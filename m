@@ -2,110 +2,209 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E415C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B60FAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:36:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73769206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:36:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466607;
-	bh=vBVODVLhA21VNdblvAjpiZ7aFEQkw084iJxoeDNUa4o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D6p1bmIgKh6fbc6ML7vfLdfH3L/vrU5awyXuhCR9hNKIQP4VK4c7XaSXj/zasx7Nh
-	 jYG2OYWfsdzNFUx+Lfiz72I4c1NkgjZNrJTHEIkV7Ku1jp20e96BcWTN6O7865w08T
-	 qG4y3aScHpKScvvDYPjN7K7MsztFz7EEQU2MbtQM=
+	by mail.kernel.org (Postfix) with ESMTP id 8B9B4206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:36:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="jCQ39Loa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391345AbgF2Vgq (ORCPT
+        id S2391352AbgF2Vgs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:36:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60640 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728431AbgF2Skk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 17:36:48 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:12468 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728407AbgF2Skk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:40:40 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593456040; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=2UyrXWkOMOMhSQo6t9EmNJzuHREHp5h9gbpKc9GpJzw=; b=jCQ39LoakAohhbZ1y9Vj7lPWwOf4QkjpOVUCgGwnUKaUMKEBc6GsY3pWFX/4ElehWxiVwGJa
+ 5llSilGz2fd658iBERViKgJMOVjkmqTwUTJrCIIZtEn9vG/+D4YaJXwDVVhTvxC0P6fsJ6q9
+ Uyr8ifkGp4ceV6w2K80/T0q5qBA=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n12.prod.us-west-2.postgun.com with SMTP id
+ 5ef9c72cad153efa34b15da6 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 29 Jun 2020 10:49:16
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DCD1BC433CA; Mon, 29 Jun 2020 10:49:15 +0000 (UTC)
+Received: from [10.50.61.98] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D765D23ED2;
-        Mon, 29 Jun 2020 15:18:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443905;
-        bh=vBVODVLhA21VNdblvAjpiZ7aFEQkw084iJxoeDNUa4o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Au2zn7RNQYYOkaeo77qsbc4A1onLRhFXjCtr+X3nWjh6S1/lo8Fg5QHTjjJtPvgYu
-         MLpbssb0nNnObjTXWLLpINBFC/PZaAMNunQohxB3YM2RyB20seEeWJC11dKHEP2Tm5
-         lQ0+SrAsvcV0BOI9/o9R9629YGs1YTFHgm10dRUo=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sabrina Dubroca <sd@queasysnail.net>,
-        Stefano Brivio <sbrivio@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 005/265] geneve: allow changing DF behavior after creation
-Date:   Mon, 29 Jun 2020 11:13:58 -0400
-Message-Id: <20200629151818.2493727-6-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
-References: <20200629151818.2493727-1-sashal@kernel.org>
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 33980C433C6;
+        Mon, 29 Jun 2020 10:49:10 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 33980C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH v6 5/6] media: venus: core: Add support for opp
+ tables/perf voting
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        bjorn.andersson@linaro.org, agross@kernel.org, robdclark@gmail.com,
+        robdclark@chromium.org
+Cc:     viresh.kumar@linaro.org, sboyd@kernel.org, mka@chromium.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org
+References: <1592222564-13556-1-git-send-email-rnayak@codeaurora.org>
+ <1592222564-13556-6-git-send-email-rnayak@codeaurora.org>
+ <e0f856ec-e391-9b1d-baa3-7dda20cb853a@linaro.org>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <fbb3bdd7-523b-a5fa-cde1-c61e7691e7f9@codeaurora.org>
+Date:   Mon, 29 Jun 2020 16:19:08 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.7.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.7.7-rc1
-X-KernelTest-Deadline: 2020-07-01T15:14+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <e0f856ec-e391-9b1d-baa3-7dda20cb853a@linaro.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sabrina Dubroca <sd@queasysnail.net>
 
-[ Upstream commit 56c09de347e40804fc8dad155272fb9609e0a97b ]
 
-Currently, trying to change the DF parameter of a geneve device does
-nothing:
+On 6/18/2020 8:24 PM, Stanimir Varbanov wrote:
+> Hi Rajendra,
+> 
+> On 6/15/20 3:02 PM, Rajendra Nayak wrote:
+>> Add support to add OPP tables and perf voting on the OPP powerdomain.
+>> This is needed so venus votes on the corresponding performance state
+>> for the OPP powerdomain along with setting the core clock rate.
+>>
+>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>> Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+>> Cc: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+>> Cc: linux-media@vger.kernel.org
+>> ---
+>> No functional change in v6, rebased over 5.8-rc1
+>> Bindings update to add optional PD https://lore.kernel.org/patchwork/patch/1241077/
+>>
+>>   drivers/media/platform/qcom/venus/core.c       | 43 +++++++++++++++++---
+>>   drivers/media/platform/qcom/venus/core.h       |  5 +++
+>>   drivers/media/platform/qcom/venus/pm_helpers.c | 54 ++++++++++++++++++++++++--
+>>   3 files changed, 92 insertions(+), 10 deletions(-)
+>>
+> 
+> <cut>
+> 
+>>   
+>> @@ -740,13 +740,16 @@ static int venc_power_v4(struct device *dev, int on)
+>>   
+>>   static int vcodec_domains_get(struct device *dev)
+>>   {
+>> +	int ret;
+>> +	struct opp_table *opp_table;
+>> +	struct device **opp_virt_dev;
+>>   	struct venus_core *core = dev_get_drvdata(dev);
+>>   	const struct venus_resources *res = core->res;
+>>   	struct device *pd;
+>>   	unsigned int i;
+>>   
+>>   	if (!res->vcodec_pmdomains_num)
+>> -		return -ENODEV;
+>> +		goto skip_pmdomains;
+>>   
+>>   	for (i = 0; i < res->vcodec_pmdomains_num; i++) {
+>>   		pd = dev_pm_domain_attach_by_name(dev,
+>> @@ -763,7 +766,41 @@ static int vcodec_domains_get(struct device *dev)
+>>   	if (!core->pd_dl_venus)
+>>   		return -ENODEV;
+>>   
+>> +skip_pmdomains:
+>> +	if (!core->has_opp_table)
+>> +		return 0;
+>> +
+>> +	/* Attach the power domain for setting performance state */
+>> +	opp_table = dev_pm_opp_attach_genpd(dev, res->opp_pmdomain, &opp_virt_dev);
+>> +	if (IS_ERR(opp_table)) {
+>> +		ret = PTR_ERR(opp_table);
+>> +		goto opp_attach_err;
+>> +	}
+>> +
+>> +	core->opp_pmdomain = *opp_virt_dev;
+>> +	core->opp_dl_venus = device_link_add(dev, core->opp_pmdomain,
+>> +					     DL_FLAG_RPM_ACTIVE |
+>> +					     DL_FLAG_PM_RUNTIME |
+>> +					     DL_FLAG_STATELESS);
+>> +	if (!core->opp_dl_venus) {
+>> +		ret = -ENODEV;
+>> +		goto opp_dl_add_err;
+>> +	}
+>> +
+>>   	return 0;
+>> +
+>> +opp_dl_add_err:
+>> +	dev_pm_domain_detach(core->opp_pmdomain, true);
+>> +opp_attach_err:
+>> +	if (core->pd_dl_venus) {
+>> +		device_link_del(core->pd_dl_venus);
+>> +		for (i = 0; i < res->vcodec_pmdomains_num; i++) {
+>> +			if (IS_ERR_OR_NULL(core->pmdomains[i]))
+>> +				continue;
+>> +			dev_pm_domain_detach(core->pmdomains[i], true);
+>> +		}
+>> +	}
+>> +	return ret;
+>>   }
+>>   
+>>   static void vcodec_domains_put(struct device *dev)
+>> @@ -773,7 +810,7 @@ static void vcodec_domains_put(struct device *dev)
+>>   	unsigned int i;
+>>   
+>>   	if (!res->vcodec_pmdomains_num)
+>> -		return;
+>> +		goto skip_pmdomains;
+>>   
+>>   	if (core->pd_dl_venus)
+>>   		device_link_del(core->pd_dl_venus);
+>> @@ -783,6 +820,15 @@ static void vcodec_domains_put(struct device *dev)
+>>   			continue;
+>>   		dev_pm_domain_detach(core->pmdomains[i], true);
+>>   	}
+>> +
+>> +skip_pmdomains:
+>> +	if (!res->opp_pmdomain)
+>> +		return;
+>> +
+>> +	if (core->opp_dl_venus)
+>> +		device_link_del(core->opp_dl_venus);
+>> +
+>> +	dev_pm_domain_detach(core->opp_pmdomain, true);
+> 
+> Without corresponding changes in venus DT node we call pm_domain_detach
+> with core->opp_pmdomain = NULL which triggers NULL pointer dereference.
+> 
+> I guess you should check:
+> 
+> 	if (core->has_opp_table)
+> 		dev_pm_domain_detach(core->opp_pmdomain, true);
+> 
+> or
+> 
+> 	if (core->opp_pmdomain)
+> 		dev_pm_domain_detach(core->opp_pmdomain, true);
+> 
+> 
+> ... not sure which one is more appropriate or both are.
 
-    # ip -d link show geneve1
-    14: geneve1: <snip>
-        link/ether <snip>
-        geneve id 1 remote 10.0.0.1 ttl auto df set dstport 6081 <snip>
-    # ip link set geneve1 type geneve id 1 df unset
-    # ip -d link show geneve1
-    14: geneve1: <snip>
-        link/ether <snip>
-        geneve id 1 remote 10.0.0.1 ttl auto df set dstport 6081 <snip>
+Thanks, I'll fix that up when I repost. Sorry I was out for a while so
+haven't been able to reproduce the rpmh timeout issue you reported.
+Will spend some time on it this week and see if I can reproduce it.
 
-We just need to update the value in geneve_changelink.
 
-Fixes: a025fb5f49ad ("geneve: Allow configuration of DF behaviour")
-Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
-Reviewed-by: Stefano Brivio <sbrivio@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/geneve.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/net/geneve.c b/drivers/net/geneve.c
-index 75266580b586d..4661ef865807f 100644
---- a/drivers/net/geneve.c
-+++ b/drivers/net/geneve.c
-@@ -1649,6 +1649,7 @@ static int geneve_changelink(struct net_device *dev, struct nlattr *tb[],
- 	geneve->collect_md = metadata;
- 	geneve->use_udp6_rx_checksums = use_udp6_rx_checksums;
- 	geneve->ttl_inherit = ttl_inherit;
-+	geneve->df = df;
- 	geneve_unquiesce(geneve, gs4, gs6);
- 
- 	return 0;
 -- 
-2.25.1
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
