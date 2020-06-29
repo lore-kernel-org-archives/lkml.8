@@ -2,162 +2,111 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E97FAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C63C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:58:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C890720720
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:58:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jRyLPLKJ"
+	by mail.kernel.org (Postfix) with ESMTP id 0AC0020724
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:58:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593464291;
+	bh=6CG63SOW4yWuuwAUoqvLDpU/7RnOGM+gSBoHHWVONao=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fn+mr3gQ7h9f8qcSBnk2QVstQ+2L6mKgR06Vv+51vPFjyTg6skHuBteQVdAPu+Xud
+	 wxR5+bfsuCIQlfqeocODYz9SzGI+xAUFGOF7xy5JqpJ5ToQ/b0m2YEdM5hN5e7ijiu
+	 FEEJjMkFxXQASE+oaYfBK1gKd2AnLJ2NdimgoHvA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389308AbgF2U6B (ORCPT
+        id S2389750AbgF2U6K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:58:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43370 "EHLO
+        Mon, 29 Jun 2020 16:58:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729825AbgF2TNF (ORCPT
+        with ESMTP id S1730795AbgF2TNE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:13:05 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F0DAC08EB20
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:27:30 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id u185so5426635pfu.1
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:27:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=OcuGTfSUXtPYMFfpENNYu5S2NR6isuQ9uC03+go4k80=;
-        b=jRyLPLKJ/wflGnWNIhsw1/xtdO++qU/4G4jZjo+lnOqYVWgtIzMYOnTwQtGOp4VTv+
-         b8zRHjoyL25oKD4tWfpH43lrpeGB8egY2xI+HOcY319Hsy/yzaeePZ8YwW/uqTnkDoS9
-         fbCN5nnFFpuj2qqzr47ls2rlOBAuxjOrocN5I=
+        Mon, 29 Jun 2020 15:13:04 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27941C00861B;
+        Mon, 29 Jun 2020 03:32:26 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id f7so13005273wrw.1;
+        Mon, 29 Jun 2020 03:32:26 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=OcuGTfSUXtPYMFfpENNYu5S2NR6isuQ9uC03+go4k80=;
-        b=ggSdttC0SYsBj8BYhOFa4H6EvX3V1AE+r1TiiMN0G3p2egxyKuME+bh7yB9JoYuz+R
-         nSF3+xvVqkixqptr2y3YOFluMklHgLMfnRWM674vQg3RKhwQPB3Eny8abzhYb+FoR8Mr
-         rMz0S5wMRTo6UMVTdZdKW6LjeJGrZQkZib/1+KebhvRhygMprq8kowDjHcVZGcAOYzFV
-         AgQ+sgdNY7bNSsGei4aGeK8XDk3e3JtZzag/QeHZno5xMJ6ZMcOkA/4ythg45TY/2aA2
-         jNCD00TwJB4mZ/x/GlKe6/yMV2IBDXHcc7G6RoLNesKdRRQ50O3SzFDtpCdY3sH5yIEk
-         oQkg==
-X-Gm-Message-State: AOAM532rfMtXmOtdjnZHX7RKu2xF7gNe4EFYhCHhADEHvGKk5Uiyl+V1
-        gDIxc0/nPSMUnYPc/iQpOQIcRQ==
-X-Google-Smtp-Source: ABdhPJyp58Bg9f7GuaQUlT4KpenbA1Jul+PfAUND8VkiaE+umM/0tCY0B+FCqda7VoHqscVan5uu+w==
-X-Received: by 2002:a62:1646:: with SMTP id 67mr13176339pfw.281.1593412049613;
-        Sun, 28 Jun 2020 23:27:29 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id 27sm18066808pjg.19.2020.06.28.23.27.28
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uA93shaS3ROaZO1F/Theu2W+pMXUv937OHVYLQtQpJc=;
+        b=QK9tK1GHNBE7aDAP8tGPnrwMHTwrspXJNSldTfaw2XfVBowb4ndW3UB1CXE+lCXLiD
+         oZ3dwZ/LQQflwvqsBUPoydEzXLNhTeBeNUdbt1ugJZ2DwoylZp8MXRE4OInh8OKgUNZU
+         1W6IFepl8kW12d6/MYgcGQA+X+1d7L/Q05ntTPVWi2kgbPkiAsbfY1CmNyx/263kVp1u
+         5zP8ISuN6/7XyZ2oRH/ZkTBitJEFi6zWEgTnFnNRQ6JWhCdl/lAW62OS/gS7YnzoG/zy
+         f8wWRGRPVY/9ko9g4VMsV/UdbkPiQjAoWA8g/WdkqDBeppBUz+sCQVoUA2iSDbi2FrBF
+         pGPw==
+X-Gm-Message-State: AOAM530lsHdL+EFmCZzaqvdxSTzXEJ8hPA9m4vTuZ3Ev3foTsiIM6fnN
+        7SnYhW46nm9CqbKW3aUKe54=
+X-Google-Smtp-Source: ABdhPJyQVyWd7PiCVN+PqIz3jcQ5yfRgoN5qX/9YK1HLjlJOQ0zbG0Eh8/SqLuvv2dP6GWVZw170OA==
+X-Received: by 2002:adf:ee05:: with SMTP id y5mr16955076wrn.185.1593426744827;
+        Mon, 29 Jun 2020 03:32:24 -0700 (PDT)
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id r1sm14814942wrw.24.2020.06.29.03.32.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jun 2020 23:27:28 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
-        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 16/17] x86/build: Warn on orphan section placement
-Date:   Sun, 28 Jun 2020 23:18:39 -0700
-Message-Id: <20200629061840.4065483-17-keescook@chromium.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629061840.4065483-1-keescook@chromium.org>
-References: <20200629061840.4065483-1-keescook@chromium.org>
+        Mon, 29 Jun 2020 03:32:24 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 10:32:23 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Joseph Salisbury <joseph.salisbury@microsoft.com>
+Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org, wei.liu@kernel.org, mikelley@microsoft.com,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH][v2] Drivers: hv: Change flag to write log level in panic
+ msg to false
+Message-ID: <20200629103223.ft7l76vbr45eec6x@liuwe-devbox-debian-v2>
+References: <1593210497-114310-1-git-send-email-joseph.salisbury@microsoft.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1593210497-114310-1-git-send-email-joseph.salisbury@microsoft.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We don't want to depend on the linker's orphan section placement
-heuristics as these can vary between linkers, and may change between
-versions. All sections need to be explicitly named in the linker
-script.
+On Fri, Jun 26, 2020 at 03:28:17PM -0700, Joseph Salisbury wrote:
+> When the kernel panics, one page of kmsg data may be collected and sent to
+> Hyper-V to aid in diagnosing the failure.  The collected kmsg data typically
+>  contains 50 to 100 lines, each of which has a log level prefix that isn't
+> very useful from a diagnostic standpoint.  So tell kmsg_dump_get_buffer()
+> to not include the log level, enabling more information that *is* useful to
+> fit in the page.
+> 
+> Requesting in stable kernels, since many kernels running in production are
+> stable releases.
+> 
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Joseph Salisbury <joseph.salisbury@microsoft.com>
 
-Discards the unused rela, plt, and got sections that are not needed
-in the final vmlinux, stop emitting kprobe sections without kprobes,
-and enable orphan section warnings.
+Applied to hyperv-fixes with Michael's review from v1. Thanks.
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- arch/x86/Makefile             | 4 ++++
- arch/x86/include/asm/asm.h    | 6 +++++-
- arch/x86/kernel/vmlinux.lds.S | 6 ++++++
- 3 files changed, 15 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-index 00e378de8bc0..f8a5b2333729 100644
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -51,6 +51,10 @@ ifdef CONFIG_X86_NEED_RELOCS
-         LDFLAGS_vmlinux := --emit-relocs --discard-none
- endif
- 
-+# We never want expected sections to be placed heuristically by the
-+# linker. All sections should be explicitly named in the linker script.
-+LDFLAGS_vmlinux += --orphan-handling=warn
-+
- #
- # Prevent GCC from generating any FP code by mistake.
- #
-diff --git a/arch/x86/include/asm/asm.h b/arch/x86/include/asm/asm.h
-index 0f63585edf5f..92feec0f0a12 100644
---- a/arch/x86/include/asm/asm.h
-+++ b/arch/x86/include/asm/asm.h
-@@ -138,11 +138,15 @@
- # define _ASM_EXTABLE_FAULT(from, to)				\
- 	_ASM_EXTABLE_HANDLE(from, to, ex_handler_fault)
- 
--# define _ASM_NOKPROBE(entry)					\
-+# ifdef CONFIG_KPROBES
-+#  define _ASM_NOKPROBE(entry)					\
- 	.pushsection "_kprobe_blacklist","aw" ;			\
- 	_ASM_ALIGN ;						\
- 	_ASM_PTR (entry);					\
- 	.popsection
-+# else
-+#  define _ASM_NOKPROBE(entry)
-+# endif
- 
- #else
- # define _EXPAND_EXTABLE_HANDLE(x) #x
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index 504d16968ed8..52e2b4952a0b 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -413,6 +413,12 @@ SECTIONS
- 	ELF_DETAILS
- 
- 	DISCARDS
-+	/DISCARD/ : {
-+		*(.rela.*) *(.rela_*)
-+		*(.rel.*) *(.rel_*)
-+		*(.got) *(.got.*)
-+		*(.igot.*) *(.iplt)
-+	}
- }
- 
- 
--- 
-2.25.1
-
+> ---
+>  drivers/hv/vmbus_drv.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> index 9147ee9d5f7d..d69f4efa3719 100644
+> --- a/drivers/hv/vmbus_drv.c
+> +++ b/drivers/hv/vmbus_drv.c
+> @@ -1368,7 +1368,7 @@ static void hv_kmsg_dump(struct kmsg_dumper *dumper,
+>  	 * Write dump contents to the page. No need to synchronize; panic should
+>  	 * be single-threaded.
+>  	 */
+> -	kmsg_dump_get_buffer(dumper, true, hv_panic_page, HV_HYP_PAGE_SIZE,
+> +	kmsg_dump_get_buffer(dumper, false, hv_panic_page, HV_HYP_PAGE_SIZE,
+>  			     &bytes_written);
+>  	if (bytes_written)
+>  		hyperv_report_panic_msg(panic_pa, bytes_written);
+> -- 
+> 2.17.1
+> 
