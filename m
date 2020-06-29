@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F181EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11DBDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D6B8A20672
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:01:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE30D206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:01:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460881;
-	bh=jqIGikHXbjh0fGXK+ZUVg3Q2MlISrW97Srq0yttB7jM=;
+	s=default; t=1593460891;
+	bh=LFcgnPZDwiKQtMWFFtgLw9vW/3moNMK4L7nJadX0foI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NZZW8v5ha43rOSXQ3t85x8OW59bnL/QqUNqf/RIS+BNJwuVMpNwCc4ZXBy9ERQZ9C
-	 4OXWzV7ItTSMd1NXAGJOgl6xvlkVI9osdyIFYbcgJKfJkPwfVGJiHBt6/GRpcMJZlf
-	 pt5YgAut7NQXWEKLJyVPEiEiZaqI2Mc1ayg9HFs4=
+	b=GnyZTfDB8ET0RzwNawfw5DRdBPATV1xgQLF/sVYlHf4RXagg2F1PB6PjjYqga2xIp
+	 j5lVkAhKDIF+huZ0420sBhnryNsR9CsDXVWBRf5iwPtH51/xESW8MKECQwlLV6ShtR
+	 oghXUCFVK2/vMX9+LmCKYeqDbQp3dI1uoicdSyL8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388644AbgF2UBT (ORCPT
+        id S2388516AbgF2UB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:01:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47636 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:01:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387546AbgF2TkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387553AbgF2TkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91A2D2490E;
-        Mon, 29 Jun 2020 15:27:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C6A1248F2;
+        Mon, 29 Jun 2020 15:27:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444463;
-        bh=jqIGikHXbjh0fGXK+ZUVg3Q2MlISrW97Srq0yttB7jM=;
+        s=default; t=1593444445;
+        bh=LFcgnPZDwiKQtMWFFtgLw9vW/3moNMK4L7nJadX0foI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ADT3u4+7TWhUsLyrWQzun1/FK1aWPi8+q0l5zXDcl8Td2QieQb9tn8F7FEUsTpZCZ
-         KiECeU/1Ju4mfNTOl8AguROhoO36zRIC6admjEPO8HQ/G19qIUdCj/lVeiEprSjcdj
-         6W1ZFtvpbQ/2VAj/eEjjhdD0lTP4SOQz2cQWjv3U=
+        b=JB/d4v/qECv2rh7RirulXdSIkHX97h2HNbOs5IIkYDmTn5p1g4gg7N/Rs+sXoChLB
+         rf2cZ2fNLvrxZtTvPgt8K2gX0/g1V0CuGfKfh4+SwMr8Vo4XgGkMzj6kXjpEM3HCOW
+         hOXVWD7ZPgkAmiTKlDqWG0CrYp8OntwpN+UF54A4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 143/178] ACPI: configfs: Disallow loading ACPI tables when locked down
-Date:   Mon, 29 Jun 2020 11:24:48 -0400
-Message-Id: <20200629152523.2494198-144-sashal@kernel.org>
+Cc:     Zekun Shen <bruceshenzk@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 124/178] net: alx: fix race condition in alx_remove
+Date:   Mon, 29 Jun 2020 11:24:29 -0400
+Message-Id: <20200629152523.2494198-125-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -65,50 +65,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+From: Zekun Shen <bruceshenzk@gmail.com>
 
-commit 75b0cea7bf307f362057cc778efe89af4c615354 upstream.
+[ Upstream commit e89df5c4322c1bf495f62d74745895b5fd2a4393 ]
 
-Like other vectors already patched, this one here allows the root
-user to load ACPI tables, which enables arbitrary physical address
-writes, which in turn makes it possible to disable lockdown.
+There is a race condition exist during termination. The path is
+alx_stop and then alx_remove. An alx_schedule_link_check could be called
+before alx_stop by interrupt handler and invoke alx_link_check later.
+Alx_stop frees the napis, and alx_remove cancels any pending works.
+If any of the work is scheduled before termination and invoked before
+alx_remove, a null-ptr-deref occurs because both expect alx->napis[i].
 
-Prevents this by checking the lockdown status before allowing a new
-ACPI table to be installed. The link in the trailer shows a PoC of
-how this might be used.
+This patch fix the race condition by moving cancel_work_sync functions
+before alx_free_napis inside alx_stop. Because interrupt handler can call
+alx_schedule_link_check again, alx_free_irq is moved before
+cancel_work_sync calls too.
 
-Link: https://git.zx2c4.com/american-unsigned-language/tree/american-unsigned-language-2.sh
-Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Zekun Shen <bruceshenzk@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/acpi_configfs.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/atheros/alx/main.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/acpi/acpi_configfs.c b/drivers/acpi/acpi_configfs.c
-index 57d9d574d4dde..01738d8e888e3 100644
---- a/drivers/acpi/acpi_configfs.c
-+++ b/drivers/acpi/acpi_configfs.c
-@@ -11,6 +11,7 @@
- #include <linux/module.h>
- #include <linux/configfs.h>
- #include <linux/acpi.h>
-+#include <linux/security.h>
+diff --git a/drivers/net/ethernet/atheros/alx/main.c b/drivers/net/ethernet/atheros/alx/main.c
+index d4bbcdfd691af..aa693c8e285ab 100644
+--- a/drivers/net/ethernet/atheros/alx/main.c
++++ b/drivers/net/ethernet/atheros/alx/main.c
+@@ -1249,8 +1249,12 @@ static int __alx_open(struct alx_priv *alx, bool resume)
  
- #include "acpica/accommon.h"
- #include "acpica/actables.h"
-@@ -28,7 +29,10 @@ static ssize_t acpi_table_aml_write(struct config_item *cfg,
+ static void __alx_stop(struct alx_priv *alx)
  {
- 	const struct acpi_table_header *header = data;
- 	struct acpi_table *table;
--	int ret;
-+	int ret = security_locked_down(LOCKDOWN_ACPI_TABLES);
+-	alx_halt(alx);
+ 	alx_free_irq(alx);
 +
-+	if (ret)
-+		return ret;
++	cancel_work_sync(&alx->link_check_wk);
++	cancel_work_sync(&alx->reset_wk);
++
++	alx_halt(alx);
+ 	alx_free_rings(alx);
+ 	alx_free_napis(alx);
+ }
+@@ -1858,9 +1862,6 @@ static void alx_remove(struct pci_dev *pdev)
+ 	struct alx_priv *alx = pci_get_drvdata(pdev);
+ 	struct alx_hw *hw = &alx->hw;
  
- 	table = container_of(cfg, struct acpi_table, cfg);
+-	cancel_work_sync(&alx->link_check_wk);
+-	cancel_work_sync(&alx->reset_wk);
+-
+ 	/* restore permanent mac address */
+ 	alx_set_macaddr(hw, hw->perm_addr);
  
 -- 
 2.25.1
