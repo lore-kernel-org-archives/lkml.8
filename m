@@ -2,137 +2,74 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17BEEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 309F8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E84EE206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:33:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466435;
-	bh=gtLos1SihbPLlOxuUhEKyPPNAS9h34pNrgwseJQvyrU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=te87qyiwertwJLFXZ8wP1C+LAUfMDTa6Spwq60cBPMv+vcAKjzJWHaMny6cIZVqAa
-	 iay60gdUF4igue04e1n8pm2Pen4rSvhbcoQ6SWwTZfOqwZ3NjT+9a9TwJ6m9EZWqkU
-	 HZyp5/GEZLP5aGxhKDcGxZbITXyMNJJ+FhyPJ6BA=
+	by mail.kernel.org (Postfix) with ESMTP id 1393B206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:34:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391224AbgF2Vdu (ORCPT
+        id S1728616AbgF2VeA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:33:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60660 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:34:00 -0400
+Received: from mga06.intel.com ([134.134.136.31]:13469 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728630AbgF2Sk6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:40:58 -0400
-Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0686723E1D;
-        Mon, 29 Jun 2020 14:46:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593442006;
-        bh=gtLos1SihbPLlOxuUhEKyPPNAS9h34pNrgwseJQvyrU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=SiBkBgNqXJiyUfisE5n7rATDfcw+dWksEbHjJGEB4JXjEc7yI3aba21RyrogW2CQW
-         5RI5/RuKgKz3dDW5w+ajvwER16uZzXQWnPWHB04eBbOk6Z8/cns5mGWoOyZprC7Njq
-         uA6ALc0L9PbPUuKleMDfJTlhg0or5tgKZ9MZDyf4=
-Date:   Mon, 29 Jun 2020 16:46:43 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Maxim Levitsky <mlevitsk@redhat.com>
-Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>
-Subject: Re: [PATCH v2 0/5] Fix split view search and debug info navigation
-Message-ID: <20200629164643.5e087da0@coco.lan>
-In-Reply-To: <649f4c040c2f6dd2d83e984a88343917d498b4ad.camel@redhat.com>
-References: <cover.1593423060.git.mchehab+huawei@kernel.org>
-        <649f4c040c2f6dd2d83e984a88343917d498b4ad.camel@redhat.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        id S1728630AbgF2Vd5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 17:33:57 -0400
+IronPort-SDR: W4F/L96Wg6shjp4F5mUwljVkF0dflLaPEeXoEROxvUO1Qnv5eCHg1/dHkZxYTXnMG2m4fOYoG9
+ yq9bh+wOTOOQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="207599721"
+X-IronPort-AV: E=Sophos;i="5.75,295,1589266800"; 
+   d="scan'208";a="207599721"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 14:33:55 -0700
+IronPort-SDR: +eiATfBA9bo4hucX3V0Y+/dJ1kiHgE21TReelGbH2BmoL+HHo566d99Q+X53f2SfpaqLtk32vm
+ xUxRiyZKWw5w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,295,1589266800"; 
+   d="scan'208";a="277215572"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by orsmga003.jf.intel.com with ESMTP; 29 Jun 2020 14:33:54 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 959A7301BA3; Mon, 29 Jun 2020 14:33:54 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 14:33:54 -0700
+From:   Andi Kleen <ak@linux.intel.com>
+To:     John Garry <john.garry@huawei.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Kajol Jain <kjain@linux.ibm.com>,
+        "Paul A. Clarke" <pc@us.ibm.com>,
+        Stephane Eranian <eranian@google.com>,
+        Ian Rogers <irogers@google.com>
+Subject: Re: [RFC 00/10] perf tools: Add support to reuse metric
+Message-ID: <20200629213354.GH818054@tassilo.jf.intel.com>
+References: <20200626194720.2915044-1-jolsa@kernel.org>
+ <b1fd3b2d-9312-bbb1-7803-426dbb737866@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b1fd3b2d-9312-bbb1-7803-426dbb737866@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, 29 Jun 2020 15:23:49 +0300
-Maxim Levitsky <mlevitsk@redhat.com> escreveu:
+> I'm guessing that those metric JSONs are human generated, so would be
+> suitable; unlike the regular JSONs, which are automated.
 
-> On Mon, 2020-06-29 at 11:35 +0200, Mauro Carvalho Chehab wrote:
-> > This series fixes some issues with search while on split view and fix the
-> > broken hyperlink navigation.
-> > 
-> > The first patches restore the pre-Qt5 conversion behavior. The last
-> > one implements navigation on a different way. I opted to keep this one
-> > in separate, as this one is a new feature.
-> > 
-> > Mauro Carvalho Chehab (5):
-> >   kconfig: qconf: cleanup includes
-> >   kconfig: qconf: ensure that only one item will be highlighted
-> >   kconfig: qconf: make search fully work again on split mode
-> >   kconfig: qconf: make debug links work again
-> >   kconfig: qconf: navigate menus on hyperlinks
-> > 
-> >  scripts/kconfig/qconf.cc | 120 +++++++++++++++++++++++++++++----------
-> >  scripts/kconfig/qconf.h  |  15 ++---
-> >  2 files changed, 98 insertions(+), 37 deletions(-)
-> >   
-> I tested the series, and it works really well here.
-> Thanks a lot for the patch 5, I indeed noted that 
-> I am not sure it ever worked like that but it does now, 
-> and it is a very good improvement in terms of usability.
-> 
-> There is still a tiny issue in patch 5 - sometimes already
-> selected items remain selected like it was in the search (now fixed).
+The x86 metrics are auto generated too.
 
-Yeah, I noticed that it was keeping something selected sometimes.
-that's why I sent a followup patch:
+That's why you see the repetition.
 
-	Date: Mon, 29 Jun 2020 12:57:45 +0200
-	Subject: [PATCH] kconfig: qconf: re-implement setSelected()
-
-Not sure why, but this one is not on lore yet.
-
-> 
-> Also I found another bug - clicking on '..' menu doesn't work:
-
-I don't think that this is a bug. See below.
-
-> For example select 'input device support', then 'keyboards' on the right,
-> then you can't get back. It also might be something that never worked,
-> and it doesn't bother me, I just note this for reference.
-
-The logic at:
-
-	void ConfigList::mouseReleaseEvent(QMouseEvent* e)
-
-Which calls:
-
-	emit parentSelected();
-
-event when the "<-" button is pressed. This is used for the
-configList when on singleMode, which makes sense:
-
-	connect(configList, SIGNAL(parentSelected()),
-		SLOT(goBack()));
-
-There's no connect for menuList. So, this event is silently
-ignored on split mode.
-
-I guess the main question here is: what kind of action this were
-supposed to do?
-
-I mean, the "menuView" should always contain the leaf nodes,
-as the rest of the menu hierarchy is at the configView.
-
-So, what kind of action could be done in this case?
-
-That's said, when looking into it, I noticed some dead code,
-and some things that could be simplified.
-
-I'll likely send a cleanup patch removing the dead code.
-
-Thanks,
-Mauro
+-Andi
