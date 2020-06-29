@@ -2,123 +2,183 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46442C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36FFDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:39:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22CD920672
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:39:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fgIP8sWC"
+	by mail.kernel.org (Postfix) with ESMTP id 245B0206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:39:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387516AbgF2TjA (ORCPT
+        id S1733197AbgF2TjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:39:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47616 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387439AbgF2Thn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:37:43 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 489BFC0307B3
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 08:58:01 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id e4so18623184ljn.4
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 08:58:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=zMZEixiFTF5mevY+VAYJknP06+KYN1owPnfYBfA5mxY=;
-        b=fgIP8sWCkgrxJ+mLPRUsnOUtmnT8rWOcMr5mr81MZdDyY8rho2NuX5xFE2H3wesszQ
-         mcd1dx0F7G+izOpy6l1Q/1cxspZ9URShXtjWxPEXMgQNHqHh2baD4Zc8YGtdXnmJoGTl
-         e0AhQuG8+eQlDwRxuPr/F7eDzV6euJu6nu1qMPZmhw1eGLMdGLg1ivo6v1RuuieZ0k9t
-         jo/5HyLQ5hbOEViAErngn2fWTJ/buTp2J3IVsw7h9BqdCYXQfWPBQJbqc+Y4hayqRv8q
-         FXjEYb18omFR0bm9d9fNMziFFh/tFowXdaPBVYNfNKDkPgX35VjGEcu/2ojH+eVtcP5J
-         5MFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=zMZEixiFTF5mevY+VAYJknP06+KYN1owPnfYBfA5mxY=;
-        b=WyZFZxuH6EJgWHcwNq5eK2dNLwnnkguWBHGwaQDTFwMGGnAQc7qGPi3lkXolxbB1sM
-         n2gH1M2rAQ7036Op/SDEFzNKI0apbaoBqeoiEZqAzQzvhhVAruUU46pIv+D06OXeeThN
-         63+VXGYkjM0v+2eJJ4Yci1KPpzTHqzJqEL+vHmIp4DfcXUqQPuMoMDgJrFHMB0djUy2d
-         MgP2y/SN6OZVUBW4CG7eAYPQJVLXSmIWZB1Ejs4XHTlSTeENnpLUnmBfp4kdUNnfhIDR
-         1E0oV+P5LZKHC2v6E37N44rQexPILLkNXssaPkd24LFIqkJ4Zt4eWR1iG+S6YTfx3nIi
-         QHkw==
-X-Gm-Message-State: AOAM5323ujswx8Cdol2wdXqxNH1NhKxUYxk2gZnFsM/R5LukZ34zWF99
-        y4bZGdQgbAjULvw9XE84kjFM7uxjI7Bv6Gulv+/BhUgj3Kw=
-X-Google-Smtp-Source: ABdhPJyJa1uJ8nWPgBY1njmJFVf8+PrABb1P8QVxFmDEpUU06Og534cpetWQyyaLbYaEtBrKco73a0FNHHfFhqvuMS8=
-X-Received: by 2002:a2e:7a03:: with SMTP id v3mr2178955ljc.141.1593446279815;
- Mon, 29 Jun 2020 08:57:59 -0700 (PDT)
-MIME-Version: 1.0
-From:   microcai <microcaicai@gmail.com>
-Date:   Mon, 29 Jun 2020 23:57:48 +0800
-Message-ID: <CAMgqO2y9MYDj6antOaWLBRKU8vGEwqCB-Y1TkXTSWsmsed+W6A@mail.gmail.com>
-Subject: [PATCH] spi-nor: Add support for xt25f32b/xt25f128b
-To:     tudor.ambarus@microchip.com
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mtd@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 29 Jun 2020 15:39:08 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:52156 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729884AbgF2TjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:39:03 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7856C1A01C5;
+        Mon, 29 Jun 2020 09:51:24 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 836451A01C1;
+        Mon, 29 Jun 2020 09:51:20 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 5D721402F7;
+        Mon, 29 Jun 2020 15:51:15 +0800 (SGT)
+From:   andy.tang@nxp.com
+To:     shawnguo@kernel.org
+Cc:     leoyang.li@nxp.com, robh+dt@kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Yuantian Tang <andy.tang@nxp.com>
+Subject: [PATCH 2/2] arm64: dts: ls1043a: add more thermal zone support
+Date:   Mon, 29 Jun 2020 15:45:19 +0800
+Message-Id: <20200629074519.28851-2-andy.tang@nxp.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200629074519.28851-1-andy.tang@nxp.com>
+References: <20200629074519.28851-1-andy.tang@nxp.com>
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From 5e308ec7332d01e84a3a5233f4cb8bd5a00026cf Mon Sep 17 00:00:00 2001
-From: microcai <microcaicai@gmail.com>
-Date: Mon, 29 Jun 2020 23:36:40 +0800
-Subject: [PATCH] spi-nor: Add support for xt25f32b/xt25f128b
+From: Yuantian Tang <andy.tang@nxp.com>
 
-The RockPi4b dev board ship with xt25f32b solded. add these ids so the
-board's spi flash can be accessed within linux.
+There are 5 thermal zones in ls1043a soc. Add the
+rest thermal zone nodes to enable them.
 
-Signed-off-by: microcai <microcaicai@gmail.com>
+Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
 ---
- drivers/mtd/spi-nor/Makefile |  1 +
- drivers/mtd/spi-nor/xtx.c    | 21 +++++++++++++++++++++
- 2 files changed, 22 insertions(+)
- create mode 100644 drivers/mtd/spi-nor/xtx.c
+ .../arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 88 ++++++++++++++++++-
+ 1 file changed, 84 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/mtd/spi-nor/Makefile b/drivers/mtd/spi-nor/Makefile
-index 653923896205..3f7a52d7fa0b 100644
---- a/drivers/mtd/spi-nor/Makefile
-+++ b/drivers/mtd/spi-nor/Makefile
-@@ -17,6 +17,7 @@ spi-nor-objs += sst.o
- spi-nor-objs += winbond.o
- spi-nor-objs += xilinx.o
- spi-nor-objs += xmc.o
-+spi-nor-objs += xtx.o
- obj-$(CONFIG_MTD_SPI_NOR) += spi-nor.o
-
- obj-$(CONFIG_MTD_SPI_NOR) += controllers/
-diff --git a/drivers/mtd/spi-nor/xtx.c b/drivers/mtd/spi-nor/xtx.c
-new file mode 100644
-index 000000000000..05f2d69401b2
---- /dev/null
-+++ b/drivers/mtd/spi-nor/xtx.c
-@@ -0,0 +1,21 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2005, Intec Automation Inc.
-+ * Copyright (C) 2014, Freescale Semiconductor, Inc.
-+ */
+diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+index 3b641bd43229..17497b0d3542 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
+@@ -149,19 +149,79 @@
+ 	};
+ 
+ 	thermal-zones {
+-		cpu_thermal: cpu-thermal {
++		ddr-controller {
+ 			polling-delay-passive = <1000>;
+ 			polling-delay = <5000>;
++			thermal-sensors = <&tmu 0>;
+ 
++			trips {
++				ddr-ctrler-alert {
++					temperature = <85000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
 +
-+#include <linux/mtd/spi-nor.h>
++				ddr-ctrler-crit {
++					temperature = <95000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++		};
 +
-+#include "core.h"
++		serdes {
++			polling-delay-passive = <1000>;
++			polling-delay = <5000>;
++			thermal-sensors = <&tmu 1>;
 +
-+static const struct flash_info xtx_parts[] = {
-+ /* XTX (Shenzhen Xin Tian Xia Tech) */
-+ { "xt25f32b", INFO(0x0b4016, 0, 64 * 1024, 64, SECT_4K) },
-+ { "xt25f128b", INFO(0x0b4018, 0, 64 * 1024, 256, SECT_4K) },
-+};
++			trips {
++				serdes-alert {
++					temperature = <85000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
 +
-+const struct spi_nor_manufacturer spi_nor_xtx = {
-+ .name = "xtx",
-+ .parts = xtx_parts,
-+ .nparts = ARRAY_SIZE(xtx_parts),
-+};
++				serdes-crit {
++					temperature = <95000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++		};
++
++		fman {
++			polling-delay-passive = <1000>;
++			polling-delay = <5000>;
++			thermal-sensors = <&tmu 2>;
++
++			trips {
++				fman-alert {
++					temperature = <85000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
++				fman-crit {
++					temperature = <95000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++		};
++
++		core-cluster {
++			polling-delay-passive = <1000>;
++			polling-delay = <5000>;
+ 			thermal-sensors = <&tmu 3>;
+ 
+ 			trips {
+-				cpu_alert: cpu-alert {
++				core_cluster_alert: core-cluster-alert {
+ 					temperature = <85000>;
+ 					hysteresis = <2000>;
+ 					type = "passive";
+ 				};
+-				cpu_crit: cpu-crit {
++
++				core_cluster_crit: core-cluster-crit {
+ 					temperature = <95000>;
+ 					hysteresis = <2000>;
+ 					type = "critical";
+@@ -170,7 +230,7 @@
+ 
+ 			cooling-maps {
+ 				map0 {
+-					trip = <&cpu_alert>;
++					trip = <&core_cluster_alert>;
+ 					cooling-device =
+ 						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+ 						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+@@ -179,6 +239,26 @@
+ 				};
+ 			};
+ 		};
++
++		sec {
++			polling-delay-passive = <1000>;
++			polling-delay = <5000>;
++			thermal-sensors = <&tmu 4>;
++
++			trips {
++				sec-alert {
++					temperature = <85000>;
++					hysteresis = <2000>;
++					type = "passive";
++				};
++
++				sec-crit {
++					temperature = <95000>;
++					hysteresis = <2000>;
++					type = "critical";
++				};
++			};
++		};
+ 	};
+ 
+ 	timer {
 -- 
-2.26.2
+2.17.1
+
