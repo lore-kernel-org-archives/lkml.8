@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1841C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:57:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48EEDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C43E206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:57:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22A1E206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:57:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467864;
-	bh=wAHUzPO5mgmrr8BB7Pi6s372eEaNK7nsfE7L00aXleI=;
+	s=default; t=1593467869;
+	bh=9es4jIpBeLCXADP+w2MOZ1vGT1jSKrVhE/zhPYPpBFU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c5TfEJiRlvWZCo757+FnpqUkQUqR3YvbSc7qikbXUgxgfw/um6x80bCAK3hLMtvnT
-	 2d/5RXorNiZGo3HXf3CMgZjNFEEuxGyTGw3CoO+BMSVUmfCEYr3+i3jgOolozmYIqm
-	 wH6L2X+pES1PptQhxPdbWktAOOLSAUboF5zuu1QQ=
+	b=e9NX8Ix5/marapaxLoKK/GYvA3Elvnw0RJX8h1IrYbhudgtz52ivYAOhaJF2alKgB
+	 GZXPltBcayQ6iRpzvYNReeNxw6j2XHa2m6+h6/Qz5f2VrBtbTcti54KeJugXddnKef
+	 CWfmh6xlqKII1nA571AlJheta3+bDQa/oHcJEs64=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404736AbgF2V5n (ORCPT
+        id S2404740AbgF2V5r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:57:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56814 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:57:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726475AbgF2Sf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1725930AbgF2Sf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2BC8247B4;
-        Mon, 29 Jun 2020 15:21:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1A52247C5;
+        Mon, 29 Jun 2020 15:22:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444117;
-        bh=wAHUzPO5mgmrr8BB7Pi6s372eEaNK7nsfE7L00aXleI=;
+        s=default; t=1593444132;
+        bh=9es4jIpBeLCXADP+w2MOZ1vGT1jSKrVhE/zhPYPpBFU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BGmw3NZkm+/kSFYS0GLU9aCJFS7p6N9YtkIsx59BXVDl6zhFDU7CObWMjbufaJQp2
-         V6aoLQ6s4h0lJOaQt2HunkFdnjx4PHvvtbbRchOrKwrPLMY59b/GBJPlbiI6h47msa
-         l0wsVKvRiwxtgUmTX7aU5xHqm5GiMYfIj7QBJAO0=
+        b=Ce4CIIWHPIm/kjmB2Kz/vLqQyaHZSAq2xB318n8Smax2wivh4NmHvdjmtllENhr7a
+         A7UyicVQIKFZBt9Td4PLAO1xGl//iEiiAPWNroK5pYayIjNsSmg6f6zyFgoP6VeOwZ
+         e8AnfkFxsBGl5diEWI9Dr8xACdwDnLS3cUqmCtQM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vlastimil Babka <vbabka@suse.cz>, Hugh Dickins <hughd@google.com>,
-        Alex Shi <alex.shi@linux.alibaba.com>,
-        Li Wang <liwang@redhat.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+Cc:     Robin Gong <yibin.gong@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 228/265] mm, compaction: make capture control handling safe wrt interrupts
-Date:   Mon, 29 Jun 2020 11:17:41 -0400
-Message-Id: <20200629151818.2493727-229-sashal@kernel.org>
+Subject: [PATCH 5.7 239/265] arm64: dts: imx8mm-evk: correct ldo1/ldo2 voltage range
+Date:   Mon, 29 Jun 2020 11:17:52 -0400
+Message-Id: <20200629151818.2493727-240-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -69,95 +67,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vlastimil Babka <vbabka@suse.cz>
+From: Robin Gong <yibin.gong@nxp.com>
 
-commit b9e20f0da1f5c9c68689450a8cb436c9486434c8 upstream.
+commit 4fd6b5735c03c0955d93960d31f17d7144f5578f upstream.
 
-Hugh reports:
+Correct ldo1 voltage range from wrong high group(3.0V~3.3V) to low group
+(1.6V~1.9V) because the ldo1 should be 1.8V. Actually, two voltage groups
+have been supported at bd718x7-regulator driver, hence, just corrrect the
+voltage range to 1.6V~3.3V. For ldo2@0.8V, correct voltage range too.
+Otherwise, ldo1 would be kept @3.0V and ldo2@0.9V which violate i.mx8mm
+datasheet as the below warning log in kernel:
 
- "While stressing compaction, one run oopsed on NULL capc->cc in
-  __free_one_page()'s task_capc(zone): compact_zone_order() had been
-  interrupted, and a page was being freed in the return from interrupt.
+[    0.995524] LDO1: Bringing 1800000uV into 3000000-3000000uV
+[    0.999196] LDO2: Bringing 800000uV into 900000-900000uV
 
-  Though you would not expect it from the source, both gccs I was using
-  (4.8.1 and 7.5.0) had chosen to compile compact_zone_order() with the
-  ".cc = &cc" implemented by mov %rbx,-0xb0(%rbp) immediately before
-  callq compact_zone - long after the "current->capture_control =
-  &capc". An interrupt in between those finds capc->cc NULL (zeroed by
-  an earlier rep stos).
-
-  This could presumably be fixed by a barrier() before setting
-  current->capture_control in compact_zone_order(); but would also need
-  more care on return from compact_zone(), in order not to risk leaking
-  a page captured by interrupt just before capture_control is reset.
-
-  Maybe that is the preferable fix, but I felt safer for task_capc() to
-  exclude the rather surprising possibility of capture at interrupt
-  time"
-
-I have checked that gcc10 also behaves the same.
-
-The advantage of fix in compact_zone_order() is that we don't add
-another test in the page freeing hot path, and that it might prevent
-future problems if we stop exposing pointers to uninitialized structures
-in current task.
-
-So this patch implements the suggestion for compact_zone_order() with
-barrier() (and WRITE_ONCE() to prevent store tearing) for setting
-current->capture_control, and prevents page leaking with
-WRITE_ONCE/READ_ONCE in the proper order.
-
-Link: http://lkml.kernel.org/r/20200616082649.27173-1-vbabka@suse.cz
-Fixes: 5e1f0f098b46 ("mm, compaction: capture a page under direct compaction")
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
-Reported-by: Hugh Dickins <hughd@google.com>
-Suggested-by: Hugh Dickins <hughd@google.com>
-Acked-by: Hugh Dickins <hughd@google.com>
-Cc: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Li Wang <liwang@redhat.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: <stable@vger.kernel.org>	[5.1+]
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 78cc25fa265d ("arm64: dts: imx8mm-evk: Add BD71847 PMIC")
+Cc: stable@vger.kernel.org
+Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- mm/compaction.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/freescale/imx8mm-evk.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/mm/compaction.c b/mm/compaction.c
-index 46f0fcc93081e..65b568e195823 100644
---- a/mm/compaction.c
-+++ b/mm/compaction.c
-@@ -2318,15 +2318,26 @@ static enum compact_result compact_zone_order(struct zone *zone, int order,
- 		.page = NULL,
- 	};
+diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+index 951e14a3de0e5..22aed2806fda8 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
+@@ -196,7 +196,7 @@
  
--	current->capture_control = &capc;
-+	/*
-+	 * Make sure the structs are really initialized before we expose the
-+	 * capture control, in case we are interrupted and the interrupt handler
-+	 * frees a page.
-+	 */
-+	barrier();
-+	WRITE_ONCE(current->capture_control, &capc);
+ 			ldo1_reg: LDO1 {
+ 				regulator-name = "LDO1";
+-				regulator-min-microvolt = <3000000>;
++				regulator-min-microvolt = <1600000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
+@@ -204,7 +204,7 @@
  
- 	ret = compact_zone(&cc, &capc);
- 
- 	VM_BUG_ON(!list_empty(&cc.freepages));
- 	VM_BUG_ON(!list_empty(&cc.migratepages));
- 
--	*capture = capc.page;
--	current->capture_control = NULL;
-+	/*
-+	 * Make sure we hide capture control first before we read the captured
-+	 * page pointer, otherwise an interrupt could free and capture a page
-+	 * and we would leak it.
-+	 */
-+	WRITE_ONCE(current->capture_control, NULL);
-+	*capture = READ_ONCE(capc.page);
- 
- 	return ret;
- }
+ 			ldo2_reg: LDO2 {
+ 				regulator-name = "LDO2";
+-				regulator-min-microvolt = <900000>;
++				regulator-min-microvolt = <800000>;
+ 				regulator-max-microvolt = <900000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
 -- 
 2.25.1
 
