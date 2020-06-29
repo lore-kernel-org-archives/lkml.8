@@ -2,138 +2,102 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB2CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 887BDC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 652902065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:01:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468081;
-	bh=hlJzryK0YI2B6UOeX5mG0dMrQH8hcdUBIULXt+JZ1TY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YMZVDlQDuWCPioxMaPvYPVwJQnYNvqJjjDj7ToCnCX/v6qbOiCdftEteZpG25pii6
-	 EtJPg+TXZEHNWqf5uCYbbO9J5paCnCfNwtyeJAQ/WB/aVloaFISrXjCdNLh8sXUVyY
-	 K3Zg4xJfQMIIi9DSLpIYUGGueHpwVvTxfZiyIGGQ=
+	by mail.kernel.org (Postfix) with ESMTP id 676EF2065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:01:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404857AbgF2WBT (ORCPT
+        id S2391636AbgF2WB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:01:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56908 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726254AbgF2SfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:24 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DD1D24767;
-        Mon, 29 Jun 2020 15:21:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444082;
-        bh=hlJzryK0YI2B6UOeX5mG0dMrQH8hcdUBIULXt+JZ1TY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G6D9CSuK+VxW2IVD9yoroYnNt+6RNQ6VI/363tkquQikrwrD9AdBtuM7VHyf0wL7i
-         nD9oB8mZ88BqRkyAakKGiUJFZn5mfGtNmoVoZwrZRy1+0JYefCDyEpn33vLN+CQ5RG
-         esu2LGL/DWS9nXAafsr8Y8LMvYrYbRjr1I0JU8L0=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Mon, 29 Jun 2020 18:01:26 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:52970 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404683AbgF2WBX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 18:01:23 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 213821C0C82; Tue, 30 Jun 2020 00:01:21 +0200 (CEST)
+Date:   Tue, 30 Jun 2020 00:01:20 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Konrad Dybcio <konradybcio@gmail.com>
+Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
         Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 192/265] pinctrl: qcom: spmi-gpio: fix warning about irq chip reusage
-Date:   Mon, 29 Jun 2020 11:17:05 -0400
-Message-Id: <20200629151818.2493727-193-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
-References: <20200629151818.2493727-1-sashal@kernel.org>
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-clk@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 7/8] arm64: dts: qcom: Add support for Sony Xperia
+ XA2/Plus/Ultra (Nile platform)
+Message-ID: <20200629220120.GC26513@amd>
+References: <20200621213806.551879-1-konradybcio@gmail.com>
+ <20200621213806.551879-8-konradybcio@gmail.com>
+ <20200629120911.GA1319@bug>
+ <CAMS8qEXdoX1Zpm660sOMM9b2rni9qXM_7rAi9kkzFBQYmL3EgQ@mail.gmail.com>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.7.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.7.7-rc1
-X-KernelTest-Deadline: 2020-07-01T15:14+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="R+My9LyyhiUvIEro"
+Content-Disposition: inline
+In-Reply-To: <CAMS8qEXdoX1Zpm660sOMM9b2rni9qXM_7rAi9kkzFBQYmL3EgQ@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-[ Upstream commit 5e50311556c9f409a85740e3cb4c4511e7e27da0 ]
+--R+My9LyyhiUvIEro
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Fix the following warnings caused by reusage of the same irq_chip
-instance for all spmi-gpio gpio_irq_chip instances. Instead embed
-irq_chip into pmic_gpio_state struct.
+On Mon 2020-06-29 14:15:32, Konrad Dybcio wrote:
+> > Do you really want autorepeat on keys like camera focus?
+>=20
+> I miiiight want to reconsider that when it will actually be in use
+> :)
 
-gpio gpiochip2: (c440000.qcom,spmi:pmic@2:gpio@c000): detected irqchip that is shared with multiple gpiochips: please fix the driver.
-gpio gpiochip3: (c440000.qcom,spmi:pmic@4:gpio@c000): detected irqchip that is shared with multiple gpiochips: please fix the driver.
-gpio gpiochip4: (c440000.qcom,spmi:pmic@a:gpio@c000): detected irqchip that is shared with multiple gpiochips: please fix the driver.
+Heh.
 
-Signed-off-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Link: https://lore.kernel.org/r/20200604002817.667160-1-dmitry.baryshkov@linaro.org
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+Okay, so... I want a Linux phone. I have N900 and Droid 4 at the
+moment. I'll have something useful real soon now --
+https://maemo-leste.github.io/maemo-leste-thirteenth-update-april-may-june-=
+2020.html
+=2E
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-index fe0be8a6ebb7b..092a48e4dff57 100644
---- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-+++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-@@ -170,6 +170,7 @@ struct pmic_gpio_state {
- 	struct regmap	*map;
- 	struct pinctrl_dev *ctrl;
- 	struct gpio_chip chip;
-+	struct irq_chip irq;
- };
- 
- static const struct pinconf_generic_params pmic_gpio_bindings[] = {
-@@ -917,16 +918,6 @@ static int pmic_gpio_populate(struct pmic_gpio_state *state,
- 	return 0;
- }
- 
--static struct irq_chip pmic_gpio_irq_chip = {
--	.name = "spmi-gpio",
--	.irq_ack = irq_chip_ack_parent,
--	.irq_mask = irq_chip_mask_parent,
--	.irq_unmask = irq_chip_unmask_parent,
--	.irq_set_type = irq_chip_set_type_parent,
--	.irq_set_wake = irq_chip_set_wake_parent,
--	.flags = IRQCHIP_MASK_ON_SUSPEND,
--};
--
- static int pmic_gpio_domain_translate(struct irq_domain *domain,
- 				      struct irq_fwspec *fwspec,
- 				      unsigned long *hwirq,
-@@ -1053,8 +1044,16 @@ static int pmic_gpio_probe(struct platform_device *pdev)
- 	if (!parent_domain)
- 		return -ENXIO;
- 
-+	state->irq.name = "spmi-gpio",
-+	state->irq.irq_ack = irq_chip_ack_parent,
-+	state->irq.irq_mask = irq_chip_mask_parent,
-+	state->irq.irq_unmask = irq_chip_unmask_parent,
-+	state->irq.irq_set_type = irq_chip_set_type_parent,
-+	state->irq.irq_set_wake = irq_chip_set_wake_parent,
-+	state->irq.flags = IRQCHIP_MASK_ON_SUSPEND,
-+
- 	girq = &state->chip.irq;
--	girq->chip = &pmic_gpio_irq_chip;
-+	girq->chip = &state->irq;
- 	girq->default_type = IRQ_TYPE_NONE;
- 	girq->handler = handle_level_irq;
- 	girq->fwnode = of_node_to_fwnode(state->dev->of_node);
--- 
-2.25.1
+OTOH... if you get useful mainline support for XA2 (or any other
+modern Sony)... be sure to let me know. Droid 4 has only 1GB RAM :-(.
 
+Best regards,
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--R+My9LyyhiUvIEro
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl76ZLAACgkQMOfwapXb+vIGtACfXOLd6RroYBKp7PosAeOohWKK
+Fk0AnR8eCWQ3Q7TeKYd4CS7/dEgHQy5s
+=cMLV
+-----END PGP SIGNATURE-----
+
+--R+My9LyyhiUvIEro--
