@@ -2,106 +2,151 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F02C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A08C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9376B2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:33:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D27AB2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:33:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LWJedSK7"
+	dkim=pass (2048-bit key) header.d=pesu-pes-edu.20150623.gappssmtp.com header.i=@pesu-pes-edu.20150623.gappssmtp.com header.b="CN262X2B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732811AbgF2TdO (ORCPT
+        id S1733249AbgF2TdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:33:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46810 "EHLO
+        Mon, 29 Jun 2020 15:33:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733234AbgF2Tcp (ORCPT
+        with ESMTP id S1733231AbgF2Tcp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:32:45 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DDE0C0307AF
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 08:55:50 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id q5so17044284wru.6
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 08:55:50 -0700 (PDT)
+Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E6EAC02F007
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:43:43 -0700 (PDT)
+Received: by mail-pl1-x642.google.com with SMTP id d10so7182720pls.5
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:43:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZLYf85kR83hcUBrWvAXG8Wj7+vy80vScSZPRychjVjA=;
-        b=LWJedSK7vsBqcOAmUtGOZfumg1m6WZSEpuhdmRAZmilonlGtrZ+oyu4Xmq4qljvXoz
-         fxFmvJ8dcvonuqckrIidX/9KdbFm4+bh3/izrA9XHkRvWc3/iDt9uwaOcc1ykoLVTyNf
-         l82zMGLrTJ25BETRb/Efx3mAGjQSdoQkMl9OzYSpqqNKEeLC2Fc5LKTv4uKVg6ckhMj/
-         lskq7ye7Eyddf5MSKTzh1a9kEbgaioraiu4/pmNoC5NeU5xoEnujNhFEB8NU+VKbszRl
-         x3j3zt80UZa2rD5u4GNWyG146Vr1EuG/uhncqg/fHQyFVr8Flr8TpyI59Z7krJmMqBmk
-         zTNQ==
+        d=pesu-pes-edu.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jLORGp6VfrDrQA8PpUsXn5+mhrmQSe4/xK3Vs+cmlnA=;
+        b=CN262X2BWpTSqbB1xZLnzt3P6PXjtlLIfYiIegWD8/RQLngh8QXv28Rke8t+T7ErjV
+         0xoehil5YqUKWFNf9122vK/5Bl/5hRrynVReUB3J5JnMTxyoit84XWPf/TXz1ioFztsx
+         AHVRLwqLna0A2h1BfWLa6SpiqcFSvanAVPhajVV+GYLDx6Q8/BDHlmGdGmlSXzWQ/ZTX
+         IFWxdidVNy4yIbMMgL2eFDLZh1gon3kWRo1AzuR3WxbQGW5UDDAdyMMFy5F/qo91WYm7
+         qo+N+qOh3A/N7rL4UKaOo4Xf7ki/gntOiUCTeRRDcT02wPU4+AzS2xOjl9YaWxHfl1JS
+         T3HA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZLYf85kR83hcUBrWvAXG8Wj7+vy80vScSZPRychjVjA=;
-        b=Ivklo+SHhXxzSQzRlGwK46KmwlfuND7RpvDyVC26eU8gHQaAMFQHmJhHGT+tolEAX2
-         7vNLVP00XlV+rXK3dbAddO7nmY6HxCJ4bhps3gLJk6BroB/R4jCUJ0C0034putHe9YD4
-         hI/U7IAUgXgOBDDgMTaPk04QguN0AvlO70GdJBZBtj602K1UaTmc0ppVkgaZHwWm6hPq
-         JOx/btoKk9aYWokZRbUVbJsflvbR1vz/fh8cZOydT2okHQ1Q+7BJkLiPKOdA1J0RBRn3
-         cEgXthSJ9Bj84dCjgsXvOVQMxgt/h/r+DeqEhxmcfZ4bwABHtnEHwnazhzicWHxHfwG8
-         xCOg==
-X-Gm-Message-State: AOAM531ZcGobE8OfGoBodzqTQs6AgaPx5e12gUmxHX6zMGq+V3E+d2NN
-        18dKntmI6PQUs3xHjQbYxLY6t2ElqK4/nU7UxjnXpg==
-X-Google-Smtp-Source: ABdhPJz9h6Cq1FWLxlQEINaOnw/gdytwi8Ik6QwjWFXm6YyNY7WE8CKP9YxrAml4Sjw812CKlTvMnxmA4R2YZ4kzcbg=
-X-Received: by 2002:adf:df03:: with SMTP id y3mr16828999wrl.376.1593446149156;
- Mon, 29 Jun 2020 08:55:49 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jLORGp6VfrDrQA8PpUsXn5+mhrmQSe4/xK3Vs+cmlnA=;
+        b=qCVPkv8JqWMRbYUhK8LMeic1idMygjtLPoqEY8kSXLMvbdi5AUZZmXX2RWIkVU7Xmd
+         C06O3edf+tWXQsN89QxxzUdbmMMo7nZmtadX/YB/vbm+LJ67zNB8RFEznHhBG0xFg1AI
+         2toGKbAutoYCgbXoffUTJ1gHvgJa504mEAIQahwQwSDOEq5HByKyAhzph2jzWrrxTtn5
+         ep5bDyu2sGpx4mUOpiMr4HpN0lx1Xd8LrhyEI+3jAxuzZApivkW/8DFLe0j6M52X5yC2
+         We4uN+JQyY9eSHdtxUi6muFOXbBd5sx4lXpHpSIHfIIPSsiKoMetGdFpozsEZfy1YYym
+         E6gQ==
+X-Gm-Message-State: AOAM53074DSoCv9FTIFvO9cXhJJEePTA0yOJoIubeiWkAHqAtl0v9SEr
+        aKFVMctJLBSWgBucoxsjC2LdJQ==
+X-Google-Smtp-Source: ABdhPJyirQnsQiQuhswSo/uIYV1ui5LyLyvg/sRt0KpvA9WEl1ByzdHprHAFfNPsV1N0i2xDWfS+Eg==
+X-Received: by 2002:a17:90a:a413:: with SMTP id y19mr4591589pjp.59.1593441822678;
+        Mon, 29 Jun 2020 07:43:42 -0700 (PDT)
+Received: from localhost ([2406:7400:73:703c:908:f18a:1156:5c38])
+        by smtp.gmail.com with ESMTPSA id s9sm101062pgo.22.2020.06.29.07.43.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 07:43:41 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 10:43:36 -0400
+From:   B K Karthik <bkkarthik@pesu.pes.edu>
+To:     B K Karthik <karthik.bk2000@live.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: media: atomisp: i2c: atomisp-ov2680.c: fixed a
+ brace coding style issue.
+Message-ID: <20200629144336.fhykjoqrhfhifmes@pesu-pes-edu>
+References: <20200628043833.3dodctrmkec6aoe5@pesu-pes-edu>
 MIME-Version: 1.0
-References: <20200626194720.2915044-1-jolsa@kernel.org> <20200626194720.2915044-8-jolsa@kernel.org>
- <CAP-5=fUB3cs7Px6NkpBtWaWdR5-qQGAd2hAGjQjyMJt=bDKXOA@mail.gmail.com> <20200628215507.GM2988321@krava>
-In-Reply-To: <20200628215507.GM2988321@krava>
-From:   Ian Rogers <irogers@google.com>
-Date:   Mon, 29 Jun 2020 08:55:37 -0700
-Message-ID: <CAP-5=fWLYkxYbc8Qtk331X4_HudO=NukEzSDiJXF=rf2Tghovg@mail.gmail.com>
-Subject: Re: [PATCH 07/10] perf tools: Collect other metrics in struct metric_expr
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kajol Jain <kjain@linux.ibm.com>,
-        John Garry <john.garry@huawei.com>,
-        "Paul A. Clarke" <pc@us.ibm.com>,
-        Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="i3ho2sv5roir6t7m"
+Content-Disposition: inline
+In-Reply-To: <20200628043833.3dodctrmkec6aoe5@pesu-pes-edu>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 28, 2020 at 2:55 PM Jiri Olsa <jolsa@redhat.com> wrote:
->
-> On Fri, Jun 26, 2020 at 02:10:57PM -0700, Ian Rogers wrote:
-> > On Fri, Jun 26, 2020 at 12:48 PM Jiri Olsa <jolsa@kernel.org> wrote:
-> > >
-> > > Add 'other' metrics into struct metric_expr object,
-> > > so they are accessible when computing the metric.
-> > >
-> > > Storing just name and expression itself, so the metric
-> > > can be resolved and computed.
-> >
-> > Nit, other vs something like referenced_metric but otherwise lgtm.
->
-> I'd like to keep metric prefix
->
->   struct metric_ref ?
 
-Sounds good to me. Thanks,
-Ian
+--i3ho2sv5roir6t7m
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> jirka
->
+Did this get burried in along with a bunch of other patches? I am sending t=
+his email only because I did not recieve a negetive acknowledgement on the =
+patch.
+
+I apologize if this message was hurtful / disrespectfull in any manner,
+thank you for reading this message.
+
+karthik
+
+On 20/06/28 12:38AM, B K Karthik wrote:
+> Fixed a coding style issue.
+>=20
+> Signed-off-by: B K Karthik <karthik.bk2000@live.com>
+> ---
+>  drivers/staging/media/atomisp/i2c/atomisp-ov2680.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/staging/media/atomisp/i2c/atomisp-ov2680.c b/drivers=
+/staging/media/atomisp/i2c/atomisp-ov2680.c
+> index 90d125ba080f..c90730513438 100644
+> --- a/drivers/staging/media/atomisp/i2c/atomisp-ov2680.c
+> +++ b/drivers/staging/media/atomisp/i2c/atomisp-ov2680.c
+> @@ -495,11 +495,11 @@ static int ov2680_h_flip(struct v4l2_subdev *sd, s3=
+2 value)
+>  	ret =3D ov2680_read_reg(client, 1, OV2680_MIRROR_REG, &val);
+>  	if (ret)
+>  		return ret;
+> -	if (value) {
+> +	if (value)
+>  		val |=3D OV2680_FLIP_MIRROR_BIT_ENABLE;
+> -	} else {
+> +	else
+>  		val &=3D ~OV2680_FLIP_MIRROR_BIT_ENABLE;
+> -	}
+> +
+>  	ret =3D ov2680_write_reg(client, 1,
+>  			       OV2680_MIRROR_REG, val);
+>  	if (ret)
+> --
+> 2.20.1
+
+
+
+--i3ho2sv5roir6t7m
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQGzBAEBCgAdFiEEpIrzAt4LvWLJmKjp471Q5AHeZ2oFAl75/hgACgkQ471Q5AHe
+Z2o9Zwv/W+4Q3b66dFYLTKnXoigYHIbecsuAc0LMW5V2VSXQJ8dq+DsCFvawZMh3
+UmbKaZsk033rYkKxbc1rubekPkm1eQ0kAY2iG6j+sIPnYtlUpkLRT6fU6vclZkAO
+gliHVAn1j0aB483pR6TJY0ek+ieMra9a7cetHsDHwzjdFQsheKDmEvtwjSYo5CCY
+0gImXtqo0md5TaiCmATWZ8GA6iOFcgOA+AHxhHN/s/SJ+CmZ2Ep4JGbPiaOCZcvq
+YjwBI15IiHVfJ8DDiYbemJvZRkZdKmgh8oIFDKS0jyFcGBn6fBkhWregLs9tqhyu
+PaSgKyS4nCIXL0mSDv87nPH8pq8DTfmFb6LEA09slsKzwMBUgESCywCLX0jiWTSn
+q0Y+CaE5mdKQBkOkizun3BuHbu43YDHKTy4qHNBDnTrLdltAKFjvxfvh6Sixfsvj
+1tEo886KYQETUjkIdmdCkjs5FT5uRDF+XGjCH2MxY/uxmq/LkxMOLY/IMGjMPf9U
+TkhSrXDs
+=Ikkk
+-----END PGP SIGNATURE-----
+
+--i3ho2sv5roir6t7m--
