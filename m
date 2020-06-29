@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE6BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:56:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8639EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:57:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AD8420674
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:56:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6756A20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:57:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460618;
-	bh=8CWrnoZjvbvp1XGWiHnOivYZmItC6ki18O8fBSx/xcE=;
+	s=default; t=1593460625;
+	bh=7Bk9ZxxCMy936t5uvireMWAe3g6G4GcYr2AKjQrRcZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FkI+6WvNp6GGb13rktlNQbNlXNfWahukXJraUFj4HRZIBRAAg4QWecsZEXarrEoaB
-	 01krwVhbB2NBjuAPHCBP6tIkJJwrfKBpAEsSoSKez22jhhE+p2g5cw+uk0qI+CI+WX
-	 a7sWa8HsuASOOBPiFL836TCTG+RtPLut7wfk5a0Q=
+	b=cAXC8VhoIzGqeeaa4zwb1bGJfnzqAtJCj+6Xn4QDTa3X4cKxrDMk+XafWDo23FM0T
+	 n0wKk3JhkCmm9HggpPh1b4Wwuwyq/wdA9CbaXnlSqOoK1UmynoVAZTdRux1XY3wd8B
+	 Pqp/sYDC792+UOouAyW0S2+NEXwIRS+DCEP6E1k0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387639AbgF2T4s (ORCPT
+        id S2387693AbgF2T5D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:56:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47674 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:57:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387630AbgF2TkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387646AbgF2TkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA665248CC;
-        Mon, 29 Jun 2020 15:27:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28A7E2487B;
+        Mon, 29 Jun 2020 15:26:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444423;
-        bh=8CWrnoZjvbvp1XGWiHnOivYZmItC6ki18O8fBSx/xcE=;
+        s=default; t=1593444377;
+        bh=7Bk9ZxxCMy936t5uvireMWAe3g6G4GcYr2AKjQrRcZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zNDgylcG3KCTnpj6qww2m6LTXx1pWKs7B7eEeDrccl9td5EZ/xOXgoEysgxXf/6Jn
-         pvqaiGs9FR6AaY9ZLXZJA1kvWJH+/+0iGzCIhwj6v4WKbf8GKaFujZtkKXqVjurp/+
-         jeXRHOFhr5KhbTbeSSmGwT75PvpZJQucEDU14+Ws=
+        b=SJ7i3k3z8AL5eYkXnb18n154xa3MEzhT1kLTq50sZogCcursFN1uqjtEnqeFp+pjI
+         b0cOUh31xUa6yjU9Z89awHI6sL+1jSnRPLtAwZxHJvgk8P8H8HSfochfOREbHsQPqR
+         Bcr77zeeUMrClCn3Ept4KWzRy4DjvQ1wXCKbgI3Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     SeongJae Park <sjpark@amazon.de>,
-        James Smart <james.smart@broadcom.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 101/178] scsi: lpfc: Avoid another null dereference in lpfc_sli4_hba_unset()
-Date:   Mon, 29 Jun 2020 11:24:06 -0400
-Message-Id: <20200629152523.2494198-102-sashal@kernel.org>
+Cc:     Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.4 054/178] xhci: Fix incorrect EP_STATE_MASK
+Date:   Mon, 29 Jun 2020 11:23:19 -0400
+Message-Id: <20200629152523.2494198-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -66,45 +64,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: SeongJae Park <sjpark@amazon.de>
+From: Mathias Nyman <mathias.nyman@linux.intel.com>
 
-[ Upstream commit 46da547e21d6cefceec3fb3dba5ebbca056627fc ]
+commit dceea67058fe22075db3aed62d5cb62092be5053 upstream.
 
-Commit cdb42becdd40 ("scsi: lpfc: Replace io_channels for nvme and fcp with
-general hdw_queues per cpu") has introduced static checker warnings for
-potential null dereferences in 'lpfc_sli4_hba_unset()' and commit 1ffdd2c0440d
-("scsi: lpfc: resolve static checker warning in lpfc_sli4_hba_unset") has
-tried to fix it.  However, yet another potential null dereference is
-remaining.  This commit fixes it.
+EP_STATE_MASK should be 0x7 instead of 0xf
 
-This bug was discovered and resolved using Coverity Static Analysis
-Security Testing (SAST) by Synopsys, Inc.
+xhci spec 6.2.3 shows that the EP state field in the endpoint context data
+structure consist of bits [2:0].
+The old value included a bit from the next field which fortunately is a
+ RsvdZ region. So hopefully this hasn't caused too much harm
 
-Link: https://lore.kernel.org/r/20200623084122.30633-1-sjpark@amazon.com
-Fixes: 1ffdd2c0440d ("scsi: lpfc: resolve static checker warning inlpfc_sli4_hba_unset")
-Fixes: cdb42becdd40 ("scsi: lpfc: Replace io_channels for nvme and fcp with general hdw_queues per cpu")
-Reviewed-by: James Smart <james.smart@broadcom.com>
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20200624135949.22611-2-mathias.nyman@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/scsi/lpfc/lpfc_init.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/usb/host/xhci.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
-index 14d9f41977f1c..95abffd9ad100 100644
---- a/drivers/scsi/lpfc/lpfc_init.c
-+++ b/drivers/scsi/lpfc/lpfc_init.c
-@@ -11542,7 +11542,8 @@ lpfc_sli4_hba_unset(struct lpfc_hba *phba)
- 	lpfc_sli4_xri_exchange_busy_wait(phba);
- 
- 	/* per-phba callback de-registration for hotplug event */
--	lpfc_cpuhp_remove(phba);
-+	if (phba->pport)
-+		lpfc_cpuhp_remove(phba);
- 
- 	/* Disable PCI subsystem interrupt */
- 	lpfc_sli4_disable_intr(phba);
+diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
+index 23a1abdc2b43c..c656b41b57b5a 100644
+--- a/drivers/usb/host/xhci.h
++++ b/drivers/usb/host/xhci.h
+@@ -716,7 +716,7 @@ struct xhci_ep_ctx {
+  * 4 - TRB error
+  * 5-7 - reserved
+  */
+-#define EP_STATE_MASK		(0xf)
++#define EP_STATE_MASK		(0x7)
+ #define EP_STATE_DISABLED	0
+ #define EP_STATE_RUNNING	1
+ #define EP_STATE_HALTED		2
 -- 
 2.25.1
 
