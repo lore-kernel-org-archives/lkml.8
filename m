@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D325DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61585C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:06:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E17C2076C
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 410112076C
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:06:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468369;
-	bh=rddvpDfFVekss7/Pg3s+lxXRzrKvxWRTL8sw+yvTBNE=;
+	s=default; t=1593468372;
+	bh=INU/ZsiYOml/6d6tHQAqOPfMSK47ZEQKhA8RjgFMxjE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1jUQj7LtnNYgiCejpmUUpecfYX/yemeFTQv4VgMR9UpJioPsRuKfCpgQ4JmxdBq0o
-	 3pW5wlxi9TLUbBdH3jL27xujxjEjyoOZfUqYPh368MEmOOqeGvrsIrzPYfIYP8HbxA
-	 P5QQBJz2CdE7qsd9z54LF7eeuMvSKQqX9QXkTMCQ=
+	b=Q0Drkon5ZZnrMJkYyw48TGOR933P6QBDPMRo7+/WujRfW0sbTQro0m7N0YwkVlzoL
+	 nYeFXExAW6hqXD/9WLVLTZ/befWutQ5ummXuoJ0cJa2dx52f1Fmu3w12ljhGXywkUR
+	 iyMiT6/FueViMAAIrg2NScbBkdR8+PQpvBoG7pyQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391898AbgF2WGH (ORCPT
+        id S1726482AbgF2WGL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:06:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56764 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:06:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726145AbgF2SfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726144AbgF2SfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 113D724755;
-        Mon, 29 Jun 2020 15:21:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 946BE247E9;
+        Mon, 29 Jun 2020 15:22:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444073;
-        bh=rddvpDfFVekss7/Pg3s+lxXRzrKvxWRTL8sw+yvTBNE=;
+        s=default; t=1593444154;
+        bh=INU/ZsiYOml/6d6tHQAqOPfMSK47ZEQKhA8RjgFMxjE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HPq7tQrKCGW5yJxmBMB1C6Qy3oDphoP7efwrKigsqu/Q80VdUW8bwTy/8qz4HLaJ6
-         /DStQaXbwRFUi1hyyqfdYC2p9FHrFelCdUEZ2p9832so7GUupQiM6D02jndZS3yd7X
-         A4WH/qwHrQ4zvOMDy9diT7R4DNcaqZ6NkXsjpxhU=
+        b=f2PCDCX0jqkYgPZqHTVVShVaHhKofAN3Ma9plK/dvZueItgSBqTIKisl9r0y7R5R2
+         LKR+Hzr6KqSGD/jSqmsxlirD6DwJVE7WtAkEcNpE4RhBaxD5+9g4BIw37dmF62isQb
+         mGMGgi4sj/Ti3H5MPtjJS6/SfuonA8I+D01FBmos=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 182/265] sata_rcar: handle pm_runtime_get_sync failure cases
-Date:   Mon, 29 Jun 2020 11:16:55 -0400
-Message-Id: <20200629151818.2493727-183-sashal@kernel.org>
+Cc:     Olga Kornievskaia <olga.kornievskaia@gmail.com>,
+        Olga Kornievskaia <kolga@netapp.com>,
+        Neil Brown <neilb@suse.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 260/265] NFSv4 fix CLOSE not waiting for direct IO compeletion
+Date:   Mon, 29 Jun 2020 11:18:13 -0400
+Message-Id: <20200629151818.2493727-261-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -64,66 +67,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Olga Kornievskaia <olga.kornievskaia@gmail.com>
 
-[ Upstream commit eea1238867205b9e48a67c1a63219529a73c46fd ]
+commit d03727b248d0dae6199569a8d7b629a681154633 upstream.
 
-Calling pm_runtime_get_sync increments the counter even in case of
-failure, causing incorrect ref count. Call pm_runtime_put if
-pm_runtime_get_sync fails.
+Figuring out the root case for the REMOVE/CLOSE race and
+suggesting the solution was done by Neil Brown.
 
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Currently what happens is that direct IO calls hold a reference
+on the open context which is decremented as an asynchronous task
+in the nfs_direct_complete(). Before reference is decremented,
+control is returned to the application which is free to close the
+file. When close is being processed, it decrements its reference
+on the open_context but since directIO still holds one, it doesn't
+sent a close on the wire. It returns control to the application
+which is free to do other operations. For instance, it can delete a
+file. Direct IO is finally releasing its reference and triggering
+an asynchronous close. Which races with the REMOVE. On the server,
+REMOVE can be processed before the CLOSE, failing the REMOVE with
+EACCES as the file is still opened.
+
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+Suggested-by: Neil Brown <neilb@suse.com>
+CC: stable@vger.kernel.org
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/ata/sata_rcar.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ fs/nfs/direct.c | 13 +++++++++----
+ fs/nfs/file.c   |  1 +
+ 2 files changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/ata/sata_rcar.c b/drivers/ata/sata_rcar.c
-index 980aacdbcf3b4..141ac600b64c8 100644
---- a/drivers/ata/sata_rcar.c
-+++ b/drivers/ata/sata_rcar.c
-@@ -907,7 +907,7 @@ static int sata_rcar_probe(struct platform_device *pdev)
- 	pm_runtime_enable(dev);
- 	ret = pm_runtime_get_sync(dev);
- 	if (ret < 0)
--		goto err_pm_disable;
-+		goto err_pm_put;
+diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
+index d49b1d1979084..f0c3f0123131e 100644
+--- a/fs/nfs/direct.c
++++ b/fs/nfs/direct.c
+@@ -267,8 +267,6 @@ static void nfs_direct_complete(struct nfs_direct_req *dreq)
+ {
+ 	struct inode *inode = dreq->inode;
  
- 	host = ata_host_alloc(dev, 1);
- 	if (!host) {
-@@ -937,7 +937,6 @@ static int sata_rcar_probe(struct platform_device *pdev)
+-	inode_dio_end(inode);
+-
+ 	if (dreq->iocb) {
+ 		long res = (long) dreq->error;
+ 		if (dreq->count != 0) {
+@@ -280,7 +278,10 @@ static void nfs_direct_complete(struct nfs_direct_req *dreq)
  
- err_pm_put:
- 	pm_runtime_put(dev);
--err_pm_disable:
- 	pm_runtime_disable(dev);
- 	return ret;
+ 	complete(&dreq->completion);
+ 
++	igrab(inode);
+ 	nfs_direct_req_release(dreq);
++	inode_dio_end(inode);
++	iput(inode);
  }
-@@ -991,8 +990,10 @@ static int sata_rcar_resume(struct device *dev)
- 	int ret;
  
- 	ret = pm_runtime_get_sync(dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put(dev);
- 		return ret;
-+	}
+ static void nfs_direct_read_completion(struct nfs_pgio_header *hdr)
+@@ -410,8 +411,10 @@ static ssize_t nfs_direct_read_schedule_iovec(struct nfs_direct_req *dreq,
+ 	 * generic layer handle the completion.
+ 	 */
+ 	if (requested_bytes == 0) {
+-		inode_dio_end(inode);
++		igrab(inode);
+ 		nfs_direct_req_release(dreq);
++		inode_dio_end(inode);
++		iput(inode);
+ 		return result < 0 ? result : -EIO;
+ 	}
  
- 	if (priv->type == RCAR_GEN3_SATA) {
- 		sata_rcar_init_module(priv);
-@@ -1017,8 +1018,10 @@ static int sata_rcar_restore(struct device *dev)
- 	int ret;
+@@ -864,8 +867,10 @@ static ssize_t nfs_direct_write_schedule_iovec(struct nfs_direct_req *dreq,
+ 	 * generic layer handle the completion.
+ 	 */
+ 	if (requested_bytes == 0) {
+-		inode_dio_end(inode);
++		igrab(inode);
+ 		nfs_direct_req_release(dreq);
++		inode_dio_end(inode);
++		iput(inode);
+ 		return result < 0 ? result : -EIO;
+ 	}
  
- 	ret = pm_runtime_get_sync(dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put(dev);
- 		return ret;
-+	}
+diff --git a/fs/nfs/file.c b/fs/nfs/file.c
+index f96367a2463e3..ccd6c1637b270 100644
+--- a/fs/nfs/file.c
++++ b/fs/nfs/file.c
+@@ -83,6 +83,7 @@ nfs_file_release(struct inode *inode, struct file *filp)
+ 	dprintk("NFS: release(%pD2)\n", filp);
  
- 	sata_rcar_setup_port(host);
- 
+ 	nfs_inc_stats(inode, NFSIOS_VFSRELEASE);
++	inode_dio_wait(inode);
+ 	nfs_file_clear_open_context(filp);
+ 	return 0;
+ }
 -- 
 2.25.1
 
