@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43167C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:34:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4026BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:34:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2485A206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:34:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 155A8206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:34:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462847;
-	bh=0TIgXh0UJBp6NZVUlhYfT7EIO63h8jLGw0n+lEZnSD8=;
+	s=default; t=1593462851;
+	bh=q+7gY2SeD3b7kSkgWYgPz2xXtwzGx94EdwIhMcM5uik=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hnVK5szPLIePiH4TIs1RHXSbk26gBgdug43tt5hjMCHxuUf4F8SgDjw7vwcpxPsUJ
-	 Y42dG0YeDl+qhcyBx1qgQTb2LaOKqfhj403bQMuj/i5SaJO4LZkBF9OjQEUr2iLIES
-	 N52buBLTjnGLrKjVd6k33ewFsn4civxZU1xC1xkw=
+	b=TkiBETTkF23hI5O5sf01nNvMOrRT7EOtFtDszKDwvT6UrXQBu4YcQBI/A0XtzdXVE
+	 o6WXUreFvCecPWYrzpEQ6umQ0loJOnkB22IqQt4Af4tHdERCnYuCRcy076Lyysja8b
+	 K/4dFF+MljFp234afWZA9OFZVCU2pv34UviPkLww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389011AbgF2UeD (ORCPT
+        id S2389211AbgF2UeJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:34:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37024 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:34:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732293AbgF2TZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732148AbgF2TZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F193253E4;
-        Mon, 29 Jun 2020 15:42:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D0BE2536A;
+        Mon, 29 Jun 2020 15:40:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445323;
-        bh=0TIgXh0UJBp6NZVUlhYfT7EIO63h8jLGw0n+lEZnSD8=;
+        s=default; t=1593445231;
+        bh=q+7gY2SeD3b7kSkgWYgPz2xXtwzGx94EdwIhMcM5uik=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ENbNF3ZVOXFhPnNTN5KKHqP7j3bc/USJxzSGJztKMaJ1vYwJWHMStFgheP1ftPq7R
-         VF+qJ7PshSfHODGDX5774jF10xscracrdc6xF7XbavyA5/gaPle2D9Kob9K4sowYMu
-         YywiP6kIQTW5TAshg2TMeVBPiRlEet63Vp/H1ils=
+        b=nck8cTMSleU48EsHuNK0M1NUUCHZ4FZIh9WhLRZQzbRlN6lS2eoswAtwS3LlFYLGK
+         skLjoYGd6UcnQQLJczQDZq/ZWLWm0bYfbHafWaqtvbVqSSZH6kQcy+dGEE/Kf6KVei
+         Stvr9Thn8g4PdruVDdnysr6GnhuK5LYbOFf3v1/Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Dmitry V. Levin" <ldv@altlinux.org>,
-        Elvira Khabirova <lineprinter@altlinux.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.9 089/191] s390: fix syscall_get_error for compat processes
-Date:   Mon, 29 Jun 2020 11:38:25 -0400
-Message-Id: <20200629154007.2495120-90-sashal@kernel.org>
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 016/191] mfd: wm8994: Fix driver operation if loaded as modules
+Date:   Mon, 29 Jun 2020 11:37:12 -0400
+Message-Id: <20200629154007.2495120-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -67,58 +66,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Dmitry V. Levin" <ldv@altlinux.org>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
 
-commit b3583fca5fb654af2cfc1c08259abb9728272538 upstream.
+[ Upstream commit d4f9b5428b53dd67f49ee8deed8d4366ed6b1933 ]
 
-If both the tracer and the tracee are compat processes, and gprs[2]
-is assigned a value by __poke_user_compat, then the higher 32 bits
-of gprs[2] are cleared, IS_ERR_VALUE() always returns false, and
-syscall_get_error() always returns 0.
+WM8994 chip has built-in regulators, which might be used for chip
+operation. They are controlled by a separate wm8994-regulator driver,
+which should be loaded before this driver calls regulator_get(), because
+that driver also provides consumer-supply mapping for the them. If that
+driver is not yet loaded, regulator core substitute them with dummy
+regulator, what breaks chip operation, because the built-in regulators are
+never enabled. Fix this by annotating this driver with MODULE_SOFTDEP()
+"pre" dependency to "wm8994_regulator" module.
 
-Fix the implementation by sign-extending the value for compat processes
-the same way as x86 implementation does.
-
-The bug was exposed to user space by commit 201766a20e30f ("ptrace: add
-PTRACE_GET_SYSCALL_INFO request") and detected by strace test suite.
-
-This change fixes strace syscall tampering on s390.
-
-Link: https://lkml.kernel.org/r/20200602180051.GA2427@altlinux.org
-Fixes: 753c4dd6a2fa2 ("[S390] ptrace changes")
-Cc: Elvira Khabirova <lineprinter@altlinux.org>
-Cc: stable@vger.kernel.org # v2.6.28+
-Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Acked-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/include/asm/syscall.h | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/mfd/wm8994-core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/s390/include/asm/syscall.h b/arch/s390/include/asm/syscall.h
-index 6bc941be69217..166fbd74e316c 100644
---- a/arch/s390/include/asm/syscall.h
-+++ b/arch/s390/include/asm/syscall.h
-@@ -41,7 +41,17 @@ static inline void syscall_rollback(struct task_struct *task,
- static inline long syscall_get_error(struct task_struct *task,
- 				     struct pt_regs *regs)
- {
--	return IS_ERR_VALUE(regs->gprs[2]) ? regs->gprs[2] : 0;
-+	unsigned long error = regs->gprs[2];
-+#ifdef CONFIG_COMPAT
-+	if (test_tsk_thread_flag(task, TIF_31BIT)) {
-+		/*
-+		 * Sign-extend the value so (int)-EFOO becomes (long)-EFOO
-+		 * and will match correctly in comparisons.
-+		 */
-+		error = (long)(int)error;
-+	}
-+#endif
-+	return IS_ERR_VALUE(error) ? error : 0;
- }
- 
- static inline long syscall_get_return_value(struct task_struct *task,
+diff --git a/drivers/mfd/wm8994-core.c b/drivers/mfd/wm8994-core.c
+index 8588dbad33011..925c1828ec288 100644
+--- a/drivers/mfd/wm8994-core.c
++++ b/drivers/mfd/wm8994-core.c
+@@ -698,3 +698,4 @@ module_i2c_driver(wm8994_i2c_driver);
+ MODULE_DESCRIPTION("Core support for the WM8994 audio CODEC");
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("Mark Brown <broonie@opensource.wolfsonmicro.com>");
++MODULE_SOFTDEP("pre: wm8994_regulator");
 -- 
 2.25.1
 
