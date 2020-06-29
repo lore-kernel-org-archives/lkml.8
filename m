@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89303C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB0CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:27:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 629D820663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:27:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 739FE20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:27:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593458846;
-	bh=n1Cc7AO/NCJwt7ao+2iFJ8N6fB59Qxob9gL4uCsLVIU=;
+	s=default; t=1593458851;
+	bh=3G6RcH4HFEvNVyVbppRrb++MZ9amUYbAvaaqBJgKZp0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r+KeV7S+rtQSYXqLdfKK358TxEAw92mhDsnrgR5kLBPig6UttmXz0Yqs1uG/EGxLb
-	 Y+KoA4bwoS9NvZCrpIijgCFwR4IBMYk/OJ3Rqfc94krsmfwT9llOFvVChxwQw34bVf
-	 DmYSD4/Fe+hZNbNr32KjJ+LmCeaJE/puQz3GRzTI=
+	b=iML2qKPUbZtmoUCgBOACYjci7T7jhTWmMmHsnq9OE/UjinAxsASohq9GKZZVHK7fu
+	 BBLb8SNgAiGy5vT+0Y3puZnMQO+ueDJ27xunrPYeU6qgzjO40gZe4RrchbynZQkvDp
+	 EGPS23IVBXc/yf8RJeCaspmv8m+js8GeYQ22aPmo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730919AbgF2T1Y (ORCPT
+        id S1732438AbgF2T1a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:27:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37072 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:27:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732667AbgF2TZn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732241AbgF2TZn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E63D32538E;
-        Mon, 29 Jun 2020 15:40:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEDEA2540D;
+        Mon, 29 Jun 2020 15:42:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445258;
-        bh=n1Cc7AO/NCJwt7ao+2iFJ8N6fB59Qxob9gL4uCsLVIU=;
+        s=default; t=1593445357;
+        bh=3G6RcH4HFEvNVyVbppRrb++MZ9amUYbAvaaqBJgKZp0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o/uNSMtSrWPXkU4OzSBa9I1luj320nFzd7wwAtANe+YID7iag+OtbJCNcerkuOPoV
-         Hc+dD8HiiQaxio6zH/LJQfcXWNlzwK/WIpkKKR7bDaivB4Sny9TiftQa5j03ZAPXwk
-         4+v58WNqLD8jhcrNSTa0IFeBnnShW7alQ3h0bBQM=
+        b=jcMR9is4TB708HxPYCmsgOq+7D2N3n2/vcVInTfIuBjPUBi7gExCrHms7wZNBpDiR
+         6sXLdEnzaRcSov+mvGoRn436UnN5JgjTIm1DJlS7JkYca0R+yf7SC65/ZQLMToYdJj
+         Xkw6uaDJqI3pO/HudMxMrGdz26Ma25rmVblwl8AE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tero Kristo <t-kristo@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 039/191] clk: ti: composite: fix memory leak
-Date:   Mon, 29 Jun 2020 11:37:35 -0400
-Message-Id: <20200629154007.2495120-40-sashal@kernel.org>
+Cc:     Jaedon Shin <jaedon.shin@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.9 115/191] media: dvb_frontend: Add compat_ioctl callback
+Date:   Mon, 29 Jun 2020 11:38:51 -0400
+Message-Id: <20200629154007.2495120-116-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -67,36 +66,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tero Kristo <t-kristo@ti.com>
+From: Jaedon Shin <jaedon.shin@gmail.com>
 
-[ Upstream commit c7c1cbbc9217ebb5601b88d138d4a5358548de9d ]
+commit c2dfd2276cec63a0c6f6ce18ed83800d96fde542 upstream
 
-The parent_names is never released for a component clock definition,
-causing some memory leak. Fix by releasing it once it is no longer
-needed.
+Adds compat_ioctl for 32-bit user space applications on a 64-bit system.
 
-Reported-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
-Link: https://lkml.kernel.org/r/20200429131341.4697-2-t-kristo@ti.com
-Acked-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+[m.chehab@osg.samsung.com: add missing include compat.h]
+Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/clk/ti/composite.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/dvb-core/dvb_frontend.c | 12 ++++++++++++
+ fs/compat_ioctl.c                     | 17 -----------------
+ 2 files changed, 12 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/clk/ti/composite.c b/drivers/clk/ti/composite.c
-index 1cf70f452e1e6..3725b2e0c7887 100644
---- a/drivers/clk/ti/composite.c
-+++ b/drivers/clk/ti/composite.c
-@@ -226,6 +226,7 @@ static void __init _register_composite(struct clk_hw *hw,
- 		if (!cclk->comp_clks[i])
- 			continue;
- 		list_del(&cclk->comp_clks[i]->link);
-+		kfree(cclk->comp_clks[i]->parent_names);
- 		kfree(cclk->comp_clks[i]);
- 	}
+diff --git a/drivers/media/dvb-core/dvb_frontend.c b/drivers/media/dvb-core/dvb_frontend.c
+index dacc467e24af2..c0a25cd6ccb8b 100644
+--- a/drivers/media/dvb-core/dvb_frontend.c
++++ b/drivers/media/dvb-core/dvb_frontend.c
+@@ -41,6 +41,7 @@
+ #include <linux/jiffies.h>
+ #include <linux/kthread.h>
+ #include <linux/ktime.h>
++#include <linux/compat.h>
+ #include <asm/processor.h>
  
+ #include "dvb_frontend.h"
+@@ -1981,6 +1982,14 @@ static long dvb_frontend_ioctl(struct file *file, unsigned int cmd,
+ 	return dvb_usercopy(file, cmd, arg, dvb_frontend_do_ioctl);
+ }
+ 
++#ifdef CONFIG_COMPAT
++static long dvb_frontend_compat_ioctl(struct file *file, unsigned int cmd,
++				      unsigned long arg)
++{
++	return dvb_frontend_ioctl(file, cmd, (unsigned long)compat_ptr(arg));
++}
++#endif
++
+ static int dtv_set_frontend(struct dvb_frontend *fe)
+ {
+ 	struct dvb_frontend_private *fepriv = fe->frontend_priv;
+@@ -2651,6 +2660,9 @@ static int dvb_frontend_release(struct inode *inode, struct file *file)
+ static const struct file_operations dvb_frontend_fops = {
+ 	.owner		= THIS_MODULE,
+ 	.unlocked_ioctl	= dvb_frontend_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl	= dvb_frontend_compat_ioctl,
++#endif
+ 	.poll		= dvb_frontend_poll,
+ 	.open		= dvb_frontend_open,
+ 	.release	= dvb_frontend_release,
+diff --git a/fs/compat_ioctl.c b/fs/compat_ioctl.c
+index 02ac9067a3542..9fa3285425fef 100644
+--- a/fs/compat_ioctl.c
++++ b/fs/compat_ioctl.c
+@@ -1340,23 +1340,6 @@ COMPATIBLE_IOCTL(DMX_GET_PES_PIDS)
+ COMPATIBLE_IOCTL(DMX_GET_CAPS)
+ COMPATIBLE_IOCTL(DMX_SET_SOURCE)
+ COMPATIBLE_IOCTL(DMX_GET_STC)
+-COMPATIBLE_IOCTL(FE_GET_INFO)
+-COMPATIBLE_IOCTL(FE_DISEQC_RESET_OVERLOAD)
+-COMPATIBLE_IOCTL(FE_DISEQC_SEND_MASTER_CMD)
+-COMPATIBLE_IOCTL(FE_DISEQC_RECV_SLAVE_REPLY)
+-COMPATIBLE_IOCTL(FE_DISEQC_SEND_BURST)
+-COMPATIBLE_IOCTL(FE_SET_TONE)
+-COMPATIBLE_IOCTL(FE_SET_VOLTAGE)
+-COMPATIBLE_IOCTL(FE_ENABLE_HIGH_LNB_VOLTAGE)
+-COMPATIBLE_IOCTL(FE_READ_STATUS)
+-COMPATIBLE_IOCTL(FE_READ_BER)
+-COMPATIBLE_IOCTL(FE_READ_SIGNAL_STRENGTH)
+-COMPATIBLE_IOCTL(FE_READ_SNR)
+-COMPATIBLE_IOCTL(FE_READ_UNCORRECTED_BLOCKS)
+-COMPATIBLE_IOCTL(FE_SET_FRONTEND)
+-COMPATIBLE_IOCTL(FE_GET_FRONTEND)
+-COMPATIBLE_IOCTL(FE_GET_EVENT)
+-COMPATIBLE_IOCTL(FE_DISHNETWORK_SEND_LEGACY_CMD)
+ COMPATIBLE_IOCTL(VIDEO_STOP)
+ COMPATIBLE_IOCTL(VIDEO_PLAY)
+ COMPATIBLE_IOCTL(VIDEO_FREEZE)
 -- 
 2.25.1
 
