@@ -2,108 +2,107 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E523C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6F76C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:41:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20C3920656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:41:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466899;
-	bh=NgETdEp/TPGsMKNJQFJucR9ZSygTH08g48sTzqUJy8M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=M4prtf6afUuzqV2TmRRwjhkNMlEk2TohpW992kfooHrqxvhZztu5XKUDHrWL71AGH
-	 4ysd1EamDCMxQtCFSTT4gRyx4AFu1YtnyrIeQDOIKIFDnXD0kvbtmtdJKqW0z3qNf4
-	 HrCGDtbLhJl8NJCzZlC++91VTroMbEWdxrGHJROk=
+	by mail.kernel.org (Postfix) with ESMTP id C32A42063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:41:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pVTf/0go"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403903AbgF2Vlh (ORCPT
+        id S1727948AbgF2SjV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:41:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60596 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726118AbgF2SkR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:40:17 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9501723370;
-        Mon, 29 Jun 2020 08:41:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593420062;
-        bh=NgETdEp/TPGsMKNJQFJucR9ZSygTH08g48sTzqUJy8M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VfCp9hE0U1V55QP8CtGkrKq/7ClTTCkOVeDpojaZzjd7aUXx+6pITg+YyxFaYu4jr
-         naHIJq0reLlZHSS6rTDqZoD6oWcAgnDmap4zDCam+du0CHBSo+I67WBnoXL2IzwO6f
-         66sWli0Vhn6A4ZyHu6XwMOh6ciaE6hDAN4crXajo=
-Date:   Mon, 29 Jun 2020 10:40:51 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     sean.wang@mediatek.com, robh+dt@kernel.org, jslaby@suse.com,
-        robert.jarzmik@free.fr, arnd@arndb.de, p.zabel@pengutronix.de,
-        joel@jms.id.au, david@lechnology.com, jan.kiszka@siemens.com,
-        heikki.krogerus@linux.intel.com, hpeter@gmail.com, vigneshr@ti.com,
-        matthias.bgg@gmail.com, tthayer@opensource.altera.com,
-        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Steven Liu <steven.liu@mediatek.com>,
-        Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: [PATCH v4] tty: serial: don't do termios for BTIF
-Message-ID: <20200629084051.GA1234189@kroah.com>
-References: <78efa2b1e2599deff4d838b05b4054ec5ac2976a.1592595601.git.sean.wang@mediatek.com>
- <20200627141222.GC1901451@kroah.com>
- <20200629082927.GA3703480@smile.fi.intel.com>
+        Mon, 29 Jun 2020 14:39:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37594 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727947AbgF2Sh7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:37:59 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 116DFC02A558
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 06:10:13 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id y18so9016599lfh.11
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 06:10:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jr1nek3J8zYrEJUnEDGgWevLtl77KOHWAeMwQjMSDdA=;
+        b=pVTf/0go2c42RtZJAsf+7SPFbpXnMlAHaciCTkREVPwihX8fWC2JlSPaEQKBQ/aAJN
+         5SxsxtgI7FpQUeWLyU1wFDJ2vB0FNaxbrWABYoO26pAL5FpLYvlJE1q3MiQxgjgLGprm
+         xlVWz43m6SWWCSyxCgCvNZtM+U813ehNZ4XALmQxInpS92F4SOVSKTjitku0R8wLOIJq
+         LZmOqql2/CeZZsaggx9uhv7Cew+YebAMKjAeHsa31HD+lfwU9Yi037GVUJm5AVDIsuOO
+         iyHJiCvI3ThpVB7bZlBW4QbASTz/1TVYbD7cR5AGWVM/lTuMOMvDCAt5TRzl5AcxePgW
+         wUmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jr1nek3J8zYrEJUnEDGgWevLtl77KOHWAeMwQjMSDdA=;
+        b=JjINrvpPkXVJrNkDnM4xfcmWa6XWXPsPUdk9544ad9BOSlJTDdquxLx3C95+3hm9ln
+         CoUAL75E1jxReiQUBvsbIZRr4bwZmEyzX/aLBVbJNTNQm31qkf6bLoMDk0UiQEuQOnzP
+         a4zK6z0v562SwL2Bo/zbg67OdBj1OGh6HmwJthXsOFf9c5eZ3cj5QFilSlq5yJUjZH4t
+         zQniGbNNI8A+xU4FfK485rl3xhHPiFVYt7oO8r6kybtrXV/DvchYrcYGpW5TDqhSlc+g
+         QmSqrBPnWfUZAQ7OUqNBn7QugZJF18xs1dIslkTILpKYC97mBBa7FWCiRYCU+5J9oTpq
+         PTpg==
+X-Gm-Message-State: AOAM533ZIGxgN/ZawqmxZ6rvvVC6A0R+ZN/ztQqHwTNZI6iWBNCZIbXx
+        YOxw5zP5k4MVS/BLC27CGi2CyonbmU/uNVOdGgo=
+X-Google-Smtp-Source: ABdhPJyKMYwlzKGDBLGeTXdwuk1wi968jDSKqlLN+LMTU4fHTuq8QJ42iNtJ48JBSb8Ib4KKwpybB4wm3thHbkt4iFU=
+X-Received: by 2002:ac2:5f04:: with SMTP id 4mr9051681lfq.140.1593436211359;
+ Mon, 29 Jun 2020 06:10:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200629082927.GA3703480@smile.fi.intel.com>
+References: <20200625140105.14999-1-TheSven73@gmail.com> <20200625140105.14999-2-TheSven73@gmail.com>
+In-Reply-To: <20200625140105.14999-2-TheSven73@gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Mon, 29 Jun 2020 10:09:59 -0300
+Message-ID: <CAOMZO5AWiHWSLAcd=dj9dDFj8jLPAVAuoiOAJ8qKGPwRq1Q41g@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] ARM: imx6plus: enable internal routing of
+ clk_enet_ref where possible
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Fugang Duan <fugang.duan@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 11:29:27AM +0300, Andy Shevchenko wrote:
-> On Sat, Jun 27, 2020 at 04:12:22PM +0200, Greg KH wrote:
-> > On Sat, Jun 20, 2020 at 03:59:14AM +0800, sean.wang@mediatek.com wrote:
-> > > From: Sean Wang <sean.wang@mediatek.com>
-> > > 
-> > > Bluetooth Interface (BTIF) is designed dedicatedly for MediaTek SOC with
-> > > BT in order to be instead of the UART interface between BT module and Host
-> > > CPU, and not exported to user space to access.
-> > > 
-> > > As the UART design, BTIF will be an APB slave and can transmit or receive
-> > > data by MCU access, but doesn't provide termios function like baudrate and
-> > > flow control setup.
-> > > 
-> > > Even LCR on offset 0xC that is just a FAKELCR
-> > > a. If FAKELCR[7] is equaled to 1, RBR(0x00), THR(0x00), IER(0x04)
-> > >    will not be readable/writable.
-> > > 
-> > > b. If FAKELCR is equaled to 0xBF, RBR(0x00), THR(0x00), IER(0x04),
-> > >    IIR(0x08), and LSR(0x14) will not be readable/writable.
-> > > 
-> > > So adding a new capability 'UART_CAP_NTIO' for the unusual unsupported
-> > > case.
-> > > 
-> > > The bluetooth driver would use BTIF device as a serdev. So the termios
-> > > still function would be called in kernelspace from ttyport_open in
-> > > drivers/tty/serdev/serdev-ttyprt.c.
-> 
-> > > +#define UART_CAP_NTIO	(1 << 18)	/* UART doesn't do termios */
-> > 
-> > Naming is hard.  I will never remember what "NTIO" is, how about we make
-> > it explicit:
-> > 	define UART_CAP_IGNORE_TERMIOS
-> > 
-> > And the _CAP_ name is getting out of hand, this isn't a "capability",
-> > it's a "quirk for this port" but that's a battle to worry about later...
-> 
-> For quirks we have a separate field in struct uart_port. Perhaps that can be used?
+Hi Sven,
 
-That would be much nicer, if possible.
+On Thu, Jun 25, 2020 at 11:01 AM Sven Van Asbroeck <thesven73@gmail.com> wrote:
+>
+> On imx6, the ethernet reference clock (clk_enet_ref) can be generated
+> by either the imx6, or an external source (e.g. an oscillator or the
+> PHY). When generated by the imx6, the clock source (from ANATOP)
+> must be routed to the input of clk_enet_ref via two pads on the SoC,
+> typically via a dedicated track on the PCB.
+>
+> On an imx6 plus however, there is a new setting which enables this
+> clock to be routed internally on the SoC, from its ANATOP clock
+> source, straight to clk_enet_ref, without having to go through
+> the SoC pads.
+>
+> Board designs where the clock is generated by the imx6 should not
+> be affected by routing the clock internally. Therefore on a plus,
+> we can enable internal routing by default.
+>
+> Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
 
-thanks,
+I have tested this series on an imx6qp sabresd and unfortunately, it
+breaks Ethernet as I can no longer get an IP address from the DHCP
+server.
 
-greg k-h
+Without this series, IP address can normally be retrieved.
+
+Therefore I suggest to create a device tree property for this feature
+and only enable it when such device tree property is present.
