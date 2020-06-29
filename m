@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A2DEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E35C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:44:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B66A2082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:44:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCA342082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:44:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593459879;
-	bh=WcuCMKlaPKNUmEgNGaEVT8QUtg6D2i/bEXZXt9pM2vg=;
+	s=default; t=1593459882;
+	bh=vDonOcKvTVviv84ID8+0kpiU/cxKre9WvHVBTDnUkjo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xxumv/zeeZmydGvbTx3C2IUqoJHpFJUnx/jJiRvyLFB4tH1Bu3MvUeaGVGCxcQiAH
-	 ke4eLQNE6Rry8nILYtJA77sUxEwpwsRk/NfCOvanHgpaaKNY27Tv7/BlGmjlXVzEkv
-	 jPZd1gFIwH1ejkipfg4DyrQjvS1AXMdRqhOJVUnQ=
+	b=D29pTSlcGpuysWeZALgo0dumNBUjd3UdxvZsGykjW4gYIHt5hbUr37Qoa/XqRcDzp
+	 muSU7jXWhScj9s6NOj45KhxQOajl+B6i76zHdxS6t8YZwFuhQIZyyZyp1F50g6Am2G
+	 3L1C97UFIDAgfbHb6RSmRh1c18JMv5eBVFI3wnmQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732036AbgF2Toh (ORCPT
+        id S1732049AbgF2Tol (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:44:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47650 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:44:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387642AbgF2Tkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387836AbgF2Tkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D229248A1;
-        Mon, 29 Jun 2020 15:26:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A2AC2485E;
+        Mon, 29 Jun 2020 15:26:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444397;
-        bh=WcuCMKlaPKNUmEgNGaEVT8QUtg6D2i/bEXZXt9pM2vg=;
+        s=default; t=1593444362;
+        bh=vDonOcKvTVviv84ID8+0kpiU/cxKre9WvHVBTDnUkjo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WOkdcr9aIJVpXAmOyw2+gLOoIoBHieqzp/wLZYkRM6HgLiQ11c9ex2gyu/iupGSgn
-         BuQSP4eBPt/yikstBtgjt7pjTPd8VWtzGI3F6jjiHemm8rXAm/eWN4LJTUi5kFLawq
-         6VE4hTbzcbk8lwJyzfSGf8SFFsE46K+x7JClIIkc=
+        b=eozEOx/qilxmk2yR35UygR9TxJdcDHgqpLL9JfARvv2p57Oq5j1Xu054jVPwQZb90
+         5iQk03XO5A15P37TAyRg3t9CXEZUpVmWn+/rGc5qXlX9cImpZE59hLxoFd30O86yHO
+         pIdBsQFBhHFQmxNhvPQjOAJNj/aYEKlYF0lC7RKo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gaurav Singh <gaurav1086@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 074/178] bpf, xdp, samples: Fix null pointer dereference in *_user code
-Date:   Mon, 29 Jun 2020 11:23:39 -0400
-Message-Id: <20200629152523.2494198-75-sashal@kernel.org>
+Cc:     Macpaul Lin <macpaul.lin@mediatek.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.4 038/178] usb: host: xhci-mtk: avoid runtime suspend when removing hcd
+Date:   Mon, 29 Jun 2020 11:23:03 -0400
+Message-Id: <20200629152523.2494198-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -67,123 +66,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gaurav Singh <gaurav1086@gmail.com>
+From: Macpaul Lin <macpaul.lin@mediatek.com>
 
-[ Upstream commit 6903cdae9f9f08d61e49c16cbef11c293e33a615 ]
+commit a24d5072e87457a14023ee1dd3fc8b1e76f899ef upstream.
 
-Memset on the pointer right after malloc can cause a NULL pointer
-deference if it failed to allocate memory. A simple fix is to
-replace malloc()/memset() pair with a simple call to calloc().
+When runtime suspend was enabled, runtime suspend might happen
+when xhci is removing hcd. This might cause kernel panic when hcd
+has been freed but runtime pm suspend related handle need to
+reference it.
 
-Fixes: 0fca931a6f21 ("samples/bpf: program demonstrating access to xdp_rxq_info")
-Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Acked-by: John Fastabend <john.fastabend@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
+Reviewed-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20200624135949.22611-4-mathias.nyman@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- samples/bpf/xdp_monitor_user.c      |  8 ++------
- samples/bpf/xdp_redirect_cpu_user.c |  7 ++-----
- samples/bpf/xdp_rxq_info_user.c     | 13 +++----------
- 3 files changed, 7 insertions(+), 21 deletions(-)
+ drivers/usb/host/xhci-mtk.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/samples/bpf/xdp_monitor_user.c b/samples/bpf/xdp_monitor_user.c
-index dd558cbb23094..ef53b93db5732 100644
---- a/samples/bpf/xdp_monitor_user.c
-+++ b/samples/bpf/xdp_monitor_user.c
-@@ -509,11 +509,8 @@ static void *alloc_rec_per_cpu(int record_size)
- {
- 	unsigned int nr_cpus = bpf_num_possible_cpus();
- 	void *array;
--	size_t size;
+diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
+index b18a6baef204a..85f1ff0399a9c 100644
+--- a/drivers/usb/host/xhci-mtk.c
++++ b/drivers/usb/host/xhci-mtk.c
+@@ -592,6 +592,9 @@ static int xhci_mtk_remove(struct platform_device *dev)
+ 	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
+ 	struct usb_hcd  *shared_hcd = xhci->shared_hcd;
  
--	size = record_size * nr_cpus;
--	array = malloc(size);
--	memset(array, 0, size);
-+	array = calloc(nr_cpus, record_size);
- 	if (!array) {
- 		fprintf(stderr, "Mem alloc error (nr_cpus:%u)\n", nr_cpus);
- 		exit(EXIT_FAIL_MEM);
-@@ -528,8 +525,7 @@ static struct stats_record *alloc_stats_record(void)
- 	int i;
++	pm_runtime_put_noidle(&dev->dev);
++	pm_runtime_disable(&dev->dev);
++
+ 	usb_remove_hcd(shared_hcd);
+ 	xhci->shared_hcd = NULL;
+ 	device_init_wakeup(&dev->dev, false);
+@@ -602,8 +605,6 @@ static int xhci_mtk_remove(struct platform_device *dev)
+ 	xhci_mtk_sch_exit(mtk);
+ 	xhci_mtk_clks_disable(mtk);
+ 	xhci_mtk_ldos_disable(mtk);
+-	pm_runtime_put_sync(&dev->dev);
+-	pm_runtime_disable(&dev->dev);
  
- 	/* Alloc main stats_record structure */
--	rec = malloc(sizeof(*rec));
--	memset(rec, 0, sizeof(*rec));
-+	rec = calloc(1, sizeof(*rec));
- 	if (!rec) {
- 		fprintf(stderr, "Mem alloc error\n");
- 		exit(EXIT_FAIL_MEM);
-diff --git a/samples/bpf/xdp_redirect_cpu_user.c b/samples/bpf/xdp_redirect_cpu_user.c
-index 767869e3b308f..0a76725568225 100644
---- a/samples/bpf/xdp_redirect_cpu_user.c
-+++ b/samples/bpf/xdp_redirect_cpu_user.c
-@@ -210,11 +210,8 @@ static struct datarec *alloc_record_per_cpu(void)
- {
- 	unsigned int nr_cpus = bpf_num_possible_cpus();
- 	struct datarec *array;
--	size_t size;
- 
--	size = sizeof(struct datarec) * nr_cpus;
--	array = malloc(size);
--	memset(array, 0, size);
-+	array = calloc(nr_cpus, sizeof(struct datarec));
- 	if (!array) {
- 		fprintf(stderr, "Mem alloc error (nr_cpus:%u)\n", nr_cpus);
- 		exit(EXIT_FAIL_MEM);
-@@ -229,11 +226,11 @@ static struct stats_record *alloc_stats_record(void)
- 
- 	size = sizeof(*rec) + n_cpus * sizeof(struct record);
- 	rec = malloc(size);
--	memset(rec, 0, size);
- 	if (!rec) {
- 		fprintf(stderr, "Mem alloc error\n");
- 		exit(EXIT_FAIL_MEM);
- 	}
-+	memset(rec, 0, size);
- 	rec->rx_cnt.cpu    = alloc_record_per_cpu();
- 	rec->redir_err.cpu = alloc_record_per_cpu();
- 	rec->kthread.cpu   = alloc_record_per_cpu();
-diff --git a/samples/bpf/xdp_rxq_info_user.c b/samples/bpf/xdp_rxq_info_user.c
-index b88df17853b84..21d6e5067a839 100644
---- a/samples/bpf/xdp_rxq_info_user.c
-+++ b/samples/bpf/xdp_rxq_info_user.c
-@@ -198,11 +198,8 @@ static struct datarec *alloc_record_per_cpu(void)
- {
- 	unsigned int nr_cpus = bpf_num_possible_cpus();
- 	struct datarec *array;
--	size_t size;
- 
--	size = sizeof(struct datarec) * nr_cpus;
--	array = malloc(size);
--	memset(array, 0, size);
-+	array = calloc(nr_cpus, sizeof(struct datarec));
- 	if (!array) {
- 		fprintf(stderr, "Mem alloc error (nr_cpus:%u)\n", nr_cpus);
- 		exit(EXIT_FAIL_MEM);
-@@ -214,11 +211,8 @@ static struct record *alloc_record_per_rxq(void)
- {
- 	unsigned int nr_rxqs = bpf_map__def(rx_queue_index_map)->max_entries;
- 	struct record *array;
--	size_t size;
- 
--	size = sizeof(struct record) * nr_rxqs;
--	array = malloc(size);
--	memset(array, 0, size);
-+	array = calloc(nr_rxqs, sizeof(struct record));
- 	if (!array) {
- 		fprintf(stderr, "Mem alloc error (nr_rxqs:%u)\n", nr_rxqs);
- 		exit(EXIT_FAIL_MEM);
-@@ -232,8 +226,7 @@ static struct stats_record *alloc_stats_record(void)
- 	struct stats_record *rec;
- 	int i;
- 
--	rec = malloc(sizeof(*rec));
--	memset(rec, 0, sizeof(*rec));
-+	rec = calloc(1, sizeof(struct stats_record));
- 	if (!rec) {
- 		fprintf(stderr, "Mem alloc error\n");
- 		exit(EXIT_FAIL_MEM);
+ 	return 0;
+ }
 -- 
 2.25.1
 
