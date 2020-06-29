@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16937C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A97CBC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:14:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE5A1206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:14:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8944B20780
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:14:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461644;
-	bh=EbdGXxJyF72rX98tL5GdVJlt+r6zucSaKqQNPqlkTws=;
+	s=default; t=1593461650;
+	bh=HuBcpEOyArzgHliXVv1A8XgnBsosqlw1lP16sXOKJco=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RcHneErjEdJQ/ms+9UEIodprYsxbVamaQhRTk/BDxlqU2kbnYXRpH54ThUKynvDfx
-	 jITriakMtC66yK5+shSMY/FKV8F1LuzWjCg7qk6pyBlwFkrexkiGgPsB2K6n9uFfCy
-	 dCnIjj4chy4ZdLVNOlkm+Wg4yZz5UGPBl5vE6TxY=
+	b=gQxGE1OTQ5nUD74mOIAgd2BdNLKnhOxaKO4BckyicJyH+PvD2jk6li/ttf037Mf9W
+	 ba7jmrvww2On5Wh3r1IFE5iqcz8LpuHr15gwJRkqyNfPVnzGmfc8JFSyou4O7HLoX7
+	 a+6ImE87+yjDkdqG3qrvhV5rQSchaKG/DzvHa7rE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732281AbgF2UOC (ORCPT
+        id S1732316AbgF2UOJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:14:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40596 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:14:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732859AbgF2TaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732850AbgF2TaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C5D3252B6;
-        Mon, 29 Jun 2020 15:37:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23EEA252ED;
+        Mon, 29 Jun 2020 15:38:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445026;
-        bh=EbdGXxJyF72rX98tL5GdVJlt+r6zucSaKqQNPqlkTws=;
+        s=default; t=1593445119;
+        bh=HuBcpEOyArzgHliXVv1A8XgnBsosqlw1lP16sXOKJco=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wX0luRqO4knzG/NrxbLXo3T+QfKDVDCmzsFXYmRyzOKgZEKx24zYY0pnt+pWrasam
-         l2Dfhy4LdA8JCZozyDO7EFzvKD9sbNkZLJZs8YdEuabzopMnCC/KbH2Eo9Uv9a5rbK
-         y2JztObrknBn6RB2K4Fb4S+6hBHoOCQ+GDp6PldE=
+        b=dxJLuuhhi2hUoTtACxLZOJnBOBgc566vQkJkyalCMDYcgcruQuyPjxXzNcqPk4zlH
+         jz2v4V04RvlAlmywvO8cjATnynWRWe2cNrYdYzHsX8LuI6WeBm8JqBD4HU49KZFgOr
+         Zw6Mtjtyl/VmYMobXwR58s5yCpkHyQkJP2jNyq5A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasily Averin <vvs@virtuozzo.com>,
-        Jeff Layton <jlayton@redhat.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+Cc:     Longfang Liu <liulongfang@huawei.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 124/131] sunrpc: fixed rollback in rpc_gssd_dummy_populate()
-Date:   Mon, 29 Jun 2020 11:34:55 -0400
-Message-Id: <20200629153502.2494656-125-sashal@kernel.org>
+Subject: [PATCH 4.14 26/78] USB: ehci: reopen solution for Synopsys HC bug
+Date:   Mon, 29 Jun 2020 11:37:14 -0400
+Message-Id: <20200629153806.2494953-27-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
-References: <20200629153502.2494656-1-sashal@kernel.org>
+In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
+References: <20200629153806.2494953-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
+Content-Type: text/plain; charset=UTF-8
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.19.y
+X-KernelTest-Branch: linux-4.14.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.19.131-rc1
-X-KernelTest-Deadline: 2020-07-01T15:34+00:00
+X-KernelTest-Version: 4.14.186-rc1
+X-KernelTest-Deadline: 2020-07-01T15:38+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -66,34 +66,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Longfang Liu <liulongfang@huawei.com>
 
-commit b7ade38165ca0001c5a3bd5314a314abbbfbb1b7 upstream.
+commit 1ddcb71a3edf0e1682b6e056158e4c4b00325f66 upstream.
 
-__rpc_depopulate(gssd_dentry) was lost on error path
+A Synopsys USB2.0 core used in Huawei Kunpeng920 SoC has a bug which
+might cause the host controller not issuing ping.
 
-cc: stable@vger.kernel.org
-Fixes: commit 4b9a445e3eeb ("sunrpc: create a new dummy pipe for gssd to hold open")
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
-Reviewed-by: Jeff Layton <jlayton@redhat.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Bug description:
+After indicating an Interrupt on Async Advance, the software uses the
+doorbell mechanism to delete the Next Link queue head of the last
+executed queue head. At this time, the host controller still references
+the removed queue head(the queue head is NULL). NULL reference causes
+the host controller to lose the USB device.
+
+Solution:
+After deleting the Next Link queue head, when has_synopsys_hc_bug set
+to 1，the software can write one of the valid queue head addresses to
+the ASYNCLISTADDR register to allow the host controller to get
+the valid queue head. in order to solve that problem, this patch set
+the flag for Huawei Kunpeng920
+
+There are detailed instructions and solutions in this patch:
+commit 2f7ac6c19997 ("USB: ehci: add workaround for Synopsys HC bug")
+
+Signed-off-by: Longfang Liu <liulongfang@huawei.com>
+Cc: stable <stable@vger.kernel.org>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Link: https://lore.kernel.org/r/1591588019-44284-1-git-send-email-liulongfang@huawei.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sunrpc/rpc_pipe.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/usb/host/ehci-pci.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/net/sunrpc/rpc_pipe.c b/net/sunrpc/rpc_pipe.c
-index 4fda18d47e2c1..285eab5b43c86 100644
---- a/net/sunrpc/rpc_pipe.c
-+++ b/net/sunrpc/rpc_pipe.c
-@@ -1331,6 +1331,7 @@ rpc_gssd_dummy_populate(struct dentry *root, struct rpc_pipe *pipe_data)
- 	q.len = strlen(gssd_dummy_clnt_dir[0].name);
- 	clnt_dentry = d_hash_and_lookup(gssd_dentry, &q);
- 	if (!clnt_dentry) {
-+		__rpc_depopulate(gssd_dentry, gssd_dummy_clnt_dir, 0, 1);
- 		pipe_dentry = ERR_PTR(-ENOENT);
- 		goto out;
+diff --git a/drivers/usb/host/ehci-pci.c b/drivers/usb/host/ehci-pci.c
+index 93326974ff4b3..265c9af1d2b5b 100644
+--- a/drivers/usb/host/ehci-pci.c
++++ b/drivers/usb/host/ehci-pci.c
+@@ -229,6 +229,13 @@ static int ehci_pci_setup(struct usb_hcd *hcd)
+ 		ehci_info(ehci, "applying MosChip frame-index workaround\n");
+ 		ehci->frame_index_bug = 1;
+ 		break;
++	case PCI_VENDOR_ID_HUAWEI:
++		/* Synopsys HC bug */
++		if (pdev->device == 0xa239) {
++			ehci_info(ehci, "applying Synopsys HC workaround\n");
++			ehci->has_synopsys_hc_bug = 1;
++		}
++		break;
  	}
+ 
+ 	/* optional debug port, normally in the first BAR */
 -- 
 2.25.1
 
