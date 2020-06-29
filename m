@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95592C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F843C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:11:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78D2E20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:11:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DDD320768
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:11:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461462;
-	bh=RTv26lsfenbpmBVyNjb/a7VDKyUyeaFSXqG7qg36/Z0=;
+	s=default; t=1593461468;
+	bh=fTQpfNLKO9oapLMx2ZgGjNS9yY6qb3mJpu3D8PVWy1E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0/RJSAkjSiqIvhiSVMybNtyeHFhu5MDhNrfEifIH9+iKxm7NrTqLPvnS3f9uCd2cV
-	 b1ZIddpg+QPnTqerG+rJJPeqk8joXKfSDgKZVCcCxx5Y3c+bYljW14DBkAPrbsi1Ho
-	 sHN5EMpHmliE363aUH2BZ/1XCUUGk2xTjMPgxhsk=
+	b=JzA3fkyu4ehP0NLZToQTlTHd3Z1v+JwREfzmgqTW1/JuwRXLT548bltJgAf+Y0R9w
+	 nKLv7pZf10oG33BQUb29a9QhcDhNHtxDBAyD0KnAre/f/OkbMSRTSAjnzssZVLfIlT
+	 6X27XY7X7diQ0zo9H86j3KNYUpOvc3A9Bq6kpzRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729479AbgF2ULA (ORCPT
+        id S1729824AbgF2ULH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:11:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40606 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:11:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732900AbgF2TaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732893AbgF2TaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F252F252AF;
-        Mon, 29 Jun 2020 15:37:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71B2225267;
+        Mon, 29 Jun 2020 15:36:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445021;
-        bh=RTv26lsfenbpmBVyNjb/a7VDKyUyeaFSXqG7qg36/Z0=;
+        s=default; t=1593444977;
+        bh=fTQpfNLKO9oapLMx2ZgGjNS9yY6qb3mJpu3D8PVWy1E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W5E5OE7Rcad7uL1h3VfBZaGr2yk2i7cAlSRnZcJZ7FpZ0VCdyUXDHEML3hQgll4+v
-         eXnL2bfBNV9RBMJ+TUPayTTrYNtLQhYWbY1X9a4yhweZQBLAwxTBbO1M21U3BtAo/L
-         sC5VOZL4LbTgI6iHkYr46HvzgoD9oNevhXkPagaY=
+        b=xS75MhZ3LZ1923eDY3PT0mamhkVmFLGkiq5pAXRVEfluTCcvc3dX7cLpRFFGj2Dhs
+         pnkFF3epiZWcI5pWgI9v3BCbzwZBKtt+e6MdktfleGIOAW851Zrv3QAJJfZ6dGp9RL
+         XE/XoNK4owYmNVKI2tGxFz0YGOgBX7gjBzlLGOVc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 119/131] tracing: Fix event trigger to accept redundant spaces
-Date:   Mon, 29 Jun 2020 11:34:50 -0400
-Message-Id: <20200629153502.2494656-120-sashal@kernel.org>
+Cc:     Alexander Lobakin <alobakin@marvell.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 076/131] net: qed: fix NVMe login fails over VFs
+Date:   Mon, 29 Jun 2020 11:34:07 -0400
+Message-Id: <20200629153502.2494656-77-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
@@ -66,89 +67,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Alexander Lobakin <alobakin@marvell.com>
 
-commit 6784beada631800f2c5afd567e5628c843362cee upstream.
+[ Upstream commit ccd7c7ce167a21dbf2b698ffcf00f11d96d44f9b ]
 
-Fix the event trigger to accept redundant spaces in
-the trigger input.
+25ms sleep cycles in waiting for PF response are excessive and may lead
+to different timeout failures.
 
-For example, these return -EINVAL
+Start to wait with short udelays, and in most cases polling will end
+here. If the time was not sufficient, switch to msleeps.
+usleep_range() may go far beyond 100us depending on platform and tick
+configuration, hence atomic udelays for consistency.
 
-echo " traceon" > events/ftrace/print/trigger
-echo "traceon  if common_pid == 0" > events/ftrace/print/trigger
-echo "disable_event:kmem:kmalloc " > events/ftrace/print/trigger
+Also add explicit DMA barriers since 'done' always comes from a shared
+request-response DMA pool, and note that in the comment nearby.
 
-But these are hard to find what is wrong.
-
-To fix this issue, use skip_spaces() to remove spaces
-in front of actual tokens, and set NULL if there is no
-token.
-
-Link: http://lkml.kernel.org/r/159262476352.185015.5261566783045364186.stgit@devnote2
-
-Cc: Tom Zanussi <zanussi@kernel.org>
-Cc: stable@vger.kernel.org
-Fixes: 85f2b08268c0 ("tracing: Add basic event trigger framework")
-Reviewed-by: Tom Zanussi <zanussi@kernel.org>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 1408cc1fa48c ("qed: Introduce VFs")
+Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
+Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace_events_trigger.c | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/qlogic/qed/qed_vf.c | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
-index 38a2a558e546b..0c3b1551cfca2 100644
---- a/kernel/trace/trace_events_trigger.c
-+++ b/kernel/trace/trace_events_trigger.c
-@@ -211,11 +211,17 @@ static int event_trigger_regex_open(struct inode *inode, struct file *file)
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_vf.c b/drivers/net/ethernet/qlogic/qed/qed_vf.c
+index 5dda547772c13..93a0fbf6a132b 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_vf.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_vf.c
+@@ -81,12 +81,17 @@ static void qed_vf_pf_req_end(struct qed_hwfn *p_hwfn, int req_status)
+ 	mutex_unlock(&(p_hwfn->vf_iov_info->mutex));
+ }
  
- static int trigger_process_regex(struct trace_event_file *file, char *buff)
++#define QED_VF_CHANNEL_USLEEP_ITERATIONS	90
++#define QED_VF_CHANNEL_USLEEP_DELAY		100
++#define QED_VF_CHANNEL_MSLEEP_ITERATIONS	10
++#define QED_VF_CHANNEL_MSLEEP_DELAY		25
++
+ static int qed_send_msg2pf(struct qed_hwfn *p_hwfn, u8 *done, u32 resp_size)
  {
--	char *command, *next = buff;
-+	char *command, *next;
- 	struct event_command *p;
- 	int ret = -EINVAL;
+ 	union vfpf_tlvs *p_req = p_hwfn->vf_iov_info->vf2pf_request;
+ 	struct ustorm_trigger_vf_zone trigger;
+ 	struct ustorm_vf_zone *zone_data;
+-	int rc = 0, time = 100;
++	int iter, rc = 0;
  
-+	next = buff = skip_spaces(buff);
- 	command = strsep(&next, ": \t");
-+	if (next) {
-+		next = skip_spaces(next);
-+		if (!*next)
-+			next = NULL;
+ 	zone_data = (struct ustorm_vf_zone *)PXP_VF_BAR0_START_USDM_ZONE_B;
+ 
+@@ -126,11 +131,19 @@ static int qed_send_msg2pf(struct qed_hwfn *p_hwfn, u8 *done, u32 resp_size)
+ 	REG_WR(p_hwfn, (uintptr_t)&zone_data->trigger, *((u32 *)&trigger));
+ 
+ 	/* When PF would be done with the response, it would write back to the
+-	 * `done' address. Poll until then.
++	 * `done' address from a coherent DMA zone. Poll until then.
+ 	 */
+-	while ((!*done) && time) {
+-		msleep(25);
+-		time--;
++
++	iter = QED_VF_CHANNEL_USLEEP_ITERATIONS;
++	while (!*done && iter--) {
++		udelay(QED_VF_CHANNEL_USLEEP_DELAY);
++		dma_rmb();
 +	}
- 	command = (command[0] != '!') ? command : command + 1;
++
++	iter = QED_VF_CHANNEL_MSLEEP_ITERATIONS;
++	while (!*done && iter--) {
++		msleep(QED_VF_CHANNEL_MSLEEP_DELAY);
++		dma_rmb();
+ 	}
  
- 	mutex_lock(&trigger_cmd_mutex);
-@@ -624,8 +630,14 @@ event_trigger_callback(struct event_command *cmd_ops,
- 	int ret;
- 
- 	/* separate the trigger from the filter (t:n [if filter]) */
--	if (param && isdigit(param[0]))
-+	if (param && isdigit(param[0])) {
- 		trigger = strsep(&param, " \t");
-+		if (param) {
-+			param = skip_spaces(param);
-+			if (!*param)
-+				param = NULL;
-+		}
-+	}
- 
- 	trigger_ops = cmd_ops->get_trigger_ops(cmd, trigger);
- 
-@@ -1361,6 +1373,11 @@ int event_enable_trigger_func(struct event_command *cmd_ops,
- 	trigger = strsep(&param, " \t");
- 	if (!trigger)
- 		return -EINVAL;
-+	if (param) {
-+		param = skip_spaces(param);
-+		if (!*param)
-+			param = NULL;
-+	}
- 
- 	system = strsep(&trigger, ":");
- 	if (!trigger)
+ 	if (!*done) {
 -- 
 2.25.1
 
