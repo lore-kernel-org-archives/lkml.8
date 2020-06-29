@@ -4,79 +4,115 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E3FFC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB30C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5173206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:38:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F365206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:38:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466724;
-	bh=ewj35rSkElcFIZJ1hg66kwd3Hqh8xk0tOa2edu8ul6s=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=2jbi4ZjXY2eLiWffpoyvIyGz3751X6bpBht3sM3/HaHmtOMrmkd4FnWSIloEJ/S3r
-	 c574QykGLGcxcVci2lr2qv+yBkQW0iRSU0De4mIeMw2MxTR/TL0sfmAuuydF7fTUd+
-	 f0/c0zAfz3Rc0c/VcOpmnMT5Z6ZoJUqvEzQWDquc=
+	s=default; t=1593466733;
+	bh=Qp3WQi3mUWW6e1xm4+yonVEJCVbUNaBsHU1YJMvnbXg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=NS7i6QRkzF3Yupuq3kc8ebp7teBDED/Urh3qK0+JuhYnFD2GhOeyu9BvKR/6yH88q
+	 z36jY5gkUkQGYdTVHAx8sPika2SAw65LKbmrJFsAJiExNSMgK3SijSa4XCDxcM1VAH
+	 ia2Cii64AGXlyqY/p+1O6R8nbJvt7UGPAqR/zfs0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733024AbgF2Vim (ORCPT
+        id S1728477AbgF2Vit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:38:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60646 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:38:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728349AbgF2Skc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728360AbgF2Skc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:40:32 -0400
-Received: from localhost.localdomain (unknown [194.230.155.195])
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B70F2085B;
-        Mon, 29 Jun 2020 08:15:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D0DF23F38;
+        Mon, 29 Jun 2020 15:18:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593418541;
-        bh=ewj35rSkElcFIZJ1hg66kwd3Hqh8xk0tOa2edu8ul6s=;
-        h=From:To:Cc:Subject:Date:From;
-        b=UWvRfKHtNAZnU9vTW3cs08UEr9o1o7kqvg7ahwYE1DOS9WSEf1ELbbw/H3torogjJ
-         9DtSz9ASc0TuNNu3dUj5myKETz43cRuCM7MfI/ZmSz+w4kRVE7TcebAxWn/38woaJV
-         ft4eqKuF+6CYIOIIEKW5KwSyF47qdpYtYxN9ieGA=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Tsahee Zidenberg <tsahee@annapurnalabs.com>,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 1/3] ARM: dts: alpine: Align GIC nodename with dtschema
-Date:   Mon, 29 Jun 2020 10:15:33 +0200
-Message-Id: <20200629081535.13502-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        s=default; t=1593443915;
+        bh=Qp3WQi3mUWW6e1xm4+yonVEJCVbUNaBsHU1YJMvnbXg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=QG1l74y69VjegtAlIoy1Ja8/mGT7g2rTOGoY69NKrySnNUzNehUXPdnkdhNmq0Eob
+         9I58z/QdgM8VNYRucQcTygyvNXROrAkReh15/8k31Ak+22+wmGGSqHFMqqo0rjlQ+f
+         AchXof7qQ6zE/wCr7EvZssYjDTIVI4eauOWC0s+c=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     guodeqing <geffrey.guo@huawei.com>,
+        David Ahern <dsahern@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 015/265] net: Fix the arp error in some cases
+Date:   Mon, 29 Jun 2020 11:14:08 -0400
+Message-Id: <20200629151818.2493727-16-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
+References: <20200629151818.2493727-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.7.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.7.7-rc1
+X-KernelTest-Deadline: 2020-07-01T15:14+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix dtschema validator warnings like:
-    gic@fb001000: $nodename:0:
-        'gic@fb001000' does not match '^interrupt-controller(@[0-9a-f,]+)*$'
+From: guodeqing <geffrey.guo@huawei.com>
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+[ Upstream commit 5eea3a63ff4aba6a26002e657a6d21934b7e2b96 ]
+
+ie.,
+$ ifconfig eth0 6.6.6.6 netmask 255.255.255.0
+
+$ ip rule add from 6.6.6.6 table 6666
+
+$ ip route add 9.9.9.9 via 6.6.6.6
+
+$ ping -I 6.6.6.6 9.9.9.9
+PING 9.9.9.9 (9.9.9.9) from 6.6.6.6 : 56(84) bytes of data.
+
+3 packets transmitted, 0 received, 100% packet loss, time 2079ms
+
+$ arp
+Address     HWtype  HWaddress           Flags Mask            Iface
+6.6.6.6             (incomplete)                              eth0
+
+The arp request address is error, this is because fib_table_lookup in
+fib_check_nh lookup the destnation 9.9.9.9 nexthop, the scope of
+the fib result is RT_SCOPE_LINK,the correct scope is RT_SCOPE_HOST.
+Here I add a check of whether this is RT_TABLE_MAIN to solve this problem.
+
+Fixes: 3bfd847203c6 ("net: Use passed in table for nexthop lookups")
+Signed-off-by: guodeqing <geffrey.guo@huawei.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm/boot/dts/alpine.dtsi | 2 +-
+ net/ipv4/fib_semantics.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/alpine.dtsi b/arch/arm/boot/dts/alpine.dtsi
-index d3036ea823d1..3b0675a1c460 100644
---- a/arch/arm/boot/dts/alpine.dtsi
-+++ b/arch/arm/boot/dts/alpine.dtsi
-@@ -91,7 +91,7 @@
- 		};
+diff --git a/net/ipv4/fib_semantics.c b/net/ipv4/fib_semantics.c
+index 55ca2e5218280..871c035be31f2 100644
+--- a/net/ipv4/fib_semantics.c
++++ b/net/ipv4/fib_semantics.c
+@@ -1109,7 +1109,7 @@ static int fib_check_nh_v4_gw(struct net *net, struct fib_nh *nh, u32 table,
+ 		if (fl4.flowi4_scope < RT_SCOPE_LINK)
+ 			fl4.flowi4_scope = RT_SCOPE_LINK;
  
- 		/* Interrupt Controller */
--		gic: gic@fb001000 {
-+		gic: interrupt-controller@fb001000 {
- 			compatible = "arm,cortex-a15-gic";
- 			#interrupt-cells = <3>;
- 			#size-cells = <0>;
+-		if (table)
++		if (table && table != RT_TABLE_MAIN)
+ 			tbl = fib_get_table(net, table);
+ 
+ 		if (tbl)
 -- 
-2.17.1
+2.25.1
 
