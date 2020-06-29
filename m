@@ -2,127 +2,104 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30296C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EBF2C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12D3720674
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:54:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bRgfBWJh"
+	by mail.kernel.org (Postfix) with ESMTP id 0AE47206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:54:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593460463;
+	bh=g+DGo3QNojV3iZV97JWZy5+xro4CU11v1elMrg288qo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=fMXH7p/2LV5WN9YOlBCLTC5+JqsWUFyrAuSmfm6lh+mzzyxp4SeZs9fjniFuLlAhf
+	 tQWQCXDLiYmfAHXnlGZ/JJ41E9Y8DmUwU3N3aVKSouVyGKVGASY/b06W71EjAbsCtY
+	 juid+d5B0Lu7XC1ArLp3qZuuQewjEBMNeUIhBSGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729615AbgF2TyF (ORCPT
+        id S1731679AbgF2TyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:54:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50320 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730991AbgF2Tx7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:53:59 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B994C03E979
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 12:53:59 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id b184so1935255pfa.6
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 12:53:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zKRhn9sIaFaGEW3xbHkfNQIj02f8YddLObFXUqnNhu8=;
-        b=bRgfBWJhw3k6vEkg+gGrA7QdNS4rt+ffVIqjxb8+xRH5Hf8e5n3ITha/4r/HQQjG1F
-         Mnp916bSSyiyNJ3mB4Pp24pG+NomV7NtlGrDIbs1/VO6qz2zh+2u4MyKygTW4DWOdEAW
-         h0hJeQ7dnSzCQo+TA8azgjmFV+w1Q1r8AkAQ6kyp/vQDX2e8LTYa1tMbaefxqY2R+gNz
-         opFp+Zy1OQeuKe8JMokYShmECU6iURq7DyQW5616Pz5i3j+aOZhMSWUTT6+QxBbnEYnE
-         2WnYAveyeIeVpJcFa2nui3COjVCHDpZHxL9us5S2uMZdxLknVjYHLMAByD7JWc3QqKQU
-         /rhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zKRhn9sIaFaGEW3xbHkfNQIj02f8YddLObFXUqnNhu8=;
-        b=WGnSzMAIjeIb2EkkmEEY3D/xE7OAE4t2yhqOglzZLpSe3M1hLJVxOfLe+cRGs6DseI
-         tF/iEy5eXNMulIyeFpzloXQc4AeG82YejvWzsjS1SWaZUI4ldxcFlnO/twDWF60uSNHy
-         dsZIV/PGQGacQ7lNvWqvPFFRheJF4UQ6rHcMCrgTMzYpRgMlqaTVbcOnO9INEh4b6+77
-         8xq17gb2IeVqOKdsxVfaHLJmeRd8kR0OKaxikCeT3xdqYkeYGoi8BRcpi9qTZ39VQwCg
-         xoIcWMcttcYyURn67WRHd6zi0i7409PnMiCnp97zmj9l+guo/x0aN4ClA2pBRtNNqkp0
-         oKAw==
-X-Gm-Message-State: AOAM533b3/ZwuqXWFHX6lAdYDVngm0CAz8EQl4TZKpxPZfbMPZOMXghG
-        iohMpmJKY0If4gh+eVph0kGSVO/37yfr8sNr4tgBAA==
-X-Google-Smtp-Source: ABdhPJx1ZltZC8TxdLF0qs/W70OrjV+LgOyxShhZsT9U/M+Islb1fHf4YkGIw2+d4lhznk2dOuqEiVum9V3YVQvnVAQ=
-X-Received: by 2002:a63:7e55:: with SMTP id o21mr11995677pgn.263.1593460438609;
- Mon, 29 Jun 2020 12:53:58 -0700 (PDT)
+        Mon, 29 Jun 2020 15:54:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47678 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387685AbgF2Tk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:40:26 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA3E624A61;
+        Mon, 29 Jun 2020 15:28:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593444488;
+        bh=g+DGo3QNojV3iZV97JWZy5+xro4CU11v1elMrg288qo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ThVSdCPrfAbQ19eE08OVHA/LdJjf5x758J8SazOHdWBJqGfC/6c0R9Dxf6pOCAJkF
+         Q6KOWK4gG2F9XgmdkX8wJ08cKWiDS5yfB47jDYtnAPX0jf2xixz4afSNtbU68S+YZQ
+         9hNsdBFSqpRCf/YXhpX+84TrpalaYxUZwghkrW/w=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Bernard Zhao <bernard@vivo.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.4 165/178] drm/amd: fix potential memleak in err branch
+Date:   Mon, 29 Jun 2020 11:25:10 -0400
+Message-Id: <20200629152523.2494198-166-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
+References: <20200629152523.2494198-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20200629061840.4065483-1-keescook@chromium.org> <20200629061840.4065483-9-keescook@chromium.org>
-In-Reply-To: <20200629061840.4065483-9-keescook@chromium.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 29 Jun 2020 12:53:47 -0700
-Message-ID: <CAKwvOd=r6bsBfSZxVYrnbm1Utq==ApWBDjx+0Fxsm90Aq3Jghw@mail.gmail.com>
-Subject: Re: [PATCH v4 08/17] arm64/mm: Remove needless section quotes
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joe Perches <joe@perches.com>
-Content-Type: text/plain; charset="UTF-8"
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.50-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.4.50-rc1
+X-KernelTest-Deadline: 2020-07-01T15:25+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 28, 2020 at 11:18 PM Kees Cook <keescook@chromium.org> wrote:
->
-> Fix a case of needless quotes in __section(), which Clang doesn't like.
->
-> Acked-by: Will Deacon <will@kernel.org>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+From: Bernard Zhao <bernard@vivo.com>
 
-Yep, I remember bugs from this.  Probably should scan the kernel for
-other instances of this.  +Joe for checkpatch.pl validation.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+commit b5b78a6c8d8cb9c307bc6b16a754603424459d6e upstream.
 
-> ---
->  arch/arm64/mm/mmu.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> index 1df25f26571d..dce024ea6084 100644
-> --- a/arch/arm64/mm/mmu.c
-> +++ b/arch/arm64/mm/mmu.c
-> @@ -42,7 +42,7 @@
->  u64 idmap_t0sz = TCR_T0SZ(VA_BITS);
->  u64 idmap_ptrs_per_pgd = PTRS_PER_PGD;
->
-> -u64 __section(".mmuoff.data.write") vabits_actual;
-> +u64 __section(.mmuoff.data.write) vabits_actual;
->  EXPORT_SYMBOL(vabits_actual);
->
->  u64 kimage_voffset __ro_after_init;
-> --
-> 2.25.1
->
+The function kobject_init_and_add alloc memory like:
+kobject_init_and_add->kobject_add_varg->kobject_set_name_vargs
+->kvasprintf_const->kstrdup_const->kstrdup->kmalloc_track_caller
+->kmalloc_slab, in err branch this memory not free. If use
+kmemleak, this path maybe catched.
+These changes are to add kobject_put in kobject_init_and_add
+failed branch, fix potential memleak.
 
+Signed-off-by: Bernard Zhao <bernard@vivo.com>
+Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/gpu/drm/amd/amdkfd/kfd_process.c | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_process.c b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
+index 40e3fc0c69421..aa0a617b8d445 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_process.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
+@@ -312,6 +312,7 @@ struct kfd_process *kfd_create_process(struct file *filep)
+ 					   (int)process->lead_thread->pid);
+ 		if (ret) {
+ 			pr_warn("Creating procfs pid directory failed");
++			kobject_put(process->kobj);
+ 			goto out;
+ 		}
+ 
 -- 
-Thanks,
-~Nick Desaulniers
+2.25.1
+
