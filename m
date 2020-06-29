@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A93FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFB4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 315DC206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:04:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D45762067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:04:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461095;
-	bh=VYd3wivLlVazmRd97iQO5NrJuHHdtzvz7ELJnIDo7KY=;
+	s=default; t=1593461098;
+	bh=OvWWwk41cNAWQcZ61SqYRjzD8VCGnnJDsEo9RiDUSbk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pFR5vzH4J28kKxiYZHsLIVVsx2cUSjIrXMU8icmmcl1Dhu19xElbAKq7Z+RlNs3TO
-	 QFMfAidJ4qFW/YncxvwXEjowhS5SVcvJCKWnsBUC4WMFwuYUOx8loP1NPkjOU+1xSM
-	 BT2zEo76Ue7Yu6flY2lxmllKHEiSWDsraCzGdC90=
+	b=t8OolxF9sK+gw+xkXRVzM0Zfj2syo11LkakLqNOjc5SspbZukKEz1k1nTkabiRK2z
+	 ehfeSerE8cmChIvGgpIW6gHXFAzKQ5hWS3Xx6ZXZLWMm3t/uyWkwylZssA7CewY5EB
+	 XIJRv/tdEtOSeFqvM1SWCHZRYP2D0HDKgzithdpM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728964AbgF2UEx (ORCPT
+        id S1732041AbgF2UEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:04:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40580 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:04:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732990AbgF2Tab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732985AbgF2Tab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8061E2525E;
-        Mon, 29 Jun 2020 15:36:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BCC925269;
+        Mon, 29 Jun 2020 15:36:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444973;
-        bh=VYd3wivLlVazmRd97iQO5NrJuHHdtzvz7ELJnIDo7KY=;
+        s=default; t=1593444979;
+        bh=OvWWwk41cNAWQcZ61SqYRjzD8VCGnnJDsEo9RiDUSbk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ATYJzduLKIKcvmXbt4+sEjYH03Ytv31LbVgKu6I3fhS1qJb5ztVbam8A6XXXerZFW
-         60rkxg1cMLDQMqEjAjBfMocTWNqerSE0m3FMaKYDHU4wDdlehtDPelR1QzeKBJ2Wje
-         DooZ6XPXpDu1sBJ8JAJgPk2GTyENoLmJQWj4F3CY=
+        b=jJOOvJudU/4IA9UD2ZyrlzmlT1fqNDCe5gZQw7DslGSSP1fiKE9thkc5ZOx6tKTJe
+         Jdieqg4ecQmIU/VBoEYaMDYLiClL+R1BH7sIvAeC1U6p1zTk0mwNooQC0LfC2WaqtO
+         HcYXvEPRipuSmPuludYpG5Sz7wtZ2MLvIfFYIc0U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mark Zhang <markz@mellanox.com>,
-        Maor Gottlieb <maorg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+Cc:     Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 072/131] RDMA/cma: Protect bind_list and listen_list while finding matching cm id
-Date:   Mon, 29 Jun 2020 11:34:03 -0400
-Message-Id: <20200629153502.2494656-73-sashal@kernel.org>
+Subject: [PATCH 4.19 078/131] cxgb4: move handling L2T ARP failures to caller
+Date:   Mon, 29 Jun 2020 11:34:09 -0400
+Message-Id: <20200629153502.2494656-79-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
@@ -67,159 +65,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Zhang <markz@mellanox.com>
+From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
 
-[ Upstream commit 730c8912484186d4623d0c76509066d285c3a755 ]
+[ Upstream commit 11d8cd5c9f3b46f397f889cefdb66795518aaebd ]
 
-The bind_list and listen_list must be accessed under a lock, add the
-missing locking around the access in cm_ib_id_from_event()
+Move code handling L2T ARP failures to the only caller.
 
-In addition add lockdep asserts to make it clearer what the locking
-semantic is here.
+Fixes following sparse warning:
+skbuff.h:2091:29: warning: context imbalance in
+'handle_failed_resolution' - unexpected unlock
 
-  general protection fault: 0000 [#1] SMP NOPTI
-  CPU: 226 PID: 126135 Comm: kworker/226:1 Tainted: G OE 4.12.14-150.47-default #1 SLE15
-  Hardware name: Cray Inc. Windom/Windom, BIOS 0.8.7 01-10-2020
-  Workqueue: ib_cm cm_work_handler [ib_cm]
-  task: ffff9c5a60a1d2c0 task.stack: ffffc1d91f554000
-  RIP: 0010:cma_ib_req_handler+0x3f1/0x11b0 [rdma_cm]
-  RSP: 0018:ffffc1d91f557b40 EFLAGS: 00010286
-  RAX: deacffffffffff30 RBX: 0000000000000001 RCX: ffff9c2af5bb6000
-  RDX: 00000000000000a9 RSI: ffff9c5aa4ed2f10 RDI: ffffc1d91f557b08
-  RBP: ffffc1d91f557d90 R08: ffff9c340cc80000 R09: ffff9c2c0f901900
-  R10: 0000000000000000 R11: 0000000000000001 R12: deacffffffffff30
-  R13: ffff9c5a48aeec00 R14: ffffc1d91f557c30 R15: ffff9c5c2eea3688
-  FS: 0000000000000000(0000) GS:ffff9c5c2fa80000(0000) knlGS:0000000000000000
-  CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 00002b5cc03fa320 CR3: 0000003f8500a000 CR4: 00000000003406e0
-  Call Trace:
-  ? rdma_addr_cancel+0xa0/0xa0 [ib_core]
-  ? cm_process_work+0x28/0x140 [ib_cm]
-  cm_process_work+0x28/0x140 [ib_cm]
-  ? cm_get_bth_pkey.isra.44+0x34/0xa0 [ib_cm]
-  cm_work_handler+0xa06/0x1a6f [ib_cm]
-  ? __switch_to_asm+0x34/0x70
-  ? __switch_to_asm+0x34/0x70
-  ? __switch_to_asm+0x40/0x70
-  ? __switch_to_asm+0x34/0x70
-  ? __switch_to_asm+0x40/0x70
-  ? __switch_to_asm+0x34/0x70
-  ? __switch_to_asm+0x40/0x70
-  ? __switch_to+0x7c/0x4b0
-  ? __switch_to_asm+0x40/0x70
-  ? __switch_to_asm+0x34/0x70
-  process_one_work+0x1da/0x400
-  worker_thread+0x2b/0x3f0
-  ? process_one_work+0x400/0x400
-  kthread+0x118/0x140
-  ? kthread_create_on_node+0x40/0x40
-  ret_from_fork+0x22/0x40
-  Code: 00 66 83 f8 02 0f 84 ca 05 00 00 49 8b 84 24 d0 01 00 00 48 85 c0 0f 84 68 07 00 00 48 2d d0 01
-  00 00 49 89 c4 0f 84 59 07 00 00 <41> 0f b7 44 24 20 49 8b 77 50 66 83 f8 0a 75 9e 49 8b 7c 24 28
-
-Fixes: 4c21b5bcef73 ("IB/cma: Add net_dev and private data checks to RDMA CM")
-Link: https://lore.kernel.org/r/20200616104304.2426081-1-leon@kernel.org
-Signed-off-by: Mark Zhang <markz@mellanox.com>
-Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Fixes: 749cb5fe48bb ("cxgb4: Replace arpq_head/arpq_tail with SKB double link-list code")
+Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/cma.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/net/ethernet/chelsio/cxgb4/l2t.c | 52 +++++++++++-------------
+ 1 file changed, 24 insertions(+), 28 deletions(-)
 
-diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
-index 5c03f4701ece2..1f14cd4ce3db5 100644
---- a/drivers/infiniband/core/cma.c
-+++ b/drivers/infiniband/core/cma.c
-@@ -1507,6 +1507,8 @@ static struct rdma_id_private *cma_find_listener(
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/l2t.c b/drivers/net/ethernet/chelsio/cxgb4/l2t.c
+index 986277744611c..08f4780e7fe7a 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/l2t.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/l2t.c
+@@ -507,41 +507,20 @@ u64 cxgb4_select_ntuple(struct net_device *dev,
+ }
+ EXPORT_SYMBOL(cxgb4_select_ntuple);
+ 
+-/*
+- * Called when address resolution fails for an L2T entry to handle packets
+- * on the arpq head.  If a packet specifies a failure handler it is invoked,
+- * otherwise the packet is sent to the device.
+- */
+-static void handle_failed_resolution(struct adapter *adap, struct l2t_entry *e)
+-{
+-	struct sk_buff *skb;
+-
+-	while ((skb = __skb_dequeue(&e->arpq)) != NULL) {
+-		const struct l2t_skb_cb *cb = L2T_SKB_CB(skb);
+-
+-		spin_unlock(&e->lock);
+-		if (cb->arp_err_handler)
+-			cb->arp_err_handler(cb->handle, skb);
+-		else
+-			t4_ofld_send(adap, skb);
+-		spin_lock(&e->lock);
+-	}
+-}
+-
+ /*
+  * Called when the host's neighbor layer makes a change to some entry that is
+  * loaded into the HW L2 table.
+  */
+ void t4_l2t_update(struct adapter *adap, struct neighbour *neigh)
  {
- 	struct rdma_id_private *id_priv, *id_priv_dev;
+-	struct l2t_entry *e;
+-	struct sk_buff_head *arpq = NULL;
+-	struct l2t_data *d = adap->l2t;
+ 	unsigned int addr_len = neigh->tbl->key_len;
+ 	u32 *addr = (u32 *) neigh->primary_key;
+-	int ifidx = neigh->dev->ifindex;
+-	int hash = addr_hash(d, addr, addr_len, ifidx);
++	int hash, ifidx = neigh->dev->ifindex;
++	struct sk_buff_head *arpq = NULL;
++	struct l2t_data *d = adap->l2t;
++	struct l2t_entry *e;
  
-+	lockdep_assert_held(&lock);
-+
- 	if (!bind_list)
- 		return ERR_PTR(-EINVAL);
- 
-@@ -1552,6 +1554,7 @@ cma_ib_id_from_event(struct ib_cm_id *cm_id,
- 		}
++	hash = addr_hash(d, addr, addr_len, ifidx);
+ 	read_lock_bh(&d->lock);
+ 	for (e = d->l2tab[hash].first; e; e = e->next)
+ 		if (!addreq(e, addr) && e->ifindex == ifidx) {
+@@ -574,8 +553,25 @@ void t4_l2t_update(struct adapter *adap, struct neighbour *neigh)
+ 			write_l2e(adap, e, 0);
  	}
  
-+	mutex_lock(&lock);
- 	/*
- 	 * Net namespace might be getting deleted while route lookup,
- 	 * cm_id lookup is in progress. Therefore, perform netdevice
-@@ -1593,6 +1596,7 @@ cma_ib_id_from_event(struct ib_cm_id *cm_id,
- 	id_priv = cma_find_listener(bind_list, cm_id, ib_event, &req, *net_dev);
- err:
- 	rcu_read_unlock();
-+	mutex_unlock(&lock);
- 	if (IS_ERR(id_priv) && *net_dev) {
- 		dev_put(*net_dev);
- 		*net_dev = NULL;
-@@ -2346,6 +2350,8 @@ static void cma_listen_on_dev(struct rdma_id_private *id_priv,
- 	struct net *net = id_priv->id.route.addr.dev_addr.net;
- 	int ret;
- 
-+	lockdep_assert_held(&lock);
+-	if (arpq)
+-		handle_failed_resolution(adap, e);
++	if (arpq) {
++		struct sk_buff *skb;
 +
- 	if (cma_family(id_priv) == AF_IB && !rdma_cap_ib_cm(cma_dev->device, 1))
- 		return;
- 
-@@ -3081,6 +3087,8 @@ static void cma_bind_port(struct rdma_bind_list *bind_list,
- 	u64 sid, mask;
- 	__be16 port;
- 
-+	lockdep_assert_held(&lock);
++		/* Called when address resolution fails for an L2T
++		 * entry to handle packets on the arpq head. If a
++		 * packet specifies a failure handler it is invoked,
++		 * otherwise the packet is sent to the device.
++		 */
++		while ((skb = __skb_dequeue(&e->arpq)) != NULL) {
++			const struct l2t_skb_cb *cb = L2T_SKB_CB(skb);
 +
- 	addr = cma_src_addr(id_priv);
- 	port = htons(bind_list->port);
++			spin_unlock(&e->lock);
++			if (cb->arp_err_handler)
++				cb->arp_err_handler(cb->handle, skb);
++			else
++				t4_ofld_send(adap, skb);
++			spin_lock(&e->lock);
++		}
++	}
+ 	spin_unlock_bh(&e->lock);
+ }
  
-@@ -3109,6 +3117,8 @@ static int cma_alloc_port(enum rdma_ucm_port_space ps,
- 	struct rdma_bind_list *bind_list;
- 	int ret;
- 
-+	lockdep_assert_held(&lock);
-+
- 	bind_list = kzalloc(sizeof *bind_list, GFP_KERNEL);
- 	if (!bind_list)
- 		return -ENOMEM;
-@@ -3135,6 +3145,8 @@ static int cma_port_is_unique(struct rdma_bind_list *bind_list,
- 	struct sockaddr  *saddr = cma_src_addr(id_priv);
- 	__be16 dport = cma_port(daddr);
- 
-+	lockdep_assert_held(&lock);
-+
- 	hlist_for_each_entry(cur_id, &bind_list->owners, node) {
- 		struct sockaddr  *cur_daddr = cma_dst_addr(cur_id);
- 		struct sockaddr  *cur_saddr = cma_src_addr(cur_id);
-@@ -3174,6 +3186,8 @@ static int cma_alloc_any_port(enum rdma_ucm_port_space ps,
- 	unsigned int rover;
- 	struct net *net = id_priv->id.route.addr.dev_addr.net;
- 
-+	lockdep_assert_held(&lock);
-+
- 	inet_get_local_port_range(net, &low, &high);
- 	remaining = (high - low) + 1;
- 	rover = prandom_u32() % remaining + low;
-@@ -3221,6 +3235,8 @@ static int cma_check_port(struct rdma_bind_list *bind_list,
- 	struct rdma_id_private *cur_id;
- 	struct sockaddr *addr, *cur_addr;
- 
-+	lockdep_assert_held(&lock);
-+
- 	addr = cma_src_addr(id_priv);
- 	hlist_for_each_entry(cur_id, &bind_list->owners, node) {
- 		if (id_priv == cur_id)
-@@ -3251,6 +3267,8 @@ static int cma_use_port(enum rdma_ucm_port_space ps,
- 	unsigned short snum;
- 	int ret;
- 
-+	lockdep_assert_held(&lock);
-+
- 	snum = ntohs(cma_port(cma_src_addr(id_priv)));
- 	if (snum < PROT_SOCK && !capable(CAP_NET_BIND_SERVICE))
- 		return -EACCES;
 -- 
 2.25.1
 
