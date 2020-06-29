@@ -2,143 +2,114 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 926B1C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F181EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74117206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6B8A20672
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:01:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593460881;
+	bh=jqIGikHXbjh0fGXK+ZUVg3Q2MlISrW97Srq0yttB7jM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=NZZW8v5ha43rOSXQ3t85x8OW59bnL/QqUNqf/RIS+BNJwuVMpNwCc4ZXBy9ERQZ9C
+	 4OXWzV7ItTSMd1NXAGJOgl6xvlkVI9osdyIFYbcgJKfJkPwfVGJiHBt6/GRpcMJZlf
+	 pt5YgAut7NQXWEKLJyVPEiEiZaqI2Mc1ayg9HFs4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388639AbgF2UBP (ORCPT
+        id S2388644AbgF2UBT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:01:15 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:33746 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728949AbgF2UBM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 16:01:12 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jpzxn-0002lW-5c; Mon, 29 Jun 2020 14:01:11 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jpzxl-0003O1-TR; Mon, 29 Jun 2020 14:01:10 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     <linux-kernel@vger.kernel.org>
-Cc:     David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <greg@kroah.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20200625095725.GA3303921@kroah.com>
-        <778297d2-512a-8361-cf05-42d9379e6977@i-love.sakura.ne.jp>
-        <20200625120725.GA3493334@kroah.com>
-        <20200625.123437.2219826613137938086.davem@davemloft.net>
-        <CAHk-=whuTwGHEPjvtbBvneHHXeqJC=q5S09mbPnqb=Q+MSPMag@mail.gmail.com>
-        <87pn9mgfc2.fsf_-_@x220.int.ebiederm.org>
-        <87y2oac50p.fsf@x220.int.ebiederm.org>
-        <87bll17ili.fsf_-_@x220.int.ebiederm.org>
-Date:   Mon, 29 Jun 2020 14:56:38 -0500
-In-Reply-To: <87bll17ili.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
-        message of "Mon, 29 Jun 2020 14:55:05 -0500")
-Message-ID: <875zb97iix.fsf_-_@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 29 Jun 2020 16:01:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47636 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387546AbgF2TkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:40:15 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91A2D2490E;
+        Mon, 29 Jun 2020 15:27:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593444463;
+        bh=jqIGikHXbjh0fGXK+ZUVg3Q2MlISrW97Srq0yttB7jM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ADT3u4+7TWhUsLyrWQzun1/FK1aWPi8+q0l5zXDcl8Td2QieQb9tn8F7FEUsTpZCZ
+         KiECeU/1Ju4mfNTOl8AguROhoO36zRIC6admjEPO8HQ/G19qIUdCj/lVeiEprSjcdj
+         6W1ZFtvpbQ/2VAj/eEjjhdD0lTP4SOQz2cQWjv3U=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.4 143/178] ACPI: configfs: Disallow loading ACPI tables when locked down
+Date:   Mon, 29 Jun 2020 11:24:48 -0400
+Message-Id: <20200629152523.2494198-144-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
+References: <20200629152523.2494198-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jpzxl-0003O1-TR;;;mid=<875zb97iix.fsf_-_@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1+rW0kJ/Nu0di7F1+PvK/unH2VPrQ43lAM=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [PATCH v2 01/15] umh: Capture the pid in umh_pipe_setup
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.50-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.4.50-rc1
+X-KernelTest-Deadline: 2020-07-01T15:25+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
 
-The pid in struct subprocess_info is only used by umh_clean_and_save_pid to
-write the pid into umh_info.
+commit 75b0cea7bf307f362057cc778efe89af4c615354 upstream.
 
-Instead always capture the pid on struct umh_info in umh_pipe_setup, removing
-code that is specific to user mode drivers from the common user path of
-user mode helpers.
+Like other vectors already patched, this one here allows the root
+user to load ACPI tables, which enables arbitrary physical address
+writes, which in turn makes it possible to disable lockdown.
 
-Link: https://lkml.kernel.org/r/87h7uygf9i.fsf_-_@x220.int.ebiederm.org
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Prevents this by checking the lockdown status before allowing a new
+ACPI table to be installed. The link in the trailer shows a PoC of
+how this might be used.
+
+Link: https://git.zx2c4.com/american-unsigned-language/tree/american-unsigned-language-2.sh
+Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/umh.h | 1 -
- kernel/umh.c        | 5 ++---
- 2 files changed, 2 insertions(+), 4 deletions(-)
+ drivers/acpi/acpi_configfs.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/umh.h b/include/linux/umh.h
-index 0c08de356d0d..aae16a0ebd0f 100644
---- a/include/linux/umh.h
-+++ b/include/linux/umh.h
-@@ -25,7 +25,6 @@ struct subprocess_info {
- 	struct file *file;
- 	int wait;
- 	int retval;
--	pid_t pid;
- 	int (*init)(struct subprocess_info *info, struct cred *new);
- 	void (*cleanup)(struct subprocess_info *info);
- 	void *data;
-diff --git a/kernel/umh.c b/kernel/umh.c
-index 79f139a7ca03..c2a582b3a2bf 100644
---- a/kernel/umh.c
-+++ b/kernel/umh.c
-@@ -102,7 +102,6 @@ static int call_usermodehelper_exec_async(void *data)
+diff --git a/drivers/acpi/acpi_configfs.c b/drivers/acpi/acpi_configfs.c
+index 57d9d574d4dde..01738d8e888e3 100644
+--- a/drivers/acpi/acpi_configfs.c
++++ b/drivers/acpi/acpi_configfs.c
+@@ -11,6 +11,7 @@
+ #include <linux/module.h>
+ #include <linux/configfs.h>
+ #include <linux/acpi.h>
++#include <linux/security.h>
  
- 	commit_creds(new);
+ #include "acpica/accommon.h"
+ #include "acpica/actables.h"
+@@ -28,7 +29,10 @@ static ssize_t acpi_table_aml_write(struct config_item *cfg,
+ {
+ 	const struct acpi_table_header *header = data;
+ 	struct acpi_table *table;
+-	int ret;
++	int ret = security_locked_down(LOCKDOWN_ACPI_TABLES);
++
++	if (ret)
++		return ret;
  
--	sub_info->pid = task_pid_nr(current);
- 	if (sub_info->file) {
- 		retval = do_execve_file(sub_info->file,
- 					sub_info->argv, sub_info->envp);
-@@ -468,6 +467,7 @@ static int umh_pipe_setup(struct subprocess_info *info, struct cred *new)
+ 	table = container_of(cfg, struct acpi_table, cfg);
  
- 	umh_info->pipe_to_umh = to_umh[1];
- 	umh_info->pipe_from_umh = from_umh[0];
-+	umh_info->pid = task_pid_nr(current);
- 	return 0;
- }
- 
-@@ -476,13 +476,12 @@ static void umh_clean_and_save_pid(struct subprocess_info *info)
- 	struct umh_info *umh_info = info->data;
- 
- 	/* cleanup if umh_pipe_setup() was successful but exec failed */
--	if (info->pid && info->retval) {
-+	if (info->retval) {
- 		fput(umh_info->pipe_to_umh);
- 		fput(umh_info->pipe_from_umh);
- 	}
- 
- 	argv_free(info->argv);
--	umh_info->pid = info->pid;
- }
- 
- /**
 -- 
-2.25.0
+2.25.1
 
