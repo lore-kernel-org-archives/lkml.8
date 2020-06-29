@@ -2,151 +2,111 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6550AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09137C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:23:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40C96206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:23:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E11C9206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:23:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Jfgz6+eh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pUD5GVMv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732320AbgF2TW5 (ORCPT
+        id S1732322AbgF2TXC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:22:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45124 "EHLO
+        Mon, 29 Jun 2020 15:23:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732293AbgF2TWp (ORCPT
+        with ESMTP id S1732295AbgF2TWp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:22:45 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11E22C030F3B
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:56:54 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id u17so13400638qtq.1
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:56:54 -0700 (PDT)
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B686BC02E2FB
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:37:36 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id k15so15671735otp.8
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:37:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=gmp0D2tdeFRnXQgw7lSdvfRGqahLRtacjy20V4Dgy4c=;
-        b=Jfgz6+ehlKKKW4qoq8xVJu2q7caS/mX7d2eerQrmJ/I8fEtrkUoYA5pgWnWcfjvIDt
-         utQSsqPaOEgIRXKX03NaualVOXjO63W2a35ig0TSMcEvHD/PcZNONbY9GUUYfk1mDK7a
-         ouQynf+wqQT5N4M8740UpW12VB7n9Jgyl+lX2odBXE5pal3VZrz0Gun2gLsRDsoSeCn1
-         4izLQLIdLSK2kPxv32lSMlEo3LqIFrnsiB9ePxMtpwt8X5utuupEstYsFyha+jdQgRgh
-         WgnW+TwAW5sRiUUFiQ6MSEV88c8RfYaX8bxGe/hkSHOAZI8dMGVQyQmstOf6vv5SN6vx
-         oMTw==
+        bh=cveXjL+4X4gh1TmXdX8oqUnZgc2Vd1IaF1EU/HiH/po=;
+        b=pUD5GVMvZNlTyNPmyJi9IXsTZfrSpSaM0QY7ebsyC1zCo0OHvFNpbLVF1pJscNAUqe
+         IFyUSK2FgPrznhkiChklKg/G7qoGD7VR+JxDCQ+2fGlXHzsXTAeebGDSbDi+xKb4oeiQ
+         r7TCH5o2rRa9F7dzql1Y0Y4WBuhpBWi1/YxuFjhqYkw3Gk8eneRiedH9eIkkpmhuMVqw
+         oLoc7SDNFwvw9CyUztYOctHv3EI/iIZ6WPxRIm3c+LnISDzu8GPBBQTtWbyUAoIKTPkK
+         TcQTR90pveM86/MHrDr6nAEk9rl3U5f0rwT6CQHlwFY7wh5l0XX7yi+KGFgnVqS4+XCo
+         sevw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=gmp0D2tdeFRnXQgw7lSdvfRGqahLRtacjy20V4Dgy4c=;
-        b=eGS9hzkIy2dX2D/M9MhsWAbwRdzOcQGFOVnuKmocdz2sO28mh2Sw768ieeYC6qKW7R
-         i5j0XzFiX1GSzU9BirFpC0IHiK1OQ083PpQYa0Drpvxj7KN3OXpERHklmV08+AlI/gmj
-         IIpYZq2GzvhCwwBZTcb3GYu5rVuo+w9hfb1wd7toY2SZCpUWU8KfRJZWwlEbujoS6AWO
-         dLcSt6sjLM0oHQ5Xp0M1fAUfYZbMGfShknxvM4+sgMiFrNm3e8j/1L0EcP8XG4J8jmyD
-         QgXrzfcNR0KeqmL5nKQzQ84l3Tt3/s6qB/hoN/pTNahuj1kJAypDEXXHXqv8CffaLs22
-         ZIOw==
-X-Gm-Message-State: AOAM530u7c5FbsaZmN9WTsxe+qP1AL/FvBALHk5RiUAsYjN2jhJIfuc0
-        6dvWdNiD3Vxvh0HM8VLgDJrkEGQQGvR6g1+dWattAw==
-X-Google-Smtp-Source: ABdhPJz4vWfkua2eG9MpTJ6k/kJDSLhEXhO0H2alk/afqT4ySNVYGzkUifS11LUHAxlT47DxEztZASWHQWqf40cxVOE=
-X-Received: by 2002:ac8:260b:: with SMTP id u11mr16891475qtu.380.1593449812975;
- Mon, 29 Jun 2020 09:56:52 -0700 (PDT)
+        bh=cveXjL+4X4gh1TmXdX8oqUnZgc2Vd1IaF1EU/HiH/po=;
+        b=ifeew4E+VXO5QXSsvQiln15uO6ojzZmj3urM5kYIuXSAARhzLuREF6RbfbbQuikSJS
+         53rVdeubR5Nfoho1pH6tJxUaICsJC0oT/pjxg4NGqUP7aZom99fUxJWjQomfJXFBJCJX
+         AUDZ25osnNuatFWABx5Hb/0KzTHMYF2Z85S/eCSdi9Lh+OzNUBx+lhBpyZlT6ly3eWZp
+         BmtyIrmmlcoZ79A1OfV6a5/+hf29BPPfBmV0aa5DsRsRRcvWFKPDXY0frUa0Uj14wzie
+         vAXlHh8hqks6sFQHjjWUlbOXAPsDCdCVxqgSaJEN6f5qiOtd2vmG/YahohDrrvbACpnS
+         dF4A==
+X-Gm-Message-State: AOAM530QcdMcb+hITD1l+Ul9Z783NLj5cTBD9vQMr8nv4nrY+CbBuUZf
+        TeEUeTYcr8aXJhJXbWWv/9iSOiK9QkZ3oHl0cxM=
+X-Google-Smtp-Source: ABdhPJxR9g/vuVB4KPn3jdGd9TFAWyi4TL/l19BuOkeMaOra6mdLr30ClOYBUAd6kOsB5YS6iY65MEoC5vi4wUTht3Y=
+X-Received: by 2002:a9d:2c26:: with SMTP id f35mr14207086otb.232.1593441455928;
+ Mon, 29 Jun 2020 07:37:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <000000000000a4293f0598ef165e@google.com> <000000000000a1c96505a109a31b@google.com>
-In-Reply-To: <000000000000a1c96505a109a31b@google.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 29 Jun 2020 18:56:41 +0200
-Message-ID: <CACT4Y+bK_1tNXQoVHz=maMr-pCw4FK_chGzA7LuvChM6DGO-LA@mail.gmail.com>
-Subject: Re: KASAN: vmalloc-out-of-bounds Write in bitfill_aligned
-To:     syzbot <syzbot+e5fd3e65515b48c02a30@syzkaller.appspotmail.com>,
-        gk568005@gmail.com
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        DRI <dri-devel@lists.freedesktop.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+References: <20200625140105.14999-1-TheSven73@gmail.com> <20200625140105.14999-2-TheSven73@gmail.com>
+ <CAOMZO5AWiHWSLAcd=dj9dDFj8jLPAVAuoiOAJ8qKGPwRq1Q41g@mail.gmail.com>
+ <CAGngYiXJy4ASTNfT+R+qzJ3wA=Wy2h6XZm+8oo09sD+Jmse02w@mail.gmail.com> <CAOMZO5Cr3k+oy_Sf0kL9gge7bwqkvJR8BQhY-FvxVXN00A2ARw@mail.gmail.com>
+In-Reply-To: <CAOMZO5Cr3k+oy_Sf0kL9gge7bwqkvJR8BQhY-FvxVXN00A2ARw@mail.gmail.com>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Mon, 29 Jun 2020 10:37:25 -0400
+Message-ID: <CAGngYiW=Pc_QjsjCv4Pc_R9OZk7nOAKm=k=b4TMbYRZ-08zKrQ@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] ARM: imx6plus: enable internal routing of
+ clk_enet_ref where possible
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Fugang Duan <fugang.duan@nxp.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Mar 17, 2020 at 10:34 AM syzbot
-<syzbot+e5fd3e65515b48c02a30@syzkaller.appspotmail.com> wrote:
->
-> syzbot has found a reproducer for the following crash on:
->
-> HEAD commit:    fb33c651 Linux 5.6-rc6
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=17dacd55e00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=9f894bd92023de02
-> dashboard link: https://syzkaller.appspot.com/bug?extid=e5fd3e65515b48c02a30
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11b8ca75e00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=114800e5e00000
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+e5fd3e65515b48c02a30@syzkaller.appspotmail.com
+Hi Fabio,
 
-+George who may know what causes this
+On Mon, Jun 29, 2020 at 10:26 AM Fabio Estevam <festevam@gmail.com> wrote:
+>
+> Just tested 5.4.24_2.1.0 on an imx6qp sabresd and DHCP also fails there.
 
-> ==================================================================
-> BUG: KASAN: vmalloc-out-of-bounds in bitfill_aligned drivers/video/fbdev/core/sysfillrect.c:54 [inline]
-> BUG: KASAN: vmalloc-out-of-bounds in bitfill_aligned+0x34b/0x410 drivers/video/fbdev/core/sysfillrect.c:25
-> Write of size 8 at addr ffffc90009621000 by task syz-executor767/9337
->
-> CPU: 3 PID: 9337 Comm: syz-executor767 Not tainted 5.6.0-rc6-syzkaller #0
-> Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x188/0x20d lib/dump_stack.c:118
->  print_address_description.constprop.0.cold+0x5/0x315 mm/kasan/report.c:374
->  __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:506
->  kasan_report+0xe/0x20 mm/kasan/common.c:641
->  bitfill_aligned drivers/video/fbdev/core/sysfillrect.c:54 [inline]
->  bitfill_aligned+0x34b/0x410 drivers/video/fbdev/core/sysfillrect.c:25
->  sys_fillrect+0x415/0x7a0 drivers/video/fbdev/core/sysfillrect.c:291
->  drm_fb_helper_sys_fillrect+0x1c/0x190 drivers/gpu/drm/drm_fb_helper.c:719
->  bit_clear_margins+0x2d5/0x4a0 drivers/video/fbdev/core/bitblit.c:232
->  fbcon_clear_margins+0x1de/0x240 drivers/video/fbdev/core/fbcon.c:1379
->  fbcon_switch+0xd1b/0x1740 drivers/video/fbdev/core/fbcon.c:2361
->  redraw_screen+0x2a8/0x770 drivers/tty/vt/vt.c:1008
->  fbcon_modechanged+0x5bd/0x780 drivers/video/fbdev/core/fbcon.c:2998
->  fbcon_update_vcs+0x3a/0x50 drivers/video/fbdev/core/fbcon.c:3045
->  fb_set_var+0xad0/0xd40 drivers/video/fbdev/core/fbmem.c:1056
->  do_fb_ioctl+0x390/0x7d0 drivers/video/fbdev/core/fbmem.c:1109
->  fb_ioctl+0xdd/0x130 drivers/video/fbdev/core/fbmem.c:1185
->  vfs_ioctl fs/ioctl.c:47 [inline]
->  ksys_ioctl+0x11a/0x180 fs/ioctl.c:763
->  __do_sys_ioctl fs/ioctl.c:772 [inline]
->  __se_sys_ioctl fs/ioctl.c:770 [inline]
->  __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:770
->  do_syscall_64+0xf6/0x7d0 arch/x86/entry/common.c:294
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x433d29
-> Code: c4 18 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 eb da fc ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007fff33d61508 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-> RAX: ffffffffffffffda RBX: 00000000004002e0 RCX: 0000000000433d29
-> RDX: 00000000200001c0 RSI: 0000000000004601 RDI: 0000000000000003
-> RBP: 00000000006b2018 R08: 0000000000000000 R09: 00000000004002e0
-> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401bc0
-> R13: 0000000000401c50 R14: 0000000000000000 R15: 0000000000000000
->
->
-> Memory state around the buggy address:
->  ffffc90009620f00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
->  ffffc90009620f80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-> >ffffc90009621000: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
->                    ^
->  ffffc90009621080: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
->  ffffc90009621100: f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9 f9
-> ==================================================================
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/000000000000a1c96505a109a31b%40google.com.
+I think I discovered the problem !
+
+When I compare the sabresd devicetree on mainline with the actual sabresd
+schematics, the devicetree is incorrect ! Things still work, but only
+by accident.
+
+The sabresd has an AR8131 PHY, which generates the enet ref clock, not the
+imx6. So on the schematic we see that the clock output of the PHY is wired
+to imx6 ENET_REF_CLK, so it can be used as a clock source. And GPIO_16
+is disconnected, as it should, because the imx6 is not generating the ref clk.
+
+But the devicetree is written as if the imx6 is providing the clock ! See
+here:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/arch/arm/boot/dts/imx6qdl-sabresd.dtsi?h=v5.7.6#n513
+
+Also there is no override of the fec PTP clock:
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/arch/arm/boot/dts/imx6qdl-sabresd.dtsi?h=v5.7.6#n202
+
+Although Shawn's mainline patch mandates this?
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/?h=v5.7.6&id=810c0ca879098a993e2ce0a190d24d11c17df748
+
+This will work, but only by accident. So on a plus, when we
+(incorrectly) switch the
+bypass bit on, things stop working.
