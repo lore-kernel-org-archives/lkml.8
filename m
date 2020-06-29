@@ -2,120 +2,87 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DATE_IN_PAST_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBEB3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4AE9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97E50208B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:29:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466197;
-	bh=b+BmPJ7PdB/ndOAReTGuooxydxFLBS0jg9jSpDW8ObI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tH6kPxSAhrO2/HbGvBSZO4374/vahlh7dFtPBGuyeQHvEoy4AR8jZzgixTxKPy9lF
-	 WwvOdy9/HjekZp061HjdEDv91HH+CcVXCtwgUO/B8L7gVyQelyRA/2vhs9ZSdHZlpV
-	 Q+9jSeHMkwMo7GiOOCPAR4TEmFDlfBRvuckJExrU=
+	by mail.kernel.org (Postfix) with ESMTP id 87F54208B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:30:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388060AbgF2V3z (ORCPT
+        id S2387505AbgF2VaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:29:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60642 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:30:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40462 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728905AbgF2SlY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728888AbgF2SlY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:41:24 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DDEE2415A;
-        Mon, 29 Jun 2020 15:19:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443940;
-        bh=b+BmPJ7PdB/ndOAReTGuooxydxFLBS0jg9jSpDW8ObI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ho6UkY9iPtwZWHcPI1veQvtelIW0DjppfqHEEkyzvwWCLaxN3Hntcl/fTXNty2LUy
-         75CYmBQligkp/q06AYDy0Hyio4mZYlhqwdMVPdFQK+VuHFTeiSEZlHtd+N6Ol109CP
-         wgLdjGlvuazkjKyYW7le7FPo6Iya7KL0mkvIoIIc=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wei Yongjun <weiyongjun1@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 042/265] mptcp: fix memory leak in mptcp_subflow_create_socket()
-Date:   Mon, 29 Jun 2020 11:14:35 -0400
-Message-Id: <20200629151818.2493727-43-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
-References: <20200629151818.2493727-1-sashal@kernel.org>
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 8266DAFAA;
+        Mon, 29 Jun 2020 10:27:20 +0000 (UTC)
+Subject: Re: [PATCH for v5.8 3/3] mm/memory: fix IO cost for anonymous page
+To:     js1304@gmail.com, Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Rik van Riel <riel@surriel.com>,
+        Minchan Kim <minchan.kim@gmail.com>,
+        Michal Hocko <mhocko@suse.com>, kernel-team@lge.com,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+References: <1592288204-27734-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <1592288204-27734-4-git-send-email-iamjoonsoo.kim@lge.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <882baec9-6d8e-55e9-ef67-67266458cbe0@suse.cz>
+Date:   Mon, 29 Jun 2020 12:27:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.7.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.7.7-rc1
-X-KernelTest-Deadline: 2020-07-01T15:14+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1592288204-27734-4-git-send-email-iamjoonsoo.kim@lge.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wei Yongjun <weiyongjun1@huawei.com>
+On 6/16/20 8:16 AM, js1304@gmail.com wrote:
+> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> 
+> With synchronous IO swap device, swap-in is directly handled in fault
+> code. Since IO cost notation isn't added there, with synchronous IO swap
+> device, LRU balancing could be wrongly biased. Fix it to count it
+> in fault code.
+> 
+> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 
-[ Upstream commit b8ad540dd4e40566c520dff491fc06c71ae6b989 ]
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
 
-socket malloced  by sock_create_kern() should be release before return
-in the error handling, otherwise it cause memory leak.
-
-unreferenced object 0xffff88810910c000 (size 1216):
-  comm "00000003_test_m", pid 12238, jiffies 4295050289 (age 54.237s)
-  hex dump (first 32 bytes):
-    01 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 00 00 2f 30 0a 81 88 ff ff  ........./0.....
-  backtrace:
-    [<00000000e877f89f>] sock_alloc_inode+0x18/0x1c0
-    [<0000000093d1dd51>] alloc_inode+0x63/0x1d0
-    [<000000005673fec6>] new_inode_pseudo+0x14/0xe0
-    [<00000000b5db6be8>] sock_alloc+0x3c/0x260
-    [<00000000e7e3cbb2>] __sock_create+0x89/0x620
-    [<0000000023e48593>] mptcp_subflow_create_socket+0xc0/0x5e0
-    [<00000000419795e4>] __mptcp_socket_create+0x1ad/0x3f0
-    [<00000000b2f942e8>] mptcp_stream_connect+0x281/0x4f0
-    [<00000000c80cd5cc>] __sys_connect_file+0x14d/0x190
-    [<00000000dc761f11>] __sys_connect+0x128/0x160
-    [<000000008b14e764>] __x64_sys_connect+0x6f/0xb0
-    [<000000007b4f93bd>] do_syscall_64+0xa1/0x530
-    [<00000000d3e770b6>] entry_SYSCALL_64_after_hwframe+0x49/0xb3
-
-Fixes: 2303f994b3e1 ("mptcp: Associate MPTCP context with TCP socket")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/mptcp/subflow.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index e6feb05a93dc3..db3e4e74e7857 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1015,8 +1015,10 @@ int mptcp_subflow_create_socket(struct sock *sk, struct socket **new_sock)
- 	err = tcp_set_ulp(sf->sk, "mptcp");
- 	release_sock(sf->sk);
- 
--	if (err)
-+	if (err) {
-+		sock_release(sf);
- 		return err;
-+	}
- 
- 	/* the newly created socket really belongs to the owning MPTCP master
- 	 * socket, even if for additional subflows the allocation is performed
--- 
-2.25.1
+> ---
+>  mm/memory.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/mm/memory.c b/mm/memory.c
+> index bc6a471..3359057 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -3143,6 +3143,14 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+>  				if (err)
+>  					goto out_page;
+>  
+> +				/*
+> +				 * XXX: Move to lru_cache_add() when it
+> +				 * supports new vs putback
+> +				 */
+> +				spin_lock_irq(&page_pgdat(page)->lru_lock);
+> +				lru_note_cost_page(page);
+> +				spin_unlock_irq(&page_pgdat(page)->lru_lock);
+> +
+>  				lru_cache_add(page);
+>  				swap_readpage(page, true);
+>  			}
+> 
 
