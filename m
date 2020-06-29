@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 204E9C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92577C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F07EA20760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71CA9206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460193;
-	bh=wUuYCyPvSVKhGvpP66IJOSYqfV3P4xzWIrHqXDhl3cY=;
+	s=default; t=1593460199;
+	bh=ZsO/Gz2btHq/e4G43/KKmYyVu0Zy/snV+DU8BBNW4Mg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y//M7Cng1hOEQp6QWXyGcHPFCk79js5qXlLGFwa5ch0KpWfQjPCEQ1Byy7AhN/d9K
-	 Lwwaq7ux7rQ0O9DGkMCtfWbIoX3Lydz4Gaz+mdaVoNwJq9ATUnkvF1Hm82ETZUsmDZ
-	 WN+f5Bf54iz3B9THZtNwj4TlmMRpwnsB5ZypZdtI=
+	b=DnLLSMCMgHGcPmYN2JYmc6h16/Y2uLAUFM1k+S2+pmh/0Wl6oSnWMTQKkocpDYLHJ
+	 je3LP8PemVS9rnn531jcpR/uQj+pn137jqfK16pZlV6cfnDG2SB8qSY0ZV9oI4hVlx
+	 j9HAi0buHVZiJda9P0Bbs1kxf991Vf3K1wfQuD4s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387983AbgF2Ttu (ORCPT
+        id S2388232AbgF2Tty (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:49:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47674 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:49:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387759AbgF2Tkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387744AbgF2Tkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BE0F24921;
-        Mon, 29 Jun 2020 15:27:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B1902489C;
+        Mon, 29 Jun 2020 15:26:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444476;
-        bh=wUuYCyPvSVKhGvpP66IJOSYqfV3P4xzWIrHqXDhl3cY=;
+        s=default; t=1593444395;
+        bh=ZsO/Gz2btHq/e4G43/KKmYyVu0Zy/snV+DU8BBNW4Mg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vxJojArVtWrUNBRULFfbhB9PCh8b+yoe70mpWHbVPU4cemcO4A52W/8Y/4FMdeUXF
-         c59ht7End2M3IU8/xJD/NE+Ck6gsENt2icgpL0eIz1P5siKIzRGln9qj5lSTHWg2YW
-         u4oShPjsypE2gu0dIobDdf1LbMsjf/gQmH9kO+68=
+        b=jxV7QZpmf5SaKrzpNPHLg03NRdFGgeLPgRMwdH+xQZ0SnQgn4JLklroAp2/EDlFsF
+         lJmFSzJF7qpqZI0yn6Q61XHdsC7T6lsbk5jZc9rmyqzrVMGFKu51HmsE0N7v9//l/E
+         wkwSSegyEU+gzTG7IyvLSt0FTnOH6wWU4snV45f0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Junxiao Bi <junxiao.bi@oracle.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Jun Piao <piaojun@huawei.com>, Mark Fasheh <mark@fasheh.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 155/178] ocfs2: avoid inode removal while nfsd is accessing it
-Date:   Mon, 29 Jun 2020 11:25:00 -0400
-Message-Id: <20200629152523.2494198-156-sashal@kernel.org>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 072/178] ASoC: fsl_ssi: Fix bclk calculation for mono channel
+Date:   Mon, 29 Jun 2020 11:23:37 -0400
+Message-Id: <20200629152523.2494198-73-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -70,102 +66,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Junxiao Bi <junxiao.bi@oracle.com>
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-commit 4cd9973f9ff69e37dd0ba2bd6e6423f8179c329a upstream.
+[ Upstream commit ed1220df6e666500ebf58c4f2fccc681941646fb ]
 
-Patch series "ocfs2: fix nfsd over ocfs2 issues", v2.
+For mono channel, SSI will switch to Normal mode.
 
-This is a series of patches to fix issues on nfsd over ocfs2.  patch 1
-is to avoid inode removed while nfsd access it patch 2 & 3 is to fix a
-panic issue.
+In Normal mode and Network mode, the Word Length Control bits
+control the word length divider in clock generator, which is
+different with I2S Master mode (the word length is fixed to
+32bit), it should be the value of params_width(hw_params).
 
-This patch (of 4):
+The condition "slots == 2" is not good for I2S Master mode,
+because for Network mode and Normal mode, the slots can also
+be 2. Then we need to use (ssi->i2s_net & SSI_SCR_I2S_MODE_MASK)
+to check if it is I2S Master mode.
 
-When nfsd is getting file dentry using handle or parent dentry of some
-dentry, one cluster lock is used to avoid inode removed from other node,
-but it still could be removed from local node, so use a rw lock to avoid
-this.
+So we refine the formula for mono channel, otherwise there
+will be sound issue for S24_LE.
 
-Link: http://lkml.kernel.org/r/20200616183829.87211-1-junxiao.bi@oracle.com
-Link: http://lkml.kernel.org/r/20200616183829.87211-2-junxiao.bi@oracle.com
-Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Jun Piao <piaojun@huawei.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: b0a7043d5c2c ("ASoC: fsl_ssi: Caculate bit clock rate using slot number and width")
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Reviewed-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Link: https://lore.kernel.org/r/034eff1435ff6ce300b6c781130cefd9db22ab9a.1592276147.git.shengjiu.wang@nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/dlmglue.c | 17 ++++++++++++++++-
- fs/ocfs2/ocfs2.h   |  1 +
- 2 files changed, 17 insertions(+), 1 deletion(-)
+ sound/soc/fsl/fsl_ssi.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/fs/ocfs2/dlmglue.c b/fs/ocfs2/dlmglue.c
-index 8a2e284ccfcdb..e2c34c704185d 100644
---- a/fs/ocfs2/dlmglue.c
-+++ b/fs/ocfs2/dlmglue.c
-@@ -689,6 +689,12 @@ static void ocfs2_nfs_sync_lock_res_init(struct ocfs2_lock_res *res,
- 				   &ocfs2_nfs_sync_lops, osb);
- }
+diff --git a/sound/soc/fsl/fsl_ssi.c b/sound/soc/fsl/fsl_ssi.c
+index 537dc69256f0e..a4ebd6ddaba10 100644
+--- a/sound/soc/fsl/fsl_ssi.c
++++ b/sound/soc/fsl/fsl_ssi.c
+@@ -678,8 +678,9 @@ static int fsl_ssi_set_bclk(struct snd_pcm_substream *substream,
+ 	struct regmap *regs = ssi->regs;
+ 	u32 pm = 999, div2, psr, stccr, mask, afreq, factor, i;
+ 	unsigned long clkrate, baudrate, tmprate;
+-	unsigned int slots = params_channels(hw_params);
+-	unsigned int slot_width = 32;
++	unsigned int channels = params_channels(hw_params);
++	unsigned int slot_width = params_width(hw_params);
++	unsigned int slots = 2;
+ 	u64 sub, savesub = 100000;
+ 	unsigned int freq;
+ 	bool baudclk_is_used;
+@@ -688,10 +689,14 @@ static int fsl_ssi_set_bclk(struct snd_pcm_substream *substream,
+ 	/* Override slots and slot_width if being specifically set... */
+ 	if (ssi->slots)
+ 		slots = ssi->slots;
+-	/* ...but keep 32 bits if slots is 2 -- I2S Master mode */
+-	if (ssi->slot_width && slots != 2)
++	if (ssi->slot_width)
+ 		slot_width = ssi->slot_width;
  
-+static void ocfs2_nfs_sync_lock_init(struct ocfs2_super *osb)
-+{
-+	ocfs2_nfs_sync_lock_res_init(&osb->osb_nfs_sync_lockres, osb);
-+	init_rwsem(&osb->nfs_sync_rwlock);
-+}
++	/* ...but force 32 bits for stereo audio using I2S Master Mode */
++	if (channels == 2 &&
++	    (ssi->i2s_net & SSI_SCR_I2S_MODE_MASK) == SSI_SCR_I2S_MODE_MASTER)
++		slot_width = 32;
 +
- void ocfs2_trim_fs_lock_res_init(struct ocfs2_super *osb)
- {
- 	struct ocfs2_lock_res *lockres = &osb->osb_trim_fs_lockres;
-@@ -2855,6 +2861,11 @@ int ocfs2_nfs_sync_lock(struct ocfs2_super *osb, int ex)
- 	if (ocfs2_is_hard_readonly(osb))
- 		return -EROFS;
+ 	/* Generate bit clock based on the slot number and slot width */
+ 	freq = slots * slot_width * params_rate(hw_params);
  
-+	if (ex)
-+		down_write(&osb->nfs_sync_rwlock);
-+	else
-+		down_read(&osb->nfs_sync_rwlock);
-+
- 	if (ocfs2_mount_local(osb))
- 		return 0;
- 
-@@ -2873,6 +2884,10 @@ void ocfs2_nfs_sync_unlock(struct ocfs2_super *osb, int ex)
- 	if (!ocfs2_mount_local(osb))
- 		ocfs2_cluster_unlock(osb, lockres,
- 				     ex ? LKM_EXMODE : LKM_PRMODE);
-+	if (ex)
-+		up_write(&osb->nfs_sync_rwlock);
-+	else
-+		up_read(&osb->nfs_sync_rwlock);
- }
- 
- int ocfs2_trim_fs_lock(struct ocfs2_super *osb,
-@@ -3340,7 +3355,7 @@ int ocfs2_dlm_init(struct ocfs2_super *osb)
- local:
- 	ocfs2_super_lock_res_init(&osb->osb_super_lockres, osb);
- 	ocfs2_rename_lock_res_init(&osb->osb_rename_lockres, osb);
--	ocfs2_nfs_sync_lock_res_init(&osb->osb_nfs_sync_lockres, osb);
-+	ocfs2_nfs_sync_lock_init(osb);
- 	ocfs2_orphan_scan_lock_res_init(&osb->osb_orphan_scan.os_lockres, osb);
- 
- 	osb->cconn = conn;
-diff --git a/fs/ocfs2/ocfs2.h b/fs/ocfs2/ocfs2.h
-index 9150cfa4df7dc..9461bd3e1c0c8 100644
---- a/fs/ocfs2/ocfs2.h
-+++ b/fs/ocfs2/ocfs2.h
-@@ -394,6 +394,7 @@ struct ocfs2_super
- 	struct ocfs2_lock_res osb_super_lockres;
- 	struct ocfs2_lock_res osb_rename_lockres;
- 	struct ocfs2_lock_res osb_nfs_sync_lockres;
-+	struct rw_semaphore nfs_sync_rwlock;
- 	struct ocfs2_lock_res osb_trim_fs_lockres;
- 	struct mutex obs_trim_fs_mutex;
- 	struct ocfs2_dlm_debug *osb_dlm_debug;
 -- 
 2.25.1
 
