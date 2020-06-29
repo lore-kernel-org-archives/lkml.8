@@ -2,147 +2,100 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0CB8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91831C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:56:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E85A20768
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:56:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u2R2A9TN"
+	by mail.kernel.org (Postfix) with ESMTP id 77436206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:56:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389882AbgF2U4M (ORCPT
+        id S2389851AbgF2U4W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:56:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43362 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731283AbgF2TNJ (ORCPT
+        Mon, 29 Jun 2020 16:56:22 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:39337 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731284AbgF2U4R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:13:09 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09CDBC03E979;
-        Sun, 28 Jun 2020 20:52:58 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id b16so7293971pfi.13;
-        Sun, 28 Jun 2020 20:52:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mMGxHvmMYl6KmBYcQsFExMxRkPUqi7/TV9d4rzWRr7k=;
-        b=u2R2A9TNTrjVPaCWT+EtNeCfx976UM0/uvyxC3814IxJ3BmtNIBpFQ0ICCey/EcQGc
-         C2eS5fpQk4UcCXH1AL8vjaVjN962La5SVUBbXE9DUXpkS2EulFeP7MKv0QrS30LgmQyA
-         cQ2YIx5Dt2G8V0SVUKirabbIOS+ctzsLxrqbXTTe6FbjXEnT9K169K/WjAZx+6ZX270m
-         k++SJlX43a5xXxXOD4YsBZgNqOf3YZSfrFwcvunodSnyOzYfknDpa3lYOFOoZY8PdBi8
-         RgNZnFHUk+mC3uA38MgCHbsb3oJAcFv/T6tdXFqj0DgTQqEKKIGlhuti9b9huZHg99il
-         aDTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=mMGxHvmMYl6KmBYcQsFExMxRkPUqi7/TV9d4rzWRr7k=;
-        b=Oj00TvbRgLoUUi5gmJh70uj/58twygrgn7n5JHCKtXPhCE+aDBEFZDjqLrvUpb7jeu
-         yzy4IHuGYvOZg/KblKHYtsSUQK7mSI7oD42jYNKOAVv63bIV/Zc8lohqCxSaJOF1g/se
-         o9l1RvR4mq76eswFlzv4jxaId3C29Y0wLV081BwpT2H/MZAYS1B2/7G7kYKN2IIrp7A7
-         Zd1B1mbQ6cMv6TT/c2bRjmqScUTbTvueeMh4Xnt0+3DF4tSz0LYV5M12GqxzFn+zgd/B
-         6OAagL9esXnOJfoWa5GwS7lqjV21ZISDUJl8uOHqp8kPLxNLpZFncGwPCbX1RZ7UAXEu
-         jGCA==
-X-Gm-Message-State: AOAM5328Pso4MS3TVeS5DW09NaDy0WZ5/GD3dukJB2xTzXc+LK2x83Ti
-        9FDFX8OseeBRuAPMAMrbvZg=
-X-Google-Smtp-Source: ABdhPJydbdI8co0v0o/sBZ2cRFoABhFdoGlHqU5hKHlqf4wT6H8b7R/olOtLPlXq7tzCb6hpIsCqjw==
-X-Received: by 2002:a62:1716:: with SMTP id 22mr12030455pfx.99.1593402777406;
-        Sun, 28 Jun 2020 20:52:57 -0700 (PDT)
-Received: from varodek.iballbatonwifi.com ([103.105.153.57])
-        by smtp.gmail.com with ESMTPSA id b191sm28757684pga.13.2020.06.28.20.52.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jun 2020 20:52:56 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org, linux-wireless@vger.kernel.org
-Subject: [PATCH v1] adm8211: use generic power management
-Date:   Mon, 29 Jun 2020 09:20:32 +0530
-Message-Id: <20200629035031.169670-1-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.27.0
+        Mon, 29 Jun 2020 16:56:17 -0400
+Received: from mail-qk1-f182.google.com ([209.85.222.182]) by
+ mrelayeu.kundenserver.de (mreue106 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1Mf0uq-1jATjC3nC6-00gVz9 for <linux-kernel@vger.kernel.org>; Mon, 29 Jun
+ 2020 13:28:29 +0200
+Received: by mail-qk1-f182.google.com with SMTP id 145so12356881qke.9
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 04:28:28 -0700 (PDT)
+X-Gm-Message-State: AOAM531XpgxAB+w5fH3gfSbm+rKX69mxTCiqz6nWFprhnirr/OR+eQYW
+        DnQVWtUCdOYH68V3QlnL0ARLUNriJHyq2Ez7pPo=
+X-Google-Smtp-Source: ABdhPJx1a27SVGh6LzPXCycNokQG+CDZxoOG3UMU7wKdxdg7U0z8BdyRfM4glFcYitYHD0+6fYEnvcVI9PbQkgjt+84=
+X-Received: by 2002:a05:620a:1654:: with SMTP id c20mr8009980qko.138.1593430107812;
+ Mon, 29 Jun 2020 04:28:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1593425623-31810-1-git-send-email-Anson.Huang@nxp.com>
+ <CAK8P3a1pr8YbZMpSXg6o_UeDvaU=dDqfo45DudTASNcsxeg3kg@mail.gmail.com> <DB3PR0402MB3916292FC3FDE4F28AFEB5EBF56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <DB3PR0402MB3916292FC3FDE4F28AFEB5EBF56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 29 Jun 2020 13:28:11 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0Za99-xXTwtHNHO-Dzbo-1uesNC2oO91RA-gZZG3Anmw@mail.gmail.com>
+Message-ID: <CAK8P3a0Za99-xXTwtHNHO-Dzbo-1uesNC2oO91RA-gZZG3Anmw@mail.gmail.com>
+Subject: Re: [PATCH 1/3] reset: imx7: Support module build
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Stefan Agner <stefan.agner@toradex.com>,
+        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Leo Li <leoyang.li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Olof Johansson <olof@lixom.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:EjVc+ogzzXXqEFzj480i0DqLvw32xnU3m5wQrDzQpck5eHfOAfG
+ HRkDxl0F5CwwRdLh0Zz7Lgp/Lducn1f5siBLvS/4KwMcXoqwuo90hZnojvFkOLiUGBodhLq
+ ZZDGFKb97mLmKRB+U4KX75rOUuewGHe0m3Oay4XugYVvGCSrpeiZdacjK5aBQmQabDfoHgQ
+ +9Z6yBTSaH+/EdxvFRr9Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:oMdFggA9gVQ=:fYdvnFtJM8WbK1LXfVVpVR
+ OAeV1wzLC2zNCHgCAYMSt2Uv189+iCWulXlCRf8DuSL+hTboTaQw1oSO6T5dxxvF38glH2Njr
+ fpV2isTMuu3f8MzIDfFCP308dfcuRxdnMEuYePmCkOryXXf6AccriHPTjIAdIVXg/Dc7LtXvS
+ sx9tfY22QDWd0d45rDV9uNzLswJ3Yn9juiKaAsxtlP9O1gQCY0ZZmFMd9+R+zzSJbA1Ne5R+l
+ jJDI9glctp+R2m8tRnSP+Nl7VUgZOG7x2d+LwMVuqKqTHlFD9zknwXkXo+526VTXFSQeNdaN5
+ /i3kUrbhWTfKTv91m50spkroIAK+GJaSdMglkgYtBMwpkoTqIs+MkiYMdtZX2E7hXD6WmO4qv
+ 1rWbT0wH8CsG6ohyUZwa4Cc9DU/jKqcbu9IIoP+om2fNXHN8M96snYFF75PStpUhC7sTLPXO9
+ hnSxSKQGx1PwpWFDhXyC9neX7W29R9frldJFqRYcL93All9UkQklFYuRmXxlUknK6pLvS2LBp
+ k13wlNldLuPYtTMI4UWvqGshaJisstq42c7iQWIg4MRPBH2OjKbISvuezEIrQnnPeeS6vl3z7
+ Y/YvzwHyrZt7hUle5DLV2cYCAe5VHeyaeBFwJnYvBKUETqmYRJzQwvSqMBzzLPp/yLWOKZBIm
+ LwhiN/Sdx5aYuX5XpGLv44k7sIiusl0GGel/pQ83qTkOIoeLrQ+95Om3CHKj9ta3F1tFle4WP
+ iwM2awJzQCTyfK9Y7zjpMdQz+d7YYhWnoxjQ+9eO8nm/teAk1h7t0X6loZveflhz60v6H64q3
+ lxK1GV+VxmtO3NZZ6hTg2hyC7QsyA/wKcdhS4Z+lfqajNPEKDdIrlz+vcylo7SYDtr+OMDrCh
+ UvMFeb6K4ox5M0QXURumk/eYPk/AEBSvjF/RL9WxYZyL16wdkrtRtvK8IfnK6rU6yQauguInP
+ QDce767acQeU4EBaaM7dVF4lvAgqpaVojtzqT6Pv3xvN57vXhvweM
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With legacy PM, drivers themselves were responsible for managing the
-device's power states and takes care of register states.
+On Mon, Jun 29, 2020 at 12:45 PM Anson Huang <anson.huang@nxp.com> wrote:
+> > Subject: Re: [PATCH 1/3] reset: imx7: Support module build
+> > On Mon, Jun 29, 2020 at 12:25 PM Anson Huang <Anson.Huang@nxp.com> wrote:
+>
+> The reset driver normally won't be removed since it is necessary for drivers which
+> need it, it is just for Android GKI support, in this case, do we need to change it to
+> module_platform_driver()?
 
-After upgrading to the generic structure, PCI core will take care of
-required tasks and drivers should do only device-specific operations.
+Please at least try to do it, or explain in the changelog what went wrong
+if it doesn't work.
 
-In the case of adm8211, after removing PCI helper functions, .suspend()
-and .resume() became empty-body functions. Hence, define them NULL and
-use dev_pm_ops.
+I don't think "because Android GKI" should ever be the sole justification for
+a patch. Making drivers loadable module is a good idea regardless of GKI,
+and if you do that, then make it behave like any other loadable module.
 
-Compile-tested only.
-
-Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
----
- drivers/net/wireless/admtek/adm8211.c | 25 +++++--------------------
- 1 file changed, 5 insertions(+), 20 deletions(-)
-
-diff --git a/drivers/net/wireless/admtek/adm8211.c b/drivers/net/wireless/admtek/adm8211.c
-index ba326f6c1214..22f9f2f8af10 100644
---- a/drivers/net/wireless/admtek/adm8211.c
-+++ b/drivers/net/wireless/admtek/adm8211.c
-@@ -1976,35 +1976,20 @@ static void adm8211_remove(struct pci_dev *pdev)
- }
- 
- 
--#ifdef CONFIG_PM
--static int adm8211_suspend(struct pci_dev *pdev, pm_message_t state)
--{
--	pci_save_state(pdev);
--	pci_set_power_state(pdev, pci_choose_state(pdev, state));
--	return 0;
--}
--
--static int adm8211_resume(struct pci_dev *pdev)
--{
--	pci_set_power_state(pdev, PCI_D0);
--	pci_restore_state(pdev);
--	return 0;
--}
--#endif /* CONFIG_PM */
--
-+#define adm8211_suspend NULL
-+#define adm8211_resume NULL
- 
- MODULE_DEVICE_TABLE(pci, adm8211_pci_id_table);
- 
-+static SIMPLE_DEV_PM_OPS(adm8211_pm_ops, adm8211_suspend, adm8211_resume);
-+
- /* TODO: implement enable_wake */
- static struct pci_driver adm8211_driver = {
- 	.name		= "adm8211",
- 	.id_table	= adm8211_pci_id_table,
- 	.probe		= adm8211_probe,
- 	.remove		= adm8211_remove,
--#ifdef CONFIG_PM
--	.suspend	= adm8211_suspend,
--	.resume		= adm8211_resume,
--#endif /* CONFIG_PM */
-+	.driver.pm	= &adm8211_pm_ops,
- };
- 
- module_pci_driver(adm8211_driver);
--- 
-2.27.0
-
+        Arnd
