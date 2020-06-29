@@ -4,60 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2BA1C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF37C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE57220656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:24:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 625C920656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:24:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462240;
-	bh=dX2+Dth5bwjsX4ZQA6ISxfzH1D20B2dgoyz+guqrl68=;
+	s=default; t=1593462242;
+	bh=4ZO3tFXObaGfCPX+bWEYa6pc6iCg3U9UGNYrABAuf1c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2Zg8V2OMRbQTwRU5FcFT6+BcO5eJAPLRmvvW0quH+OjlFkmH0VE5CmznDnaMIZFGP
-	 IeSz7GwFt39Zw/1CbRx7jQOohRf87Iv59Kk2T4fi5i/G7WduH0YMh0NuMPEQve5h3c
-	 RrBJ+y2dIKBVip4QQRnOaS62oIbA9D8I+4XVNU04=
+	b=S9pM7Ajkm3qOhe+uN8mF91iGvT0/TgJX2a78EnsMnIHMJhSKxbLRlxmhjn6F8PtS7
+	 0xQV5Tjo46KFDTPTCHn53YBCzfwOSLwtAWAnlDeLlC0fdvPuECghjGvDrmyp+M0i5P
+	 fRvh2YT1K+jG17YyvDXXt91ZhKw9evAXZwapqbbg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388892AbgF2UX7 (ORCPT
+        id S2388909AbgF2UYA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:23:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37068 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:24:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732562AbgF2TZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732561AbgF2TZb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56E562539D;
-        Mon, 29 Jun 2020 15:41:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 570702533B;
+        Mon, 29 Jun 2020 15:39:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445266;
-        bh=dX2+Dth5bwjsX4ZQA6ISxfzH1D20B2dgoyz+guqrl68=;
+        s=default; t=1593445179;
+        bh=4ZO3tFXObaGfCPX+bWEYa6pc6iCg3U9UGNYrABAuf1c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZJpje9+E2ehoFUErgX0dIqQpUU2sRIZssArilaraKqwISSwjICpz1V3kVmdflJR3X
-         dV99gb3D/Wfb3EU/2knf3/GpD9bkvKNH2rPOEC24eauCc5BW1ABQ5+tP4X1m6AFLCZ
-         EWB2JkfbPA/xpSklRH35mRX3gEn5sM34u531YGTU=
+        b=J2NTubYYF830biPVa+KlzxnAoURunxts8D1x5LFUuY0kjfjZ8LegdNOheperPDNFU
+         uxevVxwQ44XxNks75KJRVscmLO1UFnoVpiYDQkIUJt2Gti2QkKMglKIfseQ+dA2JpM
+         vJO298x9alzKNak8KZDUMIRhZp/HG3/OYg4yfHM8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Roy Spliet <nouveau@spliet.org>,
-        Abhinav Kumar <abhinavk@codeaurora.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 046/191] drm/msm/mdp5: Fix mdp5_init error path for failed mdp5_kms allocation
-Date:   Mon, 29 Jun 2020 11:37:42 -0400
-Message-Id: <20200629154007.2495120-47-sashal@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.14 71/78] Staging: rtl8723bs: prevent buffer overflow in update_sta_support_rate()
+Date:   Mon, 29 Jun 2020 11:37:59 -0400
+Message-Id: <20200629153806.2494953-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
-References: <20200629154007.2495120-1-sashal@kernel.org>
+In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
+References: <20200629153806.2494953-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.229-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.9.y
+X-KernelTest-Branch: linux-4.14.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.9.229-rc1
-X-KernelTest-Deadline: 2020-07-01T15:39+00:00
+X-KernelTest-Version: 4.14.186-rc1
+X-KernelTest-Deadline: 2020-07-01T15:38+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -66,35 +64,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roy Spliet <nouveau@spliet.org>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit e4337877c5d578722c0716f131fb774522013cf5 ]
+commit b65a2d8c8614386f7e8d38ea150749f8a862f431 upstream.
 
-When allocation for mdp5_kms fails, calling mdp5_destroy() leads to undefined
-behaviour, likely a nullptr exception or use-after-free troubles.
+The "ie_len" variable is in the 0-255 range and it comes from the
+network.  If it's over NDIS_802_11_LENGTH_RATES_EX (16) then that will
+lead to memory corruption.
 
-Signed-off-by: Roy Spliet <nouveau@spliet.org>
-Reviewed-by: Abhinav Kumar <abhinavk@codeaurora.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 554c0a3abf21 ("staging: Add rtl8723bs sdio wifi driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200603101958.GA1845750@mwanda
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/staging/rtl8723bs/core/rtw_wlan_util.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.c
-index ed7143d35b25d..6224aca7cd297 100644
---- a/drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.c
-+++ b/drivers/gpu/drm/msm/mdp/mdp5/mdp5_kms.c
-@@ -769,7 +769,8 @@ static int mdp5_init(struct platform_device *pdev, struct drm_device *dev)
+diff --git a/drivers/staging/rtl8723bs/core/rtw_wlan_util.c b/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
+index f485f541e36d0..d6de62ee681e5 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
++++ b/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
+@@ -1904,12 +1904,14 @@ int update_sta_support_rate(struct adapter *padapter, u8 *pvar_ie, uint var_ie_l
+ 	pIE = (struct ndis_80211_var_ie *)rtw_get_ie(pvar_ie, _SUPPORTEDRATES_IE_, &ie_len, var_ie_len);
+ 	if (pIE == NULL)
+ 		return _FAIL;
++	if (ie_len > sizeof(pmlmeinfo->FW_sta_info[cam_idx].SupportedRates))
++		return _FAIL;
  
- 	return 0;
- fail:
--	mdp5_destroy(pdev);
-+	if (mdp5_kms)
-+		mdp5_destroy(pdev);
- 	return ret;
- }
+ 	memcpy(pmlmeinfo->FW_sta_info[cam_idx].SupportedRates, pIE->data, ie_len);
+ 	supportRateNum = ie_len;
  
+ 	pIE = (struct ndis_80211_var_ie *)rtw_get_ie(pvar_ie, _EXT_SUPPORTEDRATES_IE_, &ie_len, var_ie_len);
+-	if (pIE)
++	if (pIE && (ie_len <= sizeof(pmlmeinfo->FW_sta_info[cam_idx].SupportedRates) - supportRateNum))
+ 		memcpy((pmlmeinfo->FW_sta_info[cam_idx].SupportedRates + supportRateNum), pIE->data, ie_len);
+ 
+ 	return _SUCCESS;
 -- 
 2.25.1
 
