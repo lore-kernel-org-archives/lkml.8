@@ -4,60 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A9FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 083BFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B6D4E20760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:14:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2F81206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:14:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461670;
-	bh=mHTMAWW1raNFP2h5TTT6iMi2R378EA2fCHGDsRw1TvM=;
+	s=default; t=1593461676;
+	bh=nDK7Vd65zXaNkIiAip2aUpYP8MkPkFhbPYTrKFizs54=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jbt0BJoSEPlKw93hb/WsZ3illEQp5gF1juOBx1bCt6RYyXZ9jlCJI0OZ5rTl0UbDX
-	 ky42LNyVHAnii3aujupdeiSnOCMuvq2jL+9c1BPQ7IXiB1OnYiGEFGqq025wc28V9e
-	 EX0hmoggtmbkaw6eo3OsHzPvhfMj3P/+ck55tTUg=
+	b=Ldj03jA8q7dGlOB0wFCSvxBSmcYfCYg89GdqSA/33YReMcOfae9+ZLo4gAAYVHzWk
+	 0sk7eQcJAn/L+RwJyE/DufPN/ZLNoyl5q/kvYwTpJcLQRKB1T90iawbODxPEq+1k97
+	 LeD2e2qBM0hGT+tBH43UsYM98JnXj1+JWDHl8Tzs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732656AbgF2UO3 (ORCPT
+        id S1732771AbgF2UOf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:14:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40584 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:14:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732844AbgF2TaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732838AbgF2TaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20C8C252E4;
-        Mon, 29 Jun 2020 15:38:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2B8A251F6;
+        Mon, 29 Jun 2020 15:35:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445115;
-        bh=mHTMAWW1raNFP2h5TTT6iMi2R378EA2fCHGDsRw1TvM=;
+        s=default; t=1593444914;
+        bh=nDK7Vd65zXaNkIiAip2aUpYP8MkPkFhbPYTrKFizs54=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1PSwTOMpjxYANKD6gJ8/VFCnoyTP4L2OHn3x8GD9a2ZUYT/m3qdp/UQeqDU+bkM2c
-         KBCLC1i0v7R+LWZ/++M5DtriP3EoI1oWl7NK2IQ0B76A1WVQNY7cMiKg1lO3FLwrIJ
-         mh5GYcpP+d6vmTV4bZ4rBQ2urKeiriccJiAj/Cxs=
+        b=170KneM49If7uJJJowQ8Pnp/uBt6biS0b1DmEgL9peLY3TLibVK9IOrBy5x4SUwLT
+         yN9L8frQ8qpmh2kIMZVjgx3xcrLAFAp7rzEg89lj5rczTpthd7sMbq9CQZvqaoOPDh
+         V0A4MSZLq5bFCOKqqDCEa7rJxzD3jzBpcO0zvdUI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tariq Toukan <tariqt@mellanox.com>,
-        Boris Pismenny <borisp@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.14 21/78] net: Do not clear the sock TX queue in sk_set_socket()
-Date:   Mon, 29 Jun 2020 11:37:09 -0400
-Message-Id: <20200629153806.2494953-22-sashal@kernel.org>
+Cc:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 010/131] i2c: tegra: Fix Maximum transfer size
+Date:   Mon, 29 Jun 2020 11:33:01 -0400
+Message-Id: <20200629153502.2494656-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
-References: <20200629153806.2494953-1-sashal@kernel.org>
+In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
+References: <20200629153502.2494656-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.14.y
+X-KernelTest-Branch: linux-4.19.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.14.186-rc1
-X-KernelTest-Deadline: 2020-07-01T15:38+00:00
+X-KernelTest-Version: 4.19.131-rc1
+X-KernelTest-Deadline: 2020-07-01T15:34+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -66,62 +66,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tariq Toukan <tariqt@mellanox.com>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
 
-[ Upstream commit 41b14fb8724d5a4b382a63cb4a1a61880347ccb8 ]
+[ Upstream commit b67d4530cdade7ebfafa2c6b46f2a0dad3e41bcb ]
 
-Clearing the sock TX queue in sk_set_socket() might cause unexpected
-out-of-order transmit when called from sock_orphan(), as outstanding
-packets can pick a different TX queue and bypass the ones already queued.
+Tegra194 supports maximum 64K Bytes transfer per packet.
+Tegra186 and prior supports maximum 4K Bytes transfer per packet.
 
-This is undesired in general. More specifically, it breaks the in-order
-scheduling property guarantee for device-offloaded TLS sockets.
+This patch fixes this payload difference between Tegra194 and prior
+Tegra chipsets using separate i2c_adapter_quirks.
 
-Remove the call to sk_tx_queue_clear() in sk_set_socket(), and add it
-explicitly only where needed.
-
-Fixes: e022f0b4a03f ("net: Introduce sk_tx_queue_mapping")
-Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
-Reviewed-by: Boris Pismenny <borisp@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/sock.h | 1 -
- net/core/sock.c    | 2 ++
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-tegra.c | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
 
-diff --git a/include/net/sock.h b/include/net/sock.h
-index c6a003bc4737c..a2e10d0b12804 100644
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -1687,7 +1687,6 @@ static inline int sk_tx_queue_get(const struct sock *sk)
+diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+index 917f416787b10..af06198851f1b 100644
+--- a/drivers/i2c/busses/i2c-tegra.c
++++ b/drivers/i2c/busses/i2c-tegra.c
+@@ -164,6 +164,8 @@ enum msg_end_type {
+  * @has_mst_fifo: The I2C controller contains the new MST FIFO interface that
+  *		provides additional features and allows for longer messages to
+  *		be transferred in one go.
++ * @quirks: i2c adapter quirks for limiting write/read transfer size and not
++ *		allowing 0 length transfers.
+  */
+ struct tegra_i2c_hw_feature {
+ 	bool has_continue_xfer_support;
+@@ -176,6 +178,7 @@ struct tegra_i2c_hw_feature {
+ 	bool has_multi_master_mode;
+ 	bool has_slcg_override_reg;
+ 	bool has_mst_fifo;
++	const struct i2c_adapter_quirks *quirks;
+ };
  
- static inline void sk_set_socket(struct sock *sk, struct socket *sock)
- {
--	sk_tx_queue_clear(sk);
- 	sk->sk_socket = sock;
- }
+ /**
+@@ -847,6 +850,10 @@ static const struct i2c_adapter_quirks tegra_i2c_quirks = {
+ 	.max_write_len = 4096 - 12,
+ };
  
-diff --git a/net/core/sock.c b/net/core/sock.c
-index d2cb2051d0453..08ca2ec0ce60a 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -1538,6 +1538,7 @@ struct sock *sk_alloc(struct net *net, int family, gfp_t priority,
- 		cgroup_sk_alloc(&sk->sk_cgrp_data);
- 		sock_update_classid(&sk->sk_cgrp_data);
- 		sock_update_netprioidx(&sk->sk_cgrp_data);
-+		sk_tx_queue_clear(sk);
- 	}
++static const struct i2c_adapter_quirks tegra194_i2c_quirks = {
++	.flags = I2C_AQ_NO_ZERO_LEN,
++};
++
+ static const struct tegra_i2c_hw_feature tegra20_i2c_hw = {
+ 	.has_continue_xfer_support = false,
+ 	.has_per_pkt_xfer_complete_irq = false,
+@@ -858,6 +865,7 @@ static const struct tegra_i2c_hw_feature tegra20_i2c_hw = {
+ 	.has_multi_master_mode = false,
+ 	.has_slcg_override_reg = false,
+ 	.has_mst_fifo = false,
++	.quirks = &tegra_i2c_quirks,
+ };
  
- 	return sk;
-@@ -1740,6 +1741,7 @@ struct sock *sk_clone_lock(const struct sock *sk, const gfp_t priority)
- 		 */
- 		sk_refcnt_debug_inc(newsk);
- 		sk_set_socket(newsk, NULL);
-+		sk_tx_queue_clear(newsk);
- 		newsk->sk_wq = NULL;
+ static const struct tegra_i2c_hw_feature tegra30_i2c_hw = {
+@@ -871,6 +879,7 @@ static const struct tegra_i2c_hw_feature tegra30_i2c_hw = {
+ 	.has_multi_master_mode = false,
+ 	.has_slcg_override_reg = false,
+ 	.has_mst_fifo = false,
++	.quirks = &tegra_i2c_quirks,
+ };
  
- 		if (newsk->sk_prot->sockets_allocated)
+ static const struct tegra_i2c_hw_feature tegra114_i2c_hw = {
+@@ -884,6 +893,7 @@ static const struct tegra_i2c_hw_feature tegra114_i2c_hw = {
+ 	.has_multi_master_mode = false,
+ 	.has_slcg_override_reg = false,
+ 	.has_mst_fifo = false,
++	.quirks = &tegra_i2c_quirks,
+ };
+ 
+ static const struct tegra_i2c_hw_feature tegra124_i2c_hw = {
+@@ -897,6 +907,7 @@ static const struct tegra_i2c_hw_feature tegra124_i2c_hw = {
+ 	.has_multi_master_mode = false,
+ 	.has_slcg_override_reg = true,
+ 	.has_mst_fifo = false,
++	.quirks = &tegra_i2c_quirks,
+ };
+ 
+ static const struct tegra_i2c_hw_feature tegra210_i2c_hw = {
+@@ -910,6 +921,7 @@ static const struct tegra_i2c_hw_feature tegra210_i2c_hw = {
+ 	.has_multi_master_mode = true,
+ 	.has_slcg_override_reg = true,
+ 	.has_mst_fifo = false,
++	.quirks = &tegra_i2c_quirks,
+ };
+ 
+ static const struct tegra_i2c_hw_feature tegra194_i2c_hw = {
+@@ -923,6 +935,7 @@ static const struct tegra_i2c_hw_feature tegra194_i2c_hw = {
+ 	.has_multi_master_mode = true,
+ 	.has_slcg_override_reg = true,
+ 	.has_mst_fifo = true,
++	.quirks = &tegra194_i2c_quirks,
+ };
+ 
+ /* Match table for of_platform binding */
+@@ -974,7 +987,6 @@ static int tegra_i2c_probe(struct platform_device *pdev)
+ 	i2c_dev->base = base;
+ 	i2c_dev->div_clk = div_clk;
+ 	i2c_dev->adapter.algo = &tegra_i2c_algo;
+-	i2c_dev->adapter.quirks = &tegra_i2c_quirks;
+ 	i2c_dev->irq = irq;
+ 	i2c_dev->cont_id = pdev->id;
+ 	i2c_dev->dev = &pdev->dev;
+@@ -990,6 +1002,7 @@ static int tegra_i2c_probe(struct platform_device *pdev)
+ 	i2c_dev->hw = of_device_get_match_data(&pdev->dev);
+ 	i2c_dev->is_dvc = of_device_is_compatible(pdev->dev.of_node,
+ 						  "nvidia,tegra20-i2c-dvc");
++	i2c_dev->adapter.quirks = i2c_dev->hw->quirks;
+ 	init_completion(&i2c_dev->msg_complete);
+ 	spin_lock_init(&i2c_dev->xfer_lock);
+ 
 -- 
 2.25.1
 
