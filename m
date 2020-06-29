@@ -2,111 +2,116 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9CE0C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D98C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:29:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B9B12065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:29:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UU3gMqGQ"
+	by mail.kernel.org (Postfix) with ESMTP id 23B4A2065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:29:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593458964;
+	bh=siDFv2wBYonOfCEnGvScoWYFodnBr3X6yc4XrIJKW9o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=n8DlM2QVgrCiwdrFxXjv55JPR/8/vAcKbqud4jo8s13Jv9XDt9KkDbnxWnWScTASi
+	 MzuWXWqPfMGc//zwGOafDPMzsK4qA8alJtUrUNC7AiQfqxdgJsUiYg9E66i0E35AxC
+	 5LBf1ODuUpOlsxB6HoFDNpSjd6M3Jk8UM1LzfG4w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732788AbgF2T3N (ORCPT
+        id S1732468AbgF2T1g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:29:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45966 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732709AbgF2T1m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:27:42 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01409C030F3E;
-        Mon, 29 Jun 2020 09:57:51 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id a6so14140026wmm.0;
-        Mon, 29 Jun 2020 09:57:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BQzFhhy4PPK+wORzA0eq8X7nCm3stS5K4TwJi9mD/OU=;
-        b=UU3gMqGQIDDI4aV0Xe5aM83CVRlvInAiCH7amNVA9uDmhXzVxpFuk1FmMYKZM7OCPq
-         a4tPy0pbznEdYQw55lRvmJjvgWSsIc7aOxVebt9kZHI03PxoJP4moiQaIKd2tsdTOA/U
-         JnNxFFUR43OLdXU4VvUpzlUX8gBrFgskl8tYwFfefmN/6EVob1pxAVGGSjb+l0vDpJoE
-         1a0DQSEFESYn08TPLpotPXvSKci9hmgYmBodhIaYks6pt7ykXGzVHeNT2li7jOYsBXKz
-         48agFyMb16F0QjcuV8o6yQ9F0zbAjdFAwxQPL1C9mdfV583zS7X0Ou6E3pbFcUKXGDOC
-         eQLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BQzFhhy4PPK+wORzA0eq8X7nCm3stS5K4TwJi9mD/OU=;
-        b=rEHiRwp8EeSh0IpAo7vSqLiC4bEN6Ttqd6oyd6HAQNsSLPLN40h7a8spc1s5UQ0uek
-         cEdd6kTt0uY8L0NgT0XNCztS2yGhHk+MHdiYhLmzNlek5pUUT7a9CuVVjBzs5kOwwbru
-         RqEK1fsB9YvC7zWID7yhkhbwU9ZX87Dq5xX0IM8bn7Gt28Hk9bfshAIrvdDJZTkpBoRc
-         s5PaoaAJNtAcRr+mcGAJfG8LAWkhm0SgiYuHJGGFDoxY2+22g8FCRtmywhAnxyzxRQMw
-         dhNnhuEcoV5zBuqmgm/YUShdCM59GeH8kb73W8VrfCIAsg7Ea9qQLmKlK4kGJbV2LrM+
-         z3cw==
-X-Gm-Message-State: AOAM533q0ehb269wRMVeNRodwDu4vCBgO6Dk80D2VoxAkTMw1CpE46WI
-        UDkF1xUzXMUHyonm9kFhI7M=
-X-Google-Smtp-Source: ABdhPJwfZU06pq3cZr3NXQLT/Ki5iwUmKfY9cklbAHtcV0HoBVmGm8eeONMeuclh5OLF4878sWZCdQ==
-X-Received: by 2002:a1c:19c5:: with SMTP id 188mr3212232wmz.124.1593449869667;
-        Mon, 29 Jun 2020 09:57:49 -0700 (PDT)
-Received: from [10.230.30.107] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id t4sm510754wmf.4.2020.06.29.09.57.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jun 2020 09:57:49 -0700 (PDT)
-Subject: Re: [PATCH v2 01/10] net: ethernet: ixgbe: check the return value of
- ixgbe_mii_bus_init()
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Russell King <linux@armlinux.org.uk>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20200629120346.4382-1-brgl@bgdev.pl>
- <20200629120346.4382-2-brgl@bgdev.pl>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <7e30d5fc-b6db-1c09-3515-e309da1eb0f5@gmail.com>
-Date:   Mon, 29 Jun 2020 09:57:44 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        Mon, 29 Jun 2020 15:27:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37038 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732666AbgF2TZn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:25:43 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E332825405;
+        Mon, 29 Jun 2020 15:42:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593445352;
+        bh=siDFv2wBYonOfCEnGvScoWYFodnBr3X6yc4XrIJKW9o=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=omi0j0rzDn1rUsCn//77wA55nGr8hG4dws3yBWHPYZ9n2u6d5rznIJeuZCSClYpKI
+         1U+csIgX8ggK2rrXpLzT5LytVrd9rcyxR9hvT9kdfjySNdReReZ4NEBf5yaVLl1TQQ
+         RaWgO4Mpqlgioxw5hbLbaFYS4pWwUA0yHyLympvQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Mauro Carvalho Chehab <mchehab@s-opensource.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.9 110/191] media: dvb_frontend: better document the -EPERM condition
+Date:   Mon, 29 Jun 2020 11:38:46 -0400
+Message-Id: <20200629154007.2495120-111-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
+References: <20200629154007.2495120-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200629120346.4382-2-brgl@bgdev.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.229-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.9.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.9.229-rc1
+X-KernelTest-Deadline: 2020-07-01T15:39+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
 
+commit da5516b5e81d45a96291823620f6c820178dc055 upstream
 
-On 6/29/2020 5:03 AM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> This function may fail. Check its return value and propagate the error
-> code.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Two readonly ioctls can't be allowed if the frontend device
+is opened in read only mode. Explain why.
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Reviewed by: Shuah Khan <shuahkh@osg.samsung.com>
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/media/dvb-core/dvb_frontend.c | 20 +++++++++++++++++---
+ 1 file changed, 17 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/media/dvb-core/dvb_frontend.c b/drivers/media/dvb-core/dvb_frontend.c
+index a7ba8e200b677..673cefb7230cb 100644
+--- a/drivers/media/dvb-core/dvb_frontend.c
++++ b/drivers/media/dvb-core/dvb_frontend.c
+@@ -1925,9 +1925,23 @@ static int dvb_frontend_ioctl(struct file *file, unsigned int cmd, void *parg)
+ 		return -ENODEV;
+ 	}
+ 
+-	if ((file->f_flags & O_ACCMODE) == O_RDONLY &&
+-	    (_IOC_DIR(cmd) != _IOC_READ || cmd == FE_GET_EVENT ||
+-	     cmd == FE_DISEQC_RECV_SLAVE_REPLY)) {
++	/*
++	 * If the frontend is opened in read-only mode, only the ioctls
++	 * that don't interfere with the tune logic should be accepted.
++	 * That allows an external application to monitor the DVB QoS and
++	 * statistics parameters.
++	 *
++	 * That matches all _IOR() ioctls, except for two special cases:
++	 *   - FE_GET_EVENT is part of the tuning logic on a DVB application;
++	 *   - FE_DISEQC_RECV_SLAVE_REPLY is part of DiSEqC 2.0
++	 *     setup
++	 * So, those two ioctls should also return -EPERM, as otherwise
++	 * reading from them would interfere with a DVB tune application
++	 */
++	if ((file->f_flags & O_ACCMODE) == O_RDONLY
++	    && (_IOC_DIR(cmd) != _IOC_READ
++		|| cmd == FE_GET_EVENT
++		|| cmd == FE_DISEQC_RECV_SLAVE_REPLY)) {
+ 		up(&fepriv->sem);
+ 		return -EPERM;
+ 	}
 -- 
-Florian
+2.25.1
+
