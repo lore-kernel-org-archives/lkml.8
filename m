@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A46C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDA2CC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:07:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC54320899
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:07:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C98902083E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:07:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="O5LrA0hv"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bO3ONsX+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730832AbgF2THq (ORCPT
+        id S1730054AbgF2THu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:07:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42530 "EHLO
+        Mon, 29 Jun 2020 15:07:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729786AbgF2THm (ORCPT
+        with ESMTP id S1727068AbgF2THm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:07:42 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB8F6C030F29
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:38:57 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id o1so734193plk.1
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:38:57 -0700 (PDT)
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E56DC030F2A
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:39:20 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id d6so8256526pjs.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:39:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WwUSLGARJc0tc0i7e9PAJ1aEIwQmah2Mj+7/Lw4GWVQ=;
-        b=O5LrA0hvh6pdSNYojIfuGO/VrkNKrM+IJqkHmMn4yck9UH4KIOfGZ880eO68An1QrF
-         pqMdoHrQrlzvSd7H5nTCyPiX3zdnX4gvVQZCrr6gRBFxqzAcC4zmzK9J3FECjM1JAo4i
-         tdb5Mpm6Rm+PiwgvaQZ3UxOSezJDzGlrQFIAU=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=SQm9k3QD0fOYn01ydGN/ugkrIz4gUsIQA2Gtlz9ae7I=;
+        b=bO3ONsX+3iGctW2inZ47Wqs9ZZv05POvU+r5G58J2J9LTLymRmNXHznvKTUP2GMQan
+         Rfr3P4nrWcmum4eD1X7htUPtPI8DRP30iJI9z/4k5X02qKxhZUY00uzvkjqs187NT162
+         mvUZE3WWSoq+BN80zlmKoJeeTgtLzA368MTFQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WwUSLGARJc0tc0i7e9PAJ1aEIwQmah2Mj+7/Lw4GWVQ=;
-        b=lpHlgJC7czyIXDbso2D3a+weSyKcpGP70IEqrtSxSjRyuC9Abtca69WIqAfnO8l7Cl
-         C5fkJwtnyknMfWsi3YVzMg4EPgBuMiUzNZZ/gjFcL2EtKf2bhdtwZiatXMdiKkqRrzYq
-         XBQRomaPDktLvTlgcaZ99ujOk/2n+knMyf2yD6G1nMlWur9qtBXYOHlKrumB0jtDIPTx
-         UAttujJEx4DyD7ppaOScrodg3l6CYFvvu3M5Bo92u4y0EJPT6Ic1eyro954p5rqFtBh8
-         RhnuYZW95G9mb5kYqmP9bJggBApcutMjbEBa9QLgaD0y6ur/K7PXf2+Rmd8GM/mBfnXW
-         v1fQ==
-X-Gm-Message-State: AOAM532zMw9KBcb5kw8FgrqaVg4kl8t8VB8H2Q3pplYvzhMtugyRtyXI
-        CCY9RIWFM9ZgyTCi9zhl2atjwUztBCw=
-X-Google-Smtp-Source: ABdhPJxiDSxzoFZlOF1LR3M+87QWIqODfOOJoQ3pC0z7sFyrqvYTX8eG16fEZIV3H1/WdJdnQ3CMfg==
-X-Received: by 2002:a17:90a:d587:: with SMTP id v7mr7889439pju.29.1593448737198;
-        Mon, 29 Jun 2020 09:38:57 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=SQm9k3QD0fOYn01ydGN/ugkrIz4gUsIQA2Gtlz9ae7I=;
+        b=OcTPWAPBp47x/C6+ld2Pac1wbeGt7olhMES6C12kf2bjKZvcdhsRZK65rc2G5fGPV/
+         sQc/6NExflK2FcOV9G5uicG2P18/MPNOkgWsJXCEjcYxSdqY8MubZBrP2iCzw6wrUsWo
+         VDqeqEfFjG+rGA3h5kXqpFZOTfWKksETQ8NZ+1W5nrrtHfS77nO73i+hpEqQocr2vd2L
+         5dv2zaD+Vw4PHtOKFG+fcSFKsEac96KQBOSN6ELfgwEEjmFYHp55RwjT+f4bvlFVVSXx
+         ePSoejPs0HKDCxXrn0jjL3WqeIIA+0Hgak3Ho5FwUgPcmz+HEVfoVViBd+Rv418gc724
+         ntSA==
+X-Gm-Message-State: AOAM530ZaIbOazanMKYRZHMoNmW/wq3Nj6pvZ3r+pEe37bO5o28R31lu
+        49P5MVfcH4P3ety2heMnx19gEq6jLdg=
+X-Google-Smtp-Source: ABdhPJylRt8boVH4iQcwk+v7TEPvKAJKV/4fgP9gbOjcDa4aaign8K0BU9D5DsISGrDpRvkqIEDj+A==
+X-Received: by 2002:a17:90a:ea05:: with SMTP id w5mr90418pjy.175.1593448759530;
+        Mon, 29 Jun 2020 09:39:19 -0700 (PDT)
 Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:476b:691:abc3:38db])
-        by smtp.gmail.com with ESMTPSA id s6sm79060pfd.20.2020.06.29.09.38.56
+        by smtp.gmail.com with ESMTPSA id s6sm79060pfd.20.2020.06.29.09.39.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 09:38:56 -0700 (PDT)
+        Mon, 29 Jun 2020 09:39:19 -0700 (PDT)
 From:   Prashant Malani <pmalani@chromium.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     heikki.krogerus@linux.intel.com,
@@ -63,10 +63,12 @@ Cc:     heikki.krogerus@linux.intel.com,
         Benson Leung <bleung@chromium.org>,
         Enric Balletbo i Serra <enric.balletbo@collabora.com>,
         Guenter Roeck <groeck@chromium.org>
-Subject: [PATCH v3 1/2] platform/chrome: cros_ec_typec: Use workqueue for port update
-Date:   Mon, 29 Jun 2020 09:38:50 -0700
-Message-Id: <20200629163851.2130450-1-pmalani@chromium.org>
+Subject: [PATCH v3 2/2] platform/chrome: cros_ec_typec: Add PM support
+Date:   Mon, 29 Jun 2020 09:38:52 -0700
+Message-Id: <20200629163851.2130450-2-pmalani@chromium.org>
 X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
+In-Reply-To: <20200629163851.2130450-1-pmalani@chromium.org>
+References: <20200629163851.2130450-1-pmalani@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,80 +76,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use a work queue to call the port update routines, instead of doing it
-directly in the PD notifier callback. This will prevent other drivers
-with PD notifier callbacks from being blocked on the port update routine
-completing.
+Define basic suspend resume functions for cros-ec-typec. On suspend, we
+simply ensure that any pending port update work is completed, and on
+resume, we re-poll the port state to account for any
+changes/disconnections that might have occurred during suspend.
 
 Signed-off-by: Prashant Malani <pmalani@chromium.org>
 ---
 
 Changes in v3:
-- Use new 100 character line length limit.
+- Remove superfluous DEV_PM_OPS #define.
 
 Changes in v2:
-- No changes.
+- Remove #ifdef-ery, add __maybe_unused tag to functions.
 
- drivers/platform/chrome/cros_ec_typec.c | 25 ++++++++++++++++++++-----
- 1 file changed, 20 insertions(+), 5 deletions(-)
+ drivers/platform/chrome/cros_ec_typec.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
 diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-index 0c041b79cbba..0beb62bf5adf 100644
+index 0beb62bf5adf..d5ac691de68b 100644
 --- a/drivers/platform/chrome/cros_ec_typec.c
 +++ b/drivers/platform/chrome/cros_ec_typec.c
-@@ -58,6 +58,7 @@ struct cros_typec_data {
- 	/* Array of ports, indexed by port number. */
- 	struct cros_typec_port *ports[EC_USB_PD_MAX_PORTS];
- 	struct notifier_block nb;
-+	struct work_struct port_work;
- };
- 
- static int cros_typec_parse_port_props(struct typec_capability *cap,
-@@ -619,18 +620,26 @@ static int cros_typec_get_cmd_version(struct cros_typec_data *typec)
- 	return 0;
+@@ -722,11 +722,35 @@ static int cros_typec_probe(struct platform_device *pdev)
+ 	return ret;
  }
  
--static int cros_ec_typec_event(struct notifier_block *nb,
--			       unsigned long host_event, void *_notify)
-+static void cros_typec_port_work(struct work_struct *work)
- {
--	struct cros_typec_data *typec = container_of(nb, struct cros_typec_data,
--						     nb);
--	int ret, i;
-+	struct cros_typec_data *typec = container_of(work, struct cros_typec_data, port_work);
-+	int ret;
-+	int i;
- 
- 	for (i = 0; i < typec->num_ports; i++) {
- 		ret = cros_typec_port_update(typec, i);
- 		if (ret < 0)
- 			dev_warn(typec->dev, "Update failed for port: %d\n", i);
- 	}
++static int __maybe_unused cros_typec_suspend(struct device *dev)
++{
++	struct cros_typec_data *typec = dev_get_drvdata(dev);
++
++	cancel_work_sync(&typec->port_work);
++
++	return 0;
 +}
 +
-+
-+static int cros_ec_typec_event(struct notifier_block *nb,
-+			       unsigned long host_event, void *_notify)
++static int __maybe_unused cros_typec_resume(struct device *dev)
 +{
-+	struct cros_typec_data *typec = container_of(nb, struct cros_typec_data, nb);
++	struct cros_typec_data *typec = dev_get_drvdata(dev);
 +
++	/* Refresh port state. */
 +	schedule_work(&typec->port_work);
- 
- 	return NOTIFY_OK;
- }
-@@ -689,6 +698,12 @@ static int cros_typec_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		return ret;
- 
-+	INIT_WORK(&typec->port_work, cros_typec_port_work);
 +
-+	/*
-+	 * Safe to call port update here, since we haven't registered the
-+	 * PD notifier yet.
-+	 */
- 	for (i = 0; i < typec->num_ports; i++) {
- 		ret = cros_typec_port_update(typec, i);
- 		if (ret < 0)
++	return 0;
++}
++
++static const struct dev_pm_ops cros_typec_pm_ops = {
++	SET_SYSTEM_SLEEP_PM_OPS(cros_typec_suspend, cros_typec_resume)
++};
++
+ static struct platform_driver cros_typec_driver = {
+ 	.driver	= {
+ 		.name = DRV_NAME,
+ 		.acpi_match_table = ACPI_PTR(cros_typec_acpi_id),
+ 		.of_match_table = of_match_ptr(cros_typec_of_match),
++		.pm = &cros_typec_pm_ops,
+ 	},
+ 	.probe = cros_typec_probe,
+ };
 -- 
 2.27.0.212.ge8ba1cc988-goog
 
