@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C96C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69F0FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84A3F20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:00:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 490B4206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:00:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460841;
-	bh=xpjyD0icNmbQsP4jgq6BMkGAy2DZjKD+QXh3hoMx0oA=;
+	s=default; t=1593460848;
+	bh=e1aEkFgeabM9gKsDhPNpArYKPyKjbdBH/0iXvt6caJY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PwWdE763AftqOrs6IGzigmb1vmfhGCvLwZAooZGCIeZObuPTQjhPJJLLLZSuC7mFK
-	 hkLKY43ftuubrQMyY8NZ2BE2pYjS4yuIVydSDaikfFLZZNE3WKirm9KxvHGfK35JAv
-	 2VlcAFGhphYIyK2GM5tWJT3bJT7AVId5kFwE98rQ=
+	b=ngay3xx5/qvGmjyn87Uyko2qqjAuYtaxCZx/EYkjtZ+Eb02gJQmBKtP74TJDTtLuR
+	 W8ezAaRyuMcZBxC+hJhXjLUudOO4jg5aTnJh7/ygzmZ2e2ja0DzsMGCL0nAxiISamN
+	 hewBASOJ6HkoMYPIfOFbBy72NI9f/CShbaNY9jf0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387644AbgF2UAj (ORCPT
+        id S2387573AbgF2UAq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:00:39 -0400
+        Mon, 29 Jun 2020 16:00:46 -0400
 Received: from mail.kernel.org ([198.145.29.99]:47660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387572AbgF2TkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387562AbgF2TkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F71C2492A;
-        Mon, 29 Jun 2020 15:28:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C43A24881;
+        Mon, 29 Jun 2020 15:26:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444483;
-        bh=xpjyD0icNmbQsP4jgq6BMkGAy2DZjKD+QXh3hoMx0oA=;
+        s=default; t=1593444382;
+        bh=e1aEkFgeabM9gKsDhPNpArYKPyKjbdBH/0iXvt6caJY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SoJoRCVkvyL/SEQ4Tb1kZ9BGCiOl0Q+RZwPB+Y5VDrmoFZgQxpTPej/AtDBG6dPZr
-         au84CXal7710IkersB9Ov15twi+g5SYJWnSzevkvC4HkVnMNJNY3WHahwxoc9ZCGv4
-         Rbo6akfV4GkfuiupZ25rH50poiRZ9FUMCLTJjluE=
+        b=JPZ51QQpR69NGE07chbUVFjb9EMUKcwYXocPCPVdC0sVwAyq7GVREK1LSjBfsqRwY
+         mnQvWDjRHDbVPSizK17b6uYWA+nU23e58BziqZIatVpykcuR0iJRmeUt+rkakYanIU
+         xFDunZ407tILPdDi9g0h03n7P6rXy39fNwer64wY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiping Ma <jiping.ma2@windriver.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
+Cc:     Shay Drory <shayd@mellanox.com>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Sasha Levin <sashal@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 160/178] arm64: perf: Report the PC value in REGS_ABI_32 mode
-Date:   Mon, 29 Jun 2020 11:25:05 -0400
-Message-Id: <20200629152523.2494198-161-sashal@kernel.org>
+Subject: [PATCH 5.4 059/178] IB/mad: Fix use after free when destroying MAD agent
+Date:   Mon, 29 Jun 2020 11:23:24 -0400
+Message-Id: <20200629152523.2494198-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -66,69 +68,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiping Ma <jiping.ma2@windriver.com>
+From: Shay Drory <shayd@mellanox.com>
 
-commit 8dfe804a4031ca6ba3a3efb2048534249b64f3a5 upstream.
+commit 116a1b9f1cb769b83e5adff323f977a62b1dcb2e upstream.
 
-A 32-bit perf querying the registers of a compat task using REGS_ABI_32
-will receive zeroes from w15, when it expects to find the PC.
+Currently, when RMPP MADs are processed while the MAD agent is destroyed,
+it could result in use after free of rmpp_recv, as decribed below:
 
-Return the PC value for register dwarf register 15 when returning register
-values for a compat task to perf.
+	cpu-0						cpu-1
+	-----						-----
+ib_mad_recv_done()
+ ib_mad_complete_recv()
+  ib_process_rmpp_recv_wc()
+						unregister_mad_agent()
+						 ib_cancel_rmpp_recvs()
+						  cancel_delayed_work()
+   process_rmpp_data()
+    start_rmpp()
+     queue_delayed_work(rmpp_recv->cleanup_work)
+						  destroy_rmpp_recv()
+						   free_rmpp_recv()
+     cleanup_work()[1]
+      spin_lock_irqsave(&rmpp_recv->agent->lock) <-- use after free
 
-Cc: <stable@vger.kernel.org>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Jiping Ma <jiping.ma2@windriver.com>
-Link: https://lore.kernel.org/r/1589165527-188401-1-git-send-email-jiping.ma2@windriver.com
-[will: Shuffled code and added a comment]
-Signed-off-by: Will Deacon <will@kernel.org>
+[1] cleanup_work() == recv_cleanup_handler
+
+Fix it by waiting for the MAD agent reference count becoming zero before
+calling to ib_cancel_rmpp_recvs().
+
+Fixes: 9a41e38a467c ("IB/mad: Use IDR for agent IDs")
+Link: https://lore.kernel.org/r/20200621104738.54850-2-leon@kernel.org
+Signed-off-by: Shay Drory <shayd@mellanox.com>
+Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm64/kernel/perf_regs.c | 25 ++++++++++++++++++++++---
- 1 file changed, 22 insertions(+), 3 deletions(-)
+ drivers/infiniband/core/mad.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kernel/perf_regs.c b/arch/arm64/kernel/perf_regs.c
-index 0bbac612146ea..666b225aeb3ad 100644
---- a/arch/arm64/kernel/perf_regs.c
-+++ b/arch/arm64/kernel/perf_regs.c
-@@ -15,15 +15,34 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
- 		return 0;
+diff --git a/drivers/infiniband/core/mad.c b/drivers/infiniband/core/mad.c
+index 9947d16edef21..a9e00cdf717b8 100644
+--- a/drivers/infiniband/core/mad.c
++++ b/drivers/infiniband/core/mad.c
+@@ -639,10 +639,10 @@ static void unregister_mad_agent(struct ib_mad_agent_private *mad_agent_priv)
+ 	xa_erase(&ib_mad_clients, mad_agent_priv->agent.hi_tid);
  
- 	/*
--	 * Compat (i.e. 32 bit) mode:
--	 * - PC has been set in the pt_regs struct in kernel_entry,
--	 * - Handle SP and LR here.
-+	 * Our handling of compat tasks (PERF_SAMPLE_REGS_ABI_32) is weird, but
-+	 * we're stuck with it for ABI compatability reasons.
-+	 *
-+	 * For a 32-bit consumer inspecting a 32-bit task, then it will look at
-+	 * the first 16 registers (see arch/arm/include/uapi/asm/perf_regs.h).
-+	 * These correspond directly to a prefix of the registers saved in our
-+	 * 'struct pt_regs', with the exception of the PC, so we copy that down
-+	 * (x15 corresponds to SP_hyp in the architecture).
-+	 *
-+	 * So far, so good.
-+	 *
-+	 * The oddity arises when a 64-bit consumer looks at a 32-bit task and
-+	 * asks for registers beyond PERF_REG_ARM_MAX. In this case, we return
-+	 * SP_usr, LR_usr and PC in the positions where the AArch64 SP, LR and
-+	 * PC registers would normally live. The initial idea was to allow a
-+	 * 64-bit unwinder to unwind a 32-bit task and, although it's not clear
-+	 * how well that works in practice, somebody might be relying on it.
-+	 *
-+	 * At the time we make a sample, we don't know whether the consumer is
-+	 * 32-bit or 64-bit, so we have to cater for both possibilities.
- 	 */
- 	if (compat_user_mode(regs)) {
- 		if ((u32)idx == PERF_REG_ARM64_SP)
- 			return regs->compat_sp;
- 		if ((u32)idx == PERF_REG_ARM64_LR)
- 			return regs->compat_lr;
-+		if (idx == 15)
-+			return regs->pc;
- 	}
+ 	flush_workqueue(port_priv->wq);
+-	ib_cancel_rmpp_recvs(mad_agent_priv);
  
- 	if ((u32)idx == PERF_REG_ARM64_SP)
+ 	deref_mad_agent(mad_agent_priv);
+ 	wait_for_completion(&mad_agent_priv->comp);
++	ib_cancel_rmpp_recvs(mad_agent_priv);
+ 
+ 	ib_mad_agent_security_cleanup(&mad_agent_priv->agent);
+ 
 -- 
 2.25.1
 
