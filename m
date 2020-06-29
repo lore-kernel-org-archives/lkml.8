@@ -2,159 +2,173 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06FA6C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F219C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:48:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD13320780
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B6C7206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:48:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593467294;
+	bh=0E9DWn2s9pN3O11fMKizrHqQ0PCsnPYcWAjxaZ9Z10w=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=BgoqII5uuBdE8nmu290zfhZMSYBO+/BZ89tBsySfOb1Jw7Ii9XtKKEMmwvF64OfxS
+	 5SKP4zTVgQ6iWtsAGT2ESBebPVJg5t+vhCOtlmf/XvrxLkDuc3I+LNaj70CGpKdQ/T
+	 yPyq8UWGR5GVBU1oZle3ag633vw8PQaJlpJMOmwA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404249AbgF2VsF (ORCPT
+        id S2404264AbgF2VsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:48:05 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:40689 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726738AbgF2Vri (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 17:47:38 -0400
-Received: from mail-qk1-f171.google.com ([209.85.222.171]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1M9FX5-1jmoTe3Q7L-006Kx6; Mon, 29 Jun 2020 10:20:02 +0200
-Received: by mail-qk1-f171.google.com with SMTP id 145so12007381qke.9;
-        Mon, 29 Jun 2020 01:20:01 -0700 (PDT)
-X-Gm-Message-State: AOAM530sbVfuJA94k3vrJQDz6ZSK29J41Kkifk6IKi1sN5MPrNnlV795
-        epM+FY7dcAkv5NOauOC2GJPeh0BooGo0aC50fHg=
-X-Google-Smtp-Source: ABdhPJyUnGB5lqBVkayiYL6LOPjQm0GbNdG1eqe9pwBbPRXhINutqeEw0hdnpM5VoWHPcIjswlrjFzeL+cTcw8l/eUE=
-X-Received: by 2002:a37:a282:: with SMTP id l124mr13270383qke.3.1593418800617;
- Mon, 29 Jun 2020 01:20:00 -0700 (PDT)
+        Mon, 29 Jun 2020 17:48:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56904 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726724AbgF2Sfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:43 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD5E4247BA;
+        Mon, 29 Jun 2020 15:22:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593444130;
+        bh=0E9DWn2s9pN3O11fMKizrHqQ0PCsnPYcWAjxaZ9Z10w=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=nTwhXmkoWIJhzanLucnx7STRiDkrVHFWBpPx9ZhGyZplf8FWpWhAZfUAgBlTFaCS6
+         UanXjET+zS0sS4aez2XoqGizHZA4rN6ir0FMFwDCtVQ02Wiae0c/id2yYjXJ61VxlI
+         NR4WkFMgBTQ7jzqwbS5ePqq12jrZ+KF7YZRJdBOU=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Ben Widawsky <ben.widawsky@intel.com>,
+        "Scargall, Steve" <steve.scargall@intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 237/265] mm/memory_hotplug.c: fix false softlockup during pfn range removal
+Date:   Mon, 29 Jun 2020 11:17:50 -0400
+Message-Id: <20200629151818.2493727-238-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
+References: <20200629151818.2493727-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <1591687933-19495-1-git-send-email-Anson.Huang@nxp.com>
- <AM6PR04MB4966B94CFAE642E6AF5AEF79809B0@AM6PR04MB4966.eurprd04.prod.outlook.com>
- <159262367025.62212.11651547971712516448@swboyd.mtv.corp.google.com>
- <AM6PR04MB496690A045E0BFFF3D03AE0380940@AM6PR04MB4966.eurprd04.prod.outlook.com>
- <159290125202.62212.13172213909023205615@swboyd.mtv.corp.google.com>
- <AM6PR04MB49664A8400CA0B0F7321EDDE80940@AM6PR04MB4966.eurprd04.prod.outlook.com>
- <159296027133.62212.18074403520585879907@swboyd.mtv.corp.google.com>
- <AM6PR04MB4966BA60F25AE60ABA8F883180950@AM6PR04MB4966.eurprd04.prod.outlook.com>
- <DB3PR0402MB39167FB012D9BCB4A5081BEDF5950@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <AM6PR04MB496622897A67C4912715223A80950@AM6PR04MB4966.eurprd04.prod.outlook.com>
- <159303858063.62212.4991053028281879719@swboyd.mtv.corp.google.com> <CAA+hA=RB3H_EqCMpCuide7WDqddaZu5=LmihU1pZaCPM8b8zng@mail.gmail.com>
-In-Reply-To: <CAA+hA=RB3H_EqCMpCuide7WDqddaZu5=LmihU1pZaCPM8b8zng@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 29 Jun 2020 10:19:44 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2-1nFvw2rR1wws04fCmj6AyvcJ4RFwcJQ+xRPwDjUCaA@mail.gmail.com>
-Message-ID: <CAK8P3a2-1nFvw2rR1wws04fCmj6AyvcJ4RFwcJQ+xRPwDjUCaA@mail.gmail.com>
-Subject: Re: [PATCH V2 3/9] clk: imx: Support building SCU clock driver as module
-To:     Dong Aisheng <dongas86@gmail.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>, Abel Vesa <abel.vesa@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Andy Duan <fugang.duan@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        Stefan Agner <stefan.agner@toradex.com>,
-        Allison Randal <allison@lohutok.net>,
-        Fabio Estevam <festevam@gmail.com>,
-        gregkh <gregkh@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Michael Turquette <mturquette@baylibre.com>,
-        oleksandr.suvorov@toradex.com,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        YueHaibing <yuehaibing@huawei.com>,
-        dl-linux-imx <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:qRZ/7KKzWfBmnOFfHPJgOp20QegMhUqElr7vtzKIvVyb73Y5Ehr
- WAjKUdW7QtbqIzz5UXbNPUFF00YwtvPja95QYNHiCIXwWBq23egHHIM6CqtvAO4CrcvIaT8
- sTMSPP994qJOpZe1JEE+3xKArPzKas4+tf1RMDblDLwI6+vYKThQ1x1LQJs90uTf3TjePA5
- v48q04Rcg+9oDWg/d5QHg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:YEJedntkUDE=:14GGG9Un7SeVj0ffCfXNat
- 0Do9UEqySUcAvKcSH8AWuia6m4S+mLVru/RCS+Yf/QWQtZnUSNK/WoYN79iH9M5WxAOsiSp/7
- MjcsQHYHX5e2tdeX0CuiBa2InsqVI747A5O2sNT0+JZIIkHZSN7syxnHVRDfskPba3mfIOkTx
- q8p/MyBfruhMZDkyLkD8oswwGRY0Q+PpNj3/bW+AxNaYIn9M7KOm0nMvmdzyfHS1fQI+z+tfR
- /KdFpmui1u8qxbYin/egUlk1ELPk6mKJ4R2QSvsSKJKlPxf3D4Rww0lG725jTFbJsoLnpGduW
- Ps7G+yxlvXMyxK2lY2Z464kl6Y9bfUw0KQYcFn8v8DPqpoBzXtFSgei+Wu/Wn2gzmLvBlTUEf
- c7ZA9Qhmv7NBsr1sNFPCaG0jA2aZWpApsFTAqwQc7FuzXN5zxg/lfPj49+rvzFYmSI6OWavHb
- Xq2wt/LBq6mHNMZW8Wy0ZPa8uxE0JZ/pr8nxU6u9snn9+mSuTYyfptVQ3kC5RunF1h6/V+6nN
- FFnDjzLPvlZRKfEougSOV6IBjkrVLvJk5yGwxKJR9NBPnpW/2xpQt84kkUvglQjpy3v5pqE6F
- nxUyVnUHSfR/dv8cjMCHVYyHG3Vov46K5TbG/M8F4OntIbzyx2l+hheFCJNFs5b4TIwPViRPw
- BL4I0q7q3HULUhL2ruiZ0aYH+3+pbo5DU1Z0sG5yZ+gNtUMj01T+AJW0oKCpsDQOdNGdG/cgH
- VzBcBqPiDq/inuZbYV5giVyqY9MCcX74d8ehNFNaPU/LkUq/JUZJhTzm2cYZFcTRTlFcxJF3Z
- CtkBftt5h7+1qPExHvqu7thRIxJbFQ96wHtNf0KU/uOytSZ8e4=
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.7.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.7.7-rc1
+X-KernelTest-Deadline: 2020-07-01T15:14+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 9:18 AM Dong Aisheng <dongas86@gmail.com> wrote:
-> On Thu, Jun 25, 2020 at 6:43 AM Stephen Boyd <sboyd@kernel.org> wrote:
-> > Quoting Aisheng Dong (2020-06-23 19:59:09)
-> > Why aren't there options to enable clk-imx6q and clk-imx6sl in the
-> > clk/imx/Kconfig file? Those can be bool or tristate depending on if the
-> > SoC drivers use CLK_OF_DECLARE or not and depend on the mxc-clk library
-> > and SoC config we have in the makefile today.
->
-> Yes, we can do that in clk/imx/Kconfig as follows theoretically.
-> config CLK_IMX6Q
->         bool
->         def_bool ARCH_MXC && ARM
->         select MXC_CLK
->
-> But we have totally 15 platforms that need to change.
+From: Ben Widawsky <ben.widawsky@intel.com>
 
-I would make that
+commit b7e3debdd0408c0dca5d4750371afa5003f792dc upstream.
 
-config CLK_IMX6Q
-         bool "Clock driver for NXP i.MX6Q"
-         depends on SOC_IMX6Q || COMPILE_TEST
-         default SOC_IMX6Q
-         select MXC_CLK
+When working with very large nodes, poisoning the struct pages (for which
+there will be very many) can take a very long time.  If the system is
+using voluntary preemptions, the software watchdog will not be able to
+detect forward progress.  This patch addresses this issue by offering to
+give up time like __remove_pages() does.  This behavior was introduced in
+v5.6 with: commit d33695b16a9f ("mm/memory_hotplug: poison memmap in
+remove_pfn_range_from_zone()")
 
-> e.g.
-> drivers/clk/imx/Makefile
-> obj-$(CONFIG_SOC_IMX1)   += clk-imx1.o
-> obj-$(CONFIG_SOC_IMX21)  += clk-imx21.o
-> obj-$(CONFIG_SOC_IMX25)  += clk-imx25.o
-> obj-$(CONFIG_SOC_IMX27)  += clk-imx27.o
-> obj-$(CONFIG_SOC_IMX31)  += clk-imx31.o
-> obj-$(CONFIG_SOC_IMX35)  += clk-imx35.o
-> obj-$(CONFIG_SOC_IMX5)   += clk-imx5.o
-> obj-$(CONFIG_SOC_IMX6Q)  += clk-imx6q.o
-> obj-$(CONFIG_SOC_IMX6SL) += clk-imx6sl.o
-> obj-$(CONFIG_SOC_IMX6SLL) += clk-imx6sll.o
-> obj-$(CONFIG_SOC_IMX6SX) += clk-imx6sx.o
-> obj-$(CONFIG_SOC_IMX6UL) += clk-imx6ul.o
-> obj-$(CONFIG_SOC_IMX7D)  += clk-imx7d.o
-> obj-$(CONFIG_SOC_IMX7ULP) += clk-imx7ulp.o
-> obj-$(CONFIG_SOC_VF610)  += clk-vf610.o
->
-> Not sure if it's really worth to do that.
-> The easiest way to address this issue is just select it in
-> arch/arm/mach-imx/Kconfig,
+Alternately, init_page_poison could do this cond_resched(), but it seems
+to me that the caller of init_page_poison() is what actually knows whether
+or not it should relax its own priority.
 
-Changing them can be a one or two patches, that's totally
-worth it IMHO.
+Based on Dan's notes, I think this is perfectly safe: commit f931ab479dd2
+("mm: fix devm_memremap_pages crash, use mem_hotplug_{begin, done}")
 
-I really don't like the 'select' in arch/arm/mach-imx/Kconfig: if
-you've done the work to make the imx8 clk driver modular,
-I would expect to see the same at least tried for the other
-ones.
+Aside from fixing the lockup, it is also a friendlier thing to do on lower
+core systems that might wipe out large chunks of hotplug memory (probably
+not a very common case).
 
-For the clk drivers that cannot yet be 'tristate' because of the
-CLK_OF_DECLARE(), can you include a list of drivers
-that depend on the clocks being available during early
-boot?
+Fixes this kind of splat:
 
-       Arnd
+  watchdog: BUG: soft lockup - CPU#46 stuck for 22s! [daxctl:9922]
+  irq event stamp: 138450
+  hardirqs last  enabled at (138449): [<ffffffffa1001f26>] trace_hardirqs_on_thunk+0x1a/0x1c
+  hardirqs last disabled at (138450): [<ffffffffa1001f42>] trace_hardirqs_off_thunk+0x1a/0x1c
+  softirqs last  enabled at (138448): [<ffffffffa1e00347>] __do_softirq+0x347/0x456
+  softirqs last disabled at (138443): [<ffffffffa10c416d>] irq_exit+0x7d/0xb0
+  CPU: 46 PID: 9922 Comm: daxctl Not tainted 5.7.0-BEN-14238-g373c6049b336 #30
+  Hardware name: Intel Corporation PURLEY/PURLEY, BIOS PLYXCRB1.86B.0578.D07.1902280810 02/28/2019
+  RIP: 0010:memset_erms+0x9/0x10
+  Code: c1 e9 03 40 0f b6 f6 48 b8 01 01 01 01 01 01 01 01 48 0f af c6 f3 48 ab 89 d1 f3 aa 4c 89 c8 c3 90 49 89 f9 40 88 f0 48 89 d1 <f3> aa 4c 89 c8 c3 90 49 89 fa 40 0f b6 ce 48 b8 01 01 01 01 01 01
+  Call Trace:
+   remove_pfn_range_from_zone+0x3a/0x380
+   memunmap_pages+0x17f/0x280
+   release_nodes+0x22a/0x260
+   __device_release_driver+0x172/0x220
+   device_driver_detach+0x3e/0xa0
+   unbind_store+0x113/0x130
+   kernfs_fop_write+0xdc/0x1c0
+   vfs_write+0xde/0x1d0
+   ksys_write+0x58/0xd0
+   do_syscall_64+0x5a/0x120
+   entry_SYSCALL_64_after_hwframe+0x49/0xb3
+  Built 2 zonelists, mobility grouping on.  Total pages: 49050381
+  Policy zone: Normal
+  Built 3 zonelists, mobility grouping on.  Total pages: 49312525
+  Policy zone: Normal
+
+David said: "It really only is an issue for devmem.  Ordinary
+hotplugged system memory is not affected (onlined/offlined in memory
+block granularity)."
+
+Link: http://lkml.kernel.org/r/20200619231213.1160351-1-ben.widawsky@intel.com
+Fixes: commit d33695b16a9f ("mm/memory_hotplug: poison memmap in remove_pfn_range_from_zone()")
+Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
+Reported-by: "Scargall, Steve" <steve.scargall@intel.com>
+Reported-by: Ben Widawsky <ben.widawsky@intel.com>
+Acked-by: David Hildenbrand <david@redhat.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Vishal Verma <vishal.l.verma@intel.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ mm/memory_hotplug.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index fc0aad0bc1f54..744a3ea284b78 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -468,11 +468,20 @@ void __ref remove_pfn_range_from_zone(struct zone *zone,
+ 				      unsigned long start_pfn,
+ 				      unsigned long nr_pages)
+ {
++	const unsigned long end_pfn = start_pfn + nr_pages;
+ 	struct pglist_data *pgdat = zone->zone_pgdat;
+-	unsigned long flags;
++	unsigned long pfn, cur_nr_pages, flags;
+ 
+ 	/* Poison struct pages because they are now uninitialized again. */
+-	page_init_poison(pfn_to_page(start_pfn), sizeof(struct page) * nr_pages);
++	for (pfn = start_pfn; pfn < end_pfn; pfn += cur_nr_pages) {
++		cond_resched();
++
++		/* Select all remaining pages up to the next section boundary */
++		cur_nr_pages =
++			min(end_pfn - pfn, SECTION_ALIGN_UP(pfn + 1) - pfn);
++		page_init_poison(pfn_to_page(pfn),
++				 sizeof(struct page) * cur_nr_pages);
++	}
+ 
+ #ifdef CONFIG_ZONE_DEVICE
+ 	/*
+-- 
+2.25.1
+
