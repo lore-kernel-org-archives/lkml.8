@@ -2,123 +2,117 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 644D7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 464FAC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:21:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 420ED20857
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:21:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20FED204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:21:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UerGcuAl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X8/CAFiD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390939AbgF2VVT (ORCPT
+        id S2390492AbgF2VVW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:21:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40024 "EHLO
+        Mon, 29 Jun 2020 17:21:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729768AbgF2Swn (ORCPT
+        with ESMTP id S1729762AbgF2Swn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:52:43 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24DCEC02E2D8
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:05:07 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id z15so5408173wrl.8
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:05:07 -0700 (PDT)
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92E75C031C53;
+        Mon, 29 Jun 2020 10:36:13 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id k71so4843467pje.0;
+        Mon, 29 Jun 2020 10:36:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=t94gU7LdZ9jhuE6Fuy5QcBW6wxTpYHr3wMA3J0Azebg=;
-        b=UerGcuAlj7Z9MLnen9oULz1ZCNnOGBCp6prj5iOmxWAPp79uH10ApRql/esij74qU1
-         TWwBUWUwXKybD7mLCIFuxnDkchZH4v0l7AhLDtvi1LP5qGhTW5sQI1CWSfJzFZ2r0vbq
-         iNCHT11TSH8gowVpzmfcRa9Ybi5BKsZNrAdCaLmXiEmJdHZQ/WB4GD2FFJw0jldyNHWe
-         1OOZfR50UhVxtQc3KBBvl3eGL4DEhf4K/Wvr3X/HV9mV+Jt0MY2ytHYcvMJwARnRZ6kJ
-         Ug4lNp8IbJIuT+yzwH5HioKnq78YX5xRE4ZSMXGPflUPfa9qFJlKYMJqu8veJZDVafd/
-         ORJA==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=G0sYP00DyHcgSiz/UpCj0vFSMqhUdJtVPzxSy22jFRs=;
+        b=X8/CAFiDKcy1LRoopU/VXQqrF/ZXGGSBw4D5FArGbTOu2n4JamyvFgiWlugGFsqSWM
+         /9xVgVu+f/ncxxEz0VlzZr31y1FxZzC8Jc+sF648c86tQga2eom8sl6/lfJxOcC2zbt3
+         nfj2/wL562qfy3sqaGoUnWITVNcwjvE/Df3g3LcC+6PyutlOA9UrYFg+s4HWkAao31gd
+         sjRuHnBD8imlkO9/NQEO6ZY6sbgFNfk5G7L7A3OtSQhS5yHQ7ZRroV6u+Zz/9N2L7ACz
+         SpWvD/+s2hgECa2/k9Apgoa1nwhlGvHGZNScfJzhTUsFEHyivbspJCM5V40cttfUNNBU
+         ti3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=t94gU7LdZ9jhuE6Fuy5QcBW6wxTpYHr3wMA3J0Azebg=;
-        b=gfBSeuDjnScxX4rCcQSyYVO3K+5YsmK7RFmdp3Zw8RM+UnzOQ8nvmxCVq4JYCD4d7u
-         uHQ4mE74EuzbfrOskPuq6yF3CPTsZSTjZPG9f+Z6I2d6PLfyjaFkmxdLlh+aBNaWW0qK
-         2f7LHMQyIWX0rs7SLSw3gwtNpJFInLLgUQJjuVxF/8Onr/DjHSYAJha2nS20mu4cXtOd
-         f+RGtaBuvIk66vmo0XCWRUUZfjUc5ZWtmFwaZ7wk8R0QVJpz1UlM68GxQFGkUqbUHE/y
-         UJ3skvvQS+yrjsoVf4HGe1AoQlPzCwwjwjywTSsUP0kyc/+tQ+dlPrisRpZfhrm2sPi3
-         omWQ==
-X-Gm-Message-State: AOAM53333NkT+mNx6dMUmCETUFC/RfoTy4G2RCBy13sZaR/cqZNwk0M8
-        eE3Owzfu34v/GB/cNGwxCU/iKA==
-X-Google-Smtp-Source: ABdhPJwmw6HtLwtc/BWKL7jvIFL/StauXcjQlFWHZqdNshQG+W/DhIyNUji82FIRqL0MnKMNZWFvkg==
-X-Received: by 2002:a5d:6846:: with SMTP id o6mr17265668wrw.370.1593439505791;
-        Mon, 29 Jun 2020 07:05:05 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id p14sm15394928wrj.14.2020.06.29.07.05.04
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=G0sYP00DyHcgSiz/UpCj0vFSMqhUdJtVPzxSy22jFRs=;
+        b=Cv8md3T3U6bAAFwBDFW/aoTHCQEgBk9+dmmJjSO3rUL4uWF0sHOE+irZcUVwl5sNG+
+         p5eUWxkLE68mXQVC/vf4G2tGdiEy6NL3WViZSHOUdhizm1eeQUjHS7pdBVFn38xVbe/X
+         M4d28H0eit8i+WLaFh2T1Xe5UI+VUtE6g5xpZdHkcID6CdUJSn4LQwKONFw9mF8JEGYd
+         KX31kHP0CWZKnJX5F//DW3p1YbTWebUiziS2eNcOKNA2lij0jx5pcpmouJyN4MiBt9aR
+         UzWTmh9SBN/3P3b1K1ieLGAP2o4lUer8NPoIJrA7Cxs5jMJyU25OAiNCiilW9RWQDMPR
+         9x3Q==
+X-Gm-Message-State: AOAM531ub9V0scIXKbvkB73yJci0lITm9RB40McHcGdWADMhzW8YJZH4
+        qVhUqHv7DxJxeR5iAyrRcwU=
+X-Google-Smtp-Source: ABdhPJytPqaMuxgD0wTHbLQsj7ArRGy3HFUVO8WFw4oHOZsTmYK70wTx5FpJaZY3EXhIhz/1MrYa7A==
+X-Received: by 2002:a17:90a:ac14:: with SMTP id o20mr11765030pjq.185.1593452173081;
+        Mon, 29 Jun 2020 10:36:13 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.153.57])
+        by smtp.gmail.com with ESMTPSA id k23sm331461pgb.92.2020.06.29.10.36.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 07:05:05 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     arnd@arndb.de, gregkh@linuxfoundation.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Michael Jung <mijung@gmx.net>,
-        Michael Ruettger <michael@ibmra.de>,
-        Frank Haverkamp <haver@linux.ibm.com>,
-        Joerg-Stephan Vogt <jsvogt@de.ibm.com>
-Subject: [PATCH 16/20] misc: genwqe: card_base: Remove set but unused variable 'rc'
-Date:   Mon, 29 Jun 2020 15:04:38 +0100
-Message-Id: <20200629140442.1043957-17-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629140442.1043957-1-lee.jones@linaro.org>
-References: <20200629140442.1043957-1-lee.jones@linaro.org>
+        Mon, 29 Jun 2020 10:36:12 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Manish Chopra <manishc@marvell.com>,
+        GR-Linux-NIC-Dev@marvell.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>, netdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+Subject: [PATCH v2 0/4] drivers/staging: use generic power management
+Date:   Mon, 29 Jun 2020 23:04:55 +0530
+Message-Id: <20200629173459.262075-1-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Variable 'rc' hasn't been checked since the driver's inception
-in 2013.  If it hasn't caused any issues since then, it's unlikely
-to in the future.  Let's take it out for now.
+Linux Kernel Mentee: Remove Legacy Power Management.
 
-Fixes the following W=1 kernel build warning(s):
+The purpose of this patch series is to remove legacy power management callbacks
+from amd ethernet drivers.
 
- drivers/misc/genwqe/card_base.c: In function ‘genwqe_health_check_stop’:
- /home/lee/projects/linux/kernel/drivers/misc/genwqe/card_base.c:1046:6: warning: variable ‘rc’ set but not used [-Wunused-but-set-variable]
- 1046 | int rc;
- | ^~
+The callbacks performing suspend() and resume() operations are still calling
+pci_save_state(), pci_set_power_state(), etc. and handling the power management
+themselves, which is not recommended.
 
-Cc: Michael Jung <mijung@gmx.net>
-Cc: Michael Ruettger <michael@ibmra.de>
-Cc: Frank Haverkamp <haver@linux.ibm.com>
-Cc: Joerg-Stephan Vogt <jsvogt@de.ibm.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/misc/genwqe/card_base.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+The conversion requires the removal of the those function calls and change the
+callback definition accordingly and make use of dev_pm_ops structure.
 
-diff --git a/drivers/misc/genwqe/card_base.c b/drivers/misc/genwqe/card_base.c
-index 1dc6c7c5cbce9..bceebf49de2d5 100644
---- a/drivers/misc/genwqe/card_base.c
-+++ b/drivers/misc/genwqe/card_base.c
-@@ -1043,12 +1043,10 @@ static int genwqe_health_thread_running(struct genwqe_dev *cd)
- 
- static int genwqe_health_check_stop(struct genwqe_dev *cd)
- {
--	int rc;
--
- 	if (!genwqe_health_thread_running(cd))
- 		return -EIO;
- 
--	rc = kthread_stop(cd->health_thread);
-+	kthread_stop(cd->health_thread);
- 	cd->health_thread = NULL;
- 	return 0;
- }
+All patches are compile-tested only.
+
+v2: An error was reported by kbuild in v1. pci_set_master() function call in
+drivers/staging/qlge/qlge_main.c, inside qlge_resume(), was passing argument
+which got deprecated after upgrade to generic PM. The error is fixed in v2.
+
+Vaibhav Gupta (4):
+  qlge/qlge_main.c: use generic power management
+  staging/rtl8192e: use generic power management
+  rts5208/rtsx.c: use generic power management
+  vt6655/device_main.c: use generic power management
+
+ drivers/staging/qlge/qlge_main.c             | 38 ++++++--------------
+ drivers/staging/rtl8192e/rtl8192e/rtl_core.c |  5 +--
+ drivers/staging/rtl8192e/rtl8192e/rtl_pm.c   | 26 ++++----------
+ drivers/staging/rtl8192e/rtl8192e/rtl_pm.h   |  4 +--
+ drivers/staging/rts5208/rtsx.c               | 30 +++++-----------
+ drivers/staging/vt6655/device_main.c         | 25 ++++---------
+ 6 files changed, 37 insertions(+), 91 deletions(-)
+
 -- 
-2.25.1
+2.27.0
 
