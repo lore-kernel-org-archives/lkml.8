@@ -2,207 +2,103 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F8AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C5ABC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:11:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEEA3206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:11:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C9B0206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:11:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593461513;
+	bh=ezznXUQTHXAvH1nGRSfvNkBY0zcMF05Sn3Ekfv8DUvQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=dIcXmDzzueyw5kAKfvV6/QzpowvKusXFSTcEulhvt78I9r/nAa3ApWgeyc6QTksv7
+	 Rh9AFbNJVaad0R42vwfG76oTIHW/h6K3BWphI5FOBb6oFhjzWD2oT+m3PZfgHozo4+
+	 jtHJIMSSsaeVhxUlLEBmxEVwYnOKZpG9u5O/zVOE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730230AbgF2ULn (ORCPT
+        id S1730286AbgF2ULv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:11:43 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:38396 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730003AbgF2ULa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 16:11:30 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jq07l-00041V-C1; Mon, 29 Jun 2020 14:11:29 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jq07k-0004jh-Eh; Mon, 29 Jun 2020 14:11:29 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     <linux-kernel@vger.kernel.org>
-Cc:     David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <greg@kroah.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20200625095725.GA3303921@kroah.com>
-        <778297d2-512a-8361-cf05-42d9379e6977@i-love.sakura.ne.jp>
-        <20200625120725.GA3493334@kroah.com>
-        <20200625.123437.2219826613137938086.davem@davemloft.net>
-        <CAHk-=whuTwGHEPjvtbBvneHHXeqJC=q5S09mbPnqb=Q+MSPMag@mail.gmail.com>
-        <87pn9mgfc2.fsf_-_@x220.int.ebiederm.org>
-        <87y2oac50p.fsf@x220.int.ebiederm.org>
-        <87bll17ili.fsf_-_@x220.int.ebiederm.org>
-Date:   Mon, 29 Jun 2020 15:06:57 -0500
-In-Reply-To: <87bll17ili.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
-        message of "Mon, 29 Jun 2020 14:55:05 -0500")
-Message-ID: <874kqt4owu.fsf_-_@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 29 Jun 2020 16:11:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40608 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732888AbgF2TaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:30:21 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DDE102525C;
+        Mon, 29 Jun 2020 15:36:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593444970;
+        bh=ezznXUQTHXAvH1nGRSfvNkBY0zcMF05Sn3Ekfv8DUvQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FgZW4LYi5cBTN1SERvh2L0deoaRYm952hrunJ/5v561dN0yMYJyRKOG5nkaCCHVO2
+         r2W7JD94+Jpy/+9HtcwK/67xnGEYTtbd21sa1JDIieUEJHpypkRBNwA1InKl2Oso7y
+         LtM8EZJUf3ZPmjolf5gkxrj7073e2NFKZ2u6IMmg=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Matthew Hagan <mnhagan88@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 069/131] ARM: dts: NSP: Correct FA2 mailbox node
+Date:   Mon, 29 Jun 2020 11:34:00 -0400
+Message-Id: <20200629153502.2494656-70-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
+References: <20200629153502.2494656-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jq07k-0004jh-Eh;;;mid=<874kqt4owu.fsf_-_@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19MtwjAP//3Te8YuqdooC9uWeB4WY4DWYs=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [PATCH v2 13/15] bpfilter: Take advantage of the facilities of struct pid
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.19.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.19.131-rc1
+X-KernelTest-Deadline: 2020-07-01T15:34+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Matthew Hagan <mnhagan88@gmail.com>
 
-Instead of relying on the exit_umh cleanup callback use the fact a
-struct pid can be tested to see if a process still exists, and that
-struct pid has a wait queue that notifies when the process dies.
+[ Upstream commit ac4e106d8934a5894811fc263f4b03fc8ed0fb7a ]
 
-Link: https://lkml.kernel.org/r/87h7uydlu9.fsf_-_@x220.int.ebiederm.org
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+The FA2 mailbox is specified at 0x18025000 but should actually be
+0x18025c00, length 0x400 according to socregs_nsp.h and board_bu.c. Also
+the interrupt was off by one and should be GIC SPI 151 instead of 150.
+
+Fixes: 17d517172300 ("ARM: dts: NSP: Add mailbox (PDC) to NSP")
+Signed-off-by: Matthew Hagan <mnhagan88@gmail.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/bpfilter.h     |  3 ++-
- net/bpfilter/bpfilter_kern.c | 15 +++++----------
- net/ipv4/bpfilter/sockopt.c  | 15 ++++++++-------
- 3 files changed, 15 insertions(+), 18 deletions(-)
+ arch/arm/boot/dts/bcm-nsp.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/bpfilter.h b/include/linux/bpfilter.h
-index 4b43d2240172..8073ddce73b1 100644
---- a/include/linux/bpfilter.h
-+++ b/include/linux/bpfilter.h
-@@ -10,6 +10,8 @@ int bpfilter_ip_set_sockopt(struct sock *sk, int optname, char __user *optval,
- 			    unsigned int optlen);
- int bpfilter_ip_get_sockopt(struct sock *sk, int optname, char __user *optval,
- 			    int __user *optlen);
-+void bpfilter_umh_cleanup(struct umd_info *info);
-+
- struct bpfilter_umh_ops {
- 	struct umd_info info;
- 	/* since ip_getsockopt() can run in parallel, serialize access to umh */
-@@ -18,7 +20,6 @@ struct bpfilter_umh_ops {
- 		       char __user *optval,
- 		       unsigned int optlen, bool is_set);
- 	int (*start)(void);
--	bool stop;
- };
- extern struct bpfilter_umh_ops bpfilter_ops;
- #endif
-diff --git a/net/bpfilter/bpfilter_kern.c b/net/bpfilter/bpfilter_kern.c
-index b73dedeb6dbf..91474884ddb7 100644
---- a/net/bpfilter/bpfilter_kern.c
-+++ b/net/bpfilter/bpfilter_kern.c
-@@ -18,10 +18,11 @@ static void shutdown_umh(void)
- 	struct umd_info *info = &bpfilter_ops.info;
- 	struct pid *tgid = info->tgid;
+diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
+index 2b219addeb449..273a316045798 100644
+--- a/arch/arm/boot/dts/bcm-nsp.dtsi
++++ b/arch/arm/boot/dts/bcm-nsp.dtsi
+@@ -249,10 +249,10 @@
+ 			status = "disabled";
+ 		};
  
--	if (bpfilter_ops.stop)
--		return;
--
--	kill_pid_info(SIGKILL, SEND_SIG_PRIV, tgid);
-+	if (tgid) {
-+		kill_pid_info(SIGKILL, SEND_SIG_PRIV, tgid);
-+		wait_event(tgid->wait_pidfd, !pid_task(tgid, PIDTYPE_TGID));
-+		bpfilter_umh_cleanup(info);
-+	}
- }
- 
- static void __stop_umh(void)
-@@ -77,7 +78,6 @@ static int start_umh(void)
- 	err = fork_usermode_driver(&bpfilter_ops.info);
- 	if (err)
- 		return err;
--	bpfilter_ops.stop = false;
- 	pr_info("Loaded bpfilter_umh pid %d\n", pid_nr(bpfilter_ops.info.tgid));
- 
- 	/* health check that usermode process started correctly */
-@@ -100,16 +100,11 @@ static int __init load_umh(void)
- 		return err;
- 
- 	mutex_lock(&bpfilter_ops.lock);
--	if (!bpfilter_ops.stop) {
--		err = -EFAULT;
--		goto out;
--	}
- 	err = start_umh();
- 	if (!err && IS_ENABLED(CONFIG_INET)) {
- 		bpfilter_ops.sockopt = &__bpfilter_process_sockopt;
- 		bpfilter_ops.start = &start_umh;
- 	}
--out:
- 	mutex_unlock(&bpfilter_ops.lock);
- 	if (err)
- 		umd_unload_blob(&bpfilter_ops.info);
-diff --git a/net/ipv4/bpfilter/sockopt.c b/net/ipv4/bpfilter/sockopt.c
-index 56cbc43145f6..9455eb9cec78 100644
---- a/net/ipv4/bpfilter/sockopt.c
-+++ b/net/ipv4/bpfilter/sockopt.c
-@@ -12,16 +12,14 @@
- struct bpfilter_umh_ops bpfilter_ops;
- EXPORT_SYMBOL_GPL(bpfilter_ops);
- 
--static void bpfilter_umh_cleanup(struct umd_info *info)
-+void bpfilter_umh_cleanup(struct umd_info *info)
- {
--	mutex_lock(&bpfilter_ops.lock);
--	bpfilter_ops.stop = true;
- 	fput(info->pipe_to_umh);
- 	fput(info->pipe_from_umh);
- 	put_pid(info->tgid);
- 	info->tgid = NULL;
--	mutex_unlock(&bpfilter_ops.lock);
- }
-+EXPORT_SYMBOL_GPL(bpfilter_umh_cleanup);
- 
- static int bpfilter_mbox_request(struct sock *sk, int optname,
- 				 char __user *optval,
-@@ -39,7 +37,11 @@ static int bpfilter_mbox_request(struct sock *sk, int optname,
- 			goto out;
- 		}
- 	}
--	if (bpfilter_ops.stop) {
-+	if (bpfilter_ops.info.tgid &&
-+	    !pid_has_task(bpfilter_ops.info.tgid, PIDTYPE_TGID))
-+		bpfilter_umh_cleanup(&bpfilter_ops.info);
-+
-+	if (!bpfilter_ops.info.tgid) {
- 		err = bpfilter_ops.start();
- 		if (err)
- 			goto out;
-@@ -70,9 +72,8 @@ int bpfilter_ip_get_sockopt(struct sock *sk, int optname, char __user *optval,
- static int __init bpfilter_sockopt_init(void)
- {
- 	mutex_init(&bpfilter_ops.lock);
--	bpfilter_ops.stop = true;
-+	bpfilter_ops.info.tgid = NULL;
- 	bpfilter_ops.info.driver_name = "bpfilter_umh";
--	bpfilter_ops.info.cleanup = &bpfilter_umh_cleanup;
- 
- 	return 0;
- }
+-		mailbox: mailbox@25000 {
++		mailbox: mailbox@25c00 {
+ 			compatible = "brcm,iproc-fa2-mbox";
+-			reg = <0x25000 0x445>;
+-			interrupts = <GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>;
++			reg = <0x25c00 0x400>;
++			interrupts = <GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>;
+ 			#mbox-cells = <1>;
+ 			brcm,rx-status-len = <32>;
+ 			brcm,use-bcm-hdr;
 -- 
-2.25.0
+2.25.1
 
