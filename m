@@ -2,158 +2,289 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1902C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:14:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA32C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C0CE206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:14:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FB67206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:14:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390493AbgF2VOD (ORCPT
+        id S1731606AbgF2VON convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:14:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40882 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730115AbgF2S5m (ORCPT
+        Mon, 29 Jun 2020 17:14:13 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:52769 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730010AbgF2S5m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:57:42 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 855F4C02E2E2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:09:35 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id o38so12893652qtf.6
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:09:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Q73kT1XN4hhOuxeHjn1mfrAOy95GtpeYTquAg+kTJ+E=;
-        b=klFi0NZOTlc2xZgHx4Q9Zr+xj8Y1kogQLVMz/OLO5j8k4HdXgFgk1qv06nuW7xAV/h
-         owguZENUyYF8ajNWNsa85xBhsqyJeEECFa5mdZ7y4tCE6NSP19RjjBT7lzEWn3Qle/qF
-         k1LWmQGK83QIP2dxgmEN8jrN7I/XF8U+V71/Xd40fjZ4wfDbh0xyW9etK31KQ/3Kl9K0
-         rnIx6L/0aUKWQXCar+peXuCPabIDMIQtBkS92tN3FxiqB42tCDiyLqMsd9YiOUqJ5tqO
-         iD+YlYVMhIEAuXj01/tojYs7+uXnLoTTUegtF04l8qDEwfflrkVLD57wRaLAxD0LjEZN
-         tX6Q==
-X-Gm-Message-State: AOAM533BQ/H1IuHkopfY4wONC3z/2QpB5h7XPZNN4hyuEU6vUiiW1bYE
-        avA9o24rS+GC/seuKHMIb9M=
-X-Google-Smtp-Source: ABdhPJxZQYjCoLk1qURh5eGr45mEWPwuBDAk+HZScdxK7qwHMr0EEcdQBtD3mHM+CU0bV9Gsj7O4Hw==
-X-Received: by 2002:ac8:5212:: with SMTP id r18mr15587792qtn.389.1593439774549;
-        Mon, 29 Jun 2020 07:09:34 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id i26sm10741461qkh.14.2020.06.29.07.09.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 07:09:34 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Fangrui Song <maskray@google.com>,
-        Dmitry Golovin <dima@golovin.in>,
-        clang-built-linux@googlegroups.com,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "H . J . Lu" <hjl@sourceware.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 4/7] x86/boot: Add .text.* to setup.ld
-Date:   Mon, 29 Jun 2020 10:09:25 -0400
-Message-Id: <20200629140928.858507-5-nivedita@alum.mit.edu>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200629140928.858507-1-nivedita@alum.mit.edu>
-References: <20200629140928.858507-1-nivedita@alum.mit.edu>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: from marcel-macpro.fritz.box (p5b3d2638.dip0.t-ipconnect.de [91.61.38.56])
+        by mail.holtmann.org (Postfix) with ESMTPSA id D17D0CECCB;
+        Mon, 29 Jun 2020 08:50:50 +0200 (CEST)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [RFC PATCH v1 1/2] Bluetooth: queue ACL packets if no handle is
+ found
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20200627185320.RFC.v1.1.Icea550bb064a24b89f2217cf19e35b4480a31afd@changeid>
+Date:   Mon, 29 Jun 2020 08:40:56 +0200
+Cc:     linux-bluetooth <linux-bluetooth@vger.kernel.org>,
+        chromeos-bluetooth-upstreaming 
+        <chromeos-bluetooth-upstreaming@chromium.org>,
+        Archie Pusaka <apusaka@chromium.org>,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org
+Content-Transfer-Encoding: 8BIT
+Message-Id: <91CFE951-262A-4E83-8550-25445AE84B5A@holtmann.org>
+References: <20200627105437.453053-1-apusaka@google.com>
+ <20200627185320.RFC.v1.1.Icea550bb064a24b89f2217cf19e35b4480a31afd@changeid>
+To:     Archie Pusaka <apusaka@google.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-gcc puts the main function into .text.startup when compiled with -Os (or
--O2). This results in arch/x86/boot/main.c having a .text.startup
-section which is currently not included explicitly in the linker script
-setup.ld in the same directory.
+Hi Archie,
 
-The BFD linker places this orphan section immediately after .text, so
-this still works. However, LLD git, since [1], is choosing to place it
-immediately after the .bstext section instead (this is the first code
-section). This plays havoc with the section layout that setup.elf
-requires to create the setup header, for eg on 64-bit:
+> There is a possibility that an ACL packet is received before we
+> receive the HCI connect event for the corresponding handle. If this
+> happens, we discard the ACL packet.
+> 
+> Rather than just ignoring them, this patch provides a queue for
+> incoming ACL packet without a handle. The queue is processed when
+> receiving a HCI connection event. If 2 seconds elapsed without
+> receiving the HCI connection event, assume something bad happened
+> and discard the queued packet.
+> 
+> Signed-off-by: Archie Pusaka <apusaka@chromium.org>
+> Reviewed-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
 
-    LD      arch/x86/boot/setup.elf
-  ld.lld: error: section .text.startup file range overlaps with .header
-  >>> .text.startup range is [0x200040, 0x2001FE]
-  >>> .header range is [0x2001EF, 0x20026B]
+so two things up front. I want to hide this behind a HCI_QUIRK_OUT_OF_ORDER_ACL that a transport driver has to set first. Frankly if this kind of out-of-order happens on UART or SDIO transports, then something is obviously going wrong. I have no plan to fix up after a fully serialized transport.
 
-  ld.lld: error: section .header file range overlaps with .bsdata
-  >>> .header range is [0x2001EF, 0x20026B]
-  >>> .bsdata range is [0x2001FF, 0x200398]
+Secondly, if a transport sets HCI_QUIRK_OUT_OF_ORDER_ACL, then I want this off by default. You can enable it via an experimental setting. The reason here is that we have to make it really hard and fail as often as possible so that hardware manufactures and spec writers realize that something is fundamentally broken here.
 
-  ld.lld: error: section .bsdata file range overlaps with .entrytext
-  >>> .bsdata range is [0x2001FF, 0x200398]
-  >>> .entrytext range is [0x20026C, 0x2002D3]
+I have no problem in running the code and complaining loudly in case the quirk has been set. Just injecting the packets can only happen if bluetoothd explicitly enabled it.
 
-  ld.lld: error: section .text.startup virtual address range overlaps
-  with .header
-  >>> .text.startup range is [0x40, 0x1FE]
-  >>> .header range is [0x1EF, 0x26B]
+> 
+> ---
+> 
+> include/net/bluetooth/hci_core.h |  8 +++
+> net/bluetooth/hci_core.c         | 84 +++++++++++++++++++++++++++++---
+> net/bluetooth/hci_event.c        |  2 +
+> 3 files changed, 88 insertions(+), 6 deletions(-)
+> 
+> diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
+> index 836dc997ff94..b69ecdd0d15a 100644
+> --- a/include/net/bluetooth/hci_core.h
+> +++ b/include/net/bluetooth/hci_core.h
+> @@ -270,6 +270,9 @@ struct adv_monitor {
+> /* Default authenticated payload timeout 30s */
+> #define DEFAULT_AUTH_PAYLOAD_TIMEOUT   0x0bb8
+> 
+> +/* Time to keep ACL packets without a corresponding handle queued (2s) */
+> +#define PENDING_ACL_TIMEOUT		msecs_to_jiffies(2000)
+> +
 
-  ld.lld: error: section .header virtual address range overlaps with
-  .bsdata
-  >>> .header range is [0x1EF, 0x26B]
-  >>> .bsdata range is [0x1FF, 0x398]
+Do we have some btmon traces with timestamps. Isn’t a second enough? Actually 2 seconds is an awful long time.
 
-  ld.lld: error: section .bsdata virtual address range overlaps with
-  .entrytext
-  >>> .bsdata range is [0x1FF, 0x398]
-  >>> .entrytext range is [0x26C, 0x2D3]
+> struct amp_assoc {
+> 	__u16	len;
+> 	__u16	offset;
+> @@ -538,6 +541,9 @@ struct hci_dev {
+> 	struct delayed_work	rpa_expired;
+> 	bdaddr_t		rpa;
+> 
+> +	struct delayed_work	remove_pending_acl;
+> +	struct sk_buff_head	pending_acl_q;
+> +
 
-  ld.lld: error: section .text.startup load address range overlaps with
-  .header
-  >>> .text.startup range is [0x40, 0x1FE]
-  >>> .header range is [0x1EF, 0x26B]
+can we name this ooo_q and move it to the other queues in this struct. Unless we want to add a Kconfig option around it, we don’t need to keep it here.
 
-  ld.lld: error: section .header load address range overlaps with
-  .bsdata
-  >>> .header range is [0x1EF, 0x26B]
-  >>> .bsdata range is [0x1FF, 0x398]
+> #if IS_ENABLED(CONFIG_BT_LEDS)
+> 	struct led_trigger	*power_led;
+> #endif
+> @@ -1773,6 +1779,8 @@ void hci_le_start_enc(struct hci_conn *conn, __le16 ediv, __le64 rand,
+> void hci_copy_identity_address(struct hci_dev *hdev, bdaddr_t *bdaddr,
+> 			       u8 *bdaddr_type);
+> 
+> +void hci_process_pending_acl(struct hci_dev *hdev, struct hci_conn *conn);
+> +
+> #define SCO_AIRMODE_MASK       0x0003
+> #define SCO_AIRMODE_CVSD       0x0000
+> #define SCO_AIRMODE_TRANSP     0x0003
+> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+> index 7959b851cc63..30780242c267 100644
+> --- a/net/bluetooth/hci_core.c
+> +++ b/net/bluetooth/hci_core.c
+> @@ -1786,6 +1786,7 @@ int hci_dev_do_close(struct hci_dev *hdev)
+> 	skb_queue_purge(&hdev->rx_q);
+> 	skb_queue_purge(&hdev->cmd_q);
+> 	skb_queue_purge(&hdev->raw_q);
+> +	skb_queue_purge(&hdev->pending_acl_q);
+> 
+> 	/* Drop last sent command */
+> 	if (hdev->sent_cmd) {
+> @@ -3518,6 +3519,78 @@ static int hci_suspend_notifier(struct notifier_block *nb, unsigned long action,
+> 	return NOTIFY_STOP;
+> }
+> 
+> +static void hci_add_pending_acl(struct hci_dev *hdev, struct sk_buff *skb)
+> +{
+> +	skb_queue_tail(&hdev->pending_acl_q, skb);
+> +
+> +	queue_delayed_work(hdev->workqueue, &hdev->remove_pending_acl,
+> +			   PENDING_ACL_TIMEOUT);
+> +}
+> +
+> +void hci_process_pending_acl(struct hci_dev *hdev, struct hci_conn *conn)
+> +{
+> +	struct sk_buff *skb, *tmp;
+> +	struct hci_acl_hdr *hdr;
+> +	u16 handle, flags;
+> +	bool reset_timer = false;
+> +
+> +	skb_queue_walk_safe(&hdev->pending_acl_q, skb, tmp) {
+> +		hdr = (struct hci_acl_hdr *)skb->data;
+> +		handle = __le16_to_cpu(hdr->handle);
+> +		flags  = hci_flags(handle);
+> +		handle = hci_handle(handle);
+> +
+> +		if (handle != conn->handle)
+> +			continue;
+> +
+> +		__skb_unlink(skb, &hdev->pending_acl_q);
+> +		skb_pull(skb, HCI_ACL_HDR_SIZE);
+> +
+> +		l2cap_recv_acldata(conn, skb, flags);
+> +		reset_timer = true;
+> +	}
+> +
+> +	if (reset_timer)
+> +		mod_delayed_work(hdev->workqueue, &hdev->remove_pending_acl,
+> +				 PENDING_ACL_TIMEOUT);
+> +}
+> +
+> +/* Remove the oldest pending ACL, and all pending ACLs with the same handle */
+> +static void hci_remove_pending_acl(struct work_struct *work)
+> +{
+> +	struct hci_dev *hdev;
+> +	struct sk_buff *skb, *tmp;
+> +	struct hci_acl_hdr *hdr;
+> +	u16 handle, oldest_handle;
+> +
+> +	hdev = container_of(work, struct hci_dev, remove_pending_acl.work);
+> +	skb = skb_dequeue(&hdev->pending_acl_q);
+> +
+> +	if (!skb)
+> +		return;
+> +
+> +	hdr = (struct hci_acl_hdr *)skb->data;
+> +	oldest_handle = hci_handle(__le16_to_cpu(hdr->handle));
+> +	kfree_skb(skb);
+> +
+> +	bt_dev_err(hdev, "ACL packet for unknown connection handle %d",
+> +		   oldest_handle);
+> +
+> +	skb_queue_walk_safe(&hdev->pending_acl_q, skb, tmp) {
+> +		hdr = (struct hci_acl_hdr *)skb->data;
+> +		handle = hci_handle(__le16_to_cpu(hdr->handle));
+> +
+> +		if (handle == oldest_handle) {
+> +			__skb_unlink(skb, &hdev->pending_acl_q);
+> +			kfree_skb(skb);
+> +		}
+> +	}
+> +
+> +	if (!skb_queue_empty(&hdev->pending_acl_q))
+> +		queue_delayed_work(hdev->workqueue, &hdev->remove_pending_acl,
+> +				   PENDING_ACL_TIMEOUT);
+> +}
+> +
 
-  ld.lld: error: section .bsdata load address range overlaps with
-  .entrytext
-  >>> .bsdata range is [0x1FF, 0x398]
-  >>> .entrytext range is [0x26C, 0x2D3]
+So I am wondering if we make this too complicated. Since generally speaking we can only have a single HCI connect complete anyway at a time. No matter if the controller serializes it for us or we do it for the controller. So hci_conn_add could just process the queue for packets with its handle and then flush it. And it can flush it no matter what since whatever other packets are in the queue, they can not be valid.
 
-Add .text.* to the .text output section to fix this, and also prevent
-any future surprises if the compiler decides to create other such
-sections.
+That said, we wouldn’t even need to check the packet handles at all. We just needed to flag them as already out-of-order queued once and hand them back into the rx_q at the top. Then the would be processed as usual. Already ooo packets would cause the same error as before if it is for a non-existing handle and others would end up being processed.
 
-[1] https://reviews.llvm.org/D75225
+For me this means we just need another queue to park the packets until hci_conn_add gets called. I might have missed something, but I am looking for the least invasive option for this and least code duplication.
 
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-Reviewed-by: Fangrui Song <maskray@google.com>
----
- arch/x86/boot/setup.ld | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> /* Alloc HCI device */
+> struct hci_dev *hci_alloc_dev(void)
+> {
+> @@ -3610,10 +3683,12 @@ struct hci_dev *hci_alloc_dev(void)
+> 	INIT_WORK(&hdev->suspend_prepare, hci_prepare_suspend);
+> 
+> 	INIT_DELAYED_WORK(&hdev->power_off, hci_power_off);
+> +	INIT_DELAYED_WORK(&hdev->remove_pending_acl, hci_remove_pending_acl);
+> 
+> 	skb_queue_head_init(&hdev->rx_q);
+> 	skb_queue_head_init(&hdev->cmd_q);
+> 	skb_queue_head_init(&hdev->raw_q);
+> +	skb_queue_head_init(&hdev->pending_acl_q);
+> 
+> 	init_waitqueue_head(&hdev->req_wait_q);
+> 	init_waitqueue_head(&hdev->suspend_wait_q);
+> @@ -4662,8 +4737,6 @@ static void hci_acldata_packet(struct hci_dev *hdev, struct sk_buff *skb)
+> 	struct hci_conn *conn;
+> 	__u16 handle, flags;
+> 
+> -	skb_pull(skb, HCI_ACL_HDR_SIZE);
+> -
+> 	handle = __le16_to_cpu(hdr->handle);
+> 	flags  = hci_flags(handle);
+> 	handle = hci_handle(handle);
+> @@ -4678,17 +4751,16 @@ static void hci_acldata_packet(struct hci_dev *hdev, struct sk_buff *skb)
+> 	hci_dev_unlock(hdev);
+> 
+> 	if (conn) {
+> +		skb_pull(skb, HCI_ACL_HDR_SIZE);
+> +
+> 		hci_conn_enter_active_mode(conn, BT_POWER_FORCE_ACTIVE_OFF);
+> 
+> 		/* Send to upper protocol */
+> 		l2cap_recv_acldata(conn, skb, flags);
+> 		return;
+> 	} else {
+> -		bt_dev_err(hdev, "ACL packet for unknown connection handle %d",
+> -			   handle);
+> +		hci_add_pending_acl(hdev, skb);
 
-diff --git a/arch/x86/boot/setup.ld b/arch/x86/boot/setup.ld
-index 24c95522f231..49546c247ae2 100644
---- a/arch/x86/boot/setup.ld
-+++ b/arch/x86/boot/setup.ld
-@@ -20,7 +20,7 @@ SECTIONS
- 	.initdata	: { *(.initdata) }
- 	__end_init = .;
+So here I want to keep being verbose. If no quirk is set, then this has to stay as an error. In case the quirk is set, then this should still warn that we are queuing up a packet. It is not an expected behavior.
+
+> 	}
+> -
+> -	kfree_skb(skb);
+> }
+> 
+> /* SCO data packet */
+> diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+> index e060fc9ebb18..108c6c102a6a 100644
+> --- a/net/bluetooth/hci_event.c
+> +++ b/net/bluetooth/hci_event.c
+> @@ -2627,6 +2627,8 @@ static void hci_conn_complete_evt(struct hci_dev *hdev, struct sk_buff *skb)
+> 			hci_send_cmd(hdev, HCI_OP_CHANGE_CONN_PTYPE, sizeof(cp),
+> 				     &cp);
+> 		}
+> +
+> +		hci_process_pending_acl(hdev, conn);
+
+Can we just do this in hci_conn_add() when we create the connection object?
  
--	.text		: { *(.text) }
-+	.text		: { *(.text .text.*) }
- 	.text32		: { *(.text32) }
- 
- 	. = ALIGN(16);
--- 
-2.26.2
+> 	} else {
+> 		conn->state = BT_CLOSED;
+> 		if (conn->type == ACL_LINK)
+> -- 
+> 2.27.0.212.ge8ba1cc988-goog
+> 
+
+Regards
+
+Marcel
 
