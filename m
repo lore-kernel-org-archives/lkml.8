@@ -2,107 +2,108 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10FB3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E6EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC7E0206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:58:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05B99206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:58:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467929;
-	bh=JaTM7OpwurAOBBFLTAzbnjTnVOjccL2UK9UeapBg/7s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bGpOKRxyTFgtVCa4mJXeZ3zErro1Z/g7WYBA9VudPKfD6mPeb+eD1WBHJgNOnQ0HJ
-	 NCkfj675GN2oDqUEpWte1ll28cUx3vAELJ+wuFWJxrqBR6JSUU4UoBYFouiJyiQhid
-	 eVwllKnnng1m2hcBwUXx/BrYRNM4CRXJE/Fk3Gr4=
+	s=default; t=1593467936;
+	bh=J56cYYTWlPlgnKtraKgukkZV8i9esAm0+h4VzSWG7u8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=VmiCf9MJhmg+BTpu3v59VdDK0ERdnCovcTWeAF/sdr1i1qcw/02O1LlAy3sdZUcMC
+	 DQV+FSwmYQ7wA11A8Du1/1uG8K9eRaQD0j7GDuf4CkowuJniAJP9255ocM422Qhv1m
+	 QAzCLiD6OLC8PObmXT+gRxInvJjqZyegVgtvrxUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404770AbgF2V6r (ORCPT
+        id S1726469AbgF2Sf2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:58:47 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:39213 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729176AbgF2V6m (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 17:58:42 -0400
-Received: by mail-il1-f193.google.com with SMTP id k6so15862732ili.6;
-        Mon, 29 Jun 2020 14:58:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=6QT2CxKngMlY2p6AbcTTZAUqsEvoLy2nz/okkRGauIc=;
-        b=lUp/19A7OQSUweoHI2QEAowtTQzqfc2lloX74hWdQME3l6d04TbFg9uaAKJkEZgTVG
-         P7rRIS3F1R3SShw2kyEAjSVL1YDPeDbfIIByNwf7RDW+95blrcRu77A1x3i8+17nEcnC
-         dbE89/8fqM8FS09XGD4CmFtwIv4J6sqSYfWax0HsIbPwSsiQ6nozeoZOLRMnM/FGIUzK
-         6rObPbd7dfRmV1z6ZoxJPXRYrsZ779rSrLHnVldNMrboR5+CruKN392Zwk3QGqMl9fyx
-         Mi01wCC05p7NADXAB8xJBqQ0qe9jwRmPii4L2SvQWKO1X2dkdmLRwIK7cDDIwh2/QgpC
-         CBZQ==
-X-Gm-Message-State: AOAM530kYFx0mchKQIasRRp81PyQLwgO3FrzYBgB7Ly0JozI8yel7UsC
-        2vtxG2ldVr1x3oQZ0bh+hg==
-X-Google-Smtp-Source: ABdhPJylefPN6e1fWTB8vAdKMAzJZl6DuCBfuuXfmf35nWeNuXIU1oLVRKCxPnf1E3+V6I0ZxzpOqw==
-X-Received: by 2002:a92:bf0c:: with SMTP id z12mr17464216ilh.151.1593467921338;
-        Mon, 29 Jun 2020 14:58:41 -0700 (PDT)
-Received: from xps15 ([64.188.179.255])
-        by smtp.gmail.com with ESMTPSA id b8sm669748ilc.42.2020.06.29.14.58.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 14:58:40 -0700 (PDT)
-Received: (nullmailer pid 3006922 invoked by uid 1000);
-        Mon, 29 Jun 2020 21:58:39 -0000
-Date:   Mon, 29 Jun 2020 15:58:39 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Florinel Iordache <florinel.iordache@nxp.com>
-Cc:     kuba@kernel.org, robh+dt@kernel.org, shawnguo@kernel.org,
-        linux-doc@vger.kernel.org, devicetree@vger.kernel.org,
-        davem@davemloft.net, andrew@lunn.ch, mark.rutland@arm.com,
-        linux@armlinux.org.uk, corbet@lwn.net, ioana.ciornei@nxp.com,
-        linux-kernel@vger.kernel.org, hkallweit1@gmail.com,
-        f.fainelli@gmail.com, leoyang.li@nxp.com, netdev@vger.kernel.org,
-        madalin.bucur@oss.nxp.com
-Subject: Re: [PATCH net-next v3 2/7] dt-bindings: net: add backplane dt
- bindings
-Message-ID: <20200629215839.GA3004274@bogus>
-References: <1592832924-31733-1-git-send-email-florinel.iordache@nxp.com>
- <1592832924-31733-3-git-send-email-florinel.iordache@nxp.com>
+        Mon, 29 Jun 2020 14:35:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56764 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725930AbgF2SfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:17 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F8FA247F7;
+        Mon, 29 Jun 2020 15:22:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593444155;
+        bh=J56cYYTWlPlgnKtraKgukkZV8i9esAm0+h4VzSWG7u8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=aCHcFUTUPNjK7m1JexbjYw8aa9c/SwSsLQaEH49THTZyRXXFfXlod/IPLsO5Ssap8
+         sjVNG3qfXf/tYV4+k9iWsV6ZH0wZtxELN9Uh/H7NtidsU+9ZHk01I6fkzB0bZ+eadW
+         s44hNhEBBc4QHnr9uoZEPKv0EP9m2G2g65Vdzs7U=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Borislav Petkov <bp@suse.de>,
+        Anders Andersson <pipatron@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 261/265] EDAC/amd64: Read back the scrub rate PCI register on F15h
+Date:   Mon, 29 Jun 2020 11:18:14 -0400
+Message-Id: <20200629151818.2493727-262-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
+References: <20200629151818.2493727-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1592832924-31733-3-git-send-email-florinel.iordache@nxp.com>
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.7.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.7.7-rc1
+X-KernelTest-Deadline: 2020-07-01T15:14+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jun 2020 16:35:19 +0300, Florinel Iordache wrote:
-> Add ethernet backplane device tree bindings
-> 
-> Signed-off-by: Florinel Iordache <florinel.iordache@nxp.com>
-> ---
->  .../bindings/net/ethernet-controller.yaml          |  7 ++-
->  .../devicetree/bindings/net/ethernet-phy.yaml      | 50 ++++++++++++++++++++++
->  .../devicetree/bindings/net/serdes-lane.yaml       | 49 +++++++++++++++++++++
->  Documentation/devicetree/bindings/net/serdes.yaml  | 42 ++++++++++++++++++
->  4 files changed, 146 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/net/serdes-lane.yaml
->  create mode 100644 Documentation/devicetree/bindings/net/serdes.yaml
-> 
+From: Borislav Petkov <bp@suse.de>
 
+commit ee470bb25d0dcdf126f586ec0ae6dca66cb340a4 upstream.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Commit:
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/serdes.example.dt.yaml: example-0: serdes@1ea0000:reg:0: [0, 32112640, 0, 8192] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/net/serdes-lane.example.dt.yaml: example-0: serdes@1ea0000:reg:0: [0, 32112640, 0, 8192] is too long
+  da92110dfdfa ("EDAC, amd64_edac: Extend scrub rate support to F15hM60h")
 
+added support for F15h, model 0x60 CPUs but in doing so, missed to read
+back SCRCTRL PCI config register on F15h CPUs which are *not* model
+0x60. Add that read so that doing
 
-See https://patchwork.ozlabs.org/patch/1314386
+  $ cat /sys/devices/system/edac/mc/mc0/sdram_scrub_rate
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
+can show the previously set DRAM scrub rate.
 
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+Fixes: da92110dfdfa ("EDAC, amd64_edac: Extend scrub rate support to F15hM60h")
+Reported-by: Anders Andersson <pipatron@gmail.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: <stable@vger.kernel.org> #v4.4..
+Link: https://lkml.kernel.org/r/CAKkunMbNWppx_i6xSdDHLseA2QQmGJqj_crY=NF-GZML5np4Vw@mail.gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/edac/amd64_edac.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Please check and re-submit.
+diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
+index 4e9994de0b900..0d89c3e473bdc 100644
+--- a/drivers/edac/amd64_edac.c
++++ b/drivers/edac/amd64_edac.c
+@@ -272,6 +272,8 @@ static int get_scrub_rate(struct mem_ctl_info *mci)
+ 
+ 		if (pvt->model == 0x60)
+ 			amd64_read_pci_cfg(pvt->F2, F15H_M60H_SCRCTRL, &scrubval);
++		else
++			amd64_read_pci_cfg(pvt->F3, SCRCTRL, &scrubval);
+ 	} else {
+ 		amd64_read_pci_cfg(pvt->F3, SCRCTRL, &scrubval);
+ 	}
+-- 
+2.25.1
 
