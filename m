@@ -2,44 +2,63 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE1C7C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C2DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B84D8206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:32:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8739E2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:32:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593459135;
+	bh=fMJnMeJx8wGXwDbv34zc9g+wG1Ni0PSEYZC1BY7IAlA=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Wo8CIV85tcfK3BE8ID889WIfA02ad9GgwlEpqIWv2hx99eFEu2h7Ht66wEZtF6fAS
+	 fSHf1g0xkUEwxzXrWekqyxW1BYup476+XUzxIyvjJgBMDb5FWoEYoHnIpJjMnJy3zQ
+	 H4npqLFOGaue+BMLT3KN+GgoaFNxwAZIm7pQEDgs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729166AbgF2TcJ (ORCPT
+        id S1732658AbgF2TcN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:32:09 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36746 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733165AbgF2Tb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:31:27 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 4E852AE41;
-        Mon, 29 Jun 2020 16:18:56 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, robh@kernel.org,
-        wahrenst@gmx.net, p.zabel@pengutronix.de, andy.shevchenko@gmail.com
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, helgaas@kernel.org,
-        mathias.nyman@linux.intel.com, lorenzo.pieralisi@arm.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH v5 2/9] reset: Add Raspberry Pi 4 firmware reset controller
-Date:   Mon, 29 Jun 2020 18:18:38 +0200
-Message-Id: <20200629161845.6021-3-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200629161845.6021-1-nsaenzjulienne@suse.de>
-References: <20200629161845.6021-1-nsaenzjulienne@suse.de>
+        Mon, 29 Jun 2020 15:32:13 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:46438 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732429AbgF2TcI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:32:08 -0400
+Received: by mail-io1-f65.google.com with SMTP id a12so18448743ion.13;
+        Mon, 29 Jun 2020 12:32:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sxRkPuDfPbrS9C7pjKtoug/7Im3FpACWhfxon0s0d4Q=;
+        b=mThvgoW64fiF80nE8HeDGJIFps6Vigecmu4kZg7elhENOIRxR2RfUte53R8Mjutwrt
+         8mvaT4Z9BpnqKpzy5QNacCy+CQa4EOIlN80/KtPhi+u84dkIQ4UyMCd9kdUcwhZrqAMf
+         F8eHpTiHKoEEr0NriZLIWMKoGGWy3npqenp4yNnONev1orkdv1f1mUpEaA0GDaoq2H/d
+         c7YqyldK0XfVj4KcsIV3/K0cdUXSEJ0cBBudDF02gKDrVGeZVnZpIRAcKP9LbGA8MbSX
+         usB99KSUAbizsqmsn0FI4+ZSyYyLf+udXjBOBrBt8P2dDsAlDPjES9JuJdb9RQa1bMCO
+         Q+/w==
+X-Gm-Message-State: AOAM530vqTwElNLopWfNMkAhb/PnoKOVEzp5n5AWwia+X7kAu7Nn2mbK
+        1n5Kv0pjJIoxnwKckzqhXHukI9N2WQ==
+X-Google-Smtp-Source: ABdhPJyoOA8axgu8kqOwB6MHsfwTzlZXdimo9+8p3rtAttS0bGleNvdFKHg38ny8eaDKNKn8oWu/Zg==
+X-Received: by 2002:a05:6602:15c8:: with SMTP id f8mr18219285iow.183.1593459126187;
+        Mon, 29 Jun 2020 12:32:06 -0700 (PDT)
+Received: from xps15.herring.priv ([64.188.179.255])
+        by smtp.googlemail.com with ESMTPSA id s17sm378792ioj.10.2020.06.29.12.32.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 12:32:05 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Andre Przywara <andre.przywara@arm.com>,
+        Joel Stanley <joel@jms.id.au>
+Subject: [PATCH] scripts/dtc: Update to upstream version v1.6.0-11-g9d7888cbf19c
+Date:   Mon, 29 Jun 2020 13:32:03 -0600
+Message-Id: <20200629193203.2727682-1-robh@kernel.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -47,195 +66,314 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Raspberry Pi 4's co-processor controls some of the board's HW
-initialization process, but it's up to Linux to trigger it when
-relevant. Introduce a reset controller capable of interfacing with
-RPi4's co-processor that models these firmware initialization routines as
-reset lines.
+Sync with upstream dtc primarily to pickup the I2C bus check fixes. The
+interrupt_provider check is noisy, so turn it off for now.
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+This adds the following commits from upstream:
 
+9d7888cbf19c dtc: Consider one-character strings as strings
+8259d59f59de checks: Improve i2c reg property checking
+fdabcf2980a4 checks: Remove warning for I2C_OWN_SLAVE_ADDRESS
+2478b1652c8d libfdt: add extern "C" for C++
+f68bfc2668b2 libfdt: trivial typo fix
+7be250b4d059 libfdt: Correct condition for reordering blocks
+81e0919a3e21 checks: Add interrupt provider test
+85e5d839847a Makefile: when building libfdt only, do not add unneeded deps
+b28464a550c5 Fix some potential unaligned accesses in dtc
+
+Signed-off-by: Rob Herring <robh@kernel.org>
 ---
+Planning to apply this for 5.8-rc.
 
-Changes since v4:
- - use np instead of fw_node, to explicitly mark this as OF centric
+ scripts/Makefile.lib        |  4 +++-
+ scripts/dtc/checks.c        | 39 ++++++++++++++++++++++++++++++++++---
+ scripts/dtc/dtc.h           | 31 +++++++++++++++++++++++++++++
+ scripts/dtc/flattree.c      |  2 +-
+ scripts/dtc/libfdt/fdt_rw.c |  2 +-
+ scripts/dtc/libfdt/fdt_sw.c |  2 +-
+ scripts/dtc/libfdt/libfdt.h |  8 ++++++++
+ scripts/dtc/treesource.c    |  8 ++++----
+ scripts/dtc/version_gen.h   |  2 +-
+ scripts/dtc/yamltree.c      |  6 +++---
+ 10 files changed, 89 insertions(+), 15 deletions(-)
 
-Changes since v2:
- - Get ids from dt-binding
-
-Changes since v1:
-  - Make the whole driver less USB centric as per Florian's comments
-
- drivers/reset/Kconfig             |  11 +++
- drivers/reset/Makefile            |   1 +
- drivers/reset/reset-raspberrypi.c | 122 ++++++++++++++++++++++++++++++
- 3 files changed, 134 insertions(+)
- create mode 100644 drivers/reset/reset-raspberrypi.c
-
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index d9efbfd29646..97e848740e13 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -140,6 +140,17 @@ config RESET_QCOM_PDC
- 	  to control reset signals provided by PDC for Modem, Compute,
- 	  Display, GPU, Debug, AOP, Sensors, Audio, SP and APPS.
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 99ac59c59826..e6411b37ecf6 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -259,6 +259,7 @@ quiet_cmd_gzip = GZIP    $@
+ # DTC
+ # ---------------------------------------------------------------------------
+ DTC ?= $(objtree)/scripts/dtc/dtc
++DTC_FLAGS += -Wno-interrupt_provider
  
-+config RESET_RASPBERRYPI
-+	tristate "Raspberry Pi 4 Firmware Reset Driver"
-+	depends on RASPBERRYPI_FIRMWARE || (RASPBERRYPI_FIRMWARE=n && COMPILE_TEST)
-+	default USB_XHCI_PCI
-+	help
-+	  Raspberry Pi 4's co-processor controls some of the board's HW
-+	  initialization process, but it's up to Linux to trigger it when
-+	  relevant. This driver provides a reset controller capable of
-+	  interfacing with RPi4's co-processor and model these firmware
-+	  initialization routines as reset lines.
+ # Disable noisy checks by default
+ ifeq ($(findstring 1,$(KBUILD_EXTRA_WARN)),)
+@@ -274,7 +275,8 @@ endif
+ 
+ ifneq ($(findstring 2,$(KBUILD_EXTRA_WARN)),)
+ DTC_FLAGS += -Wnode_name_chars_strict \
+-	-Wproperty_name_chars_strict
++	-Wproperty_name_chars_strict \
++	-Winterrupt_provider
+ endif
+ 
+ DTC_FLAGS += $(DTC_FLAGS_$(basetarget))
+diff --git a/scripts/dtc/checks.c b/scripts/dtc/checks.c
+index 4b3c486f1399..b7955dbd71ca 100644
+--- a/scripts/dtc/checks.c
++++ b/scripts/dtc/checks.c
+@@ -1022,6 +1022,9 @@ static void check_i2c_bus_bridge(struct check *c, struct dt_info *dti, struct no
+ }
+ WARNING(i2c_bus_bridge, check_i2c_bus_bridge, NULL, &addr_size_cells);
+ 
++#define I2C_OWN_SLAVE_ADDRESS	(1U << 30)
++#define I2C_TEN_BIT_ADDRESS	(1U << 31)
 +
- config RESET_SCMI
- 	tristate "Reset driver controlled via ARM SCMI interface"
- 	depends on ARM_SCMI_PROTOCOL || COMPILE_TEST
-diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-index 249ed357c997..16947610cc3b 100644
---- a/drivers/reset/Makefile
-+++ b/drivers/reset/Makefile
-@@ -21,6 +21,7 @@ obj-$(CONFIG_RESET_OXNAS) += reset-oxnas.o
- obj-$(CONFIG_RESET_PISTACHIO) += reset-pistachio.o
- obj-$(CONFIG_RESET_QCOM_AOSS) += reset-qcom-aoss.o
- obj-$(CONFIG_RESET_QCOM_PDC) += reset-qcom-pdc.o
-+obj-$(CONFIG_RESET_RASPBERRYPI) += reset-raspberrypi.o
- obj-$(CONFIG_RESET_SCMI) += reset-scmi.o
- obj-$(CONFIG_RESET_SIMPLE) += reset-simple.o
- obj-$(CONFIG_RESET_STM32MP157) += reset-stm32mp1.o
-diff --git a/drivers/reset/reset-raspberrypi.c b/drivers/reset/reset-raspberrypi.c
-new file mode 100644
-index 000000000000..02f59c06f69b
---- /dev/null
-+++ b/drivers/reset/reset-raspberrypi.c
-@@ -0,0 +1,122 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Raspberry Pi 4 firmware reset driver
-+ *
-+ * Copyright (C) 2020 Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-+ */
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset-controller.h>
-+#include <soc/bcm2835/raspberrypi-firmware.h>
-+#include <dt-bindings/reset/raspberrypi,firmware-reset.h>
+ static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node *node)
+ {
+ 	struct property *prop;
+@@ -1044,6 +1047,8 @@ static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node
+ 	}
+ 
+ 	reg = fdt32_to_cpu(*cells);
++	/* Ignore I2C_OWN_SLAVE_ADDRESS */
++	reg &= ~I2C_OWN_SLAVE_ADDRESS;
+ 	snprintf(unit_addr, sizeof(unit_addr), "%x", reg);
+ 	if (!streq(unitname, unit_addr))
+ 		FAIL(c, dti, node, "I2C bus unit address format error, expected \"%s\"",
+@@ -1051,10 +1056,15 @@ static void check_i2c_bus_reg(struct check *c, struct dt_info *dti, struct node
+ 
+ 	for (len = prop->val.len; len > 0; len -= 4) {
+ 		reg = fdt32_to_cpu(*(cells++));
+-		if (reg > 0x3ff)
++		/* Ignore I2C_OWN_SLAVE_ADDRESS */
++		reg &= ~I2C_OWN_SLAVE_ADDRESS;
 +
-+struct rpi_reset {
-+	struct reset_controller_dev rcdev;
-+	struct rpi_firmware *fw;
-+};
++		if ((reg & I2C_TEN_BIT_ADDRESS) && ((reg & ~I2C_TEN_BIT_ADDRESS) > 0x3ff))
+ 			FAIL_PROP(c, dti, node, prop, "I2C address must be less than 10-bits, got \"0x%x\"",
+ 				  reg);
+-
++		else if (reg > 0x7f)
++			FAIL_PROP(c, dti, node, prop, "I2C address must be less than 7-bits, got \"0x%x\". Set I2C_TEN_BIT_ADDRESS for 10 bit addresses or fix the property",
++				  reg);
+ 	}
+ }
+ WARNING(i2c_bus_reg, check_i2c_bus_reg, NULL, &reg_format, &i2c_bus_bridge);
+@@ -1547,6 +1557,28 @@ static bool node_is_interrupt_provider(struct node *node)
+ 
+ 	return false;
+ }
 +
-+static inline struct rpi_reset *to_rpi(struct reset_controller_dev *rcdev)
++static void check_interrupt_provider(struct check *c,
++				     struct dt_info *dti,
++				     struct node *node)
 +{
-+	return container_of(rcdev, struct rpi_reset, rcdev);
++	struct property *prop;
++
++	if (!node_is_interrupt_provider(node))
++		return;
++
++	prop = get_property(node, "#interrupt-cells");
++	if (!prop)
++		FAIL(c, dti, node,
++		     "Missing #interrupt-cells in interrupt provider");
++
++	prop = get_property(node, "#address-cells");
++	if (!prop)
++		FAIL(c, dti, node,
++		     "Missing #address-cells in interrupt provider");
++}
++WARNING(interrupt_provider, check_interrupt_provider, NULL);
++
+ static void check_interrupts_property(struct check *c,
+ 				      struct dt_info *dti,
+ 				      struct node *node)
+@@ -1604,7 +1636,7 @@ static void check_interrupts_property(struct check *c,
+ 
+ 	prop = get_property(irq_node, "#interrupt-cells");
+ 	if (!prop) {
+-		FAIL(c, dti, irq_node, "Missing #interrupt-cells in interrupt-parent");
++		/* We warn about that already in another test. */
+ 		return;
+ 	}
+ 
+@@ -1828,6 +1860,7 @@ static struct check *check_table[] = {
+ 	&deprecated_gpio_property,
+ 	&gpios_property,
+ 	&interrupts_property,
++	&interrupt_provider,
+ 
+ 	&alias_paths,
+ 
+diff --git a/scripts/dtc/dtc.h b/scripts/dtc/dtc.h
+index 6e74ecea55a3..a08f4159cd03 100644
+--- a/scripts/dtc/dtc.h
++++ b/scripts/dtc/dtc.h
+@@ -51,6 +51,37 @@ extern int annotate;		/* annotate .dts with input source location */
+ 
+ typedef uint32_t cell_t;
+ 
++static inline uint16_t dtb_ld16(const void *p)
++{
++	const uint8_t *bp = (const uint8_t *)p;
++
++	return ((uint16_t)bp[0] << 8)
++		| bp[1];
 +}
 +
-+static int rpi_reset_reset(struct reset_controller_dev *rcdev, unsigned long id)
++static inline uint32_t dtb_ld32(const void *p)
 +{
-+	struct rpi_reset *priv = to_rpi(rcdev);
-+	u32 dev_addr;
-+	int ret;
++	const uint8_t *bp = (const uint8_t *)p;
 +
-+	switch (id) {
-+	case RASPBERRYPI_FIRMWARE_RESET_ID_USB:
-+		/*
-+		 * The Raspberry Pi 4 gets its USB functionality from VL805, a
-+		 * PCIe chip that implements xHCI. After a PCI reset, VL805's
-+		 * firmware may either be loaded directly from an EEPROM or, if
-+		 * not present, by the SoC's co-processor, VideoCore. rpi's
-+		 * VideoCore OS contains both the non public firmware load
-+		 * logic and the VL805 firmware blob. This triggers the
-+		 * aforementioned process.
-+		 *
-+		 * The pci device address is expected is expected by the
-+		 * firmware encoded like this:
-+		 *
-+		 *	PCI_BUS << 20 | PCI_SLOT << 15 | PCI_FUNC << 12
-+		 *
-+		 * But since rpi's PCIe is hardwired, we know the address in
-+		 * advance.
-+		 */
-+		dev_addr = 0x100000;
-+		ret = rpi_firmware_property(priv->fw, RPI_FIRMWARE_NOTIFY_XHCI_RESET,
-+					    &dev_addr, sizeof(dev_addr));
-+		if (ret)
-+			return ret;
-+
-+		/* Wait for vl805 to startup */
-+		usleep_range(200, 1000);
-+		break;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
++	return ((uint32_t)bp[0] << 24)
++		| ((uint32_t)bp[1] << 16)
++		| ((uint32_t)bp[2] << 8)
++		| bp[3];
 +}
 +
-+static const struct reset_control_ops rpi_reset_ops = {
-+	.reset	= rpi_reset_reset,
-+};
-+
-+static int rpi_reset_probe(struct platform_device *pdev)
++static inline uint64_t dtb_ld64(const void *p)
 +{
-+	struct device *dev = &pdev->dev;
-+	struct rpi_firmware *fw;
-+	struct device_node *np;
-+	struct rpi_reset *priv;
++	const uint8_t *bp = (const uint8_t *)p;
 +
-+	np = of_get_parent(dev->of_node);
-+	if (!np) {
-+		dev_err(dev, "Missing firmware node\n");
-+		return -ENOENT;
-+	}
-+
-+	fw = rpi_firmware_get(np);
-+	of_node_put(np);
-+	if (!fw)
-+		return -EPROBE_DEFER;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	dev_set_drvdata(dev, priv);
-+
-+	priv->fw = fw;
-+	priv->rcdev.owner = THIS_MODULE;
-+	priv->rcdev.nr_resets = RASPBERRYPI_FIRMWARE_RESET_NUM_IDS;
-+	priv->rcdev.ops = &rpi_reset_ops;
-+	priv->rcdev.of_node = dev->of_node;
-+
-+	return devm_reset_controller_register(dev, &priv->rcdev);
++	return ((uint64_t)bp[0] << 56)
++		| ((uint64_t)bp[1] << 48)
++		| ((uint64_t)bp[2] << 40)
++		| ((uint64_t)bp[3] << 32)
++		| ((uint64_t)bp[4] << 24)
++		| ((uint64_t)bp[5] << 16)
++		| ((uint64_t)bp[6] << 8)
++		| bp[7];
 +}
+ 
+ #define streq(a, b)	(strcmp((a), (b)) == 0)
+ #define strstarts(s, prefix)	(strncmp((s), (prefix), strlen(prefix)) == 0)
+diff --git a/scripts/dtc/flattree.c b/scripts/dtc/flattree.c
+index bd6977eedcb8..07f10d2b5d79 100644
+--- a/scripts/dtc/flattree.c
++++ b/scripts/dtc/flattree.c
+@@ -156,7 +156,7 @@ static void asm_emit_data(void *e, struct data d)
+ 		emit_offset_label(f, m->ref, m->offset);
+ 
+ 	while ((d.len - off) >= sizeof(uint32_t)) {
+-		asm_emit_cell(e, fdt32_to_cpu(*((fdt32_t *)(d.val+off))));
++		asm_emit_cell(e, dtb_ld32(d.val + off));
+ 		off += sizeof(uint32_t);
+ 	}
+ 
+diff --git a/scripts/dtc/libfdt/fdt_rw.c b/scripts/dtc/libfdt/fdt_rw.c
+index 524b520c8486..93e4a2b56348 100644
+--- a/scripts/dtc/libfdt/fdt_rw.c
++++ b/scripts/dtc/libfdt/fdt_rw.c
+@@ -436,7 +436,7 @@ int fdt_open_into(const void *fdt, void *buf, int bufsize)
+ 			return struct_size;
+ 	}
+ 
+-	if (can_assume(LIBFDT_ORDER) |
++	if (can_assume(LIBFDT_ORDER) ||
+ 	    !fdt_blocks_misordered_(fdt, mem_rsv_size, struct_size)) {
+ 		/* no further work necessary */
+ 		err = fdt_move(fdt, buf, bufsize);
+diff --git a/scripts/dtc/libfdt/fdt_sw.c b/scripts/dtc/libfdt/fdt_sw.c
+index 26759d5dfb8c..94ce4bb91a00 100644
+--- a/scripts/dtc/libfdt/fdt_sw.c
++++ b/scripts/dtc/libfdt/fdt_sw.c
+@@ -32,7 +32,7 @@ static int fdt_sw_probe_(void *fdt)
+ /* 'memrsv' state:	Initial state after fdt_create()
+  *
+  * Allowed functions:
+- *	fdt_add_reservmap_entry()
++ *	fdt_add_reservemap_entry()
+  *	fdt_finish_reservemap()		[moves to 'struct' state]
+  */
+ static int fdt_sw_probe_memrsv_(void *fdt)
+diff --git a/scripts/dtc/libfdt/libfdt.h b/scripts/dtc/libfdt/libfdt.h
+index 36fadcdea516..fe49b5d78938 100644
+--- a/scripts/dtc/libfdt/libfdt.h
++++ b/scripts/dtc/libfdt/libfdt.h
+@@ -9,6 +9,10 @@
+ #include "libfdt_env.h"
+ #include "fdt.h"
+ 
++#ifdef __cplusplus
++extern "C" {
++#endif
 +
-+static const struct of_device_id rpi_reset_of_match[] = {
-+	{ .compatible = "raspberrypi,firmware-reset" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, rpi_reset_of_match);
+ #define FDT_FIRST_SUPPORTED_VERSION	0x02
+ #define FDT_LAST_SUPPORTED_VERSION	0x11
+ 
+@@ -2069,4 +2073,8 @@ int fdt_overlay_apply(void *fdt, void *fdto);
+ 
+ const char *fdt_strerror(int errval);
+ 
++#ifdef __cplusplus
++}
++#endif
 +
-+static struct platform_driver rpi_reset_driver = {
-+	.probe	= rpi_reset_probe,
-+	.driver	= {
-+		.name = "raspberrypi-reset",
-+		.of_match_table = rpi_reset_of_match,
-+	},
-+};
-+module_platform_driver(rpi_reset_driver);
-+
-+MODULE_AUTHOR("Nicolas Saenz Julienne <nsaenzjulienne@suse.de>");
-+MODULE_DESCRIPTION("Raspberry Pi 4 firmware reset driver");
-+MODULE_LICENSE("GPL");
+ #endif /* LIBFDT_H */
+diff --git a/scripts/dtc/treesource.c b/scripts/dtc/treesource.c
+index c9d980c8abfc..061ba8c9c5e8 100644
+--- a/scripts/dtc/treesource.c
++++ b/scripts/dtc/treesource.c
+@@ -110,13 +110,13 @@ static void write_propval_int(FILE *f, const char *p, size_t len, size_t width)
+ 			fprintf(f, "%02"PRIx8, *(const uint8_t*)p);
+ 			break;
+ 		case 2:
+-			fprintf(f, "0x%02"PRIx16, fdt16_to_cpu(*(const fdt16_t*)p));
++			fprintf(f, "0x%02"PRIx16, dtb_ld16(p));
+ 			break;
+ 		case 4:
+-			fprintf(f, "0x%02"PRIx32, fdt32_to_cpu(*(const fdt32_t*)p));
++			fprintf(f, "0x%02"PRIx32, dtb_ld32(p));
+ 			break;
+ 		case 8:
+-			fprintf(f, "0x%02"PRIx64, fdt64_to_cpu(*(const fdt64_t*)p));
++			fprintf(f, "0x%02"PRIx64, dtb_ld64(p));
+ 			break;
+ 		}
+ 		if (p + width < end)
+@@ -183,7 +183,7 @@ static enum markertype guess_value_type(struct property *prop)
+ 			nnotcelllbl++;
+ 	}
+ 
+-	if ((p[len-1] == '\0') && (nnotstring == 0) && (nnul < (len-nnul))
++	if ((p[len-1] == '\0') && (nnotstring == 0) && (nnul <= (len-nnul))
+ 	    && (nnotstringlbl == 0)) {
+ 		return TYPE_STRING;
+ 	} else if (((len % sizeof(cell_t)) == 0) && (nnotcelllbl == 0)) {
+diff --git a/scripts/dtc/version_gen.h b/scripts/dtc/version_gen.h
+index 61dd7112d6e4..0714799446f8 100644
+--- a/scripts/dtc/version_gen.h
++++ b/scripts/dtc/version_gen.h
+@@ -1 +1 @@
+-#define DTC_VERSION "DTC 1.6.0-g87a656ae"
++#define DTC_VERSION "DTC 1.6.0-g9d7888cb"
+diff --git a/scripts/dtc/yamltree.c b/scripts/dtc/yamltree.c
+index 5b6ea8ea862f..4e93c12dc658 100644
+--- a/scripts/dtc/yamltree.c
++++ b/scripts/dtc/yamltree.c
+@@ -59,10 +59,10 @@ static void yaml_propval_int(yaml_emitter_t *emitter, struct marker *markers, ch
+ 			sprintf(buf, "0x%"PRIx8, *(uint8_t*)(data + off));
+ 			break;
+ 		case 2:
+-			sprintf(buf, "0x%"PRIx16, fdt16_to_cpu(*(fdt16_t*)(data + off)));
++			sprintf(buf, "0x%"PRIx16, dtb_ld16(data + off));
+ 			break;
+ 		case 4:
+-			sprintf(buf, "0x%"PRIx32, fdt32_to_cpu(*(fdt32_t*)(data + off)));
++			sprintf(buf, "0x%"PRIx32, dtb_ld32(data + off));
+ 			m = markers;
+ 			is_phandle = false;
+ 			for_each_marker_of_type(m, REF_PHANDLE) {
+@@ -73,7 +73,7 @@ static void yaml_propval_int(yaml_emitter_t *emitter, struct marker *markers, ch
+ 			}
+ 			break;
+ 		case 8:
+-			sprintf(buf, "0x%"PRIx64, fdt64_to_cpu(*(fdt64_t*)(data + off)));
++			sprintf(buf, "0x%"PRIx64, dtb_ld64(data + off));
+ 			break;
+ 		}
+ 
 -- 
-2.27.0
+2.25.1
 
