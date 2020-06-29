@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B241C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:47:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A145C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C07020656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:47:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE1E6206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:47:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467241;
-	bh=7+ckgGs+391OquPJTLjfCaTeAqMTU6Gyltn8EGzmfDU=;
+	s=default; t=1593467244;
+	bh=8JzVfCFcoz6nS6EBFimls7GqLgC990AM2OQCsZ0RXPM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cslKvfwHveWScKP9d3f3rwnQf6nc84L10ha/vA29/AvcBC9by3Dwzzr7fH4M+LHZM
-	 lFt1+gM4y6ODB6Dt20CyeBDem746b261Fb6LOUPd7HaAlyZFHZx1r83B2Xo0sSONDA
-	 dzjCGQhGYt77HRZSSmpaYX9RBoF8u5g3q8yVQwdA=
+	b=wz5Lp0TzFCmn+6Qm10KTZUzJV+LpwkUNaypK5amGUT23YNo0PztVcDLSuEYcvJrn8
+	 94JNNi9FQ5tRNpE+q9MNkIXlBvtnSv9bTT7yP6LMBvURLjmiXq22ko5sQb+iKKsZJQ
+	 0K/vWvYk2OHWWaKh4sUqzazTmKpKNaN7Im71PnuU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404212AbgF2VrT (ORCPT
+        id S1727827AbgF2VrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:47:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56910 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:47:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726740AbgF2Sfo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726735AbgF2Sfo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4421424699;
-        Mon, 29 Jun 2020 15:19:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4CF8A24790;
+        Mon, 29 Jun 2020 15:21:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443992;
-        bh=7+ckgGs+391OquPJTLjfCaTeAqMTU6Gyltn8EGzmfDU=;
+        s=default; t=1593444099;
+        bh=8JzVfCFcoz6nS6EBFimls7GqLgC990AM2OQCsZ0RXPM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0EKnlx6NOnMUdkVvaTSOSmXqVh/Gg1z94Stsdx5hBt++vXfTeIqZ5lhrWAHy8d2HW
-         VgVmEn5SjuVqQ/Aqg7ZiWyoZn9Meg9vy6H+JHxvM9f+ZRYyZz4LDCtGrtwsP7XYIxE
-         T2msGaUE/6q2PEuT4lHSn47ziMnXgiOIZVZUtot4=
+        b=vrA58Ou1gZ6xVbnmh7qyKVGplf8OW7Y6X7Q2YE+IJwRMVmwWV+dJ033t1eT4Rmsfd
+         5ewDNqH6ZZ5L6DJi2h220d24/mcjwf86tH7P8/UJ2Oe6W1f288Oix8PsHzKavCTca9
+         JXpWBhqPUfUq44kDbO5C5IUUGX9nRYjZtSm7Z+LI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 097/265] ARM: OMAP2+: Fix legacy mode dss_reset
-Date:   Mon, 29 Jun 2020 11:15:30 -0400
-Message-Id: <20200629151818.2493727-98-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 210/265] ALSA: hda/realtek - Add quirk for MSI GE63 laptop
+Date:   Mon, 29 Jun 2020 11:17:23 -0400
+Message-Id: <20200629151818.2493727-211-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -66,37 +64,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 77cad9dbc957f23a73169e8a8971186744296614 ]
+commit a0b03952a797591d4b6d6fa7b9b7872e27783729 upstream.
 
-We must check for "dss_core" instead of "dss" to avoid also matching
-also "dss_dispc". This only matters for the mixed case of data
-configured in device tree but with legacy booting ti,hwmods property
-still enabled.
+MSI GE63 laptop with ALC1220 codec requires the very same quirk
+(ALC1220_FIXUP_CLEVO_P950) as other MSI devices for the proper sound
+output.
 
-Fixes: 8b30919a4e3c ("ARM: OMAP2+: Handle reset quirks for dynamically allocated modules")
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=208057
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200616132150.8778-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm/mach-omap2/omap_hwmod.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/pci/hda/patch_realtek.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/mach-omap2/omap_hwmod.c b/arch/arm/mach-omap2/omap_hwmod.c
-index 82706af307dee..c630457bb228e 100644
---- a/arch/arm/mach-omap2/omap_hwmod.c
-+++ b/arch/arm/mach-omap2/omap_hwmod.c
-@@ -3489,7 +3489,7 @@ static const struct omap_hwmod_reset dra7_reset_quirks[] = {
- };
- 
- static const struct omap_hwmod_reset omap_reset_quirks[] = {
--	{ .match = "dss", .len = 3, .reset = omap_dss_reset, },
-+	{ .match = "dss_core", .len = 8, .reset = omap_dss_reset, },
- 	{ .match = "hdq1w", .len = 5, .reset = omap_hdq1w_reset, },
- 	{ .match = "i2c", .len = 3, .reset = omap_i2c_reset, },
- 	{ .match = "wd_timer", .len = 8, .reset = omap2_wd_timer_reset, },
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index e057ecb5a9045..f58102925c705 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -2460,6 +2460,7 @@ static const struct snd_pci_quirk alc882_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x1458, 0xa0b8, "Gigabyte AZ370-Gaming", ALC1220_FIXUP_GB_DUAL_CODECS),
+ 	SND_PCI_QUIRK(0x1458, 0xa0cd, "Gigabyte X570 Aorus Master", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1458, 0xa0ce, "Gigabyte X570 Aorus Xtreme", ALC1220_FIXUP_CLEVO_P950),
++	SND_PCI_QUIRK(0x1462, 0x11f7, "MSI-GE63", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x1228, "MSI-GP63", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x1275, "MSI-GL63", ALC1220_FIXUP_CLEVO_P950),
+ 	SND_PCI_QUIRK(0x1462, 0x1276, "MSI-GL73", ALC1220_FIXUP_CLEVO_P950),
 -- 
 2.25.1
 
