@@ -2,115 +2,184 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 880E2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 03:34:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A19C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 03:41:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D38F206C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 03:34:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07235206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 03:41:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="f66LYiQC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726194AbgF2Dep (ORCPT
+        id S1726047AbgF2DlG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 23:34:45 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:36384 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726003AbgF2Deo (ORCPT
+        Sun, 28 Jun 2020 23:41:06 -0400
+Received: from m15114.mail.126.com ([220.181.15.114]:46649 "EHLO
+        m15114.mail.126.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725983AbgF2DlG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 23:34:44 -0400
-Authenticated-By: 
-X-SpamFilter-By: ArmorX SpamTrap 5.69 with qID 05T3YTIZ0001786, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexmb06.realtek.com.tw[172.21.6.99])
-        by rtits2.realtek.com.tw (8.15.2/2.66/5.86) with ESMTPS id 05T3YTIZ0001786
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 29 Jun 2020 11:34:29 +0800
-Received: from RTEXDAG02.realtek.com.tw (172.21.6.101) by
- RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Mon, 29 Jun 2020 11:34:29 +0800
-Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
- RTEXDAG02.realtek.com.tw (172.21.6.101) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Mon, 29 Jun 2020 11:34:28 +0800
-Received: from RTEXMB04.realtek.com.tw ([fe80::941:6388:7d34:5c44]) by
- RTEXMB04.realtek.com.tw ([fe80::941:6388:7d34:5c44%3]) with mapi id
- 15.01.1779.005; Mon, 29 Jun 2020 11:34:28 +0800
-From:   Pkshih <pkshih@realtek.com>
-To:     "joe@perches.com" <joe@perches.com>
-CC:     "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "kvalo@codeaurora.org" <kvalo@codeaurora.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kuba@kernel.org" <kuba@kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [PATCH] rtlwifi/*/dm.c: Use const in swing_table declarations
-Thread-Topic: [PATCH] rtlwifi/*/dm.c: Use const in swing_table declarations
-Thread-Index: AQHWTTVpFYNDXI1US0K76Im0pij3zqjuU+2AgAALz4CAAAX4gIAABgSA
-Date:   Mon, 29 Jun 2020 03:34:28 +0000
-Message-ID: <1593401639.12786.10.camel@realtek.com>
-References: <0f24268338756bb54b4e44674db4aaf90f8a9fca.camel@perches.com>
-         <1593396529.11412.6.camel@realtek.com>
-         <45c908b9b55000dc7b0cf9438c8e6e44@perches.com>
-         <1593400347.12786.8.camel@realtek.com>
-In-Reply-To: <1593400347.12786.8.camel@realtek.com>
-Accept-Language: en-US, zh-TW
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.69.213]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BEC65D84A847A54D88AF8BD74C77E733@realtek.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+        Sun, 28 Jun 2020 23:41:06 -0400
+X-Greylist: delayed 1827 seconds by postgrey-1.27 at vger.kernel.org; Sun, 28 Jun 2020 23:41:04 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=w+EIEf24qwNuCWKj35
+        zeUBF8QLrIvjDA8vW20eFEtc0=; b=f66LYiQCmMi3YvJrnhTruUZ6DBHjqV4AT2
+        hAY1Z0AHFkQI22ac+4AwLiOTeMRomZO5CLxQtEjXjehIr0Id3WIo/4e/kJwhi56O
+        stn+ekWURI4ZF0zqF3oXt8rBp5l1bqoBGDH5MNiY6mfgLpZ2E/kYciPyxVaEB+vs
+        D8VOnE0k0=
+Received: from xr-hulk-k8s-node1933.gh.sankuai.com (unknown [101.236.11.3])
+        by smtp7 (Coremail) with SMTP id DsmowAB3eGhlW_leYwmDGw--.3986S2;
+        Mon, 29 Jun 2020 11:09:30 +0800 (CST)
+From:   Jiang Ying <jiangying8582@126.com>
+To:     Markus.Elfring@web.de, tytso@mit.edu, adilger.kernel@dilger.ca,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     wanglong19@meituan.com
+Subject: [PATCH v2] ext4: fix direct I/O read error
+Date:   Mon, 29 Jun 2020 11:09:25 +0800
+Message-Id: <1593400165-114818-1-git-send-email-jiangying8582@126.com>
+X-Mailer: git-send-email 1.8.3.1
+X-CM-TRANSID: DsmowAB3eGhlW_leYwmDGw--.3986S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxZr47tFWDJrW5JryxJw4UCFg_yoW5tw4fpF
+        sxCa15WrWkZr1fC3ZrKanrZFyFy3yDGFWUXr98uw1UAr4ag3s5KFWIkF17G3y5GrWF9w4F
+        vFZ8tryrAw1UZFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jYT5dUUUUU=
+X-Originating-IP: [101.236.11.3]
+X-CM-SenderInfo: xmld0wp1lqwmqvysqiyswou0bp/1tbimgpSAFpEAcprjQAAsx
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTA2LTI5IGF0IDExOjEyICswODAwLCBQa3NoaWggd3JvdGU6DQo+IE9uIFN1
-biwgMjAyMC0wNi0yOCBhdCAxOTo1MSAtMDcwMCwgam9lQHBlcmNoZXMuY29tIHdyb3RlOg0KPiA+
-IE9uIDIwMjAtMDYtMjggMTk6MDksIFBrc2hpaCB3cm90ZToNCj4gPiA+IE9uIFN1biwgMjAyMC0w
-Ni0yOCBhdCAwMzoxNyAtMDcwMCwgSm9lIFBlcmNoZXMgd3JvdGU6DQo+ID4gPsKgDQo+ID4gPiBV
-c2UgJ3J0bHdpZmk6JyBhcyBzdWJqZWN0IHRpdGxlIHByZWZpeCBpcyBlbm91Z2gsIGxpa2VzDQo+
-ID4gPiDCoCBydGx3aWZpOiBVc2UgY29uc3QgaW4gc3dpbmdfdGFibGUgZGVjbGFyYXRpb25zDQo+
-ID7CoA0KPiA+IFdlIGRpc2FncmVlLg0KPiA+wqANCj4gPiBJIGxpa2Uga25vd2luZyB3aGF0IGNv
-bnRlbnQgaXMgY2hhbmdlZCB2aWEgcGF0Y2ggc3ViamVjdCBsaW5lcw0KPiA+IGFzIHRoZXJlIGFy
-ZSAzIHJ0bHdpZmkgZHJpdmVycyBiZWluZyBjaGFuZ2VkIGJ5IHRoaXMgb25lIHBhdGNoLg0KPiAN
-Cj4gSWYgMyBkcml2ZXJzIGFyZSBuZWVkZWQgdG8gYmUgbGlzdGVkLCBJJ2QgdXNlIGJlbG93IHN1
-YmplY3QNCj4gDQo+ICJydGx3aWZpOiBVc2UgY29uc3QgaW4gcnRsODE4OGVlL3J0bDg3MjNiZS9y
-dGw4ODIxYWUgc3dpbmdfdGFibGUgZGVjbGFyYXRpb25zIg0KPiANCj4gPsKgDQo+ID4gQnV0IHlv
-dXIgY2hvaWNlLCB5b3UgY2FuIGNoYW5nZSBpdCBpZiB5b3UgY2hvb3NlLg0KPiA+wqANCj4gPiA+
-PiBSZWR1Y2UgZGF0YSB1c2FnZSBhYm91dCAxS0IgYnkgdXNpbmcgY29uc3QuDQo+ID4gW10NCj4g
-PiA+IFBsZWFzZSByZW1vdmUgYmVsb3cgdHlwZSBjYXN0aW5nOsKgDQo+ID4gPsKgDQo+ID4gPiBA
-QCAtMTg3MiwxMCArMTg3MiwxMCBAQCBzdGF0aWMgdm9pZMKgDQo+ID4gPiBydGw4ODIxYWVfZ2V0
-X2RlbHRhX3N3aW5nX3RhYmxlKHN0cnVjdA0KPiA+ID4gaWVlZTgwMjExX2h3ICpodywNCj4gPiA+
-IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgKnVwX2IgPSBydGw4ODIxYWVfZGVsdGFf
-c3dpbmdfdGFibGVfaWR4XzVnYl9wWzJdOw0KPiA+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAqZG93bl9iID0gcnRsODgyMWFlX2RlbHRhX3N3aW5nX3RhYmxlX2lkeF81Z2Jfblsy
-XTsNCj4gPiA+IMKgwqDCoMKgwqDCoMKgwqB9IGVsc2Ugew0KPiA+ID4gLcKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAqdXBfYSA9ICh1OCAqKXJ0bDg4MThlX2RlbHRhX3N3aW5nX3RhYmxlX2lkeF8yNGdi
-X3A7DQo+ID4gPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCpkb3duX2EgPSAodTggKilydGw4ODE4
-ZV9kZWx0YV9zd2luZ190YWJsZV9pZHhfMjRnYl9uOw0KPiA+ID4gLcKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqAqdXBfYiA9ICh1OCAqKXJ0bDg4MThlX2RlbHRhX3N3aW5nX3RhYmxlX2lkeF8yNGdiX3A7
-DQo+ID4gPiAtwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCpkb3duX2IgPSAodTggKilydGw4ODE4ZV9k
-ZWx0YV9zd2luZ190YWJsZV9pZHhfMjRnYl9uOw0KPiA+ID4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoCp1cF9hID0gcnRsODgxOGVfZGVsdGFfc3dpbmdfdGFibGVfaWR4XzI0Z2JfcDsN
-Cj4gPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAqZG93bl9hID0gcnRsODgxOGVf
-ZGVsdGFfc3dpbmdfdGFibGVfaWR4XzI0Z2JfbjsNCj4gPiA+ICvCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqAqdXBfYiA9IHJ0bDg4MThlX2RlbHRhX3N3aW5nX3RhYmxlX2lkeF8yNGdiX3A7
-DQo+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgKmRvd25fYiA9IHJ0bDg4MThl
-X2RlbHRhX3N3aW5nX3RhYmxlX2lkeF8yNGdiX247DQo+ID7CoA0KPiA+IFRoZSBjb21waWxlciBp
-cyBxdWlldCBhYm91dCB0aGlzIHNvIEkgYmVsaWV2ZSB0aGlzIHRvIGJlDQo+ID4gYW4gdW5yZWxh
-dGVkIGNoYW5nZSBhbmQgd2hpdGVzcGFjZSBjb3JyZWN0aW9uLg0KPiANCj4gSSBrbm93IGNvbXBp
-bGVyIGRvZXNuJ3Qgd2FybiB0aGlzLCBidXQgaXQgbG9va3Mgd2lyZWQgdG8gY2FzdCAnY29uc3Qg
-dTggKicNCj4gdG8gJ3U4IConIHRvICdjb25zdCB1OCAqJy4NCj4gDQo+IA0KPiA+wqANCj4gPiBP
-ZiBjb3Vyc2UgeW91IGNvdWxkIG1vZGlmeSBpdCBpZiB5b3UgY2hvb3NlLg0KPiA+wqANCj4gPiBi
-dHc6IFRoZXJlJ3MgYW4gdW5uZWNlc3NhcnkgcmV0dXJuIGF0IHRoZSAybmQgaW5zdGFuY2UNCj4g
-PiDCoMKgwqDCoMKgwqBvZiB0aGlzIGNhc3QgcmVtb3ZhbCB0b28uDQo+IA0KPiBJdCBzZWVtcyBs
-aWtlIHRvIGNvcHkgZnJvbcKgcnRsODgxMmFlX2dldF9kZWx0YV9zd2luZ190YWJsZSgpLCBzbw0K
-PiBJIGNhbiByZW1vdmUgaXQgYnkgYW5vdGhlciBwYXRjaC4NCj4gDQoNClR3byBwYXRjaGVzIGFy
-ZSBzZW50Og0KDQpydGx3aWZpOiA4ODIxYWU6IHJlbW92ZSB1bnVzZWQgcGF0aCBCIHBhcmFtZXRl
-cnMgZnJvbSBzd2luZyB0YWJsZQ0KcnRsd2lmaTogVXNlIGNvbnN0IGluIDgxODhlZS84NzIzYmUv
-ODgyMWFlIHN3aW5nX3RhYmxlIGRlY2xhcmF0aW9ucw0KDQotLS0NClRoYW5rcw0KUEsNCg==
+Fixes: 9fe55eea7e4b ("Fix race when checking i_size on direct i/o read").
+This commit caused ext4 direct I/O read error when the read size is not
+alignment with block size.
+
+Then, I will use a test to explain the error.
+
+(1) Make the file that is not alignment with block size:
+	$dd if=/dev/zero of=./test.jar bs=1000 count=3
+
+(2) I wrote a test script named "direct_io_read_file.c" as following:
+
+	#include <stdio.h>
+	#include <stdlib.h>
+	#include <unistd.h>
+	#include <sys/file.h>
+	#include <sys/types.h>
+	#include <sys/stat.h>
+	#include <string.h>
+	#define BUF_SIZE 1024
+
+	int main()
+	{
+		int fd;
+		int ret;
+
+		unsigned char *buf;
+		ret = posix_memalign((void **)&buf, 512, BUF_SIZE);
+		if (ret) {
+			perror("posix_memalign failed");
+			exit(1);
+		}
+		fd = open("./test.jar", O_RDONLY | O_DIRECT, 0755);
+		if (fd < 0){
+			perror("open ./test.jar failed");
+			exit(1);
+		}
+
+		do {
+			ret = read(fd, buf, BUF_SIZE);
+			printf("ret=%d\n",ret);
+			if (ret < 0) {
+				perror("write test.jar failed");
+			}
+		} while (ret > 0);
+
+		free(buf);
+		close(fd);
+	}
+
+(3) Compiling the script:
+	$gcc direct_io_read_file.c -D_GNU_SOURCE
+
+(4) Exec the script:
+	$./a.out
+
+	The result is as following:
+	ret=1024
+	ret=1024
+	ret=952
+	ret=-1
+	write test.jar failed: Invalid argument.
+
+I have tested this script on XFS filesystem, XFS does not have
+this problem, because XFS use iomap_dio_rw() to do direct I/O
+read. And the comparing between read offset and file size is done
+in iomap_dio_rw(), the code is as following:
+	if (pos < size) {
+		retval = filemap_write_and_wait_range(mapping, pos,
+				pos + iov_length(iov, nr_segs) - 1);
+
+		if (!retval) {
+			retval = mapping->a_ops->direct_IO(READ, iocb,
+						iov, pos, nr_segs);
+		}
+		...
+	}
+Only when "pos < size", direct I/O can be done, or 0 will be return.
+
+I have tested my fix patch, it is up to the mustard of EINVAL in
+man2(read) as following:
+	#include <unistd.h>
+	ssize_t read(int fd, void *buf, size_t count);
+
+	EINVAL
+		fd is attached to an object which is unsuitable for reading;
+		or the file was opened with the O_DIRECT flag, and either the
+		address specified in buf, the value specified in count, or the
+		current file offset is not suitably aligned.
+
+So I think this patch can be applied to fix ext4 direct I/O error.
+
+However Ext4 introduces direct I/O read using iomap infrastructure
+on kernel 5.5, the patch is commit <b1b4705d54ab>
+("ext4: introduce direct I/O read using iomap infrastructure"),
+then Ext4 will be the same as XFS, they all use iomap_dio_rw() to do direct
+I/O read. So this problem does not exist on kernel 5.5 for Ext4.
+
+From above description, we can see this problem exists on all the kernel
+versions between kernel 3.14 and kernel 5.4. Please apply this patch
+on these kernel versions, or please use the method on kernel 5.5 to fix
+this problem. Thanks.
+
+Co-developed-by: Wang Long <wanglong19@meituan.com>
+Signed-off-by: Wang Long <wanglong19@meituan.com>
+Signed-off-by: Jiang Ying <jiangying8582@126.com>
+---
+ fs/ext4/inode.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index 516faa2..d514ff5 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -3821,6 +3821,12 @@ static ssize_t ext4_direct_IO_read(struct kiocb *iocb, struct iov_iter *iter)
+ 	struct inode *inode = mapping->host;
+ 	size_t count = iov_iter_count(iter);
+ 	ssize_t ret;
++	loff_t offset = iocb->ki_pos;
++	loff_t size;
++
++	size = i_size_read(inode);
++	if (offset >= size)
++		return 0;
+ 
+ 	/*
+ 	 * Shared inode_lock is enough for us - it protects against concurrent
+-- 
+1.8.3.1
+
