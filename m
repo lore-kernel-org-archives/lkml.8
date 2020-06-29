@@ -7,44 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 930A8C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:56:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46249C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7585E20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:56:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2496D20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:56:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460600;
-	bh=HfZiEGyAU4+9OTJfIbM4lsIBBzpqkTQDxAY0fLZh2EA=;
+	s=default; t=1593460613;
+	bh=+bMoGyWP/fESpWZ9O9+RuWU1Hnmv1KyLI11MaGLeVQ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UZUF8zz+klrfWXAAZX+0/M8EUhY980zzCAeLgCN9loCz2dQvogbN7dwt3IO02DZ1V
-	 LKQ94wRnHENlSFbvLBy1Rk3P6zixxR0kYnoxpsejk1wYOUFSysuQ6BnYHlRbDL6rvb
-	 UAbvJz/KNGVWmDPzaSjcAoH94YjCNy1ajvabDnfg=
+	b=HgSKFpXQPYSdpzsfUnPFlPX7brN2EkRdvC0JG1Q0CtCNCV3yfDguftr2Nrh9qWI4E
+	 4OfI4dkn2EYojPpYijvm33cguveV2MPOENtG2LkrEoRdDCESYnuFVXSoWbAdVkgiJy
+	 rruIokI2J5vFFMHjOms2LZo5P9brE4I3KFezmw1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732321AbgF2T4i (ORCPT
+        id S2388346AbgF2T4v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:56:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47676 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:56:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387639AbgF2TkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387641AbgF2TkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEE0824885;
-        Mon, 29 Jun 2020 15:26:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C7CBD24835;
+        Mon, 29 Jun 2020 15:25:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444384;
-        bh=HfZiEGyAU4+9OTJfIbM4lsIBBzpqkTQDxAY0fLZh2EA=;
+        s=default; t=1593444347;
+        bh=+bMoGyWP/fESpWZ9O9+RuWU1Hnmv1KyLI11MaGLeVQ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oLB+hVjhKjxQJlOACGtD1QUwShZKee7Vs+L6o2fAVU2RzHXl4dNwjGehuiKEpYhy8
-         afcf0QyrCf5OvxrzmdZSnIqU0aWg0FH0ee8YjrpDPuFNwc6efAHgjARx4UzxEkOoPM
-         zcSSZDrok0nfuB1E1XUgkXyl9DgcPbGX+R5b53pU=
+        b=fGMcYR6qLZobgBGrmvVNJD7VYrdQZuL8sZHrMlbLSdhP9Xnq9rI09Z634z1hN6CUu
+         /EnmmLAbOFMAaaeL9BB8PNmTwzmyOGZrp7XTor5VikHljE374wY+3cskTnR/6Q3Szn
+         IERFqpVsJBXCxnXu8sJDpKhWSpasyy27L2QZb2NQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 061/178] bus: ti-sysc: Flush posted write on enable and disable
-Date:   Mon, 29 Jun 2020 11:23:26 -0400
-Message-Id: <20200629152523.2494198-62-sashal@kernel.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.4 022/178] net: phy: Check harder for errors in get_phy_id()
+Date:   Mon, 29 Jun 2020 11:22:47 -0400
+Message-Id: <20200629152523.2494198-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -63,58 +66,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 5ce8aee81be6c8bc19051d7c7b0d3cbb7ac5fc3f ]
+[ Upstream commit b2ffc75e2e990b09903f9d15ccd53bc5f3a4217c ]
 
-Looks like we're missing flush of posted write after module enable and
-disable. I've seen occasional errors accessing various modules, and it
-is suspected that the lack of posted writes can also cause random reboots.
+Commit 02a6efcab675 ("net: phy: allow scanning busses with missing
+phys") added a special condition to return -ENODEV in case -ENODEV or
+-EIO was returned from the first read of the MII_PHYSID1 register.
 
-The errors we can see are similar to the one below from spi for example:
+In case the MDIO bus data line pull-up is not strong enough, the MDIO
+bus controller will not flag this as a read error. This can happen when
+a pluggable daughter card is not connected and weak internal pull-ups
+are used (since that is the only option, otherwise the pins are
+floating).
 
-44000000.ocp:L3 Custom Error: MASTER MPU TARGET L4CFG (Read): Data Access
-in User mode during Functional access
-...
-mcspi_wait_for_reg_bit
-omap2_mcspi_transfer_one
-spi_transfer_one_message
-...
+The second read of MII_PHYSID2 will be correctly flagged an error
+though, but now we will return -EIO which will be treated as a hard
+error, thus preventing MDIO bus scanning loops to continue succesfully.
 
-We also want to also flush posted write for disable. The clkctrl clock
-disable happens after module disable, and we don't want to have the
-module potentially stay active while we're trying to disable the clock.
+Apply the same logic to both register reads, thus allowing the scanning
+logic to proceed.
 
-Fixes: d59b60564cbf ("bus: ti-sysc: Add generic enable/disable functions")
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 02a6efcab675 ("net: phy: allow scanning busses with missing phys")
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/bus/ti-sysc.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/phy/phy_device.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
-index f0bc0841cbc40..c088c6f4adcff 100644
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -938,6 +938,9 @@ static int sysc_enable_module(struct device *dev)
- 		sysc_write(ddata, ddata->offsets[SYSC_SYSCONFIG], reg);
- 	}
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 0907c3d8d94a2..dba52a5c378ad 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -797,8 +797,10 @@ static int get_phy_id(struct mii_bus *bus, int addr, u32 *phy_id,
  
-+	/* Flush posted write */
-+	sysc_read(ddata, ddata->offsets[SYSC_SYSCONFIG]);
-+
- 	if (ddata->module_enable_quirk)
- 		ddata->module_enable_quirk(ddata);
+ 	/* Grab the bits from PHYIR2, and put them in the lower half */
+ 	phy_reg = mdiobus_read(bus, addr, MII_PHYSID2);
+-	if (phy_reg < 0)
+-		return -EIO;
++	if (phy_reg < 0) {
++		/* returning -ENODEV doesn't stop bus scanning */
++		return (phy_reg == -EIO || phy_reg == -ENODEV) ? -ENODEV : -EIO;
++	}
  
-@@ -1018,6 +1021,9 @@ static int sysc_disable_module(struct device *dev)
- 		reg |= 1 << regbits->autoidle_shift;
- 	sysc_write(ddata, ddata->offsets[SYSC_SYSCONFIG], reg);
- 
-+	/* Flush posted write */
-+	sysc_read(ddata, ddata->offsets[SYSC_SYSCONFIG]);
-+
- 	return 0;
- }
+ 	*phy_id |= phy_reg;
  
 -- 
 2.25.1
