@@ -2,50 +2,51 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 468A2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:30:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84D74C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18DDC2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:30:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C2F12067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:30:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593459051;
-	bh=kQvr20PH6P7HMgnnOg/6cEQl1b6N7Ru9B3CPfUxmv1w=;
+	s=default; t=1593459053;
+	bh=UURh8tWRGDtaNFALL0PWpgW1utn7RiylCqvvaBZ0d/Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T4xM583d9r1SAHO4ad2MyYuwTQUGKJRflgleVRk6oXdi/woufUvIgI95I25ZGxv3M
-	 4Krn15yYuJMfoXOzm39bf+6kB1mVTRwRIrASgrRAC+e2S8P17lZ3ZARVHHCEu7TUdc
-	 rx/+V3nHhk/pbo1k3SqQPM4f6jN8TaY+6Q2Vt/40=
+	b=Glx/pGOwr384KSsByusO7H9KIhBnWSG++rKa/kBQ4mMGQ2+tHyvWinUmC5p6pJwsS
+	 jF1fiFn9Ye/RgK0g95mycRD39ycKG0uaouyxRnSoPkM/5YHoMhrTottoOb7c1IyF5j
+	 w19vFTQdeX77zpydvImFq/ncmU+/1H3rXhWimfDs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730811AbgF2Tat (ORCPT
+        id S1733060AbgF2Taw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:30:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40586 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:30:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732865AbgF2TaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732874AbgF2TaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B5E92526C;
-        Mon, 29 Jun 2020 15:36:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6AD3A252B2;
+        Mon, 29 Jun 2020 15:37:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444980;
-        bh=kQvr20PH6P7HMgnnOg/6cEQl1b6N7Ru9B3CPfUxmv1w=;
+        s=default; t=1593445025;
+        bh=UURh8tWRGDtaNFALL0PWpgW1utn7RiylCqvvaBZ0d/Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HAqwueatsyJYvAONsz7fZp3n++lwZz8kZbPR7x9Lt3OaInz1S5L+71yq4sUqXiPVb
-         0TvuYe0p8SeH/jtVzqV/cIQB0d9PQ4U9S8j5gi55jLplUeLKqMQyyoKf/uQui+k6bx
-         rRgEKEleTG7GBapsqV6Pynw8warfUf5mngQIp5/E=
+        b=uCKHZl16vsZiMCK+rZBcCsAniyUAFvig1qooDeWCVzTRdkgu8Zxr7D3aIRuXoFw8E
+         zDvN16BVlRampm6+yLFH+eh4cKqMSq4oUBBAfjFIbM7l051ZVuSC2N+jHZNQyB04sU
+         PNLHRM/YeMGs5rhdgqxgs8GglUD5yi6gnrjbKrgM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     yu kuai <yukuai3@huawei.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 079/131] ARM: imx5: add missing put_device() call in imx_suspend_alloc_ocram()
-Date:   Mon, 29 Jun 2020 11:34:10 -0400
-Message-Id: <20200629153502.2494656-80-sashal@kernel.org>
+Cc:     Denis Efremov <efremov@linux.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.19 122/131] drm/radeon: fix fb_div check in ni_init_smc_spll_table()
+Date:   Mon, 29 Jun 2020 11:34:53 -0400
+Message-Id: <20200629153502.2494656-123-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
@@ -64,52 +65,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+From: Denis Efremov <efremov@linux.com>
 
-[ Upstream commit 586745f1598ccf71b0a5a6df2222dee0a865954e ]
+commit 35f760b44b1b9cb16a306bdcc7220fbbf78c4789 upstream.
 
-if of_find_device_by_node() succeed, imx_suspend_alloc_ocram() doesn't
-have a corresponding put_device(). Thus add a jump target to fix the
-exception handling for this function implementation.
+clk_s is checked twice in a row in ni_init_smc_spll_table().
+fb_div should be checked instead.
 
-Fixes: 1579c7b9fe01 ("ARM: imx53: Set DDR pins to high impedance when in suspend to RAM.")
-Signed-off-by: yu kuai <yukuai3@huawei.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 69e0b57a91ad ("drm/radeon/kms: add dpm support for cayman (v5)")
+Cc: stable@vger.kernel.org
+Signed-off-by: Denis Efremov <efremov@linux.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm/mach-imx/pm-imx5.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/radeon/ni_dpm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-imx/pm-imx5.c b/arch/arm/mach-imx/pm-imx5.c
-index 868781fd460c7..14c630c899c5d 100644
---- a/arch/arm/mach-imx/pm-imx5.c
-+++ b/arch/arm/mach-imx/pm-imx5.c
-@@ -301,14 +301,14 @@ static int __init imx_suspend_alloc_ocram(
- 	if (!ocram_pool) {
- 		pr_warn("%s: ocram pool unavailable!\n", __func__);
- 		ret = -ENODEV;
--		goto put_node;
-+		goto put_device;
- 	}
+diff --git a/drivers/gpu/drm/radeon/ni_dpm.c b/drivers/gpu/drm/radeon/ni_dpm.c
+index 0fd8d6ba98287..f86ca163dcf34 100644
+--- a/drivers/gpu/drm/radeon/ni_dpm.c
++++ b/drivers/gpu/drm/radeon/ni_dpm.c
+@@ -2126,7 +2126,7 @@ static int ni_init_smc_spll_table(struct radeon_device *rdev)
+ 		if (clk_s & ~(SMC_NISLANDS_SPLL_DIV_TABLE_CLKS_MASK >> SMC_NISLANDS_SPLL_DIV_TABLE_CLKS_SHIFT))
+ 			ret = -EINVAL;
  
- 	ocram_base = gen_pool_alloc(ocram_pool, size);
- 	if (!ocram_base) {
- 		pr_warn("%s: unable to alloc ocram!\n", __func__);
- 		ret = -ENOMEM;
--		goto put_node;
-+		goto put_device;
- 	}
+-		if (clk_s & ~(SMC_NISLANDS_SPLL_DIV_TABLE_CLKS_MASK >> SMC_NISLANDS_SPLL_DIV_TABLE_CLKS_SHIFT))
++		if (fb_div & ~(SMC_NISLANDS_SPLL_DIV_TABLE_FBDIV_MASK >> SMC_NISLANDS_SPLL_DIV_TABLE_FBDIV_SHIFT))
+ 			ret = -EINVAL;
  
- 	phys = gen_pool_virt_to_phys(ocram_pool, ocram_base);
-@@ -318,6 +318,8 @@ static int __init imx_suspend_alloc_ocram(
- 	if (virt_out)
- 		*virt_out = virt;
- 
-+put_device:
-+	put_device(&pdev->dev);
- put_node:
- 	of_node_put(node);
- 
+ 		if (clk_v & ~(SMC_NISLANDS_SPLL_DIV_TABLE_CLKV_MASK >> SMC_NISLANDS_SPLL_DIV_TABLE_CLKV_SHIFT))
 -- 
 2.25.1
 
