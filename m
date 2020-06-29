@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E088FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD345C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2A7320885
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE8F320874
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460155;
-	bh=ovJvvILH3TbnZcQB+zLhCu7tBZPRlFUs6GXGT0TNi1o=;
+	s=default; t=1593460158;
+	bh=v+crxahijm911DuNDyKvGSVyfJ4WlY+YO/iBkJxHw24=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kEZrXM2/9hO8ULifTHjs7vpJvcUSdxU/C8jUakau0KwVuFEr7w7UMtLd2xN80LTHV
-	 44+K4so92EjqhwsphxIFkP1vCPbQqzqwIFm5IEbieGirgJKJ9otJg8R0y6zh7Hy5yg
-	 wgkoxtIhuDenq2S3Whw1P6Yk3Z4V6kpoJK/Pgraw=
+	b=MOahfhW76OTo2NBnF7POoKehgS+n8bZ0eU29b5Jgv8RG7ZS6NELC6zewpQrQG48Hv
+	 msOsKSWMkhwBOg5NlSHYyee8f8gFYwpQLWx2zCZ8XrMmOXCFiCZ/GvGJmJ0+MzaXgt
+	 WbkezBiCUbMXMgHGuZr6vGwbvmAna0FIz31L65Fw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388201AbgF2TtO (ORCPT
+        id S2387906AbgF2TtP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:49:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47678 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:49:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387761AbgF2Tki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387762AbgF2Tki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:38 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32235248F7;
-        Mon, 29 Jun 2020 15:27:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07F91248C6;
+        Mon, 29 Jun 2020 15:26:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444449;
-        bh=ovJvvILH3TbnZcQB+zLhCu7tBZPRlFUs6GXGT0TNi1o=;
+        s=default; t=1593444420;
+        bh=v+crxahijm911DuNDyKvGSVyfJ4WlY+YO/iBkJxHw24=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xe+OSSn50pmDjZBcbX9bbdtUAIlD6gEMbqhcWKmJZzG6ga1vpOPhYCpNqh3QJnvQI
-         zYBNdaU79DfewX5tUYKFhN/wKDPD1xnWCou5YVe1n3vwzFb7CGuxMn5mnxi4XC0GwO
-         4qLd+ovs7nlAZ9gzzhY7GJ2YR31k7dICjvkhA3vY=
+        b=pt2WxAj2THw+feiWj9bgNm4KSO82GVklT7lW+zAMEFDYEsOmimOxLF5UpoNhp78Tu
+         z78vaQgnWAFTH/sXRkRKwawEDjp8nEEkkrVcnsimnmCo0VXqCFFQBeJBDlH++lUWzC
+         L7nlQDonYR1RJqwJf9gJY9CzD+8ng2fAobcSKtdc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Schnelle <svens@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+Cc:     Alexander Lobakin <alobakin@marvell.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 129/178] s390/ptrace: fix setting syscall number
-Date:   Mon, 29 Jun 2020 11:24:34 -0400
-Message-Id: <20200629152523.2494198-130-sashal@kernel.org>
+Subject: [PATCH 5.4 098/178] net: qede: fix use-after-free on recovery and AER handling
+Date:   Mon, 29 Jun 2020 11:24:03 -0400
+Message-Id: <20200629152523.2494198-99-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -65,90 +67,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Schnelle <svens@linux.ibm.com>
+From: Alexander Lobakin <alobakin@marvell.com>
 
-[ Upstream commit 873e5a763d604c32988c4a78913a8dab3862d2f9 ]
+[ Upstream commit ec6c80590bde6b5dfa4970fffa3572f1acd313ca ]
 
-When strace wants to update the syscall number, it sets GPR2
-to the desired number and updates the GPR via PTRACE_SETREGSET.
-It doesn't update regs->int_code which would cause the old syscall
-executed on syscall restart. As we cannot change the ptrace ABI and
-don't have a field for the interruption code, check whether the tracee
-is in a syscall and the last instruction was svc. In that case assume
-that the tracer wants to update the syscall number and copy the GPR2
-value to regs->int_code.
+Set edev->cdev pointer to NULL after calling remove() callback to avoid
+using of already freed object.
 
-Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Fixes: ccc67ef50b90 ("qede: Error recovery process")
+Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
+Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/ptrace.c | 31 ++++++++++++++++++++++++++++++-
- 1 file changed, 30 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/qlogic/qede/qede_main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/s390/kernel/ptrace.c b/arch/s390/kernel/ptrace.c
-index 5a2b1501d9983..5aa786063eb3e 100644
---- a/arch/s390/kernel/ptrace.c
-+++ b/arch/s390/kernel/ptrace.c
-@@ -324,6 +324,25 @@ static inline void __poke_user_per(struct task_struct *child,
- 		child->thread.per_user.end = data;
- }
+diff --git a/drivers/net/ethernet/qlogic/qede/qede_main.c b/drivers/net/ethernet/qlogic/qede/qede_main.c
+index 361a1d759b0b5..2c3d654c84543 100644
+--- a/drivers/net/ethernet/qlogic/qede/qede_main.c
++++ b/drivers/net/ethernet/qlogic/qede/qede_main.c
+@@ -1247,6 +1247,7 @@ static void __qede_remove(struct pci_dev *pdev, enum qede_remove_mode mode)
+ 	if (system_state == SYSTEM_POWER_OFF)
+ 		return;
+ 	qed_ops->common->remove(cdev);
++	edev->cdev = NULL;
  
-+static void fixup_int_code(struct task_struct *child, addr_t data)
-+{
-+	struct pt_regs *regs = task_pt_regs(child);
-+	int ilc = regs->int_code >> 16;
-+	u16 insn;
-+
-+	if (ilc > 6)
-+		return;
-+
-+	if (ptrace_access_vm(child, regs->psw.addr - (regs->int_code >> 16),
-+			&insn, sizeof(insn), FOLL_FORCE) != sizeof(insn))
-+		return;
-+
-+	/* double check that tracee stopped on svc instruction */
-+	if ((insn >> 8) != 0xa)
-+		return;
-+
-+	regs->int_code = 0x20000 | (data & 0xffff);
-+}
- /*
-  * Write a word to the user area of a process at location addr. This
-  * operation does have an additional problem compared to peek_user.
-@@ -335,7 +354,9 @@ static int __poke_user(struct task_struct *child, addr_t addr, addr_t data)
- 	struct user *dummy = NULL;
- 	addr_t offset;
- 
-+
- 	if (addr < (addr_t) &dummy->regs.acrs) {
-+		struct pt_regs *regs = task_pt_regs(child);
- 		/*
- 		 * psw and gprs are stored on the stack
- 		 */
-@@ -353,7 +374,11 @@ static int __poke_user(struct task_struct *child, addr_t addr, addr_t data)
- 				/* Invalid addressing mode bits */
- 				return -EINVAL;
- 		}
--		*(addr_t *)((addr_t) &task_pt_regs(child)->psw + addr) = data;
-+
-+		if (test_pt_regs_flag(regs, PIF_SYSCALL) &&
-+			addr == offsetof(struct user, regs.gprs[2]))
-+			fixup_int_code(child, data);
-+		*(addr_t *)((addr_t) &regs->psw + addr) = data;
- 
- 	} else if (addr < (addr_t) (&dummy->regs.orig_gpr2)) {
- 		/*
-@@ -719,6 +744,10 @@ static int __poke_user_compat(struct task_struct *child,
- 			regs->psw.mask = (regs->psw.mask & ~PSW_MASK_BA) |
- 				(__u64)(tmp & PSW32_ADDR_AMODE);
- 		} else {
-+
-+			if (test_pt_regs_flag(regs, PIF_SYSCALL) &&
-+				addr == offsetof(struct compat_user, regs.gprs[2]))
-+				fixup_int_code(child, data);
- 			/* gpr 0-15 */
- 			*(__u32*)((addr_t) &regs->psw + addr*2 + 4) = tmp;
- 		}
+ 	/* Since this can happen out-of-sync with other flows,
+ 	 * don't release the netdevice until after slowpath stop
 -- 
 2.25.1
 
