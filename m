@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCC28C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0F3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98B1F20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:04:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9E6B2065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:04:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468271;
-	bh=INcq5wxv6l6AovBo3O4mUJtdrDH+kYf9POZ5RalqkMk=;
+	s=default; t=1593468274;
+	bh=L/UZd5a6IcXtfLJej821jWf2eMKINcIs7qnt+UN8m3A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t92mWMm5wKcE7HF0nE1PugHs5xJvfHn/T9RbQub3tXja/uDq35sbeoSFru+htzu+y
-	 HN4jffr9ZnYwLT0PY1ZdSSazC/2rzOFc/BpBSmwF7I9+NT6FmlkbQGi0nTuvaIsPw8
-	 6wpYtyv39AiwCYP/Y+niiQRRyv6cAaq11JsWQToI=
+	b=MmbbvwZW/ro9N+xdQxxSvIV7mf06D2DCugM4ZPI69oLx+c6MDtKI+VAv7Z6sosWL4
+	 ZLVIon/ZollNbL9f0TJLvFkx/snEeWNTfC/LMljIlP37K4sJDp5lxhFHSsu5wSub1D
+	 lDW1zlXW9ShrpP8JC0IB1q4kfp+MaMPAJmDCqpeo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388805AbgF2WEa (ORCPT
+        id S2404429AbgF2WEc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:04:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56790 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:04:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726187AbgF2SfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726180AbgF2SfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C194246B6;
-        Mon, 29 Jun 2020 15:20:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BA6A247B3;
+        Mon, 29 Jun 2020 15:21:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444006;
-        bh=INcq5wxv6l6AovBo3O4mUJtdrDH+kYf9POZ5RalqkMk=;
+        s=default; t=1593444115;
+        bh=L/UZd5a6IcXtfLJej821jWf2eMKINcIs7qnt+UN8m3A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QYvakmDszmo3RLEw9J1c7KvLdOHdHRz5FBM9U5BWKVJXlqKeLr3Y+6m/P0+shUnud
-         LsYlJpQueODlbgzYS0FAjnUrpjbeD6EiTB5HyADSpa0BEinEOcu+ZhBiX8n2nddqun
-         w5yLAaYiLWjpJ6EyF2hkuWxUD+QNG47No14YHyOg=
+        b=iHzGEEX5U7eFucDSiqKTbxkbLUmuq/X6OFZjQRTpONApPbe2hk6igrdKDEiQenmHz
+         wCd5V7ePvN/ZGcaZ2aguVhFvjoljYmLP9OTYtKtGGKIjOfkJpW/aVFEPMc7cjSAOsy
+         v+D1DGsH5OX0xejXLkZYo7rM2y9RscuOZvJnLs54=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 112/265] ASoC: qcom: common: set correct directions for dailinks
-Date:   Mon, 29 Jun 2020 11:15:45 -0400
-Message-Id: <20200629151818.2493727-113-sashal@kernel.org>
+Cc:     Filipe Manana <fdmanana@suse.com>, David Sterba <dsterba@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 227/265] btrfs: fix RWF_NOWAIT write not failling when we need to cow
+Date:   Mon, 29 Jun 2020 11:17:40 -0400
+Message-Id: <20200629151818.2493727-228-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -66,69 +64,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Filipe Manana <fdmanana@suse.com>
 
-[ Upstream commit a2120089251f1fe221305e88df99af16f940e236 ]
+commit 260a63395f90f67d6ab89e4266af9e3dc34a77e9 upstream.
 
-Currently both FE and BE dai-links are configured bi-directional,
-However the DSP BE dais are only single directional,
-so set the directions as supported by the BE dais.
+If we attempt to do a RWF_NOWAIT write against a file range for which we
+can only do NOCOW for a part of it, due to the existence of holes or
+shared extents for example, we proceed with the write as if it were
+possible to NOCOW the whole range.
 
-Fixes: c25e295cd77b (ASoC: qcom: Add support to parse common audio device nodes)
-Reported-by: John Stultz <john.stultz@linaro.org>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Tested-by: John Stultz <john.stultz@linaro.org>
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
-Link: https://lore.kernel.org/r/20200612123711.29130-2-srinivas.kandagatla@linaro.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Example:
+
+  $ mkfs.btrfs -f /dev/sdb
+  $ mount /dev/sdb /mnt
+
+  $ touch /mnt/sdj/bar
+  $ chattr +C /mnt/sdj/bar
+
+  $ xfs_io -d -c "pwrite -S 0xab -b 256K 0 256K" /mnt/bar
+  wrote 262144/262144 bytes at offset 0
+  256 KiB, 1 ops; 0.0003 sec (694.444 MiB/sec and 2777.7778 ops/sec)
+
+  $ xfs_io -c "fpunch 64K 64K" /mnt/bar
+  $ sync
+
+  $ xfs_io -d -c "pwrite -N -V 1 -b 128K -S 0xfe 0 128K" /mnt/bar
+  wrote 131072/131072 bytes at offset 0
+  128 KiB, 1 ops; 0.0007 sec (160.051 MiB/sec and 1280.4097 ops/sec)
+
+This last write should fail with -EAGAIN since the file range from 64K to
+128K is a hole. On xfs it fails, as expected, but on ext4 it currently
+succeeds because apparently it is expensive to check if there are extents
+allocated for the whole range, but I'll check with the ext4 people.
+
+Fix the issue by checking if check_can_nocow() returns a number of
+NOCOW'able bytes smaller then the requested number of bytes, and if it
+does return -EAGAIN.
+
+Fixes: edf064e7c6fec3 ("btrfs: nowait aio support")
+CC: stable@vger.kernel.org # 4.14+
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- sound/soc/qcom/common.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ fs/btrfs/file.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/sound/soc/qcom/common.c b/sound/soc/qcom/common.c
-index 6c20bdd850f33..8ada4ecba8472 100644
---- a/sound/soc/qcom/common.c
-+++ b/sound/soc/qcom/common.c
-@@ -4,6 +4,7 @@
- 
- #include <linux/module.h>
- #include "common.h"
-+#include "qdsp6/q6afe.h"
- 
- int qcom_snd_parse_of(struct snd_soc_card *card)
- {
-@@ -101,6 +102,15 @@ int qcom_snd_parse_of(struct snd_soc_card *card)
- 			}
- 			link->no_pcm = 1;
- 			link->ignore_pmdown_time = 1;
+diff --git a/fs/btrfs/file.c b/fs/btrfs/file.c
+index 484803f8b2290..52d565ff66e2d 100644
+--- a/fs/btrfs/file.c
++++ b/fs/btrfs/file.c
+@@ -1912,18 +1912,29 @@ static ssize_t btrfs_file_write_iter(struct kiocb *iocb,
+ 	pos = iocb->ki_pos;
+ 	count = iov_iter_count(from);
+ 	if (iocb->ki_flags & IOCB_NOWAIT) {
++		size_t nocow_bytes = count;
 +
-+			if (q6afe_is_rx_port(link->id)) {
-+				link->dpcm_playback = 1;
-+				link->dpcm_capture = 0;
-+			} else {
-+				link->dpcm_playback = 0;
-+				link->dpcm_capture = 1;
-+			}
-+
- 		} else {
- 			dlc = devm_kzalloc(dev, sizeof(*dlc), GFP_KERNEL);
- 			if (!dlc)
-@@ -113,12 +123,12 @@ int qcom_snd_parse_of(struct snd_soc_card *card)
- 			link->codecs->dai_name = "snd-soc-dummy-dai";
- 			link->codecs->name = "snd-soc-dummy";
- 			link->dynamic = 1;
-+			link->dpcm_playback = 1;
-+			link->dpcm_capture = 1;
+ 		/*
+ 		 * We will allocate space in case nodatacow is not set,
+ 		 * so bail
+ 		 */
+ 		if (!(BTRFS_I(inode)->flags & (BTRFS_INODE_NODATACOW |
+ 					      BTRFS_INODE_PREALLOC)) ||
+-		    check_can_nocow(BTRFS_I(inode), pos, &count) <= 0) {
++		    check_can_nocow(BTRFS_I(inode), pos, &nocow_bytes) <= 0) {
+ 			inode_unlock(inode);
+ 			return -EAGAIN;
  		}
+ 		/* check_can_nocow() locks the snapshot lock on success */
+ 		btrfs_drew_write_unlock(&root->snapshot_lock);
++		/*
++		 * There are holes in the range or parts of the range that must
++		 * be COWed (shared extents, RO block groups, etc), so just bail
++		 * out.
++		 */
++		if (nocow_bytes < count) {
++			inode_unlock(inode);
++			return -EAGAIN;
++		}
+ 	}
  
- 		link->ignore_suspend = 1;
- 		link->nonatomic = 1;
--		link->dpcm_playback = 1;
--		link->dpcm_capture = 1;
- 		link->stream_name = link->name;
- 		link++;
- 
+ 	current->backing_dev_info = inode_to_bdi(inode);
 -- 
 2.25.1
 
