@@ -2,110 +2,94 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 337BAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:50:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD036C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FE61206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:50:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460222;
-	bh=YfelfwEUbcmCm/7aOeEl7t6zt0M79VdUgGvywh71Yzk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2cXY3PtvVRqIfkdEPd63GVNvR0o+F6zfqKNve5QnVkgphmmI/VfouIZdT0zDStLtV
-	 +TNy4sMDkYmCGGG3x8XzYtubGWxCznt29yDeR+RrNv24D0QByUpm+m/md/E91E2qDM
-	 5QEjNOY6YkEWbtXzMSw7UdJ/u/48cb1FU2rPtMek=
+	by mail.kernel.org (Postfix) with ESMTP id A73C32076C
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:50:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="cWpKHTPU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730648AbgF2TuT (ORCPT
+        id S1726884AbgF2Tua (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:50:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47668 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732703AbgF2Tkg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:40:36 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C03E24803;
-        Mon, 29 Jun 2020 15:25:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444329;
-        bh=YfelfwEUbcmCm/7aOeEl7t6zt0M79VdUgGvywh71Yzk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BJ0v7dXOU2iXSFDa4wmF344S5avXRRwtuNdcdurQG55rYPXq8Hzoh3lozWHBfsr59
-         NoIVJZOljnrQ6OGyNBzrzNbPtbWwV8qYbYq8+hQc8BnFBDli0Dkpp2Q6A+0f7AZCT8
-         7+M7RXtxOEDkorYAEI3zEZ49r9hnMC2BXGzxEZcI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sabrina Dubroca <sd@queasysnail.net>,
-        Stefano Brivio <sbrivio@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 003/178] geneve: allow changing DF behavior after creation
-Date:   Mon, 29 Jun 2020 11:22:28 -0400
-Message-Id: <20200629152523.2494198-4-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
-References: <20200629152523.2494198-1-sashal@kernel.org>
+        Mon, 29 Jun 2020 15:50:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48130 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387739AbgF2Tkf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:40:35 -0400
+Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD21FC08C5DB;
+        Mon, 29 Jun 2020 12:40:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=MVPFkWqT27H+EK/gr/8Zgz6Ls+wUfbhG+l5NiS06UDM=; b=cWpKHTPUn3rA32xoo333LDplGG
+        /0xAWYcWkkFDjIBXGHO+45kIoIvtpWwTdJKbTnhm3os86dmo4mBSUI/NlHDdmV2gaqavEMZMtq3gr
+        M3snlpc+56l3kOCu7MnQN7N8WQWb3nphprLavnWPrBA4mxdkJSQ8Tut/tMvH3ls/uG8kN7J9CITXs
+        A7iClohCANn04aASv5Pb/v3HjCVtqEJIIyqmnMeFPQEhuHkV0uuQWfF7wIH1afLqTWPS6uIq2i+kb
+        8Tr2FGLqiWdoGJayxvKNyukUZkTuV8pg9R5jKUz7TmEOASWR1oATE02aF8Ax3xwDPyvtVg3FdUUNQ
+        Bmg5Q2MA==;
+Received: from [2001:4bb8:184:76e3:fcca:c8dc:a4bf:12fa] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jpzdY-0004MD-RU; Mon, 29 Jun 2020 19:40:17 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     dm-devel@redhat.com, linux-kernel@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-xtensa@linux-xtensa.org,
+        drbd-dev@lists.linbit.com, linuxppc-dev@lists.ozlabs.org,
+        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-nvme@lists.infradead.org,
+        linux-s390@vger.kernel.org
+Subject: [PATCH 15/20] block: remove the nr_sectors variable in generic_make_request_checks
+Date:   Mon, 29 Jun 2020 21:39:42 +0200
+Message-Id: <20200629193947.2705954-16-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200629193947.2705954-1-hch@lst.de>
+References: <20200629193947.2705954-1-hch@lst.de>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.50-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.4.50-rc1
-X-KernelTest-Deadline: 2020-07-01T15:25+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sabrina Dubroca <sd@queasysnail.net>
+The variable is only used once, so just open code the bio_sector()
+there.
 
-[ Upstream commit 56c09de347e40804fc8dad155272fb9609e0a97b ]
-
-Currently, trying to change the DF parameter of a geneve device does
-nothing:
-
-    # ip -d link show geneve1
-    14: geneve1: <snip>
-        link/ether <snip>
-        geneve id 1 remote 10.0.0.1 ttl auto df set dstport 6081 <snip>
-    # ip link set geneve1 type geneve id 1 df unset
-    # ip -d link show geneve1
-    14: geneve1: <snip>
-        link/ether <snip>
-        geneve id 1 remote 10.0.0.1 ttl auto df set dstport 6081 <snip>
-
-We just need to update the value in geneve_changelink.
-
-Fixes: a025fb5f49ad ("geneve: Allow configuration of DF behaviour")
-Signed-off-by: Sabrina Dubroca <sd@queasysnail.net>
-Reviewed-by: Stefano Brivio <sbrivio@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/net/geneve.c | 1 +
- 1 file changed, 1 insertion(+)
+ block/blk-core.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/net/geneve.c b/drivers/net/geneve.c
-index cac75c7d1d018..19d9d78a6df2c 100644
---- a/drivers/net/geneve.c
-+++ b/drivers/net/geneve.c
-@@ -1649,6 +1649,7 @@ static int geneve_changelink(struct net_device *dev, struct nlattr *tb[],
- 	geneve->collect_md = metadata;
- 	geneve->use_udp6_rx_checksums = use_udp6_rx_checksums;
- 	geneve->ttl_inherit = ttl_inherit;
-+	geneve->df = df;
- 	geneve_unquiesce(geneve, gs4, gs6);
+diff --git a/block/blk-core.c b/block/blk-core.c
+index 37435d0d433564..28f60985dc75cc 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -974,7 +974,6 @@ static noinline_for_stack bool
+ generic_make_request_checks(struct bio *bio)
+ {
+ 	struct request_queue *q = bio->bi_disk->queue;
+-	int nr_sectors = bio_sectors(bio);
+ 	blk_status_t status = BLK_STS_IOERR;
  
- 	return 0;
+ 	might_sleep();
+@@ -1007,7 +1006,7 @@ generic_make_request_checks(struct bio *bio)
+ 	if (op_is_flush(bio->bi_opf) &&
+ 	    !test_bit(QUEUE_FLAG_WC, &q->queue_flags)) {
+ 		bio->bi_opf &= ~(REQ_PREFLUSH | REQ_FUA);
+-		if (!nr_sectors) {
++		if (!bio_sectors(bio)) {
+ 			status = BLK_STS_OK;
+ 			goto end_io;
+ 		}
 -- 
-2.25.1
+2.26.2
 
