@@ -2,126 +2,93 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79D33C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5317C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:31:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58BF3206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:31:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 703F2206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:31:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466275;
-	bh=grrj+Cxfz7DykoaGOy6KJANcZfrD+IimcbNv7lPXnfA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ei9rmbse665+2dRnawcP9zcRdViFsqu37Zpz2AXEr2XW1PIh4MkJzfO6SyMmSnwa4
-	 hMOvSvlH6ZeDMPfHem5ziQXC5T+TPX7/zwLM4EfhZcRhqKkDD1t8LjruS2+02/LSyS
-	 QCZnjzsitXy9KuQ1L2/ghZ1bkmDYBn1pimblI0e8=
+	s=default; t=1593466279;
+	bh=QifnuQ3OqevnySCb9bfo+3KcLPSxAMMMZIagAZ6227s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ataRtsR/wD2y+IdiciJrFs5lGRpWMFIdY6i2YrbjMvdhSGpj4RyDI5DaPK6X6ne2s
+	 qrjyr5DRd7S1t5CoyjuavJYmGJkjBZv8TGneQU7N9KmNdICMB280UtImuQXjqKwa7M
+	 nrQcUMIH8ZJyW9V3YmuUkCmKSgBOM1FS+quoKjHc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391248AbgF2VbO (ORCPT
+        id S2390989AbgF2VbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:31:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60654 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:31:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728808AbgF2SlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728814AbgF2SlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:41:17 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A582923F34;
-        Mon, 29 Jun 2020 15:18:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A881B23CD3;
+        Mon, 29 Jun 2020 11:53:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443912;
-        bh=grrj+Cxfz7DykoaGOy6KJANcZfrD+IimcbNv7lPXnfA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZRIcx2dHeWNUd/Bde5ddclJHjRrnpLVjc0xTqqR2TvHYJMEunHTMnTPOHBeVNi6Sf
-         zvt1c48wh2mypwBzamJx3lwyqcVcW/ehJMNg1Td9LyuQ5sS19rwieFUYBqTXDX1Gxk
-         USOrBtRMtW20RdAoofwfI/QXc2kBXpbaqzZPKnA4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tariq Toukan <tariqt@mellanox.com>,
-        Boris Pismenny <borisp@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 012/265] net: Do not clear the sock TX queue in sk_set_socket()
-Date:   Mon, 29 Jun 2020 11:14:05 -0400
-Message-Id: <20200629151818.2493727-13-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
-References: <20200629151818.2493727-1-sashal@kernel.org>
+        s=default; t=1593431599;
+        bh=QifnuQ3OqevnySCb9bfo+3KcLPSxAMMMZIagAZ6227s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=e0aWtAUPAo87GHfZKyQbhiRqWa3TOxxpCGs+PthoYpE3SRwz9IL9vDqQ0KlAdyPtP
+         n4ZFnebis5MOWojN2HFXlCLy1nXDZPuw/hP353dnE/d0Vo0OSHmufFYbQ0YJ6uT7E/
+         vhLIv/zXwk8VMLcqD1NnztBgdw/i1JRu28SeW2RE=
+Date:   Mon, 29 Jun 2020 12:53:17 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, swboyd@chromium.org,
+        Dilip Kota <dkota@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org
+Subject: Re: [PATCH] spi: spi-geni-qcom: Don't set the cs if it was already
+ right
+Message-ID: <20200629115316.GB5499@sirena.org.uk>
+References: <20200626151946.1.I06134fd669bf91fd387dc6ecfe21d44c202bd412@changeid>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.7.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.7.7-rc1
-X-KernelTest-Deadline: 2020-07-01T15:14+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="XOIedfhf+7KOe/yw"
+Content-Disposition: inline
+In-Reply-To: <20200626151946.1.I06134fd669bf91fd387dc6ecfe21d44c202bd412@changeid>
+X-Cookie: Real programs don't eat cache.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tariq Toukan <tariqt@mellanox.com>
 
-[ Upstream commit 41b14fb8724d5a4b382a63cb4a1a61880347ccb8 ]
+--XOIedfhf+7KOe/yw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Clearing the sock TX queue in sk_set_socket() might cause unexpected
-out-of-order transmit when called from sock_orphan(), as outstanding
-packets can pick a different TX queue and bypass the ones already queued.
+On Fri, Jun 26, 2020 at 03:19:50PM -0700, Douglas Anderson wrote:
+> Setting the chip select on the Qualcomm geni SPI controller isn't
+> exactly cheap.  Let's cache the current setting and avoid setting the
+> chip select if it's already right.
 
-This is undesired in general. More specifically, it breaks the in-order
-scheduling property guarantee for device-offloaded TLS sockets.
+Seems like it'd be worth pushing this up to the core - if we're
+constantly setting the same CS value then perhaps we ought to just stop
+doing that?
 
-Remove the call to sk_tx_queue_clear() in sk_set_socket(), and add it
-explicitly only where needed.
+--XOIedfhf+7KOe/yw
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Fixes: e022f0b4a03f ("net: Introduce sk_tx_queue_mapping")
-Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
-Reviewed-by: Boris Pismenny <borisp@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- include/net/sock.h | 1 -
- net/core/sock.c    | 2 ++
- 2 files changed, 2 insertions(+), 1 deletion(-)
+-----BEGIN PGP SIGNATURE-----
 
-diff --git a/include/net/sock.h b/include/net/sock.h
-index 3e8c6d4b4b59f..46423e86dba50 100644
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -1846,7 +1846,6 @@ static inline int sk_rx_queue_get(const struct sock *sk)
- 
- static inline void sk_set_socket(struct sock *sk, struct socket *sock)
- {
--	sk_tx_queue_clear(sk);
- 	sk->sk_socket = sock;
- }
- 
-diff --git a/net/core/sock.c b/net/core/sock.c
-index b714162213aea..da244f4d00363 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -1678,6 +1678,7 @@ struct sock *sk_alloc(struct net *net, int family, gfp_t priority,
- 		cgroup_sk_alloc(&sk->sk_cgrp_data);
- 		sock_update_classid(&sk->sk_cgrp_data);
- 		sock_update_netprioidx(&sk->sk_cgrp_data);
-+		sk_tx_queue_clear(sk);
- 	}
- 
- 	return sk;
-@@ -1901,6 +1902,7 @@ struct sock *sk_clone_lock(const struct sock *sk, const gfp_t priority)
- 		 */
- 		sk_refcnt_debug_inc(newsk);
- 		sk_set_socket(newsk, NULL);
-+		sk_tx_queue_clear(newsk);
- 		RCU_INIT_POINTER(newsk->sk_wq, NULL);
- 
- 		if (newsk->sk_prot->sockets_allocated)
--- 
-2.25.1
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl751iwACgkQJNaLcl1U
+h9AU/wf/bpfHFtT9ACyBIK96npjnnQz/vQ3t3lRL7uqyIfHIA/19K26V0j6Dbvwd
+aBYPo5xPqYDwqUHbobABbdZ5O1N6trSA8IO0I9+9MvV9vH0velLuDQIcsGEkVv8p
+8U+JrjDe2kjr7hRrqlYJvvFpbeT81Rcii6tN8cqz/Ek+eaRl7+ZOwOvanyYnzC8Y
+P5GZaxID2aTSx31RjkXiTsVzivPbZdRpQ8bE2MqhnGgyOsBVSpqOqYxLy6laSITN
+DCEwaCo+0FK+B9Fwy1/CjR4DAprkpm4tC1C3yw9Lyw1JVA9asTU4f8cG5MmiEDTT
+4XADNhyWNp+53XX+tudxCtkO84nsfQ==
+=Hcvu
+-----END PGP SIGNATURE-----
 
+--XOIedfhf+7KOe/yw--
