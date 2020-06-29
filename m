@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DC1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:08:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F40C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82460206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:08:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A09020768
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:08:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593464895;
-	bh=jG4XWYFGXJnz4ForPt/MAmTEi7umlnV2RuQuuTSRVbI=;
+	s=default; t=1593464898;
+	bh=giUKFoUw8erXn1s1XujgwlrbbRAXpbQ4mI3lyyA1zdA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zWb4R86TcBt1Qo2YeH676eYbS5Zp/vMNpeEwmx9TAmzw4zJlqp84BBtgRMs8GUJPF
-	 6FhE9Y5z3GZqnzZgRco0zhyZaFHBnXBIR9h7aIkgXVJPdi7swfWMpd0dynCxAQE2UP
-	 3FAjmdUwKU1HlrDPGEgncgtd0gWlsddhH+XuNUN4=
+	b=j60qy7xK3HEjd6KVV37gbFWpKCzY16PgY5LZg+UbSXyf+AeL0ogIkJtAwlk7UHXbK
+	 ttxcraTug5NyuoH1Rv7ekWZZZjnyhM4xUAFFMbS79vZmGHPVDm7dBdLP/TCqbKakry
+	 hq6+rhyjBl/V4q6eqwLAiVLBtxEVUZajaLZrn1fM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387684AbgF2VIO (ORCPT
+        id S2390406AbgF2VIR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:08:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45472 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:08:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730322AbgF2TAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730327AbgF2TAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:00:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E97C25509;
-        Mon, 29 Jun 2020 15:54:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5768B2554C;
+        Mon, 29 Jun 2020 15:55:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446066;
-        bh=jG4XWYFGXJnz4ForPt/MAmTEi7umlnV2RuQuuTSRVbI=;
+        s=default; t=1593446113;
+        bh=giUKFoUw8erXn1s1XujgwlrbbRAXpbQ4mI3lyyA1zdA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HQbrxacfxvQzZSzpKfQheiY5S1aVXbV5FFuSyY9SRHQBVZVwKiIUCkaJe7Imnar89
-         hB4HKdkC3aoHy6nta13VRJrvSMRBeFXVds/9/gOEZd1YLNKX343tIIOoRoPOYkVnDg
-         ReMuPwnV9fMJN523cQiEBX9YjRcbz04MS8RxHIQg=
+        b=FB+KcMKgStk9MdKKDapw8h7A4IjQbXC535ShRd0vYm/CUSv0jSzcndU++hQoVtjLS
+         I+oxt6622sByTGz4N8GwOiGuEgREVo3Hxfq5ln344Be3fortmyS4XAmFJ16dXpCke+
+         flZqnEAytr40VeEn+WkKb/1f30AA6Wdwu6ugQRlE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeffle Xu <jefflexu@linux.alibaba.com>,
-        Eric Whitney <enwlinux@gmail.com>, stable@kernel.org,
-        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 065/135] ext4: fix partial cluster initialization when splitting extent
-Date:   Mon, 29 Jun 2020 11:51:59 -0400
-Message-Id: <20200629155309.2495516-66-sashal@kernel.org>
+Cc:     Julian Scheel <julian@jusst.de>, Takashi Iwai <tiwai@suse.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 104/135] ALSA: usb-audio: uac1: Invalidate ctl on interrupt
+Date:   Mon, 29 Jun 2020 11:52:38 -0400
+Message-Id: <20200629155309.2495516-105-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -65,120 +64,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeffle Xu <jefflexu@linux.alibaba.com>
+From: Julian Scheel <julian@jusst.de>
 
-[ Upstream commit cfb3c85a600c6aa25a2581b3c1c4db3460f14e46 ]
+[ Upstream commit b2500b584cfd228d67e1e43daf27c8af865b499e ]
 
-Fix the bug when calculating the physical block number of the first
-block in the split extent.
+When an interrupt occurs, the value of at least one of the belonging
+controls should have changed. To make sure they get re-read from device
+on the next read, invalidate the cache. This was correctly implemented
+for uac2 already, but missing for uac1.
 
-This bug will cause xfstests shared/298 failure on ext4 with bigalloc
-enabled occasionally. Ext4 error messages indicate that previously freed
-blocks are being freed again, and the following fsck will fail due to
-the inconsistency of block bitmap and bg descriptor.
-
-The following is an example case:
-
-1. First, Initialize a ext4 filesystem with cluster size '16K', block size
-'4K', in which case, one cluster contains four blocks.
-
-2. Create one file (e.g., xxx.img) on this ext4 filesystem. Now the extent
-tree of this file is like:
-
-...
-36864:[0]4:220160
-36868:[0]14332:145408
-51200:[0]2:231424
-...
-
-3. Then execute PUNCH_HOLE fallocate on this file. The hole range is
-like:
-
-..
-ext4_ext_remove_space: dev 254,16 ino 12 since 49506 end 49506 depth 1
-ext4_ext_remove_space: dev 254,16 ino 12 since 49544 end 49546 depth 1
-ext4_ext_remove_space: dev 254,16 ino 12 since 49605 end 49607 depth 1
-...
-
-4. Then the extent tree of this file after punching is like
-
-...
-49507:[0]37:158047
-49547:[0]58:158087
-...
-
-5. Detailed procedure of punching hole [49544, 49546]
-
-5.1. The block address space:
-```
-lblk        ~49505  49506   49507~49543     49544~49546    49547~
-	  ---------+------+-------------+----------------+--------
-	    extent | hole |   extent	|	hole	 | extent
-	  ---------+------+-------------+----------------+--------
-pblk       ~158045  158046  158047~158083  158084~158086   158087~
-```
-
-5.2. The detailed layout of cluster 39521:
-```
-		cluster 39521
-	<------------------------------->
-
-		hole		  extent
-	<----------------------><--------
-
-lblk      49544   49545   49546   49547
-	+-------+-------+-------+-------+
-	|	|	|	|	|
-	+-------+-------+-------+-------+
-pblk     158084  1580845  158086  158087
-```
-
-5.3. The ftrace output when punching hole [49544, 49546]:
-- ext4_ext_remove_space (start 49544, end 49546)
-  - ext4_ext_rm_leaf (start 49544, end 49546, last_extent [49507(158047), 40], partial [pclu 39522 lblk 0 state 2])
-    - ext4_remove_blocks (extent [49507(158047), 40], from 49544 to 49546, partial [pclu 39522 lblk 0 state 2]
-      - ext4_free_blocks: (block 158084 count 4)
-        - ext4_mballoc_free (extent 1/6753/1)
-
-5.4. Ext4 error message in dmesg:
-EXT4-fs error (device vdb): mb_free_blocks:1457: group 1, block 158084:freeing already freed block (bit 6753); block bitmap corrupt.
-EXT4-fs error (device vdb): ext4_mb_generate_buddy:747: group 1, block bitmap and bg descriptor inconsistent: 19550 vs 19551 free clusters
-
-In this case, the whole cluster 39521 is freed mistakenly when freeing
-pblock 158084~158086 (i.e., the first three blocks of this cluster),
-although pblock 158087 (the last remaining block of this cluster) has
-not been freed yet.
-
-The root cause of this isuue is that, the pclu of the partial cluster is
-calculated mistakenly in ext4_ext_remove_space(). The correct
-partial_cluster.pclu (i.e., the cluster number of the first block in the
-next extent, that is, lblock 49597 (pblock 158086)) should be 39521 rather
-than 39522.
-
-Fixes: f4226d9ea400 ("ext4: fix partial cluster initialization")
-Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
-Reviewed-by: Eric Whitney <enwlinux@gmail.com>
-Cc: stable@kernel.org # v3.19+
-Link: https://lore.kernel.org/r/1590121124-37096-1-git-send-email-jefflexu@linux.alibaba.com
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Julian Scheel <julian@jusst.de>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/extents.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/usb/mixer.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
-index 96336830f0350..fc2746e14c42a 100644
---- a/fs/ext4/extents.c
-+++ b/fs/ext4/extents.c
-@@ -2902,7 +2902,7 @@ int ext4_ext_remove_space(struct inode *inode, ext4_lblk_t start,
- 			 * in use to avoid freeing it when removing blocks.
- 			 */
- 			if (sbi->s_cluster_ratio > 1) {
--				pblk = ext4_ext_pblock(ex) + end - ee_block + 2;
-+				pblk = ext4_ext_pblock(ex) + end - ee_block + 1;
- 				partial_cluster =
- 					-(long long) EXT4_B2C(sbi, pblk);
- 			}
+diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
+index 9bbe84ce7d07f..a2a9712bd6fa7 100644
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -2330,9 +2330,14 @@ void snd_usb_mixer_notify_id(struct usb_mixer_interface *mixer, int unitid)
+ {
+ 	struct usb_mixer_elem_list *list;
+ 
+-	for (list = mixer->id_elems[unitid]; list; list = list->next_id_elem)
++	for (list = mixer->id_elems[unitid]; list; list = list->next_id_elem) {
++		struct usb_mixer_elem_info *info =
++			(struct usb_mixer_elem_info *)list;
++		/* invalidate cache, so the value is read from the device */
++		info->cached = 0;
+ 		snd_ctl_notify(mixer->chip->card, SNDRV_CTL_EVENT_MASK_VALUE,
+ 			       &list->kctl->id);
++	}
+ }
+ 
+ static void snd_usb_mixer_dump_cval(struct snd_info_buffer *buffer,
 -- 
 2.25.1
 
