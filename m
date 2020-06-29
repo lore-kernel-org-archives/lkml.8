@@ -2,209 +2,105 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F408C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A8FAC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 244DC207D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E50120760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593461373;
+	bh=EhVqRIVL7XTnFLSU+chvQGfM9cMEKsaL5C1NCbVo8PY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=o0ki06qNKKcFBiHy90o4JXEPeXLNug6DffKnVB5l51Y5BUkU+jNaim3H4MXOiXdmh
+	 YWtuUKE6mszcBtJDegchU/ccjzmq2qAIp8uX6FrPriW5GXmbwfLBr2LMl67etY+m2D
+	 f8NebIJpHvEfCd2yNiRp712Sz7UJoNWNx5G9dNx0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728009AbgF2UJa (ORCPT
+        id S1726032AbgF2UJ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:09:30 -0400
-Received: from out03.mta.xmission.com ([166.70.13.233]:40112 "EHLO
-        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726943AbgF2UJW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 16:09:22 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jq05b-0006JU-NI; Mon, 29 Jun 2020 14:09:15 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jq05a-0000cx-I2; Mon, 29 Jun 2020 14:09:15 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     <linux-kernel@vger.kernel.org>
-Cc:     David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <greg@kroah.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20200625095725.GA3303921@kroah.com>
-        <778297d2-512a-8361-cf05-42d9379e6977@i-love.sakura.ne.jp>
-        <20200625120725.GA3493334@kroah.com>
-        <20200625.123437.2219826613137938086.davem@davemloft.net>
-        <CAHk-=whuTwGHEPjvtbBvneHHXeqJC=q5S09mbPnqb=Q+MSPMag@mail.gmail.com>
-        <87pn9mgfc2.fsf_-_@x220.int.ebiederm.org>
-        <87y2oac50p.fsf@x220.int.ebiederm.org>
-        <87bll17ili.fsf_-_@x220.int.ebiederm.org>
-Date:   Mon, 29 Jun 2020 15:04:41 -0500
-In-Reply-To: <87bll17ili.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
-        message of "Mon, 29 Jun 2020 14:55:05 -0500")
-Message-ID: <87lfk54p0m.fsf_-_@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 29 Jun 2020 16:09:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40594 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732916AbgF2TaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:30:22 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59B24252CA;
+        Mon, 29 Jun 2020 15:38:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593445093;
+        bh=EhVqRIVL7XTnFLSU+chvQGfM9cMEKsaL5C1NCbVo8PY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qWZ5U5Y2vkU8ezJEB7hdqXPI7mx0r2bkEGAuWXk6D7UiHFn2Fo3MN76CoY7CUjNun
+         5Mu7eg65ndk29RA/VZMyHbSaLqwY7B1N5qiinWwFYteKEhpKuo2ZuLekvZeoaiW6tK
+         8XHmPZ7wiq+Y0LlGzeHuuf/gKjAv9kcSLen3hrEo=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     yu kuai <yukuai3@huawei.com>, Ming Lei <ming.lei@redhat.com>,
+        Bob Liu <bob.liu@oracle.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.14 03/78] block/bio-integrity: don't free 'buf' if bio_integrity_add_page() failed
+Date:   Mon, 29 Jun 2020 11:36:51 -0400
+Message-Id: <20200629153806.2494953-4-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
+References: <20200629153806.2494953-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jq05a-0000cx-I2;;;mid=<87lfk54p0m.fsf_-_@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX18jk9MPy/jYN6RjgP7KmdEpIJ9vTl3XBbc=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [PATCH v2 10/15] exec: Remove do_execve_file
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.14.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.14.186-rc1
+X-KernelTest-Deadline: 2020-07-01T15:38+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: yu kuai <yukuai3@huawei.com>
 
-Now that the last callser has been removed remove this code from exec.
+commit a75ca9303175d36af93c0937dd9b1a6422908b8d upstream.
 
-For anyone thinking of resurrecing do_execve_file please note that
-the code was buggy in several fundamental ways.
+commit e7bf90e5afe3 ("block/bio-integrity: fix a memory leak bug") added
+a kfree() for 'buf' if bio_integrity_add_page() returns '0'. However,
+the object will be freed in bio_integrity_free() since 'bio->bi_opf' and
+'bio->bi_integrity' were set previousy in bio_integrity_alloc().
 
-- It did not ensure the file it was passed was read-only and that
-  deny_write_access had been called on it.  Which subtlely breaks
-  invaniants in exec.
-
-- The caller of do_execve_file was expected to hold and put a
-  reference to the file, but an extra reference for use by exec was
-  not taken so that when exec put it's reference to the file an
-  underflow occured on the file reference count.
-
-- The point of the interface was so that a pathname did not need to
-  exist.  Which breaks pathname based LSMs.
-
-Tetsuo Handa originally reported these issues[1].  While it was clear
-that deny_write_access was missing the fundamental incompatibility
-with the passed in O_RDWR filehandle was not immediately recognized.
-
-All of these issues were fixed by modifying the usermode driver code
-to have a path, so it did not need this hack.
-
-Reported-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-[1] https://lore.kernel.org/linux-fsdevel/2a8775b4-1dd5-9d5c-aa42-9872445e0942@i-love.sakura.ne.jp/
-Link: https://lkml.kernel.org/r/871rm2f0hi.fsf_-_@x220.int.ebiederm.org
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Fixes: commit e7bf90e5afe3 ("block/bio-integrity: fix a memory leak bug")
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+Reviewed-by: Bob Liu <bob.liu@oracle.com>
+Acked-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/exec.c               | 38 +++++++++-----------------------------
- include/linux/binfmts.h |  1 -
- 2 files changed, 9 insertions(+), 30 deletions(-)
+ block/bio-integrity.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/fs/exec.c b/fs/exec.c
-index e6e8a9a70327..23dfbb820626 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1818,13 +1818,14 @@ static int exec_binprm(struct linux_binprm *bprm)
- /*
-  * sys_execve() executes a new program.
-  */
--static int __do_execve_file(int fd, struct filename *filename,
--			    struct user_arg_ptr argv,
--			    struct user_arg_ptr envp,
--			    int flags, struct file *file)
-+static int do_execveat_common(int fd, struct filename *filename,
-+			      struct user_arg_ptr argv,
-+			      struct user_arg_ptr envp,
-+			      int flags)
- {
- 	char *pathbuf = NULL;
- 	struct linux_binprm *bprm;
-+	struct file *file;
- 	struct files_struct *displaced;
- 	int retval;
+diff --git a/block/bio-integrity.c b/block/bio-integrity.c
+index 7f80106624375..d3df44c3b43af 100644
+--- a/block/bio-integrity.c
++++ b/block/bio-integrity.c
+@@ -315,7 +315,6 @@ bool bio_integrity_prep(struct bio *bio)
  
-@@ -1863,8 +1864,7 @@ static int __do_execve_file(int fd, struct filename *filename,
- 	check_unsafe_exec(bprm);
- 	current->in_execve = 1;
- 
--	if (!file)
--		file = do_open_execat(fd, filename, flags);
-+	file = do_open_execat(fd, filename, flags);
- 	retval = PTR_ERR(file);
- 	if (IS_ERR(file))
- 		goto out_unmark;
-@@ -1872,9 +1872,7 @@ static int __do_execve_file(int fd, struct filename *filename,
- 	sched_exec();
- 
- 	bprm->file = file;
--	if (!filename) {
--		bprm->filename = "none";
--	} else if (fd == AT_FDCWD || filename->name[0] == '/') {
-+	if (fd == AT_FDCWD || filename->name[0] == '/') {
- 		bprm->filename = filename->name;
- 	} else {
- 		if (filename->name[0] == '\0')
-@@ -1935,8 +1933,7 @@ static int __do_execve_file(int fd, struct filename *filename,
- 	task_numa_free(current, false);
- 	free_bprm(bprm);
- 	kfree(pathbuf);
--	if (filename)
--		putname(filename);
-+	putname(filename);
- 	if (displaced)
- 		put_files_struct(displaced);
- 	return retval;
-@@ -1967,27 +1964,10 @@ static int __do_execve_file(int fd, struct filename *filename,
- 	if (displaced)
- 		reset_files_struct(displaced);
- out_ret:
--	if (filename)
--		putname(filename);
-+	putname(filename);
- 	return retval;
- }
- 
--static int do_execveat_common(int fd, struct filename *filename,
--			      struct user_arg_ptr argv,
--			      struct user_arg_ptr envp,
--			      int flags)
--{
--	return __do_execve_file(fd, filename, argv, envp, flags, NULL);
--}
--
--int do_execve_file(struct file *file, void *__argv, void *__envp)
--{
--	struct user_arg_ptr argv = { .ptr.native = __argv };
--	struct user_arg_ptr envp = { .ptr.native = __envp };
--
--	return __do_execve_file(AT_FDCWD, NULL, argv, envp, 0, file);
--}
--
- int do_execve(struct filename *filename,
- 	const char __user *const __user *__argv,
- 	const char __user *const __user *__envp)
-diff --git a/include/linux/binfmts.h b/include/linux/binfmts.h
-index 4a20b7517dd0..7c27d7b57871 100644
---- a/include/linux/binfmts.h
-+++ b/include/linux/binfmts.h
-@@ -141,6 +141,5 @@ extern int do_execveat(int, struct filename *,
- 		       const char __user * const __user *,
- 		       const char __user * const __user *,
- 		       int);
--int do_execve_file(struct file *file, void *__argv, void *__envp);
- 
- #endif /* _LINUX_BINFMTS_H */
+ 		if (ret == 0) {
+ 			printk(KERN_ERR "could not attach integrity payload\n");
+-			kfree(buf);
+ 			status = BLK_STS_RESOURCE;
+ 			goto err_end_io;
+ 		}
 -- 
-2.25.0
+2.25.1
 
