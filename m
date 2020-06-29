@@ -7,57 +7,58 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91AF2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:32:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74A94C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:33:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6ABA82067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:32:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44FFC2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:33:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462779;
-	bh=ymk/Fa/0qxH7ugPHWWQo5DfbHiUe6eU/Vik6JdVdvpE=;
+	s=default; t=1593462784;
+	bh=cPJjhIRuVR6ILETKUiSiAnd68luBbKR16bzeD9+IJi0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wzWVl1GikxTKSRIP/vNddmakRfsW+SaHkefKlQHQVW1MxEwNnjnETYQn6y7TFeBxe
-	 c0zHc3n1M4AXgqMiX/0Fx4Q5xMDT0SVdrR557dozgGwJVe7jNVDu2eYAiAyRuu0d0g
-	 Ri/wsPq0XibfmCw8H0KDiYzTWWacM+Co0fkaHCNM=
+	b=ruR2ROfHClvd7ZcBcTfQi11Mts7KGxIcl06Kz2IlNOQ+Dz/x9Zzo+nJyvGU9BLSWm
+	 xVPPkW8/RSKa3NhXt3TAV8TDPY29AXz0xdQhrmkyumg+sfuX4Khlo62fYHL49Nmziy
+	 184i1tbyQKQoxYw/emoWcIV8anOZ3bi8wvBxGMjM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389325AbgF2Uc6 (ORCPT
+        id S2389332AbgF2UdC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:32:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37054 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:33:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732408AbgF2TZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732398AbgF2TZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E9D52533A;
-        Mon, 29 Jun 2020 15:39:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90937253A9;
+        Mon, 29 Jun 2020 15:41:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445177;
-        bh=ymk/Fa/0qxH7ugPHWWQo5DfbHiUe6eU/Vik6JdVdvpE=;
+        s=default; t=1593445274;
+        bh=cPJjhIRuVR6ILETKUiSiAnd68luBbKR16bzeD9+IJi0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=19TdyXNPkaEA+9KW+TgM5pv+elKViEx8tK1t7GrH9NVOYSIq85jhjmDLLDXC5926b
-         FVTDKQlyFPu0xeSHxRBpfa8xwW3kBrUKkrlq0E4e0oyi2SQiy65K9emg9ZEB36vvq4
-         Zxj2+0nc4VwW5gBQpSFc9ZOxqnOoarUHhgO+c9Pk=
+        b=fToyxOt/AQBwRlbqU/YTPfTbfQ2lXZrzl/WmzUM56A9InEIq3J0V+iTSVJDbqUhfR
+         94tJbNATwCrgGHWgxwk9/H0KTGR7kS/n8fQEvxFwh751rWAHfdTkNzoqXvRg1vhleC
+         Y2uxc4moUgYhEnMPjpq/BLwiB5JIHvvJURorfH0w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.14 69/78] tracing: Fix event trigger to accept redundant spaces
-Date:   Mon, 29 Jun 2020 11:37:57 -0400
-Message-Id: <20200629153806.2494953-70-sashal@kernel.org>
+Cc:     Stefan Riedmueller <s.riedmueller@phytec.de>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 053/191] watchdog: da9062: No need to ping manually before setting timeout
+Date:   Mon, 29 Jun 2020 11:37:49 -0400
+Message-Id: <20200629154007.2495120-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
-References: <20200629153806.2494953-1-sashal@kernel.org>
+In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
+References: <20200629154007.2495120-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.229-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.14.y
+X-KernelTest-Branch: linux-4.9.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.14.186-rc1
-X-KernelTest-Deadline: 2020-07-01T15:38+00:00
+X-KernelTest-Version: 4.9.229-rc1
+X-KernelTest-Deadline: 2020-07-01T15:39+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -66,89 +67,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Stefan Riedmueller <s.riedmueller@phytec.de>
 
-commit 6784beada631800f2c5afd567e5628c843362cee upstream.
+[ Upstream commit a0948ddba65f4f6d3cfb5e2b84685485d0452966 ]
 
-Fix the event trigger to accept redundant spaces in
-the trigger input.
+There is actually no need to ping the watchdog before disabling it
+during timeout change. Disabling the watchdog already takes care of
+resetting the counter.
 
-For example, these return -EINVAL
+This fixes an issue during boot when the userspace watchdog handler takes
+over and the watchdog is already running. Opening the watchdog in this case
+leads to the first ping and directly after that without the required
+heartbeat delay a second ping issued by the set_timeout call. Due to the
+missing delay this resulted in a reset.
 
-echo " traceon" > events/ftrace/print/trigger
-echo "traceon  if common_pid == 0" > events/ftrace/print/trigger
-echo "disable_event:kmem:kmalloc " > events/ftrace/print/trigger
-
-But these are hard to find what is wrong.
-
-To fix this issue, use skip_spaces() to remove spaces
-in front of actual tokens, and set NULL if there is no
-token.
-
-Link: http://lkml.kernel.org/r/159262476352.185015.5261566783045364186.stgit@devnote2
-
-Cc: Tom Zanussi <zanussi@kernel.org>
-Cc: stable@vger.kernel.org
-Fixes: 85f2b08268c0 ("tracing: Add basic event trigger framework")
-Reviewed-by: Tom Zanussi <zanussi@kernel.org>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Link: https://lore.kernel.org/r/20200403130728.39260-3-s.riedmueller@phytec.de
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace_events_trigger.c | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+ drivers/watchdog/da9062_wdt.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
-index 6fb5eb7b57dc0..13f5013373085 100644
---- a/kernel/trace/trace_events_trigger.c
-+++ b/kernel/trace/trace_events_trigger.c
-@@ -223,11 +223,17 @@ static int event_trigger_regex_open(struct inode *inode, struct file *file)
- 
- static int trigger_process_regex(struct trace_event_file *file, char *buff)
+diff --git a/drivers/watchdog/da9062_wdt.c b/drivers/watchdog/da9062_wdt.c
+index daeb645fcea8a..519419136ce8f 100644
+--- a/drivers/watchdog/da9062_wdt.c
++++ b/drivers/watchdog/da9062_wdt.c
+@@ -94,11 +94,6 @@ static int da9062_wdt_update_timeout_register(struct da9062_watchdog *wdt,
+ 					      unsigned int regval)
  {
--	char *command, *next = buff;
-+	char *command, *next;
- 	struct event_command *p;
- 	int ret = -EINVAL;
+ 	struct da9062 *chip = wdt->hw;
+-	int ret;
+-
+-	ret = da9062_reset_watchdog_timer(wdt);
+-	if (ret)
+-		return ret;
  
-+	next = buff = skip_spaces(buff);
- 	command = strsep(&next, ": \t");
-+	if (next) {
-+		next = skip_spaces(next);
-+		if (!*next)
-+			next = NULL;
-+	}
- 	command = (command[0] != '!') ? command : command + 1;
- 
- 	mutex_lock(&trigger_cmd_mutex);
-@@ -630,8 +636,14 @@ event_trigger_callback(struct event_command *cmd_ops,
- 	int ret;
- 
- 	/* separate the trigger from the filter (t:n [if filter]) */
--	if (param && isdigit(param[0]))
-+	if (param && isdigit(param[0])) {
- 		trigger = strsep(&param, " \t");
-+		if (param) {
-+			param = skip_spaces(param);
-+			if (!*param)
-+				param = NULL;
-+		}
-+	}
- 
- 	trigger_ops = cmd_ops->get_trigger_ops(cmd, trigger);
- 
-@@ -1342,6 +1354,11 @@ int event_enable_trigger_func(struct event_command *cmd_ops,
- 	trigger = strsep(&param, " \t");
- 	if (!trigger)
- 		return -EINVAL;
-+	if (param) {
-+		param = skip_spaces(param);
-+		if (!*param)
-+			param = NULL;
-+	}
- 
- 	system = strsep(&trigger, ":");
- 	if (!trigger)
+ 	return regmap_update_bits(chip->regmap,
+ 				  DA9062AA_CONTROL_D,
 -- 
 2.25.1
 
