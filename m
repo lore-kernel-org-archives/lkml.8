@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D94C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:56:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB0DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:56:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A372206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:56:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15CE120674
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:56:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460594;
-	bh=LQLyajy/oYLm+YKdZRMetbXltK+/EvNYUwgy3KRvlCc=;
+	s=default; t=1593460597;
+	bh=1+Nu6MuUBTW3BOlVA/Y9jOm5rWUIfLwpB4nC3oDiAdQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lysybvluUN51HKab8r52dzRg4kMFoHCiHDQUzCjXyGc7S8j0KBvVr6W8cQyRhzBRL
-	 0aGdIZ60f37nXvjO4GL7d53atPl7COVaJuQ+GAUFhAuzHi4RAxyKHhLrRj0OESy3fq
-	 FW9NXh2RtpR9Y6PWezngqSuy0tzGms9TGxCCbGzY=
+	b=ZgQ2S+ZVyH75/jC3v4Hq2rDXf8h2+md/sthYe3mGVTk6yzWenYKohlArow48Ii4Zn
+	 gCbSMarfzXu1rS1B1aZcNjrNnQK/d+RWaa68mb3chsx76LG9ur10xwgHzet8AetS3l
+	 ntuBjeL4ZccOMmgchMd2+eC6BMpbzoe9hk/LngUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388311AbgF2T4d (ORCPT
+        id S2388447AbgF2T4f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:56:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47680 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:56:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387643AbgF2TkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387644AbgF2TkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF34224827;
-        Mon, 29 Jun 2020 15:25:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C915F251BD;
+        Mon, 29 Jun 2020 15:28:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444344;
-        bh=LQLyajy/oYLm+YKdZRMetbXltK+/EvNYUwgy3KRvlCc=;
+        s=default; t=1593444492;
+        bh=1+Nu6MuUBTW3BOlVA/Y9jOm5rWUIfLwpB4nC3oDiAdQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LZuJGtsAAXhKciRZ+bBpEGGyUDQc5E0sKDoWI6oXUtZQRhxrw+DmTz09pL5LTJanz
-         2WV4FytjAOV2qDL39NqX1ncnMmJ+87BRtjTIrfHyi7tyN6rxO2+sJgnZ/saEEDEL9F
-         YExFlW0CjkKcJaGfTi/x1JCq8TFQP8kvpHXKl/WA=
+        b=mZ99LQDNdHbSeH7arLcxJjQVQTEVgXrZdmk1f2c70MQ1ACki/ucU67UgPnpE/KAGJ
+         2sYVD8uyouNU4cqZkj67gizBSnQ1g36k8EYB3NuHL0Vdi3yyiEHUh8syXFR8MRfsBI
+         I43I5yMo2R3ftzrtmzBw2H/gIeJ6FrJxQCgpYCio=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
-        Venkat Venkatsubra <venkat.x.venkatsubra@oracle.com>,
-        Neal Cardwell <ncardwell@google.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 019/178] tcp: grow window for OOO packets only for SACK flows
-Date:   Mon, 29 Jun 2020 11:22:44 -0400
-Message-Id: <20200629152523.2494198-20-sashal@kernel.org>
+Subject: [PATCH 5.4 169/178] Staging: rtl8723bs: prevent buffer overflow in update_sta_support_rate()
+Date:   Mon, 29 Jun 2020 11:25:14 -0400
+Message-Id: <20200629152523.2494198-170-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -67,97 +64,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit 662051215c758ae8545451628816204ed6cd372d ]
+commit b65a2d8c8614386f7e8d38ea150749f8a862f431 upstream.
 
-Back in 2013, we made a change that broke fast retransmit
-for non SACK flows.
+The "ie_len" variable is in the 0-255 range and it comes from the
+network.  If it's over NDIS_802_11_LENGTH_RATES_EX (16) then that will
+lead to memory corruption.
 
-Indeed, for these flows, a sender needs to receive three duplicate
-ACK before starting fast retransmit. Sending ACK with different
-receive window do not count.
-
-Even if enabling SACK is strongly recommended these days,
-there still are some cases where it has to be disabled.
-
-Not increasing the window seems better than having to
-rely on RTO.
-
-After the fix, following packetdrill test gives :
-
-// Initialize connection
-    0 socket(..., SOCK_STREAM, IPPROTO_TCP) = 3
-   +0 setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
-   +0 bind(3, ..., ...) = 0
-   +0 listen(3, 1) = 0
-
-   +0 < S 0:0(0) win 32792 <mss 1000,nop,wscale 7>
-   +0 > S. 0:0(0) ack 1 <mss 1460,nop,wscale 8>
-   +0 < . 1:1(0) ack 1 win 514
-
-   +0 accept(3, ..., ...) = 4
-
-   +0 < . 1:1001(1000) ack 1 win 514
-// Quick ack
-   +0 > . 1:1(0) ack 1001 win 264
-
-   +0 < . 2001:3001(1000) ack 1 win 514
-// DUPACK : Normally we should not change the window
-   +0 > . 1:1(0) ack 1001 win 264
-
-   +0 < . 3001:4001(1000) ack 1 win 514
-// DUPACK : Normally we should not change the window
-   +0 > . 1:1(0) ack 1001 win 264
-
-   +0 < . 4001:5001(1000) ack 1 win 514
-// DUPACK : Normally we should not change the window
-    +0 > . 1:1(0) ack 1001 win 264
-
-   +0 < . 1001:2001(1000) ack 1 win 514
-// Hole is repaired.
-   +0 > . 1:1(0) ack 5001 win 272
-
-Fixes: 4e4f1fc22681 ("tcp: properly increase rcv_ssthresh for ofo packets")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: Venkat Venkatsubra <venkat.x.venkatsubra@oracle.com>
-Acked-by: Neal Cardwell <ncardwell@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 554c0a3abf21 ("staging: Add rtl8723bs sdio wifi driver")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200603101958.GA1845750@mwanda
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/tcp_input.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/staging/rtl8723bs/core/rtw_wlan_util.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-index cc8411c98f28a..3e63dc9c3eba1 100644
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -4597,7 +4597,11 @@ static void tcp_data_queue_ofo(struct sock *sk, struct sk_buff *skb)
- 	if (tcp_ooo_try_coalesce(sk, tp->ooo_last_skb,
- 				 skb, &fragstolen)) {
- coalesce_done:
--		tcp_grow_window(sk, skb);
-+		/* For non sack flows, do not grow window to force DUPACK
-+		 * and trigger fast retransmit.
-+		 */
-+		if (tcp_is_sack(tp))
-+			tcp_grow_window(sk, skb);
- 		kfree_skb_partial(skb, fragstolen);
- 		skb = NULL;
- 		goto add_sack;
-@@ -4681,7 +4685,11 @@ static void tcp_data_queue_ofo(struct sock *sk, struct sk_buff *skb)
- 		tcp_sack_new_ofo_skb(sk, seq, end_seq);
- end:
- 	if (skb) {
--		tcp_grow_window(sk, skb);
-+		/* For non sack flows, do not grow window to force DUPACK
-+		 * and trigger fast retransmit.
-+		 */
-+		if (tcp_is_sack(tp))
-+			tcp_grow_window(sk, skb);
- 		skb_condense(skb);
- 		skb_set_owner_r(skb, sk);
- 	}
+diff --git a/drivers/staging/rtl8723bs/core/rtw_wlan_util.c b/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
+index ea3ea2a6b3142..f6678ba6d4bc7 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
++++ b/drivers/staging/rtl8723bs/core/rtw_wlan_util.c
+@@ -1845,12 +1845,14 @@ int update_sta_support_rate(struct adapter *padapter, u8 *pvar_ie, uint var_ie_l
+ 	pIE = (struct ndis_80211_var_ie *)rtw_get_ie(pvar_ie, _SUPPORTEDRATES_IE_, &ie_len, var_ie_len);
+ 	if (!pIE)
+ 		return _FAIL;
++	if (ie_len > sizeof(pmlmeinfo->FW_sta_info[cam_idx].SupportedRates))
++		return _FAIL;
+ 
+ 	memcpy(pmlmeinfo->FW_sta_info[cam_idx].SupportedRates, pIE->data, ie_len);
+ 	supportRateNum = ie_len;
+ 
+ 	pIE = (struct ndis_80211_var_ie *)rtw_get_ie(pvar_ie, _EXT_SUPPORTEDRATES_IE_, &ie_len, var_ie_len);
+-	if (pIE)
++	if (pIE && (ie_len <= sizeof(pmlmeinfo->FW_sta_info[cam_idx].SupportedRates) - supportRateNum))
+ 		memcpy((pmlmeinfo->FW_sta_info[cam_idx].SupportedRates + supportRateNum), pIE->data, ie_len);
+ 
+ 	return _SUCCESS;
 -- 
 2.25.1
 
