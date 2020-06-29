@@ -7,58 +7,57 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC1CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61713C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:21:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9401B20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:20:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C3A420656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:21:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462057;
-	bh=2WCO/bxMMjPr3Vtr9iWPQFZiUO2tw/ioc0Unv3TduXg=;
+	s=default; t=1593462065;
+	bh=24SPmXbteGt0RtfcYHT0bT/26UzNHtCo81FGnkqVZqA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YZu56spKOkcoem3W0mjdLJOg4JkilJWYextOsXDXQsjsKVXJXbny+PPjlAlPJtSzn
-	 VB25AvCIk/JNvOdfcP8OiDeJVl2We+qJB2GAyO9mcCEjjgY7EPQBqSMvYXMdFfqs9j
-	 IOn1gD61cnCc3ZLtw9vGVxwQ1lckSHBW/UjjzRD4=
+	b=pr3ks5+N0g1LJ/cz252XU4iixbLNoNbvKTEXoAxqpptRiEmZ9Sykuk0Tp/aFfdmNV
+	 Bs1SFF8L9IWt19RKX5j0uqLymCZphxvT0GHsmdFRpmwx3Dl7oKLvt+LawMventtsQi
+	 +OezK2z1wRtWfSbocTk62+rtsHX4Y6+hbuZJ7Pe8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732268AbgF2UU4 (ORCPT
+        id S1732250AbgF2UVC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:20:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37016 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:21:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732597AbgF2TZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732598AbgF2TZf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:35 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD51125305;
-        Mon, 29 Jun 2020 15:38:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B460B25385;
+        Mon, 29 Jun 2020 15:40:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445133;
-        bh=2WCO/bxMMjPr3Vtr9iWPQFZiUO2tw/ioc0Unv3TduXg=;
+        s=default; t=1593445250;
+        bh=24SPmXbteGt0RtfcYHT0bT/26UzNHtCo81FGnkqVZqA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mw70aPuoSZY9ToajR2HpXHcpy6bvth3J1GZOVG+UXsyL2nM+lsx7KKfGSpVH7pvJw
-         YxvtRZXS21p4SnmVXXd7WjCXqrXNxTGWUqsLCqMGHvojwNL+q8wcnR9qQ5SVr7WvU0
-         uklk8fastQS2EmrkpFUo26z3PxMcviP1e3iNbpQg=
+        b=LLdJEHsAWjHebuBi6VJzcCkgeMt6F1r+7Y1KhHhDFw/xW7afa8rgs3pYZoqkG/D71
+         w+qn5MWwTxCfyN20KPf/FMWP3fmbMsK83Um45lf9EXCp+l2q+EDPxaK7JrL96x5M1y
+         ei53VlYOWGao+/R63+4OKC/aeiN+uJmiwllSlsuU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhang Xiaoxu <zhangxiaoxu5@huawei.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>,
+Cc:     Andrew Murray <andrew.murray@arm.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 39/78] cifs/smb3: Fix data inconsistent when zero file range
-Date:   Mon, 29 Jun 2020 11:37:27 -0400
-Message-Id: <20200629153806.2494953-40-sashal@kernel.org>
+Subject: [PATCH 4.9 033/191] PCI: rcar: Fix incorrect programming of OB windows
+Date:   Mon, 29 Jun 2020 11:37:29 -0400
+Message-Id: <20200629154007.2495120-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
-References: <20200629153806.2494953-1-sashal@kernel.org>
+In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
+References: <20200629154007.2495120-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.229-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.14.y
+X-KernelTest-Branch: linux-4.9.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.14.186-rc1
-X-KernelTest-Deadline: 2020-07-01T15:38+00:00
+X-KernelTest-Version: 4.9.229-rc1
+X-KernelTest-Deadline: 2020-07-01T15:39+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -67,47 +66,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+From: Andrew Murray <andrew.murray@arm.com>
 
-[ Upstream commit 6b69040247e14b43419a520f841f2b3052833df9 ]
+[ Upstream commit 2b9f217433e31d125fb697ca7974d3de3ecc3e92 ]
 
-CIFS implements the fallocate(FALLOC_FL_ZERO_RANGE) with send SMB
-ioctl(FSCTL_SET_ZERO_DATA) to server. It just set the range of the
-remote file to zero, but local page cache not update, then the data
-inconsistent with server, which leads the xfstest generic/008 failed.
+The outbound windows (PCIEPAUR(x), PCIEPALR(x)) describe a mapping between
+a CPU address (which is determined by the window number 'x') and a
+programmed PCI address - Thus allowing the controller to translate CPU
+accesses into PCI accesses.
 
-So we need to remove the local page caches before send SMB
-ioctl(FSCTL_SET_ZERO_DATA) to server. After next read, it will
-re-cache it.
+However the existing code incorrectly writes the CPU address - lets fix
+this by writing the PCI address instead.
 
-Fixes: 30175628bf7f5 ("[SMB3] Enable fallocate -z support for SMB3 mounts")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-Cc: stable@vger.kernel.org # v3.17
-Signed-off-by: Steve French <stfrench@microsoft.com>
+For memory transactions, existing DT users describe a 1:1 identity mapping
+and thus this change should have no effect. However the same isn't true for
+I/O.
+
+Link: https://lore.kernel.org/r/20191004132941.6660-1-andrew.murray@arm.com
+Fixes: c25da4778803 ("PCI: rcar: Add Renesas R-Car PCIe driver")
+Tested-by: Marek Vasut <marek.vasut+renesas@gmail.com>
+Signed-off-by: Andrew Murray <andrew.murray@arm.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Marek Vasut <marek.vasut+renesas@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/smb2ops.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/pci/host/pcie-rcar.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
-index 61ea429e1210b..b46fdb2b8d349 100644
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -1755,6 +1755,12 @@ static long smb3_zero_range(struct file *file, struct cifs_tcon *tcon,
- 	inode = d_inode(cfile->dentry);
- 	cifsi = CIFS_I(inode);
+diff --git a/drivers/pci/host/pcie-rcar.c b/drivers/pci/host/pcie-rcar.c
+index 7f6b454bca65f..3ff423220df61 100644
+--- a/drivers/pci/host/pcie-rcar.c
++++ b/drivers/pci/host/pcie-rcar.c
+@@ -328,11 +328,12 @@ static struct pci_ops rcar_pcie_ops = {
+ };
  
-+	/*
-+	 * We zero the range through ioctl, so we need remove the page caches
-+	 * first, otherwise the data may be inconsistent with the server.
-+	 */
-+	truncate_pagecache_range(inode, offset, offset + len - 1);
-+
- 	/* if file not oplocked can't be sure whether asking to extend size */
- 	if (!CIFS_CACHE_READ(cifsi))
- 		if (keep_size == false) {
+ static void rcar_pcie_setup_window(int win, struct rcar_pcie *pcie,
+-				   struct resource *res)
++				   struct resource_entry *window)
+ {
+ 	/* Setup PCIe address space mappings for each resource */
+ 	resource_size_t size;
+ 	resource_size_t res_start;
++	struct resource *res = window->res;
+ 	u32 mask;
+ 
+ 	rcar_pci_write_reg(pcie, 0x00000000, PCIEPTCTLR(win));
+@@ -346,9 +347,9 @@ static void rcar_pcie_setup_window(int win, struct rcar_pcie *pcie,
+ 	rcar_pci_write_reg(pcie, mask << 7, PCIEPAMR(win));
+ 
+ 	if (res->flags & IORESOURCE_IO)
+-		res_start = pci_pio_to_address(res->start);
++		res_start = pci_pio_to_address(res->start) - window->offset;
+ 	else
+-		res_start = res->start;
++		res_start = res->start - window->offset;
+ 
+ 	rcar_pci_write_reg(pcie, upper_32_bits(res_start), PCIEPAUR(win));
+ 	rcar_pci_write_reg(pcie, lower_32_bits(res_start) & ~0x7F,
+@@ -377,7 +378,7 @@ static int rcar_pcie_setup(struct list_head *resource, struct rcar_pcie *pci)
+ 		switch (resource_type(res)) {
+ 		case IORESOURCE_IO:
+ 		case IORESOURCE_MEM:
+-			rcar_pcie_setup_window(i, pci, res);
++			rcar_pcie_setup_window(i, pci, win);
+ 			i++;
+ 			break;
+ 		case IORESOURCE_BUS:
 -- 
 2.25.1
 
