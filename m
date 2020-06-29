@@ -2,90 +2,119 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE40C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F820C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1CCC206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:57:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593471456;
-	bh=5MJQJznnXjAAqH2IsfbyAP07tOgYQTg/CbKEJ3PGrAM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MUHX7bYNYy7lUYGUuNcisXw5u4x2rFDSUsYLSF/qGvBYrpLtsS+xiJaJ2M6cT7JdX
-	 U0r24XELCcrdmeyDLmwC6deV7cf/X0eyk1jIx29NqXHXxnKmFvnMIHlZWjs4GkpJob
-	 jSRBUap+dzUEY8CdK6FEQ7fH9BSSjvtgS+WGp7xc=
+	by mail.kernel.org (Postfix) with ESMTP id 0FD8C206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:58:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728765AbgF2W5e (ORCPT
+        id S1728805AbgF2W6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:57:34 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:44844 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726114AbgF2W5c (ORCPT
+        Mon, 29 Jun 2020 18:58:46 -0400
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:44774 "EHLO
+        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728318AbgF2W6q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 18:57:32 -0400
-Received: by mail-il1-f194.google.com with SMTP id w73so4148652ila.11;
-        Mon, 29 Jun 2020 15:57:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=dp0rGNgZmkxwh7zp+29hFN6emNIwuOOMBeYyx3CVAik=;
-        b=LrwgjYpYvbOWJB9+8HJgaDN4FZLobwT8W8qETMZCZwe+v6/vpyTWe0jRMZ+Mkk6UB5
-         GhNyPON7o5a+J4sXSO1Ga9Ul8NJruHojkD8RmFpRaUARvIpxJ8gW9Apwfht8dGx2ypAe
-         /yxhT0zcBMWyk5FNAQ/OCo/qpz8ZElEJ+VXM3iNMfBG9zppohCiC4xtS55Y2FXx+3hwm
-         ydQSkQkfCY+uqCIyB+pRA1oKUdcmJCUrsTNEU8e61b7WwNsc8JTfq5hFlsr6Hv9hagv2
-         08NcjpFloYaJ1uhOltia6dCvfB3906q7Zw6WnIaaB05shBxfEVSAE+LJIgcsOl/g8MUK
-         kD9Q==
-X-Gm-Message-State: AOAM531jINgdmJhZQiZpqrc+TwZDraXx48dA6mhNxiDI1z2Pjgwuvddy
-        l+U/HOs2aKNeVC1c9TauyQ==
-X-Google-Smtp-Source: ABdhPJxwe1PjcRY+JXc5+U813s3C1AUlbXLLaCfBat76uCGtRfWqUuccOKkmM6ZqkcwcRMWCpSPskg==
-X-Received: by 2002:a92:760d:: with SMTP id r13mr16384260ilc.68.1593471451159;
-        Mon, 29 Jun 2020 15:57:31 -0700 (PDT)
-Received: from xps15 ([64.188.179.255])
-        by smtp.gmail.com with ESMTPSA id p9sm498502ilc.78.2020.06.29.15.57.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 15:57:30 -0700 (PDT)
-Received: (nullmailer pid 3124287 invoked by uid 1000);
-        Mon, 29 Jun 2020 22:57:28 -0000
-Date:   Mon, 29 Jun 2020 16:57:28 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-Cc:     linux-kernel@vger.kernel.org, sspatil@android.com, afd@ti.com,
-        dmurphy@ti.com, sre@kernel.org, pali@kernel.org,
-        devicetree@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v13 3/4] dt-bindings: power: Add the bindings for the
- bq2515x family of chargers.
-Message-ID: <20200629225728.GA3124127@bogus>
-References: <20200622191837.9326-1-r-rivera-matos@ti.com>
- <20200622191837.9326-4-r-rivera-matos@ti.com>
+        Mon, 29 Jun 2020 18:58:46 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0U16XY0q_1593471523;
+Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U16XY0q_1593471523)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 30 Jun 2020 06:58:43 +0800
+Date:   Tue, 30 Jun 2020 06:58:42 +0800
+From:   Wei Yang <richard.weiyang@linux.alibaba.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Wei Yang <richard.weiyang@linux.alibaba.com>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Linux MM <linux-mm@kvack.org>, Baoquan He <bhe@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm/spase: never partially remove memmap for early section
+Message-ID: <20200629225842.GA38617@L-31X9LVDL-1304.local>
+Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
+References: <CAPcyv4gMQsBSQ-kXM6H_zz96ZTJ5F0XnDfq6_mZTn4t9JwmEpA@mail.gmail.com>
+ <4D73CD59-BFD5-401A-A001-41F7BF5641BA@redhat.com>
+ <CAPcyv4hnsUoavnzX8q5VReiLXrOsOYW0Ef5GDKxQtS+6pQLy4A@mail.gmail.com>
+ <20200629083411.GA38188@L-31X9LVDL-1304.local>
+ <CAPcyv4gK2PL5YNLkeQjSCLrNZ62P1U_HjuBSNpkEvuHMcyeGOQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200622191837.9326-4-r-rivera-matos@ti.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPcyv4gK2PL5YNLkeQjSCLrNZ62P1U_HjuBSNpkEvuHMcyeGOQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 22 Jun 2020 14:18:36 -0500, Ricardo Rivera-Matos wrote:
-> The BQ2515X family of devices are highly integrated battery management
-> ICs that integrate the most common functions for wearable devices
-> namely a charger, an output voltage rail, ADC for battery and system
-> monitoring, and a push-button controller.
-> 
-> Datasheets:
-> http://www.ti.com/lit/ds/symlink/bq25150.pdf
-> http://www.ti.com/lit/ds/symlink/bq25155.pdf
-> 
-> Signed-off-by: Ricardo Rivera-Matos <r-rivera-matos@ti.com>
-> ---
->  .../bindings/power/supply/bq2515x.yaml        | 93 +++++++++++++++++++
->  1 file changed, 93 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/supply/bq2515x.yaml
-> 
+On Mon, Jun 29, 2020 at 03:13:25PM -0700, Dan Williams wrote:
+>On Mon, Jun 29, 2020 at 1:34 AM Wei Yang
+><richard.weiyang@linux.alibaba.com> wrote:
+>>
+>> On Thu, Jun 25, 2020 at 12:46:43PM -0700, Dan Williams wrote:
+>> >On Wed, Jun 24, 2020 at 10:53 PM David Hildenbrand <david@redhat.com> wrote:
+>> >>
+>> >>
+>> >>
+>> >> > Am 25.06.2020 um 01:47 schrieb Dan Williams <dan.j.williams@intel.com>:
+>> >> >
+>> >> > ﻿On Wed, Jun 24, 2020 at 3:44 PM Wei Yang
+>> >> > <richard.weiyang@linux.alibaba.com> wrote:
+>> >> > [..]
+>> >> >>> So, you are right that there is a mismatch here, but I think the
+>> >> >>> comprehensive fix is to allow early sections to be partially
+>> >> >>> depopulated/repopulated rather than have section_activate() and
+>> >> >>> section_deacticate() special case early sections. The special casing
+>> >> >>> is problematic in retrospect as section_deactivate() can't be
+>> >> >>> maintained without understand special rules in section_activate().
+>> >> >>
+>> >> >> Hmm... This means we need to adjust pfn_valid() too, which always return true
+>> >> >> for early sections.
+>> >> >
+>> >> > Right, rather than carry workarounds in 3 locations, and the bug that
+>> >> > has resulted from then getting out of sync, just teach early section
+>> >> > mapping to allow for the subsection populate/depopulate.
+>> >> >
+>> >>
+>> >> I prefer the easy fix first - IOW what we Here here. Especially, pfn_to_online_page() will need changes as well.
+>> >
+>> >Agree, yes, let's do the simple fix first for 5.8 and the special-case
+>> >elimination work later.
+>>
+>> Dan,
+>>
+>> A quick test shows this is not a simple task.
+>
+>Thanks for taking a look...
+>
+>> First, early sections don't set subsection bitmap, which is necessary for the
+>> hot-add/remove.
+>>
+>> To properly set subsection bitmap, we need to know how many subsections in
+>> early section. While current code doesn't has a alignment requirement for
+>> last early section. We mark the whole last early section as present.
+>
+>I was thinking that the subsection map does not need to be accurate on
+>initial setup, it only needs to be accurate after the first removal.
+>However, that would result in new special casing that somewhat defeats
+>the purpose. The hardest part is potentially breaking up a PMD mapping
+>of the page array into a series of PTE mappings without disturbing
+>in-flight pfn_to_page() users.
+>
+>> I don't find a way to enable this.
+>
+>While I don't like that this bug crept into the mismatched special
+>casing of early sections, I'm now coming around to the same opinion.
+>I.e. that making the memmap for early sections permanent is a simpler
+>mechanism to maintain.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+I think so ...
+
+-- 
+Wei Yang
+Help you, Help me
