@@ -7,57 +7,56 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C168C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:34:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C322C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF3D82067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:34:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 195172067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:34:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462859;
-	bh=q0oYHXDZpo256frRJg5YI3Anjr6Cjum3R5n0qouVK04=;
+	s=default; t=1593462862;
+	bh=3yDHEoSikSlRvhsLsSDwWUziG1n0W0jEjmeFALMD9Ns=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X1keXlv5TijvjQbS8Rbfs1qjbD4ZI183j8MIrNUjDHPdCJituZj8GUjsZa50ad9Ea
-	 D+sEgy47X3twaNE17bdhDo5VpdV6ZoQqE/IOvrsYLivYCK8myE7iw6sCpmGPUaV3Yl
-	 dqdeWNI4UnGEdKLX1P+zbZJluvzFS8CaZUSx/vnA=
+	b=x0a3hlgPCOL0JAc14Fbpna7sFAAZht+q3oeEhHjsPIUv9NB1DYv+7pdyyU3LR5cPC
+	 qT0gGOJCkbDWUgk3m04NmMT6W3+75p8eDIVzZw4Y5XzFAAq5ScZDt49kwyvwu7Q7iB
+	 PxtyKL7YxCzX+GbxBi25ZHp+aogTvI5fIwZCfcks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389375AbgF2UeR (ORCPT
+        id S1732524AbgF2UeV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:34:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36990 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:34:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731837AbgF2TZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731869AbgF2TZP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9901025455;
-        Mon, 29 Jun 2020 15:43:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90B0B25320;
+        Mon, 29 Jun 2020 15:39:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445407;
-        bh=q0oYHXDZpo256frRJg5YI3Anjr6Cjum3R5n0qouVK04=;
+        s=default; t=1593445154;
+        bh=3yDHEoSikSlRvhsLsSDwWUziG1n0W0jEjmeFALMD9Ns=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VJDMMfQs5z78XuixxtC5h8bB5E+IxtYAmhv14eoNJ0qneXfM2YGh41ypXXHsox3CK
-         2dyykjmmsRIzbPHLyskh3N3yDzP8ijt9shkmTc7Z0hmdQzHsFwewXPYH6bO0wKKUI7
-         mGUN0d5ipkuaH6aud+pl1bQtVBXH8sVM44c6Pqww=
+        b=LDNWUkol0FB+rtD14pKrx/+72ZCvN08hSXfEiK6RTbr4Ulen+wGx489dEhvkO5wR9
+         o494JWzc0vqb/LFDpze6N0kkvqiLWSY6lpi2+69Rytawj4rBwSFLffb7Sq0fbtcnv3
+         4d1zyu4hJGF0P666bTDpA4kTTBK40IntLTTeTV8E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+Cc:     Zekun Shen <bruceshenzk@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 158/191] xhci: Poll for U0 after disabling USB2 LPM
-Date:   Mon, 29 Jun 2020 11:39:34 -0400
-Message-Id: <20200629154007.2495120-159-sashal@kernel.org>
+Subject: [PATCH 4.14 55/78] net: alx: fix race condition in alx_remove
+Date:   Mon, 29 Jun 2020 11:37:43 -0400
+Message-Id: <20200629153806.2494953-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
-References: <20200629154007.2495120-1-sashal@kernel.org>
+In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
+References: <20200629153806.2494953-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.229-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.9.y
+X-KernelTest-Branch: linux-4.14.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.9.229-rc1
-X-KernelTest-Deadline: 2020-07-01T15:39+00:00
+X-KernelTest-Version: 4.14.186-rc1
+X-KernelTest-Deadline: 2020-07-01T15:38+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -66,62 +65,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Zekun Shen <bruceshenzk@gmail.com>
 
-[ Upstream commit b3d71abd135e6919ca0b6cab463738472653ddfb ]
+[ Upstream commit e89df5c4322c1bf495f62d74745895b5fd2a4393 ]
 
-USB2 devices with LPM enabled may interrupt the system suspend:
-[  932.510475] usb 1-7: usb suspend, wakeup 0
-[  932.510549] hub 1-0:1.0: hub_suspend
-[  932.510581] usb usb1: bus suspend, wakeup 0
-[  932.510590] xhci_hcd 0000:00:14.0: port 9 not suspended
-[  932.510593] xhci_hcd 0000:00:14.0: port 8 not suspended
-..
-[  932.520323] xhci_hcd 0000:00:14.0: Port change event, 1-7, id 7, portsc: 0x400e03
-..
-[  932.591405] PM: pci_pm_suspend(): hcd_pci_suspend+0x0/0x30 returns -16
-[  932.591414] PM: dpm_run_callback(): pci_pm_suspend+0x0/0x160 returns -16
-[  932.591418] PM: Device 0000:00:14.0 failed to suspend async: error -16
+There is a race condition exist during termination. The path is
+alx_stop and then alx_remove. An alx_schedule_link_check could be called
+before alx_stop by interrupt handler and invoke alx_link_check later.
+Alx_stop frees the napis, and alx_remove cancels any pending works.
+If any of the work is scheduled before termination and invoked before
+alx_remove, a null-ptr-deref occurs because both expect alx->napis[i].
 
-During system suspend, USB core will let HC suspends the device if it
-doesn't have remote wakeup enabled and doesn't have any children.
-However, from the log above we can see that the usb 1-7 doesn't get bus
-suspended due to not in U0. After a while the port finished U2 -> U0
-transition, interrupts the suspend process.
+This patch fix the race condition by moving cancel_work_sync functions
+before alx_free_napis inside alx_stop. Because interrupt handler can call
+alx_schedule_link_check again, alx_free_irq is moved before
+cancel_work_sync calls too.
 
-The observation is that after disabling LPM, port doesn't transit to U0
-immediately and can linger in U2. xHCI spec 4.23.5.2 states that the
-maximum exit latency for USB2 LPM should be BESL + 10us. The BESL for
-the affected device is advertised as 400us, which is still not enough
-based on my testing result.
-
-So let's use the maximum permitted latency, 10000, to poll for U0
-status to solve the issue.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200624135949.22611-6-mathias.nyman@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Zekun Shen <bruceshenzk@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/xhci.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/atheros/alx/main.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
-index 4ef019152613e..b27987431079e 100644
---- a/drivers/usb/host/xhci.c
-+++ b/drivers/usb/host/xhci.c
-@@ -4245,6 +4245,9 @@ int xhci_set_usb2_hardware_lpm(struct usb_hcd *hcd,
- 			mutex_lock(hcd->bandwidth_mutex);
- 			xhci_change_max_exit_latency(xhci, udev, 0);
- 			mutex_unlock(hcd->bandwidth_mutex);
-+			readl_poll_timeout(port_array[port_num], pm_val,
-+					   (pm_val & PORT_PLS_MASK) == XDEV_U0,
-+					   100, 10000);
- 			return 0;
- 		}
- 	}
+diff --git a/drivers/net/ethernet/atheros/alx/main.c b/drivers/net/ethernet/atheros/alx/main.c
+index 5e5022fa1d047..85029d43da758 100644
+--- a/drivers/net/ethernet/atheros/alx/main.c
++++ b/drivers/net/ethernet/atheros/alx/main.c
+@@ -1250,8 +1250,12 @@ static int __alx_open(struct alx_priv *alx, bool resume)
+ 
+ static void __alx_stop(struct alx_priv *alx)
+ {
+-	alx_halt(alx);
+ 	alx_free_irq(alx);
++
++	cancel_work_sync(&alx->link_check_wk);
++	cancel_work_sync(&alx->reset_wk);
++
++	alx_halt(alx);
+ 	alx_free_rings(alx);
+ 	alx_free_napis(alx);
+ }
+@@ -1863,9 +1867,6 @@ static void alx_remove(struct pci_dev *pdev)
+ 	struct alx_priv *alx = pci_get_drvdata(pdev);
+ 	struct alx_hw *hw = &alx->hw;
+ 
+-	cancel_work_sync(&alx->link_check_wk);
+-	cancel_work_sync(&alx->reset_wk);
+-
+ 	/* restore permanent mac address */
+ 	alx_set_macaddr(hw, hw->perm_addr);
+ 
 -- 
 2.25.1
 
