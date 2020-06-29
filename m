@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A1BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D00BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 312042065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1642A206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:00:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468037;
-	bh=Liu3gg+QK6I8HMBtI7FtM+sIXcKmpNtk3VPR/BFoJCY=;
+	s=default; t=1593468043;
+	bh=XarSoApLLTETtyGYNWWLrDZKQDBGnJS7T4Sk19EpEdw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xeFjlCk7FpHHn+HW1t0uwq6hUpbrEAcb9OH4jccTKiuWDJy4cCpD+YfoL3LkJP+oE
-	 Y+s0Sx7yq4Ak1zlgMB80HyVXkRxyvik8qpQm9Rpt0cN6otkoAP//Y03i7a7NJbZI2s
-	 GGTZNB57RZpWKLLvdNepqGn1haUiRnLwWHH9egKw=
+	b=LWxlOAOrUNKNcireVTzJQogC6SrAeUoh4mI6HUSKZpQyj4ei42bqCKoMt84C6Nd2Y
+	 YB3LToWasycTYYa2aOlynPztgnN5WbToGNstc9L1YrYYkxoDpBQ40aDhOsCNYRAf0l
+	 rGBMuNfgnv9aiaBsUedF+ppTW3F+GyS2+eQb1IB8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391747AbgF2WAe (ORCPT
+        id S2391756AbgF2WAl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:00:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56890 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:00:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726361AbgF2SfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726362AbgF2SfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6D7EE24763;
-        Mon, 29 Jun 2020 15:21:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D97C2247E4;
+        Mon, 29 Jun 2020 15:22:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444081;
-        bh=Liu3gg+QK6I8HMBtI7FtM+sIXcKmpNtk3VPR/BFoJCY=;
+        s=default; t=1593444150;
+        bh=XarSoApLLTETtyGYNWWLrDZKQDBGnJS7T4Sk19EpEdw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V1oKV/l3oDs0Ac+ReOfOum/NzA8daDSRR+VtNrDE1CjJhviw9iLuj5TRoRBNIUOA6
-         Bvj1fcl520Vc40+pCvYVn5aCp50rvzfRIDjA9LyO2bBVc2vCO5S3XO21b3X8e1YEJt
-         vvq518IZ8nI7y0obVqUfZFLrrJgi6wC0k6gFhEB8=
+        b=BUSAoqWPBFUjuq42hX1zhcP9Cp5nvPhBOc4U8iKjMBvCx6S9BuYU2T21p4wG0AIuz
+         7NhWZotWh75MrMaTN12jis0q+d3TbzWzcnR9axbKR9fP+k67vNJ1OJgdybVeZwy3dl
+         X7lOOWLgWEkLgD/AKC2CbgFMPrl3Kritt5NrZr10=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zekun Shen <bruceshenzk@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 190/265] net: alx: fix race condition in alx_remove
-Date:   Mon, 29 Jun 2020 11:17:03 -0400
-Message-Id: <20200629151818.2493727-191-sashal@kernel.org>
+Cc:     Arseny Solokha <asolokha@kb.kras.ru>,
+        Jason Yan <yanaijie@huawei.com>, Scott Wood <oss@buserror.net>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 256/265] powerpc/fsl_booke/32: Fix build with CONFIG_RANDOMIZE_BASE
+Date:   Mon, 29 Jun 2020 11:18:09 -0400
+Message-Id: <20200629151818.2493727-257-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -65,57 +66,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zekun Shen <bruceshenzk@gmail.com>
+From: Arseny Solokha <asolokha@kb.kras.ru>
 
-[ Upstream commit e89df5c4322c1bf495f62d74745895b5fd2a4393 ]
+commit 7e4773f73dcfb92e7e33532162f722ec291e75a4 upstream.
 
-There is a race condition exist during termination. The path is
-alx_stop and then alx_remove. An alx_schedule_link_check could be called
-before alx_stop by interrupt handler and invoke alx_link_check later.
-Alx_stop frees the napis, and alx_remove cancels any pending works.
-If any of the work is scheduled before termination and invoked before
-alx_remove, a null-ptr-deref occurs because both expect alx->napis[i].
+Building the current 5.8 kernel for an e500 machine with
+CONFIG_RANDOMIZE_BASE=y and CONFIG_BLOCK=n yields the following
+failure:
 
-This patch fix the race condition by moving cancel_work_sync functions
-before alx_free_napis inside alx_stop. Because interrupt handler can call
-alx_schedule_link_check again, alx_free_irq is moved before
-cancel_work_sync calls too.
+  arch/powerpc/mm/nohash/kaslr_booke.c: In function 'kaslr_early_init':
+  arch/powerpc/mm/nohash/kaslr_booke.c:387:2: error: implicit
+  declaration of function 'flush_icache_range'; did you mean 'flush_tlb_range'?
 
-Signed-off-by: Zekun Shen <bruceshenzk@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Indeed, including asm/cacheflush.h into kaslr_booke.c fixes the build.
+
+Fixes: 2b0e86cc5de6 ("powerpc/fsl_booke/32: implement KASLR infrastructure")
+Cc: stable@vger.kernel.org # v5.5+
+Signed-off-by: Arseny Solokha <asolokha@kb.kras.ru>
+Reviewed-by: Jason Yan <yanaijie@huawei.com>
+Acked-by: Scott Wood <oss@buserror.net>
+[mpe: Tweak change log to mention CONFIG_BLOCK=n]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200613162801.1946619-1-asolokha@kb.kras.ru
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/atheros/alx/main.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ arch/powerpc/mm/nohash/kaslr_booke.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/atheros/alx/main.c b/drivers/net/ethernet/atheros/alx/main.c
-index b9b4edb913c13..9b7f1af5f5747 100644
---- a/drivers/net/ethernet/atheros/alx/main.c
-+++ b/drivers/net/ethernet/atheros/alx/main.c
-@@ -1249,8 +1249,12 @@ out_disable_adv_intr:
- 
- static void __alx_stop(struct alx_priv *alx)
- {
--	alx_halt(alx);
- 	alx_free_irq(alx);
-+
-+	cancel_work_sync(&alx->link_check_wk);
-+	cancel_work_sync(&alx->reset_wk);
-+
-+	alx_halt(alx);
- 	alx_free_rings(alx);
- 	alx_free_napis(alx);
- }
-@@ -1855,9 +1859,6 @@ static void alx_remove(struct pci_dev *pdev)
- 	struct alx_priv *alx = pci_get_drvdata(pdev);
- 	struct alx_hw *hw = &alx->hw;
- 
--	cancel_work_sync(&alx->link_check_wk);
--	cancel_work_sync(&alx->reset_wk);
--
- 	/* restore permanent mac address */
- 	alx_set_macaddr(hw, hw->perm_addr);
- 
+diff --git a/arch/powerpc/mm/nohash/kaslr_booke.c b/arch/powerpc/mm/nohash/kaslr_booke.c
+index 4a75f2d9bf0e0..bce0e5349978f 100644
+--- a/arch/powerpc/mm/nohash/kaslr_booke.c
++++ b/arch/powerpc/mm/nohash/kaslr_booke.c
+@@ -14,6 +14,7 @@
+ #include <linux/memblock.h>
+ #include <linux/libfdt.h>
+ #include <linux/crash_core.h>
++#include <asm/cacheflush.h>
+ #include <asm/pgalloc.h>
+ #include <asm/prom.h>
+ #include <asm/kdump.h>
 -- 
 2.25.1
 
