@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A47B7C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B51A2C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84B932067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:28:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96B872067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:28:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462487;
-	bh=JyX+4nj4mkg4zMc5SSi7x5dRUUXpeWSJtyztT34EZ00=;
+	s=default; t=1593462489;
+	bh=9y8PnE3clKHdder3KdR/nVVVcMVW5RJc192R86H2fSs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=o97qzPKvXD/p50Irpf4yn6VubVzUsx3kPtW29jTO7S7eSqx9Tx5DIsKEL9LuYEUaS
-	 7Nsf7v1y3u/rz4XOPXf9xuj60gwT+HIF0RXqa8TE9vZ4/faS/V9h/RWaUmZLHZG8Yp
-	 Zck6PcRZwF7sp+vK5npP0/bcQcvDfSCEgj1z0VTU=
+	b=K68StAdfUyLPLZfDguNfttS2tbc3Oet5giOxYMc4A0/uFab8N1qJgq/kl8NfkVG+Z
+	 ixr7TBLvTQkkoMPVgKGsGRWqGexybNRamJQsSikaTEZKLPY4j/v/3AaM3W8FN4Ct98
+	 Z90rlY6Hm99MgDLMi+92xOO24YbxYqDAkiOWmKLM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389176AbgF2U2C (ORCPT
+        id S2389170AbgF2U2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:28:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37070 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:28:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732508AbgF2TZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732510AbgF2TZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68CE5253D6;
-        Mon, 29 Jun 2020 15:41:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6AD32542C;
+        Mon, 29 Jun 2020 15:42:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445309;
-        bh=JyX+4nj4mkg4zMc5SSi7x5dRUUXpeWSJtyztT34EZ00=;
+        s=default; t=1593445379;
+        bh=9y8PnE3clKHdder3KdR/nVVVcMVW5RJc192R86H2fSs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wBMTIUzhc/q16EiTi2ZM8pPUksGz+p2ZsKABt5BdgKHqqkXwN+2zX7MAEcHsbzo7e
-         0VrSUsKCM4WJg5f+LJyQIR73m8GtrgIg+unBItltN4XgJu8XZq5Qu1kVn+OmWqDiQK
-         /adNLL/7NNFcXUJkB16myLDhUlyAiWM1wc0qG5v8=
+        b=POQvV3YbmypzgdytPQB1GKr46d3TykKIWNwgYqCRRzSzc7FmMFeny9lJsgZ6qNj+c
+         u8mP1Wzu+uzpcvpBEY4vq5E5SXaHRl3bNHcFli5aYbC+ejwBvlEZ4i8m8/dv5y2veh
+         fVfTlnUCDwky25mZxCsG8Gr3WCxHY9l2Orx6i/zw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhiqiang Liu <liuzhiqiang26@huawei.com>, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 078/191] bcache: fix potential deadlock problem in btree_gc_coalesce
-Date:   Mon, 29 Jun 2020 11:38:14 -0400
-Message-Id: <20200629154007.2495120-79-sashal@kernel.org>
+Cc:     Jeremy Kerr <jk@ozlabs.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.9 134/191] net: usb: ax88179_178a: fix packet alignment padding
+Date:   Mon, 29 Jun 2020 11:39:10 -0400
+Message-Id: <20200629154007.2495120-135-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -64,94 +65,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+From: Jeremy Kerr <jk@ozlabs.org>
 
-[ Upstream commit be23e837333a914df3f24bf0b32e87b0331ab8d1 ]
+[ Upstream commit e869e7a17798d85829fa7d4f9bbe1eebd4b2d3f6 ]
 
-coccicheck reports:
-  drivers/md//bcache/btree.c:1538:1-7: preceding lock on line 1417
+Using a AX88179 device (0b95:1790), I see two bytes of appended data on
+every RX packet. For example, this 48-byte ping, using 0xff as a
+payload byte:
 
-In btree_gc_coalesce func, if the coalescing process fails, we will goto
-to out_nocoalesce tag directly without releasing new_nodes[i]->write_lock.
-Then, it will cause a deadlock when trying to acquire new_nodes[i]->
-write_lock for freeing new_nodes[i] before return.
+  04:20:22.528472 IP 192.168.1.1 > 192.168.1.2: ICMP echo request, id 2447, seq 1, length 64
+	0x0000:  000a cd35 ea50 000a cd35 ea4f 0800 4500
+	0x0010:  0054 c116 4000 4001 f63e c0a8 0101 c0a8
+	0x0020:  0102 0800 b633 098f 0001 87ea cd5e 0000
+	0x0030:  0000 dcf2 0600 0000 0000 ffff ffff ffff
+	0x0040:  ffff ffff ffff ffff ffff ffff ffff ffff
+	0x0050:  ffff ffff ffff ffff ffff ffff ffff ffff
+	0x0060:  ffff 961f
 
-btree_gc_coalesce func details as follows:
-	if alloc new_nodes[i] fails:
-		goto out_nocoalesce;
-	// obtain new_nodes[i]->write_lock
-	mutex_lock(&new_nodes[i]->write_lock)
-	// main coalescing process
-	for (i = nodes - 1; i > 0; --i)
-		[snipped]
-		if coalescing process fails:
-			// Here, directly goto out_nocoalesce
-			 // tag will cause a deadlock
-			goto out_nocoalesce;
-		[snipped]
-	// release new_nodes[i]->write_lock
-	mutex_unlock(&new_nodes[i]->write_lock)
-	// coalesing succ, return
-	return;
-out_nocoalesce:
-	btree_node_free(new_nodes[i])	// free new_nodes[i]
-	// obtain new_nodes[i]->write_lock
-	mutex_lock(&new_nodes[i]->write_lock);
-	// set flag for reuse
-	clear_bit(BTREE_NODE_dirty, &ew_nodes[i]->flags);
-	// release new_nodes[i]->write_lock
-	mutex_unlock(&new_nodes[i]->write_lock);
+Those last two bytes - 96 1f - aren't part of the original packet.
 
-To fix the problem, we add a new tag 'out_unlock_nocoalesce' for
-releasing new_nodes[i]->write_lock before out_nocoalesce tag. If
-coalescing process fails, we will go to out_unlock_nocoalesce tag
-for releasing new_nodes[i]->write_lock before free new_nodes[i] in
-out_nocoalesce tag.
+In the ax88179 RX path, the usbnet rx_fixup function trims a 2-byte
+'alignment pseudo header' from the start of the packet, and sets the
+length from a per-packet field populated by hardware. It looks like that
+length field *includes* the 2-byte header; the current driver assumes
+that it's excluded.
 
-(Coly Li helps to clean up commit log format.)
+This change trims the 2-byte alignment header after we've set the packet
+length, so the resulting packet length is correct. While we're moving
+the comment around, this also fixes the spelling of 'pseudo'.
 
-Fixes: 2a285686c109816 ("bcache: btree locking rework")
-Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/md/bcache/btree.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/net/usb/ax88179_178a.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/md/bcache/btree.c b/drivers/md/bcache/btree.c
-index c8c5e3368b8b8..12849829077dd 100644
---- a/drivers/md/bcache/btree.c
-+++ b/drivers/md/bcache/btree.c
-@@ -1370,7 +1370,7 @@ static int btree_gc_coalesce(struct btree *b, struct btree_op *op,
- 			if (__set_blocks(n1, n1->keys + n2->keys,
- 					 block_bytes(b->c)) >
- 			    btree_blocks(new_nodes[i]))
--				goto out_nocoalesce;
-+				goto out_unlock_nocoalesce;
+diff --git a/drivers/net/usb/ax88179_178a.c b/drivers/net/usb/ax88179_178a.c
+index 559af8e6ad90f..0434ecf677122 100644
+--- a/drivers/net/usb/ax88179_178a.c
++++ b/drivers/net/usb/ax88179_178a.c
+@@ -1396,10 +1396,10 @@ static int ax88179_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
+ 		}
  
- 			keys = n2->keys;
- 			/* Take the key of the node we're getting rid of */
-@@ -1399,7 +1399,7 @@ static int btree_gc_coalesce(struct btree *b, struct btree_op *op,
- 
- 		if (__bch_keylist_realloc(&keylist,
- 					  bkey_u64s(&new_nodes[i]->key)))
--			goto out_nocoalesce;
-+			goto out_unlock_nocoalesce;
- 
- 		bch_btree_node_write(new_nodes[i], &cl);
- 		bch_keylist_add(&keylist, &new_nodes[i]->key);
-@@ -1445,6 +1445,10 @@ static int btree_gc_coalesce(struct btree *b, struct btree_op *op,
- 	/* Invalidated our iterator */
- 	return -EINTR;
- 
-+out_unlock_nocoalesce:
-+	for (i = 0; i < nodes; i++)
-+		mutex_unlock(&new_nodes[i]->write_lock);
-+
- out_nocoalesce:
- 	closure_sync(&cl);
- 	bch_keylist_free(&keylist);
+ 		if (pkt_cnt == 0) {
+-			/* Skip IP alignment psudo header */
+-			skb_pull(skb, 2);
+ 			skb->len = pkt_len;
+-			skb_set_tail_pointer(skb, pkt_len);
++			/* Skip IP alignment pseudo header */
++			skb_pull(skb, 2);
++			skb_set_tail_pointer(skb, skb->len);
+ 			skb->truesize = pkt_len + sizeof(struct sk_buff);
+ 			ax88179_rx_checksum(skb, pkt_hdr);
+ 			return 1;
+@@ -1408,8 +1408,9 @@ static int ax88179_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
+ 		ax_skb = skb_clone(skb, GFP_ATOMIC);
+ 		if (ax_skb) {
+ 			ax_skb->len = pkt_len;
+-			ax_skb->data = skb->data + 2;
+-			skb_set_tail_pointer(ax_skb, pkt_len);
++			/* Skip IP alignment pseudo header */
++			skb_pull(ax_skb, 2);
++			skb_set_tail_pointer(ax_skb, ax_skb->len);
+ 			ax_skb->truesize = pkt_len + sizeof(struct sk_buff);
+ 			ax88179_rx_checksum(ax_skb, pkt_hdr);
+ 			usbnet_skb_return(dev, ax_skb);
 -- 
 2.25.1
 
