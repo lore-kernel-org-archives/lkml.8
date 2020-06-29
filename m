@@ -6,59 +6,62 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DEEFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED3D0C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:36:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6359122269
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:36:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7F372225F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:36:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727017AbgF2Sgm (ORCPT
+        id S1727045AbgF2Sgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:36:42 -0400
-Received: from verein.lst.de ([213.95.11.211]:58732 "EHLO verein.lst.de"
+        Mon, 29 Jun 2020 14:36:54 -0400
+Received: from gentwo.org ([3.19.106.255]:55684 "EHLO gentwo.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726996AbgF2Sgl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:36:41 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 425DD68CEE; Mon, 29 Jun 2020 20:36:37 +0200 (CEST)
-Date:   Mon, 29 Jun 2020 20:36:36 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        David Laight <David.Laight@aculab.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: Re: [PATCH 03/11] fs: add new read_uptr and write_uptr file
- operations
-Message-ID: <20200629183636.GA6539@lst.de>
-References: <20200624162901.1814136-4-hch@lst.de> <CAHk-=wit9enePELG=-HnLsr0nY5bucFNjqAqWoFTuYDGR1P4KA@mail.gmail.com> <20200624175548.GA25939@lst.de> <CAHk-=wi_51SPWQFhURtMBGh9xgdo74j1gMpuhdkddA2rDMrt1Q@mail.gmail.com> <f50b9afa5a2742babe0293d9910e6bf4@AcuMS.aculab.com> <CAHk-=wjxQczqZ96esvDrH5QZsLg6azXCGDgo+Bmm6r8t2ssasg@mail.gmail.com> <20200629152912.GA26172@lst.de> <CAHk-=wj_Br5dQt0GnMjHooSvBbVXwtGRVKQNkpCLwWjYko-4Zw@mail.gmail.com> <20200629180730.GA4600@lst.de> <CAHk-=whzz81Cjfn+SNbLT8WvRxfQYbiAemKrQ5jpNAgxxDQhZA@mail.gmail.com>
+        id S1726087AbgF2Sgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:36:52 -0400
+Received: by gentwo.org (Postfix, from userid 1002)
+        id 2B0E33FF4E; Mon, 29 Jun 2020 14:58:40 +0000 (UTC)
+Received: from localhost (localhost [127.0.0.1])
+        by gentwo.org (Postfix) with ESMTP id 291103EA72;
+        Mon, 29 Jun 2020 14:58:40 +0000 (UTC)
+Date:   Mon, 29 Jun 2020 14:58:40 +0000 (UTC)
+From:   Christopher Lameter <cl@linux.com>
+X-X-Sender: cl@www.lameter.com
+To:     Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Michal Hocko <mhocko@suse.com>,
+        Mel Gorman <mgorman@suse.de>, Vlastimil Babka <vbabka@suse.cz>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Gautham R Shenoy <ego@linux.vnet.ibm.com>,
+        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
+        David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v5 3/3] mm/page_alloc: Keep memoryless cpuless node 0
+ offline
+In-Reply-To: <20200624092846.9194-4-srikar@linux.vnet.ibm.com>
+Message-ID: <alpine.DEB.2.22.394.2006291456550.27163@www.lameter.com>
+References: <20200624092846.9194-1-srikar@linux.vnet.ibm.com> <20200624092846.9194-4-srikar@linux.vnet.ibm.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHk-=whzz81Cjfn+SNbLT8WvRxfQYbiAemKrQ5jpNAgxxDQhZA@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 11:29:22AM -0700, Linus Torvalds wrote:
-> I didn't look at the compat cases, but if anything I'd expect those to
-> become simpler by having kernel pointers. And there doesn't actually
-> seem to be that many of them (possibly because the "int" case si so
-> common that it all ends up being the same?)
+On Wed, 24 Jun 2020, Srikar Dronamraju wrote:
 
-Having resurrect my work there really are tons of int cases.  Which
-makes me thing that splitting out a setsockopt_int method which gets
-passed value instead of a pointer, then converting all the simple cases
-to that first and then doing the real shit later sounds like a promіsing
-idea.  Let me think a bit more about that.
+> Currently Linux kernel with CONFIG_NUMA on a system with multiple
+> possible nodes, marks node 0 as online at boot.  However in practice,
+> there are systems which have node 0 as memoryless and cpuless.
 
-And yes, a lot of the common methods have tons of cases and
-sub-dispatchers and everything else you'd expect from an ioctl-like
-interface..
+Maybe add something to explain why you are not simply mapping the
+existing memory to NUMA node 0 which is after all just a numbering scheme
+used by the kernel and can be used arbitrarily?
+
+This could be seen more as a bug in the arch code during the setup of NUMA
+nodes. The two nodes are created by the firmwware / bootstrap code after
+all. Just do not do it?
+
