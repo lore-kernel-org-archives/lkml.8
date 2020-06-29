@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A142C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C017C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:22:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D621B20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:22:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D7002067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:22:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462126;
-	bh=Y9JbWJRDCLCRnMh50E6JZ1pSET7MhCQwZXpaFxR59YM=;
+	s=default; t=1593462129;
+	bh=skU9NDh+rgFwQutvhIK6EC/Sh4/cl45slDMVvV4I+/Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QYCgS8TP8zNFnEvHt3dMTScN9GyDs/H3wWeb8MDlZLBqm50KzOoaRALKdu6Q+hQNg
-	 oxuBHbL19/q3UwL6brG3680IopQKV09WXr/m31EeNrGiaMbJG+6Wm7i913ZC/fhFQ0
-	 pNZLO3bU9BvvDF7k4UGartLdnKxhmN7uwIy5teIk=
+	b=guNqwUtFT6w55fQJ++Jsmcle6qHWZYRgexUWdULYGxsIAuJfucHQEnQmvRJeoA+M8
+	 KSl4zBEl10qRnyK+b5eT86aBswPfAdIdjynd8ujx1li8LBv9aTM7ZUCRFyxm/5t1Cm
+	 iwlkE4hOEzljsZxzjLFT24Fw63EOZJVC9PTuamM4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730567AbgF2UWF (ORCPT
+        id S1733171AbgF2UWI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:22:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37040 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:22:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732587AbgF2TZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732585AbgF2TZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39A392545C;
-        Mon, 29 Jun 2020 15:43:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3176B2543E;
+        Mon, 29 Jun 2020 15:43:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445412;
-        bh=Y9JbWJRDCLCRnMh50E6JZ1pSET7MhCQwZXpaFxR59YM=;
+        s=default; t=1593445390;
+        bh=skU9NDh+rgFwQutvhIK6EC/Sh4/cl45slDMVvV4I+/Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ikyCcMpyRA9KLejozwT5wA1RiFj3OTznx5r/nDA0bdlKE3YYi3TvbYzgf8wKsmntV
-         OHeyXe8FoazvXq4SkphmJCLD9bae/9r33Mrn+hA/dDxMlP67f90vZkPEPlDq6kvaMQ
-         iUwtlptoJHrFVbZuk99bV5DvXgssN+nF/3OTuFB4=
+        b=I3LdZrEpi3Op48OQM9IlblQPL2y+ourTnc8XW09BTYKa0W6hW4toJPV+2ec/7bUtx
+         bH2SLXTDIUJPTBh8TGRMy1eSG+Oohirvdqy1+u2DdU96ipOb9DUABWgrs8aGEQOBg2
+         77KGn+RYd8og+ZbUQxoXoEVUVVi8g2voSpqQPj1M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Fan Guo <guofan5@huawei.com>, Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 162/191] RDMA/mad: Fix possible memory leak in ib_mad_post_receive_mads()
-Date:   Mon, 29 Jun 2020 11:39:38 -0400
-Message-Id: <20200629154007.2495120-163-sashal@kernel.org>
+Cc:     Tariq Toukan <tariqt@mellanox.com>,
+        Boris Pismenny <borisp@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.9 144/191] net: Do not clear the sock TX queue in sk_set_socket()
+Date:   Mon, 29 Jun 2020 11:39:20 -0400
+Message-Id: <20200629154007.2495120-145-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -64,36 +66,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fan Guo <guofan5@huawei.com>
+From: Tariq Toukan <tariqt@mellanox.com>
 
-[ Upstream commit a17f4bed811c60712d8131883cdba11a105d0161 ]
+[ Upstream commit 41b14fb8724d5a4b382a63cb4a1a61880347ccb8 ]
 
-If ib_dma_mapping_error() returns non-zero value,
-ib_mad_post_receive_mads() will jump out of loops and return -ENOMEM
-without freeing mad_priv. Fix this memory-leak problem by freeing mad_priv
-in this case.
+Clearing the sock TX queue in sk_set_socket() might cause unexpected
+out-of-order transmit when called from sock_orphan(), as outstanding
+packets can pick a different TX queue and bypass the ones already queued.
 
-Fixes: 2c34e68f4261 ("IB/mad: Check and handle potential DMA mapping errors")
-Link: https://lore.kernel.org/r/20200612063824.180611-1-guofan5@huawei.com
-Signed-off-by: Fan Guo <guofan5@huawei.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This is undesired in general. More specifically, it breaks the in-order
+scheduling property guarantee for device-offloaded TLS sockets.
+
+Remove the call to sk_tx_queue_clear() in sk_set_socket(), and add it
+explicitly only where needed.
+
+Fixes: e022f0b4a03f ("net: Introduce sk_tx_queue_mapping")
+Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
+Reviewed-by: Boris Pismenny <borisp@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/infiniband/core/mad.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/net/sock.h | 1 -
+ net/core/sock.c    | 2 ++
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/core/mad.c b/drivers/infiniband/core/mad.c
-index a1f059a9c7519..f03e10517accd 100644
---- a/drivers/infiniband/core/mad.c
-+++ b/drivers/infiniband/core/mad.c
-@@ -2885,6 +2885,7 @@ static int ib_mad_post_receive_mads(struct ib_mad_qp_info *qp_info,
- 						 DMA_FROM_DEVICE);
- 		if (unlikely(ib_dma_mapping_error(qp_info->port_priv->device,
- 						  sg_list.addr))) {
-+			kfree(mad_priv);
- 			ret = -ENOMEM;
- 			break;
- 		}
+diff --git a/include/net/sock.h b/include/net/sock.h
+index d6bce19ca261c..db68c72126d54 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -1631,7 +1631,6 @@ static inline int sk_tx_queue_get(const struct sock *sk)
+ 
+ static inline void sk_set_socket(struct sock *sk, struct socket *sock)
+ {
+-	sk_tx_queue_clear(sk);
+ 	sk->sk_socket = sock;
+ }
+ 
+diff --git a/net/core/sock.c b/net/core/sock.c
+index 41794a698da66..dac9365151df9 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -1403,6 +1403,7 @@ struct sock *sk_alloc(struct net *net, int family, gfp_t priority,
+ 		cgroup_sk_alloc(&sk->sk_cgrp_data);
+ 		sock_update_classid(&sk->sk_cgrp_data);
+ 		sock_update_netprioidx(&sk->sk_cgrp_data);
++		sk_tx_queue_clear(sk);
+ 	}
+ 
+ 	return sk;
+@@ -1587,6 +1588,7 @@ struct sock *sk_clone_lock(const struct sock *sk, const gfp_t priority)
+ 		 */
+ 		sk_refcnt_debug_inc(newsk);
+ 		sk_set_socket(newsk, NULL);
++		sk_tx_queue_clear(newsk);
+ 		newsk->sk_wq = NULL;
+ 
+ 		if (newsk->sk_prot->sockets_allocated)
 -- 
 2.25.1
 
