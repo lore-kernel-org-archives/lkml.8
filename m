@@ -2,49 +2,52 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9F8C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECCF1C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D5D1206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:16:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3A7F206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:16:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593465375;
-	bh=T879Ggz8zg9MIuGjLYvLFAyf/Cw5E5Q2TNLL9+LsFGs=;
+	s=default; t=1593465379;
+	bh=2qdwtnfk1SUhFeYfae1as9fBqfBH+TrhrvBXhvh7SZk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qYGCqMfGrWN3NbdtkNfNffbTsXf5m6vv1oN6DWvqYj10+YA7CerzQ/jUmG3bH5pbL
-	 Da+Hn+YySlhuQSvayLLx3QpVYULJbZ9CzCK0I5yonVx1+Xn9RJmRvZ0TxibIVrdTn0
-	 foH7aQ/XHD3cgZwnyrNHvLYZLOSyfJ4bET9TBHVA=
+	b=Z5F9FO0J8dceRjKe3TwmfUmUAihc1ICYGDoQfn7R8bZ65YxU3Q+RuwmO+3/HzFQyJ
+	 4IUUugM51KfAi4R6BuLCBEjOeWhgesg1wDnge5oEro61VCazvE6HVUFsz+NBor5Bq8
+	 PGYCcy7Id8v9B5ybYTgmUGLJc9/LR0tKZkiFXp0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387585AbgF2VQO (ORCPT
+        id S2390711AbgF2VQS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:16:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42390 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:16:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42392 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729938AbgF2SzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729934AbgF2SzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:55:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98FF325553;
-        Mon, 29 Jun 2020 15:55:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9AB452556B;
+        Mon, 29 Jun 2020 15:55:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446115;
-        bh=T879Ggz8zg9MIuGjLYvLFAyf/Cw5E5Q2TNLL9+LsFGs=;
+        s=default; t=1593446129;
+        bh=2qdwtnfk1SUhFeYfae1as9fBqfBH+TrhrvBXhvh7SZk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VD6lE4OQAwgAcV/r79S6WbDG8VFlAhNjk0j8QFi8ZFBpWwKVgCrqPZV9Wep+U/UYH
-         pysOPC1mKE6Ns7g3DJzMm1OVG2dtMEOM0TnbQ69mLQ2sJuGiLP9lAvLZ3OfHMwAnzO
-         Y9sL4ld7XsjkGASSKxp4JeovS4t5d1+8DGDoBViw=
+        b=Mq2Q2253kHtDwkvG5znddMAhFCO+qsUrjfHsEX0wxV9CMKZXfzP7f5kscqCfm+3jD
+         wlgSRjXnB6f5NYI1MXCbHKB4yC1N0AsroYvVR0Eupva5hn/CkCB6hv+hvk8nkVyXB/
+         wwU/rfah894W/tqIBYv4sVHo0qA1nfRFJ8prNmLk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 106/135] ALSA: usb-audio: Clean up mixer element list traverse
-Date:   Mon, 29 Jun 2020 11:52:40 -0400
-Message-Id: <20200629155309.2495516-107-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        yuu ichii <byahu140@heisei.be>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.4 120/135] ACPI: sysfs: Fix pm_profile_attr type
+Date:   Mon, 29 Jun 2020 11:52:54 -0400
+Message-Id: <20200629155309.2495516-121-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -63,157 +66,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 8c558076c740e8009a96c6fdc3d4245dde62be77 ]
+commit e6d701dca9893990d999fd145e3e07223c002b06 upstream.
 
-Introduce a new macro for iterating over mixer element list for
-avoiding the open codes in many places.  Also the open-coded
-container_of() and the forced cast to struct usb_mixer_elem_info are
-replaced with another simple macro, too.
+When running a kernel with Clang's Control Flow Integrity implemented,
+there is a violation that happens when accessing
+/sys/firmware/acpi/pm_profile:
 
-No functional changes but just readability improvement.
+$ cat /sys/firmware/acpi/pm_profile
+0
 
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+$ dmesg
+...
+[   17.352564] ------------[ cut here ]------------
+[   17.352568] CFI failure (target: acpi_show_profile+0x0/0x8):
+[   17.352572] WARNING: CPU: 3 PID: 497 at kernel/cfi.c:29 __cfi_check_fail+0x33/0x40
+[   17.352573] Modules linked in:
+[   17.352575] CPU: 3 PID: 497 Comm: cat Tainted: G        W         5.7.0-microsoft-standard+ #1
+[   17.352576] RIP: 0010:__cfi_check_fail+0x33/0x40
+[   17.352577] Code: 48 c7 c7 50 b3 85 84 48 c7 c6 50 0a 4e 84 e8 a4 d8 60 00 85 c0 75 02 5b c3 48 c7 c7 dc 5e 49 84 48 89 de 31 c0 e8 7d 06 eb ff <0f> 0b 5b c3 00 00 cc cc 00 00 cc cc 00 85 f6 74 25 41 b9 ea ff ff
+[   17.352577] RSP: 0018:ffffaa6dc3c53d30 EFLAGS: 00010246
+[   17.352578] RAX: 331267e0c06cee00 RBX: ffffffff83d85890 RCX: ffffffff8483a6f8
+[   17.352579] RDX: ffff9cceabbb37c0 RSI: 0000000000000082 RDI: ffffffff84bb9e1c
+[   17.352579] RBP: ffffffff845b2bc8 R08: 0000000000000001 R09: ffff9cceabbba200
+[   17.352579] R10: 000000000000019d R11: 0000000000000000 R12: ffff9cc947766f00
+[   17.352580] R13: ffffffff83d6bd50 R14: ffff9ccc6fa80000 R15: ffffffff845bd328
+[   17.352582] FS:  00007fdbc8d13580(0000) GS:ffff9cce91ac0000(0000) knlGS:0000000000000000
+[   17.352582] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   17.352583] CR2: 00007fdbc858e000 CR3: 00000005174d0000 CR4: 0000000000340ea0
+[   17.352584] Call Trace:
+[   17.352586]  ? rev_id_show+0x8/0x8
+[   17.352587]  ? __cfi_check+0x45bac/0x4b640
+[   17.352589]  ? kobj_attr_show+0x73/0x80
+[   17.352590]  ? sysfs_kf_seq_show+0xc1/0x140
+[   17.352592]  ? ext4_seq_options_show.cfi_jt+0x8/0x8
+[   17.352593]  ? seq_read+0x180/0x600
+[   17.352595]  ? sysfs_create_file_ns.cfi_jt+0x10/0x10
+[   17.352596]  ? tlbflush_read_file+0x8/0x8
+[   17.352597]  ? __vfs_read+0x6b/0x220
+[   17.352598]  ? handle_mm_fault+0xa23/0x11b0
+[   17.352599]  ? vfs_read+0xa2/0x130
+[   17.352599]  ? ksys_read+0x6a/0xd0
+[   17.352601]  ? __do_sys_getpgrp+0x8/0x8
+[   17.352602]  ? do_syscall_64+0x72/0x120
+[   17.352603]  ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[   17.352604] ---[ end trace 7b1fa81dc897e419 ]---
+
+When /sys/firmware/acpi/pm_profile is read, sysfs_kf_seq_show is called,
+which in turn calls kobj_attr_show, which gets the ->show callback
+member by calling container_of on attr (casting it to struct
+kobj_attribute) then calls it.
+
+There is a CFI violation because pm_profile_attr is of type
+struct device_attribute but kobj_attr_show calls ->show expecting it
+to be from struct kobj_attribute. CFI checking ensures that function
+pointer types match when doing indirect calls. Fix pm_profile_attr to
+be defined in terms of kobj_attribute so there is no violation or
+mismatch.
+
+Fixes: 362b646062b2 ("ACPI: Export FADT pm_profile integer value to userspace")
+Link: https://github.com/ClangBuiltLinux/linux/issues/1051
+Reported-by: yuu ichii <byahu140@heisei.be>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Cc: 3.10+ <stable@vger.kernel.org> # 3.10+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- sound/usb/mixer.c          | 20 +++++++++-----------
- sound/usb/mixer.h          |  6 ++++++
- sound/usb/mixer_quirks.c   |  2 +-
- sound/usb/mixer_scarlett.c |  6 ++----
- 4 files changed, 18 insertions(+), 16 deletions(-)
+ drivers/acpi/sysfs.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
-index eb98e60e57335..c29931cd461fc 100644
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -2330,9 +2330,9 @@ void snd_usb_mixer_notify_id(struct usb_mixer_interface *mixer, int unitid)
+diff --git a/drivers/acpi/sysfs.c b/drivers/acpi/sysfs.c
+index ef3dfc90e8171..13c308323e94c 100644
+--- a/drivers/acpi/sysfs.c
++++ b/drivers/acpi/sysfs.c
+@@ -776,13 +776,13 @@ static void __exit interrupt_stats_exit(void)
+ }
+ 
+ static ssize_t
+-acpi_show_profile(struct device *dev, struct device_attribute *attr,
++acpi_show_profile(struct kobject *kobj, struct kobj_attribute *attr,
+ 		  char *buf)
  {
- 	struct usb_mixer_elem_list *list;
+ 	return sprintf(buf, "%d\n", acpi_gbl_FADT.preferred_profile);
+ }
  
--	for (list = mixer->id_elems[unitid]; list; list = list->next_id_elem) {
-+	for_each_mixer_elem(list, mixer, unitid) {
- 		struct usb_mixer_elem_info *info =
--			(struct usb_mixer_elem_info *)list;
-+			mixer_elem_list_to_info(list);
- 		/* invalidate cache, so the value is read from the device */
- 		info->cached = 0;
- 		snd_ctl_notify(mixer->chip->card, SNDRV_CTL_EVENT_MASK_VALUE,
-@@ -2343,7 +2343,7 @@ void snd_usb_mixer_notify_id(struct usb_mixer_interface *mixer, int unitid)
- static void snd_usb_mixer_dump_cval(struct snd_info_buffer *buffer,
- 				    struct usb_mixer_elem_list *list)
- {
--	struct usb_mixer_elem_info *cval = (struct usb_mixer_elem_info *)list;
-+	struct usb_mixer_elem_info *cval = mixer_elem_list_to_info(list);
- 	static char *val_types[] = {"BOOLEAN", "INV_BOOLEAN",
- 				    "S8", "U8", "S16", "U16"};
- 	snd_iprintf(buffer, "    Info: id=%i, control=%i, cmask=0x%x, "
-@@ -2369,8 +2369,7 @@ static void snd_usb_mixer_proc_read(struct snd_info_entry *entry,
- 				mixer->ignore_ctl_error);
- 		snd_iprintf(buffer, "Card: %s\n", chip->card->longname);
- 		for (unitid = 0; unitid < MAX_ID_ELEMS; unitid++) {
--			for (list = mixer->id_elems[unitid]; list;
--			     list = list->next_id_elem) {
-+			for_each_mixer_elem(list, mixer, unitid) {
- 				snd_iprintf(buffer, "  Unit: %i\n", list->id);
- 				if (list->kctl)
- 					snd_iprintf(buffer,
-@@ -2400,19 +2399,19 @@ static void snd_usb_mixer_interrupt_v2(struct usb_mixer_interface *mixer,
- 		return;
- 	}
+-static const struct device_attribute pm_profile_attr =
++static const struct kobj_attribute pm_profile_attr =
+ 	__ATTR(pm_profile, S_IRUGO, acpi_show_profile, NULL);
  
--	for (list = mixer->id_elems[unitid]; list; list = list->next_id_elem)
-+	for_each_mixer_elem(list, mixer, unitid)
- 		count++;
- 
- 	if (count == 0)
- 		return;
- 
--	for (list = mixer->id_elems[unitid]; list; list = list->next_id_elem) {
-+	for_each_mixer_elem(list, mixer, unitid) {
- 		struct usb_mixer_elem_info *info;
- 
- 		if (!list->kctl)
- 			continue;
- 
--		info = (struct usb_mixer_elem_info *)list;
-+		info = mixer_elem_list_to_info(list);
- 		if (count > 1 && info->control != control)
- 			continue;
- 
-@@ -2632,7 +2631,7 @@ int snd_usb_mixer_suspend(struct usb_mixer_interface *mixer)
- 
- static int restore_mixer_value(struct usb_mixer_elem_list *list)
- {
--	struct usb_mixer_elem_info *cval = (struct usb_mixer_elem_info *)list;
-+	struct usb_mixer_elem_info *cval = mixer_elem_list_to_info(list);
- 	int c, err, idx;
- 
- 	if (cval->cmask) {
-@@ -2668,8 +2667,7 @@ int snd_usb_mixer_resume(struct usb_mixer_interface *mixer, bool reset_resume)
- 	if (reset_resume) {
- 		/* restore cached mixer values */
- 		for (id = 0; id < MAX_ID_ELEMS; id++) {
--			for (list = mixer->id_elems[id]; list;
--			     list = list->next_id_elem) {
-+			for_each_mixer_elem(list, mixer, id) {
- 				if (list->resume) {
- 					err = list->resume(list);
- 					if (err < 0)
-diff --git a/sound/usb/mixer.h b/sound/usb/mixer.h
-index 545d99b09706b..004d99037210f 100644
---- a/sound/usb/mixer.h
-+++ b/sound/usb/mixer.h
-@@ -52,6 +52,12 @@ struct usb_mixer_elem_list {
- 	usb_mixer_elem_resume_func_t resume;
- };
- 
-+/* iterate over mixer element list of the given unit id */
-+#define for_each_mixer_elem(list, mixer, id)	\
-+	for ((list) = (mixer)->id_elems[id]; (list); (list) = (list)->next_id_elem)
-+#define mixer_elem_list_to_info(list) \
-+	container_of(list, struct usb_mixer_elem_info, head)
-+
- struct usb_mixer_elem_info {
- 	struct usb_mixer_elem_list head;
- 	unsigned int control;	/* CS or ICN (high byte) */
-diff --git a/sound/usb/mixer_quirks.c b/sound/usb/mixer_quirks.c
-index 723b535ca2ec5..5d6af9c861ad9 100644
---- a/sound/usb/mixer_quirks.c
-+++ b/sound/usb/mixer_quirks.c
-@@ -1170,7 +1170,7 @@ void snd_emuusb_set_samplerate(struct snd_usb_audio *chip,
- 	int unitid = 12; /* SamleRate ExtensionUnit ID */
- 
- 	list_for_each_entry(mixer, &chip->mixer_list, list) {
--		cval = (struct usb_mixer_elem_info *)mixer->id_elems[unitid];
-+		cval = mixer_elem_list_to_info(mixer->id_elems[unitid]);
- 		if (cval) {
- 			snd_usb_mixer_set_ctl_value(cval, UAC_SET_CUR,
- 						    cval->control << 8,
-diff --git a/sound/usb/mixer_scarlett.c b/sound/usb/mixer_scarlett.c
-index 7438e7c4a842d..2876cd9b35b38 100644
---- a/sound/usb/mixer_scarlett.c
-+++ b/sound/usb/mixer_scarlett.c
-@@ -287,8 +287,7 @@ static int scarlett_ctl_switch_put(struct snd_kcontrol *kctl,
- 
- static int scarlett_ctl_resume(struct usb_mixer_elem_list *list)
- {
--	struct usb_mixer_elem_info *elem =
--		container_of(list, struct usb_mixer_elem_info, head);
-+	struct usb_mixer_elem_info *elem = mixer_elem_list_to_info(list);
- 	int i;
- 
- 	for (i = 0; i < elem->channels; i++)
-@@ -447,8 +446,7 @@ static int scarlett_ctl_enum_put(struct snd_kcontrol *kctl,
- 
- static int scarlett_ctl_enum_resume(struct usb_mixer_elem_list *list)
- {
--	struct usb_mixer_elem_info *elem =
--		container_of(list, struct usb_mixer_elem_info, head);
-+	struct usb_mixer_elem_info *elem = mixer_elem_list_to_info(list);
- 
- 	if (elem->cached)
- 		snd_usb_set_cur_mix_value(elem, 0, 0, *elem->cache_val);
+ static ssize_t hotplug_enabled_show(struct kobject *kobj,
 -- 
 2.25.1
 
