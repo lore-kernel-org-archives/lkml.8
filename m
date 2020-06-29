@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE077C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70EC4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:42:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D7A520874
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:42:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4670320842
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:42:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593459741;
-	bh=dF7OevGSrUxbwfAwJOC3YA/MHIm3PEEoGI5LjVkR4vE=;
+	s=default; t=1593459744;
+	bh=yWjydtHHG+r6V6UOLuq9t6zwh/FKdtVOlOZZv90+lzc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1gSEjuqc5u7++tchAyX/6oSIUfm8TbXMcf8GtAxGYkjJT1RVulp/GmaqZAsZRCm2x
-	 MFntaY4088oALcwCOMRMIaStSy2mganErgKAxwRVnrbaDFigJuyzP3l5qiTrxMTOxq
-	 HOx9w0TnOw4AW2dMRsBHEthD+3PWVAFxtsRSbPSI=
+	b=FH0aLbfxbeKrCa9o+wLZUW0kGHZCsj8Kvl7PutHO5GcAbeAGL44wPm83PrJe+AQuq
+	 KaKykX6voCI3svZNrAD/WC30/QUfQR7PsJ69kUNOsSUbRHhcJ1OznjvZRTAy10t/PJ
+	 Q4aUkdEFbRlF6VG/QrMduwQppUa5fBCJlwEviW3I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387472AbgF2TmU (ORCPT
+        id S1730281AbgF2TmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:42:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47692 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:42:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387846AbgF2Tkq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387850AbgF2Tkq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:46 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2E78248C4;
-        Mon, 29 Jun 2020 15:26:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E8965248ED;
+        Mon, 29 Jun 2020 15:27:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444418;
-        bh=dF7OevGSrUxbwfAwJOC3YA/MHIm3PEEoGI5LjVkR4vE=;
+        s=default; t=1593444442;
+        bh=yWjydtHHG+r6V6UOLuq9t6zwh/FKdtVOlOZZv90+lzc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z5Q5rQoTc06QNZ9T7X2IXSf5+LeFCWOhj1+NOWfg1aIfJp+c6HjZ96XYrC95IqWT5
-         ey5acC8LSaiCWX9nRh+ZXwUAxxXrrLuSZnK17nVPp+LRrQ57//Wb5TGkCcPi7YSSox
-         paoP9svcmo8E8BcsCtJ7sl/vTIXsGL2BhsN8x/IM=
+        b=imOpoaJhggWOim8NFQZoDj57wPRLLttWYLejpcFs5yFtnN1I3fDEoz3hWMo89wkJg
+         ktWB+qjofGIvt5NusH3e+GnziZGZY528uXRHHBH09sCh7qm4KIFKVgnq58MX5nzzG+
+         Y+ppudz7d9Q+LFI2fJEx63ZCmZRMr66PN6Ae8jlM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexander Lobakin <alobakin@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 096/178] net: qed: fix excessive QM ILT lines consumption
-Date:   Mon, 29 Jun 2020 11:24:01 -0400
-Message-Id: <20200629152523.2494198-97-sashal@kernel.org>
+Subject: [PATCH 5.4 121/178] hwrng: ks-sa - Fix runtime PM imbalance on error
+Date:   Mon, 29 Jun 2020 11:24:26 -0400
+Message-Id: <20200629152523.2494198-122-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -67,38 +66,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lobakin <alobakin@marvell.com>
+From: Dinghao Liu <dinghao.liu@zju.edu.cn>
 
-[ Upstream commit d434d02f7e7c24c721365fd594ed781acb18e0da ]
+[ Upstream commit 95459261c99f1621d90bc628c2a48e60b7cf9a88 ]
 
-This is likely a copy'n'paste mistake. The amount of ILT lines to
-reserve for a single VF was being multiplied by the total VFs count.
-This led to a huge redundancy in reservation and potential lines
-drainouts.
+pm_runtime_get_sync() increments the runtime PM usage counter even
+the call returns an error code. Thus a pairing decrement is needed
+on the error handling path to keep the counter balanced.
 
-Fixes: 1408cc1fa48c ("qed: Introduce VFs")
-Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+Reviewed-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_cxt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/char/hw_random/ks-sa-rng.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_cxt.c b/drivers/net/ethernet/qlogic/qed/qed_cxt.c
-index 8e1bdf58b9e77..1d6dfba0c034d 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_cxt.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_cxt.c
-@@ -396,7 +396,7 @@ static void qed_cxt_qm_iids(struct qed_hwfn *p_hwfn,
- 		vf_tids += segs[NUM_TASK_PF_SEGMENTS].count;
+diff --git a/drivers/char/hw_random/ks-sa-rng.c b/drivers/char/hw_random/ks-sa-rng.c
+index a67430010aa68..5c7d3dfcfdd04 100644
+--- a/drivers/char/hw_random/ks-sa-rng.c
++++ b/drivers/char/hw_random/ks-sa-rng.c
+@@ -208,6 +208,7 @@ static int ks_sa_rng_probe(struct platform_device *pdev)
+ 	ret = pm_runtime_get_sync(dev);
+ 	if (ret < 0) {
+ 		dev_err(dev, "Failed to enable SA power-domain\n");
++		pm_runtime_put_noidle(dev);
+ 		pm_runtime_disable(dev);
+ 		return ret;
  	}
- 
--	iids->vf_cids += vf_cids * p_mngr->vf_count;
-+	iids->vf_cids = vf_cids;
- 	iids->tids += vf_tids * p_mngr->vf_count;
- 
- 	DP_VERBOSE(p_hwfn, QED_MSG_ILT,
 -- 
 2.25.1
 
