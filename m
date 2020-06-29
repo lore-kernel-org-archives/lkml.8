@@ -2,73 +2,69 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A8AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA297C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 369E4206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:13:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gBAlCwYa"
+	by mail.kernel.org (Postfix) with ESMTP id 9A999206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:13:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387559AbgF2VNr (ORCPT
+        id S2387457AbgF2VNy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:13:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34828 "EHLO
+        Mon, 29 Jun 2020 17:13:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388530AbgF2VNo (ORCPT
+        with ESMTP id S1730114AbgF2S5m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 17:13:44 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BE00C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 14:13:43 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id o22so3491115pjw.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 14:13:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=WRy695NNutjkWd1uYy3p92+kIoqtEQ1wqPnA8Qq72ec=;
-        b=gBAlCwYaw93vgah5OMWB/EfhiMgXFRXlXLA5HxszvAVQVuyb7Lu0/jFGDRcuFa3u0g
-         cWVxou1F6nEGZfj9wME9gAVxff4lAzHJI0TkqoJufX20lHNqlxO8VPxLZ9HgOgv3yO7b
-         9SkdYa9TJAaOUa9Jb67tLuGH7qcNIdHc6RF20=
+        Mon, 29 Jun 2020 14:57:42 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A5CFC02E2DE
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:09:31 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id c139so15284106qkg.12
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:09:31 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=WRy695NNutjkWd1uYy3p92+kIoqtEQ1wqPnA8Qq72ec=;
-        b=joxZpHoOzNcpTjuTu6lyttg8bxtbHuucWi3Rh1MGE0fACmPEzAZLbKFfZKJcTTDcMy
-         Cy6DMaWw4yUJyLcKdYBvGc43SA8B7qa2hdMj3ONQ2gNsW7sghUAVHcq5IQdimlVfmG96
-         n1zB1OhalTcRYlzz0krVx/EWrn98YPWH0KPbDclNaUgIk4ApzzBd2txhEZ0zPDIXw9fe
-         QAXRD4aqHQ7a4QYenHcLTQsmlvOglocZF4zFXGHEed78ePwoVzucmTfXxsG3YcE60YZG
-         PEDXcj/uXxbLo35xWuryQxqTFOCbQgkLyx9Qz7ULQ9+w/UdxdAz44Oec6H13VLA0L75l
-         N7SQ==
-X-Gm-Message-State: AOAM5316LuehR/zOyeTPxHd7ETm0xDz9H7Rt8AWH3Aj5mBJB8+OScPBQ
-        3qfyE2aSsIQ7vt0+KVBkEFVmDdVyxLM=
-X-Google-Smtp-Source: ABdhPJxS+l3NYCg9wNzlqats8szYRiVB103lQe+sgqzJ43XJlnSjOsoVXDCoxuMA78yx6TwlEy/4Rw==
-X-Received: by 2002:a17:90a:338a:: with SMTP id n10mr20386747pjb.50.1593465222835;
-        Mon, 29 Jun 2020 14:13:42 -0700 (PDT)
-Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:476b:691:abc3:38db])
-        by smtp.gmail.com with ESMTPSA id y19sm508354pfc.135.2020.06.29.14.13.42
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=M44I2v4UaO9OPEP+jg2wmc2GcKMVwLBT5iRhIL1Tao0=;
+        b=gkVYx7pFDEcAbkRfTYC2pg6NwcWLXbxj2hL6P244iWxQMgI3hbmg6xjKbzAXhU/rsM
+         zl1nx4fDlOsC8hHLQC4J5+J6bb2ueB8skk2tExB02VxZJ2ignd7rg+qSKvtaL/s1ROkW
+         3Nw3OfHyKoJkGhXr7PzVtfK22MpvrX6yeW+ooaEfCjRby+Yso7r17zrtuY5rU14zpLtW
+         NQa3khVbaNQ/dt0hex9d1QN4jk6beINdt7Qgh6DqicwurIYzUt0ISBk40fj5UIbId37R
+         3nndbr6cwGLVnOVHA06vSgOqGeHHPPFbEquy0SPwULqrJMZcfulQiXOfpad/ibQ+sjtl
+         UBMw==
+X-Gm-Message-State: AOAM531PZvp2Wuh3jumWBa/A6MC5UGUYCXNzJ9bxifFqdvuypxjhfOwl
+        nLPVXK1PGhp28g0plrztO7k=
+X-Google-Smtp-Source: ABdhPJwwE/vx5To5SsVvdlgxz339Jn/jyUnXKYT8iXjlNSw6rXFzj1NqeKKv6bAnr1dvVOjAgL3yzg==
+X-Received: by 2002:a37:a00a:: with SMTP id j10mr14602308qke.87.1593439770329;
+        Mon, 29 Jun 2020 07:09:30 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id i26sm10741461qkh.14.2020.06.29.07.09.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 14:13:42 -0700 (PDT)
-From:   Prashant Malani <pmalani@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     heikki.krogerus@linux.intel.com,
-        Prashant Malani <pmalani@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: [PATCH v4 2/2] platform/chrome: cros_ec_typec: Add PM support
-Date:   Mon, 29 Jun 2020 14:13:29 -0700
-Message-Id: <20200629211329.2185342-2-pmalani@chromium.org>
-X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-In-Reply-To: <20200629211329.2185342-1-pmalani@chromium.org>
-References: <20200629211329.2185342-1-pmalani@chromium.org>
+        Mon, 29 Jun 2020 07:09:29 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Fangrui Song <maskray@google.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        clang-built-linux@googlegroups.com,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "H . J . Lu" <hjl@sourceware.org>, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/7] x86/boot: Remove runtime relocations from compressed kernel
+Date:   Mon, 29 Jun 2020 10:09:21 -0400
+Message-Id: <20200629140928.858507-1-nivedita@alum.mit.edu>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,67 +72,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Define basic suspend resume functions for cros-ec-typec. On suspend, we
-simply ensure that any pending port update work is completed, and on
-resume, we re-poll the port state to account for any
-changes/disconnections that might have occurred during suspend.
+The compressed kernel currently contains bogus runtime relocations in
+the startup code in head_{32,64}.S, which are generated by the linker,
+but must not actually be processed at runtime.
 
-Signed-off-by: Prashant Malani <pmalani@chromium.org>
-Reviewed-by: Guenter Roeck <groeck@chromium.org>
----
+This generates warnings when linking with the BFD linker, and errors
+with LLD, which defaults to erroring on runtime relocations in read-only
+sections. It also requires the -z noreloc-overflow hack for the 64-bit
+kernel, which prevents us from linking it as -pie on an older BFD linker
+(<= 2.26) or on LLD, because the locations that are to be apparently
+relocated are only 32-bits in size and so cannot really have
+R_X86_64_RELATIVE relocations.
 
-Changes in v4:
-- No changes (added Reviewed-by received in v3).
+This series aims to get rid of these relocations. I've build- and
+boot-tested with combinations of clang/gcc-10 with lld/bfd-2.34, and
+gcc-4.8.5 with bfd-2.23, skipping clang on 32-bit because it currently
+has other issues [0].
 
-Changes in v3:
-- Remove superfluous DEV_PM_OPS #define.
+The first three patches by Ard remove indirection via the GOT from the
+compressed kernel code.
 
-Changes in v2:
-- Remove #ifdef-ery, add __maybe_unused tag to functions.
+The next patch is an independent fix for LLD, to avoid an orphan
+section in arch/x86/boot/setup.elf.
 
- drivers/platform/chrome/cros_ec_typec.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+The fifth patch gets rid of almost all the relocations. It uses
+standard PIC addressing technique for 32-bit, i.e. loading a register
+with the address of _GLOBAL_OFFSET_TABLE_ and then using GOTOFF
+references to access variables. For 64-bit, there is 32-bit code that
+cannot use RIP-relative addressing, and also cannot use the 32-bit
+method, since GOTOFF references are 64-bit only. This is instead handled
+using a macro to replace a reference like gdt with (gdt-startup_32)
+instead. The assembler will generate a PC32 relocation entry, with
+addend set to (.-startup_32), and these will be replaced with constants
+at link time. This works as long as all the code using such references
+lives in the same section as startup_32, i.e. in .head.text.
 
-diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-index 69c4118e280c..cb95d190f06a 100644
---- a/drivers/platform/chrome/cros_ec_typec.c
-+++ b/drivers/platform/chrome/cros_ec_typec.c
-@@ -720,11 +720,35 @@ static int cros_typec_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
-+static int __maybe_unused cros_typec_suspend(struct device *dev)
-+{
-+	struct cros_typec_data *typec = dev_get_drvdata(dev);
-+
-+	cancel_work_sync(&typec->port_work);
-+
-+	return 0;
-+}
-+
-+static int __maybe_unused cros_typec_resume(struct device *dev)
-+{
-+	struct cros_typec_data *typec = dev_get_drvdata(dev);
-+
-+	/* Refresh port state. */
-+	schedule_work(&typec->port_work);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops cros_typec_pm_ops = {
-+	SET_SYSTEM_SLEEP_PM_OPS(cros_typec_suspend, cros_typec_resume)
-+};
-+
- static struct platform_driver cros_typec_driver = {
- 	.driver	= {
- 		.name = DRV_NAME,
- 		.acpi_match_table = ACPI_PTR(cros_typec_acpi_id),
- 		.of_match_table = of_match_ptr(cros_typec_of_match),
-+		.pm = &cros_typec_pm_ops,
- 	},
- 	.probe = cros_typec_probe,
- };
+The sixth patch addresses a remaining issue with the BFD linker, which
+generates runtime relocations for absolute symbols. We use z_input_len
+and z_output_len, defined in the generated piggy.S file, as symbols
+whose absolute "addresses" are actually the size of the compressed
+payload and the size of the decompressed kernel image respectively. LLD
+does not generate relocations for these two symbols, but the BFD linker
+does, prior to the upcoming 2.35. To get around this, piggy.S is
+extended to also define two u32 variables (in .rodata) with the lengths,
+and the head code is modified to use those instead of the symbol
+addresses.
+
+An alternative way to handle z_input_len/z_output_len would be to just
+include piggy.S in head_{32,64}.S instead of as a separate object file,
+since the GNU assembler doesn't generate relocations for symbols set to
+constants.
+
+The last patch adds a check in the linker script to ensure that no
+runtime relocations get reintroduced.
+
+[0] https://lore.kernel.org/lkml/20200504230309.237398-1-ndesaulniers@google.com/
+
+Changes from v2:
+- Incorporate Ard's patches for eliminating GOT references into this
+  series
+- Rebase on v5.8-rc3
+
+v2: https://lore.kernel.org/lkml/20200525225918.1624470-1-nivedita@alum.mit.edu/
+
+Changes from v1:
+- Add .text.* to setup.ld instead of just .text.startup
+- Rename the la() macro introduced in the second patch for 64-bit to
+  rva(), and rework the explanatory comment.
+- In the last patch, check both .rel.dyn and .rela.dyn, instead of just
+  one per arch.
+
+Ard Biesheuvel (3):
+  x86/boot/compressed: Move .got.plt entries out of the .got section
+  x86/boot/compressed: Force hidden visibility for all symbol references
+  x86/boot/compressed: Get rid of GOT fixup code
+
+Arvind Sankar (4):
+  x86/boot: Add .text.* to setup.ld
+  x86/boot: Remove run-time relocations from .head.text code
+  x86/boot: Remove runtime relocations from head_{32,64}.S
+  x86/boot: Check that there are no runtime relocations
+
+ arch/x86/boot/compressed/Makefile      |  37 +-----
+ arch/x86/boot/compressed/head_32.S     |  99 +++++----------
+ arch/x86/boot/compressed/head_64.S     | 165 ++++++++++---------------
+ arch/x86/boot/compressed/hidden.h      |  19 +++
+ arch/x86/boot/compressed/mkpiggy.c     |   6 +
+ arch/x86/boot/compressed/vmlinux.lds.S |  24 +++-
+ arch/x86/boot/setup.ld                 |   2 +-
+ 7 files changed, 151 insertions(+), 201 deletions(-)
+ create mode 100644 arch/x86/boot/compressed/hidden.h
+
+
+base-commit: 9ebcfadb0610322ac537dd7aa5d9cbc2b2894c68
 -- 
-2.27.0.212.ge8ba1cc988-goog
+2.26.2
 
