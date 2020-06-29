@@ -2,127 +2,107 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B00C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:54:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85700C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B5B920656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:54:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B6C42065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:54:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xjvp/Ruc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q366rras"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727881AbgF2Syr (ORCPT
+        id S1728238AbgF2Syu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:54:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40020 "EHLO
+        Mon, 29 Jun 2020 14:54:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729807AbgF2Sww (ORCPT
+        with ESMTP id S1729802AbgF2Swv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:52:52 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C9B7C031C7A;
-        Mon, 29 Jun 2020 11:15:17 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id z2so13590859qts.5;
-        Mon, 29 Jun 2020 11:15:17 -0700 (PDT)
+        Mon, 29 Jun 2020 14:52:51 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADEA9C00F816
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 05:32:21 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id l17so15223812wmj.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 05:32:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ksn6KEgSSy4O04+EmiHmLNcv0njEAGgzFW6T11ji+vI=;
-        b=Xjvp/RucTJD7ys4so77HqyBdKQg72774rOpK0Iy63xJF5nLNOOILQoRIXkvOl8GSiV
-         +dq1LOTSqRzP649aH77rs+eXXLE6NrmWrR2ZfZCPcZIIXq+sCkRejxszABRcdazkcaLO
-         sosTZdgioDe0Awvmhn8VQ9Xq7tdlEZdqFPTfi0ICfdG4ZOw15yRKYNYyr7GlNnUU/Jc6
-         j+yXaf+nXfjR9kDYWQi3iHL2zZJ08F13kaTJcXndLsH6fIgDkpVttULkAJxaKMU4AZTG
-         otU+pDZSB+sDNIHb74V0Qlsb3g2ppZAYET8gjxxd9JFf9PRwuZVBIXjVJQHbrkmo8MjZ
-         lAEw==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=NcJWzHYOpdeqh8qGaDVcQ5xRq4JhsD2PhceqG1yeYgA=;
+        b=Q366rrasZM+J0LbW/35YiKvihiuoapb6NfN+Zb4zZsqCvq9+SkLa23MzIyUfk8kh5e
+         Tfzz+oPvckK85IfjKcsT2gzRYKGkjA9x48l/nKQyaBoJf04WdVxDuu5uycO/0JeIVv7l
+         lOtSMb0HK9cCkVoeyc2/p1hyWjQjR6EecqDrCwB0F4vdpGgomiwLq5Ge5NkeB38l2s9p
+         /RPpmnw26+sNuVt41FF5MJ94lR5+1+dlEqGMEV38RM0R9mtgMDHgqIuG7D8kGbWJx/HQ
+         SSsL2oC165G4yp4HZa8wpyhQ42TMENenXjRufPEz16j5xH7YcPE37CvTwtIEREwDv7Hd
+         yPOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=ksn6KEgSSy4O04+EmiHmLNcv0njEAGgzFW6T11ji+vI=;
-        b=MMCFgfFy9XnVzlCnOmLXySRIJgDwwaAj3tfCJEP31d9kQcaS9N9s1aLPJeQJhQvxE+
-         3SRMx35eiwg5VzdZH60FFBN5CbgZ5KcZobnftXPg3HbGkyoznqcd8lp5p9RThLhLr01h
-         3NzspdNOa9bTIjExPT0NysjWKc/fTEqr4DWl0stTG7/Z9aV3cFLQbHgE09rj0NfZ1kEs
-         naM2suTJS37VlRM7S8QUsUj2uBFy34PjijFIkeyC29bKWJepv99TJC/rpbV2t64K88ua
-         q0uLpEwwqJ/QsgY/vak953jOQ9hJpK938DYmqNY+9YigJtuZQsEl9V90RUuhxKPl8ToV
-         MhBw==
-X-Gm-Message-State: AOAM532ECWZ/23VgLyHR8ClfLpqlvHPq6zguAWeTv/2/v5t3pFttUnoH
-        +P6Lp7caVaj2RH1UsbMqys0=
-X-Google-Smtp-Source: ABdhPJzHr+OXXpT2ladJEzyIUGa3Qh7oKbbNWJhQOzQ+NHJbTju9YGsvUo+VZ1jPBQ+dsZ58uYQ4Zw==
-X-Received: by 2002:ac8:7242:: with SMTP id l2mr16374761qtp.320.1593454516576;
-        Mon, 29 Jun 2020 11:15:16 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id z17sm592545qth.24.2020.06.29.11.15.15
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=NcJWzHYOpdeqh8qGaDVcQ5xRq4JhsD2PhceqG1yeYgA=;
+        b=VVfZILbmcYV9fQiQV5z8I8TnZ9+XyDXuZXU7KxXdwaZRIbBfSI2OSnpm/dPlIsJAEZ
+         eIDK9JpwpeqQYVQIggcCwb5F0MqWtyI1Z2pIhoedBfoEFHOYN4L+NnjrGZ+cHi/FgmdR
+         NtAcWSa+8msGj72nvf3PKBYa43rT0CfpvoDx4U0ju9WCMqrDADNGumNKKmVz48d9CJoE
+         BV/64gf8361wpNpIJPdCWjTIkEhs5MRjRcGDfrjV68h1Ekw+35nsxCynB7LTq3ckOWXT
+         XMBuIP3/9qRexse2jcc9lVP3hIgS9cnndMlrXNySiSpkJ963TKXc5bNIw0bPLLMnNReI
+         CpqA==
+X-Gm-Message-State: AOAM531eKjYHkD/X5AlmfDqtLVjzS3HwM/Osh86Af3GVR2l4VrPPXSg7
+        pb7tl5dD2z44NJn4IeFDPgkjRg==
+X-Google-Smtp-Source: ABdhPJx4+0k8HqfmTYlIin6K3HPVFB67u5CbChkf/P40Ljl2tLMP9fSC9+ZutsjMFevxWA0Kb++IlQ==
+X-Received: by 2002:a1c:9cd3:: with SMTP id f202mr15608911wme.64.1593433940462;
+        Mon, 29 Jun 2020 05:32:20 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id d201sm28064111wmd.34.2020.06.29.05.32.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 11:15:16 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Mon, 29 Jun 2020 14:15:14 -0400
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Kees Cook <keescook@chromium.org>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
-        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 14/17] arm/build: Warn on orphan section placement
-Message-ID: <20200629181514.GA1046442@rani.riverdale.lan>
-References: <20200629061840.4065483-1-keescook@chromium.org>
- <20200629061840.4065483-15-keescook@chromium.org>
- <20200629155401.GB900899@rani.riverdale.lan>
- <20200629180703.GX1551@shell.armlinux.org.uk>
+        Mon, 29 Jun 2020 05:32:19 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     lee.jones@linaro.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: [PATCH 1/5] mfd: si476x-cmd: Add missing documentation for si476x_cmd_fm_rds_status()'s arg 'report'
+Date:   Mon, 29 Jun 2020 13:32:11 +0100
+Message-Id: <20200629123215.1014747-2-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629123215.1014747-1-lee.jones@linaro.org>
+References: <20200629123215.1014747-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200629180703.GX1551@shell.armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 07:07:04PM +0100, Russell King - ARM Linux admin wrote:
-> On Mon, Jun 29, 2020 at 11:54:01AM -0400, Arvind Sankar wrote:
-> > On Sun, Jun 28, 2020 at 11:18:37PM -0700, Kees Cook wrote:
-> > > We don't want to depend on the linker's orphan section placement
-> > > heuristics as these can vary between linkers, and may change between
-> > > versions. All sections need to be explicitly named in the linker
-> > > script.
-> > > 
-> > > Specifically, this would have made a recently fixed bug very obvious:
-> > > 
-> > > ld: warning: orphan section `.fixup' from `arch/arm/lib/copy_from_user.o' being placed in section `.fixup'
-> > > 
-> > > Discard unneeded sections .iplt, .rel.iplt, .igot.plt, and .modinfo.
-> > > 
-> > > Add missing text stub sections .vfp11_veneer and .v4_bx.
-> > > 
-> > > Add debug sections explicitly.
-> > > 
-> > > Finally enable orphan section warning.
-> > 
-> > This is unrelated to this patch as such, but I noticed that ARM32/64 places
-> > the .got section inside .text -- is that expected on ARM?
-> 
-> Do you mean in general, in the kernel vmlinux, in the decompressor
-> vmlinux or ... ?
-> 
+Kerneldoc syntax is used, but not complete.
 
-Sorry, in the kernel vmlinux. ARM_TEXT includes *(.got) for 32-bit, and
-the 64-bit vmlinux.lds.S includes it in .text as well. The decompressor
-for 32-bit keeps it separate for non-EFI stub kernel and puts it inside
-.data for EFI stub.
+Descriptions are required for all arguments.
+
+Fixes the following W=1 build warning:
+
+ drivers/mfd/si476x-cmd.c:907: warning: Function parameter or member 'report' not described in 'si476x_core_cmd_fm_rds_status'
+
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/mfd/si476x-cmd.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/mfd/si476x-cmd.c b/drivers/mfd/si476x-cmd.c
+index 0a40c5cb751db..d15b3e7833692 100644
+--- a/drivers/mfd/si476x-cmd.c
++++ b/drivers/mfd/si476x-cmd.c
+@@ -892,6 +892,8 @@ EXPORT_SYMBOL_GPL(si476x_core_cmd_fm_seek_start);
+  *                rest RDS data contains the last valid info received
+  * @mtfifo: if set the command clears RDS receive FIFO
+  * @intack: if set the command clards the RDSINT bit.
++ * @report: - all signal quality information retured by the command
++ *           (if NULL then the output of the command is ignored)
+  *
+  * Function returns 0 on success and negative error code on failure
+  */
+-- 
+2.25.1
+
