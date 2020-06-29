@@ -2,119 +2,115 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0F24C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF5D4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A29B5206C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:37:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EFE720672
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:38:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593463066;
-	bh=5grUf4g6qzSd3uNnRAhuWxnsWIfFgMR7yMwzI4MJ2QU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oOJ3W/2d23qCun29ZY6smy5kl1M72Z7K469yZY9BT8BYaz0Eh2hnhLqTQx/+q9tuj
-	 dbu30HskYX3Rc6gy/tQKTDOZJDqT+incJQIJnmKBnlJ7W7H0Dnsxz3P4Jf/p15JaZt
-	 fXrZWrrIbQ7hE0uKY1+yh1YHFreec4ZfgGWTmn4I=
+	s=default; t=1593463080;
+	bh=JaToVEPg96WlYm3ztJ5uXKp0r8nvTwnJt6eGF53wvDg=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=zYSJSoLcFQPGghdRmc4XP81kpS3fqfADfoeK0zMqaOSGAZVL267ek1ROKDpGUuBIJ
+	 w0Gc6J5bFRoOgNvD2dNPElREXyTiScxBlbmSujThpQEVXbpcN2jgc3B/21ZqirawFh
+	 TKYvXkgLkyCKkmbQvOGmX45keaH5zPmmk1XkJ2Ig=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389524AbgF2Uhp (ORCPT
+        id S2389537AbgF2Uh7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:37:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33126 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732091AbgF2TUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:20:15 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27F3525487;
-        Mon, 29 Jun 2020 15:44:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445445;
-        bh=5grUf4g6qzSd3uNnRAhuWxnsWIfFgMR7yMwzI4MJ2QU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sdBKBhU24X15Z7D6L3w037BUBPTxrwFBbWykG6Ews2zj7JDzLItKhtfU3o1y3Odqv
-         1v4s846GVHSt8p83BHFEQDO6Zcn0bRQsKwx0jvFHw5mJAIkBINJdFtZWNHXUiU+kjJ
-         z2i88ni45nZVcGET9/f/LxZAEKU2q3zPLrcRonDc=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Mon, 29 Jun 2020 16:37:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57206 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388942AbgF2Uh4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 16:37:56 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14501C03E97A
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 13:37:56 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id 76so2265343otu.9
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 13:37:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Fm46DHlI8TQvkZHu+cmRB2IdIOYCe5xNqBHbvb86YyI=;
+        b=V2Y3vTGJ12Ll/zYo3s2cphA4SCNvy6j4fT/a3ty8OKVVsQYsdqWJ227S2Q04r/yETO
+         h+WFXtp2g82jsnVpQ55K1BaUAT6r6jDmYafNQeIrtx27I17+9xkY5SMcWC1b7EuJVqW7
+         J5tQYaClR7vkxyDmmz3EYV/8sbafzTBaw0184=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Fm46DHlI8TQvkZHu+cmRB2IdIOYCe5xNqBHbvb86YyI=;
+        b=kmkvA2QoI+9MGO4i2VqfZll8hIVOdrZh90wktnpoTLEBkgA/3g7QXclAfj+2oqKLYD
+         VQWl4aAVoNqATt6kkUJTc5TVjabBVtFWqhhbyn9S7kSr4qrtZ3jFhXSbHLL+4xfBj9wf
+         HFCOeuRE0EX+NGnW9SO9D0Jwl72zqaCSIUuk6sf+RBcyoTHFe50aWPMNhcTH097ogNym
+         Bxt3Ivbw98fosEx5nX8NWVgqqbWb+ZNMRW7ENum/EVLkHOX3uixOZLihSfGUL2r+vFk3
+         YN6aRRuBsXamSNRoz5o2K3mgJr6J3+fnTXEL6gu6gI6eVyf5QY8xQJdApUkan0+PtX2A
+         h27g==
+X-Gm-Message-State: AOAM531MgW4u8y6I3+rPy0xfRcvFvXqgQVUqCH6nUaVEcnxKhioBbVy7
+        qAYKjslaZsfyxYoAeQgSAQCAbA==
+X-Google-Smtp-Source: ABdhPJzNAvuk+0W2NxftJEP+MRskEe2g3Brg83ppvWRminnOPpTlroZr/g6WX21bBuN68CdAychIPg==
+X-Received: by 2002:a9d:4a8f:: with SMTP id i15mr15826182otf.77.1593463075332;
+        Mon, 29 Jun 2020 13:37:55 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id g126sm187086oia.41.2020.06.29.13.37.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jun 2020 13:37:54 -0700 (PDT)
+Subject: Re: [PATCH 5.7 000/265] 5.7.7-rc1 review
+To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.9 186/191] SUNRPC: Properly set the @subbuf parameter of xdr_buf_subsegment()
-Date:   Mon, 29 Jun 2020 11:40:02 -0400
-Message-Id: <20200629154007.2495120-187-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
-References: <20200629154007.2495120-1-sashal@kernel.org>
+References: <20200629151818.2493727-1-sashal@kernel.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <42dadde8-04c0-863b-651a-1959a3d85494@linuxfoundation.org>
+Date:   Mon, 29 Jun 2020 14:37:53 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.229-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.9.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.9.229-rc1
-X-KernelTest-Deadline: 2020-07-01T15:39+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+Hi Sasha,
 
-commit 89a3c9f5b9f0bcaa9aea3e8b2a616fcaea9aad78 upstream.
+On 6/29/20 9:13 AM, Sasha Levin wrote:
+> 
+> This is the start of the stable review cycle for the 5.7.7 release.
+> There are 265 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Wed 01 Jul 2020 03:14:48 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/patch/?id=linux-5.7.y&id2=v5.7.6
+> 
 
-@subbuf is an output parameter of xdr_buf_subsegment(). A survey of
-call sites shows that @subbuf is always uninitialized before
-xdr_buf_segment() is invoked by callers.
+Looks like patch naming convention has changed. My scripts look
+for the following convention Greg uses. Are you planning to use
+the above going forward? My scripts failed looking for the usual
+naming convention.
 
-There are some execution paths through xdr_buf_subsegment() that do
-not set all of the fields in @subbuf, leaving some pointer fields
-containing garbage addresses. Subsequent processing of that buffer
-then results in a page fault.
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.6-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.7.y
+and the diffstat can be found below.
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/sunrpc/xdr.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
-index 69846c6574ef6..dd547edee59f2 100644
---- a/net/sunrpc/xdr.c
-+++ b/net/sunrpc/xdr.c
-@@ -1036,6 +1036,7 @@ xdr_buf_subsegment(struct xdr_buf *buf, struct xdr_buf *subbuf,
- 		base = 0;
- 	} else {
- 		base -= buf->head[0].iov_len;
-+		subbuf->head[0].iov_base = buf->head[0].iov_base;
- 		subbuf->head[0].iov_len = 0;
- 	}
- 
-@@ -1048,6 +1049,8 @@ xdr_buf_subsegment(struct xdr_buf *buf, struct xdr_buf *subbuf,
- 		base = 0;
- 	} else {
- 		base -= buf->page_len;
-+		subbuf->pages = buf->pages;
-+		subbuf->page_base = 0;
- 		subbuf->page_len = 0;
- 	}
- 
-@@ -1059,6 +1062,7 @@ xdr_buf_subsegment(struct xdr_buf *buf, struct xdr_buf *subbuf,
- 		base = 0;
- 	} else {
- 		base -= buf->tail[0].iov_len;
-+		subbuf->tail[0].iov_base = buf->tail[0].iov_base;
- 		subbuf->tail[0].iov_len = 0;
- 	}
- 
--- 
-2.25.1
-
+thanks,
+-- Shuah
