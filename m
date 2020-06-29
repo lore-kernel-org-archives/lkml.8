@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 311C0C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:15:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9ECC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0613920675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:15:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC5B420656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:15:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461724;
-	bh=GT2VB5Iqd6Zk1iaUTAJN6eBdprg2RUo19uhmtJmufp0=;
+	s=default; t=1593461731;
+	bh=A/iejyMXASVuRe9IDxE5ScubzxcWtQAlOBvnIvtXnDo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YRN7Xn4WY1/2nRKl4Zf1SoAZzhnZL6qFqDL8aKu8FEwqX0ApGQN5XxS261rvi7N+0
-	 ki4pTrqKV2qtBMRBNnkDTZgqGajgoaJiQGxqwHduwg7vJ6Z/yTG1TfZSC7ZRb8P/iP
-	 r1r6Wk/ySqVwp10qXi5Vn9BtCHZi+V63/wnl4yeU=
+	b=fDMMfbizcTpEbc9gcjlR0p2o5sleFSPeaDemfsGDVyVGzhS24T2VUqD7oP6ZXw75/
+	 K3hfFgMDX4vw3P//0mhlMm9+T83k03xb4aBt1/6jmjZQEzteu2u7BzGr9EoNWGX0Lk
+	 XFVxzIgzvUv41GC48F51Mwoywkl7Jl3+jjRGPX8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732085AbgF2UPW (ORCPT
+        id S1730182AbgF2UPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:15:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40564 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:15:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732820AbgF2TaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732827AbgF2TaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10EAE251EC;
-        Mon, 29 Jun 2020 15:35:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E3B02527D;
+        Mon, 29 Jun 2020 15:36:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444909;
-        bh=GT2VB5Iqd6Zk1iaUTAJN6eBdprg2RUo19uhmtJmufp0=;
+        s=default; t=1593444990;
+        bh=A/iejyMXASVuRe9IDxE5ScubzxcWtQAlOBvnIvtXnDo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zDatoSSaIU5rMUil7BBYc7jvGSo1As0zTyXTmGF5ZVr4n6Pf7nFZ1xiRzR2WNU3Dg
-         vk2ZupmapWbSh9MBk5gmbZOqZ0XonC+MeAY6iL2Wm/+XDJLV29tx9jxWSaEm8nQFA6
-         rxbUfEbiJ3/CtxHBBL8FuZzKsogncfabwB9ozlKA=
+        b=j6ziL9k0XTfFaUigGr6gNf4GkV3D6BAQvLVE2fYSiMlT5M7hMnWla6e37ecBIdFEU
+         mnzpYpEENHz8Mm6GcVoEbMDTRhE67snfjDPUJDi7mJwF1y3AQrCuTQJGK9koFIXHpi
+         fpUtvCuXPnHaMgcqg+HhjFFUPGNiffM5bM7pMNJg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Doug Berger <opendmb@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Juri Lelli <juri.lelli@redhat.com>,
+        syzbot+119ba87189432ead09b4@syzkaller.appspotmail.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Daniel Wagner <dwagner@suse.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 005/131] net: bcmgenet: remove HFB_CTRL access
-Date:   Mon, 29 Jun 2020 11:32:56 -0400
-Message-Id: <20200629153502.2494656-6-sashal@kernel.org>
+Subject: [PATCH 4.19 089/131] sched/core: Fix PI boosting between RT and DEADLINE tasks
+Date:   Mon, 29 Jun 2020 11:34:20 -0400
+Message-Id: <20200629153502.2494656-90-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
@@ -65,37 +69,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Doug Berger <opendmb@gmail.com>
+From: Juri Lelli <juri.lelli@redhat.com>
 
-[ Upstream commit 24d476db6dfb0f85130e348ca1bbd14afb73a8be ]
+[ Upstream commit 740797ce3a124b7dd22b7fb832d87bc8fba1cf6f ]
 
-Commit c5a54bbcecec ("net: bcmgenet: abort suspend on error")
-mistakenly introduced register accesses that should not occur
-in bcmgenet_wol_power_up_cfg().
+syzbot reported the following warning:
 
-Fixes: c5a54bbcecec ("net: bcmgenet: abort suspend on error")
-Signed-off-by: Doug Berger <opendmb@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+ WARNING: CPU: 1 PID: 6351 at kernel/sched/deadline.c:628
+ enqueue_task_dl+0x22da/0x38a0 kernel/sched/deadline.c:1504
+
+At deadline.c:628 we have:
+
+ 623 static inline void setup_new_dl_entity(struct sched_dl_entity *dl_se)
+ 624 {
+ 625 	struct dl_rq *dl_rq = dl_rq_of_se(dl_se);
+ 626 	struct rq *rq = rq_of_dl_rq(dl_rq);
+ 627
+ 628 	WARN_ON(dl_se->dl_boosted);
+ 629 	WARN_ON(dl_time_before(rq_clock(rq), dl_se->deadline));
+        [...]
+     }
+
+Which means that setup_new_dl_entity() has been called on a task
+currently boosted. This shouldn't happen though, as setup_new_dl_entity()
+is only called when the 'dynamic' deadline of the new entity
+is in the past w.r.t. rq_clock and boosted tasks shouldn't verify this
+condition.
+
+Digging through the PI code I noticed that what above might in fact happen
+if an RT tasks blocks on an rt_mutex hold by a DEADLINE task. In the
+first branch of boosting conditions we check only if a pi_task 'dynamic'
+deadline is earlier than mutex holder's and in this case we set mutex
+holder to be dl_boosted. However, since RT 'dynamic' deadlines are only
+initialized if such tasks get boosted at some point (or if they become
+DEADLINE of course), in general RT 'dynamic' deadlines are usually equal
+to 0 and this verifies the aforementioned condition.
+
+Fix it by checking that the potential donor task is actually (even if
+temporary because in turn boosted) running at DEADLINE priority before
+using its 'dynamic' deadline value.
+
+Fixes: 2d3d891d3344 ("sched/deadline: Add SCHED_DEADLINE inheritance logic")
+Reported-by: syzbot+119ba87189432ead09b4@syzkaller.appspotmail.com
+Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Daniel Bristot de Oliveira <bristot@redhat.com>
+Tested-by: Daniel Wagner <dwagner@suse.de>
+Link: https://lkml.kernel.org/r/20181119153201.GB2119@localhost.localdomain
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c | 4 ----
- 1 file changed, 4 deletions(-)
+ kernel/sched/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c b/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
-index b3596e0ee47ba..57582efa362df 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet_wol.c
-@@ -191,10 +191,6 @@ void bcmgenet_wol_power_up_cfg(struct bcmgenet_priv *priv,
- 	reg &= ~MPD_EN;
- 	bcmgenet_umac_writel(priv, reg, UMAC_MPD_CTRL);
- 
--	reg = bcmgenet_hfb_reg_readl(priv, HFB_CTRL);
--	reg &= ~(RBUF_HFB_EN | RBUF_ACPI_EN);
--	bcmgenet_hfb_reg_writel(priv, reg, HFB_CTRL);
--
- 	/* Disable CRC Forward */
- 	reg = bcmgenet_umac_readl(priv, UMAC_CMD);
- 	reg &= ~CMD_CRC_FWD;
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 0325ccf3a8e45..843394d0ea426 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3862,7 +3862,8 @@ void rt_mutex_setprio(struct task_struct *p, struct task_struct *pi_task)
+ 	 */
+ 	if (dl_prio(prio)) {
+ 		if (!dl_prio(p->normal_prio) ||
+-		    (pi_task && dl_entity_preempt(&pi_task->dl, &p->dl))) {
++		    (pi_task && dl_prio(pi_task->prio) &&
++		     dl_entity_preempt(&pi_task->dl, &p->dl))) {
+ 			p->dl.dl_boosted = 1;
+ 			queue_flag |= ENQUEUE_REPLENISH;
+ 		} else
 -- 
 2.25.1
 
