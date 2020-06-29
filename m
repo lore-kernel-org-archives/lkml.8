@@ -2,89 +2,114 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF79C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:55:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6369C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D30A820656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:55:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A77C5206C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:55:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="vOPAUcPz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X8x6aysV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbgF2Szj (ORCPT
+        id S1729372AbgF2Szp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:55:39 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:51846 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730003AbgF2Szc (ORCPT
+        Mon, 29 Jun 2020 14:55:45 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56524 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729913AbgF2SzU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:55:32 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593456931; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=W2uT7RbUayI8+09oL7ZgMik7VzMZpJICcU7OK1H+EHw=; b=vOPAUcPzsYDlsnVyQ/6hXJe9jHPNwPYV7JWSuDUCtmW6n8pY6u6+R08GK6iWPuNHcfgPFigx
- fidNb6ZU+R6C0O1YNdtzo53wXVXpzf9GlD17ficNPwAeYLsyJAYhohy5A2Qdx4POP1lXEKTd
- smRpXG3fAUO9g4ynjwLubiudDYY=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n18.prod.us-west-2.postgun.com with SMTP id
- 5efa195a4c9690533a7b29b0 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 29 Jun 2020 16:39:54
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 44553C433C6; Mon, 29 Jun 2020 16:39:54 +0000 (UTC)
-Received: from malabar-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbhatt)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3E169C433CA;
-        Mon, 29 Jun 2020 16:39:52 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3E169C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bbhatt@codeaurora.org
-From:   Bhaumik Bhatt <bbhatt@codeaurora.org>
-To:     manivannan.sadhasivam@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
-        jhugo@codeaurora.org, linux-kernel@vger.kernel.org,
-        Bhaumik Bhatt <bbhatt@codeaurora.org>
-Subject: [PATCH v4 1/9] bus: mhi: core: Remove double occurrence for mhi_ctrl_ev_task() declaration
-Date:   Mon, 29 Jun 2020 09:39:34 -0700
-Message-Id: <1593448782-8385-2-git-send-email-bbhatt@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1593448782-8385-1-git-send-email-bbhatt@codeaurora.org>
-References: <1593448782-8385-1-git-send-email-bbhatt@codeaurora.org>
+        Mon, 29 Jun 2020 14:55:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593456919;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=IRNIV4x43P6HErryarebd5FQz8VopUKzf076Ub4cEhw=;
+        b=X8x6aysVFVe8YFVhCEmUfJRQ0p8IteM8r0KfEtdIzRJXebemoPOpgVk9PmFw5+q1RAqeiE
+        dlMu7KrzsZ4zc4fdXbNYAnrQuME4wPHLgFAbnxqe/rXB7sTU6CZKGfqYUivNX0byQ3+V6a
+        vntnh5Ohk0wTgsLP66a1K4lHuNxKu08=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-357-um4uu1F4PoCkq658zZ3pxg-1; Mon, 29 Jun 2020 08:54:00 -0400
+X-MC-Unique: um4uu1F4PoCkq658zZ3pxg-1
+Received: by mail-wm1-f69.google.com with SMTP id v6so16151905wmg.1
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 05:54:00 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=IRNIV4x43P6HErryarebd5FQz8VopUKzf076Ub4cEhw=;
+        b=P9u/mZg4grv2BZpGy6gmnrIurUD2sBX+C3GJ02eyjG4cgVO4qGPAnY/jbN2yHtTG7g
+         rxNO+Q0aHlet4vo8UUn/qlFDowC94sUCuBrYkwzSzetKzI6Qhp0aGYAq8CjFUH/CCFzW
+         0k36sVr8/8PH1CFj1aC/5PcqklFZ/GbnfUNYIwNPIm6z5XtUb4WIQ6JFJQOLDo/wTERX
+         6Kclqz6okEl8/dc1AX5ZApGAZnZADKB57Mqgv+3GQSPlhh0eeKMdzsdT+rnnZshTXWML
+         XpZ/Qjb9kXuUVLpPcn6kNloxe3kTwcdBGBX8DoHXd8isc3gdrhXszP71POr2aeJXkrA5
+         tmEQ==
+X-Gm-Message-State: AOAM531o4yRACR0YCgkRR0hmnQ7v+E2Oh3NfqHGKTsVYXUTAuoXEa9dR
+        9DMFt+51vBP+lncE2mlP7bOONMPjMlUk3Hvo/vrhU0Faes89C9Cd8UhwPKxepNNxWQPHP3qQf/P
+        Yj9zcm4IU8PO8mW1vRNc6HjUA
+X-Received: by 2002:a1c:5418:: with SMTP id i24mr16011211wmb.47.1593435239275;
+        Mon, 29 Jun 2020 05:53:59 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyCGDvr+eGI0QiQBdG3VZDI0bqn2iCa/GHXZRlpJW0cXI/cAOmdxZFkRYH9FPz3OcQeGVb3lA==
+X-Received: by 2002:a1c:5418:: with SMTP id i24mr16011199wmb.47.1593435239033;
+        Mon, 29 Jun 2020 05:53:59 -0700 (PDT)
+Received: from localhost.localdomain ([151.29.8.241])
+        by smtp.gmail.com with ESMTPSA id x13sm50975152wre.83.2020.06.29.05.53.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 05:53:58 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 14:53:56 +0200
+From:   Juri Lelli <juri.lelli@redhat.com>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     fweisbec@gmail.com, tglx@linutronix.de, mingo@kernel.org,
+        linux-rt-users@vger.kernel.org, peterz@infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH] tick/sched: update full_nohz status after SCHED dep
+ is cleared
+Message-ID: <20200629125356.GB9670@localhost.localdomain>
+References: <20200520164925.GM10078@localhost.localdomain>
+ <20200520170215.GB8800@lenoir>
+ <20200520184710.GO10078@localhost.localdomain>
+ <20200521004443.GB15455@lenoir>
+ <20200521170020.GQ10078@localhost.localdomain>
+ <20200615210743.GA21371@lenoir>
+ <20200616065757.GA446382@localhost.localdomain>
+ <20200616204649.GA4914@lenoir>
+ <20200629123651.GA9670@localhost.localdomain>
+ <20200629124207.GA6088@lenoir>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200629124207.GA6088@lenoir>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-mhi_ctrl_ev_task() in the internal header file occurred twice.
-Remove one of the occurrences for clean-up.
+On 29/06/20 14:42, Frederic Weisbecker wrote:
+> On Mon, Jun 29, 2020 at 02:36:51PM +0200, Juri Lelli wrote:
+> > Hi,
+> > 
+> > On 16/06/20 22:46, Frederic Weisbecker wrote:
+> > > On Tue, Jun 16, 2020 at 08:57:57AM +0200, Juri Lelli wrote:
+> > > > Sure. Let me know if you find anything.
+> > > 
+> > > I managed to reproduce. With "threadirqs" and without
+> > > "tsc=reliable". I see tons of spurious TIMER softirqs.
+> > > Investigation begins! I'll let you know.
+> > 
+> > Gentle ping. Any new findings about this issue?
+> 
+> Yep, I'm working on a series to reduce timer softirqs. I'm almost
+> done, should post it soon.
 
-Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
----
- drivers/bus/mhi/core/internal.h | 1 -
- 1 file changed, 1 deletion(-)
+Great!
 
-diff --git a/drivers/bus/mhi/core/internal.h b/drivers/bus/mhi/core/internal.h
-index b1f640b..bcfa7b6 100644
---- a/drivers/bus/mhi/core/internal.h
-+++ b/drivers/bus/mhi/core/internal.h
-@@ -592,7 +592,6 @@ int mhi_queue_state_transition(struct mhi_controller *mhi_cntrl,
- void mhi_pm_sys_err_handler(struct mhi_controller *mhi_cntrl);
- void mhi_fw_load_worker(struct work_struct *work);
- int mhi_ready_state_transition(struct mhi_controller *mhi_cntrl);
--void mhi_ctrl_ev_task(unsigned long data);
- int mhi_pm_m0_transition(struct mhi_controller *mhi_cntrl);
- void mhi_pm_m1_transition(struct mhi_controller *mhi_cntrl);
- int mhi_pm_m3_transition(struct mhi_controller *mhi_cntrl);
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Looking forward to it.
+
+Best,
+
+Juri
 
