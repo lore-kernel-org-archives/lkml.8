@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D37C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2634C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D915720672
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:04:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5EA520672
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:04:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461070;
-	bh=7IE2Uu2N8YQKG1XRnzrqLrSq4KIELFlb7Zow4BZM670=;
+	s=default; t=1593461074;
+	bh=4Blk32RzQ+UzyP7QmJitEaBEKLU/tRY+xGER/lF4uZo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fEon9R+//ew8MwClssL89nIN+416bk0D6Y2tlGlpbESySpG0FQ4C12rAE2iDhcB3m
-	 Erbk6oL8I/9rFfHZCy7aZSpPDl+aBRMH4B2abe0oBAyBp4oOXzDTMkBubqUSnWOEA+
-	 dpF9rX36M281tTMho1UkvyY75OswyXg8pnDaUhsU=
+	b=rr264F7eMcoBeKPOVG+L6BumD+QPhuJ6UMZpmYJmwo/35sKJOH9gBbPdkbYxlRRNJ
+	 zmMPdSES+lDbQD+yT8LO4VBGwkX/wLSwy/dI1GRw6CkJNlIotG5nkj+pSBMkqNyTj3
+	 8b0rc83uqPsHAIEkstt1KWWJSiojWfbjrHE6k4PA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731818AbgF2UE3 (ORCPT
+        id S2388655AbgF2UEc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:04:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40566 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:04:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732996AbgF2Tac (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:30:32 -0400
+        id S1732988AbgF2Tab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:30:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AFFA425237;
-        Mon, 29 Jun 2020 15:35:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8AF5425256;
+        Mon, 29 Jun 2020 15:36:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444952;
-        bh=7IE2Uu2N8YQKG1XRnzrqLrSq4KIELFlb7Zow4BZM670=;
+        s=default; t=1593444972;
+        bh=4Blk32RzQ+UzyP7QmJitEaBEKLU/tRY+xGER/lF4uZo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d1kQjHko9YU0a3VXmpPCrrq+hqkAzBAwkNgEcI6zBxtPhkIJVrZa+wzxigV02p4He
-         Ym2/PsnZC9JXx+m+Xiure+FuRtlnxBNwT/k2X3IB5MSccdQrENCcgCzi90QQQexaAB
-         E5wBvb2RW49N0RQUAePCTtWf8EpJHUie3CF3oiLQ=
+        b=UqcnoTAiJzcIiMbemxzARkH1JUsMzizZwhDMLAldlG1umBgdrHW7MUr8QcOssESjf
+         aZialkukAMLlkPoRlU+PiX5nObdLtKhmSlev4TN0h6TiBrr+K0kPMtoH4x6ZwqRb50
+         DkDGF2Jv3y9aj7w5SA2plGE/OU53YyBbvKDSSNx0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Macpaul Lin <macpaul.lin@mediatek.com>,
-        Chihhao Chen <chihhao.chen@mediatek.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 050/131] ALSA: usb-audio: add quirk for Samsung USBC Headset (AKG)
-Date:   Mon, 29 Jun 2020 11:33:41 -0400
-Message-Id: <20200629153502.2494656-51-sashal@kernel.org>
+Cc:     Michal Kalderon <michal.kalderon@marvell.com>,
+        Ariel Elior <ariel.elior@marvell.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 071/131] RDMA/qedr: Fix KASAN: use-after-free in ucma_event_handler+0x532
+Date:   Mon, 29 Jun 2020 11:34:02 -0400
+Message-Id: <20200629153502.2494656-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
@@ -66,43 +66,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Macpaul Lin <macpaul.lin@mediatek.com>
+From: Michal Kalderon <michal.kalderon@marvell.com>
 
-commit a32a1fc99807244d920d274adc46ba04b538cc8a upstream.
+[ Upstream commit 0dfbd5ecf28cbcb81674c49d34ee97366db1be44 ]
 
-We've found Samsung USBC Headset (AKG) (VID: 0x04e8, PID: 0xa051)
-need a tiny delay after each class compliant request.
-Otherwise the device might not be able to be recognized each times.
+Private data passed to iwarp_cm_handler is copied for connection request /
+response, but ignored otherwise.  If junk is passed, it is stored in the
+event and used later in the event processing.
 
-Signed-off-by: Chihhao Chen <chihhao.chen@mediatek.com>
-Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/1592910203-24035-1-git-send-email-macpaul.lin@mediatek.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The driver passes an old junk pointer during connection close which leads
+to a use-after-free on event processing.  Set private data to NULL for
+events that don 't have private data.
+
+  BUG: KASAN: use-after-free in ucma_event_handler+0x532/0x560 [rdma_ucm]
+  kernel: Read of size 4 at addr ffff8886caa71200 by task kworker/u128:1/5250
+  kernel:
+  kernel: Workqueue: iw_cm_wq cm_work_handler [iw_cm]
+  kernel: Call Trace:
+  kernel: dump_stack+0x8c/0xc0
+  kernel: print_address_description.constprop.0+0x1b/0x210
+  kernel: ? ucma_event_handler+0x532/0x560 [rdma_ucm]
+  kernel: ? ucma_event_handler+0x532/0x560 [rdma_ucm]
+  kernel: __kasan_report.cold+0x1a/0x33
+  kernel: ? ucma_event_handler+0x532/0x560 [rdma_ucm]
+  kernel: kasan_report+0xe/0x20
+  kernel: check_memory_region+0x130/0x1a0
+  kernel: memcpy+0x20/0x50
+  kernel: ucma_event_handler+0x532/0x560 [rdma_ucm]
+  kernel: ? __rpc_execute+0x608/0x620 [sunrpc]
+  kernel: cma_iw_handler+0x212/0x330 [rdma_cm]
+  kernel: ? iw_conn_req_handler+0x6e0/0x6e0 [rdma_cm]
+  kernel: ? enqueue_timer+0x86/0x140
+  kernel: ? _raw_write_lock_irq+0xd0/0xd0
+  kernel: cm_work_handler+0xd3d/0x1070 [iw_cm]
+
+Fixes: e411e0587e0d ("RDMA/qedr: Add iWARP connection management functions")
+Link: https://lore.kernel.org/r/20200616093408.17827-1-michal.kalderon@marvell.com
+Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/quirks.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/infiniband/hw/qedr/qedr_iw_cm.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
-index 976eee06907c9..8b5bc809efd3f 100644
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -1345,6 +1345,14 @@ void snd_usb_ctl_msg_quirk(struct usb_device *dev, unsigned int pipe,
- 	     chip->usb_id == USB_ID(0x0951, 0x16ad)) &&
- 	    (requesttype & USB_TYPE_MASK) == USB_TYPE_CLASS)
- 		usleep_range(1000, 2000);
-+
-+	/*
-+	 * Samsung USBC Headset (AKG) need a tiny delay after each
-+	 * class compliant request. (Model number: AAM625R or AAM627R)
-+	 */
-+	if (chip->usb_id == USB_ID(0x04e8, 0xa051) &&
-+	    (requesttype & USB_TYPE_MASK) == USB_TYPE_CLASS)
-+		usleep_range(5000, 6000);
- }
+diff --git a/drivers/infiniband/hw/qedr/qedr_iw_cm.c b/drivers/infiniband/hw/qedr/qedr_iw_cm.c
+index 93b16237b7677..2566715773675 100644
+--- a/drivers/infiniband/hw/qedr/qedr_iw_cm.c
++++ b/drivers/infiniband/hw/qedr/qedr_iw_cm.c
+@@ -128,8 +128,17 @@ qedr_iw_issue_event(void *context,
+ 	if (params->cm_info) {
+ 		event.ird = params->cm_info->ird;
+ 		event.ord = params->cm_info->ord;
+-		event.private_data_len = params->cm_info->private_data_len;
+-		event.private_data = (void *)params->cm_info->private_data;
++		/* Only connect_request and reply have valid private data
++		 * the rest of the events this may be left overs from
++		 * connection establishment. CONNECT_REQUEST is issued via
++		 * qedr_iw_mpa_request
++		 */
++		if (event_type == IW_CM_EVENT_CONNECT_REPLY) {
++			event.private_data_len =
++				params->cm_info->private_data_len;
++			event.private_data =
++				(void *)params->cm_info->private_data;
++		}
+ 	}
  
- /*
+ 	if (ep->cm_id)
 -- 
 2.25.1
 
