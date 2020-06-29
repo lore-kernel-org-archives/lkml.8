@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D357DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:06:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D325DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEEE820656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:06:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E17C2076C
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:06:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468366;
-	bh=34dyPVdeFg/qO3TlEhfhP7V9iu5OMl+FVa3uPJqFPrE=;
+	s=default; t=1593468369;
+	bh=rddvpDfFVekss7/Pg3s+lxXRzrKvxWRTL8sw+yvTBNE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nBXpiSd8rWPX0wTUdcsrVX2Fy2FXjCLWOERu8Y/rPqS0sn6PZkq+huhEpG/78oBVe
-	 dkDHcnPFX5YhorOcp59qLqPGgnNQQ0XEUSPtOnPOp73yqEvDDtduwpjomGAGKPE7XZ
-	 9Cior/T4D+ypKwppEVp4O8Xj+AvizXM4pD2ciVFY=
+	b=1jUQj7LtnNYgiCejpmUUpecfYX/yemeFTQv4VgMR9UpJioPsRuKfCpgQ4JmxdBq0o
+	 3pW5wlxi9TLUbBdH3jL27xujxjEjyoOZfUqYPh368MEmOOqeGvrsIrzPYfIYP8HbxA
+	 P5QQBJz2CdE7qsd9z54LF7eeuMvSKQqX9QXkTMCQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391892AbgF2WGE (ORCPT
+        id S2391898AbgF2WGH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:06:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56796 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:06:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726150AbgF2SfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726145AbgF2SfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17A1D24170;
-        Mon, 29 Jun 2020 15:19:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 113D724755;
+        Mon, 29 Jun 2020 15:21:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443947;
-        bh=34dyPVdeFg/qO3TlEhfhP7V9iu5OMl+FVa3uPJqFPrE=;
+        s=default; t=1593444073;
+        bh=rddvpDfFVekss7/Pg3s+lxXRzrKvxWRTL8sw+yvTBNE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=upSYItexZM6D2ivENzSY+dn1AUqvg4fgriaByFQFXAeAxoICzpa3MT9UJCCl8/in9
-         Aol4MCrCtLHnVJ4J8M+dONlN2BR91FSSSzchZIvqQtrPbeUIjdozu42ExmGjzcjw0l
-         9m7Dd2GCl8VYh9xD2pE34xX5QnMAiFoEyiHHBmNE=
+        b=HPq7tQrKCGW5yJxmBMB1C6Qy3oDphoP7efwrKigsqu/Q80VdUW8bwTy/8qz4HLaJ6
+         /DStQaXbwRFUi1hyyqfdYC2p9FHrFelCdUEZ2p9832so7GUupQiM6D02jndZS3yd7X
+         A4WH/qwHrQ4zvOMDy9diT7R4DNcaqZ6NkXsjpxhU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shannon Nelson <snelson@pensando.io>,
-        Jakub Kicinski <kuba@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 049/265] ionic: update the queue count on open
-Date:   Mon, 29 Jun 2020 11:14:42 -0400
-Message-Id: <20200629151818.2493727-50-sashal@kernel.org>
+Cc:     Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 182/265] sata_rcar: handle pm_runtime_get_sync failure cases
+Date:   Mon, 29 Jun 2020 11:16:55 -0400
+Message-Id: <20200629151818.2493727-183-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -66,43 +64,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shannon Nelson <snelson@pensando.io>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit fa48494cce5f6360b0f8683cdf258fb45c666287 ]
+[ Upstream commit eea1238867205b9e48a67c1a63219529a73c46fd ]
 
-Let the network stack know the real number of queues that
-we are using.
+Calling pm_runtime_get_sync increments the counter even in case of
+failure, causing incorrect ref count. Call pm_runtime_put if
+pm_runtime_get_sync fails.
 
-v2: added error checking
-
-Fixes: 49d3b493673a ("ionic: disable the queues on link down")
-Signed-off-by: Shannon Nelson <snelson@pensando.io>
-Reviewed-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/pensando/ionic/ionic_lif.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/ata/sata_rcar.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/pensando/ionic/ionic_lif.c b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-index 7aa037c3fe020..2729b0bb12739 100644
---- a/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-+++ b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-@@ -1653,6 +1653,14 @@ int ionic_open(struct net_device *netdev)
- 	if (err)
- 		goto err_out;
+diff --git a/drivers/ata/sata_rcar.c b/drivers/ata/sata_rcar.c
+index 980aacdbcf3b4..141ac600b64c8 100644
+--- a/drivers/ata/sata_rcar.c
++++ b/drivers/ata/sata_rcar.c
+@@ -907,7 +907,7 @@ static int sata_rcar_probe(struct platform_device *pdev)
+ 	pm_runtime_enable(dev);
+ 	ret = pm_runtime_get_sync(dev);
+ 	if (ret < 0)
+-		goto err_pm_disable;
++		goto err_pm_put;
  
-+	err = netif_set_real_num_tx_queues(netdev, lif->nxqs);
-+	if (err)
-+		goto err_txrx_deinit;
-+
-+	err = netif_set_real_num_rx_queues(netdev, lif->nxqs);
-+	if (err)
-+		goto err_txrx_deinit;
-+
- 	/* don't start the queues until we have link */
- 	if (netif_carrier_ok(netdev)) {
- 		err = ionic_start_queues(lif);
+ 	host = ata_host_alloc(dev, 1);
+ 	if (!host) {
+@@ -937,7 +937,6 @@ static int sata_rcar_probe(struct platform_device *pdev)
+ 
+ err_pm_put:
+ 	pm_runtime_put(dev);
+-err_pm_disable:
+ 	pm_runtime_disable(dev);
+ 	return ret;
+ }
+@@ -991,8 +990,10 @@ static int sata_rcar_resume(struct device *dev)
+ 	int ret;
+ 
+ 	ret = pm_runtime_get_sync(dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put(dev);
+ 		return ret;
++	}
+ 
+ 	if (priv->type == RCAR_GEN3_SATA) {
+ 		sata_rcar_init_module(priv);
+@@ -1017,8 +1018,10 @@ static int sata_rcar_restore(struct device *dev)
+ 	int ret;
+ 
+ 	ret = pm_runtime_get_sync(dev);
+-	if (ret < 0)
++	if (ret < 0) {
++		pm_runtime_put(dev);
+ 		return ret;
++	}
+ 
+ 	sata_rcar_setup_port(host);
+ 
 -- 
 2.25.1
 
