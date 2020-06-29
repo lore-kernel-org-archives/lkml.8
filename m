@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2696C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBEBAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B30F204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:56:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B08122067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:56:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593456962;
-	bh=C6FW2g4U3g9zleI+T6QiaWuTQjwS7KiK2AgAFaLs56w=;
+	s=default; t=1593456966;
+	bh=Q5bwQkRY743XCiSdqiliDAuIeq9xfC1buCDIUfDYiWM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qMCxWDkqMUaywWhGTVFOp3mWKyNmq1ZjH1prHs3o2dDbrxoUgotrJVyvsR1h6uPsL
-	 r1OOsmZ3cOwmlI2tDn4+JC64VmWUnBnLi31uPPc6ezEq71WXMWXEZ2hk8xkUy7aOnz
-	 TP7d6gQtbkKUmGGseBBZKbppN909m3/8OvxTIIgk=
+	b=bFm30CZDK/IWt+THQSraTUIGgtioTw3uV1INTAlWIoYQI6CEoGV8MCxWl9StmtfsT
+	 kqT+5unnxc9LjH1+ddUOx3reEhvxD7l4bkO94YU41e8mMZgkY2TC6O+dj1ag3+dZYx
+	 zm/ahgC5M5IvW89YILzkU3gdmd7/0FueZWpJlB8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728559AbgF2S4B (ORCPT
+        id S1728397AbgF2S4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:56:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42464 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 14:56:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729975AbgF2SzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729976AbgF2SzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:55:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE93C25579;
-        Mon, 29 Jun 2020 15:55:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81EB9248C3;
+        Mon, 29 Jun 2020 15:55:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446142;
-        bh=C6FW2g4U3g9zleI+T6QiaWuTQjwS7KiK2AgAFaLs56w=;
+        s=default; t=1593446118;
+        bh=Q5bwQkRY743XCiSdqiliDAuIeq9xfC1buCDIUfDYiWM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ng6HIQjcOEABxj12/uEgXMyLzxV8uqN0gez9wffQ1T3D0VOf3A8suWCkbGfgdV5Xs
-         Ie5eIlxNPTY8lvxLjqyfLdJG6Ci7ZlnUei8AK18oC4NIhDckjl04UTSHHcJSDCKlOA
-         7+Yl+01rQvgc1wOMo4Re4e9B2zjHAuKSB/RolAvg=
+        b=DIKmiur++nZSLsFAii6bsXkAqAcyeTBnZrzfuDyia9vQJWcmS+topKE5HvYEaXI3G
+         rYnOJuPBPSqu6dXtlSeRR2CrCfvroEq5F6uGBWNBHvU1aEW5Sv4A7g5xK6hEhxShp6
+         mbvAcyRZRCxIP9OooKXNybyurEywK/Y67vIG4p/g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.4 130/135] SUNRPC: Properly set the @subbuf parameter of xdr_buf_subsegment()
-Date:   Mon, 29 Jun 2020 11:53:04 -0400
-Message-Id: <20200629155309.2495516-131-sashal@kernel.org>
+Cc:     Zhang Xiaoxu <zhangxiaoxu5@huawei.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 109/135] cifs/smb3: Fix data inconsistent when punch hole
+Date:   Mon, 29 Jun 2020 11:52:43 -0400
+Message-Id: <20200629155309.2495516-110-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -65,56 +66,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
 
-commit 89a3c9f5b9f0bcaa9aea3e8b2a616fcaea9aad78 upstream.
+[ Upstream commit acc91c2d8de4ef46ed751c5f9df99ed9a109b100 ]
 
-@subbuf is an output parameter of xdr_buf_subsegment(). A survey of
-call sites shows that @subbuf is always uninitialized before
-xdr_buf_segment() is invoked by callers.
+When punch hole success, we also can read old data from file:
+  # strace -e trace=pread64,fallocate xfs_io -f -c "pread 20 40" \
+           -c "fpunch 20 40" -c"pread 20 40" file
+  pread64(3, " version 5.8.0-rc1+"..., 40, 20) = 40
+  fallocate(3, FALLOC_FL_KEEP_SIZE|FALLOC_FL_PUNCH_HOLE, 20, 40) = 0
+  pread64(3, " version 5.8.0-rc1+"..., 40, 20) = 40
 
-There are some execution paths through xdr_buf_subsegment() that do
-not set all of the fields in @subbuf, leaving some pointer fields
-containing garbage addresses. Subsequent processing of that buffer
-then results in a page fault.
+CIFS implements the fallocate(FALLOCATE_FL_PUNCH_HOLE) with send SMB
+ioctl(FSCTL_SET_ZERO_DATA) to server. It just set the range of the
+remote file to zero, but local page caches not updated, then the
+local page caches inconsistent with server.
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Also can be found by xfstests generic/316.
+
+So, we need to remove the page caches before send the SMB
+ioctl(FSCTL_SET_ZERO_DATA) to server.
+
+Fixes: 31742c5a33176 ("enable fallocate punch hole ("fallocate -p") for SMB3")
+Suggested-by: Pavel Shilovsky <pshilov@microsoft.com>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+Signed-off-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+Cc: stable@vger.kernel.org # v3.17
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sunrpc/xdr.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ fs/cifs/smb2ops.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
-index ed9bbd383f7d3..df7ecf9584f68 100644
---- a/net/sunrpc/xdr.c
-+++ b/net/sunrpc/xdr.c
-@@ -1031,6 +1031,7 @@ xdr_buf_subsegment(struct xdr_buf *buf, struct xdr_buf *subbuf,
- 		base = 0;
- 	} else {
- 		base -= buf->head[0].iov_len;
-+		subbuf->head[0].iov_base = buf->head[0].iov_base;
- 		subbuf->head[0].iov_len = 0;
- 	}
+diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
+index 0fcf42401a5df..870b7e763bab9 100644
+--- a/fs/cifs/smb2ops.c
++++ b/fs/cifs/smb2ops.c
+@@ -1201,6 +1201,12 @@ static long smb3_punch_hole(struct file *file, struct cifs_tcon *tcon,
+ 	if (!smb2_set_sparse(xid, tcon, cfile, inode, set_sparse))
+ 		return -EOPNOTSUPP;
  
-@@ -1043,6 +1044,8 @@ xdr_buf_subsegment(struct xdr_buf *buf, struct xdr_buf *subbuf,
- 		base = 0;
- 	} else {
- 		base -= buf->page_len;
-+		subbuf->pages = buf->pages;
-+		subbuf->page_base = 0;
- 		subbuf->page_len = 0;
- 	}
++	/*
++	 * We implement the punch hole through ioctl, so we need remove the page
++	 * caches first, otherwise the data may be inconsistent with the server.
++	 */
++	truncate_pagecache_range(inode, offset, offset + len - 1);
++
+ 	cifs_dbg(FYI, "offset %lld len %lld", offset, len);
  
-@@ -1054,6 +1057,7 @@ xdr_buf_subsegment(struct xdr_buf *buf, struct xdr_buf *subbuf,
- 		base = 0;
- 	} else {
- 		base -= buf->tail[0].iov_len;
-+		subbuf->tail[0].iov_base = buf->tail[0].iov_base;
- 		subbuf->tail[0].iov_len = 0;
- 	}
- 
+ 	fsctl_buf.FileOffset = cpu_to_le64(offset);
 -- 
 2.25.1
 
