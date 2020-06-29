@@ -2,147 +2,309 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA505C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8E56C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 992712067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:31:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593459070;
-	bh=u8+YsUztz+BPseXMGrTmb/r65SQkRQS7f94slS33SsI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p1oKjTaMgJUGzN8d4J8zQzDHqH/ggjt1kYTs+CVhJi4FCrxQPKvz0d7WxTVOQoDAS
-	 453I9sqi4WnADNyr1P9uBuIMpxABtqdw66+kgAtCG5PkYALTq+A5VBZbLI3oh/yyuO
-	 A6Oasq0QI1q3hC5kkfX+tz/Dy5bO8+I7v+96GURk=
+	by mail.kernel.org (Postfix) with ESMTP id A25CB2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:31:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="fwysWZyO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729304AbgF2TbI (ORCPT
+        id S1733167AbgF2Tb1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:31:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40592 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732986AbgF2Tab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:30:31 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82B7C25228;
-        Mon, 29 Jun 2020 15:35:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444943;
-        bh=u8+YsUztz+BPseXMGrTmb/r65SQkRQS7f94slS33SsI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wXe0xktBtmicxvjSaa6kENI2ZXFuceJdTcY2bMiEy+OxYO/itgiy6U2izEUDqeKo/
-         0HJu3s7yf2j1n/32z4cEsjUKq9ygblT45OBKNv0kmTGn9k6XA1H4nuSpDjMGs0XP4T
-         9WfDQbOGxliSTrj98EvQirWJ9MQPRYHKWeW0C09I=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Taehee Yoo <ap420073@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 040/131] net: core: reduce recursion limit value
-Date:   Mon, 29 Jun 2020 11:33:31 -0400
-Message-Id: <20200629153502.2494656-41-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
-References: <20200629153502.2494656-1-sashal@kernel.org>
+        Mon, 29 Jun 2020 15:31:27 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:24916 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733121AbgF2TbT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:31:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1593459079; x=1624995079;
+  h=date:from:to:cc:message-id:references:mime-version:
+   content-transfer-encoding:in-reply-to:subject;
+  bh=kLlA5RN03Xc0rLgTC7sQtfZJgq55+f+4l+tD0cUCuiI=;
+  b=fwysWZyOGX9AZo0dlJ1nlNRQ9HtaDMG5EsBYV/sZi9Z22ovmVsjIiVcu
+   NRQ0ZJwVSA/dPCJLSm9pM8SoJ1bRgzPAwq/TCEEvffyujWRr0xAQfNyLM
+   lI/RsmIgu+PwPxf4tmqhVyUpSuQOT4fo/E1d1w34mQwLBStsGNMezjUnt
+   w=;
+IronPort-SDR: TFk9Ap13BSopn0WzM+ofsaWep3goJJ1oYevrRH/gIxCL0UUWZBH5DxVgfAHkikcgrsKcEgr33D
+ uj0sRPYPNVsQ==
+X-IronPort-AV: E=Sophos;i="5.75,295,1589241600"; 
+   d="scan'208";a="54787643"
+Subject: Re: [PATCH 06/12] xen-blkfront: add callbacks for PM suspend and hibernation]
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 29 Jun 2020 19:20:55 +0000
+Received: from EX13MTAUEE002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com (Postfix) with ESMTPS id 942DDA2269;
+        Mon, 29 Jun 2020 19:20:53 +0000 (UTC)
+Received: from EX13D08UEE004.ant.amazon.com (10.43.62.182) by
+ EX13MTAUEE002.ant.amazon.com (10.43.62.24) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 29 Jun 2020 19:20:35 +0000
+Received: from EX13MTAUEE002.ant.amazon.com (10.43.62.24) by
+ EX13D08UEE004.ant.amazon.com (10.43.62.182) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 29 Jun 2020 19:20:35 +0000
+Received: from dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com
+ (172.22.96.68) by mail-relay.amazon.com (10.43.62.224) with Microsoft SMTP
+ Server id 15.0.1497.2 via Frontend Transport; Mon, 29 Jun 2020 19:20:35 +0000
+Received: by dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com (Postfix, from userid 4335130)
+        id 5419940348; Mon, 29 Jun 2020 19:20:35 +0000 (UTC)
+Date:   Mon, 29 Jun 2020 19:20:35 +0000
+From:   Anchal Agarwal <anchalag@amazon.com>
+To:     Roger Pau =?iso-8859-1?Q?Monn=E9?= <roger.pau@citrix.com>
+CC:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "jgross@suse.com" <jgross@suse.com>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "Kamata, Munehisa" <kamatam@amazon.com>,
+        "sstabellini@kernel.org" <sstabellini@kernel.org>,
+        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
+        "axboe@kernel.dk" <axboe@kernel.dk>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "len.brown@intel.com" <len.brown@intel.com>,
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "Valentin, Eduardo" <eduval@amazon.com>,
+        "Singh, Balbir" <sblbir@amazon.com>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
+Message-ID: <20200629192035.GA13195@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+References: <7FD7505E-79AA-43F6-8D5F-7A2567F333AB@amazon.com>
+ <20200604070548.GH1195@Air-de-Roger>
+ <20200616214925.GA21684@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <20200617083528.GW735@Air-de-Roger>
+ <20200619234312.GA24846@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <20200622083846.GF735@Air-de-Roger>
+ <20200623004314.GA28586@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <20200623081903.GP735@Air-de-Roger>
+ <20200625183659.GA26586@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <20200626091239.GA735@Air-de-Roger>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.19.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.19.131-rc1
-X-KernelTest-Deadline: 2020-07-01T15:34+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200626091239.GA735@Air-de-Roger>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+On Fri, Jun 26, 2020 at 11:12:39AM +0200, Roger Pau Monné wrote:
+> CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
+> 
+> 
+> 
+> On Thu, Jun 25, 2020 at 06:36:59PM +0000, Anchal Agarwal wrote:
+> > On Tue, Jun 23, 2020 at 10:19:03AM +0200, Roger Pau Monné wrote:
+> > > CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
+> > >
+> > >
+> > >
+> > > On Tue, Jun 23, 2020 at 12:43:14AM +0000, Anchal Agarwal wrote:
+> > > > On Mon, Jun 22, 2020 at 10:38:46AM +0200, Roger Pau Monné wrote:
+> > > > > CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
+> > > > >
+> > > > >
+> > > > >
+> > > > > On Fri, Jun 19, 2020 at 11:43:12PM +0000, Anchal Agarwal wrote:
+> > > > > > On Wed, Jun 17, 2020 at 10:35:28AM +0200, Roger Pau Monné wrote:
+> > > > > > > CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
+> > > > > > >
+> > > > > > >
+> > > > > > >
+> > > > > > > On Tue, Jun 16, 2020 at 09:49:25PM +0000, Anchal Agarwal wrote:
+> > > > > > > > On Thu, Jun 04, 2020 at 09:05:48AM +0200, Roger Pau Monné wrote:
+> > > > > > > > > CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
+> > > > > > > > > On Wed, Jun 03, 2020 at 11:33:52PM +0000, Agarwal, Anchal wrote:
+> > > > > > > > > >  CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
+> > > > > > > > > >     > +             xenbus_dev_error(dev, err, "Freezing timed out;"
+> > > > > > > > > >     > +                              "the device may become inconsistent state");
+> > > > > > > > > >
+> > > > > > > > > >     Leaving the device in this state is quite bad, as it's in a closed
+> > > > > > > > > >     state and with the queues frozen. You should make an attempt to
+> > > > > > > > > >     restore things to a working state.
+> > > > > > > > > >
+> > > > > > > > > > You mean if backend closed after timeout? Is there a way to know that? I understand it's not good to
+> > > > > > > > > > leave it in this state however, I am still trying to find if there is a good way to know if backend is still connected after timeout.
+> > > > > > > > > > Hence the message " the device may become inconsistent state".  I didn't see a timeout not even once on my end so that's why
+> > > > > > > > > > I may be looking for an alternate perspective here. may be need to thaw everything back intentionally is one thing I could think of.
+> > > > > > > > >
+> > > > > > > > > You can manually force this state, and then check that it will behave
+> > > > > > > > > correctly. I would expect that on a failure to disconnect from the
+> > > > > > > > > backend you should switch the frontend to the 'Init' state in order to
+> > > > > > > > > try to reconnect to the backend when possible.
+> > > > > > > > >
+> > > > > > > > From what I understand forcing manually is, failing the freeze without
+> > > > > > > > disconnect and try to revive the connection by unfreezing the
+> > > > > > > > queues->reconnecting to backend [which never got diconnected]. May be even
+> > > > > > > > tearing down things manually because I am not sure what state will frontend
+> > > > > > > > see if backend fails to to disconnect at any point in time. I assumed connected.
+> > > > > > > > Then again if its "CONNECTED" I may not need to tear down everything and start
+> > > > > > > > from Initialising state because that may not work.
+> > > > > > > >
+> > > > > > > > So I am not so sure about backend's state so much, lets say if  xen_blkif_disconnect fail,
+> > > > > > > > I don't see it getting handled in the backend then what will be backend's state?
+> > > > > > > > Will it still switch xenbus state to 'Closed'? If not what will frontend see,
+> > > > > > > > if it tries to read backend's state through xenbus_read_driver_state ?
+> > > > > > > >
+> > > > > > > > So the flow be like:
+> > > > > > > > Front end marks XenbusStateClosing
+> > > > > > > > Backend marks its state as XenbusStateClosing
+> > > > > > > >     Frontend marks XenbusStateClosed
+> > > > > > > >     Backend disconnects calls xen_blkif_disconnect
+> > > > > > > >        Backend fails to disconnect, the above function returns EBUSY
+> > > > > > > >        What will be state of backend here?
+> > > > > > >
+> > > > > > > Backend should stay in state 'Closing' then, until it can finish
+> > > > > > > tearing down.
+> > > > > > >
+> > > > > > It disconnects the ring after switching to connected state too.
+> > > > > > > >        Frontend did not tear down the rings if backend does not switches the
+> > > > > > > >        state to 'Closed' in case of failure.
+> > > > > > > >
+> > > > > > > > If backend stays in CONNECTED state, then even if we mark it Initialised in frontend, backend
+> > > > > > >
+> > > > > > > Backend will stay in state 'Closing' I think.
+> > > > > > >
+> > > > > > > > won't be calling connect(). {From reading code in frontend_changed}
+> > > > > > > > IMU, Initialising will fail since backend dev->state != XenbusStateClosed plus
+> > > > > > > > we did not tear down anything so calling talk_to_blkback may not be needed
+> > > > > > > >
+> > > > > > > > Does that sound correct?
+> > > > > > >
+> > > > > > > I think switching to the initial state in order to try to attempt a
+> > > > > > > reconnection would be our best bet here.
+> > > > > > >
+> > > > > > It does not seems to work correctly, I get hung tasks all over and all the
+> > > > > > requests to filesystem gets stuck. Backend does shows the state as connected
+> > > > > > after xenbus_dev_suspend fails but I think there may be something missing.
+> > > > > > I don't seem to get IO interrupts thereafter i.e hitting the function blkif_interrupts.
+> > > > > > I think just marking it initialised may not be the only thing.
+> > > > > > Here is a short description of what I am trying to do:
+> > > > > > So, on timeout:
+> > > > > >     Switch XenBusState to "Initialized"
+> > > > > >     unquiesce/unfreeze the queues and return
+> > > > > >     mark info->connected = BLKIF_STATE_CONNECTED
+> > > > >
+> > > > > If xenbus state is Initialized isn't it wrong to set info->connected
+> > > > > == CONNECTED?
+> > > > >
+> > > > Yes, you are right earlier I was marking it explicitly but that was not right,
+> > > > the connect path for blkfront will do that.
+> > > > > You should tear down all the internal state (like a proper close)?
+> > > > >
+> > > > Isn't that similar to disconnecting in the first place that failed during
+> > > > freeze? Do you mean re-try to close but this time re-connect after close
+> > > > basically do everything you would at "restore"?
+> > >
+> > > Last time I checked blkfront supported reconnections (ie: disconnect
+> > > from a backend and connect again). I was assuming we could apply the
+> > > same here on timeout, and just follow the same path where the frontend
+> > > waits indefinitely for the backend to close and then attempts to
+> > > reconnect.
+> > >
+> > > > Also, I experimented with that and it works intermittently. I want to take a
+> > > > step back on this issue and ask few questions here:
+> > > > 1. Is fixing this recovery a blocker for me sending in a V2 version?
+> > >
+> > > At the end of day it's your feature. I would certainly prefer for it
+> > > to work as good as possible, this being a recovery in case of failure
+> > > just make sure it does something sane (ie: crash/close the frontend)
+> > > and add a TODO note.
+> > >
+> > > > 2. In our 2-3 years of supporting this feature at large scale we haven't seen this issue
+> > > > where backend fails to disconnect. What we are trying to do here is create a
+> > > > hypothetical situation where we leave backend in Closing state and try and see how it
+> > > > recovers. The reason why I think it "may not" occur and the timeout of 5HZ is
+> > > > sufficient is because we haven't come across even a single use-case where it
+> > > > caused hibernation to fail.
+> > > > The reason why I think "it may" occur is if we are running a really memory
+> > > > intensive workload and ring is busy and is unable to complete all the requests
+> > > > in the given timeout. This is very unlikely though.
+> > >
+> > > As said above I would generally prefer for code to handle possible
+> > > failures the best way, and hence I think here it would be nice to
+> > > fallback to the normal disconnect path and just wait for the backend
+> > > to close.
+> > >
+> > Do you mind throwing some light in here, what that path may be, if its
+> > straight forward to fix I would like to debug it a bit more. May be I am
+> > missing some of the context here.
+> 
+> So the frontend should do:
+> 
+> - Switch to Closed state (and cleanup everything required).
+> - Wait for backend to switch to Closed state (must be done
+>   asynchronously, handled in blkback_changed).
+> - Switch frontend to XenbusStateInitialising, that will in turn force
+>   the backend to switch to XenbusStateInitWait.
+> - After that it should just follow the normal connection procedure.
+> 
+> I think the part that's missing is the frontend doing the state change
+> to XenbusStateInitialising when the backend switches to the Closed
+> state.
+> 
+> > I was of the view we may just want to mark frontend closed which should do
+> > the job of freeing resources and then following the same flow as
+> > blkfront_restore. That does not seems to work correctly 100% of the time.
+> 
+> I think the missing part is that you must wait for the backend to
+> switch to the Closed state, or else the switch to
+> XenbusStateInitialising won't be picked up correctly by the backend
+> (because it's still doing it's cleanup).
+> 
+> Using blkfront_restore might be an option, but you need to assert the
+> backend is in the initial state before using that path.
+>
+Yes, I agree and I make sure that XenbusStateInitialising only triggers
+on frontend once backend is disconnected. msleep in a loop not that graceful but
+works.
+Frontend only switches to XenbusStateInitialising once it sees backend
+as Closed. The issue here is and may require more debugging is:
+1. Hibernate instance->Closing failed, artificially created situation by not
+marking frontend Closed in the first place during freezing.
+2. System comes back up fine restored to 'backend connected'.
+3. Re-run (1) again without reboot
+4. (4) fails to recover basically freezing does not fail at all which is weird
+   because it should timeout as it passes through same path. It hits a BUG in
+   talk_to_blkback() and instance crashes.
 
-[ Upstream commit fb7861d14c8d7edac65b2fcb6e8031cb138457b2 ]
-
-In the current code, ->ndo_start_xmit() can be executed recursively only
-10 times because of stack memory.
-But, in the case of the vxlan, 10 recursion limit value results in
-a stack overflow.
-In the current code, the nested interface is limited by 8 depth.
-There is no critical reason that the recursion limitation value should
-be 10.
-So, it would be good to be the same value with the limitation value of
-nesting interface depth.
-
-Test commands:
-    ip link add vxlan10 type vxlan vni 10 dstport 4789 srcport 4789 4789
-    ip link set vxlan10 up
-    ip a a 192.168.10.1/24 dev vxlan10
-    ip n a 192.168.10.2 dev vxlan10 lladdr fc:22:33:44:55:66 nud permanent
-
-    for i in {9..0}
-    do
-        let A=$i+1
-	ip link add vxlan$i type vxlan vni $i dstport 4789 srcport 4789 4789
-	ip link set vxlan$i up
-	ip a a 192.168.$i.1/24 dev vxlan$i
-	ip n a 192.168.$i.2 dev vxlan$i lladdr fc:22:33:44:55:66 nud permanent
-	bridge fdb add fc:22:33:44:55:66 dev vxlan$A dst 192.168.$i.2 self
-    done
-    hping3 192.168.10.2 -2 -d 60000
-
-Splat looks like:
-[  103.814237][ T1127] =============================================================================
-[  103.871955][ T1127] BUG kmalloc-2k (Tainted: G    B            ): Padding overwritten. 0x00000000897a2e4f-0x000
-[  103.873187][ T1127] -----------------------------------------------------------------------------
-[  103.873187][ T1127]
-[  103.874252][ T1127] INFO: Slab 0x000000005cccc724 objects=5 used=5 fp=0x0000000000000000 flags=0x10000000001020
-[  103.881323][ T1127] CPU: 3 PID: 1127 Comm: hping3 Tainted: G    B             5.7.0+ #575
-[  103.882131][ T1127] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[  103.883006][ T1127] Call Trace:
-[  103.883324][ T1127]  dump_stack+0x96/0xdb
-[  103.883716][ T1127]  slab_err+0xad/0xd0
-[  103.884106][ T1127]  ? _raw_spin_unlock+0x1f/0x30
-[  103.884620][ T1127]  ? get_partial_node.isra.78+0x140/0x360
-[  103.885214][ T1127]  slab_pad_check.part.53+0xf7/0x160
-[  103.885769][ T1127]  ? pskb_expand_head+0x110/0xe10
-[  103.886316][ T1127]  check_slab+0x97/0xb0
-[  103.886763][ T1127]  alloc_debug_processing+0x84/0x1a0
-[  103.887308][ T1127]  ___slab_alloc+0x5a5/0x630
-[  103.887765][ T1127]  ? pskb_expand_head+0x110/0xe10
-[  103.888265][ T1127]  ? lock_downgrade+0x730/0x730
-[  103.888762][ T1127]  ? pskb_expand_head+0x110/0xe10
-[  103.889244][ T1127]  ? __slab_alloc+0x3e/0x80
-[  103.889675][ T1127]  __slab_alloc+0x3e/0x80
-[  103.890108][ T1127]  __kmalloc_node_track_caller+0xc7/0x420
-[ ... ]
-
-Fixes: 11a766ce915f ("net: Increase xmit RECURSION_LIMIT to 10.")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- include/linux/netdevice.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-index 85dc3497c74f1..4e14926433edb 100644
---- a/include/linux/netdevice.h
-+++ b/include/linux/netdevice.h
-@@ -3004,7 +3004,7 @@ static inline int dev_recursion_level(void)
- 	return this_cpu_read(softnet_data.xmit.recursion);
- }
- 
--#define XMIT_RECURSION_LIMIT	10
-+#define XMIT_RECURSION_LIMIT	8
- static inline bool dev_xmit_recursion(void)
- {
- 	return unlikely(__this_cpu_read(softnet_data.xmit.recursion) >
--- 
-2.25.1
-
+Anyways just wanted to paint out a picture that there may be something more
+happening here which needs a persistent debugging. 
+> > > You likely have this very well tuned to your own environment and
+> > > workloads, since this will now be upstream others might have more
+> > > contended systems where it could start to fail.
+> > >
+> > I agree, however, this is also from the testing I did with 100 of runs
+> > outside of EC2 running few tests of my own.
+> > > > 3) Also, I do not think this may be straight forward to fix and expect
+> > > > hibernation to work flawlessly in subsequent invocations. I am open to
+> > > > all suggestions.
+> > >
+> > > Right, adding a TODO would seem appropriate then.
+> > >
+> > Just to double check, I will send in a V2 with this marked as TO-DO?
+> 
+> I think that's fine. Please clearly describe what's missing, so
+> others know what they might have to implement.
+> 
+Ack.
+> Thanks, Roger.
+> 
+Thanks,
+Anchal
