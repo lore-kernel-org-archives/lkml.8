@@ -2,158 +2,120 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46AF2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:30:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D4BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22512206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:30:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462627;
-	bh=ksbAfAiJCEWXz3PvGB3Hk1YXXfVsKSiOoZOl5aaAd1M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Iru0mdn9oljaQSSRIqOJfFf3FCpJqXAOzRfKdb8b2/17hroGaa5t4r/PDh29AeYNO
-	 KIY+FGo4fovRugGT59VOB1qVn1xkqwO1le3mCakzMra0dQNjDBshAFfuQsxU3zoXPM
-	 iH8WHeiaZEt09Ns2tGYSNQQ6UOW5R/JjVJVfIqe0=
+	by mail.kernel.org (Postfix) with ESMTP id 81D5C2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:30:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389267AbgF2UaY (ORCPT
+        id S1726931AbgF2Uaq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:30:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37014 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732488AbgF2TZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:25:20 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAB7D25366;
-        Mon, 29 Jun 2020 15:40:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445234;
-        bh=ksbAfAiJCEWXz3PvGB3Hk1YXXfVsKSiOoZOl5aaAd1M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eUyYTp1ZxMNB3q8dVjY4GnHRypOC6L2GVQ1eIgXrvBc3G0WVpQ5MXAUdoOub4+31Z
-         1q23TVSGQhL4VNSAbHPdoDVLmfRy5c6JcVoBu/x7exNdf1tRwhAU+ilIchicja8gYj
-         4NzHIVZU/FN6AjpOWOD/WfTpxiCgfHt65xGZmoEE=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kajol Jain <kjain@linux.ibm.com>,
-        Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 019/191] powerpc/perf/hv-24x7: Fix inconsistent output values incase multiple hv-24x7 events run
-Date:   Mon, 29 Jun 2020 11:37:15 -0400
-Message-Id: <20200629154007.2495120-20-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
-References: <20200629154007.2495120-1-sashal@kernel.org>
+        Mon, 29 Jun 2020 16:30:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56080 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730127AbgF2Uah (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 16:30:37 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90E53C061755;
+        Mon, 29 Jun 2020 13:30:36 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jq0Q8-002Jaj-5k; Mon, 29 Jun 2020 20:30:28 +0000
+Date:   Mon, 29 Jun 2020 21:30:28 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>
+Subject: Re: [PATCH 18/41] regset: new method and helpers for it
+Message-ID: <20200629203028.GB2786714@ZenIV.linux.org.uk>
+References: <20200629182349.GA2786714@ZenIV.linux.org.uk>
+ <20200629182628.529995-1-viro@ZenIV.linux.org.uk>
+ <20200629182628.529995-18-viro@ZenIV.linux.org.uk>
+ <CAHk-=wjd5HML-EuPGH7J8CjWJrbnMhst3NJbcUyt-P0RV649nA@mail.gmail.com>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.229-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.9.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.9.229-rc1
-X-KernelTest-Deadline: 2020-07-01T15:39+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wjd5HML-EuPGH7J8CjWJrbnMhst3NJbcUyt-P0RV649nA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kajol Jain <kjain@linux.ibm.com>
+On Mon, Jun 29, 2020 at 12:23:34PM -0700, Linus Torvalds wrote:
+> On Mon, Jun 29, 2020 at 11:28 AM Al Viro <viro@zeniv.linux.org.uk> wrote:
+> >
+> > ->get2() takes task+regset+buffer, returns the amount of free space
+> > left in the buffer on success and -E... on error.
+> 
+> Can we please give it a better name than "get2"?
+> 
+> That's not a great name to begin with, and it's a completely
+> nonsensical name by the end of this series when you've removed the
+> original "get" function.
+> 
+> So either:
+> 
+>  (a) add one final patch to rename "get2" all back to "get" after you
+> got rid of the old "get"
 
-[ Upstream commit b4ac18eead28611ff470d0f47a35c4e0ac080d9c ]
+Bad idea, IMO...
 
-Commit 2b206ee6b0df ("powerpc/perf/hv-24x7: Display change in counter
-values")' added to print _change_ in the counter value rather then raw
-value for 24x7 counters. Incase of transactions, the event count
-is set to 0 at the beginning of the transaction. It also sets
-the event's prev_count to the raw value at the time of initialization.
-Because of setting event count to 0, we are seeing some weird behaviour,
-whenever we run multiple 24x7 events at a time.
+>  (b) or just call it something better to begin with. Maybe just
+> "get_regset" instead?
 
-For example:
+<nod>
 
-command#: ./perf stat -e "{hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/,
-			   hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/}"
-	  		   -C 0 -I 1000 sleep 100
+Frankly, other field names there are also nasty - 'set' is not
+fun to grep for, but there are 'n' and 'size' as well.  There's
+also 'bias'  and 'align' (both completely unused)...
 
-     1.000121704                120 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
-     1.000121704                  5 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
-     2.000357733                  8 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
-     2.000357733                 10 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
-     3.000495215 18,446,744,073,709,551,616 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
-     3.000495215 18,446,744,073,709,551,616 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
-     4.000641884                 56 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
-     4.000641884 18,446,744,073,709,551,616 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
-     5.000791887 18,446,744,073,709,551,616 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
+> I'd prefer (b) just because I think it will be a lot clearer if we
+> ever end up having old patches forward-ported (or, more likely,
+> newpatches back-ported), so having a "get" function that changed
+> semantics but got back the old name sounds bad to me.
+> 
+> Other than that, I can't really argue with the numbers:
+> 
+>  41 files changed, 1368 insertions(+), 2347 deletions(-)
+> 
+> looks good to me, and the code seems more understandable.
 
-Getting these large values in case we do -I.
+FWIW, there's also ->set() side of that thing.  Tons of boilerplate
+in those; I hadn't seriously looked into that part, but I suspect
+that "do copyin in the caller, pass the kernel buffer to the
+method, always start at offset 0" would also trim a lot of crap.
+I'd rather leave that one for later - this series had been painful
+enough.
 
-As we are setting event_count to 0, for interval case, overall event_count is not
-coming in incremental order. As we may can get new delta lesser then previous count.
-Because of which when we print intervals, we are getting negative value which create
-these large values.
+Other things in the same area: conversion of fdpic coredumps to
+regset (fairly easy, I've a patch series doing that in the local
+tree), conversion of the few remaining non-regset architectures
+to regset-based coredump (kill a large chunk of rotting code in
+fs/binfmt_elf.c, along with quite a few pieces of old per-arch
+coredump helpers), unification of compat ELF (done locally,
+mipsn32/mipso32 gone, all compat done via compat_binfmt_elf.c,
+x32 horrors sanitized - IMO
+#define PRSTATUS_SIZE \
+       (test_thread_flag(TIF_X32) \
+               ? sizeof(struct compat_elf_prstatus) \
+               : sizeof(struct i386_elf_prstatus))
+#define SET_PR_FPVALID(S) \
+       (*(test_thread_flag(TIF_X32) \
+               ? &(S)->pr_fpvalid      \
+               : &((struct i386_elf_prstatus *)(S))->pr_fpvalid) = 1)
+is much better than
+#define PRSTATUS_SIZE(S, R) (R != sizeof(S.pr_reg) ? 144 : 296)
+#define SET_PR_FPVALID(S, V, R) \
+  do { *(int *) (((void *) &((S)->pr_reg)) + R) = (V); } \
+  while (0)
+) and a bunch of assorted cleanups that got trimmed from the
+regset series...
 
-This patch removes part where we set event_count to 0 in function
-'h_24x7_event_read'. There won't be much impact as we do set event->hw.prev_count
-to the raw value at the time of initialization to print change value.
-
-With this patch
-In power9 platform
-
-command#: ./perf stat -e "{hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/,
-		           hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/}"
-			   -C 0 -I 1000 sleep 100
-
-     1.000117685                 93 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
-     1.000117685                  1 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
-     2.000349331                 98 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
-     2.000349331                  2 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
-     3.000495900                131 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
-     3.000495900                  4 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
-     4.000645920                204 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
-     4.000645920                 61 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=1/
-     4.284169997                 22 hv_24x7/PM_MCS01_128B_RD_DISP_PORT01,chip=0/
-
-Suggested-by: Sukadev Bhattiprolu <sukadev@linux.vnet.ibm.com>
-Signed-off-by: Kajol Jain <kjain@linux.ibm.com>
-Tested-by: Madhavan Srinivasan <maddy@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200525104308.9814-2-kjain@linux.ibm.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/powerpc/perf/hv-24x7.c | 10 ----------
- 1 file changed, 10 deletions(-)
-
-diff --git a/arch/powerpc/perf/hv-24x7.c b/arch/powerpc/perf/hv-24x7.c
-index 991c6a517ddc1..2456522583c29 100644
---- a/arch/powerpc/perf/hv-24x7.c
-+++ b/arch/powerpc/perf/hv-24x7.c
-@@ -1306,16 +1306,6 @@ static void h_24x7_event_read(struct perf_event *event)
- 			h24x7hw = &get_cpu_var(hv_24x7_hw);
- 			h24x7hw->events[i] = event;
- 			put_cpu_var(h24x7hw);
--			/*
--			 * Clear the event count so we can compute the _change_
--			 * in the 24x7 raw counter value at the end of the txn.
--			 *
--			 * Note that we could alternatively read the 24x7 value
--			 * now and save its value in event->hw.prev_count. But
--			 * that would require issuing a hcall, which would then
--			 * defeat the purpose of using the txn interface.
--			 */
--			local64_set(&event->count, 0);
- 		}
- 
- 		put_cpu_var(hv_24x7_reqb);
--- 
-2.25.1
-
+I'll probably post fdpic and compat series tonight and get
+back to uaccess and VFS stuff.
