@@ -2,53 +2,51 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE65CC433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1664C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:35:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E3C322269
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:35:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C45D22269
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:35:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593455725;
-	bh=/yIniaPFKZ11CTcjGIIKnnQplSH1xgEGXA3jO9oQshA=;
+	s=default; t=1593455733;
+	bh=uLL1PqnK9Veg9/JV1OgWihdwSCDKs3bOZ8r3QoMsWa4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jZhwFd+Z+kX8zls0YZHTiNeODKJqRRd6RAaU8r9VpB0KdlRNUrLLGcx5RQybBr5ak
-	 dWN7y3/7n6HzUHmJGGSaPvKzbgxUQXUwpDRSHIWQRw1yvYWW96mFvxoP+KmNiG/xNh
-	 M7eN0EzIR3cmgKKHIuipnTX9H5MNzRE7iVNSwEZ0=
+	b=u8Yx74QER+LnEpLz5eJE2IAVwwdFL2B+YXHa34ex7084+Fh4DIsdhA4y7hclXCa/m
+	 E1arL9dYOMllOBRIn/LA1RrYwutsDx7R/NbfJp7uInCveIFzp3qxJ/TU7YQVYeZuTa
+	 B8+XDJ1w63vSQtt6Ym98AgW6lnKKdY0cx7IF1TOc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726346AbgF2SfY (ORCPT
+        id S1726553AbgF2Sfb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:35:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56706 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 14:35:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726126AbgF2SfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726127AbgF2SfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97C2D24779;
-        Mon, 29 Jun 2020 15:21:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99F282479C;
+        Mon, 29 Jun 2020 15:21:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444088;
-        bh=/yIniaPFKZ11CTcjGIIKnnQplSH1xgEGXA3jO9oQshA=;
+        s=default; t=1593444106;
+        bh=uLL1PqnK9Veg9/JV1OgWihdwSCDKs3bOZ8r3QoMsWa4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EQ/1xmDIRwhsQKmFdQNqzyW2BzHioBimgrTq7eDBlQ6S5td0E/i9AGaGoMHS8v9jv
-         M37JOgG6kdG7oKvu8T4xKS5DBskr2kFk8I0bTjp3Jj+WZ8yco6BWOk+yOE+ShWCKdt
-         bfllvPrfLhVywEVKLn4Oky+Kej/0raFeHTOrFWR0=
+        b=nwhSMdCqWbXShuJc1k9W5AvRwNnkq7ibkc03pUGZN2qTmVyQQpO2feAgOp5dvPbx6
+         hC9vWPQtNprtOTI7m6LZ/ycZDgRnDFixdyAgJjReAeLznb0pj/K/f0eG2BLgGIB2SW
+         DMwWUmc1fxV+mVrHMRATZi+Qy+vYiW560sZtM0GM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 198/265] s390/vdso: Use $(LD) instead of $(CC) to link vDSO
-Date:   Mon, 29 Jun 2020 11:17:11 -0400
-Message-Id: <20200629151818.2493727-199-sashal@kernel.org>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 217/265] KVM: nVMX: Plumb L2 GPA through to PML emulation
+Date:   Mon, 29 Jun 2020 11:17:30 -0400
+Message-Id: <20200629151818.2493727-218-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -67,90 +65,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-[ Upstream commit 2b2a25845d534ac6d55086e35c033961fdd83a26 ]
+commit 2dbebf7ae1ed9a420d954305e2c9d5ed39ec57c3 upstream.
 
-Currently, the VDSO is being linked through $(CC). This does not match
-how the rest of the kernel links objects, which is through the $(LD)
-variable.
+Explicitly pass the L2 GPA to kvm_arch_write_log_dirty(), which for all
+intents and purposes is vmx_write_pml_buffer(), instead of having the
+latter pull the GPA from vmcs.GUEST_PHYSICAL_ADDRESS.  If the dirty bit
+update is the result of KVM emulation (rare for L2), then the GPA in the
+VMCS may be stale and/or hold a completely unrelated GPA.
 
-When clang is built in a default configuration, it first attempts to use
-the target triple's default linker, which is just ld. However, the user
-can override this through the CLANG_DEFAULT_LINKER cmake define so that
-clang uses another linker by default, such as LLVM's own linker, ld.lld.
-This can be useful to get more optimized links across various different
-projects.
-
-However, this is problematic for the s390 vDSO because ld.lld does not
-have any s390 emulatiom support:
-
-https://github.com/llvm/llvm-project/blob/llvmorg-10.0.1-rc1/lld/ELF/Driver.cpp#L132-L150
-
-Thus, if a user is using a toolchain with ld.lld as the default, they
-will see an error, even if they have specified ld.bfd through the LD
-make variable:
-
-$ make -j"$(nproc)" -s ARCH=s390 CROSS_COMPILE=s390x-linux-gnu- LLVM=1 \
-                       LD=s390x-linux-gnu-ld \
-                       defconfig arch/s390/kernel/vdso64/
-ld.lld: error: unknown emulation: elf64_s390
-clang-11: error: linker command failed with exit code 1 (use -v to see invocation)
-
-Normally, '-fuse-ld=bfd' could be used to get around this; however, this
-can be fragile, depending on paths and variable naming. The cleaner
-solution for the kernel is to take advantage of the fact that $(LD) can
-be invoked directly, which bypasses the heuristics of $(CC) and respects
-the user's choice. Similar changes have been done for ARM, ARM64, and
-MIPS.
-
-Link: https://lkml.kernel.org/r/20200602192523.32758-1-natechancellor@gmail.com
-Link: https://github.com/ClangBuiltLinux/linux/issues/1041
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-[heiko.carstens@de.ibm.com: add --build-id flag]
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: c5f983f6e8455 ("nVMX: Implement emulated Page Modification Logging")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Message-Id: <20200622215832.22090-2-sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/s390/kernel/vdso64/Makefile | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ arch/x86/include/asm/kvm_host.h | 2 +-
+ arch/x86/kvm/mmu.h              | 2 +-
+ arch/x86/kvm/mmu/mmu.c          | 4 ++--
+ arch/x86/kvm/mmu/paging_tmpl.h  | 7 ++++---
+ arch/x86/kvm/vmx/vmx.c          | 6 +++---
+ 5 files changed, 11 insertions(+), 10 deletions(-)
 
-diff --git a/arch/s390/kernel/vdso64/Makefile b/arch/s390/kernel/vdso64/Makefile
-index bec19e7e6e1cf..4a66a1cb919b1 100644
---- a/arch/s390/kernel/vdso64/Makefile
-+++ b/arch/s390/kernel/vdso64/Makefile
-@@ -18,8 +18,8 @@ KBUILD_AFLAGS_64 += -m64 -s
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 0a6b35353fc79..86e2e0272c576 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1195,7 +1195,7 @@ struct kvm_x86_ops {
+ 	void (*enable_log_dirty_pt_masked)(struct kvm *kvm,
+ 					   struct kvm_memory_slot *slot,
+ 					   gfn_t offset, unsigned long mask);
+-	int (*write_log_dirty)(struct kvm_vcpu *vcpu);
++	int (*write_log_dirty)(struct kvm_vcpu *vcpu, gpa_t l2_gpa);
  
- KBUILD_CFLAGS_64 := $(filter-out -m64,$(KBUILD_CFLAGS))
- KBUILD_CFLAGS_64 += -m64 -fPIC -shared -fno-common -fno-builtin
--KBUILD_CFLAGS_64 += -nostdlib -Wl,-soname=linux-vdso64.so.1 \
--		    -Wl,--hash-style=both
-+ldflags-y := -fPIC -shared -nostdlib -soname=linux-vdso64.so.1 \
-+	     --hash-style=both --build-id -T
+ 	/* pmu operations of sub-arch */
+ 	const struct kvm_pmu_ops *pmu_ops;
+diff --git a/arch/x86/kvm/mmu.h b/arch/x86/kvm/mmu.h
+index 8a3b1bce722a4..d0e3b1b6845b5 100644
+--- a/arch/x86/kvm/mmu.h
++++ b/arch/x86/kvm/mmu.h
+@@ -222,7 +222,7 @@ void kvm_mmu_gfn_disallow_lpage(struct kvm_memory_slot *slot, gfn_t gfn);
+ void kvm_mmu_gfn_allow_lpage(struct kvm_memory_slot *slot, gfn_t gfn);
+ bool kvm_mmu_slot_gfn_write_protect(struct kvm *kvm,
+ 				    struct kvm_memory_slot *slot, u64 gfn);
+-int kvm_arch_write_log_dirty(struct kvm_vcpu *vcpu);
++int kvm_arch_write_log_dirty(struct kvm_vcpu *vcpu, gpa_t l2_gpa);
  
- $(targets:%=$(obj)/%.dbg): KBUILD_CFLAGS = $(KBUILD_CFLAGS_64)
- $(targets:%=$(obj)/%.dbg): KBUILD_AFLAGS = $(KBUILD_AFLAGS_64)
-@@ -37,8 +37,8 @@ KASAN_SANITIZE := n
- $(obj)/vdso64_wrapper.o : $(obj)/vdso64.so
+ int kvm_mmu_post_init_vm(struct kvm *kvm);
+ void kvm_mmu_pre_destroy_vm(struct kvm *kvm);
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 92d0569541943..eb27ab47d6073 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -1746,10 +1746,10 @@ void kvm_arch_mmu_enable_log_dirty_pt_masked(struct kvm *kvm,
+  * Emulate arch specific page modification logging for the
+  * nested hypervisor
+  */
+-int kvm_arch_write_log_dirty(struct kvm_vcpu *vcpu)
++int kvm_arch_write_log_dirty(struct kvm_vcpu *vcpu, gpa_t l2_gpa)
+ {
+ 	if (kvm_x86_ops.write_log_dirty)
+-		return kvm_x86_ops.write_log_dirty(vcpu);
++		return kvm_x86_ops.write_log_dirty(vcpu, l2_gpa);
  
- # link rule for the .so file, .lds has to be first
--$(obj)/vdso64.so.dbg: $(src)/vdso64.lds $(obj-vdso64) FORCE
--	$(call if_changed,vdso64ld)
-+$(obj)/vdso64.so.dbg: $(obj)/vdso64.lds $(obj-vdso64) FORCE
-+	$(call if_changed,ld)
+ 	return 0;
+ }
+diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
+index 9bdf9b7d9a962..7098f843eabdd 100644
+--- a/arch/x86/kvm/mmu/paging_tmpl.h
++++ b/arch/x86/kvm/mmu/paging_tmpl.h
+@@ -235,7 +235,7 @@ static inline unsigned FNAME(gpte_access)(u64 gpte)
+ static int FNAME(update_accessed_dirty_bits)(struct kvm_vcpu *vcpu,
+ 					     struct kvm_mmu *mmu,
+ 					     struct guest_walker *walker,
+-					     int write_fault)
++					     gpa_t addr, int write_fault)
+ {
+ 	unsigned level, index;
+ 	pt_element_t pte, orig_pte;
+@@ -260,7 +260,7 @@ static int FNAME(update_accessed_dirty_bits)(struct kvm_vcpu *vcpu,
+ 				!(pte & PT_GUEST_DIRTY_MASK)) {
+ 			trace_kvm_mmu_set_dirty_bit(table_gfn, index, sizeof(pte));
+ #if PTTYPE == PTTYPE_EPT
+-			if (kvm_arch_write_log_dirty(vcpu))
++			if (kvm_arch_write_log_dirty(vcpu, addr))
+ 				return -EINVAL;
+ #endif
+ 			pte |= PT_GUEST_DIRTY_MASK;
+@@ -457,7 +457,8 @@ retry_walk:
+ 			(PT_GUEST_DIRTY_SHIFT - PT_GUEST_ACCESSED_SHIFT);
  
- # strip rule for the .so file
- $(obj)/%.so: OBJCOPYFLAGS := -S
-@@ -50,8 +50,6 @@ $(obj-vdso64): %.o: %.S FORCE
- 	$(call if_changed_dep,vdso64as)
+ 	if (unlikely(!accessed_dirty)) {
+-		ret = FNAME(update_accessed_dirty_bits)(vcpu, mmu, walker, write_fault);
++		ret = FNAME(update_accessed_dirty_bits)(vcpu, mmu, walker,
++							addr, write_fault);
+ 		if (unlikely(ret < 0))
+ 			goto error;
+ 		else if (ret)
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 8f59f8c8fd05d..2d7ce012b1d5f 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -7333,11 +7333,11 @@ static void vmx_flush_log_dirty(struct kvm *kvm)
+ 	kvm_flush_pml_buffers(kvm);
+ }
  
- # actual build commands
--quiet_cmd_vdso64ld = VDSO64L $@
--      cmd_vdso64ld = $(CC) $(c_flags) -Wl,-T $(filter %.lds %.o,$^) -o $@
- quiet_cmd_vdso64as = VDSO64A $@
-       cmd_vdso64as = $(CC) $(a_flags) -c -o $@ $<
+-static int vmx_write_pml_buffer(struct kvm_vcpu *vcpu)
++static int vmx_write_pml_buffer(struct kvm_vcpu *vcpu, gpa_t gpa)
+ {
+ 	struct vmcs12 *vmcs12;
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+-	gpa_t gpa, dst;
++	gpa_t dst;
  
+ 	if (is_guest_mode(vcpu)) {
+ 		WARN_ON_ONCE(vmx->nested.pml_full);
+@@ -7356,7 +7356,7 @@ static int vmx_write_pml_buffer(struct kvm_vcpu *vcpu)
+ 			return 1;
+ 		}
+ 
+-		gpa = vmcs_read64(GUEST_PHYSICAL_ADDRESS) & ~0xFFFull;
++		gpa &= ~0xFFFull;
+ 		dst = vmcs12->pml_address + sizeof(u64) * vmcs12->guest_pml_index;
+ 
+ 		if (kvm_write_guest_page(vcpu->kvm, gpa_to_gfn(dst), &gpa,
 -- 
 2.25.1
 
