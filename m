@@ -2,193 +2,342 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B1FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1014C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:10:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81BC3206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:10:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="iE6FwL5p"
+	by mail.kernel.org (Postfix) with ESMTP id 731C0206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:10:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593457815;
+	bh=cUVD8MUa7zKGUm2OVDFHUR8FBVnWGLkMd7Cf7ZGfS2E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=PJ18jxTrh145rj+OAvfiPKt4lNjIhDk0hZCOV6Ixx4qgB5Pnn4VtdhoaW/ssfT8uX
+	 rJeY+e8pIOWT25rHV9VbLdGf8euIAq70AsOcc+JgVlCsKs30eTLYuPQ78Nsbr16eaR
+	 +elqKf/A9bKbS3B5kKfGSdOk8rckIbLa24B7CC5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730929AbgF2TJ6 (ORCPT
+        id S1730600AbgF2TJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:09:58 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:50382 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730932AbgF2TJy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:09:54 -0400
-Received: from sequoia.work.tihix.com (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 328C820B4904;
-        Mon, 29 Jun 2020 08:31:12 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 328C820B4904
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1593444672;
-        bh=6ZAZLRdiVmhJSotXumflMugZiteYC6hE4wK0N2IMWYQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=iE6FwL5pkqNJ+D5EKPLuBSJ6t2EamXVQtIgimYH3NTz+/m6iAqvPMKibVX9huKOhS
-         bwF9HbBeqw6gTxc45Xiy6vfBhPGmjSnqofkv6Un+Q5APCtuUITSWlzpD5dFSbCvb5s
-         51vbIlpPIX5UoiCkEcK7RGLA88jityVKynrVKvbg=
-From:   Tyler Hicks <tyhicks@linux.microsoft.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
-Cc:     James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Casey Schaufler <casey@schaufler-ca.com>
-Subject: [PATCH] ima: Rename internal audit rule functions
-Date:   Mon, 29 Jun 2020 10:30:37 -0500
-Message-Id: <20200629153037.337349-1-tyhicks@linux.microsoft.com>
+        Mon, 29 Jun 2020 15:09:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45460 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730328AbgF2TAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:00:19 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57536254E7;
+        Mon, 29 Jun 2020 15:54:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593446046;
+        bh=cUVD8MUa7zKGUm2OVDFHUR8FBVnWGLkMd7Cf7ZGfS2E=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sm7H7wAJYhnCKKSe4oWJ90kw39LG3eUFvoXB8P/ubZZYvYj52OD2Nprff8eC0fDYE
+         JA7NUHQdCRJ7lhct5+FZcagP+byxSI72YJ8HHHYf8N8G9cYk1fZe6xWhPyMFgg25do
+         eN8EkiAjpjK9Vn2HndN9OLd3bS4qfJAJ3SgFjh68=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jann Horn <jannh@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 050/135] lib/zlib: remove outdated and incorrect pre-increment optimization
+Date:   Mon, 29 Jun 2020 11:51:44 -0400
+Message-Id: <20200629155309.2495516-51-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
+References: <20200629155309.2495516-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.229-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.4.229-rc1
+X-KernelTest-Deadline: 2020-07-01T15:53+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename IMA's internal audit rule functions from security_filter_rule_*()
-to ima_audit_rule_*(). This avoids polluting the security_* namespace,
-which is typically reserved for general security subsystem
-infrastructure, and better aligns the IMA function names with the names
-of the LSM hooks.
+From: Jann Horn <jannh@google.com>
 
-Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
-Suggested-by: Casey Schaufler <casey@schaufler-ca.com>
+[ Upstream commit acaab7335bd6f0c0b54ce3a00bd7f18222ce0f5f ]
+
+The zlib inflate code has an old micro-optimization based on the
+assumption that for pre-increment memory accesses, the compiler will
+generate code that fits better into the processor's pipeline than what
+would be generated for post-increment memory accesses.
+
+This optimization was already removed in upstream zlib in 2016:
+https://github.com/madler/zlib/commit/9aaec95e8211
+
+This optimization causes UB according to C99, which says in section 6.5.6
+"Additive operators": "If both the pointer operand and the result point to
+elements of the same array object, or one past the last element of the
+array object, the evaluation shall not produce an overflow; otherwise, the
+behavior is undefined".
+
+This UB is not only a theoretical concern, but can also cause trouble for
+future work on compiler-based sanitizers.
+
+According to the zlib commit, this optimization also is not optimal
+anymore with modern compilers.
+
+Replace uses of OFF, PUP and UP_UNALIGNED with their definitions in the
+POSTINC case, and remove the macro definitions, just like in the upstream
+patch.
+
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mikhail Zaslonko <zaslonko@linux.ibm.com>
+Link: http://lkml.kernel.org/r/20200507123112.252723-1-jannh@google.com
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
+ lib/zlib_inflate/inffast.c | 91 +++++++++++++++-----------------------
+ 1 file changed, 35 insertions(+), 56 deletions(-)
 
-Developed on top of next-integrity-testing, commit cd1d8603df60 ("IMA:
-Add audit log for failure conditions"), plus this patch series:
-
- [PATCH v2 00/11] ima: Fix rule parsing bugs and extend KEXEC_CMDLINE rule support
- https://lore.kernel.org/linux-integrity/20200626223900.253615-1-tyhicks@linux.microsoft.com/T/#t
-
-This patch has dependencies on the above patch series.
-
-Tested with and without CONFIG_IMA_LSM_RULES enabled by attempting to
-load IMA policy with rules containing the subj_role=foo conditional.
-Build logs are clean in both configurations. The IMA policy was first
-loaded without and then with a valid AppArmor profile named "foo". The
-behavior is the same before and after this patch is applied:
-
-                  | CONFIG_IMA_LSM_RULES=n   | CONFIG_IMA_LSM_RULES=y
------------------------------------------------------------------------
- Without Profile  |  IMA policy load fails   | IMA policy load fails
- With Profile     |  IMA policy load fails   | IMA policy load succeeds
-
- security/integrity/ima/ima.h        | 16 +++++++--------
- security/integrity/ima/ima_policy.c | 30 +++++++++++++----------------
- 2 files changed, 21 insertions(+), 25 deletions(-)
-
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index ff2bf57ff0c7..5d62ee8319f4 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -419,24 +419,24 @@ static inline void ima_free_modsig(struct modsig *modsig)
- /* LSM based policy rules require audit */
- #ifdef CONFIG_IMA_LSM_RULES
+diff --git a/lib/zlib_inflate/inffast.c b/lib/zlib_inflate/inffast.c
+index 2c13ecc5bb2c7..ed1f3df272602 100644
+--- a/lib/zlib_inflate/inffast.c
++++ b/lib/zlib_inflate/inffast.c
+@@ -10,17 +10,6 @@
  
--#define security_filter_rule_init security_audit_rule_init
--#define security_filter_rule_free security_audit_rule_free
--#define security_filter_rule_match security_audit_rule_match
-+#define ima_audit_rule_init security_audit_rule_init
-+#define ima_audit_rule_free security_audit_rule_free
-+#define ima_audit_rule_match security_audit_rule_match
+ #ifndef ASMINF
  
+-/* Allow machine dependent optimization for post-increment or pre-increment.
+-   Based on testing to date,
+-   Pre-increment preferred for:
+-   - PowerPC G3 (Adler)
+-   - MIPS R5000 (Randers-Pehrson)
+-   Post-increment preferred for:
+-   - none
+-   No measurable difference:
+-   - Pentium III (Anderson)
+-   - M68060 (Nikl)
+- */
+ union uu {
+ 	unsigned short us;
+ 	unsigned char b[2];
+@@ -38,16 +27,6 @@ get_unaligned16(const unsigned short *p)
+ 	return mm.us;
+ }
+ 
+-#ifdef POSTINC
+-#  define OFF 0
+-#  define PUP(a) *(a)++
+-#  define UP_UNALIGNED(a) get_unaligned16((a)++)
+-#else
+-#  define OFF 1
+-#  define PUP(a) *++(a)
+-#  define UP_UNALIGNED(a) get_unaligned16(++(a))
+-#endif
+-
+ /*
+    Decode literal, length, and distance codes and write out the resulting
+    literal and match bytes until either not enough input or output is
+@@ -115,9 +94,9 @@ void inflate_fast(z_streamp strm, unsigned start)
+ 
+     /* copy state to local variables */
+     state = (struct inflate_state *)strm->state;
+-    in = strm->next_in - OFF;
++    in = strm->next_in;
+     last = in + (strm->avail_in - 5);
+-    out = strm->next_out - OFF;
++    out = strm->next_out;
+     beg = out - (start - strm->avail_out);
+     end = out + (strm->avail_out - 257);
+ #ifdef INFLATE_STRICT
+@@ -138,9 +117,9 @@ void inflate_fast(z_streamp strm, unsigned start)
+        input data or output space */
+     do {
+         if (bits < 15) {
+-            hold += (unsigned long)(PUP(in)) << bits;
++            hold += (unsigned long)(*in++) << bits;
+             bits += 8;
+-            hold += (unsigned long)(PUP(in)) << bits;
++            hold += (unsigned long)(*in++) << bits;
+             bits += 8;
+         }
+         this = lcode[hold & lmask];
+@@ -150,14 +129,14 @@ void inflate_fast(z_streamp strm, unsigned start)
+         bits -= op;
+         op = (unsigned)(this.op);
+         if (op == 0) {                          /* literal */
+-            PUP(out) = (unsigned char)(this.val);
++            *out++ = (unsigned char)(this.val);
+         }
+         else if (op & 16) {                     /* length base */
+             len = (unsigned)(this.val);
+             op &= 15;                           /* number of extra bits */
+             if (op) {
+                 if (bits < op) {
+-                    hold += (unsigned long)(PUP(in)) << bits;
++                    hold += (unsigned long)(*in++) << bits;
+                     bits += 8;
+                 }
+                 len += (unsigned)hold & ((1U << op) - 1);
+@@ -165,9 +144,9 @@ void inflate_fast(z_streamp strm, unsigned start)
+                 bits -= op;
+             }
+             if (bits < 15) {
+-                hold += (unsigned long)(PUP(in)) << bits;
++                hold += (unsigned long)(*in++) << bits;
+                 bits += 8;
+-                hold += (unsigned long)(PUP(in)) << bits;
++                hold += (unsigned long)(*in++) << bits;
+                 bits += 8;
+             }
+             this = dcode[hold & dmask];
+@@ -180,10 +159,10 @@ void inflate_fast(z_streamp strm, unsigned start)
+                 dist = (unsigned)(this.val);
+                 op &= 15;                       /* number of extra bits */
+                 if (bits < op) {
+-                    hold += (unsigned long)(PUP(in)) << bits;
++                    hold += (unsigned long)(*in++) << bits;
+                     bits += 8;
+                     if (bits < op) {
+-                        hold += (unsigned long)(PUP(in)) << bits;
++                        hold += (unsigned long)(*in++) << bits;
+                         bits += 8;
+                     }
+                 }
+@@ -205,13 +184,13 @@ void inflate_fast(z_streamp strm, unsigned start)
+                         state->mode = BAD;
+                         break;
+                     }
+-                    from = window - OFF;
++                    from = window;
+                     if (write == 0) {           /* very common case */
+                         from += wsize - op;
+                         if (op < len) {         /* some from window */
+                             len -= op;
+                             do {
+-                                PUP(out) = PUP(from);
++                                *out++ = *from++;
+                             } while (--op);
+                             from = out - dist;  /* rest from output */
+                         }
+@@ -222,14 +201,14 @@ void inflate_fast(z_streamp strm, unsigned start)
+                         if (op < len) {         /* some from end of window */
+                             len -= op;
+                             do {
+-                                PUP(out) = PUP(from);
++                                *out++ = *from++;
+                             } while (--op);
+-                            from = window - OFF;
++                            from = window;
+                             if (write < len) {  /* some from start of window */
+                                 op = write;
+                                 len -= op;
+                                 do {
+-                                    PUP(out) = PUP(from);
++                                    *out++ = *from++;
+                                 } while (--op);
+                                 from = out - dist;      /* rest from output */
+                             }
+@@ -240,21 +219,21 @@ void inflate_fast(z_streamp strm, unsigned start)
+                         if (op < len) {         /* some from window */
+                             len -= op;
+                             do {
+-                                PUP(out) = PUP(from);
++                                *out++ = *from++;
+                             } while (--op);
+                             from = out - dist;  /* rest from output */
+                         }
+                     }
+                     while (len > 2) {
+-                        PUP(out) = PUP(from);
+-                        PUP(out) = PUP(from);
+-                        PUP(out) = PUP(from);
++                        *out++ = *from++;
++                        *out++ = *from++;
++                        *out++ = *from++;
+                         len -= 3;
+                     }
+                     if (len) {
+-                        PUP(out) = PUP(from);
++                        *out++ = *from++;
+                         if (len > 1)
+-                            PUP(out) = PUP(from);
++                            *out++ = *from++;
+                     }
+                 }
+                 else {
+@@ -264,29 +243,29 @@ void inflate_fast(z_streamp strm, unsigned start)
+                     from = out - dist;          /* copy direct from output */
+ 		    /* minimum length is three */
+ 		    /* Align out addr */
+-		    if (!((long)(out - 1 + OFF) & 1)) {
+-			PUP(out) = PUP(from);
++		    if (!((long)(out - 1) & 1)) {
++			*out++ = *from++;
+ 			len--;
+ 		    }
+-		    sout = (unsigned short *)(out - OFF);
++		    sout = (unsigned short *)(out);
+ 		    if (dist > 2) {
+ 			unsigned short *sfrom;
+ 
+-			sfrom = (unsigned short *)(from - OFF);
++			sfrom = (unsigned short *)(from);
+ 			loops = len >> 1;
+ 			do
+ #ifdef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
+-			    PUP(sout) = PUP(sfrom);
++			    *sout++ = *sfrom++;
  #else
+-			    PUP(sout) = UP_UNALIGNED(sfrom);
++			    *sout++ = get_unaligned16(sfrom++);
+ #endif
+ 			while (--loops);
+-			out = (unsigned char *)sout + OFF;
+-			from = (unsigned char *)sfrom + OFF;
++			out = (unsigned char *)sout;
++			from = (unsigned char *)sfrom;
+ 		    } else { /* dist == 1 or dist == 2 */
+ 			unsigned short pat16;
  
--static inline int security_filter_rule_init(u32 field, u32 op, char *rulestr,
--					    void **lsmrule)
-+static inline int ima_audit_rule_init(u32 field, u32 op, char *rulestr,
-+				      void **lsmrule)
- {
- 	return -EINVAL;
- }
+-			pat16 = *(sout-1+OFF);
++			pat16 = *(sout-1);
+ 			if (dist == 1) {
+ 				union uu mm;
+ 				/* copy one char pattern to both bytes */
+@@ -296,12 +275,12 @@ void inflate_fast(z_streamp strm, unsigned start)
+ 			}
+ 			loops = len >> 1;
+ 			do
+-			    PUP(sout) = pat16;
++			    *sout++ = pat16;
+ 			while (--loops);
+-			out = (unsigned char *)sout + OFF;
++			out = (unsigned char *)sout;
+ 		    }
+ 		    if (len & 1)
+-			PUP(out) = PUP(from);
++			*out++ = *from++;
+                 }
+             }
+             else if ((op & 64) == 0) {          /* 2nd level distance code */
+@@ -336,8 +315,8 @@ void inflate_fast(z_streamp strm, unsigned start)
+     hold &= (1U << bits) - 1;
  
--static inline void security_filter_rule_free(void *lsmrule)
-+static inline void ima_audit_rule_free(void *lsmrule)
- {
- }
- 
--static inline int security_filter_rule_match(u32 secid, u32 field, u32 op,
--					     void *lsmrule)
-+static inline int ima_audit_rule_match(u32 secid, u32 field, u32 op,
-+				       void *lsmrule)
- {
- 	return -EINVAL;
- }
-diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index 294323b36d06..60894656a4b7 100644
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -258,7 +258,7 @@ static void ima_lsm_free_rule(struct ima_rule_entry *entry)
- 	int i;
- 
- 	for (i = 0; i < MAX_LSM_RULES; i++) {
--		security_filter_rule_free(entry->lsm[i].rule);
-+		ima_audit_rule_free(entry->lsm[i].rule);
- 		kfree(entry->lsm[i].args_p);
- 	}
- }
-@@ -308,10 +308,9 @@ static struct ima_rule_entry *ima_lsm_copy_rule(struct ima_rule_entry *entry)
- 		 */
- 		entry->lsm[i].args_p = NULL;
- 
--		security_filter_rule_init(nentry->lsm[i].type,
--					  Audit_equal,
--					  nentry->lsm[i].args_p,
--					  &nentry->lsm[i].rule);
-+		ima_audit_rule_init(nentry->lsm[i].type, Audit_equal,
-+				    nentry->lsm[i].args_p,
-+				    &nentry->lsm[i].rule);
- 		if (!nentry->lsm[i].rule)
- 			pr_warn("rule for LSM \'%s\' is undefined\n",
- 				entry->lsm[i].args_p);
-@@ -495,18 +494,16 @@ static bool ima_match_rules(struct ima_rule_entry *rule, struct inode *inode,
- 		case LSM_OBJ_ROLE:
- 		case LSM_OBJ_TYPE:
- 			security_inode_getsecid(inode, &osid);
--			rc = security_filter_rule_match(osid,
--							rule->lsm[i].type,
--							Audit_equal,
--							rule->lsm[i].rule);
-+			rc = ima_audit_rule_match(osid, rule->lsm[i].type,
-+						  Audit_equal,
-+						  rule->lsm[i].rule);
- 			break;
- 		case LSM_SUBJ_USER:
- 		case LSM_SUBJ_ROLE:
- 		case LSM_SUBJ_TYPE:
--			rc = security_filter_rule_match(secid,
--							rule->lsm[i].type,
--							Audit_equal,
--							rule->lsm[i].rule);
-+			rc = ima_audit_rule_match(secid, rule->lsm[i].type,
-+						  Audit_equal,
-+						  rule->lsm[i].rule);
- 		default:
- 			break;
- 		}
-@@ -901,10 +898,9 @@ static int ima_lsm_rule_init(struct ima_rule_entry *entry,
- 		return -ENOMEM;
- 
- 	entry->lsm[lsm_rule].type = audit_type;
--	result = security_filter_rule_init(entry->lsm[lsm_rule].type,
--					   Audit_equal,
--					   entry->lsm[lsm_rule].args_p,
--					   &entry->lsm[lsm_rule].rule);
-+	result = ima_audit_rule_init(entry->lsm[lsm_rule].type, Audit_equal,
-+				     entry->lsm[lsm_rule].args_p,
-+				     &entry->lsm[lsm_rule].rule);
- 	if (!entry->lsm[lsm_rule].rule) {
- 		pr_warn("rule for LSM \'%s\' is undefined\n",
- 			entry->lsm[lsm_rule].args_p);
+     /* update state and return */
+-    strm->next_in = in + OFF;
+-    strm->next_out = out + OFF;
++    strm->next_in = in;
++    strm->next_out = out;
+     strm->avail_in = (unsigned)(in < last ? 5 + (last - in) : 5 - (in - last));
+     strm->avail_out = (unsigned)(out < end ?
+                                  257 + (end - out) : 257 - (out - end));
 -- 
 2.25.1
 
