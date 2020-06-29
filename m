@@ -2,99 +2,109 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AB18C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:40:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEBF4C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20CA520672
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:40:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Z5WuTv+D"
+	by mail.kernel.org (Postfix) with ESMTP id CA22320674
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:40:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593459634;
+	bh=654HW8eN8nsMN0MFjbKPYJtwu9+JQYwiQahStHN2M24=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=QeT81kaXqcWl+7qFApDEtH0JX5f1IaKpZOjPWV262+9VzZpNwPPM+QxXVLsEuONYV
+	 X1ApMCplXrW7o9a5JLfOZ3gjxBWtdxhbAvPC2P/aA6g037mE4jFaHsy449EUssGE7m
+	 0Vi3G1VxYswZSD4lzVjcxPKVNEEcNaSuGUndgwLc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387704AbgF2Tk2 (ORCPT
+        id S2387733AbgF2Tkc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:40:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48048 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387504AbgF2TkP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:40:15 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D001DC03E979;
-        Mon, 29 Jun 2020 12:40:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=nyRpegl2g2GPLIzpDQmlwzdY5HJ2Dd3E7fu8tgbKXsw=; b=Z5WuTv+Do9WG6OUJCMBSyCZ2b5
-        O1p4C2SSN/f3xWFbYtIwxeNfomJ8ZEq0SyrbzjwwaJ7XajjWQqbg6ne0HqOCf09DYkGBZuLJ26GaA
-        G4PKscydGqFZq4vsVbnE1rTpc8Bo2tVVSK4F1kmA58blASqI3DWTdKKd47m0N+FAS6pL0AtHMv1O6
-        IpIMByc9LvubnMGH0kyT3l4+R6otGS/DYqbaIdQnK858+Ds+y29BSNTq2oK2idVCG0GRGtireJqdx
-        k6us9hxnXU0NJXpEDVxEYAA+aWE9bCfkF1cFo2a5rw/CqXimrtjmiB9oiY72NmNc0pENv/evP4NX4
-        7YEoQNww==;
-Received: from [2001:4bb8:184:76e3:fcca:c8dc:a4bf:12fa] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jpzdD-0004F6-7d; Mon, 29 Jun 2020 19:39:55 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     dm-devel@redhat.com, linux-kernel@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-xtensa@linux-xtensa.org,
-        drbd-dev@lists.linbit.com, linuxppc-dev@lists.ozlabs.org,
-        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-nvme@lists.infradead.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH 03/20] drbd: stop using ->queuedata
-Date:   Mon, 29 Jun 2020 21:39:30 +0200
-Message-Id: <20200629193947.2705954-4-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200629193947.2705954-1-hch@lst.de>
-References: <20200629193947.2705954-1-hch@lst.de>
+        Mon, 29 Jun 2020 15:40:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47656 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387561AbgF2TkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:40:16 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9946224889;
+        Mon, 29 Jun 2020 15:26:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593444385;
+        bh=654HW8eN8nsMN0MFjbKPYJtwu9+JQYwiQahStHN2M24=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=UHUQeUih0fvyqCMWpuIyksUzpKV8GWS1QhOlsBJ2Sw6lIhbgPwNtZOlxzVcpTFjJw
+         vL0WpGXBQkR2Qt0DbA2PDewFYG866wHh11m1lCn/fNnqgv+UPKxYPYg2LT1g0NYHOr
+         +ZAzZY4pCOd9VwnGzthYx6Rq85qxXN5HlBFQXLBM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 062/178] bus: ti-sysc: Ignore clockactivity unless specified as a quirk
+Date:   Mon, 29 Jun 2020 11:23:27 -0400
+Message-Id: <20200629152523.2494198-63-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
+References: <20200629152523.2494198-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.50-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.4.50-rc1
+X-KernelTest-Deadline: 2020-07-01T15:25+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Instead of setting up the queuedata as well just use one private data
-field.
+From: Tony Lindgren <tony@atomide.com>
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+[ Upstream commit 08b91dd6e547467fad61a7c201ff71080d7ad65a ]
+
+We must ignore the clockactivity bit for most modules and not set it
+unless specified for the module with SYSC_QUIRK_USE_CLOCKACT. Otherwise
+the interface clock can be automatically gated constantly causing
+unexpected performance issues.
+
+Fixes: ae9ae12e9daa ("bus: ti-sysc: Handle clockactivity for enable and disable")
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/drbd/drbd_main.c | 1 -
- drivers/block/drbd/drbd_req.c  | 2 +-
- 2 files changed, 1 insertion(+), 2 deletions(-)
+ drivers/bus/ti-sysc.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/block/drbd/drbd_main.c b/drivers/block/drbd/drbd_main.c
-index 45fbd526c453bc..26f4e0aa7393b4 100644
---- a/drivers/block/drbd/drbd_main.c
-+++ b/drivers/block/drbd/drbd_main.c
-@@ -2805,7 +2805,6 @@ enum drbd_ret_code drbd_create_device(struct drbd_config_context *adm_ctx, unsig
- 	if (!q)
- 		goto out_no_q;
- 	device->rq_queue = q;
--	q->queuedata   = device;
+diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+index c088c6f4adcff..553c0e2796217 100644
+--- a/drivers/bus/ti-sysc.c
++++ b/drivers/bus/ti-sysc.c
+@@ -880,10 +880,13 @@ static int sysc_enable_module(struct device *dev)
+ 	regbits = ddata->cap->regbits;
+ 	reg = sysc_read(ddata, ddata->offsets[SYSC_SYSCONFIG]);
  
- 	disk = alloc_disk(1);
- 	if (!disk)
-diff --git a/drivers/block/drbd/drbd_req.c b/drivers/block/drbd/drbd_req.c
-index c80a2f1c3c2a73..3f09b2ab977822 100644
---- a/drivers/block/drbd/drbd_req.c
-+++ b/drivers/block/drbd/drbd_req.c
-@@ -1595,7 +1595,7 @@ void do_submit(struct work_struct *ws)
+-	/* Set CLOCKACTIVITY, we only use it for ick */
++	/*
++	 * Set CLOCKACTIVITY, we only use it for ick. And we only configure it
++	 * based on the SYSC_QUIRK_USE_CLOCKACT flag, not based on the hardware
++	 * capabilities. See the old HWMOD_SET_DEFAULT_CLOCKACT flag.
++	 */
+ 	if (regbits->clkact_shift >= 0 &&
+-	    (ddata->cfg.quirks & SYSC_QUIRK_USE_CLOCKACT ||
+-	     ddata->cfg.sysc_val & BIT(regbits->clkact_shift)))
++	    (ddata->cfg.quirks & SYSC_QUIRK_USE_CLOCKACT))
+ 		reg |= SYSC_CLOCACT_ICK << regbits->clkact_shift;
  
- blk_qc_t drbd_make_request(struct request_queue *q, struct bio *bio)
- {
--	struct drbd_device *device = (struct drbd_device *) q->queuedata;
-+	struct drbd_device *device = bio->bi_disk->private_data;
- 	unsigned long start_jif;
- 
- 	blk_queue_split(q, &bio);
+ 	/* Set SIDLE mode */
 -- 
-2.26.2
+2.25.1
 
