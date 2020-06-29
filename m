@@ -2,287 +2,164 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8252C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 01:32:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0589C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 01:36:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD3CE206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 01:32:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Owb2ka/m"
+	by mail.kernel.org (Postfix) with ESMTP id AEC89206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 01:36:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726805AbgF2Bci (ORCPT
+        id S1726796AbgF2Bg3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 21:32:38 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:32156 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726764AbgF2Bch (ORCPT
+        Sun, 28 Jun 2020 21:36:29 -0400
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:38617 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726465AbgF2Bg3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 21:32:37 -0400
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200629013232epoutp01ccc5f3373367f5824c07f548335972ee~c37ibVTz62282722827epoutp01E
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 01:32:32 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200629013232epoutp01ccc5f3373367f5824c07f548335972ee~c37ibVTz62282722827epoutp01E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1593394352;
-        bh=SUjZxcqXUup2bGqVpGLiZwsn0DACjWTe+2Tc3H2VfTE=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=Owb2ka/mpybEQ++3koEIYNTClnEbTibKG3RxnXMtVayFHBu4c4o6SggDnukTdtZKf
-         XPR4NzQhXhGicPuJ1MseImhiQmIh5Q/N29sZcaZWAzf4cFeVw6EqRMfrY6xY9AIpA2
-         HUovn4mw9+CZ+++P+arxjEO+qmOinuGljxiLyE3o=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
-        20200629013231epcas1p4fb7f668c10bb8bb1b2b6d3565696625f~c37htVqBf2086720867epcas1p4U;
-        Mon, 29 Jun 2020 01:32:31 +0000 (GMT)
-Received: from epsmges1p3.samsung.com (unknown [182.195.40.152]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 49w9302QzPzMqYkZ; Mon, 29 Jun
-        2020 01:32:28 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        50.D4.29173.CA449FE5; Mon, 29 Jun 2020 10:32:28 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200629013227epcas1p159b1b6ed8c62101bb69314ee9a252ce7~c37eSEmLZ0916209162epcas1p1X;
-        Mon, 29 Jun 2020 01:32:27 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200629013227epsmtrp1f3a838c3440ea0bf03ee87ec0c0919b3~c37eRTefk3161531615epsmtrp15;
-        Mon, 29 Jun 2020 01:32:27 +0000 (GMT)
-X-AuditID: b6c32a37-9cdff700000071f5-26-5ef944ac8808
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        04.CD.08303.BA449FE5; Mon, 29 Jun 2020 10:32:27 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200629013227epsmtip253bf65a046564e4395367b3a084211f1~c37d-rOwU0753607536epsmtip2n;
-        Mon, 29 Jun 2020 01:32:27 +0000 (GMT)
-Subject: Re: brocken devfreq simple_ondemand for Odroid XU3/4?
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Lukasz Luba <lukasz.luba@arm.com>
-Cc:     Kamil Konieczny <k.konieczny@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Willy Wolff <willy.mh.wolff.ml@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <691bc55c-5b04-b519-4575-6dce5ea9914c@samsung.com>
-Date:   Mon, 29 Jun 2020 10:43:39 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:59.0) Gecko/20100101
-        Thunderbird/59.0
+        Sun, 28 Jun 2020 21:36:29 -0400
+Received: by mail-pj1-f68.google.com with SMTP id d6so7305513pjs.3;
+        Sun, 28 Jun 2020 18:36:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=s4x1Od24FXLrarpF97nRPGvbMk3D5kp3VfdEZSEmDhw=;
+        b=p8sUSbMCdb+dAckjgIHn0PSamNBXz+CWb996fZ8BMckQKBGAly16RpEO45p29CecKX
+         N51FLwyyRodzJdbnWt4SZlcsv/Vxq+WjI3T90Mop35uE5YqQ0GJ5p6sq7ssOOz1W85fj
+         ZUeBGNdoWYMiDQnc5DOaKgUBY9NYlGNI8/75rjtsfNHqAeS4mwS8zVGj/+woZw1lNhcA
+         CigSb5MqkbxhB9Wk1mTST6SLEHp/E9gjBGmqA9nPbUH63Dzk86g4PBvB1WQoTdoXZQBa
+         5Dm+bckrb/iDxHUVyU012SB8CMoSD686240LmIGJoWkRVZUfOxHVeoDDp5hbp2Pb6E6e
+         fGAw==
+X-Gm-Message-State: AOAM532ZOvOWavjzvW+Wbm4fD6fjGq12FPH9GwK7n/MhZ5oCyMYXcbQu
+        Q+QM+YyKk8148kr7GWjUDXI=
+X-Google-Smtp-Source: ABdhPJz7xUgN970SnEgTAeV9FLe4mfvopgGs1JOIp0QPQ6aC2kw6RkTdzy4i7BI5V2xGik2Bz3QRBA==
+X-Received: by 2002:a17:902:6181:: with SMTP id u1mr11517203plj.205.1593394588106;
+        Sun, 28 Jun 2020 18:36:28 -0700 (PDT)
+Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
+        by smtp.gmail.com with ESMTPSA id z1sm27702053pgk.89.2020.06.28.18.36.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 28 Jun 2020 18:36:27 -0700 (PDT)
+Subject: Re: [PATCH 2/2] block: add BLKSETDESCZONE ioctl for Zoned Block
+ Devices
+To:     =?UTF-8?Q?Matias_Bj=c3=b8rling?= <matias.bjorling@wdc.com>,
+        axboe@kernel.dk, kbusch@kernel.org, hch@lst.de, sagi@grimberg.me,
+        martin.petersen@oracle.com, damien.lemoal@wdc.com,
+        niklas.cassel@wdc.com, hans.holmberg@wdc.com
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org
+References: <20200628230102.26990-1-matias.bjorling@wdc.com>
+ <20200628230102.26990-3-matias.bjorling@wdc.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <cbb91e7d-5cc8-eeb7-5219-b712545cb5c4@acm.org>
+Date:   Sun, 28 Jun 2020 18:36:25 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <ad4e1a73-6de3-68ee-e3b3-b30bc315bd31@samsung.com>
+In-Reply-To: <20200628230102.26990-3-matias.bjorling@wdc.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFJsWRmVeSWpSXmKPExsWy7bCmru4al59xBrPnC1hsnLGe1WLBpxms
-        Fv2PXzNbnD+/gd3ibNMbdotNj6+xWlzeNYfN4nPvEUaLGef3MVksbGpht7jduILN4vCbdlaL
-        byceMTrweqyZt4bRY+esu+wem1Z1snlsXlLv0bdlFaPH501yAWxR2TYZqYkpqUUKqXnJ+SmZ
-        eem2St7B8c7xpmYGhrqGlhbmSgp5ibmptkouPgG6bpk5QIcqKZQl5pQChQISi4uV9O1sivJL
-        S1IVMvKLS2yVUgtScgosC/SKE3OLS/PS9ZLzc60MDQyMTIEKE7IzLt6ez1hw3rhi9YYnzA2M
-        07S6GDk5JARMJPZsu88GYgsJ7GCUWNtX0MXIBWR/YpR4taWFBcL5zCgx6dBuJpiOHzuOMUMk
-        djFKLN5+khXCec8o8XbHUUaQKmEBO4n513axgtgiArES2w7fYgcpYhb4zCzxeeFhsFFsAloS
-        +1/cAFvOL6AocfXHY7BmXqDmeb2bmEFsFgFViRfH7rGD2KICYRInt7VA1QhKnJz5hAXE5hSw
-        l/ixdDvYHGYBcYlbT+YzQdjyEtvfzmGGOPsCh8ShVzoQtovEz0XHoN4Rlnh1fAs7hC0l8bK/
-        Dcqullh58ggbyNESAh2MElv2X2CFSBhL7F86GaiZA2iBpsT6XfoQYUWJnb/nMkLs5ZN497WH
-        FaREQoBXoqNNCKJEWeLyg7tQayUlFrd3sk1gVJqF5JtZSD6YheSDWQjLFjCyrGIUSy0ozk1P
-        LTYsMEaO7U2M4ESsZb6DcdrbD3qHGJk4GA8xSnAwK4nwfrb+FifEm5JYWZValB9fVJqTWnyI
-        0RQYvhOZpUST84G5IK8k3tDUyNjY2MLE0MzU0FBJnNfX6kKckEB6YklqdmpqQWoRTB8TB6dU
-        A5OgJEvhx6NP7GNXv/5yq81/+7H2cynTTYXWvNM+mykgtW6VVvfHOYuPVLXNCo+puPfFMMNT
-        Xa553t91947OUqxI3nH//9vlVvus/z1Z/SE9blb3FQdtyZj2ufPPRe3TcLhdyHr3w8Xy20kH
-        3nZs4DTrnsKSyVZ9qYKH53G3j9uvb29zXvTka566NXVVvUHOCwGOOK7jh3ZNuyxS82hhQ7GG
-        o9jF24y9Oy8tnWgr1Jik0zL1SZBPN+Pp1f3St9ZtuuKc6PZlbunJo0Epk9IvJM+6OD1JOk+4
-        mKXvs/uvYtMT+Rr+e3axfpJeou9w+pHpq2sbEjSnHkyy1oxtvXanVN3+kEVwWNt6f4V/TqXS
-        nHOVWIozEg21mIuKEwF+uaHxTQQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrGIsWRmVeSWpSXmKPExsWy7bCSvO5ql59xBhNuKltsnLGe1WLBpxms
-        Fv2PXzNbnD+/gd3ibNMbdotNj6+xWlzeNYfN4nPvEUaLGef3MVksbGpht7jduILN4vCbdlaL
-        byceMTrweqyZt4bRY+esu+wem1Z1snlsXlLv0bdlFaPH501yAWxRXDYpqTmZZalF+nYJXBkX
-        b89nLDhvXLF6wxPmBsZpWl2MnBwSAiYSP3YcY+5i5OIQEtjBKNH08SkTREJSYtrFo0AJDiBb
-        WOLw4WKImreMElOX32EGqREWsJOYf20XK4gtIhArseP8FhaQImaBn8wSn+fOg5r6kEViyqvb
-        YFVsAloS+1/cYAOx+QUUJa7+eMwIYvMCTZrXuwlsKouAqsSLY/fYQWxRgTCJnUseM0HUCEqc
-        nPmEBcTmFLCX+LF0O9gcZgF1iT/zLjFD2OISt57MZ4Kw5SW2v53DPIFReBaS9llIWmYhaZmF
-        pGUBI8sqRsnUguLc9NxiwwKjvNRyveLE3OLSvHS95PzcTYzgqNTS2sG4Z9UHvUOMTByMhxgl
-        OJiVRHg/W3+LE+JNSaysSi3Kjy8qzUktPsQozcGiJM77ddbCOCGB9MSS1OzU1ILUIpgsEwen
-        VAMT00Xmn1UfUmrv/HqzuGh5RlCj3NWJUcdd3Zmcs6YfWaz34Um69ec1Vnw6c+W8mdkCvnA8
-        iBE7MjlV/nlR2pkjBTvn8xkdMyz7soThAo+Uj2Oh336e5fJtfx9zbX83keH4C0m1B9/zFjTd
-        luaNltk/eeXmct1/wpL2jzQnPL4Vesp6qeISxvz7b1acOx5rwu1rLPI3eto0cZ5Ny6cciz4/
-        a0HXEbeuwrMBNse6HDxms0sKna1Ttbb4oPBrr0WyzNqdTLvK9khd5J/Wn3nqyen6cHtttVuf
-        Fvz+OVOjUMVYK/5che/34HaugtNbo22a2Nffl/yzUE/fgtHWJ6udbVHUoW3rgrYpMO6zDtc/
-        fjVKiaU4I9FQi7moOBEAyfHctjkDAAA=
-X-CMS-MailID: 20200629013227epcas1p159b1b6ed8c62101bb69314ee9a252ce7
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200624103308eucas1p188a5fe3cee1916d9430c9971c2dab3a3
-References: <20200623164733.qbhua7b6cg2umafj@macmini.local>
-        <CAJKOXPeLuq81NC2xZh3y32EB-_APbDAchZD4OW_eCgQKKO+p8w@mail.gmail.com>
-        <20200623191129.GA4171@kozik-lap>
-        <CGME20200624103308eucas1p188a5fe3cee1916d9430c9971c2dab3a3@eucas1p1.samsung.com>
-        <85f5a8c0-7d48-f2cd-3385-c56d662f2c88@arm.com>
-        <ef5184ed-00ff-4226-5ece-b0fc8eb16fb6@samsung.com>
-        <4a72fcab-e8da-8323-1fbe-98a6a4b3e0f1@arm.com>
-        <4c3b01af-2337-1eba-4675-6488105144c8@samsung.com>
-        <6f8b1119-62b1-942d-cfde-6f1e9a28c40c@arm.com>
-        <ee2e4acb-3986-3227-da1f-177d2756d194@samsung.com>
-        <ad4e1a73-6de3-68ee-e3b3-b30bc315bd31@samsung.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 2020-06-28 16:01, Matias Bjørling wrote:
+> +	/* This may take a while, so be nice to others */
+> +	cond_resched();
+> +
+> +	return submit_bio_wait(&bio);
 
-Sorry for late reply because of my perfornal issue. I count not check the email.
+A cond_resched() call before a submit_bio_wait() call? I think it's the
+first time that I see this. Is that call really necessary? Isn't the
+wait_for_completion() call inside submit_bio_wait() sufficient?
 
-On 6/26/20 8:22 PM, Bartlomiej Zolnierkiewicz wrote:
-> 
-> On 6/25/20 2:12 PM, Kamil Konieczny wrote:
->> On 25.06.2020 14:02, Lukasz Luba wrote:
->>>
->>>
->>> On 6/25/20 12:30 PM, Kamil Konieczny wrote:
->>>> Hi Lukasz,
->>>>
->>>> On 25.06.2020 12:02, Lukasz Luba wrote:
->>>>> Hi Sylwester,
->>>>>
->>>>> On 6/24/20 4:11 PM, Sylwester Nawrocki wrote:
->>>>>> Hi All,
->>>>>>
->>>>>> On 24.06.2020 12:32, Lukasz Luba wrote:
->>>>>>> I had issues with devfreq governor which wasn't called by devfreq
->>>>>>> workqueue. The old DELAYED vs DEFERRED work discussions and my patches
->>>>>>> for it [1]. If the CPU which scheduled the next work went idle, the
->>>>>>> devfreq workqueue will not be kicked and devfreq governor won't check
->>>>>>> DMC status and will not decide to decrease the frequency based on low
->>>>>>> busy_time.
->>>>>>> The same applies for going up with the frequency. They both are
->>>>>>> done by the governor but the workqueue must be scheduled periodically.
->>>>>>
->>>>>> As I have been working on resolving the video mixer IOMMU fault issue
->>>>>> described here: https://patchwork.kernel.org/patch/10861757
->>>>>> I did some investigation of the devfreq operation, mostly on Odroid U3.
->>>>>>
->>>>>> My conclusions are similar to what Lukasz says above. I would like to add
->>>>>> that broken scheduling of the performance counters read and the devfreq
->>>>>> updates seems to have one more serious implication. In each call, which
->>>>>> normally should happen periodically with fixed interval we stop the counters,
->>>>>> read counter values and start the counters again. But if period between
->>>>>> calls becomes long enough to let any of the counters overflow, we will
->>>>>> get wrong performance measurement results. My observations are that
->>>>>> the workqueue job can be suspended for several seconds and conditions for
->>>>>> the counter overflow occur sooner or later, depending among others
->>>>>> on the CPUs load.
->>>>>> Wrong bus load measurement can lead to setting too low interconnect bus
->>>>>> clock frequency and then bad things happen in peripheral devices.
->>>>>>
->>>>>> I agree the workqueue issue needs to be fixed. I have some WIP code to use
->>>>>> the performance counters overflow interrupts instead of SW polling and with
->>>>>> that the interconnect bus clock control seems to work much better.
->>>>>>
->>>>>
->>>>> Thank you for sharing your use case and investigation results. I think
->>>>> we are reaching a decent number of developers to maybe address this
->>>>> issue: 'workqueue issue needs to be fixed'.
->>>>> I have been facing this devfreq workqueue issue ~5 times in different
->>>>> platforms.
->>>>>
->>>>> Regarding the 'performance counters overflow interrupts' there is one
->>>>> thing worth to keep in mind: variable utilization and frequency.
->>>>> For example, in order to make a conclusion in algorithm deciding that
->>>>> the device should increase or decrease the frequency, we fix the period
->>>>> of observation, i.e. to 500ms. That can cause the long delay if the
->>>>> utilization of the device suddenly drops. For example we set an
->>>>> overflow threshold to value i.e. 1000 and we know that at 1000MHz
->>>>> and full utilization (100%) the counter will reach that threshold
->>>>> after 500ms (which we want, because we don't want too many interrupts
->>>>> per sec). What if suddenly utilization drops to 2% (i.e. from 5GB/s
->>>>> to 250MB/s (what if it drops to 25MB/s?!)), the counter will reach the
->>>>> threshold after 50*500ms = 25s. It is impossible just for the counters
->>>>> to predict next utilization and adjust the threshold. [...]
->>>>
->>>> irq triggers for underflow and overflow, so driver can adjust freq
->>>>
->>>
->>> Probably possible on some platforms, depends on how many PMU registers
->>> are available, what information can be can assign to them and type of
->>> interrupt. A lot of hassle and still - platform and device specific.
->>> Also, drivers should not adjust the freq, governors (different types
->>> of them with different settings that they can handle) should do it.
->>>
->>> What the framework can do is to take this responsibility and provide
->>> generic way to monitor the devices (or stop if they are suspended).
->>> That should work nicely with the governors, which try to predict the
->>> next best frequency. From my experience the more fluctuating intervals
->>> the governors are called, the more odd decisions they make.
->>> That's why I think having a predictable interval i.e. 100ms is something
->>> desirable. Tuning the governors is easier in this case, statistics
->>> are easier to trace and interpret, solution is not to platform specific,
->>> etc.
->>>
->>> Kamil do you have plans to refresh and push your next version of the
->>> workqueue solution?
->>
->> I do not, as Bartek takes over my work,
->> +CC Bartek
-> 
-> Hi Lukasz,
-> 
-> As you remember in January Chanwoo has proposed another idea (to allow
-> selecting workqueue type by devfreq device driver):
-> 
-> "I'm developing the RFC patch and then I'll send it as soon as possible."
-> (https://lore.kernel.org/linux-pm/6107fa2b-81ad-060d-89a2-d8941ac4d17e@samsung.com/)
-> 
-> "After posting my suggestion, we can discuss it"
-> (https://lore.kernel.org/linux-pm/f5c5cd64-b72c-2802-f6ea-ab3d28483260@samsung.com/)
-> 
-> so we have been waiting on the patch to be posted..
+> +	/* no flags is currently supported */
+                    ^^
+                    are?
 
-Sorry for this. I'll send it within few days.
+> +	/* allocate the size of the zone descriptor extension and fill
+> +	 * with the data in the user data buffer. If the data size is less
+> +	 * than the zone descriptor extension size, then the rest of the
+> +	 * zone description extension data buffer is zero-filled.
+> +	 */
+> +	zsd_data = (void *) get_zeroed_page(GFP_KERNEL);
+> +	if (!zsd_data)
+> +		return -ENOMEM;
+> +
+> +	if (copy_from_user(zsd_data, argp + sizeof(struct blk_zone_set_desc),
+> +			   zsd.len)) {
+> +		ret = -EFAULT;
+> +		goto free;
+> +	}
 
+Has it been considered to use kmalloc() instead of get_zeroed_page()?
 
-> 
-> Similarly we have been waiting on (any) feedback for exynos-bus/nocp
-> fixes for Exynos5422 support (which have been posted by Kamil also in
-> January):
-> 
-> https://lore.kernel.org/linux-pm/8f82d8d5-927b-afb4-272f-45c16b5a23b9@samsung.com/
-> 
-> Considering the above and how hard it has been to push the changes
-> through review/merge process last year we are near giving up when it
-> comes to upstream devfreq contributions. Sylwester is still working on
-> exynos-bus & interconnect integration (continuation of Artur Swigon's
-> work from last year) & related issues (IRQ support for PPMU)  but
-> I'm seriously considering putting it all on-hold..
+> diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
+> index ccb895f911b1..53b7b05b0004 100644
+> --- a/include/linux/blk_types.h
+> +++ b/include/linux/blk_types.h
+> @@ -316,6 +316,8 @@ enum req_opf {
+>  	REQ_OP_ZONE_FINISH	= 12,
+>  	/* write data at the current zone write pointer */
+>  	REQ_OP_ZONE_APPEND	= 13,
+> +	/* associate zone desc extension data to a zone */
+> +	REQ_OP_ZONE_SET_DESC	= 14,
+>  
+>  	/* SCSI passthrough using struct scsi_request */
+>  	REQ_OP_SCSI_IN		= 32,
 
-The Sylwester's patches (originally Artus Swigon's path) were reviewed
-and I agreed this approach about devfreq/interconnect. It needs
-the review from interconnect maintainer.
+Does REQ_OP_ZONE_SET_DESC count as a read or as a write operation? See also:
 
-> 
-> Best regards,
-> --
-> Bartlomiej Zolnierkiewicz
-> Samsung R&D Institute Poland
-> Samsung Electronics
-> 
-> 
+static inline bool op_is_write(unsigned int op)
+{
+	return (op & 1);
+}
 
+> +/**
+> + * struct blk_zone_set_desc - BLKSETDESCZONE ioctl requests
+> + * @sector: Starting sector of the zone to operate on.
+> + * @flags: Feature flags.
+> + * @len: size, in bytes, of the data to be associated to the zone.
+> + * @data: data to be associated.
+> + */
+> +struct blk_zone_set_desc {
+> +	__u64		sector;
+> +	__u32		flags;
+> +	__u32		len;
+> +	__u8		data[0];
+> +};
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+Isn't the recommended style to use a flexible array ([] instead of [0])?
+See also https://lore.kernel.org/lkml/20200608213711.GA22271@embeddedor/.
+
+Thanks,
+
+Bart.
