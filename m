@@ -2,134 +2,98 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D9E5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:54:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39971C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4716E20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:54:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 121AA206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:54:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KQJdYN7u"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FTyujLIN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388072AbgF2UyI (ORCPT
+        id S2388098AbgF2Uyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:54:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43392 "EHLO
+        Mon, 29 Jun 2020 16:54:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731315AbgF2TNT (ORCPT
+        with ESMTP id S1731313AbgF2TNT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:13:19 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C404EC02E2F0;
-        Mon, 29 Jun 2020 07:26:09 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id t11so3118150pfq.11;
-        Mon, 29 Jun 2020 07:26:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=mlt9jkXFO3CZS6x7qBk1OZMI7sTVBkCcQrKajfIoY1A=;
-        b=KQJdYN7uO+u4O8k6UboV5gaofYXIX+FFQti+hRLArPFMyPrbEkAGU7SBRue63Zt6Ks
-         /oUFKJ0hW+iEZ1uyX9O9dnD2Fmw5+UVJOwA9ajYKku2N3ePATzctyVnzcY1d/CaiCcIb
-         rGUGlKTrDmnoO3it8eUtykQl+DXDfJyNiLR9Oolwh5hE4J8mJXMFwvx9FBx0Kq/rB0bx
-         +R9PtqpBdu7NAcaOJgFHm5xOgv8gbzoZU2Rh/gqMfBp9QzTV32bvNaFCR0JfNCbqnYeY
-         27ipvZWnIQbqOYJsN5hnIlAb9wo5yHLzkEvFjDXo44d+jazEYAeVNN8q+0N2I8QqX/hN
-         FVTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=mlt9jkXFO3CZS6x7qBk1OZMI7sTVBkCcQrKajfIoY1A=;
-        b=sNda6ovyT4kC5ciqhmtDhChhWYlbt+oYe0DyDdCVaKIXCIzD5HtarJnzVzMSCwUmTE
-         rm7insZ+iVElx7aUzWtnRdio68iD/mInPRKZGBqkCtgJLHJyBMPg+90kvLpYWhhN2zz8
-         cDFM6VpnqpD9FGdsOqwwRjnlSMmq2NW9gJGJ5zChnK4ZEExXsj52+K6PXz7fhXWspOVd
-         +tr0tTIDzMdXMXkuq3TN1jxkvtCAfX7vq0oz7mwyD/Vh7/n3j7kmEf0NbHjttSGC1hIY
-         vjn+E0MfsxZe7DVDESE9DWDGGsHzCPAmHj962TlmYy0ziL/ge87tZTQQa7aQh9RWrdqO
-         Y+BA==
-X-Gm-Message-State: AOAM533V74Cs7V/waYh+RYlYpTR6Nq5Gp22Up4fKSm+HbOoaIxw1aNkB
-        AkYVzHLfzBfvtV02LTXsWcY=
-X-Google-Smtp-Source: ABdhPJy2N9NMsDqgB+cALwHqxUF/3QVeC2ne2FVGQEU1gsqvE2aDODdqsX6eGAu71ddInlQ2cFlR5g==
-X-Received: by 2002:a63:f408:: with SMTP id g8mr11134230pgi.184.1593440769384;
-        Mon, 29 Jun 2020 07:26:09 -0700 (PDT)
-Received: from cosmos ([122.167.176.23])
-        by smtp.gmail.com with ESMTPSA id b4sm151710pjn.38.2020.06.29.07.26.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jun 2020 07:26:08 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 19:56:03 +0530
-From:   Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
-To:     marcel@holtmann.org, johan.hedberg@gmail.com, davem@davemloft.net
-Cc:     linux-bluetooth@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] Bluetooth: fix kernel null pointer dereference error on
- suspend
-Message-ID: <20200629142600.GA3102@cosmos>
+Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC3DBC030F2B;
+        Mon, 29 Jun 2020 09:44:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=oWEN2HrEZzshPalh9h22/5jMAlzNjCxPZcOlTdfCeRk=; b=FTyujLINoEFwJfBDDiZffiOYsS
+        BOZP0lNNqNQYgm81MQzrN1dTB2zSgzMXpMKBMzAKqBNSUZjhWXDFzD5ix5SK/nr78EDMCww3KCtYB
+        FVZUrBmG/cFO4/WkHupIYCl2+9csBo+VKzxgGjSUHP5Hl7/tiAh/Rt6pXem1fYakk7QoB7Y5Lr0Bt
+        0f3Aip0bm2DWmWmW+X3rbSponeDdqXM8GfhOQVcue2706h9IT/uj1yo/G4cNfkKlcYRcA9KnQnkvB
+        ++WwoWBDi12ybggpNRY2O1AVJGlouzsl1v5yyiS/nOpk7i4e6bQDZlDQN+onRwDuINNv4lY0WR85S
+        c8vgyHMw==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jpwsu-00016O-1q; Mon, 29 Jun 2020 16:43:56 +0000
+To:     LKML <linux-kernel@vger.kernel.org>,
+        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     devicetree@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        linux-arm-msm@vger.kernel.org
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH -next] <linux/of.h>: add stub for of_get_next_parent() to fix
+ qcom build error
+Message-ID: <ce0d7561-ff93-d267-b57a-6505014c728c@infradead.org>
+Date:   Mon, 29 Jun 2020 09:43:52 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-BUG Call Trace:
-  queue_work_on+0x39/0x40
-  hci_adv_monitors_clear+0x71/0x90 [bluetooth]
-  hci_unregister_dev+0x18a/0x2f0 [bluetooth]
-  btusb_disconnect+0x68/0x150 [btusb]
-  usb_unbind_interface+0x7f/0x260
-  device_release_driver_internal+0xec/0x1b0
-  device_release_driver+0x12/0x20
-  bus_remove_device+0xe1/0x150
-  device_del+0x17d/0x3e0
-  usb_disable_device+0x9f/0x250
-  usb_disconnect+0xc6/0x270
-  hub_event+0x6da/0x18d0
-  process_one_work+0x20c/0x400
-  worker_thread+0x34/0x400
+From: Randy Dunlap <rdunlap@infradead.org>
 
-RIP: 0010:__queue_work+0x92/0x3f0
+Fix a (COMPILE_TEST) build error when CONFIG_OF is not set/enabled
+by adding a stub for of_get_next_parent().
 
-NULL deference occurs in hci_update_background_scan() while it tries
-to queue_work on already destroyed workqueues.
+../drivers/soc/qcom/qcom-geni-se.c:819:11: error: implicit declaration of function 'of_get_next_parent'; did you mean 'of_get_parent'? [-Werror=implicit-function-declaration]
+../drivers/soc/qcom/qcom-geni-se.c:819:9: warning: assignment makes pointer from integer without a cast [-Wint-conversion]
 
-Change hci_unregister_dev() to invoke destroy_workqueues after the
-call to hci_adv_monitors_clear().
-
-Signed-off-by: Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>
+Cc: devicetree@vger.kernel.org
+Cc: Andy Gross <agross@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org
 ---
- net/bluetooth/hci_core.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ include/linux/of.h |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-index 7959b85..5577cf9 100644
---- a/net/bluetooth/hci_core.c
-+++ b/net/bluetooth/hci_core.c
-@@ -3795,9 +3795,6 @@ void hci_unregister_dev(struct hci_dev *hdev)
- 	kfree_const(hdev->hw_info);
- 	kfree_const(hdev->fw_info);
+--- linux-next-20200629.orig/include/linux/of.h
++++ linux-next-20200629/include/linux/of.h
+@@ -630,6 +630,11 @@ static inline struct device_node *of_get
+ 	return NULL;
+ }
  
--	destroy_workqueue(hdev->workqueue);
--	destroy_workqueue(hdev->req_workqueue);
--
- 	hci_dev_lock(hdev);
- 	hci_bdaddr_list_clear(&hdev->blacklist);
- 	hci_bdaddr_list_clear(&hdev->whitelist);
-@@ -3815,6 +3812,9 @@ void hci_unregister_dev(struct hci_dev *hdev)
- 	hci_blocked_keys_clear(hdev);
- 	hci_dev_unlock(hdev);
- 
-+	destroy_workqueue(hdev->workqueue);
-+	destroy_workqueue(hdev->req_workqueue);
++static inline struct device_node *of_get_next_parent(struct device_node *node)
++{
++	return NULL;
++}
 +
- 	hci_dev_put(hdev);
- 
- 	ida_simple_remove(&hci_index_ida, id);
--- 
-2.7.4
+ static inline struct device_node *of_get_next_child(
+ 	const struct device_node *node, struct device_node *prev)
+ {
+
 
