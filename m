@@ -2,95 +2,112 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15200C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:42:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69474C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE6832063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:42:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 430F12063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:42:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="MMrJypkt"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Me9pZVSe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728266AbgF2Vmb (ORCPT
+        id S2391342AbgF2Vmh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:42:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37572 "EHLO
+        Mon, 29 Jun 2020 17:42:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727908AbgF2Sh4 (ORCPT
+        with ESMTP id S1727905AbgF2Sh4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:37:56 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73002C00F82D
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 05:47:56 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id w3so3530528wmi.4
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 05:47:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rudM74e1Pgb+dgRXbno543NZk9dhJh2T8QURDAwNqxo=;
-        b=MMrJypktX2dGwbWK2WJwHSZlgTCxBvMicf8S6HeV+IEHyBd/BsMsD7DMpdBDI83MMv
-         QyiPxbAJaQSWycHKbp7oaNquqzwC+4IpMBeTWunKJygLXDTtCouHG6kwzAS2WB0rfUvL
-         5sUUgJlP/7u5hxVJQ8kkalGly7nDzvinuu1S6Ow2rv0xN+jughtx7Ou23KzkI16t7Y9X
-         ir8XBS6MkFgqtdbkxyPOsNQN/TqvwoD+BQGpXSohEbzVF7hCKT5WgnGh6cM9H9htgNKl
-         UqFX7dMSyrL855EudgAl3ujqkL8MW+azJAKRg4/RN+dpJ51bk5lqXzd0ImdK4NFYM5cI
-         F/Bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rudM74e1Pgb+dgRXbno543NZk9dhJh2T8QURDAwNqxo=;
-        b=oLQd/bb0PLGtWGTIuHDqyhsFgzTxsbky8M/O4A4EMoKJKkBr9/HuMjIeN4ehiDYXpD
-         0DSRGPJneePTuYeA9gdPSA0gJmTXNfji7t/4QSmGtW9vg3G70TVX4E4Dj+AfZlw7niYR
-         oOdT4kf4WcjotbhOU3dkpVORIwP/bACN+RE9R+rWoVkwdtyCrxa/NjJwSR8dT5RJcPSl
-         zcJpfKSokkCTTxy49FY0lbJnl3Bx10o2vcvpaK4pPNLSCklKrXvFG4sY4yB5DQG8zsDn
-         YuaGqR5sH2+MmfwceudrOd7ju/ViahBgrTldwiJhf/LU4J68vQ6IguNanOB5mdWItJxA
-         w0Yw==
-X-Gm-Message-State: AOAM533RGS91jZrlKiIbZwtbmOQcVVdcVq47fo+sZIwxxezDGoNc8YKU
-        qI5I2QR4hCp1PfvDPP/rJ1tw6Q==
-X-Google-Smtp-Source: ABdhPJymTdB7uYUnNxNAvBDg/jFPSHnhR3EKfJTDqrjBJtflMfvEKlNxtCKuRryFRR89Pu116D8EKw==
-X-Received: by 2002:a1c:3142:: with SMTP id x63mr16024940wmx.62.1593434875113;
-        Mon, 29 Jun 2020 05:47:55 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id e17sm12995924wrr.88.2020.06.29.05.47.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 05:47:54 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        linux-pwm@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 0/4] Fix a bunch of W=1 warnings in PWM
-Date:   Mon, 29 Jun 2020 13:47:48 +0100
-Message-Id: <20200629124752.1018358-1-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D80FC02A57C
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 06:49:41 -0700 (PDT)
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id EF7FF299;
+        Mon, 29 Jun 2020 15:49:37 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1593438578;
+        bh=qrk1hsipZuct2oHoo+8A1DwCXMZV/BkNkxcor0eZDOo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Me9pZVSe2NPeNTRb1Ay5OpK2uSuKHCg6WoZUX4bYQ+Z6n01AlRiAzkcAjp5G2jLTy
+         9108XmEffPy9gYcL+ZN+05k6PEoWrRg3YL6PXFRWa3Z9fdtUH7NINKccW10qntY8x2
+         Va+xT4g2QxXSrmarOLkLLHe0f+wxmkeS8yr/JfHQ=
+Date:   Mon, 29 Jun 2020 16:49:34 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH v9 0/3] phy: zynqmp: Add PHY driver for the Xilinx ZynqMP
+ Gigabit Transceiver
+Message-ID: <20200629134934.GE10681@pendragon.ideasonboard.com>
+References: <20200629120054.29338-1-laurent.pinchart@ideasonboard.com>
+ <20200629131917.GL2599@vkoul-mobl>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200629131917.GL2599@vkoul-mobl>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Attempting to clean-up W=1 kernel builds, which are currently
-overwhelmingly riddled with niggly little warnings.
+Hi Vinod,
 
-Lee Jones (4):
-  pwm: bcm-iproc: Remove impossible comparison when validating duty
-    cycle
-  pwm: bcm-kona: Remove impossible comparison when validating duty cycle
-  pwm: mediatek: Provide missing kerneldoc description for 'soc' arg
-  pwm: omap-dmtimer: Repair pwm_omap_dmtimer_chip's broken kerneldoc
-    header
+On Mon, Jun 29, 2020 at 06:49:17PM +0530, Vinod Koul wrote:
+> On 29-06-20, 15:00, Laurent Pinchart wrote:
+> > Hello,
+> > 
+> > The patch series adds a PHY driver for the Xilinx ZynqMP gigabit serial
+> > transceivers (PS-GTR). The PS-GTR is a set of 4 PHYs that can be used by
+> > the PCIe, USB 3.0, DisplayPort, SATA and Ethernet controllers that are
+> > part of the Serial I/O Unit (SIOU).
+> > 
+> > The code is based on a previous version sent by Anurag Kumar Vulisha and
+> > available at [1]. The DT bindings have been converted to YAML, and both
+> > the bindings and the driver have been considerably reworked (and
+> > simplified). The most notable changes is the removal of manual handling
+> > of the reset lines of the PHY users (which belongs to the PHY users
+> > themselves), and moving to the standard PHY .power_on() and .configure()
+> > operations to replace functions that were previously exported by the
+> > driver. Please see individual patches for a more detailed changelog.
+> > 
+> > Compared to v8, the series has been rebased on phy/next, and a minor
+> > issue in MAINTAINERS has been fixed.
+> 
+> Thanks for quick rebase, Applied 1 & 2 now
 
- drivers/pwm/pwm-bcm-iproc.c    | 3 +--
- drivers/pwm/pwm-bcm-kona.c     | 2 +-
- drivers/pwm/pwm-mediatek.c     | 1 +
- drivers/pwm/pwm-omap-dmtimer.c | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+Thank you. Michal, could you apply 3/3 to your tree ?
+
+> > [1] https://patchwork.kernel.org/cover/10735681/
+> > 
+> > Anurag Kumar Vulisha (2):
+> >   dt-bindings: phy: Add DT bindings for Xilinx ZynqMP PSGTR PHY
+> >   phy: zynqmp: Add PHY driver for the Xilinx ZynqMP Gigabit Transceiver
+> > 
+> > Laurent Pinchart (1):
+> >   arm64: dts: zynqmp: Add GTR transceivers
+> > 
+> >  .../bindings/phy/xlnx,zynqmp-psgtr.yaml       | 105 ++
+> >  MAINTAINERS                                   |   9 +
+> >  arch/arm64/boot/dts/xilinx/zynqmp.dtsi        |  10 +
+> >  drivers/phy/Kconfig                           |   1 +
+> >  drivers/phy/Makefile                          |   3 +-
+> >  drivers/phy/xilinx/Kconfig                    |  13 +
+> >  drivers/phy/xilinx/Makefile                   |   3 +
+> >  drivers/phy/xilinx/phy-zynqmp.c               | 995 ++++++++++++++++++
+> >  include/dt-bindings/phy/phy.h                 |   1 +
+> >  9 files changed, 1139 insertions(+), 1 deletion(-)
+> >  create mode 100644 Documentation/devicetree/bindings/phy/xlnx,zynqmp-psgtr.yaml
+> >  create mode 100644 drivers/phy/xilinx/Kconfig
+> >  create mode 100644 drivers/phy/xilinx/Makefile
+> >  create mode 100644 drivers/phy/xilinx/phy-zynqmp.c
 
 -- 
-2.25.1
+Regards,
 
+Laurent Pinchart
