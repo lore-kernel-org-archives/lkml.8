@@ -2,171 +2,223 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BEAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:51:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD3D2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:52:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C85A6206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:51:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A1DC20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:52:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="H3weMcBl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rS5h5EDV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389854AbgF2Uvv (ORCPT
+        id S2389875AbgF2UwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:51:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43372 "EHLO
+        Mon, 29 Jun 2020 16:52:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731380AbgF2TN1 (ORCPT
+        with ESMTP id S1731375AbgF2TN1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:13:27 -0400
-Received: from EUR01-HE1-obe.outbound.protection.outlook.com (mail-he1eur01on0614.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe1e::614])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2BC7C0A8887;
-        Mon, 29 Jun 2020 00:27:53 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BdzskCP1O1Ya3+TOD5k+Z5m9HDOBTWuXypY7zuqrcRfqtV9Km3hgPuZArw9rfHF4NRhUBeoas6oLstMlcLnOMF2UN5/l95lvp4dsCfDtNMIliDrMbbFW3Dr4870iGzkNr9Xy/hA6Ai9WyQJf9agL6HcFsq0GLG8vzUSfcgQg9tC2siykvkyZhXMurj/TgniHYtkKX7rgzirdpdzx+xLRHOAdtD6LKUVoFLl2LME6dlpVd2t0uRQMuHFr5tsCv1cDpI37vWYaccA1UF1BI119LvUWudFRN9tQ2LqFKonFWoCT/rJeH2vT4XdgAv5YtqtnqVWkIzG7UZCVlDU6uNM80Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vl43n8vUBg9NroiDqhOm5H6M5rILC5sL6ySOH2MnCgQ=;
- b=CRbxY7rD9X8Soe+WxULWlhhBcQ/RNDPbd0MhyjcgRxSjTSYKikKHkxphVwD8dSEx2FTiETFAQFmTR1wpcXNxP3jyf7Vgzrph5QslAUAnxy3M8Jwiqve2NJWaRXaMgFmuDiLHUCTlRMsnpIN2fYNI+LfUr9TAXjz6xBtSZ2TT+fFTc8iOMVhUHTQ2LDNYPF62TExwqTi9g5mu8CDPAhihwqZEtvSZU2tGkQy1CYi8IHqcFnmo+kzbJCeCH2cBOsghFgkXSmMVCHudy0oEmuqe7UwXItH9fJ3+aASDt5BKaXjDDpWe5SKPaAJAn1qaib4tsOrZigGlV7EZRDb2V2yfFQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vl43n8vUBg9NroiDqhOm5H6M5rILC5sL6ySOH2MnCgQ=;
- b=H3weMcBlaTsrXuwOhSMj1DF3HYUHcJDLWIGbKn7TftI4TjJh/Tz25d1c2yG+PqQER6AosvBUKa4xqfPVlB+WmXEmiOvU/nQDvbDx1va2V+OnW1WgFPSXFC7GUZwDr9sVPrtmi6W3EX+5a47C2C55gX1vdvlL/CsVMG+8ejddMwk=
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com (2603:10a6:20b:2::14)
- by AM6PR04MB4325.eurprd04.prod.outlook.com (2603:10a6:209:47::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21; Mon, 29 Jun
- 2020 07:27:49 +0000
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::3c6c:a0e9:9a4e:c51d]) by AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::3c6c:a0e9:9a4e:c51d%7]) with mapi id 15.20.3131.026; Mon, 29 Jun 2020
- 07:27:49 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
-        Stefan Agner <stefan.agner@toradex.com>,
-        "arnd@arndb.de" <arnd@arndb.de>, Peng Fan <peng.fan@nxp.com>,
-        Abel Vesa <abel.vesa@nxp.com>, Andy Duan <fugang.duan@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "yuehaibing@huawei.com" <yuehaibing@huawei.com>,
-        "sfr@canb.auug.org.au" <sfr@canb.auug.org.au>,
-        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V3 03/10] ARM: imx: Select MXC_CLK for each SoC
-Thread-Topic: [PATCH V3 03/10] ARM: imx: Select MXC_CLK for each SoC
-Thread-Index: AQHWTdtf2ighwrlZYE2Io7rocJB2PqjvMbRA
-Date:   Mon, 29 Jun 2020 07:27:49 +0000
-Message-ID: <AM6PR04MB49662FB8227AEE678F55C116806E0@AM6PR04MB4966.eurprd04.prod.outlook.com>
-References: <1593410042-10598-1-git-send-email-Anson.Huang@nxp.com>
- <1593410042-10598-4-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1593410042-10598-4-git-send-email-Anson.Huang@nxp.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: nxp.com; dkim=none (message not signed)
- header.d=none;nxp.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: a86544ff-7b99-49ee-080e-08d81bfded5f
-x-ms-traffictypediagnostic: AM6PR04MB4325:
-x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR04MB432568CC44C2D05E918D521B806E0@AM6PR04MB4325.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4125;
-x-forefront-prvs: 044968D9E1
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ypQX2k/br1QBuPDkNLcLnxv+Ei5OG5kjdf6Qtqe8bqAN4qSqUkdVyUDyZAV2LVbN9oc5DkMF96KOUjKIpc3r9FTLQx6AIS3eQ9XRdlvMXB/snkG5/hsrP5tdUPEL2/fTeGXxe4/sHNETJ0K75Aj+CmaahVdYvgRaZ3nU3LFum9lDrGw7mwGM/cjN0+UVbEMvj589+gwYdLcF60/XznfsdwzMQcNE2ha/mYLuTFIKQX64oebKmVbZaocVrHK/mXdJYkLKN92skEytWsfaOeVcyJe4xZG3IuAFq/Z8KVkOhoUuCU59LjNcUzOHYNpvQVRBtKtCIUf1sYOGJTiO5yKqYi9x/7x53TngwlfJZvOiB1GIwWrCb0owze0t3G5G+GSs
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4966.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(346002)(39860400002)(366004)(376002)(26005)(71200400001)(33656002)(478600001)(316002)(44832011)(9686003)(2906002)(52536014)(55016002)(83380400001)(7416002)(6506007)(7696005)(76116006)(8936002)(5660300002)(8676002)(86362001)(4326008)(186003)(66476007)(66556008)(64756008)(66946007)(66446008)(110136005)(921003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 2M4kDWfrXxofwiUG+SG2M+MYdN4OK37xmT75D/WC51ZQkhe6FHN5cmD+KRFYupgrvCwXxsqGyD8RG1pE6GcFLY6pla1zBfvIuoZlK+PyY2TS9LQIosBap1z/KzS4B14RnpPZu50zl35IDPwov+xe8b68a4+y0xj/ZCx2gQT6m16OODOrFokBXolKyocc+RqoyT3SxtknEubnSDzrnOk6Xm8A6/F1hQ9CfcH3lm53b7gX9kQEeIgNyuUFRIBXi4/8qb7cfPRl7zcvUaPYIqa2/stuCBZaVNCB/dqNTOX/71NrBx0gF5gNLjQSU8Ef+K2as4MqfbTQgBOC3ARwejGbTJZCeamqKcc4N8XWUEPVbsHJgeoJtiN+2ISa9+mhOCpkS+ARShl+zJCS2fdjNLkjvw/MoXmCNas6w9gBr+w6y5O+5qil31RI8kLyZE/ABTaG3E0JSLtBJoeVn8IMeGU33SIKYY39BH16AbJwVpQvvCY=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D435CC0068FB
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 04:45:04 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id b6so16191824wrs.11
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 04:45:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=XGw/iLKNRAiVkZjoBpYpVGlTMGowb6J/RzcIqE9oUnc=;
+        b=rS5h5EDVXcM6nddGacPz/Nj3KgrOPH0q0nYOztg+J1s+b0tDo9soLUxF+5ac5OLI08
+         4pj4d8PGVhb2QpuWHGjPLdHrKX0AJKO5kd4h+mlDscVYvZ+wmgjgPcaGK+I6f94mzM4l
+         fb7mw0e8YVatfs/UV5KEfnEtOEVMtAaikz8UK4gdg/86d82CkVVrazsC2z8uZG7CUXUZ
+         niM55Y4S1aOeUjTWaFRV7epBvRNNInwxRoJNp/+oJDa1DqvxWLK+V7ia1o54br2dUWjk
+         r2bBnqELUcWJVWzHCzsw9/yfgbDJJaiY6No8zpA3wSx7ZRHXQyrZbqiOr9LQIvxuxb/V
+         Q9Pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=XGw/iLKNRAiVkZjoBpYpVGlTMGowb6J/RzcIqE9oUnc=;
+        b=sLpBb/NcFJyu4MVOEuDEQuGyCVFEVFJ0+6cz/c/QH7QU+jO1TiZgZzDita3lmPMoF4
+         jV+uUt+yP3ed/8PtN/tBkZ6IfJUvytNmhHZ6bOrm3G50v+lKgA8aEWbAKRZq95qoLmmE
+         MGL/oe7asTiH9zC3VUrJbGwzQBAtzH1HL8RJPOsxsK53f2BBiNUjeat2cgXZXlL969m4
+         j1goZkGTxP3uxhYqxZqhfKssUWqHfig7iuxVJKN87EfGDPfqD2NpjDU4qfvzd5wdrE6l
+         fR0dxSYLbh+R/R/dqpfHY2GNJ2VCMAsg9f8HoPUWuSiQDRjC08qOXCkPxie/zYGsJ2N7
+         Uqwg==
+X-Gm-Message-State: AOAM531i5EOShdklP+JnzxbJf19cSChu3XAmTvgqPVsDfe41rHJPdlJP
+        UBcLoNYg5ZizR39UFj/7Jeb/1Q==
+X-Google-Smtp-Source: ABdhPJxOJjSafM1OFUfqJURXwD3lrGdaznzf+9LM4EAUq/q+VGG6z+FfLqPpw2iGsX1ac9JHkVsJXw==
+X-Received: by 2002:adf:c142:: with SMTP id w2mr15839442wre.337.1593431103458;
+        Mon, 29 Jun 2020 04:45:03 -0700 (PDT)
+Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
+        by smtp.gmail.com with ESMTPSA id s10sm17859915wme.31.2020.06.29.04.45.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 04:45:02 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 12:45:01 +0100
+From:   Daniel Thompson <daniel.thompson@linaro.org>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     Sumit Garg <sumit.garg@linaro.org>,
+        kgdb-bugreport@lists.sourceforge.net, linux-serial@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Jiri Slaby <jslaby@suse.com>,
+        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/7] kgdb: Add request_nmi() to the io ops table for
+ kgdboc
+Message-ID: <20200629114501.7aq547dzo6o2abrt@holly.lan>
+References: <1592835984-28613-1-git-send-email-sumit.garg@linaro.org>
+ <1592835984-28613-4-git-send-email-sumit.garg@linaro.org>
+ <20200622160300.avgfhnfkpqzqqtsr@holly.lan>
+ <CAFA6WYOmQT-OQvjpy1pVPq2mx5S264bJPd-XfwnDY2BjeoWekg@mail.gmail.com>
+ <20200623105934.wvyidi3xgqgd35af@holly.lan>
+ <CAD=FV=XHZT9ud0Ze1pDvz-kQy7FMFzd9T6+jM5URt1k5BwQ15g@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4966.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a86544ff-7b99-49ee-080e-08d81bfded5f
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jun 2020 07:27:49.4979
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +V0Vd3+lXanMK9SbCmLdckkWcmmLmR3W2t3Ho7lINp4yby25bYYSJqVjT20WY9BArIV4YmtaSzkgcW2gj2A2HQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB4325
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=XHZT9ud0Ze1pDvz-kQy7FMFzd9T6+jM5URt1k5BwQ15g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gU2VudDogTW9uZGF5
-LCBKdW5lIDI5LCAyMDIwIDE6NTQgUE0NCj4gDQo+IGkuTVggY29tbW9uIGNsb2NrIGRyaXZlcnMg
-bWF5IHN1cHBvcnQgbW9kdWxlIGJ1aWxkLCBzbyBpdCBpcyBOT1Qgc2VsZWN0ZWQgYnkNCj4gZGVm
-YXVsdCwgZm9yIEFSQ0hfTVhDIEFSTXY3IHBsYXRmb3JtcywgbmVlZCB0byBzZWxlY3QgaXQgbWFu
-dWFsbHkgaW4gZWFjaCBTb0MNCj4gdG8gbWFrZSBidWlsZCBwYXNzLg0KPiANCj4gU2lnbmVkLW9m
-Zi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+IC0tLQ0KPiBDaGFuZ2Vz
-IHNpbmNlIFYyOg0KPiAJLSBtYW51YWxseSBzZWxlY3QgdGhlIE1YQ19DTEsgaW4gZWFjaCBTb0Mg
-aW5zdGVhZCBvZiBzZWxlY3RpbmcgaXQNCj4gCSAgZm9yIEFSQ0hfTVhDLg0KDQpBbnkgcmVhc29u
-IHRvIGRvIHRoaXM/DQoNClJlZ2FyZHMNCkFpc2hlbmcNCg0KPiAtLS0NCj4gIGFyY2gvYXJtL21h
-Y2gtaW14L0tjb25maWcgfCAxMSArKysrKysrKysrKw0KPiAgMSBmaWxlIGNoYW5nZWQsIDExIGlu
-c2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9tYWNoLWlteC9LY29uZmln
-IGIvYXJjaC9hcm0vbWFjaC1pbXgvS2NvbmZpZyBpbmRleA0KPiBlN2Q3YjkwLi5hNDY1YzBmIDEw
-MDY0NA0KPiAtLS0gYS9hcmNoL2FybS9tYWNoLWlteC9LY29uZmlnDQo+ICsrKyBiL2FyY2gvYXJt
-L21hY2gtaW14L0tjb25maWcNCj4gQEAgLTU4LDYgKzU4LDcgQEAgY29uZmlnIFNPQ19JTVgyMQ0K
-PiAgCXNlbGVjdCBDUFVfQVJNOTI2VA0KPiAgCXNlbGVjdCBJTVhfSEFWRV9JT01VWF9WMQ0KPiAg
-CXNlbGVjdCBNWENfQVZJQw0KPiArCXNlbGVjdCBNWENfQ0xLDQo+IA0KPiAgY29uZmlnIFNPQ19J
-TVgyNw0KPiAgCWJvb2wNCj4gQEAgLTY1LDE3ICs2NiwyMCBAQCBjb25maWcgU09DX0lNWDI3DQo+
-ICAJc2VsZWN0IElNWF9IQVZFX0lPTVVYX1YxDQo+ICAJc2VsZWN0IE1YQ19BVklDDQo+ICAJc2Vs
-ZWN0IFBJTkNUUkxfSU1YMjcNCj4gKwlzZWxlY3QgTVhDX0NMSw0KPiANCj4gIGNvbmZpZyBTT0Nf
-SU1YMzENCj4gIAlib29sDQo+ICAJc2VsZWN0IENQVV9WNg0KPiAgCXNlbGVjdCBNWENfQVZJQw0K
-PiArCXNlbGVjdCBNWENfQ0xLDQo+IA0KPiAgY29uZmlnIFNPQ19JTVgzNQ0KPiAgCWJvb2wNCj4g
-IAlzZWxlY3QgQVJDSF9NWENfSU9NVVhfVjMNCj4gIAlzZWxlY3QgTVhDX0FWSUMNCj4gIAlzZWxl
-Y3QgUElOQ1RSTF9JTVgzNQ0KPiArCXNlbGVjdCBNWENfQ0xLDQo+IA0KPiAgaWYgQVJDSF9NVUxU
-SV9WNQ0KPiANCj4gQEAgLTQxOSw2ICs0MjMsNyBAQCBjb25maWcgU09DX0lNWDENCj4gIAlzZWxl
-Y3QgQ1BVX0FSTTkyMFQNCj4gIAlzZWxlY3QgTVhDX0FWSUMNCj4gIAlzZWxlY3QgUElOQ1RSTF9J
-TVgxDQo+ICsJc2VsZWN0IE1YQ19DTEsNCj4gIAloZWxwDQo+ICAJICBUaGlzIGVuYWJsZXMgc3Vw
-cG9ydCBmb3IgRnJlZXNjYWxlIGkuTVgxIHByb2Nlc3Nvcg0KPiANCj4gQEAgLTQzMiw2ICs0Mzcs
-NyBAQCBjb25maWcgU09DX0lNWDI1DQo+ICAJc2VsZWN0IENQVV9BUk05MjZUDQo+ICAJc2VsZWN0
-IE1YQ19BVklDDQo+ICAJc2VsZWN0IFBJTkNUUkxfSU1YMjUNCj4gKwlzZWxlY3QgTVhDX0NMSw0K
-PiAgCWhlbHANCj4gIAkgIFRoaXMgZW5hYmxlcyBzdXBwb3J0IGZvciBGcmVlc2NhbGUgaS5NWDI1
-IHByb2Nlc3NvciAgZW5kaWYgQEAgLTQ0NCw2DQo+ICs0NTAsNyBAQCBjb25maWcgU09DX0lNWDUN
-Cj4gIAlib29sDQo+ICAJc2VsZWN0IEhBVkVfSU1YX1NSQw0KPiAgCXNlbGVjdCBNWENfVFpJQw0K
-PiArCXNlbGVjdCBNWENfQ0xLDQo+IA0KPiAgY29uZmlnCVNPQ19JTVg1MA0KPiAgCWJvb2wgImku
-TVg1MCBzdXBwb3J0Ig0KPiBAQCAtNDc3LDYgKzQ4NCw3IEBAIGNvbmZpZyBTT0NfSU1YNg0KPiAg
-CXNlbGVjdCBIQVZFX0lNWF9NTURDDQo+ICAJc2VsZWN0IEhBVkVfSU1YX1NSQw0KPiAgCXNlbGVj
-dCBNRkRfU1lTQ09ODQo+ICsJc2VsZWN0IE1YQ19DTEsNCj4gIAlzZWxlY3QgUEwzMTBfRVJSQVRB
-Xzc2OTQxOSBpZiBDQUNIRV9MMlgwDQo+IA0KPiAgY29uZmlnIFNPQ19JTVg2UQ0KPiBAQCAtNTYx
-LDYgKzU2OSw3IEBAIGNvbmZpZyBTT0NfSU1YN0RfQ000ICBjb25maWcgU09DX0lNWDdEDQo+ICAJ
-Ym9vbCAiaS5NWDcgRHVhbCBzdXBwb3J0Ig0KPiAgCXNlbGVjdCBQSU5DVFJMX0lNWDdEDQo+ICsJ
-c2VsZWN0IE1YQ19DTEsNCj4gIAlzZWxlY3QgU09DX0lNWDdEX0NBNyBpZiBBUkNIX01VTFRJX1Y3
-DQo+ICAJc2VsZWN0IFNPQ19JTVg3RF9DTTQgaWYgQVJNX1NJTkdMRV9BUk1WN00NCj4gIAlzZWxl
-Y3QgQVJNX0VSUkFUQV84MTQyMjAgaWYgQVJDSF9NVUxUSV9WNyBAQCAtNTcxLDYgKzU4MCw3IEBA
-DQo+IGNvbmZpZyBTT0NfSU1YN1VMUA0KPiAgCWJvb2wgImkuTVg3VUxQIHN1cHBvcnQiDQo+ICAJ
-c2VsZWN0IENMS1NSQ19JTVhfVFBNDQo+ICAJc2VsZWN0IFBJTkNUUkxfSU1YN1VMUA0KPiArCXNl
-bGVjdCBNWENfQ0xLDQo+ICAJc2VsZWN0IFNPQ19JTVg3RF9DQTcgaWYgQVJDSF9NVUxUSV9WNw0K
-PiAgCXNlbGVjdCBTT0NfSU1YN0RfQ000IGlmIEFSTV9TSU5HTEVfQVJNVjdNDQo+ICAJaGVscA0K
-PiBAQCAtNTgwLDYgKzU5MCw3IEBAIGNvbmZpZyBTT0NfVkY2MTANCj4gIAlib29sICJWeWJyaWQg
-RmFtaWx5IFZGNjEwIHN1cHBvcnQiDQo+ICAJc2VsZWN0IEFSTV9HSUMgaWYgQVJDSF9NVUxUSV9W
-Nw0KPiAgCXNlbGVjdCBQSU5DVFJMX1ZGNjEwDQo+ICsJc2VsZWN0IE1YQ19DTEsNCj4gDQo+ICAJ
-aGVscA0KPiAgCSAgVGhpcyBlbmFibGVzIHN1cHBvcnQgZm9yIEZyZWVzY2FsZSBWeWJyaWQgVkY2
-MTAgcHJvY2Vzc29yLg0KPiAtLQ0KPiAyLjcuNA0KDQo=
+On Fri, Jun 26, 2020 at 12:44:15PM -0700, Doug Anderson wrote:
+> Hi,
+> 
+> On Tue, Jun 23, 2020 at 3:59 AM Daniel Thompson
+> <daniel.thompson@linaro.org> wrote:
+> >
+> > On Tue, Jun 23, 2020 at 02:07:47PM +0530, Sumit Garg wrote:
+> > > On Mon, 22 Jun 2020 at 21:33, Daniel Thompson
+> > > <daniel.thompson@linaro.org> wrote:
+> > > > > +     irq_set_status_flags(irq, IRQ_NOAUTOEN);
+> > > > > +     res = request_nmi(irq, fn, IRQF_PERCPU, "kgdboc", dev_id);
+> > > >
+> > > > Why do we need IRQF_PERCPU here. A UART interrupt is not normally
+> > > > per-cpu?
+> > > >
+> > >
+> > > Have a look at this comment [1] and corresponding check in
+> > > request_nmi(). So essentially yes UART interrupt is not normally
+> > > per-cpu but in order to make it an NMI, we need to request it in
+> > > per-cpu mode.
+> > >
+> > > [1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/irq/manage.c#n2112
+> >
+> > Thanks! This is clear.
+> >
+> > > > > +     if (res) {
+> > > > > +             res = request_irq(irq, fn, IRQF_SHARED, "kgdboc", dev_id);
+> > > >
+> > > > IRQF_SHARED?
+> > > >
+> > > > Currrently there is nothing that prevents concurrent activation of
+> > > > ttyNMI0 and the underlying serial driver. Using IRQF_SHARED means it
+> > > > becomes possible for both drivers to try to service the same interrupt.
+> > > > That risks some rather "interesting" problems.
+> > > >
+> > >
+> > > Could you elaborate more on "interesting" problems?
+> >
+> > Er... one of the serial drivers we have allowed the userspace to open
+> > will, at best, be stone dead and not passing any characters.
+> >
+> >
+> > > BTW, I noticed one more problem with this patch that is IRQF_SHARED
+> > > doesn't go well with IRQ_NOAUTOEN status flag. Earlier I tested it
+> > > with auto enable set.
+> > >
+> > > But if we agree that both shouldn't be active at the same time due to
+> > > some real problems(?) then I can rid of IRQF_SHARED as well. Also, I
+> > > think we should unregister underlying tty driver (eg. /dev/ttyAMA0) as
+> > > well as otherwise it would provide a broken interface to user-space.
+> >
+> > I don't have a particular strong opinion on whether IRQF_SHARED is
+> > correct or not correct since I think that misses the point.
+> >
+> > Firstly, using IRQF_SHARED shows us that there is no interlocking
+> > between kgdb_nmi and the underlying serial driver. That probably tells
+> > us about the importance of the interlock than about IRQF_SHARED.
+> >
+> > To some extent I'm also unsure that kgdb_nmi could ever actually know
+> > the correct flags to use in all cases (that was another reason for the
+> > TODO comment about poll_get_irq() being a bogus API).
+> 
+> I do wonder a little bit if the architecture of the "kgdb_nmi_console"
+> should change.  I remember looking at it in the past and thinking it a
+> little weird that if I wanted to get it to work I'd need to change my
+> "console=" command line to go through this new driver and (I guess)
+> change the agetty I have running on my serial port to point to
+> ttyNMI0.  Is that how it's supposed to work?  Then if I want to do a
+> build without kgdb then I need to go in and change my agetty to point
+> back at my normal serial port?
+> 
+> It kinda feels like a better way to much of what the driver does would be to:
+> 
+> 1. Allow kgdb to sniff incoming serial bytes on a port and look for
+> its characters.  We already have this feature in the kernel to a small
+> extent for sniffing a break / sysrq character.
+> 
+> 2. If userspace doesn't happen to have the serial port open then
+> ideally we could open the port (using all the standard APIs that
+> already exist) from in the kernel and just throw away all the bytes
+> (since we already sniffed them).  As soon as userspace tried to open
+> the port when it would get ownership and if userspace ever closed the
+> port then we'd start reading / throwing away bytes again.
+> 
+> If we had a solution like that:
+> 
+> a) No serial drivers would need to change.
+> 
+> b) No kernel command line parameters would need to change.
+> 
+> Obviously that solution wouldn't magically get you an NMI, though.
+> For that I'd presume the right answer would be to add a parameter for
+> each serial driver that can support it to run its rx interrupt in NMI
+> mode.
+
+... or allow modal changes to the uart driver when kgdboc comes up?
+
+We already allow UART drivers to de-optimize themselves and use
+different code paths when polling is enabled so its not totally crazy
+;-).
+
+
+> Of course, perhaps I'm just confused and crazy and the above is a
+> really bad idea.
+
+Thanks for bringing this up.
+
+Sumit and I were chatting last week and our discussion went in a similar
+direction (I think not exactly the same which is why it is good to
+see your thoughts too).
+
+Personally I think it comes down to how intrusive adding NMI support is
+to serial drivers. kgdb_nmi is rather hacky and feels a bit odd to
+enable. It is clearly intended to avoid almost all changes to the UART
+driver. On our side we have been wondering whether the serial core can
+add helpers to make it easy for a serial driver to implement an simple,
+safe but not optimal NMI implementation. Making it easy to have
+safety-first might make NMI more palatable.
+
+
+> Speaking of confused: is there actually any way to use the existing
+> kgdb NMI driver (CONFIG_SERIAL_KGDB_NMI) in mainline without out of
+> tree patches?  When I looked before I assumed it was just me that was
+> outta luck because I didn't have NMI at the time, but I just did some
+> grepping and I can't find anyplace in mainline where
+> "arch_kgdb_ops.enable_nmi" would not be NULL.  Did I miss it, or do we
+> need out-of-tree patches to enable this?
+
+Out-of-tree...
+
+If, after looking at other approaches, we do all agree to nuke kgdb_nmi
+then there shouldn't be much impediment (nor that many tears).
+
+
+Daniel.
