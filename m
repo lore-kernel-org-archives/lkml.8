@@ -2,142 +2,144 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB1CFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F772C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:38:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A020D222C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:38:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 521642225F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:38:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ct0mv2T0"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Z/HZ+NNa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727980AbgF2SiD (ORCPT
+        id S1727988AbgF2SiK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:38:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37564 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727922AbgF2Sh5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:37:57 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1247C0307BD
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:09:18 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id q17so8090079pfu.8
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:09:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Dpcg/V5/bVux0rs7VkxFu353liBeuYLlwoKIVZn1zEc=;
-        b=ct0mv2T0RjdmYV1r2g3shjdEpjoUYMExe0D7cbytkVt7URajCK7sMn2lgMvkPFTDtT
-         B6e0osia8R1xcxdsu1BBSWWdC90GP7XLPKUMpUNAbTFBPpu42nc6i9OZtXC71O1efA/P
-         4ylNra4o8Pd7dj8TEYxISYWxhCFSaMWvEPRaQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Dpcg/V5/bVux0rs7VkxFu353liBeuYLlwoKIVZn1zEc=;
-        b=BiDhjUyoYieapzrHcMyFBHUN+PLZfRpFPe1GD+0DciHgFw6DFsaOSeKWGSehDPS9kY
-         1wYvvtXR5kkZRznlrjAbxqTBRj5wTSMAH6yfiSdGi64yQLiSdTc61dB0qdTO+80oKDjt
-         EhHaxCb2lZUTTtTJ+gw5Lc4PEnZQrbMgFe5tYRiktnZumZuHBj39gdcMnQI1BBV+Ja8O
-         6sks3LLkFST72rdTXLQ52nukX/hEXYSlEUoNs6Vd3WO3laR8kw3GqkVaqylxInUKudqv
-         7gjbIwiBlJ38Dx/VDnetwxQD6rbmaqtFZ6IsW/vPBw/P42uyZHyCxb5fkX+XVOdJ6V6q
-         kIHA==
-X-Gm-Message-State: AOAM530p5CX8FExQUjBTSNkLVWBgYFp4aokd2oZ6e5AVGwJq3Agao7OE
-        Xfx2JDJBz7ID1HB+Md1CoXt1oA==
-X-Google-Smtp-Source: ABdhPJwdMzhUEihbszttz1nTcxlrJL0pe9SFMhjHmbbNgUqzZFGh80VrfiWcOpG+4qWPncvSOSJsew==
-X-Received: by 2002:a63:a1f:: with SMTP id 31mr10760873pgk.228.1593446956199;
-        Mon, 29 Jun 2020 09:09:16 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id s194sm237565pgs.24.2020.06.29.09.09.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 09:09:15 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 09:09:14 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Fangrui Song <maskray@google.com>,
-        Dmitry Golovin <dima@golovin.in>,
-        clang-built-linux@googlegroups.com,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "H . J . Lu" <hjl@sourceware.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 7/7] x86/boot: Check that there are no runtime
- relocations
-Message-ID: <202006290907.E5EF18A@keescook>
-References: <20200629140928.858507-1-nivedita@alum.mit.edu>
- <20200629140928.858507-8-nivedita@alum.mit.edu>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200629140928.858507-8-nivedita@alum.mit.edu>
+        Mon, 29 Jun 2020 14:38:10 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:44394 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727960AbgF2SiC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:38:02 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593455881; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=Rn9VPsCeNhlTXsEtCkLtA7SovaaodoBU4vKbWke+iHI=; b=Z/HZ+NNai+i0hUoKAQVECVY4VlSrb+zp2/M/ZkJs9FQq6s0qQ/mItra74cQHwY99OBZoWFTm
+ p8D+RR8H0Cue+4Rotwgf3YTV2gdfnEwsrtSum2gb5I7BvaVecPqIkRejY7K+OY+hGbECptPe
+ gKMVy46HXv9W3SH/SUi33WZTQx0=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n08.prod.us-west-2.postgun.com with SMTP id
+ 5efa195cf3deea03f3cdf0e7 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 29 Jun 2020 16:39:56
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 3C1AAC433C8; Mon, 29 Jun 2020 16:39:56 +0000 (UTC)
+Received: from malabar-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbhatt)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 475B7C433CB;
+        Mon, 29 Jun 2020 16:39:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 475B7C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bbhatt@codeaurora.org
+From:   Bhaumik Bhatt <bbhatt@codeaurora.org>
+To:     manivannan.sadhasivam@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
+        jhugo@codeaurora.org, linux-kernel@vger.kernel.org,
+        Bhaumik Bhatt <bbhatt@codeaurora.org>
+Subject: [PATCH v4 8/9] bus: mhi: core: Read and save device hardware information from BHI
+Date:   Mon, 29 Jun 2020 09:39:41 -0700
+Message-Id: <1593448782-8385-9-git-send-email-bbhatt@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1593448782-8385-1-git-send-email-bbhatt@codeaurora.org>
+References: <1593448782-8385-1-git-send-email-bbhatt@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 10:09:28AM -0400, Arvind Sankar wrote:
-> Add a linker script check that there are no runtime relocations, and
-> remove the old one that tries to check via looking for specially-named
-> sections in the object files.
-> 
-> Drop the tests for -fPIE compiler option and -pie linker option, as they
-> are available in all supported gcc and binutils versions (as well as
-> clang and lld).
-> 
-> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-> Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
-> Reviewed-by: Fangrui Song <maskray@google.com>
-> ---
->  arch/x86/boot/compressed/Makefile      | 28 +++-----------------------
->  arch/x86/boot/compressed/vmlinux.lds.S |  8 ++++++++
->  2 files changed, 11 insertions(+), 25 deletions(-)
+Device hardware specific information such as serial number and the OEM
+PK hash can be read using BHI and saved on host to identify the
+endpoint.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
+Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
+---
+ drivers/bus/mhi/core/boot.c | 17 ++++++++++++++++-
+ include/linux/mhi.h         |  6 ++++++
+ 2 files changed, 22 insertions(+), 1 deletion(-)
 
-question below ...
-
-> diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
-> index a4a4a59a2628..a78510046eec 100644
-> --- a/arch/x86/boot/compressed/vmlinux.lds.S
-> +++ b/arch/x86/boot/compressed/vmlinux.lds.S
-> @@ -42,6 +42,12 @@ SECTIONS
->  		*(.rodata.*)
->  		_erodata = . ;
->  	}
-> +	.rel.dyn : {
-> +		*(.rel.*)
-> +	}
-> +	.rela.dyn : {
-> +		*(.rela.*)
-> +	}
->  	.got : {
->  		*(.got)
->  	}
-
-Should these be marked (INFO) as well?
-
-> @@ -85,3 +91,5 @@ ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0x18, "Unexpected GOT/PLT en
->  #else
->  ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0xc, "Unexpected GOT/PLT entries detected!")
->  #endif
-> +
-> +ASSERT(SIZEOF(.rel.dyn) == 0 && SIZEOF(.rela.dyn) == 0, "Unexpected runtime relocations detected!")
-
-I think I should be doing this same ASSERT style for other explicit
-DISCARDS in my orphan series so we'll notice if they change, instead
-of being silently dropped if they grow.
-
+diff --git a/drivers/bus/mhi/core/boot.c b/drivers/bus/mhi/core/boot.c
+index 0b38014..24422f5 100644
+--- a/drivers/bus/mhi/core/boot.c
++++ b/drivers/bus/mhi/core/boot.c
+@@ -392,13 +392,28 @@ void mhi_fw_load_handler(struct mhi_controller *mhi_cntrl)
+ 	void *buf;
+ 	dma_addr_t dma_addr;
+ 	size_t size;
+-	int ret;
++	int i, ret;
+ 
+ 	if (MHI_PM_IN_ERROR_STATE(mhi_cntrl->pm_state)) {
+ 		dev_err(dev, "Device MHI is not in valid state\n");
+ 		return;
+ 	}
+ 
++	/* save hardware info from BHI */
++	ret = mhi_read_reg(mhi_cntrl, mhi_cntrl->bhi, BHI_SERIALNU,
++			   &mhi_cntrl->serial_number);
++	if (ret)
++		dev_err(dev, "Could not capture serial number via BHI\n");
++
++	for (i = 0; i < ARRAY_SIZE(mhi_cntrl->oem_pk_hash); i++) {
++		ret = mhi_read_reg(mhi_cntrl, mhi_cntrl->bhi, BHI_OEMPKHASH(i),
++				   &mhi_cntrl->oem_pk_hash[i]);
++		if (ret) {
++			dev_err(dev, "Could not capture OEM PK HASH via BHI\n");
++			break;
++		}
++	}
++
+ 	/* If device is in pass through, do reset to ready state transition */
+ 	if (mhi_cntrl->ee == MHI_EE_PTHRU)
+ 		goto fw_load_ee_pthru;
+diff --git a/include/linux/mhi.h b/include/linux/mhi.h
+index b1e8b4f..dad6246 100644
+--- a/include/linux/mhi.h
++++ b/include/linux/mhi.h
+@@ -16,6 +16,8 @@
+ #include <linux/wait.h>
+ #include <linux/workqueue.h>
+ 
++#define MHI_MAX_OEM_PK_HASH_SEGMENTS 16
++
+ struct mhi_chan;
+ struct mhi_event;
+ struct mhi_ctxt;
+@@ -315,6 +317,8 @@ struct mhi_controller_config {
+  * @device_number: MHI controller device number
+  * @major_version: MHI controller major revision number
+  * @minor_version: MHI controller minor revision number
++ * @serial_number: MHI controller serial number obtained from BHI
++ * @oem_pk_hash: MHI controller OEM PK Hash obtained from BHI
+  * @mhi_event: MHI event ring configurations table
+  * @mhi_cmd: MHI command ring configurations table
+  * @mhi_ctxt: MHI device context, shared memory between host and device
+@@ -394,6 +398,8 @@ struct mhi_controller {
+ 	u32 device_number;
+ 	u32 major_version;
+ 	u32 minor_version;
++	u32 serial_number;
++	u32 oem_pk_hash[MHI_MAX_OEM_PK_HASH_SEGMENTS];
+ 
+ 	struct mhi_event *mhi_event;
+ 	struct mhi_cmd *mhi_cmd;
 -- 
-Kees Cook
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
+
