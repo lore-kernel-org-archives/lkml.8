@@ -2,197 +2,91 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD35DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45AF7C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:47:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 988E5204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:47:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12ECC2063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:47:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BPMNbr2s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729085AbgF2SrX (ORCPT
+        id S1729165AbgF2SrZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:47:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38398 "EHLO
+        Mon, 29 Jun 2020 14:47:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729133AbgF2Smw (ORCPT
+        with ESMTP id S1729132AbgF2Smw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:42:52 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E5D2C033C2C;
-        Mon, 29 Jun 2020 11:26:35 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jpyUD-002DxR-O7; Mon, 29 Jun 2020 18:26:33 +0000
-From:   Al Viro <viro@ZenIV.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        David Miller <davem@davemloft.net>,
-        Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>
-Subject: [PATCH 36/41] parisc: switch to ->get2()
-Date:   Mon, 29 Jun 2020 19:26:23 +0100
-Message-Id: <20200629182628.529995-36-viro@ZenIV.linux.org.uk>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200629182628.529995-1-viro@ZenIV.linux.org.uk>
-References: <20200629182349.GA2786714@ZenIV.linux.org.uk>
- <20200629182628.529995-1-viro@ZenIV.linux.org.uk>
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50F86C033C3B
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 11:37:16 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id i14so17713836ejr.9
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 11:37:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=iwjexUe6g3MgBE57x0AwTJYB+Tm1mR4Xc5V3Hpfp0Q0=;
+        b=BPMNbr2saZvodqadONafw08F2hySjig25hblzKcpl4Dn0xdeMuAJDob+Hj8/e26XnW
+         DcsrasfTyHgT8KAkwUeolszGnixcmMnYIE8upwFFBx3ce9FSI6+4bF66uZlIeO/IYnfR
+         nKG6W1gtUsCNuWXnXti67445rUxPidn7R2448rSS8fOhA6OPz9hTN+9JZ1bGkvKjvOET
+         f/Of69MzWFDlYi0WAMar+2iMf+Vf9KeLGwI7hmgPshMBgwV9SN3pybBp7tN/RZCinBap
+         xt0HZrWg0pNjOJCFPyFfAmVzUL7cyakhsBGU59PquHibfr0OHjgGhkDaijqPOVeIGj/+
+         uBMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=iwjexUe6g3MgBE57x0AwTJYB+Tm1mR4Xc5V3Hpfp0Q0=;
+        b=c3PV9D1DtUthse7Pa55WczsmWXzkxAjFdcQ2mTzRIbdTxqOazLTSmo0QgtJ5erWdtp
+         AfeeCP/TX+N353jSfnPbQcPAwlvvzFzfUX5FQPZNNpsvF4C+2sysp0qabPQcKVYoxXd4
+         CRpGvCcEqJvCN0Yt54hSElvNxfHeaCYzz7KTMU6Ul0bN2Nl/JF3/e3etHOnS0rjynsh+
+         MyEH9j/fLjbOx8D/Kr4h4+QvdZNism8HaTCg2fZMU8A1aF4rkihF/h6PctcJvqpiZn9j
+         ozofFooq8Y9O+qHKmv5mSLtEUYIGPNigbsY/gKACJe/eIYcwtQnUJpWbJs8DB8ity+ww
+         8kEA==
+X-Gm-Message-State: AOAM532AFA9dbQ/9PB5RlrjAwONaptfRLV41gTVF1RlmnNIuFAF5P5Ye
+        15RgYsgz0j8+JWDkxn2djdquPJOq
+X-Google-Smtp-Source: ABdhPJzHwlH82W9y4w5C+kdkMDP/5EI41sxvEjHgizXEikHzsbh2cE8UepqlgbOi/jQSwv4PVxX9bg==
+X-Received: by 2002:a17:907:100a:: with SMTP id ox10mr14644241ejb.351.1593455835070;
+        Mon, 29 Jun 2020 11:37:15 -0700 (PDT)
+Received: from ltop.local ([2a02:a03f:b7f9:7600:4d36:64ba:210e:1576])
+        by smtp.gmail.com with ESMTPSA id by20sm295745ejc.119.2020.06.29.11.37.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 11:37:14 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 20:37:13 +0200
+From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+To:     kernel test robot <lkp@intel.com>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] sparse: use static inline for __chk_{user,io}_ptr()
+Message-ID: <20200629183713.msrfozjvpt6jr6jl@ltop.local>
+References: <20200628072019.67107-1-luc.vanoostenryck@gmail.com>
+ <202006300219.fQMPm3tC%lkp@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202006300219.fQMPm3tC%lkp@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+On Tue, Jun 30, 2020 at 02:08:36AM +0800, kernel test robot wrote:
+> Hi Luc,
+> 
+> I love your patch! Perhaps something to improve:
+> 
+> [auto build test WARNING on next-20200626]
+> [cannot apply to linux/master linus/master v5.8-rc2 v5.8-rc1 v5.7 v5.8-rc3]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
- arch/parisc/kernel/ptrace.c | 84 +++++++++------------------------------------
- 1 file changed, 16 insertions(+), 68 deletions(-)
+This patch should be applied on top of akpm's tree or on top of next.
+I'm not sure hwo I should have specified this, 'git send-mail --base=...'
+is less useful for these trees.
 
-diff --git a/arch/parisc/kernel/ptrace.c b/arch/parisc/kernel/ptrace.c
-index b51418ad8655..6dd7a4debb9c 100644
---- a/arch/parisc/kernel/ptrace.c
-+++ b/arch/parisc/kernel/ptrace.c
-@@ -391,31 +391,11 @@ void do_syscall_trace_exit(struct pt_regs *regs)
- 
- static int fpr_get(struct task_struct *target,
- 		     const struct user_regset *regset,
--		     unsigned int pos, unsigned int count,
--		     void *kbuf, void __user *ubuf)
-+		     struct membuf to)
- {
- 	struct pt_regs *regs = task_regs(target);
--	__u64 *k = kbuf;
--	__u64 __user *u = ubuf;
--	__u64 reg;
--
--	pos /= sizeof(reg);
--	count /= sizeof(reg);
--
--	if (kbuf)
--		for (; count > 0 && pos < ELF_NFPREG; --count)
--			*k++ = regs->fr[pos++];
--	else
--		for (; count > 0 && pos < ELF_NFPREG; --count)
--			if (__put_user(regs->fr[pos++], u++))
--				return -EFAULT;
- 
--	kbuf = k;
--	ubuf = u;
--	pos *= sizeof(reg);
--	count *= sizeof(reg);
--	return user_regset_copyout_zero(&pos, &count, &kbuf, &ubuf,
--					ELF_NFPREG * sizeof(reg), -1);
-+	return membuf_write(&to, regs->fr, ELF_NFPREG * sizeof(__u64));
- }
- 
- static int fpr_set(struct task_struct *target,
-@@ -527,30 +507,14 @@ static void set_reg(struct pt_regs *regs, int num, unsigned long val)
- 
- static int gpr_get(struct task_struct *target,
- 		     const struct user_regset *regset,
--		     unsigned int pos, unsigned int count,
--		     void *kbuf, void __user *ubuf)
-+		     struct membuf to)
- {
- 	struct pt_regs *regs = task_regs(target);
--	unsigned long *k = kbuf;
--	unsigned long __user *u = ubuf;
--	unsigned long reg;
-+	unsigned int pos;
- 
--	pos /= sizeof(reg);
--	count /= sizeof(reg);
--
--	if (kbuf)
--		for (; count > 0 && pos < ELF_NGREG; --count)
--			*k++ = get_reg(regs, pos++);
--	else
--		for (; count > 0 && pos < ELF_NGREG; --count)
--			if (__put_user(get_reg(regs, pos++), u++))
--				return -EFAULT;
--	kbuf = k;
--	ubuf = u;
--	pos *= sizeof(reg);
--	count *= sizeof(reg);
--	return user_regset_copyout_zero(&pos, &count, &kbuf, &ubuf,
--					ELF_NGREG * sizeof(reg), -1);
-+	for (pos = 0; pos < ELF_NGREG; pos++)
-+		membuf_store(&to, get_reg(regs, pos));
-+	return 0;
- }
- 
- static int gpr_set(struct task_struct *target,
-@@ -588,12 +552,12 @@ static const struct user_regset native_regsets[] = {
- 	[REGSET_GENERAL] = {
- 		.core_note_type = NT_PRSTATUS, .n = ELF_NGREG,
- 		.size = sizeof(long), .align = sizeof(long),
--		.get = gpr_get, .set = gpr_set
-+		.get2 = gpr_get, .set = gpr_set
- 	},
- 	[REGSET_FP] = {
- 		.core_note_type = NT_PRFPREG, .n = ELF_NFPREG,
- 		.size = sizeof(__u64), .align = sizeof(__u64),
--		.get = fpr_get, .set = fpr_set
-+		.get2 = fpr_get, .set = fpr_set
- 	}
- };
- 
-@@ -607,31 +571,15 @@ static const struct user_regset_view user_parisc_native_view = {
- 
- static int gpr32_get(struct task_struct *target,
- 		     const struct user_regset *regset,
--		     unsigned int pos, unsigned int count,
--		     void *kbuf, void __user *ubuf)
-+		     struct membuf to)
- {
- 	struct pt_regs *regs = task_regs(target);
--	compat_ulong_t *k = kbuf;
--	compat_ulong_t __user *u = ubuf;
--	compat_ulong_t reg;
-+	unsigned int pos;
- 
--	pos /= sizeof(reg);
--	count /= sizeof(reg);
-+	for (pos = 0; pos < ELF_NGREG; pos++)
-+		membuf_store(&to, (compat_ulong_t)get_reg(regs, pos));
- 
--	if (kbuf)
--		for (; count > 0 && pos < ELF_NGREG; --count)
--			*k++ = get_reg(regs, pos++);
--	else
--		for (; count > 0 && pos < ELF_NGREG; --count)
--			if (__put_user((compat_ulong_t) get_reg(regs, pos++), u++))
--				return -EFAULT;
--
--	kbuf = k;
--	ubuf = u;
--	pos *= sizeof(reg);
--	count *= sizeof(reg);
--	return user_regset_copyout_zero(&pos, &count, &kbuf, &ubuf,
--					ELF_NGREG * sizeof(reg), -1);
-+	return 0;
- }
- 
- static int gpr32_set(struct task_struct *target,
-@@ -672,12 +620,12 @@ static const struct user_regset compat_regsets[] = {
- 	[REGSET_GENERAL] = {
- 		.core_note_type = NT_PRSTATUS, .n = ELF_NGREG,
- 		.size = sizeof(compat_long_t), .align = sizeof(compat_long_t),
--		.get = gpr32_get, .set = gpr32_set
-+		.get2 = gpr32_get, .set = gpr32_set
- 	},
- 	[REGSET_FP] = {
- 		.core_note_type = NT_PRFPREG, .n = ELF_NFPREG,
- 		.size = sizeof(__u64), .align = sizeof(__u64),
--		.get = fpr_get, .set = fpr_set
-+		.get2 = fpr_get, .set = fpr_set
- 	}
- };
- 
--- 
-2.11.0
-
+-- Luc
