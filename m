@@ -2,110 +2,87 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F7DC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 03:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C69B7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 03:24:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C230B2074A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 03:19:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82C4E206C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 03:24:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="CtUW1G7r"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DE01pAvH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726118AbgF2DT1 (ORCPT
+        id S1726026AbgF2DX7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 23:19:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37802 "EHLO
+        Sun, 28 Jun 2020 23:23:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbgF2DTY (ORCPT
+        with ESMTP id S1725976AbgF2DX7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 23:19:24 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07DA7C03E979
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 20:19:24 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id c1so138991pja.5
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 20:19:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=N7ALW83XlMpZ1UNtCe3339z3xtZN1TwIo7hbmM2+bF0=;
-        b=CtUW1G7rX1aMx2QF59g+J78Z94tMoXWIIVhLD2JEBHaXi7uvpEv8fC2AsCqzJZTxRC
-         JBEfUwTsw5guLXx5y3oAiRFLzMkQM63qumKW1s/Q8XSLd4ghrTWGvoy5HtxDIIiTCIem
-         tJ/HQ9UCOCFcjof+pojb95RYUi8143OBVYNLZYzzU8yX1BpAir30Rxi0tJsHVjXcqig+
-         zjBsx5ghHMkbDPex+Z59vhpzguaVWEt98LrTeLGL15jHpPAQOkcIRfYoXdjimV0iz0ax
-         v7XTQfFQc0XwSBhrxfhVAZRB5dTmWpg0fxg38DTbmxeMaNNX0YrylLRKC6RO/su+v0Ws
-         k0lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=N7ALW83XlMpZ1UNtCe3339z3xtZN1TwIo7hbmM2+bF0=;
-        b=VLyFHib3mGOoixKPHzx4SalkiLoptiSpZa1IglNPKKeEOYdbEmF95s6AYqkmSagjur
-         EpEPGnq+Mayeny+Ivn4kUbV6jqFqgDCJBmXWnGWMkIyOmLyQtYnx/6B8p0XqqhG4M+AN
-         EKyPCZytuFJaiVPYW+Uo0/V56+iz/lbxyLYbxPolpDSjcEJIrtVPTnRq2VD8yJdOcf0W
-         JyRDeiG5N5sAM2EJsjRt0+9SFOpfeOuE2yROXY0umyrKqH5nSnUJxUKFM5Sw5lX5/t4M
-         18vcv7YONEVnQzupNqyEzDW2nu+KKYF4PTmmnsinoWVy3Onkd7cNhdUFWGEt4zgtlLtJ
-         Lzxg==
-X-Gm-Message-State: AOAM531wZe9eCRZm38vySjn0DK9gvFrM3w+veEWeWwEYXwZHwuXDXL8W
-        c1jRfkzryWnY7yFrXBjOxNcaV9k2JTkLZw==
-X-Google-Smtp-Source: ABdhPJwI/FlxEB4eqDmKB/m+/Up3gTbXvrv98xnOr3oTcgypiCSZ3DcqOB2TUerg5zb4ouEh+nnZdw==
-X-Received: by 2002:a17:902:b496:: with SMTP id y22mr11901540plr.224.1593400763621;
-        Sun, 28 Jun 2020 20:19:23 -0700 (PDT)
-Received: from hsinchu02.internal.sifive.com (114-34-229-221.HINET-IP.hinet.net. [114.34.229.221])
-        by smtp.gmail.com with ESMTPSA id j70sm12876254pfd.208.2020.06.28.20.19.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jun 2020 20:19:23 -0700 (PDT)
-From:   Zong Li <zong.li@sifive.com>
-To:     palmer@dabbelt.com, paul.walmsley@sifive.com,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Zong Li <zong.li@sifive.com>
-Subject: [RFC PATCH 2/6] riscv: dts: sifive: Add DT support for PMU
-Date:   Mon, 29 Jun 2020 11:19:11 +0800
-Message-Id: <b90858e0baa2184d8aeac1a930c6d6882f9cc09f.1593397455.git.zong.li@sifive.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <cover.1593397455.git.zong.li@sifive.com>
-References: <cover.1593397455.git.zong.li@sifive.com>
+        Sun, 28 Jun 2020 23:23:59 -0400
+Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A930C03E979
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 20:23:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:Content-ID:
+        Content-Description:In-Reply-To:References;
+        bh=blQRyd/HnAyTbWfbQ9xtykWqeCj1aEkm67zC7s9PG2w=; b=DE01pAvHW6rcfid3cvE/jIdTqU
+        nqqb9R2nFsmYFIjfnzSXtcbUHQzBQ95NnEZPBuq7UNDzYSHWA5DhHA9ZAUXVOSdrixZqIQdMu0y3S
+        v7F9ibuJJoanNGjL1CC9W+CoBW6KsNZoF06HAKqv3EBhpa7G+BCKyzb+ZtxhnV6vxy475Lf5Fl7xV
+        75aDqAn1/Bi0T6Z0VxVzxkg6vqZCjEWqcxVBAoBE+Rjus2AeKz+GA8NWMl0lnSIkis89unej4pTSk
+        lYmf1ALW0kemIFuM6ca57rm/yYqUy1jDytPH4zD64cjYRGnDME8bc9pdmm+QXInAKpdCC2Y4E/FXf
+        2oo5LwhA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jpkOO-0003eW-BA; Mon, 29 Jun 2020 03:23:37 +0000
+To:     LKML <linux-kernel@vger.kernel.org>,
+        moderated for non-subscribers <alsa-devel@alsa-project.org>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.de>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH -next] ASoC: Documentation: fix reference to renamed source
+ file
+Message-ID: <a9f59f30-8cf2-ea82-567c-1706fd64fe62@infradead.org>
+Date:   Sun, 28 Jun 2020 20:23:33 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add performance monitor unit DT node in SiFive Fu540 soc-specific DT
-file. This pmu node passes the dtbs_check verification.
+From: Randy Dunlap <rdunlap@infradead.org>
 
-Signed-off-by: Zong Li <zong.li@sifive.com>
+sound/soc/soc-io.c was merged into sound/soc/soc-component.c, so fixup
+the Documentation to use the updated file name.
+
+Error: Cannot open file ../sound/soc/soc-io.c
+WARNING: kernel-doc '../scripts/kernel-doc -rst -enable-lineno ../sound/soc/soc-io.c' failed with return code 1
+
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Mark Brown <broonie@kernel.org>
 ---
- arch/riscv/boot/dts/sifive/fu540-c000.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ Documentation/sound/kernel-api/alsa-driver-api.rst |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-index 7db861053483..824351fe2a57 100644
---- a/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-+++ b/arch/riscv/boot/dts/sifive/fu540-c000.dtsi
-@@ -283,4 +283,17 @@ gpio: gpio@10060000 {
- 			status = "disabled";
- 		};
- 	};
-+	pmu {
-+		compatible = "riscv,pmu";
-+		riscv,width-base-cntr = <64>;
-+		riscv,width-event-cntr = <40>;
-+		riscv,n-event-cntr = <2>;
-+		riscv,hw-event-map = <0x0 0x0
-+				      0x1 0x1
-+				      0x3 0x0202
-+				      0x4 0x4000
-+				      0x5 0x2001>;
-+		riscv,hw-cache-event-map = <0x010201 0x0102
-+					    0x010204 0x0802>;
-+	};
- };
--- 
-2.27.0
+--- linux-next-20200626.orig/Documentation/sound/kernel-api/alsa-driver-api.rst
++++ linux-next-20200626/Documentation/sound/kernel-api/alsa-driver-api.rst
+@@ -99,7 +99,7 @@ ASoC Core API
+ .. kernel-doc:: include/sound/soc.h
+ .. kernel-doc:: sound/soc/soc-core.c
+ .. kernel-doc:: sound/soc/soc-devres.c
+-.. kernel-doc:: sound/soc/soc-io.c
++.. kernel-doc:: sound/soc/soc-component.c
+ .. kernel-doc:: sound/soc/soc-pcm.c
+ .. kernel-doc:: sound/soc/soc-ops.c
+ .. kernel-doc:: sound/soc/soc-compress.c
 
