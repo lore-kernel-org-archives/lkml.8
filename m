@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF8B5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D853C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:52:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D9EB20724
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CEB22072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:52:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460349;
-	bh=TY+OzDIfjSGqQuHfrjy5eBvrcMpU/vCz/7fbYEldFgM=;
+	s=default; t=1593460352;
+	bh=JlGPGxSOvt68HRiWmsy8y0VyzjBvTHeSu8EKcWfelhw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y/Qldqb0oq582dr2zwm2RLAz1WzFwSNnT+ezAsn0AlQ4VBHGeCC+Kb7uJzHh7Vlgu
-	 KngS/3RKaahcw7Y/rdJ4/R/EEmA95aXQDaVc2JPmHq7lZktkFWiQIMXQMcSg8I0dOD
-	 54M0uh9Z9eazazrTnlGJHD1sr3pQgU8uj76yMHC0=
+	b=eNVetVb+cMAFgbDy9XG4VKmPAInh9ACpidTTJbpVBC6vHIlLJUQEBlsWZjtcTsLau
+	 hyWKaI/wpTHzxiQX098fJyJigW4DQZMYDludRv3Fi2K8LaqhN7jo6KMpTJO2feen5x
+	 aaHkPsoLND4eUs4bL13bSkGJsJUTcl5rSMNtDa8c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388263AbgF2Tw1 (ORCPT
+        id S2388315AbgF2Twa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:52:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47656 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:52:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387711AbgF2Tka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387707AbgF2Tka (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7985424800;
-        Mon, 29 Jun 2020 15:25:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7263A24909;
+        Mon, 29 Jun 2020 15:27:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444328;
-        bh=TY+OzDIfjSGqQuHfrjy5eBvrcMpU/vCz/7fbYEldFgM=;
+        s=default; t=1593444464;
+        bh=JlGPGxSOvt68HRiWmsy8y0VyzjBvTHeSu8EKcWfelhw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aO+lpBukTh11QsHDBkQm/mdhQyuPbIvKKikXdcGPWZNjdGay/IE6cj7vQy98QKJZE
-         l5kTmN/AukK/RlLpDDpdPJtlqiu+MhqPk4m1Zd4ew9GL/UR3Pjo3lx/1JnSzoyFVSJ
-         f7QKYEt2nCq0vQGCC+pynoDXktdCP5YglyeQ4lmg=
+        b=AreQYUwZgIm38p87SffPcVyABfYx6HpsKRp5hufaa98pwi4HCTnddcuEb75cfOSnX
+         l4tqbP3VSpJXBduIOOGSwwZ9J2CqzYri3zpCg6sbw3wmDUVESVu+4OOCvSM2wmQPTI
+         1PjSGLo5uMV/IpIeeUlkIZ70YsJcO4DJM0ilExWQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Claudiu Manoil <claudiu.manoil@nxp.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Gao Xiang <hsiangkao@redhat.com>,
+        Hongyu Jin <hongyu.jin@unisoc.com>,
+        Chao Yu <yuchao0@huawei.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 002/178] enetc: Fix tx rings bitmap iteration range, irq handling
-Date:   Mon, 29 Jun 2020 11:22:27 -0400
-Message-Id: <20200629152523.2494198-3-sashal@kernel.org>
+Subject: [PATCH 5.4 144/178] erofs: fix partially uninitialized misuse in z_erofs_onlinepage_fixup
+Date:   Mon, 29 Jun 2020 11:24:49 -0400
+Message-Id: <20200629152523.2494198-145-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -65,53 +66,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Claudiu Manoil <claudiu.manoil@nxp.com>
+From: Gao Xiang <hsiangkao@redhat.com>
 
-[ Upstream commit 0574e2000fc3103cbc69ba82ec1175ce171fdf5e ]
+commit 3c597282887fd55181578996dca52ce697d985a5 upstream.
 
-The rings bitmap of an interrupt vector encodes
-which of the device's rings were assigned to that
-interrupt vector.
-Hence the iteration range of the tx rings bitmap
-(for_each_set_bit()) should be the total number of
-Tx rings of that netdevice instead of the number of
-rings assigned to the interrupt vector.
-Since there are 2 cores, and one interrupt vector for
-each core, the number of rings asigned to an interrupt
-vector is half the number of available rings.
-The impact of this error is that the upper half of the
-tx rings could still generate interrupts during napi
-polling.
+Hongyu reported "id != index" in z_erofs_onlinepage_fixup() with
+specific aarch64 environment easily, which wasn't shown before.
 
-Fixes: d4fd0404c1c9 ("enetc: Introduce basic PF and VF ENETC ethernet drivers")
-Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+After digging into that, I found that high 32 bits of page->private
+was set to 0xaaaaaaaa rather than 0 (due to z_erofs_onlinepage_init
+behavior with specific compiler options). Actually we only use low
+32 bits to keep the page information since page->private is only 4
+bytes on most 32-bit platforms. However z_erofs_onlinepage_fixup()
+uses the upper 32 bits by mistake.
+
+Let's fix it now.
+
+Reported-and-tested-by: Hongyu Jin <hongyu.jin@unisoc.com>
+Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
+Cc: <stable@vger.kernel.org> # 4.19+
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Link: https://lore.kernel.org/r/20200618234349.22553-1-hsiangkao@aol.com
+Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/freescale/enetc/enetc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/erofs/zdata.h | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/net/ethernet/freescale/enetc/enetc.c b/drivers/net/ethernet/freescale/enetc/enetc.c
-index b6ff893074092..4ef4d41b0d8d6 100644
---- a/drivers/net/ethernet/freescale/enetc/enetc.c
-+++ b/drivers/net/ethernet/freescale/enetc/enetc.c
-@@ -254,7 +254,7 @@ static irqreturn_t enetc_msix(int irq, void *data)
- 	/* disable interrupts */
- 	enetc_wr_reg(v->rbier, 0);
+diff --git a/fs/erofs/zdata.h b/fs/erofs/zdata.h
+index faf950189bd7a..568d5a493876c 100644
+--- a/fs/erofs/zdata.h
++++ b/fs/erofs/zdata.h
+@@ -148,22 +148,22 @@ static inline void z_erofs_onlinepage_init(struct page *page)
+ static inline void z_erofs_onlinepage_fixup(struct page *page,
+ 	uintptr_t index, bool down)
+ {
+-	unsigned long *p, o, v, id;
+-repeat:
+-	p = &page_private(page);
+-	o = READ_ONCE(*p);
++	union z_erofs_onlinepage_converter u = { .v = &page_private(page) };
++	int orig, orig_index, val;
  
--	for_each_set_bit(i, &v->tx_rings_map, v->count_tx_rings)
-+	for_each_set_bit(i, &v->tx_rings_map, ENETC_MAX_NUM_TXQS)
- 		enetc_wr_reg(v->tbier_base + ENETC_BDR_OFF(i), 0);
+-	id = o >> Z_EROFS_ONLINEPAGE_INDEX_SHIFT;
+-	if (id) {
++repeat:
++	orig = atomic_read(u.o);
++	orig_index = orig >> Z_EROFS_ONLINEPAGE_INDEX_SHIFT;
++	if (orig_index) {
+ 		if (!index)
+ 			return;
  
- 	napi_schedule_irqoff(&v->napi);
-@@ -290,7 +290,7 @@ static int enetc_poll(struct napi_struct *napi, int budget)
- 	/* enable interrupts */
- 	enetc_wr_reg(v->rbier, ENETC_RBIER_RXTIE);
+-		DBG_BUGON(id != index);
++		DBG_BUGON(orig_index != index);
+ 	}
  
--	for_each_set_bit(i, &v->tx_rings_map, v->count_tx_rings)
-+	for_each_set_bit(i, &v->tx_rings_map, ENETC_MAX_NUM_TXQS)
- 		enetc_wr_reg(v->tbier_base + ENETC_BDR_OFF(i),
- 			     ENETC_TBIER_TXTIE);
+-	v = (index << Z_EROFS_ONLINEPAGE_INDEX_SHIFT) |
+-		((o & Z_EROFS_ONLINEPAGE_COUNT_MASK) + (unsigned int)down);
+-	if (cmpxchg(p, o, v) != o)
++	val = (index << Z_EROFS_ONLINEPAGE_INDEX_SHIFT) |
++		((orig & Z_EROFS_ONLINEPAGE_COUNT_MASK) + (unsigned int)down);
++	if (atomic_cmpxchg(u.o, orig, val) != orig)
+ 		goto repeat;
+ }
  
 -- 
 2.25.1
