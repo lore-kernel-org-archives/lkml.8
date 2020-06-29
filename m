@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44218C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C48C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 261272065D
+	by mail.kernel.org (Postfix) with ESMTP id CC2C62065D
 	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1593468187;
-	bh=VKjYd9w/iLilRizjFkGuP8LDcAOj554owitDPp/Vwjc=;
+	bh=qa3ui2/kDGMV+cg74CBa2bCjyT0eCU4DDQlNS1iEZY0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ltKQ5vW7V6hcCy0ifOb8IgDDo2CrNtg/06ieCFvcLyL/lXXQCaKKUltVKwJgSTPuq
-	 T6XQY8c2/L2sxcQ2MvBw5ETwSOSunx8wVX5q3iNpYa8JlbxcaY8rrB4Up5KUgLMyOt
-	 R4DGrjnXaDoxHxsg1NOeYsSBgU9BCkGmNMlU8lhs=
+	b=1/YdFumBc1NqcB6m9sEWUSLNRLfzuOFrEPl6BvHlcQOYT1r8VFh8Nc/thKlVECTGj
+	 Gt78nUwMOAtcbkx94R1+xXb44wsBwssLA+1ZohKpi2IDQtbmreFh8xDuYM8cQvgssU
+	 q/+n+b/BXZNl38Cfm8WQ5L21eVIrde9KKleJb5m8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390375AbgF2WDB (ORCPT
+        id S1730316AbgF2WC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:03:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56794 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:02:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726237AbgF2SfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726244AbgF2SfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F8842415D;
-        Mon, 29 Jun 2020 15:19:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2517A24769;
+        Mon, 29 Jun 2020 15:21:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443941;
-        bh=VKjYd9w/iLilRizjFkGuP8LDcAOj554owitDPp/Vwjc=;
+        s=default; t=1593444083;
+        bh=qa3ui2/kDGMV+cg74CBa2bCjyT0eCU4DDQlNS1iEZY0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vU1GwDk2lKucC+BicY1dkfua6xeeJUpChT4R2bY+gKsC7eFj6fcl+RthNeumKULvS
-         38Jcir+fIq9ALQYaV3rp32qxT+Z+mbT7be3OUycUgnbyWi2/2B1Fupb7kwdaJ1Bijc
-         u+FdXMYEy9T6Sku/S2SYfstBQwvxzY8YgKs76E50=
+        b=xc4DIldNNt9tT+ej7s+3Nts8Y2SiZgN4+6UX6L953SCl9htu6aCgx9TpczQYUKs9x
+         tNyGzK0RM1nDqgqf6nVF4bnuRsbiO7ErmMUaVB5g+U57cSyUgFSB5oaEKsmUEgbjQc
+         T5lFSgK0A+Yf0XAiIr6aiCX9I4EKnLOdXS95BYz0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexander Lobakin <alobakin@pm.me>,
-        Michal Kubecek <mkubecek@suse.cz>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 043/265] net: ethtool: add missing NETIF_F_GSO_FRAGLIST feature string
-Date:   Mon, 29 Jun 2020 11:14:36 -0400
-Message-Id: <20200629151818.2493727-44-sashal@kernel.org>
+Cc:     Vidya Sagar <vidyas@nvidia.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 193/265] pinctrl: tegra: Use noirq suspend/resume callbacks
+Date:   Mon, 29 Jun 2020 11:17:06 -0400
+Message-Id: <20200629151818.2493727-194-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -66,37 +66,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lobakin <alobakin@pm.me>
+From: Vidya Sagar <vidyas@nvidia.com>
 
-[ Upstream commit eddbf5d0204e550ee59de02bdc19fe90d4203dd6 ]
+[ Upstream commit 782b6b69847f34dda330530493ea62b7de3fd06a ]
 
-Commit 3b33583265ed ("net: Add fraglist GRO/GSO feature flags") missed
-an entry for NETIF_F_GSO_FRAGLIST in netdev_features_strings array. As
-a result, fraglist GSO feature is not shown in 'ethtool -k' output and
-can't be toggled on/off.
-The fix is trivial.
+Use noirq suspend/resume callbacks as other drivers which implement
+noirq suspend/resume callbacks (Ex:- PCIe) depend on pinctrl driver to
+configure the signals used by their respective devices in the noirq phase.
 
-Fixes: 3b33583265ed ("net: Add fraglist GRO/GSO feature flags")
-Signed-off-by: Alexander Lobakin <alobakin@pm.me>
-Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Link: https://lore.kernel.org/r/20200604174935.26560-1-vidyas@nvidia.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ethtool/common.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pinctrl/tegra/pinctrl-tegra.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/ethtool/common.c b/net/ethtool/common.c
-index 7f7fff88c5d3e..aaecfc916a4db 100644
---- a/net/ethtool/common.c
-+++ b/net/ethtool/common.c
-@@ -44,6 +44,7 @@ const char netdev_features_strings[NETDEV_FEATURE_COUNT][ETH_GSTRING_LEN] = {
- 	[NETIF_F_GSO_SCTP_BIT] =	 "tx-sctp-segmentation",
- 	[NETIF_F_GSO_ESP_BIT] =		 "tx-esp-segmentation",
- 	[NETIF_F_GSO_UDP_L4_BIT] =	 "tx-udp-segmentation",
-+	[NETIF_F_GSO_FRAGLIST_BIT] =	 "tx-gso-list",
+diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
+index 21661f6490d68..195cfe557511b 100644
+--- a/drivers/pinctrl/tegra/pinctrl-tegra.c
++++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+@@ -731,8 +731,8 @@ static int tegra_pinctrl_resume(struct device *dev)
+ }
  
- 	[NETIF_F_FCOE_CRC_BIT] =         "tx-checksum-fcoe-crc",
- 	[NETIF_F_SCTP_CRC_BIT] =        "tx-checksum-sctp",
+ const struct dev_pm_ops tegra_pinctrl_pm = {
+-	.suspend = &tegra_pinctrl_suspend,
+-	.resume = &tegra_pinctrl_resume
++	.suspend_noirq = &tegra_pinctrl_suspend,
++	.resume_noirq = &tegra_pinctrl_resume
+ };
+ 
+ static bool tegra_pinctrl_gpio_node_has_range(struct tegra_pmx *pmx)
 -- 
 2.25.1
 
