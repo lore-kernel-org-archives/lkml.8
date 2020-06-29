@@ -2,115 +2,104 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF8F0C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD636C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:06:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8ED892078A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:06:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD40920656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:06:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468408;
-	bh=OZjHJXBgqjf6jeepRHxPRWcffZ7WEL55H+kz4WjR/4s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TywqkQpIPBq3ZOcPyAelnAvHkTgh+I7kylYWXJGXRsGwp/aDDvnINRo6ov2XsxDgg
-	 Y+L++sGZsHBuHLpylogtE2BaB1VYwnJw5bYii1Kiop12Z5OCuavOPjFD4U1lb6W5xT
-	 JtOoplzY0MeCOvcDIHeqiw5X3zYX9qSEMfVVHP44=
+	s=default; t=1593468410;
+	bh=whz2AYzxqIosz40Rk8FfNtqCsv/X1JKsrbmEzCmFp8k=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ZB6EG1qGFHNBcyuNItVvb3KFcWYSLvZQ+6rCOSQyorKLgRvzymakN44e0oSwqkN0T
+	 U1hDj2r7CNnmLZxKcFUPpVNTW8YzFcvPVwuDbquy9QfbziNMq3Ya+HLgtxBxjaGvI0
+	 3qMmRngTHcXLKjJb5bbJFDQ/PVKEmz6qn0qReA2w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391927AbgF2WGq (ORCPT
+        id S2391667AbgF2WGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:06:46 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:40152 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404852AbgF2WGj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 18:06:39 -0400
-Received: by mail-io1-f65.google.com with SMTP id q8so18891303iow.7;
-        Mon, 29 Jun 2020 15:06:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=d7i/LtCWxvjcrkXKayf7wJy9l1xOiA2SNi/swky4zLs=;
-        b=qLdJXcPscwc3PFY50yegWdAsLBHC54GiL4gYXMR3cLhKfeE3Qc4tzIKGsyz/QutbkW
-         dNFNivu56Q9rxEcbHgc6nt7Ux9uxtTPEgSbkkK2VaLArJUTSPLPfOhjQvFqNXhEGsONp
-         HfF1/16rL3djkFNZIkWNL//zR0Ve5ogJUcR5mW/cp6UOajRLAQcpAODLTWpdHJptoBVL
-         LBBWcvW8YyxiMfdAlWVxig9cWw7vxrNdjS2LpMOP969UKZLN3VTaduq5qoJzzelrnD5V
-         yDIK+ZWMemU8w/3LmJL4WJI8dfK8Vpq3c0IiHyaGamLZzf32CN0tUBCFDJyGszPasPcE
-         8HXw==
-X-Gm-Message-State: AOAM5310p9e0Oi5sOfZduAQx7NXmtg+f0oMJCFh4x9/0jSfeaaR0+oWg
-        i+CdgQSAe1IZS3VvIj+Fgw==
-X-Google-Smtp-Source: ABdhPJzu7iHEmXhdSieXnQBr0DvEvJgrCjdJBUPurQFawvCOFA7nufQByGRhQUQtaAcZ36ucGFZwCw==
-X-Received: by 2002:a6b:5b14:: with SMTP id v20mr19143451ioh.182.1593468398381;
-        Mon, 29 Jun 2020 15:06:38 -0700 (PDT)
-Received: from xps15 ([64.188.179.255])
-        by smtp.gmail.com with ESMTPSA id t11sm627471ils.3.2020.06.29.15.06.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 15:06:37 -0700 (PDT)
-Received: (nullmailer pid 3025233 invoked by uid 1000);
-        Mon, 29 Jun 2020 22:06:36 -0000
-Date:   Mon, 29 Jun 2020 16:06:36 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sumit Gupta <sumitg@nvidia.com>
-Cc:     viresh.kumar@linaro.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        catalin.marinas@arm.com, mperttunen@nvidia.com,
-        jonathanh@nvidia.com, rjw@rjwysocki.net,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org, will@kernel.org,
-        talho@nvidia.com, linux-arm-kernel@lists.infradead.org,
-        thierry.reding@gmail.com, bbasu@nvidia.com
-Subject: Re: [TEGRA194_CPUFREQ PATCH v4 1/4] dt-bindings: arm: Add t194
- ccplex compatible and bpmp property
-Message-ID: <20200629220636.GA3022986@bogus>
-References: <1593186236-12760-1-git-send-email-sumitg@nvidia.com>
- <1593186236-12760-2-git-send-email-sumitg@nvidia.com>
+        Mon, 29 Jun 2020 18:06:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56704 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726123AbgF2SfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:15 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9533724742;
+        Mon, 29 Jun 2020 15:21:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593444062;
+        bh=whz2AYzxqIosz40Rk8FfNtqCsv/X1JKsrbmEzCmFp8k=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=OzmPCf5XiGk65b/f2Le6y1T6qfjo3Zs0ZbkvKXjWMiverw98MexeZ0X+GJIvck6R9
+         EDMiSC27ZWEBkYlL5Ub4rp7q2Jpm+5gyW/N0cmuL+cvTf+aRsyE8/6FBq1RUgHlvll
+         Hfp5buf8yVfKVJpL9OOhRqMGH5JtifQq+Ixd2lJo=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Vincent Chen <vincent.chen@sifive.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 170/265] clk: sifive: allocate sufficient memory for struct __prci_data
+Date:   Mon, 29 Jun 2020 11:16:43 -0400
+Message-Id: <20200629151818.2493727-171-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
+References: <20200629151818.2493727-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1593186236-12760-2-git-send-email-sumitg@nvidia.com>
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.7.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.7.7-rc1
+X-KernelTest-Deadline: 2020-07-01T15:14+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Jun 2020 21:13:53 +0530, Sumit Gupta wrote:
-> To do frequency scaling on all CPUs within T194 CPU Complex, we need
-> to query BPMP for data on valid operating points. Document a compatible
-> string under 'cpus' node to represent the CPU Complex for binding drivers
-> like cpufreq which don't have their node or CPU Complex node to bind to.
-> Also, document a property to point to the BPMP device that can be queried
-> for all CPUs.
-> 
-> Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
-> ---
->  Documentation/devicetree/bindings/arm/cpus.yaml | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
+From: Vincent Chen <vincent.chen@sifive.com>
 
+[ Upstream commit d0a5fdf4cc83dabcdea668f971b8a2e916437711 ]
 
-My bot found errors running 'make dt_binding_check' on your patch:
+The (struct __prci_data).hw_clks.hws is an array with dynamic elements.
+Using struct_size(pd, hw_clks.hws, ARRAY_SIZE(__prci_init_clocks))
+instead of sizeof(*pd) to get the correct memory size of
+struct __prci_data for sifive/fu540-prci. After applying this
+modifications, the kernel runs smoothly with CONFIG_SLAB_FREELIST_RANDOM
+enabled on the HiFive unleashed board.
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/arm/cpus.yaml: properties:nvidia,bpmp: Additional properties are not allowed ('descrption' was unexpected)
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/arm/cpus.yaml: properties:nvidia,bpmp: 'descrption' is not one of ['$ref', 'additionalItems', 'additionalProperties', 'allOf', 'anyOf', 'const', 'contains', 'default', 'dependencies', 'deprecated', 'description', 'else', 'enum', 'exclusiveMaximum', 'exclusiveMinimum', 'items', 'if', 'minItems', 'minimum', 'maxItems', 'maximum', 'multipleOf', 'not', 'oneOf', 'pattern', 'patternProperties', 'properties', 'required', 'then', 'type', 'typeSize', 'unevaluatedProperties', 'uniqueItems']
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/arm/cpus.yaml: properties:nvidia,bpmp: {'$ref': '/schemas/types.yaml#/definitions/phandle', 'descrption': 'Specifies the bpmp node that needs to be queried to get\noperating point data for all CPUs.\n\nOptional for NVIDIA Tegra194 Carmel CPUs\n'} is not valid under any of the given schemas (Possible causes of the failure):
-	/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/arm/cpus.yaml: properties:nvidia,bpmp: 'description' is a required property
+Fixes: 30b8e27e3b58 ("clk: sifive: add a driver for the SiFive FU540 PRCI IP block")
+Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
+Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/clk/sifive/fu540-prci.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Documentation/devicetree/bindings/Makefile:20: recipe for target 'Documentation/devicetree/bindings/arm/cpus.example.dts' failed
-make[1]: *** [Documentation/devicetree/bindings/arm/cpus.example.dts] Error 1
-make[1]: *** Waiting for unfinished jobs....
-Makefile:1347: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
-
-
-See https://patchwork.ozlabs.org/patch/1317775
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
+diff --git a/drivers/clk/sifive/fu540-prci.c b/drivers/clk/sifive/fu540-prci.c
+index 6282ee2f361cd..a8901f90a61ac 100644
+--- a/drivers/clk/sifive/fu540-prci.c
++++ b/drivers/clk/sifive/fu540-prci.c
+@@ -586,7 +586,10 @@ static int sifive_fu540_prci_probe(struct platform_device *pdev)
+ 	struct __prci_data *pd;
+ 	int r;
+ 
+-	pd = devm_kzalloc(dev, sizeof(*pd), GFP_KERNEL);
++	pd = devm_kzalloc(dev,
++			  struct_size(pd, hw_clks.hws,
++				      ARRAY_SIZE(__prci_init_clocks)),
++			  GFP_KERNEL);
+ 	if (!pd)
+ 		return -ENOMEM;
+ 
+-- 
+2.25.1
 
