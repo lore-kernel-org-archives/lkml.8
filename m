@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C03CEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:12:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB7EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:12:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A4119206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:12:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5EDF206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:12:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593457968;
-	bh=H4bLp+NXSxDVf8zAgb8bhAnGb5CXhl2QrEc45pTUjk4=;
+	s=default; t=1593457972;
+	bh=H7Odf4Ro0q68TqmJ8ZLxfTKBiycrgRvyDAgRqObU90w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FCFyWgSjmF9H0thGwm0LLRAJQhhRse4yn719tOJnhwG8cELHA0LG9ETL1I1U+JMJq
-	 KteJiEjJKbGMT8KhCoNBt/5glggl75DJdzmcPfRAIVZRqA9T+BIaF2TMD+ejXxgB5m
-	 3nqFDX9s7HZ+fP/IR4jJxo/b/5CIE4n0I83i70Uo=
+	b=vC45BQIiz9MdR+kkJ0Qhi3VUG1jIFKR3iOBc02IQ3FkXjkJoAvQg4WLY/K812asTs
+	 j94XpSVM5/z36oamqP+aPhiQFgOvhGN5z1adwrhX8iUCEBN0mSVuhP+H1fjBYk8vhZ
+	 CN68XzMsMtgcHBAdc7LhJvtR73bcYlZHryTa6wuc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731134AbgF2TMr (ORCPT
+        id S1731175AbgF2TMu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:12:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53788 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:12:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53730 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730968AbgF2TKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730965AbgF2TKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:10:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB9EE254A6;
-        Mon, 29 Jun 2020 15:53:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F198254CE;
+        Mon, 29 Jun 2020 15:53:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446000;
-        bh=H4bLp+NXSxDVf8zAgb8bhAnGb5CXhl2QrEc45pTUjk4=;
+        s=default; t=1593446027;
+        bh=H7Odf4Ro0q68TqmJ8ZLxfTKBiycrgRvyDAgRqObU90w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DrjgGUxASs1xU9EfzrSc7h0cEyDaDpWLWYrtASy/Osoq1niqG1kwRvKsOf8sNAFaQ
-         R/j19Smb9Hr45RPmN5hdklAmqc6RfSBnyOMApUI+xW2FKI5SWOExI6Ic8lVOv4FonW
-         iVuuucKGSQhCRB34ZXNXTkGOKGosqMgifA/UmKio=
+        b=b0aKJNAiOIeCplxtKmvDD0QLK7jqJX9hFV7/U6lzviw0+kWGE/UJo2LPbA4/ELxtw
+         BnHnaQ6oMaHGhjNFhFJ8OzE+ZTdmdbzxqQJfIRGjexg3IPRuk/lip6+4U/igyKD7UV
+         7Dgl9pB26+2+qbKmwv7PwVgwh0exrs4CzDrmvgMg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oliver Neukum <oneukum@suse.com>,
-        syzbot+be5b5f86a162a6c281e6@syzkaller.appspotmail.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+Cc:     Nicholas Piggin <npiggin@gmail.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Mahesh Salgaonkar <mahesh@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 008/135] usblp: poison URBs upon disconnect
-Date:   Mon, 29 Jun 2020 11:51:02 -0400
-Message-Id: <20200629155309.2495516-9-sashal@kernel.org>
+Subject: [PATCH 4.4 033/135] powerpc/pseries/ras: Fix FWNMI_VALID off by one
+Date:   Mon, 29 Jun 2020 11:51:27 -0400
+Message-Id: <20200629155309.2495516-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -66,48 +66,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Nicholas Piggin <npiggin@gmail.com>
 
-[ Upstream commit 296a193b06120aa6ae7cf5c0d7b5e5b55968026e ]
+[ Upstream commit deb70f7a35a22dffa55b2c3aac71bc6fb0f486ce ]
 
-syzkaller reported an URB that should have been killed to be active.
-We do not understand it, but this should fix the issue if it is real.
+This was discovered developing qemu fwnmi sreset support. This
+off-by-one bug means the last 16 bytes of the rtas area can not
+be used for a 16 byte save area.
 
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Reported-by: syzbot+be5b5f86a162a6c281e6@syzkaller.appspotmail.com
-Link: https://lore.kernel.org/r/20200507085806.5793-1-oneukum@suse.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+It's not a serious bug, and QEMU implementation has to retain a
+workaround for old kernels, but it's good to tighten it.
+
+Signed-off-by: Nicholas Piggin <npiggin@gmail.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Acked-by: Mahesh Salgaonkar <mahesh@linux.ibm.com>
+Link: https://lore.kernel.org/r/20200508043408.886394-7-npiggin@gmail.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/class/usblp.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/powerpc/platforms/pseries/ras.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/class/usblp.c b/drivers/usb/class/usblp.c
-index 07c3c3449147f..c578d64edc153 100644
---- a/drivers/usb/class/usblp.c
-+++ b/drivers/usb/class/usblp.c
-@@ -481,7 +481,8 @@ static int usblp_release(struct inode *inode, struct file *file)
- 	usb_autopm_put_interface(usblp->intf);
+diff --git a/arch/powerpc/platforms/pseries/ras.c b/arch/powerpc/platforms/pseries/ras.c
+index 9795e52bab3d3..9e817c1b78087 100644
+--- a/arch/powerpc/platforms/pseries/ras.c
++++ b/arch/powerpc/platforms/pseries/ras.c
+@@ -265,10 +265,11 @@ static irqreturn_t ras_error_interrupt(int irq, void *dev_id)
+ /*
+  * Some versions of FWNMI place the buffer inside the 4kB page starting at
+  * 0x7000. Other versions place it inside the rtas buffer. We check both.
++ * Minimum size of the buffer is 16 bytes.
+  */
+ #define VALID_FWNMI_BUFFER(A) \
+-	((((A) >= 0x7000) && ((A) < 0x7ff0)) || \
+-	(((A) >= rtas.base) && ((A) < (rtas.base + rtas.size - 16))))
++	((((A) >= 0x7000) && ((A) <= 0x8000 - 16)) || \
++	(((A) >= rtas.base) && ((A) <= (rtas.base + rtas.size - 16))))
  
- 	if (!usblp->present)		/* finish cleanup from disconnect */
--		usblp_cleanup(usblp);
-+		usblp_cleanup(usblp);	/* any URBs must be dead */
-+
- 	mutex_unlock(&usblp_mutex);
- 	return 0;
- }
-@@ -1397,9 +1398,11 @@ static void usblp_disconnect(struct usb_interface *intf)
- 
- 	usblp_unlink_urbs(usblp);
- 	mutex_unlock(&usblp->mut);
-+	usb_poison_anchored_urbs(&usblp->urbs);
- 
- 	if (!usblp->used)
- 		usblp_cleanup(usblp);
-+
- 	mutex_unlock(&usblp_mutex);
- }
- 
+ /*
+  * Get the error information for errors coming through the
 -- 
 2.25.1
 
