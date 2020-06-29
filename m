@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 091F1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCB20C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2EE32067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:28:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4DB020656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:28:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462491;
-	bh=kQvr20PH6P7HMgnnOg/6cEQl1b6N7Ru9B3CPfUxmv1w=;
+	s=default; t=1593462493;
+	bh=P9ngGFvhdP1ANT5JJ+K2S/Obe4i76RSgwtMGxROMITE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rQluunBxyV7JAM5yqzd3dGfhOJes+5c3aCjIIR4+TKit6aNZHyJyehqlC5eF3uLzG
-	 JP/+1wtvlZQFcPcOmTHt186ZYcPHE+sulMURyYTEz/fBffeg1qHMGo8LpIp0jd+QAs
-	 c53MWxBTZYvnwZv1N3SwdYuEXerpODUpXhaeJTeA=
+	b=MimAB18451bQ/W+hgODEkY4PoNa7EMuulU7DChpPBmaKPhxMO54zsLeBQgi4EZSPk
+	 EMbbQQR8C130iZDgZfP12JovfHIwR5NfYlri7cFWF6ZXtpaa8MnNbokA+hYCKcgpB6
+	 Y29gqenhmnhrG1POaiCWjh7n6DnoU00BKkiZPywM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387551AbgF2U1z (ORCPT
+        id S2389151AbgF2U1x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:27:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37072 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:27:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37026 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731731AbgF2TZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732512AbgF2TZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D846525462;
-        Mon, 29 Jun 2020 15:43:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1DED253B1;
+        Mon, 29 Jun 2020 15:41:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445417;
-        bh=kQvr20PH6P7HMgnnOg/6cEQl1b6N7Ru9B3CPfUxmv1w=;
+        s=default; t=1593445278;
+        bh=P9ngGFvhdP1ANT5JJ+K2S/Obe4i76RSgwtMGxROMITE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZKpzHViLpA8huGM1zE897Ld9xRdGC+JaiQlV0bN79iSXOxJWt/kigItSSMYHDLuw/
-         aEk7AH05TkxAuZG5Cv4QOoqvZjRmJbiU96Z6TyPDHv8M5YpeNwggfngGtcC+ffEppk
-         6Rxdxm3X0EKVbmfYTxo//U9x6MPfNsiUTdES1V5w=
+        b=NMQuYBe2p/vYH6GJuu0t4BvnV5lsyjvuX/mFmy+A8Nix/BmWyBCmpE3tVzkibORAD
+         x2Y5BW3jPMSFUsuyo07cZswA1o2okkJgwfrKKhB8qj9gZGz2NjB4BPZ8aACgw6GS8F
+         o6dp5BOmF9tLT48JyC41TwVoWVKqQ2/6IfUsw8dk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     yu kuai <yukuai3@huawei.com>, Shawn Guo <shawnguo@kernel.org>,
+Cc:     Qiushi Wu <wu000273@umn.edu>, Felipe Balbi <balbi@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 166/191] ARM: imx5: add missing put_device() call in imx_suspend_alloc_ocram()
-Date:   Mon, 29 Jun 2020 11:39:42 -0400
-Message-Id: <20200629154007.2495120-167-sashal@kernel.org>
+Subject: [PATCH 4.9 057/191] usb: gadget: fix potential double-free in m66592_probe.
+Date:   Mon, 29 Jun 2020 11:37:53 -0400
+Message-Id: <20200629154007.2495120-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -64,52 +64,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+From: Qiushi Wu <wu000273@umn.edu>
 
-[ Upstream commit 586745f1598ccf71b0a5a6df2222dee0a865954e ]
+[ Upstream commit 44734a594196bf1d474212f38fe3a0d37a73278b ]
 
-if of_find_device_by_node() succeed, imx_suspend_alloc_ocram() doesn't
-have a corresponding put_device(). Thus add a jump target to fix the
-exception handling for this function implementation.
+m66592_free_request() is called under label "err_add_udc"
+and "clean_up", and m66592->ep0_req is not set to NULL after
+first free, leading to a double-free. Fix this issue by
+setting m66592->ep0_req to NULL after the first free.
 
-Fixes: 1579c7b9fe01 ("ARM: imx53: Set DDR pins to high impedance when in suspend to RAM.")
-Signed-off-by: yu kuai <yukuai3@huawei.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Fixes: 0f91349b89f3 ("usb: gadget: convert all users to the new udc infrastructure")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/mach-imx/pm-imx5.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/usb/gadget/udc/m66592-udc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-imx/pm-imx5.c b/arch/arm/mach-imx/pm-imx5.c
-index 868781fd460c7..14c630c899c5d 100644
---- a/arch/arm/mach-imx/pm-imx5.c
-+++ b/arch/arm/mach-imx/pm-imx5.c
-@@ -301,14 +301,14 @@ static int __init imx_suspend_alloc_ocram(
- 	if (!ocram_pool) {
- 		pr_warn("%s: ocram pool unavailable!\n", __func__);
- 		ret = -ENODEV;
--		goto put_node;
-+		goto put_device;
- 	}
+diff --git a/drivers/usb/gadget/udc/m66592-udc.c b/drivers/usb/gadget/udc/m66592-udc.c
+index 6e977dc225709..1be409644a483 100644
+--- a/drivers/usb/gadget/udc/m66592-udc.c
++++ b/drivers/usb/gadget/udc/m66592-udc.c
+@@ -1672,7 +1672,7 @@ static int m66592_probe(struct platform_device *pdev)
  
- 	ocram_base = gen_pool_alloc(ocram_pool, size);
- 	if (!ocram_base) {
- 		pr_warn("%s: unable to alloc ocram!\n", __func__);
- 		ret = -ENOMEM;
--		goto put_node;
-+		goto put_device;
- 	}
- 
- 	phys = gen_pool_virt_to_phys(ocram_pool, ocram_base);
-@@ -318,6 +318,8 @@ static int __init imx_suspend_alloc_ocram(
- 	if (virt_out)
- 		*virt_out = virt;
- 
-+put_device:
-+	put_device(&pdev->dev);
- put_node:
- 	of_node_put(node);
- 
+ err_add_udc:
+ 	m66592_free_request(&m66592->ep[0].ep, m66592->ep0_req);
+-
++	m66592->ep0_req = NULL;
+ clean_up3:
+ 	if (m66592->pdata->on_chip) {
+ 		clk_disable(m66592->clk);
 -- 
 2.25.1
 
