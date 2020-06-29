@@ -2,154 +2,111 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52AC4C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E23DAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:09:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 301A4207D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:09:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593464979;
-	bh=3EB4DZqVoFyQto/b1QnVXsp5YHbKVYrBtULo/IYkatE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A0ulW1Wup99egyH6GaK3tTgLrDhxmrDjpQ9bggBm/uGh6VkvMYoYXcD14YJFk8aiO
-	 UE65X+znur2FzATiFi67aYFWlgvzcZXgyRz9YfhBT1wu7KawrQwHRIAsKWlyZAy3hb
-	 wXUYFrwFIeQjK2e3a68+D2b9iHM/uhNDhmHfR3gE=
+	by mail.kernel.org (Postfix) with ESMTP id CDDB220775
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:09:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390490AbgF2VJh (ORCPT
+        id S2390235AbgF2VJl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:09:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45420 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730314AbgF2TAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:00:18 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E55325527;
-        Mon, 29 Jun 2020 15:54:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446087;
-        bh=3EB4DZqVoFyQto/b1QnVXsp5YHbKVYrBtULo/IYkatE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tw4bPVJM0cq56dr3hZRShLIDgqG0uPQ3+fFIYGz59GqtUjsrJ/7V9EGd6sCBpaMPQ
-         G+DenUu1i6unffB9jT5kZyTTSaSdYyFBtioKrCgvE1tTx73j/HWkl7ZMVm+x7Zxeh3
-         QLn6gOjM04T5bzbfQTp/AWldjtfB1MmKePdYUG2I=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yang Yingliang <yangyingliang@huawei.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.4 082/135] net: fix memleak in register_netdevice()
-Date:   Mon, 29 Jun 2020 11:52:16 -0400
-Message-Id: <20200629155309.2495516-83-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
-References: <20200629155309.2495516-1-sashal@kernel.org>
+        Mon, 29 Jun 2020 17:09:41 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:34015 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390473AbgF2VJ2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 17:09:28 -0400
+Received: from mail-qk1-f175.google.com ([209.85.222.175]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1M4s8v-1jrFTq3scJ-001xiw for <linux-kernel@vger.kernel.org>; Mon, 29 Jun
+ 2020 13:41:46 +0200
+Received: by mail-qk1-f175.google.com with SMTP id e11so14907359qkm.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 04:41:45 -0700 (PDT)
+X-Gm-Message-State: AOAM530sasEil8ERRVXJh5zFKP1CdrVns+7gvM+HvUKJIpZdPyYxNSib
+        bX128uWEDQ9oUqMRrgwIQpYpOk2AWicmkyr1piM=
+X-Google-Smtp-Source: ABdhPJyLhYoeBgzSA7MmAOwFTB9Sh+/zmsg8s7//3A8nJfIgT+w1yf4DFF1bfEfMRnermkkMST/HbKNPG8frHLqR+GA=
+X-Received: by 2002:a37:a496:: with SMTP id n144mr14552649qke.286.1593430904740;
+ Mon, 29 Jun 2020 04:41:44 -0700 (PDT)
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.229-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.4.229-rc1
-X-KernelTest-Deadline: 2020-07-01T15:53+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <1593425623-31810-1-git-send-email-Anson.Huang@nxp.com>
+ <CAK8P3a1pr8YbZMpSXg6o_UeDvaU=dDqfo45DudTASNcsxeg3kg@mail.gmail.com>
+ <DB3PR0402MB3916292FC3FDE4F28AFEB5EBF56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAK8P3a0Za99-xXTwtHNHO-Dzbo-1uesNC2oO91RA-gZZG3Anmw@mail.gmail.com> <DB3PR0402MB3916ADD54CB167B8ED10076DF56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <DB3PR0402MB3916ADD54CB167B8ED10076DF56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 29 Jun 2020 13:41:28 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1mCD1JFg80HSos9hp0ye1vu_hk79wFGz6YZ3kj10XACg@mail.gmail.com>
+Message-ID: <CAK8P3a1mCD1JFg80HSos9hp0ye1vu_hk79wFGz6YZ3kj10XACg@mail.gmail.com>
+Subject: Re: [PATCH 1/3] reset: imx7: Support module build
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Stefan Agner <stefan.agner@toradex.com>,
+        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Leo Li <leoyang.li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Olof Johansson <olof@lixom.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:33+CLiKFpT3UwZb3REktnSgLhRP+TGYP0n/qx2LjY7hgPxhJAs2
+ Pp3vKZfLmKdVlv+ITRF0uFDiLRTXRwl/S6xx4y3v6eO0JktCgeYJBybd/CXHT6FsSFW9H8h
+ Bxsk6XNBAa2NWgPMZCWr4X93/t2P2qwqlwlZfCt+0u7l5uI6jYVF/f2QTfDf1KtoX7do+qT
+ CE32p7T+OInySAmP7P0vA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:14PJPh03Tpw=:+oF22SLQQmREumaoa5GRLe
+ 4qt78LSb+I/Xqs07uVD8KMw2x8Q9lrkZOTXyhWInIAEG8ai6/mnvRlAFDknTG6LdYoTOdhk/5
+ 4Kv6KmQfv1gd9UD7bIizWAX5l3Xm9bPnzJ17i3bXrgqUNsHWm1oJz9ue8J9cdWbr1XQ3xfK66
+ 9LaSJHYtTsugrjnHiOknqk1lsrVHfm5auPX73WoP/84xX7ARhxU+gFjAFaD5H19+Jy8HfxfaA
+ /sGBexzMi0MKOXmvzOFrD4T9cghzSlf2H0hm+IdhIol+13o4dKyrs3HJIuaBuxwTdvzu63gRR
+ 1NWOpLloDJUBKRPmnUbbk3ctIM+n7GJBO1kaXNni9hKDpM24zd5Y1OS0vUUiqfSYzQQaHZDZ6
+ hV4Cp3VhWJy88nGRKqSaKnpXS6qkirLUZoXlSKNRnU6SL76gzn4rtg4JXFx1ttgh9Z3mMt7dk
+ SF9WAy6M8mV+jbt3WZTD9eTKuYexIydpOVv6aoIMy4cpsdABUnfA7lp7CescAeORTWwgF6+SV
+ 8mZoS9P43BLiXT0WdHt6gGfYOYYKVw1CTChk6svkUkWH9gFccR3llF/TRQOICrRyGpMqX+HLm
+ tzFvXXQqmAQUfYuFszPq1Kqv8OyZpJ3sKt9HZWy+jDaKfjJwRDZ2AxfjUlVbjH3IdZo0DA1RC
+ 4V33ebPOw4UVYvutowfV6L4mMiYkaTa2Kd5t6GeeD+JjCLRU+1O8/a0mbOZLaBVdWue4vqOil
+ u1ZPZ3ujUt0s/9QYIaT8WJqz+CNqP3gsWXvDBo0ud+rZ55o4mK/JfqXuccth3K4dA8i5w8+9b
+ qJdlRdN4nqZNEz6GFC7rEf355pdqV9WnRAFg10DWOg7C/Lf3gs=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Yingliang <yangyingliang@huawei.com>
+On Mon, Jun 29, 2020 at 1:32 PM Anson Huang <anson.huang@nxp.com> wrote:
+> > Subject: Re: [PATCH 1/3] reset: imx7: Support module build
+> >
+> > On Mon, Jun 29, 2020 at 12:45 PM Anson Huang <anson.huang@nxp.com>
+> > wrote:
+> > > > Subject: Re: [PATCH 1/3] reset: imx7: Support module build On Mon,
+> > > > Jun 29, 2020 at 12:25 PM Anson Huang <Anson.Huang@nxp.com> wrote:
+> > >
+> > > The reset driver normally won't be removed since it is necessary for
+> > > drivers which need it, it is just for Android GKI support, in this
+> > > case, do we need to change it to module_platform_driver()?
+> >
+> > Please at least try to do it, or explain in the changelog what went wrong if it
+> > doesn't work.
+> >
+> > I don't think "because Android GKI" should ever be the sole justification for a
+> > patch. Making drivers loadable module is a good idea regardless of GKI, and if
+> > you do that, then make it behave like any other loadable module.
+> >
+>
+> OK, will do it in V2, BTW, I think there is nothing need to be done for .remove() callback,
+> can I just skip it or need to add a blank callback anyway?
 
-[ Upstream commit 814152a89ed52c722ab92e9fbabcac3cb8a39245 ]
+I think if everything is done through devm_() calls you should be able to
+have no .remove() callback at all, but I have not tried that.
 
-I got a memleak report when doing some fuzz test:
-
-unreferenced object 0xffff888112584000 (size 13599):
-  comm "ip", pid 3048, jiffies 4294911734 (age 343.491s)
-  hex dump (first 32 bytes):
-    74 61 70 30 00 00 00 00 00 00 00 00 00 00 00 00  tap0............
-    00 ee d9 19 81 88 ff ff 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<000000002f60ba65>] __kmalloc_node+0x309/0x3a0
-    [<0000000075b211ec>] kvmalloc_node+0x7f/0xc0
-    [<00000000d3a97396>] alloc_netdev_mqs+0x76/0xfc0
-    [<00000000609c3655>] __tun_chr_ioctl+0x1456/0x3d70
-    [<000000001127ca24>] ksys_ioctl+0xe5/0x130
-    [<00000000b7d5e66a>] __x64_sys_ioctl+0x6f/0xb0
-    [<00000000e1023498>] do_syscall_64+0x56/0xa0
-    [<000000009ec0eb12>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-unreferenced object 0xffff888111845cc0 (size 8):
-  comm "ip", pid 3048, jiffies 4294911734 (age 343.491s)
-  hex dump (first 8 bytes):
-    74 61 70 30 00 88 ff ff                          tap0....
-  backtrace:
-    [<000000004c159777>] kstrdup+0x35/0x70
-    [<00000000d8b496ad>] kstrdup_const+0x3d/0x50
-    [<00000000494e884a>] kvasprintf_const+0xf1/0x180
-    [<0000000097880a2b>] kobject_set_name_vargs+0x56/0x140
-    [<000000008fbdfc7b>] dev_set_name+0xab/0xe0
-    [<000000005b99e3b4>] netdev_register_kobject+0xc0/0x390
-    [<00000000602704fe>] register_netdevice+0xb61/0x1250
-    [<000000002b7ca244>] __tun_chr_ioctl+0x1cd1/0x3d70
-    [<000000001127ca24>] ksys_ioctl+0xe5/0x130
-    [<00000000b7d5e66a>] __x64_sys_ioctl+0x6f/0xb0
-    [<00000000e1023498>] do_syscall_64+0x56/0xa0
-    [<000000009ec0eb12>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-unreferenced object 0xffff88811886d800 (size 512):
-  comm "ip", pid 3048, jiffies 4294911734 (age 343.491s)
-  hex dump (first 32 bytes):
-    00 00 00 00 ad 4e ad de ff ff ff ff 00 00 00 00  .....N..........
-    ff ff ff ff ff ff ff ff c0 66 3d a3 ff ff ff ff  .........f=.....
-  backtrace:
-    [<0000000050315800>] device_add+0x61e/0x1950
-    [<0000000021008dfb>] netdev_register_kobject+0x17e/0x390
-    [<00000000602704fe>] register_netdevice+0xb61/0x1250
-    [<000000002b7ca244>] __tun_chr_ioctl+0x1cd1/0x3d70
-    [<000000001127ca24>] ksys_ioctl+0xe5/0x130
-    [<00000000b7d5e66a>] __x64_sys_ioctl+0x6f/0xb0
-    [<00000000e1023498>] do_syscall_64+0x56/0xa0
-    [<000000009ec0eb12>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-If call_netdevice_notifiers() failed, then rollback_registered()
-calls netdev_unregister_kobject() which holds the kobject. The
-reference cannot be put because the netdev won't be add to todo
-list, so it will leads a memleak, we need put the reference to
-avoid memleak.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/core/dev.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/net/core/dev.c b/net/core/dev.c
-index 82f9ec1bd94b6..67725818d562d 100644
---- a/net/core/dev.c
-+++ b/net/core/dev.c
-@@ -6840,6 +6840,13 @@ int register_netdevice(struct net_device *dev)
- 		rcu_barrier();
- 
- 		dev->reg_state = NETREG_UNREGISTERED;
-+		/* We should put the kobject that hold in
-+		 * netdev_unregister_kobject(), otherwise
-+		 * the net device cannot be freed when
-+		 * driver calls free_netdev(), because the
-+		 * kobject is being hold.
-+		 */
-+		kobject_put(&dev->dev.kobj);
- 	}
- 	/*
- 	 *	Prevent userspace races by waiting until the network
--- 
-2.25.1
-
+     Arnd
