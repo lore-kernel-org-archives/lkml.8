@@ -6,55 +6,66 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5317C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:31:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78682C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 703F2206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:31:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DCCA2073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:31:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466279;
-	bh=QifnuQ3OqevnySCb9bfo+3KcLPSxAMMMZIagAZ6227s=;
+	s=default; t=1593466286;
+	bh=i3XF3hOBLFwb0NzPxlALfSrDzl4dgkIr0XA+m7+JoC8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ataRtsR/wD2y+IdiciJrFs5lGRpWMFIdY6i2YrbjMvdhSGpj4RyDI5DaPK6X6ne2s
-	 qrjyr5DRd7S1t5CoyjuavJYmGJkjBZv8TGneQU7N9KmNdICMB280UtImuQXjqKwa7M
-	 nrQcUMIH8ZJyW9V3YmuUkCmKSgBOM1FS+quoKjHc=
+	b=cQkyyihq4Xn43PToToPLiRwy3oKr26g7Qa1b9FjRJIGfoE6JxkEBlH17U5E2ACZ9j
+	 JaLjYuJ9KVa6QDOpel/rznqI2U9Pih/xFqNQtQhsD5hLmTpgcX0f0aw9A7rugTB0cW
+	 z4zZTrGuKyEETTqN1cKKHDJaQoXjyU8BTZg49f/I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390989AbgF2VbS (ORCPT
+        id S2391049AbgF2VbL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:31:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60608 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:31:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728814AbgF2SlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:41:17 -0400
+        id S1728804AbgF2SlS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:41:18 -0400
 Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A881B23CD3;
-        Mon, 29 Jun 2020 11:53:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C6B325587;
+        Mon, 29 Jun 2020 16:14:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593431599;
-        bh=QifnuQ3OqevnySCb9bfo+3KcLPSxAMMMZIagAZ6227s=;
+        s=default; t=1593447293;
+        bh=i3XF3hOBLFwb0NzPxlALfSrDzl4dgkIr0XA+m7+JoC8=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=e0aWtAUPAo87GHfZKyQbhiRqWa3TOxxpCGs+PthoYpE3SRwz9IL9vDqQ0KlAdyPtP
-         n4ZFnebis5MOWojN2HFXlCLy1nXDZPuw/hP353dnE/d0Vo0OSHmufFYbQ0YJ6uT7E/
-         vhLIv/zXwk8VMLcqD1NnztBgdw/i1JRu28SeW2RE=
-Date:   Mon, 29 Jun 2020 12:53:17 +0100
+        b=X+SIl8ZxkoXoG+sr41c2HNEnAyjfyK1CY3DA9icEyBQ+PEswOA8VF0ZeBwHmyoaxQ
+         eAllUfzRvyXPv1+0n0a0Y83PLyxT/SowR4vO1gl3gFkVw3NnVmu9y4mTdHddlP87K0
+         33omSROIgfdIPoK7+55i1Fm9buHYzrVyNTQwjTME=
+Date:   Mon, 29 Jun 2020 17:14:50 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     linux-arm-msm@vger.kernel.org, swboyd@chromium.org,
-        Dilip Kota <dkota@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org
-Subject: Re: [PATCH] spi: spi-geni-qcom: Don't set the cs if it was already
- right
-Message-ID: <20200629115316.GB5499@sirena.org.uk>
-References: <20200626151946.1.I06134fd669bf91fd387dc6ecfe21d44c202bd412@changeid>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "magnus.damm@gmail.com" <magnus.damm@gmail.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH/RFC v4 2/4] regulator: fixed: add regulator_ops members
+ for suspend/resume
+Message-ID: <20200629161450.GE5499@sirena.org.uk>
+References: <1593163942-5087-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1593163942-5087-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <20200626143914.GE5289@sirena.org.uk>
+ <TY2PR01MB3692A3B12CEF7F9708A8A59CD86E0@TY2PR01MB3692.jpnprd01.prod.outlook.com>
+ <20200629125756.GC5499@sirena.org.uk>
+ <20200629134011.GA23284@bogus>
+ <CAMuHMdU81-EAve+jHhL8+ohCd5YXrgLWpMgaCvgXFDLO7p17pQ@mail.gmail.com>
+ <20200629150728.GA27911@bogus>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="XOIedfhf+7KOe/yw"
+        protocol="application/pgp-signature"; boundary="9crTWz/Z+Zyzu20v"
 Content-Disposition: inline
-In-Reply-To: <20200626151946.1.I06134fd669bf91fd387dc6ecfe21d44c202bd412@changeid>
+In-Reply-To: <20200629150728.GA27911@bogus>
 X-Cookie: Real programs don't eat cache.
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -63,32 +74,74 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---XOIedfhf+7KOe/yw
-Content-Type: text/plain; charset=us-ascii
+--9crTWz/Z+Zyzu20v
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 26, 2020 at 03:19:50PM -0700, Douglas Anderson wrote:
-> Setting the chip select on the Qualcomm geni SPI controller isn't
-> exactly cheap.  Let's cache the current setting and avoid setting the
-> chip select if it's already right.
+On Mon, Jun 29, 2020 at 04:07:28PM +0100, Sudeep Holla wrote:
+> On Mon, Jun 29, 2020 at 04:15:39PM +0200, Geert Uytterhoeven wrote:
 
-Seems like it'd be worth pushing this up to the core - if we're
-constantly setting the same CS value then perhaps we ought to just stop
-doing that?
+> > This is all about how to know what exactly PSCI is powering down during
+> > SYSTEM_SUSPEND.  In this specific case, it is about knowing if the eMMC
+> > is powered down or not, as Linux should follow a specific procedure to
+> > prepare the eMMC for that, and Linux should not if that isn't the case.
 
---XOIedfhf+7KOe/yw
+> OK, unless you are optimising, you shouldn't care then what PSCI does.
+> If you don't need eMMC, just suspend/power it off before you enter system/
+> psci suspend.
+
+That only works if the power off procedure doesn't require that power be
+removed as part of the procedure.  There's a reasonable argument that
+specs that have such requirements are unhelpful but that doesn't mean
+that nobody will make hardware with such requrements which creates
+problems for generic code that needs to control that hardware if it
+can't discover the power state over suspend.
+
+> > I had a quick look at the latest revision of the PSCI specification, and
+> > it doesn't look like anything has changed in that area since my old pat=
+ch
+> > series from 2017.  So it still boils down to: we don't know what a
+> > specific PSCI implementation will do, as basically anything is
+> > compliant, so the only safe thing is to assume the worst.
+
+> The specification states clearly:
+> "... all devices in the system must be in a state that is compatible
+> with entry into the system state. These preconditions are beyond the scope
+> of this specification and are therefore not described here."
+> "Prior to the call, the OS must disable all sources of wakeup other than
+> those it needs to support for its implementation of suspend to RAM."
+
+This gets a bit circular for a generic OS since the OS needs some way to
+figure out what it's supposed to do on a given platform - for example
+the OS may be happy to use wakeup sources that the firmware is just
+going to cut power on.
+
+> I see nothing has been fixed in the firmware too and we are still
+> discussing the same after 3 years =F0=9F=98=84. Clearly we should start t=
+rusting
+> firmware and built capability to fix and replace it if there are bugs
+> just like kernel and stop hacking around in the kernel to deal with
+> just broken platform/psci firmware.
+
+This isn't just an issue of buggy firmware as far as I can see, it's
+also a lack of ability for the OS and firmware to communicate
+information about their intentions to each other.  As things stand you'd
+need to put static information in the DT.
+
+--9crTWz/Z+Zyzu20v
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl751iwACgkQJNaLcl1U
-h9AU/wf/bpfHFtT9ACyBIK96npjnnQz/vQ3t3lRL7uqyIfHIA/19K26V0j6Dbvwd
-aBYPo5xPqYDwqUHbobABbdZ5O1N6trSA8IO0I9+9MvV9vH0velLuDQIcsGEkVv8p
-8U+JrjDe2kjr7hRrqlYJvvFpbeT81Rcii6tN8cqz/Ek+eaRl7+ZOwOvanyYnzC8Y
-P5GZaxID2aTSx31RjkXiTsVzivPbZdRpQ8bE2MqhnGgyOsBVSpqOqYxLy6laSITN
-DCEwaCo+0FK+B9Fwy1/CjR4DAprkpm4tC1C3yw9Lyw1JVA9asTU4f8cG5MmiEDTT
-4XADNhyWNp+53XX+tudxCtkO84nsfQ==
-=Hcvu
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl76E3kACgkQJNaLcl1U
+h9CVZQf/b/5Ry1gGVzgtNgFJSdZbuHAxc/M3ISHQRVcymW1iEZfglFzYYPbztCAh
+Z9wvSSL2wdE5QIn3fiCogRWEYZ00MRWYaGEkejEVuGiX37nlPtjvrnuk0jU892SI
+mE0lbSPO8fWuF625sxNgUqVVtEX1rYzLY/cQm1OGqADIv2Vu2UsxkotYJ1GogT2N
+D2Uar5ao+JY3t4DkbNw0vL6bnem2tPcQh94HbNR8E/yf+c1dcosKS4nTXQkzzFcK
+pTbtsakKpe+sNs/BXSDOH2Nq00O3LHIrAUEUfx/dl6MyXg5SCHlwmek300usG/8y
+BuBF13l/Vd3ujNfSFazfX8dpElQDQQ==
+=TKQb
 -----END PGP SIGNATURE-----
 
---XOIedfhf+7KOe/yw--
+--9crTWz/Z+Zyzu20v--
