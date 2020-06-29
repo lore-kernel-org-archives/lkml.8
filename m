@@ -7,52 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A843FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C342C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:58:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 84B052076C
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:57:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0702A2076C
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:58:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467875;
-	bh=r4QEAZcLXSee9W0SJRyW4M1JONUB5ZKKnsKkupAdYmU=;
+	s=default; t=1593467881;
+	bh=BWncpzPC+Rb9or2yBrKBq8PfXfe7Y6glSYItgDGDzys=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SYDbPv1/aZ9riOKphdBTVkNmnXYHAEiRLNyqFaqjsGh6gi28f7nMOH9UrNckJi3I/
-	 1pFHX1bC6A+FN+Ur+Q8g+nOYYWQ7AYQkbEXt1civHe15M8lNxaaESycGdBDmJxcROh
-	 jDyXOG6dOV4avvZzbuoY/q3rLwRRM2M7fjJGInLc=
+	b=wZpaN6RWt1GFOpn4MdKcBwU8z1j8mjciY6li8fBEnDF1XAqtA+yz/er6Kk03TqCM8
+	 mo4Sv3ogI+pA6OlXHkZ0QdvHyFLfmo4uZUbG5Bo/824jzZpEnwEhLsleYtsg3Cb29F
+	 ikqzHGfe2uViI2L5b2DVLj7GAKMKcsO4FCgwgxP4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404047AbgF2V5x (ORCPT
+        id S2404759AbgF2V56 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:57:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56908 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:57:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726474AbgF2Sf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726473AbgF2Sf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F26EC247BC;
-        Mon, 29 Jun 2020 15:22:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0E4D24051;
+        Mon, 29 Jun 2020 15:18:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444125;
-        bh=r4QEAZcLXSee9W0SJRyW4M1JONUB5ZKKnsKkupAdYmU=;
+        s=default; t=1593443922;
+        bh=BWncpzPC+Rb9or2yBrKBq8PfXfe7Y6glSYItgDGDzys=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bbfqA9+k8O/fV6U+BydpMaoyPI0avD0LBR4T1v4CU4Ir84nUkuFjstA4agpn2D4Oj
-         koUG1+OCzsPAD14gnPcBMVFxljxbkLPQauxHQve2VwMhBKN/33hCw8pZw57jWg6SGH
-         KcZm3557iwdh2tZi6YVcquX71rrCbR+vVotnfr4A=
+        b=ycKfTCiGcUYiR8MpTGGaN6t0H0pQTG9zWH43t3Q4ESEoTAiA9YTdKXzt9NFqe2vVA
+         r7SyINtzqe8cibbgJ0YpWjFjYlHz2fBrjH6pe+IZ9teX7bWEz8V+Jbet9ZRoIgA2le
+         vp78ZTGW6z7fyDrU8XJSmykf2XHOVbtVEqTi10lA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Junxiao Bi <junxiao.bi@oracle.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Jun Piao <piaojun@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+Cc:     Eric Dumazet <edumazet@google.com>,
+        Venkat Venkatsubra <venkat.x.venkatsubra@oracle.com>,
+        Neal Cardwell <ncardwell@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 233/265] ocfs2: fix value of OCFS2_INVALID_SLOT
-Date:   Mon, 29 Jun 2020 11:17:46 -0400
-Message-Id: <20200629151818.2493727-234-sashal@kernel.org>
+Subject: [PATCH 5.7 023/265] tcp: grow window for OOO packets only for SACK flows
+Date:   Mon, 29 Jun 2020 11:14:16 -0400
+Message-Id: <20200629151818.2493727-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -71,55 +67,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Junxiao Bi <junxiao.bi@oracle.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit 9277f8334ffc719fe922d776444d6e4e884dbf30 upstream.
+[ Upstream commit 662051215c758ae8545451628816204ed6cd372d ]
 
-In the ocfs2 disk layout, slot number is 16 bits, but in ocfs2
-implementation, slot number is 32 bits.  Usually this will not cause any
-issue, because slot number is converted from u16 to u32, but
-OCFS2_INVALID_SLOT was defined as -1, when an invalid slot number from
-disk was obtained, its value was (u16)-1, and it was converted to u32.
-Then the following checking in get_local_system_inode will be always
-skipped:
+Back in 2013, we made a change that broke fast retransmit
+for non SACK flows.
 
- static struct inode **get_local_system_inode(struct ocfs2_super *osb,
-                                               int type,
-                                               u32 slot)
- {
- 	BUG_ON(slot == OCFS2_INVALID_SLOT);
-	...
- }
+Indeed, for these flows, a sender needs to receive three duplicate
+ACK before starting fast retransmit. Sending ACK with different
+receive window do not count.
 
-Link: http://lkml.kernel.org/r/20200616183829.87211-5-junxiao.bi@oracle.com
-Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Jun Piao <piaojun@huawei.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Even if enabling SACK is strongly recommended these days,
+there still are some cases where it has to be disabled.
+
+Not increasing the window seems better than having to
+rely on RTO.
+
+After the fix, following packetdrill test gives :
+
+// Initialize connection
+    0 socket(..., SOCK_STREAM, IPPROTO_TCP) = 3
+   +0 setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
+   +0 bind(3, ..., ...) = 0
+   +0 listen(3, 1) = 0
+
+   +0 < S 0:0(0) win 32792 <mss 1000,nop,wscale 7>
+   +0 > S. 0:0(0) ack 1 <mss 1460,nop,wscale 8>
+   +0 < . 1:1(0) ack 1 win 514
+
+   +0 accept(3, ..., ...) = 4
+
+   +0 < . 1:1001(1000) ack 1 win 514
+// Quick ack
+   +0 > . 1:1(0) ack 1001 win 264
+
+   +0 < . 2001:3001(1000) ack 1 win 514
+// DUPACK : Normally we should not change the window
+   +0 > . 1:1(0) ack 1001 win 264
+
+   +0 < . 3001:4001(1000) ack 1 win 514
+// DUPACK : Normally we should not change the window
+   +0 > . 1:1(0) ack 1001 win 264
+
+   +0 < . 4001:5001(1000) ack 1 win 514
+// DUPACK : Normally we should not change the window
+    +0 > . 1:1(0) ack 1001 win 264
+
+   +0 < . 1001:2001(1000) ack 1 win 514
+// Hole is repaired.
+   +0 > . 1:1(0) ack 5001 win 272
+
+Fixes: 4e4f1fc22681 ("tcp: properly increase rcv_ssthresh for ofo packets")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: Venkat Venkatsubra <venkat.x.venkatsubra@oracle.com>
+Acked-by: Neal Cardwell <ncardwell@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/ocfs2/ocfs2_fs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv4/tcp_input.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/fs/ocfs2/ocfs2_fs.h b/fs/ocfs2/ocfs2_fs.h
-index 3fc99659ed09d..19137c6d087bc 100644
---- a/fs/ocfs2/ocfs2_fs.h
-+++ b/fs/ocfs2/ocfs2_fs.h
-@@ -290,7 +290,7 @@
- #define OCFS2_MAX_SLOTS			255
- 
- /* Slot map indicator for an empty slot */
--#define OCFS2_INVALID_SLOT		-1
-+#define OCFS2_INVALID_SLOT		((u16)-1)
- 
- #define OCFS2_VOL_UUID_LEN		16
- #define OCFS2_MAX_VOL_LABEL_LEN		64
+diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+index ccab8bc29e2b1..1fa009999f577 100644
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -4603,7 +4603,11 @@ static void tcp_data_queue_ofo(struct sock *sk, struct sk_buff *skb)
+ 	if (tcp_ooo_try_coalesce(sk, tp->ooo_last_skb,
+ 				 skb, &fragstolen)) {
+ coalesce_done:
+-		tcp_grow_window(sk, skb);
++		/* For non sack flows, do not grow window to force DUPACK
++		 * and trigger fast retransmit.
++		 */
++		if (tcp_is_sack(tp))
++			tcp_grow_window(sk, skb);
+ 		kfree_skb_partial(skb, fragstolen);
+ 		skb = NULL;
+ 		goto add_sack;
+@@ -4687,7 +4691,11 @@ add_sack:
+ 		tcp_sack_new_ofo_skb(sk, seq, end_seq);
+ end:
+ 	if (skb) {
+-		tcp_grow_window(sk, skb);
++		/* For non sack flows, do not grow window to force DUPACK
++		 * and trigger fast retransmit.
++		 */
++		if (tcp_is_sack(tp))
++			tcp_grow_window(sk, skb);
+ 		skb_condense(skb);
+ 		skb_set_owner_r(skb, sk);
+ 	}
 -- 
 2.25.1
 
