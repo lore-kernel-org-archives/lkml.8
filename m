@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F5AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C11C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 83829206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB663206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467562;
-	bh=VVOg+fL6XpTbAZZVUFGIaPYMxx6lWAAVziHMXpUFrYg=;
+	s=default; t=1593467566;
+	bh=oqOzstyS6Poeb0QoznX9WUTIjyYQlORjyJQqIL90QTk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=za35kYwkmnNF64paxFWMDe4lms7pFW8XHvuOod7vomroSiN6RLO94LJJlap20+x1J
-	 xmkBquB/UxaW2GDT9K1j89U2ERXss+RVdUXhlKtfX0VWD1FHZ+iupRhD/KC3ssuLQD
-	 fkQVr2OJxSfG7A5thkNj+PtpfE35twzlR/4qUYMo=
+	b=NfU95HQBrK1E03Xo5pcPMsapOY4R74IYZ/AsRgGgpo6D5nykg4h85d3mgxZ79iJvE
+	 0l1RSciV1sObqZ7FlC7039z1dYwAgPArxohuBU8SbsZZGWKdBJJrB33cWZKCUfrgBv
+	 Ua3g2iJJnF1zBuDjyXcr8H27ultGc0NFHboQgTcg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391526AbgF2Vwl (ORCPT
+        id S2404194AbgF2Vwp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:52:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56908 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:52:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726638AbgF2Sfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726623AbgF2Sfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A31D2469C;
-        Mon, 29 Jun 2020 15:19:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E4F9247DF;
+        Mon, 29 Jun 2020 15:22:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443994;
-        bh=VVOg+fL6XpTbAZZVUFGIaPYMxx6lWAAVziHMXpUFrYg=;
+        s=default; t=1593444148;
+        bh=oqOzstyS6Poeb0QoznX9WUTIjyYQlORjyJQqIL90QTk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=haOG7BQVr1aUs0m4VfDMrLJfjuAaLBO/OJzzI/J/b3wHGfPgJZlzIRbzBHDkAiHj5
-         q2evblmwnascV/CXF/SllglrXK1CoJGpPS73MqKuOH1MwkPCutA2PkRv6pjSfn8Jvj
-         wm8JUXEBbB0HmffadlT8SPXZRo91OTM2z3rTSYCA=
+        b=H8Un/ZsZ9m65JMdw9VSunrlT0xD9Gbh+f7l6GTFOK/Gl0OYvrUeC3agBibZ/ZarNb
+         B1uBXLmSztgLFV+ZpDGbtulNE8oSTfjANr8AT4UqTfBYt7yVeveqM5fj2Q8P3ulPrx
+         HZc26eeLueQjlrUCuh64MVJ2G1LVW66ZOeYN1PvE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Huy Nguyen <huyn@mellanox.com>,
-        Boris Pismenny <borisp@mellanox.com>,
-        Raed Salem <raeds@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 098/265] xfrm: Fix double ESP trailer insertion in IPsec crypto offload.
-Date:   Mon, 29 Jun 2020 11:15:31 -0400
-Message-Id: <20200629151818.2493727-99-sashal@kernel.org>
+Cc:     Frieder Schrempf <frieder.schrempf@kontron.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 254/265] ARM: dts: imx6ul-kontron: Change WDOG_ANY signal from push-pull to open-drain
+Date:   Mon, 29 Jun 2020 11:18:07 -0400
+Message-Id: <20200629151818.2493727-255-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -68,66 +65,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huy Nguyen <huyn@mellanox.com>
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-[ Upstream commit 94579ac3f6d0820adc83b5dc5358ead0158101e9 ]
+commit d22a16cc92e04d053fd807ef3587e4f135e4206f upstream.
 
-During IPsec performance testing, we see bad ICMP checksum. The error packet
-has duplicated ESP trailer due to double validate_xmit_xfrm calls. The first call
-is from ip_output, but the packet cannot be sent because
-netif_xmit_frozen_or_stopped is true and the packet gets dev_requeue_skb. The second
-call is from NET_TX softirq. However after the first call, the packet already
-has the ESP trailer.
+The WDOG_ANY signal is connected to the RESET_IN signal of the SoM
+and baseboard. It is currently configured as push-pull, which means
+that if some external device like a programmer wants to assert the
+RESET_IN signal by pulling it to ground, it drives against the high
+level WDOG_ANY output of the SoC.
 
-Fix by marking the skb with XFRM_XMIT bit after the packet is handled by
-validate_xmit_xfrm to avoid duplicate ESP trailer insertion.
+To fix this we set the WDOG_ANY signal to open-drain configuration.
+That way we make sure that the RESET_IN can be asserted by the
+watchdog as well as by external devices.
 
-Fixes: f6e27114a60a ("net: Add a xfrm validate function to validate_xmit_skb")
-Signed-off-by: Huy Nguyen <huyn@mellanox.com>
-Reviewed-by: Boris Pismenny <borisp@mellanox.com>
-Reviewed-by: Raed Salem <raeds@mellanox.com>
-Reviewed-by: Saeed Mahameed <saeedm@mellanox.com>
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 1ea4b76cdfde ("ARM: dts: imx6ul-kontron-n6310: Add Kontron i.MX6UL N6310 SoM and boards")
+Cc: stable@vger.kernel.org
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/xfrm.h     | 1 +
- net/xfrm/xfrm_device.c | 4 +++-
- 2 files changed, 4 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/net/xfrm.h b/include/net/xfrm.h
-index 8f71c111e65af..03024701c79f7 100644
---- a/include/net/xfrm.h
-+++ b/include/net/xfrm.h
-@@ -1013,6 +1013,7 @@ struct xfrm_offload {
- #define	XFRM_GRO		32
- #define	XFRM_ESP_NO_TRAILER	64
- #define	XFRM_DEV_RESUME		128
-+#define	XFRM_XMIT		256
+diff --git a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi
+index fc316408721d0..61ba21a605a81 100644
+--- a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi
++++ b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi
+@@ -116,7 +116,7 @@
  
- 	__u32			status;
- #define CRYPTO_SUCCESS				1
-diff --git a/net/xfrm/xfrm_device.c b/net/xfrm/xfrm_device.c
-index f50d1f97cf8ec..626096bd0d294 100644
---- a/net/xfrm/xfrm_device.c
-+++ b/net/xfrm/xfrm_device.c
-@@ -108,7 +108,7 @@ struct sk_buff *validate_xmit_xfrm(struct sk_buff *skb, netdev_features_t featur
- 	struct xfrm_offload *xo = xfrm_offload(skb);
- 	struct sec_path *sp;
- 
--	if (!xo)
-+	if (!xo || (xo->flags & XFRM_XMIT))
- 		return skb;
- 
- 	if (!(features & NETIF_F_HW_ESP))
-@@ -129,6 +129,8 @@ struct sk_buff *validate_xmit_xfrm(struct sk_buff *skb, netdev_features_t featur
- 		return skb;
- 	}
- 
-+	xo->flags |= XFRM_XMIT;
-+
- 	if (skb_is_gso(skb)) {
- 		struct net_device *dev = skb->dev;
- 
+ 	pinctrl_wdog: wdoggrp {
+ 		fsl,pins = <
+-			MX6UL_PAD_GPIO1_IO09__WDOG1_WDOG_ANY    0x30b0
++			MX6UL_PAD_GPIO1_IO09__WDOG1_WDOG_ANY    0x18b0
+ 		>;
+ 	};
+ };
 -- 
 2.25.1
 
