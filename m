@@ -2,64 +2,174 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A6DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E977AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E203B20720
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:20:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBACC20720
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:20:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593458421;
+	bh=R2ZvoPBUi7lSSOB5oPgRVLBJybDMUeo5dvIOa37TyzQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=AzePAauMvRRw1nXRCU/Jw+ZXvIejYNr1ZCG6pLGt9oJJQ5iJmESaLFJ2BxDJvQoRl
+	 kOYsW22xsikcHkJUC04DJRq5bc7E/vU7OLWA1MyHAYTnkETlTFRY0PX/OVBORg8AHg
+	 hmZ4GfP516/S5s9WWag3cMTeDXAni1w6/F64gXuI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732102AbgF2TUR (ORCPT
+        id S1732122AbgF2TUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:20:17 -0400
-Received: from muru.com ([72.249.23.125]:59966 "EHLO muru.com"
+        Mon, 29 Jun 2020 15:20:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33132 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727020AbgF2TUK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:20:10 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id 066AB8102;
-        Mon, 29 Jun 2020 14:35:49 +0000 (UTC)
-Date:   Mon, 29 Jun 2020 07:34:54 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Dev Null <devnull@uvos.xyz>, Pavel Machek <pavel@ucw.cz>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
-        linux-rtc@vger.kernel.org, "Sicelo A . Mhlongo" <absicsz@gmail.com>
-Subject: Re: [PATCH] rtc: cpcap: fix range
-Message-ID: <20200629143454.GP37466@atomide.com>
-References: <20200629002917.0a2045380a0fe022f852e067@uvos.xyz>
- <20200629114123.27956-1-sebastian.reichel@collabora.com>
+        id S1732094AbgF2TUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:20:16 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 787642548F;
+        Mon, 29 Jun 2020 15:44:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593445451;
+        bh=R2ZvoPBUi7lSSOB5oPgRVLBJybDMUeo5dvIOa37TyzQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WIcnz3lM4Sd+0R0LjSPfHyHb2hBCsG+2ctUt1Ccv+JNnErdyZj4rhC/lbhLYw3diz
+         PDMM8U3bTiicX4wySausLU6METUXInZJrnTqO7pRE52NfX2w4eHtlbMQWQHevcP4bQ
+         88y8k1lYgDCkB39WYrdAsq8kl8kC1WnWqbqRZaxg=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Zheng Bin <zhengbin13@huawei.com>,
+        Ren Xudong <renxudong1@huawei.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 190/191] xfs: add agf freeblocks verify in xfs_agf_verify
+Date:   Mon, 29 Jun 2020 11:40:06 -0400
+Message-Id: <20200629154007.2495120-191-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
+References: <20200629154007.2495120-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200629114123.27956-1-sebastian.reichel@collabora.com>
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.229-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.9.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.9.229-rc1
+X-KernelTest-Deadline: 2020-07-01T15:39+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Sebastian Reichel <sebastian.reichel@collabora.com> [200629 11:42]:
-> Unbreak CPCAP driver, which has one more bit in the day counter
-> increasing the max. range from 2014 to 2058. The original commit
-> introducing the range limit was obviously wrong, since the driver
-> has only been written in 2017 (3 years after 14 bits would have
-> run out).
+From: Zheng Bin <zhengbin13@huawei.com>
 
-So I guess with 14 bits vs 15 bits we have these date ranges:
+[ Upstream commit d0c7feaf87678371c2c09b3709400be416b2dc62 ]
 
-1970 + (0x3fff / 365) = 2014
-1970 + (0x7fff / 365) = 2059
+We recently used fuzz(hydra) to test XFS and automatically generate
+tmp.img(XFS v5 format, but some metadata is wrong)
 
-Meaning we can't do the whole year for 2059 and it's only 2058
-compatible like you say above :)
+xfs_repair information(just one AG):
+agf_freeblks 0, counted 3224 in ag 0
+agf_longest 536874136, counted 3224 in ag 0
+sb_fdblocks 613, counted 3228
 
-Acked-by: Tony Lindgren <tony@atomide.com>
+Test as follows:
+mount tmp.img tmpdir
+cp file1M tmpdir
+sync
 
+In 4.19-stable, sync will stuck, the reason is:
+xfs_mountfs
+  xfs_check_summary_counts
+    if ((!xfs_sb_version_haslazysbcount(&mp->m_sb) ||
+       XFS_LAST_UNMOUNT_WAS_CLEAN(mp)) &&
+       !xfs_fs_has_sickness(mp, XFS_SICK_FS_COUNTERS))
+	return 0;  -->just return, incore sb_fdblocks still be 613
+    xfs_initialize_perag_data
 
+cp file1M tmpdir -->ok(write file to pagecache)
+sync -->stuck(write pagecache to disk)
+xfs_map_blocks
+  xfs_iomap_write_allocate
+    while (count_fsb != 0) {
+      nimaps = 0;
+      while (nimaps == 0) { --> endless loop
+         nimaps = 1;
+         xfs_bmapi_write(..., &nimaps) --> nimaps becomes 0 again
+xfs_bmapi_write
+  xfs_bmap_alloc
+    xfs_bmap_btalloc
+      xfs_alloc_vextent
+        xfs_alloc_fix_freelist
+          xfs_alloc_space_available -->fail(agf_freeblks is 0)
+
+In linux-next, sync not stuck, cause commit c2b3164320b5 ("xfs:
+use the latest extent at writeback delalloc conversion time") remove
+the above while, dmesg is as follows:
+[   55.250114] XFS (loop0): page discard on page ffffea0008bc7380, inode 0x1b0c, offset 0.
+
+Users do not know why this page is discard, the better soultion is:
+1. Like xfs_repair, make sure sb_fdblocks is equal to counted
+(xfs_initialize_perag_data did this, who is not called at this mount)
+2. Add agf verify, if fail, will tell users to repair
+
+This patch use the second soultion.
+
+Signed-off-by: Zheng Bin <zhengbin13@huawei.com>
+Signed-off-by: Ren Xudong <renxudong1@huawei.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/xfs/libxfs/xfs_alloc.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
+index e567551402a65..b904d46343556 100644
+--- a/fs/xfs/libxfs/xfs_alloc.c
++++ b/fs/xfs/libxfs/xfs_alloc.c
+@@ -2507,6 +2507,13 @@ xfs_agf_verify(
+ 	      be32_to_cpu(agf->agf_flcount) <= XFS_AGFL_SIZE(mp)))
+ 		return false;
+ 
++	if (be32_to_cpu(agf->agf_length) > mp->m_sb.sb_dblocks)
++		return false;
++
++	if (be32_to_cpu(agf->agf_freeblks) < be32_to_cpu(agf->agf_longest) ||
++	    be32_to_cpu(agf->agf_freeblks) > be32_to_cpu(agf->agf_length))
++		return false;
++
+ 	if (be32_to_cpu(agf->agf_levels[XFS_BTNUM_BNO]) < 1 ||
+ 	    be32_to_cpu(agf->agf_levels[XFS_BTNUM_CNT]) < 1 ||
+ 	    be32_to_cpu(agf->agf_levels[XFS_BTNUM_BNO]) > XFS_BTREE_MAXLEVELS ||
+@@ -2518,6 +2525,10 @@ xfs_agf_verify(
+ 	     be32_to_cpu(agf->agf_levels[XFS_BTNUM_RMAP]) > XFS_BTREE_MAXLEVELS))
+ 		return false;
+ 
++	if (xfs_sb_version_hasrmapbt(&mp->m_sb) &&
++	    be32_to_cpu(agf->agf_rmap_blocks) > be32_to_cpu(agf->agf_length))
++		return false;
++
+ 	/*
+ 	 * during growfs operations, the perag is not fully initialised,
+ 	 * so we can't use it for any useful checking. growfs ensures we can't
+@@ -2531,6 +2542,11 @@ xfs_agf_verify(
+ 	    be32_to_cpu(agf->agf_btreeblks) > be32_to_cpu(agf->agf_length))
+ 		return false;
+ 
++	if (xfs_sb_version_hasreflink(&mp->m_sb) &&
++	    be32_to_cpu(agf->agf_refcount_blocks) >
++	    be32_to_cpu(agf->agf_length))
++		return false;
++
+ 	if (xfs_sb_version_hasreflink(&mp->m_sb) &&
+ 	    (be32_to_cpu(agf->agf_refcount_level) < 1 ||
+ 	     be32_to_cpu(agf->agf_refcount_level) > XFS_BTREE_MAXLEVELS))
+-- 
+2.25.1
 
