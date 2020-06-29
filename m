@@ -2,112 +2,110 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF8C2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2059C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5E6521582
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:22:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A36E720C56
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:22:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PLNdPqDK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390964AbgF2VWU (ORCPT
+        id S2390631AbgF2VW2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:22:20 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:52597 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730572AbgF2VWL (ORCPT
+        Mon, 29 Jun 2020 17:22:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40014 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729528AbgF2Swl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 17:22:11 -0400
-Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MDv1A-1jiCrd0EKK-00A1GE for <linux-kernel@vger.kernel.org>; Mon, 29 Jun
- 2020 13:54:01 +0200
-Received: by mail-qk1-f172.google.com with SMTP id e11so14934554qkm.3
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 04:54:00 -0700 (PDT)
-X-Gm-Message-State: AOAM530VGvvB5fkMRMjDUeJj9aDLE47Y+6lLHa+oUn8CFAkbksOym1Er
-        76fNb0cx8XAOeXkQ+4a8n+NcRl4669mfr8rlViU=
-X-Google-Smtp-Source: ABdhPJwtBbHqFdSpCDwcXLaF0RSEsXGs33hzlBafcTQfeX/aXKD8IfSc9Jxe9Akfl5VitHcd5Y1zZ6gLJV9ZpAZ843A=
-X-Received: by 2002:a37:9dd6:: with SMTP id g205mr15063847qke.352.1593431639955;
- Mon, 29 Jun 2020 04:53:59 -0700 (PDT)
+        Mon, 29 Jun 2020 14:52:41 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7099C00F818
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 05:32:23 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id 22so15207038wmg.1
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 05:32:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=CmcV70ImeDYyJH0D86nMAPNtLmoBDPn40YdPz8GKRXM=;
+        b=PLNdPqDKMGgcPUcP/wj6XHcodfWWaUwahn0fM8Nis0Z3g+IGDBQuQgfwhl+tvscw66
+         0bWgg6XdXtXwj55wGKpPWE+CustOveiTYiE53BAPkQbfbUaak384QEuw3hTxZ0NTFH4e
+         sUo6fniQ1atpO9eouosuvMdnPlGHmhCwHjmlrMt7uYm6ES9Kl/4oIlOaR9X+8svJhfai
+         1XGu3s+iyX/dGMIHx1IM6fPCrW+YgvcUW9QGvkpS5zMlClxPVVl0cGmF4Mu3xsL8wtHN
+         JqHNNRW6XasBi59uDasZ1MFEoJ7O1UEgOnyCUBjWfkvGYS/iSqIOALVNIP89ar/AU1dv
+         RxeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=CmcV70ImeDYyJH0D86nMAPNtLmoBDPn40YdPz8GKRXM=;
+        b=dpxk/2tjfBOxVWeQWGXOqRW2gMN4IYpDlrzXWASYixfPa5av/7QDXSTVNFPO1IPxqD
+         bo3dkSsHumK7TuObl682k3YQJ5HKZOhGDFXsMygtyUmrMEj6qQbT0pUlD9ueHFQm69Qm
+         A2RXkqWWUs9ti8Gd2+uxMRUH/V/+mh2QbCPBBjEEzwzePq3BOUwh7hRBRytWA39ch8RB
+         xIgdi4B6BrrjwhHiqRS6kX9kMGOG3rSdiZ546x5tBtTpIlEKKEAab0cdcJIOUvntFd2g
+         Z8k1DuMCxnJ2Pt3JvRG4HY+YOndreNBtJpzPUcergWT59nDenvT+fPFqKX+GGHdeDmtq
+         NWJQ==
+X-Gm-Message-State: AOAM533v6DIjw0Bm2QyiU/ZzhS1sZZVpGr7ndpVH95G3TUFRD/QmVTww
+        wMdQBI+VS3P45VWR+ShNTnr+DQ==
+X-Google-Smtp-Source: ABdhPJwt4s91RdM3HeV0ZjKpyywC+1yJrTUvPF1DKQrW4lw5NbJj9Mco8JDQ6isSDIY1/hJbYjX7fQ==
+X-Received: by 2002:a1c:e18a:: with SMTP id y132mr16196622wmg.27.1593433942722;
+        Mon, 29 Jun 2020 05:32:22 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id d201sm28064111wmd.34.2020.06.29.05.32.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 05:32:21 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     lee.jones@linaro.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Andrey Vostrikov <andrey.vostrikov@cogentembedded.com>,
+        Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
+        Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: [PATCH 3/5] mfd: rave-sp: Fix mistake in 'struct rave_sp_deframer's kerneldoc
+Date:   Mon, 29 Jun 2020 13:32:13 +0100
+Message-Id: <20200629123215.1014747-4-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629123215.1014747-1-lee.jones@linaro.org>
+References: <20200629123215.1014747-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-References: <1593425623-31810-1-git-send-email-Anson.Huang@nxp.com>
- <1593425623-31810-2-git-send-email-Anson.Huang@nxp.com> <CAK8P3a31coESQTssW1mndGuZ1pvxXSRRpY=XT1ZO+pkj9aabxg@mail.gmail.com>
- <DB3PR0402MB3916987E13C37013ACF59EB1F56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-In-Reply-To: <DB3PR0402MB3916987E13C37013ACF59EB1F56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 29 Jun 2020 13:53:44 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3Ar3TnSuxpUUMj4NjCK0Qb0pD9cVbcFUcdeGa85m2fUQ@mail.gmail.com>
-Message-ID: <CAK8P3a3Ar3TnSuxpUUMj4NjCK0Qb0pD9cVbcFUcdeGa85m2fUQ@mail.gmail.com>
-Subject: Re: [PATCH 2/3] arm64: defconfig: Select CONFIG_RESET_IMX7 by default
-To:     Anson Huang <anson.huang@nxp.com>
-Cc:     Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Stefan Agner <stefan.agner@toradex.com>,
-        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Leo Li <leoyang.li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Olof Johansson <olof@lixom.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:NIOSdfESoXFSE8b/DuYR3KL4+W+WZjWDOStjhIIYEq3ceB+isZb
- Eiq1GkmUNJPAj68nWgC7PYKycit+ZrxUAdM/2CKx1wrGKhXDtCi6zlwSOl69jUHNXsEmCe7
- R25isb36HglKPLXxIIzWGVRSKQXj2BzB1KA0dkVL9LmYThRrK0f0MkdH8tQhHMOvxffyHVI
- blL85jSVrgafEUnJ8rSFQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:GIwaNzaF97M=:6INQF6qF6yeJQlhCQ4O+W1
- +AHvlspnFmowebU86qfyDbkZ3+rGbzf1hIIOQUxo49v8CbDRRcVGEqZpM17VzHrP7ID4cHCXA
- Hhghh+z8FrdvEXG9YGWWFbOdww6AFpaFfDNPq2GwT47CSz6K6/bnN7d2DgwhW3IBpdYAoERiB
- foAW/29+wgSomKuLULrWbqMtT2djCiZ44/iZmypUCa/9V7m0R8FEkbEGOIO81RyV10BemSiS7
- TnhUoOgzXQb/JXVtnIwW7y7UsOt99CjwOvuD4sxxcgiQT29TfBDb/V3ysGyZ2sLOl/XwtnR8d
- vMB7UDoHf1Cs5bBzXePg5LP7KOElbG2R++/PNPoV+BXNGfgvLt5VZVZCL104qcN481OfREmDb
- i97qTfbSDR6Qey35DA+8DfGf5mf/sjImXRnmgAWUVerilm6W5jeSq5lynyResp5wMp60zI/2g
- 7BW6OUpXwdP4lT9CLeYdYSD+yKPA5txOE2TevkFd0f7ohBv8/k6B4oIUgqHsv6kjhSCoFGTlX
- 9FpE2liUP0jkUBOi/kNf5n7VWi/rdgCVkcAT7vzaPlWm9ImUPLj10PrbqIhGi5Wxc+OHzjnbx
- z4kaRn+qbeCgNNOkCW+m5IogeP90bvOraYqWoP1eccXrmkxcwpO/g2y9iF120MrwAEnGLu0fv
- xmTmYqwnpFnyXnIInkPj1kRP2QDn6aBoeV2GEHMVlmlmVgNwgEGsOj4/nhqDIWSeyUnta2OqQ
- vWbJIXF5ucYKAMckXSgGTrTKj+3KUqLT5NzBw8QeaULfxh8ooMSewdgyiVZTkgUOygEjZBgDk
- Io2XUNYzZZckSiQKw6LIi7JAVQNebpxSl4/g1+tWe6FrwZ061k=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 1:34 PM Anson Huang <anson.huang@nxp.com> wrote:
-> > Subject: Re: [PATCH 2/3] arm64: defconfig: Select CONFIG_RESET_IMX7 by
-> > default
-> >
-> > On Mon, Jun 29, 2020 at 12:25 PM Anson Huang <Anson.Huang@nxp.com>
-> > wrote:
-> > >
-> > > i.MX7 reset driver now supports module build, it is no longer built in
-> > > by default, need to select it explicitly.
-> > >
-> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> >
-> > Why not make it =m now that this is possible?
->
-> It is because some drivers depends on this reset driver to work, such as PCIe,
-> If by default make it =m, it may impact PCIe's function, adding module support
-> at this point is try to provide function of loadable module for Android, but don't
-> want to impact any function which is working previously.
+Argument 'received' was incorrectly named by its struct type 'completion'
+instead of its name.
 
-It sounds like your patch 1/3 is not ready to be merged then.
+Fixes the following W=1 warning:
 
-Please make sure that loading it later does not break other drivers
-that depend on it. Other drivers don't have to be able to deal with
-missing dependencies if this one is never loaded or disabled at
-compile-time. However before you make it possible to turn this into
-a loadable module, anything that depends on it must be able to
-deal with the modules getting loaded in a random order first.
+ drivers/mfd/rave-sp.c:107: warning: Function parameter or member 'received' not described in 'rave_sp_reply'
 
-       Arnd
+Cc: Andrey Vostrikov <andrey.vostrikov@cogentembedded.com>
+Cc: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/mfd/rave-sp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/mfd/rave-sp.c b/drivers/mfd/rave-sp.c
+index 26c7b63e008a8..abaab541df19d 100644
+--- a/drivers/mfd/rave-sp.c
++++ b/drivers/mfd/rave-sp.c
+@@ -96,7 +96,7 @@ struct rave_sp_deframer {
+  * @data:	Buffer to store reply payload in
+  * @code:	Expected reply code
+  * @ackid:	Expected reply ACK ID
+- * @completion: Successful reply reception completion
++ * @received:   Successful reply reception completion
+  */
+ struct rave_sp_reply {
+ 	size_t length;
+-- 
+2.25.1
+
