@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23034C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE56FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03838206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B8B8207D0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:10:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593465000;
-	bh=rA5aTAAmo8TA8iTP7C04iQfYJE34ws41yHWBaX4nd0s=;
+	s=default; t=1593465003;
+	bh=aX5v3KXsyExJHrmVdV1Qa6ONasE96WpUM+mXSI/slVY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2M+MvVm8CiQF06dcF0p9Pcvu70Ak5kfPz3IgtSYpecJ/c1BynsTRR9eRIubg6mx/q
-	 zReDNDcqqFsKr8rGBU5U0yFCbVjPZ/FQKYoV+Xt+kAXotN+ExLtB2JVLQe1n9BwWye
-	 jmvunvpd76FKrQNITFkwxKO+BmB1nY0AE0KYkeSM=
+	b=WLwPNqN9SRxE7PAd9SRj3LazchZnAuHGAyCdcDyopGb08suz4KabH9ETwaBjaBinF
+	 0jsf+LwrudGPK151AjbUXpPT7112NMY6OAwuSXaqYT7J7rqkkL/ncEFRAjFJRaLPx+
+	 80VZHL/IC50LLuUBkPNuotxksdco8nJKwmu8F2+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390504AbgF2VJy (ORCPT
+        id S2390286AbgF2VJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:09:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45470 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:09:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45424 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730316AbgF2TAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730318AbgF2TAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:00:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7801E25503;
-        Mon, 29 Jun 2020 15:54:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 741152552E;
+        Mon, 29 Jun 2020 15:54:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446062;
-        bh=rA5aTAAmo8TA8iTP7C04iQfYJE34ws41yHWBaX4nd0s=;
+        s=default; t=1593446096;
+        bh=aX5v3KXsyExJHrmVdV1Qa6ONasE96WpUM+mXSI/slVY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iwDLsfcl+a27y9TmKkMBBtK0mUX7nEDs5Gz9J9LbYdHw0z+nq+4Qn47Bs+VBV50t9
-         t1h4++6iEKs0yrYvoYJn0+QtwnejTTrFqQd/uAA7cPdll9wSAmg0r6lOp/m6TNN6jf
-         Dvgk8Wmw9g7xRvy9EsRJcBh0ukphhPoAct8GeeME=
+        b=Uy8zTG4NmKhOTjYaoPZrfx5WMtPpeROttEjR+ONElm3xXAEMTI7yvjzDvRonk9WoB
+         Z8MlKM336apfWiYcxOAMVwQw5C+oldnyAgHg77qA19ArZ+mOXcgpOZ0BRjK0F3PK63
+         laitQvQhARsB5rOwYMjZjXyZOEbAh5W/5g10dOZ0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Emil Velikov <emil.l.velikov@gmail.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 061/135] drm: encoder_slave: fix refcouting error for modules
-Date:   Mon, 29 Jun 2020 11:51:55 -0400
-Message-Id: <20200629155309.2495516-62-sashal@kernel.org>
+Cc:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Corey Minyard <cminyard@mvista.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.4 089/135] sctp: Don't advertise IPv4 addresses if ipv6only is set on the socket
+Date:   Mon, 29 Jun 2020 11:52:23 -0400
+Message-Id: <20200629155309.2495516-90-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -66,48 +66,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+From: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
 
-[ Upstream commit f78d4032de60f50fd4afaa0fb68ea03b985f820a ]
+[ Upstream commit 471e39df96b9a4c4ba88a2da9e25a126624d7a9c ]
 
-module_put() balances try_module_get(), not request_module(). Fix the
-error path to match that.
+If a socket is set ipv6only, it will still send IPv4 addresses in the
+INIT and INIT_ACK packets. This potentially misleads the peer into using
+them, which then would cause association termination.
 
-Fixes: 2066facca4c7 ("drm/kms: slave encoder interface.")
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Reviewed-by: Emil Velikov <emil.l.velikov@gmail.com>
-Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The fix is to not add IPv4 addresses to ipv6only sockets.
+
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Reported-by: Corey Minyard <cminyard@mvista.com>
+Signed-off-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Tested-by: Corey Minyard <cminyard@mvista.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/gpu/drm/drm_encoder_slave.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ include/net/sctp/constants.h | 8 +++++---
+ net/sctp/associola.c         | 5 ++++-
+ net/sctp/bind_addr.c         | 1 +
+ net/sctp/protocol.c          | 1 +
+ 4 files changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_encoder_slave.c b/drivers/gpu/drm/drm_encoder_slave.c
-index d18b88b755c34..5c595d9f7e8f2 100644
---- a/drivers/gpu/drm/drm_encoder_slave.c
-+++ b/drivers/gpu/drm/drm_encoder_slave.c
-@@ -84,7 +84,7 @@ int drm_i2c_encoder_init(struct drm_device *dev,
+diff --git a/include/net/sctp/constants.h b/include/net/sctp/constants.h
+index 8c337cd0e1e45..bf03bab93d9e9 100644
+--- a/include/net/sctp/constants.h
++++ b/include/net/sctp/constants.h
+@@ -357,11 +357,13 @@ typedef enum {
+ 	 ipv4_is_anycast_6to4(a))
  
- 	err = encoder_drv->encoder_init(client, dev, encoder);
- 	if (err)
--		goto fail_unregister;
-+		goto fail_module_put;
+ /* Flags used for the bind address copy functions.  */
+-#define SCTP_ADDR6_ALLOWED	0x00000001	/* IPv6 address is allowed by
++#define SCTP_ADDR4_ALLOWED	0x00000001	/* IPv4 address is allowed by
+ 						   local sock family */
+-#define SCTP_ADDR4_PEERSUPP	0x00000002	/* IPv4 address is supported by
++#define SCTP_ADDR6_ALLOWED	0x00000002	/* IPv6 address is allowed by
++						   local sock family */
++#define SCTP_ADDR4_PEERSUPP	0x00000004	/* IPv4 address is supported by
+ 						   peer */
+-#define SCTP_ADDR6_PEERSUPP	0x00000004	/* IPv6 address is supported by
++#define SCTP_ADDR6_PEERSUPP	0x00000008	/* IPv6 address is supported by
+ 						   peer */
  
- 	if (info->platform_data)
- 		encoder->slave_funcs->set_config(&encoder->base,
-@@ -92,9 +92,10 @@ int drm_i2c_encoder_init(struct drm_device *dev,
+ /* Reasons to retransmit. */
+diff --git a/net/sctp/associola.c b/net/sctp/associola.c
+index f24d31f12cb44..aa38578fdfcd9 100644
+--- a/net/sctp/associola.c
++++ b/net/sctp/associola.c
+@@ -1575,12 +1575,15 @@ void sctp_assoc_rwnd_decrease(struct sctp_association *asoc, unsigned int len)
+ int sctp_assoc_set_bind_addr_from_ep(struct sctp_association *asoc,
+ 				     sctp_scope_t scope, gfp_t gfp)
+ {
++	struct sock *sk = asoc->base.sk;
+ 	int flags;
  
- 	return 0;
- 
-+fail_module_put:
-+	module_put(module);
- fail_unregister:
- 	i2c_unregister_device(client);
--	module_put(module);
- fail:
- 	return err;
- }
+ 	/* Use scoping rules to determine the subset of addresses from
+ 	 * the endpoint.
+ 	 */
+-	flags = (PF_INET6 == asoc->base.sk->sk_family) ? SCTP_ADDR6_ALLOWED : 0;
++	flags = (PF_INET6 == sk->sk_family) ? SCTP_ADDR6_ALLOWED : 0;
++	if (!inet_v6_ipv6only(sk))
++		flags |= SCTP_ADDR4_ALLOWED;
+ 	if (asoc->peer.ipv4_address)
+ 		flags |= SCTP_ADDR4_PEERSUPP;
+ 	if (asoc->peer.ipv6_address)
+diff --git a/net/sctp/bind_addr.c b/net/sctp/bind_addr.c
+index 871cdf9567e6b..664215448d09f 100644
+--- a/net/sctp/bind_addr.c
++++ b/net/sctp/bind_addr.c
+@@ -449,6 +449,7 @@ static int sctp_copy_one_addr(struct net *net, struct sctp_bind_addr *dest,
+ 		 * well as the remote peer.
+ 		 */
+ 		if ((((AF_INET == addr->sa.sa_family) &&
++		      (flags & SCTP_ADDR4_ALLOWED) &&
+ 		      (flags & SCTP_ADDR4_PEERSUPP))) ||
+ 		    (((AF_INET6 == addr->sa.sa_family) &&
+ 		      (flags & SCTP_ADDR6_ALLOWED) &&
+diff --git a/net/sctp/protocol.c b/net/sctp/protocol.c
+index 9c6c42fd9f8af..b0e401dfe1600 100644
+--- a/net/sctp/protocol.c
++++ b/net/sctp/protocol.c
+@@ -210,6 +210,7 @@ int sctp_copy_local_addr_list(struct net *net, struct sctp_bind_addr *bp,
+ 			 * sock as well as the remote peer.
+ 			 */
+ 			if ((((AF_INET == addr->a.sa.sa_family) &&
++			      (copy_flags & SCTP_ADDR4_ALLOWED) &&
+ 			      (copy_flags & SCTP_ADDR4_PEERSUPP))) ||
+ 			    (((AF_INET6 == addr->a.sa.sa_family) &&
+ 			      (copy_flags & SCTP_ADDR6_ALLOWED) &&
 -- 
 2.25.1
 
