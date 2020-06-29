@@ -2,102 +2,108 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8ACCC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD056C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:41:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA8382063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:40:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C5AA2063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:41:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466854;
-	bh=4HcPOWPJZGNE3U8X8zCydG6eyp7N0fJNEm8i+L7BItA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n0fq35sZPQ92pMAACj0a7q/4TI7jowgmqPYEUk0dJBOF6AZYyabDwnkxBo2TllgDR
-	 PPbDoU3bR86SvOAvHGBH/0lGXII3OliB06dKrZ6hTJV+8TEe97tYGZzeMODsOU5fvs
-	 qPVcDWKUNFm0xraPY3HCCduSvkKWx+6E1jcq0A8I=
+	s=default; t=1593466861;
+	bh=FvnI01MrqwrGCSn1pXUy+BedbEZpbcC56ZDWbIF8mFk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nQAWulQLHLKiHDK3TMDxKAZKGtXhYoYzI8tD4dgSR4mp8xL3u5IX+JCO9/XX5te6B
+	 w2+Pv5jHrXyy7ajF7FFka8/v7OqmniOuqlEAzfM9dsi1SsZMxVBZX0XF4YNq+51dWj
+	 kGDF3ypc6x4SF4VSpPnwPPWwpkLufzFKE/Y4vKOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391333AbgF2Vkr (ORCPT
+        id S2391371AbgF2VlA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:40:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60646 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:41:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728190AbgF2SkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:40:22 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728214AbgF2SkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:40:21 -0400
+Received: from localhost (unknown [122.182.251.219])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18F292404C;
-        Mon, 29 Jun 2020 15:18:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 994E1235FF;
+        Mon, 29 Jun 2020 09:52:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443918;
-        bh=4HcPOWPJZGNE3U8X8zCydG6eyp7N0fJNEm8i+L7BItA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XirVlwBSXF38aH1snAjaSmtZ+fF+/y0mOk6yHp4ue2nr3Hcc3Ppidk5pDEpJ1vPXn
-         t4O5NGlRzIErNDxAGWPMeDRztvULrciVR9fnAsg7JGm9lvTFowAPLDkgbXiK4uiB4x
-         5ZkR3Ca2uELAgg3XC66IqnPCLvdTokDRZWLVsCzQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aditya Pakki <pakki001@umn.edu>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 019/265] rocker: fix incorrect error handling in dma_rings_init
-Date:   Mon, 29 Jun 2020 11:14:12 -0400
-Message-Id: <20200629151818.2493727-20-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
-References: <20200629151818.2493727-1-sashal@kernel.org>
+        s=default; t=1593424331;
+        bh=FvnI01MrqwrGCSn1pXUy+BedbEZpbcC56ZDWbIF8mFk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SBvp+p2JVOK+mbuCO0DyD4m6cTuqvLnfQwf0MoDwwc8qToNCpesGe8dGwvR4NHuwO
+         Um0wpFOI/f3glHy7M5ECcY13Z3m0pS1xZjX2DpfInnFAL2wXMZ7j9bYOC/Yc/h/5lx
+         oe0ArLBMZ0u5XA50l1TuR2YiQ+bH3SrCAP+UPgQ0=
+Date:   Mon, 29 Jun 2020 15:22:07 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Amit Tomer <amittomer25@gmail.com>
+Cc:     Andre Przywara <andre.przywara@arm.com>,
+        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        dan.j.williams@intel.com, cristian.ciocaltea@gmail.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-actions@lists.infradead.org
+Subject: Re: [PATCH v4 02/10] dmaengine: Actions: Add support for S700 DMA
+ engine
+Message-ID: <20200629095207.GG2599@vkoul-mobl>
+References: <1591697830-16311-1-git-send-email-amittomer25@gmail.com>
+ <1591697830-16311-3-git-send-email-amittomer25@gmail.com>
+ <20200624061529.GF2324254@vkoul-mobl>
+ <CABHD4K-Z7_MkG-j1uAt6XGnz4zWzNYeuEgq=BwE=NXPwY6gb6g@mail.gmail.com>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.7.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.7.7-rc1
-X-KernelTest-Deadline: 2020-07-01T15:14+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CABHD4K-Z7_MkG-j1uAt6XGnz4zWzNYeuEgq=BwE=NXPwY6gb6g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+On 29-06-20, 13:49, Amit Tomer wrote:
+> Hi Vinod,
+> 
+> Thanks for having a look and providing the comments.
+> 
+> > Is the .compatible documented, Documentation patch should come before
+> > the driver use patch in a series
+> 
+> Yes, this new compatible string is documented in patch (05/10).
+> I would make it as a patch (1/10).
+> 
+> > >  static int owl_dma_probe(struct platform_device *pdev)
+> > >  {
+> > >       struct device_node *np = pdev->dev.of_node;
+> > >       struct owl_dma *od;
+> > >       int ret, i, nr_channels, nr_requests;
+> > > +     const struct of_device_id *of_id =
+> > > +                             of_match_device(owl_dma_match, &pdev->dev);
+> >
+> > You care about driver_data rather than of_id, so using
+> > of_device_get_match_data() would be better..
+> 
+> Okay. would take care of it in next version.
+> 
+> > >       od = devm_kzalloc(&pdev->dev, sizeof(*od), GFP_KERNEL);
+> > >       if (!od)
+> > > @@ -1083,6 +1116,8 @@ static int owl_dma_probe(struct platform_device *pdev)
+> > >       dev_info(&pdev->dev, "dma-channels %d, dma-requests %d\n",
+> > >                nr_channels, nr_requests);
+> > >
+> > > +     od->devid = (enum owl_dma_id)(uintptr_t)of_id->data;
+> >
+> > Funny casts, I dont think you need uintptr_t!
+> 
+> But without this cast, clang compiler emits following warning:
+> 
+> warning: cast to smaller integer type 'enum owl_dma_id' from 'const void *'
+>           [-Wvoid-pointer-to-enum-cast]
 
-[ Upstream commit 58d0c864e1a759a15c9df78f50ea5a5c32b3989e ]
+If you use of_device_get_match_data() you will not fall into this :)
 
-In rocker_dma_rings_init, the goto blocks in case of errors
-caused by the functions rocker_dma_cmd_ring_waits_alloc() and
-rocker_dma_ring_create() are incorrect. The patch fixes the
-order consistent with cleanup in rocker_dma_rings_fini().
-
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/rocker/rocker_main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/rocker/rocker_main.c b/drivers/net/ethernet/rocker/rocker_main.c
-index 7585cd2270ba4..fc99e7118e494 100644
---- a/drivers/net/ethernet/rocker/rocker_main.c
-+++ b/drivers/net/ethernet/rocker/rocker_main.c
-@@ -647,10 +647,10 @@ static int rocker_dma_rings_init(struct rocker *rocker)
- err_dma_event_ring_bufs_alloc:
- 	rocker_dma_ring_destroy(rocker, &rocker->event_ring);
- err_dma_event_ring_create:
-+	rocker_dma_cmd_ring_waits_free(rocker);
-+err_dma_cmd_ring_waits_alloc:
- 	rocker_dma_ring_bufs_free(rocker, &rocker->cmd_ring,
- 				  PCI_DMA_BIDIRECTIONAL);
--err_dma_cmd_ring_waits_alloc:
--	rocker_dma_cmd_ring_waits_free(rocker);
- err_dma_cmd_ring_bufs_alloc:
- 	rocker_dma_ring_destroy(rocker, &rocker->cmd_ring);
- 	return err;
 -- 
-2.25.1
-
+~Vinod
