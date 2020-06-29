@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D00BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E13BEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1642A206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:00:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C11EC206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:00:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468043;
-	bh=XarSoApLLTETtyGYNWWLrDZKQDBGnJS7T4Sk19EpEdw=;
+	s=default; t=1593468045;
+	bh=0hGTAF6FQOoPxWnG+9gP2MAMKZocEFQKeDcy44MXjUY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LWxlOAOrUNKNcireVTzJQogC6SrAeUoh4mI6HUSKZpQyj4ei42bqCKoMt84C6Nd2Y
-	 YB3LToWasycTYYa2aOlynPztgnN5WbToGNstc9L1YrYYkxoDpBQ40aDhOsCNYRAf0l
-	 rGBMuNfgnv9aiaBsUedF+ppTW3F+GyS2+eQb1IB8=
+	b=r3T907q392xM5tbXqmEYYIRoprC90Ge0N0G9tHTDaFXX/VgpcTSI5AhN6K4Z9r8KH
+	 1ipiqhVcSlYKP+vwV9bWSnbE/GiFtZAIt0WYCC6+Nll1H3B547D+qbEbkP3yYasK0e
+	 hzDqscSCxK6PpixYyOhfqhBz7v9/BRQQsX5BkVWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391756AbgF2WAl (ORCPT
+        id S2404694AbgF2WAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:00:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56892 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:00:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726362AbgF2SfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726336AbgF2SfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D97C2247E4;
-        Mon, 29 Jun 2020 15:22:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6413223CD1;
+        Mon, 29 Jun 2020 15:20:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444150;
-        bh=XarSoApLLTETtyGYNWWLrDZKQDBGnJS7T4Sk19EpEdw=;
+        s=default; t=1593444017;
+        bh=0hGTAF6FQOoPxWnG+9gP2MAMKZocEFQKeDcy44MXjUY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BUSAoqWPBFUjuq42hX1zhcP9Cp5nvPhBOc4U8iKjMBvCx6S9BuYU2T21p4wG0AIuz
-         7NhWZotWh75MrMaTN12jis0q+d3TbzWzcnR9axbKR9fP+k67vNJ1OJgdybVeZwy3dl
-         X7lOOWLgWEkLgD/AKC2CbgFMPrl3Kritt5NrZr10=
+        b=zhIfCLHwQjFi/C6dS+slQpnDApLd86pClN+kSfbZBxczLaZp3Pba2lZL6ShoPOX46
+         E4eLUT0CLtJzTT39P0n5AJGjm+SAdr6X0J7IgZ2w66gzYv+MN4JMqkzNv0wj7mOaOz
+         YER7agwW+zz2gtQZNAFRel615hHYvZCkEXs+pdJQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arseny Solokha <asolokha@kb.kras.ru>,
-        Jason Yan <yanaijie@huawei.com>, Scott Wood <oss@buserror.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 256/265] powerpc/fsl_booke/32: Fix build with CONFIG_RANDOMIZE_BASE
-Date:   Mon, 29 Jun 2020 11:18:09 -0400
-Message-Id: <20200629151818.2493727-257-sashal@kernel.org>
+Cc:     David Rientjes <rientjes@google.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 123/265] dma-direct: check return value when encrypting or decrypting memory
+Date:   Mon, 29 Jun 2020 11:15:56 -0400
+Message-Id: <20200629151818.2493727-124-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -66,45 +64,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arseny Solokha <asolokha@kb.kras.ru>
+From: David Rientjes <rientjes@google.com>
 
-commit 7e4773f73dcfb92e7e33532162f722ec291e75a4 upstream.
+[ Upstream commit 56fccf21d1961a06e2a0c96ce446ebf036651062 ]
 
-Building the current 5.8 kernel for an e500 machine with
-CONFIG_RANDOMIZE_BASE=y and CONFIG_BLOCK=n yields the following
-failure:
+__change_page_attr() can fail which will cause set_memory_encrypted() and
+set_memory_decrypted() to return non-zero.
 
-  arch/powerpc/mm/nohash/kaslr_booke.c: In function 'kaslr_early_init':
-  arch/powerpc/mm/nohash/kaslr_booke.c:387:2: error: implicit
-  declaration of function 'flush_icache_range'; did you mean 'flush_tlb_range'?
+If the device requires unencrypted DMA memory and decryption fails, simply
+free the memory and fail.
 
-Indeed, including asm/cacheflush.h into kaslr_booke.c fixes the build.
+If attempting to re-encrypt in the failure path and that encryption fails,
+there is no alternative other than to leak the memory.
 
-Fixes: 2b0e86cc5de6 ("powerpc/fsl_booke/32: implement KASLR infrastructure")
-Cc: stable@vger.kernel.org # v5.5+
-Signed-off-by: Arseny Solokha <asolokha@kb.kras.ru>
-Reviewed-by: Jason Yan <yanaijie@huawei.com>
-Acked-by: Scott Wood <oss@buserror.net>
-[mpe: Tweak change log to mention CONFIG_BLOCK=n]
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200613162801.1946619-1-asolokha@kb.kras.ru
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: c10f07aa27da ("dma/direct: Handle force decryption for DMA coherent buffers in common code")
+Signed-off-by: David Rientjes <rientjes@google.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/nohash/kaslr_booke.c | 1 +
- 1 file changed, 1 insertion(+)
+ kernel/dma/direct.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
-diff --git a/arch/powerpc/mm/nohash/kaslr_booke.c b/arch/powerpc/mm/nohash/kaslr_booke.c
-index 4a75f2d9bf0e0..bce0e5349978f 100644
---- a/arch/powerpc/mm/nohash/kaslr_booke.c
-+++ b/arch/powerpc/mm/nohash/kaslr_booke.c
-@@ -14,6 +14,7 @@
- #include <linux/memblock.h>
- #include <linux/libfdt.h>
- #include <linux/crash_core.h>
-+#include <asm/cacheflush.h>
- #include <asm/pgalloc.h>
- #include <asm/prom.h>
- #include <asm/kdump.h>
+diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+index 4e789c46ff0bf..98c445dcb308b 100644
+--- a/kernel/dma/direct.c
++++ b/kernel/dma/direct.c
+@@ -124,6 +124,7 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
+ {
+ 	struct page *page;
+ 	void *ret;
++	int err;
+ 
+ 	if (IS_ENABLED(CONFIG_DMA_DIRECT_REMAP) &&
+ 	    dma_alloc_need_uncached(dev, attrs) &&
+@@ -176,8 +177,12 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
+ 	}
+ 
+ 	ret = page_address(page);
+-	if (force_dma_unencrypted(dev))
+-		set_memory_decrypted((unsigned long)ret, 1 << get_order(size));
++	if (force_dma_unencrypted(dev)) {
++		err = set_memory_decrypted((unsigned long)ret,
++					   1 << get_order(size));
++		if (err)
++			goto out_free_pages;
++	}
+ 
+ 	memset(ret, 0, size);
+ 
+@@ -196,9 +201,13 @@ done:
+ 	return ret;
+ 
+ out_encrypt_pages:
+-	if (force_dma_unencrypted(dev))
+-		set_memory_encrypted((unsigned long)page_address(page),
+-				     1 << get_order(size));
++	if (force_dma_unencrypted(dev)) {
++		err = set_memory_encrypted((unsigned long)page_address(page),
++					   1 << get_order(size));
++		/* If memory cannot be re-encrypted, it must be leaked */
++		if (err)
++			return NULL;
++	}
+ out_free_pages:
+ 	dma_free_contiguous(dev, page, size);
+ 	return NULL;
 -- 
 2.25.1
 
