@@ -2,96 +2,192 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02490C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1FEEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:59:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDD9D20759
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:58:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 888BE206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:59:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Es+y1Zca"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JuiLzS0z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389911AbgF2U6t (ORCPT
+        id S2390058AbgF2U7A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:58:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43362 "EHLO
+        Mon, 29 Jun 2020 16:59:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731251AbgF2TNC (ORCPT
+        with ESMTP id S1730900AbgF2TNC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:13:02 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20E6AC00E3F8;
-        Mon, 29 Jun 2020 05:16:09 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id o18so11889056eje.7;
-        Mon, 29 Jun 2020 05:16:09 -0700 (PDT)
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D67CC0A8885;
+        Mon, 29 Jun 2020 00:26:59 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id l63so7881169pge.12;
+        Mon, 29 Jun 2020 00:26:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=soXbhE7fjamRPVpZww01jKbOBo61CZjTIZgKR2wcZEM=;
-        b=Es+y1ZcaFE2vyCcFPTaEYe17yllLj4xwPgelB6vNVhT6If85EMMEEoqcEXGHKlO5j9
-         r9I7EmCPe2amg3d60HJp9VhsfrvguLKNGZxpFyaJnNYmAMWlc22X/9D4KnoMJUkKpIk7
-         wVkcc9u2zPA3Woe/4vuUiI+eZzUSE/zj3U/shduIu+ZaZYvzjzxZ0yjKmuWfC63Ia16q
-         VUD/BrbSbMhGRCd8+q5RVU8LDnvePf0HL9m70oPYoG09tLusSgOhSCFM44UoTQvie1cL
-         De2k7jXdx3A4vDrzulA2jsFfkVGWbqnvjG4/ZDcGk/yTg6Tx36oChwqyqphcb0laxjeY
-         Xhrg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=7pdRoNIQxLUhqhAFVYUae+IUaVMSVu90O9pRkmyfRUE=;
+        b=JuiLzS0zVQSOd+UUTJ7mOtebFxRFdBiNafjWxnlDAgjAIi4FP8mQvUBX4RTUsGhJ9u
+         M1O+2ZjIiWp6WnxSmrN0Ezi63VoPfJyCr/E09Eu7bQzC2p7LR9ji+m8g5w1dDOWiNnCT
+         4mBOsK6LxSDeqvEuW/FcqUwzS7I8GkcW+qsJLgyAFZNIei+6Z0i5829HkhAXSPIMGmlW
+         g5WcWgJ65NJW8LDtKlj7eoEn3gQtFqT3ca+CS1zBgsQUepwpFr9fCGD5xuF/fkMbH2bS
+         8r58BKminK+dXqEFbOo1nT1dNz3RFpKNidlE8WKLwwm3BK2kp91N8wJtmsJK02nzuuqI
+         PV0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=soXbhE7fjamRPVpZww01jKbOBo61CZjTIZgKR2wcZEM=;
-        b=L0kdPZ4uxOA3be8s1CDoQsFWc0Q/y9qgH+r5gBpihg921a3ACsCFFXCi/FVMJvxlWD
-         hgnqXm82qxf5kC1cM4BBI9JRPDHNQKn/hw/9PYzZ6eAa9V3w9RN3bIlQk4s5vmtmUQY1
-         JC8T+d6OxZzc/o0Q92+22fh7az5e+Zw4hBLSrTdxm86FQJnfzZcXNTA3iPWgzv49Lg5L
-         4rNAydAa9poxcKfN5+VU/LvHZ4SNz4cUpCrg2pwbmXW29WmaOU0sWNmZpPbuvDC67Zvy
-         a5VycNsNZzykZbaZw7ZsrDVCrNQrdAHBfJATmGae3Qg/4O6r2cLKdytZUHRpEXogSa0Q
-         PGQg==
-X-Gm-Message-State: AOAM531Nh+5nUTMZjkk5Mbwj8F3jCo4n+GvUDJuJU7R4GTgEd/1K5VH0
-        ynF8pYguCDtcWObhMfhFDw1h+iasPuGbEEH2GZk=
-X-Google-Smtp-Source: ABdhPJxibo/BsVYpl4Oy+gCRpolTV0ZDAlF/gJWHHVyBTDNjk0EwwwBF7+zdsNd3Zc80ngr8WBE4JutDoPOiK7iCNno=
-X-Received: by 2002:a17:907:264d:: with SMTP id ar13mr9310992ejc.504.1593432967918;
- Mon, 29 Jun 2020 05:16:07 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=7pdRoNIQxLUhqhAFVYUae+IUaVMSVu90O9pRkmyfRUE=;
+        b=UfcGC0d5MkmWXYvXlfVCoipYdzf7P1tR0Is10GADU6mAEwUNVzXHj24OO/UUAjnxP1
+         MtvuRJSUl6DLysCQZfRAwYyNlZZJIvh4h43aiyk7bLeS7LQHLkGjwcYsbV3IYPa6qP+I
+         8JvEoU6QdRv57M2iEVo5CQR8vCY1Juk30ZWRKzaT7wxqNs6kXAlHlU2ZleaTlawOvevb
+         fwk0xBo7nWFAygRdI6PcSVwG5CdjuAA6Wl5qtb9AZRfdlJ3jMuKRAmbpbrRFJj7fqkyx
+         S421GqBEktSE80dkGrGSnTWaXqENw8W8QJyoStDNN8wMU7ruQjjVECjXMYlLSKA16Pze
+         ZLfg==
+X-Gm-Message-State: AOAM5318BHMaF2gLgihixlH7tYwQ9CIk5QzjHQlEBVA6L2X0l+s34Sba
+        8yll9Sh4uI7tjChiz6CyjUw=
+X-Google-Smtp-Source: ABdhPJw9RqhHyzdGNEHd4aWcBpOcun7fKsft5rfVhdinTZwJdFgedUacmTFMJS3AyuFqwGKw2yEeiQ==
+X-Received: by 2002:a63:3603:: with SMTP id d3mr8271436pga.200.1593415618423;
+        Mon, 29 Jun 2020 00:26:58 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.153.57])
+        by smtp.gmail.com with ESMTPSA id q10sm34637627pfk.86.2020.06.29.00.26.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 00:26:57 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Stanislav Yakovlev <stas.yakovlev@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org, linux-wireless@vger.kernel.org
+Subject: [PATCH v1 1/2] ipw2100: use generic power management
+Date:   Mon, 29 Jun 2020 12:55:24 +0530
+Message-Id: <20200629072525.156154-2-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200629072525.156154-1-vaibhavgupta40@gmail.com>
+References: <20200629072525.156154-1-vaibhavgupta40@gmail.com>
 MIME-Version: 1.0
-References: <20200621213806.551879-1-konradybcio@gmail.com>
- <20200621213806.551879-8-konradybcio@gmail.com> <20200629120911.GA1319@bug>
-In-Reply-To: <20200629120911.GA1319@bug>
-From:   Konrad Dybcio <konradybcio@gmail.com>
-Date:   Mon, 29 Jun 2020 14:15:32 +0200
-Message-ID: <CAMS8qEXdoX1Zpm660sOMM9b2rni9qXM_7rAi9kkzFBQYmL3EgQ@mail.gmail.com>
-Subject: Re: [PATCH 7/8] arm64: dts: qcom: Add support for Sony Xperia
- XA2/Plus/Ultra (Nile platform)
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-clk@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Do you really want autorepeat on keys like camera focus?
+With legacy PM, drivers themselves were responsible for managing the
+device's power states and takes care of register states.
 
-I miiiight want to reconsider that when it will actually be in use :)
+After upgrading to the generic structure, PCI core will take care of
+required tasks and drivers should do only device-specific operations.
 
-> No volume up?
+The driver was invoking PCI helper functions like pci_save/restore_state(),
+pci_enable/disable_device() and pci_set_power_state(), which is not
+recommended.
 
-On this board, vol up is managed by pm660 resin.
+Compile-tested only.
 
-Regards
-Konrad
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+---
+ drivers/net/wireless/intel/ipw2x00/ipw2100.c | 31 +++++---------------
+ 1 file changed, 7 insertions(+), 24 deletions(-)
+
+diff --git a/drivers/net/wireless/intel/ipw2x00/ipw2100.c b/drivers/net/wireless/intel/ipw2x00/ipw2100.c
+index 624fe721e2b5..57ce55728808 100644
+--- a/drivers/net/wireless/intel/ipw2x00/ipw2100.c
++++ b/drivers/net/wireless/intel/ipw2x00/ipw2100.c
+@@ -6397,10 +6397,9 @@ static void ipw2100_pci_remove_one(struct pci_dev *pci_dev)
+ 	IPW_DEBUG_INFO("exit\n");
+ }
+ 
+-#ifdef CONFIG_PM
+-static int ipw2100_suspend(struct pci_dev *pci_dev, pm_message_t state)
++static int __maybe_unused ipw2100_suspend(struct device *dev_d)
+ {
+-	struct ipw2100_priv *priv = pci_get_drvdata(pci_dev);
++	struct ipw2100_priv *priv = dev_get_drvdata(dev_d);
+ 	struct net_device *dev = priv->net_dev;
+ 
+ 	IPW_DEBUG_INFO("%s: Going into suspend...\n", dev->name);
+@@ -6414,10 +6413,6 @@ static int ipw2100_suspend(struct pci_dev *pci_dev, pm_message_t state)
+ 	/* Remove the PRESENT state of the device */
+ 	netif_device_detach(dev);
+ 
+-	pci_save_state(pci_dev);
+-	pci_disable_device(pci_dev);
+-	pci_set_power_state(pci_dev, PCI_D3hot);
+-
+ 	priv->suspend_at = ktime_get_boottime_seconds();
+ 
+ 	mutex_unlock(&priv->action_mutex);
+@@ -6425,11 +6420,11 @@ static int ipw2100_suspend(struct pci_dev *pci_dev, pm_message_t state)
+ 	return 0;
+ }
+ 
+-static int ipw2100_resume(struct pci_dev *pci_dev)
++static int __maybe_unused ipw2100_resume(struct device *dev_d)
+ {
++	struct pci_dev *pci_dev = to_pci_dev(dev_d);
+ 	struct ipw2100_priv *priv = pci_get_drvdata(pci_dev);
+ 	struct net_device *dev = priv->net_dev;
+-	int err;
+ 	u32 val;
+ 
+ 	if (IPW2100_PM_DISABLED)
+@@ -6439,16 +6434,6 @@ static int ipw2100_resume(struct pci_dev *pci_dev)
+ 
+ 	IPW_DEBUG_INFO("%s: Coming out of suspend...\n", dev->name);
+ 
+-	pci_set_power_state(pci_dev, PCI_D0);
+-	err = pci_enable_device(pci_dev);
+-	if (err) {
+-		printk(KERN_ERR "%s: pci_enable_device failed on resume\n",
+-		       dev->name);
+-		mutex_unlock(&priv->action_mutex);
+-		return err;
+-	}
+-	pci_restore_state(pci_dev);
+-
+ 	/*
+ 	 * Suspend/Resume resets the PCI configuration space, so we have to
+ 	 * re-disable the RETRY_TIMEOUT register (0x41) to keep PCI Tx retries
+@@ -6473,7 +6458,6 @@ static int ipw2100_resume(struct pci_dev *pci_dev)
+ 
+ 	return 0;
+ }
+-#endif
+ 
+ static void ipw2100_shutdown(struct pci_dev *pci_dev)
+ {
+@@ -6539,15 +6523,14 @@ static const struct pci_device_id ipw2100_pci_id_table[] = {
+ 
+ MODULE_DEVICE_TABLE(pci, ipw2100_pci_id_table);
+ 
++static SIMPLE_DEV_PM_OPS(ipw2100_pm_ops, ipw2100_suspend, ipw2100_resume);
++
+ static struct pci_driver ipw2100_pci_driver = {
+ 	.name = DRV_NAME,
+ 	.id_table = ipw2100_pci_id_table,
+ 	.probe = ipw2100_pci_init_one,
+ 	.remove = ipw2100_pci_remove_one,
+-#ifdef CONFIG_PM
+-	.suspend = ipw2100_suspend,
+-	.resume = ipw2100_resume,
+-#endif
++	.driver.pm = &ipw2100_pm_ops,
+ 	.shutdown = ipw2100_shutdown,
+ };
+ 
+-- 
+2.27.0
+
