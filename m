@@ -2,107 +2,61 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 467C0C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53483C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:46:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 264022078A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:45:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TUksazA+"
+	by mail.kernel.org (Postfix) with ESMTP id 3BB4020780
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:46:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbgF2Xpp (ORCPT
+        id S1728210AbgF2XqC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 19:45:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58712 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgF2Xpo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 19:45:44 -0400
-Received: from mail-vs1-xe44.google.com (mail-vs1-xe44.google.com [IPv6:2607:f8b0:4864:20::e44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05063C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 16:45:44 -0700 (PDT)
-Received: by mail-vs1-xe44.google.com with SMTP id k7so8854537vso.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 16:45:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fYI3mC1TPWWNCe5dapKUu8m35ZbqtEKTTLgsE9b3Fkw=;
-        b=TUksazA+FGM3tucKqjgqZrt9NinjymNomhfIBEhZ4zMzZqHhHj+tz5ZLgmJ2Zd0pbP
-         jOtLn2445dpX0VSLOa02xXSbZVWvTtP8p6O5h+oU67hNQPp3Kn8EbdweXGQly9MscT6r
-         sNzdpzM4hLW9cT6jYanMVyeZC5rRI6yB6SolM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fYI3mC1TPWWNCe5dapKUu8m35ZbqtEKTTLgsE9b3Fkw=;
-        b=LE4nTC1nsXKcxrUByV7SDrJF7wUpEod0GCAuOuvcsNZCGbMqnNlLSBZO2T/a8EktH6
-         L52F5tli9A2lnK1FNvNFx2V424QYHpksS4/rE62FbRbYRpfyygwDmBdjC1YcuB/2pmLG
-         5JxSZ3Cl/Gm6NpXv6l76Z/ZcE81jO2bt9Cyr2fcbG94WdeWO9m2ku+lDwF95FoVor8uh
-         9AR7V+UcAOLvXfdHTT724kFDDNYo/SN9C7/wh+9k6lJb0ia6Uyj5dJLXiJds+VwbYMjL
-         ETEJ86L1mGuRG/9D7mgCexsReR1nlLflNcxsprHVO+0e9CIoFrb+ffVfGami4oBFL8tF
-         ntmg==
-X-Gm-Message-State: AOAM5303cSBtw9thE/QWUzy3CW433FfGNCdq3QvOWAfqrdnNTB8Gjtki
-        pIMRfhhn8faT7IxCPPGjvzcF2Hcr4ks=
-X-Google-Smtp-Source: ABdhPJxDcvBGN84xrZWc6Bv39V/+NlXm3zrFTk/301sQG19c15m+vOJwaw9g5xq/xVXXrGyTNZYvNg==
-X-Received: by 2002:a67:841:: with SMTP id 62mr8531280vsi.226.1593474342981;
-        Mon, 29 Jun 2020 16:45:42 -0700 (PDT)
-Received: from mail-vs1-f45.google.com (mail-vs1-f45.google.com. [209.85.217.45])
-        by smtp.gmail.com with ESMTPSA id u20sm129198vsk.6.2020.06.29.16.45.42
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jun 2020 16:45:42 -0700 (PDT)
-Received: by mail-vs1-f45.google.com with SMTP id m25so10195997vsp.8
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 16:45:42 -0700 (PDT)
-X-Received: by 2002:a67:ec58:: with SMTP id z24mr8146370vso.109.1593474341915;
- Mon, 29 Jun 2020 16:45:41 -0700 (PDT)
+        Mon, 29 Jun 2020 19:46:02 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:55510 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726751AbgF2XqB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 19:46:01 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 543F54E9FF7E02924904;
+        Mon, 29 Jun 2020 16:00:09 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 29 Jun
+ 2020 16:00:07 +0800
+Subject: Re: [f2fs-dev] [PATCH] f2fs: remove useless parameter of
+ __insert_free_nid()
+To:     Liu Song <fishland@aliyun.com>, <jaegeuk@kernel.org>,
+        <chao@kernel.org>
+CC:     <liu.song11@zte.com.cn>, <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20200628134813.37192-1-fishland@aliyun.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <b2b1b72a-1987-d2ea-349c-c1fbe464ecb4@huawei.com>
+Date:   Mon, 29 Jun 2020 16:00:06 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-References: <20200626151946.1.I06134fd669bf91fd387dc6ecfe21d44c202bd412@changeid>
- <20200629115316.GB5499@sirena.org.uk>
-In-Reply-To: <20200629115316.GB5499@sirena.org.uk>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 29 Jun 2020 16:45:30 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=ULboyqRb1-1o1dq9Z7FGQ2gwb3oJi2bWLwZsXu6cybpw@mail.gmail.com>
-Message-ID: <CAD=FV=ULboyqRb1-1o1dq9Z7FGQ2gwb3oJi2bWLwZsXu6cybpw@mail.gmail.com>
-Subject: Re: [PATCH] spi: spi-geni-qcom: Don't set the cs if it was already right
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Dilip Kota <dkota@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200628134813.37192-1-fishland@aliyun.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On 2020/6/28 21:48, Liu Song via Linux-f2fs-devel wrote:
+> From: Liu Song <liu.song11@zte.com.cn>
+> 
+> In current version, @state will only be FREE_NID. This parameter
+> has no real effect so remove it to keep clean.
+> 
+> Signed-off-by: Liu Song <liu.song11@zte.com.cn>
 
-On Mon, Jun 29, 2020 at 4:53 AM Mark Brown <broonie@kernel.org> wrote:
->
-> On Fri, Jun 26, 2020 at 03:19:50PM -0700, Douglas Anderson wrote:
-> > Setting the chip select on the Qualcomm geni SPI controller isn't
-> > exactly cheap.  Let's cache the current setting and avoid setting the
-> > chip select if it's already right.
->
-> Seems like it'd be worth pushing this up to the core - if we're
-> constantly setting the same CS value then perhaps we ought to just stop
-> doing that?
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
 
-Posted:
-
-spi: Avoid setting the chip select if we don't need to
-https://lore.kernel.org/r/20200629164103.1.Ied8e8ad8bbb2df7f947e3bc5ea1c315e041785a2@changeid
-
-I see that you applied my patch to "spi-geni-qcom".  If the patch to
-the core looks OK to you and lands, I think the one for the driver can
-be reverted (though it doesn't hurt).
-
--Doug
+Thanks,
