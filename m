@@ -2,112 +2,205 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B96C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:53:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF045C433E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9DAFC2065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:53:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2837204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:53:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S/dhmjP1"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="JlKNFXhS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729849AbgF2Sxb (ORCPT
+        id S1729670AbgF2Sx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:53:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40078 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729812AbgF2Sww (ORCPT
+        Mon, 29 Jun 2020 14:53:57 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:10502 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729812AbgF2Sxc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:52:52 -0400
-Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13CFCC02E2CB
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:04:51 -0700 (PDT)
-Received: by mail-wm1-x342.google.com with SMTP id g75so15495622wme.5
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:04:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=KMTCDVkmhrFSTaB8bx1bgREeHsoHTmBvamvepGv04mE=;
-        b=S/dhmjP1Wds8RWIrdtgpp+KtZkHcSrMog/xRtGlSaf3iTckrCpwC/qb3qLOOKEADrl
-         kZpxdApdfTy1KHnz6O6+jI7SbLRhTquBGADwdfSEIVjCa/Us7YMMK+rSrDigt9pKKqI0
-         arAl5wsHoGHJdXZD9hM3hrNqoas6LfBWPIXFg2LiSBUriBEnR58FC9UGbKCTqPgRmE8/
-         KJZtCDQD/bWeKePibICKhOVGetOraGmlTNY4Qmo+Wl4yjii80DNIgNBDngEU4Sg2WK3n
-         8SCG0nA/cmzTOyeEVf+hiyaq0XJoRy4VTVyAFgB3iB0KTHqz43w+6Ea4riu19Pvm1t5q
-         OUzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=KMTCDVkmhrFSTaB8bx1bgREeHsoHTmBvamvepGv04mE=;
-        b=V0em+pzxQ/ki3qk9D23QuMQ4zz98E/s9j3BD7SDkLIMEy3iwQdFISgjSMCryCY9DzS
-         AqW9vr/V+cPSvl8Yn9wPz1nT1ltZATqad4pBo9X6P8RkFvSxZxvI3QFwNLEWrKg4UlMC
-         K4nbCom3my+vCQFBSiK5CnyK9nq0Q8koehWpkeB7U76mSwGTn3cI6/3gs178cr7i1l6G
-         3weJm6+jWSQVWtKiLhGLHD8V06fRPw6CEgQ2kaiooAsXnbSJ3lTNk64q/1scMSsBPvF3
-         SGyiTzRbi7WrgY2ZPS4kOzp/FEEDSDl+PJmzsMsrDIbVkE+jq5W4gZ1NUmtessuxXDWE
-         5D8A==
-X-Gm-Message-State: AOAM533fNyStS+L4BeI7s5r9TeAa6Ee75WGJzdFkjzPijqLLlJa5Nrez
-        1vuwzKZ6oUs0oKxPCBeiqKgAPg==
-X-Google-Smtp-Source: ABdhPJxpFPRPZgqmcu4lCys19buO548MqP7hdlLxqhc4qChHB+Z5s1KZcLBS69vBLvmj0ivfeBVVlA==
-X-Received: by 2002:a05:600c:2285:: with SMTP id 5mr5381620wmf.78.1593439489644;
-        Mon, 29 Jun 2020 07:04:49 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id p14sm15394928wrj.14.2020.06.29.07.04.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 07:04:48 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     arnd@arndb.de, gregkh@linuxfoundation.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Oded Gabbay <oded.gabbay@gmail.com>,
-        Tomer Tayar <ttayar@habana.ai>
-Subject: [PATCH 03/20] misc: habanalabs: firmware_if: Add missing 'fw_name' and 'dst' entries to function header
-Date:   Mon, 29 Jun 2020 15:04:25 +0100
-Message-Id: <20200629140442.1043957-4-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629140442.1043957-1-lee.jones@linaro.org>
-References: <20200629140442.1043957-1-lee.jones@linaro.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 29 Jun 2020 14:53:32 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593456812; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=J+mlqzfWdpP+r4N77POYvudZfNrZxjb/pSFyCbevuzc=; b=JlKNFXhSffLNLRKk4ri+Lq5yM++5vO5YrF56oLnfbRDAuLhKo6Ad/XVQRQgQwGzTVK9pShcV
+ GWVkvmcfHJk1FsVhC/YehaPILDbma5bqxkC1S9J1XXygcYt7JeW24zo/tKEO1GBSpxY1ZXcz
+ jN/gv5uKLmGXIAWsP7/12uv0dQ0=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n17.prod.us-west-2.postgun.com with SMTP id
+ 5efa195d5866879c763a13dc (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 29 Jun 2020 16:39:57
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1BA48C433CB; Mon, 29 Jun 2020 16:39:57 +0000 (UTC)
+Received: from malabar-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbhatt)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id B0F30C433CA;
+        Mon, 29 Jun 2020 16:39:55 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B0F30C433CA
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bbhatt@codeaurora.org
+From:   Bhaumik Bhatt <bbhatt@codeaurora.org>
+To:     manivannan.sadhasivam@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
+        jhugo@codeaurora.org, linux-kernel@vger.kernel.org,
+        Bhaumik Bhatt <bbhatt@codeaurora.org>
+Subject: [PATCH v4 9/9] bus: mhi: core: Introduce sysfs entries for MHI
+Date:   Mon, 29 Jun 2020 09:39:42 -0700
+Message-Id: <1593448782-8385-10-git-send-email-bbhatt@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1593448782-8385-1-git-send-email-bbhatt@codeaurora.org>
+References: <1593448782-8385-1-git-send-email-bbhatt@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks as though documentation for these function arguments have
-been missing since the driver's inception last year.
+Introduce sysfs entries to enable userspace clients the ability to read
+the serial number and the OEM PK Hash values obtained from BHI. OEMs
+need to read these device-specific hardware information values through
+userspace for factory testing purposes and cannot be exposed via degbufs
+as it may remain disabled for performance reasons. Also, update the
+documentation for ABI to include these entries.
 
-Fixes the following W=1 kernel build warnings:
-
- drivers/misc/habanalabs/firmware_if.c:26: warning: Function parameter or member 'fw_name' not described in 'hl_fw_load_fw_to_device'
- drivers/misc/habanalabs/firmware_if.c:26: warning: Function parameter or member 'dst' not described in 'hl_fw_load_fw_to_device'
-
-Cc: Oded Gabbay <oded.gabbay@gmail.com>
-Cc: Tomer Tayar <ttayar@habana.ai>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
 ---
- drivers/misc/habanalabs/firmware_if.c | 3 +++
- 1 file changed, 3 insertions(+)
+ Documentation/ABI/stable/sysfs-bus-mhi | 25 ++++++++++++++++
+ MAINTAINERS                            |  1 +
+ drivers/bus/mhi/core/init.c            | 53 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 79 insertions(+)
+ create mode 100644 Documentation/ABI/stable/sysfs-bus-mhi
 
-diff --git a/drivers/misc/habanalabs/firmware_if.c b/drivers/misc/habanalabs/firmware_if.c
-index baf790cf4b787..15e0793da6554 100644
---- a/drivers/misc/habanalabs/firmware_if.c
-+++ b/drivers/misc/habanalabs/firmware_if.c
-@@ -15,7 +15,10 @@
+diff --git a/Documentation/ABI/stable/sysfs-bus-mhi b/Documentation/ABI/stable/sysfs-bus-mhi
+new file mode 100644
+index 0000000..65ef711
+--- /dev/null
++++ b/Documentation/ABI/stable/sysfs-bus-mhi
+@@ -0,0 +1,25 @@
++What:		/sys/bus/mhi/devices/.../serialnumber
++Date:		May 2020
++KernelVersion:  5.8
++Contact:	Bhaumik Bhatt <bbhatt@codeaurora.org>
++Description:
++		The file holds the serial number of the endpoint device obtained
++		using a BHI (Boot Host Interface) register read after at least
++		one attempt to power up the device has been done. If read
++		without having the device power on at least once, the file will
++		read all 0's.
++Users:		Any userspace application or clients interested in the device
++		hardware information.
++
++What:		/sys/bus/mhi/devices/.../oem_pk_hash
++Date:		May 2020
++KernelVersion:  5.8
++Contact:	Bhaumik Bhatt <bbhatt@codeaurora.org>
++Description:
++		The file holds the OEM PK Hash value of the endpoint device
++		obtained using a BHI (Boot Host Interface) register read after
++		at least one attempt to power up the device has been done. If
++		read without having the device power on at least once, the file
++		will read all 0's.
++Users:		Any userspace application or clients interested in the device
++		hardware information.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e64e5db..5e49316 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11018,6 +11018,7 @@ M:	Hemant Kumar <hemantk@codeaurora.org>
+ L:	linux-arm-msm@vger.kernel.org
+ S:	Maintained
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mani/mhi.git
++F:	Documentation/ABI/stable/sysfs-bus-mhi
+ F:	Documentation/mhi/
+ F:	drivers/bus/mhi/
+ F:	include/linux/mhi.h
+diff --git a/drivers/bus/mhi/core/init.c b/drivers/bus/mhi/core/init.c
+index d2c0f6e..745e146 100644
+--- a/drivers/bus/mhi/core/init.c
++++ b/drivers/bus/mhi/core/init.c
+@@ -76,6 +76,56 @@ const char *to_mhi_pm_state_str(enum mhi_pm_state state)
+ 	return mhi_pm_state_str[index];
+ }
  
- /**
-  * hl_fw_load_fw_to_device() - Load F/W code to device's memory.
-+ *
-  * @hdev: pointer to hl_device structure.
-+ * @fw_name: the firmware image name
-+ * @dst: IO memory mapped address space to copy firmware to
-  *
-  * Copy fw code from firmware file to device memory.
-  *
++static ssize_t serial_number_show(struct device *dev,
++				  struct device_attribute *attr,
++				  char *buf)
++{
++	struct mhi_device *mhi_dev = to_mhi_device(dev);
++	struct mhi_controller *mhi_cntrl = mhi_dev->mhi_cntrl;
++
++	return snprintf(buf, PAGE_SIZE, "Serial Number:%u\n",
++			mhi_cntrl->serial_number);
++}
++static DEVICE_ATTR_RO(serial_number);
++
++static ssize_t oem_pk_hash_show(struct device *dev,
++				struct device_attribute *attr,
++				char *buf)
++{
++	struct mhi_device *mhi_dev = to_mhi_device(dev);
++	struct mhi_controller *mhi_cntrl = mhi_dev->mhi_cntrl;
++	int i, cnt = 0;
++
++	for (i = 0; i < ARRAY_SIZE(mhi_cntrl->oem_pk_hash); i++)
++		cnt += snprintf(buf + cnt, PAGE_SIZE - cnt,
++				"OEMPKHASH[%d]:0x%x\n", i,
++				mhi_cntrl->oem_pk_hash[i]);
++
++	return cnt;
++}
++static DEVICE_ATTR_RO(oem_pk_hash);
++
++static struct attribute *mhi_sysfs_attrs[] = {
++	&dev_attr_serial_number.attr,
++	&dev_attr_oem_pk_hash.attr,
++	NULL,
++};
++
++static const struct attribute_group mhi_sysfs_group = {
++	.attrs = mhi_sysfs_attrs,
++};
++
++static int mhi_create_sysfs(struct mhi_controller *mhi_cntrl)
++{
++	return sysfs_create_group(&mhi_cntrl->mhi_dev->dev.kobj,
++				  &mhi_sysfs_group);
++}
++
++static void mhi_destroy_sysfs(struct mhi_controller *mhi_cntrl)
++{
++	sysfs_remove_group(&mhi_cntrl->mhi_dev->dev.kobj, &mhi_sysfs_group);
++}
++
+ /* MHI protocol requires the transfer ring to be aligned with ring length */
+ static int mhi_alloc_aligned_ring(struct mhi_controller *mhi_cntrl,
+ 				  struct mhi_ring *ring,
+@@ -917,6 +967,8 @@ int mhi_register_controller(struct mhi_controller *mhi_cntrl,
+ 	mhi_cntrl->mhi_dev = mhi_dev;
+ 
+ 	mhi_create_debugfs(mhi_cntrl);
++	if (mhi_create_sysfs(mhi_cntrl))
++		dev_err(mhi_cntrl->cntrl_dev, "Failed to create sysfs entries\n");
+ 
+ 	return 0;
+ 
+@@ -940,6 +992,7 @@ void mhi_unregister_controller(struct mhi_controller *mhi_cntrl)
+ 	struct mhi_chan *mhi_chan = mhi_cntrl->mhi_chan;
+ 	unsigned int i;
+ 
++	mhi_destroy_sysfs(mhi_cntrl);
+ 	mhi_destroy_debugfs(mhi_cntrl);
+ 
+ 	kfree(mhi_cntrl->mhi_cmd);
 -- 
-2.25.1
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
