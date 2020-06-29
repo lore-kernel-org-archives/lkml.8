@@ -2,141 +2,121 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D577FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:15:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F2AFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B68F5206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:15:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="of984BLP"
+	by mail.kernel.org (Postfix) with ESMTP id 54CE4206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:15:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731214AbgF2TPC (ORCPT
+        id S1731207AbgF2TPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:15:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43392 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731788AbgF2TOX (ORCPT
+        Mon, 29 Jun 2020 15:15:17 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:47087 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729413AbgF2TPO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:14:23 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0E12C00E3E6
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 05:04:27 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id l2so14372322wmf.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 05:04:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7pEL+pOqyLTkwaRij99JSBZiVqVmOtzJ61ge9c76alE=;
-        b=of984BLPzSM5P+WwmyOWqcZJYwV98nXnukmPddORm7s4hFfzesBN6/ddh4U2m/PDU6
-         U7zyrLEGeItTXvJtQUt1dUuvsThE3lZ38dqMBT9cWCEKwkxHUamDCpBpGaedCu0yU3JA
-         OMEKDESF6Z+Dg/P4fdW8bjKYdSptxx+16ZaDAHFgGzM2CCXueszbTt7/jsNP4k3G4wfW
-         vhCj/O7zg5dmmRIAaJf3wX6GBBN246Lt1CVVgmSh81ZDHsWzVOmLRAYU13dZqTFhE5mJ
-         cUBwbbK/x0XCTDLHW+rUB89GdvYigHL50OJ07XC/TkMc5hT7UvPM8MrNf0tkQ8gdtoxp
-         nQpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7pEL+pOqyLTkwaRij99JSBZiVqVmOtzJ61ge9c76alE=;
-        b=CGU0B5fpgf0MeYkfG+wGn3pEGmcPW4p1afOaspepenrfmlPqx0Oyk/pyle9t3F93YA
-         tASVMjIFlx/QiXhZUOZfuYGLRI9ijzMnz4X7e5Bcd7SNdb1wmfubeHpTPe10kEDJVWym
-         4fZ1Fkst/c9ZiAJ/Z7upC1q3w6J/GrdW0wZ3Bu9kVHNdpa07ZRdoSZ5wQqEElrmHtwDf
-         ZiXx2H+2J5EwT0uGmW6pzf819+o4vwT36zsEa9qvMNWwDP8eLEkOyH+34JowMC07mc4B
-         VszLONF/VgM20OFWu1RShtImhQBIKRxgxbwARmRQ5Exen2BzdZWK9bWpyfPOVtlj76gh
-         9HFQ==
-X-Gm-Message-State: AOAM530OKi2PzfWLEhgi9Ib0/a8kpWggJPgHJwsighq96pKDNzW7/zNg
-        boqmDHoayBnw4h5D5Na0HKK7aQ==
-X-Google-Smtp-Source: ABdhPJyd6qa9V9UAIGrinBuxZn8Q8saD0KJTED9NchL3vgnTrBQeXGhAZm//V44PtKtSgMKYvFb6Dg==
-X-Received: by 2002:a1c:a70d:: with SMTP id q13mr13901671wme.55.1593432266701;
-        Mon, 29 Jun 2020 05:04:26 -0700 (PDT)
-Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id d81sm25274347wmc.0.2020.06.29.05.04.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 05:04:26 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2 10/10] net: ethernet: mtk-star-emac: use devm_of_mdiobus_register()
-Date:   Mon, 29 Jun 2020 14:03:46 +0200
-Message-Id: <20200629120346.4382-11-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200629120346.4382-1-brgl@bgdev.pl>
-References: <20200629120346.4382-1-brgl@bgdev.pl>
+        Mon, 29 Jun 2020 15:15:14 -0400
+Received: from mail-qt1-f176.google.com ([209.85.160.176]) by
+ mrelayeu.kundenserver.de (mreue109 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1MqJuP-1j3RDk2HQp-00nNSp; Mon, 29 Jun 2020 17:08:27 +0200
+Received: by mail-qt1-f176.google.com with SMTP id e12so13043116qtr.9;
+        Mon, 29 Jun 2020 08:08:27 -0700 (PDT)
+X-Gm-Message-State: AOAM532sAB5W/VPKTkLUR4AyavMWVsGao0RwMo+gteq4fYHPXPyfoutQ
+        665YQr8uXaKdWTyCPAVtHS4hP8llk1XsRXqz39Q=
+X-Google-Smtp-Source: ABdhPJyQuqwhfm5xEtb+Xwa0xEiKtz926rq5DKPRj0B3De279sqAWoVcj6OMbI8F3yDTfe5Hmp0EzLxdKp04XA+X8n0=
+X-Received: by 2002:ac8:7587:: with SMTP id s7mr16233441qtq.304.1593443306252;
+ Mon, 29 Jun 2020 08:08:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1593410042-10598-1-git-send-email-Anson.Huang@nxp.com>
+ <1593410042-10598-5-git-send-email-Anson.Huang@nxp.com> <CAK8P3a2yXFbGxuSRoC5_dYBujnAtVoEMXe50V7QYjPYhqra7nA@mail.gmail.com>
+ <DB3PR0402MB39160335642AFBAC4B38C511F56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAK8P3a0CcijnVxJws_kMiaOBbc4Uox40W4=-dX+BG6OeMYtFpw@mail.gmail.com> <DB3PR0402MB39167D9A3897C3CE327EBDDBF56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <DB3PR0402MB39167D9A3897C3CE327EBDDBF56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 29 Jun 2020 17:08:10 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1cYsgJu+JCrmQw-VQyAKpyOz7fpOf3jBZ7QKc=urUFtw@mail.gmail.com>
+Message-ID: <CAK8P3a1cYsgJu+JCrmQw-VQyAKpyOz7fpOf3jBZ7QKc=urUFtw@mail.gmail.com>
+Subject: Re: [PATCH V3 04/10] clk: imx: Support building SCU clock driver as module
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
+        Stefan Agner <stefan.agner@toradex.com>,
+        Peng Fan <peng.fan@nxp.com>, Abel Vesa <abel.vesa@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Andy Duan <fugang.duan@nxp.com>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:wKgMKK0eUebDi30MowMdmQn02QMB0d3ji+fQ99MNTtuMvfZKqJj
+ IGFEYRMy+xVLrwh3WOwQeEr1LKzXFgPeg7rFA2RO8pqbmryQpxnJ1JwGN98DYMQitIbtFDA
+ H+w435NjfnbrJwry2unOkb6mjk2P2rkVAmcRlgqA6l7pvXAx06xwWhQkdz/AyWdzP3+6Koq
+ S8My9fm5+y7e7qqsvFDUA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:iiPSoLVcnOk=:qoxOSacGPmBIHf5353Yapl
+ gndagjhThquKoK9CuFn0RXLqH1ytqqCBv2O7rzoaIV4nHK+9dVhqcMuYUBd5M+6sbNeEXwxi2
+ u3MyWGgvXqMqBHHxaSgH6SD2rvap8DjqlJTxXhIbq1YT+Ry8bKv07ZBKZ2kp/9anClzRqvk1d
+ N9qZVN0dmdKg2WBIAxWYpBfthLV3wjGrXC4lCw1nbQn5yiyzDx4IvPuhVPxmo7Lvd6Cf+LdJa
+ rvTs1te+x8zWObIW7WKrISxPxZgGZGtiphjt4nEDZYxoke9kbYjf2o3VotfQjIEs38yslOZ1D
+ z4E9HM61JkWcRcH8LXgM2buDQk53yMrsqgyo909zMIAH9Djr0jYRBTqklewJwEXuQCIe91rgN
+ i1ZRa/bEs3gf/w/htk2eh3OUyGo6xZfBR536vqcK5E1qAeJXBBKrAN6b2VH5J1ns+YMe026IY
+ ycrfc5x60mZEUIgPOW+7vjasWQY3M32RN2YwwGmUw+XDUqy6SaIxYHKWK91WcpjG6BRbiunwa
+ GfixAd7RegewVNZNqQlNFhT285rp0vZbbrySolHEQr2UGYXUGICBdGOUIO1Pm9eYkGtZ+biio
+ BJhNlg7dfFIy92SnPGC0GUXXtMjs4efj8pv/TTQ0LQJerHgveYkfI0WBp+zgkQ25kZVHiFVYB
+ GMrzRDpVBDw1Naz8wlX/A51F7Ge3JdIvU2wBpXKxcluj5YDBWaI6RKt8mgS/8i6Noet18uytu
+ ltKKZHsUjU3S4YdTRGOnP4s+0Fb+36/Hlpt8Vt4NvnqXZBHJ/xkJpeC7Xhe5immPAvD+texNM
+ V/oWkPIdsjYEpRo1TLlpA2biPGaMar6SACaHB8Ut45zlKgje3g=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+On Mon, Jun 29, 2020 at 4:52 PM Anson Huang <anson.huang@nxp.com> wrote:
+> > Subject: Re: [PATCH V3 04/10] clk: imx: Support building SCU clock driver as module
+> > On Mon, Jun 29, 2020 at 2:53 PM Anson Huang <anson.huang@nxp.com> wrote:
+> >
+> > Sorry, I misread the patch in multiple ways. First of all, you already put
+> > clk-scu.o and clk-lpcg-scu.o files into a combined loadable module, and I had
+> > only looked at clk-scu.c.
+> >
+> > What I actually meant here was to link clk-scu.o together with clk-imx8qxp.o
+> > (and possibly future chip-specific files) into a loadable module and drop the
+> > export.
+>
+> Sorry, could you please advise more details about how to do it in Makefile?
+> I tried below but it looks like NOT working. multiple definition of module_init() error reported.
+>
+> obj-$(CONFIG_MXC_CLK_SCU) := clk-imx.o
+> clk-imx-y += clk-scu.o clk-lpcg-scu.o
+> clk-imx-$(CONFIG_CLK_IMX8QXP) += clk-imx8qxp.o clk-imx8qxp-lpcg.o
 
-Shrink the code by using the managed variant of of_mdiobus_register().
+Right, you can't have multiple module_init() in a module, so what I suggested
+earlier won't work any more as soon as you add a second chip that uses the
+clk-scu driver, and then you have to use separate modules, or some hack
+that calls the init functions one at a time, which is probably worse.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- drivers/net/ethernet/mediatek/mtk_star_emac.c | 13 +------------
- 1 file changed, 1 insertion(+), 12 deletions(-)
+If it's only imx8qxp, you can do it like this:
 
-diff --git a/drivers/net/ethernet/mediatek/mtk_star_emac.c b/drivers/net/ethernet/mediatek/mtk_star_emac.c
-index 3e765bdcf9e1..13250553263b 100644
---- a/drivers/net/ethernet/mediatek/mtk_star_emac.c
-+++ b/drivers/net/ethernet/mediatek/mtk_star_emac.c
-@@ -1389,7 +1389,7 @@ static int mtk_star_mdio_init(struct net_device *ndev)
- 	priv->mii->write = mtk_star_mdio_write;
- 	priv->mii->priv = priv;
- 
--	ret = of_mdiobus_register(priv->mii, mdio_node);
-+	ret = devm_of_mdiobus_register(dev, priv->mii, mdio_node);
- 
- out_put_node:
- 	of_node_put(mdio_node);
-@@ -1441,13 +1441,6 @@ static void mtk_star_clk_disable_unprepare(void *data)
- 	clk_bulk_disable_unprepare(MTK_STAR_NCLKS, priv->clks);
- }
- 
--static void mtk_star_mdiobus_unregister(void *data)
--{
--	struct mtk_star_priv *priv = data;
--
--	mdiobus_unregister(priv->mii);
--}
--
- static int mtk_star_probe(struct platform_device *pdev)
- {
- 	struct device_node *of_node;
-@@ -1549,10 +1542,6 @@ static int mtk_star_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	ret = devm_add_action_or_reset(dev, mtk_star_mdiobus_unregister, priv);
--	if (ret)
--		return ret;
--
- 	ret = eth_platform_get_mac_address(dev, ndev->dev_addr);
- 	if (ret || !is_valid_ether_addr(ndev->dev_addr))
- 		eth_hw_addr_random(ndev);
--- 
-2.26.1
+obj-$(CONFIG_MXC_CLK_SCU) := clk-imx-scu.o clk-imx-lpcg.o
+clk-imx-scu-y         += clk-scu.o clk-imx8qxp.o
+clk-imx-lpcq-scu-y += clk-lpcg-scu.o clk-imx8qxp-lpcg.o
 
+If you already know that the scu driver is going to be used in future
+chips, then just stay with what you have now, using a separate module
+per file, exporting the symbols as needed.
+
+        Arnd
