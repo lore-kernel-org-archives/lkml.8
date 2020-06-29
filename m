@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC70C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AEA7C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:29:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECEC12065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:29:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 326D620663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:29:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593458995;
-	bh=M6ZaHtfMbTpj9D5canL426J6A9WFvGSijT5BxaGkz0E=;
+	s=default; t=1593458996;
+	bh=1WGeN2iImmzjr6Ytzn0/DYV/NAlrw75kxzi1kaGueoc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ai1wUfON+bZAwwZIuFFKwfi8amyTlb4a5TjWUFXbPN2L2xB1pFwNDSB0dK/kn4uo3
-	 EvhZM/l/XHn+Y1Wrb5sM4JY3JHg0OnVLiaycyK2ADw0gwKOJILW5ZgqssTicy8Ya17
-	 CESabH4bfhxy7i05USTcmZUlfVoasPs2YvoyHQTQ=
+	b=SkkBS9h7Oif++77tbeaTJdUBrZdljwT08WAo23L2FJjwGj8wpECYsGvpJ7lguxMnf
+	 K7B4VOH3eD3opVdq/+xqBnmukbIWUgCVNSa3wqoDjaq+pAK/MmRVYqqcp/V4G3scQK
+	 unw/OKPdgjLW7Pg2KpsYFryYLahbFlozoavb9e5c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730105AbgF2T3w (ORCPT
+        id S1732661AbgF2T3y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:29:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37070 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:29:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732655AbgF2TZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732658AbgF2TZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4521425373;
-        Mon, 29 Jun 2020 15:40:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBACF253B9;
+        Mon, 29 Jun 2020 15:41:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445238;
-        bh=M6ZaHtfMbTpj9D5canL426J6A9WFvGSijT5BxaGkz0E=;
+        s=default; t=1593445282;
+        bh=1WGeN2iImmzjr6Ytzn0/DYV/NAlrw75kxzi1kaGueoc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H2Zd79TB3K6r72/zNnN5ZB2Uifjgp1cFmVVOHbkiGrQtv+yfB3VUfNfL+al+m4by5
-         aAtEqnimbYUmLHrksBxFd49b2xA5LWTHsoMsilL8BRWT2gKW58ThqXzwovh0epKm67
-         1MmLGj3ldD/8l+WjlUMHfuBP+crZnAd07bctRkMI=
+        b=BLnAQnplnsKkDVnSI8/jSy1UfLHN1B5Wm1NE1BpLrq2F3GBe/PGYax70GqnTVOynd
+         ewc7iVABOTPaHQdm2q/gZEIw0V0tgGLzLj/ieHz2acxrsnt9ZeOQkcn7t4qA/gBmC7
+         Atd7uzlr9HYgT99Q/BlGnUZ0QFw60ItcrVnVvKmk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wang Hai <wanghai38@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Olga Kornievskaia <olga.kornievskaia@gmail.com>,
+        Olga Kornievskaia <kolga@netapp.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 022/191] yam: fix possible memory leak in yam_init_driver
-Date:   Mon, 29 Jun 2020 11:37:18 -0400
-Message-Id: <20200629154007.2495120-23-sashal@kernel.org>
+Subject: [PATCH 4.9 061/191] NFSv4.1 fix rpc_call_done assignment for BIND_CONN_TO_SESSION
+Date:   Mon, 29 Jun 2020 11:37:57 -0400
+Message-Id: <20200629154007.2495120-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -65,34 +66,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+From: Olga Kornievskaia <olga.kornievskaia@gmail.com>
 
-[ Upstream commit 98749b7188affbf2900c2aab704a8853901d1139 ]
+[ Upstream commit 1c709b766e73e54d64b1dde1b7cfbcf25bcb15b9 ]
 
-If register_netdev(dev) fails, free_netdev(dev) needs
-to be called, otherwise a memory leak will occur.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 02a95dee8cf0 ("NFS add callback_ops to nfs4_proc_bind_conn_to_session_callback")
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/hamradio/yam.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/nfs/nfs4proc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/hamradio/yam.c b/drivers/net/hamradio/yam.c
-index aaff07c100585..a453b82d10777 100644
---- a/drivers/net/hamradio/yam.c
-+++ b/drivers/net/hamradio/yam.c
-@@ -1160,6 +1160,7 @@ static int __init yam_init_driver(void)
- 		err = register_netdev(dev);
- 		if (err) {
- 			printk(KERN_WARNING "yam: cannot register net device %s\n", dev->name);
-+			free_netdev(dev);
- 			goto error;
- 		}
- 		yam_devs[i] = dev;
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 632d3c3f8dfb3..c189722bf9c71 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -7151,7 +7151,7 @@ nfs4_bind_one_conn_to_session_done(struct rpc_task *task, void *calldata)
+ }
+ 
+ static const struct rpc_call_ops nfs4_bind_one_conn_to_session_ops = {
+-	.rpc_call_done =  &nfs4_bind_one_conn_to_session_done,
++	.rpc_call_done =  nfs4_bind_one_conn_to_session_done,
+ };
+ 
+ /*
 -- 
 2.25.1
 
