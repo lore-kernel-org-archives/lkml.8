@@ -2,112 +2,131 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E9A0C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A93AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5692620776
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:12:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="sLMbOT6w"
+	by mail.kernel.org (Postfix) with ESMTP id 6BD6020780
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:12:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593472337;
+	bh=st5HMA90AC02KAbENgC6hTomYQWYZnA63bMQ2dQ0WNg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Goe2W3UBjczeyrwHM83Ovbdeo27ROf3XAHyjHAjO80qYlDe6S1kcV8Bp62fgeE4Vt
+	 BMUOgL4f88m4fQr1M4wxPh6/+ClewDeaHd2zrkJ81QMMIw7p8Nj8ZX0HNAxOB1NMYV
+	 152nUHzAfCZrCd7Ms7cubYMTc6yCtmqP4zkuOn+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729407AbgF2XMH (ORCPT
+        id S1729471AbgF2XMQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 19:12:07 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:48215 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727819AbgF2XMH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 19:12:07 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49wjtX2TZzz9s6w;
-        Tue, 30 Jun 2020 09:12:04 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1593472325;
-        bh=941EdfoYDRZUrkZYne4BILEiumD128Dyv5nWhLt38Wc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=sLMbOT6wQ3hn2zT7RtTkfHIS9I9MK5SK0XLE+DE+ooG1LgQcEekhbNTX/JQ5HbaDk
-         7QDWgcXu4C9BzGOYD7KcTBRqyvvzpeb/mG4rNK062CMNXwOxAr4rxya7HCsD1fJW4x
-         5VC3b+hMVe9whHbjzbd9wlLUpl5r6MjEA0dbfSvFuechCeYEi6VyChxgjb3QK8vSKQ
-         3KGHuVr+C8Rio/hfn9CS39Mb0RDYu4QeZWZFUncFwkyOMGeMQJHphXkY6CvDl+whLL
-         fu05tmZNgeVyHv1je3224wbTRpP4uacBfsI2PwoNvuDVxNSu9+2QNAL9mN4FP1EmjA
-         EAqeE2a9Bmm9g==
-Date:   Tue, 30 Jun 2020 09:12:03 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Linux-kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH 1/2] Explicitly include linux/major.h where it is
- needed
-Message-ID: <20200630091203.55cdd5d9@canb.auug.org.au>
-In-Reply-To: <20200617055843.GB25631@kroah.com>
-References: <20200617092614.7897ccb2@canb.auug.org.au>
-        <20200617092747.0cadb2de@canb.auug.org.au>
-        <20200617055843.GB25631@kroah.com>
+        Mon, 29 Jun 2020 19:12:16 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:42357 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727819AbgF2XMP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 19:12:15 -0400
+Received: by mail-io1-f65.google.com with SMTP id c16so19022582ioi.9;
+        Mon, 29 Jun 2020 16:12:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=op3i3z1L0LUQ12QfWOlDxJhiavChzqvWXr19iexaQZg=;
+        b=OQzAAqKgEHjysFnvuLkZfU2XFlsLpr0eaUkY8EMniHyH0G5kodDF9FgBMkzBl/HqFL
+         drCzXwx48IIoGURyAYf2Xo7wKl1A14t460pQ0R25dpeBRRdvjycuuVuB772WOwbbTeOi
+         9ov/q94D8bM5Txp9Eo6BiI9CEStufSoVaVpXd0fdL9S8D9nlsIeIjj72UGYeNGGsLaay
+         5Ep0rAX60qJFRINmHM86LJ4t5nTGxa7hpKsCvsQQhtzwFkkoKPT0kJSvSboHv4Tnr8To
+         bQnHx/+MEZEigLR+MPNKhFj3L2cu/RgzAFJYG1PXVT+Eiq3QO9XU4p4It23IkOuDChIH
+         c7dg==
+X-Gm-Message-State: AOAM531U23dmZDLqHOxmAMymURqUCw0i0AUF/gXCUPhPrF/weccACake
+        bPYsDvjX3F7ciHUWjmQd6w==
+X-Google-Smtp-Source: ABdhPJwqWxmbojLKjuDjx9fPibAgiAZ1p7u7BMvYsmcT/Qp0Zxzr9XR5iIvt0bzy9xxkhE4ie/Qu6w==
+X-Received: by 2002:a02:8796:: with SMTP id t22mr13133151jai.90.1593472334118;
+        Mon, 29 Jun 2020 16:12:14 -0700 (PDT)
+Received: from xps15 ([64.188.179.255])
+        by smtp.gmail.com with ESMTPSA id e4sm697936ilq.68.2020.06.29.16.12.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 16:12:13 -0700 (PDT)
+Received: (nullmailer pid 3148645 invoked by uid 1000);
+        Mon, 29 Jun 2020 23:12:11 -0000
+Date:   Mon, 29 Jun 2020 17:12:11 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        dri-devel@lists.freedesktop.org, linux-tegra@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 1/7] of_graph: add of_graph_presents()
+Message-ID: <20200629231211.GA3142766@bogus>
+References: <20200617222703.17080-1-digetx@gmail.com>
+ <20200617222703.17080-2-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/BCTuQZc6gP7JPm+u0nl1Qal";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200617222703.17080-2-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/BCTuQZc6gP7JPm+u0nl1Qal
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Jun 18, 2020 at 01:26:57AM +0300, Dmitry Osipenko wrote:
+> In some case, like a DRM display code for example, it's useful to silently
+> check whether port node exists at all in a device-tree before proceeding
+> with parsing of the graph.
+> 
+> This patch adds of_graph_presents() that returns true if given device-tree
+> node contains OF graph port.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/of/property.c    | 52 +++++++++++++++++++++++++++++++++-------
+>  include/linux/of_graph.h |  6 +++++
+>  2 files changed, 49 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/of/property.c b/drivers/of/property.c
+> index 1f2086f4e7ce..b84ed6a7cf50 100644
+> --- a/drivers/of/property.c
+> +++ b/drivers/of/property.c
+> @@ -29,6 +29,48 @@
+>  
+>  #include "of_private.h"
+>  
+> +/**
+> + * of_graph_get_first_local_port() - get first local port node
+> + * @node: pointer to a local endpoint device_node
+> + *
+> + * Return: First local port node associated with local endpoint node linked
+> + *	   to @node. Use of_node_put() on it when done.
+> + */
+> +static struct device_node *
+> +of_graph_get_first_local_port(const struct device_node *node)
+> +{
+> +	struct device_node *ports, *port;
+> +
+> +	ports = of_get_child_by_name(node, "ports");
+> +	if (ports)
+> +		node = ports;
+> +
+> +	port = of_get_child_by_name(node, "port");
+> +	of_node_put(ports);
+> +
+> +	return port;
+> +}
+> +
+> +/**
+> + * of_graph_presents() - check graph's presence
+> + * @node: pointer to a device_node checked for the graph's presence
+> + *
+> + * Return: True if @node has a port or ports sub-node, false otherwise.
+> + */
+> +bool of_graph_presents(const struct device_node *node)
 
-Hi Greg,
+of_graph_is_present
 
-On Wed, 17 Jun 2020 07:58:43 +0200 Greg KH <gregkh@linuxfoundation.org> wro=
-te:
->
-> On Wed, Jun 17, 2020 at 09:27:47AM +1000, Stephen Rothwell wrote:
-> > This is in preparation for removing the include of major.h where it is
-> > not needed.
-> >=20
-> > These files were found using
-> >=20
-> > 	grep -E -L '[<"](uapi/)?linux/major\.h' $(git grep -l -w -f /tmp/xx)
-> >=20
-> > where /tmp/xx contains all the symbols defined in major.h.  There were
-> > a couple of files in that list that did not need the include since the
-> > references are in comments.
-> >=20
-> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au> =20
->=20
-> Any reason this had an RFC, but patch 2/2 did not?
->=20
-> They look good to me, I will be glad to take these, but do you still
-> want reviews from others for this?  It seems simple enough to me...
+Otherwise,
 
-I am going to do another round of this patchset splitting out most of
-the "safe" removals that can be done anytime so other maintainers can
-take them.  Then there will be the left over order dependent changes at
-the end.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/BCTuQZc6gP7JPm+u0nl1Qal
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl76dUMACgkQAVBC80lX
-0GwhGQgAhvHebmqV9c+voc8vdC1Luf8C7PWLbdIb6f1iaY+N1bSNKmatpFwTZ1Up
-yf4+QbGQUZbKdTwc7VvNADVmLtek6h9aPVEF+hNKSMFPwCiBCOhpMGCSx4bXFRsj
-irlLoWruvzaAywFE6Qh8GOYbp+SSnW0T6KGnwfrn965opehsULzWBbBOoWY2euF8
-73/adQZJiKUYpTQpvGDKdDBogQRAYs6AFer+7NUxXnH6FN9Zv4wicjMcSpWqss73
-apAKvefLfTY0y+HD7JMoui4msRP+oP9AX7szdZQG81Ns7N26Kl6Uz09DsQCxp5mT
-s5688o6hb+MACM2k5TVUFdQd+GE74g==
-=aVuJ
------END PGP SIGNATURE-----
-
---Sig_/BCTuQZc6gP7JPm+u0nl1Qal--
+Reviewed-by: Rob Herring <robh@kernel.org>
