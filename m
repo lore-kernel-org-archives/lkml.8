@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A147C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:03:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4BF0C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68C7A2053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:03:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8412120663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:03:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593457387;
-	bh=lxxQnrSMlr+97kH0qKxyqvhMkplbf2d/pEWokw3G1Go=;
+	s=default; t=1593457388;
+	bh=SNWP29qCVCL6BzwKYZRbzz78rukpj11bEpKdu3tOFXU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xNNdpgkWn1nT1aib6cfyu3qKsHnZu38jMOh+gft+t7bKLVuCQgy9PdpmY+pQf5Xda
-	 ae1rnULCUhtc/Vf0XSAUsYleTPTlj5EAdKOcQ+HfiC9c6DxOL9blb24TwT4AT/TLod
-	 +LoubKfevOzHCztnT3eDc2pVVPh9iUzz5uPGjZBg=
+	b=GU55qsfoWPrt+y2UeN1YRqItPt0FvPK6XBKlsKEPUwM5xcGwOAQx9LNkVzVsdyzTP
+	 Tgdvc3ijWbfskAtX5/wEnISNREx3jGzFI914JU16ymSSQnhRLtpZbIpNRiCN2LeK2Y
+	 REyl0RN0cf8x3etIbNyM4p5HOnWae1hRGoDOFk0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730549AbgF2TCs (ORCPT
+        id S1730393AbgF2TCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:02:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45480 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:02:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45464 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730344AbgF2TAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730349AbgF2TAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:00:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8DD7254FE;
-        Mon, 29 Jun 2020 15:54:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 878C02553E;
+        Mon, 29 Jun 2020 15:55:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446058;
-        bh=lxxQnrSMlr+97kH0qKxyqvhMkplbf2d/pEWokw3G1Go=;
+        s=default; t=1593446105;
+        bh=SNWP29qCVCL6BzwKYZRbzz78rukpj11bEpKdu3tOFXU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kw+a2qTqpdNQe+5kwqc63kVw9Fa8K5O2dlzMHlMEiQZQ2UlZTg/zVKQ3sZrnnI6hi
-         i29vc0wer8zfW1LTDuJgjl+z2vIlvlnq5W6GZ16A9RDYpY9l56bZ4f4warR5WCpip3
-         s3DZ6Qeidh4fwUxPaL15hQakH3INa67zMXIme2lE=
+        b=M/H+FFZPzE/qbhOJscPe3N7xf2/Cci6Br9IMgkLO1jiYKioWh3gqLv9dfqmCW6UJY
+         sONf/x38x+LmepcXfbz25qb2JIqAsVB6wRO5CKhD/uxx5dX1c1U3Dbg85AkoGZrGf2
+         uVXT0ikSAtvez+eP9AvXSabZjACuYadI3QuQyJqg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhiqiang Liu <liuzhiqiang26@huawei.com>, Coly Li <colyli@suse.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 058/135] bcache: fix potential deadlock problem in btree_gc_coalesce
-Date:   Mon, 29 Jun 2020 11:51:52 -0400
-Message-Id: <20200629155309.2495516-59-sashal@kernel.org>
+Cc:     Dongdong Liu <liudongdong3@huawei.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Gabriele Paoloni <gabriele.paoloni@huawei.com>,
+        Zhou Wang <wangzhou1@hisilicon.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.4 097/135] PCI: Disable MSI for HiSilicon Hip06/Hip07 Root Ports
+Date:   Mon, 29 Jun 2020 11:52:31 -0400
+Message-Id: <20200629155309.2495516-98-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -64,94 +67,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+From: Dongdong Liu <liudongdong3@huawei.com>
 
-[ Upstream commit be23e837333a914df3f24bf0b32e87b0331ab8d1 ]
+commit 72f2ff0deb870145a5a2d24cd75b4f9936159a62 upstream.
 
-coccicheck reports:
-  drivers/md//bcache/btree.c:1538:1-7: preceding lock on line 1417
+The PCIe Root Port in Hip06/Hip07 SoCs advertises an MSI capability, but it
+cannot generate MSIs.  It can transfer MSI/MSI-X from downstream devices,
+but does not support MSI/MSI-X itself.
 
-In btree_gc_coalesce func, if the coalescing process fails, we will goto
-to out_nocoalesce tag directly without releasing new_nodes[i]->write_lock.
-Then, it will cause a deadlock when trying to acquire new_nodes[i]->
-write_lock for freeing new_nodes[i] before return.
+Add a quirk to prevent use of MSI/MSI-X by the Root Port.
 
-btree_gc_coalesce func details as follows:
-	if alloc new_nodes[i] fails:
-		goto out_nocoalesce;
-	// obtain new_nodes[i]->write_lock
-	mutex_lock(&new_nodes[i]->write_lock)
-	// main coalescing process
-	for (i = nodes - 1; i > 0; --i)
-		[snipped]
-		if coalescing process fails:
-			// Here, directly goto out_nocoalesce
-			 // tag will cause a deadlock
-			goto out_nocoalesce;
-		[snipped]
-	// release new_nodes[i]->write_lock
-	mutex_unlock(&new_nodes[i]->write_lock)
-	// coalesing succ, return
-	return;
-out_nocoalesce:
-	btree_node_free(new_nodes[i])	// free new_nodes[i]
-	// obtain new_nodes[i]->write_lock
-	mutex_lock(&new_nodes[i]->write_lock);
-	// set flag for reuse
-	clear_bit(BTREE_NODE_dirty, &ew_nodes[i]->flags);
-	// release new_nodes[i]->write_lock
-	mutex_unlock(&new_nodes[i]->write_lock);
-
-To fix the problem, we add a new tag 'out_unlock_nocoalesce' for
-releasing new_nodes[i]->write_lock before out_nocoalesce tag. If
-coalescing process fails, we will go to out_unlock_nocoalesce tag
-for releasing new_nodes[i]->write_lock before free new_nodes[i] in
-out_nocoalesce tag.
-
-(Coly Li helps to clean up commit log format.)
-
-Fixes: 2a285686c109816 ("bcache: btree locking rework")
-Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+[bhelgaas: changelog, sort vendor ID #define, drop device ID #define]
+Signed-off-by: Dongdong Liu <liudongdong3@huawei.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Gabriele Paoloni <gabriele.paoloni@huawei.com>
+Reviewed-by: Zhou Wang <wangzhou1@hisilicon.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/md/bcache/btree.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/pci/quirks.c    | 1 +
+ include/linux/pci_ids.h | 2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/drivers/md/bcache/btree.c b/drivers/md/bcache/btree.c
-index 5c93582c71cc6..634e9284b7bee 100644
---- a/drivers/md/bcache/btree.c
-+++ b/drivers/md/bcache/btree.c
-@@ -1375,7 +1375,7 @@ static int btree_gc_coalesce(struct btree *b, struct btree_op *op,
- 			if (__set_blocks(n1, n1->keys + n2->keys,
- 					 block_bytes(b->c)) >
- 			    btree_blocks(new_nodes[i]))
--				goto out_nocoalesce;
-+				goto out_unlock_nocoalesce;
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 83ad32b07cc39..eeb771ecda15b 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -1623,6 +1623,7 @@ static void quirk_pcie_mch(struct pci_dev *pdev)
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_E7520_MCH,	quirk_pcie_mch);
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_E7320_MCH,	quirk_pcie_mch);
+ DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_INTEL,	PCI_DEVICE_ID_INTEL_E7525_MCH,	quirk_pcie_mch);
++DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_HUAWEI,	0x1610,	quirk_pcie_mch);
  
- 			keys = n2->keys;
- 			/* Take the key of the node we're getting rid of */
-@@ -1404,7 +1404,7 @@ static int btree_gc_coalesce(struct btree *b, struct btree_op *op,
  
- 		if (__bch_keylist_realloc(&keylist,
- 					  bkey_u64s(&new_nodes[i]->key)))
--			goto out_nocoalesce;
-+			goto out_unlock_nocoalesce;
+ /*
+diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+index 1af616138d1dc..5547f1a0f83b2 100644
+--- a/include/linux/pci_ids.h
++++ b/include/linux/pci_ids.h
+@@ -2496,6 +2496,8 @@
+ #define PCI_DEVICE_ID_KORENIX_JETCARDF2	0x1700
+ #define PCI_DEVICE_ID_KORENIX_JETCARDF3	0x17ff
  
- 		bch_btree_node_write(new_nodes[i], &cl);
- 		bch_keylist_add(&keylist, &new_nodes[i]->key);
-@@ -1450,6 +1450,10 @@ static int btree_gc_coalesce(struct btree *b, struct btree_op *op,
- 	/* Invalidated our iterator */
- 	return -EINTR;
- 
-+out_unlock_nocoalesce:
-+	for (i = 0; i < nodes; i++)
-+		mutex_unlock(&new_nodes[i]->write_lock);
++#define PCI_VENDOR_ID_HUAWEI         	0x19e5
 +
- out_nocoalesce:
- 	closure_sync(&cl);
- 	bch_keylist_free(&keylist);
+ #define PCI_VENDOR_ID_NETRONOME		0x19ee
+ #define PCI_DEVICE_ID_NETRONOME_NFP3200	0x3200
+ #define PCI_DEVICE_ID_NETRONOME_NFP3240	0x3240
 -- 
 2.25.1
 
