@@ -2,159 +2,138 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47559C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEEF1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F2B5207FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YJBNPwOj"
+	by mail.kernel.org (Postfix) with ESMTP id 90DD7207D0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593461351;
+	bh=nQhk4ferhdpSiVYEziuRKJniwPCP21C39LLTWy0DsMY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=IYoSCYMELPCm6AQWD67DNL0jgtbplG26OcfmUNw09fGUFaxN0ZZIChhlX8ncqM76G
+	 jcqigkRAJoM0H5lErHBkHTMZXUqBff/YImBRhqxp19fYj0CwKG6cLojLg65Ugri1BU
+	 nyTd0GxrWk8uKTopHsMHYRvrfGx81/jt30pgM3oA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388851AbgF2UI6 (ORCPT
+        id S1730247AbgF2UJJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:08:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52630 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732968AbgF2UIq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 16:08:46 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9F31C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 13:08:46 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id a127so8341531pfa.12
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 13:08:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Dk9Y/T99sdQ3PfvJ9tzS88PlXk+29r6HaUnDmfo2AIs=;
-        b=YJBNPwOj22wBFdvzais+fblphrAroRFtJc3OzQ8RRLvsojoV0C3WM/buNqASfskOyT
-         zIA4r/pM0/v3TRqNNZxBpcOJGSD29gOelOc2e9T2RgAxFq53QEMhIdN7zA/nBhWS+qmm
-         Y8jRoreByc494Td0CMc5wZbjcCS87hohVxhtz7jj6Ix58a1hsPo6sl3iYvyX9dbReAa9
-         GDz4K05C9Dmut4rRqMPkKNiBr6X2XbdHSOnGE6PyNHPDAZA/Ck3K6jAQVo/GgatdQdQ4
-         L5D2QyfKR42ohh4zzhShlTZSmIgwd7VHZLY0uwIU2hNP0T3rbqObAKV+bA5s46B8iGbO
-         OuzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Dk9Y/T99sdQ3PfvJ9tzS88PlXk+29r6HaUnDmfo2AIs=;
-        b=bh6BLFq9Dcmy9m6MNJ5O25XXecoNp1onvhK90CfTL3Ay0NelnRSuMbiQFgZr7M2dE+
-         iqLP/0RXlQGqHPspH0XPJ2sHddu4Nqr8bkoYEy7ZuIktzj1clfCruamJDsmvHZVV+Xeh
-         ssJms78zX4f9AM35AHI48WPBTx1GTMl9jOlWI+nVh72w5SgBuum7eGttCwb65BxRXkgl
-         +mVYHo/I32Esm6hUB5jx6B7iSCxej7Dy1JDpQpkqwO/tBbrwIcw18FBy55OfxCgScGqA
-         wQsCfUf7WO2D8snBli3BU+e5ryaaP1zzrtD98sVfMuD/TESzh53P26qNuPLBie/BzDIb
-         ujNg==
-X-Gm-Message-State: AOAM532oe/Zuv6v4BU2RFD2Xgyyjhb/5q87j2he9TzcvitWZKlmTbtYH
-        qL+4IEx+9R/VVSxLMszL9VMj1yJzlrY=
-X-Google-Smtp-Source: ABdhPJw9k+cyjMxkvZCZ4AoSCBXsw6VLdn1xIUlzJKIwRHnIfMovFVz5gBkCQyh6fguu6A9iRlF4Gg==
-X-Received: by 2002:aa7:9906:: with SMTP id z6mr16229603pff.60.1593461326205;
-        Mon, 29 Jun 2020 13:08:46 -0700 (PDT)
-Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id 137sm534234pgg.72.2020.06.29.13.08.45
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Jun 2020 13:08:46 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 13:08:13 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Shengjiu Wang <shengjiu.wang@nxp.com>
-Cc:     timur@kernel.org, Xiubo.Lee@gmail.com, festevam@gmail.com,
-        broonie@kernel.org, alsa-devel@alsa-project.org,
-        lgirdwood@gmail.com, perex@perex.cz, tiwai@suse.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ASoC: fsl_asrc: Add an option to select internal ratio
- mode
-Message-ID: <20200629200813.GB27967@Asurada-Nvidia>
-References: <1593439115-19282-1-git-send-email-shengjiu.wang@nxp.com>
+        Mon, 29 Jun 2020 16:09:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40584 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732930AbgF2TaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:30:23 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F2CF251F3;
+        Mon, 29 Jun 2020 15:35:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593444912;
+        bh=nQhk4ferhdpSiVYEziuRKJniwPCP21C39LLTWy0DsMY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dWWNiIM/KB4Mm6FvomLCFaIEEy8RzcXrTf69YlUYddPsa8szMVhefGdFK+uxzvjLu
+         3OodYE49KsS7enrvDcyqGELn93slGKQ/NlIw12CdlPyF+Beh1BKMv/gLy9h+/tPobk
+         yfXR5LA60+OQSdGzVMzwag0U5FCK2xEYtGFYYIyM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Thierry Reding <treding@nvidia.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 008/131] i2c: tegra: Cleanup kerneldoc comments
+Date:   Mon, 29 Jun 2020 11:32:59 -0400
+Message-Id: <20200629153502.2494656-9-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
+References: <20200629153502.2494656-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1593439115-19282-1-git-send-email-shengjiu.wang@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.19.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.19.131-rc1
+X-KernelTest-Deadline: 2020-07-01T15:34+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 09:58:35PM +0800, Shengjiu Wang wrote:
-> The ASRC not only supports ideal ratio mode, but also supports
-> internal ratio mode.
-> 
-> For internal rato mode, the rate of clock source should be divided
-> with no remainder by sample rate, otherwise there is sound
-> distortion.
-> 
-> Add function fsl_asrc_select_clk() to find proper clock source for
-> internal ratio mode, if the clock source is available then internal
-> ratio mode will be selected.
-> 
-> With change, the ideal ratio mode is not the only option for user.
-> 
-> Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> ---
+From: Thierry Reding <treding@nvidia.com>
 
-> +static int fsl_asrc_select_clk(struct fsl_asrc_priv *asrc_priv,
-> +			       struct fsl_asrc_pair *pair,
-> +			       int in_rate,
-> +			       int out_rate)
-> +{
-> +	struct fsl_asrc_pair_priv *pair_priv = pair->private;
-> +	struct asrc_config *config = pair_priv->config;
-> +	int rate[2], select_clk[2]; /* Array size 2 means IN and OUT */
-> +	int clk_rate, clk_index;
-> +	int i = 0, j = 0;
-> +	bool clk_sel[2];
-> +
-> +	rate[0] = in_rate;
-> +	rate[1] = out_rate;
-> +
-> +	/* Select proper clock source for internal ratio mode */
-> +	for (j = 0; j < 2; j++) {
-> +		for (i = 0; i < ASRC_CLK_MAP_LEN; i++) {
-> +			clk_index = asrc_priv->clk_map[j][i];
-> +			clk_rate = clk_get_rate(asrc_priv->asrck_clk[clk_index]);
+[ Upstream commit c990bbafdb11c608bba2d529f72ded9bdff88678 ]
 
-+			/* Only match a perfect clock source with no remainder */
+Some of the kerneldoc uses a strange spelling for abbreviations. Turn
+them into all-uppercase and clean up some whitespace issues while at it.
 
-> +			if (clk_rate != 0 && (clk_rate / rate[j]) <= 1024 &&
-> +			    (clk_rate % rate[j]) == 0)
-> +				break;
-> +		}
-> +
-> +		if (i == ASRC_CLK_MAP_LEN) {
-> +			select_clk[j] = OUTCLK_ASRCK1_CLK;
-> +			clk_sel[j] = false;
-> +		} else {
-> +			select_clk[j] = i;
-> +			clk_sel[j] = true;
-> +		}
-> +	}
-> +
-> +	/* Switch to ideal ratio mode if there is no proper clock source */
-> +	if (!clk_sel[IN] || !clk_sel[OUT])
-> +		select_clk[IN] = INCLK_NONE;
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/i2c/busses/i2c-tegra.c | 23 +++++++++++------------
+ 1 file changed, 11 insertions(+), 12 deletions(-)
 
-Could get rid of clk_set:
+diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+index 47d196c026ba6..9a6b9a1b88aef 100644
+--- a/drivers/i2c/busses/i2c-tegra.c
++++ b/drivers/i2c/busses/i2c-tegra.c
+@@ -145,8 +145,8 @@ enum msg_end_type {
+  * @has_continue_xfer_support: Continue transfer supports.
+  * @has_per_pkt_xfer_complete_irq: Has enable/disable capability for transfer
+  *		complete interrupt per packet basis.
+- * @has_single_clk_source: The i2c controller has single clock source. Tegra30
+- *		and earlier Socs has two clock sources i.e. div-clk and
++ * @has_single_clk_source: The I2C controller has single clock source. Tegra30
++ *		and earlier SoCs have two clock sources i.e. div-clk and
+  *		fast-clk.
+  * @has_config_load_reg: Has the config load register to load the new
+  *		configuration.
+@@ -155,7 +155,6 @@ enum msg_end_type {
+  *		applicable if there is no fast clock source i.e. single clock
+  *		source.
+  */
+-
+ struct tegra_i2c_hw_feature {
+ 	bool has_continue_xfer_support;
+ 	bool has_per_pkt_xfer_complete_irq;
+@@ -170,22 +169,22 @@ struct tegra_i2c_hw_feature {
+ };
+ 
+ /**
+- * struct tegra_i2c_dev	- per device i2c context
++ * struct tegra_i2c_dev - per device I2C context
+  * @dev: device reference for power management
+- * @hw: Tegra i2c hw feature.
+- * @adapter: core i2c layer adapter information
+- * @div_clk: clock reference for div clock of i2c controller.
+- * @fast_clk: clock reference for fast clock of i2c controller.
++ * @hw: Tegra I2C HW feature
++ * @adapter: core I2C layer adapter information
++ * @div_clk: clock reference for div clock of I2C controller
++ * @fast_clk: clock reference for fast clock of I2C controller
+  * @base: ioremapped registers cookie
+- * @cont_id: i2c controller id, used for for packet header
+- * @irq: irq number of transfer complete interrupt
+- * @is_dvc: identifies the DVC i2c controller, has a different register layout
++ * @cont_id: I2C controller ID, used for packet header
++ * @irq: IRQ number of transfer complete interrupt
++ * @is_dvc: identifies the DVC I2C controller, has a different register layout
+  * @msg_complete: transfer completion notifier
+  * @msg_err: error code for completed message
+  * @msg_buf: pointer to current message data
+  * @msg_buf_remaining: size of unsent data in the message buffer
+  * @msg_read: identifies read transfers
+- * @bus_clk_rate: current i2c bus clock rate
++ * @bus_clk_rate: current I2C bus clock rate
+  */
+ struct tegra_i2c_dev {
+ 	struct device *dev;
+-- 
+2.25.1
 
-	for (j) {
-		for (i) {
-			if (match)
-				break;
-		}
-
-		clk[j] = i;
-	}
-
-	if (clk[IN] == ASRC_CLK_MAP_LEN || clk[OUT] == ASRC_CLK_MAP_LEN)
-
-And it only overrides clk[IN] setting but leaving clk[OUT] to
-to the searching result. This means that clk[OUT] may be using
-a clock source other than OUTCLK_ASRCK1_CLK if sel[IN] happens
-to be false while sel[OUT] happens to be true. Not sure if it
-is intended...but I feel it would probably be safer to use the
-previous settings: INCLK_NONE + OUTCLK_ASRCK1_CLK?
