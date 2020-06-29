@@ -2,108 +2,122 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31ED0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:22:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D7A2C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0961820656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:22:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462164;
-	bh=UHelsFg/AqUVtCQxeJp1oOdDdEIQu5lnGE6njx6+GwM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q0cFJh06VIbCt3sCN/aUlb9dqbYz2cDXdLL6oxdViLjTUi6ZBRgqOumcEZkLUeBNS
-	 X+uS2T7sJI+gE7T5ua+pr5rjMgoD6c6M25jXqKn0JmLZHPWokMrv4PQN3lVaTnypez
-	 y5j1hDDFY5YdSayAIFK614RsxD5zNeBDvihWwNiU=
+	by mail.kernel.org (Postfix) with ESMTP id 730C420656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:22:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730823AbgF2UWl (ORCPT
+        id S1732018AbgF2UWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:22:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37022 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732579AbgF2TZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 16:22:45 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:55586 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732564AbgF2TZd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:33 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35FAF253BA;
-        Mon, 29 Jun 2020 15:41:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445285;
-        bh=UHelsFg/AqUVtCQxeJp1oOdDdEIQu5lnGE6njx6+GwM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2ApNeCEfhwac9dOvfNyGSjQdGebaew/cpaMOMHSGuHy41ij2emVNQ9hyU+XFO+iCD
-         kLC4Z2fHkR1qo9e1QA+i4M6apAyn2k4FEwFDqHdJGDilndUecgpef4uvAtrD6l1LM2
-         pgY+HfMpQqCW6wCseJyM70+i7yJndMEr3r+bdUqw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 063/191] ASoC: fsl_asrc_dma: Fix dma_chan leak when config DMA channel failed
-Date:   Mon, 29 Jun 2020 11:37:59 -0400
-Message-Id: <20200629154007.2495120-64-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
-References: <20200629154007.2495120-1-sashal@kernel.org>
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-10-CAqVtc7cNsK1P-8WmJmePQ-1; Mon, 29 Jun 2020 09:21:23 +0100
+X-MC-Unique: CAqVtc7cNsK1P-8WmJmePQ-1
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 29 Jun 2020 09:21:22 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 29 Jun 2020 09:21:22 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Linus Torvalds' <torvalds@linux-foundation.org>
+CC:     Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>,
+        "Luis Chamberlain" <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        "Iurii Zaikin" <yzaikin@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: RE: [PATCH 03/11] fs: add new read_uptr and write_uptr file
+ operations
+Thread-Topic: [PATCH 03/11] fs: add new read_uptr and write_uptr file
+ operations
+Thread-Index: AQHWSlL8Fz5PlOyONku9ShNOCTqEYajsST7AgABSmoCAAqgYcA==
+Date:   Mon, 29 Jun 2020 08:21:22 +0000
+Message-ID: <fcd951e164a3407295971e3a4236b418@AcuMS.aculab.com>
+References: <20200624162901.1814136-1-hch@lst.de>
+ <20200624162901.1814136-4-hch@lst.de>
+ <CAHk-=wit9enePELG=-HnLsr0nY5bucFNjqAqWoFTuYDGR1P4KA@mail.gmail.com>
+ <20200624175548.GA25939@lst.de>
+ <CAHk-=wi_51SPWQFhURtMBGh9xgdo74j1gMpuhdkddA2rDMrt1Q@mail.gmail.com>
+ <f50b9afa5a2742babe0293d9910e6bf4@AcuMS.aculab.com>
+ <CAHk-=wjxQczqZ96esvDrH5QZsLg6azXCGDgo+Bmm6r8t2ssasg@mail.gmail.com>
+In-Reply-To: <CAHk-=wjxQczqZ96esvDrH5QZsLg6azXCGDgo+Bmm6r8t2ssasg@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.229-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.9.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.9.229-rc1
-X-KernelTest-Deadline: 2020-07-01T15:39+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=C51A453 smtp.mailfrom=david.laight@aculab.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-
-[ Upstream commit 36124fb19f1ae68a500cd76a76d40c6e81bee346 ]
-
-fsl_asrc_dma_hw_params() invokes dma_request_channel() or
-fsl_asrc_get_dma_channel(), which returns a reference of the specified
-dma_chan object to "pair->dma_chan[dir]" with increased refcnt.
-
-The reference counting issue happens in one exception handling path of
-fsl_asrc_dma_hw_params(). When config DMA channel failed for Back-End,
-the function forgets to decrease the refcnt increased by
-dma_request_channel() or fsl_asrc_get_dma_channel(), causing a refcnt
-leak.
-
-Fix this issue by calling dma_release_channel() when config DMA channel
-failed.
-
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Link: https://lore.kernel.org/r/1590415966-52416-1-git-send-email-xiyuyang19@fudan.edu.cn
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/soc/fsl/fsl_asrc_dma.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/sound/soc/fsl/fsl_asrc_dma.c b/sound/soc/fsl/fsl_asrc_dma.c
-index dc30d780f8742..3fcf174b99d30 100644
---- a/sound/soc/fsl/fsl_asrc_dma.c
-+++ b/sound/soc/fsl/fsl_asrc_dma.c
-@@ -243,6 +243,7 @@ static int fsl_asrc_dma_hw_params(struct snd_pcm_substream *substream,
- 	ret = dmaengine_slave_config(pair->dma_chan[dir], &config_be);
- 	if (ret) {
- 		dev_err(dev, "failed to config DMA channel for Back-End\n");
-+		dma_release_channel(pair->dma_chan[dir]);
- 		return ret;
- 	}
- 
--- 
-2.25.1
+RnJvbTogTGludXMgVG9ydmFsZHMNCj4gU2VudDogMjcgSnVuZSAyMDIwIDE3OjMzDQo+IE9uIFNh
+dCwgSnVuIDI3LCAyMDIwIGF0IDM6NDkgQU0gRGF2aWQgTGFpZ2h0IDxEYXZpZC5MYWlnaHRAYWN1
+bGFiLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiA+IEp1c3Qga2VlcCB0aGUgZXhpc3RpbmcgInNldF9m
+cygpIi4gSXQncyBub3QgaGFybWZ1bCBpZiBpdCdzIG9ubHkgdXNlZA0KPiA+ID4gb2NjYXNpb25h
+bGx5LiBXZSBzaG91bGQgcmVuYW1lIGl0IG9uY2UgaXQncyByYXJlIGVub3VnaCwgdGhvdWdoLg0K
+PiA+DQo+ID4gQW0gSSByaWdodCBpbiB0aGlua2luZyB0aGF0IGl0IGp1c3Qgc2V0cyBhIGZsYWcg
+aW4gJ2N1cnJlbnQnID8NCj4gDQo+IEJhc2ljYWxseSwgeWVzLiBUaGF0J3Mgd2hhdCBpdCBoYXMg
+YWx3YXlzIGRvbmUuDQoNCkkgY291bGQgY2hlY2ssIGJ1dCBJIHN1c3BlY3QgaXQgc2V0cyB3aGF0
+IFRBU0tfU0laRSB1c2VzIHRvIH4wdQ0Kc28gdGhhdCBhY2Nlc3Nfb2soKSBjYW4ndCBmYWlsLg0K
+DQo+IFdlbGwgImFsd2F5cyIgaXMgbm90IHRydWUgLSBpdCB1c2VkIHRvIHNldCB0aGUgJWZzIHNl
+Z21lbnQgcmVnaXN0ZXINCj4gb3JpZ2luYWxseSAodGh1cyB0aGUgbmFtZSksIGJ1dCBfY29uY2Vw
+dHVhbGx5XyBpdCBzZXRzIGEgZmxhZyBmb3INCj4gInNob3VsZCB1c2VyIGFjY2Vzc2VzIGJlIGtl
+cm5lbCBhY2Nlc3NlcyBpbnN0ZWFkIi4NCj4gDQo+IE9uIHg4NiAtIGFuZCBtb3N0IG90aGVyIGFy
+Y2hpdGVjdHVyZXMgd2hlcmUgdXNlciBzcGFjZSBhbmQga2VybmVsDQo+IHNwYWNlIGFyZSBpbiB0
+aGUgc2FtZSBhZGRyZXNzIHNwYWNlIGFuZCBhY2Nlc3NlZCB3aXRoIHRoZSBzYW1lDQo+IGluc3Ry
+dWN0aW9ucywgdGhhdCBoYXMgdGhlbiBiZWVuIGltcGxlbWVudGVkIGFzIGp1c3QgYSAid2hhdCBp
+cyB0aGUNCj4gbGltaXQgZm9yIGFuIGFjY2VzcyIuDQo+IA0KPiBPbiBvdGhlciBhcmNoaXRlY3R1
+cmVzIC0gYXJjaGl0ZWN0dXJlcyB0aGF0IG5lZWQgZGlmZmVyZW50IGFjY2Vzcw0KPiBtZXRob2Rz
+IChvciBkaWZmZXJlbnQgZmxhZ3MgdG8gdGhlIGxvYWQvc3RvcmUgaW5zdHJ1Y3Rpb24pIC0gaXQn
+cyBhbg0KPiBhY3R1YWwgZmxhZyB0aGF0IGNoYW5nZXMgd2hpY2ggYWNjZXNzIG1ldGhvZCB5b3Ug
+dXNlLg0KPiANCj4gPiBBbHRob3VnaCBJIGRvbid0IHJlbWVtYmVyIGFjY2Vzc19vaygpIGRvaW5n
+IGEgc3VpdGFibGUgY2hlY2sNCj4gPiAod291bGQgbmVlZCB0byBiZSAoYWRkcmVzcyAtIGJhc2Up
+IDwgbGltaXQpLg0KPiANCj4gU28gYWdhaW4sIG9uIHRoZSBhcmNoaXRlY3R1cmVzIHdpdGggYSB1
+bmlmaWVkIGFkZHJlc3Mgc3BhY2UsDQo+IGFjY2Vzc19vaygpIGlzIGV4YWN0bHkgdGhhdCAiYWRk
+cmVzcyArIGFjY2Vzc19zaXplIDw9IGxpbWl0IiwgYWx0aG91Z2gNCj4gb2Z0ZW4gZG9uZSB3aXRo
+IHNvbWUgaW5saW5lIGFzbSBqdXN0IHRvIGdldCB0aGUgb3ZlcmZsb3cgY2FzZSBkb25lDQo+IGVm
+ZmljaWVudGx5Lg0KDQpJIHJlYWxpc2VkIGFmdGVyd2FyZHMgdGhhdCB0aGUgJ2tlcm5lbCBhZGRy
+ZXNzIGlzIGFjdHVhbGx5IHVzZXInDQpjaGVjayBpc24ndCByZWFsbHkgZG9uZSBvbiBhcmNoaXRl
+Y3R1cmVzIGxpa2UgeDg2IHVudGlsIHN0YWMvY2xhYy4NCg0KSSBoYWQgYW5vdGhlciB0aG91Z2h0
+Lg0KV2hpbGUgc2V0dGluZyB1cCBhIGZ1bGwtYmxvd24gc2NhdHRlci1nYXRoZXIgJ2l0ZXInIHN0
+cnVjdHVyZSBmb3INCmZ1bmN0aW9ucyBsaWtlIFtnc11ldHNvY2tvcHQsIGlvY3RsIGFuZCBmY250
+bCBpcyBPVFQgYW5kIHByb2JhYmx5DQptZWFzdXJhYmx5IGV4cGVuc2l2ZSBhIGxpZ2h0d2VpZ2h0
+ICdidWZmZXInIHN0cnVjdHVyZSB0aGF0IGp1c3QNCmNvbnRhaW5lZCBhZGRyZXNzLCBsZW5ndGgg
+YW5kIHVzZXIva2VybmVsIGZsYWcgY291bGQgYmUgdXNlZC4NCg0KQWx0aG91Z2ggdGhlIHVzZXMg
+d291bGQgbmVlZCBhbiBleHRyYSBsZXZlbCBvZiBpbmRpcmVjdGlvbiB0aGlzDQp3b3VsZCBiZSBv
+ZmZzZXQgYnkgcmVkdWNpbmcgdGhlIG51bWJlciBvZiBwYXJhbWV0ZXJzIHBhc3NlZA0KdGhyb3Vn
+aCBhbGwgdGhlIGxheWVycy4NCg0KLi4uDQo+IEkgdGhvdWdodCB0aGVyZSB3YXMganVzdCBvbmUg
+dmVyeSBzcGVjaWZpYyBjYXNlIG9mICJvaCwgaW4gY2VydGFpbg0KPiBjYXNlcyBvZiBzZXRzb2Nr
+b3B0IHdlIGRvbid0IGtub3cgd2hhdCBzaXplIHRoaXMgYWRkcmVzcyBpcyBhbmQgb3B0bGVuDQo+
+IGlzIGlnbm9yZWQiLCBzbyB3ZSBoYXZlIHRvIGp1c3QgcGFzcyB0aGUgcG9pbnRlciBkb3duIHRv
+IHRoZSBwcm90b2NvbCwNCj4gd2hpY2ggaXMgdGhlIHBvaW50IHRoYXQga25vd3MgaG93IG11Y2gg
+b2YgYW4gYWRkcmVzcyBpdCB3YW50cy4uDQoNCkkgY2FuJ3QgaGVscCBmZWVsaW5nIHRoYXQgdXNl
+cnNwYWNlIHBhc3NlcyBhIHN1aXRhYmxlIGxlbmd0aCBidXQNCnRoZSBrZXJuZWwgZG9lc24ndCB2
+ZXJpZnkgaXQuDQoNCkl0IGlzIHdvcnNlIHRoYW4gdGhhdCwgb25lIG9mIHRoZSBTQ1RQIGdldHNv
+Y2tvcHQoKSBjYWxscyBoYXMgdG8gcmV0dXJuDQphIGxlbmd0aCB0aGF0IGlzIHNob3J0ZXIgdGhh
+biB0aGUgYnVmZmVyIGl0IHdyb3RlLg0KDQpTbyBhbnkgYnVmZmVyIGRlc2NyaXB0b3IgbGVuZ3Ro
+IHdvdWxkIGhhdmUgdG8gYmUgYWR2aXNvcnkuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFk
+ZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywg
+TUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
 
