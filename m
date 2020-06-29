@@ -2,135 +2,117 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F7BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E21BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 398E8206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:17:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bWI/Qpg8"
+	by mail.kernel.org (Postfix) with ESMTP id 72FD1206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:17:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593465464;
+	bh=2VjGLijjtJnODGSkJ1SgcA2IUwDBP0kg9dkApMQuTMI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MznpqryNu9ip+KXfA3ttZpr+cPWvYDNolRt7w8pMchce5mLLgvHfgohjioQp8rUX7
+	 VL+QyJowtnEarZBsnzrWxoEpdtzV8PSVTiHIzNbjTlby43BuSItNGt876RWTBptTJ+
+	 8EhFBOYjzw+9YdtbVQQhznZeXFhqSxM7zURw58no=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390579AbgF2VRk (ORCPT
+        id S2390760AbgF2VRn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:17:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40042 "EHLO
+        Mon, 29 Jun 2020 17:17:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729536AbgF2Swv (ORCPT
+        with ESMTP id S1729801AbgF2Swv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:52:51 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56515C02E2C9
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:04:48 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id z15so5406904wrl.8
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:04:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=awbvdf/o8WJSBn2jZAYd3v4hbJ6rKznLBA9Uh+6bpSY=;
-        b=bWI/Qpg8KHMiyukEPTm6FGM05U/4gMMkQHOHo8Nz82wB1fM52NfEp9sQEYJxW2Admn
-         36jXiYmOkyXpV+MMfSlpZT8Z9s9TZYZBTkr+WU+AkV6levgYIww9eFqKcfy+b7aov0Ar
-         aSA6O4aQYnrIzAVcN2+hH+w3Fx7vH5ROlRP5Q22Uxuts5CNaQr/iw9JPKy3+nzLruCX5
-         rCb9EPkFb0B6QKG1l2+sEq1zz5+b6EgH7+TAMVkNi3o6cKbwRjBq67YFLhSGVkXgCcOv
-         8znzvVP02lrg2wbkpchzZYSHLbUR3k6W/ri5p3Tqp9XejF7alIJ68AbMxV5b4psyB5Oe
-         c7RA==
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A625DC02A556
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 06:06:47 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id q7so4699983ljm.1
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 06:06:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=awbvdf/o8WJSBn2jZAYd3v4hbJ6rKznLBA9Uh+6bpSY=;
-        b=ERnoRm3L0XFRDtuB00dcXFykdkVsWfGuu1IUWy4IZSe6nqCLMelczfBw6kqhEnCSO9
-         9XVO3j6xuSRJrvknxNub8cNFITfRZM9xIyTXSHXPI6q1D472GB3YUmwx5qvLGJ/SzfMB
-         HU/4K3iOcsnLOf6lCApah0TdX3DJmUcgBlXmtWEQkk9XjdThFvW9ZIQ+JLjZRzfQdWKq
-         0HSyNAxXiGIfSawFNscZrpW8INf2jjVwi7CsBEj+Dmxpgje7utZ+dLDXZRGnEdddbETV
-         CjsBVdIpLzoqJMu4vDNmRtBWFBVIqUcxGGSqSsxqHnemuG8VgeRP4qLYJE1OY/b3VP0p
-         jySw==
-X-Gm-Message-State: AOAM531dFpn3zb6sZgsy9aLhtLIqR2YU1uGsehokSTJYavkPzIacKhim
-        7LsKoxH2ZJ2/n8TVJX6rZmLuXA==
-X-Google-Smtp-Source: ABdhPJwlYoQKfNVdDrit+2utE+6X7YuQwjowoDK8uijEIVf5IcJ4q9wfncz9T8GKzXHC/FOuq3rmSw==
-X-Received: by 2002:a5d:4603:: with SMTP id t3mr18518133wrq.38.1593439487048;
-        Mon, 29 Jun 2020 07:04:47 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id p14sm15394928wrj.14.2020.06.29.07.04.46
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=YWzRxTXrUasbGXUFwSr2i2nPcUT+2MUUycvRS8lYyrM=;
+        b=hqb37tRcYrufOBW+bXtELSQb8eYyvV7u0oFo6Bx5fAjCfViqRn2BQVIz2frQYJdkXB
+         gXpzQ5MoWm0Cu3sX93zhH3N79e3A3T0Htjl3gfeybeV0vGV0SWiy4c4HY2OIF5jIfSII
+         CHaWmMFuJ1TDwImjAOscqtMLSVzUGDaIHDRDzKpofeu64bwHeZcxFo66gfPEFMTQzNCf
+         1L/EZ0Uocdy4G2ludZCWovpgryyPQgRY1qUPLbk5iJXVkHMk98wg8Ul8TdMjMr/8oNVO
+         Hcbl2h5puCqxc3+MftLIHIkeIs44shq1RMsHbycGOXbBsg+aXArbwiordsyLNyNi26+n
+         +2NA==
+X-Gm-Message-State: AOAM5339x94fU/prGU2zQFcGqf7c6tM1Yb4Z6nzxiwzoBaDP0alBL2Vz
+        MilQXJlZa74jOv9hBMv4BOs=
+X-Google-Smtp-Source: ABdhPJwQFKL4/TMXmQS8Je9ya6myBWYfn8LiUhyH3xk8GCLpw4qDQMLOc/6BbQ7ZvG4DSGtm/UrBtQ==
+X-Received: by 2002:a2e:b55a:: with SMTP id a26mr3583999ljn.349.1593436005924;
+        Mon, 29 Jun 2020 06:06:45 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id f22sm7456128ljn.66.2020.06.29.06.06.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 07:04:46 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     arnd@arndb.de, gregkh@linuxfoundation.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        J Freyensee <james_p_freyensee@linux.intel.com>
-Subject: [PATCH 01/20] misc: pti: Repair kerneldoc formatting issues
-Date:   Mon, 29 Jun 2020 15:04:23 +0100
-Message-Id: <20200629140442.1043957-2-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629140442.1043957-1-lee.jones@linaro.org>
-References: <20200629140442.1043957-1-lee.jones@linaro.org>
+        Mon, 29 Jun 2020 06:06:45 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@kernel.org>)
+        id 1jptUi-0007Vk-Lx; Mon, 29 Jun 2020 15:06:45 +0200
+Date:   Mon, 29 Jun 2020 15:06:44 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Baolin Wang <baolin.wang7@gmail.com>,
+        Orson Zhai <orsonzhai@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Chunyan Zhang <zhang.lyra@gmail.com>
+Subject: Re: [PATCH 4/5] mfd: sprd-sc27xx-spi: Fix divide by zero when
+ allocating register offset/mask
+Message-ID: <20200629130644.GU3334@localhost>
+References: <20200629123215.1014747-1-lee.jones@linaro.org>
+ <20200629123215.1014747-5-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200629123215.1014747-5-lee.jones@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-W=1 kernel builds report a lack of descriptions for various
-function arguments.  In reality they are documented, but the
-formatting was not as expected '@.*:'.  Instead, '-'s were
-used as separators.
+On Mon, Jun 29, 2020 at 01:32:14PM +0100, Lee Jones wrote:
+> Since ddata->irqs[] is already zeroed when allocated by devm_kcalloc() and
+> dividing 0 by anything is still 0, there is no need to re-assign
+> ddata->irqs[i].* values.  Instead, it should be safe to begin at 1.
+> 
+> This fixes the following W=1 warning:
+> 
+>  drivers/mfd/sprd-sc27xx-spi.c:255 sprd_pmic_probe() debug: sval_binop_unsigned: divide by zero
+> 
+> Cc: Orson Zhai <orsonzhai@gmail.com>
+> Cc: Baolin Wang <baolin.wang7@gmail.com>
+> Cc: Chunyan Zhang <zhang.lyra@gmail.com>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  drivers/mfd/sprd-sc27xx-spi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mfd/sprd-sc27xx-spi.c b/drivers/mfd/sprd-sc27xx-spi.c
+> index c305e941e435c..694a7d429ccff 100644
+> --- a/drivers/mfd/sprd-sc27xx-spi.c
+> +++ b/drivers/mfd/sprd-sc27xx-spi.c
+> @@ -251,7 +251,7 @@ static int sprd_pmic_probe(struct spi_device *spi)
+>  		return -ENOMEM;
+>  
+>  	ddata->irq_chip.irqs = ddata->irqs;
+> -	for (i = 0; i < pdata->num_irqs; i++) {
+> +	for (i = 1; i < pdata->num_irqs; i++) {
+>  		ddata->irqs[i].reg_offset = i / pdata->num_irqs;
+>  		ddata->irqs[i].mask = BIT(i % pdata->num_irqs);
+>  	}
 
-This change fixes the following warnings:
+This doesn't look right either.
 
- drivers/misc/pti.c:748: warning: Function parameter or member 'port' not described in 'pti_port_activate'
- drivers/misc/pti.c:748: warning: Function parameter or member 'tty' not described in 'pti_port_activate'
- drivers/misc/pti.c:765: warning: Function parameter or member 'port' not described in 'pti_port_shutdown'
- drivers/misc/pti.c:793: warning: Function parameter or member 'pdev' not described in 'pti_pci_probe'
- drivers/misc/pti.c:793: warning: Function parameter or member 'ent' not described in 'pti_pci_probe'
+First, the loop is never executed if num_irqs is zero.
 
-Cc: J Freyensee <james_p_freyensee@linux.intel.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/misc/pti.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Second, the current code looks bogus too as reg_offset is always set to
+zero and mask to BIT(i)...
 
-diff --git a/drivers/misc/pti.c b/drivers/misc/pti.c
-index 07e9da7918ebd..e19988766aa69 100644
---- a/drivers/misc/pti.c
-+++ b/drivers/misc/pti.c
-@@ -733,8 +733,8 @@ static struct console pti_console = {
-  * pti_port_activate()- Used to start/initialize any items upon
-  * first opening of tty_port().
-  *
-- * @port- The tty port number of the PTI device.
-- * @tty-  The tty struct associated with this device.
-+ * @port: The tty port number of the PTI device.
-+ * @tty:  The tty struct associated with this device.
-  *
-  * Returns:
-  *	always returns 0
-@@ -754,7 +754,7 @@ static int pti_port_activate(struct tty_port *port, struct tty_struct *tty)
-  * pti_port_shutdown()- Used to stop/shutdown any items upon the
-  * last tty port close.
-  *
-- * @port- The tty port number of the PTI device.
-+ * @port: The tty port number of the PTI device.
-  *
-  * Notes: The primary purpose of the PTI tty port 0 is to hook
-  * the syslog daemon to it; thus this port will be open for a
-@@ -780,8 +780,8 @@ static const struct tty_port_operations tty_port_ops = {
-  * pti_pci_probe()- Used to detect pti on the pci bus and set
-  *		    things up in the driver.
-  *
-- * @pdev- pci_dev struct values for pti.
-- * @ent-  pci_device_id struct for pti driver.
-+ * @pdev: pci_dev struct values for pti.
-+ * @ent:  pci_device_id struct for pti driver.
-  *
-  * Returns:
-  *	0 for success
--- 
-2.25.1
-
+Johan
