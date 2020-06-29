@@ -4,55 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A06C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:12:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C03CEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1A130206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:12:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4119206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:12:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593457964;
-	bh=xh3UdEMZpdGNd9bxEHkP9QErM1NQotGeJT+jSfjzBbE=;
+	s=default; t=1593457968;
+	bh=H4bLp+NXSxDVf8zAgb8bhAnGb5CXhl2QrEc45pTUjk4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qqQ4L0LzccKPgmG7H17YXhLJav96mD+5EPONGc0xwet+dhcFqe/WljWeOklAm3qf7
-	 ML88hUw1d2Pkdknk3SsKPypvTqvklAOREfyc+UsJ1S/PDxbaG/1oQybvy7tiU5B6mV
-	 57PorLYss4X43lbRZx7ma5r+1g3fyH0/Kooc54bc=
+	b=FCFyWgSjmF9H0thGwm0LLRAJQhhRse4yn719tOJnhwG8cELHA0LG9ETL1I1U+JMJq
+	 KteJiEjJKbGMT8KhCoNBt/5glggl75DJdzmcPfRAIVZRqA9T+BIaF2TMD+ejXxgB5m
+	 3nqFDX9s7HZ+fP/IR4jJxo/b/5CIE4n0I83i70Uo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731082AbgF2TMm (ORCPT
+        id S1731134AbgF2TMr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:12:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53772 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:12:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730964AbgF2TKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730968AbgF2TKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:10:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B90E1254EF;
-        Mon, 29 Jun 2020 15:54:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB9EE254A6;
+        Mon, 29 Jun 2020 15:53:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446048;
-        bh=xh3UdEMZpdGNd9bxEHkP9QErM1NQotGeJT+jSfjzBbE=;
+        s=default; t=1593446000;
+        bh=H4bLp+NXSxDVf8zAgb8bhAnGb5CXhl2QrEc45pTUjk4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D1ts4VzD9eOQiRhmVuAzApqad+OlcPExK7aSLvxZMn/NuGwaTKn++AuJKcLdq3xYS
-         zt4B01wByldP5SnPw0GPmAGGg3XlQQSw4+TwdP4W34oQKpN+6Qf1FiqfTOOCnwrFQj
-         dXJ3L2sBKQBaebM7zwfe/+lcZz3fy/dsGz0K+H1w=
+        b=DrjgGUxASs1xU9EfzrSc7h0cEyDaDpWLWYrtASy/Osoq1niqG1kwRvKsOf8sNAFaQ
+         R/j19Smb9Hr45RPmN5hdklAmqc6RfSBnyOMApUI+xW2FKI5SWOExI6Ic8lVOv4FonW
+         iVuuucKGSQhCRB34ZXNXTkGOKGosqMgifA/UmKio=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+Cc:     Oliver Neukum <oneukum@suse.com>,
+        syzbot+be5b5f86a162a6c281e6@syzkaller.appspotmail.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 051/135] include/linux/bitops.h: avoid clang shift-count-overflow warnings
-Date:   Mon, 29 Jun 2020 11:51:45 -0400
-Message-Id: <20200629155309.2495516-52-sashal@kernel.org>
+Subject: [PATCH 4.4 008/135] usblp: poison URBs upon disconnect
+Date:   Mon, 29 Jun 2020 11:51:02 -0400
+Message-Id: <20200629155309.2495516-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -71,63 +66,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Oliver Neukum <oneukum@suse.com>
 
-[ Upstream commit bd93f003b7462ae39a43c531abca37fe7073b866 ]
+[ Upstream commit 296a193b06120aa6ae7cf5c0d7b5e5b55968026e ]
 
-Clang normally does not warn about certain issues in inline functions when
-it only happens in an eliminated code path. However if something else
-goes wrong, it does tend to complain about the definition of hweight_long()
-on 32-bit targets:
+syzkaller reported an URB that should have been killed to be active.
+We do not understand it, but this should fix the issue if it is real.
 
-  include/linux/bitops.h:75:41: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
-          return sizeof(w) == 4 ? hweight32(w) : hweight64(w);
-                                                 ^~~~~~~~~~~~
-  include/asm-generic/bitops/const_hweight.h:29:49: note: expanded from macro 'hweight64'
-   define hweight64(w) (__builtin_constant_p(w) ? __const_hweight64(w) : __arch_hweight64(w))
-                                                  ^~~~~~~~~~~~~~~~~~~~
-  include/asm-generic/bitops/const_hweight.h:21:76: note: expanded from macro '__const_hweight64'
-   define __const_hweight64(w) (__const_hweight32(w) + __const_hweight32((w) >> 32))
-                                                                             ^  ~~
-  include/asm-generic/bitops/const_hweight.h:20:49: note: expanded from macro '__const_hweight32'
-   define __const_hweight32(w) (__const_hweight16(w) + __const_hweight16((w) >> 16))
-                                                  ^
-  include/asm-generic/bitops/const_hweight.h:19:72: note: expanded from macro '__const_hweight16'
-   define __const_hweight16(w) (__const_hweight8(w)  + __const_hweight8((w)  >> 8 ))
-                                                                         ^
-  include/asm-generic/bitops/const_hweight.h:12:9: note: expanded from macro '__const_hweight8'
-            (!!((w) & (1ULL << 2))) +     \
-
-Adding an explicit cast to __u64 avoids that warning and makes it easier
-to read other output.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Link: http://lkml.kernel.org/r/20200505135513.65265-1-arnd@arndb.de
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Reported-by: syzbot+be5b5f86a162a6c281e6@syzkaller.appspotmail.com
+Link: https://lore.kernel.org/r/20200507085806.5793-1-oneukum@suse.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/bitops.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/class/usblp.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/bitops.h b/include/linux/bitops.h
-index ce2bb045b3fdd..9b9711ea267a4 100644
---- a/include/linux/bitops.h
-+++ b/include/linux/bitops.h
-@@ -59,7 +59,7 @@ static inline int get_count_order(unsigned int count)
+diff --git a/drivers/usb/class/usblp.c b/drivers/usb/class/usblp.c
+index 07c3c3449147f..c578d64edc153 100644
+--- a/drivers/usb/class/usblp.c
++++ b/drivers/usb/class/usblp.c
+@@ -481,7 +481,8 @@ static int usblp_release(struct inode *inode, struct file *file)
+ 	usb_autopm_put_interface(usblp->intf);
  
- static __always_inline unsigned long hweight_long(unsigned long w)
- {
--	return sizeof(w) == 4 ? hweight32(w) : hweight64(w);
-+	return sizeof(w) == 4 ? hweight32(w) : hweight64((__u64)w);
+ 	if (!usblp->present)		/* finish cleanup from disconnect */
+-		usblp_cleanup(usblp);
++		usblp_cleanup(usblp);	/* any URBs must be dead */
++
+ 	mutex_unlock(&usblp_mutex);
+ 	return 0;
+ }
+@@ -1397,9 +1398,11 @@ static void usblp_disconnect(struct usb_interface *intf)
+ 
+ 	usblp_unlink_urbs(usblp);
+ 	mutex_unlock(&usblp->mut);
++	usb_poison_anchored_urbs(&usblp->urbs);
+ 
+ 	if (!usblp->used)
+ 		usblp_cleanup(usblp);
++
+ 	mutex_unlock(&usblp_mutex);
  }
  
- /**
 -- 
 2.25.1
 
