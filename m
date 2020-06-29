@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C73C0C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FE5C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:56:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A36B2206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:56:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D347E206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:56:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467763;
-	bh=Ib9uaJRwu7PjqRSULrc/RVTtx7kBtkPd2bYReuBdmiw=;
+	s=default; t=1593467766;
+	bh=0R3XCmUNuL+kYoppJ/RgTC3SwhrEGN//D49RSvOc3oM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YczS4v+8kdMK7aJwg/KI5TmOa0ZfobVlhsTPfc/CxkfQtBWQbjybvY5QdNTKSxG1q
-	 FheSpxxuVGqiuk3QNE2cicxIkbWv0n9FsMoIjEEY+W96cOaZVZrOqbL/akFJWGTR3W
-	 giqhgiosK6xm3wZO4FL81tGALX8sd1T5wfUbQWeM=
+	b=MzzBfgK1ywi3XBo668vVvBP2X9Z5snywT0JORDcH6DaZvNsZTExePwK/nxjE3uBOe
+	 bFdxhkgpK3xd63cRe60fuJCYjKQG82Nar8jnuGpyZ+Y0YPwk3YkPTHKgJL9FAF9Ljp
+	 uaQvsuSc3C0MnYHh4ngk82u7uen/heg+0wExwgrU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404438AbgF2V4C (ORCPT
+        id S2404540AbgF2V4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:56:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56910 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:56:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726527AbgF2Sfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726531AbgF2Sfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 529C6247A6;
-        Mon, 29 Jun 2020 15:21:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DFB5247E0;
+        Mon, 29 Jun 2020 15:22:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444113;
-        bh=Ib9uaJRwu7PjqRSULrc/RVTtx7kBtkPd2bYReuBdmiw=;
+        s=default; t=1593444148;
+        bh=0R3XCmUNuL+kYoppJ/RgTC3SwhrEGN//D49RSvOc3oM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=od/lhvwic35ZIzVtwELwGO1Yta+QciAMEMAF5lcfAc5wDAQESoqTUkVaoRdLzGsqb
-         WSdGs8Jkbom58nJBXQO+SyMsv2JF/OQROe4wzmu3p3HSqfdSioDo/ZUyrfGCZcKX2t
-         0XDEBcpTRxyMXGhtNdqFi7gwz5CJ26aLQlTNG5eA=
+        b=g1l35/1wE4/2lCGBGlrX/H1eAxWufWAzRnD0rftyRkOiv8aDLvgx3pWFb8uJLkIjM
+         zPqFojxz1ZUYmHLmUbPinykWWVYDeHrsr4cWd+wEjcOt4YZxKHCKZBsSPOwskAKN3G
+         s1yOZ590mmY6HmVtJ8krg6Y1/R3ACpSRkmNNFLKE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Filipe Manana <fdmanana@suse.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
+Cc:     Frieder Schrempf <frieder.schrempf@kontron.de>,
+        Shawn Guo <shawnguo@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 224/265] btrfs: check if a log root exists before locking the log_mutex on unlink
-Date:   Mon, 29 Jun 2020 11:17:37 -0400
-Message-Id: <20200629151818.2493727-225-sashal@kernel.org>
+Subject: [PATCH 5.7 253/265] ARM: dts: imx6ul-kontron: Move watchdog from Kontron i.MX6UL/ULL board to SoM
+Date:   Mon, 29 Jun 2020 11:18:06 -0400
+Message-Id: <20200629151818.2493727-254-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -67,152 +65,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-commit e7a79811d0db136dc2d336b56d54cf1b774ce972 upstream.
+commit 04a2c05179b732a4c097f0a9c701ef4c9a37e1e3 upstream.
 
-This brings back an optimization that commit e678934cbe5f02 ("btrfs:
-Remove unnecessary check from join_running_log_trans") removed, but in
-a different form. So it's almost equivalent to a revert.
+The watchdog's WDOG_ANY signal is used to trigger a POR of the SoC,
+if a soft reset is issued. As the SoM hardware connects the WDOG_ANY
+and the POR signals, the watchdog node itself and the pin
+configuration should be part of the common SoM devicetree.
+Let's move it from the baseboard's devicetree to its proper place.
 
-That commit removed an optimization where we avoid locking a root's
-log_mutex when there is no log tree created in the current transaction.
-The affected code path is triggered through unlink operations.
-
-That commit was based on the assumption that the optimization was not
-necessary because we used to have the following checks when the patch
-was authored:
-
-  int btrfs_del_dir_entries_in_log(...)
-  {
-        (...)
-        if (dir->logged_trans < trans->transid)
-            return 0;
-
-        ret = join_running_log_trans(root);
-        (...)
-   }
-
-   int btrfs_del_inode_ref_in_log(...)
-   {
-        (...)
-        if (inode->logged_trans < trans->transid)
-            return 0;
-
-        ret = join_running_log_trans(root);
-        (...)
-   }
-
-However before that patch was merged, another patch was merged first which
-replaced those checks because they were buggy.
-
-That other patch corresponds to commit 803f0f64d17769 ("Btrfs: fix fsync
-not persisting dentry deletions due to inode evictions"). The assumption
-that if the logged_trans field of an inode had a smaller value then the
-current transaction's generation (transid) meant that the inode was not
-logged in the current transaction was only correct if the inode was not
-evicted and reloaded in the current transaction. So the corresponding bug
-fix changed those checks and replaced them with the following helper
-function:
-
-  static bool inode_logged(struct btrfs_trans_handle *trans,
-                           struct btrfs_inode *inode)
-  {
-        if (inode->logged_trans == trans->transid)
-                return true;
-
-        if (inode->last_trans == trans->transid &&
-            test_bit(BTRFS_INODE_NEEDS_FULL_SYNC, &inode->runtime_flags) &&
-            !test_bit(BTRFS_FS_LOG_RECOVERING, &trans->fs_info->flags))
-                return true;
-
-        return false;
-  }
-
-So if we have a subvolume without a log tree in the current transaction
-(because we had no fsyncs), every time we unlink an inode we can end up
-trying to lock the log_mutex of the root through join_running_log_trans()
-twice, once for the inode being unlinked (by btrfs_del_inode_ref_in_log())
-and once for the parent directory (with btrfs_del_dir_entries_in_log()).
-
-This means if we have several unlink operations happening in parallel for
-inodes in the same subvolume, and the those inodes and/or their parent
-inode were changed in the current transaction, we end up having a lot of
-contention on the log_mutex.
-
-The test robots from intel reported a -30.7% performance regression for
-a REAIM test after commit e678934cbe5f02 ("btrfs: Remove unnecessary check
-from join_running_log_trans").
-
-So just bring back the optimization to join_running_log_trans() where we
-check first if a log root exists before trying to lock the log_mutex. This
-is done by checking for a bit that is set on the root when a log tree is
-created and removed when a log tree is freed (at transaction commit time).
-
-Commit e678934cbe5f02 ("btrfs: Remove unnecessary check from
-join_running_log_trans") was merged in the 5.4 merge window while commit
-803f0f64d17769 ("Btrfs: fix fsync not persisting dentry deletions due to
-inode evictions") was merged in the 5.3 merge window. But the first
-commit was actually authored before the second commit (May 23 2019 vs
-June 19 2019).
-
-Reported-by: kernel test robot <rong.a.chen@intel.com>
-Link: https://lore.kernel.org/lkml/20200611090233.GL12456@shao2-debian/
-Fixes: e678934cbe5f02 ("btrfs: Remove unnecessary check from join_running_log_trans")
-CC: stable@vger.kernel.org # 5.4+
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: 1ea4b76cdfde ("ARM: dts: imx6ul-kontron-n6310: Add Kontron i.MX6UL N6310 SoM and boards")
+Cc: stable@vger.kernel.org
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/btrfs/ctree.h    | 2 ++
- fs/btrfs/tree-log.c | 5 +++++
- 2 files changed, 7 insertions(+)
+ arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi       | 13 -------------
+ .../boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi   | 13 +++++++++++++
+ 2 files changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/fs/btrfs/ctree.h b/fs/btrfs/ctree.h
-index 196d4511f8126..09e6dff8a8f85 100644
---- a/fs/btrfs/ctree.h
-+++ b/fs/btrfs/ctree.h
-@@ -988,6 +988,8 @@ enum {
- 	BTRFS_ROOT_DEAD_RELOC_TREE,
- 	/* Mark dead root stored on device whose cleanup needs to be resumed */
- 	BTRFS_ROOT_DEAD_TREE,
-+	/* The root has a log tree. Used only for subvolume roots. */
-+	BTRFS_ROOT_HAS_LOG_TREE,
+diff --git a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
+index f05e918412027..53a25fba34f69 100644
+--- a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
++++ b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
+@@ -232,13 +232,6 @@
+ 	status = "okay";
  };
  
- /*
-diff --git a/fs/btrfs/tree-log.c b/fs/btrfs/tree-log.c
-index ea72b9d54ec86..bdfc421494481 100644
---- a/fs/btrfs/tree-log.c
-+++ b/fs/btrfs/tree-log.c
-@@ -169,6 +169,7 @@ static int start_log_trans(struct btrfs_trans_handle *trans,
- 		if (ret)
- 			goto out;
+-&wdog1 {
+-	pinctrl-names = "default";
+-	pinctrl-0 = <&pinctrl_wdog>;
+-	fsl,ext-reset-output;
+-	status = "okay";
+-};
+-
+ &iomuxc {
+ 	pinctrl-0 = <&pinctrl_reset_out &pinctrl_gpio>;
  
-+		set_bit(BTRFS_ROOT_HAS_LOG_TREE, &root->state);
- 		clear_bit(BTRFS_ROOT_MULTI_LOG_TASKS, &root->state);
- 		root->log_start_pid = current->pid;
- 	}
-@@ -195,6 +196,9 @@ static int join_running_log_trans(struct btrfs_root *root)
- {
- 	int ret = -ENOENT;
+@@ -409,10 +402,4 @@
+ 			MX6UL_PAD_NAND_DATA03__USDHC2_DATA3	0x170f9
+ 		>;
+ 	};
+-
+-	pinctrl_wdog: wdoggrp {
+-		fsl,pins = <
+-			MX6UL_PAD_GPIO1_IO09__WDOG1_WDOG_ANY	0x30b0
+-		>;
+-	};
+ };
+diff --git a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi
+index a17af4d9bfdf9..fc316408721d0 100644
+--- a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi
++++ b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-som-common.dtsi
+@@ -57,6 +57,13 @@
+ 	status = "okay";
+ };
  
-+	if (!test_bit(BTRFS_ROOT_HAS_LOG_TREE, &root->state))
-+		return ret;
++&wdog1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_wdog>;
++	fsl,ext-reset-output;
++	status = "okay";
++};
 +
- 	mutex_lock(&root->log_mutex);
- 	if (root->log_root) {
- 		ret = 0;
-@@ -3312,6 +3316,7 @@ int btrfs_free_log(struct btrfs_trans_handle *trans, struct btrfs_root *root)
- 	if (root->log_root) {
- 		free_log_tree(trans, root->log_root);
- 		root->log_root = NULL;
-+		clear_bit(BTRFS_ROOT_HAS_LOG_TREE, &root->state);
- 	}
- 	return 0;
- }
+ &iomuxc {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_reset_out>;
+@@ -106,4 +113,10 @@
+ 			MX6UL_PAD_SNVS_TAMPER9__GPIO5_IO09      0x1b0b0
+ 		>;
+ 	};
++
++	pinctrl_wdog: wdoggrp {
++		fsl,pins = <
++			MX6UL_PAD_GPIO1_IO09__WDOG1_WDOG_ANY    0x30b0
++		>;
++	};
+ };
 -- 
 2.25.1
 
