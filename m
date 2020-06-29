@@ -2,52 +2,51 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 043A9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 090CEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:30:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C9286206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:30:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB677206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:30:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462616;
-	bh=hoWzCq7YdJ466h88JZyEVbYkbSgIOZ4vAwz8CrtxGEE=;
+	s=default; t=1593462620;
+	bh=g7mDwP6PrU8dc4v/UtQBYKxwGkcMz0p69pbjB9Vlj08=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bPOD2Y35zoLXlHTQwVfF118d+8kHeLNwlCb6yflkiWWdfbRXcR2f1s7mvVEE3LZIu
-	 raheAkCTAPGlufazoRV9mEPh7JcuVr2DwMHCJpi9nnQ/RLyVXv02vFbHPa/fXEd/DK
-	 VALolXzvkfar/WCPdNmmrRJjEhBYhcaQUChJGmug=
+	b=pSqut5fUo9MgNXLNg9WiIRZLj/7bgVDyWLhC1PIZcFUcZ7a+jYCLUTyVAgkjIRtIs
+	 np21GzJEiQq4wrkK8rpUtZ3rHnG6lQ4t9JIGh6rSqJWdLbotsIn7QE6rIMXW887Zsp
+	 XxyDHYxSC6+HKGXeTrzn9MCzQfqx0asLAI66DODQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388983AbgF2UaP (ORCPT
+        id S2388835AbgF2UaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:30:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37018 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:30:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732489AbgF2TZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732484AbgF2TZU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C941D25387;
-        Mon, 29 Jun 2020 15:40:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF833253B6;
+        Mon, 29 Jun 2020 15:41:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445251;
-        bh=hoWzCq7YdJ466h88JZyEVbYkbSgIOZ4vAwz8CrtxGEE=;
+        s=default; t=1593445280;
+        bh=g7mDwP6PrU8dc4v/UtQBYKxwGkcMz0p69pbjB9Vlj08=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o3ymeRqb4VJVLi7GKDIrfHecKTimCm5S+K/XjOuba5mhWkzvCeM7dXjyh/gErRanS
-         YDrlHdhB4K7hpQC4wvYe8lk89Pr7KVOXb/9+Fr0UoxFRtFTkOOVZ8XtAHcRR6Fkx6Y
-         PrSpWBeJkaPRXCHIeVBbFhIQ7jZhVT6LSk2yh0hQ=
+        b=Y7oCi9qpn8uY+Whhcnff9S0QjwBBg/eXMXzO4NogwwMDrSZruZbvZsxO4VnqIyDxt
+         ZvIgnl1y3Syj3GVlGx5WkHLjWMkUtiM47RfF0ek/x4kRYWJ84FIpVxA3NnB75Esg5J
+         59xyYnbobaw95wo7IU5kNT69FLpxjlgVX0obbcGs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 034/191] PCI/ASPM: Allow ASPM on links to PCIe-to-PCI/PCI-X Bridges
-Date:   Mon, 29 Jun 2020 11:37:30 -0400
-Message-Id: <20200629154007.2495120-35-sashal@kernel.org>
+Subject: [PATCH 4.9 059/191] clk: bcm2835: Fix return type of bcm2835_register_gate
+Date:   Mon, 29 Jun 2020 11:37:55 -0400
+Message-Id: <20200629154007.2495120-60-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -66,53 +65,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 66ff14e59e8a30690755b08bc3042359703fb07a ]
+[ Upstream commit f376c43bec4f8ee8d1ba5c5c4cfbd6e84fb279cb ]
 
-7d715a6c1ae5 ("PCI: add PCI Express ASPM support") added the ability for
-Linux to enable ASPM, but for some undocumented reason, it didn't enable
-ASPM on links where the downstream component is a PCIe-to-PCI/PCI-X Bridge.
+bcm2835_register_gate is used as a callback for the clk_register member
+of bcm2835_clk_desc, which expects a struct clk_hw * return type but
+bcm2835_register_gate returns a struct clk *.
 
-Remove this exclusion so we can enable ASPM on these links.
+This discrepancy is hidden by the fact that bcm2835_register_gate is
+cast to the typedef bcm2835_clk_register by the _REGISTER macro. This
+turns out to be a control flow integrity violation, which is how this
+was noticed.
 
-The Dell OptiPlex 7080 mentioned in the bugzilla has a TI XIO2001
-PCIe-to-PCI Bridge.  Enabling ASPM on the link leading to it allows the
-Intel SoC to enter deeper Package C-states, which is a significant power
-savings.
+Change the return type of bcm2835_register_gate to be struct clk_hw *
+and use clk_hw_register_gate to do so. This should be a non-functional
+change as clk_register_gate calls clk_hw_register_gate anyways but this
+is needed to avoid issues with further changes.
 
-[bhelgaas: commit log]
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=207571
-Link: https://lore.kernel.org/r/20200505173423.26968-1-kai.heng.feng@canonical.com
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Fixes: b19f009d4510 ("clk: bcm2835: Migrate to clk_hw based registration and OF APIs")
+Link: https://github.com/ClangBuiltLinux/linux/issues/1028
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Link: https://lkml.kernel.org/r/20200516080806.1459784-1-natechancellor@gmail.com
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pcie/aspm.c | 10 ----------
- 1 file changed, 10 deletions(-)
+ drivers/clk/bcm/clk-bcm2835.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pci/pcie/aspm.c b/drivers/pci/pcie/aspm.c
-index 4a5fde58974a6..75551a781e887 100644
---- a/drivers/pci/pcie/aspm.c
-+++ b/drivers/pci/pcie/aspm.c
-@@ -410,16 +410,6 @@ static void pcie_aspm_cap_init(struct pcie_link_state *link, int blacklist)
+diff --git a/drivers/clk/bcm/clk-bcm2835.c b/drivers/clk/bcm/clk-bcm2835.c
+index 73aab6e984cd7..2b5075298cdc0 100644
+--- a/drivers/clk/bcm/clk-bcm2835.c
++++ b/drivers/clk/bcm/clk-bcm2835.c
+@@ -1295,13 +1295,13 @@ static struct clk_hw *bcm2835_register_clock(struct bcm2835_cprman *cprman,
+ 	return &clock->hw;
+ }
  
- 	/* Setup initial capable state. Will be updated later */
- 	link->aspm_capable = link->aspm_support;
--	/*
--	 * If the downstream component has pci bridge function, don't
--	 * do ASPM for now.
--	 */
--	list_for_each_entry(child, &linkbus->devices, bus_list) {
--		if (pci_pcie_type(child) == PCI_EXP_TYPE_PCI_BRIDGE) {
--			link->aspm_disable = ASPM_STATE_ALL;
--			break;
--		}
--	}
+-static struct clk *bcm2835_register_gate(struct bcm2835_cprman *cprman,
++static struct clk_hw *bcm2835_register_gate(struct bcm2835_cprman *cprman,
+ 					 const struct bcm2835_gate_data *data)
+ {
+-	return clk_register_gate(cprman->dev, data->name, data->parent,
+-				 CLK_IGNORE_UNUSED | CLK_SET_RATE_GATE,
+-				 cprman->regs + data->ctl_reg,
+-				 CM_GATE_BIT, 0, &cprman->regs_lock);
++	return clk_hw_register_gate(cprman->dev, data->name, data->parent,
++				    CLK_IGNORE_UNUSED | CLK_SET_RATE_GATE,
++				    cprman->regs + data->ctl_reg,
++				    CM_GATE_BIT, 0, &cprman->regs_lock);
+ }
  
- 	/* Get and check endpoint acceptable latencies */
- 	list_for_each_entry(child, &linkbus->devices, bus_list) {
+ typedef struct clk_hw *(*bcm2835_clk_register)(struct bcm2835_cprman *cprman,
 -- 
 2.25.1
 
