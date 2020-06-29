@@ -7,57 +7,56 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C017C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:22:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59076C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:22:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D7002067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:22:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3100420656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:22:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462129;
-	bh=skU9NDh+rgFwQutvhIK6EC/Sh4/cl45slDMVvV4I+/Q=;
+	s=default; t=1593462132;
+	bh=00iOEWNXPCuiT+vB5Xgopm3GKbRL+3MyMQGhW+hobcI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=guNqwUtFT6w55fQJ++Jsmcle6qHWZYRgexUWdULYGxsIAuJfucHQEnQmvRJeoA+M8
-	 KSl4zBEl10qRnyK+b5eT86aBswPfAdIdjynd8ujx1li8LBv9aTM7ZUCRFyxm/5t1Cm
-	 iwlkE4hOEzljsZxzjLFT24Fw63EOZJVC9PTuamM4=
+	b=drljWkm6T1bLQ1NJRuCx0zXJPxfHHe0WmStgDIfTIJH3eJtrCL72vysUzjDF33QZA
+	 gGsxwvIV1mk4gLfN589HqB/liamUPgwmzoHjvFk5C9TkJrxDedOOiURlNj32YHotIh
+	 8gC+bMQnFpT/LUHMel5roSML+y6obepFceLU+lYk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733171AbgF2UWI (ORCPT
+        id S2388744AbgF2UWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:22:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37044 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:22:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732585AbgF2TZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732591AbgF2TZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3176B2543E;
-        Mon, 29 Jun 2020 15:43:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A1242532D;
+        Mon, 29 Jun 2020 15:39:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445390;
-        bh=skU9NDh+rgFwQutvhIK6EC/Sh4/cl45slDMVvV4I+/Q=;
+        s=default; t=1593445163;
+        bh=00iOEWNXPCuiT+vB5Xgopm3GKbRL+3MyMQGhW+hobcI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I3LdZrEpi3Op48OQM9IlblQPL2y+ourTnc8XW09BTYKa0W6hW4toJPV+2ec/7bUtx
-         bH2SLXTDIUJPTBh8TGRMy1eSG+Oohirvdqy1+u2DdU96ipOb9DUABWgrs8aGEQOBg2
-         77KGn+RYd8og+ZbUQxoXoEVUVVi8g2voSpqQPj1M=
+        b=xsp3P6/AT/cRF/D6Y6xX7k9Lgw/5FmWHki4Xyb7xql30JLIoevHviZPR8DrPvQQF8
+         EryKxHw+II4y130Vp1oUK0ei2PcC5NJw0TZSj1oanY15gpxw13b30rroxSvrZHYA8v
+         HBgbz65B11m/in2JKm4ZhbgYV7kpxb+/QQxF62k4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tariq Toukan <tariqt@mellanox.com>,
-        Boris Pismenny <borisp@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.9 144/191] net: Do not clear the sock TX queue in sk_set_socket()
-Date:   Mon, 29 Jun 2020 11:39:20 -0400
-Message-Id: <20200629154007.2495120-145-sashal@kernel.org>
+Subject: [PATCH 4.14 62/78] KVM: nVMX: Plumb L2 GPA through to PML emulation
+Date:   Mon, 29 Jun 2020 11:37:50 -0400
+Message-Id: <20200629153806.2494953-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
-References: <20200629154007.2495120-1-sashal@kernel.org>
+In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
+References: <20200629153806.2494953-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.229-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.9.y
+X-KernelTest-Branch: linux-4.14.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.9.229-rc1
-X-KernelTest-Deadline: 2020-07-01T15:39+00:00
+X-KernelTest-Version: 4.14.186-rc1
+X-KernelTest-Deadline: 2020-07-01T15:38+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -66,62 +65,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tariq Toukan <tariqt@mellanox.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-[ Upstream commit 41b14fb8724d5a4b382a63cb4a1a61880347ccb8 ]
+commit 2dbebf7ae1ed9a420d954305e2c9d5ed39ec57c3 upstream.
 
-Clearing the sock TX queue in sk_set_socket() might cause unexpected
-out-of-order transmit when called from sock_orphan(), as outstanding
-packets can pick a different TX queue and bypass the ones already queued.
+Explicitly pass the L2 GPA to kvm_arch_write_log_dirty(), which for all
+intents and purposes is vmx_write_pml_buffer(), instead of having the
+latter pull the GPA from vmcs.GUEST_PHYSICAL_ADDRESS.  If the dirty bit
+update is the result of KVM emulation (rare for L2), then the GPA in the
+VMCS may be stale and/or hold a completely unrelated GPA.
 
-This is undesired in general. More specifically, it breaks the in-order
-scheduling property guarantee for device-offloaded TLS sockets.
-
-Remove the call to sk_tx_queue_clear() in sk_set_socket(), and add it
-explicitly only where needed.
-
-Fixes: e022f0b4a03f ("net: Introduce sk_tx_queue_mapping")
-Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
-Reviewed-by: Boris Pismenny <borisp@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: c5f983f6e8455 ("nVMX: Implement emulated Page Modification Logging")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Message-Id: <20200622215832.22090-2-sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/net/sock.h | 1 -
- net/core/sock.c    | 2 ++
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/include/asm/kvm_host.h | 2 +-
+ arch/x86/kvm/mmu.c              | 4 ++--
+ arch/x86/kvm/mmu.h              | 2 +-
+ arch/x86/kvm/paging_tmpl.h      | 7 ++++---
+ arch/x86/kvm/vmx.c              | 5 ++---
+ 5 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/include/net/sock.h b/include/net/sock.h
-index d6bce19ca261c..db68c72126d54 100644
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -1631,7 +1631,6 @@ static inline int sk_tx_queue_get(const struct sock *sk)
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 9529fe69e1d92..ecb6009a2c8a2 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1060,7 +1060,7 @@ struct kvm_x86_ops {
+ 	void (*enable_log_dirty_pt_masked)(struct kvm *kvm,
+ 					   struct kvm_memory_slot *slot,
+ 					   gfn_t offset, unsigned long mask);
+-	int (*write_log_dirty)(struct kvm_vcpu *vcpu);
++	int (*write_log_dirty)(struct kvm_vcpu *vcpu, gpa_t l2_gpa);
  
- static inline void sk_set_socket(struct sock *sk, struct socket *sock)
+ 	/* pmu operations of sub-arch */
+ 	const struct kvm_pmu_ops *pmu_ops;
+diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
+index 082d0cea72f46..9df3d5d7214a6 100644
+--- a/arch/x86/kvm/mmu.c
++++ b/arch/x86/kvm/mmu.c
+@@ -1713,10 +1713,10 @@ void kvm_arch_mmu_enable_log_dirty_pt_masked(struct kvm *kvm,
+  * Emulate arch specific page modification logging for the
+  * nested hypervisor
+  */
+-int kvm_arch_write_log_dirty(struct kvm_vcpu *vcpu)
++int kvm_arch_write_log_dirty(struct kvm_vcpu *vcpu, gpa_t l2_gpa)
  {
--	sk_tx_queue_clear(sk);
- 	sk->sk_socket = sock;
+ 	if (kvm_x86_ops->write_log_dirty)
+-		return kvm_x86_ops->write_log_dirty(vcpu);
++		return kvm_x86_ops->write_log_dirty(vcpu, l2_gpa);
+ 
+ 	return 0;
+ }
+diff --git a/arch/x86/kvm/mmu.h b/arch/x86/kvm/mmu.h
+index 068feab64acf1..816a626b62508 100644
+--- a/arch/x86/kvm/mmu.h
++++ b/arch/x86/kvm/mmu.h
+@@ -194,7 +194,7 @@ void kvm_mmu_gfn_disallow_lpage(struct kvm_memory_slot *slot, gfn_t gfn);
+ void kvm_mmu_gfn_allow_lpage(struct kvm_memory_slot *slot, gfn_t gfn);
+ bool kvm_mmu_slot_gfn_write_protect(struct kvm *kvm,
+ 				    struct kvm_memory_slot *slot, u64 gfn);
+-int kvm_arch_write_log_dirty(struct kvm_vcpu *vcpu);
++int kvm_arch_write_log_dirty(struct kvm_vcpu *vcpu, gpa_t l2_gpa);
+ 
+ int kvm_mmu_post_init_vm(struct kvm *kvm);
+ void kvm_mmu_pre_destroy_vm(struct kvm *kvm);
+diff --git a/arch/x86/kvm/paging_tmpl.h b/arch/x86/kvm/paging_tmpl.h
+index 8cf7a09bdd736..7260a165488d2 100644
+--- a/arch/x86/kvm/paging_tmpl.h
++++ b/arch/x86/kvm/paging_tmpl.h
+@@ -202,7 +202,7 @@ static inline unsigned FNAME(gpte_access)(struct kvm_vcpu *vcpu, u64 gpte)
+ static int FNAME(update_accessed_dirty_bits)(struct kvm_vcpu *vcpu,
+ 					     struct kvm_mmu *mmu,
+ 					     struct guest_walker *walker,
+-					     int write_fault)
++					     gpa_t addr, int write_fault)
+ {
+ 	unsigned level, index;
+ 	pt_element_t pte, orig_pte;
+@@ -227,7 +227,7 @@ static int FNAME(update_accessed_dirty_bits)(struct kvm_vcpu *vcpu,
+ 				!(pte & PT_GUEST_DIRTY_MASK)) {
+ 			trace_kvm_mmu_set_dirty_bit(table_gfn, index, sizeof(pte));
+ #if PTTYPE == PTTYPE_EPT
+-			if (kvm_arch_write_log_dirty(vcpu))
++			if (kvm_arch_write_log_dirty(vcpu, addr))
+ 				return -EINVAL;
+ #endif
+ 			pte |= PT_GUEST_DIRTY_MASK;
+@@ -424,7 +424,8 @@ static int FNAME(walk_addr_generic)(struct guest_walker *walker,
+ 			(PT_GUEST_DIRTY_SHIFT - PT_GUEST_ACCESSED_SHIFT);
+ 
+ 	if (unlikely(!accessed_dirty)) {
+-		ret = FNAME(update_accessed_dirty_bits)(vcpu, mmu, walker, write_fault);
++		ret = FNAME(update_accessed_dirty_bits)(vcpu, mmu, walker,
++							addr, write_fault);
+ 		if (unlikely(ret < 0))
+ 			goto error;
+ 		else if (ret)
+diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
+index 42c6ca05a613e..11e683ec6c853 100644
+--- a/arch/x86/kvm/vmx.c
++++ b/arch/x86/kvm/vmx.c
+@@ -12462,11 +12462,10 @@ static void vmx_flush_log_dirty(struct kvm *kvm)
+ 	kvm_flush_pml_buffers(kvm);
  }
  
-diff --git a/net/core/sock.c b/net/core/sock.c
-index 41794a698da66..dac9365151df9 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -1403,6 +1403,7 @@ struct sock *sk_alloc(struct net *net, int family, gfp_t priority,
- 		cgroup_sk_alloc(&sk->sk_cgrp_data);
- 		sock_update_classid(&sk->sk_cgrp_data);
- 		sock_update_netprioidx(&sk->sk_cgrp_data);
-+		sk_tx_queue_clear(sk);
- 	}
+-static int vmx_write_pml_buffer(struct kvm_vcpu *vcpu)
++static int vmx_write_pml_buffer(struct kvm_vcpu *vcpu, gpa_t gpa)
+ {
+ 	struct vmcs12 *vmcs12;
+ 	struct vcpu_vmx *vmx = to_vmx(vcpu);
+-	gpa_t gpa;
+ 	struct page *page = NULL;
+ 	u64 *pml_address;
  
- 	return sk;
-@@ -1587,6 +1588,7 @@ struct sock *sk_clone_lock(const struct sock *sk, const gfp_t priority)
- 		 */
- 		sk_refcnt_debug_inc(newsk);
- 		sk_set_socket(newsk, NULL);
-+		sk_tx_queue_clear(newsk);
- 		newsk->sk_wq = NULL;
+@@ -12487,7 +12486,7 @@ static int vmx_write_pml_buffer(struct kvm_vcpu *vcpu)
+ 			return 1;
+ 		}
  
- 		if (newsk->sk_prot->sockets_allocated)
+-		gpa = vmcs_read64(GUEST_PHYSICAL_ADDRESS) & ~0xFFFull;
++		gpa &= ~0xFFFull;
+ 
+ 		page = kvm_vcpu_gpa_to_page(vcpu, vmcs12->pml_address);
+ 		if (is_error_page(page))
 -- 
 2.25.1
 
