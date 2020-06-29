@@ -4,57 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFA4C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:14:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A61C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0F21206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:14:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C7C920760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:14:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461684;
-	bh=S4oSBEKFtn41itg9mzsbFJpEvLbzU9TYSrz+ppPP6Es=;
+	s=default; t=1593461687;
+	bh=5ScMDTKWM/U7yfgxm06jNQ+5F0fwhk/4g0yJEqvOIng=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wSBx3HzRfhddLqQTeaU2y6+De8S0BxZN40ryEir5tdqNJUdP4EEfdDjL8VfvZpRxU
-	 XOHQLpDeBp8rs2FpiMQzyOQRfXcl4JPMBOSMmsnp4CFPTZb6egFFFEneHi/iBuDD+8
-	 BIlUJjdwyaxr9Lf0HP80G4n6rc8vz6vZbFwk6PkI=
+	b=RNUpl8jlulHFDgXEZCMF/4xpaV3icdpw+qK7zPzpxlQs5z0muGhD0MXMbwFu/RrJs
+	 WlLp6JMNeeggrhoB9z9MM66sCdto+dQ6DHaUxjYrXtOHHcXEL1JHa89RMgN/WcgVYj
+	 SNIt93nMJC88sBUNrfUJQJ1tLrbIz+5aaKftGk0o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732834AbgF2UOn (ORCPT
+        id S1732850AbgF2UOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:14:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40608 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:14:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732841AbgF2TaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732846AbgF2TaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFB0C252CE;
-        Mon, 29 Jun 2020 15:38:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 29779252BE;
+        Mon, 29 Jun 2020 15:37:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445095;
-        bh=S4oSBEKFtn41itg9mzsbFJpEvLbzU9TYSrz+ppPP6Es=;
+        s=default; t=1593445032;
+        bh=5ScMDTKWM/U7yfgxm06jNQ+5F0fwhk/4g0yJEqvOIng=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CrNecuVb7GnfOhdml6QZ+ndFFBry3mYtgzeM/D0gHoQmzRsky9kAb5S+oPH+Zk470
-         gry56PHwK80baeZ+YgopCW3G1bqcE0vQNm+AyE5Sv/pLd1d3jWIcKKzK0TmkmIJTxA
-         LnP2RcrB4dQHUvAV+LCIAJKhG8OItA+qUUKABXdQ=
+        b=zQ9F+CKWuyzN3i+kZa4chF2r4ZF7rDGmFSGgyJjo70N0IexlT/UPeXVLsjGhnfCaj
+         E2MumfUlpkAYqAogCuju5Swa2GGS9IeL9t4MVLH2IjhJ8b1mI8fclcHkmig4f7NVlg
+         7XsUBBZ+VuKwFV92PFkmUj8B5qGPaDVZ0vvpy8AM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 05/78] fix a braino in "sparc32: fix register window handling in genregs32_[gs]et()"
-Date:   Mon, 29 Jun 2020 11:36:53 -0400
-Message-Id: <20200629153806.2494953-6-sashal@kernel.org>
+Cc:     Mikulas Patocka <mpatocka@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.19 129/131] dm writecache: add cond_resched to loop in persistent_memory_claim()
+Date:   Mon, 29 Jun 2020 11:35:00 -0400
+Message-Id: <20200629153502.2494656-130-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
-References: <20200629153806.2494953-1-sashal@kernel.org>
+In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
+References: <20200629153502.2494656-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.14.y
+X-KernelTest-Branch: linux-4.19.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.14.186-rc1
-X-KernelTest-Deadline: 2020-07-01T15:38+00:00
+X-KernelTest-Version: 4.19.131-rc1
+X-KernelTest-Deadline: 2020-07-01T15:34+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -63,43 +65,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-[ Upstream commit 9d964e1b82d8182184153b70174f445ea616f053 ]
+commit d35bd764e6899a7bea71958f08d16cea5bfa1919 upstream.
 
-lost npc in PTRACE_SETREGSET, breaking PTRACE_SETREGS as well
+Add cond_resched() to a loop that fills in the mapper memory area
+because the loop can be executed many times.
 
-Fixes: cf51e129b968 "sparc32: fix register window handling in genregs32_[gs]et()"
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 48debafe4f2fe ("dm: add writecache target")
+Cc: stable@vger.kernel.org
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/sparc/kernel/ptrace_32.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/md/dm-writecache.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/sparc/kernel/ptrace_32.c b/arch/sparc/kernel/ptrace_32.c
-index 60f7205ebe40d..646dd58169ecb 100644
---- a/arch/sparc/kernel/ptrace_32.c
-+++ b/arch/sparc/kernel/ptrace_32.c
-@@ -168,12 +168,17 @@ static int genregs32_set(struct task_struct *target,
- 	if (ret || !count)
- 		return ret;
- 	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
--				 &regs->y,
-+				 &regs->npc,
- 				 34 * sizeof(u32), 35 * sizeof(u32));
- 	if (ret || !count)
- 		return ret;
-+	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
-+				 &regs->y,
-+				 35 * sizeof(u32), 36 * sizeof(u32));
-+	if (ret || !count)
-+		return ret;
- 	return user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
--					 35 * sizeof(u32), 38 * sizeof(u32));
-+					 36 * sizeof(u32), 38 * sizeof(u32));
- }
- 
- static int fpregs32_get(struct task_struct *target,
+diff --git a/drivers/md/dm-writecache.c b/drivers/md/dm-writecache.c
+index 509552fc55fc7..cc028353f9d55 100644
+--- a/drivers/md/dm-writecache.c
++++ b/drivers/md/dm-writecache.c
+@@ -281,6 +281,8 @@ static int persistent_memory_claim(struct dm_writecache *wc)
+ 			while (daa-- && i < p) {
+ 				pages[i++] = pfn_t_to_page(pfn);
+ 				pfn.val++;
++				if (!(i & 15))
++					cond_resched();
+ 			}
+ 		} while (i < p);
+ 		wc->memory_map = vmap(pages, p, VM_MAP, PAGE_KERNEL);
 -- 
 2.25.1
 
