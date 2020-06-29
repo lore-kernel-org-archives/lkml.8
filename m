@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0907C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 015CDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EB1A20768
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:10:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB40C206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:10:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593465011;
-	bh=Wi7VQoaaZl8rEtcf25Tj7BtZNvaHiT9DhTNsbmSZMqo=;
+	s=default; t=1593465018;
+	bh=/nf4V0oqCFiybyCnrQDSkzatkPUNi5M6Tc8facvxjsg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vp5fj5naYSaAzmyllvdx3cNqd3+LIYPwCq74E75CdvUrF3yfBcLGyghnngulwW5so
-	 zxmDGpnEibEJV2IvyJLv3+VwL7BDlbzsW/4aFMmBVF8sUZLe7OCF8NnioBiYVb/bBs
-	 GAnSff5/B7iRnA1SYPZOtz1TXHpLjJZyoXBS0wUY=
+	b=UKoHrZEXwjfnANm4DzbNj9nTtL/J4eLiUfY54X5NvB0a2SirIvbFXaHIvkXbGLR8i
+	 lqnwfO59ZdOy9OIGb+pzRd/e9l553UWoC3Bd10oum+ZBObrLp+p8NW7Pkm9cf5RfCi
+	 XrtYXWx99444958qGV2hRoBaOhiShXXJ5yJhw8zg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390501AbgF2VKJ (ORCPT
+        id S2388283AbgF2VKR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:10:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45422 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:10:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728589AbgF2TAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730210AbgF2TAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:00:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C928125526;
-        Mon, 29 Jun 2020 15:54:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD43825538;
+        Mon, 29 Jun 2020 15:54:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446089;
-        bh=Wi7VQoaaZl8rEtcf25Tj7BtZNvaHiT9DhTNsbmSZMqo=;
+        s=default; t=1593446100;
+        bh=/nf4V0oqCFiybyCnrQDSkzatkPUNi5M6Tc8facvxjsg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CN4BPD6w/UKsia7r+L6qZSRShb62nb1WJd3RyquqdC7TPEuTwtnSUrLmx9eH1e2ZJ
-         GSyY4is7M+GCsZKAHMu2riRMxVm0rkUMaK/OPtF/mCvRohfiVaQ1fqPl88lXtGEqqg
-         y/72qGOKj0U0W1lq9lIs/pquYKGeMfSYdjcuxgGk=
+        b=YYIl/RVOPJzL0JMC6gzDDGrv9hu8AQgLU9R9YGaQQv9lLqNXffvUBmN34/Nnhuo6u
+         3yGCN0LaHsbB9Fs9ol41MFZS1g3LNTxDnw8KBuHu8ub9r1uYhs1tZP1sy/UTL35T3L
+         r41HVRnGIcMfsf5NMilcxI2ZL6uh/mt6Hob81cq0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Christensen <drc@linux.vnet.ibm.com>,
-        Michael Chan <michael.chan@broadcom.com>,
+Cc:     Wang Hai <wanghai38@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Hangbin Liu <liuhangbin@gmail.com>,
         "David S . Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.4 084/135] tg3: driver sleeps indefinitely when EEH errors exceed eeh_max_freezes
-Date:   Mon, 29 Jun 2020 11:52:18 -0400
-Message-Id: <20200629155309.2495516-85-sashal@kernel.org>
+Subject: [PATCH 4.4 093/135] mld: fix memory leak in ipv6_mc_destroy_dev()
+Date:   Mon, 29 Jun 2020 11:52:27 -0400
+Message-Id: <20200629155309.2495516-94-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -66,40 +66,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Christensen <drc@linux.vnet.ibm.com>
+From: Wang Hai <wanghai38@huawei.com>
 
-[ Upstream commit 3a2656a211caf35e56afc9425e6e518fa52f7fbc ]
+[ Upstream commit ea2fce88d2fd678ed9d45354ff49b73f1d5615dd ]
 
-The driver function tg3_io_error_detected() calls napi_disable twice,
-without an intervening napi_enable, when the number of EEH errors exceeds
-eeh_max_freezes, resulting in an indefinite sleep while holding rtnl_lock.
+Commit a84d01647989 ("mld: fix memory leak in mld_del_delrec()") fixed
+the memory leak of MLD, but missing the ipv6_mc_destroy_dev() path, in
+which mca_sources are leaked after ma_put().
 
-Add check for pcierr_recovery which skips code already executed for the
-"Frozen" state.
+Using ip6_mc_clear_src() to take care of the missing free.
 
-Signed-off-by: David Christensen <drc@linux.vnet.ibm.com>
-Reviewed-by: Michael Chan <michael.chan@broadcom.com>
+BUG: memory leak
+unreferenced object 0xffff8881113d3180 (size 64):
+  comm "syz-executor071", pid 389, jiffies 4294887985 (age 17.943s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 ff 02 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<000000002cbc483c>] kmalloc include/linux/slab.h:555 [inline]
+    [<000000002cbc483c>] kzalloc include/linux/slab.h:669 [inline]
+    [<000000002cbc483c>] ip6_mc_add1_src net/ipv6/mcast.c:2237 [inline]
+    [<000000002cbc483c>] ip6_mc_add_src+0x7f5/0xbb0 net/ipv6/mcast.c:2357
+    [<0000000058b8b1ff>] ip6_mc_source+0xe0c/0x1530 net/ipv6/mcast.c:449
+    [<000000000bfc4fb5>] do_ipv6_setsockopt.isra.12+0x1b2c/0x3b30 net/ipv6/ipv6_sockglue.c:754
+    [<00000000e4e7a722>] ipv6_setsockopt+0xda/0x150 net/ipv6/ipv6_sockglue.c:950
+    [<0000000029260d9a>] rawv6_setsockopt+0x45/0x100 net/ipv6/raw.c:1081
+    [<000000005c1b46f9>] __sys_setsockopt+0x131/0x210 net/socket.c:2132
+    [<000000008491f7db>] __do_sys_setsockopt net/socket.c:2148 [inline]
+    [<000000008491f7db>] __se_sys_setsockopt net/socket.c:2145 [inline]
+    [<000000008491f7db>] __x64_sys_setsockopt+0xba/0x150 net/socket.c:2145
+    [<00000000c7bc11c5>] do_syscall_64+0xa1/0x530 arch/x86/entry/common.c:295
+    [<000000005fb7a3f3>] entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+Fixes: 1666d49e1d41 ("mld: do not remove mld souce list info when set link down")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Acked-by: Hangbin Liu <liuhangbin@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/tg3.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/ipv6/mcast.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/broadcom/tg3.c b/drivers/net/ethernet/broadcom/tg3.c
-index 58102e96ac5cd..e198427d0f292 100644
---- a/drivers/net/ethernet/broadcom/tg3.c
-+++ b/drivers/net/ethernet/broadcom/tg3.c
-@@ -18182,8 +18182,8 @@ static pci_ers_result_t tg3_io_error_detected(struct pci_dev *pdev,
+diff --git a/net/ipv6/mcast.c b/net/ipv6/mcast.c
+index 976c8133a2819..2d28f0b544946 100644
+--- a/net/ipv6/mcast.c
++++ b/net/ipv6/mcast.c
+@@ -2580,6 +2580,7 @@ void ipv6_mc_destroy_dev(struct inet6_dev *idev)
+ 		write_unlock_bh(&idev->lock);
  
- 	rtnl_lock();
+ 		igmp6_group_dropped(i);
++		ip6_mc_clear_src(i);
+ 		ma_put(i);
  
--	/* We probably don't have netdev yet */
--	if (!netdev || !netif_running(netdev))
-+	/* Could be second call or maybe we don't have netdev yet */
-+	if (!netdev || tp->pcierr_recovery || !netif_running(netdev))
- 		goto done;
- 
- 	/* We needn't recover from permanent error */
+ 		write_lock_bh(&idev->lock);
 -- 
 2.25.1
 
