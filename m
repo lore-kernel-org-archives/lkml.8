@@ -2,127 +2,161 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4783C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCBBC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90498204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:50:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74F1F2063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:50:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QwMiNdqI"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="w0fGtMeF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725856AbgF2SuB (ORCPT
+        id S1729455AbgF2SuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 29 Jun 2020 14:50:04 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:49407 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729281AbgF2SuB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:50:01 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:61738 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729180AbgF2St7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:49:59 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593456599; h=Content-Transfer-Encoding: Content-Type:
- MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
- To: From: Sender; bh=UN67+6exueZt49OSSOSCDajV8YbGx6Hd7cdOXnOfMkk=; b=QwMiNdqI5Br2s9cMPCxxiYuPy3HRZqXImd4VdKLdFKqF0i6TqVg9ttzM1eTZcwKI6JzhCli1
- x9ehV9ONZUYc1OpNo0ZDqFhro13Em6a9z0nq1xMncGMeoTU4J3fQSunockFlifEWHPx5/sW6
- zoGAfjpADkI4oafRpK7dA6BP0KU=
-X-Mailgun-Sending-Ip: 69.72.43.7
+ s=smtp; t=1593456600; h=Content-Transfer-Encoding: MIME-Version:
+ References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=6+m2NylI/67mo3h/rBMfzfIIuvn/OkghJLXIWt5F+PU=; b=w0fGtMeFkqY9zVCWT+bmOBwqxJLB14rfTiKbMyfx6adeiJsTqs/5m8PpszhoYbxKaTmJjkfH
+ 1Hb0XKZEnM8TylNcc3yOxu9MCN7ahGAQKCCGcsR3yCakQ+KmoGluIzYhkHFMUUcEAd8XR0GW
+ h+fKaVGgyBMO//yduU9ofOhu4hY=
+X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n02.prod.us-east-1.postgun.com with SMTP id
- 5ef9daf68fe116ddd98d18b8 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 29 Jun 2020 12:13:42
+ smtp-out-n16.prod.us-west-2.postgun.com with SMTP id
+ 5efa0e89f3deea03f3b232e7 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 29 Jun 2020 15:53:45
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D3F7DC433CB; Mon, 29 Jun 2020 12:13:41 +0000 (UTC)
-Received: from Pillair (unknown [183.83.71.149])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id F0F6EC433C6; Mon, 29 Jun 2020 15:53:44 +0000 (UTC)
+Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: pillair)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 26A85C433C6;
-        Mon, 29 Jun 2020 12:13:38 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 26A85C433C6
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 984A3C433C8;
+        Mon, 29 Jun 2020 15:53:38 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 984A3C433C8
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=pillair@codeaurora.org
-From:   "Rakesh Pillai" <pillair@codeaurora.org>
-To:     "'Doug Anderson'" <dianders@chromium.org>,
-        "'Kalle Valo'" <kvalo@codeaurora.org>
-Cc:     <ath10k@lists.infradead.org>,
-        "'open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS'" 
-        <devicetree@vger.kernel.org>,
-        "'linux-wireless'" <linux-wireless@vger.kernel.org>,
-        "'LKML'" <linux-kernel@vger.kernel.org>
-References: <1593194502-13164-1-git-send-email-pillair@codeaurora.org> <1593194502-13164-3-git-send-email-pillair@codeaurora.org> <CAD=FV=V1C2Lu31n8xQ8HPf21fNo_Da2SLtZAeStFBEou9+geEA@mail.gmail.com>
-In-Reply-To: <CAD=FV=V1C2Lu31n8xQ8HPf21fNo_Da2SLtZAeStFBEou9+geEA@mail.gmail.com>
-Subject: RE: [PATCH 2/2] ath10k: Add support for chain1 regulator supply voting
-Date:   Mon, 29 Jun 2020 17:43:35 +0530
-Message-ID: <000301d64e0e$b9e32c70$2da98550$@codeaurora.org>
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>
+Cc:     iommu@lists.linux-foundation.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Sean Paul <sean@poorly.run>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Akhil P Oommen <akhilpo@codeaurora.org>,
+        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        "Kristian H . Kristensen" <hoegsberg@google.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCHv3 3/7] iommu/arm-smmu: Add domain attribute for system cache
+Date:   Mon, 29 Jun 2020 21:22:46 +0530
+Message-Id: <134a67a32813dba111e9b888244d8ca44ab15f84.1593344119.git.saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <cover.1593344119.git.saiprakash.ranjan@codeaurora.org>
+References: <cover.1593344119.git.saiprakash.ranjan@codeaurora.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQKOP6JTmaF44S4OU0UHs+POXUh10gKWMw65AYCLAK6nXugGkA==
-Content-Language: en-us
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add iommu domain attribute for using system cache aka last level
+cache by client drivers like GPU to set right attributes for caching
+the hardware pagetables into the system cache.
 
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+---
+ drivers/iommu/arm-smmu.c | 17 +++++++++++++++++
+ drivers/iommu/arm-smmu.h |  1 +
+ include/linux/iommu.h    |  1 +
+ 3 files changed, 19 insertions(+)
 
-> -----Original Message-----
-> From: Doug Anderson <dianders@chromium.org>
-> Sent: Saturday, June 27, 2020 3:22 AM
-> To: Rakesh Pillai <pillair@codeaurora.org>; Kalle Valo
-> <kvalo@codeaurora.org>
-> Cc: ath10k@lists.infradead.org; open list:OPEN FIRMWARE AND FLATTENED
-> DEVICE TREE BINDINGS <devicetree@vger.kernel.org>; linux-wireless =
-<linux-
-> wireless@vger.kernel.org>; LKML <linux-kernel@vger.kernel.org>
-> Subject: Re: [PATCH 2/2] ath10k: Add support for chain1 regulator =
-supply
-> voting
->=20
-> Hi,
->=20
-> On Fri, Jun 26, 2020 at 11:02 AM Rakesh Pillai =
-<pillair@codeaurora.org> wrote:
-> >
-> > Add support to vote for chain-1 voltage regulator
-> > in WCN3990.
-> >
-> > Tested-on: WCN3990 hw1.0 SNOC WLAN.HL.3.1-01040-QCAHLSWMTPLZ-1
-> >
-> > Signed-off-by: Rakesh Pillai <pillair@codeaurora.org>
-> > ---
-> >  drivers/net/wireless/ath/ath10k/snoc.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/drivers/net/wireless/ath/ath10k/snoc.c
-> b/drivers/net/wireless/ath/ath10k/snoc.c
-> > index 645ed5f..407a074 100644
-> > --- a/drivers/net/wireless/ath/ath10k/snoc.c
-> > +++ b/drivers/net/wireless/ath/ath10k/snoc.c
-> > @@ -45,6 +45,7 @@ static const char * const ath10k_regulators[] =3D =
-{
-> >         "vdd-1.8-xo",
-> >         "vdd-1.3-rfa",
-> >         "vdd-3.3-ch0",
-> > +       "vdd-3.3-ch1",
->=20
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
->=20
-> ...with the slight nit that ${SUBJECT} and description should probably
-> call it "chan1" and not "chain1".  Presumably the maintainer can fix
-> when applying.
->=20
-> -Doug
-
-Hi Doug,
-
-It has to be chain1 only, not chan1.
-This is the power supply rail for the wlan-chain1=20
+diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+index b2564f93d685..71b6f7038423 100644
+--- a/drivers/iommu/arm-smmu.c
++++ b/drivers/iommu/arm-smmu.c
+@@ -897,6 +897,9 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+ 			goto out_unlock;
+ 	}
+ 
++	if (smmu_domain->sys_cache)
++		pgtbl_cfg.quirks |= IO_PGTABLE_QUIRK_SYS_CACHE;
++
+ 	if (smmu_domain->non_strict)
+ 		pgtbl_cfg.quirks |= IO_PGTABLE_QUIRK_NON_STRICT;
+ 
+@@ -1732,6 +1735,9 @@ static int arm_smmu_domain_get_attr(struct iommu_domain *domain,
+ 		case DOMAIN_ATTR_DMA_USE_FLUSH_QUEUE:
+ 			*(int *)data = smmu_domain->non_strict;
+ 			return 0;
++		case DOMAIN_ATTR_SYS_CACHE:
++			*((int *)data) = smmu_domain->sys_cache;
++			return 0;
+ 		default:
+ 			return -ENODEV;
+ 		}
+@@ -1763,6 +1769,17 @@ static int arm_smmu_domain_set_attr(struct iommu_domain *domain,
+ 			else
+ 				smmu_domain->stage = ARM_SMMU_DOMAIN_S1;
+ 			break;
++		case DOMAIN_ATTR_SYS_CACHE:
++			if (smmu_domain->smmu) {
++				ret = -EPERM;
++				goto out_unlock;
++			}
++
++			if (*((int *)data))
++				smmu_domain->sys_cache = true;
++			else
++				smmu_domain->sys_cache = false;
++			break;
+ 		default:
+ 			ret = -ENODEV;
+ 		}
+diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
+index 4a335ef3d97a..bbae48bdc022 100644
+--- a/drivers/iommu/arm-smmu.h
++++ b/drivers/iommu/arm-smmu.h
+@@ -348,6 +348,7 @@ struct arm_smmu_domain {
+ 	struct iommu_domain		domain;
+ 	struct device			*dev;	/* Device attached to this domain */
+ 	bool				aux;
++	bool				sys_cache;
+ };
+ 
+ struct arm_smmu_cb {
+diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+index 2388117641f1..a48edbebe3cb 100644
+--- a/include/linux/iommu.h
++++ b/include/linux/iommu.h
+@@ -125,6 +125,7 @@ enum iommu_attr {
+ 	DOMAIN_ATTR_NESTING,	/* two stages of translation */
+ 	DOMAIN_ATTR_DMA_USE_FLUSH_QUEUE,
+ 	DOMAIN_ATTR_PGTABLE_CFG,
++	DOMAIN_ATTR_SYS_CACHE,
+ 	DOMAIN_ATTR_MAX,
+ };
+ 
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
