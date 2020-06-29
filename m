@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A711BC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 806B3C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7993D20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:04:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BE002065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:04:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468295;
-	bh=5ZilBD8b4awJ7XRyq9tntI+OmekGDGgyK6digP59zWQ=;
+	s=default; t=1593468298;
+	bh=5l6+rKtmr1boCMKwk/zkfnGh7MPSWATG2k0KxQ0ouFU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2uo/F9B/CzSG5w0EzlFKaubCE9MFURCXi+HPK4dzkB05/joSV3K03ChPxM0CiLegV
-	 9d/iydNuBWxmECJVGX+ax/wQ04sbZc/tYUMeoAKcUtA2oNKBiM72aQuWbgdLTYxgR/
-	 5/zzjL9zeCSSkJ2VtbjySXyXGFNpHiHrSU75YGlk=
+	b=iqPY1oFR2tlzfq6L2lqvVPneIcySFfHgLAJt99dtODyAA1ecoPTkZyPk/+JsoCjR+
+	 JKv9voArtkGsrOPvYQ2nf8dLzB9yaoVsudgzftdualtGuupxxWLi7VR3iEk9Ti/6vM
+	 g8sc01O1ffID7slbMxiG66F0ilsfvVbjd0uh+WFU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391855AbgF2WEy (ORCPT
+        id S2391859AbgF2WE4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:04:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56904 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:04:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726177AbgF2SfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726171AbgF2SfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E61C246B3;
-        Mon, 29 Jun 2020 15:20:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 143182474A;
+        Mon, 29 Jun 2020 15:21:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444008;
-        bh=5ZilBD8b4awJ7XRyq9tntI+OmekGDGgyK6digP59zWQ=;
+        s=default; t=1593444066;
+        bh=5l6+rKtmr1boCMKwk/zkfnGh7MPSWATG2k0KxQ0ouFU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wCkvbJGFbiBANH7/FwctO1Z8OfhA5FwYLsgoIafDOe+hKjA/0Zzb2kx1vSpmTc6Vh
-         ew8BOd7AIjfGIxvIMTuC/T3OUzH5VwI+VIXCEmgwspxDATy88p0BwRRkYentBJYjwU
-         esMYfwgzau/bfostSp0v/NDQlZoGmysUB1ona0SM=
+        b=UjuMLq/J58cSOJHChXHuvDzbejnTaQ9eR2dOIDvEn1ayIPpccHROLmgYarlvU2FVw
+         zvI1ruz+yJ/amNxCd21kDg9SKD+EQ92h4H5vwGy0tvRCQOhlaVFpJfPLbly+3lrFct
+         S1SER8QPwRTyfLH1zGFk9Vx6nCLrOLFnQmKwAPBc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Philipp Fent <fent@in.tum.de>, Ard Biesheuvel <ardb@kernel.org>,
+Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 114/265] efi/libstub: Fix path separator regression
-Date:   Mon, 29 Jun 2020 11:15:47 -0400
-Message-Id: <20200629151818.2493727-115-sashal@kernel.org>
+Subject: [PATCH 5.7 175/265] wil6210: account for napi_gro_receive never returning GRO_DROP
+Date:   Mon, 29 Jun 2020 11:16:48 -0400
+Message-Id: <20200629151818.2493727-176-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -64,57 +65,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Philipp Fent <fent@in.tum.de>
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
 
-[ Upstream commit 7a88a6227dc7f2e723bba11ece05e57bd8dce8e4 ]
+[ Upstream commit 045790b7bc66a75070c112a61558c639cef2263e ]
 
-Commit 9302c1bb8e47 ("efi/libstub: Rewrite file I/O routine") introduced a
-regression that made a couple of (badly configured) systems fail to
-boot [1]: Until 5.6, we silently accepted Unix-style file separators in
-EFI paths, which might violate the EFI standard, but are an easy to make
-mistake. This fix restores the pre-5.7 behaviour.
+The napi_gro_receive function no longer returns GRO_DROP ever, making
+handling GRO_DROP dead code. This commit removes that dead code.
+Further, it's not even clear that device drivers have any business in
+taking action after passing off received packets; that's arguably out of
+their hands. In this case, too, the non-gro path didn't bother checking
+the return value. Plus, this had some clunky debugging functions that
+duplicated code from elsewhere and was generally pretty messy. So, this
+commit cleans that all up too.
 
-[1] https://bbs.archlinux.org/viewtopic.php?id=256273
-
-Fixes: 9302c1bb8e47 ("efi/libstub: Rewrite file I/O routine")
-Signed-off-by: Philipp Fent <fent@in.tum.de>
-Link: https://lore.kernel.org/r/20200615115109.7823-1-fent@in.tum.de
-[ardb: rewrite as chained if/else statements]
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Fixes: 6570bc79c0df ("net: core: use listified Rx for GRO_NORMAL in napi_gro_receive()")
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/firmware/efi/libstub/file.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ drivers/net/wireless/ath/wil6210/txrx.c | 39 +++++++------------------
+ 1 file changed, 11 insertions(+), 28 deletions(-)
 
-diff --git a/drivers/firmware/efi/libstub/file.c b/drivers/firmware/efi/libstub/file.c
-index ea66b1f16a79d..f1c4faf58c764 100644
---- a/drivers/firmware/efi/libstub/file.c
-+++ b/drivers/firmware/efi/libstub/file.c
-@@ -104,12 +104,20 @@ static int find_file_option(const efi_char16_t *cmdline, int cmdline_len,
- 	if (!found)
- 		return 0;
+diff --git a/drivers/net/wireless/ath/wil6210/txrx.c b/drivers/net/wireless/ath/wil6210/txrx.c
+index bc8c15fb609dc..080e5aa60bea4 100644
+--- a/drivers/net/wireless/ath/wil6210/txrx.c
++++ b/drivers/net/wireless/ath/wil6210/txrx.c
+@@ -897,7 +897,6 @@ static void wil_rx_handle_eapol(struct wil6210_vif *vif, struct sk_buff *skb)
+ void wil_netif_rx(struct sk_buff *skb, struct net_device *ndev, int cid,
+ 		  struct wil_net_stats *stats, bool gro)
+ {
+-	gro_result_t rc = GRO_NORMAL;
+ 	struct wil6210_vif *vif = ndev_to_vif(ndev);
+ 	struct wil6210_priv *wil = ndev_to_wil(ndev);
+ 	struct wireless_dev *wdev = vif_to_wdev(vif);
+@@ -908,22 +907,16 @@ void wil_netif_rx(struct sk_buff *skb, struct net_device *ndev, int cid,
+ 	 */
+ 	int mcast = is_multicast_ether_addr(da);
+ 	struct sk_buff *xmit_skb = NULL;
+-	static const char * const gro_res_str[] = {
+-		[GRO_MERGED]		= "GRO_MERGED",
+-		[GRO_MERGED_FREE]	= "GRO_MERGED_FREE",
+-		[GRO_HELD]		= "GRO_HELD",
+-		[GRO_NORMAL]		= "GRO_NORMAL",
+-		[GRO_DROP]		= "GRO_DROP",
+-		[GRO_CONSUMED]		= "GRO_CONSUMED",
+-	};
  
-+	/* Skip any leading slashes */
-+	while (cmdline[i] == L'/' || cmdline[i] == L'\\')
-+		i++;
-+
- 	while (--result_len > 0 && i < cmdline_len) {
--		if (cmdline[i] == L'\0' ||
--		    cmdline[i] == L'\n' ||
--		    cmdline[i] == L' ')
-+		efi_char16_t c = cmdline[i++];
-+
-+		if (c == L'\0' || c == L'\n' || c == L' ')
- 			break;
--		*result++ = cmdline[i++];
-+		else if (c == L'/')
-+			/* Replace UNIX dir separators with EFI standard ones */
-+			*result++ = L'\\';
-+		else
-+			*result++ = c;
+ 	if (wdev->iftype == NL80211_IFTYPE_STATION) {
+ 		sa = wil_skb_get_sa(skb);
+ 		if (mcast && ether_addr_equal(sa, ndev->dev_addr)) {
+ 			/* mcast packet looped back to us */
+-			rc = GRO_DROP;
+ 			dev_kfree_skb(skb);
+-			goto stats;
++			ndev->stats.rx_dropped++;
++			stats->rx_dropped++;
++			wil_dbg_txrx(wil, "Rx drop %d bytes\n", len);
++			return;
+ 		}
+ 	} else if (wdev->iftype == NL80211_IFTYPE_AP && !vif->ap_isolate) {
+ 		if (mcast) {
+@@ -967,26 +960,16 @@ void wil_netif_rx(struct sk_buff *skb, struct net_device *ndev, int cid,
+ 			wil_rx_handle_eapol(vif, skb);
+ 
+ 		if (gro)
+-			rc = napi_gro_receive(&wil->napi_rx, skb);
++			napi_gro_receive(&wil->napi_rx, skb);
+ 		else
+ 			netif_rx_ni(skb);
+-		wil_dbg_txrx(wil, "Rx complete %d bytes => %s\n",
+-			     len, gro_res_str[rc]);
+-	}
+-stats:
+-	/* statistics. rc set to GRO_NORMAL for AP bridging */
+-	if (unlikely(rc == GRO_DROP)) {
+-		ndev->stats.rx_dropped++;
+-		stats->rx_dropped++;
+-		wil_dbg_txrx(wil, "Rx drop %d bytes\n", len);
+-	} else {
+-		ndev->stats.rx_packets++;
+-		stats->rx_packets++;
+-		ndev->stats.rx_bytes += len;
+-		stats->rx_bytes += len;
+-		if (mcast)
+-			ndev->stats.multicast++;
  	}
- 	*result = L'\0';
- 	return i;
++	ndev->stats.rx_packets++;
++	stats->rx_packets++;
++	ndev->stats.rx_bytes += len;
++	stats->rx_bytes += len;
++	if (mcast)
++		ndev->stats.multicast++;
+ }
+ 
+ void wil_netif_rx_any(struct sk_buff *skb, struct net_device *ndev)
 -- 
 2.25.1
 
