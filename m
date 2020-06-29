@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9FD9C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:28:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 457D7C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5AE820656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:28:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A4B020656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:28:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462505;
-	bh=pt8TGwydI0Q2NG5Q0h+jWjnuF3rsdC1OdZDVC8mGVLs=;
+	s=default; t=1593462507;
+	bh=tQrJ7xXyHSuWsbMexpBpMnmj87YrtGVDi36GBSGUga4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aMzFMTYKjiEWRJCfRi/a8/uNLKHboS5Cw/NZxb0Sz5XhBGVSFO4x+1nm7N6Bn2/ak
-	 kRI/b8wKyn9fDQ/+Nnl1yOCa9WTsRfoNEF2ToGP8F2acKNmI5X3ppp2MU1EyRuXXmo
-	 xzeJQsBRhykhisPUwflE5qzmE6REmIJy7RlkCDUs=
+	b=JEjHlrKJPQMytgMeISl3Xr1VuDYCSLak01zuYYtZHG61+5L/e0tt7mRsLyQ2d9Fni
+	 1VAyqmtVo4X8njv1K0ctLgIaWhq3kf+sZ6KcbtHRHUnsUA10KlT+UD19TX2nMnifL4
+	 UHzc3DBW0/y0JxRde15PIhKZx4AjbfNUS46s/LQA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389172AbgF2U2W (ORCPT
+        id S2389093AbgF2U2Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:28:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37040 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:28:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37056 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732503AbgF2TZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732502AbgF2TZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EDE4253ED;
-        Mon, 29 Jun 2020 15:42:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A22D2544D;
+        Mon, 29 Jun 2020 15:43:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445329;
-        bh=pt8TGwydI0Q2NG5Q0h+jWjnuF3rsdC1OdZDVC8mGVLs=;
+        s=default; t=1593445401;
+        bh=tQrJ7xXyHSuWsbMexpBpMnmj87YrtGVDi36GBSGUga4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LApN4g4LCo7QlxCj3Qyr/bPULYTLoBL9cwAHAGrr2HjsajLsMplCFQxw8BLt/FTwW
-         QOD5ywrPizbhUa+SmFZVKMq7KHbBi1kcxrH/icw9XusmS4H3q/+1hLptjACj8H8x3w
-         ebo9sUeNPjNoS4qy+TPHBC2BLpiLdw6RkJ8bewtk=
+        b=b4zPsFu6tVPuzGkkopxxI6ETiKjHXv+tly7FPz2PLR0Z8XRDENOTBCRGtEqXJi6Mj
+         8ouy69YXFbXPY5rw82yADgh3kLEOMTtEoMPtE69T+E62UwomHJxxgvWrNlPx2GQz89
+         0xQcMcAanm7rJ9wXHZoNlb5qLZ+kHNC2SyDfGkaA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 093/191] powerpc/kprobes: Fixes for kprobe_lookup_name() on BE
-Date:   Mon, 29 Jun 2020 11:38:29 -0400
-Message-Id: <20200629154007.2495120-94-sashal@kernel.org>
+Cc:     Al Cooper <alcooperx@gmail.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.9 153/191] xhci: Fix enumeration issue when setting max packet size for FS devices.
+Date:   Mon, 29 Jun 2020 11:39:29 -0400
+Message-Id: <20200629154007.2495120-154-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -65,48 +65,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+From: Al Cooper <alcooperx@gmail.com>
 
-[ Upstream commit 30176466e36aadba01e1a630cf42397a3438efa4 ]
+commit a73d9d9cfc3cfceabd91fb0b0c13e4062b6dbcd7 upstream.
 
-Fix two issues with kprobes.h on BE which were exposed with the
-optprobes work:
-  - one, having to do with a missing include for linux/module.h for
-    MODULE_NAME_LEN -- this didn't show up previously since the only
-    users of kprobe_lookup_name were in kprobes.c, which included
-    linux/module.h through other headers, and
-  - two, with a missing const qualifier for a local variable which ends
-    up referring a string literal. Again, this is unique to how
-    kprobe_lookup_name is being invoked in optprobes.c
+Unable to complete the enumeration of a USB TV Tuner device.
 
-Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Per XHCI spec (4.6.5), the EP state field of the input context shall
+be cleared for a set address command. In the special case of an FS
+device that has "MaxPacketSize0 = 8", the Linux XHCI driver does
+not do this before evaluating the context. With an XHCI controller
+that checks the EP state field for parameter context error this
+causes a problem in cases such as the device getting reset again
+after enumeration.
+
+When that field is cleared, the problem does not occur.
+
+This was found and fixed by Sasi Kumar.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Al Cooper <alcooperx@gmail.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20200624135949.22611-3-mathias.nyman@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/powerpc/include/asm/kprobes.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/usb/host/xhci.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/powerpc/include/asm/kprobes.h b/arch/powerpc/include/asm/kprobes.h
-index 2c9759bdb63bc..063d64c1c9e89 100644
---- a/arch/powerpc/include/asm/kprobes.h
-+++ b/arch/powerpc/include/asm/kprobes.h
-@@ -29,6 +29,7 @@
- #include <linux/types.h>
- #include <linux/ptrace.h>
- #include <linux/percpu.h>
-+#include <linux/module.h>
- #include <asm/probes.h>
- #include <asm/code-patching.h>
+diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+index baacc442ec6a2..4ef019152613e 100644
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -1347,6 +1347,7 @@ static int xhci_check_maxpacket(struct xhci_hcd *xhci, unsigned int slot_id,
+ 				xhci->devs[slot_id]->out_ctx, ep_index);
  
-@@ -60,7 +61,7 @@ typedef ppc_opcode_t kprobe_opcode_t;
- #define kprobe_lookup_name(name, addr)					\
- {									\
- 	char dot_name[MODULE_NAME_LEN + 1 + KSYM_NAME_LEN];		\
--	char *modsym;							\
-+	const char *modsym;							\
- 	bool dot_appended = false;					\
- 	if ((modsym = strchr(name, ':')) != NULL) {			\
- 		modsym++;						\
+ 		ep_ctx = xhci_get_ep_ctx(xhci, command->in_ctx, ep_index);
++		ep_ctx->ep_info &= cpu_to_le32(~EP_STATE_MASK);/* must clear */
+ 		ep_ctx->ep_info2 &= cpu_to_le32(~MAX_PACKET_MASK);
+ 		ep_ctx->ep_info2 |= cpu_to_le32(MAX_PACKET(max_packet_size));
+ 
 -- 
 2.25.1
 
