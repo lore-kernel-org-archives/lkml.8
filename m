@@ -2,126 +2,96 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3895CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B9E4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:36:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C0D620672
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:36:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593459365;
-	bh=G1OaI6ru6BFUiiAeqdzS2X/v02E6klbhEIvMe3Sjtg8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D8M/HQGWtpHBOJGb3aUKQlSWfiDprG/VgfWhP7GRW6j7LTlJf2BP0M/tpmYHUKgQ9
-	 Snh3gG7TxnhDm46+ihcZ2tjhFjbbEB8aEhSW4/SOLKAdwCbszzkr16DX2sipG8sxsW
-	 Dj19zGlbyp8Gx9kCi0EqqhPd9sWqqcRlgGldRYz0=
+	by mail.kernel.org (Postfix) with ESMTP id 78C4820672
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:36:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732436AbgF2TbM (ORCPT
+        id S1730432AbgF2TgK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:31:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40556 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732992AbgF2Tac (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:30:32 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C47325223;
-        Mon, 29 Jun 2020 15:35:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444942;
-        bh=G1OaI6ru6BFUiiAeqdzS2X/v02E6klbhEIvMe3Sjtg8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N1CB4tadVzq709PnKf3LqqNpxP2DDyxMsf4+AO9ePEbisJRv6+K/hrtwoG9+VZFWw
-         b4ICd9RjLdqxkbN7jtDYrUPr0FRiGRf82rHNdXYvndYDg6TeGXd6lHSGXOavKRJhHH
-         aaJW/bM1MR8HMS5nEZwcKwoF31Mts35yQOvIMqE4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tariq Toukan <tariqt@mellanox.com>,
-        Boris Pismenny <borisp@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 039/131] net: Do not clear the sock TX queue in sk_set_socket()
-Date:   Mon, 29 Jun 2020 11:33:30 -0400
-Message-Id: <20200629153502.2494656-40-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
-References: <20200629153502.2494656-1-sashal@kernel.org>
+        Mon, 29 Jun 2020 15:36:10 -0400
+Received: from outbound-smtp30.blacknight.com ([81.17.249.61]:60650 "EHLO
+        outbound-smtp30.blacknight.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729568AbgF2Ta6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:30:58 -0400
+Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
+        by outbound-smtp30.blacknight.com (Postfix) with ESMTPS id A74EDBA9E6
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 15:41:46 +0100 (IST)
+Received: (qmail 22832 invoked from network); 29 Jun 2020 14:41:46 -0000
+Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.5])
+  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 29 Jun 2020 14:41:46 -0000
+Date:   Mon, 29 Jun 2020 15:41:45 +0100
+From:   Mel Gorman <mgorman@techsingularity.net>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Jan Kara <jack@suse.cz>, Maxim Levitsky <mlevitsk@redhat.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Amir Goldstein <amir73il@gmail.com>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: [PATCH] Revert "fs: Do not check if there is a fsnotify watcher on
+ pseudo inodes"
+Message-ID: <20200629144145.GA3183@techsingularity.net>
+References: <7b4aa1e985007c6d582fffe5e8435f8153e28e0f.camel@redhat.com>
+ <CAOQ4uxg8E-im=B6L0PQNaTTKdtxVAO=MSJki7kxq875ME4hOLw@mail.gmail.com>
+ <20200629130915.GF26507@quack2.suse.cz>
+ <CAOQ4uxhdOMbn9vL_PAGKLtriVzkjwBkuEgbdB5+uH2ZM6uA97w@mail.gmail.com>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.19.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.19.131-rc1
-X-KernelTest-Deadline: 2020-07-01T15:34+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
+In-Reply-To: <CAOQ4uxhdOMbn9vL_PAGKLtriVzkjwBkuEgbdB5+uH2ZM6uA97w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tariq Toukan <tariqt@mellanox.com>
+This reverts commit e9c15badbb7b ("fs: Do not check if there is a
+fsnotify watcher on pseudo inodes"). The commit intended to eliminate
+fsnotify-related overhead for pseudo inodes but it is broken in
+concept. inotify can receive events of pipe files under /proc/X/fd and
+chromium relies on close and open events for sandboxing. Maxim Levitsky
+reported the following
 
-[ Upstream commit 41b14fb8724d5a4b382a63cb4a1a61880347ccb8 ]
+  Chromium starts as a white rectangle, shows few white rectangles that
+  resemble its notifications and then crashes.
 
-Clearing the sock TX queue in sk_set_socket() might cause unexpected
-out-of-order transmit when called from sock_orphan(), as outstanding
-packets can pick a different TX queue and bypass the ones already queued.
+  The stdout output from chromium:
 
-This is undesired in general. More specifically, it breaks the in-order
-scheduling property guarantee for device-offloaded TLS sockets.
+  [mlevitsk@starship ~]$chromium-freeworld
+  mesa: for the   --simplifycfg-sink-common option: may only occur zero or one times!
+  mesa: for the   --global-isel-abort option: may only occur zero or one times!
+  [3379:3379:0628/135151.440930:ERROR:browser_switcher_service.cc(238)] XXX Init()
+  ../../sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc:**CRASHING**:seccomp-bpf failure in syscall 0072
+  Received signal 11 SEGV_MAPERR 0000004a9048
 
-Remove the call to sk_tx_queue_clear() in sk_set_socket(), and add it
-explicitly only where needed.
+Crashes are not universal but even if chromium does not crash, it certainly
+does not work properly. While filtering just modify and access might be
+safe, the benefit is not worth the risk hence the revert.
 
-Fixes: e022f0b4a03f ("net: Introduce sk_tx_queue_mapping")
-Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
-Reviewed-by: Boris Pismenny <borisp@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reported-by: Maxim Levitsky <mlevitsk@redhat.com>
+Fixes: e9c15badbb7b ("fs: Do not check if there is a fsnotify watcher on pseudo inodes")
+Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
 ---
- include/net/sock.h | 1 -
- net/core/sock.c    | 2 ++
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ fs/file_table.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/net/sock.h b/include/net/sock.h
-index f359e5c947628..e2df102e669e8 100644
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -1775,7 +1775,6 @@ static inline int sk_rx_queue_get(const struct sock *sk)
- 
- static inline void sk_set_socket(struct sock *sk, struct socket *sock)
- {
--	sk_tx_queue_clear(sk);
- 	sk->sk_socket = sock;
- }
- 
-diff --git a/net/core/sock.c b/net/core/sock.c
-index b11d116383dab..8721264a2b394 100644
---- a/net/core/sock.c
-+++ b/net/core/sock.c
-@@ -1540,6 +1540,7 @@ struct sock *sk_alloc(struct net *net, int family, gfp_t priority,
- 		cgroup_sk_alloc(&sk->sk_cgrp_data);
- 		sock_update_classid(&sk->sk_cgrp_data);
- 		sock_update_netprioidx(&sk->sk_cgrp_data);
-+		sk_tx_queue_clear(sk);
- 	}
- 
- 	return sk;
-@@ -1747,6 +1748,7 @@ struct sock *sk_clone_lock(const struct sock *sk, const gfp_t priority)
- 		 */
- 		sk_refcnt_debug_inc(newsk);
- 		sk_set_socket(newsk, NULL);
-+		sk_tx_queue_clear(newsk);
- 		newsk->sk_wq = NULL;
- 
- 		if (newsk->sk_prot->sockets_allocated)
--- 
-2.25.1
-
+diff --git a/fs/file_table.c b/fs/file_table.c
+index 65603502fed6..656647f9575a 100644
+--- a/fs/file_table.c
++++ b/fs/file_table.c
+@@ -230,7 +230,7 @@ struct file *alloc_file_pseudo(struct inode *inode, struct vfsmount *mnt,
+ 		d_set_d_op(path.dentry, &anon_ops);
+ 	path.mnt = mntget(mnt);
+ 	d_instantiate(path.dentry, inode);
+-	file = alloc_file(&path, flags | FMODE_NONOTIFY, fops);
++	file = alloc_file(&path, flags, fops);
+ 	if (IS_ERR(file)) {
+ 		ihold(inode);
+ 		path_put(&path);
