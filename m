@@ -2,131 +2,254 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 084FDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7959BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD76220675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:10:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461443;
-	bh=emakqb68zynqWff8gOjBLPusUCIxEvi60xO/MerYsEo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x+RgbfQfPlh9rbseEW8qu6UvkZCekCXDAfanjo/oK0oc8ZySLEJv01IIeqO3o5zMk
-	 UdYbjV6h3jMWnOH+vfWHF2Jy2Fz1QpEP5ydpFBX6LzpiXPUPwlWnNPRpqb3V7drx4Q
-	 65nc2flX45SKP7lR+bOsWL1v0MgIYfElM7zBqz4I=
+	by mail.kernel.org (Postfix) with ESMTP id 5A7B820675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:10:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729287AbgF2UKm (ORCPT
+        id S1729371AbgF2UKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 29 Jun 2020 16:10:50 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:37826 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729273AbgF2UKm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 16:10:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40562 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732905AbgF2TaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:30:22 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DE3D23EF6;
-        Mon, 29 Jun 2020 15:35:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444918;
-        bh=emakqb68zynqWff8gOjBLPusUCIxEvi60xO/MerYsEo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wKytuCT95Mc71k11VFW9gNDgDSK6JtSAfqnafmB2jpQ7O9subuTdLHA6UpeGiIUbp
-         4GWy/wyuBtMJ3ONQqa5FHFvxDNuF90ZMcB4PJwXOAnEq0j6WQbH74GkVRIN5Q21qGr
-         dYiUbnZc2ZQdCArceBg9N4/omIUXpYkWc4xAPRPE=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 014/131] ALSA: hda/realtek: Enable mute LED on an HP system
-Date:   Mon, 29 Jun 2020 11:33:05 -0400
-Message-Id: <20200629153502.2494656-15-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
-References: <20200629153502.2494656-1-sashal@kernel.org>
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jq06y-0003sK-H1; Mon, 29 Jun 2020 14:10:40 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jq06x-0004aE-1a; Mon, 29 Jun 2020 14:10:39 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     <linux-kernel@vger.kernel.org>
+Cc:     David Miller <davem@davemloft.net>,
+        Greg Kroah-Hartman <greg@kroah.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <20200625095725.GA3303921@kroah.com>
+        <778297d2-512a-8361-cf05-42d9379e6977@i-love.sakura.ne.jp>
+        <20200625120725.GA3493334@kroah.com>
+        <20200625.123437.2219826613137938086.davem@davemloft.net>
+        <CAHk-=whuTwGHEPjvtbBvneHHXeqJC=q5S09mbPnqb=Q+MSPMag@mail.gmail.com>
+        <87pn9mgfc2.fsf_-_@x220.int.ebiederm.org>
+        <87y2oac50p.fsf@x220.int.ebiederm.org>
+        <87bll17ili.fsf_-_@x220.int.ebiederm.org>
+Date:   Mon, 29 Jun 2020 15:06:07 -0500
+In-Reply-To: <87bll17ili.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
+        message of "Mon, 29 Jun 2020 14:55:05 -0500")
+Message-ID: <87a70l4oy8.fsf_-_@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.19.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.19.131-rc1
-X-KernelTest-Deadline: 2020-07-01T15:34+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-XM-SPF: eid=1jq06x-0004aE-1a;;;mid=<87a70l4oy8.fsf_-_@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1/x4mrxyEgtfOPj78oDI1znxchawvWVzpY=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: [PATCH v2 12/15] umd: Track user space drivers with struct pid
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit f5a88b0accc24c4a9021247d7a3124f90aa4c586 ]
+Use struct pid instead of user space pid values that are prone to wrap
+araound.
 
-The system in question uses ALC285, and it uses GPIO 0x04 to control its
-mute LED.
+In addition track the entire thread group instead of just the first
+thread that is started by exec.  There are no multi-threaded user mode
+drivers today but there is nothing preclucing user drivers from being
+multi-threaded, so it is just a good idea to track the entire process.
 
-The mic mute LED can be controlled by GPIO 0x01, however the system uses
-DMIC so we should use that to control mic mute LED.
+Take a reference count on the tgid's in question to make it possible
+to remove exit_umh in a future change.
 
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200327044626.29582-1-kai.heng.feng@canonical.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+As a struct pid is available directly use kill_pid_info.
+
+The prior process signalling code was iffy in using a userspace pid
+known to be in the initial pid namespace and then looking up it's task
+in whatever the current pid namespace is.  It worked only because
+kernel threads always run in the initial pid namespace.
+
+As the tgid is now refcounted verify the tgid is NULL at the start of
+fork_usermode_driver to avoid the possibility of silent pid leaks.
+
+Link: https://lkml.kernel.org/r/87mu4qdlv2.fsf_-_@x220.int.ebiederm.org
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 ---
- sound/pci/hda/patch_realtek.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ include/linux/umd.h          |  2 +-
+ kernel/exit.c                |  3 ++-
+ kernel/umd.c                 | 15 ++++++++++-----
+ net/bpfilter/bpfilter_kern.c | 13 +++++--------
+ net/ipv4/bpfilter/sockopt.c  |  3 ++-
+ 5 files changed, 20 insertions(+), 16 deletions(-)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 9847be4349e60..3103f990299c9 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -3918,6 +3918,12 @@ static void alc269_fixup_hp_gpio_led(struct hda_codec *codec,
- 	alc_fixup_hp_gpio_led(codec, action, 0x08, 0x10);
+diff --git a/include/linux/umd.h b/include/linux/umd.h
+index 12ff8f753ea7..edb1c62c62f4 100644
+--- a/include/linux/umd.h
++++ b/include/linux/umd.h
+@@ -25,7 +25,7 @@ struct umd_info {
+ 	struct list_head list;
+ 	void (*cleanup)(struct umd_info *info);
+ 	struct path wd;
+-	pid_t pid;
++	struct pid *tgid;
+ };
+ int umd_load_blob(struct umd_info *info, const void *data, size_t len);
+ int umd_unload_blob(struct umd_info *info);
+diff --git a/kernel/exit.c b/kernel/exit.c
+index b94fe03e609c..b53107abdd31 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -805,7 +805,8 @@ void __noreturn do_exit(long code)
+ 	exit_task_namespaces(tsk);
+ 	exit_task_work(tsk);
+ 	exit_thread(tsk);
+-	exit_umh(tsk);
++	if (group_dead)
++		exit_umh(tsk);
+ 
+ 	/*
+ 	 * Flush inherited counters to the parent - before the parent
+diff --git a/kernel/umd.c b/kernel/umd.c
+index aaa6f3142e52..c1e8eccaee76 100644
+--- a/kernel/umd.c
++++ b/kernel/umd.c
+@@ -133,7 +133,7 @@ static int umd_setup(struct subprocess_info *info, struct cred *new)
+ 	set_fs_pwd(current->fs, &umd_info->wd);
+ 	umd_info->pipe_to_umh = to_umh[1];
+ 	umd_info->pipe_from_umh = from_umh[0];
+-	umd_info->pid = task_pid_nr(current);
++	umd_info->tgid = get_pid(task_tgid(current));
+ 	current->flags |= PF_UMH;
+ 	return 0;
+ }
+@@ -146,6 +146,8 @@ static void umd_cleanup(struct subprocess_info *info)
+ 	if (info->retval) {
+ 		fput(umd_info->pipe_to_umh);
+ 		fput(umd_info->pipe_from_umh);
++		put_pid(umd_info->tgid);
++		umd_info->tgid = NULL;
+ 	}
  }
  
-+static void alc285_fixup_hp_gpio_led(struct hda_codec *codec,
-+				const struct hda_fixup *fix, int action)
-+{
-+	alc_fixup_hp_gpio_led(codec, action, 0x04, 0x00);
-+}
-+
- static void alc286_fixup_hp_gpio_led(struct hda_codec *codec,
- 				const struct hda_fixup *fix, int action)
+@@ -155,9 +157,9 @@ static void umd_cleanup(struct subprocess_info *info)
+  *
+  * Returns either negative error or zero which indicates success in
+  * executing a usermode driver. In such case 'struct umd_info *info'
+- * is populated with two pipes and a pid of the process. The caller is
++ * is populated with two pipes and a tgid of the process. The caller is
+  * responsible for health check of the user process, killing it via
+- * pid, and closing the pipes when user process is no longer needed.
++ * tgid, and closing the pipes when user process is no longer needed.
+  */
+ int fork_usermode_driver(struct umd_info *info)
  {
-@@ -5748,6 +5754,7 @@ enum {
- 	ALC294_FIXUP_SPK2_TO_DAC1,
- 	ALC294_FIXUP_ASUS_DUAL_SPK,
- 	ALC294_FIXUP_ASUS_HPE,
-+	ALC285_FIXUP_HP_GPIO_LED,
- };
+@@ -165,6 +167,9 @@ int fork_usermode_driver(struct umd_info *info)
+ 	char **argv = NULL;
+ 	int err;
  
- static const struct hda_fixup alc269_fixups[] = {
-@@ -6847,6 +6854,10 @@ static const struct hda_fixup alc269_fixups[] = {
- 		.chained = true,
- 		.chain_id = ALC294_FIXUP_ASUS_HEADSET_MIC
- 	},
-+	[ALC285_FIXUP_HP_GPIO_LED] = {
-+		.type = HDA_FIXUP_FUNC,
-+		.v.func = alc285_fixup_hp_gpio_led,
-+	},
- };
++	if (WARN_ON_ONCE(info->tgid))
++		return -EBUSY;
++
+ 	err = -ENOMEM;
+ 	argv = argv_split(GFP_KERNEL, info->driver_name, NULL);
+ 	if (!argv)
+@@ -192,11 +197,11 @@ EXPORT_SYMBOL_GPL(fork_usermode_driver);
+ void __exit_umh(struct task_struct *tsk)
+ {
+ 	struct umd_info *info;
+-	pid_t pid = tsk->pid;
++	struct pid *tgid = task_tgid(tsk);
  
- static const struct snd_pci_quirk alc269_fixup_tbl[] = {
-@@ -6991,6 +7002,7 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x103c, 0x83b9, "HP Spectre x360", ALC269_FIXUP_HP_MUTE_LED_MIC3),
- 	SND_PCI_QUIRK(0x103c, 0x8497, "HP Envy x360", ALC269_FIXUP_HP_MUTE_LED_MIC3),
- 	SND_PCI_QUIRK(0x103c, 0x84e7, "HP Pavilion 15", ALC269_FIXUP_HP_MUTE_LED_MIC3),
-+	SND_PCI_QUIRK(0x103c, 0x8736, "HP", ALC285_FIXUP_HP_GPIO_LED),
- 	SND_PCI_QUIRK(0x1043, 0x103e, "ASUS X540SA", ALC256_FIXUP_ASUS_MIC),
- 	SND_PCI_QUIRK(0x1043, 0x103f, "ASUS TX300", ALC282_FIXUP_ASUS_TX300),
- 	SND_PCI_QUIRK(0x1043, 0x106d, "Asus K53BE", ALC269_FIXUP_LIMIT_INT_MIC_BOOST),
+ 	mutex_lock(&umh_list_lock);
+ 	list_for_each_entry(info, &umh_list, list) {
+-		if (info->pid == pid) {
++		if (info->tgid == tgid) {
+ 			list_del(&info->list);
+ 			mutex_unlock(&umh_list_lock);
+ 			goto out;
+diff --git a/net/bpfilter/bpfilter_kern.c b/net/bpfilter/bpfilter_kern.c
+index 28883b00609d..b73dedeb6dbf 100644
+--- a/net/bpfilter/bpfilter_kern.c
++++ b/net/bpfilter/bpfilter_kern.c
+@@ -15,16 +15,13 @@ extern char bpfilter_umh_end;
+ 
+ static void shutdown_umh(void)
+ {
+-	struct task_struct *tsk;
++	struct umd_info *info = &bpfilter_ops.info;
++	struct pid *tgid = info->tgid;
+ 
+ 	if (bpfilter_ops.stop)
+ 		return;
+ 
+-	tsk = get_pid_task(find_vpid(bpfilter_ops.info.pid), PIDTYPE_PID);
+-	if (tsk) {
+-		send_sig(SIGKILL, tsk, 1);
+-		put_task_struct(tsk);
+-	}
++	kill_pid_info(SIGKILL, SEND_SIG_PRIV, tgid);
+ }
+ 
+ static void __stop_umh(void)
+@@ -48,7 +45,7 @@ static int __bpfilter_process_sockopt(struct sock *sk, int optname,
+ 	req.cmd = optname;
+ 	req.addr = (long __force __user)optval;
+ 	req.len = optlen;
+-	if (!bpfilter_ops.info.pid)
++	if (!bpfilter_ops.info.tgid)
+ 		goto out;
+ 	n = __kernel_write(bpfilter_ops.info.pipe_to_umh, &req, sizeof(req),
+ 			   &pos);
+@@ -81,7 +78,7 @@ static int start_umh(void)
+ 	if (err)
+ 		return err;
+ 	bpfilter_ops.stop = false;
+-	pr_info("Loaded bpfilter_umh pid %d\n", bpfilter_ops.info.pid);
++	pr_info("Loaded bpfilter_umh pid %d\n", pid_nr(bpfilter_ops.info.tgid));
+ 
+ 	/* health check that usermode process started correctly */
+ 	if (__bpfilter_process_sockopt(NULL, 0, NULL, 0, 0) != 0) {
+diff --git a/net/ipv4/bpfilter/sockopt.c b/net/ipv4/bpfilter/sockopt.c
+index 5050de28333d..56cbc43145f6 100644
+--- a/net/ipv4/bpfilter/sockopt.c
++++ b/net/ipv4/bpfilter/sockopt.c
+@@ -18,7 +18,8 @@ static void bpfilter_umh_cleanup(struct umd_info *info)
+ 	bpfilter_ops.stop = true;
+ 	fput(info->pipe_to_umh);
+ 	fput(info->pipe_from_umh);
+-	info->pid = 0;
++	put_pid(info->tgid);
++	info->tgid = NULL;
+ 	mutex_unlock(&bpfilter_ops.lock);
+ }
+ 
 -- 
-2.25.1
+2.25.0
 
