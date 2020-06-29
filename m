@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE780C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50EE6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:46:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABA1F20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:46:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FEEA20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:46:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467196;
-	bh=AqD3HPzojRlR/llzWs9yZ1D23zxzY8tYgsTamKWyrBk=;
+	s=default; t=1593467198;
+	bh=pnxNyqlrUmoFk5ozA2QUt9Kmgq8XNYMXIpDY0QYnR+k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qTrus0W7ORks/z8rDkm29p3g/ofsROcLYxtxPmLO2Eaczbs3RpMd3/geB9Oz64jDr
-	 bzRS08KTyd3+1T9HfEhn1h3MxVatUPe3jSBzDL/XD2CoSN60MVXHx6n4hh4R3/I+lr
-	 1vKxbTAoBXQDPkdHVg0oinwbMpaKqR0tQrcUm6Hc=
+	b=g/grMlLsP0+h8c47IUw9WibJnHuasmbC7qBXmb6LK5e7/vS+XUx3VMPCCKsz9sFPH
+	 N/pwLeoLZjnNgXrYOwNUPrLuUq1iwc+CKbPsDIUuOETEksa7ZkSyK2y/bLxoqEAQLx
+	 H+LO9b7Rnws7SZGe+vrbC5VRn1pHDn30rANEz+es=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727855AbgF2Vqe (ORCPT
+        id S1730736AbgF2Vqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:46:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56892 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:46:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726768AbgF2Sft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726764AbgF2Sft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 43B9B246C5;
-        Mon, 29 Jun 2020 15:20:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 479C624708;
+        Mon, 29 Jun 2020 15:20:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444018;
-        bh=AqD3HPzojRlR/llzWs9yZ1D23zxzY8tYgsTamKWyrBk=;
+        s=default; t=1593444041;
+        bh=pnxNyqlrUmoFk5ozA2QUt9Kmgq8XNYMXIpDY0QYnR+k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kpMHe1LpuYwy2YUifU7Emn/a4Y+IXuhiDiALau+bEtUxXyDpqFCDHif1+6yTzLZ5K
-         k7HsPqN18zvxWLiHw7vhrAGe20FBLEeJvfX8bMucJiZTNN6Fn1QPgHj/rk75B+YDiW
-         J1tu2cDhqcUkRVuUWeJsnivspUL8CWGqVG9nC6TY=
+        b=xh0sxG1/sxTPRB/Sa9nWUPPLYnGonB2mSl9eF6XDhYlzclWfB4nOtK6+GOX/5Wv6L
+         jaMMK8b6cpGPQvYx+K+RA51pi0aIy0wwsyARf8GKE5nk+5XD4g6zePrE8LfH4sfc1G
+         c/Y19y1uRtoz0E20GFtqjDE3lYdxCiROQDZjAhZM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Borislav Petkov <bp@suse.de>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
+Cc:     Alexander Lobakin <alobakin@marvell.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 124/265] x86/resctrl: Fix a NULL vs IS_ERR() static checker warning in rdt_cdp_peer_get()
-Date:   Mon, 29 Jun 2020 11:15:57 -0400
-Message-Id: <20200629151818.2493727-125-sashal@kernel.org>
+Subject: [PATCH 5.7 148/265] net: qed: fix async event callbacks unregistering
+Date:   Mon, 29 Jun 2020 11:16:21 -0400
+Message-Id: <20200629151818.2493727-149-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -67,50 +67,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Alexander Lobakin <alobakin@marvell.com>
 
-[ Upstream commit cc5277fe66cf3ad68f41f1c539b2ef0d5e432974 ]
+[ Upstream commit 31333c1a2521ff4b4ceb0c29de492549cd4a8de3 ]
 
-The callers don't expect *d_cdp to be set to an error pointer, they only
-check for NULL.  This leads to a static checker warning:
+qed_spq_unregister_async_cb() should be called before
+qed_rdma_info_free() to avoid crash-spawning uses-after-free.
+Instead of calling it from each subsystem exit code, do it in one place
+on PF down.
 
-  arch/x86/kernel/cpu/resctrl/rdtgroup.c:2648 __init_one_rdt_domain()
-  warn: 'd_cdp' could be an error pointer
-
-This would not trigger a bug in this specific case because
-__init_one_rdt_domain() calls it with a valid domain that would not have
-a negative id and thus not trigger the return of the ERR_PTR(). If this
-was a negative domain id then the call to rdt_find_domain() in
-domain_add_cpu() would have returned the ERR_PTR() much earlier and the
-creation of the domain with an invalid id would have been prevented.
-
-Even though a bug is not triggered currently the right and safe thing to
-do is to set the pointer to NULL because that is what can be checked for
-when the caller is handling the CDP and non-CDP cases.
-
-Fixes: 52eb74339a62 ("x86/resctrl: Fix rdt_find_domain() return value and checks")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Reinette Chatre <reinette.chatre@intel.com>
-Acked-by: Fenghua Yu <fenghua.yu@intel.com>
-Link: https://lkml.kernel.org/r/20200602193611.GA190851@mwanda
+Fixes: 291d57f67d24 ("qed: Fix rdma_info structure allocation")
+Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
+Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/qlogic/qed/qed_dev.c   | 9 +++++++--
+ drivers/net/ethernet/qlogic/qed/qed_iwarp.c | 2 --
+ drivers/net/ethernet/qlogic/qed/qed_roce.c  | 1 -
+ 3 files changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index 5a359d9fcc055..29a3878ab3c01 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -1117,6 +1117,7 @@ static int rdt_cdp_peer_get(struct rdt_resource *r, struct rdt_domain *d,
- 	_d_cdp = rdt_find_domain(_r_cdp, d->id, NULL);
- 	if (WARN_ON(IS_ERR_OR_NULL(_d_cdp))) {
- 		_r_cdp = NULL;
-+		_d_cdp = NULL;
- 		ret = -EINVAL;
- 	}
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_dev.c b/drivers/net/ethernet/qlogic/qed/qed_dev.c
+index 38a65b984e476..9b00988fb77e1 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_dev.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_dev.c
+@@ -1368,6 +1368,8 @@ static void qed_dbg_user_data_free(struct qed_hwfn *p_hwfn)
  
+ void qed_resc_free(struct qed_dev *cdev)
+ {
++	struct qed_rdma_info *rdma_info;
++	struct qed_hwfn *p_hwfn;
+ 	int i;
+ 
+ 	if (IS_VF(cdev)) {
+@@ -1385,7 +1387,8 @@ void qed_resc_free(struct qed_dev *cdev)
+ 	qed_llh_free(cdev);
+ 
+ 	for_each_hwfn(cdev, i) {
+-		struct qed_hwfn *p_hwfn = &cdev->hwfns[i];
++		p_hwfn = cdev->hwfns + i;
++		rdma_info = p_hwfn->p_rdma_info;
+ 
+ 		qed_cxt_mngr_free(p_hwfn);
+ 		qed_qm_info_free(p_hwfn);
+@@ -1404,8 +1407,10 @@ void qed_resc_free(struct qed_dev *cdev)
+ 			qed_ooo_free(p_hwfn);
+ 		}
+ 
+-		if (QED_IS_RDMA_PERSONALITY(p_hwfn))
++		if (QED_IS_RDMA_PERSONALITY(p_hwfn) && rdma_info) {
++			qed_spq_unregister_async_cb(p_hwfn, rdma_info->proto);
+ 			qed_rdma_info_free(p_hwfn);
++		}
+ 
+ 		qed_iov_free(p_hwfn);
+ 		qed_l2_free(p_hwfn);
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
+index d2fe61a5cf567..5409a2da6106d 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
+@@ -2836,8 +2836,6 @@ int qed_iwarp_stop(struct qed_hwfn *p_hwfn)
+ 	if (rc)
+ 		return rc;
+ 
+-	qed_spq_unregister_async_cb(p_hwfn, PROTOCOLID_IWARP);
+-
+ 	return qed_iwarp_ll2_stop(p_hwfn);
+ }
+ 
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_roce.c b/drivers/net/ethernet/qlogic/qed/qed_roce.c
+index 37e70562a9645..f15c26ef88709 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_roce.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_roce.c
+@@ -113,7 +113,6 @@ void qed_roce_stop(struct qed_hwfn *p_hwfn)
+ 			break;
+ 		}
+ 	}
+-	qed_spq_unregister_async_cb(p_hwfn, PROTOCOLID_ROCE);
+ }
+ 
+ static void qed_rdma_copy_gids(struct qed_rdma_qp *qp, __le32 *src_gid,
 -- 
 2.25.1
 
