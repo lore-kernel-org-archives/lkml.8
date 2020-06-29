@@ -2,160 +2,128 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D8AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0000C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:08:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 547C8207D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:08:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461292;
-	bh=fYfvKoY8DY5s1TnJ7ZM6lZiQx7jBU0XMdR4JBV72foI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W949qldo/tVMxp/5taxiHojnmEy408PGIi7bL8wZ9CZ13hhUTq6QX+x0EDbUeMIpv
-	 heVD5EQC8L2R1WLWkRjKH5okHUT81QfRt/ridvIrMms3IL9l8krZTr0Yawh64l8Miw
-	 /U6cBHxB8Hp2SgaOEQJvu26CvsMYrKqELWlfyO8Y=
+	by mail.kernel.org (Postfix) with ESMTP id D1D8A20760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:08:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729854AbgF2UIH (ORCPT
+        id S2388420AbgF2UIT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:08:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40610 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732938AbgF2TaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:30:23 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D5A625293;
-        Mon, 29 Jun 2020 15:36:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445005;
-        bh=fYfvKoY8DY5s1TnJ7ZM6lZiQx7jBU0XMdR4JBV72foI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tzMLSTbx5ggjxLH2tgtQTzDxeKiLZ6QmbGhfhtsPotJMCgu2NNVQ0gkv71AbOtGdk
-         LpQ2aH6qwUX9GBe089ugRekXsIQbvzFGunSN76dIUMxcQwQSuFh/xLCbp6p/T5xSII
-         cGeZq/dpZHii6USKol3jiCevKllTamnfCYyIX6JE=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        yuu ichii <byahu140@heisei.be>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 106/131] ACPI: sysfs: Fix pm_profile_attr type
-Date:   Mon, 29 Jun 2020 11:34:37 -0400
-Message-Id: <20200629153502.2494656-107-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
-References: <20200629153502.2494656-1-sashal@kernel.org>
+        Mon, 29 Jun 2020 16:08:19 -0400
+Received: from out02.mta.xmission.com ([166.70.13.232]:36630 "EHLO
+        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732373AbgF2UIP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 16:08:15 -0400
+Received: from in01.mta.xmission.com ([166.70.13.51])
+        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jq04c-0003ZM-3v; Mon, 29 Jun 2020 14:08:14 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jq04b-0000Ts-2E; Mon, 29 Jun 2020 14:08:13 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     <linux-kernel@vger.kernel.org>
+Cc:     David Miller <davem@davemloft.net>,
+        Greg Kroah-Hartman <greg@kroah.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <20200625095725.GA3303921@kroah.com>
+        <778297d2-512a-8361-cf05-42d9379e6977@i-love.sakura.ne.jp>
+        <20200625120725.GA3493334@kroah.com>
+        <20200625.123437.2219826613137938086.davem@davemloft.net>
+        <CAHk-=whuTwGHEPjvtbBvneHHXeqJC=q5S09mbPnqb=Q+MSPMag@mail.gmail.com>
+        <87pn9mgfc2.fsf_-_@x220.int.ebiederm.org>
+        <87y2oac50p.fsf@x220.int.ebiederm.org>
+        <87bll17ili.fsf_-_@x220.int.ebiederm.org>
+Date:   Mon, 29 Jun 2020 15:03:41 -0500
+In-Reply-To: <87bll17ili.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
+        message of "Mon, 29 Jun 2020 14:55:05 -0500")
+Message-ID: <87r1tx4p2a.fsf_-_@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.19.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.19.131-rc1
-X-KernelTest-Deadline: 2020-07-01T15:34+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-XM-SPF: eid=1jq04b-0000Ts-2E;;;mid=<87r1tx4p2a.fsf_-_@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX19IX0qdGDHj2d42J790qFSa6SiJQNy2ip4=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: [PATCH v2 09/15] umh: Stop calling do_execve_file
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
 
-commit e6d701dca9893990d999fd145e3e07223c002b06 upstream.
+With the user mode driver code changed to not set subprocess_info.file
+there are no more users of subproces_info.file.  Remove this field
+from struct subprocess_info and remove the only user in
+call_usermodehelper_exec_async that would call do_execve_file instead
+of do_execve if file was set.
 
-When running a kernel with Clang's Control Flow Integrity implemented,
-there is a violation that happens when accessing
-/sys/firmware/acpi/pm_profile:
-
-$ cat /sys/firmware/acpi/pm_profile
-0
-
-$ dmesg
-...
-[   17.352564] ------------[ cut here ]------------
-[   17.352568] CFI failure (target: acpi_show_profile+0x0/0x8):
-[   17.352572] WARNING: CPU: 3 PID: 497 at kernel/cfi.c:29 __cfi_check_fail+0x33/0x40
-[   17.352573] Modules linked in:
-[   17.352575] CPU: 3 PID: 497 Comm: cat Tainted: G        W         5.7.0-microsoft-standard+ #1
-[   17.352576] RIP: 0010:__cfi_check_fail+0x33/0x40
-[   17.352577] Code: 48 c7 c7 50 b3 85 84 48 c7 c6 50 0a 4e 84 e8 a4 d8 60 00 85 c0 75 02 5b c3 48 c7 c7 dc 5e 49 84 48 89 de 31 c0 e8 7d 06 eb ff <0f> 0b 5b c3 00 00 cc cc 00 00 cc cc 00 85 f6 74 25 41 b9 ea ff ff
-[   17.352577] RSP: 0018:ffffaa6dc3c53d30 EFLAGS: 00010246
-[   17.352578] RAX: 331267e0c06cee00 RBX: ffffffff83d85890 RCX: ffffffff8483a6f8
-[   17.352579] RDX: ffff9cceabbb37c0 RSI: 0000000000000082 RDI: ffffffff84bb9e1c
-[   17.352579] RBP: ffffffff845b2bc8 R08: 0000000000000001 R09: ffff9cceabbba200
-[   17.352579] R10: 000000000000019d R11: 0000000000000000 R12: ffff9cc947766f00
-[   17.352580] R13: ffffffff83d6bd50 R14: ffff9ccc6fa80000 R15: ffffffff845bd328
-[   17.352582] FS:  00007fdbc8d13580(0000) GS:ffff9cce91ac0000(0000) knlGS:0000000000000000
-[   17.352582] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   17.352583] CR2: 00007fdbc858e000 CR3: 00000005174d0000 CR4: 0000000000340ea0
-[   17.352584] Call Trace:
-[   17.352586]  ? rev_id_show+0x8/0x8
-[   17.352587]  ? __cfi_check+0x45bac/0x4b640
-[   17.352589]  ? kobj_attr_show+0x73/0x80
-[   17.352590]  ? sysfs_kf_seq_show+0xc1/0x140
-[   17.352592]  ? ext4_seq_options_show.cfi_jt+0x8/0x8
-[   17.352593]  ? seq_read+0x180/0x600
-[   17.352595]  ? sysfs_create_file_ns.cfi_jt+0x10/0x10
-[   17.352596]  ? tlbflush_read_file+0x8/0x8
-[   17.352597]  ? __vfs_read+0x6b/0x220
-[   17.352598]  ? handle_mm_fault+0xa23/0x11b0
-[   17.352599]  ? vfs_read+0xa2/0x130
-[   17.352599]  ? ksys_read+0x6a/0xd0
-[   17.352601]  ? __do_sys_getpgrp+0x8/0x8
-[   17.352602]  ? do_syscall_64+0x72/0x120
-[   17.352603]  ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[   17.352604] ---[ end trace 7b1fa81dc897e419 ]---
-
-When /sys/firmware/acpi/pm_profile is read, sysfs_kf_seq_show is called,
-which in turn calls kobj_attr_show, which gets the ->show callback
-member by calling container_of on attr (casting it to struct
-kobj_attribute) then calls it.
-
-There is a CFI violation because pm_profile_attr is of type
-struct device_attribute but kobj_attr_show calls ->show expecting it
-to be from struct kobj_attribute. CFI checking ensures that function
-pointer types match when doing indirect calls. Fix pm_profile_attr to
-be defined in terms of kobj_attribute so there is no violation or
-mismatch.
-
-Fixes: 362b646062b2 ("ACPI: Export FADT pm_profile integer value to userspace")
-Link: https://github.com/ClangBuiltLinux/linux/issues/1051
-Reported-by: yuu ichii <byahu140@heisei.be>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Cc: 3.10+ <stable@vger.kernel.org> # 3.10+
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lkml.kernel.org/r/877dvuf0i7.fsf_-_@x220.int.ebiederm.org
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 ---
- drivers/acpi/sysfs.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/umh.h |  1 -
+ kernel/umh.c        | 10 +++-------
+ 2 files changed, 3 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/acpi/sysfs.c b/drivers/acpi/sysfs.c
-index 0a8eb89617701..39ee0ca636aae 100644
---- a/drivers/acpi/sysfs.c
-+++ b/drivers/acpi/sysfs.c
-@@ -935,13 +935,13 @@ static void __exit interrupt_stats_exit(void)
- }
+diff --git a/include/linux/umh.h b/include/linux/umh.h
+index 73173c4a07e5..244aff638220 100644
+--- a/include/linux/umh.h
++++ b/include/linux/umh.h
+@@ -22,7 +22,6 @@ struct subprocess_info {
+ 	const char *path;
+ 	char **argv;
+ 	char **envp;
+-	struct file *file;
+ 	int wait;
+ 	int retval;
+ 	int (*init)(struct subprocess_info *info, struct cred *new);
+diff --git a/kernel/umh.c b/kernel/umh.c
+index 3e4e453d45c8..6ca2096298b9 100644
+--- a/kernel/umh.c
++++ b/kernel/umh.c
+@@ -98,13 +98,9 @@ static int call_usermodehelper_exec_async(void *data)
  
- static ssize_t
--acpi_show_profile(struct device *dev, struct device_attribute *attr,
-+acpi_show_profile(struct kobject *kobj, struct kobj_attribute *attr,
- 		  char *buf)
- {
- 	return sprintf(buf, "%d\n", acpi_gbl_FADT.preferred_profile);
- }
+ 	commit_creds(new);
  
--static const struct device_attribute pm_profile_attr =
-+static const struct kobj_attribute pm_profile_attr =
- 	__ATTR(pm_profile, S_IRUGO, acpi_show_profile, NULL);
- 
- static ssize_t hotplug_enabled_show(struct kobject *kobj,
+-	if (sub_info->file)
+-		retval = do_execve_file(sub_info->file,
+-					sub_info->argv, sub_info->envp);
+-	else
+-		retval = do_execve(getname_kernel(sub_info->path),
+-				   (const char __user *const __user *)sub_info->argv,
+-				   (const char __user *const __user *)sub_info->envp);
++	retval = do_execve(getname_kernel(sub_info->path),
++			   (const char __user *const __user *)sub_info->argv,
++			   (const char __user *const __user *)sub_info->envp);
+ out:
+ 	sub_info->retval = retval;
+ 	/*
 -- 
-2.25.1
+2.25.0
 
