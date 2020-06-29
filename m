@@ -2,242 +2,287 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 218C7C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:02:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 948E2C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EC9282076C
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:02:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593464578;
-	bh=oraSR6YnvIhnEnmXElusSWlgyGD1xEQG9fqnqXJGRRQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=oQ75e1LmZXe+OT+a3PYc3IoHlw4tJ5yGxQTxIvsrRE68KtdMx0SBrJbiY1B8qtpc7
-	 yeI/I9fOWVudlc9R1+U0mdLhXGoJMXIYWtJx/b/ITvGJFbONKGZ54fS6o51sBnoUgP
-	 ERLYSjgFSe5lJ3Dt13L8N5he3y5mYeOm4PfcWvzQ=
+	by mail.kernel.org (Postfix) with ESMTP id 6BD7320720
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:02:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tvsTl14b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390204AbgF2VC4 (ORCPT
+        id S2389610AbgF2VCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:02:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43384 "EHLO
+        Mon, 29 Jun 2020 17:02:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43388 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729597AbgF2TMt (ORCPT
+        with ESMTP id S1731150AbgF2TMt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:12:49 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E6BAC02A55E;
-        Mon, 29 Jun 2020 06:14:02 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id n5so15462556otj.1;
-        Mon, 29 Jun 2020 06:14:02 -0700 (PDT)
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83B4EC008772;
+        Mon, 29 Jun 2020 02:11:20 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id z15so4472939wrl.8;
+        Mon, 29 Jun 2020 02:11:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4JFg11SCAZ+tQ5Ld3P7UQSzBglvzbQrCb01cJlFc3s8=;
+        b=tvsTl14bp0IqZRxmA7TB3uuMAClfRSl2R95c5g4nsnZUIAJN0inC9j7ch60VGkAPhn
+         SuTiE0Ac2gKMqa3RRXYd2HImMM2r+MilQ09OH6OenQDA8//zCduoSyfM/TSk/YverOq8
+         SqpBhhD/5RCg/EOv+BfpChXIut10xr829bAkv7OM1pGtDMu5wwmQA1ZjIRg262KF7lUY
+         crlI5quwrfv+4gH6dN9u1DcTRC7gjdVdNPfIvoF85pF6TU2YVFYUVoQ87dVGjAUH7j66
+         ZgmdquF8h2un/tSyQ0Wrrl6wpxHWecF9styJJX5Qm+jU3t5MxAQBeqw+Mcf+o8wYbzxu
+         wHIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zl39/ogoiavirjWw0RJ4az07WY9iTjH0DwkSRzvIbpU=;
-        b=iV6/ld8RsP71JH/0pKRvmpzmiaJflW2tQuIVNHHnkwpqvY9q6FU3pG1SWZEkl+p0aF
-         4OI5HWLZI2Y2vblza8zaLEBiqhPcvaBxyZ85Q2iFBbcwYqHNRAhbapxvZaOmDeXCRwXn
-         S9roPv1fXBxPyFecE6RVj233o95BlbMkXQcg8IoMd+4/kfItU/9ERDAbbgtxFNK3TuUN
-         yXHzeUR0wue86LivwQY+BxN/ZxTez20+QJ7S/I8fx/CzFUa7em4iCp5aYwjh0KlGJ38H
-         Q0TI03xIuq2a57BGxTpd0oBvu9pNyqSuuhadapBY/PRfnELZi+FCBNSzBoMCsEtD3f3x
-         T4CA==
-X-Gm-Message-State: AOAM530dC1OYjxz7VdkeqSUb/XhYMUAisb0zZcNRNAjwnGlfFkgi3Ppw
-        mXMx1dUHz+7PoQNnGk1d3euJePoBE8G12WXeOM0=
-X-Google-Smtp-Source: ABdhPJzWedaVn91U287hY9yoH0WOIt/kqv2XIxbgQlaCJIJISmhHMf7cLkfEj9WuAXDiyquy7mPVbhFyGacWFrvsxBg=
-X-Received: by 2002:a9d:7d15:: with SMTP id v21mr12871453otn.118.1593436441986;
- Mon, 29 Jun 2020 06:14:01 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=4JFg11SCAZ+tQ5Ld3P7UQSzBglvzbQrCb01cJlFc3s8=;
+        b=tlK/MSTmGLlN8796gE3xjSFITnCx54TWznPNbXllQQ23PodDR8RqvbVcVAahRV0jDZ
+         bPlrUoXaJHVmWJ5gI6adxSCAf0bTzuT5h5A/3J0gaElON6o43ycsBk11qYmBRH4w2xSW
+         ppVxGlKabYlb9hr6FKWaLh2FSjDHIDQs0ysmBNWMcSKSBKPoEdqnPTxM2oxJ5pxslqZG
+         YB3jZrNP5D94SVblrXlZppOb3FvOlZXmmLzuIIAynY85eICROKXuCxI1Qzw30ZESU1lI
+         rl8yKTLFzPPckXbk4Q1GwVSU4eQlpc5R0/BR22PUdJkRvcgLm5yPfhIEm06MDn9g1w96
+         s1xA==
+X-Gm-Message-State: AOAM5331OsvJFxayU6Sj9mS6y8beaU000HuKCRaR8rcHBNxcZInayog9
+        mjOj3KppYnRvJybII9Tivls=
+X-Google-Smtp-Source: ABdhPJwgST9DZrkRgUTRG0o6bLn98GQLrxLSP4aby+3/19e+a1551addOPKc44DDQ7RTMTuOrCD2JQ==
+X-Received: by 2002:adf:c441:: with SMTP id a1mr15912768wrg.130.1593421879072;
+        Mon, 29 Jun 2020 02:11:19 -0700 (PDT)
+Received: from ziggy.stardust ([213.195.114.138])
+        by smtp.gmail.com with ESMTPSA id k20sm4652407wmi.27.2020.06.29.02.11.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jun 2020 02:11:18 -0700 (PDT)
+Subject: Re: [PATCH v5 03/10] iommu/mediatek: Modify the usage of
+ mtk_iommu_plat_data structure
+To:     Chao Hao <chao.hao@mediatek.com>, Joerg Roedel <joro@8bytes.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Yong Wu <yong.wu@mediatek.com>, Evan Green <evgreen@chromium.org>,
+        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com,
+        FY Yang <fy.yang@mediatek.com>
+References: <20200629071310.1557-1-chao.hao@mediatek.com>
+ <20200629071310.1557-4-chao.hao@mediatek.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
+ mQINBFP1zgUBEAC21D6hk7//0kOmsUrE3eZ55kjc9DmFPKIz6l4NggqwQjBNRHIMh04BbCMY
+ fL3eT7ZsYV5nur7zctmJ+vbszoOASXUpfq8M+S5hU2w7sBaVk5rpH9yW8CUWz2+ZpQXPJcFa
+ OhLZuSKB1F5JcvLbETRjNzNU7B3TdS2+zkgQQdEyt7Ij2HXGLJ2w+yG2GuR9/iyCJRf10Okq
+ gTh//XESJZ8S6KlOWbLXRE+yfkKDXQx2Jr1XuVvM3zPqH5FMg8reRVFsQ+vI0b+OlyekT/Xe
+ 0Hwvqkev95GG6x7yseJwI+2ydDH6M5O7fPKFW5mzAdDE2g/K9B4e2tYK6/rA7Fq4cqiAw1+u
+ EgO44+eFgv082xtBez5WNkGn18vtw0LW3ESmKh19u6kEGoi0WZwslCNaGFrS4M7OH+aOJeqK
+ fx5dIv2CEbxc6xnHY7dwkcHikTA4QdbdFeUSuj4YhIZ+0QlDVtS1QEXyvZbZky7ur9rHkZvP
+ ZqlUsLJ2nOqsmahMTIQ8Mgx9SLEShWqD4kOF4zNfPJsgEMB49KbS2o9jxbGB+JKupjNddfxZ
+ HlH1KF8QwCMZEYaTNogrVazuEJzx6JdRpR3sFda/0x5qjTadwIW6Cl9tkqe2h391dOGX1eOA
+ 1ntn9O/39KqSrWNGvm+1raHK+Ev1yPtn0Wxn+0oy1tl67TxUjQARAQABtClNYXR0aGlhcyBC
+ cnVnZ2VyIDxtYXR0aGlhcy5iZ2dAZ21haWwuY29tPokCUgQTAQIAPAIbAwYLCQgHAwIGFQgC
+ CQoLBBYCAwECHgECF4AWIQTmuZIYwPLDJRwsOhfZFAuyVhMC8QUCWt3scQIZAQAKCRDZFAuy
+ VhMC8WzRD/4onkC+gCxG+dvui5SXCJ7bGLCu0xVtiGC673Kz5Aq3heITsERHBV0BqqctOEBy
+ ZozQQe2Hindu9lasOmwfH8+vfTK+2teCgWesoE3g3XKbrOCB4RSrQmXGC3JYx6rcvMlLV/Ch
+ YMRR3qv04BOchnjkGtvm9aZWH52/6XfChyh7XYndTe5F2bqeTjt+kF/ql+xMc4E6pniqIfkv
+ c0wsH4CkBHqoZl9w5e/b9MspTqsU9NszTEOFhy7p2CYw6JEa/vmzR6YDzGs8AihieIXDOfpT
+ DUr0YUlDrwDSrlm/2MjNIPTmSGHH94ScOqu/XmGW/0q1iar/Yr0leomUOeeEzCqQtunqShtE
+ 4Mn2uEixFL+9jiVtMjujr6mphznwpEqObPCZ3IcWqOFEz77rSL+oqFiEA03A2WBDlMm++Sve
+ 9jpkJBLosJRhAYmQ6ey6MFO6Krylw1LXcq5z1XQQavtFRgZoruHZ3XlhT5wcfLJtAqrtfCe0
+ aQ0kJW+4zj9/So0uxJDAtGuOpDYnmK26dgFN0tAhVuNInEVhtErtLJHeJzFKJzNyQ4GlCaLw
+ jKcwWcqDJcrx9R7LsCu4l2XpKiyxY6fO4O8DnSleVll9NPfAZFZvf8AIy3EQ8BokUsiuUYHz
+ wUo6pclk55PZRaAsHDX/fNr24uC6Eh5oNQ+v4Pax/gtyybkCDQRd1TkHARAAt1BBpmaH+0o+
+ deSyJotkrpzZZkbSs5ygBniCUGQqXpWqgrc7Uo/qtxOFL91uOsdX1/vsnJO9FyUv3ZNI2Thw
+ NVGCTvCP9E6u4gSSuxEfVyVThCSPvRJHCG2rC+EMAOUMpxokcX9M2b7bBEbcSjeP/E4KTa39
+ q+JJSeWliaghUfMXXdimT/uxpP5Aa2/D/vcUUGHLelf9TyihHyBohdyNzeEF3v9rq7kdqamZ
+ Ihb+WYrDio/SzqTd1g+wnPJbnu45zkoQrYtBu58n7u8oo+pUummOuTR2b6dcsiB9zJaiVRIg
+ OqL8p3K2fnE8Ewwn6IKHnLTyx5T/r2Z0ikyOeijDumZ0VOPPLTnwmb780Nym3LW1OUMieKtn
+ I3v5GzZyS83NontvsiRd4oPGQDRBT39jAyBr8vDRl/3RpLKuwWBFTs1bYMLu0sYarwowOz8+
+ Mn+CRFUvRrXxociw5n0P1PgJ7vQey4muCZ4VynH1SeVb3KZ59zcQHksKtpzz2OKhtX8FCeVO
+ mHW9u4x8s/oUVMZCXEq9QrmVhdIvJnBCqq+1bh5UC2Rfjm/vLHwt5hes0HDstbCzLyiA0LTI
+ ADdP77RN2OJbzBkCuWE21YCTLtc8kTQlP+G8m23K5w8k2jleCSKumprCr/5qPyNlkie1HC4E
+ GEAfdfN+uLsFw6qPzSAsmukAEQEAAYkEbAQYAQgAIBYhBOa5khjA8sMlHCw6F9kUC7JWEwLx
+ BQJd1TkHAhsCAkAJENkUC7JWEwLxwXQgBBkBCAAdFiEEUdvKHhzqrUYPB/u8L21+TfbCqH4F
+ Al3VOQcACgkQL21+TfbCqH79RRAAtlb6oAL9y8JM5R1T3v02THFip8OMh7YvEJCnezle9Apq
+ C6Vx26RSQjBV1JwSBv6BpgDBNXarTGCPXcre6KGfX8u1r6hnXAHZNHP7bFGJQiBv5RqGFf45
+ OhOhbjXCyHc0jrnNjY4M2jTkUC+KIuOzasvggU975nolC8MiaBqfgMB2ab5W+xEiTcNCOg3+
+ 1SRs5/ZkQ0iyyba2FihSeSw3jTUjPsJBF15xndexoc9jpi0RKuvPiJ191Xa3pzNntIxpsxqc
+ ZkS1HSqPI63/urNezeSejBzW0Xz2Bi/b/5R9Hpxp1AEC3OzabOBATY/1Bmh2eAVK3xpN2Fe1
+ Zj7HrTgmzBmSefMcSXN0oKQWEI5tHtBbw5XUj0Nw4hMhUtiMfE2HAqcaozsL34sEzi3eethZ
+ IvKnIOTmllsDFMbOBa8oUSoaNg7GzkWSKJ59a9qPJkoj/hJqqeyEXF+WTCUv6FcA8BtBJmVf
+ FppFzLFM/QzF5fgDZmfjc9czjRJHAGHRMMnQlW88iWamjYVye57srNq9pUql6A4lITF7w00B
+ 5PXINFk0lMcNUdkWipu24H6rJhOO6xSP4n6OrCCcGsXsAR5oH3d4TzA9iPYrmfXAXD+hTp82
+ s+7cEbTsCJ9MMq09/GTCeroTQiqkp50UaR0AvhuPdfjJwVYZfmMS1+5IXA/KY6DbGBAAs5ti
+ AK0ieoZlCv/YxOSMCz10EQWMymD2gghjxojf4iwB2MbGp8UN4+++oKLHz+2j+IL08rd2ioFN
+ YCJBFDVoDRpF/UnrQ8LsH55UZBHuu5XyMkdJzMaHRVQc1rzfluqx+0a/CQ6Cb2q7J2d45nYx
+ 8jMSCsGj1/iU/bKjMBtuh91hsbdWCxMRW0JnGXxcEUklbhA5uGj3W4VYCfTQxwK6JiVt7JYp
+ bX7JdRKIyq3iMDcsTXi7dhhwqsttQRwbBci0UdFGAG4jT5p6u65MMDVTXEgYfZy0674P06qf
+ uSyff73ivwvLR025akzJui8MLU23rWRywXOyTINz8nsPFT4ZSGT1hr5VnIBs/esk/2yFmVoc
+ FAxs1aBO29iHmjJ8D84EJvOcKfh9RKeW8yeBNKXHrcOV4MbMOts9+vpJgBFDnJeLFQPtTHuI
+ kQXT4+yLDvwOVAW9MPLfcHlczq/A/nhGVaG+RKWDfJWNSu/mbhqUQt4J+RFpfx1gmL3yV8NN
+ 7JXABPi5M97PeKdx6qc/c1o3oEHH8iBkWZIYMS9fd6rtAqV3+KH5Ors7tQVtwUIDYEvttmeO
+ ifvpW6U/4au4zBYfvvXagbyXJhG9mZvz+jN1cr0/G2ZC93IbjFFwUmHtXS4ttQ4pbrX6fjTe
+ lq5vmROjiWirpZGm+WA3Vx9QRjqfMdS5Ag0EXdU5SAEQAJu/Jk58uOB8HSGDSuGUB+lOacXC
+ bVOOSywZkq+Ayv+3q/XIabyeaYMwhriNuXHjUxIORQoWHIHzTCqsAgHpJFfSHoM4ulCuOPFt
+ XjqfEHkA0urB6S0jnvJ6ev875lL4Yi6JJO7WQYRs/l7OakJiT13GoOwDIn7hHH/PGUqQoZlA
+ d1n5SVdg6cRd7EqJ+RMNoud7ply6nUSCRMNWbNqbgyWjKsD98CMjHa33SB9WQQSQyFlf+dz+
+ dpirWENCoY3vvwKJaSpfeqKYuqPVSxnqpKXqqyjNnG9W46OWZp+JV5ejbyUR/2U+vMwbTilL
+ cIUpTgdmxPCA6J0GQjmKNsNKKYgIMn6W4o/LoiO7IgROm1sdn0KbJouCa2QZoQ0+p/7mJXhl
+ tA0XGZhNlI3npD1lLpjdd42lWboU4VeuUp4VNOXIWU/L1NZwEwMIqzFXl4HmRi8MYbHHbpN5
+ zW+VUrFfeRDPyjrYpax+vWS+l658PPH+sWmhj3VclIoAU1nP33FrsNfp5BiQzao30rwe4ntd
+ eEdPENvGmLfCwiUV2DNVrmJaE3CIUUl1KIRoB5oe7rJeOvf0WuQhWjIU98glXIrh3WYd7vsf
+ jtbEXDoWhVtwZMShMvp7ccPCe2c4YBToIthxpDhoDPUdNwOssHNLD8G4JIBexwi4q7IT9lP6
+ sVstwvA5ABEBAAGJAjYEGAEIACAWIQTmuZIYwPLDJRwsOhfZFAuyVhMC8QUCXdU5SAIbDAAK
+ CRDZFAuyVhMC8bXXD/4xyfbyPGnRYtR0KFlCgkG2XWeWSR2shSiM1PZGRPxR888zA2WBYHAk
+ 7NpJlFchpaErV6WdFrXQjDAd9YwaEHucfS7SAhxIqdIqzV5vNFrMjwhB1N8MfdUJDpgyX7Zu
+ k/Phd5aoZXNwsCRqaD2OwFZXr81zSXwE2UdPmIfTYTjeVsOAI7GZ7akCsRPK64ni0XfoXue2
+ XUSrUUTRimTkuMHrTYaHY3544a+GduQQLLA+avseLmjvKHxsU4zna0p0Yb4czwoJj+wSkVGQ
+ NMDbxcY26CMPK204jhRm9RG687qq6691hbiuAtWABeAsl1AS+mdS7aP/4uOM4kFCvXYgIHxP
+ /BoVz9CZTMEVAZVzbRKyYCLUf1wLhcHzugTiONz9fWMBLLskKvq7m1tlr61mNgY9nVwwClMU
+ uE7i1H9r/2/UXLd+pY82zcXhFrfmKuCDmOkB5xPsOMVQJH8I0/lbqfLAqfsxSb/X1VKaP243
+ jzi+DzD9cvj2K6eD5j5kcKJJQactXqfJvF1Eb+OnxlB1BCLE8D1rNkPO5O742Mq3MgDmq19l
+ +abzEL6QDAAxn9md8KwrA3RtucNh87cHlDXfUBKa7SRvBjTczDg+HEPNk2u3hrz1j3l2rliQ
+ y1UfYx7Vk/TrdwUIJgKS8QAr8Lw9WuvY2hSqL9vEjx8VAkPWNWPwrQ==
+Message-ID: <afdd7edb-11b7-474b-206b-7a376524abc5@gmail.com>
+Date:   Mon, 29 Jun 2020 11:11:17 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <cover.1593143118.git.viresh.kumar@linaro.org> <f366ed3dd3dd111e42173b366fe4dd5a0e4647fd.1593143118.git.viresh.kumar@linaro.org>
- <20200626082433.GA284605@google.com> <20200629021309.eleyysuh5f5g52qw@vireshk-i7>
-In-Reply-To: <20200629021309.eleyysuh5f5g52qw@vireshk-i7>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 29 Jun 2020 15:13:46 +0200
-Message-ID: <CAJZ5v0j6vRpcJxJnSg_Ph02g_4H2LomPM6Ed9t4gaD7YeNE_pg@mail.gmail.com>
-Subject: Re: [PATCH V3 1/3] cpufreq: Fix locking issues with governors
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Quentin Perret <qperret@google.com>,
-        Rafael Wysocki <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        Todd Kjos <tkjos@google.com>, adharmap@codeaurora.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200629071310.1557-4-chao.hao@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 4:13 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 26-06-20, 09:24, Quentin Perret wrote:
-> > On Friday 26 Jun 2020 at 09:21:42 (+0530), Viresh Kumar wrote:
-> > > The locking around governors handling isn't adequate currently. The list
-> > > of governors should never be traversed without locking in place. Also we
-> > > must make sure the governor isn't removed while it is still referenced
-> > > by code.
-> > >
-> > > Reported-by: Quentin Perret <qperret@google.com>
-> > > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > > ---
-> > >  drivers/cpufreq/cpufreq.c | 59 ++++++++++++++++++++++++---------------
-> > >  1 file changed, 36 insertions(+), 23 deletions(-)
-> > >
-> > > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> > > index 0128de3603df..e798a1193bdf 100644
-> > > --- a/drivers/cpufreq/cpufreq.c
-> > > +++ b/drivers/cpufreq/cpufreq.c
-> > > @@ -621,6 +621,24 @@ static struct cpufreq_governor *find_governor(const char *str_governor)
-> > >     return NULL;
-> > >  }
-> > >
-> > > +static struct cpufreq_governor *get_governor(const char *str_governor)
-> > > +{
-> > > +   struct cpufreq_governor *t;
-> > > +
-> > > +   mutex_lock(&cpufreq_governor_mutex);
-> > > +   t = find_governor(str_governor);
-> > > +   if (!t)
-> > > +           goto unlock;
-> > > +
-> > > +   if (!try_module_get(t->owner))
-> > > +           t = NULL;
-> > > +
-> > > +unlock:
-> > > +   mutex_unlock(&cpufreq_governor_mutex);
-> > > +
-> > > +   return t;
-> > > +}
-> > > +
-> > >  static unsigned int cpufreq_parse_policy(char *str_governor)
-> > >  {
-> > >     if (!strncasecmp(str_governor, "performance", CPUFREQ_NAME_LEN))
-> > > @@ -640,28 +658,14 @@ static struct cpufreq_governor *cpufreq_parse_governor(char *str_governor)
-> > >  {
-> > >     struct cpufreq_governor *t;
-> > >
-> > > -   mutex_lock(&cpufreq_governor_mutex);
-> > > -
-> > > -   t = find_governor(str_governor);
-> > > -   if (!t) {
-> > > -           int ret;
-> > > -
-> > > -           mutex_unlock(&cpufreq_governor_mutex);
-> > > -
-> > > -           ret = request_module("cpufreq_%s", str_governor);
-> > > -           if (ret)
-> > > -                   return NULL;
-> > > -
-> > > -           mutex_lock(&cpufreq_governor_mutex);
-> > > +   t = get_governor(str_governor);
-> > > +   if (t)
-> > > +           return t;
-> > >
-> > > -           t = find_governor(str_governor);
-> > > -   }
-> > > -   if (t && !try_module_get(t->owner))
-> > > -           t = NULL;
-> > > -
-> > > -   mutex_unlock(&cpufreq_governor_mutex);
-> > > +   if (request_module("cpufreq_%s", str_governor))
-> > > +           return NULL;
-> > >
-> > > -   return t;
-> > > +   return get_governor(str_governor);
-> > >  }
-> > >
-> > >  /**
-> > > @@ -815,12 +819,14 @@ static ssize_t show_scaling_available_governors(struct cpufreq_policy *policy,
-> > >             goto out;
-> > >     }
-> > >
-> > > +   mutex_lock(&cpufreq_governor_mutex);
-> > >     for_each_governor(t) {
-> > >             if (i >= (ssize_t) ((PAGE_SIZE / sizeof(char))
-> > >                 - (CPUFREQ_NAME_LEN + 2)))
-> > > -                   goto out;
-> > > +                   break;
-> > >             i += scnprintf(&buf[i], CPUFREQ_NAME_PLEN, "%s ", t->name);
-> > >     }
-> > > +   mutex_unlock(&cpufreq_governor_mutex);
-> > >  out:
-> > >     i += sprintf(&buf[i], "\n");
-> > >     return i;
-> > > @@ -1058,11 +1064,14 @@ static int cpufreq_init_policy(struct cpufreq_policy *policy)
-> > >     struct cpufreq_governor *def_gov = cpufreq_default_governor();
-> > >     struct cpufreq_governor *gov = NULL;
-> > >     unsigned int pol = CPUFREQ_POLICY_UNKNOWN;
-> > > +   bool put_governor = false;
-> > > +   int ret;
-> > >
-> > >     if (has_target()) {
-> > >             /* Update policy governor to the one used before hotplug. */
-> > > -           gov = find_governor(policy->last_governor);
-> > > +           gov = get_governor(policy->last_governor);
-> > >             if (gov) {
-> > > +                   put_governor = true;
-> > >                     pr_debug("Restoring governor %s for cpu %d\n",
-> > >                              policy->governor->name, policy->cpu);
-> > >             } else if (def_gov) {
-> > > @@ -1089,7 +1098,11 @@ static int cpufreq_init_policy(struct cpufreq_policy *policy)
-> > >                     return -ENODATA;
-> > >     }
-> > >
-> > > -   return cpufreq_set_policy(policy, gov, pol);
-> > > +   ret = cpufreq_set_policy(policy, gov, pol);
-> > > +   if (put_governor)
-> > > +           module_put(gov->owner);
-> >
-> > Nit: I think you could safely do
-> >
-> >       if (gov)
-> >               module_put(gov->owner);
-> >
-> > and get rid of 'put_governor', given that try_module_get() and
-> > module_put() are nops if owner is NULL (which is guaranteed for
-> > the result of cpufreq_default_governor() as it is builtin).
->
-> I described why I chose to keep it that way in the other email, but I
-> am all for dropping the variable. And so what about this ?
 
-Works for me.
 
-> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> index e798a1193bdf..d9e9ae7051bb 100644
-> --- a/drivers/cpufreq/cpufreq.c
-> +++ b/drivers/cpufreq/cpufreq.c
-> @@ -1064,18 +1064,17 @@ static int cpufreq_init_policy(struct cpufreq_policy *policy)
->         struct cpufreq_governor *def_gov = cpufreq_default_governor();
->         struct cpufreq_governor *gov = NULL;
->         unsigned int pol = CPUFREQ_POLICY_UNKNOWN;
-> -       bool put_governor = false;
->         int ret;
->
->         if (has_target()) {
->                 /* Update policy governor to the one used before hotplug. */
->                 gov = get_governor(policy->last_governor);
->                 if (gov) {
-> -                       put_governor = true;
->                         pr_debug("Restoring governor %s for cpu %d\n",
->                                  policy->governor->name, policy->cpu);
->                 } else if (def_gov) {
->                         gov = def_gov;
-> +                       module_get(gov->owner);
->                 } else {
->                         return -ENODATA;
->                 }
-> @@ -1099,7 +1098,7 @@ static int cpufreq_init_policy(struct cpufreq_policy *policy)
->         }
->
->         ret = cpufreq_set_policy(policy, gov, pol);
-> -       if (put_governor)
-> +       if (gov)
->                 module_put(gov->owner);
->
->         return ret;
->
-> --
-> viresh
+On 29/06/2020 09:13, Chao Hao wrote:
+> Given the fact that we are adding more and more plat_data bool values,
+> it would make sense to use a u32 flags register and add the appropriate
+> macro definitions to set and check for a flag present.
+> No functional change.
+> 
+> Suggested-by: Matthias Brugger <matthias.bgg@gmail.com>
+> Signed-off-by: Chao Hao <chao.hao@mediatek.com>
+
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+
+> ---
+>  drivers/iommu/mtk_iommu.c | 23 ++++++++++++-----------
+>  drivers/iommu/mtk_iommu.h | 16 ++++++++++------
+>  2 files changed, 22 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+> index 88d3df5b91c2..8f81df6cbe51 100644
+> --- a/drivers/iommu/mtk_iommu.c
+> +++ b/drivers/iommu/mtk_iommu.c
+> @@ -563,7 +563,8 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
+>  			 upper_32_bits(data->protect_base);
+>  	writel_relaxed(regval, data->base + REG_MMU_IVRP_PADDR);
+>  
+> -	if (data->enable_4GB && data->plat_data->has_vld_pa_rng) {
+> +	if (data->enable_4GB &&
+> +	    MTK_IOMMU_HAS_FLAG(data->plat_data, HAS_VLD_PA_RNG)) {
+>  		/*
+>  		 * If 4GB mode is enabled, the validate PA range is from
+>  		 * 0x1_0000_0000 to 0x1_ffff_ffff. here record bit[32:30].
+> @@ -573,7 +574,7 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
+>  	}
+>  	writel_relaxed(0, data->base + REG_MMU_DCM_DIS);
+>  
+> -	if (data->plat_data->reset_axi) {
+> +	if (MTK_IOMMU_HAS_FLAG(data->plat_data, RESET_AXI)) {
+>  		/* The register is called STANDARD_AXI_MODE in this case */
+>  		writel_relaxed(0, data->base + REG_MMU_MISC_CTRL);
+>  	}
+> @@ -618,7 +619,7 @@ static int mtk_iommu_probe(struct platform_device *pdev)
+>  
+>  	/* Whether the current dram is over 4GB */
+>  	data->enable_4GB = !!(max_pfn > (BIT_ULL(32) >> PAGE_SHIFT));
+> -	if (!data->plat_data->has_4gb_mode)
+> +	if (!MTK_IOMMU_HAS_FLAG(data->plat_data, HAS_4GB_MODE))
+>  		data->enable_4GB = false;
+>  
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> @@ -631,7 +632,7 @@ static int mtk_iommu_probe(struct platform_device *pdev)
+>  	if (data->irq < 0)
+>  		return data->irq;
+>  
+> -	if (data->plat_data->has_bclk) {
+> +	if (MTK_IOMMU_HAS_FLAG(data->plat_data, HAS_BCLK)) {
+>  		data->bclk = devm_clk_get(dev, "bclk");
+>  		if (IS_ERR(data->bclk))
+>  			return PTR_ERR(data->bclk);
+> @@ -763,23 +764,23 @@ static const struct dev_pm_ops mtk_iommu_pm_ops = {
+>  
+>  static const struct mtk_iommu_plat_data mt2712_data = {
+>  	.m4u_plat     = M4U_MT2712,
+> -	.has_4gb_mode = true,
+> -	.has_bclk     = true,
+> -	.has_vld_pa_rng   = true,
+> +	.flags        = HAS_4GB_MODE |
+> +			HAS_BCLK |
+> +			HAS_VLD_PA_RNG,
+>  	.larbid_remap = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
+>  };
+>  
+>  static const struct mtk_iommu_plat_data mt8173_data = {
+>  	.m4u_plat     = M4U_MT8173,
+> -	.has_4gb_mode = true,
+> -	.has_bclk     = true,
+> -	.reset_axi    = true,
+> +	.flags	      = HAS_4GB_MODE |
+> +			HAS_BCLK |
+> +			RESET_AXI,
+>  	.larbid_remap = {0, 1, 2, 3, 4, 5}, /* Linear mapping. */
+>  };
+>  
+>  static const struct mtk_iommu_plat_data mt8183_data = {
+>  	.m4u_plat     = M4U_MT8183,
+> -	.reset_axi    = true,
+> +	.flags        = RESET_AXI,
+>  	.larbid_remap = {0, 4, 5, 6, 7, 2, 3, 1},
+>  };
+>  
+> diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
+> index 1b6ea839b92c..7cc39f729263 100644
+> --- a/drivers/iommu/mtk_iommu.h
+> +++ b/drivers/iommu/mtk_iommu.h
+> @@ -17,6 +17,15 @@
+>  #include <linux/spinlock.h>
+>  #include <soc/mediatek/smi.h>
+>  
+> +#define HAS_4GB_MODE			BIT(0)
+> +/* HW will use the EMI clock if there isn't the "bclk". */
+> +#define HAS_BCLK			BIT(1)
+> +#define HAS_VLD_PA_RNG			BIT(2)
+> +#define RESET_AXI			BIT(3)
+> +
+> +#define MTK_IOMMU_HAS_FLAG(pdata, _x) \
+> +		((((pdata)->flags) & (_x)) == (_x))
+> +
+>  struct mtk_iommu_suspend_reg {
+>  	u32				misc_ctrl;
+>  	u32				dcm_dis;
+> @@ -36,12 +45,7 @@ enum mtk_iommu_plat {
+>  
+>  struct mtk_iommu_plat_data {
+>  	enum mtk_iommu_plat m4u_plat;
+> -	bool                has_4gb_mode;
+> -
+> -	/* HW will use the EMI clock if there isn't the "bclk". */
+> -	bool                has_bclk;
+> -	bool                has_vld_pa_rng;
+> -	bool                reset_axi;
+> +	u32                 flags;
+>  	unsigned char       larbid_remap[MTK_LARB_NR_MAX];
+>  };
+>  
+> 
