@@ -2,110 +2,94 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F9BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:00:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BBD4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:00:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2CDE20760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:00:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FF722065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:00:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468009;
-	bh=/51UgKaOiB8wer+ZMf40UDlmUj1DatvtgCzTxyBW770=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HUU8O0GORi9PHXaWX+Lp05qrjKOeNrcXG11HXsIrTmjXpd+o/UCo7rC8KJBrdjttz
-	 urYwxGsAYXoq4sTrpzKATUuA2bWcysqxjUxjydHwqNdKQPZPNUdnj/BMl1W63tQGWj
-	 vC+SzfHb5QvGcfryTx901RrSOV/zp4uckeAi3MIU=
+	s=default; t=1593468021;
+	bh=fh6z+o2kX3OCDHFVklxd+omRgVFgEg9o+2UO27yW1rE=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:List-ID:From;
+	b=wjwp7lhxu+4Qn+6ITrxZTPPa8Zw67mUxiUJvPwWkvO09wX8gwA73VzO6pBing9qoK
+	 tws31CVAkhb/w5GCSIlo9wvVEYyZ6fFMfz6u4xOi49VFN+ulIJyYnpxhIeWx+wrWXk
+	 9b7m8WCHGL+C/6rRGE75xsgw9CoIORGiEhatPuVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404821AbgF2WAI (ORCPT
+        id S2391731AbgF2WAT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:00:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56792 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:00:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726397AbgF2SfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:25 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726382AbgF2SfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:24 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D92412467B;
-        Mon, 29 Jun 2020 15:19:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D89642547B;
+        Mon, 29 Jun 2020 18:15:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443979;
-        bh=/51UgKaOiB8wer+ZMf40UDlmUj1DatvtgCzTxyBW770=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Kr5naMBoUT3MbAvGMbXb3dTrJBgrY8J244547ulYIOBZPZ9bKHHLSANmzRQg1B/8T
-         ADdHsxoj2dWrGKcUUy/omZGj596WwWocPFCypaDXYJGF1JXFSN+z6dFY0nnYMLftSU
-         RLy7ySI17y2mtzdZ/KpECous/oIIwyIkhaddh5QQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        Steve French <stfrench@microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 083/265] cifs: Fix cached_fid refcnt leak in open_shroot
-Date:   Mon, 29 Jun 2020 11:15:16 -0400
-Message-Id: <20200629151818.2493727-84-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
-References: <20200629151818.2493727-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.7.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.7.7-rc1
-X-KernelTest-Deadline: 2020-07-01T15:14+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        s=default; t=1593454530;
+        bh=fh6z+o2kX3OCDHFVklxd+omRgVFgEg9o+2UO27yW1rE=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=OGYHtyoPO/82nwg53+O+RHGwr9XZ8dGoMgQtgMZQrt1ZrXAGDSrLYKkE1/s++Tk9C
+         XKmHBlKA6L4zRT0W78uqbgS7xCw/FmHuX7lBWDxkt+r0+3sQzQa7rsqWXAf1IBeNYR
+         knebfWFkqMTdtDh7JtbX/A5ciFyCbo7wTODtr3tY=
+Date:   Mon, 29 Jun 2020 19:15:28 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Seth Forshee <seth.forshee@canonical.com>,
+        Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc:     kernel-janitors@vger.kernel.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Support Opensource <support.opensource@diasemi.com>,
+        linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>
+In-Reply-To: <20200628180229.5068-1-lukas.bulwahn@gmail.com>
+References: <20200628180229.5068-1-lukas.bulwahn@gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: remove obsolete entry after file renaming
+Message-Id: <159345452820.54333.17324184729359258423.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+On Sun, 28 Jun 2020 20:02:29 +0200, Lukas Bulwahn wrote:
+> Commit f16861b12fa0 ("regulator: rename da903x to da903x-regulator") missed
+> to adjust the DIALOG SEMICONDUCTOR DRIVERS section in MAINTAINERS.
+> 
+> Hence, ./scripts/get_maintainer.pl --self-test=patterns complains:
+> 
+>   warning: no file matches    F:    drivers/regulator/da903x.c
+> 
+> [...]
 
-commit 77577de64167aa0643d47ffbaacf3642632b321b upstream.
+Applied to
 
-open_shroot() invokes kref_get(), which increases the refcount of the
-"tcon->crfid" object. When open_shroot() returns not zero, it means the
-open operation failed and close_shroot() will not be called to decrement
-the refcount of the "tcon->crfid".
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
-The reference counting issue happens in one normal path of
-open_shroot(). When the cached root have been opened successfully in a
-concurrent process, the function increases the refcount and jump to
-"oshr_free" to return. However the current return value "rc" may not
-equal to 0, thus the increased refcount will not be balanced outside the
-function, causing a refcnt leak.
+Thanks!
 
-Fix this issue by setting the value of "rc" to 0 before jumping to
-"oshr_free" label.
+[1/1] MAINTAINERS: remove obsolete entry after file renaming
+      commit: 412847fb47336c58885ac6231a5f34ac7ac862a0
 
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-CC: Stable <stable@vger.kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- fs/cifs/smb2ops.c | 1 +
- 1 file changed, 1 insertion(+)
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
-index f829f4165d38c..c6a4caa7053e9 100644
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -759,6 +759,7 @@ int open_shroot(unsigned int xid, struct cifs_tcon *tcon,
- 			/* close extra handle outside of crit sec */
- 			SMB2_close(xid, tcon, fid.persistent_fid, fid.volatile_fid);
- 		}
-+		rc = 0;
- 		goto oshr_free;
- 	}
- 
--- 
-2.25.1
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
