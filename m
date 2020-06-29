@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40704C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52AC4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:09:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1DA1220768
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:09:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 301A4207D0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:09:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593464974;
-	bh=cNMBpd8nqgUby7jFWs/v09K1erXrkS11i2iK7hcqnEM=;
+	s=default; t=1593464979;
+	bh=3EB4DZqVoFyQto/b1QnVXsp5YHbKVYrBtULo/IYkatE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u2kWeAe5gYXSceXxwdpqY4OAuWDXLvJa0UiWZRE9TFTxijJUWYcGvaNkZ1EGcDvzl
-	 vlvRYdCS+vmIjJc3QxH1VpAQkyt1M6BV183eaNNiDNg9+29U74LMqr2sI2Os7p3Iqg
-	 +0tWhDWe12xCebG/vh6vlISliFQu8DwYliPxpA5Q=
+	b=A0ulW1Wup99egyH6GaK3tTgLrDhxmrDjpQ9bggBm/uGh6VkvMYoYXcD14YJFk8aiO
+	 UE65X+znur2FzATiFi67aYFWlgvzcZXgyRz9YfhBT1wu7KawrQwHRIAsKWlyZAy3hb
+	 wXUYFrwFIeQjK2e3a68+D2b9iHM/uhNDhmHfR3gE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730798AbgF2VJc (ORCPT
+        id S2390490AbgF2VJh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:09:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45474 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:09:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730319AbgF2TAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:00:19 -0400
+        id S1730314AbgF2TAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:00:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E3F025502;
-        Mon, 29 Jun 2020 15:54:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E55325527;
+        Mon, 29 Jun 2020 15:54:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446065;
-        bh=cNMBpd8nqgUby7jFWs/v09K1erXrkS11i2iK7hcqnEM=;
+        s=default; t=1593446087;
+        bh=3EB4DZqVoFyQto/b1QnVXsp5YHbKVYrBtULo/IYkatE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LDlzhoodYVYaRv41+4Pw3Ic45WfSRgBYStvRCaighWkhUtm21q6Tn10LE2dOqqHX0
-         EmYHZhDuoCX5aYEKSDQ7M5E3NACH2iV14MYTLnYY5U+htRu3A/b7xsN1QIe2C7MV/z
-         wMkUFiGGfk0bidvFxPwcK4TYUvxUqcirSyGFq5w4=
+        b=tw4bPVJM0cq56dr3hZRShLIDgqG0uPQ3+fFIYGz59GqtUjsrJ/7V9EGd6sCBpaMPQ
+         G+DenUu1i6unffB9jT5kZyTTSaSdYyFBtioKrCgvE1tTx73j/HWkl7ZMVm+x7Zxeh3
+         QLn6gOjM04T5bzbfQTp/AWldjtfB1MmKePdYUG2I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tom Rix <trix@redhat.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Paul Moore <paul@paul-moore.com>,
+Cc:     Yang Yingliang <yangyingliang@huawei.com>,
+        Hulk Robot <hulkci@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.4 064/135] selinux: fix double free
-Date:   Mon, 29 Jun 2020 11:51:58 -0400
-Message-Id: <20200629155309.2495516-65-sashal@kernel.org>
+Subject: [PATCH 4.4 082/135] net: fix memleak in register_netdevice()
+Date:   Mon, 29 Jun 2020 11:52:16 -0400
+Message-Id: <20200629155309.2495516-83-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -66,48 +66,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Rix <trix@redhat.com>
+From: Yang Yingliang <yangyingliang@huawei.com>
 
-commit 65de50969a77509452ae590e9449b70a22b923bb upstream.
+[ Upstream commit 814152a89ed52c722ab92e9fbabcac3cb8a39245 ]
 
-Clang's static analysis tool reports these double free memory errors.
+I got a memleak report when doing some fuzz test:
 
-security/selinux/ss/services.c:2987:4: warning: Attempt to free released memory [unix.Malloc]
-                        kfree(bnames[i]);
-                        ^~~~~~~~~~~~~~~~
-security/selinux/ss/services.c:2990:2: warning: Attempt to free released memory [unix.Malloc]
-        kfree(bvalues);
-        ^~~~~~~~~~~~~~
+unreferenced object 0xffff888112584000 (size 13599):
+  comm "ip", pid 3048, jiffies 4294911734 (age 343.491s)
+  hex dump (first 32 bytes):
+    74 61 70 30 00 00 00 00 00 00 00 00 00 00 00 00  tap0............
+    00 ee d9 19 81 88 ff ff 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<000000002f60ba65>] __kmalloc_node+0x309/0x3a0
+    [<0000000075b211ec>] kvmalloc_node+0x7f/0xc0
+    [<00000000d3a97396>] alloc_netdev_mqs+0x76/0xfc0
+    [<00000000609c3655>] __tun_chr_ioctl+0x1456/0x3d70
+    [<000000001127ca24>] ksys_ioctl+0xe5/0x130
+    [<00000000b7d5e66a>] __x64_sys_ioctl+0x6f/0xb0
+    [<00000000e1023498>] do_syscall_64+0x56/0xa0
+    [<000000009ec0eb12>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+unreferenced object 0xffff888111845cc0 (size 8):
+  comm "ip", pid 3048, jiffies 4294911734 (age 343.491s)
+  hex dump (first 8 bytes):
+    74 61 70 30 00 88 ff ff                          tap0....
+  backtrace:
+    [<000000004c159777>] kstrdup+0x35/0x70
+    [<00000000d8b496ad>] kstrdup_const+0x3d/0x50
+    [<00000000494e884a>] kvasprintf_const+0xf1/0x180
+    [<0000000097880a2b>] kobject_set_name_vargs+0x56/0x140
+    [<000000008fbdfc7b>] dev_set_name+0xab/0xe0
+    [<000000005b99e3b4>] netdev_register_kobject+0xc0/0x390
+    [<00000000602704fe>] register_netdevice+0xb61/0x1250
+    [<000000002b7ca244>] __tun_chr_ioctl+0x1cd1/0x3d70
+    [<000000001127ca24>] ksys_ioctl+0xe5/0x130
+    [<00000000b7d5e66a>] __x64_sys_ioctl+0x6f/0xb0
+    [<00000000e1023498>] do_syscall_64+0x56/0xa0
+    [<000000009ec0eb12>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+unreferenced object 0xffff88811886d800 (size 512):
+  comm "ip", pid 3048, jiffies 4294911734 (age 343.491s)
+  hex dump (first 32 bytes):
+    00 00 00 00 ad 4e ad de ff ff ff ff 00 00 00 00  .....N..........
+    ff ff ff ff ff ff ff ff c0 66 3d a3 ff ff ff ff  .........f=.....
+  backtrace:
+    [<0000000050315800>] device_add+0x61e/0x1950
+    [<0000000021008dfb>] netdev_register_kobject+0x17e/0x390
+    [<00000000602704fe>] register_netdevice+0xb61/0x1250
+    [<000000002b7ca244>] __tun_chr_ioctl+0x1cd1/0x3d70
+    [<000000001127ca24>] ksys_ioctl+0xe5/0x130
+    [<00000000b7d5e66a>] __x64_sys_ioctl+0x6f/0xb0
+    [<00000000e1023498>] do_syscall_64+0x56/0xa0
+    [<000000009ec0eb12>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-So improve the security_get_bools error handling by freeing these variables
-and setting their return pointers to NULL and the return len to 0
+If call_netdevice_notifiers() failed, then rollback_registered()
+calls netdev_unregister_kobject() which holds the kobject. The
+reference cannot be put because the netdev won't be add to todo
+list, so it will leads a memleak, we need put the reference to
+avoid memleak.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Tom Rix <trix@redhat.com>
-Acked-by: Stephen Smalley <stephen.smalley.work@gmail.com>
-Signed-off-by: Paul Moore <paul@paul-moore.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- security/selinux/ss/services.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ net/core/dev.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/security/selinux/ss/services.c b/security/selinux/ss/services.c
-index 0a258c0602d13..55c869e0a3a08 100644
---- a/security/selinux/ss/services.c
-+++ b/security/selinux/ss/services.c
-@@ -2622,8 +2622,12 @@ int security_get_bools(int *len, char ***names, int **values)
- 	if (*names) {
- 		for (i = 0; i < *len; i++)
- 			kfree((*names)[i]);
-+		kfree(*names);
- 	}
- 	kfree(*values);
-+	*len = 0;
-+	*names = NULL;
-+	*values = NULL;
- 	goto out;
- }
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 82f9ec1bd94b6..67725818d562d 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -6840,6 +6840,13 @@ int register_netdevice(struct net_device *dev)
+ 		rcu_barrier();
  
+ 		dev->reg_state = NETREG_UNREGISTERED;
++		/* We should put the kobject that hold in
++		 * netdev_unregister_kobject(), otherwise
++		 * the net device cannot be freed when
++		 * driver calls free_netdev(), because the
++		 * kobject is being hold.
++		 */
++		kobject_put(&dev->dev.kobj);
+ 	}
+ 	/*
+ 	 *	Prevent userspace races by waiting until the network
 -- 
 2.25.1
 
