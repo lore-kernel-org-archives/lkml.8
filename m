@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DCCEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:26:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 064C7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6926B206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:26:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C66C12067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:26:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462399;
-	bh=SCtbMOcrB/KK3PIIuQGXj7HFYEfXPtOgwcKxCTRLek8=;
+	s=default; t=1593462401;
+	bh=V+lMLNQFxRWD+l8UI67+2Jc4MZi5TRImW/9qOGcMIzU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xrZ66Mxu1EGclRQkGjgdnd8g2Llf+al41HARQi3+DEcCd021p6ZumoSfrOSswT8JP
-	 fkYeqmgXea/pgrPKfdrHtzCHcEryS3lr1YX+JcJLSPB5NqXFV+vdlPMF5Pvdz1XNZT
-	 eIoefG/qRyR8R0XiVPb5xpQza3wQzttIT4+Amndg=
+	b=NKZkybAldAUK6PMIepANtprowSdRNu4jLU9V5QkVUuZMF1nXpi1y37W0e2LPg1z9T
+	 kTlATGOxjfhBrn0WOkcuXuDMiNB+xLWb5s8SP3C8HXdVniq/047HvKBa2qi7CVz+VK
+	 teREw07xkcSQ1h0l6ig0YYlyBtQuBpnYYStcWd50=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730763AbgF2U0h (ORCPT
+        id S2389078AbgF2U0k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:26:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37056 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:26:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732521AbgF2TZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732526AbgF2TZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 767B72530B;
-        Mon, 29 Jun 2020 15:38:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7172B2533E;
+        Mon, 29 Jun 2020 15:39:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445139;
-        bh=SCtbMOcrB/KK3PIIuQGXj7HFYEfXPtOgwcKxCTRLek8=;
+        s=default; t=1593445181;
+        bh=V+lMLNQFxRWD+l8UI67+2Jc4MZi5TRImW/9qOGcMIzU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OLGZiI1fSK/fT7hbQbIUBbMxrFqPfOfADyhca/kj3OLfFr+roRnCIelKv42mQp6m3
-         uJB6RNOOJrzdDyEZ+bhLMYqL1H8K0pOWFJBvgtiDkVaSUan37bUx7hsy8OdYuQgE5n
-         15axHVRreaLNGDAghjIiSiR+e5qB6PUhSwC77o6k=
+        b=Ap9I1rrleqBms8MhCUjvA4NFm4516SJeytpqKv06/fJrE8LyTGG44M6cCY9YDj/wt
+         Z7jKHpwiwdsbtWRTrzFHHo6kJtzWdZ/ZztjEGS0RKErbDHSR9BkXv189GKgn/CYMOQ
+         RXrigNMkO0kdNqJwayfrZPQMJ/lQaan1a7b6+3NA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qiushi Wu <wu000273@umn.edu>, Heiko Stuebner <heiko@sntech.de>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 44/78] ASoC: rockchip: Fix a reference count leak.
-Date:   Mon, 29 Jun 2020 11:37:32 -0400
-Message-Id: <20200629153806.2494953-45-sashal@kernel.org>
+Cc:     Vasily Averin <vvs@virtuozzo.com>,
+        Jeff Layton <jlayton@redhat.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.14 72/78] sunrpc: fixed rollback in rpc_gssd_dummy_populate()
+Date:   Mon, 29 Jun 2020 11:38:00 -0400
+Message-Id: <20200629153806.2494953-73-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
 References: <20200629153806.2494953-1-sashal@kernel.org>
@@ -65,40 +66,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit f141a422159a199f4c8dedb7e0df55b3b2cf16cd ]
+commit b7ade38165ca0001c5a3bd5314a314abbbfbb1b7 upstream.
 
-Calling pm_runtime_get_sync increments the counter even in case of
-failure, causing incorrect ref count if pm_runtime_put is not called in
-error handling paths. Call pm_runtime_put if pm_runtime_get_sync fails.
+__rpc_depopulate(gssd_dentry) was lost on error path
 
-Fixes: fc05a5b22253 ("ASoC: rockchip: add support for pdm controller")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
-Link: https://lore.kernel.org/r/20200613205158.27296-1-wu000273@umn.edu
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+cc: stable@vger.kernel.org
+Fixes: commit 4b9a445e3eeb ("sunrpc: create a new dummy pipe for gssd to hold open")
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Reviewed-by: Jeff Layton <jlayton@redhat.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- sound/soc/rockchip/rockchip_pdm.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/sunrpc/rpc_pipe.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/rockchip/rockchip_pdm.c b/sound/soc/rockchip/rockchip_pdm.c
-index 8a2e3bbce3a16..ad16c8310dd38 100644
---- a/sound/soc/rockchip/rockchip_pdm.c
-+++ b/sound/soc/rockchip/rockchip_pdm.c
-@@ -478,8 +478,10 @@ static int rockchip_pdm_resume(struct device *dev)
- 	int ret;
- 
- 	ret = pm_runtime_get_sync(dev);
--	if (ret < 0)
-+	if (ret < 0) {
-+		pm_runtime_put(dev);
- 		return ret;
-+	}
- 
- 	ret = regcache_sync(pdm->regmap);
- 
+diff --git a/net/sunrpc/rpc_pipe.c b/net/sunrpc/rpc_pipe.c
+index 34f94052c519d..137f92bfafac7 100644
+--- a/net/sunrpc/rpc_pipe.c
++++ b/net/sunrpc/rpc_pipe.c
+@@ -1347,6 +1347,7 @@ rpc_gssd_dummy_populate(struct dentry *root, struct rpc_pipe *pipe_data)
+ 	q.len = strlen(gssd_dummy_clnt_dir[0].name);
+ 	clnt_dentry = d_hash_and_lookup(gssd_dentry, &q);
+ 	if (!clnt_dentry) {
++		__rpc_depopulate(gssd_dentry, gssd_dummy_clnt_dir, 0, 1);
+ 		pipe_dentry = ERR_PTR(-ENOENT);
+ 		goto out;
+ 	}
 -- 
 2.25.1
 
