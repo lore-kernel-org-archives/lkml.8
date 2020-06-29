@@ -2,132 +2,147 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2ED8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:18:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56549C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:18:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0E1720656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:18:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461931;
-	bh=hjbnlEuAjZ36wh0c/541957pAiG2JIgnuVqRRy+/BWg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zz/9GY61s50eEf+/EcVoFRuzDBO/iqZzK66B6/L3YiDwnV6oX+fmdnbllcTmSWQe2
-	 EIUBKuCLZ0xEzMNODQW0eu09Ie5wdtDUr/6kxZrfuF39kW5I6N80IEzf9PHG7Dqy3M
-	 07+ka6x4N9Cnd3J2jIb/KROGzo4+0u28XO6+x6jc=
+	by mail.kernel.org (Postfix) with ESMTP id 332DB20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:18:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kKlzs4sb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728192AbgF2USt (ORCPT
+        id S1733305AbgF2USy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:18:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37056 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732630AbgF2TZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:25:41 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3A85253C5;
-        Mon, 29 Jun 2020 15:41:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445296;
-        bh=hjbnlEuAjZ36wh0c/541957pAiG2JIgnuVqRRy+/BWg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OoJZJhNCRK5dBaBl3hfUfU1ulQRy3SAaSCdj9/2vPpSNx7HExU5xZx4ix6teD+4ao
-         HXuAN1NKI336UYz0To5sXpzfLAiENSffztys65t2LNOtl5sacL+tqOSILDcUS9SctA
-         EEnpqATADwJUW9GGs28nvrJI6SwRwLzMzeKXEJxA=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 070/191] include/linux/bitops.h: avoid clang shift-count-overflow warnings
-Date:   Mon, 29 Jun 2020 11:38:06 -0400
-Message-Id: <20200629154007.2495120-71-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
-References: <20200629154007.2495120-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.229-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.9.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.9.229-rc1
-X-KernelTest-Deadline: 2020-07-01T15:39+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        Mon, 29 Jun 2020 16:18:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54156 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388538AbgF2USj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 16:18:39 -0400
+Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8720EC061755;
+        Mon, 29 Jun 2020 13:18:38 -0700 (PDT)
+Received: by mail-lj1-x244.google.com with SMTP id b25so16139293ljp.6;
+        Mon, 29 Jun 2020 13:18:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=8KS8I9Q3x2kXGfX+XyyK1sOmdPbnTRSOpvvTvwkAeTs=;
+        b=kKlzs4sb6gvS9zYIlKdtNO9qZQptM0LCZ/5tTmz0g8zeAuvX6L7DG9YSQv5O6J8o0t
+         +CfV51o+Z9H4vt+N0eAH1ce3eZwBa+rTl+XL8Hf1acezphKbNdejOR7/uTqpvIv9SfQA
+         2KWUGHa9aRo43YP5EqG7Hx9mGJwieKRlykPLqMKejsyZIky6Rpy0C0LZHNa3HINiVxpa
+         MEuoN5HtplNVLYZFprLtWZFMPJ3H2GbFy+unFlOKGfRMW6Tbn6F2doUdsuu+6jTP+uWQ
+         nvvaoXQQPTxy7YodFAQgWWGj5w3UiZCX3Y67jQeJz9wcdsDAK+XaohzCuEGB9fN7piJ+
+         ahYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=8KS8I9Q3x2kXGfX+XyyK1sOmdPbnTRSOpvvTvwkAeTs=;
+        b=KsE/W+rfDYRWXsZsV0vEPeO4m2I8BnQfISLxWwOGtmoFlB9ZXp3T7ukjSXuPLDlj7/
+         Lf4xy7+4cL01mKYGweluUT0/2ONBfOzLFso/UimyzlhQCa1Z/jjKXTtEKxrrYW9V9f/K
+         1JJYYrPeAGlqEyVGgHYMFuHWRXfgIJUeqz+tVMOQrhpWgdjrfEjXZwSswOWuQrJ7uedy
+         lfl4PBR7oCb90Q4khyrBbGkvpMaT8fWyUfoP68v02RraaIfdpNOtc5DbiReY8mw3+fao
+         8ncno4+QxpzC6L6c9eBVxjtykwjCKunDZ2AMqFoD/z6twJA89jhbTuLkt+iGT4iVVS6a
+         oEIg==
+X-Gm-Message-State: AOAM531wiCNvQQWz9dUIZ6HnAPli7IyRKMfwpbbDRPVNhcEX/U3YUmyN
+        P5Dk4rTmfYYNPpvTM4KSaqk=
+X-Google-Smtp-Source: ABdhPJxxtuESaMskdjQR3zZ4lP77PTmYj17q1RARRdk3vtTHJODW8Xdzzd0fpl4TxUPk/wOQ6/FF6w==
+X-Received: by 2002:a2e:b88e:: with SMTP id r14mr8307120ljp.197.1593461917004;
+        Mon, 29 Jun 2020 13:18:37 -0700 (PDT)
+Received: from localhost ([80.64.86.170])
+        by smtp.gmail.com with ESMTPSA id x64sm154660lff.14.2020.06.29.13.18.36
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Jun 2020 13:18:36 -0700 (PDT)
+From:   Ruslan Bilovol <ruslan.bilovol@gmail.com>
+To:     balbi@kernel.org
+Cc:     gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] usb: gadget: epautoconf: claim smallest endpoints first
+Date:   Mon, 29 Jun 2020 23:18:45 +0300
+Message-Id: <20200629201845.28138-1-ruslan.bilovol@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+UDC hardware may have endpoints with different maxpacket
+size. Current endpoint matching code takes first matching
+endpoint from the list.
 
-[ Upstream commit bd93f003b7462ae39a43c531abca37fe7073b866 ]
+It's always possible that gadget allocates endpoints for
+small transfers (maxpacket size) first, then larger ones.
+That works fine if all matching UDC endpoints have same
+maxpacket size or are big enough to serve that allocation.
 
-Clang normally does not warn about certain issues in inline functions when
-it only happens in an eliminated code path. However if something else
-goes wrong, it does tend to complain about the definition of hweight_long()
-on 32-bit targets:
+However, some UDCs have first endpoints in the list with
+bigger maxpacket size, whereas last endpoints are much
+smaller. In this case endpoint allocation will fail for
+the gadget (which allocates smaller endpoints first) on
+final endpoint allocations.
 
-  include/linux/bitops.h:75:41: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
-          return sizeof(w) == 4 ? hweight32(w) : hweight64(w);
-                                                 ^~~~~~~~~~~~
-  include/asm-generic/bitops/const_hweight.h:29:49: note: expanded from macro 'hweight64'
-   define hweight64(w) (__builtin_constant_p(w) ? __const_hweight64(w) : __arch_hweight64(w))
-                                                  ^~~~~~~~~~~~~~~~~~~~
-  include/asm-generic/bitops/const_hweight.h:21:76: note: expanded from macro '__const_hweight64'
-   define __const_hweight64(w) (__const_hweight32(w) + __const_hweight32((w) >> 32))
-                                                                             ^  ~~
-  include/asm-generic/bitops/const_hweight.h:20:49: note: expanded from macro '__const_hweight32'
-   define __const_hweight32(w) (__const_hweight16(w) + __const_hweight16((w) >> 16))
-                                                  ^
-  include/asm-generic/bitops/const_hweight.h:19:72: note: expanded from macro '__const_hweight16'
-   define __const_hweight16(w) (__const_hweight8(w)  + __const_hweight8((w)  >> 8 ))
-                                                                         ^
-  include/asm-generic/bitops/const_hweight.h:12:9: note: expanded from macro '__const_hweight8'
-            (!!((w) & (1ULL << 2))) +     \
+To make endpoint allocation fair, pick up smallest
+matching endpoints first, leaving bigger ones for
+heavier applications.
 
-Adding an explicit cast to __u64 avoids that warning and makes it easier
-to read other output.
-
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Link: http://lkml.kernel.org/r/20200505135513.65265-1-arnd@arndb.de
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Ruslan Bilovol <ruslan.bilovol@gmail.com>
 ---
- include/linux/bitops.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/bitops.h b/include/linux/bitops.h
-index cee74a52b9eb8..e1dee6c91ff57 100644
---- a/include/linux/bitops.h
-+++ b/include/linux/bitops.h
-@@ -49,7 +49,7 @@ static inline int get_bitmask_order(unsigned int count)
- 
- static __always_inline unsigned long hweight_long(unsigned long w)
+v2: rebased onto latest balbi/next branch
+
+ drivers/usb/gadget/epautoconf.c | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/usb/gadget/epautoconf.c b/drivers/usb/gadget/epautoconf.c
+index 1eb4fa2e623f..6c453b5d87bb 100644
+--- a/drivers/usb/gadget/epautoconf.c
++++ b/drivers/usb/gadget/epautoconf.c
+@@ -66,7 +66,7 @@ struct usb_ep *usb_ep_autoconfig_ss(
+ 	struct usb_ss_ep_comp_descriptor *ep_comp
+ )
  {
--	return sizeof(w) == 4 ? hweight32(w) : hweight64(w);
-+	return sizeof(w) == 4 ? hweight32(w) : hweight64((__u64)w);
- }
+-	struct usb_ep	*ep;
++	struct usb_ep	*ep, *ep_min = NULL;
  
- /**
+ 	if (gadget->ops->match_ep) {
+ 		ep = gadget->ops->match_ep(gadget, desc, ep_comp);
+@@ -74,14 +74,27 @@ struct usb_ep *usb_ep_autoconfig_ss(
+ 			goto found_ep;
+ 	}
+ 
+-	/* Second, look at endpoints until an unclaimed one looks usable */
++	/*
++	 * Second, look at endpoints until an unclaimed one looks usable.
++	 * Try to find one with smallest maxpacket limit, leaving larger
++	 * endpoints for heavier applications
++	 */
+ 	list_for_each_entry (ep, &gadget->ep_list, ep_list) {
+-		if (usb_gadget_ep_match_desc(gadget, ep, desc, ep_comp))
+-			goto found_ep;
++		if (usb_gadget_ep_match_desc(gadget, ep, desc, ep_comp)) {
++			if (desc->wMaxPacketSize == 0)
++				goto found_ep;
++			else if (!ep_min)
++				ep_min = ep;
++			else if (ep->maxpacket_limit < ep_min->maxpacket_limit)
++				ep_min = ep;
++		}
+ 	}
+ 
+ 	/* Fail */
+-	return NULL;
++	if (!ep_min)
++		return NULL;
++
++	ep = ep_min;
+ found_ep:
+ 
+ 	/*
 -- 
-2.25.1
+2.17.1
 
