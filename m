@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16D18C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B05BCC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E41422065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 909AD2065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468197;
-	bh=2Jf2AjL9AF4SMS47FIBNC+yP7b1wJtwLXKl98jffVM0=;
+	s=default; t=1593468200;
+	bh=1/ZFzVVzjPohzbHNwJsyjOAmCkS4AaSN6cYqJq14jks=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g1D5tm3Wjc37jAuBHpxDpVKhAwAGnGfrGBkeymHF8S7hEjfxDYmewqkgVITFY2frv
-	 36bZJcThEA2jA4gkxf1k8bft5yVebBxcCiWqOCZHyLxUGzujjF5dGq8prXJyhRV2LW
-	 Cd516pmxQcLi2MkoLyVfcvwWbbPfaag6KMtUr/7Q=
+	b=NaXkA+C75pDcofT53qv10iELu7tTR/Jm/SLpvMZydWE288/63RcZMrB3+hDDuuzsw
+	 HABamiBjL5iGhx+OWX2Jho+ZkS9xMyQ1SwKqcwH07n9BFvoS93NwX5gczyhsR5sYrR
+	 CM/TK+bV1eq3DoMgNZhp2IbqGXrL4GCEVN13lROk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390561AbgF2WDP (ORCPT
+        id S2390640AbgF2WDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:03:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56786 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:03:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726207AbgF2SfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726247AbgF2SfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC4A02467C;
-        Mon, 29 Jun 2020 15:19:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 264BC246AF;
+        Mon, 29 Jun 2020 15:20:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443980;
-        bh=2Jf2AjL9AF4SMS47FIBNC+yP7b1wJtwLXKl98jffVM0=;
+        s=default; t=1593444003;
+        bh=1/ZFzVVzjPohzbHNwJsyjOAmCkS4AaSN6cYqJq14jks=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ahSGoEoiRIpYNG9AWAACk+ePFzJIVW3ajTZzmAko61RvQRkj3OSVhrRWF12cOGrgT
-         w0oqteKuCKW3260iaOUZF56ubuvhX1P4gLm6grj16iCSEF2hcXSXfejRoYKLPx+qZ1
-         PAoq93vj2YvYBFOideHyxg9bbgwyoHlOisdyUP7k=
+        b=f/UW0Hjq9YwGYZXHM1qfD1uqAgmzlsizggZKX9K9KRKWnnWwc8+54nuVB8mRaZGHI
+         7xskypGSMDDHuHNqwbmsfzk0mx1OAippSgEl7EJuR7CD60OBftZGtEyFFPxMQ5DD3b
+         9z6mlSFPkg/zzTh4Y5TGeM1gk541djtQIofkvCxg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhang Xiaoxu <zhangxiaoxu5@huawei.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 084/265] cifs/smb3: Fix data inconsistent when punch hole
-Date:   Mon, 29 Jun 2020 11:15:17 -0400
-Message-Id: <20200629151818.2493727-85-sashal@kernel.org>
+Cc:     Qiushi Wu <wu000273@umn.edu>, Ard Biesheuvel <ardb@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 109/265] efi/esrt: Fix reference count leak in esre_create_sysfs_entry.
+Date:   Mon, 29 Jun 2020 11:15:42 -0400
+Message-Id: <20200629151818.2493727-110-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -66,55 +64,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+From: Qiushi Wu <wu000273@umn.edu>
 
-commit acc91c2d8de4ef46ed751c5f9df99ed9a109b100 upstream.
+[ Upstream commit 4ddf4739be6e375116c375f0a68bf3893ffcee21 ]
 
-When punch hole success, we also can read old data from file:
-  # strace -e trace=pread64,fallocate xfs_io -f -c "pread 20 40" \
-           -c "fpunch 20 40" -c"pread 20 40" file
-  pread64(3, " version 5.8.0-rc1+"..., 40, 20) = 40
-  fallocate(3, FALLOC_FL_KEEP_SIZE|FALLOC_FL_PUNCH_HOLE, 20, 40) = 0
-  pread64(3, " version 5.8.0-rc1+"..., 40, 20) = 40
+kobject_init_and_add() takes reference even when it fails.
+If this function returns an error, kobject_put() must be called to
+properly clean up the memory associated with the object. Previous
+commit "b8eb718348b8" fixed a similar problem.
 
-CIFS implements the fallocate(FALLOCATE_FL_PUNCH_HOLE) with send SMB
-ioctl(FSCTL_SET_ZERO_DATA) to server. It just set the range of the
-remote file to zero, but local page caches not updated, then the
-local page caches inconsistent with server.
-
-Also can be found by xfstests generic/316.
-
-So, we need to remove the page caches before send the SMB
-ioctl(FSCTL_SET_ZERO_DATA) to server.
-
-Fixes: 31742c5a33176 ("enable fallocate punch hole ("fallocate -p") for SMB3")
-Suggested-by: Pavel Shilovsky <pshilov@microsoft.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
-Cc: stable@vger.kernel.org # v3.17
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 0bb549052d33 ("efi: Add esrt support")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Link: https://lore.kernel.org/r/20200528183804.4497-1-wu000273@umn.edu
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/smb2ops.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/firmware/efi/esrt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
-index c6a4caa7053e9..3de9113eb8e35 100644
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -3211,6 +3211,12 @@ static long smb3_punch_hole(struct file *file, struct cifs_tcon *tcon,
- 		return rc;
+diff --git a/drivers/firmware/efi/esrt.c b/drivers/firmware/efi/esrt.c
+index e3d6926965834..d5915272141fd 100644
+--- a/drivers/firmware/efi/esrt.c
++++ b/drivers/firmware/efi/esrt.c
+@@ -181,7 +181,7 @@ static int esre_create_sysfs_entry(void *esre, int entry_num)
+ 		rc = kobject_init_and_add(&entry->kobj, &esre1_ktype, NULL,
+ 					  "entry%d", entry_num);
+ 		if (rc) {
+-			kfree(entry);
++			kobject_put(&entry->kobj);
+ 			return rc;
+ 		}
  	}
- 
-+	/*
-+	 * We implement the punch hole through ioctl, so we need remove the page
-+	 * caches first, otherwise the data may be inconsistent with the server.
-+	 */
-+	truncate_pagecache_range(inode, offset, offset + len - 1);
-+
- 	cifs_dbg(FYI, "Offset %lld len %lld\n", offset, len);
- 
- 	fsctl_buf.FileOffset = cpu_to_le64(offset);
 -- 
 2.25.1
 
