@@ -7,52 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4CF0C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8411DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3F252082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:47:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67E9620885
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:47:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460068;
-	bh=Q0/KPKdoE+l7DUi5F1eMTVmjpkyw2495FuaeHQCbkcY=;
+	s=default; t=1593460069;
+	bh=jwYVoiyk/dSM19se0StrQfL99xfooW7INIzccJ0Lk/0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=glcMEQ/+/63NE5w4R0A+C60P1QWZ6a1kz+i2HbBKWwMuX38oCFpzY7kzFT86YdW+0
-	 UfFtuzMsl9+eZjckEerZiGNtU5dB0QOKfP7/XkIhHqUQ3WFtWY7wDpnetxcApMSbKk
-	 QMJyGV4NsIQXYcmtbyCMEiNlCaYGefVVmq5IBlAA=
+	b=I90p5ONKqsA3bQ9pTuAsjTORJOMyjhfXKif5Rj0oJZcbnKnN+Wisb4uW2Ft3YEBd2
+	 +DZUCrhmWMcriaqzLOsE8aNoExkgj+c6aCr0SFy460ciLsY/p4AU2zoZMkUfu5uMap
+	 1E18wxjfB6qIj5Dvoea83YyneezwU4G0vj0t7xUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388151AbgF2Trf (ORCPT
+        id S2387990AbgF2Trd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:47:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47678 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:47:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387785AbgF2Tkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387780AbgF2Tkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B59BC24839;
-        Mon, 29 Jun 2020 15:25:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2141248AF;
+        Mon, 29 Jun 2020 15:26:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444349;
-        bh=Q0/KPKdoE+l7DUi5F1eMTVmjpkyw2495FuaeHQCbkcY=;
+        s=default; t=1593444409;
+        bh=jwYVoiyk/dSM19se0StrQfL99xfooW7INIzccJ0Lk/0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Psr7DSTw2vtkiSM+I67tXYla/BzZS/dm+bCnDtKAPrFktsWzgqHN3qiMqmr7+gcsu
-         G85lrvu2bpj7VC3GT840PBFyYOSh7hF2a1apVwS6jJ7EsDr022RIDorBycqFeZoHYw
-         GbMaYE9HIZdxEohYpwS0apoajqkk/Vbheo81m/ig=
+        b=ICG7koyP5+WlOEtNPMPpdTgcSDV/juDbJYDgJfK8caffY4hnmAKbNViLXApDGDxfq
+         ZoVY0k9uLEIJQ7SRCHx12ufO9RiIl9asIYo8PhR0z+OobcBLhFhJ6SbMVOPavko9r0
+         ZDTbjWDo6t2/M+WSkvRNRHKeruzZF852YrHaXqnY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ilya Ponetayev <i.ponetaev@ndmsystems.com>,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 024/178] sch_cake: don't try to reallocate or unshare skb unconditionally
-Date:   Mon, 29 Jun 2020 11:22:49 -0400
-Message-Id: <20200629152523.2494198-25-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 087/178] s390/qeth: fix error handling for isolation mode cmds
+Date:   Mon, 29 Jun 2020 11:23:52 -0400
+Message-Id: <20200629152523.2494198-88-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.50-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-5.4.y
@@ -67,99 +65,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Ponetayev <i.ponetaev@ndmsystems.com>
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-[ Upstream commit 9208d2863ac689a563b92f2161d8d1e7127d0add ]
+[ Upstream commit e2dfcfba00ba4a414617ef4c5a8501fe21567eb3 ]
 
-cake_handle_diffserv() tries to linearize mac and network header parts of
-skb and to make it writable unconditionally. In some cases it leads to full
-skb reallocation, which reduces throughput and increases CPU load. Some
-measurements of IPv4 forward + NAPT on MIPS router with 580 MHz single-core
-CPU was conducted. It appears that on kernel 4.9 skb_try_make_writable()
-reallocates skb, if skb was allocated in ethernet driver via so-called
-'build skb' method from page cache (it was discovered by strange increase
-of kmalloc-2048 slab at first).
+Current(?) OSA devices also store their cmd-specific return codes for
+SET_ACCESS_CONTROL cmds into the top-level cmd->hdr.return_code.
+So once we added stricter checking for the top-level field a while ago,
+none of the error logic that rolls back the user's configuration to its
+old state is applied any longer.
 
-Obtain DSCP value via read-only skb_header_pointer() call, and leave
-linearization only for DSCP bleaching or ECN CE setting. And, as an
-additional optimisation, skip diffserv parsing entirely if it is not needed
-by the current configuration.
+For this specific cmd, go back to the old model where we peek into the
+cmd structure even though the top-level field indicated an error.
 
-Fixes: c87b4ecdbe8d ("sch_cake: Make sure we can write the IP header before changing DSCP bits")
-Signed-off-by: Ilya Ponetayev <i.ponetaev@ndmsystems.com>
-[ fix a few style issues, reflow commit message ]
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Fixes: 686c97ee29c8 ("s390/qeth: fix error handling in adapter command callbacks")
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/sched/sch_cake.c | 41 ++++++++++++++++++++++++++++++-----------
- 1 file changed, 30 insertions(+), 11 deletions(-)
+ drivers/s390/net/qeth_core_main.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/net/sched/sch_cake.c b/net/sched/sch_cake.c
-index 2277369feae58..8020d0829f1a9 100644
---- a/net/sched/sch_cake.c
-+++ b/net/sched/sch_cake.c
-@@ -1517,30 +1517,49 @@ static unsigned int cake_drop(struct Qdisc *sch, struct sk_buff **to_free)
+diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
+index fe70e9875bde0..5043f0fcf399a 100644
+--- a/drivers/s390/net/qeth_core_main.c
++++ b/drivers/s390/net/qeth_core_main.c
+@@ -4163,9 +4163,6 @@ static int qeth_setadpparms_set_access_ctrl_cb(struct qeth_card *card,
+ 	int fallback = *(int *)reply->param;
  
- static u8 cake_handle_diffserv(struct sk_buff *skb, u16 wash)
- {
--	int wlen = skb_network_offset(skb);
-+	const int offset = skb_network_offset(skb);
-+	u16 *buf, buf_;
- 	u8 dscp;
+ 	QETH_CARD_TEXT(card, 4, "setaccb");
+-	if (cmd->hdr.return_code)
+-		return -EIO;
+-	qeth_setadpparms_inspect_rc(cmd);
  
- 	switch (tc_skb_protocol(skb)) {
- 	case htons(ETH_P_IP):
--		wlen += sizeof(struct iphdr);
--		if (!pskb_may_pull(skb, wlen) ||
--		    skb_try_make_writable(skb, wlen))
-+		buf = skb_header_pointer(skb, offset, sizeof(buf_), &buf_);
-+		if (unlikely(!buf))
- 			return 0;
- 
--		dscp = ipv4_get_dsfield(ip_hdr(skb)) >> 2;
--		if (wash && dscp)
-+		/* ToS is in the second byte of iphdr */
-+		dscp = ipv4_get_dsfield((struct iphdr *)buf) >> 2;
-+
-+		if (wash && dscp) {
-+			const int wlen = offset + sizeof(struct iphdr);
-+
-+			if (!pskb_may_pull(skb, wlen) ||
-+			    skb_try_make_writable(skb, wlen))
-+				return 0;
-+
- 			ipv4_change_dsfield(ip_hdr(skb), INET_ECN_MASK, 0);
-+		}
-+
- 		return dscp;
- 
- 	case htons(ETH_P_IPV6):
--		wlen += sizeof(struct ipv6hdr);
--		if (!pskb_may_pull(skb, wlen) ||
--		    skb_try_make_writable(skb, wlen))
-+		buf = skb_header_pointer(skb, offset, sizeof(buf_), &buf_);
-+		if (unlikely(!buf))
- 			return 0;
- 
--		dscp = ipv6_get_dsfield(ipv6_hdr(skb)) >> 2;
--		if (wash && dscp)
-+		/* Traffic class is in the first and second bytes of ipv6hdr */
-+		dscp = ipv6_get_dsfield((struct ipv6hdr *)buf) >> 2;
-+
-+		if (wash && dscp) {
-+			const int wlen = offset + sizeof(struct ipv6hdr);
-+
-+			if (!pskb_may_pull(skb, wlen) ||
-+			    skb_try_make_writable(skb, wlen))
-+				return 0;
-+
- 			ipv6_change_dsfield(ipv6_hdr(skb), INET_ECN_MASK, 0);
-+		}
-+
- 		return dscp;
- 
- 	case htons(ETH_P_ARP):
+ 	access_ctrl_req = &cmd->data.setadapterparms.data.set_access_ctrl;
+ 	QETH_CARD_TEXT_(card, 2, "rc=%d",
+@@ -4175,7 +4172,7 @@ static int qeth_setadpparms_set_access_ctrl_cb(struct qeth_card *card,
+ 		QETH_DBF_MESSAGE(3, "ERR:SET_ACCESS_CTRL(%#x) on device %x: %#x\n",
+ 				 access_ctrl_req->subcmd_code, CARD_DEVID(card),
+ 				 cmd->data.setadapterparms.hdr.return_code);
+-	switch (cmd->data.setadapterparms.hdr.return_code) {
++	switch (qeth_setadpparms_inspect_rc(cmd)) {
+ 	case SET_ACCESS_CTRL_RC_SUCCESS:
+ 		if (card->options.isolation == ISOLATION_MODE_NONE) {
+ 			dev_info(&card->gdev->dev,
 -- 
 2.25.1
 
