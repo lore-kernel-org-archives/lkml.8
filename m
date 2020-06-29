@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EAA8C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B134C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E309B206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77575206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467441;
-	bh=HHhK9UsZxKWOzpspuvRyxFbdt7ogMPoLlSp61E5kjtM=;
+	s=default; t=1593467444;
+	bh=T2XlFw7cYAIqYBlNSB3w8BAm1u/f7UnydUIyVFS42Mw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0wGFENEuE1G2apmqtPLAo41rYtq7Az1eDbxSP9iE4x7yokPEjRqVzWx/+JaNRg5yN
-	 SndbXnDB0Kw8TSwZncyDkV/S75HBlMco4uVW2C/guhTrwYxWTo5XREqIDQdJ0ZF9zq
-	 h/ojuWu3TPD1E7znjPRAog0MiMUJ46u5wI9mvj/0=
+	b=KPX5oToZcVxcWOaI5WXtfyu43bSQAw20U4zLefdXNaFUgODeGNmQBOHqT7dQSTOTM
+	 ht0j6RXvynPcQc1FgmUvburTrdkSVCi2UYvd1mGGtliRd6J90uAIYs42/XUDJePD3I
+	 0RMpuFXobkORXuK04FNkNVve3bP3RSjISWEbDKy0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404480AbgF2Vuk (ORCPT
+        id S2404489AbgF2Vun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:50:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56904 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:50:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726676AbgF2Sfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726655AbgF2Sfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8124A2466D;
-        Mon, 29 Jun 2020 15:19:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAAF5246BB;
+        Mon, 29 Jun 2020 15:20:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443973;
-        bh=HHhK9UsZxKWOzpspuvRyxFbdt7ogMPoLlSp61E5kjtM=;
+        s=default; t=1593444012;
+        bh=T2XlFw7cYAIqYBlNSB3w8BAm1u/f7UnydUIyVFS42Mw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fDNqCK/bq+kxMgvgkRtV/noYKBGPwIt2ipRBBkCtr2ZYwgkTQPXGUEy3JX8WZ/wMA
-         k2ILCZxreHxnlGUv8xKwYeFC+pHRxJkhPcifVOUSH01TQYD4Y8XlIDqQu9/Gw5JHxA
-         zTvNTh8aKo+OJ+E3aeXqnNusMi8PcXbjSjlMdNo4=
+        b=bkypAtiijMw8JJ+L8PCjZx53GL+ryPv4xt+Tpmbtv/51tePdCoN8zH0kWRzWdvoMr
+         8TiOj5tulPVjWD97FeG127jelHQcYRplMwzocQH23WSbDF2Kq8S4BZUMNawW2+Lrro
+         Dw+KOmzPdYXHcrWeogAnsfomvHOGjya0g1rkyU9o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>,
-        syzbot+fb14314433463ad51625@syzkaller.appspotmail.com,
-        syzbot+2405ca3401e943c538b5@syzkaller.appspotmail.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 077/265] ALSA: usb-audio: Fix OOB access of mixer element list
-Date:   Mon, 29 Jun 2020 11:15:10 -0400
-Message-Id: <20200629151818.2493727-78-sashal@kernel.org>
+Cc:     Lorenzo Bianconi <lorenzo@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Yonghong Song <yhs@fb.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 118/265] samples/bpf: xdp_redirect_cpu: Set MAX_CPUS according to NR_CPUS
+Date:   Mon, 29 Jun 2020 11:15:51 -0400
+Message-Id: <20200629151818.2493727-119-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -66,123 +65,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Lorenzo Bianconi <lorenzo@kernel.org>
 
-commit 220345e98f1cdc768eeb6e3364a0fa7ab9647fe7 upstream.
+[ Upstream commit 6a09815428547657f3ffd2f5c31ac2a191e7fdf3 ]
 
-The USB-audio mixer code holds a linked list of usb_mixer_elem_list,
-and several operations are performed for each mixer element.  A few of
-them (snd_usb_mixer_notify_id() and snd_usb_mixer_interrupt_v2())
-assume each mixer element being a usb_mixer_elem_info object that is a
-subclass of usb_mixer_elem_list, cast via container_of() and access it
-members.  This may result in an out-of-bound access when a
-non-standard list element has been added, as spotted by syzkaller
-recently.
+xdp_redirect_cpu is currently failing in bpf_prog_load_xattr()
+allocating cpu_map map if CONFIG_NR_CPUS is less than 64 since
+cpu_map_alloc() requires max_entries to be less than NR_CPUS.
+Set cpu_map max_entries according to NR_CPUS in xdp_redirect_cpu_kern.c
+and get currently running cpus in xdp_redirect_cpu_user.c
 
-This patch adds a new field, is_std_info, in usb_mixer_elem_list to
-indicate that the element is the usb_mixer_elem_info type or not, and
-skip the access to such an element if needed.
-
-Reported-by: syzbot+fb14314433463ad51625@syzkaller.appspotmail.com
-Reported-by: syzbot+2405ca3401e943c538b5@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200624122340.9615-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Yonghong Song <yhs@fb.com>
+Link: https://lore.kernel.org/bpf/374472755001c260158c4e4b22f193bdd3c56fb7.1589300442.git.lorenzo@kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/mixer.c        | 15 +++++++++++----
- sound/usb/mixer.h        |  9 +++++++--
- sound/usb/mixer_quirks.c |  3 ++-
- 3 files changed, 20 insertions(+), 7 deletions(-)
+ samples/bpf/xdp_redirect_cpu_kern.c |  2 +-
+ samples/bpf/xdp_redirect_cpu_user.c | 29 ++++++++++++++++-------------
+ 2 files changed, 17 insertions(+), 14 deletions(-)
 
-diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
-index 15769f266790e..eab0fd4fd7c33 100644
---- a/sound/usb/mixer.c
-+++ b/sound/usb/mixer.c
-@@ -581,8 +581,9 @@ static int check_matrix_bitmap(unsigned char *bmap,
-  * if failed, give up and free the control instance.
-  */
+diff --git a/samples/bpf/xdp_redirect_cpu_kern.c b/samples/bpf/xdp_redirect_cpu_kern.c
+index 313a8fe6d125c..2baf8db1f7e70 100644
+--- a/samples/bpf/xdp_redirect_cpu_kern.c
++++ b/samples/bpf/xdp_redirect_cpu_kern.c
+@@ -15,7 +15,7 @@
+ #include <bpf/bpf_helpers.h>
+ #include "hash_func01.h"
  
--int snd_usb_mixer_add_control(struct usb_mixer_elem_list *list,
--			      struct snd_kcontrol *kctl)
-+int snd_usb_mixer_add_list(struct usb_mixer_elem_list *list,
-+			   struct snd_kcontrol *kctl,
-+			   bool is_std_info)
- {
- 	struct usb_mixer_interface *mixer = list->mixer;
- 	int err;
-@@ -596,6 +597,7 @@ int snd_usb_mixer_add_control(struct usb_mixer_elem_list *list,
- 		return err;
- 	}
- 	list->kctl = kctl;
-+	list->is_std_info = is_std_info;
- 	list->next_id_elem = mixer->id_elems[list->id];
- 	mixer->id_elems[list->id] = list;
- 	return 0;
-@@ -3234,8 +3236,11 @@ void snd_usb_mixer_notify_id(struct usb_mixer_interface *mixer, int unitid)
- 	unitid = delegate_notify(mixer, unitid, NULL, NULL);
+-#define MAX_CPUS 64 /* WARNING - sync with _user.c */
++#define MAX_CPUS NR_CPUS
  
- 	for_each_mixer_elem(list, mixer, unitid) {
--		struct usb_mixer_elem_info *info =
--			mixer_elem_list_to_info(list);
-+		struct usb_mixer_elem_info *info;
-+
-+		if (!list->is_std_info)
-+			continue;
-+		info = mixer_elem_list_to_info(list);
- 		/* invalidate cache, so the value is read from the device */
- 		info->cached = 0;
- 		snd_ctl_notify(mixer->chip->card, SNDRV_CTL_EVENT_MASK_VALUE,
-@@ -3315,6 +3320,8 @@ static void snd_usb_mixer_interrupt_v2(struct usb_mixer_interface *mixer,
+ /* Special map type that can XDP_REDIRECT frames to another CPU */
+ struct {
+diff --git a/samples/bpf/xdp_redirect_cpu_user.c b/samples/bpf/xdp_redirect_cpu_user.c
+index 15bdf047a2221..9b8f21abeac47 100644
+--- a/samples/bpf/xdp_redirect_cpu_user.c
++++ b/samples/bpf/xdp_redirect_cpu_user.c
+@@ -13,6 +13,7 @@ static const char *__doc__ =
+ #include <unistd.h>
+ #include <locale.h>
+ #include <sys/resource.h>
++#include <sys/sysinfo.h>
+ #include <getopt.h>
+ #include <net/if.h>
+ #include <time.h>
+@@ -24,8 +25,6 @@ static const char *__doc__ =
+ #include <arpa/inet.h>
+ #include <linux/if_link.h>
  
- 		if (!list->kctl)
- 			continue;
-+		if (!list->is_std_info)
-+			continue;
+-#define MAX_CPUS 64 /* WARNING - sync with _kern.c */
+-
+ /* How many xdp_progs are defined in _kern.c */
+ #define MAX_PROG 6
  
- 		info = mixer_elem_list_to_info(list);
- 		if (count > 1 && info->control != control)
-diff --git a/sound/usb/mixer.h b/sound/usb/mixer.h
-index 41ec9dc4139bb..c29e27ac43a7a 100644
---- a/sound/usb/mixer.h
-+++ b/sound/usb/mixer.h
-@@ -66,6 +66,7 @@ struct usb_mixer_elem_list {
- 	struct usb_mixer_elem_list *next_id_elem; /* list of controls with same id */
- 	struct snd_kcontrol *kctl;
- 	unsigned int id;
-+	bool is_std_info;
- 	usb_mixer_elem_dump_func_t dump;
- 	usb_mixer_elem_resume_func_t resume;
+@@ -40,6 +39,7 @@ static char *ifname;
+ static __u32 prog_id;
+ 
+ static __u32 xdp_flags = XDP_FLAGS_UPDATE_IF_NOEXIST;
++static int n_cpus;
+ static int cpu_map_fd;
+ static int rx_cnt_map_fd;
+ static int redirect_err_cnt_map_fd;
+@@ -170,7 +170,7 @@ struct stats_record {
+ 	struct record redir_err;
+ 	struct record kthread;
+ 	struct record exception;
+-	struct record enq[MAX_CPUS];
++	struct record enq[];
  };
-@@ -103,8 +104,12 @@ void snd_usb_mixer_notify_id(struct usb_mixer_interface *mixer, int unitid);
- int snd_usb_mixer_set_ctl_value(struct usb_mixer_elem_info *cval,
- 				int request, int validx, int value_set);
  
--int snd_usb_mixer_add_control(struct usb_mixer_elem_list *list,
--			      struct snd_kcontrol *kctl);
-+int snd_usb_mixer_add_list(struct usb_mixer_elem_list *list,
-+			   struct snd_kcontrol *kctl,
-+			   bool is_std_info);
-+
-+#define snd_usb_mixer_add_control(list, kctl) \
-+	snd_usb_mixer_add_list(list, kctl, true)
+ static bool map_collect_percpu(int fd, __u32 key, struct record *rec)
+@@ -225,10 +225,11 @@ static struct datarec *alloc_record_per_cpu(void)
+ static struct stats_record *alloc_stats_record(void)
+ {
+ 	struct stats_record *rec;
+-	int i;
++	int i, size;
  
- void snd_usb_mixer_elem_init_std(struct usb_mixer_elem_list *list,
- 				 struct usb_mixer_interface *mixer,
-diff --git a/sound/usb/mixer_quirks.c b/sound/usb/mixer_quirks.c
-index aad2683ff7933..260607144f565 100644
---- a/sound/usb/mixer_quirks.c
-+++ b/sound/usb/mixer_quirks.c
-@@ -158,7 +158,8 @@ static int add_single_ctl_with_resume(struct usb_mixer_interface *mixer,
- 		return -ENOMEM;
+-	rec = malloc(sizeof(*rec));
+-	memset(rec, 0, sizeof(*rec));
++	size = sizeof(*rec) + n_cpus * sizeof(struct record);
++	rec = malloc(size);
++	memset(rec, 0, size);
+ 	if (!rec) {
+ 		fprintf(stderr, "Mem alloc error\n");
+ 		exit(EXIT_FAIL_MEM);
+@@ -237,7 +238,7 @@ static struct stats_record *alloc_stats_record(void)
+ 	rec->redir_err.cpu = alloc_record_per_cpu();
+ 	rec->kthread.cpu   = alloc_record_per_cpu();
+ 	rec->exception.cpu = alloc_record_per_cpu();
+-	for (i = 0; i < MAX_CPUS; i++)
++	for (i = 0; i < n_cpus; i++)
+ 		rec->enq[i].cpu = alloc_record_per_cpu();
+ 
+ 	return rec;
+@@ -247,7 +248,7 @@ static void free_stats_record(struct stats_record *r)
+ {
+ 	int i;
+ 
+-	for (i = 0; i < MAX_CPUS; i++)
++	for (i = 0; i < n_cpus; i++)
+ 		free(r->enq[i].cpu);
+ 	free(r->exception.cpu);
+ 	free(r->kthread.cpu);
+@@ -350,7 +351,7 @@ static void stats_print(struct stats_record *stats_rec,
  	}
- 	kctl->private_free = snd_usb_mixer_elem_free;
--	return snd_usb_mixer_add_control(list, kctl);
-+	/* don't use snd_usb_mixer_add_control() here, this is a special list element */
-+	return snd_usb_mixer_add_list(list, kctl, false);
- }
  
- /*
+ 	/* cpumap enqueue stats */
+-	for (to_cpu = 0; to_cpu < MAX_CPUS; to_cpu++) {
++	for (to_cpu = 0; to_cpu < n_cpus; to_cpu++) {
+ 		char *fmt = "%-15s %3d:%-3d %'-14.0f %'-11.0f %'-10.2f %s\n";
+ 		char *fm2 = "%-15s %3s:%-3d %'-14.0f %'-11.0f %'-10.2f %s\n";
+ 		char *errstr = "";
+@@ -475,7 +476,7 @@ static void stats_collect(struct stats_record *rec)
+ 	map_collect_percpu(fd, 1, &rec->redir_err);
+ 
+ 	fd = cpumap_enqueue_cnt_map_fd;
+-	for (i = 0; i < MAX_CPUS; i++)
++	for (i = 0; i < n_cpus; i++)
+ 		map_collect_percpu(fd, i, &rec->enq[i]);
+ 
+ 	fd = cpumap_kthread_cnt_map_fd;
+@@ -549,10 +550,10 @@ static int create_cpu_entry(__u32 cpu, __u32 queue_size,
+  */
+ static void mark_cpus_unavailable(void)
+ {
+-	__u32 invalid_cpu = MAX_CPUS;
++	__u32 invalid_cpu = n_cpus;
+ 	int ret, i;
+ 
+-	for (i = 0; i < MAX_CPUS; i++) {
++	for (i = 0; i < n_cpus; i++) {
+ 		ret = bpf_map_update_elem(cpus_available_map_fd, &i,
+ 					  &invalid_cpu, 0);
+ 		if (ret) {
+@@ -688,6 +689,8 @@ int main(int argc, char **argv)
+ 	int prog_fd;
+ 	__u32 qsize;
+ 
++	n_cpus = get_nprocs_conf();
++
+ 	/* Notice: choosing he queue size is very important with the
+ 	 * ixgbe driver, because it's driver page recycling trick is
+ 	 * dependend on pages being returned quickly.  The number of
+@@ -757,7 +760,7 @@ int main(int argc, char **argv)
+ 		case 'c':
+ 			/* Add multiple CPUs */
+ 			add_cpu = strtoul(optarg, NULL, 0);
+-			if (add_cpu >= MAX_CPUS) {
++			if (add_cpu >= n_cpus) {
+ 				fprintf(stderr,
+ 				"--cpu nr too large for cpumap err(%d):%s\n",
+ 					errno, strerror(errno));
 -- 
 2.25.1
 
