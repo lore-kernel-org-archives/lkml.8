@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BB9EC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79F49C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:35:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 58D6E22269
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:35:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F7CE22269
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:35:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593455745;
-	bh=Lh/wP2IgRNVU0BEv+HYmvbnZxJKAdQ3IZPOli5tfthM=;
+	s=default; t=1593455747;
+	bh=by+dh9vvHi+FcF9OlEwOPJ48yGlcNSRcknaKIsgnC3Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E7hXu9uZhkZgUQL4f1txZU7NKPwcfnrd51gpx9fpK/6WnM4DfDz8xMc77eciladeK
-	 xeSXQjv/xtjD9lxQLNDp9RmPpglj58zsfiZmEUObNRhL/IgSCfiULy3JNwpQs3MVCo
-	 aWv8O2qHi2avpSiRsPdrxLKOif7sHupDt8ti84hM=
+	b=OW2g42Jr19KUBn+Cx50D1/uzw3LlvY+2ZCS+sF8sgDkevzplR6Jg/0pZoqvleUYTi
+	 rxXVYD00AvWLDraTmPyZceyksPSfi5yGriu8mR54ZKspo2nC7UKdXgmt8uG81QmNNf
+	 jXJXE7IcjGYL2eO2I7+E8bbEDtz50PmupRzG6dyo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbgF2Sfn (ORCPT
+        id S1726751AbgF2Sfq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:35:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56904 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 14:35:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726228AbgF2SfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726213AbgF2SfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC8F124683;
-        Mon, 29 Jun 2020 15:19:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C20A52462D;
+        Mon, 29 Jun 2020 15:19:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443982;
-        bh=Lh/wP2IgRNVU0BEv+HYmvbnZxJKAdQ3IZPOli5tfthM=;
+        s=default; t=1593443961;
+        bh=by+dh9vvHi+FcF9OlEwOPJ48yGlcNSRcknaKIsgnC3Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tcDuA73RwbUDk2Q9lWydpnD52xOIs05glgLoHDWu56sZJV9fDAt6rSe1glrKc5fRJ
-         xQi0s54kKBuyxH6m0ddwUZ590gtnQ1KBstpuFifnevT9Qu9w1U9lvcjE0Tsm+GSFDt
-         DK4M531XXdRkNvsQOdziCFiKjJ0/SL2PVZVNMyLw=
+        b=OYWZydpB/qFmYvZJlT42qK7YdCYc3jW1FgjzNObpjk/ErKv2r6TLy4ePKw1A13mWR
+         10LH86b3379Spy723/fMUgw0XN4Dmhb33uypOlS3JOTGtW0q5s3i25KUeHyxfas7eB
+         7537jG4MhAq6OsbCVf7yN3Lo3pQje9u0UGfzJSM8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mathias Nyman <mathias.nyman@linux.intel.com>,
+Cc:     Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>,
+        kbuild test robot <lkp@intel.com>,
+        Marek Vasut <marex@denx.de>,
+        Minas Harutyunyan <hminas@synopsys.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 086/265] xhci: Fix incorrect EP_STATE_MASK
-Date:   Mon, 29 Jun 2020 11:15:19 -0400
-Message-Id: <20200629151818.2493727-87-sashal@kernel.org>
+Subject: [PATCH 5.7 064/265] usb: dwc2: Postponed gadget registration to the udc class driver
+Date:   Mon, 29 Jun 2020 11:14:57 -0400
+Message-Id: <20200629151818.2493727-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -64,39 +67,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+From: Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>
 
-commit dceea67058fe22075db3aed62d5cb62092be5053 upstream.
+commit 207324a321a866401b098cadf19e4a2dd6584622 upstream.
 
-EP_STATE_MASK should be 0x7 instead of 0xf
+During dwc2 driver probe, after gadget registration to the udc class
+driver, if exist any builtin function driver it immediately bound to
+dwc2 and after init host side (dwc2_hcd_init()) stucked in host mode.
+Patch postpone gadget registration after host side initialization done.
 
-xhci spec 6.2.3 shows that the EP state field in the endpoint context data
-structure consist of bits [2:0].
-The old value included a bit from the next field which fortunately is a
- RsvdZ region. So hopefully this hasn't caused too much harm
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200624135949.22611-2-mathias.nyman@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 117777b2c3bb9 ("usb: dwc2: Move gadget probe function into platform code")
+Reported-by: kbuild test robot <lkp@intel.com>
+Tested-by: Marek Vasut <marex@denx.de>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Minas Harutyunyan <hminas@synopsys.com>
+Link: https://lore.kernel.org/r/f21cb38fecc72a230b86155d94c7e60c9cb66f58.1591690938.git.hminas@synopsys.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/usb/host/xhci.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/dwc2/gadget.c   |  6 ------
+ drivers/usb/dwc2/platform.c | 11 +++++++++++
+ 2 files changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-index 86cfefdd6632b..c80710e474769 100644
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -716,7 +716,7 @@ struct xhci_ep_ctx {
-  * 4 - TRB error
-  * 5-7 - reserved
-  */
--#define EP_STATE_MASK		(0xf)
-+#define EP_STATE_MASK		(0x7)
- #define EP_STATE_DISABLED	0
- #define EP_STATE_RUNNING	1
- #define EP_STATE_HALTED		2
+diff --git a/drivers/usb/dwc2/gadget.c b/drivers/usb/dwc2/gadget.c
+index 12b98b4662872..7faf5f8c056d4 100644
+--- a/drivers/usb/dwc2/gadget.c
++++ b/drivers/usb/dwc2/gadget.c
+@@ -4920,12 +4920,6 @@ int dwc2_gadget_init(struct dwc2_hsotg *hsotg)
+ 					  epnum, 0);
+ 	}
+ 
+-	ret = usb_add_gadget_udc(dev, &hsotg->gadget);
+-	if (ret) {
+-		dwc2_hsotg_ep_free_request(&hsotg->eps_out[0]->ep,
+-					   hsotg->ctrl_req);
+-		return ret;
+-	}
+ 	dwc2_hsotg_dump(hsotg);
+ 
+ 	return 0;
+diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
+index 69972750e1612..5684c4781af9e 100644
+--- a/drivers/usb/dwc2/platform.c
++++ b/drivers/usb/dwc2/platform.c
+@@ -536,6 +536,17 @@ static int dwc2_driver_probe(struct platform_device *dev)
+ 	if (hsotg->dr_mode == USB_DR_MODE_PERIPHERAL)
+ 		dwc2_lowlevel_hw_disable(hsotg);
+ 
++#if IS_ENABLED(CONFIG_USB_DWC2_PERIPHERAL) || \
++	IS_ENABLED(CONFIG_USB_DWC2_DUAL_ROLE)
++	/* Postponed adding a new gadget to the udc class driver list */
++	if (hsotg->gadget_enabled) {
++		retval = usb_add_gadget_udc(hsotg->dev, &hsotg->gadget);
++		if (retval) {
++			dwc2_hsotg_remove(hsotg);
++			goto error_init;
++		}
++	}
++#endif /* CONFIG_USB_DWC2_PERIPHERAL || CONFIG_USB_DWC2_DUAL_ROLE */
+ 	return 0;
+ 
+ error_init:
 -- 
 2.25.1
 
