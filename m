@@ -3,169 +3,157 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5036C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91237C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C738F204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:45:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593456327;
-	bh=NEhWqT6taQdowOynhDameXkf6905hTNtjqIfzcRYrBc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hd+drMUnNbD+7GVBX7+Rl0Jr7wkOZUSPKQ4NzdfGWwL/KVfJmlczMKn3bBMvOAZdY
-	 ysLXvTBjtp+wWV+ukBPMU8RHkO+QmKUOSJNex1XH9H7f4F/BVA/6dN8TF6ej3sKs5W
-	 SleVpHacNDFdu3DWRGFaKFMrGlAV/Z2/cbS7DbWY=
+	by mail.kernel.org (Postfix) with ESMTP id 6F4AB204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:45:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PT3vgVBf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728363AbgF2Sp0 (ORCPT
+        id S1728416AbgF2Spi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:45:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35672 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729261AbgF2SpP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:45:15 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 29 Jun 2020 14:45:38 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29948 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729027AbgF2SpM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:45:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593456310;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=C8p+g/bhhWgJJpsjfpg/BDWzFyh4M4c6HCRnxTXHtTc=;
+        b=PT3vgVBfQJ5E8cgTuPCZNjgk95OUYXha7ngqrHd6YRfglJvyFIvlRpc/gHDHv5+Z1rTtPP
+        IK4kjl9I3M/Qi1XbT9gQQ8kNdfwSnXGeoEMWDTHCj7Tg437fxN7dKmoV0q0G1nM08l5Ant
+        6VYBwyj3K1ARXE54VP1pN5Lt4uJnSFY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-353-NcQ64LAZMp6uZxzZQhG4IA-1; Mon, 29 Jun 2020 09:43:29 -0400
+X-MC-Unique: NcQ64LAZMp6uZxzZQhG4IA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF69B255C2;
-        Mon, 29 Jun 2020 17:26:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593451613;
-        bh=NEhWqT6taQdowOynhDameXkf6905hTNtjqIfzcRYrBc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tRvbZq+V8GAi1XR6fsdfTyZqUnQD6qsLEkSNXClnAsUgl7l7D+dS/4O4i+laHUAry
-         hADus1Gr34xID1++4+cU+AQJJBv4+18dKmA8OUSiTYH2Oe4mQkQXUBLrfdkXCd20ja
-         PoPEI9G+g1ylnQVzYa511YeI+CvVBjhjOM1pk7z4=
-Date:   Mon, 29 Jun 2020 18:26:51 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "magnus.damm@gmail.com" <magnus.damm@gmail.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH/RFC v4 2/4] regulator: fixed: add regulator_ops members
- for suspend/resume
-Message-ID: <20200629172651.GG5499@sirena.org.uk>
-References: <1593163942-5087-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1593163942-5087-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20200626143914.GE5289@sirena.org.uk>
- <TY2PR01MB3692A3B12CEF7F9708A8A59CD86E0@TY2PR01MB3692.jpnprd01.prod.outlook.com>
- <20200629125756.GC5499@sirena.org.uk>
- <20200629134011.GA23284@bogus>
- <CAMuHMdU81-EAve+jHhL8+ohCd5YXrgLWpMgaCvgXFDLO7p17pQ@mail.gmail.com>
- <20200629150728.GA27911@bogus>
- <20200629161450.GE5499@sirena.org.uk>
- <20200629164207.GB27911@bogus>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DC20080572D;
+        Mon, 29 Jun 2020 13:43:27 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 00B4810013C1;
+        Mon, 29 Jun 2020 13:43:24 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id 05TDhOV0013363;
+        Mon, 29 Jun 2020 09:43:24 -0400
+Received: from localhost (mpatocka@localhost)
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id 05TDhNGN013360;
+        Mon, 29 Jun 2020 09:43:24 -0400
+X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
+Date:   Mon, 29 Jun 2020 09:43:23 -0400 (EDT)
+From:   Mikulas Patocka <mpatocka@redhat.com>
+X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
+To:     Dave Chinner <david@fromorbit.com>
+cc:     "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-xfs@vger.kernel.org, dm-devel@redhat.com,
+        Jens Axboe <axboe@kernel.dk>, NeilBrown <neilb@suse.de>
+Subject: Re: [PATCH 0/6] Overhaul memalloc_no*
+In-Reply-To: <20200629003550.GJ2005@dread.disaster.area>
+Message-ID: <alpine.LRH.2.02.2006290918030.11293@file01.intranet.prod.int.rdu2.redhat.com>
+References: <20200625113122.7540-1-willy@infradead.org> <alpine.LRH.2.02.2006261058250.11899@file01.intranet.prod.int.rdu2.redhat.com> <20200626230847.GI2005@dread.disaster.area> <alpine.LRH.2.02.2006270848540.14350@file01.intranet.prod.int.rdu2.redhat.com>
+ <20200629003550.GJ2005@dread.disaster.area>
+User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="B8ONY/mu/bqBak9m"
-Content-Disposition: inline
-In-Reply-To: <20200629164207.GB27911@bogus>
-X-Cookie: Real programs don't eat cache.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---B8ONY/mu/bqBak9m
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 29, 2020 at 05:42:07PM +0100, Sudeep Holla wrote:
-> On Mon, Jun 29, 2020 at 05:14:50PM +0100, Mark Brown wrote:
-> > On Mon, Jun 29, 2020 at 04:07:28PM +0100, Sudeep Holla wrote:
-> >
-> > > The specification states clearly:
-> > > "... all devices in the system must be in a state that is compatible
-> > > with entry into the system state. These preconditions are beyond the =
-scope
-> > > of this specification and are therefore not described here."
-> > > "Prior to the call, the OS must disable all sources of wakeup other t=
-han
-> > > those it needs to support for its implementation of suspend to RAM."
+On Mon, 29 Jun 2020, Dave Chinner wrote:
 
-> > This gets a bit circular for a generic OS since the OS needs some way to
-> > figure out what it's supposed to do on a given platform - for example
-> > the OS may be happy to use wakeup sources that the firmware is just
-> > going to cut power on.
+> On Sat, Jun 27, 2020 at 09:09:09AM -0400, Mikulas Patocka wrote:
+> > 
+> > 
+> > On Sat, 27 Jun 2020, Dave Chinner wrote:
+> > 
+> > > On Fri, Jun 26, 2020 at 11:02:19AM -0400, Mikulas Patocka wrote:
+> > > > Hi
+> > > > 
+> > > > I suggest to join memalloc_noio and memalloc_nofs into just one flag that 
+> > > > prevents both filesystem recursion and i/o recursion.
+> > > > 
+> > > > Note that any I/O can recurse into a filesystem via the loop device, thus 
+> > > > it doesn't make much sense to have a context where PF_MEMALLOC_NOFS is set 
+> > > > and PF_MEMALLOC_NOIO is not set.
+> > > 
+> > > Correct me if I'm wrong, but I think that will prevent swapping from
+> > > GFP_NOFS memory reclaim contexts.
+> > 
+> > Yes.
+> > 
+> > > IOWs, this will substantially
+> > > change the behaviour of the memory reclaim system under sustained
+> > > GFP_NOFS memory pressure. Sustained GFP_NOFS memory pressure is
+> > > quite common, so I really don't think we want to telling memory
+> > > reclaim "you can't do IO at all" when all we are trying to do is
+> > > prevent recursion back into the same filesystem.
+> > 
+> > So, we can define __GFP_ONLY_SWAP_IO and __GFP_IO.
+> 
+> Uh, why?
+> 
+> Exactly what problem are you trying to solve here?
 
-> While I understand the sentiments here, PSCI is targeted to address CPU
-> power state management mainly and system states like suspend/reset and
-> poweroff which involves last CPU. This is one of the reason it is out of
-> the scope of the specification.
+This:
 
-Sure, but as soon as we start talking about the last CPU stuff we're
-inevitably talking about the system as a whole.
+1. The filesystem does a GFP_NOFS allocation.
+2. The allocation calls directly a dm-bufio shrinker.
+3. The dm-bufio shrinker sees that there is __GFP_IO set, so it assumes 
+   that it can do I/O. It selects some dirty buffers, writes them back and 
+   waits for the I/O to finish.
+4. The dirty buffers belong to a loop device.
+5. The loop device thread calls the filesystem that did the GFP_NOFS 
+   allocation in step 1 (and that is still waiting for the allocation to 
+   succeed).
 
-> Here is my understanding. DT specifies all the wakeup sources. Linux
-> can configure those and user may choose to enable a subset of them is
-> wakeup. As stated in the spec and also based on what we already do in
-> the kernel, we disable all other wakeup sources.
+Note that setting PF_MEMALLOC_NOIO on the loop thread won't help with this 
+deadlock.
 
-> The PSCI firmware can then either read those from the interrupt controller
-> or based on static platform understanding, must not disable those wakeup
-> sources.
+Do you argue that this is a bug in dm-bufio? Or a bug in the kernel? Or 
+that it can't happen?
 
-That bit about static platform understanding isn't super helpful for the
-OS, so long as the firmware might do that the OS is pretty much out of
-luck. =20
+> > I saw this deadlock in the past in the dm-bufio subsystem - see the commit 
+> > 9d28eb12447ee08bb5d1e8bb3195cf20e1ecd1c0 that fixed it.
+> 
+> 2014?
+> 
+> /me looks closer.
+> 
+> Hmmm. Only sent to dm-devel, no comments, no review, just merged.
+> No surprise that nobody else actually knows about this commit. Well,
+> time to review it ~6 years after it was merged....
+> 
+> | dm-bufio tested for __GFP_IO. However, dm-bufio can run on a loop block
+> | device that makes calls into the filesystem. If __GFP_IO is present and
+> | __GFP_FS isn't, dm-bufio could still block on filesystem operations if it
+> | runs on a loop block device.
+> 
+> OK, so from an architectural POV, this commit is fundamentally
+> broken - block/device layer allocation should not allow relcaim
+> recursion into filesystems because filesystems are dependent on
+> the block layer making forwards progress. This commit is trying to
+> work around the loop device doing GFP_KERNEL/GFP_NOFS context
+> allocation back end IO path of the loop device. This part of the
+> loop device is a block device, so needs to run under GFP_NOIO
+> context.
 
-> > > I see nothing has been fixed in the firmware too and we are still
-> > > discussing the same after 3 years =F0=9F=98=84. Clearly we should sta=
-rt trusting
-> > > firmware and built capability to fix and replace it if there are bugs
-> > > just like kernel and stop hacking around in the kernel to deal with
-> > > just broken platform/psci firmware.
+I agree that it is broken, but it fixes the above deadlock.
 
-> > This isn't just an issue of buggy firmware as far as I can see, it's
-> > also a lack of ability for the OS and firmware to communicate
-> > information about their intentions to each other.  As things stand you'd
-> > need to put static information in the DT.
+Mikulas
 
-> It is easy for DT to get out of sync with firmware unless it is generated
-> by the same firmware. That's the reason why I am against such multiple
-
-The ability for things to get out of sync also concerns me as I said
-further back in the thread but I'm not sure we have much alternative,
-realistically we're going to need some facility to work around firmware
-that isn't ideal.
-
-> sources of information. I understand ACPI has more flexibility and I did
-
-ACPI has a much stronger idea of what the system looks like which helps
-it a lot here.
-
-> Each device or platform having its specific property in DT is not scalabl=
-e.
-> Not sure if it is a generic problem. If it is, I would like to understand
-> more details on such lack of ability for communtication between OS and
-> firmware.
-
-It seems like a generic issue from where I'm sitting.
-
---B8ONY/mu/bqBak9m
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl76JFoACgkQJNaLcl1U
-h9ARmAf/eOU+nb6NN4s2U2ScdRWwL/oDde7MOef13lrNOPZdZIqSIdT+sRSnVS8l
-SmIj9eQyDbwsJkc0rniYOlKtsW7MJj92RRC5HVokdkpKy73l8MPaoD8V++npPt2H
-iAZoW9vmf15vNzxMZ0Hx2SnnZ/GJFKBF8c99NMdAQ9GyImRU9Bxhn/sdUxU8p1It
-3v4Gr0a7/RBXnsdBXoKdqfSE5BAdME/jtLsPgQYgb6lp2CDpuh4IW3pEqpuSjKr+
-LciDOtHSSjA7grLtjWn0A3zVPwAgxsfr7+eRWo3Qll7xPQSrNx/O3aa8PFxAuym6
-m3fRJ9QVFfGPQoMokOTqE5HnGMI9ag==
-=qpfT
------END PGP SIGNATURE-----
-
---B8ONY/mu/bqBak9m--
