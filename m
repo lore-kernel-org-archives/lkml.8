@@ -2,176 +2,133 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB60C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB504C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B40A4206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:37:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="tJVaTG8I"
+	by mail.kernel.org (Postfix) with ESMTP id 8AF37206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:37:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727085AbgF2Xhh (ORCPT
+        id S1728115AbgF2Xhn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 19:37:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57458 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726596AbgF2Xhg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 19:37:36 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03706C03E97A
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 16:37:35 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id d16so7869413edz.12
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 16:37:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qwGMNUNs/JpMc5DSoLRSUO97aO1NzqYspijhzCsT3GM=;
-        b=tJVaTG8Ioo3QDYLqA2NorkRkWscX2xscfS9R3XtwLQT+rEbMNfHaRL6Bk8rbIh/uej
-         AirGgQjjiRF694c7hRnFoUIDjYthVHFz6bRJBUJFohQvLdhkGhE/S7tpJfGL8qKlKXzf
-         36cjc+IDG5LeSMPtCEtMFbzZkuC+sqjzBsuU2PertFvpBf2lDxJf2LDOSaY9AJY9BXQI
-         ZfqoEtBtaoAqu7lRliNKXcaeGV3xkAyWfYCVwrTanz69SWWOazrnnM8z4g7GYY38t0Li
-         jcljrAgsitEkk8cvpAF5tSVvL/XJ5zbIei/T1HHccrU8m4NbabY/JdBO8WNC90ih55ki
-         LZYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qwGMNUNs/JpMc5DSoLRSUO97aO1NzqYspijhzCsT3GM=;
-        b=J5jsb5cIHTNv1wdSfUGF0xc4qeRq/Q3yqrsLCPV1feGJGigGFRUz93j8LtEaVbMEV6
-         CQK747yz6ENCTakdw4bq02RHQFTHgywQ/zI8qZ5UzFWPQHcC+YJY0s4v3s78kLOYh+WN
-         MDiGjjwcpSbxs4xC2cOxChhK+EQLMNMgOBbodDWShcwMQYcB3LnwxnCmq8LGtfEmeVlO
-         pFLJb5D6kMEubvgOGkFON/FQikaV8RBU+XGsGdO7dvDPic02kColTROzdharz3eUqZMI
-         XUJbZEFWdyVgMFaRnyZwY7aMJwoLDD4es1w5mX4fDhVKQELcizkCl+S9l+NaoyCTfkHy
-         O9Zg==
-X-Gm-Message-State: AOAM532hEM3JH86UKiYGdg46Q07BkVT8VGCE1obj/rktbjYT0kYoyYch
-        OtZNSAqEwOaBSiOszXZqMbXKrYc17fShq612BBWsBQ==
-X-Google-Smtp-Source: ABdhPJzQhcOxd2UjylkoFHPRkO2RKSOL4IEFC19z2HjxnalZ4UmhNLPAAjlC35GC3qVFCBzqwYSLeVHAtanKB7jTuKE=
-X-Received: by 2002:a50:a1e7:: with SMTP id 94mr19699724edk.165.1593473854631;
- Mon, 29 Jun 2020 16:37:34 -0700 (PDT)
+        Mon, 29 Jun 2020 19:37:43 -0400
+Received: from mga11.intel.com ([192.55.52.93]:43437 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726596AbgF2Xhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 19:37:42 -0400
+IronPort-SDR: 4cumJfNVsshQcAZwUV/z2/5XrmTh3YEHAcl+lATjyizU7ghKVrBAQogBSE3//gOq3dlZCk/Qw6
+ WgNJ/bp4EHeA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="144289834"
+X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
+   d="scan'208";a="144289834"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 16:37:40 -0700
+IronPort-SDR: CDjs5miLLIZgGZ19yf5Yq8QdITReIs4RNN8/PqXo+b3RAooRc1pBLoRJ/WzT7WnNeQkYQPomw1
+ C4Y2YmmTRAFA==
+X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
+   d="scan'208";a="454378949"
+Received: from tclumbax-mobl2.gar.corp.intel.com (HELO [10.255.1.194]) ([10.255.1.194])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 16:37:38 -0700
+Subject: Re: [PATCH] mm/vmscan: restore zone_reclaim_mode ABI
+To:     Baoquan He <bhe@redhat.com>
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        ben.widawsky@intel.com, alex.shi@linux.alibaba.com,
+        dwagner@suse.de, tobin@kernel.org, cl@linux.com,
+        akpm@linux-foundation.org, stable@kernel.org
+References: <20200626003459.D8E015CA@viggo.jf.intel.com>
+ <20200629065203.GJ3346@MiWiFi-R3L-srv>
+ <3ba94f19-3b18-9d52-a070-f652620c88e6@intel.com>
+ <20200629233043.GK3346@MiWiFi-R3L-srv>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ xsFNBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
+ oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
+ 2UnKuZuSBu7lgOE193+7Uks3416N2hTkyKUSNkduyoZ9F5twiBhxPJwPtn/wnch6n5RsoXsb
+ ygOEDxLEsSk/7eyFycjE+btUtAWZtx+HseyaGfqkZK0Z9bT1lsaHecmB203xShwCPT49Blxz
+ VOab8668QpaEOdLGhtvrVYVK7x4skyT3nGWcgDCl5/Vp3TWA4K+IofwvXzX2ON/Mj7aQwf5W
+ iC+3nWC7q0uxKwwsddJ0Nu+dpA/UORQWa1NiAftEoSpk5+nUUi0WE+5DRm0H+TXKBWMGNCFn
+ c6+EKg5zQaa8KqymHcOrSXNPmzJuXvDQ8uj2J8XuzCZfK4uy1+YdIr0yyEMI7mdh4KX50LO1
+ pmowEqDh7dLShTOif/7UtQYrzYq9cPnjU2ZW4qd5Qz2joSGTG9eCXLz5PRe5SqHxv6ljk8mb
+ ApNuY7bOXO/A7T2j5RwXIlcmssqIjBcxsRRoIbpCwWWGjkYjzYCjgsNFL6rt4OL11OUF37wL
+ QcTl7fbCGv53KfKPdYD5hcbguLKi/aCccJK18ZwNjFhqr4MliQARAQABzShEYXZpZCBDaHJp
+ c3RvcGhlciBIYW5zZW4gPGRhdmVAc3I3MS5uZXQ+wsF7BBMBAgAlAhsDBgsJCAcDAgYVCAIJ
+ CgsEFgIDAQIeAQIXgAUCTo3k0QIZAQAKCRBoNZUwcMmSsMO2D/421Xg8pimb9mPzM5N7khT0
+ 2MCnaGssU1T59YPE25kYdx2HntwdO0JA27Wn9xx5zYijOe6B21ufrvsyv42auCO85+oFJWfE
+ K2R/IpLle09GDx5tcEmMAHX6KSxpHmGuJmUPibHVbfep2aCh9lKaDqQR07gXXWK5/yU1Dx0r
+ VVFRaHTasp9fZ9AmY4K9/BSA3VkQ8v3OrxNty3OdsrmTTzO91YszpdbjjEFZK53zXy6tUD2d
+ e1i0kBBS6NLAAsqEtneplz88T/v7MpLmpY30N9gQU3QyRC50jJ7LU9RazMjUQY1WohVsR56d
+ ORqFxS8ChhyJs7BI34vQusYHDTp6PnZHUppb9WIzjeWlC7Jc8lSBDlEWodmqQQgp5+6AfhTD
+ kDv1a+W5+ncq+Uo63WHRiCPuyt4di4/0zo28RVcjtzlGBZtmz2EIC3vUfmoZbO/Gn6EKbYAn
+ rzz3iU/JWV8DwQ+sZSGu0HmvYMt6t5SmqWQo/hyHtA7uF5Wxtu1lCgolSQw4t49ZuOyOnQi5
+ f8R3nE7lpVCSF1TT+h8kMvFPv3VG7KunyjHr3sEptYxQs4VRxqeirSuyBv1TyxT+LdTm6j4a
+ mulOWf+YtFRAgIYyyN5YOepDEBv4LUM8Tz98lZiNMlFyRMNrsLV6Pv6SxhrMxbT6TNVS5D+6
+ UorTLotDZKp5+M7BTQRUY85qARAAsgMW71BIXRgxjYNCYQ3Xs8k3TfAvQRbHccky50h99TUY
+ sqdULbsb3KhmY29raw1bgmyM0a4DGS1YKN7qazCDsdQlxIJp9t2YYdBKXVRzPCCsfWe1dK/q
+ 66UVhRPP8EGZ4CmFYuPTxqGY+dGRInxCeap/xzbKdvmPm01Iw3YFjAE4PQ4hTMr/H76KoDbD
+ cq62U50oKC83ca/PRRh2QqEqACvIH4BR7jueAZSPEDnzwxvVgzyeuhwqHY05QRK/wsKuhq7s
+ UuYtmN92Fasbxbw2tbVLZfoidklikvZAmotg0dwcFTjSRGEg0Gr3p/xBzJWNavFZZ95Rj7Et
+ db0lCt0HDSY5q4GMR+SrFbH+jzUY/ZqfGdZCBqo0cdPPp58krVgtIGR+ja2Mkva6ah94/oQN
+ lnCOw3udS+Eb/aRcM6detZr7XOngvxsWolBrhwTQFT9D2NH6ryAuvKd6yyAFt3/e7r+HHtkU
+ kOy27D7IpjngqP+b4EumELI/NxPgIqT69PQmo9IZaI/oRaKorYnDaZrMXViqDrFdD37XELwQ
+ gmLoSm2VfbOYY7fap/AhPOgOYOSqg3/Nxcapv71yoBzRRxOc4FxmZ65mn+q3rEM27yRztBW9
+ AnCKIc66T2i92HqXCw6AgoBJRjBkI3QnEkPgohQkZdAb8o9WGVKpfmZKbYBo4pEAEQEAAcLB
+ XwQYAQIACQUCVGPOagIbDAAKCRBoNZUwcMmSsJeCEACCh7P/aaOLKWQxcnw47p4phIVR6pVL
+ e4IEdR7Jf7ZL00s3vKSNT+nRqdl1ugJx9Ymsp8kXKMk9GSfmZpuMQB9c6io1qZc6nW/3TtvK
+ pNGz7KPPtaDzvKA4S5tfrWPnDr7n15AU5vsIZvgMjU42gkbemkjJwP0B1RkifIK60yQqAAlT
+ YZ14P0dIPdIPIlfEPiAWcg5BtLQU4Wg3cNQdpWrCJ1E3m/RIlXy/2Y3YOVVohfSy+4kvvYU3
+ lXUdPb04UPw4VWwjcVZPg7cgR7Izion61bGHqVqURgSALt2yvHl7cr68NYoFkzbNsGsye9ft
+ M9ozM23JSgMkRylPSXTeh5JIK9pz2+etco3AfLCKtaRVysjvpysukmWMTrx8QnI5Nn5MOlJj
+ 1Ov4/50JY9pXzgIDVSrgy6LYSMc4vKZ3QfCY7ipLRORyalFDF3j5AGCMRENJjHPD6O7bl3Xo
+ 4DzMID+8eucbXxKiNEbs21IqBZbbKdY1GkcEGTE7AnkA3Y6YB7I/j9mQ3hCgm5muJuhM/2Fr
+ OPsw5tV/LmQ5GXH0JQ/TZXWygyRFyyI2FqNTx4WHqUn3yFj8rwTAU1tluRUYyeLy0ayUlKBH
+ ybj0N71vWO936MqP6haFERzuPAIpxj2ezwu0xb1GjTk4ynna6h5GjnKgdfOWoRtoWndMZxbA
+ z5cecg==
+Message-ID: <791c47ad-5a6b-1f1b-c34b-d8bbf7722957@intel.com>
+Date:   Mon, 29 Jun 2020 16:37:37 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <159312902033.1850128.1712559453279208264.stgit@dwillia2-desk3.amr.corp.intel.com>
- <CAJZ5v0h8Eg5_FVxz0COLDMK8cy72xxDk_2nFnXDJNUY-MvdBEQ@mail.gmail.com>
- <CAPcyv4jqShnZr1b0-upwWf8L3JjKtHox_pCuu229630rXGuLkg@mail.gmail.com> <CAJZ5v0i=SkqtgcXzq0oYNEAuYA-FvBEG-bm6fyidzAsYSNcEdQ@mail.gmail.com>
-In-Reply-To: <CAJZ5v0i=SkqtgcXzq0oYNEAuYA-FvBEG-bm6fyidzAsYSNcEdQ@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 29 Jun 2020 16:37:23 -0700
-Message-ID: <CAPcyv4iTJcjbfeBHbOJEai4gZyD7m79AmqQrtdkEtEUOvXaYAA@mail.gmail.com>
-Subject: Re: [PATCH 00/12] ACPI/NVDIMM: Runtime Firmware Activation
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Len Brown <len.brown@intel.com>, Len Brown <lenb@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Pavel Machek <pavel@ucw.cz>, Stable <stable@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200629233043.GK3346@MiWiFi-R3L-srv>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 28, 2020 at 10:23 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Fri, Jun 26, 2020 at 8:43 PM Dan Williams <dan.j.williams@intel.com> wrote:
-> >
-> > On Fri, Jun 26, 2020 at 7:22 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > >
-> > > On Fri, Jun 26, 2020 at 2:06 AM Dan Williams <dan.j.williams@intel.com> wrote:
-> > > >
-> > > > Quoting the documentation:
-> > > >
-> > > >     Some persistent memory devices run a firmware locally on the device /
-> > > >     "DIMM" to perform tasks like media management, capacity provisioning,
-> > > >     and health monitoring. The process of updating that firmware typically
-> > > >     involves a reboot because it has implications for in-flight memory
-> > > >     transactions. However, reboots are disruptive and at least the Intel
-> > > >     persistent memory platform implementation, described by the Intel ACPI
-> > > >     DSM specification [1], has added support for activating firmware at
-> > > >     runtime.
-> > > >
-> > > >     [1]: https://docs.pmem.io/persistent-memory/
-> > > >
-> > > > The approach taken is to abstract the Intel platform specific mechanism
-> > > > behind a libnvdimm-generic sysfs interface. The interface could support
-> > > > runtime-firmware-activation on another architecture without need to
-> > > > change userspace tooling.
-> > > >
-> > > > The ACPI NFIT implementation involves a set of device-specific-methods
-> > > > (DSMs) to 'arm' individual devices for activation and bus-level
-> > > > 'trigger' method to execute the activation. Informational / enumeration
-> > > > methods are also provided at the bus and device level.
-> > > >
-> > > > One complicating aspect of the memory device firmware activation is that
-> > > > the memory controller may need to be quiesced, no memory cycles, during
-> > > > the activation. While the platform has mechanisms to support holding off
-> > > > in-flight DMA during the activation, the device response to that delay
-> > > > is potentially undefined. The platform may reject a runtime firmware
-> > > > update if, for example a PCI-E device does not support its completion
-> > > > timeout value being increased to meet the activation time. Outside of
-> > > > device timeouts the quiesce period may also violate application
-> > > > timeouts.
-> > > >
-> > > > Given the above device and application timeout considerations the
-> > > > implementation defaults to hooking into the suspend path to trigger the
-> > > > activation, i.e. that a suspend-resume cycle (at least up to the syscore
-> > > > suspend point) is required.
-> > >
-> > > Well, that doesn't work if the suspend method for the system is set to
-> > > suspend-to-idle (for example, via /sys/power/mem_sleep), because the
-> > > syscore callbacks are not invoked in that case.
-> > >
-> > > Also you probably don't need the device power state toggling that
-> > > happens during regular suspend/resume (you may not want it even for
-> > > some devices).
-> > >
-> > > The hibernation freeze/thaw may be a better match and there is some
-> > > test support in there already that may be kind of co-opted for your
-> > > use case.
-> >
-> > Hmm, yes I guess freeze should be sufficient to quiesce most
-> > device-DMA in the general case as applications will stop sending
-> > requests.
->
-> It is expected to be sufficient to quiesce all of them.
->
-> If that is not the case, the integrity of the hibernation image cannot
-> be guaranteed on the system in question.
->
+On 6/29/20 4:30 PM, Baoquan He wrote:
+>> The only way I can plausibly think of "cleaning up" the RECLAIM_ZONE bit
+>> would be to raise our confidence that it is truly unused.  That takes
+>> time, and probably a warning if we see it being set.  If we don't run
+>> into anybody setting it or depending on it being set in a few years, we
+>> can remove it.
+> So adding the old bit back for compatibility looks good, thanks.
+> 
+> Then we have to be very careful when adding and reviewing new
+> interface introducing, should not leave one which might be used
+> in the future.
+> 
+> In fact, RECLAIM_ZONE is not completely useless. At least, when the old
+> bit 0 is set, it may enter into node_reclaim() in get_page_from_freelist(),
+> that makes it like a switch.
+> 
+> get_page_from_freelist {
+> 
+> 	...
+>                         if (node_reclaim_mode == 0 ||                                                                                             
+>                             !zone_allows_reclaim(ac->preferred_zoneref->zone, zone))
+>                                 continue;
+> 	...
+> }
 
-Ah, indeed, I was overlooking that property.
+Oh, that's a very good point.  There are a couple of those around.  Let
+me circle back and update the documentation and the variable name.  I'll
+send out another version.
 
-> > I do expect some RDMA devices will happily keep on
-> > transmitting, but that likely will need explicit mitigation. It also
-> > appears the suspend callback for at least one RDMA device
-> > mlx5_suspend() is rather violent as it appears to fully teardown the
-> > device context, not just suspend operations.
-> >
-> > To be clear, what debug interface were you thinking I could glom onto
-> > to just trigger firmware-activate at the end of the freeze phase?
->
-> Functionally, the same as for suspend, but using the hibernation
-> interface, so "echo platform > /sys/power/pm_test" followed by "echo
-> disk > /sys/power/state".
->
-> But it might be cleaner to introduce a special "hibernation mode", ie.
-> is one more item in /sys/power/disk, that will trigger what you need
-> (in analogy with "test_resume").
-
-I'll move the trigger to be after process freeze, but I'll keep it
-tied to suspend-debug vs hibernate-debug. It appears the hibernate
-debug path still goes through the exercise of allocating memory for
-the hibernation image which is unnecessary if the goal is just to
-'freeze', 'activate', and 'thaw'.
