@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D99EEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2841BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B34E120672
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:36:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3C63206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:36:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593459406;
-	bh=yzF+R1vfR4+sPC1JW0ON7fOehKKTbTlT2m6gPB/YGc0=;
+	s=default; t=1593459411;
+	bh=Dz13eb/rJGgeoaRVyWqs3XRGPmYfk43xXMq8OI26fbA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PF2UEJ5K1VukwLEnisf9SG+uX1mgR1MNpGQnrXKma4psHcVRiNuIlC5VbwHjCe0sy
-	 EUEQp6CV9wmp7Hrg1jZfHh28yH/WUfMJbFU9Q7Me1VOkax3LRVBqq1V3pJqrytanIJ
-	 EGfh+IdrMUFsTLAWzldQA6Vl2hTG7Y67O/secIFo=
+	b=d2qYmMTM/VHBlD2s55JyRwD1QcQwHaTPsBeiIntQtaMfdBac582M1NPyZ4DfWEy/J
+	 /rquS6ynnbw7cmIo16cDNdC4n1KrwQdI6kS8V8R038EOrFSef+8YEDlgmYw5ufOHNK
+	 hhcAHqiIgiuV4ECWATI5ebEYaMAjMBd7P4Bnzae0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733089AbgF2Tgp (ORCPT
+        id S1733179AbgF2Tgs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:36:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40592 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:36:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733021AbgF2Tae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1733017AbgF2Tae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF9BB251E7;
-        Mon, 29 Jun 2020 15:35:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDE162529F;
+        Mon, 29 Jun 2020 15:36:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444906;
-        bh=yzF+R1vfR4+sPC1JW0ON7fOehKKTbTlT2m6gPB/YGc0=;
+        s=default; t=1593445009;
+        bh=Dz13eb/rJGgeoaRVyWqs3XRGPmYfk43xXMq8OI26fbA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fO+KDijP+GdZ2zRCdorym8JKgge2OWrA7clnsc1yVQXvcB8vuH/xdj0b9KPVloRfc
-         iIzvHv3SBhZmdHVSUQ0pQFm0A6xrVG9OP/eLeMJLrEQWo1L3QEnH2pAkqcPJ4jNNlO
-         Qyvy6x3g98eCYZ2qQdNsMaCWXCjYGUFMASd3bFks=
+        b=Z8Mb36iTsHoqwIPO6Hv8NMp1GKDM2pzAA/CjKmHhMwAkE2x7pXeYMdOPWIllSpPn1
+         JlVFrzZjMwLNPeUafmPXlbgfgFL5/sfsOlks3VVTofNY3M5mozMRb9BB9zOy7zQjZq
+         pPfMykz+tjKZjEYF978TkqdL6lpwMT+H3wPlN/wU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     yu kuai <yukuai3@huawei.com>, Ming Lei <ming.lei@redhat.com>,
-        Bob Liu <bob.liu@oracle.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Guenter Roeck <linux@roeck-us.net>,
+Cc:     Matt Fleming <matt@codeblueprint.co.uk>,
+        Borislav Petkov <bp@suse.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 002/131] block/bio-integrity: don't free 'buf' if bio_integrity_add_page() failed
-Date:   Mon, 29 Jun 2020 11:32:53 -0400
-Message-Id: <20200629153502.2494656-3-sashal@kernel.org>
+Subject: [PATCH 4.19 110/131] x86/asm/64: Align start of __clear_user() loop to 16-bytes
+Date:   Mon, 29 Jun 2020 11:34:41 -0400
+Message-Id: <20200629153502.2494656-111-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
@@ -68,39 +65,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+From: Matt Fleming <matt@codeblueprint.co.uk>
 
-commit a75ca9303175d36af93c0937dd9b1a6422908b8d upstream.
+commit bb5570ad3b54e7930997aec76ab68256d5236d94 upstream.
 
-commit e7bf90e5afe3 ("block/bio-integrity: fix a memory leak bug") added
-a kfree() for 'buf' if bio_integrity_add_page() returns '0'. However,
-the object will be freed in bio_integrity_free() since 'bio->bi_opf' and
-'bio->bi_integrity' were set previousy in bio_integrity_alloc().
+x86 CPUs can suffer severe performance drops if a tight loop, such as
+the ones in __clear_user(), straddles a 16-byte instruction fetch
+window, or worse, a 64-byte cacheline. This issues was discovered in the
+SUSE kernel with the following commit,
 
-Fixes: commit e7bf90e5afe3 ("block/bio-integrity: fix a memory leak bug")
-Signed-off-by: yu kuai <yukuai3@huawei.com>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Reviewed-by: Bob Liu <bob.liu@oracle.com>
-Acked-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Cc: Guenter Roeck <linux@roeck-us.net>
+  1153933703d9 ("x86/asm/64: Micro-optimize __clear_user() - Use immediate constants")
+
+which increased the code object size from 10 bytes to 15 bytes and
+caused the 8-byte copy loop in __clear_user() to be split across a
+64-byte cacheline.
+
+Aligning the start of the loop to 16-bytes makes this fit neatly inside
+a single instruction fetch window again and restores the performance of
+__clear_user() which is used heavily when reading from /dev/zero.
+
+Here are some numbers from running libmicro's read_z* and pread_z*
+microbenchmarks which read from /dev/zero:
+
+  Zen 1 (Naples)
+
+  libmicro-file
+                                        5.7.0-rc6              5.7.0-rc6              5.7.0-rc6
+                                                    revert-1153933703d9+               align16+
+  Time mean95-pread_z100k       9.9195 (   0.00%)      5.9856 (  39.66%)      5.9938 (  39.58%)
+  Time mean95-pread_z10k        1.1378 (   0.00%)      0.7450 (  34.52%)      0.7467 (  34.38%)
+  Time mean95-pread_z1k         0.2623 (   0.00%)      0.2251 (  14.18%)      0.2252 (  14.15%)
+  Time mean95-pread_zw100k      9.9974 (   0.00%)      6.0648 (  39.34%)      6.0756 (  39.23%)
+  Time mean95-read_z100k        9.8940 (   0.00%)      5.9885 (  39.47%)      5.9994 (  39.36%)
+  Time mean95-read_z10k         1.1394 (   0.00%)      0.7483 (  34.33%)      0.7482 (  34.33%)
+
+Note that this doesn't affect Haswell or Broadwell microarchitectures
+which seem to avoid the alignment issue by executing the loop straight
+out of the Loop Stream Detector (verified using perf events).
+
+Fixes: 1153933703d9 ("x86/asm/64: Micro-optimize __clear_user() - Use immediate constants")
+Signed-off-by: Matt Fleming <matt@codeblueprint.co.uk>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: <stable@vger.kernel.org> # v4.19+
+Link: https://lkml.kernel.org/r/20200618102002.30034-1-matt@codeblueprint.co.uk
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- block/bio-integrity.c | 1 -
- 1 file changed, 1 deletion(-)
+ arch/x86/lib/usercopy_64.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/block/bio-integrity.c b/block/bio-integrity.c
-index 5bd90cd4b51e3..a059fad53f1b0 100644
---- a/block/bio-integrity.c
-+++ b/block/bio-integrity.c
-@@ -293,7 +293,6 @@ bool bio_integrity_prep(struct bio *bio)
- 
- 		if (ret == 0) {
- 			printk(KERN_ERR "could not attach integrity payload\n");
--			kfree(buf);
- 			status = BLK_STS_RESOURCE;
- 			goto err_end_io;
- 		}
+diff --git a/arch/x86/lib/usercopy_64.c b/arch/x86/lib/usercopy_64.c
+index 9c5606d88f618..7077b3e282414 100644
+--- a/arch/x86/lib/usercopy_64.c
++++ b/arch/x86/lib/usercopy_64.c
+@@ -23,6 +23,7 @@ unsigned long __clear_user(void __user *addr, unsigned long size)
+ 	asm volatile(
+ 		"	testq  %[size8],%[size8]\n"
+ 		"	jz     4f\n"
++		"	.align 16\n"
+ 		"0:	movq $0,(%[dst])\n"
+ 		"	addq   $8,%[dst]\n"
+ 		"	decl %%ecx ; jnz   0b\n"
 -- 
 2.25.1
 
