@@ -2,206 +2,429 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3DC3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:24:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE23CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82AC1206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:24:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="qyMxtctP"
+	by mail.kernel.org (Postfix) with ESMTP id A157E206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:25:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732392AbgF2TYx (ORCPT
+        id S1730550AbgF2TZB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:24:53 -0400
-Received: from mga11.intel.com ([192.55.52.93]:22494 "EHLO mga11.intel.com"
+        Mon, 29 Jun 2020 15:25:01 -0400
+Received: from foss.arm.com ([217.140.110.172]:40110 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732229AbgF2TYN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:24:13 -0400
-IronPort-SDR: QUFCqV4WzEX0DpclvzL0kBs6jwzVpcJXCgAbZajmy8zRTXEWlwaqFxl/9S1L8AgCnvJbldA9m2
- HiGjVBczcpGg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="144144724"
-X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
-   d="scan'208";a="144144724"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 05:23:11 -0700
-IronPort-SDR: opdDwj+HB672U4xcrIPAvY6zveLUtMxy1iElSVFTqJnW264T+00B4NbPRsL5kliXRdqCrSGlvc
- NHQTBcEv2rOQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
-   d="scan'208";a="280847371"
-Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
-  by orsmga006.jf.intel.com with ESMTP; 29 Jun 2020 05:23:11 -0700
-Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
- fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 29 Jun 2020 05:23:11 -0700
-Received: from fmsmsx609.amr.corp.intel.com (10.18.126.89) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 29 Jun 2020 05:23:10 -0700
-Received: from FMSEDG001.ED.cps.intel.com (10.1.192.133) by
- fmsmsx609.amr.corp.intel.com (10.18.126.89) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Mon, 29 Jun 2020 05:23:10 -0700
-Received: from NAM04-CO1-obe.outbound.protection.outlook.com (104.47.45.55) by
- edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server (TLS) id
- 14.3.439.0; Mon, 29 Jun 2020 05:23:10 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=QnjE60hSEZAKsbXGaGUAkjzfO9Ak0ghaayHUURKPIWMcI3pZyQeP6WxldnyFh8uSPLF0q8xMNwRbpy4+wmCeztE2qt0FpBWpJ9OT/rbyg9fOxJ+4h7CsJcjI8aIb6kROdBejYx8bIMzndy4Hv6bkpwXsbDQsGfXeIRo+pBExZMrYiypBPOvbsD8Y1VMP+ocxYterhIHVzGtGdOUrUeSpAjXPify4ZHYTDK3DGL7RnrVI/vE3d22CkTposhexStjgN5KeigRtv0KogNGe/66FFuyfNdv+FbaqHz+N0CYrYnh+gCjMGNEZ1s2zLpah0W5RXBHPY9IWEw15GAHskwcGnw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+13YzAJD7w6vO8YVDFkU3bnj5WWsLn2FcJvtsl34nog=;
- b=djuyuHv91mc7zHBYZ9s/GyMQl7wZMtERlpgaoXWmtAtJ2Hx/bvAW6JSyI/1XwBr0gkhhuJLijsAHxdAftXOLsYvyCg6KKJMyHeg/0MMSAByV/KCqqsQzoyiXag8qyypesz3NAyeW30GVhLkSod45ypjERSDTzqG7rMk2BYTGeuyiwnCfPBmJtbgTEWTYRgAe9ZVB4VMYH1Jwov3sVk2Gx1135wu2KfhbRPksJNXyGIa+LkUgwjdukHW0E22BftOUZtgxOiFbSFZuFCAaXl3vlVSBNNwmQwvOwZuBP+ftuZeuhu3trZR1hPPlhrsJR7byNzLqBgIEH1j2NGS7YxGCWA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+13YzAJD7w6vO8YVDFkU3bnj5WWsLn2FcJvtsl34nog=;
- b=qyMxtctPMF3EICizAH45nFMO1V/X374vdeASqJkt5I1pInJ344MI4bJacVXBTyJTAxsk7UWxDFDM5IX/4dKXDBBJx4in2Il0ThSHnPDRJKZaHAg4fK9BEC0ae+AykaZS3fw+CRGLW3gNyt5KPIl4zM0oz0kzyQjwlprTfOrPwEs=
-Received: from DM5PR11MB1435.namprd11.prod.outlook.com (2603:10b6:4:7::18) by
- DM6PR11MB3708.namprd11.prod.outlook.com (2603:10b6:5:146::20) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3131.20; Mon, 29 Jun 2020 12:23:08 +0000
-Received: from DM5PR11MB1435.namprd11.prod.outlook.com
- ([fe80::2c3d:98d9:4e81:c86c]) by DM5PR11MB1435.namprd11.prod.outlook.com
- ([fe80::2c3d:98d9:4e81:c86c%6]) with mapi id 15.20.3131.027; Mon, 29 Jun 2020
- 12:23:08 +0000
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     Stefan Hajnoczi <stefanha@gmail.com>
-CC:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "Wu, Hao" <hao.wu@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3 02/14] iommu: Report domain nesting info
-Thread-Topic: [PATCH v3 02/14] iommu: Report domain nesting info
-Thread-Index: AQHWSgRQVmc9Qp+Xi0mQEumzIJrE0qjvWjsAgAAviUA=
-Date:   Mon, 29 Jun 2020 12:23:08 +0000
-Message-ID: <DM5PR11MB1435FC14F2E8AC075DE41205C36E0@DM5PR11MB1435.namprd11.prod.outlook.com>
-References: <1592988927-48009-1-git-send-email-yi.l.liu@intel.com>
- <1592988927-48009-3-git-send-email-yi.l.liu@intel.com>
- <20200629092448.GB31392@stefanha-x1.localdomain>
-In-Reply-To: <20200629092448.GB31392@stefanha-x1.localdomain>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-authentication-results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [192.198.147.219]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7594ca87-cb8d-44c5-121d-08d81c272e85
-x-ms-traffictypediagnostic: DM6PR11MB3708:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB3708DF26A6EF34F93AD67AB8C36E0@DM6PR11MB3708.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 044968D9E1
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: EQH8LY1QihLjXelKVZq2O/b/4efcuOEmZtC8BcJ4RjdFaWWmwW5j9bkso1ZvYudT7jq+cKVjyseZRV8gqE1fFlJh2CiUYYvoIqd1V/PRN0lvMBVZG5oSUL+hnSsFFmxnk8jHFhmfqkFiwM8o7OyDM4rxjXHpiqho9EtWhBVYgF8fNYBMQdnzHBud+mWiF7CySu+O8gjPqS7E9q4Fn/brxp2lVu4tugVJ9PQLDJdd9GLlSqCdZabJU6/lapaOhXUM0jKGIs/O0KFEuojliRmAztgdFy6MyhN8B0jYhoJP+YIetswJ+ssoV1yK18xA/q+8Dhj4ER3tgDYSYWrR5ZFYyg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR11MB1435.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(39860400002)(396003)(376002)(136003)(366004)(478600001)(7696005)(316002)(2906002)(8676002)(8936002)(7416002)(66946007)(54906003)(76116006)(6916009)(6506007)(52536014)(33656002)(66476007)(64756008)(66446008)(5660300002)(66556008)(4326008)(186003)(86362001)(83380400001)(55016002)(9686003)(26005)(71200400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 4KlcjyTcElFwnXfazHOWtQu0g+uML7Q6H7w+nmdHAw1nS2NoQecUvYqe9Jno4HUduebghDfNRvU2zvTTnK4q8JGr4GJmsXoYXpOilrWWJW9XlGgcY0huqq91mvcPAJ+4bS2wjtmn0plz3WWldwZdv+DmDjCr4JRJLYkIAg6gkgqFi+P9SdqW/ggNGXQg26sCoefvwEdFo+yIv3AB15buhlUXu6Wu8NPfoiZmRjWj92V1TN3Lh5bx8G5rh7dsIw0Weop20t6GBH4j94wVKTrBGOLZSpn42EyQ79vrBnECSDCa2yHJPrzcTl55vA1LWdKhe4bHdAl4j5yqRwkFTEUDwUMTHDMRByvWIzcAsBsWksMJjDVOseXCBKKvCFgb3I3TPfLYMqIbGu6louX+1OBOuDXN+vXw3h5jdcy9TEsiYWTYj56KOia+ImxCZiwk7yV/alwjb1j70cT39WzQpFzd2g4wm7xb6KZkxMWhuZ2qdrFQ73wp37tyPy2UiJC/e3Al
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1732408AbgF2TY4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:24:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3BD271FB;
+        Mon, 29 Jun 2020 01:09:48 -0700 (PDT)
+Received: from [10.163.83.176] (unknown [10.163.83.176])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F0F113F71E;
+        Mon, 29 Jun 2020 01:09:38 -0700 (PDT)
+Subject: Re: [PATCH V3 2/4] mm/debug_vm_pgtable: Add tests validating advanced
+ arch page table helpers
+To:     Christophe Leroy <christophe.leroy@csgroup.eu>, linux-mm@kvack.org
+Cc:     christophe.leroy@c-s.fr, ziy@nvidia.com,
+        gerald.schaefer@de.ibm.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-riscv@lists.infradead.org, x86@kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1592192277-8421-1-git-send-email-anshuman.khandual@arm.com>
+ <1592192277-8421-3-git-send-email-anshuman.khandual@arm.com>
+ <6da177e6-9219-9ccf-a402-f4293c7564f7@csgroup.eu>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <bdea0704-11a5-aab3-c9ce-a9e388394836@arm.com>
+Date:   Mon, 29 Jun 2020 13:39:28 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM5PR11MB1435.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7594ca87-cb8d-44c5-121d-08d81c272e85
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jun 2020 12:23:08.1141
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: rflPj9pyL03NnbKUQ8IK+h22QoRqwRqWwQ9I6kU8fvuLDsHk2nx0YtoAqoABRjezXpXygSB+PI3RiCPlCT4kjg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB3708
-X-OriginatorOrg: intel.com
+In-Reply-To: <6da177e6-9219-9ccf-a402-f4293c7564f7@csgroup.eu>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stefan,
 
-> From: Stefan Hajnoczi <stefanha@gmail.com>
-> Sent: Monday, June 29, 2020 5:25 PM
->=20
-> On Wed, Jun 24, 2020 at 01:55:15AM -0700, Liu Yi L wrote:
-> > +/*
-> > + * struct iommu_nesting_info - Information for nesting-capable IOMMU.
-> > + *				user space should check it before using
-> > + *				nesting capability.
-> > + *
-> > + * @size:	size of the whole structure
-> > + * @format:	PASID table entry format, the same definition with
-> > + *		@format of struct iommu_gpasid_bind_data.
-> > + * @features:	supported nesting features.
-> > + * @flags:	currently reserved for future extension.
-> > + * @data:	vendor specific cap info.
-> > + *
-> > + * +---------------+--------------------------------------------------=
---+
-> > + * | feature       |  Notes                                           =
-  |
-> > + *
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> =3D+
-> > + * | SYSWIDE_PASID |  Kernel manages PASID in system wide, PASIDs used=
-  |
-> > + * |               |  in the system should be allocated by host kernel=
-  |
-> > + * +---------------+--------------------------------------------------=
---+
-> > + * | BIND_PGTBL    |  bind page tables to host PASID, the PASID could =
-  |
-> > + * |               |  either be a host PASID passed in bind request or=
-  |
-> > + * |               |  default PASIDs (e.g. default PASID of aux-domain=
-) |
-> > + * +---------------+--------------------------------------------------=
---+
-> > + * | CACHE_INVLD   |  mandatory feature for nesting capable IOMMU     =
-  |
-> > + * +---------------+--------------------------------------------------=
---+
->=20
-> This feature description is vague about what CACHE_INVLD does and how to
-> use it. If I understand correctly, the presence of this feature means
-> that VFIO_IOMMU_NESTING_OP_CACHE_INVLD must be used?
->
-> The same kind of clarification could be done for SYSWIDE_PASID and
-> BIND_PGTBL too.
+On 06/27/2020 12:48 PM, Christophe Leroy wrote:
+> Le 15/06/2020 à 05:37, Anshuman Khandual a écrit :
+>> This adds new tests validating for these following arch advanced page table
+>> helpers. These tests create and test specific mapping types at various page
+>> table levels.
+>>
+>> 1. pxxp_set_wrprotect()
+>> 2. pxxp_get_and_clear()
+>> 3. pxxp_set_access_flags()
+>> 4. pxxp_get_and_clear_full()
+>> 5. pxxp_test_and_clear_young()
+>> 6. pxx_leaf()
+>> 7. pxx_set_huge()
+>> 8. pxx_(clear|mk)_savedwrite()
+>> 9. huge_pxxp_xxx()
+>>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Mike Rapoport <rppt@linux.ibm.com>
+>> Cc: Vineet Gupta <vgupta@synopsys.com>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Will Deacon <will@kernel.org>
+>> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+>> Cc: Paul Mackerras <paulus@samba.org>
+>> Cc: Michael Ellerman <mpe@ellerman.id.au>
+>> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+>> Cc: Vasily Gorbik <gor@linux.ibm.com>
+>> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>> Cc: Ingo Molnar <mingo@redhat.com>
+>> Cc: Borislav Petkov <bp@alien8.de>
+>> Cc: "H. Peter Anvin" <hpa@zytor.com>
+>> Cc: Kirill A. Shutemov <kirill@shutemov.name>
+>> Cc: Paul Walmsley <paul.walmsley@sifive.com>
+>> Cc: Palmer Dabbelt <palmer@dabbelt.com>
+>> Cc: linux-snps-arc@lists.infradead.org
+>> Cc: linux-arm-kernel@lists.infradead.org
+>> Cc: linuxppc-dev@lists.ozlabs.org
+>> Cc: linux-s390@vger.kernel.org
+>> Cc: linux-riscv@lists.infradead.org
+>> Cc: x86@kernel.org
+>> Cc: linux-mm@kvack.org
+>> Cc: linux-arch@vger.kernel.org
+>> Cc: linux-kernel@vger.kernel.org
+>> Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>>   mm/debug_vm_pgtable.c | 306 ++++++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 306 insertions(+)
+>>
+>> diff --git a/mm/debug_vm_pgtable.c b/mm/debug_vm_pgtable.c
+>> index ffa163d4c63c..e3f9f8317a98 100644
+>> --- a/mm/debug_vm_pgtable.c
+>> +++ b/mm/debug_vm_pgtable.c
+>> @@ -21,6 +21,7 @@
+>>   #include <linux/module.h>
+>>   #include <linux/pfn_t.h>
+>>   #include <linux/printk.h>
+>> +#include <linux/pgtable.h>
+>>   #include <linux/random.h>
+>>   #include <linux/spinlock.h>
+>>   #include <linux/swap.h>
+>> @@ -28,6 +29,7 @@
+>>   #include <linux/start_kernel.h>
+>>   #include <linux/sched/mm.h>
+>>   #include <asm/pgalloc.h>
+>> +#include <asm/tlbflush.h>
+>>     #define VMFLAGS    (VM_READ|VM_WRITE|VM_EXEC)
+>>   @@ -55,6 +57,54 @@ static void __init pte_basic_tests(unsigned long pfn, pgprot_t prot)
+>>       WARN_ON(pte_write(pte_wrprotect(pte_mkwrite(pte))));
+>>   }
+>>   +static void __init pte_advanced_tests(struct mm_struct *mm,
+>> +            struct vm_area_struct *vma, pte_t *ptep,
+>> +            unsigned long pfn, unsigned long vaddr, pgprot_t prot)
+>> +{
+>> +    pte_t pte = pfn_pte(pfn, prot);
+>> +
+>> +    pte = pfn_pte(pfn, prot);
+>> +    set_pte_at(mm, vaddr, ptep, pte);
+>> +    ptep_set_wrprotect(mm, vaddr, ptep);
+>> +    pte = READ_ONCE(*ptep);
+> 
+> same
+> 
+>> +    WARN_ON(pte_write(pte));
+>> +
+>> +    pte = pfn_pte(pfn, prot);
+>> +    set_pte_at(mm, vaddr, ptep, pte);
+>> +    ptep_get_and_clear(mm, vaddr, ptep);
+>> +    pte = READ_ONCE(*ptep);
+> 
+> same
+> 
+>> +    WARN_ON(!pte_none(pte));
+>> +
+>> +    pte = pfn_pte(pfn, prot);
+>> +    pte = pte_wrprotect(pte);
+>> +    pte = pte_mkclean(pte);
+>> +    set_pte_at(mm, vaddr, ptep, pte);
+>> +    pte = pte_mkwrite(pte);
+>> +    pte = pte_mkdirty(pte);
+>> +    ptep_set_access_flags(vma, vaddr, ptep, pte, 1);
+>> +    pte = READ_ONCE(*ptep);
+> 
+> same
+> 
+>> +    WARN_ON(!(pte_write(pte) && pte_dirty(pte)));
+>> +
+>> +    pte = pfn_pte(pfn, prot);
+>> +    set_pte_at(mm, vaddr, ptep, pte);
+>> +    ptep_get_and_clear_full(mm, vaddr, ptep, 1);
+>> +    pte = READ_ONCE(*ptep);
+> 
+> same
+> 
+>> +    WARN_ON(!pte_none(pte));
+>> +
+>> +    pte = pte_mkyoung(pte);
+>> +    set_pte_at(mm, vaddr, ptep, pte);
+>> +    ptep_test_and_clear_young(vma, vaddr, ptep);
+>> +    pte = READ_ONCE(*ptep);
+> 
+> same
+> 
+>> +    WARN_ON(pte_young(pte));
+>> +}
+>> +
+>> +static void __init pte_savedwrite_tests(unsigned long pfn, pgprot_t prot)
+>> +{
+>> +    pte_t pte = pfn_pte(pfn, prot);
+>> +
+>> +    WARN_ON(!pte_savedwrite(pte_mk_savedwrite(pte_clear_savedwrite(pte))));
+>> +    WARN_ON(pte_savedwrite(pte_clear_savedwrite(pte_mk_savedwrite(pte))));
+>> +}
+>>   #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+>>   static void __init pmd_basic_tests(unsigned long pfn, pgprot_t prot)
+>>   {
+>> @@ -77,6 +127,89 @@ static void __init pmd_basic_tests(unsigned long pfn, pgprot_t prot)
+>>       WARN_ON(!pmd_bad(pmd_mkhuge(pmd)));
+>>   }
+>>   +static void __init pmd_advanced_tests(struct mm_struct *mm,
+>> +        struct vm_area_struct *vma, pmd_t *pmdp,
+>> +        unsigned long pfn, unsigned long vaddr, pgprot_t prot)
+>> +{
+>> +    pmd_t pmd = pfn_pmd(pfn, prot);
+>> +
+>> +    if (!has_transparent_hugepage())
+>> +        return;
+>> +
+>> +    /* Align the address wrt HPAGE_PMD_SIZE */
+>> +    vaddr = (vaddr & HPAGE_PMD_MASK) + HPAGE_PMD_SIZE;
+>> +
+>> +    pmd = pfn_pmd(pfn, prot);
+>> +    set_pmd_at(mm, vaddr, pmdp, pmd);
+>> +    pmdp_set_wrprotect(mm, vaddr, pmdp);
+>> +    pmd = READ_ONCE(*pmdp);
+>> +    WARN_ON(pmd_write(pmd));
+>> +
+>> +    pmd = pfn_pmd(pfn, prot);
+>> +    set_pmd_at(mm, vaddr, pmdp, pmd);
+>> +    pmdp_huge_get_and_clear(mm, vaddr, pmdp);
+>> +    pmd = READ_ONCE(*pmdp);
+>> +    WARN_ON(!pmd_none(pmd));
+>> +
+>> +    pmd = pfn_pmd(pfn, prot);
+>> +    pmd = pmd_wrprotect(pmd);
+>> +    pmd = pmd_mkclean(pmd);
+>> +    set_pmd_at(mm, vaddr, pmdp, pmd);
+>> +    pmd = pmd_mkwrite(pmd);
+>> +    pmd = pmd_mkdirty(pmd);
+>> +    pmdp_set_access_flags(vma, vaddr, pmdp, pmd, 1);
+>> +    pmd = READ_ONCE(*pmdp);
+>> +    WARN_ON(!(pmd_write(pmd) && pmd_dirty(pmd)));
+>> +
+>> +    pmd = pmd_mkhuge(pfn_pmd(pfn, prot));
+>> +    set_pmd_at(mm, vaddr, pmdp, pmd);
+>> +    pmdp_huge_get_and_clear_full(vma, vaddr, pmdp, 1);
+>> +    pmd = READ_ONCE(*pmdp);
+>> +    WARN_ON(!pmd_none(pmd));
+>> +
+>> +    pmd = pmd_mkyoung(pmd);
+>> +    set_pmd_at(mm, vaddr, pmdp, pmd);
+>> +    pmdp_test_and_clear_young(vma, vaddr, pmdp);
+>> +    pmd = READ_ONCE(*pmdp);
+>> +    WARN_ON(pmd_young(pmd));
+>> +}
+>> +
+>> +static void __init pmd_leaf_tests(unsigned long pfn, pgprot_t prot)
+>> +{
+>> +    pmd_t pmd = pfn_pmd(pfn, prot);
+>> +
+>> +    /*
+>> +     * PMD based THP is a leaf entry.
+>> +     */
+>> +    pmd = pmd_mkhuge(pmd);
+>> +    WARN_ON(!pmd_leaf(pmd));
+>> +}
+>> +
+>> +static void __init pmd_huge_tests(pmd_t *pmdp, unsigned long pfn, pgprot_t prot)
+>> +{
+>> +    pmd_t pmd;
+>> +
+>> +    if (!IS_ENABLED(CONFIG_HAVE_ARCH_HUGE_VMAP))
+>> +        return;
+>> +    /*
+>> +     * X86 defined pmd_set_huge() verifies that the given
+>> +     * PMD is not a populated non-leaf entry.
+>> +     */
+>> +    WRITE_ONCE(*pmdp, __pmd(0));
+>> +    WARN_ON(!pmd_set_huge(pmdp, __pfn_to_phys(pfn), prot));
+>> +    WARN_ON(!pmd_clear_huge(pmdp));
+>> +    pmd = READ_ONCE(*pmdp);
+>> +    WARN_ON(!pmd_none(pmd));
+>> +}
+>> +
+>> +static void __init pmd_savedwrite_tests(unsigned long pfn, pgprot_t prot)
+>> +{
+>> +    pmd_t pmd = pfn_pmd(pfn, prot);
+>> +
+>> +    WARN_ON(!pmd_savedwrite(pmd_mk_savedwrite(pmd_clear_savedwrite(pmd))));
+>> +    WARN_ON(pmd_savedwrite(pmd_clear_savedwrite(pmd_mk_savedwrite(pmd))));
+>> +}
+>> +
+>>   #ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
+>>   static void __init pud_basic_tests(unsigned long pfn, pgprot_t prot)
+>>   {
+>> @@ -100,12 +233,115 @@ static void __init pud_basic_tests(unsigned long pfn, pgprot_t prot)
+>>        */
+>>       WARN_ON(!pud_bad(pud_mkhuge(pud)));
+>>   }
+>> +
+>> +static void pud_advanced_tests(struct mm_struct *mm,
+>> +        struct vm_area_struct *vma, pud_t *pudp,
+>> +        unsigned long pfn, unsigned long vaddr, pgprot_t prot)
+>> +{
+>> +    pud_t pud = pfn_pud(pfn, prot);
+>> +
+>> +    if (!has_transparent_hugepage())
+>> +        return;
+>> +
+>> +    /* Align the address wrt HPAGE_PUD_SIZE */
+>> +    vaddr = (vaddr & HPAGE_PUD_MASK) + HPAGE_PUD_SIZE;
+>> +
+>> +    set_pud_at(mm, vaddr, pudp, pud);
+>> +    pudp_set_wrprotect(mm, vaddr, pudp);
+>> +    pud = READ_ONCE(*pudp);
+>> +    WARN_ON(pud_write(pud));
+>> +
+>> +#ifndef __PAGETABLE_PMD_FOLDED
+>> +    pud = pfn_pud(pfn, prot);
+>> +    set_pud_at(mm, vaddr, pudp, pud);
+>> +    pudp_huge_get_and_clear(mm, vaddr, pudp);
+>> +    pud = READ_ONCE(*pudp);
+>> +    WARN_ON(!pud_none(pud));
+>> +
+>> +    pud = pfn_pud(pfn, prot);
+>> +    set_pud_at(mm, vaddr, pudp, pud);
+>> +    pudp_huge_get_and_clear_full(mm, vaddr, pudp, 1);
+>> +    pud = READ_ONCE(*pudp);
+>> +    WARN_ON(!pud_none(pud));
+>> +#endif /* __PAGETABLE_PMD_FOLDED */
+>> +    pud = pfn_pud(pfn, prot);
+>> +    pud = pud_wrprotect(pud);
+>> +    pud = pud_mkclean(pud);
+>> +    set_pud_at(mm, vaddr, pudp, pud);
+>> +    pud = pud_mkwrite(pud);
+>> +    pud = pud_mkdirty(pud);
+>> +    pudp_set_access_flags(vma, vaddr, pudp, pud, 1);
+>> +    pud = READ_ONCE(*pudp);
+>> +    WARN_ON(!(pud_write(pud) && pud_dirty(pud)));
+>> +
+>> +    pud = pud_mkyoung(pud);
+>> +    set_pud_at(mm, vaddr, pudp, pud);
+>> +    pudp_test_and_clear_young(vma, vaddr, pudp);
+>> +    pud = READ_ONCE(*pudp);
+>> +    WARN_ON(pud_young(pud));
+>> +}
+>> +
+>> +static void __init pud_leaf_tests(unsigned long pfn, pgprot_t prot)
+>> +{
+>> +    pud_t pud = pfn_pud(pfn, prot);
+>> +
+>> +    /*
+>> +     * PUD based THP is a leaf entry.
+>> +     */
+>> +    pud = pud_mkhuge(pud);
+>> +    WARN_ON(!pud_leaf(pud));
+>> +}
+>> +
+>> +static void __init pud_huge_tests(pud_t *pudp, unsigned long pfn, pgprot_t prot)
+>> +{
+>> +    pud_t pud;
+>> +
+>> +    if (!IS_ENABLED(CONFIG_HAVE_ARCH_HUGE_VMAP))
+>> +        return;
+>> +    /*
+>> +     * X86 defined pud_set_huge() verifies that the given
+>> +     * PUD is not a populated non-leaf entry.
+>> +     */
+>> +    WRITE_ONCE(*pudp, __pud(0));
+>> +    WARN_ON(!pud_set_huge(pudp, __pfn_to_phys(pfn), prot));
+>> +    WARN_ON(!pud_clear_huge(pudp));
+>> +    pud = READ_ONCE(*pudp);
+>> +    WARN_ON(!pud_none(pud));
+>> +}
+>>   #else  /* !CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD */
+>>   static void __init pud_basic_tests(unsigned long pfn, pgprot_t prot) { }
+>> +static void pud_advanced_tests(struct mm_struct *mm,
+>> +        struct vm_area_struct *vma, pud_t *pudp,
+>> +        unsigned long pfn, unsigned long vaddr, pgprot_t prot)
+>> +{
+>> +}
+>> +static void __init pud_leaf_tests(unsigned long pfn, pgprot_t prot) { }
+>> +static void __init pud_huge_tests(pud_t *pudp, unsigned long pfn, pgprot_t prot)
+>> +{
+>> +}
+>>   #endif /* CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD */
+>>   #else  /* !CONFIG_TRANSPARENT_HUGEPAGE */
+>>   static void __init pmd_basic_tests(unsigned long pfn, pgprot_t prot) { }
+>>   static void __init pud_basic_tests(unsigned long pfn, pgprot_t prot) { }
+>> +static void __init pmd_advanced_tests(struct mm_struct *mm,
+>> +        struct vm_area_struct *vma, pmd_t *pmdp,
+>> +        unsigned long pfn, unsigned long vaddr, pgprot_t prot)
+>> +{
+>> +}
+>> +static void __init pud_advanced_tests(struct mm_struct *mm,
+>> +        struct vm_area_struct *vma, pud_t *pudp,
+>> +        unsigned long pfn, unsigned long vaddr, pgprot_t prot)
+>> +{
+>> +}
+>> +static void __init pmd_leaf_tests(unsigned long pfn, pgprot_t prot) { }
+>> +static void __init pud_leaf_tests(unsigned long pfn, pgprot_t prot) { }
+>> +static void __init pmd_huge_tests(pmd_t *pmdp, unsigned long pfn, pgprot_t prot)
+>> +{
+>> +}
+>> +static void __init pud_huge_tests(pud_t *pudp, unsigned long pfn, pgprot_t prot)
+>> +{
+>> +}
+>> +static void __init pmd_savedwrite_tests(unsigned long pfn, pgprot_t prot) { }
+>>   #endif /* CONFIG_TRANSPARENT_HUGEPAGE */
+>>     static void __init p4d_basic_tests(unsigned long pfn, pgprot_t prot)
+>> @@ -495,8 +731,56 @@ static void __init hugetlb_basic_tests(unsigned long pfn, pgprot_t prot)
+>>       WARN_ON(!pte_huge(pte_mkhuge(pte)));
+>>   #endif /* CONFIG_ARCH_WANT_GENERAL_HUGETLB */
+>>   }
+>> +
+>> +static void __init hugetlb_advanced_tests(struct mm_struct *mm,
+>> +                      struct vm_area_struct *vma,
+>> +                      pte_t *ptep, unsigned long pfn,
+>> +                      unsigned long vaddr, pgprot_t prot)
+>> +{
+>> +    struct page *page = pfn_to_page(pfn);
+>> +    pte_t pte = READ_ONCE(*ptep);
+> 
+> Remplace with ptep_get() to avoid build failure on powerpc 8xx.
 
-For SYSWIDE_PASID and BIND_PGTBL, yes, presence of the feature bit
-means must use. So the two are requirements to user space if it wants
-to setup nesting. While for CACHE_INVLD, it's kind of availability
-here. How about removing CACHE_INVLD as presence of BIND_PGTBL should
-indicates support of CACHE_INVLD?
-
-Regards,
-Yi Liu
-
-> Stefan
+Sure, will replace all open PTE pointer accesses with ptep_get().
