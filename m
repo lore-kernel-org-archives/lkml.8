@@ -2,42 +2,73 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D18C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD534C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:27:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C6CCF208DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:27:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB9FF214F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:27:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bnPjIH3A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391139AbgF2V1t (ORCPT
+        id S2391124AbgF2V1q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:27:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38380 "EHLO
+        Mon, 29 Jun 2020 17:27:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729062AbgF2Smo (ORCPT
+        with ESMTP id S1729060AbgF2Smo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:42:44 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8FCDC033C15;
-        Mon, 29 Jun 2020 11:26:31 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jpyUA-002DuT-71; Mon, 29 Jun 2020 18:26:30 +0000
-From:   Al Viro <viro@ZenIV.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        David Miller <davem@davemloft.net>,
-        Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>
-Subject: [PATCH 16/41] arm64: sanitize compat_ptrace_write_user()
-Date:   Mon, 29 Jun 2020 19:26:03 +0100
-Message-Id: <20200629182628.529995-16-viro@ZenIV.linux.org.uk>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200629182628.529995-1-viro@ZenIV.linux.org.uk>
-References: <20200629182349.GA2786714@ZenIV.linux.org.uk>
- <20200629182628.529995-1-viro@ZenIV.linux.org.uk>
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6909C030F08
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:15:33 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id dg28so13314376edb.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:15:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=heGKiszYARvox0tZHtQsGW6ogrsChhTM0vUjjAQ7Fxc=;
+        b=bnPjIH3An1mt00bkgQp2o32ds9guwFtm/l2yxOJMsPPjrCQRaFOFw58b/wgq61+qz6
+         ffC7FuhZSPOuZHBdaQXYTipMPLoEImqRxrQCzc8dHvFHmBZpVsvGp5CWGNx7QJopncJJ
+         +tBYoHExJmEI/Cgcji6A0JQX/+vnsTSxV+m4z1nZ7+kkoLq3aYN9vUcUBgF+Aet6J0oM
+         tO7LDFT9SoX5Kf3R9KLwif43XUss7VrjqX5dmRU1FUVx35428FvFzyXPeAolGnCQkfBC
+         ++S6gCucl7Zz8XFT8ZGCFzxS28/ahcwdFCsFJ53JNMOLAerLb8u2Do7PoWEMQHLpgemD
+         sqBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=heGKiszYARvox0tZHtQsGW6ogrsChhTM0vUjjAQ7Fxc=;
+        b=llALyO5ZZiBnNsH5wAdWNysyU/+T9fqfrDrJ9O3fQgaqgvaKDQMUoU4HfwO0HJ1XDB
+         KSPMWI1YM8zXWpxj0Qut8PxgbGwNVzwqN88DFMjW8pqewb2YDP82j6aTzl267YGp7UFY
+         Wek1NMtTpiquCNWcc0A1YVKEKA4PttCROAxAiGQZRJendG0wwCiOhAK8oqlGTie27VaP
+         INeoR8SqrnnWDXOR1PI47gCWTfYTiUdqP8Msbzkvy7zWw1DXb1bcI13c0Ssz8QlQnt6g
+         SskPiCY1NeAwCVtgYgFJvFW9BhDpCBmlizVimh+EoNHiwHBVwBGchuU1XRcC7VEiIGR/
+         SNZw==
+X-Gm-Message-State: AOAM5316nftikXvzXAP38MPFr2jl6UZY2MjUNJ3S9leHlyNdp8k5R/3X
+        r8PBr531aDp/dnA7Yp5kMV8=
+X-Google-Smtp-Source: ABdhPJyX/7C2PCphFFlJPw5Rs4TlWFjhF5uJNYqqBvCYao2poNLZoN5EPeTH0YCtFu3/aCHjRnDG4w==
+X-Received: by 2002:a50:a661:: with SMTP id d88mr18585795edc.34.1593447332650;
+        Mon, 29 Jun 2020 09:15:32 -0700 (PDT)
+Received: from localhost.localdomain (dslb-178-011-230-176.178.011.pools.vodafone-ip.de. [178.11.230.176])
+        by smtp.gmail.com with ESMTPSA id m6sm87831ejq.85.2020.06.29.09.15.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 09:15:32 -0700 (PDT)
+From:   Michael Straube <straube.linux@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     Larry.Finger@lwfinger.net, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org,
+        Michael Straube <straube.linux@gmail.com>
+Subject: [PATCH 1/2] staging: rtl8188eu: use compound assignment operators
+Date:   Mon, 29 Jun 2020 18:12:54 +0200
+Message-Id: <20200629161255.28371-1-straube.linux@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -45,64 +76,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+Use compound assignment operators to simplify the code and clear
+missing spaces around operators checkpatch issues.
 
-don't bother with copy_regset_from_user() (not to mention
-set_fs())
-
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Michael Straube <straube.linux@gmail.com>
 ---
- arch/arm64/kernel/ptrace.c | 29 ++++++++++++++++++++---------
- 1 file changed, 20 insertions(+), 9 deletions(-)
+ drivers/staging/rtl8188eu/os_dep/ioctl_linux.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
-index d5f3da5197a1..9f769e862f68 100644
---- a/arch/arm64/kernel/ptrace.c
-+++ b/arch/arm64/kernel/ptrace.c
-@@ -1553,8 +1553,8 @@ static int compat_ptrace_read_user(struct task_struct *tsk, compat_ulong_t off,
- static int compat_ptrace_write_user(struct task_struct *tsk, compat_ulong_t off,
- 				    compat_ulong_t val)
- {
--	int ret;
--	mm_segment_t old_fs = get_fs();
-+	struct pt_regs newregs = *task_pt_regs(tsk);
-+	unsigned int idx = off / 4;
+diff --git a/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c b/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
+index d5968ef9f43d..68196d8c05eb 100644
+--- a/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
++++ b/drivers/staging/rtl8188eu/os_dep/ioctl_linux.c
+@@ -211,7 +211,7 @@ static char *translate_scan(struct adapter *padapter,
+ 		else/* default MCS7 */
+ 			max_rate = (bw_40MHz) ? ((short_GI) ? 150 : 135) : ((short_GI) ? 72 : 65);
  
- 	if (off & 3 || off >= COMPAT_USER_SZ)
- 		return -EIO;
-@@ -1562,14 +1562,25 @@ static int compat_ptrace_write_user(struct task_struct *tsk, compat_ulong_t off,
- 	if (off >= sizeof(compat_elf_gregset_t))
- 		return 0;
+-		max_rate = max_rate*2;/* Mbps/2; */
++		max_rate *= 2; /* Mbps/2; */
+ 	}
  
--	set_fs(KERNEL_DS);
--	ret = copy_regset_from_user(tsk, &user_aarch32_view,
--				    REGSET_COMPAT_GPR, off,
--				    sizeof(compat_ulong_t),
--				    &val);
--	set_fs(old_fs);
-+	switch (idx) {
-+	case 15:
-+		newregs.pc = val;
-+		break;
-+	case 16:
-+		newregs.pstate = compat_psr_to_pstate(val);
-+		break;
-+	case 17:
-+		newregs.orig_x0 = val;
-+		break;
-+	default:
-+		newregs.regs[idx] = val;
-+	}
-+
-+	if (!valid_user_regs(&newregs.user_regs, tsk))
-+		return -EINVAL;
+ 	iwe.cmd = SIOCGIWRATE;
+@@ -1395,7 +1395,7 @@ static int rtw_wx_set_rate(struct net_device *dev,
+ 		ratevalue = 11;
+ 		goto set_rate;
+ 	}
+-	target_rate = target_rate/100000;
++	target_rate /= 100000;
  
--	return ret;
-+	*task_pt_regs(tsk) = newregs;
-+	return 0;
- }
- 
- #ifdef CONFIG_HAVE_HW_BREAKPOINT
+ 	switch (target_rate) {
+ 	case 10:
 -- 
-2.11.0
+2.27.0
 
