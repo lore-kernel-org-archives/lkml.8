@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2BE0C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30130C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EA5D206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11DD4206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467428;
-	bh=PubSyzXcRX96TmBkcmiWN+8QzQTbnj2lvtz2yyYNxAk=;
+	s=default; t=1593467430;
+	bh=KGTxbpDBwea5FTUqlV3d9WT6LzTHKFm5813Edct4Qfg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v7LURdHmJpDtYA8PDKIgaO/X82dTat9bWJ/54+tR27pF9SsqNu9FG0AQ4hqDzV//G
-	 Q4HORkNlFAoiWYYzvrQg9pa6r2OEsLTczVyRwY749sdSL8qoMAMb31JVNFzTIANtdH
-	 ZPf4i5vVl3lVfG+AcPX8uodZ2DfavvZ91gRv1Fzs=
+	b=x4A1M1b2ramby9GMZItUKhnZmBZdObzFrM0zB0lSBFQC1iuIswY7zZagL5HaxKgKK
+	 QnF5ANok+dyQaWec4MpJkuFCBQtV2jHKC58iI8zCrB1gjw+Axs2gRsgHt+Dvgg9F5f
+	 dtjcV76XGpho2gHEyhoUITearsfnwO+2QPltz+S8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404453AbgF2Vu0 (ORCPT
+        id S2404463AbgF2Vu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:50:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56790 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:50:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726684AbgF2Sfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726685AbgF2Sfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82C50246A8;
-        Mon, 29 Jun 2020 15:20:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 853392478D;
+        Mon, 29 Jun 2020 15:21:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444001;
-        bh=PubSyzXcRX96TmBkcmiWN+8QzQTbnj2lvtz2yyYNxAk=;
+        s=default; t=1593444097;
+        bh=KGTxbpDBwea5FTUqlV3d9WT6LzTHKFm5813Edct4Qfg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CQU5Uxf0zkXsujOx1L5sbgpWqydSnHwaJEqPeL8K5L8xJkKh0stUuiyHdMwwKea81
-         XGGz1uEpzduT4iwWFu10J7U1ShfNBwRyhBbR+UevrXiyxvDdC5AfQLMPklE+MC0ruT
-         rjFDwXkbGQLNRSDQz3RDagHrJOGLy/OvyAX1/gW8=
+        b=ylvJ/sq5T0QxF72mI88ldVRIv1aOHYEryufRvqYgWujXZ+jNpIHo7klmi8mcYIq6c
+         LjP66kzxSYIF7hXWd41ekWF8wPRGjXC2ysBMR2pOS4IqUjKLvuHyd5Wdd9NqI007SX
+         nYAMiCmm8JbZ4jQHXtzNLQvjAtkU79eQh+i7aqdY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Reinette Chatre <reinette.chatre@intel.com>,
-        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 106/265] x86/resctrl: Support CPUID enumeration of MBM counter width
-Date:   Mon, 29 Jun 2020 11:15:39 -0400
-Message-Id: <20200629151818.2493727-107-sashal@kernel.org>
+Cc:     Yash Shah <yash.shah@sifive.com>,
+        David Abdurachmanov <david.abdurachmanov@gmail.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 207/265] RISC-V: Don't allow write+exec only page mapping request in mmap
+Date:   Mon, 29 Jun 2020 11:17:20 -0400
+Message-Id: <20200629151818.2493727-208-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -64,70 +66,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Reinette Chatre <reinette.chatre@intel.com>
+From: Yash Shah <yash.shah@sifive.com>
 
-[ Upstream commit f3d44f18b0662327c42128b9d3604489bdb6e36f ]
+[ Upstream commit e0d17c842c0f824fd4df9f4688709fc6907201e1 ]
 
-The original Memory Bandwidth Monitoring (MBM) architectural
-definition defines counters of up to 62 bits in the
-IA32_QM_CTR MSR while the first-generation MBM implementation
-uses statically defined 24 bit counters.
+As per the table 4.4 of version "20190608-Priv-MSU-Ratified" of the
+RISC-V instruction set manual[0], the PTE permission bit combination of
+"write+exec only" is reserved for future use. Hence, don't allow such
+mapping request in mmap call.
 
-Expand the MBM CPUID enumeration properties to include the MBM
-counter width. The previously undefined EAX output register contains,
-in bits [7:0], the MBM counter width encoded as an offset from
-24 bits. Enumerating this property is only specified for Intel
-CPUs.
+An issue is been reported by David Abdurachmanov, that while running
+stress-ng with "sysbadaddr" argument, RCU stalls are observed on RISC-V
+specific kernel.
 
-Suggested-by: Borislav Petkov <bp@suse.de>
-Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/afa3af2f753f6bc301fb743bc8944e749cb24afa.1588715690.git.reinette.chatre@intel.com
+This issue arises when the stress-sysbadaddr request for pages with
+"write+exec only" permission bits and then passes the address obtain
+from this mmap call to various system call. For the riscv kernel, the
+mmap call should fail for this particular combination of permission bits
+since it's not valid.
+
+[0]: http://dabbelt.com/~palmer/keep/riscv-isa-manual/riscv-privileged-20190608-1.pdf
+
+Signed-off-by: Yash Shah <yash.shah@sifive.com>
+Reported-by: David Abdurachmanov <david.abdurachmanov@gmail.com>
+[Palmer: Refer to the latest ISA specification at the only link I could
+find, and update the terminology.]
+Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/processor.h   | 3 ++-
- arch/x86/kernel/cpu/resctrl/core.c | 5 +++++
- 2 files changed, 7 insertions(+), 1 deletion(-)
+ arch/riscv/kernel/sys_riscv.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index 3bcf27caf6c9f..c4e8fd709cf67 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -113,9 +113,10 @@ struct cpuinfo_x86 {
- 	/* in KB - valid for CPUS which support this call: */
- 	unsigned int		x86_cache_size;
- 	int			x86_cache_alignment;	/* In bytes */
--	/* Cache QoS architectural values: */
-+	/* Cache QoS architectural values, valid only on the BSP: */
- 	int			x86_cache_max_rmid;	/* max index */
- 	int			x86_cache_occ_scale;	/* scale to bytes */
-+	int			x86_cache_mbm_width_offset;
- 	int			x86_power;
- 	unsigned long		loops_per_jiffy;
- 	/* cpuid returned max cores value: */
-diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
-index 49599733fa94d..d242e864726c0 100644
---- a/arch/x86/kernel/cpu/resctrl/core.c
-+++ b/arch/x86/kernel/cpu/resctrl/core.c
-@@ -963,6 +963,7 @@ void resctrl_cpu_detect(struct cpuinfo_x86 *c)
- 	if (!cpu_has(c, X86_FEATURE_CQM_LLC)) {
- 		c->x86_cache_max_rmid  = -1;
- 		c->x86_cache_occ_scale = -1;
-+		c->x86_cache_mbm_width_offset = -1;
- 		return;
- 	}
+diff --git a/arch/riscv/kernel/sys_riscv.c b/arch/riscv/kernel/sys_riscv.c
+index f3619f59d85cc..12f8a7fce78b1 100644
+--- a/arch/riscv/kernel/sys_riscv.c
++++ b/arch/riscv/kernel/sys_riscv.c
+@@ -8,6 +8,7 @@
+ #include <linux/syscalls.h>
+ #include <asm/unistd.h>
+ #include <asm/cacheflush.h>
++#include <asm-generic/mman-common.h>
  
-@@ -979,6 +980,10 @@ void resctrl_cpu_detect(struct cpuinfo_x86 *c)
- 
- 		c->x86_cache_max_rmid  = ecx;
- 		c->x86_cache_occ_scale = ebx;
-+		if (c->x86_vendor == X86_VENDOR_INTEL)
-+			c->x86_cache_mbm_width_offset = eax & 0xff;
-+		else
-+			c->x86_cache_mbm_width_offset = -1;
- 	}
+ static long riscv_sys_mmap(unsigned long addr, unsigned long len,
+ 			   unsigned long prot, unsigned long flags,
+@@ -16,6 +17,11 @@ static long riscv_sys_mmap(unsigned long addr, unsigned long len,
+ {
+ 	if (unlikely(offset & (~PAGE_MASK >> page_shift_offset)))
+ 		return -EINVAL;
++
++	if ((prot & PROT_WRITE) && (prot & PROT_EXEC))
++		if (unlikely(!(prot & PROT_READ)))
++			return -EINVAL;
++
+ 	return ksys_mmap_pgoff(addr, len, prot, flags, fd,
+ 			       offset >> (PAGE_SHIFT - page_shift_offset));
  }
- 
 -- 
 2.25.1
 
