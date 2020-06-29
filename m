@@ -4,59 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC36DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1043C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:12:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3F1620675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:12:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3AE320675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:12:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461533;
-	bh=ZqVkW5DCNTL9+xwdwfkcsXa7a/Y5WRQd3g9Iryktsdw=;
+	s=default; t=1593461540;
+	bh=kQvr20PH6P7HMgnnOg/6cEQl1b6N7Ru9B3CPfUxmv1w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0DFA0WXcoOaAjDyGonjp5K4Wd45EUXPteoJtQ9o+RImdwFw+wgS4JOX/TlYNBCQAE
-	 gsO5RwLy1CKZKz9U5A2FEIPfIkYBboDdgoRefzGiun6kclpgB9hU/qC+SO15Xlg7Or
-	 Asiei7t+pYJskcfT2Wict6XnnURYHO7jBW1PV+Lc=
+	b=e91JRt3L1gLwi+icsPefHbSrS5qVSOJcAiXFf08fhbrR13Fnbi3YHp4B8ZE0xQFQC
+	 pQhYMxw7U+r5q5H+RSRjWsjyGO54pTsJA2k4F4AuRGxb4yHeg3gAeLU8Kcjh/nx1qO
+	 K7KWO7rDEKRay7PNum0g4Qtov4nPjdTP30rlnRyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730448AbgF2UMH (ORCPT
+        id S1730509AbgF2UMT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:12:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40564 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:12:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732884AbgF2TaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732883AbgF2TaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC58625231;
-        Mon, 29 Jun 2020 15:35:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6F3525317;
+        Mon, 29 Jun 2020 15:39:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444949;
-        bh=ZqVkW5DCNTL9+xwdwfkcsXa7a/Y5WRQd3g9Iryktsdw=;
+        s=default; t=1593445145;
+        bh=kQvr20PH6P7HMgnnOg/6cEQl1b6N7Ru9B3CPfUxmv1w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WBwnUbZQVC7sIA2IRZPlH6amUcu4yg91h3pRSHh9q0ZET7189+9fM4Nm2BFbyKrrx
-         YTj+KIRTzWuXv9Mpf4cNZ/sTG6J9siHQteFkV7ZiHCpRja0FNRZm+SgHhmwZZldaiE
-         ShLdcTCp6MSyu9h47K4YnSiCvukIEzFGvhQCaBVc=
+        b=Jxa92TIzw9BIVqyCZsCN5PGvG0xA2Q3t/sZGASgpVdhkjEZoATJYJblaOdVssjozc
+         OyB9jumSTWS5CsYNh8UCpoRLfVS63x0Uw8DFw9CBq+WeBLs6PbvVhIc57w1h0jH3sn
+         aPTNYQb68IRLkU2IogoYhLxtnXKdbUmny5pAfVKE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tang Bin <tangbin@cmss.chinamobile.com>,
-        Zhang Shengju <zhangshengju@cmss.chinamobile.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 047/131] usb: host: ehci-exynos: Fix error check in exynos_ehci_probe()
-Date:   Mon, 29 Jun 2020 11:33:38 -0400
-Message-Id: <20200629153502.2494656-48-sashal@kernel.org>
+Cc:     yu kuai <yukuai3@huawei.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 49/78] ARM: imx5: add missing put_device() call in imx_suspend_alloc_ocram()
+Date:   Mon, 29 Jun 2020 11:37:37 -0400
+Message-Id: <20200629153806.2494953-50-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
-References: <20200629153502.2494656-1-sashal@kernel.org>
+In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
+References: <20200629153806.2494953-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.19.y
+X-KernelTest-Branch: linux-4.14.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.19.131-rc1
-X-KernelTest-Deadline: 2020-07-01T15:34+00:00
+X-KernelTest-Version: 4.14.186-rc1
+X-KernelTest-Deadline: 2020-07-01T15:38+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -65,41 +64,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tang Bin <tangbin@cmss.chinamobile.com>
+From: yu kuai <yukuai3@huawei.com>
 
-commit 44ed240d62736ad29943ec01e41e194b96f7c5e9 upstream.
+[ Upstream commit 586745f1598ccf71b0a5a6df2222dee0a865954e ]
 
-If the function platform_get_irq() failed, the negative value
-returned will not be detected here. So fix error handling in
-exynos_ehci_probe(). And when get irq failed, the function
-platform_get_irq() logs an error message, so remove redundant
-message here.
+if of_find_device_by_node() succeed, imx_suspend_alloc_ocram() doesn't
+have a corresponding put_device(). Thus add a jump target to fix the
+exception handling for this function implementation.
 
-Fixes: 1bcc5aa87f04 ("USB: Add initial S5P EHCI driver")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
-Link: https://lore.kernel.org/r/20200602114708.28620-1-tangbin@cmss.chinamobile.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 1579c7b9fe01 ("ARM: imx53: Set DDR pins to high impedance when in suspend to RAM.")
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/ehci-exynos.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ arch/arm/mach-imx/pm-imx5.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/host/ehci-exynos.c b/drivers/usb/host/ehci-exynos.c
-index 8e3bab1e0c1f6..f433883ca2bf1 100644
---- a/drivers/usb/host/ehci-exynos.c
-+++ b/drivers/usb/host/ehci-exynos.c
-@@ -188,9 +188,8 @@ static int exynos_ehci_probe(struct platform_device *pdev)
- 	hcd->rsrc_len = resource_size(res);
- 
- 	irq = platform_get_irq(pdev, 0);
--	if (!irq) {
--		dev_err(&pdev->dev, "Failed to get IRQ\n");
--		err = -ENODEV;
-+	if (irq < 0) {
-+		err = irq;
- 		goto fail_io;
+diff --git a/arch/arm/mach-imx/pm-imx5.c b/arch/arm/mach-imx/pm-imx5.c
+index 868781fd460c7..14c630c899c5d 100644
+--- a/arch/arm/mach-imx/pm-imx5.c
++++ b/arch/arm/mach-imx/pm-imx5.c
+@@ -301,14 +301,14 @@ static int __init imx_suspend_alloc_ocram(
+ 	if (!ocram_pool) {
+ 		pr_warn("%s: ocram pool unavailable!\n", __func__);
+ 		ret = -ENODEV;
+-		goto put_node;
++		goto put_device;
  	}
+ 
+ 	ocram_base = gen_pool_alloc(ocram_pool, size);
+ 	if (!ocram_base) {
+ 		pr_warn("%s: unable to alloc ocram!\n", __func__);
+ 		ret = -ENOMEM;
+-		goto put_node;
++		goto put_device;
+ 	}
+ 
+ 	phys = gen_pool_virt_to_phys(ocram_pool, ocram_base);
+@@ -318,6 +318,8 @@ static int __init imx_suspend_alloc_ocram(
+ 	if (virt_out)
+ 		*virt_out = virt;
+ 
++put_device:
++	put_device(&pdev->dev);
+ put_node:
+ 	of_node_put(node);
  
 -- 
 2.25.1
