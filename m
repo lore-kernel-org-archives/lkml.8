@@ -2,73 +2,70 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0D3C433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D298FC433E0
 	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 03:19:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C75BC2073A
+	by mail.kernel.org (Postfix) with ESMTP id A511820702
 	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 03:19:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="BdUD0E9c"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="DjjLcbwY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726087AbgF2DTX (ORCPT
+        id S1726055AbgF2DTW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 23:19:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37798 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725976AbgF2DTW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Sun, 28 Jun 2020 23:19:22 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F0AFC03E979
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 20:19:22 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id x11so6533318plo.7
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 20:19:22 -0700 (PDT)
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37792 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725976AbgF2DTV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 23:19:21 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E520C03E979
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 20:19:21 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id 35so6548571ple.0
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 20:19:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=4gesZ5upNg1RXGV/+lsgDtY0V75yfGqbAiiX0yLwNx4=;
-        b=BdUD0E9cKnyJ7Y9hR0Vq3aPCNKewnQ2Js53WXLo+6SZnpnJdSdZBIYxR+Wjpo4nm5K
-         AM70NnBzh9OFB3A2gwqYkialyyDojP8OVK5waMNQ/eTNM0WLROYfTMGzlsIHj54+rMan
-         f162dXgnLJLqtEkX6yxZEg/54dwBDW1APP3OSFe+/0WuCYUbGjITNqaRFl7FV8W+afF7
-         onoXDeeps26ev/oo3URcZSpbmNF9Se1jOAQLNKbp825xoig1e7UYMH3vQWsEWu1P5tMf
-         Z0fv5D3TmLOGd2Q4O5l8JGayoIKOPMI59ccmUIRNiMo/ckusEAKHmuXCW8laQfBuSFml
-         SzyQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MX1npRs6E1BJMvrT9omJsOQIQGUgSUPJQrW7wHX73nA=;
+        b=DjjLcbwY5BLsHDucAiJGHAt3gNsHaOg6PiLoaWZxOGruFvSbZQF4RW1hATXG1HnaWO
+         pcZRJWshtmAxSLaRi/JtjxHj7PxLej/B40u2BarfoutSjccAyDxw2hcUwpex99gqqQb2
+         9O3yqMDejj0DMYOFaiMYErhmu/2Fez6uwhyw8wgwxXrcc1yRNEkmuc8yM1x5s63g+AiZ
+         enfWSmp4cHLHLk6qJkgylXKWsIYPPMmEsWXpb0kiUrlFJ7M5Cf/meUzPO5Kim1q1/NrW
+         AQSaf1wD/krSAdzXwK7sbRUfAlua4GNPn5T1oGK4hVGstQcy3UrdJk7pyl0BaJ07C+f1
+         ss4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=4gesZ5upNg1RXGV/+lsgDtY0V75yfGqbAiiX0yLwNx4=;
-        b=MlxvmoN79WG2MVlFEsXHQDISvDiKstjjgoqj/Uki3JX0lzXq+//x9Vm/yiAbN1nfwo
-         RJnW9f6yMqtjVn04LMLe+cL2oEAaW3PI4M2qFuhm+EDpK5flHYEzhNsMx+KyehR1bY/R
-         KCvR+gv0huSF4FNWuMSZmiiq9Pt6o6GNEAcgY26JfYAElMoegAvBfb9CjS/I5+v3dE1d
-         c3I7E3b23PwFnV8yRScPrlMwWgMZEpnP4cm2M9RSd/bkZ6G1uih4jP0GqEGaMHoTO7KN
-         8kqMfsgppWmZLi4ooU5M8RwPH2m6fFkGP9j4JvQsIx2FyX+5WhLgdmcbLgjkKPhTorGS
-         g+5w==
-X-Gm-Message-State: AOAM531WWgi5Cjw37f9rs3wsWwXdHyokLj8FqR07GoV2PhQkxhOGhsxV
-        JIM256MQFtvJCi8swN8HlX5P/Q==
-X-Google-Smtp-Source: ABdhPJw9NOcGyEy15wvZwxgMiqsbkeu2tq5+8bkmoxxAIUG8hgbFC2uVA5ccwNjveIJBppI+Df3gdw==
-X-Received: by 2002:a17:90a:d809:: with SMTP id a9mr1580326pjv.40.1593400762094;
-        Sun, 28 Jun 2020 20:19:22 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=MX1npRs6E1BJMvrT9omJsOQIQGUgSUPJQrW7wHX73nA=;
+        b=Lvy3PvJc5WCfxiP0ZUX7jOhHWRKezj7l4m5k+qUvETHpd9DSzYlISTlPrtz92zfLfB
+         89TIYd0X+Y7dxRt1HkGFF3Qu4zxKOxH0uqXS+MrZW4r7pV4ea+BavmulcHM2Xu7uq6Km
+         c37S5hwVu7OUBd/bilTF7fD0e3k8Khv4fsrqIM/PKCzN/U2VHierRX+KkyQrnmM0xAXT
+         vGAs0vOkWAjKCxkDhz1o80rFh1ixUotTrcYwDXkDy0NjwQ23V1Hd3qKXpZck5MLJEXzr
+         3rJyBexXXg/ZCCDi/oN4stgkHAy8yYZu+9OCXcOMNlHoyYYpH3KZr40XY7VtHHd40arC
+         35aA==
+X-Gm-Message-State: AOAM532UPOGmV0mnd2syltXcKImGo5MfesKGetnTtJ+dtjxNUnzhbFLg
+        0vKyv7cBTRtWbCOAKEC3GAB6XQ==
+X-Google-Smtp-Source: ABdhPJwMpumCfd5Jtkmq2Tt8wb0YP3wqWSpHA4kY8SYSv0AOtdrJJ+gRAkE7qay+ZlKDrO56B2TLPA==
+X-Received: by 2002:a17:90a:20ad:: with SMTP id f42mr5130595pjg.96.1593400760594;
+        Sun, 28 Jun 2020 20:19:20 -0700 (PDT)
 Received: from hsinchu02.internal.sifive.com (114-34-229-221.HINET-IP.hinet.net. [114.34.229.221])
-        by smtp.gmail.com with ESMTPSA id j70sm12876254pfd.208.2020.06.28.20.19.20
+        by smtp.gmail.com with ESMTPSA id j70sm12876254pfd.208.2020.06.28.20.19.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jun 2020 20:19:21 -0700 (PDT)
+        Sun, 28 Jun 2020 20:19:20 -0700 (PDT)
 From:   Zong Li <zong.li@sifive.com>
 To:     palmer@dabbelt.com, paul.walmsley@sifive.com,
         linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
 Cc:     Zong Li <zong.li@sifive.com>
-Subject: [RFC PATCH 1/6] dt-bindings: riscv: Add YAML documentation for PMU
-Date:   Mon, 29 Jun 2020 11:19:10 +0800
-Message-Id: <3de3a480517d167a3faae086aa8ab0c0c7141d99.1593397455.git.zong.li@sifive.com>
+Subject: [RFC PATCH 0/6] Support raw event and DT for perf on RISC-V
+Date:   Mon, 29 Jun 2020 11:19:09 +0800
+Message-Id: <cover.1593397455.git.zong.li@sifive.com>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <cover.1593397455.git.zong.li@sifive.com>
-References: <cover.1593397455.git.zong.li@sifive.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,80 +73,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device tree bindings for performance monitor unit. And it passes the
-dt_binding_check verification.
+This patch set adds raw event support on RISC-V. In addition, we
+introduce the DT mechanism to make our perf more generic and common.
 
-Signed-off-by: Zong Li <zong.li@sifive.com>
----
- .../devicetree/bindings/riscv/pmu.yaml        | 59 +++++++++++++++++++
- 1 file changed, 59 insertions(+)
+Currently, we set the hardware events by writing the mhpmeventN CSRs, it
+would raise an illegal instruction exception and trap into m-mode to
+emulate event selector CSRs access. It doesn't make sense because we
+shouldn't write the m-mode CSRs in s-mode. Ideally, we should set event
+selector through standard SBI call or the shadow CSRs of s-mode. We have
+prepared a proposal of a new SBI extension, called "PMU SBI extension",
+but we also discussing the feasibility of accessing these PMU CSRs on
+s-mode at the same time, such as delegation mechanism, so I was
+wondering if we could use SBI calls first and make the PMU SBI extension
+as legacy when s-mode access mechanism is accepted by Foundation? or
+keep the current situation to see what would happen in the future.
+
+This patch set also introduces the DT mechanism, we don't want to add too
+much platform-dependency code in perf like other architectures, so we
+put the mapping of generic hardware events to DT, then we can easy to
+transfer generic hardware events to vendor's own hardware events without
+any platfrom-dependency stuff in our perf.
+
+Zong Li (6):
+  dt-bindings: riscv: Add YAML documentation for PMU
+  riscv: dts: sifive: Add DT support for PMU
+  riscv: add definition of hpmcounter CSRs
+  riscv: perf: Add raw event support
+  riscv: perf: introduce DT mechanism
+  riscv: remove PMU menu of Kconfig
+
+ .../devicetree/bindings/riscv/pmu.yaml        |  59 +++
+ arch/riscv/Kconfig                            |  13 -
+ arch/riscv/boot/dts/sifive/fu540-c000.dtsi    |  13 +
+ arch/riscv/include/asm/csr.h                  |  58 +++
+ arch/riscv/include/asm/perf_event.h           | 100 ++--
+ arch/riscv/kernel/Makefile                    |   2 +-
+ arch/riscv/kernel/perf_event.c                | 471 +++++++++++-------
+ 7 files changed, 471 insertions(+), 245 deletions(-)
  create mode 100644 Documentation/devicetree/bindings/riscv/pmu.yaml
 
-diff --git a/Documentation/devicetree/bindings/riscv/pmu.yaml b/Documentation/devicetree/bindings/riscv/pmu.yaml
-new file mode 100644
-index 000000000000..f55ccbc6c685
---- /dev/null
-+++ b/Documentation/devicetree/bindings/riscv/pmu.yaml
-@@ -0,0 +1,59 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/riscv/pmu.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: RISC-V Performance Monitor Units
-+
-+maintainers:
-+  - Zong Li <zong.li@sifive.com>
-+  - Paul Walmsley <paul.walmsley@sifive.com>
-+  - Palmer Dabbelt <palmer@dabbelt.com>
-+
-+properties:
-+  compatible:
-+    items:
-+      - const: riscv,pmu
-+
-+  riscv,width-base-cntr:
-+    description: The width of cycle and instret CSRs.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+
-+  riscv,width-event-cntr:
-+    description: The width of hpmcounter CSRs.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+
-+  riscv,n-event-cntr:
-+    description: The number of hpmcounter CSRs.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+
-+  riscv,hw-event-map:
-+    description: The mapping of generic hardware events. Default is no mapping.
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
-+
-+  riscv,hw-cache-event-map:
-+    description: The mapping of generic hardware cache events.
-+      Default is no mapping.
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
-+
-+required:
-+  - compatible
-+  - riscv,width-base-cntr
-+  - riscv,width-event-cntr
-+  - riscv,n-event-cntr
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    pmu {
-+      compatible = "riscv,pmu";
-+      riscv,width-base-cntr = <64>;
-+      riscv,width-event-cntr = <40>;
-+      riscv,n-event-cntr = <2>;
-+      riscv,hw-event-map = <0x0 0x0 0x1 0x1 0x3 0x0202 0x4 0x4000>;
-+      riscv,hw-cache-event-map = <0x010201 0x0102 0x010204 0x0802>;
-+    };
-+
-+...
 -- 
 2.27.0
 
