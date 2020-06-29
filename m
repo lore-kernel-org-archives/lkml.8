@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B22FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76626C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:33:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 166BA206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:33:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 561F72067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:33:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462806;
-	bh=0ITsDM3fOKZh+tWWm63frmHczA2dJQnz3x74cD9OrLA=;
+	s=default; t=1593462810;
+	bh=ektUYiX3ebqRBZHo+FC56D327kyXAEqCp9K7SydggQI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vtOIOvVoF/+pl8FVhmMcJla2DrAXOEU5bymUECqOVXymD2FQzpLxgt7/evnkW0cfi
-	 0KVk2nsKG5CRbYpwcfk4K1te123C2gAGV1+zErMFJLUpyD94UJTdE583SWCSXKQKlU
-	 l4wCNCqANWDEzRFiNearWlFQvsXcqO5FIPKxvzfQ=
+	b=niyQ8MiJ+GH/E83W3Z6P7HgqVmGLxN+sLZlOWRz/tVSwdk9w93Cgn4koYEVLnsFXC
+	 xeZjY5ZiYrUeoDjKcop5/jPFFeqaoh89xOau/vFYVxprwiWxp6zbHPfeLZAbMu/g4+
+	 9R2fNE/DevkDaZRAhOlKehtnK22fAi9Dq1Ic6b+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389347AbgF2UdY (ORCPT
+        id S2389344AbgF2Ud3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:33:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37040 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:33:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732254AbgF2TZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732395AbgF2TZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98AB925376;
-        Mon, 29 Jun 2020 15:40:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F06E25432;
+        Mon, 29 Jun 2020 15:43:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445239;
-        bh=0ITsDM3fOKZh+tWWm63frmHczA2dJQnz3x74cD9OrLA=;
+        s=default; t=1593445383;
+        bh=ektUYiX3ebqRBZHo+FC56D327kyXAEqCp9K7SydggQI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WURG1hDEXLVgkKqNehDDgNcu717QwfR404KCuQ3OnO6OnpAN/PatoFpUOfhR7rvp4
-         Mdw+g62/9+S4nkRETfmc2+n5BtkIFCFcg9mfFuzsC2k6nk277FiEcDHQ5eo17Oo47w
-         6t72y3LvLtzUdIFV/GahcScZ0H/f0aM/9czmYFCw=
+        b=gDM8C+vFXasB4jx7tSwbMFurp0Dxv/ebj1FM0Q4UzteTwTEEf+WSQIeDvgkYJfOZH
+         x4gtBu39iWLcIJNA27joO+2qdDiuVlepLac+hp4K4mEE80T543Y1T9zOGVZMDSpSNv
+         OWsxeH9GHj4PGppWLFLJUnSVn7Eq7i+r8N1Yshyk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     ashimida <ashimida@linux.alibaba.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 023/191] mksysmap: Fix the mismatch of '.L' symbols in System.map
-Date:   Mon, 29 Jun 2020 11:37:19 -0400
-Message-Id: <20200629154007.2495120-24-sashal@kernel.org>
+Cc:     David Christensen <drc@linux.vnet.ibm.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.9 137/191] tg3: driver sleeps indefinitely when EEH errors exceed eeh_max_freezes
+Date:   Mon, 29 Jun 2020 11:39:13 -0400
+Message-Id: <20200629154007.2495120-138-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -65,44 +66,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ashimida <ashimida@linux.alibaba.com>
+From: David Christensen <drc@linux.vnet.ibm.com>
 
-[ Upstream commit 72d24accf02add25e08733f0ecc93cf10fcbd88c ]
+[ Upstream commit 3a2656a211caf35e56afc9425e6e518fa52f7fbc ]
 
-When System.map was generated, the kernel used mksysmap to
-filter the kernel symbols, but all the symbols with the
-second letter 'L' in the kernel were filtered out, not just
-the symbols starting with 'dot + L'.
+The driver function tg3_io_error_detected() calls napi_disable twice,
+without an intervening napi_enable, when the number of EEH errors exceeds
+eeh_max_freezes, resulting in an indefinite sleep while holding rtnl_lock.
 
-For example:
-ashimida@ubuntu:~/linux$ cat System.map |grep ' .L'
-ashimida@ubuntu:~/linux$ nm -n vmlinux |grep ' .L'
-ffff0000088028e0 t bLength_show
-......
-ffff0000092e0408 b PLLP_OUTC_lock
-ffff0000092e0410 b PLLP_OUTA_lock
+Add check for pcierr_recovery which skips code already executed for the
+"Frozen" state.
 
-The original intent should be to filter out all local symbols
-starting with '.L', so the dot should be escaped.
-
-Fixes: 00902e984732 ("mksysmap: Add h8300 local symbol pattern")
-Signed-off-by: ashimida <ashimida@linux.alibaba.com>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: David Christensen <drc@linux.vnet.ibm.com>
+Reviewed-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- scripts/mksysmap | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/tg3.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/scripts/mksysmap b/scripts/mksysmap
-index a35acc0d0b827..9aa23d15862a0 100755
---- a/scripts/mksysmap
-+++ b/scripts/mksysmap
-@@ -41,4 +41,4 @@
- # so we just ignore them to let readprofile continue to work.
- # (At least sparc64 has __crc_ in the middle).
+diff --git a/drivers/net/ethernet/broadcom/tg3.c b/drivers/net/ethernet/broadcom/tg3.c
+index c069a04a6e7e2..5790b35064a8d 100644
+--- a/drivers/net/ethernet/broadcom/tg3.c
++++ b/drivers/net/ethernet/broadcom/tg3.c
+@@ -18174,8 +18174,8 @@ static pci_ers_result_t tg3_io_error_detected(struct pci_dev *pdev,
  
--$NM -n $1 | grep -v '\( [aNUw] \)\|\(__crc_\)\|\( \$[adt]\)\|\( .L\)' > $2
-+$NM -n $1 | grep -v '\( [aNUw] \)\|\(__crc_\)\|\( \$[adt]\)\|\( \.L\)' > $2
+ 	rtnl_lock();
+ 
+-	/* We probably don't have netdev yet */
+-	if (!netdev || !netif_running(netdev))
++	/* Could be second call or maybe we don't have netdev yet */
++	if (!netdev || tp->pcierr_recovery || !netif_running(netdev))
+ 		goto done;
+ 
+ 	/* We needn't recover from permanent error */
 -- 
 2.25.1
 
