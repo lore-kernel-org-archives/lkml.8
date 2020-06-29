@@ -7,50 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B076C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:09:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCCD8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3287C206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:09:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CCDE206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:09:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593457772;
-	bh=GGxbJOfbtAE6e03+LO15Vu7dDc/n1vkzpcClBCmxWjM=;
+	s=default; t=1593457774;
+	bh=cPJjhIRuVR6ILETKUiSiAnd68luBbKR16bzeD9+IJi0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1YnOypWLsnXBDCq6P1nmQaMY9MEKnOr72X/RXMN6acfoO6w9+9R1BAre/jqKEqdug
-	 vwfEL2AAGJsvUSdoDNfYokTlmFADn5WLviWOye+6Wvm0iv2MHd9GOws1900w1kuR8U
-	 2hDmLNhRFbe62j86xvdlwIikkfsDyDlEpDu2adp0=
+	b=DScmIzmryEe3KG5/Tf72C40igyoYjeGk1NhGRWxft41U6c1e6BK2xOI+DMHq3iUgq
+	 AR3B3+tcbmRgVZtorWjKPQcSdY8imKzpNAoa+/VjQ3Av5QIAA+dSFB6zd7tn3iyF/s
+	 2WVuH3XeCMi9Q9t31rmup4Qk/CTpCnrAd0rFCafQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730704AbgF2TJa (ORCPT
+        id S1729964AbgF2TJd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:09:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45476 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:09:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730341AbgF2TAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730302AbgF2TAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:00:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B0D9C2553D;
-        Mon, 29 Jun 2020 15:55:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38FCB254DD;
+        Mon, 29 Jun 2020 15:53:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446104;
-        bh=GGxbJOfbtAE6e03+LO15Vu7dDc/n1vkzpcClBCmxWjM=;
+        s=default; t=1593446035;
+        bh=cPJjhIRuVR6ILETKUiSiAnd68luBbKR16bzeD9+IJi0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GnErIBMIor16GJWvkOI8/DlOsexEl4jcZA2yf841Vp8najHvUElhWOt9z0kt00Yva
-         MOobbtMZrKo6e/dBbkcUDKWgk8yc88B+ayCZzSV3dDr0fT95pj2ZEg04R+BdQmpXzA
-         nQ6GhEb50m9uQvpEUVENoarnu3vv4GpucGtTKOss=
+        b=kfbqlZEmwhE1M94Ow5DNn9DkCUS1PhNEgxExYjtdNdZAxmWh3kbcVyNHyibpMMOZG
+         sPGEWmJUy8DzlqJm4IS2DQA+h1EQ+1n4+p86HfKMrvyMjfIRryGqGwzaabm6yNc+D4
+         w2vvlakQaf+7KNX13Pkh9mrvlwxsk+O8ICWGIfKo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Tomasz=20Meresi=C5=84ski?= <tomasz@meresinski.eu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.4 096/135] usb: add USB_QUIRK_DELAY_INIT for Logitech C922
-Date:   Mon, 29 Jun 2020 11:52:30 -0400
-Message-Id: <20200629155309.2495516-97-sashal@kernel.org>
+Cc:     Stefan Riedmueller <s.riedmueller@phytec.de>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 040/135] watchdog: da9062: No need to ping manually before setting timeout
+Date:   Mon, 29 Jun 2020 11:51:34 -0400
+Message-Id: <20200629155309.2495516-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.229-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-4.4.y
@@ -65,40 +67,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomasz Meresiński <tomasz@meresinski.eu>
+From: Stefan Riedmueller <s.riedmueller@phytec.de>
 
-commit 5d8021923e8a8cc37a421a64e27c7221f0fee33c upstream.
+[ Upstream commit a0948ddba65f4f6d3cfb5e2b84685485d0452966 ]
 
-The Logitech C922, just like other Logitech webcams,
-needs the USB_QUIRK_DELAY_INIT or it will randomly
-not respond after device connection
+There is actually no need to ping the watchdog before disabling it
+during timeout change. Disabling the watchdog already takes care of
+resetting the counter.
 
-Signed-off-by: Tomasz Meresiński <tomasz@meresinski.eu>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200603203347.7792-1-tomasz@meresinski.eu
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This fixes an issue during boot when the userspace watchdog handler takes
+over and the watchdog is already running. Opening the watchdog in this case
+leads to the first ping and directly after that without the required
+heartbeat delay a second ping issued by the set_timeout call. Due to the
+missing delay this resulted in a reset.
+
+Signed-off-by: Stefan Riedmueller <s.riedmueller@phytec.de>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+Link: https://lore.kernel.org/r/20200403130728.39260-3-s.riedmueller@phytec.de
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/core/quirks.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/watchdog/da9062_wdt.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/usb/core/quirks.c b/drivers/usb/core/quirks.c
-index 27d05f0134de8..e6e0f786547bf 100644
---- a/drivers/usb/core/quirks.c
-+++ b/drivers/usb/core/quirks.c
-@@ -73,11 +73,12 @@ static const struct usb_device_id usb_quirk_list[] = {
- 	/* Logitech HD Webcam C270 */
- 	{ USB_DEVICE(0x046d, 0x0825), .driver_info = USB_QUIRK_RESET_RESUME },
+diff --git a/drivers/watchdog/da9062_wdt.c b/drivers/watchdog/da9062_wdt.c
+index daeb645fcea8a..519419136ce8f 100644
+--- a/drivers/watchdog/da9062_wdt.c
++++ b/drivers/watchdog/da9062_wdt.c
+@@ -94,11 +94,6 @@ static int da9062_wdt_update_timeout_register(struct da9062_watchdog *wdt,
+ 					      unsigned int regval)
+ {
+ 	struct da9062 *chip = wdt->hw;
+-	int ret;
+-
+-	ret = da9062_reset_watchdog_timer(wdt);
+-	if (ret)
+-		return ret;
  
--	/* Logitech HD Pro Webcams C920, C920-C, C925e and C930e */
-+	/* Logitech HD Pro Webcams C920, C920-C, C922, C925e and C930e */
- 	{ USB_DEVICE(0x046d, 0x082d), .driver_info = USB_QUIRK_DELAY_INIT },
- 	{ USB_DEVICE(0x046d, 0x0841), .driver_info = USB_QUIRK_DELAY_INIT },
- 	{ USB_DEVICE(0x046d, 0x0843), .driver_info = USB_QUIRK_DELAY_INIT },
- 	{ USB_DEVICE(0x046d, 0x085b), .driver_info = USB_QUIRK_DELAY_INIT },
-+	{ USB_DEVICE(0x046d, 0x085c), .driver_info = USB_QUIRK_DELAY_INIT },
- 
- 	/* Logitech ConferenceCam CC3000e */
- 	{ USB_DEVICE(0x046d, 0x0847), .driver_info = USB_QUIRK_DELAY_INIT },
+ 	return regmap_update_bits(chip->regmap,
+ 				  DA9062AA_CONTROL_D,
 -- 
 2.25.1
 
