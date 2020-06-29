@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59CA9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43167C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2ABBD206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:34:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2485A206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:34:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462843;
-	bh=MtdVQO9YvinReJrh/3g8nOZ5g+saU97ovcI+Uv+a8oM=;
+	s=default; t=1593462847;
+	bh=0TIgXh0UJBp6NZVUlhYfT7EIO63h8jLGw0n+lEZnSD8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x7WiomrYGix0oXBmnSzec9Mf2tvri2hV/V3qfpZo4sdmIH+nfjM4Og+estQBzdCpb
-	 VaRD+ghXAgEHbuBUiKSL88bA5L0yFf7RG+xUiVlSsh1K0v7U2Z6kQnwmwjd3Pweop6
-	 mkfiY6xVNI9BTJH3yEGZaPuj7+HRiMsvlbMGRqJM=
+	b=hnVK5szPLIePiH4TIs1RHXSbk26gBgdug43tt5hjMCHxuUf4F8SgDjw7vwcpxPsUJ
+	 Y42dG0YeDl+qhcyBx1qgQTb2LaOKqfhj403bQMuj/i5SaJO4LZkBF9OjQEUr2iLIES
+	 N52buBLTjnGLrKjVd6k33ewFsn4civxZU1xC1xkw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389365AbgF2Ud7 (ORCPT
+        id S2389011AbgF2UeD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:33:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37022 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:34:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732291AbgF2TZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732293AbgF2TZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93A3A2542A;
-        Mon, 29 Jun 2020 15:42:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F193253E4;
+        Mon, 29 Jun 2020 15:42:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445377;
-        bh=MtdVQO9YvinReJrh/3g8nOZ5g+saU97ovcI+Uv+a8oM=;
+        s=default; t=1593445323;
+        bh=0TIgXh0UJBp6NZVUlhYfT7EIO63h8jLGw0n+lEZnSD8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kvs87PVuek3Z7Cbs/l+kIyggNQXsdgZs3L7zvRQbv6tfXkOUCQEqjVucJwWsga8BF
-         RWU2wzpWf9Oekf8n/TMJRmXBcKIgRsDv1hEVhvnKmmhf55pgF9c7YAZKINIbMJTY1P
-         NaDBnf/t7yHaqpEyY7a4U14EE956JOvI4HZOQKAI=
+        b=ENbNF3ZVOXFhPnNTN5KKHqP7j3bc/USJxzSGJztKMaJ1vYwJWHMStFgheP1ftPq7R
+         VF+qJ7PshSfHODGDX5774jF10xscracrdc6xF7XbavyA5/gaPle2D9Kob9K4sowYMu
+         YywiP6kIQTW5TAshg2TMeVBPiRlEet63Vp/H1ils=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wang Hai <wanghai38@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Hangbin Liu <liuhangbin@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     "Dmitry V. Levin" <ldv@altlinux.org>,
+        Elvira Khabirova <lineprinter@altlinux.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.9 132/191] mld: fix memory leak in ipv6_mc_destroy_dev()
-Date:   Mon, 29 Jun 2020 11:39:08 -0400
-Message-Id: <20200629154007.2495120-133-sashal@kernel.org>
+Subject: [PATCH 4.9 089/191] s390: fix syscall_get_error for compat processes
+Date:   Mon, 29 Jun 2020 11:38:25 -0400
+Message-Id: <20200629154007.2495120-90-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -66,60 +67,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+From: "Dmitry V. Levin" <ldv@altlinux.org>
 
-[ Upstream commit ea2fce88d2fd678ed9d45354ff49b73f1d5615dd ]
+commit b3583fca5fb654af2cfc1c08259abb9728272538 upstream.
 
-Commit a84d01647989 ("mld: fix memory leak in mld_del_delrec()") fixed
-the memory leak of MLD, but missing the ipv6_mc_destroy_dev() path, in
-which mca_sources are leaked after ma_put().
+If both the tracer and the tracee are compat processes, and gprs[2]
+is assigned a value by __poke_user_compat, then the higher 32 bits
+of gprs[2] are cleared, IS_ERR_VALUE() always returns false, and
+syscall_get_error() always returns 0.
 
-Using ip6_mc_clear_src() to take care of the missing free.
+Fix the implementation by sign-extending the value for compat processes
+the same way as x86 implementation does.
 
-BUG: memory leak
-unreferenced object 0xffff8881113d3180 (size 64):
-  comm "syz-executor071", pid 389, jiffies 4294887985 (age 17.943s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 ff 02 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<000000002cbc483c>] kmalloc include/linux/slab.h:555 [inline]
-    [<000000002cbc483c>] kzalloc include/linux/slab.h:669 [inline]
-    [<000000002cbc483c>] ip6_mc_add1_src net/ipv6/mcast.c:2237 [inline]
-    [<000000002cbc483c>] ip6_mc_add_src+0x7f5/0xbb0 net/ipv6/mcast.c:2357
-    [<0000000058b8b1ff>] ip6_mc_source+0xe0c/0x1530 net/ipv6/mcast.c:449
-    [<000000000bfc4fb5>] do_ipv6_setsockopt.isra.12+0x1b2c/0x3b30 net/ipv6/ipv6_sockglue.c:754
-    [<00000000e4e7a722>] ipv6_setsockopt+0xda/0x150 net/ipv6/ipv6_sockglue.c:950
-    [<0000000029260d9a>] rawv6_setsockopt+0x45/0x100 net/ipv6/raw.c:1081
-    [<000000005c1b46f9>] __sys_setsockopt+0x131/0x210 net/socket.c:2132
-    [<000000008491f7db>] __do_sys_setsockopt net/socket.c:2148 [inline]
-    [<000000008491f7db>] __se_sys_setsockopt net/socket.c:2145 [inline]
-    [<000000008491f7db>] __x64_sys_setsockopt+0xba/0x150 net/socket.c:2145
-    [<00000000c7bc11c5>] do_syscall_64+0xa1/0x530 arch/x86/entry/common.c:295
-    [<000000005fb7a3f3>] entry_SYSCALL_64_after_hwframe+0x49/0xb3
+The bug was exposed to user space by commit 201766a20e30f ("ptrace: add
+PTRACE_GET_SYSCALL_INFO request") and detected by strace test suite.
 
-Fixes: 1666d49e1d41 ("mld: do not remove mld souce list info when set link down")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Acked-by: Hangbin Liu <liuhangbin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This change fixes strace syscall tampering on s390.
+
+Link: https://lkml.kernel.org/r/20200602180051.GA2427@altlinux.org
+Fixes: 753c4dd6a2fa2 ("[S390] ptrace changes")
+Cc: Elvira Khabirova <lineprinter@altlinux.org>
+Cc: stable@vger.kernel.org # v2.6.28+
+Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/mcast.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/s390/include/asm/syscall.h | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/net/ipv6/mcast.c b/net/ipv6/mcast.c
-index e065d48b31b9f..f904b9b240275 100644
---- a/net/ipv6/mcast.c
-+++ b/net/ipv6/mcast.c
-@@ -2601,6 +2601,7 @@ void ipv6_mc_destroy_dev(struct inet6_dev *idev)
- 		idev->mc_list = i->next;
+diff --git a/arch/s390/include/asm/syscall.h b/arch/s390/include/asm/syscall.h
+index 6bc941be69217..166fbd74e316c 100644
+--- a/arch/s390/include/asm/syscall.h
++++ b/arch/s390/include/asm/syscall.h
+@@ -41,7 +41,17 @@ static inline void syscall_rollback(struct task_struct *task,
+ static inline long syscall_get_error(struct task_struct *task,
+ 				     struct pt_regs *regs)
+ {
+-	return IS_ERR_VALUE(regs->gprs[2]) ? regs->gprs[2] : 0;
++	unsigned long error = regs->gprs[2];
++#ifdef CONFIG_COMPAT
++	if (test_tsk_thread_flag(task, TIF_31BIT)) {
++		/*
++		 * Sign-extend the value so (int)-EFOO becomes (long)-EFOO
++		 * and will match correctly in comparisons.
++		 */
++		error = (long)(int)error;
++	}
++#endif
++	return IS_ERR_VALUE(error) ? error : 0;
+ }
  
- 		write_unlock_bh(&idev->lock);
-+		ip6_mc_clear_src(i);
- 		ma_put(i);
- 		write_lock_bh(&idev->lock);
- 	}
+ static inline long syscall_get_return_value(struct task_struct *task,
 -- 
 2.25.1
 
