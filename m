@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE14C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBCDCC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:59:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DFA25206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:59:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5034206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:59:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467981;
-	bh=kM7M2oW2pF7mF5sfHW5VKQ3niclpBBbtT+B91pvlGlw=;
+	s=default; t=1593467986;
+	bh=C9k1s+ImQZhFLYcZjvmoOEJvDi0OY8NulpkwBF9MZ3g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EpNN3hk1BBwCgfchyCOVxeVoB2Knc6mAzg7LuRvHMMt7qDPZ3z9qwYUqxDnbjG3/h
-	 W2LqrQiDWhRPnjwF7O1DltI3P6yMU2rgGUlG+gFn6KbzV6CitMVgHCZDD8XVTSs/qc
-	 bDnsYSqeqO3QXb+yFSZXCs/w+7jjs3unKTpRy0n8=
+	b=ODohgtegz1vuFgIY8XmqQPzx5N/Fx2EO6QPNcTtCoFLnrJVI/v4GE4ADls/tD0M1b
+	 M9Fpv0TP9OLBHgs5VcS2GBmpTnI4D9NuE7GO+D0CxzWB4Pfl3dTYLpx+HlqoDaqm3H
+	 Ru98CCaBLYfSzM4Ydu0Z5fl4zcyMF21XmBEbIA+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404670AbgF2V7U (ORCPT
+        id S2404806AbgF2V7o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:59:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56794 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:59:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726427AbgF2Sf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:27 -0400
+        id S1726418AbgF2Sf0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 737C2241A2;
-        Mon, 29 Jun 2020 15:19:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7850F247BD;
+        Mon, 29 Jun 2020 15:22:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443956;
-        bh=kM7M2oW2pF7mF5sfHW5VKQ3niclpBBbtT+B91pvlGlw=;
+        s=default; t=1593444126;
+        bh=C9k1s+ImQZhFLYcZjvmoOEJvDi0OY8NulpkwBF9MZ3g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FjH4xuytt6uHUaA08bFSU6BsoX8qiq/wPtrRP9vBT1p7XmOvWp5xLXsNc7P/txTMo
-         V9vAbA07rr4Gr6YuAJlyWsaazEC/O3EnSSSD1d3CsGafysbd29glduWkZcyVg6fA2N
-         OU6hEJhFv/fRfhP0VZ0hA61UdKbRMgk0es+ddl2Y=
+        b=n85OXHkFnHNgwKuj3y27LPgnlQCFfTGnZVZlY2UpPanDI4MmAsGexEgRpGpPIX2Ji
+         EsXi+V7CTFZ5x7U0Qd1OIVRGKbZaelP/FEp8jQKO1+5hqOdqkePdKvcS2fYg9zF9IM
+         Bj1kicURRI3+2Lu/WFRhkxw5SWciSsd5w0NVAgE8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Filipe Manana <fdmanana@suse.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Anand Jain <anand.jain@oracle.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 058/265] btrfs: fix a block group ref counter leak after failure to remove block group
-Date:   Mon, 29 Jun 2020 11:14:51 -0400
-Message-Id: <20200629151818.2493727-59-sashal@kernel.org>
+Cc:     Junxiao Bi <junxiao.bi@oracle.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Jun Piao <piaojun@huawei.com>, Mark Fasheh <mark@fasheh.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 234/265] ocfs2: fix panic on nfs server over ocfs2
+Date:   Mon, 29 Jun 2020 11:17:47 -0400
+Message-Id: <20200629151818.2493727-235-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -67,116 +70,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Junxiao Bi <junxiao.bi@oracle.com>
 
-[ Upstream commit 9fecd13202f520f3f25d5b1c313adb740fe19773 ]
+commit e5a15e17a78d58f933d17cafedfcf7486a29f5b4 upstream.
 
-When removing a block group, if we fail to delete the block group's item
-from the extent tree, we jump to the 'out' label and end up decrementing
-the block group's reference count once only (by 1), resulting in a counter
-leak because the block group at that point was already removed from the
-block group cache rbtree - so we have to decrement the reference count
-twice, once for the rbtree and once for our lookup at the start of the
-function.
+The following kernel panic was captured when running nfs server over
+ocfs2, at that time ocfs2_test_inode_bit() was checking whether one
+inode locating at "blkno" 5 was valid, that is ocfs2 root inode, its
+"suballoc_slot" was OCFS2_INVALID_SLOT(65535) and it was allocted from
+//global_inode_alloc, but here it wrongly assumed that it was got from per
+slot inode alloctor which would cause array overflow and trigger kernel
+panic.
 
-There is a second bug where if removing the free space tree entries (the
-call to remove_block_group_free_space()) fails we end up jumping to the
-'out_put_group' label but end up decrementing the reference count only
-once, when we should have done it twice, since we have already removed
-the block group from the block group cache rbtree. This happens because
-the reference count decrement for the rbtree reference happens after
-attempting to remove the free space tree entries, which is far away from
-the place where we remove the block group from the rbtree.
+  BUG: unable to handle kernel paging request at 0000000000001088
+  IP: [<ffffffff816f6898>] _raw_spin_lock+0x18/0xf0
+  PGD 1e06ba067 PUD 1e9e7d067 PMD 0
+  Oops: 0002 [#1] SMP
+  CPU: 6 PID: 24873 Comm: nfsd Not tainted 4.1.12-124.36.1.el6uek.x86_64 #2
+  Hardware name: Huawei CH121 V3/IT11SGCA1, BIOS 3.87 02/02/2018
+  RIP: _raw_spin_lock+0x18/0xf0
+  RSP: e02b:ffff88005ae97908  EFLAGS: 00010206
+  RAX: ffff88005ae98000 RBX: 0000000000001088 RCX: 0000000000000000
+  RDX: 0000000000020000 RSI: 0000000000000009 RDI: 0000000000001088
+  RBP: ffff88005ae97928 R08: 0000000000000000 R09: ffff880212878e00
+  R10: 0000000000007ff0 R11: 0000000000000000 R12: 0000000000001088
+  R13: ffff8800063c0aa8 R14: ffff8800650c27d0 R15: 000000000000ffff
+  FS:  0000000000000000(0000) GS:ffff880218180000(0000) knlGS:ffff880218180000
+  CS:  e033 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 0000000000001088 CR3: 00000002033d0000 CR4: 0000000000042660
+  Call Trace:
+    igrab+0x1e/0x60
+    ocfs2_get_system_file_inode+0x63/0x3a0 [ocfs2]
+    ocfs2_test_inode_bit+0x328/0xa00 [ocfs2]
+    ocfs2_get_parent+0xba/0x3e0 [ocfs2]
+    reconnect_path+0xb5/0x300
+    exportfs_decode_fh+0xf6/0x2b0
+    fh_verify+0x350/0x660 [nfsd]
+    nfsd4_putfh+0x4d/0x60 [nfsd]
+    nfsd4_proc_compound+0x3d3/0x6f0 [nfsd]
+    nfsd_dispatch+0xe0/0x290 [nfsd]
+    svc_process_common+0x412/0x6a0 [sunrpc]
+    svc_process+0x123/0x210 [sunrpc]
+    nfsd+0xff/0x170 [nfsd]
+    kthread+0xcb/0xf0
+    ret_from_fork+0x61/0x90
+  Code: 83 c2 02 0f b7 f2 e8 18 dc 91 ff 66 90 eb bf 0f 1f 40 00 55 48 89 e5 41 56 41 55 41 54 53 0f 1f 44 00 00 48 89 fb ba 00 00 02 00 <f0> 0f c1 17 89 d0 45 31 e4 45 31 ed c1 e8 10 66 39 d0 41 89 c6
+  RIP   _raw_spin_lock+0x18/0xf0
+  CR2: 0000000000001088
+  ---[ end trace 7264463cd1aac8f9 ]---
+  Kernel panic - not syncing: Fatal exception
 
-To make things less error prone, decrement the reference count for the
-rbtree immediately after removing the block group from it. This also
-eleminates the need for two different exit labels on error, renaming
-'out_put_label' to just 'out' and removing the old 'out'.
-
-Fixes: f6033c5e333238 ("btrfs: fix block group leak when removing fails")
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: Anand Jain <anand.jain@oracle.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Link: http://lkml.kernel.org/r/20200616183829.87211-4-junxiao.bi@oracle.com
+Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Jun Piao <piaojun@huawei.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/btrfs/block-group.c | 19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+ fs/ocfs2/suballoc.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/fs/btrfs/block-group.c b/fs/btrfs/block-group.c
-index 233c5663f2332..0c17f18b47940 100644
---- a/fs/btrfs/block-group.c
-+++ b/fs/btrfs/block-group.c
-@@ -916,7 +916,7 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
- 	path = btrfs_alloc_path();
- 	if (!path) {
- 		ret = -ENOMEM;
--		goto out_put_group;
-+		goto out;
+diff --git a/fs/ocfs2/suballoc.c b/fs/ocfs2/suballoc.c
+index 4836becb7578a..45745cc3408a5 100644
+--- a/fs/ocfs2/suballoc.c
++++ b/fs/ocfs2/suballoc.c
+@@ -2825,9 +2825,12 @@ int ocfs2_test_inode_bit(struct ocfs2_super *osb, u64 blkno, int *res)
+ 		goto bail;
  	}
  
- 	/*
-@@ -954,7 +954,7 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
- 		ret = btrfs_orphan_add(trans, BTRFS_I(inode));
- 		if (ret) {
- 			btrfs_add_delayed_iput(inode);
--			goto out_put_group;
-+			goto out;
- 		}
- 		clear_nlink(inode);
- 		/* One for the block groups ref */
-@@ -977,13 +977,13 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
- 
- 	ret = btrfs_search_slot(trans, tree_root, &key, path, -1, 1);
- 	if (ret < 0)
--		goto out_put_group;
-+		goto out;
- 	if (ret > 0)
- 		btrfs_release_path(path);
- 	if (ret == 0) {
- 		ret = btrfs_del_item(trans, tree_root, path);
- 		if (ret)
--			goto out_put_group;
-+			goto out;
- 		btrfs_release_path(path);
- 	}
- 
-@@ -992,6 +992,9 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
- 		 &fs_info->block_group_cache_tree);
- 	RB_CLEAR_NODE(&block_group->cache_node);
- 
-+	/* Once for the block groups rbtree */
-+	btrfs_put_block_group(block_group);
-+
- 	if (fs_info->first_logical_byte == block_group->start)
- 		fs_info->first_logical_byte = (u64)-1;
- 	spin_unlock(&fs_info->block_group_cache_lock);
-@@ -1102,10 +1105,7 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
- 
- 	ret = remove_block_group_free_space(trans, block_group);
- 	if (ret)
--		goto out_put_group;
--
--	/* Once for the block groups rbtree */
--	btrfs_put_block_group(block_group);
-+		goto out;
- 
- 	ret = btrfs_search_slot(trans, root, &key, path, -1, 1);
- 	if (ret > 0)
-@@ -1128,10 +1128,9 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
- 		free_extent_map(em);
- 	}
- 
--out_put_group:
-+out:
- 	/* Once for the lookup reference */
- 	btrfs_put_block_group(block_group);
--out:
- 	if (remove_rsv)
- 		btrfs_delayed_refs_rsv_release(fs_info, 1);
- 	btrfs_free_path(path);
+-	inode_alloc_inode =
+-		ocfs2_get_system_file_inode(osb, INODE_ALLOC_SYSTEM_INODE,
+-					    suballoc_slot);
++	if (suballoc_slot == (u16)OCFS2_INVALID_SLOT)
++		inode_alloc_inode = ocfs2_get_system_file_inode(osb,
++			GLOBAL_INODE_ALLOC_SYSTEM_INODE, suballoc_slot);
++	else
++		inode_alloc_inode = ocfs2_get_system_file_inode(osb,
++			INODE_ALLOC_SYSTEM_INODE, suballoc_slot);
+ 	if (!inode_alloc_inode) {
+ 		/* the error code could be inaccurate, but we are not able to
+ 		 * get the correct one. */
 -- 
 2.25.1
 
