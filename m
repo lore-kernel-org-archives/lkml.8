@@ -3,101 +3,112 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A412EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C4BDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 829DA21531
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:29:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2906D208DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:29:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466181;
-	bh=BkG+yGTjXZVHnFw4CzZ0K2Sg1A7LotTp1tk1WvurSIk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=Yi/SjKKykEoZAAUel0Jmydw9JUTmckCBEkHV3u4TjeKAvYTw3IqTxqOsNDaaKBO0F
-	 7CuuA+WEi3CrLpi2jDC1eh3Odb13HXAnxlGnGntsLNiB7WFFlh4g1yhIsWsvMRIbMC
-	 YQIwRXG2DWAO33xB3fT1Zjxm82GI+A2qXYfL3nw4=
+	s=default; t=1593466191;
+	bh=IEYbbfxHL0R+rJ5eiAE7+uNb2jSF+lIweaM7Y+Gfts8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TefT6OIgKh3oAchThhHoMuVWLfWDTD6u5dUrXBEZXvrXHugIRKH98wwOvzdwmcEE8
+	 cQ5kq+f18y22VGEFkAG1rfgijSpdEc5d/5Ai1sUr5gzL3jQyuZDYYaOdXCFgBqHW6a
+	 ISSymTpYSm+UbBMNvIZ1tuKYSSRzKkeD3ZCpz/xk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391227AbgF2V3j (ORCPT
+        id S1728917AbgF2V3t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:29:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49358 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:29:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391228AbgF2V3f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 17:29:35 -0400
-Received: from localhost (mobile-166-170-222-206.mycingular.net [166.170.222.206])
+        id S1728909AbgF2SlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:41:25 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17289208DB;
-        Mon, 29 Jun 2020 21:29:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4D8323B08;
+        Mon, 29 Jun 2020 14:26:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593466174;
-        bh=BkG+yGTjXZVHnFw4CzZ0K2Sg1A7LotTp1tk1WvurSIk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=Z49jyX8fGPzDFYBcQFcoyu+W8uRwpEm0+aaCH1NA5W2mwQMhM0qX7H5IHUPUUHi7j
-         QsS/qbS0VhMLwWo/rELHE5LIejYWA3iOO/Cz0/RcGGsvivvMmnq2klCZssKF5kghoG
-         IONltDBXInGlrUUEVKFJHB7VW4jAw5JtphSkiol8=
-Date:   Mon, 29 Jun 2020 16:29:28 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pci: consolidate typing of
- pci_error_handlers::error_detected()
-Message-ID: <20200629212928.GA3296753@bjorn-Precision-5520>
+        s=default; t=1593440768;
+        bh=IEYbbfxHL0R+rJ5eiAE7+uNb2jSF+lIweaM7Y+Gfts8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uV2p61E7ul0vof3Ye7MwmEoZfRUDkdelrmFKPTDe7nX3rTdBPdKqf+PXonbfnc+ZS
+         IE6x4O0iKrR9J6T3f7gZXK4vHqJrCxmgaTcwfOc3rNzgZnlvj20lMrj6UNr+h3I6Uo
+         wQMWBv7DyXdsEhfd31poJwTw1BFlfPXjllT+muXE=
+Date:   Mon, 29 Jun 2020 10:26:06 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Ralph Siemsen <ralph.siemsen@linaro.org>
+Cc:     Serge Semin <Sergey.Semin@baikalelectronics.ru>,
+        Pavel Machek <pavel@denx.de>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Georgy Vlasov <Georgy.Vlasov@baikalelectronics.ru>,
+        Ramil Zaripov <Ramil.Zaripov@baikalelectronics.ru>,
+        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Feng Tang <feng.tang@intel.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org,
+        devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 4.19 182/267] spi: dw: Return any value retrieved from
+ the dma_transfer callback
+Message-ID: <20200629142606.GR1931@sasha-vm>
+References: <20200619141648.840376470@linuxfoundation.org>
+ <20200619141657.498868116@linuxfoundation.org>
+ <20200619210719.GB12233@amd>
+ <20200622205121.4xuki7guyj6u5yul@mobilestation>
+ <20200626151800.GA22242@maple.netwinder.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20200628161233.73079-1-luc.vanoostenryck@gmail.com>
+In-Reply-To: <20200626151800.GA22242@maple.netwinder.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 28, 2020 at 06:12:33PM +0200, Luc Van Oostenryck wrote:
-> The method struct pci_error_handlers::error_detected() is defined and
-> documented as taking an 'enum pci_channel_state' for the second
-> argument but most drivers use 'pci_channel_state_t' instead.
-> This 'pci_channel_state_t' is not a typedef for the enum but a typedef
-> for a bitwise type in order to have better/stricter typechecking.
-> 
-> So, consolidate everything by using the restricted type in the
-> method's definition, in the documentation and in the drivers not
-> using 'pci_channel_state_t'.
+On Fri, Jun 26, 2020 at 11:18:00AM -0400, Ralph Siemsen wrote:
+>Hi Serge, Pavel, Greg,
+>
+>On Mon, Jun 22, 2020 at 11:51:21PM +0300, Serge Semin wrote:
+>>Hello Pavel
+>>
+>>On Fri, Jun 19, 2020 at 11:07:19PM +0200, Pavel Machek wrote:
+>>
+>>>Mainline patch simply changes return value, but code is different in
+>>>v4.19, and poll_transfer will now be avoided when dws->dma_mapped. Is
+>>>that a problem?
+>>
+>>Actually no.) In that old 4.19 context it's even better to return straight away
+>>no matter what value is returned by the dma_transfer() callback.
+>
+>This patch changes the return dma_transfer return value from 0 to 1, 
+>however it was only done in spi-dw-mid.c func mid_spi_dma_transfer().
+>
+>There is an identical function in spi-dw-mmio.c that needs the same 
+>treatment, otherwise access to the SPI device becomes erratic and even 
+>causes kernel to hang. Guess how I found this ;-)
+>
+>So the following patch is needed as well, at least in 4.9 and 4.19, I 
+>did not check/test other versions. Mainline does not need this, since 
+>the code seems to have been refactored to avoid the duplication.
+>
+>Regards,
+>-Ralph
+>
+>diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
+>index c563c2815093..99641c485288 100644
+>--- a/drivers/spi/spi-dw-mmio.c
+>+++ b/drivers/spi/spi-dw-mmio.c
+>@@ -358,7 +358,7 @@ static int mmio_spi_dma_transfer(struct dw_spi *dws, struct spi_transfer *xfer)
 
-  $ git grep "\<pci_channel_state\>"
-  Documentation/PCI/pci-error-recovery.rst:	enum pci_channel_state {
-  Documentation/PCI/pci-error-recovery.rst:pci_channel_state value of pci_channel_io_perm_failure.
-  arch/powerpc/kernel/eeh_driver.c:static void eeh_set_channel_state(struct eeh_pe *root, enum pci_channel_state s)
-  drivers/net/ethernet/intel/ice/ice_main.c:ice_pci_err_detected(struct pci_dev *pdev, enum pci_channel_state err)
-  drivers/pci/pci.h:			enum pci_channel_state state,
-  drivers/pci/pcie/err.c:				 enum pci_channel_state state,
-  drivers/pci/pcie/err.c:			enum pci_channel_state state,
+Um, I can't find this function anywhere... what am I missing?
 
-Should these be changed as well?  If not, why not?  Some of them look
-analogous to the ones changed below.
-
-> Note: Currently, from a typechecking point of view this patch change
->       nothing because only the constants defined by the enum
->       are bitwise, not the enum itself (sparse doesn't have
->       the notion of 'bitwise enum'). This may change in some
->       not too far future, hence the patch.
-> 
-> Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-> ---
->  Documentation/PCI/pci-error-recovery.rst    | 2 +-
->  drivers/block/rsxx/core.c                   | 2 +-
->  drivers/dma/ioat/init.c                     | 2 +-
->  drivers/media/pci/ngene/ngene-cards.c       | 2 +-
->  drivers/misc/genwqe/card_base.c             | 2 +-
->  drivers/net/ethernet/intel/i40e/i40e_main.c | 2 +-
->  drivers/net/ethernet/intel/ixgb/ixgb_main.c | 4 ++--
->  drivers/net/ethernet/sfc/efx.c              | 2 +-
->  drivers/net/ethernet/sfc/falcon/efx.c       | 2 +-
->  drivers/pci/pcie/portdrv_pci.c              | 2 +-
->  drivers/scsi/aacraid/linit.c                | 2 +-
->  drivers/scsi/sym53c8xx_2/sym_glue.c         | 2 +-
->  drivers/staging/qlge/qlge_main.c            | 2 +-
->  include/linux/pci.h                         | 2 +-
->  14 files changed, 15 insertions(+), 15 deletions(-)
+-- 
+Thanks,
+Sasha
