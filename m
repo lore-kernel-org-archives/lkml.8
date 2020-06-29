@@ -2,129 +2,164 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D296AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABBBBC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:48:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEB3120663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:48:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 845EE20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:48:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gkyZjcRb"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="hzAE1Yat"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731511AbgF2Usn (ORCPT
+        id S1730605AbgF2Usz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:48:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43362 "EHLO
+        Mon, 29 Jun 2020 16:48:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731516AbgF2TNt (ORCPT
+        with ESMTP id S1731514AbgF2TNs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:13:49 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64854C08EAFA
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:18:49 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id e18so7823585pgn.7
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:18:49 -0700 (PDT)
+        Mon, 29 Jun 2020 15:13:48 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64727C02E2ED
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:25:34 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id g11so7706228qvs.2
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:25:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=6elEkxiTC64v4srgfUTdZozPZdv37lYm4BTjSvBzmZk=;
-        b=gkyZjcRb94k71tMgV+9TZXhAbV0rJLLGSga2JTiQ29d2jw/h/CmWsxzOrVYJYO18pb
-         Rgwb6hMV5w9pjKWTXXBfcS3XfIYbnAKMBcHYDl5Yg6lCPR5OD9BbzveaWsROz9zqj2rC
-         FsLqZQZBh83rrB7TDNLbJAZPzlxe+TFWfVRNo=
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rA9epWFsG5fbaq7o7Q/6VMPdIfht3K/e6mhw2OtNl9U=;
+        b=hzAE1YatrpkZQ7jnLFTXC8QY7HnN+hfZ399QqsJj7tLxfrFjf06NFKvZC3HpmfReQp
+         krbHWZ2eodd+i28Exn1eMViNZl5pZF8YjqxUIdxufGNDPnYmPT0wjM7iRV2Vhj9glwiT
+         mue+E8bAcJT9UOHzRlon78YuZHExdmyPWuszUPv5VOhRcXZB8AcNSnN8ZOQWOG4zwIdf
+         YyoKPksd/nqs+8RjLK6vO7rmQPQ1QbcuvqXHYuv3nmyXJfYQ1PnQ8Ogx3tE/dTldtFPy
+         YtLYEPzGwTasDiDtR6fgVB38skKLMGn4YAcPaGeU9yLKq1l6hS7+xyNMpYGTttxgUvqu
+         jy4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=6elEkxiTC64v4srgfUTdZozPZdv37lYm4BTjSvBzmZk=;
-        b=OU7TuGwgNbTaXpK/Q8JKYqd6O/1ArFEmiCJylPNGfKHJcOVVvQwTGg0E4jUzz/+C/o
-         XKKpv/gMaMGmyATxYgcqlb1hu5xWfRnCmAdBFKOxJ9QC+rgOAtL/gNrq89VIJH8ya9fQ
-         SMqqlw0Tmbv1YbQRgs0zGgHTmkILPhLdXaWuZDKpHne2+M7+Pq0jXGhoJP6kvSQk63nX
-         ird1HDag3gXBzFeFQg6+CweNSrV4whzFx9SlkcwsKqWJLD1RKZIeGUDcMQLkcVfYgLQW
-         bEzdNQol6xJvcXeIDN81j/Gg4LxIs3zXm//iP/BGyUoR6tSw+mG0bzpXjIauUTg9/6eE
-         /uLA==
-X-Gm-Message-State: AOAM530Nm2PyU3RElfkmtTqE1NWhGGmOFOalSYYeJmy39oZpm7fd8ezK
-        mqM4XlzCCtZqh/3jxIfgjBbTMQ==
-X-Google-Smtp-Source: ABdhPJxJXKXKGxIgf9KhhNRZoNxE/RymgaC1Wp90l3FioPTL2ggfsfaH6bGQODamxEof1p/UWIkdKA==
-X-Received: by 2002:a62:f24b:: with SMTP id y11mr12809730pfl.85.1593411528989;
-        Sun, 28 Jun 2020 23:18:48 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id f18sm15312315pgv.84.2020.06.28.23.18.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jun 2020 23:18:47 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        clang-built-linux@googlegroups.com,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
-        linux-arch@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 05/17] ctype: Work around Clang -mbranch-protection=none bug
-Date:   Sun, 28 Jun 2020 23:18:28 -0700
-Message-Id: <20200629061840.4065483-6-keescook@chromium.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629061840.4065483-1-keescook@chromium.org>
-References: <20200629061840.4065483-1-keescook@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rA9epWFsG5fbaq7o7Q/6VMPdIfht3K/e6mhw2OtNl9U=;
+        b=kf220Or4WqhRXfkjiLDf/umKJV43ad0JzPBY+Roo3/0VRbRhDAUNw+veKsslTjEtGc
+         d7IoeVQEg0BdNhgm+2/k1JMZJuM8muy4HHjc8hMwUk4159Jkpf329h6VK1TKgDFkXGDx
+         gdzVH9fOENxgYH0PfhGLIhPAy8yTJ2KrmOtUxFe6qJ+cANUvOoq9j7sHbd9C9s/rP+nl
+         SjjJutGh2x3AQ3+WMKDNBXJhk/+RUjiPNPSvjCUfZ2OC3rFa8kU1xILVCDy3tzrOPE7I
+         UxEzoRjcBV/V+wjvUmbBUkNgvoFXhLiJfwU1HsspUZZj4JxN1f4puGdUn+LOsVUwyli0
+         hE8Q==
+X-Gm-Message-State: AOAM530GIh1ul2SQyfyk5jzXqnM4NLxPlgn5kMUCJ1mhmbdT6tJv5uUR
+        LGTG20uADoSk00SLgL/K38IE5qxAO3KLX2jtBmH+cQ==
+X-Google-Smtp-Source: ABdhPJySGZ/xP3qtD93JKEbk3jl1yLhggXL/YUW0iBOECJJHNZns1BmCY8SVCiQh2hnzho0g5QR6PDjvW7UHi0vQJWU=
+X-Received: by 2002:a0c:ec04:: with SMTP id y4mr12044188qvo.148.1593440733466;
+ Mon, 29 Jun 2020 07:25:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200623040107.22270-1-warthog618@gmail.com> <20200623040107.22270-15-warthog618@gmail.com>
+In-Reply-To: <20200623040107.22270-15-warthog618@gmail.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 29 Jun 2020 16:25:22 +0200
+Message-ID: <CAMpxmJVQmo2S6AQgcPACHH8ziSQNUvAhkUJ3eW_YsLkbyGzm=Q@mail.gmail.com>
+Subject: Re: [PATCH 14/22] gpiolib: make cdev a build option
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In preparation for building efi/libstub with -mbranch-protection=none
-(EFI does not support branch protection features[1]), add no-op code
-to work around a Clang bug that emits an unwanted .note.gnu.property
-section for object files without code[2].
+On Tue, Jun 23, 2020 at 6:02 AM Kent Gibson <warthog618@gmail.com> wrote:
+>
+> Make the gpiolib-cdev module a build option.  This allows the CDEV
+> interface to be removed from the kernel to reduce kernel size in
+> applications where is it not required, and provides the parent for
+> other other CDEV interface specific build options to follow.
+>
+> Suggested-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
+>
+> ---
+>  drivers/gpio/Kconfig        | 16 ++++++++++++++--
+>  drivers/gpio/Makefile       |  2 +-
+>  drivers/gpio/gpiolib-cdev.h | 15 +++++++++++++++
+>  3 files changed, 30 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index c6b5c65c8405..affc1524bc2c 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -66,8 +66,20 @@ config GPIO_SYSFS
+>
+>           This ABI is deprecated. If you want to use GPIO from userspace,
+>           use the character device /dev/gpiochipN with the appropriate
+> -         ioctl() operations instead. The character device is always
+> -         available.
+> +         ioctl() operations instead.
+> +
+> +config GPIO_CDEV
+> +       bool "/dev/gpiochipN (character device interface)"
+> +       default y
+> +       help
+> +         Say Y here to add the character device /dev/gpiochipN interface
+> +         for GPIOs. The character device allows userspace to control GPIOs
+> +         using ioctl() operations.
+> +
+> +         Only say N is you are sure that the GPIO character device is not
+> +         required.
+> +
+> +         If unsure, say Y.
+>
+>  config GPIO_GENERIC
+>         depends on HAS_IOMEM # Only for IOMEM drivers
+> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> index ef666cfef9d0..45eb09808d12 100644
+> --- a/drivers/gpio/Makefile
+> +++ b/drivers/gpio/Makefile
+> @@ -7,8 +7,8 @@ obj-$(CONFIG_GPIOLIB)           += gpiolib.o
+>  obj-$(CONFIG_GPIOLIB)          += gpiolib-devres.o
+>  obj-$(CONFIG_GPIOLIB)          += gpiolib-legacy.o
+>  obj-$(CONFIG_GPIOLIB)          += gpiolib-devprop.o
+> -obj-$(CONFIG_GPIOLIB)          += gpiolib-cdev.o
+>  obj-$(CONFIG_OF_GPIO)          += gpiolib-of.o
+> +obj-$(CONFIG_GPIO_CDEV)                += gpiolib-cdev.o
+>  obj-$(CONFIG_GPIO_SYSFS)       += gpiolib-sysfs.o
+>  obj-$(CONFIG_GPIO_ACPI)                += gpiolib-acpi.o
+>
+> diff --git a/drivers/gpio/gpiolib-cdev.h b/drivers/gpio/gpiolib-cdev.h
+> index 973578e7ad10..19a4e3d57120 100644
+> --- a/drivers/gpio/gpiolib-cdev.h
+> +++ b/drivers/gpio/gpiolib-cdev.h
+> @@ -5,7 +5,22 @@
+>
+>  #include <linux/device.h>
+>
+> +#ifdef CONFIG_GPIO_CDEV
+> +
+>  int gpiolib_cdev_register(struct gpio_device *gdev, dev_t devt);
+>  void gpiolib_cdev_unregister(struct gpio_device *gdev);
+>
+> +#else
+> +
+> +static inline int gpiolib_cdev_register(struct gpio_device *gdev, dev_t devt)
+> +{
+> +       return 0;
+> +}
+> +
+> +static inline void gpiolib_cdev_unregister(struct gpio_device *gdev)
+> +{
+> +}
+> +
+> +#endif /* CONFIG_GPIO_CDEV */
+> +
+>  #endif /* GPIOLIB_CDEV_H */
+> --
+> 2.27.0
+>
 
-[1] https://lore.kernel.org/lkml/CAMj1kXHck12juGi=E=P4hWP_8vQhQ+-x3vBMc3TGeRWdQ-XkxQ@mail.gmail.com
-[2] https://bugs.llvm.org/show_bug.cgi?id=46480
+I know Linus doesn't like this, but I'm personally in favor of adding
+this as long as it's enabled by default.
 
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: Will Deacon <will@kernel.org>
-Cc: Dave Martin <Dave.Martin@arm.com>
-Cc: clang-built-linux@googlegroups.com
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- lib/ctype.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/lib/ctype.c b/lib/ctype.c
-index c819fe269eb2..21245ed57d90 100644
---- a/lib/ctype.c
-+++ b/lib/ctype.c
-@@ -36,3 +36,13 @@ _L,_L,_L,_L,_L,_L,_L,_L,_L,_L,_L,_L,_L,_L,_L,_L,	/* 224-239 */
- _L,_L,_L,_L,_L,_L,_L,_P,_L,_L,_L,_L,_L,_L,_L,_L};	/* 240-255 */
- 
- EXPORT_SYMBOL(_ctype);
-+
-+/*
-+ * Clang will generate .note.gnu.property sections for object files
-+ * without code, even in the presence of -mbranch-protection=none.
-+ * To work around this, define an unused static function.
-+ * https://bugs.llvm.org/show_bug.cgi?id=46480
-+ */
-+#ifdef CONFIG_CC_IS_CLANG
-+void __maybe_unused __clang_needs_code_here(void) { }
-+#endif
--- 
-2.25.1
-
+Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
