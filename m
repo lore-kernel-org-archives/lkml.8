@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D1EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:53:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB088C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C91B4206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:53:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB9E020674
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:53:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460402;
-	bh=2QGbqlj29PbLRqTPspr6W19awiuDaSEDafDJQiGb6l4=;
+	s=default; t=1593460404;
+	bh=nQvcCjAJLkom8VDNWDceaM3WxBPNPWb9LqbVpaaSGg4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=clOuhYLLfWqwOcK7jqr/qyKoKXHc4sqOQDj6dJz1U/1m15YlXfHmn7S+K47U2V6uc
-	 g2pwN6wMoGi+rU4+sdAZmU78ErZVidGzrXMch2MSrlfVXghNmn96Hv1De4TMxufZ/T
-	 GUqgA4oql62iN8e77YCYAyqv9eJLaiKWGU5STcg8=
+	b=UgZWh0HMSwYl/TRAI+pPq80rGOPQqTAjxI4Qw2KXEIzQQOYmZTxkQ1dwyNKVXT1BT
+	 2AfGJFu6K9QFNjCYAUgtVZSUM04Gop/LOqvRc07IGtPkVmeHpInCwRZuxpkvWu9Xb5
+	 rjBLIPTXbZPQZQIzU+M4ddW6z7H1xCf6lm6ho+r4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388356AbgF2TxV (ORCPT
+        id S2388348AbgF2TxR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:53:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47652 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:53:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387686AbgF2Tk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:40:26 -0400
+        id S2387695AbgF2Tk1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:40:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4909251BB;
-        Mon, 29 Jun 2020 15:28:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFD1824869;
+        Mon, 29 Jun 2020 15:26:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444491;
-        bh=2QGbqlj29PbLRqTPspr6W19awiuDaSEDafDJQiGb6l4=;
+        s=default; t=1593444366;
+        bh=nQvcCjAJLkom8VDNWDceaM3WxBPNPWb9LqbVpaaSGg4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PJ0bHke7A8LWGiaFagGECEWBWw9/bbLGwD2cIDT/SriobjTj34UHvuRyBk/fCxqNh
-         7cq6Win5oyG29mY6IyPJarBJaFTTlN73JtoNGaMTdPAhRx2MuAxJV0rMk6+IV0xTh4
-         PUi4J1mp3IFO7qYbtVqiCBurO8Vqiy/61fuXZ2Mw=
+        b=b2nIy2iCi8xuKZv9yYupE8aAWfc27KVP3MzY0xLjT4yqIQGdJzJ84UrDhj4QAm6iB
+         A8dmhXvWXivY8rqnbt2+4RMHT2PZTLAbYND2lzjjDMyGGejDL1pJdluljwRaG2Vdcn
+         /fAXuff2XVf1G79ysVc/T+EcAVhJr3Mc3L4tF/cU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wenhui Sheng <Wenhui.Sheng@amd.com>,
-        Hawking Zhang <Hawking.Zhang@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+Cc:     "Yick W. Tse" <y_w_tse@yahoo.com.hk>, Takashi Iwai <tiwai@suse.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 168/178] drm/amdgpu: add fw release for sdma v5_0
-Date:   Mon, 29 Jun 2020 11:25:13 -0400
-Message-Id: <20200629152523.2494198-169-sashal@kernel.org>
+Subject: [PATCH 5.4 043/178] ALSA: usb-audio: add quirk for Denon DCD-1500RE
+Date:   Mon, 29 Jun 2020 11:23:08 -0400
+Message-Id: <20200629152523.2494198-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -66,39 +64,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenhui Sheng <Wenhui.Sheng@amd.com>
+From: "Yick W. Tse" <y_w_tse@yahoo.com.hk>
 
-commit edfaf6fa73f15568d4337f208b2333f647c35810 upstream.
+commit c9808bbfed3cfc911ecb60fe8e80c0c27876c657 upstream.
 
-sdma fw isn't released when module exit
+fix error "clock source 41 is not valid, cannot use"
 
-Reviewed-by: Hawking Zhang <Hawking.Zhang@amd.com>
-Signed-off-by: Wenhui Sheng <Wenhui.Sheng@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
+[] New USB device found, idVendor=154e, idProduct=1002, bcdDevice= 1.00
+[] New USB device strings: Mfr=1, Product=2, SerialNumber=0
+[] Product: DCD-1500RE
+[] Manufacturer: D & M Holdings Inc.
+[]
+[] clock source 41 is not valid, cannot use
+[] usbcore: registered new interface driver snd-usb-audio
+
+Signed-off-by: Yick W. Tse <y_w_tse@yahoo.com.hk>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/1373857985.210365.1592048406997@mail.yahoo.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ sound/usb/quirks.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c b/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c
-index bd715012185c6..23fc16dc92b4d 100644
---- a/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c
-@@ -1273,8 +1273,12 @@ static int sdma_v5_0_sw_fini(void *handle)
- 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
- 	int i;
- 
--	for (i = 0; i < adev->sdma.num_instances; i++)
-+	for (i = 0; i < adev->sdma.num_instances; i++) {
-+		if (adev->sdma.instance[i].fw != NULL)
-+			release_firmware(adev->sdma.instance[i].fw);
-+
- 		amdgpu_ring_fini(&adev->sdma.instance[i].ring);
-+	}
- 
- 	return 0;
- }
+diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
+index 092720ce2c559..eb3da0b71269c 100644
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -1461,6 +1461,7 @@ bool snd_usb_get_sample_rate_quirk(struct snd_usb_audio *chip)
+ static bool is_itf_usb_dsd_dac(unsigned int id)
+ {
+ 	switch (id) {
++	case USB_ID(0x154e, 0x1002): /* Denon DCD-1500RE */
+ 	case USB_ID(0x154e, 0x1003): /* Denon DA-300USB */
+ 	case USB_ID(0x154e, 0x3005): /* Marantz HD-DAC1 */
+ 	case USB_ID(0x154e, 0x3006): /* Marantz SA-14S1 */
 -- 
 2.25.1
 
