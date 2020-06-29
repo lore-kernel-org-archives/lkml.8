@@ -2,99 +2,85 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C05EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 463C6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:31:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 205862073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27DF42073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:31:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466257;
-	bh=ftGuVRVgqjk9PwokZ1ZSRnJZM48vH8egkh8R/K03F7Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2Fq5+ABkTEjRdxS7SkNj99eJl1nDR1t1w5rOXbzaxF+5vMCdkig6NL+3qdqgy6QRh
-	 lpzIwhb9dXczniYE4hpzSHogHmUclq8B00JHfBj+MqQ1Q9vdA4JHmDHl/Lx7iGu3kH
-	 oKL5Kixwh1q7gOv0yZEXsDTRAjmJ2v6qaZeG20dQ=
+	s=default; t=1593466265;
+	bh=P4Y+FCT/+WCOx5YCwdsX3MXOEtmwwCaFhV7DU4kMtKw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=o7jxwC+9/GTsRnkg9c/ahDNND63PvwOeuWzZN5DSPE53zrEfATG/2yWDJBH72drzA
+	 eZQ3nFdXRibWDBnjIDeWr42RQsn3HNejcVNVqaMDRObsN6tJg7ez9ZZejYal3D6hIj
+	 BbWcIATtqkhJbKIIOLuNawQ87P8sOUDhhFQ6zNfk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391245AbgF2Vaz (ORCPT
+        id S2390945AbgF2VbD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:30:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60608 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:31:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728828AbgF2SlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728698AbgF2SlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:41:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from localhost.localdomain (unknown [194.230.155.195])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A853023134;
-        Mon, 29 Jun 2020 08:10:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A0F9823356;
+        Mon, 29 Jun 2020 08:15:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593418249;
-        bh=ftGuVRVgqjk9PwokZ1ZSRnJZM48vH8egkh8R/K03F7Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=EKuRkQ2BiHMfRIFe8CdjR0qvDn5rm9WrsWhrFDzsY8en1EUHyk0ruTgCkPe/OYRt0
-         2+mzFCouHUepwnCP70mA3qtzrpPe1KZ5WvIrkzLiWNdrfzBdQSoVgYlB0z/wyBUTi0
-         jrwx4ip6uZf+jqAyXNew5BbRdkospW90++G+Oxn8=
-Date:   Mon, 29 Jun 2020 10:10:39 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Colin Ian King <colin.king@canonical.com>
-Subject: Re: [PATCH 2/2] usb: mtu3: fix NULL pointer dereference
-Message-ID: <20200629081039.GA1221843@kroah.com>
-References: <1593410434-19406-1-git-send-email-chunfeng.yun@mediatek.com>
- <1593410434-19406-2-git-send-email-chunfeng.yun@mediatek.com>
- <99fc1f6e-7907-6723-612a-8b68ffa871e5@web.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <99fc1f6e-7907-6723-612a-8b68ffa871e5@web.de>
+        s=default; t=1593418545;
+        bh=P4Y+FCT/+WCOx5YCwdsX3MXOEtmwwCaFhV7DU4kMtKw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fh1HqOwJ9Z8Y/2rNYtoZQ9IDsjVKbXvY1kGz1lNPQBK+wYKWtNJ6YOIncMkGNNbJ/
+         HgMb3XXmbbKuDOGxdkUvLBRDoVl81X1238wxtmyDJvp0800+ljgHdLPd8nNtZANxHO
+         eWzLuFqmC9/GSf1qvvBz3OxfQZdI+/HujJ+BNDO0=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Tsahee Zidenberg <tsahee@annapurnalabs.com>,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH 3/3] arm64: dts: alpine: Fix GIC unit address
+Date:   Mon, 29 Jun 2020 10:15:35 +0200
+Message-Id: <20200629081535.13502-3-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200629081535.13502-1-krzk@kernel.org>
+References: <20200629081535.13502-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 10:00:22AM +0200, Markus Elfring wrote:
-> > Some pointers are dereferenced before successful checks.
-> 
-> I suggest to reconsider and improve the change description.
-> 
-> * Would a null pointer dereference be possible only with the variables “mep”
->   and “mreq” in the implementation of the function “mtu3_gadget_dequeue”?
-> 
-> * How do you think about to adjust any more variable initialisations?
-> 
-> * Will it become helpful to add the tag “Fixes” to the commit message?
-> 
-> Regards,
-> Markus
+Node unit address should be the same as first address appearing in "reg"
+property.  Fixes DTC warning:
 
-Hi,
+    arch/arm64/boot/dts/al/alpine-v2.dtsi:116.38-126.5:
+        Warning (simple_bus_reg): /soc/interrupt-controller@f0100000: simple-bus unit address format error, expected "f0200000"
 
-This is the semi-friendly patch-bot of Greg Kroah-Hartman.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ arch/arm64/boot/dts/al/alpine-v2.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Markus, you seem to have sent a nonsensical or otherwise pointless
-review comment to a patch submission on a Linux kernel developer mailing
-list.  I strongly suggest that you not do this anymore.  Please do not
-bother developers who are actively working to produce patches and
-features with comments that, in the end, are a waste of time.
+diff --git a/arch/arm64/boot/dts/al/alpine-v2.dtsi b/arch/arm64/boot/dts/al/alpine-v2.dtsi
+index de2eaf77b1ff..4eb2cd14e00b 100644
+--- a/arch/arm64/boot/dts/al/alpine-v2.dtsi
++++ b/arch/arm64/boot/dts/al/alpine-v2.dtsi
+@@ -113,7 +113,7 @@
+ 				     <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+ 
+-		gic: interrupt-controller@f0100000 {
++		gic: interrupt-controller@f0200000 {
+ 			compatible = "arm,gic-v3";
+ 			reg = <0x0 0xf0200000 0x0 0x10000>,	/* GIC Dist */
+ 			      <0x0 0xf0280000 0x0 0x200000>,	/* GICR */
+-- 
+2.17.1
 
-Patch submitter, please ignore Markus's suggestion; you do not need to
-follow it at all.  The person/bot/AI that sent it is being ignored by
-almost all Linux kernel maintainers for having a persistent pattern of
-behavior of producing distracting and pointless commentary, and
-inability to adapt to feedback.  Please feel free to also ignore emails
-from them.
-
-thanks,
-
-greg k-h's patch email bot
