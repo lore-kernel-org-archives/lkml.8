@@ -2,98 +2,135 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C13CC433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E26D1C433E0
 	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C1222081A
+	by mail.kernel.org (Postfix) with ESMTP id C4D1620857
 	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:05:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1593461121;
-	bh=u/7iyrvQ3LzsCNLl/ZBd2xHjBP2XLskqDAzPtHt/Jw4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1uh4unf0OUw5k3T4f5OQ9dxqhHAcqnI2Knn9tMjF7b8SukYQrdz7fYtmwWDFWESG6
-	 Q4M9Ab1Poy1GJ0+PXFc99ns0Mv7W9g/0Fcs9jdzTU8qmqqj5GjXExfzyh9py+9Thtb
-	 DaW0CFiwzvGnr3JjI+u4V9a7eiDmCbz8xbweJVf8=
+	bh=Y+UfLkZNVxHu05Ixfv4l8PA8ebf5ntCkxmCcSgp/xK0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Mvorz+unG37tw5apAHCYDvjxmX7Qlsj+5nwRQkpX/BRBhDzjyKoG0ZKBncBEsQK65
+	 P1dPtvd01Si7QgeSyZMofmMeawRSO6dr4Yuf4SDmp7+soWOEPWuvxMaBLPpTc+7ZJe
+	 B9ClSWIIy7AJet+jjJgWyOFyE3gJS8wnY2bZBp3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388823AbgF2UFT (ORCPT
+        id S2388505AbgF2UFQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:05:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40416 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732035AbgF2UFQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 16:05:16 -0400
-Received: from kernel.org (unknown [87.71.40.38])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.kernel.org ([198.145.29.99]:40600 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732977AbgF2Ta3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:30:29 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92A2020702;
-        Mon, 29 Jun 2020 20:05:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B582525288;
+        Mon, 29 Jun 2020 15:36:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593461116;
-        bh=u/7iyrvQ3LzsCNLl/ZBd2xHjBP2XLskqDAzPtHt/Jw4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QHUr5A6mJj30a5qZEXoAkoLFDQ0EUls2Wd/7WNsTQhe16JoK8NOEYZuv25mCbFGME
-         Ythz2afVpxY19lU4XHuWTN74WSn4/wSjmScPOHt1Et5R5+9bNn+qN7Fif8scE5iVha
-         V/nVKaNKwuiaPjYveohhRgIDPVLqujmjyYn3CGLA=
-Date:   Mon, 29 Jun 2020 23:05:09 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Cc:     Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] doc: add link to sparse's home page/internal docs
-Message-ID: <20200629200509.GE1492837@kernel.org>
-References: <20200629044154.GB1492837@kernel.org>
- <20200629161310.89783-1-luc.vanoostenryck@gmail.com>
+        s=default; t=1593444996;
+        bh=Y+UfLkZNVxHu05Ixfv4l8PA8ebf5ntCkxmCcSgp/xK0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=2nVJK1uSDoWfAQqhKzVRdexLFyLlQvZNFtLVsLGDuLgF0IUrYEk+7YpYKsmw5kaXc
+         Lu38zUojq95r864VCycKH30SdBSVvFeMmB+udBZMaIcz84858o6yB8s+Z2Q+fRcXcZ
+         lyLyrrGMizPX2zmv0lz5IE01JzU4X++D/ZC8eOp8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Thomas Falcon <tlfalcon@linux.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 096/131] ibmvnic: Harden device login requests
+Date:   Mon, 29 Jun 2020 11:34:27 -0400
+Message-Id: <20200629153502.2494656-97-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
+References: <20200629153502.2494656-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200629161310.89783-1-luc.vanoostenryck@gmail.com>
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.19.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.19.131-rc1
+X-KernelTest-Deadline: 2020-07-01T15:34+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 06:13:10PM +0200, Luc Van Oostenryck wrote:
-> Sparse's home page used to be a wiki (sparse.wiki.kernel.org)
-> but this wiki only contained a short intro and the release notes.
-> But nowadays, sparse's main page is sparse.docs.kernel.org,
-> which contains all what was in the wiki but also other documentation,
-> mainly oriented about sparse's internals.
-> 
-> So, add a link to this in the kernel documentation.
-> 
-> Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+From: Thomas Falcon <tlfalcon@linux.ibm.com>
 
-Acked-by: Mike Rapoport <rppt@linux.ibm.com>
+[ Upstream commit dff515a3e71dc8ab3b9dcc2e23a9b5fca88b3c18 ]
 
-> ---
-> 
-> Changes since v1:
-> * fix a typo (s/kernl/kernel/) thanks to Mike Rapoport.
-> 
->  Documentation/dev-tools/sparse.rst | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/dev-tools/sparse.rst b/Documentation/dev-tools/sparse.rst
-> index 8a7055593c31..02102be7ff49 100644
-> --- a/Documentation/dev-tools/sparse.rst
-> +++ b/Documentation/dev-tools/sparse.rst
-> @@ -9,6 +9,8 @@ Sparse is a semantic checker for C programs; it can be used to find a
->  number of potential problems with kernel code.  See
->  https://lwn.net/Articles/689907/ for an overview of sparse; this document
->  contains some kernel-specific sparse information.
-> +More information on sparse, mainly about its internals, can be found in
-> +its official pages at https://sparse.docs.kernel.org.
->  
->  
->  Using sparse for typechecking
-> -- 
-> 2.27.0
-> 
+The VNIC driver's "login" command sequence is the final step
+in the driver's initialization process with device firmware,
+confirming the available device queue resources to be utilized
+by the driver. Under high system load, firmware may not respond
+to the request in a timely manner or may abort the request. In
+such cases, the driver should reattempt the login command
+sequence. In case of a device error, the number of retries
+is bounded.
 
+Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/ibm/ibmvnic.c | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
+index 645298628b6f7..5e9e45befc875 100644
+--- a/drivers/net/ethernet/ibm/ibmvnic.c
++++ b/drivers/net/ethernet/ibm/ibmvnic.c
+@@ -792,12 +792,13 @@ static int ibmvnic_login(struct net_device *netdev)
+ 	struct ibmvnic_adapter *adapter = netdev_priv(netdev);
+ 	unsigned long timeout = msecs_to_jiffies(30000);
+ 	int retry_count = 0;
++	int retries = 10;
+ 	bool retry;
+ 	int rc;
+ 
+ 	do {
+ 		retry = false;
+-		if (retry_count > IBMVNIC_MAX_QUEUES) {
++		if (retry_count > retries) {
+ 			netdev_warn(netdev, "Login attempts exceeded\n");
+ 			return -1;
+ 		}
+@@ -812,11 +813,23 @@ static int ibmvnic_login(struct net_device *netdev)
+ 
+ 		if (!wait_for_completion_timeout(&adapter->init_done,
+ 						 timeout)) {
+-			netdev_warn(netdev, "Login timed out\n");
+-			return -1;
++			netdev_warn(netdev, "Login timed out, retrying...\n");
++			retry = true;
++			adapter->init_done_rc = 0;
++			retry_count++;
++			continue;
+ 		}
+ 
+-		if (adapter->init_done_rc == PARTIALSUCCESS) {
++		if (adapter->init_done_rc == ABORTED) {
++			netdev_warn(netdev, "Login aborted, retrying...\n");
++			retry = true;
++			adapter->init_done_rc = 0;
++			retry_count++;
++			/* FW or device may be busy, so
++			 * wait a bit before retrying login
++			 */
++			msleep(500);
++		} else if (adapter->init_done_rc == PARTIALSUCCESS) {
+ 			retry_count++;
+ 			release_sub_crqs(adapter, 1);
+ 
 -- 
-Sincerely yours,
-Mike.
+2.25.1
+
