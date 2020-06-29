@@ -2,103 +2,125 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE52FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BBD7C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2810206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:18:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="CBoXxLFo"
+	by mail.kernel.org (Postfix) with ESMTP id EF070206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:18:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731779AbgF2TSL (ORCPT
+        id S1731105AbgF2TSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:18:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44306 "EHLO
+        Mon, 29 Jun 2020 15:18:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730984AbgF2TRn (ORCPT
+        with ESMTP id S1731886AbgF2TRn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:17:43 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FD63C03079B;
-        Mon, 29 Jun 2020 08:37:43 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f09280085fdc63970f65a73.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:2800:85fd:c639:70f6:5a73])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8A1B31EC0281;
-        Mon, 29 Jun 2020 17:37:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1593445058;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=E2Vy1BjgpL7djeeIafMFG4u5IsZeMp6SGkzpkdddWqk=;
-        b=CBoXxLFoMIY5VXcvAjrKeGHkctJgQQ+mpYy95c4ccd0Z87tioA+Bk1XaGXpZgf608oRnP4
-        WbzG9rrLcBktAzNOsrOwzcQC8CIKp04tXZlgE2YypfyeekjI8h9hWQpyLus8riMgcX90WB
-        iXQ8njrtu3RsCR8dpQkSF0SD2QKnOWs=
-Date:   Mon, 29 Jun 2020 17:37:37 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org,
-        linux-sgx@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Jethro Beekman <jethro@fortanix.com>,
-        Haitao Huang <haitao.huang@linux.intel.com>,
-        Chunyang Hui <sanqian.hcy@antfin.com>,
-        Jordan Hand <jorhand@linux.microsoft.com>,
-        Nathaniel McCallum <npmccallum@redhat.com>,
-        Seth Moore <sethmo@google.com>,
-        Suresh Siddha <suresh.b.siddha@intel.com>,
-        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        asapek@google.com, cedric.xing@intel.com, chenalexchen@google.com,
-        conradparker@google.com, cyhanish@google.com,
-        dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, luto@kernel.org,
-        nhorman@redhat.com, puiterwijk@redhat.com, rientjes@google.com,
-        tglx@linutronix.de, yaozhangx@google.com
-Subject: Re: [PATCH v33 11/21] x86/sgx: Linux Enclave Driver
-Message-ID: <20200629153737.GA32176@zn.tnic>
-References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
- <20200617220844.57423-12-jarkko.sakkinen@linux.intel.com>
- <20200627174335.GC15585@zn.tnic>
- <20200629152718.GA12312@linux.intel.com>
+Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69549C03079F;
+        Mon, 29 Jun 2020 08:41:55 -0700 (PDT)
+Received: by mail-ot1-x344.google.com with SMTP id d4so15937212otk.2;
+        Mon, 29 Jun 2020 08:41:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=18DuSBZeLijFT5byeb07kqFnxpD8Og5k3o71uVKMsdg=;
+        b=pdqY7+o2ViXtdwzpRg7V0spv+w3RMUTM8pq1mA6PmxJQxaN+pwXkRL4gutZbEnUAKk
+         7oZWR0fNzNN95BqoUgj38z60RkoZbqe4xAnV7jSf0z2PY1Vs68uxoB44TPGrQzkJO7a0
+         Vyua6rOkYqe3j2a+SNQtf1aAGahjOQ6olRQRMR+QKVRHTqTrB26RJMcrE0bQrdpP0kxb
+         GXkekPVusG/8EahYhVxY3eQGoN00/OYTFsMlyutG2FEKFwqzG7+e2D6I98d2I2Ajzi8X
+         2phUh4VE9sJpVENYIDLD7jo8f7GkC33+xzVej1zgc1PQXMy/mwSU4BfTjAdKNWzeDASN
+         aDpQ==
+X-Gm-Message-State: AOAM532mh0D7t76EfolXynbkKGtSx7oXy9QJfDi+g7PO2w/qt/ymCT0a
+        6P7ZpiPFXLDHyBHypymp52y56QVZgAapKfX/hxQ=
+X-Google-Smtp-Source: ABdhPJyfGDnofAtWY6Vq9zQSiEjHHywgsNVHJzUbnOYeAK8rSOSVeLQNZQAOcMed2+/KO3c+bzP8Q5CiqDzs7aUNX9g=
+X-Received: by 2002:a05:6830:1451:: with SMTP id w17mr1238896otp.250.1593445314725;
+ Mon, 29 Jun 2020 08:41:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200629152718.GA12312@linux.intel.com>
+References: <20200627143453.31835-1-rppt@kernel.org> <20200627143453.31835-2-rppt@kernel.org>
+In-Reply-To: <20200627143453.31835-2-rppt@kernel.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Mon, 29 Jun 2020 17:41:43 +0200
+Message-ID: <CAMuHMdUOrrrtKuhtWJvzKNNLXY1fx+Ym1oXGN2J_CZ7RqByGHQ@mail.gmail.com>
+Subject: Re: [PATCH 1/8] mm: remove unneeded includes of <asm/pgalloc.h>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Abdul Haleem <abdhalee@linux.vnet.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Joerg Roedel <joro@8bytes.org>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Satheesh Rajendran <sathnaga@linux.vnet.ibm.com>,
+        Stafford Horne <shorne@gmail.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        alpha <linux-alpha@vger.kernel.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-csky@vger.kernel.org,
+        "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        arcml <linux-snps-arc@lists.infradead.org>,
+        linux-um <linux-um@lists.infradead.org>,
+        "open list:TENSILICA XTENSA PORT (xtensa)" 
+        <linux-xtensa@linux-xtensa.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Openrisc <openrisc@lists.librecores.org>,
+        sparclinux <sparclinux@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 08:27:19AM -0700, Sean Christopherson wrote:
-> Hmm, I was going to say that SGX_ENCL_INITIALIZED can't be checked until
-> encl->lock is held, but that's not true for this path as mutual exclusion
-> is provided by the SGX_ENCL_IOCTL flag.  So yeah, this can be checked at
-> the same time as SGX_ENCL_CREATED in sgx_ioc_enclave_init().
-
-Right, so my point is to have state checks for flags which make sense in
-all ioctl entry points, in order to catch a misuse early. But we're on
-the same page.
-
-> ENCLS[EINIT] is interruptible because it has such a high latency, e.g. 50k+
-> cycles on success.  If an IRQ/NMI/SMI becomes pending, EINIT may fail with
-> SGX_UNMASKED_EVENT so that the event can be serviced.
+On Sat, Jun 27, 2020 at 4:35 PM Mike Rapoport <rppt@kernel.org> wrote:
+> From: Mike Rapoport <rppt@linux.ibm.com>
 >
-> The idea behind the double loop is to try EINIT in a tight loop, then back
-> off and sleep for a while before retrying that tight inner loop.
+> In the most cases <asm/pgalloc.h> header is required only for allocations
+> of page table memory. Most of the .c files that include that header do not
+> use symbols declared in <asm/pgalloc.h> and do not require that header.
+>
+> As for the other header files that used to include <asm/pgalloc.h>, it is
+> possible to move that include into the .c file that actually uses symbols
+> from <asm/pgalloc.h> and drop the include from the header file.
+>
+> The process was somewhat automated using
+>
+>         sed -i -E '/[<"]asm\/pgalloc\.h/d' \
+>                 $(grep -L -w -f /tmp/xx \
+>                         $(git grep -E -l '[<"]asm/pgalloc\.h'))
+>
+> where /tmp/xx contains all the symbols defined in
+> arch/*/include/asm/pgalloc.h.
+>
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 
-That gist of that kinda wants to be in a comment over that double-loop for
-future on-lookers.
+For the m68k part:
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-Thx.
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Regards/Gruss,
-    Boris.
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-https://people.kernel.org/tglx/notes-about-netiquette
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
