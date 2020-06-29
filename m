@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A09C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E5DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:15:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F93F206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD9F520702
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:15:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593465336;
-	bh=Z039l8Mkb8nGfcdmFlyYZ2+kohu5Eos7KqzKcvPLTVs=;
+	s=default; t=1593465337;
+	bh=CnfFPVNFf2MOak4PEBuDHgbaazvboLiSg0mZjVjsj1o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UWrOZGC3SfhiGw0Hurv3YBfWsoSH9+07h2XH3b6r1S7oC/AMQOFz0PZfIEOAWcN+Q
-	 kUEkCRwog+XCstSxRSv0ycaLgyBBnMTNi1Z6fJOKkB8OJ2pdx5ZXZNSi4vgbCD3Zqe
-	 QfVWd3wMwO9Cfyq0uG1GW7yhg8svxl6QQC7wfBo8=
+	b=cLWjdBQiodJabZcD1fHHrwEnBRJULWz0eR/8Khz/piUDkwJfTqrlY3ejb5aYLaEjm
+	 ecU1yGe3hdM7ayJ/HHvs+k7NYCL+WqdCIEhmnGN/9V5Gji3FEHxdhxQPe7Mu7+2jXd
+	 nwq1sN+NFKHWdFtgLBF8aXfoaNReMIaPNr0oGqgI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388341AbgF2VPa (ORCPT
+        id S1729953AbgF2VP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:15:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42444 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:15:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729950AbgF2SzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729971AbgF2SzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:55:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D48E425575;
-        Mon, 29 Jun 2020 15:55:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 857442555B;
+        Mon, 29 Jun 2020 15:55:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446139;
-        bh=Z039l8Mkb8nGfcdmFlyYZ2+kohu5Eos7KqzKcvPLTVs=;
+        s=default; t=1593446120;
+        bh=CnfFPVNFf2MOak4PEBuDHgbaazvboLiSg0mZjVjsj1o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fhYUHD9+XeWUdLzaWupklfcTiG6GxKH/QsjshJlMd7ETi3ifeMrdzXC3hcuX8ubmP
-         Hl4hyObug/2T4ebgIXXClsvMruAkgGMOBpzJul0Iiyu4SjeZC4Zz3USST4yfY5czP8
-         yz/LkH4b3ql9Ssvs+y+jZoVJhuZMDuHh9PnJiMKs=
+        b=iDNaHv4d14HPgHLoIXTr3UHY3cTfkgcwRAhVDMas/UH2DbRL3Domo5K+2K/rl+gRJ
+         a6kmyNTjV37THHHz82kSMTXVd3TiDp9///kETVAZKXDjVHvgp4E59WM25JoRo1omYQ
+         OL3i3mVV8dkmThJ824+FlYNxI6wxNStAylnRY3Eg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.4 127/135] tracing: Fix event trigger to accept redundant spaces
-Date:   Mon, 29 Jun 2020 11:53:01 -0400
-Message-Id: <20200629155309.2495516-128-sashal@kernel.org>
+Cc:     Qiushi Wu <wu000273@umn.edu>, Ard Biesheuvel <ardb@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 111/135] efi/esrt: Fix reference count leak in esre_create_sysfs_entry.
+Date:   Mon, 29 Jun 2020 11:52:45 -0400
+Message-Id: <20200629155309.2495516-112-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -66,89 +64,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Qiushi Wu <wu000273@umn.edu>
 
-commit 6784beada631800f2c5afd567e5628c843362cee upstream.
+[ Upstream commit 4ddf4739be6e375116c375f0a68bf3893ffcee21 ]
 
-Fix the event trigger to accept redundant spaces in
-the trigger input.
+kobject_init_and_add() takes reference even when it fails.
+If this function returns an error, kobject_put() must be called to
+properly clean up the memory associated with the object. Previous
+commit "b8eb718348b8" fixed a similar problem.
 
-For example, these return -EINVAL
-
-echo " traceon" > events/ftrace/print/trigger
-echo "traceon  if common_pid == 0" > events/ftrace/print/trigger
-echo "disable_event:kmem:kmalloc " > events/ftrace/print/trigger
-
-But these are hard to find what is wrong.
-
-To fix this issue, use skip_spaces() to remove spaces
-in front of actual tokens, and set NULL if there is no
-token.
-
-Link: http://lkml.kernel.org/r/159262476352.185015.5261566783045364186.stgit@devnote2
-
-Cc: Tom Zanussi <zanussi@kernel.org>
-Cc: stable@vger.kernel.org
-Fixes: 85f2b08268c0 ("tracing: Add basic event trigger framework")
-Reviewed-by: Tom Zanussi <zanussi@kernel.org>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 0bb549052d33 ("efi: Add esrt support")
+Signed-off-by: Qiushi Wu <wu000273@umn.edu>
+Link: https://lore.kernel.org/r/20200528183804.4497-1-wu000273@umn.edu
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace_events_trigger.c | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+ drivers/firmware/efi/esrt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
-index 78346aba6980e..94fca4d687adc 100644
---- a/kernel/trace/trace_events_trigger.c
-+++ b/kernel/trace/trace_events_trigger.c
-@@ -204,11 +204,17 @@ static int event_trigger_regex_open(struct inode *inode, struct file *file)
- 
- static int trigger_process_regex(struct trace_event_file *file, char *buff)
- {
--	char *command, *next = buff;
-+	char *command, *next;
- 	struct event_command *p;
- 	int ret = -EINVAL;
- 
-+	next = buff = skip_spaces(buff);
- 	command = strsep(&next, ": \t");
-+	if (next) {
-+		next = skip_spaces(next);
-+		if (!*next)
-+			next = NULL;
-+	}
- 	command = (command[0] != '!') ? command : command + 1;
- 
- 	mutex_lock(&trigger_cmd_mutex);
-@@ -615,8 +621,14 @@ event_trigger_callback(struct event_command *cmd_ops,
- 	int ret;
- 
- 	/* separate the trigger from the filter (t:n [if filter]) */
--	if (param && isdigit(param[0]))
-+	if (param && isdigit(param[0])) {
- 		trigger = strsep(&param, " \t");
-+		if (param) {
-+			param = skip_spaces(param);
-+			if (!*param)
-+				param = NULL;
-+		}
-+	}
- 
- 	trigger_ops = cmd_ops->get_trigger_ops(cmd, trigger);
- 
-@@ -1185,6 +1197,11 @@ event_enable_trigger_func(struct event_command *cmd_ops,
- 	trigger = strsep(&param, " \t");
- 	if (!trigger)
- 		return -EINVAL;
-+	if (param) {
-+		param = skip_spaces(param);
-+		if (!*param)
-+			param = NULL;
-+	}
- 
- 	system = strsep(&trigger, ":");
- 	if (!trigger)
+diff --git a/drivers/firmware/efi/esrt.c b/drivers/firmware/efi/esrt.c
+index 341b8c686ec7b..4aaaccf95b362 100644
+--- a/drivers/firmware/efi/esrt.c
++++ b/drivers/firmware/efi/esrt.c
+@@ -182,7 +182,7 @@ static int esre_create_sysfs_entry(void *esre, int entry_num)
+ 		rc = kobject_init_and_add(&entry->kobj, &esre1_ktype, NULL,
+ 					  "%s", name);
+ 		if (rc) {
+-			kfree(entry);
++			kobject_put(&entry->kobj);
+ 			return rc;
+ 		}
+ 	}
 -- 
 2.25.1
 
