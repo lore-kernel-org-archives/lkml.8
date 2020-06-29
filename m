@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D46BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E2EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0EC1A2076C
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:57:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA7E620786
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:57:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467851;
-	bh=NyWz1FgYUPSub3ifSPAYEhuuWIOksl05ZJUrc5Sa8M8=;
+	s=default; t=1593467857;
+	bh=Xv6s/hhVZVL9IE+xoCVPrgrKTX+scJkpBD1WMF/fTJM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ze9+7Cp0J2NVOMy/UR+NJ1DRSD80soFMXo12KndPgpUldsucWgEkQqsWkL8cT77rJ
-	 pICTKsezT87ekH5AB6cX6GZI2SJ7LupC0b/0fl1N0hD1Kd460X2RaKrktM8y+ZWs5H
-	 Ft+nPzipPqhST+N87Xi8SP6mJsTowekrLADAx9qQ=
+	b=k+D1VzsmXc7RKCyvfFY3T4u+m3HKHEeEr2rBLtYa4QCm5TPyNPbdC1B/TBTRXbGZh
+	 q4ZhGSpXFX46ZXjeLjIZyXTdLOPyM++BhXmwceyxdBtRjPqAqkJszfWB8M+Nqcaxiv
+	 5gJouhU7adyFLfwgq5IzxVaC/6AZzWL1MU6c1EKM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732624AbgF2V53 (ORCPT
+        id S2404718AbgF2V5g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:57:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56794 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:57:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726490AbgF2Sf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726481AbgF2Sf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 554EC2468F;
-        Mon, 29 Jun 2020 15:19:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5259024707;
+        Mon, 29 Jun 2020 15:20:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443991;
-        bh=NyWz1FgYUPSub3ifSPAYEhuuWIOksl05ZJUrc5Sa8M8=;
+        s=default; t=1593444042;
+        bh=Xv6s/hhVZVL9IE+xoCVPrgrKTX+scJkpBD1WMF/fTJM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cJlR99NMKjLgUR0fhmj7PN52hpY1l7DOSE3/CjUu27ItjKTEAhiYdImKd9NEwyKxf
-         sUOFofGryVQD/r5SV8mqXua1Amwq2i4Yfh6N9F+Sl7+rq39ajdJvpGp4CVieYgrqU9
-         n7eKwvZhwCf2fLSvAWUMvWjhUHcXaaYvmSauiTy4=
+        b=Y5vHhWjRsxVbxFGuewov+aMCP6GvNe+n184vtKRxYfUDqevi+IYrJ8pdEZa4ef9OX
+         yV1EXaOOXMnzEytIEXo1iniz5JRkAhOrE9INCbmmJI0mDRzwPcZiVShkT2DbKnhAVd
+         7MLgOpHrUudpYQw7XmelSCWyTkJL/4DVr05aYOxs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+Cc:     Alexander Lobakin <alobakin@marvell.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 095/265] bus: ti-sysc: Ignore clockactivity unless specified as a quirk
-Date:   Mon, 29 Jun 2020 11:15:28 -0400
-Message-Id: <20200629151818.2493727-96-sashal@kernel.org>
+Subject: [PATCH 5.7 149/265] net: qede: stop adding events on an already destroyed workqueue
+Date:   Mon, 29 Jun 2020 11:16:22 -0400
+Message-Id: <20200629151818.2493727-150-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -66,45 +67,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Alexander Lobakin <alobakin@marvell.com>
 
-[ Upstream commit 08b91dd6e547467fad61a7c201ff71080d7ad65a ]
+[ Upstream commit 4079c7f7a2a00ab403c177ce723b560de59139c3 ]
 
-We must ignore the clockactivity bit for most modules and not set it
-unless specified for the module with SYSC_QUIRK_USE_CLOCKACT. Otherwise
-the interface clock can be automatically gated constantly causing
-unexpected performance issues.
+Set rdma_wq pointer to NULL after destroying the workqueue and check
+for it when adding new events to fix crashes on driver unload.
 
-Fixes: ae9ae12e9daa ("bus: ti-sysc: Handle clockactivity for enable and disable")
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Fixes: cee9fbd8e2e9 ("qede: Add qedr framework")
+Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
+Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/bus/ti-sysc.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/qlogic/qede/qede_rdma.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
-index a3a2c269e9ad7..4f640a635ded1 100644
---- a/drivers/bus/ti-sysc.c
-+++ b/drivers/bus/ti-sysc.c
-@@ -988,10 +988,13 @@ static int sysc_enable_module(struct device *dev)
- 	regbits = ddata->cap->regbits;
- 	reg = sysc_read(ddata, ddata->offsets[SYSC_SYSCONFIG]);
+diff --git a/drivers/net/ethernet/qlogic/qede/qede_rdma.c b/drivers/net/ethernet/qlogic/qede/qede_rdma.c
+index 2d873ae8a234d..668ccc9d49f83 100644
+--- a/drivers/net/ethernet/qlogic/qede/qede_rdma.c
++++ b/drivers/net/ethernet/qlogic/qede/qede_rdma.c
+@@ -105,6 +105,7 @@ static void qede_rdma_destroy_wq(struct qede_dev *edev)
  
--	/* Set CLOCKACTIVITY, we only use it for ick */
-+	/*
-+	 * Set CLOCKACTIVITY, we only use it for ick. And we only configure it
-+	 * based on the SYSC_QUIRK_USE_CLOCKACT flag, not based on the hardware
-+	 * capabilities. See the old HWMOD_SET_DEFAULT_CLOCKACT flag.
-+	 */
- 	if (regbits->clkact_shift >= 0 &&
--	    (ddata->cfg.quirks & SYSC_QUIRK_USE_CLOCKACT ||
--	     ddata->cfg.sysc_val & BIT(regbits->clkact_shift)))
-+	    (ddata->cfg.quirks & SYSC_QUIRK_USE_CLOCKACT))
- 		reg |= SYSC_CLOCACT_ICK << regbits->clkact_shift;
+ 	qede_rdma_cleanup_event(edev);
+ 	destroy_workqueue(edev->rdma_info.rdma_wq);
++	edev->rdma_info.rdma_wq = NULL;
+ }
  
- 	/* Set SIDLE mode */
+ int qede_rdma_dev_add(struct qede_dev *edev, bool recovery)
+@@ -325,7 +326,7 @@ static void qede_rdma_add_event(struct qede_dev *edev,
+ 	if (edev->rdma_info.exp_recovery)
+ 		return;
+ 
+-	if (!edev->rdma_info.qedr_dev)
++	if (!edev->rdma_info.qedr_dev || !edev->rdma_info.rdma_wq)
+ 		return;
+ 
+ 	/* We don't want the cleanup flow to start while we're allocating and
 -- 
 2.25.1
 
