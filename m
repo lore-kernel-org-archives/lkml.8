@@ -4,56 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A94F9C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DA9FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F7F8206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:05:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 766A5206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:05:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468340;
-	bh=f8wWRBJu0xVCp0JlyfTc7Lt1H4gqJ376r6jAqEgVev0=;
+	s=default; t=1593468344;
+	bh=Fo58XYYbLg0fR3AnA2QeKF2c5Xegrf9NXglg4qyGSC8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NxPqMVYsWM7G81VX5kgYhTu+IuyUuH1rZtgtfhDBWQUxDwHKlfRFiJDBo297zG1P8
-	 q/tpkwQnS4Daol6pOXjoleIMTxrC22D2YtVtZubPA8I37Vl2q1sOQNPAggaG4bp1ru
-	 13wB+iZXMXSyPE4vgAXSmJU2x0mZOREQmicEYCd8=
+	b=w2Me0Cu+vUBhp2x71RgSKjwCgyV8eV/vOo8MRu1vNV3Zt1FMTTxryH/10n3nXN62/
+	 hWZ1/f0L9FNv5zV9O1HU1CfY+r2r9S3c8IM28R83x3lNu/ZfLMdxsWGBjr89GseqxV
+	 DHrMsXBVWVCp6Gvhls2XILNvjm00utp31ScWr8W0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391735AbgF2WFj (ORCPT
+        id S1732639AbgF2WFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:05:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56814 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:05:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726152AbgF2SfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726151AbgF2SfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CE4B246CE;
-        Mon, 29 Jun 2020 15:20:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11381247BB;
+        Mon, 29 Jun 2020 15:21:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444020;
-        bh=f8wWRBJu0xVCp0JlyfTc7Lt1H4gqJ376r6jAqEgVev0=;
+        s=default; t=1593444120;
+        bh=Fo58XYYbLg0fR3AnA2QeKF2c5Xegrf9NXglg4qyGSC8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A/oD33WVMxmCOpXy4kav837aZr/P4NhsJU499GzZ1H4pHzCRNWXobdHtnDk9vvKeF
-         cjhRddufqTycSVpIVNsVtfBpS5xuuZxvDSx6NHhEveIfVQnYoUW7CiKiPXzTfrxqBm
-         9Tq6lz6QPOv5bKJJFl45RQJtUB/3mKolr5oJ5xKk=
+        b=QQfsjHEp8luhvfypCXXlcjytwztzMcm0KfId9l1dhjl45CmRKg5dEV8nT6AIfnOJB
+         NpjN/fNVv3NaQEehMC55b2xLv22LKes8nofvHY9ACoaEsFIQImPH7+k8NI0LqYha9Y
+         k5oM4nhBARToeYZw4NXhZz965kP07Eg3gfTDfzVE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        Xiumei Mu <xmu@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 127/265] devmap: Use bpf_map_area_alloc() for allocating hash buckets
-Date:   Mon, 29 Jun 2020 11:16:00 -0400
-Message-Id: <20200629151818.2493727-128-sashal@kernel.org>
+Cc:     Waiman Long <longman@redhat.com>, Michal Hocko <mhocko@suse.com>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Joe Perches <joe@perches.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Rientjes <rientjes@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 230/265] mm/slab: use memzero_explicit() in kzfree()
+Date:   Mon, 29 Jun 2020 11:17:43 -0400
+Message-Id: <20200629151818.2493727-231-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-5.7.y
@@ -68,66 +76,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Toke Høiland-Jørgensen <toke@redhat.com>
+From: Waiman Long <longman@redhat.com>
 
-[ Upstream commit 99c51064fb06146b3d494b745c947e438a10aaa7 ]
+commit 8982ae527fbef170ef298650c15d55a9ccd33973 upstream.
 
-Syzkaller discovered that creating a hash of type devmap_hash with a large
-number of entries can hit the memory allocator limit for allocating
-contiguous memory regions. There's really no reason to use kmalloc_array()
-directly in the devmap code, so just switch it to the existing
-bpf_map_area_alloc() function that is used elsewhere.
+The kzfree() function is normally used to clear some sensitive
+information, like encryption keys, in the buffer before freeing it back to
+the pool.  Memset() is currently used for buffer clearing.  However
+unlikely, there is still a non-zero probability that the compiler may
+choose to optimize away the memory clearing especially if LTO is being
+used in the future.
 
-Fixes: 6f9d451ab1a3 ("xdp: Add devmap_hash map type for looking up devices by hashed index")
-Reported-by: Xiumei Mu <xmu@redhat.com>
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: John Fastabend <john.fastabend@gmail.com>
-Link: https://lore.kernel.org/bpf/20200616142829.114173-1-toke@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+To make sure that this optimization will never happen,
+memzero_explicit(), which is introduced in v3.18, is now used in
+kzfree() to future-proof it.
+
+Link: http://lkml.kernel.org/r/20200616154311.12314-2-longman@redhat.com
+Fixes: 3ef0e5ba4673 ("slab: introduce kzfree()")
+Signed-off-by: Waiman Long <longman@redhat.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: James Morris <jmorris@namei.org>
+Cc: "Serge E. Hallyn" <serge@hallyn.com>
+Cc: Joe Perches <joe@perches.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: "Jason A . Donenfeld" <Jason@zx2c4.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- kernel/bpf/devmap.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ mm/slab_common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/bpf/devmap.c b/kernel/bpf/devmap.c
-index 58bdca5d978a8..badf382bbd365 100644
---- a/kernel/bpf/devmap.c
-+++ b/kernel/bpf/devmap.c
-@@ -85,12 +85,13 @@ static DEFINE_PER_CPU(struct list_head, dev_flush_list);
- static DEFINE_SPINLOCK(dev_map_lock);
- static LIST_HEAD(dev_map_list);
- 
--static struct hlist_head *dev_map_create_hash(unsigned int entries)
-+static struct hlist_head *dev_map_create_hash(unsigned int entries,
-+					      int numa_node)
- {
- 	int i;
- 	struct hlist_head *hash;
- 
--	hash = kmalloc_array(entries, sizeof(*hash), GFP_KERNEL);
-+	hash = bpf_map_area_alloc(entries * sizeof(*hash), numa_node);
- 	if (hash != NULL)
- 		for (i = 0; i < entries; i++)
- 			INIT_HLIST_HEAD(&hash[i]);
-@@ -138,7 +139,8 @@ static int dev_map_init_map(struct bpf_dtab *dtab, union bpf_attr *attr)
- 		return -EINVAL;
- 
- 	if (attr->map_type == BPF_MAP_TYPE_DEVMAP_HASH) {
--		dtab->dev_index_head = dev_map_create_hash(dtab->n_buckets);
-+		dtab->dev_index_head = dev_map_create_hash(dtab->n_buckets,
-+							   dtab->map.numa_node);
- 		if (!dtab->dev_index_head)
- 			goto free_charge;
- 
-@@ -223,7 +225,7 @@ static void dev_map_free(struct bpf_map *map)
- 			}
- 		}
- 
--		kfree(dtab->dev_index_head);
-+		bpf_map_area_free(dtab->dev_index_head);
- 	} else {
- 		for (i = 0; i < dtab->map.max_entries; i++) {
- 			struct bpf_dtab_netdev *dev;
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index 9e72ba2241750..37d48a56431d0 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -1726,7 +1726,7 @@ void kzfree(const void *p)
+ 	if (unlikely(ZERO_OR_NULL_PTR(mem)))
+ 		return;
+ 	ks = ksize(mem);
+-	memset(mem, 0, ks);
++	memzero_explicit(mem, ks);
+ 	kfree(mem);
+ }
+ EXPORT_SYMBOL(kzfree);
 -- 
 2.25.1
 
