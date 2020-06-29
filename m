@@ -2,138 +2,131 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2634C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:04:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 611A2C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C5EA520672
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:04:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461074;
-	bh=4Blk32RzQ+UzyP7QmJitEaBEKLU/tRY+xGER/lF4uZo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rr264F7eMcoBeKPOVG+L6BumD+QPhuJ6UMZpmYJmwo/35sKJOH9gBbPdkbYxlRRNJ
-	 zmMPdSES+lDbQD+yT8LO4VBGwkX/wLSwy/dI1GRw6CkJNlIotG5nkj+pSBMkqNyTj3
-	 8b0rc83uqPsHAIEkstt1KWWJSiojWfbjrHE6k4PA=
+	by mail.kernel.org (Postfix) with ESMTP id 43382206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:04:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iyegTPlb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388655AbgF2UEc (ORCPT
+        id S1728050AbgF2UEh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:04:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40584 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732988AbgF2Tab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:30:31 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AF5425256;
-        Mon, 29 Jun 2020 15:36:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444972;
-        bh=4Blk32RzQ+UzyP7QmJitEaBEKLU/tRY+xGER/lF4uZo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UqcnoTAiJzcIiMbemxzARkH1JUsMzizZwhDMLAldlG1umBgdrHW7MUr8QcOssESjf
-         aZialkukAMLlkPoRlU+PiX5nObdLtKhmSlev4TN0h6TiBrr+K0kPMtoH4x6ZwqRb50
-         DkDGF2Jv3y9aj7w5SA2plGE/OU53YyBbvKDSSNx0=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michal Kalderon <michal.kalderon@marvell.com>,
-        Ariel Elior <ariel.elior@marvell.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 071/131] RDMA/qedr: Fix KASAN: use-after-free in ucma_event_handler+0x532
-Date:   Mon, 29 Jun 2020 11:34:02 -0400
-Message-Id: <20200629153502.2494656-72-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
-References: <20200629153502.2494656-1-sashal@kernel.org>
+        Mon, 29 Jun 2020 16:04:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51972 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732988AbgF2UEd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 16:04:33 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E20D8C061755
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 13:04:33 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id b184so1947308pfa.6
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 13:04:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=dTLUsyi9EoNBvYop+SAQkhC6GYIREzqCPpDVHlef0N4=;
+        b=iyegTPlbjhn5HlYQVhbZw8XqrIU7lJKRRk5bmuxEeuSQzinLKXX6CuU8egSe3yPdKD
+         hN4x0leCH3AyDKiaTF3Nb59aff4r2LF1aPPEwtqGfIEB+oZD9/0TJ9jhmlHrykRvmJnl
+         a6cjSj2v7FpsBA9YWOnvcv54vPdfr5mhHAKW4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=dTLUsyi9EoNBvYop+SAQkhC6GYIREzqCPpDVHlef0N4=;
+        b=IZKfKnEkp2aT4NKlWIRDOIfFrLG0C68TTdCZpGDqbBd4Azsd4q8HCE7gwS3yAV18wL
+         CradKshH7Yr+tq08sGQLUE66u4HjX4JGZ8q0EPVczxz8mdT6R6OWJy1yQqeLcGbJCj60
+         U84vUJwnZWkYlS6cg4aoAeEhgioFptmOGYAU/5iXT/ZdlQpj54ttFlWMnj17pHUq8DFh
+         Fafz/c+bQ+R+sOLwt2k+lEHDhpB6Ddte+knrEBa/4PH1PLwtfO1zLgmi8DP/UlWjlJox
+         62FbYH0BgDZlQS7CtgdNKryqtdrfJrRj2DCtri9+KIrD3t2uXE9jzXI49n9PPV5S9x3Y
+         9WYQ==
+X-Gm-Message-State: AOAM533m95idJ0mRFwD+Q20T3KkQTNHOACWBId7NtLLz1ztdDSEUu+e6
+        L/v0yjFZ5SMaPVZkPhJvMLCXIw==
+X-Google-Smtp-Source: ABdhPJzdUinj83wjxemEYOkw00z16gQNGulknaX544OOjyQoDtiBgCLUR8nqCuc5q1pH8hR406oB2w==
+X-Received: by 2002:a63:4c08:: with SMTP id z8mr11413821pga.201.1593461073426;
+        Mon, 29 Jun 2020 13:04:33 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id h130sm446526pfe.200.2020.06.29.13.04.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 13:04:32 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 13:04:31 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v4 08/17] arm64/mm: Remove needless section quotes
+Message-ID: <202006291301.46FEF3B7@keescook>
+References: <20200629061840.4065483-1-keescook@chromium.org>
+ <20200629061840.4065483-9-keescook@chromium.org>
+ <CAKwvOd=r6bsBfSZxVYrnbm1Utq==ApWBDjx+0Fxsm90Aq3Jghw@mail.gmail.com>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.19.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.19.131-rc1
-X-KernelTest-Deadline: 2020-07-01T15:34+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOd=r6bsBfSZxVYrnbm1Utq==ApWBDjx+0Fxsm90Aq3Jghw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Kalderon <michal.kalderon@marvell.com>
+On Mon, Jun 29, 2020 at 12:53:47PM -0700, Nick Desaulniers wrote:
+> On Sun, Jun 28, 2020 at 11:18 PM Kees Cook <keescook@chromium.org> wrote:
+> >
+> > Fix a case of needless quotes in __section(), which Clang doesn't like.
+> >
+> > Acked-by: Will Deacon <will@kernel.org>
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> 
+> Yep, I remember bugs from this.  Probably should scan the kernel for
+> other instances of this.  +Joe for checkpatch.pl validation.
 
-[ Upstream commit 0dfbd5ecf28cbcb81674c49d34ee97366db1be44 ]
+I think the others are safe because they're in macros:
 
-Private data passed to iwarp_cm_handler is copied for connection request /
-response, but ignored otherwise.  If junk is passed, it is stored in the
-event and used later in the event processing.
+$ git grep -4 '__section("'
+include/linux/compiler.h-# define KENTRY(sym)                                           \
+include/linux/compiler.h-       extern typeof(sym) sym;                                 \
+include/linux/compiler.h-       static const unsigned long __kentry_##sym               \
+include/linux/compiler.h-       __used                                                  \
+include/linux/compiler.h:       __section("___kentry" "+" #sym )                        \
+include/linux/compiler.h-       = (unsigned long)&sym;
+--
+include/linux/export.h-#define __ksym_marker(sym)       \
+include/linux/export.h: static int __ksym_marker_##sym[0] __section(".discard.ksym") __used
+--
+include/linux/srcutree.h-# define __DEFINE_SRCU(name, is_static)                                \
+include/linux/srcutree.h-       is_static struct srcu_struct name;                              \
+include/linux/srcutree.h-       struct srcu_struct * const __srcu_struct_##name                 \
+include/linux/srcutree.h:               __section("___srcu_struct_ptrs") = &name
 
-The driver passes an old junk pointer during connection close which leads
-to a use-after-free on event processing.  Set private data to NULL for
-events that don 't have private data.
 
-  BUG: KASAN: use-after-free in ucma_event_handler+0x532/0x560 [rdma_ucm]
-  kernel: Read of size 4 at addr ffff8886caa71200 by task kworker/u128:1/5250
-  kernel:
-  kernel: Workqueue: iw_cm_wq cm_work_handler [iw_cm]
-  kernel: Call Trace:
-  kernel: dump_stack+0x8c/0xc0
-  kernel: print_address_description.constprop.0+0x1b/0x210
-  kernel: ? ucma_event_handler+0x532/0x560 [rdma_ucm]
-  kernel: ? ucma_event_handler+0x532/0x560 [rdma_ucm]
-  kernel: __kasan_report.cold+0x1a/0x33
-  kernel: ? ucma_event_handler+0x532/0x560 [rdma_ucm]
-  kernel: kasan_report+0xe/0x20
-  kernel: check_memory_region+0x130/0x1a0
-  kernel: memcpy+0x20/0x50
-  kernel: ucma_event_handler+0x532/0x560 [rdma_ucm]
-  kernel: ? __rpc_execute+0x608/0x620 [sunrpc]
-  kernel: cma_iw_handler+0x212/0x330 [rdma_cm]
-  kernel: ? iw_conn_req_handler+0x6e0/0x6e0 [rdma_cm]
-  kernel: ? enqueue_timer+0x86/0x140
-  kernel: ? _raw_write_lock_irq+0xd0/0xd0
-  kernel: cm_work_handler+0xd3d/0x1070 [iw_cm]
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Fixes: e411e0587e0d ("RDMA/qedr: Add iWARP connection management functions")
-Link: https://lore.kernel.org/r/20200616093408.17827-1-michal.kalderon@marvell.com
-Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/infiniband/hw/qedr/qedr_iw_cm.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+Thanks!
 
-diff --git a/drivers/infiniband/hw/qedr/qedr_iw_cm.c b/drivers/infiniband/hw/qedr/qedr_iw_cm.c
-index 93b16237b7677..2566715773675 100644
---- a/drivers/infiniband/hw/qedr/qedr_iw_cm.c
-+++ b/drivers/infiniband/hw/qedr/qedr_iw_cm.c
-@@ -128,8 +128,17 @@ qedr_iw_issue_event(void *context,
- 	if (params->cm_info) {
- 		event.ird = params->cm_info->ird;
- 		event.ord = params->cm_info->ord;
--		event.private_data_len = params->cm_info->private_data_len;
--		event.private_data = (void *)params->cm_info->private_data;
-+		/* Only connect_request and reply have valid private data
-+		 * the rest of the events this may be left overs from
-+		 * connection establishment. CONNECT_REQUEST is issued via
-+		 * qedr_iw_mpa_request
-+		 */
-+		if (event_type == IW_CM_EVENT_CONNECT_REPLY) {
-+			event.private_data_len =
-+				params->cm_info->private_data_len;
-+			event.private_data =
-+				(void *)params->cm_info->private_data;
-+		}
- 	}
- 
- 	if (ep->cm_id)
 -- 
-2.25.1
-
+Kees Cook
