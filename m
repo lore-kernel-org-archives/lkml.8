@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C52AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:07:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0E3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:07:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7AF3520760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:07:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 297D920760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:07:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461240;
-	bh=NUXmR4lHug30r6DStI+RG3JHn2fqSnGmfjiT7Dzq0JA=;
+	s=default; t=1593461247;
+	bh=XQoYnUCgaMP3oCo8b8n7Dk3WF46jXhEGX70p3V1QGRo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uUMBvQiFfHa3MdERZ/sG2mWklihkS0l8YCGdykXps79tZWep0SIAvwFH5EuKAzaCE
-	 3Y5aaYS8X7/GIp7COgopkW002XEmNHE5UWc3KOBtIxKqb9VOb6LeDuUjF8Cud1ggmd
-	 9M32/qYqb/M7sjV3yxjmfKd+urEMoZcJ8QuFekzw=
+	b=zFKjCmF5YAu1PtFxd7ngoGC3CyOq8ojuRRJhFFBpUXsnaLxnn33BHarYa4vkiMfU+
+	 n1XCTTXAI7+F098f+cmBsuoGEmE7nv7TSUS+RN+Ew00Vy/oxo5UJBqdU5ayn1ySeI3
+	 R4/c0WDN27lgLJamWItfFqv21P2yH37aqcH7Ohxs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388885AbgF2UHS (ORCPT
+        id S2388889AbgF2UHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:07:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40554 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:07:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732954AbgF2TaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732337AbgF2TaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31E6B251E6;
-        Mon, 29 Jun 2020 15:35:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 379D625273;
+        Mon, 29 Jun 2020 15:36:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444907;
-        bh=NUXmR4lHug30r6DStI+RG3JHn2fqSnGmfjiT7Dzq0JA=;
+        s=default; t=1593444983;
+        bh=XQoYnUCgaMP3oCo8b8n7Dk3WF46jXhEGX70p3V1QGRo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=saAihrXTgSUvU3Z5SRXoqpF/+EyByisbtiRxeJT+9KtQTGp3IGdRXYu+ZMpctu+2N
-         dAmwQWVNzW4lmcz6E5ApDNuw2qJfw2eWk8PxEIpz3GQkDfIRIfemrjnTww1iVkyg4W
-         nFuvGzQYkuksrGmYFRBGSQUg7eMgfUPUQpwXg6yM=
+        b=QrvCJU3fQT6IJPL0xNf0HNOdPaOLBObQLS8o5+iodzuC9LRzrHDFQu1vnH1Dgtnyf
+         NT3ITohZnguKdB0Ywn3a/ovJ+TPrKlCjtrKfkyvodxADRW4uihVj0HL6DydIetq3Ak
+         LOE0cpuVN+X2LvZEOIDlhSd7FRfJIOU5oO3dD5uk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.cz>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 003/131] fanotify: fix ignore mask logic for events on child and on dir
-Date:   Mon, 29 Jun 2020 11:32:54 -0400
-Message-Id: <20200629153502.2494656-4-sashal@kernel.org>
+Cc:     Anton Eidelman <anton@lightbitslabs.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 083/131] nvme-multipath: fix deadlock between ana_work and scan_work
+Date:   Mon, 29 Jun 2020 11:34:14 -0400
+Message-Id: <20200629153502.2494656-84-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
@@ -65,66 +65,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amir Goldstein <amir73il@gmail.com>
+From: Anton Eidelman <anton@lightbitslabs.com>
 
-commit 2f02fd3fa13e51713b630164f8a8e5b42de8283b upstream.
+[ Upstream commit 489dd102a2c7c94d783a35f9412eb085b8da1aa4 ]
 
-The comments in fanotify_group_event_mask() say:
+When scan_work calls nvme_mpath_add_disk() this holds ana_lock
+and invokes nvme_parse_ana_log(), which may issue IO
+in device_add_disk() and hang waiting for an accessible path.
+While nvme_mpath_set_live() only called when nvme_state_is_live(),
+a transition may cause NVME_SC_ANA_TRANSITION and requeue the IO.
 
-  "If the event is on dir/child and this mark doesn't care about
-   events on dir/child, don't send it!"
+In order to recover and complete the IO ana_work on the same ctrl
+should be able to update the path state and remove NVME_NS_ANA_PENDING.
 
-Specifically, mount and filesystem marks do not care about events
-on child, but they can still specify an ignore mask for those events.
-For example, a group that has:
-- A mount mark with mask 0 and ignore_mask FAN_OPEN
-- An inode mark on a directory with mask FAN_OPEN | FAN_OPEN_EXEC
-  with flag FAN_EVENT_ON_CHILD
+The deadlock occurs because scan_work keeps holding ana_lock,
+so ana_work hangs [1].
 
-A child file open for exec would be reported to group with the FAN_OPEN
-event despite the fact that FAN_OPEN is in ignore mask of mount mark,
-because the mark iteration loop skips over non-inode marks for events
-on child when calculating the ignore mask.
+Fix:
+Now nvme_mpath_add_disk() uses nvme_parse_ana_log() to obtain a copy
+of the ANA group desc, and then calls nvme_update_ns_ana_state() without
+holding ana_lock.
 
-Move ignore mask calculation to the top of the iteration loop block
-before excluding marks for events on dir/child.
+[1]:
+kernel: Workqueue: nvme-wq nvme_scan_work [nvme_core]
+kernel: Call Trace:
+kernel:  __schedule+0x2b9/0x6c0
+kernel:  schedule+0x42/0xb0
+kernel:  io_schedule+0x16/0x40
+kernel:  do_read_cache_page+0x438/0x830
+kernel:  read_cache_page+0x12/0x20
+kernel:  read_dev_sector+0x27/0xc0
+kernel:  read_lba+0xc1/0x220
+kernel:  efi_partition+0x1e6/0x708
+kernel:  check_partition+0x154/0x244
+kernel:  rescan_partitions+0xae/0x280
+kernel:  __blkdev_get+0x40f/0x560
+kernel:  blkdev_get+0x3d/0x140
+kernel:  __device_add_disk+0x388/0x480
+kernel:  device_add_disk+0x13/0x20
+kernel:  nvme_mpath_set_live+0x119/0x140 [nvme_core]
+kernel:  nvme_update_ns_ana_state+0x5c/0x60 [nvme_core]
+kernel:  nvme_set_ns_ana_state+0x1e/0x30 [nvme_core]
+kernel:  nvme_parse_ana_log+0xa1/0x180 [nvme_core]
+kernel:  nvme_mpath_add_disk+0x47/0x90 [nvme_core]
+kernel:  nvme_validate_ns+0x396/0x940 [nvme_core]
+kernel:  nvme_scan_work+0x24f/0x380 [nvme_core]
+kernel:  process_one_work+0x1db/0x380
+kernel:  worker_thread+0x249/0x400
+kernel:  kthread+0x104/0x140
 
-Link: https://lore.kernel.org/r/20200524072441.18258-1-amir73il@gmail.com
-Reported-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/linux-fsdevel/20200521162443.GA26052@quack2.suse.cz/
-Fixes: 55bf882c7f13 "fanotify: fix merging marks masks with FAN_ONDIR"
-Fixes: b469e7e47c8a "fanotify: fix handling of events on child..."
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+kernel: Workqueue: nvme-wq nvme_ana_work [nvme_core]
+kernel: Call Trace:
+kernel:  __schedule+0x2b9/0x6c0
+kernel:  schedule+0x42/0xb0
+kernel:  schedule_preempt_disabled+0xe/0x10
+kernel:  __mutex_lock.isra.0+0x182/0x4f0
+kernel:  ? __switch_to_asm+0x34/0x70
+kernel:  ? select_task_rq_fair+0x1aa/0x5c0
+kernel:  ? kvm_sched_clock_read+0x11/0x20
+kernel:  ? sched_clock+0x9/0x10
+kernel:  __mutex_lock_slowpath+0x13/0x20
+kernel:  mutex_lock+0x2e/0x40
+kernel:  nvme_read_ana_log+0x3a/0x100 [nvme_core]
+kernel:  nvme_ana_work+0x15/0x20 [nvme_core]
+kernel:  process_one_work+0x1db/0x380
+kernel:  worker_thread+0x4d/0x400
+kernel:  kthread+0x104/0x140
+kernel:  ? process_one_work+0x380/0x380
+kernel:  ? kthread_park+0x80/0x80
+kernel:  ret_from_fork+0x35/0x40
+
+Fixes: 0d0b660f214d ("nvme: add ANA support")
+Signed-off-by: Anton Eidelman <anton@lightbitslabs.com>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/notify/fanotify/fanotify.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/nvme/host/multipath.c | 24 ++++++++++++++++--------
+ 1 file changed, 16 insertions(+), 8 deletions(-)
 
-diff --git a/fs/notify/fanotify/fanotify.c b/fs/notify/fanotify/fanotify.c
-index a18b8d7a30759..ca3405f732644 100644
---- a/fs/notify/fanotify/fanotify.c
-+++ b/fs/notify/fanotify/fanotify.c
-@@ -114,6 +114,10 @@ static bool fanotify_should_send_event(struct fsnotify_iter_info *iter_info,
- 		if (!fsnotify_iter_should_report_type(iter_info, type))
- 			continue;
- 		mark = iter_info->marks[type];
-+
-+		/* Apply ignore mask regardless of ISDIR and ON_CHILD flags */
-+		marks_ignored_mask |= mark->ignored_mask;
-+
- 		/*
- 		 * If the event is for a child and this mark doesn't care about
- 		 * events on a child, don't send it!
-@@ -124,7 +128,6 @@ static bool fanotify_should_send_event(struct fsnotify_iter_info *iter_info,
- 			continue;
+diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
+index 6f584a9515f42..3ad6183c5e6b4 100644
+--- a/drivers/nvme/host/multipath.c
++++ b/drivers/nvme/host/multipath.c
+@@ -496,26 +496,34 @@ static ssize_t ana_state_show(struct device *dev, struct device_attribute *attr,
+ }
+ DEVICE_ATTR_RO(ana_state);
  
- 		marks_mask |= mark->mask;
--		marks_ignored_mask |= mark->ignored_mask;
- 	}
+-static int nvme_set_ns_ana_state(struct nvme_ctrl *ctrl,
++static int nvme_lookup_ana_group_desc(struct nvme_ctrl *ctrl,
+ 		struct nvme_ana_group_desc *desc, void *data)
+ {
+-	struct nvme_ns *ns = data;
++	struct nvme_ana_group_desc *dst = data;
  
- 	if (d_is_dir(path->dentry) &&
+-	if (ns->ana_grpid == le32_to_cpu(desc->grpid)) {
+-		nvme_update_ns_ana_state(desc, ns);
+-		return -ENXIO; /* just break out of the loop */
+-	}
++	if (desc->grpid != dst->grpid)
++		return 0;
+ 
+-	return 0;
++	*dst = *desc;
++	return -ENXIO; /* just break out of the loop */
+ }
+ 
+ void nvme_mpath_add_disk(struct nvme_ns *ns, struct nvme_id_ns *id)
+ {
+ 	if (nvme_ctrl_use_ana(ns->ctrl)) {
++		struct nvme_ana_group_desc desc = {
++			.grpid = id->anagrpid,
++			.state = 0,
++		};
++
+ 		mutex_lock(&ns->ctrl->ana_lock);
+ 		ns->ana_grpid = le32_to_cpu(id->anagrpid);
+-		nvme_parse_ana_log(ns->ctrl, ns, nvme_set_ns_ana_state);
++		nvme_parse_ana_log(ns->ctrl, &desc, nvme_lookup_ana_group_desc);
+ 		mutex_unlock(&ns->ctrl->ana_lock);
++		if (desc.state) {
++			/* found the group desc: update */
++			nvme_update_ns_ana_state(&desc, ns);
++		}
+ 	} else {
+ 		mutex_lock(&ns->head->lock);
+ 		ns->ana_state = NVME_ANA_OPTIMIZED; 
 -- 
 2.25.1
 
