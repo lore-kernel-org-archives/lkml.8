@@ -2,263 +2,120 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95483C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B356EC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:01:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 717062053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:00:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593457256;
-	bh=7UZGFVIq3dV1dcHto4syuA8n3NxWKtVATlv2TOdA1Cc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oudtS9EhLw+uOXyJeCMSCvquK7cgb2iiAHKTzheZ4/K/eEBWIcSh3ZLDnHosJwINY
-	 MS27M//JahF7fwa3K7X2tCr7p7tWp5W/Xk9GXGp348XPn9ZRAODRC3mwTa9kNp4LiA
-	 JlHTJX+/wlHXI/G7JP8m+mlCVg/BdNpXHDmuWBE8=
+	by mail.kernel.org (Postfix) with ESMTP id 8FE502053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:01:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="oTcfFWKe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730379AbgF2TAb (ORCPT
+        id S1729359AbgF2TBE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:00:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45436 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:01:04 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:32667 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730309AbgF2TAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:00:18 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1730346AbgF2TAY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:00:24 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593457223; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=MGpgHTPanseMUSP/5lHDa6o1Mxq+oOakQ9xuKUP30WY=; b=oTcfFWKeY+TcNxeQMFBvU5xW/rxPfn4d9Xncxw4QCJhKroeqpxZQK1mzt6kZvkYAPHbK8AmM
+ Jn/h+oOFvZ67uQ9kf3RjZA6yBKPepUNYVMNF0xfq0vb3jWx9qULEZ2aLxu12BkEr6m8hWxKA
+ 5HEOwXVLm8L6W6cr9tDJak8hTOs=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n03.prod.us-west-2.postgun.com with SMTP id
+ 5efa1958fe1db4db892338cd (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 29 Jun 2020 16:39:52
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 621F0C433C6; Mon, 29 Jun 2020 16:39:52 +0000 (UTC)
+Received: from malabar-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE8D1254FF;
-        Mon, 29 Jun 2020 15:54:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446060;
-        bh=7UZGFVIq3dV1dcHto4syuA8n3NxWKtVATlv2TOdA1Cc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LCgo9R8oDuusGufw+ARk8CDlbPlo8eaxqLKD/WzERxzRu34D/i8LDBVGe7nQ5Mo7v
-         ZzTgHMCRmjD4RgTMK58BKrREJjCOf1h1Vpleyy2tBzPUhVGJ7rHep2tdKN3qLGvn6B
-         pYUc39T8ZjrYUMUGU6tjybNZ3idBvrrTVk1+v9b0=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jason Yan <yanaijie@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>, Jan Kara <jack@suse.cz>,
-        Christoph Hellwig <hch@lst.de>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 059/135] block: Fix use-after-free in blkdev_get()
-Date:   Mon, 29 Jun 2020 11:51:53 -0400
-Message-Id: <20200629155309.2495516-60-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
-References: <20200629155309.2495516-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.229-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.4.229-rc1
-X-KernelTest-Deadline: 2020-07-01T15:53+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        (Authenticated sender: bbhatt)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C6CBEC433C8;
+        Mon, 29 Jun 2020 16:39:51 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C6CBEC433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bbhatt@codeaurora.org
+From:   Bhaumik Bhatt <bbhatt@codeaurora.org>
+To:     manivannan.sadhasivam@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
+        jhugo@codeaurora.org, linux-kernel@vger.kernel.org,
+        Bhaumik Bhatt <bbhatt@codeaurora.org>
+Subject: [PATCH v4 0/9] Introduce features and debugfs/sysfs entries for MHI
+Date:   Mon, 29 Jun 2020 09:39:33 -0700
+Message-Id: <1593448782-8385-1-git-send-email-bbhatt@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Yan <yanaijie@huawei.com>
+Introduce independent bus and device voting mechanism for clients and save
+hardware information from BHI.
+Allow reading and modifying some MHI variables for debug, test, and
+informational purposes using debugfs.
+Read values for device specific hardware information to be used by OEMs in
+factory testing such as serial number and PK hash using sysfs.
 
-[ Upstream commit 2d3a8e2deddea6c89961c422ec0c5b851e648c14 ]
+This set of patches was tested on arm64 and x86.
 
-In blkdev_get() we call __blkdev_get() to do some internal jobs and if
-there is some errors in __blkdev_get(), the bdput() is called which
-means we have released the refcount of the bdev (actually the refcount of
-the bdev inode). This means we cannot access bdev after that point. But
-acctually bdev is still accessed in blkdev_get() after calling
-__blkdev_get(). This results in use-after-free if the refcount is the
-last one we released in __blkdev_get(). Let's take a look at the
-following scenerio:
+v4:
+-Removed bus: mhi: core: Introduce independent voting mechanism patch
+-Removed bus vote function from debugfs due to independent voting removal
+-Added helper resume APIs to aid consolidation of spread out code
+-Added a clean-up patch and a missing host resume in voting API
 
-  CPU0            CPU1                    CPU2
-blkdev_open     blkdev_open           Remove disk
-                  bd_acquire
-		  blkdev_get
-		    __blkdev_get      del_gendisk
-					bdev_unhash_inode
-  bd_acquire          bdev_get_gendisk
-    bd_forget           failed because of unhashed
-	  bdput
-	              bdput (the last one)
-		        bdev_evict_inode
+v3:
+-Add patch to check for pending packets in suspend as a dependency for the
+independent voting mechanism introduction
+-Include register dump entry for debugfs to dump MHI, BHI, and BHIe registers
+-Update commit message for the debugfs patch
+-Updated Documentation/ABI with the required info for sysfs
+-Updated debugfs patch to include a new KConfig entry and dependencies
+-Updated reviewed-by for some patches
 
-	  	    access bdev => use after free
+v2:
+-Added a new debugfs.c file for specific debugfs entries and code
+-Updated commit text and addressed some comments for voting change
+-Made sure sysfs is only used for serial number and OEM PK hash usage
 
-[  459.350216] BUG: KASAN: use-after-free in __lock_acquire+0x24c1/0x31b0
-[  459.351190] Read of size 8 at addr ffff88806c815a80 by task syz-executor.0/20132
-[  459.352347]
-[  459.352594] CPU: 0 PID: 20132 Comm: syz-executor.0 Not tainted 4.19.90 #2
-[  459.353628] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-[  459.354947] Call Trace:
-[  459.355337]  dump_stack+0x111/0x19e
-[  459.355879]  ? __lock_acquire+0x24c1/0x31b0
-[  459.356523]  print_address_description+0x60/0x223
-[  459.357248]  ? __lock_acquire+0x24c1/0x31b0
-[  459.357887]  kasan_report.cold+0xae/0x2d8
-[  459.358503]  __lock_acquire+0x24c1/0x31b0
-[  459.359120]  ? _raw_spin_unlock_irq+0x24/0x40
-[  459.359784]  ? lockdep_hardirqs_on+0x37b/0x580
-[  459.360465]  ? _raw_spin_unlock_irq+0x24/0x40
-[  459.361123]  ? finish_task_switch+0x125/0x600
-[  459.361812]  ? finish_task_switch+0xee/0x600
-[  459.362471]  ? mark_held_locks+0xf0/0xf0
-[  459.363108]  ? __schedule+0x96f/0x21d0
-[  459.363716]  lock_acquire+0x111/0x320
-[  459.364285]  ? blkdev_get+0xce/0xbe0
-[  459.364846]  ? blkdev_get+0xce/0xbe0
-[  459.365390]  __mutex_lock+0xf9/0x12a0
-[  459.365948]  ? blkdev_get+0xce/0xbe0
-[  459.366493]  ? bdev_evict_inode+0x1f0/0x1f0
-[  459.367130]  ? blkdev_get+0xce/0xbe0
-[  459.367678]  ? destroy_inode+0xbc/0x110
-[  459.368261]  ? mutex_trylock+0x1a0/0x1a0
-[  459.368867]  ? __blkdev_get+0x3e6/0x1280
-[  459.369463]  ? bdev_disk_changed+0x1d0/0x1d0
-[  459.370114]  ? blkdev_get+0xce/0xbe0
-[  459.370656]  blkdev_get+0xce/0xbe0
-[  459.371178]  ? find_held_lock+0x2c/0x110
-[  459.371774]  ? __blkdev_get+0x1280/0x1280
-[  459.372383]  ? lock_downgrade+0x680/0x680
-[  459.373002]  ? lock_acquire+0x111/0x320
-[  459.373587]  ? bd_acquire+0x21/0x2c0
-[  459.374134]  ? do_raw_spin_unlock+0x4f/0x250
-[  459.374780]  blkdev_open+0x202/0x290
-[  459.375325]  do_dentry_open+0x49e/0x1050
-[  459.375924]  ? blkdev_get_by_dev+0x70/0x70
-[  459.376543]  ? __x64_sys_fchdir+0x1f0/0x1f0
-[  459.377192]  ? inode_permission+0xbe/0x3a0
-[  459.377818]  path_openat+0x148c/0x3f50
-[  459.378392]  ? kmem_cache_alloc+0xd5/0x280
-[  459.379016]  ? entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[  459.379802]  ? path_lookupat.isra.0+0x900/0x900
-[  459.380489]  ? __lock_is_held+0xad/0x140
-[  459.381093]  do_filp_open+0x1a1/0x280
-[  459.381654]  ? may_open_dev+0xf0/0xf0
-[  459.382214]  ? find_held_lock+0x2c/0x110
-[  459.382816]  ? lock_downgrade+0x680/0x680
-[  459.383425]  ? __lock_is_held+0xad/0x140
-[  459.384024]  ? do_raw_spin_unlock+0x4f/0x250
-[  459.384668]  ? _raw_spin_unlock+0x1f/0x30
-[  459.385280]  ? __alloc_fd+0x448/0x560
-[  459.385841]  do_sys_open+0x3c3/0x500
-[  459.386386]  ? filp_open+0x70/0x70
-[  459.386911]  ? trace_hardirqs_on_thunk+0x1a/0x1c
-[  459.387610]  ? trace_hardirqs_off_caller+0x55/0x1c0
-[  459.388342]  ? do_syscall_64+0x1a/0x520
-[  459.388930]  do_syscall_64+0xc3/0x520
-[  459.389490]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[  459.390248] RIP: 0033:0x416211
-[  459.390720] Code: 75 14 b8 02 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83
-04 19 00 00 c3 48 83 ec 08 e8 0a fa ff ff 48 89 04 24 b8 02 00 00 00 0f
-   05 <48> 8b 3c 24 48 89 c2 e8 53 fa ff ff 48 89 d0 48 83 c4 08 48 3d
-      01
-[  459.393483] RSP: 002b:00007fe45dfe9a60 EFLAGS: 00000293 ORIG_RAX: 0000000000000002
-[  459.394610] RAX: ffffffffffffffda RBX: 00007fe45dfea6d4 RCX: 0000000000416211
-[  459.395678] RDX: 00007fe45dfe9b0a RSI: 0000000000000002 RDI: 00007fe45dfe9b00
-[  459.396758] RBP: 000000000076bf20 R08: 0000000000000000 R09: 000000000000000a
-[  459.397930] R10: 0000000000000075 R11: 0000000000000293 R12: 00000000ffffffff
-[  459.399022] R13: 0000000000000bd9 R14: 00000000004cdb80 R15: 000000000076bf2c
-[  459.400168]
-[  459.400430] Allocated by task 20132:
-[  459.401038]  kasan_kmalloc+0xbf/0xe0
-[  459.401652]  kmem_cache_alloc+0xd5/0x280
-[  459.402330]  bdev_alloc_inode+0x18/0x40
-[  459.402970]  alloc_inode+0x5f/0x180
-[  459.403510]  iget5_locked+0x57/0xd0
-[  459.404095]  bdget+0x94/0x4e0
-[  459.404607]  bd_acquire+0xfa/0x2c0
-[  459.405113]  blkdev_open+0x110/0x290
-[  459.405702]  do_dentry_open+0x49e/0x1050
-[  459.406340]  path_openat+0x148c/0x3f50
-[  459.406926]  do_filp_open+0x1a1/0x280
-[  459.407471]  do_sys_open+0x3c3/0x500
-[  459.408010]  do_syscall_64+0xc3/0x520
-[  459.408572]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-[  459.409415]
-[  459.409679] Freed by task 1262:
-[  459.410212]  __kasan_slab_free+0x129/0x170
-[  459.410919]  kmem_cache_free+0xb2/0x2a0
-[  459.411564]  rcu_process_callbacks+0xbb2/0x2320
-[  459.412318]  __do_softirq+0x225/0x8ac
+Bhaumik Bhatt (9):
+  bus: mhi: core: Remove double occurrence for mhi_ctrl_ev_task()
+    declaration
+  bus: mhi: core: Abort suspends due to outgoing pending packets
+  bus: mhi: core: Use helper API to trigger a non-blocking host resume
+  bus: mhi: core: Trigger a host resume when device vote is requested
+  bus: mhi: core: Use generic name field for an MHI device
+  bus: mhi: core: Introduce helper function to check device state
+  bus: mhi: core: Introduce debugfs entries and counters for MHI
+  bus: mhi: core: Read and save device hardware information from BHI
+  bus: mhi: core: Introduce sysfs entries for MHI
 
-Fix this by delaying bdput() to the end of blkdev_get() which means we
-have finished accessing bdev.
+ Documentation/ABI/stable/sysfs-bus-mhi |  25 ++
+ MAINTAINERS                            |   1 +
+ drivers/bus/mhi/Kconfig                |   8 +
+ drivers/bus/mhi/core/Makefile          |   5 +-
+ drivers/bus/mhi/core/boot.c            |  17 +-
+ drivers/bus/mhi/core/debugfs.c         | 444 +++++++++++++++++++++++++++++++++
+ drivers/bus/mhi/core/init.c            |  65 ++++-
+ drivers/bus/mhi/core/internal.h        |  38 ++-
+ drivers/bus/mhi/core/main.c            |  27 +-
+ drivers/bus/mhi/core/pm.c              |  19 +-
+ include/linux/mhi.h                    |  18 +-
+ 11 files changed, 633 insertions(+), 34 deletions(-)
+ create mode 100644 Documentation/ABI/stable/sysfs-bus-mhi
+ create mode 100644 drivers/bus/mhi/core/debugfs.c
 
-Fixes: 77ea887e433a ("implement in-kernel gendisk events handling")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
-Tested-by: Sedat Dilek <sedat.dilek@gmail.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Ming Lei <ming.lei@redhat.com>
-Cc: Jan Kara <jack@suse.cz>
-Cc: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/block_dev.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
-
-diff --git a/fs/block_dev.c b/fs/block_dev.c
-index 26bbaaefdff48..b2ebfd96785b7 100644
---- a/fs/block_dev.c
-+++ b/fs/block_dev.c
-@@ -1181,10 +1181,8 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, int for_part)
- 	 */
- 	if (!for_part) {
- 		ret = devcgroup_inode_permission(bdev->bd_inode, perm);
--		if (ret != 0) {
--			bdput(bdev);
-+		if (ret != 0)
- 			return ret;
--		}
- 	}
- 
-  restart:
-@@ -1253,8 +1251,10 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, int for_part)
- 				goto out_clear;
- 			BUG_ON(for_part);
- 			ret = __blkdev_get(whole, mode, 1);
--			if (ret)
-+			if (ret) {
-+				bdput(whole);
- 				goto out_clear;
-+			}
- 			bdev->bd_contains = whole;
- 			bdev->bd_part = disk_get_part(disk, partno);
- 			if (!(disk->flags & GENHD_FL_UP) ||
-@@ -1311,7 +1311,6 @@ static int __blkdev_get(struct block_device *bdev, fmode_t mode, int for_part)
- 	put_disk(disk);
- 	module_put(owner);
-  out:
--	bdput(bdev);
- 
- 	return ret;
- }
-@@ -1397,6 +1396,9 @@ int blkdev_get(struct block_device *bdev, fmode_t mode, void *holder)
- 		bdput(whole);
- 	}
- 
-+	if (res)
-+		bdput(bdev);
-+
- 	return res;
- }
- EXPORT_SYMBOL(blkdev_get);
 -- 
-2.25.1
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
