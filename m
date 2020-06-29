@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75688C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:20:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C31C6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:20:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5639F2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:20:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A617320748
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:20:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593458430;
-	bh=CPoLbO4bEUspwUnycH2PlRBtiaWpwvB983rVPZ/hEcI=;
+	s=default; t=1593458432;
+	bh=Pmc4Qk3SkNxp1+Xft8iK3sugnTpwsjtIyHgR0m1BHxU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sOxyjae+D5holrFQjgyxJPnRhebU4JF9axHZ/afRxZGLBGWcq5/8MhQx951YEjSGY
-	 FAocaRtTA3qoaFCeJ+sIdvMJwnSkzEz2VzBybdRby7w2/e37EkDaV+tup03LVW2oQG
-	 MO47iK3FluxFwqhn0usckJuOK43F+gg/7m4zf7jM=
+	b=S0ejwePm/q3W+LihmmGLkAVQSeGe3EB/Zgol20+aNC2QEIMDUUJgR6/XAFIj93Ywm
+	 X8kCU0CzJc1yAt+u1ljUEKlKqkfRyAenHDlkqLXWoTE5Sw+K/sEnmN5o7xc3jch6Lr
+	 tCpi/HW6xYORmrMoq2hxQb9T/pvse6w9rZXnT8r8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732130AbgF2TU2 (ORCPT
+        id S1732135AbgF2TUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:20:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33196 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:20:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732110AbgF2TUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732104AbgF2TUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:20:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4729225477;
-        Mon, 29 Jun 2020 15:43:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B9C02546D;
+        Mon, 29 Jun 2020 15:43:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445431;
-        bh=CPoLbO4bEUspwUnycH2PlRBtiaWpwvB983rVPZ/hEcI=;
+        s=default; t=1593445424;
+        bh=Pmc4Qk3SkNxp1+Xft8iK3sugnTpwsjtIyHgR0m1BHxU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y+7l2+0WYoU9szJpNIxihGJolRW/KBQ9XBbWzO08y/gjVSDSaAZXaVB9nw+rtTzhF
-         OsQmtFPEYxqnKRbAhaQYhdB+kA1rrIm3gc1yO1d0x4s3EavdW/XSHxqRrYv0eB5AWs
-         GfNfltxR5Z2Pb6nu6b2IWDgbfqhZNN2dcvkZ8WiA=
+        b=Ulc6/qZ+tQBcBEFX420JKSo+9IO2lVAhPyDTaQDI/huzw1QL66ixhq847pq0GiCRO
+         RbSgzUiy7yxj0IcOMTaTGspmTkIQfbLKZJrfqZcZlDeMHqKi34j2LekWZg6iIWrONm
+         3tz2nikas9b45M+i6FC+qWkGjaklw/CRjXqAo34I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiaoyao Li <xiaoyao.li@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.9 177/191] KVM: X86: Fix MSR range of APIC registers in X2APIC mode
-Date:   Mon, 29 Jun 2020 11:39:53 -0400
-Message-Id: <20200629154007.2495120-178-sashal@kernel.org>
+Cc:     Sven Schnelle <svens@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 172/191] s390/ptrace: fix setting syscall number
+Date:   Mon, 29 Jun 2020 11:39:48 -0400
+Message-Id: <20200629154007.2495120-173-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -67,47 +65,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiaoyao Li <xiaoyao.li@intel.com>
+From: Sven Schnelle <svens@linux.ibm.com>
 
-commit bf10bd0be53282183f374af23577b18b5fbf7801 upstream.
+[ Upstream commit 873e5a763d604c32988c4a78913a8dab3862d2f9 ]
 
-Only MSR address range 0x800 through 0x8ff is architecturally reserved
-and dedicated for accessing APIC registers in x2APIC mode.
+When strace wants to update the syscall number, it sets GPR2
+to the desired number and updates the GPR via PTRACE_SETREGSET.
+It doesn't update regs->int_code which would cause the old syscall
+executed on syscall restart. As we cannot change the ptrace ABI and
+don't have a field for the interruption code, check whether the tracee
+is in a syscall and the last instruction was svc. In that case assume
+that the tracer wants to update the syscall number and copy the GPR2
+value to regs->int_code.
 
-Fixes: 0105d1a52640 ("KVM: x2apic interface to lapic")
-Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
-Message-Id: <20200616073307.16440-1-xiaoyao.li@intel.com>
-Cc: stable@vger.kernel.org
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/x86.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/s390/kernel/ptrace.c | 31 ++++++++++++++++++++++++++++++-
+ 1 file changed, 30 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index 0f66f7dd89384..6b7faa14c27bb 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -2304,7 +2304,7 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		return kvm_mtrr_set_msr(vcpu, msr, data);
- 	case MSR_IA32_APICBASE:
- 		return kvm_set_apic_base(vcpu, msr_info);
--	case APIC_BASE_MSR ... APIC_BASE_MSR + 0x3ff:
-+	case APIC_BASE_MSR ... APIC_BASE_MSR + 0xff:
- 		return kvm_x2apic_msr_write(vcpu, msr, data);
- 	case MSR_IA32_TSCDEADLINE:
- 		kvm_set_lapic_tscdeadline_msr(vcpu, data);
-@@ -2576,7 +2576,7 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 	case MSR_IA32_APICBASE:
- 		msr_info->data = kvm_get_apic_base(vcpu);
- 		break;
--	case APIC_BASE_MSR ... APIC_BASE_MSR + 0x3ff:
-+	case APIC_BASE_MSR ... APIC_BASE_MSR + 0xff:
- 		return kvm_x2apic_msr_read(vcpu, msr_info->index, &msr_info->data);
- 		break;
- 	case MSR_IA32_TSCDEADLINE:
+diff --git a/arch/s390/kernel/ptrace.c b/arch/s390/kernel/ptrace.c
+index fc2974b929c37..ee757d6f585e6 100644
+--- a/arch/s390/kernel/ptrace.c
++++ b/arch/s390/kernel/ptrace.c
+@@ -308,6 +308,25 @@ static inline void __poke_user_per(struct task_struct *child,
+ 		child->thread.per_user.end = data;
+ }
+ 
++static void fixup_int_code(struct task_struct *child, addr_t data)
++{
++	struct pt_regs *regs = task_pt_regs(child);
++	int ilc = regs->int_code >> 16;
++	u16 insn;
++
++	if (ilc > 6)
++		return;
++
++	if (ptrace_access_vm(child, regs->psw.addr - (regs->int_code >> 16),
++			&insn, sizeof(insn), FOLL_FORCE) != sizeof(insn))
++		return;
++
++	/* double check that tracee stopped on svc instruction */
++	if ((insn >> 8) != 0xa)
++		return;
++
++	regs->int_code = 0x20000 | (data & 0xffff);
++}
+ /*
+  * Write a word to the user area of a process at location addr. This
+  * operation does have an additional problem compared to peek_user.
+@@ -319,7 +338,9 @@ static int __poke_user(struct task_struct *child, addr_t addr, addr_t data)
+ 	struct user *dummy = NULL;
+ 	addr_t offset;
+ 
++
+ 	if (addr < (addr_t) &dummy->regs.acrs) {
++		struct pt_regs *regs = task_pt_regs(child);
+ 		/*
+ 		 * psw and gprs are stored on the stack
+ 		 */
+@@ -337,7 +358,11 @@ static int __poke_user(struct task_struct *child, addr_t addr, addr_t data)
+ 				/* Invalid addressing mode bits */
+ 				return -EINVAL;
+ 		}
+-		*(addr_t *)((addr_t) &task_pt_regs(child)->psw + addr) = data;
++
++		if (test_pt_regs_flag(regs, PIF_SYSCALL) &&
++			addr == offsetof(struct user, regs.gprs[2]))
++			fixup_int_code(child, data);
++		*(addr_t *)((addr_t) &regs->psw + addr) = data;
+ 
+ 	} else if (addr < (addr_t) (&dummy->regs.orig_gpr2)) {
+ 		/*
+@@ -703,6 +728,10 @@ static int __poke_user_compat(struct task_struct *child,
+ 			regs->psw.mask = (regs->psw.mask & ~PSW_MASK_BA) |
+ 				(__u64)(tmp & PSW32_ADDR_AMODE);
+ 		} else {
++
++			if (test_pt_regs_flag(regs, PIF_SYSCALL) &&
++				addr == offsetof(struct compat_user, regs.gprs[2]))
++				fixup_int_code(child, data);
+ 			/* gpr 0-15 */
+ 			*(__u32*)((addr_t) &regs->psw + addr*2 + 4) = tmp;
+ 		}
 -- 
 2.25.1
 
