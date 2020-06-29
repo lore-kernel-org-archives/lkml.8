@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB47C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2560C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B27F20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:58:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD9DC20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:58:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460689;
-	bh=XZMZvUdksZcKNHGwiJfs3BqbDlrqQIOsxe64/ux010k=;
+	s=default; t=1593460694;
+	bh=FATNjAXvx8vrwrvho3+k3jo6fRNhCtd/10INbKd4NGs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wpag4jXN4w1lWg/aAl3Omz5Z3H0tazLwS7LOrjTsZLpR5hGVPmcO8FeWnie/nFJi3
-	 BhDzjw+NxsC0UgubVb9VovhPw4fpfvV8jI2kpoCEMaVg292QAmD58GcAwBwuH7EJpH
-	 GVRDCu4UbeaJArQ3CEePbTwZ5Ac7cSvSEWgPqObI=
+	b=cOPBlj+CFnyBE8behHL+kI3c0Y+MZKB48L+1UKeca0F3ASTVIAhM5t11rbiPm3S64
+	 FdcPz0LsxjDY/Tll3vKKjvMhZOWfxRpdyA7EKslKxNkzBCeVl3BULNZ8mlcqo/FfBO
+	 3KGwEma3+UaZSGynFqXk+MzsbwlRn6kswyfdRtcE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388195AbgF2T6G (ORCPT
+        id S2388392AbgF2T6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:58:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47692 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:58:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387596AbgF2TkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387607AbgF2TkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 192FF248AA;
-        Mon, 29 Jun 2020 15:26:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B1132489D;
+        Mon, 29 Jun 2020 15:26:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444402;
-        bh=XZMZvUdksZcKNHGwiJfs3BqbDlrqQIOsxe64/ux010k=;
+        s=default; t=1593444399;
+        bh=FATNjAXvx8vrwrvho3+k3jo6fRNhCtd/10INbKd4NGs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aa8hJ/LPx1yxENUAxXyUGRbxug3tu+c4jUWfcgePuCa2LawyqGS23Y2CwtvQDO+2u
-         pv1/0qyqA5gnF8jKib8y8jr04cI9hXRDXshCg9vpZQls1dDsw1BzPwn+XkcRpHwDIL
-         f60BjzzFcsfTy3arKymrCTfotMRuM1mMsF2AjuLA=
+        b=ZI9yQrSxzD+QUT6zfU1DF8IKZfFeio3q5raQh4iavfu+IY5rQWhJhqiN/Dl6sZW9V
+         znhNGEa4YiF69nA+Qm9EpqwY0GewpkvC1Gz4ouXlFPRnBYE+rwJztSWX1FwudDuQNL
+         s+wV18aTXYbAFXtMVB+zQA5oJQC+3UeI2N2/yWv4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Stanislav Fomichev <sdf@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        David Laight <David.Laight@ACULAB.COM>,
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Borislav Petkov <bp@suse.de>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 080/178] bpf: Don't return EINVAL from {get,set}sockopt when optlen > PAGE_SIZE
-Date:   Mon, 29 Jun 2020 11:23:45 -0400
-Message-Id: <20200629152523.2494198-81-sashal@kernel.org>
+Subject: [PATCH 5.4 077/178] x86/resctrl: Fix a NULL vs IS_ERR() static checker warning in rdt_cdp_peer_get()
+Date:   Mon, 29 Jun 2020 11:23:42 -0400
+Message-Id: <20200629152523.2494198-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -66,158 +67,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stanislav Fomichev <sdf@google.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-[ Upstream commit d8fe449a9c51a37d844ab607e14e2f5c657d3cf2 ]
+[ Upstream commit cc5277fe66cf3ad68f41f1c539b2ef0d5e432974 ]
 
-Attaching to these hooks can break iptables because its optval is
-usually quite big, or at least bigger than the current PAGE_SIZE limit.
-David also mentioned some SCTP options can be big (around 256k).
+The callers don't expect *d_cdp to be set to an error pointer, they only
+check for NULL.  This leads to a static checker warning:
 
-For such optvals we expose only the first PAGE_SIZE bytes to
-the BPF program. BPF program has two options:
-1. Set ctx->optlen to 0 to indicate that the BPF's optval
-   should be ignored and the kernel should use original userspace
-   value.
-2. Set ctx->optlen to something that's smaller than the PAGE_SIZE.
+  arch/x86/kernel/cpu/resctrl/rdtgroup.c:2648 __init_one_rdt_domain()
+  warn: 'd_cdp' could be an error pointer
 
-v5:
-* use ctx->optlen == 0 with trimmed buffer (Alexei Starovoitov)
-* update the docs accordingly
+This would not trigger a bug in this specific case because
+__init_one_rdt_domain() calls it with a valid domain that would not have
+a negative id and thus not trigger the return of the ERR_PTR(). If this
+was a negative domain id then the call to rdt_find_domain() in
+domain_add_cpu() would have returned the ERR_PTR() much earlier and the
+creation of the domain with an invalid id would have been prevented.
 
-v4:
-* use temporary buffer to avoid optval == optval_end == NULL;
-  this removes the corner case in the verifier that might assume
-  non-zero PTR_TO_PACKET/PTR_TO_PACKET_END.
+Even though a bug is not triggered currently the right and safe thing to
+do is to set the pointer to NULL because that is what can be checked for
+when the caller is handling the CDP and non-CDP cases.
 
-v3:
-* don't increase the limit, bypass the argument
-
-v2:
-* proper comments formatting (Jakub Kicinski)
-
-Fixes: 0d01da6afc54 ("bpf: implement getsockopt and setsockopt hooks")
-Signed-off-by: Stanislav Fomichev <sdf@google.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Cc: David Laight <David.Laight@ACULAB.COM>
-Link: https://lore.kernel.org/bpf/20200617010416.93086-1-sdf@google.com
+Fixes: 52eb74339a62 ("x86/resctrl: Fix rdt_find_domain() return value and checks")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Reinette Chatre <reinette.chatre@intel.com>
+Acked-by: Fenghua Yu <fenghua.yu@intel.com>
+Link: https://lkml.kernel.org/r/20200602193611.GA190851@mwanda
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/bpf/cgroup.c | 53 ++++++++++++++++++++++++++++-----------------
- 1 file changed, 33 insertions(+), 20 deletions(-)
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
-index 869e2e1860e84..b701af27a7799 100644
---- a/kernel/bpf/cgroup.c
-+++ b/kernel/bpf/cgroup.c
-@@ -966,16 +966,23 @@ static bool __cgroup_bpf_prog_array_is_empty(struct cgroup *cgrp,
- 
- static int sockopt_alloc_buf(struct bpf_sockopt_kern *ctx, int max_optlen)
- {
--	if (unlikely(max_optlen > PAGE_SIZE) || max_optlen < 0)
-+	if (unlikely(max_optlen < 0))
- 		return -EINVAL;
- 
-+	if (unlikely(max_optlen > PAGE_SIZE)) {
-+		/* We don't expose optvals that are greater than PAGE_SIZE
-+		 * to the BPF program.
-+		 */
-+		max_optlen = PAGE_SIZE;
-+	}
-+
- 	ctx->optval = kzalloc(max_optlen, GFP_USER);
- 	if (!ctx->optval)
- 		return -ENOMEM;
- 
- 	ctx->optval_end = ctx->optval + max_optlen;
- 
--	return 0;
-+	return max_optlen;
- }
- 
- static void sockopt_free_buf(struct bpf_sockopt_kern *ctx)
-@@ -1009,13 +1016,13 @@ int __cgroup_bpf_run_filter_setsockopt(struct sock *sk, int *level,
- 	 */
- 	max_optlen = max_t(int, 16, *optlen);
- 
--	ret = sockopt_alloc_buf(&ctx, max_optlen);
--	if (ret)
--		return ret;
-+	max_optlen = sockopt_alloc_buf(&ctx, max_optlen);
-+	if (max_optlen < 0)
-+		return max_optlen;
- 
- 	ctx.optlen = *optlen;
- 
--	if (copy_from_user(ctx.optval, optval, *optlen) != 0) {
-+	if (copy_from_user(ctx.optval, optval, min(*optlen, max_optlen)) != 0) {
- 		ret = -EFAULT;
- 		goto out;
- 	}
-@@ -1043,8 +1050,14 @@ int __cgroup_bpf_run_filter_setsockopt(struct sock *sk, int *level,
- 		/* export any potential modifications */
- 		*level = ctx.level;
- 		*optname = ctx.optname;
--		*optlen = ctx.optlen;
--		*kernel_optval = ctx.optval;
-+
-+		/* optlen == 0 from BPF indicates that we should
-+		 * use original userspace data.
-+		 */
-+		if (ctx.optlen != 0) {
-+			*optlen = ctx.optlen;
-+			*kernel_optval = ctx.optval;
-+		}
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index 20856d80dce3b..54b711bc06073 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -1027,6 +1027,7 @@ static int rdt_cdp_peer_get(struct rdt_resource *r, struct rdt_domain *d,
+ 	_d_cdp = rdt_find_domain(_r_cdp, d->id, NULL);
+ 	if (WARN_ON(IS_ERR_OR_NULL(_d_cdp))) {
+ 		_r_cdp = NULL;
++		_d_cdp = NULL;
+ 		ret = -EINVAL;
  	}
  
- out:
-@@ -1076,12 +1089,12 @@ int __cgroup_bpf_run_filter_getsockopt(struct sock *sk, int level,
- 	    __cgroup_bpf_prog_array_is_empty(cgrp, BPF_CGROUP_GETSOCKOPT))
- 		return retval;
- 
--	ret = sockopt_alloc_buf(&ctx, max_optlen);
--	if (ret)
--		return ret;
--
- 	ctx.optlen = max_optlen;
- 
-+	max_optlen = sockopt_alloc_buf(&ctx, max_optlen);
-+	if (max_optlen < 0)
-+		return max_optlen;
-+
- 	if (!retval) {
- 		/* If kernel getsockopt finished successfully,
- 		 * copy whatever was returned to the user back
-@@ -1095,10 +1108,8 @@ int __cgroup_bpf_run_filter_getsockopt(struct sock *sk, int level,
- 			goto out;
- 		}
- 
--		if (ctx.optlen > max_optlen)
--			ctx.optlen = max_optlen;
--
--		if (copy_from_user(ctx.optval, optval, ctx.optlen) != 0) {
-+		if (copy_from_user(ctx.optval, optval,
-+				   min(ctx.optlen, max_optlen)) != 0) {
- 			ret = -EFAULT;
- 			goto out;
- 		}
-@@ -1127,10 +1138,12 @@ int __cgroup_bpf_run_filter_getsockopt(struct sock *sk, int level,
- 		goto out;
- 	}
- 
--	if (copy_to_user(optval, ctx.optval, ctx.optlen) ||
--	    put_user(ctx.optlen, optlen)) {
--		ret = -EFAULT;
--		goto out;
-+	if (ctx.optlen != 0) {
-+		if (copy_to_user(optval, ctx.optval, ctx.optlen) ||
-+		    put_user(ctx.optlen, optlen)) {
-+			ret = -EFAULT;
-+			goto out;
-+		}
- 	}
- 
- 	ret = ctx.retval;
 -- 
 2.25.1
 
