@@ -4,52 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 158FCC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:35:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B671C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E6FE922269
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:35:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B8D5222C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:35:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593455738;
-	bh=+BScHcEoWoNxBeKrIFUTdorvUOhsOsh1PWnSVcUlz+c=;
+	s=default; t=1593455741;
+	bh=YcBvkHLseg2B1KadSr98e/e+pOnVHrMnbfzANZoWk7E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y7lURh6BzRA1gboBQugE0oLxQxSkGIyOl4yMVTB3uBZZo4Csxxj6O1hgJVdM8b9/w
-	 3qdrccB+nkHnh1SmGk3JfSmQ5NorD3/5sXlEasdGn08emcHiW8devUGYD7Bfc6DojW
-	 U+fFRKubVQRjs0I+R4ppR7r4Pt3Liq4s02Q3MrIE=
+	b=quse4LGdXbkRnoUuWKOFVZgxEb3t8ZQm28CdtcwG2fD3JZIzFvO+oYf/G0tDUFZiN
+	 5NsaEErtvo7ll7puoWjrK/UR6Oc5XFClhIrzddhD1AAjha40jJBN/0sADbysPlFhPu
+	 eMT4H/Tl6DPVi/IpYnpMqQrjPjyviyhE1v03WjLQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbgF2Sfg (ORCPT
+        id S1726047AbgF2Sfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:35:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56892 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 14:35:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726175AbgF2SfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726186AbgF2SfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16422247C9;
-        Mon, 29 Jun 2020 15:22:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB00124749;
+        Mon, 29 Jun 2020 15:21:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444135;
-        bh=+BScHcEoWoNxBeKrIFUTdorvUOhsOsh1PWnSVcUlz+c=;
+        s=default; t=1593444068;
+        bh=YcBvkHLseg2B1KadSr98e/e+pOnVHrMnbfzANZoWk7E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C7ZZEU5o/tSeT1CJRSnZB4t4L2xwXudOXzi6nGDqaHhfiGax9+j92QEpq9pg9pXib
-         /FesMi5G1tSLGrCgPs4GY+LSFWbt+ZJD1LLOVN7jSe+pS0sKIh8ZpLpJFH4/M0I+MI
-         Nulj7Z+FEOpX0NpN3kipMPcrcJUFKbtIa31S5bDM=
+        b=BOP7MwMqWc1zEQUxwvWPEHvhPxK7pCjIv0iBN2dD7GdwQu5YkB5tV1pR1crzsP8Gh
+         P6SAGwQaJAue3ZGiOAav3o1164LJJN7qwYsT2vxE9Cq2yYD6EddzyjsWQB+uikLwft
+         PsnAu0YqQbKeajNpefEyozJYn/4ZsFh1Jhm7/01U=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sascha Ortmann <sascha.ortmann@stud.uni-hannover.de>,
-        linux-kernel@i4.cs.fau.de,
-        Maximilian Werner <maximilian.werner96@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 241/265] tracing/boottime: Fix kprobe multiple events
-Date:   Mon, 29 Jun 2020 11:17:54 -0400
-Message-Id: <20200629151818.2493727-242-sashal@kernel.org>
+Cc:     Mans Rullgard <mans@mansr.com>, Wolfram Sang <wsa@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 177/265] i2c: core: check returned size of emulated smbus block read
+Date:   Mon, 29 Jun 2020 11:16:50 -0400
+Message-Id: <20200629151818.2493727-178-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -68,75 +64,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sascha Ortmann <sascha.ortmann@stud.uni-hannover.de>
+From: Mans Rullgard <mans@mansr.com>
 
-commit 20dc3847cc2fc886ee4eb9112e6e2fad9419b0c7 upstream.
+[ Upstream commit 40e05200593af06633f64ab0effff052eee6f076 ]
 
-Fix boottime kprobe events to report and abort after each failure when
-adding probes.
+If the i2c bus driver ignores the I2C_M_RECV_LEN flag (as some of
+them do), it is possible for an I2C_SMBUS_BLOCK_DATA read issued
+on some random device to return an arbitrary value in the first
+byte (and nothing else).  When this happens, i2c_smbus_xfer_emulated()
+will happily write past the end of the supplied data buffer, thus
+causing Bad Things to happen.  To prevent this, check the size
+before copying the data block and return an error if it is too large.
 
-As an example, when we try to set multiprobe kprobe events in
-bootconfig like this:
-
-ftrace.event.kprobes.vfsevents {
-        probes = "vfs_read $arg1 $arg2,,
-                 !error! not reported;?", // leads to error
-                 "vfs_write $arg1 $arg2"
-}
-
-This will not work as expected. After
-commit da0f1f4167e3af69e ("tracing/boottime: Fix kprobe event API usage"),
-the function trace_boot_add_kprobe_event will not produce any error
-message when adding a probe fails at kprobe_event_gen_cmd_start.
-Furthermore, we continue to add probes when kprobe_event_gen_cmd_end fails
-(and kprobe_event_gen_cmd_start did not fail). In this case the function
-even returns successfully when the last call to kprobe_event_gen_cmd_end
-is successful.
-
-The behaviour of reporting and aborting after failures is not
-consistent.
-
-The function trace_boot_add_kprobe_event now reports each failure and
-stops adding probes immediately.
-
-Link: https://lkml.kernel.org/r/20200618163301.25854-1-sascha.ortmann@stud.uni-hannover.de
-
-Cc: stable@vger.kernel.org
-Cc: linux-kernel@i4.cs.fau.de
-Co-developed-by: Maximilian Werner <maximilian.werner96@gmail.com>
-Fixes: da0f1f4167e3 ("tracing/boottime: Fix kprobe event API usage")
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Maximilian Werner <maximilian.werner96@gmail.com>
-Signed-off-by: Sascha Ortmann <sascha.ortmann@stud.uni-hannover.de>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 209d27c3b167 ("i2c: Emulate SMBus block read over I2C")
+Signed-off-by: Mans Rullgard <mans@mansr.com>
+[wsa: use better errno]
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace_boot.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/i2c/i2c-core-smbus.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
-index 9de29bb45a27f..fdc5abc00bf84 100644
---- a/kernel/trace/trace_boot.c
-+++ b/kernel/trace/trace_boot.c
-@@ -101,12 +101,16 @@ trace_boot_add_kprobe_event(struct xbc_node *node, const char *event)
- 		kprobe_event_cmd_init(&cmd, buf, MAX_BUF_LEN);
- 
- 		ret = kprobe_event_gen_cmd_start(&cmd, event, val);
--		if (ret)
-+		if (ret) {
-+			pr_err("Failed to generate probe: %s\n", buf);
+diff --git a/drivers/i2c/i2c-core-smbus.c b/drivers/i2c/i2c-core-smbus.c
+index b34d2ff069318..bbb70a8a411e3 100644
+--- a/drivers/i2c/i2c-core-smbus.c
++++ b/drivers/i2c/i2c-core-smbus.c
+@@ -495,6 +495,13 @@ static s32 i2c_smbus_xfer_emulated(struct i2c_adapter *adapter, u16 addr,
  			break;
-+		}
- 
- 		ret = kprobe_event_gen_cmd_end(&cmd);
--		if (ret)
-+		if (ret) {
- 			pr_err("Failed to add probe: %s\n", buf);
-+			break;
-+		}
- 	}
- 
- 	return ret;
+ 		case I2C_SMBUS_BLOCK_DATA:
+ 		case I2C_SMBUS_BLOCK_PROC_CALL:
++			if (msg[1].buf[0] > I2C_SMBUS_BLOCK_MAX) {
++				dev_err(&adapter->dev,
++					"Invalid block size returned: %d\n",
++					msg[1].buf[0]);
++				status = -EPROTO;
++				goto cleanup;
++			}
+ 			for (i = 0; i < msg[1].buf[0] + 1; i++)
+ 				data->block[i] = msg[1].buf[i];
+ 			break;
 -- 
 2.25.1
 
