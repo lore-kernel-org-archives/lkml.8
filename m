@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E6EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DDA4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05B99206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:58:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 396B1206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:58:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467936;
-	bh=J56cYYTWlPlgnKtraKgukkZV8i9esAm0+h4VzSWG7u8=;
+	s=default; t=1593467939;
+	bh=PxQi7KYMGjCiF39BGevEi1RnPJUzvD/9wwRNIYsBLBY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VmiCf9MJhmg+BTpu3v59VdDK0ERdnCovcTWeAF/sdr1i1qcw/02O1LlAy3sdZUcMC
-	 DQV+FSwmYQ7wA11A8Du1/1uG8K9eRaQD0j7GDuf4CkowuJniAJP9255ocM422Qhv1m
-	 QAzCLiD6OLC8PObmXT+gRxInvJjqZyegVgtvrxUs=
+	b=TNTOeUDy5q9T1phmA3DYhpGARc8PE3PVhzZMaj3OhL6tWnaHgPTUHFbGLKsZiXACx
+	 +wD831zeTjXoMj78Ln+LAP9HOqMY8madvxO7a3aHL3kVoc/jYJev+0Ga6vtvnNgUh0
+	 /nUSF/PBKJwZH4C2h3MyAhTfiiQd8HuO4f5h2LU4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726469AbgF2Sf2 (ORCPT
+        id S2404776AbgF2V65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:35:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56764 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:58:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725930AbgF2SfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:17 -0400
+        id S1726438AbgF2Sf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F8FA247F7;
-        Mon, 29 Jun 2020 15:22:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A53224691;
+        Mon, 29 Jun 2020 15:19:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444155;
-        bh=J56cYYTWlPlgnKtraKgukkZV8i9esAm0+h4VzSWG7u8=;
+        s=default; t=1593443988;
+        bh=PxQi7KYMGjCiF39BGevEi1RnPJUzvD/9wwRNIYsBLBY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aCHcFUTUPNjK7m1JexbjYw8aa9c/SwSsLQaEH49THTZyRXXFfXlod/IPLsO5Ssap8
-         sjVNG3qfXf/tYV4+k9iWsV6ZH0wZtxELN9Uh/H7NtidsU+9ZHk01I6fkzB0bZ+eadW
-         s44hNhEBBc4QHnr9uoZEPKv0EP9m2G2g65Vdzs7U=
+        b=LKvT45COOMHibV4HpiKtr29/MIp3/2uGzpg357cLjcmULTJZIta7S/qiDSSijelM0
+         92aivXUIVWGzozLwzmCnQcS0P+gtgI58xib4UZgCYVJKhvIRlQx86DqudWYM0cGvde
+         Tq8wM0OlHgoTYdc36WGaykTb7BLzRCot2rVmkngo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Borislav Petkov <bp@suse.de>,
-        Anders Andersson <pipatron@gmail.com>,
+Cc:     Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 261/265] EDAC/amd64: Read back the scrub rate PCI register on F15h
-Date:   Mon, 29 Jun 2020 11:18:14 -0400
-Message-Id: <20200629151818.2493727-262-sashal@kernel.org>
+Subject: [PATCH 5.7 092/265] IB/hfi1: Fix module use count flaw due to leftover module put calls
+Date:   Mon, 29 Jun 2020 11:15:25 -0400
+Message-Id: <20200629151818.2493727-93-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -65,45 +67,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+From: Dennis Dalessandro <dennis.dalessandro@intel.com>
 
-commit ee470bb25d0dcdf126f586ec0ae6dca66cb340a4 upstream.
+commit 822fbd37410639acdae368ea55477ddd3498651d upstream.
 
-Commit:
+When the try_module_get calls were removed from opening and closing of the
+i2c debugfs file, the corresponding module_put calls were missed.  This
+results in an inaccurate module use count that requires a power cycle to
+fix.
 
-  da92110dfdfa ("EDAC, amd64_edac: Extend scrub rate support to F15hM60h")
-
-added support for F15h, model 0x60 CPUs but in doing so, missed to read
-back SCRCTRL PCI config register on F15h CPUs which are *not* model
-0x60. Add that read so that doing
-
-  $ cat /sys/devices/system/edac/mc/mc0/sdram_scrub_rate
-
-can show the previously set DRAM scrub rate.
-
-Fixes: da92110dfdfa ("EDAC, amd64_edac: Extend scrub rate support to F15hM60h")
-Reported-by: Anders Andersson <pipatron@gmail.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: <stable@vger.kernel.org> #v4.4..
-Link: https://lkml.kernel.org/r/CAKkunMbNWppx_i6xSdDHLseA2QQmGJqj_crY=NF-GZML5np4Vw@mail.gmail.com
+Fixes: 09fbca8e6240 ("IB/hfi1: No need to use try_module_get for debugfs")
+Link: https://lore.kernel.org/r/20200623203230.106975.76240.stgit@awfm-01.aw.intel.com
+Cc: <stable@vger.kernel.org>
+Reviewed-by: Kaike Wan <kaike.wan@intel.com>
+Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/edac/amd64_edac.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/infiniband/hw/hfi1/debugfs.c | 19 ++-----------------
+ 1 file changed, 2 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/edac/amd64_edac.c b/drivers/edac/amd64_edac.c
-index 4e9994de0b900..0d89c3e473bdc 100644
---- a/drivers/edac/amd64_edac.c
-+++ b/drivers/edac/amd64_edac.c
-@@ -272,6 +272,8 @@ static int get_scrub_rate(struct mem_ctl_info *mci)
+diff --git a/drivers/infiniband/hw/hfi1/debugfs.c b/drivers/infiniband/hw/hfi1/debugfs.c
+index 4633a0ce1a8c0..2ced236e1553c 100644
+--- a/drivers/infiniband/hw/hfi1/debugfs.c
++++ b/drivers/infiniband/hw/hfi1/debugfs.c
+@@ -985,15 +985,10 @@ static ssize_t qsfp2_debugfs_read(struct file *file, char __user *buf,
+ static int __i2c_debugfs_open(struct inode *in, struct file *fp, u32 target)
+ {
+ 	struct hfi1_pportdata *ppd;
+-	int ret;
  
- 		if (pvt->model == 0x60)
- 			amd64_read_pci_cfg(pvt->F2, F15H_M60H_SCRCTRL, &scrubval);
-+		else
-+			amd64_read_pci_cfg(pvt->F3, SCRCTRL, &scrubval);
- 	} else {
- 		amd64_read_pci_cfg(pvt->F3, SCRCTRL, &scrubval);
- 	}
+ 	ppd = private2ppd(fp);
+ 
+-	ret = acquire_chip_resource(ppd->dd, i2c_target(target), 0);
+-	if (ret) /* failed - release the module */
+-		module_put(THIS_MODULE);
+-
+-	return ret;
++	return acquire_chip_resource(ppd->dd, i2c_target(target), 0);
+ }
+ 
+ static int i2c1_debugfs_open(struct inode *in, struct file *fp)
+@@ -1013,7 +1008,6 @@ static int __i2c_debugfs_release(struct inode *in, struct file *fp, u32 target)
+ 	ppd = private2ppd(fp);
+ 
+ 	release_chip_resource(ppd->dd, i2c_target(target));
+-	module_put(THIS_MODULE);
+ 
+ 	return 0;
+ }
+@@ -1031,18 +1025,10 @@ static int i2c2_debugfs_release(struct inode *in, struct file *fp)
+ static int __qsfp_debugfs_open(struct inode *in, struct file *fp, u32 target)
+ {
+ 	struct hfi1_pportdata *ppd;
+-	int ret;
+-
+-	if (!try_module_get(THIS_MODULE))
+-		return -ENODEV;
+ 
+ 	ppd = private2ppd(fp);
+ 
+-	ret = acquire_chip_resource(ppd->dd, i2c_target(target), 0);
+-	if (ret) /* failed - release the module */
+-		module_put(THIS_MODULE);
+-
+-	return ret;
++	return acquire_chip_resource(ppd->dd, i2c_target(target), 0);
+ }
+ 
+ static int qsfp1_debugfs_open(struct inode *in, struct file *fp)
+@@ -1062,7 +1048,6 @@ static int __qsfp_debugfs_release(struct inode *in, struct file *fp, u32 target)
+ 	ppd = private2ppd(fp);
+ 
+ 	release_chip_resource(ppd->dd, i2c_target(target));
+-	module_put(THIS_MODULE);
+ 
+ 	return 0;
+ }
 -- 
 2.25.1
 
