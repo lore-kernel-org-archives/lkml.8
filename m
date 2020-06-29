@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 814DFC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D46BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 553EA206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EC1A2076C
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:57:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467846;
-	bh=1xv6yYBqZwbWzKf+MAaWuSrnLwTqcr4DmRgoY8PZRCM=;
+	s=default; t=1593467851;
+	bh=NyWz1FgYUPSub3ifSPAYEhuuWIOksl05ZJUrc5Sa8M8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y0iuXD1GXHa+SSt2XX9sGxlIPetFRqMk2XkM+/juY+zSbpM4t3RPAozK+wby0y6tg
-	 8h3zYo2KUO9Ntx+TC/Z76tblVfCO4PC8eOz/g7iYLZPS2QRgxFYr91WbfXKTgmAjgR
-	 pCtsPoMoQ6Jik+ugo9AK/i42yPfmo+EOlAR0+UAg=
+	b=Ze9+7Cp0J2NVOMy/UR+NJ1DRSD80soFMXo12KndPgpUldsucWgEkQqsWkL8cT77rJ
+	 pICTKsezT87ekH5AB6cX6GZI2SJ7LupC0b/0fl1N0hD1Kd460X2RaKrktM8y+ZWs5H
+	 Ft+nPzipPqhST+N87Xi8SP6mJsTowekrLADAx9qQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726639AbgF2V5Z (ORCPT
+        id S1732624AbgF2V53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:57:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56782 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:57:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726507AbgF2Sfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:30 -0400
+        id S1726490AbgF2Sf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:29 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C05D24681;
-        Mon, 29 Jun 2020 15:19:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 554EC2468F;
+        Mon, 29 Jun 2020 15:19:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443976;
-        bh=1xv6yYBqZwbWzKf+MAaWuSrnLwTqcr4DmRgoY8PZRCM=;
+        s=default; t=1593443991;
+        bh=NyWz1FgYUPSub3ifSPAYEhuuWIOksl05ZJUrc5Sa8M8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HMENSB8c7+B5relgx2fhDnJduQlAwGDtN1JQ7yaV9/j0xdwtRdpvU6WxcJbTPQAsN
-         xoiEJxrhB8sgfVdOQ5md1ZyG50knGREOKdp7LXWNvUx37VasvIzC5p5LUpZuiaPiM2
-         rXc7ATop//HoUyX9q9szAVtj4JhDbYQS8pgDdZ1g=
+        b=cJlR99NMKjLgUR0fhmj7PN52hpY1l7DOSE3/CjUu27ItjKTEAhiYdImKd9NEwyKxf
+         sUOFofGryVQD/r5SV8mqXua1Amwq2i4Yfh6N9F+Sl7+rq39ajdJvpGp4CVieYgrqU9
+         n7eKwvZhwCf2fLSvAWUMvWjhUHcXaaYvmSauiTy4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Chen <peter.chen@nxp.com>,
-        Pawel Laszczak <pawell@cadence.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 080/265] usb: cdns3: ep0: add spinlock for cdns3_check_new_setup
-Date:   Mon, 29 Jun 2020 11:15:13 -0400
-Message-Id: <20200629151818.2493727-81-sashal@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 095/265] bus: ti-sysc: Ignore clockactivity unless specified as a quirk
+Date:   Mon, 29 Jun 2020 11:15:28 -0400
+Message-Id: <20200629151818.2493727-96-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -66,55 +66,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Chen <peter.chen@nxp.com>
+From: Tony Lindgren <tony@atomide.com>
 
-commit 2587a029fa2a877d0a8dda955ef1b24c94b4bd0e upstream.
+[ Upstream commit 08b91dd6e547467fad61a7c201ff71080d7ad65a ]
 
-The other thread may access other endpoints when the cdns3_check_new_setup
-is handling, add spinlock to protect it.
+We must ignore the clockactivity bit for most modules and not set it
+unless specified for the module with SYSC_QUIRK_USE_CLOCKACT. Otherwise
+the interface clock can be automatically gated constantly causing
+unexpected performance issues.
 
-Cc: <stable@vger.kernel.org>
-Fixes: 7733f6c32e36 ("usb: cdns3: Add Cadence USB3 DRD Driver")
-Reviewed-by: Pawel Laszczak <pawell@cadence.com>
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: ae9ae12e9daa ("bus: ti-sysc: Handle clockactivity for enable and disable")
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/cdns3/ep0.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/bus/ti-sysc.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/usb/cdns3/ep0.c b/drivers/usb/cdns3/ep0.c
-index f785ce84aba62..da4c5eb03d7ee 100644
---- a/drivers/usb/cdns3/ep0.c
-+++ b/drivers/usb/cdns3/ep0.c
-@@ -712,15 +712,17 @@ static int cdns3_gadget_ep0_queue(struct usb_ep *ep,
- 	int ret = 0;
- 	u8 zlp = 0;
+diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+index a3a2c269e9ad7..4f640a635ded1 100644
+--- a/drivers/bus/ti-sysc.c
++++ b/drivers/bus/ti-sysc.c
+@@ -988,10 +988,13 @@ static int sysc_enable_module(struct device *dev)
+ 	regbits = ddata->cap->regbits;
+ 	reg = sysc_read(ddata, ddata->offsets[SYSC_SYSCONFIG]);
  
-+	spin_lock_irqsave(&priv_dev->lock, flags);
- 	trace_cdns3_ep0_queue(priv_dev, request);
+-	/* Set CLOCKACTIVITY, we only use it for ick */
++	/*
++	 * Set CLOCKACTIVITY, we only use it for ick. And we only configure it
++	 * based on the SYSC_QUIRK_USE_CLOCKACT flag, not based on the hardware
++	 * capabilities. See the old HWMOD_SET_DEFAULT_CLOCKACT flag.
++	 */
+ 	if (regbits->clkact_shift >= 0 &&
+-	    (ddata->cfg.quirks & SYSC_QUIRK_USE_CLOCKACT ||
+-	     ddata->cfg.sysc_val & BIT(regbits->clkact_shift)))
++	    (ddata->cfg.quirks & SYSC_QUIRK_USE_CLOCKACT))
+ 		reg |= SYSC_CLOCACT_ICK << regbits->clkact_shift;
  
- 	/* cancel the request if controller receive new SETUP packet. */
--	if (cdns3_check_new_setup(priv_dev))
-+	if (cdns3_check_new_setup(priv_dev)) {
-+		spin_unlock_irqrestore(&priv_dev->lock, flags);
- 		return -ECONNRESET;
-+	}
- 
- 	/* send STATUS stage. Should be called only for SET_CONFIGURATION */
- 	if (priv_dev->ep0_stage == CDNS3_STATUS_STAGE) {
--		spin_lock_irqsave(&priv_dev->lock, flags);
- 		cdns3_select_ep(priv_dev, 0x00);
- 
- 		erdy_sent = !priv_dev->hw_configured_flag;
-@@ -745,7 +747,6 @@ static int cdns3_gadget_ep0_queue(struct usb_ep *ep,
- 		return 0;
- 	}
- 
--	spin_lock_irqsave(&priv_dev->lock, flags);
- 	if (!list_empty(&priv_ep->pending_req_list)) {
- 		dev_err(priv_dev->dev,
- 			"can't handle multiple requests for ep0\n");
+ 	/* Set SIDLE mode */
 -- 
 2.25.1
 
