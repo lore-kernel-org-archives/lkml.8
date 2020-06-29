@@ -2,107 +2,116 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ABABC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:55:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73213C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 798EF206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:55:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yo/HNQ93"
+	by mail.kernel.org (Postfix) with ESMTP id 4A91F206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:55:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593464142;
+	bh=pNN4gqHLLPuHdeY3rwPqJyTQ2QEC0Lul2Iwl6qbr9EI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=k7JPYklSDZAqnt5l2d8RDILz6To9nUWki26pZPxW+KRyEpo5n7o/IDkHyAvJP+3Ah
+	 N+gmDhNXJK0jpmr7WtbnwXQZWJ35E1UxUlIzNJWe71dtKllKj2Xa1o1vuuNjafqlVr
+	 gE1zkDvvncvgO7IsIkkNqa5Dm+q8XrI/xLn3u5Y8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389730AbgF2Uzd (ORCPT
+        id S2389940AbgF2Uzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:55:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43352 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731094AbgF2TNL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:13:11 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C538AC0086ED
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 02:46:30 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id 67so3603056pfg.5
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 02:46:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=twG/EpHFuddy1cJI4fW+wI5sB13DCvr59QOYZyPQvNU=;
-        b=yo/HNQ93HufpwCBYJHzJLpKYwIIAl0VMUj2nyPl6T2UPoijncLXHNKAdPYjL3L5lHT
-         Zk86qKQesI8zLVRj91lRQFZ9gQVG6tC5Rv9Io2JBMHEY3TZeHFmlCuEdE8Gr83Eip4YF
-         aEfxDR3S8vxeRS+pitFuvIq9wr9a6InjsNKI3O1wn3B06wNQd8vGg6OOOfNYtFctHxbp
-         qANSp15+IMUav5Rv3+a+7wzSUYJP3D2jOOYf9hLBUNPWef9axGtHkdFl0re9zwtYPKpg
-         HspnQ8i/aT7uNI3lE0e9Hg9fJjDeUxSVPBzdwYixvKF2NhNoxF0OSzFQLS72aksVZc4a
-         Ia5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=twG/EpHFuddy1cJI4fW+wI5sB13DCvr59QOYZyPQvNU=;
-        b=Yt9hLB/FK+ygW7C1tmxPWewdyUhQQoe5EWOAXVtImeuoB7ERyNOLs9FFS2J5Rbw5vZ
-         A26vOG7XQvtHum6lAqdOFWOAzIPyPZd90ULJismYpz6Pfxrwvn9so7N/36fU27JkcMLW
-         RP/aVK5W7UgksfJLPePN6j0QByHfHH4Lu/ZP0AiJG8nBvqnVGWk4dH2eZ+4PhqhWgdau
-         QFaMJnrTGhXKzy8tGLyn2SoePWl1pmNKrMFPnB807Vpam2Vv3Vq75dhwl+DC4+lf1C/g
-         ppusJahAGDPcH5u9CwDKyk9iXPjF5ljmfUjOrts5wMEINuS1aLeCnjq++PO0Jd7xgRzX
-         eiaw==
-X-Gm-Message-State: AOAM533aJFOAHSJNSfY/iBcPwhMgeJZ9e+EcyqzmRkmp8PbIGvElBVeT
-        RNNwPt6RmoHHsn1Vl8aHwPERrg==
-X-Google-Smtp-Source: ABdhPJxucTS/dE2M+PRfCssDuqawGeg909Rg9RxBv9//zm0cML2sSyfvU+J7x5kZWv89y8yYC7MFcw==
-X-Received: by 2002:a63:f903:: with SMTP id h3mr9891025pgi.437.1593423990258;
-        Mon, 29 Jun 2020 02:46:30 -0700 (PDT)
-Received: from localhost ([122.172.127.76])
-        by smtp.gmail.com with ESMTPSA id b14sm15088557pfb.186.2020.06.29.02.46.29
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 29 Jun 2020 02:46:29 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 15:16:27 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Quentin Perret <qperret@google.com>
-Cc:     Rafael Wysocki <rjw@rjwysocki.net>,
-        Jonathan Corbet <corbet@lwn.net>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        kernel-team@android.com, tkjos@google.com, adharmap@codeaurora.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V4 3/3] cpufreq: Specify default governor on command line
-Message-ID: <20200629094627.jh7pwhftcdqj6nhm@vireshk-i7>
-References: <cover.1593418662.git.viresh.kumar@linaro.org>
- <96b6e6ca02b664194ff3e57e1ec768fbc597bf38.1593418662.git.viresh.kumar@linaro.org>
- <20200629094452.GB1228312@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200629094452.GB1228312@google.com>
-User-Agent: NeoMutt/20180716-391-311a52
+        Mon, 29 Jun 2020 16:55:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50068 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389927AbgF2Uzf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 16:55:35 -0400
+Received: from kozik-lap.mshome.net (unknown [194.230.155.195])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 902FE2071A;
+        Mon, 29 Jun 2020 20:55:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593464134;
+        bh=pNN4gqHLLPuHdeY3rwPqJyTQ2QEC0Lul2Iwl6qbr9EI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=keBqJYOJt7lQ3wq5+ooET7lVHtr3HdVUlgPPhGUUcOofQzcqlTUPTA5XcJeXik/rL
+         /Q3EtkyMg5Bxw/wIifvT9a4Q8vbUwv3yUBe1+8g4VHtOY33GvIWFWnqnYI50tq985Z
+         uwWeJHbuBciXzFgNO7iijoqXkWG9Qw4GRfIkzZUg=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sylwester Nawrocki <snawrocki@kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Pankaj Dubey <pankaj.dubey@samsung.com>
+Subject: [PATCH 2/4] arm64: dts: exynos: Remove generic arm,armv8-pmuv3 compatible
+Date:   Mon, 29 Jun 2020 22:44:40 +0200
+Message-Id: <20200629204442.17336-2-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200629204442.17336-1-krzk@kernel.org>
+References: <20200629204442.17336-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29-06-20, 10:44, Quentin Perret wrote:
-> On Monday 29 Jun 2020 at 13:55:00 (+0530), Viresh Kumar wrote:
-> >  static int __init cpufreq_core_init(void)
-> >  {
-> > +	struct cpufreq_governor *gov = cpufreq_default_governor();
-> > +
-> >  	if (cpufreq_disabled())
-> >  		return -ENODEV;
-> >  
-> >  	cpufreq_global_kobject = kobject_create_and_add("cpufreq", &cpu_subsys.dev_root->kobj);
-> >  	BUG_ON(!cpufreq_global_kobject);
-> >  
-> > +	if (!strlen(default_governor))
-> 
-> Should we test '!strlen(default_governor) && gov' here actually?
-> We check the return value of cpufreq_default_governor() in
-> cpufreq_init_policy(), so I'm guessing we should do the same here to be
-> on the safe side.
+The ARM PMU node is described enough with first compatible so remove the
+arm,armv8-pmuv3 to fix dtschema warnings like:
 
-With the current setup (the Kconfig option being a choice which
-selects one governor at least), it is not possible for gov to be NULL
-here. And so I didn't worry about it :)
+    arm-pmu: compatible: Additional items are not allowed ('arm,armv8-pmuv3' was unexpected)
+    arm-pmu: compatible: ['arm,cortex-a57-pmu', 'arm,armv8-pmuv3'] is too long
 
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+
+---
+
+Not tested although no effect expected.
+---
+ arch/arm64/boot/dts/exynos/exynos5433.dtsi | 4 ++--
+ arch/arm64/boot/dts/exynos/exynos7.dtsi    | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+index ebe089469b5f..57b433a1c900 100644
+--- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
++++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
+@@ -24,7 +24,7 @@
+ 	interrupt-parent = <&gic>;
+ 
+ 	arm_a53_pmu {
+-		compatible = "arm,cortex-a53-pmu", "arm,armv8-pmuv3";
++		compatible = "arm,cortex-a53-pmu";
+ 		interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>,
+@@ -33,7 +33,7 @@
+ 	};
+ 
+ 	arm_a57_pmu {
+-		compatible = "arm,cortex-a57-pmu", "arm,armv8-pmuv3";
++		compatible = "arm,cortex-a57-pmu";
+ 		interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
+diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+index 523547b3d539..96ed93a21e40 100644
+--- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
++++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
+@@ -29,7 +29,7 @@
+ 	};
+ 
+ 	arm-pmu {
+-		compatible = "arm,cortex-a57-pmu", "arm,armv8-pmuv3";
++		compatible = "arm,cortex-a57-pmu";
+ 		interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
+ 			     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
 -- 
-viresh
+2.17.1
+
