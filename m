@@ -2,51 +2,51 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C7CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:07:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D066FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 542F320786
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:07:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD67A206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:08:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593464879;
-	bh=nx4VCgNV2Gi63jwHnrkoO7J/aLC0hgWL37GAsha9WyQ=;
+	s=default; t=1593464883;
+	bh=bhyJGtb/BvgA8n0B8soZ5ozfqmaGs0j1uCclP71HvnE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J7c9tm6Wqp/eALmACIl7NKqeU2UPQi2jZdcVYPJfEoueF0CKju46yMoK+57BsOh/x
-	 jSfnMEXTiuXRMOL89NCZ2t9tb86+M5o8SaKbIPRXKomxHZrfRWhs8rUD/DywwqO/ju
-	 AYmzNNtC5clOpLUtHVIaBV3V+cATHiA7b/5bVq4Y=
+	b=ZFu0ZmEaLo8Fa2xPPE/YnY8TMojfijNT9G4zQ+0J+Rk4mJbnTjey4r57gaDPQVPVX
+	 9dz/MW3cB8+qmB1jJSFYoIKjiYEb52MRkAS+OG9lgb5exPxdkusxCzkNyAkvOw4fXo
+	 cEDcr7004somMjVWl+4O2UwglMobEBmCVI/ygEsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728436AbgF2VH6 (ORCPT
+        id S2390390AbgF2VHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:07:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53670 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:07:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730335AbgF2TKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729908AbgF2TKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:10:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A133254BC;
-        Mon, 29 Jun 2020 15:53:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D5F1254A9;
+        Mon, 29 Jun 2020 15:53:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446014;
-        bh=nx4VCgNV2Gi63jwHnrkoO7J/aLC0hgWL37GAsha9WyQ=;
+        s=default; t=1593446002;
+        bh=bhyJGtb/BvgA8n0B8soZ5ozfqmaGs0j1uCclP71HvnE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZhKaqAno7wqJXbsFpFT9k2w5bchBYii3+vWz9PTu1AxMomvNsSekD46G1BhKw1DGb
-         eFAiFQSO+Rwg4iEK2Ttw5C8bLupTllzMsRDcw5MFf5zarcBIWNFXbqj4D/c0AvNoaG
-         C0fHIe2+CWBwIAM93bNI0r0x5BCMBha6gjRdfAQ0=
+        b=nJ00es0k58nIM91s0jKNf7Ibz3eNind8bl9HhY9VUV4xIMGkvhGPwDdylYY67saLz
+         bpqT3lMt8IaoUrFQLa1xEjuVz3sZ5O3+Z1xH+UjqInUVGrKbAGWj0NfltEzFerhxve
+         +oK9Z65S2ihTnr6c2YGSv38mw+ImHLcTCihP7WTk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Raghavendra Rao Ananta <rananta@codeaurora.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+Cc:     Qian Cai <cai@lca.pw>,
+        Alex Williamson <alex.williamson@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 021/135] tty: hvc: Fix data abort due to race in hvc_open
-Date:   Mon, 29 Jun 2020 11:51:15 -0400
-Message-Id: <20200629155309.2495516-22-sashal@kernel.org>
+Subject: [PATCH 4.4 010/135] vfio/pci: fix memory leaks in alloc_perm_bits()
+Date:   Mon, 29 Jun 2020 11:51:04 -0400
+Message-Id: <20200629155309.2495516-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -65,79 +65,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Raghavendra Rao Ananta <rananta@codeaurora.org>
+From: Qian Cai <cai@lca.pw>
 
-[ Upstream commit e2bd1dcbe1aa34ff5570b3427c530e4332ecf0fe ]
+[ Upstream commit 3e63b94b6274324ff2e7d8615df31586de827c4e ]
 
-Potentially, hvc_open() can be called in parallel when two tasks calls
-open() on /dev/hvcX. In such a scenario, if the hp->ops->notifier_add()
-callback in the function fails, where it sets the tty->driver_data to
-NULL, the parallel hvc_open() can see this NULL and cause a memory abort.
-Hence, serialize hvc_open and check if tty->private_data is NULL before
-proceeding ahead.
+vfio_pci_disable() calls vfio_config_free() but forgets to call
+free_perm_bits() resulting in memory leaks,
 
-The issue can be easily reproduced by launching two tasks simultaneously
-that does nothing but open() and close() on /dev/hvcX.
-For example:
-$ ./simple_open_close /dev/hvc0 & ./simple_open_close /dev/hvc0 &
+unreferenced object 0xc000000c4db2dee0 (size 16):
+  comm "qemu-kvm", pid 4305, jiffies 4295020272 (age 3463.780s)
+  hex dump (first 16 bytes):
+    00 00 ff 00 ff ff ff ff ff ff ff ff ff ff 00 00  ................
+  backtrace:
+    [<00000000a6a4552d>] alloc_perm_bits+0x58/0xe0 [vfio_pci]
+    [<00000000ac990549>] vfio_config_init+0xdf0/0x11b0 [vfio_pci]
+    init_pci_cap_msi_perm at drivers/vfio/pci/vfio_pci_config.c:1125
+    (inlined by) vfio_msi_cap_len at drivers/vfio/pci/vfio_pci_config.c:1180
+    (inlined by) vfio_cap_len at drivers/vfio/pci/vfio_pci_config.c:1241
+    (inlined by) vfio_cap_init at drivers/vfio/pci/vfio_pci_config.c:1468
+    (inlined by) vfio_config_init at drivers/vfio/pci/vfio_pci_config.c:1707
+    [<000000006db873a1>] vfio_pci_open+0x234/0x700 [vfio_pci]
+    [<00000000630e1906>] vfio_group_fops_unl_ioctl+0x8e0/0xb84 [vfio]
+    [<000000009e34c54f>] ksys_ioctl+0xd8/0x130
+    [<000000006577923d>] sys_ioctl+0x28/0x40
+    [<000000006d7b1cf2>] system_call_exception+0x114/0x1e0
+    [<0000000008ea7dd5>] system_call_common+0xf0/0x278
+unreferenced object 0xc000000c4db2e330 (size 16):
+  comm "qemu-kvm", pid 4305, jiffies 4295020272 (age 3463.780s)
+  hex dump (first 16 bytes):
+    00 ff ff 00 ff ff ff ff ff ff ff ff ff ff 00 00  ................
+  backtrace:
+    [<000000004c71914f>] alloc_perm_bits+0x44/0xe0 [vfio_pci]
+    [<00000000ac990549>] vfio_config_init+0xdf0/0x11b0 [vfio_pci]
+    [<000000006db873a1>] vfio_pci_open+0x234/0x700 [vfio_pci]
+    [<00000000630e1906>] vfio_group_fops_unl_ioctl+0x8e0/0xb84 [vfio]
+    [<000000009e34c54f>] ksys_ioctl+0xd8/0x130
+    [<000000006577923d>] sys_ioctl+0x28/0x40
+    [<000000006d7b1cf2>] system_call_exception+0x114/0x1e0
+    [<0000000008ea7dd5>] system_call_common+0xf0/0x278
 
-Signed-off-by: Raghavendra Rao Ananta <rananta@codeaurora.org>
-Link: https://lore.kernel.org/r/20200428032601.22127-1-rananta@codeaurora.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 89e1f7d4c66d ("vfio: Add PCI device driver")
+Signed-off-by: Qian Cai <cai@lca.pw>
+[aw: rolled in follow-up patch]
+Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/hvc/hvc_console.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ drivers/vfio/pci/vfio_pci_config.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/tty/hvc/hvc_console.c b/drivers/tty/hvc/hvc_console.c
-index acf6d143c7531..81f23af8beca9 100644
---- a/drivers/tty/hvc/hvc_console.c
-+++ b/drivers/tty/hvc/hvc_console.c
-@@ -89,6 +89,8 @@ static LIST_HEAD(hvc_structs);
-  */
- static DEFINE_SPINLOCK(hvc_structs_lock);
- 
-+/* Mutex to serialize hvc_open */
-+static DEFINE_MUTEX(hvc_open_mutex);
- /*
-  * This value is used to assign a tty->index value to a hvc_struct based
-  * upon order of exposure via hvc_probe(), when we can not match it to
-@@ -333,16 +335,24 @@ static int hvc_install(struct tty_driver *driver, struct tty_struct *tty)
-  */
- static int hvc_open(struct tty_struct *tty, struct file * filp)
- {
--	struct hvc_struct *hp = tty->driver_data;
-+	struct hvc_struct *hp;
- 	unsigned long flags;
- 	int rc = 0;
- 
-+	mutex_lock(&hvc_open_mutex);
-+
-+	hp = tty->driver_data;
-+	if (!hp) {
-+		rc = -EIO;
-+		goto out;
+diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
+index 98a12be76c9cf..bf65572f47a8f 100644
+--- a/drivers/vfio/pci/vfio_pci_config.c
++++ b/drivers/vfio/pci/vfio_pci_config.c
+@@ -1644,8 +1644,11 @@ void vfio_config_free(struct vfio_pci_device *vdev)
+ 	vdev->vconfig = NULL;
+ 	kfree(vdev->pci_config_map);
+ 	vdev->pci_config_map = NULL;
+-	kfree(vdev->msi_perm);
+-	vdev->msi_perm = NULL;
++	if (vdev->msi_perm) {
++		free_perm_bits(vdev->msi_perm);
++		kfree(vdev->msi_perm);
++		vdev->msi_perm = NULL;
 +	}
-+
- 	spin_lock_irqsave(&hp->port.lock, flags);
- 	/* Check and then increment for fast path open. */
- 	if (hp->port.count++ > 0) {
- 		spin_unlock_irqrestore(&hp->port.lock, flags);
- 		hvc_kick();
--		return 0;
-+		goto out;
- 	} /* else count == 0 */
- 	spin_unlock_irqrestore(&hp->port.lock, flags);
- 
-@@ -371,6 +381,8 @@ static int hvc_open(struct tty_struct *tty, struct file * filp)
- 	/* Force wakeup of the polling thread */
- 	hvc_kick();
- 
-+out:
-+	mutex_unlock(&hvc_open_mutex);
- 	return rc;
  }
  
+ /*
 -- 
 2.25.1
 
