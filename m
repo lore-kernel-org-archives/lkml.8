@@ -4,58 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D240CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFA4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:14:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B5F3F20760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0F21206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:14:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461678;
-	bh=yaxxQRVddgLLU1mEzBS9LCPeKyakKlY+qyYxcS2VEjs=;
+	s=default; t=1593461684;
+	bh=S4oSBEKFtn41itg9mzsbFJpEvLbzU9TYSrz+ppPP6Es=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=v2ECFyPeChl8JeN+PPUkqs4TO2CiYpBmXDKGozekauTFTuax7M5jYuIpqJfEMYNwZ
-	 bDAoGU9Q+GX/ITS7wKyYfD1FMnvc3R7AQoBjlWx1YpN2g249N07nA96kNHr8SI9EP5
-	 xUlEuKy1WUaNBvA6V+AIkmzUTE7GP3b4ePskvaKg=
+	b=wSBx3HzRfhddLqQTeaU2y6+De8S0BxZN40ryEir5tdqNJUdP4EEfdDjL8VfvZpRxU
+	 XOHQLpDeBp8rs2FpiMQzyOQRfXcl4JPMBOSMmsnp4CFPTZb6egFFFEneHi/iBuDD+8
+	 BIlUJjdwyaxr9Lf0HP80G4n6rc8vz6vZbFwk6PkI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732686AbgF2UOe (ORCPT
+        id S1732834AbgF2UOn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:14:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40566 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:14:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732837AbgF2TaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732841AbgF2TaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD2AF252A2;
-        Mon, 29 Jun 2020 15:36:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CFB0C252CE;
+        Mon, 29 Jun 2020 15:38:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445011;
-        bh=yaxxQRVddgLLU1mEzBS9LCPeKyakKlY+qyYxcS2VEjs=;
+        s=default; t=1593445095;
+        bh=S4oSBEKFtn41itg9mzsbFJpEvLbzU9TYSrz+ppPP6Es=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UgVdsMkUWFgR7Y6fCFsoYAcAF5yiyUKg//o7/N1MHWlf3VTGWQXFyesvQzlWiw3XE
-         phzqjn4umUbBgp+/5U+7TIObqpe9IxdctWd6hs6on4ACDOAjb18Uh2OeSIb2HFFMPC
-         pjg6kVG/pnX9oJ/lAG0OzWg0wIH2nPLUlgepFGzQ=
+        b=CrNecuVb7GnfOhdml6QZ+ndFFBry3mYtgzeM/D0gHoQmzRsky9kAb5S+oPH+Zk470
+         gry56PHwK80baeZ+YgopCW3G1bqcE0vQNm+AyE5Sv/pLd1d3jWIcKKzK0TmkmIJTxA
+         LnP2RcrB4dQHUvAV+LCIAJKhG8OItA+qUUKABXdQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Filipe Manana <fdmanana@suse.com>, David Sterba <dsterba@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 112/131] btrfs: fix failure of RWF_NOWAIT write into prealloc extent beyond eof
-Date:   Mon, 29 Jun 2020 11:34:43 -0400
-Message-Id: <20200629153502.2494656-113-sashal@kernel.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 05/78] fix a braino in "sparc32: fix register window handling in genregs32_[gs]et()"
+Date:   Mon, 29 Jun 2020 11:36:53 -0400
+Message-Id: <20200629153806.2494953-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
-References: <20200629153502.2494656-1-sashal@kernel.org>
+In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
+References: <20200629153806.2494953-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.19.y
+X-KernelTest-Branch: linux-4.14.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.19.131-rc1
-X-KernelTest-Deadline: 2020-07-01T15:34+00:00
+X-KernelTest-Version: 4.14.186-rc1
+X-KernelTest-Deadline: 2020-07-01T15:38+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -64,63 +63,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-commit 4b1946284dd6641afdb9457101056d9e6ee6204c upstream.
+[ Upstream commit 9d964e1b82d8182184153b70174f445ea616f053 ]
 
-If we attempt to write to prealloc extent located after eof using a
-RWF_NOWAIT write, we always fail with -EAGAIN.
+lost npc in PTRACE_SETREGSET, breaking PTRACE_SETREGS as well
 
-We do actually check if we have an allocated extent for the write at
-the start of btrfs_file_write_iter() through a call to check_can_nocow(),
-but later when we go into the actual direct IO write path we simply
-return -EAGAIN if the write starts at or beyond EOF.
-
-Trivial to reproduce:
-
-  $ mkfs.btrfs -f /dev/sdb
-  $ mount /dev/sdb /mnt
-
-  $ touch /mnt/foo
-  $ chattr +C /mnt/foo
-
-  $ xfs_io -d -c "pwrite -S 0xab 0 64K" /mnt/foo
-  wrote 65536/65536 bytes at offset 0
-  64 KiB, 16 ops; 0.0004 sec (135.575 MiB/sec and 34707.1584 ops/sec)
-
-  $ xfs_io -c "falloc -k 64K 1M" /mnt/foo
-
-  $ xfs_io -d -c "pwrite -N -V 1 -S 0xfe -b 64K 64K 64K" /mnt/foo
-  pwrite: Resource temporarily unavailable
-
-On xfs and ext4 the write succeeds, as expected.
-
-Fix this by removing the wrong check at btrfs_direct_IO().
-
-Fixes: edf064e7c6fec3 ("btrfs: nowait aio support")
-CC: stable@vger.kernel.org # 4.14+
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: cf51e129b968 "sparc32: fix register window handling in genregs32_[gs]et()"
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/inode.c | 3 ---
- 1 file changed, 3 deletions(-)
+ arch/sparc/kernel/ptrace_32.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index 7ffb15b473a72..8dd2702ce859e 100644
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -8656,9 +8656,6 @@ static ssize_t btrfs_direct_IO(struct kiocb *iocb, struct iov_iter *iter)
- 			dio_data.overwrite = 1;
- 			inode_unlock(inode);
- 			relock = true;
--		} else if (iocb->ki_flags & IOCB_NOWAIT) {
--			ret = -EAGAIN;
--			goto out;
- 		}
- 		ret = btrfs_delalloc_reserve_space(inode, &data_reserved,
- 						   offset, count);
+diff --git a/arch/sparc/kernel/ptrace_32.c b/arch/sparc/kernel/ptrace_32.c
+index 60f7205ebe40d..646dd58169ecb 100644
+--- a/arch/sparc/kernel/ptrace_32.c
++++ b/arch/sparc/kernel/ptrace_32.c
+@@ -168,12 +168,17 @@ static int genregs32_set(struct task_struct *target,
+ 	if (ret || !count)
+ 		return ret;
+ 	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
+-				 &regs->y,
++				 &regs->npc,
+ 				 34 * sizeof(u32), 35 * sizeof(u32));
+ 	if (ret || !count)
+ 		return ret;
++	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
++				 &regs->y,
++				 35 * sizeof(u32), 36 * sizeof(u32));
++	if (ret || !count)
++		return ret;
+ 	return user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
+-					 35 * sizeof(u32), 38 * sizeof(u32));
++					 36 * sizeof(u32), 38 * sizeof(u32));
+ }
+ 
+ static int fpregs32_get(struct task_struct *target,
 -- 
 2.25.1
 
