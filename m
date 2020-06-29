@@ -2,90 +2,112 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC8A2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:54:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 177D4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:54:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBB68206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:54:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nNXRBgZr"
+	by mail.kernel.org (Postfix) with ESMTP id EE799206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:54:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593460472;
+	bh=Epgfdw5T1sde/Ipkq3mq31YonFT7STLR7rDzLr18MgE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=yUBnDE4RMHY9d3pi610zKb5mxy7PBLrZcC8r4UxzTTq7Qb4QTGTV6UI/1l73X0Zy+
+	 X0VBh8p4jDyTZvjhk7DTRDSj9qjvJNxBW8CQaTmvwBwEuS1D4uhMk6TkcO8a8m6Qxj
+	 NeX9WjhSgGEYD+ohYUfrpzu50At6sKVfNsScT+TI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387855AbgF2TyY (ORCPT
+        id S1731914AbgF2Tya (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:54:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48096 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387465AbgF2Tk0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:54:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47670 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387676AbgF2Tk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:26 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 878D3C03E979;
-        Mon, 29 Jun 2020 12:40:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description;
-        bh=N4V7c3aeDLuwhXVBAMVeI93XDU7dFLU/PzjjNBBA1go=; b=nNXRBgZrqUkYW06bN7kMVbhKQp
-        BlmpXSCdMbqb/Ht5wWHvxJtfrr6svKWFTv8Tt4Ufg7qxppL3ei3dqO9x299z4vDWrKj32a6zAcqSL
-        c4m4m8EqDQLV0obdwyzZum4rarDYDeASDBA573D5k0a3dJQxVCiz704FT+VKkYMJLXypm1xf73cB3
-        AgGiAVOZh9k2lYQfWMzILfco++St1B3KjzFapwCHMQbwuELGSHYTtoro2+hJ5y8/MWUZ1ZK+LwL5b
-        lBJH3BSbHoqbKdPThJr9UKdZ7VxtYLq5743jYblBgF7pRDOkMgWA5lO9m/s8jN+8qpJjWKBSVdf/p
-        NcNA9Tjw==;
-Received: from [2001:4bb8:184:76e3:fcca:c8dc:a4bf:12fa] (helo=localhost)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jpzdP-0004KD-Bf; Mon, 29 Jun 2020 19:40:08 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     dm-devel@redhat.com, linux-kernel@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-xtensa@linux-xtensa.org,
-        drbd-dev@lists.linbit.com, linuxppc-dev@lists.ozlabs.org,
-        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-nvme@lists.infradead.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH 11/20] fs: remove a weird comment in submit_bh_wbc
-Date:   Mon, 29 Jun 2020 21:39:38 +0200
-Message-Id: <20200629193947.2705954-12-hch@lst.de>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200629193947.2705954-1-hch@lst.de>
-References: <20200629193947.2705954-1-hch@lst.de>
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BA4824910;
+        Mon, 29 Jun 2020 15:27:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593444465;
+        bh=Epgfdw5T1sde/Ipkq3mq31YonFT7STLR7rDzLr18MgE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=2hRNRJ4AgxPMpj4Nd1SBSTp/ueYOoJLNMoUHWDv58JwsDBFLuM2X1ZpdCGuM1aUE3
+         lri9+oIoHVhSRtxXt1Ab4MSbhVN5rj7X1ilJiihzM3SddznhtwP6hFCIBHl/GMAlX+
+         QRDh9X/uFIViJxvyAFKtFMpwvyKrnkkAXSBeBZDk=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Xiaoyao Li <xiaoyao.li@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.4 145/178] KVM: X86: Fix MSR range of APIC registers in X2APIC mode
+Date:   Mon, 29 Jun 2020 11:24:50 -0400
+Message-Id: <20200629152523.2494198-146-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
+References: <20200629152523.2494198-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.50-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.4.50-rc1
+X-KernelTest-Deadline: 2020-07-01T15:25+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All bios can get remapped if submitted to partitions.  No need to
-comment on that.
+From: Xiaoyao Li <xiaoyao.li@intel.com>
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+commit bf10bd0be53282183f374af23577b18b5fbf7801 upstream.
+
+Only MSR address range 0x800 through 0x8ff is architecturally reserved
+and dedicated for accessing APIC registers in x2APIC mode.
+
+Fixes: 0105d1a52640 ("KVM: x2apic interface to lapic")
+Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
+Message-Id: <20200616073307.16440-1-xiaoyao.li@intel.com>
+Cc: stable@vger.kernel.org
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Reviewed-by: Jim Mattson <jmattson@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/buffer.c | 5 -----
- 1 file changed, 5 deletions(-)
+ arch/x86/kvm/x86.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/buffer.c b/fs/buffer.c
-index 64fe82ec65ff1f..2725ebbcfdc246 100644
---- a/fs/buffer.c
-+++ b/fs/buffer.c
-@@ -3040,12 +3040,7 @@ static int submit_bh_wbc(int op, int op_flags, struct buffer_head *bh,
- 	if (test_set_buffer_req(bh) && (op == REQ_OP_WRITE))
- 		clear_buffer_write_io_error(bh);
- 
--	/*
--	 * from here on down, it's all bio -- do the initial mapping,
--	 * submit_bio -> generic_make_request may further map this bio around
--	 */
- 	bio = bio_alloc(GFP_NOIO, 1);
--
- 	bio->bi_iter.bi_sector = bh->b_blocknr * (bh->b_size >> 9);
- 	bio_set_dev(bio, bh->b_bdev);
- 	bio->bi_write_hint = write_hint;
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index fff279fb173bc..eed1866ae4d3a 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -2753,7 +2753,7 @@ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 		return kvm_mtrr_set_msr(vcpu, msr, data);
+ 	case MSR_IA32_APICBASE:
+ 		return kvm_set_apic_base(vcpu, msr_info);
+-	case APIC_BASE_MSR ... APIC_BASE_MSR + 0x3ff:
++	case APIC_BASE_MSR ... APIC_BASE_MSR + 0xff:
+ 		return kvm_x2apic_msr_write(vcpu, msr, data);
+ 	case MSR_IA32_TSCDEADLINE:
+ 		kvm_set_lapic_tscdeadline_msr(vcpu, data);
+@@ -3057,7 +3057,7 @@ int kvm_get_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 	case MSR_IA32_APICBASE:
+ 		msr_info->data = kvm_get_apic_base(vcpu);
+ 		break;
+-	case APIC_BASE_MSR ... APIC_BASE_MSR + 0x3ff:
++	case APIC_BASE_MSR ... APIC_BASE_MSR + 0xff:
+ 		return kvm_x2apic_msr_read(vcpu, msr_info->index, &msr_info->data);
+ 		break;
+ 	case MSR_IA32_TSCDEADLINE:
 -- 
-2.26.2
+2.25.1
 
