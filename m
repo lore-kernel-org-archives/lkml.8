@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE25C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:12:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38C8BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:13:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A5543207FB
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:12:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1516120675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:13:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461576;
-	bh=W96DTGGa9Z1cA8uVuBsCLl1rBYQsk3eOXLVvL78Rpfg=;
+	s=default; t=1593461581;
+	bh=Prp7NLKLWcgBgbbd5HUw0mfypWzzrlEeyiwEN/3vqJY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0KIb30d1ZXHBDmp6g8VWLVwXzeuCKfzt7uRIQEZge8Y5x4MHh5dSnPC3bWP7ZUL13
-	 6CEaedsqUTXojsBkgqeV7a3kVUPu7OfTOJ8hxZjwj+sAnwho7tFYJ9prv6QjwWAP87
-	 ys1iA6eXvqT6FMXgXqV0j+I5I8A4ATtzRnkxqRNA=
+	b=kXgaezD12mWIIqsMo0QKeYRX+KqrSDUJP4M4Bojv52LwYvKYd9YLMD0LJfdj4fM/k
+	 F60R/1DTJ+Zvej2flqWYhhRKS/s+kRpWKHoMnJQxZuFTNKqOD+ZKNwKMZM1URcY8a2
+	 It12TD4kxVZGHpCc6OD/0v5JrtME2O/vST9EYV0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730690AbgF2UMn (ORCPT
+        id S1727919AbgF2UNA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:12:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40592 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:13:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732871AbgF2TaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732869AbgF2TaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27F9F25240;
-        Mon, 29 Jun 2020 15:35:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D93B25254;
+        Mon, 29 Jun 2020 15:36:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444957;
-        bh=W96DTGGa9Z1cA8uVuBsCLl1rBYQsk3eOXLVvL78Rpfg=;
+        s=default; t=1593444966;
+        bh=Prp7NLKLWcgBgbbd5HUw0mfypWzzrlEeyiwEN/3vqJY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MXLZpwZsJkddWWfYPT1Ri7xg4qwtLhWe6ETfgVwFAUYG7zXAQFxC5lAV2uue4VlIR
-         KXHgNiuQqXPyN3kACOBli4+X6ZMO1Cik4z7940oIh6vzyWrp1aoWU4oJipC2vR+RGS
-         HS4Q9GizCNKJnS1jidDN1Lg6oYh6zwTKLiGVZqCU=
+        b=aNd01lr8hdRRkSp3mYoEXcqcmWDNCcyX9WAGu422voFyHw1JqjwcNc06vGCTP3FX/
+         CbGH7fzZ2OK3KAnXhoOAzDr3O1yPgGxeBydM/55hZpgpMEavGzf03tVYtHxqX2v92q
+         +XG3vaE37MMB2+oCraOeAPc8nNd1VnhbaQ2yy6gM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Joakim Tjernlund <joakim.tjernlund@infinera.com>,
-        Oliver Neukum <oneukum@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 056/131] cdc-acm: Add DISABLE_ECHO quirk for Microchip/SMSC chip
-Date:   Mon, 29 Jun 2020 11:33:47 -0400
-Message-Id: <20200629153502.2494656-57-sashal@kernel.org>
+Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 065/131] ASoC: fsl_ssi: Fix bclk calculation for mono channel
+Date:   Mon, 29 Jun 2020 11:33:56 -0400
+Message-Id: <20200629153502.2494656-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
@@ -65,36 +66,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joakim Tjernlund <joakim.tjernlund@infinera.com>
+From: Shengjiu Wang <shengjiu.wang@nxp.com>
 
-commit 03894573f2913181ee5aae0089f333b2131f2d4b upstream.
+[ Upstream commit ed1220df6e666500ebf58c4f2fccc681941646fb ]
 
-USB_DEVICE(0x0424, 0x274e) can send data before cdc_acm is ready,
-causing garbage chars on the TTY causing stray input to the shell
-and/or login prompt.
+For mono channel, SSI will switch to Normal mode.
 
-Signed-off-by: Joakim Tjernlund <joakim.tjernlund@infinera.com>
-Cc: stable@vger.kernel.org
-Acked-by: Oliver Neukum <oneukum@suse.com>
-Link: https://lore.kernel.org/r/20200605105418.22263-1-joakim.tjernlund@infinera.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+In Normal mode and Network mode, the Word Length Control bits
+control the word length divider in clock generator, which is
+different with I2S Master mode (the word length is fixed to
+32bit), it should be the value of params_width(hw_params).
+
+The condition "slots == 2" is not good for I2S Master mode,
+because for Network mode and Normal mode, the slots can also
+be 2. Then we need to use (ssi->i2s_net & SSI_SCR_I2S_MODE_MASK)
+to check if it is I2S Master mode.
+
+So we refine the formula for mono channel, otherwise there
+will be sound issue for S24_LE.
+
+Fixes: b0a7043d5c2c ("ASoC: fsl_ssi: Caculate bit clock rate using slot number and width")
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Reviewed-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Link: https://lore.kernel.org/r/034eff1435ff6ce300b6c781130cefd9db22ab9a.1592276147.git.shengjiu.wang@nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/class/cdc-acm.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/soc/fsl/fsl_ssi.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/class/cdc-acm.c b/drivers/usb/class/cdc-acm.c
-index e8b9b27937ed6..ea7883e1fbe28 100644
---- a/drivers/usb/class/cdc-acm.c
-+++ b/drivers/usb/class/cdc-acm.c
-@@ -1721,6 +1721,8 @@ static int acm_pre_reset(struct usb_interface *intf)
+diff --git a/sound/soc/fsl/fsl_ssi.c b/sound/soc/fsl/fsl_ssi.c
+index d83be26d64467..0e2bdad373d66 100644
+--- a/sound/soc/fsl/fsl_ssi.c
++++ b/sound/soc/fsl/fsl_ssi.c
+@@ -678,8 +678,9 @@ static int fsl_ssi_set_bclk(struct snd_pcm_substream *substream,
+ 	struct regmap *regs = ssi->regs;
+ 	u32 pm = 999, div2, psr, stccr, mask, afreq, factor, i;
+ 	unsigned long clkrate, baudrate, tmprate;
+-	unsigned int slots = params_channels(hw_params);
+-	unsigned int slot_width = 32;
++	unsigned int channels = params_channels(hw_params);
++	unsigned int slot_width = params_width(hw_params);
++	unsigned int slots = 2;
+ 	u64 sub, savesub = 100000;
+ 	unsigned int freq;
+ 	bool baudclk_is_used;
+@@ -688,10 +689,14 @@ static int fsl_ssi_set_bclk(struct snd_pcm_substream *substream,
+ 	/* Override slots and slot_width if being specifically set... */
+ 	if (ssi->slots)
+ 		slots = ssi->slots;
+-	/* ...but keep 32 bits if slots is 2 -- I2S Master mode */
+-	if (ssi->slot_width && slots != 2)
++	if (ssi->slot_width)
+ 		slot_width = ssi->slot_width;
  
- static const struct usb_device_id acm_ids[] = {
- 	/* quirky and broken devices */
-+	{ USB_DEVICE(0x0424, 0x274e), /* Microchip Technology, Inc. (formerly SMSC) */
-+	  .driver_info = DISABLE_ECHO, }, /* DISABLE ECHO in termios flag */
- 	{ USB_DEVICE(0x076d, 0x0006), /* Denso Cradle CU-321 */
- 	.driver_info = NO_UNION_NORMAL, },/* has no union descriptor */
- 	{ USB_DEVICE(0x17ef, 0x7000), /* Lenovo USB modem */
++	/* ...but force 32 bits for stereo audio using I2S Master Mode */
++	if (channels == 2 &&
++	    (ssi->i2s_net & SSI_SCR_I2S_MODE_MASK) == SSI_SCR_I2S_MODE_MASTER)
++		slot_width = 32;
++
+ 	/* Generate bit clock based on the slot number and slot width */
+ 	freq = slots * slot_width * params_rate(hw_params);
+ 
 -- 
 2.25.1
 
