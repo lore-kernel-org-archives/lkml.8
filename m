@@ -2,120 +2,114 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88859C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 968E6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66F0E206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:13:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593458011;
-	bh=i9ZfBpzxB3oPpousxT2bRt0NotTChvxCXKkleB811bU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KXxj/ioiboaQgbIa7DhCE3iH3OiMV/N4R2tcP9+39Tt7ss98x+8vwMzOsMvJnnMqG
-	 9PZRs4IB+jIIr5eGgc12PwsN9fIx/VIeHdjiXFGtm77IvLyOjx6j0IJiQq2TjRf5ls
-	 8Xd+FWiOnpUzBVldvMkuW7ndQo3Jn7VeygCxMkyI=
+	by mail.kernel.org (Postfix) with ESMTP id 768A1206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:13:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="MFHsR5ID"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731057AbgF2TN3 (ORCPT
+        id S1731472AbgF2TNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:13:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43384 "EHLO
+        Mon, 29 Jun 2020 15:13:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731325AbgF2TNU (ORCPT
+        with ESMTP id S1731358AbgF2TN2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:13:20 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7B91C008751;
-        Mon, 29 Jun 2020 01:35:57 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id i14so15694087ejr.9;
-        Mon, 29 Jun 2020 01:35:57 -0700 (PDT)
+        Mon, 29 Jun 2020 15:13:28 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AA5AC08EC44
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:50:15 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id z13so15335749wrw.5
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:50:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0FbmkW7UOcYY7LkyFQeYD+n43SXMQXYjstj7AfGPBFY=;
+        b=MFHsR5IDjPY0E1cBnmOdDmaaexsDnuGaeCom8ugM6D2bx/csHHWIKc48ZfoIzQ1WnQ
+         wH2T1DsKev7yAD8X37BfHZeGwcp165BuatzBqWpk9PKAHPFguntRaNcNM+9ylDmq1Njl
+         NVuN0ckQWhi9I84VLdztbSBWb2IQ1+HBDHXb622lxqQpwfrwmNWd9Mkyxhm4TdXQF1a6
+         Qu7nv7GnKuaQtAdamC+YNXe2VGuqkZAdM7PXqkyxRPuNL0QCsk4OeEyOd44jJct2xsgz
+         /DRypuk9B9Sua+ocxb2STpKn4HHeSpfcsjEMcVSUlGI2ghJFdvn2DzB6bgnCgXysJtma
+         CCag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=P/lWBTxJeT64MmPuE+Y53vSa9wNIb6a3JKrDaGJpzms=;
-        b=tCNf8B6YWMeZ7MhUEoFAMQQAPNwFYbsz8eq/qIeXIgJQ6vdkn0041EqqTNOsLS+Ait
-         7avI8YxjJj1tMA/EiLLMs3kgCxbshsE+tLXz1Zkr/SQZY78jFK2GDRipp7jWGmZScS1m
-         x0YWXskl11/zTACK5IRnOR5tCmC5WpBc1ZRDVWTcj5RK5B2ZK2TB6YSmWsVCouXkc9fH
-         m3LrT8ZGR4If4XF5Ru3zfQMz5xoTV5WWhsbTlYl9M7mxn+MGHY4/MM234iegMFhaWdsp
-         uhOC0QCCdFbme+VmxGNE4aqPWc/SeAOABmuCY5wbNX3szwexaajOfxaWr/jw8Q8AH78H
-         wrqg==
-X-Gm-Message-State: AOAM533VCO9psoKWQ3lh3cxY3vt8aw0C/h3kyeoM21T5JpLGZtQXoefc
-        /JH67q0msfWvT/9U+Fkm30zhyXT3
-X-Google-Smtp-Source: ABdhPJwSpDThVjcEd0PgJHWyDlPf/nuRiq+gnvJcGaWZixD0/guW/6gO2OZBM23kPBf0l0OLqzgoxQ==
-X-Received: by 2002:a17:906:a1cc:: with SMTP id bx12mr12520655ejb.461.1593419756288;
-        Mon, 29 Jun 2020 01:35:56 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.195])
-        by smtp.googlemail.com with ESMTPSA id c4sm24101091ejb.17.2020.06.29.01.35.54
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Jun 2020 01:35:55 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 10:35:53 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Tamseel Shams <m.shams@samsung.com>
-Cc:     kgene@kernel.org, gregkh@linuxfoundation.org, jslaby@suse.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org, alim.akhtar@samsung.com
-Subject: Re: [PATCH v2] serial: samsung: Re-factors UART IRQ resource for
- various Samsung SoC
-Message-ID: <20200629083553.GA14028@kozik-lap>
-References: <CGME20200628071932epcas5p175059c085421a95de76202767bd132cf@epcas5p1.samsung.com>
- <20200628070007.36222-1-m.shams@samsung.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=0FbmkW7UOcYY7LkyFQeYD+n43SXMQXYjstj7AfGPBFY=;
+        b=T/XOTaHssCwlmPTSPzm0byM1SVC0ob87lFWMCOmq4MOR7YqvM7dGhnosb79d2V+Mc7
+         sDH9NnLdKceyQBDsCH1/Hyl3/ITB+Ib4tVETwAJhEUcbX9Bwv8oIh7xQBTDkx+k26I12
+         DBVr0nE06QUy1Kr0yEL6/h7GfwxZQbYiTvD//rhShEIJ5Xl4OQjkmAlJIn6P3K0A9j/x
+         ucl9gmrIVDWg6LBaEtRkM8tajBvX4qj8xqxNk9WOSxZmiZYjkG2NUh0X19NdaLtvJIPi
+         ijJKPSYKS5NuSa9ifHLp79ampobjOGX8+NZS5bjZY184zUnIYNrV7sctTMAX92JySQbA
+         rxUA==
+X-Gm-Message-State: AOAM5303toebn2Vw6jNz9WOBHIFFhdB0T4nhiG32PibsDszGJso4gOS/
+        +qMHIrCXs3Mu2FKmFcHjwUfuxsoYrag=
+X-Google-Smtp-Source: ABdhPJxSUzNN1zV4gXxXOT8r64Q07nF/D8nrR8lGdd7yU4bCgcU0Q04rNUK9eOM5Le0U05BUn4D0PA==
+X-Received: by 2002:a5d:4ec7:: with SMTP id s7mr15362311wrv.400.1593413413900;
+        Sun, 28 Jun 2020 23:50:13 -0700 (PDT)
+Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
+        by smtp.gmail.com with ESMTPSA id z25sm26400850wmk.28.2020.06.28.23.50.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Jun 2020 23:50:13 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jean Delvare <jdelvare@suse.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hwmon@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v2 0/6] devres: provide and use devm_krealloc()
+Date:   Mon, 29 Jun 2020 08:50:02 +0200
+Message-Id: <20200629065008.27620-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.26.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200628070007.36222-1-m.shams@samsung.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 28, 2020 at 12:30:07PM +0530, Tamseel Shams wrote:
-> In few older Samsung SoCs like s3c2410, s3c2412
-> and s3c2440, UART IP is having 2 interrupt lines.
-> However, in other SoCs like s3c6400, s5pv210,
-> exynos5433, and exynos4210 UART is having only 1
-> interrupt line. Due to this, "platform_get_irq(platdev, 1)"
-> call in the driver gives the following warning:
-> "IRQ index 1 not found" on recent platforms.
-> 
-> This patch re-factors the IRQ resources handling for
-> each platform and hence fixing the above warnings seen
-> on some platforms.
-> 
-> Signed-off-by: Tamseel Shams <m.shams@samsung.com>
-> ---
-> Removed the RFC tag and using 'platform_get_irq_optional'
-> instead of 'platform_get_irq' as per comment received from
-> Robin Murphy.
-> 
->  drivers/tty/serial/samsung_tty.c | 14 ++++++++++++--
->  1 file changed, 12 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
-> index 6ef614d8648c..60554f42e208 100644
-> --- a/drivers/tty/serial/samsung_tty.c
-> +++ b/drivers/tty/serial/samsung_tty.c
-> @@ -60,6 +60,7 @@ struct s3c24xx_uart_info {
->  	char			*name;
->  	unsigned int		type;
->  	unsigned int		fifosize;
-> +	unsigned int		irq_cnt;
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-No, it's duplicating the logic.
+Regular krealloc() obviously can't work with managed memory. This series
+implements devm_krealloc() and adds the first user with hope that this
+helper will be adopted by other drivers currently using non-managed
+krealloc().
 
-The driver already checks whether SoC has two or one interrupt line with
-s3c24xx_serial_has_interrupt_mask() so there is no point to have two of
-such methods.
+Some additional changes to the code modified by main patches are included.
 
-Instead unify it please. Probably entire
-s3c24xx_serial_has_interrupt_mask() and s3c24xx_serial_type() should be
-removed and switched into *serial_drv_data.
+v1 -> v2:
+- remove leftover call to hwmon_device_unregister() from pmbus_core.c
+- add a patch extending devm_kmalloc() to handle zero size case
+- use WARN_ON() instead of WARN_ONCE() in devm_krealloc() when passed
+  a pointer to non-managed memory
+- correctly handle the case when devm_krealloc() is passed a pointer to
+  memory in .rodata (potentially returned by devm_kstrdup_const())
+- correctly handle ZERO_SIZE_PTR passed as the ptr argument in devm_krealloc()
 
-Best regards,
-Krzysztof
+Bartosz Golaszewski (6):
+  devres: remove stray space from devm_kmalloc() definition
+  devres: move the size check from alloc_dr() into a separate function
+  device: remove 'extern' attribute from function prototypes in device.h
+  devres: handle zero size in devm_kmalloc()
+  devres: provide devm_krealloc()
+  hwmon: pmbus: use more devres helpers
+
+ .../driver-api/driver-model/devres.rst        |   1 +
+ drivers/base/devres.c                         |  75 +++++-
+ drivers/hwmon/pmbus/pmbus_core.c              |  28 +--
+ include/linux/device.h                        | 225 +++++++++---------
+ 4 files changed, 187 insertions(+), 142 deletions(-)
+
+-- 
+2.26.1
+
