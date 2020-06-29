@@ -6,114 +6,120 @@ X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D9F5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C621C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B879204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:48:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 460192063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:48:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729135AbgF2Ssl (ORCPT
+        id S1729200AbgF2Ssp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:48:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43040 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726990AbgF2Ssi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:48:38 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id B3D3AAAC5;
-        Mon, 29 Jun 2020 18:48:35 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 9726B1E12E7; Mon, 29 Jun 2020 20:48:35 +0200 (CEST)
-Date:   Mon, 29 Jun 2020 20:48:35 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] fs: Do not check if there is a fsnotify watcher on
- pseudo inodes
-Message-ID: <20200629184835.GK26507@quack2.suse.cz>
-References: <20200615121358.GF3183@techsingularity.net>
- <CAOQ4uxi0fqKFZ9=U-+DQ78233hR9TXEU44xRih4q=M556ynphA@mail.gmail.com>
- <20200616074701.GA20086@quack2.suse.cz>
- <4f6c8dab-4b54-d523-8636-2b01c03d14d3@gmail.com>
+        Mon, 29 Jun 2020 14:48:45 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:10384 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728109AbgF2Ssh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:48:37 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05T5Vwwl188340;
+        Mon, 29 Jun 2020 02:01:04 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31wyqufjc0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 29 Jun 2020 02:01:04 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05T613Px163660;
+        Mon, 29 Jun 2020 02:01:03 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31wyqufjar-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 29 Jun 2020 02:01:03 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05T5tJR7020658;
+        Mon, 29 Jun 2020 06:01:02 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma04ams.nl.ibm.com with ESMTP id 31wwr89w10-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 29 Jun 2020 06:01:01 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05T60wQh51445850
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 29 Jun 2020 06:00:59 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B0821A40CB;
+        Mon, 29 Jun 2020 06:00:56 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 895FCA41C8;
+        Mon, 29 Jun 2020 06:00:36 +0000 (GMT)
+Received: from [9.102.0.109] (unknown [9.102.0.109])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 29 Jun 2020 06:00:36 +0000 (GMT)
+Subject: Re: [PATCH 01/11] kexec_file: allow archs to handle special regions
+ while locating memory hole
+To:     piliu <piliu@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Kexec-ml <kexec@lists.infradead.org>,
+        Petr Tesarik <ptesarik@suse.cz>,
+        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
+        Sourabh Jain <sourabhjain@linux.ibm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@ozlabs.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        Dave Young <dyoung@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Eric Biederman <ebiederm@xmission.com>
+References: <159319825403.16351.7253978047621755765.stgit@hbathini.in.ibm.com>
+ <159319828304.16351.6990340111766605842.stgit@hbathini.in.ibm.com>
+ <ed94a357-16aa-9f17-aa5f-5aab6617ed68@redhat.com>
+From:   Hari Bathini <hbathini@linux.ibm.com>
+Message-ID: <38237270-ce15-c8ec-a527-1ff938ca257d@linux.ibm.com>
+Date:   Mon, 29 Jun 2020 11:30:35 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4f6c8dab-4b54-d523-8636-2b01c03d14d3@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <ed94a357-16aa-9f17-aa5f-5aab6617ed68@redhat.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-29_04:2020-06-26,2020-06-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 mlxscore=0 adultscore=0 spamscore=0 suspectscore=0
+ impostorscore=0 cotscore=-2147483648 bulkscore=0 lowpriorityscore=0
+ clxscore=1015 mlxlogscore=999 phishscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006290035
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 29-06-20 08:17:02, Eric Dumazet wrote:
-> On 6/16/20 12:47 AM, Jan Kara wrote:
-> > On Mon 15-06-20 19:26:38, Amir Goldstein wrote:
-> >>> This patch changes alloc_file_pseudo() to always opt out of fsnotify by
-> >>> setting FMODE_NONOTIFY flag so that no check is made for fsnotify watchers
-> >>> on pseudo files. This should be safe as the underlying helper for the
-> >>> dentry is d_alloc_pseudo which explicitly states that no lookups are ever
-> >>> performed meaning that fanotify should have nothing useful to attach to.
-> >>>
-> >>> The test motivating this was "perf bench sched messaging --pipe". On
-> >>> a single-socket machine using threads the difference of the patch was
-> >>> as follows.
-> >>>
-> >>>                               5.7.0                  5.7.0
-> >>>                             vanilla        nofsnotify-v1r1
-> >>> Amean     1       1.3837 (   0.00%)      1.3547 (   2.10%)
-> >>> Amean     3       3.7360 (   0.00%)      3.6543 (   2.19%)
-> >>> Amean     5       5.8130 (   0.00%)      5.7233 *   1.54%*
-> >>> Amean     7       8.1490 (   0.00%)      7.9730 *   2.16%*
-> >>> Amean     12     14.6843 (   0.00%)     14.1820 (   3.42%)
-> >>> Amean     18     21.8840 (   0.00%)     21.7460 (   0.63%)
-> >>> Amean     24     28.8697 (   0.00%)     29.1680 (  -1.03%)
-> >>> Amean     30     36.0787 (   0.00%)     35.2640 *   2.26%*
-> >>> Amean     32     38.0527 (   0.00%)     38.1223 (  -0.18%)
-> >>>
-> >>> The difference is small but in some cases it's outside the noise so
-> >>> while marginal, there is still some small benefit to ignoring fsnotify
-> >>> for files allocated via alloc_file_pseudo in some cases.
-> >>>
-> >>> Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
-> >>
-> >> Reviewed-by: Amir Goldstein <amir73il@gmail.com>
-> > 
-> > Thanks for the patch Mel and for review Amir! I've added the patch to my
-> > tree with small amendments to the changelog.
-> > 
-> > 								Honza
-> > 
-> 
-> Note this patch broke some user programs (one instance being packetdrill)
-> 
-> Typical legacy packetdrill script has :
-> 
-> // Create a socket and set it to non-blocking.
->     0 socket(..., SOCK_STREAM, IPPROTO_TCP) = 3
->    +0 fcntl(3, F_GETFL) = 0x2 (flags O_RDWR)
->    +0 fcntl(3, F_SETFL, O_RDWR|O_NONBLOCK) = 0
-> 
-> 
-> But after this change, fcntl(3, F_GETFL) returns 0x4000002 
-> 
-> FMODE_NONOTIFY was not meant to be visible to user space. (otherwise
-> there would be a O_NONOTIFY) ?
 
-Interesting. As Mel said the patch is reverted anyway (Linus already
-applied the revert) but the question about FMODE_NONOTIFY is interesting.
-Userspace certainly cannot set the flag (the kernel enforces this on
-open(2) and fcntl(F_SETFL)). But it is visible to userspace via
-fcntl(F_GETFL) which may have been an oversight... I'm just not sure
-whether some of the fanotify(7) users which legitimately get such file
-descriptors don't depend on this flag being visible.
 
-								Honza
+On 28/06/20 7:58 am, piliu wrote:
+> Hi Hari,
+> 
+> If in [4/11],  get_exclude_memory_ranges() turns out to be unnecessary
+> ,then this patch is abundant either. As my understanding, memblock has
+> already helped to achieved the purpose that get_exclude_memory_ranges()
+> wants.
 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+As mentioned in the other patch, there is a need for @exclude_ranges as crashkernel
+region is likely to have an overlap with regions like opal, rtas..
+
+But yeah.. the weak function should have been kexec_locate_mem_hole() instead
+of kexec_add_buffer(). Will take care of that in v2.
+
+> On 06/27/2020 03:04 AM, Hari Bathini wrote:
+>> Some archs can have special memory regions, within the given memory
+>> range, which can't be used for the buffer in a kexec segment. As
+>> kexec_add_buffer() function is being called from generic code as well,
+>> add weak arch_kexec_add_buffer definition for archs to override & take
+>> care of special regions before trying to locate a memory hole.
+>>
+>> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+
+Thanks
+Hari
