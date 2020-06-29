@@ -2,115 +2,184 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C50D9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E2DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A2578208B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:29:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FHOaKahN"
+	by mail.kernel.org (Postfix) with ESMTP id BCC81208B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:29:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729509AbgF2V3A (ORCPT
+        id S2388580AbgF2V3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:29:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38372 "EHLO
+        Mon, 29 Jun 2020 17:29:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38374 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729022AbgF2Smm (ORCPT
+        with ESMTP id S1726033AbgF2Smm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:42:42 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98D49C02F037
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 08:02:52 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id 72so15801915otc.3
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 08:02:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=L+1Xz44ar6Uipm1PA8hKU1mmGQISJNR16huXvQBXU6I=;
-        b=FHOaKahNgiBqalW/HJ7xU6Lci0yyJ1W3j5q7NdKCfei0LGFhxNl66FqNvW578NF/Tp
-         Xwon/3JNQgjYAGlkDbo5kfqW3ti/ewtur0uxwVKM5NUQ57dHFpKpn6a7HF0CB4Bi/OaU
-         qVX6wx33PATZj2rAQJ6T4gGTP27jbxsH9w4fkPFzbhGgMIX2J4AsQDuBrS2UEUnctgT3
-         o63jtCu8cDpkUIsx1jddZM1JCLhG20iDpgn6jTJfjDW1oT5PA/o3Eag38rj3CH8aMoTH
-         yMoSN+6rCfEqZb/o59YTB46ceXfNkidS6um7I2w92F0bYK6XQhq9oCVJtrYVXoj71s2E
-         mNwg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=L+1Xz44ar6Uipm1PA8hKU1mmGQISJNR16huXvQBXU6I=;
-        b=DGCNbrnJ+JgA+9VCBg2rKCuXEm28DFd3ygjje7Kz6+zA1dEvMgqAXKhDdLpF+bDk15
-         t2rbqG5nVDQjoD0JPvVyCdOvi2KyMnRC4Zj0whzBrohe4801iqeY98ShV07BCCXAsSDu
-         d5bUhefgFAhKqw2YskulkekjqoW4MYs9eP+7GsgPb0fkJH8DBI7ewxyBvFF8duEazguJ
-         Q7hihXwFIu4q7Y9ptxWU8aNr8vxBkjjgSiVDDWYu/XZb6Ooz1LU5qDzYByZURG2Gl2wm
-         g6003rYIjzgqD6SPHAKlR4aWhB39SaRl+HZunI41rcC6BhdfwPByfXZscNQvHXM0NRb0
-         87Pg==
-X-Gm-Message-State: AOAM531sf1WPfTjlJFBUv83Jfx0tQLMJOPSSbdrGVnF0Kq17jyH/DY0L
-        vDxrl8JCmQhfmpL0q4C1azMIJmv5B+Py+sxUtB8=
-X-Google-Smtp-Source: ABdhPJxAv3nNA07e6BnrRu3LBTJ+LyIE2q/QM8cY6s6i/AdfdMV0lBURqFifSBhRLBv25JuF3dX27RCSg/1khsAd2mw=
-X-Received: by 2002:a05:6830:3151:: with SMTP id c17mr14283505ots.143.1593442971967;
- Mon, 29 Jun 2020 08:02:51 -0700 (PDT)
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BA7DC033C1A;
+        Mon, 29 Jun 2020 11:26:32 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jpyUB-002DvU-A6; Mon, 29 Jun 2020 18:26:31 +0000
+From:   Al Viro <viro@ZenIV.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        David Miller <davem@davemloft.net>,
+        Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>
+Subject: [PATCH 25/41] sh: convert to ->get2()
+Date:   Mon, 29 Jun 2020 19:26:12 +0100
+Message-Id: <20200629182628.529995-25-viro@ZenIV.linux.org.uk>
+X-Mailer: git-send-email 2.25.4
+In-Reply-To: <20200629182628.529995-1-viro@ZenIV.linux.org.uk>
+References: <20200629182349.GA2786714@ZenIV.linux.org.uk>
+ <20200629182628.529995-1-viro@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-References: <20200629140442.1043957-1-lee.jones@linaro.org> <20200629140442.1043957-11-lee.jones@linaro.org>
-In-Reply-To: <20200629140442.1043957-11-lee.jones@linaro.org>
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-Date:   Mon, 29 Jun 2020 18:02:24 +0300
-Message-ID: <CAFCwf11L35U4u-C+rKijJbPNc9VowFOaKWKzx=ZNY4cN=EkyBg@mail.gmail.com>
-Subject: Re: [PATCH 10/20] misc: habanalabs: gaudi: gaudi_security: Repair
- incorrectly named function arg
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        Tomer Tayar <ttayar@habana.ai>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 5:04 PM Lee Jones <lee.jones@linaro.org> wrote:
->
-> audi_pb_set_block()'s argument 'base' was incorrectly named 'block' in
-gaudi_pb_set_block()'s
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-> its function header.
->
-> Fixes the following W=1 kernel build warning(s):
->
->  drivers/misc/habanalabs/gaudi/gaudi_security.c:454: warning: Function parameter or member 'base' not described in 'gaudi_pb_set_block'
->  drivers/misc/habanalabs/gaudi/gaudi_security.c:454: warning: Excess function parameter 'block' description in 'gaudi_pb_set_block'
->
-> Cc: Oded Gabbay <oded.gabbay@gmail.com>
-> Cc: Tomer Tayar <ttayar@habana.ai>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  drivers/misc/habanalabs/gaudi/gaudi_security.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/drivers/misc/habanalabs/gaudi/gaudi_security.c b/drivers/misc/habanalabs/gaudi/gaudi_security.c
-> index 6a351e31fa6af..abdd5ed8f2cf6 100644
-> --- a/drivers/misc/habanalabs/gaudi/gaudi_security.c
-> +++ b/drivers/misc/habanalabs/gaudi/gaudi_security.c
-> @@ -447,8 +447,7 @@ static u64 gaudi_rr_hbw_mask_high_ar_regs[GAUDI_NUMBER_OF_RR_REGS] = {
->   * gaudi_set_block_as_protected - set the given block as protected
->   *
->   * @hdev: pointer to hl_device structure
-> - * @block: block base address
-> - *
-> + * @base: block base address
->   */
->  static void gaudi_pb_set_block(struct hl_device *hdev, u64 base)
->  {
-> --
-> 2.25.1
->
-With the above fix, This patch is:
-Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+NB: there's a direct call of fpregs_get() left in dump_fpu().
+To be taken out once we convert ELF_FDPIC to use of regset.
+
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+---
+ arch/sh/kernel/process_32.c |  5 ++---
+ arch/sh/kernel/ptrace_32.c  | 48 ++++++++++-----------------------------------
+ 2 files changed, 12 insertions(+), 41 deletions(-)
+
+diff --git a/arch/sh/kernel/process_32.c b/arch/sh/kernel/process_32.c
+index 456cc8d171f7..6ab397bc47ed 100644
+--- a/arch/sh/kernel/process_32.c
++++ b/arch/sh/kernel/process_32.c
+@@ -103,9 +103,8 @@ int dump_fpu(struct pt_regs *regs, elf_fpregset_t *fpu)
+ 
+ 	fpvalid = !!tsk_used_math(tsk);
+ 	if (fpvalid)
+-		fpvalid = !fpregs_get(tsk, NULL, 0,
+-				      sizeof(struct user_fpu_struct),
+-				      fpu, NULL);
++		fpvalid = !fpregs_get(tsk, NULL,
++				      (struct membuf){fpu, sizeof(*fpu)});
+ #endif
+ 
+ 	return fpvalid;
+diff --git a/arch/sh/kernel/ptrace_32.c b/arch/sh/kernel/ptrace_32.c
+index 64bfb714943e..7aa5e61ccb7b 100644
+--- a/arch/sh/kernel/ptrace_32.c
++++ b/arch/sh/kernel/ptrace_32.c
+@@ -134,26 +134,11 @@ void ptrace_disable(struct task_struct *child)
+ 
+ static int genregs_get(struct task_struct *target,
+ 		       const struct user_regset *regset,
+-		       unsigned int pos, unsigned int count,
+-		       void *kbuf, void __user *ubuf)
++		       struct membuf to)
+ {
+ 	const struct pt_regs *regs = task_pt_regs(target);
+-	int ret;
+ 
+-	ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-				  regs->regs,
+-				  0, 16 * sizeof(unsigned long));
+-	if (!ret)
+-		/* PC, PR, SR, GBR, MACH, MACL, TRA */
+-		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-					  &regs->pc,
+-					  offsetof(struct pt_regs, pc),
+-					  sizeof(struct pt_regs));
+-	if (!ret)
+-		ret = user_regset_copyout_zero(&pos, &count, &kbuf, &ubuf,
+-					       sizeof(struct pt_regs), -1);
+-
+-	return ret;
++	return membuf_write(&to, regs, sizeof(struct pt_regs));
+ }
+ 
+ static int genregs_set(struct task_struct *target,
+@@ -182,8 +167,7 @@ static int genregs_set(struct task_struct *target,
+ #ifdef CONFIG_SH_FPU
+ int fpregs_get(struct task_struct *target,
+ 	       const struct user_regset *regset,
+-	       unsigned int pos, unsigned int count,
+-	       void *kbuf, void __user *ubuf)
++	       struct membuf to)
+ {
+ 	int ret;
+ 
+@@ -191,12 +175,8 @@ int fpregs_get(struct task_struct *target,
+ 	if (ret)
+ 		return ret;
+ 
+-	if ((boot_cpu_data.flags & CPU_HAS_FPU))
+-		return user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-					   &target->thread.xstate->hardfpu, 0, -1);
+-
+-	return user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-				   &target->thread.xstate->softfpu, 0, -1);
++	return membuf_write(&to, target->thread.xstate,
++			    sizeof(struct user_fpu_struct));
+ }
+ 
+ static int fpregs_set(struct task_struct *target,
+@@ -230,20 +210,12 @@ static int fpregs_active(struct task_struct *target,
+ #ifdef CONFIG_SH_DSP
+ static int dspregs_get(struct task_struct *target,
+ 		       const struct user_regset *regset,
+-		       unsigned int pos, unsigned int count,
+-		       void *kbuf, void __user *ubuf)
++		       struct membuf to)
+ {
+ 	const struct pt_dspregs *regs =
+ 		(struct pt_dspregs *)&target->thread.dsp_status.dsp_regs;
+-	int ret;
+ 
+-	ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf, regs,
+-				  0, sizeof(struct pt_dspregs));
+-	if (!ret)
+-		ret = user_regset_copyout_zero(&pos, &count, &kbuf, &ubuf,
+-					       sizeof(struct pt_dspregs), -1);
+-
+-	return ret;
++	return membuf_write(&to, regs, sizeof(struct pt_dspregs));
+ }
+ 
+ static int dspregs_set(struct task_struct *target,
+@@ -324,7 +296,7 @@ static const struct user_regset sh_regsets[] = {
+ 		.n		= ELF_NGREG,
+ 		.size		= sizeof(long),
+ 		.align		= sizeof(long),
+-		.get		= genregs_get,
++		.get2		= genregs_get,
+ 		.set		= genregs_set,
+ 	},
+ 
+@@ -334,7 +306,7 @@ static const struct user_regset sh_regsets[] = {
+ 		.n		= sizeof(struct user_fpu_struct) / sizeof(long),
+ 		.size		= sizeof(long),
+ 		.align		= sizeof(long),
+-		.get		= fpregs_get,
++		.get2		= fpregs_get,
+ 		.set		= fpregs_set,
+ 		.active		= fpregs_active,
+ 	},
+@@ -345,7 +317,7 @@ static const struct user_regset sh_regsets[] = {
+ 		.n		= sizeof(struct pt_dspregs) / sizeof(long),
+ 		.size		= sizeof(long),
+ 		.align		= sizeof(long),
+-		.get		= dspregs_get,
++		.get2		= dspregs_get,
+ 		.set		= dspregs_set,
+ 		.active		= dspregs_active,
+ 	},
+-- 
+2.11.0
+
