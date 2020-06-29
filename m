@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 295A4C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:35:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3895CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0DA9820672
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:35:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C0D620672
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:36:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593459359;
-	bh=kfPtnYEFtzFOLLzWNKBug91PdEaXii46WT/pLjKUsHQ=;
+	s=default; t=1593459365;
+	bh=G1OaI6ru6BFUiiAeqdzS2X/v02E6klbhEIvMe3Sjtg8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NsFElUFCYWs2QzOUvm6jue0zAjT/xnWKOudhGR0tzDE4/2W6QhWiw1XMcwKzRJpJj
-	 +7bPZkhgMMZGZBaW+Dq7IbBCSldzWWMEXN2dL0ZEn/ybDL50/IBAi3kIdeiIFZ9dra
-	 baji80VIRUL3/3I0zDwtpaaH6qNWi6fWDfCeLPN4=
+	b=D8M/HQGWtpHBOJGb3aUKQlSWfiDprG/VgfWhP7GRW6j7LTlJf2BP0M/tpmYHUKgQ9
+	 Snh3gG7TxnhDm46+ihcZ2tjhFjbbEB8aEhSW4/SOLKAdwCbszzkr16DX2sipG8sxsW
+	 Dj19zGlbyp8Gx9kCi0EqqhPd9sWqqcRlgGldRYz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733109AbgF2TbP (ORCPT
+        id S1732436AbgF2TbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:31:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40572 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:31:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40556 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733001AbgF2Tad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:30:33 -0400
+        id S1732992AbgF2Tac (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:30:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F6A9251DC;
-        Mon, 29 Jun 2020 15:35:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C47325223;
+        Mon, 29 Jun 2020 15:35:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444945;
-        bh=kfPtnYEFtzFOLLzWNKBug91PdEaXii46WT/pLjKUsHQ=;
+        s=default; t=1593444942;
+        bh=G1OaI6ru6BFUiiAeqdzS2X/v02E6klbhEIvMe3Sjtg8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AGWSGV+HaBCsNLgoSTURu7e+KG4Iu2ys+7M1yOMpDCLbYzP8TgIHFzOpby6Ftls0F
-         ofHN//MfR44RlTb8KErByj/kNnlFrW0TwqNaMtzxNlh35Ani+BvX7lmpkZ8T5EARTF
-         3wlDJltKT9FjWuTMv7YFOTo8Mq+SCb4plhNu+J5g=
+        b=N1CB4tadVzq709PnKf3LqqNpxP2DDyxMsf4+AO9ePEbisJRv6+K/hrtwoG9+VZFWw
+         b4ICd9RjLdqxkbN7jtDYrUPr0FRiGRf82rHNdXYvndYDg6TeGXd6lHSGXOavKRJhHH
+         aaJW/bM1MR8HMS5nEZwcKwoF31Mts35yQOvIMqE4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>,
-        kbuild test robot <lkp@intel.com>,
-        Marek Vasut <marex@denx.de>,
-        Minas Harutyunyan <hminas@synopsys.com>,
+Cc:     Tariq Toukan <tariqt@mellanox.com>,
+        Boris Pismenny <borisp@mellanox.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 042/131] usb: dwc2: Postponed gadget registration to the udc class driver
-Date:   Mon, 29 Jun 2020 11:33:33 -0400
-Message-Id: <20200629153502.2494656-43-sashal@kernel.org>
+Subject: [PATCH 4.19 039/131] net: Do not clear the sock TX queue in sk_set_socket()
+Date:   Mon, 29 Jun 2020 11:33:30 -0400
+Message-Id: <20200629153502.2494656-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
@@ -67,66 +66,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Minas Harutyunyan <Minas.Harutyunyan@synopsys.com>
+From: Tariq Toukan <tariqt@mellanox.com>
 
-commit 207324a321a866401b098cadf19e4a2dd6584622 upstream.
+[ Upstream commit 41b14fb8724d5a4b382a63cb4a1a61880347ccb8 ]
 
-During dwc2 driver probe, after gadget registration to the udc class
-driver, if exist any builtin function driver it immediately bound to
-dwc2 and after init host side (dwc2_hcd_init()) stucked in host mode.
-Patch postpone gadget registration after host side initialization done.
+Clearing the sock TX queue in sk_set_socket() might cause unexpected
+out-of-order transmit when called from sock_orphan(), as outstanding
+packets can pick a different TX queue and bypass the ones already queued.
 
-Fixes: 117777b2c3bb9 ("usb: dwc2: Move gadget probe function into platform code")
-Reported-by: kbuild test robot <lkp@intel.com>
-Tested-by: Marek Vasut <marex@denx.de>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Minas Harutyunyan <hminas@synopsys.com>
-Link: https://lore.kernel.org/r/f21cb38fecc72a230b86155d94c7e60c9cb66f58.1591690938.git.hminas@synopsys.com
+This is undesired in general. More specifically, it breaks the in-order
+scheduling property guarantee for device-offloaded TLS sockets.
+
+Remove the call to sk_tx_queue_clear() in sk_set_socket(), and add it
+explicitly only where needed.
+
+Fixes: e022f0b4a03f ("net: Introduce sk_tx_queue_mapping")
+Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
+Reviewed-by: Boris Pismenny <borisp@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/usb/dwc2/gadget.c   |  6 ------
- drivers/usb/dwc2/platform.c | 11 +++++++++++
- 2 files changed, 11 insertions(+), 6 deletions(-)
+ include/net/sock.h | 1 -
+ net/core/sock.c    | 2 ++
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/dwc2/gadget.c b/drivers/usb/dwc2/gadget.c
-index d8424834902db..f18aa3f59e519 100644
---- a/drivers/usb/dwc2/gadget.c
-+++ b/drivers/usb/dwc2/gadget.c
-@@ -4759,12 +4759,6 @@ int dwc2_gadget_init(struct dwc2_hsotg *hsotg)
- 					  epnum, 0);
+diff --git a/include/net/sock.h b/include/net/sock.h
+index f359e5c947628..e2df102e669e8 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -1775,7 +1775,6 @@ static inline int sk_rx_queue_get(const struct sock *sk)
+ 
+ static inline void sk_set_socket(struct sock *sk, struct socket *sock)
+ {
+-	sk_tx_queue_clear(sk);
+ 	sk->sk_socket = sock;
+ }
+ 
+diff --git a/net/core/sock.c b/net/core/sock.c
+index b11d116383dab..8721264a2b394 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -1540,6 +1540,7 @@ struct sock *sk_alloc(struct net *net, int family, gfp_t priority,
+ 		cgroup_sk_alloc(&sk->sk_cgrp_data);
+ 		sock_update_classid(&sk->sk_cgrp_data);
+ 		sock_update_netprioidx(&sk->sk_cgrp_data);
++		sk_tx_queue_clear(sk);
  	}
  
--	ret = usb_add_gadget_udc(dev, &hsotg->gadget);
--	if (ret) {
--		dwc2_hsotg_ep_free_request(&hsotg->eps_out[0]->ep,
--					   hsotg->ctrl_req);
--		return ret;
--	}
- 	dwc2_hsotg_dump(hsotg);
+ 	return sk;
+@@ -1747,6 +1748,7 @@ struct sock *sk_clone_lock(const struct sock *sk, const gfp_t priority)
+ 		 */
+ 		sk_refcnt_debug_inc(newsk);
+ 		sk_set_socket(newsk, NULL);
++		sk_tx_queue_clear(newsk);
+ 		newsk->sk_wq = NULL;
  
- 	return 0;
-diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
-index 577642895b57d..c3383f30b37a4 100644
---- a/drivers/usb/dwc2/platform.c
-+++ b/drivers/usb/dwc2/platform.c
-@@ -492,6 +492,17 @@ static int dwc2_driver_probe(struct platform_device *dev)
- 	if (hsotg->dr_mode == USB_DR_MODE_PERIPHERAL)
- 		dwc2_lowlevel_hw_disable(hsotg);
- 
-+#if IS_ENABLED(CONFIG_USB_DWC2_PERIPHERAL) || \
-+	IS_ENABLED(CONFIG_USB_DWC2_DUAL_ROLE)
-+	/* Postponed adding a new gadget to the udc class driver list */
-+	if (hsotg->gadget_enabled) {
-+		retval = usb_add_gadget_udc(hsotg->dev, &hsotg->gadget);
-+		if (retval) {
-+			dwc2_hsotg_remove(hsotg);
-+			goto error;
-+		}
-+	}
-+#endif /* CONFIG_USB_DWC2_PERIPHERAL || CONFIG_USB_DWC2_DUAL_ROLE */
- 	return 0;
- 
- error:
+ 		if (newsk->sk_prot->sockets_allocated)
 -- 
 2.25.1
 
