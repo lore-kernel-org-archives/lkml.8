@@ -2,377 +2,102 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F05C3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D513C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEA20206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:17:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24A49206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:17:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="A9TU9zrr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731966AbgF2TRJ (ORCPT
+        id S1731582AbgF2TRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 29 Jun 2020 15:17:11 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:55572 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731963AbgF2TRJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:17:09 -0400
-Received: from mga01.intel.com ([192.55.52.88]:63701 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731798AbgF2TRA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:17:00 -0400
-IronPort-SDR: zQVslvxTdUJYmnYaCQxQykC8p0vqjS7YNVyM89ASyWn/EjmwOMcb9QKBeHGZqkvJqLKh+rDWu3
- IHTOxb5iJr5w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="163944968"
-X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
-   d="scan'208";a="163944968"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 02:04:04 -0700
-IronPort-SDR: efGfS+925yJcyydLz+hA38uSECBwuq0VTi09MpkwYmNzyQB8Hi5E4S5E6idD+Kk58G5TjNEWpo
- 96wjqlfNb0qw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
-   d="scan'208";a="424750634"
-Received: from sgsxdev001.isng.intel.com (HELO localhost) ([10.226.88.11])
-  by orsmga004.jf.intel.com with ESMTP; 29 Jun 2020 02:04:01 -0700
-From:   Rahul Tanwar <rahul.tanwar@linux.intel.com>
-To:     u.kleine-koenig@pengutronix.de, linux-pwm@vger.kernel.org
-Cc:     thierry.reding@gmail.com, p.zabel@pengutronix.de,
-        robh+dt@kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
-        songjun.Wu@intel.com, cheol.yong.kim@intel.com,
-        qi-ming.wu@intel.com, rahul.tanwar.linux@gmail.com,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Subject: [PATCH v3 2/2] Add PWM fan controller driver for LGM SoC
-Date:   Mon, 29 Jun 2020 17:03:47 +0800
-Message-Id: <df22a642083474e71f9f8274c033a6ef9757af5f.1593420979.git.rahul.tanwar@linux.intel.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <cover.1593420979.git.rahul.tanwar@linux.intel.com>
-References: <cover.1593420979.git.rahul.tanwar@linux.intel.com>
-In-Reply-To: <cover.1593420979.git.rahul.tanwar@linux.intel.com>
-References: <cover.1593420979.git.rahul.tanwar@linux.intel.com>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593458228;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=oCU9JjYn8E5EJ3tgtkZ8fJQcI1jYdB8KZDv2+twV1/g=;
+        b=A9TU9zrrWi35e6LxvVRWC3ssuzs97B2pnNvjC9jSNTDhQEBT9f1+XUZBVBY+pT4wv2TJz0
+        nDd9TUFapZWDpwXTSOtU3jc5nu8RU5GUfJq5dw6Q00NNVSePLwZPSXMTBuDc91BabDWL7y
+        KuQJGaJiUKHGRXov1guNRhxcMQP4/2Y=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-230-UuU0pLxkNTqGodv5frl3IQ-1; Mon, 29 Jun 2020 15:17:04 -0400
+X-MC-Unique: UuU0pLxkNTqGodv5frl3IQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F09FE91362B;
+        Mon, 29 Jun 2020 19:17:02 +0000 (UTC)
+Received: from krava (unknown [10.40.195.81])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 261F71C4;
+        Mon, 29 Jun 2020 19:17:00 +0000 (UTC)
+Date:   Mon, 29 Jun 2020 21:17:00 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Alexey Budankov <alexey.budankov@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v8 01/13] tools/libperf: avoid moving of fds at
+ fdarray__filter() call
+Message-ID: <20200629191700.GC3031756@krava>
+References: <0781a077-aa82-5b4a-273e-c17372a72b93@linux.intel.com>
+ <3d36dc7a-4249-096c-7554-80e6d290eac5@linux.intel.com>
+ <fada6325-2e6a-0de4-918f-0bc7d1410c52@linux.intel.com>
+ <20200625171405.GL2719003@krava>
+ <688910f3-289e-d63e-79e3-0a17a6df0e9e@linux.intel.com>
+ <20200626093745.GM2719003@krava>
+ <6582201a-9570-709f-f6e9-5a644296f49d@linux.intel.com>
+ <b2a868bb-b434-7814-d577-944efc5369aa@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b2a868bb-b434-7814-d577-944efc5369aa@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Intel Lightning Mountain(LGM) SoC contains a PWM fan controller.
-This PWM controller does not have any other consumer, it is a
-dedicated PWM controller for fan attached to the system. Add
-driver for this PWM fan controller.
+On Mon, Jun 29, 2020 at 06:11:52PM +0300, Alexey Budankov wrote:
 
-Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
----
- drivers/pwm/Kconfig         |   9 ++
- drivers/pwm/Makefile        |   1 +
- drivers/pwm/pwm-intel-lgm.c | 265 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 275 insertions(+)
- create mode 100644 drivers/pwm/pwm-intel-lgm.c
+SNIP
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index cb8d739067d2..a3303e22d5fa 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -232,6 +232,15 @@ config PWM_IMX_TPM
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-imx-tpm.
- 
-+config PWM_INTEL_LGM
-+	tristate "Intel LGM PWM support"
-+	depends on X86 || COMPILE_TEST
-+	help
-+	  Generic PWM fan controller driver for LGM SoC.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-intel-lgm.
-+
- config PWM_IQS620A
- 	tristate "Azoteq IQS620A PWM support"
- 	depends on MFD_IQS62X || COMPILE_TEST
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index a59c710e98c7..db154a6b4f51 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -20,6 +20,7 @@ obj-$(CONFIG_PWM_IMG)		+= pwm-img.o
- obj-$(CONFIG_PWM_IMX1)		+= pwm-imx1.o
- obj-$(CONFIG_PWM_IMX27)		+= pwm-imx27.o
- obj-$(CONFIG_PWM_IMX_TPM)	+= pwm-imx-tpm.o
-+obj-$(CONFIG_PWM_INTEL_LGM)	+= pwm-intel-lgm.o
- obj-$(CONFIG_PWM_IQS620A)	+= pwm-iqs620a.o
- obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
- obj-$(CONFIG_PWM_LP3943)	+= pwm-lp3943.o
-diff --git a/drivers/pwm/pwm-intel-lgm.c b/drivers/pwm/pwm-intel-lgm.c
-new file mode 100644
-index 000000000000..661fa7d9145d
---- /dev/null
-+++ b/drivers/pwm/pwm-intel-lgm.c
-@@ -0,0 +1,265 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2020 Intel Corporation.
-+ *
-+ * Notes & Limitations:
-+ * - The hardware supports fixed period which is dependent on 2/3 or 4
-+ *   wire fan mode.
-+ * - Supports normal polarity. Does not support changing polarity.
-+ * - When PWM is disabled, output of PWM will become 0(inactive). It doesn't
-+ *   keep track of running period.
-+ * - When duty cycle is changed, PWM output may be a mix of previous setting
-+ *   and new setting for the first period. From second period, the output is
-+ *   based on new setting.
-+ * - Supports 100% duty cycle.
-+ * - It is a dedicated PWM fan controller. There are no other consumers for
-+ *   this PWM controller.
-+ */
-+#include <linux/bitfield.h>
-+#include <linux/clk.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/pwm.h>
-+#include <linux/regmap.h>
-+#include <linux/reset.h>
-+
-+#define PWM_FAN_CON0		0x0
-+#define PWM_FAN_EN_EN		BIT(0)
-+#define PWM_FAN_EN_DIS		0x0
-+#define PWM_FAN_EN_MSK		BIT(0)
-+#define PWM_FAN_MODE_2WIRE	0x0
-+#define PWM_FAN_MODE_4WIRE	0x1
-+#define PWM_FAN_MODE_MSK	BIT(1)
-+#define PWM_FAN_DC_MSK		GENMASK(23, 16)
-+
-+#define PWM_FAN_CON1		0x4
-+#define PWM_FAN_MAX_RPM_MSK	GENMASK(15, 0)
-+
-+#define MAX_RPM			(BIT(16) - 1)
-+#define DFAULT_RPM		4000
-+#define MAX_DUTY_CYCLE		(BIT(8) - 1)
-+
-+#define DC_BITS			8
-+
-+#define PERIOD_2WIRE_NSECS	40000000
-+#define PERIOD_4WIRE_NSECS	40000
-+
-+#define LGM_PWM_DIV_ROUND_DOWN(n, d) (((n) + ((d) / 2) - 1) / (d))
-+
-+struct lgm_pwm_chip {
-+	struct pwm_chip chip;
-+	struct regmap *regmap;
-+	struct clk *clk;
-+	struct reset_control *rst;
-+	u32 period;
-+};
-+
-+static inline struct lgm_pwm_chip *to_lgm_pwm_chip(struct pwm_chip *chip)
-+{
-+	return container_of(chip, struct lgm_pwm_chip, chip);
-+}
-+
-+static int lgm_pwm_enable(struct pwm_chip *chip, bool enable)
-+{
-+	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
-+	struct regmap *regmap = pc->regmap;
-+
-+	if (enable)
-+		regmap_update_bits(regmap, PWM_FAN_CON0,
-+				   PWM_FAN_EN_MSK, PWM_FAN_EN_EN);
-+	else
-+		regmap_update_bits(regmap, PWM_FAN_CON0,
-+			   	   PWM_FAN_EN_MSK, PWM_FAN_EN_DIS);
-+
-+	return 0;
-+}
-+
-+static int lgm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-+			 const struct pwm_state *state)
-+{
-+	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
-+	u32 duty_cycle, val;
-+	unsigned int period;
-+
-+	period = min_t(unsigned int, state->period, pc->period);
-+
-+	if (state->polarity != PWM_POLARITY_NORMAL ||
-+	    period < pc->period)
-+		return -EINVAL;
-+
-+	duty_cycle = min_t(u32, state->duty_cycle, period);
-+
-+	/* reg_value = duty_ns * MAX_REG_VAL(0xff) / period_ns */
-+	val = LGM_PWM_DIV_ROUND_DOWN(duty_cycle << DC_BITS, period);
-+	val = min_t(u32, val, MAX_DUTY_CYCLE);
-+
-+	regmap_update_bits(pc->regmap, PWM_FAN_CON0, PWM_FAN_DC_MSK,
-+			   FIELD_PREP(PWM_FAN_DC_MSK, val));
-+
-+	if (state->enabled != regmap_test_bits(pc->regmap, PWM_FAN_CON0,
-+					       PWM_FAN_EN_EN))
-+		lgm_pwm_enable(chip, state->enabled);
-+
-+	return 0;
-+}
-+
-+static void lgm_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-+			      struct pwm_state *state)
-+{
-+	struct lgm_pwm_chip *pc = to_lgm_pwm_chip(chip);
-+	u32 duty, val;
-+
-+	state->enabled = regmap_test_bits(pc->regmap, PWM_FAN_CON0,
-+					  PWM_FAN_EN_EN);
-+	state->polarity = PWM_POLARITY_NORMAL;
-+	state->period = pc->period; /* fixed period */
-+
-+	regmap_read(pc->regmap, PWM_FAN_CON0, &val);
-+	duty = FIELD_GET(PWM_FAN_DC_MSK, val);
-+	state->duty_cycle = duty * pc->period >> DC_BITS;
-+	state->duty_cycle = roundup_pow_of_two(state->duty_cycle);
-+}
-+
-+static const struct pwm_ops lgm_pwm_ops = {
-+	.get_state = lgm_pwm_get_state,
-+	.apply = lgm_pwm_apply,
-+	.owner = THIS_MODULE,
-+};
-+
-+static void lgm_pwm_init(struct lgm_pwm_chip *pc)
-+{
-+	struct device *dev = pc->chip.dev;
-+	struct regmap *regmap = pc->regmap;
-+	u32 max_rpm, fan_wire, con0_val, con0_mask;
-+
-+	if (device_property_read_u32(dev, "intel,fan-wire", &fan_wire))
-+		fan_wire = 2; /* default is 2 wire mode */
-+
-+	con0_mask = PWM_FAN_MODE_MSK;
-+
-+	switch (fan_wire) {
-+	case 4:
-+		con0_val = FIELD_PREP(PWM_FAN_MODE_MSK, PWM_FAN_MODE_4WIRE);
-+		pc->period = PERIOD_4WIRE_NSECS;
-+		break;
-+	default:
-+		/* default is 2wire mode */
-+		con0_val = FIELD_PREP(PWM_FAN_MODE_MSK, PWM_FAN_MODE_2WIRE);
-+		pc->period = PERIOD_2WIRE_NSECS;
-+		break;
-+	}
-+
-+	if (device_property_read_u32(dev, "intel,max-rpm", &max_rpm))
-+		max_rpm = DFAULT_RPM;
-+
-+	max_rpm = min_t(u32, max_rpm, MAX_RPM);
-+	if (max_rpm == 0)
-+		max_rpm = DFAULT_RPM;
-+
-+	regmap_update_bits(regmap, PWM_FAN_CON1, PWM_FAN_MAX_RPM_MSK, max_rpm);
-+	regmap_update_bits(regmap, PWM_FAN_CON0, con0_mask, con0_val);
-+}
-+
-+static const struct regmap_config lgm_pwm_regmap_config = {
-+	.reg_bits = 32,
-+	.reg_stride = 4,
-+	.val_bits = 32,
-+};
-+
-+static int lgm_pwm_probe(struct platform_device *pdev)
-+{
-+	struct lgm_pwm_chip *pc;
-+	struct device *dev = &pdev->dev;
-+	void __iomem *io_base;
-+	int ret;
-+
-+	pc = devm_kzalloc(dev, sizeof(*pc), GFP_KERNEL);
-+	if (!pc)
-+		return -ENOMEM;
-+
-+	io_base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(io_base))
-+		return PTR_ERR(io_base);
-+
-+	pc->regmap = devm_regmap_init_mmio(dev, io_base, &lgm_pwm_regmap_config);
-+	if (IS_ERR(pc->regmap)) {
-+		ret = PTR_ERR(pc->regmap);
-+		dev_err(dev, "failed to init register map: %pe\n", pc->regmap);
-+		return ret;
-+	}
-+
-+	pc->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(pc->clk)) {
-+		ret = PTR_ERR(pc->clk);
-+		dev_err(dev, "failed to get clock: %pe\n", pc->clk);
-+		return ret;
-+	}
-+
-+	pc->rst = devm_reset_control_get_exclusive(dev, NULL);
-+	if (IS_ERR(pc->rst)) {
-+		ret = PTR_ERR(pc->rst);
-+		dev_err(dev, "failed to get reset control: %pe\n", pc->rst);
-+		return ret;
-+	}
-+
-+	ret = reset_control_deassert(pc->rst);
-+	if (ret) {
-+		dev_err(dev, "cannot deassert reset control: %pe\n",
-+			ERR_PTR(ret));
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(pc->clk);
-+	if (ret) {
-+		dev_err(dev, "failed to enable clock\n");
-+		return ret;
-+	}
-+
-+	pc->chip.dev = dev;
-+	pc->chip.ops = &lgm_pwm_ops;
-+	pc->chip.npwm = 1;
-+
-+	lgm_pwm_init(pc);
-+
-+	ret = pwmchip_add(&pc->chip);
-+	if (ret < 0) {
-+		dev_err(dev, "failed to add PWM chip: %pe\n", ERR_PTR(ret));
-+		clk_disable_unprepare(pc->clk);
-+		reset_control_assert(pc->rst);
-+		return ret;
-+	}
-+
-+	platform_set_drvdata(pdev, pc);
-+	return 0;
-+}
-+
-+static int lgm_pwm_remove(struct platform_device *pdev)
-+{
-+	struct lgm_pwm_chip *pc = platform_get_drvdata(pdev);
-+	int ret;
-+
-+	ret = pwmchip_remove(&pc->chip);
-+	if (ret < 0)
-+		return ret;
-+
-+	clk_disable_unprepare(pc->clk);
-+	reset_control_assert(pc->rst);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id lgm_pwm_of_match[] = {
-+	{ .compatible = "intel,lgm-pwm" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, lgm_pwm_of_match);
-+
-+static struct platform_driver lgm_pwm_driver = {
-+	.driver = {
-+		.name = "intel-pwm",
-+		.of_match_table = lgm_pwm_of_match,
-+	},
-+	.probe = lgm_pwm_probe,
-+	.remove = lgm_pwm_remove,
-+};
-+module_platform_driver(lgm_pwm_driver);
--- 
-2.11.0
+> >>
+> >> I'm confused, are you talking about file descriptors limit now?
+> >> this wont be affected by epoll change.. what do I miss?
+> > 
+> > Currently there is already uname -n limit on the amount of open file descriptors
+> > and Perf tool process is affected by that limit.
+> > 
+> > Moving to epoll() will impose one more max_user_watches limit and that can additionally
+> > confine Perf applicability even though default value on some machines currently
+> > is high enough.
+> 
+> Prior making v9 I would prefer to agree on some design to be implemented in order to
+> avoid guessing and redundant reiterating.
+> 
+> Options that I see as good balanced ones are 1) or 5), + non screwing of fds to fix
+> staleness of pos(=fdarray__add()).
+> 
+> Are there any thoughts so far?
+
+let's try it and discuss over the code
+
+jirka
 
