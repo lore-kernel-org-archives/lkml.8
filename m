@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E0CCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D01BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:57:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59C50207E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DCD0206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:57:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467835;
-	bh=QcRfZJniiltEW6KmV8PKB4BRobpN1Ff18VLIQgwZ1yc=;
+	s=default; t=1593467839;
+	bh=0J2d8kQPi0mkMtqbYwV3PWKAC3zG/6+wEzFKKm+edqA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VvJPxxUxivEeXQMs/H6WWHR/U4q5QClEkeDhPLo4nHCrp8pEo1G4c0GYFMLJrOMoK
-	 Qy/tkTnVsSr0rDA65uCbFCpvyEdzPsL/EhXnNdOuNo2GqmLjefjS2/fBKDoKuQ04EK
-	 Q4A96jzt94GcsqxMRqz2HgjdidiUcI4woDwqOur4=
+	b=HeC8vPWKK3rae1ECxRMW15QZFQSzB+dx5Pt4GomcV7SxKoJ0kDmY1UIENVQwWeLrA
+	 Umc2Q6WPXYNZe9AgLsPSjswG1FTRiILfoWTORO3AYr4Qah/0OyOL39F32hUsaRie+U
+	 7AnBa4Y8NTZ+38xMFOsqVghaZ06t/OvbI0ZearE4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404698AbgF2V5N (ORCPT
+        id S1732630AbgF2V5R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:57:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56892 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:57:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726509AbgF2Sfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726506AbgF2Sfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5271324747;
-        Mon, 29 Jun 2020 15:21:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C0AB2469D;
+        Mon, 29 Jun 2020 15:19:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444064;
-        bh=QcRfZJniiltEW6KmV8PKB4BRobpN1Ff18VLIQgwZ1yc=;
+        s=default; t=1593443995;
+        bh=0J2d8kQPi0mkMtqbYwV3PWKAC3zG/6+wEzFKKm+edqA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U7voeI0m9U4bLSC1mFFU/q4jy9qf6DdFH0x0jw+LO8fOhn6i8r9pVGTWP45s7mN23
-         ET/SvtI94wvhV5CRerVOj4JH/9tvvNPNK//5KD0j0NJSpbOzEJ695EhgpEVBz7V7Wv
-         IbVZTgWAQxnxNbiOT7OIWpCSYXSKrGwrnzFsuNZ4=
+        b=PkK/kVPUHslPQ8KatTHfXdadXwwqZzOjHW+SO5STDBlx4tC2WNtUTnMdDu9nF2D0u
+         YExQQbG2yQUp7HpUNdsC07F9rGG9Frz94/yU6dhMjtGwRSeBV5wJe9BQJvGchuco8o
+         7JlFzRSI4Ht1yrY9WCeoNMHAJkAvVtX7ByEHFs5c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Oskar Holmlund <oskar@ohdata.se>, Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 173/265] wireguard: receive: account for napi_gro_receive never returning GRO_DROP
-Date:   Mon, 29 Jun 2020 11:16:46 -0400
-Message-Id: <20200629151818.2493727-174-sashal@kernel.org>
+Subject: [PATCH 5.7 099/265] ARM: dts: Fix am33xx.dtsi USB ranges length
+Date:   Mon, 29 Jun 2020 11:15:32 -0400
+Message-Id: <20200629151818.2493727-100-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -65,46 +64,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+From: Oskar Holmlund <oskar@ohdata.se>
 
-[ Upstream commit df08126e3833e9dca19e2407db5f5860a7c194fb ]
+[ Upstream commit 3f311e8993ed18fb7325373ec0f82a7f8e8be82e ]
 
-The napi_gro_receive function no longer returns GRO_DROP ever, making
-handling GRO_DROP dead code. This commit removes that dead code.
-Further, it's not even clear that device drivers have any business in
-taking action after passing off received packets; that's arguably out of
-their hands.
+AM335x TRM: Table 2-1 defines USBSS - USB Queue Manager in memory region
+0x4740 0000 to 0x4740 7FFF.
 
-Fixes: e7096c131e51 ("net: WireGuard secure network tunnel")
-Fixes: 6570bc79c0df ("net: core: use listified Rx for GRO_NORMAL in napi_gro_receive()")
-Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Looks like the older TRM revisions list the range from 0x5000 to 0x8000
+as reserved.
+
+Fixes: 0782e8572ce4 ("ARM: dts: Probe am335x musb with ti-sysc")
+Signed-off-by: Oskar Holmlund <oskar@ohdata.se>
+[tony@atomide.com: updated comments]
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireguard/receive.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+ arch/arm/boot/dts/am33xx.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireguard/receive.c b/drivers/net/wireguard/receive.c
-index 91438144e4f7a..9b2ab6fc91cdd 100644
---- a/drivers/net/wireguard/receive.c
-+++ b/drivers/net/wireguard/receive.c
-@@ -414,14 +414,8 @@ static void wg_packet_consume_data_done(struct wg_peer *peer,
- 	if (unlikely(routed_peer != peer))
- 		goto dishonest_packet_peer;
+diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+index a35f5052d76f6..be76ded7e4c0c 100644
+--- a/arch/arm/boot/dts/am33xx.dtsi
++++ b/arch/arm/boot/dts/am33xx.dtsi
+@@ -347,7 +347,7 @@
+ 			clock-names = "fck";
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+-			ranges = <0x0 0x47400000 0x5000>;
++			ranges = <0x0 0x47400000 0x8000>;
  
--	if (unlikely(napi_gro_receive(&peer->napi, skb) == GRO_DROP)) {
--		++dev->stats.rx_dropped;
--		net_dbg_ratelimited("%s: Failed to give packet to userspace from peer %llu (%pISpfsc)\n",
--				    dev->name, peer->internal_id,
--				    &peer->endpoint.addr);
--	} else {
--		update_rx_stats(peer, message_data_len(len_before_trim));
--	}
-+	napi_gro_receive(&peer->napi, skb);
-+	update_rx_stats(peer, message_data_len(len_before_trim));
- 	return;
- 
- dishonest_packet_peer:
+ 			usb0_phy: usb-phy@1300 {
+ 				compatible = "ti,am335x-usb-phy";
 -- 
 2.25.1
 
