@@ -2,105 +2,102 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FEAFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:08:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C3A6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E201E20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:08:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468501;
-	bh=IzlFq193qa+1jAkusYfzaJahL20PlWUa2vVzADAVyQA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jwTtMWvHaQ8lWpaBFkEuh7KMHwT7iR6/X1QuXO5DGvyC98WtRwkLx/VHLKqWY58kI
-	 hxWO/rnPvHX8DnOHglsO+kqVhkOWLVQPNhv9vtO9YFkpReLkbi/6wXN1LKRfH6yLtT
-	 S1or5vVtIrACZksgA5sl6hbiBQXQ4vgkCMIvpxw0=
+	by mail.kernel.org (Postfix) with ESMTP id 7CE2B20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:09:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s9pAv/an"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388308AbgF2WIT (ORCPT
+        id S1730165AbgF2WJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:08:19 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:38847 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730358AbgF2WIR (ORCPT
+        Mon, 29 Jun 2020 18:09:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43724 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726157AbgF2WJR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 18:08:17 -0400
-Received: by mail-il1-f193.google.com with SMTP id s21so771514ilk.5;
-        Mon, 29 Jun 2020 15:08:16 -0700 (PDT)
+        Mon, 29 Jun 2020 18:09:17 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54660C061755;
+        Mon, 29 Jun 2020 15:09:16 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id z5so8946586pgb.6;
+        Mon, 29 Jun 2020 15:09:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rwnaIBxmlVU5yw/jsEjsqibWX+NWsHn0EL+Q3wi7R7o=;
+        b=s9pAv/anEg0LouIOdLZSVi5xU92+CqCAvTjVhLN6iA9WF4DzXi7loIelOpUD2RUXAy
+         6KfiiLkMZSYXQfD+70ZN97ATGl5wjk86QDrv+aZXKJ96oYiAtTV00ev0GqR++/qnpIFw
+         ms8kub6SVh04WS6NSkUZw2vqzdNP37sF/SjYm+NizUsUnVWNtkd8WD1oHouSYnB16uTx
+         aLK7NkKMyos13044FWbR+a+84658j29h+KxERte3SuneKpGc7W3oQH4pupNYvXWICcXA
+         UyGFlYV8MMR7HcjhjXkEVdLrs+ltfMliLAtu4nPnFDuCUnMvb9hEKzWTuAycHc/6H/B1
+         2ZSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=vwvHQ+egE5FhXPLyDuX6PUzwahMGUZgE1G0XKrUbVJc=;
-        b=EugHssimz1oZPZ+q201j5+m2Xbl6bqlW2q7AnqNIro1qqTk2DWeb0DV9xoPcIeyaqy
-         VZmjI8hRj/lDXCk1WdmYz0I4shvAGjQOcU1As8XPZDX+swqsVd4s6/YDvkgRq0z/Amq0
-         8x18krUVxqRUMTGlFIakc7F2XrJk7UJZTaGHhwP0QyvzUsU/Fy6mxWYrCapYsGVeOmFe
-         11lllUYOS/IFQfVSwWniFMZdYMBeRwWmk8e0oBQ+bdewaj2cCo8IooUZeLQ4aKIpfcqO
-         L0YET34/ax8V8LrD1UqFA+TBQWy2tYW+wMO8Zqm9b9bLMQUfjDocTs+jtjI2AveBOmwW
-         mWqQ==
-X-Gm-Message-State: AOAM530sJYRF3JE7/K0sRgPzHXHPGECZRXFr6+PlfDR1GhaIJcIB5aU3
-        bs/9R1W0EWrqwEq7Cm7bxQ==
-X-Google-Smtp-Source: ABdhPJxaNGKo9xiFded/KOQljwxiaUFNa/MDlL0x3tpYl14Xsnb5nlYxwmTKdu9uDJ7MiUyTxb46OA==
-X-Received: by 2002:a92:8552:: with SMTP id f79mr18158073ilh.225.1593468495966;
-        Mon, 29 Jun 2020 15:08:15 -0700 (PDT)
-Received: from xps15 ([64.188.179.255])
-        by smtp.gmail.com with ESMTPSA id u10sm578648iow.38.2020.06.29.15.08.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 15:08:15 -0700 (PDT)
-Received: (nullmailer pid 3029062 invoked by uid 1000);
-        Mon, 29 Jun 2020 22:08:12 -0000
-Date:   Mon, 29 Jun 2020 16:08:12 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Cc:     p.zabel@pengutronix.de, linux-kernel@vger.kernel.org,
-        songjun.Wu@intel.com, rahul.tanwar.linux@gmail.com,
-        robh+dt@kernel.org, cheol.yong.kim@intel.com, qi-ming.wu@intel.com,
-        thierry.reding@gmail.com, linux-pwm@vger.kernel.org,
-        andriy.shevchenko@intel.com, u.kleine-koenig@pengutronix.de,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] Add DT bindings YAML schema for PWM fan
- controller of LGM SoC
-Message-ID: <20200629220812.GA3028453@bogus>
-References: <cover.1593420979.git.rahul.tanwar@linux.intel.com>
- <cd0692812e7f1bce365a7594b076ae0ed19d2b37.1593420979.git.rahul.tanwar@linux.intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rwnaIBxmlVU5yw/jsEjsqibWX+NWsHn0EL+Q3wi7R7o=;
+        b=Kie1dSGSzH/bHMrhqHTWo4VZQcgZpLP+zr5m4QppEchIaYt65bZMSBwbR77T8EkwIM
+         D8mRRIf71pr2PV3p+SihW1lhrFBDpTL9YMge0BxOlU1w9rTNYK37BYWfnJC+3Ew9/JHp
+         reNrLVs1wfPPxPCbP86rsO5H/6Cpwj9gbkFYwwClRg1KWH4F0Y8oTQW8llNMyL3nAznI
+         TeGwmFxQv0d2wpQqg8wKS02LTXxmwYK9muEd5UYFAxrje9hZbbgUl8KPWJSiUpKDHNLq
+         j1JIk9ZeZT1s3noUN1wrI119sMVtmpiGiGOlFT+LxvpvvE9UUMik2Hy/s4UE3ZKdOFYh
+         3wFw==
+X-Gm-Message-State: AOAM530AWuu11LWyPBaCljZ8UIdlOXfmDg8qke6Y///hd9fmm4CoL+S8
+        /2gqcNsEStFq2Vn2KJmhfb/WsE+9VY0/d/gncuM=
+X-Google-Smtp-Source: ABdhPJwW+kIfqYNuaEhBXt3QXAFS7eLOSnfmcOLZEE9+VO3Hhu3oi1bfnAdtUyEaBr73GKpt8WWVqKu4fZL7SqNw+Ic=
+X-Received: by 2002:a63:457:: with SMTP id 84mr12351993pge.219.1593468555920;
+ Mon, 29 Jun 2020 15:09:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cd0692812e7f1bce365a7594b076ae0ed19d2b37.1593420979.git.rahul.tanwar@linux.intel.com>
+References: <20200629200227.1518784-1-lkmlabelt@gmail.com> <20200629200227.1518784-2-lkmlabelt@gmail.com>
+ <20200629204653.o6q3a2fufgq62pzo@liuwe-devbox-debian-v2> <CAGpZZ6sUXOnggeQyPfxkdK50=1AhTUqbvBvc2bEs4qwwk+rSPg@mail.gmail.com>
+ <MW2PR2101MB1052D0B7884A022D2DB6BED2D76E0@MW2PR2101MB1052.namprd21.prod.outlook.com>
+In-Reply-To: <MW2PR2101MB1052D0B7884A022D2DB6BED2D76E0@MW2PR2101MB1052.namprd21.prod.outlook.com>
+From:   Andres Beltran <lkmlabelt@gmail.com>
+Date:   Mon, 29 Jun 2020 18:09:06 -0400
+Message-ID: <CAGpZZ6tjc0Zzdpt+OFznAFU2NbAt5=7nvRyDmL_phSbnDM_eYA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] Drivers: hv: vmbus: Add vmbus_requestor data
+ structure for VMBus hardening
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     Wei Liu <wei.liu@kernel.org>,
+        Andres Beltran <t-mabelt@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andrea Parri <parri.andrea@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Jun 2020 17:03:46 +0800, Rahul Tanwar wrote:
-> Intel's LGM(Lightning Mountain) SoC contains a PWM fan controller
-> which is only used to control the fan attached to the system. This
-> PWM controller does not have any other consumer other than fan.
-> Add DT bindings documentation for this PWM fan controller.
-> 
-> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-> ---
->  .../devicetree/bindings/pwm/intel,lgm-pwm.yaml     | 51 ++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/intel,lgm-pwm.yaml
-> 
+On Mon, Jun 29, 2020 at 5:56 PM Michael Kelley <mikelley@microsoft.com> wrote:
+> I'm not understanding the problem here.  Any VMbus driver that uses
+> this requestID allocation mechanism must set newchannel->rqstor_size
+> to a non-zero value.  But if a VMbus driver doesn't use the mechanism,
+> then newchannel->rqstor_size will default to zero, and the mechanism
+> will not be initialized for the channels used by that driver.  I think the
+> cleanup of the mechanism handles the case where it wasn't ever
+> initialized.  Or am I missing something?
+>
+> Michael
 
+Yes, that is correct. I think the validation is necessary if there
+exists an instance
+where a driver call vmbus_next_request_id or vmbus_request_addr() with a rqstor
+that has not been previously initialized. Currently, the rqstor
+pointer is not being
+validated in these 2 functions, because we assume that the driver has
+initialized the
+array with a non-zero value before calling next_id() or request_addr().
 
-My bot found errors running 'make dt_binding_check' on your patch:
-
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/pwm/intel,lgm-pwm.example.dt.yaml: pwm@e0d00000: '#pwm-cells' does not match any of the regexes: 'pinctrl-[0-9]+'
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/reset/intel,rcu-gw.example.dt.yaml: pwm@e0d00000: '#pwm-cells' does not match any of the regexes: 'pinctrl-[0-9]+'
-
-
-See https://patchwork.ozlabs.org/patch/1318996
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
-
+Andres.
