@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEE2DC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C5EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EBE8206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:02:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFB32206C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:02:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593457329;
-	bh=f1vPHzNtr1Vmjka+F3U37oEz28VDM9kM8QKZ4JjCEiE=;
+	s=default; t=1593457331;
+	bh=nnG65npblopB49xLdLnlkOiuMveqdiuLEcgLLxBTwKo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KbNTQhUpxDMPW/5tquNFVLz/laDk4+8U/QxaK6lmyIwawu6xoC6LHbhHeLBaPyvxB
-	 19vbpNVJJGnUziHVzyUR9ulBO69TqXXy8Esdq7DTR7mn3IAqZJ6Xhz1oPUhfmBcCFB
-	 XbUkx0qoWkd7dTbJYiH0P9jay+SCFJju3tmXgsrE=
+	b=xcRJc6L68s391htNOyMWDDUOqDka4DYKy/GiI2kfNtS7Ah/ttAe1DlV9kOnoWDf1U
+	 2pmoOmoahNBIsXtz2z8GHNq/GuZIAtuWBjD/ZpEXeCqRH98l2aSQ0EfQ31XwgDVCy4
+	 GaAnv6ZR0kpyeMtQbwGcO0W9nbbmG/2mzPUAqVTE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729842AbgF2TCI (ORCPT
+        id S1730474AbgF2TCJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:02:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45486 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:02:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730357AbgF2TAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730358AbgF2TAV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:00:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AFB325531;
-        Mon, 29 Jun 2020 15:54:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7EDA25519;
+        Mon, 29 Jun 2020 15:54:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446097;
-        bh=f1vPHzNtr1Vmjka+F3U37oEz28VDM9kM8QKZ4JjCEiE=;
+        s=default; t=1593446073;
+        bh=nnG65npblopB49xLdLnlkOiuMveqdiuLEcgLLxBTwKo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Cb8bXa4h/7batwTZy7IQXcu/if12cvWBi+q7xS/51WDxbvOeJ2zTt7ExZNlEUcCrL
-         2a0WUPXc880svd4xz+PDBE94WVT/BbxRLdGL+qeq6RRfPPmiTGguUtprmgOzWOjORo
-         oRlBrSZh55F2cOzavYCM5rtECTRG40Vm7zRkvpzE=
+        b=baWVMTkBuoQ3AB/z30Hj4C5+HANgNouQ3Y9LryVp9eLWiwWz0JOyuDGLYe6B3WLDi
+         mOmyKrLzyCZhEPZ3sk/hc5UnONqIbMk8M7QQd0jXrehkB6QWIBJpWYzrXHZdkPd5l7
+         XX2oAb2jxeRFVVnlAYqc0quxETKWEWAB9EscGkgQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     guodeqing <geffrey.guo@huawei.com>,
-        David Ahern <dsahern@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.4 090/135] net: Fix the arp error in some cases
-Date:   Mon, 29 Jun 2020 11:52:24 -0400
-Message-Id: <20200629155309.2495516-91-sashal@kernel.org>
+Cc:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 071/135] powerpc/kprobes: Fixes for kprobe_lookup_name() on BE
+Date:   Mon, 29 Jun 2020 11:52:05 -0400
+Message-Id: <20200629155309.2495516-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -66,53 +65,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: guodeqing <geffrey.guo@huawei.com>
+From: "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
 
-[ Upstream commit 5eea3a63ff4aba6a26002e657a6d21934b7e2b96 ]
+[ Upstream commit 30176466e36aadba01e1a630cf42397a3438efa4 ]
 
-ie.,
-$ ifconfig eth0 6.6.6.6 netmask 255.255.255.0
+Fix two issues with kprobes.h on BE which were exposed with the
+optprobes work:
+  - one, having to do with a missing include for linux/module.h for
+    MODULE_NAME_LEN -- this didn't show up previously since the only
+    users of kprobe_lookup_name were in kprobes.c, which included
+    linux/module.h through other headers, and
+  - two, with a missing const qualifier for a local variable which ends
+    up referring a string literal. Again, this is unique to how
+    kprobe_lookup_name is being invoked in optprobes.c
 
-$ ip rule add from 6.6.6.6 table 6666
-
-$ ip route add 9.9.9.9 via 6.6.6.6
-
-$ ping -I 6.6.6.6 9.9.9.9
-PING 9.9.9.9 (9.9.9.9) from 6.6.6.6 : 56(84) bytes of data.
-
-3 packets transmitted, 0 received, 100% packet loss, time 2079ms
-
-$ arp
-Address     HWtype  HWaddress           Flags Mask            Iface
-6.6.6.6             (incomplete)                              eth0
-
-The arp request address is error, this is because fib_table_lookup in
-fib_check_nh lookup the destnation 9.9.9.9 nexthop, the scope of
-the fib result is RT_SCOPE_LINK,the correct scope is RT_SCOPE_HOST.
-Here I add a check of whether this is RT_TABLE_MAIN to solve this problem.
-
-Fixes: 3bfd847203c6 ("net: Use passed in table for nexthop lookups")
-Signed-off-by: guodeqing <geffrey.guo@huawei.com>
-Reviewed-by: David Ahern <dsahern@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/fib_semantics.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/include/asm/kprobes.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/ipv4/fib_semantics.c b/net/ipv4/fib_semantics.c
-index 498d5a929d6f2..3c1e42d495201 100644
---- a/net/ipv4/fib_semantics.c
-+++ b/net/ipv4/fib_semantics.c
-@@ -776,7 +776,7 @@ static int fib_check_nh(struct fib_config *cfg, struct fib_info *fi,
- 			if (fl4.flowi4_scope < RT_SCOPE_LINK)
- 				fl4.flowi4_scope = RT_SCOPE_LINK;
+diff --git a/arch/powerpc/include/asm/kprobes.h b/arch/powerpc/include/asm/kprobes.h
+index 039b583db0292..f0717eedf781c 100644
+--- a/arch/powerpc/include/asm/kprobes.h
++++ b/arch/powerpc/include/asm/kprobes.h
+@@ -29,6 +29,7 @@
+ #include <linux/types.h>
+ #include <linux/ptrace.h>
+ #include <linux/percpu.h>
++#include <linux/module.h>
+ #include <asm/probes.h>
+ #include <asm/code-patching.h>
  
--			if (cfg->fc_table)
-+			if (cfg->fc_table && cfg->fc_table != RT_TABLE_MAIN)
- 				tbl = fib_get_table(net, cfg->fc_table);
- 
- 			if (tbl)
+@@ -61,7 +62,7 @@ typedef ppc_opcode_t kprobe_opcode_t;
+ #define kprobe_lookup_name(name, addr)					\
+ {									\
+ 	char dot_name[MODULE_NAME_LEN + 1 + KSYM_NAME_LEN];		\
+-	char *modsym;							\
++	const char *modsym;							\
+ 	bool dot_appended = false;					\
+ 	if ((modsym = strchr(name, ':')) != NULL) {			\
+ 		modsym++;						\
 -- 
 2.25.1
 
