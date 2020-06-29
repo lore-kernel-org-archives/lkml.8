@@ -2,74 +2,119 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 625EEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:41:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A43C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:41:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3931A20724
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:41:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8595D20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:41:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y5a00ORe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731686AbgF2UlL convert rfc822-to-8bit (ORCPT
+        id S2389475AbgF2UlP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:41:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43366 "EHLO
+        Mon, 29 Jun 2020 16:41:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731656AbgF2TOI (ORCPT
+        with ESMTP id S1731681AbgF2TOI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:14:08 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50E16C008773
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 02:12:20 -0700 (PDT)
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jpppq-0005vP-Pv; Mon, 29 Jun 2020 11:12:18 +0200
-Received: from pza by lupine with local (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1jpppq-0000WO-4Z; Mon, 29 Jun 2020 11:12:18 +0200
-Message-ID: <6f8011480adae494371231ca888c946ac146786a.camel@pengutronix.de>
-Subject: Re: [PATCH 2/2] hantro: h264: Refuse to decode unsupported bitstream
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>, Jonas Karlman <jonas@kwiboo.se>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>,
-        kernel@collabora.com
-Date:   Mon, 29 Jun 2020 11:12:18 +0200
-In-Reply-To: <20200626171130.27346-3-ezequiel@collabora.com>
-References: <20200626171130.27346-1-ezequiel@collabora.com>
-         <20200626171130.27346-3-ezequiel@collabora.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.30.5-1.1 
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 525D5C00876B
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 01:53:15 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id b25so13505567ljp.6
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 01:53:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=G4N3NxnIHOlrbNxccCBL6Rnaa4Jaah/lF3KoyD4lJEU=;
+        b=Y5a00ORenb6fp3CAxkO2RdJhoSHYbhVhEF70f/Bopch+KginR0LyR2AYL2cW7YtzgE
+         4IBv/FjDw/X3ITMn7zE1q91GX2itg9qJ9m1DAIGJ86/5nVIvAESpGJNbQXrsq5JVOY8Q
+         E02Bdpx76U4cBBUxa7dA3EhR/bJGYosrKez06N2Q11o/6BTmZ2nXQj9qA1UoQ07YuyQr
+         ZMQ9sNVxKVhUWhtR+8oz6o4ZpoXBu+EE8pARkgtqi8O3gLxn7g4K5ldEY4iH6/+z7nqg
+         CXwAu2lLH9//ry9zSvJFNwpPG3zUVVSA+8mEmzkmKQxRlv5HRIrcnw1SNTabSrO8WFfd
+         aMjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=G4N3NxnIHOlrbNxccCBL6Rnaa4Jaah/lF3KoyD4lJEU=;
+        b=iFD6YdbpSO/1eEnJJOlBjNudHg0TNqGuzmpRvuzybjB4GHmo1+3yt1guM58f7mYX2T
+         VVWwL5vQXqTLDyWayaFxrnjBmfdbJU4RbPOS5yEzGMCmnA/XjYZ5DMRnrVaE+uMwaokf
+         tuyjxvrk40/DK6N+dgedDPYjZS+YEndMftJR2K66xZkFrpXAydHgDCGPi4D606BgjlRV
+         zIzdObdIp1/v6ep2rTY/ByXt8Ri4EqkPUlWQYzKZo94SziYIwbyGBxg4siSnsi3RTg+q
+         fMIZ3lNRCiYF1DKiVGmfxOHjSej3sB1ri8g2yB8s7rJGFa9e+53/i4PCvceCes/FT2Jp
+         TKvw==
+X-Gm-Message-State: AOAM533nXK+EuRnjbiEvdvJfFpSm8hSATXl2ApmKzJfdMcE8pI34ZHyF
+        tVva83lt81lhgGoiTLSYlPcLdYUMAViraIKGfNA32g==
+X-Google-Smtp-Source: ABdhPJy1rQQ5J/jylQniMmYImqn4+s/8Ebp+FCxmpDIQBCBP4TtEoH93hKJjC0A/2GKgXMfoOCLC5zfzCmLvoKP0M2c=
+X-Received: by 2002:a2e:b054:: with SMTP id d20mr7114033ljl.55.1593420793493;
+ Mon, 29 Jun 2020 01:53:13 -0700 (PDT)
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <CA+G9fYvHFs5Yx8TnT6VavtfjMN8QLPuXg6us-dXVJqUUt68adA@mail.gmail.com>
+ <20200622224920.GA4332@42.do-not-panic.com> <CA+G9fYsXDZUspc5OyfqrGZn=k=2uRiGzWY_aPePK2C_kZ+dYGQ@mail.gmail.com>
+ <20200623064056.GA8121@gondor.apana.org.au> <20200623170217.GB150582@gmail.com>
+ <20200626062948.GA25285@gondor.apana.org.au> <20200627083147.GA9365@gondor.apana.org.au>
+In-Reply-To: <20200627083147.GA9365@gondor.apana.org.au>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Mon, 29 Jun 2020 14:23:02 +0530
+Message-ID: <CA+G9fYszuzVq5P+10OA1biMQHQ-4tTDtqoOBHHdVMQXrwnWFJQ@mail.gmail.com>
+Subject: Re: [LKP] Re: [PATCH] crypto: af_alg - Fix regression on empty requests
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     LKML <linux-kernel@vger.kernel.org>, lkp@lists.01.org,
+        LTP List <ltp@lists.linux.it>,
+        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
+        lkft-triage@lists.linaro.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-06-26 at 14:11 -0300, Ezequiel Garcia wrote:
-> The hardware only supports 4:2:0 or 4:0:0 (monochrome),
-> 8-bit depth content.
-> 
-> Verify that the PPS refers to a supported bitstream, and refuse
-> unsupported bitstreams by failing at TRY_EXT_CTRLS time.
-> 
-> Given the JPEG compression level control is the only one
-> that needs setting, a specific ops is provided.
-> 
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+On Sat, 27 Jun 2020 at 14:02, Herbert Xu <herbert@gondor.apana.org.au> wrote:
+>
+> On Fri, Jun 26, 2020 at 04:29:48PM +1000, Herbert Xu wrote:
+> >
+> > Reported-by: Sachin Sant <sachinp@linux.vnet.ibm.com>
+> > Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
+> > Fixes: f3c802a1f300 ("crypto: algif_aead - Only wake up when...")
+> > Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+>
+> Reported-by: kernel test robot <rong.a.chen@intel.com>
+Tested-by: Naresh Kamboju <naresh.kamboju@linaro.org>
 
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+I have applied your patch and tested on Linux-next on arm, x86_64 and i386.
+All LTP crypto tests got passed.
 
-regards
-Philipp
+---
+patch -p1 <  crypto-af_alg---Fix-regression-on-empty-requests.diff
+patching file crypto/af_alg.c
+patching file crypto/algif_aead.c
+patching file crypto/algif_skcipher.c
+patching file include/crypto/if_alg.h
+
+Test output:
+af_alg02.c:33: PASS: Successfully \"encrypted\" an empty message
+af_alg05.c:40: PASS: read() expectedly failed with EINVAL
+
+Test results summary:
+af_alg01: pass
+af_alg02: pass
+af_alg03: pass
+af_alg04: pass
+af_alg05: pass
+af_alg06: pass
+
+ref:
+https://lkft.validation.linaro.org/scheduler/job/1532020#L1413
+https://lkft.validation.linaro.org/scheduler/job/1532019#L1516
+https://lkft.validation.linaro.org/scheduler/job/1532026#L935
+
+-- 
+Linaro LKFT
+https://lkft.linaro.org
