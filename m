@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A145C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:47:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C56AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE1E6206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:47:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2819D20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:47:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467244;
-	bh=8JzVfCFcoz6nS6EBFimls7GqLgC990AM2OQCsZ0RXPM=;
+	s=default; t=1593467248;
+	bh=sNOLCnFtuh+m9OD5TG/Nxs/Wi7fC45jIgNmN74LSD68=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wz5Lp0TzFCmn+6Qm10KTZUzJV+LpwkUNaypK5amGUT23YNo0PztVcDLSuEYcvJrn8
-	 94JNNi9FQ5tRNpE+q9MNkIXlBvtnSv9bTT7yP6LMBvURLjmiXq22ko5sQb+iKKsZJQ
-	 0K/vWvYk2OHWWaKh4sUqzazTmKpKNaN7Im71PnuU=
+	b=useLAB3NVUcaMmYRBeWnzx1XYOC07W0pLqCveu6Tuc1xPTIlHvda+NLpx54dETwbW
+	 b7Vuyxo1nW8/jUl8z/XEmcOdftkhxiRuk73OdERA7TL4QTAqCwXLfOPc9dVaeupcpC
+	 V1pm+O/VAJIyLHXUvUc4OvteMfvXhrWbNu6540N0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbgF2VrW (ORCPT
+        id S2404225AbgF2VrZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:47:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56782 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:47:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726735AbgF2Sfo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726737AbgF2Sfo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CF8A24790;
-        Mon, 29 Jun 2020 15:21:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B6EB24697;
+        Mon, 29 Jun 2020 15:19:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444099;
-        bh=8JzVfCFcoz6nS6EBFimls7GqLgC990AM2OQCsZ0RXPM=;
+        s=default; t=1593443992;
+        bh=sNOLCnFtuh+m9OD5TG/Nxs/Wi7fC45jIgNmN74LSD68=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vrA58Ou1gZ6xVbnmh7qyKVGplf8OW7Y6X7Q2YE+IJwRMVmwWV+dJ033t1eT4Rmsfd
-         5ewDNqH6ZZ5L6DJi2h220d24/mcjwf86tH7P8/UJ2Oe6W1f288Oix8PsHzKavCTca9
-         JXpWBhqPUfUq44kDbO5C5IUUGX9nRYjZtSm7Z+LI=
+        b=xVEWP8b0vlhVIVqeevq5CPd8itlP4SPQmY8b7Da82wwqCw1Z4NIZWMYPBFkQA0ofH
+         NvAZg6CRcLZ3tbjz9IRXCerji041kHGiofvxw4dwP4PDoHdpc3mCBr40l+oos865+A
+         lSX9Ck+vGSSH4fbUKekEH8yBsVj6f3m8tIlAeipo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 210/265] ALSA: hda/realtek - Add quirk for MSI GE63 laptop
-Date:   Mon, 29 Jun 2020 11:17:23 -0400
-Message-Id: <20200629151818.2493727-211-sashal@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 096/265] bus: ti-sysc: Fix uninitialized framedonetv_irq
+Date:   Mon, 29 Jun 2020 11:15:29 -0400
+Message-Id: <20200629151818.2493727-97-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -64,35 +66,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Tony Lindgren <tony@atomide.com>
 
-commit a0b03952a797591d4b6d6fa7b9b7872e27783729 upstream.
+[ Upstream commit 085bc0e576a4bf53b67a917c54908f299a2fb949 ]
 
-MSI GE63 laptop with ALC1220 codec requires the very same quirk
-(ALC1220_FIXUP_CLEVO_P950) as other MSI devices for the proper sound
-output.
+We are currently only setting the framedonetv_irq disabled for the SoCs
+that don't have it. But we are never setting it enabled for the SoCs that
+have it. Let's initialized it to true by default.
 
-BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=208057
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200616132150.8778-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 7324a7a0d5e2 ("bus: ti-sysc: Implement display subsystem reset quirk")
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/bus/ti-sysc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index e057ecb5a9045..f58102925c705 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -2460,6 +2460,7 @@ static const struct snd_pci_quirk alc882_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x1458, 0xa0b8, "Gigabyte AZ370-Gaming", ALC1220_FIXUP_GB_DUAL_CODECS),
- 	SND_PCI_QUIRK(0x1458, 0xa0cd, "Gigabyte X570 Aorus Master", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1458, 0xa0ce, "Gigabyte X570 Aorus Xtreme", ALC1220_FIXUP_CLEVO_P950),
-+	SND_PCI_QUIRK(0x1462, 0x11f7, "MSI-GE63", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1462, 0x1228, "MSI-GP63", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1462, 0x1275, "MSI-GL63", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1462, 0x1276, "MSI-GL73", ALC1220_FIXUP_CLEVO_P950),
+diff --git a/drivers/bus/ti-sysc.c b/drivers/bus/ti-sysc.c
+index 4f640a635ded1..db9541f385055 100644
+--- a/drivers/bus/ti-sysc.c
++++ b/drivers/bus/ti-sysc.c
+@@ -1552,7 +1552,7 @@ static u32 sysc_quirk_dispc(struct sysc *ddata, int dispc_offset,
+ 	bool lcd_en, digit_en, lcd2_en = false, lcd3_en = false;
+ 	const int lcd_en_mask = BIT(0), digit_en_mask = BIT(1);
+ 	int manager_count;
+-	bool framedonetv_irq;
++	bool framedonetv_irq = true;
+ 	u32 val, irq_mask = 0;
+ 
+ 	switch (sysc_soc->soc) {
+@@ -1569,6 +1569,7 @@ static u32 sysc_quirk_dispc(struct sysc *ddata, int dispc_offset,
+ 		break;
+ 	case SOC_AM4:
+ 		manager_count = 1;
++		framedonetv_irq = false;
+ 		break;
+ 	case SOC_UNKNOWN:
+ 	default:
 -- 
 2.25.1
 
