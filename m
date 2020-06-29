@@ -2,158 +2,140 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC35C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:59:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45F8EC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6ECF5206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:59:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 264CE20760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:00:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467999;
-	bh=ZtASUsHSUH9iBmQouSmlHBp0adBRXfaTVKN3IEKwB2A=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=nU+JqJh8EwiYRHyEZ6nzcOzdAcujb3DWT1slYQzVAqdUQ4jYrHEuRiHaWPMzR7Xr+
-	 Lb47yWplcQdc8sUzH07FVieqSP1SCmozvQtud/Nt0rpL/WeOncKlAfzwbkpK/YBUhX
-	 fIG5nAioXFbbzcKtPxGw8NmH8OgRVtL4gBe6W3C0=
+	s=default; t=1593468001;
+	bh=eQR5T/SVBRuHQchbV22Fez1VOAY2w9PMyaNCtvXj1zg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=UcJRyZZCBQ3pTwunplrN6SsOO5kvX5vwSstDr6TN7SjdRm3m2sIi95bw7pTcuYp5o
+	 1VdA1UOejLgHqDYoANG+5dAapHTONEbIIzstvViBfW6Jgp8uW++gwYHgCXuwBCX0as
+	 V6eZsMwFpJsasvHbrPRifcyW2X3OhnJVbfNIU7Xw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726409AbgF2V75 (ORCPT
+        id S2391727AbgF2WAA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:59:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56764 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:00:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726392AbgF2SfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726395AbgF2SfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:25 -0400
-Received: from mail-ot1-f51.google.com (mail-ot1-f51.google.com [209.85.210.51])
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFCA3255C7;
-        Mon, 29 Jun 2020 17:57:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D423B24753;
+        Mon, 29 Jun 2020 15:21:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593453470;
-        bh=ZtASUsHSUH9iBmQouSmlHBp0adBRXfaTVKN3IEKwB2A=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=2kKS+wDhkOuxpH9plHm9j0XcBd1NOUkJJmJEvlxcmanpfHqlzhfaHZvWTWdWKm1fj
-         wSf07FVi3Vc5BoJg00SsFz9stOKYZjSXPZ0CZnwRUr9xGG9SK7jE+dnTuQahmLknAV
-         QdfXGtfSQm+QApl5nSJa5URHEmOz9dzGsODL98zw=
-Received: by mail-ot1-f51.google.com with SMTP id q21so8790879otc.7;
-        Mon, 29 Jun 2020 10:57:49 -0700 (PDT)
-X-Gm-Message-State: AOAM530ZH+ymx1LRhBUi64LdyKz+BbmrCg9xFIijTPklFGRFQdXbXrT8
-        a0c6j2G3NQXXwQ5O1ORx4/1uP7KmUySXwk2IGA==
-X-Google-Smtp-Source: ABdhPJyimQAzFgXMjRYrAPs8oEIeWpJhMBKYcA7auFeZopuljB1Q7c28J7qEymPHWgbqxTgyvUyyluEt85Lj4qCu1n4=
-X-Received: by 2002:a05:6830:3104:: with SMTP id b4mr14554766ots.192.1593453469212;
- Mon, 29 Jun 2020 10:57:49 -0700 (PDT)
+        s=default; t=1593444071;
+        bh=eQR5T/SVBRuHQchbV22Fez1VOAY2w9PMyaNCtvXj1zg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Gv/tfyCxI5XB4AHdx1crw0NmHXqtrt+kZf3uVZfZr7mkKgzVQx3Wl6NGgXnUz7+R2
+         AJOmPSMgudBfKo/HMUw8Vmz9VUavWqN5PpzlE0DWGNEyhCMwvG83uYl1y64tmHgRwu
+         CwTUOjMMywediPju5CGo/8VdKn6dg5R6NkicmPIg=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Juri Lelli <juri.lelli@redhat.com>,
+        syzbot+119ba87189432ead09b4@syzkaller.appspotmail.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Daniel Wagner <dwagner@suse.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 180/265] sched/core: Fix PI boosting between RT and DEADLINE tasks
+Date:   Mon, 29 Jun 2020 11:16:53 -0400
+Message-Id: <20200629151818.2493727-181-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
+References: <20200629151818.2493727-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20200618224413.1115849-1-robh@kernel.org> <20200619215341.GA6857@ravnborg.org>
- <20200622165730.pnx7fzbq5e6q5h4l@holly.lan>
-In-Reply-To: <20200622165730.pnx7fzbq5e6q5h4l@holly.lan>
-From:   Rob Herring <robh@kernel.org>
-Date:   Mon, 29 Jun 2020 11:57:37 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqK1yJ09k6tKak==TjRN17VzueVkcf-WOLw2ETL2ZJv9sg@mail.gmail.com>
-Message-ID: <CAL_JsqK1yJ09k6tKak==TjRN17VzueVkcf-WOLw2ETL2ZJv9sg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: backlight: Convert common backlight bindings
- to DT schema
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Sam Ravnborg <sam@ravnborg.org>, devicetree@vger.kernel.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.7.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.7.7-rc1
+X-KernelTest-Deadline: 2020-07-01T15:14+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 22, 2020 at 10:57 AM Daniel Thompson
-<daniel.thompson@linaro.org> wrote:
->
-> On Fri, Jun 19, 2020 at 11:53:41PM +0200, Sam Ravnborg wrote:
-> > > diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.yaml
-> > > new file mode 100644
-> > > index 000000000000..7e1f109a38a4
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.yaml
-> > > @@ -0,0 +1,98 @@
-> > > +# SPDX-License-Identifier: GPL-2.0-only
-> > > +%YAML 1.2
-> > > +---
-> > > +$id: http://devicetree.org/schemas/leds/backlight/pwm-backlight.yaml#
-> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > +
-> > > +title: pwm-backlight bindings
-> > > +
-> > > +maintainers:
-> > > +  - Lee Jones <lee.jones@linaro.org>
-> > > +  - Daniel Thompson <daniel.thompson@linaro.org>
-> > > +  - Jingoo Han <jingoohan1@gmail.com>
-> > > +
-> > > +properties:
-> > > +  compatible:
-> > > +    const: pwm-backlight
-> > > +
-> > > +  pwms:
-> > > +    maxItems: 1
-> > > +
-> > > +  pwm-names: true
-> > > +
-> > > +  power-supply:
-> > > +    description: regulator for supply voltage
-> > > +
-> > > +  enable-gpios:
-> > > +    description: Contains a single GPIO specifier for the GPIO which enables
-> > > +      and disables the backlight
-> > > +    maxItems: 1
-> > > +
-> > > +  post-pwm-on-delay-ms:
-> > > +    description: Delay in ms between setting an initial (non-zero) PWM and
-> > > +      enabling the backlight using GPIO.
-> > > +
-> > > +  pwm-off-delay-ms:
-> > > +    description: Delay in ms between disabling the backlight using GPIO
-> > > +      and setting PWM value to 0.
-> > > +
-> > > +  brightness-levels:
-> > > +    description: Array of distinct brightness levels. Typically these are
-> > > +      in the range from 0 to 255, but any range starting at 0 will do. The
-> > > +      actual brightness level (PWM duty cycle) will be interpolated from
-> > > +      these values. 0 means a 0% duty cycle (darkest/off), while the last
-> > > +      value in the array represents a 100% duty cycle (brightest).
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> > > +
-> > > +  default-brightness-level:
-> > > +    description: The default brightness level (index into the array defined
-> > > +      by the "brightness-levels" property).
-> > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > Same comment as before...
->
-> Sorry the "ditto" meant I didn't thing about PWM as much as I should
-> have.
->
-> The situation for PWM is a little different to LED. That's mostly
-> because we decided not to clutter the LED code with
-> "num-interpolated-steps".
->
-> The PWM code implements the default-brightness-level as an index into
-> the brightness array *after* it has been expanded using interpolation.
-> In other words today Linux treats the default-brightness-level more
-> like[1].
->
->     description: The default brightness level. When
->       num-interpolated-steps is not set this is simply an index into
->       the array defined by the "brightness-levels" property. If
->       num-interpolated-steps is set the brightness array will be
->       expanded by interpolation before we index to get a default
->       level.
->
-> This is the best I have come up with so far... but I concede it still
-> lacks elegance.
+From: Juri Lelli <juri.lelli@redhat.com>
 
-Happy to add this or whatever folks want if there's agreement, but I
-don't want to get bogged down on re-reviewing and re-writing the
-binding on what is just a conversion. There's a mountain of bindings
-to convert.
+[ Upstream commit 740797ce3a124b7dd22b7fb832d87bc8fba1cf6f ]
 
-Rob
+syzbot reported the following warning:
+
+ WARNING: CPU: 1 PID: 6351 at kernel/sched/deadline.c:628
+ enqueue_task_dl+0x22da/0x38a0 kernel/sched/deadline.c:1504
+
+At deadline.c:628 we have:
+
+ 623 static inline void setup_new_dl_entity(struct sched_dl_entity *dl_se)
+ 624 {
+ 625 	struct dl_rq *dl_rq = dl_rq_of_se(dl_se);
+ 626 	struct rq *rq = rq_of_dl_rq(dl_rq);
+ 627
+ 628 	WARN_ON(dl_se->dl_boosted);
+ 629 	WARN_ON(dl_time_before(rq_clock(rq), dl_se->deadline));
+        [...]
+     }
+
+Which means that setup_new_dl_entity() has been called on a task
+currently boosted. This shouldn't happen though, as setup_new_dl_entity()
+is only called when the 'dynamic' deadline of the new entity
+is in the past w.r.t. rq_clock and boosted tasks shouldn't verify this
+condition.
+
+Digging through the PI code I noticed that what above might in fact happen
+if an RT tasks blocks on an rt_mutex hold by a DEADLINE task. In the
+first branch of boosting conditions we check only if a pi_task 'dynamic'
+deadline is earlier than mutex holder's and in this case we set mutex
+holder to be dl_boosted. However, since RT 'dynamic' deadlines are only
+initialized if such tasks get boosted at some point (or if they become
+DEADLINE of course), in general RT 'dynamic' deadlines are usually equal
+to 0 and this verifies the aforementioned condition.
+
+Fix it by checking that the potential donor task is actually (even if
+temporary because in turn boosted) running at DEADLINE priority before
+using its 'dynamic' deadline value.
+
+Fixes: 2d3d891d3344 ("sched/deadline: Add SCHED_DEADLINE inheritance logic")
+Reported-by: syzbot+119ba87189432ead09b4@syzkaller.appspotmail.com
+Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reviewed-by: Daniel Bristot de Oliveira <bristot@redhat.com>
+Tested-by: Daniel Wagner <dwagner@suse.de>
+Link: https://lkml.kernel.org/r/20181119153201.GB2119@localhost.localdomain
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/sched/core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 5eccfb816d23b..f2618ade80479 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -4461,7 +4461,8 @@ void rt_mutex_setprio(struct task_struct *p, struct task_struct *pi_task)
+ 	 */
+ 	if (dl_prio(prio)) {
+ 		if (!dl_prio(p->normal_prio) ||
+-		    (pi_task && dl_entity_preempt(&pi_task->dl, &p->dl))) {
++		    (pi_task && dl_prio(pi_task->prio) &&
++		     dl_entity_preempt(&pi_task->dl, &p->dl))) {
+ 			p->dl.dl_boosted = 1;
+ 			queue_flag |= ENQUEUE_REPLENISH;
+ 		} else
+-- 
+2.25.1
+
