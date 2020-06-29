@@ -2,84 +2,103 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86097C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56C43C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C5A32076C
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A5DD206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468218;
-	bh=HME3jm5v+kI3YX0e1z9z2PFpSji4Pm/di2GGIvU+mpM=;
-	h=Date:From:To:In-Reply-To:References:Subject:List-ID:From;
-	b=Bn946Jh7MKzUa/eeVBW+RXDvi65RpLxzK/VoRPzBqGQKenEzlLCyTx3K6VTYhAdWh
-	 yPZlKiDceYyM/W4BTY2xOQ2MslJzPsEp0IUgDll4CobcjT+yG3wv6Nyh623SVN8ONr
-	 8emX85nNcMzaJ1wZxfInjMJC0ve3ypA2iv3cst5Q=
+	s=default; t=1593468222;
+	bh=Z1QEs3Oj9n1CWnpZuG8UpDqDYz8a9LXYk7Syj9bwlK8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=vjoN+jHGz7ORtPnvbl4O0ewNgm0f3nyqzm6nZ0rkLK0wfmTRj/EzRAlt3/B2gBC/H
+	 QI0HMvqSrsOE8gpX5IKcEHOsSOf+sYEYC+5zyunQIz/r0N+67bR7+NZoA8jmRXs52N
+	 LvZ8arZioyDRxcOQDEx/l0NvK1QUyzGikQnVsTmY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391665AbgF2WDh (ORCPT
+        id S2391695AbgF2WDk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:03:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56890 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:03:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726236AbgF2SfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:23 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726192AbgF2SfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:22 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C94A025599;
-        Mon, 29 Jun 2020 18:15:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D48F246DB;
+        Mon, 29 Jun 2020 15:20:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593454519;
-        bh=HME3jm5v+kI3YX0e1z9z2PFpSji4Pm/di2GGIvU+mpM=;
-        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-        b=pqTxBMQQ7VvDugyQK5aqKCae+tDtwremB2oe11I/J6sXrgwhq/Q0XqQLNhuX2KBdW
-         RJm+2Bg0tIzcZeRo+V6/Bxo56MsCI22ceSzjrC4OXFpxcA/oPBE79FSBezP5486YaP
-         5ZduXoLhipDZghr8b07IILTLCqqlCy55LSMj29SQ=
-Date:   Mon, 29 Jun 2020 19:15:17 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     lgirdwood@gmail.com, perex@perex.cz, plai@codeaurora.org,
-        alsa-devel@alsa-project.org, tiwai@suse.com,
-        linux-kernel@vger.kernel.org, Rohit kumar <rohitkr@codeaurora.org>
-In-Reply-To: <1593265030-1451-1-git-send-email-rohitkr@codeaurora.org>
-References: <1593265030-1451-1-git-send-email-rohitkr@codeaurora.org>
-Subject: Re: [PATCH] asoc: Update supported rate and format for dummy dai
-Message-Id: <159345450675.54191.18376967903850938054.b4-ty@kernel.org>
+        s=default; t=1593444022;
+        bh=Z1QEs3Oj9n1CWnpZuG8UpDqDYz8a9LXYk7Syj9bwlK8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zf8JybDWet7RS2N7RRFn/Q3cmQ90g9kwZ9WoAe1sWK/zpmfEJvrkyDigGeD1ypc2h
+         JWHHN4ZgfU4suNRtKYcQ9z/Otdc1Fx3zUUV7EHDoLpII4ZkWJhgul60m4KdSByoxxM
+         L5kg6Ug0HvjU3I1Du+Bt8oxHtj6njhN2o7wrAP9U=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Matthew Hagan <mnhagan88@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 129/265] ARM: dts: NSP: Correct FA2 mailbox node
+Date:   Mon, 29 Jun 2020 11:16:02 -0400
+Message-Id: <20200629151818.2493727-130-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
+References: <20200629151818.2493727-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.7.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.7.7-rc1
+X-KernelTest-Deadline: 2020-07-01T15:14+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 27 Jun 2020 19:07:10 +0530, Rohit kumar wrote:
-> Add support for 384KHz sample rate and S24_3LE
-> bitwidth for dummy dai.
+From: Matthew Hagan <mnhagan88@gmail.com>
 
-Applied to
+[ Upstream commit ac4e106d8934a5894811fc263f4b03fc8ed0fb7a ]
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+The FA2 mailbox is specified at 0x18025000 but should actually be
+0x18025c00, length 0x400 according to socregs_nsp.h and board_bu.c. Also
+the interrupt was off by one and should be GIC SPI 151 instead of 150.
 
-Thanks!
+Fixes: 17d517172300 ("ARM: dts: NSP: Add mailbox (PDC) to NSP")
+Signed-off-by: Matthew Hagan <mnhagan88@gmail.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/bcm-nsp.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-[1/1] asoc: Update supported rate and format for dummy dai
-      commit: abc17b2974d634c17d25be7f4472890c8533a005
+diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
+index 920c0f561e5ce..3175266ede646 100644
+--- a/arch/arm/boot/dts/bcm-nsp.dtsi
++++ b/arch/arm/boot/dts/bcm-nsp.dtsi
+@@ -259,10 +259,10 @@
+ 			status = "disabled";
+ 		};
+ 
+-		mailbox: mailbox@25000 {
++		mailbox: mailbox@25c00 {
+ 			compatible = "brcm,iproc-fa2-mbox";
+-			reg = <0x25000 0x445>;
+-			interrupts = <GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>;
++			reg = <0x25c00 0x400>;
++			interrupts = <GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>;
+ 			#mbox-cells = <1>;
+ 			brcm,rx-status-len = <32>;
+ 			brcm,use-bcm-hdr;
+-- 
+2.25.1
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
