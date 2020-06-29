@@ -2,148 +2,156 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72955C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E79AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51ECF2076C
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:37:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C37D20672
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:38:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KcVKFDX0"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="n8C0XkJJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387475AbgF2Th4 (ORCPT
+        id S2387489AbgF2TiA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:37:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47600 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387447AbgF2Tho (ORCPT
+        Mon, 29 Jun 2020 15:38:00 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:47329 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387472AbgF2Thz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:37:44 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B362C03140A;
-        Mon, 29 Jun 2020 10:08:24 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id i25so18029840iog.0;
-        Mon, 29 Jun 2020 10:08:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=frtiYAYIRYzf0c7+OgXqsn5Y4WKcJhLf7MblWKEL3MA=;
-        b=KcVKFDX0aWv+4QnWokmKVfaYBiydsC8d4y04AFFqnqRTa8TX66glEnwA4LAx7jrcHO
-         aHjNlbLp8Fw7EqJrIE3NblKbq0ItY2uaETkpyHeezSbKT8I/F0tmUjNkeyG9jzVrjMSO
-         rJWjqHlIj/YxLkgY/M4hqNysJtlYr/cVXngCANAuqogcbUtjbjSQ95FEl+D/kmhCTsKy
-         idEiC55+sejV6tPeFdAePpRZr9pPMufXyF9bpVZ7fQdeWzkD7pc267kvzZghk+1wgj3V
-         skFuRFwlVk+WlcCA8THFcmZRPyIC4/MQMmMx8c8NqUXdVzxJMJp5oTrFDmDYVqMgosLK
-         2hyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=frtiYAYIRYzf0c7+OgXqsn5Y4WKcJhLf7MblWKEL3MA=;
-        b=SO0Iq0tcI9GLU//X2XFqrUWkn2LZO372Ms1DxwpguYuzNj67Azd4gjwMtjLEh4C8+o
-         wK5s9zu7Z4kQ5B85N1K2RYdKZJVA4O5AUHNXBlgzsZsCou7R12RZrXUqJ4O5KpDAsuqi
-         oexeZ1ft3B6PhslWfwola5LVev3/LJ5QHuQJqG99OaJQ4yVSCeEt3vmOxBopNC2IeAB6
-         XgLMGQZKFuJvfRuy9zRkKG9I4h+l4JjGccBX0nzwlpT2yTYYtp7svziIuBDfRIw9QRY/
-         GeoKO6F0Y/aVglnFpg0L8uuEHdJwS2wiwyVZqHcfbksf9SZeKyhw5TatNjHYiBRG3vgM
-         MbJA==
-X-Gm-Message-State: AOAM530+ESqpyB0BRhNhrgs20Lndjtj8FoeV4FU1TCaz2jcuV/81Jhkp
-        FzQ4iPF5fpWhk8AOXdntz+vORLMrf5PHi97UUDI=
-X-Google-Smtp-Source: ABdhPJwM8dA8f98ng1O4Ad9g0kEaSLHoAQus5mbh10axsYJMT/LexW2plXFhLFquWtBxTRJo3Sp3xpOjdyhOkK9dUEM=
-X-Received: by 2002:a02:a408:: with SMTP id c8mr19198600jal.59.1593450502896;
- Mon, 29 Jun 2020 10:08:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200629082819.216405-2-vaibhavgupta40@gmail.com> <202006300026.hCr1U7Sc%lkp@intel.com>
-In-Reply-To: <202006300026.hCr1U7Sc%lkp@intel.com>
-From:   Vaibhav Gupta <vaibhav.varodek@gmail.com>
-Date:   Mon, 29 Jun 2020 22:36:45 +0530
-Message-ID: <CAPBsFfD8pNFtry605zUs+1uaQi+t8X12iuAiSWbnYqVLDpuBbA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/4] qlge/qlge_main.c: use genric power management
-To:     kernel test robot <lkp@intel.com>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>, bjorn@helgaas.com,
-        Manish Chopra <manishc@marvell.com>,
-        GR-Linux-NIC-Dev@marvell.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kbuild-all@lists.01.org, devel@driverdev.osuosl.org,
-        netdev@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        skhan@linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 29 Jun 2020 15:37:55 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200629112251euoutp0288b4489365f4ea46f3a4da084139b3e9~c-_9HhG4K1862518625euoutp02h
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 11:22:51 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200629112251euoutp0288b4489365f4ea46f3a4da084139b3e9~c-_9HhG4K1862518625euoutp02h
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593429771;
+        bh=B440VBDLdLWidVVzamEgT8cxdzc8DwUiqZOX84CTZVs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=n8C0XkJJUibVAhAvnSkzGmbewZuChMGVQjfjeMcWkOpx3an4KqCe64AcdUhwSLoO8
+         DIILivtoUTmEZ9F7iAyL75dgWa/IVRm5gSiDSy5VpzHAW1ZBRKuu/c1KmHnT6Ecwmd
+         +4ILMSV5O7jl+WSa6Y0v6MHDdn4B5i2VL3w653tk=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200629112250eucas1p2c61b6686a340a5f63cf3fc732e77ed4c~c-_8y6McG0721607216eucas1p2l;
+        Mon, 29 Jun 2020 11:22:50 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 3C.68.06318.A0FC9FE5; Mon, 29
+        Jun 2020 12:22:50 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200629112250eucas1p162ce47eab8946c45357a7e2c03a6da9a~c-_8bV1tt1693516935eucas1p1m;
+        Mon, 29 Jun 2020 11:22:50 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200629112250eusmtrp2c127127c787ab37d16fb4aea0a2cc84c~c-_8au3BK1960419604eusmtrp2s;
+        Mon, 29 Jun 2020 11:22:50 +0000 (GMT)
+X-AuditID: cbfec7f5-38bff700000018ae-d8-5ef9cf0a647f
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 9D.EC.06017.A0FC9FE5; Mon, 29
+        Jun 2020 12:22:50 +0100 (BST)
+Received: from AMDC3748.digital.local (unknown [106.120.51.74]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200629112249eusmtip19ca9d250ad2f68834f5b4750386400a9~c-_7sJRpH2177921779eusmtip14;
+        Mon, 29 Jun 2020 11:22:49 +0000 (GMT)
+From:   Andrzej Hajda <a.hajda@samsung.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        andy.shevchenko@gmail.com, Mark Brown <broonie@kernel.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel@lists.freedesktop.org (open list:DRM DRIVERS)
+Subject: [PATCH v7 4/4] drm/bridge: lvds-codec: simplify error handling
+Date:   Mon, 29 Jun 2020 13:22:42 +0200
+Message-Id: <20200629112242.18380-5-a.hajda@samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200629112242.18380-1-a.hajda@samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA0WSf0yMcRzH973nued5ujw8rug7xJwfG5timX39nG5+PGM2s7bIOo6eEv1y
+        10XGCqm7Ildp9AujaBXX3bnjmpRjHVJ39FMoTWMZE+7oIul6wn+vz/vz/vz67kthYrtwGhUd
+        l8gp4uQxEkKEmxvc9kUiu1u2WPN+Beq62SxE/doHAOkv6IQov7ePQCPmHAy1uj4T6ORVHYHa
+        fvRj6PHHNhxpckpJZHjbLkQtNcUEsubXAnTj4WsSWbN3ohJnPraWYVvan2Hs585TJFv7/TLO
+        Wgpfk2yRukDIGio0BPtI+1zA1pVUkWxPlk3AGktT2OxbFYCtP5OHs98MM7fSYaJVEVxMdBKn
+        CFyzW7TvgrFbkFAiOqz93i1IBe1UJvCiILMU6u8Xg0wgosRMOYBa5xucD5wA/qyswvjgG4Bp
+        lpJRGzVWMjy8kdevA9hgHiD/VQwU9eGevgSzAA4bXxAe9mWC4NmmwjETxgzhsC0jXehJ+DAb
+        YVrrO+BhnJkHX/alCzxMMwhmNGoxfsFZsLK6foy9mOWwxVEwtixkvpDQ8Kqe4E3r4KCuW8iz
+        D/xgu0XyPAOOWC4JeE6BPeVpGF+sBtBUbRmfsBK+ah4iPLdho2vragJ5ORg661wkf/JE2Plp
+        skfGRjHXfB7jZRqq08W8ezbsaTKNN/SDZQ7X+GYsvG0zjb/vaQAbP9kxLZhV+H/YZQAqgB+n
+        UsZGccqgOO5QgFIeq1TFRQXsjY81gNFv1vjb5roD7v3aYwUMBSQT6N3NbplYKE9SJsdaAaQw
+        iS8tbWqUiekIefIRThG/S6GK4ZRWMJ3CJX500JX+cDETJU/kDnBcAqf4mxVQXtNSgaY1ZHvC
+        Ofdcn7KRNFrlrc7116umPLmjV1TN8We/9C7I2pLhmH3bN6erY5f+5nntYKi00uA+ml4wfGxR
+        clhk6rVJJxyMqXjzfKd9x9XQyPUHy4Ifg/f0/fLyix2r7Xc3LUvp5/K+Pq32dh4hQsNDjh/b
+        IJsirZtkXC41lE7d1jmwX4Ir98mXLMQUSvkfTyVhEWIDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrAIsWRmVeSWpSXmKPExsVy+t/xu7pc53/GGayfo2hxa905VouXEw4z
+        WmycsZ7VYurDJ2wW/7dNZLa48vU9m0Xz4vVsFle/v2S2OPnmKotF58Ql7BabHl9jtbi8aw6b
+        xaGpexkt1h65y25xqC/aYu6XqcwOAh6Xr11k9nh/o5XdY++3BSweO2fdZfeY3TGT1WPTqk42
+        jxMTLjF57J+7ht3jfvdxJo/NS+o9+rasYvQ40DuZxePzJrkA3ig9m6L80pJUhYz84hJbpWhD
+        CyM9Q0sLPSMTSz1DY/NYKyNTJX07m5TUnMyy1CJ9uwS9jBmb7zEVzOWqmPDtHlMD4zWOLkYO
+        DgkBE4m/f927GLk4hASWMkpc7lzJ0sXICRQXl9g9/y0zhC0s8edaFxtE0SdGiVsfDzOCJNgE
+        NCX+br7JBmKLCBhL9J+dxQ5SxCzQxiox9/wTdpCEsIC7RMuVZ2ANLAKqEreftDGB2LwCFhLt
+        pydAbZCXWL3hAJjNKWApcfnCTLB6IaCaC0c72Scw8i1gZFjFKJJaWpybnltspFecmFtcmpeu
+        l5yfu4kRGFvbjv3csoOx613wIUYBDkYlHt6Ecz/jhFgTy4orcw8xSnAwK4nwOp09HSfEm5JY
+        WZValB9fVJqTWnyI0RToqInMUqLJ+cC4zyuJNzQ1NLewNDQ3Njc2s1AS5+0QOBgjJJCeWJKa
+        nZpakFoE08fEwSnVwCgxY9fDTfd2Gez99WXz2rqmGVrxU4WfLM2edOOqjbiu3wevrVHT1j12
+        dmTKyTry9/+MbxwVX3cf/JvOfWFS4m9ntUNBfluO/i03KT31/2GIgJvNZoVHMsfPa6jtul75
+        8ZtO3+7SMO5bqj/y4yz+ie/9YxbV1ZDzYO2/suyT8Sc8imrE/sRxbM1QYinOSDTUYi4qTgQA
+        oBEyssMCAAA=
+X-CMS-MailID: 20200629112250eucas1p162ce47eab8946c45357a7e2c03a6da9a
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200629112250eucas1p162ce47eab8946c45357a7e2c03a6da9a
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200629112250eucas1p162ce47eab8946c45357a7e2c03a6da9a
+References: <20200629112242.18380-1-a.hajda@samsung.com>
+        <CGME20200629112250eucas1p162ce47eab8946c45357a7e2c03a6da9a@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Jun 2020 at 21:39, kernel test robot <lkp@intel.com> wrote:
->
-> Hi Vaibhav,
->
-> Thank you for the patch! Yet something to improve:
->
-> [auto build test ERROR on staging/staging-testing]
-> [also build test ERROR on v5.8-rc3 next-20200629]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use  as documented in
-> https://git-scm.com/docs/git-format-patch]
->
-> url:    https://github.com/0day-ci/linux/commits/Vaibhav-Gupta/drivers-staging-use-generic-power-management/20200629-163141
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git 347fa58ff5558075eec98725029c443c80ffbf4a
-> config: x86_64-rhel-7.6 (attached as .config)
-> compiler: gcc-9 (Debian 9.3.0-13) 9.3.0
-> reproduce (this is a W=1 build):
->         # save the attached .config to linux build tree
->         make W=1 ARCH=x86_64
->
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
->
-> All errors (new ones prefixed by >>):
->
->    drivers/staging/qlge/qlge_main.c: In function 'qlge_resume':
-> >> drivers/staging/qlge/qlge_main.c:4793:17: error: 'pdev' undeclared (first use in this function); did you mean 'qdev'?
->     4793 |  pci_set_master(pdev);
->          |                 ^~~~
->          |                 qdev
->    drivers/staging/qlge/qlge_main.c:4793:17: note: each undeclared identifier is reported only once for each function it appears in
->
-> vim +4793 drivers/staging/qlge/qlge_main.c
->
-> c4e84bde1d595d drivers/net/qlge/qlge_main.c     Ron Mercer    2008-09-18  4786
-> 1aed508211e137 drivers/staging/qlge/qlge_main.c Vaibhav Gupta 2020-06-29  4787  static int __maybe_unused qlge_resume(struct device *dev_d)
-> c4e84bde1d595d drivers/net/qlge/qlge_main.c     Ron Mercer    2008-09-18  4788  {
-> 1aed508211e137 drivers/staging/qlge/qlge_main.c Vaibhav Gupta 2020-06-29  4789          struct net_device *ndev = dev_get_drvdata(dev_d);
-> c4e84bde1d595d drivers/net/qlge/qlge_main.c     Ron Mercer    2008-09-18  4790          struct ql_adapter *qdev = netdev_priv(ndev);
-> c4e84bde1d595d drivers/net/qlge/qlge_main.c     Ron Mercer    2008-09-18  4791          int err;
-> c4e84bde1d595d drivers/net/qlge/qlge_main.c     Ron Mercer    2008-09-18  4792
-> c4e84bde1d595d drivers/net/qlge/qlge_main.c     Ron Mercer    2008-09-18 @4793          pci_set_master(pdev);
-> c4e84bde1d595d drivers/net/qlge/qlge_main.c     Ron Mercer    2008-09-18  4794
-> 1aed508211e137 drivers/staging/qlge/qlge_main.c Vaibhav Gupta 2020-06-29  4795          device_wakeup_disable(dev_d);
-> c4e84bde1d595d drivers/net/qlge/qlge_main.c     Ron Mercer    2008-09-18  4796
-> c4e84bde1d595d drivers/net/qlge/qlge_main.c     Ron Mercer    2008-09-18  4797          if (netif_running(ndev)) {
-> c4e84bde1d595d drivers/net/qlge/qlge_main.c     Ron Mercer    2008-09-18  4798                  err = ql_adapter_up(qdev);
-> c4e84bde1d595d drivers/net/qlge/qlge_main.c     Ron Mercer    2008-09-18  4799                  if (err)
-> c4e84bde1d595d drivers/net/qlge/qlge_main.c     Ron Mercer    2008-09-18  4800                          return err;
-> c4e84bde1d595d drivers/net/qlge/qlge_main.c     Ron Mercer    2008-09-18  4801          }
-> c4e84bde1d595d drivers/net/qlge/qlge_main.c     Ron Mercer    2008-09-18  4802
-> 72046d84f0d6e3 drivers/net/qlge/qlge_main.c     Breno Leitao  2010-07-01  4803          mod_timer(&qdev->timer, jiffies + (5 * HZ));
-> c4e84bde1d595d drivers/net/qlge/qlge_main.c     Ron Mercer    2008-09-18  4804          netif_device_attach(ndev);
-> c4e84bde1d595d drivers/net/qlge/qlge_main.c     Ron Mercer    2008-09-18  4805
-> c4e84bde1d595d drivers/net/qlge/qlge_main.c     Ron Mercer    2008-09-18  4806          return 0;
-> c4e84bde1d595d drivers/net/qlge/qlge_main.c     Ron Mercer    2008-09-18  4807  }
-> c4e84bde1d595d drivers/net/qlge/qlge_main.c     Ron Mercer    2008-09-18  4808
->
-> ---
-> 0-DAY CI Kernel Test Service, Intel Corporation
-> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
-This is a genuine error. I remember taking care of it when I upgraded
-the driver.
-Must have been caused by some unnoticed reverts at my side.
+Using dev_err_probe code has following advantages:
+- shorter code,
+- recorded defer probe reason for debugging,
+- uniform error code logging.
 
-I will fix it and send a v2 patch-set. Thanks for reporting.
+Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+---
+ drivers/gpu/drm/bridge/lvds-codec.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
--- Vaibhav gupta
+diff --git a/drivers/gpu/drm/bridge/lvds-codec.c b/drivers/gpu/drm/bridge/lvds-codec.c
+index 24fb1befdfa2..f19d9f7a5db2 100644
+--- a/drivers/gpu/drm/bridge/lvds-codec.c
++++ b/drivers/gpu/drm/bridge/lvds-codec.c
+@@ -71,13 +71,9 @@ static int lvds_codec_probe(struct platform_device *pdev)
+ 	lvds_codec->connector_type = (uintptr_t)of_device_get_match_data(dev);
+ 	lvds_codec->powerdown_gpio = devm_gpiod_get_optional(dev, "powerdown",
+ 							     GPIOD_OUT_HIGH);
+-	if (IS_ERR(lvds_codec->powerdown_gpio)) {
+-		int err = PTR_ERR(lvds_codec->powerdown_gpio);
+-
+-		if (err != -EPROBE_DEFER)
+-			dev_err(dev, "powerdown GPIO failure: %d\n", err);
+-		return err;
+-	}
++	if (IS_ERR(lvds_codec->powerdown_gpio))
++		return dev_err_probe(dev, PTR_ERR(lvds_codec->powerdown_gpio),
++				     "powerdown GPIO failure\n");
+ 
+ 	/* Locate the panel DT node. */
+ 	panel_node = of_graph_get_remote_node(dev->of_node, 1, 0);
+-- 
+2.17.1
+
