@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CC52C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C52AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 589DB207D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:07:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7AF3520760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:07:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461233;
-	bh=xisftz+dHBu+QeZH4GbJwDsy8r9mx1+dmOcWCt74LvI=;
+	s=default; t=1593461240;
+	bh=NUXmR4lHug30r6DStI+RG3JHn2fqSnGmfjiT7Dzq0JA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r4ce/mjsvsjunE3AWgyIzaO17wH75O2OhrpsqLDYfcQtK+EIjumZctvfK8SA5af9L
-	 iPrnuJ6C8VoYUwJMHKNI2QCC7i1/UllqE61mDcVc6hQpEKklk71PJ4a0zeZEW0Avut
-	 fBPXejBTVUrZL2P4WkZV57k0WtyMnDtTwYprVwVw=
+	b=uUMBvQiFfHa3MdERZ/sG2mWklihkS0l8YCGdykXps79tZWep0SIAvwFH5EuKAzaCE
+	 3Y5aaYS8X7/GIp7COgopkW002XEmNHE5UWc3KOBtIxKqb9VOb6LeDuUjF8Cud1ggmd
+	 9M32/qYqb/M7sjV3yxjmfKd+urEMoZcJ8QuFekzw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388608AbgF2UHL (ORCPT
+        id S2388885AbgF2UHS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:07:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40600 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:07:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732952AbgF2TaZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:30:25 -0400
+        id S1732954AbgF2TaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:30:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DD7125272;
-        Mon, 29 Jun 2020 15:36:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31E6B251E6;
+        Mon, 29 Jun 2020 15:35:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444982;
-        bh=xisftz+dHBu+QeZH4GbJwDsy8r9mx1+dmOcWCt74LvI=;
+        s=default; t=1593444907;
+        bh=NUXmR4lHug30r6DStI+RG3JHn2fqSnGmfjiT7Dzq0JA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZKnwo2kmEiG8FDlhsQOyE41fEdzdWq6Vwxv/Omkd2mUXuiJPDMXQW1Zdk/5Q25nzn
-         kCNFxDkP4W9kD/h4vVhQmmSH5mPyCDeg1l5ddskqZLDjxyLJSvHkQrx357XK86TSRl
-         hmETjPUZtQ5S6QCNnUHWf13iCSA25wujRh3lSg7o=
+        b=saAihrXTgSUvU3Z5SRXoqpF/+EyByisbtiRxeJT+9KtQTGp3IGdRXYu+ZMpctu+2N
+         dAmwQWVNzW4lmcz6E5ApDNuw2qJfw2eWk8PxEIpz3GQkDfIRIfemrjnTww1iVkyg4W
+         nFuvGzQYkuksrGmYFRBGSQUg7eMgfUPUQpwXg6yM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sagi Grimberg <sagi@grimberg.me>,
-        Anton Eidelman <anton@lightbitslabs.com>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 082/131] nvme: fix possible deadlock when I/O is blocked
-Date:   Mon, 29 Jun 2020 11:34:13 -0400
-Message-Id: <20200629153502.2494656-83-sashal@kernel.org>
+Cc:     Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.cz>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.19 003/131] fanotify: fix ignore mask logic for events on child and on dir
+Date:   Mon, 29 Jun 2020 11:32:54 -0400
+Message-Id: <20200629153502.2494656-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
@@ -65,122 +65,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sagi Grimberg <sagi@grimberg.me>
+From: Amir Goldstein <amir73il@gmail.com>
 
-[ Upstream commit 3b4b19721ec652ad2c4fe51dfbe5124212b5f581 ]
+commit 2f02fd3fa13e51713b630164f8a8e5b42de8283b upstream.
 
-Revert fab7772bfbcf ("nvme-multipath: revalidate nvme_ns_head gendisk
-in nvme_validate_ns")
+The comments in fanotify_group_event_mask() say:
 
-When adding a new namespace to the head disk (via nvme_mpath_set_live)
-we will see partition scan which triggers I/O on the mpath device node.
-This process will usually be triggered from the scan_work which holds
-the scan_lock. If I/O blocks (if we got ana change currently have only
-available paths but none are accessible) this can deadlock on the head
-disk bd_mutex as both partition scan I/O takes it, and head disk revalidation
-takes it to check for resize (also triggered from scan_work on a different
-path). See trace [1].
+  "If the event is on dir/child and this mark doesn't care about
+   events on dir/child, don't send it!"
 
-The mpath disk revalidation was originally added to detect online disk
-size change, but this is no longer needed since commit cb224c3af4df
-("nvme: Convert to use set_capacity_revalidate_and_notify") which already
-updates resize info without unnecessarily revalidating the disk (the
-mpath disk doesn't even implement .revalidate_disk fop).
+Specifically, mount and filesystem marks do not care about events
+on child, but they can still specify an ignore mask for those events.
+For example, a group that has:
+- A mount mark with mask 0 and ignore_mask FAN_OPEN
+- An inode mark on a directory with mask FAN_OPEN | FAN_OPEN_EXEC
+  with flag FAN_EVENT_ON_CHILD
 
-[1]:
---
-kernel: INFO: task kworker/u65:9:494 blocked for more than 241 seconds.
-kernel:       Tainted: G           OE     5.3.5-050305-generic #201910071830
-kernel: "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-kernel: kworker/u65:9   D    0   494      2 0x80004000
-kernel: Workqueue: nvme-wq nvme_scan_work [nvme_core]
-kernel: Call Trace:
-kernel:  __schedule+0x2b9/0x6c0
-kernel:  schedule+0x42/0xb0
-kernel:  schedule_preempt_disabled+0xe/0x10
-kernel:  __mutex_lock.isra.0+0x182/0x4f0
-kernel:  __mutex_lock_slowpath+0x13/0x20
-kernel:  mutex_lock+0x2e/0x40
-kernel:  revalidate_disk+0x63/0xa0
-kernel:  __nvme_revalidate_disk+0xfe/0x110 [nvme_core]
-kernel:  nvme_revalidate_disk+0xa4/0x160 [nvme_core]
-kernel:  ? evict+0x14c/0x1b0
-kernel:  revalidate_disk+0x2b/0xa0
-kernel:  nvme_validate_ns+0x49/0x940 [nvme_core]
-kernel:  ? blk_mq_free_request+0xd2/0x100
-kernel:  ? __nvme_submit_sync_cmd+0xbe/0x1e0 [nvme_core]
-kernel:  nvme_scan_work+0x24f/0x380 [nvme_core]
-kernel:  process_one_work+0x1db/0x380
-kernel:  worker_thread+0x249/0x400
-kernel:  kthread+0x104/0x140
-kernel:  ? process_one_work+0x380/0x380
-kernel:  ? kthread_park+0x80/0x80
-kernel:  ret_from_fork+0x1f/0x40
-...
-kernel: INFO: task kworker/u65:1:2630 blocked for more than 241 seconds.
-kernel:       Tainted: G           OE     5.3.5-050305-generic #201910071830
-kernel: "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-kernel: kworker/u65:1   D    0  2630      2 0x80004000
-kernel: Workqueue: nvme-wq nvme_scan_work [nvme_core]
-kernel: Call Trace:
-kernel:  __schedule+0x2b9/0x6c0
-kernel:  schedule+0x42/0xb0
-kernel:  io_schedule+0x16/0x40
-kernel:  do_read_cache_page+0x438/0x830
-kernel:  ? __switch_to_asm+0x34/0x70
-kernel:  ? file_fdatawait_range+0x30/0x30
-kernel:  read_cache_page+0x12/0x20
-kernel:  read_dev_sector+0x27/0xc0
-kernel:  read_lba+0xc1/0x220
-kernel:  ? kmem_cache_alloc_trace+0x19c/0x230
-kernel:  efi_partition+0x1e6/0x708
-kernel:  ? vsnprintf+0x39e/0x4e0
-kernel:  ? snprintf+0x49/0x60
-kernel:  check_partition+0x154/0x244
-kernel:  rescan_partitions+0xae/0x280
-kernel:  __blkdev_get+0x40f/0x560
-kernel:  blkdev_get+0x3d/0x140
-kernel:  __device_add_disk+0x388/0x480
-kernel:  device_add_disk+0x13/0x20
-kernel:  nvme_mpath_set_live+0x119/0x140 [nvme_core]
-kernel:  nvme_update_ns_ana_state+0x5c/0x60 [nvme_core]
-kernel:  nvme_set_ns_ana_state+0x1e/0x30 [nvme_core]
-kernel:  nvme_parse_ana_log+0xa1/0x180 [nvme_core]
-kernel:  ? nvme_update_ns_ana_state+0x60/0x60 [nvme_core]
-kernel:  nvme_mpath_add_disk+0x47/0x90 [nvme_core]
-kernel:  nvme_validate_ns+0x396/0x940 [nvme_core]
-kernel:  ? blk_mq_free_request+0xd2/0x100
-kernel:  nvme_scan_work+0x24f/0x380 [nvme_core]
-kernel:  process_one_work+0x1db/0x380
-kernel:  worker_thread+0x249/0x400
-kernel:  kthread+0x104/0x140
-kernel:  ? process_one_work+0x380/0x380
-kernel:  ? kthread_park+0x80/0x80
-kernel:  ret_from_fork+0x1f/0x40
---
+A child file open for exec would be reported to group with the FAN_OPEN
+event despite the fact that FAN_OPEN is in ignore mask of mount mark,
+because the mark iteration loop skips over non-inode marks for events
+on child when calculating the ignore mask.
 
-Fixes: fab7772bfbcf ("nvme-multipath: revalidate nvme_ns_head gendisk
-in nvme_validate_ns")
-Signed-off-by: Anton Eidelman <anton@lightbitslabs.com>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Move ignore mask calculation to the top of the iteration loop block
+before excluding marks for events on dir/child.
+
+Link: https://lore.kernel.org/r/20200524072441.18258-1-amir73il@gmail.com
+Reported-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/linux-fsdevel/20200521162443.GA26052@quack2.suse.cz/
+Fixes: 55bf882c7f13 "fanotify: fix merging marks masks with FAN_ONDIR"
+Fixes: b469e7e47c8a "fanotify: fix handling of events on child..."
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/nvme/host/core.c | 1 -
- 1 file changed, 1 deletion(-)
+ fs/notify/fanotify/fanotify.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 0d60f2f8f3eec..5c9326777334f 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -1602,7 +1602,6 @@ static void __nvme_revalidate_disk(struct gendisk *disk, struct nvme_id_ns *id)
- 	if (ns->head->disk) {
- 		nvme_update_disk_info(ns->head->disk, ns, id);
- 		blk_queue_stack_limits(ns->head->disk->queue, ns->queue);
--		revalidate_disk(ns->head->disk);
+diff --git a/fs/notify/fanotify/fanotify.c b/fs/notify/fanotify/fanotify.c
+index a18b8d7a30759..ca3405f732644 100644
+--- a/fs/notify/fanotify/fanotify.c
++++ b/fs/notify/fanotify/fanotify.c
+@@ -114,6 +114,10 @@ static bool fanotify_should_send_event(struct fsnotify_iter_info *iter_info,
+ 		if (!fsnotify_iter_should_report_type(iter_info, type))
+ 			continue;
+ 		mark = iter_info->marks[type];
++
++		/* Apply ignore mask regardless of ISDIR and ON_CHILD flags */
++		marks_ignored_mask |= mark->ignored_mask;
++
+ 		/*
+ 		 * If the event is for a child and this mark doesn't care about
+ 		 * events on a child, don't send it!
+@@ -124,7 +128,6 @@ static bool fanotify_should_send_event(struct fsnotify_iter_info *iter_info,
+ 			continue;
+ 
+ 		marks_mask |= mark->mask;
+-		marks_ignored_mask |= mark->ignored_mask;
  	}
- #endif
- }
+ 
+ 	if (d_is_dir(path->dentry) &&
 -- 
 2.25.1
 
