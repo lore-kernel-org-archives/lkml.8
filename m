@@ -2,103 +2,63 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B020BC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9086C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EBB820656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:17:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461830;
-	bh=jG48EIU4dr9zDxGG51f0h/mF76bDGtCruCg/QBobqhw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gPARfIux7x9VTUPToico4gNX8RBo/RL4Zz7GvveZSLEq9snqDcnJ0GMI93561juj6
-	 upun+Cu1EHojHDR+gyDq50rGxQEDQh1h06HwB3qoyfsjpYvkY/KFqnoDT9BvwYX/ZF
-	 L2l4iC26KPLYtRswWt0m/3A65cKy7jkA8Sc/Iu9o=
+	by mail.kernel.org (Postfix) with ESMTP id AA13E2065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:17:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733018AbgF2URJ (ORCPT
+        id S1733047AbgF2URN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:17:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40528 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:17:13 -0400
+Received: from muru.com ([72.249.23.125]:59968 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730777AbgF2TaP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:30:15 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99A17252CC;
-        Mon, 29 Jun 2020 15:38:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445094;
-        bh=jG48EIU4dr9zDxGG51f0h/mF76bDGtCruCg/QBobqhw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aTAflVfxPDtUQ4wUyDgg7uEIY0ad47DaZ6g2gSeVKbZuemQb3sv1rzLTNxA1eGNOs
-         d3ZQX4nRpUkT9BrTQVsbzZ+fam/eXxiLrmQ+84ev80KiB8u5kIeURc2AF0dNIgqdY1
-         5ivuHcXst3h5ILXgqQiYc1A75gfkYNqgsf9/UEE8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Valentin Longchamp <valentin@longchamp.me>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 04/78] net: sched: export __netdev_watchdog_up()
-Date:   Mon, 29 Jun 2020 11:36:52 -0400
-Message-Id: <20200629153806.2494953-5-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
-References: <20200629153806.2494953-1-sashal@kernel.org>
+        id S1729266AbgF2TaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:30:10 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 710FC81A7;
+        Mon, 29 Jun 2020 17:04:53 +0000 (UTC)
+Date:   Mon, 29 Jun 2020 10:03:58 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Drew Fustini <drew@beagleboard.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, bcousson@baylibre.com,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>,
+        "H . Nikolaus Schaller" <hns@goldelico.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2] ARM: dts: am335x-pocketbeagle: set default mux for
+ gpio pins
+Message-ID: <20200629170358.GT37466@atomide.com>
+References: <20200628152442.322593-1-drew@beagleboard.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.14.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.14.186-rc1
-X-KernelTest-Deadline: 2020-07-01T15:38+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200628152442.322593-1-drew@beagleboard.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valentin Longchamp <valentin@longchamp.me>
+Hi,
 
-[ Upstream commit 1a3db27ad9a72d033235b9673653962c02e3486e ]
+* Drew Fustini <drew@beagleboard.org> [200628 08:26]:
+> v2 changes:
+> - change default mux from output to input.  Input is safer as it does
+>   not drive the line.  If the user wants output, they will need to edit
+>   this device tree.
 
-Since the quiesce/activate rework, __netdev_watchdog_up() is directly
-called in the ucc_geth driver.
+So can you please clarify this a bit, are you saying that gpio output can't
+be done via userspace?
 
-Unfortunately, this function is not available for modules and thus
-ucc_geth cannot be built as a module anymore. Fix it by exporting
-__netdev_watchdog_up().
+Needing to change the dts does not sound good to me.. But maybe you mean
+this is needed until the gpio-omap and pinctrl-single patches are merged?
 
-Since the commit introducing the regression was backported to stable
-branches, this one should ideally be as well.
+Regards,
 
-Fixes: 79dde73cf9bc ("net/ethernet/freescale: rework quiesce/activate for ucc_geth")
-Signed-off-by: Valentin Longchamp <valentin@longchamp.me>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/sched/sch_generic.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/net/sched/sch_generic.c b/net/sched/sch_generic.c
-index 21b981abbacb5..091a9746627fa 100644
---- a/net/sched/sch_generic.c
-+++ b/net/sched/sch_generic.c
-@@ -341,6 +341,7 @@ void __netdev_watchdog_up(struct net_device *dev)
- 			dev_hold(dev);
- 	}
- }
-+EXPORT_SYMBOL_GPL(__netdev_watchdog_up);
- 
- static void dev_watchdog_up(struct net_device *dev)
- {
--- 
-2.25.1
-
+Tony
