@@ -2,101 +2,88 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F12DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E111FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6604D20781
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:18:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593472710;
-	bh=Ap0GGyo3TT4bbUcnODAakDh+tdESRemEszuYecL7hu8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=worcb5j5oRqxvsVSYavIrxhub2+a1rsXrWYKIN5dhJr3Tkpdq1DpceN4AehRRItLc
-	 xy6x28+DLXNz9oHDdr+wZHSfaa9a/C5wWn8Bxu1UHcNVwX7jglitLyFJdrx9FiMDCA
-	 pqr9r7WV42zGAFaILEyFBRnH9QCNM4hM/VmFU6zc=
+	by mail.kernel.org (Postfix) with ESMTP id BADD320776
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:19:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="TNGaxkB4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729180AbgF2XS3 (ORCPT
+        id S1728614AbgF2XTs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 19:18:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41894 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726199AbgF2XS2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 19:18:28 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D20EE20776;
-        Mon, 29 Jun 2020 23:18:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593472708;
-        bh=Ap0GGyo3TT4bbUcnODAakDh+tdESRemEszuYecL7hu8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0bPCRdJ/elG7YYslCo5o8utl9pmlYGZbTiVI8rX41Rlp46edDosAP0eoH5jikoE+n
-         G97w8RVRcigRB2FKRm1sLZ+0qJOrRascrZIgMjPdcqKk3lm7KeXVwPOl724ZPK8EmY
-         iUglfuFMowRPQnyA4CxEqVJCYduZHu235Ui9TibI=
-Date:   Mon, 29 Jun 2020 19:18:26 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 5.7 000/265] 5.7.7-rc1 review
-Message-ID: <20200629231826.GT1931@sasha-vm>
-References: <20200629151818.2493727-1-sashal@kernel.org>
- <42dadde8-04c0-863b-651a-1959a3d85494@linuxfoundation.org>
+        Mon, 29 Jun 2020 19:19:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54688 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726199AbgF2XTr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 19:19:47 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DEAFDC061755
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 16:19:47 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id o22so3609352pjw.2
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 16:19:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=7BCJlfo7G05xbD0az983kKAGFwTGf/oknVgG88bEOuo=;
+        b=TNGaxkB4WqrzO1Rk2s8RincaD8Rigbs1OexXplCAyMg266FHEL1M5oJZrqqCc4OtXC
+         dp31cQYL6GvgZWbR4tfGNlmCwOL8ISJsaS6+8H/YyjK816ypFrD15qyg/sygrl2v6rKS
+         KvaPkQipNntsnindjHXBkzi19Wb2/S9eqVQ84Gy22MprFtGor1olAX78/0rFk/syv8J2
+         XRmPVPpEOBPLPUURo9vOOiZ9w040EIggc2A2RC6p3/F4ePo0v5eDZr+AaHShDKt1pcnp
+         WWU/sRbTyynjwsbTCN/rjvHArtlod0LWN3Sj6mMcXhil62v6nUoNNXdJd7tMDct8s2m9
+         Gd0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=7BCJlfo7G05xbD0az983kKAGFwTGf/oknVgG88bEOuo=;
+        b=mR54QTdJA2BlGkc9hP11DsO7jVBl3Q8GvDC5dybi3y9TJtj3hMahd85sVOqASU+UI5
+         vJoEvVTVFh62rAGw2pSA+4jXMoDLTs7hixoYzD9lsb8+y3IMct1zZVG5WmyqLYkLLEgv
+         te20NY5kWKEm+37gZEg1Xtxtuv4Ds8urMNCmC8DW0+2SVf8W3zNVztIPPoIU8v7wI7rI
+         2OdEIrMt64yaHklaKfRJ62xo9Kf2gemgi4IRiXosCkLqCymtMNgoiujRwRxG/roTA9Kr
+         KhxOSojDh5IwSdOXySrdQTCnnJqXwhj8gIqWU2aoIwgusQcb7sO6IVBRre6Q4uKgXQvQ
+         xSvg==
+X-Gm-Message-State: AOAM533Da57SOKYKilea+gHSAmiCMLpEFDIAX5/sMLwX5cPkP7inxlRD
+        rBGaVLFt9tfCc1ZuzliosAydiO18EoVodQ==
+X-Google-Smtp-Source: ABdhPJx0eXNtAX3bA2KoFAmvdhYvpSuaxwQz3i/aAvo77Rr8UlXpr4imdKYkriuLLMVI7PdD3GaHpQ==
+X-Received: by 2002:a17:902:b90c:: with SMTP id bf12mr15253811plb.61.1593472787396;
+        Mon, 29 Jun 2020 16:19:47 -0700 (PDT)
+Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
+        by smtp.gmail.com with ESMTPSA id 9sm623822pfh.160.2020.06.29.16.19.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 16:19:46 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: meson: add missing gxl rng clock
+Date:   Mon, 29 Jun 2020 16:19:44 -0700
+Message-Id: <159347276726.1911.12754465903057336311.b4-ty@baylibre.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200617125346.1163527-1-jbrunet@baylibre.com>
+References: <20200617125346.1163527-1-jbrunet@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <42dadde8-04c0-863b-651a-1959a3d85494@linuxfoundation.org>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 02:37:53PM -0600, Shuah Khan wrote:
->Hi Sasha,
->
->On 6/29/20 9:13 AM, Sasha Levin wrote:
->>
->>This is the start of the stable review cycle for the 5.7.7 release.
->>There are 265 patches in this series, all will be posted as a response
->>to this one.  If anyone has any issues with these being applied, please
->>let me know.
->>
->>Responses should be made by Wed 01 Jul 2020 03:14:48 PM UTC.
->>Anything received after that time might be too late.
->>
->>The whole patch series can be found in one patch at:
->>	https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/patch/?id=linux-5.7.y&id2=v5.7.6
->>
->
->Looks like patch naming convention has changed. My scripts look
->for the following convention Greg uses. Are you planning to use
->the above going forward? My scripts failed looking for the usual
->naming convention.
->
->The whole patch series can be found in one patch at:
->	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.6-rc1.gz
->or in the git tree and branch at:
->	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.7.y
->and the diffstat can be found below.
+On Wed, 17 Jun 2020 14:53:46 +0200, Jerome Brunet wrote:
+> The peripheral clock of the RNG is missing for gxl while it is present
+> for gxbb.
 
-Sorry for that. I was hoping to avoid using the signed upload mechanism
-Greg was using by simply pointing the links to automatically generated
-patches on cgit (the git.kernel.org interface).
+Applied, thanks!
 
-Would it be ok to change the pattern matching here? Something like this
-should work for both Greg's format and my own (and whatever may come
-next):
+[1/1] arm64: dts: meson: add missing gxl rng clock
+      commit: 95ca6f06dd4827ff63be5154120c7a8511cd9a41
 
-	grep -A1 "The whole patch series can be found in one patch at:" | tail -n1 | sed 's/\t//'
-
+Best regards,
 -- 
-Thanks,
-Sasha
+Kevin Hilman <khilman@baylibre.com>
