@@ -2,238 +2,59 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D129C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:15:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B5FBC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB2B520656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:15:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468915;
-	bh=ubijwkuJkctnjNxbNkBUjbZT4SUaWN7gs7zS2J9matA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GIZWzGliTMc5ms1NNCJiWPKaCkWsKihx01M2K9/0ynYR1h2XsPDSXH7sZsvUqXjBk
-	 XHuTpRVQPzjazGrOzhultZmS4FPDxGfFtVvfWrmDs3YXdQbhfGl9N/CE+JMg2eOXo6
-	 wzOKU/zvrt7cjM2m4jOH6LyDlZskUoyMalFLqAw0=
+	by mail.kernel.org (Postfix) with ESMTP id 5B89C206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:16:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729132AbgF2WPN (ORCPT
+        id S1730542AbgF2WQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:15:13 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40103 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726194AbgF2WPM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 18:15:12 -0400
-Received: by mail-wr1-f67.google.com with SMTP id h5so18140828wrc.7;
-        Mon, 29 Jun 2020 15:15:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zYhnczUzTZS10iZ74sMezWQhcuPfTZGdTDnOMiepOIE=;
-        b=Cpc7N6lWaJ7EEZ8Y3cBnBXktxml3tb9OIMA/bnGr65H3nk7zDc+U/mPGVHdkg2RHsN
-         djCQEs/oPZc2ybw4QTuBhNwCLET0v0rqD0O9oEh5oyzOKAiUfdlfhyRze9P9U/Z35I/u
-         2Dnib1ihKCWwqqqsK66wCD0+3+PGa6upMictQnHKiEw2mbvGPgZunantzmLi34XM32II
-         zS+YjbCNSSCzE5h6PoXDzi3M6DMqGutBxPKnlUQpXC6PhNP+RLvc/CvGa6MtxqUKxj2d
-         24twPq5ElMlGSbmAGWVg1NKS07sF5xSrrouR/YeoXqt7KM5ns89SwCmbXLYoCCjzdXwI
-         CfUQ==
-X-Gm-Message-State: AOAM531VWKQsqxTz1N1KTuVk72/zGNKkTiWBoY9ooe1szmaSxXXXivjI
-        vVy36ER1Be2bDUa7m2CRqRY=
-X-Google-Smtp-Source: ABdhPJxln+Q4PRlG9LzWShncK40XPHg8FBt2AkeOReE8CClowvXn/IVkw3Na/JM9MUZpiMx7L7621Q==
-X-Received: by 2002:a5d:4a42:: with SMTP id v2mr17555488wrs.33.1593468909267;
-        Mon, 29 Jun 2020 15:15:09 -0700 (PDT)
-Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
-        by smtp.gmail.com with ESMTPSA id v18sm1361530wrv.49.2020.06.29.15.15.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 15:15:08 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 22:15:07 +0000
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     Andres Beltran <lkmlabelt@gmail.com>, Wei Liu <wei.liu@kernel.org>,
-        Andres Beltran <t-mabelt@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andrea Parri <parri.andrea@gmail.com>
-Subject: Re: [PATCH v2 1/3] Drivers: hv: vmbus: Add vmbus_requestor data
- structure for VMBus hardening
-Message-ID: <20200629221507.2ubontmtpw36b4so@liuwe-devbox-debian-v2>
-References: <20200629200227.1518784-1-lkmlabelt@gmail.com>
- <20200629200227.1518784-2-lkmlabelt@gmail.com>
- <20200629204653.o6q3a2fufgq62pzo@liuwe-devbox-debian-v2>
- <CAGpZZ6sUXOnggeQyPfxkdK50=1AhTUqbvBvc2bEs4qwwk+rSPg@mail.gmail.com>
- <MW2PR2101MB1052D0B7884A022D2DB6BED2D76E0@MW2PR2101MB1052.namprd21.prod.outlook.com>
+        Mon, 29 Jun 2020 18:16:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52898 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726194AbgF2WQ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 18:16:27 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8AD920656;
+        Mon, 29 Jun 2020 22:16:26 +0000 (UTC)
+Date:   Mon, 29 Jun 2020 18:16:25 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     Paul McKenney <paulmck@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ring-buffer: speed up buffer resets by avoiding
+ synchronize_rcu for each CPU
+Message-ID: <20200629181625.4b87a63a@oasis.local.home>
+In-Reply-To: <20200625053403.2386972-1-npiggin@gmail.com>
+References: <20200625053403.2386972-1-npiggin@gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <MW2PR2101MB1052D0B7884A022D2DB6BED2D76E0@MW2PR2101MB1052.namprd21.prod.outlook.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 09:56:08PM +0000, Michael Kelley wrote:
-> From: Andres Beltran <lkmlabelt@gmail.com> Sent: Monday, June 29, 2020 2:51 PM
-> > 
-> > On Mon, Jun 29, 2020 at 4:46 PM Wei Liu <wei.liu@kernel.org> wrote:
-> > >
-> > > On Mon, Jun 29, 2020 at 04:02:25PM -0400, Andres Beltran wrote:
-> > > > Currently, VMbus drivers use pointers into guest memory as request IDs
-> > > > for interactions with Hyper-V. To be more robust in the face of errors
-> > > > or malicious behavior from a compromised Hyper-V, avoid exposing
-> > > > guest memory addresses to Hyper-V. Also avoid Hyper-V giving back a
-> > > > bad request ID that is then treated as the address of a guest data
-> > > > structure with no validation. Instead, encapsulate these memory
-> > > > addresses and provide small integers as request IDs.
-> > > >
-> > > > Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
-> > > > ---
-> > > > Changes in v2:
-> > > >       - Get rid of "rqstor" variable in __vmbus_open().
-> > > >
-> > > >  drivers/hv/channel.c   | 146 +++++++++++++++++++++++++++++++++++++++++
-> > > >  include/linux/hyperv.h |  21 ++++++
-> > > >  2 files changed, 167 insertions(+)
-> > > >
-> > > > diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
-> > > > index 3ebda7707e46..c89d57d0c2d2 100644
-> > > > --- a/drivers/hv/channel.c
-> > > > +++ b/drivers/hv/channel.c
-> > > > @@ -112,6 +112,70 @@ int vmbus_alloc_ring(struct vmbus_channel *newchannel,
-> > > >  }
-> > > >  EXPORT_SYMBOL_GPL(vmbus_alloc_ring);
-> > > >
-> > > > +/**
-> > > > + * request_arr_init - Allocates memory for the requestor array. Each slot
-> > > > + * keeps track of the next available slot in the array. Initially, each
-> > > > + * slot points to the next one (as in a Linked List). The last slot
-> > > > + * does not point to anything, so its value is U64_MAX by default.
-> > > > + * @size The size of the array
-> > > > + */
-> > > > +static u64 *request_arr_init(u32 size)
-> > > > +{
-> > > > +     int i;
-> > > > +     u64 *req_arr;
-> > > > +
-> > > > +     req_arr = kcalloc(size, sizeof(u64), GFP_KERNEL);
-> > > > +     if (!req_arr)
-> > > > +             return NULL;
-> > > > +
-> > > > +     for (i = 0; i < size - 1; i++)
-> > > > +             req_arr[i] = i + 1;
-> > > > +
-> > > > +     /* Last slot (no more available slots) */
-> > > > +     req_arr[i] = U64_MAX;
-> > > > +
-> > > > +     return req_arr;
-> > > > +}
-> > > > +
-> > > > +/*
-> > > > + * vmbus_alloc_requestor - Initializes @rqstor's fields.
-> > > > + * Slot at index 0 is the first free slot.
-> > > > + * @size: Size of the requestor array
-> > > > + */
-> > > > +static int vmbus_alloc_requestor(struct vmbus_requestor *rqstor, u32 size)
-> > > > +{
-> > > > +     u64 *rqst_arr;
-> > > > +     unsigned long *bitmap;
-> > > > +
-> > > > +     rqst_arr = request_arr_init(size);
-> > > > +     if (!rqst_arr)
-> > > > +             return -ENOMEM;
-> > > > +
-> > > > +     bitmap = bitmap_zalloc(size, GFP_KERNEL);
-> > > > +     if (!bitmap) {
-> > > > +             kfree(rqst_arr);
-> > > > +             return -ENOMEM;
-> > > > +     }
-> > > > +
-> > > > +     rqstor->req_arr = rqst_arr;
-> > > > +     rqstor->req_bitmap = bitmap;
-> > > > +     rqstor->size = size;
-> > > > +     rqstor->next_request_id = 0;
-> > > > +     spin_lock_init(&rqstor->req_lock);
-> > > > +
-> > > > +     return 0;
-> > > > +}
-> > > > +
-> > > > +/*
-> > > > + * vmbus_free_requestor - Frees memory allocated for @rqstor
-> > > > + * @rqstor: Pointer to the requestor struct
-> > > > + */
-> > > > +static void vmbus_free_requestor(struct vmbus_requestor *rqstor)
-> > > > +{
-> > > > +     kfree(rqstor->req_arr);
-> > > > +     bitmap_free(rqstor->req_bitmap);
-> > > > +}
-> > > > +
-> > > >  static int __vmbus_open(struct vmbus_channel *newchannel,
-> > > >                      void *userdata, u32 userdatalen,
-> > > >                      void (*onchannelcallback)(void *context), void *context)
-> > > > @@ -132,6 +196,12 @@ static int __vmbus_open(struct vmbus_channel *newchannel,
-> > > >       if (newchannel->state != CHANNEL_OPEN_STATE)
-> > > >               return -EINVAL;
-> > > >
-> > > > +     /* Create and init requestor */
-> > > > +     if (newchannel->rqstor_size) {
-> > > > +             if (vmbus_alloc_requestor(&newchannel->requestor, newchannel-
-> > >rqstor_size))
-> > > > +                     return -ENOMEM;
-> > > > +     }
-> > > > +
-> > >
-> > > Sorry for not noticing this in the last round: this infrastructure is
-> > > initialized conditionally but used unconditionally.
-> > >
-> > > I can think of two options here:
-> > >
-> > >   1. Mandate rqstor_size to be non-zero. Always initialize this
-> > >      infra.
-> > >   2. Modify vmbus_next_request_id and vmbus_request_addr to deal with
-> > >      uninitialized state.
-> > >
-> > > For #2, you can simply check rqstor->size _before_ taking the lock
-> > > (because it may be uninitialized, and the assumption is ->size will not
-> > > change during the channel's lifetime, hence no lock is needed) and
-> > > simply return the same value to the caller.
-> > >
-> > > Wei.
-> > 
-> > Right. I think option #2 would be preferable in this case, because #1 works
-> > if we had a default non-zero size for cases where rqstor_size has not been
-> > set to a non-zero value before calling vmbus_alloc_requestor(). For #2, what
-> > do you mean by "same value"? I think we would need to return
-> > VMBUS_RQST_ERROR if the size is 0, because otherwise we would be
-> > returning the same guest memory address which we don't want to expose.
-> > 
-> 
-> I'm not understanding the problem here.  Any VMbus driver that uses
-> this requestID allocation mechanism must set newchannel->rqstor_size
-> to a non-zero value.  But if a VMbus driver doesn't use the mechanism,
-> then newchannel->rqstor_size will default to zero, and the mechanism
-> will not be initialized for the channels used by that driver.  I think the
-> cleanup of the mechanism handles the case where it wasn't ever
-> initialized.  Or am I missing something?
-> 
+On Thu, 25 Jun 2020 15:34:03 +1000
+Nicholas Piggin <npiggin@gmail.com> wrote:
 
-It is not about the cleanup function -- it handles things correctly
-because kfree etc can cope with NULL pointers.
+> Batch these up so we disable all the per-cpu buffers first, then
+> synchronize_rcu() once, then reset each of the buffers. This brings
+> the time down to about 0.5s.
 
-I'm referring to vmbus_next_request_id and vmbus_request_addr. They are
-called in later patches regardless of whether the infrastructure is
-initialized or not.
+After applying this patch, running tools/testing/selftests/ftracetest
+went from 5 minutes and 35 seconds to 5 minutes 5 seconds to complete
+on my 4 core (8 with hyperthreading) machine! That's almost a 10% drop!
 
-That is problematic, because the first thing those functions do is to
-acquire the spinlock, which is not guaranteed to be initialized -- it is
-initialized in vmbus_alloc_requestor which is called conditionally.
+Thanks, I'm definitely applying this for the next merge window.
 
-Wei.
-
-> Michael
+-- Steve
