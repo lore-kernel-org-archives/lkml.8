@@ -2,179 +2,246 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 690D8C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10EB8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35C90214F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:28:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="qUKAnWVU"
+	by mail.kernel.org (Postfix) with ESMTP id EC72E214F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:28:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391150AbgF2V2F (ORCPT
+        id S2391154AbgF2V2J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:28:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38374 "EHLO
+        Mon, 29 Jun 2020 17:28:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729048AbgF2Smo (ORCPT
+        with ESMTP id S1729051AbgF2Smo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:42:44 -0400
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on0626.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe0c::626])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23802C00F825
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 05:46:23 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ja47IZu9KDpVUnSkAFFh+38J+ad0/gU4Z+y2ZwmWaWMtlct7huPp+OztlBm8VuJd5sFtJ0QNZJlxRT9Eyseh9xPJYkx6uS2OvLsoIrtbNcdIoqM6xrZZ3iIAikypr/OehprCBCE1wfyJ5zYM29izgSfeEF84hrG2nopKfd68sKRRhKbtQittQnXEfiZr0oAaNpLiyMboQiVLphUv8lUW8TA/QwHS/HQpapnRORNbX/6XzxUpQffe45qfwljxz57yEc2BTuNYdTEv7NUs084Hw1HzGfKg7Bj9+jmn0D0AGoMbbB2Bx6pgzc5x+z1vS4nx8+rgHdy8+gfY0ptRPhzojQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=E8cdwMFoRlKOj47TeeZy6z8D6mbAjAkAexETl2poQ+0=;
- b=KYSeZ5pUTrmKPLLIa1Ea5rXWNkTcGjtF6kOcMgEYE40I5C84JF/lrs/8pTskEfm2xiRDIcdbmPDxDPtGTgRKtteSyguRdBJUxes/YPRyklcgahd8SG8fGNv2/xUoD9Z+pBPKcAvLw7lzmJXjqFigW5gijO4sZcYt0rV2Z7tzNFaFdO2BUe9iKPffSL1e4tHfnsYEi0htQyTCZbeoxji6dGUzQqvY7d3coX3zn/9seM9sl6qZ8WYQrZnrxryM7Wq/TmSdyY9WlZmM9w6P1hNFDLWPt1zHJfDYRiOl3jBXWBE1YWfXa8J+24fxcfb1o8BL7gAAUcK0YMFLw4LcxKKBRQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=E8cdwMFoRlKOj47TeeZy6z8D6mbAjAkAexETl2poQ+0=;
- b=qUKAnWVUNFmQlunfBFB/2HNtPoCfRXduV4nXTJs5PRADFTV7CosTj6L+DQXtuTjCKB8AVyfhWSfron3JvRnKYFtpKnS2LtcHXPr0aVhbQboQXURjIEhCUkEleqioSIJ4x9E2te0B53kECr/w1bYmpX9+GqQVdk7SI7vqHABIy6w=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
- by DB6PR04MB3127.eurprd04.prod.outlook.com (2603:10a6:6:c::19) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.3131.26; Mon, 29 Jun 2020 12:46:18 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::1dab:b68c:e028:acb3]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::1dab:b68c:e028:acb3%6]) with mapi id 15.20.3131.027; Mon, 29 Jun 2020
- 12:46:17 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Arnd Bergmann <arnd@arndb.de>, Richard Zhu <hongxing.zhu@nxp.com>
-CC:     Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Stefan Agner <stefan.agner@toradex.com>,
-        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Leo Li <leoyang.li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Olof Johansson <olof@lixom.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH 2/3] arm64: defconfig: Select CONFIG_RESET_IMX7 by default
-Thread-Topic: [PATCH 2/3] arm64: defconfig: Select CONFIG_RESET_IMX7 by
- default
-Thread-Index: AQHWTf+gaUMc2TSOQkGGQmWO3bqF1KjvdP0AgAAA96CAAAXtAIAAAtMggAAHhYCAAANTMA==
-Date:   Mon, 29 Jun 2020 12:46:17 +0000
-Message-ID: <DB3PR0402MB39162138624705E5A296A047F56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1593425623-31810-1-git-send-email-Anson.Huang@nxp.com>
- <1593425623-31810-2-git-send-email-Anson.Huang@nxp.com>
- <CAK8P3a31coESQTssW1mndGuZ1pvxXSRRpY=XT1ZO+pkj9aabxg@mail.gmail.com>
- <DB3PR0402MB3916987E13C37013ACF59EB1F56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CAK8P3a3Ar3TnSuxpUUMj4NjCK0Qb0pD9cVbcFUcdeGa85m2fUQ@mail.gmail.com>
- <DB3PR0402MB3916192607A09C7061740087F56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <CAK8P3a1NoyMGNK90WzbgJ7opPbiVL8vwnMEuBeeNPNyvB+5sqQ@mail.gmail.com>
-In-Reply-To: <CAK8P3a1NoyMGNK90WzbgJ7opPbiVL8vwnMEuBeeNPNyvB+5sqQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: arndb.de; dkim=none (message not signed)
- header.d=none;arndb.de; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [183.192.13.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 015bb9e2-36e0-4757-70db-08d81c2a6acc
-x-ms-traffictypediagnostic: DB6PR04MB3127:
-x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB6PR04MB31276E2DF710836E5B1B4A7FF56E0@DB6PR04MB3127.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 044968D9E1
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: vjlA1muqV8EarOZmWIB1SOYmX8zLmM5ejWrt8CIlumWifJQJ0JALziFQ6/eH3X+4BOFwWQ4kNV49T3qMCBA+3g+splPpKqGh8mZVZorDD5fIJKM8TZiGI0qMIEBqusv7RC46y7JgFY2ZGxarozxIjNHhKLBFmmRGrUtd62KSltMTkgIlHk4f7a5Kp8RESbQii1KYJloptk/jIHHHEDZHlpCpa0vUVn+cej1F9QPk9MaHPZm/obxkOiFU4jo5ssj4t0Gz3aY9cBOfFNoymQJk43V+4B+QhYPWn1YNCdqiBGrghlHlYFbucnFvq5aqe9Pyb4C+ugS7FZTuasO1+3btlw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(366004)(396003)(136003)(39860400002)(83380400001)(86362001)(4326008)(478600001)(52536014)(55016002)(33656002)(66446008)(64756008)(66946007)(9686003)(66476007)(76116006)(66556008)(71200400001)(6636002)(316002)(7416002)(7696005)(110136005)(54906003)(26005)(5660300002)(8676002)(44832011)(6506007)(53546011)(186003)(2906002)(8936002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 06DnJQkxyykWx6SdNnTMsnW0gFdDUA6ATiuRDn0ONWxs2OSG2g/GoF1GN6571DdRHo83aRSqEuz2Pv8MtIJfBIdLRAY369rUHCxrU9WGXO1bZNTzTc4XWEuhkvoFyCyW53E7hTBeeWQGrauKss2Eo+rEMg54CNw+YUp6mGBU2s99slxYjMNvZc0/6mfgAUaaCv5AmJ4t8jKVQPPD6jtz4CLChbHo/AF/CynfI8BOpN7T6P1gwNkERAsaz7uPRbPkyztMCtkdxwX8OHm4mH7h8WXIqwaA71f5z5KtvfAM+dVe5ffLeLsWLHgq+ZdWdVRDCyikiWVHRdDFiQSt9TqoRVrSR5e/NIhko6rpQLH2k7sTxDALLp71ogzYcnj8Kb2JBhk6r1x64/MzqjI2J2NiHgk3diyoeco89V9vG5e+4v2kM7jL5h/3BWHZumgEa5+GYzvjKPymyBrK3K9czV3g8JFP76dyEvI4Me7MwFZeDbO78mg3zlHelTiBoCeWfIeQ
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06521C033C0F;
+        Mon, 29 Jun 2020 11:26:31 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jpyU8-002Dsy-Jp; Mon, 29 Jun 2020 18:26:28 +0000
+From:   Al Viro <viro@ZenIV.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        David Miller <davem@davemloft.net>,
+        Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>
+Subject: [PATCH 01/41] introduction of regset ->get() wrappers, switching ELF coredumps to those
+Date:   Mon, 29 Jun 2020 19:25:48 +0100
+Message-Id: <20200629182628.529995-1-viro@ZenIV.linux.org.uk>
+X-Mailer: git-send-email 2.25.4
+In-Reply-To: <20200629182349.GA2786714@ZenIV.linux.org.uk>
+References: <20200629182349.GA2786714@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB3PR0402MB3916.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 015bb9e2-36e0-4757-70db-08d81c2a6acc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jun 2020 12:46:17.7823
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: GqSqm4InZ5Q3y+YGHdz0idU8RCkbP2M49NTpPerMlSs+p8P396asatnhWyctqJHrl33hqhWuqc2QyLrMSJShzQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR04MB3127
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIEFybmQNCg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDIvM10gYXJtNjQ6IGRlZmNvbmZpZzog
-U2VsZWN0IENPTkZJR19SRVNFVF9JTVg3IGJ5DQo+IGRlZmF1bHQNCj4gDQo+IE9uIE1vbiwgSnVu
-IDI5LCAyMDIwIGF0IDI6MDkgUE0gQW5zb24gSHVhbmcgPGFuc29uLmh1YW5nQG54cC5jb20+DQo+
-IHdyb3RlOg0KPiA+ID4NCj4gPiA+IEl0IHNvdW5kcyBsaWtlIHlvdXIgcGF0Y2ggMS8zIGlzIG5v
-dCByZWFkeSB0byBiZSBtZXJnZWQgdGhlbi4NCj4gPiA+DQo+ID4gPiBQbGVhc2UgbWFrZSBzdXJl
-IHRoYXQgbG9hZGluZyBpdCBsYXRlciBkb2VzIG5vdCBicmVhayBvdGhlciBkcml2ZXJzDQo+ID4g
-PiB0aGF0IGRlcGVuZCBvbiBpdC4gT3RoZXIgZHJpdmVycyBkb24ndCBoYXZlIHRvIGJlIGFibGUg
-dG8gZGVhbCB3aXRoDQo+ID4gPiBtaXNzaW5nIGRlcGVuZGVuY2llcyBpZiB0aGlzIG9uZSBpcyBu
-ZXZlciBsb2FkZWQgb3IgZGlzYWJsZWQgYXQNCj4gPiA+IGNvbXBpbGUtdGltZS4gSG93ZXZlciBi
-ZWZvcmUgeW91IG1ha2UgaXQgcG9zc2libGUgdG8gdHVybiB0aGlzIGludG8NCj4gPiA+IGEgbG9h
-ZGFibGUgbW9kdWxlLCBhbnl0aGluZyB0aGF0IGRlcGVuZHMgb24gaXQgbXVzdCBiZSBhYmxlIHRv
-IGRlYWwNCj4gPiA+IHdpdGggdGhlIG1vZHVsZXMgZ2V0dGluZyBsb2FkZWQgaW4gYSByYW5kb20g
-b3JkZXIgZmlyc3QuDQo+ID4gPg0KPiA+IEkgc2VhcmNoZWQgYWxsIGRyaXZlciB3aGljaCB1c2Vz
-IHRoaXMgcmVzZXQgZHJpdmVyLCBsb29rcyBsaWtlIE9OTFkNCj4gPiBpLk1YNiBQQ0llIGlzIHVz
-aW5nIGl0IGFuZCBpdCBPTkxZIHN1cHBvcnRzIGJ1aWx0LWluLg0KPiANCj4gT2ssIHRoYW5rcyBm
-b3IgcmVzZWFyY2hpbmcgdGhpcy4NCj4gDQo+ID4gYW5kIGluc2lkZSB0aGlzIGRyaXZlciwgaXQg
-ZG9lcyBOT1Qgc3VwcG9ydCBkZWZlciBwcm9iZSBldGMuLCBzaW5jZSBJDQo+ID4gYW0gTk9UIHN1
-cmUgd2hlbiB0aGlzIFBDSWUgZHJpdmVyIHdpbGwgYWRkIG1vZHVsZSBzdXBwb3J0LCBzbyBkbyB5
-b3UNCj4gPiB0aGluayBpZiBJIGNhbiBtYWtlIFBDSV9JTVg2IHNlbGVjdCBSRVNFVF9JTVg3LCB0
-aGVuIGl0IHdvbid0IGJyZWFrDQo+ID4gdGhlIFBDSWUgZnVuY3Rpb24gZXZlbg0KPiA+IFJFU0VU
-X0lNWDcgaXMgc2V0IHRvID1tIGluIGRlZmNvbmZpZywgYXMgd2hlbiBQQ0lfSU1YNiBpcyBlbmFi
-bGVkIGFzDQo+ID4gPXksIFJFU0VUX0lNWDcgd2lsbCBiZSBhbHNvID15Lg0KPiANCj4gWWVzLCBJ
-IHRoaW5rIHRoaXMgY2FuIHdvcmsgYXMgYSBzaG9ydC10ZXJtIHdvcmthcm91bmQsIHRob3VnaCBp
-ZGVhbGx5IHRoZSBQQ0llDQo+IGRyaXZlciB3b3VsZCBhbHNvIGJlY29tZSBhIGxvYWRhYmxlIG1v
-ZHVsZSBhbmQgYWxzbyBzdXBwb3J0IGRlZmVycmVkDQo+IHByb2JpbmcuDQo+IA0KPiBIYXZpbmcg
-bG9hZGFibGUgUENJZSBkcml2ZXJzIGhhcyB0cmFkaXRpb25hbGx5IGJlZW4gcHJvYmxlbWF0aWMg
-aW4gTGludXgsIGJ1dA0KPiBSb2IgSGVycmluZyBoYXMgcmVjZW50bHkgaW1wcm92ZWQgdGhpcyBp
-biB0aGUgc2VyaWVzIGNvbnRhaW5pbmcgcGF0Y2gNCj4gMGM1OWMwNmE3YzkwICgiUENJOiBob3N0
-LWdlbmVyaWM6IFN1cHBvcnQgYnVpbGRpbmcgYXMgbW9kdWxlcyIpLCB3aGljaCB3YXMNCj4gYWxz
-byBpbnRlbmRlZCB0byBoZWxwIHdpdGggQW5kcm9pZCBHS0kuDQo+IA0KPiBBcyBpLk1YIHVzZXMg
-dGhlIGRlc2lnbndhcmUgUENJIGNvcmUgc3VwcG9ydCwgdGhpcyBtYXkgcmVxdWlyZSBzb21lIG1v
-cmUNCj4gY2hhbmdlcyBpbiBQQ0lFX0RXIGJlZm9yZSB0aGUgaS5NWCBzcGVjaWZpYyBwYXJ0IGNh
-biBiZSBhIGxvYWRhYmxlIG1vZHVsZSwNCj4gYnV0IGl0IHNob3VsZCBubyBsb25nZXIgcmVxdWly
-ZSBjaGFuZ2VzIHRvIHRoZSBQQ0kgY29yZSBjb2RlLiBUdXJuaW5nIHRoZSBkcml2ZXINCj4gaW50
-byBhIGxvYWRhYmxlIG1vZHVsZSBpcyBwcm9iYWJseSBub3QgZXZlbiB0aGF0IGhhcmQsIGJ1dCBt
-YWtpbmcgaXQgcG9zc2libGUNCj4gdG8gdW5sb2FkIGRlZmluaXRlbHkgcmVxdWlyZXMgYWRkaW5n
-IGEgcHJvcGVyIC5yZW1vdmUgY2FsbGJhY2sgdG8gcHJvcGVybHkNCj4gdW5yZWdpc3RlciB0aGUg
-UENJZSBob3N0IGJyaWRnZS4NCj4gDQo+IEkgYWxzbyBzZWUgYSBERUNMQVJFX1BDSV9GSVhVUCgp
-IGFuZCBhIGZhdWx0IGhhbmRsZXIgaG9vayBpbiB0aGUgcGNpLWlteDYuYw0KPiBkcml2ZXIsIHdo
-aWNoIHByb2JhYmx5IG5lZWQgdG8gZ2V0IG1vdmVkIGludG8gYSBzZXBhcmF0ZSBidWlsdC1pbiBm
-aWxlIHdpdGggYQ0KPiBmZXcgY2hhbmdlcy4NCj4gDQo+IEFuZCB0aGVuIEkgbm90aWNlZCBhIGJ1
-ZyBpbiB0aGUgZHJpdmVyOiBpdCBob29rcyB0aGUgYWJvcnQgaGFuZGxlciBmcm9tIGFuDQo+IGlu
-aXRjYWxsIHdoZW5ldmVyIHRoZSBkcml2ZXIgaXMgYnVpbHQgaW50byB0aGUga2VybmVsLCByZWdh
-cmRsZXNzIG9mIHdoaWNoDQo+IG1hY2hpbmUgaXQgaXMgYWN0dWFsbHkgcnVubmluZyBvbiENCj4g
-DQo+IFJlZ2FyZGluZyBkZWZlcnJlciBwcm9iaW5nLCB0aGUgUENJZSBob3N0IGN1cnJlbnRseSBy
-ZWxpZXMgb24gdGhlIGNsayBjb250cm9sbGVyLA0KPiB0aGUgcmVndWxhdG9yIGFuZCAob24gaW14
-N2QpIHRoZSByZXNldCBkcml2ZXIgdG8gYmUgcHJvYmVkIGZpcnN0LiBJIHRoaW5rIG1ha2luZw0K
-PiBpdCBzdXBwb3J0IGRlZmVycmVkIHByb2JpbmcgZm9yIGFsbCB0aHJlZSBzaG91bGQgYmUgc3Ry
-YWlnaHRmb3J3YXJkLCBtb3N0DQo+IGltcG9ydGFudGx5IHRoaXMgbWVhbnMgbm90IHByaW50aW5n
-IGFuIGVycm9yIGFuZCByZXR1cm5pbmcgLUVQUk9CRV9ERUZFUg0KPiB3aGVuIG5vdCBhbGwgZGVw
-ZW5kZW5jaWVzIGFyZSB0aGVyZSB5ZXQuDQo+IA0KDQpUaGFua3MgZm9yIGRldGFpbGVkIGluZm8g
-YWJvdXQgUENJIGxvYWRhYmxlIG1vZHVsZSBzdXBwb3J0LCBJIGNvcHkgb3VyIFBDSSBvd25lcg0K
-aGVyZSB0byBoZWxwIG9uIHRoZSBzdXBwb3J0IG9mIGkuTVg2IFBDSWUgZHJpdmVyIHRvIHN1cHBv
-cnQgbG9hZGFibGUgbW9kdWxlLiBNZWFud2hpbGUsDQppbiB0aGlzIHBhdGNoIHNlcmllcywgSSB3
-aWxsIGFkZCB0aGUgc2hvcnQtdGVybSB3b3JrYXJvdW5kIGFzIEkgZGVzY3JpYmVkIHVwcGVyLCBh
-bmQgdGhlbiByZW1vdmUNCnRoaXMgc2hvcnQtdGVybSB3b3JrYXJvdW5kIGVpdGhlciBpbiB0aGUg
-aS5NWDYgUENJIGRyaXZlcidzIGxvYWRhYmxlIG1vZHVsZSBzdXBwb3J0IHBhdGNoIGxhdGVyDQpv
-ciBhZGRpbmcgYSBuZXcgcGF0Y2ggaWYgbmVjZXNzYXJ5Lg0KDQpUaGFua3MsDQpBbnNvbg0K
+From: Al Viro <viro@zeniv.linux.org.uk>
+
+Two new helpers: given a process and regset, dump into a buffer.
+regset_get() takes a buffer and size, regset_get_alloc() takes size
+and allocates a buffer.
+
+Return value in both cases is the amount of data actually dumped in
+case of success or -E...  on error.
+
+In both cases the size is capped by regset->n * regset->size, so
+->get() is called with offset 0 and size no more than what regset
+expects.
+
+binfmt_elf.c callers of ->get() are switched to using those; the other
+caller (copy_regset_to_user()) will need some preparations to switch.
+
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+---
+ fs/binfmt_elf.c        | 54 ++++++++++++++++++++++++--------------------------
+ include/linux/regset.h |  9 +++++++++
+ kernel/Makefile        |  2 +-
+ kernel/regset.c        | 54 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 90 insertions(+), 29 deletions(-)
+ create mode 100644 kernel/regset.c
+
+diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+index 9fe3b51c116a..80743b8957c9 100644
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -1821,7 +1821,7 @@ static int fill_thread_core_info(struct elf_thread_core_info *t,
+ 				 long signr, size_t *total)
+ {
+ 	unsigned int i;
+-	unsigned int regset0_size = regset_size(t->task, &view->regsets[0]);
++	unsigned int regset0_size;
+ 
+ 	/*
+ 	 * NT_PRSTATUS is the one special case, because the regset data
+@@ -1830,8 +1830,10 @@ static int fill_thread_core_info(struct elf_thread_core_info *t,
+ 	 * We assume that regset 0 is NT_PRSTATUS.
+ 	 */
+ 	fill_prstatus(&t->prstatus, t->task, signr);
+-	(void) view->regsets[0].get(t->task, &view->regsets[0], 0, regset0_size,
+-				    &t->prstatus.pr_reg, NULL);
++	regset0_size = regset_get(t->task, &view->regsets[0],
++		   sizeof(t->prstatus.pr_reg), &t->prstatus.pr_reg);
++	if (regset0_size < 0)
++		return 0;
+ 
+ 	fill_note(&t->notes[0], "CORE", NT_PRSTATUS,
+ 		  PRSTATUS_SIZE(t->prstatus, regset0_size), &t->prstatus);
+@@ -1846,32 +1848,28 @@ static int fill_thread_core_info(struct elf_thread_core_info *t,
+ 	 */
+ 	for (i = 1; i < view->n; ++i) {
+ 		const struct user_regset *regset = &view->regsets[i];
++		int note_type = regset->core_note_type;
++		bool is_fpreg = note_type == NT_PRFPREG;
++		void *data;
++		int ret;
++
+ 		do_thread_regset_writeback(t->task, regset);
+-		if (regset->core_note_type && regset->get &&
+-		    (!regset->active || regset->active(t->task, regset) > 0)) {
+-			int ret;
+-			size_t size = regset_size(t->task, regset);
+-			void *data = kzalloc(size, GFP_KERNEL);
+-			if (unlikely(!data))
+-				return 0;
+-			ret = regset->get(t->task, regset,
+-					  0, size, data, NULL);
+-			if (unlikely(ret))
+-				kfree(data);
+-			else {
+-				if (regset->core_note_type != NT_PRFPREG)
+-					fill_note(&t->notes[i], "LINUX",
+-						  regset->core_note_type,
+-						  size, data);
+-				else {
+-					SET_PR_FPVALID(&t->prstatus,
+-							1, regset0_size);
+-					fill_note(&t->notes[i], "CORE",
+-						  NT_PRFPREG, size, data);
+-				}
+-				*total += notesize(&t->notes[i]);
+-			}
+-		}
++		if (!note_type) // not for coredumps
++			continue;
++		if (regset->active && regset->active(t->task, regset) <= 0)
++			continue;
++
++		ret = regset_get_alloc(t->task, regset, ~0U, &data);
++		if (ret < 0)
++			continue;
++
++		if (is_fpreg)
++			SET_PR_FPVALID(&t->prstatus, 1, regset0_size);
++
++		fill_note(&t->notes[i], is_fpreg ? "CORE" : "LINUX",
++			  note_type, ret, data);
++
++		*total += notesize(&t->notes[i]);
+ 	}
+ 
+ 	return 1;
+diff --git a/include/linux/regset.h b/include/linux/regset.h
+index 46d6ae68c455..968a032922d5 100644
+--- a/include/linux/regset.h
++++ b/include/linux/regset.h
+@@ -353,6 +353,15 @@ static inline int user_regset_copyin_ignore(unsigned int *pos,
+ 	return 0;
+ }
+ 
++extern int regset_get(struct task_struct *target,
++		      const struct user_regset *regset,
++		      unsigned int size, void *data);
++
++extern int regset_get_alloc(struct task_struct *target,
++			    const struct user_regset *regset,
++			    unsigned int size,
++			    void **data);
++
+ /**
+  * copy_regset_to_user - fetch a thread's user_regset data into user memory
+  * @target:	thread to be examined
+diff --git a/kernel/Makefile b/kernel/Makefile
+index f3218bc5ec69..e6e03380a0f1 100644
+--- a/kernel/Makefile
++++ b/kernel/Makefile
+@@ -10,7 +10,7 @@ obj-y     = fork.o exec_domain.o panic.o \
+ 	    extable.o params.o \
+ 	    kthread.o sys_ni.o nsproxy.o \
+ 	    notifier.o ksysfs.o cred.o reboot.o \
+-	    async.o range.o smpboot.o ucount.o
++	    async.o range.o smpboot.o ucount.o regset.o
+ 
+ obj-$(CONFIG_MODULES) += kmod.o
+ obj-$(CONFIG_MULTIUSER) += groups.o
+diff --git a/kernel/regset.c b/kernel/regset.c
+new file mode 100644
+index 000000000000..6b39fa0993ec
+--- /dev/null
++++ b/kernel/regset.c
+@@ -0,0 +1,54 @@
++// SPDX-License-Identifier: GPL-2.0-only
++#include <linux/export.h>
++#include <linux/slab.h>
++#include <linux/regset.h>
++
++static int __regset_get(struct task_struct *target,
++			const struct user_regset *regset,
++			unsigned int size,
++			void **data)
++{
++	void *p = *data, *to_free = NULL;
++	int res;
++
++	if (!regset->get)
++		return -EOPNOTSUPP;
++	if (size > regset->n * regset->size)
++		size = regset->n * regset->size;
++	if (!p) {
++		to_free = p = kzalloc(size, GFP_KERNEL);
++		if (!p)
++			return -ENOMEM;
++	}
++	res = regset->get(target, regset, 0, size, p, NULL);
++	if (unlikely(res < 0)) {
++		kfree(to_free);
++		return res;
++	}
++	*data = p;
++	if (regset->get_size) { // arm64-only kludge, will go away
++		unsigned max_size = regset->get_size(target, regset);
++		if (size > max_size)
++			size = max_size;
++	}
++	return size;
++}
++
++int regset_get(struct task_struct *target,
++	       const struct user_regset *regset,
++	       unsigned int size,
++	       void *data)
++{
++	return __regset_get(target, regset, size, &data);
++}
++EXPORT_SYMBOL(regset_get);
++
++int regset_get_alloc(struct task_struct *target,
++		     const struct user_regset *regset,
++		     unsigned int size,
++		     void **data)
++{
++	*data = NULL;
++	return __regset_get(target, regset, size, data);
++}
++EXPORT_SYMBOL(regset_get_alloc);
+-- 
+2.11.0
+
