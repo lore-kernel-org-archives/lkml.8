@@ -2,50 +2,52 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E13AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E51C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:53:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BB6820760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:53:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2D7E206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:53:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467585;
-	bh=h1exmCBpP4dvGL6YomoSTtUxadSu5YsmIGfU3pB2C+U=;
+	s=default; t=1593467590;
+	bh=Rd/7JZIi1jGJQMAxjhbt+AKP4whl0MEM7/J879v14yo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h1ZgzU0J0hLy7pAU6SEjL7AiOo99TibndUpzOiK3AOLTI4T8Yhiu+0CNuBrrYqbuk
-	 eiokK2rsW+qcRB8q1ypYg0VL/XRWd7BmSmsErQy4edwmyAh60nyGJEQIyi3RweG3MB
-	 lTMLYJVVPpfnUEpyfumvNVqzbIA2+F+YLckpsm24=
+	b=xkSuHklOduBPVKXJMLINf+7A5b+AYyk49L0kkhWNP4lfNpixUvzSnfVp9KrSjYqhe
+	 NAYmv4UWUUbs86HGhTbFfbvKwvtsnLT91yVoxSQuDJknyDtI1X9CygqH0mREKAs0sE
+	 qhrhcgwYtvF6HIqMQiObjcH1ddHWUK/ru+Z9koo0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391375AbgF2VxD (ORCPT
+        id S1727961AbgF2Vw7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:53:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56886 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:52:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726639AbgF2Sfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726631AbgF2Sfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CF7D2469F;
-        Mon, 29 Jun 2020 15:19:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32055246EC;
+        Mon, 29 Jun 2020 15:20:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443995;
-        bh=h1exmCBpP4dvGL6YomoSTtUxadSu5YsmIGfU3pB2C+U=;
+        s=default; t=1593444033;
+        bh=Rd/7JZIi1jGJQMAxjhbt+AKP4whl0MEM7/J879v14yo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yj6lLEgdnKqLpoOrkFRtTBimi/I0Lb1E+oPB6m+Pujc3awe15W//qyXY9PeXBQQ4r
-         xYxh9v70rWoL4NZd1WR6Led9tAYu7I2K53j/YX/AtscN9Zd4P+Bzkb9Excy4tOFDtj
-         nAepcD7hoaHfVYFYwMhAMgqa6TERCE14L8wAwuFQ=
+        b=B6rxsKY+0+NRkT+6UUVpkqofqxIdygHN18Uu9OAkgLfiXi6S1vzh55vVaL6XmPEsr
+         d8nt/wfHU/XcinXyz81PnJKjgqlVPJNOke1Sp8D6ni9UcBpi59HnGmOYj5/TgYsg7o
+         UjnuWqj5a+rJkGr49l7aDX64Tc6EvYyfZnN23cRU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oskar Holmlund <oskar@ohdata.se>, Tony Lindgren <tony@atomide.com>,
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Maxime Coquelin <maxime.coquelin@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 100/265] ARM: dts: Fix am33xx.dtsi ti,sysc-mask wrong softreset flag
-Date:   Mon, 29 Jun 2020 11:15:33 -0400
-Message-Id: <20200629151818.2493727-101-sashal@kernel.org>
+Subject: [PATCH 5.7 141/265] Revert "KVM: VMX: Micro-optimize vmexit time when not exposing PMU"
+Date:   Mon, 29 Jun 2020 11:16:14 -0400
+Message-Id: <20200629151818.2493727-142-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -64,35 +66,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oskar Holmlund <oskar@ohdata.se>
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-[ Upstream commit 9f872f924545324a06fa216ad38132804c20f2db ]
+[ Upstream commit 49097762fa405cdc16f8f597f6d27c078d4a31e9 ]
 
-AM335x TRM: Figure 16-23 define sysconfig register and soft_reset
-are in first position corresponding to SYSC_OMAP4_SOFTRESET defined
-in ti-sysc.h.
+Guest crashes are observed on a Cascade Lake system when 'perf top' is
+launched on the host, e.g.
 
-Fixes: 0782e8572ce4 ("ARM: dts: Probe am335x musb with ti-sysc")
-Signed-off-by: Oskar Holmlund <oskar@ohdata.se>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+ BUG: unable to handle kernel paging request at fffffe0000073038
+ PGD 7ffa7067 P4D 7ffa7067 PUD 7ffa6067 PMD 7ffa5067 PTE ffffffffff120
+ Oops: 0000 [#1] SMP PTI
+ CPU: 1 PID: 1 Comm: systemd Not tainted 4.18.0+ #380
+...
+ Call Trace:
+  serial8250_console_write+0xfe/0x1f0
+  call_console_drivers.constprop.0+0x9d/0x120
+  console_unlock+0x1ea/0x460
+
+Call traces are different but the crash is imminent. The problem was
+blindly bisected to the commit 041bc42ce2d0 ("KVM: VMX: Micro-optimize
+vmexit time when not exposing PMU"). It was also confirmed that the
+issue goes away if PMU is exposed to the guest.
+
+With some instrumentation of the guest we can see what is being switched
+(when we do atomic_switch_perf_msrs()):
+
+ vmx_vcpu_run: switching 2 msrs
+ vmx_vcpu_run: switching MSR38f guest: 70000000d host: 70000000f
+ vmx_vcpu_run: switching MSR3f1 guest: 0 host: 2
+
+The current guess is that PEBS (MSR_IA32_PEBS_ENABLE, 0x3f1) is to blame.
+Regardless of whether PMU is exposed to the guest or not, PEBS needs to
+be disabled upon switch.
+
+This reverts commit 041bc42ce2d0efac3b85bbb81dea8c74b81f4ef9.
+
+Reported-by: Maxime Coquelin <maxime.coquelin@redhat.com>
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Message-Id: <20200619094046.654019-1-vkuznets@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/am33xx.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/vmx/vmx.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-index be76ded7e4c0c..ed6634d34c3c7 100644
---- a/arch/arm/boot/dts/am33xx.dtsi
-+++ b/arch/arm/boot/dts/am33xx.dtsi
-@@ -335,7 +335,7 @@
- 			      <0x47400010 0x4>;
- 			reg-names = "rev", "sysc";
- 			ti,sysc-mask = <(SYSC_OMAP4_FREEEMU |
--					 SYSC_OMAP2_SOFTRESET)>;
-+					 SYSC_OMAP4_SOFTRESET)>;
- 			ti,sysc-midle = <SYSC_IDLE_FORCE>,
- 					<SYSC_IDLE_NO>,
- 					<SYSC_IDLE_SMART>;
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index d7aa0dfab8bbd..8f59f8c8fd05d 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -6575,8 +6575,7 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+ 
+ 	pt_guest_enter(vmx);
+ 
+-	if (vcpu_to_pmu(vcpu)->version)
+-		atomic_switch_perf_msrs(vmx);
++	atomic_switch_perf_msrs(vmx);
+ 	atomic_switch_umwait_control_msr(vmx);
+ 
+ 	if (enable_preemption_timer)
 -- 
 2.25.1
 
