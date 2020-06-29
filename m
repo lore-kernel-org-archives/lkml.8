@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E78C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBA02C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E21B206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:09:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4004206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:09:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593464964;
-	bh=NxoIYNIIbfOJgNLjpRrH+E1LwpRHKvafmzUGCZq7qzo=;
+	s=default; t=1593464966;
+	bh=MuCfBuUOeCkgAih9ZNGzeYuaIqMHmHR6h4iTxQ1d8FM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jngwVsQbncw2jX9e1cmFoAaVd6DD1bTv9n/Vxq1tuh7PVa6PD9Zc090W0bP0Tnhno
-	 tSnpfeyQ7SnAFhTdjmopmehNNPvhIJsexS9rSrRRzIPMem6f01dqaR4A1HVsDy9rye
-	 04Qr05QHkVW0+nxfCJhIh4CC+oquAKj6K8r6tXow=
+	b=N7BhaMLE/6qu+9A66bU88OHDrdPRIuJYukLIdloDe0ixLOhg27skp4Y3P0s6sfs86
+	 bsF7DWkE3RHhE/c9rDyadkyuu704zj/MeAKgxGDaZlllscJiCWwsjtLO7Ro/0RdtcH
+	 rj1Zy3jyuxDWM0968SzVjDsM5ladJHronQYoej/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390464AbgF2VJX (ORCPT
+        id S2390470AbgF2VJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:09:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45480 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:09:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730325AbgF2TAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730312AbgF2TAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:00:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BAE8254D7;
-        Mon, 29 Jun 2020 15:53:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67E2D2551A;
+        Mon, 29 Jun 2020 15:54:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446033;
-        bh=NxoIYNIIbfOJgNLjpRrH+E1LwpRHKvafmzUGCZq7qzo=;
+        s=default; t=1593446079;
+        bh=MuCfBuUOeCkgAih9ZNGzeYuaIqMHmHR6h4iTxQ1d8FM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GEy9ZfJPVLD4lS53WHT+b+SNQNacN3vIjZvUwGNTolNxpDI08vSnUFdwWeb9HsBzv
-         amC+7iBqiBRz7cVZHP0BbsaZL0a0+C1LwsE3ryAS/F27HUSPNoxTbyJ5juuuMZySRi
-         MAOe7gxhTY42PxPTlBmuYt25KfDcKBsm+jJHIJjk=
+        b=NviEmFRv3IL1IQ7f0NvdW7FG+0TZot4ympcz1rI9EZDFB2RKRlALzSdd+7jaa6kNW
+         ay9cw0GOv6cazAgOY7rQIx5uGwTqZXoUXZIL14q5U7qM8t9rJ0o3gJkcq8XTUWqyyf
+         6kZcufoH1dM/AYm5UfyasMVzTMJ54mWW0McQ1wXw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 038/135] tty: n_gsm: Fix bogus i++ in gsm_data_kick
-Date:   Mon, 29 Jun 2020 11:51:32 -0400
-Message-Id: <20200629155309.2495516-39-sashal@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>, netdev@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 075/135] sched/rt, net: Use CONFIG_PREEMPTION.patch
+Date:   Mon, 29 Jun 2020 11:52:09 -0400
+Message-Id: <20200629155309.2495516-76-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -65,51 +68,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-[ Upstream commit 4dd31f1ffec6c370c3c2e0c605628bf5e16d5c46 ]
+[ Upstream commit 2da2b32fd9346009e9acdb68c570ca8d3966aba7 ]
 
-When submitting the previous fix "tty: n_gsm: Fix waking up upper tty
-layer when room available". It was suggested to switch from a while to
-a for loop, but when doing it, there was a remaining bogus i++.
+CONFIG_PREEMPTION is selected by CONFIG_PREEMPT and by CONFIG_PREEMPT_RT.
+Both PREEMPT and PREEMPT_RT require the same functionality which today
+depends on CONFIG_PREEMPT.
 
-This patch removes this i++ and also reorganizes the code making it more
-compact.
+Update the comment to use CONFIG_PREEMPTION.
 
-Fixes: e1eaea46bb40 ("tty: n_gsm line discipline")
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Link: https://lore.kernel.org/r/20200518084517.2173242-3-gregory.clement@bootlin.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: David S. Miller <davem@davemloft.net>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: netdev@vger.kernel.org
+Link: https://lore.kernel.org/r/20191015191821.11479-22-bigeasy@linutronix.de
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/n_gsm.c | 14 +++-----------
- 1 file changed, 3 insertions(+), 11 deletions(-)
+ net/core/dev.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
-index 0020de4fe66f5..9b2beada2ff3b 100644
---- a/drivers/tty/n_gsm.c
-+++ b/drivers/tty/n_gsm.c
-@@ -719,17 +719,9 @@ static void gsm_data_kick(struct gsm_mux *gsm, struct gsm_dlci *dlci)
- 		} else {
- 			int i = 0;
- 
--			for (i = 0; i < NUM_DLCI; i++) {
--				struct gsm_dlci *dlci;
--
--				dlci = gsm->dlci[i];
--				if (dlci == NULL) {
--					i++;
--					continue;
--				}
--
--				tty_port_tty_wakeup(&dlci->port);
--			}
-+			for (i = 0; i < NUM_DLCI; i++)
-+				if (gsm->dlci[i])
-+					tty_port_tty_wakeup(&gsm->dlci[i]->port);
- 		}
- 	}
- }
+diff --git a/net/core/dev.c b/net/core/dev.c
+index 38e4977eb09d7..775c8dfeff848 100644
+--- a/net/core/dev.c
++++ b/net/core/dev.c
+@@ -865,7 +865,7 @@ EXPORT_SYMBOL(dev_get_by_index);
+  *
+  *	The use of raw_seqcount_begin() and cond_resched() before
+  *	retrying is required as we want to give the writers a chance
+- *	to complete when CONFIG_PREEMPT is not set.
++ *	to complete when CONFIG_PREEMPTION is not set.
+  */
+ int netdev_get_name(struct net *net, char *name, int ifindex)
+ {
 -- 
 2.25.1
 
