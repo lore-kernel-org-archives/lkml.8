@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF39C433E6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86987C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:04:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDAB52065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CF932065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:04:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468264;
-	bh=iQMfhhMDR9SqAjMN20ohl0Z5Hao8YRg59GgPwdq2KrY=;
+	s=default; t=1593468268;
+	bh=7NDwsqB7TgbdnkZ66qpsR+9t4LAP6VSLYc1GeJ1+DD0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PIWMIizTmzzSw24PCDdFrN424WKBfiXsp9bZgg2Yp+A1OCPac1XAOsmb4uLHELn2T
-	 MNj6lpt5m+kHfXOEg6DyG4k0hLr47gAGF4nEEqmPblfJ5H4KXy2YDR0UnZAPSnYpwB
-	 ZJkXh530Te+ssV3ZaNU0nTNvc/hYuegoOzDKnWUw=
+	b=TNvmn9d6aNvm8GfL2o4vtC34qkRjsDdw28gu2l/+0HpI5Jjwukuv8+uQngRLyzY3y
+	 ygzVfVKO8r/VtRkD0lxv/bs8Cv2OK8i37n/rEkB1ipjdjYHZupeHbYobUZKT1nSFl3
+	 BaNeechRr//iwp+o9VRwmAV/7m9jSycy9Fe2gb5E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391696AbgF2WEX (ORCPT
+        id S1731101AbgF2WE1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:04:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56792 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:04:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726191AbgF2SfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726196AbgF2SfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1EC9246D3;
-        Mon, 29 Jun 2020 15:20:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C95FC2405C;
+        Mon, 29 Jun 2020 15:18:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444026;
-        bh=iQMfhhMDR9SqAjMN20ohl0Z5Hao8YRg59GgPwdq2KrY=;
+        s=default; t=1593443930;
+        bh=7NDwsqB7TgbdnkZ66qpsR+9t4LAP6VSLYc1GeJ1+DD0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f9CzBfwTIrQsHnnEEDdGea5IxbPkiqAJ3DTKna+WgMY6vCE+DtHcrhFyV1+AxbM/O
-         jpP30+FQlVtWs8pDZGb3vsdLdxGWgHYfaKwA+MNrelPyXvxsr0XGaEO8qD8aOlq1xO
-         LNO2gEC4oiRzEnzX/NFuxs0CQ7Ya2pOqd7qARvyQ=
+        b=EOtKi7r0hDKXkNZlA7RZ5RBdduTEYe/TO47gLPB3+t0jHJhIdUPXviQvmVWUbFQbX
+         JuSLn+r1ZcYa/aF5Ime9O5vwt//XkgT2A3RHT/+NVJ+BHpristHmW15SLqSKxw8aM7
+         M8uuO2o3luk/2YcZBYtLXPvJr5Sk2ZJyEiZqTcwY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michal Kalderon <michal.kalderon@marvell.com>,
-        Ariel Elior <ariel.elior@marvell.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 133/265] RDMA/qedr: Fix KASAN: use-after-free in ucma_event_handler+0x532
-Date:   Mon, 29 Jun 2020 11:16:06 -0400
-Message-Id: <20200629151818.2493727-134-sashal@kernel.org>
+Cc:     Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 031/265] bnxt_en: Read VPD info only for PFs
+Date:   Mon, 29 Jun 2020 11:14:24 -0400
+Message-Id: <20200629151818.2493727-32-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -66,74 +66,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michal Kalderon <michal.kalderon@marvell.com>
+From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 
-[ Upstream commit 0dfbd5ecf28cbcb81674c49d34ee97366db1be44 ]
+[ Upstream commit c55e28a8b43fcd7dc71868bd165705bc7741a7ca ]
 
-Private data passed to iwarp_cm_handler is copied for connection request /
-response, but ignored otherwise.  If junk is passed, it is stored in the
-event and used later in the event processing.
+Virtual functions does not have VPD information. This patch modifies
+calling bnxt_read_vpd_info() only for PFs and avoids an unnecessary
+error log.
 
-The driver passes an old junk pointer during connection close which leads
-to a use-after-free on event processing.  Set private data to NULL for
-events that don 't have private data.
-
-  BUG: KASAN: use-after-free in ucma_event_handler+0x532/0x560 [rdma_ucm]
-  kernel: Read of size 4 at addr ffff8886caa71200 by task kworker/u128:1/5250
-  kernel:
-  kernel: Workqueue: iw_cm_wq cm_work_handler [iw_cm]
-  kernel: Call Trace:
-  kernel: dump_stack+0x8c/0xc0
-  kernel: print_address_description.constprop.0+0x1b/0x210
-  kernel: ? ucma_event_handler+0x532/0x560 [rdma_ucm]
-  kernel: ? ucma_event_handler+0x532/0x560 [rdma_ucm]
-  kernel: __kasan_report.cold+0x1a/0x33
-  kernel: ? ucma_event_handler+0x532/0x560 [rdma_ucm]
-  kernel: kasan_report+0xe/0x20
-  kernel: check_memory_region+0x130/0x1a0
-  kernel: memcpy+0x20/0x50
-  kernel: ucma_event_handler+0x532/0x560 [rdma_ucm]
-  kernel: ? __rpc_execute+0x608/0x620 [sunrpc]
-  kernel: cma_iw_handler+0x212/0x330 [rdma_cm]
-  kernel: ? iw_conn_req_handler+0x6e0/0x6e0 [rdma_cm]
-  kernel: ? enqueue_timer+0x86/0x140
-  kernel: ? _raw_write_lock_irq+0xd0/0xd0
-  kernel: cm_work_handler+0xd3d/0x1070 [iw_cm]
-
-Fixes: e411e0587e0d ("RDMA/qedr: Add iWARP connection management functions")
-Link: https://lore.kernel.org/r/20200616093408.17827-1-michal.kalderon@marvell.com
-Signed-off-by: Ariel Elior <ariel.elior@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: a0d0fd70fed5 ("bnxt_en: Read partno and serialno of the board from VPD")
+Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/infiniband/hw/qedr/qedr_iw_cm.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/hw/qedr/qedr_iw_cm.c b/drivers/infiniband/hw/qedr/qedr_iw_cm.c
-index 792eecd206b61..97fc7dd353b04 100644
---- a/drivers/infiniband/hw/qedr/qedr_iw_cm.c
-+++ b/drivers/infiniband/hw/qedr/qedr_iw_cm.c
-@@ -150,8 +150,17 @@ qedr_iw_issue_event(void *context,
- 	if (params->cm_info) {
- 		event.ird = params->cm_info->ird;
- 		event.ord = params->cm_info->ord;
--		event.private_data_len = params->cm_info->private_data_len;
--		event.private_data = (void *)params->cm_info->private_data;
-+		/* Only connect_request and reply have valid private data
-+		 * the rest of the events this may be left overs from
-+		 * connection establishment. CONNECT_REQUEST is issued via
-+		 * qedr_iw_mpa_request
-+		 */
-+		if (event_type == IW_CM_EVENT_CONNECT_REPLY) {
-+			event.private_data_len =
-+				params->cm_info->private_data_len;
-+			event.private_data =
-+				(void *)params->cm_info->private_data;
-+		}
- 	}
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+index c202c2a3d140d..b6fb5a1709c01 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -11884,7 +11884,8 @@ static int bnxt_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	dev->ethtool_ops = &bnxt_ethtool_ops;
+ 	pci_set_drvdata(pdev, dev);
  
- 	if (ep->cm_id)
+-	bnxt_vpd_read_info(bp);
++	if (BNXT_PF(bp))
++		bnxt_vpd_read_info(bp);
+ 
+ 	rc = bnxt_alloc_hwrm_resources(bp);
+ 	if (rc)
 -- 
 2.25.1
 
