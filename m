@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D6F6C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43EB9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3928F206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:11:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18683206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:11:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593465086;
-	bh=WUitdJWmkG6QX/RcPT3sZzbXh2tUsaNL7rYm7Sr8PN8=;
+	s=default; t=1593465095;
+	bh=t9zzV/CyhZ4bPii2Izp8Lv2PwTTnEZksXP9gnh6vTMg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HCy8bzkXRWx0QBwmNKEjGOP16Gzmxr/II0iyk5diRQKnynUIOkF/UQRyhJBFcg+6t
-	 38FDtxAKQaLtRjGqge/f+isIYQJcX+R1fVuUB0nAbwf7fTFQyi8B/RI57LBeVWWs1W
-	 p41xuHwvuL0uGCEEfqDelIfv1H/wBeJTVhQoPI4E=
+	b=gjHjp8bYKUurT0Fdkk9RUkaY0zXEzwJxQz+RJoXDcgHF0DHSA5GgzMdxDZwnT6neo
+	 3C3w85oHPjdogi7PRxX/kPsqVCpfuMvO5GtOU/JUjIEi2yC+CLYJV6THiuk14Trd1V
+	 ygBRDFZz4jfJfAusQq7QfKml5stz0izc0uzNTWMg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390116AbgF2VLY (ORCPT
+        id S2390382AbgF2VL3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:11:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45404 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:11:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45396 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730306AbgF2TAP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730303AbgF2TAP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:00:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B9302552F;
-        Mon, 29 Jun 2020 15:54:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D8802550B;
+        Mon, 29 Jun 2020 15:54:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446094;
-        bh=WUitdJWmkG6QX/RcPT3sZzbXh2tUsaNL7rYm7Sr8PN8=;
+        s=default; t=1593446068;
+        bh=t9zzV/CyhZ4bPii2Izp8Lv2PwTTnEZksXP9gnh6vTMg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V4mYMIWvpKXAn8MiAYfq+qrFtYkPWWgl8yqSeK+pPB7EXGAi8vatJwMpxBvgXRlgk
-         QXRs6wjGH9vggPfetvcboNLukyrC6aZyBKn0+aYMpVymKORSZWz60a+NxFz276P+wh
-         f4D5RmA793+yUJgkhX301CVFt27BehbOINiFPe8c=
+        b=pj3AF0bqTdglDtGaY+9rLbkvZi0bbfxfoY43roUTUYGwxsTDUrMN4zFvQZK8aKrJ3
+         lYvtwZaUK0Vnn4dZfxgmemfo0aEsKzICmHwFmPJ3wVHS0n/nTPrr8rYFtCgttis6uQ
+         1gU+7kOr2y54IKGCfBlsfHIGSUJO9gTDlresDmSc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
-        Venkat Venkatsubra <venkat.x.venkatsubra@oracle.com>,
-        Neal Cardwell <ncardwell@google.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.4 088/135] tcp: grow window for OOO packets only for SACK flows
-Date:   Mon, 29 Jun 2020 11:52:22 -0400
-Message-Id: <20200629155309.2495516-89-sashal@kernel.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, stable@kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 067/135] sparc64: fix misuses of access_process_vm() in genregs32_[sg]et()
+Date:   Mon, 29 Jun 2020 11:52:01 -0400
+Message-Id: <20200629155309.2495516-68-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -67,97 +64,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-[ Upstream commit 662051215c758ae8545451628816204ed6cd372d ]
+[ Upstream commit 142cd25293f6a7ecbdff4fb0af17de6438d46433 ]
 
-Back in 2013, we made a change that broke fast retransmit
-for non SACK flows.
+We do need access_process_vm() to access the target's reg_window.
+However, access to caller's memory (storing the result in
+genregs32_get(), fetching the new values in case of genregs32_set())
+should be done by normal uaccess primitives.
 
-Indeed, for these flows, a sender needs to receive three duplicate
-ACK before starting fast retransmit. Sending ACK with different
-receive window do not count.
-
-Even if enabling SACK is strongly recommended these days,
-there still are some cases where it has to be disabled.
-
-Not increasing the window seems better than having to
-rely on RTO.
-
-After the fix, following packetdrill test gives :
-
-// Initialize connection
-    0 socket(..., SOCK_STREAM, IPPROTO_TCP) = 3
-   +0 setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
-   +0 bind(3, ..., ...) = 0
-   +0 listen(3, 1) = 0
-
-   +0 < S 0:0(0) win 32792 <mss 1000,nop,wscale 7>
-   +0 > S. 0:0(0) ack 1 <mss 1460,nop,wscale 8>
-   +0 < . 1:1(0) ack 1 win 514
-
-   +0 accept(3, ..., ...) = 4
-
-   +0 < . 1:1001(1000) ack 1 win 514
-// Quick ack
-   +0 > . 1:1(0) ack 1001 win 264
-
-   +0 < . 2001:3001(1000) ack 1 win 514
-// DUPACK : Normally we should not change the window
-   +0 > . 1:1(0) ack 1001 win 264
-
-   +0 < . 3001:4001(1000) ack 1 win 514
-// DUPACK : Normally we should not change the window
-   +0 > . 1:1(0) ack 1001 win 264
-
-   +0 < . 4001:5001(1000) ack 1 win 514
-// DUPACK : Normally we should not change the window
-    +0 > . 1:1(0) ack 1001 win 264
-
-   +0 < . 1001:2001(1000) ack 1 win 514
-// Hole is repaired.
-   +0 > . 1:1(0) ack 5001 win 272
-
-Fixes: 4e4f1fc22681 ("tcp: properly increase rcv_ssthresh for ofo packets")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: Venkat Venkatsubra <venkat.x.venkatsubra@oracle.com>
-Acked-by: Neal Cardwell <ncardwell@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: ad4f95764040 ([SPARC64]: Fix user accesses in regset code.)
+Cc: stable@kernel.org
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/tcp_input.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ arch/sparc/kernel/ptrace_64.c | 13 ++-----------
+ 1 file changed, 2 insertions(+), 11 deletions(-)
 
-diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-index 64c7265793a59..e2066f2f19b4a 100644
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -4465,7 +4465,11 @@ static void tcp_data_queue_ofo(struct sock *sk, struct sk_buff *skb)
- 	if (tcp_ooo_try_coalesce(sk, tp->ooo_last_skb,
- 				 skb, &fragstolen)) {
- coalesce_done:
--		tcp_grow_window(sk, skb);
-+		/* For non sack flows, do not grow window to force DUPACK
-+		 * and trigger fast retransmit.
-+		 */
-+		if (tcp_is_sack(tp))
-+			tcp_grow_window(sk, skb);
- 		kfree_skb_partial(skb, fragstolen);
- 		skb = NULL;
- 		goto add_sack;
-@@ -4545,7 +4549,11 @@ static void tcp_data_queue_ofo(struct sock *sk, struct sk_buff *skb)
- 		tcp_sack_new_ofo_skb(sk, seq, end_seq);
- end:
- 	if (skb) {
--		tcp_grow_window(sk, skb);
-+		/* For non sack flows, do not grow window to force DUPACK
-+		 * and trigger fast retransmit.
-+		 */
-+		if (tcp_is_sack(tp))
-+			tcp_grow_window(sk, skb);
- 		skb_set_owner_r(skb, sk);
+diff --git a/arch/sparc/kernel/ptrace_64.c b/arch/sparc/kernel/ptrace_64.c
+index c1566170964f3..829592d5efe0b 100644
+--- a/arch/sparc/kernel/ptrace_64.c
++++ b/arch/sparc/kernel/ptrace_64.c
+@@ -534,13 +534,8 @@ static int genregs32_get(struct task_struct *target,
+ 						      &reg, sizeof(reg), 0)
+ 				    != sizeof(reg))
+ 					return -EFAULT;
+-				if (access_process_vm(target,
+-						      (unsigned long) u,
+-						      &reg, sizeof(reg), 1)
+-				    != sizeof(reg))
++				if (put_user(reg, u++))
+ 					return -EFAULT;
+-				pos++;
+-				u++;
+ 			}
+ 		}
  	}
- }
+@@ -639,11 +634,7 @@ static int genregs32_set(struct task_struct *target,
+ 			}
+ 		} else {
+ 			for (; count > 0 && pos < 32; count--) {
+-				if (access_process_vm(target,
+-						      (unsigned long)
+-						      u,
+-						      &reg, sizeof(reg), 0)
+-				    != sizeof(reg))
++				if (get_user(reg, u++))
+ 					return -EFAULT;
+ 				if (access_process_vm(target,
+ 						      (unsigned long)
 -- 
 2.25.1
 
