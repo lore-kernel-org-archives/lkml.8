@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8B0C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:12:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 424EAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C387120760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:12:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1699820675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:12:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461543;
-	bh=CDnV8wgM8h/k65NbFa4Ok2WEounI+mN6nVJiujCCaMw=;
+	s=default; t=1593461549;
+	bh=+fjJTwtTffvmuCdEVZGk9qwlYddz6jrFPC0zOsFVzGY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ps1meF6VMNaovru+Tb1lA6BPtXnTuv90ldrn3QKWeQcsc6/nvANr2Gf3BEbP1Ks0l
-	 vWWHfly8LB1sAM8XErm4OZR3aPNuPZGsftFribjvpvhxlx3sNkWt/Pf69GmzUIvJjM
-	 z9WLHFu4YgrMRt+sVF8Uht6tZ0jDreOjZhDzM7V0=
+	b=Uu+xX0kN+tkzYHi9Nw0Uu445zNq+0cWvq1arDyXw3FgD8BO3fZRoiUDwVwrd0UmHZ
+	 XMcQPGWsHKih0k5q/aYYCHyl31DCgRMD5avnhuAOYLGLFYv4VY45NwyjdUZJrd7ZfQ
+	 6M4ThcmsorYX1JBRvTMQEZP3hsUWDc1DrVMQJc5M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbgF2UMW (ORCPT
+        id S1730557AbgF2UM0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:12:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40580 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:12:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40574 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732807AbgF2TaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:30:21 -0400
+        id S1732885AbgF2TaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:30:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D99C125214;
-        Mon, 29 Jun 2020 15:35:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DACF525283;
+        Mon, 29 Jun 2020 15:36:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444932;
-        bh=CDnV8wgM8h/k65NbFa4Ok2WEounI+mN6nVJiujCCaMw=;
+        s=default; t=1593444994;
+        bh=+fjJTwtTffvmuCdEVZGk9qwlYddz6jrFPC0zOsFVzGY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c/k9uCzgFh1qG5FpN4H3/BjMsObKVVNE07l1pyJQ2NGEpAbMeRp2bYIss25OOMZpk
-         8YRUPsVNhrbWTPFVsaTI9XUvZJDUKsKU4RQuwRHzkL/Zvw8xCYTeHEskwh8eg/8C5G
-         Dkh9eQxH8YfiRBC7QnvC+2aJPrzI5NuYbukmNO3w=
+        b=TYIrEJqPk8PmGUUFzyucKdWrLJpiAB4GXEK7Sa9ZoRrfsR1x4350TbQYM/JdE8YJK
+         Dtl45iEeeaXJ3aciSSBBQ10X90EYbOClxwDT4Z6S3jnrfqJ0xGG67tsm3pMnwFE9wa
+         v+5zkh060UJcV94HtsD2yH0m3sptxqEhZpAg8i+A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
-        Venkat Venkatsubra <venkat.x.venkatsubra@oracle.com>,
-        Neal Cardwell <ncardwell@google.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 029/131] tcp: grow window for OOO packets only for SACK flows
-Date:   Mon, 29 Jun 2020 11:33:20 -0400
-Message-Id: <20200629153502.2494656-30-sashal@kernel.org>
+Cc:     Dinghao Liu <dinghao.liu@zju.edu.cn>,
+        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 094/131] hwrng: ks-sa - Fix runtime PM imbalance on error
+Date:   Mon, 29 Jun 2020 11:34:25 -0400
+Message-Id: <20200629153502.2494656-95-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
@@ -67,96 +66,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Dinghao Liu <dinghao.liu@zju.edu.cn>
 
-[ Upstream commit 662051215c758ae8545451628816204ed6cd372d ]
+[ Upstream commit 95459261c99f1621d90bc628c2a48e60b7cf9a88 ]
 
-Back in 2013, we made a change that broke fast retransmit
-for non SACK flows.
+pm_runtime_get_sync() increments the runtime PM usage counter even
+the call returns an error code. Thus a pairing decrement is needed
+on the error handling path to keep the counter balanced.
 
-Indeed, for these flows, a sender needs to receive three duplicate
-ACK before starting fast retransmit. Sending ACK with different
-receive window do not count.
-
-Even if enabling SACK is strongly recommended these days,
-there still are some cases where it has to be disabled.
-
-Not increasing the window seems better than having to
-rely on RTO.
-
-After the fix, following packetdrill test gives :
-
-// Initialize connection
-    0 socket(..., SOCK_STREAM, IPPROTO_TCP) = 3
-   +0 setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
-   +0 bind(3, ..., ...) = 0
-   +0 listen(3, 1) = 0
-
-   +0 < S 0:0(0) win 32792 <mss 1000,nop,wscale 7>
-   +0 > S. 0:0(0) ack 1 <mss 1460,nop,wscale 8>
-   +0 < . 1:1(0) ack 1 win 514
-
-   +0 accept(3, ..., ...) = 4
-
-   +0 < . 1:1001(1000) ack 1 win 514
-// Quick ack
-   +0 > . 1:1(0) ack 1001 win 264
-
-   +0 < . 2001:3001(1000) ack 1 win 514
-// DUPACK : Normally we should not change the window
-   +0 > . 1:1(0) ack 1001 win 264
-
-   +0 < . 3001:4001(1000) ack 1 win 514
-// DUPACK : Normally we should not change the window
-   +0 > . 1:1(0) ack 1001 win 264
-
-   +0 < . 4001:5001(1000) ack 1 win 514
-// DUPACK : Normally we should not change the window
-    +0 > . 1:1(0) ack 1001 win 264
-
-   +0 < . 1001:2001(1000) ack 1 win 514
-// Hole is repaired.
-   +0 > . 1:1(0) ack 5001 win 272
-
-Fixes: 4e4f1fc22681 ("tcp: properly increase rcv_ssthresh for ofo packets")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: Venkat Venkatsubra <venkat.x.venkatsubra@oracle.com>
-Acked-by: Neal Cardwell <ncardwell@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
+Reviewed-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/tcp_input.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/char/hw_random/ks-sa-rng.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-index ee1b4804b40de..7441ecfc8320a 100644
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -4528,7 +4528,11 @@ static void tcp_data_queue_ofo(struct sock *sk, struct sk_buff *skb)
- 	if (tcp_ooo_try_coalesce(sk, tp->ooo_last_skb,
- 				 skb, &fragstolen)) {
- coalesce_done:
--		tcp_grow_window(sk, skb);
-+		/* For non sack flows, do not grow window to force DUPACK
-+		 * and trigger fast retransmit.
-+		 */
-+		if (tcp_is_sack(tp))
-+			tcp_grow_window(sk, skb);
- 		kfree_skb_partial(skb, fragstolen);
- 		skb = NULL;
- 		goto add_sack;
-@@ -4612,7 +4616,11 @@ static void tcp_data_queue_ofo(struct sock *sk, struct sk_buff *skb)
- 		tcp_sack_new_ofo_skb(sk, seq, end_seq);
- end:
- 	if (skb) {
--		tcp_grow_window(sk, skb);
-+		/* For non sack flows, do not grow window to force DUPACK
-+		 * and trigger fast retransmit.
-+		 */
-+		if (tcp_is_sack(tp))
-+			tcp_grow_window(sk, skb);
- 		skb_condense(skb);
- 		skb_set_owner_r(skb, sk);
+diff --git a/drivers/char/hw_random/ks-sa-rng.c b/drivers/char/hw_random/ks-sa-rng.c
+index 62c6696c1dbd8..b6d7db362b217 100644
+--- a/drivers/char/hw_random/ks-sa-rng.c
++++ b/drivers/char/hw_random/ks-sa-rng.c
+@@ -216,6 +216,7 @@ static int ks_sa_rng_probe(struct platform_device *pdev)
+ 	ret = pm_runtime_get_sync(dev);
+ 	if (ret < 0) {
+ 		dev_err(dev, "Failed to enable SA power-domain\n");
++		pm_runtime_put_noidle(dev);
+ 		pm_runtime_disable(dev);
+ 		return ret;
  	}
 -- 
 2.25.1
