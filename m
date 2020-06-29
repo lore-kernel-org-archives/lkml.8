@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C033DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D20C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E3A0206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:54:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4C8A206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:54:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467674;
-	bh=sTZhejpHNdPTk4/qHgVwZSgCKGun0MCFQds5tLxB0K4=;
+	s=default; t=1593467685;
+	bh=7GUbe3H6bGsgLR7A+WgWytyJG14XwkQ1TsxdR+n07kk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z0i0j0LotNVbG3a24rWab2zB3JISK6hVHIEODAZND9TBFyNrWggvZIAv6/w20eSNT
-	 TQL2+S6lhLwVEySnEtUgwfmlMaHdbEEc+03Umyz5BfZiQpQSGGV2u/RZuzIXNULYNy
-	 Osr08PQy2mlSZfkx4S/3NwagaH8Eov70mds5cmkc=
+	b=cn5w4QHZVXyRtlVoGPgauvYoM+pTgPPTY4fDILbDSKy2s42Pzs6X3Hrlr7bN1EKqu
+	 FYnj6t2KWqVhJAMdW79iqXtkjEQ0GHPbMYRapbZO0UnfnmZq9atyTdW2uPsR5x8IAZ
+	 mRXfryvI4U/IBB3YwUTJ5lFoXFH6geWK/+/KTzRc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389289AbgF2Vy0 (ORCPT
+        id S2404390AbgF2Vym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:54:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56764 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:54:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726586AbgF2Sfd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726590AbgF2Sfd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AEB324732;
-        Mon, 29 Jun 2020 15:20:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0094C246D0;
+        Mon, 29 Jun 2020 15:20:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444052;
-        bh=sTZhejpHNdPTk4/qHgVwZSgCKGun0MCFQds5tLxB0K4=;
+        s=default; t=1593444023;
+        bh=7GUbe3H6bGsgLR7A+WgWytyJG14XwkQ1TsxdR+n07kk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ubc8ycbNfVqA4+LQMTlAvJF7GFl7QZSTX5xx3Ln/F28G8QAl2ZEws7P0UxxDCw39v
-         s4sKSAJkrsxSTssd9M5oqBCMF4kwcKuigKK2W8V4ep8HJ2A4PcK+VlhhKi9hCh88OJ
-         qD9eMt/a7QrrzPcTTfuvwx1qpqatOZ5jZ9TOyh3k=
+        b=ZWT9pIsc+kSKgJB5WNlp+Fw0diRhYu1UlhNe0HRIIF0rtTWNt1ivdDesw7DRIejVB
+         tXvvzOwTI1QO0bEhSyRyFQWBwOgprjlRnwJa0DH0clatIWwCDvnsg5AhXIXp37QhHC
+         9RclHrl1PV8Fh8xvzez05rX+kba658vxYK2fgKWc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Hien Dang <hien.dang.eb@renesas.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+Cc:     David Howells <dhowells@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 160/265] usb: renesas_usbhs: getting residue from callback_result
-Date:   Mon, 29 Jun 2020 11:16:33 -0400
-Message-Id: <20200629151818.2493727-161-sashal@kernel.org>
+Subject: [PATCH 5.7 130/265] rxrpc: Fix handling of rwind from an ACK packet
+Date:   Mon, 29 Jun 2020 11:16:03 -0400
+Message-Id: <20200629151818.2493727-131-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -66,122 +64,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit ea0efd687b01355cd799c8643d0c636ba4859ffc ]
+[ Upstream commit a2ad7c21ad8cf1ce4ad65e13df1c2a1c29b38ac5 ]
 
-This driver assumed that dmaengine_tx_status() could return
-the residue even if the transfer was completed. However,
-this was not correct usage [1] and this caused to break getting
-the residue after the commit 24461d9792c2 ("dmaengine:
-virt-dma: Fix access after free in vchan_complete()") actually.
-So, this is possible to get wrong received size if the usb
-controller gets a short packet. For example, g_zero driver
-causes "bad OUT byte" errors.
+The handling of the receive window size (rwind) from a received ACK packet
+is not correct.  The rxrpc_input_ackinfo() function currently checks the
+current Tx window size against the rwind from the ACK to see if it has
+changed, but then limits the rwind size before storing it in the tx_winsize
+member and, if it increased, wake up the transmitting process.  This means
+that if rwind > RXRPC_RXTX_BUFF_SIZE - 1, this path will always be
+followed.
 
-The usb-dmac driver will support the callback_result, so this
-driver can use it to get residue correctly. Note that even if
-the usb-dmac driver has not supported the callback_result yet,
-this patch doesn't cause any side-effects.
+Fix this by limiting rwind before we compare it to tx_winsize.
 
-[1]
-https://lore.kernel.org/dmaengine/20200616165550.GP2324254@vkoul-mobl/
+The effect of this can be seen by enabling the rxrpc_rx_rwind_change
+tracepoint.
 
-Reported-by: Hien Dang <hien.dang.eb@renesas.com>
-Fixes: 24461d9792c2 ("dmaengine: virt-dma: Fix access after free in vchan_complete()")
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Link: https://lore.kernel.org/r/1592482277-19563-1-git-send-email-yoshihiro.shimoda.uh@renesas.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 702f2ac87a9a ("rxrpc: Wake up the transmitter if Rx window size increases on the peer")
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/renesas_usbhs/fifo.c | 23 +++++++++++++----------
- drivers/usb/renesas_usbhs/fifo.h |  2 +-
- 2 files changed, 14 insertions(+), 11 deletions(-)
+ net/rxrpc/input.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/usb/renesas_usbhs/fifo.c b/drivers/usb/renesas_usbhs/fifo.c
-index 01c6a48c41bc9..ac9a81ae82164 100644
---- a/drivers/usb/renesas_usbhs/fifo.c
-+++ b/drivers/usb/renesas_usbhs/fifo.c
-@@ -803,7 +803,8 @@ static int __usbhsf_dma_map_ctrl(struct usbhs_pkt *pkt, int map)
- 	return info->dma_map_ctrl(chan->device->dev, pkt, map);
- }
+diff --git a/net/rxrpc/input.c b/net/rxrpc/input.c
+index 3be4177baf707..22dec6049e1bb 100644
+--- a/net/rxrpc/input.c
++++ b/net/rxrpc/input.c
+@@ -723,13 +723,12 @@ static void rxrpc_input_ackinfo(struct rxrpc_call *call, struct sk_buff *skb,
+ 	       ntohl(ackinfo->rxMTU), ntohl(ackinfo->maxMTU),
+ 	       rwind, ntohl(ackinfo->jumbo_max));
  
--static void usbhsf_dma_complete(void *arg);
-+static void usbhsf_dma_complete(void *arg,
-+				const struct dmaengine_result *result);
- static void usbhsf_dma_xfer_preparing(struct usbhs_pkt *pkt)
- {
- 	struct usbhs_pipe *pipe = pkt->pipe;
-@@ -813,6 +814,7 @@ static void usbhsf_dma_xfer_preparing(struct usbhs_pkt *pkt)
- 	struct dma_chan *chan;
- 	struct device *dev = usbhs_priv_to_dev(priv);
- 	enum dma_transfer_direction dir;
-+	dma_cookie_t cookie;
- 
- 	fifo = usbhs_pipe_to_fifo(pipe);
- 	if (!fifo)
-@@ -827,11 +829,11 @@ static void usbhsf_dma_xfer_preparing(struct usbhs_pkt *pkt)
- 	if (!desc)
- 		return;
- 
--	desc->callback		= usbhsf_dma_complete;
--	desc->callback_param	= pipe;
-+	desc->callback_result	= usbhsf_dma_complete;
-+	desc->callback_param	= pkt;
- 
--	pkt->cookie = dmaengine_submit(desc);
--	if (pkt->cookie < 0) {
-+	cookie = dmaengine_submit(desc);
-+	if (cookie < 0) {
- 		dev_err(dev, "Failed to submit dma descriptor\n");
- 		return;
++	if (rwind > RXRPC_RXTX_BUFF_SIZE - 1)
++		rwind = RXRPC_RXTX_BUFF_SIZE - 1;
+ 	if (call->tx_winsize != rwind) {
+-		if (rwind > RXRPC_RXTX_BUFF_SIZE - 1)
+-			rwind = RXRPC_RXTX_BUFF_SIZE - 1;
+ 		if (rwind > call->tx_winsize)
+ 			wake = true;
+-		trace_rxrpc_rx_rwind_change(call, sp->hdr.serial,
+-					    ntohl(ackinfo->rwind), wake);
++		trace_rxrpc_rx_rwind_change(call, sp->hdr.serial, rwind, wake);
+ 		call->tx_winsize = rwind;
  	}
-@@ -1152,12 +1154,10 @@ static size_t usbhs_dma_calc_received_size(struct usbhs_pkt *pkt,
- 					   struct dma_chan *chan, int dtln)
- {
- 	struct usbhs_pipe *pipe = pkt->pipe;
--	struct dma_tx_state state;
- 	size_t received_size;
- 	int maxp = usbhs_pipe_get_maxpacket(pipe);
  
--	dmaengine_tx_status(chan, pkt->cookie, &state);
--	received_size = pkt->length - state.residue;
-+	received_size = pkt->length - pkt->dma_result->residue;
- 
- 	if (dtln) {
- 		received_size -= USBHS_USB_DMAC_XFER_SIZE;
-@@ -1363,13 +1363,16 @@ static int usbhsf_irq_ready(struct usbhs_priv *priv,
- 	return 0;
- }
- 
--static void usbhsf_dma_complete(void *arg)
-+static void usbhsf_dma_complete(void *arg,
-+				const struct dmaengine_result *result)
- {
--	struct usbhs_pipe *pipe = arg;
-+	struct usbhs_pkt *pkt = arg;
-+	struct usbhs_pipe *pipe = pkt->pipe;
- 	struct usbhs_priv *priv = usbhs_pipe_to_priv(pipe);
- 	struct device *dev = usbhs_priv_to_dev(priv);
- 	int ret;
- 
-+	pkt->dma_result = result;
- 	ret = usbhsf_pkt_handler(pipe, USBHSF_PKT_DMA_DONE);
- 	if (ret < 0)
- 		dev_err(dev, "dma_complete run_error %d : %d\n",
-diff --git a/drivers/usb/renesas_usbhs/fifo.h b/drivers/usb/renesas_usbhs/fifo.h
-index c3d3cc35cee0f..4a7dc23ce3d35 100644
---- a/drivers/usb/renesas_usbhs/fifo.h
-+++ b/drivers/usb/renesas_usbhs/fifo.h
-@@ -50,7 +50,7 @@ struct usbhs_pkt {
- 		     struct usbhs_pkt *pkt);
- 	struct work_struct work;
- 	dma_addr_t dma;
--	dma_cookie_t cookie;
-+	const struct dmaengine_result *dma_result;
- 	void *buf;
- 	int length;
- 	int trans;
 -- 
 2.25.1
 
