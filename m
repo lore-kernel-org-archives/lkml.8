@@ -7,68 +7,69 @@ X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1039AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B2C9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA8DE206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:44:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8FA62063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:44:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="1JQT0OK5"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="cakXMdhc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389113AbgF2Vn6 (ORCPT
+        id S2391425AbgF2VoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:43:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37572 "EHLO
+        Mon, 29 Jun 2020 17:44:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727845AbgF2Shs (ORCPT
+        with ESMTP id S1727841AbgF2Shr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:37:48 -0400
-Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4A92C031C43
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 10:21:20 -0700 (PDT)
-Received: by mail-qt1-x844.google.com with SMTP id x62so13442128qtd.3
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 10:21:20 -0700 (PDT)
+        Mon, 29 Jun 2020 14:37:47 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4C2BC031433
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 10:21:12 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id g11so8004262qvs.2
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 10:21:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=marek-ca.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=snsizZHV6FarzIo1/rFuJ3/yVOUqTzRajk7bCD023lA=;
-        b=1JQT0OK5S8iqXV0ngr3NmpjqtgEGc1ny910dvyBLeebNJ3Z7wDyDzpLN1X00TtyrBM
-         mrnc/gcv2SENfHKLR3xBxf9vaGhP62J1JULk0R3jDR/FI41ysX0VS7oHugctNBUnQgTx
-         yd5r6lNbgC4i3xlmP8OtFhNGCxY321SPHfLS8BNc90NlojJX3kQBaYxDLECITzF6ZXkH
-         MGDGrzR7n5JF4cMPFMdZX8ub3zBCT3UF8Y8WEQaDRoOXlcgcDJKtn+2c3SU+THSQi9F5
-         miG/RT54YR3bp7fchH9v8S45sD6eba4ZAJgah8y19Q9UZtTZVSXrqlyn6wGL7WV25yco
-         AJTw==
+        bh=MEAgnaM7D2mpY2dMCdUXKcsS9ZNQb7s4gUJ6O4bO1VY=;
+        b=cakXMdhcddci1jYVi33hSFcTaWjtdUzX5bG+pUizoRKtavcztv5pEaTMcR3xhC3pwc
+         +oFlbm5GPeRBw6/yBHNsb2PyDNdKFFm6cLRFu/zWPqDKIvOXOvdhN1DSUWkxKIG6LYo7
+         7kuDTw4b5e4x8NwN5PFfMI26gd4OmiBKT4kbnvRmOOO/rEe0QQoio1VL2pUsNlGYIY9h
+         eY/oYmNlpRRKzpOVUzXibc/63n8GQvOUrjdP4mAiJ865Fn2NvzdH9ZhPFjWhgcGc/urt
+         gOmvnB8AoQFacwoRRRA8YESi0slDXE6DWDqu7dZyzgerrRtYZ0jk90J5sX3fxzoWzuAP
+         JPhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=snsizZHV6FarzIo1/rFuJ3/yVOUqTzRajk7bCD023lA=;
-        b=G29yQ+d40kzF8DAvrlu16Hc7GCPAH/z7hPLlAzDFD4ty1RPbzELokkMClC/0MbHP4Z
-         x0Fm8f9FPeEAwHq6hqu2kM6rFMRS5v0RYKQyT/ur0eWeQliryhGZXOorkCaG+9S3k2MR
-         taTGQ1AdyEiUsYDwmg/C62HuEWUx7wwZPREUHZj0xqohugevlNOzm4t/vJsiH8zNyaXm
-         CYaODmPOW4541MSzn/TNcUWxpn+QiHEbm4YnifRIiE5v+mE7CVjL8zISdb6vp+9h/hsb
-         aOvgAfRYCny2Y7G0dFRhridNbfno6MjD3QD5d2+VO1/rHd4gUtDC6GARuq2HjCYbWqgk
-         C6oA==
-X-Gm-Message-State: AOAM5323l5EIX52L946BY57M1qnKOIBzveT4wtab4F3w4ecRgiTzl/MV
-        FfEoDL6G57RH4qd46jU6DTiNbA==
-X-Google-Smtp-Source: ABdhPJxMcwEqK90UbZjY+TgRHdTd09OSLpnceXNMlLhQKJ4PMKhybFFGTMNwD0O0wRw09XSGo2tIlA==
-X-Received: by 2002:ac8:6f26:: with SMTP id i6mr16695618qtv.61.1593451280085;
-        Mon, 29 Jun 2020 10:21:20 -0700 (PDT)
+        bh=MEAgnaM7D2mpY2dMCdUXKcsS9ZNQb7s4gUJ6O4bO1VY=;
+        b=IlifVuitvla5/NpssykOHZantf5ENwmsMXEey6bvRJw1FWqpUuDPAXFGjs0eIzUC6x
+         QqUz0VDqg9Fbnq42zCCS/q1ZDeje7kVk9sP2Ihvak5Ls+fB1biI7ZRTPPQXrl7jMZmie
+         QPlkSxt/n3MHzN8nWrezzkylGe+5vPfMSNejIA+RWbU3lW/VaFByerwYJmV/oYrNx3kg
+         fStnLv8cSn3ncx5gjMlxvXS6GVxACFipt4G1UK+JA/ncnDWf+2X0j7g0RLPdoAT5GgXH
+         TxZx6vAoNTVIzDEdvlBi319PuJd3z4/jdlIXs1n1MKwE6Za/yIhED17cxs0bP5QS9Mi1
+         UdJA==
+X-Gm-Message-State: AOAM5321Rc+u69DYzKloXd+3YW5xUbPlnCxaO2mzh8IdskWDCAZPuD7M
+        ghApJYK54M15k2OPqoDRa7vweQ==
+X-Google-Smtp-Source: ABdhPJyaLd6au1/0WA+lxGsA1HcU8jMvhnK/QtKjdcrss2tNZZ0jSr2bU65AOstsV9I+9d+Bn3UceA==
+X-Received: by 2002:a05:6214:9af:: with SMTP id du15mr16068477qvb.188.1593451271974;
+        Mon, 29 Jun 2020 10:21:11 -0700 (PDT)
 Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id q5sm408363qtf.12.2020.06.29.10.21.18
+        by smtp.gmail.com with ESMTPSA id q5sm408363qtf.12.2020.06.29.10.21.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 10:21:19 -0700 (PDT)
+        Mon, 29 Jun 2020 10:21:11 -0700 (PDT)
 From:   Jonathan Marek <jonathan@marek.ca>
 To:     linux-arm-msm@vger.kernel.org
 Cc:     Andy Gross <agross@kernel.org>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 13/13] arm64: dts: qcom: add sm8250 GPU nodes
-Date:   Mon, 29 Jun 2020 13:20:43 -0400
-Message-Id: <20200629172049.30452-14-jonathan@marek.ca>
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        linux-clk@vger.kernel.org (open list:COMMON CLK FRAMEWORK),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 08/13] clk: qcom: add common gdsc_gx_do_nothing_enable for gpucc drivers
+Date:   Mon, 29 Jun 2020 13:20:38 -0400
+Message-Id: <20200629172049.30452-9-jonathan@marek.ca>
 X-Mailer: git-send-email 2.26.1
 In-Reply-To: <20200629172049.30452-1-jonathan@marek.ca>
 References: <20200629172049.30452-1-jonathan@marek.ca>
@@ -79,174 +80,148 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This brings up the GPU. Tested on HDK865 by running vulkan CTS.
+All gpucc drivers need this, so move it to common code instead of
+duplicating it in every gpucc driver.
 
 Signed-off-by: Jonathan Marek <jonathan@marek.ca>
 ---
- arch/arm64/boot/dts/qcom/sm8250.dtsi | 143 +++++++++++++++++++++++++++
- 1 file changed, 143 insertions(+)
+ drivers/clk/qcom/gdsc.c         | 25 +++++++++++++++++++++++++
+ drivers/clk/qcom/gdsc.h         |  1 +
+ drivers/clk/qcom/gpucc-sc7180.c | 27 +--------------------------
+ drivers/clk/qcom/gpucc-sdm845.c | 27 +--------------------------
+ 4 files changed, 28 insertions(+), 52 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/sm8250.dtsi b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-index 25224d8cac4e..c9b38dd88f43 100644
---- a/arch/arm64/boot/dts/qcom/sm8250.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm8250.dtsi
-@@ -5,6 +5,7 @@
+diff --git a/drivers/clk/qcom/gdsc.c b/drivers/clk/qcom/gdsc.c
+index 04944f11659b..628397703717 100644
+--- a/drivers/clk/qcom/gdsc.c
++++ b/drivers/clk/qcom/gdsc.c
+@@ -433,3 +433,28 @@ void gdsc_unregister(struct gdsc_desc *desc)
+ 	}
+ 	of_genpd_del_provider(dev->of_node);
+ }
++
++/*
++ * On SDM845+ the GPU GX domain is *almost* entirely controlled by the GMU
++ * running in the CX domain so the CPU doesn't need to know anything about the
++ * GX domain EXCEPT....
++ *
++ * Hardware constraints dictate that the GX be powered down before the CX. If
++ * the GMU crashes it could leave the GX on. In order to successfully bring back
++ * the device the CPU needs to disable the GX headswitch. There being no sane
++ * way to reach in and touch that register from deep inside the GPU driver we
++ * need to set up the infrastructure to be able to ensure that the GPU can
++ * ensure that the GX is off during this super special case. We do this by
++ * defining a GX gdsc with a dummy enable function and a "default" disable
++ * function.
++ *
++ * This allows us to attach with genpd_dev_pm_attach_by_name() in the GPU
++ * driver. During power up, nothing will happen from the CPU (and the GMU will
++ * power up normally but during power down this will ensure that the GX domain
++ * is *really* off - this gives us a semi standard way of doing what we need.
++ */
++int gdsc_gx_do_nothing_enable(struct generic_pm_domain *domain)
++{
++	/* Do nothing but give genpd the impression that we were successful */
++	return 0;
++}
+diff --git a/drivers/clk/qcom/gdsc.h b/drivers/clk/qcom/gdsc.h
+index c36fc26dcdff..1896bfb2bbd1 100644
+--- a/drivers/clk/qcom/gdsc.h
++++ b/drivers/clk/qcom/gdsc.h
+@@ -68,6 +68,7 @@ struct gdsc_desc {
+ int gdsc_register(struct gdsc_desc *desc, struct reset_controller_dev *,
+ 		  struct regmap *);
+ void gdsc_unregister(struct gdsc_desc *desc);
++int gdsc_gx_do_nothing_enable(struct generic_pm_domain *domain);
+ #else
+ static inline int gdsc_register(struct gdsc_desc *desc,
+ 				struct reset_controller_dev *rcdev,
+diff --git a/drivers/clk/qcom/gpucc-sc7180.c b/drivers/clk/qcom/gpucc-sc7180.c
+index 7b656b6aeced..88a739b6fec3 100644
+--- a/drivers/clk/qcom/gpucc-sc7180.c
++++ b/drivers/clk/qcom/gpucc-sc7180.c
+@@ -170,37 +170,12 @@ static struct gdsc cx_gdsc = {
+ 	.flags = VOTABLE,
+ };
  
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/qcom,gcc-sm8250.h>
-+#include <dt-bindings/clock/qcom,gpucc-sm8250.h>
- #include <dt-bindings/clock/qcom,rpmh.h>
- #include <dt-bindings/power/qcom-rpmpd.h>
- #include <dt-bindings/soc/qcom,rpmh-rsc.h>
-@@ -387,6 +388,148 @@ tcsr_mutex: hwlock@1f40000 {
- 			#hwlock-cells = <1>;
- 		};
+-/*
+- * On SC7180 the GPU GX domain is *almost* entirely controlled by the GMU
+- * running in the CX domain so the CPU doesn't need to know anything about the
+- * GX domain EXCEPT....
+- *
+- * Hardware constraints dictate that the GX be powered down before the CX. If
+- * the GMU crashes it could leave the GX on. In order to successfully bring back
+- * the device the CPU needs to disable the GX headswitch. There being no sane
+- * way to reach in and touch that register from deep inside the GPU driver we
+- * need to set up the infrastructure to be able to ensure that the GPU can
+- * ensure that the GX is off during this super special case. We do this by
+- * defining a GX gdsc with a dummy enable function and a "default" disable
+- * function.
+- *
+- * This allows us to attach with genpd_dev_pm_attach_by_name() in the GPU
+- * driver. During power up, nothing will happen from the CPU (and the GMU will
+- * power up normally but during power down this will ensure that the GX domain
+- * is *really* off - this gives us a semi standard way of doing what we need.
+- */
+-static int gx_gdsc_enable(struct generic_pm_domain *domain)
+-{
+-	/* Do nothing but give genpd the impression that we were successful */
+-	return 0;
+-}
+-
+ static struct gdsc gx_gdsc = {
+ 	.gdscr = 0x100c,
+ 	.clamp_io_ctrl = 0x1508,
+ 	.pd = {
+ 		.name = "gx_gdsc",
+-		.power_on = gx_gdsc_enable,
++		.power_on = gdsc_gx_do_nothing_enable,
+ 	},
+ 	.pwrsts = PWRSTS_OFF_ON,
+ 	.flags = CLAMP_IO,
+diff --git a/drivers/clk/qcom/gpucc-sdm845.c b/drivers/clk/qcom/gpucc-sdm845.c
+index e40efba1bf7d..5663698b306b 100644
+--- a/drivers/clk/qcom/gpucc-sdm845.c
++++ b/drivers/clk/qcom/gpucc-sdm845.c
+@@ -131,37 +131,12 @@ static struct gdsc gpu_cx_gdsc = {
+ 	.flags = VOTABLE,
+ };
  
-+		gpu: gpu@3d00000 {
-+			/*
-+			 * note: the amd,imageon compatible makes it possible
-+			 * to use the drm/msm driver without the display node,
-+			 * make sure to remove it when display node is added
-+			 */
-+			compatible = "qcom,adreno-650.2",
-+				     "qcom,adreno",
-+				     "amd,imageon";
-+			#stream-id-cells = <16>;
-+
-+			reg = <0 0x3d00000 0 0x40000>;
-+			reg-names = "kgsl_3d0_reg_memory";
-+
-+			interrupts = <GIC_SPI 300 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			iommus = <&adreno_smmu 0 0x401>;
-+
-+			operating-points-v2 = <&gpu_opp_table>;
-+
-+			qcom,gmu = <&gmu>;
-+
-+			zap-shader {
-+				memory-region = <&gpu_mem>;
-+			};
-+
-+			/* note: downstream checks gpu binning for 670 Mhz */
-+			gpu_opp_table: opp-table {
-+				compatible = "operating-points-v2";
-+
-+				opp-670000000 {
-+					opp-hz = /bits/ 64 <670000000>;
-+					opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
-+				};
-+
-+				opp-587000000 {
-+					opp-hz = /bits/ 64 <587000000>;
-+					opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
-+				};
-+
-+				opp-525000000 {
-+					opp-hz = /bits/ 64 <525000000>;
-+					opp-level = <RPMH_REGULATOR_LEVEL_SVS_L2>;
-+				};
-+
-+				opp-490000000 {
-+					opp-hz = /bits/ 64 <490000000>;
-+					opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
-+				};
-+
-+				opp-441600000 {
-+					opp-hz = /bits/ 64 <441600000>;
-+					opp-level = <RPMH_REGULATOR_LEVEL_SVS_L0>;
-+				};
-+
-+				opp-400000000 {
-+					opp-hz = /bits/ 64 <400000000>;
-+					opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
-+				};
-+
-+				opp-305000000 {
-+					opp-hz = /bits/ 64 <305000000>;
-+					opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
-+				};
-+			};
-+		};
-+
-+		gmu: gmu@3d6a000 {
-+			compatible="qcom,adreno-gmu-650.2", "qcom,adreno-gmu";
-+
-+			reg = <0 0x3d6a000 0 0x30000>,
-+			      <0 0x3de0000 0 0x10000>,
-+			      <0 0xb290000 0 0x10000>,
-+			      <0 0xb490000 0 0x10000>;
-+			reg-names = "gmu", "rscc", "gmu_pdc", "gmu_pdc_seq";
-+
-+			interrupts = <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "hfi", "gmu";
-+
-+			clocks = <&gpucc GPU_CC_AHB_CLK>,
-+				 <&gpucc GPU_CC_CX_GMU_CLK>,
-+			         <&gpucc GPU_CC_CXO_CLK>,
-+				 <&gcc GCC_DDRSS_GPU_AXI_CLK>,
-+				 <&gcc GCC_GPU_MEMNOC_GFX_CLK>;
-+			clock-names = "ahb", "gmu", "cxo", "axi", "memnoc";
-+
-+			power-domains = <&gpucc GPU_CX_GDSC>,
-+					<&gpucc GPU_GX_GDSC>;
-+			power-domain-names = "cx", "gx";
-+
-+			iommus = <&adreno_smmu 5 0x400>;
-+
-+			operating-points-v2 = <&gmu_opp_table>;
-+
-+			gmu_opp_table: opp-table {
-+				compatible = "operating-points-v2";
-+
-+				opp-200000000 {
-+					opp-hz = /bits/ 64 <200000000>;
-+					opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
-+				};
-+			};
-+		};
-+
-+		gpucc: clock-controller@3d90000 {
-+			compatible = "qcom,sm8250-gpucc";
-+			reg = <0 0x3d90000 0 0x9000>;
-+			clocks = <&rpmhcc RPMH_CXO_CLK>,
-+				 <&gcc GCC_GPU_GPLL0_CLK_SRC>,
-+				 <&gcc GCC_GPU_GPLL0_DIV_CLK_SRC>;
-+			clock-names = "bi_tcxo",
-+				      "gcc_gpu_gpll0_clk_src",
-+				      "gcc_gpu_gpll0_div_clk_src";
-+			#clock-cells = <1>;
-+			#reset-cells = <1>;
-+			#power-domain-cells = <1>;
-+		};
-+
-+		adreno_smmu: iommu@3da0000 {
-+			compatible = "qcom,sm8250-smmu-500", "arm,mmu-500";
-+			reg = <0 0x3da0000 0 0x10000>;
-+			#iommu-cells = <2>;
-+			#global-interrupts = <2>;
-+			interrupts = <GIC_SPI 672 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 673 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 678 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 679 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 680 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 681 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 682 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 683 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 684 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 685 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&gpucc GPU_CC_AHB_CLK>,
-+				 <&gcc GCC_GPU_MEMNOC_GFX_CLK>,
-+				 <&gcc GCC_GPU_SNOC_DVM_GFX_CLK>;
-+			clock-names = "ahb", "bus", "iface";
-+
-+			power-domains = <&gpucc GPU_CX_GDSC>;
-+		};
-+
- 		usb_1_hsphy: phy@88e3000 {
- 			compatible = "qcom,sm8250-usb-hs-phy",
- 				     "qcom,usb-snps-hs-7nm-phy";
+-/*
+- * On SDM845 the GPU GX domain is *almost* entirely controlled by the GMU
+- * running in the CX domain so the CPU doesn't need to know anything about the
+- * GX domain EXCEPT....
+- *
+- * Hardware constraints dictate that the GX be powered down before the CX. If
+- * the GMU crashes it could leave the GX on. In order to successfully bring back
+- * the device the CPU needs to disable the GX headswitch. There being no sane
+- * way to reach in and touch that register from deep inside the GPU driver we
+- * need to set up the infrastructure to be able to ensure that the GPU can
+- * ensure that the GX is off during this super special case. We do this by
+- * defining a GX gdsc with a dummy enable function and a "default" disable
+- * function.
+- *
+- * This allows us to attach with genpd_dev_pm_attach_by_name() in the GPU
+- * driver. During power up, nothing will happen from the CPU (and the GMU will
+- * power up normally but during power down this will ensure that the GX domain
+- * is *really* off - this gives us a semi standard way of doing what we need.
+- */
+-static int gx_gdsc_enable(struct generic_pm_domain *domain)
+-{
+-	/* Do nothing but give genpd the impression that we were successful */
+-	return 0;
+-}
+-
+ static struct gdsc gpu_gx_gdsc = {
+ 	.gdscr = 0x100c,
+ 	.clamp_io_ctrl = 0x1508,
+ 	.pd = {
+ 		.name = "gpu_gx_gdsc",
+-		.power_on = gx_gdsc_enable,
++		.power_on = gdsc_gx_do_nothing_enable,
+ 	},
+ 	.pwrsts = PWRSTS_OFF_ON,
+ 	.flags = CLAMP_IO | AON_RESET | POLL_CFG_GDSCR,
 -- 
 2.26.1
 
