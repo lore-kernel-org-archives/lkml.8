@@ -2,117 +2,161 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA19EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:18:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E3D1C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB57720775
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:18:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0A7420724
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:18:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UWLk6Vml"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uDoV+f/a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390778AbgF2VSM (ORCPT
+        id S2390805AbgF2VSj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:18:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40046 "EHLO
+        Mon, 29 Jun 2020 17:18:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729793AbgF2Swu (ORCPT
+        with ESMTP id S1729687AbgF2Swt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:52:50 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36BE5C02E2D6
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:05:04 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id r12so16623446wrj.13
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:05:04 -0700 (PDT)
+        Mon, 29 Jun 2020 14:52:49 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AD80C030F15
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:24:47 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id dr13so17192602ejc.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:24:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=JmkBl6CgYcKij/6z3M241pPTb33PjPTKpPi0m3JJzZw=;
-        b=UWLk6VmlQbmgGn4fxQ9O9psVUunquWgTklcNwPDy56YobyD39DbRUDQCyVvdxB+o3p
-         LGCnqchxFgFvLy1pT+ih5xMmrLS1HVNnYIK/pluBDZb09cz8AqhLnXfvEjPncFbmC13T
-         p2N7ccpTgWZ7gkTeMI4Y64VGhLlUURWMObv42l0H+kk/Fq5rONWnaJ9Yn8s69opYrbdW
-         pS2nx53E8qC4aQPhLC6IocEWs+ZOu/cxQ8ONVYrZPOfPsW6cwQK7vzt+9GGr+RChqZCj
-         bjo/bWB+8L5H4e+VqyufDUV/kEx7SG2rQphbkfVZTatbY7LItp8tSL3kV7gDzh+dkST0
-         OIQw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Ud+jy3wulB5wSts5pAy11Tc3R2svZplkU4sR98nwwJE=;
+        b=uDoV+f/amMJySkjiD5nfcXFSEYKLa7JOmygbWtDrbVnsvXumsg4JB325HUaxGjw2Vi
+         eNdd9RRj62EnIZ4pbaSVLWpw3IL0kteHloONkLXM8vzkvFt3entXOVvKORsQfBIiJ8FH
+         xusOSAMEt1gemF6n6eornvY9U6B9dxUiqNR5UmkXigrRjgElYE81qVrgeaUwWFLy0piP
+         oFimG/Ha18kkdW68rV9v8tq3sflRfqesYVAcwc0DVBNEd5wdvY0hty6tnKDa+73zY6Lx
+         /l9tVNaU6LiRvD6apfQlzXRVljaVF0aJKrqm5HQOlFyJ7A2dczyLCFj9qc6OUuEBJpke
+         wfCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=JmkBl6CgYcKij/6z3M241pPTb33PjPTKpPi0m3JJzZw=;
-        b=SkG0ZCunQyTH9ChiQBQZsn5nQFQ4zB3SFedaHv4oH1OlZNoW4dZ6pTlOapUJklE0y6
-         LyHEwpKDsH/3j1RDCPsKo2IfM0wyv2wYHgIrHxmIFAi7E59sEJi+wknV0+JLHThos8mb
-         Cenx3VJVL0rU2wEp7QCIuEeMiQGyxlOl4PxzjiZzrC0/e4mY6xBa5d8eJc1kBBwxrj7i
-         s1WjzaXY5R4RHIy/lHRPBgG6fKNRVrlhHy+QduoPx2u3o7V/bJRY4olDvgBFEbTOukEZ
-         nxenWt3pSazEJoBwOQgF1VRIshzfoCQJMF7LJnUKwxdqHouwc2KhSP0r3AJ7ZxmpGKy4
-         FQUA==
-X-Gm-Message-State: AOAM530FzDXICTwxtEN9NJfc4P0be8JWVjb345ROqJevNM4bG0qwxskR
-        MJXSEwo3LW2QaUTd/2SZRsEybTC4lcc=
-X-Google-Smtp-Source: ABdhPJyQRVI9EP39ZGYsTFc+3vc1D9TeBEYaguyI5hOW2INRl8vdxPpsYcnXAsNe5kQjL671fwMBlA==
-X-Received: by 2002:a5d:684f:: with SMTP id o15mr12582448wrw.148.1593439502968;
-        Mon, 29 Jun 2020 07:05:02 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id p14sm15394928wrj.14.2020.06.29.07.05.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 07:05:02 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     arnd@arndb.de, gregkh@linuxfoundation.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Masayuki Ohtak <masa-korg@dsn.okisemi.com>,
-        Tomoya MORINAGA <tomoya-linux@dsn.okisemi.com>
-Subject: [PATCH 14/20] misc: pch_phub: Remove superfluous descriptions to non-existent args 'offset_address'
-Date:   Mon, 29 Jun 2020 15:04:36 +0100
-Message-Id: <20200629140442.1043957-15-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629140442.1043957-1-lee.jones@linaro.org>
-References: <20200629140442.1043957-1-lee.jones@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Ud+jy3wulB5wSts5pAy11Tc3R2svZplkU4sR98nwwJE=;
+        b=WjO+9TQtNzVA6JLt4gip8Bnl+/GKSxgcJ3rMv2mJt0YuIkMEq+JqKnBYnW2toK+A0i
+         QVKCqukYqCRgwfmD+aptafsuV6vqmpaNe3m6v5IYnrVIfWDpkIAW4MYk0rFpI1CP4F6g
+         sMXxi5Vr677ajQeMgBVFQ5zIFLfip4xnmy0kevSRexgSIMdyaGGhKQmg+p9wumaqed15
+         RZUU8mAs8K3wtf702BkYDp9gZI9p/kuTnhFCb6uD5E7W0OPx8zG95X5VWocgj0ZPI69T
+         4wzSzvVaBMOsbEYhYM1TaTtgrAub8mnZrSZ6jbgG7rIL5OGSjwd2WAKPY2cFqlAl7EnE
+         LDbw==
+X-Gm-Message-State: AOAM531VHvQa1naekDUlPLeRSLHwL/pZCsQrTFCUMuXR9ZPJj14ig5GA
+        OiUtZweYGtznglTl+FjWYMkWthJVo6hoPP4fh4vMyw==
+X-Google-Smtp-Source: ABdhPJxlRAhYNvkoRyV5Hwm46QJy+t17bof8FUMuwBjVY5l48RtUsL6y2BFz2PS0mENanl2mteJxNhRc2gCcq/W5WPs=
+X-Received: by 2002:a17:906:ef2:: with SMTP id x18mr14263665eji.547.1593447885760;
+ Mon, 29 Jun 2020 09:24:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200629161333.2110327-1-pmalani@chromium.org>
+In-Reply-To: <20200629161333.2110327-1-pmalani@chromium.org>
+From:   Guenter Roeck <groeck@google.com>
+Date:   Mon, 29 Jun 2020 09:24:34 -0700
+Message-ID: <CABXOdTcSOUru-B_nbB0Z9k1_EUrL5ENZ7zQhuXoG+e1gZmz4qw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] platform/chrome: cros_ec_typec: Use workqueue for
+ port update
+To:     Prashant Malani <pmalani@chromium.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Probably a copy 'n' paste error, 'offset_address' has never been
-part of the pch_phub_{read,write}_gbe_mac_addr() functions.
+On Mon, Jun 29, 2020 at 9:13 AM Prashant Malani <pmalani@chromium.org> wrote:
+>
+> Use a work queue to call the port update routines, instead of doing it
+> directly in the PD notifier callback. This will prevent other drivers
+> with PD notifier callbacks from being blocked on the port update routine
+> completing.
+>
+> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> ---
+>
+> Changes in v2:
+> - No changes.
+>
+>  drivers/platform/chrome/cros_ec_typec.c | 28 ++++++++++++++++++++-----
+>  1 file changed, 23 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
+> index 0c041b79cbba..630170fb2cbe 100644
+> --- a/drivers/platform/chrome/cros_ec_typec.c
+> +++ b/drivers/platform/chrome/cros_ec_typec.c
+> @@ -58,6 +58,7 @@ struct cros_typec_data {
+>         /* Array of ports, indexed by port number. */
+>         struct cros_typec_port *ports[EC_USB_PD_MAX_PORTS];
+>         struct notifier_block nb;
+> +       struct work_struct port_work;
+>  };
+>
+>  static int cros_typec_parse_port_props(struct typec_capability *cap,
+> @@ -619,18 +620,29 @@ static int cros_typec_get_cmd_version(struct cros_typec_data *typec)
+>         return 0;
+>  }
+>
+> -static int cros_ec_typec_event(struct notifier_block *nb,
+> -                              unsigned long host_event, void *_notify)
+> +static void cros_typec_port_work(struct work_struct *work)
+>  {
+> -       struct cros_typec_data *typec = container_of(nb, struct cros_typec_data,
+> -                                                    nb);
+> -       int ret, i;
+> +       struct cros_typec_data *typec = container_of(work,
+> +                                                    struct cros_typec_data,
+> +                                                    port_work);
 
-Squashes the following W=1 warnings:
+Nit, but the upstream line length limit is now 100 characters, and
+this is a perfect example where this would come handy.
 
- drivers/misc/pch_phub.c:450: warning: Excess function parameter 'offset_address' description in 'pch_phub_read_gbe_mac_addr'
- drivers/misc/pch_phub.c:462: warning: Excess function parameter 'offset_address' description in 'pch_phub_write_gbe_mac_addr'
+> +       int ret;
+> +       int i;
+>
+>         for (i = 0; i < typec->num_ports; i++) {
+>                 ret = cros_typec_port_update(typec, i);
+>                 if (ret < 0)
+>                         dev_warn(typec->dev, "Update failed for port: %d\n", i);
+>         }
+> +}
+> +
+> +
+> +static int cros_ec_typec_event(struct notifier_block *nb,
+> +                              unsigned long host_event, void *_notify)
+> +{
+> +       struct cros_typec_data *typec = container_of(nb, struct cros_typec_data,
+> +                                                    nb);
+> +
+... and even more so here.
 
-Cc: Masayuki Ohtak <masa-korg@dsn.okisemi.com>
-Cc: Tomoya MORINAGA <tomoya-linux@dsn.okisemi.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/misc/pch_phub.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/misc/pch_phub.c b/drivers/misc/pch_phub.c
-index 95ba82a8625b0..b27d826132915 100644
---- a/drivers/misc/pch_phub.c
-+++ b/drivers/misc/pch_phub.c
-@@ -448,7 +448,6 @@ static int pch_phub_gbe_serial_rom_conf_mp(struct pch_phub_reg *chip)
- 
- /**
-  * pch_phub_read_gbe_mac_addr() - Read Gigabit Ethernet MAC address
-- * @offset_address:	Gigabit Ethernet MAC address offset value.
-  * @chip:		Pointer to the PHUB register structure
-  * @data:		Buffer of the Gigabit Ethernet MAC address value.
-  */
-@@ -461,7 +460,6 @@ static void pch_phub_read_gbe_mac_addr(struct pch_phub_reg *chip, u8 *data)
- 
- /**
-  * pch_phub_write_gbe_mac_addr() - Write MAC address
-- * @offset_address:	Gigabit Ethernet MAC address offset value.
-  * @chip:		Pointer to the PHUB register structure
-  * @data:		Gigabit Ethernet MAC address value.
-  */
--- 
-2.25.1
-
+> +       schedule_work(&typec->port_work);
+>
+>         return NOTIFY_OK;
+>  }
+> @@ -689,6 +701,12 @@ static int cros_typec_probe(struct platform_device *pdev)
+>         if (ret < 0)
+>                 return ret;
+>
+> +       INIT_WORK(&typec->port_work, cros_typec_port_work);
+> +
+> +       /*
+> +        * Safe to call port update here, since we haven't registered the
+> +        * PD notifier yet.
+> +        */
+>         for (i = 0; i < typec->num_ports; i++) {
+>                 ret = cros_typec_port_update(typec, i);
+>                 if (ret < 0)
+> --
+> 2.27.0.212.ge8ba1cc988-goog
+>
