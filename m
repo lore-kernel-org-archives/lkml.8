@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16164C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F84C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C1B9820724
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:52:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7742720702
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:52:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460341;
-	bh=/wwFr023xKwZwoH9KeM4gDBBd7FR80d/Yi4TuXHM080=;
+	s=default; t=1593460347;
+	bh=JQCWNfOt0DHc1emiaikqQlj/f/EBGVEXcXNGQXArUyw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vBmi09uofISWNdKbhdHRXfeEwLKEwWOb6GcZlklkkVKrdkHTVmoAQv1ZTU6iBNFVO
-	 EcdHQFbYSruWhnaUO3atFUb3uBuWg3s7X8jfyzwc1MEnL+aeb2U461eUpnk08wlFuf
-	 aC1bqWx0qVE0trc6toY2n32E0XjhYrshVHYiDfrU=
+	b=QLkAVpye/awS5tIRbZF5MTp8EUYf13wiJuXzgrzGHL63Mple4id2Tj3VL4CE31TsQ
+	 UhuP8tJ9tVj9yyzEnP/pMWuI0awa9s/oT0vm5iFOgqSVWEZ89Z8q+i9130tFisCnaC
+	 mVTynCenze+L8YmcGh07TvPtcvz4KkXQi9AQHAYg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387830AbgF2TwO (ORCPT
+        id S2388307AbgF2TwZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:52:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47660 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:52:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387724AbgF2Tkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387720AbgF2Tkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B2AA251C7;
-        Mon, 29 Jun 2020 15:28:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AC4E248F6;
+        Mon, 29 Jun 2020 15:27:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444498;
-        bh=/wwFr023xKwZwoH9KeM4gDBBd7FR80d/Yi4TuXHM080=;
+        s=default; t=1593444448;
+        bh=JQCWNfOt0DHc1emiaikqQlj/f/EBGVEXcXNGQXArUyw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OiSnj/eB/DD0YTAdsgAYhAwHt9jVf7i/S/niw8ibxCvfSIqFH04SjTuyvMlV4Ilws
-         tCYoVEfQRrv5++bW9mXtHudtQScxQ3LwvxjWDpNAbXgng0v1Jv7cJRWXURRdCEjnUz
-         ryJnN4zQzp68qgGKM8hkKId34dhWXiWK6IVElIM4=
+        b=FIU0ldXxdECreaVfaEiHkOr6TAATsGq+BhDHvwsNra3KzohlvSVWHJzbUHaOV4drt
+         gslVdpaQQnFSsSBaEfudFKa5WPot0fPkp9LhvUceDzRlZaWcfXdrdbXUXmZslCnhLb
+         jEiaC30FvxiVcp41ZQc6hu6Sw/W2cHxc0uDpkhf4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Huaisheng Ye <yehs1@lenovo.com>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 175/178] dm writecache: correct uncommitted_block when discarding uncommitted entry
-Date:   Mon, 29 Jun 2020 11:25:20 -0400
-Message-Id: <20200629152523.2494198-176-sashal@kernel.org>
+Cc:     Vidya Sagar <vidyas@nvidia.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 127/178] pinctrl: tegra: Use noirq suspend/resume callbacks
+Date:   Mon, 29 Jun 2020 11:24:32 -0400
+Message-Id: <20200629152523.2494198-128-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -66,36 +66,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Huaisheng Ye <yehs1@lenovo.com>
+From: Vidya Sagar <vidyas@nvidia.com>
 
-commit 39495b12ef1cf602e6abd350dce2ef4199906531 upstream.
+[ Upstream commit 782b6b69847f34dda330530493ea62b7de3fd06a ]
 
-When uncommitted entry has been discarded, correct wc->uncommitted_block
-for getting the exact number.
+Use noirq suspend/resume callbacks as other drivers which implement
+noirq suspend/resume callbacks (Ex:- PCIe) depend on pinctrl driver to
+configure the signals used by their respective devices in the noirq phase.
 
-Fixes: 48debafe4f2fe ("dm: add writecache target")
-Cc: stable@vger.kernel.org
-Signed-off-by: Huaisheng Ye <yehs1@lenovo.com>
-Acked-by: Mikulas Patocka <mpatocka@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Link: https://lore.kernel.org/r/20200604174935.26560-1-vidyas@nvidia.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-writecache.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pinctrl/tegra/pinctrl-tegra.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/md/dm-writecache.c b/drivers/md/dm-writecache.c
-index 0d6ca723257f6..64d75bbefda11 100644
---- a/drivers/md/dm-writecache.c
-+++ b/drivers/md/dm-writecache.c
-@@ -805,6 +805,8 @@ static void writecache_discard(struct dm_writecache *wc, sector_t start, sector_
- 				writecache_wait_for_ios(wc, WRITE);
- 				discarded_something = true;
- 			}
-+			if (!writecache_entry_is_committed(wc, e))
-+				wc->uncommitted_blocks--;
- 			writecache_free_entry(wc, e);
- 		}
+diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
+index e9a7cbb9aa336..01bcef2c01bcf 100644
+--- a/drivers/pinctrl/tegra/pinctrl-tegra.c
++++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+@@ -685,8 +685,8 @@ static int tegra_pinctrl_resume(struct device *dev)
+ }
  
+ const struct dev_pm_ops tegra_pinctrl_pm = {
+-	.suspend = &tegra_pinctrl_suspend,
+-	.resume = &tegra_pinctrl_resume
++	.suspend_noirq = &tegra_pinctrl_suspend,
++	.resume_noirq = &tegra_pinctrl_resume
+ };
+ 
+ static bool gpio_node_has_range(const char *compatible)
 -- 
 2.25.1
 
