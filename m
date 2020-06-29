@@ -2,117 +2,223 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F2EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7178AC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:46:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4110D206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:46:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51D7920656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:46:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467187;
-	bh=gF4C5IJL9Z7p1l9MBEr0x0+yhKuUVQmPfhBBdsQPwNk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=S16FdLrAOtqfOvcC6SFYKvk5hoa4VZk+BgZcYxlcpRN0ZQ8pyy/YgmwQWH/EeJIYL
-	 kk46chF0p/R8Gdf0mJ2NCisH4StEIyeSB9R0ddJDTxUgY1NcWQnWz/PKYZbGlpT7k+
-	 Twg7ckuRWDtopLxTM0JXgJiF6rH7b0UWlcP5R4fc=
+	s=default; t=1593467191;
+	bh=FNpzwp1s02R1GjuXV+0y15viWvqFwwi/HZ1PMgAv9kY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=kHpu4eywhbExuVKNL4hIkAG3pPkG61sw7MMSSpmaE6AUmQIeD8lZ3kLpNv6RGMgak
+	 KX9FM6oYUA3+sgljF7nzHE0TnIc4MzaawXzPAyxLuMXVuLvYf3s0ZRHJ3UwFlI1mR/
+	 xcSsZsttoIch6lKTE/zOc/Qm5EbEzXVFrem2yq8E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404138AbgF2VqZ (ORCPT
+        id S2404147AbgF2Vq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:46:25 -0400
-Received: from mail-il1-f193.google.com ([209.85.166.193]:44090 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403971AbgF2VqP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 17:46:15 -0400
-Received: by mail-il1-f193.google.com with SMTP id w73so4008872ila.11;
-        Mon, 29 Jun 2020 14:46:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=uyW+jW1awHxTjKyRxm3xfnDiRBllSD4XGWQa5b78Aw8=;
-        b=bvczna650WplwrbE2t7lBZio1h82/M0jvHqMsVdFzDLnwQFT7OHKuk6ME5eHq6C7rI
-         INRc3gxByEzTCDdE1Rblvl0dRi0VUEOIiz/eUjDXGg+7xEJ2tj7qevgFZHHMV85Xvswz
-         cDvF/sAXKN8AoSqsNLHiTrwHZ++2hmE809fM+zcOpevJuL7j4TfKaJfdNTDT42MIukqU
-         w7cw0uatIu09PN4lUBHI+UxikLJQd6m2SQ5F2FChin9O56LWMKkhwVG7E3fS2QxVFScJ
-         VOm1qsH9Fspg8qd90mqmE0PoPtvpXRLndSEzDQTT2u3CPLJ84Jhddiogeou/pgHILVMX
-         GnrA==
-X-Gm-Message-State: AOAM530t+ex3qOLtQ+bOv5I1nLSdenyrJEMRcrLykP5qF6glB9Tm6xCN
-        p6h69JFn1NdGNlHJheg1bQ==
-X-Google-Smtp-Source: ABdhPJxBseoySQnNrO/ucBAVbxE8Ve40ZGwZtZVMP9DsPrIAMec0KapS8vUwFpWKDddIkdU/wn0rOw==
-X-Received: by 2002:a92:b684:: with SMTP id m4mr17425649ill.153.1593467174525;
-        Mon, 29 Jun 2020 14:46:14 -0700 (PDT)
-Received: from xps15 ([64.188.179.255])
-        by smtp.gmail.com with ESMTPSA id z9sm612748ilz.45.2020.06.29.14.46.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 14:46:13 -0700 (PDT)
-Received: (nullmailer pid 2980772 invoked by uid 1000);
-        Mon, 29 Jun 2020 21:46:12 -0000
-Date:   Mon, 29 Jun 2020 15:46:12 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Serge Semin <Sergey.Semin@baikalelectronics.ru>
-Cc:     devicetree@vger.kernel.org, Serge Semin <fancer.lancer@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Paul Burton <paulburton@kernel.org>
-Subject: Re: [PATCH v4 1/6] dt-bindings: power: Convert mti,mips-cpc to DT
- schema
-Message-ID: <20200629214612.GA2979868@bogus>
-References: <20200617223201.23259-1-Sergey.Semin@baikalelectronics.ru>
- <20200617223201.23259-2-Sergey.Semin@baikalelectronics.ru>
+        Mon, 29 Jun 2020 17:46:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56796 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726760AbgF2Sft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:49 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7CD5246B5;
+        Mon, 29 Jun 2020 15:20:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593444010;
+        bh=FNpzwp1s02R1GjuXV+0y15viWvqFwwi/HZ1PMgAv9kY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=I6p6hCOi6sSuJGX/d+wGwc7E8y5I+mBH5JVVAgjerUcrLAFWIAIezYW9nG6PtvgVr
+         wHL1AiuvK2KCdXgmnXPPRxfl3SAyQ3ogziIy7r5/haE5+DAu7k80hV/p+fHqtqJiXi
+         shkS1yVbwQ/PDY+0v3b1dFzAqIW2OJlIkQFkoCSM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Matthew Hagan <mnhagan88@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 116/265] ARM: dts: NSP: Disable PL330 by default, add dma-coherent property
+Date:   Mon, 29 Jun 2020 11:15:49 -0400
+Message-Id: <20200629151818.2493727-117-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
+References: <20200629151818.2493727-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200617223201.23259-2-Sergey.Semin@baikalelectronics.ru>
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.7.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.7.7-rc1
+X-KernelTest-Deadline: 2020-07-01T15:14+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Jun 2020 01:31:55 +0300, Serge Semin wrote:
-> It's a Cluster Power Controller embedded into the MIPS IP cores.
-> Currently the corresponding dts node is supposed to have compatible
-> and reg properties.
-> 
-> Signed-off-by: Serge Semin <Sergey.Semin@baikalelectronics.ru>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Cc: Alexey Malahov <Alexey.Malahov@baikalelectronics.ru>
-> 
-> ---
-> 
-> Changelog prev:
-> - Reword the changelog summary - use shorter version.
-> - Lowercase the example hex'es.
-> ---
->  .../bindings/power/mti,mips-cpc.txt           |  8 -----
->  .../bindings/power/mti,mips-cpc.yaml          | 35 +++++++++++++++++++
->  2 files changed, 35 insertions(+), 8 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/power/mti,mips-cpc.txt
->  create mode 100644 Documentation/devicetree/bindings/power/mti,mips-cpc.yaml
-> 
+From: Matthew Hagan <mnhagan88@gmail.com>
 
+[ Upstream commit b9dbe0101e344e8339406a11b7a91d4a0c50ad13 ]
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Currently the PL330 is enabled by default. However if left in IDM reset, as is
+the case with the Meraki and Synology NSP devices, the system will hang when
+probing for the PL330's AMBA peripheral ID. We therefore should be able to
+disable it in these cases.
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/power/mti,mips-cpc.example.dt.yaml: example-0: cpc@1bde0000:reg:0: [0, 467533824, 0, 32768] is too long
+The PL330 is also included among of the list of peripherals put into coherent
+mode, so "dma-coherent" has been added here as well.
 
+Fixes: 5fa1026a3e4d ("ARM: dts: NSP: Add PL330 support")
+Signed-off-by: Matthew Hagan <mnhagan88@gmail.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/bcm-nsp.dtsi     | 4 +++-
+ arch/arm/boot/dts/bcm958522er.dts  | 4 ++++
+ arch/arm/boot/dts/bcm958525er.dts  | 4 ++++
+ arch/arm/boot/dts/bcm958525xmc.dts | 4 ++++
+ arch/arm/boot/dts/bcm958622hr.dts  | 4 ++++
+ arch/arm/boot/dts/bcm958623hr.dts  | 4 ++++
+ arch/arm/boot/dts/bcm958625hr.dts  | 4 ++++
+ arch/arm/boot/dts/bcm958625k.dts   | 4 ++++
+ 8 files changed, 31 insertions(+), 1 deletion(-)
 
-See https://patchwork.ozlabs.org/patch/1311661
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
+diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
+index da6d70f09ef19..920c0f561e5ce 100644
+--- a/arch/arm/boot/dts/bcm-nsp.dtsi
++++ b/arch/arm/boot/dts/bcm-nsp.dtsi
+@@ -200,7 +200,7 @@
+ 			status = "disabled";
+ 		};
+ 
+-		dma@20000 {
++		dma: dma@20000 {
+ 			compatible = "arm,pl330", "arm,primecell";
+ 			reg = <0x20000 0x1000>;
+ 			interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,
+@@ -215,6 +215,8 @@
+ 			clocks = <&iprocslow>;
+ 			clock-names = "apb_pclk";
+ 			#dma-cells = <1>;
++			dma-coherent;
++			status = "disabled";
+ 		};
+ 
+ 		sdio: sdhci@21000 {
+diff --git a/arch/arm/boot/dts/bcm958522er.dts b/arch/arm/boot/dts/bcm958522er.dts
+index 8c388eb8a08f8..7be4c4e628e02 100644
+--- a/arch/arm/boot/dts/bcm958522er.dts
++++ b/arch/arm/boot/dts/bcm958522er.dts
+@@ -58,6 +58,10 @@
+ 
+ /* USB 3 support needed to be complete */
+ 
++&dma {
++	status = "okay";
++};
++
+ &amac0 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/bcm958525er.dts b/arch/arm/boot/dts/bcm958525er.dts
+index c339771bb22e0..e58ed7e953460 100644
+--- a/arch/arm/boot/dts/bcm958525er.dts
++++ b/arch/arm/boot/dts/bcm958525er.dts
+@@ -58,6 +58,10 @@
+ 
+ /* USB 3 support needed to be complete */
+ 
++&dma {
++	status = "okay";
++};
++
+ &amac0 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/bcm958525xmc.dts b/arch/arm/boot/dts/bcm958525xmc.dts
+index 1c72ec8288de4..716da62f57885 100644
+--- a/arch/arm/boot/dts/bcm958525xmc.dts
++++ b/arch/arm/boot/dts/bcm958525xmc.dts
+@@ -58,6 +58,10 @@
+ 
+ /* XHCI support needed to be complete */
+ 
++&dma {
++	status = "okay";
++};
++
+ &amac0 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/bcm958622hr.dts b/arch/arm/boot/dts/bcm958622hr.dts
+index 96a021cebd97b..a49c2fd21f4a8 100644
+--- a/arch/arm/boot/dts/bcm958622hr.dts
++++ b/arch/arm/boot/dts/bcm958622hr.dts
+@@ -58,6 +58,10 @@
+ 
+ /* USB 3 and SLIC support needed to be complete */
+ 
++&dma {
++	status = "okay";
++};
++
+ &amac0 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/bcm958623hr.dts b/arch/arm/boot/dts/bcm958623hr.dts
+index b2c7f21d471e6..dd6dff6452b87 100644
+--- a/arch/arm/boot/dts/bcm958623hr.dts
++++ b/arch/arm/boot/dts/bcm958623hr.dts
+@@ -58,6 +58,10 @@
+ 
+ /* USB 3 and SLIC support needed to be complete */
+ 
++&dma {
++	status = "okay";
++};
++
+ &amac0 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/bcm958625hr.dts b/arch/arm/boot/dts/bcm958625hr.dts
+index 536fb24f38bb7..a71371b4065ed 100644
+--- a/arch/arm/boot/dts/bcm958625hr.dts
++++ b/arch/arm/boot/dts/bcm958625hr.dts
+@@ -69,6 +69,10 @@
+ 	status = "okay";
+ };
+ 
++&dma {
++	status = "okay";
++};
++
+ &amac0 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm/boot/dts/bcm958625k.dts b/arch/arm/boot/dts/bcm958625k.dts
+index 3fcca12d83c2d..7b84b54436edd 100644
+--- a/arch/arm/boot/dts/bcm958625k.dts
++++ b/arch/arm/boot/dts/bcm958625k.dts
+@@ -48,6 +48,10 @@
+ 	};
+ };
+ 
++&dma {
++	status = "okay";
++};
++
+ &amac0 {
+ 	status = "okay";
+ };
+-- 
+2.25.1
 
