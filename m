@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD703C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF081C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AB9320656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:06:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C783120656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:06:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468381;
-	bh=5xZ9Bfz31l30pCq45KyeE0+gkOEVNXg0vIJALHphUow=;
+	s=default; t=1593468384;
+	bh=giJcWPoG0KotqrnpuGv7hPNXaJdUSSdszAHKNZgTzbM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wl2nH47z5EBz2qJ70Wxxk9JiRGBJT5soMxYl3MglcJkNMOC8+48qECTMDdxrCQsEE
-	 GAH33HfE6m/DXJ0N9eknAytW+JMrCfOxxX5pmgKIXzV6ccY+yz2YnKSZEuA+27dT/P
-	 14ftAQkb48TBzStSCd8cK+nL6QHfMK238R00O8HI=
+	b=vnCVT5VdewnU7IGUhS4A2q9P9AThmh2MIZtI8T/5qpiLOcDicVsJ3sRlKgGGBov/A
+	 SDCJhtfa8cfYO2vQRw7VSnLhkvhfhY8m1BwlTsOgA+oa7cBPLMX5dgAVx1Z9ICR2Ww
+	 gBvaWoCTJvRa+QLAsse0SniMLK5RO1SUN15NLoQE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389659AbgF2WGU (ORCPT
+        id S2404772AbgF2WGX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:06:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56780 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:06:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726131AbgF2SfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726139AbgF2SfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 942FC24726;
-        Mon, 29 Jun 2020 15:20:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9982B2463E;
+        Mon, 29 Jun 2020 15:19:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444048;
-        bh=5xZ9Bfz31l30pCq45KyeE0+gkOEVNXg0vIJALHphUow=;
+        s=default; t=1593443963;
+        bh=giJcWPoG0KotqrnpuGv7hPNXaJdUSSdszAHKNZgTzbM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wtE3fHB/MOwn8HQfpPKBpLlC34XKZ6nEJEU01oX5eggfvXaNX58jQndKaKFNyd1v5
-         oOefkTFZvUhstohIckcC0Hbh0QXWn7PBqYpslaPkYAJiA92FkD3PL+WBVJwOkJxeFy
-         n90vzYY6CclVeOpVugsZJSLvsDLbZd/bZVHjBRd8=
+        b=Vy7Cd39v+FzTDA5bGXmgHFUPODXOxZ4lE3AOvS1AA8s1j/ieJTowEMgcb+eMazd6F
+         XZ8/l67eJ3V3lchRg2scldaOJ4uit+ERhWyxZhCRi+qKETQz4JxeKt1M7Ax36IvRP6
+         iRRglGCNS76S+lDmCl9ooFlV92/7igWiq4WMLkbw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 155/265] cxgb4: move handling L2T ARP failures to caller
-Date:   Mon, 29 Jun 2020 11:16:28 -0400
-Message-Id: <20200629151818.2493727-156-sashal@kernel.org>
+Cc:     Longfang Liu <liulongfang@huawei.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 066/265] USB: ehci: reopen solution for Synopsys HC bug
+Date:   Mon, 29 Jun 2020 11:14:59 -0400
+Message-Id: <20200629151818.2493727-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-5.7.y
@@ -65,103 +66,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+From: Longfang Liu <liulongfang@huawei.com>
 
-[ Upstream commit 11d8cd5c9f3b46f397f889cefdb66795518aaebd ]
+commit 1ddcb71a3edf0e1682b6e056158e4c4b00325f66 upstream.
 
-Move code handling L2T ARP failures to the only caller.
+A Synopsys USB2.0 core used in Huawei Kunpeng920 SoC has a bug which
+might cause the host controller not issuing ping.
 
-Fixes following sparse warning:
-skbuff.h:2091:29: warning: context imbalance in
-'handle_failed_resolution' - unexpected unlock
+Bug description:
+After indicating an Interrupt on Async Advance, the software uses the
+doorbell mechanism to delete the Next Link queue head of the last
+executed queue head. At this time, the host controller still references
+the removed queue head(the queue head is NULL). NULL reference causes
+the host controller to lose the USB device.
 
-Fixes: 749cb5fe48bb ("cxgb4: Replace arpq_head/arpq_tail with SKB double link-list code")
-Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Solution:
+After deleting the Next Link queue head, when has_synopsys_hc_bug set
+to 1，the software can write one of the valid queue head addresses to
+the ASYNCLISTADDR register to allow the host controller to get
+the valid queue head. in order to solve that problem, this patch set
+the flag for Huawei Kunpeng920
+
+There are detailed instructions and solutions in this patch:
+commit 2f7ac6c19997 ("USB: ehci: add workaround for Synopsys HC bug")
+
+Signed-off-by: Longfang Liu <liulongfang@huawei.com>
+Cc: stable <stable@vger.kernel.org>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Link: https://lore.kernel.org/r/1591588019-44284-1-git-send-email-liulongfang@huawei.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/chelsio/cxgb4/l2t.c | 52 +++++++++++-------------
- 1 file changed, 24 insertions(+), 28 deletions(-)
+ drivers/usb/host/ehci-pci.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/net/ethernet/chelsio/cxgb4/l2t.c b/drivers/net/ethernet/chelsio/cxgb4/l2t.c
-index 72b37a66c7d88..0ed20a9cca144 100644
---- a/drivers/net/ethernet/chelsio/cxgb4/l2t.c
-+++ b/drivers/net/ethernet/chelsio/cxgb4/l2t.c
-@@ -502,41 +502,20 @@ u64 cxgb4_select_ntuple(struct net_device *dev,
- }
- EXPORT_SYMBOL(cxgb4_select_ntuple);
- 
--/*
-- * Called when address resolution fails for an L2T entry to handle packets
-- * on the arpq head.  If a packet specifies a failure handler it is invoked,
-- * otherwise the packet is sent to the device.
-- */
--static void handle_failed_resolution(struct adapter *adap, struct l2t_entry *e)
--{
--	struct sk_buff *skb;
--
--	while ((skb = __skb_dequeue(&e->arpq)) != NULL) {
--		const struct l2t_skb_cb *cb = L2T_SKB_CB(skb);
--
--		spin_unlock(&e->lock);
--		if (cb->arp_err_handler)
--			cb->arp_err_handler(cb->handle, skb);
--		else
--			t4_ofld_send(adap, skb);
--		spin_lock(&e->lock);
--	}
--}
--
- /*
-  * Called when the host's neighbor layer makes a change to some entry that is
-  * loaded into the HW L2 table.
-  */
- void t4_l2t_update(struct adapter *adap, struct neighbour *neigh)
- {
--	struct l2t_entry *e;
--	struct sk_buff_head *arpq = NULL;
--	struct l2t_data *d = adap->l2t;
- 	unsigned int addr_len = neigh->tbl->key_len;
- 	u32 *addr = (u32 *) neigh->primary_key;
--	int ifidx = neigh->dev->ifindex;
--	int hash = addr_hash(d, addr, addr_len, ifidx);
-+	int hash, ifidx = neigh->dev->ifindex;
-+	struct sk_buff_head *arpq = NULL;
-+	struct l2t_data *d = adap->l2t;
-+	struct l2t_entry *e;
- 
-+	hash = addr_hash(d, addr, addr_len, ifidx);
- 	read_lock_bh(&d->lock);
- 	for (e = d->l2tab[hash].first; e; e = e->next)
- 		if (!addreq(e, addr) && e->ifindex == ifidx) {
-@@ -569,8 +548,25 @@ void t4_l2t_update(struct adapter *adap, struct neighbour *neigh)
- 			write_l2e(adap, e, 0);
+diff --git a/drivers/usb/host/ehci-pci.c b/drivers/usb/host/ehci-pci.c
+index 1a48ab1bd3b2a..7ff2cbdcd0b22 100644
+--- a/drivers/usb/host/ehci-pci.c
++++ b/drivers/usb/host/ehci-pci.c
+@@ -216,6 +216,13 @@ static int ehci_pci_setup(struct usb_hcd *hcd)
+ 		ehci_info(ehci, "applying MosChip frame-index workaround\n");
+ 		ehci->frame_index_bug = 1;
+ 		break;
++	case PCI_VENDOR_ID_HUAWEI:
++		/* Synopsys HC bug */
++		if (pdev->device == 0xa239) {
++			ehci_info(ehci, "applying Synopsys HC workaround\n");
++			ehci->has_synopsys_hc_bug = 1;
++		}
++		break;
  	}
  
--	if (arpq)
--		handle_failed_resolution(adap, e);
-+	if (arpq) {
-+		struct sk_buff *skb;
-+
-+		/* Called when address resolution fails for an L2T
-+		 * entry to handle packets on the arpq head. If a
-+		 * packet specifies a failure handler it is invoked,
-+		 * otherwise the packet is sent to the device.
-+		 */
-+		while ((skb = __skb_dequeue(&e->arpq)) != NULL) {
-+			const struct l2t_skb_cb *cb = L2T_SKB_CB(skb);
-+
-+			spin_unlock(&e->lock);
-+			if (cb->arp_err_handler)
-+				cb->arp_err_handler(cb->handle, skb);
-+			else
-+				t4_ofld_send(adap, skb);
-+			spin_lock(&e->lock);
-+		}
-+	}
- 	spin_unlock_bh(&e->lock);
- }
- 
+ 	/* optional debug port, normally in the first BAR */
 -- 
 2.25.1
 
