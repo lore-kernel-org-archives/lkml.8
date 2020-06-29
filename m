@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A537C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD50FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1ACDC20780
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 991B520780
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:01:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468107;
-	bh=+kFvMppVPhbb1Jbt3yVA+kAco1Bh+AKTYk60GeSAHeo=;
+	s=default; t=1593468112;
+	bh=QzOTcZupd2bkxq8x7aWHVHFNfXkXtl9rpvhQrlewe4o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XNuLimciwV/Bxlplmz21rRDC5SOBH0H5Pn1RyNzIMmY6QaP6ivG5MI/svmF1kDYZx
-	 JqOh+x7Js8X/TLbTzAOkj2ESpoDOggSP9PGol/c/cqM7Gp2QCFrkDJ6cmjOBId32U6
-	 /Q/Ia8lo/UnTosQ75JoY/noD5v4AzQapdcj9J5O8=
+	b=12PLmVHevi1Gy2GTjglDsfzGiQfahhaxoxtVFCr4fraJ1el6Tzu3C2rUISHxG3WAn
+	 pT7rlZrLOQqFTGTNuh4XQjj3ELRKEK9aNVqYfzJ0U1m1+mTQ/thHd7JGv5ugYz9v9T
+	 NHAWhnT2gmWmGVFOm92a/GSddktP1+gAouzAYOHY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387442AbgF2WBp (ORCPT
+        id S2389629AbgF2WBu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:01:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56792 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:01:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726251AbgF2SfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726285AbgF2SfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B8A3246EE;
-        Mon, 29 Jun 2020 15:20:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 661FE246F4;
+        Mon, 29 Jun 2020 15:20:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444034;
-        bh=+kFvMppVPhbb1Jbt3yVA+kAco1Bh+AKTYk60GeSAHeo=;
+        s=default; t=1593444038;
+        bh=QzOTcZupd2bkxq8x7aWHVHFNfXkXtl9rpvhQrlewe4o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xfcFr44IHwtqW740QHre5TD7xZZNhGDD/D3bOUM6b7sGfuk4M0vQPdEauHkZCfm5X
-         1zgsBvICU1G/1XKen09CWlNh7CIr3SJjawvxQJD2VATWvFLXwOFZlxafuXrpfCjQSf
-         6nckHmlURt2swsoZzJQoKm3fUTf+TeNWUbj+VEgw=
+        b=kNBdPHXDLTM5/At0rwIr6hyUiCo/15EPaR3SEaWyq93NMEP1Ou8gjOPu/jaqfPS9E
+         yFQb7JmO24Q0MksS2d/c+gn17q2lvbJSFKZRqoJwGPP44mek9v6mNIbsv0A6Yo3wjl
+         Eg+iFa+2dkgpFjSstbJ+7BqUoMTpD53VUOgGsFhc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>, Xin Zeng <xin.zeng@intel.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 142/265] iommu/vt-d: Set U/S bit in first level page table by default
-Date:   Mon, 29 Jun 2020 11:16:15 -0400
-Message-Id: <20200629151818.2493727-143-sashal@kernel.org>
+Cc:     Anson Huang <Anson.Huang@nxp.com>,
+        Iuliana Prodan <iuliana.prodan@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 145/265] soc: imx8m: Correct i.MX8MP UID fuse offset
+Date:   Mon, 29 Jun 2020 11:16:18 -0400
+Message-Id: <20200629151818.2493727-146-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -64,76 +66,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lu Baolu <baolu.lu@linux.intel.com>
+From: Anson Huang <Anson.Huang@nxp.com>
 
-[ Upstream commit 16ecf10e815d70d11d2300243f4a3b4c7c5acac7 ]
+[ Upstream commit c95c9693b112f312b59c5d100fd09a1349970fab ]
 
-When using first-level translation for IOVA, currently the U/S bit in the
-page table is cleared which implies DMA requests with user privilege are
-blocked. As the result, following error messages might be observed when
-passing through a device to user level:
+Correct i.MX8MP UID fuse offset according to fuse map:
 
-DMAR: DRHD: handling fault status reg 3
-DMAR: [DMA Read] Request device [41:00.0] PASID 1 fault addr 7ecdcd000
-        [fault reason 129] SM: U/S set 0 for first-level translation
-        with user privilege
+UID_LOW: 0x420
+UID_HIGH: 0x430
 
-This fixes it by setting U/S bit in the first level page table and makes
-IOVA over first level compatible with previous second-level translation.
-
-Fixes: b802d070a52a1 ("iommu/vt-d: Use iova over first level")
-Reported-by: Xin Zeng <xin.zeng@intel.com>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Link: https://lore.kernel.org/r/20200622231345.29722-3-baolu.lu@linux.intel.com
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Fixes: fc40200ebf82 ("soc: imx: increase build coverage for imx8m soc driver")
+Fixes: 18f662a73862 ("soc: imx: Add i.MX8MP SoC driver support")
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Reviewed-by: Iuliana Prodan <iuliana.prodan@nxp.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/iommu/intel-iommu.c | 5 ++---
- include/linux/intel-iommu.h | 1 +
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ drivers/soc/imx/soc-imx8m.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-index fde7aba49b746..a0b9ea0805210 100644
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -943,7 +943,7 @@ static struct dma_pte *pfn_to_dma_pte(struct dmar_domain *domain,
- 			domain_flush_cache(domain, tmp_page, VTD_PAGE_SIZE);
- 			pteval = ((uint64_t)virt_to_dma_pfn(tmp_page) << VTD_PAGE_SHIFT) | DMA_PTE_READ | DMA_PTE_WRITE;
- 			if (domain_use_first_level(domain))
--				pteval |= DMA_FL_PTE_XD;
-+				pteval |= DMA_FL_PTE_XD | DMA_FL_PTE_US;
- 			if (cmpxchg64(&pte->val, 0ULL, pteval))
- 				/* Someone else set it while we were thinking; use theirs. */
- 				free_pgtable_page(tmp_page);
-@@ -2034,7 +2034,6 @@ static inline void
- context_set_sm_rid2pasid(struct context_entry *context, unsigned long pasid)
+diff --git a/drivers/soc/imx/soc-imx8m.c b/drivers/soc/imx/soc-imx8m.c
+index 719e1f189ebf2..ada0d8804d84c 100644
+--- a/drivers/soc/imx/soc-imx8m.c
++++ b/drivers/soc/imx/soc-imx8m.c
+@@ -22,6 +22,8 @@
+ #define OCOTP_UID_LOW			0x410
+ #define OCOTP_UID_HIGH			0x420
+ 
++#define IMX8MP_OCOTP_UID_OFFSET		0x10
++
+ /* Same as ANADIG_DIGPROG_IMX7D */
+ #define ANADIG_DIGPROG_IMX8MM	0x800
+ 
+@@ -88,6 +90,8 @@ static void __init imx8mm_soc_uid(void)
  {
- 	context->hi |= pasid & ((1 << 20) - 1);
--	context->hi |= (1 << 20);
- }
+ 	void __iomem *ocotp_base;
+ 	struct device_node *np;
++	u32 offset = of_machine_is_compatible("fsl,imx8mp") ?
++		     IMX8MP_OCOTP_UID_OFFSET : 0;
  
- /*
-@@ -2326,7 +2325,7 @@ static int __domain_mapping(struct dmar_domain *domain, unsigned long iov_pfn,
+ 	np = of_find_compatible_node(NULL, NULL, "fsl,imx8mm-ocotp");
+ 	if (!np)
+@@ -96,9 +100,9 @@ static void __init imx8mm_soc_uid(void)
+ 	ocotp_base = of_iomap(np, 0);
+ 	WARN_ON(!ocotp_base);
  
- 	attr = prot & (DMA_PTE_READ | DMA_PTE_WRITE | DMA_PTE_SNP);
- 	if (domain_use_first_level(domain))
--		attr |= DMA_FL_PTE_PRESENT | DMA_FL_PTE_XD;
-+		attr |= DMA_FL_PTE_PRESENT | DMA_FL_PTE_XD | DMA_FL_PTE_US;
+-	soc_uid = readl_relaxed(ocotp_base + OCOTP_UID_HIGH);
++	soc_uid = readl_relaxed(ocotp_base + OCOTP_UID_HIGH + offset);
+ 	soc_uid <<= 32;
+-	soc_uid |= readl_relaxed(ocotp_base + OCOTP_UID_LOW);
++	soc_uid |= readl_relaxed(ocotp_base + OCOTP_UID_LOW + offset);
  
- 	if (!sg) {
- 		sg_res = nr_pages;
-diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-index de23fb95fe918..64a5335046b00 100644
---- a/include/linux/intel-iommu.h
-+++ b/include/linux/intel-iommu.h
-@@ -40,6 +40,7 @@
- #define DMA_PTE_SNP		BIT_ULL(11)
- 
- #define DMA_FL_PTE_PRESENT	BIT_ULL(0)
-+#define DMA_FL_PTE_US		BIT_ULL(2)
- #define DMA_FL_PTE_XD		BIT_ULL(63)
- 
- #define CONTEXT_TT_MULTI_LEVEL	0
+ 	iounmap(ocotp_base);
+ 	of_node_put(np);
 -- 
 2.25.1
 
