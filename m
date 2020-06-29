@@ -2,107 +2,98 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E05D9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A40A0C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7C2020724
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:46:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BF4520672
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:47:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eDtph5pc"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OQ0O/ji3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389760AbgF2Uq5 (ORCPT
+        id S2389461AbgF2UrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:46:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43384 "EHLO
+        Mon, 29 Jun 2020 16:47:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731525AbgF2TNw (ORCPT
+        with ESMTP id S1730650AbgF2TNw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:13:52 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D1DFC0068BA;
-        Mon, 29 Jun 2020 04:49:32 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id e22so12548169edq.8;
-        Mon, 29 Jun 2020 04:49:32 -0700 (PDT)
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 623DAC014AFF
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 01:04:04 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id h5so15519279wrc.7
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 01:04:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2uPO3vckqsooDcWfKZuORVgJvTI2dPV4QqBlpSlJ+WY=;
-        b=eDtph5pcsYHKVqyYe7AqdGWv7pSMpgITQFZvs/tZftfHXbon6dnQcD4JpPZjxHQ4F4
-         6Qi0Gxx6aAe54M7RXwfq7FsQrd54aX60+g3cBZ9COLWkFBcN2f+8NZmPYZ0/NGnAPacK
-         C44sHkNGCrA6E9leq32IEneHBWGF1XpmCsGzBiIjN9Nt+POJcFADpVYSffVo6ejOLTah
-         lE4W5B0yghA//VCbi493fDcVq892KnnCwZFJdO0XA0oZwD5H0YCL/dZnW/UYyPVeWWDt
-         YkyOJsSrGo/btZkZU7JP76om4gRGwk6XgIEgVb5wQxDaZOxxJ9kme+A4fhgZQXnYyF4i
-         pStA==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=wJu5T05EGIesmOT82QcK4tvM42NAPTrHSyac4x7F7pM=;
+        b=OQ0O/ji3YWaPUA5LVTl2z+7oIv8oHPXXajbTo7gN+ypY32l7m2S8IHDthtPNy8PmUI
+         3/RB2boMvLnFXERxlvImDeRSrAmCnr84vqbj+hoK2UVr5jSFPlXCeqfbMYmnw1DtZoCz
+         wfz1yX5KxVKQ6+reINQnT84GX4kzt3f1463mWC00vcmx89o7eIJH2WBtTTb6QhFyW9zQ
+         hvK7Bmre+NIIGJTAvrlFsQZAcOAzcIg6D0DdL6rfZhqpV/wAzAA6fh29DpdZ9ZNAxsLf
+         s3cb2tlXJHAcIrAd+N8AfFxDQm6sFD8UFJa97ojLl9pmTExTdys+BJ+NBS1K6M7wPhlo
+         e2TQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2uPO3vckqsooDcWfKZuORVgJvTI2dPV4QqBlpSlJ+WY=;
-        b=YlGUEDK0rFZAS0NnsaEFxmEFv0dfMIXMmiqP+MFrQP/yk6LWuw+w8j7i75+8eyejrC
-         NM6fRRnjocCKIXcHjzv1Cebk3NTLaoyQBn4BvJZ+l81kvnDTCgZrcN0V1CV1Ken62tfb
-         pUfMNKA/fqNNGE1zo7bSO+5yZjBHlHfWilnRaEvl1iyl63TCUj2x0EKOqC6a5oxRxFEF
-         9eMY1845hMtGTuUM2bTaZNjHRTm6iaYw6II3YDLcoeWCwnInf93ANESZEpqyyJ0iamKm
-         lqBv+Hagx1aIP56Q5zs6HKaxPbuX3nCv+iUQYJ6VMO3MzBZfxKT7nazrCZ3gx6RLB0mm
-         ZZbQ==
-X-Gm-Message-State: AOAM53292xZoNRIXG5spEQp/w5uultxPiA5zP56Afqwp4L+OSoj3HVNs
-        WWPFmAVoGK4lP5ySkmAqgqSQgQIkvTM=
-X-Google-Smtp-Source: ABdhPJxX3ZkbA575LdtUr7ABCDWqwZSDSB4e/xyVQw9NjMO+OlKeImrqaZVJLNLDkt+5mICUb79hhw==
-X-Received: by 2002:a50:e1c5:: with SMTP id m5mr17248608edl.47.1593431370952;
-        Mon, 29 Jun 2020 04:49:30 -0700 (PDT)
-Received: from xps13.lan (3e6b1cc1.rev.stofanet.dk. [62.107.28.193])
-        by smtp.googlemail.com with ESMTPSA id z20sm9818006edq.97.2020.06.29.04.49.29
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=wJu5T05EGIesmOT82QcK4tvM42NAPTrHSyac4x7F7pM=;
+        b=XIlg3zrQx9VX+LG+x2yoYXGKhd/r/lk5fh886ffSZ02EGNe9ytsd/hbn0odpgKUbRP
+         jdduuYfFWD4LZxjHGQZiJTy5KUz6P0vGIwde3TwBdtDBlRvZp2zyBmJ5tNuv6tOUZvhF
+         a7fyqZiZL/C8a7QV2vNE4QziO/TijM6mdGejDnnHRtrFZja4Qhj9qGJxc6thz6JxFq76
+         iDESWcNVxPA3quIz0ku/BD2rfEo3RSai7WPZQFDRCU2vXPbGbFI1DiPPver+xKmeXI/j
+         62mnk5V4ySO/t7u5451c1Bvdew0ih8LgHY0p5FnrXkZ24r2lMouM59Sx0b1TUEeBCrBU
+         EEOw==
+X-Gm-Message-State: AOAM533aeYbpBwwnIBOxt4dDy10yUZzwKwt36tbt2Lc8NaFKqghQwQ+a
+        ykNb25XF8FwMyZULrRiSpyrIPw==
+X-Google-Smtp-Source: ABdhPJxjhHOLK/OLS+QpmEsbDw2KsR8ghE7pxziLY6KM8n7B0r5tY5LBX2zBH+b5fLJzKBlhjiImZg==
+X-Received: by 2002:a5d:6a01:: with SMTP id m1mr16758755wru.115.1593417842938;
+        Mon, 29 Jun 2020 01:04:02 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id a2sm31496362wrn.68.2020.06.29.01.04.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 04:49:30 -0700 (PDT)
-From:   Bruno Thomsen <bruno.thomsen@gmail.com>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>, bth@kamstrup.com,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Bruno Thomsen <bruno.thomsen@gmail.com>
-Subject: [PATCH 1/3] dt-bindings: ARM: imx: add kamstrup flex concentrator to schema
-Date:   Mon, 29 Jun 2020 13:49:25 +0200
-Message-Id: <20200629114927.17379-1-bruno.thomsen@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        Mon, 29 Jun 2020 01:04:02 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 09:03:58 +0100
+From:   Quentin Perret <qperret@google.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Rafael Wysocki <rjw@rjwysocki.net>,
+        Jonathan Corbet <corbet@lwn.net>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        kernel-team@android.com, tkjos@google.com, adharmap@codeaurora.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 3/3] cpufreq: Specify default governor on command line
+Message-ID: <20200629080358.GA1217385@google.com>
+References: <cover.1593143118.git.viresh.kumar@linaro.org>
+ <7eb38608b2b32c0c72dfb160c51206ec42e74e35.1593143118.git.viresh.kumar@linaro.org>
+ <20200626155750.GA540785@google.com>
+ <20200629020843.erntkwfprgi5ugqu@vireshk-i7>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200629020843.erntkwfprgi5ugqu@vireshk-i7>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add Kamstrup flex concentrator compatibles to the schema so we can
-make use of them for the validation.
+On Monday 29 Jun 2020 at 07:38:43 (+0530), Viresh Kumar wrote:
+> On 26-06-20, 16:57, Quentin Perret wrote:
+> > Do we need both cpufreq_param_governor and default_governor?
+> > Could we move everything to only one of them? Something a little bit
+> > like that maybe?
+> 
+> No because we want to fallback to the default governor when the
+> governor shown by the cpufreq_param_governor is valid but missing.
 
-Signed-off-by: Bruno Thomsen <bruno.thomsen@gmail.com>
----
- Documentation/devicetree/bindings/arm/fsl.yaml | 2 ++
- 1 file changed, 2 insertions(+)
+But that would still work with my suggestion no? You still fallback to
+calling cpufreq_default_governor() in cpufreq_init_policy() if
+get_governor(default_governor) doesn't succeed, so we should be covered.
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index 05906e291e38..66627b272e40 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -299,6 +299,8 @@ properties:
-           - enum:
-               - fsl,imx7d-sdb             # i.MX7 SabreSD Board
-               - fsl,imx7d-sdb-reva        # i.MX7 SabreSD Rev-A Board
-+              - kam,imx7d-flex-concentrator       # Kamstrup OMNIA Flex Concentrator
-+              - kam,imx7d-flex-concentrator-mfg   # Kamstrup OMNIA Flex Concentrator in manufacturing mode
-               - novtech,imx7d-meerkat96   # i.MX7 Meerkat96 Board
-               - technexion,imx7d-pico-dwarf   # TechNexion i.MX7D Pico-Dwarf
-               - technexion,imx7d-pico-hobbit  # TechNexion i.MX7D Pico-Hobbit
-
-base-commit: 9ebcfadb0610322ac537dd7aa5d9cbc2b2894c68
--- 
-2.26.2
-
+Thanks,
+Quentin
