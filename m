@@ -3,80 +3,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05316C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14491C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2D4E20672
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:20:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5523204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:20:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R0fJ45Lc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HamVpoW1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbgF2VUf (ORCPT
+        id S2390926AbgF2VUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:20:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40038 "EHLO
+        Mon, 29 Jun 2020 17:20:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729781AbgF2Sws (ORCPT
+        with ESMTP id S1729508AbgF2VUn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:52:48 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0EF6FC031C57;
-        Mon, 29 Jun 2020 10:36:37 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id t6so8635774pgq.1;
-        Mon, 29 Jun 2020 10:36:37 -0700 (PDT)
+        Mon, 29 Jun 2020 17:20:43 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84926C03E97A
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 14:20:43 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id q8so18772757iow.7
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 14:20:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=0fKzFmJ6swEgieVUVWwiawhKzRLACyYFxC8XDxv8xYs=;
-        b=R0fJ45LcAzqMEfB6noKVYodLWFah632V2+qcF0G9d0sHUN7n7MwsjReJlbHyOxFAgQ
-         Pyqf1TrIb5+jNNbE7Gu2zh7Pev/OIpQYVhr0G06pAc4EvZ3QZti8JaDPPh9JprJ6lqM7
-         tqLA5emrcXMH/+DvgiCyb8A/ClsuRUzKMnIbaTWBxp5GGslGGiGr9HKCHUy1PbvqS24j
-         60bvSOJ0Nj3W6JRhbdP6caRjgWiAIuXtyAUuqOPa4jCa9O05I1sFDK5lLIaDCRcZodQs
-         B0eEZH4anwaspISF1wAL0KJ23fKcs6Ri+fuakGDCBPHZtFTJikMOeCKnC+N8ARzFsldc
-         kSNg==
+        bh=5NzyDp4mBovD0FjYRR3tCmdZlivRdkEwWwtmv1riTuY=;
+        b=HamVpoW1/0IkR9G49C+/CBrniF24a3GIZ9p6TtnYlbSO4Jpx8uu5WJQGFRbkvKSq8+
+         j6kHhPKvjPGELtsFcvX674UMr9vz1yt16f77C9fqv3dSurKPtFE28qBjLKqruB7Xho2X
+         tdlAVlQJ8FrLryNHSqhfuXOSG72GQYAucZyrHocMCCzVbIpl1LfYZfpUIxUpkfrxIHPW
+         b2iUXuTJqVakaOT/xk2KnXKL9hh6lMOoKk5FYHtdHBmftDgFtgePg8K8CguTarT7UImA
+         uEem5KM/ZKPBDW6O4Gpn1aoLYlJzQ3N/jjs+rPwztmOdvXYJ3bN/6sRaReYvD/dMZOWF
+         YpWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=0fKzFmJ6swEgieVUVWwiawhKzRLACyYFxC8XDxv8xYs=;
-        b=smNUO9Kknl4aB+epcEO3OvhfpqOYEzSnukU5Y8FOsTbHqEuOK4HUSAH0sOaZMol3pa
-         ZbysRAum9pevIeu/RoBsdy6BbPHkZyR42OHuxaP9QUwNOD25FvWkDCwkc5RlK1eFLw4z
-         Kor1VVJ4XEYoAiVX6paPq1xzU23BI3mcXrSuyd4ffz+QSct3XvpRExS9wCZ23vcv54/R
-         nfZRdR3zISxQcG86iCF/2rTUykT54JoOGM83r+vhE0TQ8yW3hH0al4uoY2AryDCGvna/
-         XTmadXJEMgbqbqq1uda6WxGElKIWiFAn5dcHKBJHgoxxqT99SwaC0i/fxrYTzNdaLsWj
-         7u3g==
-X-Gm-Message-State: AOAM530e5uElo1NSZYLHCxCvqMzR4Z8WAMgh1xVR78o8N1WD73djtKQ9
-        fZ16qRwMH0Dv8mblDvltrI0=
-X-Google-Smtp-Source: ABdhPJzX3W9pUE3rQzyWQqNZmLpVSpw6IGMNuc9exvw210citymSwYDDB32iKOYKjCaB5XfOf1cKHw==
-X-Received: by 2002:a63:4915:: with SMTP id w21mr5651899pga.134.1593452196587;
-        Mon, 29 Jun 2020 10:36:36 -0700 (PDT)
-Received: from varodek.iballbatonwifi.com ([103.105.153.57])
-        by smtp.gmail.com with ESMTPSA id k23sm331461pgb.92.2020.06.29.10.36.32
+        bh=5NzyDp4mBovD0FjYRR3tCmdZlivRdkEwWwtmv1riTuY=;
+        b=UQIweDQnjVCGHR2Mf/8Y0YAXTqhOtajQ4n2/qw8ZxJNyJQIAV2Zc26Vg96kO7JpYz2
+         FASebSIfU+xzANCtgujl5/zwZjXxIP3OBbO0Usp1tKEnvMfVGtHfrGXAxEtD9huxSt+S
+         9R2Wzf8S2VWV8aZPNieipCkycf1IUWZjaspYJ0LPT1BA/uDL6B4XPoQwuZcGUUNpjCid
+         k7JeP2XxRFLiFjzRxWv196xBzHmnstoR+BmlbTk90MCyRLsYYXuWes8fVuMGgR+EzG6e
+         LE3a0gWkxI3V4kzKuAk0RbL1xTUz3fpLW75Ja6vej9ax9jy+Isd9duaDi+9rDVQlWGEO
+         hhIw==
+X-Gm-Message-State: AOAM530LuGUgU0lug4RNiKOaUWlZDI+s1Zs7q06liPqd4QDcIqywWNVc
+        VNFgqpaz3rQOx4fMAFCAjGm0uEeLoeg=
+X-Google-Smtp-Source: ABdhPJxvNitkIu0iE4zz7boXfb9eCDNNtZDZcvpcxTVgpXrBh0jYQMvaTJ9iT7sBkjWuhlLVyitA6A==
+X-Received: by 2002:a05:6602:134d:: with SMTP id i13mr19247613iov.113.1593465642955;
+        Mon, 29 Jun 2020 14:20:42 -0700 (PDT)
+Received: from presto.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.gmail.com with ESMTPSA id f18sm564588ilj.15.2020.06.29.14.20.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 10:36:36 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Manish Chopra <manishc@marvell.com>,
-        GR-Linux-NIC-Dev@marvell.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>, netdev@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org
-Subject: [PATCH v2 4/4] vt6655/device_main.c: use generic power management
-Date:   Mon, 29 Jun 2020 23:04:59 +0530
-Message-Id: <20200629173459.262075-5-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200629173459.262075-1-vaibhavgupta40@gmail.com>
-References: <20200629173459.262075-1-vaibhavgupta40@gmail.com>
+        Mon, 29 Jun 2020 14:20:42 -0700 (PDT)
+From:   Alex Elder <elder@linaro.org>
+To:     davem@davemloft.net, kuba@kernel.org
+Cc:     evgreen@chromium.org, subashab@codeaurora.org,
+        cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net 1/3] net: ipa: always check for stopped channel
+Date:   Mon, 29 Jun 2020 16:20:36 -0500
+Message-Id: <20200629212038.1153054-2-elder@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629212038.1153054-1-elder@linaro.org>
+References: <20200629212038.1153054-1-elder@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -84,84 +77,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drivers should not use legacy power management as they have to manage power
-states and related operations, for the device, themselves. This driver was
-handling them with the help of PCI helper functions like
-pci_save/restore_state(), pci_enable/disable_device(), etc.
+In gsi_channel_stop(), there's a check to see if the channel might
+have entered STOPPED state since a previous call, which might have
+timed out before stopping completed.
 
-With generic PM, all essentials will be handled by the PCI core. Driver
-needs to do only device-specific operations.
+That check actually belongs in gsi_channel_stop_command(), which is
+called repeatedly by gsi_channel_stop() for RX channels.
 
-The driver was also using pci_enable_wake(...,..., 0) to disable wake. Use
-device_wakeup_disable() instead.
-
-Compile-tested only.
-
-Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- drivers/staging/vt6655/device_main.c | 25 +++++++------------------
- 1 file changed, 7 insertions(+), 18 deletions(-)
+ drivers/net/ipa/gsi.c | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/staging/vt6655/device_main.c b/drivers/staging/vt6655/device_main.c
-index 41cbec4134b0..76de1fd568eb 100644
---- a/drivers/staging/vt6655/device_main.c
-+++ b/drivers/staging/vt6655/device_main.c
-@@ -1766,48 +1766,37 @@ vt6655_probe(struct pci_dev *pcid, const struct pci_device_id *ent)
+diff --git a/drivers/net/ipa/gsi.c b/drivers/net/ipa/gsi.c
+index 55226b264e3c..ac7e5a04c8ac 100644
+--- a/drivers/net/ipa/gsi.c
++++ b/drivers/net/ipa/gsi.c
+@@ -500,6 +500,13 @@ static int gsi_channel_stop_command(struct gsi_channel *channel)
+ 	int ret;
  
- /*------------------------------------------------------------------*/
- 
--#ifdef CONFIG_PM
--static int vt6655_suspend(struct pci_dev *pcid, pm_message_t state)
-+static int __maybe_unused vt6655_suspend(struct device *dev_d)
- {
--	struct vnt_private *priv = pci_get_drvdata(pcid);
-+	struct vnt_private *priv = dev_get_drvdata(dev_d);
- 	unsigned long flags;
- 
- 	spin_lock_irqsave(&priv->lock, flags);
- 
--	pci_save_state(pcid);
--
- 	MACbShutdown(priv);
- 
--	pci_disable_device(pcid);
--
- 	spin_unlock_irqrestore(&priv->lock, flags);
- 
--	pci_set_power_state(pcid, pci_choose_state(pcid, state));
--
- 	return 0;
- }
- 
--static int vt6655_resume(struct pci_dev *pcid)
-+static int __maybe_unused vt6655_resume(struct device *dev_d)
- {
--	pci_set_power_state(pcid, PCI_D0);
--	pci_enable_wake(pcid, PCI_D0, 0);
--	pci_restore_state(pcid);
-+	device_wakeup_disable(dev_d);
- 
- 	return 0;
- }
--#endif
- 
- MODULE_DEVICE_TABLE(pci, vt6655_pci_id_table);
- 
-+static SIMPLE_DEV_PM_OPS(vt6655_pm_ops, vt6655_suspend, vt6655_resume);
+ 	state = gsi_channel_state(channel);
 +
- static struct pci_driver device_driver = {
- 	.name = DEVICE_NAME,
- 	.id_table = vt6655_pci_id_table,
- 	.probe = vt6655_probe,
- 	.remove = vt6655_remove,
--#ifdef CONFIG_PM
--	.suspend = vt6655_suspend,
--	.resume = vt6655_resume,
--#endif
-+	.driver.pm = &vt6655_pm_ops,
- };
++	/* Channel could have entered STOPPED state since last call
++	 * if it timed out.  If so, we're done.
++	 */
++	if (state == GSI_CHANNEL_STATE_STOPPED)
++		return 0;
++
+ 	if (state != GSI_CHANNEL_STATE_STARTED &&
+ 	    state != GSI_CHANNEL_STATE_STOP_IN_PROC)
+ 		return -EINVAL;
+@@ -789,20 +796,11 @@ int gsi_channel_start(struct gsi *gsi, u32 channel_id)
+ int gsi_channel_stop(struct gsi *gsi, u32 channel_id)
+ {
+ 	struct gsi_channel *channel = &gsi->channel[channel_id];
+-	enum gsi_channel_state state;
+ 	u32 retries;
+ 	int ret;
  
- module_pci_driver(device_driver);
+ 	gsi_channel_freeze(channel);
+ 
+-	/* Channel could have entered STOPPED state since last call if the
+-	 * STOP command timed out.  We won't stop a channel if stopping it
+-	 * was successful previously (so we still want the freeze above).
+-	 */
+-	state = gsi_channel_state(channel);
+-	if (state == GSI_CHANNEL_STATE_STOPPED)
+-		return 0;
+-
+ 	/* RX channels might require a little time to enter STOPPED state */
+ 	retries = channel->toward_ipa ? 0 : GSI_CHANNEL_STOP_RX_RETRIES;
+ 
 -- 
-2.27.0
+2.25.1
 
