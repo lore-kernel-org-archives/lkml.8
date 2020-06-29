@@ -2,52 +2,53 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C15C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E037CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C616C206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFD72206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468225;
-	bh=JvPxeEh2+VWlLdBUzputQqXq+2ISNZvpSxQnslm+XE8=;
+	s=default; t=1593468228;
+	bh=Lf6jb8z4iIF/Glg9uv3XNjE9mqcTEL/2yKtxJnHNVOI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KcycpuxUhb4sUkBWAb0zyvSUDEFxaY5S4Ol6sGj0sYfQx7KWr5RE23O8S4w9InXMN
-	 Oagy+VMV9/vVzDhHYNdhLyI7+zcMZqK28E0g5bOYII5cTN3AADLcauVPd7ngtpM9A+
-	 4P2dxfR+ATKK6Ln3mW0jk+v8MHJfaAJ8oErDgPz0=
+	b=wYjtIj1q37DTpBsiQqMrfaQnBdT4p4lk/cCyvcmAcK0eTyq5XvIGdwqQPzfd6jye8
+	 hfL7MRFBTOhF5TtA8WVpnq4A9cW2h8gpqwdpYxmds9UdwB2SpQFkOK8bmqHqLQaTxc
+	 FmRKk3nRAzG7Paa/U87CJT/78cn/cpmXc/9kdbZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391714AbgF2WDn (ORCPT
+        id S2391736AbgF2WDr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:03:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56814 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:03:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726217AbgF2SfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:23 -0400
+        id S1726183AbgF2SfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C349B246C2;
-        Mon, 29 Jun 2020 15:20:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1B0424680;
+        Mon, 29 Jun 2020 15:19:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444014;
-        bh=JvPxeEh2+VWlLdBUzputQqXq+2ISNZvpSxQnslm+XE8=;
+        s=default; t=1593443981;
+        bh=Lf6jb8z4iIF/Glg9uv3XNjE9mqcTEL/2yKtxJnHNVOI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u1A6VxSb4fVEbLUaih84xoN8OiG+kmCCQOvpY7X5O2FFel1aNN7s1+zftA1ezybF4
-         fbeVGRdEWpaxFPq8HNbjF6CXQo3aubS8PFCb+G+pi60cRiJliZSpaNzdjIbipwAng+
-         /y1GyDIk0xksZ1gKSJUD20hIH0rSerH8QqRGetgc=
+        b=N9KOxRM9E2xGZuZ0BuT+KZlPHSQVqvKu9ysiBVzAzTH7fEkATmmFMeddlSr3jX0d0
+         OfGV2t6vzBgi9LzuUrV2+cR0ioUkOj3pyWPhcHMYELXNz5nf2py2pWJA7VSRrO28fn
+         e9lQEkbDvSJOcyeO7GlJTmqC8XdfOnwDJpMy3klI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Drew Fustini <drew@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 120/265] ARM: dts: am335x-pocketbeagle: Fix mmc0 Write Protect
-Date:   Mon, 29 Jun 2020 11:15:53 -0400
-Message-Id: <20200629151818.2493727-121-sashal@kernel.org>
+Cc:     Zhang Xiaoxu <zhangxiaoxu5@huawei.com>,
+        Hulk Robot <hulkci@huawei.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
+        Steve French <stfrench@microsoft.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 085/265] cifs/smb3: Fix data inconsistent when zero file range
+Date:   Mon, 29 Jun 2020 11:15:18 -0400
+Message-Id: <20200629151818.2493727-86-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -66,39 +67,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Drew Fustini <drew@beagleboard.org>
+From: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
 
-[ Upstream commit d7af722344e6dc52d87649100516515263e15c75 ]
+commit 6b69040247e14b43419a520f841f2b3052833df9 upstream.
 
-AM3358 pin mcasp0_aclkr (ZCZ ball B13) [0] is routed to P1.31 header [1]
-Mode 4 of this pin is mmc0_sdwp (SD Write Protect).  A signal connected
-to P1.31 may accidentally trigger mmc0 write protection.  To avoid this
-situation, do not put mcasp0_aclkr in mode 4 (mmc0_sdwp) by default.
+CIFS implements the fallocate(FALLOC_FL_ZERO_RANGE) with send SMB
+ioctl(FSCTL_SET_ZERO_DATA) to server. It just set the range of the
+remote file to zero, but local page cache not update, then the data
+inconsistent with server, which leads the xfstest generic/008 failed.
 
-[0] http://www.ti.com/lit/ds/symlink/am3358.pdf
-[1] https://github.com/beagleboard/pocketbeagle/wiki/System-Reference-Manual#531_Expansion_Headers
+So we need to remove the local page caches before send SMB
+ioctl(FSCTL_SET_ZERO_DATA) to server. After next read, it will
+re-cache it.
 
-Fixes: 047905376a16 (ARM: dts: Add am335x-pocketbeagle)
-Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
-Signed-off-by: Drew Fustini <drew@beagleboard.org>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 30175628bf7f5 ("[SMB3] Enable fallocate -z support for SMB3 mounts")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+Cc: stable@vger.kernel.org # v3.17
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm/boot/dts/am335x-pocketbeagle.dts | 1 -
- 1 file changed, 1 deletion(-)
+ fs/cifs/smb2ops.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/am335x-pocketbeagle.dts b/arch/arm/boot/dts/am335x-pocketbeagle.dts
-index 4da719098028f..f0b222201b867 100644
---- a/arch/arm/boot/dts/am335x-pocketbeagle.dts
-+++ b/arch/arm/boot/dts/am335x-pocketbeagle.dts
-@@ -88,7 +88,6 @@
- 			AM33XX_PADCONF(AM335X_PIN_MMC0_DAT3, PIN_INPUT_PULLUP, MUX_MODE0)
- 			AM33XX_PADCONF(AM335X_PIN_MMC0_CMD, PIN_INPUT_PULLUP, MUX_MODE0)
- 			AM33XX_PADCONF(AM335X_PIN_MMC0_CLK, PIN_INPUT_PULLUP, MUX_MODE0)
--			AM33XX_PADCONF(AM335X_PIN_MCASP0_ACLKR, PIN_INPUT, MUX_MODE4)		/* (B12) mcasp0_aclkr.mmc0_sdwp */
- 		>;
- 	};
+diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
+index 3de9113eb8e35..6fc69c3b2749d 100644
+--- a/fs/cifs/smb2ops.c
++++ b/fs/cifs/smb2ops.c
+@@ -3145,6 +3145,11 @@ static long smb3_zero_range(struct file *file, struct cifs_tcon *tcon,
+ 	trace_smb3_zero_enter(xid, cfile->fid.persistent_fid, tcon->tid,
+ 			      ses->Suid, offset, len);
  
++	/*
++	 * We zero the range through ioctl, so we need remove the page caches
++	 * first, otherwise the data may be inconsistent with the server.
++	 */
++	truncate_pagecache_range(inode, offset, offset + len - 1);
+ 
+ 	/* if file not oplocked can't be sure whether asking to extend size */
+ 	if (!CIFS_CACHE_READ(cifsi))
 -- 
 2.25.1
 
