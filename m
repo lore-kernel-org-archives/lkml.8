@@ -7,55 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D0D7C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF33C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 787E520656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:18:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CFB920656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:18:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461916;
-	bh=zmb9aZXgj3+VHQSBwM4mMhdjrr/RkgwzppLqULpozgE=;
+	s=default; t=1593461921;
+	bh=ZJ+tY0mEOW4kbbhTdVLDb5bY+9vwmA+0mfiv3q0RqN0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kdbqqMYWeN8gz8AHSK8qAKzVbZMCr1yetIno+CuQ9E2b1g4ULtRvMnXz3MTuQkGvf
-	 skrpiPfuzKKmlkKE/Snxnyn90VYy330urP5Hl1Y3tYUNfwlTdlnnTjUOgZ25IbH546
-	 ufbM9zZ5BPKmG3w18CuQOa0KZ/o+4+rCJmdEbVO4=
+	b=DvhSK4cpT+Ps5YX6Pf0wJ8c/+gtIvWpRmYvBwlMnAVZyrQBlqS0PZfD8reHRmPOg4
+	 3GvyLiPPws22tJULP42EpfMK0AuTalOovUusjEEMV9c0MZkH9bU3jGw/CFKzRCPaL9
+	 XmMZVJ+9r1kxpxzhNmZEhpbYx5KgL8DmgXwfFOXM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388384AbgF2USf (ORCPT
+        id S2388582AbgF2USj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:18:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37044 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:18:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732637AbgF2TZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732628AbgF2TZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7445253E3;
-        Mon, 29 Jun 2020 15:42:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A788925390;
+        Mon, 29 Jun 2020 15:40:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445328;
-        bh=zmb9aZXgj3+VHQSBwM4mMhdjrr/RkgwzppLqULpozgE=;
+        s=default; t=1593445259;
+        bh=ZJ+tY0mEOW4kbbhTdVLDb5bY+9vwmA+0mfiv3q0RqN0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BXmD/OwQTpann1s9AVmUfUMYAHCl4IswcfGlNI+pYTkS8QZjrAdI2MneowH2n2hvl
-         2YK5wDFQiaGc63jW7U3aGYuZUY+rUMcVFcTQgxPaL6hmZ2GVmFOZdHSiY8LAlCZpBk
-         5xnfReoIrIly/mhtPT1wBISVM+N+1oq9pNCz1slc=
+        b=lswYTyUvU5hq/8QAx2G1aeBIyb/XESXuxZ1guHqDA36NARhDoh+BCxkygLeyoqB5Z
+         m75XsIya9LtbiqHBaokN8DdVm/zXZ3hwxmSsYdFK3fQTpod3J8GL48f5sqHM9BGrWQ
+         XwuuLv4cxN2bLk3mAuYB8xA565+TnJFxFGGKCpMc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        David Miller <davem@davemloft.net>,
-        Ingo Molnar <mingo@elte.hu>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ziqian SUN <zsun@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
+Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 092/191] kprobes: Fix to protect kick_kprobe_optimizer() by kprobe_mutex
-Date:   Mon, 29 Jun 2020 11:38:28 -0400
-Message-Id: <20200629154007.2495120-93-sashal@kernel.org>
+Subject: [PATCH 4.9 040/191] tty: n_gsm: Fix SOF skipping
+Date:   Mon, 29 Jun 2020 11:37:36 -0400
+Message-Id: <20200629154007.2495120-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -74,55 +65,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
 
-[ Upstream commit 1a0aa991a6274161c95a844c58cfb801d681eb59 ]
+[ Upstream commit 84d6f81c1fb58b56eba81ff0a36cf31946064b40 ]
 
-In kprobe_optimizer() kick_kprobe_optimizer() is called
-without kprobe_mutex, but this can race with other caller
-which is protected by kprobe_mutex.
+For at least some modems like the TELIT LE910, skipping SOF makes
+transfers blocking indefinitely after a short amount of data
+transferred.
 
-To fix that, expand kprobe_mutex protected area to protect
-kick_kprobe_optimizer() call.
+Given the small improvement provided by skipping the SOF (just one
+byte on about 100 bytes), it seems better to completely remove this
+"feature" than make it optional.
 
-Link: http://lkml.kernel.org/r/158927057586.27680.5036330063955940456.stgit@devnote2
-
-Fixes: cd7ebe2298ff ("kprobes: Use text_poke_smp_batch for optimizing")
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: "Gustavo A . R . Silva" <gustavoars@kernel.org>
-Cc: Anders Roxell <anders.roxell@linaro.org>
-Cc: "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>
-Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-Cc: David Miller <davem@davemloft.net>
-Cc: Ingo Molnar <mingo@elte.hu>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ziqian SUN <zsun@redhat.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: e1eaea46bb40 ("tty: n_gsm line discipline")
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Link: https://lore.kernel.org/r/20200512115323.1447922-3-gregory.clement@bootlin.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/kprobes.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/tty/n_gsm.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 1b75fb8c7735e..3db9cf412996c 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -561,11 +561,12 @@ static void kprobe_optimizer(struct work_struct *work)
- 	do_free_cleaned_kprobes();
+diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
+index 9e9016e67843b..d5efacd27b15c 100644
+--- a/drivers/tty/n_gsm.c
++++ b/drivers/tty/n_gsm.c
+@@ -685,7 +685,6 @@ static void gsm_data_kick(struct gsm_mux *gsm)
+ {
+ 	struct gsm_msg *msg, *nmsg;
+ 	int len;
+-	int skip_sof = 0;
  
- 	mutex_unlock(&module_mutex);
--	mutex_unlock(&kprobe_mutex);
+ 	list_for_each_entry_safe(msg, nmsg, &gsm->tx_list, list) {
+ 		if (gsm->constipated && msg->addr)
+@@ -707,15 +706,10 @@ static void gsm_data_kick(struct gsm_mux *gsm)
+ 			print_hex_dump_bytes("gsm_data_kick: ",
+ 					     DUMP_PREFIX_OFFSET,
+ 					     gsm->txframe, len);
+-
+-		if (gsm->output(gsm, gsm->txframe + skip_sof,
+-						len - skip_sof) < 0)
++		if (gsm->output(gsm, gsm->txframe, len) < 0)
+ 			break;
+ 		/* FIXME: Can eliminate one SOF in many more cases */
+ 		gsm->tx_bytes -= msg->len;
+-		/* For a burst of frames skip the extra SOF within the
+-		   burst */
+-		skip_sof = 1;
  
- 	/* Step 5: Kick optimizer again if needed */
- 	if (!list_empty(&optimizing_list) || !list_empty(&unoptimizing_list))
- 		kick_kprobe_optimizer();
-+
-+	mutex_unlock(&kprobe_mutex);
- }
- 
- /* Wait for completing optimization and unoptimization */
+ 		list_del(&msg->list);
+ 		kfree(msg);
 -- 
 2.25.1
 
