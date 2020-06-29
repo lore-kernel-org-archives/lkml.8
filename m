@@ -3,80 +3,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6438AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F26C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38CB2214D8
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:22:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B2A02158C
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:22:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BRoJqKnz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rDYv3J+t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390956AbgF2VWE (ORCPT
+        id S2390959AbgF2VWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:22:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40032 "EHLO
+        Mon, 29 Jun 2020 17:22:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729742AbgF2Swn (ORCPT
+        with ESMTP id S1729338AbgF2Swm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:52:43 -0400
-Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 868E8C031C54;
-        Mon, 29 Jun 2020 10:36:19 -0700 (PDT)
-Received: by mail-pf1-x441.google.com with SMTP id j12so8183231pfn.10;
-        Mon, 29 Jun 2020 10:36:19 -0700 (PDT)
+        Mon, 29 Jun 2020 14:52:42 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E03E4C02E2D7
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:05:05 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id o11so16673823wrv.9
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:05:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=CZkAqgCCUyZIGNalJFNzQkMvhQ98PbVukaKm6LBtBnw=;
-        b=BRoJqKnzIZ14r5VSfz2GvyHmBQrCXaeQFISHO5MhmKwM+cQ4LkuCWFmuV2vLJ87hni
-         1WSQfDvX1KIPgOIq0GqBSOl0kijABUuIg90rOEn5mt5rB8WUxWRMB+Q1GGTGjsSPZhOj
-         5LyRcSRFbLG9ArQfDMA5IFsAug9TGGtsCFpIK30hOy+sYpdECEBzRy8WkR/bhwVZ5wUJ
-         WIHo4Y8Mutr6NTDJKF5id3d3RcbZCLkytOl4dp1D/tFNqEC/dKAUXi+mh6nz6xoJUTg1
-         rajzN+GCABHK1/kVgtFjmEvpVOC6P5laiMork/oGUt6rbY/JZagWjN21+VyL8Vq5BxTm
-         Ki3Q==
+        bh=XFhbgCKNRxFbloxjm7n8+8nB92/O/AE2sBwMkN1jQVY=;
+        b=rDYv3J+t/fvTXVYSLvlXorZNbHhUQ/6y/asw1e95tUgjbuzJJ22wOs5jgNEXZ9aCFw
+         7nENOeDtyDLGMIcPXDx4J6RpgY0J72cV3yU9pJyBzsKwUHo5ax6PbSWYW3A0F0yg5poM
+         yrnzqIS/FqzMaroXxLXo+0M2YedfnRYdVtYyO882ipkmlwYEGNM5n0IX7fASjRbyJRhX
+         qNjGbqr4NAX+OrG9kHVAeWj4xRrT+Piiiq+v8IaiWO+R1O1vthsB8/QlFEKVLAQYZvzM
+         NsKP8ih9Vk3CTfeB4RzJyjQ0jdxLswX27P9M+U41Yd8vx4H2FQERi0c+7/F7l5VcEEpi
+         kJSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=CZkAqgCCUyZIGNalJFNzQkMvhQ98PbVukaKm6LBtBnw=;
-        b=KWw1BEKzu//uIGiw64fmLVs9rLJZHtzRmuESBOel1/uHFYZtk69+dDAhJCF48uA7mK
-         tmcePYbzz+9kHv82lmHEwQUEg7MOCkd4lsq423wXdhIPClQSTvHH2tcvVrPoEMtNrh91
-         fiR2x5XVwXyKyOp0mUQ7IWy/9JVnh6mpwH6mqmS+iwC1ePbprwFqfMxbbROKV6RnidF5
-         raxVk6kRqn11yTOh/ocdpaU6+3DMsRCe2WgHUW2ewz18Jke2WjLMhuBlZ/O9zaLpp1Ef
-         e5+yioChBZEXuG0FwdNg+TWp8gw4qiVMVbiAfNFN5c4XefUqOLGewWMtr8LwnAdVAKMf
-         r2xQ==
-X-Gm-Message-State: AOAM533uMDycZ2xJSLwiI6INl2Xv+hMzeTOGjoISaxbE2kfyGFAtRWa5
-        iuX5/AjxmfGGdbaGZftcUU4=
-X-Google-Smtp-Source: ABdhPJw6r6FYtLR2yskuhsNB7yhjQGHKP1pPuiujo9QgEcD55HQaBUT/5cbXYo1xJIh7l0zxt+bZBg==
-X-Received: by 2002:a65:5649:: with SMTP id m9mr10983216pgs.279.1593452179043;
-        Mon, 29 Jun 2020 10:36:19 -0700 (PDT)
-Received: from varodek.iballbatonwifi.com ([103.105.153.57])
-        by smtp.gmail.com with ESMTPSA id k23sm331461pgb.92.2020.06.29.10.36.14
+        bh=XFhbgCKNRxFbloxjm7n8+8nB92/O/AE2sBwMkN1jQVY=;
+        b=MI7H+j76FWcEkW4J1kXujEMU/4E/Zq0iZYtZMnbsm77+sHQ0IbonFMOueBNta6+K5e
+         I1YwSD+K+OQxnjPWbe5kwqPFyAXW38bpTYM2b3aKYCE283ieVUoen+7lq40S/SJ+NDSl
+         brvz7TxYOiDXTo3FRm3fKyGFd/IrPyih03IgLaX2M4+e19tOU1SoMQjlycS0VadsWz0b
+         CmX7hVMqe3n4Mp+XGmmMidiAlI4AFBGRiG0kxtaGTXR6MJOaX789EGHPIgAYVihFMJRI
+         W8Sp57ncOpDoN4sI9rB857FiRIRMDN2I6iPr+OoTesSxfefiaqY7PbJfh4BJBvI4n60b
+         zr3Q==
+X-Gm-Message-State: AOAM531hL0/71tYmgmyOKfZRPm+UNxPHtzV5Dbne7IHH+xKmb91v2/2z
+        GXiAqV2AJyeJxLUQFXIYMc3W6g==
+X-Google-Smtp-Source: ABdhPJzyDyJpP65nJE9M2B1HioZi4XCaFMuMdtxDSjSoHMRbycyagIcp+yN52R7KVxHSkjFw7Jr9QA==
+X-Received: by 2002:a5d:4649:: with SMTP id j9mr16461671wrs.270.1593439504476;
+        Mon, 29 Jun 2020 07:05:04 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id p14sm15394928wrj.14.2020.06.29.07.05.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 10:36:18 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Manish Chopra <manishc@marvell.com>,
-        GR-Linux-NIC-Dev@marvell.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>, netdev@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org
-Subject: [PATCH v2 1/4] qlge/qlge_main.c: use generic power management
-Date:   Mon, 29 Jun 2020 23:04:56 +0530
-Message-Id: <20200629173459.262075-2-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200629173459.262075-1-vaibhavgupta40@gmail.com>
-References: <20200629173459.262075-1-vaibhavgupta40@gmail.com>
+        Mon, 29 Jun 2020 07:05:03 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     arnd@arndb.de, gregkh@linuxfoundation.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>
+Subject: [PATCH 15/20] misc: enclosure: Update enclosure_remove_device() documentation to match reality
+Date:   Mon, 29 Jun 2020 15:04:37 +0100
+Message-Id: <20200629140442.1043957-16-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629140442.1043957-1-lee.jones@linaro.org>
+References: <20200629140442.1043957-1-lee.jones@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -84,107 +77,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drivers should not use legacy power management as they have to manage power
-states and related operations, for the device, themselves. This driver was
-handling them with the help of PCI helper functions like
-pci_save/restore_state(), pci_enable/disable_device(), etc.
+enclosure_remove_device() hasn't taken an 'int component for over a decade.
+Instead use kerneldoc to describe the 'struct device' actually passed in.
 
-With generic PM, all essentials will be handled by the PCI core. Driver
-needs to do only device-specific operations.
+Fixes the following W=1 kernel build warning(s):
 
-The driver was also using pci_enable_wake(...,..., 0) to disable wake. Use
-device_wakeup_disable() instead.
+ drivers/misc/enclosure.c:400: warning: Function parameter or member 'dev' not described in 'enclosure_remove_device'
+ drivers/misc/enclosure.c:400: warning: Excess function parameter 'num' description in 'enclosure_remove_device'
 
-Compile-tested only.
-
-Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+Cc: James Bottomley <James.Bottomley@HansenPartnership.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/staging/qlge/qlge_main.c | 38 +++++++++-----------------------
- 1 file changed, 10 insertions(+), 28 deletions(-)
+ drivers/misc/enclosure.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
-index 402edaeffe12..86d1b53da2c2 100644
---- a/drivers/staging/qlge/qlge_main.c
-+++ b/drivers/staging/qlge/qlge_main.c
-@@ -4763,9 +4763,9 @@ static const struct pci_error_handlers qlge_err_handler = {
- 	.resume = qlge_io_resume,
- };
- 
--static int qlge_suspend(struct pci_dev *pdev, pm_message_t state)
-+static int __maybe_unused qlge_suspend(struct device *dev_d)
- {
--	struct net_device *ndev = pci_get_drvdata(pdev);
-+	struct net_device *ndev = dev_get_drvdata(dev_d);
- 	struct ql_adapter *qdev = netdev_priv(ndev);
- 	int err;
- 
-@@ -4779,35 +4779,19 @@ static int qlge_suspend(struct pci_dev *pdev, pm_message_t state)
- 	}
- 
- 	ql_wol(qdev);
--	err = pci_save_state(pdev);
--	if (err)
--		return err;
--
--	pci_disable_device(pdev);
--
--	pci_set_power_state(pdev, pci_choose_state(pdev, state));
- 
- 	return 0;
- }
- 
--#ifdef CONFIG_PM
--static int qlge_resume(struct pci_dev *pdev)
-+static int __maybe_unused qlge_resume(struct device *dev_d)
- {
--	struct net_device *ndev = pci_get_drvdata(pdev);
-+	struct net_device *ndev = dev_get_drvdata(dev_d);
- 	struct ql_adapter *qdev = netdev_priv(ndev);
- 	int err;
- 
--	pci_set_power_state(pdev, PCI_D0);
--	pci_restore_state(pdev);
--	err = pci_enable_device(pdev);
--	if (err) {
--		netif_err(qdev, ifup, qdev->ndev, "Cannot enable PCI device from suspend\n");
--		return err;
--	}
--	pci_set_master(pdev);
-+	pci_set_master(to_pci_dev(dev_d));
- 
--	pci_enable_wake(pdev, PCI_D3hot, 0);
--	pci_enable_wake(pdev, PCI_D3cold, 0);
-+	device_wakeup_disable(dev_d);
- 
- 	if (netif_running(ndev)) {
- 		err = ql_adapter_up(qdev);
-@@ -4820,22 +4804,20 @@ static int qlge_resume(struct pci_dev *pdev)
- 
- 	return 0;
- }
--#endif /* CONFIG_PM */
- 
- static void qlge_shutdown(struct pci_dev *pdev)
- {
--	qlge_suspend(pdev, PMSG_SUSPEND);
-+	qlge_suspend(&pdev->dev);
- }
- 
-+static SIMPLE_DEV_PM_OPS(qlge_pm_ops, qlge_suspend, qlge_resume);
-+
- static struct pci_driver qlge_driver = {
- 	.name = DRV_NAME,
- 	.id_table = qlge_pci_tbl,
- 	.probe = qlge_probe,
- 	.remove = qlge_remove,
--#ifdef CONFIG_PM
--	.suspend = qlge_suspend,
--	.resume = qlge_resume,
--#endif
-+	.driver.pm = &qlge_pm_ops,
- 	.shutdown = qlge_shutdown,
- 	.err_handler = &qlge_err_handler
- };
+diff --git a/drivers/misc/enclosure.c b/drivers/misc/enclosure.c
+index e8eba52750b34..f950d0155876a 100644
+--- a/drivers/misc/enclosure.c
++++ b/drivers/misc/enclosure.c
+@@ -391,7 +391,7 @@ EXPORT_SYMBOL_GPL(enclosure_add_device);
+ /**
+  * enclosure_remove_device - remove a device from an enclosure
+  * @edev:	the enclosure device
+- * @num:	the number of the component to remove
++ * @dev:	device to remove/put
+  *
+  * Returns zero on success or an error.
+  *
 -- 
-2.27.0
+2.25.1
 
