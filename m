@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A440C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:19:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4E5C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C6C7206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:19:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADDAA206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:19:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461986;
-	bh=vtmKuTVxeyYUij1KgMtO3mM9JqUH76s7rT5d7/7PG0s=;
+	s=default; t=1593461989;
+	bh=9mTK1c+NsX/lpeb9u0hRpDUgCNM27kvlzHnsMC7fYK4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KOu/DOHSICWIWYrKmNqr6Ifx/+vCAs+aOW+y2VvtBX8QMYHqY0fNgb9ThgvwwntCd
-	 L1qXWX5C4rn3QX5XMiF4GZPbwHfbvcHa+Aeq0afrznDvHPAQGsEBNnqo9rkeBnqEp1
-	 gVReYg/SGkiB+VV4UUEZIQJoiFuRLNmL2x3LlG50=
+	b=X4H0C90OdjRQVSslG+ACjK5z3wPus96xf6LWAc2qLlY8mHQCVjrpLGRtLceQZfBZK
+	 niGYvLOSErWpd7kJ28KJzBYiteKzsTq8EsocGjZfcIDGWpjYftbFLNwOmy+f9h1M7N
+	 07fCGqhlpsTVWkxU49hz/LpBl3jSpVRZC2vsGIao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732629AbgF2TZk (ORCPT
+        id S1732909AbgF2UTs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:25:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37066 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:19:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732477AbgF2TZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:25:19 -0400
+        id S1732617AbgF2TZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:25:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13E38253BF;
-        Mon, 29 Jun 2020 15:41:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B56C9253AA;
+        Mon, 29 Jun 2020 15:41:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445287;
-        bh=vtmKuTVxeyYUij1KgMtO3mM9JqUH76s7rT5d7/7PG0s=;
+        s=default; t=1593445275;
+        bh=9mTK1c+NsX/lpeb9u0hRpDUgCNM27kvlzHnsMC7fYK4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=W27TJHKJhvdS48LRzywgESbWCWUukv0ERChhnfmRwJUBRGDYW7m+gwL6xz9Gpj+kU
-         sqsJ7aeNAwZTZ4v/FpFTEjTGtDyiXYjM4UpAEaRFiM7WPHhe8RAJk9dbl5ykegs8vF
-         uWAQuPMh5dJRFM0cH2yyuZziliM/Gyv5qIHrxBhw=
+        b=QAElEFSs5uosY6kcXjI+KZpholq8CUBP+TjJGB+6qIhpWGfCDbdnN4eYT65+ThU85
+         A3rnhPVbR1Q6I2+BPItB8s3dSd6VyIxSOAqGRU/X3AVhF/5CJMvX7oMmNkEMne2RzO
+         lRBY7soE8FIq68mNCK6Mygfr9znP9mG9DfL7bGJc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
+Cc:     Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Minas Harutyunyan <hminas@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 065/191] gfs2: Allow lock_nolock mount to specify jid=X
-Date:   Mon, 29 Jun 2020 11:38:01 -0400
-Message-Id: <20200629154007.2495120-66-sashal@kernel.org>
+Subject: [PATCH 4.9 054/191] usb: dwc2: gadget: move gadget resume after the core is in L0 state
+Date:   Mon, 29 Jun 2020 11:37:50 -0400
+Message-Id: <20200629154007.2495120-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -65,44 +66,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Peterson <rpeterso@redhat.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
 
-[ Upstream commit ea22eee4e6027d8927099de344f7fff43c507ef9 ]
+[ Upstream commit 8c935deacebb8fac8f41378701eb79d12f3c2e2d ]
 
-Before this patch, a simple typo accidentally added \n to the jid=
-string for lock_nolock mounts. This made it impossible to mount a
-gfs2 file system with a journal other than journal0. Thus:
+When the remote wakeup interrupt is triggered, lx_state is resumed from L2
+to L0 state. But when the gadget resume is called, lx_state is still L2.
+This prevents the resume callback to queue any request. Any attempt
+to queue a request from resume callback will result in:
+- "submit request only in active state" debug message to be issued
+- dwc2_hsotg_ep_queue() returns -EAGAIN
 
-mount -tgfs2 -o hostdata="jid=1" <device> <mount pt>
+Call the gadget resume routine after the core is in L0 state.
 
-Resulted in:
-mount: wrong fs type, bad option, bad superblock on <device>
+Fixes: f81f46e1f530 ("usb: dwc2: implement hibernation during bus suspend/resume")
 
-In most cases this is not a problem. However, for debugging and
-testing purposes we sometimes want to test the integrity of other
-journals. This patch removes the unnecessary \n and thus allows
-lock_nolock users to specify an alternate journal.
-
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+Acked-by: Minas Harutyunyan <hminas@synopsys.com>
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/gfs2/ops_fstype.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/dwc2/core_intr.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/fs/gfs2/ops_fstype.c b/fs/gfs2/ops_fstype.c
-index 84e5ac061b17e..bb5ddaabc218b 100644
---- a/fs/gfs2/ops_fstype.c
-+++ b/fs/gfs2/ops_fstype.c
-@@ -920,7 +920,7 @@ static int init_per_node(struct gfs2_sbd *sdp, int undo)
- }
+diff --git a/drivers/usb/dwc2/core_intr.c b/drivers/usb/dwc2/core_intr.c
+index d85c5c9f96c1d..f046703f63f27 100644
+--- a/drivers/usb/dwc2/core_intr.c
++++ b/drivers/usb/dwc2/core_intr.c
+@@ -365,10 +365,13 @@ static void dwc2_handle_wakeup_detected_intr(struct dwc2_hsotg *hsotg)
+ 			if (ret && (ret != -ENOTSUPP))
+ 				dev_err(hsotg->dev, "exit hibernation failed\n");
  
- static const match_table_t nolock_tokens = {
--	{ Opt_jid, "jid=%d\n", },
-+	{ Opt_jid, "jid=%d", },
- 	{ Opt_err, NULL },
- };
- 
++			/* Change to L0 state */
++			hsotg->lx_state = DWC2_L0;
+ 			call_gadget(hsotg, resume);
++		} else {
++			/* Change to L0 state */
++			hsotg->lx_state = DWC2_L0;
+ 		}
+-		/* Change to L0 state */
+-		hsotg->lx_state = DWC2_L0;
+ 	} else {
+ 		if (hsotg->core_params->hibernation)
+ 			return;
 -- 
 2.25.1
 
