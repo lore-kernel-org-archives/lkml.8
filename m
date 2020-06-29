@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4885FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 262B9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1E3B620760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:01:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04E4820760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:01:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468099;
-	bh=gnsYxH96Bjz9snSuLZhMaPlkC3GQAaOV3NO/+KV8V38=;
+	s=default; t=1593468102;
+	bh=NZBpvXR0toR/Aek7Lz0RRaujuuhv5ZM2HJX/D3SBmPo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A0I8UL1wmdMR1MWXQm1KY6ib/6+hPRq6Fl/TJzzmys0o6NSiCXphj+BVmVGbQjQGq
-	 XajJZhH1VotHhX5pkDrBQj9B1shiTUZL/0QBlZ2YdoVy7XQ4aEVS2SPfc4jZ8j5RWF
-	 QN2UhmN8AKmde6VVGRD4Kq1UsD6vOWxZ4s8f4BJ4=
+	b=bdr56uJasubkGNmOEuGtrwqdQPUGCEOpHl1qM/CvldPgxf0sY1OdoTuaC0G0j+mIe
+	 YflAej/KI+gFxquMNHyheAiLnHcXzbY7CCk/8bZCwIfLDaYyKeelRcqVTuvBMO5Z+b
+	 V5M2L8a4GnVjORE/1R18DpDloX/5d1Hc0y824UB0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732000AbgF2WBh (ORCPT
+        id S1731982AbgF2WBk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:01:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56910 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:01:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726274AbgF2SfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726245AbgF2SfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2477C241A6;
-        Mon, 29 Jun 2020 15:19:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26D3E246B9;
+        Mon, 29 Jun 2020 15:20:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443958;
-        bh=gnsYxH96Bjz9snSuLZhMaPlkC3GQAaOV3NO/+KV8V38=;
+        s=default; t=1593444007;
+        bh=NZBpvXR0toR/Aek7Lz0RRaujuuhv5ZM2HJX/D3SBmPo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f97gPBUDXv6wDc++ONGoUdKUcjNT3ivYzIJsfITvGVYrBMEDvKmFMUAHWnT9bVoa+
-         Rhm3O7FNhNu2hfxXh4LfZswMh8MUni8iPK0T7TOunKAgxOovUBfSDcMOILyykqHpyO
-         No6SE8PU18B72rz2mHbVFsxYQSXL23tGarJYEgnc=
+        b=EeZbPeUEAOC90haDojY/P3BrCjPXMrKkRZN9+rFx5wrdpACbZDcqWCBlPOWIhEmQg
+         zkNY6OFO6gJWYinE6BOeqPNrQhDBDCG/KA4VHIaHsQ9jWumm8phDwn5yM2n7lROijW
+         YIOePzpaOBzoR/g1dPdNYsxLe7WT/x0dy3uZdaPM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 061/265] mei: me: add tiger lake point device ids for H platforms.
-Date:   Mon, 29 Jun 2020 11:14:54 -0400
-Message-Id: <20200629151818.2493727-62-sashal@kernel.org>
+Cc:     Robin Gong <yibin.gong@nxp.com>,
+        Christophe Meynard <Christophe.Meynard@ign.fr>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 113/265] regualtor: pfuze100: correct sw1a/sw2 on pfuze3000
+Date:   Mon, 29 Jun 2020 11:15:46 -0400
+Message-Id: <20200629151818.2493727-114-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -65,100 +66,119 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Usyskin <alexander.usyskin@intel.com>
+From: Robin Gong <yibin.gong@nxp.com>
 
-commit 8c289ea064165237891a7b4be77b74d5cba8fa99 upstream.
+[ Upstream commit 6f1cf5257acc6e6242ddf2f52bc7912aed77b79f ]
 
-Add Tiger Lake device ids H for HECI1.
-TGH_H is also used in Tatlow SPS platform we need to
-disable the mei interface there.
+PFUZE100_SWB_REG is not proper for sw1a/sw2, because enable_mask/enable_reg
+is not correct. On PFUZE3000, sw1a/sw2 should be the same as sw1a/sw2 on
+pfuze100 except that voltages are not linear, so add new PFUZE3000_SW_REG
+and pfuze3000_sw_regulator_ops which like the non-linear PFUZE100_SW_REG
+and pfuze100_sw_regulator_ops.
 
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
-Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
-Link: https://lore.kernel.org/r/20200619165121.2145330-7-tomas.winkler@intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 1dced996ee70 ("regulator: pfuze100: update voltage setting for pfuze3000 sw1a")
+Reported-by: Christophe Meynard <Christophe.Meynard@ign.fr>
+Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+Link: https://lore.kernel.org/r/1592171648-8752-1-git-send-email-yibin.gong@nxp.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/mei/hw-me-regs.h |  1 +
- drivers/misc/mei/hw-me.c      | 10 ++++++++++
- drivers/misc/mei/hw-me.h      |  4 ++++
- drivers/misc/mei/pci-me.c     |  1 +
- 4 files changed, 16 insertions(+)
+ drivers/regulator/pfuze100-regulator.c | 60 +++++++++++++++++---------
+ 1 file changed, 39 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/misc/mei/hw-me-regs.h b/drivers/misc/mei/hw-me-regs.h
-index 01b1bf74f2626..7becfc768bbcc 100644
---- a/drivers/misc/mei/hw-me-regs.h
-+++ b/drivers/misc/mei/hw-me-regs.h
-@@ -94,6 +94,7 @@
- #define MEI_DEV_ID_JSP_N      0x4DE0  /* Jasper Lake Point N */
+diff --git a/drivers/regulator/pfuze100-regulator.c b/drivers/regulator/pfuze100-regulator.c
+index 689537927f6f7..4c8e8b4722872 100644
+--- a/drivers/regulator/pfuze100-regulator.c
++++ b/drivers/regulator/pfuze100-regulator.c
+@@ -209,6 +209,19 @@ static const struct regulator_ops pfuze100_swb_regulator_ops = {
  
- #define MEI_DEV_ID_TGP_LP     0xA0E0  /* Tiger Lake Point LP */
-+#define MEI_DEV_ID_TGP_H      0x43E0  /* Tiger Lake Point H */
- 
- #define MEI_DEV_ID_MCC        0x4B70  /* Mule Creek Canyon (EHL) */
- #define MEI_DEV_ID_MCC_4      0x4B75  /* Mule Creek Canyon 4 (EHL) */
-diff --git a/drivers/misc/mei/hw-me.c b/drivers/misc/mei/hw-me.c
-index f8155c1e811d7..7649710a2ab9e 100644
---- a/drivers/misc/mei/hw-me.c
-+++ b/drivers/misc/mei/hw-me.c
-@@ -1526,6 +1526,15 @@ static const struct mei_cfg mei_me_pch15_cfg = {
- 	MEI_CFG_TRC,
  };
  
-+/* Tiger Lake with quirk for SPS 5.0 and newer Firmware exclusion */
-+static const struct mei_cfg mei_me_pch15_sps_cfg = {
-+	MEI_CFG_PCH8_HFS,
-+	MEI_CFG_FW_VER_SUPP,
-+	MEI_CFG_DMA_128,
-+	MEI_CFG_TRC,
-+	MEI_CFG_FW_SPS,
++static const struct regulator_ops pfuze3000_sw_regulator_ops = {
++	.enable = regulator_enable_regmap,
++	.disable = regulator_disable_regmap,
++	.is_enabled = regulator_is_enabled_regmap,
++	.list_voltage = regulator_list_voltage_table,
++	.map_voltage = regulator_map_voltage_ascend,
++	.set_voltage_sel = regulator_set_voltage_sel_regmap,
++	.get_voltage_sel = regulator_get_voltage_sel_regmap,
++	.set_voltage_time_sel = regulator_set_voltage_time_sel,
++	.set_ramp_delay = pfuze100_set_ramp_delay,
++
 +};
 +
- /*
-  * mei_cfg_list - A list of platform platform specific configurations.
-  * Note: has to be synchronized with  enum mei_cfg_idx.
-@@ -1544,6 +1553,7 @@ static const struct mei_cfg *const mei_cfg_list[] = {
- 	[MEI_ME_PCH12_SPS_CFG] = &mei_me_pch12_sps_cfg,
- 	[MEI_ME_PCH12_SPS_NODMA_CFG] = &mei_me_pch12_nodma_sps_cfg,
- 	[MEI_ME_PCH15_CFG] = &mei_me_pch15_cfg,
-+	[MEI_ME_PCH15_SPS_CFG] = &mei_me_pch15_sps_cfg,
+ #define PFUZE100_FIXED_REG(_chip, _name, base, voltage)	\
+ 	[_chip ## _ ## _name] = {	\
+ 		.desc = {	\
+@@ -318,23 +331,28 @@ static const struct regulator_ops pfuze100_swb_regulator_ops = {
+ 	.stby_mask = 0x20,	\
+ }
+ 
+-
+-#define PFUZE3000_SW2_REG(_chip, _name, base, min, max, step)	{	\
+-	.desc = {	\
+-		.name = #_name,\
+-		.n_voltages = ((max) - (min)) / (step) + 1,	\
+-		.ops = &pfuze100_sw_regulator_ops,	\
+-		.type = REGULATOR_VOLTAGE,	\
+-		.id = _chip ## _ ## _name,	\
+-		.owner = THIS_MODULE,	\
+-		.min_uV = (min),	\
+-		.uV_step = (step),	\
+-		.vsel_reg = (base) + PFUZE100_VOL_OFFSET,	\
+-		.vsel_mask = 0x7,	\
+-	},	\
+-	.stby_reg = (base) + PFUZE100_STANDBY_OFFSET,	\
+-	.stby_mask = 0x7,	\
+-}
++/* No linar case for the some switches of PFUZE3000 */
++#define PFUZE3000_SW_REG(_chip, _name, base, mask, voltages)	\
++	[_chip ## _ ##  _name] = {	\
++		.desc = {	\
++			.name = #_name,	\
++			.n_voltages = ARRAY_SIZE(voltages),	\
++			.ops = &pfuze3000_sw_regulator_ops,	\
++			.type = REGULATOR_VOLTAGE,	\
++			.id = _chip ## _ ## _name,	\
++			.owner = THIS_MODULE,	\
++			.volt_table = voltages,	\
++			.vsel_reg = (base) + PFUZE100_VOL_OFFSET,	\
++			.vsel_mask = (mask),	\
++			.enable_reg = (base) + PFUZE100_MODE_OFFSET,	\
++			.enable_mask = 0xf,	\
++			.enable_val = 0x8,	\
++			.enable_time = 500,	\
++		},	\
++		.stby_reg = (base) + PFUZE100_STANDBY_OFFSET,	\
++		.stby_mask = (mask),	\
++		.sw_reg = true,		\
++	}
+ 
+ #define PFUZE3000_SW3_REG(_chip, _name, base, min, max, step)	{	\
+ 	.desc = {	\
+@@ -391,9 +409,9 @@ static struct pfuze_regulator pfuze200_regulators[] = {
  };
  
- const struct mei_cfg *mei_me_get_cfg(kernel_ulong_t idx)
-diff --git a/drivers/misc/mei/hw-me.h b/drivers/misc/mei/hw-me.h
-index 52e0c6d578f27..6a8973649c490 100644
---- a/drivers/misc/mei/hw-me.h
-+++ b/drivers/misc/mei/hw-me.h
-@@ -87,6 +87,9 @@ struct mei_me_hw {
-  *                         servers platforms with quirk for
-  *                         SPS firmware exclusion.
-  * @MEI_ME_PCH15_CFG:      Platform Controller Hub Gen15 and newer
-+ * @MEI_ME_PCH15_SPS_CFG:  Platform Controller Hub Gen15 and newer
-+ *                         servers platforms with quirk for
-+ *                         SPS firmware exclusion.
-  * @MEI_ME_NUM_CFG:        Upper Sentinel.
-  */
- enum mei_cfg_idx {
-@@ -103,6 +106,7 @@ enum mei_cfg_idx {
- 	MEI_ME_PCH12_SPS_CFG,
- 	MEI_ME_PCH12_SPS_NODMA_CFG,
- 	MEI_ME_PCH15_CFG,
-+	MEI_ME_PCH15_SPS_CFG,
- 	MEI_ME_NUM_CFG,
+ static struct pfuze_regulator pfuze3000_regulators[] = {
+-	PFUZE100_SWB_REG(PFUZE3000, SW1A, PFUZE100_SW1ABVOL, 0x1f, pfuze3000_sw1a),
++	PFUZE3000_SW_REG(PFUZE3000, SW1A, PFUZE100_SW1ABVOL, 0x1f, pfuze3000_sw1a),
+ 	PFUZE100_SW_REG(PFUZE3000, SW1B, PFUZE100_SW1CVOL, 700000, 1475000, 25000),
+-	PFUZE100_SWB_REG(PFUZE3000, SW2, PFUZE100_SW2VOL, 0x7, pfuze3000_sw2lo),
++	PFUZE3000_SW_REG(PFUZE3000, SW2, PFUZE100_SW2VOL, 0x7, pfuze3000_sw2lo),
+ 	PFUZE3000_SW3_REG(PFUZE3000, SW3, PFUZE100_SW3AVOL, 900000, 1650000, 50000),
+ 	PFUZE100_SWB_REG(PFUZE3000, SWBST, PFUZE100_SWBSTCON1, 0x3, pfuze100_swbst),
+ 	PFUZE100_SWB_REG(PFUZE3000, VSNVS, PFUZE100_VSNVSVOL, 0x7, pfuze100_vsnvs),
+@@ -407,8 +425,8 @@ static struct pfuze_regulator pfuze3000_regulators[] = {
  };
  
-diff --git a/drivers/misc/mei/pci-me.c b/drivers/misc/mei/pci-me.c
-index f74c6113812d6..81e759674c1b5 100644
---- a/drivers/misc/mei/pci-me.c
-+++ b/drivers/misc/mei/pci-me.c
-@@ -96,6 +96,7 @@ static const struct pci_device_id mei_me_pci_tbl[] = {
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_ICP_LP, MEI_ME_PCH12_CFG)},
- 
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_TGP_LP, MEI_ME_PCH15_CFG)},
-+	{MEI_PCI_DEVICE(MEI_DEV_ID_TGP_H, MEI_ME_PCH15_SPS_CFG)},
- 
- 	{MEI_PCI_DEVICE(MEI_DEV_ID_JSP_N, MEI_ME_PCH15_CFG)},
- 
+ static struct pfuze_regulator pfuze3001_regulators[] = {
+-	PFUZE100_SWB_REG(PFUZE3001, SW1, PFUZE100_SW1ABVOL, 0x1f, pfuze3000_sw1a),
+-	PFUZE100_SWB_REG(PFUZE3001, SW2, PFUZE100_SW2VOL, 0x7, pfuze3000_sw2lo),
++	PFUZE3000_SW_REG(PFUZE3001, SW1, PFUZE100_SW1ABVOL, 0x1f, pfuze3000_sw1a),
++	PFUZE3000_SW_REG(PFUZE3001, SW2, PFUZE100_SW2VOL, 0x7, pfuze3000_sw2lo),
+ 	PFUZE3000_SW3_REG(PFUZE3001, SW3, PFUZE100_SW3AVOL, 900000, 1650000, 50000),
+ 	PFUZE100_SWB_REG(PFUZE3001, VSNVS, PFUZE100_VSNVSVOL, 0x7, pfuze100_vsnvs),
+ 	PFUZE100_VGEN_REG(PFUZE3001, VLDO1, PFUZE100_VGEN1VOL, 1800000, 3300000, 100000),
 -- 
 2.25.1
 
