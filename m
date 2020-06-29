@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2225C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E961C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9ACE9206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:51:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73561206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:51:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467500;
-	bh=CEb9o2yL5eEnwlfJtCGk5Cdd+bLozxsyRisthU6Vmsg=;
+	s=default; t=1593467502;
+	bh=R2j6V0eZaLlrba2WbCE1v/ST4757gs8/EMzZo0IjirQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OFlgu3kn1bvVSCHPGAZpjOwaQsVfI0xuqea64BrbucOkx8bPk7Pevumm9+PUSqFFD
-	 loXlHTJjpBaS8Ndnf7ATRMvnYZV++iZb1p+r+QMLhu1g2FXGSeitSF2XZXUESQgFnp
-	 x8KyRtcWpRSxnZue60vf9NPL/D5T2zQ5+ZxnlOec=
+	b=jfF5/bfuEb+YdCUaWTqYxwCuWwyXpkBoWCa1zzxh7vFpNet0iaYrMDQO8u5YYLAl2
+	 UwZIRbCbEs4wEJ1AZDhBdZ7X+1e7PsqQ7U/56z6ri9cG5KNODCkRLDVamHBaN6P9CD
+	 +8o7PI6i1bdVmQqMhlIG4Y0BMfqG2RJXWBXrsNZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404305AbgF2Vvi (ORCPT
+        id S2404565AbgF2Vvl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:51:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56792 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:51:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726654AbgF2Sfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726663AbgF2Sfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B463F2478A;
-        Mon, 29 Jun 2020 15:21:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA4952479A;
+        Mon, 29 Jun 2020 15:21:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444095;
-        bh=CEb9o2yL5eEnwlfJtCGk5Cdd+bLozxsyRisthU6Vmsg=;
+        s=default; t=1593444105;
+        bh=R2j6V0eZaLlrba2WbCE1v/ST4757gs8/EMzZo0IjirQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qaI7LPFVhNFkUEpWNdD82O+Rm4inYFouZxto82BSnMuDBosRkmqcxqX5aHJ/5m+ho
-         h5Tp92dbqb4BPugllruFoUxUbrcLCPTZt0Wd0EdC+nJsA5SvFQ8E9ux+Ky/cLMlSxx
-         G3RvA9gtBQiY7GTtDjc4JOWaIvOoN1frAIA/K04c=
+        b=B1OviV8XQhH3uAJBDH2eMw9RXdFn+G6UwWSUG3wPMJuhb62mebPXPCgUXkA40SUD3
+         2bJaN6Uhl1hpdCYwIKErV80N1WIJnNUfzcCg33+n+o2yT344dLGtzXhAS1tlTfpiAu
+         OjG5q4TWYr1oWM3+tqYSGp6P9+n254akVMpDEdoU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vishal Verma <vishal.l.verma@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 205/265] nvdimm/region: always show the 'align' attribute
-Date:   Mon, 29 Jun 2020 11:17:18 -0400
-Message-Id: <20200629151818.2493727-206-sashal@kernel.org>
+Cc:     Igor Mammedov <imammedo@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 216/265] kvm: lapic: fix broken vcpu hotplug
+Date:   Mon, 29 Jun 2020 11:17:29 -0400
+Message-Id: <20200629151818.2493727-217-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -65,57 +65,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vishal Verma <vishal.l.verma@intel.com>
+From: Igor Mammedov <imammedo@redhat.com>
 
-[ Upstream commit 543094e19c82b5d171e139d09a1a3ea0a7361117 ]
+commit af28dfacbe00d53df5dec2bf50640df33138b1fe upstream.
 
-It is possible that a platform that is capable of 'namespace labels'
-comes up without the labels properly initialized. In this case, the
-region's 'align' attribute is hidden. Howerver, once the user does
-initialize he labels, the 'align' attribute still stays hidden, which is
-unexpected.
+Guest fails to online hotplugged CPU with error
+  smpboot: do_boot_cpu failed(-1) to wakeup CPU#4
 
-The sysfs_update_group() API is meant to address this, and could be
-called during region probe, but it has entanglements with the device
-'lockdep_mutex'. Therefore, simply make the 'align' attribute always
-visible. It doesn't matter what it says for label-less namespaces, since
-it is not possible to change their allocation anyway.
+It's caused by the fact that kvm_apic_set_state(), which used to call
+recalculate_apic_map() unconditionally and pulled hotplugged CPU into
+apic map, is updating map conditionally on state changes.  In this case
+the APIC map is not considered dirty and the is not updated.
 
-Suggested-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Link: https://lore.kernel.org/r/20200520225026.29426-1-vishal.l.verma@intel.com
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fix the issue by forcing unconditional update from kvm_apic_set_state(),
+like it used to be.
+
+Fixes: 4abaffce4d25a ("KVM: LAPIC: Recalculate apic map in batch")
+Cc: stable@vger.kernel.org
+Signed-off-by: Igor Mammedov <imammedo@redhat.com>
+Message-Id: <20200622160830.426022-1-imammedo@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/nvdimm/region_devs.c | 14 ++------------
- 1 file changed, 2 insertions(+), 12 deletions(-)
+ arch/x86/kvm/lapic.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/nvdimm/region_devs.c b/drivers/nvdimm/region_devs.c
-index ccbb5b43b8b2c..4502f9c4708d0 100644
---- a/drivers/nvdimm/region_devs.c
-+++ b/drivers/nvdimm/region_devs.c
-@@ -679,18 +679,8 @@ static umode_t region_visible(struct kobject *kobj, struct attribute *a, int n)
- 		return a->mode;
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index 9af25c97612a7..8967e320a9784 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -2512,6 +2512,7 @@ int kvm_apic_set_state(struct kvm_vcpu *vcpu, struct kvm_lapic_state *s)
  	}
+ 	memcpy(vcpu->arch.apic->regs, s->regs, sizeof(*s));
  
--	if (a == &dev_attr_align.attr) {
--		int i;
--
--		for (i = 0; i < nd_region->ndr_mappings; i++) {
--			struct nd_mapping *nd_mapping = &nd_region->mapping[i];
--			struct nvdimm *nvdimm = nd_mapping->nvdimm;
--
--			if (test_bit(NDD_LABELING, &nvdimm->flags))
--				return a->mode;
--		}
--		return 0;
--	}
-+	if (a == &dev_attr_align.attr)
-+		return a->mode;
++	apic->vcpu->kvm->arch.apic_map_dirty = true;
+ 	kvm_recalculate_apic_map(vcpu->kvm);
+ 	kvm_apic_set_version(vcpu);
  
- 	if (a != &dev_attr_set_cookie.attr
- 			&& a != &dev_attr_available_size.attr)
 -- 
 2.25.1
 
