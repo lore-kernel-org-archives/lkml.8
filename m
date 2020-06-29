@@ -2,194 +2,122 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86533C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9335C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:30:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5879A20768
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:30:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466216;
-	bh=w3FZD4im0Akh+fIGBw1c9ClNYUbIQLJYgTYhb1xdu1c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=yjL8YWLODjguT+oEibph7QRHN6RddcghEjXtdau/vp9K9fAlRSJK8Jm8CH3m62CPE
-	 gAs4Dmxyi2vIuqigB83SCBQfWJM8IH27bRA914F3J/qrn9f02o2Omhnd6PBsccEXF/
-	 1vMKwJ7SoF5jZZhnyaaSHx/1qnLWOdj2A09jBMpI=
+	by mail.kernel.org (Postfix) with ESMTP id BF124206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:30:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732339AbgF2VaP (ORCPT
+        id S2388760AbgF2VaZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:30:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60642 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728875AbgF2SlW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:41:22 -0400
-Received: from localhost (unknown [122.182.251.219])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4921E2342C;
-        Mon, 29 Jun 2020 09:44:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593423865;
-        bh=w3FZD4im0Akh+fIGBw1c9ClNYUbIQLJYgTYhb1xdu1c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0/POGlUp0WbbmUZGA9MOwno2mdejSPgSen/jAC7icBvo5DI527qhcOcbn2WQZlUoB
-         1ZPOQcIHcyWvvRpYgt697/mxrSX1vy7+haXmoN0v0tDuAWtTBUAnmYDhs/Ruob6KKn
-         rHBOLMDiCJ8+xR6ChC3vFoO8Soqn9qQ7ZGKmtGgk=
-Date:   Mon, 29 Jun 2020 15:14:21 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Wesley Cheng <wcheng@codeaurora.org>
-Cc:     kishon@ti.com, agross@kernel.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jackp@codeaurora.org
-Subject: Re: [PATCH v3 1/2] phy: qcom-snps: Add runtime suspend and resume
- handlers
-Message-ID: <20200629094421.GD2599@vkoul-mobl>
-References: <20200625195444.15130-1-wcheng@codeaurora.org>
- <20200625195444.15130-2-wcheng@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200625195444.15130-2-wcheng@codeaurora.org>
+        Mon, 29 Jun 2020 17:30:25 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51804 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728873AbgF2VaW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 17:30:22 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05TL3oWa041064;
+        Mon, 29 Jun 2020 17:30:10 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31ydk9e64q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 29 Jun 2020 17:30:10 -0400
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05TLTiJq191397;
+        Mon, 29 Jun 2020 17:30:10 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31ydk9e63h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 29 Jun 2020 17:30:09 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05TLJIH4021282;
+        Mon, 29 Jun 2020 21:30:07 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma04ams.nl.ibm.com with ESMTP id 31wwr8atb6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 29 Jun 2020 21:30:07 +0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05TLU51O55640508
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 29 Jun 2020 21:30:05 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3A950A405D;
+        Mon, 29 Jun 2020 21:30:05 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0B4A3A4040;
+        Mon, 29 Jun 2020 21:30:04 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.137.220])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 29 Jun 2020 21:30:03 +0000 (GMT)
+Message-ID: <1593466203.5085.62.camel@linux.ibm.com>
+Subject: Re: [PATCH] ima: Rename internal audit rule functions
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Tyler Hicks <tyhicks@linux.microsoft.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+Cc:     James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        linux-audit@redhat.com
+Date:   Mon, 29 Jun 2020 17:30:03 -0400
+In-Reply-To: <20200629153037.337349-1-tyhicks@linux.microsoft.com>
+References: <20200629153037.337349-1-tyhicks@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-06-29_21:2020-06-29,2020-06-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
+ suspectscore=2 adultscore=0 mlxlogscore=999 lowpriorityscore=0
+ clxscore=1015 bulkscore=0 malwarescore=0 cotscore=-2147483648
+ impostorscore=0 spamscore=0 priorityscore=1501 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006290130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Wesley,
+[Cc'ing the audit mailing list]
 
-On 25-06-20, 12:54, Wesley Cheng wrote:
-> Allow for the PHY to be put into a powered down state when possible.
-> Add the required suspend and resume callbacks, which will determine
-> what resources can be turned off depending on the cable status.
+On Mon, 2020-06-29 at 10:30 -0500, Tyler Hicks wrote:
 > 
-> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
-> Reviewed-by: Vinod Koul <vkoul@kernel.org>
+> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+> index ff2bf57ff0c7..5d62ee8319f4 100644
+> --- a/security/integrity/ima/ima.h
+> +++ b/security/integrity/ima/ima.h
+> @@ -419,24 +419,24 @@ static inline void ima_free_modsig(struct modsig *modsig)
+>  /* LSM based policy rules require audit */
+>  #ifdef CONFIG_IMA_LSM_RULES
+>  
+> -#define security_filter_rule_init security_audit_rule_init
+> -#define security_filter_rule_free security_audit_rule_free
+> -#define security_filter_rule_match security_audit_rule_match
+> +#define ima_audit_rule_init security_audit_rule_init
+> +#define ima_audit_rule_free security_audit_rule_free
+> +#define ima_audit_rule_match security_audit_rule_match
 
-Please do not add this tag unless someone send it explictly over the
-email.. I do not recall sending a review tag
+Instead of defining an entirely new method of identifying files, IMA
+piggybacks on top of the existing audit rule syntax.  IMA policy rules
+"filter" based on this information.
 
-> ---
->  drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c | 73 +++++++++++++++++++
->  1 file changed, 73 insertions(+)
-> 
-> diff --git a/drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c b/drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c
-> index 4d74045271eb..152d8633f4ea 100644
-> --- a/drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c
-> +++ b/drivers/phy/qualcomm/phy-qcom-snps-femto-v2.c
-> @@ -104,6 +104,63 @@ static inline void qcom_snps_hsphy_write_mask(void __iomem *base, u32 offset,
->  	readl_relaxed(base + offset);
->  }
->  
-> +static int qcom_snps_hsphy_suspend(struct qcom_snps_hsphy *hsphy)
-> +{
-> +	dev_dbg(&hsphy->phy->dev, "Suspend QCOM SNPS PHY\n");
-> +
-> +	if (hsphy->mode == PHY_MODE_USB_HOST) {
-> +		/* Enable auto-resume to meet remote wakeup timing */
-> +		qcom_snps_hsphy_write_mask(hsphy->base,
-> +					   USB2_PHY_USB_PHY_HS_PHY_CTRL2,
-> +					   USB2_AUTO_RESUME,
-> +					   USB2_AUTO_RESUME);
-> +		usleep_range(500, 1000);
-> +		qcom_snps_hsphy_write_mask(hsphy->base,
-> +					   USB2_PHY_USB_PHY_HS_PHY_CTRL2,
-> +					   0, USB2_AUTO_RESUME);
-> +	}
-> +
-> +	clk_disable_unprepare(hsphy->cfg_ahb_clk);
-> +	return 0;
-> +}
-> +
-> +static int qcom_snps_hsphy_resume(struct qcom_snps_hsphy *hsphy)
-> +{
-> +	int ret;
-> +
-> +	dev_dbg(&hsphy->phy->dev, "Resume QCOM SNPS PHY, mode\n");
-> +
-> +	ret = clk_prepare_enable(hsphy->cfg_ahb_clk);
-> +	if (ret) {
-> +		dev_err(&hsphy->phy->dev, "failed to enable cfg ahb clock\n");
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused qcom_snps_hsphy_runtime_suspend(struct device *dev)
-> +{
-> +	struct qcom_snps_hsphy *hsphy = dev_get_drvdata(dev);
-> +
-> +	if (!hsphy->phy_initialized)
-> +		return 0;
-> +
-> +	qcom_snps_hsphy_suspend(hsphy);
-> +	return 0;
-> +}
-> +
-> +static int __maybe_unused qcom_snps_hsphy_runtime_resume(struct device *dev)
-> +{
-> +	struct qcom_snps_hsphy *hsphy = dev_get_drvdata(dev);
-> +
-> +	if (!hsphy->phy_initialized)
-> +		return 0;
-> +
-> +	qcom_snps_hsphy_resume(hsphy);
-> +	return 0;
-> +}
-> +
->  static int qcom_snps_hsphy_init(struct phy *phy)
->  {
->  	struct qcom_snps_hsphy *hsphy = phy_get_drvdata(phy);
-> @@ -212,6 +269,11 @@ static const struct of_device_id qcom_snps_hsphy_of_match_table[] = {
->  };
->  MODULE_DEVICE_TABLE(of, qcom_snps_hsphy_of_match_table);
->  
-> +static const struct dev_pm_ops qcom_snps_hsphy_pm_ops = {
-> +	SET_RUNTIME_PM_OPS(qcom_snps_hsphy_runtime_suspend,
-> +			   qcom_snps_hsphy_runtime_resume, NULL)
-> +};
-> +
->  static int qcom_snps_hsphy_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> @@ -255,6 +317,14 @@ static int qcom_snps_hsphy_probe(struct platform_device *pdev)
->  		return ret;
->  	}
->  
-> +	pm_runtime_set_active(dev);
-> +	pm_runtime_enable(dev);
-> +	/*
-> +	 * Prevent runtime pm from being ON by default. Users can enable
-> +	 * it using power/control in sysfs.
-> +	 */
-> +	pm_runtime_forbid(dev);
-> +
->  	generic_phy = devm_phy_create(dev, NULL, &qcom_snps_hsphy_gen_ops);
->  	if (IS_ERR(generic_phy)) {
->  		ret = PTR_ERR(generic_phy);
-> @@ -269,6 +339,8 @@ static int qcom_snps_hsphy_probe(struct platform_device *pdev)
->  	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
->  	if (!IS_ERR(phy_provider))
->  		dev_dbg(dev, "Registered Qcom-SNPS HS phy\n");
-> +	else
-> +		pm_runtime_disable(dev);
->  
->  	return PTR_ERR_OR_ZERO(phy_provider);
->  }
-> @@ -277,6 +349,7 @@ static struct platform_driver qcom_snps_hsphy_driver = {
->  	.probe		= qcom_snps_hsphy_probe,
->  	.driver = {
->  		.name	= "qcom-snps-hs-femto-v2-phy",
-> +		.pm = &qcom_snps_hsphy_pm_ops,
->  		.of_match_table = qcom_snps_hsphy_of_match_table,
->  	},
->  };
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+IMA already audits security/integrity related events.  Using the word
+"audit" here will make things even more confusing than they currently
+are.  Renaming these functions as ima_audit_rule_XXX provides no
+benefit.  At that point, IMA might as well call the
+security_audit_rule prefixed function names directly.  As a quick fix,
+rename them as "ima_filter_rule".
 
--- 
-~Vinod
+The correct solution would probably be to rename these prefixed
+"security_audit_rule" functions as "security_filter_rule", so that
+both the audit subsystem and IMA could use them.
+
+Mimi
