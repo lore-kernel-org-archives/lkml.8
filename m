@@ -2,51 +2,50 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC93C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5FD8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:17:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1CC6E20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:17:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93C5D20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:17:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461868;
-	bh=7lSh4o1auUNb6gy7GNBXJWQZ2wdNQRJ5nYN0muRQ1NU=;
+	s=default; t=1593461869;
+	bh=nUQP0ziKCATQAvBbnQgRmQROXRvuwEzsoToKNDtoNuY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ewdKwVlkaLwKS7ktVwl2q4O52giVZ4kP1LW3nHEBfde7SfKpIjW8rTj1SRsvhXslO
-	 vV0pKx5qxjFU4ZpddnRWKWyMbl1zT8s/wNB8Q5dSpeRq/dYhPDVaxF+52kmEPzKD6F
-	 vo6yQggC4UYP9N2A0ir6LB4GHOLKiBMVuKUPQh+A=
+	b=FpqawsvD8tYjeiv2elPuhsEzWK5jZuZxqvAbMZBy81olJxYZcn54G6aRZm2asgyl+
+	 FBxGX/9xAlCPUvQCPpu8Riv2NRoV09OxLfTQjCT1cSSeJMM3CW4Ht/IONsZyUnWc61
+	 eLwPTSl3VIkk34jC4jW81LuAHnGeSgtw1I2kGge8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730654AbgF2URp (ORCPT
+        id S1726943AbgF2URo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:17:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37072 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:17:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37042 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732641AbgF2TZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732642AbgF2TZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACEE125368;
-        Mon, 29 Jun 2020 15:40:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A768125413;
+        Mon, 29 Jun 2020 15:42:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445229;
-        bh=7lSh4o1auUNb6gy7GNBXJWQZ2wdNQRJ5nYN0muRQ1NU=;
+        s=default; t=1593445364;
+        bh=nUQP0ziKCATQAvBbnQgRmQROXRvuwEzsoToKNDtoNuY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xTqicY2HNRK7ZijGeF5mxAccecN2ffhPZcyL81tcQjEF2IeQDnxgqMkXHOIRKVb+k
-         JpFdfaU0rE7baSn0FQz9fQJZ1/qVVkQtv7eHtqg4Wsk7DCow8lwlHcsWFfb2jkf/yI
-         XAbZAwjTJZ6Pl6nTDiyXsfCTiYyslaLNGtO9FY7g=
+        b=dqNNNv1RDXvdKdap6Og6Uj+sZhKz0Ym497awCHQppb4gGclqo4/Y3A6wDr0CKSLZ8
+         nrQFPkVfyBlUckYynC0kwkY4jaOb0eTYfnGGEP8hnM3TcUFlFukiUKZthXqZDv/ZnF
+         TKMX3/10O0uA/tERCMrwVuyO1teky7q5cww6xy+0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>,
-        Alex Williamson <alex.williamson@redhat.com>,
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 015/191] vfio/pci: fix memory leaks in alloc_perm_bits()
-Date:   Mon, 29 Jun 2020 11:37:11 -0400
-Message-Id: <20200629154007.2495120-16-sashal@kernel.org>
+Subject: [PATCH 4.9 120/191] mtd: rawnand: diskonchip: Fix the probe error path
+Date:   Mon, 29 Jun 2020 11:38:56 -0400
+Message-Id: <20200629154007.2495120-121-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -65,72 +64,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
 
-[ Upstream commit 3e63b94b6274324ff2e7d8615df31586de827c4e ]
+[ Upstream commit c5be12e45940f1aa1b5dfa04db5d15ad24f7c896 ]
 
-vfio_pci_disable() calls vfio_config_free() but forgets to call
-free_perm_bits() resulting in memory leaks,
+Not sure nand_cleanup() is the right function to call here but in any
+case it is not nand_release(). Indeed, even a comment says that
+calling nand_release() is a bit of a hack as there is no MTD device to
+unregister. So switch to nand_cleanup() for now and drop this
+comment.
 
-unreferenced object 0xc000000c4db2dee0 (size 16):
-  comm "qemu-kvm", pid 4305, jiffies 4295020272 (age 3463.780s)
-  hex dump (first 16 bytes):
-    00 00 ff 00 ff ff ff ff ff ff ff ff ff ff 00 00  ................
-  backtrace:
-    [<00000000a6a4552d>] alloc_perm_bits+0x58/0xe0 [vfio_pci]
-    [<00000000ac990549>] vfio_config_init+0xdf0/0x11b0 [vfio_pci]
-    init_pci_cap_msi_perm at drivers/vfio/pci/vfio_pci_config.c:1125
-    (inlined by) vfio_msi_cap_len at drivers/vfio/pci/vfio_pci_config.c:1180
-    (inlined by) vfio_cap_len at drivers/vfio/pci/vfio_pci_config.c:1241
-    (inlined by) vfio_cap_init at drivers/vfio/pci/vfio_pci_config.c:1468
-    (inlined by) vfio_config_init at drivers/vfio/pci/vfio_pci_config.c:1707
-    [<000000006db873a1>] vfio_pci_open+0x234/0x700 [vfio_pci]
-    [<00000000630e1906>] vfio_group_fops_unl_ioctl+0x8e0/0xb84 [vfio]
-    [<000000009e34c54f>] ksys_ioctl+0xd8/0x130
-    [<000000006577923d>] sys_ioctl+0x28/0x40
-    [<000000006d7b1cf2>] system_call_exception+0x114/0x1e0
-    [<0000000008ea7dd5>] system_call_common+0xf0/0x278
-unreferenced object 0xc000000c4db2e330 (size 16):
-  comm "qemu-kvm", pid 4305, jiffies 4295020272 (age 3463.780s)
-  hex dump (first 16 bytes):
-    00 ff ff 00 ff ff ff ff ff ff ff ff ff ff 00 00  ................
-  backtrace:
-    [<000000004c71914f>] alloc_perm_bits+0x44/0xe0 [vfio_pci]
-    [<00000000ac990549>] vfio_config_init+0xdf0/0x11b0 [vfio_pci]
-    [<000000006db873a1>] vfio_pci_open+0x234/0x700 [vfio_pci]
-    [<00000000630e1906>] vfio_group_fops_unl_ioctl+0x8e0/0xb84 [vfio]
-    [<000000009e34c54f>] ksys_ioctl+0xd8/0x130
-    [<000000006577923d>] sys_ioctl+0x28/0x40
-    [<000000006d7b1cf2>] system_call_exception+0x114/0x1e0
-    [<0000000008ea7dd5>] system_call_common+0xf0/0x278
+There is no Fixes tag applying here as the use of nand_release()
+in this driver predates by far the introduction of nand_cleanup() in
+commit d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
+which makes this change possible. However, pointing this commit as the
+culprit for backporting purposes makes sense even if it did not intruce
+any bug.
 
-Fixes: 89e1f7d4c66d ("vfio: Add PCI device driver")
-Signed-off-by: Qian Cai <cai@lca.pw>
-[aw: rolled in follow-up patch]
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+Fixes: d44154f969a4 ("mtd: nand: Provide nand_cleanup() function to free NAND related resources")
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/linux-mtd/20200519130035.1883-13-miquel.raynal@bootlin.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/pci/vfio_pci_config.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/mtd/nand/diskonchip.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-index 84905d074c4ff..608b94a0ee0e0 100644
---- a/drivers/vfio/pci/vfio_pci_config.c
-+++ b/drivers/vfio/pci/vfio_pci_config.c
-@@ -1729,8 +1729,11 @@ void vfio_config_free(struct vfio_pci_device *vdev)
- 	vdev->vconfig = NULL;
- 	kfree(vdev->pci_config_map);
- 	vdev->pci_config_map = NULL;
--	kfree(vdev->msi_perm);
--	vdev->msi_perm = NULL;
-+	if (vdev->msi_perm) {
-+		free_perm_bits(vdev->msi_perm);
-+		kfree(vdev->msi_perm);
-+		vdev->msi_perm = NULL;
-+	}
- }
+diff --git a/drivers/mtd/nand/diskonchip.c b/drivers/mtd/nand/diskonchip.c
+index b42d618553be8..374b7a10ba517 100644
+--- a/drivers/mtd/nand/diskonchip.c
++++ b/drivers/mtd/nand/diskonchip.c
+@@ -1605,13 +1605,10 @@ static int __init doc_probe(unsigned long physadr)
+ 		numchips = doc2001_init(mtd);
  
- /*
+ 	if ((ret = nand_scan(mtd, numchips)) || (ret = doc->late_init(mtd))) {
+-		/* DBB note: i believe nand_release is necessary here, as
++		/* DBB note: i believe nand_cleanup is necessary here, as
+ 		   buffers may have been allocated in nand_base.  Check with
+ 		   Thomas. FIX ME! */
+-		/* nand_release will call mtd_device_unregister, but we
+-		   haven't yet added it.  This is handled without incident by
+-		   mtd_device_unregister, as far as I can tell. */
+-		nand_release(nand);
++		nand_cleanup(nand);
+ 		kfree(nand);
+ 		goto fail;
+ 	}
 -- 
 2.25.1
 
