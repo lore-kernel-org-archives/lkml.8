@@ -2,122 +2,142 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B12DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 761DEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:40:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2277A2063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:40:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 570C920656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:40:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593456057;
+	bh=34RLz4AGlOLv0qThfaZkESlSozovgvdYMlx7twj9dNo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=oFZoiIGD1Q/8wKzzyNpHFkaCsh9Bu/n4CuVgOMWNxm8YUK5FXq4kAqiW3ibgT2nqn
+	 /T2APNcaPedrkUGWM/Df379UJxcd5wdiembyq5IvcVmPQpYY460nbUBk7PLmivrzkp
+	 smTHs0PjR6BFAx+Zl493T8OGxPlLZEgp+iP0S5Es=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728524AbgF2Skt (ORCPT
+        id S1728597AbgF2Skz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:40:49 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60072 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728391AbgF2Skf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:40:35 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05TGXkNW147767;
-        Mon, 29 Jun 2020 12:57:45 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31ydjwpppk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 Jun 2020 12:57:45 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05TGYWfM152459;
-        Mon, 29 Jun 2020 12:57:44 -0400
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31ydjwppnf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 Jun 2020 12:57:44 -0400
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05TGexbZ020434;
-        Mon, 29 Jun 2020 16:57:42 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma06fra.de.ibm.com with ESMTP id 31wwcgs7qb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 Jun 2020 16:57:42 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05TGveue39518286
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 29 Jun 2020 16:57:40 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 31AA811C04C;
-        Mon, 29 Jun 2020 16:57:40 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 57B4411C04A;
-        Mon, 29 Jun 2020 16:57:39 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.137.220])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 29 Jun 2020 16:57:39 +0000 (GMT)
-Message-ID: <1593449858.5085.24.camel@linux.ibm.com>
-Subject: Re: [PATCH v3 2/2] IMA: Add audit log for failure conditions
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Paul Moore <paul@paul-moore.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc:     sgrubb@redhat.com, rgb@redhat.com, linux-integrity@vger.kernel.org,
-        linux-audit@redhat.com, linux-kernel@vger.kernel.org
-Date:   Mon, 29 Jun 2020 12:57:38 -0400
-In-Reply-To: <CAHC9VhRQru30WtA-CMeqq=0GBtZ-Ut20ecHwpYfbEu5qCFqgDg@mail.gmail.com>
-References: <20200618211012.2823-1-nramas@linux.microsoft.com>
-         <20200618211012.2823-2-nramas@linux.microsoft.com>
-         <1592942295.5389.9.camel@linux.ibm.com>
-         <39d66bdc-55be-984a-42a0-34d0a011e0fb@linux.microsoft.com>
-         <CAHC9VhRQru30WtA-CMeqq=0GBtZ-Ut20ecHwpYfbEu5qCFqgDg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-06-29_18:2020-06-29,2020-06-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- adultscore=0 impostorscore=0 phishscore=0 mlxlogscore=999 malwarescore=0
- priorityscore=1501 spamscore=0 mlxscore=0 cotscore=-2147483648 bulkscore=0
- suspectscore=0 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006290106
+        Mon, 29 Jun 2020 14:40:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60594 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728528AbgF2Skv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:40:51 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F07123D51;
+        Mon, 29 Jun 2020 14:01:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593439266;
+        bh=34RLz4AGlOLv0qThfaZkESlSozovgvdYMlx7twj9dNo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=H9hqRgTH3hbbEok3oVOWnPSHA8uX73nPBDevXHnc+9COGNF/WvBBV3bLj1bTeRu56
+         HY/l+I/ZhoyZ4BZCC4QisD1Jqi89UZtqqlLdEF+UYbuxaL9FKjK7eC0U/o9YpB4kS0
+         3LaZwMu/3b9xCFSjl/q0BfUfzGUiudLaGrBv8J3w=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jpuLJ-007Kfz-4d; Mon, 29 Jun 2020 15:01:05 +0100
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 29 Jun 2020 15:01:05 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        wanghaibin.wang@huawei.com, kuhn.chenqun@huawei.com,
+        wangjingyi11@huawei.com
+Subject: Re: [BUG] irqchip/gic-v4.1: sleeping function called from invalid
+ context
+In-Reply-To: <1d673e99-0dd2-d287-aedf-65686eed5194@huawei.com>
+References: <1d673e99-0dd2-d287-aedf-65686eed5194@huawei.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <c401871295f68391473f2e522b920719@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, tglx@linutronix.de, jason@lakedaemon.net, linux-kernel@vger.kernel.org, wanghaibin.wang@huawei.com, kuhn.chenqun@huawei.com, wangjingyi11@huawei.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2020-06-25 at 15:14 -0400, Paul Moore wrote:
-> On Wed, Jun 24, 2020 at 1:25 PM Lakshmi Ramasubramanian
-> <nramas@linux.microsoft.com> wrote:
-> >
-> > On 6/23/20 12:58 PM, Mimi Zohar wrote:
-> >
-> > Hi Steve\Paul,
-> >
-> > >> Sample audit messages:
-> > >>
-> > >> [    6.303048] audit: type=1804 audit(1592506281.627:2): pid=1 uid=0
-> > >> auid=4294967295 ses=4294967295 subj=kernel op=measuring_key
-> > >> cause=ENOMEM comm="swapper/0" name=".builtin_trusted_keys" res=0
-> > >> errno=-12
-> > >
-> > > My only concern is that auditing -ENOMEM will put additional memory
-> > > pressure on the system.  I'm not sure if this is a concern and, if so,
-> > > how it should be handled.
-> >
-> > Do you have any concerns with respect to adding audit messages in low
-> > memory conditions?
+Hi Zenghui,
+
+On 2020-06-29 10:39, Zenghui Yu wrote:
+> Hi All,
 > 
-> Assuming the system is not completely toast, the allocation failure
-> could be a very transient issue; I wouldn't worry too much about it.
+> Booting the latest kernel with DEBUG_ATOMIC_SLEEP=y on a GICv4.1 
+> enabled
+> box, I get the following kernel splat:
+> 
+> [    0.053766] BUG: sleeping function called from invalid context at
+> mm/slab.h:567
+> [    0.053767] in_atomic(): 1, irqs_disabled(): 128, non_block: 0,
+> pid: 0, name: swapper/1
+> [    0.053769] CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.8.0-rc3+ #23
+> [    0.053770] Call trace:
+> [    0.053774]  dump_backtrace+0x0/0x218
+> [    0.053775]  show_stack+0x2c/0x38
+> [    0.053777]  dump_stack+0xc4/0x10c
+> [    0.053779]  ___might_sleep+0xfc/0x140
+> [    0.053780]  __might_sleep+0x58/0x90
+> [    0.053782]  slab_pre_alloc_hook+0x7c/0x90
+> [    0.053783]  kmem_cache_alloc_trace+0x60/0x2f0
+> [    0.053785]  its_cpu_init+0x6f4/0xe40
+> [    0.053786]  gic_starting_cpu+0x24/0x38
+> [    0.053788]  cpuhp_invoke_callback+0xa0/0x710
+> [    0.053789]  notify_cpu_starting+0xcc/0xd8
+> [    0.053790]  secondary_start_kernel+0x148/0x200
+> 
+> # ./scripts/faddr2line vmlinux its_cpu_init+0x6f4/0xe40
+> its_cpu_init+0x6f4/0xe40:
+> allocate_vpe_l1_table at drivers/irqchip/irq-gic-v3-its.c:2818
+> (inlined by) its_cpu_init_lpis at drivers/irqchip/irq-gic-v3-its.c:3138
+> (inlined by) its_cpu_init at drivers/irqchip/irq-gic-v3-its.c:5166
 
-There was a major clean up of removing ENOMEM error messages through
-out the kernel a while ago by Wolfram Sang.  The subject lines
-included "don't print error when allocating XXX fails".  As it turns
-out, they were being removed because "kmalloc will print enough
-information in case of failure."  It had nothing to do with memory
-pressure on the system.
+Let me guess: a system with more than a single CommonLPIAff group?
 
-Thanks, Paul.  I think we're good.
+> I've tried to replace GFP_KERNEL flag with GFP_ATOMIC to allocate 
+> memory
+> in this atomic context, and the splat disappears. But after a quick 
+> look
+> at [*], it seems not a good idea to allocate memory within the CPU
+> hotplug notifier. I really don't know much about it, please have a 
+> look.
+> 
+> [*]
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=11e37d357f6ba7a9af850a872396082cc0a0001f
 
-Mimi
+The allocation of the cpumask is pretty benign, and could either be
+allocated upfront for all RDs (and freed on detecting that we share
+the same CommonLPIAff group) or made atomic.
 
+The much bigger issue is the alloc_pages call just after. Allocating 
+this
+upfront probably is the wrong thing to do, as you are likely to allocate
+way too much memory, even if you free it quickly afterwards.
+
+At this stage, I'd rather we turn this into an atomic allocation. A 
+notifier
+is just another atomic context, and if this fails at such an early 
+stage,
+then the CPU is unlikely to continue booting...
+
+Would you like to write a patch for this? Given that you have tested
+something, it probably already exists. Or do you want me to do it?
+
+Thanks,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
