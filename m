@@ -2,134 +2,130 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0DC4C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A545C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AFEAC20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:55:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="KprmURFr";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="lgBD7eWE"
+	by mail.kernel.org (Postfix) with ESMTP id E707220656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:55:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593456924;
+	bh=NzJiSt9g1A0IkY1gDVeVFO1A+AGElzRZS2z5eg2GhWk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2tktfvkSd0EYkEgEtajtmabLnW51ebv//kdLuBCc+xAHyrqkMR3ykAxCjB/qWkR6n
+	 AWZFEMW5A1gIotF2kgrir9BQu9TA0P3tsQqEpvLdt2N/8bnO+RuIoibt/M75MlyZSX
+	 SAhAT0LBCtCjrAROkcWXtZNff8mkADqmKquuNDm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728632AbgF2SzS (ORCPT
+        id S1729996AbgF2SzV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:55:18 -0400
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:57271 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729913AbgF2SzC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:55:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1593456903; x=1624992903;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=4pBUNMg3VFjKVrGwnC4ohdxyekxz+h1fNlIksMD4IBU=;
-  b=KprmURFraijooqVsxMSS1ETsBW8JmoQtfEmc/w0PDp5yFQcOOeX8EBFV
-   PmEmCOabewLt7Ll06C0nr4irC6Bl0ZUzOYRrNh3TbnQQ2tH2ftq4M8ti2
-   IAnfwFy1+Hfg95baI+8cJLFP2SGzse4SXnABmfqp87mjys5WHMHiisHzk
-   82okW5eqZdw6Yo73TT7RgzeJXfiAenjwMBpX3oT1CN3QtolH449spN8AC
-   UNKN0cnCIvbefHTKAxM2EM4EivK39YPSYNr3jAm5Gel3nZ4X1uZcoX25g
-   Ff6kDusXS9qZG73m8ngTuvssa/TPTAOhgFS+joTP6L+vUJrUJnqc2LFmj
-   w==;
-IronPort-SDR: Y7XBPpzYqRBmjA2WuilWFhefGY//XoUNsVX7FCqQEs99gdk5eEYDjBz3kLAqvb+V2AhSIE+w0u
- VtwdGn7OewaY7Ufsv7SmX0C8rvjYJFVphToFBvZUx0oEyJRJAIVuNwz4Xm+XZhQEKA/Q44XN9K
- M/hVxa6Iy6o4D7yVJtbCLDAlDCPfAIbkTiHXH4jjL545h2xa6E8eK1fZTGaVJQ0GCJJbFj0tMu
- JJAdb3qQ1mCwpDTTY61u5VkZUwXa7qC/Wd2ON34cZA2nNfdPL6Hz2gIY2KG9tn6K0ZZBTYQ9YS
- gD4=
-X-IronPort-AV: E=Sophos;i="5.75,294,1589212800"; 
-   d="scan'208";a="244189572"
-Received: from mail-dm6nam12lp2177.outbound.protection.outlook.com (HELO NAM12-DM6-obe.outbound.protection.outlook.com) ([104.47.59.177])
-  by ob1.hgst.iphmx.com with ESMTP; 29 Jun 2020 17:33:49 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=R2LUkd7YtlzLq/TDLbk71wbGyfyIwOBNwkKR3F/th2ae8KgOV+vt9YN91mYg/vB2hA8rglWc50n5Y43Px4NgG7zEj5DxV73NNU8DVNohevvzdIghDH6LLLeIRLPtzDgn/dkQ0VaSD+6VLG1jtoWKC4ay55C55CHvF3oJ45qokGSMEWriRVh/wbvkaoc132tdsdlnA4RseTZExLLukuFOO8NcysDophpU6UL0klDL1EHHh5nh69M9nHrvTq+ylNSjarKdTD/KaE9259g8wsDlJkMMV3w0TWuJTsTvMSz0Zav0na8CedTQdofECVX6ZL6HBcuexZoSu9bjybN4FbFFcQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1Rj6BoradiiHIAF1i9yj5Mq+a5UnPuCDyOKbOdKynlM=;
- b=WF/KBPhjzD3HMeL1f7GMk8evRhK1YzE4wyV0UQXvwF5a3Fa3MIe+gsLRPzATME3projR87hs9XJYghMxVKMd4XnPiK4trQPdyzOHS7u2fjuXBsdFxFOajFfiE50fwaqoZEIuPOwiABx3ktOKRlHwgH+BTHfATOp3iq2obAPpeIIJmGWEDqwyDGGGVgIQkWfdt/SmMoqyIZt14cv4m32r6eLh1O3wefcfU+ID3A/74yoF92MyObiIzHtIFYcZQcM54Q9GC/sKz7F2e12Ok0IqygOjieOcZTdLfgjqSpMos51+Q5CMMtU40MdsIzeYom5S0XIvtv+LSp9qL/qakwpvUQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1Rj6BoradiiHIAF1i9yj5Mq+a5UnPuCDyOKbOdKynlM=;
- b=lgBD7eWE7qSUT9CKSz3LyXjiusjPNdOWq7nx3ekEaozwHDQkA2pOTyOSMUeD3/PQ/hN3p5JrAMwaFTme5yablz84eZQHxWRlp/OSieiwopihhWSTpZXOZhg/EhuBfshg5p75W3tnDlagvXkf1VLlsYxlc54Ssc4v/KIKLrRgrwc=
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- (2603:10b6:803:47::21) by SN6PR04MB4461.namprd04.prod.outlook.com
- (2603:10b6:805:ac::15) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.20; Mon, 29 Jun
- 2020 09:33:37 +0000
-Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::1447:186c:326e:30b2]) by SN4PR0401MB3598.namprd04.prod.outlook.com
- ([fe80::1447:186c:326e:30b2%7]) with mapi id 15.20.3131.026; Mon, 29 Jun 2020
- 09:33:37 +0000
-From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Tejun Heo <tj@kernel.org>
-CC:     Dennis Zhou <dennis@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Mon, 29 Jun 2020 14:55:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42432 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729943AbgF2SzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:55:16 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CABCC2556D;
+        Mon, 29 Jun 2020 15:55:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593446132;
+        bh=NzJiSt9g1A0IkY1gDVeVFO1A+AGElzRZS2z5eg2GhWk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=bJinHi6L2hle1kHSTGQADdjxYiHX9z9DjaHCQ1Ljttb0U1vrEWpQeDShfdjrOLQNN
+         012Y8oZU0lTl6CNC6Miq7ujGNxxKxG/knWiMTUeZhP8eJ5LDPYxnmqMcJI1Iqvc5Fk
+         Q+WoaNVUgkeisnHNvaocP4RDshpNcUeg5KbP+/s0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Waiman Long <longman@redhat.com>, Michal Hocko <mhocko@suse.com>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Joe Perches <joe@perches.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Rientjes <rientjes@google.com>,
         Johannes Weiner <hannes@cmpxchg.org>,
-        "dm-devel@redhat.com" <dm-devel@redhat.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>
-Subject: Re: [PATCH 02/14] block: remove bio_disassociate_blkg
-Thread-Topic: [PATCH 02/14] block: remove bio_disassociate_blkg
-Thread-Index: AQHWTFVNaIwLRIH5Bka8FkGqn1pzlA==
-Date:   Mon, 29 Jun 2020 09:33:37 +0000
-Message-ID: <SN4PR0401MB359848B55D6E3BE7ECE717B99B6E0@SN4PR0401MB3598.namprd04.prod.outlook.com>
-References: <20200627073159.2447325-1-hch@lst.de>
- <20200627073159.2447325-3-hch@lst.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: lst.de; dkim=none (message not signed)
- header.d=none;lst.de; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [2001:a62:1515:bd01:5d2:80d1:159b:260e]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 61009f67-2e6b-4c0f-29ee-08d81c0f8022
-x-ms-traffictypediagnostic: SN6PR04MB4461:
-x-microsoft-antispam-prvs: <SN6PR04MB44613963613469B46E20D5859B6E0@SN6PR04MB4461.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
-x-forefront-prvs: 044968D9E1
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Q28bZ07EpmhnVTmqajiSWKV2ZPJCBU5sys/g5xcvbKHSuLrTJVGyGuNIFWRCmQD/coPZBpfM0p7nSgOPaIr0GpCqdovcj0gvomRKXHGq01EbK/mWCCm2oURXXVk0YuSfxJVJg3mlKxUWjF1ztc3ZVKff7r7uzHJNlYg4/2JWTdvEag0DItoD5X95htTu0vOJQ2OxQkJoQazeULvT8nvnLe4fJC/5iEKWOfSF+pViphPs6FSDuJ1L6uzw6nStZzovXbDeIlpHWq94TZPeCsWVxRwplJTfzZ1HTO2U12v81or3RBbnfwppbIGReeXDbT5p
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(376002)(136003)(396003)(346002)(316002)(9686003)(7416002)(4326008)(33656002)(5660300002)(54906003)(110136005)(53546011)(52536014)(71200400001)(8676002)(7696005)(478600001)(55016002)(6506007)(186003)(76116006)(66946007)(558084003)(2906002)(64756008)(66446008)(86362001)(91956017)(66556008)(8936002)(66476007);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: jkRI+nSY0ywkRiEmQHGKO+qoboZtdUYeqT4RX+K07a2sg2VAHa9Bq0P34qjQ19a+xusPMCKLkh/bg66Qg8zh7JM8y4xGTw6u5NcgojBBbRrqMgC+Y7g+AaL7LsuT4ucm35lg77cxAV4+rJZvagLjr4H2zGV9cezU1DgULfu7LV+lb2mPLO5FWa06lHuZkwd3saZkCy71Lm8hGqUztiV2wBPF6BG0juHEYPiwGVGQLLS+SoNftt28DMIRtc42DRBRl2uUQdDXihL7kA1X2XagUlmcCo8Efa0S8vGWGT6OUZL8wuhyvgnMMAjZBiGPB9wKEy1Lf8tNplgaKVPqUETwPbQVfqEIk8qnHTuDBKaUV0Pn070bBN5kAUDX5sn3tgtDkEns79RckQRGtMDoSLpH9l7tle7u0rK7g4czNQi5yxSMOqijvOw2sibbg71e4aj6k5/dP6hQ3G3iWODt1m5LvM3jmvI8KycORZNqrivl2LoWOnGKL4qYLcGH0H9TagA8dFLeVXfNr9bv/k4hCdqWXc+nZdeOI/xnecgAFniQOOc=
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.4 122/135] mm/slab: use memzero_explicit() in kzfree()
+Date:   Mon, 29 Jun 2020 11:52:56 -0400
+Message-Id: <20200629155309.2495516-123-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
+References: <20200629155309.2495516-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SN4PR0401MB3598.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 61009f67-2e6b-4c0f-29ee-08d81c0f8022
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jun 2020 09:33:37.1945
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: uidjJ+d+6CG7WoHL246qLqZmvVBYx/676I6F4ZXGDDNa6wsSx5IW5zr682ewwfuiWwpUTGvgnyu+d30uFvB9e5r1H0mGaMJpy6AxR8CxmGo=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4461
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.229-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.4.229-rc1
+X-KernelTest-Deadline: 2020-07-01T15:53+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 27/06/2020 09:33, Christoph Hellwig wrote:=0A=
-> a new value to >bi_blkg.  Just open code the function in the two callers.=
-=0A=
-Nit: ->bi_blkg=0A=
-=0A=
-Otherwise,=0A=
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
+From: Waiman Long <longman@redhat.com>
+
+commit 8982ae527fbef170ef298650c15d55a9ccd33973 upstream.
+
+The kzfree() function is normally used to clear some sensitive
+information, like encryption keys, in the buffer before freeing it back to
+the pool.  Memset() is currently used for buffer clearing.  However
+unlikely, there is still a non-zero probability that the compiler may
+choose to optimize away the memory clearing especially if LTO is being
+used in the future.
+
+To make sure that this optimization will never happen,
+memzero_explicit(), which is introduced in v3.18, is now used in
+kzfree() to future-proof it.
+
+Link: http://lkml.kernel.org/r/20200616154311.12314-2-longman@redhat.com
+Fixes: 3ef0e5ba4673 ("slab: introduce kzfree()")
+Signed-off-by: Waiman Long <longman@redhat.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: James Morris <jmorris@namei.org>
+Cc: "Serge E. Hallyn" <serge@hallyn.com>
+Cc: Joe Perches <joe@perches.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: "Jason A . Donenfeld" <Jason@zx2c4.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ mm/slab_common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index 01e7246de8dfa..5d8c809a3ff71 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -1269,7 +1269,7 @@ void kzfree(const void *p)
+ 	if (unlikely(ZERO_OR_NULL_PTR(mem)))
+ 		return;
+ 	ks = ksize(mem);
+-	memset(mem, 0, ks);
++	memzero_explicit(mem, ks);
+ 	kfree(mem);
+ }
+ EXPORT_SYMBOL(kzfree);
+-- 
+2.25.1
+
