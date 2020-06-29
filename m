@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4504C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3666C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:45:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BAA9D206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:45:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EC3A20760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:45:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593459941;
-	bh=OCXb/vDVKTu9y6J5IRsL8Nl2H5rnFdeMpMS5a7nUwUk=;
+	s=default; t=1593459956;
+	bh=Z7NsjXxpZEVCJp2cpvTUtpY6YzyZYuNUqTIoUiYB53c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NNh2h5RxEfuNdoDjbjaysE2KDBIfVqhQUZMnnwjA8EShGwDVR0Qz+lC2PtcI6sykB
-	 8DJsZeoODkwjP9fDWyzURaZq8sD1na99dVSQ0Y8clD9vRr/ztZj8yiJCABW0mWy/HZ
-	 7XxK2qEImPZv9sVXe/NqCcbWhOTzi3J7W+xGMNxk=
+	b=Nlq/ccYMggIRVCipJ7R29+9u3g07xo7mbubUewJAE+NBmsc9X7UxmkIKVVMpvHWCY
+	 qsI62s1CVR7h5hzGRp64Fr5TNfbCSr9LakrqCKonWoDrMh4KFaIhhHjEA2pBtnASOf
+	 wkNm/2fIHMBU6SiUV4TZLNTAoQ+8cGzJpBVVhiPY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388032AbgF2Tpc (ORCPT
+        id S2388078AbgF2Tpy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:45:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47656 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:45:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387820AbgF2Tko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387822AbgF2Tko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACAA92486F;
-        Mon, 29 Jun 2020 15:26:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC7762493A;
+        Mon, 29 Jun 2020 15:28:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444369;
-        bh=OCXb/vDVKTu9y6J5IRsL8Nl2H5rnFdeMpMS5a7nUwUk=;
+        s=default; t=1593444485;
+        bh=Z7NsjXxpZEVCJp2cpvTUtpY6YzyZYuNUqTIoUiYB53c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iobce1+ojYq5jfTqnkqYf3NOSSAvyqNCT4/ctDxbufAUbpRD6ia4Gl+cddZxyCTFi
-         nGWttRa5UxZVQm0e9JkydbxPzJOUYh/ZvoOCYaUSI2PS1VFnZDbl50Z/x0rGVQra1T
-         hHYwCSln5/iPYJ9+EmSUAObdTTX5aue3oRmG1PcM=
+        b=etklJRmsjiUMWkLWrEVOhnOr1PGJCHguZiSUz2v4fPG1I3FqDCU1u001gt2TsoZXz
+         jtWsxpzoTCnwBW9G1aJwqmogPL2himIiRrZ6xVTEq0gaCFPVTIZV+rrYM7VZcda0CG
+         JPMr88R613ci6VuWsJAggpJjEEt/MHh0CcotBwW8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Chen <peter.chen@nxp.com>,
-        Pawel Laszczak <pawell@cadence.com>,
-        Felipe Balbi <balbi@kernel.org>,
+Cc:     Robin Gong <yibin.gong@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 046/178] usb: cdns3: trace: using correct dir value
-Date:   Mon, 29 Jun 2020 11:23:11 -0400
-Message-Id: <20200629152523.2494198-47-sashal@kernel.org>
+Subject: [PATCH 5.4 162/178] arm64: dts: imx8mn-ddr4-evk: correct ldo1/ldo2 voltage range
+Date:   Mon, 29 Jun 2020 11:25:07 -0400
+Message-Id: <20200629152523.2494198-163-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -66,42 +67,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Chen <peter.chen@nxp.com>
+From: Robin Gong <yibin.gong@nxp.com>
 
-commit ba3a80fe0fb67d8790f62b7bc60df97406d89871 upstream.
+commit cfb12c8952f617df58d73d24161e539a035d82b0 upstream.
 
-It should use the correct direction value from register, not depends
-on previous software setting. It fixed the EP number wrong issue at
-trace when the TRBERR interrupt occurs for EP0IN.
+Correct ldo1 voltage range from wrong high group(3.0V~3.3V) to low group
+(1.6V~1.9V) because the ldo1 should be 1.8V. Actually, two voltage groups
+have been supported at bd718x7-regulator driver, hence, just corrrect the
+voltage range to 1.6V~3.3V. For ldo2@0.8V, correct voltage range too.
+Otherwise, ldo1 would be kept @3.0V and ldo2@0.9V which violate i.mx8mn
+datasheet as the below warning log in kernel:
 
-When the EP0IN IOC has finished, software prepares the setup packet
-request, the expected direction is OUT, but at that time, the TRBERR
-for EP0IN may occur since it is DMULT mode, the DMA does not stop
-until TRBERR has met.
+[    0.995524] LDO1: Bringing 1800000uV into 3000000-3000000uV
+[    0.999196] LDO2: Bringing 800000uV into 900000-900000uV
 
-Cc: <stable@vger.kernel.org>
-Fixes: 7733f6c32e36 ("usb: cdns3: Add Cadence USB3 DRD Driver")
-Reviewed-by: Pawel Laszczak <pawell@cadence.com>
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Fixes: 3e44dd09736d ("arm64: dts: imx8mn-ddr4-evk: Add rohm,bd71847 PMIC support")
+Cc: stable@vger.kernel.org
+Signed-off-by: Robin Gong <yibin.gong@nxp.com>
+Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/usb/cdns3/trace.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/cdns3/trace.h b/drivers/usb/cdns3/trace.h
-index e92348c9b4d71..7cc8bebaa07da 100644
---- a/drivers/usb/cdns3/trace.h
-+++ b/drivers/usb/cdns3/trace.h
-@@ -150,7 +150,7 @@ DECLARE_EVENT_CLASS(cdns3_log_ep0_irq,
- 		__dynamic_array(char, str, CDNS3_MSG_MAX)
- 	),
- 	TP_fast_assign(
--		__entry->ep_dir = priv_dev->ep0_data_dir;
-+		__entry->ep_dir = priv_dev->selected_ep;
- 		__entry->ep_sts = ep_sts;
- 	),
- 	TP_printk("%s", cdns3_decode_ep0_irq(__get_str(str),
+diff --git a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
+index 11c705d225d02..9ad1d43b8ce75 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mn-ddr4-evk.dts
+@@ -268,7 +268,7 @@
+ 
+ 			ldo1_reg: LDO1 {
+ 				regulator-name = "LDO1";
+-				regulator-min-microvolt = <3000000>;
++				regulator-min-microvolt = <1600000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
+@@ -276,7 +276,7 @@
+ 
+ 			ldo2_reg: LDO2 {
+ 				regulator-name = "LDO2";
+-				regulator-min-microvolt = <900000>;
++				regulator-min-microvolt = <800000>;
+ 				regulator-max-microvolt = <900000>;
+ 				regulator-boot-on;
+ 				regulator-always-on;
 -- 
 2.25.1
 
