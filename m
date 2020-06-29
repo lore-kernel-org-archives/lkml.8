@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F190C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F6C4C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 492692078A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:26:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F0132078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:26:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593458774;
-	bh=E+UNJVGrva68eXJn+LCdpez1aQGF2KWOGq6upO0Ng/A=;
+	s=default; t=1593458778;
+	bh=+pJodRaQLTNHHoXcFk3mFgnI3zSVwETZbusdVpaYPD0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jqQFbfOFJ7/9NnGz0CUHde5YZpk7KzRiLjhmIHqM4u5AGDdxckqDNkqo+jMgf0XW7
-	 Nj4U6Y6c7yXcwg/BQtGLy/Mq8tDNy+4a8xxWAICzFTvrBoX1bHLX52U4/PzYPBruQs
-	 TwX6F5oiLYuhipGJbP96m9php4szhefphLGuT1w4=
+	b=jvomqNmJ/v3bPMXtFErR40l72ITqFieQpv87h0bTL/MtW7ja0HBJeeKZgtFLj3OYS
+	 RK4Z9SPrTL1mFEdzO1v8/1KxL/I4Mzt3jY+2SQ7c+1dknu0j8yaJcN9jXrb14Z5M4P
+	 BkCVmdZLtMLoQth2RcV8BL4RcabHFDzsHqo+upFk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732734AbgF2T0M (ORCPT
+        id S1732742AbgF2T0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:26:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37040 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:26:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732669AbgF2TZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732680AbgF2TZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC04D2540E;
-        Mon, 29 Jun 2020 15:42:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9988253EA;
+        Mon, 29 Jun 2020 15:42:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445360;
-        bh=E+UNJVGrva68eXJn+LCdpez1aQGF2KWOGq6upO0Ng/A=;
+        s=default; t=1593445331;
+        bh=+pJodRaQLTNHHoXcFk3mFgnI3zSVwETZbusdVpaYPD0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DArmL8+Y8+nUNoaYpciK+JjOEt5Vj1w21q+kni6tFCFX84EagJNaU1w6hm+xQSQoZ
-         sVGMvy0N/zCLOus1HzlcxTuhNcFjf43zSPf5iZwF1Yk3Z4tQq6HzXc1Z1lXKPxw1nr
-         C0ekIDZazUGvAB/EPGGr0IktYBmBGQEOLPzYy3Qc=
+        b=MgT4W4Qa2sCYVmE/YJyM2vXVBoF+2hqWYkeN7amtliPCIYAYiZrr1kULFmDnH1qG+
+         +IC1j667mafdToQQ06bQkoNuSZz3dufyh0khRAOT6rfRGeWe5kLNCPs/uoPqu2rzUs
+         iC8y/Bm5Q/8qkIW/0sQ/YjLw0gOiwBNAQP7zC4Yo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>,
-        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.9 117/191] media: dvb_frontend: fix wrong cast in compat_ioctl
-Date:   Mon, 29 Jun 2020 11:38:53 -0400
-Message-Id: <20200629154007.2495120-118-sashal@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrea Righi <righi.andrea@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 094/191] x86/kprobes: Avoid kretprobe recursion bug
+Date:   Mon, 29 Jun 2020 11:38:30 -0400
+Message-Id: <20200629154007.2495120-95-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -66,38 +70,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-commit 5c6c9c4830b76d851d38829611b3c3e4be0f5cdf upstream
+[ Upstream commit b191fa96ea6dc00d331dcc28c1f7db5e075693a0 ]
 
-FE_GET_PROPERTY has always failed as following situations:
-  - Use compatible ioctl
-  - The array of 'struct dtv_property' has 2 or more items
+Avoid kretprobe recursion loop bg by setting a dummy
+kprobes to current_kprobe per-CPU variable.
 
-This patch fixes wrong cast to a pointer 'struct dtv_property' from a
-pointer of 2nd or after item of 'struct compat_dtv_property' array.
+This bug has been introduced with the asm-coded trampoline
+code, since previously it used another kprobe for hooking
+the function return placeholder (which only has a nop) and
+trampoline handler was called from that kprobe.
 
-Signed-off-by: Katsuhiro Suzuki <suzuki.katsuhiro@socionext.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This revives the old lost kprobe again.
+
+With this fix, we don't see deadlock anymore.
+
+And you can see that all inner-called kretprobe are skipped.
+
+  event_1                                  235               0
+  event_2                                19375           19612
+
+The 1st column is recorded count and the 2nd is missed count.
+Above shows (event_1 rec) + (event_2 rec) ~= (event_2 missed)
+(some difference are here because the counter is racy)
+
+Reported-by: Andrea Righi <righi.andrea@gmail.com>
+Tested-by: Andrea Righi <righi.andrea@gmail.com>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Acked-by: Steven Rostedt <rostedt@goodmis.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Fixes: c9becf58d935 ("[PATCH] kretprobe: kretprobe-booster")
+Link: http://lkml.kernel.org/r/155094064889.6137.972160690963039.stgit@devbox
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/dvb-core/dvb_frontend.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/kprobes/core.c | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/dvb-core/dvb_frontend.c b/drivers/media/dvb-core/dvb_frontend.c
-index 34f55a2ba071d..740dedf033616 100644
---- a/drivers/media/dvb-core/dvb_frontend.c
-+++ b/drivers/media/dvb-core/dvb_frontend.c
-@@ -2081,7 +2081,7 @@ static int dvb_frontend_handle_compat_ioctl(struct file *file, unsigned int cmd,
+diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
+index dcd6df5943d60..118f66a609ced 100644
+--- a/arch/x86/kernel/kprobes/core.c
++++ b/arch/x86/kernel/kprobes/core.c
+@@ -740,11 +740,16 @@ asm(
+ NOKPROBE_SYMBOL(kretprobe_trampoline);
+ STACK_FRAME_NON_STANDARD(kretprobe_trampoline);
+ 
++static struct kprobe kretprobe_kprobe = {
++	.addr = (void *)kretprobe_trampoline,
++};
++
+ /*
+  * Called from kretprobe_trampoline
+  */
+ __visible __used void *trampoline_handler(struct pt_regs *regs)
+ {
++	struct kprobe_ctlblk *kcb;
+ 	struct kretprobe_instance *ri = NULL;
+ 	struct hlist_head *head, empty_rp;
+ 	struct hlist_node *tmp;
+@@ -754,6 +759,17 @@ __visible __used void *trampoline_handler(struct pt_regs *regs)
+ 	void *frame_pointer;
+ 	bool skipped = false;
+ 
++	preempt_disable();
++
++	/*
++	 * Set a dummy kprobe for avoiding kretprobe recursion.
++	 * Since kretprobe never run in kprobe handler, kprobe must not
++	 * be running at this point.
++	 */
++	kcb = get_kprobe_ctlblk();
++	__this_cpu_write(current_kprobe, &kretprobe_kprobe);
++	kcb->kprobe_status = KPROBE_HIT_ACTIVE;
++
+ 	INIT_HLIST_HEAD(&empty_rp);
+ 	kretprobe_hash_lock(current, &head, &flags);
+ 	/* fixup registers */
+@@ -829,10 +845,9 @@ __visible __used void *trampoline_handler(struct pt_regs *regs)
+ 		orig_ret_address = (unsigned long)ri->ret_addr;
+ 		if (ri->rp && ri->rp->handler) {
+ 			__this_cpu_write(current_kprobe, &ri->rp->kp);
+-			get_kprobe_ctlblk()->kprobe_status = KPROBE_HIT_ACTIVE;
+ 			ri->ret_addr = correct_ret_addr;
+ 			ri->rp->handler(ri, regs);
+-			__this_cpu_write(current_kprobe, NULL);
++			__this_cpu_write(current_kprobe, &kretprobe_kprobe);
  		}
- 		for (i = 0; i < tvps->num; i++) {
- 			err = dtv_property_process_get(
--			    fe, &getp, (struct dtv_property *)tvp + i, file);
-+			    fe, &getp, (struct dtv_property *)(tvp + i), file);
- 			if (err < 0) {
- 				kfree(tvp);
- 				return err;
+ 
+ 		recycle_rp_inst(ri, &empty_rp);
+@@ -848,6 +863,9 @@ __visible __used void *trampoline_handler(struct pt_regs *regs)
+ 
+ 	kretprobe_hash_unlock(current, &flags);
+ 
++	__this_cpu_write(current_kprobe, NULL);
++	preempt_enable();
++
+ 	hlist_for_each_entry_safe(ri, tmp, &empty_rp, hlist) {
+ 		hlist_del(&ri->hlist);
+ 		kfree(ri);
 -- 
 2.25.1
 
