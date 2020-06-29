@@ -2,108 +2,118 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8323FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:44:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF9EEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5FEB220842
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:44:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEA8220842
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:44:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MnG4WngD"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oByy/EXs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387539AbgF2Tn6 (ORCPT
+        id S2387925AbgF2ToD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:43:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48498 "EHLO
+        Mon, 29 Jun 2020 15:44:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48502 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387963AbgF2Tmm (ORCPT
+        with ESMTP id S2387966AbgF2Tmm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:42:42 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9761EC031412
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 10:16:52 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id o11so17309071wrv.9
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 10:16:52 -0700 (PDT)
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2945FC0307BA
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:06:09 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id 207so7906258pfu.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:06:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=58F1k7MrrA18PHt4ShpVauKdd7W9Jl9sr1t9KkeMq+c=;
-        b=MnG4WngDq/kPxIpHMQd2gytgkwlS4KclFS+YUiaFm97BDEufADDKaF62Xb1Eo9jQWK
-         FHuCGjoDZ4yPEoFLc+PzT19zJikxKd01woAFUE9liu5zRCVCcdLXSge/w1rT7fmuKygB
-         V3JaprlTrLMf1t35eL1X2Xn5b4C4ibDM83o0ZfRdd192EcpUSb0ciB9dSHkjQ6VoPfjS
-         sJVdsCHDwdYv5fKDvPas6fbC44xThBbtFMmjxm08D8B1V+arp310dozdpp17Ncl+4EWb
-         aZUxV1lZmoEQIG65XR8QGgYYkq+yqoGMuE0OX2LFZOLcw9aYcSo66zkhxEnMjgiwC0um
-         Vthg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=Hd2ztXk1vCQk2wKYG462cRN4nuwUe31pLKUP0eS2DPs=;
+        b=oByy/EXs3Sua6IxFhmLKuu1yCt1mraiv5y8rkvS2ofpAw6W5y2hcFRMu1fzsyV7kIe
+         AkmJIkwLYYjKcr0yNXy0Gh0fkHuhpqMZ6UxG7olLFBcM7PrBakbHwVvnZHcNEPwLYh1z
+         iFcf75y1DRs8b03UeSX2DWhmxCwKrYAM+WnP8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=58F1k7MrrA18PHt4ShpVauKdd7W9Jl9sr1t9KkeMq+c=;
-        b=AMR+e3MPG751q01MVp7uSZpN4hcGLEbxyaTl5OniMm74GWIT95CEWYOhi39MHvPPBW
-         yPRMvtxUTewjDFoR7ZknrIjp9Fu9pu/mXxStyK6nOxYPA3rVXEcPZ+Njx4wRvSyFurbJ
-         7xCbOsOwI64cwLhWmF5/CZHicvg3ywmmeBSfRIgnDHaLdbO5SMlAEjfjhHEBjLyJe30R
-         ss2HNQ5D8Vok7XnrL7sstjjqslWqEkBfplvRMaGXyFjrp9jQNrwNeqsOXRDt42SpOJHl
-         Y9rqRIr+4nD2x3WLgJSIhdTi3wTRVtesSuE8vZRkPNfmd0MZxWRFnLVpbqp8e9oUZKuI
-         p+0A==
-X-Gm-Message-State: AOAM533BZmlJSUNaPkK74ESqPJuQByD0Se6CGDSxBZOLjtOqoYs8MkIb
-        ugh0H8fSLNMCbzHV6ecc84k=
-X-Google-Smtp-Source: ABdhPJydWWJdG3LfLZ7/i2qfqcBv41OMVwGGy7Y+ls3W8Je2UKVCAd4E5xgMyAr3duDTShaXi6mc7w==
-X-Received: by 2002:a05:6000:1283:: with SMTP id f3mr18108462wrx.106.1593451011421;
-        Mon, 29 Jun 2020 10:16:51 -0700 (PDT)
-Received: from localhost.localdomain (dslb-178-011-230-176.178.011.pools.vodafone-ip.de. [178.11.230.176])
-        by smtp.gmail.com with ESMTPSA id n14sm432728wro.81.2020.06.29.10.16.50
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Hd2ztXk1vCQk2wKYG462cRN4nuwUe31pLKUP0eS2DPs=;
+        b=WqBW59d+7bhuqkgcegheEJ0iy7YK1RcSHUV1hdtoPHS5ZEFHXQ062hMub/QDNTm2i5
+         AauNAWa4ElhveJah0dLRd4qg3R9rSLc0M88OMYmFhiOEn2VW1S/D4dZdIcyZPkxpiI+s
+         uutnyWoIpblseFi96dDpxEavFIscKor9VhBuuomWicje95oEdQUlditmZq9wjf3DCiJ6
+         MEPJqxtnZLKW7B0eOyySYoBl1ILKp/OdVuIIKD9qKiMvmFpbT5FFtswi9y52e7cFpov0
+         ZjIPgeJNxVSh0KNK/IQywASRN403IJJaP3qelRXXyKfjSRvuCwAZjn1AnBHU2UeRAmYe
+         PYmw==
+X-Gm-Message-State: AOAM533mXWCUJ2WDL93iUgDD7G1vny5OY81Tj/mMqV994H34XMS5yc+b
+        viB0avaMyqO9Iaf204XH/1TDDw==
+X-Google-Smtp-Source: ABdhPJy9noqH+1qN4YXU+pVP49CfNJCdlJxq5gFL48QPyB9J6qBJ1eK5ra4BIxq+7K6YiI08/a/kkw==
+X-Received: by 2002:a63:6dc1:: with SMTP id i184mr10942111pgc.345.1593446768762;
+        Mon, 29 Jun 2020 09:06:08 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id gk5sm62829pjb.4.2020.06.29.09.06.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 10:16:50 -0700 (PDT)
-From:   Michael Straube <straube.linux@gmail.com>
-To:     gregkh@linuxfoundation.org
-Cc:     Larry.Finger@lwfinger.net, hdegoede@redhat.com,
-        florian.c.schilhabel@googlemail.com, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        Michael Straube <straube.linux@gmail.com>
-Subject: [PATCH 3/3] staging: rtl8712: remove some ieee80211 constants from wifi.h
-Date:   Mon, 29 Jun 2020 19:14:05 +0200
-Message-Id: <20200629171405.7711-3-straube.linux@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200629171405.7711-1-straube.linux@gmail.com>
-References: <20200629171405.7711-1-straube.linux@gmail.com>
+        Mon, 29 Jun 2020 09:06:07 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 09:06:07 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Arvind Sankar <nivedita@alum.mit.edu>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Fangrui Song <maskray@google.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        clang-built-linux@googlegroups.com,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "H . J . Lu" <hjl@sourceware.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 6/7] x86/boot: Remove runtime relocations from
+ head_{32,64}.S
+Message-ID: <202006290905.7531731A@keescook>
+References: <20200629140928.858507-1-nivedita@alum.mit.edu>
+ <20200629140928.858507-7-nivedita@alum.mit.edu>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200629140928.858507-7-nivedita@alum.mit.edu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The constants IEEE80211_BAR_CTRL_ACK_POLICY_NORMAL and
-IEEE80211_BAR_CTRL_CBMTID_COMPRESSED_BA are not used in the driver
-code and, if ever needed, available from 'include/linux/ieee80211.h'.
-Remove them from wifi.h.
+On Mon, Jun 29, 2020 at 10:09:27AM -0400, Arvind Sankar wrote:
+> The BFD linker generates runtime relocations for z_input_len and
+> z_output_len, even though they are absolute symbols.
+> 
+> This is fixed for binutils-2.35 [1]. Work around this for earlier
+> versions by defining two variables input_len and output_len in addition
+> to the symbols, and use them via position-independent references.
+> 
+> This eliminates the last two runtime relocations in the head code and
+> allows us to drop the -z noreloc-overflow flag to the linker.
+> 
+> [1] https://sourceware.org/bugzilla/show_bug.cgi?id=25754
+> 
+> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+> Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+> Reviewed-by: Fangrui Song <maskray@google.com>
+> ---
+>  arch/x86/boot/compressed/Makefile  |  8 --------
+>  arch/x86/boot/compressed/head_32.S | 17 ++++++++---------
+>  arch/x86/boot/compressed/head_64.S |  4 ++--
+>  arch/x86/boot/compressed/mkpiggy.c |  6 ++++++
+>  4 files changed, 16 insertions(+), 19 deletions(-)
 
-Signed-off-by: Michael Straube <straube.linux@gmail.com>
----
- drivers/staging/rtl8712/wifi.h | 4 ----
- 1 file changed, 4 deletions(-)
+I continue to really enjoy the smaller code. Anything that makes
+mkpiggy.c smaller is a win. :)
 
-diff --git a/drivers/staging/rtl8712/wifi.h b/drivers/staging/rtl8712/wifi.h
-index befb2f9b40ad..66e0634f07ba 100644
---- a/drivers/staging/rtl8712/wifi.h
-+++ b/drivers/staging/rtl8712/wifi.h
-@@ -451,10 +451,6 @@ static inline unsigned char *get_hdr_bssid(unsigned char *pframe)
- #define GetOrderBit(pbuf)	(((*(__le16 *)(pbuf)) & \
- 				le16_to_cpu(_ORDER_)) != 0)
- 
--/* 802.11 BAR control masks */
--#define IEEE80211_BAR_CTRL_ACK_POLICY_NORMAL     0x0000
--#define IEEE80211_BAR_CTRL_CBMTID_COMPRESSED_BA  0x0004
--
- /*
-  * struct rtl_ieee80211_ht_cap - HT capabilities
-  *
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
 -- 
-2.27.0
-
+Kees Cook
