@@ -4,60 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B5BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:16:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26FD9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6355020656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:16:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE45B20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:16:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461786;
-	bh=YJO+rR1zT8+Vb0G8wKjcHbxnjLc7cUyVjatn5U7cxi0=;
+	s=default; t=1593461791;
+	bh=6tU5t7Wp3ryxUnzg+wsVxrjZn9g2w7paFvQL6w9l024=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WpKScAq2L1BNk3ko4Zf+PTS6p3PV9nzOkuT2SEEMStU0reEcOpCivGudpXk63YRGC
-	 YxyXnhh58xVWoMVlXQsDTXqcYLpV+7i3O5gN8IW/GC189eyF6WsaA99F62fPW0Mp+x
-	 aIHO0AV+lfh3xuaVUf40H1jAwO8iGcFZkcX1IIYw=
+	b=KJOwTFYPTcXY8OChcIE4G9KalzjVMmBazH6cgIHzu4yBeksD3rmYNln24l3kE+vvP
+	 0lMtcMBK/lInM+XnagFSGJgDYDheFED4mYR4qZm+u4TnVnCJ9rK+iXOfUH+jYt74hl
+	 HE80qNaBBJJTtY+WY/RJbrkVf7rxAl5Jn86ALrUo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732915AbgF2UQZ (ORCPT
+        id S1732919AbgF2UQa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:16:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40556 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:16:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732639AbgF2TaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732812AbgF2TaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93852252DE;
-        Mon, 29 Jun 2020 15:38:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E7532523B;
+        Mon, 29 Jun 2020 15:35:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445109;
-        bh=YJO+rR1zT8+Vb0G8wKjcHbxnjLc7cUyVjatn5U7cxi0=;
+        s=default; t=1593444954;
+        bh=6tU5t7Wp3ryxUnzg+wsVxrjZn9g2w7paFvQL6w9l024=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WEm/Sir/2Hjg/zmC+GQFP5unsUBtgBuHY5v4b3xtBijRHhUUT8r+1kpAvzpGlIlVi
-         z8WnIfbff8SB/3TM2hfw7OEn6PEGOUSI7KyVp1bYzEqaUrp52Juf0LeH1ZRZT+jsM+
-         3DguzNKkO2MMzy7ZQKExvqyzlpkp7OFaZLHPMtZE=
+        b=i/EG+1QUtLJ5emHQGQJE8OL2cKk+dClErpr8Uf05ehouhsvSwxCiML+1KdjCIq2Pv
+         olz3nHwXcK1EsOMeFuIJwMHKc3qEj2HnrbmgHrEn/w3V96qjEz5Dv9Gz0xWw93oOat
+         4n5jCv1iaIRghWQJfKNdpdu5MkNJ0P2f5P9jgiPU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Taehee Yoo <ap420073@gmail.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Steffen Maier <maier@linux.ibm.com>,
+        Julian Wiedmann <jwi@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.14 17/78] ip_tunnel: fix use-after-free in ip_tunnel_lookup()
-Date:   Mon, 29 Jun 2020 11:37:05 -0400
-Message-Id: <20200629153806.2494953-18-sashal@kernel.org>
+Subject: [PATCH 4.19 052/131] scsi: zfcp: Fix panic on ERP timeout for previously dismissed ERP action
+Date:   Mon, 29 Jun 2020 11:33:43 -0400
+Message-Id: <20200629153502.2494656-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
-References: <20200629153806.2494953-1-sashal@kernel.org>
+In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
+References: <20200629153502.2494656-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.14.y
+X-KernelTest-Branch: linux-4.19.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.14.186-rc1
-X-KernelTest-Deadline: 2020-07-01T15:38+00:00
+X-KernelTest-Version: 4.19.131-rc1
+X-KernelTest-Deadline: 2020-07-01T15:34+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -66,120 +66,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Steffen Maier <maier@linux.ibm.com>
 
-[ Upstream commit ba61539c6ae57f4146284a5cb4f7b7ed8d42bf45 ]
+commit 936e6b85da0476dd2edac7c51c68072da9fb4ba2 upstream.
 
-In the datapath, the ip_tunnel_lookup() is used and it internally uses
-fallback tunnel device pointer, which is fb_tunnel_dev.
-This pointer variable should be set to NULL when a fb interface is deleted.
-But there is no routine to set fb_tunnel_dev pointer to NULL.
-So, this pointer will be still used after interface is deleted and
-it eventually results in the use-after-free problem.
+Suppose that, for unrelated reasons, FSF requests on behalf of recovery are
+very slow and can run into the ERP timeout.
 
-Test commands:
-    ip netns add A
-    ip netns add B
-    ip link add eth0 type veth peer name eth1
-    ip link set eth0 netns A
-    ip link set eth1 netns B
+In the case at hand, we did adapter recovery to a large degree.  However
+due to the slowness a LUN open is pending so the corresponding fc_rport
+remains blocked.  After fast_io_fail_tmo we trigger close physical port
+recovery for the port under which the LUN should have been opened.  The new
+higher order port recovery dismisses the pending LUN open ERP action and
+dismisses the pending LUN open FSF request.  Such dismissal decouples the
+ERP action from the pending corresponding FSF request by setting
+zfcp_fsf_req->erp_action to NULL (among other things)
+[zfcp_erp_strategy_check_fsfreq()].
 
-    ip netns exec A ip link set lo up
-    ip netns exec A ip link set eth0 up
-    ip netns exec A ip link add gre1 type gre local 10.0.0.1 \
-	    remote 10.0.0.2
-    ip netns exec A ip link set gre1 up
-    ip netns exec A ip a a 10.0.100.1/24 dev gre1
-    ip netns exec A ip a a 10.0.0.1/24 dev eth0
+If now the ERP timeout for the pending open LUN request runs out, we must
+not use zfcp_fsf_req->erp_action in the ERP timeout handler.  This is a
+problem since v4.15 commit 75492a51568b ("s390/scsi: Convert timers to use
+timer_setup()"). Before that we intentionally only passed zfcp_erp_action
+as context argument to zfcp_erp_timeout_handler().
 
-    ip netns exec B ip link set lo up
-    ip netns exec B ip link set eth1 up
-    ip netns exec B ip link add gre1 type gre local 10.0.0.2 \
-	    remote 10.0.0.1
-    ip netns exec B ip link set gre1 up
-    ip netns exec B ip a a 10.0.100.2/24 dev gre1
-    ip netns exec B ip a a 10.0.0.2/24 dev eth1
-    ip netns exec A hping3 10.0.100.2 -2 --flood -d 60000 &
-    ip netns del B
+Note: The lifetime of the corresponding zfcp_fsf_req object continues until
+a (late) response or an (unrelated) adapter recovery.
 
-Splat looks like:
-[   77.793450][    C3] ==================================================================
-[   77.794702][    C3] BUG: KASAN: use-after-free in ip_tunnel_lookup+0xcc4/0xf30
-[   77.795573][    C3] Read of size 4 at addr ffff888060bd9c84 by task hping3/2905
-[   77.796398][    C3]
-[   77.796664][    C3] CPU: 3 PID: 2905 Comm: hping3 Not tainted 5.8.0-rc1+ #616
-[   77.797474][    C3] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[   77.798453][    C3] Call Trace:
-[   77.798815][    C3]  <IRQ>
-[   77.799142][    C3]  dump_stack+0x9d/0xdb
-[   77.799605][    C3]  print_address_description.constprop.7+0x2cc/0x450
-[   77.800365][    C3]  ? ip_tunnel_lookup+0xcc4/0xf30
-[   77.800908][    C3]  ? ip_tunnel_lookup+0xcc4/0xf30
-[   77.801517][    C3]  ? ip_tunnel_lookup+0xcc4/0xf30
-[   77.802145][    C3]  kasan_report+0x154/0x190
-[   77.802821][    C3]  ? ip_tunnel_lookup+0xcc4/0xf30
-[   77.803503][    C3]  ip_tunnel_lookup+0xcc4/0xf30
-[   77.804165][    C3]  __ipgre_rcv+0x1ab/0xaa0 [ip_gre]
-[   77.804862][    C3]  ? rcu_read_lock_sched_held+0xc0/0xc0
-[   77.805621][    C3]  gre_rcv+0x304/0x1910 [ip_gre]
-[   77.806293][    C3]  ? lock_acquire+0x1a9/0x870
-[   77.806925][    C3]  ? gre_rcv+0xfe/0x354 [gre]
-[   77.807559][    C3]  ? erspan_xmit+0x2e60/0x2e60 [ip_gre]
-[   77.808305][    C3]  ? rcu_read_lock_sched_held+0xc0/0xc0
-[   77.809032][    C3]  ? rcu_read_lock_held+0x90/0xa0
-[   77.809713][    C3]  gre_rcv+0x1b8/0x354 [gre]
-[ ... ]
+Just like the regular response path ignores dismissed requests
+[zfcp_fsf_req_complete() => zfcp_fsf_protstatus_eval() => return early] the
+ERP timeout handler now needs to ignore dismissed requests.  So simply
+return early in the ERP timeout handler if the FSF request is marked as
+dismissed in its status flags.  To protect against the race where
+zfcp_erp_strategy_check_fsfreq() dismisses and sets
+zfcp_fsf_req->erp_action to NULL after our previous status flag check,
+return early if zfcp_fsf_req->erp_action is NULL.  After all, the former
+ERP action does not need to be woken up as that was already done as part of
+the dismissal above [zfcp_erp_action_dismiss()].
 
-Suggested-by: Eric Dumazet <eric.dumazet@gmail.com>
-Fixes: c54419321455 ("GRE: Refactor GRE tunneling code.")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This fixes the following panic due to kernel page fault in IRQ context:
+
+Unable to handle kernel pointer dereference in virtual kernel address space
+Failing address: 0000000000000000 TEID: 0000000000000483
+Fault in home space mode while using kernel ASCE.
+AS:000009859238c00b R2:00000e3e7ffd000b R3:00000e3e7ffcc007 S:00000e3e7ffd7000 P:000000000000013d
+Oops: 0004 ilc:2 [#1] SMP
+Modules linked in: ...
+CPU: 82 PID: 311273 Comm: stress Kdump: loaded Tainted: G            E  X   ...
+Hardware name: IBM 8561 T01 701 (LPAR)
+Krnl PSW : 0404c00180000000 001fffff80549be0 (zfcp_erp_notify+0x40/0xc0 [zfcp])
+           R:0 T:1 IO:0 EX:0 Key:0 M:1 W:0 P:0 AS:3 CC:0 PM:0 RI:0 EA:3
+Krnl GPRS: 0000000000000080 00000e3d00000000 00000000000000f0 0000000000030000
+           000000010028e700 000000000400a39c 000000010028e700 00000e3e7cf87e02
+           0000000010000000 0700098591cb67f0 0000000000000000 0000000000000000
+           0000033840e9a000 0000000000000000 001fffe008d6bc18 001fffe008d6bbc8
+Krnl Code: 001fffff80549bd4: a7180000            lhi     %r1,0
+           001fffff80549bd8: 4120a0f0            la      %r2,240(%r10)
+          #001fffff80549bdc: a53e0003            llilh   %r3,3
+          >001fffff80549be0: ba132000            cs      %r1,%r3,0(%r2)
+           001fffff80549be4: a7740037            brc     7,1fffff80549c52
+           001fffff80549be8: e320b0180004        lg      %r2,24(%r11)
+           001fffff80549bee: e31020e00004        lg      %r1,224(%r2)
+           001fffff80549bf4: 412020e0            la      %r2,224(%r2)
+Call Trace:
+ [<001fffff80549be0>] zfcp_erp_notify+0x40/0xc0 [zfcp]
+ [<00000985915e26f0>] call_timer_fn+0x38/0x190
+ [<00000985915e2944>] expire_timers+0xfc/0x190
+ [<00000985915e2ac4>] run_timer_softirq+0xec/0x218
+ [<0000098591ca7c4c>] __do_softirq+0x144/0x398
+ [<00000985915110aa>] do_softirq_own_stack+0x72/0x88
+ [<0000098591551b58>] irq_exit+0xb0/0xb8
+ [<0000098591510c6a>] do_IRQ+0x82/0xb0
+ [<0000098591ca7140>] ext_int_handler+0x128/0x12c
+ [<0000098591722d98>] clear_subpage.constprop.13+0x38/0x60
+([<000009859172ae4c>] clear_huge_page+0xec/0x250)
+ [<000009859177e7a2>] do_huge_pmd_anonymous_page+0x32a/0x768
+ [<000009859172a712>] __handle_mm_fault+0x88a/0x900
+ [<000009859172a860>] handle_mm_fault+0xd8/0x1b0
+ [<0000098591529ef6>] do_dat_exception+0x136/0x3e8
+ [<0000098591ca6d34>] pgm_check_handler+0x1c8/0x220
+Last Breaking-Event-Address:
+ [<001fffff80549c88>] zfcp_erp_timeout_handler+0x10/0x18 [zfcp]
+Kernel panic - not syncing: Fatal exception in interrupt
+
+Link: https://lore.kernel.org/r/20200623140242.98864-1-maier@linux.ibm.com
+Fixes: 75492a51568b ("s390/scsi: Convert timers to use timer_setup()")
+Cc: <stable@vger.kernel.org> #4.15+
+Reviewed-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: Steffen Maier <maier@linux.ibm.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/ip_tunnel.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ drivers/s390/scsi/zfcp_erp.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/net/ipv4/ip_tunnel.c b/net/ipv4/ip_tunnel.c
-index f6793017a20d9..44cc17c43a6b5 100644
---- a/net/ipv4/ip_tunnel.c
-+++ b/net/ipv4/ip_tunnel.c
-@@ -98,9 +98,10 @@ struct ip_tunnel *ip_tunnel_lookup(struct ip_tunnel_net *itn,
- 				   __be32 remote, __be32 local,
- 				   __be32 key)
+diff --git a/drivers/s390/scsi/zfcp_erp.c b/drivers/s390/scsi/zfcp_erp.c
+index 7522aa06672dd..b7afdb55a459f 100644
+--- a/drivers/s390/scsi/zfcp_erp.c
++++ b/drivers/s390/scsi/zfcp_erp.c
+@@ -592,7 +592,10 @@ static void zfcp_erp_strategy_check_fsfreq(struct zfcp_erp_action *act)
+ 				   ZFCP_STATUS_ERP_TIMEDOUT)) {
+ 			req->status |= ZFCP_STATUS_FSFREQ_DISMISSED;
+ 			zfcp_dbf_rec_run("erscf_1", act);
+-			req->erp_action = NULL;
++			/* lock-free concurrent access with
++			 * zfcp_erp_timeout_handler()
++			 */
++			WRITE_ONCE(req->erp_action, NULL);
+ 		}
+ 		if (act->status & ZFCP_STATUS_ERP_TIMEDOUT)
+ 			zfcp_dbf_rec_run("erscf_2", act);
+@@ -628,8 +631,14 @@ void zfcp_erp_notify(struct zfcp_erp_action *erp_action, unsigned long set_mask)
+ void zfcp_erp_timeout_handler(struct timer_list *t)
  {
--	unsigned int hash;
- 	struct ip_tunnel *t, *cand = NULL;
- 	struct hlist_head *head;
-+	struct net_device *ndev;
-+	unsigned int hash;
+ 	struct zfcp_fsf_req *fsf_req = from_timer(fsf_req, t, timer);
+-	struct zfcp_erp_action *act = fsf_req->erp_action;
++	struct zfcp_erp_action *act;
  
- 	hash = ip_tunnel_hash(key, remote);
- 	head = &itn->tunnels[hash];
-@@ -175,8 +176,9 @@ struct ip_tunnel *ip_tunnel_lookup(struct ip_tunnel_net *itn,
- 	if (t && t->dev->flags & IFF_UP)
- 		return t;
- 
--	if (itn->fb_tunnel_dev && itn->fb_tunnel_dev->flags & IFF_UP)
--		return netdev_priv(itn->fb_tunnel_dev);
-+	ndev = READ_ONCE(itn->fb_tunnel_dev);
-+	if (ndev && ndev->flags & IFF_UP)
-+		return netdev_priv(ndev);
- 
- 	return NULL;
++	if (fsf_req->status & ZFCP_STATUS_FSFREQ_DISMISSED)
++		return;
++	/* lock-free concurrent access with zfcp_erp_strategy_check_fsfreq() */
++	act = READ_ONCE(fsf_req->erp_action);
++	if (!act)
++		return;
+ 	zfcp_erp_notify(act, ZFCP_STATUS_ERP_TIMEDOUT);
  }
-@@ -1211,9 +1213,9 @@ void ip_tunnel_uninit(struct net_device *dev)
- 	struct ip_tunnel_net *itn;
  
- 	itn = net_generic(net, tunnel->ip_tnl_net_id);
--	/* fb_tunnel_dev will be unregisted in net-exit call. */
--	if (itn->fb_tunnel_dev != dev)
--		ip_tunnel_del(itn, netdev_priv(dev));
-+	ip_tunnel_del(itn, netdev_priv(dev));
-+	if (itn->fb_tunnel_dev == dev)
-+		WRITE_ONCE(itn->fb_tunnel_dev, NULL);
- 
- 	dst_cache_reset(&tunnel->dst_cache);
- }
 -- 
 2.25.1
 
