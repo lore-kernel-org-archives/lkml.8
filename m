@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C618C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:09:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40704C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:09:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BE00207D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:09:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DA1220768
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:09:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593464969;
-	bh=X3SpH3cEO2qEabbYJ3jLb7aQhxaAWEW5SjVBMz55dNg=;
+	s=default; t=1593464974;
+	bh=cNMBpd8nqgUby7jFWs/v09K1erXrkS11i2iK7hcqnEM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jVJGdRfs4Z/wrZbXUsWwil8E97VfcN7lw003RU5tzWejhc7IuNjiZFCnmeeyZbmvN
-	 g71ebgMYZ4E2TlOg2M4SKmW7ennzXlxg7AIO7sPneYhFIaU3/6Z9RYcIyaZy71Q63V
-	 87aKSzIw7t55s07tYpd+WFCpc+npsDV3ShRa+s9M=
+	b=u2kWeAe5gYXSceXxwdpqY4OAuWDXLvJa0UiWZRE9TFTxijJUWYcGvaNkZ1EGcDvzl
+	 vlvRYdCS+vmIjJc3QxH1VpAQkyt1M6BV183eaNNiDNg9+29U74LMqr2sI2Os7p3Iqg
+	 +0tWhDWe12xCebG/vh6vlISliFQu8DwYliPxpA5Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390479AbgF2VJ2 (ORCPT
+        id S1730798AbgF2VJc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:09:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45476 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:09:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730320AbgF2TAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730319AbgF2TAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:00:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AF5125520;
-        Mon, 29 Jun 2020 15:54:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E3F025502;
+        Mon, 29 Jun 2020 15:54:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446084;
-        bh=X3SpH3cEO2qEabbYJ3jLb7aQhxaAWEW5SjVBMz55dNg=;
+        s=default; t=1593446065;
+        bh=cNMBpd8nqgUby7jFWs/v09K1erXrkS11i2iK7hcqnEM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gShZp1t+Ac9RlkMTfASzm+AHvj26EXVhmZRFFFOUvQZeAP52mM1eqJXk6wczb2p7K
-         8JMdnPhnDjuCppKfuko6R1PnUc5iyJoDNQh+ja9XWrrg4lSOmvPdu0OuZRVZ095Zln
-         lyJahRudkX51g0Ol9trfgoXEGG5Gk+Wh51pnGLy0=
+        b=LDlzhoodYVYaRv41+4Pw3Ic45WfSRgBYStvRCaighWkhUtm21q6Tn10LE2dOqqHX0
+         EmYHZhDuoCX5aYEKSDQ7M5E3NACH2iV14MYTLnYY5U+htRu3A/b7xsN1QIe2C7MV/z
+         wMkUFiGGfk0bidvFxPwcK4TYUvxUqcirSyGFq5w4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ridge Kennedy <ridge.kennedy@alliedtelesis.co.nz>,
-        James Chapman <jchapman@katalix.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Guenter Roeck <linux@roeck-us.net>,
+Cc:     Tom Rix <trix@redhat.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Paul Moore <paul@paul-moore.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.4 079/135] l2tp: Allow duplicate session creation with UDP
-Date:   Mon, 29 Jun 2020 11:52:13 -0400
-Message-Id: <20200629155309.2495516-80-sashal@kernel.org>
+Subject: [PATCH 4.4 064/135] selinux: fix double free
+Date:   Mon, 29 Jun 2020 11:51:58 -0400
+Message-Id: <20200629155309.2495516-65-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -67,51 +66,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ridge Kennedy <ridge.kennedy@alliedtelesis.co.nz>
+From: Tom Rix <trix@redhat.com>
 
-commit 0d0d9a388a858e271bb70e71e99e7fe2a6fd6f64 upstream.
+commit 65de50969a77509452ae590e9449b70a22b923bb upstream.
 
-In the past it was possible to create multiple L2TPv3 sessions with the
-same session id as long as the sessions belonged to different tunnels.
-The resulting sessions had issues when used with IP encapsulated tunnels,
-but worked fine with UDP encapsulated ones. Some applications began to
-rely on this behaviour to avoid having to negotiate unique session ids.
+Clang's static analysis tool reports these double free memory errors.
 
-Some time ago a change was made to require session ids to be unique across
-all tunnels, breaking the applications making use of this "feature".
+security/selinux/ss/services.c:2987:4: warning: Attempt to free released memory [unix.Malloc]
+                        kfree(bnames[i]);
+                        ^~~~~~~~~~~~~~~~
+security/selinux/ss/services.c:2990:2: warning: Attempt to free released memory [unix.Malloc]
+        kfree(bvalues);
+        ^~~~~~~~~~~~~~
 
-This change relaxes the duplicate session id check to allow duplicates
-if both of the colliding sessions belong to UDP encapsulated tunnels.
+So improve the security_get_bools error handling by freeing these variables
+and setting their return pointers to NULL and the return len to 0
 
-Fixes: dbdbc73b4478 ("l2tp: fix duplicate session creation")
-Signed-off-by: Ridge Kennedy <ridge.kennedy@alliedtelesis.co.nz>
-Acked-by: James Chapman <jchapman@katalix.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: stable@vger.kernel.org
+Signed-off-by: Tom Rix <trix@redhat.com>
+Acked-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/l2tp/l2tp_core.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ security/selinux/ss/services.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/net/l2tp/l2tp_core.c b/net/l2tp/l2tp_core.c
-index 239464045697e..53c53b1c881c5 100644
---- a/net/l2tp/l2tp_core.c
-+++ b/net/l2tp/l2tp_core.c
-@@ -351,8 +351,13 @@ int l2tp_session_register(struct l2tp_session *session,
+diff --git a/security/selinux/ss/services.c b/security/selinux/ss/services.c
+index 0a258c0602d13..55c869e0a3a08 100644
+--- a/security/selinux/ss/services.c
++++ b/security/selinux/ss/services.c
+@@ -2622,8 +2622,12 @@ int security_get_bools(int *len, char ***names, int **values)
+ 	if (*names) {
+ 		for (i = 0; i < *len; i++)
+ 			kfree((*names)[i]);
++		kfree(*names);
+ 	}
+ 	kfree(*values);
++	*len = 0;
++	*names = NULL;
++	*values = NULL;
+ 	goto out;
+ }
  
- 		spin_lock_bh(&pn->l2tp_session_hlist_lock);
- 
-+		/* IP encap expects session IDs to be globally unique, while
-+		 * UDP encap doesn't.
-+		 */
- 		hlist_for_each_entry(session_walk, g_head, global_hlist)
--			if (session_walk->session_id == session->session_id) {
-+			if (session_walk->session_id == session->session_id &&
-+			    (session_walk->tunnel->encap == L2TP_ENCAPTYPE_IP ||
-+			     tunnel->encap == L2TP_ENCAPTYPE_IP)) {
- 				err = -EEXIST;
- 				goto err_tlock_pnlock;
- 			}
 -- 
 2.25.1
 
