@@ -7,52 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A9B3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:21:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F39F2C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:21:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DA08206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:21:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB12F20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:21:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462093;
-	bh=04vIyIzwvDuZu9o5J+YiK7s0DuB4Wlp6+UFmuPA7bdk=;
+	s=default; t=1593462102;
+	bh=TMpL60Nf2nyZupKtYwuwJcMVd4KNYDLpjIbjzkn2xXQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aMsEtOr7Oz5ZREUMG0PSIX+9IBeMqQW8CeBFcTxMYhYE8DGMr96c7wk5VWaSr7/Ti
-	 ALf52mFqTafK5N6jGTEJKZeSsAFqpumSPXx2Dz2eBil0O+Um3FR+YyknnF29iLkBcV
-	 7oBWUagDKEkrfzn5SiAObNOSqFmg7GFQsINsjWVU=
+	b=CxV3EqFV8Ayz55zHQwbJ3vcXomgHBIWVBUbpww2ILh9vASHrYtnR5RbWCfpnjRw6c
+	 nwqGC9dxbm9gfzqYHDwYYL6qg3gvJM3ge41z6thVztw3BCDx+AR+yy/geUTe6qhAZS
+	 5uEOmWX9LGdbb01m6B10o6HOoHcaA6dihQjNoP90=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732933AbgF2UVT (ORCPT
+        id S1732596AbgF2UVl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:21:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37056 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:21:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732596AbgF2TZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732589AbgF2TZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BDC89253D0;
-        Mon, 29 Jun 2020 15:41:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E7CE253A1;
+        Mon, 29 Jun 2020 15:41:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445308;
-        bh=04vIyIzwvDuZu9o5J+YiK7s0DuB4Wlp6+UFmuPA7bdk=;
+        s=default; t=1593445268;
+        bh=TMpL60Nf2nyZupKtYwuwJcMVd4KNYDLpjIbjzkn2xXQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P9KNwR3h6+tzWQKzeeOuk6vIcSAophohK2oDM4NUN+BkixekK9QX65gj/ZDyXINsj
-         /EWuh63wxG7/WmdBvLrE8S4sykI/CuyKJMPObEU0BlCkPdcVda/1jFwlL9yDAR7SG5
-         bbCXxygq0zJ4wu+77ym2PdYMPQhDiyfmLFNb9ZJ0=
+        b=xCOgVQahUTYLrkDCzQnYqQB9k51m56JR904t9tzXRFdBXKKRkw7BNK11Ul5o/TGJY
+         pFVaX2gGsSZELbrSUdiVjFeFCmjUbVx8bmfHNerpHbH4m3nWmkj8+i0XKGsqHsyrwe
+         HupaLwiC3SbXlwpca4yW+vyhSTfPoieQVlvREZEg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gaurav Singh <gaurav1086@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
-        Kan Liang <kan.liang@intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 077/191] perf report: Fix NULL pointer dereference in hists__fprintf_nr_sample_events()
-Date:   Mon, 29 Jun 2020 11:38:13 -0400
-Message-Id: <20200629154007.2495120-78-sashal@kernel.org>
+Subject: [PATCH 4.9 048/191] tty: n_gsm: Fix bogus i++ in gsm_data_kick
+Date:   Mon, 29 Jun 2020 11:37:44 -0400
+Message-Id: <20200629154007.2495120-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -71,43 +65,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gaurav Singh <gaurav1086@gmail.com>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
 
-[ Upstream commit 11b6e5482e178055ec1f2444b55f2518713809d1 ]
+[ Upstream commit 4dd31f1ffec6c370c3c2e0c605628bf5e16d5c46 ]
 
-The 'evname' variable can be NULL, as it is checked a few lines back,
-check it before using.
+When submitting the previous fix "tty: n_gsm: Fix waking up upper tty
+layer when room available". It was suggested to switch from a while to
+a for loop, but when doing it, there was a remaining bogus i++.
 
-Fixes: 9e207ddfa207 ("perf report: Show call graph from reference events")
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lore.kernel.org/lkml/
-Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
+This patch removes this i++ and also reorganizes the code making it more
+compact.
+
+Fixes: e1eaea46bb40 ("tty: n_gsm line discipline")
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Link: https://lore.kernel.org/r/20200518084517.2173242-3-gregory.clement@bootlin.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/builtin-report.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/tty/n_gsm.c | 14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 0abca8783bb3c..78485edb9467d 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -341,8 +341,7 @@ static size_t hists__fprintf_nr_sample_events(struct hists *hists, struct report
- 	if (evname != NULL)
- 		ret += fprintf(fp, " of event '%s'", evname);
+diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
+index 56716f5250303..1ab9bd4335421 100644
+--- a/drivers/tty/n_gsm.c
++++ b/drivers/tty/n_gsm.c
+@@ -719,17 +719,9 @@ static void gsm_data_kick(struct gsm_mux *gsm, struct gsm_dlci *dlci)
+ 		} else {
+ 			int i = 0;
  
--	if (symbol_conf.show_ref_callgraph &&
--	    strstr(evname, "call-graph=no")) {
-+	if (symbol_conf.show_ref_callgraph && evname && strstr(evname, "call-graph=no")) {
- 		ret += fprintf(fp, ", show reference callgraph");
+-			for (i = 0; i < NUM_DLCI; i++) {
+-				struct gsm_dlci *dlci;
+-
+-				dlci = gsm->dlci[i];
+-				if (dlci == NULL) {
+-					i++;
+-					continue;
+-				}
+-
+-				tty_port_tty_wakeup(&dlci->port);
+-			}
++			for (i = 0; i < NUM_DLCI; i++)
++				if (gsm->dlci[i])
++					tty_port_tty_wakeup(&gsm->dlci[i]->port);
+ 		}
  	}
- 
+ }
 -- 
 2.25.1
 
