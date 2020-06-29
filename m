@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5F82C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BAF3C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B88CB207D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 493EC207E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461394;
-	bh=6FQOpK2Gl9FPOH/Zv2HvhQOSAiGCPIPIg99k4N738II=;
+	s=default; t=1593461396;
+	bh=UiTGzYgiwJtil1e+utSA+jGg7dXl4VCjtAJXPf4JREM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hafx4diK4jNTX4IuMsK2mSVmSDpRAGhkBEubQbE6zborE1Qi+nKTHmQnzPYhTcoiw
-	 ewjd+XzFsl9qWRjttYRc5qWokYsEhemG4uNrOfMjaslzccf3YOcp+PxV4PcNQWTLN+
-	 zLE/Bs94zKnDrL1DFaAh1mfIDfSy5UQLjLPOSPhI=
+	b=FozRAsfn3hJXj0CTDLKf971hMReXXcik9J2FIhQW/tkcMGp2FacgUO6kvNlFcloL3
+	 xkQejXZRdTkw6Kr3ZTeY/G265OcKMaQvgCCtdAjiJnz4rHzMVN36rKoXcaPhw4VLFl
+	 oNVxPAWoY9ExG1JKeck3BIEM7hH98DVCTZSRmwvY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728132AbgF2UJx (ORCPT
+        id S1727799AbgF2UJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:09:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40568 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:09:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732923AbgF2TaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732924AbgF2TaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DA7625201;
-        Mon, 29 Jun 2020 15:35:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0755A25298;
+        Mon, 29 Jun 2020 15:36:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444923;
-        bh=6FQOpK2Gl9FPOH/Zv2HvhQOSAiGCPIPIg99k4N738II=;
+        s=default; t=1593445006;
+        bh=UiTGzYgiwJtil1e+utSA+jGg7dXl4VCjtAJXPf4JREM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dmzULtm8DDVcMTBvEgkxbE+Us/1PrNcbx/SajO/9hHMDQE/ky2I0m+aZOkQWiIKmx
-         fnDkUOVyzlRQ9ptWmfu7+u3+y7leGNfaaRp2uyGcFHaAmcoXGzDSBn2lU1ijwE6JAg
-         JpnIDXugCxP3Mu7TpKQwRHzH00+hYQq6ZSEXwXAk=
+        b=jcFGgtNCfGGGXFEA5cbjwYlfDH9A5qD41cvgCeFK4X1MRUYZ9I6PZXHbhQVTEzz3Z
+         vVhQF2Gf13EH6xdFvf0r8OyK4xII3Kb4qp4+vhHyPvv+AQkXXQvu5WK8nljXc6knjX
+         591j8GzBAOee7iwg0+HmDYVWwNjBuHHWsxUtVdyQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Martitz <t.martitz@avm.de>,
-        Roopa Prabhu <roopa@cumulusnetworks.com>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, Felix Fietkau <nbd@nbd.name>,
+Cc:     Gao Xiang <hsiangkao@redhat.com>,
+        Hongyu Jin <hongyu.jin@unisoc.com>,
+        Chao Yu <yuchao0@huawei.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 019/131] net: bridge: enfore alignment for ethernet address
-Date:   Mon, 29 Jun 2020 11:33:10 -0400
-Message-Id: <20200629153502.2494656-20-sashal@kernel.org>
+Subject: [PATCH 4.19 107/131] erofs: fix partially uninitialized misuse in z_erofs_onlinepage_fixup
+Date:   Mon, 29 Jun 2020 11:34:38 -0400
+Message-Id: <20200629153502.2494656-108-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
@@ -68,46 +66,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Martitz <t.martitz@avm.de>
+From: Gao Xiang <hsiangkao@redhat.com>
 
-[ Upstream commit db7202dec92e6caa2706c21d6fc359af318bde2e ]
+commit 3c597282887fd55181578996dca52ce697d985a5 upstream.
 
-The eth_addr member is passed to ether_addr functions that require
-2-byte alignment, therefore the member must be properly aligned
-to avoid unaligned accesses.
+Hongyu reported "id != index" in z_erofs_onlinepage_fixup() with
+specific aarch64 environment easily, which wasn't shown before.
 
-The problem is in place since the initial merge of multicast to unicast:
-commit 6db6f0eae6052b70885562e1733896647ec1d807 bridge: multicast to unicast
+After digging into that, I found that high 32 bits of page->private
+was set to 0xaaaaaaaa rather than 0 (due to z_erofs_onlinepage_init
+behavior with specific compiler options). Actually we only use low
+32 bits to keep the page information since page->private is only 4
+bytes on most 32-bit platforms. However z_erofs_onlinepage_fixup()
+uses the upper 32 bits by mistake.
 
-Fixes: 6db6f0eae605 ("bridge: multicast to unicast")
-Cc: Roopa Prabhu <roopa@cumulusnetworks.com>
-Cc: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Cc: Felix Fietkau <nbd@nbd.name>
-Cc: stable@vger.kernel.org
-Signed-off-by: Thomas Martitz <t.martitz@avm.de>
-Acked-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Let's fix it now.
+
+Reported-and-tested-by: Hongyu Jin <hongyu.jin@unisoc.com>
+Fixes: 3883a79abd02 ("staging: erofs: introduce VLE decompression support")
+Cc: <stable@vger.kernel.org> # 4.19+
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Link: https://lore.kernel.org/r/20200618234349.22553-1-hsiangkao@aol.com
+Signed-off-by: Gao Xiang <hsiangkao@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/bridge/br_private.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/staging/erofs/unzip_vle.h | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/net/bridge/br_private.h b/net/bridge/br_private.h
-index 11ed2029985fd..33b8222db75c4 100644
---- a/net/bridge/br_private.h
-+++ b/net/bridge/br_private.h
-@@ -202,8 +202,8 @@ struct net_bridge_port_group {
- 	struct rcu_head			rcu;
- 	struct timer_list		timer;
- 	struct br_ip			addr;
-+	unsigned char			eth_addr[ETH_ALEN] __aligned(2);
- 	unsigned char			flags;
--	unsigned char			eth_addr[ETH_ALEN];
- };
+diff --git a/drivers/staging/erofs/unzip_vle.h b/drivers/staging/erofs/unzip_vle.h
+index 684ff06fc7bf8..630fd1f4f123d 100644
+--- a/drivers/staging/erofs/unzip_vle.h
++++ b/drivers/staging/erofs/unzip_vle.h
+@@ -169,22 +169,22 @@ static inline void z_erofs_onlinepage_init(struct page *page)
+ static inline void z_erofs_onlinepage_fixup(struct page *page,
+ 	uintptr_t index, bool down)
+ {
+-	unsigned long *p, o, v, id;
+-repeat:
+-	p = &page_private(page);
+-	o = READ_ONCE(*p);
++	union z_erofs_onlinepage_converter u = { .v = &page_private(page) };
++	int orig, orig_index, val;
  
- struct net_bridge_mdb_entry
+-	id = o >> Z_EROFS_ONLINEPAGE_INDEX_SHIFT;
+-	if (id) {
++repeat:
++	orig = atomic_read(u.o);
++	orig_index = orig >> Z_EROFS_ONLINEPAGE_INDEX_SHIFT;
++	if (orig_index) {
+ 		if (!index)
+ 			return;
+ 
+-		BUG_ON(id != index);
++		DBG_BUGON(orig_index != index);
+ 	}
+ 
+-	v = (index << Z_EROFS_ONLINEPAGE_INDEX_SHIFT) |
+-		((o & Z_EROFS_ONLINEPAGE_COUNT_MASK) + (unsigned)down);
+-	if (cmpxchg(p, o, v) != o)
++	val = (index << Z_EROFS_ONLINEPAGE_INDEX_SHIFT) |
++		((orig & Z_EROFS_ONLINEPAGE_COUNT_MASK) + (unsigned int)down);
++	if (atomic_cmpxchg(u.o, orig, val) != orig)
+ 		goto repeat;
+ }
+ 
 -- 
 2.25.1
 
