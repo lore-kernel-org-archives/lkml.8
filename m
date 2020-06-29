@@ -8,73 +8,76 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5367DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D29AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 24C1F20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:43:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 489C920672
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:43:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MIatfl+V"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A6ebBXcZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389669AbgF2Um6 (ORCPT
+        id S2389681AbgF2UnF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:42:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43356 "EHLO
+        Mon, 29 Jun 2020 16:43:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731643AbgF2TOD (ORCPT
+        with ESMTP id S1730821AbgF2TOD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:14:03 -0400
 Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A812BC0A8938;
-        Mon, 29 Jun 2020 00:37:43 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id p3so7917922pgh.3;
-        Mon, 29 Jun 2020 00:37:43 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2454C0086DA;
+        Mon, 29 Jun 2020 02:31:20 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id e9so8027913pgo.9;
+        Mon, 29 Jun 2020 02:31:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Oh8xk0TqxiDTOzgBpulOm8nQjP8syH1MFAg9SRwAtT4=;
-        b=MIatfl+V/S3Ufh1oJKUjfSYjWTmUU/I4l8mB4A/EKjCUpWBHDGtAhP83RxBxd1bHvD
-         lXMsMA8EOKV6umjuLT/2CYBWWzgQplUr4UznpJFcgv+pcDVuN6EZ5wQrxpKQjprComuT
-         nHDJcRnQxbMqG/GFEl0rn6CeYVw/L+y13vvJcDDNTOzb6Q+4N39cwg8hZ6ZTcAngeVsF
-         1cSxq625BZofQfgcUsXpYgXMp/vbZR/x/TgmZ8l05avVmFY0MGKJbbZzoBuKQVOiN6Yx
-         EGow6axDN5/am1TjjJUN8SySu0kCKAgSufBzhuUxItbrNZXquDIGAdoPAKJ3gB67pf4P
-         cbtw==
+        bh=Y9KYjkbiR1My5Ffq4vIf/Hm4e77c+uBf3NZ5oJyz9ys=;
+        b=A6ebBXcZgYVQ4MmoB/nHGk8Jgn7ZEian0Q8zKJFOteyApn8XDBK3mz/j1RRpS3Xkv5
+         8tOGySH9jVq3r0NEVP3vVtSDCwCAh+1mMz5DoUYHrzS0QsyFzbSuW7ptHRoRgtwtKVl7
+         OqxLMbjiwVUNUHekMWK9GrJr0KljM9lMqsKWYJw+mgCZ5aB8kX8G+064BMMLeXTU6O+B
+         q1X9y8gnU2yUc9K1gcn+i9uKnE924tcSnqsWjUC2HLOr4gvTlMd3I1LXbtFMykcHsHZm
+         F5ZCgLU9wBfcXRGm8bSDEtcVlxGYB2MUkvYHuavM3G630oOVjc2raTslJAPd4sYGW+og
+         QdfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Oh8xk0TqxiDTOzgBpulOm8nQjP8syH1MFAg9SRwAtT4=;
-        b=r60NIcJdy2CbCvLraPAEUDAdUXEWydYkcf+/pUDMnfpvC9guf6X3H+/P/jidlXqKRK
-         1laeriKMitPebmJfkH5OwZnOHOtd7vFI5ViB8LQXfTN3VaQTHtjtfc7Kx4G1t0RT8tzf
-         kLYRTa8L7qVWxQhabOYE6iKKi/TSZGI4srcSOtvEPzN6GcffHLIAaQIusSvaT7QMAnGk
-         h0mNnHYKPhgmsmIZe8vLqGMYAcaoSaGPtZE3CjxkgXr9P+UjJF67/5cv+k0sUtI2ZE3A
-         bYAnakZrokdI3bMVO5RNbkKGGY6IscCnr8/WfZbdtjWC5xzBJlwWnXpNdutPlVMQjxQv
-         ND/A==
-X-Gm-Message-State: AOAM532N1+toYwjEvrQJ69YCBm6x9ca/opEohpSM2S4WL3Os6ui3kU0e
-        CWw0dUfzhkabpl4sQKtKpC0=
-X-Google-Smtp-Source: ABdhPJxu4ilTfacJ81Zt5Q839MN4J+yYfSr9e3LiZl9nj6Qi2F2XwvNT/FoD5dFAEy+ie8AFvMhcRw==
-X-Received: by 2002:a62:54c4:: with SMTP id i187mr13504579pfb.263.1593416263218;
-        Mon, 29 Jun 2020 00:37:43 -0700 (PDT)
-Received: from varodek.iballbatonwifi.com ([103.105.153.57])
-        by smtp.gmail.com with ESMTPSA id q10sm34673004pfk.86.2020.06.29.00.37.39
+        bh=Y9KYjkbiR1My5Ffq4vIf/Hm4e77c+uBf3NZ5oJyz9ys=;
+        b=suUFw3lXkusm1UUWuXSQ5+IiXLXIVysvxDYEZQ7nA/9TPT8J0d3DjAhBxpn+PxkJxh
+         IA6r8UGhEFJiUWfNOOxFbr4IaHilO42dE61HKRYYL65SRf94nfK5PYU7X/LZskHPI4oB
+         dm9yLZxjfT+e76B1vkEmGJt71q7iMHUK7OOApqDLvsj0YYsph0GYAZ7fmeKmwV7ClqA0
+         YfG7FoHuwcnHkrMu3uVtrzlafLPmNuU8w6CgFAY0ztr41Xrr1rvwDR/BeJYZfVKHlUYQ
+         ZoTYga2sn9xWGVVOO5cstAPq0d+RXTMcZ754oLoZjzu5v4NQJL8HW7hat/yaw3kgqLc5
+         2S5w==
+X-Gm-Message-State: AOAM531RvnXusMGn6wYDBgo+4tQJ/rYpQf9uHqKsuX3LVmAl5sQql9ec
+        yJnEQnhlD2XMsiunX6pFR7M=
+X-Google-Smtp-Source: ABdhPJz/nRI7irHgjO0iq6QaoncxuD3EEDuh0r14Hz0DHIyPXF79779I+BckEkrN3/yh9CfuDsdgXg==
+X-Received: by 2002:a62:1d81:: with SMTP id d123mr13563954pfd.38.1593423080148;
+        Mon, 29 Jun 2020 02:31:20 -0700 (PDT)
+Received: from varodek.localdomain ([106.210.40.90])
+        by smtp.gmail.com with ESMTPSA id q20sm2921286pfn.111.2020.06.29.02.31.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 00:37:42 -0700 (PDT)
+        Mon, 29 Jun 2020 02:31:19 -0700 (PDT)
 From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
 To:     Bjorn Helgaas <helgaas@kernel.org>,
         Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
         Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         linux-kernel-mentees@lists.linuxfoundation.org,
         skhan@linuxfoundation.org
-Subject: [PATCH v1 5/6] [media] meye: use generic power management
-Date:   Mon, 29 Jun 2020 13:06:03 +0530
-Message-Id: <20200629073604.205478-6-vaibhavgupta40@gmail.com>
+Subject: [PATCH v1 1/5] iavf: use generic power management
+Date:   Mon, 29 Jun 2020 14:59:39 +0530
+Message-Id: <20200629092943.227910-2-vaibhavgupta40@gmail.com>
 X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200629073604.205478-1-vaibhavgupta40@gmail.com>
-References: <20200629073604.205478-1-vaibhavgupta40@gmail.com>
+In-Reply-To: <20200629092943.227910-1-vaibhavgupta40@gmail.com>
+References: <20200629092943.227910-1-vaibhavgupta40@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -82,75 +85,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With legacy PM, drivers themselves were responsible for managing the
-device's power states and takes care of register states.
+With the support of generic PM callbacks, drivers no longer need to use
+legacy .suspend() and .resume() in which they had to maintain PCI states
+changes and device's power state themselves. The required operations are
+done by PCI core.
 
-After upgrading to the generic structure, PCI core will take care of
-required tasks and drivers should do only device-specific operations.
-
-The driver was invoking PCI helper functions like pci_save/restore_state()
-which is not recommended.
+PCI drivers are not expected to invoke PCI helper functions like
+pci_save/restore_state(), pci_enable/disable_device(),
+pci_set_power_state(), etc. Their tasks are completed by PCI core itself.
 
 Compile-tested only.
 
 Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
 ---
- drivers/media/pci/meye/meye.c | 15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
+ drivers/net/ethernet/intel/iavf/iavf_main.c | 45 ++++++---------------
+ 1 file changed, 12 insertions(+), 33 deletions(-)
 
-diff --git a/drivers/media/pci/meye/meye.c b/drivers/media/pci/meye/meye.c
-index 73e064e6f56d..7fb3b1853b87 100644
---- a/drivers/media/pci/meye/meye.c
-+++ b/drivers/media/pci/meye/meye.c
-@@ -1528,19 +1528,16 @@ static const struct v4l2_ctrl_ops meye_ctrl_ops = {
- 	.s_ctrl = meye_s_ctrl,
- };
+diff --git a/drivers/net/ethernet/intel/iavf/iavf_main.c b/drivers/net/ethernet/intel/iavf/iavf_main.c
+index fa82768e5eda..93fa0884ca69 100644
+--- a/drivers/net/ethernet/intel/iavf/iavf_main.c
++++ b/drivers/net/ethernet/intel/iavf/iavf_main.c
+@@ -3772,7 +3772,6 @@ static int iavf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	return err;
+ }
  
 -#ifdef CONFIG_PM
--static int meye_suspend(struct pci_dev *pdev, pm_message_t state)
-+static int __maybe_unused meye_suspend(struct device *dev)
+ /**
+  * iavf_suspend - Power management suspend routine
+  * @pdev: PCI device information struct
+@@ -3780,11 +3779,10 @@ static int iavf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+  *
+  * Called when the system (VM) is entering sleep/suspend.
+  **/
+-static int iavf_suspend(struct pci_dev *pdev, pm_message_t state)
++static int __maybe_unused iavf_suspend(struct device *dev_d)
  {
--	pci_save_state(pdev);
- 	meye.pm_mchip_mode = meye.mchip_mode;
- 	mchip_hic_stop();
- 	mchip_set(MCHIP_MM_INTA, 0x0);
+-	struct net_device *netdev = pci_get_drvdata(pdev);
++	struct net_device *netdev = dev_get_drvdata(dev_d);
+ 	struct iavf_adapter *adapter = netdev_priv(netdev);
+-	int retval = 0;
+ 
+ 	netif_device_detach(netdev);
+ 
+@@ -3802,12 +3800,6 @@ static int iavf_suspend(struct pci_dev *pdev, pm_message_t state)
+ 
+ 	clear_bit(__IAVF_IN_CRITICAL_TASK, &adapter->crit_section);
+ 
+-	retval = pci_save_state(pdev);
+-	if (retval)
+-		return retval;
+-
+-	pci_disable_device(pdev);
+-
  	return 0;
  }
  
--static int meye_resume(struct pci_dev *pdev)
-+static int __maybe_unused meye_resume(struct device *dev)
+@@ -3817,24 +3809,13 @@ static int iavf_suspend(struct pci_dev *pdev, pm_message_t state)
+  *
+  * Called when the system (VM) is resumed from sleep/suspend.
+  **/
+-static int iavf_resume(struct pci_dev *pdev)
++static int __maybe_unused iavf_resume(struct device *dev_d)
  {
++	struct pci_dev *pdev = to_pci_dev(dev_d);
+ 	struct iavf_adapter *adapter = pci_get_drvdata(pdev);
+ 	struct net_device *netdev = adapter->netdev;
+ 	u32 err;
+ 
+-	pci_set_power_state(pdev, PCI_D0);
 -	pci_restore_state(pdev);
- 	pci_write_config_word(meye.mchip_dev, MCHIP_PCI_SOFTRESET_SET, 1);
+-	/* pci_restore_state clears dev->state_saved so call
+-	 * pci_save_state to restore it.
+-	 */
+-	pci_save_state(pdev);
+-
+-	err = pci_enable_device_mem(pdev);
+-	if (err) {
+-		dev_err(&pdev->dev, "Cannot enable PCI device from suspend.\n");
+-		return err;
+-	}
+ 	pci_set_master(pdev);
  
- 	mchip_delay(MCHIP_HIC_CMD, 0);
-@@ -1562,7 +1559,6 @@ static int meye_resume(struct pci_dev *pdev)
- 	}
- 	return 0;
+ 	rtnl_lock();
+@@ -3858,7 +3839,6 @@ static int iavf_resume(struct pci_dev *pdev)
+ 	return err;
  }
--#endif
  
- static int meye_probe(struct pci_dev *pcidev, const struct pci_device_id *ent)
- {
-@@ -1788,15 +1784,14 @@ static const struct pci_device_id meye_pci_tbl[] = {
+-#endif /* CONFIG_PM */
+ /**
+  * iavf_remove - Device Removal Routine
+  * @pdev: PCI device information struct
+@@ -3960,16 +3940,15 @@ static void iavf_remove(struct pci_dev *pdev)
+ 	pci_disable_device(pdev);
+ }
  
- MODULE_DEVICE_TABLE(pci, meye_pci_tbl);
- 
-+static SIMPLE_DEV_PM_OPS(meye_pm_ops, meye_suspend, meye_resume);
++static SIMPLE_DEV_PM_OPS(iavf_pm_ops, iavf_suspend, iavf_resume);
 +
- static struct pci_driver meye_driver = {
- 	.name		= "meye",
- 	.id_table	= meye_pci_tbl,
- 	.probe		= meye_probe,
- 	.remove		= meye_remove,
+ static struct pci_driver iavf_driver = {
+-	.name     = iavf_driver_name,
+-	.id_table = iavf_pci_tbl,
+-	.probe    = iavf_probe,
+-	.remove   = iavf_remove,
 -#ifdef CONFIG_PM
--	.suspend	= meye_suspend,
--	.resume		= meye_resume,
+-	.suspend  = iavf_suspend,
+-	.resume   = iavf_resume,
 -#endif
-+	.driver.pm	= &meye_pm_ops,
+-	.shutdown = iavf_shutdown,
++	.name      = iavf_driver_name,
++	.id_table  = iavf_pci_tbl,
++	.probe     = iavf_probe,
++	.remove    = iavf_remove,
++	.driver.pm = &iavf_pm_ops,
++	.shutdown  = iavf_shutdown,
  };
  
- static int __init meye_init(void)
+ /**
 -- 
 2.27.0
 
