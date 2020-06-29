@@ -2,105 +2,123 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81880C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDEBC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52AB62065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:27:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69DA82065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:27:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YZh8en+Z"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="VnC8bHc+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730215AbgF2T1G (ORCPT
+        id S1732433AbgF2T1L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:27:06 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:43097 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730220AbgF2T1D (ORCPT
+        Mon, 29 Jun 2020 15:27:11 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:10622 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732315AbgF2T1H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:27:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593458822;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=ULeTr0SB55lWnRLDf1wo07nelEQfKeugCaPGmgEHj60=;
-        b=YZh8en+ZhpdmZcyVTkuLHT53oPyVb6e0qFsRSK4A6d/+9ANkYc/8kIgYOThCEXpzytkyr1
-        lgz+NSuvDH+wjYsl7DrytbWsToP169YbD2GFpZwPP+FfaPjtbkGp9zP+Utyw83b5pz3XJQ
-        ZY7kxJeTuL9YBe+L/M6z8K/BHHIaIoE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-18-5TlJu8U2Nl6yNclv8OYdGQ-1; Mon, 29 Jun 2020 15:27:00 -0400
-X-MC-Unique: 5TlJu8U2Nl6yNclv8OYdGQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6FFDBA0C01;
-        Mon, 29 Jun 2020 19:26:59 +0000 (UTC)
-Received: from prarit.bos.redhat.com (prarit-guest.7a2m.lab.eng.bos.redhat.com [10.16.222.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EC68C19C71;
-        Mon, 29 Jun 2020 19:26:58 +0000 (UTC)
-From:   Prarit Bhargava <prarit@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Prarit Bhargava <prarit@redhat.com>, Len Brown <lenb@kernel.org>,
-        linux-pm@vger.kernel.org,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-Subject: [PATCH] turbostat: Use sched_getcpu() instead of hardcoded cpu 0
-Date:   Mon, 29 Jun 2020 15:26:57 -0400
-Message-Id: <20200629192657.34045-1-prarit@redhat.com>
+        Mon, 29 Jun 2020 15:27:07 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5efa226f0000>; Mon, 29 Jun 2020 10:18:39 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 29 Jun 2020 10:19:28 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 29 Jun 2020 10:19:28 -0700
+Received: from [10.25.103.164] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 29 Jun
+ 2020 17:19:20 +0000
+CC:     <spujar@nvidia.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <robh+dt@kernel.org>, <lgirdwood@gmail.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <digetx@gmail.com>, <alsa-devel@alsa-project.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sharadg@nvidia.com>, <mkumard@nvidia.com>,
+        <viswanathl@nvidia.com>, <rlokhande@nvidia.com>,
+        <dramesh@nvidia.com>, <atalambedu@nvidia.com>,
+        <nwartikar@nvidia.com>, <swarren@nvidia.com>,
+        <nicoleotsuka@gmail.com>
+Subject: Re: [PATCH v4 15/23] ASoC: soc-core: Identify 'no_pcm' DAI links for
+ DPCM
+To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+References: <1593233625-14961-1-git-send-email-spujar@nvidia.com>
+ <1593233625-14961-16-git-send-email-spujar@nvidia.com>
+ <87366e1wkb.wl-kuninori.morimoto.gx@renesas.com>
+From:   Sameer Pujar <spujar@nvidia.com>
+Message-ID: <83b6cee2-8254-477c-cb65-7e05a9fdbacf@nvidia.com>
+Date:   Mon, 29 Jun 2020 22:49:16 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <87366e1wkb.wl-kuninori.morimoto.gx@renesas.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1593451119; bh=vfUlacqPqumAcLV/c3aep1ECOFfwdUJzoe5RzrENPw0=;
+        h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=VnC8bHc+ovxigL9GkP1gqYfnwMTUuwzT7kfV2xUkvtLMZAFOCjDe59+nUsfk2zS2q
+         fOANMD+Nf7NfUfBAD8FJlNyEh/2ZvHQ4R8UlGsxrWYsZrzVx2XCnqBsSVb7OOB/vqF
+         6z/hGWZGIVqJCOJmx2ameHksjLhCaKPeJ4L4T6oAaLUbh1RarDm8UIuXB9BEI4YJKq
+         NCPvT8V3c2m4rdYtX4/Z/jpq+z8XztvzNJGI45B3LAJl4KichbWOFWEfFo5tdUOmew
+         wX4YoyUEBzqbFJPG0kVQxrQoZ40OJmtBkA7QICsXowl9CkuLQO3Ez7M969NB6KkPfR
+         dR8unv5kxhjTw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Disabling cpu 0 results in an error
 
-turbostat: /sys/devices/system/cpu/cpu0/topology/thread_siblings: open failed: No such file or directory
 
-Use sched_getcpu() instead of a hardcoded cpu 0 to get the max cpu number.
+On 6/29/2020 7:08 AM, Kuninori Morimoto wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> Hi Sameer
+>
+>> PCM devices are created for dai links with 'no-pcm' flag as '0'.
+>> Such DAI links have CPU component which implement pcm_construct()
+>> and pcm_destruct() callbacks. Based on this, current patch exposes
+>> a helper function to identify such components and populate 'no_pcm'
+>> flag for DPCM DAI link.
+> (snip)
+>> +bool soc_component_is_pcm(struct snd_soc_dai_link_component *dlc)
+>> +{
+>> +     struct snd_soc_component *component;
+>> +     struct snd_soc_dai *dai;
+>> +
+>> +     for_each_component(component) {
+>> +             if (!component->driver)
+>> +                     continue;
+>> +
+>> +             for_each_component_dais(component, dai) {
+>> +                     if (!dai->name || !dlc->dai_name)
+>> +                             continue;
+>> +
+>> +                     if (strcmp(dai->name, dlc->dai_name))
+>> +                             continue;
+>
+> We can/should NULL poinster check for "dlc->dai_name" on top of
+> this function instead of inside loop ?
+> And then, we can remove "dai->name" check because next strcmp()
+> automatically fail if dai->name was NULL.
 
-Signed-off-by: Prarit Bhargava <prarit@redhat.com>
-Cc: Len Brown <lenb@kernel.org>
-Cc: linux-pm@vger.kernel.org
-Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
- tools/power/x86/turbostat/turbostat.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
-
-diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
-index 33b370865d16..2d3a3012f2f8 100644
---- a/tools/power/x86/turbostat/turbostat.c
-+++ b/tools/power/x86/turbostat/turbostat.c
-@@ -2769,12 +2769,19 @@ void re_initialize(void)
- void set_max_cpu_num(void)
- {
- 	FILE *filep;
-+	int base_cpu;
- 	unsigned long dummy;
-+	char pathname[64];
- 
-+	base_cpu = sched_getcpu();
-+	if (base_cpu < 0)
-+		err(1, "cannot find calling cpu ID");
-+	sprintf(pathname,
-+		"/sys/devices/system/cpu/cpu%d/topology/thread_siblings",
-+		base_cpu);
-+
-+	filep = fopen_or_die(pathname, "r");
- 	topo.max_cpu_num = 0;
--	filep = fopen_or_die(
--			"/sys/devices/system/cpu/cpu0/topology/thread_siblings",
--			"r");
- 	while (fscanf(filep, "%lx,", &dummy) == 1)
- 		topo.max_cpu_num += BITMASK_SIZE;
- 	fclose(filep);
--- 
-2.21.3
+Sounds good, will update.
+>
+> Thank you for your help !!
+>
+> Best regards
+> ---
+> Kuninori Morimoto
 
