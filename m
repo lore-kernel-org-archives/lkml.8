@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA551C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4568C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B711120724
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:52:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0B4120674
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:52:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460360;
-	bh=uiUgCBJW+P2z3Y1CbQBk2mXh7Nit/giMRJsltz66ggs=;
+	s=default; t=1593460363;
+	bh=tOrwBAVd/x0Oigir99dcKgnRdsCe7DV5Y5oW2/wsAZs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vk8yINstNBti69eY0qP2PKAuFemVB5tq6ayHrkENnM6fB7l2RD1SUP9eLSU4sH9le
-	 igvAt2+7E4y4DIEF74EeEyFOivebcO52t5i4Ktrf7QogTKoIU9A+3+vYDiea8p+tWm
-	 6KuKAorQULyZrdxNb86zqHZ74WheIlncvKevKFkU=
+	b=Z6wjbsUTgCpXk02nSh1ydTCiZOxIVxVPQbEF1izJ6kgYpjGMlrPR+0cu+gOEocYI/
+	 YvbJ5pAGIDElRPfH5lJ4Ym8ISMk5Bdf7um8ZYcQe/uk8f9N3jhenKJMHWSnqjYy95N
+	 RCpF/wi0nPU8HNAHW3HLNUJZO5AD/Tfg9L8Pq8Gs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388324AbgF2Twj (ORCPT
+        id S2388251AbgF2Twl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:52:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47710 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:52:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387700AbgF2Tk1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387699AbgF2Tk1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73087251C2;
-        Mon, 29 Jun 2020 15:28:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77BB1248B5;
+        Mon, 29 Jun 2020 15:26:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444495;
-        bh=uiUgCBJW+P2z3Y1CbQBk2mXh7Nit/giMRJsltz66ggs=;
+        s=default; t=1593444411;
+        bh=tOrwBAVd/x0Oigir99dcKgnRdsCe7DV5Y5oW2/wsAZs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QUJDsGHrOKcFBFMSv0Nt0WWPZ7a1Wy10Te+wkNQsdTqbK6yTC4DWXmsb/gEjXbLSW
-         9D4WLSs+d6rJcIEkSuKBt9wDE4o45dJp/L9YR8Az+jiZUoL2icqG3pUoXBEDxCImw9
-         EB7ybgASUl0jSzdpCh28cjUwso6lDaY+1YsyhbM4=
+        b=zoxcgrn/lUSLtRFnTecjaUM6wn6h43UDsL47PQnDiMu6Kende1IZz1VkBpkYYNQjs
+         tiYBD2mkN15n1WL3oUGILQ8T0OjLGpQSyZPL0iis7A5ePu8zjU+2t8bNcFGit5TT24
+         lIlnSeQ/M0fkLbLfEGXXkXjWCC58/JEgzt7cnnNE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 172/178] pNFS/flexfiles: Fix list corruption if the mirror count changes
-Date:   Mon, 29 Jun 2020 11:25:17 -0400
-Message-Id: <20200629152523.2494198-173-sashal@kernel.org>
+Cc:     Willem de Bruijn <willemb@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 089/178] selftests/net: report etf errors correctly
+Date:   Mon, 29 Jun 2020 11:23:54 -0400
+Message-Id: <20200629152523.2494198-90-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -65,59 +65,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Willem de Bruijn <willemb@google.com>
 
-commit 8b04013737341442ed914b336cde866b902664ae upstream.
+[ Upstream commit ca8826095e4d4afc0ccaead27bba6e4b623a12ae ]
 
-If the mirror count changes in the new layout we pick up inside
-ff_layout_pg_init_write(), then we can end up adding the
-request to the wrong mirror and corrupting the mirror->pg_list.
+The ETF qdisc can queue skbs that it could not pace on the errqueue.
 
-Fixes: d600ad1f2bdb ("NFS41: pop some layoutget errors to application")
-Cc: stable@vger.kernel.org
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Address a few issues in the selftest
+
+- recv buffer size was too small, and incorrectly calculated
+- compared errno to ee_code instead of ee_errno
+- missed invalid request error type
+
+v2:
+  - fix a few checkpatch --strict indentation warnings
+
+Fixes: ea6a547669b3 ("selftests/net: make so_txtime more robust to timer variance")
+Signed-off-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/flexfilelayout/flexfilelayout.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ tools/testing/selftests/net/so_txtime.c | 33 +++++++++++++++++++------
+ 1 file changed, 26 insertions(+), 7 deletions(-)
 
-diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
-index 5657b7f2611f1..1741d902b0d8f 100644
---- a/fs/nfs/flexfilelayout/flexfilelayout.c
-+++ b/fs/nfs/flexfilelayout/flexfilelayout.c
-@@ -984,9 +984,8 @@ ff_layout_pg_init_write(struct nfs_pageio_descriptor *pgio,
- 		goto out_mds;
+diff --git a/tools/testing/selftests/net/so_txtime.c b/tools/testing/selftests/net/so_txtime.c
+index 383bac05ac324..ceaad78e96674 100644
+--- a/tools/testing/selftests/net/so_txtime.c
++++ b/tools/testing/selftests/net/so_txtime.c
+@@ -15,8 +15,9 @@
+ #include <inttypes.h>
+ #include <linux/net_tstamp.h>
+ #include <linux/errqueue.h>
++#include <linux/if_ether.h>
+ #include <linux/ipv6.h>
+-#include <linux/tcp.h>
++#include <linux/udp.h>
+ #include <stdbool.h>
+ #include <stdlib.h>
+ #include <stdio.h>
+@@ -140,8 +141,8 @@ static void do_recv_errqueue_timeout(int fdt)
+ {
+ 	char control[CMSG_SPACE(sizeof(struct sock_extended_err)) +
+ 		     CMSG_SPACE(sizeof(struct sockaddr_in6))] = {0};
+-	char data[sizeof(struct ipv6hdr) +
+-		  sizeof(struct tcphdr) + 1];
++	char data[sizeof(struct ethhdr) + sizeof(struct ipv6hdr) +
++		  sizeof(struct udphdr) + 1];
+ 	struct sock_extended_err *err;
+ 	struct msghdr msg = {0};
+ 	struct iovec iov = {0};
+@@ -159,6 +160,8 @@ static void do_recv_errqueue_timeout(int fdt)
+ 	msg.msg_controllen = sizeof(control);
  
- 	/* Use a direct mapping of ds_idx to pgio mirror_idx */
--	if (WARN_ON_ONCE(pgio->pg_mirror_count !=
--	    FF_LAYOUT_MIRROR_COUNT(pgio->pg_lseg)))
--		goto out_mds;
-+	if (pgio->pg_mirror_count != FF_LAYOUT_MIRROR_COUNT(pgio->pg_lseg))
-+		goto out_eagain;
+ 	while (1) {
++		const char *reason;
++
+ 		ret = recvmsg(fdt, &msg, MSG_ERRQUEUE);
+ 		if (ret == -1 && errno == EAGAIN)
+ 			break;
+@@ -176,14 +179,30 @@ static void do_recv_errqueue_timeout(int fdt)
+ 		err = (struct sock_extended_err *)CMSG_DATA(cm);
+ 		if (err->ee_origin != SO_EE_ORIGIN_TXTIME)
+ 			error(1, 0, "errqueue: origin 0x%x\n", err->ee_origin);
+-		if (err->ee_code != ECANCELED)
+-			error(1, 0, "errqueue: code 0x%x\n", err->ee_code);
++
++		switch (err->ee_errno) {
++		case ECANCELED:
++			if (err->ee_code != SO_EE_CODE_TXTIME_MISSED)
++				error(1, 0, "errqueue: unknown ECANCELED %u\n",
++				      err->ee_code);
++			reason = "missed txtime";
++		break;
++		case EINVAL:
++			if (err->ee_code != SO_EE_CODE_TXTIME_INVALID_PARAM)
++				error(1, 0, "errqueue: unknown EINVAL %u\n",
++				      err->ee_code);
++			reason = "invalid txtime";
++		break;
++		default:
++			error(1, 0, "errqueue: errno %u code %u\n",
++			      err->ee_errno, err->ee_code);
++		};
  
- 	for (i = 0; i < pgio->pg_mirror_count; i++) {
- 		mirror = FF_LAYOUT_COMP(pgio->pg_lseg, i);
-@@ -1008,7 +1007,10 @@ ff_layout_pg_init_write(struct nfs_pageio_descriptor *pgio,
- 			(NFS_MOUNT_SOFT|NFS_MOUNT_SOFTERR))
- 		pgio->pg_maxretrans = io_maxretrans;
- 	return;
--
-+out_eagain:
-+	pnfs_generic_pg_cleanup(pgio);
-+	pgio->pg_error = -EAGAIN;
-+	return;
- out_mds:
- 	trace_pnfs_mds_fallback_pg_init_write(pgio->pg_inode,
- 			0, NFS4_MAX_UINT64, IOMODE_RW,
-@@ -1018,6 +1020,7 @@ ff_layout_pg_init_write(struct nfs_pageio_descriptor *pgio,
- 	pgio->pg_lseg = NULL;
- 	pgio->pg_maxretrans = 0;
- 	nfs_pageio_reset_write_mds(pgio);
-+	pgio->pg_error = -EAGAIN;
- }
+ 		tstamp = ((int64_t) err->ee_data) << 32 | err->ee_info;
+ 		tstamp -= (int64_t) glob_tstart;
+ 		tstamp /= 1000 * 1000;
+-		fprintf(stderr, "send: pkt %c at %" PRId64 "ms dropped\n",
+-				data[ret - 1], tstamp);
++		fprintf(stderr, "send: pkt %c at %" PRId64 "ms dropped: %s\n",
++			data[ret - 1], tstamp, reason);
  
- static unsigned int
+ 		msg.msg_flags = 0;
+ 		msg.msg_controllen = sizeof(control);
 -- 
 2.25.1
 
