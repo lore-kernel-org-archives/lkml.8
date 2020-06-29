@@ -2,137 +2,180 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FE2AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:43:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2981C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:43:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4678B2082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:43:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A6912082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:43:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c9p9Gar7"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LEw0pNBj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387514AbgF2Tnc (ORCPT
+        id S2387735AbgF2Tnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:43:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48516 "EHLO
+        Mon, 29 Jun 2020 15:43:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387981AbgF2Tmo (ORCPT
+        with ESMTP id S2387971AbgF2Tmn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:42:44 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C413CC03140F
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 10:15:44 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id a6so17314028wrm.4
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 10:15:44 -0700 (PDT)
+        Mon, 29 Jun 2020 15:42:43 -0400
+Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28E32C02F023
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:54:26 -0700 (PDT)
+Received: by mail-ot1-x343.google.com with SMTP id k15so15728162otp.8
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:54:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LdmyDXtA8EIM1jxYalqYHcGVicYKfXEl1rpwhzYY7yY=;
-        b=c9p9Gar7D2nXzpz2YR/ib39Abgv4y6hEa91cr786gH8hhBcc2XHPgejdMauKVSCXyw
-         EgAsOWswu0yM60MBbUpqEjXeok6FXbZK3cY12YvSpijtvD0BGihf4HyPCLh9I970OF+w
-         78MwbI9PqGOns9VkUov0ZQ9RbuCV+fwXeAcEtPspxUT9Uk7UyYJvZDXRhVlIPAhOgy1r
-         0ebCtAluvcdaAZtdvp/iG7aZAmwyeaGzf8o6royVXgBp6bmZYTZ+EEf7K6vitzPvHvWn
-         wVU1xmaE5kyGW65gr+wCRjIx7La2Aae9t0Re8V+Heu0ZC4EarsLzwXx5hOPENYGaf8DM
-         nFPg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VYgNM/DVHPEkntLU/yBA/5PMKk3x04iIvLdywNiIUKs=;
+        b=LEw0pNBjUt/k5mYtgdQzG5wULzkigu9dhAcGPJCpoSFHN0K3X4S/1RHnb6elfeLSw+
+         XmsQ91PsH5Uc1TvkJ2t4OQq9VXXOekhEpjcwSDTKW7FelGNN7XmJZgaOLhbj/9zLJRZo
+         Ow936VWRX3KPBqjArVUpA99VRCQfp40S5FN3LnUoxN2OCuzL+9JfVA8/xTv3VP1RQQxs
+         K98osvYHYSli8F/gYDCXqvg0Y6ShnrHB51QqyyGY6qAb2QOduVGG7j75RVilj9leqN1V
+         U1p+pWzBaTTsydLyCyIYg55RVcnBaYB5gIRx22uj8HkVz1LKw77dS6jMLUY1SOdUmfEY
+         Ij+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LdmyDXtA8EIM1jxYalqYHcGVicYKfXEl1rpwhzYY7yY=;
-        b=PrGPzt9o5OGEqMKcEQT4O6DvCaufkq6Nhn5vLtGywb0g4oJMqS56T4IUcJNb5sENhm
-         QqVk68ohR6yL4lMsbFnWKD/DpwktTe0Z5Om7DKcI4Mrg0l+6OiXcF313tpG9GjuKnp/i
-         hGcrC4aDovDaqeCTXeO07NhJA47CWpzNgtpf2lXVSOsSEbx0CpVX2gSpVdzfd2LGjc9P
-         E8vkwFAJN09sL6Ek+P9KY4N5Zfd5dQUaw9dEf2GHDPyKmj3DOcc9G9ErIsia8wNcdy/P
-         T62YNYzW1nQNfNNQ315EBH8YZncnBWgZZJ2VVux5v/aTuXlHLOh/TfP2rw8va+Ou07aW
-         O92Q==
-X-Gm-Message-State: AOAM533Cph6rDZCDgz+vgN/kXn1X1oomALLT5FZ/5z75mbMWigtppnKR
-        xjtJFe0aKyilqufWOsgtz72NFA==
-X-Google-Smtp-Source: ABdhPJzs30159xRqcvLpbN8z4ChYHhI0ngFXg57huo/LOl0+OMOWqLHYtRb1FBzKVGwD5ZJ8obYgyw==
-X-Received: by 2002:a5d:66ca:: with SMTP id k10mr7472015wrw.244.1593450943526;
-        Mon, 29 Jun 2020 10:15:43 -0700 (PDT)
-Received: from wychelm.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id g195sm517482wme.38.2020.06.29.10.15.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 10:15:42 -0700 (PDT)
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Jason Wessel <jason.wessel@windriver.com>,
-        Douglas Anderson <dianders@chromium.org>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>, pmladek@suse.com,
-        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        patches@linaro.org
-Subject: [PATCH] kgdb: Resolve races during kgdb_io_register/unregister_module
-Date:   Mon, 29 Jun 2020 18:15:29 +0100
-Message-Id: <20200629171529.558003-1-daniel.thompson@linaro.org>
-X-Mailer: git-send-email 2.25.4
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VYgNM/DVHPEkntLU/yBA/5PMKk3x04iIvLdywNiIUKs=;
+        b=FsBO5ffgJdo6LrzHiaKIWlsj9N3rxlP+113+wEJnwZHkI0XpyuPTZY4PE1SEpDNzFa
+         ibUCIYTqfdkT1pgQ1X4KdCNAQFykJ+OP0S4gjDhD1UpDBkGvGkI2M4wKyg4oaFEoKDYO
+         koCjd0kSrrqZ2uDb9H++gv/NAWubiBf2SxzqyGd9zZkQz9Wlcd3gWqGAM+8OECCGXkPx
+         ZQgZPQeVbK8HwoZ//IacW+tGc4qzYvS/iCCh9fIM1WmjBn7becPZdUGecCRf9bsfOktS
+         GpUUjnk+A1KrG3VOK/a2WyLftzIJ4IUE+x/jpGnZRhgYe93yhUV9hgwjHYNTnrA9YF35
+         Qg3g==
+X-Gm-Message-State: AOAM531po9L1tMm5j09hxQVE7NBynUQRpOQfiDW66sZLJDwJlNkYSyY0
+        STFDTH6wNJ1Vr8oBZs7FYwWCpvcHX8xEy1CTKWG5rA==
+X-Google-Smtp-Source: ABdhPJyckXjh5IRpiR9K6i3vrxLY+tdC2eV4PshSeToL+m0/x/hlaJCCKXsszuWnnIyl5PtD4g1/M53Tp0Oe58zqikU=
+X-Received: by 2002:a9d:638c:: with SMTP id w12mr12713578otk.251.1593442465246;
+ Mon, 29 Jun 2020 07:54:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200624014940.1204448-5-keescook@chromium.org>
+ <202006250240.J1VuMKoC%lkp@intel.com> <202006270840.E0BC752A72@keescook>
+In-Reply-To: <202006270840.E0BC752A72@keescook>
+From:   Marco Elver <elver@google.com>
+Date:   Mon, 29 Jun 2020 16:54:13 +0200
+Message-ID: <CANpmjNMtFbc_jQU6iNfNx-4wwQF4DY3uaOB1dCPZ3dMqXx6smg@mail.gmail.com>
+Subject: Re: [PATCH v3 4/9] x86/build: Warn on orphan section placement
+To:     Kees Cook <keescook@chromium.org>
+Cc:     kernel test robot <lkp@intel.com>, kbuild-all@lists.01.org,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        kasan-dev <kasan-dev@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently kgdb_register_callbacks() and kgdb_unregister_callbacks()
-are called outside the scope of the kgdb_registration_lock. This
-allows them to race with each other. This could do all sorts of crazy
-things up to and including dbg_io_ops becoming NULL partway through the
-execution of the kgdb trap handler (which isn't allowed and would be
-fatal).
+On Sat, 27 Jun 2020 at 17:44, Kees Cook <keescook@chromium.org> wrote:
+>
+> On Thu, Jun 25, 2020 at 02:36:27AM +0800, kernel test robot wrote:
+> > I love your patch! Perhaps something to improve:
+> > [...]
+> > config: x86_64-randconfig-a012-20200624 (attached as .config)
+>
+> CONFIG_KCSAN=y
+>
+> > compiler: clang version 11.0.0 (https://github.com/llvm/llvm-project 1d4c87335d5236ea1f35937e1014980ba961ae34)
+> > [...]
+> > All warnings (new ones prefixed by >>):
+> >
+> >    ld.lld: warning: drivers/built-in.a(mfd/mt6397-irq.o):(.init_array.0) is being placed in '.init_array.0'
+>
+> As far as I can tell, this is a Clang bug. But I don't know the
+> internals here, so I've opened:
+> https://bugs.llvm.org/show_bug.cgi?id=46478
+>
+> and created a work-around patch for the kernel:
 
-Fix this by bringing the trap handler setup and teardown into the scope
-of the registration lock.
+Thanks, minor comments below.
 
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
----
- kernel/debug/debug_core.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+With KCSAN this is:
 
-diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
-index 9e5934780f41..9799f2c6dc94 100644
---- a/kernel/debug/debug_core.c
-+++ b/kernel/debug/debug_core.c
-@@ -1117,9 +1117,8 @@ int kgdb_register_io_module(struct kgdb_io *new_dbg_io_ops)
+Tested-by: Marco Elver <elver@google.com>
 
- 	dbg_io_ops = new_dbg_io_ops;
 
--	spin_unlock(&kgdb_registration_lock);
--
- 	if (old_dbg_io_ops) {
-+		spin_unlock(&kgdb_registration_lock);
- 		old_dbg_io_ops->deinit();
- 		return 0;
- 	}
-@@ -1129,6 +1128,8 @@ int kgdb_register_io_module(struct kgdb_io *new_dbg_io_ops)
- 	/* Arm KGDB now. */
- 	kgdb_register_callbacks();
+> commit 915f2c343e59a14f00c68f4d7afcfdc621de0674
+> Author: Kees Cook <keescook@chromium.org>
+> Date:   Sat Jun 27 08:07:54 2020 -0700
+>
+>     vmlinux.lds.h: Avoid KCSAN's unwanted sections
 
-+	spin_unlock(&kgdb_registration_lock);
-+
- 	if (kgdb_break_asap &&
- 	    (!dbg_is_early || IS_ENABLED(CONFIG_ARCH_HAS_EARLY_DEBUG)))
- 		kgdb_initial_breakpoint();
-@@ -1147,13 +1148,14 @@ void kgdb_unregister_io_module(struct kgdb_io *old_dbg_io_ops)
- {
- 	BUG_ON(kgdb_connected);
+Since you found that it's also KASAN, this probably wants updating.
 
-+	spin_lock(&kgdb_registration_lock);
-+
- 	/*
- 	 * KGDB is no longer able to communicate out, so
- 	 * unregister our callbacks and reset state.
- 	 */
- 	kgdb_unregister_callbacks();
+>     KCSAN (-fsanitize=thread) produces unwanted[1] .eh_frame and .init_array.*
+>     sections. Add them to DISCARDS, except with CONFIG_CONSTRUCTORS, which
+>     wants to keep .init_array.* sections.
+>
+>     [1] https://bugs.llvm.org/show_bug.cgi?id=46478
+>
+>     Signed-off-by: Kees Cook <keescook@chromium.org>
+>
+> diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+> index f8a5b2333729..41c8c73de6c4 100644
+> --- a/arch/x86/Makefile
+> +++ b/arch/x86/Makefile
+> @@ -195,7 +195,9 @@ endif
+>  # Workaround for a gcc prelease that unfortunately was shipped in a suse release
+>  KBUILD_CFLAGS += -Wno-sign-compare
+>  #
+> -KBUILD_CFLAGS += -fno-asynchronous-unwind-tables
+> +KBUILD_AFLAGS += -fno-asynchronous-unwind-tables -fno-unwind-tables
+> +KBUILD_CFLAGS += -fno-asynchronous-unwind-tables -fno-unwind-tables
+> +KBUILD_LDFLAGS += $(call ld-option,--no-ld-generated-unwind-info)
 
--	spin_lock(&kgdb_registration_lock);
+Why are they needed? They are not mentioned in the commit message.
 
- 	WARN_ON_ONCE(dbg_io_ops != old_dbg_io_ops);
- 	dbg_io_ops = NULL;
+>  # Avoid indirect branches in kernel to deal with Spectre
+>  ifdef CONFIG_RETPOLINE
+> diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+> index b1dca0762fc5..a44ee16abc78 100644
+> --- a/include/asm-generic/vmlinux.lds.h
+> +++ b/include/asm-generic/vmlinux.lds.h
+> @@ -934,10 +934,28 @@
+>         EXIT_DATA
+>  #endif
+>
+> +/*
+> + * Clang's -fsanitize=thread produces unwanted sections (.eh_frame
+> + * and .init_array.*), but CONFIG_CONSTRUCTORS wants to keep any
+> + * .init_array.* sections.
+> + * https://bugs.llvm.org/show_bug.cgi?id=46478
+> + */
+> +#if defined(CONFIG_KCSAN) && !defined(CONFIG_CONSTRUCTORS)
 
-base-commit: 9ebcfadb0610322ac537dd7aa5d9cbc2b2894c68
---
-2.25.4
+CONFIG_KASAN as well?
 
+> +#define KCSAN_DISCARDS                                                 \
+> +       *(.init_array) *(.init_array.*)                                 \
+> +       *(.eh_frame)
+> +#elif defined(CONFIG_KCSAN) && defined(CONFIG_CONSTRUCTORS)
+> +#define KCSAN_DISCARDS                                                 \
+> +       *(.eh_frame)
+> +#else
+> +#define KCSAN_DISCARDS
+> +#endif
+> +
+>  #define DISCARDS                                                       \
+>         /DISCARD/ : {                                                   \
+>         EXIT_DISCARDS                                                   \
+>         EXIT_CALL                                                       \
+> +       KCSAN_DISCARDS                                                  \
+
+Maybe just 'SANITIZER_DISCARDS'?
+
+>         *(.discard)                                                     \
+>         *(.discard.*)                                                   \
+>         *(.modinfo)                                                     \
+>
+> --
+> Kees Cook
