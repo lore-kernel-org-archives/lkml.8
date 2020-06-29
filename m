@@ -2,98 +2,128 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39971C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:54:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02DD4C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 121AA206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D247320663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:54:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FTyujLIN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M1hIH6mF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388098AbgF2Uyh (ORCPT
+        id S2389417AbgF2Uyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:54:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43376 "EHLO
+        Mon, 29 Jun 2020 16:54:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731313AbgF2TNT (ORCPT
+        with ESMTP id S1731274AbgF2TNS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:13:19 -0400
-Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC3DBC030F2B;
-        Mon, 29 Jun 2020 09:44:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=oWEN2HrEZzshPalh9h22/5jMAlzNjCxPZcOlTdfCeRk=; b=FTyujLINoEFwJfBDDiZffiOYsS
-        BOZP0lNNqNQYgm81MQzrN1dTB2zSgzMXpMKBMzAKqBNSUZjhWXDFzD5ix5SK/nr78EDMCww3KCtYB
-        FVZUrBmG/cFO4/WkHupIYCl2+9csBo+VKzxgGjSUHP5Hl7/tiAh/Rt6pXem1fYakk7QoB7Y5Lr0Bt
-        0f3Aip0bm2DWmWmW+X3rbSponeDdqXM8GfhOQVcue2706h9IT/uj1yo/G4cNfkKlcYRcA9KnQnkvB
-        ++WwoWBDi12ybggpNRY2O1AVJGlouzsl1v5yyiS/nOpk7i4e6bQDZlDQN+onRwDuINNv4lY0WR85S
-        c8vgyHMw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jpwsu-00016O-1q; Mon, 29 Jun 2020 16:43:56 +0000
-To:     LKML <linux-kernel@vger.kernel.org>,
-        "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     devicetree@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-arm-msm@vger.kernel.org
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH -next] <linux/of.h>: add stub for of_get_next_parent() to fix
- qcom build error
-Message-ID: <ce0d7561-ff93-d267-b57a-6505014c728c@infradead.org>
-Date:   Mon, 29 Jun 2020 09:43:52 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 29 Jun 2020 15:13:18 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C19E8C0A8935;
+        Mon, 29 Jun 2020 00:37:29 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id u8so7398778pje.4;
+        Mon, 29 Jun 2020 00:37:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=wNBasksRn6HqqFy9YNin3k0xj1oUFrdl5Lr5u3FSELQ=;
+        b=M1hIH6mFmORSCGE86XorMiBP7P08Gf4iZf58OyrKtzhu/cv2OISPl0WAHowytkfrXb
+         Dxtp9KEV+JThYTPWvaCa029Z+U7sItPFnlKrjYO+P7uwh/rTbA4R4HTUSv5AlaBsq51O
+         k8PDB3rzBRmgXTeZ8DdA/U/csAwKlTqGKtV4Y4qJkujlyGSF63nQAmcrkA61IBbPlvXI
+         leqBFDNv9s7LvFlq4dGOdA+uUpzsrcRl36VOzX57aTt6Smf7gdRwvxKPLW1qT9TnG3Ds
+         WZuuLNR/i/9WGDTcE6PYFhdE5tX2xgAWxR53fnb1MLYIY9J+qFyGGcOgglFfMOV/dy2n
+         aiOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=wNBasksRn6HqqFy9YNin3k0xj1oUFrdl5Lr5u3FSELQ=;
+        b=uLmZM2xmd8pI7EBLW6+W6OYYbW5pUqH8SuWUT6rwp8dn/Lb/XwIyJXqIcubYh0o0ve
+         SPA7GwntPsPDTHG99myZnFH3XYhkwebeY0Jxx8mQprWpLYeDe3x7TfeEibB+9FGgiari
+         Fcw/uu1NsqqF3jXN3enC5+SNA9DPhaTtTtJVoac2tjWOTWn9oGzv25ghrIj266yjUxwM
+         t+fVKwieAnWUWLeVNrrNS9xtatpOZyPrKt5nN9ImIrJf1GPtUTg6t9S9P1j2+QhGIzg0
+         MOpgUdO33Z9y1JFm6lB+BLOfFCkgHjSvW5aP+/B9a8iOGtAdxvm9XO1dhW4cW1RPgg4k
+         B1Jw==
+X-Gm-Message-State: AOAM5311QgMKiE28XauWmZ3uZw4mbsdJsK5c4JrIffcs7kUBIlyBDHv/
+        P8ZMe6dRRfsRoPhMHKTJmmk=
+X-Google-Smtp-Source: ABdhPJw5JV6v034J4F08OVzJgY5QNT872fYtNd1w2ulu2+H64M023gpnMHfQNOtSd3meU2msqry31Q==
+X-Received: by 2002:a17:902:54f:: with SMTP id 73mr12020846plf.76.1593416249351;
+        Mon, 29 Jun 2020 00:37:29 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.153.57])
+        by smtp.gmail.com with ESMTPSA id q10sm34673004pfk.86.2020.06.29.00.37.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 00:37:28 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+Subject: [PATCH v1 2/6] [media] cx23885: use generic power management
+Date:   Mon, 29 Jun 2020 13:06:00 +0530
+Message-Id: <20200629073604.205478-3-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200629073604.205478-1-vaibhavgupta40@gmail.com>
+References: <20200629073604.205478-1-vaibhavgupta40@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+The .suspend() and .resume() callbacks are not defined for this driver.
+Still, their power managemgement stucture can be easily upgraded to
+gemeric, without affecting its normal behaviour.
 
-Fix a (COMPILE_TEST) build error when CONFIG_OF is not set/enabled
-by adding a stub for of_get_next_parent().
+Hence, define them NULL and use struct dev_pm_ops type to bind them.
 
-../drivers/soc/qcom/qcom-geni-se.c:819:11: error: implicit declaration of function 'of_get_next_parent'; did you mean 'of_get_parent'? [-Werror=implicit-function-declaration]
-../drivers/soc/qcom/qcom-geni-se.c:819:9: warning: assignment makes pointer from integer without a cast [-Wint-conversion]
+Compile-tested only.
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: devicetree@vger.kernel.org
-Cc: Andy Gross <agross@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
 ---
- include/linux/of.h |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/media/pci/cx23885/cx23885-core.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
---- linux-next-20200629.orig/include/linux/of.h
-+++ linux-next-20200629/include/linux/of.h
-@@ -630,6 +630,11 @@ static inline struct device_node *of_get
- 	return NULL;
- }
+diff --git a/drivers/media/pci/cx23885/cx23885-core.c b/drivers/media/pci/cx23885/cx23885-core.c
+index 7e0b0b7cc2a3..da9ee7270dfd 100644
+--- a/drivers/media/pci/cx23885/cx23885-core.c
++++ b/drivers/media/pci/cx23885/cx23885-core.c
+@@ -2230,14 +2230,18 @@ static const struct pci_device_id cx23885_pci_tbl[] = {
+ };
+ MODULE_DEVICE_TABLE(pci, cx23885_pci_tbl);
  
-+static inline struct device_node *of_get_next_parent(struct device_node *node)
-+{
-+	return NULL;
-+}
++#define cx23885_suspend NULL
++#define cx23885_resume NULL
 +
- static inline struct device_node *of_get_next_child(
- 	const struct device_node *node, struct device_node *prev)
- {
-
++static SIMPLE_DEV_PM_OPS(cx23885_pm_ops, cx23885_suspend, cx23885_resume);
++
+ static struct pci_driver cx23885_pci_driver = {
+-	.name     = "cx23885",
+-	.id_table = cx23885_pci_tbl,
+-	.probe    = cx23885_initdev,
+-	.remove   = cx23885_finidev,
++	.name      = "cx23885",
++	.id_table  = cx23885_pci_tbl,
++	.probe     = cx23885_initdev,
++	.remove    = cx23885_finidev,
+ 	/* TODO */
+-	.suspend  = NULL,
+-	.resume   = NULL,
++	.driver.pm = &cx23885_pm_ops,
+ };
+ 
+ static int __init cx23885_init(void)
+-- 
+2.27.0
 
