@@ -2,317 +2,246 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FD57C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B640DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 381D72067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:29:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593458999;
-	bh=3QShgetPmaxyjM42Gp2UHiQI2b9/XOK9DJZv1HeZ4kI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cn/YBtN7Hgjui005BVSXVp33gYL4rHvIWG9blLSl/8B7LnW37BCZwKm/+SHxPn/xF
-	 C4o3sXXaHOO3nhQljBsl167ViISJyRMcNSsrkcu7UEWg2Ev9puZf2zPmzz4WRzmh3b
-	 oV/v48hyMJ7Vk/Zkb2i3noGyGLkZDNgEaz/sKwx4=
+	by mail.kernel.org (Postfix) with ESMTP id 98A1D2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:30:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729188AbgF2T35 (ORCPT
+        id S1732751AbgF2TaF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:29:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37016 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:30:05 -0400
+Received: from foss.arm.com ([217.140.110.172]:40664 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732648AbgF2TZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:25:42 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF018253EF;
-        Mon, 29 Jun 2020 15:42:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445333;
-        bh=3QShgetPmaxyjM42Gp2UHiQI2b9/XOK9DJZv1HeZ4kI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vfnFE3yD+dnLm1MgRJWuDFgjVAPTFDin+Gn5VMv72THuT8DVxcsboHA2enHD5SzlA
-         Kn9H2hGhXcIoys8zzSpXY3GhTq8ZAcXFLzZ5H19ao6qOZMU2dOQfhXRTDgNs2JSIN/
-         7CHsNzhlMoHIggQ7qrYn6XldO/0trqUPgt8P1DiI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiri Olsa <jolsa@redhat.com>, Ingo Molnar <mingo@kernel.org>,
-        "Gustavo A . R . Silva" <gustavoars@kernel.org>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        David Miller <davem@davemloft.net>,
-        Ingo Molnar <mingo@elte.hu>,
+        id S1730063AbgF2T34 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:29:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 22FB9147A;
+        Mon, 29 Jun 2020 05:21:53 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 794443F73C;
+        Mon, 29 Jun 2020 05:21:51 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 13:21:49 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Patrick Bellasi <patrick.bellasi@matbug.net>
+Cc:     Ingo Molnar <mingo@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        "Ziqian SUN (Zamir)" <zsun@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 095/191] kretprobe: Prevent triggering kretprobe from within kprobe_flush_task
-Date:   Mon, 29 Jun 2020 11:38:31 -0400
-Message-Id: <20200629154007.2495120-96-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
-References: <20200629154007.2495120-1-sashal@kernel.org>
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Chris Redpath <chris.redpath@arm.com>,
+        Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] sched/uclamp: Protect uclamp fast path code with
+ static key
+Message-ID: <20200629122148.klgi4mi3znhnzaf7@e107158-lin.cambridge.arm.com>
+References: <20200625154352.24767-1-qais.yousef@arm.com>
+ <20200625154352.24767-3-qais.yousef@arm.com>
+ <87bll6ngrr.derkling@matbug.net>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.229-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.9.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.9.229-rc1
-X-KernelTest-Deadline: 2020-07-01T15:39+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <87bll6ngrr.derkling@matbug.net>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@redhat.com>
+On 06/26/20 14:38, Patrick Bellasi wrote:
+> 
+> On Thu, Jun 25, 2020 at 17:43:52 +0200, Qais Yousef <qais.yousef@arm.com> wrote...
+> 
+> [...]
+> 
+> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> > index 235b2cae00a0..e2f1fffa013c 100644
+> > --- a/kernel/sched/core.c
+> > +++ b/kernel/sched/core.c
+> > @@ -794,6 +794,25 @@ unsigned int sysctl_sched_uclamp_util_max = SCHED_CAPACITY_SCALE;
+> >  /* All clamps are required to be less or equal than these values */
+> >  static struct uclamp_se uclamp_default[UCLAMP_CNT];
+> >  
+> > +/*
+> > + * This static key is used to reduce the uclamp overhead in the fast path. It
+> > + * only disables the call to uclamp_rq_{inc, dec}() in enqueue/dequeue_task().
+> > + *
+> > + * This allows users to continue to enable uclamp in their kernel config with
+> > + * minimum uclamp overhead in the fast path.
+> > + *
+> > + * As soon as userspace modifies any of the uclamp knobs, the static key is
+> > + * enabled, since we have an actual users that make use of uclamp
+> > + * functionality.
+> > + *
+> > + * The knobs that would enable this static key are:
+> > + *
+> > + *   * A task modifying its uclamp value with sched_setattr().
+> > + *   * An admin modifying the sysctl_sched_uclamp_{min, max} via procfs.
+> > + *   * An admin modifying the cgroup cpu.uclamp.{min, max}
+> > + */
+> > +static DEFINE_STATIC_KEY_FALSE(sched_uclamp_used);
+> 
+> This is me being choosy, but given that:
 
-[ Upstream commit 9b38cc704e844e41d9cf74e647bff1d249512cb3 ]
+ulcamp_enabled is already used. And technically uclamp is enabled but not used
+here. We can use active too, but I prefer this term as it refers to userspace
+opting in using util clamp.
 
-Ziqian reported lockup when adding retprobe on _raw_spin_lock_irqsave.
-My test was also able to trigger lockdep output:
+> 
+> ---8<---
+> % grep -e '_used[ )]' fair.c core.c
+> fair.c:	return static_key_false(&__cfs_bandwidth_used);
+> fair.c:	static_key_slow_inc_cpuslocked(&__cfs_bandwidth_used);
+> fair.c:	static_key_slow_dec_cpuslocked(&__cfs_bandwidth_used);
+> 
+> % grep -e '_enabled[ )]' fair.c core.c
+> fair.c:	if (!cfs_bandwidth_used() || !cfs_rq->runtime_enabled)
+> fair.c:	if (!cfs_rq->runtime_enabled || cfs_rq->nr_running)
+> fair.c:	if (!cfs_rq->runtime_enabled || cfs_rq->curr)
+> fair.c:	if (likely(!cfs_rq->runtime_enabled || cfs_rq->runtime_remaining > 0))
+> fair.c:	cfs_rq->runtime_enabled = 0;
+> fair.c:		cfs_rq->runtime_enabled = cfs_b->quota != RUNTIME_INF;
+> fair.c:		if (!cfs_rq->runtime_enabled)
+> fair.c:		cfs_rq->runtime_enabled = 0;
+> core.c:	if (static_key_false((&paravirt_steal_rq_enabled))) {
+> core.c:	if (unlikely(!p->sched_class->uclamp_enabled))
+> core.c:	if (unlikely(!p->sched_class->uclamp_enabled))
+> core.c:	 * Prevent race between setting of cfs_rq->runtime_enabled and
+> core.c:	runtime_enabled = quota != RUNTIME_INF;
+> core.c:	runtime_was_enabled = cfs_b->quota != RUNTIME_INF;
+> core.c:	if (runtime_enabled && !runtime_was_enabled)
+> core.c:	if (runtime_enabled)
+> core.c:		cfs_rq->runtime_enabled = runtime_enabled;
+> core.c:	if (runtime_was_enabled && !runtime_enabled)
+> ---8<---
+> 
+> even just for consistency shake, I would still prefer sched_uclamp_enabled for
+> the static key name.
+> 
+> > +
+> >  /* Integer rounded range for each bucket */
+> >  #define UCLAMP_BUCKET_DELTA DIV_ROUND_CLOSEST(SCHED_CAPACITY_SCALE, UCLAMP_BUCKETS)
+> >  
+> > @@ -994,9 +1013,16 @@ static inline void uclamp_rq_dec_id(struct rq *rq, struct task_struct *p,
+> >  	lockdep_assert_held(&rq->lock);
+> >  
+> >  	bucket = &uc_rq->bucket[uc_se->bucket_id];
+> > -	SCHED_WARN_ON(!bucket->tasks);
+> > -	if (likely(bucket->tasks))
+> > -		bucket->tasks--;
+> > +
+> > +	/*
+> > +	 * This could happen if sched_uclamp_used was enabled while the
+> > +	 * current task was running, hence we could end up with unbalanced call
+> > +	 * to uclamp_rq_dec_id().
+> > +	 */
+> > +	if (unlikely(!bucket->tasks))
+> > +		return;
+> > +
+> > +	bucket->tasks--;
+> >  	uc_se->active = false;
+> 
+> In this chunk you are indeed changing the code.
+> 
+> Are we sure there are not issues with patterns like:
+> 
+>   enqueue(taskA)
+>   // uclamp gets enabled
+>   enqueue(taskB)
+>   dequeue(taskA)
+>   // bucket->tasks is now 0
+>   dequeue(taskB)
 
- ============================================
- WARNING: possible recursive locking detected
- 5.6.0-rc6+ #6 Not tainted
- --------------------------------------------
- sched-messaging/2767 is trying to acquire lock:
- ffffffff9a492798 (&(kretprobe_table_locks[i].lock)){-.-.}, at: kretprobe_hash_lock+0x52/0xa0
+Hmm I don't know to be honest if this ordering problem could happen.
 
- but task is already holding lock:
- ffffffff9a491a18 (&(kretprobe_table_locks[i].lock)){-.-.}, at: kretprobe_trampoline+0x0/0x50
+> 
+> TaskB has been enqueued with with uclamp enabled, thus it
+> has got uc_se->active=True and enforced its clamp value at RQ level.
+> 
+> But with your change above we don't reset that anymore.
+> 
+> As per my previous proposal: why not just removing the SCHED_WARN_ON?
+> That's the only real problem in the code above, since now we are not
+> more granted to have balanced inc/dec.
 
- other info that might help us debug this:
-  Possible unsafe locking scenario:
+Yeah I agree. I'll re-instate it and add a comment of this ordering issue too.
 
-        CPU0
-        ----
-   lock(&(kretprobe_table_locks[i].lock));
-   lock(&(kretprobe_table_locks[i].lock));
+> 
+> [...]
+> 
+> > +bool uclamp_is_enabled(void)
+> > +{
+> > +	return static_branch_likely(&sched_uclamp_used);
+> > +}
+> > +
+> 
+> The above and the following changes are not necessary if we just
+> add the guards at the beginning of uclamp_rq_util_with() instead of what
+> you do in PATCH1.
 
-  *** DEADLOCK ***
+I addressed that in patch 1 and hopefully my reasoning made sense of why we
+can't do what you're suggesting in uclamp_rq_util_with().
 
-  May be due to missing lock nesting notation
+> 
+> I think this will give better overheads removal by avoiding not
+> necessary min/max clamps for both RT and CFS.
 
- 1 lock held by sched-messaging/2767:
-  #0: ffffffff9a491a18 (&(kretprobe_table_locks[i].lock)){-.-.}, at: kretprobe_trampoline+0x0/0x50
+As I stated earlier, uclamp_rq_util_with() is called from schedutil_cpu_util()
+and find_energy_efficient_cpu(). I don't think it's an overhead if they continue
+to call it since it'll not break correctness and speed is not an issue.
 
- stack backtrace:
- CPU: 3 PID: 2767 Comm: sched-messaging Not tainted 5.6.0-rc6+ #6
- Call Trace:
-  dump_stack+0x96/0xe0
-  __lock_acquire.cold.57+0x173/0x2b7
-  ? native_queued_spin_lock_slowpath+0x42b/0x9e0
-  ? lockdep_hardirqs_on+0x590/0x590
-  ? __lock_acquire+0xf63/0x4030
-  lock_acquire+0x15a/0x3d0
-  ? kretprobe_hash_lock+0x52/0xa0
-  _raw_spin_lock_irqsave+0x36/0x70
-  ? kretprobe_hash_lock+0x52/0xa0
-  kretprobe_hash_lock+0x52/0xa0
-  trampoline_handler+0xf8/0x940
-  ? kprobe_fault_handler+0x380/0x380
-  ? find_held_lock+0x3a/0x1c0
-  kretprobe_trampoline+0x25/0x50
-  ? lock_acquired+0x392/0xbc0
-  ? _raw_spin_lock_irqsave+0x50/0x70
-  ? __get_valid_kprobe+0x1f0/0x1f0
-  ? _raw_spin_unlock_irqrestore+0x3b/0x40
-  ? finish_task_switch+0x4b9/0x6d0
-  ? __switch_to_asm+0x34/0x70
-  ? __switch_to_asm+0x40/0x70
+But as I think this could be potential cause of confusion at least. I'll add
+a comment there and probably make it return early so it's more readable and
+future proof.
 
-The code within the kretprobe handler checks for probe reentrancy,
-so we won't trigger any _raw_spin_lock_irqsave probe in there.
+Thanks
 
-The problem is in outside kprobe_flush_task, where we call:
+--
+Qais Yousef
 
-  kprobe_flush_task
-    kretprobe_table_lock
-      raw_spin_lock_irqsave
-        _raw_spin_lock_irqsave
-
-where _raw_spin_lock_irqsave triggers the kretprobe and installs
-kretprobe_trampoline handler on _raw_spin_lock_irqsave return.
-
-The kretprobe_trampoline handler is then executed with already
-locked kretprobe_table_locks, and first thing it does is to
-lock kretprobe_table_locks ;-) the whole lockup path like:
-
-  kprobe_flush_task
-    kretprobe_table_lock
-      raw_spin_lock_irqsave
-        _raw_spin_lock_irqsave ---> probe triggered, kretprobe_trampoline installed
-
-        ---> kretprobe_table_locks locked
-
-        kretprobe_trampoline
-          trampoline_handler
-            kretprobe_hash_lock(current, &head, &flags);  <--- deadlock
-
-Adding kprobe_busy_begin/end helpers that mark code with fake
-probe installed to prevent triggering of another kprobe within
-this code.
-
-Using these helpers in kprobe_flush_task, so the probe recursion
-protection check is hit and the probe is never set to prevent
-above lockup.
-
-Link: http://lkml.kernel.org/r/158927059835.27680.7011202830041561604.stgit@devnote2
-
-Fixes: ef53d9c5e4da ("kprobes: improve kretprobe scalability with hashed locking")
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: "Gustavo A . R . Silva" <gustavoars@kernel.org>
-Cc: Anders Roxell <anders.roxell@linaro.org>
-Cc: "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>
-Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-Cc: David Miller <davem@davemloft.net>
-Cc: Ingo Molnar <mingo@elte.hu>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: stable@vger.kernel.org
-Reported-by: "Ziqian SUN (Zamir)" <zsun@redhat.com>
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/kernel/kprobes/core.c | 16 +++-------------
- include/linux/kprobes.h        |  4 ++++
- kernel/kprobes.c               | 24 ++++++++++++++++++++++++
- 3 files changed, 31 insertions(+), 13 deletions(-)
-
-diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
-index 118f66a609ced..86aec286e4f22 100644
---- a/arch/x86/kernel/kprobes/core.c
-+++ b/arch/x86/kernel/kprobes/core.c
-@@ -740,16 +740,11 @@ asm(
- NOKPROBE_SYMBOL(kretprobe_trampoline);
- STACK_FRAME_NON_STANDARD(kretprobe_trampoline);
- 
--static struct kprobe kretprobe_kprobe = {
--	.addr = (void *)kretprobe_trampoline,
--};
--
- /*
-  * Called from kretprobe_trampoline
-  */
- __visible __used void *trampoline_handler(struct pt_regs *regs)
- {
--	struct kprobe_ctlblk *kcb;
- 	struct kretprobe_instance *ri = NULL;
- 	struct hlist_head *head, empty_rp;
- 	struct hlist_node *tmp;
-@@ -759,16 +754,12 @@ __visible __used void *trampoline_handler(struct pt_regs *regs)
- 	void *frame_pointer;
- 	bool skipped = false;
- 
--	preempt_disable();
--
- 	/*
- 	 * Set a dummy kprobe for avoiding kretprobe recursion.
- 	 * Since kretprobe never run in kprobe handler, kprobe must not
- 	 * be running at this point.
- 	 */
--	kcb = get_kprobe_ctlblk();
--	__this_cpu_write(current_kprobe, &kretprobe_kprobe);
--	kcb->kprobe_status = KPROBE_HIT_ACTIVE;
-+	kprobe_busy_begin();
- 
- 	INIT_HLIST_HEAD(&empty_rp);
- 	kretprobe_hash_lock(current, &head, &flags);
-@@ -847,7 +838,7 @@ __visible __used void *trampoline_handler(struct pt_regs *regs)
- 			__this_cpu_write(current_kprobe, &ri->rp->kp);
- 			ri->ret_addr = correct_ret_addr;
- 			ri->rp->handler(ri, regs);
--			__this_cpu_write(current_kprobe, &kretprobe_kprobe);
-+			__this_cpu_write(current_kprobe, &kprobe_busy);
- 		}
- 
- 		recycle_rp_inst(ri, &empty_rp);
-@@ -863,8 +854,7 @@ __visible __used void *trampoline_handler(struct pt_regs *regs)
- 
- 	kretprobe_hash_unlock(current, &flags);
- 
--	__this_cpu_write(current_kprobe, NULL);
--	preempt_enable();
-+	kprobe_busy_end();
- 
- 	hlist_for_each_entry_safe(ri, tmp, &empty_rp, hlist) {
- 		hlist_del(&ri->hlist);
-diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
-index cb527c78de9fd..4db62045f01ae 100644
---- a/include/linux/kprobes.h
-+++ b/include/linux/kprobes.h
-@@ -366,6 +366,10 @@ static inline struct kprobe_ctlblk *get_kprobe_ctlblk(void)
- 	return this_cpu_ptr(&kprobe_ctlblk);
- }
- 
-+extern struct kprobe kprobe_busy;
-+void kprobe_busy_begin(void);
-+void kprobe_busy_end(void);
-+
- int register_kprobe(struct kprobe *p);
- void unregister_kprobe(struct kprobe *p);
- int register_kprobes(struct kprobe **kps, int num);
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 3db9cf412996c..a864e94ecb6b6 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -1150,6 +1150,26 @@ __releases(hlist_lock)
- }
- NOKPROBE_SYMBOL(kretprobe_table_unlock);
- 
-+struct kprobe kprobe_busy = {
-+	.addr = (void *) get_kprobe,
-+};
-+
-+void kprobe_busy_begin(void)
-+{
-+	struct kprobe_ctlblk *kcb;
-+
-+	preempt_disable();
-+	__this_cpu_write(current_kprobe, &kprobe_busy);
-+	kcb = get_kprobe_ctlblk();
-+	kcb->kprobe_status = KPROBE_HIT_ACTIVE;
-+}
-+
-+void kprobe_busy_end(void)
-+{
-+	__this_cpu_write(current_kprobe, NULL);
-+	preempt_enable();
-+}
-+
- /*
-  * This function is called from finish_task_switch when task tk becomes dead,
-  * so that we can recycle any function-return probe instances associated
-@@ -1167,6 +1187,8 @@ void kprobe_flush_task(struct task_struct *tk)
- 		/* Early boot.  kretprobe_table_locks not yet initialized. */
- 		return;
- 
-+	kprobe_busy_begin();
-+
- 	INIT_HLIST_HEAD(&empty_rp);
- 	hash = hash_ptr(tk, KPROBE_HASH_BITS);
- 	head = &kretprobe_inst_table[hash];
-@@ -1180,6 +1202,8 @@ void kprobe_flush_task(struct task_struct *tk)
- 		hlist_del(&ri->hlist);
- 		kfree(ri);
- 	}
-+
-+	kprobe_busy_end();
- }
- NOKPROBE_SYMBOL(kprobe_flush_task);
- 
--- 
-2.25.1
-
+>   
+> > diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+> > index 7fbaee24c824..3f4e296ccb67 100644
+> > --- a/kernel/sched/cpufreq_schedutil.c
+> > +++ b/kernel/sched/cpufreq_schedutil.c
+> > @@ -210,7 +210,7 @@ unsigned long schedutil_cpu_util(int cpu, unsigned long util_cfs,
+> >  	unsigned long dl_util, util, irq;
+> >  	struct rq *rq = cpu_rq(cpu);
+> >  
+> > -	if (!IS_BUILTIN(CONFIG_UCLAMP_TASK) &&
+> > +	if (!uclamp_is_enabled() &&
+> >  	    type == FREQUENCY_UTIL && rt_rq_is_runnable(&rq->rt)) {
+> >  		return max;
+> >  	}
+> > diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+> > index 1d4e94c1e5fe..aff5430331e4 100644
+> > --- a/kernel/sched/sched.h
+> > +++ b/kernel/sched/sched.h
+> > @@ -2371,6 +2371,8 @@ unsigned long uclamp_rq_util_with(struct rq *rq, unsigned long util,
+> >  
+> >  	return clamp(util, min_util, max_util);
+> >  }
+> > +
+> > +bool uclamp_is_enabled(void);
+> >  #else /* CONFIG_UCLAMP_TASK */
+> >  static inline
+> >  unsigned long uclamp_rq_util_with(struct rq *rq, unsigned long util,
+> > @@ -2378,6 +2380,11 @@ unsigned long uclamp_rq_util_with(struct rq *rq, unsigned long util,
+> >  {
+> >  	return util;
+> >  }
+> > +
+> > +static inline bool uclamp_is_enabled(void)
+> > +{
+> > +	return false;
+> > +}
+> >  #endif /* CONFIG_UCLAMP_TASK */
+> >  
+> >  #ifdef arch_scale_freq_capacity
+> 
