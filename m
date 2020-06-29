@@ -2,2507 +2,1319 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F22DEC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DB7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CB5C204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:50:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="Gbzmnjfy"
+	by mail.kernel.org (Postfix) with ESMTP id 33A9B204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:50:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729020AbgF2Sue (ORCPT
+        id S1729538AbgF2Suj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:50:34 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:29314 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729516AbgF2Su2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:50:28 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05TB5ghk029788;
-        Mon, 29 Jun 2020 04:06:07 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=pfpt0818;
- bh=Wk7kD1RtWeOsEHl4LzDnHOJsTJ+WLB5spv8+Fh2XMK0=;
- b=Gbzmnjfy86kMp0tj8yZiw1J2iuYt4KHs251yYbv5M4IRVjbUOi4OJTft0JiOTs0eDDDd
- 9g8//yyd4wSdhwJ3+jDOOXseWk9iLWiC0jjGeJxJKeP7hoN4rgjxBLHoWuIefJaER6wH
- tFbBq1lLuCp+Ie9FEwUQzBv9SJVGpSn+Ux476UQcPHoaQBz4WNIB9M9SJFHt64KYzw2C
- hK/dwx9vke4pfTFSUXbimeAxi+3M9+Rmi9N35QccMQNn+A5cbijlpl/m9Hkz+r9FJ3vj
- BD4gmrhrBLp2ME6qOJPpJ/fYPI/XtNP2yqZcpJHBkz0paqSEzXS9x6EK7pVEuZXQjz0d gA== 
-Received: from sc-exch02.marvell.com ([199.233.58.182])
-        by mx0a-0016f401.pphosted.com with ESMTP id 31y0wrtfxx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 29 Jun 2020 04:06:06 -0700
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH02.marvell.com
- (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 29 Jun
- 2020 04:06:05 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 29 Jun 2020 04:06:05 -0700
-Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.54.6])
-        by maili.marvell.com (Postfix) with ESMTP id 5F1323F703F;
-        Mon, 29 Jun 2020 04:06:02 -0700 (PDT)
-From:   Alexander Lobakin <alobakin@marvell.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-CC:     Igor Russkikh <irusskikh@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        Ariel Elior <aelior@marvell.com>,
-        "Alexander Lobakin" <alobakin@marvell.com>,
-        <GR-everest-linux-l2@marvell.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next 2/6] net: qed: convert to SPDX License Identifiers
-Date:   Mon, 29 Jun 2020 14:05:08 +0300
-Message-ID: <20200629110512.1812-3-alobakin@marvell.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629110512.1812-1-alobakin@marvell.com>
-References: <20200629110512.1812-1-alobakin@marvell.com>
+        Mon, 29 Jun 2020 14:50:39 -0400
+Received: from mga06.intel.com ([134.134.136.31]:65030 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729511AbgF2Su1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:50:27 -0400
+IronPort-SDR: rghadUoKIAFvIUedV3xtLdXB3ZzzhmEq11+4KVxE3Ixky17bW2x9F1birwRuIwe0CNVh+kvvEv
+ nHNDSbqvI2Pw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="207450218"
+X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
+   d="gz'50?scan'50,208,50";a="207450218"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 04:33:00 -0700
+IronPort-SDR: CzdBK/2/2vYQH0c3Tu9sEpw3xtUvqEvP6JDP/4zolShrbhoAAIsEpKT9Zrjsmju5MMZIBSedMG
+ ynbfPRmgGMhg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
+   d="gz'50?scan'50,208,50";a="320612751"
+Received: from lkp-server01.sh.intel.com (HELO 28879958b202) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 29 Jun 2020 04:32:58 -0700
+Received: from kbuild by 28879958b202 with local (Exim 4.92)
+        (envelope-from <lkp@intel.com>)
+        id 1jps1x-0000x0-F4; Mon, 29 Jun 2020 11:32:57 +0000
+Date:   Mon, 29 Jun 2020 19:31:55 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Chao Yu <yuchao0@huawei.com>, Chao Yu <chao@kernel.org>,
+        jaegeuk@kernel.org
+Cc:     kbuild-all@lists.01.org, linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, chao@kernel.org,
+        Chao Yu <yuchao0@huawei.com>
+Subject: Re: [PATCH 2/3] f2fs: support to trace f2fs_bmap()
+Message-ID: <202006291943.3w2lp8yg%lkp@intel.com>
+References: <20200628122940.29665-2-yuchao0@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-29_11:2020-06-29,2020-06-29 signatures=0
+Content-Type: multipart/mixed; boundary="VS++wcV0S1rZb1Fb"
+Content-Disposition: inline
+In-Reply-To: <20200628122940.29665-2-yuchao0@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QLogic QED drivers source code is dual licensed under
-GPL-2.0/BSD-3-Clause.
-Remove all the boilerplates in the existing code and replace it with the
-correct SPDX tag.
 
-Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+--VS++wcV0S1rZb1Fb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+Hi Chao,
+
+I love your patch! Perhaps something to improve:
+
+[auto build test WARNING on f2fs/dev-test]
+[also build test WARNING on v5.8-rc3 next-20200629]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use  as documented in
+https://git-scm.com/docs/git-format-patch]
+
+url:    https://github.com/0day-ci/linux/commits/Chao-Yu/f2fs-fix-wrong-return-value-of-f2fs_bmap_compress/20200628-203231
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs.git dev-test
+config: s390-allyesconfig (attached as .config)
+compiler: s390-linux-gcc (GCC) 9.3.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # save the attached .config to linux build tree
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-9.3.0 make.cross ARCH=s390 
+
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
+
+All warnings (new ones prefixed by >>):
+
+   In file included from include/trace/define_trace.h:102,
+                    from include/trace/events/f2fs.h:1924,
+                    from fs/f2fs/super.c:37:
+   include/trace/events/f2fs.h: In function 'trace_raw_output_f2fs_bmap':
+>> include/trace/events/f2fs.h:1914:12: warning: format '%lu' expects argument of type 'long unsigned int', but argument 5 has type 'ino_t' {aka 'unsigned int'} [-Wformat=]
+    1914 |  TP_printk("dev = (%d,%d), ino = %lu, lblock:%lld, pblock:%lld",
+         |            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/trace/trace_events.h:368:22: note: in definition of macro 'DECLARE_EVENT_CLASS'
+     368 |  trace_seq_printf(s, print);     \
+         |                      ^~~~~
+   include/trace/trace_events.h:80:9: note: in expansion of macro 'PARAMS'
+      80 |         PARAMS(print));         \
+         |         ^~~~~~
+   include/trace/events/f2fs.h:1894:1: note: in expansion of macro 'TRACE_EVENT'
+    1894 | TRACE_EVENT(f2fs_bmap,
+         | ^~~~~~~~~~~
+>> include/trace/events/f2fs.h:1914:2: note: in expansion of macro 'TP_printk'
+    1914 |  TP_printk("dev = (%d,%d), ino = %lu, lblock:%lld, pblock:%lld",
+         |  ^~~~~~~~~
+   In file included from include/trace/trace_events.h:402,
+                    from include/trace/define_trace.h:102,
+                    from include/trace/events/f2fs.h:1924,
+                    from fs/f2fs/super.c:37:
+   include/trace/events/f2fs.h:1914:36: note: format string is defined here
+    1914 |  TP_printk("dev = (%d,%d), ino = %lu, lblock:%lld, pblock:%lld",
+         |                                  ~~^
+         |                                    |
+         |                                    long unsigned int
+         |                                  %u
+
+vim +1914 include/trace/events/f2fs.h
+
+  1895	
+  1896		TP_PROTO(struct inode *inode, sector_t lblock, sector_t pblock),
+  1897	
+  1898		TP_ARGS(inode, lblock, pblock),
+  1899	
+  1900		TP_STRUCT__entry(
+  1901			__field(dev_t, dev)
+  1902			__field(ino_t, ino)
+  1903			__field(sector_t, lblock)
+  1904			__field(sector_t, pblock)
+  1905		),
+  1906	
+  1907		TP_fast_assign(
+  1908			__entry->dev		= inode->i_sb->s_dev;
+  1909			__entry->ino		= inode->i_ino;
+  1910			__entry->lblock		= lblock;
+  1911			__entry->pblock		= pblock;
+  1912		),
+  1913	
+> 1914		TP_printk("dev = (%d,%d), ino = %lu, lblock:%lld, pblock:%lld",
+  1915			show_dev(__entry->dev),
+  1916			__entry->ino,
+  1917			(unsigned long long)__entry->lblock,
+  1918			(unsigned long long)__entry->pblock)
+  1919	);
+  1920	
+
 ---
- drivers/net/ethernet/qlogic/qed/qed.h         | 29 +-----------------
- drivers/net/ethernet/qlogic/qed/qed_cxt.c     | 29 +-----------------
- drivers/net/ethernet/qlogic/qed/qed_cxt.h     | 29 +-----------------
- drivers/net/ethernet/qlogic/qed/qed_dcbx.c    | 29 +-----------------
- drivers/net/ethernet/qlogic/qed/qed_dcbx.h    | 29 +-----------------
- drivers/net/ethernet/qlogic/qed/qed_dev.c     | 29 +-----------------
- drivers/net/ethernet/qlogic/qed/qed_dev_api.h | 29 +-----------------
- drivers/net/ethernet/qlogic/qed/qed_fcoe.c    | 29 +-----------------
- drivers/net/ethernet/qlogic/qed/qed_fcoe.h    | 29 +-----------------
- drivers/net/ethernet/qlogic/qed/qed_hsi.h     | 29 +-----------------
- drivers/net/ethernet/qlogic/qed/qed_hw.c      | 29 +-----------------
- drivers/net/ethernet/qlogic/qed/qed_hw.h      | 29 +-----------------
- .../ethernet/qlogic/qed/qed_init_fw_funcs.c   | 29 +-----------------
- .../net/ethernet/qlogic/qed/qed_init_ops.c    | 29 +-----------------
- .../net/ethernet/qlogic/qed/qed_init_ops.h    | 29 +-----------------
- drivers/net/ethernet/qlogic/qed/qed_int.c     | 29 +-----------------
- drivers/net/ethernet/qlogic/qed/qed_int.h     | 29 +-----------------
- drivers/net/ethernet/qlogic/qed/qed_iscsi.c   | 29 +-----------------
- drivers/net/ethernet/qlogic/qed/qed_iscsi.h   | 29 +-----------------
- drivers/net/ethernet/qlogic/qed/qed_iwarp.c   | 30 ++-----------------
- drivers/net/ethernet/qlogic/qed/qed_iwarp.h   | 30 ++-----------------
- drivers/net/ethernet/qlogic/qed/qed_l2.c      | 29 +-----------------
- drivers/net/ethernet/qlogic/qed/qed_l2.h      | 30 ++-----------------
- drivers/net/ethernet/qlogic/qed/qed_ll2.c     | 29 +-----------------
- drivers/net/ethernet/qlogic/qed/qed_ll2.h     | 29 +-----------------
- drivers/net/ethernet/qlogic/qed/qed_main.c    | 29 +-----------------
- drivers/net/ethernet/qlogic/qed/qed_mcp.c     | 29 +-----------------
- drivers/net/ethernet/qlogic/qed/qed_mcp.h     | 29 +-----------------
- drivers/net/ethernet/qlogic/qed/qed_ooo.c     | 29 +-----------------
- drivers/net/ethernet/qlogic/qed/qed_ooo.h     | 29 +-----------------
- drivers/net/ethernet/qlogic/qed/qed_ptp.c     | 30 ++-----------------
- drivers/net/ethernet/qlogic/qed/qed_rdma.c    | 30 ++-----------------
- drivers/net/ethernet/qlogic/qed/qed_rdma.h    | 30 ++-----------------
- .../net/ethernet/qlogic/qed/qed_reg_addr.h    | 29 +-----------------
- drivers/net/ethernet/qlogic/qed/qed_roce.c    | 30 ++-----------------
- drivers/net/ethernet/qlogic/qed/qed_roce.h    | 30 ++-----------------
- .../net/ethernet/qlogic/qed/qed_selftest.c    | 29 +-----------------
- drivers/net/ethernet/qlogic/qed/qed_sp.h      | 29 +-----------------
- .../net/ethernet/qlogic/qed/qed_sp_commands.c | 29 +-----------------
- drivers/net/ethernet/qlogic/qed/qed_spq.c     | 29 +-----------------
- drivers/net/ethernet/qlogic/qed/qed_sriov.c   | 29 +-----------------
- drivers/net/ethernet/qlogic/qed/qed_sriov.h   | 29 +-----------------
- drivers/net/ethernet/qlogic/qed/qed_vf.c      | 29 +-----------------
- drivers/net/ethernet/qlogic/qed/qed_vf.h      | 29 +-----------------
- include/linux/qed/common_hsi.h                | 29 +-----------------
- include/linux/qed/eth_common.h                | 29 +-----------------
- include/linux/qed/iscsi_common.h              | 29 +-----------------
- include/linux/qed/iwarp_common.h              | 29 +-----------------
- include/linux/qed/qed_chain.h                 | 29 +-----------------
- include/linux/qed/qed_eth_if.h                | 29 +-----------------
- include/linux/qed/qed_if.h                    | 29 +-----------------
- include/linux/qed/qed_iov_if.h                | 29 +-----------------
- include/linux/qed/qed_iscsi_if.h              | 29 +-----------------
- include/linux/qed/qed_ll2_if.h                | 29 +-----------------
- include/linux/qed/qed_rdma_if.h               | 30 ++-----------------
- include/linux/qed/qede_rdma.h                 | 30 ++-----------------
- include/linux/qed/rdma_common.h               | 29 +-----------------
- include/linux/qed/roce_common.h               | 29 +-----------------
- include/linux/qed/storage_common.h            | 29 +-----------------
- include/linux/qed/tcp_common.h                | 29 +-----------------
- 60 files changed, 70 insertions(+), 1680 deletions(-)
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed.h b/drivers/net/ethernet/qlogic/qed/qed.h
-index a49743d56b9c..52130dcbfe4c 100644
---- a/drivers/net/ethernet/qlogic/qed/qed.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed.h
-@@ -1,33 +1,6 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #ifndef _QED_H
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_cxt.c b/drivers/net/ethernet/qlogic/qed/qed_cxt.c
-index 08ba9d54ab63..3985dd746ca2 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_cxt.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_cxt.c
-@@ -1,33 +1,6 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #include <linux/types.h>
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_cxt.h b/drivers/net/ethernet/qlogic/qed/qed_cxt.h
-index ce08ae8d8498..05b28919653a 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_cxt.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed_cxt.h
-@@ -1,33 +1,6 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #ifndef _QED_CXT_H
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_dcbx.c b/drivers/net/ethernet/qlogic/qed/qed_dcbx.c
-index 5c6a276f69ac..a72523298307 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_dcbx.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_dcbx.c
-@@ -1,33 +1,6 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #include <linux/types.h>
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_dcbx.h b/drivers/net/ethernet/qlogic/qed/qed_dcbx.h
-index 01f253ea4b22..537d60de4e2b 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_dcbx.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed_dcbx.h
-@@ -1,33 +1,6 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #ifndef _QED_DCBX_H
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_dev.c b/drivers/net/ethernet/qlogic/qed/qed_dev.c
-index 3aa51374e727..fa7c10e8aa7a 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_dev.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_dev.c
-@@ -1,33 +1,6 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #include <linux/types.h>
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_dev_api.h b/drivers/net/ethernet/qlogic/qed/qed_dev_api.h
-index eb4808b3bf67..1f2122c699cc 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_dev_api.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed_dev_api.h
-@@ -1,33 +1,6 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #ifndef _QED_DEV_API_H
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_fcoe.c b/drivers/net/ethernet/qlogic/qed/qed_fcoe.c
-index 4c7fa391fd33..91d6cdf4abe8 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_fcoe.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_fcoe.c
-@@ -1,33 +1,6 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #include <linux/types.h>
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_fcoe.h b/drivers/net/ethernet/qlogic/qed/qed_fcoe.h
-index 027a76ac839a..bf324736c7cb 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_fcoe.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed_fcoe.h
-@@ -1,33 +1,6 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #ifndef _QED_FCOE_H
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_hsi.h b/drivers/net/ethernet/qlogic/qed/qed_hsi.h
-index f00460d00cab..ebbca7d999a4 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_hsi.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed_hsi.h
-@@ -1,33 +1,6 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #ifndef _QED_HSI_H
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_hw.c b/drivers/net/ethernet/qlogic/qed/qed_hw.c
-index 5fa251489536..bdbb8fa8d399 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_hw.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_hw.c
-@@ -1,33 +1,6 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #include <linux/types.h>
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_hw.h b/drivers/net/ethernet/qlogic/qed/qed_hw.h
-index f5b109b04b66..68f44b747565 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_hw.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed_hw.h
-@@ -1,33 +1,6 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #ifndef _QED_HW_H
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_init_fw_funcs.c b/drivers/net/ethernet/qlogic/qed/qed_init_fw_funcs.c
-index 2f1049b0b93a..72ff2e5c5f24 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_init_fw_funcs.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_init_fw_funcs.c
-@@ -1,33 +1,6 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #include <linux/types.h>
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_init_ops.c b/drivers/net/ethernet/qlogic/qed/qed_init_ops.c
-index 5a6e4ac4fef4..74c425640d67 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_init_ops.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_init_ops.c
-@@ -1,33 +1,6 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #include <linux/types.h>
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_init_ops.h b/drivers/net/ethernet/qlogic/qed/qed_init_ops.h
-index e9e8ade50ed3..cf33c41e0952 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_init_ops.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed_init_ops.h
-@@ -1,33 +1,6 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #ifndef _QED_INIT_OPS_H
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_int.c b/drivers/net/ethernet/qlogic/qed/qed_int.c
-index b7b974f0ef21..be336d47c934 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_int.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_int.c
-@@ -1,33 +1,6 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #include <linux/types.h>
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_int.h b/drivers/net/ethernet/qlogic/qed/qed_int.h
-index e09db3386367..6fca82f6c7fa 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_int.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed_int.h
-@@ -1,33 +1,6 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #ifndef _QED_INT_H
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_iscsi.c b/drivers/net/ethernet/qlogic/qed/qed_iscsi.c
-index 7245a615517a..164b4d953b67 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_iscsi.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_iscsi.c
-@@ -1,33 +1,6 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #include <linux/types.h>
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_iscsi.h b/drivers/net/ethernet/qlogic/qed/qed_iscsi.h
-index 225c75b02a06..8b6518a31b7e 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_iscsi.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed_iscsi.h
-@@ -1,33 +1,6 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #ifndef _QED_ISCSI_H
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
-index 5409a2da6106..7fac39744275 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
-@@ -1,34 +1,8 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
-+
- #include <linux/if_ether.h>
- #include <linux/if_vlan.h>
- #include <linux/ip.h>
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_iwarp.h b/drivers/net/ethernet/qlogic/qed/qed_iwarp.h
-index c1b2057d23b8..83ca05cd74d7 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_iwarp.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed_iwarp.h
-@@ -1,34 +1,8 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
-+
- #ifndef _QED_IWARP_H
- #define _QED_IWARP_H
- 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_l2.c b/drivers/net/ethernet/qlogic/qed/qed_l2.c
-index 29810a1aa210..750098e60c64 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_l2.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_l2.c
-@@ -1,33 +1,6 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #include <linux/types.h>
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_l2.h b/drivers/net/ethernet/qlogic/qed/qed_l2.h
-index 7127d5aaac42..dce39f5a87ca 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_l2.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed_l2.h
-@@ -1,34 +1,8 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
-+
- #ifndef _QED_L2_H
- #define _QED_L2_H
- #include <linux/types.h>
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_ll2.c b/drivers/net/ethernet/qlogic/qed/qed_ll2.c
-index 4afd8572ada6..47da6d4e226c 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_ll2.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_ll2.c
-@@ -1,33 +1,6 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #include <linux/types.h>
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_ll2.h b/drivers/net/ethernet/qlogic/qed/qed_ll2.h
-index 288642d526b7..c0d13bd6c3a6 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_ll2.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed_ll2.h
-@@ -1,33 +1,6 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #ifndef _QED_LL2_H
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_main.c b/drivers/net/ethernet/qlogic/qed/qed_main.c
-index 11367a248d55..d00335cc145b 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_main.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_main.c
-@@ -1,33 +1,6 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #include <linux/stddef.h>
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_mcp.c b/drivers/net/ethernet/qlogic/qed/qed_mcp.c
-index 9624616806e7..c17b140aa7ae 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_mcp.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_mcp.c
-@@ -1,33 +1,6 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #include <linux/types.h>
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_mcp.h b/drivers/net/ethernet/qlogic/qed/qed_mcp.h
-index 5750b4c5ef63..351a13215ddd 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_mcp.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed_mcp.h
-@@ -1,33 +1,6 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #ifndef _QED_MCP_H
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_ooo.c b/drivers/net/ethernet/qlogic/qed/qed_ooo.c
-index ffac4ac87394..d01f91f7f661 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_ooo.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_ooo.c
-@@ -1,33 +1,6 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #include <linux/types.h>
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_ooo.h b/drivers/net/ethernet/qlogic/qed/qed_ooo.h
-index 49c4e75b15b1..2731c392a3f4 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_ooo.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed_ooo.h
-@@ -1,33 +1,6 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #ifndef _QED_OOO_H
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_ptp.c b/drivers/net/ethernet/qlogic/qed/qed_ptp.c
-index 3e613058e225..f10ddf9d1704 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_ptp.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_ptp.c
-@@ -1,34 +1,8 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
-+
- #include <linux/types.h>
- #include "qed.h"
- #include "qed_dev_api.h"
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_rdma.c b/drivers/net/ethernet/qlogic/qed/qed_rdma.c
-index 19c0c8864da1..9a3541f159dc 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_rdma.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_rdma.c
-@@ -1,34 +1,8 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
-+
- #include <linux/types.h>
- #include <asm/byteorder.h>
- #include <linux/bitops.h>
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_rdma.h b/drivers/net/ethernet/qlogic/qed/qed_rdma.h
-index 1e69d5bb0a70..a20397a395cf 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_rdma.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed_rdma.h
-@@ -1,34 +1,8 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
-+
- #ifndef _QED_RDMA_H
- #define _QED_RDMA_H
- #include <linux/types.h>
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_reg_addr.h b/drivers/net/ethernet/qlogic/qed/qed_reg_addr.h
-index 3dcb6ff58e73..bdfd90748042 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_reg_addr.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed_reg_addr.h
-@@ -1,33 +1,6 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #ifndef REG_ADDR_H
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_roce.c b/drivers/net/ethernet/qlogic/qed/qed_roce.c
-index 7271dd7166e5..1e03d66e33d1 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_roce.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_roce.c
-@@ -1,34 +1,8 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
-+
- #include <linux/types.h>
- #include <asm/byteorder.h>
- #include <linux/bitops.h>
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_roce.h b/drivers/net/ethernet/qlogic/qed/qed_roce.h
-index f801f39fde61..9178904bf0e9 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_roce.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed_roce.h
-@@ -1,34 +1,8 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
-+
- #ifndef _QED_ROCE_H
- #define _QED_ROCE_H
- #include <linux/types.h>
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_selftest.c b/drivers/net/ethernet/qlogic/qed/qed_selftest.c
-index cf1d4476f9d8..d24ee1ea8d3c 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_selftest.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_selftest.c
-@@ -1,33 +1,6 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2016  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #include <linux/crc32.h>
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_sp.h b/drivers/net/ethernet/qlogic/qed/qed_sp.h
-index b7b4fbbbccfe..4f646e101074 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_sp.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed_sp.h
-@@ -1,33 +1,6 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #ifndef _QED_SP_H
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_sp_commands.c b/drivers/net/ethernet/qlogic/qed/qed_sp_commands.c
-index 900bc603e30a..23d630b37199 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_sp_commands.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_sp_commands.c
-@@ -1,33 +1,6 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #include <linux/types.h>
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_spq.c b/drivers/net/ethernet/qlogic/qed/qed_spq.c
-index 790c28d696a0..18c59981cab7 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_spq.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_spq.c
-@@ -1,33 +1,6 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #include <linux/types.h>
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_sriov.c b/drivers/net/ethernet/qlogic/qed/qed_sriov.c
-index 20679fd4204b..6d3c6d4f6308 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_sriov.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_sriov.c
-@@ -1,33 +1,6 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #include <linux/etherdevice.h>
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_sriov.h b/drivers/net/ethernet/qlogic/qed/qed_sriov.h
-index 368e88565783..43dfaf410332 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_sriov.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed_sriov.h
-@@ -1,33 +1,6 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #ifndef _QED_SRIOV_H
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_vf.c b/drivers/net/ethernet/qlogic/qed/qed_vf.c
-index adc2c8f3d48e..c800f8812492 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_vf.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_vf.c
-@@ -1,33 +1,6 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #include <linux/crc32.h>
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_vf.h b/drivers/net/ethernet/qlogic/qed/qed_vf.h
-index 033409db86ae..60d2bb64e65f 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_vf.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed_vf.h
-@@ -1,33 +1,6 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #ifndef _QED_VF_H
-diff --git a/include/linux/qed/common_hsi.h b/include/linux/qed/common_hsi.h
-index 2c4737e6694a..294d01eae5cb 100644
---- a/include/linux/qed/common_hsi.h
-+++ b/include/linux/qed/common_hsi.h
-@@ -1,33 +1,6 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2016  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #ifndef _COMMON_HSI_H
-diff --git a/include/linux/qed/eth_common.h b/include/linux/qed/eth_common.h
-index 95f5fd615852..a9566ef3c2ce 100644
---- a/include/linux/qed/eth_common.h
-+++ b/include/linux/qed/eth_common.h
-@@ -1,33 +1,6 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #ifndef __ETH_COMMON__
-diff --git a/include/linux/qed/iscsi_common.h b/include/linux/qed/iscsi_common.h
-index 2f0a771a9176..7ca89fb9247f 100644
---- a/include/linux/qed/iscsi_common.h
-+++ b/include/linux/qed/iscsi_common.h
-@@ -1,33 +1,6 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #ifndef __ISCSI_COMMON__
-diff --git a/include/linux/qed/iwarp_common.h b/include/linux/qed/iwarp_common.h
-index c6cfd39cd910..23583e644257 100644
---- a/include/linux/qed/iwarp_common.h
-+++ b/include/linux/qed/iwarp_common.h
-@@ -1,33 +1,6 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #ifndef __IWARP_COMMON__
-diff --git a/include/linux/qed/qed_chain.h b/include/linux/qed/qed_chain.h
-index 6d15040c642c..e6e25197f7cb 100644
---- a/include/linux/qed/qed_chain.h
-+++ b/include/linux/qed/qed_chain.h
-@@ -1,33 +1,6 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #ifndef _QED_CHAIN_H
-diff --git a/include/linux/qed/qed_eth_if.h b/include/linux/qed/qed_eth_if.h
-index a1310482c4ed..7803dedbcb52 100644
---- a/include/linux/qed/qed_eth_if.h
-+++ b/include/linux/qed/qed_eth_if.h
-@@ -1,33 +1,6 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #ifndef _QED_ETH_IF_H
-diff --git a/include/linux/qed/qed_if.h b/include/linux/qed/qed_if.h
-index 8cb76405cbce..4a36608ff3a8 100644
---- a/include/linux/qed/qed_if.h
-+++ b/include/linux/qed/qed_if.h
-@@ -1,33 +1,6 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #ifndef _QED_IF_H
-diff --git a/include/linux/qed/qed_iov_if.h b/include/linux/qed/qed_iov_if.h
-index ac2e6a3199a3..c2ca8196def9 100644
---- a/include/linux/qed/qed_iov_if.h
-+++ b/include/linux/qed/qed_iov_if.h
-@@ -1,33 +1,6 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #ifndef _QED_IOV_IF_H
-diff --git a/include/linux/qed/qed_iscsi_if.h b/include/linux/qed/qed_iscsi_if.h
-index d0df1bec5357..89912c6c440c 100644
---- a/include/linux/qed/qed_iscsi_if.h
-+++ b/include/linux/qed/qed_iscsi_if.h
-@@ -1,33 +1,6 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #ifndef _QED_ISCSI_IF_H
-diff --git a/include/linux/qed/qed_ll2_if.h b/include/linux/qed/qed_ll2_if.h
-index 1313c34d9a68..79cac277e38b 100644
---- a/include/linux/qed/qed_ll2_if.h
-+++ b/include/linux/qed/qed_ll2_if.h
-@@ -1,33 +1,6 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #ifndef _QED_LL2_IF_H
-diff --git a/include/linux/qed/qed_rdma_if.h b/include/linux/qed/qed_rdma_if.h
-index 2d3ddd2b85e0..041a5b005a82 100644
---- a/include/linux/qed/qed_rdma_if.h
-+++ b/include/linux/qed/qed_rdma_if.h
-@@ -1,34 +1,8 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
-+
- #ifndef _QED_RDMA_IF_H
- #define _QED_RDMA_IF_H
- #include <linux/types.h>
-diff --git a/include/linux/qed/qede_rdma.h b/include/linux/qed/qede_rdma.h
-index 5a00c7a473bf..20ed7f2c55bb 100644
---- a/include/linux/qed/qede_rdma.h
-+++ b/include/linux/qed/qede_rdma.h
-@@ -1,34 +1,8 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qedr NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
-+
- #ifndef QEDE_ROCE_H
- #define QEDE_ROCE_H
- 
-diff --git a/include/linux/qed/rdma_common.h b/include/linux/qed/rdma_common.h
-index 480a57eb36cc..3e3f01136c06 100644
---- a/include/linux/qed/rdma_common.h
-+++ b/include/linux/qed/rdma_common.h
-@@ -1,33 +1,6 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #ifndef __RDMA_COMMON__
-diff --git a/include/linux/qed/roce_common.h b/include/linux/qed/roce_common.h
-index 473fba76aa77..89065f023813 100644
---- a/include/linux/qed/roce_common.h
-+++ b/include/linux/qed/roce_common.h
-@@ -1,33 +1,6 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #ifndef __ROCE_COMMON__
-diff --git a/include/linux/qed/storage_common.h b/include/linux/qed/storage_common.h
-index 9a973ffbbff5..34f069c79067 100644
---- a/include/linux/qed/storage_common.h
-+++ b/include/linux/qed/storage_common.h
-@@ -1,33 +1,6 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #ifndef __STORAGE_COMMON__
-diff --git a/include/linux/qed/tcp_common.h b/include/linux/qed/tcp_common.h
-index 4a4845193539..925e7cb7a582 100644
---- a/include/linux/qed/tcp_common.h
-+++ b/include/linux/qed/tcp_common.h
-@@ -1,33 +1,6 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qed NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
- 
- #ifndef __TCP_COMMON__
--- 
-2.25.1
+--VS++wcV0S1rZb1Fb
+Content-Type: application/gzip
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
 
+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
+
+--VS++wcV0S1rZb1Fb--
