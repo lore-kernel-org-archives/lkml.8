@@ -4,47 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60507C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF5E1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 34EBA20842
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:45:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 975752082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:45:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593459902;
-	bh=S4oSBEKFtn41itg9mzsbFJpEvLbzU9TYSrz+ppPP6Es=;
+	s=default; t=1593459907;
+	bh=6b5KKbzCD16/UYiEDLH2M5EnoWk7Y4bdxlpxfeS917U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GXEkpToCID6dnYEUBMcvrIyusf13SOs527BPVQ0VKTcQe+bhOcfWAOKTuXOw1QOl8
-	 1P+cXc+Z6Z/fvVNeIHdPfgUofdi4qD4dum3OgaU6wUkOy0IaCok+/fe4bw2KzG7k5K
-	 LvyVZLhMyQ02ZzqcMO7guuDjq4jiQUwjOgIyOoSU=
+	b=MtyU0Oysykvqe5DutACMDh4l/S/w6KyC7Q9pAiAlSIcY8WcJj47xKH5XzYgmh7enQ
+	 lQE14DsYgnBO5bckSJocSuMBk+nV+EJSS/axOBEHO/UeoHTMnw4QjilVlES2pUDlff
+	 Hpo0Ut6FZUked0WjEM9K2/gEKkHw7Itg8BE8sOcA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730261AbgF2TpA (ORCPT
+        id S2387946AbgF2Tow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:45:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47710 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:44:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387834AbgF2Tkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387833AbgF2Tkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4D4C524843;
-        Mon, 29 Jun 2020 15:25:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FC5724805;
+        Mon, 29 Jun 2020 15:25:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444355;
-        bh=S4oSBEKFtn41itg9mzsbFJpEvLbzU9TYSrz+ppPP6Es=;
+        s=default; t=1593444329;
+        bh=6b5KKbzCD16/UYiEDLH2M5EnoWk7Y4bdxlpxfeS917U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gu0OZ4rlkDjqExMI98k4UgRvyJFrTfuBPcnlTXaz9r2jwr/VT9YwgxcYq44DEZVIN
-         vnhSQzHHXe+K+UwfqTjELca40JpWEi23qYGYLaHIARtD5K5SUvFRs1Vh1Tv6RZd/2v
-         dZl0fjro758WFzyJ7NuaD31n7sJCd/8TKmPCdDzs=
+        b=FI+kDIn800Lo+fhUkUJ8g218lKpXryGXMZ6wHN8N4LvF9Sw5su0kZJxdTiFUOcM1F
+         zvPSY0y9XAocZMOvHZ10rixe/W/SpDmNqqO9HFlqOx8v704KnQTJkLugaKKo7zZwls
+         a5vVVZTH6ySarY+85E4IX5teQKHyXgb+m7XjP6Vc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 031/178] fix a braino in "sparc32: fix register window handling in genregs32_[gs]et()"
-Date:   Mon, 29 Jun 2020 11:22:56 -0400
-Message-Id: <20200629152523.2494198-32-sashal@kernel.org>
+Cc:     Thomas Falcon <tlfalcon@linux.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.4 004/178] ibmveth: Fix max MTU limit
+Date:   Mon, 29 Jun 2020 11:22:29 -0400
+Message-Id: <20200629152523.2494198-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -63,43 +65,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+From: Thomas Falcon <tlfalcon@linux.ibm.com>
 
-[ Upstream commit 9d964e1b82d8182184153b70174f445ea616f053 ]
+[ Upstream commit 5948378b26d89f8aa5eac37629dbd0616ce8d7a7 ]
 
-lost npc in PTRACE_SETREGSET, breaking PTRACE_SETREGS as well
+The max MTU limit defined for ibmveth is not accounting for
+virtual ethernet buffer overhead, which is twenty-two additional
+bytes set aside for the ethernet header and eight additional bytes
+of an opaque handle reserved for use by the hypervisor. Update the
+max MTU to reflect this overhead.
 
-Fixes: cf51e129b968 "sparc32: fix register window handling in genregs32_[gs]et()"
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: d894be57ca92 ("ethernet: use net core MTU range checking in more drivers")
+Fixes: 110447f8269a ("ethernet: fix min/max MTU typos")
+Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/sparc/kernel/ptrace_32.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/ibm/ibmveth.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/sparc/kernel/ptrace_32.c b/arch/sparc/kernel/ptrace_32.c
-index 60f7205ebe40d..646dd58169ecb 100644
---- a/arch/sparc/kernel/ptrace_32.c
-+++ b/arch/sparc/kernel/ptrace_32.c
-@@ -168,12 +168,17 @@ static int genregs32_set(struct task_struct *target,
- 	if (ret || !count)
- 		return ret;
- 	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
--				 &regs->y,
-+				 &regs->npc,
- 				 34 * sizeof(u32), 35 * sizeof(u32));
- 	if (ret || !count)
- 		return ret;
-+	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
-+				 &regs->y,
-+				 35 * sizeof(u32), 36 * sizeof(u32));
-+	if (ret || !count)
-+		return ret;
- 	return user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
--					 35 * sizeof(u32), 38 * sizeof(u32));
-+					 36 * sizeof(u32), 38 * sizeof(u32));
- }
+diff --git a/drivers/net/ethernet/ibm/ibmveth.c b/drivers/net/ethernet/ibm/ibmveth.c
+index c5be4ebd84373..aa32a5b041129 100644
+--- a/drivers/net/ethernet/ibm/ibmveth.c
++++ b/drivers/net/ethernet/ibm/ibmveth.c
+@@ -1682,7 +1682,7 @@ static int ibmveth_probe(struct vio_dev *dev, const struct vio_device_id *id)
+ 	}
  
- static int fpregs32_get(struct task_struct *target,
+ 	netdev->min_mtu = IBMVETH_MIN_MTU;
+-	netdev->max_mtu = ETH_MAX_MTU;
++	netdev->max_mtu = ETH_MAX_MTU - IBMVETH_BUFF_OH;
+ 
+ 	memcpy(netdev->dev_addr, mac_addr_p, ETH_ALEN);
+ 
 -- 
 2.25.1
 
