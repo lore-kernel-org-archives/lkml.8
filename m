@@ -6,152 +6,188 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD05C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE11BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:00:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 933D0204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:00:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D111204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:00:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730290AbgF2S77 (ORCPT
+        id S1730208AbgF2TAB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:59:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:37358 "EHLO foss.arm.com"
+        Mon, 29 Jun 2020 15:00:01 -0400
+Received: from foss.arm.com ([217.140.110.172]:37356 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728460AbgF2S74 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728088AbgF2S74 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:59:56 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3DF96150C;
-        Mon, 29 Jun 2020 10:42:56 -0700 (PDT)
-Received: from bogus (unknown [10.37.8.30])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F079E3F71E;
-        Mon, 29 Jun 2020 10:42:52 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 18:42:46 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "magnus.damm@gmail.com" <magnus.damm@gmail.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH/RFC v4 2/4] regulator: fixed: add regulator_ops members
- for suspend/resume
-Message-ID: <20200629174220.GA4188@bogus>
-References: <1593163942-5087-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20200626143914.GE5289@sirena.org.uk>
- <TY2PR01MB3692A3B12CEF7F9708A8A59CD86E0@TY2PR01MB3692.jpnprd01.prod.outlook.com>
- <20200629125756.GC5499@sirena.org.uk>
- <20200629134011.GA23284@bogus>
- <CAMuHMdU81-EAve+jHhL8+ohCd5YXrgLWpMgaCvgXFDLO7p17pQ@mail.gmail.com>
- <20200629150728.GA27911@bogus>
- <20200629161450.GE5499@sirena.org.uk>
- <20200629164207.GB27911@bogus>
- <20200629172651.GG5499@sirena.org.uk>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B2328143B;
+        Mon, 29 Jun 2020 04:52:15 -0700 (PDT)
+Received: from [10.37.12.67] (unknown [10.37.12.67])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 854593F73C;
+        Mon, 29 Jun 2020 04:52:12 -0700 (PDT)
+Subject: Re: brocken devfreq simple_ondemand for Odroid XU3/4?
+To:     Chanwoo Choi <cw00.choi@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     Kamil Konieczny <k.konieczny@samsung.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Willy Wolff <willy.mh.wolff.ml@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>, linux-pm@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200623164733.qbhua7b6cg2umafj@macmini.local>
+ <CAJKOXPeLuq81NC2xZh3y32EB-_APbDAchZD4OW_eCgQKKO+p8w@mail.gmail.com>
+ <20200623191129.GA4171@kozik-lap>
+ <CGME20200624103308eucas1p188a5fe3cee1916d9430c9971c2dab3a3@eucas1p1.samsung.com>
+ <85f5a8c0-7d48-f2cd-3385-c56d662f2c88@arm.com>
+ <ef5184ed-00ff-4226-5ece-b0fc8eb16fb6@samsung.com>
+ <4a72fcab-e8da-8323-1fbe-98a6a4b3e0f1@arm.com>
+ <4c3b01af-2337-1eba-4675-6488105144c8@samsung.com>
+ <6f8b1119-62b1-942d-cfde-6f1e9a28c40c@arm.com>
+ <ee2e4acb-3986-3227-da1f-177d2756d194@samsung.com>
+ <ad4e1a73-6de3-68ee-e3b3-b30bc315bd31@samsung.com>
+ <691bc55c-5b04-b519-4575-6dce5ea9914c@samsung.com>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <be215777-54fd-ed84-0709-1d276bc3fe90@arm.com>
+Date:   Mon, 29 Jun 2020 12:52:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200629172651.GG5499@sirena.org.uk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <691bc55c-5b04-b519-4575-6dce5ea9914c@samsung.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 06:26:51PM +0100, Mark Brown wrote:
-> On Mon, Jun 29, 2020 at 05:42:07PM +0100, Sudeep Holla wrote:
-> > On Mon, Jun 29, 2020 at 05:14:50PM +0100, Mark Brown wrote:
-> > > On Mon, Jun 29, 2020 at 04:07:28PM +0100, Sudeep Holla wrote:
-> > >
-> > > > The specification states clearly:
-> > > > "... all devices in the system must be in a state that is compatible
-> > > > with entry into the system state. These preconditions are beyond the scope
-> > > > of this specification and are therefore not described here."
-> > > > "Prior to the call, the OS must disable all sources of wakeup other than
-> > > > those it needs to support for its implementation of suspend to RAM."
->
-> > > This gets a bit circular for a generic OS since the OS needs some way to
-> > > figure out what it's supposed to do on a given platform - for example
-> > > the OS may be happy to use wakeup sources that the firmware is just
-> > > going to cut power on.
->
-> > While I understand the sentiments here, PSCI is targeted to address CPU
-> > power state management mainly and system states like suspend/reset and
-> > poweroff which involves last CPU. This is one of the reason it is out of
-> > the scope of the specification.
->
-> Sure, but as soon as we start talking about the last CPU stuff we're
-> inevitably talking about the system as a whole.
->
-> > Here is my understanding. DT specifies all the wakeup sources. Linux
-> > can configure those and user may choose to enable a subset of them is
-> > wakeup. As stated in the spec and also based on what we already do in
-> > the kernel, we disable all other wakeup sources.
->
-> > The PSCI firmware can then either read those from the interrupt controller
-> > or based on static platform understanding, must not disable those wakeup
-> > sources.
->
-> That bit about static platform understanding isn't super helpful for the
-> OS, so long as the firmware might do that the OS is pretty much out of
-> luck.
->
+Hi Chanwoo,
 
-I don't disagree. That's one of the reason I wanted to gather requirement
-few years back when PSCI system suspend was introduced. I couldn't
-convince PSCI spec authors myself.
+On 6/29/20 2:43 AM, Chanwoo Choi wrote:
+> Hi,
+> 
+> Sorry for late reply because of my perfornal issue. I count not check the email.
 
-> > > > I see nothing has been fixed in the firmware too and we are still
-> > > > discussing the same after 3 years 😄. Clearly we should start trusting
-> > > > firmware and built capability to fix and replace it if there are bugs
-> > > > just like kernel and stop hacking around in the kernel to deal with
-> > > > just broken platform/psci firmware.
->
-> > > This isn't just an issue of buggy firmware as far as I can see, it's
-> > > also a lack of ability for the OS and firmware to communicate
-> > > information about their intentions to each other.  As things stand you'd
-> > > need to put static information in the DT.
->
-> > It is easy for DT to get out of sync with firmware unless it is generated
-> > by the same firmware. That's the reason why I am against such multiple
->
-> The ability for things to get out of sync also concerns me as I said
-> further back in the thread but I'm not sure we have much alternative,
-> realistically we're going to need some facility to work around firmware
-> that isn't ideal.
->
+I hope you are good now.
 
-I understand and I agree. That's the main reason I want to understand this
-better and provide a generic solution. The current pm_suspend_via_firmware
-seem to have different intentions(at-least that's what I grasped quickly
-reading through the document)
+> 
+> On 6/26/20 8:22 PM, Bartlomiej Zolnierkiewicz wrote:
+>>
+>> On 6/25/20 2:12 PM, Kamil Konieczny wrote:
+>>> On 25.06.2020 14:02, Lukasz Luba wrote:
+>>>>
+>>>>
+>>>> On 6/25/20 12:30 PM, Kamil Konieczny wrote:
+>>>>> Hi Lukasz,
+>>>>>
+>>>>> On 25.06.2020 12:02, Lukasz Luba wrote:
+>>>>>> Hi Sylwester,
+>>>>>>
+>>>>>> On 6/24/20 4:11 PM, Sylwester Nawrocki wrote:
+>>>>>>> Hi All,
+>>>>>>>
+>>>>>>> On 24.06.2020 12:32, Lukasz Luba wrote:
+>>>>>>>> I had issues with devfreq governor which wasn't called by devfreq
+>>>>>>>> workqueue. The old DELAYED vs DEFERRED work discussions and my patches
+>>>>>>>> for it [1]. If the CPU which scheduled the next work went idle, the
+>>>>>>>> devfreq workqueue will not be kicked and devfreq governor won't check
+>>>>>>>> DMC status and will not decide to decrease the frequency based on low
+>>>>>>>> busy_time.
+>>>>>>>> The same applies for going up with the frequency. They both are
+>>>>>>>> done by the governor but the workqueue must be scheduled periodically.
+>>>>>>>
+>>>>>>> As I have been working on resolving the video mixer IOMMU fault issue
+>>>>>>> described here: https://patchwork.kernel.org/patch/10861757
+>>>>>>> I did some investigation of the devfreq operation, mostly on Odroid U3.
+>>>>>>>
+>>>>>>> My conclusions are similar to what Lukasz says above. I would like to add
+>>>>>>> that broken scheduling of the performance counters read and the devfreq
+>>>>>>> updates seems to have one more serious implication. In each call, which
+>>>>>>> normally should happen periodically with fixed interval we stop the counters,
+>>>>>>> read counter values and start the counters again. But if period between
+>>>>>>> calls becomes long enough to let any of the counters overflow, we will
+>>>>>>> get wrong performance measurement results. My observations are that
+>>>>>>> the workqueue job can be suspended for several seconds and conditions for
+>>>>>>> the counter overflow occur sooner or later, depending among others
+>>>>>>> on the CPUs load.
+>>>>>>> Wrong bus load measurement can lead to setting too low interconnect bus
+>>>>>>> clock frequency and then bad things happen in peripheral devices.
+>>>>>>>
+>>>>>>> I agree the workqueue issue needs to be fixed. I have some WIP code to use
+>>>>>>> the performance counters overflow interrupts instead of SW polling and with
+>>>>>>> that the interconnect bus clock control seems to work much better.
+>>>>>>>
+>>>>>>
+>>>>>> Thank you for sharing your use case and investigation results. I think
+>>>>>> we are reaching a decent number of developers to maybe address this
+>>>>>> issue: 'workqueue issue needs to be fixed'.
+>>>>>> I have been facing this devfreq workqueue issue ~5 times in different
+>>>>>> platforms.
+>>>>>>
+>>>>>> Regarding the 'performance counters overflow interrupts' there is one
+>>>>>> thing worth to keep in mind: variable utilization and frequency.
+>>>>>> For example, in order to make a conclusion in algorithm deciding that
+>>>>>> the device should increase or decrease the frequency, we fix the period
+>>>>>> of observation, i.e. to 500ms. That can cause the long delay if the
+>>>>>> utilization of the device suddenly drops. For example we set an
+>>>>>> overflow threshold to value i.e. 1000 and we know that at 1000MHz
+>>>>>> and full utilization (100%) the counter will reach that threshold
+>>>>>> after 500ms (which we want, because we don't want too many interrupts
+>>>>>> per sec). What if suddenly utilization drops to 2% (i.e. from 5GB/s
+>>>>>> to 250MB/s (what if it drops to 25MB/s?!)), the counter will reach the
+>>>>>> threshold after 50*500ms = 25s. It is impossible just for the counters
+>>>>>> to predict next utilization and adjust the threshold. [...]
+>>>>>
+>>>>> irq triggers for underflow and overflow, so driver can adjust freq
+>>>>>
+>>>>
+>>>> Probably possible on some platforms, depends on how many PMU registers
+>>>> are available, what information can be can assign to them and type of
+>>>> interrupt. A lot of hassle and still - platform and device specific.
+>>>> Also, drivers should not adjust the freq, governors (different types
+>>>> of them with different settings that they can handle) should do it.
+>>>>
+>>>> What the framework can do is to take this responsibility and provide
+>>>> generic way to monitor the devices (or stop if they are suspended).
+>>>> That should work nicely with the governors, which try to predict the
+>>>> next best frequency. From my experience the more fluctuating intervals
+>>>> the governors are called, the more odd decisions they make.
+>>>> That's why I think having a predictable interval i.e. 100ms is something
+>>>> desirable. Tuning the governors is easier in this case, statistics
+>>>> are easier to trace and interpret, solution is not to platform specific,
+>>>> etc.
+>>>>
+>>>> Kamil do you have plans to refresh and push your next version of the
+>>>> workqueue solution?
+>>>
+>>> I do not, as Bartek takes over my work,
+>>> +CC Bartek
+>>
+>> Hi Lukasz,
+>>
+>> As you remember in January Chanwoo has proposed another idea (to allow
+>> selecting workqueue type by devfreq device driver):
+>>
+>> "I'm developing the RFC patch and then I'll send it as soon as possible."
+>> (https://lore.kernel.org/linux-pm/6107fa2b-81ad-060d-89a2-d8941ac4d17e@samsung.com/)
+>>
+>> "After posting my suggestion, we can discuss it"
+>> (https://lore.kernel.org/linux-pm/f5c5cd64-b72c-2802-f6ea-ab3d28483260@samsung.com/)
+>>
+>> so we have been waiting on the patch to be posted..
+> 
+> Sorry for this. I'll send it within few days.
 
-> > sources of information. I understand ACPI has more flexibility and I did
->
-> ACPI has a much stronger idea of what the system looks like which helps
-> it a lot here.
->
 
-Yes, I wanted something similar initially but didn't get good response
-both from community and PSCI spec authors.
+Feel free to add me on CC, I can review&test the patches if you like.
 
-> > Each device or platform having its specific property in DT is not scalable.
-> > Not sure if it is a generic problem. If it is, I would like to understand
-> > more details on such lack of ability for communtication between OS and
-> > firmware.
->
-> It seems like a generic issue from where I'm sitting.
+Stay safe and healthy.
 
-I can't disagree with that. The description of the issue and the solution
-in the thread is. We need make it more generic and provide generic solution,.
-I already see 2-3 threads addressing this in isolation as specific issue.
-Also we need to check with DT maintainers if there are fine with the idea
-of binding to address this issue.
-
---
 Regards,
-Sudeep
+Lukasz
+
