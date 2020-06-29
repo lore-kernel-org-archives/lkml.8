@@ -2,188 +2,118 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40140C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B05FCC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:57:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C00420674
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:57:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93BB3206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:57:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bH7wT0Px"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lk2ZKv/8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730591AbgF2T5i (ORCPT
+        id S2388474AbgF2T5l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:57:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50864 "EHLO
+        Mon, 29 Jun 2020 15:57:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388200AbgF2T5b (ORCPT
+        with ESMTP id S2387620AbgF2T5c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:57:31 -0400
-Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07BF4C061755;
-        Mon, 29 Jun 2020 12:57:31 -0700 (PDT)
-Received: by mail-ed1-x542.google.com with SMTP id h28so14053585edz.0;
-        Mon, 29 Jun 2020 12:57:30 -0700 (PDT)
+        Mon, 29 Jun 2020 15:57:32 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8850C03E979
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 12:57:31 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id y13so9872686lfe.9
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 12:57:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AaIAGXzm3zle6m3IyH6J6bY+lak3D/cEfWozndthNJQ=;
-        b=bH7wT0Px6bC7hXr1S6yEgmoWByAw/Sx0DSg0e3sBnS6GfVDVkgciX1P6xiXpE5ikWi
-         EKNxcnejGmYA74L9W6I79GzlF+DEBoJDK9EZpI3DGdPHozeUi933NqosK1opTbyWgskW
-         ta2XN6jexhlUpxoUpJJ68E+L+6RcUF4kcyij9OgF1o7eM6Y8JzUP8cafX4ViUqNz6TaB
-         Lt0FKK9Nu+u4VEyFbOojPocJ0pnx/8RJPCHhxka9jm3y2F6G1YUMZAPRUbSdvYM8RrPh
-         ANjOnT2SH02GOZKMLwoa4t0cOvQGEENFu0/ZhL9smtbFnj2dZfjMa2k4ysF/piDp7gd0
-         Bl6Q==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HXip5KwBZ4zG01jb8JoG5vDVesbu67fX4v/5SOWVsj4=;
+        b=Lk2ZKv/8twm874ckZSIpONTn1wKHEBB2f/Q7LqsydREQ3t324cgr3ti8w4T35d2hqD
+         stZeidGIKh7SFUlqSamSyI6bumqDuxvRhUR/GR3Ou4bbFVuEKvej60UDCiABSrNj82xS
+         s6q8oULU2pm6FzX20VTkivj1emLaZoqjdOjg8gxUcikDWxMNQImO70ppQ/w+2wxP3prx
+         aiBSTMMtSaQEiqS8jQd4JObvXwALmYxrLk/nwQ+Hh9mGPARJJ608+xOH3oGkSmpqrEJq
+         OrnDXyWTDQkYZng/JBYDEqMgjpsOhJ8KHg6KdSVfVBlfaQJpYtsMdL69J6B9ytpAT0Te
+         IsmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AaIAGXzm3zle6m3IyH6J6bY+lak3D/cEfWozndthNJQ=;
-        b=jJ9+pIK3JdCHw6lEMn97tzxaqG4FB0LCjm6WKYhFkifZvsju7JVaQMsIjtYvt8yMnZ
-         BYP9sBSw6wjnOY4qGpNZCmPV3yOZhkntZbCXEe0oYP1g4MjO/4zuO4hQLEwoYIC02UjA
-         y1UaEO6FdDX6XEavzq7PwwT7cf7W9HRYFXq1Wuydt+giXMn/15NWh2Y4T+mcUuGLUEZl
-         jgfiMvMN9I0OuTDP0Im//1tXGJ0Cymwmb3FSNT5T66oyzkAbR/rPRLdq0gqB7j4a3Lgx
-         Qtl4XZxBkTt1FeCOeg8p0EZYY3gbFSpWlA19wNLxYG3IRU2IlMd1j3VR904U2xQr2ZgF
-         bYNw==
-X-Gm-Message-State: AOAM5322vxZYZ9gMLg3oqZMKCcFz/KMPGKEbL9afCHWptIlHC3DjTTSp
-        n8uKv/OAaz9fR7eqMAUUjCMUM1txgUgNI6uSDySZgPl/
-X-Google-Smtp-Source: ABdhPJxuqVeCta8VoAgMN0v4dnb20yspX1tWXnf7++Cbpyc1biLAcvlB00qweNwifDIJzhl2qqHoB4gCEw2ejQUXIfA=
-X-Received: by 2002:aa7:d792:: with SMTP id s18mr19820549edq.7.1593460649733;
- Mon, 29 Jun 2020 12:57:29 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=HXip5KwBZ4zG01jb8JoG5vDVesbu67fX4v/5SOWVsj4=;
+        b=YcnjDtExLtssHgw8cQBma05JJt8vLgG7WJFH7NrrvTvIR8OaDlOtMot44yaRHTameg
+         M4peexT3855H9ivK+URQ1Mz9Nx8FgLgYWY61Fw7onmeeHSx5jxilAWldRZw2gwA0R2YX
+         qHKFnHXekPVHaxrmh9SLGxWuwLngff/SivSHW+wNUwNEwV2C0HG2Z9Oqipv7h6ffrJXU
+         GYw6IN3x3QhrK7stoDEjBCEEL54NJpJS2xVLCtdtm9eitrvJ7ICzt9D8JE8tX7YlM0dc
+         zcuw4azleT6djS5fZSlYsGnUd1JuVr0tWVko8VGnrA12NLWnPlcXvO/AjV6o64aGr5tL
+         tN+Q==
+X-Gm-Message-State: AOAM530V7J89LkGURqp8BiXKqwNHuy8aH2UlnX8kTa2vL+sbunZpXKbe
+        7xlgIeKZFXEDnuFNGozqBfY=
+X-Google-Smtp-Source: ABdhPJzyjzo4qb7j6DhvyjzqhExSDy157w8OBaZ64xKDwkrn8HkXTU6LDyhB2G94yoljtX3cTlmO2g==
+X-Received: by 2002:a05:6512:31c5:: with SMTP id j5mr10255219lfe.26.1593460650455;
+        Mon, 29 Jun 2020 12:57:30 -0700 (PDT)
+Received: from localhost.localdomain (h-98-128-228-147.NA.cust.bahnhof.se. [98.128.228.147])
+        by smtp.gmail.com with ESMTPSA id y26sm166482ljk.26.2020.06.29.12.57.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 12:57:29 -0700 (PDT)
+From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
+To:     mripard@kernel.org, wens@csie.org
+Cc:     kishon@ti.com, vkoul@kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Subject: [PATCH] phy: allwinner: phy-sun6i-mipi-dphy: Constify structs
+Date:   Mon, 29 Jun 2020 21:57:27 +0200
+Message-Id: <20200629195727.9717-1-rikard.falkeborn@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-References: <20200629181921.3019271-1-eric@anholt.net> <20200629181921.3019271-2-eric@anholt.net>
-In-Reply-To: <20200629181921.3019271-2-eric@anholt.net>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Mon, 29 Jun 2020 12:57:59 -0700
-Message-ID: <CAF6AEGstctXSCwW9Hv=MmB_Ca1VGA_DZNtzvqSY-1NqPTK+WPQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] drm/msm: Quiet error during failure in optional
- resource mappings.
-To:     Eric Anholt <eric@anholt.net>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Sean Paul <sean@poorly.run>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 11:19 AM Eric Anholt <eric@anholt.net> wrote:
->
-> We don't expect to find vbif_nrt or regdma on cheza, but were clogging
-> up dmesg with errors about it.
+sun6i_dphy_ops and sun6i_dphy_regmap_config are not modified so make them
+const structs to allow the compiler to put them in read-only memory.
 
-nit: s/cheza/sdm845/ (since this really applies to the SoC rather than
-the board..
+Before:
+   text    data     bss     dec     hex filename
+   4407    1944      64    6415    190f drivers/phy/allwinner/phy-sun6i-mipi-dphy.o
 
-also, maybe msm_ioremap_optional() ?
+After:
+   text    data     bss     dec     hex filename
+   4835    1496      64    6395    18fb drivers/phy/allwinner/phy-sun6i-mipi-dphy.o
 
-BR,
--R
+Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+---
+ drivers/phy/allwinner/phy-sun6i-mipi-dphy.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
->
-> Signed-off-by: Eric Anholt <eric@anholt.net>
-> ---
->  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c |  4 ++--
->  drivers/gpu/drm/msm/msm_drv.c           | 22 ++++++++++++++++++----
->  drivers/gpu/drm/msm/msm_drv.h           |  2 ++
->  3 files changed, 22 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-> index a4ab802fee6d..d9aef2b5e930 100644
-> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-> @@ -838,13 +838,13 @@ static int dpu_kms_hw_init(struct msm_kms *kms)
->                 dpu_kms->vbif[VBIF_RT] = NULL;
->                 goto error;
->         }
-> -       dpu_kms->vbif[VBIF_NRT] = msm_ioremap(dpu_kms->pdev, "vbif_nrt", "vbif_nrt");
-> +       dpu_kms->vbif[VBIF_NRT] = msm_ioremap_quiet(dpu_kms->pdev, "vbif_nrt", "vbif_nrt");
->         if (IS_ERR(dpu_kms->vbif[VBIF_NRT])) {
->                 dpu_kms->vbif[VBIF_NRT] = NULL;
->                 DPU_DEBUG("VBIF NRT is not defined");
->         }
->
-> -       dpu_kms->reg_dma = msm_ioremap(dpu_kms->pdev, "regdma", "regdma");
-> +       dpu_kms->reg_dma = msm_ioremap_quiet(dpu_kms->pdev, "regdma", "regdma");
->         if (IS_ERR(dpu_kms->reg_dma)) {
->                 dpu_kms->reg_dma = NULL;
->                 DPU_DEBUG("REG_DMA is not defined");
-> diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-> index f6ce40bf3699..df4a3c6a49cd 100644
-> --- a/drivers/gpu/drm/msm/msm_drv.c
-> +++ b/drivers/gpu/drm/msm/msm_drv.c
-> @@ -120,8 +120,8 @@ struct clk *msm_clk_get(struct platform_device *pdev, const char *name)
->         return clk;
->  }
->
-> -void __iomem *msm_ioremap(struct platform_device *pdev, const char *name,
-> -               const char *dbgname)
-> +void __iomem *_msm_ioremap(struct platform_device *pdev, const char *name,
-> +                          const char *dbgname, bool quiet)
->  {
->         struct resource *res;
->         unsigned long size;
-> @@ -133,7 +133,8 @@ void __iomem *msm_ioremap(struct platform_device *pdev, const char *name,
->                 res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->
->         if (!res) {
-> -               DRM_DEV_ERROR(&pdev->dev, "failed to get memory resource: %s\n", name);
-> +               if (!quiet)
-> +                       DRM_DEV_ERROR(&pdev->dev, "failed to get memory resource: %s\n", name);
->                 return ERR_PTR(-EINVAL);
->         }
->
-> @@ -141,7 +142,8 @@ void __iomem *msm_ioremap(struct platform_device *pdev, const char *name,
->
->         ptr = devm_ioremap(&pdev->dev, res->start, size);
->         if (!ptr) {
-> -               DRM_DEV_ERROR(&pdev->dev, "failed to ioremap: %s\n", name);
-> +               if (!quiet)
-> +                       DRM_DEV_ERROR(&pdev->dev, "failed to ioremap: %s\n", name);
->                 return ERR_PTR(-ENOMEM);
->         }
->
-> @@ -151,6 +153,18 @@ void __iomem *msm_ioremap(struct platform_device *pdev, const char *name,
->         return ptr;
->  }
->
-> +void __iomem *msm_ioremap(struct platform_device *pdev, const char *name,
-> +                         const char *dbgname)
-> +{
-> +       return _msm_ioremap(pdev, name, dbgname, false);
-> +}
-> +
-> +void __iomem *msm_ioremap_quiet(struct platform_device *pdev, const char *name,
-> +                               const char *dbgname)
-> +{
-> +       return _msm_ioremap(pdev, name, dbgname, true);
-> +}
-> +
->  void msm_writel(u32 data, void __iomem *addr)
->  {
->         if (reglog)
-> diff --git a/drivers/gpu/drm/msm/msm_drv.h b/drivers/gpu/drm/msm/msm_drv.h
-> index e2d6a6056418..2687f7a42c15 100644
-> --- a/drivers/gpu/drm/msm/msm_drv.h
-> +++ b/drivers/gpu/drm/msm/msm_drv.h
-> @@ -411,6 +411,8 @@ struct clk *msm_clk_bulk_get_clock(struct clk_bulk_data *bulk, int count,
->         const char *name);
->  void __iomem *msm_ioremap(struct platform_device *pdev, const char *name,
->                 const char *dbgname);
-> +void __iomem *msm_ioremap_quiet(struct platform_device *pdev, const char *name,
-> +               const char *dbgname);
->  void msm_writel(u32 data, void __iomem *addr);
->  u32 msm_readl(const void __iomem *addr);
->
-> --
-> 2.26.2
->
+diff --git a/drivers/phy/allwinner/phy-sun6i-mipi-dphy.c b/drivers/phy/allwinner/phy-sun6i-mipi-dphy.c
+index 79c8af5c7c1d..1fa761ba6cbb 100644
+--- a/drivers/phy/allwinner/phy-sun6i-mipi-dphy.c
++++ b/drivers/phy/allwinner/phy-sun6i-mipi-dphy.c
+@@ -233,7 +233,7 @@ static int sun6i_dphy_exit(struct phy *phy)
+ }
+ 
+ 
+-static struct phy_ops sun6i_dphy_ops = {
++static const struct phy_ops sun6i_dphy_ops = {
+ 	.configure	= sun6i_dphy_configure,
+ 	.power_on	= sun6i_dphy_power_on,
+ 	.power_off	= sun6i_dphy_power_off,
+@@ -241,7 +241,7 @@ static struct phy_ops sun6i_dphy_ops = {
+ 	.exit		= sun6i_dphy_exit,
+ };
+ 
+-static struct regmap_config sun6i_dphy_regmap_config = {
++static const struct regmap_config sun6i_dphy_regmap_config = {
+ 	.reg_bits	= 32,
+ 	.val_bits	= 32,
+ 	.reg_stride	= 4,
+-- 
+2.27.0
+
