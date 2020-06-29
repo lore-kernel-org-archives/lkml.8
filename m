@@ -2,56 +2,62 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A618DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E28FC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 85FFA2076C
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B1112076C
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:08:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593464937;
-	bh=OvzyPl8VfUotXnXLj0cygQ6yNQobozBfpnD05z44V4s=;
+	s=default; t=1593464939;
+	bh=vEjf/A/Kuk4YUAnfqpXqh4UJDM3Zzu27UFabstohaUI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OlFII2dVER5mNwTi2TKroret9yjStN9INC3n5OcGsGMLPEaCukSdsTw8K1gunYJ5C
-	 mdRJbJKslMwStdvHFlRTI/LiTvwpFGCwIJVA1ikmpX8nmQ0pbMpddUI9D+GLNX57SP
-	 Sl4ClvTdHqf5PAW9VCX0sZV1kpQqkXI5ZzcbmrLQ=
+	b=k/VY8W/Hu6vaH5NZNm9TiYRjm/6kgQyJiOeNKA/vkZL93+QMMPSOBY2kqHvkKtmRx
+	 87P5+ChM1Fx5usMp4ZQEJIeJpaUpUQZKqZJQeIyBwfntbrxCOIV9Ty/ell/dW5Y0LD
+	 Zhe1k8q2rgUWmNPcqeoZ5xjDxFJt71digCTU0y0A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390454AbgF2VIu (ORCPT
+        id S2390442AbgF2VIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:08:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45436 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:08:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730332AbgF2TAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730324AbgF2TAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:00:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F21025540;
-        Mon, 29 Jun 2020 15:55:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5333C254F3;
+        Mon, 29 Jun 2020 15:54:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446107;
-        bh=OvzyPl8VfUotXnXLj0cygQ6yNQobozBfpnD05z44V4s=;
+        s=default; t=1593446049;
+        bh=vEjf/A/Kuk4YUAnfqpXqh4UJDM3Zzu27UFabstohaUI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NXyFNYAQIRG/M/FnFRYro4OmuGmUAMOKs/JZsBsmZJlNnfW9fqAAfw+2hacdzFk4W
-         VOY+4xPyJcpNSYCpzgzYC3+NZuYnNEhDXET8vYT0fd5Gd7GpBsjpSYBinhO5DadRI0
-         gy7mYgQR+GjZxlL2b3V7FiLeUQQL7MWq+lHOV6bA=
+        b=gFrAFx3FByWmQZmM9OIcoVfMsfN04qTeAze0mPT8VKH/Qz3rFSHdGX24He1pQh+aU
+         DYX2BTj+JajscGIp7R41cNx/FKXpFaHfpbLO9pHHt2GoiJsqGK7SwbwkrgeG5lEJci
+         vGgQEQBRVw2uEyfuIa/n30c8tIEeQbfNon5eddlA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Longfang Liu <liulongfang@huawei.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.4 098/135] USB: ehci: reopen solution for Synopsys HC bug
-Date:   Mon, 29 Jun 2020 11:52:32 -0400
-Message-Id: <20200629155309.2495516-99-sashal@kernel.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Fangrui Song <maskray@google.com>,
+        Jeremy Fitzhardinge <jeremy@goop.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Ilie Halip <ilie.halip@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 052/135] elfnote: mark all .note sections SHF_ALLOC
+Date:   Mon, 29 Jun 2020 11:51:46 -0400
+Message-Id: <20200629155309.2495516-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.229-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-4.4.y
@@ -66,57 +72,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Longfang Liu <liulongfang@huawei.com>
+From: Nick Desaulniers <ndesaulniers@google.com>
 
-commit 1ddcb71a3edf0e1682b6e056158e4c4b00325f66 upstream.
+[ Upstream commit 51da9dfb7f20911ae4e79e9b412a9c2d4c373d4b ]
 
-A Synopsys USB2.0 core used in Huawei Kunpeng920 SoC has a bug which
-might cause the host controller not issuing ping.
+ELFNOTE_START allows callers to specify flags for .pushsection assembler
+directives.  All callsites but ELF_NOTE use "a" for SHF_ALLOC.  For vdso's
+that explicitly use ELF_NOTE_START and BUILD_SALT, the same section is
+specified twice after preprocessing, once with "a" flag, once without.
+Example:
 
-Bug description:
-After indicating an Interrupt on Async Advance, the software uses the
-doorbell mechanism to delete the Next Link queue head of the last
-executed queue head. At this time, the host controller still references
-the removed queue head(the queue head is NULL). NULL reference causes
-the host controller to lose the USB device.
+.pushsection .note.Linux, "a", @note ;
+.pushsection .note.Linux, "", @note ;
 
-Solution:
-After deleting the Next Link queue head, when has_synopsys_hc_bug set
-to 1，the software can write one of the valid queue head addresses to
-the ASYNCLISTADDR register to allow the host controller to get
-the valid queue head. in order to solve that problem, this patch set
-the flag for Huawei Kunpeng920
+While GNU as allows this ordering, it warns for the opposite ordering,
+making these directives position dependent.  We'd prefer not to precisely
+match this behavior in Clang's integrated assembler.  Instead, the non
+__ASSEMBLY__ definition of ELF_NOTE uses
+__attribute__((section(".note.Linux"))) which is created with SHF_ALLOC,
+so let's make the __ASSEMBLY__ definition of ELF_NOTE consistent with C
+and just always use "a" flag.
 
-There are detailed instructions and solutions in this patch:
-commit 2f7ac6c19997 ("USB: ehci: add workaround for Synopsys HC bug")
+This allows Clang to assemble a working mainline (5.6) kernel via:
+$ make CC=clang AS=clang
 
-Signed-off-by: Longfang Liu <liulongfang@huawei.com>
-Cc: stable <stable@vger.kernel.org>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Link: https://lore.kernel.org/r/1591588019-44284-1-git-send-email-liulongfang@huawei.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Fangrui Song <maskray@google.com>
+Cc: Jeremy Fitzhardinge <jeremy@goop.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Link: https://github.com/ClangBuiltLinux/linux/issues/913
+Link: http://lkml.kernel.org/r/20200325231250.99205-1-ndesaulniers@google.com
+Debugged-by: Ilie Halip <ilie.halip@gmail.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/ehci-pci.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ include/linux/elfnote.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/host/ehci-pci.c b/drivers/usb/host/ehci-pci.c
-index 2a5d2fd76040c..33e9ed7fe0266 100644
---- a/drivers/usb/host/ehci-pci.c
-+++ b/drivers/usb/host/ehci-pci.c
-@@ -229,6 +229,13 @@ static int ehci_pci_setup(struct usb_hcd *hcd)
- 		ehci_info(ehci, "applying MosChip frame-index workaround\n");
- 		ehci->frame_index_bug = 1;
- 		break;
-+	case PCI_VENDOR_ID_HUAWEI:
-+		/* Synopsys HC bug */
-+		if (pdev->device == 0xa239) {
-+			ehci_info(ehci, "applying Synopsys HC workaround\n");
-+			ehci->has_synopsys_hc_bug = 1;
-+		}
-+		break;
- 	}
+diff --git a/include/linux/elfnote.h b/include/linux/elfnote.h
+index 278e3ef053369..56c6d9031663d 100644
+--- a/include/linux/elfnote.h
++++ b/include/linux/elfnote.h
+@@ -53,7 +53,7 @@
+ .popsection				;
  
- 	/* optional debug port, normally in the first BAR */
+ #define ELFNOTE(name, type, desc)		\
+-	ELFNOTE_START(name, type, "")		\
++	ELFNOTE_START(name, type, "a")		\
+ 		desc			;	\
+ 	ELFNOTE_END
+ 
 -- 
 2.25.1
 
