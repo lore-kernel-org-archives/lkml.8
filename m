@@ -2,235 +2,176 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52BD1C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 582E0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:14:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3719A206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:14:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gxKy2bwo"
+	by mail.kernel.org (Postfix) with ESMTP id 3FD53206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:14:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731812AbgF2TO0 (ORCPT
+        id S1730998AbgF2TOe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:14:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43384 "EHLO
+        Mon, 29 Jun 2020 15:14:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731042AbgF2TOU (ORCPT
+        with ESMTP id S1731795AbgF2TOY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:14:20 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF9F8C0086DC;
-        Mon, 29 Jun 2020 02:31:33 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id q17so7653368pfu.8;
-        Mon, 29 Jun 2020 02:31:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=qe4WDxIQGl3f8nl5SssfB8C9vc9ueXmXwiDJGu9bR+U=;
-        b=gxKy2bwoStooFIbHMuvcV/ySW4DhExicwX6eDsJRMPKxT3EtXkkzy4XkPZ7XaBAXuL
-         dsCi0E0ZbCRPX9CA6lrQU0ga29adgeFdIRgXJjtuyloMTQnZ4IHAvGO42VKD1JSQtqx4
-         gLo9Ntqaqf1FDwUsl/4tvEBRQlNzQMViHgdFBu8rAY3E++k+ZFaYqfAy29nBtRRXcHPV
-         eudann+dY92ttd2o47kcoebTGocwMq5sNRKo9W31Bk+/Q/c5dQpujD1vq1Y+paMDOxPo
-         1pFGRPKNa+4nosY5izWIrVe17jk+JELQxI3GZoy1zTCNDM6Vc96RYfSi1wTwKKcqirt2
-         Nmug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=qe4WDxIQGl3f8nl5SssfB8C9vc9ueXmXwiDJGu9bR+U=;
-        b=rHhUylfB0+RPFZiSSjJmQBIxNr5lywH5JSo4IVv6MZFeiqFkigZ/62CUL1CYBxdqeu
-         8jMuvKiW6ze/90NmNUv1Teqo3jRFj+fU2h5rsCMQAmuQXUPbu9iiDk9D97sU6GmsdUer
-         vTfAw94IuwYRXjCkJplRFKdqQ7NcNKzEbxOWvsge3jgzZF6SZQJHchAbAaOXfxUCCBo7
-         ndRl5w4tPZN0Usmm88+r9Q2jlsFPkrze8FWHjhB3tI75KePkCOO0Qm9X+h601TdTYG1a
-         IBFSm4BfgExY31zBfFValD7pd4CAyctnWhnQ/MyU+a1h5o6Ua7PZqg9vNHnVkiHWmxcO
-         LdSw==
-X-Gm-Message-State: AOAM531ZbAD+NsaYYOo5YjMXhYXECfHGt3i1xwl4aoIc26uDkNPIAWav
-        fLzTT83Am3sEqR/aAFNv+XDmGkLpRK8=
-X-Google-Smtp-Source: ABdhPJzc/HXeM2Z10CROTyp/Ia6gJiD+wH9o2SbtefVvniYcFcPJgHQUf/d2M3s4RdRVXyc6lOCjcA==
-X-Received: by 2002:a63:1e60:: with SMTP id p32mr9294309pgm.172.1593423093298;
-        Mon, 29 Jun 2020 02:31:33 -0700 (PDT)
-Received: from varodek.localdomain ([106.210.40.90])
-        by smtp.gmail.com with ESMTPSA id q20sm2921286pfn.111.2020.06.29.02.31.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 02:31:32 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org
-Subject: [PATCH v1 3/5] ixgbe: use generic power management
-Date:   Mon, 29 Jun 2020 14:59:41 +0530
-Message-Id: <20200629092943.227910-4-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200629092943.227910-1-vaibhavgupta40@gmail.com>
-References: <20200629092943.227910-1-vaibhavgupta40@gmail.com>
+        Mon, 29 Jun 2020 15:14:24 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0433C061755;
+        Mon, 29 Jun 2020 04:05:33 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id E26C72A2184
+Subject: Re: [PATCH v2] PM / devfreq: rk3399_dmc: Fix kernel oops when
+ rockchip,pmu is absent
+To:     Chanwoo Choi <cw00.choi@samsung.com>, Marc Zyngier <maz@kernel.org>
+Cc:     =?UTF-8?Q?Heiko_St=c3=bcbner?= <heiko@sntech.de>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        kernel-team@android.com,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+References: <CGME20200622152844epcas1p2309f34247eb9653acdfd3818b7e6a569@epcas1p2.samsung.com>
+ <20200622152824.1054946-1-maz@kernel.org>
+ <784808d7-8943-44ab-f15a-34821e6d4d5f@samsung.com>
+ <87tuyue142.wl-maz@kernel.org>
+ <c1a5b730-0554-bb90-9d8d-b50390482e96@samsung.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <3de68490-d788-e416-dd5f-d4d6e7eca61a@collabora.com>
+Date:   Mon, 29 Jun 2020 13:05:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <c1a5b730-0554-bb90-9d8d-b50390482e96@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With legacy PM hooks, it was the responsibility of a driver to manage PCI
-states and also the device's power state. The generic approach is to let
-PCI core handle the work.
+Hi Chanwoo and Marc,
 
-ixgbe_suspend() calls __ixgbe_shutdown() to perform intermediate tasks.
-__ixgbe_shutdown() modifies the value of "wake" (device should be wakeup
-enabled or not), responsible for controlling the flow of legacy PM.
+On 29/6/20 13:09, Chanwoo Choi wrote:
+> Hi Enric,
+> 
+> Could you check this issue? Your patch[1] causes this issue.
+> As Marc mentioned, although rk3399-dmc.c handled 'rockchip,pmu'
+> as the mandatory property, your patch[1] didn't add the 'rockchip,pmu'
+> property to the documentation. 
+> 
 
-Since, PCI core has no idea about the value of "wake", new code for generic
-PM may produce unexpected results. Thus, use "device_set_wakeup_enable()"
-to wakeup-enable the device accordingly.
+I think the problem is that the DT binding patch, for some reason, was missed
+and didn't land. The patch seems to have all the required reviews and acks.
 
-Compile-tested only.
+  https://patchwork.kernel.org/patch/10901593/
 
-Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
----
- drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 61 +++++--------------
- 1 file changed, 15 insertions(+), 46 deletions(-)
+Sorry because I didn't notice this issue when 9173c5ceb035 landed. And thanks
+for fixing the issue.
 
-diff --git a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-index 97a423ecf808..145296825e64 100644
---- a/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-+++ b/drivers/net/ethernet/intel/ixgbe/ixgbe_main.c
-@@ -6861,32 +6861,20 @@ int ixgbe_close(struct net_device *netdev)
- 	return 0;
- }
- 
--#ifdef CONFIG_PM
--static int ixgbe_resume(struct pci_dev *pdev)
-+static int __maybe_unused ixgbe_resume(struct device *dev_d)
- {
-+	struct pci_dev *pdev = to_pci_dev(dev_d);
- 	struct ixgbe_adapter *adapter = pci_get_drvdata(pdev);
- 	struct net_device *netdev = adapter->netdev;
- 	u32 err;
- 
- 	adapter->hw.hw_addr = adapter->io_addr;
--	pci_set_power_state(pdev, PCI_D0);
--	pci_restore_state(pdev);
--	/*
--	 * pci_restore_state clears dev->state_saved so call
--	 * pci_save_state to restore it.
--	 */
--	pci_save_state(pdev);
- 
--	err = pci_enable_device_mem(pdev);
--	if (err) {
--		e_dev_err("Cannot enable PCI device from suspend\n");
--		return err;
--	}
- 	smp_mb__before_atomic();
- 	clear_bit(__IXGBE_DISABLED, &adapter->state);
- 	pci_set_master(pdev);
- 
--	pci_wake_from_d3(pdev, false);
-+	device_wakeup_disable(dev_d);
- 
- 	ixgbe_reset(adapter);
- 
-@@ -6904,7 +6892,6 @@ static int ixgbe_resume(struct pci_dev *pdev)
- 
- 	return err;
- }
--#endif /* CONFIG_PM */
- 
- static int __ixgbe_shutdown(struct pci_dev *pdev, bool *enable_wake)
- {
-@@ -6913,9 +6900,6 @@ static int __ixgbe_shutdown(struct pci_dev *pdev, bool *enable_wake)
- 	struct ixgbe_hw *hw = &adapter->hw;
- 	u32 ctrl;
- 	u32 wufc = adapter->wol;
--#ifdef CONFIG_PM
--	int retval = 0;
--#endif
- 
- 	rtnl_lock();
- 	netif_device_detach(netdev);
-@@ -6926,12 +6910,6 @@ static int __ixgbe_shutdown(struct pci_dev *pdev, bool *enable_wake)
- 	ixgbe_clear_interrupt_scheme(adapter);
- 	rtnl_unlock();
- 
--#ifdef CONFIG_PM
--	retval = pci_save_state(pdev);
--	if (retval)
--		return retval;
--
--#endif
- 	if (hw->mac.ops.stop_link_on_d3)
- 		hw->mac.ops.stop_link_on_d3(hw);
- 
-@@ -6986,26 +6964,18 @@ static int __ixgbe_shutdown(struct pci_dev *pdev, bool *enable_wake)
- 	return 0;
- }
- 
--#ifdef CONFIG_PM
--static int ixgbe_suspend(struct pci_dev *pdev, pm_message_t state)
-+static int __maybe_unused ixgbe_suspend(struct device *dev_d)
- {
-+	struct pci_dev *pdev = to_pci_dev(dev_d);
- 	int retval;
- 	bool wake;
- 
- 	retval = __ixgbe_shutdown(pdev, &wake);
--	if (retval)
--		return retval;
- 
--	if (wake) {
--		pci_prepare_to_sleep(pdev);
--	} else {
--		pci_wake_from_d3(pdev, false);
--		pci_set_power_state(pdev, PCI_D3hot);
--	}
-+	device_set_wakeup_enable(dev_d, wake);
- 
--	return 0;
-+	return retval;
- }
--#endif /* CONFIG_PM */
- 
- static void ixgbe_shutdown(struct pci_dev *pdev)
- {
-@@ -11489,16 +11459,15 @@ static const struct pci_error_handlers ixgbe_err_handler = {
- 	.resume = ixgbe_io_resume,
- };
- 
-+static SIMPLE_DEV_PM_OPS(ixgbe_pm_ops, ixgbe_suspend, ixgbe_resume);
-+
- static struct pci_driver ixgbe_driver = {
--	.name     = ixgbe_driver_name,
--	.id_table = ixgbe_pci_tbl,
--	.probe    = ixgbe_probe,
--	.remove   = ixgbe_remove,
--#ifdef CONFIG_PM
--	.suspend  = ixgbe_suspend,
--	.resume   = ixgbe_resume,
--#endif
--	.shutdown = ixgbe_shutdown,
-+	.name      = ixgbe_driver_name,
-+	.id_table  = ixgbe_pci_tbl,
-+	.probe     = ixgbe_probe,
-+	.remove    = ixgbe_remove,
-+	.driver.pm = &ixgbe_pm_ops,
-+	.shutdown  = ixgbe_shutdown,
- 	.sriov_configure = ixgbe_pci_sriov_configure,
- 	.err_handler = &ixgbe_err_handler
- };
--- 
-2.27.0
+Best regards,
+ Enric
 
+> [1] 9173c5ceb035 ("PM / devfreq: rk3399_dmc: Pass ODT
+> and auto power down parameters to TF-A.")
+> 
+> 
+> On 6/29/20 5:18 PM, Marc Zyngier wrote:
+>> Hi Chanwoo,
+>>
+>> On Mon, 29 Jun 2020 03:43:37 +0100,
+>> Chanwoo Choi <cw00.choi@samsung.com> wrote:
+>>>
+>>> Hi Marc,
+>>>
+>>> On 6/23/20 12:28 AM, Marc Zyngier wrote:
+>>
+>> [...]
+>>
+>>> It looks good to me. But, I think that it is not necessary
+>>> fully kernel panic log about NULL pointer. It is enoughspsp
+>>> just mentioning the NULL pointer issue without full kernel panic log.
+>>
+>> I personally find the backtrace useful as it allows people with the
+>> same issue to trawl the kernel log and find whether it has already be
+>> fixed upstream. But it's only me, and I'm not attached to it.
+>>
+>>> So, how about editing the patch description as following or others simply?
+>>> and we need to add 'stable@vger.kernel.org' to Cc list for applying it
+>>> to stable branch.
+>>
+>> Looks good to me.
+>>
+>>>
+>>>
+>>>   PM / devfreq: rk3399_dmc: Fix kernel oops when rockchip,pmu is absent
+>>>
+>>>     Booting a recent kernel on a rk3399-based system (nanopc-t4),
+>>>     equipped with a recent u-boot and ATF results in the kernel panic
+>>>     about NULL pointer issue.
+>>
+>> nit: "results in a kernel panic on dereferencing a NULL pointer".
+>>
+>>>
+>>>     This turns out to be due to the rk3399-dmc driver looking for
+>>>     an *undocumented* property (rockchip,pmu), and happily using
+>>>     a NULL pointer when the property isn't there.
+>>>
+>>>     Instead, make most of what was brought in with 9173c5ceb035
+>>>     ("PM / devfreq: rk3399_dmc: Pass ODT and auto power down parameters
+>>>     to TF-A.") conditioned on finding this property in the device-tree,
+>>>     preventing the driver from exploding.
+>>>
+>>>     Fixes: 9173c5ceb035 ("PM / devfreq: rk3399_dmc: Pass ODT and auto power down parameters to TF-A.")
+>>>     Signed-off-by: Marc Zyngier <maz@kernel.org>
+>>>     Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>>
+>>
+>> Note that the biggest issue is still there: the driver is using an
+>> undocumented property, and this patch is just papering over it.
+>> Since I expect this property to be useful for something, it would be
+>> good for whoever knows what it does to document it.
+> 
+> Hi Marc,
+> 
+> You are right. We have to do two step:
+> 1. Add missing explanation of 'rockchip,pmu' property to dt-binding document
+> 2. If possible, add 'rockchip,pmu' property node to rk3399_dmc dt node.
+> 
+> When I tried to find usage example of 'rockchip,pmu' property,
+> I found them as following: The 'rockchip,pmu' property[2] indicates
+> 'PMU (Power Management Unit)'. 
+> 
+> $ grep -rn "rockchip,pmu" arch/arm64/boot/dts/
+> arch/arm64/boot/dts/rockchip/px30.dtsi:1211:		rockchip,pmu = <&pmugrf>;
+> arch/arm64/boot/dts/rockchip/rk3399.dtsi:1909:		rockchip,pmu = <&pmugrf>;
+> arch/arm64/boot/dts/rockchip/rk3368.dtsi:807:		rockchip,pmu = <&pmugrf>;
+> 
+> [2] the description of 'rockchip,pmu' property
+> - https://elixir.bootlin.com/linux/v5.7.2/source/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt#L40
+> 
+> 
+> If don't receive the any reply, I'll add as following:
+> 
+> cwchoi00@chan-linux-pc:~/kernel/git.kernel/linux.chanwoo$ d
+> diff --git a/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt b/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
+> index 0ec68141f85a..161e60ea874b 100644
+> --- a/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
+> +++ b/Documentation/devicetree/bindings/devfreq/rk3399_dmc.txt
+> @@ -18,6 +18,8 @@ Optional properties:
+>                          format depends on the interrupt controller.
+>                          It should be a DCF interrupt. When DDR DVFS finishes
+>                          a DCF interrupt is triggered.
+> +- rockchip,pmu:                 Phandle to the syscon managing the "pmu general
+> +                        register files".
+>  
+>  Following properties relate to DDR timing:
+>  
+> 
+> 
