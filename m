@@ -2,123 +2,110 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC56C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F28DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:17:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C077206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60CF6206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:17:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qfyP5Rxg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731952AbgF2TRt convert rfc822-to-8bit (ORCPT
+        id S1731976AbgF2TR4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:17:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44324 "EHLO
+        Mon, 29 Jun 2020 15:17:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44314 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731953AbgF2TRn (ORCPT
+        with ESMTP id S1731954AbgF2TRn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:17:43 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 166F0C03079D
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 08:39:02 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id h19so18498546ljg.13
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 08:39:02 -0700 (PDT)
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ACA3FC030F31;
+        Mon, 29 Jun 2020 09:50:55 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id o1so746758plk.1;
+        Mon, 29 Jun 2020 09:50:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=epjZAavl8OTnrmj035AkLkdZa01IVf7hDefQw4XclfM=;
+        b=qfyP5RxgxAmyq6gPs73byd3YoUOiLlNFQvfce7YA6ZsR4onyELxfCTqCWi9/zFOy9v
+         7ispQlUC7C62ftj66FOnsAaCx06Splb36D3NXxPefaLlEexM+/GJp5SzYtsGakl+mL8B
+         eiPo23Xf8b/PqiyIqGS164oGgDUWUvPrIGy1sBMgspA0aqQBkcHfxRXfE3/2dFsV6dAW
+         k11LT22CZUqLUqGH2Em2PSrz5m+H6cJgWvUB96mb2oPQvs7VGaO1I4H9d6J/iOgaigXr
+         4af3bgasPy59TzF+5e2A/5fHzziw2TWZci3cAFqTzHOYBESugR9IwZ0F6+uS9vE1IZyq
+         e9DQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=UQmPCDX6xMOsUPe/v2T5v2xy5fsOZjivnEQOFoz/TIE=;
-        b=baouVJ3gD+I0VlenNRasksMaTOgh2MD0ap27alPsbihTh5ADnaARKaags2r5XfFJ5c
-         JtIoM4IUmOwFid7DFUWtaGs2a0Yu5wNGTJnPvIc8hn85KWjgwl/jujMwMWtiDm/JYQST
-         DgnWEUx8VVzue5ThodBk7TiqSjJAc6E925Q77XVf0BXl1B0v2BzhZHvosxt/OKKM3x1u
-         FvXuSJV91VFSnD/+He8HO9sW9Q57XG8xIyyKSJfFiLQeEgO5a9bdUtoOuiNhBRhAPksN
-         vuHxq9JCCkU16SiipEqIgxS2yO42RQtUHdDZU8QH4sZirqraUc2dDsd3gfVKgd+O5W5j
-         Lq/A==
-X-Gm-Message-State: AOAM530BmJA6weU9cF++lCjL3RrvKkMz8rzwPFxksu5dCcVq9A1bR3Cy
-        5+PwjoAcqu3pIhHRspAzTLhvtAI8IdU=
-X-Google-Smtp-Source: ABdhPJzqTgTER43gmMLxrLQzPWsW2sthTWJSc0MNSxQvpzC/50ihNTlFax6crYFapvJ6G5wlF9ORHw==
-X-Received: by 2002:a2e:b0da:: with SMTP id g26mr3840235ljl.299.1593445139962;
-        Mon, 29 Jun 2020 08:38:59 -0700 (PDT)
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
-        by smtp.gmail.com with ESMTPSA id u8sm11311lff.38.2020.06.29.08.38.59
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jun 2020 08:38:59 -0700 (PDT)
-Received: by mail-lj1-f171.google.com with SMTP id f8so6267475ljc.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 08:38:59 -0700 (PDT)
-X-Received: by 2002:a2e:890d:: with SMTP id d13mr8550620lji.75.1593445139288;
- Mon, 29 Jun 2020 08:38:59 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=epjZAavl8OTnrmj035AkLkdZa01IVf7hDefQw4XclfM=;
+        b=Ds++611FQtbDfwjmK0Ja4x9B58g+eThFp+aRwufbE2vjFMIxtgfGgWbB+qHZSOJdKh
+         5VsnBo8MQ/e2H3mNtffXUFLD2Ps4AcN9kHr36iYHIPL5ntx1ioOcUOHmT6F6ORvvbgW+
+         poPI0MMFucKV5HvwCURQH1raQjhOBVlulKj3W3r64sSU5qp/4vN+IRns1HuxGBDd5vk0
+         VWXkVyIEkbIQ9GQBHDI+CRTJo2gxuzAHOwZAjSdctc8LX2KFUTwCUmAD5MY6EKwcENhb
+         5HYFoGRr8/QMhmeS9C0i0JeRg+HEKWW381w6z2lIqX7+WFSzLSFvzpCqCxMNdjinfH9T
+         dvig==
+X-Gm-Message-State: AOAM531qr4mxBjjAKaoH7SAMxSn+Ci3wz8LYyEKVulMaeNx020qu7ULY
+        UQQkgwlPJjfciCCmyTDkTgvQAjzZORLlKmh1mmg=
+X-Google-Smtp-Source: ABdhPJwK8VIW73nkc0kipwx1fUf9LlTusE2dlg042QQH/vsyXg7aXQu6OoBfFkAIfefdmaXBT/ZOhM4ezkR0DNBgt9w=
+X-Received: by 2002:a17:902:8491:: with SMTP id c17mr6807522plo.262.1593449454975;
+ Mon, 29 Jun 2020 09:50:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200629123215.1014747-1-lee.jones@linaro.org> <20200629123215.1014747-6-lee.jones@linaro.org>
-In-Reply-To: <20200629123215.1014747-6-lee.jones@linaro.org>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Mon, 29 Jun 2020 23:38:47 +0800
-X-Gmail-Original-Message-ID: <CAGb2v66Ws4WNPZbOYQvikKoozj_2WjzS-Jq-o2VxT77=k0vODw@mail.gmail.com>
-Message-ID: <CAGb2v66Ws4WNPZbOYQvikKoozj_2WjzS-Jq-o2VxT77=k0vODw@mail.gmail.com>
-Subject: Re: [PATCH 5/5] mfd: axp20x-i2c: Do not define 'struct
- acpi_device_id' when !CONFIG_ACPI
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Carlo Caione <carlo@caione.org>
+References: <20200503105453.23658-1-miquel.raynal@bootlin.com> <20200629160844.6ecf79c1@xps13>
+In-Reply-To: <20200629160844.6ecf79c1@xps13>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 29 Jun 2020 19:50:41 +0300
+Message-ID: <CAHp75Vehv_Cp1AhMPhk8ktyp-uHSkgweqnhhSq_7w2Kf9y=7XQ@mail.gmail.com>
+Subject: Re: [PATCH v6] gpio: pca953x: Add Maxim MAX7313 PWM support
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-pwm@vger.kernel.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adding Hans to the list as he's the one that deals with all the x86
-platforms that use this series of chips.
+On Mon, Jun 29, 2020 at 5:08 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+> Miquel Raynal <miquel.raynal@bootlin.com> wrote on Sun,  3 May 2020
+> 12:54:53 +0200:
+>
+> > The MAX7313 chip is fully compatible with the PCA9535 on its basic
+> > functions but can also manage the intensity on each of its ports with
+> > PWM. Each output is independent and may be tuned with 16 values (4
+> > bits per output). The period is always 32kHz, only the duty-cycle may
+> > be changed. One can use any output as GPIO or PWM.
 
-On Mon, Jun 29, 2020 at 8:32 PM Lee Jones <lee.jones@linaro.org> wrote:
+> Can I have a status on this patch please?
 >
-> Since ACPI_PTR() is used to NULLify the value when !CONFIG_ACPI,
-> struct axp20x_i2c_acpi_match becomes defined by unused.
->
-> This squashes the current W=1 kernel builds warning:
->
->  drivers/mfd/axp20x-i2c.c:82:36: warning: ‘axp20x_i2c_acpi_match’ defined but not used [-Wunused-const-variable=]
->
-> Cc: Chen-Yu Tsai <wens@csie.org>
-> Cc: Carlo Caione <carlo@caione.org>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  drivers/mfd/axp20x-i2c.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/mfd/axp20x-i2c.c b/drivers/mfd/axp20x-i2c.c
-> index 14f9df74f855c..3dd650125c239 100644
-> --- a/drivers/mfd/axp20x-i2c.c
-> +++ b/drivers/mfd/axp20x-i2c.c
-> @@ -79,6 +79,7 @@ static const struct i2c_device_id axp20x_i2c_id[] = {
->  };
->  MODULE_DEVICE_TABLE(i2c, axp20x_i2c_id);
->
-> +#if IS_ENABLED(CONFIG_ACPI)
->  static const struct acpi_device_id axp20x_i2c_acpi_match[] = {
+> If it was forgotten, I would be good to have it queued now, otherwise,
+> may I know the reason?
 
-I'd rather use "__maybe_unused" if possible to at least get a compile
-check, and also because "ACPI_PTR NULLifies the value" might not be
-well known to people not working on ACPI-based platforms.
+TWIMC, just my 2 cents about this patch.
+I don't like it in this form. On the constructive side I can propose
+at least two ways to solve:
+a) introduce a PWM as a pin mode; move pca953x to pin control; use
+this mode with PWM driver being separated from the pin control;
+b) introduce an MFD that provides two parts for this GPIO & PWM.
 
-Either way,
+Personally I would go with a) as I know at least one more pin
+controller which will get an advantage of this (and it's definitely
+not an MFD).
 
-Acked-by: Chen-Yu Tsai <wens@csie.org>
+If GPIO / pin control maintainers consider this okay, I will rest my
+case, but see above...
 
-
->         {
->                 .id = "INT33F4",
-> @@ -87,6 +88,7 @@ static const struct acpi_device_id axp20x_i2c_acpi_match[] = {
->         { },
->  };
->  MODULE_DEVICE_TABLE(acpi, axp20x_i2c_acpi_match);
-> +#endif
->
->  static struct i2c_driver axp20x_i2c_driver = {
->         .driver = {
-> --
-> 2.25.1
->
+-- 
+With Best Regards,
+Andy Shevchenko
