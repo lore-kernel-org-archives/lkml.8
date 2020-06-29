@@ -2,127 +2,211 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DFBBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18631C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 76FB520720
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:38:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6C6A20672
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:38:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IJ889BmJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f07Xlc1R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732026AbgF2UiJ (ORCPT
+        id S1732221AbgF2UiN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:38:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43392 "EHLO
+        Mon, 29 Jun 2020 16:38:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731762AbgF2TOU (ORCPT
+        with ESMTP id S1731757AbgF2TOU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:14:20 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7E69C00877A;
-        Mon, 29 Jun 2020 02:21:35 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id o11so15770028wrv.9;
-        Mon, 29 Jun 2020 02:21:35 -0700 (PDT)
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B971BC008746;
+        Mon, 29 Jun 2020 01:29:58 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id g17so6807155plq.12;
+        Mon, 29 Jun 2020 01:29:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=u36sE6+AVFdBFxDD1Z4WGH1iqkdyYgs1gbZlLzZxPLE=;
-        b=IJ889BmJs5fJA5JUI2j9TnvlzUL6xKrXd3eu1AW6e3BrxmyJ2ATlUFZy+P7GIYORW6
-         HYez5wQ7G/KioFh7zuBQymOuqxnI7c6j5yRe11o57m44r8/F60mZ6D+45IRLGvKPT5qt
-         aW3wey9iITO657/ug3AKdVol5V7hFGckvAEbPUkmm4tbITw/bvsNqYeXyI4ykT/inVt3
-         sloPqSCvfLyPkPQG7mNpTNMCsWUbRe5bsYtwjHO8nL5cv993DWt6EhGXXCUqNcGEwttk
-         prxRqeBfShqro3WzaLRT8X+17rgo3DhgNG5L8W2ai+AlV91Mlb7pJO0OmOXsHs/DEz10
-         PgnQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=oH+afjmFUre+9FJ85sDhmbIb/IC6g4po5tsZa9lvjsM=;
+        b=f07Xlc1RfHdDURjJolZTPQDp5pEfso1a48bWdBhuRHv1QZTiAWgUu22ScPh1mTwIig
+         SV/S+f7osgn1CYkLxGukWgIiliXpYCG7q0i2Vus4lio+WRH9tMUKzyEYdXbK4t7UasfE
+         KcOCIY67Bxm3BY2YKG+CJ21lBruqtIeNm1p+/Z2A7OverRY/HWD/+5KdsUt7pPF1P9S6
+         A0myuaXZ3T8M9hTEvOEcXKAzqrzbA+yIBThrD5byqvlxqcLlf3RWS0g1jCCgAaU1wVDn
+         6dCiWM2OZxMupfZXK8UOZUxOmLy8VgmJGqUzLXJkfrcDmi7ectDy9tOuPWKDI9ZdY6AD
+         1JDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=u36sE6+AVFdBFxDD1Z4WGH1iqkdyYgs1gbZlLzZxPLE=;
-        b=DBlLYeZ+GaW/SlZ+ld0/yMz3loUdyO0spnDlXTjaLEXZgSNTgGnHLsHMDo29/caZCc
-         PzsVx/s+L28ewg7bQ1N3rf1gXRMGgbu+jsDWXHAJtz9Z4+ut9G5FnNJ+xXAGZmSj/scy
-         qbP3IlCA/XZzKqBPSAHo7w+W+jTy3nb+PPi7dViYvNeZ8+lpmu836OoE5ZOjLFdgI1JI
-         40wDs9rXLzkR/WRwhob5nFpx+eNE2fy31QhwfDIREj21mlSNIEUGqef3BJvdrV2C/h1J
-         v+G9KPqaFrCF6Jc9qwvr46GBils1ZogBI/NEgCNdW/PlZ3txFm6V7/1En43HVmW0e8jP
-         724A==
-X-Gm-Message-State: AOAM533eAvd6dQn6vdvk2ajzHZe3aNPsWKZOC1spEq6ALvHMnt9tuUi8
-        nkGR+KlIeZRlT2uuAUS1inI=
-X-Google-Smtp-Source: ABdhPJzh7GPo/4W5Lhu8m6qyhHoxvF0iYmpIYlqSS2hKwQ7UFkCIhEfG19AD/L05HblV+ynNCJCBSg==
-X-Received: by 2002:a5d:508e:: with SMTP id a14mr15439712wrt.335.1593422494478;
-        Mon, 29 Jun 2020 02:21:34 -0700 (PDT)
-Received: from localhost ([51.15.41.238])
-        by smtp.gmail.com with ESMTPSA id b18sm18487064wmb.18.2020.06.29.02.21.33
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=oH+afjmFUre+9FJ85sDhmbIb/IC6g4po5tsZa9lvjsM=;
+        b=LE90+83IeWpJoJtoSER3cUsvjOXq2uZXNECn78JqKFzOEfCMKV5DOJAIaA0LDHVQGp
+         S8Y+EPxOjXilMmLEhHosMKXAoJohB9HyPEjKRipAyyciMVe/VlJEjo5TwV6bcw/jJnoa
+         FRh+iluJfuSYDV8gTKjwMLIlsSZJ2UCKrg9Q1q3XAgH6YA3+n9+PP7kWT0TwXHX9H1lX
+         PMg6e/wTrKmF9uLMPODiCcQRxphFKPrfdB43tqJwjFl5XhTPA69znQipG8/5LqYqh5hd
+         kYtix6NTVisocsZsEIH0JfWAubjzfvBjDaIjOLVYXIdMSbUgFbzrET/GNoersmsxs+Q4
+         pa/Q==
+X-Gm-Message-State: AOAM530Y9wI3rdn5Faa9Tuf6hPenquZj62yD9Lb1JIx8UX6E+XCIB+YK
+        uB5hL6COScP8zDdTCJV5SHs=
+X-Google-Smtp-Source: ABdhPJxR43wP1sFEtNBwNe8FR/hj56jBT3/IpuCPOT3I/llm4eTgVn28U2THxOzPdm/pFRqtHfDxfg==
+X-Received: by 2002:a17:902:c142:: with SMTP id 2mr12962207plj.222.1593419398255;
+        Mon, 29 Jun 2020 01:29:58 -0700 (PDT)
+Received: from varodek.localdomain ([106.210.40.90])
+        by smtp.gmail.com with ESMTPSA id 202sm9133790pfw.84.2020.06.29.01.29.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 02:21:33 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 10:21:32 +0100
-From:   Stefan Hajnoczi <stefanha@gmail.com>
-To:     Liu Yi L <yi.l.liu@intel.com>
-Cc:     alex.williamson@redhat.com, eric.auger@redhat.com,
-        baolu.lu@linux.intel.com, joro@8bytes.org, kevin.tian@intel.com,
-        jacob.jun.pan@linux.intel.com, ashok.raj@intel.com,
-        jun.j.tian@intel.com, yi.y.sun@intel.com, jean-philippe@linaro.org,
-        peterx@redhat.com, hao.wu@intel.com,
-        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 13/14] vfio: Document dual stage control
-Message-ID: <20200629092132.GA31392@stefanha-x1.localdomain>
-References: <1592988927-48009-1-git-send-email-yi.l.liu@intel.com>
- <1592988927-48009-14-git-send-email-yi.l.liu@intel.com>
+        Mon, 29 Jun 2020 01:29:57 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Manish Chopra <manishc@marvell.com>,
+        GR-Linux-NIC-Dev@marvell.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>, netdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+Subject: [PATCH v1 2/4] staging/rtl8192e: use generic power management
+Date:   Mon, 29 Jun 2020 13:58:17 +0530
+Message-Id: <20200629082819.216405-3-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200629082819.216405-1-vaibhavgupta40@gmail.com>
+References: <20200629082819.216405-1-vaibhavgupta40@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="YZ5djTAD1cGYuMQK"
-Content-Disposition: inline
-In-Reply-To: <1592988927-48009-14-git-send-email-yi.l.liu@intel.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The structure of working of PM hooks for source files is:
+    drivers/staging/rtl8192e/rtl8192e/rtl_pm.h   : callbacks declared
+    drivers/staging/rtl8192e/rtl8192e/rtl_pm.c   : callbacks defined
+    drivers/staging/rtl8192e/rtl8192e/rtl_core.c : callbacks used
 
---YZ5djTAD1cGYuMQK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Drivers should not use legacy power management as they have to manage power
+states and related operations, for the device, themselves. This driver was
+handling them with the help of PCI helper functions like
+pci_save/restore_state(), pci_enable/disable_device(), etc.
 
-On Wed, Jun 24, 2020 at 01:55:26AM -0700, Liu Yi L wrote:
-> +Details can be found in Documentation/userspace-api/iommu.rst. For Intel
-> +VT-d, each stage 1 page table is bound to host by:
-> +
-> +    nesting_op->flags = VFIO_IOMMU_NESTING_OP_BIND_PGTBL;
-> +    memcpy(&nesting_op->data, &bind_data, sizeof(bind_data));
-> +    ioctl(container->fd, VFIO_IOMMU_NESTING_OP, nesting_op);
-> +
-> +As mentioned above, guest OS may use stage 1 for GIOVA->GPA or GVA->GPA.
-> +GVA->GPA page tables are available when PASID (Process Address Space ID)
-> +is exposed to guest. e.g. guest with PASID-capable devices assigned. For
-> +such page table binding, the bind_data should include PASID info, which
-> +is allocated by guest itself or by host. This depends on hardware vendor
-> +e.g. Intel VT-d requires to allocate PASID from host. This requirement is
-> +defined by the Virtual Command Support in VT-d 3.0 spec, guest software
-> +running on VT-d should allocate PASID from host kernel. To allocate PASID
-> +from host, user space should +check the IOMMU_NESTING_FEAT_SYSWIDE_PASID
+With generic PM, all essentials will be handled by the PCI core. Driver
+needs to do only device-specific operations.
 
-s/+check/check/g
+The driver was also using pci_enable_wake(...,..., 0) to disable wake. Use
+device_wakeup_disable() instead. Use device_set_wakeup_enable() where WOL
+is decided by the value of a variable during runtime.
 
-Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
+Compile-tested only.
 
---YZ5djTAD1cGYuMQK
-Content-Type: application/pgp-signature; name="signature.asc"
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+---
+ drivers/staging/rtl8192e/rtl8192e/rtl_core.c |  5 ++--
+ drivers/staging/rtl8192e/rtl8192e/rtl_pm.c   | 26 ++++++--------------
+ drivers/staging/rtl8192e/rtl8192e/rtl_pm.h   |  4 +--
+ 3 files changed, 12 insertions(+), 23 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/drivers/staging/rtl8192e/rtl8192e/rtl_core.c b/drivers/staging/rtl8192e/rtl8192e/rtl_core.c
+index a7cd4de65b28..dbcb8d0d9707 100644
+--- a/drivers/staging/rtl8192e/rtl8192e/rtl_core.c
++++ b/drivers/staging/rtl8192e/rtl8192e/rtl_core.c
+@@ -63,13 +63,14 @@ static int _rtl92e_pci_probe(struct pci_dev *pdev,
+ static void _rtl92e_pci_disconnect(struct pci_dev *pdev);
+ static irqreturn_t _rtl92e_irq(int irq, void *netdev);
+ 
++static SIMPLE_DEV_PM_OPS(rtl92e_pm_ops, rtl92e_suspend, rtl92e_resume);
++
+ static struct pci_driver rtl8192_pci_driver = {
+ 	.name = DRV_NAME,	/* Driver name   */
+ 	.id_table = rtl8192_pci_id_tbl,	/* PCI_ID table  */
+ 	.probe	= _rtl92e_pci_probe,	/* probe fn      */
+ 	.remove	 = _rtl92e_pci_disconnect,	/* remove fn */
+-	.suspend = rtl92e_suspend,	/* PM suspend fn */
+-	.resume = rtl92e_resume,                 /* PM resume fn  */
++	.driver.pm = &rtl92e_pm_ops,
+ };
+ 
+ static short _rtl92e_is_tx_queue_empty(struct net_device *dev);
+diff --git a/drivers/staging/rtl8192e/rtl8192e/rtl_pm.c b/drivers/staging/rtl8192e/rtl8192e/rtl_pm.c
+index cd3e17b41d6f..5575186caebd 100644
+--- a/drivers/staging/rtl8192e/rtl8192e/rtl_pm.c
++++ b/drivers/staging/rtl8192e/rtl8192e/rtl_pm.c
+@@ -10,9 +10,9 @@
+ #include "rtl_pm.h"
+ 
+ 
+-int rtl92e_suspend(struct pci_dev *pdev, pm_message_t state)
++int rtl92e_suspend(struct device *dev_d)
+ {
+-	struct net_device *dev = pci_get_drvdata(pdev);
++	struct net_device *dev = dev_get_drvdata(dev_d);
+ 	struct r8192_priv *priv = rtllib_priv(dev);
+ 	u32	ulRegRead;
+ 
+@@ -46,40 +46,28 @@ int rtl92e_suspend(struct pci_dev *pdev, pm_message_t state)
+ out_pci_suspend:
+ 	netdev_info(dev, "WOL is %s\n", priv->rtllib->bSupportRemoteWakeUp ?
+ 			    "Supported" : "Not supported");
+-	pci_save_state(pdev);
+-	pci_disable_device(pdev);
+-	pci_enable_wake(pdev, pci_choose_state(pdev, state),
+-			priv->rtllib->bSupportRemoteWakeUp ? 1 : 0);
+-	pci_set_power_state(pdev, pci_choose_state(pdev, state));
++	device_set_wakeup_enable(dev_d, priv->rtllib->bSupportRemoteWakeUp);
+ 
+ 	mdelay(20);
+ 
+ 	return 0;
+ }
+ 
+-int rtl92e_resume(struct pci_dev *pdev)
++int rtl92e_resume(struct device *dev_d)
+ {
+-	struct net_device *dev = pci_get_drvdata(pdev);
++	struct pci_dev *pdev = to_pci_dev(dev_d);
++	struct net_device *dev = dev_get_drvdata(dev_d);
+ 	struct r8192_priv *priv = rtllib_priv(dev);
+-	int err;
+ 	u32 val;
+ 
+ 	netdev_info(dev, "================>r8192E resume call.\n");
+ 
+-	pci_set_power_state(pdev, PCI_D0);
+-
+-	err = pci_enable_device(pdev);
+-	if (err) {
+-		netdev_err(dev, "pci_enable_device failed on resume\n");
+-		return err;
+-	}
+-	pci_restore_state(pdev);
+ 
+ 	pci_read_config_dword(pdev, 0x40, &val);
+ 	if ((val & 0x0000ff00) != 0)
+ 		pci_write_config_dword(pdev, 0x40, val & 0xffff00ff);
+ 
+-	pci_enable_wake(pdev, PCI_D0, 0);
++	device_wakeup_disable(dev_d);
+ 
+ 	if (priv->polling_timer_on == 0)
+ 		rtl92e_check_rfctrl_gpio_timer(&priv->gpio_polling_timer);
+diff --git a/drivers/staging/rtl8192e/rtl8192e/rtl_pm.h b/drivers/staging/rtl8192e/rtl8192e/rtl_pm.h
+index e58f2bcdb1dd..fd8611495975 100644
+--- a/drivers/staging/rtl8192e/rtl8192e/rtl_pm.h
++++ b/drivers/staging/rtl8192e/rtl8192e/rtl_pm.h
+@@ -10,7 +10,7 @@
+ #include <linux/types.h>
+ #include <linux/pci.h>
+ 
+-int rtl92e_suspend(struct pci_dev *dev, pm_message_t state);
+-int rtl92e_resume(struct pci_dev *dev);
++int rtl92e_suspend(struct device *dev_d);
++int rtl92e_resume(struct device *dev_d);
+ 
+ #endif
+-- 
+2.27.0
 
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl75spgACgkQnKSrs4Gr
-c8gpagf9FTccG+B43s7SRg40eJAbPdgjqaIGSOHqn1yr6h4wG9TuIbEZ9RTdmYdm
-OsRKzgTHXIQ6C7tk9qW9o5tUa0qFbeYKsOaxMPYt11sEio0dTJsv82DN4Frl422t
-8UMqnTHS2w6hK2ia+Vze5zRF1otE0YPJmnO2riabWnX0i3Imp3n2sEaV8uuZMFie
-WSEUaVcm2db2HnS1W02ydcserBdM2RmaMCJ3mbbzlLMfqF6sK/h+UWXqIIfgJk6y
-A/F0I15YUSxlGVeNpWym8mbJPDrKmdxu2LuB8Mc1HF/ByH9OY9tlmApru5EGkr/x
-hGn3rreQu+7yknOXixQ9sQ5l8jiweg==
-=PF2X
------END PGP SIGNATURE-----
-
---YZ5djTAD1cGYuMQK--
