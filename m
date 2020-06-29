@@ -2,182 +2,139 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75378C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E10AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5AD13204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:46:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1472F204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:46:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbgF2SqM (ORCPT
+        id S1729220AbgF2Sq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:46:12 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61662 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728088AbgF2SqI (ORCPT
+        Mon, 29 Jun 2020 14:46:27 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:58803 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbgF2SqG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:46:08 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05TFZsCK187966;
-        Mon, 29 Jun 2020 11:50:18 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31ycksfa3p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 Jun 2020 11:50:17 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05TFa3TW188984;
-        Mon, 29 Jun 2020 11:50:17 -0400
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31ycksfa2u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 Jun 2020 11:50:17 -0400
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05TFktZH001146;
-        Mon, 29 Jun 2020 15:50:15 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma06fra.de.ibm.com with ESMTP id 31wwcgs6hw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 Jun 2020 15:50:15 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05TFoDIt50921500
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 29 Jun 2020 15:50:13 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 37EB6AE045;
-        Mon, 29 Jun 2020 15:50:13 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DAF6AAE057;
-        Mon, 29 Jun 2020 15:50:12 +0000 (GMT)
-Received: from oc3871087118.ibm.com (unknown [9.145.156.24])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 29 Jun 2020 15:50:12 +0000 (GMT)
-From:   Alexander Gordeev <agordeev@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Alexander Gordeev <agordeev@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: [PATCH 2/3] perf bench numa: fix benchmark names
-Date:   Mon, 29 Jun 2020 17:50:08 +0200
-Message-Id: <aee0cc30c77779673d2c473693cfb7abb3f1de58.1593445668.git.agordeev@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <cover.1593445668.git.agordeev@linux.ibm.com>
-References: <cover.1593445668.git.agordeev@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-06-29_15:2020-06-29,2020-06-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
- mlxscore=0 bulkscore=0 priorityscore=1501 phishscore=0 spamscore=0
- clxscore=1015 malwarescore=0 mlxlogscore=999 suspectscore=1
- cotscore=-2147483648 lowpriorityscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006290103
+        Mon, 29 Jun 2020 14:46:06 -0400
+Received: from mail-qt1-f173.google.com ([209.85.160.173]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1N63i4-1ijUcQ1moa-016RQt for <linux-kernel@vger.kernel.org>; Mon, 29 Jun
+ 2020 14:31:02 +0200
+Received: by mail-qt1-f173.google.com with SMTP id x62so12639867qtd.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 05:31:02 -0700 (PDT)
+X-Gm-Message-State: AOAM531p7869LT5njh8wnj6KVn4FQ+Xh3qJNQJcKg59cP05CCuxmgU9O
+        tVvku5tfDJ695M6Z1OLQ+sQp2J7zRce2QdWcvKA=
+X-Google-Smtp-Source: ABdhPJyi8d5XSsqDz2xGWs39SMtTovk0NumfjVlNgvEVQqVelWtmCwHZ6CtxBJqI3LVrMPW8vqPvDjskRDxpKTJl7uo=
+X-Received: by 2002:ac8:7587:: with SMTP id s7mr15464702qtq.304.1593433861257;
+ Mon, 29 Jun 2020 05:31:01 -0700 (PDT)
+MIME-Version: 1.0
+References: <1593425623-31810-1-git-send-email-Anson.Huang@nxp.com>
+ <1593425623-31810-2-git-send-email-Anson.Huang@nxp.com> <CAK8P3a31coESQTssW1mndGuZ1pvxXSRRpY=XT1ZO+pkj9aabxg@mail.gmail.com>
+ <DB3PR0402MB3916987E13C37013ACF59EB1F56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAK8P3a3Ar3TnSuxpUUMj4NjCK0Qb0pD9cVbcFUcdeGa85m2fUQ@mail.gmail.com> <DB3PR0402MB3916192607A09C7061740087F56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <DB3PR0402MB3916192607A09C7061740087F56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 29 Jun 2020 14:30:45 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a1NoyMGNK90WzbgJ7opPbiVL8vwnMEuBeeNPNyvB+5sqQ@mail.gmail.com>
+Message-ID: <CAK8P3a1NoyMGNK90WzbgJ7opPbiVL8vwnMEuBeeNPNyvB+5sqQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] arm64: defconfig: Select CONFIG_RESET_IMX7 by default
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Stefan Agner <stefan.agner@toradex.com>,
+        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Leo Li <leoyang.li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Olof Johansson <olof@lixom.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:2bbfnnu6caMfroSf3X6brnBsM4ueKxnAkzlLwmtvc7NLrcVsHrG
+ HG76r3AKyTfjXtQvSsvspWv6vx8BJvIpJ+SYUFm1kKL+CKntyhkyzI0zuvAGUEWog7SlI2D
+ BJRJthS7uCO0R2+HXeUsxIL4380OI2P7I31pzOUAp5pt1FiI8u1eeoaYd7YSAK2+3LZrkIt
+ aDA+yQeFVhaTWSiwmn8nA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:EeNE1Bczr/E=:vh9X1h67EmkOmWVO+u3MlR
+ 6daWYLlzK8gV5wW6CEZWyje4BRW7MElm84xD2hG0JMjTt6dt2OcZUrd3nNSVWZFPebb6xnr5O
+ ZSnOaJXT939t8FT5IncDhIacZwF7daeXNchIGOb2FTzJYvTnUHPNCVqzWQVmZpjzFdTIu8a/2
+ O0XzT1j6gQYfZyl6Hmi0OOQSWNmLUejAPbAWE+S5+DuUQFjrxJvtSU/BgHnra35emZVzoDhzI
+ YY5gaSUl1HXyrTB0asdpv+KRE2MB94I+0rJc7OXvrMWdRK6rDiZy8tRJ6SPouy+Ix5nSn6WOP
+ HhrBesKYfAkbAtJHLTpIHXHCoEsYdduz0k+Ew9mZkTNedxkiCwB6w6YoLSW9w+2DUbmRdkrgg
+ Uo081LIZP6S6CuOhd1KnLk9jK9wEVk+n4eD+q2bH5TW+pI/DDZHTfclfrigwdt+fOsW6BriNY
+ bG1PdhTZx4EaYtCiAvEBEKCuAsDbggojHKPRo9pvaj/ls3eKl0l3X5LuSmKXGQxrQnqgKhhGh
+ M8o53h+f3GkmTJ8tu2A5s/G+NkypngXw5YpA+4LgRp5QBQSz/igkt16gwKGTUj+a5UULj/5L4
+ nD4h32mFdpkfe9UgmkbuFkiAwAffoVhz8xv9Q6mtMU3IxeqLUuR3pT9bthmbQVxJZhsfDnUUo
+ 9CAQ2YOh7f47fH/W6l3P/CUuInMvzPGPvfNZSFGSQLx6Yyvt7pGESJFB0BPsNW/9WhtuU/WfY
+ I2dS0KFCCRbemrvlvVeUFiigvMawJcaqNUsSZArBTqWvf3X1hNbXRGyeapPsNAheNE+YGSvRM
+ 4YfgTYvlW/SHSag8fBJr1cLxroUiskIxgldnF0XgboudRaKZJE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Several benchmarks have names that do not correspond to
-their configuration. Fix that and also some whitespace
-inconsistencies.
+On Mon, Jun 29, 2020 at 2:09 PM Anson Huang <anson.huang@nxp.com> wrote:
+> >
+> > It sounds like your patch 1/3 is not ready to be merged then.
+> >
+> > Please make sure that loading it later does not break other drivers that depend
+> > on it. Other drivers don't have to be able to deal with missing dependencies if
+> > this one is never loaded or disabled at compile-time. However before you
+> > make it possible to turn this into a loadable module, anything that depends on
+> > it must be able to deal with the modules getting loaded in a random order
+> > first.
+> >
+> I searched all driver which uses this reset driver, looks like ONLY i.MX6 PCIe is using it and
+> it ONLY supports built-in.
 
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
----
- tools/perf/bench/numa.c | 42 +++++++++++++++++++++---------------------
- 1 file changed, 21 insertions(+), 21 deletions(-)
+Ok, thanks for researching this.
 
-diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
-index 5497c74..7965a55 100644
---- a/tools/perf/bench/numa.c
-+++ b/tools/perf/bench/numa.c
-@@ -812,12 +812,12 @@ static u64 do_work(u8 *__data, long bytes, int nr, int nr_max, int loop, u64 val
- 			}
- 		}
- 	} else if (!g->p.data_backwards || (nr + loop) & 1) {
-+		/* Process data forwards: */
- 
- 		d0 = data + off;
- 		d  = data + off + 1;
- 		d1 = data + words;
- 
--		/* Process data forwards: */
- 		for (;;) {
- 			if (unlikely(d >= d1))
- 				d = data;
-@@ -835,7 +835,6 @@ static u64 do_work(u8 *__data, long bytes, int nr, int nr_max, int loop, u64 val
- 		d  = data + off - 1;
- 		d1 = data + words;
- 
--		/* Process data forwards: */
- 		for (;;) {
- 			if (unlikely(d < data))
- 				d = data + words-1;
-@@ -1732,12 +1731,12 @@ static int run_bench_numa(const char *name, const char **argv)
-  */
- static const char *tests[][MAX_ARGS] = {
-    /* Basic single-stream NUMA bandwidth measurements: */
--   { "RAM-bw-local,",	  "mem",  "-p",  "1",  "-t",  "1", "-P", "1024",
-+   { "RAM-bw-local,",     "mem",  "-p",  "1",  "-t",  "1", "-P", "1024",
- 			  "-C" ,   "0", "-M",   "0", OPT_BW_RAM },
-    { "RAM-bw-local-NOTHP,",
- 			  "mem",  "-p",  "1",  "-t",  "1", "-P", "1024",
- 			  "-C" ,   "0", "-M",   "0", OPT_BW_RAM_NOTHP },
--   { "RAM-bw-remote,",	  "mem",  "-p",  "1",  "-t",  "1", "-P", "1024",
-+   { "RAM-bw-remote,",    "mem",  "-p",  "1",  "-t",  "1", "-P", "1024",
- 			  "-C" ,   "0", "-M",   "1", OPT_BW_RAM },
- 
-    /* 2-stream NUMA bandwidth measurements: */
-@@ -1779,27 +1778,28 @@ static int run_bench_numa(const char *name, const char **argv)
- 			  "mem",  "-p",  "8", "-t",  "1", "-P", " 512", OPT_BW_NOTHP },
-    { "16x1-bw-process,",  "mem",  "-p", "16", "-t",  "1", "-P",  "256", OPT_BW },
- 
--   { " 4x1-bw-thread,",	  "mem",  "-p",  "1", "-t",  "4", "-T",  "256", OPT_BW },
--   { " 8x1-bw-thread,",	  "mem",  "-p",  "1", "-t",  "8", "-T",  "256", OPT_BW },
--   { "16x1-bw-thread,",   "mem",  "-p",  "1", "-t", "16", "-T",  "128", OPT_BW },
--   { "32x1-bw-thread,",   "mem",  "-p",  "1", "-t", "32", "-T",   "64", OPT_BW },
-+   { " 1x4-bw-thread,",   "mem",  "-p",  "1", "-t",  "4", "-T",  "256", OPT_BW },
-+   { " 1x8-bw-thread,",   "mem",  "-p",  "1", "-t",  "8", "-T",  "256", OPT_BW },
-+   { "1x16-bw-thread,",   "mem",  "-p",  "1", "-t", "16", "-T",  "128", OPT_BW },
-+   { "1x32-bw-thread,",   "mem",  "-p",  "1", "-t", "32", "-T",   "64", OPT_BW },
- 
--   { " 2x3-bw-thread,",	  "mem",  "-p",  "2", "-t",  "3", "-P",  "512", OPT_BW },
--   { " 4x4-bw-thread,",	  "mem",  "-p",  "4", "-t",  "4", "-P",  "512", OPT_BW },
--   { " 4x6-bw-thread,",	  "mem",  "-p",  "4", "-t",  "6", "-P",  "512", OPT_BW },
--   { " 4x8-bw-thread,",	  "mem",  "-p",  "4", "-t",  "8", "-P",  "512", OPT_BW },
--   { " 4x8-bw-thread-NOTHP,",
-+   { " 2x3-bw-process,",  "mem",  "-p",  "2", "-t",  "3", "-P",  "512", OPT_BW },
-+   { " 4x4-bw-process,",  "mem",  "-p",  "4", "-t",  "4", "-P",  "512", OPT_BW },
-+   { " 4x6-bw-process,",  "mem",  "-p",  "4", "-t",  "6", "-P",  "512", OPT_BW },
-+   { " 4x8-bw-process,",  "mem",  "-p",  "4", "-t",  "8", "-P",  "512", OPT_BW },
-+   { " 4x8-bw-process-NOTHP,",
- 			  "mem",  "-p",  "4", "-t",  "8", "-P",  "512", OPT_BW_NOTHP },
--   { " 3x3-bw-thread,",	  "mem",  "-p",  "3", "-t",  "3", "-P",  "512", OPT_BW },
--   { " 5x5-bw-thread,",	  "mem",  "-p",  "5", "-t",  "5", "-P",  "512", OPT_BW },
-+   { " 3x3-bw-process,",  "mem",  "-p",  "3", "-t",  "3", "-P",  "512", OPT_BW },
-+   { " 5x5-bw-process,",  "mem",  "-p",  "5", "-t",  "5", "-P",  "512", OPT_BW },
- 
--   { "2x16-bw-thread,",   "mem",  "-p",  "2", "-t", "16", "-P",  "512", OPT_BW },
--   { "1x32-bw-thread,",   "mem",  "-p",  "1", "-t", "32", "-P", "2048", OPT_BW },
-+   { "2x16-bw-process,",  "mem",  "-p",  "2", "-t", "16", "-P",  "512", OPT_BW },
-+   { "1x32-bw-process,",  "mem",  "-p",  "1", "-t", "32", "-P", "2048", OPT_BW },
- 
--   { "numa02-bw,",	  "mem",  "-p",  "1", "-t", "32", "-T",   "32", OPT_BW },
--   { "numa02-bw-NOTHP,",  "mem",  "-p",  "1", "-t", "32", "-T",   "32", OPT_BW_NOTHP },
--   { "numa01-bw-thread,", "mem",  "-p",  "2", "-t", "16", "-T",  "192", OPT_BW },
--   { "numa01-bw-thread-NOTHP,",
-+   { "1x32-bw-thread,",   "mem",  "-p",  "1", "-t", "32", "-T",   "32", OPT_BW },
-+   { "1x32-bw-thread-NOTHP,",
-+			  "mem",  "-p",  "1", "-t", "32", "-T",   "32", OPT_BW_NOTHP },
-+   { "2x16-bw-thread,",   "mem",  "-p",  "2", "-t", "16", "-T",  "192", OPT_BW },
-+   { "2x16-bw-thread-NOTHP,",
- 			  "mem",  "-p",  "2", "-t", "16", "-T",  "192", OPT_BW_NOTHP },
- };
- 
--- 
-1.8.3.1
+> and inside this driver, it does NOT support defer probe etc.,
+> since I am NOT sure when this PCIe driver will add module support, so do you think if I
+> can make PCI_IMX6 select RESET_IMX7, then it won't break the PCIe function even
+> RESET_IMX7 is set to =m in defconfig, as when PCI_IMX6 is enabled as =y, RESET_IMX7 will
+> be also =y.
 
+Yes, I think this can work as a short-term workaround, though ideally the
+PCIe driver would also become a loadable module and also support deferred
+probing.
+
+Having loadable PCIe drivers has traditionally been problematic in Linux,
+but Rob Herring has recently improved this in the series containing patch
+0c59c06a7c90 ("PCI: host-generic: Support building as modules"), which
+was also intended to help with Android GKI.
+
+As i.MX uses the designware PCI core support, this may require some
+more changes in PCIE_DW before the i.MX specific part can be
+a loadable module, but it should no longer require changes to the
+PCI core code. Turning the driver into a loadable module is probably
+not even that hard, but making it possible to unload definitely requires
+adding a proper .remove callback to properly unregister the PCIe
+host bridge.
+
+I also see a DECLARE_PCI_FIXUP() and a fault handler hook in
+the pci-imx6.c driver, which probably need to get moved into
+a separate built-in file with a few changes.
+
+And then I noticed a bug in the driver: it hooks the abort handler
+from an initcall whenever the driver is built into the kernel, regardless
+of which machine it is actually running on!
+
+Regarding deferrer probing, the PCIe host currently relies on
+the clk controller,  the regulator and (on imx7d) the reset driver
+to be probed first. I think making it support deferred probing for
+all three should be straightforward, most importantly this means
+not printing an error and returning -EPROBE_DEFER when not
+all dependencies are there yet.
+
+       Arnd
