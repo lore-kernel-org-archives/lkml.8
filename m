@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E26D1C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E10C5C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:05:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4D1620857
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:05:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC8CB2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:05:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461121;
-	bh=Y+UfLkZNVxHu05Ixfv4l8PA8ebf5ntCkxmCcSgp/xK0=;
+	s=default; t=1593461129;
+	bh=NWUUJ1ukVy0W+JRdz6CTMeUjSDfAUf92Fvbytatqz4E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mvorz+unG37tw5apAHCYDvjxmX7Qlsj+5nwRQkpX/BRBhDzjyKoG0ZKBncBEsQK65
-	 P1dPtvd01Si7QgeSyZMofmMeawRSO6dr4Yuf4SDmp7+soWOEPWuvxMaBLPpTc+7ZJe
-	 B9ClSWIIy7AJet+jjJgWyOFyE3gJS8wnY2bZBp3M=
+	b=oEAGeaf57K9TdYfNjGjtDp3cCzUhbeeW0QqsScinEZwjNIb6J9ZjEzfGOptsHEwpk
+	 Y+9+6lIOJ7DYDUMODEuGbwiNz34N9lIS+/8ZnTsmgN5xpXubR1y4sndV0ACZUan8/9
+	 YbBPsn+TtzUEQJREnHTLeyhXto2vmaitxe5eJ4fc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388505AbgF2UFQ (ORCPT
+        id S2388731AbgF2UF2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:05:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40600 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:05:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732977AbgF2Ta3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:30:29 -0400
+        id S1732970AbgF2Ta2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:30:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B582525288;
-        Mon, 29 Jun 2020 15:36:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6C4325222;
+        Mon, 29 Jun 2020 15:35:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444996;
-        bh=Y+UfLkZNVxHu05Ixfv4l8PA8ebf5ntCkxmCcSgp/xK0=;
+        s=default; t=1593444940;
+        bh=NWUUJ1ukVy0W+JRdz6CTMeUjSDfAUf92Fvbytatqz4E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2nVJK1uSDoWfAQqhKzVRdexLFyLlQvZNFtLVsLGDuLgF0IUrYEk+7YpYKsmw5kaXc
-         Lu38zUojq95r864VCycKH30SdBSVvFeMmB+udBZMaIcz84858o6yB8s+Z2Q+fRcXcZ
-         lyLyrrGMizPX2zmv0lz5IE01JzU4X++D/ZC8eOp8=
+        b=jv/saoPFwZKxPlWqaM2tSxQiwktyMYuLKyVacJBLvqPp9iw7QeJUNS7AK5nmjSzjo
+         YagJ8zQskBctFNvmbJLYE7e0z7PDxQ1ZV1kcxDD12LkJkj1aLrtFnW9SJOquvca7OR
+         QxlPRkmVcIbixAUwymKRyMD2lDNjg65ekCnv2+zg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Falcon <tlfalcon@linux.ibm.com>,
+Cc:     =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 096/131] ibmvnic: Harden device login requests
-Date:   Mon, 29 Jun 2020 11:34:27 -0400
-Message-Id: <20200629153502.2494656-97-sashal@kernel.org>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.19 037/131] sch_cake: don't call diffserv parsing code when it is not needed
+Date:   Mon, 29 Jun 2020 11:33:28 -0400
+Message-Id: <20200629153502.2494656-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-4.19.y
@@ -65,72 +66,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Falcon <tlfalcon@linux.ibm.com>
+From: Toke Høiland-Jørgensen <toke@redhat.com>
 
-[ Upstream commit dff515a3e71dc8ab3b9dcc2e23a9b5fca88b3c18 ]
+[ Upstream commit 8c95eca0bb8c4bd2231a0d581f1ad0d50c90488c ]
 
-The VNIC driver's "login" command sequence is the final step
-in the driver's initialization process with device firmware,
-confirming the available device queue resources to be utilized
-by the driver. Under high system load, firmware may not respond
-to the request in a timely manner or may abort the request. In
-such cases, the driver should reattempt the login command
-sequence. In case of a device error, the number of retries
-is bounded.
+As a further optimisation of the diffserv parsing codepath, we can skip it
+entirely if CAKE is configured to neither use diffserv-based
+classification, nor to zero out the diffserv bits.
 
-Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
+Fixes: c87b4ecdbe8d ("sch_cake: Make sure we can write the IP header before changing DSCP bits")
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/ibm/ibmvnic.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+ net/sched/sch_cake.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
-index 645298628b6f7..5e9e45befc875 100644
---- a/drivers/net/ethernet/ibm/ibmvnic.c
-+++ b/drivers/net/ethernet/ibm/ibmvnic.c
-@@ -792,12 +792,13 @@ static int ibmvnic_login(struct net_device *netdev)
- 	struct ibmvnic_adapter *adapter = netdev_priv(netdev);
- 	unsigned long timeout = msecs_to_jiffies(30000);
- 	int retry_count = 0;
-+	int retries = 10;
- 	bool retry;
- 	int rc;
+diff --git a/net/sched/sch_cake.c b/net/sched/sch_cake.c
+index d8064cb521c4c..d03f843647aea 100644
+--- a/net/sched/sch_cake.c
++++ b/net/sched/sch_cake.c
+@@ -1508,7 +1508,7 @@ static unsigned int cake_drop(struct Qdisc *sch, struct sk_buff **to_free)
+ 	return idx + (tin << 16);
+ }
  
- 	do {
- 		retry = false;
--		if (retry_count > IBMVNIC_MAX_QUEUES) {
-+		if (retry_count > retries) {
- 			netdev_warn(netdev, "Login attempts exceeded\n");
- 			return -1;
- 		}
-@@ -812,11 +813,23 @@ static int ibmvnic_login(struct net_device *netdev)
+-static u8 cake_handle_diffserv(struct sk_buff *skb, u16 wash)
++static u8 cake_handle_diffserv(struct sk_buff *skb, bool wash)
+ {
+ 	const int offset = skb_network_offset(skb);
+ 	u16 *buf, buf_;
+@@ -1569,13 +1569,16 @@ static struct cake_tin_data *cake_select_tin(struct Qdisc *sch,
+ {
+ 	struct cake_sched_data *q = qdisc_priv(sch);
+ 	u32 tin;
++	bool wash;
+ 	u8 dscp;
  
- 		if (!wait_for_completion_timeout(&adapter->init_done,
- 						 timeout)) {
--			netdev_warn(netdev, "Login timed out\n");
--			return -1;
-+			netdev_warn(netdev, "Login timed out, retrying...\n");
-+			retry = true;
-+			adapter->init_done_rc = 0;
-+			retry_count++;
-+			continue;
- 		}
+ 	/* Tin selection: Default to diffserv-based selection, allow overriding
+-	 * using firewall marks or skb->priority.
++	 * using firewall marks or skb->priority. Call DSCP parsing early if
++	 * wash is enabled, otherwise defer to below to skip unneeded parsing.
+ 	 */
+-	dscp = cake_handle_diffserv(skb,
+-				    q->rate_flags & CAKE_FLAG_WASH);
++	wash = !!(q->rate_flags & CAKE_FLAG_WASH);
++	if (wash)
++		dscp = cake_handle_diffserv(skb, wash);
  
--		if (adapter->init_done_rc == PARTIALSUCCESS) {
-+		if (adapter->init_done_rc == ABORTED) {
-+			netdev_warn(netdev, "Login aborted, retrying...\n");
-+			retry = true;
-+			adapter->init_done_rc = 0;
-+			retry_count++;
-+			/* FW or device may be busy, so
-+			 * wait a bit before retrying login
-+			 */
-+			msleep(500);
-+		} else if (adapter->init_done_rc == PARTIALSUCCESS) {
- 			retry_count++;
- 			release_sub_crqs(adapter, 1);
+ 	if (q->tin_mode == CAKE_DIFFSERV_BESTEFFORT)
+ 		tin = 0;
+@@ -1586,6 +1589,8 @@ static struct cake_tin_data *cake_select_tin(struct Qdisc *sch,
+ 		tin = q->tin_order[TC_H_MIN(skb->priority) - 1];
  
+ 	else {
++		if (!wash)
++			dscp = cake_handle_diffserv(skb, wash);
+ 		tin = q->tin_index[dscp];
+ 
+ 		if (unlikely(tin >= q->tin_cnt))
 -- 
 2.25.1
 
