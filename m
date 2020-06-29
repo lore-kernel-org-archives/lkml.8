@@ -2,107 +2,153 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF7A3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:10:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F16BDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A12B5207E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:10:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDECA20780
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:10:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="RwCEbkr7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728931AbgF2UKH (ORCPT
+        id S1728980AbgF2UKP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:10:07 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:37478 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727071AbgF2UKB (ORCPT
+        Mon, 29 Jun 2020 16:10:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52840 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728956AbgF2UKI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 16:10:01 -0400
-Received: from in02.mta.xmission.com ([166.70.13.52])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jq06J-0003mh-VX; Mon, 29 Jun 2020 14:09:59 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jq06J-0004T6-4B; Mon, 29 Jun 2020 14:09:59 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     <linux-kernel@vger.kernel.org>
-Cc:     David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <greg@kroah.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20200625095725.GA3303921@kroah.com>
-        <778297d2-512a-8361-cf05-42d9379e6977@i-love.sakura.ne.jp>
-        <20200625120725.GA3493334@kroah.com>
-        <20200625.123437.2219826613137938086.davem@davemloft.net>
-        <CAHk-=whuTwGHEPjvtbBvneHHXeqJC=q5S09mbPnqb=Q+MSPMag@mail.gmail.com>
-        <87pn9mgfc2.fsf_-_@x220.int.ebiederm.org>
-        <87y2oac50p.fsf@x220.int.ebiederm.org>
-        <87bll17ili.fsf_-_@x220.int.ebiederm.org>
-Date:   Mon, 29 Jun 2020 15:05:27 -0500
-In-Reply-To: <87bll17ili.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
-        message of "Mon, 29 Jun 2020 14:55:05 -0500")
-Message-ID: <87ftad4ozc.fsf_-_@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 29 Jun 2020 16:10:08 -0400
+Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22517C03E979
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 13:10:08 -0700 (PDT)
+Received: by mail-wr1-x441.google.com with SMTP id z15so6579023wrl.8
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 13:10:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=atishpatra.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DuXPs2KRc0kRkrIeNHomDGkRgeQMj5m4hx2hmqHrvd0=;
+        b=RwCEbkr7yIXMwaL6oCI6h3TFBrn9VLnCgp8TQCTIrSgyVQuzK7Iywclm3ny1C/A1j6
+         CiUUsHeusFGkR4ofBNlMT4xs3Kk14kgzfpLpcB8o5VTHHC+x3qfdunD/jM1rZKGu8j+1
+         HFbJcxtTP50PS+jYQqGKvl03Itsy8M6Zm5+f4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DuXPs2KRc0kRkrIeNHomDGkRgeQMj5m4hx2hmqHrvd0=;
+        b=chwb7zkz9NrlUyV8qi6WJhUbFzJMXJLqgu8Xh+xAzXfGSXdKvVSq/TaEB/Xfpl4u5e
+         jE5ZODkf4Lr54aVAsJsbbs6gAYvRI9YvZl5u20YiMHDr+aSIbK/HtRAXRME9gTy1XMIm
+         akFlV8/z9xFqxmB6PiWjEmmJOYrFDzYCtMc40OH9JCpAZ9Atbz+oz7Amhluje647tXQG
+         9DHB5iEPhHnxrE+ludAYw2L73Jxyn9oCOXcQ4jfir7dsapEyBpypqs1Qp9cu0fBri3zM
+         BHWM/Kpi0nNM2SotEs0WBKkDTkAqSY+DJ+2ehtSIuQYVNGNplVWJL3yGVn5vRQkfHu+A
+         XTNQ==
+X-Gm-Message-State: AOAM533JvMq240xqxGHoiKkWh/GRAJNy80Y/rrxeKJ9RNcweOgrfTf6D
+        Uea0TmISGIYNqnJmYkRwr2GRn6WTw6EG7m0s55hf
+X-Google-Smtp-Source: ABdhPJxHxREtLEN5Xz2f+V7HyVEy8DgsTaByjDILcaX0i/Qvfu6F12G1pzyMk4t6el/9QubVSfamdtO8NvLTSslFfjc=
+X-Received: by 2002:adf:e884:: with SMTP id d4mr17770822wrm.176.1593461406779;
+ Mon, 29 Jun 2020 13:10:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jq06J-0004T6-4B;;;mid=<87ftad4ozc.fsf_-_@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX19HJ+Q2cBtWz31Qjezuq/ZK7ROsAlPYjXo=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [PATCH v2 11/15] bpfilter: Move bpfilter_umh back into init data
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
+References: <20200625234516.31406-1-atish.patra@wdc.com> <20200625234516.31406-2-atish.patra@wdc.com>
+ <5e2ce2ae-5458-8579-576a-76721f7d3b08@gmx.de> <CAOnJCUKnB7kLdTh1-NaFNw4p6EammETzhUa-Uniq2rrC-7AaQg@mail.gmail.com>
+ <CAMj1kXFyQiYPYB-81POq7agRW1ROt=2j3nN9wcpHGmr4YjmFCQ@mail.gmail.com> <CAMj1kXFd3wpob228WOYOu3SG0r2SEbT0cZF1JkF6uwjzrmf2EQ@mail.gmail.com>
+In-Reply-To: <CAMj1kXFd3wpob228WOYOu3SG0r2SEbT0cZF1JkF6uwjzrmf2EQ@mail.gmail.com>
+From:   Atish Patra <atishp@atishpatra.org>
+Date:   Mon, 29 Jun 2020 13:09:55 -0700
+Message-ID: <CAOnJCUJAdMoTEtxn8Q0Frxi9fw6PS052e3jp2CSJszmGBPp4kA@mail.gmail.com>
+Subject: Re: [RFC PATCH 01/11] efi: Fix gcc error around __umoddi3 for 32 bit builds
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Heinrich Schuchardt <xypron.glpk@gmx.de>,
+        Atish Patra <atish.patra@wdc.com>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Jun 27, 2020 at 2:22 AM Ard Biesheuvel <ardb@kernel.org> wrote:
+>
+> On Sat, 27 Jun 2020 at 00:03, Ard Biesheuvel <ardb@kernel.org> wrote:
+> >
+> > On Fri, 26 Jun 2020 at 23:56, Atish Patra <atishp@atishpatra.org> wrote:
+> > >
+> > > On Thu, Jun 25, 2020 at 7:43 PM Heinrich Schuchardt <xypron.glpk@gmx.de> wrote:
+> > > >
+> > > > On 6/26/20 1:45 AM, Atish Patra wrote:
+> > > > > 32bit gcc doesn't support modulo operation on 64 bit data. It results in
+> > > > > a __umoddi3 error while building EFI for 32 bit.
+> > > > >
+> > > > > Use bitwise operations instead of modulo operations to fix the issue.
+> > > > >
+> > > > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > > > > ---
+> > > > >  drivers/firmware/efi/libstub/alignedmem.c | 2 +-
+> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > >
+> > > > > diff --git a/drivers/firmware/efi/libstub/alignedmem.c b/drivers/firmware/efi/libstub/alignedmem.c
+> > > > > index cc89c4d6196f..1de9878ddd3a 100644
+> > > > > --- a/drivers/firmware/efi/libstub/alignedmem.c
+> > > > > +++ b/drivers/firmware/efi/libstub/alignedmem.c
+> > > > > @@ -44,7 +44,7 @@ efi_status_t efi_allocate_pages_aligned(unsigned long size, unsigned long *addr,
+> > > > >       *addr = ALIGN((unsigned long)alloc_addr, align);
+> > > > >
+> > > > >       if (slack > 0) {
+> > > > > -             int l = (alloc_addr % align) / EFI_PAGE_SIZE;
+> > > > > +             int l = (alloc_addr & (align - 1)) / EFI_PAGE_SIZE;
+> > > >
+> > > > Here you rely on the compiler to silently convert the division by
+> > > > EFI_PAGE_SIZE into a right shift. Wouldn't it be cleaner to use
+> > > > EFI_PAGE_SHIFT to explicitly avoid a dependency on __udivdi3()?
+> > > >
+> > > > slack = (align >> EFI_PAGE_SHIFT) - 1;
+> > > > ...
+> > > > int l = (alloc_addr & (align - 1)) >> EFI_PAGE_SHIFT;
+> > > >
+> > >
+> > > Sure. I will update it in the next version. Thanks for the suggestion.
+> >
+> > Please don't. Dividing by EFI_PAGE_SIZE is perfectly fine, and is more readable.
+>
+> Actually, I will take this patch as a fix right away - 32-bit ARM has
+> the same issue (although it does not actually incorporate this object
+> file)
+>
 
-To allow for restarts 61fbf5933d42 ("net: bpfilter: restart
-bpfilter_umh when error occurred") moved the blob holding the
-userspace binary out of the init sections.
+Thanks. I will drop it from my next version in that case.
 
-Now that loading the blob into a filesystem is separate from executing
-the blob the blob no longer needs to live .rodata to allow for restarting.
-So move the blob back to .init.rodata.
+> In the meantime, please check how the stub gets pulled into your
+> kernel: the idea of a static library is that only the objects that are
+> used are included in the final build, but this turned out to be broken
+> for arm64 [0]. IOW, simply applying a similar change might fix your
+> build issue as well (assuming RISC-V does not actually call
+> efi_allocate_pages_aligned() anywhere)
+>
+Sorry. I missed this thread earlier. Yes. Applying a similar change
+fixes the static library linking for RISC-V. I don't see
+efi_allocate_pages_aligned or efi_random_alloc
+in vmlinux anymore. I will update my patch. Thanks.
 
-Link: https://lkml.kernel.org/r/87sgeidlvq.fsf_-_@x220.int.ebiederm.org
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
----
- net/bpfilter/bpfilter_umh_blob.S | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I did not see any new version of the next patch in that series [1].
+Thus, I am leaving libstub/Makefile changes
+as it is. Please let me know if I missed something.
 
-diff --git a/net/bpfilter/bpfilter_umh_blob.S b/net/bpfilter/bpfilter_umh_blob.S
-index 9ea6100dca87..40311d10d2f2 100644
---- a/net/bpfilter/bpfilter_umh_blob.S
-+++ b/net/bpfilter/bpfilter_umh_blob.S
-@@ -1,5 +1,5 @@
- /* SPDX-License-Identifier: GPL-2.0 */
--	.section .rodata, "a"
-+	.section .init.rodata, "a"
- 	.global bpfilter_umh_start
- bpfilter_umh_start:
- 	.incbin "net/bpfilter/bpfilter_umh"
+[1] https://lore.kernel.org/linux-efi/CAMj1kXGg-w6N7jyG0pBJmeRctAhG2wWGoU=ryWj+Qi2UH-_m9Q@mail.gmail.com/
+
+> [0] https://lore.kernel.org/linux-arm-kernel/20200604022031.164207-1-masahiroy@kernel.org/
+
+
+
 -- 
-2.25.0
-
+Regards,
+Atish
