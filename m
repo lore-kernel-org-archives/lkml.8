@@ -2,110 +2,160 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39036C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E6A5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 11BE22063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:44:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="i+9UP96B"
+	by mail.kernel.org (Postfix) with ESMTP id 5AE1C2063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:44:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391430AbgF2VoH (ORCPT
+        id S2391439AbgF2VoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:44:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37588 "EHLO
+        Mon, 29 Jun 2020 17:44:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727835AbgF2Shr (ORCPT
+        with ESMTP id S1727828AbgF2Shq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:37:47 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB4C8C0307BE
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:10:06 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id x3so2568698pfo.9
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:10:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=VLeKruvw8xS/1C0BGsgxQCKuNobKaryrVDfkNcFoTKw=;
-        b=i+9UP96BeuDUndvXAn5oRwVUqCxKPUqo5jb9FpFAkevibF4fOIyewm6LBAtkZLrBzP
-         /7U3H02kF4xz1/F9l3P0SJ2jj2PFznh1x5HDxhs16XUY+e7OWMJgLhbNHwJYVT8KWpee
-         TodpFVlf7IKIfvaTS8QPjZFYeI1/hHcL3q4bY=
+        Mon, 29 Jun 2020 14:37:46 -0400
+Received: from mail-io1-xd45.google.com (mail-io1-xd45.google.com [IPv6:2607:f8b0:4864:20::d45])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3682C030F04
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:11:17 -0700 (PDT)
+Received: by mail-io1-xd45.google.com with SMTP id l13so11301802ioj.5
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:11:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=VLeKruvw8xS/1C0BGsgxQCKuNobKaryrVDfkNcFoTKw=;
-        b=Q440k/y6E7c3jBG0LIB6b9Gr0mSHBjQw3bzPBiLt4T9k9ESmvAG/HdqayEVJjUwuGc
-         fh4d4U1LEZJOb5nvecMBDGUWMdr4GGiWQ1RHftgtu7QatRcilGbDOxAdnzArhCJj7aIB
-         x7xhCflg66T0F+3pJC71HBg1faVZE5MTsGM5lNWwpc2GDuYt42K1DB/2eio24LYfDxjH
-         iyBCxWYGuPlQjVgGE/jSzMJGX9m7TRFbfs6q7XisClhpzeo0B2u5CkaHYokz5qfkHk9H
-         BK3673eJa1oeQ/hnLeTglh6ddlCYHGNonmONPBg6JBeCEwzyp4ZB7yYMI29PyiCYFmTu
-         VCOQ==
-X-Gm-Message-State: AOAM530SFj0+XxykKDZxSy3GpNztGZWFBjnXOVGg6UbsqqyBl94ep3Qm
-        a9ABZ2JjZXlAqy9cI0HDfew19w==
-X-Google-Smtp-Source: ABdhPJxiXdS02g2kg/C3e7NIZ+hRQZoFSkyCVmAnS41BhXLKFEBoQYo+oIuHHOwfsIe186IoCXJYwg==
-X-Received: by 2002:a65:5649:: with SMTP id m9mr10671287pgs.279.1593447006373;
-        Mon, 29 Jun 2020 09:10:06 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id j21sm176656pfa.133.2020.06.29.09.10.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 09:10:05 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 09:10:04 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Fangrui Song <maskray@google.com>,
-        Dmitry Golovin <dima@golovin.in>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "H . J . Lu" <hjl@sourceware.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 1/7] x86/boot/compressed: Move .got.plt entries out of
- the .got section
-Message-ID: <202006290909.F79ED275C@keescook>
-References: <20200629140928.858507-1-nivedita@alum.mit.edu>
- <20200629140928.858507-2-nivedita@alum.mit.edu>
- <202006290846.5A5C76A4D7@keescook>
- <20200629155011.GA900899@rani.riverdale.lan>
- <CAMj1kXH1Fx3c4fZRVgNPeXnPFbHWVhgywU0Jvu65=wBaR_5yjA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=fHNShTIFKimzlTuSuHsOSN8MhkqtCX4a3iQZfPeFGNk=;
+        b=jp/Gg8REsxq8vD8VDtfjMNdrB2tOtYG/C5y0T8+Nq9aHYgConIPjmoCzvyJ6QWWpw2
+         FXjsbsBItWEHuyNIEXGl8D0EEYr/W+NPCaaPeYUGDp6FVfvKf0hf+D3TshsXb/RT2353
+         CvyVi8nki8pIcg5amGvpmeMY7U+yLXY3KqFps8UE8TbOdwdCQQlqrb6pFrN/SX0634hY
+         e0IHRmEbNobjVPlzFyEdklcXbaN/j4ydm1xFKeneGnazrq3mws1/22bkRZWOsQ2mqF7I
+         AlqQOEK6wKz2VglyNlb47d6fb4eXSDnhO0pGXVOOBpvOgv10AHRikaHCVORivQp8Vki3
+         fqrg==
+X-Gm-Message-State: AOAM531zDT5PSEiA6IpporgSwBMvGJDTFu6SrI0qAGlPov6ld44/HeyG
+        3oz5kDgfvSe77mY5ybVL6aTqOZ/r4LcPdTlpTIi7YzIDWc6O
+X-Google-Smtp-Source: ABdhPJysiOaUNCY1J4HnT+7BtSo8nTwGdQ9+J7zWVN+86liAyR0PJzzajluP2G91WNKtFm0zWVNujfGJaPc71DuMmFALwhrQmBw+
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXH1Fx3c4fZRVgNPeXnPFbHWVhgywU0Jvu65=wBaR_5yjA@mail.gmail.com>
+X-Received: by 2002:a05:6602:140b:: with SMTP id t11mr17540527iov.198.1593447076756;
+ Mon, 29 Jun 2020 09:11:16 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 09:11:16 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000fa90bb05a93b4e52@google.com>
+Subject: KMSAN: uninit-value in macvlan_start_xmit
+From:   syzbot <syzbot+301cccce1b286fa6449e@syzkaller.appspotmail.com>
+To:     ap420073@gmail.com, davem@davemloft.net, dong.menglong@zte.com.cn,
+        edumazet@google.com, glider@google.com,
+        linux-kernel@vger.kernel.org, maheshb@google.com,
+        netdev@vger.kernel.org, richardcochran@gmail.com,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 05:51:00PM +0200, Ard Biesheuvel wrote:
-> On Mon, 29 Jun 2020 at 17:50, Arvind Sankar <nivedita@alum.mit.edu> wrote:
-> >
-> > On Mon, Jun 29, 2020 at 08:48:05AM -0700, Kees Cook wrote:
-> > > On Mon, Jun 29, 2020 at 10:09:22AM -0400, Arvind Sankar wrote:
-> > >
-> > > This is also being done on arm64, and the section was specified slightly
-> > > differently (with INFO) which maybe should be done here too?
-> >
-> > I was actually just about to email you to ask what that INFO is for :)
-> > What does it do?
-> >
-> 
-> It makes the section non-allocatable, so it is dropped from the final image
+Hello,
 
-i.e. takes no disk space, but the ASSERT can still be done.
+syzbot found the following crash on:
 
--- 
-Kees Cook
+HEAD commit:    f0d5ec90 kmsan: apply __no_sanitize_memory to dotraplinkag..
+git tree:       https://github.com/google/kmsan.git master
+console output: https://syzkaller.appspot.com/x/log.txt?x=1565759b100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=86e4f8af239686c6
+dashboard link: https://syzkaller.appspot.com/bug?extid=301cccce1b286fa6449e
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=132ae8f5100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=156200f3100000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+301cccce1b286fa6449e@syzkaller.appspotmail.com
+
+=====================================================
+BUG: KMSAN: uninit-value in macvlan_queue_xmit drivers/net/macvlan.c:521 [inline]
+BUG: KMSAN: uninit-value in macvlan_start_xmit+0x3ea/0xb50 drivers/net/macvlan.c:562
+CPU: 0 PID: 9 Comm: ksoftirqd/0 Not tainted 5.7.0-rc4-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1c9/0x220 lib/dump_stack.c:118
+ kmsan_report+0xf7/0x1e0 mm/kmsan/kmsan_report.c:121
+ __msan_warning+0x58/0xa0 mm/kmsan/kmsan_instr.c:215
+ macvlan_queue_xmit drivers/net/macvlan.c:521 [inline]
+ macvlan_start_xmit+0x3ea/0xb50 drivers/net/macvlan.c:562
+ __netdev_start_xmit include/linux/netdevice.h:4533 [inline]
+ netdev_start_xmit include/linux/netdevice.h:4547 [inline]
+ xmit_one net/core/dev.c:3477 [inline]
+ dev_hard_start_xmit+0x531/0xab0 net/core/dev.c:3493
+ __dev_queue_xmit+0x2f8d/0x3b20 net/core/dev.c:4052
+ dev_queue_xmit+0x4b/0x60 net/core/dev.c:4085
+ hsr_xmit net/hsr/hsr_forward.c:228 [inline]
+ hsr_forward_do net/hsr/hsr_forward.c:285 [inline]
+ hsr_forward_skb+0x2614/0x30d0 net/hsr/hsr_forward.c:361
+ hsr_handle_frame+0x3be/0x500 net/hsr/hsr_slave.c:44
+ __netif_receive_skb_core+0x21ce/0x5870 net/core/dev.c:5089
+ __netif_receive_skb_one_core net/core/dev.c:5186 [inline]
+ __netif_receive_skb net/core/dev.c:5302 [inline]
+ process_backlog+0x936/0x1410 net/core/dev.c:6134
+ napi_poll net/core/dev.c:6572 [inline]
+ net_rx_action+0x786/0x1aa0 net/core/dev.c:6640
+ __do_softirq+0x311/0x83d kernel/softirq.c:293
+ run_ksoftirqd+0x25/0x40 kernel/softirq.c:608
+ smpboot_thread_fn+0x493/0x980 kernel/smpboot.c:165
+ kthread+0x4b5/0x4f0 kernel/kthread.c:269
+ ret_from_fork+0x35/0x40 arch/x86/entry/entry_64.S:353
+
+Uninit was stored to memory at:
+ kmsan_save_stack_with_flags mm/kmsan/kmsan.c:144 [inline]
+ kmsan_internal_chain_origin+0xad/0x130 mm/kmsan/kmsan.c:310
+ kmsan_memcpy_memmove_metadata+0x272/0x2e0 mm/kmsan/kmsan.c:247
+ kmsan_memcpy_metadata+0xb/0x10 mm/kmsan/kmsan.c:267
+ __msan_memcpy+0x43/0x50 mm/kmsan/kmsan_instr.c:116
+ pskb_expand_head+0x38b/0x1b00 net/core/skbuff.c:1636
+ __skb_pad+0x47f/0x900 net/core/skbuff.c:1804
+ __skb_put_padto include/linux/skbuff.h:3244 [inline]
+ skb_put_padto include/linux/skbuff.h:3263 [inline]
+ send_hsr_supervision_frame+0x122d/0x1500 net/hsr/hsr_device.c:301
+ hsr_announce+0x1e2/0x370 net/hsr/hsr_device.c:332
+ call_timer_fn+0x218/0x510 kernel/time/timer.c:1405
+ expire_timers kernel/time/timer.c:1450 [inline]
+ __run_timers+0xcff/0x1210 kernel/time/timer.c:1774
+ run_timer_softirq+0x2d/0x50 kernel/time/timer.c:1787
+ __do_softirq+0x311/0x83d kernel/softirq.c:293
+
+Uninit was created at:
+ kmsan_save_stack_with_flags+0x3c/0x90 mm/kmsan/kmsan.c:144
+ kmsan_internal_alloc_meta_for_pages mm/kmsan/kmsan_shadow.c:269 [inline]
+ kmsan_alloc_page+0xb9/0x180 mm/kmsan/kmsan_shadow.c:293
+ __alloc_pages_nodemask+0x56a2/0x5dc0 mm/page_alloc.c:4848
+ __alloc_pages include/linux/gfp.h:504 [inline]
+ __alloc_pages_node include/linux/gfp.h:517 [inline]
+ alloc_pages_node include/linux/gfp.h:531 [inline]
+ __page_frag_cache_refill mm/page_alloc.c:4923 [inline]
+ page_frag_alloc+0x3ae/0x910 mm/page_alloc.c:4953
+ __napi_alloc_skb+0x193/0xa60 net/core/skbuff.c:519
+ napi_alloc_skb include/linux/skbuff.h:2876 [inline]
+ page_to_skb+0x1a2/0x1390 drivers/net/virtio_net.c:384
+ receive_mergeable drivers/net/virtio_net.c:935 [inline]
+ receive_buf+0xec6/0x8d20 drivers/net/virtio_net.c:1045
+ virtnet_receive drivers/net/virtio_net.c:1335 [inline]
+ virtnet_poll+0x64b/0x19f0 drivers/net/virtio_net.c:1440
+ napi_poll net/core/dev.c:6572 [inline]
+ net_rx_action+0x786/0x1aa0 net/core/dev.c:6640
+ __do_softirq+0x311/0x83d kernel/softirq.c:293
+=====================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
