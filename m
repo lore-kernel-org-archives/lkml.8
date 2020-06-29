@@ -2,138 +2,181 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3B68C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BE14C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADFB7206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:59:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="iFmORjkY"
+	by mail.kernel.org (Postfix) with ESMTP id DFA25206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:59:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593467981;
+	bh=kM7M2oW2pF7mF5sfHW5VKQ3niclpBBbtT+B91pvlGlw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=EpNN3hk1BBwCgfchyCOVxeVoB2Knc6mAzg7LuRvHMMt7qDPZ3z9qwYUqxDnbjG3/h
+	 W2LqrQiDWhRPnjwF7O1DltI3P6yMU2rgGUlG+gFn6KbzV6CitMVgHCZDD8XVTSs/qc
+	 bDnsYSqeqO3QXb+yFSZXCs/w+7jjs3unKTpRy0n8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391706AbgF2V7f (ORCPT
+        id S2404670AbgF2V7U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:59:35 -0400
-Received: from mout.web.de ([212.227.15.4]:50243 "EHLO mout.web.de"
+        Mon, 29 Jun 2020 17:59:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731388AbgF2V7S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 17:59:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1593467956;
-        bh=S8T29fkcYiXDkPn/9lQ+45R4Jkq71F8qlpyc/mIFxpc=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=iFmORjkYEdB5fFngA46+Axlm+dVx4vwUz1AE+KgsVUkoaCgOuzkx/13Zkt2c3et7J
-         aP0zwnsQBYHgkAf0Sp4vXBTxODrqlPi0qoSTNe8KIdrIwEqpQWTVAflirXv0ukpsXM
-         DGkJbtv9am/R3Jfak1b7FG6eDw7utcV/iYhT99cg=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.131.123.16]) by smtp.web.de (mrweb001
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0M73o5-1ivOy91X5Z-00wpRo; Mon, 29
- Jun 2020 10:15:24 +0200
-Subject: Re: [PATCH 1/2] usb: mtu3: disable USB2 LPM
-To:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Peter Chen <hzpeterchen@gmail.com>,
-        linux-kernel@vger.kernel.org
-References: <1593410434-19406-1-git-send-email-chunfeng.yun@mediatek.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <390dab28-2798-ee5a-ece3-bf7f2cd3f175@web.de>
-Date:   Mon, 29 Jun 2020 10:15:21 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1726427AbgF2Sf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:27 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 737C2241A2;
+        Mon, 29 Jun 2020 15:19:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593443956;
+        bh=kM7M2oW2pF7mF5sfHW5VKQ3niclpBBbtT+B91pvlGlw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FjH4xuytt6uHUaA08bFSU6BsoX8qiq/wPtrRP9vBT1p7XmOvWp5xLXsNc7P/txTMo
+         V9vAbA07rr4Gr6YuAJlyWsaazEC/O3EnSSSD1d3CsGafysbd29glduWkZcyVg6fA2N
+         OU6hEJhFv/fRfhP0VZ0hA61UdKbRMgk0es+ddl2Y=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Filipe Manana <fdmanana@suse.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Anand Jain <anand.jain@oracle.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 058/265] btrfs: fix a block group ref counter leak after failure to remove block group
+Date:   Mon, 29 Jun 2020 11:14:51 -0400
+Message-Id: <20200629151818.2493727-59-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
+References: <20200629151818.2493727-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <1593410434-19406-1-git-send-email-chunfeng.yun@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:t7V1F9kLqdX3GUIUap/U2aETmgPmRTpVr/MUNxvCH7AMYtaueRz
- L1/p/GHjsaoxRpo0i8waXAtAE3ppx7cfQf4rbsAxDFsoZS//+HziGbu4MhLzC0OGy1baAIC
- l/7ylzASryC5Le95u5bRV0XQFwkeG2JLit+p5clZLlv/xpX+c5t25vH1pntTFkIj0N/K8C9
- G5q1SOKR4AaUZaZK72L6w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:2dJx+0PPcfs=:VQP90HRNpTyDkMv/V50oA6
- YfgGhYHci9MQMC5Q+LVuQJFktQ5AT/IX4PGluW1BiHPUwuenVjWbqidC/9qQhq36WtgxJxttK
- GNamCePNWU15REYzx82pL+6lRXyOZRUbljCyYazQHTxbcv2/1Nb6t+0wOxVTx4qk4CBawswlS
- XqX3pmEG0K+rP4qQy+qKkPtN8EupqZAVDf8/O5GgY7wGdVuLQY0dai2ha/2JEGkyxFMTkO9ch
- PhYKNSDD4l8AqDJNTtRwvg77YS5asxqmILMTGrOUWSBV6ak2QecPSNba9xy5DGBv/PkApB+vb
- OHEz0z+ta/TG36p73fVwdZeUOJ2Kpjl1hlfunoq/Y5vmpD571Y3muLhwyp1p9JR+tz2sz1hcb
- 0gXP0Fn2CNVuU5JcMH3ndYulbSQo4D34xbGnPTX7rCidgoMuqKmxvASdAStw6p7p8xNe4twP4
- a5i0OW7vI0r2o029QyxpBPxppzKfoJ11oFx8H7pSo5k2QqkJ1s9cwMsNyUJqHldC6CWq5H6ed
- PCRdyQlcZoUbfgzAX2lV50/Ljj+z4CUI1e4aHQHMJ35deF/LDN6KXApZmYveTiODeUAhWybmz
- jsYsIJPP/Lgjpv0tKw8nlZbdj4UbVF8DXHxxsJVjReSC6PtB+FTFR3u2r1cR/muFuXBv9FaxG
- fNNCFiewMze6f5vwVpYng7Tr+rYSi/Z9gA+XNNRBRlJfUYfPYGwIDuJpZXVeHTY9EPeb1s/Hl
- jd7U7B1dL30XplrfNekaGRA7JmxpPWjShuMiPv5NgD5tgo7+RdGlmU5enSdfj4em/+eff3aYW
- 38MxeIvl2P7GIia+l7hJknAqo3Pifb08G87y49XOTBZXzx+JXvnt/Lec2oF3KZNMkjEi49Khk
- jUQWWfiaUf7anWw4Qrwe9jVg3RoDydNv32/qTRCXVRkAHO5IfVSRxPnUTRrbA155SlgwnozfM
- EBVDysx9P8Nh5JsFOafpuInFqiNxEGndE2k+eGH3QacsOPPQamQmuLaDUQQ1LLkNNWij9Ou3H
- i5HQ4kWay1SdULrwfZebGnOz/dFZL+KactgbtE/plgQL1shpaSRzR7Fs4Pw/7TMlpjLImuuTp
- o2SavfNLQKAagOL/u9bSSlOEbLxjtHwMYhcge7rssogOpt+/06WJ4bhfl789ZgI7WlN36vUbJ
- /S2uGx0e31a2Z4zrFxsOONijNUQ5kDWBqAlUs5Ft1gTdxwHJH3LkUSuBr755HOT4YNc0gTZR5
- AwH8JsiK/Ud0sflzKGtjgyusuKhFLZeI61PyB+Q==
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.7.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.7.7-rc1
+X-KernelTest-Deadline: 2020-07-01T15:14+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> A SuperSpeed device shall include the USB 2.0 extension descriptor
-=E2=80=A6
+From: Filipe Manana <fdmanana@suse.com>
 
-If you would insist to combine the presented update steps for this softwar=
-e module,
-a cover letter would be helpful together with following improvements.
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Do=
-cumentation/process/submitting-patches.rst?id=3D9ebcfadb0610322ac537dd7aa5=
-d9cbc2b2894c68#n785
+[ Upstream commit 9fecd13202f520f3f25d5b1c313adb740fe19773 ]
 
-Regards,
-Markus
+When removing a block group, if we fail to delete the block group's item
+from the extent tree, we jump to the 'out' label and end up decrementing
+the block group's reference count once only (by 1), resulting in a counter
+leak because the block group at that point was already removed from the
+block group cache rbtree - so we have to decrement the reference count
+twice, once for the rbtree and once for our lookup at the start of the
+function.
+
+There is a second bug where if removing the free space tree entries (the
+call to remove_block_group_free_space()) fails we end up jumping to the
+'out_put_group' label but end up decrementing the reference count only
+once, when we should have done it twice, since we have already removed
+the block group from the block group cache rbtree. This happens because
+the reference count decrement for the rbtree reference happens after
+attempting to remove the free space tree entries, which is far away from
+the place where we remove the block group from the rbtree.
+
+To make things less error prone, decrement the reference count for the
+rbtree immediately after removing the block group from it. This also
+eleminates the need for two different exit labels on error, renaming
+'out_put_label' to just 'out' and removing the old 'out'.
+
+Fixes: f6033c5e333238 ("btrfs: fix block group leak when removing fails")
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Reviewed-by: Anand Jain <anand.jain@oracle.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/btrfs/block-group.c | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
+
+diff --git a/fs/btrfs/block-group.c b/fs/btrfs/block-group.c
+index 233c5663f2332..0c17f18b47940 100644
+--- a/fs/btrfs/block-group.c
++++ b/fs/btrfs/block-group.c
+@@ -916,7 +916,7 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
+ 	path = btrfs_alloc_path();
+ 	if (!path) {
+ 		ret = -ENOMEM;
+-		goto out_put_group;
++		goto out;
+ 	}
+ 
+ 	/*
+@@ -954,7 +954,7 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
+ 		ret = btrfs_orphan_add(trans, BTRFS_I(inode));
+ 		if (ret) {
+ 			btrfs_add_delayed_iput(inode);
+-			goto out_put_group;
++			goto out;
+ 		}
+ 		clear_nlink(inode);
+ 		/* One for the block groups ref */
+@@ -977,13 +977,13 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
+ 
+ 	ret = btrfs_search_slot(trans, tree_root, &key, path, -1, 1);
+ 	if (ret < 0)
+-		goto out_put_group;
++		goto out;
+ 	if (ret > 0)
+ 		btrfs_release_path(path);
+ 	if (ret == 0) {
+ 		ret = btrfs_del_item(trans, tree_root, path);
+ 		if (ret)
+-			goto out_put_group;
++			goto out;
+ 		btrfs_release_path(path);
+ 	}
+ 
+@@ -992,6 +992,9 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
+ 		 &fs_info->block_group_cache_tree);
+ 	RB_CLEAR_NODE(&block_group->cache_node);
+ 
++	/* Once for the block groups rbtree */
++	btrfs_put_block_group(block_group);
++
+ 	if (fs_info->first_logical_byte == block_group->start)
+ 		fs_info->first_logical_byte = (u64)-1;
+ 	spin_unlock(&fs_info->block_group_cache_lock);
+@@ -1102,10 +1105,7 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
+ 
+ 	ret = remove_block_group_free_space(trans, block_group);
+ 	if (ret)
+-		goto out_put_group;
+-
+-	/* Once for the block groups rbtree */
+-	btrfs_put_block_group(block_group);
++		goto out;
+ 
+ 	ret = btrfs_search_slot(trans, root, &key, path, -1, 1);
+ 	if (ret > 0)
+@@ -1128,10 +1128,9 @@ int btrfs_remove_block_group(struct btrfs_trans_handle *trans,
+ 		free_extent_map(em);
+ 	}
+ 
+-out_put_group:
++out:
+ 	/* Once for the lookup reference */
+ 	btrfs_put_block_group(block_group);
+-out:
+ 	if (remove_rsv)
+ 		btrfs_delayed_refs_rsv_release(fs_info, 1);
+ 	btrfs_free_path(path);
+-- 
+2.25.1
+
