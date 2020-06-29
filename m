@@ -2,27 +2,27 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29403C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:22:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3204C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:22:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 16EC6206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:22:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94DD6206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:22:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731782AbgF2TW0 (ORCPT
+        id S1729904AbgF2TWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:22:26 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:45968 "EHLO
+        Mon, 29 Jun 2020 15:22:35 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:47724 "EHLO
         cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732226AbgF2TVg (ORCPT
+        with ESMTP id S1732191AbgF2TVf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:21:36 -0400
+        Mon, 29 Jun 2020 15:21:35 -0400
 Received: from 89-64-84-69.dynamic.chello.pl (89.64.84.69) (HELO kreacher.localnet)
  by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id 200f7df7d1df78b0; Mon, 29 Jun 2020 18:34:54 +0200
+ id 39af2550cfacad4d; Mon, 29 Jun 2020 18:34:52 +0200
 From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
 To:     Dan Williams <dan.j.williams@intel.com>,
         Erik Kaneda <erik.kaneda@intel.com>
@@ -34,11 +34,11 @@ Cc:     rafael.j.wysocki@intel.com, Len Brown <lenb@kernel.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
         linux-nvdimm@lists.01.org, Bob Moore <robert.moore@intel.com>
-Subject: [PATCH v4 0/2] ACPI: ACPICA / OSL: Avoid unmapping ACPI memory inside of the AML interpreter
-Date:   Mon, 29 Jun 2020 18:31:02 +0200
-Message-ID: <1666722.UopIai5n7p@kreacher>
-In-Reply-To: <2788992.3K7huLjdjL@kreacher>
-References: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com> <2713141.s8EVnczdoM@kreacher> <2788992.3K7huLjdjL@kreacher>
+Subject: [PATCH v4 2/2] ACPICA: Preserve memory opregion mappings
+Date:   Mon, 29 Jun 2020 18:33:58 +0200
+Message-ID: <1794490.F2OrUDcHQn@kreacher>
+In-Reply-To: <1666722.UopIai5n7p@kreacher>
+References: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com> <2788992.3K7huLjdjL@kreacher> <1666722.UopIai5n7p@kreacher>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="us-ascii"
@@ -47,72 +47,223 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-On Friday, June 26, 2020 7:28:27 PM CEST Rafael J. Wysocki wrote:
-> Hi All,
-> 
-> On Monday, June 22, 2020 3:50:42 PM CEST Rafael J. Wysocki wrote:
-> > Hi All,
-> > 
-> > This series is to address the problem with RCU synchronization occurring,
-> > possibly relatively often, inside of acpi_ex_system_memory_space_handler(),
-> > when the namespace and interpreter mutexes are held.
-> > 
-> > Like I said before, I had decided to change the approach used in the previous
-> > iteration of this series and to allow the unmap operations carried out by 
-> > acpi_ex_system_memory_space_handler() to be deferred in the first place,
-> > which is done in patches [1-2/4].
-> 
-> In the meantime I realized that calling syncrhonize_rcu_expedited() under the
-> "tables" mutex within ACPICA is not quite a good idea too and that there is no
-> reason for any users of acpi_os_unmap_memory() in the tree to use the "sync"
-> variant of unmapping.
-> 
-> So, unless I'm missing something, acpi_os_unmap_memory() can be changed to
-> always defer the final unmapping and the only ACPICA change needed to support
-> that is the addition of the acpi_os_release_unused_mappings() call to get rid
-> of the unused mappings when leaving the interpreter (module the extra call in
-> the debug code for consistency).
-> 
-> So patches [1-2/4] have been changed accordingly.
+The ACPICA's strategy with respect to the handling of memory mappings
+associated with memory operation regions is to avoid mapping the
+entire region at once which may be problematic at least in principle
+(for example, it may lead to conflicts with overlapping mappings
+having different attributes created by drivers).  It may also be
+wasteful, because memory opregions on some systems take up vast
+chunks of address space while the fields in those regions actually
+accessed by AML are sparsely distributed.
 
-And this still can be improved by using queue_rcu_work() to queue up the unused
-mappings for removal in which case ACPICA need not be modified at all for the
-deferred unmapping to work.
+For this reason, a one-page "window" is mapped for a given opregion
+on the first memory access through it and if that "window" does not
+cover an address range accessed through that opregion subsequently,
+it is unmapped and a new "window" is mapped to replace it.  Next,
+if the new "window" is not sufficient to acess memory through the
+opregion in question in the future, it will be replaced with yet
+another "window" and so on.  That may lead to a suboptimal sequence
+of memory mapping and unmapping operations, for example if two fields
+in one opregion separated from each other by a sufficiently wide
+chunk of unused address space are accessed in an alternating pattern.
 
-Accordingly, patches [1-2/4] from the v3 (and earlier) are now replaced by one
-patch, the [1/2].
+The situation may still be suboptimal if the deferred unmapping
+introduced previously is supported by the OS layer.  For instance,
+the alternating memory access pattern mentioned above may produce
+a relatively long list of mappings to release with substantial
+duplication among the entries in it, which could be avoided if
+acpi_ex_system_memory_space_handler() did not release the mapping
+used by it previously as soon as the current access was not covered
+by it.
 
-> > However, it turns out that the "fast-path" mapping is still useful on top of
-> > the above to reduce the number of ioremap-iounmap cycles for the same address
-> > range and so it is introduced by patches [3-4/4].
-> 
-> Patches [3-4/4] still do what they did, but they have been simplified a bit
-> after rebasing on top of the new [1-2/4].
+In order to improve that, modify acpi_ex_system_memory_space_handler()
+to preserve all of the memory mappings created by it until the memory
+regions associated with them go away.
 
-Moreover, the ACPICA part of the old patches [3-4/4] can be reworked to always
-preserve memory mappings created by the memory opregion handler without the
-need to take additional references to memory mappings at the OS level, so
-patch [4/4] from the v3 (and earlier) is not needed now.
+Accordingly, update acpi_ev_system_memory_region_setup() to unmap all
+memory associated with memory opregions that go away.
 
-Again, for details, please refer to the patch changelogs, but I'm kind of
-inclined to make these changes regardless, because they both are clear
-improvements to me.
+Reported-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/acpi/acpica/evrgnini.c | 14 ++++----
+ drivers/acpi/acpica/exregion.c | 65 ++++++++++++++++++++++++----------
+ include/acpi/actypes.h         | 12 +++++--
+ 3 files changed, 64 insertions(+), 27 deletions(-)
 
-As before:
+diff --git a/drivers/acpi/acpica/evrgnini.c b/drivers/acpi/acpica/evrgnini.c
+index aefc0145e583..89be3ccdad53 100644
+--- a/drivers/acpi/acpica/evrgnini.c
++++ b/drivers/acpi/acpica/evrgnini.c
+@@ -38,6 +38,7 @@ acpi_ev_system_memory_region_setup(acpi_handle handle,
+ 	union acpi_operand_object *region_desc =
+ 	    (union acpi_operand_object *)handle;
+ 	struct acpi_mem_space_context *local_region_context;
++	struct acpi_mem_mapping *mm;
+ 
+ 	ACPI_FUNCTION_TRACE(ev_system_memory_region_setup);
+ 
+@@ -46,13 +47,14 @@ acpi_ev_system_memory_region_setup(acpi_handle handle,
+ 			local_region_context =
+ 			    (struct acpi_mem_space_context *)*region_context;
+ 
+-			/* Delete a cached mapping if present */
++			/* Delete memory mappings if present */
+ 
+-			if (local_region_context->mapped_length) {
+-				acpi_os_unmap_memory(local_region_context->
+-						     mapped_logical_address,
+-						     local_region_context->
+-						     mapped_length);
++			while (local_region_context->first_mm) {
++				mm = local_region_context->first_mm;
++				local_region_context->first_mm = mm->next_mm;
++				acpi_os_unmap_memory(mm->logical_address,
++						     mm->length);
++				ACPI_FREE(mm);
+ 			}
+ 			ACPI_FREE(local_region_context);
+ 			*region_context = NULL;
+diff --git a/drivers/acpi/acpica/exregion.c b/drivers/acpi/acpica/exregion.c
+index d15a66de26c0..fd68f2134804 100644
+--- a/drivers/acpi/acpica/exregion.c
++++ b/drivers/acpi/acpica/exregion.c
+@@ -41,6 +41,7 @@ acpi_ex_system_memory_space_handler(u32 function,
+ 	acpi_status status = AE_OK;
+ 	void *logical_addr_ptr = NULL;
+ 	struct acpi_mem_space_context *mem_info = region_context;
++	struct acpi_mem_mapping *mm = mem_info->cur_mm;
+ 	u32 length;
+ 	acpi_size map_length;
+ 	acpi_size page_boundary_map_length;
+@@ -96,20 +97,38 @@ acpi_ex_system_memory_space_handler(u32 function,
+ 	 * Is 1) Address below the current mapping? OR
+ 	 *    2) Address beyond the current mapping?
+ 	 */
+-	if ((address < mem_info->mapped_physical_address) ||
+-	    (((u64) address + length) > ((u64)
+-					 mem_info->mapped_physical_address +
+-					 mem_info->mapped_length))) {
++	if (!mm || (address < mm->physical_address) ||
++	    ((u64) address + length > (u64) mm->physical_address + mm->length)) {
+ 		/*
+-		 * The request cannot be resolved by the current memory mapping;
+-		 * Delete the existing mapping and create a new one.
++		 * The request cannot be resolved by the current memory mapping.
++		 *
++		 * Look for an existing saved mapping covering the address range
++		 * at hand.  If found, save it as the current one and carry out
++		 * the access.
+ 		 */
+-		if (mem_info->mapped_length) {
++		for (mm = mem_info->first_mm; mm; mm = mm->next_mm) {
++			if (mm == mem_info->cur_mm)
++				continue;
++
++			if (address < mm->physical_address)
++				continue;
++
++			if ((u64) address + length >
++					(u64) mm->physical_address + mm->length)
++				continue;
+ 
+-			/* Valid mapping, delete it */
++			mem_info->cur_mm = mm;
++			goto access;
++		}
+ 
+-			acpi_os_unmap_memory(mem_info->mapped_logical_address,
+-					     mem_info->mapped_length);
++		/* Create a new mappings list entry */
++		mm = ACPI_ALLOCATE_ZEROED(sizeof(*mm));
++		if (!mm) {
++			ACPI_ERROR((AE_INFO,
++				    "Unable to save memory mapping at 0x%8.8X%8.8X, size %u",
++				    ACPI_FORMAT_UINT64(address),
++				    (u32)map_length));
++			return_ACPI_STATUS(AE_NO_MEMORY);
+ 		}
+ 
+ 		/*
+@@ -143,29 +162,39 @@ acpi_ex_system_memory_space_handler(u32 function,
+ 
+ 		/* Create a new mapping starting at the address given */
+ 
+-		mem_info->mapped_logical_address =
+-		    acpi_os_map_memory(address, map_length);
+-		if (!mem_info->mapped_logical_address) {
++		logical_addr_ptr = acpi_os_map_memory(address, map_length);
++		if (!logical_addr_ptr) {
+ 			ACPI_ERROR((AE_INFO,
+ 				    "Could not map memory at 0x%8.8X%8.8X, size %u",
+ 				    ACPI_FORMAT_UINT64(address),
+ 				    (u32)map_length));
+-			mem_info->mapped_length = 0;
++			ACPI_FREE(mm);
+ 			return_ACPI_STATUS(AE_NO_MEMORY);
+ 		}
+ 
+ 		/* Save the physical address and mapping size */
+ 
+-		mem_info->mapped_physical_address = address;
+-		mem_info->mapped_length = map_length;
++		mm->logical_address = logical_addr_ptr;
++		mm->physical_address = address;
++		mm->length = map_length;
++
++		/*
++		 * Add the new entry to the mappigs list and save it as the
++		 * current mapping.
++		 */
++		mm->next_mm = mem_info->first_mm;
++		mem_info->first_mm = mm;
++
++		mem_info->cur_mm = mm;
+ 	}
+ 
++access:
+ 	/*
+ 	 * Generate a logical pointer corresponding to the address we want to
+ 	 * access
+ 	 */
+-	logical_addr_ptr = mem_info->mapped_logical_address +
+-	    ((u64) address - (u64) mem_info->mapped_physical_address);
++	logical_addr_ptr = mm->logical_address +
++		((u64) address - (u64) mm->physical_address);
+ 
+ 	ACPI_DEBUG_PRINT((ACPI_DB_INFO,
+ 			  "System-Memory (width %u) R/W %u Address=%8.8X%8.8X\n",
+diff --git a/include/acpi/actypes.h b/include/acpi/actypes.h
+index aa236b9e6f24..d005e35ab399 100644
+--- a/include/acpi/actypes.h
++++ b/include/acpi/actypes.h
+@@ -1201,12 +1201,18 @@ struct acpi_pci_id {
+ 	u16 function;
+ };
+ 
++struct acpi_mem_mapping {
++	acpi_physical_address physical_address;
++	u8 *logical_address;
++	acpi_size length;
++	struct acpi_mem_mapping *next_mm;
++};
++
+ struct acpi_mem_space_context {
+ 	u32 length;
+ 	acpi_physical_address address;
+-	acpi_physical_address mapped_physical_address;
+-	u8 *mapped_logical_address;
+-	acpi_size mapped_length;
++	struct acpi_mem_mapping *cur_mm;
++	struct acpi_mem_mapping *first_mm;
+ };
+ 
+ /*
+-- 
+2.26.2
 
-> > The series is available from the git branch at
-> > 
-> >  git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
-> >  acpica-osl
-> > 
-> > for easier testing.
-> 
-> Also the series have been tested locally.
-
-Cheers,
-Rafael
 
 
 
