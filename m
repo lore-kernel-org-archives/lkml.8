@@ -2,52 +2,53 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A16D9C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89303C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8248D20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:27:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 629D820663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:27:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593458842;
-	bh=pF3pWv/GOcDxOoaEshP3nh+jd3va/7b8gr2M0p5wcCY=;
+	s=default; t=1593458846;
+	bh=n1Cc7AO/NCJwt7ao+2iFJ8N6fB59Qxob9gL4uCsLVIU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u9zAHlw9SitNYJVPUBH2Fj+u+ld1Tem/4V4Km5/XmftROqPCIRjAisoxsvWopmJUK
-	 MxDeO5zTKKjc9jE+jqueFfnSn+EBwZ8HW6uIb8xsXR7P7uPHfhctju/EbOhYqa+y+u
-	 iwTF9XED2yPb+EVRve2VvYIoMebrdSzq1XmrDZHQ=
+	b=r+KeV7S+rtQSYXqLdfKK358TxEAw92mhDsnrgR5kLBPig6UttmXz0Yqs1uG/EGxLb
+	 Y+KoA4bwoS9NvZCrpIijgCFwR4IBMYk/OJ3Rqfc94krsmfwT9llOFvVChxwQw34bVf
+	 DmYSD4/Fe+hZNbNr32KjJ+LmCeaJE/puQz3GRzTI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732682AbgF2TZo (ORCPT
+        id S1730919AbgF2T1Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:25:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37054 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:27:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732492AbgF2TZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:25:23 -0400
+        id S1732667AbgF2TZn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:25:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25E8C25472;
-        Mon, 29 Jun 2020 15:43:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E63D32538E;
+        Mon, 29 Jun 2020 15:40:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445427;
-        bh=pF3pWv/GOcDxOoaEshP3nh+jd3va/7b8gr2M0p5wcCY=;
+        s=default; t=1593445258;
+        bh=n1Cc7AO/NCJwt7ao+2iFJ8N6fB59Qxob9gL4uCsLVIU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aIXWxqT1L4FYsr8XRae2vhoajK95wCTpkgW8cEQ7vSS7ia7qVpG1qmVi8oQ7JIAbY
-         fLG4SYZI1TQdxPFvLe+8HuevVeJZVNMIunS9USxbu8YhyRDByXBLUgOIi2/RCv8oXA
-         FgImzAusKPYFGVrKn+E22/RH0PtbguHTzIcvUSlU=
+        b=o/uNSMtSrWPXkU4OzSBa9I1luj320nFzd7wwAtANe+YID7iag+OtbJCNcerkuOPoV
+         Hc+dD8HiiQaxio6zH/LJQfcXWNlzwK/WIpkKKR7bDaivB4Sny9TiftQa5j03ZAPXwk
+         4+v58WNqLD8jhcrNSTa0IFeBnnShW7alQ3h0bBQM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luis Chamberlain <mcgrof@kernel.org>, Jan Kara <jack@suse.cz>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+Cc:     Tero Kristo <t-kristo@ti.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 174/191] blktrace: break out of blktrace setup on concurrent calls
-Date:   Mon, 29 Jun 2020 11:39:50 -0400
-Message-Id: <20200629154007.2495120-175-sashal@kernel.org>
+Subject: [PATCH 4.9 039/191] clk: ti: composite: fix memory leak
+Date:   Mon, 29 Jun 2020 11:37:35 -0400
+Message-Id: <20200629154007.2495120-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -66,91 +67,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luis Chamberlain <mcgrof@kernel.org>
+From: Tero Kristo <t-kristo@ti.com>
 
-[ Upstream commit 1b0b283648163dae2a214ca28ed5a99f62a77319 ]
+[ Upstream commit c7c1cbbc9217ebb5601b88d138d4a5358548de9d ]
 
-We use one blktrace per request_queue, that means one per the entire
-disk.  So we cannot run one blktrace on say /dev/vda and then /dev/vda1,
-or just two calls on /dev/vda.
+The parent_names is never released for a component clock definition,
+causing some memory leak. Fix by releasing it once it is no longer
+needed.
 
-We check for concurrent setup only at the very end of the blktrace setup though.
-
-If we try to run two concurrent blktraces on the same block device the
-second one will fail, and the first one seems to go on. However when
-one tries to kill the first one one will see things like this:
-
-The kernel will show these:
-
-```
-debugfs: File 'dropped' in directory 'nvme1n1' already present!
-debugfs: File 'msg' in directory 'nvme1n1' already present!
-debugfs: File 'trace0' in directory 'nvme1n1' already present!
-``
-
-And userspace just sees this error message for the second call:
-
-```
-blktrace /dev/nvme1n1
-BLKTRACESETUP(2) /dev/nvme1n1 failed: 5/Input/output error
-```
-
-The first userspace process #1 will also claim that the files
-were taken underneath their nose as well. The files are taken
-away form the first process given that when the second blktrace
-fails, it will follow up with a BLKTRACESTOP and BLKTRACETEARDOWN.
-This means that even if go-happy process #1 is waiting for blktrace
-data, we *have* been asked to take teardown the blktrace.
-
-This can easily be reproduced with break-blktrace [0] run_0005.sh test.
-
-Just break out early if we know we're already going to fail, this will
-prevent trying to create the files all over again, which we know still
-exist.
-
-[0] https://github.com/mcgrof/break-blktrace
-
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Reported-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Signed-off-by: Tero Kristo <t-kristo@ti.com>
+Link: https://lkml.kernel.org/r/20200429131341.4697-2-t-kristo@ti.com
+Acked-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/blktrace.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/clk/ti/composite.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index 6d3b432a748a6..88eb9261c7b5c 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -15,6 +15,9 @@
-  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-  *
-  */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
- #include <linux/kernel.h>
- #include <linux/blkdev.h>
- #include <linux/blktrace_api.h>
-@@ -481,6 +484,16 @@ int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
- 	 */
- 	strreplace(buts->name, '/', '_');
+diff --git a/drivers/clk/ti/composite.c b/drivers/clk/ti/composite.c
+index 1cf70f452e1e6..3725b2e0c7887 100644
+--- a/drivers/clk/ti/composite.c
++++ b/drivers/clk/ti/composite.c
+@@ -226,6 +226,7 @@ static void __init _register_composite(struct clk_hw *hw,
+ 		if (!cclk->comp_clks[i])
+ 			continue;
+ 		list_del(&cclk->comp_clks[i]->link);
++		kfree(cclk->comp_clks[i]->parent_names);
+ 		kfree(cclk->comp_clks[i]);
+ 	}
  
-+	/*
-+	 * bdev can be NULL, as with scsi-generic, this is a helpful as
-+	 * we can be.
-+	 */
-+	if (q->blk_trace) {
-+		pr_warn("Concurrent blktraces are not allowed on %s\n",
-+			buts->name);
-+		return -EBUSY;
-+	}
-+
- 	bt = kzalloc(sizeof(*bt), GFP_KERNEL);
- 	if (!bt)
- 		return -ENOMEM;
 -- 
 2.25.1
 
