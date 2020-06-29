@@ -2,148 +2,217 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20364C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:55:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C73C0C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:56:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EE4E5206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:55:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nGp01w2n"
+	by mail.kernel.org (Postfix) with ESMTP id A36B2206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:56:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593467763;
+	bh=Ib9uaJRwu7PjqRSULrc/RVTtx7kBtkPd2bYReuBdmiw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=YczS4v+8kdMK7aJwg/KI5TmOa0ZfobVlhsTPfc/CxkfQtBWQbjybvY5QdNTKSxG1q
+	 FheSpxxuVGqiuk3QNE2cicxIkbWv0n9FsMoIjEEY+W96cOaZVZrOqbL/akFJWGTR3W
+	 giqhgiosK6xm3wZO4FL81tGALX8sd1T5wfUbQWeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404175AbgF2Vzy (ORCPT
+        id S2404438AbgF2V4C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:55:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41602 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2391560AbgF2Vz1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 17:55:27 -0400
-Received: from mail-io1-xd42.google.com (mail-io1-xd42.google.com [IPv6:2607:f8b0:4864:20::d42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB733C03E979
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 14:55:27 -0700 (PDT)
-Received: by mail-io1-xd42.google.com with SMTP id q8so18861093iow.7
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 14:55:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=zQuQWfZzfj1SDZzBIXoKjjE4U7nBLLgIi6SIHAdQ+GA=;
-        b=nGp01w2niKYCt4PaDR03fsVvxKd2eC+s3Q3ZlNqyypP7ldsPagswtGN9KUM4XpbMIS
-         Aa9+EGXM/XCYpLzhGgRDKGbNqzrCnxV387ZzSl/TfHcNQM0o3SykBipxtAeYnbQJbo1z
-         h/C+KpByaLay7PG11dGkPSCVyYbYjkGT1aGqC84lQ90RyZg1H/i8zJd4M8ZfZh64WFbQ
-         B7L//WshF43JDl7GAWd1uVvioE2U6lJSsSNNpRIHQ9dJMwXqBVDGEB5Nhbjsz44aJ4ly
-         Odk/LQmZSPI3hCI8zXjT9mK+fzzOArU9EY9PiorANBPUC4Bjq5gnpn4UcexJh7T7mGOR
-         1Plg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=zQuQWfZzfj1SDZzBIXoKjjE4U7nBLLgIi6SIHAdQ+GA=;
-        b=Fc6CkxrJy3NHSC8FgXEOT9f3a2FtARvOTzOZIsWAyQ2jRzd9CJMXY7wLLLa3WQBBvL
-         4DDn5fNepql3M4heYfd1epJEW9vFzi0nxXmbS9eh1A300dUODfJy9PUro4U0AB/UWHd0
-         rHXUZf+fT32FeIbi/iujGusgnFi+X/sVK1kMQaxL08nOv0UNMUW79bn3IPuf2MCZXsNy
-         5t5H/MBP08IXEc9Xq21ABSZbx1o6/KiuYD/T2p/iLBNByeIFbrywGQsO9qwfiI8s1y+U
-         dX2fCqGaX2l+c+3zY5HrbCyitfOmv0CRg1kyvcDukWuoTojXDTNxJx7dlmFmNeuk1Cdo
-         MNFA==
-X-Gm-Message-State: AOAM533SAp9EdoE8kzvodZh0K0Z1T6kjNH767f+fLIBXfozafBe3ipFo
-        1mGon+sRJdVtcBPNWakd5T9ZSA==
-X-Google-Smtp-Source: ABdhPJxGwvvKmc1/Mw85Jidwdd9tp3bG583KjI33LYk6uebsjpDlj/Bf8q7fbeentimbgNbROGtx3Q==
-X-Received: by 2002:a05:6602:491:: with SMTP id y17mr18551373iov.72.1593467727042;
-        Mon, 29 Jun 2020 14:55:27 -0700 (PDT)
-Received: from presto.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.gmail.com with ESMTPSA id a187sm543221iog.2.2020.06.29.14.55.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 14:55:26 -0700 (PDT)
-From:   Alex Elder <elder@linaro.org>
-To:     davem@davemloft.net, kuba@kernel.org
-Cc:     evgreen@chromium.org, subashab@codeaurora.org,
-        cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 1/3] net: ipa: rework ipa_aggr_granularity_val()
-Date:   Mon, 29 Jun 2020 16:55:21 -0500
-Message-Id: <20200629215523.1196263-2-elder@linaro.org>
+        Mon, 29 Jun 2020 17:56:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56910 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726527AbgF2Sfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:31 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 529C6247A6;
+        Mon, 29 Jun 2020 15:21:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593444113;
+        bh=Ib9uaJRwu7PjqRSULrc/RVTtx7kBtkPd2bYReuBdmiw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=od/lhvwic35ZIzVtwELwGO1Yta+QciAMEMAF5lcfAc5wDAQESoqTUkVaoRdLzGsqb
+         WSdGs8Jkbom58nJBXQO+SyMsv2JF/OQROe4wzmu3p3HSqfdSioDo/ZUyrfGCZcKX2t
+         0XDEBcpTRxyMXGhtNdqFi7gwz5CJ26aLQlTNG5eA=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Filipe Manana <fdmanana@suse.com>,
+        kernel test robot <rong.a.chen@intel.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 224/265] btrfs: check if a log root exists before locking the log_mutex on unlink
+Date:   Mon, 29 Jun 2020 11:17:37 -0400
+Message-Id: <20200629151818.2493727-225-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629215523.1196263-1-elder@linaro.org>
-References: <20200629215523.1196263-1-elder@linaro.org>
+In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
+References: <20200629151818.2493727-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.7.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.7.7-rc1
+X-KernelTest-Deadline: 2020-07-01T15:14+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The timer used for aggregation makes use of an internal 32 KHz clock.
-The granularity of the timer is programmed by a field whose value is
-computed by ipa_aggr_granularity_val().  Redefine the way that value
-is computed by using a new TIMER_FREQUENCY constant representing the
-underlying clock frequency.
+From: Filipe Manana <fdmanana@suse.com>
 
-Add two BUILD_BUG_ON() calls to ensure the value used is valid.
+commit e7a79811d0db136dc2d336b56d54cf1b774ce972 upstream.
 
-Signed-off-by: Alex Elder <elder@linaro.org>
+This brings back an optimization that commit e678934cbe5f02 ("btrfs:
+Remove unnecessary check from join_running_log_trans") removed, but in
+a different form. So it's almost equivalent to a revert.
+
+That commit removed an optimization where we avoid locking a root's
+log_mutex when there is no log tree created in the current transaction.
+The affected code path is triggered through unlink operations.
+
+That commit was based on the assumption that the optimization was not
+necessary because we used to have the following checks when the patch
+was authored:
+
+  int btrfs_del_dir_entries_in_log(...)
+  {
+        (...)
+        if (dir->logged_trans < trans->transid)
+            return 0;
+
+        ret = join_running_log_trans(root);
+        (...)
+   }
+
+   int btrfs_del_inode_ref_in_log(...)
+   {
+        (...)
+        if (inode->logged_trans < trans->transid)
+            return 0;
+
+        ret = join_running_log_trans(root);
+        (...)
+   }
+
+However before that patch was merged, another patch was merged first which
+replaced those checks because they were buggy.
+
+That other patch corresponds to commit 803f0f64d17769 ("Btrfs: fix fsync
+not persisting dentry deletions due to inode evictions"). The assumption
+that if the logged_trans field of an inode had a smaller value then the
+current transaction's generation (transid) meant that the inode was not
+logged in the current transaction was only correct if the inode was not
+evicted and reloaded in the current transaction. So the corresponding bug
+fix changed those checks and replaced them with the following helper
+function:
+
+  static bool inode_logged(struct btrfs_trans_handle *trans,
+                           struct btrfs_inode *inode)
+  {
+        if (inode->logged_trans == trans->transid)
+                return true;
+
+        if (inode->last_trans == trans->transid &&
+            test_bit(BTRFS_INODE_NEEDS_FULL_SYNC, &inode->runtime_flags) &&
+            !test_bit(BTRFS_FS_LOG_RECOVERING, &trans->fs_info->flags))
+                return true;
+
+        return false;
+  }
+
+So if we have a subvolume without a log tree in the current transaction
+(because we had no fsyncs), every time we unlink an inode we can end up
+trying to lock the log_mutex of the root through join_running_log_trans()
+twice, once for the inode being unlinked (by btrfs_del_inode_ref_in_log())
+and once for the parent directory (with btrfs_del_dir_entries_in_log()).
+
+This means if we have several unlink operations happening in parallel for
+inodes in the same subvolume, and the those inodes and/or their parent
+inode were changed in the current transaction, we end up having a lot of
+contention on the log_mutex.
+
+The test robots from intel reported a -30.7% performance regression for
+a REAIM test after commit e678934cbe5f02 ("btrfs: Remove unnecessary check
+from join_running_log_trans").
+
+So just bring back the optimization to join_running_log_trans() where we
+check first if a log root exists before trying to lock the log_mutex. This
+is done by checking for a bit that is set on the root when a log tree is
+created and removed when a log tree is freed (at transaction commit time).
+
+Commit e678934cbe5f02 ("btrfs: Remove unnecessary check from
+join_running_log_trans") was merged in the 5.4 merge window while commit
+803f0f64d17769 ("Btrfs: fix fsync not persisting dentry deletions due to
+inode evictions") was merged in the 5.3 merge window. But the first
+commit was actually authored before the second commit (May 23 2019 vs
+June 19 2019).
+
+Reported-by: kernel test robot <rong.a.chen@intel.com>
+Link: https://lore.kernel.org/lkml/20200611090233.GL12456@shao2-debian/
+Fixes: e678934cbe5f02 ("btrfs: Remove unnecessary check from join_running_log_trans")
+CC: stable@vger.kernel.org # 5.4+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ipa/ipa_main.c |  5 +++++
- drivers/net/ipa/ipa_reg.h  | 17 ++++++++---------
- 2 files changed, 13 insertions(+), 9 deletions(-)
+ fs/btrfs/ctree.h    | 2 ++
+ fs/btrfs/tree-log.c | 5 +++++
+ 2 files changed, 7 insertions(+)
 
-diff --git a/drivers/net/ipa/ipa_main.c b/drivers/net/ipa/ipa_main.c
-index 76d5108b8403..27a869df3a4b 100644
---- a/drivers/net/ipa/ipa_main.c
-+++ b/drivers/net/ipa/ipa_main.c
-@@ -674,6 +674,11 @@ static void ipa_validate_build(void)
+diff --git a/fs/btrfs/ctree.h b/fs/btrfs/ctree.h
+index 196d4511f8126..09e6dff8a8f85 100644
+--- a/fs/btrfs/ctree.h
++++ b/fs/btrfs/ctree.h
+@@ -988,6 +988,8 @@ enum {
+ 	BTRFS_ROOT_DEAD_RELOC_TREE,
+ 	/* Mark dead root stored on device whose cleanup needs to be resumed */
+ 	BTRFS_ROOT_DEAD_TREE,
++	/* The root has a log tree. Used only for subvolume roots. */
++	BTRFS_ROOT_HAS_LOG_TREE,
+ };
  
- 	/* This is used as a divisor */
- 	BUILD_BUG_ON(!IPA_AGGR_GRANULARITY);
-+
-+	/* Aggregation granularity value can't be 0, and must fit */
-+	BUILD_BUG_ON(!ipa_aggr_granularity_val(IPA_AGGR_GRANULARITY));
-+	BUILD_BUG_ON(ipa_aggr_granularity_val(IPA_AGGR_GRANULARITY) >
-+			field_max(AGGR_GRANULARITY));
- #endif /* IPA_VALIDATE */
- }
+ /*
+diff --git a/fs/btrfs/tree-log.c b/fs/btrfs/tree-log.c
+index ea72b9d54ec86..bdfc421494481 100644
+--- a/fs/btrfs/tree-log.c
++++ b/fs/btrfs/tree-log.c
+@@ -169,6 +169,7 @@ static int start_log_trans(struct btrfs_trans_handle *trans,
+ 		if (ret)
+ 			goto out;
  
-diff --git a/drivers/net/ipa/ipa_reg.h b/drivers/net/ipa/ipa_reg.h
-index 0a688d8c1d7c..7ae8015798ae 100644
---- a/drivers/net/ipa/ipa_reg.h
-+++ b/drivers/net/ipa/ipa_reg.h
-@@ -190,24 +190,23 @@ static inline u32 ipa_reg_bcr_val(enum ipa_version version)
- 	return 0x00000000;
- }
- 
--
- #define IPA_REG_LOCAL_PKT_PROC_CNTXT_BASE_OFFSET	0x000001e8
- 
- #define IPA_REG_AGGR_FORCE_CLOSE_OFFSET			0x000001ec
- /* ipa->available defines the valid bits in the AGGR_FORCE_CLOSE register */
- 
-+/* The internal inactivity timer clock is used for the aggregation timer */
-+#define TIMER_FREQUENCY	32000	/* 32 KHz inactivity timer clock */
-+
- #define IPA_REG_COUNTER_CFG_OFFSET			0x000001f0
- #define AGGR_GRANULARITY			GENMASK(8, 4)
--/* Compute the value to use in the AGGR_GRANULARITY field representing
-- * the given number of microseconds (up to 1 millisecond).
-- *	x = (32 * usec) / 1000 - 1
-+/* Compute the value to use in the AGGR_GRANULARITY field representing the
-+ * given number of microseconds.  The value is one less than the number of
-+ * timer ticks in the requested period.  Zero not a valid granularity value.
-  */
--static inline u32 ipa_aggr_granularity_val(u32 microseconds)
-+static inline u32 ipa_aggr_granularity_val(u32 usec)
++		set_bit(BTRFS_ROOT_HAS_LOG_TREE, &root->state);
+ 		clear_bit(BTRFS_ROOT_MULTI_LOG_TASKS, &root->state);
+ 		root->log_start_pid = current->pid;
+ 	}
+@@ -195,6 +196,9 @@ static int join_running_log_trans(struct btrfs_root *root)
  {
--	/* assert(microseconds >= 16); (?) */
--	/* assert(microseconds <= 1015); */
--
--	return DIV_ROUND_CLOSEST(32 * microseconds, 1000) - 1;
-+	return DIV_ROUND_CLOSEST(usec * TIMER_FREQUENCY, USEC_PER_SEC) - 1;
- }
+ 	int ret = -ENOENT;
  
- #define IPA_REG_TX_CFG_OFFSET				0x000001fc
++	if (!test_bit(BTRFS_ROOT_HAS_LOG_TREE, &root->state))
++		return ret;
++
+ 	mutex_lock(&root->log_mutex);
+ 	if (root->log_root) {
+ 		ret = 0;
+@@ -3312,6 +3316,7 @@ int btrfs_free_log(struct btrfs_trans_handle *trans, struct btrfs_root *root)
+ 	if (root->log_root) {
+ 		free_log_tree(trans, root->log_root);
+ 		root->log_root = NULL;
++		clear_bit(BTRFS_ROOT_HAS_LOG_TREE, &root->state);
+ 	}
+ 	return 0;
+ }
 -- 
 2.25.1
 
