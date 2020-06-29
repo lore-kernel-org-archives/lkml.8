@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD8ABC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E03C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:01:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89CD620702
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:00:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA26B206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:01:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460859;
-	bh=3/sCQmNiRo2QgM8gU+c241Fiwn/a2hTSPYHc67QFY3A=;
+	s=default; t=1593460866;
+	bh=W2lKIUT3jvh1ulzHEggBPfEuSFTuH8fB8H2owCNbxLU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VuZ12dW+m1z4KC4+unhEMXQVKWmVKxotgqFap6F3TvqgwjWq2aV1wb5VeNBBaiwms
-	 h/e3nd0Z8qtYn99ROTjGLEviKalZXo4zC8c7UuQ31bZJK+4epXTcqSQbJw74epp/AD
-	 3TAoUsZGllPZCQYERJddYvP8YqRVNcY4xFvkMyoc=
+	b=hBKlhCryoGiNdd74vvkhElG4kmXBC0nDyGr7gnsOeSm05dxLuLXH0Mo5TpUcfOcP2
+	 FnIkvUL/Y+Rdi+nwQiUVB9Wf2EETNgNXlvgRd6V1bIHZMGAXgC1d57Znc7CVvl441i
+	 sxCQRyz7ZhfLeZ+A2ZsfMVYnUaQbWNRJkcV9HXzc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388621AbgF2UA5 (ORCPT
+        id S2388627AbgF2UBF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:00:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47652 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:01:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387548AbgF2TkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:40:16 -0400
+        id S2387544AbgF2TkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:40:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 924B5248D4;
-        Mon, 29 Jun 2020 15:27:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96B6E248B7;
+        Mon, 29 Jun 2020 15:26:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444429;
-        bh=3/sCQmNiRo2QgM8gU+c241Fiwn/a2hTSPYHc67QFY3A=;
+        s=default; t=1593444410;
+        bh=W2lKIUT3jvh1ulzHEggBPfEuSFTuH8fB8H2owCNbxLU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hoNh28KngH0i0RoPZgcZmedUXMhh/6DWYkI3pFrLram648GEgyIOvVHR1KxOUk2RP
-         fTPQdb4GueUlfUxXkngVtPpFezhLOMYRuoLI7lEt2B5/b4ZJtV+RkW1L2CQaVAosDm
-         J6093A2fUfoJUcjEY2mxnFKkyuS1kEJYvXUhZlug=
+        b=DaNDUx0OYV32jLcOj8Ei9n5B08vWHtOen2lVVUw25vgMRhU7xskiJV97CxVmZhnfj
+         +fKmgJ9zB6Kgf40P5mDzjL16GHjuYR6dUzfbZBuvn6q4dUZWXZaHwksV17QFQLrLeT
+         Zg6JeQ5bln2RuZIN0H4o6kdXLGEIgHPTcaGCsjlU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sagi Grimberg <sagi@grimberg.me>,
-        Anton Eidelman <anton@lightbitslabs.com>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 107/178] nvme: don't protect ns mutation with ns->head->lock
-Date:   Mon, 29 Jun 2020 11:24:12 -0400
-Message-Id: <20200629152523.2494198-108-sashal@kernel.org>
+Cc:     Fan Guo <guofan5@huawei.com>, Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 088/178] RDMA/mad: Fix possible memory leak in ib_mad_post_receive_mads()
+Date:   Mon, 29 Jun 2020 11:23:53 -0400
+Message-Id: <20200629152523.2494198-89-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -65,90 +64,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sagi Grimberg <sagi@grimberg.me>
+From: Fan Guo <guofan5@huawei.com>
 
-[ Upstream commit e164471dcf19308d154adb69e7760d8ba426a77f ]
+[ Upstream commit a17f4bed811c60712d8131883cdba11a105d0161 ]
 
-Right now ns->head->lock is protecting namespace mutation
-which is wrong and unneeded. Move it to only protect
-against head mutations. While we're at it, remove unnecessary
-ns->head reference as we already have head pointer.
+If ib_dma_mapping_error() returns non-zero value,
+ib_mad_post_receive_mads() will jump out of loops and return -ENOMEM
+without freeing mad_priv. Fix this memory-leak problem by freeing mad_priv
+in this case.
 
-The problem with this is that the head->lock spans
-mpath disk node I/O that may block under some conditions (if
-for example the controller is disconnecting or the path
-became inaccessible), The locking scheme does not allow any
-other path to enable itself, preventing blocked I/O to complete
-and forward-progress from there.
-
-This is a preparation patch for the fix in a subsequent patch
-where the disk I/O will also be done outside the head->lock.
-
-Fixes: 0d0b660f214d ("nvme: add ANA support")
-Signed-off-by: Anton Eidelman <anton@lightbitslabs.com>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Fixes: 2c34e68f4261 ("IB/mad: Check and handle potential DMA mapping errors")
+Link: https://lore.kernel.org/r/20200612063824.180611-1-guofan5@huawei.com
+Signed-off-by: Fan Guo <guofan5@huawei.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/multipath.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+ drivers/infiniband/core/mad.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
-index 0f08c15553a64..18f0a05c74b56 100644
---- a/drivers/nvme/host/multipath.c
-+++ b/drivers/nvme/host/multipath.c
-@@ -414,11 +414,10 @@ static void nvme_mpath_set_live(struct nvme_ns *ns)
- {
- 	struct nvme_ns_head *head = ns->head;
- 
--	lockdep_assert_held(&ns->head->lock);
--
- 	if (!head->disk)
- 		return;
- 
-+	mutex_lock(&head->lock);
- 	if (!(head->disk->flags & GENHD_FL_UP))
- 		device_add_disk(&head->subsys->dev, head->disk,
- 				nvme_ns_id_attr_groups);
-@@ -431,9 +430,10 @@ static void nvme_mpath_set_live(struct nvme_ns *ns)
- 			__nvme_find_path(head, node);
- 		srcu_read_unlock(&head->srcu, srcu_idx);
- 	}
-+	mutex_unlock(&head->lock);
- 
--	synchronize_srcu(&ns->head->srcu);
--	kblockd_schedule_work(&ns->head->requeue_work);
-+	synchronize_srcu(&head->srcu);
-+	kblockd_schedule_work(&head->requeue_work);
- }
- 
- static int nvme_parse_ana_log(struct nvme_ctrl *ctrl, void *data,
-@@ -484,14 +484,12 @@ static inline bool nvme_state_is_live(enum nvme_ana_state state)
- static void nvme_update_ns_ana_state(struct nvme_ana_group_desc *desc,
- 		struct nvme_ns *ns)
- {
--	mutex_lock(&ns->head->lock);
- 	ns->ana_grpid = le32_to_cpu(desc->grpid);
- 	ns->ana_state = desc->state;
- 	clear_bit(NVME_NS_ANA_PENDING, &ns->flags);
- 
- 	if (nvme_state_is_live(ns->ana_state))
- 		nvme_mpath_set_live(ns);
--	mutex_unlock(&ns->head->lock);
- }
- 
- static int nvme_update_ana_state(struct nvme_ctrl *ctrl,
-@@ -670,10 +668,8 @@ void nvme_mpath_add_disk(struct nvme_ns *ns, struct nvme_id_ns *id)
- 			nvme_update_ns_ana_state(&desc, ns);
+diff --git a/drivers/infiniband/core/mad.c b/drivers/infiniband/core/mad.c
+index a9e00cdf717b8..2284930b5f915 100644
+--- a/drivers/infiniband/core/mad.c
++++ b/drivers/infiniband/core/mad.c
+@@ -2960,6 +2960,7 @@ static int ib_mad_post_receive_mads(struct ib_mad_qp_info *qp_info,
+ 						 DMA_FROM_DEVICE);
+ 		if (unlikely(ib_dma_mapping_error(qp_info->port_priv->device,
+ 						  sg_list.addr))) {
++			kfree(mad_priv);
+ 			ret = -ENOMEM;
+ 			break;
  		}
- 	} else {
--		mutex_lock(&ns->head->lock);
- 		ns->ana_state = NVME_ANA_OPTIMIZED; 
- 		nvme_mpath_set_live(ns);
--		mutex_unlock(&ns->head->lock);
- 	}
- 
- 	if (bdi_cap_stable_pages_required(ns->queue->backing_dev_info)) {
 -- 
 2.25.1
 
