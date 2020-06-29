@@ -2,97 +2,106 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41289C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:15:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7835AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08A432065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:15:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461755;
-	bh=dWj/02JCFhcZIyCPN78y8G/mcwUuHQlsXctOb05YzsU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dFSCg5Zoe4KPzjc3MlsW2aGWMnGZcZtONamineB24H7Z11s+QS4kPuqQlnF3jCV7T
-	 BvcFkAYjbZxZCyXyrIX3uoNK5iJlX8589Crdu4OvC+mZ435+XIWByau4VeRjBXlg5Y
-	 ORdTOCuT/2dQz156rmhpZC0X4s0lytHGw72eH9Hw=
+	by mail.kernel.org (Postfix) with ESMTP id 56A9220675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:15:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ziTb39eZ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fTj+OTBO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732871AbgF2UPy (ORCPT
+        id S1732880AbgF2UP5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:15:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40584 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732823AbgF2TaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:30:17 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C88625280;
-        Mon, 29 Jun 2020 15:36:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444992;
-        bh=dWj/02JCFhcZIyCPN78y8G/mcwUuHQlsXctOb05YzsU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0ol8qVeN5WQA4/I6Ral/ALPV4Nzco8HQrFOW7P4pdcN1p9d0GuFNvBjntmCrhrVBj
-         21bnESaUQeBomakUmR/ZrrXvkCCZ3fJiv+I+LplN40X74qgIqQcnZtqESP+2lU1ueL
-         sUhU4AO96XiENaFtpZZ3/UJ9VkZf6dumssgVxyy4=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Denis Efremov <efremov@linux.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 092/131] drm/amd/display: Use kfree() to free rgb_user in calculate_user_regamma_ramp()
-Date:   Mon, 29 Jun 2020 11:34:23 -0400
-Message-Id: <20200629153502.2494656-93-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
-References: <20200629153502.2494656-1-sashal@kernel.org>
+        Mon, 29 Jun 2020 16:15:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53702 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732820AbgF2UPk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 16:15:40 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C996C061755
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 13:15:40 -0700 (PDT)
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1593461738;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Qzhrv068SVyOclPG+XbY3eTySnVvBXvWF1YU6qPgT4A=;
+        b=ziTb39eZbm9oX7ZE+jaxLZodSu6uy93Z0xNo3n7DI0zxs3bEWmqSPFJ/lxw8NpknEelPsE
+        fGqKTXyFt2P6L9ni2CA63VRNC1Em/qA//Czrr5ofKER6SwOQIPZYlasj5hv1bDm5gQfx17
+        fVf5hfL0LUU4z/+VF1wUzzzG98HoKvslA7vBiZrBtx7qPSOpNGTcRj4RsrvkoyqFHak8YX
+        cc6ObdPGBSco/+7JTqsNIlkovLX+fowkYGa9jResv3KFvxorwzWKa7Q9ij8wm1ppJWgJBO
+        7ebKCxvB/GRB6RwlqEA3mBOOF1xGEa4n+mviC5qHt09Vp4ii1XAGPzKmK/EjAg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1593461738;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Qzhrv068SVyOclPG+XbY3eTySnVvBXvWF1YU6qPgT4A=;
+        b=fTj+OTBOaUMG4LLbz3Rk01YlI+4RE8eLIhXKVHt5TPdrnw90mIhKf1L+jxzLWmilZ2zsHM
+        BpW1lpdUTz70SyAg==
+To:     linux-kernel@vger.kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        tglx@linutronix.de,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH] lockdep: Do no validate wait context for novalidate class
+Date:   Mon, 29 Jun 2020 22:15:29 +0200
+Message-Id: <20200629201529.1017485-1-bigeasy@linutronix.de>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.19.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.19.131-rc1
-X-KernelTest-Deadline: 2020-07-01T15:34+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Denis Efremov <efremov@linux.com>
+The novalidate class is ignored in the lockchain validation but is
+considered in the wait context validation.
+If a mutex and a spinlock_t is ignored by using
+lockdep_set_novalidate_class() then both locks will share the same lock
+class. From the wait validation point of view the mutex will then appear
+like a spinlock_t and the validator will complain if another mutex will
+be acquired.
 
-[ Upstream commit 43a562774fceba867e8eebba977d7d42f8a2eac7 ]
+Ignore the nonvalidate locks from wait context checking.
 
-Use kfree() instead of kvfree() to free rgb_user in
-calculate_user_regamma_ramp() because the memory is allocated with
-kcalloc().
-
-Signed-off-by: Denis Efremov <efremov@linux.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- drivers/gpu/drm/amd/display/modules/color/color_gamma.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/locking/lockdep.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/display/modules/color/color_gamma.c b/drivers/gpu/drm/amd/display/modules/color/color_gamma.c
-index 962900932beed..11ea1a0e629bd 100644
---- a/drivers/gpu/drm/amd/display/modules/color/color_gamma.c
-+++ b/drivers/gpu/drm/amd/display/modules/color/color_gamma.c
-@@ -1561,7 +1561,7 @@ bool calculate_user_regamma_ramp(struct dc_transfer_func *output_tf,
- 
- 	kfree(rgb_regamma);
- rgb_regamma_alloc_fail:
--	kvfree(rgb_user);
-+	kfree(rgb_user);
- rgb_user_alloc_fail:
- 	return ret;
- }
--- 
-2.25.1
+diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+index 29a8de4c50b90..fb9a642d8ebef 100644
+--- a/kernel/locking/lockdep.c
++++ b/kernel/locking/lockdep.c
+@@ -4067,7 +4067,7 @@ static int check_wait_context(struct task_struct *cur=
+r, struct held_lock *next)
+ 	 */
+ 	for (depth =3D curr->lockdep_depth - 1; depth >=3D 0; depth--) {
+ 		struct held_lock *prev =3D curr->held_locks + depth;
+-		if (prev->irq_context !=3D next->irq_context)
++		if (prev->check && prev->irq_context !=3D next->irq_context)
+ 			break;
+ 	}
+ 	depth++;
+@@ -4078,6 +4078,9 @@ static int check_wait_context(struct task_struct *cur=
+r, struct held_lock *next)
+ 		struct held_lock *prev =3D curr->held_locks + depth;
+ 		short prev_inner =3D hlock_class(prev)->wait_type_inner;
+=20
++		if (!prev->check)
++			continue;
++
+ 		if (prev_inner) {
+ 			/*
+ 			 * We can have a bigger inner than a previous one
+--=20
+2.27.0
 
