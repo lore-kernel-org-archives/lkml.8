@@ -2,118 +2,126 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A31AEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24368C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:04:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 81D6C2073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:04:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0610420768
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:04:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ifgI6FKo"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="uHWduRT5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388441AbgF2VEb (ORCPT
+        id S2389428AbgF2VEk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:04:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43394 "EHLO
+        Mon, 29 Jun 2020 17:04:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731119AbgF2TMp (ORCPT
+        with ESMTP id S1731112AbgF2TMo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:12:45 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E03DEC0149DD;
-        Mon, 29 Jun 2020 01:19:50 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id n2so3034499edr.5;
-        Mon, 29 Jun 2020 01:19:50 -0700 (PDT)
+        Mon, 29 Jun 2020 15:12:44 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0722C08ECA6
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:50:17 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id l17so14277726wmj.0
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:50:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Di4X3kO1NLhqcaNYFfndVe6TZWk4Eo5zmSmqMBqgXsg=;
-        b=ifgI6FKoFI1Vj1Y+nGO/as8ZauW+sydv5qFWLvnktrrd+l8EjoY0z7O5zApRcfIIhS
-         RlFN/y8e0n51H6cEehMPylM946Wx/H+jVJ0pcLlzNtIjppj07NZgbpXUKfZwniLoheTJ
-         +NqBBpp60z8OjGiY+u+rHkgHRpnakZLyZ4FcOtEW27C0twNv5XWpiq/hzTMfHlHG/sHA
-         CDZxrFFX3QUyQWfR05S5EDvntl5pAG1dWlfA2WGfhx8moL20Cxsh6pF+G9SJqXzlCuFZ
-         S1EHIkwV0NgK0NSIQv6MqeIR8kcmdm6hzDAasfCewAia06Ur4YxsWrj4MjjLwaCuC0DU
-         Vj6w==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=/lPkRY5zqjvg98KXV/ewwSSeHltl7MZJ65glZzN0dPQ=;
+        b=uHWduRT5zZJw4Hwc9B74igIqFOEHnjuRsYYMcRLM99cZ1YohKhbSuZsTzU3QNZn5n8
+         DggURCBqcVH2hKXL67YV8IzP115GSey41KFa0vv0U7Lp2uGwQL6E2xn37o7EOKGWqi+F
+         mXmL71fmVcc9rLdTYLsD4EsduHmkOk/VXC3X9JXq/6Dv9MB06hYXNJlkUYlWqLmPgM5V
+         A23bUylZ1YJ1dXxD6n9hAb81iW4LN5RWRu5oHTSRQKRX7kPnWGRv5t8Ldpq6LkyHTwLS
+         xlWA/+mUQisbhbRJxFYbKpF6wGEKu6IItURDPtgSNDAN1YEwzdnkinovzA2KvpRKJVUq
+         ZmxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Di4X3kO1NLhqcaNYFfndVe6TZWk4Eo5zmSmqMBqgXsg=;
-        b=kXVGdwDXTTcFOO1mrtsXznf2AEZYjwXFk/CiYKOyRMMpJ2b3FtJGDVMUNIvqrpJGYP
-         v2dSQU1ak1anx5pkkM80dhvmihpvwNCeG6vqILpDFaUGFi+r0Q51FVPvbeIaXnZdBmAj
-         r4ts1BnKGkT754+b0Wlxaf8bIunD+kyq6VatxrMa0F6rPmmEkPRI1o36Nia7zR+2NNgY
-         GX42SW9eF6GPXGYSWAbpxHWRqqKAcj6GNTduo82cYcT1GbPKZtsWXBweorH/4IrKV8A7
-         GPE0oKJqGjCxs8arPWHBtKM/u+EYWtX70nHiRKzQ8L66Pix7IwSY9E9CqUYI3z2rosHX
-         jWDQ==
-X-Gm-Message-State: AOAM532PV9giwIHwEYpRJOGWdoeRo7od23UwYitwoOUOtnkiKC94UjGp
-        ZjMRGXQckmynb7hnhG5aUpOirzJ9bJpBpLvRlSI=
-X-Google-Smtp-Source: ABdhPJwfdt2m13rVluP61KSXjdS/shN0vv951DCdcYyHLuk5BLxsJ+nzlopMzbt3IgLYif0iqkr1O0q0o+EFuSIip/o=
-X-Received: by 2002:a50:fe94:: with SMTP id d20mr15868605edt.254.1593418789481;
- Mon, 29 Jun 2020 01:19:49 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=/lPkRY5zqjvg98KXV/ewwSSeHltl7MZJ65glZzN0dPQ=;
+        b=Lozlx15JIW80A78FSjIgNvPaPdFSn+lNDjXDzQIP4i0Ct+jugXksOJx4IFF/ZO1GYx
+         sHjwDNrZAdCeB3GSKwF3aSCu0R6WMXYBSwCwyV242mjQfFqDGuOJOCAtV1V34ebAfvfu
+         9Et1ZX5sEivUlAPlXK68Fm9POgHEktgCztsqlMqwLy8TLmqdHrZP8x0QEwio0hLPl9p6
+         zxOvYG8FYqimlVPQn8b7Ap88exDaAiApuq95x67cALTbCQBr+cLlFZu3ZSPbuPx+TR69
+         2bB8XFx2i7YOshlZrES016fx58MS46kyOw599zlHkZ7hxdlw5uV3wNr64OtW5Q74b9RI
+         oBMQ==
+X-Gm-Message-State: AOAM533Zx38ggFbBfevR7CPvpEDIImpiKK/OoTlPPylZpf8Jtvvljo6Q
+        kFE6sRdbnGgjzjd+pQlbxIEC8g==
+X-Google-Smtp-Source: ABdhPJxEvLFDqGizVKVA+kCWvUNxwkMOgwoH94wkn9w50auKmytYRDvwZYMieLGnlarkAN4tua/fxw==
+X-Received: by 2002:a7b:cf10:: with SMTP id l16mr15384822wmg.93.1593413416631;
+        Sun, 28 Jun 2020 23:50:16 -0700 (PDT)
+Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
+        by smtp.gmail.com with ESMTPSA id z25sm26400850wmk.28.2020.06.28.23.50.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Jun 2020 23:50:16 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jean Delvare <jdelvare@suse.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hwmon@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v2 2/6] devres: move the size check from alloc_dr() into a separate function
+Date:   Mon, 29 Jun 2020 08:50:04 +0200
+Message-Id: <20200629065008.27620-3-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200629065008.27620-1-brgl@bgdev.pl>
+References: <20200629065008.27620-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-References: <1591697830-16311-1-git-send-email-amittomer25@gmail.com>
- <1591697830-16311-3-git-send-email-amittomer25@gmail.com> <20200624061529.GF2324254@vkoul-mobl>
-In-Reply-To: <20200624061529.GF2324254@vkoul-mobl>
-From:   Amit Tomer <amittomer25@gmail.com>
-Date:   Mon, 29 Jun 2020 13:49:13 +0530
-Message-ID: <CABHD4K-Z7_MkG-j1uAt6XGnz4zWzNYeuEgq=BwE=NXPwY6gb6g@mail.gmail.com>
-Subject: Re: [PATCH v4 02/10] dmaengine: Actions: Add support for S700 DMA engine
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Andre Przywara <andre.przywara@arm.com>,
-        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        dan.j.williams@intel.com, cristian.ciocaltea@gmail.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-actions@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinod,
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Thanks for having a look and providing the comments.
+We will perform the same size check in devm_krealloc(). Move the relevant
+code into a separate helper.
 
-> Is the .compatible documented, Documentation patch should come before
-> the driver use patch in a series
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ drivers/base/devres.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-Yes, this new compatible string is documented in patch (05/10).
-I would make it as a patch (1/10).
+diff --git a/drivers/base/devres.c b/drivers/base/devres.c
+index c34327219c34..1df1fb10b2d9 100644
+--- a/drivers/base/devres.c
++++ b/drivers/base/devres.c
+@@ -89,15 +89,23 @@ static struct devres_group * node_to_group(struct devres_node *node)
+ 	return NULL;
+ }
+ 
++static bool check_dr_size(size_t size, size_t *tot_size)
++{
++	/* We must catch any near-SIZE_MAX cases that could overflow. */
++	if (unlikely(check_add_overflow(sizeof(struct devres),
++					size, tot_size)))
++		return false;
++
++	return true;
++}
++
+ static __always_inline struct devres * alloc_dr(dr_release_t release,
+ 						size_t size, gfp_t gfp, int nid)
+ {
+ 	size_t tot_size;
+ 	struct devres *dr;
+ 
+-	/* We must catch any near-SIZE_MAX cases that could overflow. */
+-	if (unlikely(check_add_overflow(sizeof(struct devres), size,
+-					&tot_size)))
++	if (!check_dr_size(size, &tot_size))
+ 		return NULL;
+ 
+ 	dr = kmalloc_node_track_caller(tot_size, gfp, nid);
+-- 
+2.26.1
 
-> >  static int owl_dma_probe(struct platform_device *pdev)
-> >  {
-> >       struct device_node *np = pdev->dev.of_node;
-> >       struct owl_dma *od;
-> >       int ret, i, nr_channels, nr_requests;
-> > +     const struct of_device_id *of_id =
-> > +                             of_match_device(owl_dma_match, &pdev->dev);
->
-> You care about driver_data rather than of_id, so using
-> of_device_get_match_data() would be better..
-
-Okay. would take care of it in next version.
-
-> >       od = devm_kzalloc(&pdev->dev, sizeof(*od), GFP_KERNEL);
-> >       if (!od)
-> > @@ -1083,6 +1116,8 @@ static int owl_dma_probe(struct platform_device *pdev)
-> >       dev_info(&pdev->dev, "dma-channels %d, dma-requests %d\n",
-> >                nr_channels, nr_requests);
-> >
-> > +     od->devid = (enum owl_dma_id)(uintptr_t)of_id->data;
->
-> Funny casts, I dont think you need uintptr_t!
-
-But without this cast, clang compiler emits following warning:
-
-warning: cast to smaller integer type 'enum owl_dma_id' from 'const void *'
-          [-Wvoid-pointer-to-enum-cast]
-
-Thanks
--Amit
