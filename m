@@ -2,96 +2,152 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88057C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40209C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:41:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5E0BA20724
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:41:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593459696;
-	bh=4t5X/QkWlWatgJ5KVtynxP0TYEtoEV69bOTTaFpokUs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aQOPRgIPNZ+SoVwmOIEoLmpW0+1hMjG82/HIsgNxJ/h8tXdF+AIMtsmyW8tSed3Yv
-	 iLVxbIYQz94Cfa3g+xpxhD7p0BSyspa3In/E+luPlCUjJzKrmxKaacImAvTydSRtyO
-	 yP41DMzDXyfLwaajOF4GUdwr/jiZ7t0WOcAdLu2Y=
+	by mail.kernel.org (Postfix) with ESMTP id 1F2632081A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:41:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HWSftGfF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387875AbgF2Tkw (ORCPT
+        id S2387397AbgF2Tlo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:40:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47652 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387757AbgF2Tkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:40:37 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B70924867;
-        Mon, 29 Jun 2020 15:26:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444365;
-        bh=4t5X/QkWlWatgJ5KVtynxP0TYEtoEV69bOTTaFpokUs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iuk1lmCXwjn+tS/FDGRz0uasW/DQJidbLqvI3kkZqSWzHt/JbXwkkaNHhXSZHNsEL
-         VEJhC77qBKCFcY0iujpuj3UN/meWoCFcrQ13Y6pxx4vfr1DtM6uUbuIpyjGTpsud4x
-         EnYMfi1od/BMPz41wCI+h++Q6+pl0xZaZJXum+NU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Laurence Tratt <laurie@tratt.net>, Takashi Iwai <tiwai@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 042/178] ALSA: usb-audio: Add implicit feedback quirk for SSL2+.
-Date:   Mon, 29 Jun 2020 11:23:07 -0400
-Message-Id: <20200629152523.2494198-43-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
-References: <20200629152523.2494198-1-sashal@kernel.org>
+        Mon, 29 Jun 2020 15:41:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48318 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729393AbgF2Tlk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:41:40 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10D24C03E979
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 12:41:40 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id e13so16412391qkg.5
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 12:41:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QvdDQWAT9Z1b4tHlY2KQ+Wb11SVaesY+vPIQJ1iufDY=;
+        b=HWSftGfFhpY45fPy7VC+cdsQ/Po0jzPrZQNmUtOCkM8OGbVOH+RnvN5bi3ioCkrqhy
+         Glwz6OtqSDkSsxh2JcQZqlUOechGWpxo/iXVO1UmSf4pQrKdXgCbuwivQ8G32n0XYol2
+         elUQuh2gf8XMT12Qe8yzTazj1rhPUtPM7KWJdT3Bhcbu9ETe3ADUOoIHEUkMNrdKBrHm
+         WbhAOmfTPlBSNyWVvFAO1M9zWtm3iJK9FRCM9wJ1PkpR9aKDUmLc73e7xHqZ69fxUKYc
+         THiFKTecK4CdTMI1NiLDTu1I3uuh/JB0RhqpvNwYLaJ0RIf5YuxSkmxacUcMYL6yUENV
+         7AXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QvdDQWAT9Z1b4tHlY2KQ+Wb11SVaesY+vPIQJ1iufDY=;
+        b=tIDUAlrFqWEi/5KueuKhx2JRG4Ed+FEdFOolxWBAeGFklqpWH/Rpru4z7XcXGygs+2
+         xe0GKptOXAt0upGw+l4AILYbZ98yulFNy0HJ6cMDoczrC/nfCwmdC5qUR8ghLJPAmaDc
+         Yvb6LH330PdcwuJfc+Hb5kSqk+OPYNQtS1ULXuVDFSueeMMgUjZQxFrOeJCnz63Rc5RS
+         BgL40ET3wrzdWBb+OcT3Dq7dnGSZ4BinrzxuOTZYfrvSWiXEj/WFItfvc4W3aGW2rYcf
+         JEc7aGzlqy39Pa6r+/+wD6/IpXJHo9oQeDEl0lpkrXi5ajdD4mARrZVnk6uyGxmV+NRH
+         c7lg==
+X-Gm-Message-State: AOAM531ViNYf9R/nVhaSupJO3YywCtJCEsW6OE0Jq2shwF1NF7l6/U0P
+        eBnj6ZjyJ4csGn25wppIWzJIAkAbFTfJ42X+Qktb6g==
+X-Google-Smtp-Source: ABdhPJym2+ZxxMc80cE9zQefSkfB/DFa2F6Ga0IhHiGx/uZihQ9c950v7wLi4cPLxYn3pL2TcfRcNPT9qrbCtEXeEcw=
+X-Received: by 2002:a37:4f0e:: with SMTP id d14mr17080420qkb.8.1593459699006;
+ Mon, 29 Jun 2020 12:41:39 -0700 (PDT)
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.50-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.4.50-rc1
-X-KernelTest-Deadline: 2020-07-01T15:25+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <000000000000107b4605a7bdce7d@google.com> <20200614085321.8740-1-hdanton@sina.com>
+ <20200627130205.16900-1-hdanton@sina.com> <20200627222527.GC25301@ziepe.ca>
+ <CACT4Y+ab1q7fON3rkj+FHODPQXDGyP5c0tJt7gbrpmsAAYRb1g@mail.gmail.com>
+ <CACT4Y+Zjw=ru-Sqs-V7cP0Exgu7g0jWBXcPeVKnLqpbkS-wDRg@mail.gmail.com> <20200629192255.GE25301@ziepe.ca>
+In-Reply-To: <20200629192255.GE25301@ziepe.ca>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 29 Jun 2020 21:41:27 +0200
+Message-ID: <CACT4Y+bWgEMuSoYKf4GQdfH1VZi_vpDJZ6q3gUZ-6Ce=OsrCuA@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in addr_handler (2)
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     syzkaller <syzkaller@googlegroups.com>,
+        Hillf Danton <hdanton@sina.com>,
+        syzbot <syzbot+a929647172775e335941@syzkaller.appspotmail.com>,
+        chuck.lever@oracle.com, Doug Ledford <dledford@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        RDMA mailing list <linux-rdma@vger.kernel.org>,
+        parav@mellanox.com, Markus Elfring <Markus.Elfring@web.de>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurence Tratt <laurie@tratt.net>
+On Mon, Jun 29, 2020 at 9:22 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> > > > On Sat, Jun 27, 2020 at 09:02:05PM +0800, Hillf Danton wrote:
+> > > > > > So, to hit this syzkaller one of these must have happened:
+> > > > > >  1) rdma_addr_cancel() didn't work and the process_one_work() is still
+> > > > > >     runnable/running
+> > > > >
+> > > > > What syzbot reported indicates that the kworker did survive not only
+> > > > > canceling work but the handler_mutex, despite it's a sync cancel that
+> > > > > waits for the work to complete.
+> > > >
+> > > > The syzbot report doesn't confirm that the cancel work was actaully
+> > > > called.
+> > > >
+> > > > The most likely situation is that it was skipped because of the state
+> > > > mangling the patch fixes..
+> > > >
+> > > > > >  2) The state changed away from RDMA_CM_ADDR_QUERY without doing
+> > > > > >     rdma_addr_cancel()
+> > > > >
+> > > > > The cancel does cover the query state in the reported case, and have
+> > > > > difficult time working out what's in the patch below preventing the
+> > > > > work from going across the line the sync cancel draws. That's the
+> > > > > question we can revisit once there is a reproducer available.
+> > > >
+> > > > rdma-cm never seems to get reproducers from syzkaller
+> > >
+> > > +syzkaller mailing list
+> > >
+> > > Hi Jason,
+> > >
+> > > Wonder if there is some systematic issue. Let me double check.
+> >
+> > By scanning bugs at:
+> > https://syzkaller.appspot.com/upstream
+> > https://syzkaller.appspot.com/upstream/fixed
+> >
+> > I found a significant number of bugs that I would qualify as "rdma-cm"
+> > and that have reproducers. Here is an incomplete list (I did not get
+> > to the end):
+> >
+> > https://syzkaller.appspot.com/bug?id=b8febdb3c7c8c1f1b606fb903cee66b21b2fd02f
+> > https://syzkaller.appspot.com/bug?id=d5222b3e1659e0aea19df562c79f216515740daa
+> > https://syzkaller.appspot.com/bug?id=c600e111223ce0a20e5f2fb4e9a4ebdff54d7fa6
+> > https://syzkaller.appspot.com/bug?id=a9796acbdecc1b2ba927578917755899c63c48af
+> > https://syzkaller.appspot.com/bug?id=95f89b8fb9fdc42e28ad586e657fea074e4e719b
+> > https://syzkaller.appspot.com/bug?id=8dc0bcd9dd6ec915ba10b3354740eb420884acaa
+> > https://syzkaller.appspot.com/bug?id=805ad726feb6910e35088ae7bbe61f4125e573b7
+> > https://syzkaller.appspot.com/bug?id=56b60fb3340c5995373fe5b8eae9e8722a012fc4
+> > https://syzkaller.appspot.com/bug?id=38d36d1b26b4299bf964d50af4d79688d39ab960
+> > https://syzkaller.appspot.com/bug?id=25e00dd59f31783f233185cb60064b0ab645310f
+> > https://syzkaller.appspot.com/bug?id=2f38d7e5312fdd0acc979c5e26ef2ef8f3370996
+> >
+> > Do you mean some specific subset of bugs by "rdma-cm"? If yes, what is
+> > that subset?
+>
+> The race condition bugs never seem to get reproducers, I checked a few
+> of the above and these are much more deterministic things.
+>
+> I think the recurrance rate for the races is probably too low?
 
-commit e7585db1b0b5b4e4eb1967bb1472df308f7ffcbf upstream.
-
-This uses the same quirk as the Motu M2 and M4 to ensure the driver uses the
-audio interface's clock. Tested on an SSL2+.
-
-Signed-off-by: Laurence Tratt <laurie@tratt.net>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200612111807.dgnig6rwhmsl2bod@overdrive.tratt.net
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- sound/usb/pcm.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/sound/usb/pcm.c b/sound/usb/pcm.c
-index c36e6c97d09ae..b971d9aaa64a0 100644
---- a/sound/usb/pcm.c
-+++ b/sound/usb/pcm.c
-@@ -349,6 +349,7 @@ static int set_sync_ep_implicit_fb_quirk(struct snd_usb_substream *subs,
- 		ifnum = 0;
- 		goto add_sync_ep_from_ifnum;
- 	case USB_ID(0x07fd, 0x0008): /* MOTU M Series */
-+	case USB_ID(0x31e9, 0x0002): /* Solid State Logic SSL2+ */
- 		ep = 0x81;
- 		ifnum = 2;
- 		goto add_sync_ep_from_ifnum;
--- 
-2.25.1
-
+Yes, it definitely may depend on probability. There is usually a
+significant correlation with the number of crashes. This bug happened
+only once, that usually means either a very hard to trigger race
+condition, or a previous induced memory corruption. For harder to
+trigger race conditions, KCSAN (the data race detector) may help in
+future. However, kernel has too many races to report them to mailing
+lists:
+https://syzkaller.appspot.com/upstream?manager=ci2-upstream-kcsan-gce
+Though, some race conditions are manageable to trigger and I think we
+have hundreds of race conditions with reproducers on the dashboard.
