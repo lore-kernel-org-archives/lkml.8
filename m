@@ -2,140 +2,114 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B08BDC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:06:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD698C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:06:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C5A0206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:06:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hSeSQ6MX"
+	by mail.kernel.org (Postfix) with ESMTP id B790D206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:06:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593464783;
+	bh=GDty82TpQn3TQtvSKvWJza1OMJHRZPsq4SrmyPwrfAs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mL76DhF5l7oufNJElLDPHztPT6crdi2ErWQpex0uEH6DKT+hkE0+303bUQuZS+qd4
+	 o0l8esArNV6yDOUNksZRwnbgz8JYPyuTBuoz6z+ZiYcQ2AK1yZyZ+NX9wY9Domc3Mw
+	 Q/Yu0BrDbpcLanHN5RxCSqePT1o0IQpYcOJXz8Ks=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390307AbgF2VGM (ORCPT
+        id S1730975AbgF2TKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:06:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33634 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389594AbgF2VGF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 17:06:05 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B1EEC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 14:06:05 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id p20so18218034ejd.13
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 14:06:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rq20rSFORtIjkkFfsOodF7/loWbxXzOkNkZ9gABTDVk=;
-        b=hSeSQ6MXm37ABAafBYuGpCCIr8kzQpA01Oj4bpo9DYXwgHyCcg19o4AUzS7jbrRpOb
-         poip2fESmXOCp/ZkLkaX/AJQpBJjL6sJ3/SlvJ5aTkzPmT1Er5IU6xCDTrQolyn+Thn4
-         tHjLsD8QwjcV2LDXb91H1JhLeVqtTsKm7TI9BYDJg5Gmyu9Cb6lHNC7itlELEVXFzgtN
-         Ju5AQMT76MVnJUKayU0eDHaHJdX858w6maZfMarJWghToy7BZ8J2hSLH4QaHGa4sr9uR
-         Ca63WFIXQ0U93GCk6rCcjTaNS+Uyi0UuIxbVHT5jSUMHH4HmDU/KtBIEEdndNFhQZ7lp
-         tC7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rq20rSFORtIjkkFfsOodF7/loWbxXzOkNkZ9gABTDVk=;
-        b=liYmMja3IJ904r1u8mxHwYxcjbYRPluhSMl32/G/80AabNHlirxtNC5cDsctMF+nXl
-         N3wVy8Csu0MjRmFIlLi8K7WMa9rVkGlD6AKW4W9c+A454M3LlFSDWN4PGkIsLtd4rl4H
-         9UGVV4wVVjg8liQao/zZ+WSsnUXIIv/R/+4wn/tueeF/nz1FOpwnPCMYQZsapmLUh69c
-         tedchdFnIlMvkEWlwv9E39LO4HDxR9HTkbd8csy/ONuB4Gf60xYUsDKeVfL9uFecVIOc
-         1EP1a6UzS84Haz5zn6KzDR08dztDsMqstnz/87+zlmlDRBnAYei3rmH3E/IHj3WJwEDC
-         XQVQ==
-X-Gm-Message-State: AOAM532JvrkYV3kglhSEFIsZYugMyjcj6Ww9ZVa6Wa8tny+98n7x4vvI
-        LvbPyyhTIaAVTcZfDFytnD29a3Zfpvb9Kf+lshtrQA==
-X-Google-Smtp-Source: ABdhPJxn+9mxEDJtgIvUOIFg6YNIcgYeyPSSi16cAgmgoim/yZIjeZYVXiGU2P080VBLtQrUENC5fJqF3cyMzFh4uw4=
-X-Received: by 2002:a17:906:8316:: with SMTP id j22mr15258617ejx.97.1593464763819;
- Mon, 29 Jun 2020 14:06:03 -0700 (PDT)
+        Mon, 29 Jun 2020 15:10:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53676 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730294AbgF2TKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:10:15 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 140FC2549D;
+        Mon, 29 Jun 2020 15:53:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593445995;
+        bh=GDty82TpQn3TQtvSKvWJza1OMJHRZPsq4SrmyPwrfAs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vNhB/hXSv1Dl7J+ovJnhVBecx2HAOtIRaqg/pPVPgsAlGYz0OqTXm2FoUylkccThk
+         XyT7c1T2/mjKWnw/eUndFMtAcDGb3OVJRx72a0oEYQPKYYwujzII0qR0hyXMkjEGYV
+         1gcoh4JvckHVETt2SG181EiuKfJBOjmXZsj9VGIU=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Adam Honse <calcprogrammer1@gmail.com>,
+        Jean Delvare <jdelvare@suse.de>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 003/135] i2c: piix4: Detect secondary SMBus controller on AMD AM4 chipsets
+Date:   Mon, 29 Jun 2020 11:50:57 -0400
+Message-Id: <20200629155309.2495516-4-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
+References: <20200629155309.2495516-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20200629163851.2130450-1-pmalani@chromium.org> <20200629163851.2130450-2-pmalani@chromium.org>
-In-Reply-To: <20200629163851.2130450-2-pmalani@chromium.org>
-From:   Guenter Roeck <groeck@google.com>
-Date:   Mon, 29 Jun 2020 14:05:52 -0700
-Message-ID: <CABXOdTfax0f_W=H7042uBMcNgNTV6R-QOR7af4YnvSfaJ9Wn_w@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] platform/chrome: cros_ec_typec: Add PM support
-To:     Prashant Malani <pmalani@chromium.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.229-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.4.229-rc1
+X-KernelTest-Deadline: 2020-07-01T15:53+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 9:39 AM Prashant Malani <pmalani@chromium.org> wrote:
->
-> Define basic suspend resume functions for cros-ec-typec. On suspend, we
-> simply ensure that any pending port update work is completed, and on
-> resume, we re-poll the port state to account for any
-> changes/disconnections that might have occurred during suspend.
->
-> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+From: Adam Honse <calcprogrammer1@gmail.com>
 
-Reviewed-by: Guenter Roeck <groeck@chromium.org>
+[ Upstream commit f27237c174fd9653033330e4e532cd9d153ce824 ]
 
-> ---
->
-> Changes in v3:
-> - Remove superfluous DEV_PM_OPS #define.
->
-> Changes in v2:
-> - Remove #ifdef-ery, add __maybe_unused tag to functions.
->
->  drivers/platform/chrome/cros_ec_typec.c | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->
-> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-> index 0beb62bf5adf..d5ac691de68b 100644
-> --- a/drivers/platform/chrome/cros_ec_typec.c
-> +++ b/drivers/platform/chrome/cros_ec_typec.c
-> @@ -722,11 +722,35 @@ static int cros_typec_probe(struct platform_device *pdev)
->         return ret;
->  }
->
-> +static int __maybe_unused cros_typec_suspend(struct device *dev)
-> +{
-> +       struct cros_typec_data *typec = dev_get_drvdata(dev);
-> +
-> +       cancel_work_sync(&typec->port_work);
-> +
-> +       return 0;
-> +}
-> +
-> +static int __maybe_unused cros_typec_resume(struct device *dev)
-> +{
-> +       struct cros_typec_data *typec = dev_get_drvdata(dev);
-> +
-> +       /* Refresh port state. */
-> +       schedule_work(&typec->port_work);
-> +
-> +       return 0;
-> +}
-> +
-> +static const struct dev_pm_ops cros_typec_pm_ops = {
-> +       SET_SYSTEM_SLEEP_PM_OPS(cros_typec_suspend, cros_typec_resume)
-> +};
-> +
->  static struct platform_driver cros_typec_driver = {
->         .driver = {
->                 .name = DRV_NAME,
->                 .acpi_match_table = ACPI_PTR(cros_typec_acpi_id),
->                 .of_match_table = of_match_ptr(cros_typec_of_match),
-> +               .pm = &cros_typec_pm_ops,
->         },
->         .probe = cros_typec_probe,
->  };
-> --
-> 2.27.0.212.ge8ba1cc988-goog
->
+The AMD X370 and other AM4 chipsets (A/B/X 3/4/5 parts) and Threadripper
+equivalents have a secondary SMBus controller at I/O port address
+0x0B20.  This bus is used by several manufacturers to control
+motherboard RGB lighting via embedded controllers.  I have been using
+this bus in my OpenRGB project to control the Aura RGB on many
+motherboards and ASRock also uses this bus for their Polychrome RGB
+controller.
+
+I am not aware of any CZ-compatible platforms which do not have the
+second SMBus channel.  All of AMD's AM4- and Threadripper- series
+chipsets that OpenRGB users have tested appear to have this secondary
+bus.  I also noticed this secondary bus is present on older AMD
+platforms including my FM1 home server.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202587
+Signed-off-by: Adam Honse <calcprogrammer1@gmail.com>
+Reviewed-by: Jean Delvare <jdelvare@suse.de>
+Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Tested-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/i2c/busses/i2c-piix4.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/i2c/busses/i2c-piix4.c b/drivers/i2c/busses/i2c-piix4.c
+index b61db9db3ca5d..c85ac178c4838 100644
+--- a/drivers/i2c/busses/i2c-piix4.c
++++ b/drivers/i2c/busses/i2c-piix4.c
+@@ -647,7 +647,8 @@ static int piix4_probe(struct pci_dev *dev, const struct pci_device_id *id)
+ 	}
+ 
+ 	if (dev->vendor == PCI_VENDOR_ID_AMD &&
+-	    dev->device == PCI_DEVICE_ID_AMD_HUDSON2_SMBUS) {
++	    (dev->device == PCI_DEVICE_ID_AMD_HUDSON2_SMBUS ||
++	     dev->device == PCI_DEVICE_ID_AMD_KERNCZ_SMBUS)) {
+ 		retval = piix4_setup_sb800(dev, id, 1);
+ 	}
+ 
+-- 
+2.25.1
+
