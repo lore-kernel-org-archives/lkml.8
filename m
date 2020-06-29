@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A99C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:31:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D11EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:31:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CD51320826
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:31:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47F59206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:31:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466312;
-	bh=R7Ov2awEkrZIyqcu8QasaYukANbO8HJ0R3f0yEw4k7U=;
+	s=default; t=1593466315;
+	bh=xD1BMjfAN1scEy6upLBMty2kJ9YUg0f0fS4LilD7uLw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mHFvvsdoTmUGf5DNwKJvV9OKKsmdTk3sGQortQvx0rRXheH2iY8nQw2aAnEXi0miJ
-	 uizgVInZOZC9VqrKTapSmFGK0JzEinnKxGWozHsKu660iTvkQLuFaf3M+S7Ij/i47c
-	 gAyD3bmtZPFT8pXP8oHd320EgJCewhMojj2UZ5Sw=
+	b=uigXfuyaKBGj/WXaCgtUWJsG0gu1oYYWT6mdpRa+StiKQNG4OqAMIvCP/qWu14d4V
+	 n+z974QA3lmm/gGyKwfIzWh25xJc/PpEkNfIK6SGUmKEs0LkfVBizdTZ0HeG1ktMuP
+	 mj9zWj2h2dpjuCRnYIrQdTpw9GtaqRM+ccFMugIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728737AbgF2SlL (ORCPT
+        id S1729576AbgF2Vbx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:41:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60660 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:31:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728688AbgF2SlG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:41:06 -0400
+        id S1728724AbgF2SlL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:41:11 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35F9124125;
-        Mon, 29 Jun 2020 15:18:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9F062405E;
+        Mon, 29 Jun 2020 15:18:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443936;
-        bh=R7Ov2awEkrZIyqcu8QasaYukANbO8HJ0R3f0yEw4k7U=;
+        s=default; t=1593443931;
+        bh=xD1BMjfAN1scEy6upLBMty2kJ9YUg0f0fS4LilD7uLw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nl3iI7PteN8xcIH8JJvpqjbX8/2TMlGokKC8TTu9V1fBcQf7tvQWSZDPuEPe5oQxN
-         RvHC8LQDNfDXtZgsNJqsBpG57oIaGmYwnaYTpfKqhiTco54uj/8t2jtvob7Tr0nql3
-         lkLPJGdQr4L12sfUdMiUHR8usBhkCFXvJa/FC6/8=
+        b=p5TcluXn+A1BXRRWL//bZ28k3f/iXvKWWjiRMnzzSAoStaANqm6ZY6FKdZxZwwf2G
+         aRwBSFWfa2iexsD15h4rgMj5XBEW/PgYts2zj4V1K+rdFfo+EBwUCMHqZCX4vlC1ZV
+         v8KwV59g3r7ah/z9QtPUjftE6DYhs8KNCQIdNqDw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Neal Cardwell <ncardwell@google.com>,
-        Mirja Kuehlewind <mirja.kuehlewind@ericsson.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Soheil Hassas Yeganeh <soheil@google.com>,
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
         "David S . Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 037/265] tcp_cubic: fix spurious HYSTART_DELAY exit upon drop in min RTT
-Date:   Mon, 29 Jun 2020 11:14:30 -0400
-Message-Id: <20200629151818.2493727-38-sashal@kernel.org>
+Subject: [PATCH 5.7 032/265] net: phylink: fix ethtool -A with attached PHYs
+Date:   Mon, 29 Jun 2020 11:14:25 -0400
+Message-Id: <20200629151818.2493727-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -68,57 +65,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neal Cardwell <ncardwell@google.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit b344579ca8478598937215f7005d6c7b84d28aee ]
+[ Upstream commit c718af2d00a37587b09e5958d142da7569f3d55b ]
 
-Mirja Kuehlewind reported a bug in Linux TCP CUBIC Hystart, where
-Hystart HYSTART_DELAY mechanism can exit Slow Start spuriously on an
-ACK when the minimum rtt of a connection goes down. From inspection it
-is clear from the existing code that this could happen in an example
-like the following:
+Fix a phylink's ethtool set_pauseparam support deadlock caused by phylib
+interacting with phylink: we must not hold the state lock while calling
+phylib functions that may call into phylink_phy_change().
 
-o The first 8 RTT samples in a round trip are 150ms, resulting in a
-  curr_rtt of 150ms and a delay_min of 150ms.
-
-o The 9th RTT sample is 100ms. The curr_rtt does not change after the
-  first 8 samples, so curr_rtt remains 150ms. But delay_min can be
-  lowered at any time, so delay_min falls to 100ms. The code executes
-  the HYSTART_DELAY comparison between curr_rtt of 150ms and delay_min
-  of 100ms, and the curr_rtt is declared far enough above delay_min to
-  force a (spurious) exit of Slow start.
-
-The fix here is simple: allow every RTT sample in a round trip to
-lower the curr_rtt.
-
-Fixes: ae27e98a5152 ("[TCP] CUBIC v2.3")
-Reported-by: Mirja Kuehlewind <mirja.kuehlewind@ericsson.com>
-Signed-off-by: Neal Cardwell <ncardwell@google.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
+Fixes: f904f15ea9b5 ("net: phylink: allow ethtool -A to change flow control advertisement")
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/tcp_cubic.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/net/phy/phylink.c | 20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/net/ipv4/tcp_cubic.c b/net/ipv4/tcp_cubic.c
-index 8f8eefd3a3ce1..c7bf5b26bf0c2 100644
---- a/net/ipv4/tcp_cubic.c
-+++ b/net/ipv4/tcp_cubic.c
-@@ -432,10 +432,9 @@ static void hystart_update(struct sock *sk, u32 delay)
+diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+index 34ca12aec61b3..b0ddeab2a8d2f 100644
+--- a/drivers/net/phy/phylink.c
++++ b/drivers/net/phy/phylink.c
+@@ -1519,18 +1519,20 @@ int phylink_ethtool_set_pauseparam(struct phylink *pl,
+ 	linkmode_set_pause(config->advertising, pause->tx_pause,
+ 			   pause->rx_pause);
  
- 	if (hystart_detect & HYSTART_DELAY) {
- 		/* obtain the minimum delay of more than sampling packets */
-+		if (ca->curr_rtt > delay)
-+			ca->curr_rtt = delay;
- 		if (ca->sample_cnt < HYSTART_MIN_SAMPLES) {
--			if (ca->curr_rtt > delay)
--				ca->curr_rtt = delay;
--
- 			ca->sample_cnt++;
- 		} else {
- 			if (ca->curr_rtt > ca->delay_min +
+-	/* If we have a PHY, phylib will call our link state function if the
+-	 * mode has changed, which will trigger a resolve and update the MAC
+-	 * configuration.
++	if (!pl->phydev && !test_bit(PHYLINK_DISABLE_STOPPED,
++				     &pl->phylink_disable_state))
++		phylink_pcs_config(pl, true, &pl->link_config);
++
++	mutex_unlock(&pl->state_mutex);
++
++	/* If we have a PHY, a change of the pause frame advertisement will
++	 * cause phylib to renegotiate (if AN is enabled) which will in turn
++	 * call our phylink_phy_change() and trigger a resolve.  Note that
++	 * we can't hold our state mutex while calling phy_set_asym_pause().
+ 	 */
+-	if (pl->phydev) {
++	if (pl->phydev)
+ 		phy_set_asym_pause(pl->phydev, pause->rx_pause,
+ 				   pause->tx_pause);
+-	} else if (!test_bit(PHYLINK_DISABLE_STOPPED,
+-			     &pl->phylink_disable_state)) {
+-		phylink_pcs_config(pl, true, &pl->link_config);
+-	}
+-	mutex_unlock(&pl->state_mutex);
+ 
+ 	return 0;
+ }
 -- 
 2.25.1
 
