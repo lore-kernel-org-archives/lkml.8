@@ -2,182 +2,297 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81070C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EBBAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:25:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59B5521582
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:25:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="USGV60Zz"
+	by mail.kernel.org (Postfix) with ESMTP id 3EB94208B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:25:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388799AbgF2VZ3 (ORCPT
+        id S1729892AbgF2VZc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:25:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38396 "EHLO
+        Mon, 29 Jun 2020 17:25:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729122AbgF2Smv (ORCPT
+        with ESMTP id S1729115AbgF2Smu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:42:51 -0400
-Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2ADCC031C48
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 10:27:09 -0700 (PDT)
-Received: by mail-qk1-x743.google.com with SMTP id c139so15947747qkg.12
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 10:27:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=pqe14MaPsMfgtT/LBcuvaSN2cytXk1SleFgshIkTKVM=;
-        b=USGV60ZzR1pxKQN2xImazAMTEN9Qly93rcztD+sYyGT3yq/2h+C2ZfM6tWNpO2TSuW
-         sI+F0KtJIs/Rz04s9xPFkJ6DTpB5pPPAprIj3AnIMP4sEaqqcurmdjYTdABfIZZ40Awr
-         ck9UYLevqJHyUS4oEHxtxwTJ6+9/xo1gykYlCpdGmF+khLkasVMr0e8eMjVr7eSur2Hl
-         zCQK8g35HbE5WDa5bKhJmyaMG+KMygFxJkSi6qYWbZsQ3Cms7DeKU2Du8peGOUpdqvEH
-         7h199ie9F89cNHIX9BXnlcW832fl9cx4Yo0HLEglG8PnZM5iD1OX6Sbr1P9Jnusg65cJ
-         bQ/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pqe14MaPsMfgtT/LBcuvaSN2cytXk1SleFgshIkTKVM=;
-        b=Ak7W6DemT01hf4T3iVvZUdyCBGJU8rG9We3Ol3ND6eNHRtKFvCuU9lMpkS/bn1g+1J
-         hdYKPFkQpxAAQf9YKlYMfKXg3s/+vF6nO7HMSod2Q5hzZUvOuAgqLJQjIZsdfH0iNnwM
-         ZrqUBQV/rtmbniis/RHtVIytGviC+W9Lv2AdcgsAx/2rewHidP2Xx9CQJULEuFVHMBV2
-         iq5wbaBY3+k9sYVxnuH0PMXcdKps9Cyqq5odUlvY0SDH+KZj6KWmlQc2eGSlRDrlhSxz
-         V3JKTpuMEh83PAFH+GU1g0bcWTSs/oB2w/UN6k1PrCRaYrpjRwYVsFlu0HRFI5HwO2xU
-         EE/A==
-X-Gm-Message-State: AOAM532AGZ5BxJUDTb0AG6TdruaVTjoxp27FZ3D8MG9V0BeyAi7FxFi2
-        4n69MU513DsLG+vfk9+8Sqc9kQ==
-X-Google-Smtp-Source: ABdhPJz6/7Q13mZzwNNVBWoMSVx5buOlaqi44+cTUPkY+oXRmbqWOckeIL2jAiQfaU3iBb439UfzvA==
-X-Received: by 2002:a37:7741:: with SMTP id s62mr4110200qkc.263.1593451628633;
-        Mon, 29 Jun 2020 10:27:08 -0700 (PDT)
-Received: from [192.168.0.189] ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id x19sm372668qtc.36.2020.06.29.10.27.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jun 2020 10:27:08 -0700 (PDT)
-Subject: Re: [PATCH 07/10] clk: qcom: Add graphics clock controller driver for
- SM8150
-To:     Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
-References: <20200524210615.17035-1-jonathan@marek.ca>
- <20200524210615.17035-8-jonathan@marek.ca>
- <159056904079.88029.16161248455546031414@swboyd.mtv.corp.google.com>
-From:   Jonathan Marek <jonathan@marek.ca>
-Message-ID: <231bd673-aa99-6223-fa74-54e9a488833e@marek.ca>
-Date:   Mon, 29 Jun 2020 13:27:21 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Mon, 29 Jun 2020 14:42:50 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75D37C033C18;
+        Mon, 29 Jun 2020 11:26:32 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jpyU9-002Du8-S6; Mon, 29 Jun 2020 18:26:29 +0000
+From:   Al Viro <viro@ZenIV.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        David Miller <davem@davemloft.net>,
+        Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>
+Subject: [PATCH 13/41] sparc64: get rid of odd callers of copy_regset_from_user()
+Date:   Mon, 29 Jun 2020 19:26:00 +0100
+Message-Id: <20200629182628.529995-13-viro@ZenIV.linux.org.uk>
+X-Mailer: git-send-email 2.25.4
+In-Reply-To: <20200629182628.529995-1-viro@ZenIV.linux.org.uk>
+References: <20200629182349.GA2786714@ZenIV.linux.org.uk>
+ <20200629182628.529995-1-viro@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <159056904079.88029.16161248455546031414@swboyd.mtv.corp.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/27/20 4:44 AM, Stephen Boyd wrote:
-> Quoting Jonathan Marek (2020-05-24 14:06:08)
->> diff --git a/drivers/clk/qcom/gpucc-sm8150.c b/drivers/clk/qcom/gpucc-sm8150.c
->> new file mode 100644
->> index 000000000000..6e1fff0cde75
->> --- /dev/null
->> +++ b/drivers/clk/qcom/gpucc-sm8150.c
->> @@ -0,0 +1,429 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (c) 2017-2020, The Linux Foundation. All rights reserved.
->> + */
->> +
->> +#include <linux/clk-provider.h>
->> +#include <linux/module.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/regmap.h>
->> +
->> +#include <dt-bindings/clock/qcom,gpucc-sm8150.h>
-> [..]
->> +
->> +static struct clk_rcg2 gpu_cc_gmu_clk_src = {
->> +       .cmd_rcgr = 0x1120,
->> +       .mnd_width = 0,
->> +       .hid_width = 5,
->> +       .parent_map = gpu_cc_parent_map_0,
->> +       .freq_tbl = ftbl_gpu_cc_gmu_clk_src,
->> +       .clkr.hw.init = &(struct clk_init_data){
->> +               .name = "gpu_cc_gmu_clk_src",
->> +               .parent_names = gpu_cc_parent_names_0,
->> +               .num_parents = 6,
->> +               .flags = CLK_SET_RATE_PARENT,
->> +               .ops = &clk_rcg2_ops,
->> +       },
->> +};
->> +
->> +static struct clk_branch gpu_cc_ahb_clk = {
->> +       .halt_reg = 0x1078,
->> +       .halt_check = BRANCH_HALT_DELAY,
->> +       .clkr = {
->> +               .enable_reg = 0x1078,
->> +               .enable_mask = BIT(0),
->> +               .hw.init = &(struct clk_init_data){
->> +                       .name = "gpu_cc_ahb_clk",
->> +                       .flags = CLK_IS_CRITICAL,
-> 
-> Why is this CLK_IS_CRITICAL? Why not just enable the clk manually with
-> a register write in probe and then remove this clk from the system? We
-> can save some memory that way.
-> 
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-I copied this from downstream, so I don't know why. It works without it, 
-so I removed the CLK_IS_CRITICAL in my v2 (from both sm8150 and sm8250).
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+---
+ arch/sparc/kernel/ptrace_64.c | 177 ++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 144 insertions(+), 33 deletions(-)
 
->> +                       .ops = &clk_branch2_ops,
->> +               },
->> +       },
->> +};
->> +
-> [...]
->> +
->> +static struct gdsc gpu_cx_gdsc = {
->> +       .gdscr = 0x106c,
->> +       .gds_hw_ctrl = 0x1540,
->> +       .pd = {
->> +               .name = "gpu_cx_gdsc",
->> +       },
->> +       .pwrsts = PWRSTS_OFF_ON,
->> +       .flags = VOTABLE,
->> +};
->> +
->> +/* see comment in gpucc-sdm845 about this */
->> +static int gx_gdsc_enable(struct generic_pm_domain *domain)
->> +{
->> +       /* Do nothing but give genpd the impression that we were successful */
->> +       return 0;
->> +}
-> 
-> Maybe we should export a helper from gdsc.c for this with the comment
-> and it named something obvious? gx_gdsc_do_nothing_enable()?
-> 
+diff --git a/arch/sparc/kernel/ptrace_64.c b/arch/sparc/kernel/ptrace_64.c
+index 1b1910b67ca4..3c9eee12102a 100644
+--- a/arch/sparc/kernel/ptrace_64.c
++++ b/arch/sparc/kernel/ptrace_64.c
+@@ -541,6 +541,60 @@ static int getregs64_get(struct task_struct *target,
+ 	return ret;
+ }
+ 
++static int setregs64_set(struct task_struct *target,
++			 const struct user_regset *regset,
++			 unsigned int pos, unsigned int count,
++			 const void *kbuf, const void __user *ubuf)
++{
++	struct pt_regs *regs = task_pt_regs(target);
++	unsigned long y = regs->y;
++	unsigned long tstate;
++	int ret;
++
++	if (target == current)
++		flushw_user();
++
++	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
++				 regs->u_regs + 1,
++				 0 * sizeof(u64),
++				 15 * sizeof(u64));
++	if (ret)
++		return ret;
++	ret =user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
++				 15 * sizeof(u64), 16 * sizeof(u64));
++	if (ret)
++		return ret;
++	/* TSTATE */
++	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
++				 &tstate,
++				 16 * sizeof(u64),
++				 17 * sizeof(u64));
++	if (ret)
++		return ret;
++	/* Only the condition codes and the "in syscall"
++	 * state can be modified in the %tstate register.
++	 */
++	tstate &= (TSTATE_ICC | TSTATE_XCC | TSTATE_SYSCALL);
++	regs->tstate &= ~(TSTATE_ICC | TSTATE_XCC | TSTATE_SYSCALL);
++	regs->tstate |= tstate;
++
++	/* TPC, TNPC */
++	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
++				 &regs->tpc,
++				 17 * sizeof(u64),
++				 19 * sizeof(u64));
++	if (ret)
++		return ret;
++	/* Y */
++	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
++				 &y,
++				 19 * sizeof(u64),
++				 20 * sizeof(u64));
++	if (!ret)
++		regs->y = y;
++	return ret;
++}
++
+ static const struct user_regset ptrace64_regsets[] = {
+ 	/* Format is:
+ 	 *      G1 --> G7
+@@ -549,7 +603,8 @@ static const struct user_regset ptrace64_regsets[] = {
+ 	 *      TSTATE, TPC, TNPC, Y
+ 	 */
+ 	[REGSET_GENERAL] = {
+-		.n = 20, .size = sizeof(u64), .get = getregs64_get,
++		.n = 20, .size = sizeof(u64),
++		.get = getregs64_get, .set = setregs64_set,
+ 	},
+ };
+ 
+@@ -914,6 +969,40 @@ static int getregs_get(struct task_struct *target,
+ 				   0, 19 * sizeof(u32));
+ }
+ 
++static int setregs_set(struct task_struct *target,
++			 const struct user_regset *regset,
++			 unsigned int pos, unsigned int count,
++			 const void *kbuf, const void __user *ubuf)
++{
++	struct pt_regs *regs = task_pt_regs(target);
++	unsigned long tstate;
++	u32 uregs[19];
++	int i, ret;
++
++	if (target == current)
++		flushw_user();
++
++	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
++				 uregs,
++				 0, 19 * sizeof(u32));
++	if (ret)
++		return ret;
++
++	tstate = regs->tstate;
++	tstate &= ~(TSTATE_ICC | TSTATE_XCC | TSTATE_SYSCALL);
++	tstate |= psr_to_tstate_icc(uregs[0]);
++	if (uregs[0] & PSR_SYSCALL)
++		tstate |= TSTATE_SYSCALL;
++	regs->tstate = tstate;
++	regs->tpc = uregs[1];
++	regs->tnpc = uregs[2];
++	regs->y = uregs[3];
++
++	for (i = 1; i < 15; i++)
++		regs->u_regs[i] = uregs[3 + i];
++	return 0;
++}
++
+ static int getfpregs_get(struct task_struct *target,
+ 			const struct user_regset *regset,
+ 			unsigned int pos, unsigned int count,
+@@ -948,12 +1037,52 @@ static int getfpregs_get(struct task_struct *target,
+ 	return ret;
+ }
+ 
++static int setfpregs_set(struct task_struct *target,
++			const struct user_regset *regset,
++			unsigned int pos, unsigned int count,
++			const void *kbuf, const void __user *ubuf)
++{
++	unsigned long *fpregs = task_thread_info(target)->fpregs;
++	unsigned long fprs;
++	int ret;
++
++	if (target == current)
++		save_and_clear_fpu();
++
++	fprs = task_thread_info(target)->fpsaved[0];
++
++	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
++				 fpregs,
++				 0, 32 * sizeof(u32));
++	if (!ret) {
++		compat_ulong_t fsr;
++		unsigned long val;
++
++		ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
++					 &fsr,
++					 32 * sizeof(u32),
++					 33 * sizeof(u32));
++		if (!ret) {
++			val = task_thread_info(target)->xfsr[0];
++			val &= 0xffffffff00000000UL;
++			val |= fsr;
++			task_thread_info(target)->xfsr[0] = val;
++		}
++	}
++
++	fprs |= (FPRS_FEF | FPRS_DL);
++	task_thread_info(target)->fpsaved[0] = fprs;
++	return ret;
++}
++
+ static const struct user_regset ptrace32_regsets[] = {
+ 	[REGSET_GENERAL] = {
+-		.n = 19, .size = sizeof(u32), .get = getregs_get,
++		.n = 19, .size = sizeof(u32),
++		.get = getregs_get, .set = setregs_set,
+ 	},
+ 	[REGSET_FP] = {
+-		.n = 68, .size = sizeof(u32), .get = getfpregs_get,
++		.n = 68, .size = sizeof(u32),
++		.get = getfpregs_get, .set = setfpregs_set,
+ 	},
+ };
+ 
+@@ -992,7 +1121,6 @@ struct compat_fps {
+ long compat_arch_ptrace(struct task_struct *child, compat_long_t request,
+ 			compat_ulong_t caddr, compat_ulong_t cdata)
+ {
+-	const struct user_regset_view *view = task_user_regset_view(current);
+ 	compat_ulong_t caddr2 = task_pt_regs(current)->u_regs[UREG_I4];
+ 	struct pt_regs32 __user *pregs;
+ 	struct compat_fps __user *fps;
+@@ -1017,15 +1145,10 @@ long compat_arch_ptrace(struct task_struct *child, compat_long_t request,
+ 		break;
+ 
+ 	case PTRACE_SETREGS:
+-		ret = copy_regset_from_user(child, view, REGSET_GENERAL,
+-					    32 * sizeof(u32),
+-					    4 * sizeof(u32),
+-					    &pregs->psr);
+-		if (!ret)
+-			ret = copy_regset_from_user(child, view, REGSET_GENERAL,
+-						    1 * sizeof(u32),
+-						    15 * sizeof(u32),
+-						    &pregs->u_regs[0]);
++		ret = copy_regset_from_user(child, &ptrace32_view,
++					  REGSET_GENERAL, 0,
++					  19 * sizeof(u32),
++					  pregs);
+ 		break;
+ 
+ 	case PTRACE_GETFPREGS:
+@@ -1036,15 +1159,10 @@ long compat_arch_ptrace(struct task_struct *child, compat_long_t request,
+ 		break;
+ 
+ 	case PTRACE_SETFPREGS:
+-		ret = copy_regset_from_user(child, view, REGSET_FP,
+-					    0 * sizeof(u32),
+-					    32 * sizeof(u32),
+-					    &fps->regs[0]);
+-		if (!ret)
+-			ret = copy_regset_from_user(child, view, REGSET_FP,
+-						    33 * sizeof(u32),
+-						    1 * sizeof(u32),
+-						    &fps->fsr);
++		ret = copy_regset_from_user(child, &ptrace32_view,
++					  REGSET_FP, 0,
++					  33 * sizeof(u32),
++					  fps);
+ 		break;
+ 
+ 	case PTRACE_READTEXT:
+@@ -1110,17 +1228,10 @@ long arch_ptrace(struct task_struct *child, long request,
+ 		break;
+ 
+ 	case PTRACE_SETREGS64:
+-		ret = copy_regset_from_user(child, view, REGSET_GENERAL,
+-					    1 * sizeof(u64),
+-					    15 * sizeof(u64),
+-					    &pregs->u_regs[0]);
+-		if (!ret) {
+-			/* XXX doesn't handle 'y' register correctly XXX */
+-			ret = copy_regset_from_user(child, view, REGSET_GENERAL,
+-						    32 * sizeof(u64),
+-						    4 * sizeof(u64),
+-						    &pregs->tstate);
+-		}
++		ret = copy_regset_from_user(child, &ptrace64_view,
++					  REGSET_GENERAL, 0,
++					  19 * sizeof(u64),
++					  pregs);
+ 		break;
+ 
+ 	case PTRACE_GETFPREGS64:
+-- 
+2.11.0
 
-Made this change in my v2.
-
->> +
->> +static struct gdsc gpu_gx_gdsc = {
->> +       .gdscr = 0x100c,
->> +       .clamp_io_ctrl = 0x1508,
->> +       .pd = {
->> +               .name = "gpu_gx_gdsc",
->> +               .power_on = gx_gdsc_enable,
->> +       },
->> +       .pwrsts = PWRSTS_OFF_ON,
->> +       .flags = CLAMP_IO | AON_RESET | POLL_CFG_GDSCR,
->> +};
->> +
