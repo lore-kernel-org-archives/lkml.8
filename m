@@ -4,53 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A879EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0907C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7ED8A20768
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EB1A20768
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:10:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593465007;
-	bh=bGzG+iPRM2VG9c8HA/q5X0aU7W1UiDFnnv1Hfm+zFNA=;
+	s=default; t=1593465011;
+	bh=Wi7VQoaaZl8rEtcf25Tj7BtZNvaHiT9DhTNsbmSZMqo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=js+smvzjH+ZHeBW+xguj232olaQ0Z/SRFQfUTwNw2ujBaHI7JblnM5fYW29vrCCIL
-	 V81HQkNw1qSweEGOyJxnp+1PKdTKDtOepU9STyc9PTTxasAKAt7fbnGXauiwWQZnsf
-	 369Ze4EjvZ/DNcbt+vrNUkBOq9OhCqGMWw5E1Fa4=
+	b=vp5fj5naYSaAzmyllvdx3cNqd3+LIYPwCq74E75CdvUrF3yfBcLGyghnngulwW5so
+	 zxmDGpnEibEJV2IvyJLv3+VwL7BDlbzsW/4aFMmBVF8sUZLe7OCF8NnioBiYVb/bBs
+	 GAnSff5/B7iRnA1SYPZOtz1TXHpLjJZyoXBS0wUY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388143AbgF2VKG (ORCPT
+        id S2390501AbgF2VKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:10:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45462 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:10:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730229AbgF2TAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728589AbgF2TAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:00:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 247C2254F6;
-        Mon, 29 Jun 2020 15:54:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C928125526;
+        Mon, 29 Jun 2020 15:54:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446053;
-        bh=bGzG+iPRM2VG9c8HA/q5X0aU7W1UiDFnnv1Hfm+zFNA=;
+        s=default; t=1593446089;
+        bh=Wi7VQoaaZl8rEtcf25Tj7BtZNvaHiT9DhTNsbmSZMqo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k+2koGM3uM14xxRjvUt5f5+efGUgvHMJpjlfkBxKrBaJBWOCRp1N9wtY+rvZ/XMhd
-         tY51UPJ52+UP6oPrCj7Qyx4VXM5mYlPLLPrhXO1nwaBej02Dfxt2u/tWubl/643RHc
-         5Xy7iX0dEPBA//BOCCIP97Gu47kqoo4ZIhTiU1NY=
+        b=CN4BPD6w/UKsia7r+L6qZSRShb62nb1WJd3RyquqdC7TPEuTwtnSUrLmx9eH1e2ZJ
+         GSyY4is7M+GCsZKAHMu2riRMxVm0rkUMaK/OPtF/mCvRohfiVaQ1fqPl88lXtGEqqg
+         y/72qGOKj0U0W1lq9lIs/pquYKGeMfSYdjcuxgGk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qais Yousef <qais.yousef@arm.com>,
-        Tony Prisk <linux@prisktech.co.nz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        Oliver Neukum <oneukum@suse.de>,
-        linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 055/135] usb/xhci-plat: Set PM runtime as active on resume
-Date:   Mon, 29 Jun 2020 11:51:49 -0400
-Message-Id: <20200629155309.2495516-56-sashal@kernel.org>
+Cc:     David Christensen <drc@linux.vnet.ibm.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.4 084/135] tg3: driver sleeps indefinitely when EEH errors exceed eeh_max_freezes
+Date:   Mon, 29 Jun 2020 11:52:18 -0400
+Message-Id: <20200629155309.2495516-85-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -69,56 +66,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qais Yousef <qais.yousef@arm.com>
+From: David Christensen <drc@linux.vnet.ibm.com>
 
-[ Upstream commit 79112cc3c29f4a8c73a21428fbcbcb0afb005e3e ]
+[ Upstream commit 3a2656a211caf35e56afc9425e6e518fa52f7fbc ]
 
-Follow suit of ohci-platform.c and perform pm_runtime_set_active() on
-resume.
+The driver function tg3_io_error_detected() calls napi_disable twice,
+without an intervening napi_enable, when the number of EEH errors exceeds
+eeh_max_freezes, resulting in an indefinite sleep while holding rtnl_lock.
 
-ohci-platform.c had a warning reported due to the missing
-pm_runtime_set_active() [1].
+Add check for pcierr_recovery which skips code already executed for the
+"Frozen" state.
 
-[1] https://lore.kernel.org/lkml/20200323143857.db5zphxhq4hz3hmd@e107158-lin.cambridge.arm.com/
-
-Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-CC: Tony Prisk <linux@prisktech.co.nz>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Mathias Nyman <mathias.nyman@intel.com>
-CC: Oliver Neukum <oneukum@suse.de>
-CC: linux-arm-kernel@lists.infradead.org
-CC: linux-usb@vger.kernel.org
-CC: linux-kernel@vger.kernel.org
-Link: https://lore.kernel.org/r/20200518154931.6144-2-qais.yousef@arm.com
+Signed-off-by: David Christensen <drc@linux.vnet.ibm.com>
+Reviewed-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/xhci-plat.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/tg3.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-index c4c40e9d42471..510fb7853f92a 100644
---- a/drivers/usb/host/xhci-plat.c
-+++ b/drivers/usb/host/xhci-plat.c
-@@ -249,8 +249,17 @@ static int xhci_plat_resume(struct device *dev)
- {
- 	struct usb_hcd	*hcd = dev_get_drvdata(dev);
- 	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
-+	int ret;
-+
-+	ret = xhci_resume(xhci, 0);
-+	if (ret)
-+		return ret;
+diff --git a/drivers/net/ethernet/broadcom/tg3.c b/drivers/net/ethernet/broadcom/tg3.c
+index 58102e96ac5cd..e198427d0f292 100644
+--- a/drivers/net/ethernet/broadcom/tg3.c
++++ b/drivers/net/ethernet/broadcom/tg3.c
+@@ -18182,8 +18182,8 @@ static pci_ers_result_t tg3_io_error_detected(struct pci_dev *pdev,
  
--	return xhci_resume(xhci, 0);
-+	pm_runtime_disable(dev);
-+	pm_runtime_set_active(dev);
-+	pm_runtime_enable(dev);
-+
-+	return 0;
- }
+ 	rtnl_lock();
  
- static const struct dev_pm_ops xhci_plat_pm_ops = {
+-	/* We probably don't have netdev yet */
+-	if (!netdev || !netif_running(netdev))
++	/* Could be second call or maybe we don't have netdev yet */
++	if (!netdev || tp->pcierr_recovery || !netif_running(netdev))
+ 		goto done;
+ 
+ 	/* We needn't recover from permanent error */
 -- 
 2.25.1
 
