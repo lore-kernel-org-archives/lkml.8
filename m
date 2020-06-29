@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4C0C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1841C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:57:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1979A206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:57:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C43E206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:57:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467860;
-	bh=+lP1ivIjJCHetDSwDDW71ytRb636cQUIiBGy7Wq4WhU=;
+	s=default; t=1593467864;
+	bh=wAHUzPO5mgmrr8BB7Pi6s372eEaNK7nsfE7L00aXleI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GtIp0NEWeTlWsS2bTso1VGPUuZJcv+5Yv2wPZtIwtI/vuXiqPidrli4OILNnOEHO4
-	 lJxXCKITtJcvr/EiWC/p/ik0wlQdH8uso0BfTTWqBlkeR79pZhYxJkE0XEqT6LNrWG
-	 RnFePCZ2yBuLSx2c+te2ZKkCd8KX23hAFo/AaUH0=
+	b=c5TfEJiRlvWZCo757+FnpqUkQUqR3YvbSc7qikbXUgxgfw/um6x80bCAK3hLMtvnT
+	 2d/5RXorNiZGo3HXf3CMgZjNFEEuxGyTGw3CoO+BMSVUmfCEYr3+i3jgOolozmYIqm
+	 wH6L2X+pES1PptQhxPdbWktAOOLSAUboF5zuu1QQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404709AbgF2V5e (ORCPT
+        id S2404736AbgF2V5n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:57:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56890 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:57:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726493AbgF2Sf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:29 -0400
+        id S1726475AbgF2Sf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3B4F247B6;
-        Mon, 29 Jun 2020 15:22:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2BC8247B4;
+        Mon, 29 Jun 2020 15:21:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444122;
-        bh=+lP1ivIjJCHetDSwDDW71ytRb636cQUIiBGy7Wq4WhU=;
+        s=default; t=1593444117;
+        bh=wAHUzPO5mgmrr8BB7Pi6s372eEaNK7nsfE7L00aXleI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V3tU5ljD1OfTD/5R7gemaE02TVD5lSk4SFKTY43lrynpcVhMGOD9LrQ77+mQHMEGO
-         LEsAnevhHbf0fbQ6oTs7JvMsJ8iAdIIVfWZ3ESvVBFnMhdpgFrCcfplOdnKLEbGJDE
-         LF5ep+ooh/d8J17UaY1+oh8iduHdeZ1fO8zfMnqs=
+        b=BGmw3NZkm+/kSFYS0GLU9aCJFS7p6N9YtkIsx59BXVDl6zhFDU7CObWMjbufaJQp2
+         V6aoLQ6s4h0lJOaQt2HunkFdnjx4PHvvtbbRchOrKwrPLMY59b/GBJPlbiI6h47msa
+         l0wsVKvRiwxtgUmTX7aU5xHqm5GiMYfIj7QBJAO0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Junxiao Bi <junxiao.bi@oracle.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Jun Piao <piaojun@huawei.com>, Mark Fasheh <mark@fasheh.com>,
+Cc:     Vlastimil Babka <vbabka@suse.cz>, Hugh Dickins <hughd@google.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Li Wang <liwang@redhat.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 231/265] ocfs2: avoid inode removal while nfsd is accessing it
-Date:   Mon, 29 Jun 2020 11:17:44 -0400
-Message-Id: <20200629151818.2493727-232-sashal@kernel.org>
+Subject: [PATCH 5.7 228/265] mm, compaction: make capture control handling safe wrt interrupts
+Date:   Mon, 29 Jun 2020 11:17:41 -0400
+Message-Id: <20200629151818.2493727-229-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -70,102 +69,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Junxiao Bi <junxiao.bi@oracle.com>
+From: Vlastimil Babka <vbabka@suse.cz>
 
-commit 4cd9973f9ff69e37dd0ba2bd6e6423f8179c329a upstream.
+commit b9e20f0da1f5c9c68689450a8cb436c9486434c8 upstream.
 
-Patch series "ocfs2: fix nfsd over ocfs2 issues", v2.
+Hugh reports:
 
-This is a series of patches to fix issues on nfsd over ocfs2.  patch 1
-is to avoid inode removed while nfsd access it patch 2 & 3 is to fix a
-panic issue.
+ "While stressing compaction, one run oopsed on NULL capc->cc in
+  __free_one_page()'s task_capc(zone): compact_zone_order() had been
+  interrupted, and a page was being freed in the return from interrupt.
 
-This patch (of 4):
+  Though you would not expect it from the source, both gccs I was using
+  (4.8.1 and 7.5.0) had chosen to compile compact_zone_order() with the
+  ".cc = &cc" implemented by mov %rbx,-0xb0(%rbp) immediately before
+  callq compact_zone - long after the "current->capture_control =
+  &capc". An interrupt in between those finds capc->cc NULL (zeroed by
+  an earlier rep stos).
 
-When nfsd is getting file dentry using handle or parent dentry of some
-dentry, one cluster lock is used to avoid inode removed from other node,
-but it still could be removed from local node, so use a rw lock to avoid
-this.
+  This could presumably be fixed by a barrier() before setting
+  current->capture_control in compact_zone_order(); but would also need
+  more care on return from compact_zone(), in order not to risk leaking
+  a page captured by interrupt just before capture_control is reset.
 
-Link: http://lkml.kernel.org/r/20200616183829.87211-1-junxiao.bi@oracle.com
-Link: http://lkml.kernel.org/r/20200616183829.87211-2-junxiao.bi@oracle.com
-Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Jun Piao <piaojun@huawei.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: <stable@vger.kernel.org>
+  Maybe that is the preferable fix, but I felt safer for task_capc() to
+  exclude the rather surprising possibility of capture at interrupt
+  time"
+
+I have checked that gcc10 also behaves the same.
+
+The advantage of fix in compact_zone_order() is that we don't add
+another test in the page freeing hot path, and that it might prevent
+future problems if we stop exposing pointers to uninitialized structures
+in current task.
+
+So this patch implements the suggestion for compact_zone_order() with
+barrier() (and WRITE_ONCE() to prevent store tearing) for setting
+current->capture_control, and prevents page leaking with
+WRITE_ONCE/READ_ONCE in the proper order.
+
+Link: http://lkml.kernel.org/r/20200616082649.27173-1-vbabka@suse.cz
+Fixes: 5e1f0f098b46 ("mm, compaction: capture a page under direct compaction")
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Reported-by: Hugh Dickins <hughd@google.com>
+Suggested-by: Hugh Dickins <hughd@google.com>
+Acked-by: Hugh Dickins <hughd@google.com>
+Cc: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Li Wang <liwang@redhat.com>
+Cc: Mel Gorman <mgorman@techsingularity.net>
+Cc: <stable@vger.kernel.org>	[5.1+]
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/ocfs2/dlmglue.c | 17 ++++++++++++++++-
- fs/ocfs2/ocfs2.h   |  1 +
- 2 files changed, 17 insertions(+), 1 deletion(-)
+ mm/compaction.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/fs/ocfs2/dlmglue.c b/fs/ocfs2/dlmglue.c
-index 152a0fc4e9051..751bc4dc74663 100644
---- a/fs/ocfs2/dlmglue.c
-+++ b/fs/ocfs2/dlmglue.c
-@@ -689,6 +689,12 @@ static void ocfs2_nfs_sync_lock_res_init(struct ocfs2_lock_res *res,
- 				   &ocfs2_nfs_sync_lops, osb);
+diff --git a/mm/compaction.c b/mm/compaction.c
+index 46f0fcc93081e..65b568e195823 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -2318,15 +2318,26 @@ static enum compact_result compact_zone_order(struct zone *zone, int order,
+ 		.page = NULL,
+ 	};
+ 
+-	current->capture_control = &capc;
++	/*
++	 * Make sure the structs are really initialized before we expose the
++	 * capture control, in case we are interrupted and the interrupt handler
++	 * frees a page.
++	 */
++	barrier();
++	WRITE_ONCE(current->capture_control, &capc);
+ 
+ 	ret = compact_zone(&cc, &capc);
+ 
+ 	VM_BUG_ON(!list_empty(&cc.freepages));
+ 	VM_BUG_ON(!list_empty(&cc.migratepages));
+ 
+-	*capture = capc.page;
+-	current->capture_control = NULL;
++	/*
++	 * Make sure we hide capture control first before we read the captured
++	 * page pointer, otherwise an interrupt could free and capture a page
++	 * and we would leak it.
++	 */
++	WRITE_ONCE(current->capture_control, NULL);
++	*capture = READ_ONCE(capc.page);
+ 
+ 	return ret;
  }
- 
-+static void ocfs2_nfs_sync_lock_init(struct ocfs2_super *osb)
-+{
-+	ocfs2_nfs_sync_lock_res_init(&osb->osb_nfs_sync_lockres, osb);
-+	init_rwsem(&osb->nfs_sync_rwlock);
-+}
-+
- void ocfs2_trim_fs_lock_res_init(struct ocfs2_super *osb)
- {
- 	struct ocfs2_lock_res *lockres = &osb->osb_trim_fs_lockres;
-@@ -2855,6 +2861,11 @@ int ocfs2_nfs_sync_lock(struct ocfs2_super *osb, int ex)
- 	if (ocfs2_is_hard_readonly(osb))
- 		return -EROFS;
- 
-+	if (ex)
-+		down_write(&osb->nfs_sync_rwlock);
-+	else
-+		down_read(&osb->nfs_sync_rwlock);
-+
- 	if (ocfs2_mount_local(osb))
- 		return 0;
- 
-@@ -2873,6 +2884,10 @@ void ocfs2_nfs_sync_unlock(struct ocfs2_super *osb, int ex)
- 	if (!ocfs2_mount_local(osb))
- 		ocfs2_cluster_unlock(osb, lockres,
- 				     ex ? LKM_EXMODE : LKM_PRMODE);
-+	if (ex)
-+		up_write(&osb->nfs_sync_rwlock);
-+	else
-+		up_read(&osb->nfs_sync_rwlock);
- }
- 
- int ocfs2_trim_fs_lock(struct ocfs2_super *osb,
-@@ -3340,7 +3355,7 @@ int ocfs2_dlm_init(struct ocfs2_super *osb)
- local:
- 	ocfs2_super_lock_res_init(&osb->osb_super_lockres, osb);
- 	ocfs2_rename_lock_res_init(&osb->osb_rename_lockres, osb);
--	ocfs2_nfs_sync_lock_res_init(&osb->osb_nfs_sync_lockres, osb);
-+	ocfs2_nfs_sync_lock_init(osb);
- 	ocfs2_orphan_scan_lock_res_init(&osb->osb_orphan_scan.os_lockres, osb);
- 
- 	osb->cconn = conn;
-diff --git a/fs/ocfs2/ocfs2.h b/fs/ocfs2/ocfs2.h
-index 9150cfa4df7dc..9461bd3e1c0c8 100644
---- a/fs/ocfs2/ocfs2.h
-+++ b/fs/ocfs2/ocfs2.h
-@@ -394,6 +394,7 @@ struct ocfs2_super
- 	struct ocfs2_lock_res osb_super_lockres;
- 	struct ocfs2_lock_res osb_rename_lockres;
- 	struct ocfs2_lock_res osb_nfs_sync_lockres;
-+	struct rw_semaphore nfs_sync_rwlock;
- 	struct ocfs2_lock_res osb_trim_fs_lockres;
- 	struct mutex obs_trim_fs_mutex;
- 	struct ocfs2_dlm_debug *osb_dlm_debug;
 -- 
 2.25.1
 
