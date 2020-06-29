@@ -2,91 +2,155 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F581C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECF0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 259D8206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:57:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53385206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:57:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b77Q8K97"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389990AbgF2U46 (ORCPT
+        id S1730251AbgF2U5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:56:58 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:39213 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389986AbgF2U4y (ORCPT
+        Mon, 29 Jun 2020 16:57:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43394 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731264AbgF2TNG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 16:56:54 -0400
-Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1Mzi3l-1iuAwi1hTd-00vgo9 for <linux-kernel@vger.kernel.org>; Mon, 29 Jun
- 2020 13:29:21 +0200
-Received: by mail-qk1-f172.google.com with SMTP id c30so10984018qka.10
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 04:29:21 -0700 (PDT)
-X-Gm-Message-State: AOAM532KVF3Mrwsp88XFnB5qMzvUOyGYvzELSJ7vfp+3LkFxDCSgCuhk
-        tKdIdL1SiK8XewrnMn2E8AunhBmTcltVXq88Osw=
-X-Google-Smtp-Source: ABdhPJxOWyRR6TiiwQf9Wh2sxQ3AKNOhcX8BfRNiFAEby8tFCy7k4tx1AsKF2pBnKqqLfN8S+NOpfx/YguO5KbiA4Jk=
-X-Received: by 2002:a37:a496:: with SMTP id n144mr14507722qke.286.1593430160300;
- Mon, 29 Jun 2020 04:29:20 -0700 (PDT)
+        Mon, 29 Jun 2020 15:13:06 -0400
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02146C008741;
+        Mon, 29 Jun 2020 01:29:09 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id e22so12063739edq.8;
+        Mon, 29 Jun 2020 01:29:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=p0Amh6fr+1R3C2RHtf7InopKIGPAneI2V6X/f0nvW6Q=;
+        b=b77Q8K97SjCe4N8FKt73VUizzh+FuWSG8cJXm6d2FMGC0TtHg5b70pfUimyt/OH2Rt
+         OAr/iJ4zjJb444/lbv2zVCLlse3US+YJfBymOdvEXIe7pTciZW+2R8mCpvl8um5461QU
+         9rpTxROKF4jinHlpY+bak3w8PAzNO4b6KgBtnr5nvlGVgDfUe2VOf8enHOyYS6Eihw2i
+         77Gd/SXdsF9tCnssdbK2oB0g46Z2D9+bAvqhwvlI8QmqW34M8X9Q4kmNSIjbvmib4SBr
+         l+1efmH1oorND0bS9As7HzVldskq32kutrrGOyjohkSuTPAnozd6J3bVOV1f8mn1cf2l
+         1lTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=p0Amh6fr+1R3C2RHtf7InopKIGPAneI2V6X/f0nvW6Q=;
+        b=f0dC3cHkAPRcqFtJijH7ejOSz/XegJ7gXyIPkzzg+aTKLYvfsv1TbeL761oATIi0gx
+         GuEhUB4K96AzGpgyaA/jXsvtPE9BJGZfG5EHKLDn83fwdsm1+AlSgOxIND5/P1TZweRK
+         z+jICI5H6SLApWcMx3XsOwksNXdnt8HpZ+LsqqO3w/d8xM4mlNpEYiHGaNeOhJA6bODG
+         PhtWSPjTPXWCXAaZvFJ4goTv6H2/QiMfYZxSIrP4HzX/CyRzYoD9rkWo9FK8dsN2hjYd
+         05g6vGASrJzJR8/XDSQ7Fp3/OHkrfS6dwcvhMsuXLVhCFVcNrwrzu1lEHKCUn8sBHvK7
+         th9w==
+X-Gm-Message-State: AOAM533IzXTdztckmmaPWiQfTIMNSagVQpja8gs1UeOLpUf2S488lApl
+        KtVSwpI9rs0otg9y+dS9q8YJl1FShz6nin+RQHU=
+X-Google-Smtp-Source: ABdhPJxPj3tJ0PQzOv97lm804VPCxbjl4m6U29OVUfEV8uCWqRZKPmi25QGenCWT2I5pPTREN2ZYJEXttVeTSUc/wVc=
+X-Received: by 2002:a50:f413:: with SMTP id r19mr17094422edm.17.1593419347605;
+ Mon, 29 Jun 2020 01:29:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <1593425623-31810-1-git-send-email-Anson.Huang@nxp.com> <1593425623-31810-2-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1593425623-31810-2-git-send-email-Anson.Huang@nxp.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 29 Jun 2020 13:29:04 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a31coESQTssW1mndGuZ1pvxXSRRpY=XT1ZO+pkj9aabxg@mail.gmail.com>
-Message-ID: <CAK8P3a31coESQTssW1mndGuZ1pvxXSRRpY=XT1ZO+pkj9aabxg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] arm64: defconfig: Select CONFIG_RESET_IMX7 by default
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Stefan Agner <stefan.agner@toradex.com>,
-        oleksandr.suvorov@toradex.com,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Leo Li <leoyang.li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Olof Johansson <olof@lixom.net>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        NXP Linux Team <Linux-imx@nxp.com>
+References: <1591697830-16311-1-git-send-email-amittomer25@gmail.com>
+ <1591697830-16311-3-git-send-email-amittomer25@gmail.com> <20200624061529.GF2324254@vkoul-mobl>
+ <75d154d0-2962-99e6-a7c7-bf0928ec8b2a@arm.com>
+In-Reply-To: <75d154d0-2962-99e6-a7c7-bf0928ec8b2a@arm.com>
+From:   Amit Tomer <amittomer25@gmail.com>
+Date:   Mon, 29 Jun 2020 13:58:31 +0530
+Message-ID: <CABHD4K-uFzzHLcH8SXGYkn_ZburG-g0f-ECrefU2V61Fp+z3fQ@mail.gmail.com>
+Subject: Re: [PATCH v4 02/10] dmaengine: Actions: Add support for S700 DMA engine
+To:     =?UTF-8?Q?Andr=C3=A9_Przywara?= <andre.przywara@arm.com>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        dan.j.williams@intel.com, cristian.ciocaltea@gmail.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-actions@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:L/cCgtNTGpTZuLd/vE7UdNH3zJxmqthQ+1RD5O4Pl1kAR+QwSLC
- xbdM/tcUzx1D2AQfTzXsK0/CirZfD/hMsNayPxrJyKbeZ4Xe0no4guHiEYDDU/psXr5wBir
- jmZ3Qin4lIcO9thalxj6l/rOxbB8Br0T2OheyFLCWcYPLUXmd1hahymuFFgEY71fxffFDpG
- l6u8XrxzFuFndOwe/0nvw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:k4fUJO9ov5M=:MBC+10tvQBuFpd2IVfJD9l
- L4jMInpaovEk2f0E0nZg6O0VNMeJ/QGOJ+U8j6eADoO6XC6NG1wrNq5PpsoeahAuIF2aFgwM5
- kKyZwko6j1BG7qX/PuhnvbEcLSkrhLAEtjyNaWwGDWcG6sWYOnjpqqggGTq86bkU6yIbVpO7B
- MAcH2q5FgISQc1Soo/R/9QVhB8brNdxtcRId4MhbZHwfAUSM6i8R9H9wGwuPBFYucywSlwFKg
- snKF7fOsKb7J3KIY4vbl9ZR1cjeBbDtLTaZszlnjt1rUyN0n7ND3le/reGxcCYtQCQR2khQ+C
- FEARXPnwSRkiFP2vE5mbt2QjBqCFZahyrdqljGjH3Gi1t5k5MgblyTyujGCJ/4Ix06yFSXh3N
- 3yN27M7M0ular2BfOsTu45eh99YO0IoEjTRcfxXjWYKD5a9OsBi1+WU1I91KrzvBZ2fsJhSWH
- VdBFnt2DEr0gU9aDtTx3zYPl+JO/TC/8vuSzkovh77BAkWiU+L26oQqIlfHybI6VdXXrHeDRm
- Cb0aL0fwyVJnFMX2MCIhVKsfZREkawUAz2DZ4pFWB9y5czHScPq3m5U7Eaca0ei0Zh1VlbLLk
- Q0iLfPBPugURcJ7wArexRqaAjQeTXbiseMvDtD9O71mOLFbpQXdClIFFM47zXLA9qBXb3FwkK
- D81rAUjodioeTBVjLVtwD7xKDgBoI5KfetXuc+T4ZfPUNcVtWz4VdtHiAsCo6KykktkYZfJzC
- zDxRNX7GDBExnic5+29k1fGsRZCJPWEoYLK/kqlGpb5PSXaIRk5yZOX1sGBYISP9zOQ79heGL
- 4g6ihZzewdviFcwCECr2zMFfNI9UF4prpgV3gIuNhFbBJ683K8=
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 12:25 PM Anson Huang <Anson.Huang@nxp.com> wrote:
->
-> i.MX7 reset driver now supports module build, it is no longer
-> built in by default, need to select it explicitly.
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Hi,
 
-Why not make it =m now that this is possible?
+On Wed, Jun 24, 2020 at 3:06 PM Andr=C3=A9 Przywara <andre.przywara@arm.com=
+> wrote:
+>
+> On 24/06/2020 07:15, Vinod Koul wrote:
+>
+> Hi,
+>
+> > On 09-06-20, 15:47, Amit Singh Tomar wrote:
+> >
+> >> @@ -372,6 +383,7 @@ static inline int owl_dma_cfg_lli(struct owl_dma_v=
+chan *vchan,
+> >>                                struct dma_slave_config *sconfig,
+> >>                                bool is_cyclic)
+> >>  {
+> >> +    struct owl_dma *od =3D to_owl_dma(vchan->vc.chan.device);
+> >>      u32 mode, ctrlb;
+> >>
+> >>      mode =3D OWL_DMA_MODE_PW(0);
+> >> @@ -427,14 +439,26 @@ static inline int owl_dma_cfg_lli(struct owl_dma=
+_vchan *vchan,
+> >>      lli->hw[OWL_DMADESC_DADDR] =3D dst;
+> >>      lli->hw[OWL_DMADESC_SRC_STRIDE] =3D 0;
+> >>      lli->hw[OWL_DMADESC_DST_STRIDE] =3D 0;
+> >> -    /*
+> >> -     * Word starts from offset 0xC is shared between frame length
+> >> -     * (max frame length is 1MB) and frame count, where first 20
+> >> -     * bits are for frame length and rest of 12 bits are for frame
+> >> -     * count.
+> >> -     */
+> >> -    lli->hw[OWL_DMADESC_FLEN] =3D len | FCNT_VAL << 20;
+> >> -    lli->hw[OWL_DMADESC_CTRLB] =3D ctrlb;
+> >> +
+> >> +    if (od->devid =3D=3D S700_DMA) {
+> >> +            /* Max frame length is 1MB */
+> >> +            lli->hw[OWL_DMADESC_FLEN] =3D len;
+> >> +            /*
+> >> +             * On S700, word starts from offset 0x1C is shared betwee=
+n
+> >> +             * frame count and ctrlb, where first 12 bits are for fra=
+me
+> >> +             * count and rest of 20 bits are for ctrlb.
+> >> +             */
+> >> +            lli->hw[OWL_DMADESC_CTRLB] =3D FCNT_VAL | ctrlb;
+> >> +    } else {
+> >> +            /*
+> >> +             * On S900, word starts from offset 0xC is shared between
+> >> +             * frame length (max frame length is 1MB) and frame count=
+,
+> >> +             * where first 20 bits are for frame length and rest of
+> >> +             * 12 bits are for frame count.
+> >> +             */
+> >> +            lli->hw[OWL_DMADESC_FLEN] =3D len | FCNT_VAL << 20;
+> >> +            lli->hw[OWL_DMADESC_CTRLB] =3D ctrlb;
+> >
+> > Unfortunately this wont scale, we will keep adding new conditions for
+> > newer SoC's! So rather than this why not encode max frame length in
+> > driver_data rather than S900_DMA/S700_DMA.. In future one can add value=
+s
+> > for newer SoC and not code above logic again.
+>
+> What newer SoCs? I don't think we should try to guess the future here.
+> We can always introduce further abstractions later, once we actually
+> *know* what we are looking at.
+>
+Apart from it , we have *one* more SoC from Actions .i.e. S500 where
+the DMA controller is
+identical to S900, and requires *no* additional code to work properly.
 
-      Arnd
+So, I think we are safe to have the changes proposed in this patch.
+
+Thanks
+
+-Amit
