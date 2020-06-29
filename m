@@ -2,289 +2,426 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCCAAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:21:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B393EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0E81206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:21:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FF09206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:21:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="w53KbBWB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732051AbgF2TVD (ORCPT
+        id S1732151AbgF2TVK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:21:03 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:52283 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729752AbgF2TU6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:20:58 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49wJ7Z2bG8z9tvr7;
-        Mon, 29 Jun 2020 08:51:54 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id Ql3tDOZ5HUJp; Mon, 29 Jun 2020 08:51:54 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49wJ7Z1fPrz9tvr5;
-        Mon, 29 Jun 2020 08:51:54 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3C2088B784;
-        Mon, 29 Jun 2020 08:52:00 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id lj7dlNmcEfXw; Mon, 29 Jun 2020 08:52:00 +0200 (CEST)
-Received: from [172.25.230.105] (po15451.idsi0.si.c-s.fr [172.25.230.105])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id B57FB8B75B;
-        Mon, 29 Jun 2020 08:51:59 +0200 (CEST)
-Subject: Re: [PATCH v2] powerpc/uaccess: Use flexible addressing with
- __put_user()/__get_user()
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, npiggin@gmail.com,
-        segher@kernel.crashing.org
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <c2addbd9d76212242d3d8554a2f7ff849fb08b85.1587040754.git.christophe.leroy@c-s.fr>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <7b916759-1683-b4df-0d4b-b04b3fcd9a02@csgroup.eu>
-Date:   Mon, 29 Jun 2020 08:52:00 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 29 Jun 2020 15:21:10 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:26142 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726078AbgF2TVG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:21:06 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05TB5W9C029754;
+        Mon, 29 Jun 2020 04:06:17 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=pfpt0818;
+ bh=OH9aer3J1GSf82LNXO61/2zVdbXA+VwaY6PFfQp2rK0=;
+ b=w53KbBWBieZxMvk1LFSg4heNqbGDNFFsMks4KV5qgaIe9E9l+bwxfCDsfFHNjV4CQSno
+ 7qMnrT/mEeJAZX+zhYnCtOgNbtVjzA2UKQNK943NiicrjSny4zx58TrpP+mL+blvrLby
+ 6uApJMosER5+E229KksUY7oiUzSbLrrhAsQE+9YwCi86+ziCipYAahGEu+3aA/m6XKP1
+ nlipYFqUtOtNnCbO0MHBwvfj6tBC7YGPpknnhr0FDEDj3uJK83kOilesrMfLikU7MFU1
+ tHPZBg2KPoakTG004PiAqdd35BWEcNUgb8eRRCIcatbR9h9ihfIiEkFSm8IITFNEr7i1 Lw== 
+Received: from sc-exch02.marvell.com ([199.233.58.182])
+        by mx0a-0016f401.pphosted.com with ESMTP id 31y0wrtg02-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 29 Jun 2020 04:06:16 -0700
+Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH02.marvell.com
+ (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 29 Jun
+ 2020 04:06:16 -0700
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by DC5-EXCH02.marvell.com
+ (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 29 Jun
+ 2020 04:06:15 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 29 Jun 2020 04:06:15 -0700
+Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.54.6])
+        by maili.marvell.com (Postfix) with ESMTP id 9DD073F7041;
+        Mon, 29 Jun 2020 04:06:12 -0700 (PDT)
+From:   Alexander Lobakin <alobakin@marvell.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+CC:     Igor Russkikh <irusskikh@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        Ariel Elior <aelior@marvell.com>,
+        "Alexander Lobakin" <alobakin@marvell.com>,
+        <GR-everest-linux-l2@marvell.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next 5/6] net: qede: convert to SPDX License Identifiers
+Date:   Mon, 29 Jun 2020 14:05:11 +0300
+Message-ID: <20200629110512.1812-6-alobakin@marvell.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629110512.1812-1-alobakin@marvell.com>
+References: <20200629110512.1812-1-alobakin@marvell.com>
 MIME-Version: 1.0
-In-Reply-To: <c2addbd9d76212242d3d8554a2f7ff849fb08b85.1587040754.git.christophe.leroy@c-s.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-29_11:2020-06-29,2020-06-29 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Michael,
+QLogic QED drivers source code is dual licensed under
+GPL-2.0/BSD-3-Clause.
+Remove all the boilerplates in the existing code and replace it with the
+correct SPDX tag.
 
-I see this patch is marked as "defered" in patchwork, but I can't see 
-any related discussion. Is it normal ?
+Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
+Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+---
+ drivers/net/ethernet/qlogic/qede/qede.h       | 30 ++-----------------
+ .../net/ethernet/qlogic/qede/qede_ethtool.c   | 30 ++-----------------
+ .../net/ethernet/qlogic/qede/qede_filter.c    | 30 ++-----------------
+ drivers/net/ethernet/qlogic/qede/qede_fp.c    | 30 ++-----------------
+ drivers/net/ethernet/qlogic/qede/qede_main.c  | 30 ++-----------------
+ drivers/net/ethernet/qlogic/qede/qede_ptp.c   | 30 ++-----------------
+ drivers/net/ethernet/qlogic/qede/qede_ptp.h   | 30 ++-----------------
+ drivers/net/ethernet/qlogic/qede/qede_rdma.c  | 30 ++-----------------
+ 8 files changed, 16 insertions(+), 224 deletions(-)
 
-Christophe
+diff --git a/drivers/net/ethernet/qlogic/qede/qede.h b/drivers/net/ethernet/qlogic/qede/qede.h
+index 8857da1208d7..8567f295a12f 100644
+--- a/drivers/net/ethernet/qlogic/qede/qede.h
++++ b/drivers/net/ethernet/qlogic/qede/qede.h
+@@ -1,34 +1,8 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
+ /* QLogic qede NIC Driver
+  * Copyright (c) 2015-2017  QLogic Corporation
+- *
+- * This software is available to you under a choice of one of two
+- * licenses.  You may choose to be licensed under the terms of the GNU
+- * General Public License (GPL) Version 2, available from the file
+- * COPYING in the main directory of this source tree, or the
+- * OpenIB.org BSD license below:
+- *
+- *     Redistribution and use in source and binary forms, with or
+- *     without modification, are permitted provided that the following
+- *     conditions are met:
+- *
+- *      - Redistributions of source code must retain the above
+- *        copyright notice, this list of conditions and the following
+- *        disclaimer.
+- *
+- *      - Redistributions in binary form must reproduce the above
+- *        copyright notice, this list of conditions and the following
+- *        disclaimer in the documentation and /or other materials
+- *        provided with the distribution.
+- *
+- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+- * SOFTWARE.
+  */
++
+ #ifndef _QEDE_H_
+ #define _QEDE_H_
+ #include <linux/compiler.h>
+diff --git a/drivers/net/ethernet/qlogic/qede/qede_ethtool.c b/drivers/net/ethernet/qlogic/qede/qede_ethtool.c
+index 24cc68391ac4..26acfb380dc3 100644
+--- a/drivers/net/ethernet/qlogic/qede/qede_ethtool.c
++++ b/drivers/net/ethernet/qlogic/qede/qede_ethtool.c
+@@ -1,34 +1,8 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
+ /* QLogic qede NIC Driver
+  * Copyright (c) 2015-2017  QLogic Corporation
+- *
+- * This software is available to you under a choice of one of two
+- * licenses.  You may choose to be licensed under the terms of the GNU
+- * General Public License (GPL) Version 2, available from the file
+- * COPYING in the main directory of this source tree, or the
+- * OpenIB.org BSD license below:
+- *
+- *     Redistribution and use in source and binary forms, with or
+- *     without modification, are permitted provided that the following
+- *     conditions are met:
+- *
+- *      - Redistributions of source code must retain the above
+- *        copyright notice, this list of conditions and the following
+- *        disclaimer.
+- *
+- *      - Redistributions in binary form must reproduce the above
+- *        copyright notice, this list of conditions and the following
+- *        disclaimer in the documentation and /or other materials
+- *        provided with the distribution.
+- *
+- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+- * SOFTWARE.
+  */
++
+ #include <linux/version.h>
+ #include <linux/types.h>
+ #include <linux/netdevice.h>
+diff --git a/drivers/net/ethernet/qlogic/qede/qede_filter.c b/drivers/net/ethernet/qlogic/qede/qede_filter.c
+index fe72bb6c9455..e03d6a957ceb 100644
+--- a/drivers/net/ethernet/qlogic/qede/qede_filter.c
++++ b/drivers/net/ethernet/qlogic/qede/qede_filter.c
+@@ -1,34 +1,8 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
+ /* QLogic qede NIC Driver
+  * Copyright (c) 2015-2017  QLogic Corporation
+- *
+- * This software is available to you under a choice of one of two
+- * licenses.  You may choose to be licensed under the terms of the GNU
+- * General Public License (GPL) Version 2, available from the file
+- * COPYING in the main directory of this source tree, or the
+- * OpenIB.org BSD license below:
+- *
+- *     Redistribution and use in source and binary forms, with or
+- *     without modification, are permitted provided that the following
+- *     conditions are met:
+- *
+- *      - Redistributions of source code must retain the above
+- *        copyright notice, this list of conditions and the following
+- *        disclaimer.
+- *
+- *      - Redistributions in binary form must reproduce the above
+- *        copyright notice, this list of conditions and the following
+- *        disclaimer in the documentation and /or other materials
+- *        provided with the distribution.
+- *
+- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+- * SOFTWARE.
+  */
++
+ #include <linux/netdevice.h>
+ #include <linux/etherdevice.h>
+ #include <net/udp_tunnel.h>
+diff --git a/drivers/net/ethernet/qlogic/qede/qede_fp.c b/drivers/net/ethernet/qlogic/qede/qede_fp.c
+index 7598ebe0962a..c21d4c53121b 100644
+--- a/drivers/net/ethernet/qlogic/qede/qede_fp.c
++++ b/drivers/net/ethernet/qlogic/qede/qede_fp.c
+@@ -1,34 +1,8 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
+ /* QLogic qede NIC Driver
+  * Copyright (c) 2015-2017  QLogic Corporation
+- *
+- * This software is available to you under a choice of one of two
+- * licenses.  You may choose to be licensed under the terms of the GNU
+- * General Public License (GPL) Version 2, available from the file
+- * COPYING in the main directory of this source tree, or the
+- * OpenIB.org BSD license below:
+- *
+- *     Redistribution and use in source and binary forms, with or
+- *     without modification, are permitted provided that the following
+- *     conditions are met:
+- *
+- *      - Redistributions of source code must retain the above
+- *        copyright notice, this list of conditions and the following
+- *        disclaimer.
+- *
+- *      - Redistributions in binary form must reproduce the above
+- *        copyright notice, this list of conditions and the following
+- *        disclaimer in the documentation and /or other materials
+- *        provided with the distribution.
+- *
+- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+- * SOFTWARE.
+  */
++
+ #include <linux/netdevice.h>
+ #include <linux/etherdevice.h>
+ #include <linux/skbuff.h>
+diff --git a/drivers/net/ethernet/qlogic/qede/qede_main.c b/drivers/net/ethernet/qlogic/qede/qede_main.c
+index 29e285430f99..01c20b2d81e2 100644
+--- a/drivers/net/ethernet/qlogic/qede/qede_main.c
++++ b/drivers/net/ethernet/qlogic/qede/qede_main.c
+@@ -1,34 +1,8 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
+ /* QLogic qede NIC Driver
+  * Copyright (c) 2015-2017  QLogic Corporation
+- *
+- * This software is available to you under a choice of one of two
+- * licenses.  You may choose to be licensed under the terms of the GNU
+- * General Public License (GPL) Version 2, available from the file
+- * COPYING in the main directory of this source tree, or the
+- * OpenIB.org BSD license below:
+- *
+- *     Redistribution and use in source and binary forms, with or
+- *     without modification, are permitted provided that the following
+- *     conditions are met:
+- *
+- *      - Redistributions of source code must retain the above
+- *        copyright notice, this list of conditions and the following
+- *        disclaimer.
+- *
+- *      - Redistributions in binary form must reproduce the above
+- *        copyright notice, this list of conditions and the following
+- *        disclaimer in the documentation and /or other materials
+- *        provided with the distribution.
+- *
+- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+- * SOFTWARE.
+  */
++
+ #include <linux/crash_dump.h>
+ #include <linux/module.h>
+ #include <linux/pci.h>
+diff --git a/drivers/net/ethernet/qlogic/qede/qede_ptp.c b/drivers/net/ethernet/qlogic/qede/qede_ptp.c
+index cd5841a9415e..797ce187d683 100644
+--- a/drivers/net/ethernet/qlogic/qede/qede_ptp.c
++++ b/drivers/net/ethernet/qlogic/qede/qede_ptp.c
+@@ -1,34 +1,8 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
+ /* QLogic qede NIC Driver
+  * Copyright (c) 2015-2017  QLogic Corporation
+- *
+- * This software is available to you under a choice of one of two
+- * licenses.  You may choose to be licensed under the terms of the GNU
+- * General Public License (GPL) Version 2, available from the file
+- * COPYING in the main directory of this source tree, or the
+- * OpenIB.org BSD license below:
+- *
+- *     Redistribution and use in source and binary forms, with or
+- *     without modification, are permitted provided that the following
+- *     conditions are met:
+- *
+- *      - Redistributions of source code must retain the above
+- *        copyright notice, this list of conditions and the following
+- *        disclaimer.
+- *
+- *      - Redistributions in binary form must reproduce the above
+- *        copyright notice, this list of conditions and the following
+- *        disclaimer in the documentation and /or other materials
+- *        provided with the distribution.
+- *
+- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+- * SOFTWARE.
+  */
++
+ #include "qede_ptp.h"
+ #define QEDE_PTP_TX_TIMEOUT (2 * HZ)
+ 
+diff --git a/drivers/net/ethernet/qlogic/qede/qede_ptp.h b/drivers/net/ethernet/qlogic/qede/qede_ptp.h
+index 89c7f3cf3ee2..00ff981efa66 100644
+--- a/drivers/net/ethernet/qlogic/qede/qede_ptp.h
++++ b/drivers/net/ethernet/qlogic/qede/qede_ptp.h
+@@ -1,34 +1,8 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
+ /* QLogic qede NIC Driver
+  * Copyright (c) 2015-2017  QLogic Corporation
+- *
+- * This software is available to you under a choice of one of two
+- * licenses.  You may choose to be licensed under the terms of the GNU
+- * General Public License (GPL) Version 2, available from the file
+- * COPYING in the main directory of this source tree, or the
+- * OpenIB.org BSD license below:
+- *
+- *     Redistribution and use in source and binary forms, with or
+- *     without modification, are permitted provided that the following
+- *     conditions are met:
+- *
+- *      - Redistributions of source code must retain the above
+- *        copyright notice, this list of conditions and the following
+- *        disclaimer.
+- *
+- *      - Redistributions in binary form must reproduce the above
+- *        copyright notice, this list of conditions and the following
+- *        disclaimer in the documentation and /or other materials
+- *        provided with the distribution.
+- *
+- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+- * SOFTWARE.
+  */
++
+ #ifndef _QEDE_PTP_H_
+ #define _QEDE_PTP_H_
+ 
+diff --git a/drivers/net/ethernet/qlogic/qede/qede_rdma.c b/drivers/net/ethernet/qlogic/qede/qede_rdma.c
+index 668ccc9d49f8..2228f1d1166f 100644
+--- a/drivers/net/ethernet/qlogic/qede/qede_rdma.c
++++ b/drivers/net/ethernet/qlogic/qede/qede_rdma.c
+@@ -1,34 +1,8 @@
++// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
+ /* QLogic qedr NIC Driver
+  * Copyright (c) 2015-2017  QLogic Corporation
+- *
+- * This software is available to you under a choice of one of two
+- * licenses.  You may choose to be licensed under the terms of the GNU
+- * General Public License (GPL) Version 2, available from the file
+- * COPYING in the main directory of this source tree, or the
+- * OpenIB.org BSD license below:
+- *
+- *     Redistribution and use in source and binary forms, with or
+- *     without modification, are permitted provided that the following
+- *     conditions are met:
+- *
+- *      - Redistributions of source code must retain the above
+- *        copyright notice, this list of conditions and the following
+- *        disclaimer.
+- *
+- *      - Redistributions in binary form must reproduce the above
+- *        copyright notice, this list of conditions and the following
+- *        disclaimer in the documentation and /or other materials
+- *        provided with the distribution.
+- *
+- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+- * SOFTWARE.
+  */
++
+ #include <linux/pci.h>
+ #include <linux/netdevice.h>
+ #include <linux/list.h>
+-- 
+2.25.1
 
-Le 16/04/2020 à 14:39, Christophe Leroy a écrit :
-> At the time being, __put_user()/__get_user() and friends only use
-> D-form addressing, with 0 offset. Ex:
-> 
-> 	lwz	reg1, 0(reg2)
-> 
-> Give the compiler the opportunity to use other adressing modes
-> whenever possible, to get more optimised code.
-> 
-> Hereunder is a small exemple:
-> 
-> struct test {
-> 	u32 item1;
-> 	u16 item2;
-> 	u8 item3;
-> 	u64 item4;
-> };
-> 
-> int set_test_user(struct test __user *from, struct test __user *to)
-> {
-> 	int err;
-> 	u32 item1;
-> 	u16 item2;
-> 	u8 item3;
-> 	u64 item4;
-> 
-> 	err = __get_user(item1, &from->item1);
-> 	err |= __get_user(item2, &from->item2);
-> 	err |= __get_user(item3, &from->item3);
-> 	err |= __get_user(item4, &from->item4);
-> 
-> 	err |= __put_user(item1, &to->item1);
-> 	err |= __put_user(item2, &to->item2);
-> 	err |= __put_user(item3, &to->item3);
-> 	err |= __put_user(item4, &to->item4);
-> 
-> 	return err;
-> }
-> 
-> Before the patch:
-> 
-> 00000df0 <set_test_user>:
->   df0:	94 21 ff f0 	stwu    r1,-16(r1)
->   df4:	39 40 00 00 	li      r10,0
->   df8:	93 c1 00 08 	stw     r30,8(r1)
->   dfc:	93 e1 00 0c 	stw     r31,12(r1)
->   e00:	7d 49 53 78 	mr      r9,r10
->   e04:	80 a3 00 00 	lwz     r5,0(r3)
->   e08:	38 e3 00 04 	addi    r7,r3,4
->   e0c:	7d 46 53 78 	mr      r6,r10
->   e10:	a0 e7 00 00 	lhz     r7,0(r7)
->   e14:	7d 29 33 78 	or      r9,r9,r6
->   e18:	39 03 00 06 	addi    r8,r3,6
->   e1c:	7d 46 53 78 	mr      r6,r10
->   e20:	89 08 00 00 	lbz     r8,0(r8)
->   e24:	7d 29 33 78 	or      r9,r9,r6
->   e28:	38 63 00 08 	addi    r3,r3,8
->   e2c:	7d 46 53 78 	mr      r6,r10
->   e30:	83 c3 00 00 	lwz     r30,0(r3)
->   e34:	83 e3 00 04 	lwz     r31,4(r3)
->   e38:	7d 29 33 78 	or      r9,r9,r6
->   e3c:	7d 43 53 78 	mr      r3,r10
->   e40:	90 a4 00 00 	stw     r5,0(r4)
->   e44:	7d 29 1b 78 	or      r9,r9,r3
->   e48:	38 c4 00 04 	addi    r6,r4,4
->   e4c:	7d 43 53 78 	mr      r3,r10
->   e50:	b0 e6 00 00 	sth     r7,0(r6)
->   e54:	7d 29 1b 78 	or      r9,r9,r3
->   e58:	38 e4 00 06 	addi    r7,r4,6
->   e5c:	7d 43 53 78 	mr      r3,r10
->   e60:	99 07 00 00 	stb     r8,0(r7)
->   e64:	7d 23 1b 78 	or      r3,r9,r3
->   e68:	38 84 00 08 	addi    r4,r4,8
->   e6c:	93 c4 00 00 	stw     r30,0(r4)
->   e70:	93 e4 00 04 	stw     r31,4(r4)
->   e74:	7c 63 53 78 	or      r3,r3,r10
->   e78:	83 c1 00 08 	lwz     r30,8(r1)
->   e7c:	83 e1 00 0c 	lwz     r31,12(r1)
->   e80:	38 21 00 10 	addi    r1,r1,16
->   e84:	4e 80 00 20 	blr
-> 
-> After the patch:
-> 
-> 00000dbc <set_test_user>:
->   dbc:	39 40 00 00 	li      r10,0
->   dc0:	7d 49 53 78 	mr      r9,r10
->   dc4:	80 03 00 00 	lwz     r0,0(r3)
->   dc8:	7d 48 53 78 	mr      r8,r10
->   dcc:	a1 63 00 04 	lhz     r11,4(r3)
->   dd0:	7d 29 43 78 	or      r9,r9,r8
->   dd4:	7d 48 53 78 	mr      r8,r10
->   dd8:	88 a3 00 06 	lbz     r5,6(r3)
->   ddc:	7d 29 43 78 	or      r9,r9,r8
->   de0:	7d 48 53 78 	mr      r8,r10
->   de4:	80 c3 00 08 	lwz     r6,8(r3)
->   de8:	80 e3 00 0c 	lwz     r7,12(r3)
->   dec:	7d 29 43 78 	or      r9,r9,r8
->   df0:	7d 43 53 78 	mr      r3,r10
->   df4:	90 04 00 00 	stw     r0,0(r4)
->   df8:	7d 29 1b 78 	or      r9,r9,r3
->   dfc:	7d 43 53 78 	mr      r3,r10
->   e00:	b1 64 00 04 	sth     r11,4(r4)
->   e04:	7d 29 1b 78 	or      r9,r9,r3
->   e08:	7d 43 53 78 	mr      r3,r10
->   e0c:	98 a4 00 06 	stb     r5,6(r4)
->   e10:	7d 23 1b 78 	or      r3,r9,r3
->   e14:	90 c4 00 08 	stw     r6,8(r4)
->   e18:	90 e4 00 0c 	stw     r7,12(r4)
->   e1c:	7c 63 53 78 	or      r3,r3,r10
->   e20:	4e 80 00 20 	blr
-> 
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> Reviewed-by: Segher Boessenkool <segher@kernel.crashing.org>
-> ---
-> v2:
-> - Added <> modifier in __put_user_asm() and __get_user_asm()
-> - Removed %U2 in __put_user_asm2() and __get_user_asm2()
-> - Reworded the commit log
-> ---
->   arch/powerpc/include/asm/uaccess.h | 28 ++++++++++++++--------------
->   1 file changed, 14 insertions(+), 14 deletions(-)
-> 
-> diff --git a/arch/powerpc/include/asm/uaccess.h b/arch/powerpc/include/asm/uaccess.h
-> index 7c811442b607..9365b59495a2 100644
-> --- a/arch/powerpc/include/asm/uaccess.h
-> +++ b/arch/powerpc/include/asm/uaccess.h
-> @@ -114,7 +114,7 @@ extern long __put_user_bad(void);
->    */
->   #define __put_user_asm(x, addr, err, op)			\
->   	__asm__ __volatile__(					\
-> -		"1:	" op " %1,0(%2)	# put_user\n"		\
-> +		"1:	" op "%U2%X2 %1,%2	# put_user\n"	\
->   		"2:\n"						\
->   		".section .fixup,\"ax\"\n"			\
->   		"3:	li %0,%3\n"				\
-> @@ -122,7 +122,7 @@ extern long __put_user_bad(void);
->   		".previous\n"					\
->   		EX_TABLE(1b, 3b)				\
->   		: "=r" (err)					\
-> -		: "r" (x), "b" (addr), "i" (-EFAULT), "0" (err))
-> +		: "r" (x), "m<>" (*addr), "i" (-EFAULT), "0" (err))
->   
->   #ifdef __powerpc64__
->   #define __put_user_asm2(x, ptr, retval)				\
-> @@ -130,8 +130,8 @@ extern long __put_user_bad(void);
->   #else /* __powerpc64__ */
->   #define __put_user_asm2(x, addr, err)				\
->   	__asm__ __volatile__(					\
-> -		"1:	stw %1,0(%2)\n"				\
-> -		"2:	stw %1+1,4(%2)\n"			\
-> +		"1:	stw%X2 %1,%2\n"			\
-> +		"2:	stw%X2 %L1,%L2\n"			\
->   		"3:\n"						\
->   		".section .fixup,\"ax\"\n"			\
->   		"4:	li %0,%3\n"				\
-> @@ -140,7 +140,7 @@ extern long __put_user_bad(void);
->   		EX_TABLE(1b, 4b)				\
->   		EX_TABLE(2b, 4b)				\
->   		: "=r" (err)					\
-> -		: "r" (x), "b" (addr), "i" (-EFAULT), "0" (err))
-> +		: "r" (x), "m" (*addr), "i" (-EFAULT), "0" (err))
->   #endif /* __powerpc64__ */
->   
->   #define __put_user_size_allowed(x, ptr, size, retval)		\
-> @@ -260,7 +260,7 @@ extern long __get_user_bad(void);
->   
->   #define __get_user_asm(x, addr, err, op)		\
->   	__asm__ __volatile__(				\
-> -		"1:	"op" %1,0(%2)	# get_user\n"	\
-> +		"1:	"op"%U2%X2 %1, %2	# get_user\n"	\
->   		"2:\n"					\
->   		".section .fixup,\"ax\"\n"		\
->   		"3:	li %0,%3\n"			\
-> @@ -269,7 +269,7 @@ extern long __get_user_bad(void);
->   		".previous\n"				\
->   		EX_TABLE(1b, 3b)			\
->   		: "=r" (err), "=r" (x)			\
-> -		: "b" (addr), "i" (-EFAULT), "0" (err))
-> +		: "m<>" (*addr), "i" (-EFAULT), "0" (err))
->   
->   #ifdef __powerpc64__
->   #define __get_user_asm2(x, addr, err)			\
-> @@ -277,8 +277,8 @@ extern long __get_user_bad(void);
->   #else /* __powerpc64__ */
->   #define __get_user_asm2(x, addr, err)			\
->   	__asm__ __volatile__(				\
-> -		"1:	lwz %1,0(%2)\n"			\
-> -		"2:	lwz %1+1,4(%2)\n"		\
-> +		"1:	lwz%X2 %1, %2\n"			\
-> +		"2:	lwz%X2 %L1, %L2\n"		\
->   		"3:\n"					\
->   		".section .fixup,\"ax\"\n"		\
->   		"4:	li %0,%3\n"			\
-> @@ -289,7 +289,7 @@ extern long __get_user_bad(void);
->   		EX_TABLE(1b, 4b)			\
->   		EX_TABLE(2b, 4b)			\
->   		: "=r" (err), "=&r" (x)			\
-> -		: "b" (addr), "i" (-EFAULT), "0" (err))
-> +		: "m" (*addr), "i" (-EFAULT), "0" (err))
->   #endif /* __powerpc64__ */
->   
->   #define __get_user_size_allowed(x, ptr, size, retval)		\
-> @@ -299,10 +299,10 @@ do {								\
->   	if (size > sizeof(x))					\
->   		(x) = __get_user_bad();				\
->   	switch (size) {						\
-> -	case 1: __get_user_asm(x, ptr, retval, "lbz"); break;	\
-> -	case 2: __get_user_asm(x, ptr, retval, "lhz"); break;	\
-> -	case 4: __get_user_asm(x, ptr, retval, "lwz"); break;	\
-> -	case 8: __get_user_asm2(x, ptr, retval);  break;	\
-> +	case 1: __get_user_asm(x, (u8 __user *)ptr, retval, "lbz"); break;	\
-> +	case 2: __get_user_asm(x, (u16 __user *)ptr, retval, "lhz"); break;	\
-> +	case 4: __get_user_asm(x, (u32 __user *)ptr, retval, "lwz"); break;	\
-> +	case 8: __get_user_asm2(x, (u64 __user *)ptr, retval);  break;	\
->   	default: (x) = __get_user_bad();			\
->   	}							\
->   } while (0)
-> 
