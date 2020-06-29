@@ -2,71 +2,102 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC92CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:25:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DACDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:25:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B492A208B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:25:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B63A208DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:25:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593465949;
+	bh=uX5WXDrJa9DPLlsdJIWYE4UvjtgmVVqjU+UrlPR1sGQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XKWbKIGdKr8kMv47CEdp3a59bsqiIPHUqOBwGdUY97eKwVyYcnpEdcXzD6ZHdl791
+	 By9Bq4Khwqr6hqHpNdvVTlsmTyqwDLFKOHAbDWXWtqMSXAhWTRMO5y0W7PR4dD337X
+	 YqhVcTaagvRevkr8wugMe+BQOrWdCzgbPOMGr0Qw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391035AbgF2VZk (ORCPT
+        id S2391036AbgF2VZr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:25:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38386 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729112AbgF2Smu (ORCPT
+        Mon, 29 Jun 2020 17:25:47 -0400
+Received: from mail-il1-f193.google.com ([209.85.166.193]:37277 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726862AbgF2VZW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:42:50 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73F75C033C13;
-        Mon, 29 Jun 2020 11:26:31 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jpyUA-002DuN-3W; Mon, 29 Jun 2020 18:26:30 +0000
-From:   Al Viro <viro@ZenIV.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        David Miller <davem@davemloft.net>,
-        Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>
-Subject: [PATCH 15/41] arm64: get rid of copy_regset_to_user() in compat_ptrace_read_user()
-Date:   Mon, 29 Jun 2020 19:26:02 +0100
-Message-Id: <20200629182628.529995-15-viro@ZenIV.linux.org.uk>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200629182628.529995-1-viro@ZenIV.linux.org.uk>
-References: <20200629182349.GA2786714@ZenIV.linux.org.uk>
- <20200629182628.529995-1-viro@ZenIV.linux.org.uk>
+        Mon, 29 Jun 2020 17:25:22 -0400
+Received: by mail-il1-f193.google.com with SMTP id r12so8592120ilh.4;
+        Mon, 29 Jun 2020 14:25:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8sRNZq3i6sSIEbh/4bbkFq8rEMNhJ4QITzwGR/lljm8=;
+        b=BMC1syC41NCzxzB/pbvJpgmQ9FcJc5r2D9qsr143aDRDPwde32ULP75xo6hvY+HWtd
+         zDs9rX3aN+AZolPZnXfuJ/Pddaesd9gT3tUQhK1K5K72vX/qyoEOfeHK7MeisQh8vr6K
+         qPAivX8E+N9cl/7GtrHIjbACdnyPdHdSYBkce5VbSW3vJXAB0GlvsKZpksM7dgjTn/a8
+         CRq13jzvF8q+y0d4Gd0yz54JG48+UWl8PBqLIZpum2LNlhjllL2RzF1DgC116EdW50gy
+         bxMNzYL+dJMt6a9IJAfS84wSVfPTENitg2A8kHmFF/xZ10pVbQdB1JYin3bSl7doJ/qe
+         /fFQ==
+X-Gm-Message-State: AOAM531oa1G9btWWBSgKh3ZdNF6mVUbfN1BL+izUwqhB4NJd2u4Vhzxa
+        9+MVaBm15Ar84+kjGg5y3g==
+X-Google-Smtp-Source: ABdhPJx7dUZO0U25grEUl0vGwvMDDg6JWilgQ6/cy87UtwfMefk9HX94VG7CywqBbog84JPOnX3tTQ==
+X-Received: by 2002:a92:b685:: with SMTP id m5mr17246717ill.219.1593465921481;
+        Mon, 29 Jun 2020 14:25:21 -0700 (PDT)
+Received: from xps15 ([64.188.179.255])
+        by smtp.gmail.com with ESMTPSA id v3sm630164ili.12.2020.06.29.14.25.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 14:25:21 -0700 (PDT)
+Received: (nullmailer pid 2935889 invoked by uid 1000);
+        Mon, 29 Jun 2020 21:25:19 -0000
+Date:   Mon, 29 Jun 2020 15:25:19 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Frank Rowand <frowand.list@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Michal Marek <michal.lkml@markovi.net>
+Subject: Re: [PATCH 3/4] dt-bindings: copy process-schema-examples.yaml to
+ process-schema.yaml
+Message-ID: <20200629212519.GA2935789@bogus>
+References: <20200625170434.635114-1-masahiroy@kernel.org>
+ <20200625170434.635114-4-masahiroy@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200625170434.635114-4-masahiroy@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+On Fri, 26 Jun 2020 02:04:33 +0900, Masahiro Yamada wrote:
+> There are two processed schema files:
+> 
+>  - processed-schema-examples.yaml
+> 
+>     Used for 'make dt_binding_check'. This is always a full schema.
+> 
+>  - processed-schema.yaml
+> 
+>     Used for 'make dtbs_check'. This may be a full schema, or a smaller
+>     subset if DT_SCHEMA_FILES is given by a user.
+> 
+> If DT_SCHEMA_FILES is not specified, they are the same. You can copy
+> the former to the latter instead of running dt-mk-schema twice. This
+> saves the cpu time a lot when you do 'make dt_binding_check dtbs_check'
+> because building the full schema takes a couple of seconds.
+> 
+> If DT_SCHEMA_FILES is specified, processed-schema.yaml is generated
+> based on the specified yaml files.
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+> 
+>  Documentation/devicetree/bindings/Makefile | 28 +++++++++++++++-------
+>  scripts/Makefile.lib                       |  3 +++
+>  2 files changed, 23 insertions(+), 8 deletions(-)
+> 
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
- arch/arm64/kernel/ptrace.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
-index 5b837741ab76..d5f3da5197a1 100644
---- a/arch/arm64/kernel/ptrace.c
-+++ b/arch/arm64/kernel/ptrace.c
-@@ -1541,9 +1541,7 @@ static int compat_ptrace_read_user(struct task_struct *tsk, compat_ulong_t off,
- 	else if (off == COMPAT_PT_TEXT_END_ADDR)
- 		tmp = tsk->mm->end_code;
- 	else if (off < sizeof(compat_elf_gregset_t))
--		return copy_regset_to_user(tsk, &user_aarch32_view,
--					   REGSET_COMPAT_GPR, off,
--					   sizeof(compat_ulong_t), ret);
-+		tmp = compat_get_user_reg(tsk, off >> 2);
- 	else if (off >= COMPAT_USER_SZ)
- 		return -EIO;
- 	else
--- 
-2.11.0
-
+Applied, thanks!
