@@ -7,55 +7,58 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1043C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF8B0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:12:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3AE320675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:12:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C387120760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:12:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461540;
-	bh=kQvr20PH6P7HMgnnOg/6cEQl1b6N7Ru9B3CPfUxmv1w=;
+	s=default; t=1593461543;
+	bh=CDnV8wgM8h/k65NbFa4Ok2WEounI+mN6nVJiujCCaMw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e91JRt3L1gLwi+icsPefHbSrS5qVSOJcAiXFf08fhbrR13Fnbi3YHp4B8ZE0xQFQC
-	 pQhYMxw7U+r5q5H+RSRjWsjyGO54pTsJA2k4F4AuRGxb4yHeg3gAeLU8Kcjh/nx1qO
-	 K7KWO7rDEKRay7PNum0g4Qtov4nPjdTP30rlnRyA=
+	b=Ps1meF6VMNaovru+Tb1lA6BPtXnTuv90ldrn3QKWeQcsc6/nvANr2Gf3BEbP1Ks0l
+	 vWWHfly8LB1sAM8XErm4OZR3aPNuPZGsftFribjvpvhxlx3sNkWt/Pf69GmzUIvJjM
+	 z9WLHFu4YgrMRt+sVF8Uht6tZ0jDreOjZhDzM7V0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730509AbgF2UMT (ORCPT
+        id S1726893AbgF2UMW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:12:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40556 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:12:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732883AbgF2TaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732807AbgF2TaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6F3525317;
-        Mon, 29 Jun 2020 15:39:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D99C125214;
+        Mon, 29 Jun 2020 15:35:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445145;
-        bh=kQvr20PH6P7HMgnnOg/6cEQl1b6N7Ru9B3CPfUxmv1w=;
+        s=default; t=1593444932;
+        bh=CDnV8wgM8h/k65NbFa4Ok2WEounI+mN6nVJiujCCaMw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jxa92TIzw9BIVqyCZsCN5PGvG0xA2Q3t/sZGASgpVdhkjEZoATJYJblaOdVssjozc
-         OyB9jumSTWS5CsYNh8UCpoRLfVS63x0Uw8DFw9CBq+WeBLs6PbvVhIc57w1h0jH3sn
-         aPTNYQb68IRLkU2IogoYhLxtnXKdbUmny5pAfVKE=
+        b=c/k9uCzgFh1qG5FpN4H3/BjMsObKVVNE07l1pyJQ2NGEpAbMeRp2bYIss25OOMZpk
+         8YRUPsVNhrbWTPFVsaTI9XUvZJDUKsKU4RQuwRHzkL/Zvw8xCYTeHEskwh8eg/8C5G
+         Dkh9eQxH8YfiRBC7QnvC+2aJPrzI5NuYbukmNO3w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     yu kuai <yukuai3@huawei.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 49/78] ARM: imx5: add missing put_device() call in imx_suspend_alloc_ocram()
-Date:   Mon, 29 Jun 2020 11:37:37 -0400
-Message-Id: <20200629153806.2494953-50-sashal@kernel.org>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        Venkat Venkatsubra <venkat.x.venkatsubra@oracle.com>,
+        Neal Cardwell <ncardwell@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.19 029/131] tcp: grow window for OOO packets only for SACK flows
+Date:   Mon, 29 Jun 2020 11:33:20 -0400
+Message-Id: <20200629153502.2494656-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
-References: <20200629153806.2494953-1-sashal@kernel.org>
+In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
+References: <20200629153502.2494656-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.14.y
+X-KernelTest-Branch: linux-4.19.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.14.186-rc1
-X-KernelTest-Deadline: 2020-07-01T15:38+00:00
+X-KernelTest-Version: 4.19.131-rc1
+X-KernelTest-Deadline: 2020-07-01T15:34+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -64,52 +67,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: yu kuai <yukuai3@huawei.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 586745f1598ccf71b0a5a6df2222dee0a865954e ]
+[ Upstream commit 662051215c758ae8545451628816204ed6cd372d ]
 
-if of_find_device_by_node() succeed, imx_suspend_alloc_ocram() doesn't
-have a corresponding put_device(). Thus add a jump target to fix the
-exception handling for this function implementation.
+Back in 2013, we made a change that broke fast retransmit
+for non SACK flows.
 
-Fixes: 1579c7b9fe01 ("ARM: imx53: Set DDR pins to high impedance when in suspend to RAM.")
-Signed-off-by: yu kuai <yukuai3@huawei.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Indeed, for these flows, a sender needs to receive three duplicate
+ACK before starting fast retransmit. Sending ACK with different
+receive window do not count.
+
+Even if enabling SACK is strongly recommended these days,
+there still are some cases where it has to be disabled.
+
+Not increasing the window seems better than having to
+rely on RTO.
+
+After the fix, following packetdrill test gives :
+
+// Initialize connection
+    0 socket(..., SOCK_STREAM, IPPROTO_TCP) = 3
+   +0 setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
+   +0 bind(3, ..., ...) = 0
+   +0 listen(3, 1) = 0
+
+   +0 < S 0:0(0) win 32792 <mss 1000,nop,wscale 7>
+   +0 > S. 0:0(0) ack 1 <mss 1460,nop,wscale 8>
+   +0 < . 1:1(0) ack 1 win 514
+
+   +0 accept(3, ..., ...) = 4
+
+   +0 < . 1:1001(1000) ack 1 win 514
+// Quick ack
+   +0 > . 1:1(0) ack 1001 win 264
+
+   +0 < . 2001:3001(1000) ack 1 win 514
+// DUPACK : Normally we should not change the window
+   +0 > . 1:1(0) ack 1001 win 264
+
+   +0 < . 3001:4001(1000) ack 1 win 514
+// DUPACK : Normally we should not change the window
+   +0 > . 1:1(0) ack 1001 win 264
+
+   +0 < . 4001:5001(1000) ack 1 win 514
+// DUPACK : Normally we should not change the window
+    +0 > . 1:1(0) ack 1001 win 264
+
+   +0 < . 1001:2001(1000) ack 1 win 514
+// Hole is repaired.
+   +0 > . 1:1(0) ack 5001 win 272
+
+Fixes: 4e4f1fc22681 ("tcp: properly increase rcv_ssthresh for ofo packets")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: Venkat Venkatsubra <venkat.x.venkatsubra@oracle.com>
+Acked-by: Neal Cardwell <ncardwell@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm/mach-imx/pm-imx5.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ net/ipv4/tcp_input.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/mach-imx/pm-imx5.c b/arch/arm/mach-imx/pm-imx5.c
-index 868781fd460c7..14c630c899c5d 100644
---- a/arch/arm/mach-imx/pm-imx5.c
-+++ b/arch/arm/mach-imx/pm-imx5.c
-@@ -301,14 +301,14 @@ static int __init imx_suspend_alloc_ocram(
- 	if (!ocram_pool) {
- 		pr_warn("%s: ocram pool unavailable!\n", __func__);
- 		ret = -ENODEV;
--		goto put_node;
-+		goto put_device;
+diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+index ee1b4804b40de..7441ecfc8320a 100644
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -4528,7 +4528,11 @@ static void tcp_data_queue_ofo(struct sock *sk, struct sk_buff *skb)
+ 	if (tcp_ooo_try_coalesce(sk, tp->ooo_last_skb,
+ 				 skb, &fragstolen)) {
+ coalesce_done:
+-		tcp_grow_window(sk, skb);
++		/* For non sack flows, do not grow window to force DUPACK
++		 * and trigger fast retransmit.
++		 */
++		if (tcp_is_sack(tp))
++			tcp_grow_window(sk, skb);
+ 		kfree_skb_partial(skb, fragstolen);
+ 		skb = NULL;
+ 		goto add_sack;
+@@ -4612,7 +4616,11 @@ static void tcp_data_queue_ofo(struct sock *sk, struct sk_buff *skb)
+ 		tcp_sack_new_ofo_skb(sk, seq, end_seq);
+ end:
+ 	if (skb) {
+-		tcp_grow_window(sk, skb);
++		/* For non sack flows, do not grow window to force DUPACK
++		 * and trigger fast retransmit.
++		 */
++		if (tcp_is_sack(tp))
++			tcp_grow_window(sk, skb);
+ 		skb_condense(skb);
+ 		skb_set_owner_r(skb, sk);
  	}
- 
- 	ocram_base = gen_pool_alloc(ocram_pool, size);
- 	if (!ocram_base) {
- 		pr_warn("%s: unable to alloc ocram!\n", __func__);
- 		ret = -ENOMEM;
--		goto put_node;
-+		goto put_device;
- 	}
- 
- 	phys = gen_pool_virt_to_phys(ocram_pool, ocram_base);
-@@ -318,6 +318,8 @@ static int __init imx_suspend_alloc_ocram(
- 	if (virt_out)
- 		*virt_out = virt;
- 
-+put_device:
-+	put_device(&pdev->dev);
- put_node:
- 	of_node_put(node);
- 
 -- 
 2.25.1
 
