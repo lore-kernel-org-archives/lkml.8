@@ -7,45 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33924C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9523C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:48:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0723B206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:48:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85FCA206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:48:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467315;
-	bh=CShSKxwEsr2YDNf3cAE90Nyu4luZdDoF3ZS0WckTXJM=;
+	s=default; t=1593467319;
+	bh=a0w75ceKG5xADy+1ICAIaqk8AtJh5EnmkqIiOCZj7NY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a4fYa/3tZZbjc3Ee3DrN19G2xtdTPO/1GWz+TWHkPespbbWr+CZpUJmd4XCpaZI2q
-	 SoWR7Ai/8VJs84o/J4v9RggFjUwqv42qD7J+8j/ukf9dot39sqqcvRXTcsec4aggxC
-	 6wd06WbNxgzGHTGrfDfmrxkqp+dXO3uureFIKiqo=
+	b=kc53rUseDA/VViCq7i2c4SKfu3FTGxXfs9hywFngHOi4FsPDXMtANTZh6ZLd7f07j
+	 4/XwONZjsz7uKgxBDuujnUng4SK4LQ23E3m6cfU3J/T1T7z19SIKv6oEZAddsQJDNT
+	 t8bb42Cuxhmt7FB6EKlP2NYvwLxO5cmpHm4IoYLU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404302AbgF2Vsd (ORCPT
+        id S2404309AbgF2Vsi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:48:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56764 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:48:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726721AbgF2Sfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726716AbgF2Sfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A5B6A246A7;
-        Mon, 29 Jun 2020 15:19:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6FA824770;
+        Mon, 29 Jun 2020 15:21:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444000;
-        bh=CShSKxwEsr2YDNf3cAE90Nyu4luZdDoF3ZS0WckTXJM=;
+        s=default; t=1593444089;
+        bh=a0w75ceKG5xADy+1ICAIaqk8AtJh5EnmkqIiOCZj7NY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WyrJM9uovylKDkjG7Gkz4nRXA2Az63YD2qtCSAVzkO+6MPGV5d54GRbs0Jk7qTSFH
-         eB51k4qjHtCK7EP8KYwgWBqsIxF/trVamk6Q21CptamZ8V4c6kcxllUYwa4VKkjs03
-         nh60rDv5ZSoKBmm05mndC0KEexWmt4SIos1ojLX0=
+        b=BYAfVhLDp6d3rYHVMvJ8sWUCqZqQzpCZ3BuTgRlo7RdIOro6qOUFyqT4Wq5FIFbFp
+         eovjRZZzo2TrG3xU7xv1nRFo7uKmzWpmoWAotkLeH3cu2GD/pIt72pXtNow9De0qEP
+         2ssoF40qp5st91mTWqIDgrtYSyPqcsxPYbWNQW84=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Reinette Chatre <reinette.chatre@intel.com>,
-        Borislav Petkov <bp@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 105/265] x86/cpu: Move resctrl CPUID code to resctrl/
-Date:   Mon, 29 Jun 2020 11:15:38 -0400
-Message-Id: <20200629151818.2493727-106-sashal@kernel.org>
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 199/265] s390/vdso: fix vDSO clock_getres()
+Date:   Mon, 29 Jun 2020 11:17:12 -0400
+Message-Id: <20200629151818.2493727-200-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -64,139 +67,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Reinette Chatre <reinette.chatre@intel.com>
+From: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
-[ Upstream commit 0118ad82c2a64ebcf15d7565ed35361407efadfa ]
+[ Upstream commit 478237a595120a18e9b52fd2c57a6e8b7a01e411 ]
 
-The function determining a platform's support and properties of cache
-occupancy and memory bandwidth monitoring (properties of
-X86_FEATURE_CQM_LLC) can be found among the common CPU code. After
-the feature's properties is populated in the per-CPU data the resctrl
-subsystem is the only consumer (via boot_cpu_data).
+clock_getres in the vDSO library has to preserve the same behaviour
+of posix_get_hrtimer_res().
 
-Move the function that obtains the CPU information used by resctrl to
-the resctrl subsystem and rename it from init_cqm() to
-resctrl_cpu_detect(). The function continues to be called from the
-common CPU code. This move is done in preparation of the addition of some
-vendor specific code.
+In particular, posix_get_hrtimer_res() does:
+    sec = 0;
+    ns = hrtimer_resolution;
+and hrtimer_resolution depends on the enablement of the high
+resolution timers that can happen either at compile or at run time.
 
-No functional change.
+Fix the s390 vdso implementation of clock_getres keeping a copy of
+hrtimer_resolution in vdso data and using that directly.
 
-Suggested-by: Borislav Petkov <bp@suse.de>
-Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Link: https://lkml.kernel.org/r/38433b99f9d16c8f4ee796f8cc42b871531fa203.1588715690.git.reinette.chatre@intel.com
+Link: https://lkml.kernel.org/r/20200324121027.21665-1-vincenzo.frascino@arm.com
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Acked-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+[heiko.carstens@de.ibm.com: use llgf for proper zero extension]
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/resctrl_sched.h |  3 +++
- arch/x86/kernel/cpu/common.c         | 27 ++-------------------------
- arch/x86/kernel/cpu/resctrl/core.c   | 24 ++++++++++++++++++++++++
- 3 files changed, 29 insertions(+), 25 deletions(-)
+ arch/s390/include/asm/vdso.h           |  1 +
+ arch/s390/kernel/asm-offsets.c         |  2 +-
+ arch/s390/kernel/time.c                |  1 +
+ arch/s390/kernel/vdso64/clock_getres.S | 10 +++++-----
+ 4 files changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/include/asm/resctrl_sched.h b/arch/x86/include/asm/resctrl_sched.h
-index f6b7fe2833cc7..c8a27cbbdae29 100644
---- a/arch/x86/include/asm/resctrl_sched.h
-+++ b/arch/x86/include/asm/resctrl_sched.h
-@@ -84,9 +84,12 @@ static inline void resctrl_sched_in(void)
- 		__resctrl_sched_in();
+diff --git a/arch/s390/include/asm/vdso.h b/arch/s390/include/asm/vdso.h
+index 3bcfdeb013951..0cd085cdeb4f2 100644
+--- a/arch/s390/include/asm/vdso.h
++++ b/arch/s390/include/asm/vdso.h
+@@ -36,6 +36,7 @@ struct vdso_data {
+ 	__u32 tk_shift;			/* Shift used for xtime_nsec	0x60 */
+ 	__u32 ts_dir;			/* TOD steering direction	0x64 */
+ 	__u64 ts_end;			/* TOD steering end		0x68 */
++	__u32 hrtimer_res;		/* hrtimer resolution		0x70 */
+ };
+ 
+ struct vdso_per_cpu_data {
+diff --git a/arch/s390/kernel/asm-offsets.c b/arch/s390/kernel/asm-offsets.c
+index e80f0e6f59722..46f84cb0d5528 100644
+--- a/arch/s390/kernel/asm-offsets.c
++++ b/arch/s390/kernel/asm-offsets.c
+@@ -76,6 +76,7 @@ int main(void)
+ 	OFFSET(__VDSO_TK_SHIFT, vdso_data, tk_shift);
+ 	OFFSET(__VDSO_TS_DIR, vdso_data, ts_dir);
+ 	OFFSET(__VDSO_TS_END, vdso_data, ts_end);
++	OFFSET(__VDSO_CLOCK_REALTIME_RES, vdso_data, hrtimer_res);
+ 	OFFSET(__VDSO_ECTG_BASE, vdso_per_cpu_data, ectg_timer_base);
+ 	OFFSET(__VDSO_ECTG_USER, vdso_per_cpu_data, ectg_user_time);
+ 	OFFSET(__VDSO_GETCPU_VAL, vdso_per_cpu_data, getcpu_val);
+@@ -86,7 +87,6 @@ int main(void)
+ 	DEFINE(__CLOCK_REALTIME_COARSE, CLOCK_REALTIME_COARSE);
+ 	DEFINE(__CLOCK_MONOTONIC_COARSE, CLOCK_MONOTONIC_COARSE);
+ 	DEFINE(__CLOCK_THREAD_CPUTIME_ID, CLOCK_THREAD_CPUTIME_ID);
+-	DEFINE(__CLOCK_REALTIME_RES, MONOTONIC_RES_NSEC);
+ 	DEFINE(__CLOCK_COARSE_RES, LOW_RES_NSEC);
+ 	BLANK();
+ 	/* idle data offsets */
+diff --git a/arch/s390/kernel/time.c b/arch/s390/kernel/time.c
+index f9d070d016e35..b1113b5194325 100644
+--- a/arch/s390/kernel/time.c
++++ b/arch/s390/kernel/time.c
+@@ -301,6 +301,7 @@ void update_vsyscall(struct timekeeper *tk)
+ 
+ 	vdso_data->tk_mult = tk->tkr_mono.mult;
+ 	vdso_data->tk_shift = tk->tkr_mono.shift;
++	vdso_data->hrtimer_res = hrtimer_resolution;
+ 	smp_wmb();
+ 	++vdso_data->tb_update_count;
  }
- 
-+void resctrl_cpu_detect(struct cpuinfo_x86 *c);
-+
- #else
- 
- static inline void resctrl_sched_in(void) {}
-+static inline void resctrl_cpu_detect(struct cpuinfo_x86 *c) {}
- 
- #endif /* CONFIG_X86_CPU_RESCTRL */
- 
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 8293ee5149758..e2e4af685f9b4 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -56,6 +56,7 @@
- #include <asm/intel-family.h>
- #include <asm/cpu_device_id.h>
- #include <asm/uv/uv.h>
-+#include <asm/resctrl_sched.h>
- 
- #include "cpu.h"
- 
-@@ -854,30 +855,6 @@ static void init_speculation_control(struct cpuinfo_x86 *c)
- 	}
- }
- 
--static void init_cqm(struct cpuinfo_x86 *c)
--{
--	if (!cpu_has(c, X86_FEATURE_CQM_LLC)) {
--		c->x86_cache_max_rmid  = -1;
--		c->x86_cache_occ_scale = -1;
--		return;
--	}
--
--	/* will be overridden if occupancy monitoring exists */
--	c->x86_cache_max_rmid = cpuid_ebx(0xf);
--
--	if (cpu_has(c, X86_FEATURE_CQM_OCCUP_LLC) ||
--	    cpu_has(c, X86_FEATURE_CQM_MBM_TOTAL) ||
--	    cpu_has(c, X86_FEATURE_CQM_MBM_LOCAL)) {
--		u32 eax, ebx, ecx, edx;
--
--		/* QoS sub-leaf, EAX=0Fh, ECX=1 */
--		cpuid_count(0xf, 1, &eax, &ebx, &ecx, &edx);
--
--		c->x86_cache_max_rmid  = ecx;
--		c->x86_cache_occ_scale = ebx;
--	}
--}
--
- void get_cpu_cap(struct cpuinfo_x86 *c)
- {
- 	u32 eax, ebx, ecx, edx;
-@@ -945,7 +922,7 @@ void get_cpu_cap(struct cpuinfo_x86 *c)
- 
- 	init_scattered_cpuid_features(c);
- 	init_speculation_control(c);
--	init_cqm(c);
-+	resctrl_cpu_detect(c);
- 
- 	/*
- 	 * Clear/Set all flags overridden by options, after probe.
-diff --git a/arch/x86/kernel/cpu/resctrl/core.c b/arch/x86/kernel/cpu/resctrl/core.c
-index d8cc5223b7ce8..49599733fa94d 100644
---- a/arch/x86/kernel/cpu/resctrl/core.c
-+++ b/arch/x86/kernel/cpu/resctrl/core.c
-@@ -958,6 +958,30 @@ static __init void rdt_init_res_defs(void)
- 
- static enum cpuhp_state rdt_online;
- 
-+void resctrl_cpu_detect(struct cpuinfo_x86 *c)
-+{
-+	if (!cpu_has(c, X86_FEATURE_CQM_LLC)) {
-+		c->x86_cache_max_rmid  = -1;
-+		c->x86_cache_occ_scale = -1;
-+		return;
-+	}
-+
-+	/* will be overridden if occupancy monitoring exists */
-+	c->x86_cache_max_rmid = cpuid_ebx(0xf);
-+
-+	if (cpu_has(c, X86_FEATURE_CQM_OCCUP_LLC) ||
-+	    cpu_has(c, X86_FEATURE_CQM_MBM_TOTAL) ||
-+	    cpu_has(c, X86_FEATURE_CQM_MBM_LOCAL)) {
-+		u32 eax, ebx, ecx, edx;
-+
-+		/* QoS sub-leaf, EAX=0Fh, ECX=1 */
-+		cpuid_count(0xf, 1, &eax, &ebx, &ecx, &edx);
-+
-+		c->x86_cache_max_rmid  = ecx;
-+		c->x86_cache_occ_scale = ebx;
-+	}
-+}
-+
- static int __init resctrl_late_init(void)
- {
- 	struct rdt_resource *r;
+diff --git a/arch/s390/kernel/vdso64/clock_getres.S b/arch/s390/kernel/vdso64/clock_getres.S
+index 081435398e0a1..0c79caa32b592 100644
+--- a/arch/s390/kernel/vdso64/clock_getres.S
++++ b/arch/s390/kernel/vdso64/clock_getres.S
+@@ -17,12 +17,14 @@
+ 	.type  __kernel_clock_getres,@function
+ __kernel_clock_getres:
+ 	CFI_STARTPROC
+-	larl	%r1,4f
++	larl	%r1,3f
++	lg	%r0,0(%r1)
+ 	cghi	%r2,__CLOCK_REALTIME_COARSE
+ 	je	0f
+ 	cghi	%r2,__CLOCK_MONOTONIC_COARSE
+ 	je	0f
+-	larl	%r1,3f
++	larl	%r1,_vdso_data
++	llgf	%r0,__VDSO_CLOCK_REALTIME_RES(%r1)
+ 	cghi	%r2,__CLOCK_REALTIME
+ 	je	0f
+ 	cghi	%r2,__CLOCK_MONOTONIC
+@@ -36,7 +38,6 @@ __kernel_clock_getres:
+ 	jz	2f
+ 0:	ltgr	%r3,%r3
+ 	jz	1f				/* res == NULL */
+-	lg	%r0,0(%r1)
+ 	xc	0(8,%r3),0(%r3)			/* set tp->tv_sec to zero */
+ 	stg	%r0,8(%r3)			/* store tp->tv_usec */
+ 1:	lghi	%r2,0
+@@ -45,6 +46,5 @@ __kernel_clock_getres:
+ 	svc	0
+ 	br	%r14
+ 	CFI_ENDPROC
+-3:	.quad	__CLOCK_REALTIME_RES
+-4:	.quad	__CLOCK_COARSE_RES
++3:	.quad	__CLOCK_COARSE_RES
+ 	.size	__kernel_clock_getres,.-__kernel_clock_getres
 -- 
 2.25.1
 
