@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41ECAC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:09:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81E78C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:09:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1568920775
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:09:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E21B206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:09:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593464958;
-	bh=vmCZLNpjszkjkmLUNfOKEwUCYfE4zalL5oTumu3Ayl8=;
+	s=default; t=1593464964;
+	bh=NxoIYNIIbfOJgNLjpRrH+E1LwpRHKvafmzUGCZq7qzo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lzDFNmB0oaoiSFQ20jFSnp9zhmaKmetaj9ZEma/Knr1vzZLfPUqlH2LaplXpqWBHI
-	 ktSldl71rMPhUojFDXjMkTbwAp5s0vbI/TtF+oRATEj3ApaiB9SMdFyU8om0WYn5mm
-	 P7sttjs64nuvr3Ev89eKiz0CI1E097w2uk6TWcrg=
+	b=jngwVsQbncw2jX9e1cmFoAaVd6DD1bTv9n/Vxq1tuh7PVa6PD9Zc090W0bP0Tnhno
+	 tSnpfeyQ7SnAFhTdjmopmehNNPvhIJsexS9rSrRRzIPMem6f01dqaR4A1HVsDy9rye
+	 04Qr05QHkVW0+nxfCJhIh4CC+oquAKj6K8r6tXow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390141AbgF2VJR (ORCPT
+        id S2390464AbgF2VJX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:09:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45462 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:09:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45480 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730329AbgF2TAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730325AbgF2TAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:00:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5603E25546;
-        Mon, 29 Jun 2020 15:55:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BAE8254D7;
+        Mon, 29 Jun 2020 15:53:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446108;
-        bh=vmCZLNpjszkjkmLUNfOKEwUCYfE4zalL5oTumu3Ayl8=;
+        s=default; t=1593446033;
+        bh=NxoIYNIIbfOJgNLjpRrH+E1LwpRHKvafmzUGCZq7qzo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xgqJa6Y7Dquxlt2vOQNMMZ62mio7AUJugkDKWDYgJcJmvhHtXe7K1huLbsrgTfR3h
-         6XkfzfKFU8yBOl/7xIi74oXOOzaKzVkLZMqtfkMzlDlNPJCKzNVxxOP9i2BVWumUCZ
-         Yj1umwq3vo18jH5lmdvbO31BD338CTiFs2H2gWRs=
+        b=GEy9ZfJPVLD4lS53WHT+b+SNQNacN3vIjZvUwGNTolNxpDI08vSnUFdwWeb9HsBzv
+         amC+7iBqiBRz7cVZHP0BbsaZL0a0+C1LwsE3ryAS/F27HUSPNoxTbyJ5juuuMZySRi
+         MAOe7gxhTY42PxPTlBmuYt25KfDcKBsm+jJHIJjk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tang Bin <tangbin@cmss.chinamobile.com>,
-        Zhang Shengju <zhangshengju@cmss.chinamobile.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.4 099/135] usb: host: ehci-exynos: Fix error check in exynos_ehci_probe()
-Date:   Mon, 29 Jun 2020 11:52:33 -0400
-Message-Id: <20200629155309.2495516-100-sashal@kernel.org>
+Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 038/135] tty: n_gsm: Fix bogus i++ in gsm_data_kick
+Date:   Mon, 29 Jun 2020 11:51:32 -0400
+Message-Id: <20200629155309.2495516-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -65,42 +65,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tang Bin <tangbin@cmss.chinamobile.com>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
 
-commit 44ed240d62736ad29943ec01e41e194b96f7c5e9 upstream.
+[ Upstream commit 4dd31f1ffec6c370c3c2e0c605628bf5e16d5c46 ]
 
-If the function platform_get_irq() failed, the negative value
-returned will not be detected here. So fix error handling in
-exynos_ehci_probe(). And when get irq failed, the function
-platform_get_irq() logs an error message, so remove redundant
-message here.
+When submitting the previous fix "tty: n_gsm: Fix waking up upper tty
+layer when room available". It was suggested to switch from a while to
+a for loop, but when doing it, there was a remaining bogus i++.
 
-Fixes: 1bcc5aa87f04 ("USB: Add initial S5P EHCI driver")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
-Link: https://lore.kernel.org/r/20200602114708.28620-1-tangbin@cmss.chinamobile.com
+This patch removes this i++ and also reorganizes the code making it more
+compact.
+
+Fixes: e1eaea46bb40 ("tty: n_gsm line discipline")
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+Link: https://lore.kernel.org/r/20200518084517.2173242-3-gregory.clement@bootlin.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/ehci-exynos.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/tty/n_gsm.c | 14 +++-----------
+ 1 file changed, 3 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/usb/host/ehci-exynos.c b/drivers/usb/host/ehci-exynos.c
-index 46f5354c534d4..3b5a28f43ef95 100644
---- a/drivers/usb/host/ehci-exynos.c
-+++ b/drivers/usb/host/ehci-exynos.c
-@@ -199,9 +199,8 @@ static int exynos_ehci_probe(struct platform_device *pdev)
- 	hcd->rsrc_len = resource_size(res);
+diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
+index 0020de4fe66f5..9b2beada2ff3b 100644
+--- a/drivers/tty/n_gsm.c
++++ b/drivers/tty/n_gsm.c
+@@ -719,17 +719,9 @@ static void gsm_data_kick(struct gsm_mux *gsm, struct gsm_dlci *dlci)
+ 		} else {
+ 			int i = 0;
  
- 	irq = platform_get_irq(pdev, 0);
--	if (!irq) {
--		dev_err(&pdev->dev, "Failed to get IRQ\n");
--		err = -ENODEV;
-+	if (irq < 0) {
-+		err = irq;
- 		goto fail_io;
+-			for (i = 0; i < NUM_DLCI; i++) {
+-				struct gsm_dlci *dlci;
+-
+-				dlci = gsm->dlci[i];
+-				if (dlci == NULL) {
+-					i++;
+-					continue;
+-				}
+-
+-				tty_port_tty_wakeup(&dlci->port);
+-			}
++			for (i = 0; i < NUM_DLCI; i++)
++				if (gsm->dlci[i])
++					tty_port_tty_wakeup(&gsm->dlci[i]->port);
+ 		}
  	}
- 
+ }
 -- 
 2.25.1
 
