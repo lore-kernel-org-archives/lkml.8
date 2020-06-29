@@ -2,101 +2,61 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB06C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:01:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD66C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:02:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 13635206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:01:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460912;
-	bh=ke+E4ACwtF8UcIi+lq2rwLffvdLaAJALS7zP8w5TH0A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yy+qCoYDcI2F2mj4J03qOJzZT/o7a4VNUSoPazom900QuJhhqVHpwgpjWqr0ypHee
-	 HrSKsdg44xDwJ4Joq1PKbcsE0cKu6SeAl/RjqvwTw6uCklveXewdRvHXlbe1a1yPX+
-	 T/xASYU/hSp6B6RjTTDVnddnL5wx26PrK6G2+xkY=
+	by mail.kernel.org (Postfix) with ESMTP id B925E20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:02:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387607AbgF2UBu (ORCPT
+        id S1726892AbgF2UB6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:01:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47630 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:01:58 -0400
+Received: from muru.com ([72.249.23.125]:59970 "EHLO muru.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387495AbgF2TkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:40:15 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91E222488A;
-        Mon, 29 Jun 2020 15:26:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444386;
-        bh=ke+E4ACwtF8UcIi+lq2rwLffvdLaAJALS7zP8w5TH0A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QJuDFe1KWYb4aKvcIgIrDT864y7laKSbQsTTFN015BBP6q+ZiUJ2dEcr3Pklvn6tc
-         Y/oJiD5EZ2jdfIe0tFVooXJHPCtGj7xhsJhc7dOkeIlq9+u+GugjA1hNY+BK7O4SDq
-         QCpx2th0poDq+Eyf8g0V9YEAu9gcCeSnSwdIHCIk=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 063/178] ARM: OMAP2+: Fix legacy mode dss_reset
-Date:   Mon, 29 Jun 2020 11:23:28 -0400
-Message-Id: <20200629152523.2494198-64-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
-References: <20200629152523.2494198-1-sashal@kernel.org>
+        id S1732992AbgF2TkL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:40:11 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id B5FBA81B3;
+        Mon, 29 Jun 2020 17:15:34 +0000 (UTC)
+Date:   Mon, 29 Jun 2020 10:14:39 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Drew Fustini <drew@beagleboard.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@beagleboard.org>
+Subject: Re: [PATCH v2] arm: dts: am335x-boneblack: add gpio-line-names
+Message-ID: <20200629171439.GV37466@atomide.com>
+References: <20200521200926.GC429020@x1>
+ <20200528131620.GA3126290@x1>
+ <20200529172108.GS37466@atomide.com>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.50-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.4.50-rc1
-X-KernelTest-Deadline: 2020-07-01T15:25+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200529172108.GS37466@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+* Tony Lindgren <tony@atomide.com> [200529 17:22]:
+> * Drew Fustini <drew@beagleboard.org> [200528 13:17]:
+> > FYI - Linus W. provided an Acked-by in related thread [0].
+> > 
+> > Anyone else have any review comments?
+> 
+> Looks good to me thanks. But as the merge window is about
+> to open, let's do fixes only at this point and leave this
+> for v5.9.
 
-[ Upstream commit 77cad9dbc957f23a73169e8a8971186744296614 ]
+Applying into omap-for-v5.9/dt thanks.
 
-We must check for "dss_core" instead of "dss" to avoid also matching
-also "dss_dispc". This only matters for the mixed case of data
-configured in device tree but with legacy booting ti,hwmods property
-still enabled.
-
-Fixes: 8b30919a4e3c ("ARM: OMAP2+: Handle reset quirks for dynamically allocated modules")
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/mach-omap2/omap_hwmod.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/mach-omap2/omap_hwmod.c b/arch/arm/mach-omap2/omap_hwmod.c
-index 203664c40d3d2..eb74aa1826614 100644
---- a/arch/arm/mach-omap2/omap_hwmod.c
-+++ b/arch/arm/mach-omap2/omap_hwmod.c
-@@ -3535,7 +3535,7 @@ static const struct omap_hwmod_reset dra7_reset_quirks[] = {
- };
- 
- static const struct omap_hwmod_reset omap_reset_quirks[] = {
--	{ .match = "dss", .len = 3, .reset = omap_dss_reset, },
-+	{ .match = "dss_core", .len = 8, .reset = omap_dss_reset, },
- 	{ .match = "hdq1w", .len = 5, .reset = omap_hdq1w_reset, },
- 	{ .match = "i2c", .len = 3, .reset = omap_i2c_reset, },
- 	{ .match = "wd_timer", .len = 8, .reset = omap2_wd_timer_reset, },
--- 
-2.25.1
-
+Tony
