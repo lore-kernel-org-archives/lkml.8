@@ -2,92 +2,159 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 168F8C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85303C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:35:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EB226206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:35:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61E3E206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:35:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466517;
-	bh=vDqH4OQik9QBHRoYPIsS115Se7LvewJkoA+wC/XILJ8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Uywc/lUeuz2k/B3OEMOZ6yZBWCRzV2kuip8ZsaWRrqBt2rJUfIpC4Iir/bWYpc4Rl
-	 UhcYh2xDC8hBFM69xzAH/t5EU15+NmqDkybpgVN2ejgIj7tTCEmXej8mp7vFzwiert
-	 pcq2Ly0jZaYGfeUlq302F+xhA0ttYNpTCAlR6yuA=
+	s=default; t=1593466525;
+	bh=aUlW1jN73vdOSZpkpkucX5DY39QfgpzaB4OVxaLyNwg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=okW6n+74KGxTD63sV1CXmLeldkOYz9EB+2n0aeI4ZK5yRGrI50O1DyfmZ60kCavjN
+	 ZY6Nf8WHr/aPpvFCHeEH/lwARkgJV6BuvyGcHYMk3uhewJKf//mIVJib/PThkX3bSE
+	 AIkeyakj35aafTWMgvL4CSVYK326IPutX3N4QBTA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388637AbgF2VfP (ORCPT
+        id S2391312AbgF2VfY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:35:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60600 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:35:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728529AbgF2Sky (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:40:54 -0400
-Received: from localhost (lfbn-ncy-1-996-218.w90-101.abo.wanadoo.fr [90.101.73.218])
+        id S1728536AbgF2Skv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:40:51 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54B8E23D24;
-        Mon, 29 Jun 2020 12:42:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2CCC23341;
+        Mon, 29 Jun 2020 09:37:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593434530;
-        bh=vDqH4OQik9QBHRoYPIsS115Se7LvewJkoA+wC/XILJ8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=04ef066Nl1RVmJ0rEQuLCUxIe74aNZT94SXMcWmBJpt8ieJLaRiuiPf01/phg/pRn
-         cwsQ8o70pdRXGfjV7aiVEDSYjYr+B/VlEQvBhNdQABAmIitvNHFdXFvu5FutYwDCMl
-         yFxuImOmuk9k1S/icL0Ln6ggd0ghKrEIiR1lHDhc=
-Date:   Mon, 29 Jun 2020 14:42:08 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Juri Lelli <juri.lelli@redhat.com>
-Cc:     fweisbec@gmail.com, tglx@linutronix.de, mingo@kernel.org,
-        linux-rt-users@vger.kernel.org, peterz@infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] tick/sched: update full_nohz status after SCHED dep
- is cleared
-Message-ID: <20200629124207.GA6088@lenoir>
-References: <20200520162400.GA8800@lenoir>
- <20200520164925.GM10078@localhost.localdomain>
- <20200520170215.GB8800@lenoir>
- <20200520184710.GO10078@localhost.localdomain>
- <20200521004443.GB15455@lenoir>
- <20200521170020.GQ10078@localhost.localdomain>
- <20200615210743.GA21371@lenoir>
- <20200616065757.GA446382@localhost.localdomain>
- <20200616204649.GA4914@lenoir>
- <20200629123651.GA9670@localhost.localdomain>
+        s=default; t=1593423463;
+        bh=aUlW1jN73vdOSZpkpkucX5DY39QfgpzaB4OVxaLyNwg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=fQhAJAY2GQWzjXCHbIzBM0WcizWlyLgsusUesRD5/mJLqWfstu9qc2Z4O5NWMc3AI
+         xWohK04BBHDh0YjLNX+w47tv7DpEXNO4+hLXXkD3QEmjwCPtmLCKy0Dqu1JhGBVGtA
+         Uayx7idGwLNExpoi3uR2z6+tmpozhbSFMRLNUGhk=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jpqEP-007I8r-Eo; Mon, 29 Jun 2020 10:37:41 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200629123651.GA9670@localhost.localdomain>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 29 Jun 2020 10:37:41 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Russell King <linux@arm.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Sumit Garg <sumit.garg@linaro.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Andrew Lunn <andrew@lunn.ch>, kernel-team@android.com
+Subject: Re: [PATCH v2 04/17] ARM: Allow IPIs to be handled as normal
+ interrupts
+In-Reply-To: <jhjk0zvgfz7.mognet@arm.com>
+References: <20200624195811.435857-1-maz@kernel.org>
+ <20200624195811.435857-5-maz@kernel.org> <jhjk0zvgfz7.mognet@arm.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <abca3a7e3f019b0f07ab2ec42894001b@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: valentin.schneider@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com, linux@arm.linux.org.uk, tglx@linutronix.de, jason@lakedaemon.net, sumit.garg@linaro.org, f.fainelli@gmail.com, gregory.clement@bootlin.com, andrew@lunn.ch, kernel-team@android.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 02:36:51PM +0200, Juri Lelli wrote:
-> Hi,
+On 2020-06-25 19:25, Valentin Schneider wrote:
+> On 24/06/20 20:57, Marc Zyngier wrote:
+>> @@ -696,9 +696,76 @@ void handle_IPI(int ipinr, struct pt_regs *regs)
+>> 
+>>       if ((unsigned)ipinr < NR_IPI)
+>>               trace_ipi_exit_rcuidle(ipi_types[ipinr]);
+>> +}
+>> +
+>> +/* Legacy version, should go away once all irqchips have been 
+>> converted */
+>> +void handle_IPI(int ipinr, struct pt_regs *regs)
+>> +{
+>> +	struct pt_regs *old_regs = set_irq_regs(regs);
+>> +
+>> +	irq_enter();
+>> +	do_handle_IPI(ipinr);
+>> +	irq_exit();
+>> +
+>>       set_irq_regs(old_regs);
+>>  }
+>> 
+>> +static irqreturn_t ipi_handler(int irq, void *data)
+>> +{
+>> +	do_handle_IPI(irq - ipi_irq_base);
+>> +	return IRQ_HANDLED;
+>> +}
+>> +
+>> +static void ipi_send(const struct cpumask *target, unsigned int ipi)
+>> +{
+>> +	__ipi_send_mask(ipi_desc[ipi], target);
+>> +}
+>> +
+>> +static void ipi_setup(int cpu)
+>> +{
+>> +	if (ipi_irq_base) {
+>> +		int i;
+>> +
+>> +		for (i = 0; i < nr_ipi; i++)
+>> +			enable_percpu_irq(ipi_irq_base + i, 0);
+>> +	}
+>> +}
+>> +
+>> +static void ipi_teardown(int cpu)
+>> +{
+>> +	if (ipi_irq_base) {
+>> +		int i;
+>> +
+>> +		for (i = 0; i < nr_ipi; i++)
+>> +			disable_percpu_irq(ipi_irq_base + i);
+>> +	}
+>> +}
+>> +
+>> +void __init set_smp_ipi_range(int ipi_base, int n)
+>> +{
+>> +	int i;
+>> +
+>> +	WARN_ON(n < MAX_IPI);
+>> +	nr_ipi = min(n, MAX_IPI);
 > 
-> On 16/06/20 22:46, Frederic Weisbecker wrote:
-> > On Tue, Jun 16, 2020 at 08:57:57AM +0200, Juri Lelli wrote:
-> > > Sure. Let me know if you find anything.
-> > 
-> > I managed to reproduce. With "threadirqs" and without
-> > "tsc=reliable". I see tons of spurious TIMER softirqs.
-> > Investigation begins! I'll let you know.
 > 
-> Gentle ping. Any new findings about this issue?
+> I got confused by that backtrace thing and NR_IPI vs MAX_IPI.
+> I think I got it now : we don't want to call trace_ipi_raise() for
+> IPI_CPU_BACKTRACE *but* we still need to alloc the desc and route it
+> through the generic IPI layers.
 
-Yep, I'm working on a series to reduce timer softirqs. I'm almost
-done, should post it soon.
+Indeed, and I didn't want to have a bizarre "+ 1" hanging about.
 
-I believe you guessed right:
+> The only difference I can tell is that now we will get some trace 
+> events
+> for it via the handler entry/exit tracepoints - that shouldn't cause 
+> any
+> issue.
 
-* Timer tick raises timer softirq
-* Ksoftirqd wakes up, restarts the tick
-* Timer tick raises timer softirq
-* ...
+I hope so. I don't see how you can avoid all tracepoints anyway (if that
+was the intention).
 
-Thanks.
+Thanks,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
