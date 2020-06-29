@@ -2,603 +2,228 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 865FBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A97C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5338F20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:44:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D7C620663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:44:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="nIOimuXJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GSFp18a4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389597AbgF2Uos (ORCPT
+        id S2389520AbgF2Uoq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:44:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43384 "EHLO
+        Mon, 29 Jun 2020 16:44:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731593AbgF2TN7 (ORCPT
+        with ESMTP id S1731592AbgF2TN7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:13:59 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70DA0C08EB1A
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:26:57 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id d4so14461625otk.2
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:26:57 -0700 (PDT)
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72CEBC008616;
+        Mon, 29 Jun 2020 03:29:06 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id f139so15571273wmf.5;
+        Mon, 29 Jun 2020 03:29:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9TJG4DrrooPGsWzW/XH6h33636kY0Me0F2GPfsAkrQ8=;
-        b=nIOimuXJMJjHqSbeO66zAjxhdCg3sgsmMwCCtTnwqXktWkt5/Zga7sPgZ+EivE4MiZ
-         KiHLUTR0S01qxoRhq6wNxuHR/taS3ZKwGjZm8qiPM6cs1sKXxaD7Tubf2xPx4f6mwshh
-         /VJjFyPdu0xdE1uzIsftAP1e1vqwvAlbstt1lpi78yU4lWV8gjUswKqgBjvn3SGbhQel
-         SdaSplf/cSmiR/G7cRIn0PSJ0bq+QdtEvUJfJlKu5ZiAgM/Apz9eyQS3Mb1hK6zUGJ9u
-         gFkl30ruCfA5y4BKz16Isvp9GT/7wRqtPDbTbk8K3sQi2wHU/44k1R0+AhyLxL1ouJDZ
-         kW3A==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=qH6Y8YLZwAQKLLRKt9UlLI5PhgjXpInExIUsMf3zs/o=;
+        b=GSFp18a4hT5psZ9d8iFlr7YHTQNN/uaOedWpgXDQv+7mlKvAw6asJKa32R40OpfaMf
+         hv2T5ZHWIbB9k9zuHCDP9iiGquaQKgVr0DLXOql0cyfd2epFcGLg8BRAd1n7hwf10RiJ
+         lbzodLDjKyVSyc7cGQv5cz1dUY9WXuTeoFKkTv3ZrH7XUA6+favrTFrmilo50o4zOkmL
+         hFLYPfHFlae3s9QWPCjqVuVH8Z8+Qn9bIlZ4TldVizer95x84pYlT1yyjW5ya9R4Z5DV
+         HO4wHux13wlISSavurvQrdkpg1Mis9bSyNHhqUaujc+7dpISt1pnF6FstLoecVsEt3FO
+         OvVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9TJG4DrrooPGsWzW/XH6h33636kY0Me0F2GPfsAkrQ8=;
-        b=rusv9EsRDCjKlMmBPJYyJJ5gZv/876keQI9+RpQe/0gblSnDNzntuwQyqhOZvXE+Yq
-         xZbL96NuhMSJ0wCZABerZzg2bPl1HWeauZIrFZ2nGqKhzVp5lQPMU+YAjEDmO3wkn7Ml
-         A97BzuihSt9deIescJw5ta/1MPHze9+bKcVHhHljUhIn+D3USuveMI5+/AuRt8tWVij2
-         PnJLWt6t9SqyBqtQFeFYeagYq6wQws2oLdg+xfMvSwJGJxyU6ck7y3R4klciOCEXwvnq
-         ridpdsWkAsENpogmptS8S8cwEkfvKlH0PidhUKbCOyvv3rg+pRNCT1zV6AR70k33HhX4
-         GiIQ==
-X-Gm-Message-State: AOAM531Gu515Dbj5YFrtRBLfirndGOIQRPq0eG+zRw6+eJ7P6fhG1Gf0
-        +o3iTRwhds46iPJ4phcuhpddn+zKRGLFKvOBsRzgO/GC4Vg=
-X-Google-Smtp-Source: ABdhPJzbVuPwpKsQkvlSBZ31jXNctAapW/UQrDXbcD2kWqf7OLYQiNcshOPLxBvI3i5jgvqf9r5o4XfvZGxhdNmveRs=
-X-Received: by 2002:a9d:3a36:: with SMTP id j51mr12422899otc.129.1593412016685;
- Sun, 28 Jun 2020 23:26:56 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=qH6Y8YLZwAQKLLRKt9UlLI5PhgjXpInExIUsMf3zs/o=;
+        b=MkQLxrArCQ/U0Wzo7bzCmJciIJJLCl9/WOQcoDuf4MIzpQc5gIzIzez0cuSGohiINU
+         6ISVgqK0TWcMfIoFFuVFV2WgVXnuMtJ/kcIBQqU1YyU+CW2tO77xCCYgyFWp/t2BSKl0
+         xDzAa4hNBvXM4Rx2JD5WDOaai6Hlvrv3s05FM8BJsTy+TrXJSRQY+vycDst7DUcGOpsJ
+         CT1IZ+Smy+vMo0A4iPWsWrawqAqLjmmwlQ5H91xZyRdFHMSYmSqMtIUkOdgiBjZP1JPV
+         rPm5to/4aCvuFy3JChDCVGq2LDbTTQLfSL6Nc5q9h9oepM7VIZ7pWJovaHRIlnw7G2P0
+         iigQ==
+X-Gm-Message-State: AOAM533RQP3/8iTEXuYR1ekIVo92axjGkaycemSmgfiRp8KMndlqvw5O
+        /GoG63pMwjIIbSC1fTUUuPWyRq0CrZQ=
+X-Google-Smtp-Source: ABdhPJytODh0+QP7ijQ6hjMmEjsy1PHRom3lDtvr4XIcC8w/ihO7g7oh0Lhdq/WJBRPTYdj5pOzqgQ==
+X-Received: by 2002:a1c:b6c3:: with SMTP id g186mr16692459wmf.135.1593426545193;
+        Mon, 29 Jun 2020 03:29:05 -0700 (PDT)
+Received: from ziggy.stardust ([213.195.114.138])
+        by smtp.gmail.com with ESMTPSA id c5sm27819182wmb.24.2020.06.29.03.29.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jun 2020 03:29:04 -0700 (PDT)
+Subject: Re: [PATCH v5 10/10] iommu/mediatek: Add mt6779 basic support
+To:     Chao Hao <chao.hao@mediatek.com>, Joerg Roedel <joro@8bytes.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Yong Wu <yong.wu@mediatek.com>, Evan Green <evgreen@chromium.org>,
+        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com,
+        FY Yang <fy.yang@mediatek.com>
+References: <20200629071310.1557-1-chao.hao@mediatek.com>
+ <20200629071310.1557-11-chao.hao@mediatek.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <e1654652-85a9-0e30-df60-eee0957331d7@gmail.com>
+Date:   Mon, 29 Jun 2020 12:29:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <cover.1593397455.git.zong.li@sifive.com> <da261dc8b456fc0dd67508d98b16838bcd697220.1593397455.git.zong.li@sifive.com>
- <CAAhSdy1qTtGvtYe+fUqVGOxOzfiLjXvy-7uDMCUJbbDEFp=nUw@mail.gmail.com>
-In-Reply-To: <CAAhSdy1qTtGvtYe+fUqVGOxOzfiLjXvy-7uDMCUJbbDEFp=nUw@mail.gmail.com>
-From:   Zong Li <zong.li@sifive.com>
-Date:   Mon, 29 Jun 2020 14:26:45 +0800
-Message-ID: <CANXhq0r2o1gYtmCDT_RGZVSObnbj+vdzHfXWmq45xP8E4Y-n8w@mail.gmail.com>
-Subject: Re: [RFC PATCH 5/6] riscv: perf: introduce DT mechanism
-To:     Anup Patel <anup@brainfault.org>
-Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200629071310.1557-11-chao.hao@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 12:37 PM Anup Patel <anup@brainfault.org> wrote:
->
-> On Mon, Jun 29, 2020 at 8:49 AM Zong Li <zong.li@sifive.com> wrote:
-> >
-> > Each architecture is responsible for mapping generic hardware and cache
-> > events to their own specific encoding of hardware events. For each
-> > architecture, it also have to distinguish the defination of hardware
-> > events of different platforms of each vendor. We use DT file to describe
-> > platform-specific information to make our perf implementation more
-> > generic and common.
-> >
-> > Signed-off-by: Zong Li <zong.li@sifive.com>
-> > ---
-> >  arch/riscv/include/asm/perf_event.h |  55 ++----
-> >  arch/riscv/kernel/perf_event.c      | 273 +++++++++++++---------------
-> >  2 files changed, 139 insertions(+), 189 deletions(-)
-> >
-> > diff --git a/arch/riscv/include/asm/perf_event.h b/arch/riscv/include/asm/perf_event.h
-> > index 41d515a1f331..e95d3bbaae3e 100644
-> > --- a/arch/riscv/include/asm/perf_event.h
-> > +++ b/arch/riscv/include/asm/perf_event.h
-> > @@ -17,6 +17,8 @@
-> >  #define RISCV_EVENT_COUNTERS   29
-> >  #define RISCV_TOTAL_COUNTERS   (RISCV_BASE_COUNTERS + RISCV_EVENT_COUNTERS)
-> >
-> > +#define RISCV_DEFAULT_WIDTH_COUNTER    64
-> > +
-> >  /*
-> >   * According to the spec, an implementation can support counter up to
-> >   * mhpmcounter31, but many high-end processors has at most 6 general
-> > @@ -33,9 +35,21 @@
-> >
-> >  #define RISCV_PMU_HPMCOUNTER_FIRST     3
-> >  #define RISCV_PMU_HPMCOUNTER_LAST                                      \
-> > -       (RISCV_PMU_HPMCOUNTER_FIRST + riscv_pmu->num_counters - 1)
-> > +       (RISCV_PMU_HPMCOUNTER_FIRST + riscv_pmu.num_event_cntr - 1)
-> > +
-> > +#define RISCV_OP_UNSUPP                        (-EOPNOTSUPP)
-> > +
-> > +#define RISCV_MAP_ALL_UNSUPPORTED                                      \
-> > +       [0 ... PERF_COUNT_HW_MAX - 1] = RISCV_OP_UNSUPP
-> >
-> > -#define RISCV_OP_UNSUPP                (-EOPNOTSUPP)
-> > +#define C(x) PERF_COUNT_HW_CACHE_##x
-> > +
-> > +#define RISCV_CACHE_MAP_ALL_UNSUPPORTED                                        \
-> > +[0 ... C(MAX) - 1] = {                                                 \
-> > +       [0 ... C(OP_MAX) - 1] = {                                       \
-> > +               [0 ... C(RESULT_MAX) - 1] = RISCV_OP_UNSUPP,            \
-> > +       },                                                              \
-> > +}
-> >
-> >  /* Hardware cache event encoding */
-> >  #define PERF_HW_CACHE_TYPE             0
-> > @@ -65,43 +79,6 @@
-> >  #define CSR_MHPMEVENT7 0x327
-> >  #define CSR_MHPMEVENT8 0x328
-> >
-> > -struct cpu_hw_events {
-> > -       /* # currently enabled events*/
-> > -       int                     n_events;
-> > -       /* currently enabled events */
-> > -       struct perf_event       *events[RISCV_EVENT_COUNTERS];
-> > -       /* bitmap of used event counters */
-> > -       unsigned long           used_cntr_mask;
-> > -       /* vendor-defined PMU data */
-> > -       void                    *platform;
-> > -};
-> > -
-> > -struct riscv_pmu {
-> > -       struct pmu      *pmu;
-> > -
-> > -       /* generic hw/cache events table */
-> > -       const int       *hw_events;
-> > -       const int       (*cache_events)[PERF_COUNT_HW_CACHE_MAX]
-> > -                                      [PERF_COUNT_HW_CACHE_OP_MAX]
-> > -                                      [PERF_COUNT_HW_CACHE_RESULT_MAX];
-> > -       /* method used to map hw/cache events */
-> > -       int             (*map_hw_event)(u64 config);
-> > -       int             (*map_cache_event)(u64 config);
-> > -
-> > -       /* max generic hw events in map */
-> > -       int             max_events;
-> > -       /* number total counters, 2(base) + x(general) */
-> > -       int             num_counters;
-> > -       /* the width of the counter */
-> > -       int             counter_width;
-> > -
-> > -       /* vendor-defined PMU features */
-> > -       void            *platform;
-> > -
-> > -       irqreturn_t     (*handle_irq)(int irq_num, void *dev);
-> > -       int             irq;
-> > -};
-> > -
-> >  #endif
-> >  #ifdef CONFIG_PERF_EVENTS
-> >  #define perf_arch_bpf_user_pt_regs(regs) (struct user_regs_struct *)regs
-> > diff --git a/arch/riscv/kernel/perf_event.c b/arch/riscv/kernel/perf_event.c
-> > index 0cfcd6f1e57b..3bdfbe4efd5c 100644
-> > --- a/arch/riscv/kernel/perf_event.c
-> > +++ b/arch/riscv/kernel/perf_event.c
-> > @@ -9,6 +9,7 @@
-> >   * Copyright (C) 2009 Google, Inc., Stephane Eranian
-> >   * Copyright 2014 Tilera Corporation. All Rights Reserved.
-> >   * Copyright (C) 2018 Andes Technology Corporation
-> > + * Copyright (C) 2020 SiFive
-> >   *
-> >   * Perf_events support for RISC-V platforms.
-> >   *
-> > @@ -30,113 +31,55 @@
-> >  #include <linux/perf_event.h>
-> >  #include <linux/atomic.h>
-> >  #include <linux/of.h>
-> > +#include <asm/csr.h>
-> >  #include <asm/perf_event.h>
-> >
-> > -static const struct riscv_pmu *riscv_pmu __read_mostly;
-> > +static struct riscv_pmu {
-> > +       struct pmu      *pmu;
-> > +
-> > +       /* number of event counters */
-> > +       int             num_event_cntr;
-> > +
-> > +       /* the width of base counters */
-> > +       int             width_base_cntr;
-> > +
-> > +       /* the width of event counters */
-> > +       int             width_event_cntr;
-> > +
-> > +       irqreturn_t     (*handle_irq)(int irq_num, void *dev);
-> > +
-> > +       int             irq;
-> > +} riscv_pmu;
-> > +
-> > +struct cpu_hw_events {
-> > +       /* # currently enabled events*/
-> > +       int                     n_events;
-> > +
-> > +       /* currently enabled events */
-> > +       struct perf_event       *events[RISCV_EVENT_COUNTERS];
-> > +
-> > +       /* bitmap of used event counters */
-> > +       unsigned long           used_cntr_mask;
-> > +};
-> > +
-> >  static DEFINE_PER_CPU(struct cpu_hw_events, cpu_hw_events);
-> >
-> >  /*
-> >   * Hardware & cache maps and their methods
-> >   */
-> >
-> > -static const int riscv_hw_event_map[] = {
-> > -       [PERF_COUNT_HW_CPU_CYCLES]              = RISCV_PMU_CYCLE,
-> > -       [PERF_COUNT_HW_INSTRUCTIONS]            = RISCV_PMU_INSTRET,
-> > -       [PERF_COUNT_HW_CACHE_REFERENCES]        = RISCV_OP_UNSUPP,
-> > -       [PERF_COUNT_HW_CACHE_MISSES]            = RISCV_OP_UNSUPP,
-> > -       [PERF_COUNT_HW_BRANCH_INSTRUCTIONS]     = RISCV_OP_UNSUPP,
-> > -       [PERF_COUNT_HW_BRANCH_MISSES]           = RISCV_OP_UNSUPP,
-> > -       [PERF_COUNT_HW_BUS_CYCLES]              = RISCV_OP_UNSUPP,
-> > +static int riscv_hw_event_map[PERF_COUNT_HW_MAX] = {
-> > +       RISCV_MAP_ALL_UNSUPPORTED,
-> > +
-> > +       /* Specify base pmu, even if they aren't present in DT file */
-> > +       [PERF_COUNT_HW_CPU_CYCLES]      = RISCV_PMU_CYCLE,
-> > +       [PERF_COUNT_HW_INSTRUCTIONS]    = RISCV_PMU_INSTRET,
-> >  };
-> >
-> > -#define C(x) PERF_COUNT_HW_CACHE_##x
-> > -static const int riscv_cache_event_map[PERF_COUNT_HW_CACHE_MAX]
-> > -[PERF_COUNT_HW_CACHE_OP_MAX]
-> > -[PERF_COUNT_HW_CACHE_RESULT_MAX] = {
-> > -       [C(L1D)] = {
-> > -               [C(OP_READ)] = {
-> > -                       [C(RESULT_ACCESS)] = RISCV_OP_UNSUPP,
-> > -                       [C(RESULT_MISS)] = RISCV_OP_UNSUPP,
-> > -               },
-> > -               [C(OP_WRITE)] = {
-> > -                       [C(RESULT_ACCESS)] = RISCV_OP_UNSUPP,
-> > -                       [C(RESULT_MISS)] = RISCV_OP_UNSUPP,
-> > -               },
-> > -               [C(OP_PREFETCH)] = {
-> > -                       [C(RESULT_ACCESS)] = RISCV_OP_UNSUPP,
-> > -                       [C(RESULT_MISS)] = RISCV_OP_UNSUPP,
-> > -               },
-> > -       },
-> > -       [C(L1I)] = {
-> > -               [C(OP_READ)] = {
-> > -                       [C(RESULT_ACCESS)] = RISCV_OP_UNSUPP,
-> > -                       [C(RESULT_MISS)] = RISCV_OP_UNSUPP,
-> > -               },
-> > -               [C(OP_WRITE)] = {
-> > -                       [C(RESULT_ACCESS)] = RISCV_OP_UNSUPP,
-> > -                       [C(RESULT_MISS)] = RISCV_OP_UNSUPP,
-> > -               },
-> > -               [C(OP_PREFETCH)] = {
-> > -                       [C(RESULT_ACCESS)] = RISCV_OP_UNSUPP,
-> > -                       [C(RESULT_MISS)] = RISCV_OP_UNSUPP,
-> > -               },
-> > -       },
-> > -       [C(LL)] = {
-> > -               [C(OP_READ)] = {
-> > -                       [C(RESULT_ACCESS)] = RISCV_OP_UNSUPP,
-> > -                       [C(RESULT_MISS)] = RISCV_OP_UNSUPP,
-> > -               },
-> > -               [C(OP_WRITE)] = {
-> > -                       [C(RESULT_ACCESS)] = RISCV_OP_UNSUPP,
-> > -                       [C(RESULT_MISS)] = RISCV_OP_UNSUPP,
-> > -               },
-> > -               [C(OP_PREFETCH)] = {
-> > -                       [C(RESULT_ACCESS)] = RISCV_OP_UNSUPP,
-> > -                       [C(RESULT_MISS)] = RISCV_OP_UNSUPP,
-> > -               },
-> > -       },
-> > -       [C(DTLB)] = {
-> > -               [C(OP_READ)] = {
-> > -                       [C(RESULT_ACCESS)] =  RISCV_OP_UNSUPP,
-> > -                       [C(RESULT_MISS)] =  RISCV_OP_UNSUPP,
-> > -               },
-> > -               [C(OP_WRITE)] = {
-> > -                       [C(RESULT_ACCESS)] = RISCV_OP_UNSUPP,
-> > -                       [C(RESULT_MISS)] = RISCV_OP_UNSUPP,
-> > -               },
-> > -               [C(OP_PREFETCH)] = {
-> > -                       [C(RESULT_ACCESS)] = RISCV_OP_UNSUPP,
-> > -                       [C(RESULT_MISS)] = RISCV_OP_UNSUPP,
-> > -               },
-> > -       },
-> > -       [C(ITLB)] = {
-> > -               [C(OP_READ)] = {
-> > -                       [C(RESULT_ACCESS)] = RISCV_OP_UNSUPP,
-> > -                       [C(RESULT_MISS)] = RISCV_OP_UNSUPP,
-> > -               },
-> > -               [C(OP_WRITE)] = {
-> > -                       [C(RESULT_ACCESS)] = RISCV_OP_UNSUPP,
-> > -                       [C(RESULT_MISS)] = RISCV_OP_UNSUPP,
-> > -               },
-> > -               [C(OP_PREFETCH)] = {
-> > -                       [C(RESULT_ACCESS)] = RISCV_OP_UNSUPP,
-> > -                       [C(RESULT_MISS)] = RISCV_OP_UNSUPP,
-> > -               },
-> > -       },
-> > -       [C(BPU)] = {
-> > -               [C(OP_READ)] = {
-> > -                       [C(RESULT_ACCESS)] = RISCV_OP_UNSUPP,
-> > -                       [C(RESULT_MISS)] = RISCV_OP_UNSUPP,
-> > -               },
-> > -               [C(OP_WRITE)] = {
-> > -                       [C(RESULT_ACCESS)] = RISCV_OP_UNSUPP,
-> > -                       [C(RESULT_MISS)] = RISCV_OP_UNSUPP,
-> > -               },
-> > -               [C(OP_PREFETCH)] = {
-> > -                       [C(RESULT_ACCESS)] = RISCV_OP_UNSUPP,
-> > -                       [C(RESULT_MISS)] = RISCV_OP_UNSUPP,
-> > -               },
-> > -       },
-> > +static int riscv_cache_event_map[PERF_COUNT_HW_CACHE_MAX]
-> > +                               [PERF_COUNT_HW_CACHE_OP_MAX]
-> > +                               [PERF_COUNT_HW_CACHE_RESULT_MAX] = {
-> > +       RISCV_CACHE_MAP_ALL_UNSUPPORTED,
-> >  };
-> >
-> >  /*
-> > @@ -154,6 +97,17 @@ static inline int is_event_counter(int idx)
-> >                 idx <= RISCV_PMU_HPMCOUNTER_LAST);
-> >  }
-> >
-> > +static inline int get_counter_width(int idx)
-> > +{
-> > +       if (is_base_counter(idx))
-> > +               return riscv_pmu.width_base_cntr;
-> > +
-> > +       if (is_event_counter(idx))
-> > +               return riscv_pmu.width_event_cntr;
-> > +
-> > +       return 0;
-> > +}
-> > +
-> >  static inline int get_available_counter(struct perf_event *event)
-> >  {
-> >         struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-> > @@ -188,10 +142,14 @@ static inline int get_available_counter(struct perf_event *event)
-> >   */
-> >  static int riscv_map_hw_event(u64 config)
-> >  {
-> > -       if (config >= riscv_pmu->max_events)
-> > +       int ret;
-> > +
-> > +       if (config >= PERF_COUNT_HW_MAX)
-> >                 return -EINVAL;
-> >
-> > -       return riscv_pmu->hw_events[config];
-> > +       ret = riscv_hw_event_map[config];
-> > +
-> > +       return ret == RISCV_OP_UNSUPP ? -ENOENT : ret;
-> >  }
-> >
-> >  /*
-> > @@ -355,7 +313,7 @@ static void riscv_pmu_read(struct perf_event *event)
-> >          * delta is the value to update the counter we maintain in the kernel.
-> >          */
-> >         delta = (new_raw_count - prev_raw_count) &
-> > -               ((1ULL << riscv_pmu->counter_width) - 1);
-> > +               ((1ULL << get_counter_width(idx)) - 1);
-> >
-> >         local64_add(delta, &event->count);
-> >         /*
-> > @@ -386,7 +344,7 @@ static void riscv_pmu_stop(struct perf_event *event, int flags)
-> >         hwc->state |= PERF_HES_STOPPED;
-> >
-> >         if ((flags & PERF_EF_UPDATE) && !(hwc->state & PERF_HES_UPTODATE)) {
-> > -               riscv_pmu->pmu->read(event);
-> > +               riscv_pmu_read(event);
-> >                 hwc->state |= PERF_HES_UPTODATE;
-> >         }
-> >  }
-> > @@ -429,7 +387,7 @@ static int riscv_pmu_add(struct perf_event *event, int flags)
-> >         struct hw_perf_event *hwc = &event->hw;
-> >         int count_idx;
-> >
-> > -       if (cpuc->n_events == riscv_pmu->num_counters)
-> > +       if (cpuc->n_events == riscv_pmu.num_event_cntr)
-> >                 return -ENOSPC;
-> >
-> >         count_idx = get_available_counter(event);
-> > @@ -437,13 +395,13 @@ static int riscv_pmu_add(struct perf_event *event, int flags)
-> >                 return -ENOSPC;
-> >
-> >         cpuc->n_events++;
-> > +
-> >         hwc->idx = count_idx;
-> > -       cpuc->events[hwc->idx] = event;
-> >
-> >         hwc->state = PERF_HES_UPTODATE | PERF_HES_STOPPED;
-> >
-> >         if (flags & PERF_EF_START)
-> > -               riscv_pmu->pmu->start(event, PERF_EF_RELOAD);
-> > +               riscv_pmu_start(event, PERF_EF_RELOAD);
-> >
-> >         return 0;
-> >  }
-> > @@ -459,8 +417,8 @@ static void riscv_pmu_del(struct perf_event *event, int flags)
-> >         cpuc->n_events--;
-> >         __clear_bit(hwc->idx, &cpuc->used_cntr_mask);
-> >
-> > -       cpuc->events[hwc->idx] = NULL;
-> > -       riscv_pmu->pmu->stop(event, PERF_EF_UPDATE);
-> > +       riscv_pmu_stop(event, PERF_EF_UPDATE);
-> > +
-> >         perf_event_update_userpage(event);
-> >  }
-> >
-> > @@ -470,7 +428,7 @@ static void riscv_pmu_del(struct perf_event *event, int flags)
-> >
-> >  static DEFINE_MUTEX(pmc_reserve_mutex);
-> >
-> > -static irqreturn_t riscv_base_pmu_handle_irq(int irq_num, void *dev)
-> > +static irqreturn_t riscv_pmu_handle_irq(int irq_num, void *dev)
-> >  {
-> >         return IRQ_NONE;
-> >  }
-> > @@ -480,8 +438,8 @@ static int reserve_pmc_hardware(void)
-> >         int err = 0;
-> >
-> >         mutex_lock(&pmc_reserve_mutex);
-> > -       if (riscv_pmu->irq >= 0 && riscv_pmu->handle_irq) {
-> > -               err = request_irq(riscv_pmu->irq, riscv_pmu->handle_irq,
-> > +       if (riscv_pmu.irq >= 0 && riscv_pmu.handle_irq) {
-> > +               err = request_irq(riscv_pmu.irq, riscv_pmu.handle_irq,
-> >                                   IRQF_PERCPU, "riscv-base-perf", NULL);
-> >         }
-> >         mutex_unlock(&pmc_reserve_mutex);
-> > @@ -492,8 +450,8 @@ static int reserve_pmc_hardware(void)
-> >  static void release_pmc_hardware(void)
-> >  {
-> >         mutex_lock(&pmc_reserve_mutex);
-> > -       if (riscv_pmu->irq >= 0)
-> > -               free_irq(riscv_pmu->irq, NULL);
-> > +       if (riscv_pmu.irq >= 0)
-> > +               free_irq(riscv_pmu.irq, NULL);
-> >         mutex_unlock(&pmc_reserve_mutex);
-> >  }
-> >
-> > @@ -529,10 +487,10 @@ static int riscv_event_init(struct perf_event *event)
-> >
-> >         switch (event->attr.type) {
-> >         case PERF_TYPE_HARDWARE:
-> > -               code = riscv_pmu->map_hw_event(attr->config);
-> > +               code = riscv_map_hw_event(attr->config);
-> >                 break;
-> >         case PERF_TYPE_HW_CACHE:
-> > -               code = riscv_pmu->map_cache_event(attr->config);
-> > +               code = riscv_map_cache_event(attr->config);
-> >                 break;
-> >         case PERF_TYPE_RAW:
-> >                 code = attr->config;
-> > @@ -555,9 +513,6 @@ static int riscv_event_init(struct perf_event *event)
-> >         /*
-> >          * idx is set to -1 because the index of a general event should not be
-> >          * decided until binding to some counter in pmu->add().
-> > -        *
-> > -        * But since we don't have such support, later in pmu->add(), we just
-> > -        * use hwc->config as the index instead.
-> >          */
-> >         hwc->config_base = config_base;
-> >         hwc->config = code;
-> > @@ -570,52 +525,70 @@ static int riscv_event_init(struct perf_event *event)
-> >   * Initialization
-> >   */
-> >
-> > -static struct pmu min_pmu = {
-> > -       .name           = "riscv-base",
-> > -       .event_init     = riscv_event_init,
-> > -       .add            = riscv_pmu_add,
-> > -       .del            = riscv_pmu_del,
-> > -       .start          = riscv_pmu_start,
-> > -       .stop           = riscv_pmu_stop,
-> > -       .read           = riscv_pmu_read,
-> > -};
-> > +static struct riscv_pmu riscv_pmu = {
-> > +       .pmu = &(struct pmu) {
-> > +               .name           = "riscv-pmu",
-> > +               .event_init     = riscv_event_init,
-> > +               .add            = riscv_pmu_add,
-> > +               .del            = riscv_pmu_del,
-> > +               .start          = riscv_pmu_start,
-> > +               .stop           = riscv_pmu_stop,
-> > +               .read           = riscv_pmu_read,
-> > +       },
-> >
-> > -static const struct riscv_pmu riscv_base_pmu = {
-> > -       .pmu = &min_pmu,
-> > -       .max_events = ARRAY_SIZE(riscv_hw_event_map),
-> > -       .map_hw_event = riscv_map_hw_event,
-> > -       .hw_events = riscv_hw_event_map,
-> > -       .map_cache_event = riscv_map_cache_event,
-> > -       .cache_events = &riscv_cache_event_map,
-> > -       .counter_width = 63,
-> > -       .num_counters = RISCV_BASE_COUNTERS + 0,
-> > -       .handle_irq = &riscv_base_pmu_handle_irq,
-> > +       .num_event_cntr = 0,
-> > +       .width_event_cntr = RISCV_DEFAULT_WIDTH_COUNTER,
-> > +       .width_base_cntr = RISCV_DEFAULT_WIDTH_COUNTER,
-> >
-> > +       .handle_irq = &riscv_pmu_handle_irq,
-> >         /* This means this PMU has no IRQ. */
-> >         .irq = -1,
-> >  };
-> >
-> > -static const struct of_device_id riscv_pmu_of_ids[] = {
-> > -       {.compatible = "riscv,base-pmu",        .data = &riscv_base_pmu},
-> > -       { /* sentinel value */ }
-> > -};
-> > +static int __init init_riscv_pmu(struct device_node *node)
-> > +{
-> > +       int num_events, key, value, i;
-> > +
-> > +       of_property_read_u32(node, "riscv,width-base-cntr", &riscv_pmu.width_base_cntr);
-> > +
-> > +       of_property_read_u32(node, "riscv,width-event-cntr", &riscv_pmu.width_event_cntr);
-> > +
-> > +       of_property_read_u32(node, "riscv,n-event-cntr", &riscv_pmu.num_event_cntr);
-> > +       if (riscv_pmu.num_event_cntr > RISCV_EVENT_COUNTERS)
-> > +               riscv_pmu.num_event_cntr = RISCV_EVENT_COUNTERS;
-> > +
-> > +       num_events = of_property_count_u32_elems(node, "riscv,hw-event-map");
-> > +       if (num_events > 0 && num_events % 2 == 0)
-> > +               for (i = 0; i < num_events;) {
-> > +                       of_property_read_u32_index(node, "riscv,hw-event-map", i++, &key);
-> > +                       of_property_read_u32_index(node, "riscv,hw-event-map", i++, &value);
-> > +                       riscv_hw_event_map[key] = value;
-> > +               }
-> > +
-> > +       num_events = of_property_count_u32_elems(node, "riscv,hw-cache-event-map");
-> > +       if (num_events > 0 && num_events % 2 == 0)
-> > +               for (i = 0; i < num_events;) {
-> > +                       of_property_read_u32_index(node, "riscv,hw-cache-event-map", i++, &key);
-> > +                       of_property_read_u32_index(node, "riscv,hw-cache-event-map", i++, &value);
-> > +                       riscv_cache_event_map
-> > +                               [(key >> PERF_HW_CACHE_TYPE) & PERF_HW_CACHE_MASK]
-> > +                               [(key >> PERF_HW_CACHE_OP) & PERF_HW_CACHE_MASK]
-> > +                               [(key >> PERF_HW_CACHE_RESULT) & PERF_HW_CACHE_MASK] = value;
-> > +               }
-> > +
-> > +       return 0;
-> > +}
-> >
-> >  static int __init init_hw_perf_events(void)
-> >  {
-> > -       struct device_node *node = of_find_node_by_type(NULL, "pmu");
-> > -       const struct of_device_id *of_id;
-> > +       struct device_node *node = of_find_compatible_node(NULL, NULL, "riscv,pmu");
-> >
-> > -       riscv_pmu = &riscv_base_pmu;
-> > +       if (node)
-> > +               init_riscv_pmu(node);
-> >
-> > -       if (node) {
-> > -               of_id = of_match_node(riscv_pmu_of_ids, node);
-> > -
-> > -               if (of_id)
-> > -                       riscv_pmu = of_id->data;
-> > -               of_node_put(node);
-> > -       }
-> > +       /* Even if there is no pmu node in DT, we reach here for base PMU. */
-> > +       perf_pmu_register(riscv_pmu.pmu, "cpu", PERF_TYPE_RAW);
-> >
-> > -       perf_pmu_register(riscv_pmu->pmu, "cpu", PERF_TYPE_RAW);
-> >         return 0;
-> >  }
-> >  arch_initcall(init_hw_perf_events);
->
-> Why does this have to arch_initcall() ??
-> Why can't we just probe this like a regular DT based driver ??
->
-> This driver needs total re-write because it has to be a platform driver.
-> Even the names of counters are not registered. The implementation
-> specific counter names should come from DT property.
->
 
-We have some discussion in the cover letter, let us talk about in one place. :)
 
-> Regards,
-> Anup
->
-> > --
-> > 2.27.0
-> >
+On 29/06/2020 09:13, Chao Hao wrote:
+> 1. Start from mt6779, INVLDT_SEL move to offset=0x2c, so we add
+>    REG_MMU_INV_SEL_GEN2 definition and mt6779 uses it.
+> 2. Add mt6779_data to support mm_iommu HW init.
+> 
+> Cc: Yong Wu <yong.wu@mediatek.com>
+> Cc: Matthias Brugger <matthias.bgg@gmail.com>
+> Signed-off-by: Chao Hao <chao.hao@mediatek.com>
+
+Reviewed by: Matthias Brugger <matthias.bgg@gmail.com>
+
+> ---
+>  drivers/iommu/mtk_iommu.c | 11 +++++++++++
+>  drivers/iommu/mtk_iommu.h |  1 +
+>  2 files changed, 12 insertions(+)
+> 
+> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+> index e46e2deee3fd..1575196d9cd5 100644
+> --- a/drivers/iommu/mtk_iommu.c
+> +++ b/drivers/iommu/mtk_iommu.c
+> @@ -37,6 +37,7 @@
+>  #define REG_MMU_INVLD_START_A			0x024
+>  #define REG_MMU_INVLD_END_A			0x028
+>  
+> +#define REG_MMU_INV_SEL_GEN2			0x02c
+>  #define REG_MMU_INV_SEL_GEN1			0x038
+>  #define F_INVLD_EN0				BIT(0)
+>  #define F_INVLD_EN1				BIT(1)
+> @@ -798,6 +799,15 @@ static const struct mtk_iommu_plat_data mt2712_data = {
+>  	.larbid_remap = {{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}},
+>  };
+>  
+> +static const struct mtk_iommu_plat_data mt6779_data = {
+> +	.m4u_plat      = M4U_MT6779,
+> +	.flags         = HAS_SUB_COMM |
+> +			 OUT_ORDER_EN |
+> +			 WR_THROT_EN,
+> +	.inv_sel_reg   = REG_MMU_INV_SEL_GEN2,
+> +	.larbid_remap  = {{0}, {1}, {2}, {3}, {5}, {7, 8}, {10}, {9}},
+> +};
+> +
+>  static const struct mtk_iommu_plat_data mt8173_data = {
+>  	.m4u_plat     = M4U_MT8173,
+>  	.flags	      = HAS_4GB_MODE |
+> @@ -816,6 +826,7 @@ static const struct mtk_iommu_plat_data mt8183_data = {
+>  
+>  static const struct of_device_id mtk_iommu_of_ids[] = {
+>  	{ .compatible = "mediatek,mt2712-m4u", .data = &mt2712_data},
+> +	{ .compatible = "mediatek,mt6779-m4u", .data = &mt6779_data},
+>  	{ .compatible = "mediatek,mt8173-m4u", .data = &mt8173_data},
+>  	{ .compatible = "mediatek,mt8183-m4u", .data = &mt8183_data},
+>  	{}
+> diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
+> index ce4f4e8f03aa..a080db2e8a93 100644
+> --- a/drivers/iommu/mtk_iommu.h
+> +++ b/drivers/iommu/mtk_iommu.h
+> @@ -43,6 +43,7 @@ struct mtk_iommu_suspend_reg {
+>  enum mtk_iommu_plat {
+>  	M4U_MT2701,
+>  	M4U_MT2712,
+> +	M4U_MT6779,
+>  	M4U_MT8173,
+>  	M4U_MT8183,
+>  };
+> 
