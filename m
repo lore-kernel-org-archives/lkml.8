@@ -2,121 +2,125 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10493C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:54:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7416CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE21E20760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:54:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F53B206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:54:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467641;
-	bh=Zr5itSru/+GHNNd9LHWvlnW58UoEc4Xy72bax738w/o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=M4JynDFIh8csN00//DMRUqsTKUkhgc04XlmTi0hFoLAl6O3QuYMYGsk44+Xqxv4oM
-	 h/q3f8TWhtkBL5EZQk6KwsUSs7FcejfHK9xmxQIQZcJxfEQkDGStuXRNE9M8TvyrFK
-	 hYQhtZZjPdIoGozAuRPbEw6VaG33LYEoS6pQcMqM=
+	s=default; t=1593467647;
+	bh=uQiadOMZ3uEfWQnv8fMX1w6chwspqEv0Mi50OtEKkKk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=gCS0Vr43o0K9sqOdM2ktDy8OzGcQ5AJKpH4BcBvjnZfYMDYvAh3K8p3e39UZSIuaR
+	 JjGmUuemU1yGUm8YGylvVs03dXfkN+n/vg18OvEZxi5DBTDgY1Ox+xLW5qGgLD0ptc
+	 Hg5nW5lZU3/Gb1HArp+slo3K/wCSw9XTClSlsoAs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731577AbgF2Vx6 (ORCPT
+        id S2404351AbgF2VyE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:53:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56780 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726587AbgF2Sfd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:33 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FCCA246B2;
-        Mon, 29 Jun 2020 15:20:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444005;
-        bh=Zr5itSru/+GHNNd9LHWvlnW58UoEc4Xy72bax738w/o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X9SaKm+6al8zv4LRYqgk1LjZR1vruydOy4YEs1ZSxwYaD4omsIcyeEoyEP1QCEmgf
-         3cQxV0o44/TL7h6kawawNfXC5brCMGRbYeTbI2sxNIvOmrSI0Omm9jL3/sAwAJOQGu
-         /anj0HkaHk3UhEJzbmLb9a6ZO8CH84TvS//0FIKw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 111/265] ASoc: q6afe: add support to get port direction
-Date:   Mon, 29 Jun 2020 11:15:44 -0400
-Message-Id: <20200629151818.2493727-112-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
-References: <20200629151818.2493727-1-sashal@kernel.org>
+        Mon, 29 Jun 2020 17:54:04 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:37466 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404461AbgF2Vxf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 17:53:35 -0400
+Received: by mail-io1-f65.google.com with SMTP id v6so5163812iob.4;
+        Mon, 29 Jun 2020 14:53:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=TqO9zSccC03uQUBHdnGu8Ma3JV07Cz0JDvsVx9Gx0ZY=;
+        b=BI5j2klROPkAw5y71Nus7JZg2kw4DRN35t07NRJ8k7ia18GH/E0t3shkmjJ18jl0SP
+         /rTnVa2UbnSnJNgWxI8OFen9vWgatI3pPXPj/4WMXjJxvxFdSfI8ywNrCw+WR8YrlARO
+         mTaMURwB9Z0RPIn2mWLBE3qw5vk2hYKNR44yqIGVs0T5bLDvpLknUc7eTNupVfliVRya
+         yVSNAzcpr7e6v2Yuir7Nod8b0MTrOaH4d/ss5+Sjr+y+jmc320xfXlce2YPHTYuC5Z+2
+         BMCB9J5u9DHwASyI2AxdIoxbMR+zKhJu9ae7SVdM6q14yX88MEBetp6EFiJLHf2B1XDL
+         0GPA==
+X-Gm-Message-State: AOAM530wCbae5J3sg6I2a4rDTIcR9/v6t5Jp3l6xGyiG5A8bpLNxhtph
+        jaQqtkoVLIj2QHFMncrWsw==
+X-Google-Smtp-Source: ABdhPJyIbG7PIhmtfb8YhLKR5Xh3nGklRFT+QTShHlA/Rx0Efb1UteRJRihqMm1UaKN8nH02gpJ1Xw==
+X-Received: by 2002:a05:6638:2601:: with SMTP id m1mr9213481jat.43.1593467614612;
+        Mon, 29 Jun 2020 14:53:34 -0700 (PDT)
+Received: from xps15 ([64.188.179.255])
+        by smtp.gmail.com with ESMTPSA id t12sm604000ilo.80.2020.06.29.14.53.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 14:53:34 -0700 (PDT)
+Received: (nullmailer pid 2994774 invoked by uid 1000);
+        Mon, 29 Jun 2020 21:53:31 -0000
+Date:   Mon, 29 Jun 2020 15:53:31 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Hanks Chen <hanks.chen@mediatek.com>
+Cc:     wsd_upstream@mediatek.com, linux-gpio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        Andy Teng <andy.teng@mediatek.com>,
+        linux-kernel@vger.kernel.org, mtk01761 <wendell.lin@mediatek.com>,
+        Loda Chou <loda.chou@mediatek.com>, linux-clk@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Sean Wang <sean.wang@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        CC Hwang <cc.hwang@mediatek.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v6 1/7] dt-bindings: pinctrl: add bindings for MediaTek
+ MT6779 SoC
+Message-ID: <20200629215331.GA2991039@bogus>
+References: <1592480018-3340-1-git-send-email-hanks.chen@mediatek.com>
+ <1592480018-3340-2-git-send-email-hanks.chen@mediatek.com>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.7.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.7.7-rc1
-X-KernelTest-Deadline: 2020-07-01T15:14+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1592480018-3340-2-git-send-email-hanks.chen@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+On Thu, 18 Jun 2020 19:33:32 +0800, Hanks Chen wrote:
+> From: Andy Teng <andy.teng@mediatek.com>
+> 
+> Add devicetree bindings for MediaTek MT6779 pinctrl driver.
+> 
+> Signed-off-by: Andy Teng <andy.teng@mediatek.com>
+> ---
+>  .../bindings/pinctrl/mediatek,mt6779-pinctrl.yaml  |  210 ++++++++++++++++++++
+>  1 file changed, 210 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.yaml
+> 
 
-[ Upstream commit 4a95737440d426e93441d49d11abf4c6526d4666 ]
 
-This patch adds support to q6afe_is_rx_port() to get direction
-of DSP BE dai port, this is useful for setting dailink
-directions correctly.
+My bot found errors running 'make dt_binding_check' on your patch:
 
-Fixes: c25e295cd77b (ASoC: qcom: Add support to parse common audio device nodes)
-Reported-by: John Stultz <john.stultz@linaro.org>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
-Link: https://lore.kernel.org/r/20200612123711.29130-1-srinivas.kandagatla@linaro.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/soc/qcom/qdsp6/q6afe.c | 8 ++++++++
- sound/soc/qcom/qdsp6/q6afe.h | 1 +
- 2 files changed, 9 insertions(+)
+Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.example.dts:21:18: fatal error: dt-bindings/pinctrl/mt6779-pinfunc.h: No such file or directory
+         #include <dt-bindings/pinctrl/mt6779-pinfunc.h>
+                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+compilation terminated.
+scripts/Makefile.lib:315: recipe for target 'Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.example.dt.yaml' failed
+make[1]: *** [Documentation/devicetree/bindings/pinctrl/mediatek,mt6779-pinctrl.example.dt.yaml] Error 1
+make[1]: *** Waiting for unfinished jobs....
+Makefile:1347: recipe for target 'dt_binding_check' failed
+make: *** [dt_binding_check] Error 2
 
-diff --git a/sound/soc/qcom/qdsp6/q6afe.c b/sound/soc/qcom/qdsp6/q6afe.c
-index e0945f7a58c81..0ce4eb60f9848 100644
---- a/sound/soc/qcom/qdsp6/q6afe.c
-+++ b/sound/soc/qcom/qdsp6/q6afe.c
-@@ -800,6 +800,14 @@ int q6afe_get_port_id(int index)
- }
- EXPORT_SYMBOL_GPL(q6afe_get_port_id);
- 
-+int q6afe_is_rx_port(int index)
-+{
-+	if (index < 0 || index >= AFE_PORT_MAX)
-+		return -EINVAL;
-+
-+	return port_maps[index].is_rx;
-+}
-+EXPORT_SYMBOL_GPL(q6afe_is_rx_port);
- static int afe_apr_send_pkt(struct q6afe *afe, struct apr_pkt *pkt,
- 			    struct q6afe_port *port)
- {
-diff --git a/sound/soc/qcom/qdsp6/q6afe.h b/sound/soc/qcom/qdsp6/q6afe.h
-index c7ed5422baffd..1a0f80a14afea 100644
---- a/sound/soc/qcom/qdsp6/q6afe.h
-+++ b/sound/soc/qcom/qdsp6/q6afe.h
-@@ -198,6 +198,7 @@ int q6afe_port_start(struct q6afe_port *port);
- int q6afe_port_stop(struct q6afe_port *port);
- void q6afe_port_put(struct q6afe_port *port);
- int q6afe_get_port_id(int index);
-+int q6afe_is_rx_port(int index);
- void q6afe_hdmi_port_prepare(struct q6afe_port *port,
- 			    struct q6afe_hdmi_cfg *cfg);
- void q6afe_slim_port_prepare(struct q6afe_port *port,
--- 
-2.25.1
+
+See https://patchwork.ozlabs.org/patch/1312018
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure dt-schema is up to date:
+
+pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+
+Please check and re-submit.
+
+
+
+Here, you need patch 2 to come first or merge it into this patch as it 
+is part of the binding.
+
+Rob
 
