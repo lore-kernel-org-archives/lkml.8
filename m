@@ -2,194 +2,123 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63AD8C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4286C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:38:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 406172225F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:38:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 999A62225F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:38:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iJsS8hBM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dm4DRQiQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726093AbgF2SiN (ORCPT
+        id S1728002AbgF2SiR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:38:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37562 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727969AbgF2SiC (ORCPT
+        Mon, 29 Jun 2020 14:38:17 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20021 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727996AbgF2SiN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:38:02 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEA47C02F032
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 08:00:51 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id 5so13780100oty.11
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 08:00:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=64cs0TbTbP8oXkjqFwlVyOK6sTxRyWaYSp+tM0bVADY=;
-        b=iJsS8hBM9QxkxafcTMtycbQCdy9iovLnZQNdm8sCMuUW7wM0vJYf5QfWXoLeJioLI9
-         zuvRpVpeKmZt7ZodsyhJFd7sMFqdMhqfJaDmmNRU088OIknBDX2Qfw3w74wbyBichTco
-         0AoN+RjPb0ODn5sXj655D7NhIWazi7BLmbQ5QZkVjOjHcgRp8JDNfrBkm/Z/pmvtz5lW
-         sqfT4dwvk9uyfa+TPJc7Rb1sANktKemkQv0y3XrC/ZHh+CvhL6rHiv5IcqUlLuRyNU9o
-         ZN6zW0cF4acVTqClrpTBc3bdnzXC3B6KxGjzrkaZ7ViJ+uGfpZ8ARYYSTDPcvO0sKb5n
-         5RfA==
+        Mon, 29 Jun 2020 14:38:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593455891;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Iiom3LNVi9ET0XgfPNiU1I3DflByt3ZNInrS8hmdp2U=;
+        b=Dm4DRQiQ6fUDiw0ODYfzRHM0l5n+/OCax4tsmQVFEte4dJzOhv+iMeaX7PPDTf5oyU2Cvy
+        0CJwQz6V7YaBivk2kU2ABaaWuXVz4uW6YjOtq4MYIn+3EyNMsgXd1uWHXxibfnQTObK24F
+        8SkzU6q4SO8an7e201QLwzG41YBOs7A=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-455-zq5FJK0EM5iWibiXsRdCPQ-1; Mon, 29 Jun 2020 02:33:44 -0400
+X-MC-Unique: zq5FJK0EM5iWibiXsRdCPQ-1
+Received: by mail-wm1-f72.google.com with SMTP id g138so9169162wme.7
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:33:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=64cs0TbTbP8oXkjqFwlVyOK6sTxRyWaYSp+tM0bVADY=;
-        b=NuIo1VlcZv49m6B1n4c/lzUFZiUpCZG11pyYTVCnviiD1ppRJ/TXyVgpMqv0D4zrkp
-         dDKbFLhUc7fhj/qNWM49I+KdDddFcvUOaHAyQfLrjIn5LeG1t4Xpo13yxo70F8m8PXZ4
-         LtYu59wWjWLUH1614ELGr05qUbCivAh9jK4RDAMvJKCC19Bcjr8JJw/M8lS7nB/020wv
-         OVLKMBXwGm29xGJ0VrUJS4lII+6QuMasudTvWIw0GwvpAYMKMDRYp2JR+Q6qKiD6E2pf
-         cRH+RVj/HSmUX+zMWVVu3sSrFl2zcXK6ViXcq1cx55bHxZFezJwhIelkLXt/Tb+XO/ei
-         Jwgg==
-X-Gm-Message-State: AOAM532doZIboY7Xgwhr4+YsKfOpUWMS4PTKsM5WET7COFhGAevWSaSN
-        cJxfJMkXO+MqmmYHd8C/joXBHrA3QB9X2ow9FRs=
-X-Google-Smtp-Source: ABdhPJzhdHJhL6wz1HDjdvznHpIGmS/1e0gDDMgS5NOP2fYaMZB7eIyrlZjLdTrGaY2+0NhG+ZKaNsBIJm4MAxyRH3Y=
-X-Received: by 2002:a9d:904:: with SMTP id 4mr14130648otp.339.1593442851032;
- Mon, 29 Jun 2020 08:00:51 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=Iiom3LNVi9ET0XgfPNiU1I3DflByt3ZNInrS8hmdp2U=;
+        b=bcJwot1rvvs31r6/bGkj69+UdKhSSU3V29QHO2CN/GXz2IBDw0gXkenJA5N8Fhy7pP
+         yv6SjNdVYVEEVRlWaKnFo2or0J342R83z/tPKQ4Lu+9avZ1h4gk4KJYgOf2tHqquDaxv
+         dKRcHykJPRBatK8yz/XMHye1JGzGO6WzGc6sLB70r9CYKpLVQXCy2bR545Ldhq8kzV0X
+         D5yd0nT6kg01GFPFY99Pd6GrVCh4TVc6u6XvlP94eFK3nSkbkCZoOeL6w1dRROFpCrtp
+         YSGj1o6IHwbwbP+aCQYAekMjaFjAV69JCyzGFY0hANWF6WxxyKy3HdVXawA+ztSCitb3
+         MamQ==
+X-Gm-Message-State: AOAM530kykZRCy2aHGfDYcu1cKbcr+mYv9MGX3cJp5TMQP037huGMZHQ
+        1J5pGyazveM8pQupjHGQXa4NmqbqUiizQhjwevBkf+beDJiPsUI+FM719+Cn3xROx9v64wgxE2c
+        pK53+Jv4h2oM6W7hincD04d3/
+X-Received: by 2002:adf:8067:: with SMTP id 94mr14821901wrk.427.1593412423677;
+        Sun, 28 Jun 2020 23:33:43 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxfYJ1M6jIB+Bt9+iuqmCS+1/JuHYbah8AxWL9RwY6izIKRHTcVkotYUsuHjo+DZqHXAwCswQ==
+X-Received: by 2002:adf:8067:: with SMTP id 94mr14821888wrk.427.1593412423531;
+        Sun, 28 Jun 2020 23:33:43 -0700 (PDT)
+Received: from redhat.com (bzq-79-182-31-92.red.bezeqint.net. [79.182.31.92])
+        by smtp.gmail.com with ESMTPSA id s8sm41059111wru.38.2020.06.28.23.33.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Jun 2020 23:33:42 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 02:33:39 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     Stefano Stabellini <sstabellini@kernel.org>,
+        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
+        "jgross@suse.com" <jgross@suse.com>,
+        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH] xen: introduce xen_vring_use_dma
+Message-ID: <20200629023225-mutt-send-email-mst@kernel.org>
+References: <20200624050355-mutt-send-email-mst@kernel.org>
+ <alpine.DEB.2.21.2006241047010.8121@sstabellini-ThinkPad-T480s>
+ <20200624163940-mutt-send-email-mst@kernel.org>
+ <alpine.DEB.2.21.2006241351430.8121@sstabellini-ThinkPad-T480s>
+ <20200624181026-mutt-send-email-mst@kernel.org>
+ <alpine.DEB.2.21.2006251014230.8121@sstabellini-ThinkPad-T480s>
+ <20200626110629-mutt-send-email-mst@kernel.org>
+ <DB6PR0402MB27601CA74B85DA5A9F5E5DD6886E0@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+ <20200629022124-mutt-send-email-mst@kernel.org>
+ <DB6PR0402MB27602AB2A9A242D79343CE48886E0@DB6PR0402MB2760.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-References: <20200629140442.1043957-1-lee.jones@linaro.org> <20200629140442.1043957-7-lee.jones@linaro.org>
-In-Reply-To: <20200629140442.1043957-7-lee.jones@linaro.org>
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-Date:   Mon, 29 Jun 2020 18:00:21 +0300
-Message-ID: <CAFCwf12UOrL3R4TKuE6Zwrgyfz0NHRRqyqdSwJQZ78yYvRVrDg@mail.gmail.com>
-Subject: Re: [PATCH 06/20] misc: habanalabs: goya: Omit pointless check
- ensuring addr is >=0
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        Tomer Tayar <ttayar@habana.ai>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DB6PR0402MB27602AB2A9A242D79343CE48886E0@DB6PR0402MB2760.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 5:04 PM Lee Jones <lee.jones@linaro.org> wrote:
->
-> Seeing as 'addr' is unsigned, it would be impossible for the assigned
-> value to be anything other than zero or positive.
->
-> Squashes the following W=3D1 warnings:
->
->  drivers/misc/habanalabs/goya/goya.c: In function =E2=80=98goya_debugfs_r=
-ead32=E2=80=99:
->  drivers/misc/habanalabs/goya/goya.c:3945:19: warning: comparison of unsi=
-gned expression >=3D 0 is always true [-Wtype-limits]
->  3945 | } else if ((addr >=3D DRAM_PHYS_BASE) &&
->  | ^~
->  drivers/misc/habanalabs/goya/goya.c: In function =E2=80=98goya_debugfs_w=
-rite32=E2=80=99:
->  drivers/misc/habanalabs/goya/goya.c:4002:19: warning: comparison of unsi=
-gned expression >=3D 0 is always true [-Wtype-limits]
->  4002 | } else if ((addr >=3D DRAM_PHYS_BASE) &&
->  | ^~
->  drivers/misc/habanalabs/goya/goya.c: In function =E2=80=98goya_debugfs_r=
-ead64=E2=80=99:
->  drivers/misc/habanalabs/goya/goya.c:4047:19: warning: comparison of unsi=
-gned expression >=3D 0 is always true [-Wtype-limits]
->  4047 | } else if ((addr >=3D DRAM_PHYS_BASE) &&
->  | ^~
->  drivers/misc/habanalabs/goya/goya.c: In function =E2=80=98goya_debugfs_w=
-rite64=E2=80=99:
->  drivers/misc/habanalabs/goya/goya.c:4091:19: warning: comparison of unsi=
-gned expression >=3D 0 is always true [-Wtype-limits]
->  4091 | } else if ((addr >=3D DRAM_PHYS_BASE) &&
->  | ^~
->  drivers/misc/habanalabs/pci.c:328: warning: Excess function parameter 'd=
-ma_mask' description in 'hl_pci_set_dma_mask'
->  drivers/misc/habanalabs/goya/goya_coresight.c: In function =E2=80=98goya=
-_debug_coresight=E2=80=99:
->  drivers/misc/habanalabs/goya/goya_coresight.c:643:6: warning: variable =
-=E2=80=98val=E2=80=99 set but not used [-Wunused-but-set-variable]
->  643 | u32 val;
->  | ^~~
->
-> Cc: Oded Gabbay <oded.gabbay@gmail.com>
-> Cc: Tomer Tayar <ttayar@habana.ai>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  drivers/misc/habanalabs/goya/goya.c | 16 ++++++----------
->  1 file changed, 6 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalab=
-s/goya/goya.c
-> index 0d2952bb58dfb..a4a20e27ed3b4 100644
-> --- a/drivers/misc/habanalabs/goya/goya.c
-> +++ b/drivers/misc/habanalabs/goya/goya.c
-> @@ -3942,8 +3942,7 @@ static int goya_debugfs_read32(struct hl_device *hd=
-ev, u64 addr, u32 *val)
->                 *val =3D readl(hdev->pcie_bar[SRAM_CFG_BAR_ID] +
->                                 (addr - SRAM_BASE_ADDR));
->
-> -       } else if ((addr >=3D DRAM_PHYS_BASE) &&
-> -                       (addr < DRAM_PHYS_BASE + hdev->asic_prop.dram_siz=
-e)) {
-> +       } else if (addr < DRAM_PHYS_BASE + hdev->asic_prop.dram_size) {
->
->                 u64 bar_base_addr =3D DRAM_PHYS_BASE +
->                                 (addr & ~(prop->dram_pci_bar_size - 0x1ul=
-l));
-> @@ -3999,8 +3998,7 @@ static int goya_debugfs_write32(struct hl_device *h=
-dev, u64 addr, u32 val)
->                 writel(val, hdev->pcie_bar[SRAM_CFG_BAR_ID] +
->                                         (addr - SRAM_BASE_ADDR));
->
-> -       } else if ((addr >=3D DRAM_PHYS_BASE) &&
-> -                       (addr < DRAM_PHYS_BASE + hdev->asic_prop.dram_siz=
-e)) {
-> +       } else if (addr < DRAM_PHYS_BASE + hdev->asic_prop.dram_size) {
->
->                 u64 bar_base_addr =3D DRAM_PHYS_BASE +
->                                 (addr & ~(prop->dram_pci_bar_size - 0x1ul=
-l));
-> @@ -4044,9 +4042,8 @@ static int goya_debugfs_read64(struct hl_device *hd=
-ev, u64 addr, u64 *val)
->                 *val =3D readq(hdev->pcie_bar[SRAM_CFG_BAR_ID] +
->                                 (addr - SRAM_BASE_ADDR));
->
-> -       } else if ((addr >=3D DRAM_PHYS_BASE) &&
-> -                  (addr <=3D
-> -                   DRAM_PHYS_BASE + hdev->asic_prop.dram_size - sizeof(u=
-64))) {
-> +       } else if (addr <=3D
-> +                  DRAM_PHYS_BASE + hdev->asic_prop.dram_size - sizeof(u6=
-4)) {
->
->                 u64 bar_base_addr =3D DRAM_PHYS_BASE +
->                                 (addr & ~(prop->dram_pci_bar_size - 0x1ul=
-l));
-> @@ -4088,9 +4085,8 @@ static int goya_debugfs_write64(struct hl_device *h=
-dev, u64 addr, u64 val)
->                 writeq(val, hdev->pcie_bar[SRAM_CFG_BAR_ID] +
->                                         (addr - SRAM_BASE_ADDR));
->
-> -       } else if ((addr >=3D DRAM_PHYS_BASE) &&
-> -                  (addr <=3D
-> -                   DRAM_PHYS_BASE + hdev->asic_prop.dram_size - sizeof(u=
-64))) {
-> +       } else if (addr <=3D
-> +                  DRAM_PHYS_BASE + hdev->asic_prop.dram_size - sizeof(u6=
-4)) {
->
->                 u64 bar_base_addr =3D DRAM_PHYS_BASE +
->                                 (addr & ~(prop->dram_pci_bar_size - 0x1ul=
-l));
-> --
-> 2.25.1
->
+On Mon, Jun 29, 2020 at 06:25:41AM +0000, Peng Fan wrote:
+> > > > > Anyway, re-reading the last messages of the original thread [1],
+> > > > > it looks like Peng had a clear idea on how to fix the general issue.
+> > > > > Peng, what happened with that?
+> > >
+> > > We shrinked the rpmsg reserved area to workaround the issue.
+> > > So still use the dma apis in rpmsg.
+> > >
+> > > But here I am going to address domu android trusty issue using virtio.
+> > 
+> > My suggestion is to first of all fix DMA API so it works properly.
+> 
+> Could you please elaborate more details?
+> 
+> You mean the DMA API usage of rpmsg? Or xen domu dma_ops?
+> 
+> Thanks,
+> Peng. 
 
-This patch is:
-Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+Not 100% sure but I think xen dma ops.
+
+-- 
+MST
+
