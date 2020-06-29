@@ -2,268 +2,211 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3204C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:22:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB75FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 94DD6206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:22:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1445206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:22:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729904AbgF2TWf (ORCPT
+        id S1731873AbgF2TWb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:22:35 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:47724 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732191AbgF2TVf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:22:31 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59528 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732218AbgF2TVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:21:35 -0400
-Received: from 89-64-84-69.dynamic.chello.pl (89.64.84.69) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
- id 39af2550cfacad4d; Mon, 29 Jun 2020 18:34:52 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>
-Cc:     rafael.j.wysocki@intel.com, Len Brown <lenb@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Ira Weiny <ira.weiny@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-nvdimm@lists.01.org, Bob Moore <robert.moore@intel.com>
-Subject: [PATCH v4 2/2] ACPICA: Preserve memory opregion mappings
-Date:   Mon, 29 Jun 2020 18:33:58 +0200
-Message-ID: <1794490.F2OrUDcHQn@kreacher>
-In-Reply-To: <1666722.UopIai5n7p@kreacher>
-References: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com> <2788992.3K7huLjdjL@kreacher> <1666722.UopIai5n7p@kreacher>
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 50BFBAF82;
+        Mon, 29 Jun 2020 15:10:01 +0000 (UTC)
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     gregkh@linuxfoundation.org
+Cc:     kernel-list@raspberrypi.com, laurent.pinchart@ideasonboard.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devel@driverdev.osuosl.org,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Subject: [PATCH v2 20/47] staging: vchi: Use vchiq's enum vchiq_reason
+Date:   Mon, 29 Jun 2020 17:09:18 +0200
+Message-Id: <20200629150945.10720-21-nsaenzjulienne@suse.de>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200629150945.10720-1-nsaenzjulienne@suse.de>
+References: <20200629150945.10720-1-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+enum vchi_callback_reason maps 1:1 to enum vchiq_reason, in an effort to
+simplify things, let's use the later, and get rid of the extra
+indirection.
 
-The ACPICA's strategy with respect to the handling of memory mappings
-associated with memory operation regions is to avoid mapping the
-entire region at once which may be problematic at least in principle
-(for example, it may lead to conflicts with overlapping mappings
-having different attributes created by drivers).  It may also be
-wasteful, because memory opregions on some systems take up vast
-chunks of address space while the fields in those regions actually
-accessed by AML are sparsely distributed.
-
-For this reason, a one-page "window" is mapped for a given opregion
-on the first memory access through it and if that "window" does not
-cover an address range accessed through that opregion subsequently,
-it is unmapped and a new "window" is mapped to replace it.  Next,
-if the new "window" is not sufficient to acess memory through the
-opregion in question in the future, it will be replaced with yet
-another "window" and so on.  That may lead to a suboptimal sequence
-of memory mapping and unmapping operations, for example if two fields
-in one opregion separated from each other by a sufficiently wide
-chunk of unused address space are accessed in an alternating pattern.
-
-The situation may still be suboptimal if the deferred unmapping
-introduced previously is supported by the OS layer.  For instance,
-the alternating memory access pattern mentioned above may produce
-a relatively long list of mappings to release with substantial
-duplication among the entries in it, which could be avoided if
-acpi_ex_system_memory_space_handler() did not release the mapping
-used by it previously as soon as the current access was not covered
-by it.
-
-In order to improve that, modify acpi_ex_system_memory_space_handler()
-to preserve all of the memory mappings created by it until the memory
-regions associated with them go away.
-
-Accordingly, update acpi_ev_system_memory_region_setup() to unmap all
-memory associated with memory opregions that go away.
-
-Reported-by: Dan Williams <dan.j.williams@intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
 ---
- drivers/acpi/acpica/evrgnini.c | 14 ++++----
- drivers/acpi/acpica/exregion.c | 65 ++++++++++++++++++++++++----------
- include/acpi/actypes.h         | 12 +++++--
- 3 files changed, 64 insertions(+), 27 deletions(-)
+ .../bcm2835-audio/bcm2835-vchiq.c             |  5 +--
+ .../interface/vchi/vchi_common.h              | 20 +---------
+ .../interface/vchiq_arm/vchiq_shim.c          | 40 +------------------
+ .../vc04_services/vchiq-mmal/mmal-vchiq.c     | 11 +++--
+ 4 files changed, 10 insertions(+), 66 deletions(-)
 
-diff --git a/drivers/acpi/acpica/evrgnini.c b/drivers/acpi/acpica/evrgnini.c
-index aefc0145e583..89be3ccdad53 100644
---- a/drivers/acpi/acpica/evrgnini.c
-+++ b/drivers/acpi/acpica/evrgnini.c
-@@ -38,6 +38,7 @@ acpi_ev_system_memory_region_setup(acpi_handle handle,
- 	union acpi_operand_object *region_desc =
- 	    (union acpi_operand_object *)handle;
- 	struct acpi_mem_space_context *local_region_context;
-+	struct acpi_mem_mapping *mm;
+diff --git a/drivers/staging/vc04_services/bcm2835-audio/bcm2835-vchiq.c b/drivers/staging/vc04_services/bcm2835-audio/bcm2835-vchiq.c
+index 565853ec1e7a..0f97eda4ec90 100644
+--- a/drivers/staging/vc04_services/bcm2835-audio/bcm2835-vchiq.c
++++ b/drivers/staging/vc04_services/bcm2835-audio/bcm2835-vchiq.c
+@@ -89,8 +89,7 @@ static int bcm2835_audio_send_simple(struct bcm2835_audio_instance *instance,
+ 	return bcm2835_audio_send_msg(instance, &m, wait);
+ }
  
- 	ACPI_FUNCTION_TRACE(ev_system_memory_region_setup);
+-static void audio_vchi_callback(void *param,
+-				const enum vchi_callback_reason reason,
++static void audio_vchi_callback(void *param, const enum vchiq_reason reason,
+ 				void *msg_handle)
+ {
+ 	struct bcm2835_audio_instance *instance = param;
+@@ -99,7 +98,7 @@ static void audio_vchi_callback(void *param,
+ 	unsigned size;
+ 	int status;
  
-@@ -46,13 +47,14 @@ acpi_ev_system_memory_region_setup(acpi_handle handle,
- 			local_region_context =
- 			    (struct acpi_mem_space_context *)*region_context;
+-	if (reason != VCHI_CALLBACK_MSG_AVAILABLE)
++	if (reason != VCHIQ_MESSAGE_AVAILABLE)
+ 		return;
  
--			/* Delete a cached mapping if present */
-+			/* Delete memory mappings if present */
+ 	status = vchi_msg_hold(instance->service, (void **)&m, &size, &handle);
+diff --git a/drivers/staging/vc04_services/interface/vchi/vchi_common.h b/drivers/staging/vc04_services/interface/vchi/vchi_common.h
+index 52b447c19445..24e8665e214a 100644
+--- a/drivers/staging/vc04_services/interface/vchi/vchi_common.h
++++ b/drivers/staging/vc04_services/interface/vchi/vchi_common.h
+@@ -4,27 +4,9 @@
+ #ifndef VCHI_COMMON_H_
+ #define VCHI_COMMON_H_
  
--			if (local_region_context->mapped_length) {
--				acpi_os_unmap_memory(local_region_context->
--						     mapped_logical_address,
--						     local_region_context->
--						     mapped_length);
-+			while (local_region_context->first_mm) {
-+				mm = local_region_context->first_mm;
-+				local_region_context->first_mm = mm->next_mm;
-+				acpi_os_unmap_memory(mm->logical_address,
-+						     mm->length);
-+				ACPI_FREE(mm);
- 			}
- 			ACPI_FREE(local_region_context);
- 			*region_context = NULL;
-diff --git a/drivers/acpi/acpica/exregion.c b/drivers/acpi/acpica/exregion.c
-index d15a66de26c0..fd68f2134804 100644
---- a/drivers/acpi/acpica/exregion.c
-+++ b/drivers/acpi/acpica/exregion.c
-@@ -41,6 +41,7 @@ acpi_ex_system_memory_space_handler(u32 function,
- 	acpi_status status = AE_OK;
- 	void *logical_addr_ptr = NULL;
- 	struct acpi_mem_space_context *mem_info = region_context;
-+	struct acpi_mem_mapping *mm = mem_info->cur_mm;
- 	u32 length;
- 	acpi_size map_length;
- 	acpi_size page_boundary_map_length;
-@@ -96,20 +97,38 @@ acpi_ex_system_memory_space_handler(u32 function,
- 	 * Is 1) Address below the current mapping? OR
- 	 *    2) Address beyond the current mapping?
- 	 */
--	if ((address < mem_info->mapped_physical_address) ||
--	    (((u64) address + length) > ((u64)
--					 mem_info->mapped_physical_address +
--					 mem_info->mapped_length))) {
-+	if (!mm || (address < mm->physical_address) ||
-+	    ((u64) address + length > (u64) mm->physical_address + mm->length)) {
- 		/*
--		 * The request cannot be resolved by the current memory mapping;
--		 * Delete the existing mapping and create a new one.
-+		 * The request cannot be resolved by the current memory mapping.
-+		 *
-+		 * Look for an existing saved mapping covering the address range
-+		 * at hand.  If found, save it as the current one and carry out
-+		 * the access.
- 		 */
--		if (mem_info->mapped_length) {
-+		for (mm = mem_info->first_mm; mm; mm = mm->next_mm) {
-+			if (mm == mem_info->cur_mm)
-+				continue;
-+
-+			if (address < mm->physical_address)
-+				continue;
-+
-+			if ((u64) address + length >
-+					(u64) mm->physical_address + mm->length)
-+				continue;
+-//callback reasons when an event occurs on a service
+-enum vchi_callback_reason {
+-	/*
+-	 * This indicates that there is data available handle is the msg id that
+-	 * was transmitted with the data
+-	 * When a message is received and there was no FULL message available
+-	 * previously, send callback
+-	 * Tasks get kicked by the callback, reset their event and try and read
+-	 * from the fifo until it fails
+-	 */
+-	VCHI_CALLBACK_SERVICE_CLOSED,
+-	VCHI_CALLBACK_MSG_AVAILABLE,
+-	VCHI_CALLBACK_BULK_SENT,
+-	VCHI_CALLBACK_BULK_RECEIVED,
+-	VCHI_CALLBACK_BULK_TRANSMIT_ABORTED,
+-	VCHI_CALLBACK_BULK_RECEIVE_ABORTED,
+-};
+-
+ //Callback used by all services / bulk transfers
+ typedef void (*vchi_callback)(void *callback_param, //my service local param
+-			      enum vchi_callback_reason reason,
++			      enum vchiq_reason reason,
+ 			      void *handle); //for transmitting msg's only
  
--			/* Valid mapping, delete it */
-+			mem_info->cur_mm = mm;
-+			goto access;
-+		}
+ #endif // VCHI_COMMON_H_
+diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c
+index c6b14d31492b..f2998c0ca5b1 100644
+--- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c
++++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_shim.c
+@@ -274,46 +274,10 @@ static enum vchiq_status shim_callback(enum vchiq_reason reason,
+ 	if (!service->callback)
+ 		goto release;
  
--			acpi_os_unmap_memory(mem_info->mapped_logical_address,
--					     mem_info->mapped_length);
-+		/* Create a new mappings list entry */
-+		mm = ACPI_ALLOCATE_ZEROED(sizeof(*mm));
-+		if (!mm) {
-+			ACPI_ERROR((AE_INFO,
-+				    "Unable to save memory mapping at 0x%8.8X%8.8X, size %u",
-+				    ACPI_FORMAT_UINT64(address),
-+				    (u32)map_length));
-+			return_ACPI_STATUS(AE_NO_MEMORY);
- 		}
+-	switch (reason) {
+-	case VCHIQ_MESSAGE_AVAILABLE:
++	if (reason == VCHIQ_MESSAGE_AVAILABLE)
+ 		vchiu_queue_push(&service->queue, header);
  
- 		/*
-@@ -143,29 +162,39 @@ acpi_ex_system_memory_space_handler(u32 function,
+-		service->callback(service->callback_param,
+-				  VCHI_CALLBACK_MSG_AVAILABLE, NULL);
+-
+-		break;
+-
+-	case VCHIQ_BULK_TRANSMIT_DONE:
+-		service->callback(service->callback_param,
+-				  VCHI_CALLBACK_BULK_SENT, bulk_user);
+-		break;
+-
+-	case VCHIQ_BULK_RECEIVE_DONE:
+-		service->callback(service->callback_param,
+-				  VCHI_CALLBACK_BULK_RECEIVED, bulk_user);
+-		break;
+-
+-	case VCHIQ_SERVICE_CLOSED:
+-		service->callback(service->callback_param,
+-				  VCHI_CALLBACK_SERVICE_CLOSED, NULL);
+-		break;
+-
+-	case VCHIQ_BULK_TRANSMIT_ABORTED:
+-		service->callback(service->callback_param,
+-				  VCHI_CALLBACK_BULK_TRANSMIT_ABORTED,
+-				  bulk_user);
+-		break;
+-
+-	case VCHIQ_BULK_RECEIVE_ABORTED:
+-		service->callback(service->callback_param,
+-				  VCHI_CALLBACK_BULK_RECEIVE_ABORTED,
+-				  bulk_user);
+-		break;
+-
+-	default:
+-		WARN(1, "not supported\n");
+-		break;
+-	}
++	service->callback(service->callback_param, reason, bulk_user);
  
- 		/* Create a new mapping starting at the address given */
+ release:
+ 	return VCHIQ_SUCCESS;
+diff --git a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
+index 5c9fd354a7fe..f710ccccb14c 100644
+--- a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
++++ b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
+@@ -549,8 +549,7 @@ static void bulk_abort_cb(struct vchiq_mmal_instance *instance,
+ }
  
--		mem_info->mapped_logical_address =
--		    acpi_os_map_memory(address, map_length);
--		if (!mem_info->mapped_logical_address) {
-+		logical_addr_ptr = acpi_os_map_memory(address, map_length);
-+		if (!logical_addr_ptr) {
- 			ACPI_ERROR((AE_INFO,
- 				    "Could not map memory at 0x%8.8X%8.8X, size %u",
- 				    ACPI_FORMAT_UINT64(address),
- 				    (u32)map_length));
--			mem_info->mapped_length = 0;
-+			ACPI_FREE(mm);
- 			return_ACPI_STATUS(AE_NO_MEMORY);
- 		}
- 
- 		/* Save the physical address and mapping size */
- 
--		mem_info->mapped_physical_address = address;
--		mem_info->mapped_length = map_length;
-+		mm->logical_address = logical_addr_ptr;
-+		mm->physical_address = address;
-+		mm->length = map_length;
-+
-+		/*
-+		 * Add the new entry to the mappigs list and save it as the
-+		 * current mapping.
-+		 */
-+		mm->next_mm = mem_info->first_mm;
-+		mem_info->first_mm = mm;
-+
-+		mem_info->cur_mm = mm;
+ /* incoming event service callback */
+-static void service_callback(void *param,
+-			     const enum vchi_callback_reason reason,
++static void service_callback(void *param, const enum vchiq_reason reason,
+ 			     void *bulk_ctx)
+ {
+ 	struct vchiq_mmal_instance *instance = param;
+@@ -566,7 +565,7 @@ static void service_callback(void *param,
  	}
  
-+access:
- 	/*
- 	 * Generate a logical pointer corresponding to the address we want to
- 	 * access
- 	 */
--	logical_addr_ptr = mem_info->mapped_logical_address +
--	    ((u64) address - (u64) mem_info->mapped_physical_address);
-+	logical_addr_ptr = mm->logical_address +
-+		((u64) address - (u64) mm->physical_address);
+ 	switch (reason) {
+-	case VCHI_CALLBACK_MSG_AVAILABLE:
++	case VCHIQ_MESSAGE_AVAILABLE:
+ 		status = vchi_msg_hold(instance->service, (void **)&msg,
+ 				       &msg_len, &msg_handle);
+ 		if (status) {
+@@ -631,15 +630,15 @@ static void service_callback(void *param,
  
- 	ACPI_DEBUG_PRINT((ACPI_DB_INFO,
- 			  "System-Memory (width %u) R/W %u Address=%8.8X%8.8X\n",
-diff --git a/include/acpi/actypes.h b/include/acpi/actypes.h
-index aa236b9e6f24..d005e35ab399 100644
---- a/include/acpi/actypes.h
-+++ b/include/acpi/actypes.h
-@@ -1201,12 +1201,18 @@ struct acpi_pci_id {
- 	u16 function;
- };
+ 		break;
  
-+struct acpi_mem_mapping {
-+	acpi_physical_address physical_address;
-+	u8 *logical_address;
-+	acpi_size length;
-+	struct acpi_mem_mapping *next_mm;
-+};
-+
- struct acpi_mem_space_context {
- 	u32 length;
- 	acpi_physical_address address;
--	acpi_physical_address mapped_physical_address;
--	u8 *mapped_logical_address;
--	acpi_size mapped_length;
-+	struct acpi_mem_mapping *cur_mm;
-+	struct acpi_mem_mapping *first_mm;
- };
+-	case VCHI_CALLBACK_BULK_RECEIVED:
++	case VCHIQ_BULK_RECEIVE_DONE:
+ 		bulk_receive_cb(instance, bulk_ctx);
+ 		break;
  
- /*
+-	case VCHI_CALLBACK_BULK_RECEIVE_ABORTED:
++	case VCHIQ_BULK_RECEIVE_ABORTED:
+ 		bulk_abort_cb(instance, bulk_ctx);
+ 		break;
+ 
+-	case VCHI_CALLBACK_SERVICE_CLOSED:
++	case VCHIQ_SERVICE_CLOSED:
+ 		/* TODO: consider if this requires action if received when
+ 		 * driver is not explicitly closing the service
+ 		 */
 -- 
-2.26.2
-
-
-
+2.27.0
 
