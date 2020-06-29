@@ -7,51 +7,52 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A80C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 045C5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:59:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AC7A5206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:59:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2FA0206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:59:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467962;
-	bh=kWFoPjZ44xAKHBoLCADRXcnguWJ83ANFhE1RmGfkMlQ=;
+	s=default; t=1593467968;
+	bh=AFTA9VXm2WtOiabAN8FzZBOpUKuSP8j/v981QvGyVyY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pq/KbWs+qbQ79f8i5plSLZAl+utq8JkTjbP4pQjUg6xLwFqeGXqmAFq6TMbrE56s7
-	 6TEsdnWBeqgxj8JVRUJ0mInGQ9DhIK5WMl2qr52XUbf7ky9Wwv/NmgamlJtu8n1hxy
-	 CmXtXJOdEIgeG+dj/RD857GB7+kZtkpmFsFEVyJ4=
+	b=z5vBVi0nLuF09LEselMbWXnIW06QDSUClp6egso0YfVWrUZ8xh0yWze5Yktk63cAb
+	 xNB18ibgnc3lO9q1ZCbsXMRh+Bv5O782UIaloXhp8rL84gSGjP2KMo0ahxU4HdGl6N
+	 d6oy82wgVXWa8XrGp6cpB1EesP2d/rlsPwGnA5cs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404801AbgF2V7V (ORCPT
+        id S1732613AbgF2V71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:59:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56912 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:59:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726419AbgF2Sf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:27 -0400
+        id S1726430AbgF2Sf0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:26 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71FCA24671;
-        Mon, 29 Jun 2020 15:19:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C30824061;
+        Mon, 29 Jun 2020 15:18:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443974;
-        bh=kWFoPjZ44xAKHBoLCADRXcnguWJ83ANFhE1RmGfkMlQ=;
+        s=default; t=1593443933;
+        bh=AFTA9VXm2WtOiabAN8FzZBOpUKuSP8j/v981QvGyVyY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1Db2UYI8mZdalTEzbxvmS1/LQbYLpk/pD2WceEOF11D9HLONkzx06d7u7+OljisLO
-         wQl2Zic42M7KO+4/fR3m1UxtQIYo5oZJDlGaKJ/E7BUDRxfbBoj40V6Lyd7UM+QJsf
-         34oPIM+vOoXI5zOC/iXvkBYCIiRCnPbkhHX2tTr0=
+        b=Ez25g4s1GGhyYMD5m0d8guNv1JuYmicbxY5K5UYCGdjLeCwpuR9vg9IuwS5Jvh355
+         XlkYUOI1IYr3rN/d7gZRa1FnyuqnS5HJy2K5PbSlDK7ZcOWds+RwoYp4QDfZKbCu11
+         9GGHwxfT0GPIh2x9s/mzM4CR0xtVv/sODpSDJO94=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Chen <peter.chen@nxp.com>,
-        Pawel Laszczak <pawell@cadence.com>,
-        Felipe Balbi <balbi@kernel.org>,
+Cc:     Ilya Ponetayev <i.ponetaev@ndmsystems.com>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 078/265] usb: cdns3: trace: using correct dir value
-Date:   Mon, 29 Jun 2020 11:15:11 -0400
-Message-Id: <20200629151818.2493727-79-sashal@kernel.org>
+Subject: [PATCH 5.7 034/265] sch_cake: don't try to reallocate or unshare skb unconditionally
+Date:   Mon, 29 Jun 2020 11:14:27 -0400
+Message-Id: <20200629151818.2493727-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-5.7.y
@@ -66,42 +67,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Chen <peter.chen@nxp.com>
+From: Ilya Ponetayev <i.ponetaev@ndmsystems.com>
 
-commit ba3a80fe0fb67d8790f62b7bc60df97406d89871 upstream.
+[ Upstream commit 9208d2863ac689a563b92f2161d8d1e7127d0add ]
 
-It should use the correct direction value from register, not depends
-on previous software setting. It fixed the EP number wrong issue at
-trace when the TRBERR interrupt occurs for EP0IN.
+cake_handle_diffserv() tries to linearize mac and network header parts of
+skb and to make it writable unconditionally. In some cases it leads to full
+skb reallocation, which reduces throughput and increases CPU load. Some
+measurements of IPv4 forward + NAPT on MIPS router with 580 MHz single-core
+CPU was conducted. It appears that on kernel 4.9 skb_try_make_writable()
+reallocates skb, if skb was allocated in ethernet driver via so-called
+'build skb' method from page cache (it was discovered by strange increase
+of kmalloc-2048 slab at first).
 
-When the EP0IN IOC has finished, software prepares the setup packet
-request, the expected direction is OUT, but at that time, the TRBERR
-for EP0IN may occur since it is DMULT mode, the DMA does not stop
-until TRBERR has met.
+Obtain DSCP value via read-only skb_header_pointer() call, and leave
+linearization only for DSCP bleaching or ECN CE setting. And, as an
+additional optimisation, skip diffserv parsing entirely if it is not needed
+by the current configuration.
 
-Cc: <stable@vger.kernel.org>
-Fixes: 7733f6c32e36 ("usb: cdns3: Add Cadence USB3 DRD Driver")
-Reviewed-by: Pawel Laszczak <pawell@cadence.com>
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Fixes: c87b4ecdbe8d ("sch_cake: Make sure we can write the IP header before changing DSCP bits")
+Signed-off-by: Ilya Ponetayev <i.ponetaev@ndmsystems.com>
+[ fix a few style issues, reflow commit message ]
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/usb/cdns3/trace.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/sched/sch_cake.c | 41 ++++++++++++++++++++++++++++++-----------
+ 1 file changed, 30 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/usb/cdns3/trace.h b/drivers/usb/cdns3/trace.h
-index 8d121e207fd8f..755c565822575 100644
---- a/drivers/usb/cdns3/trace.h
-+++ b/drivers/usb/cdns3/trace.h
-@@ -156,7 +156,7 @@ DECLARE_EVENT_CLASS(cdns3_log_ep0_irq,
- 		__dynamic_array(char, str, CDNS3_MSG_MAX)
- 	),
- 	TP_fast_assign(
--		__entry->ep_dir = priv_dev->ep0_data_dir;
-+		__entry->ep_dir = priv_dev->selected_ep;
- 		__entry->ep_sts = ep_sts;
- 	),
- 	TP_printk("%s", cdns3_decode_ep0_irq(__get_str(str),
+diff --git a/net/sched/sch_cake.c b/net/sched/sch_cake.c
+index 1496e87cd07bb..a92d6c57aa9a5 100644
+--- a/net/sched/sch_cake.c
++++ b/net/sched/sch_cake.c
+@@ -1516,30 +1516,49 @@ static unsigned int cake_drop(struct Qdisc *sch, struct sk_buff **to_free)
+ 
+ static u8 cake_handle_diffserv(struct sk_buff *skb, u16 wash)
+ {
+-	int wlen = skb_network_offset(skb);
++	const int offset = skb_network_offset(skb);
++	u16 *buf, buf_;
+ 	u8 dscp;
+ 
+ 	switch (tc_skb_protocol(skb)) {
+ 	case htons(ETH_P_IP):
+-		wlen += sizeof(struct iphdr);
+-		if (!pskb_may_pull(skb, wlen) ||
+-		    skb_try_make_writable(skb, wlen))
++		buf = skb_header_pointer(skb, offset, sizeof(buf_), &buf_);
++		if (unlikely(!buf))
+ 			return 0;
+ 
+-		dscp = ipv4_get_dsfield(ip_hdr(skb)) >> 2;
+-		if (wash && dscp)
++		/* ToS is in the second byte of iphdr */
++		dscp = ipv4_get_dsfield((struct iphdr *)buf) >> 2;
++
++		if (wash && dscp) {
++			const int wlen = offset + sizeof(struct iphdr);
++
++			if (!pskb_may_pull(skb, wlen) ||
++			    skb_try_make_writable(skb, wlen))
++				return 0;
++
+ 			ipv4_change_dsfield(ip_hdr(skb), INET_ECN_MASK, 0);
++		}
++
+ 		return dscp;
+ 
+ 	case htons(ETH_P_IPV6):
+-		wlen += sizeof(struct ipv6hdr);
+-		if (!pskb_may_pull(skb, wlen) ||
+-		    skb_try_make_writable(skb, wlen))
++		buf = skb_header_pointer(skb, offset, sizeof(buf_), &buf_);
++		if (unlikely(!buf))
+ 			return 0;
+ 
+-		dscp = ipv6_get_dsfield(ipv6_hdr(skb)) >> 2;
+-		if (wash && dscp)
++		/* Traffic class is in the first and second bytes of ipv6hdr */
++		dscp = ipv6_get_dsfield((struct ipv6hdr *)buf) >> 2;
++
++		if (wash && dscp) {
++			const int wlen = offset + sizeof(struct ipv6hdr);
++
++			if (!pskb_may_pull(skb, wlen) ||
++			    skb_try_make_writable(skb, wlen))
++				return 0;
++
+ 			ipv6_change_dsfield(ipv6_hdr(skb), INET_ECN_MASK, 0);
++		}
++
+ 		return dscp;
+ 
+ 	case htons(ETH_P_ARP):
 -- 
 2.25.1
 
