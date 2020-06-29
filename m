@@ -2,182 +2,152 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02EBCC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 499E1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D411820885
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:48:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Im8v5EGy"
+	by mail.kernel.org (Postfix) with ESMTP id 1A6902082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:48:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593460089;
+	bh=54tUvEvcNrm1z+E20e6+d00V4H9quND4CEjlUpsyeVw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=2BWIGIeVUokhaWRFpm8rfk7pxzOweJdvw3nfK2mYc3YsrBpA34JgO9jCA6VbUtPJl
+	 alOqZCr0d+Z80151sLdCnDRcLL43F0tkjrPZ0bsVEGobQKJwEsrjaddAvB90SfAX/x
+	 qIupTBIyzJOcPvY8vG6AAmMJR4oemSfSA+zCSlDI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbgF2TsC (ORCPT
+        id S2388037AbgF2TsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:48:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49276 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388105AbgF2TrQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:47:16 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08817C03E97A
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 12:47:16 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id y18so7498479plr.4
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 12:47:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1gz1zQHU9+r/YpON9C/k1EX29gyKSkYfOsfpz38zwBA=;
-        b=Im8v5EGyC2StppMSLYm6OQn+oLGyJfaUm6K7ize3Z/Umh4ZYnOr1TcUmPi9B+HpLUQ
-         cLC2XsUaCI472AeGUmVPqaS4Bmla9oHo9I+AIWRkU0tKMAkgxKOPmsmCHTRZotVKURc+
-         3Ej3S2v2UMRKvyl3Q/MUcNjQN9lw0K08BG3VVAlkAHIGdIZymVTArWa791V22RfReKvK
-         d4Xn9SrFlNP5F7C5P+8Tu8DV3TMfCi8RkBELIdz9ah/XgEYZ0E2gxGyacBn2DlN9d4M/
-         w6i7bvKZcnFz+1hsf9o46nd5nuTk8SAC+MJFu9ob0741d4CQ4emNSBIyIp+27VDHdBTP
-         6/hg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1gz1zQHU9+r/YpON9C/k1EX29gyKSkYfOsfpz38zwBA=;
-        b=cP8p/cXlvsdSEkW0Fsj2pFTMrYl0gNxNgWAK7egK/2l6H74YZyjZszsZL7RVUw+XiQ
-         epApdicI9WIaoVczO6kntubjg9ekMt1EbhiZuOZ6Hanwr1OWx94zFB0kVg8riXHcQc2M
-         Oogl/I464ap0bB/rOtk2sp1V/9M5MP1ZrPjm1/VXBl1cBWARkN+aXMMFWSDCvC+NaJv6
-         m6azUcEhSzDhiz4IHPsIi/TffMNv1r7rXWw9kRlGpq/ejeVDL80tE8sU9OPvCp4vDn5I
-         ItxD0JN6ZJyE89I43F1zV/jZCs6Lp90E++zTxvffqTedgFLBlG9CRgvmujEFedLSzk+z
-         4wzA==
-X-Gm-Message-State: AOAM532k468H5Q/ATuH/X+B69eK1qZ7HPCQMFfyQyEVerR0gE4b/NzOY
-        dFXVJo0DC/1Ow6TFNmjHis+i2jwcft0x0TXdpf7T6g==
-X-Google-Smtp-Source: ABdhPJxD+NDMzpTLVtkwIahVlE1Ojd9ohblWdC3y8HeoT1NdlP3ApesamY48WnXvCXAzV3iGs4MYCMe98HbhJvlJHpE=
-X-Received: by 2002:a17:90a:30ea:: with SMTP id h97mr18995233pjb.32.1593460035317;
- Mon, 29 Jun 2020 12:47:15 -0700 (PDT)
+        Mon, 29 Jun 2020 15:48:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47692 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387779AbgF2Tkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:40:39 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B76EA248BE;
+        Mon, 29 Jun 2020 15:26:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593444415;
+        bh=54tUvEvcNrm1z+E20e6+d00V4H9quND4CEjlUpsyeVw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TowLkxs5ykdcu8gbwr+1cbYDd3xlySnUjhRYZGI3qnCGFpSzM9RAtvQQVjG1hyRPW
+         eadHiK9UXd8bjZCbVDx1CN9zXo+KPmF5fzfILQwxvD4CS2nOQVMUyZrmzote4fN4a7
+         yQcwlObgMhoozlcXGehT+TDAho6zTesbQ6s4SI7o=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Alexander Lobakin <alobakin@marvell.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 093/178] net: qed: fix async event callbacks unregistering
+Date:   Mon, 29 Jun 2020 11:23:58 -0400
+Message-Id: <20200629152523.2494198-94-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
+References: <20200629152523.2494198-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20200629061840.4065483-1-keescook@chromium.org> <20200629061840.4065483-15-keescook@chromium.org>
-In-Reply-To: <20200629061840.4065483-15-keescook@chromium.org>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 29 Jun 2020 12:47:03 -0700
-Message-ID: <CAKwvOdnErUWrJUaw9gm3ZSOpD2JepZKod3REBctzBr4QuHLiAA@mail.gmail.com>
-Subject: Re: [PATCH v4 14/17] arm/build: Warn on orphan section placement
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.50-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.4.50-rc1
+X-KernelTest-Deadline: 2020-07-01T15:25+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 28, 2020 at 11:18 PM Kees Cook <keescook@chromium.org> wrote:
->
-> We don't want to depend on the linker's orphan section placement
-> heuristics as these can vary between linkers, and may change between
-> versions. All sections need to be explicitly named in the linker
-> script.
->
-> Specifically, this would have made a recently fixed bug very obvious:
->
-> ld: warning: orphan section `.fixup' from `arch/arm/lib/copy_from_user.o' being placed in section `.fixup'
->
-> Discard unneeded sections .iplt, .rel.iplt, .igot.plt, and .modinfo.
->
-> Add missing text stub sections .vfp11_veneer and .v4_bx.
->
-> Add debug sections explicitly.
->
-> Finally enable orphan section warning.
->
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+From: Alexander Lobakin <alobakin@marvell.com>
 
-Thanks for following up on the previous suggestion regarding .glu_7 /
-.glu_7t ordering. LGTM
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+[ Upstream commit 31333c1a2521ff4b4ceb0c29de492549cd4a8de3 ]
 
-> ---
->  arch/arm/include/asm/vmlinux.lds.h | 6 +++++-
->  arch/arm/kernel/vmlinux-xip.lds.S  | 1 +
->  arch/arm/kernel/vmlinux.lds.S      | 1 +
->  3 files changed, 7 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm/include/asm/vmlinux.lds.h b/arch/arm/include/asm/vmlinux.lds.h
-> index c66b16cd8837..d44fae722e7a 100644
-> --- a/arch/arm/include/asm/vmlinux.lds.h
-> +++ b/arch/arm/include/asm/vmlinux.lds.h
-> @@ -39,6 +39,8 @@
->                 __idmap_text_end = .;                                   \
->
->  #define ARM_COMMON_DISCARD                                             \
-> +               *(.iplt) *(.rel.iplt) *(.igot.plt)                      \
-> +               *(.modinfo)                                             \
->                 *(.discard)                                             \
->                 *(.discard.*)
->
-> @@ -63,7 +65,9 @@
->  #define ARM_STUBS_TEXT                                                 \
->                 *(.gnu.warning)                                         \
->                 *(.glue_7)                                              \
-> -               *(.glue_7t)
-> +               *(.glue_7t)                                             \
-> +               *(.vfp11_veneer)                                        \
-> +               *(.v4_bx)
->
->  #define ARM_TEXT                                                       \
->                 IDMAP_TEXT                                              \
-> diff --git a/arch/arm/kernel/vmlinux-xip.lds.S b/arch/arm/kernel/vmlinux-xip.lds.S
-> index 57fcbf55f913..11ffa79751da 100644
-> --- a/arch/arm/kernel/vmlinux-xip.lds.S
-> +++ b/arch/arm/kernel/vmlinux-xip.lds.S
-> @@ -150,6 +150,7 @@ SECTIONS
->         _end = .;
->
->         STABS_DEBUG
-> +       DWARF_DEBUG
->         ARM_DETAILS
->  }
->
-> diff --git a/arch/arm/kernel/vmlinux.lds.S b/arch/arm/kernel/vmlinux.lds.S
-> index 1d3d3b599635..dc672fe35de3 100644
-> --- a/arch/arm/kernel/vmlinux.lds.S
-> +++ b/arch/arm/kernel/vmlinux.lds.S
-> @@ -149,6 +149,7 @@ SECTIONS
->         _end = .;
->
->         STABS_DEBUG
-> +       DWARF_DEBUG
->         ARM_DETAILS
->  }
->
-> --
-> 2.25.1
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200629061840.4065483-15-keescook%40chromium.org.
+qed_spq_unregister_async_cb() should be called before
+qed_rdma_info_free() to avoid crash-spawning uses-after-free.
+Instead of calling it from each subsystem exit code, do it in one place
+on PF down.
 
+Fixes: 291d57f67d24 ("qed: Fix rdma_info structure allocation")
+Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
+Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/qlogic/qed/qed_dev.c   | 9 +++++++--
+ drivers/net/ethernet/qlogic/qed/qed_iwarp.c | 2 --
+ drivers/net/ethernet/qlogic/qed/qed_roce.c  | 1 -
+ 3 files changed, 7 insertions(+), 5 deletions(-)
 
-
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_dev.c b/drivers/net/ethernet/qlogic/qed/qed_dev.c
+index 0bf91df80d47f..ecd14474a6031 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_dev.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_dev.c
+@@ -1368,6 +1368,8 @@ static void qed_dbg_user_data_free(struct qed_hwfn *p_hwfn)
+ 
+ void qed_resc_free(struct qed_dev *cdev)
+ {
++	struct qed_rdma_info *rdma_info;
++	struct qed_hwfn *p_hwfn;
+ 	int i;
+ 
+ 	if (IS_VF(cdev)) {
+@@ -1385,7 +1387,8 @@ void qed_resc_free(struct qed_dev *cdev)
+ 	qed_llh_free(cdev);
+ 
+ 	for_each_hwfn(cdev, i) {
+-		struct qed_hwfn *p_hwfn = &cdev->hwfns[i];
++		p_hwfn = cdev->hwfns + i;
++		rdma_info = p_hwfn->p_rdma_info;
+ 
+ 		qed_cxt_mngr_free(p_hwfn);
+ 		qed_qm_info_free(p_hwfn);
+@@ -1404,8 +1407,10 @@ void qed_resc_free(struct qed_dev *cdev)
+ 			qed_ooo_free(p_hwfn);
+ 		}
+ 
+-		if (QED_IS_RDMA_PERSONALITY(p_hwfn))
++		if (QED_IS_RDMA_PERSONALITY(p_hwfn) && rdma_info) {
++			qed_spq_unregister_async_cb(p_hwfn, rdma_info->proto);
+ 			qed_rdma_info_free(p_hwfn);
++		}
+ 
+ 		qed_iov_free(p_hwfn);
+ 		qed_l2_free(p_hwfn);
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
+index 65ec16a316584..2b3102a2fe5c9 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_iwarp.c
+@@ -2832,8 +2832,6 @@ int qed_iwarp_stop(struct qed_hwfn *p_hwfn)
+ 	if (rc)
+ 		return rc;
+ 
+-	qed_spq_unregister_async_cb(p_hwfn, PROTOCOLID_IWARP);
+-
+ 	return qed_iwarp_ll2_stop(p_hwfn);
+ }
+ 
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_roce.c b/drivers/net/ethernet/qlogic/qed/qed_roce.c
+index e49fada854108..83817bb50e9fa 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_roce.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_roce.c
+@@ -113,7 +113,6 @@ void qed_roce_stop(struct qed_hwfn *p_hwfn)
+ 			break;
+ 		}
+ 	}
+-	qed_spq_unregister_async_cb(p_hwfn, PROTOCOLID_ROCE);
+ }
+ 
+ static void qed_rdma_copy_gids(struct qed_rdma_qp *qp, __le32 *src_gid,
 -- 
-Thanks,
-~Nick Desaulniers
+2.25.1
+
