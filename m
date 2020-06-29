@@ -2,183 +2,159 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36FFDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F6F5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 245B0206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20BCF206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:39:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="OBaDehdl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733197AbgF2TjI (ORCPT
+        id S1733233AbgF2TjP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:39:08 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:52156 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729884AbgF2TjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:39:03 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 7856C1A01C5;
-        Mon, 29 Jun 2020 09:51:24 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 836451A01C1;
-        Mon, 29 Jun 2020 09:51:20 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 5D721402F7;
-        Mon, 29 Jun 2020 15:51:15 +0800 (SGT)
-From:   andy.tang@nxp.com
-To:     shawnguo@kernel.org
-Cc:     leoyang.li@nxp.com, robh+dt@kernel.org,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Yuantian Tang <andy.tang@nxp.com>
-Subject: [PATCH 2/2] arm64: dts: ls1043a: add more thermal zone support
-Date:   Mon, 29 Jun 2020 15:45:19 +0800
-Message-Id: <20200629074519.28851-2-andy.tang@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200629074519.28851-1-andy.tang@nxp.com>
-References: <20200629074519.28851-1-andy.tang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 29 Jun 2020 15:39:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47600 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387433AbgF2Thn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:37:43 -0400
+Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04EB2C03140B;
+        Mon, 29 Jun 2020 10:10:29 -0700 (PDT)
+Received: from zn.tnic (p200300ec2f092800b9efbf1c1ef2eddc.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:2800:b9ef:bf1c:1ef2:eddc])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 4212D1EC01A9;
+        Mon, 29 Jun 2020 19:10:28 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1593450628;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=j5hXS9nvnbM+fSpieFZ04v4XNRE7FJsxEX2ec96mQh0=;
+        b=OBaDehdlg74vqOdiIcPbAbw5Rje/RWi1O7zVjWKP0EDqPqWqYFbl5qQ3gfCD/qW3lbLuO2
+        BSt1CvSrup/U1RHK89+BJnA9/J3LyWGRS3fY2Iw8AKeIt20+OAQpr0TTdx1kF342/Nq4a1
+        8yMJ4JH+A0CL+GRaITz21ZvbCvHu17Y=
+Date:   Mon, 29 Jun 2020 19:10:22 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     x86@kernel.org, linux-sgx@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Jethro Beekman <jethro@fortanix.com>,
+        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
+        asapek@google.com, cedric.xing@intel.com, chenalexchen@google.com,
+        conradparker@google.com, cyhanish@google.com,
+        dave.hansen@intel.com, haitao.huang@intel.com,
+        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
+        kmoy@google.com, ludloff@google.com, luto@kernel.org,
+        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
+        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
+Subject: Re: [PATCH v33 15/21] x86/vdso: Add support for exception fixup in
+ vDSO functions
+Message-ID: <20200629171022.GC32176@zn.tnic>
+References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
+ <20200617220844.57423-16-jarkko.sakkinen@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200617220844.57423-16-jarkko.sakkinen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yuantian Tang <andy.tang@nxp.com>
+On Thu, Jun 18, 2020 at 01:08:37AM +0300, Jarkko Sakkinen wrote:
+...
+> intended benefit of massaging GCC's inlining algorithm is unlikely to
+> realized in the vDSO any time soon, if ever.
 
-There are 5 thermal zones in ls1043a soc. Add the
-rest thermal zone nodes to enable them.
+That is a very good explanation and I would prefer if it would be in a
+sgx-specific README or so instead of it getting lost in git...
 
-Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
----
- .../arm64/boot/dts/freescale/fsl-ls1043a.dtsi | 88 ++++++++++++++++++-
- 1 file changed, 84 insertions(+), 4 deletions(-)
+> +bool fixup_vdso_exception(struct pt_regs *regs, int trapnr,
+> +			  unsigned long error_code, unsigned long fault_addr)
+> +{
+> +	const struct vdso_image *image = current->mm->context.vdso_image;
+> +	const struct vdso_exception_table_entry *extable;
+> +	unsigned int nr_entries, i;
+> +	unsigned long base;
+> +
+> +	/*
+> +	 * Do not attempt to fixup #DB or #BP.  It's impossible to identify
+> +	 * whether or not a #DB/#BP originated from within an SGX enclave and
+> +	 * SGX enclaves are currently the only use case for vDSO fixup.
+> +	 */
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-index 3b641bd43229..17497b0d3542 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-@@ -149,19 +149,79 @@
- 	};
- 
- 	thermal-zones {
--		cpu_thermal: cpu-thermal {
-+		ddr-controller {
- 			polling-delay-passive = <1000>;
- 			polling-delay = <5000>;
-+			thermal-sensors = <&tmu 0>;
- 
-+			trips {
-+				ddr-ctrler-alert {
-+					temperature = <85000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
+So this is all fine and dandy but nowhere do I see the code doing:
+
+	if (am_I_an_sgx_enclave(tsk))
+		fixup_vdso_exception()
+
+because that vDSO exception fixup, albeit it looking kinda generic, is
+SGX-only for now. So it should be designed to run only for SGX enclaves
+for now.
+
+Also, is there any particular reason for fixup_vdso_exception() to be in
+arch/x86/entry/vdso/extable.c instead of in arch/x86/mm/extable.c?
+
+I mean, it gets called by traps.c so it looks like normal kernel code to
+me or am I missing some vdso magic?
+
+And built only when CONFIG_INTEL_SGX is enabled.
+
+And so on...
+
+...
+
+> diff --git a/arch/x86/entry/vdso/extable.h b/arch/x86/entry/vdso/extable.h
+> new file mode 100644
+> index 000000000000..aafdac396948
+> --- /dev/null
+> +++ b/arch/x86/entry/vdso/extable.h
+> @@ -0,0 +1,29 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __VDSO_EXTABLE_H
+> +#define __VDSO_EXTABLE_H
+> +
+> +/*
+> + * Inject exception fixup for vDSO code.  Unlike normal exception fixup,
+> + * vDSO uses a dedicated handler the addresses are relative to the overall
+> + * exception table, not each individual entry.
+> + */
+> +#ifdef __ASSEMBLY__
+> +#define _ASM_VDSO_EXTABLE_HANDLE(from, to)	\
+> +	ASM_VDSO_EXTABLE_HANDLE from to
+> +
+> +.macro ASM_VDSO_EXTABLE_HANDLE from:req to:req
+> +	.pushsection __ex_table, "a"
+> +	.long (\from) - __ex_table
+> +	.long (\to) - __ex_table
+> +	.popsection
+> +.endm
+> +#else
+> +#define _ASM_VDSO_EXTABLE_HANDLE(from, to)	\
+> +	".pushsection __ex_table, \"a\"\n"      \
+> +	".long (" #from ") - __ex_table\n"      \
+> +	".long (" #to ") - __ex_table\n"        \
+> +	".popsection\n"
+> +#endif
+> +
+> +#endif /* __VDSO_EXTABLE_H */
+> +
+
+.git/rebase-apply/patch:122: new blank line at EOF.
 +
-+				ddr-ctrler-crit {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		serdes {
-+			polling-delay-passive = <1000>;
-+			polling-delay = <5000>;
-+			thermal-sensors = <&tmu 1>;
-+
-+			trips {
-+				serdes-alert {
-+					temperature = <85000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				serdes-crit {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		fman {
-+			polling-delay-passive = <1000>;
-+			polling-delay = <5000>;
-+			thermal-sensors = <&tmu 2>;
-+
-+			trips {
-+				fman-alert {
-+					temperature = <85000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				fman-crit {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+		};
-+
-+		core-cluster {
-+			polling-delay-passive = <1000>;
-+			polling-delay = <5000>;
- 			thermal-sensors = <&tmu 3>;
- 
- 			trips {
--				cpu_alert: cpu-alert {
-+				core_cluster_alert: core-cluster-alert {
- 					temperature = <85000>;
- 					hysteresis = <2000>;
- 					type = "passive";
- 				};
--				cpu_crit: cpu-crit {
-+
-+				core_cluster_crit: core-cluster-crit {
- 					temperature = <95000>;
- 					hysteresis = <2000>;
- 					type = "critical";
-@@ -170,7 +230,7 @@
- 
- 			cooling-maps {
- 				map0 {
--					trip = <&cpu_alert>;
-+					trip = <&core_cluster_alert>;
- 					cooling-device =
- 						<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
- 						<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-@@ -179,6 +239,26 @@
- 				};
- 			};
- 		};
-+
-+		sec {
-+			polling-delay-passive = <1000>;
-+			polling-delay = <5000>;
-+			thermal-sensors = <&tmu 4>;
-+
-+			trips {
-+				sec-alert {
-+					temperature = <85000>;
-+					hysteresis = <2000>;
-+					type = "passive";
-+				};
-+
-+				sec-crit {
-+					temperature = <95000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+		};
- 	};
- 
- 	timer {
+
+Thx.
+
 -- 
-2.17.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
