@@ -2,137 +2,118 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED202C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:48:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D9F5C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:48:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF4412063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:48:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vN4jQV/X"
+	by mail.kernel.org (Postfix) with ESMTP id 6B879204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:48:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729016AbgF2Ssh (ORCPT
+        id S1729135AbgF2Ssl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:48:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39208 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729336AbgF2Sro (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:47:44 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B9DCC031C4A
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 10:27:53 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id o38so13451600qtf.6
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 10:27:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=I+h1WtSND1gZmFF1Lpj+XH5zZAhc+/M8o2aQRQdjh50=;
-        b=vN4jQV/XHQ40iIH2MPATkDhQ9XYk5JOA4Cu18nURwdyM7Ht8324JB4h7QnrcbHSh0R
-         uKKcYQU4Tmo37sWRyrYkZhvqqYzG/9ZXo5l9eyiCVc19l9Dbr/LHunoO8LapcliqcnSD
-         3LhMUJkZ297hLPjw3jyZJv+TWE7c2KvXMhEaZDDuaFMIGXEHIumNwmEWUiJ862xyVmqm
-         MJAfw/iY0wlRX2S10wNuLITTVXcfVN3BLWNyw66SBI6+zrw+HQX3JlHnLtj6AqxbmY24
-         n6CHFe1Ehezl1qZ1Vka9N9dQ4cSLMzyuhl7Gu4Yq6Oi447DXbCbTo6nObrKVcHTc25Se
-         S9Hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=I+h1WtSND1gZmFF1Lpj+XH5zZAhc+/M8o2aQRQdjh50=;
-        b=VI06QvX5pOONEjdgOWeoevzMZN4juFA7z4PpoEcplEtL6R4vkTLsd6dV0BNdg76vmM
-         WDVNq8b/CnrKrGcX/LkjWDvHpP3d3IspUhE47VIq4pYULL1PKJR6T8qkGW6dkgpuh+VX
-         WO8vHfgeDbpndZfkWeiD2yxN0xJPh2TllmMzkAVCmEpWiBsRpLw50Z6Jqo1MWiR1vpPt
-         +iQ0qi11b5ilpBwEhOmPYziuEXtlNTkOyTwrg4hzq0YWIMfbKwEaUDUWoTSqfGoG3/6C
-         P1zT14jXpBeKZUgQcTi1YfeXKk2pdley4mUUQ+h14VAWMddhyv5RIo9lMMqz6ZrVN9Zl
-         e4OQ==
-X-Gm-Message-State: AOAM533MTXm7X3SyAdw6AADSlvo5bavbbx0ov9lvYz7qw2c40a2Bqwlz
-        Hz/L2euvYbsQ7cNRwdO+OA4gZzdpVjAkvvnhM/Xgqw==
-X-Google-Smtp-Source: ABdhPJwBDrl7Z6joBJSwfnK/ZIszLge5SHZULmIYamE/+wcJ4SgCb9HG2qDHpPbGVSJJDzFUwOdk4bos+M1tWqEEmog=
-X-Received: by 2002:ac8:260b:: with SMTP id u11mr17039578qtu.380.1593451672211;
- Mon, 29 Jun 2020 10:27:52 -0700 (PDT)
+        Mon, 29 Jun 2020 14:48:41 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43040 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726990AbgF2Ssi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:48:38 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id B3D3AAAC5;
+        Mon, 29 Jun 2020 18:48:35 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 9726B1E12E7; Mon, 29 Jun 2020 20:48:35 +0200 (CEST)
+Date:   Mon, 29 Jun 2020 20:48:35 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Eric Dumazet <eric.dumazet@gmail.com>
+Cc:     Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] fs: Do not check if there is a fsnotify watcher on
+ pseudo inodes
+Message-ID: <20200629184835.GK26507@quack2.suse.cz>
+References: <20200615121358.GF3183@techsingularity.net>
+ <CAOQ4uxi0fqKFZ9=U-+DQ78233hR9TXEU44xRih4q=M556ynphA@mail.gmail.com>
+ <20200616074701.GA20086@quack2.suse.cz>
+ <4f6c8dab-4b54-d523-8636-2b01c03d14d3@gmail.com>
 MIME-Version: 1.0
-References: <000000000000107b4605a7bdce7d@google.com> <20200614085321.8740-1-hdanton@sina.com>
- <20200627130205.16900-1-hdanton@sina.com> <20200627222527.GC25301@ziepe.ca> <CACT4Y+ab1q7fON3rkj+FHODPQXDGyP5c0tJt7gbrpmsAAYRb1g@mail.gmail.com>
-In-Reply-To: <CACT4Y+ab1q7fON3rkj+FHODPQXDGyP5c0tJt7gbrpmsAAYRb1g@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 29 Jun 2020 19:27:40 +0200
-Message-ID: <CACT4Y+Zjw=ru-Sqs-V7cP0Exgu7g0jWBXcPeVKnLqpbkS-wDRg@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in addr_handler (2)
-To:     Jason Gunthorpe <jgg@ziepe.ca>,
-        syzkaller <syzkaller@googlegroups.com>
-Cc:     Hillf Danton <hdanton@sina.com>,
-        syzbot <syzbot+a929647172775e335941@syzkaller.appspotmail.com>,
-        chuck.lever@oracle.com, Doug Ledford <dledford@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        RDMA mailing list <linux-rdma@vger.kernel.org>,
-        parav@mellanox.com, Markus Elfring <Markus.Elfring@web.de>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4f6c8dab-4b54-d523-8636-2b01c03d14d3@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 4:42 PM Dmitry Vyukov <dvyukov@google.com> wrote:
->
-> On Sun, Jun 28, 2020 at 12:25 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> >
-> > On Sat, Jun 27, 2020 at 09:02:05PM +0800, Hillf Danton wrote:
-> > > > So, to hit this syzkaller one of these must have happened:
-> > > >  1) rdma_addr_cancel() didn't work and the process_one_work() is still
-> > > >     runnable/running
-> > >
-> > > What syzbot reported indicates that the kworker did survive not only
-> > > canceling work but the handler_mutex, despite it's a sync cancel that
-> > > waits for the work to complete.
-> >
-> > The syzbot report doesn't confirm that the cancel work was actaully
-> > called.
-> >
-> > The most likely situation is that it was skipped because of the state
-> > mangling the patch fixes..
-> >
-> > > >  2) The state changed away from RDMA_CM_ADDR_QUERY without doing
-> > > >     rdma_addr_cancel()
-> > >
-> > > The cancel does cover the query state in the reported case, and have
-> > > difficult time working out what's in the patch below preventing the
-> > > work from going across the line the sync cancel draws. That's the
-> > > question we can revisit once there is a reproducer available.
-> >
-> > rdma-cm never seems to get reproducers from syzkaller
->
-> +syzkaller mailing list
->
-> Hi Jason,
->
-> Wonder if there is some systematic issue. Let me double check.
+On Mon 29-06-20 08:17:02, Eric Dumazet wrote:
+> On 6/16/20 12:47 AM, Jan Kara wrote:
+> > On Mon 15-06-20 19:26:38, Amir Goldstein wrote:
+> >>> This patch changes alloc_file_pseudo() to always opt out of fsnotify by
+> >>> setting FMODE_NONOTIFY flag so that no check is made for fsnotify watchers
+> >>> on pseudo files. This should be safe as the underlying helper for the
+> >>> dentry is d_alloc_pseudo which explicitly states that no lookups are ever
+> >>> performed meaning that fanotify should have nothing useful to attach to.
+> >>>
+> >>> The test motivating this was "perf bench sched messaging --pipe". On
+> >>> a single-socket machine using threads the difference of the patch was
+> >>> as follows.
+> >>>
+> >>>                               5.7.0                  5.7.0
+> >>>                             vanilla        nofsnotify-v1r1
+> >>> Amean     1       1.3837 (   0.00%)      1.3547 (   2.10%)
+> >>> Amean     3       3.7360 (   0.00%)      3.6543 (   2.19%)
+> >>> Amean     5       5.8130 (   0.00%)      5.7233 *   1.54%*
+> >>> Amean     7       8.1490 (   0.00%)      7.9730 *   2.16%*
+> >>> Amean     12     14.6843 (   0.00%)     14.1820 (   3.42%)
+> >>> Amean     18     21.8840 (   0.00%)     21.7460 (   0.63%)
+> >>> Amean     24     28.8697 (   0.00%)     29.1680 (  -1.03%)
+> >>> Amean     30     36.0787 (   0.00%)     35.2640 *   2.26%*
+> >>> Amean     32     38.0527 (   0.00%)     38.1223 (  -0.18%)
+> >>>
+> >>> The difference is small but in some cases it's outside the noise so
+> >>> while marginal, there is still some small benefit to ignoring fsnotify
+> >>> for files allocated via alloc_file_pseudo in some cases.
+> >>>
+> >>> Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+> >>
+> >> Reviewed-by: Amir Goldstein <amir73il@gmail.com>
+> > 
+> > Thanks for the patch Mel and for review Amir! I've added the patch to my
+> > tree with small amendments to the changelog.
+> > 
+> > 								Honza
+> > 
+> 
+> Note this patch broke some user programs (one instance being packetdrill)
+> 
+> Typical legacy packetdrill script has :
+> 
+> // Create a socket and set it to non-blocking.
+>     0 socket(..., SOCK_STREAM, IPPROTO_TCP) = 3
+>    +0 fcntl(3, F_GETFL) = 0x2 (flags O_RDWR)
+>    +0 fcntl(3, F_SETFL, O_RDWR|O_NONBLOCK) = 0
+> 
+> 
+> But after this change, fcntl(3, F_GETFL) returns 0x4000002 
+> 
+> FMODE_NONOTIFY was not meant to be visible to user space. (otherwise
+> there would be a O_NONOTIFY) ?
 
-By scanning bugs at:
-https://syzkaller.appspot.com/upstream
-https://syzkaller.appspot.com/upstream/fixed
+Interesting. As Mel said the patch is reverted anyway (Linus already
+applied the revert) but the question about FMODE_NONOTIFY is interesting.
+Userspace certainly cannot set the flag (the kernel enforces this on
+open(2) and fcntl(F_SETFL)). But it is visible to userspace via
+fcntl(F_GETFL) which may have been an oversight... I'm just not sure
+whether some of the fanotify(7) users which legitimately get such file
+descriptors don't depend on this flag being visible.
 
-I found a significant number of bugs that I would qualify as "rdma-cm"
-and that have reproducers. Here is an incomplete list (I did not get
-to the end):
+								Honza
 
-https://syzkaller.appspot.com/bug?id=b8febdb3c7c8c1f1b606fb903cee66b21b2fd02f
-https://syzkaller.appspot.com/bug?id=d5222b3e1659e0aea19df562c79f216515740daa
-https://syzkaller.appspot.com/bug?id=c600e111223ce0a20e5f2fb4e9a4ebdff54d7fa6
-https://syzkaller.appspot.com/bug?id=a9796acbdecc1b2ba927578917755899c63c48af
-https://syzkaller.appspot.com/bug?id=95f89b8fb9fdc42e28ad586e657fea074e4e719b
-https://syzkaller.appspot.com/bug?id=8dc0bcd9dd6ec915ba10b3354740eb420884acaa
-https://syzkaller.appspot.com/bug?id=805ad726feb6910e35088ae7bbe61f4125e573b7
-https://syzkaller.appspot.com/bug?id=56b60fb3340c5995373fe5b8eae9e8722a012fc4
-https://syzkaller.appspot.com/bug?id=38d36d1b26b4299bf964d50af4d79688d39ab960
-https://syzkaller.appspot.com/bug?id=25e00dd59f31783f233185cb60064b0ab645310f
-https://syzkaller.appspot.com/bug?id=2f38d7e5312fdd0acc979c5e26ef2ef8f3370996
-
-Do you mean some specific subset of bugs by "rdma-cm"? If yes, what is
-that subset?
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
