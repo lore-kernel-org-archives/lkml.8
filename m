@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E3FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 371CAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:00:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE5E72065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:00:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15E472065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:00:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468023;
-	bh=2ubDCHODXZNNgKbQOQukr/eKLce8EHPTK8F1h0as8Xg=;
+	s=default; t=1593468028;
+	bh=5jJ5tsc2fYzVzsrCetlSI32efB4LRDq2ryQWZ5SkKLc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lk9/40CVbmxaG7ggQuA5OkD0OE1+8AuIYyvgX50yFMOiwCl9b4ObbeALCHJvIgEBw
-	 m4wUuAuxZ4r/qOxE8yzvOL8FS38jvs98+2THWA5I4hwNUHUze/tZ3Dil4gA1zeY2s3
-	 DqIvixKI+h18v3WFinXIbqfPy3Ub2x+CAz70jWbM=
+	b=O5gv12zTS1ZRC2t75yPhIKepflZFDWCn6kq8VzZ0DeqIms695A937FHs/w54LjDSA
+	 rgw8dB6QZtYUxiiJH4+omP9RJdTd+yPqjzQ6tcAl4s3g0lNNCBYS0vXSEcslnfN7N4
+	 uvvlTf4to9nVd8x/JUvsFVq/qsf3Ij2pwKF08n4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391741AbgF2WAV (ORCPT
+        id S2387869AbgF2WAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:00:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56780 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:00:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726385AbgF2SfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726356AbgF2SfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0D8E2476D;
-        Mon, 29 Jun 2020 15:21:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2C872404F;
+        Mon, 29 Jun 2020 15:18:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444086;
-        bh=2ubDCHODXZNNgKbQOQukr/eKLce8EHPTK8F1h0as8Xg=;
+        s=default; t=1593443921;
+        bh=5jJ5tsc2fYzVzsrCetlSI32efB4LRDq2ryQWZ5SkKLc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qx0s0X8oI1dSC1YCRmGWBjw+xtyAkuprNaRSUWW1u475riF6+J/9Vq3fECcCtDyVE
-         S92tbGFd1yD7mTdtBs8Ogp09o70PZjuxtX7uoEK1Of2JPHLQFMydijCYpzi+49ju01
-         gmKbOeBKHe4+MdsgSnUheqeKnq260RsDW4lW9eLY=
+        b=guJVhnIlOFpZZT6xzFwpFxjzVdx7ZkfZ4syPumOcy95dbgIfHv3HGUsBfcMuIxUsN
+         fyM/7GWf1sYtXWXuoeO5TYuZrKKlpVPzo88Rd2GXGPC3ebkiNkZfoFo5JzlehLgsar
+         vZ6TYdGOiug5pOsWZRX1oz2WJhorch6KP7g2UB40=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Schnelle <svens@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 196/265] s390/ptrace: pass invalid syscall numbers to tracing
-Date:   Mon, 29 Jun 2020 11:17:09 -0400
-Message-Id: <20200629151818.2493727-197-sashal@kernel.org>
+Cc:     Denis Kirjanov <kda@linux-powerpc.org>,
+        Denis Kirjanov <denis.kirjanov@suse.com>,
+        Neal Cardwell <ncardwell@google.com>,
+        Eric Dumazet <edumazet@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 022/265] tcp: don't ignore ECN CWR on pure ACK
+Date:   Mon, 29 Jun 2020 11:14:15 -0400
+Message-Id: <20200629151818.2493727-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -65,55 +68,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Schnelle <svens@linux.ibm.com>
+From: Denis Kirjanov <kda@linux-powerpc.org>
 
-[ Upstream commit 00332c16b1604242a56289ff2b26e283dbad0812 ]
+[ Upstream commit 2570284060b48f3f79d8f1a2698792f36c385e9a ]
 
-tracing expects to see invalid syscalls, so pass it through.
-The syscall path in entry.S checks the syscall number before
-looking up the handler, so it is still safe.
+there is a problem with the CWR flag set in an incoming ACK segment
+and it leads to the situation when the ECE flag is latched forever
 
-Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+the following packetdrill script shows what happens:
+
+// Stack receives incoming segments with CE set
++0.1 <[ect0]  . 11001:12001(1000) ack 1001 win 65535
++0.0 <[ce]    . 12001:13001(1000) ack 1001 win 65535
++0.0 <[ect0] P. 13001:14001(1000) ack 1001 win 65535
+
+// Stack repsonds with ECN ECHO
++0.0 >[noecn]  . 1001:1001(0) ack 12001
++0.0 >[noecn] E. 1001:1001(0) ack 13001
++0.0 >[noecn] E. 1001:1001(0) ack 14001
+
+// Write a packet
++0.1 write(3, ..., 1000) = 1000
++0.0 >[ect0] PE. 1001:2001(1000) ack 14001
+
+// Pure ACK received
++0.01 <[noecn] W. 14001:14001(0) ack 2001 win 65535
+
+// Since CWR was sent, this packet should NOT have ECE set
+
++0.1 write(3, ..., 1000) = 1000
++0.0 >[ect0]  P. 2001:3001(1000) ack 14001
+// but Linux will still keep ECE latched here, with packetdrill
+// flagging a missing ECE flag, expecting
+// >[ect0] PE. 2001:3001(1000) ack 14001
+// in the script
+
+In the situation above we will continue to send ECN ECHO packets
+and trigger the peer to reduce the congestion window. To avoid that
+we can check CWR on pure ACKs received.
+
+v3:
+- Add a sequence check to avoid sending an ACK to an ACK
+
+v2:
+- Adjusted the comment
+- move CWR check before checking for unacknowledged packets
+
+Signed-off-by: Denis Kirjanov <denis.kirjanov@suse.com>
+Acked-by: Neal Cardwell <ncardwell@google.com>
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/s390/kernel/entry.S  | 2 +-
- arch/s390/kernel/ptrace.c | 6 ++----
- 2 files changed, 3 insertions(+), 5 deletions(-)
+ net/ipv4/tcp_input.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/arch/s390/kernel/entry.S b/arch/s390/kernel/entry.S
-index 3ae64914bd144..9584e743102b7 100644
---- a/arch/s390/kernel/entry.S
-+++ b/arch/s390/kernel/entry.S
-@@ -368,9 +368,9 @@ ENTRY(system_call)
- 	jnz	.Lsysc_nr_ok
- 	# svc 0: system call number in %r1
- 	llgfr	%r1,%r1				# clear high word in r1
-+	sth	%r1,__PT_INT_CODE+2(%r11)
- 	cghi	%r1,NR_syscalls
- 	jnl	.Lsysc_nr_ok
--	sth	%r1,__PT_INT_CODE+2(%r11)
- 	slag	%r8,%r1,3
- .Lsysc_nr_ok:
- 	xc	__SF_BACKCHAIN(8,%r15),__SF_BACKCHAIN(%r15)
-diff --git a/arch/s390/kernel/ptrace.c b/arch/s390/kernel/ptrace.c
-index 3f29646313e82..fca78b269349d 100644
---- a/arch/s390/kernel/ptrace.c
-+++ b/arch/s390/kernel/ptrace.c
-@@ -848,11 +848,9 @@ asmlinkage long do_syscall_trace_enter(struct pt_regs *regs)
- 	 * call number to gprs[2].
- 	 */
- 	if (test_thread_flag(TIF_SYSCALL_TRACE) &&
--	    (tracehook_report_syscall_entry(regs) ||
--	     regs->gprs[2] >= NR_syscalls)) {
-+	    tracehook_report_syscall_entry(regs)) {
- 		/*
--		 * Tracing decided this syscall should not happen or the
--		 * debugger stored an invalid system call number. Skip
-+		 * Tracing decided this syscall should not happen. Skip
- 		 * the system call and the system call restart handling.
+diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+index 29c6fc8c77168..ccab8bc29e2b1 100644
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -261,7 +261,8 @@ static void tcp_ecn_accept_cwr(struct sock *sk, const struct sk_buff *skb)
+ 		 * cwnd may be very low (even just 1 packet), so we should ACK
+ 		 * immediately.
  		 */
- 		goto skip;
+-		inet_csk(sk)->icsk_ack.pending |= ICSK_ACK_NOW;
++		if (TCP_SKB_CB(skb)->seq != TCP_SKB_CB(skb)->end_seq)
++			inet_csk(sk)->icsk_ack.pending |= ICSK_ACK_NOW;
+ 	}
+ }
+ 
+@@ -3683,6 +3684,15 @@ static int tcp_ack(struct sock *sk, const struct sk_buff *skb, int flag)
+ 		tcp_in_ack_event(sk, ack_ev_flags);
+ 	}
+ 
++	/* This is a deviation from RFC3168 since it states that:
++	 * "When the TCP data sender is ready to set the CWR bit after reducing
++	 * the congestion window, it SHOULD set the CWR bit only on the first
++	 * new data packet that it transmits."
++	 * We accept CWR on pure ACKs to be more robust
++	 * with widely-deployed TCP implementations that do this.
++	 */
++	tcp_ecn_accept_cwr(sk, skb);
++
+ 	/* We passed data and got it acked, remove any soft error
+ 	 * log. Something worked...
+ 	 */
+@@ -4780,8 +4790,6 @@ static void tcp_data_queue(struct sock *sk, struct sk_buff *skb)
+ 	skb_dst_drop(skb);
+ 	__skb_pull(skb, tcp_hdr(skb)->doff * 4);
+ 
+-	tcp_ecn_accept_cwr(sk, skb);
+-
+ 	tp->rx_opt.dsack = 0;
+ 
+ 	/*  Queue data for delivery to the user.
 -- 
 2.25.1
 
