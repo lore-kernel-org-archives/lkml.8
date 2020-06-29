@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2589CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:26:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A2FCC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EEF3A2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:26:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 015DD20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:27:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462416;
-	bh=jYcTHKfl71oRSgVpLIw4fJJ7HkJD9PW7AfDpRhNHGMI=;
+	s=default; t=1593462421;
+	bh=f2UiAtHANs9tFRVesQfBZNsitQGOznVCjZKCH6GXzDk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GYg8fbXQQOEzFmC8OIubSu2/bBbbHqXBnL1mLCRwBPyNTmD8XpuCMweokaj57fS4B
-	 B/X8oTBPCZPTmSszfqYFSjm1VI2AwYT7QlQfb2Bf1BZWEXGre1c6EGA4g+xYX0zc/Z
-	 RVFEkPtznuug06Xb73jU0bD5qd6DdX5IyloWggVI=
+	b=Ui8evjyFE9bMyR0hy4FVi+nLRibrZVbngFna20AcHRd1bPWR82xfwMqW1S5+mB4UZ
+	 Gu8nGm0dEYJNtY5+uAlslf8NFJip2h0yd5jvEszZyXLJ8umKhZ6H/bnN0IBDOc2/lV
+	 sA6izpAPZstLCaVGv4b/PELkjBUe4pUp0kaqStqg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730264AbgF2U0y (ORCPT
+        id S2389102AbgF2U07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:26:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37016 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:26:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732459AbgF2TZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732455AbgF2TZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D303C25316;
-        Mon, 29 Jun 2020 15:39:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D62DD25324;
+        Mon, 29 Jun 2020 15:39:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445144;
-        bh=jYcTHKfl71oRSgVpLIw4fJJ7HkJD9PW7AfDpRhNHGMI=;
+        s=default; t=1593445156;
+        bh=f2UiAtHANs9tFRVesQfBZNsitQGOznVCjZKCH6GXzDk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OC6D1BpT8GHOSBEPlYKLQNaxhXqJ7LXWA2Spw4+HnOUITMYzFSdMm6mrIoLGu8MrQ
-         wAerfY3I5Lb6lskmGdiU8bBi5F/vHJ+sqOi/znbT37g70NZ/vbCJcc8u/ruAoSYJ/q
-         nz+ojxCmnID+Lw84ulsDDjXHANCK33dRAf2mugPg=
+        b=bM5a3IxILeCPiMNMSkdHU7mvmmHg5R1X7ysVLL0MZH7Ru8SoAnRfAVmrfVmx2c/3v
+         o6amw4pdOIv/VMHthjTi3SsfizAU+HRybuYXRucQZOjZUXvMkGsmXLrjkNbVpcMbWT
+         fnZn5iRR6Mqn5mbHJXOsaYBXw9r0Vn5XSQwrq2h0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexander Lobakin <alobakin@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 48/78] net: qed: fix excessive QM ILT lines consumption
-Date:   Mon, 29 Jun 2020 11:37:36 -0400
-Message-Id: <20200629153806.2494953-49-sashal@kernel.org>
+Subject: [PATCH 4.14 57/78] kbuild: improve cc-option to clean up all temporary files
+Date:   Mon, 29 Jun 2020 11:37:45 -0400
+Message-Id: <20200629153806.2494953-58-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
 References: <20200629153806.2494953-1-sashal@kernel.org>
@@ -67,38 +64,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lobakin <alobakin@marvell.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit d434d02f7e7c24c721365fd594ed781acb18e0da ]
+[ Upstream commit f2f02ebd8f3833626642688b2d2c6a7b3c141fa9 ]
 
-This is likely a copy'n'paste mistake. The amount of ILT lines to
-reserve for a single VF was being multiplied by the total VFs count.
-This led to a huge redundancy in reservation and potential lines
-drainouts.
+When cc-option and friends evaluate compiler flags, the temporary file
+$$TMP is created as an output object, and automatically cleaned up.
+The actual file path of $$TMP is .<pid>.tmp, here <pid> is the process
+ID of $(shell ...) invoked from cc-option. (Please note $$$$ is the
+escape sequence of $$).
 
-Fixes: 1408cc1fa48c ("qed: Introduce VFs")
-Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Such garbage files are cleaned up in most cases, but some compiler flags
+create additional output files.
+
+For example, -gsplit-dwarf creates a .dwo file.
+
+When CONFIG_DEBUG_INFO_SPLIT=y, you will see a bunch of .<pid>.dwo files
+left in the top of build directories. You may not notice them unless you
+do 'ls -a', but the garbage files will increase every time you run 'make'.
+
+This commit changes the temporary object path to .tmp_<pid>/tmp, and
+removes .tmp_<pid> directory when exiting. Separate build artifacts such
+as *.dwo will be cleaned up all together because their file paths are
+usually determined based on the base name of the object.
+
+Another example is -ftest-coverage, which outputs the coverage data into
+<base-name-of-object>.gcno
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_cxt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ scripts/Kbuild.include | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_cxt.c b/drivers/net/ethernet/qlogic/qed/qed_cxt.c
-index 27ba476f761d4..4fc3468f6f38b 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_cxt.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_cxt.c
-@@ -396,7 +396,7 @@ static void qed_cxt_qm_iids(struct qed_hwfn *p_hwfn,
- 		vf_tids += segs[NUM_TASK_PF_SEGMENTS].count;
- 	}
+diff --git a/scripts/Kbuild.include b/scripts/Kbuild.include
+index a33fa1a918731..28bfb4378dbd8 100644
+--- a/scripts/Kbuild.include
++++ b/scripts/Kbuild.include
+@@ -82,20 +82,21 @@ cc-cross-prefix =  \
+ 		fi)))
  
--	iids->vf_cids += vf_cids * p_mngr->vf_count;
-+	iids->vf_cids = vf_cids;
- 	iids->tids += vf_tids * p_mngr->vf_count;
+ # output directory for tests below
+-TMPOUT := $(if $(KBUILD_EXTMOD),$(firstword $(KBUILD_EXTMOD))/)
++TMPOUT = $(if $(KBUILD_EXTMOD),$(firstword $(KBUILD_EXTMOD))/).tmp_$$$$
  
- 	DP_VERBOSE(p_hwfn, QED_MSG_ILT,
+ # try-run
+ # Usage: option = $(call try-run, $(CC)...-o "$$TMP",option-ok,otherwise)
+ # Exit code chooses option. "$$TMP" serves as a temporary file and is
+ # automatically cleaned up.
+ try-run = $(shell set -e;		\
+-	TMP="$(TMPOUT).$$$$.tmp";	\
+-	TMPO="$(TMPOUT).$$$$.o";	\
++	TMP=$(TMPOUT)/tmp;		\
++	TMPO=$(TMPOUT)/tmp.o;		\
++	mkdir -p $(TMPOUT);		\
++	trap "rm -rf $(TMPOUT)" EXIT;	\
+ 	if ($(1)) >/dev/null 2>&1;	\
+ 	then echo "$(2)";		\
+ 	else echo "$(3)";		\
+-	fi;				\
+-	rm -f "$$TMP" "$$TMPO")
++	fi)
+ 
+ # as-option
+ # Usage: cflags-y += $(call as-option,-Wa$(comma)-isa=foo,)
 -- 
 2.25.1
 
