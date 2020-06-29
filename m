@@ -2,133 +2,140 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F87C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD470C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:06:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 61CB320663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EBA6206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:06:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tUchiO1Z"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Fce1K0Oh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730734AbgF2TGH (ORCPT
+        id S1730735AbgF2TGP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:06:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41732 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730529AbgF2TCn (ORCPT
+        Mon, 29 Jun 2020 15:06:15 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:55375 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730037AbgF2TGN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:02:43 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62B5BC031C5E;
-        Mon, 29 Jun 2020 10:44:03 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id 67so4131721pfg.5;
-        Mon, 29 Jun 2020 10:44:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=zajKLFBWYvbR/dn70eWOQZrMNaJGoW21UItsytAj4Pg=;
-        b=tUchiO1ZmHPcMUQ6nb6f+GBa4GwRs+UmAyEev+2pWA7R/2ylJcq4ZTXHOQeyLtbtKC
-         7YJaKxcjh5GVMzls4Q0y2vp3h7D94xr91HPZHTYdn3HRQgzE3dF8791jm9A3v6tBOYqe
-         WN40ApOIzVoFRQK49V44l03voWX+TUL36q1dDsY4yrM2g6KHfASEnDkSdp5miGCDrg3+
-         PqVW30sWMvrXokrQORmke/VQMfqTpNs7Ifvm3EwToEa83E23Sy5TQACWtjB4RMpJgQPl
-         5SmtFPk5qWymIYKBXzKyeUZl7u0NABgETrEC4t95CUwAH4Rcq+4JnrfPp4X4iM/CKla8
-         k0ng==
+        Mon, 29 Jun 2020 15:06:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593457572;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=wiA60jnjSVk1PN6FvCwFOWuyAKPOYAY44lt2HUcQNf4=;
+        b=Fce1K0OhI4n8GXXkr71jHl24wl4Cn5c1UK2uzi7eDRUgQozU7BMbOCFVNgH2BfebMgmcT7
+        5THjliWzZixzSxbfbn+ppcPeVR/XnnYlYz1ufDx2dB/ZlhzK6mmI29VdKFzsKcMxri9Vil
+        VVLr+Ku+YqyLsuJJzxTplIZdsJiPEP8=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-217-WF7REQIJOxiSNRrVrGysAw-1; Mon, 29 Jun 2020 11:03:44 -0400
+X-MC-Unique: WF7REQIJOxiSNRrVrGysAw-1
+Received: by mail-wr1-f69.google.com with SMTP id y13so16666132wrp.13
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 08:03:44 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=zajKLFBWYvbR/dn70eWOQZrMNaJGoW21UItsytAj4Pg=;
-        b=Hiyg0VM7FzFORSv7WbPWk/zWDfzusT9C853x3QcYrGF7uSB/PlrwIkjfMc8BqteZPi
-         D4w1WwunePVvphKkDXbkdZ1KPgSKMM1kC8xRVVGZ88xjj5r20t3RtsBQ/Xm3gn6QXfOw
-         jGOGeI4JmWLhBq5c1tyjr1wrobWBaxWmLOArhMTTo2VUA9xEgUzG1Otot38bWyooYI39
-         vWZN5BX18fE66alc6jSYnRmvQocfSicozZ3by9E6WChqQExTvlI3BWQ94u4m9MzoR25h
-         BvMm6y+GvyfH/JrsDX7w1ALlQtzzD9U8Rwab6YZszybK+6+gWH5PwFIudxWed2P6BB+U
-         h2Cg==
-X-Gm-Message-State: AOAM533Vqzx7Cl9NrhPmxMljb5ImMXuuZ3ljDs6nuyTFrzllL1Cb2aAz
-        hieoQKu/lihXeBu8EtCNIns=
-X-Google-Smtp-Source: ABdhPJzBcLLzwLTBp+SADDEiJRBUHsSxdEdo7/SpaPcZ8T2RJtU5PzmMtmzfSCa+VgpSvypvEpCRVA==
-X-Received: by 2002:a63:d74c:: with SMTP id w12mr11600066pgi.260.1593452642988;
-        Mon, 29 Jun 2020 10:44:02 -0700 (PDT)
-Received: from localhost ([160.16.113.140])
-        by smtp.gmail.com with ESMTPSA id j2sm202778pjf.4.2020.06.29.10.44.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 10:44:02 -0700 (PDT)
-From:   Coiby Xu <coiby.xu@gmail.com>
-X-Google-Original-From: Coiby Xu <Coiby.Xu@gmail.com>
-Date:   Tue, 30 Jun 2020 01:43:52 +0800
-To:     Benjamin Poirier <benjamin.poirier@gmail.com>
-Cc:     devel@driverdev.osuosl.org, joe@perches.com,
-        dan.carpenter@oracle.com, gregkh@linuxfoundation.org,
-        Manish Chopra <manishc@marvell.com>,
-        "supporter:QLOGIC QLGE 10Gb ETHERNET DRIVER" 
-        <GR-Linux-NIC-Dev@marvell.com>,
-        "open list:QLOGIC QLGE 10Gb ETHERNET DRIVER" <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 4/4] staging: qlge: replace pr_err with netdev_err
-Message-ID: <20200629174352.euw4lckze2k7xtbm@Rk>
-References: <20200627145857.15926-1-coiby.xu@gmail.com>
- <20200627145857.15926-5-coiby.xu@gmail.com>
- <20200629053004.GA6165@f3>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wiA60jnjSVk1PN6FvCwFOWuyAKPOYAY44lt2HUcQNf4=;
+        b=bv84YorrWpAmSkVEounLH8RrzzWA/LiW3gfz7BAym/QWhiv33wMZge7kj38VH31F94
+         SXI8gP9vaO6Uw0eR9SGoXokXqT0Ugu2gvF3q+zsKeWYeMgJ3ynvluJcCxx9/OC54Hqa0
+         QlZpEQwkM5/EtLrR0yqf6f5a+/aucArPWDUY3zI24gXaMwKu0lBqFrxpvNBnq6ebC8oC
+         7d/dnMGbVXZJ/M/BNqiHyr3hmNSxWH6LykTHN5zi94VioAvB+kRJWm/IOs2D0dVS9Q+Y
+         q3fx/IeS21MMp4sGpjhnFyGESP0lVARPfDJxQY/c+ZMQx8hunohV7oNpcAgDfgZ6Mgty
+         qvJw==
+X-Gm-Message-State: AOAM531kygnbmiZ4TKJmm3ClPPKq4GxHPCoMfITPWAgGmvnvDTLD+Npc
+        c6R0e6KUb1nAwltoqQTutAmXtE+dMWYgTxii4ziIIqlGCXhUqWFvHb97q30AdPl/Ngmo2GErkiX
+        bI7LvsMa0Eh8JYOi+9QaV6iBr
+X-Received: by 2002:a7b:c185:: with SMTP id y5mr17739374wmi.85.1593443023634;
+        Mon, 29 Jun 2020 08:03:43 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJyfWzhvzup1XHO1uAaeVJMlYTx2UJCwm1ZI0mJJ7N8UF2kln9C5WXC5FIAYwAJfdIO20eLgbA==
+X-Received: by 2002:a7b:c185:: with SMTP id y5mr17739339wmi.85.1593443023215;
+        Mon, 29 Jun 2020 08:03:43 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:b0e5:c632:a580:8b9a? ([2001:b07:6468:f312:b0e5:c632:a580:8b9a])
+        by smtp.gmail.com with ESMTPSA id a126sm63300wme.28.2020.06.29.08.03.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jun 2020 08:03:42 -0700 (PDT)
+Subject: Re: [PATCH] KVM: X86: Fix async pf caused null-ptr-deref
+To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+References: <1593426391-8231-1-git-send-email-wanpengli@tencent.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <60b8326d-3979-6218-4a41-79c86ffab3bd@redhat.com>
+Date:   Mon, 29 Jun 2020 17:03:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200629053004.GA6165@f3>
+In-Reply-To: <1593426391-8231-1-git-send-email-wanpengli@tencent.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 02:30:04PM +0900, Benjamin Poirier wrote:
->On 2020-06-27 22:58 +0800, Coiby Xu wrote:
->[...]
->>  void ql_dump_qdev(struct ql_adapter *qdev)
->>  {
->> @@ -1611,99 +1618,100 @@ void ql_dump_qdev(struct ql_adapter *qdev)
->>  #ifdef QL_CB_DUMP
->>  void ql_dump_wqicb(struct wqicb *wqicb)
->>  {
->> -	pr_err("Dumping wqicb stuff...\n");
->> -	pr_err("wqicb->len = 0x%x\n", le16_to_cpu(wqicb->len));
->> -	pr_err("wqicb->flags = %x\n", le16_to_cpu(wqicb->flags));
->> -	pr_err("wqicb->cq_id_rss = %d\n",
->> -	       le16_to_cpu(wqicb->cq_id_rss));
->> -	pr_err("wqicb->rid = 0x%x\n", le16_to_cpu(wqicb->rid));
->> -	pr_err("wqicb->wq_addr = 0x%llx\n",
->> -	       (unsigned long long)le64_to_cpu(wqicb->addr));
->> -	pr_err("wqicb->wq_cnsmr_idx_addr = 0x%llx\n",
->> -	       (unsigned long long)le64_to_cpu(wqicb->cnsmr_idx_addr));
->> +	netdev_err(qdev->ndev, "Dumping wqicb stuff...\n");
->
->drivers/staging/qlge/qlge_dbg.c:1621:13: error: ‘qdev’ undeclared (first use in this function); did you mean ‘cdev’?
-> 1621 |  netdev_err(qdev->ndev, "Dumping wqicb stuff...\n");
->      |             ^~~~
->      |             cdev
->
->[...]
->and many more like that
->
->Anyways, qlge_dbg.h is a dumpster. It has hundreds of lines of code
->bitrotting away in ifdef land. See this comment from David Miller on the
->topic of ifdef'ed debugging code:
->https://lore.kernel.org/netdev/20200303.145916.1506066510928020193.davem@davemloft.net/
+On 29/06/20 12:26, Wanpeng Li wrote:
+> From: Wanpeng Li <wanpengli@tencent.com>
+> 
+> Syzbot reported that:
+> 
+>   CPU: 1 PID: 6780 Comm: syz-executor153 Not tainted 5.7.0-syzkaller #0
+>   Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+>   RIP: 0010:__apic_accept_irq+0x46/0xb80
+>   Call Trace:
+>    kvm_arch_async_page_present+0x7de/0x9e0
+>    kvm_check_async_pf_completion+0x18d/0x400
+>    kvm_arch_vcpu_ioctl_run+0x18bf/0x69f0
+>    kvm_vcpu_ioctl+0x46a/0xe20
+>    ksys_ioctl+0x11a/0x180
+>    __x64_sys_ioctl+0x6f/0xb0
+>    do_syscall_64+0xf6/0x7d0
+>    entry_SYSCALL_64_after_hwframe+0x49/0xb3
+>  
+> The testcase enables APF mechanism in MSR_KVM_ASYNC_PF_EN with ASYNC_PF_INT 
+> enabled w/o setting MSR_KVM_ASYNC_PF_INT before, what's worse, interrupt 
+> based APF 'page ready' event delivery depends on in kernel lapic, however, 
+> we didn't bail out when lapic is not in kernel during guest setting 
+> MSR_KVM_ASYNC_PF_EN which causes the null-ptr-deref in host later. 
+> This patch fixes it.
+> 
+> Reported-by: syzbot+1bf777dfdde86d64b89b@syzkaller.appspotmail.com
+> Fixes: 2635b5c4a0 (KVM: x86: interrupt based APF 'page ready' event delivery)
+> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> ---
+>  arch/x86/kvm/x86.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 00c88c2..1c0b4f5 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -2693,6 +2693,9 @@ static int kvm_pv_enable_async_pf(struct kvm_vcpu *vcpu, u64 data)
+>  	if (data & 0x30)
+>  		return 1;
+>  
+> +	if (!lapic_in_kernel(vcpu))
+> +		return 1;
+> +
+>  	vcpu->arch.apf.msr_en_val = data;
+>  
+>  	if (!kvm_pv_async_pf_enabled(vcpu)) {
+> 
 
-Thank you for spotting this problem! This issue could be fixed by
-passing qdev to ql_dump_wqicb. Or are you suggesting we completely
-remove qlge_dbg since it's only for the purpose of debugging the driver
-by the developer?
+Queued, thanks.
 
-Btw, I'm curious how you make this compiling error occur. Do you manually trigger
-it via "QL_CB_DUMP=1 make M=drivers/staging/qlge" or use some automate
-tools?
+Paolo
 
---
-Best regards,
-Coiby
