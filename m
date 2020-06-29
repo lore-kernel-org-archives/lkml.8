@@ -2,97 +2,116 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B17F5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C82C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 996F02067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:45:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 301752063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:45:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Jlf/+bu6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404080AbgF2Vp1 (ORCPT
+        id S2404084AbgF2Vpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:45:27 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:49520 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727123AbgF2Shn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 17:45:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37554 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727775AbgF2Shn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:37:43 -0400
-Received: from kvm-dev1.localdomain (unknown [10.2.5.134])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxn9566flezmRMAA--.4772S2;
-        Mon, 29 Jun 2020 21:15:39 +0800 (CST)
-From:   bibo mao <maobibo@loongson.cn>
-To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, Bibo Mao <maobibo@loongson.cn>
-Subject: [PATCH 1/2] hugetlb: clear huge pte during flush function on mips platform
-Date:   Mon, 29 Jun 2020 21:15:32 +0800
-Message-Id: <1593436533-8645-1-git-send-email-maobibo@loongson.cn>
-X-Mailer: git-send-email 1.8.3.1
-X-CM-TRANSID: AQAAf9Dxn9566flezmRMAA--.4772S2
-X-Coremail-Antispam: 1UD129KBjvJXoW7ZrWDGFWfKw4rAr17Ary3XFb_yoW8XF4kpF
-        WDCwn5G3ykGr9IkF1xZ34kK3y3tw4qgaySyFyrKF4FywnxXw4UKF97WFWUAw4kZrZ5ta18
-        uF4jqr4kAFsFvw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUkS14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
-        Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
-        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE-syl42xK
-        82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGw
-        C20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48J
-        MIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMI
-        IF0xvE42xK8VAvwI8IcIk0rVWrJr0_WFyUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY
-        6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUF9a9DUUUU
-X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86812C00F830
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 05:47:57 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id 22so15255638wmg.1
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 05:47:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=MXWPj65SsgiOS9zBWng/y3B2dHdHCzzNx8KN4IFF3T0=;
+        b=Jlf/+bu6MQO1H2Y1nOpHwS2pO3hXcUe/HKZCIAl8BbtiP7Kf0yEVgv1uZN932HwADc
+         133TMwpc3TtvSaPRg1M+WFSrLYTatgIZv2mcd/+YFO4O6JtO2y//GGZpwk8nnUrhGdYQ
+         hMsTYPm9uxGpufCX1GKnRNjRNFLSlDT5dQXKo2WuBUcsIN677aUB958DsS2Ufpw3Ef1L
+         nFdL6uQVDk5/7DG88H8PBdiJnSa0JYbh6CpzKvzVtC54HCTmX3MW25q6eJUouLqxLHNI
+         k0W+rWsYph1/w8326KtVbvoRim9UDd1hixtZ35evPkPMsFz+gjbP/UFmtrYOWW786+7s
+         t8lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=MXWPj65SsgiOS9zBWng/y3B2dHdHCzzNx8KN4IFF3T0=;
+        b=anJ4TIRiOQvh0KHBMznK85FSvTtL+kAdBMBy+PPz8S64Gp1BDL6n6b92IiroS8LFPf
+         SlYPxRCxUyEh2jTxKwePUaNNIVIZklGkm6HCMO/sqhVTNa+xM8HQbT1Zyx6cYhRDYLas
+         +bxlQbn9isYwMNuZj7Yx+CMPLPLmltTXNyHk33idf0y0DwENo1NOkhsBJ0MMNrEyDL/L
+         9gzJR/T3eQz+0XMIZSmY6oWodQKf00kkQ0aQQh9gbbhkDLFTWTPSVH92KVJqj3SzXmWl
+         8+3Jh6J1mXCLgS1hSWUZIIcnmA8zpOu83UpEneQ9T/97CUnq9+3syosTuLiOwptcwZc5
+         rAEw==
+X-Gm-Message-State: AOAM530OKCywGj5dmzGR3p/WlA49tLNMLlx7I8g6y9S2nf+RkVdIb/9z
+        4SBePSlc/aY/oqdyjNsh1P/Z/g==
+X-Google-Smtp-Source: ABdhPJwFsoOz7r0nFMjUVsQWVlIpJeZRYkCocmfI+AhlI+deNKBfMmUDPAunud4nny3pLzOyhu25ug==
+X-Received: by 2002:a7b:cbc5:: with SMTP id n5mr16593514wmi.95.1593434876317;
+        Mon, 29 Jun 2020 05:47:56 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id e17sm12995924wrr.88.2020.06.29.05.47.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 05:47:55 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        linux-pwm@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>, Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Yendapally Reddy Dhananjaya Reddy 
+        <yendapally.reddy@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com
+Subject: [PATCH 1/4] pwm: bcm-iproc: Remove impossible comparison when validating duty cycle
+Date:   Mon, 29 Jun 2020 13:47:49 +0100
+Message-Id: <20200629124752.1018358-2-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629124752.1018358-1-lee.jones@linaro.org>
+References: <20200629124752.1018358-1-lee.jones@linaro.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bibo Mao <maobibo@loongson.cn>
+'duty' here is an unsigned int, thus checking for <0 will always
+evaluate to false.
 
-If multiple threads are accessing the same huge page at the same
-time, hugetlb_cow will be called if one thread write the COW huge
-page. And function huge_ptep_clear_flush is called to notify other
-threads to clear the huge pte tlb entry. The other threads clear
-the huge pte tlb entry and reload it from page table, the reload
-huge pte entry may be old.
+Fixes the following W=1 warning:
 
-This patch fixes this issue on mips platform, and it clears huge
-pte entry before notifying other threads to flush current huge
-page entry, it is similar with other architectures.
+ drivers/pwm/pwm-bcm-iproc.c:147:12: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
 
-Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+Cc: Ray Jui <rjui@broadcom.com>
+Cc: Scott Branden <sbranden@broadcom.com>
+Cc: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+Cc: bcm-kernel-feedback-list@broadcom.com
+Cc: linux-pwm@vger.kernel.org
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- arch/mips/include/asm/hugetlb.h | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/pwm/pwm-bcm-iproc.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/arch/mips/include/asm/hugetlb.h b/arch/mips/include/asm/hugetlb.h
-index 10e3be87..c214440 100644
---- a/arch/mips/include/asm/hugetlb.h
-+++ b/arch/mips/include/asm/hugetlb.h
-@@ -46,7 +46,13 @@ static inline pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
- static inline void huge_ptep_clear_flush(struct vm_area_struct *vma,
- 					 unsigned long addr, pte_t *ptep)
- {
--	flush_tlb_page(vma, addr & huge_page_mask(hstate_vma(vma)));
-+	/*
-+	 * clear the huge pte entry firstly, so that the other smp threads will
-+	 * not get old pte entry after finishing flush_tlb_page and before
-+	 * setting new huge pte entry
-+	 */
-+	huge_ptep_get_and_clear(vma->vm_mm, addr, ptep);
-+	flush_tlb_page(vma, addr);
- }
+diff --git a/drivers/pwm/pwm-bcm-iproc.c b/drivers/pwm/pwm-bcm-iproc.c
+index 1f829edd8ee70..46f0a45e9049c 100644
+--- a/drivers/pwm/pwm-bcm-iproc.c
++++ b/drivers/pwm/pwm-bcm-iproc.c
+@@ -143,8 +143,7 @@ static int iproc_pwmc_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		value = rate * state->duty_cycle;
+ 		duty = div64_u64(value, div);
  
- #define __HAVE_ARCH_HUGE_PTE_NONE
+-		if (period < IPROC_PWM_PERIOD_MIN ||
+-		    duty < IPROC_PWM_DUTY_CYCLE_MIN)
++		if (period < IPROC_PWM_PERIOD_MIN)
+ 			return -EINVAL;
+ 
+ 		if (period <= IPROC_PWM_PERIOD_MAX &&
 -- 
-1.8.3.1
+2.25.1
 
