@@ -2,53 +2,53 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18F2AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:53:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCB9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:53:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5345206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:53:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19CBE206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:53:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467630;
-	bh=+w3tag92/3T0o050FpKjOJpFcrV35hzPqXlbW4nZDR0=;
+	s=default; t=1593467633;
+	bh=3r3v1nvR0vOVb62KV20dOeGyuaTp4CmZLYUwsK6azdk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QnD48tjHqffXQxkh/2ks9x+2RHw0xjadfxPQN4qOUrlSaHjt03a8zPKvQ10588Q+l
-	 u1Y44sH48x5BCpj/BdNOM8Pf7eGjcJBnLqVeAhS7YFdbA9BoDCP5icWxQhGHYN+u7/
-	 byF5jlvBhvW+oPJuvhmRO2j+sahwfaEBVgXtCyU4=
+	b=xNdovoQ9yC1G9u1Ql/g57Mu/iKtQauAge3/8yAzE0Q71Qp5R827TXjkYlPEjSJaK4
+	 +yaSYTf2fmmPZ2+9zNiKfl1k+1DYdVW48dR/feL8lkHGoeoWnNxpuMMP8heQcXV4Y0
+	 O6riWpphSMgskzgAXDPwAQPCe05IlKtraeM2BFwY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404640AbgF2Vxg (ORCPT
+        id S2404655AbgF2Vxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:53:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56890 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:53:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726592AbgF2Sfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:34 -0400
+        id S1726589AbgF2Sfd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DB842417F;
-        Mon, 29 Jun 2020 15:19:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 056C0246B0;
+        Mon, 29 Jun 2020 15:20:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443950;
-        bh=+w3tag92/3T0o050FpKjOJpFcrV35hzPqXlbW4nZDR0=;
+        s=default; t=1593444004;
+        bh=3r3v1nvR0vOVb62KV20dOeGyuaTp4CmZLYUwsK6azdk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QJDDLdeye3QLksI4PCTe/D4Ri+PHNgZ1X9cp2j3MezWR6yIJ3YbTRlBef8BlC65bb
-         y+Uiv+dErmY8MqOYZSrfJiaL+hBAFkMdQSct/6PuLW4P9Q2iEIfvW5yMLYcXUfDN8/
-         2HqewSGQ693+QbWL+dGF1drfwMq6vfovYxeQKWAE=
+        b=1hRByP1r3zKdNFki1vhKWBUaa+uopuDv7t9LAe6Ts6drBrmmLgdqLIRu0XG+KW2Zu
+         18D4+eS7e+r16F8KvyZPFYY53ZC5SQGR9keOiveiWTxhwSjKgPunnVT0QnAe1Uq0Vn
+         yh+RRDT1l6PcHA4qWrfN1J62yr9ymzVVWz7oxGMg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Cong Wang <xiyou.wangcong@gmail.com>,
-        Ido Schimmel <idosch@idosch.org>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 052/265] genetlink: clean up family attributes allocations
-Date:   Mon, 29 Jun 2020 11:14:45 -0400
-Message-Id: <20200629151818.2493727-53-sashal@kernel.org>
+Subject: [PATCH 5.7 110/265] ASoC: soc-pcm: fix checks for multi-cpu FE dailinks
+Date:   Mon, 29 Jun 2020 11:15:43 -0400
+Message-Id: <20200629151818.2493727-111-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -67,141 +67,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-[ Upstream commit b65ce380b754e77fbfdcfc83fd6e29c8ceedf431 ]
+[ Upstream commit 96bf62f018f40cb5d4e4bed95e50fd990a2354af ]
 
-genl_family_rcv_msg_attrs_parse() and genl_family_rcv_msg_attrs_free()
-take a boolean parameter to determine whether allocate/free the family
-attrs. This is unnecessary as we can just check family->parallel_ops.
-More importantly, callers would not need to worry about pairing these
-parameters correctly after this patch.
+soc_dpcm_fe_runtime_update() is called for all dailinks, and we want
+to first discard all back-ends, then deal with front-ends.
 
-And this fixes a memory leak, as after commit c36f05559104
-("genetlink: fix memory leaks in genl_family_rcv_msg_dumpit()")
-we call genl_family_rcv_msg_attrs_parse() for both parallel and
-non-parallel cases.
+The existing code first reports an error with multi-cpu front-ends,
+and that check needs to be moved after we know that we are dealing
+with a front-end.
 
-Fixes: c36f05559104 ("genetlink: fix memory leaks in genl_family_rcv_msg_dumpit()")
-Reported-by: Ido Schimmel <idosch@idosch.org>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Reviewed-by: Ido Schimmel <idosch@mellanox.com>
-Tested-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 6e1276a5e613d ('ASoC: Return error if the function does not support multi-cpu')
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Reviewed-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+BugLink: https://github.com/thesofproject/linux/issues/1970
+Link: https://lore.kernel.org/r/20200612203507.25621-1-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netlink/genetlink.c | 28 ++++++++++++----------------
- 1 file changed, 12 insertions(+), 16 deletions(-)
+ sound/soc/soc-pcm.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/net/netlink/genetlink.c b/net/netlink/genetlink.c
-index bcbba0bef1c2a..9c1c27f3a0894 100644
---- a/net/netlink/genetlink.c
-+++ b/net/netlink/genetlink.c
-@@ -474,8 +474,7 @@ genl_family_rcv_msg_attrs_parse(const struct genl_family *family,
- 				struct netlink_ext_ack *extack,
- 				const struct genl_ops *ops,
- 				int hdrlen,
--				enum genl_validate_flags no_strict_flag,
--				bool parallel)
-+				enum genl_validate_flags no_strict_flag)
- {
- 	enum netlink_validation validate = ops->validate & no_strict_flag ?
- 					   NL_VALIDATE_LIBERAL :
-@@ -486,7 +485,7 @@ genl_family_rcv_msg_attrs_parse(const struct genl_family *family,
- 	if (!family->maxattr)
- 		return NULL;
+diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
+index 39ce61c5b8744..fde097a7aad32 100644
+--- a/sound/soc/soc-pcm.c
++++ b/sound/soc/soc-pcm.c
+@@ -2749,15 +2749,15 @@ static int soc_dpcm_fe_runtime_update(struct snd_soc_pcm_runtime *fe, int new)
+ 	int count, paths;
+ 	int ret;
  
--	if (parallel) {
-+	if (family->parallel_ops) {
- 		attrbuf = kmalloc_array(family->maxattr + 1,
- 					sizeof(struct nlattr *), GFP_KERNEL);
- 		if (!attrbuf)
-@@ -498,7 +497,7 @@ genl_family_rcv_msg_attrs_parse(const struct genl_family *family,
- 	err = __nlmsg_parse(nlh, hdrlen, attrbuf, family->maxattr,
- 			    family->policy, validate, extack);
- 	if (err) {
--		if (parallel)
-+		if (family->parallel_ops)
- 			kfree(attrbuf);
- 		return ERR_PTR(err);
- 	}
-@@ -506,10 +505,9 @@ genl_family_rcv_msg_attrs_parse(const struct genl_family *family,
- }
- 
- static void genl_family_rcv_msg_attrs_free(const struct genl_family *family,
--					   struct nlattr **attrbuf,
--					   bool parallel)
-+					   struct nlattr **attrbuf)
- {
--	if (parallel)
-+	if (family->parallel_ops)
- 		kfree(attrbuf);
- }
- 
-@@ -537,15 +535,14 @@ static int genl_start(struct netlink_callback *cb)
- 
- 	attrs = genl_family_rcv_msg_attrs_parse(ctx->family, ctx->nlh, ctx->extack,
- 						ops, ctx->hdrlen,
--						GENL_DONT_VALIDATE_DUMP_STRICT,
--						true);
-+						GENL_DONT_VALIDATE_DUMP_STRICT);
- 	if (IS_ERR(attrs))
- 		return PTR_ERR(attrs);
- 
- no_attrs:
- 	info = genl_dumpit_info_alloc();
- 	if (!info) {
--		kfree(attrs);
-+		genl_family_rcv_msg_attrs_free(ctx->family, attrs);
- 		return -ENOMEM;
- 	}
- 	info->family = ctx->family;
-@@ -562,7 +559,7 @@ no_attrs:
++	if (!fe->dai_link->dynamic)
++		return 0;
++
+ 	if (fe->num_cpus > 1) {
+ 		dev_err(fe->dev,
+ 			"%s doesn't support Multi CPU yet\n", __func__);
+ 		return -EINVAL;
  	}
  
- 	if (rc) {
--		kfree(attrs);
-+		genl_family_rcv_msg_attrs_free(info->family, info->attrs);
- 		genl_dumpit_info_free(info);
- 		cb->data = NULL;
- 	}
-@@ -591,7 +588,7 @@ static int genl_lock_done(struct netlink_callback *cb)
- 		rc = ops->done(cb);
- 		genl_unlock();
- 	}
--	genl_family_rcv_msg_attrs_free(info->family, info->attrs, false);
-+	genl_family_rcv_msg_attrs_free(info->family, info->attrs);
- 	genl_dumpit_info_free(info);
- 	return rc;
- }
-@@ -604,7 +601,7 @@ static int genl_parallel_done(struct netlink_callback *cb)
- 
- 	if (ops->done)
- 		rc = ops->done(cb);
--	genl_family_rcv_msg_attrs_free(info->family, info->attrs, true);
-+	genl_family_rcv_msg_attrs_free(info->family, info->attrs);
- 	genl_dumpit_info_free(info);
- 	return rc;
- }
-@@ -671,8 +668,7 @@ static int genl_family_rcv_msg_doit(const struct genl_family *family,
- 
- 	attrbuf = genl_family_rcv_msg_attrs_parse(family, nlh, extack,
- 						  ops, hdrlen,
--						  GENL_DONT_VALIDATE_STRICT,
--						  family->parallel_ops);
-+						  GENL_DONT_VALIDATE_STRICT);
- 	if (IS_ERR(attrbuf))
- 		return PTR_ERR(attrbuf);
- 
-@@ -698,7 +694,7 @@ static int genl_family_rcv_msg_doit(const struct genl_family *family,
- 		family->post_doit(ops, skb, &info);
- 
- out:
--	genl_family_rcv_msg_attrs_free(family, attrbuf, family->parallel_ops);
-+	genl_family_rcv_msg_attrs_free(family, attrbuf);
- 
- 	return err;
- }
+-	if (!fe->dai_link->dynamic)
+-		return 0;
+-
+ 	/* only check active links */
+ 	if (!fe->cpu_dai->active)
+ 		return 0;
 -- 
 2.25.1
 
