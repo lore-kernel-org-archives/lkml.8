@@ -2,97 +2,124 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFDA2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A47C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9E62420760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EFE820760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:09:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593461382;
+	bh=WcwcWtLCHVk5avc1l8MLwJSQ8mF0Qpzh/HG6UIJq678=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gDw7Ztxjo6m5J+IUrXOzd+LYsJDMnbFQnBwOngkIHf5ZnUdX2KQmGeJw25YKyvqlw
+	 RQFt3bgDeXusOfkZwwWnSqPKEp9gf+Zsm/WGYsiQTkKYKQRappmgx9wWwyNMt7kSfe
+	 tirfFjnHi8gijZVL6U8/HkOgpPc1TuNqqIYdSY2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbgF2UJg (ORCPT
+        id S1726909AbgF2UJV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:09:36 -0400
-Received: from mga14.intel.com ([192.55.52.115]:8203 "EHLO mga14.intel.com"
+        Mon, 29 Jun 2020 16:09:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727938AbgF2UJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 16:09:26 -0400
-IronPort-SDR: aDaW0t+7lHLm/T6o1YN2QMqnDoZpQHaJs+kop2Xt5YZf6w2z/7uRVwvr2XarJ6uFS6A7S+h6rz
- WEfRPwnnKpwg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="145126351"
-X-IronPort-AV: E=Sophos;i="5.75,295,1589266800"; 
-   d="scan'208";a="145126351"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 13:09:26 -0700
-IronPort-SDR: PoVjz7Y+YLh6hCKpBiPEoY6bNJLo/ocBfnj+22m72VjMoPDZijXwyTfNOwYkLzxZUb6K2ThjD5
- CNfUtTHR8anQ==
-X-IronPort-AV: E=Sophos;i="5.75,295,1589266800"; 
-   d="scan'208";a="454315340"
-Received: from ddalessa-mobl.amr.corp.intel.com (HELO [10.254.206.102]) ([10.254.206.102])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 13:09:23 -0700
-From:   Dennis Dalessandro <dennis.dalessandro@intel.com>
-Subject: Re: [PATCH v2 2/8] IB/hfi1: Convert PCIBIOS_* errors to generic -E*
- errors
-To:     refactormyself@gmail.com, helgaas@kernel.org
-Cc:     bjorn@helgaas.com, linux-pci@vger.kernel.org,
-        skhan@linuxfoundation.org,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-References: <20200615073225.24061-1-refactormyself@gmail.com>
- <20200615073225.24061-3-refactormyself@gmail.com>
-Message-ID: <9e2b006e-9a0a-19fb-5dab-52df8c0e8674@intel.com>
-Date:   Mon, 29 Jun 2020 16:09:21 -0400
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1732921AbgF2TaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:30:22 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 079F22520D;
+        Mon, 29 Jun 2020 15:35:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593444948;
+        bh=WcwcWtLCHVk5avc1l8MLwJSQ8mF0Qpzh/HG6UIJq678=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YOHQevzkBC6VSdmfnmmJSl0WoCVEdOIqEa+BwkYyzdUDx03eD/094ahbzQV5oWUYo
+         dke7lkzp8LYLxC/cYZXrKe7sDUT8P0dH5woFZoWRTt0WZ1jPP1atw7asQcsEAKLTOy
+         w5uemuEHdTNOYNnwuY1BhJwLs2QG4WyRFXH1DTHA=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.19 046/131] xhci: Poll for U0 after disabling USB2 LPM
+Date:   Mon, 29 Jun 2020 11:33:37 -0400
+Message-Id: <20200629153502.2494656-47-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
+References: <20200629153502.2494656-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200615073225.24061-3-refactormyself@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.19.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.19.131-rc1
+X-KernelTest-Deadline: 2020-07-01T15:34+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/15/2020 3:32 AM, refactormyself@gmail.com wrote:
-> From: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
-> 
-> pcie_speeds() returns PCIBIOS_ error codes from PCIe capability accessors.
-> 
-> PCIBIOS_ error codes have positive values. Passing on these values is
-> inconsistent with functions which return only a negative value on failure.
-> 
-> Before passing on the return value of PCIe capability accessors, call
-> pcibios_err_to_errno() to convert any positive PCIBIOS_ error codes to
-> negative generic error values.
-> 
-> Suggested-by: Bjorn Helgaas <bjorn@helgaas.com>
-> Signed-off-by: Bolarinwa Olayemi Saheed <refactormyself@gmail.com>
-> ---
->   drivers/infiniband/hw/hfi1/pcie.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/infiniband/hw/hfi1/pcie.c b/drivers/infiniband/hw/hfi1/pcie.c
-> index 1a6268d61977..eb53781d0c6a 100644
-> --- a/drivers/infiniband/hw/hfi1/pcie.c
-> +++ b/drivers/infiniband/hw/hfi1/pcie.c
-> @@ -306,7 +306,7 @@ int pcie_speeds(struct hfi1_devdata *dd)
->   	ret = pcie_capability_read_dword(dd->pcidev, PCI_EXP_LNKCAP, &linkcap);
->   	if (ret) {
->   		dd_dev_err(dd, "Unable to read from PCI config\n");
-> -		return ret;
-> +		return pcibios_err_to_errno(ret);
->   	}
->   
->   	if ((linkcap & PCI_EXP_LNKCAP_SLS) != PCI_EXP_LNKCAP_SLS_8_0GB) {
-> 
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+commit b3d71abd135e6919ca0b6cab463738472653ddfb upstream.
+
+USB2 devices with LPM enabled may interrupt the system suspend:
+[  932.510475] usb 1-7: usb suspend, wakeup 0
+[  932.510549] hub 1-0:1.0: hub_suspend
+[  932.510581] usb usb1: bus suspend, wakeup 0
+[  932.510590] xhci_hcd 0000:00:14.0: port 9 not suspended
+[  932.510593] xhci_hcd 0000:00:14.0: port 8 not suspended
+..
+[  932.520323] xhci_hcd 0000:00:14.0: Port change event, 1-7, id 7, portsc: 0x400e03
+..
+[  932.591405] PM: pci_pm_suspend(): hcd_pci_suspend+0x0/0x30 returns -16
+[  932.591414] PM: dpm_run_callback(): pci_pm_suspend+0x0/0x160 returns -16
+[  932.591418] PM: Device 0000:00:14.0 failed to suspend async: error -16
+
+During system suspend, USB core will let HC suspends the device if it
+doesn't have remote wakeup enabled and doesn't have any children.
+However, from the log above we can see that the usb 1-7 doesn't get bus
+suspended due to not in U0. After a while the port finished U2 -> U0
+transition, interrupts the suspend process.
+
+The observation is that after disabling LPM, port doesn't transit to U0
+immediately and can linger in U2. xHCI spec 4.23.5.2 states that the
+maximum exit latency for USB2 LPM should be BESL + 10us. The BESL for
+the affected device is advertised as 400us, which is still not enough
+based on my testing result.
+
+So let's use the maximum permitted latency, 10000, to poll for U0
+status to solve the issue.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20200624135949.22611-6-mathias.nyman@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/usb/host/xhci.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+index b4177287d7d0f..b02b83a38dca1 100644
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -4385,6 +4385,9 @@ static int xhci_set_usb2_hardware_lpm(struct usb_hcd *hcd,
+ 			mutex_lock(hcd->bandwidth_mutex);
+ 			xhci_change_max_exit_latency(xhci, udev, 0);
+ 			mutex_unlock(hcd->bandwidth_mutex);
++			readl_poll_timeout(ports[port_num]->addr, pm_val,
++					   (pm_val & PORT_PLS_MASK) == XDEV_U0,
++					   100, 10000);
+ 			return 0;
+ 		}
+ 	}
+-- 
+2.25.1
+
