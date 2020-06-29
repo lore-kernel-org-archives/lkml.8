@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38698C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 448C8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 134AC2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:27:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 187A42067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:28:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462479;
-	bh=yrvwbRjTMFsARZOs8NEqcI4fmeFNsMp7D37A1Kxzhng=;
+	s=default; t=1593462486;
+	bh=O8OnCYgvR9JOBs3QiGMTB91I6sGqjaXgtjIc0MOs+Fk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rlluWQMNeXRO8corV1gKWBWZAMuxKng+r28325OpcJmyjM2uws6wM9jzuYasmQv5w
-	 PG6426AgarWqyjBZeQYXcu/Jl8+ZAjK7uMLfX7cti+fXUWHlleveIoXJJ+FanwPbrx
-	 csq83a4eoRA8DS+gIIzo8mMcIoXmwaw9bHpWNo8Q=
+	b=iiiyYl9m7DEEhBDJq1grrq2QFmdlp7aF9MLMDMI+BiqsCChNJnswn34vELEu1TBWP
+	 jnVZiNHF+ObrWFiJHAWAljwInRRiGVsVJYat5/UifHjbOF3/0TlCKczMcQSNHYVzPG
+	 7CJytv54qY1xdii2REZx7HN7dg4ndoFcBgaMm4UU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389164AbgF2U14 (ORCPT
+        id S2389178AbgF2U2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:27:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37058 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:28:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731892AbgF2TZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732505AbgF2TZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3D44253AF;
-        Mon, 29 Jun 2020 15:41:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68C632538B;
+        Mon, 29 Jun 2020 15:40:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445277;
-        bh=yrvwbRjTMFsARZOs8NEqcI4fmeFNsMp7D37A1Kxzhng=;
+        s=default; t=1593445255;
+        bh=O8OnCYgvR9JOBs3QiGMTB91I6sGqjaXgtjIc0MOs+Fk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=F7HJH0vFwmN804PBjdwKhmVUyQ3uFG6zmbdJ6splbxFuGQCeAJYis6KSVYZP+z91O
-         Tgy7XmcJlKgtxemxO9a72Tw4nUo+o/p+kHuMmgIy+vSe6lqWZcLpTLMSysRGUy+zI5
-         OJMg1TWhsH8g8i54cZWjz2ypJRfSvGyqK+jsL2xc=
+        b=raznR2xHZwcltQmBPkdfePy+oJoNxCvz5DLAwdyM0abBXFZllEcOCDjT9eboDn3en
+         /alQr2FR2cWCvn2scYsoERMpaqJThf0LUFERBW5xmVBRiH7gW2r8kAzChK2asFVZyK
+         pUkMLSmPAtlKNnAqoAtlhTB8ACRW4AANY65qo6b0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Felipe Balbi <balbi@kernel.org>,
+Cc:     Suganath Prabu S <suganath-prabu.subramani@broadcom.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 056/191] usb: gadget: lpc32xx_udc: don't dereference ep pointer before null check
-Date:   Mon, 29 Jun 2020 11:37:52 -0400
-Message-Id: <20200629154007.2495120-57-sashal@kernel.org>
+Subject: [PATCH 4.9 037/191] scsi: mpt3sas: Fix double free warnings
+Date:   Mon, 29 Jun 2020 11:37:33 -0400
+Message-Id: <20200629154007.2495120-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -65,68 +66,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Suganath Prabu S <suganath-prabu.subramani@broadcom.com>
 
-[ Upstream commit eafa80041645cd7604c4357b1a0cd4a3c81f2227 ]
+[ Upstream commit cbbfdb2a2416c9f0cde913cf09670097ac281282 ]
 
-Currently pointer ep is being dereferenced before it is null checked
-leading to a null pointer dereference issue.  Fix this by only assigning
-pointer udc once ep is known to be not null.  Also remove a debug
-message that requires a valid udc which may not be possible at that
-point.
+Fix following warning from Smatch static analyser:
 
-Addresses-Coverity: ("Dereference before null check")
-Fixes: 24a28e428351 ("USB: gadget driver for LPC32xx")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+drivers/scsi/mpt3sas/mpt3sas_base.c:5256 _base_allocate_memory_pools()
+warn: 'ioc->hpr_lookup' double freed
+
+drivers/scsi/mpt3sas/mpt3sas_base.c:5256 _base_allocate_memory_pools()
+warn: 'ioc->internal_lookup' double freed
+
+Link: https://lore.kernel.org/r/20200508110738.30732-1-suganath-prabu.subramani@broadcom.com
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: Suganath Prabu S <suganath-prabu.subramani@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/lpc32xx_udc.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/scsi/mpt3sas/mpt3sas_base.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/usb/gadget/udc/lpc32xx_udc.c b/drivers/usb/gadget/udc/lpc32xx_udc.c
-index ac2aa04ca6573..7107931617953 100644
---- a/drivers/usb/gadget/udc/lpc32xx_udc.c
-+++ b/drivers/usb/gadget/udc/lpc32xx_udc.c
-@@ -1615,17 +1615,17 @@ static int lpc32xx_ep_enable(struct usb_ep *_ep,
- 			     const struct usb_endpoint_descriptor *desc)
- {
- 	struct lpc32xx_ep *ep = container_of(_ep, struct lpc32xx_ep, ep);
--	struct lpc32xx_udc *udc = ep->udc;
-+	struct lpc32xx_udc *udc;
- 	u16 maxpacket;
- 	u32 tmp;
- 	unsigned long flags;
- 
- 	/* Verify EP data */
- 	if ((!_ep) || (!ep) || (!desc) ||
--	    (desc->bDescriptorType != USB_DT_ENDPOINT)) {
--		dev_dbg(udc->dev, "bad ep or descriptor\n");
-+	    (desc->bDescriptorType != USB_DT_ENDPOINT))
- 		return -EINVAL;
--	}
-+
-+	udc = ep->udc;
- 	maxpacket = usb_endpoint_maxp(desc);
- 	if ((maxpacket == 0) || (maxpacket > ep->maxpacket)) {
- 		dev_dbg(udc->dev, "bad ep descriptor's packet size\n");
-@@ -1873,7 +1873,7 @@ static int lpc32xx_ep_dequeue(struct usb_ep *_ep, struct usb_request *_req)
- static int lpc32xx_ep_set_halt(struct usb_ep *_ep, int value)
- {
- 	struct lpc32xx_ep *ep = container_of(_ep, struct lpc32xx_ep, ep);
--	struct lpc32xx_udc *udc = ep->udc;
-+	struct lpc32xx_udc *udc;
- 	unsigned long flags;
- 
- 	if ((!ep) || (ep->hwep_num <= 1))
-@@ -1883,6 +1883,7 @@ static int lpc32xx_ep_set_halt(struct usb_ep *_ep, int value)
- 	if (ep->is_in)
- 		return -EAGAIN;
- 
-+	udc = ep->udc;
- 	spin_lock_irqsave(&udc->lock, flags);
- 
- 	if (value == 1) {
+diff --git a/drivers/scsi/mpt3sas/mpt3sas_base.c b/drivers/scsi/mpt3sas/mpt3sas_base.c
+index 6ccde2b415178..601a93953307d 100644
+--- a/drivers/scsi/mpt3sas/mpt3sas_base.c
++++ b/drivers/scsi/mpt3sas/mpt3sas_base.c
+@@ -3166,7 +3166,9 @@ _base_release_memory_pools(struct MPT3SAS_ADAPTER *ioc)
+ 		ioc->scsi_lookup = NULL;
+ 	}
+ 	kfree(ioc->hpr_lookup);
++	ioc->hpr_lookup = NULL;
+ 	kfree(ioc->internal_lookup);
++	ioc->internal_lookup = NULL;
+ 	if (ioc->chain_lookup) {
+ 		for (i = 0; i < ioc->chain_depth; i++) {
+ 			if (ioc->chain_lookup[i].chain_buffer)
 -- 
 2.25.1
 
