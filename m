@@ -2,113 +2,266 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77BA4C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 02:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A69EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 03:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56825206F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 02:55:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E49B206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 03:00:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wcl2Dqoc"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="qmk4pcuE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbgF2Czq (ORCPT
+        id S1726055AbgF2DAP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 22:55:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34134 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726236AbgF2CzW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 22:55:22 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B893C03E979;
-        Sun, 28 Jun 2020 19:55:22 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id s9so16289329ljm.11;
-        Sun, 28 Jun 2020 19:55:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=1qLiLZq7FNwrmfOWv+rYatcR7Rmj1NqpWdK2xLqqCWw=;
-        b=Wcl2DqocSxSs3AV5P8qGRrF0a0VmKu0wuJALfiDzn/V6c73u/IST3buU5xPKvYbzx9
-         tn2xdj+sDmLxZcC1jCK4Y1KW/azSbdAqerN+lnf4B6IiQCV5kEMtxu/VdrCGVSbW46EW
-         dyTmqdeg0DdfnFcBNwcdViRqBfhJEgKrkZ1q/TRrZa3SxnT4XhsCdvAkoWzzX3K3KtIh
-         NYO8NOEZ9Ib49NAHRB/wHyRmohCCmqkCpQoThENIJtOMKtebHXX8Z7jDrQo7CTLhvydm
-         ap1n3x+0VHIDXaOlB8RWjalge5BWtBmjEIHYEUY5kDCPCi3zpVEdudSTOciWqb+b7JZC
-         mynQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1qLiLZq7FNwrmfOWv+rYatcR7Rmj1NqpWdK2xLqqCWw=;
-        b=uK49bvLRniuftvzbl86ajs6IpHk3lrEE7w8SVPXmPjNKknqTL68usBc4JvpyPrWW8e
-         mzRmZ11Tpc+q7sqszXSwwznjUT5NeDthBS0S1zg+NI+5q9EXu9hpR2n+pS+r5S/a/NJW
-         iIKYG35PMB9xnU/bsR6Gg9L0EBM1UCDUf1IaUfgTdbTTb1Sn+ucuWRE5eJeXkLcypziB
-         qijOqIRKGJ+u+LQwVlRwEtij1QMAnxVFimtq1J1/cAHPDSF97YC+MOMV6gJpRRrt8A7y
-         G0qzO9WtAPKF3x0dipIAjFL938rSbi1Oxe2sW8o4V3TLv/opFAAWROI1CMeJegu2Dwak
-         w3kQ==
-X-Gm-Message-State: AOAM530nxenHEZpQ6YXK9+BFevB6Pxp29d/tHxZYz4Cw72e3cFufn6zQ
-        CAT1f1ri3TAlx/Zu0PWJL08=
-X-Google-Smtp-Source: ABdhPJzddhu8nUbV/+5iF9XYH9HvhNxIkYcrt1OMwJAMLn3V+gPiVMqU6FV6aSPiq1SOAi9/f3V0fw==
-X-Received: by 2002:a2e:780e:: with SMTP id t14mr2186888ljc.444.1593399320778;
-        Sun, 28 Jun 2020 19:55:20 -0700 (PDT)
-Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.gmail.com with ESMTPSA id o4sm8820527lfb.52.2020.06.28.19.55.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jun 2020 19:55:20 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        David Heidelberg <david@ixit.cz>,
-        Peter Geis <pgwipeout@gmail.com>,
-        Stephen Warren <swarren@wwwdotorg.org>,
-        Nicolas Chauvet <kwizart@gmail.com>,
-        =?UTF-8?q?Pedro=20=C3=82ngelo?= <pangelo@void.io>,
-        Matt Merhar <mattmerhar@protonmail.com>,
-        Zack Pearsall <zpearsall@yahoo.com>
-Cc:     linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v10 4/6] dt-bindings: ARM: tegra: Add Acer Iconia Tab A500
-Date:   Mon, 29 Jun 2020 05:54:54 +0300
-Message-Id: <20200629025456.28124-5-digetx@gmail.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200629025456.28124-1-digetx@gmail.com>
-References: <20200629025456.28124-1-digetx@gmail.com>
+        Sun, 28 Jun 2020 23:00:15 -0400
+Received: from mail-am6eur05on2073.outbound.protection.outlook.com ([40.107.22.73]:8897
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725976AbgF2DAP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 23:00:15 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=aL8wxT8ULA7WFH5G8xcDuoZtllx95ZG8Oou7/uyLlz7QcdOC7lbr7W7V1ZP73APB3dvcmO6hnkfAUeJGPJbyY76CYHHkmyNMaREEdofUgQeQHhP+Us1mkLiOOSwpMHfjPfDi87TWoop0lZCa5ArAhGDevbh/tYjL1QNj/4HuthNinoNXoEh4DIeaoOc6ihKT5vWdroiB5S7Fjd5rupkSv9e8xR2Sts3c4zgpfClvxTjm9ky0hbveLMNoa0+6apM4C3JUZS14nj7vmuVBxxR2YsPDbWwDIuw/bHjMRZ+xGoGaU1+Ot+csSyXlo/wcB0PWAZZbEOBs3n3Gtfe30hu8Kg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cEkYM3WrGoh9CXGo+3w9YCuBPjOjwUC6rQ5FN+BYd+Q=;
+ b=aqKrKDEyOEfrZou1eB6GvbcYHaUFHQBdaRnV8JcR08eIOh4h82jzISYZ1zAsor5P7TzitKfWzZrpZz3P7buieHZM+HnsLJF4oqYm3jkT1hg7F7VpI6dtA9IS1UmLtQHs4JGeaXtfHYItRDM7LzIzMF4i1Vd2brIfGqCdg//K+V7L8eBCyQWycbIarWouMR95rNdDd2mHojsToSsUSovB4YVCtJReqW0Xa03umPbNcVbwpQRwMfghG7ck4+2m9agBVcYx5zzl9d82FB3GK6C+VggygChY6DC2NK49/Zo0f6U2Zb5WapPiLGIT2U2s15cUYqb+CFNFTygvOp7uokgtWg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cEkYM3WrGoh9CXGo+3w9YCuBPjOjwUC6rQ5FN+BYd+Q=;
+ b=qmk4pcuEisqTd4+4+dH8ia2k/C7g9J8/LFQncpSN9+AZLiY4QhGQRjB7jSW9SfDx4QOJDHH4V9Ag7Q+1Di5BK6YnWPt9PSDUiq1GY4bYLa9SksOItQAdNHUwpHnV4Y2Pdsw/5cLz2900b4ef4bDRTmRseKO2dMm/udvcOt+dCU0=
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
+ by DB6PR0402MB2933.eurprd04.prod.outlook.com (2603:10a6:4:9c::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.26; Mon, 29 Jun
+ 2020 03:00:08 +0000
+Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::2d36:b569:17c:7701]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
+ ([fe80::2d36:b569:17c:7701%4]) with mapi id 15.20.3131.026; Mon, 29 Jun 2020
+ 03:00:08 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Stefano Stabellini <sstabellini@kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+CC:     "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
+        "jgross@suse.com" <jgross@suse.com>,
+        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH] xen: introduce xen_vring_use_dma
+Thread-Topic: [PATCH] xen: introduce xen_vring_use_dma
+Thread-Index: AQHWSgTusARd8c8cRkWwDit233DtZajneYoAgACU6oCAAC7QAIAAEpoAgAAGSwCAAUK2gIAFVRgQ
+Date:   Mon, 29 Jun 2020 03:00:08 +0000
+Message-ID: <DB6PR0402MB2760B02A5EA92A24D5703344886E0@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+References: <20200624091732.23944-1-peng.fan@nxp.com>
+ <20200624050355-mutt-send-email-mst@kernel.org>
+ <alpine.DEB.2.21.2006241047010.8121@sstabellini-ThinkPad-T480s>
+ <20200624163940-mutt-send-email-mst@kernel.org>
+ <alpine.DEB.2.21.2006241351430.8121@sstabellini-ThinkPad-T480s>
+ <20200624181026-mutt-send-email-mst@kernel.org>
+ <alpine.DEB.2.21.2006251014230.8121@sstabellini-ThinkPad-T480s>
+In-Reply-To: <alpine.DEB.2.21.2006251014230.8121@sstabellini-ThinkPad-T480s>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.71]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 13ba3640-e9ad-4e19-0273-08d81bd88847
+x-ms-traffictypediagnostic: DB6PR0402MB2933:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB6PR0402MB29339084D7549C71A0F58503886E0@DB6PR0402MB2933.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 044968D9E1
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: q15QAvPQSN0Timky4oDpoQS5EjdrqXyUR1t7gIHO5/lII+2gdPQVQdSXSXhZlqnIolxDskOU3zxxiut6WJYFzfMoEOWmyXxCCkrmkJUDu4RPemXo/DT+xmilbdL2bDtr1mK4zk0D+ZBfixO0e+3oi3FEGBWy6wIJdve3no6VbjcKt3xeaNgMSMcObV3TcVbe34A9rMQTAwW13OGg+pSU3bcOhcaP618ZDtTdibEE/WKv1LdNtyKkrxUQUHUIsQfbq/lap48+BOfN27XzbUlcDnoJtTg0OROcVqPHqy+KtiYaAlSAN578MUzdINBTKV/2DX/+wnQyYNL/yAU/SX7fAV1ESIK6Jd+4o+cK8hCyWeLJDGotGeePClJRbt7UXruSXxt+pRzoLXiKAhVsVNm+qw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(346002)(136003)(366004)(39860400002)(316002)(76116006)(966005)(52536014)(66476007)(54906003)(66946007)(6506007)(66446008)(64756008)(66556008)(7416002)(4326008)(186003)(26005)(7696005)(2906002)(33656002)(86362001)(110136005)(45080400002)(8676002)(83080400001)(8936002)(71200400001)(83380400001)(9686003)(478600001)(44832011)(55016002)(5660300002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: rIh4hpyZRlq1oXv0Jp5uXtz/ZBRmR5fCy7P/DPCVKSUc/ZUSfpco3e197h5zPE5YrX0mUvrKaBvhrFyzRq+9kYsTkXIrfhrFiaxdUUMTeNk1AxnwEzDWrTwrDVUsqYfeb39VGV2HX6MlChnzz1Sfssl23UkXqLY4EpkUHniCtEbQqB+PbqHtC0h3po7KQdmlp8juiiCFoWhyEjahToeZhOejGxGZaMbO3PjO7gkzxgj2Vuv77kLSNTKpk8qtWRSdhboted7dHYzWMtS8oQEnkQM9QJn6kKvKlXDsVyn3kzuPDJnY/wQoNuT7r9jgj2GdeH6z+JZTztjeIrjiupnElYwagCedNMcPOXx2mTRYyv+coPNroPMnopkCFQwRGSIYdYz6BuuHHzVrl03FUD2loYS1doMczk0yWXrj+QCtwHItMAxJFbBQcPHSIS0IiLZDLGkEPYO8W9aGAfCSigmp+B+Ts5tbl3mtHZFDIytzrMb6UyVZ+IpG9Pt+WLI5COp6
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DB6PR0402MB2760.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 13ba3640-e9ad-4e19-0273-08d81bd88847
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jun 2020 03:00:08.4686
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: WFb8Yle0owm/sFCkI7lJMnCMp8RzUFPNAIHnY7sAQRRBmHrab9Fa7cCfi1CtCu1BSYp+Oj2wBJAQ58CduENUEA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2933
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a binding for the Tegra20-based Acer Iconia Tab A500 tablet device.
+> Subject: Re: [PATCH] xen: introduce xen_vring_use_dma
+>=20
+> On Wed, 24 Jun 2020, Michael S. Tsirkin wrote:
+> > On Wed, Jun 24, 2020 at 02:53:54PM -0700, Stefano Stabellini wrote:
+> > > On Wed, 24 Jun 2020, Michael S. Tsirkin wrote:
+> > > > On Wed, Jun 24, 2020 at 10:59:47AM -0700, Stefano Stabellini wrote:
+> > > > > On Wed, 24 Jun 2020, Michael S. Tsirkin wrote:
+> > > > > > On Wed, Jun 24, 2020 at 05:17:32PM +0800, Peng Fan wrote:
+> > > > > > > Export xen_swiotlb for all platforms using xen swiotlb
+> > > > > > >
+> > > > > > > Use xen_swiotlb to determine when vring should use dma APIs
+> > > > > > > to map the
+> > > > > > > ring: when xen_swiotlb is enabled the dma API is required.
+> > > > > > > When it is disabled, it is not required.
+> > > > > > >
+> > > > > > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > > > > >
+> > > > > > Isn't there some way to use VIRTIO_F_IOMMU_PLATFORM for this?
+> > > > > > Xen was there first, but everyone else is using that now.
+> > > > >
+> > > > > Unfortunately it is complicated and it is not related to
+> > > > > VIRTIO_F_IOMMU_PLATFORM :-(
+> > > > >
+> > > > >
+> > > > > The Xen subsystem in Linux uses dma_ops via swiotlb_xen to
+> > > > > translate foreign mappings (memory coming from other VMs) to
+> physical addresses.
+> > > > > On x86, it also uses dma_ops to translate Linux's idea of a
+> > > > > physical address into a real physical address (this is unneeded
+> > > > > on ARM.)
+> > > > >
+> > > > >
+> > > > > So regardless of VIRTIO_F_IOMMU_PLATFORM, dma_ops should be
+> used
+> > > > > on Xen/x86 always and on Xen/ARM if Linux is Dom0 (because it
+> > > > > has foreign
+> > > > > mappings.) That is why we have the if (xen_domain) return true;
+> > > > > in vring_use_dma_api.
+> > > >
+> > > > VIRTIO_F_IOMMU_PLATFORM makes guest always use DMA ops.
+> > > >
+> > > > Xen hack predates VIRTIO_F_IOMMU_PLATFORM so it *also* forces
+> DMA
+> > > > ops even if VIRTIO_F_IOMMU_PLATFORM is clear.
+> > > >
+> > > > Unfortunately as a result Xen never got around to properly setting
+> > > > VIRTIO_F_IOMMU_PLATFORM.
+> > >
+> > > I don't think VIRTIO_F_IOMMU_PLATFORM would be correct for this
+> > > because the usage of swiotlb_xen is not a property of virtio,
+> >
+> >
+> > Basically any device without VIRTIO_F_ACCESS_PLATFORM (that is it's
+> > name in latest virtio spec, VIRTIO_F_IOMMU_PLATFORM is what linux
+> > calls it) is declared as "special, don't follow normal rules for
+> > access".
+> >
+> > So yes swiotlb_xen is not a property of virtio, but what *is* a
+> > property of virtio is that it's not special, just a regular device from=
+ DMA POV.
+>=20
+> I am trying to understand what you meant but I think I am missing somethi=
+ng.
+>=20
+> Are you saying that modern virtio should always have
+> VIRTIO_F_ACCESS_PLATFORM, hence use normal dma_ops as any other
+> devices?
+>=20
+> If that is the case, how is it possible that virtio breaks on ARM using t=
+he
+> default dma_ops? The breakage is not Xen related (except that Xen turns
+> dma_ops on). The original message from Peng was:
+>=20
+>   vring_map_one_sg -> vring_use_dma_api
+>                    -> dma_map_page
+>   		       -> __swiotlb_map_page
+>   		                ->swiotlb_map_page
+>   				->__dma_map_area(phys_to_virt(dma_to_phys(dev,
+> dev_addr)), size, dir);
+>   However we are using per device dma area for rpmsg, phys_to_virt
+>   could not return a correct virtual address for virtual address in
+>   vmalloc area. Then kernel panic.
+>=20
+> I must be missing something. Maybe it is because it has to do with RPMesg=
+?
 
-Acked-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- Documentation/devicetree/bindings/arm/tegra.yaml | 3 +++
- 1 file changed, 3 insertions(+)
+I am not going to fix the rpmsg issue with this patch. It is when ARM DomU
+Android os communicate with secure world trusty os using virtio, the
+vring_use_dma_api will return true for xen domu, but I no need it return
+true and fall into swiotlb.
 
-diff --git a/Documentation/devicetree/bindings/arm/tegra.yaml b/Documentation/devicetree/bindings/arm/tegra.yaml
-index 60b38eb5c61a..7fd0b66c69b2 100644
---- a/Documentation/devicetree/bindings/arm/tegra.yaml
-+++ b/Documentation/devicetree/bindings/arm/tegra.yaml
-@@ -34,6 +34,9 @@ properties:
-               - toradex,colibri_t20-iris
-           - const: toradex,colibri_t20
-           - const: nvidia,tegra20
-+      - items:
-+          - const: acer,picasso
-+          - const: nvidia,tegra20
-       - items:
-           - enum:
-               - nvidia,beaver
--- 
-2.26.0
+Thanks,
+Peng.
 
+>=20
+>=20
+> > > > > You might have noticed that I missed one possible case above:
+> > > > > Xen/ARM DomU :-)
+> > > > >
+> > > > > Xen/ARM domUs don't need swiotlb_xen, it is not even
+> > > > > initialized. So if
+> > > > > (xen_domain) return true; would give the wrong answer in that cas=
+e.
+> > > > > Linux would end up calling the "normal" dma_ops, not
+> > > > > swiotlb-xen, and the "normal" dma_ops fail.
+> > > > >
+> > > > >
+> > > > > The solution I suggested was to make the check in
+> > > > > vring_use_dma_api more flexible by returning true if the
+> > > > > swiotlb_xen is supposed to be used, not in general for all Xen
+> > > > > domains, because that is what the check was really meant to do.
+> > > >
+> > > > Why not fix DMA ops so they DTRT (nop) on Xen/ARM DomU? What is
+> wrong with that?
+> > >
+> > > swiotlb-xen is not used on Xen/ARM DomU, the default dma_ops are the
+> > > ones that are used. So you are saying, why don't we fix the default
+> > > dma_ops to work with virtio?
+> > >
+> > > It is bad that the default dma_ops crash with virtio, so yes I think
+> > > it would be good to fix that. However, even if we fixed that, the if
+> > > (xen_domain()) check in vring_use_dma_api is still a problem.
+> >
+> > Why is it a problem? It just makes virtio use DMA API.
+> > If that in turn works, problem solved.
+>=20
+> You are correct in the sense that it would work. However I do think it is=
+ wrong
+> for vring_use_dma_api to enable dma_ops/swiotlb-xen for Xen/ARM DomUs
+> that don't need it. There are many different types of Xen guests, Xen x86=
+ is
+> drastically different from Xen ARM, it seems wrong to treat them the same
+> way.
+>=20
+>=20
+>=20
+> Anyway, re-reading the last messages of the original thread [1], it looks=
+ like
+> Peng had a clear idea on how to fix the general issue. Peng, what happene=
+d
+> with that?
+>=20
+>=20
+> [1]
+> https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Flore.=
+ke
+> rnel.org%2Fpatchwork%2Fpatch%2F1033801%2F%231222404&amp;data=3D02
+> %7C01%7Cpeng.fan%40nxp.com%7C27edb29c11da49a2249008d8192d98cc
+> %7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0%7C637287030912707
+> 092&amp;sdata=3DMsF%2FLmBmJ1V%2BoOQ%2FmdhEJ3PFzH55DaSNvorRUU
+> QvBvQ%3D&amp;reserved=3D0
