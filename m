@@ -2,95 +2,194 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE464C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:52:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55FD3C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD7B7204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:52:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="SHCJ5JM/"
+	by mail.kernel.org (Postfix) with ESMTP id 37EA2204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:52:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729712AbgF2SwB (ORCPT
+        id S1729729AbgF2SwG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:52:01 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:18046 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729702AbgF2Svx (ORCPT
+        Mon, 29 Jun 2020 14:52:06 -0400
+Received: from smtp1.de.adit-jv.com ([93.241.18.167]:55815 "EHLO
+        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729716AbgF2Sv7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:51:53 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5ef9ed360000>; Mon, 29 Jun 2020 06:31:34 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 29 Jun 2020 06:31:47 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 29 Jun 2020 06:31:47 -0700
-Received: from [10.26.75.188] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 29 Jun
- 2020 13:31:40 +0000
-Subject: Re: [PATCH V3 1/2] arm64: tegra: Re-order PCIe aperture mappings to
- support ACPI boot
-To:     Vidya Sagar <vidyas@nvidia.com>, <bhelgaas@google.com>,
-        <lorenzo.pieralisi@arm.com>, <rjw@rjwysocki.net>,
-        <lenb@kernel.org>, <andrew.murray@arm.com>, <treding@nvidia.com>
-CC:     <linux-tegra@vger.kernel.org>, <linux-pci@vger.kernel.org>,
-        <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20200106082709.14370-1-vidyas@nvidia.com>
- <20200110191500.9538-1-vidyas@nvidia.com>
- <20200110191500.9538-2-vidyas@nvidia.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <d52db35b-dbf8-a706-9611-95448cf6a69e@nvidia.com>
-Date:   Mon, 29 Jun 2020 14:31:38 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 29 Jun 2020 14:51:59 -0400
+Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
+        by smtp1.de.adit-jv.com (Postfix) with ESMTP id EFC963C0588;
+        Mon, 29 Jun 2020 11:24:22 +0200 (CEST)
+Received: from smtp1.de.adit-jv.com ([127.0.0.1])
+        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 3LZ3PyHkiLPo; Mon, 29 Jun 2020 11:24:18 +0200 (CEST)
+Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 274483C0585;
+        Mon, 29 Jun 2020 11:24:18 +0200 (CEST)
+Received: from vmlxhi-110.adit-jv.com (10.72.93.196) by HI2EXCH01.adit-jv.com
+ (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.487.0; Mon, 29 Jun
+ 2020 11:24:17 +0200
+Date:   Mon, 29 Jun 2020 11:24:13 +0200
+From:   Ramzi Ben Meftah <rbmeftah@de.adit-jv.com>
+To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+CC:     Steve Longerbeam <steve_longerbeam@mentor.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Ramzi BEN MEFTAH <rbmeftah@de.adit-jv.com>,
+        niklas soderlund <niklas.soderlund@ragnatech.se>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Arnd Bergmann <arnd@arndb.de>, <linux-media@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Michael Rodin <mrodin@de.adit-jv.com>,
+        <efriedrich@de.adit-jv.com>, <erosca@de.adit-jv.com>
+Subject: Re: [PATCH 1/3] v4l2-subdev: Add subdev ioctl support for
+ ENUM/GET/SET INPUT
+Message-ID: <20200629092413.GA84958@vmlxhi-110.adit-jv.com>
+References: <1592301619-17631-1-git-send-email-rbmeftah@de.adit-jv.com>
+ <20200624075307.hl6wew7vr5ue225t@uno.localdomain>
+ <20200625020138.GW5980@pendragon.ideasonboard.com>
+ <c57d416d-14d4-6d5d-a281-ddbf3183395a@mentor.com>
+ <20200626011251.GP5865@pendragon.ideasonboard.com>
 MIME-Version: 1.0
-In-Reply-To: <20200110191500.9538-2-vidyas@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
 Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1593437494; bh=Y32CfHcMUWKKF9wD0CLFw8La6QEVGFVAMOsFhmKdfEU=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=SHCJ5JM/tbcA1imuBapYWSJr6z+o4OojHikk4j61y7FE/MkNF54FhwyT08IMnjadW
-         lHTOBpjK6/7Fj289JNT9INlUuWwXTI4Y+81NRoDs7DLuDK5EPg/dW/qU4MZ9DmvAVM
-         gfivYDmVRoUITMwz4H+8CmISt8nEBI9bJSy48Vxzfqo6sixPDGCsAOi0qEeAM2wAAc
-         PkYY7LbPQa7d8ZiPLf6HDYMfg4wYlUEIkOribMuqvsIMFnRfI2n1mCzvkn1F1e8VIj
-         lMpP0hNtbkeybDwNSPr8ubqADxgY+pBCDAy5o4lvgK4vnUiAVenSFo2B9sXKEgYsJ3
-         Z2KSQjp2XTjsg==
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200626011251.GP5865@pendragon.ideasonboard.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Originating-IP: [10.72.93.196]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sagar,
+Hi Laurent,
 
-On 10/01/2020 19:14, Vidya Sagar wrote:
-> Re-order Tegra194's PCIe aperture mappings to have IO window moved to
-> 64-bit aperture and have the entire 32-bit aperture used for accessing
-> the configuration space. This makes it to use the entire 32MB of the 32-bit
-> aperture for ECAM purpose while booting through ACPI.
+On Fri, Jun 26, 2020 at 04:12:51AM +0300, Laurent Pinchart wrote:
+> Hi Steve,
 > 
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> On Thu, Jun 25, 2020 at 10:41:09AM -0700, Steve Longerbeam wrote:
+> > On 6/24/20 7:01 PM, Laurent Pinchart wrote:
+> > > On Wed, Jun 24, 2020 at 09:53:07AM +0200, Jacopo Mondi wrote:
+> > >> On Tue, Jun 16, 2020 at 12:00:15PM +0200, Ramzi BEN MEFTAH wrote:
+> > >>> From: Steve Longerbeam <steve_longerbeam@mentor.com>
+> > >>   +Niklas, +Laurent
+> > >>
+> > >> Niklas, Laurent, how does this play with CAP_IO_MC ?
+> > > I don't think it's related to CAP_IO_MC, but I don't think it's a good
+> > > idea either :-) Routing doesn't go through the subdev [gs]_input
+> > > operations in MC-based drivers. It should be configured through link
+> > > setup instead. This patch goes in the wrong direction, sorry Steve.
+> > 
+> > That's OK! :) I didn't submit this patch, and as stated in the commit 
+> > header, I never recommended this patch be submitted to upstream in the 
+> > first place.
+> > 
+> > Selecting inputs at a subdev should normally make use of media link 
+> > setup. But for selecting analog signal inputs, such as the ADV748x AFE 
+> > standard definition inputs, that would  mean there would need to exist 
+> > source "analog" subdevs that connect to the AFE inputs, if only for the 
+> > purpose of selecting those inputs, which seems silly IMHO. The ADV748x 
+> > AFE subdev defines these inputs as media pads, but have no connections, 
+> > so link setup API can't be used to select those inputs.
+> > 
+> > So a new subdev pad API is clearly needed, not just to get input status 
+> > at a subdev pad, but to select/make active such analog inputs without 
+> > requiring link setup API.
+> 
+> There was an attempt to create a subdev ioctl to configure internal
+> routing. See "[PATCH v4 19/31] media: Documentation: Add GS_ROUTING
+> documentation" ([1]) and the related patches in the series.
+> 
+> [1] https://lore.kernel.org/linux-media/20190328200608.9463-20-jacopo+renesas@jmondi.org/
+> 
 
-Any reason why we should not merge this change, even if patch 2/2 is not
-accepted? If there is no harm in us merging this, this would be one less
-change for us to carry out-of-tree. If so, can you update and re-post
-for 5.9?
+I was thinking why not just allowing linking pads of the same media entity.
+This will avoid adding a new control, and will do the same as S_INPUT ioctl.
 
-Cheers
-Jon
+> > >>> This commit enables VIDIOC_ENUMINPUT, VIDIOC_G_INPUT, and VIDIOC_S_INPUT
+> > >>> ioctls for use via v4l2 subdevice node.
+> > >>>
+> > >>> This commit should probably not be pushed upstream, because the (old)
+> > >>> idea of video inputs conflicts with the newer concept of establishing
+> > >>> media links between src->sink pads.
+> > >>>
+> > >>> However it might make sense for some subdevices to support enum/get/set
+> > >>> inputs. One example would be the analog front end subdevice for the
+> > >>> ADV748x. By providing these ioctls, selecting the ADV748x analog inputs
+> > >>> can be done without requiring the implementation of media entities that
+> > >>> would define the analog source for which to establish a media link.
+> > >>>
+> > >>> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
+> > >>> ---
+> > >>>   drivers/media/v4l2-core/v4l2-subdev.c |  9 +++++++++
+> > >>>   include/media/v4l2-subdev.h           | 11 +++++++++++
+> > >>>   2 files changed, 20 insertions(+)
+> > >>>
+> > >>> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
+> > >>> index 6b989fe..73fbfe9 100644
+> > >>> --- a/drivers/media/v4l2-core/v4l2-subdev.c
+> > >>> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
+> > >>> @@ -378,6 +378,15 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
+> > >>>   			return -ENOTTY;
+> > >>>   		return v4l2_querymenu(vfh->ctrl_handler, arg);
+> > >>>
+> > >>> +	case VIDIOC_ENUMINPUT:
+> > >>> +		return v4l2_subdev_call(sd, video, enuminput, arg);
+> > >>> +
+> > >>> +	case VIDIOC_G_INPUT:
+> > >>> +		return v4l2_subdev_call(sd, video, g_input, arg);
+> > >>> +
+> > >>> +	case VIDIOC_S_INPUT:
+> > >>> +		return v4l2_subdev_call(sd, video, s_input, *(u32 *)arg);
+> > >>> +
+> > >>>   	case VIDIOC_G_CTRL:
+> > >>>   		if (!vfh->ctrl_handler)
+> > >>>   			return -ENOTTY;
+> > >>> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
+> > >>> index f7fe78a..6e1a9cd 100644
+> > >>> --- a/include/media/v4l2-subdev.h
+> > >>> +++ b/include/media/v4l2-subdev.h
+> > >>> @@ -383,6 +383,14 @@ struct v4l2_mbus_frame_desc {
+> > >>>    * @g_input_status: get input status. Same as the status field in the
+> > >>>    *	&struct &v4l2_input
+> > >>>    *
+> > >>> + * @enuminput: enumerate inputs. Should return the same input status as
+> > >>> + *      @g_input_status if the passed input index is the currently active
+> > >>> + *      input.
+> > >>> + *
+> > >>> + * @g_input: returns the currently active input index.
+> > >>> + *
+> > >>> + * @s_input: set the active input.
+> > >>> + *
+> > >>>    * @s_stream: used to notify the driver that a video stream will start or has
+> > >>>    *	stopped.
+> > >>>    *
+> > >>> @@ -423,6 +431,9 @@ struct v4l2_subdev_video_ops {
+> > >>>   	int (*g_tvnorms)(struct v4l2_subdev *sd, v4l2_std_id *std);
+> > >>>   	int (*g_tvnorms_output)(struct v4l2_subdev *sd, v4l2_std_id *std);
+> > >>>   	int (*g_input_status)(struct v4l2_subdev *sd, u32 *status);
+> > >>> +	int (*enuminput)(struct v4l2_subdev *sd, struct v4l2_input *input);
+> > >>> +	int (*g_input)(struct v4l2_subdev *sd, u32 *index);
+> > >>> +	int (*s_input)(struct v4l2_subdev *sd, u32 index);
+> > >>>   	int (*s_stream)(struct v4l2_subdev *sd, int enable);
+> > >>>   	int (*g_pixelaspect)(struct v4l2_subdev *sd, struct v4l2_fract *aspect);
+> > >>>   	int (*g_frame_interval)(struct v4l2_subdev *sd,
+> > 
+> 
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
 
 -- 
-nvpublic
+Best Regards,
+Ramzi Ben Meftah.
