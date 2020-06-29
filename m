@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 866AEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43039C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6682920760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2061120760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467570;
-	bh=vabRyVgDkFUg3lNiwlmdoEUpny39lVxyEzxQS9PmrX0=;
+	s=default; t=1593467573;
+	bh=Yn0VfqWS4xDvXpPauWQ/AwR0jBqLHAG+sbhriLI01aE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tvp1jnp4mOh9DKNU43OS/AwnMSTaANsadHsTy/TDKIL/O0+vckEi2C0r4WCFfljNX
-	 Ty4hsJTSmxfL/J9UpXGnd0RRnUlpXgPF1z5EFzFkvnCLr/40V//07oGdR6AuH6/Jlr
-	 4MU2saB8yjzZcDGlbRmZc6ExZq/5cg0N6ikKu5v8=
+	b=UYyAPIypExe685EygPCG4w823FyW9XDuNNVDrOU1Dk9Kob8z7Tirx6l1MED3IvuKz
+	 m+uuLBm0enOeYSk6M9PNqCnTfgCVCE2dpJMwJ3XBB8c2g8BYd68olZ1wUbhQJHNvz3
+	 BvOt/tgzmlmdoJbxuUyM6PCRjDKmtHQPqVEmK0yU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404382AbgF2Vws (ORCPT
+        id S2391534AbgF2Vwn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:52:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56906 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:52:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726615AbgF2Sfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726620AbgF2Sfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A55B246EB;
-        Mon, 29 Jun 2020 15:20:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D928247B1;
+        Mon, 29 Jun 2020 15:21:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444032;
-        bh=vabRyVgDkFUg3lNiwlmdoEUpny39lVxyEzxQS9PmrX0=;
+        s=default; t=1593444114;
+        bh=Yn0VfqWS4xDvXpPauWQ/AwR0jBqLHAG+sbhriLI01aE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xY2HGCBzCWcXRC0YnqoOiFBFvs25R2qm0qdHzOLWW4WZ9F7UXZiOK9nxeIdPx/E5V
-         TNm9bJEPwraWTDGGoKo6Z/NselJrWPkxoThAni0Td02oJ6LSBhofbMRRUAPtJZjQVD
-         XuerHe2UPf8UxriBu5+Jx750K+fkgW2MdbhFZhb4=
+        b=lsDVryGM5wt0lfyjuKnrDTZ8kiHIjxe+nT2D5ZV4nF5yXjQ22GFIzBxKH+vaepsse
+         3KcMThkvxXtiVHKpqOD0N6oxVFzY7aHFGdeR5ovw6G7TY67QppsyUGL9ogwRss7XvE
+         pMj6yhDpkw7OGakCzL74bZanLka894NnUuKiZY4c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shannon Nelson <snelson@pensando.io>,
-        Jonathan Toppins <jtoppins@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 140/265] ionic: tame the watchdog timer on reconfig
-Date:   Mon, 29 Jun 2020 11:16:13 -0400
-Message-Id: <20200629151818.2493727-141-sashal@kernel.org>
+Cc:     Filipe Manana <fdmanana@suse.com>, David Sterba <dsterba@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 226/265] btrfs: fix failure of RWF_NOWAIT write into prealloc extent beyond eof
+Date:   Mon, 29 Jun 2020 11:17:39 -0400
+Message-Id: <20200629151818.2493727-227-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -66,66 +64,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shannon Nelson <snelson@pensando.io>
+From: Filipe Manana <fdmanana@suse.com>
 
-[ Upstream commit b59eabd23ee53e8c3492602722e1697f9a2f63ad ]
+commit 4b1946284dd6641afdb9457101056d9e6ee6204c upstream.
 
-Even with moving netif_tx_disable() to an earlier point when
-taking down the queues for a reconfiguration, we still end
-up with the occasional netdev watchdog Tx Timeout complaint.
-The old method of using netif_trans_update() works fine for
-queue 0, but has no effect on the remaining queues.  Using
-netif_device_detach() allows us to signal to the watchdog to
-ignore us for the moment.
+If we attempt to write to prealloc extent located after eof using a
+RWF_NOWAIT write, we always fail with -EAGAIN.
 
-Fixes: beead698b173 ("ionic: Add the basic NDO callbacks for netdev support")
-Signed-off-by: Shannon Nelson <snelson@pensando.io>
-Acked-by: Jonathan Toppins <jtoppins@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+We do actually check if we have an allocated extent for the write at
+the start of btrfs_file_write_iter() through a call to check_can_nocow(),
+but later when we go into the actual direct IO write path we simply
+return -EAGAIN if the write starts at or beyond EOF.
+
+Trivial to reproduce:
+
+  $ mkfs.btrfs -f /dev/sdb
+  $ mount /dev/sdb /mnt
+
+  $ touch /mnt/foo
+  $ chattr +C /mnt/foo
+
+  $ xfs_io -d -c "pwrite -S 0xab 0 64K" /mnt/foo
+  wrote 65536/65536 bytes at offset 0
+  64 KiB, 16 ops; 0.0004 sec (135.575 MiB/sec and 34707.1584 ops/sec)
+
+  $ xfs_io -c "falloc -k 64K 1M" /mnt/foo
+
+  $ xfs_io -d -c "pwrite -N -V 1 -S 0xfe -b 64K 64K 64K" /mnt/foo
+  pwrite: Resource temporarily unavailable
+
+On xfs and ext4 the write succeeds, as expected.
+
+Fix this by removing the wrong check at btrfs_direct_IO().
+
+Fixes: edf064e7c6fec3 ("btrfs: nowait aio support")
+CC: stable@vger.kernel.org # 4.14+
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/pensando/ionic/ionic_lif.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ fs/btrfs/inode.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/pensando/ionic/ionic_lif.c b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-index 2729b0bb12739..790d4854b8ef5 100644
---- a/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-+++ b/drivers/net/ethernet/pensando/ionic/ionic_lif.c
-@@ -1682,8 +1682,8 @@ static void ionic_stop_queues(struct ionic_lif *lif)
- 	if (!test_and_clear_bit(IONIC_LIF_F_UP, lif->state))
- 		return;
- 
--	ionic_txrx_disable(lif);
- 	netif_tx_disable(lif->netdev);
-+	ionic_txrx_disable(lif);
- }
- 
- int ionic_stop(struct net_device *netdev)
-@@ -1949,18 +1949,19 @@ int ionic_reset_queues(struct ionic_lif *lif)
- 	bool running;
- 	int err = 0;
- 
--	/* Put off the next watchdog timeout */
--	netif_trans_update(lif->netdev);
--
- 	err = ionic_wait_for_bit(lif, IONIC_LIF_F_QUEUE_RESET);
- 	if (err)
- 		return err;
- 
- 	running = netif_running(lif->netdev);
--	if (running)
-+	if (running) {
-+		netif_device_detach(lif->netdev);
- 		err = ionic_stop(lif->netdev);
--	if (!err && running)
-+	}
-+	if (!err && running) {
- 		ionic_open(lif->netdev);
-+		netif_device_attach(lif->netdev);
-+	}
- 
- 	clear_bit(IONIC_LIF_F_QUEUE_RESET, lif->state);
- 
+diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+index 18111b0263d71..6aa200e373c8f 100644
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -8262,9 +8262,6 @@ static ssize_t btrfs_direct_IO(struct kiocb *iocb, struct iov_iter *iter)
+ 			dio_data.overwrite = 1;
+ 			inode_unlock(inode);
+ 			relock = true;
+-		} else if (iocb->ki_flags & IOCB_NOWAIT) {
+-			ret = -EAGAIN;
+-			goto out;
+ 		}
+ 		ret = btrfs_delalloc_reserve_space(inode, &data_reserved,
+ 						   offset, count);
 -- 
 2.25.1
 
