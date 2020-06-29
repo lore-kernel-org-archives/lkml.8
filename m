@@ -2,109 +2,134 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4B24C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E032BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A891B20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:02:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593457359;
-	bh=akbiHMLtrh9zquQkY+XHTWnClXAmVlxeMPT7R0tvfBo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fP0CAoZxBtFQDqr2rxsRkps0lGlEAdc4Tf9Xf23/Pec1wQr/fk7QpYT3OBYE+WQca
-	 sdtqyP+Q/AXqdsvWUn8XmCoIJA4n4RiWFi+TdiKlLEX4r7XSn7FPrQcohD58RPsb5I
-	 6n94ZihRlXJOf/8Za/tv7sh0NOrPbShqLk4IfaPc=
+	by mail.kernel.org (Postfix) with ESMTP id B986120663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:02:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q5EC2Oaf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729927AbgF2TCi (ORCPT
+        id S1730555AbgF2TCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:02:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45478 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730311AbgF2TAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:00:20 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86A4B2550C;
-        Mon, 29 Jun 2020 15:54:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446069;
-        bh=akbiHMLtrh9zquQkY+XHTWnClXAmVlxeMPT7R0tvfBo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jKXP+UBckU059fX8dk4fbaSJ+VDzYa1UA3qqpfmGuP6jQ4OzGE2lmimKuzUGeBRlo
-         trsz2blUeAT04aanPxNmesqgrItJELpuoFxdCjjLZLn9EsforoECRWgq6+Sil60IyA
-         3TiykO1pyEREf41n/Be5+PIijOQfF8qsP4hxF7vg=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 068/135] block: nr_sects_write(): Disable preemption on seqcount write
-Date:   Mon, 29 Jun 2020 11:52:02 -0400
-Message-Id: <20200629155309.2495516-69-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
-References: <20200629155309.2495516-1-sashal@kernel.org>
+        Mon, 29 Jun 2020 15:02:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41724 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730511AbgF2TCm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:02:42 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93AF3C030F24
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:36:56 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id h4so1216127plt.9
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:36:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cP6iQsVZnZL9cfv3sLl/5r6hzqX0rVayprzDZmD8fls=;
+        b=q5EC2OafxVTf2u/iQVD0g8yJF3Y1bDOuicqD7IHdDsvf5/fGCEdbx9n3vhiYTT2qiC
+         fXBtNHHkfMBVzxvHYFkKG4rc+UqQ1k+C6Zc1++iOwPtLEWdKwxKR0b4Hexnp5badz2e9
+         Emob2Nui7WvtyIQWV2bepfCdG5Z+H4LQOzS6+qE7Mk/UpmWlaayYsRadT8JfLDeJuF7b
+         ekEIDf7quMaUYxhU8LTapw6ta8ft2Dnmm1EFyyS+Va4/NSNILgilR0dN32QjzYEyHoPS
+         cVvD1LHMsN1bihCtlFjyMsdBqea389T0XZ7BeI/GjaXKXlZmPjNU8WYzYSUbXsvl1n2F
+         1iIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cP6iQsVZnZL9cfv3sLl/5r6hzqX0rVayprzDZmD8fls=;
+        b=F2C4riixD9Z5TSuzIybSFFwZRMlZWYkfnbkM/fplv9AMTUYrdRGsDFhUf/t8NcZ6E5
+         sP7xxFqDbjilSQvXQcZfbT3OYdWFYdBKP1pTYk9hvEjdIEEob2lLuqRyegottENC8i/N
+         D8GLb8AJTI+9M8xrPvwkEnWG8p6CWykqSvX0X+AJW8Z2i8RBgkF85GidGgzzjbgwSo7/
+         d2kVZuVYG9Kpjas0gL7UuSLWlu/wpPqPoQtCb2YtCaL5MJ/Tr4asLwRsGF9t9ehUZRF5
+         NQgseuPuCxsDXF6Gfh5pX1y2HjhNc+8avM2Usj/04imC2NsIJ7JrGMyf4VcUuTRGIzv4
+         slaQ==
+X-Gm-Message-State: AOAM530epQgLGYyxnzxGTovaUmj6dTdx3T9kTUfW9Gxfzlns3b0ZFBWy
+        dkx8QkRzCdlnr5A2AfvJXdsp5jUjuKf7ZxwKhy8=
+X-Google-Smtp-Source: ABdhPJxY0TieHGnK37IC/NZ8PHvS+nU0xr2yP6SeSbn2otyH5MinztJSPrmwBVJET9OWG4mysZKu95H1GtfccfKlpyw=
+X-Received: by 2002:a17:90a:b30d:: with SMTP id d13mr18146343pjr.181.1593448616001;
+ Mon, 29 Jun 2020 09:36:56 -0700 (PDT)
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.229-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.4.229-rc1
-X-KernelTest-Deadline: 2020-07-01T15:53+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <CGME20200629112249eucas1p160b845444f8fbad96bdec41e9d3938da@eucas1p1.samsung.com>
+ <20200629112242.18380-1-a.hajda@samsung.com> <20200629112242.18380-3-a.hajda@samsung.com>
+In-Reply-To: <20200629112242.18380-3-a.hajda@samsung.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 29 Jun 2020 19:36:42 +0300
+Message-ID: <CAHp75VdS_u8h4qfBxsQRUp1-2SL_hq20=dQkpteXH7Xg7epArQ@mail.gmail.com>
+Subject: Re: [PATCH v7 2/4] driver core: add deferring probe reason to
+ devices_deferred property
+To:     Andrzej Hajda <a.hajda@samsung.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Mark Brown <broonie@kernel.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Ahmed S. Darwish" <a.darwish@linutronix.de>
+On Mon, Jun 29, 2020 at 2:22 PM Andrzej Hajda <a.hajda@samsung.com> wrote:
+>
+> /sys/kernel/debug/devices_deferred property contains list of deferred devices.
+> This list does not contain reason why the driver deferred probe, the patch
+> improves it.
+> The natural place to set the reason is dev_err_probe function introduced recently,
+> ie. if dev_err_probe will be called with -EPROBE_DEFER instead of printk the message
+> will be attached to deferred device and printed when user read devices_deferred
 
-[ Upstream commit 15b81ce5abdc4b502aa31dff2d415b79d2349d2f ]
+to a deferred
 
-For optimized block readers not holding a mutex, the "number of sectors"
-64-bit value is protected from tearing on 32-bit architectures by a
-sequence counter.
+reads
 
-Disable preemption before entering that sequence counter's write side
-critical section. Otherwise, the read side can preempt the write side
-section and spin for the entire scheduler tick. If the reader belongs to
-a real-time scheduling class, it can spin forever and the kernel will
-livelock.
+> property.
 
-Fixes: c83f6bf98dc1 ("block: add partition resize function to blkpg ioctl")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
-Reviewed-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- include/linux/genhd.h | 2 ++
- 1 file changed, 2 insertions(+)
+...
 
-diff --git a/include/linux/genhd.h b/include/linux/genhd.h
-index 5012fcdb4c9ed..a27d0aef07f66 100644
---- a/include/linux/genhd.h
-+++ b/include/linux/genhd.h
-@@ -727,9 +727,11 @@ static inline sector_t part_nr_sects_read(struct hd_struct *part)
- static inline void part_nr_sects_write(struct hd_struct *part, sector_t size)
- {
- #if BITS_PER_LONG==32 && defined(CONFIG_LBDAF) && defined(CONFIG_SMP)
-+	preempt_disable();
- 	write_seqcount_begin(&part->nr_sects_seq);
- 	part->nr_sects = size;
- 	write_seqcount_end(&part->nr_sects_seq);
-+	preempt_enable();
- #elif BITS_PER_LONG==32 && defined(CONFIG_LBDAF) && defined(CONFIG_PREEMPT)
- 	preempt_disable();
- 	part->nr_sects = size;
+> @@ -3984,10 +3986,12 @@ int dev_err_probe(const struct device *dev, int err, const char *fmt, ...)
+>         vaf.fmt = fmt;
+>         vaf.va = &args;
+>
+> -       if (err != -EPROBE_DEFER)
+
+> +       if (err != -EPROBE_DEFER) {
+
+Why not positive conditional? (Okay, I'm fine with either in this case)
+
+>                 dev_err(dev, "error %d: %pV", err, &vaf);
+> -       else
+> +       } else {
+> +               device_set_deferred_probe_reson(dev, &vaf);
+>                 dev_dbg(dev, "error %d: %pV", err, &vaf);
+> +       }
+
+To reduce churn, you may move {} addition to the first patch.
+
+...
+
+>         list_for_each_entry(curr, &deferred_probe_pending_list, deferred_probe)
+> -               seq_printf(s, "%s\n", dev_name(curr->device));
+> +               seq_printf(s, "%s\t%s", dev_name(curr->device),
+> +                          curr->device->p->deferred_probe_reason ?: "\n");
+
+Hmm... "\t" will be dangling in the latter case.
+
 -- 
-2.25.1
-
+With Best Regards,
+Andy Shevchenko
