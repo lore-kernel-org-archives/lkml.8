@@ -7,44 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C63FC433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92526C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:45:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D082206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:45:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65BF5206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:45:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593459931;
-	bh=IPjqOOWZ9Sfj5zluR+FvX6Y/lbIVzybNA36IqjFDWSI=;
+	s=default; t=1593459936;
+	bh=RMVHADc1MCpldmDojQ2vsBF9hMOtSGGGcm9B/f+bWkk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QciGfCPcelKZy1PDBUUvNNAk9y+BWvX4Q5vGLUBwIoqmv0BByi5uozhoNXTwuRrvr
-	 d1hDcfnQKDy8gJLZeiCS3NzUSK42D317pgDNNfNhQ05+pva0qPabrFQmHtr/uDrHFy
-	 eYc7U1mf5UFJKKUBh2wHKzc7PBmc4+93Snflmboo=
+	b=KFWytobYB5s52c1WrIofzyI6yCMkxtCuuvO4QlLjaJXDPdSEz+eQEuQjvVZzMfzT+
+	 C07V6fpfGiZcT1LQyXDJT/e8hXqP4qbrB4rA8UQBjCh/r4s8F282HYSp61Vz7YkrM4
+	 3tugac0LsBFCp8nk15oAvpHB+UEHx0yp0l9qSHQk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388039AbgF2Tpa (ORCPT
+        id S2388048AbgF2Tpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:45:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47668 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:45:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387831AbgF2Tko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387821AbgF2Tko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4E5A4248A2;
-        Mon, 29 Jun 2020 15:26:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A489024872;
+        Mon, 29 Jun 2020 15:26:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444398;
-        bh=IPjqOOWZ9Sfj5zluR+FvX6Y/lbIVzybNA36IqjFDWSI=;
+        s=default; t=1593444370;
+        bh=RMVHADc1MCpldmDojQ2vsBF9hMOtSGGGcm9B/f+bWkk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=idPounMUKWE7HqeTeFGack22iuu1sB2+D8LLYwJQlhg/MA4v31cGyJTkesBZo2EnW
-         IfB645gLZxA5VJgz1eHF9cpauGXkxEy6bk9IdMlZFKHLw3vnwE/hIu8jvTpBwoP3Og
-         MNxDNVFdzYu6WN/ulc96rmh9kwFyQRA5u8YLIFqc=
+        b=ekrUpZ8kFJq9EiA6A+ODg4/YRKUUx9OI+7LQw9HC/sCEsJ87St9Lvu2nNXMJNMWir
+         zreM6BteJASTLmpSxBg0KRey3JN+J0FBfxYGsT4L0JGbsvM0wwycBEsVXtW3psNDNW
+         Q9Q//XdeWqr27GMJfBZeNIdaBWOOvciytk63hHAE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 076/178] ARM: dts: Fix duovero smsc interrupt for suspend
-Date:   Mon, 29 Jun 2020 11:23:41 -0400
-Message-Id: <20200629152523.2494198-77-sashal@kernel.org>
+Cc:     Peter Chen <peter.chen@nxp.com>, Jun Li <jun.li@nxp.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.4 047/178] usb: cdns3: ep0: fix the test mode set incorrectly
+Date:   Mon, 29 Jun 2020 11:23:12 -0400
+Message-Id: <20200629152523.2494198-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -63,38 +65,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Peter Chen <peter.chen@nxp.com>
 
-[ Upstream commit 9cf28e41f9f768791f54ee18333239fda6927ed8 ]
+commit b51e1cf64f93acebb6d8afbacd648a6ecefc39b4 upstream.
 
-While testing the recent suspend and resume regressions I noticed that
-duovero can still end up losing edge gpio interrupts on runtime
-suspend. This causes NFSroot easily stopping working after resume on
-duovero.
+The 'tmode' is ctrl->wIndex, changing it as the real test
+mode value for register assignment.
 
-Let's fix the issue by using gpio level interrupts for smsc as then
-the gpio interrupt state is seen by the gpio controller on resume.
-
-Fixes: 731b409878a3 ("ARM: dts: Configure duovero for to allow core retention during idle")
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: <stable@vger.kernel.org>
+Fixes: 7733f6c32e36 ("usb: cdns3: Add Cadence USB3 DRD Driver")
+Reviewed-by: Jun Li <jun.li@nxp.com>
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm/boot/dts/omap4-duovero-parlor.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/cdns3/ep0.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/omap4-duovero-parlor.dts b/arch/arm/boot/dts/omap4-duovero-parlor.dts
-index 8047e8cdb3af0..4548d87534e37 100644
---- a/arch/arm/boot/dts/omap4-duovero-parlor.dts
-+++ b/arch/arm/boot/dts/omap4-duovero-parlor.dts
-@@ -139,7 +139,7 @@
- 	ethernet@gpmc {
- 		reg = <5 0 0xff>;
- 		interrupt-parent = <&gpio2>;
--		interrupts = <12 IRQ_TYPE_EDGE_FALLING>;	/* gpio_44 */
-+		interrupts = <12 IRQ_TYPE_LEVEL_LOW>;		/* gpio_44 */
+diff --git a/drivers/usb/cdns3/ep0.c b/drivers/usb/cdns3/ep0.c
+index e71240b386b49..f785ce84aba62 100644
+--- a/drivers/usb/cdns3/ep0.c
++++ b/drivers/usb/cdns3/ep0.c
+@@ -327,7 +327,8 @@ static int cdns3_ep0_feature_handle_device(struct cdns3_device *priv_dev,
+ 		if (!set || (tmode & 0xff) != 0)
+ 			return -EINVAL;
  
- 		phy-mode = "mii";
- 
+-		switch (tmode >> 8) {
++		tmode >>= 8;
++		switch (tmode) {
+ 		case TEST_J:
+ 		case TEST_K:
+ 		case TEST_SE0_NAK:
 -- 
 2.25.1
 
