@@ -2,146 +2,182 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D152C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75378C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:46:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E620204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:46:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Bx6hKf+3"
+	by mail.kernel.org (Postfix) with ESMTP id 5AD13204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:46:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729157AbgF2SqO (ORCPT
+        id S1727972AbgF2SqM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:46:14 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:45611 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728632AbgF2SqK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:46:10 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593456370; h=Content-Transfer-Encoding: MIME-Version:
- References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=Nlv7Rf/jfB8kGSXWgVtT7Chuv1kVyM09QN/RDs/cbeU=; b=Bx6hKf+3jHdK3G36ncw5LzZWbaUart3DlH0l9Fc5iFHT2fxMsdrECYXWslBmbZbAQiIGhHQE
- ZOFyAX4n2LbRPwb/BwlW9Hnn39STEqdx+wDBcbmMHYOo54vHO0WP84QWzpnuaU1ATiT5n718
- 49iNaXEPJ65Yg8PVLwkkL7W+/Zs=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n16.prod.us-west-2.postgun.com with SMTP id
- 5efa0ea33a8a8b20b87b614e (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 29 Jun 2020 15:54:11
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2259AC4339C; Mon, 29 Jun 2020 15:54:11 +0000 (UTC)
-Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id F1193C43395;
-        Mon, 29 Jun 2020 15:54:03 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org F1193C43395
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>
-Cc:     iommu@lists.linux-foundation.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Sean Paul <sean@poorly.run>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Akhil P Oommen <akhilpo@codeaurora.org>,
-        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        "Kristian H . Kristensen" <hoegsberg@google.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCHv3 6/7] drm/msm: rearrange the gpu_rmw() function
-Date:   Mon, 29 Jun 2020 21:22:49 +0530
-Message-Id: <9a39c39a9d96664c91175b845eaacda63d712adb.1593344119.git.saiprakash.ranjan@codeaurora.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <cover.1593344119.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1593344119.git.saiprakash.ranjan@codeaurora.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 29 Jun 2020 14:46:12 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61662 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728088AbgF2SqI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:46:08 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05TFZsCK187966;
+        Mon, 29 Jun 2020 11:50:18 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31ycksfa3p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 29 Jun 2020 11:50:17 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05TFa3TW188984;
+        Mon, 29 Jun 2020 11:50:17 -0400
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 31ycksfa2u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 29 Jun 2020 11:50:17 -0400
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05TFktZH001146;
+        Mon, 29 Jun 2020 15:50:15 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma06fra.de.ibm.com with ESMTP id 31wwcgs6hw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 29 Jun 2020 15:50:15 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05TFoDIt50921500
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 29 Jun 2020 15:50:13 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 37EB6AE045;
+        Mon, 29 Jun 2020 15:50:13 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DAF6AAE057;
+        Mon, 29 Jun 2020 15:50:12 +0000 (GMT)
+Received: from oc3871087118.ibm.com (unknown [9.145.156.24])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 29 Jun 2020 15:50:12 +0000 (GMT)
+From:   Alexander Gordeev <agordeev@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Alexander Gordeev <agordeev@linux.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: [PATCH 2/3] perf bench numa: fix benchmark names
+Date:   Mon, 29 Jun 2020 17:50:08 +0200
+Message-Id: <aee0cc30c77779673d2c473693cfb7abb3f1de58.1593445668.git.agordeev@linux.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <cover.1593445668.git.agordeev@linux.ibm.com>
+References: <cover.1593445668.git.agordeev@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-06-29_15:2020-06-29,2020-06-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
+ mlxscore=0 bulkscore=0 priorityscore=1501 phishscore=0 spamscore=0
+ clxscore=1015 malwarescore=0 mlxlogscore=999 suspectscore=1
+ cotscore=-2147483648 lowpriorityscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006290103
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sharat Masetty <smasetty@codeaurora.org>
+Several benchmarks have names that do not correspond to
+their configuration. Fix that and also some whitespace
+inconsistencies.
 
-The register read-modify-write construct is generic enough
-that it can be used by other subsystems as needed, create
-a more generic rmw() function and have the gpu_rmw() use
-this new function.
-
-Signed-off-by: Sharat Masetty <smasetty@codeaurora.org>
-Reviewed-by: Jordan Crouse <jcrouse@codeaurora.org>
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
 ---
- drivers/gpu/drm/msm/msm_drv.c | 8 ++++++++
- drivers/gpu/drm/msm/msm_drv.h | 1 +
- drivers/gpu/drm/msm/msm_gpu.h | 5 +----
- 3 files changed, 10 insertions(+), 4 deletions(-)
+ tools/perf/bench/numa.c | 42 +++++++++++++++++++++---------------------
+ 1 file changed, 21 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
-index 0c219b954943..5aa070929220 100644
---- a/drivers/gpu/drm/msm/msm_drv.c
-+++ b/drivers/gpu/drm/msm/msm_drv.c
-@@ -166,6 +166,14 @@ u32 msm_readl(const void __iomem *addr)
- 	return val;
- }
+diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
+index 5497c74..7965a55 100644
+--- a/tools/perf/bench/numa.c
++++ b/tools/perf/bench/numa.c
+@@ -812,12 +812,12 @@ static u64 do_work(u8 *__data, long bytes, int nr, int nr_max, int loop, u64 val
+ 			}
+ 		}
+ 	} else if (!g->p.data_backwards || (nr + loop) & 1) {
++		/* Process data forwards: */
  
-+void msm_rmw(void __iomem *addr, u32 mask, u32 or)
-+{
-+	u32 val = msm_readl(addr);
-+
-+	val &= ~mask;
-+	msm_writel(val | or, addr);
-+}
-+
- struct msm_vblank_work {
- 	struct work_struct work;
- 	int crtc_id;
-diff --git a/drivers/gpu/drm/msm/msm_drv.h b/drivers/gpu/drm/msm/msm_drv.h
-index 983a8b7e5a74..5bb02ccb863a 100644
---- a/drivers/gpu/drm/msm/msm_drv.h
-+++ b/drivers/gpu/drm/msm/msm_drv.h
-@@ -417,6 +417,7 @@ void __iomem *msm_ioremap(struct platform_device *pdev, const char *name,
- 		const char *dbgname);
- void msm_writel(u32 data, void __iomem *addr);
- u32 msm_readl(const void __iomem *addr);
-+void msm_rmw(void __iomem *addr, u32 mask, u32 or);
+ 		d0 = data + off;
+ 		d  = data + off + 1;
+ 		d1 = data + words;
  
- struct msm_gpu_submitqueue;
- int msm_submitqueue_init(struct drm_device *drm, struct msm_file_private *ctx);
-diff --git a/drivers/gpu/drm/msm/msm_gpu.h b/drivers/gpu/drm/msm/msm_gpu.h
-index f1762b77bea8..3519777c8cb2 100644
---- a/drivers/gpu/drm/msm/msm_gpu.h
-+++ b/drivers/gpu/drm/msm/msm_gpu.h
-@@ -232,10 +232,7 @@ static inline u32 gpu_read(struct msm_gpu *gpu, u32 reg)
+-		/* Process data forwards: */
+ 		for (;;) {
+ 			if (unlikely(d >= d1))
+ 				d = data;
+@@ -835,7 +835,6 @@ static u64 do_work(u8 *__data, long bytes, int nr, int nr_max, int loop, u64 val
+ 		d  = data + off - 1;
+ 		d1 = data + words;
  
- static inline void gpu_rmw(struct msm_gpu *gpu, u32 reg, u32 mask, u32 or)
- {
--	uint32_t val = gpu_read(gpu, reg);
--
--	val &= ~mask;
--	gpu_write(gpu, reg, val | or);
-+	msm_rmw(gpu->mmio + (reg << 2), mask, or);
- }
+-		/* Process data forwards: */
+ 		for (;;) {
+ 			if (unlikely(d < data))
+ 				d = data + words-1;
+@@ -1732,12 +1731,12 @@ static int run_bench_numa(const char *name, const char **argv)
+  */
+ static const char *tests[][MAX_ARGS] = {
+    /* Basic single-stream NUMA bandwidth measurements: */
+-   { "RAM-bw-local,",	  "mem",  "-p",  "1",  "-t",  "1", "-P", "1024",
++   { "RAM-bw-local,",     "mem",  "-p",  "1",  "-t",  "1", "-P", "1024",
+ 			  "-C" ,   "0", "-M",   "0", OPT_BW_RAM },
+    { "RAM-bw-local-NOTHP,",
+ 			  "mem",  "-p",  "1",  "-t",  "1", "-P", "1024",
+ 			  "-C" ,   "0", "-M",   "0", OPT_BW_RAM_NOTHP },
+-   { "RAM-bw-remote,",	  "mem",  "-p",  "1",  "-t",  "1", "-P", "1024",
++   { "RAM-bw-remote,",    "mem",  "-p",  "1",  "-t",  "1", "-P", "1024",
+ 			  "-C" ,   "0", "-M",   "1", OPT_BW_RAM },
  
- static inline u64 gpu_read64(struct msm_gpu *gpu, u32 lo, u32 hi)
+    /* 2-stream NUMA bandwidth measurements: */
+@@ -1779,27 +1778,28 @@ static int run_bench_numa(const char *name, const char **argv)
+ 			  "mem",  "-p",  "8", "-t",  "1", "-P", " 512", OPT_BW_NOTHP },
+    { "16x1-bw-process,",  "mem",  "-p", "16", "-t",  "1", "-P",  "256", OPT_BW },
+ 
+-   { " 4x1-bw-thread,",	  "mem",  "-p",  "1", "-t",  "4", "-T",  "256", OPT_BW },
+-   { " 8x1-bw-thread,",	  "mem",  "-p",  "1", "-t",  "8", "-T",  "256", OPT_BW },
+-   { "16x1-bw-thread,",   "mem",  "-p",  "1", "-t", "16", "-T",  "128", OPT_BW },
+-   { "32x1-bw-thread,",   "mem",  "-p",  "1", "-t", "32", "-T",   "64", OPT_BW },
++   { " 1x4-bw-thread,",   "mem",  "-p",  "1", "-t",  "4", "-T",  "256", OPT_BW },
++   { " 1x8-bw-thread,",   "mem",  "-p",  "1", "-t",  "8", "-T",  "256", OPT_BW },
++   { "1x16-bw-thread,",   "mem",  "-p",  "1", "-t", "16", "-T",  "128", OPT_BW },
++   { "1x32-bw-thread,",   "mem",  "-p",  "1", "-t", "32", "-T",   "64", OPT_BW },
+ 
+-   { " 2x3-bw-thread,",	  "mem",  "-p",  "2", "-t",  "3", "-P",  "512", OPT_BW },
+-   { " 4x4-bw-thread,",	  "mem",  "-p",  "4", "-t",  "4", "-P",  "512", OPT_BW },
+-   { " 4x6-bw-thread,",	  "mem",  "-p",  "4", "-t",  "6", "-P",  "512", OPT_BW },
+-   { " 4x8-bw-thread,",	  "mem",  "-p",  "4", "-t",  "8", "-P",  "512", OPT_BW },
+-   { " 4x8-bw-thread-NOTHP,",
++   { " 2x3-bw-process,",  "mem",  "-p",  "2", "-t",  "3", "-P",  "512", OPT_BW },
++   { " 4x4-bw-process,",  "mem",  "-p",  "4", "-t",  "4", "-P",  "512", OPT_BW },
++   { " 4x6-bw-process,",  "mem",  "-p",  "4", "-t",  "6", "-P",  "512", OPT_BW },
++   { " 4x8-bw-process,",  "mem",  "-p",  "4", "-t",  "8", "-P",  "512", OPT_BW },
++   { " 4x8-bw-process-NOTHP,",
+ 			  "mem",  "-p",  "4", "-t",  "8", "-P",  "512", OPT_BW_NOTHP },
+-   { " 3x3-bw-thread,",	  "mem",  "-p",  "3", "-t",  "3", "-P",  "512", OPT_BW },
+-   { " 5x5-bw-thread,",	  "mem",  "-p",  "5", "-t",  "5", "-P",  "512", OPT_BW },
++   { " 3x3-bw-process,",  "mem",  "-p",  "3", "-t",  "3", "-P",  "512", OPT_BW },
++   { " 5x5-bw-process,",  "mem",  "-p",  "5", "-t",  "5", "-P",  "512", OPT_BW },
+ 
+-   { "2x16-bw-thread,",   "mem",  "-p",  "2", "-t", "16", "-P",  "512", OPT_BW },
+-   { "1x32-bw-thread,",   "mem",  "-p",  "1", "-t", "32", "-P", "2048", OPT_BW },
++   { "2x16-bw-process,",  "mem",  "-p",  "2", "-t", "16", "-P",  "512", OPT_BW },
++   { "1x32-bw-process,",  "mem",  "-p",  "1", "-t", "32", "-P", "2048", OPT_BW },
+ 
+-   { "numa02-bw,",	  "mem",  "-p",  "1", "-t", "32", "-T",   "32", OPT_BW },
+-   { "numa02-bw-NOTHP,",  "mem",  "-p",  "1", "-t", "32", "-T",   "32", OPT_BW_NOTHP },
+-   { "numa01-bw-thread,", "mem",  "-p",  "2", "-t", "16", "-T",  "192", OPT_BW },
+-   { "numa01-bw-thread-NOTHP,",
++   { "1x32-bw-thread,",   "mem",  "-p",  "1", "-t", "32", "-T",   "32", OPT_BW },
++   { "1x32-bw-thread-NOTHP,",
++			  "mem",  "-p",  "1", "-t", "32", "-T",   "32", OPT_BW_NOTHP },
++   { "2x16-bw-thread,",   "mem",  "-p",  "2", "-t", "16", "-T",  "192", OPT_BW },
++   { "2x16-bw-thread-NOTHP,",
+ 			  "mem",  "-p",  "2", "-t", "16", "-T",  "192", OPT_BW_NOTHP },
+ };
+ 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+1.8.3.1
 
