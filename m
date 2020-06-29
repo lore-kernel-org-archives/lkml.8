@@ -2,163 +2,181 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BA99C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:11:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C23C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F649206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:11:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="N7mXCg2N"
+	by mail.kernel.org (Postfix) with ESMTP id B45D7206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:11:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728456AbgF2TLT (ORCPT
+        id S1731059AbgF2TLZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 29 Jun 2020 15:11:25 -0400
+Received: from mx.socionext.com ([202.248.49.38]:30877 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730760AbgF2TLT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:11:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43116 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731040AbgF2TLQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:11:16 -0400
-Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 059CFC031415
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 12:11:15 -0700 (PDT)
-Received: by mail-ed1-x543.google.com with SMTP id d16so7235874edz.12
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 12:11:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=NroMd8DfMK868D8FL8lie3B1iaJmWDlvZoIY161nvvg=;
-        b=N7mXCg2NLcNbdNNrXCuFA8Af3Lc5aqsbv3Exg4+0dUr7yL0Eq863c9MSzQtN7Ej2vw
-         FnhLnser4TEh0nkGuUNgvLAl4qwmK0dQma56oE1xG4vHWnM3BWjEgd9njb06gyQkFBpu
-         tssbRMkIyNWgfrbRgqa+ealIZBwtD82n5H3qg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=NroMd8DfMK868D8FL8lie3B1iaJmWDlvZoIY161nvvg=;
-        b=MSzExM0rDsn1UOVhZTqnzguG5m8Sl+QtkDy5vg1s99GDoEq3SYXaT9+gT5p9rBlBXP
-         FtJNFcda1iQdp3/dsyjU7oIGVANolh3vXL2eu3vOqCt+sLmXQOIcr6ZN0vJmIZ34j4Bg
-         ExghDOBXeVhFGLc+rV7F2Pfsum//KqgxIhwiNWi/GX+u8LSYYewuGpznfbS48DCErYhR
-         Utx/d+jb0toqzXkHxTtubFGIZUOJSWp9xxfUQ87d/uN8VUeqG73F0LQRuLfUhuqUbkcU
-         W+/5+LrbsAW5etHNwIvJj5p/lzJ0wgsu6Hn4k2rEc5dsjEimCLZCsfsGcOZrqXS/NChg
-         9Btg==
-X-Gm-Message-State: AOAM5320GeiFXFdQv+JvaS7ZjmEVKmkXFhWKUr45mDVXkHvGD6AsHGXy
-        CBEFJNlsYIHBS2Z62deHpq/hFhC/j+yq8eRfVHV05w==
-X-Google-Smtp-Source: ABdhPJzL7uVA+dVAF1QW30vuD7NCdhEOj1gDC9CMkWqkDjC97pJ9HEtE2P1H5GL5MRzD06Y+IN1VY11+kv6zy8NRcWE=
-X-Received: by 2002:a50:c90d:: with SMTP id o13mr19293199edh.338.1593457874607;
- Mon, 29 Jun 2020 12:11:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200602080644.11333-1-mylene.josserand@collabora.com> <20200602080644.11333-2-mylene.josserand@collabora.com>
-In-Reply-To: <20200602080644.11333-2-mylene.josserand@collabora.com>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Tue, 30 Jun 2020 00:41:03 +0530
-Message-ID: <CAMty3ZDx-_-VHEwjbV05GBb-hQbPpo21aZbCrQ+GTaoT_gxAMg@mail.gmail.com>
-Subject: Re: [PATCH v4 1/2] clk: rockchip: rk3288: Handle clock tree for rk3288w
-To:     =?UTF-8?Q?Myl=C3=A8ne_Josserand?= <mylene.josserand@collabora.com>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 29 Jun 2020 18:49:31 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 83E1060060;
+        Mon, 29 Jun 2020 18:49:31 +0900 (JST)
+Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Mon, 29 Jun 2020 18:49:31 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by iyokan.css.socionext.com (Postfix) with ESMTP id 1653D4031A;
+        Mon, 29 Jun 2020 18:49:31 +0900 (JST)
+Received: from [10.213.29.155] (unknown [10.213.29.155])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 7654F120455;
+        Mon, 29 Jun 2020 18:49:30 +0900 (JST)
+Subject: Re: [PATCH v5 2/6] PCI: uniphier: Add misc interrupt handler to
+ invoke PME and AER
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
         Rob Herring <robh+dt@kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        kernel@collabora.com, linux-clk <linux-clk@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+References: <1592469493-1549-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1592469493-1549-3-git-send-email-hayashi.kunihiko@socionext.com>
+ <87v9jcet5h.wl-maz@kernel.org>
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Message-ID: <c09ceb2f-0bf3-a5de-f918-1ccd0dba1e0a@socionext.com>
+Date:   Mon, 29 Jun 2020 18:49:30 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.1
+MIME-Version: 1.0
+In-Reply-To: <87v9jcet5h.wl-maz@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 2, 2020 at 1:37 PM Myl=C3=A8ne Josserand
-<mylene.josserand@collabora.com> wrote:
->
-> The revision rk3288w has a different clock tree about "hclk_vio"
-> clock, according to the BSP kernel code.
->
-> This patch handles this difference by detecting which device-tree
-> we are using. If it is a "rockchip,rk3288-cru", let's register
-> the clock tree as it was before. If the device-tree node is
-> "rockchip,rk3288w-cru", we will apply the difference with this
-> version of this SoC.
->
-> Noticed that this new device-tree compatible must be handled in
-> bootloader such as u-boot.
->
-> Signed-off-by: Myl=C3=A8ne Josserand <mylene.josserand@collabora.com>
-> ---
->  drivers/clk/rockchip/clk-rk3288.c | 20 ++++++++++++++++++--
->  1 file changed, 18 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk=
--rk3288.c
-> index cc2a177bbdbf..204976e2d0cb 100644
-> --- a/drivers/clk/rockchip/clk-rk3288.c
-> +++ b/drivers/clk/rockchip/clk-rk3288.c
-> @@ -425,8 +425,6 @@ static struct rockchip_clk_branch rk3288_clk_branches=
-[] __initdata =3D {
->         COMPOSITE(0, "aclk_vio0", mux_pll_src_cpll_gpll_usb480m_p, CLK_IG=
-NORE_UNUSED,
->                         RK3288_CLKSEL_CON(31), 6, 2, MFLAGS, 0, 5, DFLAGS=
-,
->                         RK3288_CLKGATE_CON(3), 0, GFLAGS),
-> -       DIV(0, "hclk_vio", "aclk_vio0", 0,
-> -                       RK3288_CLKSEL_CON(28), 8, 5, DFLAGS),
->         COMPOSITE(0, "aclk_vio1", mux_pll_src_cpll_gpll_usb480m_p, CLK_IG=
-NORE_UNUSED,
->                         RK3288_CLKSEL_CON(31), 14, 2, MFLAGS, 8, 5, DFLAG=
-S,
->                         RK3288_CLKGATE_CON(3), 2, GFLAGS),
-> @@ -819,6 +817,16 @@ static struct rockchip_clk_branch rk3288_clk_branche=
-s[] __initdata =3D {
->         INVERTER(0, "pclk_isp", "pclk_isp_in", RK3288_CLKSEL_CON(29), 3, =
-IFLAGS),
->  };
->
-> +static struct rockchip_clk_branch rk3288w_hclkvio_branch[] __initdata =
-=3D {
-> +       DIV(0, "hclk_vio", "aclk_vio1", 0,
-> +                       RK3288_CLKSEL_CON(28), 8, 5, DFLAGS),
-> +};
-> +
-> +static struct rockchip_clk_branch rk3288_hclkvio_branch[] __initdata =3D=
- {
-> +       DIV(0, "hclk_vio", "aclk_vio0", 0,
-> +                       RK3288_CLKSEL_CON(28), 8, 5, DFLAGS),
-> +};
-> +
->  static const char *const rk3288_critical_clocks[] __initconst =3D {
->         "aclk_cpu",
->         "aclk_peri",
-> @@ -936,6 +944,14 @@ static void __init rk3288_clk_init(struct device_nod=
-e *np)
->                                    RK3288_GRF_SOC_STATUS1);
->         rockchip_clk_register_branches(ctx, rk3288_clk_branches,
->                                   ARRAY_SIZE(rk3288_clk_branches));
-> +
-> +       if (of_device_is_compatible(np, "rockchip,rk3288w-cru"))
-> +               rockchip_clk_register_branches(ctx, rk3288w_hclkvio_branc=
-h,
-> +                                              ARRAY_SIZE(rk3288w_hclkvio=
-_branch));
-> +       else
-> +               rockchip_clk_register_branches(ctx, rk3288_hclkvio_branch=
-,
-> +                                              ARRAY_SIZE(rk3288_hclkvio_=
-branch));
-> +
+Hi Marc,
 
-Sorry for the late query on this. I am a bit unclear about this
-compatible change, does Linux expect to replace rockchip,rk3288-cru
-with rockchip,rk3288w-cru in bootloader if the chip is RK3288w? or
-append the existing cru compatible node with rockchip,rk3288w-cru?
-because replace new cru node make clock never probe since the
-CLK_OF_DECLARE checking rockchip,rk3288-cru
+On 2020/06/27 18:48, Marc Zyngier wrote:
+> On Thu, 18 Jun 2020 09:38:09 +0100,
+> Kunihiko Hayashi <hayashi.kunihiko@socionext.com> wrote:
+>>
+>> The misc interrupts consisting of PME, AER, and Link event, is handled
+>> by INTx handler, however, these interrupts should be also handled by
+>> MSI handler.
+>>
+>> This adds the function uniphier_pcie_misc_isr() that handles misc
+>> interrupts, which is called from both INTx and MSI handlers.
+>> This function detects PME and AER interrupts with the status register,
+>> and invoke PME and AER drivers related to MSI.
+>>
+>> And this sets the mask for misc interrupts from INTx if MSI is enabled
+>> and sets the mask for misc interrupts from MSI if MSI is disabled.
+>>
+>> Cc: Marc Zyngier <maz@kernel.org>
+>> Cc: Jingoo Han <jingoohan1@gmail.com>
+>> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+>> ---
+>>   drivers/pci/controller/dwc/pcie-uniphier.c | 57 ++++++++++++++++++++++++------
+>>   1 file changed, 46 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c b/drivers/pci/controller/dwc/pcie-uniphier.c
+>> index a5401a0..5ce2479 100644
+>> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
+>> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+>> @@ -44,7 +44,9 @@
+>>   #define PCL_SYS_AUX_PWR_DET		BIT(8)
+>>   
+>>   #define PCL_RCV_INT			0x8108
+>> +#define PCL_RCV_INT_ALL_INT_MASK	GENMASK(28, 25)
+>>   #define PCL_RCV_INT_ALL_ENABLE		GENMASK(20, 17)
+>> +#define PCL_RCV_INT_ALL_MSI_MASK	GENMASK(12, 9)
+>>   #define PCL_CFG_BW_MGT_STATUS		BIT(4)
+>>   #define PCL_CFG_LINK_AUTO_BW_STATUS	BIT(3)
+>>   #define PCL_CFG_AER_RC_ERR_MSI_STATUS	BIT(2)
+>> @@ -167,7 +169,15 @@ static void uniphier_pcie_stop_link(struct dw_pcie *pci)
+>>   
+>>   static void uniphier_pcie_irq_enable(struct uniphier_pcie_priv *priv)
+>>   {
+>> -	writel(PCL_RCV_INT_ALL_ENABLE, priv->base + PCL_RCV_INT);
+>> +	u32 val;
+>> +
+>> +	val = PCL_RCV_INT_ALL_ENABLE;
+>> +	if (pci_msi_enabled())
+>> +		val |= PCL_RCV_INT_ALL_INT_MASK;
+>> +	else
+>> +		val |= PCL_RCV_INT_ALL_MSI_MASK;
+> 
+> Does this affect endpoints? Or just the RC itself?
 
-Jagan.
+These interrupts are asserted by RC itself, so this part affects only RC.
+
+>> +
+>> +	writel(val, priv->base + PCL_RCV_INT);
+>>   	writel(PCL_RCV_INTX_ALL_ENABLE, priv->base + PCL_RCV_INTX);
+>>   }
+>>   
+>> @@ -231,32 +241,56 @@ static const struct irq_domain_ops uniphier_intx_domain_ops = {
+>>   	.map = uniphier_pcie_intx_map,
+>>   };
+>>   
+>> -static void uniphier_pcie_irq_handler(struct irq_desc *desc)
+>> +static void uniphier_pcie_misc_isr(struct pcie_port *pp, bool is_msi)
+>>   {
+>> -	struct pcie_port *pp = irq_desc_get_handler_data(desc);
+>>   	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>>   	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
+>> -	struct irq_chip *chip = irq_desc_get_chip(desc);
+>> -	unsigned long reg;
+>> -	u32 val, bit, virq;
+>> +	u32 val, virq;
+>>   
+>> -	/* INT for debug */
+>>   	val = readl(priv->base + PCL_RCV_INT);
+>>   
+>>   	if (val & PCL_CFG_BW_MGT_STATUS)
+>>   		dev_dbg(pci->dev, "Link Bandwidth Management Event\n");
+>> +
+>>   	if (val & PCL_CFG_LINK_AUTO_BW_STATUS)
+>>   		dev_dbg(pci->dev, "Link Autonomous Bandwidth Event\n");
+>> -	if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
+>> -		dev_dbg(pci->dev, "Root Error\n");
+>> -	if (val & PCL_CFG_PME_MSI_STATUS)
+>> -		dev_dbg(pci->dev, "PME Interrupt\n");
+>> +
+>> +	if (is_msi) {
+>> +		if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
+>> +			dev_dbg(pci->dev, "Root Error Status\n");
+>> +
+>> +		if (val & PCL_CFG_PME_MSI_STATUS)
+>> +			dev_dbg(pci->dev, "PME Interrupt\n");
+>> +
+>> +		if (val & (PCL_CFG_AER_RC_ERR_MSI_STATUS |
+>> +			   PCL_CFG_PME_MSI_STATUS)) {
+>> +			virq = irq_linear_revmap(pp->irq_domain, 0);
+>> +			generic_handle_irq(virq);
+>> +		}
+>> +	}
+> 
+> Please have two handlers: one for interrupts that are from the RC,
+> another for interrupts coming from the endpoints.
+I assume that this handler treats interrupts from the RC only and
+this is set on the member ".msi_host_isr" added in the patch 1/6.
+I think that the handler for interrupts coming from endpoints should be
+treated as a normal case (after calling .msi_host_isr in
+dw_handle_msi_irq()).
+
+Thank you,
+
+---
+Best Regards
+Kunihiko Hayashi
