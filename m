@@ -2,149 +2,179 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DDC0C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4651CC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0F9C021D81
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:37:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593455878;
-	bh=3PQUGe+qdshaYBJMmSVFbzuZ4v1BnhHxU6b93Wzgcuo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=itgQukkykliNouDRh2zT/M5XvQW89fqenfal0hRxll3g6HIvEeOAfwFkBpAymIklN
-	 DU2xJsCD6bUId3WcOTQEHlyhaJi0MLaxzlwolNATBq+NYxYXXLKrLWkG1hWySEjMJb
-	 f2JrMTmMxKmNViWr7j0SFWXxt4ekEtqZZKOj8dUw=
+	by mail.kernel.org (Postfix) with ESMTP id 2499622269
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:38:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=anholt-net.20150623.gappssmtp.com header.i=@anholt-net.20150623.gappssmtp.com header.b="yQLnvAyj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727904AbgF2Shz (ORCPT
+        id S1727941AbgF2Sh7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:37:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37540 "EHLO
+        Mon, 29 Jun 2020 14:37:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727086AbgF2Shm (ORCPT
+        with ESMTP id S1727769AbgF2Shm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:37:42 -0400
-Received: from mail-lj1-x244.google.com (mail-lj1-x244.google.com [IPv6:2a00:1450:4864:20::244])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2BB0C033C35
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 11:29:41 -0700 (PDT)
-Received: by mail-lj1-x244.google.com with SMTP id t25so14715822lji.12
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 11:29:41 -0700 (PDT)
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B116C033C02
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 11:19:26 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id e8so8687813pgc.5
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 11:19:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/dhvDgleJHHO6BJC9vWh9omDNPlG72DDBtGZ6h3AXGQ=;
-        b=QG5+6qRC7nsdPcUZTLfS+NEfHK62YgjdIwfMGtYPHzfLaI4jEbzvOeQZzTdHo9hNak
-         LckQojrFpUDhJ5X7+nsWLEKLjTAbP7X0XvFHCHDH8Rgwq9O5cIeAFY+lp4mLYcKtWp2g
-         Yx3pvKuQpLIVMdrWZr5Woiwbrm+vUS5+GpPNQ=
+        d=anholt-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=1oi0v4BTqqsBj+gW6Vk8gVF71VLAujXP7ErpOuZ8DBU=;
+        b=yQLnvAyjAr+LxeKzCBz+Cz38qqs13PpJx/G/GeiT7S+YT7j/jCgsNknnuMVghwTLwa
+         p+B7z41EM1Sg+VeQ9+I4Ii1bpu12EIl+9TIXwwW2s4A2UziC7U31raM4gmDloGG7KreY
+         3XQ+vjN2fr+VG+XPUuRYRaSThXnqdOLqD6pAv8vqTMeAuXGl/AXgyLtfNyU7t54zcDQn
+         xiCVg6AOhQlcTQWiOvjs8bRz9yU/gdGQXO+cB5MLKRY2MP642FevbdHkvjUOWZXTIN+M
+         WRVB8z0/ZnlvmcnGzsHaukTLfq1LnQ4/9GWydJFNGlrDTsCENJvlonF0h05dbumSvzwp
+         IHNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/dhvDgleJHHO6BJC9vWh9omDNPlG72DDBtGZ6h3AXGQ=;
-        b=Kkwe/Utu6obX+qg/guMutQt9fjCdgybZZgIYqALRyeFps1skvJPw43Ag4CNBxKsjp+
-         1O3HeKKAwpu9BgBXb3up+PHbB957YJ7fALdYjVZXQB1KIqmVzekBl2E2uyDkVYmbE6w6
-         dBUUn76zzQkDgEajfBEEWNZfDuSYX8ZMgtwxqs9TTcdc60dVFmJJnxPu2iW6ey7MsrH3
-         iPz0hPUXGeJt8xOqRpWWLGv4UJZ5CX7E/IidUhJNN/q9oV/ZJngcD0V2jMZ2WXA6AjV/
-         6gIbGDlalFU6ya6CBGiFwxZde8CNV95MrzF5mVEuy+svE97P3eQj9k1NaapNjSPwEt1Y
-         CWKA==
-X-Gm-Message-State: AOAM533Ioa5S2QMxKSSK0Ps8QD3WxtvKQfPHltBEeRA+6j1dNiY8k3MW
-        Uw55Sc+9rZ/H5PW5sJhwlhMHRu508Hs=
-X-Google-Smtp-Source: ABdhPJwWSQBajlOsqqavx18sUBM68rhIDBbUnSNFN4nSGgLWhOgy8K4EyFqOFyXV5XzJ9SSgc8+HTg==
-X-Received: by 2002:a2e:b04c:: with SMTP id d12mr7965925ljl.256.1593455379834;
-        Mon, 29 Jun 2020 11:29:39 -0700 (PDT)
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com. [209.85.208.179])
-        by smtp.gmail.com with ESMTPSA id x10sm125481ljx.67.2020.06.29.11.29.38
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jun 2020 11:29:39 -0700 (PDT)
-Received: by mail-lj1-f179.google.com with SMTP id f8so7019223ljc.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 11:29:38 -0700 (PDT)
-X-Received: by 2002:a2e:9c92:: with SMTP id x18mr3886392lji.70.1593455378379;
- Mon, 29 Jun 2020 11:29:38 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=1oi0v4BTqqsBj+gW6Vk8gVF71VLAujXP7ErpOuZ8DBU=;
+        b=HZnULhA36y/lfrOsHcfzmGQ7BGS0CVwMivAdcNJO96lnkafASfZssoCv/HGSCALsmu
+         x1UwAUIpvX1VbnEVDJjFZl5iKTu4IKxZVcjytTOfa8SuVWzHMupGWkYI39UgJLsFlwxR
+         AubFdeKLljIf4/+YRn8iFmBThR9ZheH28Mo1X/VrAdPJA+oWRf9nJ93Ax2sKANlXzbJv
+         o/akqeNaeHnK18ODMy8K0q5OdUkPDXvgsulQmGJE0D7KW2Cy61aVSFdwu6jVfFYqX9jt
+         lKN8IFU8BjQqsKWZCDpvkn+PN9PvTTSEpRyMKrJpKOXbZ2gUTvE8ubVW6qwxsBmdWWh7
+         /Jmg==
+X-Gm-Message-State: AOAM530hrko2Ih5lSZCtgCxR8vnNWJlyV1SCuqW2pIUSWSeR24JUUSdO
+        VyMOX7bVvPQOen1s7W7X4JEFDA==
+X-Google-Smtp-Source: ABdhPJwxzpypgasS1TUWuGtTez4i3IrG6t1gNltC8YqyLfhomKv2+LqAnOB6FD7cpbGSwbn/8KX1YQ==
+X-Received: by 2002:a63:fc09:: with SMTP id j9mr11866988pgi.308.1593454766126;
+        Mon, 29 Jun 2020 11:19:26 -0700 (PDT)
+Received: from miranda.anholt.net ([97.115.155.172])
+        by smtp.gmail.com with ESMTPSA id a9sm359463pfr.103.2020.06.29.11.19.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 11:19:25 -0700 (PDT)
+From:   Eric Anholt <eric@anholt.net>
+To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
+        Sean Paul <sean@poorly.run>,
+        Jordan Crouse <jcrouse@codeaurora.org>
+Cc:     linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>
+Subject: [PATCH 2/2] drm/msm: Quiet error during failure in optional resource mappings.
+Date:   Mon, 29 Jun 2020 11:19:21 -0700
+Message-Id: <20200629181921.3019271-2-eric@anholt.net>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200629181921.3019271-1-eric@anholt.net>
+References: <20200629181921.3019271-1-eric@anholt.net>
 MIME-Version: 1.0
-References: <20200624162901.1814136-1-hch@lst.de> <20200624162901.1814136-4-hch@lst.de>
- <CAHk-=wit9enePELG=-HnLsr0nY5bucFNjqAqWoFTuYDGR1P4KA@mail.gmail.com>
- <20200624175548.GA25939@lst.de> <CAHk-=wi_51SPWQFhURtMBGh9xgdo74j1gMpuhdkddA2rDMrt1Q@mail.gmail.com>
- <f50b9afa5a2742babe0293d9910e6bf4@AcuMS.aculab.com> <CAHk-=wjxQczqZ96esvDrH5QZsLg6azXCGDgo+Bmm6r8t2ssasg@mail.gmail.com>
- <20200629152912.GA26172@lst.de> <CAHk-=wj_Br5dQt0GnMjHooSvBbVXwtGRVKQNkpCLwWjYko-4Zw@mail.gmail.com>
- <20200629180730.GA4600@lst.de>
-In-Reply-To: <20200629180730.GA4600@lst.de>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 29 Jun 2020 11:29:22 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whzz81Cjfn+SNbLT8WvRxfQYbiAemKrQ5jpNAgxxDQhZA@mail.gmail.com>
-Message-ID: <CAHk-=whzz81Cjfn+SNbLT8WvRxfQYbiAemKrQ5jpNAgxxDQhZA@mail.gmail.com>
-Subject: Re: [PATCH 03/11] fs: add new read_uptr and write_uptr file operations
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     David Laight <David.Laight@aculab.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 11:07 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> One issue is that a lot setsockopt calls are in the fast path, and
-> even have micro-optimizations like putting an int on stack for the
-> fast path to avoid the memory allocation.
+We don't expect to find vbif_nrt or regdma on cheza, but were clogging
+up dmesg with errors about it.
 
-Yeah., An the RFC patch I posted could easily be updated to do exactly
-that for small optlen values (say, avoid the kmalloc and use a stack
-buffer for oplen smaller than 16 bytes or whatever).
+Signed-off-by: Eric Anholt <eric@anholt.net>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c |  4 ++--
+ drivers/gpu/drm/msm/msm_drv.c           | 22 ++++++++++++++++++----
+ drivers/gpu/drm/msm/msm_drv.h           |  2 ++
+ 3 files changed, 22 insertions(+), 6 deletions(-)
 
-Most of the setsockopt's I'm aware of are just a single integer, so if
-that's the bulk of them, then we'd never actually need to do the
-kmalloc() in those cases, and only fall back to the kmalloc for the
-(hopefully quite unusual) bigger options..
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+index a4ab802fee6d..d9aef2b5e930 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+@@ -838,13 +838,13 @@ static int dpu_kms_hw_init(struct msm_kms *kms)
+ 		dpu_kms->vbif[VBIF_RT] = NULL;
+ 		goto error;
+ 	}
+-	dpu_kms->vbif[VBIF_NRT] = msm_ioremap(dpu_kms->pdev, "vbif_nrt", "vbif_nrt");
++	dpu_kms->vbif[VBIF_NRT] = msm_ioremap_quiet(dpu_kms->pdev, "vbif_nrt", "vbif_nrt");
+ 	if (IS_ERR(dpu_kms->vbif[VBIF_NRT])) {
+ 		dpu_kms->vbif[VBIF_NRT] = NULL;
+ 		DPU_DEBUG("VBIF NRT is not defined");
+ 	}
+ 
+-	dpu_kms->reg_dma = msm_ioremap(dpu_kms->pdev, "regdma", "regdma");
++	dpu_kms->reg_dma = msm_ioremap_quiet(dpu_kms->pdev, "regdma", "regdma");
+ 	if (IS_ERR(dpu_kms->reg_dma)) {
+ 		dpu_kms->reg_dma = NULL;
+ 		DPU_DEBUG("REG_DMA is not defined");
+diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+index f6ce40bf3699..df4a3c6a49cd 100644
+--- a/drivers/gpu/drm/msm/msm_drv.c
++++ b/drivers/gpu/drm/msm/msm_drv.c
+@@ -120,8 +120,8 @@ struct clk *msm_clk_get(struct platform_device *pdev, const char *name)
+ 	return clk;
+ }
+ 
+-void __iomem *msm_ioremap(struct platform_device *pdev, const char *name,
+-		const char *dbgname)
++void __iomem *_msm_ioremap(struct platform_device *pdev, const char *name,
++			   const char *dbgname, bool quiet)
+ {
+ 	struct resource *res;
+ 	unsigned long size;
+@@ -133,7 +133,8 @@ void __iomem *msm_ioremap(struct platform_device *pdev, const char *name,
+ 		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 
+ 	if (!res) {
+-		DRM_DEV_ERROR(&pdev->dev, "failed to get memory resource: %s\n", name);
++		if (!quiet)
++			DRM_DEV_ERROR(&pdev->dev, "failed to get memory resource: %s\n", name);
+ 		return ERR_PTR(-EINVAL);
+ 	}
+ 
+@@ -141,7 +142,8 @@ void __iomem *msm_ioremap(struct platform_device *pdev, const char *name,
+ 
+ 	ptr = devm_ioremap(&pdev->dev, res->start, size);
+ 	if (!ptr) {
+-		DRM_DEV_ERROR(&pdev->dev, "failed to ioremap: %s\n", name);
++		if (!quiet)
++			DRM_DEV_ERROR(&pdev->dev, "failed to ioremap: %s\n", name);
+ 		return ERR_PTR(-ENOMEM);
+ 	}
+ 
+@@ -151,6 +153,18 @@ void __iomem *msm_ioremap(struct platform_device *pdev, const char *name,
+ 	return ptr;
+ }
+ 
++void __iomem *msm_ioremap(struct platform_device *pdev, const char *name,
++			  const char *dbgname)
++{
++	return _msm_ioremap(pdev, name, dbgname, false);
++}
++
++void __iomem *msm_ioremap_quiet(struct platform_device *pdev, const char *name,
++				const char *dbgname)
++{
++	return _msm_ioremap(pdev, name, dbgname, true);
++}
++
+ void msm_writel(u32 data, void __iomem *addr)
+ {
+ 	if (reglog)
+diff --git a/drivers/gpu/drm/msm/msm_drv.h b/drivers/gpu/drm/msm/msm_drv.h
+index e2d6a6056418..2687f7a42c15 100644
+--- a/drivers/gpu/drm/msm/msm_drv.h
++++ b/drivers/gpu/drm/msm/msm_drv.h
+@@ -411,6 +411,8 @@ struct clk *msm_clk_bulk_get_clock(struct clk_bulk_data *bulk, int count,
+ 	const char *name);
+ void __iomem *msm_ioremap(struct platform_device *pdev, const char *name,
+ 		const char *dbgname);
++void __iomem *msm_ioremap_quiet(struct platform_device *pdev, const char *name,
++		const char *dbgname);
+ void msm_writel(u32 data, void __iomem *addr);
+ u32 msm_readl(const void __iomem *addr);
+ 
+-- 
+2.26.2
 
-> I'd love to be able to do that.  And now that we want through this
-> whole mess than Nth time I have another idea:
->
->  - we assume optlen is correct, which should cover about 90% of
->    the protocols
->  - but to override that a new setsockopt_len method is added that
->    returns the correct length for all the messy ones.
->
-> Let me try if that works out.
-
-Doing a quick grep, there's about 100 different ".setsockopt" function
-initializers, but a quarter of them are just setting it to
-'sock_no_setsockopt'.
-
-A number of others are using 'sock_common_setsockopt'.
-
-Which leaves something like 50 different implementations of the
-.setsockopt functions.  But I didn't go any deeper than that - maybe
-they then have hundreds of different option cases each and this is all
-a nightmare.
-
-Looking at a couple of them, the "int val" situation does seem to be
-the most common one by _far_, and is often handled by a common
-"get_user()" thing, so converting them to just getting the thing as a
-kernel pointer doesn't look _too_ nasty, because even when they have a
-lot of subcases, the actual optval accesses are much fewer.
-
-Which is not to say that it looks all that much fun, but it doesn't
-look entirely undoable either.
-
-The good news (I guess) is that any missed transformation will be
-fairly obvious (ie somebody uses a "get_user()" on what is now a
-kernel pointer, and returns -EFAULT. So it shouldn't cause any subtle
-failures, and it shouldn't cause any security issues.
-
-I didn't look at the compat cases, but if anything I'd expect those to
-become simpler by having kernel pointers. And there doesn't actually
-seem to be that many of them (possibly because the "int" case si so
-common that it all ends up being the same?)
-
-              Linus
