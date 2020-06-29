@@ -4,58 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BF8BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91AF2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:32:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FAC02067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:32:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ABA82067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:32:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462775;
-	bh=n+cUBZCrIf+GYJLnVnt3+i5W6LAp8t1afFp1UK6ngXg=;
+	s=default; t=1593462779;
+	bh=ymk/Fa/0qxH7ugPHWWQo5DfbHiUe6eU/Vik6JdVdvpE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hFeNNDlwEtbLAbLNjIibKlDhl1t3J55NxWk/BPUEHRznPNIfVeHSWLn8lHTFxmTS4
-	 3mTXfZ28Zj55KrPJRGbHgdeQUH5HL8xcpMP7lsHURWdskDR5DUqgiZM3RzeSEWdz7p
-	 +x8m85uq4LXV7F+etlKGyWODwZ/q7wyF16RLBd4M=
+	b=wzWVl1GikxTKSRIP/vNddmakRfsW+SaHkefKlQHQVW1MxEwNnjnETYQn6y7TFeBxe
+	 c0zHc3n1M4AXgqMiX/0Fx4Q5xMDT0SVdrR557dozgGwJVe7jNVDu2eYAiAyRuu0d0g
+	 Ri/wsPq0XibfmCw8H0KDiYzTWWacM+Co0fkaHCNM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389023AbgF2Ucy (ORCPT
+        id S2389325AbgF2Uc6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:32:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37022 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:32:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732400AbgF2TZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732408AbgF2TZS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92AB82544B;
-        Mon, 29 Jun 2020 15:43:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E9D52533A;
+        Mon, 29 Jun 2020 15:39:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445400;
-        bh=n+cUBZCrIf+GYJLnVnt3+i5W6LAp8t1afFp1UK6ngXg=;
+        s=default; t=1593445177;
+        bh=ymk/Fa/0qxH7ugPHWWQo5DfbHiUe6eU/Vik6JdVdvpE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yjDQYTuiH+k0yrdxzqg54HkZNtydEEsY6uEIwzkkQNBLP42QMwaNOETsiBIMjDvX+
-         +kgt0wyqtPvJ0K+XZoFFt925EMqKMLH0yknLSzGcZnhC16b+GAiwMJbgyU0iLlIrr0
-         CmhFAFMegPTp1li4J5oAFbcyRr05m381t+oOo3W0=
+        b=19TdyXNPkaEA+9KW+TgM5pv+elKViEx8tK1t7GrH9NVOYSIq85jhjmDLLDXC5926b
+         FVTDKQlyFPu0xeSHxRBpfa8xwW3kBrUKkrlq0E4e0oyi2SQiy65K9emg9ZEB36vvq4
+         Zxj2+0nc4VwW5gBQpSFc9ZOxqnOoarUHhgO+c9Pk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mathias Nyman <mathias.nyman@linux.intel.com>,
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.9 152/191] xhci: Fix incorrect EP_STATE_MASK
-Date:   Mon, 29 Jun 2020 11:39:28 -0400
-Message-Id: <20200629154007.2495120-153-sashal@kernel.org>
+Subject: [PATCH 4.14 69/78] tracing: Fix event trigger to accept redundant spaces
+Date:   Mon, 29 Jun 2020 11:37:57 -0400
+Message-Id: <20200629153806.2494953-70-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
-References: <20200629154007.2495120-1-sashal@kernel.org>
+In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
+References: <20200629153806.2494953-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.229-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.9.y
+X-KernelTest-Branch: linux-4.14.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.9.229-rc1
-X-KernelTest-Deadline: 2020-07-01T15:39+00:00
+X-KernelTest-Version: 4.14.186-rc1
+X-KernelTest-Deadline: 2020-07-01T15:38+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -64,39 +66,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathias Nyman <mathias.nyman@linux.intel.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-commit dceea67058fe22075db3aed62d5cb62092be5053 upstream.
+commit 6784beada631800f2c5afd567e5628c843362cee upstream.
 
-EP_STATE_MASK should be 0x7 instead of 0xf
+Fix the event trigger to accept redundant spaces in
+the trigger input.
 
-xhci spec 6.2.3 shows that the EP state field in the endpoint context data
-structure consist of bits [2:0].
-The old value included a bit from the next field which fortunately is a
- RsvdZ region. So hopefully this hasn't caused too much harm
+For example, these return -EINVAL
 
+echo " traceon" > events/ftrace/print/trigger
+echo "traceon  if common_pid == 0" > events/ftrace/print/trigger
+echo "disable_event:kmem:kmalloc " > events/ftrace/print/trigger
+
+But these are hard to find what is wrong.
+
+To fix this issue, use skip_spaces() to remove spaces
+in front of actual tokens, and set NULL if there is no
+token.
+
+Link: http://lkml.kernel.org/r/159262476352.185015.5261566783045364186.stgit@devnote2
+
+Cc: Tom Zanussi <zanussi@kernel.org>
 Cc: stable@vger.kernel.org
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200624135949.22611-2-mathias.nyman@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 85f2b08268c0 ("tracing: Add basic event trigger framework")
+Reviewed-by: Tom Zanussi <zanussi@kernel.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/usb/host/xhci.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/trace_events_trigger.c | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-index 2b603ef5c10cd..2b8df83dad38d 100644
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -709,7 +709,7 @@ struct xhci_ep_ctx {
-  * 4 - TRB error
-  * 5-7 - reserved
-  */
--#define EP_STATE_MASK		(0xf)
-+#define EP_STATE_MASK		(0x7)
- #define EP_STATE_DISABLED	0
- #define EP_STATE_RUNNING	1
- #define EP_STATE_HALTED		2
+diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
+index 6fb5eb7b57dc0..13f5013373085 100644
+--- a/kernel/trace/trace_events_trigger.c
++++ b/kernel/trace/trace_events_trigger.c
+@@ -223,11 +223,17 @@ static int event_trigger_regex_open(struct inode *inode, struct file *file)
+ 
+ static int trigger_process_regex(struct trace_event_file *file, char *buff)
+ {
+-	char *command, *next = buff;
++	char *command, *next;
+ 	struct event_command *p;
+ 	int ret = -EINVAL;
+ 
++	next = buff = skip_spaces(buff);
+ 	command = strsep(&next, ": \t");
++	if (next) {
++		next = skip_spaces(next);
++		if (!*next)
++			next = NULL;
++	}
+ 	command = (command[0] != '!') ? command : command + 1;
+ 
+ 	mutex_lock(&trigger_cmd_mutex);
+@@ -630,8 +636,14 @@ event_trigger_callback(struct event_command *cmd_ops,
+ 	int ret;
+ 
+ 	/* separate the trigger from the filter (t:n [if filter]) */
+-	if (param && isdigit(param[0]))
++	if (param && isdigit(param[0])) {
+ 		trigger = strsep(&param, " \t");
++		if (param) {
++			param = skip_spaces(param);
++			if (!*param)
++				param = NULL;
++		}
++	}
+ 
+ 	trigger_ops = cmd_ops->get_trigger_ops(cmd, trigger);
+ 
+@@ -1342,6 +1354,11 @@ int event_enable_trigger_func(struct event_command *cmd_ops,
+ 	trigger = strsep(&param, " \t");
+ 	if (!trigger)
+ 		return -EINVAL;
++	if (param) {
++		param = skip_spaces(param);
++		if (!*param)
++			param = NULL;
++	}
+ 
+ 	system = strsep(&trigger, ":");
+ 	if (!trigger)
 -- 
 2.25.1
 
