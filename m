@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E13BEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F001CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C11EC206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:00:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D06FE2078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:00:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468045;
-	bh=0hGTAF6FQOoPxWnG+9gP2MAMKZocEFQKeDcy44MXjUY=;
+	s=default; t=1593468050;
+	bh=gdqGbviJQ8DPHxHnkuoAUnXO84jNZ/sdL4M8a2yZTZg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r3T907q392xM5tbXqmEYYIRoprC90Ge0N0G9tHTDaFXX/VgpcTSI5AhN6K4Z9r8KH
-	 1ipiqhVcSlYKP+vwV9bWSnbE/GiFtZAIt0WYCC6+Nll1H3B547D+qbEbkP3yYasK0e
-	 hzDqscSCxK6PpixYyOhfqhBz7v9/BRQQsX5BkVWY=
+	b=dJS7h8IvLhu9p5pL31G1siHL1CZdEVDY0JlpILgUBsyUMAP7MsS8QymIF8DxZmCQO
+	 IdaKzGInrO4bjPxDpctlktdJwyPPwm242kDRzjmuIjCQUfHl4V3LxraaGwT5NU6BC1
+	 cDsTUY6Aod9QgzfUmnD5O0snMC/iaiwq4uaCzJfo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404694AbgF2WAo (ORCPT
+        id S2404833AbgF2WAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:00:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56906 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:00:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726336AbgF2SfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726334AbgF2SfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6413223CD1;
-        Mon, 29 Jun 2020 15:20:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C35624640;
+        Mon, 29 Jun 2020 15:19:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444017;
-        bh=0hGTAF6FQOoPxWnG+9gP2MAMKZocEFQKeDcy44MXjUY=;
+        s=default; t=1593443965;
+        bh=gdqGbviJQ8DPHxHnkuoAUnXO84jNZ/sdL4M8a2yZTZg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zhIfCLHwQjFi/C6dS+slQpnDApLd86pClN+kSfbZBxczLaZp3Pba2lZL6ShoPOX46
-         E4eLUT0CLtJzTT39P0n5AJGjm+SAdr6X0J7IgZ2w66gzYv+MN4JMqkzNv0wj7mOaOz
-         YER7agwW+zz2gtQZNAFRel615hHYvZCkEXs+pdJQ=
+        b=cQBqF9oztiGjtZxlBcMptoZXgvkoIiJQc5iTDnIYyXVoxo7yM6oF0Ut/+OJjlOMxT
+         sAiMf4rWBD1pSoX3tdTOhOrNd3zqc9iIBLVXdgF0Ek80i7Pjhu2vzwHZIZ6qU/S6y7
+         GuA5RPfryC52Dg7t1DpU+eDMmr+FqaXs88zMyCh0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Rientjes <rientjes@google.com>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 123/265] dma-direct: check return value when encrypting or decrypting memory
-Date:   Mon, 29 Jun 2020 11:15:56 -0400
-Message-Id: <20200629151818.2493727-124-sashal@kernel.org>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 068/265] xhci: Poll for U0 after disabling USB2 LPM
+Date:   Mon, 29 Jun 2020 11:15:01 -0400
+Message-Id: <20200629151818.2493727-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -64,71 +65,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Rientjes <rientjes@google.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit 56fccf21d1961a06e2a0c96ce446ebf036651062 ]
+commit b3d71abd135e6919ca0b6cab463738472653ddfb upstream.
 
-__change_page_attr() can fail which will cause set_memory_encrypted() and
-set_memory_decrypted() to return non-zero.
+USB2 devices with LPM enabled may interrupt the system suspend:
+[  932.510475] usb 1-7: usb suspend, wakeup 0
+[  932.510549] hub 1-0:1.0: hub_suspend
+[  932.510581] usb usb1: bus suspend, wakeup 0
+[  932.510590] xhci_hcd 0000:00:14.0: port 9 not suspended
+[  932.510593] xhci_hcd 0000:00:14.0: port 8 not suspended
+..
+[  932.520323] xhci_hcd 0000:00:14.0: Port change event, 1-7, id 7, portsc: 0x400e03
+..
+[  932.591405] PM: pci_pm_suspend(): hcd_pci_suspend+0x0/0x30 returns -16
+[  932.591414] PM: dpm_run_callback(): pci_pm_suspend+0x0/0x160 returns -16
+[  932.591418] PM: Device 0000:00:14.0 failed to suspend async: error -16
 
-If the device requires unencrypted DMA memory and decryption fails, simply
-free the memory and fail.
+During system suspend, USB core will let HC suspends the device if it
+doesn't have remote wakeup enabled and doesn't have any children.
+However, from the log above we can see that the usb 1-7 doesn't get bus
+suspended due to not in U0. After a while the port finished U2 -> U0
+transition, interrupts the suspend process.
 
-If attempting to re-encrypt in the failure path and that encryption fails,
-there is no alternative other than to leak the memory.
+The observation is that after disabling LPM, port doesn't transit to U0
+immediately and can linger in U2. xHCI spec 4.23.5.2 states that the
+maximum exit latency for USB2 LPM should be BESL + 10us. The BESL for
+the affected device is advertised as 400us, which is still not enough
+based on my testing result.
 
-Fixes: c10f07aa27da ("dma/direct: Handle force decryption for DMA coherent buffers in common code")
-Signed-off-by: David Rientjes <rientjes@google.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+So let's use the maximum permitted latency, 10000, to poll for U0
+status to solve the issue.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20200624135949.22611-6-mathias.nyman@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- kernel/dma/direct.c | 19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+ drivers/usb/host/xhci.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index 4e789c46ff0bf..98c445dcb308b 100644
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -124,6 +124,7 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
- {
- 	struct page *page;
- 	void *ret;
-+	int err;
- 
- 	if (IS_ENABLED(CONFIG_DMA_DIRECT_REMAP) &&
- 	    dma_alloc_need_uncached(dev, attrs) &&
-@@ -176,8 +177,12 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
+diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+index bee5deccc83d8..10d76205a79ca 100644
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -4471,6 +4471,9 @@ static int xhci_set_usb2_hardware_lpm(struct usb_hcd *hcd,
+ 			mutex_lock(hcd->bandwidth_mutex);
+ 			xhci_change_max_exit_latency(xhci, udev, 0);
+ 			mutex_unlock(hcd->bandwidth_mutex);
++			readl_poll_timeout(ports[port_num]->addr, pm_val,
++					   (pm_val & PORT_PLS_MASK) == XDEV_U0,
++					   100, 10000);
+ 			return 0;
+ 		}
  	}
- 
- 	ret = page_address(page);
--	if (force_dma_unencrypted(dev))
--		set_memory_decrypted((unsigned long)ret, 1 << get_order(size));
-+	if (force_dma_unencrypted(dev)) {
-+		err = set_memory_decrypted((unsigned long)ret,
-+					   1 << get_order(size));
-+		if (err)
-+			goto out_free_pages;
-+	}
- 
- 	memset(ret, 0, size);
- 
-@@ -196,9 +201,13 @@ done:
- 	return ret;
- 
- out_encrypt_pages:
--	if (force_dma_unencrypted(dev))
--		set_memory_encrypted((unsigned long)page_address(page),
--				     1 << get_order(size));
-+	if (force_dma_unencrypted(dev)) {
-+		err = set_memory_encrypted((unsigned long)page_address(page),
-+					   1 << get_order(size));
-+		/* If memory cannot be re-encrypted, it must be leaked */
-+		if (err)
-+			return NULL;
-+	}
- out_free_pages:
- 	dma_free_contiguous(dev, page, size);
- 	return NULL;
 -- 
 2.25.1
 
