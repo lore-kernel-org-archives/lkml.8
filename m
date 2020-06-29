@@ -2,131 +2,131 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8CFC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:04:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23289C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A13620760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:04:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468246;
-	bh=fLY1AgT1wEp7fNrc7MHIRNNDgz4/uoC9E8LizHZsIdI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KGSaQp5eQMArwmPBgME44y3E8UCuasmZQ6Zq2/3cRb+S+1wOstmZd/Ppd2JJBwiTK
-	 TM7TfzXNL+TXEtCwwwApcW0PO3Nk38ct3VjkvIg+mcAPDyVV5BXBA71GuuoUAC1hg+
-	 8R/eqLOyKnZC4SRM4q3X+ooucOctTjObOszwJF5A=
+	by mail.kernel.org (Postfix) with ESMTP id 0526D2065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:04:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391801AbgF2WEE (ORCPT
+        id S2391680AbgF2WEK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:04:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56912 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:04:10 -0400
+Received: from mga17.intel.com ([192.55.52.151]:13064 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726203AbgF2SfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:22 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C23212405B;
-        Mon, 29 Jun 2020 15:18:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443929;
-        bh=fLY1AgT1wEp7fNrc7MHIRNNDgz4/uoC9E8LizHZsIdI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cVzkNFoPv7tbsBCDE8cki91XTlEK4NkxTLMyux2GvUz3l+/PZD5jJ9n8ORePi4jBa
-         uEEfpAzAnwv4sbAJzkSa2VKb6DmsVpvuH5woTYFypkovI1FeF0PY3lfq8oTl73TJGr
-         JEgcnsEYzkzVEZW/OFipgErR8EBMNE3HRBbE7Uvw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Michael Chan <michael.chan@broadcom.com>,
-        Jakub Kicinski <kicinski@fb.com>,
-        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 030/265] bnxt_en: Fix statistics counters issue during ifdown with older firmware.
-Date:   Mon, 29 Jun 2020 11:14:23 -0400
-Message-Id: <20200629151818.2493727-31-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
-References: <20200629151818.2493727-1-sashal@kernel.org>
+        id S2391789AbgF2WEB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 18:04:01 -0400
+IronPort-SDR: DHbY/j1+e5YRByWtjoNiEmCgRPpCVnSwSkLrr85eCRZ1qWZRt3T6hfjkORSFy7VK8WoOAtBt+u
+ 0gpQxvZdnaNA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="126217642"
+X-IronPort-AV: E=Sophos;i="5.75,295,1589266800"; 
+   d="scan'208";a="126217642"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 15:04:00 -0700
+IronPort-SDR: SreirR+rW8l5lvYprSMfMupp38yiGawA6y2IndIaYKmlSV9rQeGpcfGD8AVlg9Nf7e28dnSeBc
+ NDZmcB9roRzw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,295,1589266800"; 
+   d="scan'208";a="454351736"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga005.jf.intel.com with ESMTP; 29 Jun 2020 15:04:00 -0700
+Date:   Mon, 29 Jun 2020 15:04:00 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org,
+        linux-sgx@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        Jethro Beekman <jethro@fortanix.com>,
+        Andy Lutomirski <luto@kernel.org>, akpm@linux-foundation.org,
+        andriy.shevchenko@linux.intel.com, asapek@google.com,
+        cedric.xing@intel.com, chenalexchen@google.com,
+        conradparker@google.com, cyhanish@google.com,
+        dave.hansen@intel.com, haitao.huang@intel.com,
+        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
+        kmoy@google.com, ludloff@google.com, nhorman@redhat.com,
+        npmccallum@redhat.com, puiterwijk@redhat.com, rientjes@google.com,
+        tglx@linutronix.de, yaozhangx@google.com
+Subject: Re: [PATCH v33 12/21] x86/sgx: Allow a limited use of
+ ATTRIBUTE.PROVISIONKEY for attestation
+Message-ID: <20200629220400.GI12312@linux.intel.com>
+References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
+ <20200617220844.57423-13-jarkko.sakkinen@linux.intel.com>
+ <20200629160242.GB32176@zn.tnic>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.7.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.7.7-rc1
-X-KernelTest-Deadline: 2020-07-01T15:14+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200629160242.GB32176@zn.tnic>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Chan <michael.chan@broadcom.com>
+On Mon, Jun 29, 2020 at 06:02:42PM +0200, Borislav Petkov wrote:
+> On Thu, Jun 18, 2020 at 01:08:34AM +0300, Jarkko Sakkinen wrote:
+> > Provisioning Certification Enclave (PCE), the root of trust for other
+> > enclaves, generates a signing key from a fused key called Provisioning
+> > Certification Key. PCE can then use this key to certify an attestation key
+> > of a QE, e.g. we get the chain of trust down to the hardware if the Intel
+> 
+> What's a QE?
+> 
+> I don't see this acronym resolved anywhere in the whole patchset.
 
-[ Upstream commit c2dec363feb41544a76c8083aca2378990e17166 ]
+Quoting Enclave.
 
-On older firmware, the hardware statistics are not cleared when the
-driver frees the hardware stats contexts during ifdown.  The driver
-expects these stats to be cleared and saves a copy before freeing
-the stats contexts.  During the next ifup, the driver will likely
-allocate the same hardware stats contexts and this will cause a big
-increase in the counters as the old counters are added back to the
-saved counters.
+> > signed PCE is used.
+> > 
+> > To use the needed keys, ATTRIBUTE.PROVISIONKEY is required but should be
+> > only allowed for those who actually need it so that only the trusted
+> > parties can certify QE's.
+> > 
+> > Obviously the attestation service should know the public key of the used
+> > PCE and that way detect illegit attestation, but whitelisting the legit
+> > users still adds an additional layer of defence.
+> > 
+> > Add new device file called /dev/sgx/provision. The sole purpose of this
+> > file is to provide file descriptors that act as privilege tokens to allow
+> > to build enclaves with ATTRIBUTE.PROVISIONKEY set. A new ioctl called
+> > SGX_IOC_ENCLAVE_SET_ATTRIBUTE is used to assign this token to an enclave.
+> 
+> So I'm sure I'm missing something here: what controls which
+> enclave can open /dev/sgx/provision and thus pass the FD to
+> SGX_IOC_ENCLAVE_SET_ATTRIBUTE?
 
-We fix it by making an additional firmware call to clear the counters
-before freeing the hw stats contexts when the firmware is the older
-20.x firmware.
+/dev/sgx/provision is root-only by default, the expectation is that the admin
+will configure the system to grant only specific enclaves access to the
+PROVISION_KEY.
 
-Fixes: b8875ca356f1 ("bnxt_en: Save ring statistics before reset.")
-Reported-by: Jakub Kicinski <kicinski@fb.com>
-Reviewed-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Tested-by: Jakub Kicinski <kicinski@fb.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/broadcom/bnxt/bnxt.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+> And in general, how does that whole flow look like: what calls
+> SGX_IOC_ENCLAVE_SET_ATTRIBUTE when?
 
-diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-index 6bf97b3acdadc..c202c2a3d140d 100644
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -6293,6 +6293,7 @@ int bnxt_hwrm_set_coal(struct bnxt *bp)
- 
- static void bnxt_hwrm_stat_ctx_free(struct bnxt *bp)
- {
-+	struct hwrm_stat_ctx_clr_stats_input req0 = {0};
- 	struct hwrm_stat_ctx_free_input req = {0};
- 	int i;
- 
-@@ -6302,6 +6303,7 @@ static void bnxt_hwrm_stat_ctx_free(struct bnxt *bp)
- 	if (BNXT_CHIP_TYPE_NITRO_A0(bp))
- 		return;
- 
-+	bnxt_hwrm_cmd_hdr_init(bp, &req0, HWRM_STAT_CTX_CLR_STATS, -1, -1);
- 	bnxt_hwrm_cmd_hdr_init(bp, &req, HWRM_STAT_CTX_FREE, -1, -1);
- 
- 	mutex_lock(&bp->hwrm_cmd_lock);
-@@ -6311,7 +6313,11 @@ static void bnxt_hwrm_stat_ctx_free(struct bnxt *bp)
- 
- 		if (cpr->hw_stats_ctx_id != INVALID_STATS_CTX_ID) {
- 			req.stat_ctx_id = cpu_to_le32(cpr->hw_stats_ctx_id);
--
-+			if (BNXT_FW_MAJ(bp) <= 20) {
-+				req0.stat_ctx_id = req.stat_ctx_id;
-+				_hwrm_send_message(bp, &req0, sizeof(req0),
-+						   HWRM_CMD_TIMEOUT);
-+			}
- 			_hwrm_send_message(bp, &req, sizeof(req),
- 					   HWRM_CMD_TIMEOUT);
- 
--- 
-2.25.1
+The basic gist is that the host process of an enclave that needs/wants access
+to the PROVISION_KEY will invoke SGX_IOC_ENCLAVE_SET_ATTRIBUTE when building
+the enclave.  Any enclave can request access to PROVISION_KEY, but practically
+speaking only the PCE and QE (or their non-Intel equivalents) actually need
+access to the key.  KVM (future series) will also respect /dev/sgx/provision,
+i.e. require a similar ioctl() to expose the PROVISION_KEY to a guest.
 
+E.g. for my own personal testing, I never do anything attestation related, so
+none of the enclaves I run request PROVISION_KEY, but I do expose it to VMs to
+test the KVM paths.
+
+In this series, access is fairly binary, i.e. there's no additional kernel
+infrastructure to help userspace make per-enclave decisions.  There have been
+more than a few proposals on how to extend the kernel to help provide better
+granularity, e.g. LSM hooks, but it was generally agreed to punt that stuff
+to post-upstreaming to keep things "simple" once we went far enough down
+various paths to ensure we weren't painting ourselves into a corner.
+
+If you want super gory details, Intel's whitepaper on attestation in cloud
+environments is a good starting point[*], but I don't recommended doing much
+more than skimming unless you really like attestation stuff or are
+masochistic, which IMO amount to the same thing :-)
+
+[*] https://download.01.org/intel-sgx/dcap-1.0/docs/SGX_ECDSA_QuoteGenReference_DCAP_API_Linux_1.0.pdf
