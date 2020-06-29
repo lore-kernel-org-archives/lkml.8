@@ -2,192 +2,95 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D36C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:04:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61BF9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 074A52073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:04:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 432912073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:04:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="bvozZtlY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mt6YICf2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390274AbgF2VEv (ORCPT
+        id S2390278AbgF2VE4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:04:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43384 "EHLO
+        Mon, 29 Jun 2020 17:04:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731109AbgF2TMo (ORCPT
+        with ESMTP id S1731103AbgF2TMo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:12:44 -0400
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [IPv6:2001:4b98:dc2:55:216:3eff:fef7:d647])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5601C0086E3;
-        Mon, 29 Jun 2020 02:34:48 -0700 (PDT)
-Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 151892B3;
-        Mon, 29 Jun 2020 11:34:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1593423287;
-        bh=j0zsdCSu5FedzXiYOl5bxEOicYT1rdUAbW7P09CKJGM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=bvozZtlYoWNFocjWd26temgDYOZKqdHniKIYoJovGSy6RepWl3DW4KXMn+A0WImL3
-         pNG8/b8m591iElqpPwNAxj7ZDNEull+ybM/LqE9lO/HgOIp7aWXf41K8ZAwGhEmEiE
-         ocSCIOBtsmq6763P6gOoA/ZF9JP+OZEq/Kuawzyo=
-Date:   Mon, 29 Jun 2020 12:34:44 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Ramzi Ben Meftah <rbmeftah@de.adit-jv.com>
-Cc:     Steve Longerbeam <steve_longerbeam@mentor.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        niklas soderlund <niklas.soderlund@ragnatech.se>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Michael Rodin <mrodin@de.adit-jv.com>,
-        efriedrich@de.adit-jv.com, erosca@de.adit-jv.com
-Subject: Re: [PATCH 1/3] v4l2-subdev: Add subdev ioctl support for
- ENUM/GET/SET INPUT
-Message-ID: <20200629093444.GA10681@pendragon.ideasonboard.com>
-References: <1592301619-17631-1-git-send-email-rbmeftah@de.adit-jv.com>
- <20200624075307.hl6wew7vr5ue225t@uno.localdomain>
- <20200625020138.GW5980@pendragon.ideasonboard.com>
- <c57d416d-14d4-6d5d-a281-ddbf3183395a@mentor.com>
- <20200626011251.GP5865@pendragon.ideasonboard.com>
- <20200629092413.GA84958@vmlxhi-110.adit-jv.com>
+Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB4DBC00E3F4;
+        Mon, 29 Jun 2020 05:13:59 -0700 (PDT)
+Received: by mail-ed1-x541.google.com with SMTP id d16so5980115edz.12;
+        Mon, 29 Jun 2020 05:13:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Af8MV+kVnTa7zdW0E2E5KjHeensJMBWL2+gQQwCUvNQ=;
+        b=Mt6YICf2k3JascEFwPr+DhVRtQVII9mitVMQBW+uLVMO8/WmyQT80jOuzZcBOBRepN
+         3tzXW2b8Mjlq8B8TpjQH2Tm4bNtSxoR7BC3Ghx5abmvL9u/vB1JdEbT44qNQyVO7ATqh
+         vhiHpEgAX3qNWmGPTqSgTxz1V9WXJ70C8RxRSdOpBFQEs+omcOyaBtsZEvBYihgp9WGg
+         2buf1O+ocG/M3upbbAGl/w2ACJOYmw68GTIfmYtflzMC3yjUY+Bi+IDmAIHhyHnMsxY9
+         hb78RlB/eUGpN8EF8ikWLyk9OuAjyuLVWBi8wDqq3TbqdoCE/aFcJv10R/pPmR2yCAyw
+         qAOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Af8MV+kVnTa7zdW0E2E5KjHeensJMBWL2+gQQwCUvNQ=;
+        b=oFW2Lxj1CtqT32ZG8i8M/PS0hhpXotD7aL7aG3tzjZJ1/DauOurLYbcU2x/STLA36q
+         x7AB39z0oq3IvzG0w6mVNCBpky10GdL6G5Q+Cy5PhfGlQvHFfcPTl6oSHBGuGS0MSP50
+         0PgySA/IyLJ2BfnIylcfHpYS0kNrQc0VFvVUJLvEet/YYIsh93GKOvGxrSKQcaYkUsYJ
+         x/+FNNNof/USi6M907qtWIFJ0ArGZFNs72IPPBC5w/i1SKgX0i1NcKIsRTXV++u4okJS
+         X3l8qHVH65QyjJJy6Ps8qMm+mNLr08Qp6visdbEkt6MqbI8pXHQtD3iTeT+WCTqFzSfn
+         Z/QQ==
+X-Gm-Message-State: AOAM530rMQoSdMfCpNCtipfPBYu6ygGkR0qN6aY1tFVTMmE1oNHJ/O5c
+        mSH4BnOk836TtYfVSuhUW9ZPBiQ8bEkFQ74wIls=
+X-Google-Smtp-Source: ABdhPJx8GL2/LtvhYYnPZOnTG4JvnILLNC3i/hbToZbdsMBix31WyuKYxSB8w2InTRozYPvAU2y9b9ASSm/xVcLNwMA=
+X-Received: by 2002:a50:ec8f:: with SMTP id e15mr16899806edr.70.1593432838641;
+ Mon, 29 Jun 2020 05:13:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200629092413.GA84958@vmlxhi-110.adit-jv.com>
+References: <20200621213806.551879-1-konradybcio@gmail.com>
+ <20200621213806.551879-9-konradybcio@gmail.com> <20200629120918.GB1319@bug>
+In-Reply-To: <20200629120918.GB1319@bug>
+From:   Konrad Dybcio <konradybcio@gmail.com>
+Date:   Mon, 29 Jun 2020 14:13:22 +0200
+Message-ID: <CAMS8qEVaJ0ZpZ1HE8U9DbPfV0-cc=_qyLYdA1g7NYfz-WcE+aA@mail.gmail.com>
+Subject: Re: [PATCH 8/8] arm64: dts: qcom: Add support for Sony Xperia 10/10
+ Plus (Ganges platform)
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     skrzynka@konradybcio.pl, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        linux-clk@vger.kernel.org, DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-gpio@vger.kernel.org, Martin Botka <martin.botka1@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ramzi,
+> This is not usual comment style.
 
-On Mon, Jun 29, 2020 at 11:24:13AM +0200, Ramzi Ben Meftah wrote:
-> On Fri, Jun 26, 2020 at 04:12:51AM +0300, Laurent Pinchart wrote:
-> > On Thu, Jun 25, 2020 at 10:41:09AM -0700, Steve Longerbeam wrote:
-> >> On 6/24/20 7:01 PM, Laurent Pinchart wrote:
-> >>> On Wed, Jun 24, 2020 at 09:53:07AM +0200, Jacopo Mondi wrote:
-> >>>> On Tue, Jun 16, 2020 at 12:00:15PM +0200, Ramzi BEN MEFTAH wrote:
-> >>>>> From: Steve Longerbeam <steve_longerbeam@mentor.com>
-> >>>>   +Niklas, +Laurent
-> >>>>
-> >>>> Niklas, Laurent, how does this play with CAP_IO_MC ?
-> >>> I don't think it's related to CAP_IO_MC, but I don't think it's a good
-> >>> idea either :-) Routing doesn't go through the subdev [gs]_input
-> >>> operations in MC-based drivers. It should be configured through link
-> >>> setup instead. This patch goes in the wrong direction, sorry Steve.
-> >> 
-> >> That's OK! :) I didn't submit this patch, and as stated in the commit 
-> >> header, I never recommended this patch be submitted to upstream in the 
-> >> first place.
-> >> 
-> >> Selecting inputs at a subdev should normally make use of media link 
-> >> setup. But for selecting analog signal inputs, such as the ADV748x AFE 
-> >> standard definition inputs, that would  mean there would need to exist 
-> >> source "analog" subdevs that connect to the AFE inputs, if only for the 
-> >> purpose of selecting those inputs, which seems silly IMHO. The ADV748x 
-> >> AFE subdev defines these inputs as media pads, but have no connections, 
-> >> so link setup API can't be used to select those inputs.
-> >> 
-> >> So a new subdev pad API is clearly needed, not just to get input status 
-> >> at a subdev pad, but to select/make active such analog inputs without 
-> >> requiring link setup API.
-> > 
-> > There was an attempt to create a subdev ioctl to configure internal
-> > routing. See "[PATCH v4 19/31] media: Documentation: Add GS_ROUTING
-> > documentation" ([1]) and the related patches in the series.
-> > 
-> > [1] https://lore.kernel.org/linux-media/20190328200608.9463-20-jacopo+renesas@jmondi.org/
-> 
-> I was thinking why not just allowing linking pads of the same media entity.
-> This will avoid adding a new control, and will do the same as S_INPUT ioctl.
+This was fixed in a later revision and is currently applied to
+qcom/linux in the correct form. [1]
 
-The MC link setup API doesn't offer a way to configure multiple links in
-one operation, which is often needed for internal routing. There's also
-the issue that extensive changes would likely be needed for the MC core,
-although that's "just" a matter of implementing it.
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/qcom/linux.git/commit/?h=for-next&id=234d7d6b4cbfab0e900f12658053689bb3376141
 
-> >>>>> This commit enables VIDIOC_ENUMINPUT, VIDIOC_G_INPUT, and VIDIOC_S_INPUT
-> >>>>> ioctls for use via v4l2 subdevice node.
-> >>>>>
-> >>>>> This commit should probably not be pushed upstream, because the (old)
-> >>>>> idea of video inputs conflicts with the newer concept of establishing
-> >>>>> media links between src->sink pads.
-> >>>>>
-> >>>>> However it might make sense for some subdevices to support enum/get/set
-> >>>>> inputs. One example would be the analog front end subdevice for the
-> >>>>> ADV748x. By providing these ioctls, selecting the ADV748x analog inputs
-> >>>>> can be done without requiring the implementation of media entities that
-> >>>>> would define the analog source for which to establish a media link.
-> >>>>>
-> >>>>> Signed-off-by: Steve Longerbeam <steve_longerbeam@mentor.com>
-> >>>>> ---
-> >>>>>   drivers/media/v4l2-core/v4l2-subdev.c |  9 +++++++++
-> >>>>>   include/media/v4l2-subdev.h           | 11 +++++++++++
-> >>>>>   2 files changed, 20 insertions(+)
-> >>>>>
-> >>>>> diff --git a/drivers/media/v4l2-core/v4l2-subdev.c b/drivers/media/v4l2-core/v4l2-subdev.c
-> >>>>> index 6b989fe..73fbfe9 100644
-> >>>>> --- a/drivers/media/v4l2-core/v4l2-subdev.c
-> >>>>> +++ b/drivers/media/v4l2-core/v4l2-subdev.c
-> >>>>> @@ -378,6 +378,15 @@ static long subdev_do_ioctl(struct file *file, unsigned int cmd, void *arg)
-> >>>>>   			return -ENOTTY;
-> >>>>>   		return v4l2_querymenu(vfh->ctrl_handler, arg);
-> >>>>>
-> >>>>> +	case VIDIOC_ENUMINPUT:
-> >>>>> +		return v4l2_subdev_call(sd, video, enuminput, arg);
-> >>>>> +
-> >>>>> +	case VIDIOC_G_INPUT:
-> >>>>> +		return v4l2_subdev_call(sd, video, g_input, arg);
-> >>>>> +
-> >>>>> +	case VIDIOC_S_INPUT:
-> >>>>> +		return v4l2_subdev_call(sd, video, s_input, *(u32 *)arg);
-> >>>>> +
-> >>>>>   	case VIDIOC_G_CTRL:
-> >>>>>   		if (!vfh->ctrl_handler)
-> >>>>>   			return -ENOTTY;
-> >>>>> diff --git a/include/media/v4l2-subdev.h b/include/media/v4l2-subdev.h
-> >>>>> index f7fe78a..6e1a9cd 100644
-> >>>>> --- a/include/media/v4l2-subdev.h
-> >>>>> +++ b/include/media/v4l2-subdev.h
-> >>>>> @@ -383,6 +383,14 @@ struct v4l2_mbus_frame_desc {
-> >>>>>    * @g_input_status: get input status. Same as the status field in the
-> >>>>>    *	&struct &v4l2_input
-> >>>>>    *
-> >>>>> + * @enuminput: enumerate inputs. Should return the same input status as
-> >>>>> + *      @g_input_status if the passed input index is the currently active
-> >>>>> + *      input.
-> >>>>> + *
-> >>>>> + * @g_input: returns the currently active input index.
-> >>>>> + *
-> >>>>> + * @s_input: set the active input.
-> >>>>> + *
-> >>>>>    * @s_stream: used to notify the driver that a video stream will start or has
-> >>>>>    *	stopped.
-> >>>>>    *
-> >>>>> @@ -423,6 +431,9 @@ struct v4l2_subdev_video_ops {
-> >>>>>   	int (*g_tvnorms)(struct v4l2_subdev *sd, v4l2_std_id *std);
-> >>>>>   	int (*g_tvnorms_output)(struct v4l2_subdev *sd, v4l2_std_id *std);
-> >>>>>   	int (*g_input_status)(struct v4l2_subdev *sd, u32 *status);
-> >>>>> +	int (*enuminput)(struct v4l2_subdev *sd, struct v4l2_input *input);
-> >>>>> +	int (*g_input)(struct v4l2_subdev *sd, u32 *index);
-> >>>>> +	int (*s_input)(struct v4l2_subdev *sd, u32 index);
-> >>>>>   	int (*s_stream)(struct v4l2_subdev *sd, int enable);
-> >>>>>   	int (*g_pixelaspect)(struct v4l2_subdev *sd, struct v4l2_fract *aspect);
-> >>>>>   	int (*g_frame_interval)(struct v4l2_subdev *sd,
-
--- 
-Regards,
-
-Laurent Pinchart
+Regards
+Konrad
