@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E91C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D8BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E61D1206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E82B206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467545;
-	bh=5UrSFmKEAXzAlU88xkoyVMYQ07T5cpZSA4wEaKz4x+g=;
+	s=default; t=1593467546;
+	bh=QlB3A0RhynGuT++VxDFewAOVjKaK3Wr4JoQqAO3O8MY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B7Km6cXYCa19YLmBtTUH83at1RSbwRQUZAzummUWbYR2r19QjjrAUlOKjUrEQt3KG
-	 t5MR2ju2wkQhOacUcoC1bAh9UsJ1vG7ADbLjJnFWj6EHv1GD/R/TN8FpHzpd2nlh3G
-	 Mzip9yGeYeftYXrSusjMLtFn3qAOGl54bvgAr/Nc=
+	b=Ygqfwa3DqXw9Sjs2l0idM+GRZEXsN4yOfqdNpf4dp8RJntFWEMmTFRvxHkabUl0cC
+	 MTCRj2ld9hOLipv5Da1dw5rUdhTfePXyei5D3Yx0tGuhF7EJzRQLi9TCZFBzxBLY4O
+	 J6qnWU/raNBusJo951k9U+FTK8led7QMp5vP5AKw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391490AbgF2VwX (ORCPT
+        id S2391507AbgF2VwY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:52:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56786 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:52:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726649AbgF2Sfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726651AbgF2Sfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6740247F5;
-        Mon, 29 Jun 2020 15:22:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5D6D246DC;
+        Mon, 29 Jun 2020 15:20:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444153;
-        bh=5UrSFmKEAXzAlU88xkoyVMYQ07T5cpZSA4wEaKz4x+g=;
+        s=default; t=1593444025;
+        bh=QlB3A0RhynGuT++VxDFewAOVjKaK3Wr4JoQqAO3O8MY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bd9KQ03CEZVkTItEobYcoqOFhFQXHHSlOR+NG3g/xzQbwdqiQMs8jctDsidPuu+ZX
-         5mORBibkSnM423IkbuRzwuwd3QgWHP4q8fijGlfNNuUpee7qovrtzl8rKwwHC68Efj
-         fcMDqxnt3KhEH/XepN1CelB6vN//bVUSJYqfCivo=
+        b=DDmqseEL6tOeQy7SPyEYAYpbzJmGd5/jidVfZBsc3ZqoxCZ+Mr/tCSHEOGTtgURWm
+         YaeOhbK9vxMKvWWr59RenXLYQ7oQkM0faw4ZA2hxL+oSTeWlWWrrsoqgejqhZ7BPXB
+         cj7UkRPRP78qndwGb8bngZWeguT+lDJkSdaWEYis=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 259/265] pNFS/flexfiles: Fix list corruption if the mirror count changes
-Date:   Mon, 29 Jun 2020 11:18:12 -0400
-Message-Id: <20200629151818.2493727-260-sashal@kernel.org>
+Cc:     Gal Pressman <galpress@amazon.com>,
+        Firas JahJah <firasj@amazon.com>,
+        Yossi Leybovich <sleybo@amazon.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 132/265] RDMA/efa: Set maximum pkeys device attribute
+Date:   Mon, 29 Jun 2020 11:16:05 -0400
+Message-Id: <20200629151818.2493727-133-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -65,59 +67,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+From: Gal Pressman <galpress@amazon.com>
 
-commit 8b04013737341442ed914b336cde866b902664ae upstream.
+[ Upstream commit 0133654d8eb8607eacc96badfe49bf992155f4cb ]
 
-If the mirror count changes in the new layout we pick up inside
-ff_layout_pg_init_write(), then we can end up adding the
-request to the wrong mirror and corrupting the mirror->pg_list.
+The max_pkeys device attribute was not set in query device verb, set it to
+one in order to account for the default pkey (0xffff). This information is
+exposed to userspace and can cause malfunction
 
-Fixes: d600ad1f2bdb ("NFS41: pop some layoutget errors to application")
-Cc: stable@vger.kernel.org
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 40909f664d27 ("RDMA/efa: Add EFA verbs implementation")
+Link: https://lore.kernel.org/r/20200614103534.88060-1-galpress@amazon.com
+Reviewed-by: Firas JahJah <firasj@amazon.com>
+Reviewed-by: Yossi Leybovich <sleybo@amazon.com>
+Signed-off-by: Gal Pressman <galpress@amazon.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/flexfilelayout/flexfilelayout.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/infiniband/hw/efa/efa_verbs.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
-index 7d399f72ebbbf..de03e440b7eef 100644
---- a/fs/nfs/flexfilelayout/flexfilelayout.c
-+++ b/fs/nfs/flexfilelayout/flexfilelayout.c
-@@ -907,9 +907,8 @@ retry:
- 		goto out_mds;
+diff --git a/drivers/infiniband/hw/efa/efa_verbs.c b/drivers/infiniband/hw/efa/efa_verbs.c
+index 5c57098a4aee5..3420c77424861 100644
+--- a/drivers/infiniband/hw/efa/efa_verbs.c
++++ b/drivers/infiniband/hw/efa/efa_verbs.c
+@@ -209,6 +209,7 @@ int efa_query_device(struct ib_device *ibdev,
+ 	props->max_send_sge = dev_attr->max_sq_sge;
+ 	props->max_recv_sge = dev_attr->max_rq_sge;
+ 	props->max_sge_rd = dev_attr->max_wr_rdma_sge;
++	props->max_pkeys = 1;
  
- 	/* Use a direct mapping of ds_idx to pgio mirror_idx */
--	if (WARN_ON_ONCE(pgio->pg_mirror_count !=
--	    FF_LAYOUT_MIRROR_COUNT(pgio->pg_lseg)))
--		goto out_mds;
-+	if (pgio->pg_mirror_count != FF_LAYOUT_MIRROR_COUNT(pgio->pg_lseg))
-+		goto out_eagain;
- 
- 	for (i = 0; i < pgio->pg_mirror_count; i++) {
- 		mirror = FF_LAYOUT_COMP(pgio->pg_lseg, i);
-@@ -931,7 +930,10 @@ retry:
- 			(NFS_MOUNT_SOFT|NFS_MOUNT_SOFTERR))
- 		pgio->pg_maxretrans = io_maxretrans;
- 	return;
--
-+out_eagain:
-+	pnfs_generic_pg_cleanup(pgio);
-+	pgio->pg_error = -EAGAIN;
-+	return;
- out_mds:
- 	trace_pnfs_mds_fallback_pg_init_write(pgio->pg_inode,
- 			0, NFS4_MAX_UINT64, IOMODE_RW,
-@@ -941,6 +943,7 @@ out_mds:
- 	pgio->pg_lseg = NULL;
- 	pgio->pg_maxretrans = 0;
- 	nfs_pageio_reset_write_mds(pgio);
-+	pgio->pg_error = -EAGAIN;
- }
- 
- static unsigned int
+ 	if (udata && udata->outlen) {
+ 		resp.max_sq_sge = dev_attr->max_sq_sge;
 -- 
 2.25.1
 
