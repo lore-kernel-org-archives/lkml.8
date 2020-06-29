@@ -2,223 +2,157 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D1EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:43:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D30C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:43:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 317F12063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:43:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED2F820656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:43:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="oHzmtKVg"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TG6rKq8O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391415AbgF2VnQ (ORCPT
+        id S2403953AbgF2VnS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:43:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37592 "EHLO
+        Mon, 29 Jun 2020 17:43:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727874AbgF2Shv (ORCPT
+        with ESMTP id S1727875AbgF2Shw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:37:51 -0400
-Received: from mail-qt1-x843.google.com (mail-qt1-x843.google.com [IPv6:2607:f8b0:4864:20::843])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 316EAC03142F
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 10:21:11 -0700 (PDT)
-Received: by mail-qt1-x843.google.com with SMTP id g13so13426077qtv.8
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 10:21:11 -0700 (PDT)
+        Mon, 29 Jun 2020 14:37:52 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39DF2C031C7F
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 11:18:32 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id a127so8221478pfa.12
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 11:18:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=XikCz1+zr3FnvV2tYs/cOdK5k7ijVDZQLAkhovyJ9wo=;
-        b=oHzmtKVg4mDiXoIv90UY28rvbCERFVLGDpG/7OO1sWyA7OiOM8riiwAC+72M9N9i9y
-         TLg/CuNCRxl/UgM1VIft/qGTEG7l6vzZAFa/nN6A5vTVqSaBzSi/hi09c0tJtDq9MSfr
-         xYYf2me8OnHTlP6mo8vvmYDR4H/OHrDzF4O3QOIr5N2uudWtJEItuusx+10iNEjJTUOT
-         cH+IUlZcgYaXYLM50l3GFnbZdZha8zlsEy+4eePbHv4YCV9xB6Xvqz8vscWhvA1IR+pC
-         VTfkJ8zUy0GJ4GVvgBercGjMxA/jwmWSpnASmPEt+EG9ldlQAEHr2AK0tk03kKEn/FnS
-         59UA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RVpg6vIouDiH3on4zq6Qkvcb4IcnV9Eg7LBox0nJvvM=;
+        b=TG6rKq8OIgA/7NkvNhVbwcp7Zv81JPFjOf+X5UcCa1t+7uVP1xbpgSP9j7A1oaOrDB
+         URqVDRAfG2f8ZVotshyU0N6vx7j9gnEMkN2ZKla0nhU8H+hqEabOCXFHgrmhkdiUNDc0
+         c10xCi1y0+t2AOlKgfjDJ3AF633ROwnB2UluF8oFnaHIxW/ZNI4eeEh/Tnaf0n3YeW+T
+         YTW9iGyu6ShQ6xVj1DqYA0MHDO/YQTZJ6l/Re/dhnJklZQC8rIkaANrpwMxz2E/eYA6E
+         q6tGvHjkbrH7RdYeDdgMCAj7jYCOqIERf7OTSeWu13R4TJZinjirQ0MiAVPZ4kdnGlSh
+         PMWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=XikCz1+zr3FnvV2tYs/cOdK5k7ijVDZQLAkhovyJ9wo=;
-        b=kyXPbIwJkSI3hjn//zRf8/61ra+TqFRxRTSM7tIzoVPF30CnlApH8TnipkqmX356aE
-         g8tiHqwwQeq5637MFtbYQG5LPfIshGG3v0WKID/h6nsFxpFgZIPPVfmtPZPdsJdOhEKF
-         gKcDUGJU/VJnQ7xunsvgdmZ7pEgS5ul1WGt1GCwFqYitkGzUisa9FF3bjmBGXi65J9dr
-         HF6tjiDuowoUq+x+9+WQ7l0uPe+p6WLf1GohveOOmrmY4dJriY4XW5ljV4gqBpk5LFnU
-         gzcoXl7O6OSjmyv+A1HtaVbCuGb4dv03VPw3x9e1lR2vnb10GCEcGlWqth0lMY9FIMqG
-         9IZg==
-X-Gm-Message-State: AOAM530lMM8QmHXv4sycXNa6Fwu8EPV0P7/CAIfSuceHrxrP0xP2LkAM
-        yYkORCRF8l0bW2xcoQLqJkbm9A==
-X-Google-Smtp-Source: ABdhPJx3skupfPl9B/dzCTc8I20RAdMZje7jYDHR44GD9LAHO48epycaqSeUhhgZpCUM6hLNojrG5g==
-X-Received: by 2002:ac8:378f:: with SMTP id d15mr16598634qtc.256.1593451270376;
-        Mon, 29 Jun 2020 10:21:10 -0700 (PDT)
-Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id q5sm408363qtf.12.2020.06.29.10.21.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 10:21:10 -0700 (PDT)
-From:   Jonathan Marek <jonathan@marek.ca>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-clk@vger.kernel.org (open list:COMMON CLK FRAMEWORK),
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 07/13] dt-bindings: clock: Introduce SM8250 QCOM Graphics clock bindings
-Date:   Mon, 29 Jun 2020 13:20:37 -0400
-Message-Id: <20200629172049.30452-8-jonathan@marek.ca>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200629172049.30452-1-jonathan@marek.ca>
-References: <20200629172049.30452-1-jonathan@marek.ca>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RVpg6vIouDiH3on4zq6Qkvcb4IcnV9Eg7LBox0nJvvM=;
+        b=WGwJqk95sXsvtpldIN0w2oQEpXj0A05PF4edrwN9J2AgDq3jmm+2WPQ5e/VxqFoDad
+         wMXyFD2A+oUNCknCGYR9bhhnYtHO82IGaEaLc7AQPyTFdsQegm3nNixv/lgte0VtaR0y
+         E7Iv7NlX5MIiHrEL9P0oRBwEQ/wU1kl4NFOYvtKbuqgDQjmcAbDtt6gK2yjMXIZwdce9
+         1luEoPZgvimXZSv8XHs8yYbQwipCGtVayd0W+bjAtaWAljDkQ1hdGVRKh1xOuTTe3bbj
+         5GBxeywrHUPsKnFdhZYpV51UF1SfTNyKMax0zOx2hBhLx/SakJE74jCG2IZ7k0w0qJUA
+         6toA==
+X-Gm-Message-State: AOAM533KzOw0cKC5OwbzqJxEhaLujCESvNVC5PXagVUu/3/fDigYw0ew
+        uT0OaHt5bXGlI9RnsLIikniFZxYUwx2RniMeqke2vs8H
+X-Google-Smtp-Source: ABdhPJx9DCxKOqTyOvK/N39qAKQF4pHJeiMiGtVuafF9ig7zbCcl+2HZ5M9JzPJoDZZmvSgVG0JvPipv8QimLEaooNg=
+X-Received: by 2002:a63:5644:: with SMTP id g4mr11018260pgm.381.1593454711516;
+ Mon, 29 Jun 2020 11:18:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <202006210249.QHly8bQZ%lkp@intel.com> <CA+h21hpABfDvthiwq_JwWGpqZ68VJxu5TOBVbw_Gaxpq8j+XQg@mail.gmail.com>
+ <CAKwvOdnAKR_CtOccZohR_r1kzKKVuvo8LbpLi0s3ek+3u+c_zw@mail.gmail.com> <CA+h21hokCCF52O1wxkg0gLqS9ZcGtB0xMBm07_--i56=anJ=Rg@mail.gmail.com>
+In-Reply-To: <CA+h21hokCCF52O1wxkg0gLqS9ZcGtB0xMBm07_--i56=anJ=Rg@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Mon, 29 Jun 2020 11:18:20 -0700
+Message-ID: <CAKwvOdkcPWT4krC5FuCpiXaoY+GiTeUa=CiamFCk5tPJOz4Cjw@mail.gmail.com>
+Subject: Re: drivers/gpu/drm/panel/panel-samsung-ld9040.c:240:12: warning:
+ stack frame size of 8312 bytes in function 'ld9040_prepare'
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     kernel test robot <lkp@intel.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        kbuild-all@lists.01.org,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device tree bindings for graphics clock controller for
-Qualcomm Technology Inc's SM8250 SoCs.
+On Sat, Jun 27, 2020 at 12:43 PM Vladimir Oltean <olteanv@gmail.com> wrote:
+>
+> Hi Nick,
+>
+> On Mon, 22 Jun 2020 at 19:50, Nick Desaulniers <ndesaulniers@google.com> wrote:
+> >
+>
+> > > I really don't get what's the problem here. The listing of
+> > > ld9040_prepare at the given commit and with the given .config is:
+> >
+> > I wrote a tool to help debug these.
+> > https://github.com/ClangBuiltLinux/frame-larger-than
+> > If you fetch the randconfig and rebuild with debug info, that tool
+> > will help show you which variables are used in which stack frames and
+> > what their sizes are.  Also note that strange things get dug up from
+> > randconfigs.
+> >
+> >
+> > --
+> > Thanks,
+> > ~Nick Desaulniers
+>
+> I ran your tool and it basically told me that all 11 calls to
 
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
----
- .../bindings/clock/qcom,sm8250-gpucc.yaml     | 74 +++++++++++++++++++
- include/dt-bindings/clock/qcom,gpucc-sm8250.h | 40 ++++++++++
- 2 files changed, 114 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/qcom,sm8250-gpucc.yaml
- create mode 100644 include/dt-bindings/clock/qcom,gpucc-sm8250.h
+Cool? No bugs running it? (I still need to extend support for many
+architectures)
 
-diff --git a/Documentation/devicetree/bindings/clock/qcom,sm8250-gpucc.yaml b/Documentation/devicetree/bindings/clock/qcom,sm8250-gpucc.yaml
-new file mode 100644
-index 000000000000..2b9c8f97b76d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/qcom,sm8250-gpucc.yaml
-@@ -0,0 +1,74 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/clock/qcom,sm8250-gpucc.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Qualcomm Graphics Clock & Reset Controller Binding for SM8250
-+
-+maintainers:
-+  -
-+
-+description: |
-+  Qualcomm graphics clock control module which supports the clocks, resets and
-+  power domains on SM8250.
-+
-+  See also dt-bindings/clock/qcom,gpucc-sm8250.h.
-+
-+properties:
-+  compatible:
-+    const: qcom,sm8250-gpucc
-+
-+  clocks:
-+    items:
-+      - description: Board XO source
-+      - description: GPLL0 main branch source
-+      - description: GPLL0 div branch source
-+
-+  clock-names:
-+    items:
-+      - const: bi_tcxo
-+      - const: gcc_gpu_gpll0_clk_src
-+      - const: gcc_gpu_gpll0_div_clk_src
-+
-+  '#clock-cells':
-+    const: 1
-+
-+  '#reset-cells':
-+    const: 1
-+
-+  '#power-domain-cells':
-+    const: 1
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - '#clock-cells'
-+  - '#reset-cells'
-+  - '#power-domain-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,gcc-sm8250.h>
-+    #include <dt-bindings/clock/qcom,rpmh.h>
-+    clock-controller@3d90000 {
-+      compatible = "qcom,sm8250-gpucc";
-+      reg = <0x3d90000 0x9000>;
-+      clocks = <&rpmhcc RPMH_CXO_CLK>,
-+               <&gcc GCC_GPU_GPLL0_CLK_SRC>,
-+               <&gcc GCC_GPU_GPLL0_DIV_CLK_SRC>;
-+      clock-names = "bi_tcxo",
-+                    "gcc_gpu_gpll0_clk_src",
-+                    "gcc_gpu_gpll0_div_clk_src";
-+      #clock-cells = <1>;
-+      #reset-cells = <1>;
-+      #power-domain-cells = <1>;
-+    };
-+...
-diff --git a/include/dt-bindings/clock/qcom,gpucc-sm8250.h b/include/dt-bindings/clock/qcom,gpucc-sm8250.h
-new file mode 100644
-index 000000000000..c8fe64e399fd
---- /dev/null
-+++ b/include/dt-bindings/clock/qcom,gpucc-sm8250.h
-@@ -0,0 +1,40 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2017-2020, The Linux Foundation. All rights reserved.
-+ */
-+
-+#ifndef _DT_BINDINGS_CLK_QCOM_GPU_CC_SM8250_H
-+#define _DT_BINDINGS_CLK_QCOM_GPU_CC_SM8250_H
-+
-+/* GPU_CC clock registers */
-+#define GPU_CC_AHB_CLK				0
-+#define GPU_CC_CRC_AHB_CLK			1
-+#define GPU_CC_CX_APB_CLK			2
-+#define GPU_CC_CX_GMU_CLK			3
-+#define GPU_CC_CX_QDSS_AT_CLK			4
-+#define GPU_CC_CX_QDSS_TRIG_CLK			5
-+#define GPU_CC_CX_QDSS_TSCTR_CLK		6
-+#define GPU_CC_CX_SNOC_DVM_CLK			7
-+#define GPU_CC_CXO_AON_CLK			8
-+#define GPU_CC_CXO_CLK				9
-+#define GPU_CC_GMU_CLK_SRC			10
-+#define GPU_CC_GX_GMU_CLK			11
-+#define GPU_CC_GX_QDSS_TSCTR_CLK		12
-+#define GPU_CC_GX_VSENSE_CLK			13
-+#define GPU_CC_PLL1				14
-+#define GPU_CC_SLEEP_CLK			15
-+#define GPU_CC_HLOS1_VOTE_GPU_SMMU_CLK		16
-+
-+/* GPU_CC Resets */
-+#define GPUCC_GPU_CC_ACD_BCR			0
-+#define GPUCC_GPU_CC_CX_BCR			1
-+#define GPUCC_GPU_CC_GFX3D_AON_BCR		2
-+#define GPUCC_GPU_CC_GMU_BCR			3
-+#define GPUCC_GPU_CC_GX_BCR			4
-+#define GPUCC_GPU_CC_XO_BCR			5
-+
-+/* GPU_CC GDSCRs */
-+#define GPU_CX_GDSC				0
-+#define GPU_GX_GDSC				1
-+
-+#endif
+> ld9040_dcs_write from within ld9040_init are inlined by the compiler.
+> Each of these ld9040_dcs_write functions calls ld9040_spi_write_word
+> twice, so 22 inline calls to that. Now, sizeof(struct
+> spi_transfer)=136 and sizeof(struct spi_message)=104, so, no wonder we
+> run out of stack pretty quickly.
+
+I'd expect these to have distinct lifetimes resulting in stack slot
+reuse.  When the compiler inlines functions, it introduces a lexical
+scope. You can imagine it inlining the body, but within a new `{}`
+delineated compound statement.  Then the compiler knows that the
+variables local to those scopes can't outlive each other, and can
+reuse their stack slots in the containing function.  Escape analysis
+comes into play, too, but I'm not sure that's an issue here.
+
+>
+> But my question is: what's wrong with the code, if anything at all?
+
+The general case we try to find+fix with this warning is excessively
+large stack allocations that probably should be heap allocated,
+percpu, or static.  Also, the `noinline_for_stack` function annotation
+is used frequently for this.
+
+One known case of issues are the sanitizers, which can generally
+prevent the reuse of stack slots.  Were any of those set in this
+config, since this was a randconfig?  I'd check this first, then
+consider if `noinline_for_stack` is appropriate on any of the related
+functions.
+
+> Why does the compiler try to inline it, and then complain that it's
+> using too much stack
+
+The flag -Wframe-larger-than= is a warning on semantics, not really an
+optimization flag controlling the maximum stack depth of the function
+being inlined into.
+
+> when basically nobody appears to have asked it to
+> inline it?
+
+That's not really how inlining works.  If you don't specify compiler
+attributes, then the compiler can decide to inline or not at its
+discretion.  The `inline` keyword or its absence doesn't really affect
+this.  __attribute__((always_inline)) and __attribute__((noinline))
+can give you more control, but there are hyper obscure edge cases
+where even those don't work as advertised.
+
 -- 
-2.26.1
-
+Thanks,
+~Nick Desaulniers
