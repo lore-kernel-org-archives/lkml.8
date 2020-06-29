@@ -2,205 +2,151 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B30C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EBB3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BCEF020780
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:42:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 508092078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:43:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xCE8MQ3k"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JP+KeEw5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728394AbgF2XmU (ORCPT
+        id S1728146AbgF2XnV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 19:42:20 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:58800 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbgF2XmT (ORCPT
+        Mon, 29 Jun 2020 19:43:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58340 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727065AbgF2XnU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 19:42:19 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05T6gUTe007015;
-        Mon, 29 Jun 2020 01:42:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593412950;
-        bh=Pe4Py7qCB9HM1+jvt5qFl1K2y+kJ7Nz7h3KUpMZTwdY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=xCE8MQ3kPKcGXZwR6FQY2tDiMBreXL2O0wRa65uuWSFimRXf4cN0IjUtPsD8F8KtJ
-         mGIqEbcB5Kdq4YRPtIS5XdkmKWvrWwZpi37bSsefjQsLMPF5RmlUDOUNsP+M8Upz7f
-         Gs8LurD+Lcdn3marIz8mP5CdZMPjKxzE75e+pY9I=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05T6gU8s057552;
-        Mon, 29 Jun 2020 01:42:30 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 29
- Jun 2020 01:42:30 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 29 Jun 2020 01:42:30 -0500
-Received: from [192.168.2.10] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05T6gSLE079730;
-        Mon, 29 Jun 2020 01:42:29 -0500
-Subject: Re: [PATCH][next] dmaengine: ti: k3-udma: Use struct_size() in
- kzalloc()
-To:     "Gustavo A. R. Silva" <gustavoars@kernel.org>
-CC:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200619224334.GA7857@embeddedor>
- <20200624055535.GX2324254@vkoul-mobl>
- <3a5514c9-d966-c332-84ba-f418c26fa74c@embeddedor.com>
- <98426221-8bff-25df-a062-9ec1ca4e8f26@ti.com>
- <20200626132944.GA26003@embeddedor>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-X-Pep-Version: 2.0
-Message-ID: <04a5fb89-37eb-2cf7-d085-aaa4c9ed284d@ti.com>
-Date:   Mon, 29 Jun 2020 09:43:26 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 29 Jun 2020 19:43:20 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06653C03E979
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 16:43:20 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id z5so9041949pgb.6
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 16:43:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QciK5tXPc0ig4ewp8mAOTjfJLOJkGR17cLI3UFIq7P4=;
+        b=JP+KeEw5Ge2u0AgRunHG6CylzE+cjwR7RMtG2QLQWVY0SIR3gmC+cjStYNxrDVrF0T
+         cWYhp3nhvP0oIs8lc57KPy6JBKX03zycDRKQa4/w1+HqdRKKW1wBReQJuZaLVWtpYpWY
+         zztg+w4Z21un2gOixaBjAOXx1LE6O+uO7LIIc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QciK5tXPc0ig4ewp8mAOTjfJLOJkGR17cLI3UFIq7P4=;
+        b=ueJAuoDguJkAvZ6JyBN6uptEaE5cX2TqJ7rCC0yxh3AetqHUp97kVdKMeXRWnNCHRd
+         TU1iC3rTCO9+RSc3OV95PlXMtsoDtvNyF0n8a0YKmNcMyOF5Nk82HIQ0JqcZLsIaAIH0
+         NuPwPbsJYzXgu+nw6LUykbb3DS3IKzUhK5B0SfEz0QI1SfKO0MWvzYl7eRX90nXuU0vG
+         Er8zvLog1w/LfgHP5S12mkVad3F0MloMnvTdueEbQTXXhBy55aZOc+Bj84I0eMAl5auh
+         MTvDX+/6bsLiXHQTSo3QqQ5f/1027xnYi59wXWmp27RmoMjXjq78SObDLHfagmaFO2es
+         cafQ==
+X-Gm-Message-State: AOAM531lvF0mNrA2oikle3iJ6RU8rsxZ348ezWFmLqMOauulYPCEEGzz
+        g2wTmCI4k6OORW+Mrid0Hcz8bA==
+X-Google-Smtp-Source: ABdhPJyI8g97mTqP8wUF/YUNfuHe3OhvjyzPpoxFXcVqURHplY/uOe+v6Yiqilg3jnWEFhYr70yfWQ==
+X-Received: by 2002:aa7:988f:: with SMTP id r15mr7635504pfl.2.1593474199348;
+        Mon, 29 Jun 2020 16:43:19 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id s30sm753535pgn.34.2020.06.29.16.43.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 16:43:18 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Benson Leung <bleung@chromium.org>,
+        linux-arm-msm@vger.kernel.org,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        swboyd@chromium.org, Douglas Anderson <dianders@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
+Subject: [PATCH] spi: Avoid setting the chip select if we don't need to
+Date:   Mon, 29 Jun 2020 16:41:06 -0700
+Message-Id: <20200629164103.1.Ied8e8ad8bbb2df7f947e3bc5ea1c315e041785a2@changeid>
+X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
 MIME-Version: 1.0
-In-Reply-To: <20200626132944.GA26003@embeddedor>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On some SPI controllers (like spi-geni-qcom) setting the chip select
+is a heavy operation.  For instance on spi-geni-qcom, with the current
+code, is was measured as taking upwards of 20 us.  Even on SPI
+controllers that aren't as heavy, setting the chip select is at least
+something like a MMIO operation over some peripheral bus which isn't
+as fast as a RAM access.
 
+While it would be good to find ways to mitigate problems like this in
+the drivers for those SPI controllers, it can also be noted that the
+SPI framework could also help out.  Specifically, in some situations,
+we can see the SPI framework calling the driver's set_cs() with the
+same parameter several times in a row.  This is specifically observed
+when looking at the way the Chrome OS EC SPI driver (cros_ec_spi)
+works but other drivers likely trip it to some extent.
 
-On 26/06/2020 16.29, Gustavo A. R. Silva wrote:
-> Hi Peter,
->=20
-> Please, see my comments below...
->=20
-> On Fri, Jun 26, 2020 at 10:30:37AM +0300, Peter Ujfalusi wrote:
->>
->>
->> On 24/06/2020 20.12, Gustavo A. R. Silva wrote:
->>> Hi Vinod,
->>>
->>> On 6/24/20 00:55, Vinod Koul wrote:
->>>> On 19-06-20, 17:43, Gustavo A. R. Silva wrote:
->>>>> Make use of the struct_size() helper instead of an open-coded versi=
-on
->>>>> in order to avoid any potential type mistakes.
->>>>>
->>>>> This code was detected with the help of Coccinelle and, audited and=
+Let's solve this by caching the chip select state in the core and only
+calling into the controller if there was a change.  We check not only
+the "enable" state but also the chip select mode (active high or
+active low) since controllers may care about both the mode and the
+enable flag in their callback.
 
->>>>> fixed manually.
->>>>>
->>>>> Addresses-KSPP-ID: https://github.com/KSPP/linux/issues/83
->>>>> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
->>>>> ---
->>>>>  drivers/dma/ti/k3-udma.c | 4 ++--
->>>>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/drivers/dma/ti/k3-udma.c b/drivers/dma/ti/k3-udma.c
->>>>> index 0d5fb154b8e2..411c54b86ba8 100644
->>>>> --- a/drivers/dma/ti/k3-udma.c
->>>>> +++ b/drivers/dma/ti/k3-udma.c
->>>>> @@ -2209,7 +2209,7 @@ udma_prep_slave_sg_pkt(struct udma_chan *uc, =
-struct scatterlist *sgl,
->>>>>  	u32 ring_id;
->>>>>  	unsigned int i;
->>>>> =20
->>>>> -	d =3D kzalloc(sizeof(*d) + sglen * sizeof(d->hwdesc[0]), GFP_NOWA=
-IT);
->>>>> +	d =3D kzalloc(struct_size(d, hwdesc, sglen), GFP_NOWAIT);
->>>>
->>>> struct_size() is a * b + c but here we need, a + b * c.. the trailin=
-g
->>>> struct is N times here..
->>>>
->>>
->>> struct_size() works exactly as expected in this case. :)
->>> Please, see:
->>>
->>> include/linux/overflow.h:314:
->>> 314 #define struct_size(p, member, count)                            =
-       \
->>> 315         __ab_c_size(count,                                       =
-       \
->>> 316                     sizeof(*(p)->member) + __must_be_array((p)->m=
-ember),\
->>> 317                     sizeof(*(p)))
->>
->> True, struct_size is for this sort of things.
->>
->> Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->>
->> While looking it up in include/linux/overflow.h I have noticed your
->> commit in linux-next, which adds flex_array_size()
->>
->> The example in the commit message contradicts with what the helper
->=20
-> There is no contradiction here.
->=20
->> does imho. To be correct it should have been:
->>
->> struct something {
->> 	size_t count;
->> 	struct foo items[];
->> };
->>
->> - struct something *instance;
->> + struct something instance;
->>
->> - instance =3D kmalloc(struct_size(instance, items, count), GFP_KERNEL=
-);
->> + instance.items =3D kmalloc(struct_size(instance, items, count), GFP_=
-KERNEL);
->> instance->count =3D count;
->> memcpy(instance->items, src, flex_array_size(instance, items, instance=
-->count));
->>
->=20
-> This is all wrong. Please, double check how struct_size() works.
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
-Yes, I got it mixed up, I know how struct_size works... For some reason
-I just overlooked it's use in the kmalloc().
+ drivers/spi/spi.c       | 11 +++++++++++
+ include/linux/spi/spi.h |  4 ++++
+ 2 files changed, 15 insertions(+)
 
->=20
-> Thanks
-> --
-> Gustavo
->=20
->>>>>  	if (!d)
->>>>>  		return NULL;
->>>>> =20
->>>>> @@ -2525,7 +2525,7 @@ udma_prep_dma_cyclic_pkt(struct udma_chan *uc=
-, dma_addr_t buf_addr,
->>>>>  	if (period_len >=3D SZ_4M)
->>>>>  		return NULL;
->>>>> =20
->>>>> -	d =3D kzalloc(sizeof(*d) + periods * sizeof(d->hwdesc[0]), GFP_NO=
-WAIT);
->>>>> +	d =3D kzalloc(struct_size(d, hwdesc, periods), GFP_NOWAIT);
->>>>>  	if (!d)
->>>>>  		return NULL;
->>>>> =20
->>>>> --=20
->>>>> 2.27.0
->>>>
->>
->> - P=C3=A9ter
->>
->> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunn=
-us/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
->>
-
-- P=C3=A9ter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 6fa56590bba2..d4ba723a30da 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -778,6 +778,17 @@ static void spi_set_cs(struct spi_device *spi, bool enable)
+ {
+ 	bool enable1 = enable;
+ 
++	/*
++	 * Avoid calling into the driver (or doing delays) if the chip select
++	 * isn't actually changing from the last time this was called.
++	 */
++	if ((spi->controller->last_cs_enable == enable) &&
++	    (spi->controller->last_cs_mode_high == (spi->mode & SPI_CS_HIGH)))
++		return;
++
++	spi->controller->last_cs_enable = enable;
++	spi->controller->last_cs_mode_high = spi->mode & SPI_CS_HIGH;
++
+ 	if (!spi->controller->set_cs_timing) {
+ 		if (enable1)
+ 			spi_delay_exec(&spi->controller->cs_setup, NULL);
+diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+index b4917df79637..0e67a9a3a1d3 100644
+--- a/include/linux/spi/spi.h
++++ b/include/linux/spi/spi.h
+@@ -368,6 +368,8 @@ static inline void spi_unregister_driver(struct spi_driver *sdrv)
+  * @cur_msg_prepared: spi_prepare_message was called for the currently
+  *                    in-flight message
+  * @cur_msg_mapped: message has been mapped for DMA
++ * @last_cs_enable: was enable true on the last call to set_cs.
++ * @last_cs_mode_high: was (mode & SPI_CS_HIGH) true on the last call to set_cs.
+  * @xfer_completion: used by core transfer_one_message()
+  * @busy: message pump is busy
+  * @running: message pump is running
+@@ -604,6 +606,8 @@ struct spi_controller {
+ 	bool				auto_runtime_pm;
+ 	bool                            cur_msg_prepared;
+ 	bool				cur_msg_mapped;
++	bool				last_cs_enable;
++	bool				last_cs_mode_high;
+ 	bool                            fallback;
+ 	struct completion               xfer_completion;
+ 	size_t				max_dma_len;
+-- 
+2.27.0.212.ge8ba1cc988-goog
 
