@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C336C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6F5AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DD8C7206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83829206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467553;
-	bh=R7EbNfwBfhbKAwJL9cGsCE0UyhurDjirYYrMzZFv7YQ=;
+	s=default; t=1593467562;
+	bh=VVOg+fL6XpTbAZZVUFGIaPYMxx6lWAAVziHMXpUFrYg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j5EXHUreQfLeFVF2kVYt+B56KMuCrhuIoaQAvrBEuW66lUg4x1yCzjfm35afop+Ax
-	 B8Z/jaFaB1j6q7zBHDfsg1zg/S4lKO9fJuYf76zdPubOfI3daaeMPQ8Rj9iWzV5oId
-	 ueJgFohLpajHllshTKVfbFYuJ+ki9QG943Vgmn30=
+	b=za35kYwkmnNF64paxFWMDe4lms7pFW8XHvuOod7vomroSiN6RLO94LJJlap20+x1J
+	 xmkBquB/UxaW2GDT9K1j89U2ERXss+RVdUXhlKtfX0VWD1FHZ+iupRhD/KC3ssuLQD
+	 fkQVr2OJxSfG7A5thkNj+PtpfE35twzlR/4qUYMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391522AbgF2Vwc (ORCPT
+        id S2391526AbgF2Vwl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:52:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56904 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:52:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726642AbgF2Sfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726638AbgF2Sfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3814424653;
-        Mon, 29 Jun 2020 15:19:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A31D2469C;
+        Mon, 29 Jun 2020 15:19:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443967;
-        bh=R7EbNfwBfhbKAwJL9cGsCE0UyhurDjirYYrMzZFv7YQ=;
+        s=default; t=1593443994;
+        bh=VVOg+fL6XpTbAZZVUFGIaPYMxx6lWAAVziHMXpUFrYg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CrHu0aNqrupclbky3ZB66u1e+ZZp81S/AQRnF9fNc5h6et0vM+ZxaIzqawM4GMNor
-         TNw3G0aspFqMhNA7JPSkOxuE7xkh44Cmc6a8tYlclRGnEamB5gGucxAoTNCkqKUv+R
-         aLkN1wmA8zSdLq0VeZBbSeuGR2VybyO52y3Eqxp4=
+        b=haOG7BQVr1aUs0m4VfDMrLJfjuAaLBO/OJzzI/J/b3wHGfPgJZlzIRbzBHDkAiHj5
+         q2evblmwnascV/CXF/SllglrXK1CoJGpPS73MqKuOH1MwkPCutA2PkRv6pjSfn8Jvj
+         wm8JUXEBbB0HmffadlT8SPXZRo91OTM2z3rTSYCA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Prashant Malani <pmalani@chromium.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 071/265] usb: typec: mux: intel_pmc_mux: Fix DP alternate mode entry
-Date:   Mon, 29 Jun 2020 11:15:04 -0400
-Message-Id: <20200629151818.2493727-72-sashal@kernel.org>
+Cc:     Huy Nguyen <huyn@mellanox.com>,
+        Boris Pismenny <borisp@mellanox.com>,
+        Raed Salem <raeds@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 098/265] xfrm: Fix double ESP trailer insertion in IPsec crypto offload.
+Date:   Mon, 29 Jun 2020 11:15:31 -0400
+Message-Id: <20200629151818.2493727-99-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -65,65 +68,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+From: Huy Nguyen <huyn@mellanox.com>
 
-commit 130206a88683d859f63ed6d4a56ab5c2b4930c8e upstream.
+[ Upstream commit 94579ac3f6d0820adc83b5dc5358ead0158101e9 ]
 
-The PMC needs to be notified separately about HPD (hotplug
-detected) signal being high after mode entry. There is a bit
-"HPD High" in the Alternate Mode Request that the driver
-already sets, but that bit is only valid when the
-DisplayPort Alternate Mode is directly entered from
-disconnected state.
+During IPsec performance testing, we see bad ICMP checksum. The error packet
+has duplicated ESP trailer due to double validate_xmit_xfrm calls. The first call
+is from ip_output, but the packet cannot be sent because
+netif_xmit_frozen_or_stopped is true and the packet gets dev_requeue_skb. The second
+call is from NET_TX softirq. However after the first call, the packet already
+has the ESP trailer.
 
-Fixes: 5c4edcdbcd97 ("usb: typec: mux: intel: Fix DP_HPD_LVL bit field")
-Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc: stable <stable@vger.kernel.org>
-Tested-by: Prashant Malani <pmalani@chromium.org>
-Link: https://lore.kernel.org/r/20200529131753.15587-1-heikki.krogerus@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fix by marking the skb with XFRM_XMIT bit after the packet is handled by
+validate_xmit_xfrm to avoid duplicate ESP trailer insertion.
+
+Fixes: f6e27114a60a ("net: Add a xfrm validate function to validate_xmit_skb")
+Signed-off-by: Huy Nguyen <huyn@mellanox.com>
+Reviewed-by: Boris Pismenny <borisp@mellanox.com>
+Reviewed-by: Raed Salem <raeds@mellanox.com>
+Reviewed-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/typec/mux/intel_pmc_mux.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ include/net/xfrm.h     | 1 +
+ net/xfrm/xfrm_device.c | 4 +++-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/typec/mux/intel_pmc_mux.c b/drivers/usb/typec/mux/intel_pmc_mux.c
-index c22e5c4bbf1a9..e35508f5e1287 100644
---- a/drivers/usb/typec/mux/intel_pmc_mux.c
-+++ b/drivers/usb/typec/mux/intel_pmc_mux.c
-@@ -129,7 +129,8 @@ pmc_usb_mux_dp_hpd(struct pmc_usb_port *port, struct typec_mux_state *state)
- 	msg[0] = PMC_USB_DP_HPD;
- 	msg[0] |= port->usb3_port << PMC_USB_MSG_USB3_PORT_SHIFT;
+diff --git a/include/net/xfrm.h b/include/net/xfrm.h
+index 8f71c111e65af..03024701c79f7 100644
+--- a/include/net/xfrm.h
++++ b/include/net/xfrm.h
+@@ -1013,6 +1013,7 @@ struct xfrm_offload {
+ #define	XFRM_GRO		32
+ #define	XFRM_ESP_NO_TRAILER	64
+ #define	XFRM_DEV_RESUME		128
++#define	XFRM_XMIT		256
  
--	msg[1] = PMC_USB_DP_HPD_IRQ;
-+	if (data->status & DP_STATUS_IRQ_HPD)
-+		msg[1] = PMC_USB_DP_HPD_IRQ;
+ 	__u32			status;
+ #define CRYPTO_SUCCESS				1
+diff --git a/net/xfrm/xfrm_device.c b/net/xfrm/xfrm_device.c
+index f50d1f97cf8ec..626096bd0d294 100644
+--- a/net/xfrm/xfrm_device.c
++++ b/net/xfrm/xfrm_device.c
+@@ -108,7 +108,7 @@ struct sk_buff *validate_xmit_xfrm(struct sk_buff *skb, netdev_features_t featur
+ 	struct xfrm_offload *xo = xfrm_offload(skb);
+ 	struct sec_path *sp;
  
- 	if (data->status & DP_STATUS_HPD_STATE)
- 		msg[1] |= PMC_USB_DP_HPD_LVL;
-@@ -142,6 +143,7 @@ pmc_usb_mux_dp(struct pmc_usb_port *port, struct typec_mux_state *state)
- {
- 	struct typec_displayport_data *data = state->data;
- 	struct altmode_req req = { };
-+	int ret;
+-	if (!xo)
++	if (!xo || (xo->flags & XFRM_XMIT))
+ 		return skb;
  
- 	if (data->status & DP_STATUS_IRQ_HPD)
- 		return pmc_usb_mux_dp_hpd(port, state);
-@@ -161,7 +163,14 @@ pmc_usb_mux_dp(struct pmc_usb_port *port, struct typec_mux_state *state)
- 	if (data->status & DP_STATUS_HPD_STATE)
- 		req.mode_data |= PMC_USB_ALTMODE_HPD_HIGH;
+ 	if (!(features & NETIF_F_HW_ESP))
+@@ -129,6 +129,8 @@ struct sk_buff *validate_xmit_xfrm(struct sk_buff *skb, netdev_features_t featur
+ 		return skb;
+ 	}
  
--	return pmc_usb_command(port, (void *)&req, sizeof(req));
-+	ret = pmc_usb_command(port, (void *)&req, sizeof(req));
-+	if (ret)
-+		return ret;
++	xo->flags |= XFRM_XMIT;
 +
-+	if (data->status & DP_STATUS_HPD_STATE)
-+		return pmc_usb_mux_dp_hpd(port, state);
-+
-+	return 0;
- }
+ 	if (skb_is_gso(skb)) {
+ 		struct net_device *dev = skb->dev;
  
- static int
 -- 
 2.25.1
 
