@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D92C3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:33:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE661C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B44992067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:33:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A7A42067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:33:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462792;
-	bh=FErfLAtSgFwdrckrYiDutcgWgLZ2rUZ1zmULEUoVWeU=;
+	s=default; t=1593462797;
+	bh=Mej9ssHFMj3X60ejOpk7m0olOfhDlfijdDv4Gmjkx4k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SReKv4UyVpfvU/SpxKxj5PhPM7D+usWaeYoQNBgwF4glcMEygoguPamp7fNDqaEut
-	 BpZauPzHdlQQUVmgdJI6OazCxJqKMwN8wgSjYy8W88cEQ0pXFGFT9s7kbvod2iypwW
-	 +9u3OKxQ1UWqwt5fUf+TY1rnI1U+xaZqL6YfBHpM=
+	b=uRpN9Yl98qnM722wVHan4qpyLLZZB26HJjqsbYcqyGRroUORkzSDO5Fit4w4V18da
+	 i9N64t4F3ADwTv/q50BkgCFtnwB75hFUHAEsW5ifjAxWvrHBaMoDTJyE6CPCxc69Rd
+	 QKaHQhfLDHwztuxuzWp8lL30uNwXKppr480YQrPw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389333AbgF2UdK (ORCPT
+        id S2389121AbgF2UdP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:33:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37038 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:33:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37044 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732325AbgF2TZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732396AbgF2TZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FD56253A6;
-        Mon, 29 Jun 2020 15:41:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97230253FF;
+        Mon, 29 Jun 2020 15:42:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445272;
-        bh=FErfLAtSgFwdrckrYiDutcgWgLZ2rUZ1zmULEUoVWeU=;
+        s=default; t=1593445348;
+        bh=Mej9ssHFMj3X60ejOpk7m0olOfhDlfijdDv4Gmjkx4k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZH0839D1CFQqk2LHe1n0u/A2yUnGqlOlM7xyz9P2d9Y96cn3p3cEQXyCc5/m7EgSg
-         Jx2jOv53qk3Yglb9Hd2QvXwHtaCFETEswZxHVQwWqFVcD8xwS00kx++IoYAzmdVaIJ
-         K7qwxX68XkHYXg5SCwaEl0DHVYbKmMYflZTSU548=
+        b=GrANEctbxL1F8r8e7XcHQzv+x+7wyEy6sAUzRDitduZ+wclvmpKs6n4DJ/rOEbR+W
+         cilG/pczqaidrR9bzzmWoaoGnj80Ne9m5LRHntU7FsgtCadNst62VNhGgcA5Hbvn4X
+         36FQdI7nRCztoBgr9y3Lc9DRIrlPCycA/y1jJ2Lc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Aditya Paluri <Venkata.AdityaPaluri@synopsys.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 051/191] PCI/PTM: Inherit Switch Downstream Port PTM settings from Upstream Port
-Date:   Mon, 29 Jun 2020 11:37:47 -0400
-Message-Id: <20200629154007.2495120-52-sashal@kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab@s-opensource.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.9 106/191] media: dvb_frontend: get rid of set_property() callback
+Date:   Mon, 29 Jun 2020 11:38:42 -0400
+Message-Id: <20200629154007.2495120-107-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -65,75 +65,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
 
-[ Upstream commit 7b38fd9760f51cc83d80eed2cfbde8b5ead9e93a ]
+commit 6680e73b5226114992acfc11f9cf5730f706fb01 upstream
 
-Except for Endpoints, we enable PTM at enumeration-time.  Previously we did
-not account for the fact that Switch Downstream Ports are not permitted to
-have a PTM capability; their PTM behavior is controlled by the Upstream
-Port (PCIe r5.0, sec 7.9.16).  Since Downstream Ports don't have a PTM
-capability, we did not mark them as "ptm_enabled", which meant that
-pci_enable_ptm() on an Endpoint failed because there was no PTM path to it.
+Now that all clients of set_property() were removed, get rid
+of this callback.
 
-Mark Downstream Ports as "ptm_enabled" if their Upstream Port has PTM
-enabled.
-
-Fixes: eec097d43100 ("PCI: Add pci_enable_ptm() for drivers to enable PTM on endpoints")
-Reported-by: Aditya Paluri <Venkata.AdityaPaluri@synopsys.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/pci/pcie/ptm.c | 22 +++++++++++++++++-----
- 1 file changed, 17 insertions(+), 5 deletions(-)
+ drivers/media/dvb-core/dvb_frontend.c | 7 -------
+ drivers/media/dvb-core/dvb_frontend.h | 5 -----
+ 2 files changed, 12 deletions(-)
 
-diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
-index 3008bba360f35..ec6f6213960b4 100644
---- a/drivers/pci/pcie/ptm.c
-+++ b/drivers/pci/pcie/ptm.c
-@@ -47,10 +47,6 @@ void pci_ptm_init(struct pci_dev *dev)
- 	if (!pci_is_pcie(dev))
- 		return;
+diff --git a/drivers/media/dvb-core/dvb_frontend.c b/drivers/media/dvb-core/dvb_frontend.c
+index 97c825f97b15e..2bf55a786e297 100644
+--- a/drivers/media/dvb-core/dvb_frontend.c
++++ b/drivers/media/dvb-core/dvb_frontend.c
+@@ -1751,13 +1751,6 @@ static int dtv_property_process_set(struct dvb_frontend *fe,
+ 	int r = 0;
+ 	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
  
--	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
--	if (!pos)
--		return;
+-	/* Allow the frontend to validate incoming properties */
+-	if (fe->ops.set_property) {
+-		r = fe->ops.set_property(fe, tvp);
+-		if (r < 0)
+-			return r;
+-	}
 -
- 	/*
- 	 * Enable PTM only on interior devices (root ports, switch ports,
- 	 * etc.) on the assumption that it causes no link traffic until an
-@@ -60,6 +56,23 @@ void pci_ptm_init(struct pci_dev *dev)
- 	     pci_pcie_type(dev) == PCI_EXP_TYPE_RC_END))
- 		return;
+ 	dtv_property_dump(fe, true, tvp);
  
-+	/*
-+	 * Switch Downstream Ports are not permitted to have a PTM
-+	 * capability; their PTM behavior is controlled by the Upstream
-+	 * Port (PCIe r5.0, sec 7.9.16).
-+	 */
-+	ups = pci_upstream_bridge(dev);
-+	if (pci_pcie_type(dev) == PCI_EXP_TYPE_DOWNSTREAM &&
-+	    ups && ups->ptm_enabled) {
-+		dev->ptm_granularity = ups->ptm_granularity;
-+		dev->ptm_enabled = 1;
-+		return;
-+	}
-+
-+	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_PTM);
-+	if (!pos)
-+		return;
-+
- 	pci_read_config_dword(dev, pos + PCI_PTM_CAP, &cap);
- 	local_clock = (cap & PCI_PTM_GRANULARITY_MASK) >> 8;
+ 	switch(tvp->cmd) {
+diff --git a/drivers/media/dvb-core/dvb_frontend.h b/drivers/media/dvb-core/dvb_frontend.h
+index 57cedbe5c2c79..f852f0a49f422 100644
+--- a/drivers/media/dvb-core/dvb_frontend.h
++++ b/drivers/media/dvb-core/dvb_frontend.h
+@@ -397,11 +397,8 @@ struct dtv_frontend_properties;
+  * @search:		callback function used on some custom algo search algos.
+  * @tuner_ops:		pointer to struct dvb_tuner_ops
+  * @analog_ops:		pointer to struct analog_demod_ops
+- * @set_property:	callback function to allow the frontend to validade
+- *			incoming properties. Should not be used on new drivers.
+  */
+ struct dvb_frontend_ops {
+-
+ 	struct dvb_frontend_info info;
  
-@@ -69,7 +82,6 @@ void pci_ptm_init(struct pci_dev *dev)
- 	 * the spec recommendation (PCIe r3.1, sec 7.32.3), select the
- 	 * furthest upstream Time Source as the PTM Root.
- 	 */
--	ups = pci_upstream_bridge(dev);
- 	if (ups && ups->ptm_enabled) {
- 		ctrl = PCI_PTM_CTRL_ENABLE;
- 		if (ups->ptm_granularity == 0)
+ 	u8 delsys[MAX_DELSYS];
+@@ -459,8 +456,6 @@ struct dvb_frontend_ops {
+ 
+ 	struct dvb_tuner_ops tuner_ops;
+ 	struct analog_demod_ops analog_ops;
+-
+-	int (*set_property)(struct dvb_frontend* fe, struct dtv_property* tvp);
+ };
+ 
+ #ifdef __DVB_CORE__
 -- 
 2.25.1
 
