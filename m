@@ -2,132 +2,126 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9FD1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E2AEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 871BD204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:56:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593456971;
-	bh=4d8E+xxY6HjJP5yT1ceEnqlab49ZVk3WLYdMr1sR3qI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zNMSg5q0AfQyGgEPN3w4G+kjlHcRcGRPwQrNNwU8QUoV55Z6TPLW0KkNMkcVQ5ZW3
-	 rCPwYN0Dj//CyICjDy2T9iEOLuhWM1yrgm3ZojmZB6BmaVllEjICwKAJF9b17CmBkR
-	 ON4NEqQ8y//7jnxhHmmQZvtXBmtU3CNgfSPbSuM0=
+	by mail.kernel.org (Postfix) with ESMTP id 21CA72067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:56:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="FTd4dSa/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730028AbgF2S4J (ORCPT
+        id S1726906AbgF2S4O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:56:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42448 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 14:56:14 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:54415 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729972AbgF2SzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:55:17 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        id S1730023AbgF2S4G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:56:06 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593456966; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=vO5cQ9r6C1BPb1i55IQPk0kf5dp76XCzv2CyuUd7XPI=; b=FTd4dSa/iq72XesUI/nUFaLewTYz0ETh8INf67Syf0sCLyAsCcF6jbJ7eWddslhNSr6T0bo7
+ Upq9qdTwIaV7pGedNFnX56iWiTJ+4aedLjcqv43QIgK83R7mKRE2MmvGFr5t1lNvJ3YEWywM
+ OgVc2TR/5xu6ztEWTCH57kmkzi4=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
+ 5ef9d0db3a8a8b20b8dd2087 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 29 Jun 2020 11:30:35
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CEB54C4339C; Mon, 29 Jun 2020 11:30:35 +0000 (UTC)
+Received: from [10.50.61.98] (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87BEB25564;
-        Mon, 29 Jun 2020 15:55:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446127;
-        bh=4d8E+xxY6HjJP5yT1ceEnqlab49ZVk3WLYdMr1sR3qI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zEBWlRO/YV5IrZmllkovqNrcQMLRqPzwHO4OQo4Yu4sT6yWpxK7t68NNbZaqYavJi
-         QKw+2SiNrTYx4kkhnIhnbrsAKIX7mpblW/r0nA9QGhIWwOjUI+VgP/wV7OtMS+zxvJ
-         L/MIl4S/GbBNTgWk3WsrzLW5ibljMAiLk0WFTTtU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 118/135] kbuild: improve cc-option to clean up all temporary files
-Date:   Mon, 29 Jun 2020 11:52:52 -0400
-Message-Id: <20200629155309.2495516-119-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
-References: <20200629155309.2495516-1-sashal@kernel.org>
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id AC8BDC433C6;
+        Mon, 29 Jun 2020 11:30:30 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AC8BDC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH v6 6/6] spi: spi-qcom-qspi: Use OPP API to set clk/perf
+ state
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Mark Brown <broonie@kernel.org>, bjorn.andersson@linaro.org,
+        agross@kernel.org, robdclark@gmail.com, robdclark@chromium.org,
+        stanimir.varbanov@linaro.org, viresh.kumar@linaro.org,
+        sboyd@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Alok Chauhan <alokc@codeaurora.org>,
+        Akash Asthana <akashast@codeaurora.org>,
+        linux-spi@vger.kernel.org
+References: <1592222564-13556-1-git-send-email-rnayak@codeaurora.org>
+ <1592222564-13556-7-git-send-email-rnayak@codeaurora.org>
+ <20200624170933.GB39073@google.com> <20200624171537.GL5472@sirena.org.uk>
+ <20200624173948.GC39073@google.com> <20200624174417.GM5472@sirena.org.uk>
+ <20200624175536.GD39073@google.com> <20200624180005.GO5472@sirena.org.uk>
+ <20200624181245.GE39073@google.com> <20200625152527.GG39073@google.com>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <d35e45f3-faf6-6879-e9e3-19e395bdd77c@codeaurora.org>
+Date:   Mon, 29 Jun 2020 17:00:28 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.229-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.4.229-rc1
-X-KernelTest-Deadline: 2020-07-01T15:53+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200625152527.GG39073@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit f2f02ebd8f3833626642688b2d2c6a7b3c141fa9 ]
+On 6/25/2020 8:55 PM, Matthias Kaehlcke wrote:
+> On Wed, Jun 24, 2020 at 11:12:45AM -0700, Matthias Kaehlcke wrote:
+>> On Wed, Jun 24, 2020 at 07:00:05PM +0100, Mark Brown wrote:
+>>> On Wed, Jun 24, 2020 at 10:55:36AM -0700, Matthias Kaehlcke wrote:
+>>>> On Wed, Jun 24, 2020 at 06:44:17PM +0100, Mark Brown wrote:
+>>>
+>>>>> Wait, so *some* of the series should go together but not other bits?
+>>>>> But you want them split up for some reason?
+>>>
+>>>> Yes, this will almost certainly be the case, even if not for this patch.
+>>>> I brought this up earlier (https://patchwork.kernel.org/cover/11604623/#23428709).
+>>>
+>>> I'm not really reading any of this stuff for the series as a whole, as
+>>> far as I could tell I'd reviewed all my bits and was hoping whatever
+>>> random platform stuff needs sorting out was going to be sorted out so I
+>>> stopped getting copied on revisions :(
+>>
+>> Sorry this caused you extra work, I only fully realized this when the series
+>> was basically ready to land :(
+>>
+>> Avoiding unnecessary revision spam is another good reason to not combine
+>> technically unrelated patches in a single series.
+>>
+>> If I notice similar series in the future I'll try to bring it up early.
+>>
+>>>> For the QSPI patch you could argue to just take it through QCOM since the SPI
+>>>> patch of this series goes through this tree, up to you, I just want to make
+>>>> sure everybody is on the same page.
+>>>
+>>> If there are some part of this that don't have a connection with the
+>>> rest of the series and should be applied separately please split them
+>>> out and send them separately so it's clear what's going on.
+>>
+>> Rajendra, IIUC you have to re-spin this series anyway, please split it
+>> up in self-contained chunks.
+> 
+> One more thing: when you do the split it seems it would make sense to
+> include the DT changes that were initially part of this series
+> (https://patchwork.kernel.org/project/linux-arm-msm/list/?series=278691&state=*)
 
-When cc-option and friends evaluate compiler flags, the temporary file
-$$TMP is created as an output object, and automatically cleaned up.
-The actual file path of $$TMP is .<pid>.tmp, here <pid> is the process
-ID of $(shell ...) invoked from cc-option. (Please note $$$$ is the
-escape sequence of $$).
+Sure, I'll send the ones out for which driver changes are already merged/pulled in,
+like sdhc, geni-uart and geni-spi.
+For the rest, I will include them with the driver changes.
 
-Such garbage files are cleaned up in most cases, but some compiler flags
-create additional output files.
-
-For example, -gsplit-dwarf creates a .dwo file.
-
-When CONFIG_DEBUG_INFO_SPLIT=y, you will see a bunch of .<pid>.dwo files
-left in the top of build directories. You may not notice them unless you
-do 'ls -a', but the garbage files will increase every time you run 'make'.
-
-This commit changes the temporary object path to .tmp_<pid>/tmp, and
-removes .tmp_<pid> directory when exiting. Separate build artifacts such
-as *.dwo will be cleaned up all together because their file paths are
-usually determined based on the base name of the object.
-
-Another example is -ftest-coverage, which outputs the coverage data into
-<base-name-of-object>.gcno
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- scripts/Kbuild.include | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
-
-diff --git a/scripts/Kbuild.include b/scripts/Kbuild.include
-index e61a5c29b08c5..b6f055157b89a 100644
---- a/scripts/Kbuild.include
-+++ b/scripts/Kbuild.include
-@@ -81,20 +81,21 @@ cc-cross-prefix =  \
- 		fi)))
- 
- # output directory for tests below
--TMPOUT := $(if $(KBUILD_EXTMOD),$(firstword $(KBUILD_EXTMOD))/)
-+TMPOUT = $(if $(KBUILD_EXTMOD),$(firstword $(KBUILD_EXTMOD))/).tmp_$$$$
- 
- # try-run
- # Usage: option = $(call try-run, $(CC)...-o "$$TMP",option-ok,otherwise)
- # Exit code chooses option. "$$TMP" is can be used as temporary file and
- # is automatically cleaned up.
- try-run = $(shell set -e;		\
--	TMP="$(TMPOUT).$$$$.tmp";	\
--	TMPO="$(TMPOUT).$$$$.o";	\
-+	TMP=$(TMPOUT)/tmp;		\
-+	TMPO=$(TMPOUT)/tmp.o;		\
-+	mkdir -p $(TMPOUT);		\
-+	trap "rm -rf $(TMPOUT)" EXIT;	\
- 	if ($(1)) >/dev/null 2>&1;	\
- 	then echo "$(2)";		\
- 	else echo "$(3)";		\
--	fi;				\
--	rm -f "$$TMP" "$$TMPO")
-+	fi)
- 
- # as-option
- # Usage: cflags-y += $(call as-option,-Wa$(comma)-isa=foo,)
 -- 
-2.25.1
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
