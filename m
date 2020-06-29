@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C07C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:33:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59CA9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 05703206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:33:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ABBD206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:34:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462837;
-	bh=nP8oIgmJpbzfY6b3GAwgSxttlTlWjyHWpqt+kc6asSk=;
+	s=default; t=1593462843;
+	bh=MtdVQO9YvinReJrh/3g8nOZ5g+saU97ovcI+Uv+a8oM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=V8BwcWcNytfPoRqlBd04pF3CwQfjTazBrGRhpC5PvOQ/6igCXn+oni6eEsnrjKdDB
-	 8zspN2NWMattDufyNMbRkfFw00skxApVb6QJ/+oLorhfKFc/i3hhO7zrRU1itma8Z0
-	 HGU+cKveuxJC1NyCJbexjnbLuMWR7Fp7iHCf+9bg=
+	b=x7WiomrYGix0oXBmnSzec9Mf2tvri2hV/V3qfpZo4sdmIH+nfjM4Og+estQBzdCpb
+	 VaRD+ghXAgEHbuBUiKSL88bA5L0yFf7RG+xUiVlSsh1K0v7U2Z6kQnwmwjd3Pweop6
+	 mkfiY6xVNI9BTJH3yEGZaPuj7+HRiMsvlbMGRqJM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730794AbgF2Udz (ORCPT
+        id S2389365AbgF2Ud7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:33:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37028 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:33:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732324AbgF2TZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732291AbgF2TZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9005325412;
-        Mon, 29 Jun 2020 15:42:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93A3A2542A;
+        Mon, 29 Jun 2020 15:42:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445361;
-        bh=nP8oIgmJpbzfY6b3GAwgSxttlTlWjyHWpqt+kc6asSk=;
+        s=default; t=1593445377;
+        bh=MtdVQO9YvinReJrh/3g8nOZ5g+saU97ovcI+Uv+a8oM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=046m34ygQnu7kbIAQPZP6WiLGdSLtAFBZe/Qyfg5KQt0poBnXwk5cxvSRokT+KwOR
-         nZ9splUDImmECVymS6I6tA1vCbGnbg7F5qLjyim0K2av4P3W2obLwo80P6pCB+DCMj
-         MqzndbpWF9K0SZsS9rhSEMBx9izK+3xx03n9nX30=
+        b=kvs87PVuek3Z7Cbs/l+kIyggNQXsdgZs3L7zvRQbv6tfXkOUCQEqjVucJwWsga8BF
+         RWU2wzpWf9Oekf8n/TMJRmXBcKIgRsDv1hEVhvnKmmhf55pgF9c7YAZKINIbMJTY1P
+         NaDBnf/t7yHaqpEyY7a4U14EE956JOvI4HZOQKAI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mauro Carvalho Chehab <mchehab@s-opensource.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+Cc:     Wang Hai <wanghai38@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Hangbin Liu <liuhangbin@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.9 118/191] media: dvb_frontend: fix return error code
-Date:   Mon, 29 Jun 2020 11:38:54 -0400
-Message-Id: <20200629154007.2495120-119-sashal@kernel.org>
+Subject: [PATCH 4.9 132/191] mld: fix memory leak in ipv6_mc_destroy_dev()
+Date:   Mon, 29 Jun 2020 11:39:08 -0400
+Message-Id: <20200629154007.2495120-133-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -65,40 +66,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+From: Wang Hai <wanghai38@huawei.com>
 
-commit 330dada5957e3ca0c8811b14c45e3ac42c694651 upstream
+[ Upstream commit ea2fce88d2fd678ed9d45354ff49b73f1d5615dd ]
 
-The correct error code when a function is not defined is
--ENOTSUPP. It was typoed wrong as -EOPNOTSUPP, with,
-unfortunately, exists, but it is not used by the DVB core.
+Commit a84d01647989 ("mld: fix memory leak in mld_del_delrec()") fixed
+the memory leak of MLD, but missing the ipv6_mc_destroy_dev() path, in
+which mca_sources are leaked after ma_put().
 
-Thanks-to: Geert Uytterhoeven <geert@linux-m68k.org>
-Thanks-to: Arnd Bergmann <arnd@arndb.de>
+Using ip6_mc_clear_src() to take care of the missing free.
 
-To make me revisit this code.
+BUG: memory leak
+unreferenced object 0xffff8881113d3180 (size 64):
+  comm "syz-executor071", pid 389, jiffies 4294887985 (age 17.943s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 ff 02 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<000000002cbc483c>] kmalloc include/linux/slab.h:555 [inline]
+    [<000000002cbc483c>] kzalloc include/linux/slab.h:669 [inline]
+    [<000000002cbc483c>] ip6_mc_add1_src net/ipv6/mcast.c:2237 [inline]
+    [<000000002cbc483c>] ip6_mc_add_src+0x7f5/0xbb0 net/ipv6/mcast.c:2357
+    [<0000000058b8b1ff>] ip6_mc_source+0xe0c/0x1530 net/ipv6/mcast.c:449
+    [<000000000bfc4fb5>] do_ipv6_setsockopt.isra.12+0x1b2c/0x3b30 net/ipv6/ipv6_sockglue.c:754
+    [<00000000e4e7a722>] ipv6_setsockopt+0xda/0x150 net/ipv6/ipv6_sockglue.c:950
+    [<0000000029260d9a>] rawv6_setsockopt+0x45/0x100 net/ipv6/raw.c:1081
+    [<000000005c1b46f9>] __sys_setsockopt+0x131/0x210 net/socket.c:2132
+    [<000000008491f7db>] __do_sys_setsockopt net/socket.c:2148 [inline]
+    [<000000008491f7db>] __se_sys_setsockopt net/socket.c:2145 [inline]
+    [<000000008491f7db>] __x64_sys_setsockopt+0xba/0x150 net/socket.c:2145
+    [<00000000c7bc11c5>] do_syscall_64+0xa1/0x530 arch/x86/entry/common.c:295
+    [<000000005fb7a3f3>] entry_SYSCALL_64_after_hwframe+0x49/0xb3
 
-Fixes: a9cb97c3e628 ("media: dvb_frontend: be sure to init dvb_frontend_handle_ioctl() return code")
-Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Fixes: 1666d49e1d41 ("mld: do not remove mld souce list info when set link down")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Acked-by: Hangbin Liu <liuhangbin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/media/dvb-core/dvb_frontend.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv6/mcast.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/media/dvb-core/dvb_frontend.c b/drivers/media/dvb-core/dvb_frontend.c
-index 740dedf033616..cd45b38946616 100644
---- a/drivers/media/dvb-core/dvb_frontend.c
-+++ b/drivers/media/dvb-core/dvb_frontend.c
-@@ -2265,7 +2265,7 @@ static int dvb_frontend_handle_ioctl(struct file *file,
- 	struct dvb_frontend *fe = dvbdev->priv;
- 	struct dvb_frontend_private *fepriv = fe->frontend_priv;
- 	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
--	int i, err = -EOPNOTSUPP;
-+	int i, err = -ENOTSUPP;
+diff --git a/net/ipv6/mcast.c b/net/ipv6/mcast.c
+index e065d48b31b9f..f904b9b240275 100644
+--- a/net/ipv6/mcast.c
++++ b/net/ipv6/mcast.c
+@@ -2601,6 +2601,7 @@ void ipv6_mc_destroy_dev(struct inet6_dev *idev)
+ 		idev->mc_list = i->next;
  
- 	dev_dbg(fe->dvb->device, "%s:\n", __func__);
- 
+ 		write_unlock_bh(&idev->lock);
++		ip6_mc_clear_src(i);
+ 		ma_put(i);
+ 		write_lock_bh(&idev->lock);
+ 	}
 -- 
 2.25.1
 
