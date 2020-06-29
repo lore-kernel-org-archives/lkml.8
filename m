@@ -2,258 +2,399 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49ED3C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55C8CC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:46:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 181B42063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:45:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="fBQu6ZAp"
+	by mail.kernel.org (Postfix) with ESMTP id 411D4204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:46:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729173AbgF2Spr (ORCPT
+        id S1728476AbgF2SqE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:45:47 -0400
-Received: from sonic310-30.consmr.mail.ne1.yahoo.com ([66.163.186.211]:39791
-        "EHLO sonic310-30.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729241AbgF2Sov (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:44:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1593456289; bh=OuJSaS9Xnbydlb+uxydM0d2cO5uCSpCFE6dx2suBF2U=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=fBQu6ZApY3JfZ1F6IivUk34/l6LGsyWrpummPq+TNmGWK2NP+DphZpBw8vT99FFFvjnUieLAAv90huOxr9QE7uZq8rLgWaIKd3doNrdRtsdY0qom4fQLFVbr5UQlxxOGa3wBg4c6sReGdHDezrL1cPBi7LLcx1TBEs3RiQwAw+1JJZ5TLk/barkVZnrdx7BFBm7N+PYDHsGF4SqQGequlUxNQvBwZoPtmoWvxxUuxP6BOHf73jBOMO3zL2gopbJLL5FzIyaUiNkRfqelKvH0vmVCvRq7bsmrTdl773WPmt55zt2+/Z7SPejAnppxQjxpiz7tkkned3KwEhoJyxCSBg==
-X-YMail-OSG: 9ebNZ.UVM1n_um2PoRjGpiLzcpb1SWXBQaecD2JTFGrB6XDI61MyaOqnb8xJ_0D
- We7FFipbj.pKwojpUHk7tHX65vW3C4a6UK9MP3hhmL73a1.a2w25hBL1YCt5cHcsjqjufEWBo2IE
- oNC_N5ilQkI1XZcStEbdRhqfYbI3ZoqihweuR846B4q5gZOJABKoNw7FP1410z2tlod8SEb9NKcV
- ZdJaK7Fw2gXLkrbaiBjV_NLn9e.xEA7c4.URnXMItW3lg4qr.yvYDALd.6J5Mk.pvxQvUBhhT_Do
- F5RTUNa_unEC4Fk9fSL4JNFBEVVZGcN_4sl4h2nZ_i5DojkouJjRRoAtj9UoH4r0TAVeLGT_09T5
- RAFncVfEvddz81Di6LcYQ4VqpkyCs___UIZR0A5ZLKlsW81.MWcGboc.f2HRs12uJ2DDRsbBdhnN
- mAPwZpNkhJNEsruMUkSEFV41Ufj3qyhrWtFkXVw2cfHPQWNaytWlXQXt11EQX455D39KRTDMAcU_
- IYy9HklLh7xGChyiP.nxivPey_4kmTOUSTVeMFFBXjG5aMZnvZN4JPnPOZWvGTxU6Oh9Jrp8i03H
- 5ML91XoEtarfR0w4w10o0ovZtAhQHbBhjkSFs9if4B2w3JkVZXGrIcFCaKhIA.Yf1sU.CHiUAKjs
- X7QGKHlIQmqVW6Wrf6AMxyOx.6aNFygy1c1I54w.gbKmGhMFQ.J4QVTlmlmiZnRGUUD09iXx7_7e
- iurg4AJmz5yT2_z5TETJCoYGVWfrC6XeROXwK0cipkY7.Dhe6zr219yCpRCqA.ys9nO28oNIUcFh
- aG5Y4BcO926sLNm9tVCTE.zFZuMLhJJPERXe_239rLjL5cE2eFBFFfLun2jyfSB1VGQNPIIWcs3c
- B5KTheQyYhep0.yb7RNLHeG3q4U5HaE8KGS.Sjc6eFmpsAHAxir1GIMtw.fDTLTJgImDcyvLRq_v
- BUmahotgMdKddL1nDn3IRqjPKuTrYjc216GChMYq1PXrlZn2.gMLzYEfHxHHWlDT3cotiDBbHGZ_
- npRbZYnPcZx53xeuaYhu7puFWiXBUMnvBjekpsFIRLkBEP0Hbpi61XeejN9dRxmcA4d892yubxRD
- 5vUUKWWZDvvSWihdzoLLPU5NDCKD4aCIZaT4Y6cfGKl8o735xx7vckwMaLdrI.n5DLLzzvFg5URM
- rwCvibhe5Q7jHm3AjvRruI5hTGL3MRPChlOaNCGYE.0k9ytpAgp15MNYU.gV5b5wT7KsWvnQ178i
- UeCPztRWz6J7QC.XYpcY7wJ4DUa3xa5TGfekMniFmNlAmCUxAJYcehV0P45CQqW64ksuAMi3sKsv
- Y5d5DxDhYgmcmSiy7w5kVQ_YZMQlx0Yf1hoZuy58ybmgM2OqBaVLNbwDKx5uRPri0P7A4KYkT4zY
- g7pBK3muJtEffIfEturuhkpaC2OcY5ZBY8yrcDao1fYPTpPj3t9c-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic310.consmr.mail.ne1.yahoo.com with HTTP; Mon, 29 Jun 2020 18:44:49 +0000
-Received: by smtp420.mail.gq1.yahoo.com (VZM Hermes SMTP Server) with ESMTPA ID fe3990c2c42a706576896e64c3c5270d;
-          Mon, 29 Jun 2020 16:24:38 +0000 (UTC)
-Subject: Re: [PATCH] ima: Rename internal audit rule functions
-To:     Tyler Hicks <tyhicks@linux.microsoft.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
-Cc:     James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Casey Schaufler <casey@schaufler-ca.com>
-References: <20200629153037.337349-1-tyhicks@linux.microsoft.com>
-From:   Casey Schaufler <casey@schaufler-ca.com>
-Autocrypt: addr=casey@schaufler-ca.com; keydata=
- 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
- abzjfg==
-Message-ID: <71e9960a-cc98-a480-d65b-ac40f4de9a9c@schaufler-ca.com>
-Date:   Mon, 29 Jun 2020 09:24:38 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 29 Jun 2020 14:46:04 -0400
+Received: from mga02.intel.com ([134.134.136.20]:40916 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728088AbgF2Sn6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:43:58 -0400
+IronPort-SDR: vbJ+wb12l2XX+Uk8XxHQwhDRmdRW3cC81sEATNtnI0WauT3+X980ap4F/7sp5YmcYEVVqPwN6p
+ zB7FD8f2ubLw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="134238586"
+X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
+   d="scan'208";a="134238586"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 00:22:12 -0700
+IronPort-SDR: IK2B93vrGxkOX3auaaON3OXDiOil8mKogsFsuQ/9caFcYPW5aDAI8cfqTDzf6d5lchEqEI53Ly
+ joke4krAoRFw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
+   d="scan'208";a="386316237"
+Received: from kuha.fi.intel.com ([10.237.72.162])
+  by fmsmga001.fm.intel.com with SMTP; 29 Jun 2020 00:22:03 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 29 Jun 2020 10:22:02 +0300
+Date:   Mon, 29 Jun 2020 10:22:02 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Wesley Cheng <wcheng@codeaurora.org>
+Cc:     agross@kernel.org, mark.rutland@arm.com,
+        bjorn.andersson@linaro.org, gregkh@linuxfoundation.org,
+        broonie@kernel.org, lgirdwood@gmail.com, robh+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-usb@vger.kernel.org,
+        jackp@codeaurora.org, rdunlap@infradead.org
+Subject: Re: [PATCH v4 1/6] usb: typec: Add QCOM PMIC typec detection driver
+Message-ID: <20200629072202.GA856968@kuha.fi.intel.com>
+References: <20200626185516.18018-1-wcheng@codeaurora.org>
+ <20200626185516.18018-2-wcheng@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20200629153037.337349-1-tyhicks@linux.microsoft.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Mailer: WebService/1.1.16138 hermes_yahoo Apache-HttpAsyncClient/4.1.4 (Java/11.0.7)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200626185516.18018-2-wcheng@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/29/2020 8:30 AM, Tyler Hicks wrote:
-> Rename IMA's internal audit rule functions from security_filter_rule_*()
-> to ima_audit_rule_*(). This avoids polluting the security_* namespace,
-> which is typically reserved for general security subsystem
-> infrastructure, and better aligns the IMA function names with the names
-> of the LSM hooks.
->
-> Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
-> Suggested-by: Casey Schaufler <casey@schaufler-ca.com>
+On Fri, Jun 26, 2020 at 11:55:11AM -0700, Wesley Cheng wrote:
+> The QCOM SPMI typec driver handles the role and orientation detection, and
+> notifies client drivers using the USB role switch framework.   It registers
+> as a typec port, so orientation can be communicated using the typec switch
+> APIs.  The driver also attains a handle to the VBUS output regulator, so it
+> can enable/disable the VBUS source when acting as a host/device.
+> 
+> Signed-off-by: Wesley Cheng <wcheng@codeaurora.org>
 
-Reviewed-by: Casey Schaufler <casey@schaufler-ca.com>
+Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
 > ---
->
-> Developed on top of next-integrity-testing, commit cd1d8603df60 ("IMA:
-> Add audit log for failure conditions"), plus this patch series:
->
->  [PATCH v2 00/11] ima: Fix rule parsing bugs and extend KEXEC_CMDLINE rule support
->  https://lore.kernel.org/linux-integrity/20200626223900.253615-1-tyhicks@linux.microsoft.com/T/#t
->
-> This patch has dependencies on the above patch series.
->
-> Tested with and without CONFIG_IMA_LSM_RULES enabled by attempting to
-> load IMA policy with rules containing the subj_role=foo conditional.
-> Build logs are clean in both configurations. The IMA policy was first
-> loaded without and then with a valid AppArmor profile named "foo". The
-> behavior is the same before and after this patch is applied:
->
->                   | CONFIG_IMA_LSM_RULES=n   | CONFIG_IMA_LSM_RULES=y
-> -----------------------------------------------------------------------
->  Without Profile  |  IMA policy load fails   | IMA policy load fails
->  With Profile     |  IMA policy load fails   | IMA policy load succeeds
->
->  security/integrity/ima/ima.h        | 16 +++++++--------
->  security/integrity/ima/ima_policy.c | 30 +++++++++++++----------------
->  2 files changed, 21 insertions(+), 25 deletions(-)
->
-> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-> index ff2bf57ff0c7..5d62ee8319f4 100644
-> --- a/security/integrity/ima/ima.h
-> +++ b/security/integrity/ima/ima.h
-> @@ -419,24 +419,24 @@ static inline void ima_free_modsig(struct modsig *modsig)
->  /* LSM based policy rules require audit */
->  #ifdef CONFIG_IMA_LSM_RULES
+>  drivers/usb/typec/Kconfig           |  12 ++
+>  drivers/usb/typec/Makefile          |   1 +
+>  drivers/usb/typec/qcom-pmic-typec.c | 275 ++++++++++++++++++++++++++++
+>  3 files changed, 288 insertions(+)
+>  create mode 100644 drivers/usb/typec/qcom-pmic-typec.c
+> 
+> diff --git a/drivers/usb/typec/Kconfig b/drivers/usb/typec/Kconfig
+> index b4f2aac7ae8a..595c14766e99 100644
+> --- a/drivers/usb/typec/Kconfig
+> +++ b/drivers/usb/typec/Kconfig
+> @@ -72,6 +72,18 @@ config TYPEC_TPS6598X
+>  	  If you choose to build this driver as a dynamically linked module, the
+>  	  module will be called tps6598x.ko.
 >  
-> -#define security_filter_rule_init security_audit_rule_init
-> -#define security_filter_rule_free security_audit_rule_free
-> -#define security_filter_rule_match security_audit_rule_match
-> +#define ima_audit_rule_init security_audit_rule_init
-> +#define ima_audit_rule_free security_audit_rule_free
-> +#define ima_audit_rule_match security_audit_rule_match
+> +config TYPEC_QCOM_PMIC
+> +	tristate "Qualcomm PMIC USB Type-C driver"
+> +	depends on ARCH_QCOM
+> +	help
+> +	  Driver for supporting role switch over the Qualcomm PMIC.  This will
+> +	  handle the USB Type-C role and orientation detection reported by the
+> +	  QCOM PMIC if the PMIC has the capability to handle USB Type-C
+> +	  detection.
+> +
+> +	  It will also enable the VBUS output to connected devices when a
+> +	  DFP connection is made.
+> +
+>  source "drivers/usb/typec/mux/Kconfig"
 >  
->  #else
->  
-> -static inline int security_filter_rule_init(u32 field, u32 op, char *rulestr,
-> -					    void **lsmrule)
-> +static inline int ima_audit_rule_init(u32 field, u32 op, char *rulestr,
-> +				      void **lsmrule)
->  {
->  	return -EINVAL;
->  }
->  
-> -static inline void security_filter_rule_free(void *lsmrule)
-> +static inline void ima_audit_rule_free(void *lsmrule)
->  {
->  }
->  
-> -static inline int security_filter_rule_match(u32 secid, u32 field, u32 op,
-> -					     void *lsmrule)
-> +static inline int ima_audit_rule_match(u32 secid, u32 field, u32 op,
-> +				       void *lsmrule)
->  {
->  	return -EINVAL;
->  }
-> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-> index 294323b36d06..60894656a4b7 100644
-> --- a/security/integrity/ima/ima_policy.c
-> +++ b/security/integrity/ima/ima_policy.c
-> @@ -258,7 +258,7 @@ static void ima_lsm_free_rule(struct ima_rule_entry *entry)
->  	int i;
->  
->  	for (i = 0; i < MAX_LSM_RULES; i++) {
-> -		security_filter_rule_free(entry->lsm[i].rule);
-> +		ima_audit_rule_free(entry->lsm[i].rule);
->  		kfree(entry->lsm[i].args_p);
->  	}
->  }
-> @@ -308,10 +308,9 @@ static struct ima_rule_entry *ima_lsm_copy_rule(struct ima_rule_entry *entry)
->  		 */
->  		entry->lsm[i].args_p = NULL;
->  
-> -		security_filter_rule_init(nentry->lsm[i].type,
-> -					  Audit_equal,
-> -					  nentry->lsm[i].args_p,
-> -					  &nentry->lsm[i].rule);
-> +		ima_audit_rule_init(nentry->lsm[i].type, Audit_equal,
-> +				    nentry->lsm[i].args_p,
-> +				    &nentry->lsm[i].rule);
->  		if (!nentry->lsm[i].rule)
->  			pr_warn("rule for LSM \'%s\' is undefined\n",
->  				entry->lsm[i].args_p);
-> @@ -495,18 +494,16 @@ static bool ima_match_rules(struct ima_rule_entry *rule, struct inode *inode,
->  		case LSM_OBJ_ROLE:
->  		case LSM_OBJ_TYPE:
->  			security_inode_getsecid(inode, &osid);
-> -			rc = security_filter_rule_match(osid,
-> -							rule->lsm[i].type,
-> -							Audit_equal,
-> -							rule->lsm[i].rule);
-> +			rc = ima_audit_rule_match(osid, rule->lsm[i].type,
-> +						  Audit_equal,
-> +						  rule->lsm[i].rule);
->  			break;
->  		case LSM_SUBJ_USER:
->  		case LSM_SUBJ_ROLE:
->  		case LSM_SUBJ_TYPE:
-> -			rc = security_filter_rule_match(secid,
-> -							rule->lsm[i].type,
-> -							Audit_equal,
-> -							rule->lsm[i].rule);
-> +			rc = ima_audit_rule_match(secid, rule->lsm[i].type,
-> +						  Audit_equal,
-> +						  rule->lsm[i].rule);
->  		default:
->  			break;
->  		}
-> @@ -901,10 +898,9 @@ static int ima_lsm_rule_init(struct ima_rule_entry *entry,
->  		return -ENOMEM;
->  
->  	entry->lsm[lsm_rule].type = audit_type;
-> -	result = security_filter_rule_init(entry->lsm[lsm_rule].type,
-> -					   Audit_equal,
-> -					   entry->lsm[lsm_rule].args_p,
-> -					   &entry->lsm[lsm_rule].rule);
-> +	result = ima_audit_rule_init(entry->lsm[lsm_rule].type, Audit_equal,
-> +				     entry->lsm[lsm_rule].args_p,
-> +				     &entry->lsm[lsm_rule].rule);
->  	if (!entry->lsm[lsm_rule].rule) {
->  		pr_warn("rule for LSM \'%s\' is undefined\n",
->  			entry->lsm[lsm_rule].args_p);
+>  source "drivers/usb/typec/altmodes/Kconfig"
+> diff --git a/drivers/usb/typec/Makefile b/drivers/usb/typec/Makefile
+> index 7753a5c3cd46..cceffd987643 100644
+> --- a/drivers/usb/typec/Makefile
+> +++ b/drivers/usb/typec/Makefile
+> @@ -6,4 +6,5 @@ obj-$(CONFIG_TYPEC_TCPM)	+= tcpm/
+>  obj-$(CONFIG_TYPEC_UCSI)	+= ucsi/
+>  obj-$(CONFIG_TYPEC_HD3SS3220)	+= hd3ss3220.o
+>  obj-$(CONFIG_TYPEC_TPS6598X)	+= tps6598x.o
+> +obj-$(CONFIG_TYPEC_QCOM_PMIC)	+= qcom-pmic-typec.o
+>  obj-$(CONFIG_TYPEC)		+= mux/
+> diff --git a/drivers/usb/typec/qcom-pmic-typec.c b/drivers/usb/typec/qcom-pmic-typec.c
+> new file mode 100644
+> index 000000000000..5ae3af03c638
+> --- /dev/null
+> +++ b/drivers/usb/typec/qcom-pmic-typec.c
+> @@ -0,0 +1,275 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <linux/err.h>
+> +#include <linux/regmap.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/slab.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/of_device.h>
+> +#include <linux/usb/role.h>
+> +#include <linux/usb/typec_mux.h>
+> +#include <linux/regulator/consumer.h>
+> +
+> +#define TYPEC_MISC_STATUS		0xb
+> +#define CC_ATTACHED			BIT(0)
+> +#define CC_ORIENTATION			BIT(1)
+> +#define SNK_SRC_MODE			BIT(6)
+> +#define TYPEC_MODE_CFG			0x44
+> +#define TYPEC_DISABLE_CMD		BIT(0)
+> +#define EN_SNK_ONLY			BIT(1)
+> +#define EN_SRC_ONLY			BIT(2)
+> +#define TYPEC_VCONN_CONTROL		0x46
+> +#define VCONN_EN_SRC			BIT(0)
+> +#define VCONN_EN_VAL			BIT(1)
+> +#define TYPEC_EXIT_STATE_CFG		0x50
+> +#define SEL_SRC_UPPER_REF		BIT(2)
+> +#define TYPEC_INTR_EN_CFG_1		0x5e
+> +#define TYPEC_INTR_EN_CFG_1_MASK	GENMASK(7, 0)
+> +
+> +struct qcom_pmic_typec {
+> +	struct device		*dev;
+> +	struct fwnode_handle	*fwnode;
+> +	struct regmap		*regmap;
+> +	u32			base;
+> +
+> +	struct typec_capability *cap;
+> +	struct typec_port	*port;
+> +	struct usb_role_switch *role_sw;
+> +
+> +	struct regulator	*vbus_reg;
+> +	bool			vbus_enabled;
+> +};
+> +
+> +static void qcom_pmic_typec_enable_vbus_regulator(struct qcom_pmic_typec
+> +							*qcom_usb, bool enable)
+> +{
+> +	int ret = 0;
+> +
+> +	if (enable == qcom_usb->vbus_enabled)
+> +		return;
+> +
+> +	if (!qcom_usb->vbus_reg) {
+> +		qcom_usb->vbus_reg = devm_regulator_get(qcom_usb->dev,
+> +							"usb_vbus");
+> +		if (IS_ERR(qcom_usb->vbus_reg)) {
+> +			qcom_usb->vbus_reg = NULL;
+> +			return;
+> +		}
+> +	}
+> +
+> +	if (enable) {
+> +		ret = regulator_enable(qcom_usb->vbus_reg);
+> +		if (ret)
+> +			return;
+> +	} else {
+> +		ret = regulator_disable(qcom_usb->vbus_reg);
+> +		if (ret)
+> +			return;
+> +	}
+> +	qcom_usb->vbus_enabled = enable;
+> +}
+> +
+> +static void qcom_pmic_typec_check_connection(struct qcom_pmic_typec *qcom_usb)
+> +{
+> +	enum typec_orientation orientation;
+> +	enum usb_role role;
+> +	unsigned int stat;
+> +	bool enable_vbus;
+> +
+> +	regmap_read(qcom_usb->regmap, qcom_usb->base + TYPEC_MISC_STATUS,
+> +		    &stat);
+> +
+> +	if (stat & CC_ATTACHED) {
+> +		orientation = ((stat & CC_ORIENTATION) >> 1) ?
+> +				TYPEC_ORIENTATION_REVERSE :
+> +				TYPEC_ORIENTATION_NORMAL;
+> +		typec_set_orientation(qcom_usb->port, orientation);
+> +
+> +		role = (stat & SNK_SRC_MODE) ? USB_ROLE_HOST : USB_ROLE_DEVICE;
+> +		if (role == USB_ROLE_HOST)
+> +			enable_vbus = true;
+> +		else
+> +			enable_vbus = false;
+> +	} else {
+> +		role = USB_ROLE_NONE;
+> +		enable_vbus = false;
+> +	}
+> +
+> +	qcom_pmic_typec_enable_vbus_regulator(qcom_usb, enable_vbus);
+> +	usb_role_switch_set_role(qcom_usb->role_sw, role);
+> +}
+> +
+> +static irqreturn_t qcom_pmic_typec_interrupt(int irq, void *_qcom_usb)
+> +{
+> +	struct qcom_pmic_typec *qcom_usb = _qcom_usb;
+> +
+> +	qcom_pmic_typec_check_connection(qcom_usb);
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static void qcom_pmic_typec_typec_hw_init(struct qcom_pmic_typec *qcom_usb)
+> +{
+> +	u8 mode = 0;
+> +
+> +	regmap_update_bits(qcom_usb->regmap,
+> +			   qcom_usb->base + TYPEC_INTR_EN_CFG_1,
+> +			   TYPEC_INTR_EN_CFG_1_MASK, 0);
+> +
+> +	if (qcom_usb->cap->type != TYPEC_PORT_DRP)
+> +		mode = (qcom_usb->cap->type == TYPEC_PORT_SNK) ?
+> +					EN_SNK_ONLY : EN_SRC_ONLY;
+> +	regmap_update_bits(qcom_usb->regmap, qcom_usb->base + TYPEC_MODE_CFG,
+> +			   EN_SNK_ONLY | EN_SRC_ONLY, mode);
+> +
+> +	regmap_update_bits(qcom_usb->regmap,
+> +			   qcom_usb->base + TYPEC_VCONN_CONTROL,
+> +			   VCONN_EN_SRC | VCONN_EN_VAL, VCONN_EN_SRC);
+> +	regmap_update_bits(qcom_usb->regmap,
+> +			   qcom_usb->base + TYPEC_EXIT_STATE_CFG,
+> +			   SEL_SRC_UPPER_REF, SEL_SRC_UPPER_REF);
+> +}
+> +
+> +static int qcom_pmic_typec_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct qcom_pmic_typec *qcom_usb;
+> +	struct typec_capability *cap;
+> +	const char *buf;
+> +	int ret, irq, role;
+> +	u32 reg;
+> +
+> +	ret = of_property_read_u32(dev->of_node, "reg", &reg);
+> +	if (ret < 0) {
+> +		dev_err(dev, "missing base address");
+> +		return ret;
+> +	}
+> +
+> +	qcom_usb = devm_kzalloc(dev, sizeof(*qcom_usb), GFP_KERNEL);
+> +	if (!qcom_usb)
+> +		return -ENOMEM;
+> +
+> +	qcom_usb->dev = dev;
+> +	qcom_usb->base = reg;
+> +
+> +	qcom_usb->regmap = dev_get_regmap(dev->parent, NULL);
+> +	if (!qcom_usb->regmap) {
+> +		dev_err(dev, "Failed to get regmap\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (irq < 0) {
+> +		dev_err(dev, "Failed to get CC irq\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = devm_request_threaded_irq(qcom_usb->dev, irq, NULL,
+> +					qcom_pmic_typec_interrupt, IRQF_ONESHOT,
+> +					"qcom-pmic-typec", qcom_usb);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Could not request IRQ\n");
+> +		return ret;
+> +	}
+> +
+> +	qcom_usb->fwnode = device_get_named_child_node(dev, "connector");
+> +	if (!qcom_usb->fwnode)
+> +		return -EINVAL;
+> +
+> +	cap = devm_kzalloc(dev, sizeof(*cap), GFP_KERNEL);
+> +	if (!cap) {
+> +		ret = -ENOMEM;
+> +		goto err_put_node;
+> +	}
+> +
+> +	ret = fwnode_property_read_string(qcom_usb->fwnode, "power-role", &buf);
+> +	if (!ret) {
+> +		role = typec_find_port_power_role(buf);
+> +		if (role < 0)
+> +			role = TYPEC_PORT_SNK;
+> +	} else {
+> +		role = TYPEC_PORT_SNK;
+> +	}
+> +	cap->type = role;
+> +
+> +	ret = fwnode_property_read_string(qcom_usb->fwnode, "data-role", &buf);
+> +	if (!ret) {
+> +		role = typec_find_port_data_role(buf);
+> +		if (role < 0)
+> +			role = TYPEC_PORT_UFP;
+> +	} else {
+> +		role = TYPEC_PORT_UFP;
+> +	}
+> +	cap->data = role;
+> +
+> +	cap->prefer_role = TYPEC_NO_PREFERRED_ROLE;
+> +	cap->fwnode = qcom_usb->fwnode;
+> +	qcom_usb->port = typec_register_port(dev, cap);
+> +	if (IS_ERR(qcom_usb->port)) {
+> +		ret = PTR_ERR(qcom_usb->port);
+> +		dev_err(dev, "Failed to register type c port %d\n", ret);
+> +		goto err_put_node;
+> +	}
+> +
+> +	qcom_usb->cap = cap;
+> +
+> +	qcom_usb->role_sw = fwnode_usb_role_switch_get(qcom_usb->fwnode);
+> +	if (IS_ERR(qcom_usb->role_sw)) {
+> +		if (PTR_ERR(qcom_usb->role_sw) != -EPROBE_DEFER)
+> +			dev_err(dev, "failed to get role switch\n");
+> +		ret = PTR_ERR(qcom_usb->role_sw);
+> +		goto err_typec_port;
+> +	}
+> +
+> +	platform_set_drvdata(pdev, qcom_usb);
+> +	qcom_pmic_typec_typec_hw_init(qcom_usb);
+> +	qcom_pmic_typec_check_connection(qcom_usb);
+> +
+> +	return 0;
+> +
+> +err_typec_port:
+> +	typec_unregister_port(qcom_usb->port);
+> +err_put_node:
+> +	fwnode_handle_put(qcom_usb->fwnode);
+> +
+> +	return ret;
+> +}
+> +
+> +static int qcom_pmic_typec_remove(struct platform_device *pdev)
+> +{
+> +	struct qcom_pmic_typec *qcom_usb = platform_get_drvdata(pdev);
+> +
+> +	usb_role_switch_set_role(qcom_usb->role_sw, USB_ROLE_NONE);
+> +	qcom_pmic_typec_enable_vbus_regulator(qcom_usb, 0);
+> +
+> +	typec_unregister_port(qcom_usb->port);
+> +	usb_role_switch_put(qcom_usb->role_sw);
+> +	fwnode_handle_put(qcom_usb->fwnode);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id qcom_pmic_typec_table[] = {
+> +	{ .compatible = "qcom,pm8150b-usb-typec" },
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, qcom_pmic_typec_table);
+> +
+> +static struct platform_driver qcom_pmic_typec = {
+> +	.driver = {
+> +		.name = "qcom,pmic-typec",
+> +		.of_match_table = qcom_pmic_typec_table,
+> +	},
+> +	.probe = qcom_pmic_typec_probe,
+> +	.remove = qcom_pmic_typec_remove,
+> +};
+> +
+> +module_platform_driver(qcom_pmic_typec);
+> +
+> +MODULE_DESCRIPTION("QCOM PMIC USB type C driver");
+> +MODULE_LICENSE("GPL v2");
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+
+thanks,
+
+-- 
+heikki
