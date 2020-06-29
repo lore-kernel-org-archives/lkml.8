@@ -2,210 +2,102 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD1FCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F4BBC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B535220874
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:47:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TPiSvFkt"
+	by mail.kernel.org (Postfix) with ESMTP id 166832082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:47:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593460032;
+	bh=PFvL3VxOVOlF/3zx/5l47zDQBKLBGVYgekU9F93Jmqg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=tCl/pUJATqjfi8Np8nRj6mDsQT/0tqO+R2Ky2u+H4WsId4+vwlgeVJAkngj5uD/xX
+	 bR6RiaT8E5QXeKLHRgY9pMMn183lTXv63xysdU/+W9hrnJDspC3M6lw3VB9PHMD8fH
+	 0gAXnjntQ95gZasM51x7T1cDSmxd5AZysQ+ORHUY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388124AbgF2TrC (ORCPT
+        id S2387801AbgF2Tkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:47:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49198 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388109AbgF2Tqt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:46:49 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA3DBC061755;
-        Mon, 29 Jun 2020 12:46:47 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id 9so19610509ljv.5;
-        Mon, 29 Jun 2020 12:46:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=2SQrH6OLRIdCV3u3TyexljDPzLXrQVLpJKvgZnIkG2I=;
-        b=TPiSvFkt5xeFRoD4jV5BSfmCJLioRZm4cmEdxFI6njLQbVzDrVig6fViStyGvz66Zn
-         SRrGJ8xANuTdnjPccP3mNJp8gal/qrmE9mzodm4tR6RuE2xiVqVvtIYd7yi78n+z4yVx
-         uzAAb7iXG3knfwBLem39r/c85al/Io52C1Yqee+X9yBa5YOaHMoSffMqFSqhyrcvX1kO
-         U1JrvWcppxo0clHBpkSYKdDc5ViM+3LCenG9x2CIwUjF30I3dWKx4ZKv1u50oGhhDbpq
-         nVt/psQOI9jsElpPmS/xoseOaGAUO9QSXc6nTPR0OZs4vIFYiv7fKpeFTYMT1iNn+nJ0
-         IwOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=2SQrH6OLRIdCV3u3TyexljDPzLXrQVLpJKvgZnIkG2I=;
-        b=BGvLAfUC1nW5JkMo2mggDgxWWe79Rlsf09L2ZoBdETaaClNxEXm9u3JkL7ImKh3dDt
-         R+h5xu8CSJ3zHWag7B8IAsy+YQJUZDFRxZl0kIhLf+xezosT17vo9UBiurMkCGQmkqJF
-         RiyYa8kZiYOakprhsP6Uzzv+N5hkK4Be+wolAKRbzsb0xuubAnYuqqtwoaYZazCIeXOI
-         mevl/Xto/jWrzavP5cCdqeKDB2fDB5gvi7fCcs347vxKARwPjcexwI/hgfIrZDnyrQwi
-         VkmFgkUSP+qCsdPa+oE77E/2K2k0kNZ32cD6ca9knEt1FFxVWPoERNQPtqoiK3Fc9XJe
-         k75g==
-X-Gm-Message-State: AOAM531OSN3iNYkdAO/wyMa4JBA6glwKaGM8QRz7Dn5WUjoNk3cjy5Cr
-        DpRFqdkbb1xnTFmDTNAAChQ=
-X-Google-Smtp-Source: ABdhPJzlWbnH4NSBzQDgB9bNAkZOHiN0uxEO0aXOOgf52q7yAs7Tis6PI5ZVN84mzIWIjBC/SlD4Aw==
-X-Received: by 2002:a2e:547:: with SMTP id 68mr8045494ljf.115.1593460006259;
-        Mon, 29 Jun 2020 12:46:46 -0700 (PDT)
-Received: from localhost.localdomain (h-98-128-228-147.NA.cust.bahnhof.se. [98.128.228.147])
-        by smtp.gmail.com with ESMTPSA id q128sm154750ljb.140.2020.06.29.12.46.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 12:46:45 -0700 (PDT)
-From:   Rikard Falkeborn <rikard.falkeborn@gmail.com>
-To:     agross@kernel.org, bjorn.andersson@linaro.org
-Cc:     lgirdwood@gmail.com, broonie@kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Subject: [PATCH 2/2] regulator: qcom_spmi: Constify struct regulator_ops
-Date:   Mon, 29 Jun 2020 21:46:32 +0200
-Message-Id: <20200629194632.8147-3-rikard.falkeborn@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200629194632.8147-1-rikard.falkeborn@gmail.com>
-References: <20200629194632.8147-1-rikard.falkeborn@gmail.com>
+        Mon, 29 Jun 2020 15:40:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47678 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387645AbgF2TkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:40:24 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CE0AB24821;
+        Mon, 29 Jun 2020 15:25:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593444340;
+        bh=PFvL3VxOVOlF/3zx/5l47zDQBKLBGVYgekU9F93Jmqg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=j4mLAf3ajWdg5jpMw6arT9B8a74ImZeVYZeiHjCBGaAejWSJBLq3EJOwoDN2MJji1
+         Y/X+yKYwcWqA/WvI3DKOatBZ9V1+JTF5YfgCdP0oTZLbt9B5ZcPrHyUHlW6ygZPfcx
+         U8UN+94cpx8bpqN2YCX/MaLlG0DH3EfaifDwo0SE=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Aditya Pakki <pakki001@umn.edu>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.4 015/178] rocker: fix incorrect error handling in dma_rings_init
+Date:   Mon, 29 Jun 2020 11:22:40 -0400
+Message-Id: <20200629152523.2494198-16-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
+References: <20200629152523.2494198-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.50-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.4.50-rc1
+X-KernelTest-Deadline: 2020-07-01T15:25+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These are never modified, so make them const to allow the compiler to
-put them in read-only memory.
+From: Aditya Pakki <pakki001@umn.edu>
 
-Before:
-   text    data     bss     dec     hex filename
-  20362    2592     152   23106    5a42 drivers/regulator/qcom_spmi-regulator.o
+[ Upstream commit 58d0c864e1a759a15c9df78f50ea5a5c32b3989e ]
 
-After:
-   text    data     bss     dec     hex filename
-  21814    1140     152   23106    5a42 drivers/regulator/qcom_spmi-regulator.o
+In rocker_dma_rings_init, the goto blocks in case of errors
+caused by the functions rocker_dma_cmd_ring_waits_alloc() and
+rocker_dma_ring_create() are incorrect. The patch fixes the
+order consistent with cleanup in rocker_dma_rings_fini().
 
-Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/regulator/qcom_spmi-regulator.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ drivers/net/ethernet/rocker/rocker_main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/qcom_spmi-regulator.c b/drivers/regulator/qcom_spmi-regulator.c
-index 95737e4dd6bb..5ee7c5305d95 100644
---- a/drivers/regulator/qcom_spmi-regulator.c
-+++ b/drivers/regulator/qcom_spmi-regulator.c
-@@ -380,7 +380,7 @@ struct spmi_regulator_mapping {
- 	enum spmi_regulator_logical_type	logical_type;
- 	u32					revision_min;
- 	u32					revision_max;
--	struct regulator_ops			*ops;
-+	const struct regulator_ops		*ops;
- 	struct spmi_voltage_set_points		*set_points;
- 	int					hpm_min_load;
- };
-@@ -1261,7 +1261,7 @@ spmi_regulator_saw_set_voltage(struct regulator_dev *rdev, unsigned selector)
- 
- static struct regulator_ops spmi_saw_ops = {};
- 
--static struct regulator_ops spmi_smps_ops = {
-+static const struct regulator_ops spmi_smps_ops = {
- 	.enable			= regulator_enable_regmap,
- 	.disable		= regulator_disable_regmap,
- 	.is_enabled		= regulator_is_enabled_regmap,
-@@ -1276,7 +1276,7 @@ static struct regulator_ops spmi_smps_ops = {
- 	.set_pull_down		= spmi_regulator_common_set_pull_down,
- };
- 
--static struct regulator_ops spmi_ldo_ops = {
-+static const struct regulator_ops spmi_ldo_ops = {
- 	.enable			= regulator_enable_regmap,
- 	.disable		= regulator_disable_regmap,
- 	.is_enabled		= regulator_is_enabled_regmap,
-@@ -1293,7 +1293,7 @@ static struct regulator_ops spmi_ldo_ops = {
- 	.set_soft_start		= spmi_regulator_common_set_soft_start,
- };
- 
--static struct regulator_ops spmi_ln_ldo_ops = {
-+static const struct regulator_ops spmi_ln_ldo_ops = {
- 	.enable			= regulator_enable_regmap,
- 	.disable		= regulator_disable_regmap,
- 	.is_enabled		= regulator_is_enabled_regmap,
-@@ -1305,7 +1305,7 @@ static struct regulator_ops spmi_ln_ldo_ops = {
- 	.get_bypass		= spmi_regulator_common_get_bypass,
- };
- 
--static struct regulator_ops spmi_vs_ops = {
-+static const struct regulator_ops spmi_vs_ops = {
- 	.enable			= spmi_regulator_vs_enable,
- 	.disable		= regulator_disable_regmap,
- 	.is_enabled		= regulator_is_enabled_regmap,
-@@ -1316,7 +1316,7 @@ static struct regulator_ops spmi_vs_ops = {
- 	.get_mode		= spmi_regulator_common_get_mode,
- };
- 
--static struct regulator_ops spmi_boost_ops = {
-+static const struct regulator_ops spmi_boost_ops = {
- 	.enable			= regulator_enable_regmap,
- 	.disable		= regulator_disable_regmap,
- 	.is_enabled		= regulator_is_enabled_regmap,
-@@ -1327,7 +1327,7 @@ static struct regulator_ops spmi_boost_ops = {
- 	.set_input_current_limit = spmi_regulator_set_ilim,
- };
- 
--static struct regulator_ops spmi_ftsmps_ops = {
-+static const struct regulator_ops spmi_ftsmps_ops = {
- 	.enable			= regulator_enable_regmap,
- 	.disable		= regulator_disable_regmap,
- 	.is_enabled		= regulator_is_enabled_regmap,
-@@ -1342,7 +1342,7 @@ static struct regulator_ops spmi_ftsmps_ops = {
- 	.set_pull_down		= spmi_regulator_common_set_pull_down,
- };
- 
--static struct regulator_ops spmi_ult_lo_smps_ops = {
-+static const struct regulator_ops spmi_ult_lo_smps_ops = {
- 	.enable			= regulator_enable_regmap,
- 	.disable		= regulator_disable_regmap,
- 	.is_enabled		= regulator_is_enabled_regmap,
-@@ -1356,7 +1356,7 @@ static struct regulator_ops spmi_ult_lo_smps_ops = {
- 	.set_pull_down		= spmi_regulator_common_set_pull_down,
- };
- 
--static struct regulator_ops spmi_ult_ho_smps_ops = {
-+static const struct regulator_ops spmi_ult_ho_smps_ops = {
- 	.enable			= regulator_enable_regmap,
- 	.disable		= regulator_disable_regmap,
- 	.is_enabled		= regulator_is_enabled_regmap,
-@@ -1371,7 +1371,7 @@ static struct regulator_ops spmi_ult_ho_smps_ops = {
- 	.set_pull_down		= spmi_regulator_common_set_pull_down,
- };
- 
--static struct regulator_ops spmi_ult_ldo_ops = {
-+static const struct regulator_ops spmi_ult_ldo_ops = {
- 	.enable			= regulator_enable_regmap,
- 	.disable		= regulator_disable_regmap,
- 	.is_enabled		= regulator_is_enabled_regmap,
-@@ -1388,7 +1388,7 @@ static struct regulator_ops spmi_ult_ldo_ops = {
- 	.set_soft_start		= spmi_regulator_common_set_soft_start,
- };
- 
--static struct regulator_ops spmi_ftsmps426_ops = {
-+static const struct regulator_ops spmi_ftsmps426_ops = {
- 	.enable			= regulator_enable_regmap,
- 	.disable		= regulator_disable_regmap,
- 	.is_enabled		= regulator_is_enabled_regmap,
-@@ -1403,7 +1403,7 @@ static struct regulator_ops spmi_ftsmps426_ops = {
- 	.set_pull_down		= spmi_regulator_common_set_pull_down,
- };
- 
--static struct regulator_ops spmi_hfs430_ops = {
-+static const struct regulator_ops spmi_hfs430_ops = {
- 	.enable			= regulator_enable_regmap,
- 	.disable		= regulator_disable_regmap,
- 	.is_enabled		= regulator_is_enabled_regmap,
+diff --git a/drivers/net/ethernet/rocker/rocker_main.c b/drivers/net/ethernet/rocker/rocker_main.c
+index 786b158bd3050..5abb3f9684ffd 100644
+--- a/drivers/net/ethernet/rocker/rocker_main.c
++++ b/drivers/net/ethernet/rocker/rocker_main.c
+@@ -647,10 +647,10 @@ static int rocker_dma_rings_init(struct rocker *rocker)
+ err_dma_event_ring_bufs_alloc:
+ 	rocker_dma_ring_destroy(rocker, &rocker->event_ring);
+ err_dma_event_ring_create:
++	rocker_dma_cmd_ring_waits_free(rocker);
++err_dma_cmd_ring_waits_alloc:
+ 	rocker_dma_ring_bufs_free(rocker, &rocker->cmd_ring,
+ 				  PCI_DMA_BIDIRECTIONAL);
+-err_dma_cmd_ring_waits_alloc:
+-	rocker_dma_cmd_ring_waits_free(rocker);
+ err_dma_cmd_ring_bufs_alloc:
+ 	rocker_dma_ring_destroy(rocker, &rocker->cmd_ring);
+ 	return err;
 -- 
-2.27.0
+2.25.1
 
