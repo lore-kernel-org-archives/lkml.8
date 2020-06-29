@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9245AC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06413C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B00820760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:00:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C389120760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:00:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468004;
-	bh=Dph8eKuyg9WVFWOCCxI2zDNW8OAcyMNptYEcBaT4Jyw=;
+	s=default; t=1593468005;
+	bh=N2IbsRFaLFjDTh/NoWJYWlGOxlpbKvfzjTvumYUSvPs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ieZRBxLbhaZG0sCAan+t1d3aNX9bpnh9aQ2gPWREoVLZcxqYfYv+7x9nJFrz2oY3Y
-	 lulPkMmVoDBIw96TEGOgs9kNw/NZ0zM3nmGlE63Oz7WsKP+DIvwHX7KR1sHcWNx2a8
-	 eLqaUl7bjNMxeMGMsZbiut+NfqCSz2jLFo199EIY=
+	b=juEQ8mnxA+WskalyBUClfTOCO9jYLm083ESMywL+KpSR7F6C/tTA3uuMlq08OEmIv
+	 rDS8FngXwQVgKpS1CRqlrRSzhNQZhJ7YQtHq0eKoSTsY1b65eL0iXBW66bBuR5PFrC
+	 dv6os6IA1GBUTvU+WcChsbHjmK9aGCUKmFJd0RNM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404811AbgF2WAC (ORCPT
+        id S1726555AbgF2WAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:00:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56788 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:00:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726388AbgF2SfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726126AbgF2SfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D99B1247EA;
-        Mon, 29 Jun 2020 15:22:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAF5F24794;
+        Mon, 29 Jun 2020 15:21:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444152;
-        bh=Dph8eKuyg9WVFWOCCxI2zDNW8OAcyMNptYEcBaT4Jyw=;
+        s=default; t=1593444102;
+        bh=N2IbsRFaLFjDTh/NoWJYWlGOxlpbKvfzjTvumYUSvPs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r+gX8p5svhkI2vpwj9+9TI34mjZzDauBf1bufHBFeFa5nj+5zJHSsAs1L7IzLyIC0
-         MBLASEuyN6EREPItTg+lluKUlVZjUVvhsYQUOhYWVbdXWcRR5u0ss4BsHN5WGYlJTv
-         Z22Vp0FJ6qXXKqP9PrxKFdT0Hd0/RZql3iydzBdE=
+        b=Au9mtUTGUPsMVThKbanopAsuwm/sGRH0NhW6OJ7WN3ln/4V4f2yPym3Z/Au3AKdXe
+         ABok8IPTI1DJ0ZjSYB8GP6XBxIS4s0HPfRZHAvR2D82Jv7v6mrU8IvPJAyIy/74bIy
+         WvrmN9lIZY8k0DtT+Da+QxJjr4d4iKhMzRG/FjsA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuck Lever <chuck.lever@oracle.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 258/265] SUNRPC: Properly set the @subbuf parameter of xdr_buf_subsegment()
-Date:   Mon, 29 Jun 2020 11:18:11 -0400
-Message-Id: <20200629151818.2493727-259-sashal@kernel.org>
+Subject: [PATCH 5.7 213/265] ACPI: configfs: Disallow loading ACPI tables when locked down
+Date:   Mon, 29 Jun 2020 11:17:26 -0400
+Message-Id: <20200629151818.2493727-214-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -65,55 +65,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuck Lever <chuck.lever@oracle.com>
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
 
-commit 89a3c9f5b9f0bcaa9aea3e8b2a616fcaea9aad78 upstream.
+commit 75b0cea7bf307f362057cc778efe89af4c615354 upstream.
 
-@subbuf is an output parameter of xdr_buf_subsegment(). A survey of
-call sites shows that @subbuf is always uninitialized before
-xdr_buf_segment() is invoked by callers.
+Like other vectors already patched, this one here allows the root
+user to load ACPI tables, which enables arbitrary physical address
+writes, which in turn makes it possible to disable lockdown.
 
-There are some execution paths through xdr_buf_subsegment() that do
-not set all of the fields in @subbuf, leaving some pointer fields
-containing garbage addresses. Subsequent processing of that buffer
-then results in a page fault.
+Prevents this by checking the lockdown status before allowing a new
+ACPI table to be installed. The link in the trailer shows a PoC of
+how this might be used.
 
-Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Link: https://git.zx2c4.com/american-unsigned-language/tree/american-unsigned-language-2.sh
+Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
+Signed-off-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sunrpc/xdr.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/acpi/acpi_configfs.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/net/sunrpc/xdr.c b/net/sunrpc/xdr.c
-index 6f7d82fb1eb0a..be11d672b5b97 100644
---- a/net/sunrpc/xdr.c
-+++ b/net/sunrpc/xdr.c
-@@ -1118,6 +1118,7 @@ xdr_buf_subsegment(struct xdr_buf *buf, struct xdr_buf *subbuf,
- 		base = 0;
- 	} else {
- 		base -= buf->head[0].iov_len;
-+		subbuf->head[0].iov_base = buf->head[0].iov_base;
- 		subbuf->head[0].iov_len = 0;
- 	}
+diff --git a/drivers/acpi/acpi_configfs.c b/drivers/acpi/acpi_configfs.c
+index ece8c1a921cc1..88c8af455ea3f 100644
+--- a/drivers/acpi/acpi_configfs.c
++++ b/drivers/acpi/acpi_configfs.c
+@@ -11,6 +11,7 @@
+ #include <linux/module.h>
+ #include <linux/configfs.h>
+ #include <linux/acpi.h>
++#include <linux/security.h>
  
-@@ -1130,6 +1131,8 @@ xdr_buf_subsegment(struct xdr_buf *buf, struct xdr_buf *subbuf,
- 		base = 0;
- 	} else {
- 		base -= buf->page_len;
-+		subbuf->pages = buf->pages;
-+		subbuf->page_base = 0;
- 		subbuf->page_len = 0;
- 	}
+ #include "acpica/accommon.h"
+ #include "acpica/actables.h"
+@@ -28,7 +29,10 @@ static ssize_t acpi_table_aml_write(struct config_item *cfg,
+ {
+ 	const struct acpi_table_header *header = data;
+ 	struct acpi_table *table;
+-	int ret;
++	int ret = security_locked_down(LOCKDOWN_ACPI_TABLES);
++
++	if (ret)
++		return ret;
  
-@@ -1141,6 +1144,7 @@ xdr_buf_subsegment(struct xdr_buf *buf, struct xdr_buf *subbuf,
- 		base = 0;
- 	} else {
- 		base -= buf->tail[0].iov_len;
-+		subbuf->tail[0].iov_base = buf->tail[0].iov_base;
- 		subbuf->tail[0].iov_len = 0;
- 	}
+ 	table = container_of(cfg, struct acpi_table, cfg);
  
 -- 
 2.25.1
