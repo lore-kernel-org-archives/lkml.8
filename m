@@ -1,132 +1,189 @@
 Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: **
-X-Spam-Status: No, score=2.2 required=3.0 tests=CHARSET_FARAWAY_HEADER,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E527C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF04C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB16520663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1822B20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:53:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=necglobal.onmicrosoft.com header.i=@necglobal.onmicrosoft.com header.b="GrRVE364"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bkt6Q0Tc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389894AbgF2UxF (ORCPT
+        id S1730994AbgF2UxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:53:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43356 "EHLO
+        Mon, 29 Jun 2020 16:53:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731339AbgF2TNX (ORCPT
+        with ESMTP id S1731335AbgF2TNX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:13:23 -0400
-Received: from APC01-PU1-obe.outbound.protection.outlook.com (mail-pu1apc01on061f.outbound.protection.outlook.com [IPv6:2a01:111:f400:febe::61f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE6DDC0A88AD;
-        Mon, 29 Jun 2020 00:33:12 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=J/fLDqcy9DZnyNe8JpODxqvVvUZupcAMBFsgkqOqCNqOn8mlcoy9NbjeRVUgjSKZZzWjarDETi9y8Dt9nRRdvKfOUQGV35pmSHCy1BiZQCErJIXwscMPmDRHhdCpxN/+CFKnN4ePJFnxT1iqJm4pF1GniX7AT+lxvsZYJW0OtnOiStvncETM/cb7vgmVddi1cFYqOs2r+ECwpWdpDb+dFuaMaZkKjHykPKsbPRSv3oJ3RSY6AdyjiFlHVzAqbxSHyk0VUwY0O/rW0QhyTMdkhitCKYc4nk0yLEsnEAqdSR6hdjPjOsfTYwBIExxE0GpeIDU+Y92TJwrNyQq3SFFl9Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=F38UHee9PLqPO4rP08KzZfkN8V8xkSHdYHislmqEJRQ=;
- b=kCIhNyRrMbqX9duwfhGf4wDjmdzCPl4TSqmWJIPUMRRqtnD6fGTWphPf5AFSsM1YWjiwQU+ASZ8D52xzwtrlwqaHcvtaK0EyiGWbJrWI//92TRWpdSpkgLM+/CrHHHYUMxHY1ff2SBGH6V4wUfOPpRkCaYgp+p/sHcPWEfNGRtWhUvWkB5sRATUBl0zbBjEGo2+sFqq9KiicBj8Alu+8Ztz76IcY4e7GPyZ3CfX7+t6yxxo+y4iQcGWe7yFiEylKJRTZKpkQgB9WAf6bAEXH+AmkYSY2LPDJmpbXm4wfdEocqf52Tv7AarifsWyYnraL7rWjJwVWH26f6hjYkvG2fw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nec.com; dmarc=pass action=none header.from=nec.com; dkim=pass
- header.d=nec.com; arc=none
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D60EBC014A54
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 01:17:28 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id u8so7444003pje.4
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 01:17:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=necglobal.onmicrosoft.com; s=selector1-necglobal-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=F38UHee9PLqPO4rP08KzZfkN8V8xkSHdYHislmqEJRQ=;
- b=GrRVE364NL0O/yjGJEWRzmd3mHbrzbIT/PC/K9XmfphW2my+mDvBItNL2TfgIhoTZsf47eCun53inSRXHJdrJzm6pDampBNisPwmGjoeVOYTzokRg0bW6btwPOPAyVePDCKrbQozSflUThbQCvhK5WcdDSUzqOCWAN82204mliE=
-Received: from TY2PR01MB3210.jpnprd01.prod.outlook.com (2603:1096:404:74::14)
- by TY2PR01MB4489.jpnprd01.prod.outlook.com (2603:1096:404:114::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.20; Mon, 29 Jun
- 2020 07:33:09 +0000
-Received: from TY2PR01MB3210.jpnprd01.prod.outlook.com
- ([fe80::3841:ec9f:5cdf:f58]) by TY2PR01MB3210.jpnprd01.prod.outlook.com
- ([fe80::3841:ec9f:5cdf:f58%5]) with mapi id 15.20.3131.026; Mon, 29 Jun 2020
- 07:33:09 +0000
-From:   =?iso-2022-jp?B?SE9SSUdVQ0hJIE5BT1lBKBskQktZOH0hIUQ+TGkbKEIp?= 
-        <naoya.horiguchi@nec.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-CC:     Naoya Horiguchi <nao.horiguchi@gmail.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        "cai@lca.pw" <cai@lca.pw>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>, Michal Hocko <mhocko@kernel.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        "osalvador@suse.de" <osalvador@suse.de>,
-        Tony Luck <tony.luck@intel.com>,
-        "david@redhat.com" <david@redhat.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.vnet.ibm.com>,
-        "zeil@yandex-team.ru" <zeil@yandex-team.ru>,
-        open list <linux-kernel@vger.kernel.org>,
-        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: [PATCH v3 13/15] mm,hwpoison: Refactor soft_offline_huge_page and
- __soft_offline_page
-Thread-Topic: [PATCH v3 13/15] mm,hwpoison: Refactor soft_offline_huge_page
- and __soft_offline_page
-Thread-Index: AQHWSjh5qcZg75sKv0mmnb8ztyYfl6jrIEGAgAJ9JoCAAZpMAIAAAu0A
-Date:   Mon, 29 Jun 2020 07:33:09 +0000
-Message-ID: <20200629073308.GB13601@hori.linux.bs1.fc.nec.co.jp>
-References: <20200624150137.7052-1-nao.horiguchi@gmail.com>
- <20200624150137.7052-14-nao.horiguchi@gmail.com>
- <CA+G9fYvopXWr+Y34xz2NVv17yeFs7fuKnJO_iUMnfCwaDNRXYg@mail.gmail.com>
- <20200628065409.GA546944@u2004> <20200629172240.0d01e161@canb.auug.org.au>
-In-Reply-To: <20200629172240.0d01e161@canb.auug.org.au>
-Accept-Language: ja-JP, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: canb.auug.org.au; dkim=none (message not signed)
- header.d=none;canb.auug.org.au; dmarc=none action=none header.from=nec.com;
-x-originating-ip: [165.225.110.205]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ed70647e-635b-47cb-b138-08d81bfeabda
-x-ms-traffictypediagnostic: TY2PR01MB4489:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <TY2PR01MB4489BD8B2D0A0A864F1460DDE76E0@TY2PR01MB4489.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 044968D9E1
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: eM5YTfuQx2pT07nAcT3gcT3m56qjlEYRs27X7BB28e4e5GDtpDzSJr/p8zyVFwqLSuuOh/fT7WNwWolYCRCZQOrnLXsaoRI0cVmuSlsawd+OePKVATgQiRLgDF7zf8ATZ7WF3e8tU6E1WcmbZWIozVQ0Cli3Fo6hDA1YkW0FOBj1ryZe5Yk+H1V0YcRY/UYn1i1O64HIzP6Kc4WTtL49vz3/hVuCnsbahbLcriSz8S6GXEHwLWCkYSrQY45EztlAQWxdv6NPViGdGM9G3HOmjOb4edMqcSfzu6MFLkKKgsdSZh37ad98wXQWLcXehFyiQvPBxAEe4v5bguKXOK8f2+SytwOWCLiacF7/MMpJ9ljuM/1sTy2cUtNYBT5w9Ls9aaC6vkdPnFB5Emxzf/qGTg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR01MB3210.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(376002)(366004)(39860400002)(346002)(7416002)(8936002)(76116006)(6512007)(9686003)(66556008)(2906002)(33656002)(54906003)(6916009)(66946007)(186003)(8676002)(66476007)(85182001)(478600001)(64756008)(316002)(66446008)(6486002)(71200400001)(5660300002)(26005)(1076003)(86362001)(558084003)(6506007)(4326008)(55236004)(14583001)(142933001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: rOO/KBkhOFApDwWqtEYTS19D4ASrgB/NF7wXI2B+grrcKbgC1TtVdTFt7ZVwU8cEBmrF0fpRYmU93uo6aSXLoiV4q1epMxTGooAnL1Ehbvi+sIsHi5IpwiZxUNmWMCFioY3hliP0DBQA9J+7HJfBOsvlDmUgOToZZwFudpt+Mcao9c4TMbeGYR2kz6SAV77knoKz2p/NLFMR5eX8b5B3RYlj81jgfRV9UeiOYom0+6YLIRRnWKSmx3/9PpnCJ/DLV3jYVrWJFEjU8zXm+8brTPQ5ZEZ/DnjTitkH9lGxKwa7fhh16aSJnE4kJDnyAZp2/DmXnd69LEr6HPVDTf3NIZEA84Js7c0rJ29mwh6ShA5dIzVpiajHATHPLs2EGSaSOL5SRN/IfzkhV2p7w3Ciav8n7YKkbak3YLVjXfa3meWuYjUn5vKcVWG80Ibh/ifwhkpIudCjnOGDcZk2nnazaQ1pgQwQ8o3exEcMumLerZDaC0HjGcI4VFq9BYs9eFJ/
-Content-Type: text/plain; charset="iso-2022-jp"
-Content-ID: <FF71F9482B3A7842906567E039AA2DED@jpnprd01.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=LQbv/kqpYIFMU5rUjcmTQLBycdHYItEePq3QI83n7qo=;
+        b=bkt6Q0TcR4n/l+mBmN3Mq3o4JTW33uWez2KZwEhui6jpKMAK6feYaJ/p7yeSgj4aY8
+         kouegoT4XvMfelGTNnqistuNTIYK0t8iaSds1Pwd2GZMmd5rBVVJ07daijT0XaBJUnEZ
+         huI6yAjhoYtjnoILtfsweJszvd+SVsGObGcmRijmR0F/99YERXlh8J2C7XijVX84ug3X
+         A8rc5/SzoItUpTkhGwagy++k7o26fx818Ghi67KkbBgbw9wr6AWxkn+YggKBedaRgVE3
+         jeQ6KrvJETk967RjT7Sm3t5pYOy2SS3u7uz2WvHOOjVhDAfWuprvBxD2NWUePlkMuVop
+         f7+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=LQbv/kqpYIFMU5rUjcmTQLBycdHYItEePq3QI83n7qo=;
+        b=uk1S1lEdAdhjma1gPvWGOclvvMxLYHuS7zeRCpMuyQfT93YnoAE/O4yRXJ1f7mIqJa
+         plgDk7WhUBCb89gnDGEYdruvqnpMSMnqXVNBmxkbVYgoebmJgDYw7bav4lyx8SBwjB3t
+         Q+Ptw/xMrRwwOGiClxzfz+JKYyNcOGxAXOsvvEm9XlJnPZAVL23ZvuWbr/W9HcSELtWf
+         zfjpxODDvdvYuslZZA7mNDxo9OU8xOBMA/iw2xIT4XjXya7k9PbHSkDJRPyRX05LoAoC
+         uVPfOtp8hD9EW9sV2q4EFk4rPXMcvkJLxU4GjPrKir2aNngKe8XpIURv6+fXtxC/bDiS
+         29KQ==
+X-Gm-Message-State: AOAM533lwMiSK8ae4KFHgG2DxVsuJghdpCQ+6Gze7g8QI3FHNGGoVdt7
+        v6TCDUE1XXktmsG1ue22y3o=
+X-Google-Smtp-Source: ABdhPJwQKm/0wvFfLPrzBSGZOAhguhAg7eyU3UUCTNgvWuQvPS/qYbNuIbd2IYrNGNfKtDUf0maWYw==
+X-Received: by 2002:a17:902:b714:: with SMTP id d20mr2645461pls.318.1593418648402;
+        Mon, 29 Jun 2020 01:17:28 -0700 (PDT)
+Received: from varodek.localdomain ([106.210.40.90])
+        by smtp.gmail.com with ESMTPSA id co1sm3345154pjb.34.2020.06.29.01.17.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 01:17:27 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jirislaby@gmail.com>, Alex Dubov <oakad@yahoo.com>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+Subject: [PATCH v1 2/5] cardreader/rtsx_pcr.c: use generic power management
+Date:   Mon, 29 Jun 2020 13:45:28 +0530
+Message-Id: <20200629081531.214734-3-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200629081531.214734-1-vaibhavgupta40@gmail.com>
+References: <20200629081531.214734-1-vaibhavgupta40@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nec.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY2PR01MB3210.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ed70647e-635b-47cb-b138-08d81bfeabda
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jun 2020 07:33:09.0944
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: e67df547-9d0d-4f4d-9161-51c6ed1f7d11
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: GbjcrtD8obUudFKXyNdR3AD99c5zZvZg8fYYzuvrBw6puO9qh6z3yijBIXtgeqZ0UIFTST2RfPawa1Dw1AzcUg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PR01MB4489
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 05:22:40PM +1000, Stephen Rothwell wrote:
-> Hi Naoya,
->=20
-> On Sun, 28 Jun 2020 15:54:09 +0900 Naoya Horiguchi <nao.horiguchi@gmail.c=
-om> wrote:
-> >
-> > Andrew, could you append this diff on top of this series on mmotm?
->=20
-> I have added that patch to linux-next today.
+Drivers should not use legacy power management as they have to manage power
+states and related operations, for the device, themselves. This driver was
+handling them with the help of PCI helper functions like
+pci_save/restore_state(), pci_enable/disable_device(), etc.
 
-Thank you!
+With generic PM, all essentials will be handled by the  PCI core. Driver
+needs to do only device-specific operations.
 
-- Naoya=
+The driver was also using pci_enable_wake(...,..., 0) to disable wake. Use
+device_wakeup_disable() instead.
+
+Compile-tested only.
+
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+---
+ drivers/misc/cardreader/rtsx_pcr.c | 27 ++++++++++-----------------
+ 1 file changed, 10 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/misc/cardreader/rtsx_pcr.c b/drivers/misc/cardreader/rtsx_pcr.c
+index 0d5928bc1b6d..ca5212cba1c0 100644
+--- a/drivers/misc/cardreader/rtsx_pcr.c
++++ b/drivers/misc/cardreader/rtsx_pcr.c
+@@ -1604,10 +1604,9 @@ static void rtsx_pci_remove(struct pci_dev *pcidev)
+ 		pci_name(pcidev), (int)pcidev->vendor, (int)pcidev->device);
+ }
+ 
+-#ifdef CONFIG_PM
+-
+-static int rtsx_pci_suspend(struct pci_dev *pcidev, pm_message_t state)
++static int __maybe_unused rtsx_pci_suspend(struct device *dev_d)
+ {
++	struct pci_dev *pcidev = to_pci_dev(dev_d);
+ 	struct pcr_handle *handle;
+ 	struct rtsx_pcr *pcr;
+ 
+@@ -1623,17 +1622,15 @@ static int rtsx_pci_suspend(struct pci_dev *pcidev, pm_message_t state)
+ 
+ 	rtsx_pci_power_off(pcr, HOST_ENTER_S3);
+ 
+-	pci_save_state(pcidev);
+-	pci_enable_wake(pcidev, pci_choose_state(pcidev, state), 0);
+-	pci_disable_device(pcidev);
+-	pci_set_power_state(pcidev, pci_choose_state(pcidev, state));
++	device_wakeup_disable(dev_d);
+ 
+ 	mutex_unlock(&pcr->pcr_mutex);
+ 	return 0;
+ }
+ 
+-static int rtsx_pci_resume(struct pci_dev *pcidev)
++static int __maybe_unused rtsx_pci_resume(struct device *dev_d)
+ {
++	struct pci_dev *pcidev = to_pci_dev(dev_d);
+ 	struct pcr_handle *handle;
+ 	struct rtsx_pcr *pcr;
+ 	int ret = 0;
+@@ -1645,11 +1642,6 @@ static int rtsx_pci_resume(struct pci_dev *pcidev)
+ 
+ 	mutex_lock(&pcr->pcr_mutex);
+ 
+-	pci_set_power_state(pcidev, PCI_D0);
+-	pci_restore_state(pcidev);
+-	ret = pci_enable_device(pcidev);
+-	if (ret)
+-		goto out;
+ 	pci_set_master(pcidev);
+ 
+ 	ret = rtsx_pci_write_register(pcr, HOST_SLEEP_STATE, 0x03, 0x00);
+@@ -1667,6 +1659,8 @@ static int rtsx_pci_resume(struct pci_dev *pcidev)
+ 	return ret;
+ }
+ 
++#ifdef CONFIG_PM
++
+ static void rtsx_pci_shutdown(struct pci_dev *pcidev)
+ {
+ 	struct pcr_handle *handle;
+@@ -1686,19 +1680,18 @@ static void rtsx_pci_shutdown(struct pci_dev *pcidev)
+ 
+ #else /* CONFIG_PM */
+ 
+-#define rtsx_pci_suspend NULL
+-#define rtsx_pci_resume NULL
+ #define rtsx_pci_shutdown NULL
+ 
+ #endif /* CONFIG_PM */
+ 
++static SIMPLE_DEV_PM_OPS(rtsx_pci_pm_ops, rtsx_pci_suspend, rtsx_pci_resume);
++
+ static struct pci_driver rtsx_pci_driver = {
+ 	.name = DRV_NAME_RTSX_PCI,
+ 	.id_table = rtsx_pci_ids,
+ 	.probe = rtsx_pci_probe,
+ 	.remove = rtsx_pci_remove,
+-	.suspend = rtsx_pci_suspend,
+-	.resume = rtsx_pci_resume,
++	.driver.pm = &rtsx_pci_pm_ops,
+ 	.shutdown = rtsx_pci_shutdown,
+ };
+ module_pci_driver(rtsx_pci_driver);
+-- 
+2.27.0
+
