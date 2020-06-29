@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8241C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2589CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:26:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A54E20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:26:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEF3A2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:26:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462413;
-	bh=U/vdpUFnbMSHnv19qe02lQ+5fJN4qRutmWTdXVU4Jt4=;
+	s=default; t=1593462416;
+	bh=jYcTHKfl71oRSgVpLIw4fJJ7HkJD9PW7AfDpRhNHGMI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g4EsbBgvrpEZQTI3jVzyBMGzMzNQ57Jdc5609v46acuhxFkQJjOLDM6XVyFvtcZIo
-	 SVQdR2aZ/q1B2JL+uGieFEYdSTEQzDz/ZomXZQhF9AyO6Zw91u4EuFlCmFx9P4mpDK
-	 1oAZWVfJbp0c2PMnTqzbTEqWEP/z6qmIpZRTp8Kk=
+	b=GYg8fbXQQOEzFmC8OIubSu2/bBbbHqXBnL1mLCRwBPyNTmD8XpuCMweokaj57fS4B
+	 B/X8oTBPCZPTmSszfqYFSjm1VI2AwYT7QlQfb2Bf1BZWEXGre1c6EGA4g+xYX0zc/Z
+	 RVFEkPtznuug06Xb73jU0bD5qd6DdX5IyloWggVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732632AbgF2U0v (ORCPT
+        id S1730264AbgF2U0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:26:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37064 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:26:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732518AbgF2TZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732459AbgF2TZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC1A82531D;
-        Mon, 29 Jun 2020 15:39:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D303C25316;
+        Mon, 29 Jun 2020 15:39:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445152;
-        bh=U/vdpUFnbMSHnv19qe02lQ+5fJN4qRutmWTdXVU4Jt4=;
+        s=default; t=1593445144;
+        bh=jYcTHKfl71oRSgVpLIw4fJJ7HkJD9PW7AfDpRhNHGMI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rdz+rB/0X+Tw+bowE43qr1UotU7FcDAiqfI3QONOz1uT58xr37bOPgf6udzGhoOih
-         vi7c/4xbD32PUmEERn2JCJ9p7EIQ5U3i8JOuhztz5DaOg2ryVKUE+npcuGHL2rK6G2
-         sVSNG4kzsaMgG2XtCW6D1NA08XW5KIlIvJPFVSO4=
+        b=OC6D1BpT8GHOSBEPlYKLQNaxhXqJ7LXWA2Spw4+HnOUITMYzFSdMm6mrIoLGu8MrQ
+         wAerfY3I5Lb6lskmGdiU8bBi5F/vHJ+sqOi/znbT37g70NZ/vbCJcc8u/ruAoSYJ/q
+         nz+ojxCmnID+Lw84ulsDDjXHANCK33dRAf2mugPg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Juri Lelli <juri.lelli@redhat.com>,
-        syzbot+119ba87189432ead09b4@syzkaller.appspotmail.com,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Daniel Wagner <dwagner@suse.de>,
+Cc:     Alexander Lobakin <alobakin@marvell.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 53/78] sched/core: Fix PI boosting between RT and DEADLINE tasks
-Date:   Mon, 29 Jun 2020 11:37:41 -0400
-Message-Id: <20200629153806.2494953-54-sashal@kernel.org>
+Subject: [PATCH 4.14 48/78] net: qed: fix excessive QM ILT lines consumption
+Date:   Mon, 29 Jun 2020 11:37:36 -0400
+Message-Id: <20200629153806.2494953-49-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
 References: <20200629153806.2494953-1-sashal@kernel.org>
@@ -69,73 +67,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juri Lelli <juri.lelli@redhat.com>
+From: Alexander Lobakin <alobakin@marvell.com>
 
-[ Upstream commit 740797ce3a124b7dd22b7fb832d87bc8fba1cf6f ]
+[ Upstream commit d434d02f7e7c24c721365fd594ed781acb18e0da ]
 
-syzbot reported the following warning:
+This is likely a copy'n'paste mistake. The amount of ILT lines to
+reserve for a single VF was being multiplied by the total VFs count.
+This led to a huge redundancy in reservation and potential lines
+drainouts.
 
- WARNING: CPU: 1 PID: 6351 at kernel/sched/deadline.c:628
- enqueue_task_dl+0x22da/0x38a0 kernel/sched/deadline.c:1504
-
-At deadline.c:628 we have:
-
- 623 static inline void setup_new_dl_entity(struct sched_dl_entity *dl_se)
- 624 {
- 625 	struct dl_rq *dl_rq = dl_rq_of_se(dl_se);
- 626 	struct rq *rq = rq_of_dl_rq(dl_rq);
- 627
- 628 	WARN_ON(dl_se->dl_boosted);
- 629 	WARN_ON(dl_time_before(rq_clock(rq), dl_se->deadline));
-        [...]
-     }
-
-Which means that setup_new_dl_entity() has been called on a task
-currently boosted. This shouldn't happen though, as setup_new_dl_entity()
-is only called when the 'dynamic' deadline of the new entity
-is in the past w.r.t. rq_clock and boosted tasks shouldn't verify this
-condition.
-
-Digging through the PI code I noticed that what above might in fact happen
-if an RT tasks blocks on an rt_mutex hold by a DEADLINE task. In the
-first branch of boosting conditions we check only if a pi_task 'dynamic'
-deadline is earlier than mutex holder's and in this case we set mutex
-holder to be dl_boosted. However, since RT 'dynamic' deadlines are only
-initialized if such tasks get boosted at some point (or if they become
-DEADLINE of course), in general RT 'dynamic' deadlines are usually equal
-to 0 and this verifies the aforementioned condition.
-
-Fix it by checking that the potential donor task is actually (even if
-temporary because in turn boosted) running at DEADLINE priority before
-using its 'dynamic' deadline value.
-
-Fixes: 2d3d891d3344 ("sched/deadline: Add SCHED_DEADLINE inheritance logic")
-Reported-by: syzbot+119ba87189432ead09b4@syzkaller.appspotmail.com
-Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Daniel Bristot de Oliveira <bristot@redhat.com>
-Tested-by: Daniel Wagner <dwagner@suse.de>
-Link: https://lkml.kernel.org/r/20181119153201.GB2119@localhost.localdomain
+Fixes: 1408cc1fa48c ("qed: Introduce VFs")
+Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
+Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sched/core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/qlogic/qed/qed_cxt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 97a27726ea217..c5599174e7450 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3731,7 +3731,8 @@ void rt_mutex_setprio(struct task_struct *p, struct task_struct *pi_task)
- 	 */
- 	if (dl_prio(prio)) {
- 		if (!dl_prio(p->normal_prio) ||
--		    (pi_task && dl_entity_preempt(&pi_task->dl, &p->dl))) {
-+		    (pi_task && dl_prio(pi_task->prio) &&
-+		     dl_entity_preempt(&pi_task->dl, &p->dl))) {
- 			p->dl.dl_boosted = 1;
- 			queue_flag |= ENQUEUE_REPLENISH;
- 		} else
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_cxt.c b/drivers/net/ethernet/qlogic/qed/qed_cxt.c
+index 27ba476f761d4..4fc3468f6f38b 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_cxt.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_cxt.c
+@@ -396,7 +396,7 @@ static void qed_cxt_qm_iids(struct qed_hwfn *p_hwfn,
+ 		vf_tids += segs[NUM_TASK_PF_SEGMENTS].count;
+ 	}
+ 
+-	iids->vf_cids += vf_cids * p_mngr->vf_count;
++	iids->vf_cids = vf_cids;
+ 	iids->tids += vf_tids * p_mngr->vf_count;
+ 
+ 	DP_VERBOSE(p_hwfn, QED_MSG_ILT,
 -- 
 2.25.1
 
