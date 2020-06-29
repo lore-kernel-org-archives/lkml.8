@@ -7,48 +7,57 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AEA7C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:50:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44CAFC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:50:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 77638206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:50:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2462C206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:50:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460207;
-	bh=6NadJLY2JjTTBHnBAPPLUmClRu1ve21sHbvw0vkswdI=;
+	s=default; t=1593460213;
+	bh=3coX6j3Fphs8O7z3LLLDGOwYtvmbmUlhEMASUnyrIi8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UcAVsnB5yROdqPcXCRKdilRGRxfi7nw7hnE2K8ep+0SpqKLgKvpGR5O5yBeNlD6fc
-	 o6D5a70lTEwhFl91b5I3PRPcctzG2tjlyMhesvL0wdiWCnXedP2tSTjrIa0/nGuCmY
-	 lO/SL0o2aTsVTSfd2S0we0rIq1OAZw8jaQbhgqf0=
+	b=XlBJPbrAmt3MAYotCR82YgN6obJ0Xzr01sjpGupmhk1E9kv8AvaJdJfoitKcI/DB+
+	 NGDXcGe49yGmkumQRR7CNGc19H3NOxtFsMRpL6vqNHnfYGrtzTUQdMOb+mX91+bPyZ
+	 kCOj1qkUgbjnq6O2WXV0DsYumxMXWOyr6cc46mgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388114AbgF2TuF (ORCPT
+        id S2388274AbgF2TuK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:50:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47660 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:50:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387749AbgF2Tkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387750AbgF2Tkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5816A248B8;
-        Mon, 29 Jun 2020 15:26:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D8DA2491F;
+        Mon, 29 Jun 2020 15:27:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444412;
-        bh=6NadJLY2JjTTBHnBAPPLUmClRu1ve21sHbvw0vkswdI=;
+        s=default; t=1593444474;
+        bh=3coX6j3Fphs8O7z3LLLDGOwYtvmbmUlhEMASUnyrIi8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LXOIm8UAM0NUjetVID4P0LzeD3bqiZwt8p1+HTMabulZqtP01sIFOaHBMgmljBUWT
-         jvEqDfMXAPJwK06hGQmGUZYxs8TXC1xMbPPmbedCFcEeX6yWSsyKm1Vp578ZgfwLCf
-         oi4EP3Jpnt8yeo67/8++gH4bKnJLcmKloAALdxVM=
+        b=JHEBaxsbx7BfoJpWwxSl3pnEV89Us/KbRiqK3qIIbsBwnfkxisxdRV81g3iyPheVp
+         3BFLLrfaoN39x/A+MIEkgCpcIXbWb3Ui3HfUISWGJj6vY6i+aGR+bwzN8HWZg92VVS
+         zlP5C+yucB0x78eYGqYvvDTcle8y6Kjlh69AxThE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
-        Lalithambika Krishnakumar <lalithambika.krishnakumar@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 090/178] iommu/vt-d: Enable PCI ACS for platform opt in hint
-Date:   Mon, 29 Jun 2020 11:23:55 -0400
-Message-Id: <20200629152523.2494198-91-sashal@kernel.org>
+Cc:     Waiman Long <longman@redhat.com>, Michal Hocko <mhocko@suse.com>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Joe Perches <joe@perches.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Rientjes <rientjes@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.4 154/178] mm/slab: use memzero_explicit() in kzfree()
+Date:   Mon, 29 Jun 2020 11:24:59 -0400
+Message-Id: <20200629152523.2494198-155-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -67,53 +76,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lu Baolu <baolu.lu@linux.intel.com>
+From: Waiman Long <longman@redhat.com>
 
-[ Upstream commit 50310600ebda74b9988467e2e6128711c7ba56fc ]
+commit 8982ae527fbef170ef298650c15d55a9ccd33973 upstream.
 
-PCI ACS is disabled if Intel IOMMU is off by default or intel_iommu=off
-is used in command line. Unfortunately, Intel IOMMU will be forced on if
-there're devices sitting on an external facing PCI port that is marked
-as untrusted (for example, thunderbolt peripherals). That means, PCI ACS
-is disabled while Intel IOMMU is forced on to isolate those devices. As
-the result, the devices of an MFD will be grouped by a single group even
-the ACS is supported on device.
+The kzfree() function is normally used to clear some sensitive
+information, like encryption keys, in the buffer before freeing it back to
+the pool.  Memset() is currently used for buffer clearing.  However
+unlikely, there is still a non-zero probability that the compiler may
+choose to optimize away the memory clearing especially if LTO is being
+used in the future.
 
-[    0.691263] pci 0000:00:07.1: Adding to iommu group 3
-[    0.691277] pci 0000:00:07.2: Adding to iommu group 3
-[    0.691292] pci 0000:00:07.3: Adding to iommu group 3
+To make sure that this optimization will never happen,
+memzero_explicit(), which is introduced in v3.18, is now used in
+kzfree() to future-proof it.
 
-Fix it by requesting PCI ACS when Intel IOMMU is detected with platform
-opt in hint.
-
-Fixes: 89a6079df791a ("iommu/vt-d: Force IOMMU on for platform opt in hint")
-Co-developed-by: Lalithambika Krishnakumar <lalithambika.krishnakumar@intel.com>
-Signed-off-by: Lalithambika Krishnakumar <lalithambika.krishnakumar@intel.com>
-Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Ashok Raj <ashok.raj@intel.com>
-Link: https://lore.kernel.org/r/20200622231345.29722-5-baolu.lu@linux.intel.com
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Link: http://lkml.kernel.org/r/20200616154311.12314-2-longman@redhat.com
+Fixes: 3ef0e5ba4673 ("slab: introduce kzfree()")
+Signed-off-by: Waiman Long <longman@redhat.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: James Morris <jmorris@namei.org>
+Cc: "Serge E. Hallyn" <serge@hallyn.com>
+Cc: Joe Perches <joe@perches.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: "Jason A . Donenfeld" <Jason@zx2c4.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/iommu/dmar.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ mm/slab_common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
-index 9e393b9c50911..30ac0ba55864e 100644
---- a/drivers/iommu/dmar.c
-+++ b/drivers/iommu/dmar.c
-@@ -898,7 +898,8 @@ int __init detect_intel_iommu(void)
- 	if (!ret)
- 		ret = dmar_walk_dmar_table((struct acpi_table_dmar *)dmar_tbl,
- 					   &validate_drhd_cb);
--	if (!ret && !no_iommu && !iommu_detected && !dmar_disabled) {
-+	if (!ret && !no_iommu && !iommu_detected &&
-+	    (!dmar_disabled || dmar_platform_optin())) {
- 		iommu_detected = 1;
- 		/* Make sure ACS will be enabled */
- 		pci_request_acs();
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index ade6c257d4b42..8c1ffbf7de45c 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -1740,7 +1740,7 @@ void kzfree(const void *p)
+ 	if (unlikely(ZERO_OR_NULL_PTR(mem)))
+ 		return;
+ 	ks = ksize(mem);
+-	memset(mem, 0, ks);
++	memzero_explicit(mem, ks);
+ 	kfree(mem);
+ }
+ EXPORT_SYMBOL(kzfree);
 -- 
 2.25.1
 
