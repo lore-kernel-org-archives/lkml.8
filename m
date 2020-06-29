@@ -2,126 +2,166 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E6FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4449C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:42:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8C0BE2064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:42:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2F332063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:42:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729072AbgF2Smo (ORCPT
+        id S1726575AbgF2Smr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:42:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60640 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726836AbgF2Sl0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:41:26 -0400
-Received: from [10.44.0.192] (unknown [103.48.210.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E09AB23D68;
-        Mon, 29 Jun 2020 14:03:11 +0000 (UTC)
-Subject: Re: [PATCH 1/2] m68k: nommu: register start of the memory with
- memblock
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>
-References: <20200617065341.32160-1-rppt@kernel.org>
- <20200617065341.32160-2-rppt@kernel.org>
- <45cb9ecf-44c2-d307-4342-e66851ef67a7@linux-m68k.org>
- <4a988de6-b194-5831-9eec-3dd7417bc3c7@linux-m68k.org>
- <20200629041459.GA1492837@kernel.org>
-From:   Greg Ungerer <gerg@linux-m68k.org>
-Message-ID: <25be53bf-3ec3-490b-4f2f-1a94ba7a7700@linux-m68k.org>
-Date:   Tue, 30 Jun 2020 00:03:08 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Mon, 29 Jun 2020 14:42:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38356 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729006AbgF2Smm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:42:42 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7E04C033C1B;
+        Mon, 29 Jun 2020 11:26:32 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jpyUB-002Dvc-FI; Mon, 29 Jun 2020 18:26:31 +0000
+From:   Al Viro <viro@ZenIV.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        David Miller <davem@davemloft.net>,
+        Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>
+Subject: [PATCH 26/41] arm: switch to ->get2()
+Date:   Mon, 29 Jun 2020 19:26:13 +0100
+Message-Id: <20200629182628.529995-26-viro@ZenIV.linux.org.uk>
+X-Mailer: git-send-email 2.25.4
+In-Reply-To: <20200629182628.529995-1-viro@ZenIV.linux.org.uk>
+References: <20200629182349.GA2786714@ZenIV.linux.org.uk>
+ <20200629182628.529995-1-viro@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20200629041459.GA1492837@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mike,
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-On 29/6/20 2:14 pm, Mike Rapoport wrote:
-> On Mon, Jun 29, 2020 at 11:10:16AM +1000, Greg Ungerer wrote:
->> On 17/6/20 10:33 pm, Greg Ungerer wrote:
->>> On 17/6/20 4:53 pm, Mike Rapoport wrote:
->>>> From: Mike Rapoport <rppt@linux.ibm.com>
->>>>
->>>> The m68k nommu setup code didn't register the beginning of the physical
->>>> memory with memblock because it was anyway occupied by the kernel. However,
->>>> commit fa3354e4ea39 ("mm: free_area_init: use maximal zone PFNs rather than
->>>> zone sizes") changed zones initialization to use memblock.memory to detect
->>>> the zone extents and this caused inconsistency between zone PFNs and the
->>>> actual PFNs:
->>>>
->>>> BUG: Bad page state in process swapper  pfn:20165
->>>> page:41fe0ca0 refcount:0 mapcount:1 mapping:00000000 index:0x0 flags: 0x0()
->>>> raw: 00000000 00000100 00000122 00000000 00000000 00000000 00000000 00000000
->>>> page dumped because: nonzero mapcount
->>>> CPU: 0 PID: 1 Comm: swapper Not tainted 5.8.0-rc1-00001-g3a38f8a60c65-dirty #1
->>>> Stack from 404c9ebc:
->>>>           404c9ebc 4029ab28 4029ab28 40088470 41fe0ca0 40299e21 40299df1 404ba2a4
->>>>           00020165 00000000 41fd2c10 402c7ba0 41fd2c04 40088504 41fe0ca0 40299e21
->>>>           00000000 40088a12 41fe0ca0 41fe0ca4 0000020a 00000000 00000001 402ca000
->>>>           00000000 41fe0ca0 41fd2c10 41fd2c10 00000000 00000000 402b2388 00000001
->>>>           400a0934 40091056 404c9f44 404c9f44 40088db4 402c7ba0 00000001 41fd2c04
->>>>           41fe0ca0 41fd2000 41fe0ca0 40089e02 4026ecf4 40089e4e 41fe0ca0 ffffffff
->>>> Call Trace:
->>>>           [<40088470>] 0x40088470
->>>>    [<40088504>] 0x40088504
->>>>    [<40088a12>] 0x40088a12
->>>>    [<402ca000>] 0x402ca000
->>>>    [<400a0934>] 0x400a0934
->>>>
->>>> Adjust the memory registration with memblock to include the beginning of
->>>> the physical memory and make sure that the area occupied by the kernel is
->>>> marked as reserved.
->>>>
->>>> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
->>>
->>> Acked-by: Greg Ungerer <gerg@linux-m68k.org>
->>
->> What path do you anticipate this taking into mainline?
->> I see it is still broken in 5.8-rc3.
-> 
-> I thought it will go through m68k tree.
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+---
+ arch/arm/kernel/ptrace.c | 52 +++++++++++-------------------------------------
+ 1 file changed, 12 insertions(+), 40 deletions(-)
 
-Ok, no worries, I will push them through.
-I have pushed into the for-next and for-linus branches of the m68knommu
-git tree to get the ball rolling.
+diff --git a/arch/arm/kernel/ptrace.c b/arch/arm/kernel/ptrace.c
+index d0f7c8896c96..895388288093 100644
+--- a/arch/arm/kernel/ptrace.c
++++ b/arch/arm/kernel/ptrace.c
+@@ -569,14 +569,9 @@ static int ptrace_sethbpregs(struct task_struct *tsk, long num,
+ 
+ static int gpr_get(struct task_struct *target,
+ 		   const struct user_regset *regset,
+-		   unsigned int pos, unsigned int count,
+-		   void *kbuf, void __user *ubuf)
++		   struct membuf to)
+ {
+-	struct pt_regs *regs = task_pt_regs(target);
+-
+-	return user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-				   regs,
+-				   0, sizeof(*regs));
++	return membuf_write(&to, task_pt_regs(target), sizeof(struct pt_regs));
+ }
+ 
+ static int gpr_set(struct task_struct *target,
+@@ -602,12 +597,10 @@ static int gpr_set(struct task_struct *target,
+ 
+ static int fpa_get(struct task_struct *target,
+ 		   const struct user_regset *regset,
+-		   unsigned int pos, unsigned int count,
+-		   void *kbuf, void __user *ubuf)
++		   struct membuf to)
+ {
+-	return user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-				   &task_thread_info(target)->fpstate,
+-				   0, sizeof(struct user_fp));
++	return membuf_write(&to, &task_thread_info(target)->fpstate,
++				 sizeof(struct user_fp));
+ }
+ 
+ static int fpa_set(struct task_struct *target,
+@@ -642,41 +635,20 @@ static int fpa_set(struct task_struct *target,
+  *	vfp_set() ignores this chunk
+  *
+  * 1 word for the FPSCR
+- *
+- * The bounds-checking logic built into user_regset_copyout and friends
+- * means that we can make a simple sequence of calls to map the relevant data
+- * to/from the specified slice of the user regset structure.
+  */
+ static int vfp_get(struct task_struct *target,
+ 		   const struct user_regset *regset,
+-		   unsigned int pos, unsigned int count,
+-		   void *kbuf, void __user *ubuf)
++		   struct membuf to)
+ {
+-	int ret;
+ 	struct thread_info *thread = task_thread_info(target);
+ 	struct vfp_hard_struct const *vfp = &thread->vfpstate.hard;
+-	const size_t user_fpregs_offset = offsetof(struct user_vfp, fpregs);
+ 	const size_t user_fpscr_offset = offsetof(struct user_vfp, fpscr);
+ 
+ 	vfp_sync_hwstate(thread);
+ 
+-	ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-				  &vfp->fpregs,
+-				  user_fpregs_offset,
+-				  user_fpregs_offset + sizeof(vfp->fpregs));
+-	if (ret)
+-		return ret;
+-
+-	ret = user_regset_copyout_zero(&pos, &count, &kbuf, &ubuf,
+-				       user_fpregs_offset + sizeof(vfp->fpregs),
+-				       user_fpscr_offset);
+-	if (ret)
+-		return ret;
+-
+-	return user_regset_copyout(&pos, &count, &kbuf, &ubuf,
+-				   &vfp->fpscr,
+-				   user_fpscr_offset,
+-				   user_fpscr_offset + sizeof(vfp->fpscr));
++	membuf_write(&to, vfp->fpregs, sizeof(vfp->fpregs));
++	membuf_zero(&to, user_fpscr_offset - sizeof(vfp->fpregs));
++	return membuf_store(&to, vfp->fpscr);
+ }
+ 
+ /*
+@@ -739,7 +711,7 @@ static const struct user_regset arm_regsets[] = {
+ 		.n = ELF_NGREG,
+ 		.size = sizeof(u32),
+ 		.align = sizeof(u32),
+-		.get = gpr_get,
++		.get2 = gpr_get,
+ 		.set = gpr_set
+ 	},
+ 	[REGSET_FPR] = {
+@@ -751,7 +723,7 @@ static const struct user_regset arm_regsets[] = {
+ 		.n = sizeof(struct user_fp) / sizeof(u32),
+ 		.size = sizeof(u32),
+ 		.align = sizeof(u32),
+-		.get = fpa_get,
++		.get2 = fpa_get,
+ 		.set = fpa_set
+ 	},
+ #ifdef CONFIG_VFP
+@@ -764,7 +736,7 @@ static const struct user_regset arm_regsets[] = {
+ 		.n = ARM_VFPREGS_SIZE / sizeof(u32),
+ 		.size = sizeof(u32),
+ 		.align = sizeof(u32),
+-		.get = vfp_get,
++		.get2 = vfp_get,
+ 		.set = vfp_set
+ 	},
+ #endif /* CONFIG_VFP */
+-- 
+2.11.0
 
-Regards
-Greg
-
-
-
->>>> ---
->>>>    arch/m68k/kernel/setup_no.c | 3 ++-
->>>>    1 file changed, 2 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/arch/m68k/kernel/setup_no.c b/arch/m68k/kernel/setup_no.c
->>>> index e779b19e0193..f66f4b1d062e 100644
->>>> --- a/arch/m68k/kernel/setup_no.c
->>>> +++ b/arch/m68k/kernel/setup_no.c
->>>> @@ -138,7 +138,8 @@ void __init setup_arch(char **cmdline_p)
->>>>        pr_debug("MEMORY -> ROMFS=0x%p-0x%06lx MEM=0x%06lx-0x%06lx\n ",
->>>>             __bss_stop, memory_start, memory_start, memory_end);
->>>> -    memblock_add(memory_start, memory_end - memory_start);
->>>> +    memblock_add(_rambase, memory_end - _rambase);
->>>> +    memblock_reserve(_rambase, memory_start - _rambase);
->>>>        /* Keep a copy of command line */
->>>>        *cmdline_p = &command_line[0];
->>>>
-> 
