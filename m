@@ -2,112 +2,199 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E430DC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC0FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:49:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE3592065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:49:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A3272065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:49:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="YiHYnDoc"
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="lj9PiDYY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387672AbgF2Uti (ORCPT
+        id S2387703AbgF2Utq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:49:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43372 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731358AbgF2TNk (ORCPT
+        Mon, 29 Jun 2020 16:49:46 -0400
+Received: from mail-m964.mail.126.com ([123.126.96.4]:54182 "EHLO
+        mail-m964.mail.126.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731557AbgF2Utk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:13:40 -0400
-Received: from ozlabs.org (bilbo.ozlabs.org [IPv6:2401:3900:2:1::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31C68C00862A;
-        Mon, 29 Jun 2020 03:55:11 -0700 (PDT)
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49wPX01jWzz9s6w;
-        Mon, 29 Jun 2020 20:54:55 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1593428108;
-        bh=Ikj+QFFobl8b3GOszRTI8T5Tvh6wpN/NDrkClHklAgw=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=YiHYnDocf/5avJ1oQV/ZaHBo/5KnMj7//ysZQFYyI4CFWIs0UV549pLr1FezSCW5R
-         7XD/bwKDSUl4GAlnxg7+l0dw4qYA4xFJR/p0JjqRrWAn2c6piTAq/Kf99cWgxRb+Vr
-         ch+9DPfW5GFlugwK8NDTwdtqvhOtAXApFXREB/EMHOgHMLm6ivU0YJfIMjJPJ40xpN
-         kv2gGSe40lRU0VLBuIWAsbpJHfD2vQ8cVfDbiLUGCL8LADDRAfzAvbVmxjxe8KYph/
-         C0DoRs93QcEpGuelY5DIvGvYXit7Ov60w25mPElZgJuSxb+KyRGJmW1byOAeC/UHQf
-         AIm77bM9c7www==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Joerg Roedel <joro@8bytes.org>, iommu@lists.linux-foundation.org
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>, x86@kernel.org,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        intel-gfx@lists.freedesktop.org, Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH 13/13] powerpc/dma: Remove dev->archdata.iommu_domain
-In-Reply-To: <20200625130836.1916-14-joro@8bytes.org>
-References: <20200625130836.1916-1-joro@8bytes.org> <20200625130836.1916-14-joro@8bytes.org>
-Date:   Mon, 29 Jun 2020 20:57:07 +1000
-Message-ID: <87bll287i4.fsf@mpe.ellerman.id.au>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Mon, 29 Jun 2020 16:49:40 -0400
+X-Greylist: delayed 5420 seconds by postgrey-1.27 at vger.kernel.org; Mon, 29 Jun 2020 16:49:39 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=dZFXghp2i9BkRXeQIr
+        QISjtevrHQgS0lHVzMWGLDDZI=; b=lj9PiDYYMZOxqGFVGXaCBp+s71xwrYi66o
+        tNIizvnECV5i9rd0sDxGOaFrjeO8jd5GfhEa374YfNLPRbxAhd5Fl9FS59zPG8tO
+        DDPUNDhRhzg8wyXCQeQf7diukTLsSS6TQFGa7dEI7h2WOEjDW6BrsvyGm2SsyKME
+        Lp/tyPGbA=
+Received: from xr-hulk-k8s-node1933.gh.sankuai.com (unknown [101.236.11.2])
+        by smtp9 (Coremail) with SMTP id NeRpCgCHnS07uPlezqHWAg--.1769S2;
+        Mon, 29 Jun 2020 17:45:36 +0800 (CST)
+From:   Jiang Ying <jiangying8582@126.com>
+To:     Markus.Elfring@web.de, tytso@mit.edu, adilger.kernel@dilger.ca,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        wanglong19@meituan.com, heguanjun@meituan.com
+Subject: [PATCH v3] ext4: fix direct I/O read error
+Date:   Mon, 29 Jun 2020 17:45:30 +0800
+Message-Id: <1593423930-5576-1-git-send-email-jiangying8582@126.com>
+X-Mailer: git-send-email 1.8.3.1
+X-CM-TRANSID: NeRpCgCHnS07uPlezqHWAg--.1769S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxAw47WFW8tw4rCr1UZr4xZwb_yoWrGry5pr
+        nxCa15WrZ5Zr4xCanrK3ZrZFyFy3yDGFWUXry5u34UZr4Yg3s5KFWxKF17C3yUGrWF9w4F
+        qFZ8tryfAw1UAFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U_cTdUUUUU=
+X-Originating-IP: [101.236.11.2]
+X-CM-SenderInfo: xmld0wp1lqwmqvysqiyswou0bp/1tbiXABSAFpEA7E69AAAss
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Joerg Roedel <joro@8bytes.org> writes:
-> From: Joerg Roedel <jroedel@suse.de>
->
-> There are no users left, so remove the pointer and save some memory.
->
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> ---
->  arch/powerpc/include/asm/device.h | 3 ---
->  1 file changed, 3 deletions(-)
+This patch is used to fix ext4 direct I/O read error when
+the read size is not aligned with block size.
 
-It's a little hard to confirm there are no users left just with grep,
-but I think you've got them all, and the compiler should tell us if
-you've missed any.
+Then, I will use a test to explain the error.
 
-Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
+(1) Make a file that is not aligned with block size:
+	$dd if=/dev/zero of=./test.jar bs=1000 count=3
 
-cheers
+(2) I wrote a source file named "direct_io_read_file.c" as following:
 
-> diff --git a/arch/powerpc/include/asm/device.h b/arch/powerpc/include/asm/device.h
-> index 266542769e4b..1bc595213338 100644
-> --- a/arch/powerpc/include/asm/device.h
-> +++ b/arch/powerpc/include/asm/device.h
-> @@ -34,9 +34,6 @@ struct dev_archdata {
->  	struct iommu_table	*iommu_table_base;
->  #endif
->  
-> -#ifdef CONFIG_IOMMU_API
-> -	void			*iommu_domain;
-> -#endif
->  #ifdef CONFIG_PPC64
->  	struct pci_dn		*pci_data;
->  #endif
-> -- 
-> 2.27.0
+	#include <stdio.h>
+	#include <stdlib.h>
+	#include <unistd.h>
+	#include <sys/file.h>
+	#include <sys/types.h>
+	#include <sys/stat.h>
+	#include <string.h>
+	#define BUF_SIZE 1024
+
+	int main()
+	{
+		int fd;
+		int ret;
+
+		unsigned char *buf;
+		ret = posix_memalign((void **)&buf, 512, BUF_SIZE);
+		if (ret) {
+			perror("posix_memalign failed");
+			exit(1);
+		}
+		fd = open("./test.jar", O_RDONLY | O_DIRECT, 0755);
+		if (fd < 0){
+			perror("open ./test.jar failed");
+			exit(1);
+		}
+
+		do {
+			ret = read(fd, buf, BUF_SIZE);
+			printf("ret=%d\n",ret);
+			if (ret < 0) {
+				perror("write test.jar failed");
+			}
+		} while (ret > 0);
+
+		free(buf);
+		close(fd);
+	}
+
+(3) Compile the source file:
+	$gcc direct_io_read_file.c -D_GNU_SOURCE
+
+(4) Run the test program:
+	$./a.out
+
+	The result is as following:
+	ret=1024
+	ret=1024
+	ret=952
+	ret=-1
+	write test.jar failed: Invalid argument.
+
+I have tested this program on XFS filesystem, XFS does not have
+this problem, because XFS use iomap_dio_rw() to do direct I/O
+read. And the comparing between read offset and file size is done
+in iomap_dio_rw(), the code is as following:
+
+	if (pos < size) {
+		retval = filemap_write_and_wait_range(mapping, pos,
+				pos + iov_length(iov, nr_segs) - 1);
+
+		if (!retval) {
+			retval = mapping->a_ops->direct_IO(READ, iocb,
+						iov, pos, nr_segs);
+		}
+		...
+	}
+
+...only when "pos < size", direct I/O can be done, or 0 will be return.
+
+I have tested the fix patch on Ext4, it is up to the mustard of
+EINVAL in man2(read) as following:
+	#include <unistd.h>
+	ssize_t read(int fd, void *buf, size_t count);
+
+	EINVAL
+		fd is attached to an object which is unsuitable for reading;
+		or the file was opened with the O_DIRECT flag, and either the
+		address specified in buf, the value specified in count, or the
+		current file offset is not suitably aligned.
+
+So I think this patch can be applied to fix ext4 direct I/O error.
+
+However Ext4 introduces direct I/O read using iomap infrastructure
+on kernel 5.5, the patch is commit <b1b4705d54ab>
+("ext4: introduce direct I/O read using iomap infrastructure"),
+then Ext4 will be the same as XFS, they all use iomap_dio_rw() to do direct
+I/O read. So this problem does not exist on kernel 5.5 for Ext4.
+
+From above description, we can see this problem exists on all the kernel
+versions between kernel 3.14 and kernel 5.4. Please apply this patch
+on these kernel versions, or please use the method on kernel 5.5 to fix
+this problem.
+
+Fixes: 9fe55eea7e4b ("Fix race when checking i_size on direct i/o read")
+Co-developed-by: Wang Long <wanglong19@meituan.com>
+Signed-off-by: Wang Long <wanglong19@meituan.com>
+Signed-off-by: Jiang Ying <jiangying8582@126.com>
+
+Changes since V2:
+	Optimize the description of the commit message and make a variation for
+	the patch, e.g. with:
+
+		Before:
+			loff_t size;
+			size = i_size_read(inode);
+		After:
+			loff_t size = i_size_read(inode);
+
+Changes since V1:
+	Signed-off use real name and add "Fixes:" flag
+
+---
+ fs/ext4/inode.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index 516faa2..a66b0ac 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -3821,6 +3821,11 @@ static ssize_t ext4_direct_IO_read(struct kiocb *iocb, struct iov_iter *iter)
+ 	struct inode *inode = mapping->host;
+ 	size_t count = iov_iter_count(iter);
+ 	ssize_t ret;
++	loff_t offset = iocb->ki_pos;
++	loff_t size = i_size_read(inode);
++
++	if (offset >= size)
++		return 0;
+ 
+ 	/*
+ 	 * Shared inode_lock is enough for us - it protects against concurrent
+-- 
+1.8.3.1
+
