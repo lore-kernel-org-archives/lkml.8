@@ -2,186 +2,128 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A8A6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CAAFC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47498206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:18:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5297D206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:18:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xabakTlT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AbHbF76T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731984AbgF2TR6 (ORCPT
+        id S1730851AbgF2TSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:17:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44318 "EHLO
+        Mon, 29 Jun 2020 15:18:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731951AbgF2TRn (ORCPT
+        with ESMTP id S1731950AbgF2TRn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:17:43 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EA5BC03079C
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 08:38:00 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id z13so17000691wrw.5
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 08:38:00 -0700 (PDT)
+Received: from mail-qt1-x844.google.com (mail-qt1-x844.google.com [IPv6:2607:f8b0:4864:20::844])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E3E7C030F32
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:52:13 -0700 (PDT)
+Received: by mail-qt1-x844.google.com with SMTP id v19so13320259qtq.10
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:52:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=ShhE7g5SJz1A2LdeoWPLePC7l35fgsx0zx/wDQfKJTI=;
-        b=xabakTlTYmtpEyDxEa7yDPe7DMOMxN6AqQMck23F6MmQi9YTgUxfraCYFu3KPQ6uEA
-         Nzx5KBfZrhmF1SeYQT4keNVs3KIGJgsAO1wgjGE1ivCJ5Zk4OLRKDiv3SFXo716cfv/c
-         ijch2hqp6P7/zzg06QYa5s+GF+US5RChmsNGKhdxI6sXjB3DL5SEtIX08aSAsOHEfAph
-         Qf5L18elCCk1rY2JVhBJ3DCM9GYN/WWvTApmKdlO88JWK6SRzXr0nmP0/opCQPi0EUKg
-         MVydtly7U8O3gokNeY3QDC1FhZj9TCINr5JntGlRrd8mc9X5Ym2p17ZeQuVSl8xRmDol
-         L32w==
+        bh=zVHoQQL1LMsjUx4guRxFxG91mzY8eSh+1dSHVIjtlAw=;
+        b=AbHbF76TqmAMD6PPzsJCCJLquGawD17crfO8756wqiYD2QTDJqwM1V4JoCk4fahs9P
+         hmwMMQIXhWDBt9WTcm/8eBOhR2JJs+r4Nlb18DFOVbOhjKz4G/A221gd0mLpR2K/W6fN
+         Y/8lxIgiV7xoK2zNetBqhe38al2oz7padgN2vH4YN6u97FI56v51Z/uxdOQOaM4ZzqF5
+         O5HCXyHcS949k0Oxm5RJNn1KN4iWUsha1uLN55/0mgOHiNZs+tSNa7MLR65Xa8cPCgVw
+         HJNlWG4C1+cVOXqUHSDPkhd55CoJC3JLP0frt+de4d9SuyGKB4RLReP7fbTIE888tWuP
+         XMjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ShhE7g5SJz1A2LdeoWPLePC7l35fgsx0zx/wDQfKJTI=;
-        b=MBmxGVBGBQTGt4or49ESCzRd5x7vBpQkkWMCf7S+EkUi4Zz5XEPh6dFFtDCD5ongF4
-         Ht4DkExCChQbu2RGQ7z8E2p/FAlNsr8Zid0udztOTJhj4Vm4l9XAwtJKUxOdGr0Lju7B
-         XAfpRQljfsZWUsVyloN6u/YsFtHQrhtBpROPB1XBdmMA+pkUEZv7wtF/u1NNcizpC/5j
-         s85Sv52fqBEWcXKMQyST65WdapGeHrnmdEhAICCXh5IyPyB/fFbQ+E6DfmiOV4HqWS3N
-         xsqIooB5STfZBBoid+AoxfAZu+mzrnd7gUksr9B6v+b9jKnECLpUTlJc7RVz38V5GmGA
-         cMJg==
-X-Gm-Message-State: AOAM531JGsMqM6tSrFVE2/TCf21VgA9APtcIAXnsORAovlk0e/e71iVt
-        vkjzo4+7DgCQQjBG6yNRujQxfw==
-X-Google-Smtp-Source: ABdhPJzWB6poC4LpTU3NkcmJJ1oY9B/oljvOMDKa4t38dBstjpwMNtrI5BzUy3wr3kxD0q7Ug0kRnw==
-X-Received: by 2002:a5d:4051:: with SMTP id w17mr16754914wrp.183.1593445078758;
-        Mon, 29 Jun 2020 08:37:58 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id v18sm105056wrv.49.2020.06.29.08.37.58
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to;
+        bh=zVHoQQL1LMsjUx4guRxFxG91mzY8eSh+1dSHVIjtlAw=;
+        b=C4lob7syRDRBqszsIdLv25W7b997AA07ski+ewCSI2OHV3y2mhJj84mqERYcCT5b1A
+         wOrK1sfAUJOd93o29GzEeL7CqQU8gzB8MkQYwgEuksjbOb5a0FE0oJ88JaaUoopcRdeH
+         NbBXwaLkzHZ5mpB5ftCm8/+Oyw4ur95zjBK93ScMTVo6+Xw5291ojrILHLk3Ygjw2Qhh
+         XsiPBascE9Fqk3i5EImhvHgqN3G2MrgSOgdtjO1lmPmiTkw1kW/hKMqUelSxfaFj8xs6
+         k4Zq/HoixK6cFaoO6YzL+RRP28l6FD6Q5eVzaT+JIv2+UNBQ4gug85nevmgWC/8CDm+V
+         /sfg==
+X-Gm-Message-State: AOAM531hywLebhYnpnW6NO4mDVC8W1xIX8mWWBr2BFpdI8mWY1pPTizK
+        wrEdEKzp/0IiPq3XstJ2xpc=
+X-Google-Smtp-Source: ABdhPJwy1vikItqkvahrY4JF8s/d4g/QtX4Rsl8mDkBv4CAPplOG1B4GSDPQ+xdeh/9E/MRX/up7UQ==
+X-Received: by 2002:ac8:3496:: with SMTP id w22mr16740693qtb.147.1593449532575;
+        Mon, 29 Jun 2020 09:52:12 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id g145sm398035qke.17.2020.06.29.09.52.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 08:37:58 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 16:37:56 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Cengiz Can <cengiz@kernel.wtf>, Sumit Garg <sumit.garg@linaro.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH] kdb: prevent possible null deref in kdb_msg_write
-Message-ID: <20200629153756.cxg74nec3repa4lu@holly.lan>
-References: <20200629135923.14912-1-cengiz@kernel.wtf>
- <20200629145020.GL6156@alley>
+        Mon, 29 Jun 2020 09:52:12 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Mon, 29 Jun 2020 12:52:10 -0400
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Fangrui Song <maskray@google.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        clang-built-linux@googlegroups.com,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "H . J . Lu" <hjl@sourceware.org>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 6/7] x86/boot: Remove runtime relocations from
+ head_{32,64}.S
+Message-ID: <20200629165210.GC900899@rani.riverdale.lan>
+References: <20200629140928.858507-1-nivedita@alum.mit.edu>
+ <20200629140928.858507-7-nivedita@alum.mit.edu>
+ <202006290905.7531731A@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200629145020.GL6156@alley>
+In-Reply-To: <202006290905.7531731A@keescook>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 04:50:20PM +0200, Petr Mladek wrote:
-> On Mon 2020-06-29 16:59:24, Cengiz Can wrote:
-> > `kdb_msg_write` operates on a global `struct kgdb_io *` called
-> > `dbg_io_ops`.
+On Mon, Jun 29, 2020 at 09:06:07AM -0700, Kees Cook wrote:
+> On Mon, Jun 29, 2020 at 10:09:27AM -0400, Arvind Sankar wrote:
+> > The BFD linker generates runtime relocations for z_input_len and
+> > z_output_len, even though they are absolute symbols.
 > > 
-> > Although it is initialized in `debug_core.c`, there's a null check in
-> > `kdb_msg_write` which implies that it can be null whenever we dereference
-> > it in this function call.
+> > This is fixed for binutils-2.35 [1]. Work around this for earlier
+> > versions by defining two variables input_len and output_len in addition
+> > to the symbols, and use them via position-independent references.
 > > 
-> > Coverity scanner caught this as CID 1465042.
+> > This eliminates the last two runtime relocations in the head code and
+> > allows us to drop the -z noreloc-overflow flag to the linker.
 > > 
-> > I have modified the function to bail out if `dbg_io_ops` is not properly
-> > initialized.
+> > [1] https://sourceware.org/bugzilla/show_bug.cgi?id=25754
 > > 
-> > Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
+> > Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+> > Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+> > Reviewed-by: Fangrui Song <maskray@google.com>
 > > ---
-> >  kernel/debug/kdb/kdb_io.c | 15 ++++++++-------
-> >  1 file changed, 8 insertions(+), 7 deletions(-)
-> > 
-> > diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
-> > index 683a799618ad..85e579812458 100644
-> > --- a/kernel/debug/kdb/kdb_io.c
-> > +++ b/kernel/debug/kdb/kdb_io.c
-> > @@ -549,14 +549,15 @@ static void kdb_msg_write(const char *msg, int msg_len)
-> >  	if (msg_len == 0)
-> >  		return;
-> >  
-> > -	if (dbg_io_ops) {
-> > -		const char *cp = msg;
-> > -		int len = msg_len;
-> > +	if (!dbg_io_ops)
-> > +		return;
+> >  arch/x86/boot/compressed/Makefile  |  8 --------
+> >  arch/x86/boot/compressed/head_32.S | 17 ++++++++---------
+> >  arch/x86/boot/compressed/head_64.S |  4 ++--
+> >  arch/x86/boot/compressed/mkpiggy.c |  6 ++++++
+> >  4 files changed, 16 insertions(+), 19 deletions(-)
 > 
-> This looks wrong. The message should be printed to the consoles
-> even when dbg_io_ops is NULL. I mean that the for_each_console(c)
-> cycle should always get called.
+> I continue to really enjoy the smaller code. Anything that makes
+> mkpiggy.c smaller is a win. :)
 > 
-> Well, the code really looks racy. dbg_io_ops is set under
-> kgdb_registration_lock. IMHO, it should also get accessed under this lock.
+> Reviewed-by: Kees Cook <keescook@chromium.org>
 > 
-> It seems that the race is possible. kdb_msg_write() is called from
-> vkdb_printf(). This function is serialized on more CPUs using
-> kdb_printf_cpu lock. But it is not serialized with
-> kgdb_register_io_module() and kgdb_unregister_io_module() calls.
+> -- 
+> Kees Cook
 
-We can't take the lock from the trap handler itself since we cannot
-have spinlocks contended between regular threads and the debug trap
-(which could be an NMI).
-
-Instead, the call to kgdb_unregister_callbacks() at the beginning
-of kgdb_unregister_io_module() should render kdb_msg_write()
-unreachable prior to dbg_io_ops becoming NULL.
-
-As it happens I am starting to believe there is a race in this area but
-the race is between register/unregister calls rather than against the
-trap handler (if there were register/unregister races then the trap
-handler is be a potential victim of the race though).
-
-
-> But I might miss something. dbg_io_ops is dereferenced on many other
-> locations without any check.
-
-There is already a paranoid "just in case there are bugs" check in
-kgdb_io_ready() so in any case I think the check in kdb_msg_write() can
-simply be removed.
-
-As I said in my other post, if dbg_io_ops were ever NULL then the
-system is completely hosed anyway: we can never receive the keystroke
-needed to leave the debugger... and may not be able to tell anybody
-why.
-
-
-> >  
-> > -		while (len--) {
-> > -			dbg_io_ops->write_char(*cp);
-> > -			cp++;
-> > -		}
-> > +	const char *cp = msg;
-> > +	int len = msg_len;
-> > +
-> > +	while (len--) {
-> > +		dbg_io_ops->write_char(*cp);
-> > +		cp++;
-> >  	}
-> >  
-> >  	for_each_console(c) {
-> 
-> You probably got confused by this new code:
-> 
-> 		if (c == dbg_io_ops->cons)
-> 			continue;
-> 
-> It dereferences dbg_io_ops without NULL check. It should probably
-> get replaced by:
-> 
-> 		if (dbg_io_ops && c == dbg_io_ops->cons)
-> 			continue;
-> 
-> Daniel, Sumit, could you please put some light on this?
-
-As above, I think the NULL check that confuses coverity can simply be
-removed.
-
-
-Daniel.
+It doesn't actually reduce the size? mkpiggy.c _could_ I think be
+replaced with some carefully written shell code, but this doesn't do
+anything like that.
