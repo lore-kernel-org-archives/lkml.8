@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 079A7C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:26:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5769BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:26:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DF57A2065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:26:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CF98206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:26:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593458808;
-	bh=dWZgweTsH9O0pwJFdmAD8JiQLLkCnmL0L87Gdd4f6ug=;
+	s=default; t=1593458813;
+	bh=8syAJ3fthn+zD5CKMzlub3CBePknRBgAdwrW7T343+A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QWwXxQ04zzDW3lSg6O0EmkV9mpfItFOy53lM+g3bRSJjWq1LUIGTvYWCSsWh/wVum
-	 hmg5nFNv/wZaOPf7h4gdOyXeMHT18CiFspaf6G1sTZqEXA1oE9YpnvYOqchZ//hvWy
-	 LEaV80c8bwBS0aV2MUtdgkSzmMoutfXgBell2uuk=
+	b=NcSBwfMH12R+A1Cl02RvIwrScJN63als1xOKFk6TmciT/aLjRT4lj1FXdP39TT9Ge
+	 M+1wdg3JAidU84iUNE1apw5rtZqZ4RB4ukxgrlAuPwsKE/CLs8YeU2dXuO0s8VIqk3
+	 lWAwTGKjxwLHgnFVvvPhsss8iELqHvyDy05/cdGQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732097AbgF2T0r (ORCPT
+        id S1729454AbgF2T0v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:26:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37064 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:26:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732677AbgF2TZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732673AbgF2TZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE63C25406;
-        Mon, 29 Jun 2020 15:42:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EFE132540B;
+        Mon, 29 Jun 2020 15:42:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445356;
-        bh=dWZgweTsH9O0pwJFdmAD8JiQLLkCnmL0L87Gdd4f6ug=;
+        s=default; t=1593445358;
+        bh=8syAJ3fthn+zD5CKMzlub3CBePknRBgAdwrW7T343+A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AbWYBw9D2GXIibDy89SnRLmEUuZlvxj40JV2N3Il3CYLj8aOH2X6xM4bzPQKPdDf6
-         ay7bg/D9wI0GzDWBmo42xSDm59WdnXNLYGadpdFz5C/IpgMt7Gws9xqMLAGfat0FDe
-         w0DUalXimooXMlWBhYoHXvpLf58r7Z3/urABPIw4=
+        b=zEgJa2la82dmSj03dG2jZeZRlSm1XV1KBIgkSNnv7+/32iBz82kKrb4dYVSKJAEVv
+         GtnS6yzCv35PbI2TtRrBMIhEZkkgrQwCjLh9rpJ2svvxNED/6StHd+W8SYsy1mgdj7
+         IVisC0NpWSD25nToViu8nd8VupZkd3GPryFBzU8s=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Jaedon Shin <jaedon.shin@gmail.com>,
         Mauro Carvalho Chehab <mchehab@s-opensource.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.9 114/191] media: dvb_frontend: Add unlocked_ioctl in dvb_frontend.c
-Date:   Mon, 29 Jun 2020 11:38:50 -0400
-Message-Id: <20200629154007.2495120-115-sashal@kernel.org>
+Subject: [PATCH 4.9 116/191] media: dvb_frontend: Add commands implementation for compat ioct
+Date:   Mon, 29 Jun 2020 11:38:52 -0400
+Message-Id: <20200629154007.2495120-117-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -68,68 +68,166 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jaedon Shin <jaedon.shin@gmail.com>
 
-commit a2282fd1fe2ebcda480426dbfaaa7c4e87e27399 upstream
+commit 18192a77f0810933ab71a46c1b260d230d7352ee upstream
 
-Adds unlocked ioctl function directly in dvb_frontend.c instead of using
-dvb_generic_ioctl().
+The dtv_properties structure and the dtv_property structure are
+different sizes in 32-bit and 64-bit system. This patch provides
+FE_SET_PROPERTY and FE_GET_PROPERTY ioctl commands implementation for
+32-bit user space applications.
 
 Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
 Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/media/dvb-core/dvb_frontend.c | 17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ drivers/media/dvb-core/dvb_frontend.c | 131 ++++++++++++++++++++++++++
+ 1 file changed, 131 insertions(+)
 
 diff --git a/drivers/media/dvb-core/dvb_frontend.c b/drivers/media/dvb-core/dvb_frontend.c
-index 6f9ee78a18703..dacc467e24af2 100644
+index c0a25cd6ccb8b..34f55a2ba071d 100644
 --- a/drivers/media/dvb-core/dvb_frontend.c
 +++ b/drivers/media/dvb-core/dvb_frontend.c
-@@ -1926,7 +1926,8 @@ static int dtv_property_process_set(struct dvb_frontend *fe,
- 	return r;
+@@ -1983,9 +1983,140 @@ static long dvb_frontend_ioctl(struct file *file, unsigned int cmd,
  }
  
--static int dvb_frontend_ioctl(struct file *file, unsigned int cmd, void *parg)
-+static int dvb_frontend_do_ioctl(struct file *file, unsigned int cmd,
-+				 void *parg)
- {
- 	struct dvb_device *dvbdev = file->private_data;
- 	struct dvb_frontend *fe = dvbdev->priv;
-@@ -1969,6 +1970,17 @@ static int dvb_frontend_ioctl(struct file *file, unsigned int cmd, void *parg)
- 	return err;
- }
- 
-+static long dvb_frontend_ioctl(struct file *file, unsigned int cmd,
-+			       unsigned long arg)
+ #ifdef CONFIG_COMPAT
++struct compat_dtv_property {
++	__u32 cmd;
++	__u32 reserved[3];
++	union {
++		__u32 data;
++		struct dtv_fe_stats st;
++		struct {
++			__u8 data[32];
++			__u32 len;
++			__u32 reserved1[3];
++			compat_uptr_t reserved2;
++		} buffer;
++	} u;
++	int result;
++} __attribute__ ((packed));
++
++struct compat_dtv_properties {
++	__u32 num;
++	compat_uptr_t props;
++};
++
++#define COMPAT_FE_SET_PROPERTY	   _IOW('o', 82, struct compat_dtv_properties)
++#define COMPAT_FE_GET_PROPERTY	   _IOR('o', 83, struct compat_dtv_properties)
++
++static int dvb_frontend_handle_compat_ioctl(struct file *file, unsigned int cmd,
++					    unsigned long arg)
 +{
 +	struct dvb_device *dvbdev = file->private_data;
++	struct dvb_frontend *fe = dvbdev->priv;
++	struct dvb_frontend_private *fepriv = fe->frontend_priv;
++	int i, err = 0;
 +
-+	if (!dvbdev)
-+		return -ENODEV;
++	if (cmd == COMPAT_FE_SET_PROPERTY) {
++		struct compat_dtv_properties prop, *tvps = NULL;
++		struct compat_dtv_property *tvp = NULL;
 +
-+	return dvb_usercopy(file, cmd, arg, dvb_frontend_do_ioctl);
++		if (copy_from_user(&prop, compat_ptr(arg), sizeof(prop)))
++			return -EFAULT;
++
++		tvps = &prop;
++
++		/*
++		 * Put an arbitrary limit on the number of messages that can
++		 * be sent at once
++		 */
++		if (!tvps->num || (tvps->num > DTV_IOCTL_MAX_MSGS))
++			return -EINVAL;
++
++		tvp = memdup_user(compat_ptr(tvps->props), tvps->num * sizeof(*tvp));
++		if (IS_ERR(tvp))
++			return PTR_ERR(tvp);
++
++		for (i = 0; i < tvps->num; i++) {
++			err = dtv_property_process_set(fe, file,
++							(tvp + i)->cmd,
++							(tvp + i)->u.data);
++			if (err < 0) {
++				kfree(tvp);
++				return err;
++			}
++		}
++		kfree(tvp);
++	} else if (cmd == COMPAT_FE_GET_PROPERTY) {
++		struct compat_dtv_properties prop, *tvps = NULL;
++		struct compat_dtv_property *tvp = NULL;
++		struct dtv_frontend_properties getp = fe->dtv_property_cache;
++
++		if (copy_from_user(&prop, compat_ptr(arg), sizeof(prop)))
++			return -EFAULT;
++
++		tvps = &prop;
++
++		/*
++		 * Put an arbitrary limit on the number of messages that can
++		 * be sent at once
++		 */
++		if (!tvps->num || (tvps->num > DTV_IOCTL_MAX_MSGS))
++			return -EINVAL;
++
++		tvp = memdup_user(compat_ptr(tvps->props), tvps->num * sizeof(*tvp));
++		if (IS_ERR(tvp))
++			return PTR_ERR(tvp);
++
++		/*
++		 * Let's use our own copy of property cache, in order to
++		 * avoid mangling with DTV zigzag logic, as drivers might
++		 * return crap, if they don't check if the data is available
++		 * before updating the properties cache.
++		 */
++		if (fepriv->state != FESTATE_IDLE) {
++			err = dtv_get_frontend(fe, &getp, NULL);
++			if (err < 0) {
++				kfree(tvp);
++				return err;
++			}
++		}
++		for (i = 0; i < tvps->num; i++) {
++			err = dtv_property_process_get(
++			    fe, &getp, (struct dtv_property *)tvp + i, file);
++			if (err < 0) {
++				kfree(tvp);
++				return err;
++			}
++		}
++
++		if (copy_to_user((void __user *)compat_ptr(tvps->props), tvp,
++				 tvps->num * sizeof(struct compat_dtv_property))) {
++			kfree(tvp);
++			return -EFAULT;
++		}
++		kfree(tvp);
++	}
++
++	return err;
 +}
 +
- static int dtv_set_frontend(struct dvb_frontend *fe)
+ static long dvb_frontend_compat_ioctl(struct file *file, unsigned int cmd,
+ 				      unsigned long arg)
  {
- 	struct dvb_frontend_private *fepriv = fe->frontend_priv;
-@@ -2638,7 +2650,7 @@ static int dvb_frontend_release(struct inode *inode, struct file *file)
- 
- static const struct file_operations dvb_frontend_fops = {
- 	.owner		= THIS_MODULE,
--	.unlocked_ioctl	= dvb_generic_ioctl,
-+	.unlocked_ioctl	= dvb_frontend_ioctl,
- 	.poll		= dvb_frontend_poll,
- 	.open		= dvb_frontend_open,
- 	.release	= dvb_frontend_release,
-@@ -2706,7 +2718,6 @@ int dvb_register_frontend(struct dvb_adapter* dvb,
- #if defined(CONFIG_MEDIA_CONTROLLER_DVB)
- 		.name = fe->ops.info.name,
++	struct dvb_device *dvbdev = file->private_data;
++	struct dvb_frontend *fe = dvbdev->priv;
++	struct dvb_frontend_private *fepriv = fe->frontend_priv;
++	int err;
++
++	if (cmd == COMPAT_FE_SET_PROPERTY || cmd == COMPAT_FE_GET_PROPERTY) {
++		if (down_interruptible(&fepriv->sem))
++			return -ERESTARTSYS;
++
++		err = dvb_frontend_handle_compat_ioctl(file, cmd, arg);
++
++		up(&fepriv->sem);
++		return err;
++	}
++
+ 	return dvb_frontend_ioctl(file, cmd, (unsigned long)compat_ptr(arg));
+ }
  #endif
--		.kernel_ioctl = dvb_frontend_ioctl
- 	};
- 
- 	dev_dbg(dvb->device, "%s:\n", __func__);
 -- 
 2.25.1
 
