@@ -2,135 +2,387 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 721BEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 02:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA78C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 02:23:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 502EF206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 02:23:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D5DB206D7
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 02:23:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="N3cDWn5d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbgF2CXT (ORCPT
+        id S1726444AbgF2CXf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 22:23:19 -0400
-Received: from mga09.intel.com ([134.134.136.24]:41844 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726154AbgF2CXS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 22:23:18 -0400
-IronPort-SDR: 6tHhmAeo1KG44lZ0CK+3ixCSNaPMXINN1z6TPqIEQWeAq4r5rd1c9w98rjBkvnqG+mJpjUmCwU
- JMWmSOGoFuBw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="147444397"
-X-IronPort-AV: E=Sophos;i="5.75,293,1589266800"; 
-   d="scan'208";a="147444397"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2020 19:23:18 -0700
-IronPort-SDR: 9QeAQlFy9BN+1rM6V7gRkUiaq+DRB6cnf5ctktGu4WeGBRbb9mrBS6DO9Y0pV0BLr+Rio/d+tT
- i85FPgocNKWg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,293,1589266800"; 
-   d="scan'208";a="480625528"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.141])
-  by fmsmga005.fm.intel.com with ESMTP; 28 Jun 2020 19:23:15 -0700
-Date:   Mon, 29 Jun 2020 10:19:24 +0800
-From:   Xu Yilun <yilun.xu@intel.com>
-To:     trix@redhat.com
-Cc:     mdf@kernel.org, linux-fpga@vger.kernel.org,
-        linux-kernel@vger.kernel.org, hao.wu@intel.com,
-        matthew.gerlach@linux.intel.com
-Subject: Re: [PATCH] fpga: dfl: improve configuration of dfl pci devices
-Message-ID: <20200629021924.GB2620@yilunxu-OptiPlex-7050>
-References: <20200628151813.7679-1-trix@redhat.com>
+        Sun, 28 Jun 2020 22:23:35 -0400
+Received: from mail-db8eur05on2057.outbound.protection.outlook.com ([40.107.20.57]:20238
+        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726154AbgF2CXe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 22:23:34 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=iRlF2SIvegQNy7lCg8rll4/FUuLdTLrJ2SJv+9H6v+OdxDriXuGNWqWEx+s5JyweLcvNIsCN0SIdLH3mqJtwjbSRle8CFWHsoLBUcffwgaGy8oukbyoDmNAvX7ZRhe/Z3yxAZ09H1dECcHXoXX6a7scMC5Qx/AjHIDrdSAy+DgX9Pjur2dLhTRwKZNe7VIv9ik5iSoCbRAW949QTWOVJ2IEalO0EndCBDhJKlAbwb6+q05tUYwgUr28LW+pW7jobFquyb90Ud58duISxvNVyKMfmy0Sygvpmb0dl7AiwtSutz8z1FrN1S+VymRy2czloSI94/UC4m9FAwN/Zce04sA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jcy7UL+bnv/Hr53sSBsAJTZKHEXvSXf6kcZVaiG1FYs=;
+ b=SoiG1vRzmSqZiyRCgN8nsR+dgWS8sZuEa0SSgtgb03jpCWyGIA0KqrTfbnH6MLlztQ4xypvoMs0iSVEavQfWnvcRMZAfRrEl5t1LfAvy+H62y2Q6FB2oSS+OAl4+vCarlGr91Z1aDySEKfuBkzgnjpnMYXU5CrnjW/dyaAH3gJQZIHn9lGS0TebegIcdt882SJUY0GMS/ncU4hUQctmQuxp762XWPSmZOikmWSAAOBq9LGhU8REmputqypViJGPyCrqAqmeePPbN6FPDyahb6gST+sI4/0dLQqbJSuRvQ2THN4heZpqNf4cZDHwxr1oWnzd/2DAXcHJCcdyl8F0RrA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jcy7UL+bnv/Hr53sSBsAJTZKHEXvSXf6kcZVaiG1FYs=;
+ b=N3cDWn5dHmZl7yaV2WOS8lsYozZgDEC3d/2QJgSACJTi/shc1Jm0dP5gEyzhokKo3IebBYVWSrRJj76set4L7efXx7TuORtLgos6oYnDkrzRAIDbhAbe91lUz6lLRAuBp5PI16SBKCncP964SYjwtz4qQQl7eRrLJwTHGVplyGg=
+Authentication-Results: davemloft.net; dkim=none (message not signed)
+ header.d=none;davemloft.net; dmarc=none action=none header.from=nxp.com;
+Received: from VE1PR04MB6496.eurprd04.prod.outlook.com (2603:10a6:803:11c::29)
+ by VE1PR04MB6608.eurprd04.prod.outlook.com (2603:10a6:803:125::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.23; Mon, 29 Jun
+ 2020 02:23:28 +0000
+Received: from VE1PR04MB6496.eurprd04.prod.outlook.com
+ ([fe80::c1ea:5943:40e8:58f1]) by VE1PR04MB6496.eurprd04.prod.outlook.com
+ ([fe80::c1ea:5943:40e8:58f1%3]) with mapi id 15.20.3131.026; Mon, 29 Jun 2020
+ 02:23:28 +0000
+From:   Po Liu <po.liu@nxp.com>
+To:     davem@davemloft.net, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     alexandre.belloni@bootlin.com, andrew@lunn.ch,
+        vivien.didelot@gmail.com, f.fainelli@gmail.com, kuba@kernel.org,
+        jiri@resnulli.us, vlad@buslov.dev, claudiu.manoil@nxp.com,
+        vladimir.oltean@nxp.com, alexandru.marginean@nxp.com,
+        michael.chan@broadcom.com, vishal@chelsio.com, saeedm@mellanox.com,
+        leon@kernel.org, jiri@mellanox.com, idosch@mellanox.com,
+        UNGLinuxDriver@microchip.com, jhs@mojatatu.com,
+        xiyou.wangcong@gmail.com, simon.horman@netronome.com,
+        pablo@netfilter.org, moshe@mellanox.com, oss-drivers@netronome.com,
+        Po Liu <po.liu@nxp.com>
+Subject: [v1,net-next] net:qos: police action offloading parameter 'burst' change to the original value
+Date:   Mon, 29 Jun 2020 10:25:00 +0800
+Message-Id: <20200629022500.30527-1-po.liu@nxp.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain
+X-ClientProxiedBy: SG2PR03CA0102.apcprd03.prod.outlook.com
+ (2603:1096:4:7c::30) To VE1PR04MB6496.eurprd04.prod.outlook.com
+ (2603:10a6:803:11c::29)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200628151813.7679-1-trix@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from tsn.ap.freescale.net (119.31.174.73) by SG2PR03CA0102.apcprd03.prod.outlook.com (2603:1096:4:7c::30) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.12 via Frontend Transport; Mon, 29 Jun 2020 02:23:20 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [119.31.174.73]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: e3ca1aba-fd5b-494d-5d70-08d81bd368ca
+X-MS-TrafficTypeDiagnostic: VE1PR04MB6608:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VE1PR04MB6608605D5CCED50CAEF3E9FF926E0@VE1PR04MB6608.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1850;
+X-Forefront-PRVS: 044968D9E1
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Xdqt8ZINsq7KCzyAncj/tcBV1ZHJhBRlyF7W/haa/zjWfGOhHwz3PKpop7n74KOgDRzYqOeGBbC1W4UqJcMPSxffp5eZwaxxmxPXNJ8CDGwF6ZHCE9DdIvsDSDQDoI2pEwPLeV33PGYRPAz5TYWutgLw8w/IcC/jU0O0M2SmggCc6sk0CuvN6dMqAAum5ZFgsZm+r8CaY4a0cyW+Mf1SsClt7lnaGWFPHlF6JWCUz8C+wnmGEpaGr38UUGCgmv/zpbtCb1I09ZqfGNfzwcDO42/U2ewrWvrLykbWv1wRWSKkFsM657GdaTPNeH4J9a7D
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6496.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(366004)(396003)(39860400002)(136003)(478600001)(186003)(956004)(2616005)(86362001)(83380400001)(44832011)(16526019)(2906002)(52116002)(4326008)(6512007)(36756003)(7416002)(6666004)(8676002)(6506007)(316002)(26005)(1076003)(30864003)(8936002)(5660300002)(6486002)(66556008)(66476007)(66946007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: q91QVPZSe4mnnrtF+24BJe84cQA721hPZ6y0E+xkTOLqWl/Q7tdCV5+lAEY8x3V/baffoSRFLaHJRc0Xi1efiInJPfMIyz1K8Ryy3AoejnoC5ckXQ2/LWsDDZKWyYhpND7BL1MZZ8VNvzp43e8FgMC3+tG9IL669DwRZ4wW2zGlAsG2uK76ULu6F0TAC/jaboaBrh+XasmhLSvkpa8+ryjJ7NSZxNLLAY9TwhMmtBuZVIdAI9gFO1dwu+9anW99tJcBhd7n94l8JquCBcK2Ws8Nq94JrT1AVX7ydUYIPiiAmZWgkwR55XlzbfUpXveXsWD5b/VG/5p6VNB/LvHCMXdnrnKHGqcd/RyO7DMMjkxk/pQp/kGM0lkshfYikTIwEOH1hyFLfVuQ+JS0eMiCnojdsb0xqB5dEa0H7MYiWDTVDnO9F16kacQY8XHyDQ6TeKLtp/KMcs67Z7PhJV0pq4S8Asu4TryDQnvhgvt1hx0A=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e3ca1aba-fd5b-494d-5d70-08d81bd368ca
+X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6496.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jun 2020 02:23:28.6195
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: D7X/wEHq0C+/xqPgeWI/Hex+91x+WkBhKu4Brx2pvYD/GkS3tH9vK/EOBFJDh664
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6608
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I think maybe we don't have to select them all. It is now possible for
-FPGA DFL boards to work without FME or AFU, providing limited
-functionality. It is possible designers trim the bitstream for their
-purpose, and also need a smaller driver set.
+Since 'tcfp_burst' with TICK factor, driver side always need to recover
+it to the original value, this patch moves the generic calculation and
+recover to the 'burst' original value before offloading to device driver.
 
-I think we may add "default FPGA_DFL" for FPGA_DFL_FME,
-FPGA_DFL_FME_MGR and others to make life easier.
+Signed-off-by: Po Liu <po.liu@nxp.com>
+Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+---
+ drivers/net/dsa/ocelot/felix.c                |  4 +--
+ drivers/net/dsa/sja1105/sja1105_flower.c      | 16 ++++------
+ drivers/net/dsa/sja1105/sja1105_main.c        |  4 +--
+ .../net/ethernet/freescale/enetc/enetc_qos.c  |  8 +----
+ drivers/net/ethernet/mscc/ocelot_flower.c     |  4 +--
+ drivers/net/ethernet/mscc/ocelot_net.c        |  4 +--
+ .../ethernet/netronome/nfp/flower/qos_conf.c  |  6 ++--
+ include/net/dsa.h                             |  2 +-
+ include/net/flow_offload.h                    |  2 +-
+ include/net/tc_act/tc_police.h                | 32 +++++++++++++++++--
+ net/sched/cls_api.c                           |  2 +-
+ 11 files changed, 48 insertions(+), 36 deletions(-)
 
-How do you think?
+diff --git a/drivers/net/dsa/ocelot/felix.c b/drivers/net/dsa/ocelot/felix.c
+index 25046777c993..75020af7f7a4 100644
+--- a/drivers/net/dsa/ocelot/felix.c
++++ b/drivers/net/dsa/ocelot/felix.c
+@@ -746,9 +746,7 @@ static int felix_port_policer_add(struct dsa_switch *ds, int port,
+ 	struct ocelot *ocelot = ds->priv;
+ 	struct ocelot_policer pol = {
+ 		.rate = div_u64(policer->rate_bytes_per_sec, 1000) * 8,
+-		.burst = div_u64(policer->rate_bytes_per_sec *
+-				 PSCHED_NS2TICKS(policer->burst),
+-				 PSCHED_TICKS_PER_SEC),
++		.burst = policer->burst,
+ 	};
+ 
+ 	return ocelot_port_policer_add(ocelot, port, &pol);
+diff --git a/drivers/net/dsa/sja1105/sja1105_flower.c b/drivers/net/dsa/sja1105/sja1105_flower.c
+index 9ee8968610cd..12e76020bea3 100644
+--- a/drivers/net/dsa/sja1105/sja1105_flower.c
++++ b/drivers/net/dsa/sja1105/sja1105_flower.c
+@@ -31,7 +31,7 @@ static int sja1105_setup_bcast_policer(struct sja1105_private *priv,
+ 				       struct netlink_ext_ack *extack,
+ 				       unsigned long cookie, int port,
+ 				       u64 rate_bytes_per_sec,
+-				       s64 burst)
++				       u32 burst)
+ {
+ 	struct sja1105_rule *rule = sja1105_rule_find(priv, cookie);
+ 	struct sja1105_l2_policing_entry *policing;
+@@ -79,9 +79,8 @@ static int sja1105_setup_bcast_policer(struct sja1105_private *priv,
+ 
+ 	policing[rule->bcast_pol.sharindx].rate = div_u64(rate_bytes_per_sec *
+ 							  512, 1000000);
+-	policing[rule->bcast_pol.sharindx].smax = div_u64(rate_bytes_per_sec *
+-							  PSCHED_NS2TICKS(burst),
+-							  PSCHED_TICKS_PER_SEC);
++	policing[rule->bcast_pol.sharindx].smax = burst;
++
+ 	/* TODO: support per-flow MTU */
+ 	policing[rule->bcast_pol.sharindx].maxlen = VLAN_ETH_FRAME_LEN +
+ 						    ETH_FCS_LEN;
+@@ -103,7 +102,7 @@ static int sja1105_setup_tc_policer(struct sja1105_private *priv,
+ 				    struct netlink_ext_ack *extack,
+ 				    unsigned long cookie, int port, int tc,
+ 				    u64 rate_bytes_per_sec,
+-				    s64 burst)
++				    u32 burst)
+ {
+ 	struct sja1105_rule *rule = sja1105_rule_find(priv, cookie);
+ 	struct sja1105_l2_policing_entry *policing;
+@@ -152,9 +151,8 @@ static int sja1105_setup_tc_policer(struct sja1105_private *priv,
+ 
+ 	policing[rule->tc_pol.sharindx].rate = div_u64(rate_bytes_per_sec *
+ 						       512, 1000000);
+-	policing[rule->tc_pol.sharindx].smax = div_u64(rate_bytes_per_sec *
+-						       PSCHED_NS2TICKS(burst),
+-						       PSCHED_TICKS_PER_SEC);
++	policing[rule->tc_pol.sharindx].smax = burst;
++
+ 	/* TODO: support per-flow MTU */
+ 	policing[rule->tc_pol.sharindx].maxlen = VLAN_ETH_FRAME_LEN +
+ 						 ETH_FCS_LEN;
+@@ -177,7 +175,7 @@ static int sja1105_flower_policer(struct sja1105_private *priv, int port,
+ 				  unsigned long cookie,
+ 				  struct sja1105_key *key,
+ 				  u64 rate_bytes_per_sec,
+-				  s64 burst)
++				  u32 burst)
+ {
+ 	switch (key->type) {
+ 	case SJA1105_KEY_BCAST:
+diff --git a/drivers/net/dsa/sja1105/sja1105_main.c b/drivers/net/dsa/sja1105/sja1105_main.c
+index 789b288cc78b..5079e4aeef80 100644
+--- a/drivers/net/dsa/sja1105/sja1105_main.c
++++ b/drivers/net/dsa/sja1105/sja1105_main.c
+@@ -3324,9 +3324,7 @@ static int sja1105_port_policer_add(struct dsa_switch *ds, int port,
+ 	 */
+ 	policing[port].rate = div_u64(512 * policer->rate_bytes_per_sec,
+ 				      1000000);
+-	policing[port].smax = div_u64(policer->rate_bytes_per_sec *
+-				      PSCHED_NS2TICKS(policer->burst),
+-				      PSCHED_TICKS_PER_SEC);
++	policing[port].smax = policer->burst;
+ 
+ 	return sja1105_static_config_reload(priv, SJA1105_BEST_EFFORT_POLICING);
+ }
+diff --git a/drivers/net/ethernet/freescale/enetc/enetc_qos.c b/drivers/net/ethernet/freescale/enetc/enetc_qos.c
+index 4f670cbdf186..b8b336179d82 100644
+--- a/drivers/net/ethernet/freescale/enetc/enetc_qos.c
++++ b/drivers/net/ethernet/freescale/enetc/enetc_qos.c
+@@ -1241,8 +1241,6 @@ static int enetc_psfp_parse_clsflower(struct enetc_ndev_priv *priv,
+ 	/* Flow meter and max frame size */
+ 	if (entryp) {
+ 		if (entryp->police.burst) {
+-			u64 temp;
+-
+ 			fmi = kzalloc(sizeof(*fmi), GFP_KERNEL);
+ 			if (!fmi) {
+ 				err = -ENOMEM;
+@@ -1250,11 +1248,7 @@ static int enetc_psfp_parse_clsflower(struct enetc_ndev_priv *priv,
+ 			}
+ 			refcount_set(&fmi->refcount, 1);
+ 			fmi->cir = entryp->police.rate_bytes_ps;
+-			/* Convert to original burst value */
+-			temp = entryp->police.burst * fmi->cir;
+-			temp = div_u64(temp, 1000000000ULL);
+-
+-			fmi->cbs = temp;
++			fmi->cbs = entryp->police.burst;
+ 			fmi->index = entryp->police.index;
+ 			filter->flags |= ENETC_PSFP_FLAGS_FMI;
+ 			filter->fmi_index = fmi->index;
+diff --git a/drivers/net/ethernet/mscc/ocelot_flower.c b/drivers/net/ethernet/mscc/ocelot_flower.c
+index f2a85b06a6e7..ec1b6e2572ba 100644
+--- a/drivers/net/ethernet/mscc/ocelot_flower.c
++++ b/drivers/net/ethernet/mscc/ocelot_flower.c
+@@ -12,7 +12,6 @@ static int ocelot_flower_parse_action(struct flow_cls_offload *f,
+ 				      struct ocelot_vcap_filter *filter)
+ {
+ 	const struct flow_action_entry *a;
+-	s64 burst;
+ 	u64 rate;
+ 	int i;
+ 
+@@ -35,8 +34,7 @@ static int ocelot_flower_parse_action(struct flow_cls_offload *f,
+ 			filter->action = OCELOT_VCAP_ACTION_POLICE;
+ 			rate = a->police.rate_bytes_ps;
+ 			filter->pol.rate = div_u64(rate, 1000) * 8;
+-			burst = rate * PSCHED_NS2TICKS(a->police.burst);
+-			filter->pol.burst = div_u64(burst, PSCHED_TICKS_PER_SEC);
++			filter->pol.burst = a->police.burst;
+ 			break;
+ 		default:
+ 			return -EOPNOTSUPP;
+diff --git a/drivers/net/ethernet/mscc/ocelot_net.c b/drivers/net/ethernet/mscc/ocelot_net.c
+index 702b42543fb7..b69187c51fa6 100644
+--- a/drivers/net/ethernet/mscc/ocelot_net.c
++++ b/drivers/net/ethernet/mscc/ocelot_net.c
+@@ -74,9 +74,7 @@ static int ocelot_setup_tc_cls_matchall(struct ocelot_port_private *priv,
+ 		}
+ 
+ 		pol.rate = (u32)div_u64(action->police.rate_bytes_ps, 1000) * 8;
+-		pol.burst = (u32)div_u64(action->police.rate_bytes_ps *
+-					 PSCHED_NS2TICKS(action->police.burst),
+-					 PSCHED_TICKS_PER_SEC);
++		pol.burst = action->police.burst;
+ 
+ 		err = ocelot_port_policer_add(ocelot, port, &pol);
+ 		if (err) {
+diff --git a/drivers/net/ethernet/netronome/nfp/flower/qos_conf.c b/drivers/net/ethernet/netronome/nfp/flower/qos_conf.c
+index bb327d48d1ab..d4ce8f9ef3cc 100644
+--- a/drivers/net/ethernet/netronome/nfp/flower/qos_conf.c
++++ b/drivers/net/ethernet/netronome/nfp/flower/qos_conf.c
+@@ -69,7 +69,8 @@ nfp_flower_install_rate_limiter(struct nfp_app *app, struct net_device *netdev,
+ 	struct nfp_repr *repr;
+ 	struct sk_buff *skb;
+ 	u32 netdev_port_id;
+-	u64 burst, rate;
++	u32 burst;
++	u64 rate;
+ 
+ 	if (!nfp_netdev_is_nfp_repr(netdev)) {
+ 		NL_SET_ERR_MSG_MOD(extack, "unsupported offload: qos rate limit offload not supported on higher level port");
+@@ -104,8 +105,7 @@ nfp_flower_install_rate_limiter(struct nfp_app *app, struct net_device *netdev,
+ 	}
+ 
+ 	rate = action->police.rate_bytes_ps;
+-	burst = div_u64(rate * PSCHED_NS2TICKS(action->police.burst),
+-			PSCHED_TICKS_PER_SEC);
++	burst = action->police.burst;
+ 	netdev_port_id = nfp_repr_get_port_id(netdev);
+ 
+ 	skb = nfp_flower_cmsg_alloc(repr->app, sizeof(struct nfp_police_config),
+diff --git a/include/net/dsa.h b/include/net/dsa.h
+index 50389772c597..4046ccd1945d 100644
+--- a/include/net/dsa.h
++++ b/include/net/dsa.h
+@@ -144,7 +144,7 @@ struct dsa_mall_mirror_tc_entry {
+ 
+ /* TC port policer entry */
+ struct dsa_mall_policer_tc_entry {
+-	s64 burst;
++	u32 burst;
+ 	u64 rate_bytes_per_sec;
+ };
+ 
+diff --git a/include/net/flow_offload.h b/include/net/flow_offload.h
+index 3bafb5124ac0..2dc25082eabf 100644
+--- a/include/net/flow_offload.h
++++ b/include/net/flow_offload.h
+@@ -233,7 +233,7 @@ struct flow_action_entry {
+ 		} sample;
+ 		struct {				/* FLOW_ACTION_POLICE */
+ 			u32			index;
+-			s64			burst;
++			u32			burst;
+ 			u64			rate_bytes_ps;
+ 			u32			mtu;
+ 		} police;
+diff --git a/include/net/tc_act/tc_police.h b/include/net/tc_act/tc_police.h
+index cd973b10ae8c..6d1e26b709b5 100644
+--- a/include/net/tc_act/tc_police.h
++++ b/include/net/tc_act/tc_police.h
+@@ -59,14 +59,42 @@ static inline u64 tcf_police_rate_bytes_ps(const struct tc_action *act)
+ 	return params->rate.rate_bytes_ps;
+ }
+ 
+-static inline s64 tcf_police_tcfp_burst(const struct tc_action *act)
++static inline u32 tcf_police_burst(const struct tc_action *act)
+ {
+ 	struct tcf_police *police = to_police(act);
+ 	struct tcf_police_params *params;
++	u32 burst;
+ 
+ 	params = rcu_dereference_protected(police->params,
+ 					   lockdep_is_held(&police->tcf_lock));
+-	return params->tcfp_burst;
++
++	/*
++	 *  "rate" bytes   "burst" nanoseconds
++	 *  ------------ * -------------------
++	 *    1 second          2^6 ticks
++	 *
++	 * ------------------------------------
++	 *        NSEC_PER_SEC nanoseconds
++	 *        ------------------------
++	 *              2^6 ticks
++	 *
++	 *    "rate" bytes   "burst" nanoseconds            2^6 ticks
++	 *  = ------------ * ------------------- * ------------------------
++	 *      1 second          2^6 ticks        NSEC_PER_SEC nanoseconds
++	 *
++	 *   "rate" * "burst"
++	 * = ---------------- bytes/nanosecond
++	 *    NSEC_PER_SEC^2
++	 *
++	 *
++	 *   "rate" * "burst"
++	 * = ---------------- bytes/second
++	 *     NSEC_PER_SEC
++	 */
++	burst = div_u64(params->tcfp_burst * params->rate.rate_bytes_ps,
++			NSEC_PER_SEC);
++
++	return burst;
+ }
+ 
+ static inline u32 tcf_police_tcfp_mtu(const struct tc_action *act)
+diff --git a/net/sched/cls_api.c b/net/sched/cls_api.c
+index 5bfa6b985bb8..cf324807fc42 100644
+--- a/net/sched/cls_api.c
++++ b/net/sched/cls_api.c
+@@ -3660,7 +3660,7 @@ int tc_setup_flow_action(struct flow_action *flow_action,
+ 			tcf_sample_get_group(entry, act);
+ 		} else if (is_tcf_police(act)) {
+ 			entry->id = FLOW_ACTION_POLICE;
+-			entry->police.burst = tcf_police_tcfp_burst(act);
++			entry->police.burst = tcf_police_burst(act);
+ 			entry->police.rate_bytes_ps =
+ 				tcf_police_rate_bytes_ps(act);
+ 			entry->police.mtu = tcf_police_tcfp_mtu(act);
+-- 
+2.17.1
 
-On Sun, Jun 28, 2020 at 08:18:13AM -0700, trix@redhat.com wrote:
-> From: Tom Rix <trix@redhat.com>
-> 
-> To use a dfl pci device, several dfl configs need to be selected.
-> This is tedious and error prone.
-> 
-> So automagically select the needed configs when FPGA_DFL_PCI
-> is selected.
-> 
-> Signed-off-by: Tom Rix <trix@redhat.com>
-> ---
->  drivers/fpga/Kconfig | 36 +++++++++++++++++++++---------------
->  1 file changed, 21 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
-> index 7cd5a29fc437..4b9e05af5426 100644
-> --- a/drivers/fpga/Kconfig
-> +++ b/drivers/fpga/Kconfig
-> @@ -138,6 +138,27 @@ config OF_FPGA_REGION
->  	  Support for loading FPGA images by applying a Device Tree
->  	  overlay.
->  
-> +config FPGA_DFL_PCI
-> +	tristate "FPGA DFL PCIe Device Driver"
-> +	depends on PCI
-> +	select FPGA_DFL
-> +	select FPGA_DFL_FME
-> +	select FPGA_DFL_FME_MGR
-> +	select FPGA_DFL_FME_BRIDGE
-> +	select FPGA_DFL_FME_REGION
-> +	select FPGA_DFL_AFU
-> +	help
-> +	  Select this option to enable PCIe driver for PCIe-based
-> +	  Field-Programmable Gate Array (FPGA) solutions which implement
-> +	  the Device Feature List (DFL). This driver provides interfaces
-> +	  for userspace applications to configure, enumerate, open and access
-> +	  FPGA accelerators on the FPGA DFL devices, enables system level
-> +	  management functions such as FPGA partial reconfiguration, power
-> +	  management and virtualization with DFL framework and DFL feature
-> +	  device drivers.
-> +
-> +	  To compile this as a module, choose M here.
-> +
->  config FPGA_DFL
->  	tristate "FPGA Device Feature List (DFL) support"
->  	select FPGA_BRIDGE
-> @@ -191,21 +212,6 @@ config FPGA_DFL_AFU
->  	  to the FPGA infrastructure via a Port. There may be more than one
->  	  Port/AFU per DFL based FPGA device.
->  
-> -config FPGA_DFL_PCI
-> -	tristate "FPGA DFL PCIe Device Driver"
-> -	depends on PCI && FPGA_DFL
-> -	help
-> -	  Select this option to enable PCIe driver for PCIe-based
-> -	  Field-Programmable Gate Array (FPGA) solutions which implement
-> -	  the Device Feature List (DFL). This driver provides interfaces
-> -	  for userspace applications to configure, enumerate, open and access
-> -	  FPGA accelerators on the FPGA DFL devices, enables system level
-> -	  management functions such as FPGA partial reconfiguration, power
-> -	  management and virtualization with DFL framework and DFL feature
-> -	  device drivers.
-> -
-> -	  To compile this as a module, choose M here.
-> -
->  config FPGA_MGR_ZYNQMP_FPGA
->  	tristate "Xilinx ZynqMP FPGA"
->  	depends on ZYNQMP_FIRMWARE || (!ZYNQMP_FIRMWARE && COMPILE_TEST)
-> -- 
-> 2.18.1
