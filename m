@@ -2,87 +2,78 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC0CCC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0CB8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:56:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3EE520724
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:56:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E85A20768
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:56:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="EVDjc0Vq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u2R2A9TN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732497AbgF2Uz6 (ORCPT
+        id S2389882AbgF2U4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:55:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43382 "EHLO
+        Mon, 29 Jun 2020 16:56:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43362 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729296AbgF2TNL (ORCPT
+        with ESMTP id S1731283AbgF2TNJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:13:11 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDE45C08EAEF
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:18:45 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id j4so6691601plk.3
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:18:45 -0700 (PDT)
+        Mon, 29 Jun 2020 15:13:09 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09CDBC03E979;
+        Sun, 28 Jun 2020 20:52:58 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id b16so7293971pfi.13;
+        Sun, 28 Jun 2020 20:52:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=4bArInUOY6/vKGVdecpLjfb0/2uC+GzWucHk89/LRTo=;
-        b=EVDjc0VqYgRB2DG2EzHcBoN2SoQ4nLRItPJPDmHm0b1Z1rE2TFzvswTjV0UFJMg0A+
-         zk7wDPwhAdhR5pkqtDyugtOi4viSQFRF681TEkB9AOAbZShiWouWaRwMeqnrq0qniejQ
-         Np9npLPCvLOYdVSL9z4v5SRp3hcbR0u8c56Q0=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mMGxHvmMYl6KmBYcQsFExMxRkPUqi7/TV9d4rzWRr7k=;
+        b=u2R2A9TNTrjVPaCWT+EtNeCfx976UM0/uvyxC3814IxJ3BmtNIBpFQ0ICCey/EcQGc
+         C2eS5fpQk4UcCXH1AL8vjaVjN962La5SVUBbXE9DUXpkS2EulFeP7MKv0QrS30LgmQyA
+         cQ2YIx5Dt2G8V0SVUKirabbIOS+ctzsLxrqbXTTe6FbjXEnT9K169K/WjAZx+6ZX270m
+         k++SJlX43a5xXxXOD4YsBZgNqOf3YZSfrFwcvunodSnyOzYfknDpa3lYOFOoZY8PdBi8
+         RgNZnFHUk+mC3uA38MgCHbsb3oJAcFv/T6tdXFqj0DgTQqEKKIGlhuti9b9huZHg99il
+         aDTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=4bArInUOY6/vKGVdecpLjfb0/2uC+GzWucHk89/LRTo=;
-        b=CEC/5DNupJFRGO3HF+WYS6zMljHVyfg4uHb1Kmu/1RbahXNB6N/p9J9YF2e8hjpDz0
-         C5ZDxvhfgxYixFEibOfTa30ZvIWAM1noFZlIFVjz2HiGUrIpK+KXXH/j6JPQlEBc6QHE
-         FcoxKOztHqRmiO7a9Z0TSQ3E9xs+39/aFqYz+byMIlxG7rEWBC5pv14nxfyrbKPLaF3F
-         XaLh2kPXXy/UAhRvUX7+T570hVPhovJFUInP5ymhFwQEFC3ytyqX/1ikT2Gi4QsPBXtJ
-         A6NaPIAmpCmlWNemxgHWeMoSMFAPtKMwlkwu4C3Oa7ui+yA6ocGIU+Z7z5jfNZPIlvBj
-         fbFQ==
-X-Gm-Message-State: AOAM530viCutOJoykGMm/EQwcGgqR4YGZSZVmTEo6Jc/YX5RKPogbo3q
-        mTX2ZW5QfS3yfy8uoEm4xa9wPg==
-X-Google-Smtp-Source: ABdhPJxYBenbTI5DJ7oZajl9d4KYYFff7a69/j4AFC+Rq7Vn12vxMy0qYgcyv5UfojptE8ebjeq4/Q==
-X-Received: by 2002:a17:902:8491:: with SMTP id c17mr4942997plo.262.1593411525398;
-        Sun, 28 Jun 2020 23:18:45 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id u26sm2979285pfn.54.2020.06.28.23.18.43
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=mMGxHvmMYl6KmBYcQsFExMxRkPUqi7/TV9d4rzWRr7k=;
+        b=Oj00TvbRgLoUUi5gmJh70uj/58twygrgn7n5JHCKtXPhCE+aDBEFZDjqLrvUpb7jeu
+         yzy4IHuGYvOZg/KblKHYtsSUQK7mSI7oD42jYNKOAVv63bIV/Zc8lohqCxSaJOF1g/se
+         o9l1RvR4mq76eswFlzv4jxaId3C29Y0wLV081BwpT2H/MZAYS1B2/7G7kYKN2IIrp7A7
+         Zd1B1mbQ6cMv6TT/c2bRjmqScUTbTvueeMh4Xnt0+3DF4tSz0LYV5M12GqxzFn+zgd/B
+         6OAagL9esXnOJfoWa5GwS7lqjV21ZISDUJl8uOHqp8kPLxNLpZFncGwPCbX1RZ7UAXEu
+         jGCA==
+X-Gm-Message-State: AOAM5328Pso4MS3TVeS5DW09NaDy0WZ5/GD3dukJB2xTzXc+LK2x83Ti
+        9FDFX8OseeBRuAPMAMrbvZg=
+X-Google-Smtp-Source: ABdhPJydbdI8co0v0o/sBZ2cRFoABhFdoGlHqU5hKHlqf4wT6H8b7R/olOtLPlXq7tzCb6hpIsCqjw==
+X-Received: by 2002:a62:1716:: with SMTP id 22mr12030455pfx.99.1593402777406;
+        Sun, 28 Jun 2020 20:52:57 -0700 (PDT)
+Received: from varodek.iballbatonwifi.com ([103.105.153.57])
+        by smtp.gmail.com with ESMTPSA id b191sm28757684pga.13.2020.06.28.20.52.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jun 2020 23:18:43 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Fangrui Song <maskray@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
-        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 01/17] vmlinux.lds.h: Add .gnu.version* to DISCARDS
-Date:   Sun, 28 Jun 2020 23:18:24 -0700
-Message-Id: <20200629061840.4065483-2-keescook@chromium.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629061840.4065483-1-keescook@chromium.org>
-References: <20200629061840.4065483-1-keescook@chromium.org>
+        Sun, 28 Jun 2020 20:52:56 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org, linux-wireless@vger.kernel.org
+Subject: [PATCH v1] adm8211: use generic power management
+Date:   Mon, 29 Jun 2020 09:20:32 +0530
+Message-Id: <20200629035031.169670-1-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -90,35 +81,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For vmlinux linking, no architecture uses the .gnu.version* sections,
-so remove it via the common DISCARDS macro in preparation for adding
---orphan-handling=warn more widely. This is a work-around for what
-appears to be a bug[1] in ld.bfd which warns for this synthetic section
-even when none is found in input objects, and even when no section is
-emitted for an output object[2].
+With legacy PM, drivers themselves were responsible for managing the
+device's power states and takes care of register states.
 
-[1] https://sourceware.org/bugzilla/show_bug.cgi?id=26153
-[2] https://lore.kernel.org/lkml/202006221524.CEB86E036B@keescook/
+After upgrading to the generic structure, PCI core will take care of
+required tasks and drivers should do only device-specific operations.
 
-Reviewed-by: Fangrui Song <maskray@google.com>
-Signed-off-by: Kees Cook <keescook@chromium.org>
+In the case of adm8211, after removing PCI helper functions, .suspend()
+and .resume() became empty-body functions. Hence, define them NULL and
+use dev_pm_ops.
+
+Compile-tested only.
+
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
 ---
- include/asm-generic/vmlinux.lds.h | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/wireless/admtek/adm8211.c | 25 +++++--------------------
+ 1 file changed, 5 insertions(+), 20 deletions(-)
 
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index db600ef218d7..1248a206be8d 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -934,6 +934,8 @@
- 	*(.discard)							\
- 	*(.discard.*)							\
- 	*(.modinfo)							\
-+	/* ld.bfd warns about .gnu.version* even when not emitted */	\
-+	*(.gnu.version*)						\
- 	}
+diff --git a/drivers/net/wireless/admtek/adm8211.c b/drivers/net/wireless/admtek/adm8211.c
+index ba326f6c1214..22f9f2f8af10 100644
+--- a/drivers/net/wireless/admtek/adm8211.c
++++ b/drivers/net/wireless/admtek/adm8211.c
+@@ -1976,35 +1976,20 @@ static void adm8211_remove(struct pci_dev *pdev)
+ }
  
- /**
+ 
+-#ifdef CONFIG_PM
+-static int adm8211_suspend(struct pci_dev *pdev, pm_message_t state)
+-{
+-	pci_save_state(pdev);
+-	pci_set_power_state(pdev, pci_choose_state(pdev, state));
+-	return 0;
+-}
+-
+-static int adm8211_resume(struct pci_dev *pdev)
+-{
+-	pci_set_power_state(pdev, PCI_D0);
+-	pci_restore_state(pdev);
+-	return 0;
+-}
+-#endif /* CONFIG_PM */
+-
++#define adm8211_suspend NULL
++#define adm8211_resume NULL
+ 
+ MODULE_DEVICE_TABLE(pci, adm8211_pci_id_table);
+ 
++static SIMPLE_DEV_PM_OPS(adm8211_pm_ops, adm8211_suspend, adm8211_resume);
++
+ /* TODO: implement enable_wake */
+ static struct pci_driver adm8211_driver = {
+ 	.name		= "adm8211",
+ 	.id_table	= adm8211_pci_id_table,
+ 	.probe		= adm8211_probe,
+ 	.remove		= adm8211_remove,
+-#ifdef CONFIG_PM
+-	.suspend	= adm8211_suspend,
+-	.resume		= adm8211_resume,
+-#endif /* CONFIG_PM */
++	.driver.pm	= &adm8211_pm_ops,
+ };
+ 
+ module_pci_driver(adm8211_driver);
 -- 
-2.25.1
+2.27.0
 
