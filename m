@@ -4,47 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F49C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E91C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 510BB206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E61D1206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467541;
-	bh=IPjqOOWZ9Sfj5zluR+FvX6Y/lbIVzybNA36IqjFDWSI=;
+	s=default; t=1593467545;
+	bh=5UrSFmKEAXzAlU88xkoyVMYQ07T5cpZSA4wEaKz4x+g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XfrQO62CQ94uDffY+5HgtoOBYF7XGEjxv3tbp0T2xzYgERuNEh7WIvKz+GcLjsRa3
-	 wOLLlPTtk97oTWlfoOQZhpLCN5nnr/YbJJjCq6ub8V6MxNnv5jZI6eONLBc13VrGw7
-	 5aZ/Yy1i122aR2TJa6mxdQqyNzCGyjaRVOtANNsQ=
+	b=B7Km6cXYCa19YLmBtTUH83at1RSbwRQUZAzummUWbYR2r19QjjrAUlOKjUrEQt3KG
+	 t5MR2ju2wkQhOacUcoC1bAh9UsJ1vG7ADbLjJnFWj6EHv1GD/R/TN8FpHzpd2nlh3G
+	 Mzip9yGeYeftYXrSusjMLtFn3qAOGl54bvgAr/Nc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391482AbgF2VwU (ORCPT
+        id S2391490AbgF2VwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:52:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56796 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:52:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726110AbgF2Sfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726649AbgF2Sfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA730246C3;
-        Mon, 29 Jun 2020 15:20:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6740247F5;
+        Mon, 29 Jun 2020 15:22:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444015;
-        bh=IPjqOOWZ9Sfj5zluR+FvX6Y/lbIVzybNA36IqjFDWSI=;
+        s=default; t=1593444153;
+        bh=5UrSFmKEAXzAlU88xkoyVMYQ07T5cpZSA4wEaKz4x+g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hJdsom3totfyQtHlOZHJeN1kyRQ393ObY3h5+WOFV0D8jElHpkWOV9N9l+wWCr505
-         St6EJ6hXr/pqBIhfDf+ZdMfToh0tACcUtuipahtSMeVXSSxk/THN+ff4rUbwHv5GdH
-         Ax+DYzj28rykqQwRryjU18js+BXEwwt1hG8gTrVk=
+        b=bd9KQ03CEZVkTItEobYcoqOFhFQXHHSlOR+NG3g/xzQbwdqiQMs8jctDsidPuu+ZX
+         5mORBibkSnM423IkbuRzwuwd3QgWHP4q8fijGlfNNuUpee7qovrtzl8rKwwHC68Efj
+         fcMDqxnt3KhEH/XepN1CelB6vN//bVUSJYqfCivo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 121/265] ARM: dts: Fix duovero smsc interrupt for suspend
-Date:   Mon, 29 Jun 2020 11:15:54 -0400
-Message-Id: <20200629151818.2493727-122-sashal@kernel.org>
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 259/265] pNFS/flexfiles: Fix list corruption if the mirror count changes
+Date:   Mon, 29 Jun 2020 11:18:12 -0400
+Message-Id: <20200629151818.2493727-260-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -63,38 +65,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tony Lindgren <tony@atomide.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit 9cf28e41f9f768791f54ee18333239fda6927ed8 ]
+commit 8b04013737341442ed914b336cde866b902664ae upstream.
 
-While testing the recent suspend and resume regressions I noticed that
-duovero can still end up losing edge gpio interrupts on runtime
-suspend. This causes NFSroot easily stopping working after resume on
-duovero.
+If the mirror count changes in the new layout we pick up inside
+ff_layout_pg_init_write(), then we can end up adding the
+request to the wrong mirror and corrupting the mirror->pg_list.
 
-Let's fix the issue by using gpio level interrupts for smsc as then
-the gpio interrupt state is seen by the gpio controller on resume.
-
-Fixes: 731b409878a3 ("ARM: dts: Configure duovero for to allow core retention during idle")
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: d600ad1f2bdb ("NFS41: pop some layoutget errors to application")
+Cc: stable@vger.kernel.org
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm/boot/dts/omap4-duovero-parlor.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/nfs/flexfilelayout/flexfilelayout.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/omap4-duovero-parlor.dts b/arch/arm/boot/dts/omap4-duovero-parlor.dts
-index 8047e8cdb3af0..4548d87534e37 100644
---- a/arch/arm/boot/dts/omap4-duovero-parlor.dts
-+++ b/arch/arm/boot/dts/omap4-duovero-parlor.dts
-@@ -139,7 +139,7 @@
- 	ethernet@gpmc {
- 		reg = <5 0 0xff>;
- 		interrupt-parent = <&gpio2>;
--		interrupts = <12 IRQ_TYPE_EDGE_FALLING>;	/* gpio_44 */
-+		interrupts = <12 IRQ_TYPE_LEVEL_LOW>;		/* gpio_44 */
+diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
+index 7d399f72ebbbf..de03e440b7eef 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayout.c
++++ b/fs/nfs/flexfilelayout/flexfilelayout.c
+@@ -907,9 +907,8 @@ retry:
+ 		goto out_mds;
  
- 		phy-mode = "mii";
+ 	/* Use a direct mapping of ds_idx to pgio mirror_idx */
+-	if (WARN_ON_ONCE(pgio->pg_mirror_count !=
+-	    FF_LAYOUT_MIRROR_COUNT(pgio->pg_lseg)))
+-		goto out_mds;
++	if (pgio->pg_mirror_count != FF_LAYOUT_MIRROR_COUNT(pgio->pg_lseg))
++		goto out_eagain;
  
+ 	for (i = 0; i < pgio->pg_mirror_count; i++) {
+ 		mirror = FF_LAYOUT_COMP(pgio->pg_lseg, i);
+@@ -931,7 +930,10 @@ retry:
+ 			(NFS_MOUNT_SOFT|NFS_MOUNT_SOFTERR))
+ 		pgio->pg_maxretrans = io_maxretrans;
+ 	return;
+-
++out_eagain:
++	pnfs_generic_pg_cleanup(pgio);
++	pgio->pg_error = -EAGAIN;
++	return;
+ out_mds:
+ 	trace_pnfs_mds_fallback_pg_init_write(pgio->pg_inode,
+ 			0, NFS4_MAX_UINT64, IOMODE_RW,
+@@ -941,6 +943,7 @@ out_mds:
+ 	pgio->pg_lseg = NULL;
+ 	pgio->pg_maxretrans = 0;
+ 	nfs_pageio_reset_write_mds(pgio);
++	pgio->pg_error = -EAGAIN;
+ }
+ 
+ static unsigned int
 -- 
 2.25.1
 
