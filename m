@@ -2,155 +2,162 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67235C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E97FAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DAA6206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:57:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C890720720
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:58:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EOmizTnm"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jRyLPLKJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730074AbgF2U5x (ORCPT
+        id S2389308AbgF2U6B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:57:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43354 "EHLO
+        Mon, 29 Jun 2020 16:58:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731259AbgF2TNG (ORCPT
+        with ESMTP id S1729825AbgF2TNF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:13:06 -0400
-Received: from mail-wr1-x44a.google.com (mail-wr1-x44a.google.com [IPv6:2a00:1450:4864:20::44a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02CD5C008621
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 03:42:25 -0700 (PDT)
-Received: by mail-wr1-x44a.google.com with SMTP id j16so11057490wrw.3
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 03:42:24 -0700 (PDT)
+        Mon, 29 Jun 2020 15:13:05 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F0DAC08EB20
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:27:30 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id u185so5426635pfu.1
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:27:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=cd/DuDkUFEfbY/EbJHKe01td49IpW+ZHgFOrWbd6mno=;
-        b=EOmizTnmdW1stEhyikixAOAJYGNG4JoVNWc2K1UIoT2JVQHjKWidyg6GyKAfxeutDo
-         Izz6Jb9AabLjANhiyZ1a51F4CzD6c9LtAZ/GOpx6AfFdiW8D7phD7bDT+tXG0Lo5Ouc/
-         Lb/RgLaaYJmf5aDyZk+27Eom2mSnHL1jztE/Fn308ky7gMOfKxFlWWr8GG3JLQcPHCte
-         a9ibrJCVH/AtS6TnRrPA8ECia7qZhTlL3vsVK6eBhl+oanmtWmzattunVuJq3HeY+w4/
-         XHIgMgHxvNAAzqoE5KXLAvT/LsTMdnBVfj8vaIEGnh/ZHVZgl4wyhueBOaWoqg5RlBxs
-         zOvA==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=OcuGTfSUXtPYMFfpENNYu5S2NR6isuQ9uC03+go4k80=;
+        b=jRyLPLKJ/wflGnWNIhsw1/xtdO++qU/4G4jZjo+lnOqYVWgtIzMYOnTwQtGOp4VTv+
+         b8zRHjoyL25oKD4tWfpH43lrpeGB8egY2xI+HOcY319Hsy/yzaeePZ8YwW/uqTnkDoS9
+         fbCN5nnFFpuj2qqzr47ls2rlOBAuxjOrocN5I=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=cd/DuDkUFEfbY/EbJHKe01td49IpW+ZHgFOrWbd6mno=;
-        b=m2sCY1+cqgarumhJ2yxTgsjiarm337jdil0Gkk/SkQ4THwoXAz9j+SYXaGrJloUCJL
-         Jy88YpDyS/fGoSqVC3mpHoba9DsX0BimsxXk2A3JrCXzk1+4KuMuqpAaA7wwaoh1ViFl
-         24WMy7McQQOKwj2j2bdIjGWWcr3PoH3FZuQwq5IA2clwAqrgV4dMEbBBPp+BhRqdKX3c
-         1v+w5KB3/ZF1at0VmLHFLtCIC3KiK4u2R2+UVWs1Z9DkWpGQhVezzltslSOT4epyiPJ6
-         Kd14acKY7cYKcpgoTjS1u9EVo+gYl2ORrh/6gBTOtkL9sZ0ewNYEFRMCaICKSzIbxYsh
-         mBNA==
-X-Gm-Message-State: AOAM5335s44Rwi73AFM9JhqjJf+GHdDw4KfqavDfS6fsM09QzYl3QS2+
-        oLkIEVibpA2y17SJOoF0eRtd6CqzNg==
-X-Google-Smtp-Source: ABdhPJwcer+5LT1CvjxBJy31tjF/CKb14qtGBiWuvjYtpLPhyBTlm1yqEYg+TmCM21m65nLocFTZVkZDPg==
-X-Received: by 2002:a7b:ce87:: with SMTP id q7mr16866593wmj.39.1593427343578;
- Mon, 29 Jun 2020 03:42:23 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 12:41:56 +0200
-Message-Id: <20200629104157.3242503-1-elver@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-Subject: [PATCH 1/2] kasan: Improve and simplify Kconfig.kasan
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com, akpm@linux-foundation.org
-Cc:     dvyukov@google.com, glider@google.com, andreyknvl@google.com,
-        linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-        aryabinin@virtuozzo.com, ndesaulniers@google.com,
-        walter-zh.wu@mediatek.com, arnd@arndb.de, dja@axtens.net,
-        linux-doc@vger.kernel.org, clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=OcuGTfSUXtPYMFfpENNYu5S2NR6isuQ9uC03+go4k80=;
+        b=ggSdttC0SYsBj8BYhOFa4H6EvX3V1AE+r1TiiMN0G3p2egxyKuME+bh7yB9JoYuz+R
+         nSF3+xvVqkixqptr2y3YOFluMklHgLMfnRWM674vQg3RKhwQPB3Eny8abzhYb+FoR8Mr
+         rMz0S5wMRTo6UMVTdZdKW6LjeJGrZQkZib/1+KebhvRhygMprq8kowDjHcVZGcAOYzFV
+         AgQ+sgdNY7bNSsGei4aGeK8XDk3e3JtZzag/QeHZno5xMJ6ZMcOkA/4ythg45TY/2aA2
+         jNCD00TwJB4mZ/x/GlKe6/yMV2IBDXHcc7G6RoLNesKdRRQ50O3SzFDtpCdY3sH5yIEk
+         oQkg==
+X-Gm-Message-State: AOAM532rfMtXmOtdjnZHX7RKu2xF7gNe4EFYhCHhADEHvGKk5Uiyl+V1
+        gDIxc0/nPSMUnYPc/iQpOQIcRQ==
+X-Google-Smtp-Source: ABdhPJyp58Bg9f7GuaQUlT4KpenbA1Jul+PfAUND8VkiaE+umM/0tCY0B+FCqda7VoHqscVan5uu+w==
+X-Received: by 2002:a62:1646:: with SMTP id 67mr13176339pfw.281.1593412049613;
+        Sun, 28 Jun 2020 23:27:29 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id 27sm18066808pjg.19.2020.06.28.23.27.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Jun 2020 23:27:28 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 16/17] x86/build: Warn on orphan section placement
+Date:   Sun, 28 Jun 2020 23:18:39 -0700
+Message-Id: <20200629061840.4065483-17-keescook@chromium.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629061840.4065483-1-keescook@chromium.org>
+References: <20200629061840.4065483-1-keescook@chromium.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Turn 'KASAN' into a menuconfig, to avoid cluttering its parent menu with
-the suboptions if enabled. Use 'if KASAN ... endif' instead of having
-to 'depend on KASAN' for each entry.
+We don't want to depend on the linker's orphan section placement
+heuristics as these can vary between linkers, and may change between
+versions. All sections need to be explicitly named in the linker
+script.
 
-Signed-off-by: Marco Elver <elver@google.com>
+Discards the unused rela, plt, and got sections that are not needed
+in the final vmlinux, stop emitting kprobe sections without kprobes,
+and enable orphan section warnings.
+
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- lib/Kconfig.kasan | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ arch/x86/Makefile             | 4 ++++
+ arch/x86/include/asm/asm.h    | 6 +++++-
+ arch/x86/kernel/vmlinux.lds.S | 6 ++++++
+ 3 files changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
-index 34b84bcbd3d9..89053defc0d9 100644
---- a/lib/Kconfig.kasan
-+++ b/lib/Kconfig.kasan
-@@ -18,7 +18,7 @@ config CC_HAS_KASAN_SW_TAGS
- config CC_HAS_WORKING_NOSANITIZE_ADDRESS
- 	def_bool !CC_IS_GCC || GCC_VERSION >= 80300
+diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+index 00e378de8bc0..f8a5b2333729 100644
+--- a/arch/x86/Makefile
++++ b/arch/x86/Makefile
+@@ -51,6 +51,10 @@ ifdef CONFIG_X86_NEED_RELOCS
+         LDFLAGS_vmlinux := --emit-relocs --discard-none
+ endif
  
--config KASAN
-+menuconfig KASAN
- 	bool "KASAN: runtime memory debugger"
- 	depends on (HAVE_ARCH_KASAN && CC_HAS_KASAN_GENERIC) || \
- 		   (HAVE_ARCH_KASAN_SW_TAGS && CC_HAS_KASAN_SW_TAGS)
-@@ -29,9 +29,10 @@ config KASAN
- 	  designed to find out-of-bounds accesses and use-after-free bugs.
- 	  See Documentation/dev-tools/kasan.rst for details.
- 
-+if KASAN
++# We never want expected sections to be placed heuristically by the
++# linker. All sections should be explicitly named in the linker script.
++LDFLAGS_vmlinux += --orphan-handling=warn
 +
- choice
- 	prompt "KASAN mode"
--	depends on KASAN
- 	default KASAN_GENERIC
- 	help
- 	  KASAN has two modes: generic KASAN (similar to userspace ASan,
-@@ -88,7 +89,6 @@ endchoice
+ #
+ # Prevent GCC from generating any FP code by mistake.
+ #
+diff --git a/arch/x86/include/asm/asm.h b/arch/x86/include/asm/asm.h
+index 0f63585edf5f..92feec0f0a12 100644
+--- a/arch/x86/include/asm/asm.h
++++ b/arch/x86/include/asm/asm.h
+@@ -138,11 +138,15 @@
+ # define _ASM_EXTABLE_FAULT(from, to)				\
+ 	_ASM_EXTABLE_HANDLE(from, to, ex_handler_fault)
  
- choice
- 	prompt "Instrumentation type"
--	depends on KASAN
- 	default KASAN_OUTLINE
+-# define _ASM_NOKPROBE(entry)					\
++# ifdef CONFIG_KPROBES
++#  define _ASM_NOKPROBE(entry)					\
+ 	.pushsection "_kprobe_blacklist","aw" ;			\
+ 	_ASM_ALIGN ;						\
+ 	_ASM_PTR (entry);					\
+ 	.popsection
++# else
++#  define _ASM_NOKPROBE(entry)
++# endif
  
- config KASAN_OUTLINE
-@@ -113,7 +113,6 @@ endchoice
+ #else
+ # define _EXPAND_EXTABLE_HANDLE(x) #x
+diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+index 504d16968ed8..52e2b4952a0b 100644
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -413,6 +413,12 @@ SECTIONS
+ 	ELF_DETAILS
  
- config KASAN_STACK_ENABLE
- 	bool "Enable stack instrumentation (unsafe)" if CC_IS_CLANG && !COMPILE_TEST
--	depends on KASAN
- 	help
- 	  The LLVM stack address sanitizer has a know problem that
- 	  causes excessive stack usage in a lot of functions, see
-@@ -134,7 +133,7 @@ config KASAN_STACK
+ 	DISCARDS
++	/DISCARD/ : {
++		*(.rela.*) *(.rela_*)
++		*(.rel.*) *(.rel_*)
++		*(.got) *(.got.*)
++		*(.igot.*) *(.iplt)
++	}
+ }
  
- config KASAN_S390_4_LEVEL_PAGING
- 	bool "KASan: use 4-level paging"
--	depends on KASAN && S390
-+	depends on S390
- 	help
- 	  Compiling the kernel with KASan disables automatic 3-level vs
- 	  4-level paging selection. 3-level paging is used by default (up
-@@ -151,7 +150,7 @@ config KASAN_SW_TAGS_IDENTIFY
  
- config KASAN_VMALLOC
- 	bool "Back mappings in vmalloc space with real shadow memory"
--	depends on KASAN && HAVE_ARCH_KASAN_VMALLOC
-+	depends on HAVE_ARCH_KASAN_VMALLOC
- 	help
- 	  By default, the shadow region for vmalloc space is the read-only
- 	  zero page. This means that KASAN cannot detect errors involving
-@@ -164,8 +163,10 @@ config KASAN_VMALLOC
- 
- config TEST_KASAN
- 	tristate "Module for testing KASAN for bug detection"
--	depends on m && KASAN
-+	depends on m
- 	help
- 	  This is a test module doing various nasty things like
- 	  out of bounds accesses, use after free. It is useful for testing
- 	  kernel debugging features like KASAN.
-+
-+endif # KASAN
 -- 
-2.27.0.212.ge8ba1cc988-goog
+2.25.1
 
