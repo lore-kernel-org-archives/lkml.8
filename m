@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85337C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E1DCC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A10920760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:48:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B77020760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:48:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460115;
-	bh=Ek0ULgVy39jBD8SSkFxugE25V40WPVHosBEnKWbkujI=;
+	s=default; t=1593460117;
+	bh=X5wvYzdYdmiEvI3MUmNaguXAvPmPDk/q6YALBMlO8qw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kLAN+qaUhLseQbVZQ/jLrP5xhjq3AWWM+VnBqZpEYP8/gMZpenNXl7pavNPIvvsq/
-	 KLp9xMRj8dHzwDkCfN+2ZVvUQtE/27u9Q0Na4NGl6oTA9nr4DNIq/st4MO8Quh7HlC
-	 ECAlrsz72OHB+PzJ7LMar0kaQ4FQL7qGKYOPm7eE=
+	b=WTOram15ykNoVgSrDtVVDOnzSaMPY97ZsWhWK0VT9vIqLqs0ituF5ROcY8KY0Somg
+	 67GQBAzJrx44KgRUiRiDE5+7VuIeGvfggCBFMBqHWzORixWfyDTTqVJWLIkgoMIa2y
+	 SEpbdxYrx2m2RSnnMx66vPKCSY1XsK4OKRPlBo2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388167AbgF2Tsd (ORCPT
+        id S2388174AbgF2Tsf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:48:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47676 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:48:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387783AbgF2Tkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387770AbgF2Tkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 82B5B248F0;
-        Mon, 29 Jun 2020 15:27:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB4B124837;
+        Mon, 29 Jun 2020 15:25:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444446;
-        bh=Ek0ULgVy39jBD8SSkFxugE25V40WPVHosBEnKWbkujI=;
+        s=default; t=1593444348;
+        bh=X5wvYzdYdmiEvI3MUmNaguXAvPmPDk/q6YALBMlO8qw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jrx5XoAmaBpirnA3kfGVDWs4BOgVCRXlW8Yr/edT00eC/Q8jbgdhUDOa0V5U2JId6
-         LzH2IMje+ryDtHiCTw5ufhS9TRtX7+RG1xPO7ysMyX2wjsLdrSCt5ygCWaH/viTMLE
-         5ysgdbVy4ftD+63hdA9qNqpBZTLOMyyMtPCc8xjw=
+        b=l0QlCLs2KrPrBemdXlSROYbB1T2ZiNWVdimR0nnHaZ+iT8R8VKlTO2SP/SMc/+0dH
+         7eSZJN1JX4gRBQ0/jDsGk+4785lGwC1v5TGHdk0ZZIhjRRi8m6vqWypUqbHF899J8l
+         C3uhgHR0RLPWVCmxg/LRnL4AB/Vlny4UOEo1jFN0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aditya Pakki <pakki001@umn.edu>,
+Cc:     Taehee Yoo <ap420073@gmail.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 125/178] test_objagg: Fix potential memory leak in error handling
-Date:   Mon, 29 Jun 2020 11:24:30 -0400
-Message-Id: <20200629152523.2494198-126-sashal@kernel.org>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.4 023/178] ip_tunnel: fix use-after-free in ip_tunnel_lookup()
+Date:   Mon, 29 Jun 2020 11:22:48 -0400
+Message-Id: <20200629152523.2494198-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -65,38 +66,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit a6379f0ad6375a707e915518ecd5c2270afcd395 ]
+[ Upstream commit ba61539c6ae57f4146284a5cb4f7b7ed8d42bf45 ]
 
-In case of failure of check_expect_hints_stats(), the resources
-allocated by objagg_hints_get should be freed. The patch fixes
-this issue.
+In the datapath, the ip_tunnel_lookup() is used and it internally uses
+fallback tunnel device pointer, which is fb_tunnel_dev.
+This pointer variable should be set to NULL when a fb interface is deleted.
+But there is no routine to set fb_tunnel_dev pointer to NULL.
+So, this pointer will be still used after interface is deleted and
+it eventually results in the use-after-free problem.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Test commands:
+    ip netns add A
+    ip netns add B
+    ip link add eth0 type veth peer name eth1
+    ip link set eth0 netns A
+    ip link set eth1 netns B
+
+    ip netns exec A ip link set lo up
+    ip netns exec A ip link set eth0 up
+    ip netns exec A ip link add gre1 type gre local 10.0.0.1 \
+	    remote 10.0.0.2
+    ip netns exec A ip link set gre1 up
+    ip netns exec A ip a a 10.0.100.1/24 dev gre1
+    ip netns exec A ip a a 10.0.0.1/24 dev eth0
+
+    ip netns exec B ip link set lo up
+    ip netns exec B ip link set eth1 up
+    ip netns exec B ip link add gre1 type gre local 10.0.0.2 \
+	    remote 10.0.0.1
+    ip netns exec B ip link set gre1 up
+    ip netns exec B ip a a 10.0.100.2/24 dev gre1
+    ip netns exec B ip a a 10.0.0.2/24 dev eth1
+    ip netns exec A hping3 10.0.100.2 -2 --flood -d 60000 &
+    ip netns del B
+
+Splat looks like:
+[   77.793450][    C3] ==================================================================
+[   77.794702][    C3] BUG: KASAN: use-after-free in ip_tunnel_lookup+0xcc4/0xf30
+[   77.795573][    C3] Read of size 4 at addr ffff888060bd9c84 by task hping3/2905
+[   77.796398][    C3]
+[   77.796664][    C3] CPU: 3 PID: 2905 Comm: hping3 Not tainted 5.8.0-rc1+ #616
+[   77.797474][    C3] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+[   77.798453][    C3] Call Trace:
+[   77.798815][    C3]  <IRQ>
+[   77.799142][    C3]  dump_stack+0x9d/0xdb
+[   77.799605][    C3]  print_address_description.constprop.7+0x2cc/0x450
+[   77.800365][    C3]  ? ip_tunnel_lookup+0xcc4/0xf30
+[   77.800908][    C3]  ? ip_tunnel_lookup+0xcc4/0xf30
+[   77.801517][    C3]  ? ip_tunnel_lookup+0xcc4/0xf30
+[   77.802145][    C3]  kasan_report+0x154/0x190
+[   77.802821][    C3]  ? ip_tunnel_lookup+0xcc4/0xf30
+[   77.803503][    C3]  ip_tunnel_lookup+0xcc4/0xf30
+[   77.804165][    C3]  __ipgre_rcv+0x1ab/0xaa0 [ip_gre]
+[   77.804862][    C3]  ? rcu_read_lock_sched_held+0xc0/0xc0
+[   77.805621][    C3]  gre_rcv+0x304/0x1910 [ip_gre]
+[   77.806293][    C3]  ? lock_acquire+0x1a9/0x870
+[   77.806925][    C3]  ? gre_rcv+0xfe/0x354 [gre]
+[   77.807559][    C3]  ? erspan_xmit+0x2e60/0x2e60 [ip_gre]
+[   77.808305][    C3]  ? rcu_read_lock_sched_held+0xc0/0xc0
+[   77.809032][    C3]  ? rcu_read_lock_held+0x90/0xa0
+[   77.809713][    C3]  gre_rcv+0x1b8/0x354 [gre]
+[ ... ]
+
+Suggested-by: Eric Dumazet <eric.dumazet@gmail.com>
+Fixes: c54419321455 ("GRE: Refactor GRE tunneling code.")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- lib/test_objagg.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/ipv4/ip_tunnel.c | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/lib/test_objagg.c b/lib/test_objagg.c
-index 72c1abfa154dc..da137939a4100 100644
---- a/lib/test_objagg.c
-+++ b/lib/test_objagg.c
-@@ -979,10 +979,10 @@ static int test_hints_case(const struct hints_case *hints_case)
- err_world2_obj_get:
- 	for (i--; i >= 0; i--)
- 		world_obj_put(&world2, objagg, hints_case->key_ids[i]);
--	objagg_hints_put(hints);
--	objagg_destroy(objagg2);
- 	i = hints_case->key_ids_count;
-+	objagg_destroy(objagg2);
- err_check_expect_hints_stats:
-+	objagg_hints_put(hints);
- err_hints_get:
- err_check_expect_stats:
- err_world_obj_get:
+diff --git a/net/ipv4/ip_tunnel.c b/net/ipv4/ip_tunnel.c
+index cd4b84310d929..a0b4dc54f8a60 100644
+--- a/net/ipv4/ip_tunnel.c
++++ b/net/ipv4/ip_tunnel.c
+@@ -85,9 +85,10 @@ struct ip_tunnel *ip_tunnel_lookup(struct ip_tunnel_net *itn,
+ 				   __be32 remote, __be32 local,
+ 				   __be32 key)
+ {
+-	unsigned int hash;
+ 	struct ip_tunnel *t, *cand = NULL;
+ 	struct hlist_head *head;
++	struct net_device *ndev;
++	unsigned int hash;
+ 
+ 	hash = ip_tunnel_hash(key, remote);
+ 	head = &itn->tunnels[hash];
+@@ -162,8 +163,9 @@ struct ip_tunnel *ip_tunnel_lookup(struct ip_tunnel_net *itn,
+ 	if (t && t->dev->flags & IFF_UP)
+ 		return t;
+ 
+-	if (itn->fb_tunnel_dev && itn->fb_tunnel_dev->flags & IFF_UP)
+-		return netdev_priv(itn->fb_tunnel_dev);
++	ndev = READ_ONCE(itn->fb_tunnel_dev);
++	if (ndev && ndev->flags & IFF_UP)
++		return netdev_priv(ndev);
+ 
+ 	return NULL;
+ }
+@@ -1245,9 +1247,9 @@ void ip_tunnel_uninit(struct net_device *dev)
+ 	struct ip_tunnel_net *itn;
+ 
+ 	itn = net_generic(net, tunnel->ip_tnl_net_id);
+-	/* fb_tunnel_dev will be unregisted in net-exit call. */
+-	if (itn->fb_tunnel_dev != dev)
+-		ip_tunnel_del(itn, netdev_priv(dev));
++	ip_tunnel_del(itn, netdev_priv(dev));
++	if (itn->fb_tunnel_dev == dev)
++		WRITE_ONCE(itn->fb_tunnel_dev, NULL);
+ 
+ 	dst_cache_reset(&tunnel->dst_cache);
+ }
 -- 
 2.25.1
 
