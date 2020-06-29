@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95CF2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:25:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CAF0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 73E5A20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:25:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A26D20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:25:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593458733;
-	bh=NreF01LoI6c9QfXFcdFmk5Yu4R8Y/7nG3te/iilV4QY=;
+	s=default; t=1593458737;
+	bh=ChTL6Zpp6VFyxhQl5HlLme+O9W/F52bSbqdY44CyKVo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UPj5UD6uYLmylKJuYMOSzZ1r7oaqHMAQsx+Z4m7L4HHBRoWGxM45bWbmlK+9iI7kK
-	 IdSs7iDm8K0Blius3f09Jx1FCHDFMWAHXxXwmAL6H2FmgrYC2n77SHuoo+sb10xKCt
-	 LURl2R2BdGkAxW1TaKZSMCVeJ93P57+a9D4idMKM=
+	b=NmzidVAC3QZByMRtj8S3XsBLlSeflJzM1CRMsM0dX93jn0lq2AXeLx4T2700UEAvx
+	 V9wjBq/TTDOpKqHkhcVLA/tRm5tjM9Tq7BNV0IufFmbguwvaC7C8XOzu2YaZiyJJim
+	 Q0j96E5hW3ZWKF7gVFiPeGlxV4pwtefzqQPBs+CA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732558AbgF2TZa (ORCPT
+        id S1731878AbgF2TZf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:25:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37014 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:25:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732146AbgF2TZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:25:16 -0400
+        id S1732474AbgF2TZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:25:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DFD425459;
-        Mon, 29 Jun 2020 15:43:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1024E253F4;
+        Mon, 29 Jun 2020 15:42:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445408;
-        bh=NreF01LoI6c9QfXFcdFmk5Yu4R8Y/7nG3te/iilV4QY=;
+        s=default; t=1593445335;
+        bh=ChTL6Zpp6VFyxhQl5HlLme+O9W/F52bSbqdY44CyKVo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NWtBbDTgSMHDKFNHsCABoEPXlHvKXHKR4NUUtpTwWavMFqWArXwtNoLacXKfgydzg
-         wEKMklVr5W42vFDd30E4g1luSxlLdU4Dz3ogQ6GtVwkCnfYnuViN7yVM16KsTrSIak
-         bgc+qUT0ZkS0wZWBf82ookX0/e5FUZnmtxThrgs0=
+        b=PyFgbiRZM8Ywh9235B44ra+4MrEZSDTts51d3svzbjAHDfKHkrZz6jfWXJrj+RKu8
+         /Zf/O4ux87bLz5Nf4wrrqvevE/swDjCEVzLgF1MXpkSWT2DHEzj5BYJh1aOm1qUlkm
+         rJZrgYDwGXkDIYVFIjv/eTNw8QxAaJQyosA1rLzw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhang Xiaoxu <zhangxiaoxu5@huawei.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>,
+Cc:     Chen Yu <yu.c.chen@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Stable@vger.kernel.org, Aaron Brown <aaron.f.brown@intel.com>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 159/191] cifs/smb3: Fix data inconsistent when punch hole
-Date:   Mon, 29 Jun 2020 11:39:35 -0400
-Message-Id: <20200629154007.2495120-160-sashal@kernel.org>
+Subject: [PATCH 4.9 096/191] e1000e: Do not wake up the system via WOL if device wakeup is disabled
+Date:   Mon, 29 Jun 2020 11:38:32 -0400
+Message-Id: <20200629154007.2495120-97-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -66,55 +68,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+From: Chen Yu <yu.c.chen@intel.com>
 
-[ Upstream commit acc91c2d8de4ef46ed751c5f9df99ed9a109b100 ]
+[ Upstream commit 6bf6be1127f7e6d4bf39f84d56854e944d045d74 ]
 
-When punch hole success, we also can read old data from file:
-  # strace -e trace=pread64,fallocate xfs_io -f -c "pread 20 40" \
-           -c "fpunch 20 40" -c"pread 20 40" file
-  pread64(3, " version 5.8.0-rc1+"..., 40, 20) = 40
-  fallocate(3, FALLOC_FL_KEEP_SIZE|FALLOC_FL_PUNCH_HOLE, 20, 40) = 0
-  pread64(3, " version 5.8.0-rc1+"..., 40, 20) = 40
+Currently the system will be woken up via WOL(Wake On LAN) even if the
+device wakeup ability has been disabled via sysfs:
+ cat /sys/devices/pci0000:00/0000:00:1f.6/power/wakeup
+ disabled
 
-CIFS implements the fallocate(FALLOCATE_FL_PUNCH_HOLE) with send SMB
-ioctl(FSCTL_SET_ZERO_DATA) to server. It just set the range of the
-remote file to zero, but local page caches not updated, then the
-local page caches inconsistent with server.
+The system should not be woken up if the user has explicitly
+disabled the wake up ability for this device.
 
-Also can be found by xfstests generic/316.
+This patch clears the WOL ability of this network device if the
+user has disabled the wake up ability in sysfs.
 
-So, we need to remove the page caches before send the SMB
-ioctl(FSCTL_SET_ZERO_DATA) to server.
-
-Fixes: 31742c5a33176 ("enable fallocate punch hole ("fallocate -p") for SMB3")
-Suggested-by: Pavel Shilovsky <pshilov@microsoft.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
-Cc: stable@vger.kernel.org # v3.17
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Fixes: bc7f75fa9788 ("[E1000E]: New pci-express e1000 driver")
+Reported-by: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: <Stable@vger.kernel.org>
+Signed-off-by: Chen Yu <yu.c.chen@intel.com>
+Tested-by: Aaron Brown <aaron.f.brown@intel.com>
+Signed-off-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/smb2ops.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/ethernet/intel/e1000e/netdev.c | 14 ++++++++++----
+ 1 file changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
-index 67d9b7a277a3b..9c29317deef56 100644
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -1276,6 +1276,12 @@ static long smb3_punch_hole(struct file *file, struct cifs_tcon *tcon,
- 	if (!smb2_set_sparse(xid, tcon, cfile, inode, set_sparse))
- 		return -EOPNOTSUPP;
+diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
+index be324b4761eb6..3c01bc43889a2 100644
+--- a/drivers/net/ethernet/intel/e1000e/netdev.c
++++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+@@ -6315,11 +6315,17 @@ static int __e1000_shutdown(struct pci_dev *pdev, bool runtime)
+ 	struct net_device *netdev = pci_get_drvdata(pdev);
+ 	struct e1000_adapter *adapter = netdev_priv(netdev);
+ 	struct e1000_hw *hw = &adapter->hw;
+-	u32 ctrl, ctrl_ext, rctl, status;
+-	/* Runtime suspend should only enable wakeup for link changes */
+-	u32 wufc = runtime ? E1000_WUFC_LNKC : adapter->wol;
++	u32 ctrl, ctrl_ext, rctl, status, wufc;
+ 	int retval = 0;
  
-+	/*
-+	 * We implement the punch hole through ioctl, so we need remove the page
-+	 * caches first, otherwise the data may be inconsistent with the server.
-+	 */
-+	truncate_pagecache_range(inode, offset, offset + len - 1);
++	/* Runtime suspend should only enable wakeup for link changes */
++	if (runtime)
++		wufc = E1000_WUFC_LNKC;
++	else if (device_may_wakeup(&pdev->dev))
++		wufc = adapter->wol;
++	else
++		wufc = 0;
 +
- 	cifs_dbg(FYI, "offset %lld len %lld", offset, len);
- 
- 	fsctl_buf.FileOffset = cpu_to_le64(offset);
+ 	status = er32(STATUS);
+ 	if (status & E1000_STATUS_LU)
+ 		wufc &= ~E1000_WUFC_LNKC;
+@@ -6377,7 +6383,7 @@ static int __e1000_shutdown(struct pci_dev *pdev, bool runtime)
+ 		e1000e_igp3_phy_powerdown_workaround_ich8lan(&adapter->hw);
+ 	} else if ((hw->mac.type == e1000_pch_lpt) ||
+ 		   (hw->mac.type == e1000_pch_spt)) {
+-		if (!(wufc & (E1000_WUFC_EX | E1000_WUFC_MC | E1000_WUFC_BC)))
++		if (wufc && !(wufc & (E1000_WUFC_EX | E1000_WUFC_MC | E1000_WUFC_BC)))
+ 			/* ULP does not support wake from unicast, multicast
+ 			 * or broadcast.
+ 			 */
 -- 
 2.25.1
 
