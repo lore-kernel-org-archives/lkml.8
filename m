@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39186C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44930C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09A712065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 161A72071A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:05:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468309;
-	bh=5NP+qZkv52s2t0p4d7RZmI/81Jk5wRFpyh28Zeo2Cdo=;
+	s=default; t=1593468319;
+	bh=1FFAhl0OAM6WMZkxs4GUZv3PqFs8gVfwKn18iQl9Ccg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wuVGlxwDrtBD8NxFbfJz84iCV67pK0nfBKgeAbw/3zargWj31+th+0Xs8z3pid3ED
-	 sm/z8LxzJWzCLZLqhY5T9i2yYzrG4SWpLVAS5huMyUlTu6aG4MCmTwzfXqPM/xDKyV
-	 XQpJsaRkNLLw31FBpilYVrPh1013xsEhIVX5KVh4=
+	b=njPbh0/KK1dLUfkPJY+ivylSSzaYONjQfE4IqCmD37+naxTjzkOIWqR2wwuD8Y9xJ
+	 MZdg7/DTyLiVw6NVH1JIkjeQTBxIOpTo0iHuba8K06A1cxMhf8JssZWJ7carcGZkS4
+	 7OyXgjT6AxqjRu55Ex32/qlVSvm/ly/4e/C2Jq2U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391868AbgF2WFH (ORCPT
+        id S2387791AbgF2WFQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:05:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56890 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:05:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726174AbgF2SfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726122AbgF2SfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 129A024792;
-        Mon, 29 Jun 2020 15:21:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 159A124655;
+        Mon, 29 Jun 2020 15:19:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444100;
-        bh=5NP+qZkv52s2t0p4d7RZmI/81Jk5wRFpyh28Zeo2Cdo=;
+        s=default; t=1593443968;
+        bh=1FFAhl0OAM6WMZkxs4GUZv3PqFs8gVfwKn18iQl9Ccg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y0zvylTerbM+jVK/6zv6Jvj4zBFQhdYO0QAJhm7mzGw/YWTBbeYuOLzlXyycQzJV9
-         vlqsPjzPYSnxrfsgG4VUz07snZ22XKNj4EbxAPsUcRfNf57mvXDUPn//Ehyfpok4YA
-         6caRtzl/lTuGr4G0wIDvqlsGLaedG4cfW9asSBDw=
+        b=hRtESvOMqMQ66pWE3IXEvARAOJ+wfYUki8Fjq3L3iKPm6osGsPQNabdvp2k4VHnpk
+         wPjg2ifIjA55r0oaWFqBDSSxgs3V1UxPvUQJcdq3BYc1bp24bzwr0SmNqQXB4EdERz
+         IlNwNi7taJjTGgpCYrRv9YFDj3ICV26to/BttD6M=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>,
+Cc:     Laurence Tratt <laurie@tratt.net>, Takashi Iwai <tiwai@suse.de>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 211/265] ALSA: hda/realtek: Add mute LED and micmute LED support for HP systems
-Date:   Mon, 29 Jun 2020 11:17:24 -0400
-Message-Id: <20200629151818.2493727-212-sashal@kernel.org>
+Subject: [PATCH 5.7 072/265] ALSA: usb-audio: Add implicit feedback quirk for SSL2+.
+Date:   Mon, 29 Jun 2020 11:15:05 -0400
+Message-Id: <20200629151818.2493727-73-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -65,37 +64,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Laurence Tratt <laurie@tratt.net>
 
-commit b2c22910fe5aae10b7e17b0721e63a3edf0c9553 upstream.
+commit e7585db1b0b5b4e4eb1967bb1472df308f7ffcbf upstream.
 
-There are two more HP systems control mute LED from HDA codec and need
-to expose micmute led class so SoF can control micmute LED.
+This uses the same quirk as the Motu M2 and M4 to ensure the driver uses the
+audio interface's clock. Tested on an SSL2+.
 
-Add quirks to support them.
-
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Laurence Tratt <laurie@tratt.net>
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200617102906.16156-2-kai.heng.feng@canonical.com
+Link: https://lore.kernel.org/r/20200612111807.dgnig6rwhmsl2bod@overdrive.tratt.net
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- sound/pci/hda/patch_realtek.c | 2 ++
- 1 file changed, 2 insertions(+)
+ sound/usb/pcm.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index f58102925c705..cb689878ba205 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -7436,6 +7436,8 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x103c, 0x83b9, "HP Spectre x360", ALC269_FIXUP_HP_MUTE_LED_MIC3),
- 	SND_PCI_QUIRK(0x103c, 0x8497, "HP Envy x360", ALC269_FIXUP_HP_MUTE_LED_MIC3),
- 	SND_PCI_QUIRK(0x103c, 0x84e7, "HP Pavilion 15", ALC269_FIXUP_HP_MUTE_LED_MIC3),
-+	SND_PCI_QUIRK(0x103c, 0x869d, "HP", ALC236_FIXUP_HP_MUTE_LED),
-+	SND_PCI_QUIRK(0x103c, 0x8729, "HP", ALC285_FIXUP_HP_GPIO_LED),
- 	SND_PCI_QUIRK(0x103c, 0x8736, "HP", ALC285_FIXUP_HP_GPIO_LED),
- 	SND_PCI_QUIRK(0x103c, 0x877a, "HP", ALC285_FIXUP_HP_MUTE_LED),
- 	SND_PCI_QUIRK(0x103c, 0x877d, "HP", ALC236_FIXUP_HP_MUTE_LED),
+diff --git a/sound/usb/pcm.c b/sound/usb/pcm.c
+index 3411e27eb64bb..39aec83f8aca4 100644
+--- a/sound/usb/pcm.c
++++ b/sound/usb/pcm.c
+@@ -367,6 +367,7 @@ static int set_sync_ep_implicit_fb_quirk(struct snd_usb_substream *subs,
+ 		ifnum = 0;
+ 		goto add_sync_ep_from_ifnum;
+ 	case USB_ID(0x07fd, 0x0008): /* MOTU M Series */
++	case USB_ID(0x31e9, 0x0002): /* Solid State Logic SSL2+ */
+ 		ep = 0x81;
+ 		ifnum = 2;
+ 		goto add_sync_ep_from_ifnum;
 -- 
 2.25.1
 
