@@ -2,153 +2,103 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F16BDC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70BDCC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDECA20780
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:10:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=atishpatra.org header.i=@atishpatra.org header.b="RwCEbkr7"
+	by mail.kernel.org (Postfix) with ESMTP id 4AB3520675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:10:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593461423;
+	bh=agRQypckGCYSkFlC3kExSSvrt4mjZ/93NTQyMsU16ws=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=IEZqK65Mqeld9fAdEARLoovqEcSPaxfaPl4R42kCgGzSSaTlbv7bCqUImSbd7r+CM
+	 9iio/gzVoXmigg8jhSoZ/gYQR6aHNn2yOx1b49X/nBGmC7ok8AOM0JX0TfMvpYNLLI
+	 Ge/YURKG8BXAoy3yg3DZtDjX35G37RZeSA5JxECI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728980AbgF2UKP (ORCPT
+        id S1728998AbgF2UKW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:10:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52840 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728956AbgF2UKI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 16:10:08 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22517C03E979
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 13:10:08 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id z15so6579023wrl.8
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 13:10:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=atishpatra.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DuXPs2KRc0kRkrIeNHomDGkRgeQMj5m4hx2hmqHrvd0=;
-        b=RwCEbkr7yIXMwaL6oCI6h3TFBrn9VLnCgp8TQCTIrSgyVQuzK7Iywclm3ny1C/A1j6
-         CiUUsHeusFGkR4ofBNlMT4xs3Kk14kgzfpLpcB8o5VTHHC+x3qfdunD/jM1rZKGu8j+1
-         HFbJcxtTP50PS+jYQqGKvl03Itsy8M6Zm5+f4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DuXPs2KRc0kRkrIeNHomDGkRgeQMj5m4hx2hmqHrvd0=;
-        b=chwb7zkz9NrlUyV8qi6WJhUbFzJMXJLqgu8Xh+xAzXfGSXdKvVSq/TaEB/Xfpl4u5e
-         jE5ZODkf4Lr54aVAsJsbbs6gAYvRI9YvZl5u20YiMHDr+aSIbK/HtRAXRME9gTy1XMIm
-         akFlV8/z9xFqxmB6PiWjEmmJOYrFDzYCtMc40OH9JCpAZ9Atbz+oz7Amhluje647tXQG
-         9DHB5iEPhHnxrE+ludAYw2L73Jxyn9oCOXcQ4jfir7dsapEyBpypqs1Qp9cu0fBri3zM
-         BHWM/Kpi0nNM2SotEs0WBKkDTkAqSY+DJ+2ehtSIuQYVNGNplVWJL3yGVn5vRQkfHu+A
-         XTNQ==
-X-Gm-Message-State: AOAM533JvMq240xqxGHoiKkWh/GRAJNy80Y/rrxeKJ9RNcweOgrfTf6D
-        Uea0TmISGIYNqnJmYkRwr2GRn6WTw6EG7m0s55hf
-X-Google-Smtp-Source: ABdhPJxHxREtLEN5Xz2f+V7HyVEy8DgsTaByjDILcaX0i/Qvfu6F12G1pzyMk4t6el/9QubVSfamdtO8NvLTSslFfjc=
-X-Received: by 2002:adf:e884:: with SMTP id d4mr17770822wrm.176.1593461406779;
- Mon, 29 Jun 2020 13:10:06 -0700 (PDT)
+        Mon, 29 Jun 2020 16:10:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40564 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732914AbgF2TaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:30:22 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CEBE2522A;
+        Mon, 29 Jun 2020 15:35:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593444945;
+        bh=agRQypckGCYSkFlC3kExSSvrt4mjZ/93NTQyMsU16ws=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=P9CV97CnbZNLAO08S20hD1eTh1lxkz5NV0HGPGF8iJMLgM0w7T6twM7sYioLrfu5c
+         6/WGRDz+5eTkaMuxwqbt7JClzSU7ItLnx26iMvcvdDi70yiVA6VabiKs0+ZdAOGIra
+         kkkvYffvuup8ck5NqBQDR1TPXReiHsxtqCitOzt8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     =?UTF-8?q?Tomasz=20Meresi=C5=84ski?= <tomasz@meresinski.eu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.19 043/131] usb: add USB_QUIRK_DELAY_INIT for Logitech C922
+Date:   Mon, 29 Jun 2020 11:33:34 -0400
+Message-Id: <20200629153502.2494656-44-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
+References: <20200629153502.2494656-1-sashal@kernel.org>
 MIME-Version: 1.0
-References: <20200625234516.31406-1-atish.patra@wdc.com> <20200625234516.31406-2-atish.patra@wdc.com>
- <5e2ce2ae-5458-8579-576a-76721f7d3b08@gmx.de> <CAOnJCUKnB7kLdTh1-NaFNw4p6EammETzhUa-Uniq2rrC-7AaQg@mail.gmail.com>
- <CAMj1kXFyQiYPYB-81POq7agRW1ROt=2j3nN9wcpHGmr4YjmFCQ@mail.gmail.com> <CAMj1kXFd3wpob228WOYOu3SG0r2SEbT0cZF1JkF6uwjzrmf2EQ@mail.gmail.com>
-In-Reply-To: <CAMj1kXFd3wpob228WOYOu3SG0r2SEbT0cZF1JkF6uwjzrmf2EQ@mail.gmail.com>
-From:   Atish Patra <atishp@atishpatra.org>
-Date:   Mon, 29 Jun 2020 13:09:55 -0700
-Message-ID: <CAOnJCUJAdMoTEtxn8Q0Frxi9fw6PS052e3jp2CSJszmGBPp4kA@mail.gmail.com>
-Subject: Re: [RFC PATCH 01/11] efi: Fix gcc error around __umoddi3 for 32 bit builds
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        Atish Patra <atish.patra@wdc.com>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.19.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.19.131-rc1
+X-KernelTest-Deadline: 2020-07-01T15:34+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 27, 2020 at 2:22 AM Ard Biesheuvel <ardb@kernel.org> wrote:
->
-> On Sat, 27 Jun 2020 at 00:03, Ard Biesheuvel <ardb@kernel.org> wrote:
-> >
-> > On Fri, 26 Jun 2020 at 23:56, Atish Patra <atishp@atishpatra.org> wrote:
-> > >
-> > > On Thu, Jun 25, 2020 at 7:43 PM Heinrich Schuchardt <xypron.glpk@gmx.de> wrote:
-> > > >
-> > > > On 6/26/20 1:45 AM, Atish Patra wrote:
-> > > > > 32bit gcc doesn't support modulo operation on 64 bit data. It results in
-> > > > > a __umoddi3 error while building EFI for 32 bit.
-> > > > >
-> > > > > Use bitwise operations instead of modulo operations to fix the issue.
-> > > > >
-> > > > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> > > > > ---
-> > > > >  drivers/firmware/efi/libstub/alignedmem.c | 2 +-
-> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > >
-> > > > > diff --git a/drivers/firmware/efi/libstub/alignedmem.c b/drivers/firmware/efi/libstub/alignedmem.c
-> > > > > index cc89c4d6196f..1de9878ddd3a 100644
-> > > > > --- a/drivers/firmware/efi/libstub/alignedmem.c
-> > > > > +++ b/drivers/firmware/efi/libstub/alignedmem.c
-> > > > > @@ -44,7 +44,7 @@ efi_status_t efi_allocate_pages_aligned(unsigned long size, unsigned long *addr,
-> > > > >       *addr = ALIGN((unsigned long)alloc_addr, align);
-> > > > >
-> > > > >       if (slack > 0) {
-> > > > > -             int l = (alloc_addr % align) / EFI_PAGE_SIZE;
-> > > > > +             int l = (alloc_addr & (align - 1)) / EFI_PAGE_SIZE;
-> > > >
-> > > > Here you rely on the compiler to silently convert the division by
-> > > > EFI_PAGE_SIZE into a right shift. Wouldn't it be cleaner to use
-> > > > EFI_PAGE_SHIFT to explicitly avoid a dependency on __udivdi3()?
-> > > >
-> > > > slack = (align >> EFI_PAGE_SHIFT) - 1;
-> > > > ...
-> > > > int l = (alloc_addr & (align - 1)) >> EFI_PAGE_SHIFT;
-> > > >
-> > >
-> > > Sure. I will update it in the next version. Thanks for the suggestion.
-> >
-> > Please don't. Dividing by EFI_PAGE_SIZE is perfectly fine, and is more readable.
->
-> Actually, I will take this patch as a fix right away - 32-bit ARM has
-> the same issue (although it does not actually incorporate this object
-> file)
->
+From: Tomasz Meresiński <tomasz@meresinski.eu>
 
-Thanks. I will drop it from my next version in that case.
+commit 5d8021923e8a8cc37a421a64e27c7221f0fee33c upstream.
 
-> In the meantime, please check how the stub gets pulled into your
-> kernel: the idea of a static library is that only the objects that are
-> used are included in the final build, but this turned out to be broken
-> for arm64 [0]. IOW, simply applying a similar change might fix your
-> build issue as well (assuming RISC-V does not actually call
-> efi_allocate_pages_aligned() anywhere)
->
-Sorry. I missed this thread earlier. Yes. Applying a similar change
-fixes the static library linking for RISC-V. I don't see
-efi_allocate_pages_aligned or efi_random_alloc
-in vmlinux anymore. I will update my patch. Thanks.
+The Logitech C922, just like other Logitech webcams,
+needs the USB_QUIRK_DELAY_INIT or it will randomly
+not respond after device connection
 
-I did not see any new version of the next patch in that series [1].
-Thus, I am leaving libstub/Makefile changes
-as it is. Please let me know if I missed something.
+Signed-off-by: Tomasz Meresiński <tomasz@meresinski.eu>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200603203347.7792-1-tomasz@meresinski.eu
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/usb/core/quirks.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-[1] https://lore.kernel.org/linux-efi/CAMj1kXGg-w6N7jyG0pBJmeRctAhG2wWGoU=ryWj+Qi2UH-_m9Q@mail.gmail.com/
-
-> [0] https://lore.kernel.org/linux-arm-kernel/20200604022031.164207-1-masahiroy@kernel.org/
-
-
-
+diff --git a/drivers/usb/core/quirks.c b/drivers/usb/core/quirks.c
+index 3e8efe759c3e6..e0b77674869ce 100644
+--- a/drivers/usb/core/quirks.c
++++ b/drivers/usb/core/quirks.c
+@@ -218,11 +218,12 @@ static const struct usb_device_id usb_quirk_list[] = {
+ 	/* Logitech HD Webcam C270 */
+ 	{ USB_DEVICE(0x046d, 0x0825), .driver_info = USB_QUIRK_RESET_RESUME },
+ 
+-	/* Logitech HD Pro Webcams C920, C920-C, C925e and C930e */
++	/* Logitech HD Pro Webcams C920, C920-C, C922, C925e and C930e */
+ 	{ USB_DEVICE(0x046d, 0x082d), .driver_info = USB_QUIRK_DELAY_INIT },
+ 	{ USB_DEVICE(0x046d, 0x0841), .driver_info = USB_QUIRK_DELAY_INIT },
+ 	{ USB_DEVICE(0x046d, 0x0843), .driver_info = USB_QUIRK_DELAY_INIT },
+ 	{ USB_DEVICE(0x046d, 0x085b), .driver_info = USB_QUIRK_DELAY_INIT },
++	{ USB_DEVICE(0x046d, 0x085c), .driver_info = USB_QUIRK_DELAY_INIT },
+ 
+ 	/* Logitech ConferenceCam CC3000e */
+ 	{ USB_DEVICE(0x046d, 0x0847), .driver_info = USB_QUIRK_DELAY_INIT },
 -- 
-Regards,
-Atish
+2.25.1
+
