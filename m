@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 610BEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32EEBC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2F2E0206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01FA1206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:58:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467917;
-	bh=WCjtbpjQ4nsvFwRlVNbbY7Rzz1MwGVeN88ApKGRWaO0=;
+	s=default; t=1593467923;
+	bh=KxMLodaL9VRmXU3o6wjS4X4aIDtMS1Hm+31sE0FPM9o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tazl2dMg1T4RluYY77t136CfNyGcABrR0dweKYwmCSwt7WUva1pdaUeuCQ107W+F3
-	 2D8MkCxvdIiJ/Q8QMld8mWSbHScH568PhCgkclo0HlFuqltqnfJsn7HEq03lbGX9FP
-	 NAYzxIGO6vu3w4FX16cw3e0nCgVptdRDdQ7Iq2nQ=
+	b=SzHQ6QR+aSkyFz+RvRfW/Oem1G1lVWG4Ot1QURIR4QDwRbTMRiy8CThl3IxDreKeo
+	 idzPhHgfH3hsWEVU79p6Om4gqoKVBmI++NAHNOOYrQ8devyxg/jQSCBPM3gogAfqlr
+	 tyONirCKbFeQPL9uXVPpF4RRnA+g0/QOYc5k+CjE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391663AbgF2V6f (ORCPT
+        id S2391669AbgF2V6l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:58:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56782 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:58:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726448AbgF2Sf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726451AbgF2Sf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78DA224741;
-        Mon, 29 Jun 2020 15:21:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7850C247D8;
+        Mon, 29 Jun 2020 15:22:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444063;
-        bh=WCjtbpjQ4nsvFwRlVNbbY7Rzz1MwGVeN88ApKGRWaO0=;
+        s=default; t=1593444146;
+        bh=KxMLodaL9VRmXU3o6wjS4X4aIDtMS1Hm+31sE0FPM9o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uO+LGK1stLPqFukwhczhzcFd5ga9KfpfwOFK4GqkcnPNldlKjMbRFhlMnDeekU+hg
-         f+o4nN7SFnQ1sKSdMlwLpq/zrB2nVv9mzo3aKcPbJLUdPUr8SfyZI0HpqA+Ri+oF2i
-         8G6g+W/GofdJUFDnwkXxYjDzlVf1X4EurMtURdxg=
+        b=rCpTWII19VTejB1w78fKHDavcR3/tjQHKRG1AybL0Xi5cfKIYSkSKprd9pXoHE2UN
+         BKUFmL23GtJNPL9BOQ2rtqnlL/CZTYaMcCpckHIdEvsKXRPqkmAM1mKcaItomf9Z9n
+         /RRKIhOmbdnjKy/tNXavx8yf6DQu4XiEUtRakRF4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eddie James <eajames@linux.ibm.com>, Joel Stanley <joel@jms.id.au>,
-        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 171/265] i2c: fsi: Fix the port number field in status register
-Date:   Mon, 29 Jun 2020 11:16:44 -0400
-Message-Id: <20200629151818.2493727-172-sashal@kernel.org>
+Cc:     Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 251/265] drm/panel-simple: fix connector type for newhaven_nhd_43_480272ef_atxl
+Date:   Mon, 29 Jun 2020 11:18:04 -0400
+Message-Id: <20200629151818.2493727-252-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -64,34 +65,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eddie James <eajames@linux.ibm.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
 
-[ Upstream commit 502035e284cc7e9efef22b01771d822d49698ab9 ]
+commit 8a4f5e1185db61bce6ce3a5dce6381a77bcf94e6 upstream.
 
-The port number field in the status register was not correct, so fix it.
+Add connector type for newhaven_nhd_43_480272ef_atxl, as
+drm_panel_bridge_add() requires connector type to be set.
 
-Fixes: d6ffb6300116 ("i2c: Add FSI-attached I2C master algorithm")
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
-Signed-off-by: Joel Stanley <joel@jms.id.au>
-Signed-off-by: Wolfram Sang <wsa@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: stable@vger.kernel.org # v5.5+
+Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200609102809.753203-1-tomi.valkeinen@ti.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/i2c/busses/i2c-fsi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/panel/panel-simple.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/i2c/busses/i2c-fsi.c b/drivers/i2c/busses/i2c-fsi.c
-index e0c256922d4f1..977d6f524649c 100644
---- a/drivers/i2c/busses/i2c-fsi.c
-+++ b/drivers/i2c/busses/i2c-fsi.c
-@@ -98,7 +98,7 @@
- #define I2C_STAT_DAT_REQ	BIT(25)
- #define I2C_STAT_CMD_COMP	BIT(24)
- #define I2C_STAT_STOP_ERR	BIT(23)
--#define I2C_STAT_MAX_PORT	GENMASK(19, 16)
-+#define I2C_STAT_MAX_PORT	GENMASK(22, 16)
- #define I2C_STAT_ANY_INT	BIT(15)
- #define I2C_STAT_SCL_IN		BIT(11)
- #define I2C_STAT_SDA_IN		BIT(10)
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 3ad828eaefe1c..00c1a8dc4ce8f 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -2465,6 +2465,7 @@ static const struct panel_desc newhaven_nhd_43_480272ef_atxl = {
+ 	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
+ 	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE |
+ 		     DRM_BUS_FLAG_SYNC_DRIVE_POSEDGE,
++	.connector_type = DRM_MODE_CONNECTOR_DPI,
+ };
+ 
+ static const struct display_timing nlt_nl192108ac18_02d_timing = {
 -- 
 2.25.1
 
