@@ -2,53 +2,51 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70759C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 609EFC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:59:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5394520702
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:59:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E03920702
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:59:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460740;
-	bh=/yIniaPFKZ11CTcjGIIKnnQplSH1xgEGXA3jO9oQshA=;
+	s=default; t=1593460743;
+	bh=4svoy0z0zux1KpKCP0I1O3QcgoJ5wobljsZlGrM3pqs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1VuVuOMhn+1riDTTW3tVV3hXbYKQiSIop9W4PAF/5t1waUbSJaRnQWFhkaGF+XnxV
-	 Fl2ROH/Z+nfj/lWgidap3KpcCr03qTqpBRk7nCxV79xv6a6xD/evRu6nxwvhA1fJVt
-	 4GAge36B8cvEkDJM1B9K1ltrhjL4EAYxyYViskU8=
+	b=d4gpavjgcBMeL+SjF97oat281S/BPRbjcGyG91sEqjTap2ZSmoLyCGb2gkSv+Mvk+
+	 AbgZ5BgNBPbhZ2EMPf46wldgF83O3sSZy9aXuTumSdgSICvLAmw42kFbcW42A79U3D
+	 h357pzT6SpcWF31DaW0NjOJVoMvNYxPf9yW5/Fx8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731957AbgF2T66 (ORCPT
+        id S2387638AbgF2T7C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:58:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47676 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:59:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47678 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387582AbgF2TkR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387583AbgF2TkR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11A5C248FD;
-        Mon, 29 Jun 2020 15:27:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 112DC248AB;
+        Mon, 29 Jun 2020 15:26:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444450;
-        bh=/yIniaPFKZ11CTcjGIIKnnQplSH1xgEGXA3jO9oQshA=;
+        s=default; t=1593444403;
+        bh=4svoy0z0zux1KpKCP0I1O3QcgoJ5wobljsZlGrM3pqs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wbeRL4tR7ihLCg4/rNQlrchZ306zwve4xxxg9X1/RnMaA5AGCHRgzYCf0FZ/04Ff3
-         Dfp/naWRwvsYO+GSSt0YcV+Cp6ec+bJaHanrsEWSQ3hdkT0FR9IuP280cWETA/xaL/
-         gNfYr5xtLi1YD1vyfeimyl/3DIiEI1DrpJDMJ8P0=
+        b=hWEoVA95N6wy54pUA11+O6LW0FL7xU1y09H8C5I+xZ4lN7SsVrFFocvDqsyNGyPc5
+         Qxj1ijSAsMXv4R76q+IYix46QShBtX6Z2m5j3anORii/ZyrZIvPtleC0UgBvSv7DOu
+         FheSn/kywhTeyoFu4aklBIk5xFf/P+zWNB7LNUNc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+Cc:     Matthew Hagan <mnhagan88@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 130/178] s390/vdso: Use $(LD) instead of $(CC) to link vDSO
-Date:   Mon, 29 Jun 2020 11:24:35 -0400
-Message-Id: <20200629152523.2494198-131-sashal@kernel.org>
+Subject: [PATCH 5.4 081/178] ARM: dts: NSP: Correct FA2 mailbox node
+Date:   Mon, 29 Jun 2020 11:23:46 -0400
+Message-Id: <20200629152523.2494198-82-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -67,90 +65,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Matthew Hagan <mnhagan88@gmail.com>
 
-[ Upstream commit 2b2a25845d534ac6d55086e35c033961fdd83a26 ]
+[ Upstream commit ac4e106d8934a5894811fc263f4b03fc8ed0fb7a ]
 
-Currently, the VDSO is being linked through $(CC). This does not match
-how the rest of the kernel links objects, which is through the $(LD)
-variable.
+The FA2 mailbox is specified at 0x18025000 but should actually be
+0x18025c00, length 0x400 according to socregs_nsp.h and board_bu.c. Also
+the interrupt was off by one and should be GIC SPI 151 instead of 150.
 
-When clang is built in a default configuration, it first attempts to use
-the target triple's default linker, which is just ld. However, the user
-can override this through the CLANG_DEFAULT_LINKER cmake define so that
-clang uses another linker by default, such as LLVM's own linker, ld.lld.
-This can be useful to get more optimized links across various different
-projects.
-
-However, this is problematic for the s390 vDSO because ld.lld does not
-have any s390 emulatiom support:
-
-https://github.com/llvm/llvm-project/blob/llvmorg-10.0.1-rc1/lld/ELF/Driver.cpp#L132-L150
-
-Thus, if a user is using a toolchain with ld.lld as the default, they
-will see an error, even if they have specified ld.bfd through the LD
-make variable:
-
-$ make -j"$(nproc)" -s ARCH=s390 CROSS_COMPILE=s390x-linux-gnu- LLVM=1 \
-                       LD=s390x-linux-gnu-ld \
-                       defconfig arch/s390/kernel/vdso64/
-ld.lld: error: unknown emulation: elf64_s390
-clang-11: error: linker command failed with exit code 1 (use -v to see invocation)
-
-Normally, '-fuse-ld=bfd' could be used to get around this; however, this
-can be fragile, depending on paths and variable naming. The cleaner
-solution for the kernel is to take advantage of the fact that $(LD) can
-be invoked directly, which bypasses the heuristics of $(CC) and respects
-the user's choice. Similar changes have been done for ARM, ARM64, and
-MIPS.
-
-Link: https://lkml.kernel.org/r/20200602192523.32758-1-natechancellor@gmail.com
-Link: https://github.com/ClangBuiltLinux/linux/issues/1041
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-[heiko.carstens@de.ibm.com: add --build-id flag]
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Fixes: 17d517172300 ("ARM: dts: NSP: Add mailbox (PDC) to NSP")
+Signed-off-by: Matthew Hagan <mnhagan88@gmail.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/vdso64/Makefile | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/bcm-nsp.dtsi | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/s390/kernel/vdso64/Makefile b/arch/s390/kernel/vdso64/Makefile
-index bec19e7e6e1cf..4a66a1cb919b1 100644
---- a/arch/s390/kernel/vdso64/Makefile
-+++ b/arch/s390/kernel/vdso64/Makefile
-@@ -18,8 +18,8 @@ KBUILD_AFLAGS_64 += -m64 -s
+diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
+index da6d70f09ef19..418e6b97cb2ec 100644
+--- a/arch/arm/boot/dts/bcm-nsp.dtsi
++++ b/arch/arm/boot/dts/bcm-nsp.dtsi
+@@ -257,10 +257,10 @@
+ 			status = "disabled";
+ 		};
  
- KBUILD_CFLAGS_64 := $(filter-out -m64,$(KBUILD_CFLAGS))
- KBUILD_CFLAGS_64 += -m64 -fPIC -shared -fno-common -fno-builtin
--KBUILD_CFLAGS_64 += -nostdlib -Wl,-soname=linux-vdso64.so.1 \
--		    -Wl,--hash-style=both
-+ldflags-y := -fPIC -shared -nostdlib -soname=linux-vdso64.so.1 \
-+	     --hash-style=both --build-id -T
- 
- $(targets:%=$(obj)/%.dbg): KBUILD_CFLAGS = $(KBUILD_CFLAGS_64)
- $(targets:%=$(obj)/%.dbg): KBUILD_AFLAGS = $(KBUILD_AFLAGS_64)
-@@ -37,8 +37,8 @@ KASAN_SANITIZE := n
- $(obj)/vdso64_wrapper.o : $(obj)/vdso64.so
- 
- # link rule for the .so file, .lds has to be first
--$(obj)/vdso64.so.dbg: $(src)/vdso64.lds $(obj-vdso64) FORCE
--	$(call if_changed,vdso64ld)
-+$(obj)/vdso64.so.dbg: $(obj)/vdso64.lds $(obj-vdso64) FORCE
-+	$(call if_changed,ld)
- 
- # strip rule for the .so file
- $(obj)/%.so: OBJCOPYFLAGS := -S
-@@ -50,8 +50,6 @@ $(obj-vdso64): %.o: %.S FORCE
- 	$(call if_changed_dep,vdso64as)
- 
- # actual build commands
--quiet_cmd_vdso64ld = VDSO64L $@
--      cmd_vdso64ld = $(CC) $(c_flags) -Wl,-T $(filter %.lds %.o,$^) -o $@
- quiet_cmd_vdso64as = VDSO64A $@
-       cmd_vdso64as = $(CC) $(a_flags) -c -o $@ $<
- 
+-		mailbox: mailbox@25000 {
++		mailbox: mailbox@25c00 {
+ 			compatible = "brcm,iproc-fa2-mbox";
+-			reg = <0x25000 0x445>;
+-			interrupts = <GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>;
++			reg = <0x25c00 0x400>;
++			interrupts = <GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>;
+ 			#mbox-cells = <1>;
+ 			brcm,rx-status-len = <32>;
+ 			brcm,use-bcm-hdr;
 -- 
 2.25.1
 
