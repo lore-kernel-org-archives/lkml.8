@@ -2,123 +2,167 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4286C433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:38:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02772C433E6
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:38:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 999A62225F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:38:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD1A922269
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:38:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Dm4DRQiQ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DMRKm+PE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728002AbgF2SiR (ORCPT
+        id S1728019AbgF2SiV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:38:17 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20021 "EHLO
+        Mon, 29 Jun 2020 14:38:21 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40256 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727996AbgF2SiN (ORCPT
+        with ESMTP id S1728001AbgF2SiS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:38:13 -0400
+        Mon, 29 Jun 2020 14:38:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593455891;
+        s=mimecast20190719; t=1593455896;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Iiom3LNVi9ET0XgfPNiU1I3DflByt3ZNInrS8hmdp2U=;
-        b=Dm4DRQiQ6fUDiw0ODYfzRHM0l5n+/OCax4tsmQVFEte4dJzOhv+iMeaX7PPDTf5oyU2Cvy
-        0CJwQz6V7YaBivk2kU2ABaaWuXVz4uW6YjOtq4MYIn+3EyNMsgXd1uWHXxibfnQTObK24F
-        8SkzU6q4SO8an7e201QLwzG41YBOs7A=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-455-zq5FJK0EM5iWibiXsRdCPQ-1; Mon, 29 Jun 2020 02:33:44 -0400
-X-MC-Unique: zq5FJK0EM5iWibiXsRdCPQ-1
-Received: by mail-wm1-f72.google.com with SMTP id g138so9169162wme.7
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:33:44 -0700 (PDT)
+        bh=R99ss63BUFWwoVTJOpLbdpSFm6kFyzl0vl5jaR1UOQE=;
+        b=DMRKm+PEWXYJ1h6K3HIVDNTLDQpexLqfYit6j/PTzrpGjmShfYaT0QS3iACoEjIbxgBlIu
+        Jr/I9aMi7ywCdU0h15VmgEfUWn4ykaGE/NdOjDEqIam6mHn5G7jCHHk17kMFD59Pmh+Xob
+        6gw0o9FXKAf9MCqsAwBxVO2TA66b+3Q=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-4-isuCXy7xNrSsAUXUxvLUxA-1; Mon, 29 Jun 2020 07:35:55 -0400
+X-MC-Unique: isuCXy7xNrSsAUXUxvLUxA-1
+Received: by mail-ed1-f71.google.com with SMTP id x20so14009769edr.20
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 04:35:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Iiom3LNVi9ET0XgfPNiU1I3DflByt3ZNInrS8hmdp2U=;
-        b=bcJwot1rvvs31r6/bGkj69+UdKhSSU3V29QHO2CN/GXz2IBDw0gXkenJA5N8Fhy7pP
-         yv6SjNdVYVEEVRlWaKnFo2or0J342R83z/tPKQ4Lu+9avZ1h4gk4KJYgOf2tHqquDaxv
-         dKRcHykJPRBatK8yz/XMHye1JGzGO6WzGc6sLB70r9CYKpLVQXCy2bR545Ldhq8kzV0X
-         D5yd0nT6kg01GFPFY99Pd6GrVCh4TVc6u6XvlP94eFK3nSkbkCZoOeL6w1dRROFpCrtp
-         YSGj1o6IHwbwbP+aCQYAekMjaFjAV69JCyzGFY0hANWF6WxxyKy3HdVXawA+ztSCitb3
-         MamQ==
-X-Gm-Message-State: AOAM530kykZRCy2aHGfDYcu1cKbcr+mYv9MGX3cJp5TMQP037huGMZHQ
-        1J5pGyazveM8pQupjHGQXa4NmqbqUiizQhjwevBkf+beDJiPsUI+FM719+Cn3xROx9v64wgxE2c
-        pK53+Jv4h2oM6W7hincD04d3/
-X-Received: by 2002:adf:8067:: with SMTP id 94mr14821901wrk.427.1593412423677;
-        Sun, 28 Jun 2020 23:33:43 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxfYJ1M6jIB+Bt9+iuqmCS+1/JuHYbah8AxWL9RwY6izIKRHTcVkotYUsuHjo+DZqHXAwCswQ==
-X-Received: by 2002:adf:8067:: with SMTP id 94mr14821888wrk.427.1593412423531;
-        Sun, 28 Jun 2020 23:33:43 -0700 (PDT)
-Received: from redhat.com (bzq-79-182-31-92.red.bezeqint.net. [79.182.31.92])
-        by smtp.gmail.com with ESMTPSA id s8sm41059111wru.38.2020.06.28.23.33.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jun 2020 23:33:42 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 02:33:39 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     Stefano Stabellini <sstabellini@kernel.org>,
-        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
-        "jgross@suse.com" <jgross@suse.com>,
-        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH] xen: introduce xen_vring_use_dma
-Message-ID: <20200629023225-mutt-send-email-mst@kernel.org>
-References: <20200624050355-mutt-send-email-mst@kernel.org>
- <alpine.DEB.2.21.2006241047010.8121@sstabellini-ThinkPad-T480s>
- <20200624163940-mutt-send-email-mst@kernel.org>
- <alpine.DEB.2.21.2006241351430.8121@sstabellini-ThinkPad-T480s>
- <20200624181026-mutt-send-email-mst@kernel.org>
- <alpine.DEB.2.21.2006251014230.8121@sstabellini-ThinkPad-T480s>
- <20200626110629-mutt-send-email-mst@kernel.org>
- <DB6PR0402MB27601CA74B85DA5A9F5E5DD6886E0@DB6PR0402MB2760.eurprd04.prod.outlook.com>
- <20200629022124-mutt-send-email-mst@kernel.org>
- <DB6PR0402MB27602AB2A9A242D79343CE48886E0@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=R99ss63BUFWwoVTJOpLbdpSFm6kFyzl0vl5jaR1UOQE=;
+        b=EGgACwCK3YXHowFZl4VwI386RvySFt5iyE2Hkii9HKZ37eYrZ2QknP1Aw8QUKezfip
+         uYGIAm0+1UwZxXoJ+uDsvgzP30sNiUftZGLOzOFmK9EO8xmJInnh06uz1IFqoNRhyjrC
+         a12hTHUXqdTNTV1+QcYz3ym+LA1zzSN43Ny7LYZHGKGqkPK/M4NQx+mgwPDlScwwFQlW
+         TAM4m2hssJU7HkclB5Dya+79x7+TRlkeFq6ugbeHQYtbZI+pKHY/Aqu+eTO/pcfngBxE
+         fbd5TRW9gcVoxbl3JT3OaNVZfQ0xqcs0Hb4RcYC8Zg40UaE+VfHSrRg/f1onGprpUl4y
+         NbYg==
+X-Gm-Message-State: AOAM531cphA0oPN1PsYOsOXek0PWkqaBb4ajGnwZW9mxL/YYpi9+c8sr
+        GQ8uG2NP7FW/MC+7kXOHEG0DVOv2nHifie0lk/vT6oVlegw4X1ABQRgWnGuotPczbrPS1OwAFoD
+        LzWpVgo+y4dDYQmMSIyMccPlD
+X-Received: by 2002:a50:e883:: with SMTP id f3mr17440209edn.220.1593430553904;
+        Mon, 29 Jun 2020 04:35:53 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzwJIGYRCpIxnD23fTjHfHV6n5mRstLkCBYdh8pYGwyaMC4yak38mPYlTddmtbQZ9eVQCpEeg==
+X-Received: by 2002:a50:e883:: with SMTP id f3mr17440192edn.220.1593430553710;
+        Mon, 29 Jun 2020 04:35:53 -0700 (PDT)
+Received: from x1.localdomain (2001-1c00-0c0c-fe00-d2ea-f29d-118b-24dc.cable.dynamic.v6.ziggo.nl. [2001:1c00:c0c:fe00:d2ea:f29d:118b:24dc])
+        by smtp.gmail.com with ESMTPSA id q21sm24104189ejd.30.2020.06.29.04.35.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jun 2020 04:35:53 -0700 (PDT)
+Subject: Re: [PATCH v2] brcmfmac: Transform compatible string for FW loading
+To:     matthias.bgg@kernel.org, arend.vanspriel@broadcom.com,
+        kvalo@codeaurora.org, davem@davemloft.net, kuba@kernel.org
+Cc:     brcm80211-dev-list.pdl@broadcom.com, mbrugger@suse.com,
+        netdev@vger.kernel.org, chi-hsien.lin@cypress.com,
+        linux-wireless@vger.kernel.org, hante.meuleman@broadcom.com,
+        linux-kernel@vger.kernel.org, wright.feng@cypress.com,
+        brcm80211-dev-list@cypress.com, franky.lin@broadcom.com
+References: <20200629110141.22419-1-matthias.bgg@kernel.org>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <c96ec748-ded7-7e3e-e00c-222d80bde152@redhat.com>
+Date:   Mon, 29 Jun 2020 13:35:52 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DB6PR0402MB27602AB2A9A242D79343CE48886E0@DB6PR0402MB2760.eurprd04.prod.outlook.com>
+In-Reply-To: <20200629110141.22419-1-matthias.bgg@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 06:25:41AM +0000, Peng Fan wrote:
-> > > > > Anyway, re-reading the last messages of the original thread [1],
-> > > > > it looks like Peng had a clear idea on how to fix the general issue.
-> > > > > Peng, what happened with that?
-> > >
-> > > We shrinked the rpmsg reserved area to workaround the issue.
-> > > So still use the dma apis in rpmsg.
-> > >
-> > > But here I am going to address domu android trusty issue using virtio.
-> > 
-> > My suggestion is to first of all fix DMA API so it works properly.
-> 
-> Could you please elaborate more details?
-> 
-> You mean the DMA API usage of rpmsg? Or xen domu dma_ops?
-> 
-> Thanks,
-> Peng. 
+Hi,
 
-Not 100% sure but I think xen dma ops.
+On 6/29/20 1:01 PM, matthias.bgg@kernel.org wrote:
+> From: Matthias Brugger <mbrugger@suse.com>
+> 
+> The driver relies on the compatible string from DT to determine which
+> FW configuration file it should load. The DTS spec allows for '/' as
+> part of the compatible string. We change this to '-' so that we will
+> still be able to load the config file, even when the compatible has a
+> '/'. This fixes explicitly the firmware loading for
+> "solidrun,cubox-i/q".
+> 
+> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
+> 
+> ---
+> 
+> Changes in v2:
+> - use strscpy instead of strncpy (Hans de Goede)
+> - use strlen(tmp) + 1 for allocation (Hans de Goede, kernel test robot)
+> 
+>   .../wireless/broadcom/brcm80211/brcmfmac/of.c  | 18 +++++++++++++++---
+>   1 file changed, 15 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/of.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/of.c
+> index b886b56a5e5a..5f0ebaf4d64e 100644
+> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/of.c
+> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/of.c
+> @@ -17,7 +17,6 @@ void brcmf_of_probe(struct device *dev, enum brcmf_bus_type bus_type,
+>   {
+>   	struct brcmfmac_sdio_pd *sdio = &settings->bus.sdio;
+>   	struct device_node *root, *np = dev->of_node;
+> -	struct property *prop;
+>   	int irq;
+>   	u32 irqf;
+>   	u32 val;
+> @@ -25,8 +24,21 @@ void brcmf_of_probe(struct device *dev, enum brcmf_bus_type bus_type,
+>   	/* Set board-type to the first string of the machine compatible prop */
+>   	root = of_find_node_by_path("/");
+>   	if (root) {
+> -		prop = of_find_property(root, "compatible", NULL);
+> -		settings->board_type = of_prop_next_string(prop, NULL);
+> +		int i;
+> +		char *board_type;
+> +		const char *tmp;
+> +
+> +		of_property_read_string_index(root, "compatible", 0, &tmp);
+> +
+> +		/* get rid of '/' in the compatible string to be able to find the FW */
+> +		board_type = devm_kzalloc(dev, strlen(tmp) + 1, GFP_KERNEL);
+> +		strscpy(board_type, tmp, sizeof(board_type));
 
--- 
-MST
+sizeof(board_type) == sizeof(char *) == 4 or 8 bytes, which is not what you
+want. Maybe store strlen() + 1 in an int len to avoid having to call it 2 times?
+
+> +		for (i = 0; i < strlen(board_type); i++) {
+
+And here you probably want to use:
+
+		for (i = 0; board_type[i]; i++) {
+
+Rather then calling strlen many times again (in theory each step
+through the loop).
+
+Regards,
+
+Hans
+
+
+
+> +			if (board_type[i] == '/')
+> +				board_type[i] = '-';
+> +		}
+> +		settings->board_type = board_type;
+> +
+>   		of_node_put(root);
+>   	}
+>   
+> 
 
