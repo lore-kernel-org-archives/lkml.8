@@ -2,127 +2,107 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E54BBC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB65C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C89F02076C
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:02:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 004EE20720
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:02:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="upLlvbRF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390168AbgF2VCL (ORCPT
+        id S2390173AbgF2VCN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:02:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43376 "EHLO
+        Mon, 29 Jun 2020 17:02:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730965AbgF2TMw (ORCPT
+        with ESMTP id S1731173AbgF2TMu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:12:52 -0400
-Received: from mail-io1-xd46.google.com (mail-io1-xd46.google.com [IPv6:2607:f8b0:4864:20::d46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FC8DC08E6DC
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 21:56:16 -0700 (PDT)
-Received: by mail-io1-xd46.google.com with SMTP id i5so1458875iow.1
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 21:56:16 -0700 (PDT)
+        Mon, 29 Jun 2020 15:12:50 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D71DC08ECA4
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:50:16 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id w3so2512431wmi.4
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:50:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=YrSMqNfBoEk4+fX9YqI78/jZTXRW6ktfo7V3K+aMn3w=;
+        b=upLlvbRF4tMtLhZRgG4aao3H6mcyJe65PDDy7dexjRFuR47lkplRUwULz9d1LCPq5T
+         8PSoAkKUWGYPCmCWnMllxsc92k3hShDPWrcL8HEYzbotM7BthsGZOSgH5VYciLXYT4zt
+         lRguE7takeSshSPrJHv3v1/KwQrnN8GQUkFVNRVkvYaOIqQW2dNnnhNMCmaK1/NIh0u0
+         2bcAM11R1TSDYDyBtsAK2WcHhTipUmnzqkz/wUtX2a+/aqHNuIs3OgSlPpcb6G11Ggn6
+         EWJ3YxsCDgroXaqZ9YOcN+r13j4qJ41kFrV2Bp+D713x9EbKN2BFs9kGYgUHZcTWPWkb
+         eMMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=7UR4veMVO94msNsRyMPSIg+uNPusi34riys9/+FERgY=;
-        b=VZhPmg8jqDG5M8N3/MB5JLBV0kClow3VV9DoU5jNh7Gn+tPuPBN5uvjfwcf97gD4nB
-         U2xNejSsRHy40pMomq6GB6tQ8nSfKmZ8lvj6h6rY1lLUHeBq8d4+TdBEwJJk9UCeC5Ww
-         pCbaBRBo7IXHTzq5mW1m53c8hp+nbHZ39H/uJtTwfqGf5yfMRD9/Rh6FCFL6S7IWymUH
-         MDM54geImed+MEDR2aNxq50Hcsj1+fkZ65DuEWB3PncbQkDqA3gQ1/nqOHmnFJp1x/34
-         J6ZZNng5gqKP6Hel7vs1/5eugmfTBQtfDjVC2nDR+SY76k4IbmnRiiRDfNqKNjVM3fRz
-         ThmQ==
-X-Gm-Message-State: AOAM533uLAcxgLz3wD841EbZRa4qyrlZvmj6SABIjsQ0nh71igWRkEyj
-        o8gJpKADJl+mYi+IE0RUzlQEPrqC/QaYts40ST8dtGzkYc4V
-X-Google-Smtp-Source: ABdhPJxcCO85VG9jOjxVOCCibWirWcudltftil7cwcErqtjR0I74qEPPMjqadEUKLw5tmalZI83D6VWFASuSqo7TOlDHTTfabJgb
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=YrSMqNfBoEk4+fX9YqI78/jZTXRW6ktfo7V3K+aMn3w=;
+        b=FrPL+BwpxRxGvqe3nfKVEwb1Ci3aAAX2htTZD0MkhZD+tkpvHRsy74rPGf27d6CMB5
+         glFMgjWzFhN5JquXw0F81/ys40hwaa/IUK/bP8beuRM8gLiyV+xln5OaBD8fwe2pYCs5
+         iARqxSRaJ8K0ySdHac9eDEVFyn9AcVHzZVJAF11CepVUIH/t6DCmuAjlI3VYzieu3ay6
+         JqpSUo4SL235Zsbj1Ki5Yj8EJjC1MVhVUM0jerWAPznqqenVtSJdgujTZ8rRMmnVwqbb
+         f2Wa3DO4Me+snvDw2HlysVrHITDfqEEOTEMaBVwOVK3Lgidl00MdcTcD2Lo2RiVuRoBw
+         NbdQ==
+X-Gm-Message-State: AOAM532onosEJtMrOIv0nBa7SaPtj5vCOU8oO9Q4qG2oZU4bCM/GOcWs
+        xumZTkz6OQidm77GD+AixBd7RQ==
+X-Google-Smtp-Source: ABdhPJyiAFSYFjdftA88Pd9SuThnV7f04JjUlm4iXI4vLpqDFrxITGIMoZtYG0VnLs6sByqPmifBzA==
+X-Received: by 2002:a1c:5418:: with SMTP id i24mr14741712wmb.47.1593413415302;
+        Sun, 28 Jun 2020 23:50:15 -0700 (PDT)
+Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
+        by smtp.gmail.com with ESMTPSA id z25sm26400850wmk.28.2020.06.28.23.50.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Jun 2020 23:50:14 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jean Delvare <jdelvare@suse.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hwmon@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v2 1/6] devres: remove stray space from devm_kmalloc() definition
+Date:   Mon, 29 Jun 2020 08:50:03 +0200
+Message-Id: <20200629065008.27620-2-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200629065008.27620-1-brgl@bgdev.pl>
+References: <20200629065008.27620-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c0c8:: with SMTP id t8mr3168667ilf.229.1593406576031;
- Sun, 28 Jun 2020 21:56:16 -0700 (PDT)
-Date:   Sun, 28 Jun 2020 21:56:16 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f27eba05a931e09d@google.com>
-Subject: KASAN: user-memory-access Read in do_con_write (2)
-From:   syzbot <syzbot+63ca998c125cfe13c6a5@syzkaller.appspotmail.com>
-To:     ebiggers@google.com, gregkh@linuxfoundation.org, jslaby@suse.com,
-        linux-kernel@vger.kernel.org, nico@fluxnic.net, sam@ravnborg.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-syzbot found the following crash on:
+Use the preferred coding style for functions returning pointers.
 
-HEAD commit:    4e99b321 Merge tag 'nfs-for-5.8-2' of git://git.linux-nfs...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14747dc5100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=bf3aec367b9ab569
-dashboard link: https://syzkaller.appspot.com/bug?extid=63ca998c125cfe13c6a5
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+63ca998c125cfe13c6a5@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: user-memory-access in memcpy include/linux/string.h:406 [inline]
-BUG: KASAN: user-memory-access in scr_memcpyw include/linux/vt_buffer.h:49 [inline]
-BUG: KASAN: user-memory-access in delete_char drivers/tty/vt/vt.c:858 [inline]
-BUG: KASAN: user-memory-access in csi_P drivers/tty/vt/vt.c:2013 [inline]
-BUG: KASAN: user-memory-access in do_con_trol drivers/tty/vt/vt.c:2407 [inline]
-BUG: KASAN: user-memory-access in do_con_write+0x6f90/0x7400 drivers/tty/vt/vt.c:2823
-Read of size 118 at addr 00000000ffffff9a by task syz-executor.4/10580
-
-CPU: 0 PID: 10580 Comm: syz-executor.4 Not tainted 5.8.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- __kasan_report mm/kasan/report.c:517 [inline]
- kasan_report.cold+0x5/0x37 mm/kasan/report.c:530
- check_memory_region_inline mm/kasan/generic.c:186 [inline]
- check_memory_region+0x13d/0x180 mm/kasan/generic.c:192
- memcpy+0x20/0x60 mm/kasan/common.c:105
- memcpy include/linux/string.h:406 [inline]
- scr_memcpyw include/linux/vt_buffer.h:49 [inline]
- delete_char drivers/tty/vt/vt.c:858 [inline]
- csi_P drivers/tty/vt/vt.c:2013 [inline]
- do_con_trol drivers/tty/vt/vt.c:2407 [inline]
- do_con_write+0x6f90/0x7400 drivers/tty/vt/vt.c:2823
- con_write+0x22/0xb0 drivers/tty/vt/vt.c:3159
- process_output_block drivers/tty/n_tty.c:595 [inline]
- n_tty_write+0x3ce/0xf80 drivers/tty/n_tty.c:2333
- do_tty_write drivers/tty/tty_io.c:962 [inline]
- tty_write+0x4d9/0x870 drivers/tty/tty_io.c:1046
- __vfs_write+0x76/0x100 fs/read_write.c:495
- vfs_write+0x268/0x5d0 fs/read_write.c:559
- ksys_write+0x12d/0x250 fs/read_write.c:612
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45cb19
-Code: Bad RIP value.
-RSP: 002b:00007fcc7ee74c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 000000000050e080 RCX: 000000000045cb19
-RDX: 0000000000000320 RSI: 00000000200001c0 RDI: 0000000000000007
-RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000d2a R14: 00000000004cf845 R15: 00007fcc7ee756d4
-==================================================================
-
-
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ drivers/base/devres.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/drivers/base/devres.c b/drivers/base/devres.c
+index 0bbb328bd17f..c34327219c34 100644
+--- a/drivers/base/devres.c
++++ b/drivers/base/devres.c
+@@ -807,7 +807,7 @@ static int devm_kmalloc_match(struct device *dev, void *res, void *data)
+  * RETURNS:
+  * Pointer to allocated memory on success, NULL on failure.
+  */
+-void * devm_kmalloc(struct device *dev, size_t size, gfp_t gfp)
++void *devm_kmalloc(struct device *dev, size_t size, gfp_t gfp)
+ {
+ 	struct devres *dr;
+ 
+-- 
+2.26.1
+
