@@ -4,54 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84904C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D79E9C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5BD85206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:24:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1A2B206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:24:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462269;
-	bh=WmKZJ3jZ4rr2AEEx8132hJJVHy1T919jQDDban6+uwk=;
+	s=default; t=1593462274;
+	bh=nz8sNK96jXzc9FT3K7EvGHTNEFG3swOaqKT6ksWMWxk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a7MQwi2PB8QUIc03p9bFvctSTH8OGycXQuy0OfiqLA0tNsjj9ZY/FyDpMon34MLG+
-	 BmW4Gbq584FUn5UKB47ehvxZu3bwr5BS/yLjuT+rEfQWkMrK1Z3XeQ+zobwJaeNrXB
-	 a6DIBhjcyCJGMfn3bMtB4VUKA7hN4K2qNX5cLfX8=
+	b=go857hJ7GWhy+a5f7FM4ph9r47duo5UbHhGGyjJ0FmN8bP01/eo3fWx+kxV/LfkIH
+	 uKx6tk12JrCMoUsqLUaJNxq6lK1eSn7GThQLEQhu9FuMVrX+rq4QwBB5+WmiWKshY5
+	 W4KvtcRrvBK8pJhsr2ivsncgUt1bZvCoHSnWYdTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388973AbgF2UY2 (ORCPT
+        id S2387502AbgF2UYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:24:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37018 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:24:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732546AbgF2TZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732551AbgF2TZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5E76825336;
-        Mon, 29 Jun 2020 15:39:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F21D25342;
+        Mon, 29 Jun 2020 15:39:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445175;
-        bh=WmKZJ3jZ4rr2AEEx8132hJJVHy1T919jQDDban6+uwk=;
+        s=default; t=1593445183;
+        bh=nz8sNK96jXzc9FT3K7EvGHTNEFG3swOaqKT6ksWMWxk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZnwpMRvarehT72RXrDK+cL/WSlfPl6xaNDxt75pupFqs0ThGXTeTDjVIUA8+XJQ9F
-         nbbznSV2dWEke6F0seR//e3mYPbmi2fLqF7d/z2e86o/l3Z/axqQFLwRRSzC+8GaZx
-         x9NAzphJwUwpdJGMPpmtYdohyTVo4JJcztElw2yk=
+        b=P2U6NE/BhEBC+rXJzbZtHUwC2+sicmjQUE4mm0475oE/IZTPz+9N4mvehke1SWF+c
+         caQPEEx2z+LJt1/fkrADiIJ88w+kPoNcX0Hz/d6mIceAfLt0vGFRR99tb2n4TbY1eP
+         yOFc3oaSGzWfgZBDjypkQqVPp2/GVoCZk/MRH8BM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Junxiao Bi <junxiao.bi@oracle.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Jun Piao <piaojun@huawei.com>, Mark Fasheh <mark@fasheh.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.14 67/78] ocfs2: fix panic on nfs server over ocfs2
-Date:   Mon, 29 Jun 2020 11:37:55 -0400
-Message-Id: <20200629153806.2494953-68-sashal@kernel.org>
+Subject: [PATCH 4.14 74/78] pNFS/flexfiles: Fix list corruption if the mirror count changes
+Date:   Mon, 29 Jun 2020 11:38:02 -0400
+Message-Id: <20200629153806.2494953-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
 References: <20200629153806.2494953-1-sashal@kernel.org>
@@ -70,92 +65,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Junxiao Bi <junxiao.bi@oracle.com>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-commit e5a15e17a78d58f933d17cafedfcf7486a29f5b4 upstream.
+commit 8b04013737341442ed914b336cde866b902664ae upstream.
 
-The following kernel panic was captured when running nfs server over
-ocfs2, at that time ocfs2_test_inode_bit() was checking whether one
-inode locating at "blkno" 5 was valid, that is ocfs2 root inode, its
-"suballoc_slot" was OCFS2_INVALID_SLOT(65535) and it was allocted from
-//global_inode_alloc, but here it wrongly assumed that it was got from per
-slot inode alloctor which would cause array overflow and trigger kernel
-panic.
+If the mirror count changes in the new layout we pick up inside
+ff_layout_pg_init_write(), then we can end up adding the
+request to the wrong mirror and corrupting the mirror->pg_list.
 
-  BUG: unable to handle kernel paging request at 0000000000001088
-  IP: [<ffffffff816f6898>] _raw_spin_lock+0x18/0xf0
-  PGD 1e06ba067 PUD 1e9e7d067 PMD 0
-  Oops: 0002 [#1] SMP
-  CPU: 6 PID: 24873 Comm: nfsd Not tainted 4.1.12-124.36.1.el6uek.x86_64 #2
-  Hardware name: Huawei CH121 V3/IT11SGCA1, BIOS 3.87 02/02/2018
-  RIP: _raw_spin_lock+0x18/0xf0
-  RSP: e02b:ffff88005ae97908  EFLAGS: 00010206
-  RAX: ffff88005ae98000 RBX: 0000000000001088 RCX: 0000000000000000
-  RDX: 0000000000020000 RSI: 0000000000000009 RDI: 0000000000001088
-  RBP: ffff88005ae97928 R08: 0000000000000000 R09: ffff880212878e00
-  R10: 0000000000007ff0 R11: 0000000000000000 R12: 0000000000001088
-  R13: ffff8800063c0aa8 R14: ffff8800650c27d0 R15: 000000000000ffff
-  FS:  0000000000000000(0000) GS:ffff880218180000(0000) knlGS:ffff880218180000
-  CS:  e033 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 0000000000001088 CR3: 00000002033d0000 CR4: 0000000000042660
-  Call Trace:
-    igrab+0x1e/0x60
-    ocfs2_get_system_file_inode+0x63/0x3a0 [ocfs2]
-    ocfs2_test_inode_bit+0x328/0xa00 [ocfs2]
-    ocfs2_get_parent+0xba/0x3e0 [ocfs2]
-    reconnect_path+0xb5/0x300
-    exportfs_decode_fh+0xf6/0x2b0
-    fh_verify+0x350/0x660 [nfsd]
-    nfsd4_putfh+0x4d/0x60 [nfsd]
-    nfsd4_proc_compound+0x3d3/0x6f0 [nfsd]
-    nfsd_dispatch+0xe0/0x290 [nfsd]
-    svc_process_common+0x412/0x6a0 [sunrpc]
-    svc_process+0x123/0x210 [sunrpc]
-    nfsd+0xff/0x170 [nfsd]
-    kthread+0xcb/0xf0
-    ret_from_fork+0x61/0x90
-  Code: 83 c2 02 0f b7 f2 e8 18 dc 91 ff 66 90 eb bf 0f 1f 40 00 55 48 89 e5 41 56 41 55 41 54 53 0f 1f 44 00 00 48 89 fb ba 00 00 02 00 <f0> 0f c1 17 89 d0 45 31 e4 45 31 ed c1 e8 10 66 39 d0 41 89 c6
-  RIP   _raw_spin_lock+0x18/0xf0
-  CR2: 0000000000001088
-  ---[ end trace 7264463cd1aac8f9 ]---
-  Kernel panic - not syncing: Fatal exception
-
-Link: http://lkml.kernel.org/r/20200616183829.87211-4-junxiao.bi@oracle.com
-Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Jun Piao <piaojun@huawei.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: d600ad1f2bdb ("NFS41: pop some layoutget errors to application")
+Cc: stable@vger.kernel.org
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/ocfs2/suballoc.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ fs/nfs/flexfilelayout/flexfilelayout.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/fs/ocfs2/suballoc.c b/fs/ocfs2/suballoc.c
-index 71f22c8fbffd4..4ca2f71565f9a 100644
---- a/fs/ocfs2/suballoc.c
-+++ b/fs/ocfs2/suballoc.c
-@@ -2891,9 +2891,12 @@ int ocfs2_test_inode_bit(struct ocfs2_super *osb, u64 blkno, int *res)
- 		goto bail;
+diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
+index 8dbde5ded0425..74f15498c9bfd 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayout.c
++++ b/fs/nfs/flexfilelayout/flexfilelayout.c
+@@ -921,9 +921,8 @@ ff_layout_pg_init_write(struct nfs_pageio_descriptor *pgio,
+ 		goto out_mds;
+ 
+ 	/* Use a direct mapping of ds_idx to pgio mirror_idx */
+-	if (WARN_ON_ONCE(pgio->pg_mirror_count !=
+-	    FF_LAYOUT_MIRROR_COUNT(pgio->pg_lseg)))
+-		goto out_mds;
++	if (pgio->pg_mirror_count != FF_LAYOUT_MIRROR_COUNT(pgio->pg_lseg))
++		goto out_eagain;
+ 
+ 	for (i = 0; i < pgio->pg_mirror_count; i++) {
+ 		ds = nfs4_ff_layout_prepare_ds(pgio->pg_lseg, i, true);
+@@ -942,11 +941,15 @@ ff_layout_pg_init_write(struct nfs_pageio_descriptor *pgio,
  	}
  
--	inode_alloc_inode =
--		ocfs2_get_system_file_inode(osb, INODE_ALLOC_SYSTEM_INODE,
--					    suballoc_slot);
-+	if (suballoc_slot == (u16)OCFS2_INVALID_SLOT)
-+		inode_alloc_inode = ocfs2_get_system_file_inode(osb,
-+			GLOBAL_INODE_ALLOC_SYSTEM_INODE, suballoc_slot);
-+	else
-+		inode_alloc_inode = ocfs2_get_system_file_inode(osb,
-+			INODE_ALLOC_SYSTEM_INODE, suballoc_slot);
- 	if (!inode_alloc_inode) {
- 		/* the error code could be inaccurate, but we are not able to
- 		 * get the correct one. */
+ 	return;
+-
++out_eagain:
++	pnfs_generic_pg_cleanup(pgio);
++	pgio->pg_error = -EAGAIN;
++	return;
+ out_mds:
+ 	pnfs_put_lseg(pgio->pg_lseg);
+ 	pgio->pg_lseg = NULL;
+ 	nfs_pageio_reset_write_mds(pgio);
++	pgio->pg_error = -EAGAIN;
+ }
+ 
+ static unsigned int
 -- 
 2.25.1
 
