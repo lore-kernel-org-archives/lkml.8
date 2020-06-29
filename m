@@ -4,92 +4,103 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D772DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:30:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F3FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:30:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8E18206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:30:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D8B72073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:30:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466246;
-	bh=xrtSI1ftxfMwU5aR7cVF6dYNr3U91GCqJPVY8cd1ylg=;
+	s=default; t=1593466252;
+	bh=Z/tKZZxO+tm5/UIKAv5Jl82sEFtufynPHLTjeFGDuN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H52IKVfrzUnLKSqIKc8/fRcLjk/2/35ggKeifk8nYCDNR381h7IyYei/usfB6nqZK
-	 m1Ngm2vcdNGMXhVSMJg56eX7sHpSwcDuWZWkdDWNLPcm6AjSNXNUIQ9ExKTcKglcYJ
-	 H4FWbFX6Dmd3dsjXJENoqddNbSzobSU9ZA4HDV2A=
+	b=tGe7nWvLZw5US5NFJjKsdi/hsqr1JRnKuSEUnztLcmHxoP4eAX7dP9suzPXL3tSbu
+	 RECQE5DciolPk9N3Ng3aU+klPgM73yHoHDyADeR0vTR4B+rd7rxwvsnxzk3U4JRAiq
+	 K5N1ujOBxAC8SVp1zAejbILphoSG3sT6z7xH3yGU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730701AbgF2Vap (ORCPT
+        id S1728793AbgF2Vau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:30:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60660 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:30:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728845AbgF2SlV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:41:21 -0400
-Received: from localhost.localdomain (unknown [122.182.251.219])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728834AbgF2SlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:41:20 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA6362336E;
-        Mon, 29 Jun 2020 14:50:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AD85823F27;
+        Mon, 29 Jun 2020 15:18:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593442253;
-        bh=xrtSI1ftxfMwU5aR7cVF6dYNr3U91GCqJPVY8cd1ylg=;
+        s=default; t=1593443909;
+        bh=Z/tKZZxO+tm5/UIKAv5Jl82sEFtufynPHLTjeFGDuN8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O4Iw5qdfUvqJE5VPKHUW495X+vQfhfCU6Z1RprpA0rJduvsSv+Y4rAu0Dg0cBkpbR
-         7OYVyt/tG7c8r0kZ/ryyxZztyTT9f7B5q3ID1pRw9SXNkKVAHFikeWztv4nUE7gKIv
-         LUR6Hn5oIYvzycelZW+KNgdlL5fziBEAz5ux3FiI=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Vinod Koul <vkoul@kernel.org>, linux-kernel@vger.kernel.org,
-        Roger Quadros <rogerq@ti.com>
-Subject: [PATCH 4/4] phy: ti-pipe3: remove set but unused variable
-Date:   Mon, 29 Jun 2020 20:20:10 +0530
-Message-Id: <20200629145010.122675-4-vkoul@kernel.org>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200629145010.122675-1-vkoul@kernel.org>
-References: <20200629145010.122675-1-vkoul@kernel.org>
+        b=qWepjuNY1i+W6vF30HDz5ZqIRSjPdkv4/LTn3hUhcKyURX+qQCxn6N5wmsZFszFbp
+         B9YooaqlKCj4trJmmhX9wcJgtIt3rC4hACJ7RMEb5jR2iAZyo79bb6H0q0MzcUdhhS
+         POuvGXrM2tIOREKp4NUaBOv+wGvE8mXxVU103+uo=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Sven Auhagen <sven.auhagen@voleatech.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 009/265] mvpp2: ethtool rxtx stats fix
+Date:   Mon, 29 Jun 2020 11:14:02 -0400
+Message-Id: <20200629151818.2493727-10-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
+References: <20200629151818.2493727-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.7.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.7.7-rc1
+X-KernelTest-Deadline: 2020-07-01T15:14+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ti_pipe3_power_on() sets variable 'ret' but never uses it, so remove it.
+From: Sven Auhagen <sven.auhagen@voleatech.de>
 
-drivers/phy/ti/phy-ti-pipe3.c:340:6: warning: variable ‘ret’ set but not
-used [-Wunused-but-set-variable]
+[ Upstream commit cc970925feb9a38c2f0d34305518e00a3084ce85 ]
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+The ethtool rx and tx queue statistics are reporting wrong values.
+Fix reading out the correct ones.
+
+Signed-off-by: Sven Auhagen <sven.auhagen@voleatech.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/phy/ti/phy-ti-pipe3.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/phy/ti/phy-ti-pipe3.c b/drivers/phy/ti/phy-ti-pipe3.c
-index a87946589eb7..e9332c90f75f 100644
---- a/drivers/phy/ti/phy-ti-pipe3.c
-+++ b/drivers/phy/ti/phy-ti-pipe3.c
-@@ -337,7 +337,6 @@ static int ti_pipe3_power_on(struct phy *x)
- {
- 	u32 val;
- 	u32 mask;
--	int ret;
- 	unsigned long rate;
- 	struct ti_pipe3 *phy = phy_get_drvdata(x);
- 	bool rx_pending = false;
-@@ -355,8 +354,8 @@ static int ti_pipe3_power_on(struct phy *x)
- 	rate = rate / 1000000;
- 	mask = OMAP_CTRL_PIPE3_PHY_PWRCTL_CLK_FREQ_MASK;
- 	val = rate << OMAP_CTRL_PIPE3_PHY_PWRCTL_CLK_FREQ_SHIFT;
--	ret = regmap_update_bits(phy->phy_power_syscon, phy->power_reg,
--				 mask, val);
-+	regmap_update_bits(phy->phy_power_syscon, phy->power_reg,
-+			   mask, val);
- 	/*
- 	 * For PCIe, TX and RX must be powered on simultaneously.
- 	 * For USB and SATA, TX must be powered on before RX
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+index b7b553602ea9f..24f4d8e0da989 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
+@@ -1544,7 +1544,7 @@ static void mvpp2_read_stats(struct mvpp2_port *port)
+ 	for (q = 0; q < port->ntxqs; q++)
+ 		for (i = 0; i < ARRAY_SIZE(mvpp2_ethtool_txq_regs); i++)
+ 			*pstats++ += mvpp2_read_index(port->priv,
+-						      MVPP22_CTRS_TX_CTR(port->id, i),
++						      MVPP22_CTRS_TX_CTR(port->id, q),
+ 						      mvpp2_ethtool_txq_regs[i].offset);
+ 
+ 	/* Rxqs are numbered from 0 from the user standpoint, but not from the
+@@ -1553,7 +1553,7 @@ static void mvpp2_read_stats(struct mvpp2_port *port)
+ 	for (q = 0; q < port->nrxqs; q++)
+ 		for (i = 0; i < ARRAY_SIZE(mvpp2_ethtool_rxq_regs); i++)
+ 			*pstats++ += mvpp2_read_index(port->priv,
+-						      port->first_rxq + i,
++						      port->first_rxq + q,
+ 						      mvpp2_ethtool_rxq_regs[i].offset);
+ }
+ 
 -- 
-2.26.2
+2.25.1
 
