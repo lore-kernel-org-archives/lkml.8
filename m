@@ -2,150 +2,197 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 634C2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 789E3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:57:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4185B20720
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:57:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593464249;
-	bh=BVxfHHV5eeS071ZyTIkymXEwTnryixggHKSaYZaRJxg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=J8oDWFwzvd9Dg7VSXQtg9uAt5lDwEkdsr73qp/ub5btSgbtrx0vjqUe1N1yuWbyYY
-	 PazmHJ2N3uGGaXPTUJcPsagngpuAqh63ZuQ1fXb8/vIBs4558eTjGmvDUBjF6tXA+m
-	 VhO1LWaEUkiJDjdU6l3tNfsE3vW8WjRT1Y6UqxW0=
+	by mail.kernel.org (Postfix) with ESMTP id 584E4206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:57:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=octiron.net header.i=@octiron.net header.b="UiVw7iCX";
+	dkim=pass (2048-bit key) header.d=octiron.net header.i=@octiron.net header.b="e9ofXEjO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732748AbgF2U51 (ORCPT
+        id S1733300AbgF2U5l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:57:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43380 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729386AbgF2TNG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:13:06 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01BD9C0147C0;
-        Mon, 29 Jun 2020 01:22:13 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id dr13so15669757ejc.3;
-        Mon, 29 Jun 2020 01:22:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=mPrydynbK5+rnDYJyI/EITf6/MzUF0CRG2o081Vq5dc=;
-        b=cAUwQQoKDC06YT4LHqdA4xDyz4JhAwt/ytb8hC2uFAgm3TaJ0OqssW2rznu5kn46N0
-         JEfbQYCX8VjtVSYRhGVHgjVYgSFWExMm1vkZXi1UwgkfXGAynHOqVs6b8Uyz4VSmSm7d
-         g8vZqCOtQq89cSyg0hzhyyAdIElZ9ayjmNLD5XwRybW4IiJvn7V3HaL/koa8Rn1Zk4F7
-         LXKY7Wn3Qug30+dPR0hRk132yk2/ruEAxMLBk/x6JjQrK0mqQawVfXpByLN2YxpGFNJA
-         +CRptDvNTYQkuOkCl7DSICXv2c9+yGZNOBEZtT2ghVeHYlDtKRZ0N+kEKvfD1WUSSt2Q
-         gm9g==
-X-Gm-Message-State: AOAM533eUkhnbbKD9GNDNyDTvijEnMJmgU0VUOBWOli7pTBGPUWkLY6Y
-        sQL3l0vxf7X3S8m+C5hMF7o=
-X-Google-Smtp-Source: ABdhPJxpOcTkL4osdGXouPGkUvoEu+LR2SWHbzDt5dJZtwUNOJWJOn7V0ppda1Dcr/qptC9T6ZT4xQ==
-X-Received: by 2002:a17:906:fa9b:: with SMTP id lt27mr12396115ejb.365.1593418931557;
-        Mon, 29 Jun 2020 01:22:11 -0700 (PDT)
-Received: from localhost (ip-37-188-168-3.eurotel.cz. [37.188.168.3])
-        by smtp.gmail.com with ESMTPSA id x10sm15592704ejc.46.2020.06.29.01.22.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 01:22:10 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 10:22:09 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Mikulas Patocka <mpatocka@redhat.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-xfs@vger.kernel.org, dm-devel@redhat.com,
-        Jens Axboe <axboe@kernel.dk>, NeilBrown <neilb@suse.de>
-Subject: Re: [PATCH 0/6] Overhaul memalloc_no*
-Message-ID: <20200629082209.GC32461@dhcp22.suse.cz>
-References: <20200625113122.7540-1-willy@infradead.org>
- <alpine.LRH.2.02.2006261058250.11899@file01.intranet.prod.int.rdu2.redhat.com>
- <20200626230847.GI2005@dread.disaster.area>
+        Mon, 29 Jun 2020 16:57:41 -0400
+Received: from chalk.uuid.uk ([51.68.227.198]:52730 "EHLO chalk.uuid.uk"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729386AbgF2U5g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 16:57:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=octiron.net
+        ; s=20180214; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:
+        Message-ID:Subject:Cc:From:To:Sender:Reply-To:Content-ID:Content-Description:
+        Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+        In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=+rLOlLyhvnP0f8oiGdEmdKJzbVAQvAR2f04vwtNycPY=; b=UiVw7iCXk5sZQYWfvPvaRktzpg
+        f8FxSZLDsWaht/5ia9EPIFFj+/H+RyzbEd49rLwwgYgVsca2khq8wupvfcmiDODVw3vmnkTklFLU0
+        dKodZuxzUKp+i9KNE6DiYBzO3fFHJr41VIl1SMZ6DzImbMnscvJsBqvsBYp26YGlm97Ljo65hbGur
+        7cG04inkYugNldNfBuFVswsSTMPM5v49O4ScLpkqbPpAFxoUYqUb1gfGxE3OYEGR6kL1xBj9TFxz/
+        BM8lspwxtb/qYIBMQE5QjaMZeROuw3vYewsOltABvOjXiBLtDwtwN13aR/k7hqw271gyOpdUeHx22
+        J7P91tjA==;
+Received: by chalk.uuid.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <simon@octiron.net>)
+        id 1jq0pl-0000O4-5c; Mon, 29 Jun 2020 21:57:04 +0100
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=octiron.net
+        ; s=20180214; h=Content-Transfer-Encoding:Content-Type:MIME-Version:Date:
+        Message-ID:Subject:Cc:From:To;
+        bh=+rLOlLyhvnP0f8oiGdEmdKJzbVAQvAR2f04vwtNycPY=; b=e9ofXEjOwK1Md4paqP/5no9yI9
+        qdPejM1TrHUE0fQXeQkd76Q6S96ZdVfVHGLStwp23xjop+6PNG1vp013Csw1BWeoudxy6KGlfmAN+
+        994tI2azKqNG9iy1XnS/JiuIjQRnu75sLufWqgVWyD//lPP19aleHUf1v5HPDVvI/yc/qgQTZBax2
+        b6kk6Ci9EE0AOXUTuOiGIVJH6mBAEJ2CxxJSsaRwN+z3zGfxaBANpF4q6yYXbXrh8EmNpeCTm8Evk
+        X51UsQZHj8x4h6PYC7dpePuXgtQGp8H8FCj2QlElOOTTfB3TiW9Zcr6ZxekwZTa5/JTcOS61l/ICC
+        5n1og10A==;
+Received: by tsort.uuid.uk with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <simon@octiron.net>)
+        id 1jq0pe-0008G2-10; Mon, 29 Jun 2020 21:56:55 +0100
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+From:   Simon Arlott <simon@octiron.net>
+Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, Bart Van Assche <bvanassche@acm.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Subject: [PATCH 1/2] reboot: add a "power cycle" quirk to prepare for a power
+ off on reboot
+Message-ID: <f4a7b539-eeac-1a59-2350-3eefc8c17801@0882a8b5-c6c3-11e9-b005-00805fc181fe>
+Date:   Mon, 29 Jun 2020 21:56:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200626230847.GI2005@dread.disaster.area>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat 27-06-20 09:08:47, Dave Chinner wrote:
-> On Fri, Jun 26, 2020 at 11:02:19AM -0400, Mikulas Patocka wrote:
-> > Hi
-> > 
-> > I suggest to join memalloc_noio and memalloc_nofs into just one flag that 
-> > prevents both filesystem recursion and i/o recursion.
-> > 
-> > Note that any I/O can recurse into a filesystem via the loop device, thus 
-> > it doesn't make much sense to have a context where PF_MEMALLOC_NOFS is set 
-> > and PF_MEMALLOC_NOIO is not set.
-> 
-> Correct me if I'm wrong, but I think that will prevent swapping from
-> GFP_NOFS memory reclaim contexts. IOWs, this will substantially
-> change the behaviour of the memory reclaim system under sustained
-> GFP_NOFS memory pressure. Sustained GFP_NOFS memory pressure is
-> quite common, so I really don't think we want to telling memory
-> reclaim "you can't do IO at all" when all we are trying to do is
-> prevent recursion back into the same filesystem.
-> 
-> Given that the loop device IO path already operates under
-> memalloc_noio context, (i.e. the recursion restriction is applied in
-> only the context that needs is) I see no reason for making that a
-> global reclaim limitation....
-> 
-> In reality, we need to be moving the other way with GFP_NOFS - to
-> fine grained anti-recursion contexts, not more broad contexts.
+I need to use "reboot=p" on my desktop because one of the PCIe devices
+does not appear after a warm boot. This results in a very cold boot
+because the BIOS turns the PSU off and on.
 
-Absolutely agreed! It is not really hard to see system struggling due to
-heavy FS metadata workload while there are objects which could be
-reclaimed.
+The scsi sd shutdown process does not send a stop command to disks
+before the reboot happens (stop commands are only sent for a shutdown).
 
-> That is, GFP_NOFS prevents recursion into any filesystem, not just
-> the one that we are actively operating on and needing to prevent
-> recursion back into. We can safely have reclaim do relcaim work on
-> other filesysetms without fear of recursion deadlocks, but the
-> memory reclaim infrastructure does not provide that capability.(*)
-> 
-> e.g. if memalloc_nofs_save() took a reclaim context structure that
-> the filesystem put the superblock, the superblock's nesting depth
-> (because layering on loop devices can create cross-filesystem
-> recursion dependencies), and any other filesyetm private data the
-> fs wanted to add, we could actually have reclaim only avoid reclaim
-> from filesytsems where there is a deadlock possiblity. e.g:
-> 
-> 	- superblock nesting depth is different, apply GFP_NOFS
-> 	  reclaim unconditionally
-> 	- superblock different apply GFP_KERNEL reclaim
-> 	- superblock the same, pass context to filesystem to
-> 	  decide if reclaim from the sueprblock is safe.
-> 
-> At this point, we get memory reclaim able to always be able to
-> reclaim from filesystems that are not at risk of recursion
-> deadlocks. Direct reclaim is much more likely to be able to make
-> progress now because it is much less restricted in what it can
-> reclaim. That's going to make direct relcaim faster and more
-> efficient, and taht's the ultimate goal we are aiming to acheive
-> here...
+The result is that all of my SSDs experience a sudden power loss on
+every reboot, which is undesirable behaviour because it could cause data
+to be corrupted. These events are recorded in the SMART attributes.
 
-Yes, we have discussed something like that few years back at LSFMM IIRC.
-The scoped NOFS/NOIO api was just a first step to reduce explicit
-NOFS/NOIO usage with a hope that we will get no-recursion entry points
-much more well defined and get rid of many instances where "this is a fs
-code so it has to use NOFS gfp mask".
+Add a "power cycle" quirk to the reboot options to prepare all devices for
+a power off by setting the system_state to SYSTEM_POWER_OFF instead of
+SYSTEM_RESTART while still performing a restart as requested.
 
-Some of that has happened and that is really great. On the other hand
-many people still like to use that api as a workaround for an immediate
-problem because no-recursion scopes are much harder to recognize unless
-you are supper familiar with the specific fs/IO layer implementation.
-So this is definitely not a project for somebody to go over all code and
-just do the clean up.
+This uses the letter "C" for the parameter because of numerous uses of
+"reboot=pci" that would otherwise trigger this behaviour if "c" was used.
 
-Thanks!
+Signed-off-by: Simon Arlott <simon@octiron.net>
+---
+Previous patches to make scsi/sd stop before a reboot:
+https://lore.kernel.org/lkml/499138c8-b6d5-ef4a-2780-4f750ed337d3@0882a8b5-c6c3-11e9-b005-00805fc181fe/
+https://lore.kernel.org/lkml/e726ffd8-8897-4a79-c3d6-6271eda8aebb@0882a8b5-c6c3-11e9-b005-00805fc181fe/
+
+ Documentation/admin-guide/kernel-parameters.txt |  8 ++++++--
+ include/linux/reboot.h                          |  4 ++++
+ kernel/reboot.c                                 | 15 ++++++++++++++-
+ 3 files changed, 24 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index bee3b83d6f84..91359fd4fbcc 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -4422,9 +4422,10 @@
+ 	reboot=		[KNL]
+ 			Format (x86 or x86_64):
+ 				[w[arm] | c[old] | h[ard] | s[oft] | g[pio]] \
+-				[[,]s[mp]#### \
++				[[,]s[mp]####] \
+ 				[[,]b[ios] | a[cpi] | k[bd] | t[riple] | e[fi] | p[ci]] \
+-				[[,]f[orce]
++				[[,]f[orce]] \
++				[[,]C]
+ 			Where reboot_mode is one of warm (soft) or cold (hard) or gpio
+ 					(prefix with 'panic_' to set mode for panic
+ 					reboot only),
+@@ -4432,6 +4433,9 @@
+ 			      reboot_force is either force or not specified,
+ 			      reboot_cpu is s[mp]#### with #### being the processor
+ 					to be used for rebooting.
++			Quirks:
++				C = Rebooting includes a power cycle, prepare
++				    for a power off instead of a restart.
+ 
+ 	refscale.holdoff= [KNL]
+ 			Set test-start holdoff period.  The purpose of
+diff --git a/include/linux/reboot.h b/include/linux/reboot.h
+index 3734cd8f38a8..b49559ba825a 100644
+--- a/include/linux/reboot.h
++++ b/include/linux/reboot.h
+@@ -39,6 +39,10 @@ extern int reboot_default;
+ extern int reboot_cpu;
+ extern int reboot_force;
+ 
++#define REBOOT_QUIRK_POWER_CYCLE                BIT(0)
++
++extern int reboot_quirks;
++
+ 
+ extern int register_reboot_notifier(struct notifier_block *);
+ extern int unregister_reboot_notifier(struct notifier_block *);
+diff --git a/kernel/reboot.c b/kernel/reboot.c
+index 491f1347bf43..5605c2894f2b 100644
+--- a/kernel/reboot.c
++++ b/kernel/reboot.c
+@@ -45,6 +45,7 @@ int reboot_default = 1;
+ int reboot_cpu;
+ enum reboot_type reboot_type = BOOT_ACPI;
+ int reboot_force;
++int reboot_quirks;
+ 
+ /*
+  * If set, this is used for preparing the system to power off.
+@@ -71,7 +72,15 @@ EXPORT_SYMBOL_GPL(emergency_restart);
+ void kernel_restart_prepare(char *cmd)
+ {
+ 	blocking_notifier_call_chain(&reboot_notifier_list, SYS_RESTART, cmd);
+-	system_state = SYSTEM_RESTART;
++	if (reboot_quirks & REBOOT_QUIRK_POWER_CYCLE) {
++		/*
++		 * The reboot will include a power cycle, so prepare all
++		 * devices for a power off.
++		 */
++		system_state = SYSTEM_POWER_OFF;
++	} else {
++		system_state = SYSTEM_RESTART;
++	}
+ 	usermodehelper_disable();
+ 	device_shutdown();
+ }
+@@ -583,6 +592,10 @@ static int __init reboot_setup(char *str)
+ 		case 'f':
+ 			reboot_force = 1;
+ 			break;
++
++		case 'C':
++			reboot_quirks |= REBOOT_QUIRK_POWER_CYCLE;
++			break;
+ 		}
+ 
+ 		str = strchr(str, ',');
 -- 
-Michal Hocko
-SUSE Labs
+2.17.1
+
+-- 
+Simon Arlott
