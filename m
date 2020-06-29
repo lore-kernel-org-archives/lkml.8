@@ -4,58 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A2FCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3117BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 015DD20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:27:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0514120656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:27:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462421;
-	bh=f2UiAtHANs9tFRVesQfBZNsitQGOznVCjZKCH6GXzDk=;
+	s=default; t=1593462441;
+	bh=u2b31ASksSqbh8KsF2Gfxx+UjgPj5VlCuC4Tbvreias=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ui8evjyFE9bMyR0hy4FVi+nLRibrZVbngFna20AcHRd1bPWR82xfwMqW1S5+mB4UZ
-	 Gu8nGm0dEYJNtY5+uAlslf8NFJip2h0yd5jvEszZyXLJ8umKhZ6H/bnN0IBDOc2/lV
-	 sA6izpAPZstLCaVGv4b/PELkjBUe4pUp0kaqStqg=
+	b=A93lLWMerJ7EZwfF885MGB8AZcNv80PmO2eD0iTAu75yAJc92LTLG8o3u+esH4Wns
+	 ScEvUwUKjWVxwhNgZ0aNaMBaqSeBwiPmkdnzB879Yt4nJia67czyJh2gWyOu5iHpJq
+	 fnsVH+PWAvjBVjQ4A4GiwaYABmRJeYhmoOlyzYG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389102AbgF2U07 (ORCPT
+        id S2388868AbgF2U04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:26:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37028 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:26:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732455AbgF2TZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732511AbgF2TZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D62DD25324;
-        Mon, 29 Jun 2020 15:39:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE8E12545E;
+        Mon, 29 Jun 2020 15:43:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445156;
-        bh=f2UiAtHANs9tFRVesQfBZNsitQGOznVCjZKCH6GXzDk=;
+        s=default; t=1593445415;
+        bh=u2b31ASksSqbh8KsF2Gfxx+UjgPj5VlCuC4Tbvreias=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bM5a3IxILeCPiMNMSkdHU7mvmmHg5R1X7ysVLL0MZH7Ru8SoAnRfAVmrfVmx2c/3v
-         o6amw4pdOIv/VMHthjTi3SsfizAU+HRybuYXRucQZOjZUXvMkGsmXLrjkNbVpcMbWT
-         fnZn5iRR6Mqn5mbHJXOsaYBXw9r0Vn5XSQwrq2h0=
+        b=IxNNQaiHH92JnLe340h3pZYsewHJGjR9Hq/ANvfKTGVUfiQ2ovrjMK38NDPrJidiQ
+         Hr7PDuXqmVDFjlEI41gcdpae9lV04+rIxbg5mzRundulDpvojqcjiisK9vrbW1HTb/
+         J1LBhbQWobq1fqblBQ1Mz7PHNI+BWZgP76ZN5OY8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+Cc:     Alexander Lobakin <alobakin@marvell.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 57/78] kbuild: improve cc-option to clean up all temporary files
-Date:   Mon, 29 Jun 2020 11:37:45 -0400
-Message-Id: <20200629153806.2494953-58-sashal@kernel.org>
+Subject: [PATCH 4.9 164/191] net: qed: fix NVMe login fails over VFs
+Date:   Mon, 29 Jun 2020 11:39:40 -0400
+Message-Id: <20200629154007.2495120-165-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
-References: <20200629153806.2494953-1-sashal@kernel.org>
+In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
+References: <20200629154007.2495120-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.229-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.14.y
+X-KernelTest-Branch: linux-4.9.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.14.186-rc1
-X-KernelTest-Deadline: 2020-07-01T15:38+00:00
+X-KernelTest-Version: 4.9.229-rc1
+X-KernelTest-Deadline: 2020-07-01T15:39+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -64,70 +67,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Alexander Lobakin <alobakin@marvell.com>
 
-[ Upstream commit f2f02ebd8f3833626642688b2d2c6a7b3c141fa9 ]
+[ Upstream commit ccd7c7ce167a21dbf2b698ffcf00f11d96d44f9b ]
 
-When cc-option and friends evaluate compiler flags, the temporary file
-$$TMP is created as an output object, and automatically cleaned up.
-The actual file path of $$TMP is .<pid>.tmp, here <pid> is the process
-ID of $(shell ...) invoked from cc-option. (Please note $$$$ is the
-escape sequence of $$).
+25ms sleep cycles in waiting for PF response are excessive and may lead
+to different timeout failures.
 
-Such garbage files are cleaned up in most cases, but some compiler flags
-create additional output files.
+Start to wait with short udelays, and in most cases polling will end
+here. If the time was not sufficient, switch to msleeps.
+usleep_range() may go far beyond 100us depending on platform and tick
+configuration, hence atomic udelays for consistency.
 
-For example, -gsplit-dwarf creates a .dwo file.
+Also add explicit DMA barriers since 'done' always comes from a shared
+request-response DMA pool, and note that in the comment nearby.
 
-When CONFIG_DEBUG_INFO_SPLIT=y, you will see a bunch of .<pid>.dwo files
-left in the top of build directories. You may not notice them unless you
-do 'ls -a', but the garbage files will increase every time you run 'make'.
-
-This commit changes the temporary object path to .tmp_<pid>/tmp, and
-removes .tmp_<pid> directory when exiting. Separate build artifacts such
-as *.dwo will be cleaned up all together because their file paths are
-usually determined based on the base name of the object.
-
-Another example is -ftest-coverage, which outputs the coverage data into
-<base-name-of-object>.gcno
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Fixes: 1408cc1fa48c ("qed: Introduce VFs")
+Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
+Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/Kbuild.include | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/qlogic/qed/qed_vf.c | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
 
-diff --git a/scripts/Kbuild.include b/scripts/Kbuild.include
-index a33fa1a918731..28bfb4378dbd8 100644
---- a/scripts/Kbuild.include
-+++ b/scripts/Kbuild.include
-@@ -82,20 +82,21 @@ cc-cross-prefix =  \
- 		fi)))
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_vf.c b/drivers/net/ethernet/qlogic/qed/qed_vf.c
+index cf34908ec8e1f..170243d3276b9 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_vf.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_vf.c
+@@ -57,12 +57,17 @@ static void qed_vf_pf_req_end(struct qed_hwfn *p_hwfn, int req_status)
+ 	mutex_unlock(&(p_hwfn->vf_iov_info->mutex));
+ }
  
- # output directory for tests below
--TMPOUT := $(if $(KBUILD_EXTMOD),$(firstword $(KBUILD_EXTMOD))/)
-+TMPOUT = $(if $(KBUILD_EXTMOD),$(firstword $(KBUILD_EXTMOD))/).tmp_$$$$
++#define QED_VF_CHANNEL_USLEEP_ITERATIONS	90
++#define QED_VF_CHANNEL_USLEEP_DELAY		100
++#define QED_VF_CHANNEL_MSLEEP_ITERATIONS	10
++#define QED_VF_CHANNEL_MSLEEP_DELAY		25
++
+ static int qed_send_msg2pf(struct qed_hwfn *p_hwfn, u8 *done, u32 resp_size)
+ {
+ 	union vfpf_tlvs *p_req = p_hwfn->vf_iov_info->vf2pf_request;
+ 	struct ustorm_trigger_vf_zone trigger;
+ 	struct ustorm_vf_zone *zone_data;
+-	int rc = 0, time = 100;
++	int iter, rc = 0;
  
- # try-run
- # Usage: option = $(call try-run, $(CC)...-o "$$TMP",option-ok,otherwise)
- # Exit code chooses option. "$$TMP" serves as a temporary file and is
- # automatically cleaned up.
- try-run = $(shell set -e;		\
--	TMP="$(TMPOUT).$$$$.tmp";	\
--	TMPO="$(TMPOUT).$$$$.o";	\
-+	TMP=$(TMPOUT)/tmp;		\
-+	TMPO=$(TMPOUT)/tmp.o;		\
-+	mkdir -p $(TMPOUT);		\
-+	trap "rm -rf $(TMPOUT)" EXIT;	\
- 	if ($(1)) >/dev/null 2>&1;	\
- 	then echo "$(2)";		\
- 	else echo "$(3)";		\
--	fi;				\
--	rm -f "$$TMP" "$$TMPO")
-+	fi)
+ 	zone_data = (struct ustorm_vf_zone *)PXP_VF_BAR0_START_USDM_ZONE_B;
  
- # as-option
- # Usage: cflags-y += $(call as-option,-Wa$(comma)-isa=foo,)
+@@ -102,11 +107,19 @@ static int qed_send_msg2pf(struct qed_hwfn *p_hwfn, u8 *done, u32 resp_size)
+ 	REG_WR(p_hwfn, (uintptr_t)&zone_data->trigger, *((u32 *)&trigger));
+ 
+ 	/* When PF would be done with the response, it would write back to the
+-	 * `done' address. Poll until then.
++	 * `done' address from a coherent DMA zone. Poll until then.
+ 	 */
+-	while ((!*done) && time) {
+-		msleep(25);
+-		time--;
++
++	iter = QED_VF_CHANNEL_USLEEP_ITERATIONS;
++	while (!*done && iter--) {
++		udelay(QED_VF_CHANNEL_USLEEP_DELAY);
++		dma_rmb();
++	}
++
++	iter = QED_VF_CHANNEL_MSLEEP_ITERATIONS;
++	while (!*done && iter--) {
++		msleep(QED_VF_CHANNEL_MSLEEP_DELAY);
++		dma_rmb();
+ 	}
+ 
+ 	if (!*done) {
 -- 
 2.25.1
 
