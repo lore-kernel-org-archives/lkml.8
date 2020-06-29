@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD698C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE1AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B790D206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 01798206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:06:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593464783;
-	bh=GDty82TpQn3TQtvSKvWJza1OMJHRZPsq4SrmyPwrfAs=;
+	s=default; t=1593464787;
+	bh=AgRFdOEPmRGhMwYWEDiAD/ydaphTjPBnO+pOw4nCiM8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mL76DhF5l7oufNJElLDPHztPT6crdi2ErWQpex0uEH6DKT+hkE0+303bUQuZS+qd4
-	 o0l8esArNV6yDOUNksZRwnbgz8JYPyuTBuoz6z+ZiYcQ2AK1yZyZ+NX9wY9Domc3Mw
-	 Q/Yu0BrDbpcLanHN5RxCSqePT1o0IQpYcOJXz8Ks=
+	b=rHPyF3As8mUBpPhIicVMVLqBWRxxdgM0DwBmWi6NYTwTlJomgwSEbb+sfmQdPRsl1
+	 V/q4sheeKrf57wf3iwDZldB4845jwLz1OE9gSZM6IPUFdciYEtsA8FGKiVpmGx7Kv9
+	 z7rHQ1HRwzkUMcz1zBWnFygYCc7mgvGUyLH0booA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730975AbgF2TKS (ORCPT
+        id S2389691AbgF2VGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:10:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53676 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:06:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730294AbgF2TKP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:10:15 -0400
+        id S1730748AbgF2TKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:10:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 140FC2549D;
-        Mon, 29 Jun 2020 15:53:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE53E254B6;
+        Mon, 29 Jun 2020 15:53:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445995;
-        bh=GDty82TpQn3TQtvSKvWJza1OMJHRZPsq4SrmyPwrfAs=;
+        s=default; t=1593446011;
+        bh=AgRFdOEPmRGhMwYWEDiAD/ydaphTjPBnO+pOw4nCiM8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vNhB/hXSv1Dl7J+ovJnhVBecx2HAOtIRaqg/pPVPgsAlGYz0OqTXm2FoUylkccThk
-         XyT7c1T2/mjKWnw/eUndFMtAcDGb3OVJRx72a0oEYQPKYYwujzII0qR0hyXMkjEGYV
-         1gcoh4JvckHVETt2SG181EiuKfJBOjmXZsj9VGIU=
+        b=ivqGkrn8GCp+UeowK/7yCYprxII02l4YWmuzhtTMujhjcBh4VFHadXsdzlObGvG6u
+         xiSXRv+PnqxzdMjjjVZEtflzR56eI57lm4kAm/cYaSBYFJHXjBcLWOUS1glAMVHC6+
+         fxvOrFHwsW5HwRXu+YqqbLbfcbO11QxyIcIQ4vjQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Adam Honse <calcprogrammer1@gmail.com>,
-        Jean Delvare <jdelvare@suse.de>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
+Cc:     Tyrel Datwyler <tyreld@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 003/135] i2c: piix4: Detect secondary SMBus controller on AMD AM4 chipsets
-Date:   Mon, 29 Jun 2020 11:50:57 -0400
-Message-Id: <20200629155309.2495516-4-sashal@kernel.org>
+Subject: [PATCH 4.4 018/135] scsi: ibmvscsi: Don't send host info in adapter info MAD after LPM
+Date:   Mon, 29 Jun 2020 11:51:12 -0400
+Message-Id: <20200629155309.2495516-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -67,49 +65,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adam Honse <calcprogrammer1@gmail.com>
+From: Tyrel Datwyler <tyreld@linux.ibm.com>
 
-[ Upstream commit f27237c174fd9653033330e4e532cd9d153ce824 ]
+[ Upstream commit 4919b33b63c8b69d8dcf2b867431d0e3b6dc6d28 ]
 
-The AMD X370 and other AM4 chipsets (A/B/X 3/4/5 parts) and Threadripper
-equivalents have a secondary SMBus controller at I/O port address
-0x0B20.  This bus is used by several manufacturers to control
-motherboard RGB lighting via embedded controllers.  I have been using
-this bus in my OpenRGB project to control the Aura RGB on many
-motherboards and ASRock also uses this bus for their Polychrome RGB
-controller.
+The adapter info MAD is used to send the client info and receive the host
+info as a response. A persistent buffer is used and as such the client info
+is overwritten after the response. During the course of a normal adapter
+reset the client info is refreshed in the buffer in preparation for sending
+the adapter info MAD.
 
-I am not aware of any CZ-compatible platforms which do not have the
-second SMBus channel.  All of AMD's AM4- and Threadripper- series
-chipsets that OpenRGB users have tested appear to have this secondary
-bus.  I also noticed this secondary bus is present on older AMD
-platforms including my FM1 home server.
+However, in the special case of LPM where we reenable the CRQ instead of a
+full CRQ teardown and reset we fail to refresh the client info in the
+adapter info buffer. As a result, after Live Partition Migration (LPM) we
+erroneously report the host's info as our own.
 
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=202587
-Signed-off-by: Adam Honse <calcprogrammer1@gmail.com>
-Reviewed-by: Jean Delvare <jdelvare@suse.de>
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Tested-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+[mkp: typos]
+
+Link: https://lore.kernel.org/r/20200603203632.18426-1-tyreld@linux.ibm.com
+Signed-off-by: Tyrel Datwyler <tyreld@linux.ibm.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/busses/i2c-piix4.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/scsi/ibmvscsi/ibmvscsi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/i2c/busses/i2c-piix4.c b/drivers/i2c/busses/i2c-piix4.c
-index b61db9db3ca5d..c85ac178c4838 100644
---- a/drivers/i2c/busses/i2c-piix4.c
-+++ b/drivers/i2c/busses/i2c-piix4.c
-@@ -647,7 +647,8 @@ static int piix4_probe(struct pci_dev *dev, const struct pci_device_id *id)
- 	}
+diff --git a/drivers/scsi/ibmvscsi/ibmvscsi.c b/drivers/scsi/ibmvscsi/ibmvscsi.c
+index e26747a1b35a1..e7075aae15daa 100644
+--- a/drivers/scsi/ibmvscsi/ibmvscsi.c
++++ b/drivers/scsi/ibmvscsi/ibmvscsi.c
+@@ -427,6 +427,8 @@ static int ibmvscsi_reenable_crq_queue(struct crq_queue *queue,
+ 	int rc = 0;
+ 	struct vio_dev *vdev = to_vio_dev(hostdata->dev);
  
- 	if (dev->vendor == PCI_VENDOR_ID_AMD &&
--	    dev->device == PCI_DEVICE_ID_AMD_HUDSON2_SMBUS) {
-+	    (dev->device == PCI_DEVICE_ID_AMD_HUDSON2_SMBUS ||
-+	     dev->device == PCI_DEVICE_ID_AMD_KERNCZ_SMBUS)) {
- 		retval = piix4_setup_sb800(dev, id, 1);
- 	}
- 
++	set_adapter_info(hostdata);
++
+ 	/* Re-enable the CRQ */
+ 	do {
+ 		if (rc)
 -- 
 2.25.1
 
