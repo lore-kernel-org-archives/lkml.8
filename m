@@ -2,179 +2,94 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6AFEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:36:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37009C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B40620672
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:36:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AB6620672
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:36:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="mELjv7rb";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="CcaOcIk4"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="LhMrpjSD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732804AbgF2Tg0 (ORCPT
+        id S1732634AbgF2Tgd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:36:26 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:47574 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730437AbgF2TgU (ORCPT
+        Mon, 29 Jun 2020 15:36:33 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:54693 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729305AbgF2TgX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:36:20 -0400
-Received: from pps.filterd (m0148460.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05TGt3re027481;
-        Mon, 29 Jun 2020 09:56:54 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=qXullG9VUSDOlcxffaa8Iax5xyCbXolNPH4syXdcWP4=;
- b=mELjv7rb6O5o/YqGQ/tuLnTXbTPiauTTLQLG+23Jr58xN1kH0ZWjDdGW3J/POXvWmd5s
- 8uAEr3lzQo7Z0l1YH2ElFNrHyZpiGCkFJ9X0tlcfWJEEBOCKMAEa7Mb/lPMsna1J1yla
- 9tBp8Yei2zixHqY9+6WzKyRCOUSNU7fib08= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 31x3mmfypb-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Mon, 29 Jun 2020 09:56:53 -0700
-Received: from NAM02-BL2-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.36.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 29 Jun 2020 09:56:53 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=DUVi73QL2hZ7lxK7lyUHXIVblOhhCVztYJHhDCco1jo5lNHYGrPhjapv4rdpAxsNeOGKFuJrw2PN6qFBbvxLgkvMrucMPRBWPXmYcliCYwX7Z8JqgGDQcHen4EGI9dB3T4/CF8Nb2wCl1/iKd5W7egagurRfkKzzbEL3XvBS6O9BnUAVRlp7D+bK7nGRqCMtBKzKVVkZfT7VpLo3xW99yfu8kCZuizz5SDeUrtJu6YcDN7NXqzdlOkxJE/pU3sFkKA8FL3o4xXKtMW7bDzVhV3e7r0Rpfh8uycAqq6qV1fZKjA7OTW0Ul0T6CTjj5TToRb/ar/Q3lXhMxVcKAUS+CQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qXullG9VUSDOlcxffaa8Iax5xyCbXolNPH4syXdcWP4=;
- b=f0BgwdsFOR7SVzgd5kroWpXzv35xMQQfM9IWA3v0HeKIwRztIqVhimTgHuptHENiBkGRLERCTGdpro2STQ0Fq9lsvxDt4dveGLUjEUrJIjqfM+UwgJgdCS1LnizCUQy0Iy0pQpD5Sa0gg7lNIH3ML7HnnEd5bAYowsHG7JvZVh6Z6nhEN1cTn4mdSc1HicjmYzmFXBw3G8wizt5IjpMLgKOCUyIwOBNCy87KJ4fNKMrX8xhmqwh8rKwbpkQeOjmcrf41xAzEG4DocSTjQdITxFKcxSXds+Zje7msyEEblQ8TDnXHh+mGLJnsctm5tf+d3M69LETli25yAeypUuoO6w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qXullG9VUSDOlcxffaa8Iax5xyCbXolNPH4syXdcWP4=;
- b=CcaOcIk4B6JDzf3U/7zMQNOsNglOjjcgeN6iH1/F4ySt4L0KWL8RuIKhS0Hy0kJAhAwzt1uLYhT4UE+w6Dp5ZsnyWXwirehdNJHBdpEeigdDyYq8h0G7KQaiTQLlAovsC+ri8rfo0/+i7MGcIM0HrzkSH9GlIyzpu9hCdPmaKqs=
-Received: from BYAPR15MB2999.namprd15.prod.outlook.com (2603:10b6:a03:fa::12)
- by BYAPR15MB4088.namprd15.prod.outlook.com (2603:10b6:a02:c3::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.26; Mon, 29 Jun
- 2020 16:56:52 +0000
-Received: from BYAPR15MB2999.namprd15.prod.outlook.com
- ([fe80::543:b185:ef4a:7e8]) by BYAPR15MB2999.namprd15.prod.outlook.com
- ([fe80::543:b185:ef4a:7e8%5]) with mapi id 15.20.3131.027; Mon, 29 Jun 2020
- 16:56:52 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     Yonghong Song <yhs@fb.com>
-CC:     bpf <bpf@vger.kernel.org>, Networking <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Alexei Starovoitov" <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "Kernel Team" <Kernel-team@fb.com>,
-        "john.fastabend@gmail.com" <john.fastabend@gmail.com>,
-        "kpsingh@chromium.org" <kpsingh@chromium.org>
-Subject: Re: [PATCH v4 bpf-next 4/4] selftests/bpf: add bpf_iter test with
- bpf_get_task_stack()
-Thread-Topic: [PATCH v4 bpf-next 4/4] selftests/bpf: add bpf_iter test with
- bpf_get_task_stack()
-Thread-Index: AQHWTdoDfCOX11YGIkGMqBxDcia9fajvsh+AgAAevoA=
-Date:   Mon, 29 Jun 2020 16:56:52 +0000
-Message-ID: <D3BAF0B3-122D-409C-B0DD-600E1EE606C0@fb.com>
-References: <20200629055530.3244342-1-songliubraving@fb.com>
- <20200629055530.3244342-5-songliubraving@fb.com>
- <bd62a752-df45-8e65-9f74-e340ef708764@fb.com>
-In-Reply-To: <bd62a752-df45-8e65-9f74-e340ef708764@fb.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3608.80.23.2.2)
-x-originating-ip: [2620:10d:c091:480::1:2b35]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ff34af05-3303-4aec-c487-08d81c4d6c04
-x-ms-traffictypediagnostic: BYAPR15MB4088:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR15MB40880E0CC89213D4858D6D21B36E0@BYAPR15MB4088.namprd15.prod.outlook.com>
-x-fb-source: Internal
-x-ms-oob-tlc-oobclassifiers: OLM:3276;
-x-forefront-prvs: 044968D9E1
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: duz5jXhrS5DEGunREhPj1UPvEwPn0RLITMIJJJPipvKXtMfbjfokAZeuYtYlvv+BunpNCJd+xghE7/+K951pWepp1Q4cTLqkgoODruzjtVGh8oZCiE8kIIH2hAKRugBbU8oYEmH/nKpXrlvMwk24+rzkqfSEOm3awk4bRWMWXHVh08hSL6p93oljWcGwTdIIttRGmTPVoDHi6QTNYVXz2AALOK5KmGC6E0I/2dIPddC3ALm4slP3iiBQxyVEDhAb/TEJ4ND1k6lNXaAJRwkYVGlN45DZem9yle4r/Qj7451MOgKQVE/jImzrbIKRBH3JbF8GTFerLG/sPNYfxsWerA==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB2999.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(136003)(396003)(366004)(39860400002)(346002)(376002)(6486002)(37006003)(54906003)(36756003)(6862004)(6512007)(86362001)(2616005)(4326008)(478600001)(316002)(8936002)(2906002)(6506007)(33656002)(53546011)(66476007)(66556008)(64756008)(71200400001)(5660300002)(66946007)(8676002)(76116006)(186003)(6636002)(66446008)(91956017);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 7AWQG/ZHrFRVDkuvJBfp/mU4k+v8LTvzU6H1RNCJu7IkA/8kgR6+/36SnYRsujXs85BnpdlGAtKLvzzpKlVXZPByK8Nrr2EtlgaAqherJd+9ai0vEw4yVtnLC3o01zRqHOgZSvLVieYBaLpGDqCqt2i39YGOcwjQfk9o9wVz8BZnJpNN3UVD2H4rYjY+8Js0ehg5nBa/2ZmL9lbYjskMnCIlmpeAhIU76LQZhwzx/SSUb0EE3Pfl2bAtnc3srztbIUcZFBzQobB8K+x8ULI56vCps0tQM0ne2n43tbfQ99Km5Mkh605KOgpUvMMAtydH0UNoHjqYcyFzct4LftU/4BKM0yJ0QFxKAIwej+0dzPjWfTo5i8aSXnPiiVbfuwRwUkV0dRlEKdNADbbw/6x0gvbA4Hs6BRGX7jEEzIAYnLFKpotofaJ5In+FyYqe4gfzY2Z8/QVrciyiDf0ZwEYAXhVy8i1Mkc16DIOkp0wdi7DmkBT38EmdlRVhV62EGRkbeu7my08VxToysqQP03BLPg==
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <D65D069ED4CCB34BB8A9545E6242AB29@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 29 Jun 2020 15:36:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1593459383; x=1624995383;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=b4/y29sI+1yiTQiF1xYesH4kt0pQMd5eSrVNTpeSPi4=;
+  b=LhMrpjSDf/mnZHYhSrEDPKDmdrPwxiQfr1dbGMLPojkN6ps2Afa7AiEa
+   Vg3gYnKcTSWGjSF2j8DBPkd7PVqE78er3SOTq6THG/PC0pHFD5xhJCVPf
+   c5Zgpk2UuTgvDaEIoxB9kIq7GKpENd0xy7PTHSilfNgCtiOvzgmi4YkwW
+   s=;
+IronPort-SDR: 30ZfxPliLXRENJTl2hI0YJ7tElU9JTYqigHOFsbk/lUG7zcXVx6pI7nW0ogcDx+3yHCtxim+sP
+ YCQMGiTTYanQ==
+X-IronPort-AV: E=Sophos;i="5.75,295,1589241600"; 
+   d="scan'208";a="39176521"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1d-5dd976cd.us-east-1.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 29 Jun 2020 19:36:19 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
+        by email-inbound-relay-1d-5dd976cd.us-east-1.amazon.com (Postfix) with ESMTPS id B7CFDA1C47;
+        Mon, 29 Jun 2020 19:36:17 +0000 (UTC)
+Received: from EX13D31EUA004.ant.amazon.com (10.43.165.161) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 29 Jun 2020 19:36:17 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.48) by
+ EX13D31EUA004.ant.amazon.com (10.43.165.161) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Mon, 29 Jun 2020 19:36:12 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     <gregkh@linuxfoundation.org>, <sashal@kernel.org>
+CC:     <sj38.park@gmail.com>, <stable@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Upstream fixes not merged in 5.4.y
+Date:   Mon, 29 Jun 2020 21:35:37 +0200
+Message-ID: <20200629193537.21738-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB2999.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ff34af05-3303-4aec-c487-08d81c4d6c04
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jun 2020 16:56:52.2336
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7DWS3t/1AqOiETwg+wBN7+VHT/9FMJQoU9cQ6u4mzq9iGxRPfYPq7WrwvXdXysk13nmG9fDdqM8vVIkA4b0aBQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB4088
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-06-29_18:2020-06-29,2020-06-29 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0 bulkscore=0
- impostorscore=0 lowpriorityscore=0 cotscore=-2147483648 spamscore=0
- mlxlogscore=999 adultscore=0 clxscore=1015 malwarescore=0 suspectscore=0
- priorityscore=1501 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006290109
-X-FB-Internal: deliver
+Content-Type: text/plain
+X-Originating-IP: [10.43.160.48]
+X-ClientProxiedBy: EX13D04UWB001.ant.amazon.com (10.43.161.46) To
+ EX13D31EUA004.ant.amazon.com (10.43.165.161)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
 
-> On Jun 29, 2020, at 8:06 AM, Yonghong Song <yhs@fb.com> wrote:
->=20
->=20
->=20
-> On 6/28/20 10:55 PM, Song Liu wrote:
->> The new test is similar to other bpf_iter tests. It dumps all
->> /proc/<pid>/stack to a seq_file. Here is some example output:
->> pid:     2873 num_entries:        3
->> [<0>] worker_thread+0xc6/0x380
->> [<0>] kthread+0x135/0x150
->> [<0>] ret_from_fork+0x22/0x30
->> pid:     2874 num_entries:        9
->> [<0>] __bpf_get_stack+0x15e/0x250
->> [<0>] bpf_prog_22a400774977bb30_dump_task_stack+0x4a/0xb3c
->> [<0>] bpf_iter_run_prog+0x81/0x170
->> [<0>] __task_seq_show+0x58/0x80
->> [<0>] bpf_seq_read+0x1c3/0x3b0
->> [<0>] vfs_read+0x9e/0x170
->> [<0>] ksys_read+0xa7/0xe0
->> [<0>] do_syscall_64+0x4c/0xa0
->> [<0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
->> Note: To print the output, it is necessary to modify the selftest.
->=20
-> I do not know what this sentence means. It seems confusing
-> and probably not needed.
+With my little script, I found below commits in the mainline tree are more than
+1 week old and fixing commits that back-ported in v5.4..v5.4.49 but not merged
+in the stable/linux-5.4.y tree.  Are those need to be merged in but missed or
+dealyed?
 
-It means current do_dummy_read() doesn't check/print the contents of the=20
-seq_file:
+9210c075cef2 ("nvme-pci: avoid race between nvme_reap_pending_cqes() and nvme_poll()")
+9fecd13202f5 ("btrfs: fix a block group ref counter leak after failure to remove block group")
+9d964e1b82d8 ("fix a braino in "sparc32: fix register window handling in genregs32_[gs]et()"")
+8ab3a3812aa9 ("drm/i915/gt: Incrementally check for rewinding")
+6e2f83884c09 ("bnxt_en: Fix AER reset logic on 57500 chips.")
+efb94790852a ("drm/panel-simple: fix connector type for LogicPD Type28 Display")
+ff58bbc7b970 ("ALSA: usb-audio: Fix potential use-after-free of streams")
+ff58bbc7b970 ("ALSA: usb-audio: Fix potential use-after-free of streams")
+8dbe4c5d5e40 ("net: dsa: bcm_sf2: Fix node reference count")
+ca8826095e4d ("selftests/net: report etf errors correctly")
+5a8d7f126c97 ("of: of_mdio: Correct loop scanning logic")
+d35d3660e065 ("binder: fix null deref of proc->context")
 
-        /* not check contents, but ensure read() ends without error */
-        while ((len =3D read(iter_fd, buf, sizeof(buf))) > 0)
-                ;
+The script found several more commits but I exclude those here, because those
+seems not applicable on 5.4.y or fixing trivial problems only.  If I'm not
+following a proper process for this kind of reports, please let me know.
 
->=20
->> Signed-off-by: Song Liu <songliubraving@fb.com>
->=20
-> Acked-by: Yonghong Song <yhs@fb.com>
 
-Thanks!
-
-[...]
-
+Thanks,
+SeongJae Park
