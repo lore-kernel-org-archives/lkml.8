@@ -7,57 +7,58 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF65C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50BFDC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 334FC20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:02:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F6E520675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:02:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460973;
-	bh=eQi4cORXWtIrdBZk35/K4rmMJS6hHyA7dHS7DUmSLkA=;
+	s=default; t=1593460977;
+	bh=/u7xzgp5yfHgdTybx9FkSBdR1Vp7JFFuuPvhqwapbCk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Edj7veLM/kFX/gvvXXurzsj0hMEFSKaHccG4zT1oPaxdYJ232oKCXWV8PkETZH5YZ
-	 9aH/lrZO0Uj49r12odjRwOfb38zpWsZqTGW8U1rH88gk8qdLxFaQhaY8EUU/YUfrOu
-	 01Snvr6nQX1i3/b+AapGckVs895ns1XUEC3bv8TY=
+	b=jF1eP1yxZByXKADQA7hgSu5rjiQZRBq7i4ppj3a843UUPnlqePOiHqcCdMX/1Xgm9
+	 mziKLDEQhvklqyCgmmVk7BCPEBqRHRCbGyw5Mr7mGbyQw5tUCOmNK3BNsQP2DXuLvk
+	 rNFFeY2ErKeVpYi8//g44Ah7O7Wb0k2KUWqQ8Gh0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388699AbgF2UCw (ORCPT
+        id S2388511AbgF2UCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:02:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40608 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:02:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733002AbgF2Tad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1733003AbgF2Tad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4492A25246;
-        Mon, 29 Jun 2020 15:36:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41BC2252C7;
+        Mon, 29 Jun 2020 15:38:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444960;
-        bh=eQi4cORXWtIrdBZk35/K4rmMJS6hHyA7dHS7DUmSLkA=;
+        s=default; t=1593445092;
+        bh=/u7xzgp5yfHgdTybx9FkSBdR1Vp7JFFuuPvhqwapbCk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hzNI3NqaQXhEGZLc7JWAI69RB2WpkLolGM0IG102ZNh8FUi8+c+H9mknmLJhRA7jI
-         PPqA8RQBnU/eNGdF+IccTA68kqN0F0EipX3E+u1rzEahm2ER00fVMDTMqfRETb9D3Z
-         onYO8mTuIKWC5TNqGsPbvnMFsVQH/u5NBMSvVuRE=
+        b=WEkB0mcbMDCFUkjwyBLUbMyGo20bok1cwKC34s38wNXJAuvyKICt88MSQXPv50g07
+         Eyegg+By2WslKf3Q48ogWvy+wYHqyHHO0aLLZhEMqWmJ+6Oi80urSaVQLrKlXMoJDT
+         1MhfY3nO1ovxX4Ub6qWyJIAKqfk7tcxOPJ5KEjv4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhang Xiaoxu <zhangxiaoxu5@huawei.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 059/131] cifs/smb3: Fix data inconsistent when punch hole
-Date:   Mon, 29 Jun 2020 11:33:50 -0400
-Message-Id: <20200629153502.2494656-60-sashal@kernel.org>
+Cc:     Eric Dumazet <edumazet@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.14 02/78] net: be more gentle about silly gso requests coming from user
+Date:   Mon, 29 Jun 2020 11:36:50 -0400
+Message-Id: <20200629153806.2494953-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
-References: <20200629153502.2494656-1-sashal@kernel.org>
+In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
+References: <20200629153806.2494953-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.19.y
+X-KernelTest-Branch: linux-4.14.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.19.131-rc1
-X-KernelTest-Deadline: 2020-07-01T15:34+00:00
+X-KernelTest-Version: 4.14.186-rc1
+X-KernelTest-Deadline: 2020-07-01T15:38+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -66,55 +67,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit acc91c2d8de4ef46ed751c5f9df99ed9a109b100 ]
+commit 7c6d2ecbda83150b2036a2b36b21381ad4667762 upstream.
 
-When punch hole success, we also can read old data from file:
-  # strace -e trace=pread64,fallocate xfs_io -f -c "pread 20 40" \
-           -c "fpunch 20 40" -c"pread 20 40" file
-  pread64(3, " version 5.8.0-rc1+"..., 40, 20) = 40
-  fallocate(3, FALLOC_FL_KEEP_SIZE|FALLOC_FL_PUNCH_HOLE, 20, 40) = 0
-  pread64(3, " version 5.8.0-rc1+"..., 40, 20) = 40
+Recent change in virtio_net_hdr_to_skb() broke some packetdrill tests.
 
-CIFS implements the fallocate(FALLOCATE_FL_PUNCH_HOLE) with send SMB
-ioctl(FSCTL_SET_ZERO_DATA) to server. It just set the range of the
-remote file to zero, but local page caches not updated, then the
-local page caches inconsistent with server.
+When --mss=XXX option is set, packetdrill always provide gso_type & gso_size
+for its inbound packets, regardless of packet size.
 
-Also can be found by xfstests generic/316.
+	if (packet->tcp && packet->mss) {
+		if (packet->ipv4)
+			gso.gso_type = VIRTIO_NET_HDR_GSO_TCPV4;
+		else
+			gso.gso_type = VIRTIO_NET_HDR_GSO_TCPV6;
+		gso.gso_size = packet->mss;
+	}
 
-So, we need to remove the page caches before send the SMB
-ioctl(FSCTL_SET_ZERO_DATA) to server.
+Since many other programs could do the same, relax virtio_net_hdr_to_skb()
+to no longer return an error, but instead ignore gso settings.
 
-Fixes: 31742c5a33176 ("enable fallocate punch hole ("fallocate -p") for SMB3")
-Suggested-by: Pavel Shilovsky <pshilov@microsoft.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
-Cc: stable@vger.kernel.org # v3.17
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This keeps Willem intent to make sure no malicious packet could
+reach gso stack.
+
+Note that TCP stack has a special logic in tcp_set_skb_tso_segs()
+to clear gso_size for small packets.
+
+Fixes: 6dd912f82680 ("net: check untrusted gso_size at kernel entry")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Willem de Bruijn <willemb@google.com>
+Acked-by: Willem de Bruijn <willemb@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/cifs/smb2ops.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ include/linux/virtio_net.h | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
-index 6fc16329ceb45..0b830ac8a9e72 100644
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -2248,6 +2248,12 @@ static long smb3_punch_hole(struct file *file, struct cifs_tcon *tcon,
- 		return rc;
+diff --git a/include/linux/virtio_net.h b/include/linux/virtio_net.h
+index a16e0bdf77511..d19bfdcf77498 100644
+--- a/include/linux/virtio_net.h
++++ b/include/linux/virtio_net.h
+@@ -107,16 +107,17 @@ static inline int virtio_net_hdr_to_skb(struct sk_buff *skb,
+ 
+ 	if (hdr->gso_type != VIRTIO_NET_HDR_GSO_NONE) {
+ 		u16 gso_size = __virtio16_to_cpu(little_endian, hdr->gso_size);
++		struct skb_shared_info *shinfo = skb_shinfo(skb);
+ 
+-		if (skb->len - p_off <= gso_size)
+-			return -EINVAL;
+-
+-		skb_shinfo(skb)->gso_size = gso_size;
+-		skb_shinfo(skb)->gso_type = gso_type;
++		/* Too small packets are not really GSO ones. */
++		if (skb->len - p_off > gso_size) {
++			shinfo->gso_size = gso_size;
++			shinfo->gso_type = gso_type;
+ 
+-		/* Header must be checked, and gso_segs computed. */
+-		skb_shinfo(skb)->gso_type |= SKB_GSO_DODGY;
+-		skb_shinfo(skb)->gso_segs = 0;
++			/* Header must be checked, and gso_segs computed. */
++			shinfo->gso_type |= SKB_GSO_DODGY;
++			shinfo->gso_segs = 0;
++		}
  	}
  
-+	/*
-+	 * We implement the punch hole through ioctl, so we need remove the page
-+	 * caches first, otherwise the data may be inconsistent with the server.
-+	 */
-+	truncate_pagecache_range(inode, offset, offset + len - 1);
-+
- 	cifs_dbg(FYI, "offset %lld len %lld", offset, len);
- 
- 	fsctl_buf.FileOffset = cpu_to_le64(offset);
+ 	return 0;
 -- 
 2.25.1
 
