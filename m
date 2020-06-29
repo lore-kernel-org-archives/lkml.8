@@ -2,191 +2,111 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2708AC433E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AACE0C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 09D0F21D81
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8897A22269
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:38:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=anholt-net.20150623.gappssmtp.com header.i=@anholt-net.20150623.gappssmtp.com header.b="LMYg4oGG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ewKodK9a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726346AbgF2Siw (ORCPT
+        id S1728071AbgF2Siy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:38:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37582 "EHLO
+        Mon, 29 Jun 2020 14:38:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727956AbgF2SiA (ORCPT
+        with ESMTP id S1727953AbgF2SiA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:38:00 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B0D5DC033C01
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 11:19:25 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id j1so8245414pfe.4
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 11:19:25 -0700 (PDT)
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAE29C031416;
+        Mon, 29 Jun 2020 10:20:31 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id k1so7359789pls.2;
+        Mon, 29 Jun 2020 10:20:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=anholt-net.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=/NcQmzB/12sdIDSUANv/DWZPIgxSIz4p962Qo3Ee9Xk=;
-        b=LMYg4oGGKEaTmenbEsK0CIKVFhkJl9YAlVxpJdly4EOkbl0HBYt/5Ha3Srnig1UBoT
-         h/qtDvpv74MmjMgwV/9506Og5qSGCJS4PBTr6dfpCvg0SAypsOTCJWlbnS2WI3W6lbGg
-         Axn0byRolbnuj2z0dG5vUAetEKbHsjSf+tgr2Kp3+KAWsPh4O8Kcop2ltFxfxWHz8xAW
-         8XwtIByCbeYbP9ZsKlGCD+/kFf5aZJQfNPO36x2f739Z+hm41rea47av0faYwnP1THe+
-         oug4dfKuvUmE7TkKBumQDViI1es4IbdlihRotJdDQ43nRGgnfWdJ2prNvsLJ7P8nVnnL
-         fmMg==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=EBxO7W3vjKfKExb7YIhRFg//dsteKdeNGdPmppkjMb8=;
+        b=ewKodK9aN0OWBZQbu44iYiVfZECWxTo16lvDvRM89Z4teK9Y+NqZrKgHYKIHfQNOTY
+         vWSJsKDUNNqYREungOJwclpKtKpmRkrGL+hMdIqE94CYuq5fgEYhUIMzysHUIT76AEss
+         9/Hf9IgN/E1R5MQ6oWDqXpxAzTI8bKdOJqf3X5whfi8CQo95Fb5coiHOOJu0SF++m1CG
+         xuFod+DMFoP8uTRz17dh9MvwIzMuRq7CCB2EiZri8RNCupv/MdpyiQacCznzyf9Hd0Hm
+         FhBrhOLm+FIsA6Wt/Uu/B/3Nlo28pPvmhyhjwn+WhNH66L0Y/en19olQMt1/sRgiJtSM
+         LrFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=/NcQmzB/12sdIDSUANv/DWZPIgxSIz4p962Qo3Ee9Xk=;
-        b=YmFEhmfyz8PITt776TqivVgYdY7dMNUvqowvGtmbMNG1bBPxIwqYQMlrSqOtO0Jd7Q
-         2sU2naHLUwceSsrr00489oYVzXhL0AcOo4YVJRpeB7E09Qd5p7qKSiesBeB84Wr/KNe5
-         dEM92MWDSj+Wp66tUaI2z/EXCbbVeqNyC47ItHt1Wg9JeUKjxosS32AaeaXOIKkHQGbc
-         CRdKuwTE6GQirkaeQ8eP//nwUngpNPgi7X2g/AUBU+cD3mpa4K8/Yq8DA1BkmFZRE+DM
-         kKIpp7KoRA1AUpznDxWNZg1t14197tkORNMO7diRbXXHAKkHywB23uvv/9t1pIzwKelZ
-         l6wA==
-X-Gm-Message-State: AOAM533o3hk08Cg7DRQs1pJpVpOzvjBCvCxMfWRS8tdo8VyjJ5GVBizN
-        YtRWgDML5EyRBf17zOjUkzMsqGPayf5Exw==
-X-Google-Smtp-Source: ABdhPJydZmEj+KGJUb2VhyoF11wEycqqrieadtqlO/4guD0EeDtJASVLB7TAqDKHTzBvaC/X7SqBAw==
-X-Received: by 2002:aa7:91d4:: with SMTP id z20mr14642359pfa.153.1593454765199;
-        Mon, 29 Jun 2020 11:19:25 -0700 (PDT)
-Received: from miranda.anholt.net ([97.115.155.172])
-        by smtp.gmail.com with ESMTPSA id a9sm359463pfr.103.2020.06.29.11.19.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 11:19:24 -0700 (PDT)
-From:   Eric Anholt <eric@anholt.net>
-To:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
-        freedreno@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>,
-        Jordan Crouse <jcrouse@codeaurora.org>
-Cc:     linux-kernel@vger.kernel.org, Eric Anholt <eric@anholt.net>
-Subject: [PATCH 1/2] drm/msm: Garbage collect unused resource _len fields.
-Date:   Mon, 29 Jun 2020 11:19:20 -0700
-Message-Id: <20200629181921.3019271-1-eric@anholt.net>
-X-Mailer: git-send-email 2.26.2
+        bh=EBxO7W3vjKfKExb7YIhRFg//dsteKdeNGdPmppkjMb8=;
+        b=A92X8F6O9ZZ/sefrG8X3+lnBbHgSzPl/mH0w2b8Fr8ovLmcCCO3Y5wd8syVZhNHSAo
+         XEE8Yb1+zHFY8GwyiJavjdyPPJGoe5a3Mi0eUaH0PAfpiZQJi5MvY3Y3HntfHVaR5l3A
+         KLcsLcnF5aLnTeCaU9OwV5ygsP9dyWUm0vvcdYGhaPBWh4RCodBGcDSWeQSpsbGJhgGw
+         1LpiwXwHPfLVLoCAHFkyct2v5m8auuGJx8+87WHPBuF2JcW74T2bNxwHpF0A0EScN3Te
+         QbJvN/+/FLSbgtbq+Yi8qnDlNbqWk8KoBhVDyY+EEne8SOwQGSucIVvzTmzsEY+uYUZL
+         bxEQ==
+X-Gm-Message-State: AOAM533j5O2Dp47UJOXGXjMlbVZ9bVHufOnuGYp+UJ0wnbqIzW/bD/2E
+        0erjhOVP6vvY1GJnU71B5IU=
+X-Google-Smtp-Source: ABdhPJwBXYzSqVqaej7MrTtvAoxQQyVfrLurS2VT0FpRREZWIImH+ognZwMO6/Mmioqfe4mIEvAzzw==
+X-Received: by 2002:a17:902:301:: with SMTP id 1mr14726130pld.214.1593451231314;
+        Mon, 29 Jun 2020 10:20:31 -0700 (PDT)
+Received: from [10.230.30.107] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id f29sm331735pga.59.2020.06.29.10.20.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jun 2020 10:20:30 -0700 (PDT)
+Subject: Re: [PATCH v2 08/10] of: mdio: remove the 'extern' keyword from
+ function declarations
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Russell King <linux@armlinux.org.uk>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20200629120346.4382-1-brgl@bgdev.pl>
+ <20200629120346.4382-9-brgl@bgdev.pl>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <4ec2d4c1-3169-da94-2fe2-1165e1fbd531@gmail.com>
+Date:   Mon, 29 Jun 2020 10:20:28 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200629120346.4382-9-brgl@bgdev.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nothing was using the lengths of these ioremaps.
 
-Signed-off-by: Eric Anholt <eric@anholt.net>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c  | 21 ---------------------
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h  |  1 -
- drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c |  9 ---------
- 3 files changed, 31 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-index 680527e28d09..a4ab802fee6d 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-@@ -45,20 +45,6 @@
- static int dpu_kms_hw_init(struct msm_kms *kms);
- static void _dpu_kms_mmu_destroy(struct dpu_kms *dpu_kms);
- 
--static unsigned long dpu_iomap_size(struct platform_device *pdev,
--				    const char *name)
--{
--	struct resource *res;
--
--	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
--	if (!res) {
--		DRM_ERROR("failed to get memory resource: %s\n", name);
--		return 0;
--	}
--
--	return resource_size(res);
--}
--
- #ifdef CONFIG_DEBUG_FS
- static int _dpu_danger_signal_status(struct seq_file *s,
- 		bool danger_status)
-@@ -844,7 +830,6 @@ static int dpu_kms_hw_init(struct msm_kms *kms)
- 		goto error;
- 	}
- 	DRM_DEBUG("mapped dpu address space @%pK\n", dpu_kms->mmio);
--	dpu_kms->mmio_len = dpu_iomap_size(dpu_kms->pdev, "mdp");
- 
- 	dpu_kms->vbif[VBIF_RT] = msm_ioremap(dpu_kms->pdev, "vbif", "vbif");
- 	if (IS_ERR(dpu_kms->vbif[VBIF_RT])) {
-@@ -853,22 +838,16 @@ static int dpu_kms_hw_init(struct msm_kms *kms)
- 		dpu_kms->vbif[VBIF_RT] = NULL;
- 		goto error;
- 	}
--	dpu_kms->vbif_len[VBIF_RT] = dpu_iomap_size(dpu_kms->pdev, "vbif");
- 	dpu_kms->vbif[VBIF_NRT] = msm_ioremap(dpu_kms->pdev, "vbif_nrt", "vbif_nrt");
- 	if (IS_ERR(dpu_kms->vbif[VBIF_NRT])) {
- 		dpu_kms->vbif[VBIF_NRT] = NULL;
- 		DPU_DEBUG("VBIF NRT is not defined");
--	} else {
--		dpu_kms->vbif_len[VBIF_NRT] = dpu_iomap_size(dpu_kms->pdev,
--							     "vbif_nrt");
- 	}
- 
- 	dpu_kms->reg_dma = msm_ioremap(dpu_kms->pdev, "regdma", "regdma");
- 	if (IS_ERR(dpu_kms->reg_dma)) {
- 		dpu_kms->reg_dma = NULL;
- 		DPU_DEBUG("REG_DMA is not defined");
--	} else {
--		dpu_kms->reg_dma_len = dpu_iomap_size(dpu_kms->pdev, "regdma");
- 	}
- 
- 	pm_runtime_get_sync(&dpu_kms->pdev->dev);
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
-index 4e32d040f1e6..13034cdb8665 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h
-@@ -100,7 +100,6 @@ struct dpu_kms {
- 
- 	/* io/register spaces: */
- 	void __iomem *mmio, *vbif[VBIF_MAX], *reg_dma;
--	unsigned long mmio_len, vbif_len[VBIF_MAX], reg_dma_len;
- 
- 	struct regulator *vdd;
- 	struct regulator *mmagic;
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
-index 80d3cfc14007..9f20b84d5c0a 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
-@@ -37,7 +37,6 @@ struct dpu_mdss_hw_init_handler {
- struct dpu_mdss {
- 	struct msm_mdss base;
- 	void __iomem *mmio;
--	unsigned long mmio_len;
- 	struct dss_module_power mp;
- 	struct dpu_irq_controller irq_controller;
- 	struct icc_path *path[2];
-@@ -292,7 +291,6 @@ int dpu_mdss_init(struct drm_device *dev)
- {
- 	struct platform_device *pdev = to_platform_device(dev->dev);
- 	struct msm_drm_private *priv = dev->dev_private;
--	struct resource *res;
- 	struct dpu_mdss *dpu_mdss;
- 	struct dss_module_power *mp;
- 	int ret = 0;
-@@ -308,13 +306,6 @@ int dpu_mdss_init(struct drm_device *dev)
- 
- 	DRM_DEBUG("mapped mdss address space @%pK\n", dpu_mdss->mmio);
- 
--	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "mdss");
--	if (!res) {
--		DRM_ERROR("failed to get memory resource for mdss\n");
--		return -ENOMEM;
--	}
--	dpu_mdss->mmio_len = resource_size(res);
--
- 	ret = dpu_mdss_parse_data_bus_icc_path(dev, dpu_mdss);
- 	if (ret)
- 		return ret;
+On 6/29/2020 5:03 AM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> The 'extern' keyword in headers doesn't have any benefit. Remove them
+> all from the of_mdio.h header.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-2.26.2
-
+Florian
