@@ -2,156 +2,145 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97011C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1389CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7757820771
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB4E1206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:23:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="NB0L9Jf4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c3q7wPvu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732080AbgF2TXI (ORCPT
+        id S1730979AbgF2TXQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:23:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45164 "EHLO
+        Mon, 29 Jun 2020 15:23:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732318AbgF2TW5 (ORCPT
+        with ESMTP id S1730404AbgF2TWp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:22:57 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 365B9C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 12:22:57 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id s21so368042ilk.5
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 12:22:57 -0700 (PDT)
+        Mon, 29 Jun 2020 15:22:45 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51AA8C02E2F9
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:35:19 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id d21so9190297lfb.6
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:35:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ZC/wx6BYtpV6+oS6GfTqmrGOk4Agnx/4t/kFHxFuX1c=;
-        b=NB0L9Jf44nLOQXjdxaFB7OESdzE0E3n+5gfJPDxlxaGUKeqHJIw4JnHtoPxOkZUNeE
-         gWEztc08nsdEdKiaqewWM4/2PufgbC1umy6eeakNmmavgPmTLiCKf4X+tM/lX1XbtRId
-         2kCdgJB9MJNxc2cSUUomhH4Im6NEiCvfnMWKHjtb/uiQa/8KOJDdgFiEInN49oAMo6MU
-         YWySRaiPNFREDtLEXC3llONWun8g2Ogf011o5WvX0apbDRX9NDLL3Z+1Xoo00loxQoIl
-         nvsuoiEipUgt+X1o1iwJQpgUSsj6912/YjdLCEfWQcqeQtLTQ2NNST3fn9rtbF+/onjG
-         81tA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RaTcPoUQJY1lOqOm/hLw7WScDE1kdon3oAxJjzWJBGs=;
+        b=c3q7wPvuWmxbXEeQbOXweKx9JWUXhVEdKTI9tOiGufjlgDQVL+HCyOLJP+J74EWwaS
+         PHpEkg184kjqjYLicQRA2S5pusbsv40d2NPwsfR/i1/sI1jcwOnFMzq8I06Ep0vk/BhQ
+         VaBAup3tV/I2JN+YGMDkQEviOdvR/Dr0DHalr7UdlABf5RkDM2ZgB2tBmszegEkzKc3S
+         UiMzSzA38BAqrqn2UuOd4SIRwddzJyIKCPq97MFVawrYNZ2rFzK+6bKzg/tgUkx0uY76
+         cdWkO4Nxxb4Fdn5afDc7s2m/Ta5XCqx4EehNzw5TbXPj2N8hGm9pfhQf1kSHxkWEBnye
+         PG4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ZC/wx6BYtpV6+oS6GfTqmrGOk4Agnx/4t/kFHxFuX1c=;
-        b=Thy2B3jhQR65KimIqHB8A+hArJsszDOaIGT+aXF3cZONkBwQq+UVPZTAOmIG/GY8jW
-         pn2OR3ybYTd/72wK6VKtvAXteOXTge+YNFEGngCVUy3Jgpn11Nuorjo5gAP6Y/nNcnmv
-         WuKKOzWEemo+5l9sU5Eh9XzNKflxiDIdROJT33BI14clXXxuJwUc0HA0RtfJzBwTccTG
-         r++cm3zbdyMGQ4cWa5qzKTSv7lL22R6IVuFHKffB3kurphM6WmiotOt4BecQ3qEpUD7P
-         R7Nkx072sQufSCpqOfNdX0t3aupd3mVBfv9paGZzroXERMt6dM7IStb5wJbHPfuBROUu
-         gxSg==
-X-Gm-Message-State: AOAM531YiAiZD4GC6Sla59RLrdq1JijAz2lH89kPjusNhaKF2O0fHyZR
-        0/S6rAHqV/qxp4Uw3fNwWnJU0IJbDbbijw==
-X-Google-Smtp-Source: ABdhPJxuDCpQ8zVvVIsoUoXrz64TVB2DcaTHauicCj1HoXP6cKM17Jkd9+9Z4z8u9DYEJQnsfGzlZQ==
-X-Received: by 2002:a92:9f0e:: with SMTP id u14mr16629538ili.277.1593458576600;
-        Mon, 29 Jun 2020 12:22:56 -0700 (PDT)
-Received: from ziepe.ca ([206.223.160.26])
-        by smtp.gmail.com with ESMTPSA id v5sm345230ios.54.2020.06.29.12.22.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 12:22:55 -0700 (PDT)
-Received: from jgg by mlx with local (Exim 4.93)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1jpzMl-001Bxd-0w; Mon, 29 Jun 2020 16:22:55 -0300
-Date:   Mon, 29 Jun 2020 16:22:55 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     syzkaller <syzkaller@googlegroups.com>,
-        Hillf Danton <hdanton@sina.com>,
-        syzbot <syzbot+a929647172775e335941@syzkaller.appspotmail.com>,
-        chuck.lever@oracle.com, Doug Ledford <dledford@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        RDMA mailing list <linux-rdma@vger.kernel.org>,
-        parav@mellanox.com, Markus Elfring <Markus.Elfring@web.de>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: KASAN: use-after-free Read in addr_handler (2)
-Message-ID: <20200629192255.GE25301@ziepe.ca>
-References: <000000000000107b4605a7bdce7d@google.com>
- <20200614085321.8740-1-hdanton@sina.com>
- <20200627130205.16900-1-hdanton@sina.com>
- <20200627222527.GC25301@ziepe.ca>
- <CACT4Y+ab1q7fON3rkj+FHODPQXDGyP5c0tJt7gbrpmsAAYRb1g@mail.gmail.com>
- <CACT4Y+Zjw=ru-Sqs-V7cP0Exgu7g0jWBXcPeVKnLqpbkS-wDRg@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RaTcPoUQJY1lOqOm/hLw7WScDE1kdon3oAxJjzWJBGs=;
+        b=nu3dY6dkX5wDLwvR44VzRaEfoXaHFwbim8rqgoJzJiDtRsQ+cwoweILU+TrzBZm+mK
+         PIv8zNa42RWHmy6SOoyNGfiR2XiPaPfZwqDZShiwmP8ICHrIVnroiXQkvDyPdUtsfyg/
+         aoS7kJXCCGOdP8pZPS8aID5e/olD/UD2xnWTD+s2fI+pmqGcDDTQCte8LY3dSdwfO74g
+         nKvcHRABmHVLMv3/+GkRdUw3rc7QI6gZZGn/mwiGMf+DtRh0HLSdxrp4dO58ucYIs9ml
+         xfVs+g2qoS5RP6RqUbVP/1ibCsDrfa7OZ7AL/tYItPI+uJ1KYS58sy+05uT24xx4nulS
+         mSQQ==
+X-Gm-Message-State: AOAM5331vR9Maa76mjTYz0vhRQNuGUZ7RZiXMaEUehoztrzcBYERJsP6
+        1yoAVbxr6EgKXY4NimvtxoncFBVPWuPZT/jpjog=
+X-Google-Smtp-Source: ABdhPJw9k6oTdppBMyT/KY2IUwKfPX6ngAt9KNp5tgyRQ/K3MrIhYF73uYTXUj1LpJ3QS0XdIxjni9cckLDUTwSJIzA=
+X-Received: by 2002:a05:6512:108f:: with SMTP id j15mr9276546lfg.19.1593441317711;
+ Mon, 29 Jun 2020 07:35:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+Zjw=ru-Sqs-V7cP0Exgu7g0jWBXcPeVKnLqpbkS-wDRg@mail.gmail.com>
+References: <20200629123215.1014747-1-lee.jones@linaro.org>
+ <20200629123215.1014747-5-lee.jones@linaro.org> <20200629130644.GU3334@localhost>
+ <20200629140137.GK177734@dell>
+In-Reply-To: <20200629140137.GK177734@dell>
+From:   Baolin Wang <baolin.wang7@gmail.com>
+Date:   Mon, 29 Jun 2020 22:35:06 +0800
+Message-ID: <CADBw62r_tkGEr9kHpojAi+fJ+qUqbsc-DQgG1TUAwOdbDXTgNQ@mail.gmail.com>
+Subject: Re: [PATCH 4/5] mfd: sprd-sc27xx-spi: Fix divide by zero when
+ allocating register offset/mask
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Johan Hovold <johan@kernel.org>, Orson Zhai <orsonzhai@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Chunyan Zhang <zhang.lyra@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 07:27:40PM +0200, Dmitry Vyukov wrote:
-> On Mon, Jun 29, 2020 at 4:42 PM Dmitry Vyukov <dvyukov@google.com> wrote:
+On Mon, Jun 29, 2020 at 10:01 PM Lee Jones <lee.jones@linaro.org> wrote:
+>
+> On Mon, 29 Jun 2020, Johan Hovold wrote:
+>
+> > On Mon, Jun 29, 2020 at 01:32:14PM +0100, Lee Jones wrote:
+> > > Since ddata->irqs[] is already zeroed when allocated by devm_kcalloc() and
+> > > dividing 0 by anything is still 0, there is no need to re-assign
+> > > ddata->irqs[i].* values.  Instead, it should be safe to begin at 1.
+> > >
+> > > This fixes the following W=1 warning:
+> > >
+> > >  drivers/mfd/sprd-sc27xx-spi.c:255 sprd_pmic_probe() debug: sval_binop_unsigned: divide by zero
+> > >
+> > > Cc: Orson Zhai <orsonzhai@gmail.com>
+> > > Cc: Baolin Wang <baolin.wang7@gmail.com>
+> > > Cc: Chunyan Zhang <zhang.lyra@gmail.com>
+> > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > > ---
+> > >  drivers/mfd/sprd-sc27xx-spi.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/mfd/sprd-sc27xx-spi.c b/drivers/mfd/sprd-sc27xx-spi.c
+> > > index c305e941e435c..694a7d429ccff 100644
+> > > --- a/drivers/mfd/sprd-sc27xx-spi.c
+> > > +++ b/drivers/mfd/sprd-sc27xx-spi.c
+> > > @@ -251,7 +251,7 @@ static int sprd_pmic_probe(struct spi_device *spi)
+> > >             return -ENOMEM;
+> > >
+> > >     ddata->irq_chip.irqs = ddata->irqs;
+> > > -   for (i = 0; i < pdata->num_irqs; i++) {
+> > > +   for (i = 1; i < pdata->num_irqs; i++) {
+> > >             ddata->irqs[i].reg_offset = i / pdata->num_irqs;
+> > >             ddata->irqs[i].mask = BIT(i % pdata->num_irqs);
+> > >     }
 > >
-> > On Sun, Jun 28, 2020 at 12:25 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> > >
-> > > On Sat, Jun 27, 2020 at 09:02:05PM +0800, Hillf Danton wrote:
-> > > > > So, to hit this syzkaller one of these must have happened:
-> > > > >  1) rdma_addr_cancel() didn't work and the process_one_work() is still
-> > > > >     runnable/running
-> > > >
-> > > > What syzbot reported indicates that the kworker did survive not only
-> > > > canceling work but the handler_mutex, despite it's a sync cancel that
-> > > > waits for the work to complete.
-> > >
-> > > The syzbot report doesn't confirm that the cancel work was actaully
-> > > called.
-> > >
-> > > The most likely situation is that it was skipped because of the state
-> > > mangling the patch fixes..
-> > >
-> > > > >  2) The state changed away from RDMA_CM_ADDR_QUERY without doing
-> > > > >     rdma_addr_cancel()
-> > > >
-> > > > The cancel does cover the query state in the reported case, and have
-> > > > difficult time working out what's in the patch below preventing the
-> > > > work from going across the line the sync cancel draws. That's the
-> > > > question we can revisit once there is a reproducer available.
-> > >
-> > > rdma-cm never seems to get reproducers from syzkaller
+> > This doesn't look right either.
 > >
-> > +syzkaller mailing list
-> >
-> > Hi Jason,
-> >
-> > Wonder if there is some systematic issue. Let me double check.
-> 
-> By scanning bugs at:
-> https://syzkaller.appspot.com/upstream
-> https://syzkaller.appspot.com/upstream/fixed
-> 
-> I found a significant number of bugs that I would qualify as "rdma-cm"
-> and that have reproducers. Here is an incomplete list (I did not get
-> to the end):
-> 
-> https://syzkaller.appspot.com/bug?id=b8febdb3c7c8c1f1b606fb903cee66b21b2fd02f
-> https://syzkaller.appspot.com/bug?id=d5222b3e1659e0aea19df562c79f216515740daa
-> https://syzkaller.appspot.com/bug?id=c600e111223ce0a20e5f2fb4e9a4ebdff54d7fa6
-> https://syzkaller.appspot.com/bug?id=a9796acbdecc1b2ba927578917755899c63c48af
-> https://syzkaller.appspot.com/bug?id=95f89b8fb9fdc42e28ad586e657fea074e4e719b
-> https://syzkaller.appspot.com/bug?id=8dc0bcd9dd6ec915ba10b3354740eb420884acaa
-> https://syzkaller.appspot.com/bug?id=805ad726feb6910e35088ae7bbe61f4125e573b7
-> https://syzkaller.appspot.com/bug?id=56b60fb3340c5995373fe5b8eae9e8722a012fc4
-> https://syzkaller.appspot.com/bug?id=38d36d1b26b4299bf964d50af4d79688d39ab960
-> https://syzkaller.appspot.com/bug?id=25e00dd59f31783f233185cb60064b0ab645310f
-> https://syzkaller.appspot.com/bug?id=2f38d7e5312fdd0acc979c5e26ef2ef8f3370996
-> 
-> Do you mean some specific subset of bugs by "rdma-cm"? If yes, what is
-> that subset?
+> > First, the loop is never executed if num_irqs is zero.
+>
+> The point of the patch is that 0 entries are never processed.
+>
+> However, what I appear to have overlooked is that BIT(0 % x) is not 0,
+> it's 1.
 
-The race condition bugs never seem to get reproducers, I checked a few
-of the above and these are much more deterministic things.
+Yes.
 
-I think the recurrance rate for the races is probably too low?
+>
+> > Second, the current code looks bogus too as reg_offset is always set to
+> > zero and mask to BIT(i)...
 
-Jason
+Now the result is correct, since all PMIC irq mask bits are in one
+register now, which means the reg_offset is always 0 can work well.
+But I think the logics still can be improved if our PMIC irq numbers
+are larger than 32 in future.
+
+>
+> Heh.  I wonder if/how this was tested.
+>
+> I'm going to wait to hear from the authors before attempting to fix
+> this again.
+>
+> Baolin, Could you please clarify this for us please?
+
+Yes, see above comments.
+
+-- 
+Baolin Wang
