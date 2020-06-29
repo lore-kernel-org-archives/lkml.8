@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ADC9C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9233CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBBB320760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:51:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70938206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:51:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467462;
-	bh=ytxrJpv4HbDGIhA4VvJS5FU8ycN3FY9OzFHatGp9nUc=;
+	s=default; t=1593467466;
+	bh=aZX3bH4RlKLW5bh/pndxC1n7t5/JBse0G0JucZ29OCg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oxqCJuhcxi6KKJ7zJBHF4WWbUCMzWNCzQRQUVLAJskN1hxwhJiWUuhiit1gnnRFUe
-	 rCXMP0Ieb/r2LdA2yrdA0vKllrSaRNYgQjK604aH7GSq02pLByLWieoXMnLN8BTHcx
-	 TzwoL12umAWdrEsFr5ioNwR3JHmCOc3+WUVuvQpA=
+	b=cS+MrDY47wCwJRLDDRvqkwSZA4GZDdK4cKnoh/NkfGkJCm6uBTl53KMlc5WxiA27m
+	 thQFYvsdYosk6DxdUIz4XPDjsywtumQkZzJYcY9wxDQC2+RO6o0LNG0ixpjREI4WhL
+	 g6fDvgAue3S8u3NXLIOI1PZhrF2H7H/FCMOjAypU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404516AbgF2VvA (ORCPT
+        id S2404523AbgF2VvE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:51:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56786 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:51:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726671AbgF2Sfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726666AbgF2Sfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAA722473D;
-        Mon, 29 Jun 2020 15:20:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B45B12476F;
+        Mon, 29 Jun 2020 15:21:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444060;
-        bh=ytxrJpv4HbDGIhA4VvJS5FU8ycN3FY9OzFHatGp9nUc=;
+        s=default; t=1593444087;
+        bh=aZX3bH4RlKLW5bh/pndxC1n7t5/JBse0G0JucZ29OCg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yAcF1RGZ92yq3K7vK092K1ydll1WRraJYAc6YN67rHJX5LGLCvujxA55Xuxtz3Qyo
-         71s5lk0FQBMx1Y5cwMm/uUB1LrzDWbBQD7oDTu+KOgkTkus1Hm8MwHQj1XqSd1oI+h
-         erTj0XYNLaHBiHOSKq72QfHEs5Gil9DOfSwyzFU8=
+        b=B1tTum5Rs/zc+xqhP7PcTlSA01KnnXnlr3CDnNe2s171OczQwYWT5g7PG+BrReTsc
+         6vlI/IXaRPA2C8/oEJdN7xXJzu+s9MUkDVQtvVtgS5QcooTu1CG93Ur2gzrCKmhTkR
+         Bgd3Ob7PdVClrF/QoBIOO4WZzQr8vdAlqbNfC36A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Doug Berger <opendmb@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Sven Schnelle <svens@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 168/265] net: bcmgenet: use hardware padding of runt frames
-Date:   Mon, 29 Jun 2020 11:16:41 -0400
-Message-Id: <20200629151818.2493727-169-sashal@kernel.org>
+Subject: [PATCH 5.7 197/265] s390/ptrace: fix setting syscall number
+Date:   Mon, 29 Jun 2020 11:17:10 -0400
+Message-Id: <20200629151818.2493727-198-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -66,63 +65,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Doug Berger <opendmb@gmail.com>
+From: Sven Schnelle <svens@linux.ibm.com>
 
-[ Upstream commit 20d1f2d1b024f6be199a3bedf1578a1d21592bc5 ]
+[ Upstream commit 873e5a763d604c32988c4a78913a8dab3862d2f9 ]
 
-When commit 474ea9cafc45 ("net: bcmgenet: correctly pad short
-packets") added the call to skb_padto() it should have been
-located before the nr_frags parameter was read since that value
-could be changed when padding packets with lengths between 55
-and 59 bytes (inclusive).
+When strace wants to update the syscall number, it sets GPR2
+to the desired number and updates the GPR via PTRACE_SETREGSET.
+It doesn't update regs->int_code which would cause the old syscall
+executed on syscall restart. As we cannot change the ptrace ABI and
+don't have a field for the interruption code, check whether the tracee
+is in a syscall and the last instruction was svc. In that case assume
+that the tracer wants to update the syscall number and copy the GPR2
+value to regs->int_code.
 
-The use of a stale nr_frags value can cause corruption of the
-pad data when tx-scatter-gather is enabled. This corruption of
-the pad can cause invalid checksum computation when hardware
-offload of tx-checksum is also enabled.
-
-Since the original reason for the padding was corrected by
-commit 7dd399130efb ("net: bcmgenet: fix skb_len in
-bcmgenet_xmit_single()") we can remove the software padding all
-together and make use of hardware padding of short frames as
-long as the hardware also always appends the FCS value to the
-frame.
-
-Fixes: 474ea9cafc45 ("net: bcmgenet: correctly pad short packets")
-Signed-off-by: Doug Berger <opendmb@gmail.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/genet/bcmgenet.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ arch/s390/kernel/ptrace.c | 31 ++++++++++++++++++++++++++++++-
+ 1 file changed, 30 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index 38bdfd4b46f0f..dde1c23c8e399 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -1520,11 +1520,6 @@ static netdev_tx_t bcmgenet_xmit(struct sk_buff *skb, struct net_device *dev)
- 		goto out;
- 	}
+diff --git a/arch/s390/kernel/ptrace.c b/arch/s390/kernel/ptrace.c
+index fca78b269349d..e007224b65bb2 100644
+--- a/arch/s390/kernel/ptrace.c
++++ b/arch/s390/kernel/ptrace.c
+@@ -324,6 +324,25 @@ static inline void __poke_user_per(struct task_struct *child,
+ 		child->thread.per_user.end = data;
+ }
  
--	if (skb_padto(skb, ETH_ZLEN)) {
--		ret = NETDEV_TX_OK;
--		goto out;
--	}
--
- 	/* Retain how many bytes will be sent on the wire, without TSB inserted
- 	 * by transmit checksum offload
- 	 */
-@@ -1571,6 +1566,9 @@ static netdev_tx_t bcmgenet_xmit(struct sk_buff *skb, struct net_device *dev)
- 		len_stat = (size << DMA_BUFLENGTH_SHIFT) |
- 			   (priv->hw_params->qtag_mask << DMA_TX_QTAG_SHIFT);
++static void fixup_int_code(struct task_struct *child, addr_t data)
++{
++	struct pt_regs *regs = task_pt_regs(child);
++	int ilc = regs->int_code >> 16;
++	u16 insn;
++
++	if (ilc > 6)
++		return;
++
++	if (ptrace_access_vm(child, regs->psw.addr - (regs->int_code >> 16),
++			&insn, sizeof(insn), FOLL_FORCE) != sizeof(insn))
++		return;
++
++	/* double check that tracee stopped on svc instruction */
++	if ((insn >> 8) != 0xa)
++		return;
++
++	regs->int_code = 0x20000 | (data & 0xffff);
++}
+ /*
+  * Write a word to the user area of a process at location addr. This
+  * operation does have an additional problem compared to peek_user.
+@@ -335,7 +354,9 @@ static int __poke_user(struct task_struct *child, addr_t addr, addr_t data)
+ 	struct user *dummy = NULL;
+ 	addr_t offset;
  
-+		/* Note: if we ever change from DMA_TX_APPEND_CRC below we
-+		 * will need to restore software padding of "runt" packets
-+		 */
- 		if (!i) {
- 			len_stat |= DMA_TX_APPEND_CRC | DMA_SOP;
- 			if (skb->ip_summed == CHECKSUM_PARTIAL)
++
+ 	if (addr < (addr_t) &dummy->regs.acrs) {
++		struct pt_regs *regs = task_pt_regs(child);
+ 		/*
+ 		 * psw and gprs are stored on the stack
+ 		 */
+@@ -353,7 +374,11 @@ static int __poke_user(struct task_struct *child, addr_t addr, addr_t data)
+ 				/* Invalid addressing mode bits */
+ 				return -EINVAL;
+ 		}
+-		*(addr_t *)((addr_t) &task_pt_regs(child)->psw + addr) = data;
++
++		if (test_pt_regs_flag(regs, PIF_SYSCALL) &&
++			addr == offsetof(struct user, regs.gprs[2]))
++			fixup_int_code(child, data);
++		*(addr_t *)((addr_t) &regs->psw + addr) = data;
+ 
+ 	} else if (addr < (addr_t) (&dummy->regs.orig_gpr2)) {
+ 		/*
+@@ -719,6 +744,10 @@ static int __poke_user_compat(struct task_struct *child,
+ 			regs->psw.mask = (regs->psw.mask & ~PSW_MASK_BA) |
+ 				(__u64)(tmp & PSW32_ADDR_AMODE);
+ 		} else {
++
++			if (test_pt_regs_flag(regs, PIF_SYSCALL) &&
++				addr == offsetof(struct compat_user, regs.gprs[2]))
++				fixup_int_code(child, data);
+ 			/* gpr 0-15 */
+ 			*(__u32*)((addr_t) &regs->psw + addr*2 + 4) = tmp;
+ 		}
 -- 
 2.25.1
 
