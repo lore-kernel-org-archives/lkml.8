@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61585C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:06:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD703C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 410112076C
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:06:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AB9320656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:06:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468372;
-	bh=INU/ZsiYOml/6d6tHQAqOPfMSK47ZEQKhA8RjgFMxjE=;
+	s=default; t=1593468381;
+	bh=5xZ9Bfz31l30pCq45KyeE0+gkOEVNXg0vIJALHphUow=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q0Drkon5ZZnrMJkYyw48TGOR933P6QBDPMRo7+/WujRfW0sbTQro0m7N0YwkVlzoL
-	 nYeFXExAW6hqXD/9WLVLTZ/befWutQ5ummXuoJ0cJa2dx52f1Fmu3w12ljhGXywkUR
-	 iyMiT6/FueViMAAIrg2NScbBkdR8+PQpvBoG7pyQ=
+	b=Wl2nH47z5EBz2qJ70Wxxk9JiRGBJT5soMxYl3MglcJkNMOC8+48qECTMDdxrCQsEE
+	 GAH33HfE6m/DXJ0N9eknAytW+JMrCfOxxX5pmgKIXzV6ccY+yz2YnKSZEuA+27dT/P
+	 14ftAQkb48TBzStSCd8cK+nL6QHfMK238R00O8HI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726482AbgF2WGL (ORCPT
+        id S2389659AbgF2WGU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:06:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56788 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:06:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726144AbgF2SfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:19 -0400
+        id S1726131AbgF2SfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 946BE247E9;
-        Mon, 29 Jun 2020 15:22:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 942FC24726;
+        Mon, 29 Jun 2020 15:20:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444154;
-        bh=INU/ZsiYOml/6d6tHQAqOPfMSK47ZEQKhA8RjgFMxjE=;
+        s=default; t=1593444048;
+        bh=5xZ9Bfz31l30pCq45KyeE0+gkOEVNXg0vIJALHphUow=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f2PCDCX0jqkYgPZqHTVVShVaHhKofAN3Ma9plK/dvZueItgSBqTIKisl9r0y7R5R2
-         LKR+Hzr6KqSGD/jSqmsxlirD6DwJVE7WtAkEcNpE4RhBaxD5+9g4BIw37dmF62isQb
-         mGMGgi4sj/Ti3H5MPtjJS6/SfuonA8I+D01FBmos=
+        b=wtE3fHB/MOwn8HQfpPKBpLlC34XKZ6nEJEU01oX5eggfvXaNX58jQndKaKFNyd1v5
+         oOefkTFZvUhstohIckcC0Hbh0QXWn7PBqYpslaPkYAJiA92FkD3PL+WBVJwOkJxeFy
+         n90vzYY6CclVeOpVugsZJSLvsDLbZd/bZVHjBRd8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Olga Kornievskaia <olga.kornievskaia@gmail.com>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Neil Brown <neilb@suse.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 260/265] NFSv4 fix CLOSE not waiting for direct IO compeletion
-Date:   Mon, 29 Jun 2020 11:18:13 -0400
-Message-Id: <20200629151818.2493727-261-sashal@kernel.org>
+Cc:     Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 155/265] cxgb4: move handling L2T ARP failures to caller
+Date:   Mon, 29 Jun 2020 11:16:28 -0400
+Message-Id: <20200629151818.2493727-156-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -67,96 +65,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olga Kornievskaia <olga.kornievskaia@gmail.com>
+From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
 
-commit d03727b248d0dae6199569a8d7b629a681154633 upstream.
+[ Upstream commit 11d8cd5c9f3b46f397f889cefdb66795518aaebd ]
 
-Figuring out the root case for the REMOVE/CLOSE race and
-suggesting the solution was done by Neil Brown.
+Move code handling L2T ARP failures to the only caller.
 
-Currently what happens is that direct IO calls hold a reference
-on the open context which is decremented as an asynchronous task
-in the nfs_direct_complete(). Before reference is decremented,
-control is returned to the application which is free to close the
-file. When close is being processed, it decrements its reference
-on the open_context but since directIO still holds one, it doesn't
-sent a close on the wire. It returns control to the application
-which is free to do other operations. For instance, it can delete a
-file. Direct IO is finally releasing its reference and triggering
-an asynchronous close. Which races with the REMOVE. On the server,
-REMOVE can be processed before the CLOSE, failing the REMOVE with
-EACCES as the file is still opened.
+Fixes following sparse warning:
+skbuff.h:2091:29: warning: context imbalance in
+'handle_failed_resolution' - unexpected unlock
 
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-Suggested-by: Neil Brown <neilb@suse.com>
-CC: stable@vger.kernel.org
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 749cb5fe48bb ("cxgb4: Replace arpq_head/arpq_tail with SKB double link-list code")
+Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/direct.c | 13 +++++++++----
- fs/nfs/file.c   |  1 +
- 2 files changed, 10 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/chelsio/cxgb4/l2t.c | 52 +++++++++++-------------
+ 1 file changed, 24 insertions(+), 28 deletions(-)
 
-diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-index d49b1d1979084..f0c3f0123131e 100644
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -267,8 +267,6 @@ static void nfs_direct_complete(struct nfs_direct_req *dreq)
- {
- 	struct inode *inode = dreq->inode;
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/l2t.c b/drivers/net/ethernet/chelsio/cxgb4/l2t.c
+index 72b37a66c7d88..0ed20a9cca144 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/l2t.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/l2t.c
+@@ -502,41 +502,20 @@ u64 cxgb4_select_ntuple(struct net_device *dev,
+ }
+ EXPORT_SYMBOL(cxgb4_select_ntuple);
  
--	inode_dio_end(inode);
+-/*
+- * Called when address resolution fails for an L2T entry to handle packets
+- * on the arpq head.  If a packet specifies a failure handler it is invoked,
+- * otherwise the packet is sent to the device.
+- */
+-static void handle_failed_resolution(struct adapter *adap, struct l2t_entry *e)
+-{
+-	struct sk_buff *skb;
 -
- 	if (dreq->iocb) {
- 		long res = (long) dreq->error;
- 		if (dreq->count != 0) {
-@@ -280,7 +278,10 @@ static void nfs_direct_complete(struct nfs_direct_req *dreq)
+-	while ((skb = __skb_dequeue(&e->arpq)) != NULL) {
+-		const struct l2t_skb_cb *cb = L2T_SKB_CB(skb);
+-
+-		spin_unlock(&e->lock);
+-		if (cb->arp_err_handler)
+-			cb->arp_err_handler(cb->handle, skb);
+-		else
+-			t4_ofld_send(adap, skb);
+-		spin_lock(&e->lock);
+-	}
+-}
+-
+ /*
+  * Called when the host's neighbor layer makes a change to some entry that is
+  * loaded into the HW L2 table.
+  */
+ void t4_l2t_update(struct adapter *adap, struct neighbour *neigh)
+ {
+-	struct l2t_entry *e;
+-	struct sk_buff_head *arpq = NULL;
+-	struct l2t_data *d = adap->l2t;
+ 	unsigned int addr_len = neigh->tbl->key_len;
+ 	u32 *addr = (u32 *) neigh->primary_key;
+-	int ifidx = neigh->dev->ifindex;
+-	int hash = addr_hash(d, addr, addr_len, ifidx);
++	int hash, ifidx = neigh->dev->ifindex;
++	struct sk_buff_head *arpq = NULL;
++	struct l2t_data *d = adap->l2t;
++	struct l2t_entry *e;
  
- 	complete(&dreq->completion);
- 
-+	igrab(inode);
- 	nfs_direct_req_release(dreq);
-+	inode_dio_end(inode);
-+	iput(inode);
- }
- 
- static void nfs_direct_read_completion(struct nfs_pgio_header *hdr)
-@@ -410,8 +411,10 @@ static ssize_t nfs_direct_read_schedule_iovec(struct nfs_direct_req *dreq,
- 	 * generic layer handle the completion.
- 	 */
- 	if (requested_bytes == 0) {
--		inode_dio_end(inode);
-+		igrab(inode);
- 		nfs_direct_req_release(dreq);
-+		inode_dio_end(inode);
-+		iput(inode);
- 		return result < 0 ? result : -EIO;
++	hash = addr_hash(d, addr, addr_len, ifidx);
+ 	read_lock_bh(&d->lock);
+ 	for (e = d->l2tab[hash].first; e; e = e->next)
+ 		if (!addreq(e, addr) && e->ifindex == ifidx) {
+@@ -569,8 +548,25 @@ void t4_l2t_update(struct adapter *adap, struct neighbour *neigh)
+ 			write_l2e(adap, e, 0);
  	}
  
-@@ -864,8 +867,10 @@ static ssize_t nfs_direct_write_schedule_iovec(struct nfs_direct_req *dreq,
- 	 * generic layer handle the completion.
- 	 */
- 	if (requested_bytes == 0) {
--		inode_dio_end(inode);
-+		igrab(inode);
- 		nfs_direct_req_release(dreq);
-+		inode_dio_end(inode);
-+		iput(inode);
- 		return result < 0 ? result : -EIO;
- 	}
- 
-diff --git a/fs/nfs/file.c b/fs/nfs/file.c
-index f96367a2463e3..ccd6c1637b270 100644
---- a/fs/nfs/file.c
-+++ b/fs/nfs/file.c
-@@ -83,6 +83,7 @@ nfs_file_release(struct inode *inode, struct file *filp)
- 	dprintk("NFS: release(%pD2)\n", filp);
- 
- 	nfs_inc_stats(inode, NFSIOS_VFSRELEASE);
-+	inode_dio_wait(inode);
- 	nfs_file_clear_open_context(filp);
- 	return 0;
+-	if (arpq)
+-		handle_failed_resolution(adap, e);
++	if (arpq) {
++		struct sk_buff *skb;
++
++		/* Called when address resolution fails for an L2T
++		 * entry to handle packets on the arpq head. If a
++		 * packet specifies a failure handler it is invoked,
++		 * otherwise the packet is sent to the device.
++		 */
++		while ((skb = __skb_dequeue(&e->arpq)) != NULL) {
++			const struct l2t_skb_cb *cb = L2T_SKB_CB(skb);
++
++			spin_unlock(&e->lock);
++			if (cb->arp_err_handler)
++				cb->arp_err_handler(cb->handle, skb);
++			else
++				t4_ofld_send(adap, skb);
++			spin_lock(&e->lock);
++		}
++	}
+ 	spin_unlock_bh(&e->lock);
  }
+ 
 -- 
 2.25.1
 
