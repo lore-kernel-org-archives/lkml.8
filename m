@@ -2,139 +2,121 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5285CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C395C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:26:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3386D20760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:26:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ljl6F57/"
+	by mail.kernel.org (Postfix) with ESMTP id 4A80A20702
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:26:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593469583;
+	bh=r3VNIG9zdZCG6XvWpYgndcaV7QVuq/DRgpAllK4xRQg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Ripsvy2DPb3/8FMMcuFmxpfHAdCU++6xOtx/vz4LfoCtzzbtv1r0urjEnBtXZmSgj
+	 MT7zy22V5UHfqS0ncSewhlFUmmEqWN711YyEyPBZXidmCx6/Iuex4KN31qm/LSvQQw
+	 G3baZnMcZC7Qo+z/QFLcVvMc7/8Wym2id02FCGvM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730982AbgF2W0Q (ORCPT
+        id S1731181AbgF2W0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:26:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46314 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727054AbgF2W0Q (ORCPT
+        Mon, 29 Jun 2020 18:26:21 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43468 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726974AbgF2W0Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 18:26:16 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D749C061755;
-        Mon, 29 Jun 2020 15:26:15 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id w6so18450736ejq.6;
-        Mon, 29 Jun 2020 15:26:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uLrF+jjxF5OBkT9A4ZfGcSFTtJNvBwrUYxVPDIS2euc=;
-        b=ljl6F57/XOyWQURIpW+SYGe4bHNcdPifrgDCw24RC+hnGGqwpRlyGiY/mzZuA4sSbx
-         TeYo3z8Ufl89Li/087qtQtJ9yTEh++OJ9m71n+SXhpzAK2T4jGhl7JXDxspZyWsnKxBu
-         k7P9M0GtxOH6/gRBRnh9oUvWtpzmGljW6RVoQ3oU9OPOlmiVnyvdkhXZAVXFvXUf/tCr
-         Tzz4eNbn/yV6INdTYHThjjxpw+43Ld5UmMcnks2I9V2HJlS/jAGLCxbe9ppqLydxFDLg
-         8MRFCWGFJ3/f7cwHeSirkNItjyDGoJY5aXLch5LHVxMUKjAivXcrodHjiWs9Zq1Gpc5A
-         iGeQ==
+Received: by mail-wr1-f65.google.com with SMTP id j4so15722036wrp.10;
+        Mon, 29 Jun 2020 15:26:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=uLrF+jjxF5OBkT9A4ZfGcSFTtJNvBwrUYxVPDIS2euc=;
-        b=Af+WQLx3TfmbH2C3ZDRuyfL7mruSENAq54LDCIs1wOZXiHtH6tNKU7oBGNR48xrwmz
-         qNJNkuPnhgC0jnrc2dqSsOdSfqwbO2s18Nrq7g6P6Is6F1IuFJF+Xk47PU1CiwXSktdF
-         2rf3A/iuOzCK7Tu2ryWSXNoIFu1qYR27HtSSMR3Y7kXNRBK0QhNH2lURoWv7AbHpihR7
-         NyEfTHDzWvcRkUC+4vebU+B/k3ry07g3KVNQzXC5TyADiWXer8w3OKShIGr7SpPG6W/X
-         jrf4Z6hKEbpxv658FojQ9AMaxvuW7vYLsMrx/5fdzXAu4GrwEjchIRS0iDGAcwcIbYma
-         fF8w==
-X-Gm-Message-State: AOAM530ll0wd8ObgTeTBBNLjQ74DdfZzBEkFiEtHfGEy+G1eHulfpEmY
-        wY0JGVtpB3h9BlFxNenHKSg=
-X-Google-Smtp-Source: ABdhPJxu0f3tnqjZ6HdE27eVb1JqxXjsWLvQl9OFzp7badrN8VqEab5KFGVI1t8l0ZpWVCoHu0dtXA==
-X-Received: by 2002:a17:906:12cd:: with SMTP id l13mr16230422ejb.96.1593469574315;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LM1EvBQFJ9bPWFgzrCK4QStJDhC6i50g59dK2Gr0iyU=;
+        b=tMMqM+HQKgSxCC6qxUEiXizZKpfYmchK8eG9+/kz2O+6hcm2ld2FIk5/S1Oen9uL6D
+         30doifklRzqkrZMtNWxzmYGXv2n4kckt7KW9SS0LuD6Ch6mAawfPmYcCcoXGjC2iUMKj
+         VNvjU7ncAAZmZNUdm3tlMCQDVdGQS2+dMu+AMgtIeXCZ88ruU1PwC7iXbx0RClBzfFbV
+         oTWWbzPplnpViJhjgBwNPgqQX0Iz8Vpq18LFIyG6UpEjNWdINYNmgFSh6scczJTvodHF
+         OUUiCOj2lj6M7pB+SIHXHWrKgBJlf0v4dmTR/T0aM3VXqkX82gEDdeTaj/Ujffiy0aOn
+         PxlA==
+X-Gm-Message-State: AOAM531feytHhiJCifclKZWikq1kKcdO/uoxZ3UBqvvd8WYrLDyDI5WH
+        VgnVoMmvPF6XdckqOeh8szTBe+ZH
+X-Google-Smtp-Source: ABdhPJwf3d8ZkBU7ZHjIKV/HaftDPM+aqerSKsrHstUj5ydiwXM7tnHAsu5OI7a05IGATlxo7H/BUQ==
+X-Received: by 2002:adf:84e2:: with SMTP id 89mr19764045wrg.139.1593469574388;
         Mon, 29 Jun 2020 15:26:14 -0700 (PDT)
-Received: from localhost.localdomain (abag196.neoplus.adsl.tpnet.pl. [83.6.170.196])
-        by smtp.googlemail.com with ESMTPSA id y21sm592877ejo.4.2020.06.29.15.26.13
+Received: from liuwe-devbox-debian-v2 ([51.145.34.42])
+        by smtp.gmail.com with ESMTPSA id 138sm1430837wma.23.2020.06.29.15.26.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 29 Jun 2020 15:26:13 -0700 (PDT)
-From:   Konrad Dybcio <konradybcio@gmail.com>
-To:     skrzynka@konradybcio.pl
-Cc:     Konrad Dybcio <konradybcio@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH -next] arm64: dts: sdm630: Temporarily disable SMMUs by default
-Date:   Tue, 30 Jun 2020 00:26:10 +0200
-Message-Id: <20200629222610.168511-1-konradybcio@gmail.com>
-X-Mailer: git-send-email 2.27.0
+Date:   Mon, 29 Jun 2020 22:26:12 +0000
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Haiyang Zhang <haiyangz@microsoft.com>
+Cc:     Andres Beltran <t-mabelt@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "parri.andrea@gmail.com" <parri.andrea@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Subject: Re: [PATCH v2 3/3] hv_netvsc: Use vmbus_requestor to generate
+ transaction IDs for VMBus hardening
+Message-ID: <20200629222612.pxbuuifod6tyudfu@liuwe-devbox-debian-v2>
+References: <20200629200227.1518784-1-lkmlabelt@gmail.com>
+ <20200629200227.1518784-4-lkmlabelt@gmail.com>
+ <BL0PR2101MB0930DB73E3B5A89DD3E55481CA6E0@BL0PR2101MB0930.namprd21.prod.outlook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BL0PR2101MB0930DB73E3B5A89DD3E55481CA6E0@BL0PR2101MB0930.namprd21.prod.outlook.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There happens to be an issue between how kernel handles
-qcom-smmuv2 and how the hypervisor would like it to be
-handled. That results in the platform hanging completely
-after the SMMUs are probed.
+On Mon, Jun 29, 2020 at 09:33:15PM +0000, Haiyang Zhang wrote:
+> 
+> 
+> > -----Original Message-----
+> > From: Andres Beltran <lkmlabelt@gmail.com>
+> > Sent: Monday, June 29, 2020 4:02 PM
+> > To: KY Srinivasan <kys@microsoft.com>; Haiyang Zhang
+> > <haiyangz@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
+> > wei.liu@kernel.org
+> > Cc: linux-hyperv@vger.kernel.org; linux-kernel@vger.kernel.org; Michael
+> > Kelley <mikelley@microsoft.com>; parri.andrea@gmail.com; Andres Beltran
+> > <lkmlabelt@gmail.com>; David S . Miller <davem@davemloft.net>; Jakub
+> > Kicinski <kuba@kernel.org>; netdev@vger.kernel.org
+> > Subject: [PATCH v2 3/3] hv_netvsc: Use vmbus_requestor to generate
+> > transaction IDs for VMBus hardening
+> > 
+> > Currently, pointers to guest memory are passed to Hyper-V as
+> > transaction IDs in netvsc. In the face of errors or malicious
+> > behavior in Hyper-V, netvsc should not expose or trust the transaction
+> > IDs returned by Hyper-V to be valid guest memory addresses. Instead,
+> > use small integers generated by vmbus_requestor as requests
+> > (transaction) IDs.
+> > 
+> > Cc: David S. Miller <davem@davemloft.net>
+> > Cc: Jakub Kicinski <kuba@kernel.org>
+> > Cc: netdev@vger.kernel.org
+> > Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
+> 
+> Reviewed-by: Haiyang Zhang <haiyangz@microsoft.com>
+> 
+> 
 
-Hence, disable the SMMU nodes temporarily, until the
-issue is rectified.
+Thanks Haiyang for reviewing.
 
-This has been overlooked by me in the initial
-porting stage, as my defconfig has SMMU disabled.
+David and Jakub:
 
-Signed-off-by: Konrad Dybcio <konradybcio@gmail.com>
----
- arch/arm64/boot/dts/qcom/sdm630.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+This patch depends on the first patch. I intend to pick up this patch
+via hyperv.git. This makes life easier for all of us. Let me know if you
+disagree.
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm630.dtsi b/arch/arm64/boot/dts/qcom/sdm630.dtsi
-index 88efe8200c80..deb928d303c2 100644
---- a/arch/arm64/boot/dts/qcom/sdm630.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm630.dtsi
-@@ -518,6 +518,8 @@ anoc2_smmu: iommu@16c0000 {
- 				<GIC_SPI 472 IRQ_TYPE_LEVEL_HIGH>,
- 				<GIC_SPI 473 IRQ_TYPE_LEVEL_HIGH>,
- 				<GIC_SPI 474 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			status = "disabled";
- 		};
- 
- 		tcsr_mutex_regs: syscon@1f40000 {
-@@ -749,6 +751,8 @@ kgsl_smmu: iommu@5040000 {
- 				<GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
- 				<GIC_SPI 349 IRQ_TYPE_LEVEL_HIGH>,
- 				<GIC_SPI 350 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			status = "disabled";
- 		};
- 
- 		lpass_smmu: iommu@5100000 {
-@@ -778,6 +782,8 @@ lpass_smmu: iommu@5100000 {
- 				<GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>,
- 				<GIC_SPI 310 IRQ_TYPE_LEVEL_HIGH>,
- 				<GIC_SPI 404 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			status = "disabled";
- 		};
- 
- 		spmi_bus: spmi@800f000 {
-@@ -1074,6 +1080,8 @@ mmss_smmu: iommu@cd00000 {
- 				<GIC_SPI 274 IRQ_TYPE_LEVEL_HIGH>,
- 				<GIC_SPI 275 IRQ_TYPE_LEVEL_HIGH>,
- 				<GIC_SPI 276 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			status = "disabled";
- 		};
- 
- 		apcs_glb: mailbox@17911000 {
--- 
-2.27.0
-
+Wei.
