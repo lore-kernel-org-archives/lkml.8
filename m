@@ -4,49 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB73C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:02:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F5DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF5F12065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:02:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D8102065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:02:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468158;
-	bh=APLxcwDGeZ9hfuIkU4SGCga+WTEhWX0SpFSyYDeFI1k=;
+	s=default; t=1593468164;
+	bh=S4oSBEKFtn41itg9mzsbFJpEvLbzU9TYSrz+ppPP6Es=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GnRXLyQpFO3UTxcC6mDNC4hBoQwoVv/g50Hx3vEr0yfVtIHMS8kY9ShS++0SYRpRM
-	 xU+pZ9VISF+wy98fhI9JyNRSqGPJ8XP9T9jeF1PZrf8FuonhpTsj5/ViGPPpoqH29S
-	 dEgdqGDNPAlbItlrcxDwFvfDW6uE5WLG0dK6LhfE=
+	b=s2Nwrr5QIxYMK1TRDEc0XCs2ThrPkHzJd5IeBl0uKTGFHuZnJchBrQJ7rzaWL+mQp
+	 Rta1/cM7DVhkbPCdcGxYX6trPS7CMpQI1IbofLx7A6jI+HT6eK6+8+QVAxHDJ9KkbB
+	 Oq/QVoVoFrmvFX8OrVIXTl/8yXcFP20oFGq+hp1c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389527AbgF2WCe (ORCPT
+        id S2389765AbgF2WCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:02:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56762 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:02:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726284AbgF2SfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726249AbgF2SfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A4D62472F;
-        Mon, 29 Jun 2020 15:20:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26A7724196;
+        Mon, 29 Jun 2020 15:19:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444051;
-        bh=APLxcwDGeZ9hfuIkU4SGCga+WTEhWX0SpFSyYDeFI1k=;
+        s=default; t=1593443953;
+        bh=S4oSBEKFtn41itg9mzsbFJpEvLbzU9TYSrz+ppPP6Es=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g8ig4Y83z+1wb0hF4vLiDUraL+Kv6Cvl2yzzTIChtUdIpAL7OQvAVHOYpf/JB+JSs
-         miLgvs1iFTKl9nHFvykJuBbgV8wkRxt7lWd77bk8KESvOOnPWDca/M8RVjUPzr9/gN
-         35hnCGs8AHcu2T82L5m6gLkNLGFpb66bPDBME5Ek=
+        b=ssc6vpKKd+8FBR9j3F2t5sweklbGR81LepenAVhpRiffII7zbpFz5HxaCHKsZos09
+         pRVixcehWhENq0UwaAr0JPqug+WW1mz+67LpZh/a8FWShiQp6inc2eoMyjyMU/wjef
+         lai1yg13qi8GKYro7IY8JOoZWSsuCRiW9fgGOOvo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 159/265] usb: gadget: udc: Potential Oops in error handling code
-Date:   Mon, 29 Jun 2020 11:16:32 -0400
-Message-Id: <20200629151818.2493727-160-sashal@kernel.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 055/265] fix a braino in "sparc32: fix register window handling in genregs32_[gs]et()"
+Date:   Mon, 29 Jun 2020 11:14:48 -0400
+Message-Id: <20200629151818.2493727-56-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -65,36 +63,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-[ Upstream commit e55f3c37cb8d31c7e301f46396b2ac6a19eb3a7c ]
+[ Upstream commit 9d964e1b82d8182184153b70174f445ea616f053 ]
 
-If this is in "transceiver" mode the the ->qwork isn't required and is
-a NULL pointer.  This can lead to a NULL dereference when we call
-destroy_workqueue(udc->qwork).
+lost npc in PTRACE_SETREGSET, breaking PTRACE_SETREGS as well
 
-Fixes: 3517c31a8ece ("usb: gadget: mv_udc: use devm_xxx for probe")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Fixes: cf51e129b968 "sparc32: fix register window handling in genregs32_[gs]et()"
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/gadget/udc/mv_udc_core.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/sparc/kernel/ptrace_32.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/gadget/udc/mv_udc_core.c b/drivers/usb/gadget/udc/mv_udc_core.c
-index cafde053788bb..80a1b52c656e0 100644
---- a/drivers/usb/gadget/udc/mv_udc_core.c
-+++ b/drivers/usb/gadget/udc/mv_udc_core.c
-@@ -2313,7 +2313,8 @@ static int mv_udc_probe(struct platform_device *pdev)
- 	return 0;
+diff --git a/arch/sparc/kernel/ptrace_32.c b/arch/sparc/kernel/ptrace_32.c
+index 60f7205ebe40d..646dd58169ecb 100644
+--- a/arch/sparc/kernel/ptrace_32.c
++++ b/arch/sparc/kernel/ptrace_32.c
+@@ -168,12 +168,17 @@ static int genregs32_set(struct task_struct *target,
+ 	if (ret || !count)
+ 		return ret;
+ 	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
+-				 &regs->y,
++				 &regs->npc,
+ 				 34 * sizeof(u32), 35 * sizeof(u32));
+ 	if (ret || !count)
+ 		return ret;
++	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
++				 &regs->y,
++				 35 * sizeof(u32), 36 * sizeof(u32));
++	if (ret || !count)
++		return ret;
+ 	return user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
+-					 35 * sizeof(u32), 38 * sizeof(u32));
++					 36 * sizeof(u32), 38 * sizeof(u32));
+ }
  
- err_create_workqueue:
--	destroy_workqueue(udc->qwork);
-+	if (udc->qwork)
-+		destroy_workqueue(udc->qwork);
- err_destroy_dma:
- 	dma_pool_destroy(udc->dtd_pool);
- err_free_dma:
+ static int fpregs32_get(struct task_struct *target,
 -- 
 2.25.1
 
