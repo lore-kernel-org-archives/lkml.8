@@ -2,103 +2,104 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D18C1C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4203BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:38:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF60B20672
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:38:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qJOEMzB7"
+	by mail.kernel.org (Postfix) with ESMTP id 260D220672
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:38:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593459515;
+	bh=4ECl/pIPEUH2v5bmJI4o9fIfWPNuwnv1Iy+dGSbkmYU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TcN+Rt48QGPPccA9Xvl4BF9T/8W7/C/k8H5E58W/XNvIbP/RHF8pl1cGMFW98TFAF
+	 WGRZ+5ItbE63kgHR/q9jhWOz7EoNKBbRP3aPkN1jKcQsuXbw3xgvOt2cxG6CHBH/74
+	 0S0vci7KJp704GL0eMahjlkmd8krFWmGYa7tFFfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387452AbgF2Tia (ORCPT
+        id S1733052AbgF2Ti3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:38:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47612 "EHLO
+        Mon, 29 Jun 2020 15:38:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387450AbgF2Tho (ORCPT
+        with ESMTP id S2387449AbgF2Tho (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:37:44 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DE9AC02A573
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 06:40:51 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id n6so15541065otl.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 06:40:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e2yPHKowUi96Vn2b3DOoicWlqu6R072c9j8HQHzbwdU=;
-        b=qJOEMzB7xbxdQjpO+XL5H0gKfxvjsVXEi6ZaHyfxCFOI5uO9ZlyJzc3O6PJoV2fkmv
-         loacqs6nDBuoGABmSYSH7aZL4osJDtZbvQzHSUGu1mmO/EEXyyV3RGKTlb+LYOiNz6eK
-         qjEkdk1p9Z2GTjVS7xRdj1ocEXJL9XX/jBQ03tgMrwLsf1aDakKhjRRtrqfRSryeO0K+
-         o+Hv92Tx+nGSK1WzW7EvZjrBFhJc8infvGvOVcLjEJ3Q9BgyTayq9rWYD5nsP2BYmsiw
-         55XmrnGd/w3ufr6QwTCIFKgnkXF+y94EJDQL1UEM8MxNA17C2VJYFjNrmrx5QdB7q/6q
-         zWgQ==
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABA6BC02A549;
+        Mon, 29 Jun 2020 05:52:34 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id z17so12727584edr.9;
+        Mon, 29 Jun 2020 05:52:34 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e2yPHKowUi96Vn2b3DOoicWlqu6R072c9j8HQHzbwdU=;
-        b=MPetrr2mB0/dLnabLs/wOWYBlkN06B/BeVn8BO5D50+4kEUAgHSB6LsnX6kbCo0Ial
-         VF1y0mi7X+KpNK3b8wrQhx7BbcEXU8+hqKsrwv0GVbcC11x90BZotHombcM6nAJrUAxr
-         QlBwvULLnqSm1KCZUhV6/Tw4JmTVONM4geoibqOHH6lkW7S0OkCoGYlUIk4x7XEInckM
-         yZyGOuihrJDVhwxwRZXZSXU550q+It3FGkyh8opUExYlZqGQkc9HQCLu3pqSRVDpmJki
-         ZArBb6/SLZpNYKmWD99qQ9J5VKHne09XoCXGrAxH5PNSG0NCzmT8Zr/KQR2bKnk5225r
-         M+Hw==
-X-Gm-Message-State: AOAM530C5utNzzm3OQN7LxtDsFaYJ1IcNW47P4NG0SV5vIS4YZWZvevK
-        Lrlm4fpfNbpQOU5HMNuq0ktcZLAcsMCyakopJnw=
-X-Google-Smtp-Source: ABdhPJw7kEzXBxJJnUuNUUoU45XMZoYtBPe0snAmYN8gjM/GZ/pcyzUWVZ8CWfI2On4ChM+3h/EaYLLVeEcrx/mUa+o=
-X-Received: by 2002:a9d:2c26:: with SMTP id f35mr13978875otb.232.1593438050647;
- Mon, 29 Jun 2020 06:40:50 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mISjJ6W1t59EyOgM95PXut3o9oWxsupqoczgWBu6EVM=;
+        b=U+aAv48PQQCnh+KsZHoyXJp2fb+2JKRI7qPY/jFla8ukJUA0pqSumSJaqLP1d1c/Tg
+         QfUulpfaMxcxtpRdA0xd2YvPRJYF0X1F3NE3vdK3UR/tDmi+QfDx9cT7UXKBbtjjsPpF
+         3v4QE6RY8FZ0bO8xAJT/vUL8eTbWWxXWI+uwWu5Y/HETw6WBlLZHUxfxQG9ZsmdduygF
+         IeV+sFppe6kmQwReUz8SndYScV/KQSW3/ARWhd2MV7oZPNecQ2kLXmxVp2QkAvjFKRFH
+         Xaj0Qb8zk7m4nJUPj85jBwjxDU6FgXx6o++a7QOXmvJWBIMIKwmSdEQ1n0HiqP9ql7he
+         d52Q==
+X-Gm-Message-State: AOAM532rcdftR3zqGww/nsy4sirU2uOjxsKLIudipP8lgdUdqSGTAyxn
+        JQY4PQmIgkpBxm3WL52Qw/E=
+X-Google-Smtp-Source: ABdhPJwKuDYNd8lQ0rDIYcM14Sny/O73oVLrmaxeBF52BJhJLTspOZ/6aPol9DAWu4TfLKyk6WFptw==
+X-Received: by 2002:a05:6402:1c96:: with SMTP id cy22mr17042750edb.79.1593435153360;
+        Mon, 29 Jun 2020 05:52:33 -0700 (PDT)
+Received: from localhost (ip-37-188-168-3.eurotel.cz. [37.188.168.3])
+        by smtp.gmail.com with ESMTPSA id r17sm4808969edw.68.2020.06.29.05.52.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 05:52:32 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 14:52:31 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-xfs@vger.kernel.org, dm-devel@redhat.com,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, NeilBrown <neilb@suse.de>
+Subject: Re: [PATCH 6/6] mm: Add memalloc_nowait
+Message-ID: <20200629125231.GJ32461@dhcp22.suse.cz>
+References: <20200625113122.7540-1-willy@infradead.org>
+ <20200625113122.7540-7-willy@infradead.org>
+ <20200629050851.GC1492837@kernel.org>
+ <20200629121816.GC25523@casper.infradead.org>
 MIME-Version: 1.0
-References: <20200625140105.14999-1-TheSven73@gmail.com> <20200625140105.14999-2-TheSven73@gmail.com>
- <CAOMZO5AWiHWSLAcd=dj9dDFj8jLPAVAuoiOAJ8qKGPwRq1Q41g@mail.gmail.com>
-In-Reply-To: <CAOMZO5AWiHWSLAcd=dj9dDFj8jLPAVAuoiOAJ8qKGPwRq1Q41g@mail.gmail.com>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Mon, 29 Jun 2020 09:40:38 -0400
-Message-ID: <CAGngYiXJy4ASTNfT+R+qzJ3wA=Wy2h6XZm+8oo09sD+Jmse02w@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] ARM: imx6plus: enable internal routing of
- clk_enet_ref where possible
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Fugang Duan <fugang.duan@nxp.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200629121816.GC25523@casper.infradead.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Fabio,
+On Mon 29-06-20 13:18:16, Matthew Wilcox wrote:
+> On Mon, Jun 29, 2020 at 08:08:51AM +0300, Mike Rapoport wrote:
+> > > @@ -886,8 +868,12 @@ static struct dm_buffer *__alloc_buffer_wait_no_callback(struct dm_bufio_client
+> > >  			return NULL;
+> > >  
+> > >  		if (dm_bufio_cache_size_latch != 1 && !tried_noio_alloc) {
+> > > +			unsigned noio_flag;
+> > > +
+> > >  			dm_bufio_unlock(c);
+> > > -			b = alloc_buffer(c, GFP_NOIO | __GFP_NORETRY | __GFP_NOMEMALLOC | __GFP_NOWARN);
+> > > +			noio_flag = memalloc_noio_save();
+> > 
+> > I've read the series twice and I'm still missing the definition of
+> > memalloc_noio_save().
+> > 
+> > And also it would be nice to have a paragraph about it in
+> > Documentation/core-api/memory-allocation.rst
+> 
+> Documentation/core-api/gfp_mask-from-fs-io.rst:``memalloc_nofs_save``, ``memalloc_nofs_restore`` respectively ``memalloc_noio_save``,
+> Documentation/core-api/gfp_mask-from-fs-io.rst:   :functions: memalloc_noio_save memalloc_noio_restore
+> Documentation/core-api/gfp_mask-from-fs-io.rst:allows nesting so it is safe to call ``memalloc_noio_save`` or
+ 
+The patch is adding memalloc_nowait* and I suspect Mike had that in
+mind, which would be a fair request. Btw. we are missing memalloc_nocma*
+documentation either - I was just reminded of its existence today...
 
-On Mon, Jun 29, 2020 at 9:10 AM Fabio Estevam <festevam@gmail.com> wrote:
->
-> I have tested this series on an imx6qp sabresd and unfortunately, it
-> breaks Ethernet as I can no longer get an IP address from the DHCP
-> server.
-
-Thank you for testing this out on a different platform !
-
-I had a look at how things are done in the Freescale fork of the kernel
-(5.4.24_2.1.0) and I noticed that this kernel has almost the same
-behaviour as this proposed patch: the GPR5 bit is _always_ set
-on a plus. The code does not check how the enet clock is generated.
-
-https://source.codeaurora.org/external/imx/linux-imx/tree/arch/arm/mach-imx/mach-imx6q.c?h=rel_imx_5.4.24_2.1.0&id=babac008e5cf168abca1a85bda2e8071ca27a5c0#n269
-
-Now, I'm assuming that the sabresd-plus can run on the Freescale
-kernel fork. The GPR5 bit will always be set there.
-
-So why won't mainline work with this patch? What have I overlooked?
-
-I'm sure you've checked that sabresd ethernet works ok on mainline
-even without this patch?
+-- 
+Michal Hocko
+SUSE Labs
