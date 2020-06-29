@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC4E9C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9C5C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C99EF20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:52:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD50920674
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:52:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460369;
-	bh=mf6tAQmnFenOeadPu9vq/CB00FjfAh+j+uraLXZXOKE=;
+	s=default; t=1593460371;
+	bh=ZSUC7tD4dJcbdChXIXW0Wc+cNObHrZMYvCPyNkWxuUo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YazFt7L74TOyVC3mJF/5zt+Ame1dyn+pUa5jTYQl72l6g9CCAHcOKObKv3zF8IZIX
-	 CY7QldogrNdvYuP8ohkFx1z+Wo7ZA83s4vi8Y8d0vegYLSCHmWIfvs0FZ3iWnbAuxq
-	 JOhgjpkAWQL0QpiFk2/sIjL2iVmK/QQiWGJ6AoBE=
+	b=ZHsuTo2A1dQT157Ks/XYx9ufh1sUj2SG+92gXkkB/fGTq2w+NrfzNeFBQEChZ5HcD
+	 QQsIwl95LzcUgjTmeIIH1W+ToSZfI1vHjZBKlbXZr75LKAfgyfS29ElHlNTHk388dm
+	 M2VCHZAae3SG2HFjeTJObDNdlEZGV1G1KmJsjNk4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730340AbgF2Tws (ORCPT
+        id S2388352AbgF2Twu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:52:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47682 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:52:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387687AbgF2Tk1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387689AbgF2Tk1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC73724905;
-        Mon, 29 Jun 2020 15:27:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D14982482C;
+        Mon, 29 Jun 2020 15:25:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444454;
-        bh=mf6tAQmnFenOeadPu9vq/CB00FjfAh+j+uraLXZXOKE=;
+        s=default; t=1593444346;
+        bh=ZSUC7tD4dJcbdChXIXW0Wc+cNObHrZMYvCPyNkWxuUo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qYVfjHd8/bZHfb/FPy7MiaW2T0pAoMY0JU3qsRVB+unmyxQsErH1D4yUC2/K3h9pe
-         AZYZDkwT9v/WgoT6Pb4SclhdIttK/Rx+KDtnF6M4m9a3ZaCXuX4o4z8psd7PzV6fK2
-         g7SIo2Pfa93jqZFKr508pcx08BGG7tLfdTOByZbU=
+        b=Mi7RzVjDXwkudGQk2sike2HMU168drzHYceIGXyvLs0IJNkvJD0JdouWO04xVeSum
+         fOB066TkrQ+tAwCpqcCX0o33ToQhHY6L5TIndSDMZLwKjP84SK7+CfLO7XIFnnPtzK
+         cQpvlLcRfRyo7qzKHIN4ty4Ka7tN4c0XH27FZoBU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sami Tolvanen <samitolvanen@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Matt Helsley <mhelsley@vmware.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 134/178] recordmcount: support >64k sections
-Date:   Mon, 29 Jun 2020 11:24:39 -0400
-Message-Id: <20200629152523.2494198-135-sashal@kernel.org>
+Cc:     Taehee Yoo <ap420073@gmail.com>,
+        Eric Dumazet <eric.dumazet@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.4 021/178] ip6_gre: fix use-after-free in ip6gre_tunnel_lookup()
+Date:   Mon, 29 Jun 2020 11:22:46 -0400
+Message-Id: <20200629152523.2494198-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -67,229 +66,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sami Tolvanen <samitolvanen@google.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 4ef57b21d6fb49d2b25c47e4cff467a0c2c8b6b7 ]
+[ Upstream commit dafabb6590cb15f300b77c095d50312e2c7c8e0f ]
 
-When compiling a kernel with Clang and LTO, we need to run
-recordmcount on vmlinux.o with a large number of sections, which
-currently fails as the program doesn't understand extended
-section indexes. This change adds support for processing binaries
-with >64k sections.
+In the datapath, the ip6gre_tunnel_lookup() is used and it internally uses
+fallback tunnel device pointer, which is fb_tunnel_dev.
+This pointer variable should be set to NULL when a fb interface is deleted.
+But there is no routine to set fb_tunnel_dev pointer to NULL.
+So, this pointer will be still used after interface is deleted and
+it eventually results in the use-after-free problem.
 
-Link: https://lkml.kernel.org/r/20200424193046.160744-1-samitolvanen@google.com
-Link: https://lore.kernel.org/lkml/CAK7LNARbZhoaA=Nnuw0=gBrkuKbr_4Ng_Ei57uafujZf7Xazgw@mail.gmail.com/
+Test commands:
+    ip netns add A
+    ip netns add B
+    ip link add eth0 type veth peer name eth1
+    ip link set eth0 netns A
+    ip link set eth1 netns B
 
-Cc: Kees Cook <keescook@chromium.org>
-Reviewed-by: Matt Helsley <mhelsley@vmware.com>
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+    ip netns exec A ip link set lo up
+    ip netns exec A ip link set eth0 up
+    ip netns exec A ip link add ip6gre1 type ip6gre local fc:0::1 \
+	    remote fc:0::2
+    ip netns exec A ip -6 a a fc:100::1/64 dev ip6gre1
+    ip netns exec A ip link set ip6gre1 up
+    ip netns exec A ip -6 a a fc:0::1/64 dev eth0
+    ip netns exec A ip link set ip6gre0 up
+
+    ip netns exec B ip link set lo up
+    ip netns exec B ip link set eth1 up
+    ip netns exec B ip link add ip6gre1 type ip6gre local fc:0::2 \
+	    remote fc:0::1
+    ip netns exec B ip -6 a a fc:100::2/64 dev ip6gre1
+    ip netns exec B ip link set ip6gre1 up
+    ip netns exec B ip -6 a a fc:0::2/64 dev eth1
+    ip netns exec B ip link set ip6gre0 up
+    ip netns exec A ping fc:100::2 -s 60000 &
+    ip netns del B
+
+Splat looks like:
+[   73.087285][    C1] BUG: KASAN: use-after-free in ip6gre_tunnel_lookup+0x1064/0x13f0 [ip6_gre]
+[   73.088361][    C1] Read of size 4 at addr ffff888040559218 by task ping/1429
+[   73.089317][    C1]
+[   73.089638][    C1] CPU: 1 PID: 1429 Comm: ping Not tainted 5.7.0+ #602
+[   73.090531][    C1] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+[   73.091725][    C1] Call Trace:
+[   73.092160][    C1]  <IRQ>
+[   73.092556][    C1]  dump_stack+0x96/0xdb
+[   73.093122][    C1]  print_address_description.constprop.6+0x2cc/0x450
+[   73.094016][    C1]  ? ip6gre_tunnel_lookup+0x1064/0x13f0 [ip6_gre]
+[   73.094894][    C1]  ? ip6gre_tunnel_lookup+0x1064/0x13f0 [ip6_gre]
+[   73.095767][    C1]  ? ip6gre_tunnel_lookup+0x1064/0x13f0 [ip6_gre]
+[   73.096619][    C1]  kasan_report+0x154/0x190
+[   73.097209][    C1]  ? ip6gre_tunnel_lookup+0x1064/0x13f0 [ip6_gre]
+[   73.097989][    C1]  ip6gre_tunnel_lookup+0x1064/0x13f0 [ip6_gre]
+[   73.098750][    C1]  ? gre_del_protocol+0x60/0x60 [gre]
+[   73.099500][    C1]  gre_rcv+0x1c5/0x1450 [ip6_gre]
+[   73.100199][    C1]  ? ip6gre_header+0xf00/0xf00 [ip6_gre]
+[   73.100985][    C1]  ? rcu_read_lock_sched_held+0xc0/0xc0
+[   73.101830][    C1]  ? ip6_input_finish+0x5/0xf0
+[   73.102483][    C1]  ip6_protocol_deliver_rcu+0xcbb/0x1510
+[   73.103296][    C1]  ip6_input_finish+0x5b/0xf0
+[   73.103920][    C1]  ip6_input+0xcd/0x2c0
+[   73.104473][    C1]  ? ip6_input_finish+0xf0/0xf0
+[   73.105115][    C1]  ? rcu_read_lock_held+0x90/0xa0
+[   73.105783][    C1]  ? rcu_read_lock_sched_held+0xc0/0xc0
+[   73.106548][    C1]  ipv6_rcv+0x1f1/0x300
+[ ... ]
+
+Suggested-by: Eric Dumazet <eric.dumazet@gmail.com>
+Fixes: c12b395a4664 ("gre: Support GRE over IPv6")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- scripts/recordmcount.h | 98 +++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 92 insertions(+), 6 deletions(-)
+ net/ipv6/ip6_gre.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/scripts/recordmcount.h b/scripts/recordmcount.h
-index 74eab03e31d4d..f9b19524da112 100644
---- a/scripts/recordmcount.h
-+++ b/scripts/recordmcount.h
-@@ -29,6 +29,11 @@
- #undef has_rel_mcount
- #undef tot_relsize
- #undef get_mcountsym
-+#undef find_symtab
-+#undef get_shnum
-+#undef set_shnum
-+#undef get_shstrndx
-+#undef get_symindex
- #undef get_sym_str_and_relp
- #undef do_func
- #undef Elf_Addr
-@@ -58,6 +63,11 @@
- # define __has_rel_mcount	__has64_rel_mcount
- # define has_rel_mcount		has64_rel_mcount
- # define tot_relsize		tot64_relsize
-+# define find_symtab		find_symtab64
-+# define get_shnum		get_shnum64
-+# define set_shnum		set_shnum64
-+# define get_shstrndx		get_shstrndx64
-+# define get_symindex		get_symindex64
- # define get_sym_str_and_relp	get_sym_str_and_relp_64
- # define do_func		do64
- # define get_mcountsym		get_mcountsym_64
-@@ -91,6 +101,11 @@
- # define __has_rel_mcount	__has32_rel_mcount
- # define has_rel_mcount		has32_rel_mcount
- # define tot_relsize		tot32_relsize
-+# define find_symtab		find_symtab32
-+# define get_shnum		get_shnum32
-+# define set_shnum		set_shnum32
-+# define get_shstrndx		get_shstrndx32
-+# define get_symindex		get_symindex32
- # define get_sym_str_and_relp	get_sym_str_and_relp_32
- # define do_func		do32
- # define get_mcountsym		get_mcountsym_32
-@@ -173,6 +188,67 @@ static int MIPS_is_fake_mcount(Elf_Rel const *rp)
- 	return is_fake;
+diff --git a/net/ipv6/ip6_gre.c b/net/ipv6/ip6_gre.c
+index 9ec05a1df5e19..04d76f043e180 100644
+--- a/net/ipv6/ip6_gre.c
++++ b/net/ipv6/ip6_gre.c
+@@ -127,6 +127,7 @@ static struct ip6_tnl *ip6gre_tunnel_lookup(struct net_device *dev,
+ 			gre_proto == htons(ETH_P_ERSPAN2)) ?
+ 		       ARPHRD_ETHER : ARPHRD_IP6GRE;
+ 	int score, cand_score = 4;
++	struct net_device *ndev;
+ 
+ 	for_each_ip_tunnel_rcu(t, ign->tunnels_r_l[h0 ^ h1]) {
+ 		if (!ipv6_addr_equal(local, &t->parms.laddr) ||
+@@ -238,9 +239,9 @@ static struct ip6_tnl *ip6gre_tunnel_lookup(struct net_device *dev,
+ 	if (t && t->dev->flags & IFF_UP)
+ 		return t;
+ 
+-	dev = ign->fb_tunnel_dev;
+-	if (dev && dev->flags & IFF_UP)
+-		return netdev_priv(dev);
++	ndev = READ_ONCE(ign->fb_tunnel_dev);
++	if (ndev && ndev->flags & IFF_UP)
++		return netdev_priv(ndev);
+ 
+ 	return NULL;
  }
+@@ -413,6 +414,8 @@ static void ip6gre_tunnel_uninit(struct net_device *dev)
  
-+static unsigned int get_symindex(Elf_Sym const *sym, Elf32_Word const *symtab,
-+				 Elf32_Word const *symtab_shndx)
-+{
-+	unsigned long offset;
-+	int index;
-+
-+	if (sym->st_shndx != SHN_XINDEX)
-+		return w2(sym->st_shndx);
-+
-+	offset = (unsigned long)sym - (unsigned long)symtab;
-+	index = offset / sizeof(*sym);
-+
-+	return w(symtab_shndx[index]);
-+}
-+
-+static unsigned int get_shnum(Elf_Ehdr const *ehdr, Elf_Shdr const *shdr0)
-+{
-+	if (shdr0 && !ehdr->e_shnum)
-+		return w(shdr0->sh_size);
-+
-+	return w2(ehdr->e_shnum);
-+}
-+
-+static void set_shnum(Elf_Ehdr *ehdr, Elf_Shdr *shdr0, unsigned int new_shnum)
-+{
-+	if (new_shnum >= SHN_LORESERVE) {
-+		ehdr->e_shnum = 0;
-+		shdr0->sh_size = w(new_shnum);
-+	} else
-+		ehdr->e_shnum = w2(new_shnum);
-+}
-+
-+static int get_shstrndx(Elf_Ehdr const *ehdr, Elf_Shdr const *shdr0)
-+{
-+	if (ehdr->e_shstrndx != SHN_XINDEX)
-+		return w2(ehdr->e_shstrndx);
-+
-+	return w(shdr0->sh_link);
-+}
-+
-+static void find_symtab(Elf_Ehdr *const ehdr, Elf_Shdr const *shdr0,
-+			unsigned const nhdr, Elf32_Word **symtab,
-+			Elf32_Word **symtab_shndx)
-+{
-+	Elf_Shdr const *relhdr;
-+	unsigned k;
-+
-+	*symtab = NULL;
-+	*symtab_shndx = NULL;
-+
-+	for (relhdr = shdr0, k = nhdr; k; --k, ++relhdr) {
-+		if (relhdr->sh_type == SHT_SYMTAB)
-+			*symtab = (void *)ehdr + relhdr->sh_offset;
-+		else if (relhdr->sh_type == SHT_SYMTAB_SHNDX)
-+			*symtab_shndx = (void *)ehdr + relhdr->sh_offset;
-+
-+		if (*symtab && *symtab_shndx)
-+			break;
-+	}
-+}
-+
- /* Append the new shstrtab, Elf_Shdr[], __mcount_loc and its relocations. */
- static int append_func(Elf_Ehdr *const ehdr,
- 			Elf_Shdr *const shstr,
-@@ -188,10 +264,12 @@ static int append_func(Elf_Ehdr *const ehdr,
- 	char const *mc_name = (sizeof(Elf_Rela) == rel_entsize)
- 		? ".rela__mcount_loc"
- 		:  ".rel__mcount_loc";
--	unsigned const old_shnum = w2(ehdr->e_shnum);
- 	uint_t const old_shoff = _w(ehdr->e_shoff);
- 	uint_t const old_shstr_sh_size   = _w(shstr->sh_size);
- 	uint_t const old_shstr_sh_offset = _w(shstr->sh_offset);
-+	Elf_Shdr *const shdr0 = (Elf_Shdr *)(old_shoff + (void *)ehdr);
-+	unsigned int const old_shnum = get_shnum(ehdr, shdr0);
-+	unsigned int const new_shnum = 2 + old_shnum; /* {.rel,}__mcount_loc */
- 	uint_t t = 1 + strlen(mc_name) + _w(shstr->sh_size);
- 	uint_t new_e_shoff;
- 
-@@ -201,6 +279,8 @@ static int append_func(Elf_Ehdr *const ehdr,
- 	t += (_align & -t);  /* word-byte align */
- 	new_e_shoff = t;
- 
-+	set_shnum(ehdr, shdr0, new_shnum);
-+
- 	/* body for new shstrtab */
- 	if (ulseek(sb.st_size, SEEK_SET) < 0)
- 		return -1;
-@@ -255,7 +335,6 @@ static int append_func(Elf_Ehdr *const ehdr,
- 		return -1;
- 
- 	ehdr->e_shoff = _w(new_e_shoff);
--	ehdr->e_shnum = w2(2 + w2(ehdr->e_shnum));  /* {.rel,}__mcount_loc */
- 	if (ulseek(0, SEEK_SET) < 0)
- 		return -1;
- 	if (uwrite(ehdr, sizeof(*ehdr)) < 0)
-@@ -434,6 +513,8 @@ static int find_secsym_ndx(unsigned const txtndx,
- 				uint_t *const recvalp,
- 				unsigned int *sym_index,
- 				Elf_Shdr const *const symhdr,
-+				Elf32_Word const *symtab,
-+				Elf32_Word const *symtab_shndx,
- 				Elf_Ehdr const *const ehdr)
- {
- 	Elf_Sym const *const sym0 = (Elf_Sym const *)(_w(symhdr->sh_offset)
-@@ -445,7 +526,7 @@ static int find_secsym_ndx(unsigned const txtndx,
- 	for (symp = sym0, t = nsym; t; --t, ++symp) {
- 		unsigned int const st_bind = ELF_ST_BIND(symp->st_info);
- 
--		if (txtndx == w2(symp->st_shndx)
-+		if (txtndx == get_symindex(symp, symtab, symtab_shndx)
- 			/* avoid STB_WEAK */
- 		    && (STB_LOCAL == st_bind || STB_GLOBAL == st_bind)) {
- 			/* function symbols on ARM have quirks, avoid them */
-@@ -516,21 +597,23 @@ static unsigned tot_relsize(Elf_Shdr const *const shdr0,
- 	return totrelsz;
+ 	ip6gre_tunnel_unlink_md(ign, t);
+ 	ip6gre_tunnel_unlink(ign, t);
++	if (ign->fb_tunnel_dev == dev)
++		WRITE_ONCE(ign->fb_tunnel_dev, NULL);
+ 	dst_cache_reset(&t->dst_cache);
+ 	dev_put(dev);
  }
- 
--
- /* Overall supervision for Elf32 ET_REL file. */
- static int do_func(Elf_Ehdr *const ehdr, char const *const fname,
- 		   unsigned const reltype)
- {
- 	Elf_Shdr *const shdr0 = (Elf_Shdr *)(_w(ehdr->e_shoff)
- 		+ (void *)ehdr);
--	unsigned const nhdr = w2(ehdr->e_shnum);
--	Elf_Shdr *const shstr = &shdr0[w2(ehdr->e_shstrndx)];
-+	unsigned const nhdr = get_shnum(ehdr, shdr0);
-+	Elf_Shdr *const shstr = &shdr0[get_shstrndx(ehdr, shdr0)];
- 	char const *const shstrtab = (char const *)(_w(shstr->sh_offset)
- 		+ (void *)ehdr);
- 
- 	Elf_Shdr const *relhdr;
- 	unsigned k;
- 
-+	Elf32_Word *symtab;
-+	Elf32_Word *symtab_shndx;
-+
- 	/* Upper bound on space: assume all relevant relocs are for mcount. */
- 	unsigned       totrelsz;
- 
-@@ -561,6 +644,8 @@ static int do_func(Elf_Ehdr *const ehdr, char const *const fname,
- 		return -1;
- 	}
- 
-+	find_symtab(ehdr, shdr0, nhdr, &symtab, &symtab_shndx);
-+
- 	for (relhdr = shdr0, k = nhdr; k; --k, ++relhdr) {
- 		char const *const txtname = has_rel_mcount(relhdr, shdr0,
- 			shstrtab, fname);
-@@ -577,6 +662,7 @@ static int do_func(Elf_Ehdr *const ehdr, char const *const fname,
- 			result = find_secsym_ndx(w(relhdr->sh_info), txtname,
- 						&recval, &recsym,
- 						&shdr0[symsec_sh_link],
-+						symtab, symtab_shndx,
- 						ehdr);
- 			if (result)
- 				goto out;
 -- 
 2.25.1
 
