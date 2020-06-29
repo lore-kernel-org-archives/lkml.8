@@ -8,193 +8,178 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC0FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D41CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:49:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A3272065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:49:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19B5A206C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:49:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="lj9PiDYY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UMnRMopl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387703AbgF2Utq (ORCPT
+        id S2387857AbgF2Utv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:49:46 -0400
-Received: from mail-m964.mail.126.com ([123.126.96.4]:54182 "EHLO
-        mail-m964.mail.126.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731557AbgF2Utk (ORCPT
+        Mon, 29 Jun 2020 16:49:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43394 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731482AbgF2TNk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 16:49:40 -0400
-X-Greylist: delayed 5420 seconds by postgrey-1.27 at vger.kernel.org; Mon, 29 Jun 2020 16:49:39 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-        s=s110527; h=From:Subject:Date:Message-Id; bh=dZFXghp2i9BkRXeQIr
-        QISjtevrHQgS0lHVzMWGLDDZI=; b=lj9PiDYYMZOxqGFVGXaCBp+s71xwrYi66o
-        tNIizvnECV5i9rd0sDxGOaFrjeO8jd5GfhEa374YfNLPRbxAhd5Fl9FS59zPG8tO
-        DDPUNDhRhzg8wyXCQeQf7diukTLsSS6TQFGa7dEI7h2WOEjDW6BrsvyGm2SsyKME
-        Lp/tyPGbA=
-Received: from xr-hulk-k8s-node1933.gh.sankuai.com (unknown [101.236.11.2])
-        by smtp9 (Coremail) with SMTP id NeRpCgCHnS07uPlezqHWAg--.1769S2;
-        Mon, 29 Jun 2020 17:45:36 +0800 (CST)
-From:   Jiang Ying <jiangying8582@126.com>
-To:     Markus.Elfring@web.de, tytso@mit.edu, adilger.kernel@dilger.ca,
-        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
-        wanglong19@meituan.com, heguanjun@meituan.com
-Subject: [PATCH v3] ext4: fix direct I/O read error
-Date:   Mon, 29 Jun 2020 17:45:30 +0800
-Message-Id: <1593423930-5576-1-git-send-email-jiangying8582@126.com>
-X-Mailer: git-send-email 1.8.3.1
-X-CM-TRANSID: NeRpCgCHnS07uPlezqHWAg--.1769S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxAw47WFW8tw4rCr1UZr4xZwb_yoWrGry5pr
-        nxCa15WrZ5Zr4xCanrK3ZrZFyFy3yDGFWUXry5u34UZr4Yg3s5KFWxKF17C3yUGrWF9w4F
-        qFZ8tryfAw1UAFJanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07U_cTdUUUUU=
-X-Originating-IP: [101.236.11.2]
-X-CM-SenderInfo: xmld0wp1lqwmqvysqiyswou0bp/1tbiXABSAFpEA7E69AAAss
+        Mon, 29 Jun 2020 15:13:40 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31DD0C0086DE;
+        Mon, 29 Jun 2020 02:31:46 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id z5so8039614pgb.6;
+        Mon, 29 Jun 2020 02:31:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=U8LfJvZ8Suv0UU3L8Vq/myysU79XrKbzAI5mVt1upHA=;
+        b=UMnRMoplidwqa2axc+13CTf6GjvG/QKjq19NX5mr89r2PyhZPX2MmNwdhqGn5qo/AE
+         M/IV5z4/XD05V3cPZvLn0BS3/ArPV/QS+ZEH9j7MePFM4pBR9FEAf7VN6gytNgMOuzwd
+         LpJdF3e/tF391hQub1QawVUYlZHIIYXfYfAVpsYvXVu9lab+VFzIx3/ydCnJKYCUXEmR
+         VdWO4gpulSb43KzGvbLkwnqUkfIXscpggHyFGR/ixKo889mdkn9g1akJKYcwTJTY+HIS
+         VYxamiq6E56/6ub1rzvsawOCbz6kYBvFRVeo28EdhIndpB5xhclS+Eh+UmAAuX0JpzPp
+         egYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=U8LfJvZ8Suv0UU3L8Vq/myysU79XrKbzAI5mVt1upHA=;
+        b=mkQHfdvKLx3SYlrbGo5wZqvZQscv0ZW16Uyr2vuEJpbElvO84wlYkjcWTrZVPdHJlY
+         eWbPwPyNcsL7gD6JhrjrqxsCHxfDbr4DwSz4/deZVmfVspAp3IivN212DDPcH3i5Zyae
+         UpBI7o/QFV9plfNaQM+hDosjaWZdp2wxODRwFbgCck4caz+NQICDX/JCeClMO0glycwm
+         EddpX1RDM6r9GJLdrv6UZYOrvdeiYbIjBan3yy/NQF5l9GQ00NURJL2+42xioF+TluDb
+         uCl4hb5dQbDCMyJdc3kJ8QIMxCkAYcf2YSFHIZiGGEUGm6KgTwDUIG4dgiXIcn1/5k05
+         OB3g==
+X-Gm-Message-State: AOAM532G9bzmjJWiHy0DRt+vYNAIfsIiLFxm/DQLhMuQwS58eJXZdSbG
+        gh69ovekFAzttowPaQdynXE=
+X-Google-Smtp-Source: ABdhPJxCrwzkJMp9WcEN5z/vEr5Xrtqg4Z1I1sF8VTyeVMLmhzbwmlekF7t0Va8jyim44rh9w5wtUA==
+X-Received: by 2002:a63:b915:: with SMTP id z21mr9981906pge.145.1593423105725;
+        Mon, 29 Jun 2020 02:31:45 -0700 (PDT)
+Received: from varodek.localdomain ([106.210.40.90])
+        by smtp.gmail.com with ESMTPSA id q20sm2921286pfn.111.2020.06.29.02.31.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 02:31:45 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+Subject: [PATCH v1 5/5] e100: use generic power management
+Date:   Mon, 29 Jun 2020 14:59:43 +0530
+Message-Id: <20200629092943.227910-6-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200629092943.227910-1-vaibhavgupta40@gmail.com>
+References: <20200629092943.227910-1-vaibhavgupta40@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch is used to fix ext4 direct I/O read error when
-the read size is not aligned with block size.
+With legacy PM hooks, it was the responsibility of a driver to manage PCI
+states and also the device's power state. The generic approach is to let
+PCI core handle the work.
 
-Then, I will use a test to explain the error.
+e100_suspend() calls __e100_shutdown() to perform intermediate tasks.
+__e100_shutdown() calls pci_save_state() which is not recommended.
 
-(1) Make a file that is not aligned with block size:
-	$dd if=/dev/zero of=./test.jar bs=1000 count=3
+e100_suspend() also calls __e100_power_off() which is calling PCI helper
+functions, pci_prepare_to_sleep(), pci_set_power_state(), along with
+pci_wake_from_d3(...,false). Hence, the functin call is removed and wol is
+disabled as earlier using device_wakeup_disable().
 
-(2) I wrote a source file named "direct_io_read_file.c" as following:
+Compile-tested only.
 
-	#include <stdio.h>
-	#include <stdlib.h>
-	#include <unistd.h>
-	#include <sys/file.h>
-	#include <sys/types.h>
-	#include <sys/stat.h>
-	#include <string.h>
-	#define BUF_SIZE 1024
-
-	int main()
-	{
-		int fd;
-		int ret;
-
-		unsigned char *buf;
-		ret = posix_memalign((void **)&buf, 512, BUF_SIZE);
-		if (ret) {
-			perror("posix_memalign failed");
-			exit(1);
-		}
-		fd = open("./test.jar", O_RDONLY | O_DIRECT, 0755);
-		if (fd < 0){
-			perror("open ./test.jar failed");
-			exit(1);
-		}
-
-		do {
-			ret = read(fd, buf, BUF_SIZE);
-			printf("ret=%d\n",ret);
-			if (ret < 0) {
-				perror("write test.jar failed");
-			}
-		} while (ret > 0);
-
-		free(buf);
-		close(fd);
-	}
-
-(3) Compile the source file:
-	$gcc direct_io_read_file.c -D_GNU_SOURCE
-
-(4) Run the test program:
-	$./a.out
-
-	The result is as following:
-	ret=1024
-	ret=1024
-	ret=952
-	ret=-1
-	write test.jar failed: Invalid argument.
-
-I have tested this program on XFS filesystem, XFS does not have
-this problem, because XFS use iomap_dio_rw() to do direct I/O
-read. And the comparing between read offset and file size is done
-in iomap_dio_rw(), the code is as following:
-
-	if (pos < size) {
-		retval = filemap_write_and_wait_range(mapping, pos,
-				pos + iov_length(iov, nr_segs) - 1);
-
-		if (!retval) {
-			retval = mapping->a_ops->direct_IO(READ, iocb,
-						iov, pos, nr_segs);
-		}
-		...
-	}
-
-...only when "pos < size", direct I/O can be done, or 0 will be return.
-
-I have tested the fix patch on Ext4, it is up to the mustard of
-EINVAL in man2(read) as following:
-	#include <unistd.h>
-	ssize_t read(int fd, void *buf, size_t count);
-
-	EINVAL
-		fd is attached to an object which is unsuitable for reading;
-		or the file was opened with the O_DIRECT flag, and either the
-		address specified in buf, the value specified in count, or the
-		current file offset is not suitably aligned.
-
-So I think this patch can be applied to fix ext4 direct I/O error.
-
-However Ext4 introduces direct I/O read using iomap infrastructure
-on kernel 5.5, the patch is commit <b1b4705d54ab>
-("ext4: introduce direct I/O read using iomap infrastructure"),
-then Ext4 will be the same as XFS, they all use iomap_dio_rw() to do direct
-I/O read. So this problem does not exist on kernel 5.5 for Ext4.
-
-From above description, we can see this problem exists on all the kernel
-versions between kernel 3.14 and kernel 5.4. Please apply this patch
-on these kernel versions, or please use the method on kernel 5.5 to fix
-this problem.
-
-Fixes: 9fe55eea7e4b ("Fix race when checking i_size on direct i/o read")
-Co-developed-by: Wang Long <wanglong19@meituan.com>
-Signed-off-by: Wang Long <wanglong19@meituan.com>
-Signed-off-by: Jiang Ying <jiangying8582@126.com>
-
-Changes since V2:
-	Optimize the description of the commit message and make a variation for
-	the patch, e.g. with:
-
-		Before:
-			loff_t size;
-			size = i_size_read(inode);
-		After:
-			loff_t size = i_size_read(inode);
-
-Changes since V1:
-	Signed-off use real name and add "Fixes:" flag
-
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
 ---
- fs/ext4/inode.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/net/ethernet/intel/e100.c | 31 +++++++++++++------------------
+ 1 file changed, 13 insertions(+), 18 deletions(-)
 
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index 516faa2..a66b0ac 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -3821,6 +3821,11 @@ static ssize_t ext4_direct_IO_read(struct kiocb *iocb, struct iov_iter *iter)
- 	struct inode *inode = mapping->host;
- 	size_t count = iov_iter_count(iter);
- 	ssize_t ret;
-+	loff_t offset = iocb->ki_pos;
-+	loff_t size = i_size_read(inode);
-+
-+	if (offset >= size)
-+		return 0;
+diff --git a/drivers/net/ethernet/intel/e100.c b/drivers/net/ethernet/intel/e100.c
+index 1b8d015ebfb0..7506fb5eca8f 100644
+--- a/drivers/net/ethernet/intel/e100.c
++++ b/drivers/net/ethernet/intel/e100.c
+@@ -2997,8 +2997,6 @@ static void __e100_shutdown(struct pci_dev *pdev, bool *enable_wake)
+ 		e100_down(nic);
+ 	netif_device_detach(netdev);
  
- 	/*
- 	 * Shared inode_lock is enough for us - it protects against concurrent
+-	pci_save_state(pdev);
+-
+ 	if ((nic->flags & wol_magic) | e100_asf(nic)) {
+ 		/* enable reverse auto-negotiation */
+ 		if (nic->phy == phy_82552_v) {
+@@ -3028,24 +3026,21 @@ static int __e100_power_off(struct pci_dev *pdev, bool wake)
+ 	return 0;
+ }
+ 
+-#ifdef CONFIG_PM
+-static int e100_suspend(struct pci_dev *pdev, pm_message_t state)
++static int __maybe_unused e100_suspend(struct device *dev_d)
+ {
+ 	bool wake;
+-	__e100_shutdown(pdev, &wake);
+-	return __e100_power_off(pdev, wake);
++	__e100_shutdown(to_pci_dev(dev_d), &wake);
++
++	device_wakeup_disable(dev_d);
++
++	return 0;
+ }
+ 
+-static int e100_resume(struct pci_dev *pdev)
++static int __maybe_unused e100_resume(struct device *dev_d)
+ {
+-	struct net_device *netdev = pci_get_drvdata(pdev);
++	struct net_device *netdev = dev_get_drvdata(dev_d);
+ 	struct nic *nic = netdev_priv(netdev);
+ 
+-	pci_set_power_state(pdev, PCI_D0);
+-	pci_restore_state(pdev);
+-	/* ack any pending wake events, disable PME */
+-	pci_enable_wake(pdev, PCI_D0, 0);
+-
+ 	/* disable reverse auto-negotiation */
+ 	if (nic->phy == phy_82552_v) {
+ 		u16 smartspeed = mdio_read(netdev, nic->mii.phy_id,
+@@ -3062,7 +3057,6 @@ static int e100_resume(struct pci_dev *pdev)
+ 
+ 	return 0;
+ }
+-#endif /* CONFIG_PM */
+ 
+ static void e100_shutdown(struct pci_dev *pdev)
+ {
+@@ -3150,16 +3144,17 @@ static const struct pci_error_handlers e100_err_handler = {
+ 	.resume = e100_io_resume,
+ };
+ 
++static SIMPLE_DEV_PM_OPS(e100_pm_ops, e100_suspend, e100_resume);
++
+ static struct pci_driver e100_driver = {
+ 	.name =         DRV_NAME,
+ 	.id_table =     e100_id_table,
+ 	.probe =        e100_probe,
+ 	.remove =       e100_remove,
+-#ifdef CONFIG_PM
++
+ 	/* Power Management hooks */
+-	.suspend =      e100_suspend,
+-	.resume =       e100_resume,
+-#endif
++	.driver.pm =	&e100_pm_ops,
++
+ 	.shutdown =     e100_shutdown,
+ 	.err_handler = &e100_err_handler,
+ };
 -- 
-1.8.3.1
+2.27.0
 
