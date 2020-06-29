@@ -2,160 +2,130 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B68EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3051AC433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A56D21D81
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:39:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13E9521D81
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:40:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BxIAXn9p"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="BUfRYnq6";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="bqAABlkn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728134AbgF2Sju (ORCPT
+        id S1728158AbgF2Sj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:39:50 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:54506 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbgF2Sjl (ORCPT
+        Mon, 29 Jun 2020 14:39:58 -0400
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:42845 "EHLO
+        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbgF2Sjb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:39:41 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05TCr25O015325;
-        Mon, 29 Jun 2020 07:53:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593435182;
-        bh=P0UG0v9WZr2hySBskVuVNfPW+YNPbGGZZJtra3qz4wQ=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=BxIAXn9pA9SiL6e4p4eWsaoij0Hi+deiYTP2BN+gMGn9VYWWL8h+a8QtUv12ocBWT
-         ia1rvJwuMw5xlXW+2Qcp23rIjoi6WqaI1lKFDDQTbRbkhwReU4auk/olLTRmX7wp79
-         589Web2cMuwMWtPDEhaxXItGi5nSBXxPSNyiVRr0=
-Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05TCr2NU111046
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 29 Jun 2020 07:53:02 -0500
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Mon, 29
- Jun 2020 07:53:01 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Mon, 29 Jun 2020 07:53:01 -0500
-Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05TCqugw015456;
-        Mon, 29 Jun 2020 07:52:59 -0500
-From:   Roger Quadros <rogerq@ti.com>
-To:     <t-kristo@ti.com>
-CC:     <robh@kernel.org>, <kishon@ti.com>, <nm@ti.com>, <vigneshr@ti.com>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v4 1/6] dt-bindings: mfd: ti,j721e-system-controller.yaml: Add J721e system controller
-Date:   Mon, 29 Jun 2020 15:52:49 +0300
-Message-ID: <20200629125254.28754-2-rogerq@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200629125254.28754-1-rogerq@ti.com>
-References: <20200629125254.28754-1-rogerq@ti.com>
+        Mon, 29 Jun 2020 14:39:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1593455971; x=1624991971;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
+  b=BUfRYnq6d2QtmnijmrdjbeUn7mcWzYHUNtrd2nnEaWTj8bPefi9mjPmW
+   afJGKzWEhbIEJHPHhSxXY1iXk9C0QdkU3c26PYs/Whq5sTvUMAovmOQU6
+   gxb+Amv8X0x27QELgjV+CUzJMzvWpNDSTGLlw+0EJI3mrNLjELmkFwKzP
+   XCuPlVLFnbqdJAgXZrWwaf+yG0QyRPndCjstCF1wbIg9JcQUpfutZayPv
+   Ri/ON7n0Mjy4aJ1y8V1T4s/D35/GYjwX+F5Kq1kFuhVFSlhVy5dEyaE/r
+   36xeEhywtauCCSpGWxmAw/DlueduqkINAyJY7o2jXeiq4/1NQqghBfBmQ
+   Q==;
+IronPort-SDR: tAeOKkQlQ2lXTHrk/zkZK3t5fxmPuGbqgjhwweXhYkFlr4Z1jDuiOgbKc+6WXDfm7GIlLnRN1G
+ A3EjvGyIoa+mbRJVk5KBLaZ7D0t87pYW9sBf9qpiPFsih2Zmuxt26UlF6ao2sPRybzSe2+vFcz
+ oYGCYjzZikOc3dqBEBfXVNRqzRBPmO3XTH0OPHkIsRj8EC3GpMODqZxNUs53A9BitYsHdPdCFF
+ C+NvJcGZp/ZrMhucKnOX8tTFM1kCdacx/+ZROBb+vHKOEmz4BMERAKvW+lyB92uxD/4M+9cUgu
+ 2dY=
+X-IronPort-AV: E=Sophos;i="5.75,294,1589212800"; 
+   d="scan'208";a="142527849"
+Received: from mail-sn1nam04lp2052.outbound.protection.outlook.com (HELO NAM04-SN1-obe.outbound.protection.outlook.com) ([104.47.44.52])
+  by ob1.hgst.iphmx.com with ESMTP; 29 Jun 2020 17:31:51 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SN64LNqS2+onHxfglFjA8xHwJ0eoJhWf0+JIZZHRiqtN1HNxa+518GEshNot6xzDRif0bbJzDSltR1dIHEptNcVD0Zg70JD6HXZdMYdCFDFFcrDpqrpTOGgbo4z26IBjdZSRGEZ93t7It26bpDb6OBIyMxrDb+g/Vi93mlEjIvmh5q6RTp47foKTHXU3+rit6VqJhCocbOZBm9/Y+jMs18BOIAUCm11arl8SLJVuoq5RR8SqUHfb3jLAtNrYdKI2tix96jkdSvTdgbRuYvar/byhMvIPxR0E03ROMyHWTH20gCR2zopcM9570hoK298/vQKW1SByBN6CLcLsq3YIaQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
+ b=JrXu4FXBryRptRdqPHhOLjq+hxBQXEE/edbKmGrs5fgwRRt7EqC38f3xW7Gjrf+9iTb3soQ5/+0ujoiEhwuPUqC6Ynfno2qCkQQEC2SzP3uBAz0e2TclQYxZ/cBprvyg/LDgVD9LvylS+pMivkSIcV+D6nYeZCOW4GOaTdtCKttPoMBxYtoxjMig81cHBGzhKYItc51tRRdh3aLQJyuT370ZAKNDydS2Pp2Ig7f8Mx4TeVSpCU3jI4pVNDO7tWWwtXWxpNei5p46pA6n2SPOO1Dhj0b5e9JMILjVCR6XiSaMIGc6NiQ7sSg8FGDt+05fhZQXqMbln0ngNOfowbJjvQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
+ b=bqAABlknO4/7Lcokr+Sb0mmDqbA0CCNA8gLwPXze+3hSd4E0tWCILXWHR+i+D0rte6oz4U5wO3LfNOh4kDla9x6qbFEvjce0vOEXsAXENyWlTyjlvW7mOK8Ddl2fOc+0LAgRqoDWj6R35m4ddcsav0bFwoZBLpQ/GR3TaC1coy0=
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ (2603:10b6:803:47::21) by SN6PR04MB4461.namprd04.prod.outlook.com
+ (2603:10b6:805:ac::15) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.20; Mon, 29 Jun
+ 2020 09:31:48 +0000
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::1447:186c:326e:30b2]) by SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::1447:186c:326e:30b2%7]) with mapi id 15.20.3131.026; Mon, 29 Jun 2020
+ 09:31:48 +0000
+From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Tejun Heo <tj@kernel.org>
+CC:     Dennis Zhou <dennis@kernel.org>, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        "dm-devel@redhat.com" <dm-devel@redhat.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+Subject: Re: [PATCH 01/14] dm: use bio_uninit instead of bio_disassociate_blkg
+Thread-Topic: [PATCH 01/14] dm: use bio_uninit instead of
+ bio_disassociate_blkg
+Thread-Index: AQHWTFVNhEHhBYRZnECuJQ/imV0vWA==
+Date:   Mon, 29 Jun 2020 09:31:48 +0000
+Message-ID: <SN4PR0401MB3598E2A437BF7D2E94A1D1C29B6E0@SN4PR0401MB3598.namprd04.prod.outlook.com>
+References: <20200627073159.2447325-1-hch@lst.de>
+ <20200627073159.2447325-2-hch@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: lst.de; dkim=none (message not signed)
+ header.d=none;lst.de; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [2001:a62:1515:bd01:5d2:80d1:159b:260e]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: bcecde9b-0045-4786-4596-08d81c0f3f66
+x-ms-traffictypediagnostic: SN6PR04MB4461:
+x-microsoft-antispam-prvs: <SN6PR04MB4461F5165DDFE68C5AB69BCD9B6E0@SN6PR04MB4461.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:1728;
+x-forefront-prvs: 044968D9E1
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: TYDuIAQuhqe8397xiIBEQXtDjw/zkJbzbl0xJ86yJ4ff0RnVo4Dd5ah9Lv5qM0/OMYJCwv0gWgK9fnQOatoWNu/JVMEbJVQKo//QmZ1mNLaRjR9+kOV/z/vZH5oTzM4yDhbYYrxM92yvWYSM94pg9r0dQl2sFCHdL9RYHgFLIZJNnNqPWc+8idky+rBBy2aT98XUpoVde9SL4jCD+HmmnUMoocg1Q2bNdHDYUBsldgRL9ptaQemQwOnv3DusJYcAxTKMeBr6biCyBKtwoSoXojr5O39SfjSQvtY1lH3grmSKR40kDYR+Y5oVXw6b26QwCvtTgPB00IZ+cZql4E+2aQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(376002)(136003)(396003)(346002)(316002)(9686003)(7416002)(4326008)(33656002)(5660300002)(54906003)(110136005)(4270600006)(52536014)(71200400001)(8676002)(7696005)(478600001)(55016002)(19618925003)(6506007)(186003)(76116006)(66946007)(558084003)(2906002)(64756008)(66446008)(86362001)(91956017)(66556008)(8936002)(66476007);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: SRgU4yZreQpPfwnzKXBLkCL8ogPFvY+ZBNxfkIUcGRRhuQnXX51Ys3KbVWLyjz4GCHyB2gwXcoCmNMp2MuFFiiabw9hqAZokRuV76LEhbiH2mNdlPupaNCogq43TeK1/P1fZDPFuvrTS3Zm8hzJRRfrHPVhdz7vveRjy8j2xwHOS5doud9oXU4TyWwC0qUV3Yczty2N/0bMcviIFrtFKsQGEvXEFeD8y+hjh2BmpKFLSsudh8hCWRIcWgyaZKBIR7bX9sTsqL0TwUVlDxQN5J+VZXySSP1iT4IZemVfvbcuncOcco0p5sw/2gfBq4ThTl4xALn//13a69p/unY01CSzd7kJwHAWAV4bSdmkCEPpiHZFLJcNJlnBFqodLWL9xo2BV0mMqKVvMs4X267B4DOurHO48rl3tSZyOjcmECcyaLPWNZYytAKYklKX1IFY3iRlqGTWNTck6wnjtR3WUyyGM5KqYdo5R07fanmNH2Q1VxnFsmVR6mD4NiqXRxANS+p9l8ndB9pYs/r6Dp1NOmuZnwJ0pdLMYSe3QL/1rSG0=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN4PR0401MB3598.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bcecde9b-0045-4786-4596-08d81c0f3f66
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jun 2020 09:31:48.5620
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: X7yey5SmTbVaZpKtYpXM1BxcDEzN8AxYLOHq1IZWa5RsdPoJmn9Qv53gK8AeMHzmehrs0OfXwymk+1f7mHyRWcifwer+a4L6UZemwIBd4A8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4461
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add DT binding schema for J721e system controller.
-
-Signed-off-by: Roger Quadros <rogerq@ti.com>
----
- .../mfd/ti,j721e-system-controller.yaml       | 74 +++++++++++++++++++
- 1 file changed, 74 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/ti,j721e-system-controller.yaml
-
-diff --git a/Documentation/devicetree/bindings/mfd/ti,j721e-system-controller.yaml b/Documentation/devicetree/bindings/mfd/ti,j721e-system-controller.yaml
-new file mode 100644
-index 000000000000..03d0a232c75e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/ti,j721e-system-controller.yaml
-@@ -0,0 +1,74 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+# Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/mfd/ti,j721e-system-controller.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: TI J721e System Controller Registers R/W Device Tree Bindings
-+
-+description: |
-+  This represents the Control Module registers (CTRL_MMR0) on the SoC.
-+  System controller node represents a register region containing a set
-+  of miscellaneous registers. The registers are not cohesive enough to
-+  represent as any specific type of device. The typical use-case is
-+  for some other node's driver, or platform-specific code, to acquire
-+  a reference to the syscon node (e.g. by phandle, node path, or
-+  search using a specific compatible value), interrogate the node (or
-+  associated OS driver) to determine the location of the registers,
-+  and access the registers directly.
-+
-+maintainers:
-+  - Kishon Vijay Abraham I <kishon@ti.com>
-+  - Roger Quadros <rogerq@ti.com
-+
-+properties:
-+  compatible:
-+    anyOf:
-+      - items:
-+        - enum:
-+           - ti,j721e-system-controller
-+        - const: syscon
-+        - const: simple-mfd
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 1
-+
-+  ranges: true
-+
-+# Optional children
-+
-+  "^serdes-ln-ctrl@[0-9a-f]+$":
-+    type: object
-+    description: |
-+      This is the SERDES lane control mux. It should follow the bindings
-+      specified in
-+      Documentation/devicetree/bindings/mux/reg-mux.txt
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#address-cells"
-+  - "#size-cells"
-+  - ranges
-+
-+unevaluatedProperties: false
-+
-+examples:
-+  - |
-+    scm_conf: scm-conf@100000 {
-+        compatible = "ti,j721e-system-controller", "syscon", "simple-mfd";
-+        reg = <0x00100000 0x1c000>;
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        ranges;
-+
-+        serdes_ln_ctrl: serdes-ln-ctrl@4080 {
-+            compatible = "mmio-mux";
-+            reg = <0x00004080 0x50>;
-+        };
-+    };
-+...
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
+Looks good,=0A=
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
