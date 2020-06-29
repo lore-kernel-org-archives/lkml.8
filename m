@@ -2,117 +2,101 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A16C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:42:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F369CC433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 973292063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:42:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF6BA2064B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:42:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593456154;
-	bh=nkXVUsdToHyNieb+U/6qjEft4C6WlZi7raDmgvDcMO0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fE+WjLd/4gUqAH3QF5V5wCtJBntGCYsKIgICDteRDBDFLViZvTSvVIHa9lQFw7QP5
-	 ZtQMluGbxgaddeVgsO4/Ww/2U4biwQRbUl2hRIDxIxhBFGD+C8EeajM9eUGG5Z2jmk
-	 ccl1GyO3/Ogi8Ja2taPtqOyh0Cqmp7vmMBKOJk1A=
+	s=default; t=1593456156;
+	bh=XHtYOKJSfUA300e/p5ysfFZ8eKeqkxoTiM/IQ6Hezx8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=vgeiMZ7r4zab/1POmOP122wUihRfnPcW/yR5wo3FP6d60qEaQD5k57JyS9gWC3+o4
+	 TTi7LJ/7bVwoNqsm8fuawU1wKEJyLSLZpf2qVqLbrrrP6eXzmB+evxigSa0KBHFX0u
+	 r2wCqC+afGKR6Vwg8y+XBu1o1aIIqLSkB+mTz1EA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728953AbgF2Smc (ORCPT
+        id S1728938AbgF2Sma (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:42:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60658 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 14:42:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728935AbgF2Sl0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728937AbgF2Sl0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:41:26 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from localhost.localdomain (unknown [122.182.251.219])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECFD124050;
-        Mon, 29 Jun 2020 15:18:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3B3C23D67;
+        Mon, 29 Jun 2020 13:47:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443925;
-        bh=nkXVUsdToHyNieb+U/6qjEft4C6WlZi7raDmgvDcMO0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZSbTpfQ6whzHdgPRdLDv17mix5yhEUz83j4EGTIk9jcg2PlEuHLfEwWJfObPLNnIJ
-         rSDLQ/MTUF+TSuS9A4vi+bR9L1mWaR013jLDZHVvd+GS9MndvXmg8w87iSJzxSHIrm
-         7HCKTt/erpZ9MKh0mYpotHRquumKMgeYV7lt/Ij8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 026/265] net: phy: Check harder for errors in get_phy_id()
-Date:   Mon, 29 Jun 2020 11:14:19 -0400
-Message-Id: <20200629151818.2493727-27-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
-References: <20200629151818.2493727-1-sashal@kernel.org>
+        s=default; t=1593438469;
+        bh=XHtYOKJSfUA300e/p5ysfFZ8eKeqkxoTiM/IQ6Hezx8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=oPeNk1jpTRqSnMK+lKozomFejz2j5aQRcZ4EeBGRNig7FvO3D2Q9ZHLKqOtHH4upq
+         9gTDalb6sl47L730CJbjlYTLIbUJ3ms6ulS2HEm64suB8CgUqMzhpA3cEJ1wWKckTz
+         ZwF6yy5a5Fa2Gpc3DWLn0g21xIcI13O1tC6l6urI=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Takashi Iwai <tiwai@suse.com>, Jaroslav Kysela <perex@perex.cz>
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Charles Keepax <ckeepax@opensource.cirrus.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 0/3] ALSA: compress: Document stream states and fix gapless SM
+Date:   Mon, 29 Jun 2020 19:17:34 +0530
+Message-Id: <20200629134737.105993-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.7.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.7.7-rc1
-X-KernelTest-Deadline: 2020-07-01T15:14+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+Srini found issue with gapless implementation which prompted to look deeper
+into SM for compressed stream.
 
-[ Upstream commit b2ffc75e2e990b09903f9d15ccd53bc5f3a4217c ]
+So documenting SM was first step, so first two patches add that. Last patch
+fixes the issue by keeping track on partial_drain and then moving state to
+'running' in snd_compr_drain_notify() for partial_drain case on success.
+While at it, noticed snd_compr_drain_notify() is lockless state change, so
+fixed that as well.
 
-Commit 02a6efcab675 ("net: phy: allow scanning busses with missing
-phys") added a special condition to return -ENODEV in case -ENODEV or
--EIO was returned from the first read of the MII_PHYSID1 register.
+I have tested this on Dragon board RB3, compressed audio works out of the
+box on that platform and Srini will send driver and fcplay patches for
+gapless soon.
 
-In case the MDIO bus data line pull-up is not strong enough, the MDIO
-bus controller will not flag this as a read error. This can happen when
-a pluggable daughter card is not connected and weak internal pull-ups
-are used (since that is the only option, otherwise the pins are
-floating).
+Changes in v5:
+ - Update SM diagram as suggested by Amadeusz
 
-The second read of MII_PHYSID2 will be correctly flagged an error
-though, but now we will return -EIO which will be treated as a hard
-error, thus preventing MDIO bus scanning loops to continue succesfully.
+Changes in v4:
+ - Add review tag by Charles
+ - fix the lock deadlock pointed by Charles
 
-Apply the same logic to both register reads, thus allowing the scanning
-logic to proceed.
+Changes in v3:
+ - Add pause->stop->free transition
+ - Add setup->free transition
+ - remove running->free as that goes thru stop
 
-Fixes: 02a6efcab675 ("net: phy: allow scanning busses with missing phys")
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/phy/phy_device.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Changes in v2:
+ - Added tested tag by Srini
+ - Update compress SM with Free state and compr_stop() transitions
 
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index 697c74deb222b..0881b4b923632 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -798,8 +798,10 @@ static int get_phy_id(struct mii_bus *bus, int addr, u32 *phy_id,
- 
- 	/* Grab the bits from PHYIR2, and put them in the lower half */
- 	phy_reg = mdiobus_read(bus, addr, MII_PHYSID2);
--	if (phy_reg < 0)
--		return -EIO;
-+	if (phy_reg < 0) {
-+		/* returning -ENODEV doesn't stop bus scanning */
-+		return (phy_reg == -EIO || phy_reg == -ENODEV) ? -ENODEV : -EIO;
-+	}
- 
- 	*phy_id |= phy_reg;
- 
+Vinod Koul (3):
+  ALSA: compress: document the compress audio state machine
+  ALSA: compress: document the compress gapless audio state machine
+  ALSA: compress: fix partial_drain completion state
+
+ .../sound/designs/compress-offload.rst        | 83 +++++++++++++++++++
+ include/sound/compress_driver.h               | 10 ++-
+ sound/core/compress_offload.c                 |  4 +
+ 3 files changed, 96 insertions(+), 1 deletion(-)
+
 -- 
-2.25.1
+2.26.2
 
