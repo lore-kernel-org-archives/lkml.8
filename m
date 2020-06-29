@@ -2,287 +2,81 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EA32C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F5EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:14:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FB67206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:14:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A201206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:14:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731606AbgF2VON convert rfc822-to-8bit (ORCPT
+        id S2390643AbgF2VOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:14:13 -0400
-Received: from coyote.holtmann.net ([212.227.132.17]:52769 "EHLO
+        Mon, 29 Jun 2020 17:14:21 -0400
+Received: from coyote.holtmann.net ([212.227.132.17]:43155 "EHLO
         mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730010AbgF2S5m (ORCPT
+        with ESMTP id S1729877AbgF2S5l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:57:42 -0400
+        Mon, 29 Jun 2020 14:57:41 -0400
 Received: from marcel-macpro.fritz.box (p5b3d2638.dip0.t-ipconnect.de [91.61.38.56])
-        by mail.holtmann.org (Postfix) with ESMTPSA id D17D0CECCB;
-        Mon, 29 Jun 2020 08:50:50 +0200 (CEST)
+        by mail.holtmann.org (Postfix) with ESMTPSA id 012ABCECD6;
+        Mon, 29 Jun 2020 17:51:57 +0200 (CEST)
 Content-Type: text/plain;
-        charset=utf-8
+        charset=us-ascii
 Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [RFC PATCH v1 1/2] Bluetooth: queue ACL packets if no handle is
- found
+Subject: Re: [PATCH] Bluetooth: fix kernel null pointer dereference error on
+ suspend
 From:   Marcel Holtmann <marcel@holtmann.org>
-In-Reply-To: <20200627185320.RFC.v1.1.Icea550bb064a24b89f2217cf19e35b4480a31afd@changeid>
-Date:   Mon, 29 Jun 2020 08:40:56 +0200
-Cc:     linux-bluetooth <linux-bluetooth@vger.kernel.org>,
-        chromeos-bluetooth-upstreaming 
-        <chromeos-bluetooth-upstreaming@chromium.org>,
-        Archie Pusaka <apusaka@chromium.org>,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+In-Reply-To: <20200629142600.GA3102@cosmos>
+Date:   Mon, 29 Jun 2020 17:42:02 +0200
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <91CFE951-262A-4E83-8550-25445AE84B5A@holtmann.org>
-References: <20200627105437.453053-1-apusaka@google.com>
- <20200627185320.RFC.v1.1.Icea550bb064a24b89f2217cf19e35b4480a31afd@changeid>
-To:     Archie Pusaka <apusaka@google.com>
+        linux-bluetooth <linux-bluetooth@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <C9C778D8-E453-4400-9475-E5127F5FA575@holtmann.org>
+References: <20200629142600.GA3102@cosmos>
+To:     Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
 X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Archie,
+Hi Vamshi,
 
-> There is a possibility that an ACL packet is received before we
-> receive the HCI connect event for the corresponding handle. If this
-> happens, we discard the ACL packet.
+> BUG Call Trace:
+>  queue_work_on+0x39/0x40
+>  hci_adv_monitors_clear+0x71/0x90 [bluetooth]
+>  hci_unregister_dev+0x18a/0x2f0 [bluetooth]
+>  btusb_disconnect+0x68/0x150 [btusb]
+>  usb_unbind_interface+0x7f/0x260
+>  device_release_driver_internal+0xec/0x1b0
+>  device_release_driver+0x12/0x20
+>  bus_remove_device+0xe1/0x150
+>  device_del+0x17d/0x3e0
+>  usb_disable_device+0x9f/0x250
+>  usb_disconnect+0xc6/0x270
+>  hub_event+0x6da/0x18d0
+>  process_one_work+0x20c/0x400
+>  worker_thread+0x34/0x400
 > 
-> Rather than just ignoring them, this patch provides a queue for
-> incoming ACL packet without a handle. The queue is processed when
-> receiving a HCI connection event. If 2 seconds elapsed without
-> receiving the HCI connection event, assume something bad happened
-> and discard the queued packet.
+> RIP: 0010:__queue_work+0x92/0x3f0
 > 
-> Signed-off-by: Archie Pusaka <apusaka@chromium.org>
-> Reviewed-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-
-so two things up front. I want to hide this behind a HCI_QUIRK_OUT_OF_ORDER_ACL that a transport driver has to set first. Frankly if this kind of out-of-order happens on UART or SDIO transports, then something is obviously going wrong. I have no plan to fix up after a fully serialized transport.
-
-Secondly, if a transport sets HCI_QUIRK_OUT_OF_ORDER_ACL, then I want this off by default. You can enable it via an experimental setting. The reason here is that we have to make it really hard and fail as often as possible so that hardware manufactures and spec writers realize that something is fundamentally broken here.
-
-I have no problem in running the code and complaining loudly in case the quirk has been set. Just injecting the packets can only happen if bluetoothd explicitly enabled it.
-
+> NULL deference occurs in hci_update_background_scan() while it tries
+> to queue_work on already destroyed workqueues.
 > 
+> Change hci_unregister_dev() to invoke destroy_workqueues after the
+> call to hci_adv_monitors_clear().
+> 
+> Signed-off-by: Vamshi K Sthambamkadi <vamshi.k.sthambamkadi@gmail.com>
 > ---
-> 
-> include/net/bluetooth/hci_core.h |  8 +++
-> net/bluetooth/hci_core.c         | 84 +++++++++++++++++++++++++++++---
-> net/bluetooth/hci_event.c        |  2 +
-> 3 files changed, 88 insertions(+), 6 deletions(-)
-> 
-> diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/hci_core.h
-> index 836dc997ff94..b69ecdd0d15a 100644
-> --- a/include/net/bluetooth/hci_core.h
-> +++ b/include/net/bluetooth/hci_core.h
-> @@ -270,6 +270,9 @@ struct adv_monitor {
-> /* Default authenticated payload timeout 30s */
-> #define DEFAULT_AUTH_PAYLOAD_TIMEOUT   0x0bb8
-> 
-> +/* Time to keep ACL packets without a corresponding handle queued (2s) */
-> +#define PENDING_ACL_TIMEOUT		msecs_to_jiffies(2000)
-> +
+> net/bluetooth/hci_core.c | 6 +++---
+> 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Do we have some btmon traces with timestamps. Isn’t a second enough? Actually 2 seconds is an awful long time.
-
-> struct amp_assoc {
-> 	__u16	len;
-> 	__u16	offset;
-> @@ -538,6 +541,9 @@ struct hci_dev {
-> 	struct delayed_work	rpa_expired;
-> 	bdaddr_t		rpa;
-> 
-> +	struct delayed_work	remove_pending_acl;
-> +	struct sk_buff_head	pending_acl_q;
-> +
-
-can we name this ooo_q and move it to the other queues in this struct. Unless we want to add a Kconfig option around it, we don’t need to keep it here.
-
-> #if IS_ENABLED(CONFIG_BT_LEDS)
-> 	struct led_trigger	*power_led;
-> #endif
-> @@ -1773,6 +1779,8 @@ void hci_le_start_enc(struct hci_conn *conn, __le16 ediv, __le64 rand,
-> void hci_copy_identity_address(struct hci_dev *hdev, bdaddr_t *bdaddr,
-> 			       u8 *bdaddr_type);
-> 
-> +void hci_process_pending_acl(struct hci_dev *hdev, struct hci_conn *conn);
-> +
-> #define SCO_AIRMODE_MASK       0x0003
-> #define SCO_AIRMODE_CVSD       0x0000
-> #define SCO_AIRMODE_TRANSP     0x0003
-> diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-> index 7959b851cc63..30780242c267 100644
-> --- a/net/bluetooth/hci_core.c
-> +++ b/net/bluetooth/hci_core.c
-> @@ -1786,6 +1786,7 @@ int hci_dev_do_close(struct hci_dev *hdev)
-> 	skb_queue_purge(&hdev->rx_q);
-> 	skb_queue_purge(&hdev->cmd_q);
-> 	skb_queue_purge(&hdev->raw_q);
-> +	skb_queue_purge(&hdev->pending_acl_q);
-> 
-> 	/* Drop last sent command */
-> 	if (hdev->sent_cmd) {
-> @@ -3518,6 +3519,78 @@ static int hci_suspend_notifier(struct notifier_block *nb, unsigned long action,
-> 	return NOTIFY_STOP;
-> }
-> 
-> +static void hci_add_pending_acl(struct hci_dev *hdev, struct sk_buff *skb)
-> +{
-> +	skb_queue_tail(&hdev->pending_acl_q, skb);
-> +
-> +	queue_delayed_work(hdev->workqueue, &hdev->remove_pending_acl,
-> +			   PENDING_ACL_TIMEOUT);
-> +}
-> +
-> +void hci_process_pending_acl(struct hci_dev *hdev, struct hci_conn *conn)
-> +{
-> +	struct sk_buff *skb, *tmp;
-> +	struct hci_acl_hdr *hdr;
-> +	u16 handle, flags;
-> +	bool reset_timer = false;
-> +
-> +	skb_queue_walk_safe(&hdev->pending_acl_q, skb, tmp) {
-> +		hdr = (struct hci_acl_hdr *)skb->data;
-> +		handle = __le16_to_cpu(hdr->handle);
-> +		flags  = hci_flags(handle);
-> +		handle = hci_handle(handle);
-> +
-> +		if (handle != conn->handle)
-> +			continue;
-> +
-> +		__skb_unlink(skb, &hdev->pending_acl_q);
-> +		skb_pull(skb, HCI_ACL_HDR_SIZE);
-> +
-> +		l2cap_recv_acldata(conn, skb, flags);
-> +		reset_timer = true;
-> +	}
-> +
-> +	if (reset_timer)
-> +		mod_delayed_work(hdev->workqueue, &hdev->remove_pending_acl,
-> +				 PENDING_ACL_TIMEOUT);
-> +}
-> +
-> +/* Remove the oldest pending ACL, and all pending ACLs with the same handle */
-> +static void hci_remove_pending_acl(struct work_struct *work)
-> +{
-> +	struct hci_dev *hdev;
-> +	struct sk_buff *skb, *tmp;
-> +	struct hci_acl_hdr *hdr;
-> +	u16 handle, oldest_handle;
-> +
-> +	hdev = container_of(work, struct hci_dev, remove_pending_acl.work);
-> +	skb = skb_dequeue(&hdev->pending_acl_q);
-> +
-> +	if (!skb)
-> +		return;
-> +
-> +	hdr = (struct hci_acl_hdr *)skb->data;
-> +	oldest_handle = hci_handle(__le16_to_cpu(hdr->handle));
-> +	kfree_skb(skb);
-> +
-> +	bt_dev_err(hdev, "ACL packet for unknown connection handle %d",
-> +		   oldest_handle);
-> +
-> +	skb_queue_walk_safe(&hdev->pending_acl_q, skb, tmp) {
-> +		hdr = (struct hci_acl_hdr *)skb->data;
-> +		handle = hci_handle(__le16_to_cpu(hdr->handle));
-> +
-> +		if (handle == oldest_handle) {
-> +			__skb_unlink(skb, &hdev->pending_acl_q);
-> +			kfree_skb(skb);
-> +		}
-> +	}
-> +
-> +	if (!skb_queue_empty(&hdev->pending_acl_q))
-> +		queue_delayed_work(hdev->workqueue, &hdev->remove_pending_acl,
-> +				   PENDING_ACL_TIMEOUT);
-> +}
-> +
-
-So I am wondering if we make this too complicated. Since generally speaking we can only have a single HCI connect complete anyway at a time. No matter if the controller serializes it for us or we do it for the controller. So hci_conn_add could just process the queue for packets with its handle and then flush it. And it can flush it no matter what since whatever other packets are in the queue, they can not be valid.
-
-That said, we wouldn’t even need to check the packet handles at all. We just needed to flag them as already out-of-order queued once and hand them back into the rx_q at the top. Then the would be processed as usual. Already ooo packets would cause the same error as before if it is for a non-existing handle and others would end up being processed.
-
-For me this means we just need another queue to park the packets until hci_conn_add gets called. I might have missed something, but I am looking for the least invasive option for this and least code duplication.
-
-> /* Alloc HCI device */
-> struct hci_dev *hci_alloc_dev(void)
-> {
-> @@ -3610,10 +3683,12 @@ struct hci_dev *hci_alloc_dev(void)
-> 	INIT_WORK(&hdev->suspend_prepare, hci_prepare_suspend);
-> 
-> 	INIT_DELAYED_WORK(&hdev->power_off, hci_power_off);
-> +	INIT_DELAYED_WORK(&hdev->remove_pending_acl, hci_remove_pending_acl);
-> 
-> 	skb_queue_head_init(&hdev->rx_q);
-> 	skb_queue_head_init(&hdev->cmd_q);
-> 	skb_queue_head_init(&hdev->raw_q);
-> +	skb_queue_head_init(&hdev->pending_acl_q);
-> 
-> 	init_waitqueue_head(&hdev->req_wait_q);
-> 	init_waitqueue_head(&hdev->suspend_wait_q);
-> @@ -4662,8 +4737,6 @@ static void hci_acldata_packet(struct hci_dev *hdev, struct sk_buff *skb)
-> 	struct hci_conn *conn;
-> 	__u16 handle, flags;
-> 
-> -	skb_pull(skb, HCI_ACL_HDR_SIZE);
-> -
-> 	handle = __le16_to_cpu(hdr->handle);
-> 	flags  = hci_flags(handle);
-> 	handle = hci_handle(handle);
-> @@ -4678,17 +4751,16 @@ static void hci_acldata_packet(struct hci_dev *hdev, struct sk_buff *skb)
-> 	hci_dev_unlock(hdev);
-> 
-> 	if (conn) {
-> +		skb_pull(skb, HCI_ACL_HDR_SIZE);
-> +
-> 		hci_conn_enter_active_mode(conn, BT_POWER_FORCE_ACTIVE_OFF);
-> 
-> 		/* Send to upper protocol */
-> 		l2cap_recv_acldata(conn, skb, flags);
-> 		return;
-> 	} else {
-> -		bt_dev_err(hdev, "ACL packet for unknown connection handle %d",
-> -			   handle);
-> +		hci_add_pending_acl(hdev, skb);
-
-So here I want to keep being verbose. If no quirk is set, then this has to stay as an error. In case the quirk is set, then this should still warn that we are queuing up a packet. It is not an expected behavior.
-
-> 	}
-> -
-> -	kfree_skb(skb);
-> }
-> 
-> /* SCO data packet */
-> diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-> index e060fc9ebb18..108c6c102a6a 100644
-> --- a/net/bluetooth/hci_event.c
-> +++ b/net/bluetooth/hci_event.c
-> @@ -2627,6 +2627,8 @@ static void hci_conn_complete_evt(struct hci_dev *hdev, struct sk_buff *skb)
-> 			hci_send_cmd(hdev, HCI_OP_CHANGE_CONN_PTYPE, sizeof(cp),
-> 				     &cp);
-> 		}
-> +
-> +		hci_process_pending_acl(hdev, conn);
-
-Can we just do this in hci_conn_add() when we create the connection object?
- 
-> 	} else {
-> 		conn->state = BT_CLOSED;
-> 		if (conn->type == ACL_LINK)
-> -- 
-> 2.27.0.212.ge8ba1cc988-goog
-> 
+patch has been applied to bluetooth-next tree.
 
 Regards
 
