@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA951C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65978C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDD7920656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:15:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41EE220675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:15:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461738;
-	bh=5+wdZmjteOV1jHbPULdRx6+1VEdNbnGpw+dtMS8ZR8U=;
+	s=default; t=1593461742;
+	bh=dAQagAwGzha9ayDt2K5dc8ZwEUMXPs7HNP+abuI3+gk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ym/EWz2jxpJ05nx9Lmgi0Z46OFJ8qEz/lzQJTv22zfVubapiXThqqU471uyDYlzoE
-	 kE14aQ7XTkDxMR/qrNgwvbrCv3IjkG+UGBt+loN/8prnYqlkHBnFog7posbvLWIzoB
-	 VFFXuKOfecmyhuHvfdczGlT265wozIs25l2ahw54=
+	b=u9meRK7zeS0wJrjQgIzJdiiuGPQmohwdCDGqhDr00+U7Co0fim9ooS1SqQOktp8Re
+	 mnQZciL9fxKLTR5C4CIah5qx5jSI3p5pxlSppJfH0/WRkIuYh6DjBupptFtXIi82lz
+	 FkEj9luF5wrssYToJjJNgGPTsN8B8FP6WMLjFO8M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730530AbgF2UPh (ORCPT
+        id S1727812AbgF2UPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:15:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40592 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:15:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732825AbgF2TaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732830AbgF2TaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1440125203;
-        Mon, 29 Jun 2020 15:35:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16861252BC;
+        Mon, 29 Jun 2020 15:37:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444927;
-        bh=5+wdZmjteOV1jHbPULdRx6+1VEdNbnGpw+dtMS8ZR8U=;
+        s=default; t=1593445028;
+        bh=dAQagAwGzha9ayDt2K5dc8ZwEUMXPs7HNP+abuI3+gk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pfxY8kmSurJkzQQm7pf1xMjo+zJuy+cYLupZ6u6XraD1XvmoiknaxVfT+JrlDpJMt
-         qKe6YrFCVnvUPPh6Qhbv6jyH4xs0RQq+dvASwVmw2ZGMSZmot16q4/0vM5XTGzGwEb
-         W6PRFdHqKVj1TrJk8yZtpJBnAZVvPe843bh8a8Mk=
+        b=BEU5Q6EyHRf0uUq9vYkz4XZKOGl4hYNRorPI1q+AWcAm2XsCHFGSyKl4cDW5bRMXq
+         ipLLkJbomyrgVzpZ47nKZ1AZaZi7+SXYjj3e94UyFSMAULC8BAzfDvIzfMPIe8BD9u
+         LXDVKly00aOkM96UsxwJdNyjtVjwOAxmMycGZo50=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jeremy Kerr <jk@ozlabs.org>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 024/131] net: usb: ax88179_178a: fix packet alignment padding
-Date:   Mon, 29 Jun 2020 11:33:15 -0400
-Message-Id: <20200629153502.2494656-25-sashal@kernel.org>
+Subject: [PATCH 4.19 126/131] pNFS/flexfiles: Fix list corruption if the mirror count changes
+Date:   Mon, 29 Jun 2020 11:34:57 -0400
+Message-Id: <20200629153502.2494656-127-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
@@ -65,72 +65,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Kerr <jk@ozlabs.org>
+From: Trond Myklebust <trond.myklebust@hammerspace.com>
 
-[ Upstream commit e869e7a17798d85829fa7d4f9bbe1eebd4b2d3f6 ]
+commit 8b04013737341442ed914b336cde866b902664ae upstream.
 
-Using a AX88179 device (0b95:1790), I see two bytes of appended data on
-every RX packet. For example, this 48-byte ping, using 0xff as a
-payload byte:
+If the mirror count changes in the new layout we pick up inside
+ff_layout_pg_init_write(), then we can end up adding the
+request to the wrong mirror and corrupting the mirror->pg_list.
 
-  04:20:22.528472 IP 192.168.1.1 > 192.168.1.2: ICMP echo request, id 2447, seq 1, length 64
-	0x0000:  000a cd35 ea50 000a cd35 ea4f 0800 4500
-	0x0010:  0054 c116 4000 4001 f63e c0a8 0101 c0a8
-	0x0020:  0102 0800 b633 098f 0001 87ea cd5e 0000
-	0x0030:  0000 dcf2 0600 0000 0000 ffff ffff ffff
-	0x0040:  ffff ffff ffff ffff ffff ffff ffff ffff
-	0x0050:  ffff ffff ffff ffff ffff ffff ffff ffff
-	0x0060:  ffff 961f
-
-Those last two bytes - 96 1f - aren't part of the original packet.
-
-In the ax88179 RX path, the usbnet rx_fixup function trims a 2-byte
-'alignment pseudo header' from the start of the packet, and sets the
-length from a per-packet field populated by hardware. It looks like that
-length field *includes* the 2-byte header; the current driver assumes
-that it's excluded.
-
-This change trims the 2-byte alignment header after we've set the packet
-length, so the resulting packet length is correct. While we're moving
-the comment around, this also fixes the spelling of 'pseudo'.
-
-Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: d600ad1f2bdb ("NFS41: pop some layoutget errors to application")
+Cc: stable@vger.kernel.org
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/usb/ax88179_178a.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ fs/nfs/flexfilelayout/flexfilelayout.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/usb/ax88179_178a.c b/drivers/net/usb/ax88179_178a.c
-index 2207f7a7d1ffb..8455f72007b9e 100644
---- a/drivers/net/usb/ax88179_178a.c
-+++ b/drivers/net/usb/ax88179_178a.c
-@@ -1400,10 +1400,10 @@ static int ax88179_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
- 		}
+diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
+index e0fe9a0f1bf18..d8cba46a9395c 100644
+--- a/fs/nfs/flexfilelayout/flexfilelayout.c
++++ b/fs/nfs/flexfilelayout/flexfilelayout.c
+@@ -915,9 +915,8 @@ ff_layout_pg_init_write(struct nfs_pageio_descriptor *pgio,
+ 		goto out_mds;
  
- 		if (pkt_cnt == 0) {
--			/* Skip IP alignment psudo header */
--			skb_pull(skb, 2);
- 			skb->len = pkt_len;
--			skb_set_tail_pointer(skb, pkt_len);
-+			/* Skip IP alignment pseudo header */
-+			skb_pull(skb, 2);
-+			skb_set_tail_pointer(skb, skb->len);
- 			skb->truesize = pkt_len + sizeof(struct sk_buff);
- 			ax88179_rx_checksum(skb, pkt_hdr);
- 			return 1;
-@@ -1412,8 +1412,9 @@ static int ax88179_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
- 		ax_skb = skb_clone(skb, GFP_ATOMIC);
- 		if (ax_skb) {
- 			ax_skb->len = pkt_len;
--			ax_skb->data = skb->data + 2;
--			skb_set_tail_pointer(ax_skb, pkt_len);
-+			/* Skip IP alignment pseudo header */
-+			skb_pull(ax_skb, 2);
-+			skb_set_tail_pointer(ax_skb, ax_skb->len);
- 			ax_skb->truesize = pkt_len + sizeof(struct sk_buff);
- 			ax88179_rx_checksum(ax_skb, pkt_hdr);
- 			usbnet_skb_return(dev, ax_skb);
+ 	/* Use a direct mapping of ds_idx to pgio mirror_idx */
+-	if (WARN_ON_ONCE(pgio->pg_mirror_count !=
+-	    FF_LAYOUT_MIRROR_COUNT(pgio->pg_lseg)))
+-		goto out_mds;
++	if (pgio->pg_mirror_count != FF_LAYOUT_MIRROR_COUNT(pgio->pg_lseg))
++		goto out_eagain;
+ 
+ 	for (i = 0; i < pgio->pg_mirror_count; i++) {
+ 		ds = nfs4_ff_layout_prepare_ds(pgio->pg_lseg, i, true);
+@@ -936,11 +935,15 @@ ff_layout_pg_init_write(struct nfs_pageio_descriptor *pgio,
+ 	}
+ 
+ 	return;
+-
++out_eagain:
++	pnfs_generic_pg_cleanup(pgio);
++	pgio->pg_error = -EAGAIN;
++	return;
+ out_mds:
+ 	pnfs_put_lseg(pgio->pg_lseg);
+ 	pgio->pg_lseg = NULL;
+ 	nfs_pageio_reset_write_mds(pgio);
++	pgio->pg_error = -EAGAIN;
+ }
+ 
+ static unsigned int
 -- 
 2.25.1
 
