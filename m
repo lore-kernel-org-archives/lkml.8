@@ -4,49 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8809EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AFAAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:58:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 67D7C206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:58:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3841C2072D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:58:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460718;
-	bh=h63UWjESisQE8n3eAG6r0gEX4O1AVAstfhT8AixWNGw=;
+	s=default; t=1593460722;
+	bh=QqM6UqnNmyzG++c86yYdcz/LHxbATi8of0ESWcWzMDQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SRZDKFxYpi7+5LfGJoagqG5YyDWCK2TAOdU1ZW4tjCQBTmZbgAXQdRV7luIfDdKtF
-	 r8l5UtKuPm1TRAQ2kjRih+3AsBr0I1G/QUOrP3Ljr10s4DgicTpUgHpGwnepqNE60G
-	 AbtCZvZ7TkVUGR82cb/vDXsQIpSyBqvUX4uJjsc0=
+	b=k4YMMXqjNR2Wvoxvul4gTjMCji2Zf85d4lUEExh17NxTrvDwxGuZRi0xD25OpmNE0
+	 OTpw1oTr53I+Uv9Ahf2Xb+xAFgPmz0XrAkOzHuZ+ikEJBy7E8ncd2HwX2qh3G7asDe
+	 hn4LTAz3VVJj92hjRUKuUq/oQuIFSIFD/pUCjV4I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388500AbgF2T6h (ORCPT
+        id S2388488AbgF2T6e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:58:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47694 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:58:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387594AbgF2TkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387590AbgF2TkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C1312490A;
-        Mon, 29 Jun 2020 15:27:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B69624924;
+        Mon, 29 Jun 2020 15:27:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444459;
-        bh=h63UWjESisQE8n3eAG6r0gEX4O1AVAstfhT8AixWNGw=;
+        s=default; t=1593444479;
+        bh=QqM6UqnNmyzG++c86yYdcz/LHxbATi8of0ESWcWzMDQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rlTrMlvN8qtqLpc1EnLs2KULqNeQ4dnhR3x8bHXAuzzqthJtX3SZAwRcdvLAUmClh
-         dJTP+GYpZI3tLQeE8kWxzWvQIQkE1+c1mJHrYprLIiL65zRtPhBKwK9I/R5i4i3Qsn
-         B5Rmsbk+C6Pqkh4fSVS/VuGe8jOI1Rx/tHABlV/o=
+        b=D1WLkXA3eMrasTgMwgJu44Nd6n28MsAbErekqHrv2gXrGa3T6MUraZqHHdWcjsoRh
+         xa04gTmyQz4uPztzJoV/LBwOvwNk1XhMvc4ywylSLfYQ1Dp09nsdL4n9/yNasora35
+         PhpPwyw5zj/p9+cAXpUTBV+Pnuss6cFjM3F5i1Os=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aaron Plattner <aplattner@nvidia.com>,
-        Takashi Iwai <tiwai@suse.de>,
+Cc:     Junxiao Bi <junxiao.bi@oracle.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 139/178] ALSA: hda: Add NVIDIA codec IDs 9a & 9d through a0 to patch table
-Date:   Mon, 29 Jun 2020 11:24:44 -0400
-Message-Id: <20200629152523.2494198-140-sashal@kernel.org>
+Subject: [PATCH 5.4 157/178] ocfs2: fix value of OCFS2_INVALID_SLOT
+Date:   Mon, 29 Jun 2020 11:25:02 -0400
+Message-Id: <20200629152523.2494198-158-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -65,38 +71,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaron Plattner <aplattner@nvidia.com>
+From: Junxiao Bi <junxiao.bi@oracle.com>
 
-commit adb36a8203831e40494a92095dacd566b2ad4a69 upstream.
+commit 9277f8334ffc719fe922d776444d6e4e884dbf30 upstream.
 
-These IDs are for upcoming NVIDIA chips with audio functions that are largely
-similar to the existing ones.
+In the ocfs2 disk layout, slot number is 16 bits, but in ocfs2
+implementation, slot number is 32 bits.  Usually this will not cause any
+issue, because slot number is converted from u16 to u32, but
+OCFS2_INVALID_SLOT was defined as -1, when an invalid slot number from
+disk was obtained, its value was (u16)-1, and it was converted to u32.
+Then the following checking in get_local_system_inode will be always
+skipped:
 
-Signed-off-by: Aaron Plattner <aplattner@nvidia.com>
+ static struct inode **get_local_system_inode(struct ocfs2_super *osb,
+                                               int type,
+                                               u32 slot)
+ {
+ 	BUG_ON(slot == OCFS2_INVALID_SLOT);
+	...
+ }
+
+Link: http://lkml.kernel.org/r/20200616183829.87211-5-junxiao.bi@oracle.com
+Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200611180845.39942-1-aplattner@nvidia.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- sound/pci/hda/patch_hdmi.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ fs/ocfs2/ocfs2_fs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
-index d41c91468ab33..e78c4367b6c86 100644
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -4146,6 +4146,11 @@ HDA_CODEC_ENTRY(0x10de0095, "GPU 95 HDMI/DP",	patch_nvhdmi),
- HDA_CODEC_ENTRY(0x10de0097, "GPU 97 HDMI/DP",	patch_nvhdmi),
- HDA_CODEC_ENTRY(0x10de0098, "GPU 98 HDMI/DP",	patch_nvhdmi),
- HDA_CODEC_ENTRY(0x10de0099, "GPU 99 HDMI/DP",	patch_nvhdmi),
-+HDA_CODEC_ENTRY(0x10de009a, "GPU 9a HDMI/DP",	patch_nvhdmi),
-+HDA_CODEC_ENTRY(0x10de009d, "GPU 9d HDMI/DP",	patch_nvhdmi),
-+HDA_CODEC_ENTRY(0x10de009e, "GPU 9e HDMI/DP",	patch_nvhdmi),
-+HDA_CODEC_ENTRY(0x10de009f, "GPU 9f HDMI/DP",	patch_nvhdmi),
-+HDA_CODEC_ENTRY(0x10de00a0, "GPU a0 HDMI/DP",	patch_nvhdmi),
- HDA_CODEC_ENTRY(0x10de8001, "MCP73 HDMI",	patch_nvhdmi_2ch),
- HDA_CODEC_ENTRY(0x10de8067, "MCP67/68 HDMI",	patch_nvhdmi_2ch),
- HDA_CODEC_ENTRY(0x11069f80, "VX900 HDMI/DP",	patch_via_hdmi),
+diff --git a/fs/ocfs2/ocfs2_fs.h b/fs/ocfs2/ocfs2_fs.h
+index 46700f9b6b4cd..dcef83c8796d4 100644
+--- a/fs/ocfs2/ocfs2_fs.h
++++ b/fs/ocfs2/ocfs2_fs.h
+@@ -290,7 +290,7 @@
+ #define OCFS2_MAX_SLOTS			255
+ 
+ /* Slot map indicator for an empty slot */
+-#define OCFS2_INVALID_SLOT		-1
++#define OCFS2_INVALID_SLOT		((u16)-1)
+ 
+ #define OCFS2_VOL_UUID_LEN		16
+ #define OCFS2_MAX_VOL_LABEL_LEN		64
 -- 
 2.25.1
 
