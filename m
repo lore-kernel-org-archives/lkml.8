@@ -2,101 +2,164 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 211A3C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 877BAC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:57:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 057CE204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:57:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CA9F20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:57:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="heSHuZTF"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="hJloRbJx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730098AbgF2S5U (ORCPT
+        id S1729175AbgF2S5a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:57:20 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:31875 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726178AbgF2S5L (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:57:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593457030;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=x2c/2dZNG7adq9LsJdfmo7ftcPEILQF95jZw0pQ9BCQ=;
-        b=heSHuZTF0S4jBuO+WRaJongAIcmpcdDj4Zl3murESu8dVvNzqcyhkpl/EaM2TaaJZimXsu
-        Zw5N7Mp9mQJLHfy5lBa1poy5hsM7PN+x3WVJbHNwWuqKpRnTuqIPUHC934ON/blxftyHls
-        Atr8v40eREjznLe4ix7n+hXKyMGed/8=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-469-q60Rl0cbMX6Q8nC4LTZZpQ-1; Mon, 29 Jun 2020 10:56:24 -0400
-X-MC-Unique: q60Rl0cbMX6Q8nC4LTZZpQ-1
-Received: by mail-qk1-f199.google.com with SMTP id v16so2250723qka.18
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:56:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=x2c/2dZNG7adq9LsJdfmo7ftcPEILQF95jZw0pQ9BCQ=;
-        b=k8Xv2H4hOgPyNYYq7TY5B89xxOXGNY/qmAIF023lkkYfPAEVZhWSHGBf8mxkD7OM5t
-         3VYXeYHuX0k03frM+HV6YoavOMNV5wkM/oSsRTaMRUKi7Syc7vXh/Q/vD/QNpo7dQxvD
-         qByqZ/kro4fkPybw2r5fpw9urTuNg78/BWZi7lWEY3PeCXhKfOjOyoaq+KtDhd3hXKqE
-         6nsOdF+wNyu/Umg0yjPzCi9JnMps0wfvXhitmUd3uoWzscYf5D29yHGjUeIDPhd/sC0O
-         GgKQw0ZimRKUhjNKxChXuONbYQXzEVd+EXv3lUlkCzsUhU1/ZqR9IJOZfA8fThQhtV/7
-         YNYw==
-X-Gm-Message-State: AOAM533+/n/2COw7eebQ871MbHAHQNRuBc/SkFfWTA1Oc35cM6O5Zth3
-        Mn4klsNUYQslGKQzwbJoyzpcI3w9SixXAe9Cn94bd7tS+JGj/UP5FZTaxLHjUwpwWNTD/y3+vIB
-        1CQvdIu1BK752PVtNLNo0Sclz
-X-Received: by 2002:ac8:4e03:: with SMTP id c3mr16104936qtw.82.1593442583874;
-        Mon, 29 Jun 2020 07:56:23 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxbgg3ZlZlh6ZNt2QjuDWhPkkTILFb8Ljtsdr8XVVXuozp8ruhVF65TWV2XDFLeFI6GnqXVuA==
-X-Received: by 2002:ac8:4e03:: with SMTP id c3mr16104908qtw.82.1593442583630;
-        Mon, 29 Jun 2020 07:56:23 -0700 (PDT)
-Received: from xz-x1 ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id g1sm35145qkl.86.2020.06.29.07.56.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 07:56:22 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 10:56:21 -0400
-From:   Peter Xu <peterx@redhat.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH 01/26] mm: Do page fault accounting in handle_mm_fault
-Message-ID: <20200629145621.GC266532@xz-x1>
-References: <20200626223130.199227-1-peterx@redhat.com>
- <20200626223130.199227-2-peterx@redhat.com>
- <370e06f7-a93b-21c9-c58e-57ad6ed8f8a8@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <370e06f7-a93b-21c9-c58e-57ad6ed8f8a8@nvidia.com>
+        Mon, 29 Jun 2020 14:57:30 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:54415 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728601AbgF2S5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:57:25 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593457045; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=no+lY7+XNcfI1t+JikLNx6A15a/ghQbWaISNj3s3yLs=; b=hJloRbJx3cD1r0+Hj70xF6KpO2OxoLooM20U5tktDqlGsWw8aWD8aMHMCu2Gd8SBGEiem+lv
+ 7i6jskiXoI36JkoW3Tv24q86NyFpC1mjCkE1Jdkme+6h09+8f/s2LA/Uovkw+7gkIIJQeqGm
+ BdqByh2unJ7amYxN85s8C/Y7I6I=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
+ 5efa195af3deea03f3cded9d (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 29 Jun 2020 16:39:54
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id CE0DAC433CB; Mon, 29 Jun 2020 16:39:54 +0000 (UTC)
+Received: from malabar-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbhatt)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id E9F8CC43395;
+        Mon, 29 Jun 2020 16:39:53 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org E9F8CC43395
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bbhatt@codeaurora.org
+From:   Bhaumik Bhatt <bbhatt@codeaurora.org>
+To:     manivannan.sadhasivam@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
+        jhugo@codeaurora.org, linux-kernel@vger.kernel.org,
+        Bhaumik Bhatt <bbhatt@codeaurora.org>
+Subject: [PATCH v4 5/9] bus: mhi: core: Use generic name field for an MHI device
+Date:   Mon, 29 Jun 2020 09:39:38 -0700
+Message-Id: <1593448782-8385-6-git-send-email-bbhatt@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1593448782-8385-1-git-send-email-bbhatt@codeaurora.org>
+References: <1593448782-8385-1-git-send-email-bbhatt@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 28, 2020 at 06:52:24PM -0700, John Hubbard wrote:
-> The above file is renamed, as of a couple weeks ago, via
-> commit ad8694bac410 ("iommu/amd: Move AMD IOMMU driver into
-> subdirectory").
-> 
-> Also there are a number of changes to mm/gup.c (not a concern for this
-> patch, but it is for the overall series). So I'm hoping you're going to
-> post a version that is rebased against 5.8-rc*.
+An MHI device is not necessarily associated with only channels as we can
+have one associated with the controller itself. Hence, the chan_name
+field within the mhi_device structure should instead be replaced with a
+generic name to accurately reflect any type of MHI device.
 
-Thanks for the heads up.  It turns out that there're even more conflicts than
-the file movements.  I'll rebase to linux-next/akpm and resend.  The versioning
-of the series seems to always not working right...  I'll try to fix that too...
+Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
+Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
+---
+ drivers/bus/mhi/core/init.c | 5 +++--
+ drivers/bus/mhi/core/main.c | 6 +++---
+ include/linux/mhi.h         | 8 ++++----
+ 3 files changed, 10 insertions(+), 9 deletions(-)
 
+diff --git a/drivers/bus/mhi/core/init.c b/drivers/bus/mhi/core/init.c
+index e43a190..e2011ec 100644
+--- a/drivers/bus/mhi/core/init.c
++++ b/drivers/bus/mhi/core/init.c
+@@ -904,6 +904,7 @@ int mhi_register_controller(struct mhi_controller *mhi_cntrl,
+ 	mhi_dev->dev_type = MHI_DEVICE_CONTROLLER;
+ 	mhi_dev->mhi_cntrl = mhi_cntrl;
+ 	dev_set_name(&mhi_dev->dev, "%s", dev_name(mhi_cntrl->cntrl_dev));
++	mhi_dev->name = dev_name(mhi_cntrl->cntrl_dev);
+ 
+ 	/* Init wakeup source */
+ 	device_init_wakeup(&mhi_dev->dev, true);
+@@ -1249,7 +1250,7 @@ static int mhi_uevent(struct device *dev, struct kobj_uevent_env *env)
+ 	struct mhi_device *mhi_dev = to_mhi_device(dev);
+ 
+ 	return add_uevent_var(env, "MODALIAS=" MHI_DEVICE_MODALIAS_FMT,
+-					mhi_dev->chan_name);
++					mhi_dev->name);
+ }
+ 
+ static int mhi_match(struct device *dev, struct device_driver *drv)
+@@ -1266,7 +1267,7 @@ static int mhi_match(struct device *dev, struct device_driver *drv)
+ 		return 0;
+ 
+ 	for (id = mhi_drv->id_table; id->chan[0]; id++)
+-		if (!strcmp(mhi_dev->chan_name, id->chan)) {
++		if (!strcmp(mhi_dev->name, id->chan)) {
+ 			mhi_dev->id = id;
+ 			return 1;
+ 		}
+diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
+index 8d6ec34..3af0ce6 100644
+--- a/drivers/bus/mhi/core/main.c
++++ b/drivers/bus/mhi/core/main.c
+@@ -249,7 +249,7 @@ int mhi_destroy_device(struct device *dev, void *data)
+ 		put_device(&mhi_dev->dl_chan->mhi_dev->dev);
+ 
+ 	dev_dbg(&mhi_cntrl->mhi_dev->dev, "destroy device for chan:%s\n",
+-		 mhi_dev->chan_name);
++		 mhi_dev->name);
+ 
+ 	/* Notify the client and remove the device from MHI bus */
+ 	device_del(dev);
+@@ -327,10 +327,10 @@ void mhi_create_devices(struct mhi_controller *mhi_cntrl)
+ 		}
+ 
+ 		/* Channel name is same for both UL and DL */
+-		mhi_dev->chan_name = mhi_chan->name;
++		mhi_dev->name = mhi_chan->name;
+ 		dev_set_name(&mhi_dev->dev, "%s_%s",
+ 			     dev_name(mhi_cntrl->cntrl_dev),
+-			     mhi_dev->chan_name);
++			     mhi_dev->name);
+ 
+ 		/* Init wakeup source if available */
+ 		if (mhi_dev->dl_chan && mhi_dev->dl_chan->wake_capable)
+diff --git a/include/linux/mhi.h b/include/linux/mhi.h
+index b008914..7ed785e 100644
+--- a/include/linux/mhi.h
++++ b/include/linux/mhi.h
+@@ -436,10 +436,10 @@ struct mhi_controller {
+ };
+ 
+ /**
+- * struct mhi_device - Structure representing a MHI device which binds
+- *                     to channels
++ * struct mhi_device - Structure representing an MHI device which binds
++ *                     to channels or is associated with controllers
+  * @id: Pointer to MHI device ID struct
+- * @chan_name: Name of the channel to which the device binds
++ * @name: Name of the associated MHI device
+  * @mhi_cntrl: Controller the device belongs to
+  * @ul_chan: UL channel for the device
+  * @dl_chan: DL channel for the device
+@@ -451,7 +451,7 @@ struct mhi_controller {
+  */
+ struct mhi_device {
+ 	const struct mhi_device_id *id;
+-	const char *chan_name;
++	const char *name;
+ 	struct mhi_controller *mhi_cntrl;
+ 	struct mhi_chan *ul_chan;
+ 	struct mhi_chan *dl_chan;
 -- 
-Peter Xu
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
