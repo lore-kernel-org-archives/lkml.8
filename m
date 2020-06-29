@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19198C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:48:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE364C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E157220760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:48:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6BA620760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:48:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460125;
-	bh=5+Q2LbZakW7M8pUDTNFnL1YeRbaqIOCUnuuA2pCSyaM=;
+	s=default; t=1593460128;
+	bh=eCoiJnE2UqZNsG6gJYFlYftVhCvaxXONnjxO3zvrJx4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xIcIOMuY9sI/ypqtPf63alO1BYaXyENF/bYT5A2mfU+3UIYKJgZ8JxXpiJn+VLPpv
-	 WjB7b0+UWMkF1RA7QNPW6kUd1gaAPCin3tAzDWhGEp/KuS6976/zVy3k4lYLygcagH
-	 I4QcBCbQV9oUr/FM02+8lNuDRd1k5Uw/83GWLpcs=
+	b=gI7N0ugSXRpZCoNjHqTbN+snWovkmLyufnguQagvzqa9qKZTX0gcXf2SkHZy6PxYr
+	 OO3WXLeyG97sess+5CVA+KjAptYhy9TuzJ4aeerMRfDNNouviKFxfOfzNf5yLFG75i
+	 xjHzixTbPY21G8U06TIfKTGJcoJmJDAClwsrtV44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388188AbgF2Tso (ORCPT
+        id S2388182AbgF2Tsj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:48:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47654 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:48:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47682 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387775AbgF2Tkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387772AbgF2Tkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB8D4248A8;
-        Mon, 29 Jun 2020 15:26:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B822424946;
+        Mon, 29 Jun 2020 15:28:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444405;
-        bh=5+Q2LbZakW7M8pUDTNFnL1YeRbaqIOCUnuuA2pCSyaM=;
+        s=default; t=1593444486;
+        bh=eCoiJnE2UqZNsG6gJYFlYftVhCvaxXONnjxO3zvrJx4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j66nQpb8lbZ0i6Jn7takeny7YoDCVV3k9vS2Bdnop6VuxIMuHXhK2UIG8lVFUeh82
-         UznRZyAnarx0DJnzHU3LAzo8HEKeUjHPRayFT+7bF5Ce5F+PP/YX3LGUIO1E/hxcLU
-         T8EkxzzZswPF1MsGo1HWtaZMSfVx/+6UB3gVwSWI=
+        b=Vo9AuC8u7RHkW2jlfg4R02180kcxYBNDDPINReyHz/UEj8EBKiyY26cBavPn4rVza
+         TYimY/11hq+83UOzsD4qWM9y/3UzHl0KNAYPvziiK4UUJFfnAaXi08XkH6x2uvY0ii
+         tQ5NcR14ZeVSeD8qoICic9r41h1rp4jTR9ExtzYY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aditya Pakki <pakki001@umn.edu>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 083/178] RDMA/rvt: Fix potential memory leak caused by rvt_alloc_rq
-Date:   Mon, 29 Jun 2020 11:23:48 -0400
-Message-Id: <20200629152523.2494198-84-sashal@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.4 163/178] tracing: Fix event trigger to accept redundant spaces
+Date:   Mon, 29 Jun 2020 11:25:08 -0400
+Message-Id: <20200629152523.2494198-164-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -66,50 +66,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-[ Upstream commit 90a239ee25fa3a483facec3de7c144361a3d3a51 ]
+commit 6784beada631800f2c5afd567e5628c843362cee upstream.
 
-In case of failure of alloc_ud_wq_attr(), the memory allocated by
-rvt_alloc_rq() is not freed. Fix it by calling rvt_free_rq() using the
-existing clean-up code.
+Fix the event trigger to accept redundant spaces in
+the trigger input.
 
-Fixes: d310c4bf8aea ("IB/{rdmavt, hfi1, qib}: Remove AH refcount for UD QPs")
-Link: https://lore.kernel.org/r/20200614041148.131983-1-pakki001@umn.edu
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Acked-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+For example, these return -EINVAL
+
+echo " traceon" > events/ftrace/print/trigger
+echo "traceon  if common_pid == 0" > events/ftrace/print/trigger
+echo "disable_event:kmem:kmalloc " > events/ftrace/print/trigger
+
+But these are hard to find what is wrong.
+
+To fix this issue, use skip_spaces() to remove spaces
+in front of actual tokens, and set NULL if there is no
+token.
+
+Link: http://lkml.kernel.org/r/159262476352.185015.5261566783045364186.stgit@devnote2
+
+Cc: Tom Zanussi <zanussi@kernel.org>
+Cc: stable@vger.kernel.org
+Fixes: 85f2b08268c0 ("tracing: Add basic event trigger framework")
+Reviewed-by: Tom Zanussi <zanussi@kernel.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/infiniband/sw/rdmavt/qp.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ kernel/trace/trace_events_trigger.c | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/infiniband/sw/rdmavt/qp.c b/drivers/infiniband/sw/rdmavt/qp.c
-index d354653893577..19556c62c7ea8 100644
---- a/drivers/infiniband/sw/rdmavt/qp.c
-+++ b/drivers/infiniband/sw/rdmavt/qp.c
-@@ -1196,7 +1196,7 @@ struct ib_qp *rvt_create_qp(struct ib_pd *ibpd,
- 		err = alloc_ud_wq_attr(qp, rdi->dparms.node);
- 		if (err) {
- 			ret = (ERR_PTR(err));
--			goto bail_driver_priv;
-+			goto bail_rq_rvt;
- 		}
+diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
+index de840de87a18c..e913d41a41949 100644
+--- a/kernel/trace/trace_events_trigger.c
++++ b/kernel/trace/trace_events_trigger.c
+@@ -216,11 +216,17 @@ static int event_trigger_regex_open(struct inode *inode, struct file *file)
  
- 		err = alloc_qpn(rdi, &rdi->qp_dev->qpn_table,
-@@ -1300,9 +1300,11 @@ struct ib_qp *rvt_create_qp(struct ib_pd *ibpd,
- 	rvt_free_qpn(&rdi->qp_dev->qpn_table, qp->ibqp.qp_num);
+ static int trigger_process_regex(struct trace_event_file *file, char *buff)
+ {
+-	char *command, *next = buff;
++	char *command, *next;
+ 	struct event_command *p;
+ 	int ret = -EINVAL;
  
- bail_rq_wq:
--	rvt_free_rq(&qp->r_rq);
- 	free_ud_wq_attr(qp);
++	next = buff = skip_spaces(buff);
+ 	command = strsep(&next, ": \t");
++	if (next) {
++		next = skip_spaces(next);
++		if (!*next)
++			next = NULL;
++	}
+ 	command = (command[0] != '!') ? command : command + 1;
  
-+bail_rq_rvt:
-+	rvt_free_rq(&qp->r_rq);
-+
- bail_driver_priv:
- 	rdi->driver_f.qp_priv_free(rdi, qp);
+ 	mutex_lock(&trigger_cmd_mutex);
+@@ -630,8 +636,14 @@ event_trigger_callback(struct event_command *cmd_ops,
+ 	int ret;
  
+ 	/* separate the trigger from the filter (t:n [if filter]) */
+-	if (param && isdigit(param[0]))
++	if (param && isdigit(param[0])) {
+ 		trigger = strsep(&param, " \t");
++		if (param) {
++			param = skip_spaces(param);
++			if (!*param)
++				param = NULL;
++		}
++	}
+ 
+ 	trigger_ops = cmd_ops->get_trigger_ops(cmd, trigger);
+ 
+@@ -1368,6 +1380,11 @@ int event_enable_trigger_func(struct event_command *cmd_ops,
+ 	trigger = strsep(&param, " \t");
+ 	if (!trigger)
+ 		return -EINVAL;
++	if (param) {
++		param = skip_spaces(param);
++		if (!*param)
++			param = NULL;
++	}
+ 
+ 	system = strsep(&trigger, ":");
+ 	if (!trigger)
 -- 
 2.25.1
 
