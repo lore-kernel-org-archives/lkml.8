@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 323CBC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96049C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E2A820760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:56:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73459206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:56:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467802;
-	bh=O3Sl3Zmj13GtombGOkybZSX876YS3KMgO+6+2EF6B1w=;
+	s=default; t=1593467809;
+	bh=s1z9igBSV3lztCsHw33mR1pCTyJJtjXbdRW56g7ZAdU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U7B6KLa2/cejIO+G6fCGvaB8vQBkzUMhrk4aOuWnvpQusU5/KVA+pG1dttKJy3WqX
-	 te1MMy88D7KHxvNWtKF58D5gW4HMyovqPpD3N7lVrTTqQIPV3Me4orNjpE9HW+TsM8
-	 Lj9eD16tKJ74uUFwsblEJNaGY6Q8VQqGSn5qrBD0=
+	b=I7EgEUb1i+kiJ6ZSL7zub9q3tKcghTN2OBerfBgtlmofb5DoBzoaPrhJYwxBxllPb
+	 1SnprAbb1ltfWr0dz/5Zj3RCI1cx1mlhy23ZbxTQpcnp5PoFXAFysHfMn4HkRmiy6O
+	 sCpfaglk591Sjd3e2FVSQh5wFLruR7ih0O8zQG3c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404561AbgF2V4P (ORCPT
+        id S2391614AbgF2V4r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:56:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56912 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:56:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726535AbgF2Sfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:31 -0400
+        id S1726518AbgF2Sfa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 595C024709;
-        Mon, 29 Jun 2020 15:20:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F4B1247CD;
+        Mon, 29 Jun 2020 15:22:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444043;
-        bh=O3Sl3Zmj13GtombGOkybZSX876YS3KMgO+6+2EF6B1w=;
+        s=default; t=1593444139;
+        bh=s1z9igBSV3lztCsHw33mR1pCTyJJtjXbdRW56g7ZAdU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LKMbmHXOrIfv6NJo4gA+hlSuiNNT/oUcFjGKapoeQHo7rXPY3KNvVzSFgugwiM8P2
-         slKS+xoNKUyE89nKRykcJMHsYgOjB/BHvtxLoyZfX5fLL4yLdp6uEwqSksHITweQ/k
-         nfmeq4diZEbY7vdlrgoXAnplnrqHgp810F1Rx79k=
+        b=qVAycklmSqym+6N5TGsaURCbKgfRlnI5acljxK64b08/XpEkKWAUEf5uBJ7Odx8YN
+         f7KibMiCS/O+i87sB5bhEI39IZnQM+RDs6Dp6HDtZRsXjvwOfR54/BNd/NL+XiE0P7
+         a2A7lIUzrmnSPkzamh8A16g6nuMbNAPzMOjrE24A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexander Lobakin <alobakin@marvell.com>,
-        Igor Russkikh <irusskikh@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 150/265] net: qed: fix NVMe login fails over VFs
-Date:   Mon, 29 Jun 2020 11:16:23 -0400
-Message-Id: <20200629151818.2493727-151-sashal@kernel.org>
+Cc:     Bernard Zhao <bernard@vivo.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 245/265] drm/amd: fix potential memleak in err branch
+Date:   Mon, 29 Jun 2020 11:17:58 -0400
+Message-Id: <20200629151818.2493727-246-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -67,78 +66,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lobakin <alobakin@marvell.com>
+From: Bernard Zhao <bernard@vivo.com>
 
-[ Upstream commit ccd7c7ce167a21dbf2b698ffcf00f11d96d44f9b ]
+commit b5b78a6c8d8cb9c307bc6b16a754603424459d6e upstream.
 
-25ms sleep cycles in waiting for PF response are excessive and may lead
-to different timeout failures.
+The function kobject_init_and_add alloc memory like:
+kobject_init_and_add->kobject_add_varg->kobject_set_name_vargs
+->kvasprintf_const->kstrdup_const->kstrdup->kmalloc_track_caller
+->kmalloc_slab, in err branch this memory not free. If use
+kmemleak, this path maybe catched.
+These changes are to add kobject_put in kobject_init_and_add
+failed branch, fix potential memleak.
 
-Start to wait with short udelays, and in most cases polling will end
-here. If the time was not sufficient, switch to msleeps.
-usleep_range() may go far beyond 100us depending on platform and tick
-configuration, hence atomic udelays for consistency.
-
-Also add explicit DMA barriers since 'done' always comes from a shared
-request-response DMA pool, and note that in the comment nearby.
-
-Fixes: 1408cc1fa48c ("qed: Introduce VFs")
-Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
-Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Bernard Zhao <bernard@vivo.com>
+Reviewed-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Signed-off-by: Felix Kuehling <Felix.Kuehling@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/qlogic/qed/qed_vf.c | 23 ++++++++++++++++++-----
- 1 file changed, 18 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/amd/amdkfd/kfd_process.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_vf.c b/drivers/net/ethernet/qlogic/qed/qed_vf.c
-index 856051f50eb75..adc2c8f3d48ef 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_vf.c
-+++ b/drivers/net/ethernet/qlogic/qed/qed_vf.c
-@@ -81,12 +81,17 @@ static void qed_vf_pf_req_end(struct qed_hwfn *p_hwfn, int req_status)
- 	mutex_unlock(&(p_hwfn->vf_iov_info->mutex));
- }
+diff --git a/drivers/gpu/drm/amd/amdkfd/kfd_process.c b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
+index fe0cd49d4ea7c..d8c74aa4e5650 100644
+--- a/drivers/gpu/drm/amd/amdkfd/kfd_process.c
++++ b/drivers/gpu/drm/amd/amdkfd/kfd_process.c
+@@ -396,6 +396,7 @@ struct kfd_process *kfd_create_process(struct file *filep)
+ 					   (int)process->lead_thread->pid);
+ 		if (ret) {
+ 			pr_warn("Creating procfs pid directory failed");
++			kobject_put(process->kobj);
+ 			goto out;
+ 		}
  
-+#define QED_VF_CHANNEL_USLEEP_ITERATIONS	90
-+#define QED_VF_CHANNEL_USLEEP_DELAY		100
-+#define QED_VF_CHANNEL_MSLEEP_ITERATIONS	10
-+#define QED_VF_CHANNEL_MSLEEP_DELAY		25
-+
- static int qed_send_msg2pf(struct qed_hwfn *p_hwfn, u8 *done, u32 resp_size)
- {
- 	union vfpf_tlvs *p_req = p_hwfn->vf_iov_info->vf2pf_request;
- 	struct ustorm_trigger_vf_zone trigger;
- 	struct ustorm_vf_zone *zone_data;
--	int rc = 0, time = 100;
-+	int iter, rc = 0;
- 
- 	zone_data = (struct ustorm_vf_zone *)PXP_VF_BAR0_START_USDM_ZONE_B;
- 
-@@ -126,11 +131,19 @@ static int qed_send_msg2pf(struct qed_hwfn *p_hwfn, u8 *done, u32 resp_size)
- 	REG_WR(p_hwfn, (uintptr_t)&zone_data->trigger, *((u32 *)&trigger));
- 
- 	/* When PF would be done with the response, it would write back to the
--	 * `done' address. Poll until then.
-+	 * `done' address from a coherent DMA zone. Poll until then.
- 	 */
--	while ((!*done) && time) {
--		msleep(25);
--		time--;
-+
-+	iter = QED_VF_CHANNEL_USLEEP_ITERATIONS;
-+	while (!*done && iter--) {
-+		udelay(QED_VF_CHANNEL_USLEEP_DELAY);
-+		dma_rmb();
-+	}
-+
-+	iter = QED_VF_CHANNEL_MSLEEP_ITERATIONS;
-+	while (!*done && iter--) {
-+		msleep(QED_VF_CHANNEL_MSLEEP_DELAY);
-+		dma_rmb();
- 	}
- 
- 	if (!*done) {
 -- 
 2.25.1
 
