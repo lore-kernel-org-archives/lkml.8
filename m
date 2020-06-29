@@ -2,123 +2,208 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD00C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EE85C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:51:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 66A8E206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:51:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5575E206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:51:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uGRgKAii"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UmKdj7zz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731658AbgF2VvM (ORCPT
+        id S2404539AbgF2VvU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:51:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40474 "EHLO
+        Mon, 29 Jun 2020 17:51:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404373AbgF2VtY (ORCPT
+        with ESMTP id S1731828AbgF2VvP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 17:49:24 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9217AC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 14:49:24 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id i25so18911189iog.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 14:49:24 -0700 (PDT)
+        Mon, 29 Jun 2020 17:51:15 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74A62C061755;
+        Mon, 29 Jun 2020 14:51:15 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id d4so8928454pgk.4;
+        Mon, 29 Jun 2020 14:51:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=OnwKMPzUR7vm+fNhfAe4BP95ZmBSiCousJyVZMr+eU4=;
-        b=uGRgKAiimrgL2i7Xoqg6kmfwYFmRBO1K+Hf2WRe219l2vR8aW/OqlhuegRdkChRdnc
-         rEWIRCb8GE4FvyD09etNE9iSoN66TFoedqfseGxy3t/ApZOdAWdhxQf6B8bBOQSOftS8
-         2P+qW5At3Ax4AqjfZVFTIpQGDm2A5NvFvPIvJv0NNZx6/t/jqaxv0r/K/R2ZZgkG7DBb
-         R8Rp46qzgzYKi2/RcXo92Efw+ZSAAMW9H0sm6Nanma6Vr90PCjA5lK5gj1G30t2HFupD
-         GrRfqkvcrxE5h0e4j5J/9sgEEnH9T/9T1oEnU7jgIUS27wS1H8ThmX0gfIGXYHG6ER0w
-         GGCg==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QD5DEy/jVvw/j5XLElSOzb3HgHrMTHj6k7kJYHldTlE=;
+        b=UmKdj7zzQGovaJHoZDjRCUfbnKZO9fy/KOV7Ye7XkNX3XRaahNF/EOOZULEPDHzNFX
+         5O/UE8pbIdcVAEKrK2oVN4z3jBU40Zy0LPNPgMRfqmA3lDNqA0IXGmds2cG/Y38iIh17
+         9psRG4xwGUi4zqt161P5yEKou3mzHuY/2f74sM3JUp1n6NIHLg5gCCOTHJ0BEP/mm16q
+         8Rj4ByGJDje8G0YaHV5Ly4P+6AlGRPkT83d+oZiG+/Leog1eiWMLN7hEZH2axlfWSplZ
+         6Y5ml8nX/hh9/8slGJwiipD0bSU+PZrleBG58YzEvG/eebD3b6Z3VlGQU1B4FKrs/mOe
+         Virw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=OnwKMPzUR7vm+fNhfAe4BP95ZmBSiCousJyVZMr+eU4=;
-        b=jD+sfnL2hbi95Q3Os4rFvbdRm61MrWwvNlX/Q2e4/TI6A8hBzETMV7QFxpb1+QJU/P
-         7CFSxz/7EmjZ+siAZxvhYIOIt9xaGz5y1kym1Ti13DyN1bkBKDKSVWfGSOU6djxnRTKx
-         yCiZXKTr6j7Ewy3KhRzkOioQP3KEitf80hczqmjv2h8jeqVakGCaJULGIn9h8JV1io31
-         nmncYLKT1exaKZOP6C7XIZzjWJ3anDmgsdKjPVBNn+qI5atbHDpmk6tZMczIfsT6+NkS
-         AEEiPDUe6m8DASGqiAkB+GX26LZKCVJ9qDIzxOJ9H9McKXUiwYifAMr6TzwDmMmloQW+
-         sHPQ==
-X-Gm-Message-State: AOAM532ImgMkyWWtQa4/S5Zfc/5zoD6I9QuD2T/SiFtTgz2B+2FMRAQF
-        iXz1EDy/UWkJrjHqKTAGK5wdPw==
-X-Google-Smtp-Source: ABdhPJzQw2nxuO3eOLUdcXu6/d/nND+rrrENJbWNxkhhgZktkVnd+vMwypSgufU/1EQnjqLTnT2seA==
-X-Received: by 2002:a05:6638:601:: with SMTP id g1mr20258787jar.137.1593467363991;
-        Mon, 29 Jun 2020 14:49:23 -0700 (PDT)
-Received: from presto.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.gmail.com with ESMTPSA id u10sm555500iow.38.2020.06.29.14.49.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 14:49:23 -0700 (PDT)
-From:   Alex Elder <elder@linaro.org>
-To:     davem@davemloft.net, kuba@kernel.org
-Cc:     evgreen@chromium.org, subashab@codeaurora.org,
-        cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 1/5] net: ipa: head-of-line block registers are RX only
-Date:   Mon, 29 Jun 2020 16:49:15 -0500
-Message-Id: <20200629214919.1196017-2-elder@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629214919.1196017-1-elder@linaro.org>
-References: <20200629214919.1196017-1-elder@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QD5DEy/jVvw/j5XLElSOzb3HgHrMTHj6k7kJYHldTlE=;
+        b=Cx5dfIprIQkcXxm53a0Rl9Eev3W0M1MWX6qbGaNTwQaS5+SOoidGLrHojsJqIgZ5AI
+         AZZS7HKAehwWyJsAd0y+higVEz1DlgLuuJOkfSkXpTWW78N+gy6kK1ZqMOFOwOzr1mKc
+         p51duAQ3g8vfuFnI7mWHNATJ8axXisEInNG41L7Z4qnnuXdGNG4PTJYIRV0mWXc2w4BG
+         pPvD8zaE9G6TCyzUVPZVjJ/unTYuw1RsrjFCd34sCjibUh+uttyWRIY+Zji56XuT3Lel
+         94fAiw9vYCkA18YXH7GUr5RMf2nR1QtQsX111EqppEgISYlcMiQcPuRnBoX1RaSuXfB8
+         iPgg==
+X-Gm-Message-State: AOAM5334UbxLhw/GX4m7/Aazqq1UQ0Q4cQnS7XSzscpsgEo6+S4/7Y30
+        MX+PTeP4RF9zscNKZ8tSHdQruXT9feVnbMchoj0=
+X-Google-Smtp-Source: ABdhPJxxUX+SId++y236FyrS13rQ65Xb1fQ62IsrNWMa+Tu1woI6xPPfiUo2cxoKlxyk5ZP5iW+ASe43unUJBUOWGr0=
+X-Received: by 2002:a63:db18:: with SMTP id e24mr8993393pgg.192.1593467475038;
+ Mon, 29 Jun 2020 14:51:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200629200227.1518784-1-lkmlabelt@gmail.com> <20200629200227.1518784-2-lkmlabelt@gmail.com>
+ <20200629204653.o6q3a2fufgq62pzo@liuwe-devbox-debian-v2>
+In-Reply-To: <20200629204653.o6q3a2fufgq62pzo@liuwe-devbox-debian-v2>
+From:   Andres Beltran <lkmlabelt@gmail.com>
+Date:   Mon, 29 Jun 2020 17:51:05 -0400
+Message-ID: <CAGpZZ6sUXOnggeQyPfxkdK50=1AhTUqbvBvc2bEs4qwwk+rSPg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] Drivers: hv: vmbus: Add vmbus_requestor data
+ structure for VMBus hardening
+To:     Wei Liu <wei.liu@kernel.org>
+Cc:     Andres Beltran <t-mabelt@microsoft.com>, kys@microsoft.com,
+        haiyangz@microsoft.com, sthemmin@microsoft.com,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        Andrea Parri <parri.andrea@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The INIT_HOL_BLOCK_EN and INIT_HOL_BLOCK_TIMER endpoint registers
-are only valid for RX endpoints.
+On Mon, Jun 29, 2020 at 4:46 PM Wei Liu <wei.liu@kernel.org> wrote:
+>
+> On Mon, Jun 29, 2020 at 04:02:25PM -0400, Andres Beltran wrote:
+> > Currently, VMbus drivers use pointers into guest memory as request IDs
+> > for interactions with Hyper-V. To be more robust in the face of errors
+> > or malicious behavior from a compromised Hyper-V, avoid exposing
+> > guest memory addresses to Hyper-V. Also avoid Hyper-V giving back a
+> > bad request ID that is then treated as the address of a guest data
+> > structure with no validation. Instead, encapsulate these memory
+> > addresses and provide small integers as request IDs.
+> >
+> > Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
+> > ---
+> > Changes in v2:
+> >       - Get rid of "rqstor" variable in __vmbus_open().
+> >
+> >  drivers/hv/channel.c   | 146 +++++++++++++++++++++++++++++++++++++++++
+> >  include/linux/hyperv.h |  21 ++++++
+> >  2 files changed, 167 insertions(+)
+> >
+> > diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
+> > index 3ebda7707e46..c89d57d0c2d2 100644
+> > --- a/drivers/hv/channel.c
+> > +++ b/drivers/hv/channel.c
+> > @@ -112,6 +112,70 @@ int vmbus_alloc_ring(struct vmbus_channel *newchannel,
+> >  }
+> >  EXPORT_SYMBOL_GPL(vmbus_alloc_ring);
+> >
+> > +/**
+> > + * request_arr_init - Allocates memory for the requestor array. Each slot
+> > + * keeps track of the next available slot in the array. Initially, each
+> > + * slot points to the next one (as in a Linked List). The last slot
+> > + * does not point to anything, so its value is U64_MAX by default.
+> > + * @size The size of the array
+> > + */
+> > +static u64 *request_arr_init(u32 size)
+> > +{
+> > +     int i;
+> > +     u64 *req_arr;
+> > +
+> > +     req_arr = kcalloc(size, sizeof(u64), GFP_KERNEL);
+> > +     if (!req_arr)
+> > +             return NULL;
+> > +
+> > +     for (i = 0; i < size - 1; i++)
+> > +             req_arr[i] = i + 1;
+> > +
+> > +     /* Last slot (no more available slots) */
+> > +     req_arr[i] = U64_MAX;
+> > +
+> > +     return req_arr;
+> > +}
+> > +
+> > +/*
+> > + * vmbus_alloc_requestor - Initializes @rqstor's fields.
+> > + * Slot at index 0 is the first free slot.
+> > + * @size: Size of the requestor array
+> > + */
+> > +static int vmbus_alloc_requestor(struct vmbus_requestor *rqstor, u32 size)
+> > +{
+> > +     u64 *rqst_arr;
+> > +     unsigned long *bitmap;
+> > +
+> > +     rqst_arr = request_arr_init(size);
+> > +     if (!rqst_arr)
+> > +             return -ENOMEM;
+> > +
+> > +     bitmap = bitmap_zalloc(size, GFP_KERNEL);
+> > +     if (!bitmap) {
+> > +             kfree(rqst_arr);
+> > +             return -ENOMEM;
+> > +     }
+> > +
+> > +     rqstor->req_arr = rqst_arr;
+> > +     rqstor->req_bitmap = bitmap;
+> > +     rqstor->size = size;
+> > +     rqstor->next_request_id = 0;
+> > +     spin_lock_init(&rqstor->req_lock);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +/*
+> > + * vmbus_free_requestor - Frees memory allocated for @rqstor
+> > + * @rqstor: Pointer to the requestor struct
+> > + */
+> > +static void vmbus_free_requestor(struct vmbus_requestor *rqstor)
+> > +{
+> > +     kfree(rqstor->req_arr);
+> > +     bitmap_free(rqstor->req_bitmap);
+> > +}
+> > +
+> >  static int __vmbus_open(struct vmbus_channel *newchannel,
+> >                      void *userdata, u32 userdatalen,
+> >                      void (*onchannelcallback)(void *context), void *context)
+> > @@ -132,6 +196,12 @@ static int __vmbus_open(struct vmbus_channel *newchannel,
+> >       if (newchannel->state != CHANNEL_OPEN_STATE)
+> >               return -EINVAL;
+> >
+> > +     /* Create and init requestor */
+> > +     if (newchannel->rqstor_size) {
+> > +             if (vmbus_alloc_requestor(&newchannel->requestor, newchannel->rqstor_size))
+> > +                     return -ENOMEM;
+> > +     }
+> > +
+>
+> Sorry for not noticing this in the last round: this infrastructure is
+> initialized conditionally but used unconditionally.
+>
+> I can think of two options here:
+>
+>   1. Mandate rqstor_size to be non-zero. Always initialize this
+>      infra.
+>   2. Modify vmbus_next_request_id and vmbus_request_addr to deal with
+>      uninitialized state.
+>
+> For #2, you can simply check rqstor->size _before_ taking the lock
+> (because it may be uninitialized, and the assumption is ->size will not
+> change during the channel's lifetime, hence no lock is needed) and
+> simply return the same value to the caller.
+>
+> Wei.
 
-Have ipa_endpoint_modem_hol_block_clear_all() skip writing these
-registers for TX endpoints.
+Right. I think option #2 would be preferable in this case, because #1 works
+if we had a default non-zero size for cases where rqstor_size has not been
+set to a non-zero value before calling vmbus_alloc_requestor(). For #2, what
+do you mean by "same value"? I think we would need to return
+VMBUS_RQST_ERROR if the size is 0, because otherwise we would be
+returning the same guest memory address which we don't want to expose.
 
-Signed-off-by: Alex Elder <elder@linaro.org>
----
- drivers/net/ipa/ipa_endpoint.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/ipa/ipa_endpoint.c b/drivers/net/ipa/ipa_endpoint.c
-index 9f50d0d11704..3f5a41fc1997 100644
---- a/drivers/net/ipa/ipa_endpoint.c
-+++ b/drivers/net/ipa/ipa_endpoint.c
-@@ -642,6 +642,8 @@ static int ipa_endpoint_init_hol_block_timer(struct ipa_endpoint *endpoint,
- 	u32 offset;
- 	u32 val;
- 
-+	/* assert(!endpoint->toward_ipa); */
-+
- 	/* XXX We'll fix this when the register definition is clear */
- 	if (microseconds) {
- 		struct device *dev = &ipa->pdev->dev;
-@@ -671,6 +673,8 @@ ipa_endpoint_init_hol_block_enable(struct ipa_endpoint *endpoint, bool enable)
- 	u32 offset;
- 	u32 val;
- 
-+	/* assert(!endpoint->toward_ipa); */
-+
- 	val = u32_encode_bits(enable ? 1 : 0, HOL_BLOCK_EN_FMASK);
- 	offset = IPA_REG_ENDP_INIT_HOL_BLOCK_EN_N_OFFSET(endpoint_id);
- 	iowrite32(val, endpoint->ipa->reg_virt + offset);
-@@ -683,7 +687,7 @@ void ipa_endpoint_modem_hol_block_clear_all(struct ipa *ipa)
- 	for (i = 0; i < IPA_ENDPOINT_MAX; i++) {
- 		struct ipa_endpoint *endpoint = &ipa->endpoint[i];
- 
--		if (endpoint->ee_id != GSI_EE_MODEM)
-+		if (endpoint->toward_ipa || endpoint->ee_id != GSI_EE_MODEM)
- 			continue;
- 
- 		(void)ipa_endpoint_init_hol_block_timer(endpoint, 0);
--- 
-2.25.1
-
+Andres.
