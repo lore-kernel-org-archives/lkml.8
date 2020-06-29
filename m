@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE661C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5FF9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A7A42067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:33:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCF46206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:33:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462797;
-	bh=Mej9ssHFMj3X60ejOpk7m0olOfhDlfijdDv4Gmjkx4k=;
+	s=default; t=1593462801;
+	bh=XSTF3fm7DRjOxknTkfjWDogjJ1+ZAG3jH+aOYLkF0Mk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uRpN9Yl98qnM722wVHan4qpyLLZZB26HJjqsbYcqyGRroUORkzSDO5Fit4w4V18da
-	 i9N64t4F3ADwTv/q50BkgCFtnwB75hFUHAEsW5ifjAxWvrHBaMoDTJyE6CPCxc69Rd
-	 QKaHQhfLDHwztuxuzWp8lL30uNwXKppr480YQrPw=
+	b=0uOl0AKfTR8PCry1ZJocZj0A63PBVlv1xaBzWUUda0cXWmDhEBimQJSfPMlSKKYD9
+	 LFhriGuj/qJ0nmwHgWQ9i8q731IbRnRY81GkyTEX0fpEZLh9U7YBRdSVacvS9TMzxM
+	 bY0k6Ef1nMyWmWZGQGzwXBvoNNByW28C9iTn6BX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389121AbgF2UdP (ORCPT
+        id S1732489AbgF2UdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:33:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37044 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:33:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732396AbgF2TZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732302AbgF2TZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97230253FF;
-        Mon, 29 Jun 2020 15:42:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9BDC12535E;
+        Mon, 29 Jun 2020 15:40:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445348;
-        bh=Mej9ssHFMj3X60ejOpk7m0olOfhDlfijdDv4Gmjkx4k=;
+        s=default; t=1593445223;
+        bh=XSTF3fm7DRjOxknTkfjWDogjJ1+ZAG3jH+aOYLkF0Mk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GrANEctbxL1F8r8e7XcHQzv+x+7wyEy6sAUzRDitduZ+wclvmpKs6n4DJ/rOEbR+W
-         cilG/pczqaidrR9bzzmWoaoGnj80Ne9m5LRHntU7FsgtCadNst62VNhGgcA5Hbvn4X
-         36FQdI7nRCztoBgr9y3Lc9DRIrlPCycA/y1jJ2Lc=
+        b=JWTgJZuSm35s/zN5SandQKQ9pikRdarPFKjUSqoLLW+0wZjzbE7A8nZ3+2ua7rGve
+         GMhBqura4I1SxMhKaSNinO6iW8RWL7ZDL6xDFrzSkZmUjGV8IxO9t4T/WtNGkwjhUr
+         a/sd7FNW9nEVPHL21oSfTFxUUSN5ucvWOWF/vvLM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mauro Carvalho Chehab <mchehab@s-opensource.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.9 106/191] media: dvb_frontend: get rid of set_property() callback
-Date:   Mon, 29 Jun 2020 11:38:42 -0400
-Message-Id: <20200629154007.2495120-107-sashal@kernel.org>
+Cc:     Andreas Klinger <ak@it-klinger.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 010/191] iio: bmp280: fix compensation of humidity
+Date:   Mon, 29 Jun 2020 11:37:06 -0400
+Message-Id: <20200629154007.2495120-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -65,64 +65,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+From: Andreas Klinger <ak@it-klinger.de>
 
-commit 6680e73b5226114992acfc11f9cf5730f706fb01 upstream
+[ Upstream commit dee2dabc0e4115b80945fe2c91603e634f4b4686 ]
 
-Now that all clients of set_property() were removed, get rid
-of this callback.
+Limit the output of humidity compensation to the range between 0 and 100
+percent.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Depending on the calibration parameters of the individual sensor it
+happens, that a humidity above 100 percent or below 0 percent is
+calculated, which don't make sense in terms of relative humidity.
+
+Add a clamp to the compensation formula as described in the datasheet of
+the sensor in chapter 4.2.3.
+
+Although this clamp is documented, it was never in the driver of the
+kernel.
+
+It depends on the circumstances (calibration parameters, temperature,
+humidity) if one can see a value above 100 percent without the clamp.
+The writer of this patch was working with this type of sensor without
+noting this error. So it seems to be a rare event when this bug occures.
+
+Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/dvb-core/dvb_frontend.c | 7 -------
- drivers/media/dvb-core/dvb_frontend.h | 5 -----
- 2 files changed, 12 deletions(-)
+ drivers/iio/pressure/bmp280-core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/media/dvb-core/dvb_frontend.c b/drivers/media/dvb-core/dvb_frontend.c
-index 97c825f97b15e..2bf55a786e297 100644
---- a/drivers/media/dvb-core/dvb_frontend.c
-+++ b/drivers/media/dvb-core/dvb_frontend.c
-@@ -1751,13 +1751,6 @@ static int dtv_property_process_set(struct dvb_frontend *fe,
- 	int r = 0;
- 	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
+diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/bmp280-core.c
+index 36f03fdf4d4f9..85b90b5939db2 100644
+--- a/drivers/iio/pressure/bmp280-core.c
++++ b/drivers/iio/pressure/bmp280-core.c
+@@ -182,6 +182,8 @@ static u32 bmp280_compensate_humidity(struct bmp280_data *data,
+ 		+ (s32)2097152) * H2 + 8192) >> 14);
+ 	var -= ((((var >> 15) * (var >> 15)) >> 7) * (s32)H1) >> 4;
  
--	/* Allow the frontend to validate incoming properties */
--	if (fe->ops.set_property) {
--		r = fe->ops.set_property(fe, tvp);
--		if (r < 0)
--			return r;
--	}
--
- 	dtv_property_dump(fe, true, tvp);
- 
- 	switch(tvp->cmd) {
-diff --git a/drivers/media/dvb-core/dvb_frontend.h b/drivers/media/dvb-core/dvb_frontend.h
-index 57cedbe5c2c79..f852f0a49f422 100644
---- a/drivers/media/dvb-core/dvb_frontend.h
-+++ b/drivers/media/dvb-core/dvb_frontend.h
-@@ -397,11 +397,8 @@ struct dtv_frontend_properties;
-  * @search:		callback function used on some custom algo search algos.
-  * @tuner_ops:		pointer to struct dvb_tuner_ops
-  * @analog_ops:		pointer to struct analog_demod_ops
-- * @set_property:	callback function to allow the frontend to validade
-- *			incoming properties. Should not be used on new drivers.
-  */
- struct dvb_frontend_ops {
--
- 	struct dvb_frontend_info info;
- 
- 	u8 delsys[MAX_DELSYS];
-@@ -459,8 +456,6 @@ struct dvb_frontend_ops {
- 
- 	struct dvb_tuner_ops tuner_ops;
- 	struct analog_demod_ops analog_ops;
--
--	int (*set_property)(struct dvb_frontend* fe, struct dtv_property* tvp);
++	var = clamp_val(var, 0, 419430400);
++
+ 	return var >> 12;
  };
  
- #ifdef __DVB_CORE__
 -- 
 2.25.1
 
