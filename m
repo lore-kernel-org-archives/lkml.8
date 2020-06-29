@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF2DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C336C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0C2BE20760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD8C7206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:52:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467551;
-	bh=MouZSTVrUh0LDNHZw9RYHNyEcfZHloCjp7rQlYscy9Y=;
+	s=default; t=1593467553;
+	bh=R7EbNfwBfhbKAwJL9cGsCE0UyhurDjirYYrMzZFv7YQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GNoLcwblriLxdqQM2a+JNQixi+dXFqd4R7LFm8mKbzrUsLDGLbRjd8K2m5b8zvBbx
-	 nt+tceLUtvotX4K6MzRsXRNbrGdsbXn6DrPG34NyOPlo2ff5byeJ/+0kuSqMBaSG98
-	 a3JNTl/4ZiftdqhFeAfm7ZAthGFwDm0uUnbOVEXg=
+	b=j5EXHUreQfLeFVF2kVYt+B56KMuCrhuIoaQAvrBEuW66lUg4x1yCzjfm35afop+Ax
+	 B8Z/jaFaB1j6q7zBHDfsg1zg/S4lKO9fJuYf76zdPubOfI3daaeMPQ8Rj9iWzV5oId
+	 ueJgFohLpajHllshTKVfbFYuJ+ki9QG943Vgmn30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391515AbgF2Vw3 (ORCPT
+        id S2391522AbgF2Vwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:52:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56764 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:52:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726630AbgF2Sfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726642AbgF2Sfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:39 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3B9A4247CA;
-        Mon, 29 Jun 2020 15:22:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3814424653;
+        Mon, 29 Jun 2020 15:19:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444135;
-        bh=MouZSTVrUh0LDNHZw9RYHNyEcfZHloCjp7rQlYscy9Y=;
+        s=default; t=1593443967;
+        bh=R7EbNfwBfhbKAwJL9cGsCE0UyhurDjirYYrMzZFv7YQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XH8p8jSRkJ+jfTF/dRoMV6i2WLIPNkNjiW7oRa2V2DRgVBMcXyfGrNj2A7BG//0zF
-         x+XA3PpESEFIp0IUfQq6R666UI6VQK0ikQ+UvNMNDAEQMIRlqcdkYhqIxllQO0chAu
-         gliNhtui64tM8f3VIDp/IGindt7PfRMkuBM0dwAA=
+        b=CrHu0aNqrupclbky3ZB66u1e+ZZp81S/AQRnF9fNc5h6et0vM+ZxaIzqawM4GMNor
+         TNw3G0aspFqMhNA7JPSkOxuE7xkh44Cmc6a8tYlclRGnEamB5gGucxAoTNCkqKUv+R
+         aLkN1wmA8zSdLq0VeZBbSeuGR2VybyO52y3Eqxp4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
+Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Prashant Malani <pmalani@chromium.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 242/265] tracing: Fix event trigger to accept redundant spaces
-Date:   Mon, 29 Jun 2020 11:17:55 -0400
-Message-Id: <20200629151818.2493727-243-sashal@kernel.org>
+Subject: [PATCH 5.7 071/265] usb: typec: mux: intel_pmc_mux: Fix DP alternate mode entry
+Date:   Mon, 29 Jun 2020 11:15:04 -0400
+Message-Id: <20200629151818.2493727-72-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -66,89 +65,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-commit 6784beada631800f2c5afd567e5628c843362cee upstream.
+commit 130206a88683d859f63ed6d4a56ab5c2b4930c8e upstream.
 
-Fix the event trigger to accept redundant spaces in
-the trigger input.
+The PMC needs to be notified separately about HPD (hotplug
+detected) signal being high after mode entry. There is a bit
+"HPD High" in the Alternate Mode Request that the driver
+already sets, but that bit is only valid when the
+DisplayPort Alternate Mode is directly entered from
+disconnected state.
 
-For example, these return -EINVAL
-
-echo " traceon" > events/ftrace/print/trigger
-echo "traceon  if common_pid == 0" > events/ftrace/print/trigger
-echo "disable_event:kmem:kmalloc " > events/ftrace/print/trigger
-
-But these are hard to find what is wrong.
-
-To fix this issue, use skip_spaces() to remove spaces
-in front of actual tokens, and set NULL if there is no
-token.
-
-Link: http://lkml.kernel.org/r/159262476352.185015.5261566783045364186.stgit@devnote2
-
-Cc: Tom Zanussi <zanussi@kernel.org>
-Cc: stable@vger.kernel.org
-Fixes: 85f2b08268c0 ("tracing: Add basic event trigger framework")
-Reviewed-by: Tom Zanussi <zanussi@kernel.org>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: 5c4edcdbcd97 ("usb: typec: mux: intel: Fix DP_HPD_LVL bit field")
+Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc: stable <stable@vger.kernel.org>
+Tested-by: Prashant Malani <pmalani@chromium.org>
+Link: https://lore.kernel.org/r/20200529131753.15587-1-heikki.krogerus@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- kernel/trace/trace_events_trigger.c | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+ drivers/usb/typec/mux/intel_pmc_mux.c | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
-index 3a74736da363a..f725802160c0b 100644
---- a/kernel/trace/trace_events_trigger.c
-+++ b/kernel/trace/trace_events_trigger.c
-@@ -216,11 +216,17 @@ static int event_trigger_regex_open(struct inode *inode, struct file *file)
+diff --git a/drivers/usb/typec/mux/intel_pmc_mux.c b/drivers/usb/typec/mux/intel_pmc_mux.c
+index c22e5c4bbf1a9..e35508f5e1287 100644
+--- a/drivers/usb/typec/mux/intel_pmc_mux.c
++++ b/drivers/usb/typec/mux/intel_pmc_mux.c
+@@ -129,7 +129,8 @@ pmc_usb_mux_dp_hpd(struct pmc_usb_port *port, struct typec_mux_state *state)
+ 	msg[0] = PMC_USB_DP_HPD;
+ 	msg[0] |= port->usb3_port << PMC_USB_MSG_USB3_PORT_SHIFT;
  
- int trigger_process_regex(struct trace_event_file *file, char *buff)
+-	msg[1] = PMC_USB_DP_HPD_IRQ;
++	if (data->status & DP_STATUS_IRQ_HPD)
++		msg[1] = PMC_USB_DP_HPD_IRQ;
+ 
+ 	if (data->status & DP_STATUS_HPD_STATE)
+ 		msg[1] |= PMC_USB_DP_HPD_LVL;
+@@ -142,6 +143,7 @@ pmc_usb_mux_dp(struct pmc_usb_port *port, struct typec_mux_state *state)
  {
--	char *command, *next = buff;
-+	char *command, *next;
- 	struct event_command *p;
- 	int ret = -EINVAL;
+ 	struct typec_displayport_data *data = state->data;
+ 	struct altmode_req req = { };
++	int ret;
  
-+	next = buff = skip_spaces(buff);
- 	command = strsep(&next, ": \t");
-+	if (next) {
-+		next = skip_spaces(next);
-+		if (!*next)
-+			next = NULL;
-+	}
- 	command = (command[0] != '!') ? command : command + 1;
+ 	if (data->status & DP_STATUS_IRQ_HPD)
+ 		return pmc_usb_mux_dp_hpd(port, state);
+@@ -161,7 +163,14 @@ pmc_usb_mux_dp(struct pmc_usb_port *port, struct typec_mux_state *state)
+ 	if (data->status & DP_STATUS_HPD_STATE)
+ 		req.mode_data |= PMC_USB_ALTMODE_HPD_HIGH;
  
- 	mutex_lock(&trigger_cmd_mutex);
-@@ -630,8 +636,14 @@ event_trigger_callback(struct event_command *cmd_ops,
- 	int ret;
+-	return pmc_usb_command(port, (void *)&req, sizeof(req));
++	ret = pmc_usb_command(port, (void *)&req, sizeof(req));
++	if (ret)
++		return ret;
++
++	if (data->status & DP_STATUS_HPD_STATE)
++		return pmc_usb_mux_dp_hpd(port, state);
++
++	return 0;
+ }
  
- 	/* separate the trigger from the filter (t:n [if filter]) */
--	if (param && isdigit(param[0]))
-+	if (param && isdigit(param[0])) {
- 		trigger = strsep(&param, " \t");
-+		if (param) {
-+			param = skip_spaces(param);
-+			if (!*param)
-+				param = NULL;
-+		}
-+	}
- 
- 	trigger_ops = cmd_ops->get_trigger_ops(cmd, trigger);
- 
-@@ -1368,6 +1380,11 @@ int event_enable_trigger_func(struct event_command *cmd_ops,
- 	trigger = strsep(&param, " \t");
- 	if (!trigger)
- 		return -EINVAL;
-+	if (param) {
-+		param = skip_spaces(param);
-+		if (!*param)
-+			param = NULL;
-+	}
- 
- 	system = strsep(&trigger, ":");
- 	if (!trigger)
+ static int
 -- 
 2.25.1
 
