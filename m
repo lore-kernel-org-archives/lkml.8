@@ -2,132 +2,145 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB568C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BEAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8933020656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:12:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59D4020656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:13:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QGGZu2c4"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="TYDM21jl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731061AbgF2WMh (ORCPT
+        id S1730148AbgF2WNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:12:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44226 "EHLO
+        Mon, 29 Jun 2020 18:13:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725937AbgF2WMf (ORCPT
+        with ESMTP id S1725937AbgF2WNi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 18:12:35 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C171C061755;
-        Mon, 29 Jun 2020 15:12:35 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id 35so7648612ple.0;
-        Mon, 29 Jun 2020 15:12:35 -0700 (PDT)
+        Mon, 29 Jun 2020 18:13:38 -0400
+Received: from mail-ed1-x543.google.com (mail-ed1-x543.google.com [IPv6:2a00:1450:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBED4C061755
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 15:13:37 -0700 (PDT)
+Received: by mail-ed1-x543.google.com with SMTP id b15so14352698edy.7
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 15:13:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=bYbnK/1xSCVq1/TiUVXXGtkJjMs/M1Q7KN0EtGsVY6o=;
-        b=QGGZu2c4OuikWTRSNeoe1sVM3jGJOC1AUrzjW5WMAQvvuH9XL+s1wpFivhaniiLEx9
-         6NZSaIGqhCzd2ykSYS1W4q5M0bwY8B9KZq82eYI88v/NWkm9FC8VcubCh2qCmdp3gmUF
-         N6zR5kwYnq7Ar8uTIsswnVYWdH8c+IWLnf6Sr69rCa+GY2Ce0LW6ixZ96NMmUAHji/wj
-         fRKp+Ea8+q1atMhnQ4bpScUYSWdMEGqJ3K6iaZvh/Mmw6zupppbQQC3YPOD7Ur4Gs3Iz
-         oCM4IGld1+je/nS1r2/OKSmScpyzGj3A254T4DmwGHMZBYPadtzyZs4UYKJ1cnF7/K0U
-         IDnQ==
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=K4P8LKVTe5uXiv5CF12dyUP3GsCS0f55L5RS9bYmy6s=;
+        b=TYDM21jlaEWrczTgpptgS/N7rK1Bd/hFjHiVqFg8CH/odj/0JHq/SWjjosVXKTar0z
+         JhK0lqHlowbBubO5YdLsUIeYZqoAIAx41jaVKt4jSZpb9qpKbMBklKkP+qPBJVhuzJ/8
+         tvmvypxaw478c7pUQG3gCWp0B00HOvTU6J95+KtSNLm6Q/LEHfvPMfe+VpX9RiSXZYAb
+         +BpANty5cTk/d/KSm1hi4dJ4MQ/01iP79D9O3qM3TdiboMmxEhtFQkndMeJiyPaI6TGC
+         w1OmACGfeq4MdZD1B3EC1+N0XkJeGk3RNigxpW5ThA5OGMicYBnEvh9GttgQI6kck035
+         ZZYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=bYbnK/1xSCVq1/TiUVXXGtkJjMs/M1Q7KN0EtGsVY6o=;
-        b=JN7wj/kJj00cpzHQuR53iIlG5fhr/Ottj9/aTaqUiYnx71JIIcjrhTyq7wyG+rBBoK
-         nRjF3r0SUTR8MGiEJVYdcJk8sBoohPZOucXKPZHJfQBaxlbaX345lqTHpfQz4i78IHGg
-         +kPyJdCn/yBCtadHKq/meetBBsXeW7cLipRIXDiuf09EKWtE3lsFFOQ3dY+qTIS5Col9
-         Vj4wqraTRHA/WTMayfL+8C3D/W310rOf8HZcDESIsFeCb/rbsgDMTszSL01M6QcTZ2Sp
-         5qjrRhS9Dq5x4H458kqzF0yTaCK46sX+D7Ex3mOV2tvg7vYF0HVjuSLKjGOE/xsvf5hR
-         bTWg==
-X-Gm-Message-State: AOAM530Ez5SdgemWMm71rVzRcsOwk/56HrNA2kKU7UTM4Pd/kw7Q1QDR
-        PiRRrYhwFP2TR+vEwXQFQ4W0Kqge
-X-Google-Smtp-Source: ABdhPJxOc+HpDNzP+2988YFqOG8eD5PnPjzwgrx3K2bOdH27XDD3MYifNIiTyYCfMU3Elj4SI7z0KA==
-X-Received: by 2002:a17:90b:1c12:: with SMTP id oc18mr18176746pjb.160.1593468754943;
-        Mon, 29 Jun 2020 15:12:34 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:592])
-        by smtp.gmail.com with ESMTPSA id cv3sm419878pjb.45.2020.06.29.15.12.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 15:12:34 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 15:12:31 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <greg@kroah.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2 00/15] Make the user mode driver code a better citizen
-Message-ID: <20200629221231.jjc2czk3ul2roxkw@ast-mbp.dhcp.thefacebook.com>
-References: <20200625095725.GA3303921@kroah.com>
- <778297d2-512a-8361-cf05-42d9379e6977@i-love.sakura.ne.jp>
- <20200625120725.GA3493334@kroah.com>
- <20200625.123437.2219826613137938086.davem@davemloft.net>
- <CAHk-=whuTwGHEPjvtbBvneHHXeqJC=q5S09mbPnqb=Q+MSPMag@mail.gmail.com>
- <87pn9mgfc2.fsf_-_@x220.int.ebiederm.org>
- <87y2oac50p.fsf@x220.int.ebiederm.org>
- <87bll17ili.fsf_-_@x220.int.ebiederm.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=K4P8LKVTe5uXiv5CF12dyUP3GsCS0f55L5RS9bYmy6s=;
+        b=ITTMg6dc7UTdj0wj0eV6ym5PxpMoQ6v4CQFchXcxurO+CYtl7GOxESF17NUg2trc7K
+         j20PEH5m625KAuw+NdNCBOmARqjZRuGrjH2KtKZ1pXJwfiDOjfx14iSqblYvFmxJ3rFq
+         4xa8HfjYxmSHDYbUoFuRsZpH8YPMNipzXFsY4H3xvoThafO48M9sHPEInxxtCqswnEm6
+         PWdwlC8wMILk9RpJqsdTXOjRfMfUp6967XilJPRQU3MpzVe55dCCfPtpqflH+hnPwa6Q
+         yg6kwhYZhSvZLuErqDzw0Yb3sFoWVOwCuXUgJTAC+yeOXiCeRBs/V3HjNlB+q+TqG8Dl
+         VN/g==
+X-Gm-Message-State: AOAM533H6yIOA28IZyEy4X02jqO1D32nD4JM8CiKrMVENYJG3sqzSp2I
+        Ef/idcXdhXvCJeHD6V5161vTED1dOhdTx5ewrVniAg==
+X-Google-Smtp-Source: ABdhPJxE92Vl3dMU6YdSUcgNvBLlsmv8x89spCVSrKlAXXuf4yBVYS/6NJ5lEkK2x5KqYdKSrSEwowTp1Kf9Tzq/l6Q=
+X-Received: by 2002:aa7:c24d:: with SMTP id y13mr20776220edo.123.1593468816606;
+ Mon, 29 Jun 2020 15:13:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87bll17ili.fsf_-_@x220.int.ebiederm.org>
+References: <CAPcyv4gMQsBSQ-kXM6H_zz96ZTJ5F0XnDfq6_mZTn4t9JwmEpA@mail.gmail.com>
+ <4D73CD59-BFD5-401A-A001-41F7BF5641BA@redhat.com> <CAPcyv4hnsUoavnzX8q5VReiLXrOsOYW0Ef5GDKxQtS+6pQLy4A@mail.gmail.com>
+ <20200629083411.GA38188@L-31X9LVDL-1304.local>
+In-Reply-To: <20200629083411.GA38188@L-31X9LVDL-1304.local>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 29 Jun 2020 15:13:25 -0700
+Message-ID: <CAPcyv4gK2PL5YNLkeQjSCLrNZ62P1U_HjuBSNpkEvuHMcyeGOQ@mail.gmail.com>
+Subject: Re: [PATCH] mm/spase: never partially remove memmap for early section
+To:     Wei Yang <richard.weiyang@linux.alibaba.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Linux MM <linux-mm@kvack.org>, Baoquan He <bhe@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 02:55:05PM -0500, Eric W. Biederman wrote:
-> 
-> I have tested thes changes by booting with the code compiled in and
-> by killing "bpfilter_umh" and running iptables -vnL to restart
-> the userspace driver.
-> 
-> I have compiled tested each change with and without CONFIG_BPFILTER
-> enabled.
+On Mon, Jun 29, 2020 at 1:34 AM Wei Yang
+<richard.weiyang@linux.alibaba.com> wrote:
+>
+> On Thu, Jun 25, 2020 at 12:46:43PM -0700, Dan Williams wrote:
+> >On Wed, Jun 24, 2020 at 10:53 PM David Hildenbrand <david@redhat.com> wr=
+ote:
+> >>
+> >>
+> >>
+> >> > Am 25.06.2020 um 01:47 schrieb Dan Williams <dan.j.williams@intel.co=
+m>:
+> >> >
+> >> > =EF=BB=BFOn Wed, Jun 24, 2020 at 3:44 PM Wei Yang
+> >> > <richard.weiyang@linux.alibaba.com> wrote:
+> >> > [..]
+> >> >>> So, you are right that there is a mismatch here, but I think the
+> >> >>> comprehensive fix is to allow early sections to be partially
+> >> >>> depopulated/repopulated rather than have section_activate() and
+> >> >>> section_deacticate() special case early sections. The special casi=
+ng
+> >> >>> is problematic in retrospect as section_deactivate() can't be
+> >> >>> maintained without understand special rules in section_activate().
+> >> >>
+> >> >> Hmm... This means we need to adjust pfn_valid() too, which always r=
+eturn true
+> >> >> for early sections.
+> >> >
+> >> > Right, rather than carry workarounds in 3 locations, and the bug tha=
+t
+> >> > has resulted from then getting out of sync, just teach early section
+> >> > mapping to allow for the subsection populate/depopulate.
+> >> >
+> >>
+> >> I prefer the easy fix first - IOW what we Here here. Especially, pfn_t=
+o_online_page() will need changes as well.
+> >
+> >Agree, yes, let's do the simple fix first for 5.8 and the special-case
+> >elimination work later.
+>
+> Dan,
+>
+> A quick test shows this is not a simple task.
 
-With
-CONFIG_BPFILTER=y
-CONFIG_BPFILTER_UMH=m
-it doesn't build:
+Thanks for taking a look...
 
-ERROR: modpost: "kill_pid_info" [net/bpfilter/bpfilter.ko] undefined!
+> First, early sections don't set subsection bitmap, which is necessary for=
+ the
+> hot-add/remove.
+>
+> To properly set subsection bitmap, we need to know how many subsections i=
+n
+> early section. While current code doesn't has a alignment requirement for
+> last early section. We mark the whole last early section as present.
 
-I've added:
-+EXPORT_SYMBOL(kill_pid_info);
-to continue testing...
+I was thinking that the subsection map does not need to be accurate on
+initial setup, it only needs to be accurate after the first removal.
+However, that would result in new special casing that somewhat defeats
+the purpose. The hardest part is potentially breaking up a PMD mapping
+of the page array into a series of PTE mappings without disturbing
+in-flight pfn_to_page() users.
 
-And then did:
-while true; do iptables -L;rmmod bpfilter; done
- 
-Unfortunately sometimes 'rmmod bpfilter' hangs in wait_event().
+> I don't find a way to enable this.
 
-I suspect patch 13 is somehow responsible:
-+	if (tgid) {
-+		kill_pid_info(SIGKILL, SEND_SIG_PRIV, tgid);
-+		wait_event(tgid->wait_pidfd, !pid_task(tgid, PIDTYPE_TGID));
-+		bpfilter_umh_cleanup(info);
-+	}
-
-I cannot figure out why it hangs. Some sort of race ?
-Since adding short delay between kill and wait makes it work.
+While I don't like that this bug crept into the mismatched special
+casing of early sections, I'm now coming around to the same opinion.
+I.e. that making the memmap for early sections permanent is a simpler
+mechanism to maintain.
