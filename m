@@ -2,131 +2,108 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A68F1C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 02:03:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59341C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 02:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82FB8206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 02:03:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39B272065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 02:03:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="SQOg2QEc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B0UhxI61"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726447AbgF2CC7 (ORCPT
+        id S1726506AbgF2CDX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 22:02:59 -0400
-Received: from mail-eopbgr80053.outbound.protection.outlook.com ([40.107.8.53]:60993
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726345AbgF2CC5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 22:02:57 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=maJGTsTfIzF/Q9h+23lCIZiCR4OuhlTZ/NLXqNZ/fNvE9fZi/TJDo7B2FMPcHm8oDTiEFK5looaEmAkSA3Yx1g2cvQzdzd2K5WEZ8rrXtfLkICDPsbJkXU3lB72d6zOFa74haMR3t7vBEt8F8wPmtlfvr5tUHKNUJSN43T9EETsiOuCz/5/PLezMEw5wvScZ68NTOpJ47I8dPsxcu8LQImkO46TBFd7kB4EknDA+KxqXvmQysbmmvE5jrgIs8DtR3s0GEC4/5W6EP+B+WoMjbp90kzopiAVx14kE6cG/SJy34QsoijU7BTCUVbOu3fboEiF2arfW2737ygYQr1xYhg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I3jEr20mwdcV4t89uWUQHzQ9+TazWCvkuo4mo8Uaaeg=;
- b=VDQdN3mX5NLiB0JmsIbfxSDfoEF/6wo5uI80OBrzAVbQGO1ncxSaTcWx2dhOKdZpoNWQfzUahXMVOlripjShL8PuMn5VsbzaqmpDmY8p5Uh/QSDKCo/X2QnToLntRhUySgIteGW53fqryTb0VaBGbVIVGmWQCddzM45rZGEtbH5aM9fyDtrDoOp8rNX8pNTE7ADWW6PqAz3ZrRWlR45mnBXHooJIqDJMPVTIU5PaQf6lIHgJXo1D7TtSU6H0CVoMXR/OVBod8xUkw05uPLu/M7TL0c2Y2FY4U708JERZ268lxDSxQ8jwYUJoCjZ2TmzwPa2/aG22EJb+pbyMxfRK4g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I3jEr20mwdcV4t89uWUQHzQ9+TazWCvkuo4mo8Uaaeg=;
- b=SQOg2QEcCRnT/YHtbRj0Aj0cmCmpY2u8TsB3+9ik4zaiqlmIqpCk3gGPw71dpujU2WDO2BT9U9HGdJDggH+1Dqd00Zd8p+VqKMRYUu3Mo9GtvFLaR9oI6rAikwtphXylScqXviqoU3WjN0iQ+xWGCUlf/RaOn0HPz4Y8tL/VT1Y=
-Authentication-Results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=nxp.com;
-Received: from VE1PR04MB6496.eurprd04.prod.outlook.com (2603:10a6:803:11c::29)
- by VI1PR04MB6030.eurprd04.prod.outlook.com (2603:10a6:803:f8::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21; Mon, 29 Jun
- 2020 02:02:53 +0000
-Received: from VE1PR04MB6496.eurprd04.prod.outlook.com
- ([fe80::c1ea:5943:40e8:58f1]) by VE1PR04MB6496.eurprd04.prod.outlook.com
- ([fe80::c1ea:5943:40e8:58f1%3]) with mapi id 15.20.3131.026; Mon, 29 Jun 2020
- 02:02:53 +0000
-From:   Po Liu <po.liu@nxp.com>
-To:     dsahern@gmail.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Cc:     stephen@networkplumber.org, davem@davemloft.net, jhs@mojatatu.com,
-        vlad@buslov.dev, po.liu@nxp.com, claudiu.manoil@nxp.com,
-        vladimir.oltean@nxp.com, alexandru.marginean@nxp.com
-Subject: [v2,iproute2-next 2/2] action police: make 'mtu' could be set independently in police action
-Date:   Mon, 29 Jun 2020 10:04:20 +0800
-Message-Id: <20200629020420.30412-2-po.liu@nxp.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200629020420.30412-1-po.liu@nxp.com>
-References: <20200628014602.13002-1-po.liu@nxp.com>
- <20200629020420.30412-1-po.liu@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR01CA0164.apcprd01.prod.exchangelabs.com
- (2603:1096:4:28::20) To VE1PR04MB6496.eurprd04.prod.outlook.com
- (2603:10a6:803:11c::29)
+        Sun, 28 Jun 2020 22:03:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54362 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726345AbgF2CDX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 22:03:23 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38918C03E979
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 19:03:22 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id p3so7595450pgh.3
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 19:03:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QDZVkEGnIrKfbxBfohB8JpyHIKxziKsOzFFQJQW1Y2g=;
+        b=B0UhxI61raVzv+EmENSz8VpoRV7j2xH27ETZQ52gSc61GH1r/h/ezXpRdNhwEbZHtK
+         uBy8nUuY8AqprEoCZxvLTVbKPajt3AEutHfbdumpGqZF0QJpQ1Lrrjn0JqP2dW/V/vTp
+         CKJkhzsPVPftyk8Su7NczWON8qvTBXgbq0dBHTeyMy9gGvsoENibT8lhswpFsBOfz3Yx
+         N+4hBdcssVo/al2DqZvXi48JBD9Qk2UPSyY4Ann/JkDgP75TCf16LaXHVRTAdh0s4Jle
+         KNFS1cDM1sqceGyjDPKA53I4oYdjBEode/i43sgesSCkXk1R8a2UZmdcGwphqJy6W2jR
+         KmtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QDZVkEGnIrKfbxBfohB8JpyHIKxziKsOzFFQJQW1Y2g=;
+        b=Vq0yaO9m9n9O/t1l38GLU3Yeyrss0K/mkXm0YzPvgP15q8x3Qn9oZM4ACjld0ql9qr
+         WcHMpGkX3kWBCcYZmK5q30OBE5ACcIoj/puGkVILsPV/4F72W04Um3sxXuLzIzI0NjNi
+         HEHV5F3wF0tQOuXXS5Oi3q7kODx/YtMIuEozkLmuY5QJnDdx361+pEKF+HP+ooIu5v0h
+         CaIQylD0Su7M75qkJ9fzODxS6zTf5FFfG18KdV3xcvzRa79+PapxicY590uxB/Z3CMiy
+         gdib5jLkg2FttJK4cRHdOwZzZm78TAwqeT6tjiiz2bb7I6G/FOqyWeP3faZZIcUjq2YV
+         QIWg==
+X-Gm-Message-State: AOAM533ISsAPFH4df2Ek5HxmFAIhv7iehu05AM8yROSt3AC4+w2P7Chh
+        Qon28UoahLA1oiZ4llBuERKRKAyAcgc=
+X-Google-Smtp-Source: ABdhPJxxkJXjW4f5no0NjX84TxHnLzmVO8fiRUg6nyOW06GtGPhTBdBZIsVWaxOWXIxLMVXsL+WGCg==
+X-Received: by 2002:aa7:9184:: with SMTP id x4mr12338959pfa.271.1593396201686;
+        Sun, 28 Jun 2020 19:03:21 -0700 (PDT)
+Received: from localhost ([122.172.127.76])
+        by smtp.gmail.com with ESMTPSA id s10sm4726713pjf.3.2020.06.28.19.03.20
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 28 Jun 2020 19:03:21 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 07:33:18 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Viresh Kumar <vireshk@kernel.org>,
+        Shiraz Hashim <shiraz.linux.kernel@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH] ARM: dts: spear: Align L2 cache-controller nodename with
+ dtschema
+Message-ID: <20200629020318.etzz3xsju7shcglr@vireshk-i7>
+References: <20200626080557.3680-1-krzk@kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from tsn.ap.freescale.net (119.31.174.73) by SG2PR01CA0164.apcprd01.prod.exchangelabs.com (2603:1096:4:28::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.20 via Frontend Transport; Mon, 29 Jun 2020 02:02:49 +0000
-X-Mailer: git-send-email 2.17.1
-X-Originating-IP: [119.31.174.73]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: cd506474-2048-47cd-e2bf-08d81bd08875
-X-MS-TrafficTypeDiagnostic: VI1PR04MB6030:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR04MB6030BB4757AB9563C660B206926E0@VI1PR04MB6030.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-Forefront-PRVS: 044968D9E1
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: RwuIDisFyYHFXK8QehrGOck5fXQYoc/2gOMsDVYDy7ftTOSaaU0m2y4jT/a1E9KuoRDe1sAKn5ASV2rtbLZ9KkrUJtxWL43ZSp34YtUxCmjHDm52v1jCaBINdGBHEwe+aldMqcB+dzsRMkbnQuHilKIf7cjHXYLRqzxzpftGFP4VGsGtLS17mouu6Q8/eH5Ug7TLM3ARzCH4K010q4vqjmx/zHkXc15ml/yQm+gCZkIZNnP6lYYEb8tly5Mz/lJP3j8i63HOOYbHTDItSgznmCI3HI/QPyCMgRV3QO3EQKhWZqtI6hn62On2qCtlH7aj0lQGklFlac9XGxbN0gweZw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6496.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(136003)(346002)(376002)(39860400002)(1076003)(26005)(6486002)(16526019)(316002)(4744005)(5660300002)(8936002)(83380400001)(186003)(44832011)(956004)(8676002)(2616005)(2906002)(36756003)(66476007)(66946007)(66556008)(6506007)(4326008)(6666004)(6512007)(478600001)(86362001)(52116002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: LBwXkEO8vEB1tMo9bciU6BmGEaqVqdFXyf2n6PwX6u0qhR4ViEgrlzJ6QzDO6DG7OwYK/Andv6uoncv8LUCmcsKRMXGjDNG9wLXyDVT/R2mZypHEu1IXlMObHAuAJj86F5aLEKE+arNCBuSHhqNL9N3v/VYDewa6jk+KcNVuDhWutSfvzJ5KVQJ1S8ooC8o/TRPs/rhUMqDo1E3qF0vBvbTle7dxM6rjiuMZllZFwj/Adhjxj8bk/nCGyHFahZo4cFSQuXLaUm+dyvLloHuUngU9qOnli0Z9f/18TPBYxIWsLfEIcz62+RzaqLVglqRyZlq5RDuc7TODn3NNooUEeSAG4jBO5vzN2XFcbK3tp9Pk28VhN7AcbU/omXILosMfxMHfhbMfzjY5ol+DHHwGv2J9535dp1W9+yxnQCq/iAT6zl+QZn4QDzPQ25EI/I5XZ5Nv7JqcNdzXWj2Eadl4EiibktQ9NoB5ROfBOE98d+s=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cd506474-2048-47cd-e2bf-08d81bd08875
-X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6496.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jun 2020 02:02:53.3737
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: tP6LUuvPUjUPzNu6clG+fzpzFLARoq11xMYp4VD35socY93nlL56MFN01BOC4d5z
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6030
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200626080557.3680-1-krzk@kernel.org>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current police action must set 'rate' and 'burst'. 'mtu' parameter
-set the max frame size and could be set alone without 'rate' and 'burst'
-in some situation. Offloading to hardware for example, 'mtu' could limit
-the flow max frame size.
+On 26-06-20, 10:05, Krzysztof Kozlowski wrote:
+> Fix dtschema validator warnings like:
+>     l2-cache: $nodename:0: 'l2-cache' does not match '^(cache-controller|cpu)(@[0-9a-f,]+)*$'
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  arch/arm/boot/dts/spear13xx.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/spear13xx.dtsi b/arch/arm/boot/dts/spear13xx.dtsi
+> index f187da4485f4..c87b881b2c8b 100644
+> --- a/arch/arm/boot/dts/spear13xx.dtsi
+> +++ b/arch/arm/boot/dts/spear13xx.dtsi
+> @@ -43,7 +43,7 @@
+>  			      0 7 0x04>;
+>  	};
+>  
+> -	L2: l2-cache {
+> +	L2: cache-controller {
+>  		    compatible = "arm,pl310-cache";
+>  		    reg = <0xed000000 0x1000>;
+>  		    cache-unified;
 
-Signed-off-by: Po Liu <po.liu@nxp.com>
----
-v1->v2 changes:
-- fix the print message style and add space acked by Stephen Hemminger <stephen@networkplumber.org>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
- tc/m_police.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/tc/m_police.c b/tc/m_police.c
-index 7eb47f8e..83b25db4 100644
---- a/tc/m_police.c
-+++ b/tc/m_police.c
-@@ -161,8 +161,8 @@ action_ctrl_ok:
- 		return -1;
- 
- 	/* Must at least do late binding, use TB or ewma policing */
--	if (!rate64 && !avrate && !p.index) {
--		fprintf(stderr, "'rate' or 'avrate' MUST be specified.\n");
-+	if (!rate64 && !avrate && !p.index && !mtu) {
-+		fprintf(stderr, "'rate' or 'avrate' or 'mtu' MUST be specified.\n");
- 		return -1;
- 	}
- 
 -- 
-2.17.1
-
+viresh
