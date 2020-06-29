@@ -2,78 +2,86 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC0A8C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BFB7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:51:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA42920663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:51:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47E3820663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:51:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="SIZcYUqj"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UGuj7q/W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389719AbgF2Uvc (ORCPT
+        id S2389744AbgF2Uvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:51:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43356 "EHLO
+        Mon, 29 Jun 2020 16:51:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731398AbgF2TN3 (ORCPT
+        with ESMTP id S1731397AbgF2TN3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:13:29 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43744C08ECAD
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:50:20 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id a6so13032563wmm.0
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:50:20 -0700 (PDT)
+Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45A5BC08EAD6
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:18:45 -0700 (PDT)
+Received: by mail-pf1-x442.google.com with SMTP id u5so7455337pfn.7
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:18:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=kw/uv7mzLibBsj+LOWOIdk1Thny96wIQJHxJQ2eekIA=;
-        b=SIZcYUqjXVEe8aMLi5SGPbYOBtdESkCMgL8suGnrl0Ahkbt5IgssgahqK/2ZJobC6l
-         Zru4yIACrtfO3JJhea0gBpOzgKVGu1wHtE3+KKnPnvor3cgV/Jx68v2Z1HdA9yIjm5Ya
-         nLupGdn7GehwjFWQD74IhdKCBaFBGW9+ZewUa3o6YmajgwDNrKexNV4xgN6EOXSN75pl
-         K4/hyBCPM+GS48sgW+CTgH3wq3AZ5BWJroEAHyvJLugJrWczgUewtWDCH9smN3K69Ofy
-         jcz55Pp54LrkY3D9986r7EAMb3bwh5pfB/1x4tlRDpBYQfI6G6XXO4MrEaUAef2xLuXc
-         z8DA==
+        bh=JYEfxa7OKW4v9GzIhRwTOUIFBqV9srsfVDhYF/BxOH4=;
+        b=UGuj7q/WS0KExRsg2CLBONUZs7T3XsjCMG/yvyLhtdKaUxcYROcvoBOHpNAFhy3W6X
+         hRSrOBP/yNeMA7/dIhR3oCJW8Q2Ny4KVxmm6Vjh8bZXH5/6i5EtAUXUY8d0+u7DSSe3D
+         eLJOO3rK0lYMIO5dti5mWzX97ev2/r072VzHI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=kw/uv7mzLibBsj+LOWOIdk1Thny96wIQJHxJQ2eekIA=;
-        b=g+vDi290SrPnDxBs/QTdKokWu442x2PC6sbYEkjwKAUod8W+Hs6l9mkiqJVvYmdUqS
-         hJEgwmQpDyz3kkisRBZ5nMjVBIIqyz4W+fvy5H+cOUWwPduxt2c2nqUHGSFazmFfCgo3
-         rdg2eISdrOBw+I/B9HWCl0iSy9U7xEi2SH+UlCiGyGR/0AwGkNEE1KdwQXRl7Himwt0Z
-         zvOUmqmhwsVh516usPc2YtmCAHV1rCkb6SAs/lQKF1gBiVESCeTvZmWNeJ+RB20OHGZB
-         XmmOlJ0WtA66arCKtzhiJ1j9u4Oo5hbGq+n381pE1A5Lm+c3MVpkY6nTcxpPMAJMeO8z
-         YzoQ==
-X-Gm-Message-State: AOAM533VClUdnK+KsF/CnBE6MGyqOPIHhMfLMBrSXZDDMwcXRtdAdH7/
-        zlB78oOZ3yqnFXZeICqv+CEJKQ==
-X-Google-Smtp-Source: ABdhPJw+V40exuzx/4bjMtVNs9KS0u1HH05sx9cQBmql8zhWKpmSYw8VZO59aPGiDhmCWJ2QUk9NJg==
-X-Received: by 2002:a7b:c185:: with SMTP id y5mr15841234wmi.85.1593413419047;
-        Sun, 28 Jun 2020 23:50:19 -0700 (PDT)
-Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
-        by smtp.gmail.com with ESMTPSA id z25sm26400850wmk.28.2020.06.28.23.50.17
+        bh=JYEfxa7OKW4v9GzIhRwTOUIFBqV9srsfVDhYF/BxOH4=;
+        b=cFFvtqG9f31iOrE6wXB745x6rI9WXboj4zFGMUo3RrE70CsnmuH+7zBNI75i5NMYqp
+         6xMbHLzmjPp2G2MDgW4zE9JplgofjpVgZBOagUtCK+B0iAtPJ7BHOIXdw5xDhu5wPmSy
+         oItohpnTRt1wMvA1R9qWlm23/H/r33Byc0y9NTbOFfhyzgSow0/Y6bfodYgoWero2WUy
+         PO//uYNT1TJwXCGZxSYW1GhPd3brDK80VV2OJKAtSEFlpDbYEsSFM/emh+jFFBiFbuWu
+         3GZ+H3Ch9mmj8xnJIY9vK9vmkS+dewZP7QjwE6nD2aY5T++vSYwyBjTh5OOnY2Czafd4
+         KbYw==
+X-Gm-Message-State: AOAM530ZmVwFxJpseZTuAwd0coIoQ8vEWPiNKVtlFjlKI1kq6EDv+sRZ
+        W8J/YxmABZHCMv6zJXkFsA0r4QnioUA=
+X-Google-Smtp-Source: ABdhPJw01U8lgdzVeHYlSAg3jRburoo7yEiQmP++SKqH4gvPoLztfxnPJpbsXaeAqVpc8BiwbFDEkg==
+X-Received: by 2002:a05:6a00:148c:: with SMTP id v12mr12987122pfu.171.1593411524779;
+        Sun, 28 Jun 2020 23:18:44 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id o207sm33243245pfd.56.2020.06.28.23.18.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jun 2020 23:50:18 -0700 (PDT)
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Jean Delvare <jdelvare@suse.com>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-hwmon@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: [PATCH v2 4/6] devres: handle zero size in devm_kmalloc()
-Date:   Mon, 29 Jun 2020 08:50:06 +0200
-Message-Id: <20200629065008.27620-5-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200629065008.27620-1-brgl@bgdev.pl>
-References: <20200629065008.27620-1-brgl@bgdev.pl>
+        Sun, 28 Jun 2020 23:18:43 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 02/17] vmlinux.lds.h: Avoid KASAN and KCSAN's unwanted sections
+Date:   Sun, 28 Jun 2020 23:18:25 -0700
+Message-Id: <20200629061840.4065483-3-keescook@chromium.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629061840.4065483-1-keescook@chromium.org>
+References: <20200629061840.4065483-1-keescook@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,45 +89,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+KASAN (-fsanitize=kernel-address) and KCSAN (-fsanitize=thread) produce
+unwanted[1] .eh_frame and .init_array.* sections. Add them to DISCARDS,
+except with CONFIG_CONSTRUCTORS, which wants to keep .init_array.*
+sections.
 
-Make devm_kmalloc() behave similarly to non-managed kmalloc(): return
-ZERO_SIZE_PTR when requested size is 0. Update devm_kfree() to handle
-this case.
+[1] https://bugs.llvm.org/show_bug.cgi?id=46478
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/base/devres.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ include/asm-generic/vmlinux.lds.h | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/drivers/base/devres.c b/drivers/base/devres.c
-index 1df1fb10b2d9..ed615d3b9cf1 100644
---- a/drivers/base/devres.c
-+++ b/drivers/base/devres.c
-@@ -819,6 +819,9 @@ void *devm_kmalloc(struct device *dev, size_t size, gfp_t gfp)
- {
- 	struct devres *dr;
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index 1248a206be8d..e53a2d4f47f6 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -927,10 +927,30 @@
+ 	EXIT_DATA
+ #endif
  
-+	if (unlikely(!size))
-+		return ZERO_SIZE_PTR;
++/*
++ * Clang's -fsanitize=kernel-address and -fsanitize=thread produce
++ * unwanted sections (.eh_frame and .init_array.*), but
++ * CONFIG_CONSTRUCTORS wants to keep any .init_array.* sections.
++ * https://bugs.llvm.org/show_bug.cgi?id=46478
++ */
++#if defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KCSAN)
++# ifdef CONFIG_CONSTRUCTORS
++#  define KASAN_DISCARDS						\
++	*(.eh_frame)
++# else
++#  define KASAN_DISCARDS						\
++	*(.init_array) *(.init_array.*)					\
++	*(.eh_frame)
++# endif
++#else
++# define KASAN_DISCARDS
++#endif
 +
- 	/* use raw alloc_dr for kmalloc caller tracing */
- 	dr = alloc_dr(devm_kmalloc_release, size, gfp, dev_to_node(dev));
- 	if (unlikely(!dr))
-@@ -950,10 +953,10 @@ void devm_kfree(struct device *dev, const void *p)
- 	int rc;
- 
- 	/*
--	 * Special case: pointer to a string in .rodata returned by
--	 * devm_kstrdup_const().
-+	 * Special cases: pointer to a string in .rodata returned by
-+	 * devm_kstrdup_const() or NULL/ZERO ptr.
- 	 */
--	if (unlikely(is_kernel_rodata((unsigned long)p)))
-+	if (unlikely(is_kernel_rodata((unsigned long)p) || ZERO_OR_NULL_PTR(p)))
- 		return;
- 
- 	rc = devres_destroy(dev, devm_kmalloc_release,
+ #define DISCARDS							\
+ 	/DISCARD/ : {							\
+ 	EXIT_DISCARDS							\
+ 	EXIT_CALL							\
++	KASAN_DISCARDS							\
+ 	*(.discard)							\
+ 	*(.discard.*)							\
+ 	*(.modinfo)							\
 -- 
-2.26.1
+2.25.1
 
