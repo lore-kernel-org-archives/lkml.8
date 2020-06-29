@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D4DCC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01956C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:06:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4338620760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:06:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D697A20760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:06:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461208;
-	bh=Mc2QQwWYQqh2QYAyDo4U+G0QkLWISzXdyWlG8++wAQs=;
+	s=default; t=1593461213;
+	bh=8axVWMTQG9lbwjbZ9PHAWBAJvvSmXrimVIe6PrAqNJA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MwT54IBrzgaOUJdiDuK7PgoFx3hc3Ybz7itXikipHdHodkFa2mQ2U5oc5irIraYQU
-	 FOVxLt2cJuPJTKCqeLeoiaaUvREbj5ijumXQnTOP6iH3q7mdTdPUggjyyUe/LSrclx
-	 KsU2+o9mSC0iO8tDVsRmp7OHyHaFqeKUPO/76dJU=
+	b=tLH6kfxCZuukQwxOZy/x3SHHSSkhdC0G6mxyyg5dPtNaovTkFWLgm9a/COz/UHOKQ
+	 vleWXbB64Y6ZnO8UmXoVLkaCAz5ebCq3UmLnu4TlJYy5gy3pbAAPwUc/hid1kQAC8V
+	 WAyfcjVk4pGQQQJYCgxlhsBt0lbd4RWIy8eHNGCE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388696AbgF2UG2 (ORCPT
+        id S2388871AbgF2UGv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:06:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40574 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:06:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732966AbgF2Ta1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732958AbgF2Ta1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF559252D3;
-        Mon, 29 Jun 2020 15:38:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31FD525275;
+        Mon, 29 Jun 2020 15:36:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445098;
-        bh=Mc2QQwWYQqh2QYAyDo4U+G0QkLWISzXdyWlG8++wAQs=;
+        s=default; t=1593444984;
+        bh=8axVWMTQG9lbwjbZ9PHAWBAJvvSmXrimVIe6PrAqNJA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GEBzhRM9oQeg+fHiEhliN9WQttXu+BL8UVczn2YzUDTDzdShIs6hx5OHf4cWPRDDK
-         uRRvcEKH3T4fpuGYU48g5DAocdnZlOeHUYa1KoF8N3W1M3RbjBtCAH2tlifAv+QlFT
-         3+nYdOzfqptTaPY6BNPzONOQGZDyMbO8Rfo5KUsQ=
+        b=jd59+LiNd/llwF1q2i8sJXOYfhvxse4XnA410EfYVDJBClOdq4AhVUDU4WWFKEHiD
+         QlkcWF2e516o++MAPEXsZRowZA8MLCagFs5jrqiIjv6kF3QR5MIaLPtN8a8K4JVVS4
+         N9XzX1GMUFYOyvjvAutYtI9IJcXNblDh7PZ7HNCA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wang Hai <wanghai38@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Hangbin Liu <liuhangbin@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.14 08/78] mld: fix memory leak in ipv6_mc_destroy_dev()
-Date:   Mon, 29 Jun 2020 11:36:56 -0400
-Message-Id: <20200629153806.2494953-9-sashal@kernel.org>
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 084/131] netfilter: ipset: fix unaligned atomic access
+Date:   Mon, 29 Jun 2020 11:34:15 -0400
+Message-Id: <20200629153502.2494656-85-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
-References: <20200629153806.2494953-1-sashal@kernel.org>
+In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
+References: <20200629153502.2494656-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.14.y
+X-KernelTest-Branch: linux-4.19.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.14.186-rc1
-X-KernelTest-Deadline: 2020-07-01T15:38+00:00
+X-KernelTest-Version: 4.19.131-rc1
+X-KernelTest-Deadline: 2020-07-01T15:34+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -66,60 +66,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Hai <wanghai38@huawei.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-[ Upstream commit ea2fce88d2fd678ed9d45354ff49b73f1d5615dd ]
+[ Upstream commit 715028460082d07a7ec6fcd87b14b46784346a72 ]
 
-Commit a84d01647989 ("mld: fix memory leak in mld_del_delrec()") fixed
-the memory leak of MLD, but missing the ipv6_mc_destroy_dev() path, in
-which mca_sources are leaked after ma_put().
+When using ip_set with counters and comment, traffic causes the kernel
+to panic on 32-bit ARM:
 
-Using ip6_mc_clear_src() to take care of the missing free.
+Alignment trap: not handling instruction e1b82f9f at [<bf01b0dc>]
+Unhandled fault: alignment exception (0x221) at 0xea08133c
+PC is at ip_set_match_extensions+0xe0/0x224 [ip_set]
 
-BUG: memory leak
-unreferenced object 0xffff8881113d3180 (size 64):
-  comm "syz-executor071", pid 389, jiffies 4294887985 (age 17.943s)
-  hex dump (first 32 bytes):
-    00 00 00 00 00 00 00 00 ff 02 00 00 00 00 00 00  ................
-    00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<000000002cbc483c>] kmalloc include/linux/slab.h:555 [inline]
-    [<000000002cbc483c>] kzalloc include/linux/slab.h:669 [inline]
-    [<000000002cbc483c>] ip6_mc_add1_src net/ipv6/mcast.c:2237 [inline]
-    [<000000002cbc483c>] ip6_mc_add_src+0x7f5/0xbb0 net/ipv6/mcast.c:2357
-    [<0000000058b8b1ff>] ip6_mc_source+0xe0c/0x1530 net/ipv6/mcast.c:449
-    [<000000000bfc4fb5>] do_ipv6_setsockopt.isra.12+0x1b2c/0x3b30 net/ipv6/ipv6_sockglue.c:754
-    [<00000000e4e7a722>] ipv6_setsockopt+0xda/0x150 net/ipv6/ipv6_sockglue.c:950
-    [<0000000029260d9a>] rawv6_setsockopt+0x45/0x100 net/ipv6/raw.c:1081
-    [<000000005c1b46f9>] __sys_setsockopt+0x131/0x210 net/socket.c:2132
-    [<000000008491f7db>] __do_sys_setsockopt net/socket.c:2148 [inline]
-    [<000000008491f7db>] __se_sys_setsockopt net/socket.c:2145 [inline]
-    [<000000008491f7db>] __x64_sys_setsockopt+0xba/0x150 net/socket.c:2145
-    [<00000000c7bc11c5>] do_syscall_64+0xa1/0x530 arch/x86/entry/common.c:295
-    [<000000005fb7a3f3>] entry_SYSCALL_64_after_hwframe+0x49/0xb3
+The problem occurs when we try to update the 64-bit counters - the
+faulting address above is not 64-bit aligned.  The problem occurs
+due to the way elements are allocated, for example:
 
-Fixes: 1666d49e1d41 ("mld: do not remove mld souce list info when set link down")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Wang Hai <wanghai38@huawei.com>
-Acked-by: Hangbin Liu <liuhangbin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+	set->dsize = ip_set_elem_len(set, tb, 0, 0);
+	map = ip_set_alloc(sizeof(*map) + elements * set->dsize);
+
+If the element has a requirement for a member to be 64-bit aligned,
+and set->dsize is not a multiple of 8, but is a multiple of four,
+then every odd numbered elements will be misaligned - and hitting
+an atomic64_add() on that element will cause the kernel to panic.
+
+ip_set_elem_len() must return a size that is rounded to the maximum
+alignment of any extension field stored in the element.  This change
+ensures that is the case.
+
+Fixes: 95ad1f4a9358 ("netfilter: ipset: Fix extension alignment")
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Acked-by: Jozsef Kadlecsik <kadlec@netfilter.org>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv6/mcast.c | 1 +
- 1 file changed, 1 insertion(+)
+ net/netfilter/ipset/ip_set_core.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/net/ipv6/mcast.c b/net/ipv6/mcast.c
-index 611dc5d55fa09..959057515fc9c 100644
---- a/net/ipv6/mcast.c
-+++ b/net/ipv6/mcast.c
-@@ -2599,6 +2599,7 @@ void ipv6_mc_destroy_dev(struct inet6_dev *idev)
- 		idev->mc_list = i->next;
- 
- 		write_unlock_bh(&idev->lock);
-+		ip6_mc_clear_src(i);
- 		ma_put(i);
- 		write_lock_bh(&idev->lock);
- 	}
+diff --git a/net/netfilter/ipset/ip_set_core.c b/net/netfilter/ipset/ip_set_core.c
+index 21eb53f6d4fe3..36ebc40a4313c 100644
+--- a/net/netfilter/ipset/ip_set_core.c
++++ b/net/netfilter/ipset/ip_set_core.c
+@@ -385,6 +385,8 @@ ip_set_elem_len(struct ip_set *set, struct nlattr *tb[], size_t len,
+ 	for (id = 0; id < IPSET_EXT_ID_MAX; id++) {
+ 		if (!add_extension(id, cadt_flags, tb))
+ 			continue;
++		if (align < ip_set_extensions[id].align)
++			align = ip_set_extensions[id].align;
+ 		len = ALIGN(len, ip_set_extensions[id].align);
+ 		set->offset[id] = len;
+ 		set->extensions |= ip_set_extensions[id].type;
 -- 
 2.25.1
 
