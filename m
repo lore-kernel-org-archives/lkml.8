@@ -4,55 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46DABC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0945C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2149F20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:28:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C42B7206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:28:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462524;
-	bh=+tp58noZXQoEUGiIglKdWJQNuoOipzmLxZuJLK3D7ss=;
+	s=default; t=1593462526;
+	bh=HVSYSmtUBuT/O3o/DRiXR98ASihCimHjTnrt5L0yzQ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eawrZbdP5ZD1AbH+WOidXto3nGVxJnkWlqAxnS7tPpHdBL602Zyx2Wt8uNTBvcz0I
-	 lRMV3SlR09qQhNi/KnJSQOZ9H1tbCc9JZJlTklGwP8ql4iuxFJ/lP1XgQkLnMgUWlr
-	 90GUxto1NmKbR+SiJ2DKgplHADlZzIKG0AItKqdY=
+	b=e0I3gW+n4/HJYf5FvcAKUM+FpiyIwlaszrfmCnB4E5yjpIoBJd4YK2ir31Aq7hHdj
+	 tQOlqJxKbHgydI9hOwC4Gi3S2Wpx4DJQz8NmZza21qB/XDVBybSX0Xt/z4+LBJa+IF
+	 ZFXdAGpjPClVq1Wyujn21hC/EKDpxsyBvN9AuqE8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729101AbgF2U2m (ORCPT
+        id S2388592AbgF2U2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:28:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37014 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:28:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37066 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731758AbgF2TZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732446AbgF2TZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CA21253CD;
-        Mon, 29 Jun 2020 15:41:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C01C253E7;
+        Mon, 29 Jun 2020 15:42:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445301;
-        bh=+tp58noZXQoEUGiIglKdWJQNuoOipzmLxZuJLK3D7ss=;
+        s=default; t=1593445324;
+        bh=HVSYSmtUBuT/O3o/DRiXR98ASihCimHjTnrt5L0yzQ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gV0tO65lk3U/jMSmJlrRExtwyPjSBL8iBOq2jWc+IZX7O8oOCpK5FLUJ47csQ0cDu
-         tFvhDhFfQXM+MGmWmkw99Cc3G1yKAgO9bojfC8E23KBv22z/PHLoOGkFltJaXgOSxq
-         pg7c7gZxaV55tbTm9TR3137bp86OnCO6TnvgnjFc=
+        b=tGRpM4MOiHFCCF0iwriStjq26iscptc2ovGW03NBfcKnknO0qNKcltx63dClrhEny
+         8d/0tIQKc0VNyZ9HHxEZccZUb4opcul3DHjBP0eFsWGA43WdPtM2NW/SdkWw5ZvRaI
+         dyTRxfQSns6BjdumpaNJuBQmSdymB300HK9+DgLw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     tannerlove <tannerlove@google.com>,
-        Willem de Bruijn <willemb@google.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 073/191] selftests/net: in timestamping, strncpy needs to preserve null byte
-Date:   Mon, 29 Jun 2020 11:38:09 -0400
-Message-Id: <20200629154007.2495120-74-sashal@kernel.org>
+Cc:     Chris Wilson <chris@chris-wilson.co.uk>,
+        Mika Kuoppala <mika.kuoppala@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.9 090/191] drm/i915: Whitelist context-local timestamp in the gen9 cmdparser
+Date:   Mon, 29 Jun 2020 11:38:26 -0400
+Message-Id: <20200629154007.2495120-91-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.229-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-4.9.y
@@ -67,63 +66,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: tannerlove <tannerlove@google.com>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-[ Upstream commit 8027bc0307ce59759b90679fa5d8b22949586d20 ]
+commit 273500ae71711c040d258a7b3f4b6f44c368fff2 upstream.
 
-If user passed an interface option longer than 15 characters, then
-device.ifr_name and hwtstamp.ifr_name became non-null-terminated
-strings. The compiler warned about this:
+Allow batch buffers to read their own _local_ cumulative HW runtime of
+their logical context.
 
-timestamping.c:353:2: warning: ‘strncpy’ specified bound 16 equals \
-destination size [-Wstringop-truncation]
-  353 |  strncpy(device.ifr_name, interface, sizeof(device.ifr_name));
-
-Fixes: cb9eff097831 ("net: new user space API for time stamping of incoming and outgoing packets")
-Signed-off-by: Tanner Love <tannerlove@google.com>
-Acked-by: Willem de Bruijn <willemb@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 0f2f39758341 ("drm/i915: Add gen9 BCS cmdparsing")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Mika Kuoppala <mika.kuoppala@linux.intel.com>
+Cc: <stable@vger.kernel.org> # v5.4+
+Reviewed-by: Mika Kuoppala <mika.kuoppala@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20200601161942.30854-1-chris@chris-wilson.co.uk
+(cherry picked from commit f9496520df11de00fbafc3cbd693b9570d600ab3)
+Signed-off-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- .../selftests/networking/timestamping/timestamping.c   | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/i915/i915_cmd_parser.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/tools/testing/selftests/networking/timestamping/timestamping.c b/tools/testing/selftests/networking/timestamping/timestamping.c
-index 5cdfd743447b7..900ed4b478996 100644
---- a/tools/testing/selftests/networking/timestamping/timestamping.c
-+++ b/tools/testing/selftests/networking/timestamping/timestamping.c
-@@ -332,10 +332,16 @@ int main(int argc, char **argv)
- 	int val;
- 	socklen_t len;
- 	struct timeval next;
-+	size_t if_len;
+diff --git a/drivers/gpu/drm/i915/i915_cmd_parser.c b/drivers/gpu/drm/i915/i915_cmd_parser.c
+index 1e104518192da..8a98442d494b4 100644
+--- a/drivers/gpu/drm/i915/i915_cmd_parser.c
++++ b/drivers/gpu/drm/i915/i915_cmd_parser.c
+@@ -570,6 +570,9 @@ struct drm_i915_reg_descriptor {
+ #define REG32(_reg, ...) \
+ 	{ .addr = (_reg), __VA_ARGS__ }
  
- 	if (argc < 2)
- 		usage(0);
- 	interface = argv[1];
-+	if_len = strlen(interface);
-+	if (if_len >= IFNAMSIZ) {
-+		printf("interface name exceeds IFNAMSIZ\n");
-+		exit(1);
-+	}
- 
- 	for (i = 2; i < argc; i++) {
- 		if (!strcasecmp(argv[i], "SO_TIMESTAMP"))
-@@ -369,12 +375,12 @@ int main(int argc, char **argv)
- 		bail("socket");
- 
- 	memset(&device, 0, sizeof(device));
--	strncpy(device.ifr_name, interface, sizeof(device.ifr_name));
-+	memcpy(device.ifr_name, interface, if_len + 1);
- 	if (ioctl(sock, SIOCGIFADDR, &device) < 0)
- 		bail("getting interface IP address");
- 
- 	memset(&hwtstamp, 0, sizeof(hwtstamp));
--	strncpy(hwtstamp.ifr_name, interface, sizeof(hwtstamp.ifr_name));
-+	memcpy(hwtstamp.ifr_name, interface, if_len + 1);
- 	hwtstamp.ifr_data = (void *)&hwconfig;
- 	memset(&hwconfig, 0, sizeof(hwconfig));
- 	hwconfig.tx_type =
++#define REG32_IDX(_reg, idx) \
++	{ .addr = _reg(idx) }
++
+ /*
+  * Convenience macro for adding 64-bit registers.
+  *
+@@ -667,6 +670,7 @@ static const struct drm_i915_reg_descriptor gen9_blt_regs[] = {
+ 	REG64_IDX(RING_TIMESTAMP, BSD_RING_BASE),
+ 	REG32(BCS_SWCTRL),
+ 	REG64_IDX(RING_TIMESTAMP, BLT_RING_BASE),
++	REG32_IDX(RING_CTX_TIMESTAMP, BLT_RING_BASE),
+ 	REG64_IDX(BCS_GPR, 0),
+ 	REG64_IDX(BCS_GPR, 1),
+ 	REG64_IDX(BCS_GPR, 2),
 -- 
 2.25.1
 
