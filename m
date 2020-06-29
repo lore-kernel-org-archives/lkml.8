@@ -2,180 +2,131 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 213A0C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:31:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7242DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D1522067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:31:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61DDC2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:31:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733183AbgF2Tba (ORCPT
+        id S1733195AbgF2Tbe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:31:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36618 "EHLO mx2.suse.de"
+        Mon, 29 Jun 2020 15:31:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36750 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730296AbgF2TbZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:31:25 -0400
+        id S1733164AbgF2Tb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:31:27 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id BA4A4AE7D;
-        Mon, 29 Jun 2020 16:19:00 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 5418FAD33;
+        Mon, 29 Jun 2020 15:19:59 +0000 (UTC)
+Message-ID: <9e6d34b0d31829f1b6760191c9424dda65963bcd.camel@suse.de>
+Subject: Re: [PATCH v3 2/9] reset: Add Raspberry Pi 4 firmware reset
+ controller
 From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, robh@kernel.org,
-        wahrenst@gmx.net, p.zabel@pengutronix.de, andy.shevchenko@gmail.com
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
+To:     Philipp Zabel <p.zabel@pengutronix.de>, f.fainelli@gmail.com,
+        gregkh@linuxfoundation.org, wahrenst@gmx.net,
+        linux-kernel@vger.kernel.org
+Cc:     linux-usb@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org,
         bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
         linux-pci@vger.kernel.org, helgaas@kernel.org,
-        mathias.nyman@linux.intel.com, lorenzo.pieralisi@arm.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH v5 8/9] Revert "firmware: raspberrypi: Introduce vl805 init routine"
-Date:   Mon, 29 Jun 2020 18:18:44 +0200
-Message-Id: <20200629161845.6021-9-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200629161845.6021-1-nsaenzjulienne@suse.de>
-References: <20200629161845.6021-1-nsaenzjulienne@suse.de>
+        andy.shevchenko@gmail.com, mathias.nyman@linux.intel.com,
+        lorenzo.pieralisi@arm.com
+Date:   Mon, 29 Jun 2020 17:19:57 +0200
+In-Reply-To: <6ddaf69d4f5ad188864f62dcdbfbbe32acef9820.camel@pengutronix.de>
+References: <20200612171334.26385-1-nsaenzjulienne@suse.de>
+         <20200612171334.26385-3-nsaenzjulienne@suse.de>
+         <c1ccb77ef0bc56b96a8ad991f8345d0ffbd76fc2.camel@pengutronix.de>
+         <b324122e8bd93302215a77d0dcf6d8b2897d3597.camel@suse.de>
+         <6ddaf69d4f5ad188864f62dcdbfbbe32acef9820.camel@pengutronix.de>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-pYGBGq9PFJmcLEyUIZhw"
+User-Agent: Evolution 3.36.3 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit fbbc5ff3f7f9f4cad562e530ae2cf5d8964fe6d3.
 
-The vl805 init routine has moved into drivers/reset/reset-raspberrypi.c
+--=-pYGBGq9PFJmcLEyUIZhw
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/firmware/raspberrypi.c             | 61 ----------------------
- include/soc/bcm2835/raspberrypi-firmware.h |  7 ---
- 2 files changed, 68 deletions(-)
+On Fri, 2020-06-26 at 12:43 +0200, Philipp Zabel wrote:
+> On Wed, 2020-06-17 at 12:44 +0200, Nicolas Saenz Julienne wrote:
+> > On Wed, 2020-06-17 at 12:02 +0200, Philipp Zabel wrote:
+> > > Hi Nicolas,
+> > >=20
+> > > On Fri, 2020-06-12 at 19:13 +0200, Nicolas Saenz Julienne wrote:
+> > > > Raspberry Pi 4's co-processor controls some of the board's HW
+> > > > initialization process, but it's up to Linux to trigger it when
+> > > > relevant. Introduce a reset controller capable of interfacing with
+> > > > RPi4's co-processor that models these firmware initialization routi=
+nes
+> > > > as
+> > > > reset lines.
+> > > >=20
+> > > > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> > > > Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+> > >=20
+> > > Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+> >=20
+> > Thanks!
+> >=20
+> > > If there is a good reason for the single DT specified reset id, I can
+> > > pick up patches 1 and 2.
+> >=20
+> > The idea here is to make sure we're reasonably covered against further
+> > changes
+> > in firmware. If we define constraints too narrow it can be a pain to su=
+pport
+> > new features without breaking backwards compatibility in dt.
+>=20
+> Ok.
+>=20
+> > > If you change the dts patch 4 to use a number instead of the reset id
+> > > define for now, there wouldn't even be a dependency between these res=
+et
+> > > and dts patches.
+> >=20
+> > I was under the impression that having an explicit definition was nice =
+to
+> > have.
+> > What's troubling about creating the dependency?
+>=20
+> Just that the last patch has to wait for the reset patches to be merged
+> before it can be applied.
 
-diff --git a/drivers/firmware/raspberrypi.c b/drivers/firmware/raspberrypi.c
-index 625c8fdceabf..c1b054e71f19 100644
---- a/drivers/firmware/raspberrypi.c
-+++ b/drivers/firmware/raspberrypi.c
-@@ -12,8 +12,6 @@
- #include <linux/of_platform.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
--#include <linux/pci.h>
--#include <linux/delay.h>
- #include <soc/bcm2835/raspberrypi-firmware.h>
- 
- #define MBOX_MSG(chan, data28)		(((data28) & ~0xf) | ((chan) & 0xf))
-@@ -21,8 +19,6 @@
- #define MBOX_DATA28(msg)		((msg) & ~0xf)
- #define MBOX_CHAN_PROPERTY		8
- 
--#define VL805_PCI_CONFIG_VERSION_OFFSET		0x50
--
- static struct platform_device *rpi_hwmon;
- static struct platform_device *rpi_clk;
- 
-@@ -287,63 +283,6 @@ struct rpi_firmware *rpi_firmware_get(struct device_node *firmware_node)
- }
- EXPORT_SYMBOL_GPL(rpi_firmware_get);
- 
--/*
-- * The Raspberry Pi 4 gets its USB functionality from VL805, a PCIe chip that
-- * implements xHCI. After a PCI reset, VL805's firmware may either be loaded
-- * directly from an EEPROM or, if not present, by the SoC's co-processor,
-- * VideoCore. RPi4's VideoCore OS contains both the non public firmware load
-- * logic and the VL805 firmware blob. This function triggers the aforementioned
-- * process.
-- */
--int rpi_firmware_init_vl805(struct pci_dev *pdev)
--{
--	struct device_node *fw_np;
--	struct rpi_firmware *fw;
--	u32 dev_addr, version;
--	int ret;
--
--	fw_np = of_find_compatible_node(NULL, NULL,
--					"raspberrypi,bcm2835-firmware");
--	if (!fw_np)
--		return 0;
--
--	fw = rpi_firmware_get(fw_np);
--	of_node_put(fw_np);
--	if (!fw)
--		return -ENODEV;
--
--	/*
--	 * Make sure we don't trigger a firmware load unnecessarily.
--	 *
--	 * If something went wrong with PCI, this whole exercise would be
--	 * futile as VideoCore expects from us a configured PCI bus. Just take
--	 * the faulty version (likely ~0) and let xHCI's registration fail
--	 * further down the line.
--	 */
--	pci_read_config_dword(pdev, VL805_PCI_CONFIG_VERSION_OFFSET, &version);
--	if (version)
--		goto exit;
--
--	dev_addr = pdev->bus->number << 20 | PCI_SLOT(pdev->devfn) << 15 |
--		   PCI_FUNC(pdev->devfn) << 12;
--
--	ret = rpi_firmware_property(fw, RPI_FIRMWARE_NOTIFY_XHCI_RESET,
--				    &dev_addr, sizeof(dev_addr));
--	if (ret)
--		return ret;
--
--	/* Wait for vl805 to startup */
--	usleep_range(200, 1000);
--
--	pci_read_config_dword(pdev, VL805_PCI_CONFIG_VERSION_OFFSET,
--			      &version);
--exit:
--	pci_info(pdev, "VL805 firmware version %08x\n", version);
--
--	return 0;
--}
--EXPORT_SYMBOL_GPL(rpi_firmware_init_vl805);
--
- static const struct of_device_id rpi_firmware_of_match[] = {
- 	{ .compatible = "raspberrypi,bcm2835-firmware", },
- 	{},
-diff --git a/include/soc/bcm2835/raspberrypi-firmware.h b/include/soc/bcm2835/raspberrypi-firmware.h
-index 3025aca3c358..cc9cdbc66403 100644
---- a/include/soc/bcm2835/raspberrypi-firmware.h
-+++ b/include/soc/bcm2835/raspberrypi-firmware.h
-@@ -10,7 +10,6 @@
- #include <linux/of_device.h>
- 
- struct rpi_firmware;
--struct pci_dev;
- 
- enum rpi_firmware_property_status {
- 	RPI_FIRMWARE_STATUS_REQUEST = 0,
-@@ -142,7 +141,6 @@ int rpi_firmware_property(struct rpi_firmware *fw,
- int rpi_firmware_property_list(struct rpi_firmware *fw,
- 			       void *data, size_t tag_size);
- struct rpi_firmware *rpi_firmware_get(struct device_node *firmware_node);
--int rpi_firmware_init_vl805(struct pci_dev *pdev);
- #else
- static inline int rpi_firmware_property(struct rpi_firmware *fw, u32 tag,
- 					void *data, size_t len)
-@@ -160,11 +158,6 @@ static inline struct rpi_firmware *rpi_firmware_get(struct device_node *firmware
- {
- 	return NULL;
- }
--
--static inline int rpi_firmware_init_vl805(struct pci_dev *pdev)
--{
--	return 0;
--}
- #endif
- 
- #endif /* __SOC_RASPBERRY_FIRMWARE_H__ */
--- 
-2.27.0
+TBH there is no hurry, this only provides a better design on something that=
+'s
+already available upstream. USB works on RPi4, so I don't mind if this gets
+delayed a release.
+
+Regards,
+Nicolas
+
+
+--=-pYGBGq9PFJmcLEyUIZhw
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl76Bp4ACgkQlfZmHno8
+x/4Ajwf+K267YktdZT35ap4okjOsWgkfqAIAwxP52bNAwkVqxoMvi5Bvt7bQiZhF
+6yW4hejw30Ynb5u18w0FNOECF0/hV8XCTPYHcBDqplrtVwDAJSvHkjRZ4Ta4yR0e
+afhITI1v66VKfk6fXq/6a3UEC0mZoUX1JY+eVo2M7tQEgGGQrNjU1kTUl9nwJkSb
+E9iYX4L+qtAfXtvirFebov4CrdX2zZRaaQpRPIFGh2ZMBpXFIFaOVVBe9DS4Wbav
+kIKuL2AIisi8ZY6yssQTxECJuzir//mqRN+yBvmOJaB8Va83E7AaE1pE1uN0JhhN
+/P/W9lzR8Ku7wbNuORr35TFIKyEiXg==
+=iSMN
+-----END PGP SIGNATURE-----
+
+--=-pYGBGq9PFJmcLEyUIZhw--
 
