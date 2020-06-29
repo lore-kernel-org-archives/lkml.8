@@ -2,123 +2,89 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E398CC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:46:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D99C433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C719A2065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:46:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jELQEPaT"
+	by mail.kernel.org (Postfix) with ESMTP id 49CDA2063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:47:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729215AbgF2Sqp (ORCPT
+        id S1729047AbgF2Sq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:46:45 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38690 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729306AbgF2Sqm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:46:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593456401;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=lmeklZemL80Q7lsiy/DTnr9n71S9umll3AkykzC+jhc=;
-        b=jELQEPaTByRF52JD1NkVF/HAlxaFMnoUqkxDJHCmhrUgyJv37/aFjMB0ZrMBV/C8A5FGbg
-        77ERASuOjnxp0ZtdN362hVpw7foWi1msxVMBPwgbh+YnlcTnQV8MwSaGWLBRODWZ7lW2Ks
-        B4kgBLLhV/M9bniIF/RPvkHLTgqofYA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-39-qTZ19pRuPo682yuNxSFHLQ-1; Mon, 29 Jun 2020 09:44:50 -0400
-X-MC-Unique: qTZ19pRuPo682yuNxSFHLQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 99FC6107ACF9;
-        Mon, 29 Jun 2020 13:44:48 +0000 (UTC)
-Received: from gondolin (ovpn-113-61.ams2.redhat.com [10.36.113.61])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6FDB35C1D4;
-        Mon, 29 Jun 2020 13:44:42 +0000 (UTC)
-Date:   Mon, 29 Jun 2020 15:44:39 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     Halil Pasic <pasic@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, mst@redhat.com,
-        jasowang@redhat.com, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
-        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com
-Subject: Re: [PATCH v3 1/1] s390: virtio: let arch accept devices without
- IOMMU feature
-Message-ID: <20200629154439.14cc5ae7.cohuck@redhat.com>
-In-Reply-To: <7fe6e9ab-fd5a-3f92-1f3a-f9e6805d3730@linux.ibm.com>
-References: <1592390637-17441-1-git-send-email-pmorel@linux.ibm.com>
-        <1592390637-17441-2-git-send-email-pmorel@linux.ibm.com>
-        <20200618002956.5f179de4.pasic@linux.ibm.com>
-        <20200619112051.74babdb1.cohuck@redhat.com>
-        <7fe6e9ab-fd5a-3f92-1f3a-f9e6805d3730@linux.ibm.com>
-Organization: Red Hat GmbH
+        Mon, 29 Jun 2020 14:46:57 -0400
+Received: from verein.lst.de ([213.95.11.211]:58879 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729294AbgF2Sqf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:46:35 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 0E55768C7B; Mon, 29 Jun 2020 20:07:31 +0200 (CEST)
+Date:   Mon, 29 Jun 2020 20:07:30 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        David Laight <David.Laight@aculab.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Subject: Re: [PATCH 03/11] fs: add new read_uptr and write_uptr file
+ operations
+Message-ID: <20200629180730.GA4600@lst.de>
+References: <20200624162901.1814136-1-hch@lst.de> <20200624162901.1814136-4-hch@lst.de> <CAHk-=wit9enePELG=-HnLsr0nY5bucFNjqAqWoFTuYDGR1P4KA@mail.gmail.com> <20200624175548.GA25939@lst.de> <CAHk-=wi_51SPWQFhURtMBGh9xgdo74j1gMpuhdkddA2rDMrt1Q@mail.gmail.com> <f50b9afa5a2742babe0293d9910e6bf4@AcuMS.aculab.com> <CAHk-=wjxQczqZ96esvDrH5QZsLg6azXCGDgo+Bmm6r8t2ssasg@mail.gmail.com> <20200629152912.GA26172@lst.de> <CAHk-=wj_Br5dQt0GnMjHooSvBbVXwtGRVKQNkpCLwWjYko-4Zw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wj_Br5dQt0GnMjHooSvBbVXwtGRVKQNkpCLwWjYko-4Zw@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Jun 2020 15:14:04 +0200
-Pierre Morel <pmorel@linux.ibm.com> wrote:
+On Mon, Jun 29, 2020 at 10:02:48AM -0700, Linus Torvalds wrote:
+> That said, is there no practical limit on how big "optlen" can be?
 
-> On 2020-06-19 11:20, Cornelia Huck wrote:
-> > On Thu, 18 Jun 2020 00:29:56 +0200
-> > Halil Pasic <pasic@linux.ibm.com> wrote:
-> >   
-> >> On Wed, 17 Jun 2020 12:43:57 +0200
-> >> Pierre Morel <pmorel@linux.ibm.com> wrote:  
+There are some pretty huge ones, like the sctp one that can take
+a basically unlimited list of sockaddr structures.
 
-> >>> @@ -179,6 +194,13 @@ int virtio_finalize_features(struct virtio_device *dev)
-> >>>   	if (!virtio_has_feature(dev, VIRTIO_F_VERSION_1))
-> >>>   		return 0;
-> >>>   
-> >>> +	if (arch_needs_virtio_iommu_platform(dev) &&
-> >>> +		!virtio_has_feature(dev, VIRTIO_F_IOMMU_PLATFORM)) {
-> >>> +		dev_warn(&dev->dev,
-> >>> +			 "virtio: device must provide VIRTIO_F_IOMMU_PLATFORM\n");  
+> Sure, I realize that a lot of setsockopt users may not use all of the
+> data, but let's say that "optlen" is 128, but the actual low-level
+> setsockopt operation only uses the first 16 bytes, maybe we could
+> always just copy the 128 bytes from user space into kernel space, and
+> just say "setsockopt() always gets a kernel pointer".
 
-[Side note: wasn't there a patch renaming this bit on the list? I think
-this name is only kept for userspace compat.]
+One issue is that a lot setsockopt calls are in the fast path, and
+even have micro-optimizations like putting an int on stack for the
+fast path to avoid the memory allocation.  While I don't know for
+sure I fear that always doing a large allocation could end up having
+a performance impact.  But otherwise I like that idea, and did in
+fact start some prep work until I realized what I did was futile.
 
-> >>
-> >> I'm not sure, divulging the current Linux name of this feature bit is a
-> >> good idea, but if everybody else is fine with this, I don't care that  
-> > 
-> > Not sure if that feature name will ever change, as it is exported in
-> > headers. At most, we might want to add the new ACCESS_PLATFORM define
-> > and keep the old one, but that would still mean some churn.
-> >   
-> >> much. An alternative would be:
-> >> "virtio: device falsely claims to have full access to the memory,
-> >> aborting the device"  
-> > 
-> > "virtio: device does not work with limited memory access" ?
-> > 
-> > But no issue with keeping the current message.
-> >   
+> Then the bpf use is even simpler. It would just pass the kernel
+> pointer natively.
 > 
-> If it is OK, I would like to specify that the arch is responsible to 
-> accept or not the device.
-> The reason why the device is not accepted without IOMMU_PLATFORM is arch 
-> specific.
+> Because that seems to be what the BPF code really wants to do: it
+> takes the user optval, and munges it into a kernel optval, and then
+> (if that has been done) runs the low-level sock_setsockopt() under
+> KERNEL_DS.
+> 
+> Couldn't we switch things around instead, and just *always* copy
+> things from user space, and sock_setsockopt (and
+> sock->ops->setsockopt) _always_ get a kernel buffer?
+> 
+> And avoid the set_fs(KERNEL_DS) games entirely that way?
 
-Hm, I'd think the reason is always the same (the device cannot access
-the memory directly), just the way to figure out whether that is the
-case or not is arch-specific, as with so many other things. No real
-need to go into detail here, I think.
+I'd love to be able to do that.  And now that we want through this
+whole mess than Nth time I have another idea:
 
+ - we assume optlen is correct, which should cover about 90% of
+   the protocols
+ - but to override that a new setsockopt_len method is added that
+   returns the correct length for all the messy ones.
+
+Let me try if that works out.
