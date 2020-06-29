@@ -2,108 +2,182 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D431EC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F4EDC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1C0D20776
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:11:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g9QBDw/5"
+	by mail.kernel.org (Postfix) with ESMTP id 4A93020776
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:11:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728920AbgF2XLN (ORCPT
+        id S1729309AbgF2XLR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 19:11:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53386 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726598AbgF2XLM (ORCPT
+        Mon, 29 Jun 2020 19:11:17 -0400
+Received: from mail-il1-f198.google.com ([209.85.166.198]:50191 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727819AbgF2XLO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 19:11:12 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A081CC061755;
-        Mon, 29 Jun 2020 16:11:12 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id n26so4588315ejx.0;
-        Mon, 29 Jun 2020 16:11:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=NyzXXw5rhPzXDzk87PHT4MSvXN0tYVX6d5yDjfIvSWw=;
-        b=g9QBDw/5I3cm62saB5Rv1ReXEd57CmvhsgUFDyGJC1G9KOE+qOMvDPGzYK0mNBfIb1
-         rJ2ifdAAohVS/9OGMxbmT2jaU2XZXfCfTPdpVWCXk52iccN8bydi69Q2ieGNSoKHlBJT
-         i5MPHRBc4GF9Tm+7PMrSyGDihpKAUlQab2ChzOMoOB/9vGhVmf/9vsv0/YRFeVm6fN11
-         jCu+ozA8+ZlyoLJO9M2tctS3KgT67Jjag9lZzNDhyZwnilwvdnbSqe2Hs2raf+YDqkcf
-         dfVnQAJxgtLbJOyd5+sKgU+0fD/VtJIJSBlxTrhMtwbCeY4DcwNRv4QgWxwWhmS0w2HT
-         yH2w==
+        Mon, 29 Jun 2020 19:11:14 -0400
+Received: by mail-il1-f198.google.com with SMTP id l17so13393228ilj.17
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 16:11:13 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=NyzXXw5rhPzXDzk87PHT4MSvXN0tYVX6d5yDjfIvSWw=;
-        b=Rm3BT9wWD9XQAwCGCN4qw5P3PNfSziFmfd4gv8FwAgw12VSoWIKLA8M+0zc5WIf0gL
-         g+fXsWZI6uiJ9GYNbyFz93yyRsgjphCXiNYnzWM4t1oyObQkMgpOddalzCLFwvyXZDAl
-         8dUaRPMjgDZTNd33HYm7b5MGCNyL2tsIGZPoIUAfGsWRrNeaGPglinaPkeTMMewOhj2+
-         w5M3n30yRgCp2AdsuEbvR2MvE4oXneiyCZKoJi04B4gP54+DYKXCoUZS48pr4G/kCV0H
-         /Zrd5qydCgqsTC5narZLF8//lQH1voZEc5AEXfWFjBkR5ypE+eVEc46JY7Cz1UuwU1d9
-         JssQ==
-X-Gm-Message-State: AOAM532OQ0T8K2A2PNJRY6f+xMW0JboXRNx3QBct915DUN00PrB/L4sS
-        ItPw0grubFh6Ou28Id9YxOc=
-X-Google-Smtp-Source: ABdhPJw9/ZehljeUhKBFdyzt45t+rg5pj4fSwo8OI4pal/Z0ajYpGu/4863flF8Husdgc64U5yxhAA==
-X-Received: by 2002:a17:906:f752:: with SMTP id jp18mr15783772ejb.538.1593472271409;
-        Mon, 29 Jun 2020 16:11:11 -0700 (PDT)
-Received: from ltop.local ([2a02:a03f:b7f9:7600:4c8a:c17d:ea37:16f])
-        by smtp.gmail.com with ESMTPSA id gr15sm620939ejb.84.2020.06.29.16.11.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 16:11:10 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 01:11:09 +0200
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pci: consolidate typing of
- pci_error_handlers::error_detected()
-Message-ID: <20200629231109.n7lrmrtn2cj75sb6@ltop.local>
-References: <20200628161233.73079-1-luc.vanoostenryck@gmail.com>
- <20200629212928.GA3296753@bjorn-Precision-5520>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=scxQ3olKSlbD2dbdxyeSE7jRyJ9lJyRe3hVz8jvF9ow=;
+        b=EpSecKiKriSr5XSIXKrpAaBqF1gly1fUDIXTmepXEJQaVTNSRxr4oAnl4AzsLUy/Xw
+         UB02bWI6pJ2ixJzhJrrpr4vNgyTP2Ry4XxNfCfywtgYj9jIqlTfT5lxldAOtlW4LGZQj
+         +JMZXcAKN8/IT/faENabCNNiV3rf24dA7dxCx5i6+g5RAsvRgy/WALv5VymSDEn/hONe
+         Ma6/MrNk9sXEEOYYjhXsWIjSwiZg6BCgVvYviUKylTxLKRxYPTgnOAItvzTPAbO8pvFO
+         neENjE2bARsCKiMBpA5QgIBv2qkd1b4c4ifi8KS5OjiyZzKiM1K69FCdKBD+74lFdT7Q
+         cNjg==
+X-Gm-Message-State: AOAM530oFZBYEJSXbvxuGwc3zrYlKu9FM6jIvzps6JaizNXqbDnd7u8B
+        l36WkwbD7KAQu5+62B/OnA4xVbGtPke1sIIOfFXH3KB0qdjD
+X-Google-Smtp-Source: ABdhPJx6hW4JpWu7xneEQCiHNeHEXyoCY16K9PPGVpQTWUp1dg1xDaKn7ah0VhFOgIgt4YT/p0ew9JG20fSp4FFidx1Smbq0Ak8v
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200629212928.GA3296753@bjorn-Precision-5520>
+X-Received: by 2002:a05:6e02:13cd:: with SMTP id v13mr9732535ilj.15.1593472272869;
+ Mon, 29 Jun 2020 16:11:12 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 16:11:12 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c8af7205a9412c5b@google.com>
+Subject: KASAN: use-after-free Read in dev_get_by_name
+From:   syzbot <syzbot+86e957379663a156cd31@syzkaller.appspotmail.com>
+To:     Jason@zx2c4.com, davem@davemloft.net, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, wireguard@lists.zx2c4.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 04:29:28PM -0500, Bjorn Helgaas wrote:
-> On Sun, Jun 28, 2020 at 06:12:33PM +0200, Luc Van Oostenryck wrote:
-> > The method struct pci_error_handlers::error_detected() is defined and
-> > documented as taking an 'enum pci_channel_state' for the second
-> > argument but most drivers use 'pci_channel_state_t' instead.
-> > This 'pci_channel_state_t' is not a typedef for the enum but a typedef
-> > for a bitwise type in order to have better/stricter typechecking.
-> > 
-> > So, consolidate everything by using the restricted type in the
-> > method's definition, in the documentation and in the drivers not
-> > using 'pci_channel_state_t'.
-> 
->   $ git grep "\<pci_channel_state\>"
->   Documentation/PCI/pci-error-recovery.rst:	enum pci_channel_state {
->   Documentation/PCI/pci-error-recovery.rst:pci_channel_state value of pci_channel_io_perm_failure.
->   arch/powerpc/kernel/eeh_driver.c:static void eeh_set_channel_state(struct eeh_pe *root, enum pci_channel_state s)
->   drivers/net/ethernet/intel/ice/ice_main.c:ice_pci_err_detected(struct pci_dev *pdev, enum pci_channel_state err)
->   drivers/pci/pci.h:			enum pci_channel_state state,
->   drivers/pci/pcie/err.c:				 enum pci_channel_state state,
->   drivers/pci/pcie/err.c:			enum pci_channel_state state,
-> 
-> Should these be changed as well?  If not, why not?  Some of them look
-> analogous to the ones changed below.
+Hello,
 
-Oh yes, surely. This is in fact a resend of an old patch (Dec 2018)
-and it seems that these are more recent. I'll check, update and send
-a new version.
+syzbot found the following crash on:
 
--- Luc
+HEAD commit:    4e99b321 Merge tag 'nfs-for-5.8-2' of git://git.linux-nfs...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=1013cb29100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=20c907630cbdbe5
+dashboard link: https://syzkaller.appspot.com/bug?extid=86e957379663a156cd31
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1689e8f5100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=144f07bb100000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+86e957379663a156cd31@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: use-after-free in strnlen+0x63/0x80 lib/string.c:561
+Read of size 1 at addr ffff88809f3e9c18 by task syz-executor276/7264
+
+CPU: 0 PID: 7264 Comm: syz-executor276 Not tainted 5.8.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1f0/0x31e lib/dump_stack.c:118
+ print_address_description+0x66/0x5a0 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report+0x132/0x1d0 mm/kasan/report.c:530
+ strnlen+0x63/0x80 lib/string.c:561
+ dev_name_hash net/core/dev.c:208 [inline]
+ netdev_name_node_lookup_rcu net/core/dev.c:290 [inline]
+ dev_get_by_name_rcu net/core/dev.c:883 [inline]
+ dev_get_by_name+0x9b/0x2a0 net/core/dev.c:905
+ lookup_interface drivers/net/wireguard/netlink.c:63 [inline]
+ wg_get_device_start+0x1fb/0x2d0 drivers/net/wireguard/netlink.c:203
+ genl_start+0x390/0x570 net/netlink/genetlink.c:556
+ __netlink_dump_start+0x3d2/0x700 net/netlink/af_netlink.c:2343
+ genl_family_rcv_msg_dumpit net/netlink/genetlink.c:638 [inline]
+ genl_family_rcv_msg net/netlink/genetlink.c:733 [inline]
+ genl_rcv_msg+0xb03/0xe00 net/netlink/genetlink.c:753
+ netlink_rcv_skb+0x190/0x3a0 net/netlink/af_netlink.c:2469
+ genl_rcv+0x24/0x40 net/netlink/genetlink.c:764
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x786/0x940 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0xa57/0xd70 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg net/socket.c:672 [inline]
+ ____sys_sendmsg+0x519/0x800 net/socket.c:2352
+ ___sys_sendmsg net/socket.c:2406 [inline]
+ __sys_sendmsg+0x2b1/0x360 net/socket.c:2439
+ do_syscall_64+0x73/0xe0 arch/x86/entry/common.c:359
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x44a809
+Code: Bad RIP value.
+RSP: 002b:00007fed6f920da8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000006dbc28 RCX: 000000000044a809
+RDX: 0000000000000000 RSI: 0000000020000200 RDI: 0000000000000004
+RBP: 00000000006dbc20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000006dbc2c
+R13: 0000000000000000 R14: 0000000000316777 R15: 0000000000000000
+
+Allocated by task 7265:
+ save_stack mm/kasan/common.c:48 [inline]
+ set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc+0x103/0x140 mm/kasan/common.c:494
+ __kmalloc_reserve net/core/skbuff.c:142 [inline]
+ __alloc_skb+0xde/0x4f0 net/core/skbuff.c:210
+ alloc_skb include/linux/skbuff.h:1083 [inline]
+ netlink_alloc_large_skb net/netlink/af_netlink.c:1175 [inline]
+ netlink_sendmsg+0x7b2/0xd70 net/netlink/af_netlink.c:1893
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg net/socket.c:672 [inline]
+ ____sys_sendmsg+0x519/0x800 net/socket.c:2352
+ ___sys_sendmsg net/socket.c:2406 [inline]
+ __sys_sendmsg+0x2b1/0x360 net/socket.c:2439
+ do_syscall_64+0x73/0xe0 arch/x86/entry/common.c:359
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Freed by task 7265:
+ save_stack mm/kasan/common.c:48 [inline]
+ set_track mm/kasan/common.c:56 [inline]
+ kasan_set_free_info mm/kasan/common.c:316 [inline]
+ __kasan_slab_free+0x114/0x170 mm/kasan/common.c:455
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x10a/0x220 mm/slab.c:3757
+ skb_release_all net/core/skbuff.c:664 [inline]
+ __kfree_skb+0x56/0x1c0 net/core/skbuff.c:678
+ netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
+ netlink_unicast+0x78e/0x940 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0xa57/0xd70 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg net/socket.c:672 [inline]
+ ____sys_sendmsg+0x519/0x800 net/socket.c:2352
+ ___sys_sendmsg net/socket.c:2406 [inline]
+ __sys_sendmsg+0x2b1/0x360 net/socket.c:2439
+ do_syscall_64+0x73/0xe0 arch/x86/entry/common.c:359
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+The buggy address belongs to the object at ffff88809f3e9c00
+ which belongs to the cache kmalloc-512 of size 512
+The buggy address is located 24 bytes inside of
+ 512-byte region [ffff88809f3e9c00, ffff88809f3e9e00)
+The buggy address belongs to the page:
+page:ffffea00027cfa40 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea000294b388 ffffea00029e4388 ffff8880aa400a80
+raw: 0000000000000000 ffff88809f3e9000 0000000100000004 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff88809f3e9b00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff88809f3e9b80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>ffff88809f3e9c00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                            ^
+ ffff88809f3e9c80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff88809f3e9d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
