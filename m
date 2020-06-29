@@ -2,127 +2,143 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 576CEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:46:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE6CEC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3AEAF2082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:46:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAEAB20760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:46:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593459967;
+	bh=LoVIHkXo/f1i0Yzxzmm7UVOq2WlhqMhxCMJ6m/utMNQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=v6sbm6arrS8g1pTNHm4xjKe4IvLpup3xhgm+SZ3Wr1WTYB2ie8udVnzm+B+WwWmm1
+	 nuTqSDC+DT56xDO0QIW+ozMHsvmXGwNo2gtwWQ2JEt7PLDsg8n1lnrmFHPAlwAd5B2
+	 11A5umNqDEwqJPQEp8ex2RWb0MBoAZVBHKPcPbkc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388086AbgF2TqA (ORCPT
+        id S2388071AbgF2Tpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:46:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49052 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388083AbgF2Tp4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:45:56 -0400
-Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 216B8C03E979
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 12:45:56 -0700 (PDT)
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jpziy-00084a-Re; Mon, 29 Jun 2020 21:45:52 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1jpziy-0005Sc-2g; Mon, 29 Jun 2020 21:45:52 +0200
-Date:   Mon, 29 Jun 2020 21:45:51 +0200
-From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     thierry.reding@gmail.com, linux-pwm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Ray Jui <rjui@broadcom.com>,
-        Scott Branden <sbranden@broadcom.com>,
-        Yendapally Reddy Dhananjaya Reddy 
-        <yendapally.reddy@broadcom.com>,
-        bcm-kernel-feedback-list@broadcom.com
-Subject: Re: [PATCH 1/4] pwm: bcm-iproc: Remove impossible comparison when
- validating duty cycle
-Message-ID: <20200629194551.nlsgjlc6g35taks6@pengutronix.de>
-References: <20200629124752.1018358-1-lee.jones@linaro.org>
- <20200629124752.1018358-2-lee.jones@linaro.org>
+        Mon, 29 Jun 2020 15:45:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47696 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387818AbgF2Tko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:40:44 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A633A248BD;
+        Mon, 29 Jun 2020 15:26:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593444414;
+        bh=LoVIHkXo/f1i0Yzxzmm7UVOq2WlhqMhxCMJ6m/utMNQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VVkvXmZWoyWkgscTqTBXFQj+4FrMi36+I3APp0gGB087iTxNd34sMBAdUvjoQ4HW0
+         X+ZPgkeMMHpMymDKjnZEe/sAb6IStVq4WpZLsIxTl4QdB3nD4vSau6eCvZqRBI4lJg
+         way+Shiy9Q2IQ4beGTJ+HIOlE36DXFY0zfuP7LjY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Alexander Lobakin <alobakin@marvell.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 092/178] net: qed: fix left elements count calculation
+Date:   Mon, 29 Jun 2020 11:23:57 -0400
+Message-Id: <20200629152523.2494198-93-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
+References: <20200629152523.2494198-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="nfpd2ci3eiscija7"
-Content-Disposition: inline
-In-Reply-To: <20200629124752.1018358-2-lee.jones@linaro.org>
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.50-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.4.50-rc1
+X-KernelTest-Deadline: 2020-07-01T15:25+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Alexander Lobakin <alobakin@marvell.com>
 
---nfpd2ci3eiscija7
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+[ Upstream commit 97dd1abd026ae4e6a82fa68645928404ad483409 ]
 
-On Mon, Jun 29, 2020 at 01:47:49PM +0100, Lee Jones wrote:
-> 'duty' here is an unsigned int, thus checking for <0 will always
-> evaluate to false.
->=20
-> Fixes the following W=3D1 warning:
->=20
->  drivers/pwm/pwm-bcm-iproc.c:147:12: warning: comparison of unsigned expr=
-ession < 0 is always false [-Wtype-limits]
->=20
-> Cc: Ray Jui <rjui@broadcom.com>
-> Cc: Scott Branden <sbranden@broadcom.com>
-> Cc: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
-> Cc: bcm-kernel-feedback-list@broadcom.com
-> Cc: linux-pwm@vger.kernel.org
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  drivers/pwm/pwm-bcm-iproc.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->=20
-> diff --git a/drivers/pwm/pwm-bcm-iproc.c b/drivers/pwm/pwm-bcm-iproc.c
-> index 1f829edd8ee70..46f0a45e9049c 100644
-> --- a/drivers/pwm/pwm-bcm-iproc.c
-> +++ b/drivers/pwm/pwm-bcm-iproc.c
-> @@ -143,8 +143,7 @@ static int iproc_pwmc_apply(struct pwm_chip *chip, st=
-ruct pwm_device *pwm,
->  		value =3D rate * state->duty_cycle;
->  		duty =3D div64_u64(value, div);
-> =20
-> -		if (period < IPROC_PWM_PERIOD_MIN ||
-> -		    duty < IPROC_PWM_DUTY_CYCLE_MIN)
-> +		if (period < IPROC_PWM_PERIOD_MIN)
->  			return -EINVAL;
-> =20
->  		if (period <=3D IPROC_PWM_PERIOD_MAX &&
+qed_chain_get_element_left{,_u32} returned 0 when the difference
+between producer and consumer page count was equal to the total
+page count.
+Fix this by conditional expanding of producer value (vs
+unconditional). This allowed to eliminate normalizaton against
+total page count, which was the cause of this bug.
 
-Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+Misc: replace open-coded constants with common defines.
 
-Thanks
-Uwe
+Fixes: a91eb52abb50 ("qed: Revisit chain implementation")
+Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
+Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/linux/qed/qed_chain.h | 26 ++++++++++++++++----------
+ 1 file changed, 16 insertions(+), 10 deletions(-)
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+diff --git a/include/linux/qed/qed_chain.h b/include/linux/qed/qed_chain.h
+index 733fad7dfbed9..6d15040c642cb 100644
+--- a/include/linux/qed/qed_chain.h
++++ b/include/linux/qed/qed_chain.h
+@@ -207,28 +207,34 @@ static inline u32 qed_chain_get_cons_idx_u32(struct qed_chain *p_chain)
+ 
+ static inline u16 qed_chain_get_elem_left(struct qed_chain *p_chain)
+ {
++	u16 elem_per_page = p_chain->elem_per_page;
++	u32 prod = p_chain->u.chain16.prod_idx;
++	u32 cons = p_chain->u.chain16.cons_idx;
+ 	u16 used;
+ 
+-	used = (u16) (((u32)0x10000 +
+-		       (u32)p_chain->u.chain16.prod_idx) -
+-		      (u32)p_chain->u.chain16.cons_idx);
++	if (prod < cons)
++		prod += (u32)U16_MAX + 1;
++
++	used = (u16)(prod - cons);
+ 	if (p_chain->mode == QED_CHAIN_MODE_NEXT_PTR)
+-		used -= p_chain->u.chain16.prod_idx / p_chain->elem_per_page -
+-		    p_chain->u.chain16.cons_idx / p_chain->elem_per_page;
++		used -= prod / elem_per_page - cons / elem_per_page;
+ 
+ 	return (u16)(p_chain->capacity - used);
+ }
+ 
+ static inline u32 qed_chain_get_elem_left_u32(struct qed_chain *p_chain)
+ {
++	u16 elem_per_page = p_chain->elem_per_page;
++	u64 prod = p_chain->u.chain32.prod_idx;
++	u64 cons = p_chain->u.chain32.cons_idx;
+ 	u32 used;
+ 
+-	used = (u32) (((u64)0x100000000ULL +
+-		       (u64)p_chain->u.chain32.prod_idx) -
+-		      (u64)p_chain->u.chain32.cons_idx);
++	if (prod < cons)
++		prod += (u64)U32_MAX + 1;
++
++	used = (u32)(prod - cons);
+ 	if (p_chain->mode == QED_CHAIN_MODE_NEXT_PTR)
+-		used -= p_chain->u.chain32.prod_idx / p_chain->elem_per_page -
+-		    p_chain->u.chain32.cons_idx / p_chain->elem_per_page;
++		used -= (u32)(prod / elem_per_page - cons / elem_per_page);
+ 
+ 	return p_chain->capacity - used;
+ }
+-- 
+2.25.1
 
---nfpd2ci3eiscija7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl76ROwACgkQwfwUeK3K
-7Ambxwf/R6wYgRkhf9eNfmHQhlvmhydLzULYpt4yxZAlGdgVBIv5d0queLbzMC/A
-+Rg9YS0L+QlaHXscl/HMURmyNE/ogz70JD/K+RD9gtRABEX1qC6VCXudZ372QVkZ
-CnsUQXpva36Q680MkvM7Df3pJmj82YvCRDkpyOfXdb66d28bKKZXfqnACTzESIzp
-7eAIMtkdY1sOUA9pFIGrujjVrtpvXjUy7X+eq0lxspMoRxeMb9fqm40kVCbPCdEO
-gILougjq73SO3L2Q14oh/3XydBgc87caM1yhihbz3OamZd6m/BEp0pUvHTeNHpdJ
-GIXb0dYXi44CkLHakoWrXsYEAoelcA==
-=0gnH
------END PGP SIGNATURE-----
-
---nfpd2ci3eiscija7--
