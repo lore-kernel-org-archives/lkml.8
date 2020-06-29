@@ -2,56 +2,52 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E83FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D9E1C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:06:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6E763207E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08297207E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:06:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461169;
-	bh=YxjOEaanIKF2s27K3i4x261+HzRK38qM6YsIAFXNqrs=;
+	s=default; t=1593461173;
+	bh=yq5v9GFR3nQRyLwxruwPhH9dHuZJJnO9qRvov30S4b8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wcp5/p5hVcoDasAGbib/wWK2risQzDen+ATNTzlH2Wl9OCPaFFWQ0U3BK5Zu6Yabn
-	 taRQCocwuHxvqylphjVWvF6K+RjLE8FM9Koq7o0QT1nhAusaiCP7aFzMNIZMTrxbpX
-	 FZsxc8TM8uJ8Nke+VBGe933XHkWFxFuJ63jYLTmk=
+	b=Yoc3r7WiSZsT7ftLXYpVk1auWFn7UeCl8bJaHDCw+oN/W4Bzd9CuvQ2TQMdDsp3tz
+	 J/qLTltRuHyeeG1eoMzKU50vxDlPpdITE6kvf5FfChJrwRhXLGKvr6Lawu1/MrqZYA
+	 ljcNubvpF37LrZU3A/HKiWekegcna7jwyuJEnngI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731760AbgF2UGH (ORCPT
+        id S2388689AbgF2UGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:06:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40566 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:06:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732969AbgF2Ta2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732971AbgF2Ta2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B270D2521F;
-        Mon, 29 Jun 2020 15:35:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF7EA252C3;
+        Mon, 29 Jun 2020 15:37:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444938;
-        bh=YxjOEaanIKF2s27K3i4x261+HzRK38qM6YsIAFXNqrs=;
+        s=default; t=1593445034;
+        bh=yq5v9GFR3nQRyLwxruwPhH9dHuZJJnO9qRvov30S4b8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J+9TXstU4WSHlMkIIg7+RkjYqkBWKYCUv/1fz7ilLRK/SiCXYAOKwGnugnd0jARcw
-         Sa7Bi1doqcbxoUvPsLD2WcbMBCYyA0Wz8/dl0hWdMmGtNMIvuBSz02W8Xfrh25psxj
-         KVno8Xl0lHVlUNzYGNpBPDRDbVxYrs9bVPtv4/GA=
+        b=AHsgFQzRjZz+xAAaay7CDBXzeQMfcJNIMbCJfAaTTxx5aayiJv3F7kdOQYUHRsB77
+         uOd1qW4vu/GUoqOXV3ib+JBvd3o6mB1lK9a/a79jmAoxqqApsEX59IY+6mxfSNC2uP
+         o56svCVWPl2NNNL8GIGDobZYoH99F4nitZq5482c=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 035/131] sch_cake: fix a few style nits
-Date:   Mon, 29 Jun 2020 11:33:26 -0400
-Message-Id: <20200629153502.2494656-36-sashal@kernel.org>
+Cc:     Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 131/131] Linux 4.19.131-rc1
+Date:   Mon, 29 Jun 2020 11:35:02 -0400
+Message-Id: <20200629153502.2494656-132-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-4.19.y
@@ -66,44 +62,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Toke Høiland-Jørgensen <toke@redhat.com>
-
-[ Upstream commit 3f608f0c41360b11b04c763f348b712f651c8bac ]
-
-I spotted a few nits when comparing the in-tree version of sch_cake with
-the out-of-tree one: A redundant error variable declaration shadowing an
-outer declaration, and an indentation alignment issue. Fix both of these.
-
-Fixes: 046f6fd5daef ("sched: Add Common Applications Kept Enhanced (cake) qdisc")
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/sch_cake.c | 4 ++--
+ Makefile | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/sched/sch_cake.c b/net/sched/sch_cake.c
-index c0d92a251bcb6..d8064cb521c4c 100644
---- a/net/sched/sch_cake.c
-+++ b/net/sched/sch_cake.c
-@@ -2649,7 +2649,7 @@ static int cake_init(struct Qdisc *sch, struct nlattr *opt,
- 	qdisc_watchdog_init(&q->watchdog, sch);
+diff --git a/Makefile b/Makefile
+index 6443cbd51f704..1ba4ddc0c04d6 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,8 +1,8 @@
+ # SPDX-License-Identifier: GPL-2.0
+ VERSION = 4
+ PATCHLEVEL = 19
+-SUBLEVEL = 130
+-EXTRAVERSION =
++SUBLEVEL = 131
++EXTRAVERSION = -rc1
+ NAME = "People's Front"
  
- 	if (opt) {
--		int err = cake_change(sch, opt, extack);
-+		err = cake_change(sch, opt, extack);
- 
- 		if (err)
- 			return err;
-@@ -2963,7 +2963,7 @@ static int cake_dump_class_stats(struct Qdisc *sch, unsigned long cl,
- 			PUT_STAT_S32(BLUE_TIMER_US,
- 				     ktime_to_us(
- 					     ktime_sub(now,
--						     flow->cvars.blue_timer)));
-+						       flow->cvars.blue_timer)));
- 		}
- 		if (flow->cvars.dropping) {
- 			PUT_STAT_S32(DROP_NEXT_US,
+ # *DOCUMENTATION*
 -- 
 2.25.1
 
