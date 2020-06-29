@@ -1,128 +1,132 @@
 Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Level: **
+X-Spam-Status: No, score=2.2 required=3.0 tests=CHARSET_FARAWAY_HEADER,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD42EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E527C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A9D4620663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:52:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB16520663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:53:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kQvFRp2J"
+	dkim=pass (1024-bit key) header.d=necglobal.onmicrosoft.com header.i=@necglobal.onmicrosoft.com header.b="GrRVE364"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389878AbgF2Uwu (ORCPT
+        id S2389894AbgF2UxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:52:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43372 "EHLO
+        Mon, 29 Jun 2020 16:53:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43356 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731347AbgF2TNY (ORCPT
+        with ESMTP id S1731339AbgF2TNX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:13:24 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF4FFC0086FF
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 02:55:32 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id 17so15472136wmo.1
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 02:55:32 -0700 (PDT)
+        Mon, 29 Jun 2020 15:13:23 -0400
+Received: from APC01-PU1-obe.outbound.protection.outlook.com (mail-pu1apc01on061f.outbound.protection.outlook.com [IPv6:2a01:111:f400:febe::61f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE6DDC0A88AD;
+        Mon, 29 Jun 2020 00:33:12 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=J/fLDqcy9DZnyNe8JpODxqvVvUZupcAMBFsgkqOqCNqOn8mlcoy9NbjeRVUgjSKZZzWjarDETi9y8Dt9nRRdvKfOUQGV35pmSHCy1BiZQCErJIXwscMPmDRHhdCpxN/+CFKnN4ePJFnxT1iqJm4pF1GniX7AT+lxvsZYJW0OtnOiStvncETM/cb7vgmVddi1cFYqOs2r+ECwpWdpDb+dFuaMaZkKjHykPKsbPRSv3oJ3RSY6AdyjiFlHVzAqbxSHyk0VUwY0O/rW0QhyTMdkhitCKYc4nk0yLEsnEAqdSR6hdjPjOsfTYwBIExxE0GpeIDU+Y92TJwrNyQq3SFFl9Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=F38UHee9PLqPO4rP08KzZfkN8V8xkSHdYHislmqEJRQ=;
+ b=kCIhNyRrMbqX9duwfhGf4wDjmdzCPl4TSqmWJIPUMRRqtnD6fGTWphPf5AFSsM1YWjiwQU+ASZ8D52xzwtrlwqaHcvtaK0EyiGWbJrWI//92TRWpdSpkgLM+/CrHHHYUMxHY1ff2SBGH6V4wUfOPpRkCaYgp+p/sHcPWEfNGRtWhUvWkB5sRATUBl0zbBjEGo2+sFqq9KiicBj8Alu+8Ztz76IcY4e7GPyZ3CfX7+t6yxxo+y4iQcGWe7yFiEylKJRTZKpkQgB9WAf6bAEXH+AmkYSY2LPDJmpbXm4wfdEocqf52Tv7AarifsWyYnraL7rWjJwVWH26f6hjYkvG2fw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nec.com; dmarc=pass action=none header.from=nec.com; dkim=pass
+ header.d=nec.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=LfaVHK95vP+/yqyPSsgOJ96CzY9z3S8IGFhM8d1JksE=;
-        b=kQvFRp2JCmd6+CWcro1viq1NDZbcQv9QXvxVyS+hc5tHddsqQYQk7lFWuGFM+wLAWb
-         0Mj3h23R6/dowPu/lo0Vo8jHCAyPBgh1OTB2rrKQBkT8Y8D7I+JI1OAH3OnoXii6MDbh
-         nx7md3+03mL4EQdUjNWheQ+4NJcnnVEps8ShZdhsAqwODJA2rxxrCHtksxuMIm9kxLl5
-         WDGMUj35pWLJxEHxpPTLQWvJX8U0iGBXmg6SjDN/D9KARgH5LqqQoVBBgndxNH5etBts
-         cgPdp7PM5zn9sYE7VF7zerZt8LyMmO4keA94BFx7ItlgpkhocVTH9laEg29GIW5W8RMY
-         /JUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=LfaVHK95vP+/yqyPSsgOJ96CzY9z3S8IGFhM8d1JksE=;
-        b=RmEqwfzTZyj6xdfw85iMMeFkQL0Z7AWdgPVv1Eo5W5DHos4BAop8C12l4whCh0KEoY
-         TnmPNxAqAhzA0lfKO56des/vZrVhwdZFNKcEE9CDh37T5VuBmU/EmXag2iJJWi6z0Ydj
-         hBIjwne18N2zSvhei+ssz+f1oaef3D+bICr326dR0Z3KqPfxoRa+EIcJGTxUuvVPKz13
-         y4BpengK/Q+Vb2aV5OZ2gp57Y0/6lCXhV4OZY153vbBgplybgj1hbHfIvBa2n8B1VVqE
-         C4hE7v9tYNg3uH079rZSLpLjvWam4q0Ea4hb7ebhAoqdf17oYivTpIlONnjS/cu2IH01
-         H2Mg==
-X-Gm-Message-State: AOAM533ML3UrgDfRKaI7SCjwPWGarS0Z4vVtpuSpJOcuIXDg3ufK5kgv
-        wJbNI/KTfTSyNuK+rY51BcsicQ==
-X-Google-Smtp-Source: ABdhPJzJxBVIN7hpGpbilBwf8akgBE11lXjQGHA8rMwku6sqv13n9ShBOAAlVqTSAR4t6FB2yXe43w==
-X-Received: by 2002:a1c:48e:: with SMTP id 136mr15305628wme.164.1593424531474;
-        Mon, 29 Jun 2020 02:55:31 -0700 (PDT)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id u84sm16341010wmg.7.2020.06.29.02.55.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 02:55:30 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 10:55:27 +0100
-From:   Quentin Perret <qperret@google.com>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Rafael Wysocki <rjw@rjwysocki.net>,
-        Jonathan Corbet <corbet@lwn.net>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        kernel-team@android.com, tkjos@google.com, adharmap@codeaurora.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V4 3/3] cpufreq: Specify default governor on command line
-Message-ID: <20200629095527.GA1232873@google.com>
-References: <cover.1593418662.git.viresh.kumar@linaro.org>
- <96b6e6ca02b664194ff3e57e1ec768fbc597bf38.1593418662.git.viresh.kumar@linaro.org>
- <20200629094452.GB1228312@google.com>
- <20200629094627.jh7pwhftcdqj6nhm@vireshk-i7>
- <20200629094825.GA1231692@google.com>
- <20200629095038.GB1231692@google.com>
- <20200629095423.xengjk5z2ezshrdb@vireshk-i7>
+ d=necglobal.onmicrosoft.com; s=selector1-necglobal-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=F38UHee9PLqPO4rP08KzZfkN8V8xkSHdYHislmqEJRQ=;
+ b=GrRVE364NL0O/yjGJEWRzmd3mHbrzbIT/PC/K9XmfphW2my+mDvBItNL2TfgIhoTZsf47eCun53inSRXHJdrJzm6pDampBNisPwmGjoeVOYTzokRg0bW6btwPOPAyVePDCKrbQozSflUThbQCvhK5WcdDSUzqOCWAN82204mliE=
+Received: from TY2PR01MB3210.jpnprd01.prod.outlook.com (2603:1096:404:74::14)
+ by TY2PR01MB4489.jpnprd01.prod.outlook.com (2603:1096:404:114::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.20; Mon, 29 Jun
+ 2020 07:33:09 +0000
+Received: from TY2PR01MB3210.jpnprd01.prod.outlook.com
+ ([fe80::3841:ec9f:5cdf:f58]) by TY2PR01MB3210.jpnprd01.prod.outlook.com
+ ([fe80::3841:ec9f:5cdf:f58%5]) with mapi id 15.20.3131.026; Mon, 29 Jun 2020
+ 07:33:09 +0000
+From:   =?iso-2022-jp?B?SE9SSUdVQ0hJIE5BT1lBKBskQktZOH0hIUQ+TGkbKEIp?= 
+        <naoya.horiguchi@nec.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+CC:     Naoya Horiguchi <nao.horiguchi@gmail.com>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        "cai@lca.pw" <cai@lca.pw>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>, Michal Hocko <mhocko@kernel.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        "osalvador@suse.de" <osalvador@suse.de>,
+        Tony Luck <tony.luck@intel.com>,
+        "david@redhat.com" <david@redhat.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.vnet.ibm.com>,
+        "zeil@yandex-team.ru" <zeil@yandex-team.ru>,
+        open list <linux-kernel@vger.kernel.org>,
+        "lkft-triage@lists.linaro.org" <lkft-triage@lists.linaro.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: [PATCH v3 13/15] mm,hwpoison: Refactor soft_offline_huge_page and
+ __soft_offline_page
+Thread-Topic: [PATCH v3 13/15] mm,hwpoison: Refactor soft_offline_huge_page
+ and __soft_offline_page
+Thread-Index: AQHWSjh5qcZg75sKv0mmnb8ztyYfl6jrIEGAgAJ9JoCAAZpMAIAAAu0A
+Date:   Mon, 29 Jun 2020 07:33:09 +0000
+Message-ID: <20200629073308.GB13601@hori.linux.bs1.fc.nec.co.jp>
+References: <20200624150137.7052-1-nao.horiguchi@gmail.com>
+ <20200624150137.7052-14-nao.horiguchi@gmail.com>
+ <CA+G9fYvopXWr+Y34xz2NVv17yeFs7fuKnJO_iUMnfCwaDNRXYg@mail.gmail.com>
+ <20200628065409.GA546944@u2004> <20200629172240.0d01e161@canb.auug.org.au>
+In-Reply-To: <20200629172240.0d01e161@canb.auug.org.au>
+Accept-Language: ja-JP, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: canb.auug.org.au; dkim=none (message not signed)
+ header.d=none;canb.auug.org.au; dmarc=none action=none header.from=nec.com;
+x-originating-ip: [165.225.110.205]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ed70647e-635b-47cb-b138-08d81bfeabda
+x-ms-traffictypediagnostic: TY2PR01MB4489:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <TY2PR01MB4489BD8B2D0A0A864F1460DDE76E0@TY2PR01MB4489.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 044968D9E1
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: eM5YTfuQx2pT07nAcT3gcT3m56qjlEYRs27X7BB28e4e5GDtpDzSJr/p8zyVFwqLSuuOh/fT7WNwWolYCRCZQOrnLXsaoRI0cVmuSlsawd+OePKVATgQiRLgDF7zf8ATZ7WF3e8tU6E1WcmbZWIozVQ0Cli3Fo6hDA1YkW0FOBj1ryZe5Yk+H1V0YcRY/UYn1i1O64HIzP6Kc4WTtL49vz3/hVuCnsbahbLcriSz8S6GXEHwLWCkYSrQY45EztlAQWxdv6NPViGdGM9G3HOmjOb4edMqcSfzu6MFLkKKgsdSZh37ad98wXQWLcXehFyiQvPBxAEe4v5bguKXOK8f2+SytwOWCLiacF7/MMpJ9ljuM/1sTy2cUtNYBT5w9Ls9aaC6vkdPnFB5Emxzf/qGTg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR01MB3210.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(136003)(376002)(366004)(39860400002)(346002)(7416002)(8936002)(76116006)(6512007)(9686003)(66556008)(2906002)(33656002)(54906003)(6916009)(66946007)(186003)(8676002)(66476007)(85182001)(478600001)(64756008)(316002)(66446008)(6486002)(71200400001)(5660300002)(26005)(1076003)(86362001)(558084003)(6506007)(4326008)(55236004)(14583001)(142933001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: rOO/KBkhOFApDwWqtEYTS19D4ASrgB/NF7wXI2B+grrcKbgC1TtVdTFt7ZVwU8cEBmrF0fpRYmU93uo6aSXLoiV4q1epMxTGooAnL1Ehbvi+sIsHi5IpwiZxUNmWMCFioY3hliP0DBQA9J+7HJfBOsvlDmUgOToZZwFudpt+Mcao9c4TMbeGYR2kz6SAV77knoKz2p/NLFMR5eX8b5B3RYlj81jgfRV9UeiOYom0+6YLIRRnWKSmx3/9PpnCJ/DLV3jYVrWJFEjU8zXm+8brTPQ5ZEZ/DnjTitkH9lGxKwa7fhh16aSJnE4kJDnyAZp2/DmXnd69LEr6HPVDTf3NIZEA84Js7c0rJ29mwh6ShA5dIzVpiajHATHPLs2EGSaSOL5SRN/IfzkhV2p7w3Ciav8n7YKkbak3YLVjXfa3meWuYjUn5vKcVWG80Ibh/ifwhkpIudCjnOGDcZk2nnazaQ1pgQwQ8o3exEcMumLerZDaC0HjGcI4VFq9BYs9eFJ/
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-ID: <FF71F9482B3A7842906567E039AA2DED@jpnprd01.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200629095423.xengjk5z2ezshrdb@vireshk-i7>
+X-OriginatorOrg: nec.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TY2PR01MB3210.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ed70647e-635b-47cb-b138-08d81bfeabda
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jun 2020 07:33:09.0944
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: e67df547-9d0d-4f4d-9161-51c6ed1f7d11
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: GbjcrtD8obUudFKXyNdR3AD99c5zZvZg8fYYzuvrBw6puO9qh6z3yijBIXtgeqZ0UIFTST2RfPawa1Dw1AzcUg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PR01MB4489
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday 29 Jun 2020 at 15:24:23 (+0530), Viresh Kumar wrote:
-> On 29-06-20, 10:50, Quentin Perret wrote:
-> > On Monday 29 Jun 2020 at 10:48:25 (+0100), Quentin Perret wrote:
-> > > On Monday 29 Jun 2020 at 15:16:27 (+0530), Viresh Kumar wrote:
-> > > > On 29-06-20, 10:44, Quentin Perret wrote:
-> > > > > On Monday 29 Jun 2020 at 13:55:00 (+0530), Viresh Kumar wrote:
-> > > > > >  static int __init cpufreq_core_init(void)
-> > > > > >  {
-> > > > > > +	struct cpufreq_governor *gov = cpufreq_default_governor();
-> > > > > > +
-> > > > > >  	if (cpufreq_disabled())
-> > > > > >  		return -ENODEV;
-> > > > > >  
-> > > > > >  	cpufreq_global_kobject = kobject_create_and_add("cpufreq", &cpu_subsys.dev_root->kobj);
-> > > > > >  	BUG_ON(!cpufreq_global_kobject);
-> > > > > >  
-> > > > > > +	if (!strlen(default_governor))
-> > > > > 
-> > > > > Should we test '!strlen(default_governor) && gov' here actually?
-> > > > > We check the return value of cpufreq_default_governor() in
-> > > > > cpufreq_init_policy(), so I'm guessing we should do the same here to be
-> > > > > on the safe side.
-> > > > 
-> > > > With the current setup (the Kconfig option being a choice which
-> > > > selects one governor at least), it is not possible for gov to be NULL
-> > > > here. And so I didn't worry about it :)
-> > > 
-> > > Right, so should we remove the check in cpufreq_init_policy() then?
-> > > I don't mind either way as long as we are consitent :)
-> > 
-> > And actually maybe we should remove the weakly defined
-> > cpufreq_default_governor() implementation too? That'd make sure we get a
-> > link-time error if for some reason things change in the Kconfig options.
-> 
-> That would be fine I believe. I will do all that in a separate patch
-> then and let this series go through with no more changes :)
+On Mon, Jun 29, 2020 at 05:22:40PM +1000, Stephen Rothwell wrote:
+> Hi Naoya,
+>=20
+> On Sun, 28 Jun 2020 15:54:09 +0900 Naoya Horiguchi <nao.horiguchi@gmail.c=
+om> wrote:
+> >
+> > Andrew, could you append this diff on top of this series on mmotm?
+>=20
+> I have added that patch to linux-next today.
 
-OK, that works for me.
+Thank you!
 
-Thanks!
-Quentin
+- Naoya=
