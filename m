@@ -4,49 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B2ABC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A61C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:07:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D69D920768
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:07:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D574E206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:07:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593464857;
-	bh=/yquSOXHUSX0WMYJM8Ct5M6u/+o+EQ73rUrDH7s2lWI=;
+	s=default; t=1593464863;
+	bh=OOL5AQyC70XboO1uFudQJ7C4T+r/QhbK3Ww63OnGLbE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0/BjMp/jOorcWURWHRstSpNRHE3T1hjcJwCaXc8jPcKimJRlRRlralVBoRWTeNcRA
-	 wlXjMwtoo1kPPOHFveTlgvNfNx5Ir3ja7fWLoK+813I/mn58Kyjc73yNKTo3Cr+0w/
-	 e3iqNOP8kbWSmcX2xlWHLQAv6ZbX5fMjGPq/HiNQ=
+	b=hka3Aa4Tujm/ikDkqBcFynZle8gjfrRjhCKUsjhiaV2C3PZ5BJB9pwrAYIQR/LNYA
+	 Rh5CIBoJGSvPq/DsiMHBoRKIH8Ytghwk104R6OXoNtbwNPyOUIM2QRnwGgHU6pBS/p
+	 kAbEHohNkfAYr5G6JGG0FMOh/2EnHyRQGjW6juqM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390372AbgF2VHd (ORCPT
+        id S2388413AbgF2VHm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:07:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53728 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:07:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730876AbgF2TKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730773AbgF2TKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:10:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2042825498;
-        Mon, 29 Jun 2020 15:53:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2208254E9;
+        Mon, 29 Jun 2020 15:54:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445993;
-        bh=/yquSOXHUSX0WMYJM8Ct5M6u/+o+EQ73rUrDH7s2lWI=;
+        s=default; t=1593446042;
+        bh=OOL5AQyC70XboO1uFudQJ7C4T+r/QhbK3Ww63OnGLbE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=faea7LZl5wzlVkOWAWdf7ZdZ6WeVZ0wmx7zW3877yxnOXviit4u+fbUgBICc5ix5a
-         Y7mNAficGIXp3kbsetz2MCrYuHqtcgk6E9apulhfeQYRILfwW5ZawevQDYek8VGlB6
-         8xDOrj3ZjU58O9utfMStEushL+FZ8cM63kQHG7yw=
+        b=yJ4P5CgZhyXxJYosndbEdg/cjAc0MPgmNUEVAzLgvDo+pfbL5D6qLm1MjEF6rV0jR
+         gmf14oDWrSBczwUGVhu7eENq/5y3ei18EKzMiEhAjsLc4LCF7U7p7zSVIDoTkLX1cg
+         t3v1ovjntCRquShPs1wE4jrAgF/GHy1R2KLUOWRY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Rikard Falkeborn <rikard.falkeborn@gmail.com>,
-        Maxime Ripard <maxime@cerno.tech>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 002/135] clk: sunxi: Fix incorrect usage of round_down()
-Date:   Mon, 29 Jun 2020 11:50:56 -0400
-Message-Id: <20200629155309.2495516-3-sashal@kernel.org>
+Cc:     Stafford Horne <shorne@gmail.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 047/135] openrisc: Fix issue with argument clobbering for clone/fork
+Date:   Mon, 29 Jun 2020 11:51:41 -0400
+Message-Id: <20200629155309.2495516-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -65,37 +63,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+From: Stafford Horne <shorne@gmail.com>
 
-[ Upstream commit ee25d9742dabed3fd18158b518f846abeb70f319 ]
+[ Upstream commit 6bd140e14d9aaa734ec37985b8b20a96c0ece948 ]
 
-round_down() can only round to powers of 2. If round_down() is asked
-to round to something that is not a power of 2, incorrect results are
-produced. The incorrect results can be both too large and too small.
+Working on the OpenRISC glibc port I found that sometimes clone was
+working strange.  That the tls data argument sent in r7 was always
+wrong.  Further investigation revealed that the arguments were getting
+clobbered in the entry code.  This patch removes the code that writes to
+the argument registers.  This was likely due to some old code hanging
+around.
 
-Instead, use rounddown() which can round to any number.
+This patch fixes this up for clone and fork.  This fork clobber is
+harmless but also useless so remove.
 
-Fixes: 6a721db180a2 ("clk: sunxi: Add A31 clocks support")
-Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Signed-off-by: Maxime Ripard <maxime@cerno.tech>
+Signed-off-by: Stafford Horne <shorne@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/sunxi/clk-sunxi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/openrisc/kernel/entry.S | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
-index 9c79af0c03b21..2cec9e83831fd 100644
---- a/drivers/clk/sunxi/clk-sunxi.c
-+++ b/drivers/clk/sunxi/clk-sunxi.c
-@@ -311,7 +311,7 @@ static void sun6i_a31_get_pll1_factors(u32 *freq, u32 parent_rate,
- 	 * Round down the frequency to the closest multiple of either
- 	 * 6 or 16
- 	 */
--	u32 round_freq_6 = round_down(freq_mhz, 6);
-+	u32 round_freq_6 = rounddown(freq_mhz, 6);
- 	u32 round_freq_16 = round_down(freq_mhz, 16);
+diff --git a/arch/openrisc/kernel/entry.S b/arch/openrisc/kernel/entry.S
+index c17e8451d9978..3fbe420f49c43 100644
+--- a/arch/openrisc/kernel/entry.S
++++ b/arch/openrisc/kernel/entry.S
+@@ -1092,13 +1092,13 @@ ENTRY(__sys_clone)
+ 	l.movhi	r29,hi(sys_clone)
+ 	l.ori	r29,r29,lo(sys_clone)
+ 	l.j	_fork_save_extra_regs_and_call
+-	 l.addi	r7,r1,0
++	 l.nop
  
- 	if (round_freq_6 > round_freq_16)
+ ENTRY(__sys_fork)
+ 	l.movhi	r29,hi(sys_fork)
+ 	l.ori	r29,r29,lo(sys_fork)
+ 	l.j	_fork_save_extra_regs_and_call
+-	 l.addi	r3,r1,0
++	 l.nop
+ 
+ ENTRY(sys_rt_sigreturn)
+ 	l.j	_sys_rt_sigreturn
 -- 
 2.25.1
 
