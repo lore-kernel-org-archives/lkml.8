@@ -2,162 +2,180 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66609C433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD86CC433E2
 	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52156255D8
+	by mail.kernel.org (Postfix) with ESMTP id 7C15C255D8
 	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:35:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="s2IxXCxl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726028AbgF2Se5 (ORCPT
+        id S1726093AbgF2SfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:34:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:34558 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725869AbgF2Se5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:34:57 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E206A101E;
-        Sun, 28 Jun 2020 23:45:30 -0700 (PDT)
-Received: from p8cg001049571a15.arm.com (unknown [10.163.83.176])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6C5B33F73C;
-        Sun, 28 Jun 2020 23:45:26 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-mm@kvack.org
-Cc:     robin.murphy@arm.com,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Barry Song <song.bao.hua@hisilicon.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH V2] arm64/hugetlb: Reserve CMA areas for gigantic pages on 16K and 64K configs
-Date:   Mon, 29 Jun 2020 12:15:07 +0530
-Message-Id: <1593413107-12779-1-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 29 Jun 2020 14:35:05 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:52553 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725988AbgF2SfD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:03 -0400
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20200629183500epoutp02f44fae61e4f716e4abc7a53cf938e02b~dF4RsL7dS0190001900epoutp02d
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 18:35:00 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20200629183500epoutp02f44fae61e4f716e4abc7a53cf938e02b~dF4RsL7dS0190001900epoutp02d
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593455700;
+        bh=GOb5F6IEPqqUzppfmpm5q/EtUDLSZpl8Hl/nDzpT/II=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=s2IxXCxlP0DxRQWjQCAElJjGgGLZwVziDdmjh6WwL1NUfVg7PtLaxqxPj1yS/b9Jq
+         6K3jcZ/sVaZ4EPg5JmlFC/cvjxywO9MEnxDx/ErMuDRGPqlEnZc2N1z8LPV9jaQMkq
+         //6kLW40RNAyxr4Aewxvu0iXbnU0qA2JxQ4N7SZk=
+Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+        20200629183459epcas5p3e5d54b1bd9edce6f19f739b187e730bb~dF4Q0gKG30377803778epcas5p3y;
+        Mon, 29 Jun 2020 18:34:59 +0000 (GMT)
+Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
+        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        DB.07.09703.3543AFE5; Tue, 30 Jun 2020 03:34:59 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+        20200629183459epcas5p464fdcdf272ea360bcd50901ccc79ca6e~dF4QV4RQj0162001620epcas5p4P;
+        Mon, 29 Jun 2020 18:34:59 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200629183459epsmtrp29abb784126e5b438d6071a9f61937274~dF4QU9PJ80229002290epsmtrp2j;
+        Mon, 29 Jun 2020 18:34:59 +0000 (GMT)
+X-AuditID: b6c32a4a-4b5ff700000025e7-6e-5efa34533fce
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        A1.55.08303.3543AFE5; Tue, 30 Jun 2020 03:34:59 +0900 (KST)
+Received: from test-zns (unknown [107.110.206.5]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200629183456epsmtip268cd4e9ea0911be74ab0ec579850ff0c~dF4OJ4uE21597515975epsmtip2a;
+        Mon, 29 Jun 2020 18:34:56 +0000 (GMT)
+Date:   Tue, 30 Jun 2020 00:02:02 +0530
+From:   Kanchan Joshi <joshi.k@samsung.com>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     "axboe@kernel.dk" <axboe@kernel.dk>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "bcrl@kvack.org" <bcrl@kvack.org>,
+        "asml.silence@gmail.com" <asml.silence@gmail.com>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "mb@lightnvm.io" <mb@lightnvm.io>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-aio@kvack.org" <linux-aio@kvack.org>,
+        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "selvakuma.s1@samsung.com" <selvakuma.s1@samsung.com>,
+        "nj.shetty@samsung.com" <nj.shetty@samsung.com>,
+        "javier.gonz@samsung.com" <javier.gonz@samsung.com>,
+        Arnav Dawn <a.dawn@samsung.com>
+Subject: Re: [PATCH v2 1/2] fs,block: Introduce RWF_ZONE_APPEND and handling
+ in direct IO path
+Message-ID: <20200629183202.GA24003@test-zns>
+MIME-Version: 1.0
+In-Reply-To: <CY4PR04MB37511FB1D3B3491A2CED5470E7930@CY4PR04MB3751.namprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrIKsWRmVeSWpSXmKPExsWy7bCmum6wya84g20vVC1+b3vEYjFn1TZG
+        i9V3+9ksuv5tYbFobf/GZHF6wiImi3et51gsHt/5zG4xZVoTo8XeW9oWe/aeZLG4vGsOm8WK
+        7UdYLLb9ns9s8frHSTaL83+PszoIeOycdZfdY/MKLY/LZ0s9Nn2axO7RffUHo0ffllWMHp83
+        yXm0H+hm8tj05C1TAGcUl01Kak5mWWqRvl0CV8ah8xuYC+YJVqxceo+xgXEXXxcjJ4eEgInE
+        wqurmLsYuTiEBHYzSjxesJcFwvnEKLF54QVWCOczo0Tnne0sMC3fH74Es4UEdjFKfN7OAVH0
+        jFHi2L5XrCAJFgFViWW/O9i6GDk42AQ0JS5MLgUJiwhoSSzb9w5sKLPAZ1aJ1jvrwWqEBRIk
+        1n72BKnhFdCVmP20iQXCFpQ4OfMJmM0pECvx+NBuMFtUQFniwLbjTCBzJARucEhMn70N6jgX
+        ibN/HkHZwhKvjm9hh7ClJD6/28sGYRdL/LpzlBmiuYNR4nrDTKgGe4mLe/4ygdjMAhkSC6Zc
+        hLL5JHp/P2ECOVRCgFeio00IolxR4t6kp6wQtrjEwxlLoGwPiWP7+9kgAbSESeLK9KIJjHKz
+        kPwzC8kGCNtKovNDE+ssoA3MAtISy/9xQJiaEut36S9gZF3FKJlaUJybnlpsWmCUl1quV5yY
+        W1yal66XnJ+7iRGc6rS8djA+fPBB7xAjEwfjIUYJDmYlEd7TBr/ihHhTEiurUovy44tKc1KL
+        DzFKc7AoifMq/TgTJySQnliSmp2aWpBaBJNl4uCUamBauZNXf6/s58OZcRmpPrzCgi+uvght
+        WJd37p6TBtOZ3aYvGb68yzLe6L//XHmI1eu/PRrHDAsy1LWDPV46vDMS6DvAkLAwf17c1rN3
+        Jnw/4mBZHWk+4UH65leh/9sPP7r/PFf+84U1EWG2V7VPKP/W3vTwQ+keJcFtO3bn/jOwmm6X
+        I7vplNdtiek+S6q8nRef5jgVVzGjm+nkGbPj6jrLxbVnqt/nXH/vYkbQa5FNN/f5vFthECC6
+        +vu6iGjNwgTezGNPb6wtnd75m5Ox1P1zmahCk83jW/aHGPItmEs3q6eslWXxM9vDvVJPrTU0
+        rtXitqPNXvHNAR9u+xQlSz6KiDG9Vejkxfuqp3xZcL4SS3FGoqEWc1FxIgCanNv45AMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNIsWRmVeSWpSXmKPExsWy7bCSvG6wya84g7fX2S1+b3vEYjFn1TZG
+        i9V3+9ksuv5tYbFobf/GZHF6wiImi3et51gsHt/5zG4xZVoTo8XeW9oWe/aeZLG4vGsOm8WK
+        7UdYLLb9ns9s8frHSTaL83+PszoIeOycdZfdY/MKLY/LZ0s9Nn2axO7RffUHo0ffllWMHp83
+        yXm0H+hm8tj05C1TAGcUl01Kak5mWWqRvl0CV0bz5EbGggt8FRdmvWNpYGzj6WLk5JAQMJH4
+        /vAlSxcjF4eQwA5GiUWv5rNAJMQlmq/9YIewhSVW/nvODlH0hFHizJKTTCAJFgFViWW/O9i6
+        GDk42AQ0JS5MLgUJiwhoSSzb944VpJ5Z4CerxKUfGxhBaoQFEiTWfvYEqeEV0JWY/bQJavES
+        JomLH+6zQSQEJU7OfAJ2BLOAmcS8zQ+ZQXqZBaQllv/jAAlzCsRKPD60G6xEVEBZ4sC240wT
+        GAVnIemehaR7FkL3AkbmVYySqQXFuem5xYYFRnmp5XrFibnFpXnpesn5uZsYwfGnpbWDcc+q
+        D3qHGJk4GA8xSnAwK4nwnjb4FSfEm5JYWZValB9fVJqTWnyIUZqDRUmc9+ushXFCAumJJanZ
+        qakFqUUwWSYOTqkGJjbJG7cM+jIOWtrnMTw7aMCbOivG5RObtItF8CZDLhMFj05fsWXO6xfM
+        cpBYExTwRjrh0fc0V2eWNQmhlQ55DEUrb64Qm/7wX2arFneq88TLr5dyy6pX+DtPm8u2/Upc
+        3P8mmxypK/8kijslOfcEP/LhibU1WMQh076vxLMhefqTlIuZBqJzM1uaNFtz4w0etOWULJX3
+        sW7YWanv/vgGr9vO3YX+xSucqv5PzXr05UMtJ0eEwt7QHaK79gud2arydN5spp/3JXfw96R9
+        rjrBofVQ6rXEmXO8+RUzFarjygV/Km0WTReYcSJHrifUy5BPRHi6QaTX+uqau027lbQXcfld
+        le9fqCv2O+LEbSWW4oxEQy3mouJEAFK+Z2ouAwAA
+X-CMS-MailID: 20200629183459epcas5p464fdcdf272ea360bcd50901ccc79ca6e
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+        boundary="----nai8lIH9ngBNHun9R6qswQcIIemhXBCkNXu5CagZqSM5j8ea=_aa309_"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200625171834epcas5p226a24dfcb84cfa83fe29a2bd17795d85
+References: <1593105349-19270-1-git-send-email-joshi.k@samsung.com>
+        <CGME20200625171834epcas5p226a24dfcb84cfa83fe29a2bd17795d85@epcas5p2.samsung.com>
+        <1593105349-19270-2-git-send-email-joshi.k@samsung.com>
+        <CY4PR04MB37511FB1D3B3491A2CED5470E7930@CY4PR04MB3751.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently 'hugetlb_cma=' command line argument does not create CMA area on
-ARM64_16K_PAGES and ARM64_64K_PAGES based platforms. Instead, it just ends
-up with the following warning message. Reason being, hugetlb_cma_reserve()
-never gets called for these huge page sizes.
+------nai8lIH9ngBNHun9R6qswQcIIemhXBCkNXu5CagZqSM5j8ea=_aa309_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Disposition: inline
 
-[   64.255669] hugetlb_cma: the option isn't supported by current arch
+On Fri, Jun 26, 2020 at 02:50:20AM +0000, Damien Le Moal wrote:
+>On 2020/06/26 2:18, Kanchan Joshi wrote:
+>> Introduce RWF_ZONE_APPEND flag to represent zone-append. User-space
+>> sends this with write. Add IOCB_ZONE_APPEND which is set in
+>> kiocb->ki_flags on receiving RWF_ZONE_APPEND.
+>> Make direct IO submission path use IOCB_ZONE_APPEND to send bio with
+>> append op. Direct IO completion returns zone-relative offset, in sector
+>> unit, to upper layer using kiocb->ki_complete interface.
+>> Report error if zone-append is requested on regular file or on sync
+>> kiocb (i.e. one without ki_complete).
+>>
+>> Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
+>> Signed-off-by: SelvaKumar S <selvakuma.s1@samsung.com>
+>> Signed-off-by: Arnav Dawn <a.dawn@samsung.com>
+>> Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
+>> Signed-off-by: Javier Gonzalez <javier.gonz@samsung.com>
+>> ---
+>>  fs/block_dev.c          | 28 ++++++++++++++++++++++++----
+>>  include/linux/fs.h      |  9 +++++++++
+>>  include/uapi/linux/fs.h |  5 ++++-
+>>  3 files changed, 37 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/fs/block_dev.c b/fs/block_dev.c
+>> index 47860e5..5180268 100644
+>> --- a/fs/block_dev.c
+>> +++ b/fs/block_dev.c
+>> @@ -185,6 +185,10 @@ static unsigned int dio_bio_write_op(struct kiocb *iocb)
+>>  	/* avoid the need for a I/O completion work item */
+>>  	if (iocb->ki_flags & IOCB_DSYNC)
+>>  		op |= REQ_FUA;
+>> +
+>> +	if (iocb->ki_flags & IOCB_ZONE_APPEND)
+>> +		op |= REQ_OP_ZONE_APPEND;
+>
+>This is wrong. REQ_OP_WRITE is already set in the declaration of "op". How can
+>this work ?
+REQ_OP_ZONE_APPEND will override the REQ_WRITE op, while previously set op
+flags (REQ_FUA etc.) will be retained. But yes, this can be made to look
+cleaner.
+V3 will include the other changes you pointed out. Thanks for the review.
 
-This enables CMA areas reservation on ARM64_16K_PAGES and ARM64_64K_PAGES
-configs by defining an unified arm64_hugetlb_cma_reseve() that is wrapped
-in CONFIG_CMA.
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Barry Song <song.bao.hua@hisilicon.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
-Applies on 5.8-rc3.
+------nai8lIH9ngBNHun9R6qswQcIIemhXBCkNXu5CagZqSM5j8ea=_aa309_
+Content-Type: text/plain; charset="utf-8"
 
-Changes in V2:
 
-- Moved arm64_hugetlb_cma_reserve() stub and declaration near call site
-
-Changes in V1: (https://patchwork.kernel.org/patch/11619839/)
-
- arch/arm64/mm/hugetlbpage.c | 38 +++++++++++++++++++++++++++++++++++++
- arch/arm64/mm/init.c        | 12 +++++++++---
- 2 files changed, 47 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
-index 0a52ce46f020..ea7fb48b8617 100644
---- a/arch/arm64/mm/hugetlbpage.c
-+++ b/arch/arm64/mm/hugetlbpage.c
-@@ -19,6 +19,44 @@
- #include <asm/tlbflush.h>
- #include <asm/pgalloc.h>
- 
-+/*
-+ * HugeTLB Support Matrix
-+ *
-+ * ---------------------------------------------------
-+ * | Page Size | CONT PTE |  PMD  | CONT PMD |  PUD  |
-+ * ---------------------------------------------------
-+ * |     4K    |   64K    |   2M  |    32M   |   1G  |
-+ * |    16K    |    2M    |  32M  |     1G   |       |
-+ * |    64K    |    2M    | 512M  |    16G   |       |
-+ * ---------------------------------------------------
-+ */
-+
-+/*
-+ * Reserve CMA areas for the largest supported gigantic
-+ * huge page when requested. Any other smaller gigantic
-+ * huge pages could still be served from those areas.
-+ */
-+#ifdef CONFIG_CMA
-+void __init arm64_hugetlb_cma_reserve(void)
-+{
-+	int order;
-+
-+#ifdef CONFIG_ARM64_4K_PAGES
-+	order = PUD_SHIFT - PAGE_SHIFT;
-+#else
-+	order = CONT_PMD_SHIFT + PMD_SHIFT - PAGE_SHIFT;
-+#endif
-+	/*
-+	 * HugeTLB CMA reservation is required for gigantic
-+	 * huge pages which could not be allocated via the
-+	 * page allocator. Just warn if there is any change
-+	 * breaking this assumption.
-+	 */
-+	WARN_ON(order <= MAX_ORDER);
-+	hugetlb_cma_reserve(order);
-+}
-+#endif /* CONFIG_CMA */
-+
- #ifdef CONFIG_ARCH_ENABLE_HUGEPAGE_MIGRATION
- bool arch_hugetlb_migration_supported(struct hstate *h)
- {
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 1e93cfc7c47a..8a260ef0cb94 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -406,6 +406,14 @@ void __init arm64_memblock_init(void)
- 	dma_contiguous_reserve(arm64_dma32_phys_limit);
- }
- 
-+#if defined(CONFIG_HUGETLB_PAGE) && defined(CONFIG_CMA)
-+void arm64_hugetlb_cma_reserve(void);
-+#else
-+static inline void arm64_hugetlb_cma_reserve(void)
-+{
-+}
-+#endif
-+
- void __init bootmem_init(void)
- {
- 	unsigned long min, max;
-@@ -425,9 +433,7 @@ void __init bootmem_init(void)
- 	 * initialize node_online_map that gets used in hugetlb_cma_reserve()
- 	 * while allocating required CMA size across online nodes.
- 	 */
--#ifdef CONFIG_ARM64_4K_PAGES
--	hugetlb_cma_reserve(PUD_SHIFT - PAGE_SHIFT);
--#endif
-+	arm64_hugetlb_cma_reserve();
- 
- 	/*
- 	 * Sparsemem tries to allocate bootmem in memory_present(), so must be
--- 
-2.20.1
-
+------nai8lIH9ngBNHun9R6qswQcIIemhXBCkNXu5CagZqSM5j8ea=_aa309_--
