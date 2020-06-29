@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 843DCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:51:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 134DFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F74A20702
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:51:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6F4520702
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:51:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460300;
-	bh=G8/IU3K6Lq2oG1eeekiV6WzgxmKEhni/f5SR/wKzogs=;
+	s=default; t=1593460303;
+	bh=yjNpRv8q3GfXREcKPByLoH2E7axhZx/JhrTgyTbmn9k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dl47+GgERwREMi2ElVb1RIdyo+PaS7ZGuZWuEXdd6hzCjlLlgpZtwy0gYkwUGvAo+
-	 i21bI52OU9PF5PeWnTXTv6+6IuvMq53UmEDva8foE9xGYPJMyeSuVG4UrfKdyXw/Pb
-	 0X8Uztoj9N9Sjlo+CfaO/UN3H5yrvctQ+ROt9on0=
+	b=eIQ1d+xclKG0VsLTCfrZLR4vS0/Kz4uFFL/l9pm7DZ7rG/6uYE/l9dbiLnahJuL5G
+	 SsiCOVSO1AvGd4PUNvaBqHSASvLxINcEB4OAowjgS2OhHESwVITlRbB67PYFNzttlT
+	 l09iNKwVJKOskA97ld9uMU6n1LIZsCkApDLFa0mo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387846AbgF2Tvi (ORCPT
+        id S2387786AbgF2Tvm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:51:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47694 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:51:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387727AbgF2Tkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387728AbgF2Tkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D38124812;
-        Mon, 29 Jun 2020 15:25:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50D27248F8;
+        Mon, 29 Jun 2020 15:27:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444334;
-        bh=G8/IU3K6Lq2oG1eeekiV6WzgxmKEhni/f5SR/wKzogs=;
+        s=default; t=1593444448;
+        bh=yjNpRv8q3GfXREcKPByLoH2E7axhZx/JhrTgyTbmn9k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PD1j8zXic6DVr8WAniXKIFCWGBLErG6DwEaQW6hpFHGkbVE4hr1sGBz7I8D07EoC1
-         zQxBsdyWfIC7FSeA43uHcR/h1rI95FBpwSYrQIsPebvwPib9azV80O6pt7VCwJZQsq
-         7UUWkw5SBEgzt2yMk/RBuKaPY8iixFPQEdDMuhTw=
+        b=tjSc7a0IzzEDxeJqoNnzWHUjKIQfKE/7vA6xh9UWjP2Ap4O9WUiaqq9R4G14c59M1
+         ecAKTu/ALFhXwZdcdVSSfjE6jYcm3bRmu2Ahy+ld2duhuwMzQWdHnhWr2hQw87Ox2a
+         uIyyshyOKavBaB9l3+BqjuB69S5p00nEZA9t9Az8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Taehee Yoo <ap420073@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 008/178] net: core: reduce recursion limit value
-Date:   Mon, 29 Jun 2020 11:22:33 -0400
-Message-Id: <20200629152523.2494198-9-sashal@kernel.org>
+Cc:     Sven Schnelle <svens@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 128/178] s390/ptrace: pass invalid syscall numbers to tracing
+Date:   Mon, 29 Jun 2020 11:24:33 -0400
+Message-Id: <20200629152523.2494198-129-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -65,84 +65,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Sven Schnelle <svens@linux.ibm.com>
 
-[ Upstream commit fb7861d14c8d7edac65b2fcb6e8031cb138457b2 ]
+[ Upstream commit 00332c16b1604242a56289ff2b26e283dbad0812 ]
 
-In the current code, ->ndo_start_xmit() can be executed recursively only
-10 times because of stack memory.
-But, in the case of the vxlan, 10 recursion limit value results in
-a stack overflow.
-In the current code, the nested interface is limited by 8 depth.
-There is no critical reason that the recursion limitation value should
-be 10.
-So, it would be good to be the same value with the limitation value of
-nesting interface depth.
+tracing expects to see invalid syscalls, so pass it through.
+The syscall path in entry.S checks the syscall number before
+looking up the handler, so it is still safe.
 
-Test commands:
-    ip link add vxlan10 type vxlan vni 10 dstport 4789 srcport 4789 4789
-    ip link set vxlan10 up
-    ip a a 192.168.10.1/24 dev vxlan10
-    ip n a 192.168.10.2 dev vxlan10 lladdr fc:22:33:44:55:66 nud permanent
-
-    for i in {9..0}
-    do
-        let A=$i+1
-	ip link add vxlan$i type vxlan vni $i dstport 4789 srcport 4789 4789
-	ip link set vxlan$i up
-	ip a a 192.168.$i.1/24 dev vxlan$i
-	ip n a 192.168.$i.2 dev vxlan$i lladdr fc:22:33:44:55:66 nud permanent
-	bridge fdb add fc:22:33:44:55:66 dev vxlan$A dst 192.168.$i.2 self
-    done
-    hping3 192.168.10.2 -2 -d 60000
-
-Splat looks like:
-[  103.814237][ T1127] =============================================================================
-[  103.871955][ T1127] BUG kmalloc-2k (Tainted: G    B            ): Padding overwritten. 0x00000000897a2e4f-0x000
-[  103.873187][ T1127] -----------------------------------------------------------------------------
-[  103.873187][ T1127]
-[  103.874252][ T1127] INFO: Slab 0x000000005cccc724 objects=5 used=5 fp=0x0000000000000000 flags=0x10000000001020
-[  103.881323][ T1127] CPU: 3 PID: 1127 Comm: hping3 Tainted: G    B             5.7.0+ #575
-[  103.882131][ T1127] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[  103.883006][ T1127] Call Trace:
-[  103.883324][ T1127]  dump_stack+0x96/0xdb
-[  103.883716][ T1127]  slab_err+0xad/0xd0
-[  103.884106][ T1127]  ? _raw_spin_unlock+0x1f/0x30
-[  103.884620][ T1127]  ? get_partial_node.isra.78+0x140/0x360
-[  103.885214][ T1127]  slab_pad_check.part.53+0xf7/0x160
-[  103.885769][ T1127]  ? pskb_expand_head+0x110/0xe10
-[  103.886316][ T1127]  check_slab+0x97/0xb0
-[  103.886763][ T1127]  alloc_debug_processing+0x84/0x1a0
-[  103.887308][ T1127]  ___slab_alloc+0x5a5/0x630
-[  103.887765][ T1127]  ? pskb_expand_head+0x110/0xe10
-[  103.888265][ T1127]  ? lock_downgrade+0x730/0x730
-[  103.888762][ T1127]  ? pskb_expand_head+0x110/0xe10
-[  103.889244][ T1127]  ? __slab_alloc+0x3e/0x80
-[  103.889675][ T1127]  __slab_alloc+0x3e/0x80
-[  103.890108][ T1127]  __kmalloc_node_track_caller+0xc7/0x420
-[ ... ]
-
-Fixes: 11a766ce915f ("net: Increase xmit RECURSION_LIMIT to 10.")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/netdevice.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/s390/kernel/entry.S  | 2 +-
+ arch/s390/kernel/ptrace.c | 6 ++----
+ 2 files changed, 3 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
-index b580a35f50ea6..ec3081ab04c01 100644
---- a/include/linux/netdevice.h
-+++ b/include/linux/netdevice.h
-@@ -3043,7 +3043,7 @@ static inline int dev_recursion_level(void)
- 	return this_cpu_read(softnet_data.xmit.recursion);
- }
- 
--#define XMIT_RECURSION_LIMIT	10
-+#define XMIT_RECURSION_LIMIT	8
- static inline bool dev_xmit_recursion(void)
- {
- 	return unlikely(__this_cpu_read(softnet_data.xmit.recursion) >
+diff --git a/arch/s390/kernel/entry.S b/arch/s390/kernel/entry.S
+index bc85987727f09..c544b7a11ebb3 100644
+--- a/arch/s390/kernel/entry.S
++++ b/arch/s390/kernel/entry.S
+@@ -368,9 +368,9 @@ ENTRY(system_call)
+ 	jnz	.Lsysc_nr_ok
+ 	# svc 0: system call number in %r1
+ 	llgfr	%r1,%r1				# clear high word in r1
++	sth	%r1,__PT_INT_CODE+2(%r11)
+ 	cghi	%r1,NR_syscalls
+ 	jnl	.Lsysc_nr_ok
+-	sth	%r1,__PT_INT_CODE+2(%r11)
+ 	slag	%r8,%r1,3
+ .Lsysc_nr_ok:
+ 	xc	__SF_BACKCHAIN(8,%r15),__SF_BACKCHAIN(%r15)
+diff --git a/arch/s390/kernel/ptrace.c b/arch/s390/kernel/ptrace.c
+index ad71132374f0c..5a2b1501d9983 100644
+--- a/arch/s390/kernel/ptrace.c
++++ b/arch/s390/kernel/ptrace.c
+@@ -844,11 +844,9 @@ asmlinkage long do_syscall_trace_enter(struct pt_regs *regs)
+ 	 * call number to gprs[2].
+ 	 */
+ 	if (test_thread_flag(TIF_SYSCALL_TRACE) &&
+-	    (tracehook_report_syscall_entry(regs) ||
+-	     regs->gprs[2] >= NR_syscalls)) {
++	    tracehook_report_syscall_entry(regs)) {
+ 		/*
+-		 * Tracing decided this syscall should not happen or the
+-		 * debugger stored an invalid system call number. Skip
++		 * Tracing decided this syscall should not happen. Skip
+ 		 * the system call and the system call restart handling.
+ 		 */
+ 		clear_pt_regs_flag(regs, PIF_SYSCALL);
 -- 
 2.25.1
 
