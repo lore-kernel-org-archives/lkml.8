@@ -2,160 +2,151 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 928CBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DA1DC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F75820768
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:06:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LqI1i8wz"
+	by mail.kernel.org (Postfix) with ESMTP id 1363820768
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:06:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593464802;
+	bh=JF4D4GxBKYc22QwJ+VHkcFbhksUi+zc6GFQewDK7e4Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=msJj8R++n5DsJzgSyWicRfhjZly9RAXJoLLMGyWQn1wD2y/rMkd/YzfNM38LMii0Q
+	 kJjqaeL/C+SLDT+UXMlQC/L3hBz/YF8J8iuDyotD3xwHA9RtCTmu8ZoiFpPnLWfyMc
+	 yO0Ox5w8tldl5pqXxsSMTHKiSY+XbARnL3jwzSo8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390313AbgF2VGf (ORCPT
+        id S2390317AbgF2VGl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:06:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33682 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387498AbgF2VGX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 17:06:23 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27A9BC061755;
-        Mon, 29 Jun 2020 14:06:23 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id z2so14024217qts.5;
-        Mon, 29 Jun 2020 14:06:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=doBBGB7xlE5VTXsZgCgPieACb98RUxeYYlyjRqBYqwk=;
-        b=LqI1i8wzqXm8nU2Ic1Xkncf9ppAoV7PBHkxQVw49w+S1bUMRA+mPYwotwm1xevj+wz
-         W7EprSOUg3PFhG5CK6k3/cDlwyEbzt528fqOgPyORXJYnow9dML18ccBtnqZJa0UdbP8
-         f7kr1bzbgY0PbKRDt0Abfldoi/agCPG37BmIgJT9nW7J546oknUZM4hZiVXOCrNV9smK
-         XGUkCXgopqK8G1MfzuL2Vf+yhTTvEPxPfxyb2lV+eZJ49nK25nTOmOpNG0bDxTKPO7Jb
-         6d2EuO6hIIQsf3ZYt5qo346hnRJUH4p0HrQMgsRCSErlVd5C9z0ucwkOvhk8rUv6mZf8
-         iEAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=doBBGB7xlE5VTXsZgCgPieACb98RUxeYYlyjRqBYqwk=;
-        b=Mw7z0IPBrrKxo1cx6we3Bj8CJITITGTFu5TF3Ifee8VFhBJZk6S/WtkczAGhXvg/sz
-         Fa22CDEo3ccaJ60bHmrxgb4pNiq1vD3/pM7BBRiwl71rA2ZRr0x6Da2xEf6GMcTxAU7c
-         I181Iq7awoZmGByzhA1VjyeoQLSRzq0+jJ1jHMB5UVlCdkchBmFNQkM2MAdiwH2Fk5ii
-         69EBUufYGSg+nE4CMzZVgwLhymd/GY/SmA3OZltOisnDKHKXnD3oyHVUbYE+s7k9EcOF
-         DhKoCsEB5qvNyT9WViMaE3iBfh85SVOGNCAG789JOA7qnXec9QmvcG9X4oA19y2upyRX
-         9Nvg==
-X-Gm-Message-State: AOAM531SLhhC8Rkiea0p2HbIu7PHEH8lmj5HKPYrl5sseOvbfDRV+5Kl
-        KvkLdenNYAe6k1IccPG9JaY=
-X-Google-Smtp-Source: ABdhPJwWfhACQdRSjlXr+8tYrYr5Js2ar1sW///HmVXlxpOfUFTESwvc3U+xILMwk4hI3IsVsOzReg==
-X-Received: by 2002:ac8:48da:: with SMTP id l26mr17036060qtr.214.1593464782360;
-        Mon, 29 Jun 2020 14:06:22 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id u68sm864480qkd.59.2020.06.29.14.06.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 14:06:21 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Mon, 29 Jun 2020 17:06:19 -0400
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v4 08/17] arm64/mm: Remove needless section quotes
-Message-ID: <20200629210619.GA1603907@rani.riverdale.lan>
-References: <20200629061840.4065483-1-keescook@chromium.org>
- <20200629061840.4065483-9-keescook@chromium.org>
- <CAKwvOd=r6bsBfSZxVYrnbm1Utq==ApWBDjx+0Fxsm90Aq3Jghw@mail.gmail.com>
- <202006291301.46FEF3B7@keescook>
- <20200629205448.GA1474367@rani.riverdale.lan>
+        Mon, 29 Jun 2020 17:06:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53758 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730874AbgF2TKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:10:18 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDB2A254A8;
+        Mon, 29 Jun 2020 15:53:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593446001;
+        bh=JF4D4GxBKYc22QwJ+VHkcFbhksUi+zc6GFQewDK7e4Y=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=HQVwG67N/Ar8BfmZJYjtHQqYSvLgd4XAV9iR7dK6H0fg98ljJlsImxhUMUZeb4ZHF
+         tUL+l8wEGLAOzDh6D0wlATEh6k8RBStgGajgndfR5FMSt82knNGtMxMh65KWyWk7w+
+         F5gF7MZWYM0C5OOY3o0zpOP5TtWJYsI1egqdbiDI=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Emmanuel Nicolet <emmanuel.nicolet@gmail.com>,
+        Geoff Levand <geoff@infradead.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 009/135] ps3disk: use the default segment boundary
+Date:   Mon, 29 Jun 2020 11:51:03 -0400
+Message-Id: <20200629155309.2495516-10-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
+References: <20200629155309.2495516-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200629205448.GA1474367@rani.riverdale.lan>
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.229-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.4.229-rc1
+X-KernelTest-Deadline: 2020-07-01T15:53+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 04:54:48PM -0400, Arvind Sankar wrote:
-> On Mon, Jun 29, 2020 at 01:04:31PM -0700, Kees Cook wrote:
-> > On Mon, Jun 29, 2020 at 12:53:47PM -0700, Nick Desaulniers wrote:
-> > > On Sun, Jun 28, 2020 at 11:18 PM Kees Cook <keescook@chromium.org> wrote:
-> > > >
-> > > > Fix a case of needless quotes in __section(), which Clang doesn't like.
-> > > >
-> > > > Acked-by: Will Deacon <will@kernel.org>
-> > > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > 
-> > > Yep, I remember bugs from this.  Probably should scan the kernel for
-> > > other instances of this.  +Joe for checkpatch.pl validation.
-> > 
-> > I think the others are safe because they're in macros:
-> 
-> Why does that make it safe -- the commit msg is a bit sparse, but I
-> assume the problem is that it generates
-> 	__attribute__((__section__("\".foo\"")))
-> from
-> 	__section(".foo")
-> after preprocessing, and clang keeps the quotes in the section name when
-> generating assembly, while gcc appears to strip them off.
-> 
-> It does that even if nested in another macro, no?
+From: Emmanuel Nicolet <emmanuel.nicolet@gmail.com>
 
-Yep, I can see things like:
-[25] ".discard.ksym"   PROGBITS         0000000000000000  0000217c
-       0000000000000000  0000000000000000  WA       0     0     4
+[ Upstream commit 720bc316690bd27dea9d71510b50f0cd698ffc32 ]
 
-Doesn't seem to cause a build error, but that can't be good.
+Since commit dcebd755926b ("block: use bio_for_each_bvec() to compute
+multi-page bvec count"), the kernel will bug_on on the PS3 because
+bio_split() is called with sectors == 0:
 
-> 
-> > 
-> > $ git grep -4 '__section("'
-> > include/linux/compiler.h-# define KENTRY(sym)                                           \
-> 
-> Am I missing something, or is KENTRY unused in the tree?
-> 
-> > include/linux/compiler.h-       extern typeof(sym) sym;                                 \
-> > include/linux/compiler.h-       static const unsigned long __kentry_##sym               \
-> > include/linux/compiler.h-       __used                                                  \
-> > include/linux/compiler.h:       __section("___kentry" "+" #sym )                        \
-> > include/linux/compiler.h-       = (unsigned long)&sym;
-> > --
-> > include/linux/export.h-#define __ksym_marker(sym)       \
-> > include/linux/export.h: static int __ksym_marker_##sym[0] __section(".discard.ksym") __used
-> > --
-> > include/linux/srcutree.h-# define __DEFINE_SRCU(name, is_static)                                \
-> > include/linux/srcutree.h-       is_static struct srcu_struct name;                              \
-> > include/linux/srcutree.h-       struct srcu_struct * const __srcu_struct_##name                 \
-> > include/linux/srcutree.h:               __section("___srcu_struct_ptrs") = &name
-> > 
-> > 
-> > > Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-> > 
-> > Thanks!
-> > 
-> > -- 
-> > Kees Cook
+  kernel BUG at block/bio.c:1853!
+  Oops: Exception in kernel mode, sig: 5 [#1]
+  BE PAGE_SIZE=4K MMU=Hash PREEMPT SMP NR_CPUS=8 NUMA PS3
+  Modules linked in: firewire_sbp2 rtc_ps3(+) soundcore ps3_gelic(+) \
+  ps3rom(+) firewire_core ps3vram(+) usb_common crc_itu_t
+  CPU: 0 PID: 97 Comm: blkid Not tainted 5.3.0-rc4 #1
+  NIP:  c00000000027d0d0 LR: c00000000027d0b0 CTR: 0000000000000000
+  REGS: c00000000135ae90 TRAP: 0700   Not tainted  (5.3.0-rc4)
+  MSR:  8000000000028032 <SF,EE,IR,DR,RI>  CR: 44008240  XER: 20000000
+  IRQMASK: 0
+  GPR00: c000000000289368 c00000000135b120 c00000000084a500 c000000004ff8300
+  GPR04: 0000000000000c00 c000000004c905e0 c000000004c905e0 000000000000ffff
+  GPR08: 0000000000000000 0000000000000001 0000000000000000 000000000000ffff
+  GPR12: 0000000000000000 c0000000008ef000 000000000000003e 0000000000080001
+  GPR16: 0000000000000100 000000000000ffff 0000000000000000 0000000000000004
+  GPR20: c00000000062fd7e 0000000000000001 000000000000ffff 0000000000000080
+  GPR24: c000000000781788 c00000000135b350 0000000000000080 c000000004c905e0
+  GPR28: c00000000135b348 c000000004ff8300 0000000000000000 c000000004c90000
+  NIP [c00000000027d0d0] .bio_split+0x28/0xac
+  LR [c00000000027d0b0] .bio_split+0x8/0xac
+  Call Trace:
+  [c00000000135b120] [c00000000027d130] .bio_split+0x88/0xac (unreliable)
+  [c00000000135b1b0] [c000000000289368] .__blk_queue_split+0x11c/0x53c
+  [c00000000135b2d0] [c00000000028f614] .blk_mq_make_request+0x80/0x7d4
+  [c00000000135b3d0] [c000000000283a8c] .generic_make_request+0x118/0x294
+  [c00000000135b4b0] [c000000000283d34] .submit_bio+0x12c/0x174
+  [c00000000135b580] [c000000000205a44] .mpage_bio_submit+0x3c/0x4c
+  [c00000000135b600] [c000000000206184] .mpage_readpages+0xa4/0x184
+  [c00000000135b750] [c0000000001ff8fc] .blkdev_readpages+0x24/0x38
+  [c00000000135b7c0] [c0000000001589f0] .read_pages+0x6c/0x1a8
+  [c00000000135b8b0] [c000000000158c74] .__do_page_cache_readahead+0x118/0x184
+  [c00000000135b9b0] [c0000000001591a8] .force_page_cache_readahead+0xe4/0xe8
+  [c00000000135ba50] [c00000000014fc24] .generic_file_read_iter+0x1d8/0x830
+  [c00000000135bb50] [c0000000001ffadc] .blkdev_read_iter+0x40/0x5c
+  [c00000000135bbc0] [c0000000001b9e00] .new_sync_read+0x144/0x1a0
+  [c00000000135bcd0] [c0000000001bc454] .vfs_read+0xa0/0x124
+  [c00000000135bd70] [c0000000001bc7a4] .ksys_read+0x70/0xd8
+  [c00000000135be20] [c00000000000a524] system_call+0x5c/0x70
+  Instruction dump:
+  7fe3fb78 482e30dc 7c0802a6 482e3085 7c9e2378 f821ff71 7ca42b78 7d3e00d0
+  7c7d1b78 79290fe0 7cc53378 69290001 <0b090000> 81230028 7bca0020 7929ba62
+  [ end trace 313fec760f30aa1f ]---
+
+The problem originates from setting the segment boundary of the
+request queue to -1UL. This makes get_max_segment_size() return zero
+when offset is zero, whatever the max segment size. The test with
+BLK_SEG_BOUNDARY_MASK fails and 'mask - (mask & offset) + 1' overflows
+to zero in the return statement.
+
+Not setting the segment boundary and using the default
+value (BLK_SEG_BOUNDARY_MASK) fixes the problem.
+
+Signed-off-by: Emmanuel Nicolet <emmanuel.nicolet@gmail.com>
+Signed-off-by: Geoff Levand <geoff@infradead.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/060a416c43138f45105c0540eff1a45539f7e2fc.1589049250.git.geoff@infradead.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/block/ps3disk.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/block/ps3disk.c b/drivers/block/ps3disk.c
+index c120d70d3fb3b..fc7a20286090d 100644
+--- a/drivers/block/ps3disk.c
++++ b/drivers/block/ps3disk.c
+@@ -464,7 +464,6 @@ static int ps3disk_probe(struct ps3_system_bus_device *_dev)
+ 	blk_queue_bounce_limit(queue, BLK_BOUNCE_HIGH);
+ 
+ 	blk_queue_max_hw_sectors(queue, dev->bounce_size >> 9);
+-	blk_queue_segment_boundary(queue, -1UL);
+ 	blk_queue_dma_alignment(queue, dev->blk_size-1);
+ 	blk_queue_logical_block_size(queue, dev->blk_size);
+ 
+-- 
+2.25.1
+
