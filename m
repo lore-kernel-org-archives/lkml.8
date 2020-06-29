@@ -2,199 +2,125 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2913C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C377AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AE14F206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:35:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466543;
-	bh=qBdL3tlBX+scLgBAFOGB5TLlWji+GPtg13a4shdBzo0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qe+xWxlJFNyuIGF4OEuiRS+cFeU6QzlGB/7JAlMgkeq5r9udPFGjM7JHfUyodFf15
-	 ez3fPtDj2i2ux6m3YO/L8rOV5YRaQ4g8vka4VHbj9iTWUWjucHglArg3gH6b45J2KW
-	 qw/jgKrdJUwvgkDfnvf8RIH9GRr+5hVrRVngQFto=
+	by mail.kernel.org (Postfix) with ESMTP id AA1E9206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:35:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391123AbgF2Vfm (ORCPT
+        id S2403789AbgF2Vft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:35:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60608 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:35:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60648 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728509AbgF2Skr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:40:47 -0400
-Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728494AbgF2Skq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:40:46 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 764FD23EB4;
-        Mon, 29 Jun 2020 15:08:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443295;
-        bh=qBdL3tlBX+scLgBAFOGB5TLlWji+GPtg13a4shdBzo0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CqbNccPLqUPqB9hiyKYsfFMqH3nDDzIujQlexZjYfgmKPuDRzFqITwjtLc4SEaPIT
-         NX7+dkrumDzJth6HVgXUB7tIDxo+mOubkRrfP1ERFvFBgCZFiSuWvu5Ekl28nVWyl3
-         BT+iYJ8vFGrLyBjgUdifq4hbovppZjc7Z52B/uGQ=
-Received: by mail-oi1-f176.google.com with SMTP id e4so6522842oib.1;
-        Mon, 29 Jun 2020 08:08:15 -0700 (PDT)
-X-Gm-Message-State: AOAM5300557Le6CeZWQf0nLdoir8lOGrRYPQOS2xzVsy9qYXMKVLFCeD
-        W52XoAHDZ4guK0byG5tbY6Ka9j0v6UaCx2W0CPE=
-X-Google-Smtp-Source: ABdhPJwTia/C2SAyWRf7uRxGpRTQZVHRS1vjtLhx+E/b1Dt+tcSaaYv2NWdpuTJRHdljFla/pOrxnXThmPE1qfnRksI=
-X-Received: by 2002:aca:b241:: with SMTP id b62mr11815740oif.47.1593443294721;
- Mon, 29 Jun 2020 08:08:14 -0700 (PDT)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DBD6206A1;
+        Mon, 29 Jun 2020 12:56:09 +0000 (UTC)
+Date:   Mon, 29 Jun 2020 08:56:08 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     syzbot <syzbot+721aa903751db87aa244@syzkaller.appspotmail.com>
+Cc:     linux-kernel@vger.kernel.org, mathieu.desnoyers@polymtl.ca,
+        mingo@elte.hu, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <frederic@kernel.org>
+Subject: Re: WARNING in tracepoint_add_func
+Message-ID: <20200629085608.42ede213@oasis.local.home>
+In-Reply-To: <000000000000a6348d05a9234041@google.com>
+References: <000000000000a6348d05a9234041@google.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20200629061840.4065483-1-keescook@chromium.org>
- <20200629061840.4065483-6-keescook@chromium.org> <CAMj1kXE+toCd=Bx-zw7D9bvDRNB2aPn5-_7CY7MOKcVGA-azVg@mail.gmail.com>
- <202006290806.3BDE2A8@keescook>
-In-Reply-To: <202006290806.3BDE2A8@keescook>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Mon, 29 Jun 2020 17:08:03 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXHij8M5_kvh6EDaFa8ksbDBxqdaWGtR=-QnXhF7YosK6g@mail.gmail.com>
-Message-ID: <CAMj1kXHij8M5_kvh6EDaFa8ksbDBxqdaWGtR=-QnXhF7YosK6g@mail.gmail.com>
-Subject: Re: [PATCH v4 05/17] ctype: Work around Clang -mbranch-protection=none
- bug
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Will Deacon <will@kernel.org>, Dave Martin <Dave.Martin@arm.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, X86 ML <x86@kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Jun 2020 at 17:06, Kees Cook <keescook@chromium.org> wrote:
->
-> On Mon, Jun 29, 2020 at 10:15:47AM +0200, Ard Biesheuvel wrote:
-> > On Mon, 29 Jun 2020 at 08:18, Kees Cook <keescook@chromium.org> wrote:
-> > >
-> > > In preparation for building efi/libstub with -mbranch-protection=none
-> > > (EFI does not support branch protection features[1]), add no-op code
-> > > to work around a Clang bug that emits an unwanted .note.gnu.property
-> > > section for object files without code[2].
-> > >
-> > > [1] https://lore.kernel.org/lkml/CAMj1kXHck12juGi=E=P4hWP_8vQhQ+-x3vBMc3TGeRWdQ-XkxQ@mail.gmail.com
-> > > [2] https://bugs.llvm.org/show_bug.cgi?id=46480
-> > >
-> > > Cc: Ard Biesheuvel <ardb@kernel.org>
-> > > Cc: Will Deacon <will@kernel.org>
-> > > Cc: Dave Martin <Dave.Martin@arm.com>
-> > > Cc: clang-built-linux@googlegroups.com
-> > > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > > ---
-> > >  lib/ctype.c | 10 ++++++++++
-> > >  1 file changed, 10 insertions(+)
-> > >
-> > > diff --git a/lib/ctype.c b/lib/ctype.c
-> > > index c819fe269eb2..21245ed57d90 100644
-> > > --- a/lib/ctype.c
-> > > +++ b/lib/ctype.c
-> > > @@ -36,3 +36,13 @@ _L,_L,_L,_L,_L,_L,_L,_L,_L,_L,_L,_L,_L,_L,_L,_L,     /* 224-239 */
-> > >  _L,_L,_L,_L,_L,_L,_L,_P,_L,_L,_L,_L,_L,_L,_L,_L};      /* 240-255 */
-> > >
-> > >  EXPORT_SYMBOL(_ctype);
-> > > +
-> > > +/*
-> > > + * Clang will generate .note.gnu.property sections for object files
-> > > + * without code, even in the presence of -mbranch-protection=none.
-> > > + * To work around this, define an unused static function.
-> > > + * https://bugs.llvm.org/show_bug.cgi?id=46480
-> > > + */
-> > > +#ifdef CONFIG_CC_IS_CLANG
-> > > +void __maybe_unused __clang_needs_code_here(void) { }
-> > > +#endif
-> > > --
-> > > 2.25.1
-> > >
-> >
-> > I take it we don't need this horrible hack if we build the EFI stub
-> > with branch protections and filter out the .note.gnu.property section
-> > explicitly?
-> >
-> > Sorry to backpedal, but that is probably a better approach after all,
-> > given that the instructions don't hurt, and we will hopefully be able
-> > to arm them once UEFI (as well as PE/COFF) gets around to describing
-> > this in a way that both the firmware and the OS can consume.
->
-> How does this look?
->
->
-> commit 051ef0b75a386c3fe2f216d16246468147a48c5b
-> Author: Kees Cook <keescook@chromium.org>
-> Date:   Tue Jun 23 18:02:56 2020 -0700
->
->     efi/libstub: Disable -mbranch-protection
->
->     In preparation for adding --orphan-handling=warn to more architectures,
->     disable -mbranch-protection, as EFI does not yet support it[1].  This was
->     noticed due to it producing unwanted .note.gnu.property sections (prefixed
->     with .init due to the objcopy build step).
->
->     However, we must also work around a bug in Clang where the section is
->     still emitted for code-less object files[2], so also remove the section
->     during the objcopy.
->
->     [1] https://lore.kernel.org/lkml/CAMj1kXHck12juGi=E=P4hWP_8vQhQ+-x3vBMc3TGeRWdQ-XkxQ@mail.gmail.com
->     [2] https://bugs.llvm.org/show_bug.cgi?id=46480
->
->     Cc: Ard Biesheuvel <ardb@kernel.org>
->     Cc: Arvind Sankar <nivedita@alum.mit.edu>
->     Cc: Atish Patra <atish.patra@wdc.com>
->     Cc: linux-efi@vger.kernel.org
->     Signed-off-by: Kees Cook <keescook@chromium.org>
->
-> diff --git a/drivers/firmware/efi/libstub/Makefile b/drivers/firmware/efi/libstub/Makefile
-> index 75daaf20374e..f9f1922f8f28 100644
-> --- a/drivers/firmware/efi/libstub/Makefile
-> +++ b/drivers/firmware/efi/libstub/Makefile
-> @@ -18,7 +18,8 @@ cflags-$(CONFIG_X86)          += -m$(BITS) -D__KERNEL__ \
->  # arm64 uses the full KBUILD_CFLAGS so it's necessary to explicitly
->  # disable the stackleak plugin
->  cflags-$(CONFIG_ARM64)         := $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
-> -                                  -fpie $(DISABLE_STACKLEAK_PLUGIN)
-> +                                  -fpie $(DISABLE_STACKLEAK_PLUGIN) \
-> +                                  $(call cc-option,-mbranch-protection=none)
->  cflags-$(CONFIG_ARM)           := $(subst $(CC_FLAGS_FTRACE),,$(KBUILD_CFLAGS)) \
->                                    -fno-builtin -fpic \
->                                    $(call cc-option,-mno-single-pic-base)
-> @@ -66,6 +67,12 @@ lib-$(CONFIG_X86)            += x86-stub.o
->  CFLAGS_arm32-stub.o            := -DTEXT_OFFSET=$(TEXT_OFFSET)
->  CFLAGS_arm64-stub.o            := -DTEXT_OFFSET=$(TEXT_OFFSET)
->
-> +# Even when -mbranch-protection=none is set, Clang will generate a
-> +# .note.gnu.property for code-less object files (like lib/ctype.c),
-> +# so work around this by explicitly removing the unwanted section.
-> +# https://bugs.llvm.org/show_bug.cgi?id=46480
-> +STUBCOPY_FLAGS-y               += --remove-section=.note.gnu.property
-> +
->  #
->  # For x86, bootloaders like systemd-boot or grub-efi do not zero-initialize the
->  # .bss section, so the .bss section of the EFI stub needs to be included in the
->
+
+Cc'd Frederic and Peter.
+
+-- Steve
 
 
-Looks fine
+On Sun, 28 Jun 2020 04:29:17 -0700
+syzbot <syzbot+721aa903751db87aa244@syzkaller.appspotmail.com> wrote:
 
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    7a64135f libbpf: Adjust SEC short cut for expected attach ..
+> git tree:       bpf
+> console output: https://syzkaller.appspot.com/x/log.txt?x=142782e3100000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=dcc6334acae363d4
+> dashboard link: https://syzkaller.appspot.com/bug?extid=721aa903751db87aa244
+> compiler:       gcc (GCC) 10.1.0-syz 20200507
+> 
+> Unfortunately, I don't have any reproducer for this crash yet.
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+721aa903751db87aa244@syzkaller.appspotmail.com
+> 
+> ------------[ cut here ]------------
+> WARNING: CPU: 1 PID: 16762 at kernel/tracepoint.c:243 tracepoint_add_func+0x254/0x880 kernel/tracepoint.c:243
+> Kernel panic - not syncing: panic_on_warn set ...
+> CPU: 1 PID: 16762 Comm: syz-executor.4 Not tainted 5.8.0-rc1-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x18f/0x20d lib/dump_stack.c:118
+>  panic+0x2e3/0x75c kernel/panic.c:231
+>  __warn.cold+0x20/0x45 kernel/panic.c:600
+>  report_bug+0x1bd/0x210 lib/bug.c:198
+>  exc_invalid_op+0x24d/0x400 arch/x86/kernel/traps.c:235
+>  asm_exc_invalid_op+0x12/0x20 arch/x86/include/asm/idtentry.h:563
+> RIP: 0010:tracepoint_add_func+0x254/0x880 kernel/tracepoint.c:243
+> Code: 44 24 20 48 8b 5b 08 80 38 00 0f 85 6b 05 00 00 48 8b 44 24 08 48 3b 58 08 0f 85 2d ff ff ff 41 bc ef ff ff ff e8 4c 78 fe ff <0f> 0b e8 45 78 fe ff 44 89 e0 48 83 c4 38 5b 5d 41 5c 41 5d 41 5e
+> RSP: 0018:ffffc90001497a98 EFLAGS: 00010216
+> RAX: 000000000000199a RBX: ffffffff89b99040 RCX: ffffc90011df4000
+> RDX: 0000000000040000 RSI: ffffffff8174d824 RDI: ffff8880979adb30
+> RBP: ffffffff814f1b80 R08: 0000000000000000 R09: ffffffff89bf9867
+> R10: 000000000000000a R11: 0000000000000000 R12: 00000000ffffffef
+> R13: 0000000000000001 R14: dffffc0000000000 R15: ffff8880979adb10
+>  tracepoint_probe_register_prio kernel/tracepoint.c:315 [inline]
+>  tracepoint_probe_register+0x9c/0xe0 kernel/tracepoint.c:335
+>  trace_event_reg+0x28f/0x350 kernel/trace/trace_events.c:304
+>  perf_trace_event_reg kernel/trace/trace_event_perf.c:129 [inline]
+>  perf_trace_event_init+0x532/0x9a0 kernel/trace/trace_event_perf.c:204
+>  perf_trace_init+0x176/0x240 kernel/trace/trace_event_perf.c:228
+>  perf_tp_event_init+0xa2/0x120 kernel/events/core.c:9330
+>  perf_try_init_event+0x12a/0x560 kernel/events/core.c:10782
+>  perf_init_event kernel/events/core.c:10834 [inline]
+>  perf_event_alloc.part.0+0xdee/0x36f0 kernel/events/core.c:11110
+>  perf_event_alloc kernel/events/core.c:11489 [inline]
+>  __do_sys_perf_event_open+0x72c/0x2b50 kernel/events/core.c:11605
+>  do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> RIP: 0033:0x45cb19
+> Code: Bad RIP value.
+> RSP: 002b:00007f2d99608c78 EFLAGS: 00000246 ORIG_RAX: 000000000000012a
+> RAX: ffffffffffffffda RBX: 00000000004fa640 RCX: 000000000045cb19
+> RDX: 0000000000000000 RSI: ffffffffffffffff RDI: 0000000020000100
+> RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
+> R10: ffffffffffffffff R11: 0000000000000246 R12: 00000000ffffffff
+> R13: 0000000000000841 R14: 00000000004cb320 R15: 00007f2d996096d4
+> Kernel Offset: disabled
+> 
+> 
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-if you want to keep it with the set, or I can take it as a EFI fix.
