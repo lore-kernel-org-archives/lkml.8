@@ -2,149 +2,188 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04BAAC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:57:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40140C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DE2AD2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:57:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460653;
-	bh=1fWsF8qQO7mrh1A70PT5hiVR710gJOGU5C0NkvHckLw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DolqZW4ZKWH55Gsi9bJ6SPkM9kUm5jGb2/8C6xj37nMD1ctkVdUmblW8btEBMxBnm
-	 /2LTbdLcO4e+AoXNO2CAcE2RqqGyyOj383yo1gYvqIrwdrL3StgNPddZT4iGkIENGt
-	 FUVDfcJaVcU/+s3JOyiTDVShdoFgSNwY5nnOovtM=
+	by mail.kernel.org (Postfix) with ESMTP id 1C00420674
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:57:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bH7wT0Px"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388113AbgF2T5a (ORCPT
+        id S1730591AbgF2T5i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:57:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47656 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387620AbgF2TkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:40:21 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C226524886;
-        Mon, 29 Jun 2020 15:26:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444383;
-        bh=1fWsF8qQO7mrh1A70PT5hiVR710gJOGU5C0NkvHckLw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sHW3BdohlXcrLSs4oGBP9uLB7Q2tFIHpeVIy8ixvLjxvW9fWm8DqGzOYKbV8RbjYK
-         yIXt+WqWK5kqIEYD3ezAVBHzD2q4pqQH7F0dDo2abkcX8KF/actzOhmNOUoYm1j+Op
-         eS7A1nzmzXe0zrIT8SKw4sQUUktea/0XVM2EGW5M=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 060/178] IB/hfi1: Fix module use count flaw due to leftover module put calls
-Date:   Mon, 29 Jun 2020 11:23:25 -0400
-Message-Id: <20200629152523.2494198-61-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
-References: <20200629152523.2494198-1-sashal@kernel.org>
+        Mon, 29 Jun 2020 15:57:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50864 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388200AbgF2T5b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:57:31 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07BF4C061755;
+        Mon, 29 Jun 2020 12:57:31 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id h28so14053585edz.0;
+        Mon, 29 Jun 2020 12:57:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AaIAGXzm3zle6m3IyH6J6bY+lak3D/cEfWozndthNJQ=;
+        b=bH7wT0Px6bC7hXr1S6yEgmoWByAw/Sx0DSg0e3sBnS6GfVDVkgciX1P6xiXpE5ikWi
+         EKNxcnejGmYA74L9W6I79GzlF+DEBoJDK9EZpI3DGdPHozeUi933NqosK1opTbyWgskW
+         ta2XN6jexhlUpxoUpJJ68E+L+6RcUF4kcyij9OgF1o7eM6Y8JzUP8cafX4ViUqNz6TaB
+         Lt0FKK9Nu+u4VEyFbOojPocJ0pnx/8RJPCHhxka9jm3y2F6G1YUMZAPRUbSdvYM8RrPh
+         ANjOnT2SH02GOZKMLwoa4t0cOvQGEENFu0/ZhL9smtbFnj2dZfjMa2k4ysF/piDp7gd0
+         Bl6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AaIAGXzm3zle6m3IyH6J6bY+lak3D/cEfWozndthNJQ=;
+        b=jJ9+pIK3JdCHw6lEMn97tzxaqG4FB0LCjm6WKYhFkifZvsju7JVaQMsIjtYvt8yMnZ
+         BYP9sBSw6wjnOY4qGpNZCmPV3yOZhkntZbCXEe0oYP1g4MjO/4zuO4hQLEwoYIC02UjA
+         y1UaEO6FdDX6XEavzq7PwwT7cf7W9HRYFXq1Wuydt+giXMn/15NWh2Y4T+mcUuGLUEZl
+         jgfiMvMN9I0OuTDP0Im//1tXGJ0Cymwmb3FSNT5T66oyzkAbR/rPRLdq0gqB7j4a3Lgx
+         Qtl4XZxBkTt1FeCOeg8p0EZYY3gbFSpWlA19wNLxYG3IRU2IlMd1j3VR904U2xQr2ZgF
+         bYNw==
+X-Gm-Message-State: AOAM5322vxZYZ9gMLg3oqZMKCcFz/KMPGKEbL9afCHWptIlHC3DjTTSp
+        n8uKv/OAaz9fR7eqMAUUjCMUM1txgUgNI6uSDySZgPl/
+X-Google-Smtp-Source: ABdhPJxuqVeCta8VoAgMN0v4dnb20yspX1tWXnf7++Cbpyc1biLAcvlB00qweNwifDIJzhl2qqHoB4gCEw2ejQUXIfA=
+X-Received: by 2002:aa7:d792:: with SMTP id s18mr19820549edq.7.1593460649733;
+ Mon, 29 Jun 2020 12:57:29 -0700 (PDT)
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.50-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.4.50-rc1
-X-KernelTest-Deadline: 2020-07-01T15:25+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20200629181921.3019271-1-eric@anholt.net> <20200629181921.3019271-2-eric@anholt.net>
+In-Reply-To: <20200629181921.3019271-2-eric@anholt.net>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Mon, 29 Jun 2020 12:57:59 -0700
+Message-ID: <CAF6AEGstctXSCwW9Hv=MmB_Ca1VGA_DZNtzvqSY-1NqPTK+WPQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] drm/msm: Quiet error during failure in optional
+ resource mappings.
+To:     Eric Anholt <eric@anholt.net>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Sean Paul <sean@poorly.run>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dennis Dalessandro <dennis.dalessandro@intel.com>
+On Mon, Jun 29, 2020 at 11:19 AM Eric Anholt <eric@anholt.net> wrote:
+>
+> We don't expect to find vbif_nrt or regdma on cheza, but were clogging
+> up dmesg with errors about it.
 
-commit 822fbd37410639acdae368ea55477ddd3498651d upstream.
+nit: s/cheza/sdm845/ (since this really applies to the SoC rather than
+the board..
 
-When the try_module_get calls were removed from opening and closing of the
-i2c debugfs file, the corresponding module_put calls were missed.  This
-results in an inaccurate module use count that requires a power cycle to
-fix.
+also, maybe msm_ioremap_optional() ?
 
-Fixes: 09fbca8e6240 ("IB/hfi1: No need to use try_module_get for debugfs")
-Link: https://lore.kernel.org/r/20200623203230.106975.76240.stgit@awfm-01.aw.intel.com
-Cc: <stable@vger.kernel.org>
-Reviewed-by: Kaike Wan <kaike.wan@intel.com>
-Reviewed-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@nvidia.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/infiniband/hw/hfi1/debugfs.c | 19 ++-----------------
- 1 file changed, 2 insertions(+), 17 deletions(-)
+BR,
+-R
 
-diff --git a/drivers/infiniband/hw/hfi1/debugfs.c b/drivers/infiniband/hw/hfi1/debugfs.c
-index d268bf9c42eef..c29da2f4e3396 100644
---- a/drivers/infiniband/hw/hfi1/debugfs.c
-+++ b/drivers/infiniband/hw/hfi1/debugfs.c
-@@ -985,15 +985,10 @@ static ssize_t qsfp2_debugfs_read(struct file *file, char __user *buf,
- static int __i2c_debugfs_open(struct inode *in, struct file *fp, u32 target)
- {
- 	struct hfi1_pportdata *ppd;
--	int ret;
- 
- 	ppd = private2ppd(fp);
- 
--	ret = acquire_chip_resource(ppd->dd, i2c_target(target), 0);
--	if (ret) /* failed - release the module */
--		module_put(THIS_MODULE);
--
--	return ret;
-+	return acquire_chip_resource(ppd->dd, i2c_target(target), 0);
- }
- 
- static int i2c1_debugfs_open(struct inode *in, struct file *fp)
-@@ -1013,7 +1008,6 @@ static int __i2c_debugfs_release(struct inode *in, struct file *fp, u32 target)
- 	ppd = private2ppd(fp);
- 
- 	release_chip_resource(ppd->dd, i2c_target(target));
--	module_put(THIS_MODULE);
- 
- 	return 0;
- }
-@@ -1031,18 +1025,10 @@ static int i2c2_debugfs_release(struct inode *in, struct file *fp)
- static int __qsfp_debugfs_open(struct inode *in, struct file *fp, u32 target)
- {
- 	struct hfi1_pportdata *ppd;
--	int ret;
--
--	if (!try_module_get(THIS_MODULE))
--		return -ENODEV;
- 
- 	ppd = private2ppd(fp);
- 
--	ret = acquire_chip_resource(ppd->dd, i2c_target(target), 0);
--	if (ret) /* failed - release the module */
--		module_put(THIS_MODULE);
--
--	return ret;
-+	return acquire_chip_resource(ppd->dd, i2c_target(target), 0);
- }
- 
- static int qsfp1_debugfs_open(struct inode *in, struct file *fp)
-@@ -1062,7 +1048,6 @@ static int __qsfp_debugfs_release(struct inode *in, struct file *fp, u32 target)
- 	ppd = private2ppd(fp);
- 
- 	release_chip_resource(ppd->dd, i2c_target(target));
--	module_put(THIS_MODULE);
- 
- 	return 0;
- }
--- 
-2.25.1
-
+>
+> Signed-off-by: Eric Anholt <eric@anholt.net>
+> ---
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c |  4 ++--
+>  drivers/gpu/drm/msm/msm_drv.c           | 22 ++++++++++++++++++----
+>  drivers/gpu/drm/msm/msm_drv.h           |  2 ++
+>  3 files changed, 22 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+> index a4ab802fee6d..d9aef2b5e930 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+> @@ -838,13 +838,13 @@ static int dpu_kms_hw_init(struct msm_kms *kms)
+>                 dpu_kms->vbif[VBIF_RT] = NULL;
+>                 goto error;
+>         }
+> -       dpu_kms->vbif[VBIF_NRT] = msm_ioremap(dpu_kms->pdev, "vbif_nrt", "vbif_nrt");
+> +       dpu_kms->vbif[VBIF_NRT] = msm_ioremap_quiet(dpu_kms->pdev, "vbif_nrt", "vbif_nrt");
+>         if (IS_ERR(dpu_kms->vbif[VBIF_NRT])) {
+>                 dpu_kms->vbif[VBIF_NRT] = NULL;
+>                 DPU_DEBUG("VBIF NRT is not defined");
+>         }
+>
+> -       dpu_kms->reg_dma = msm_ioremap(dpu_kms->pdev, "regdma", "regdma");
+> +       dpu_kms->reg_dma = msm_ioremap_quiet(dpu_kms->pdev, "regdma", "regdma");
+>         if (IS_ERR(dpu_kms->reg_dma)) {
+>                 dpu_kms->reg_dma = NULL;
+>                 DPU_DEBUG("REG_DMA is not defined");
+> diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+> index f6ce40bf3699..df4a3c6a49cd 100644
+> --- a/drivers/gpu/drm/msm/msm_drv.c
+> +++ b/drivers/gpu/drm/msm/msm_drv.c
+> @@ -120,8 +120,8 @@ struct clk *msm_clk_get(struct platform_device *pdev, const char *name)
+>         return clk;
+>  }
+>
+> -void __iomem *msm_ioremap(struct platform_device *pdev, const char *name,
+> -               const char *dbgname)
+> +void __iomem *_msm_ioremap(struct platform_device *pdev, const char *name,
+> +                          const char *dbgname, bool quiet)
+>  {
+>         struct resource *res;
+>         unsigned long size;
+> @@ -133,7 +133,8 @@ void __iomem *msm_ioremap(struct platform_device *pdev, const char *name,
+>                 res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>
+>         if (!res) {
+> -               DRM_DEV_ERROR(&pdev->dev, "failed to get memory resource: %s\n", name);
+> +               if (!quiet)
+> +                       DRM_DEV_ERROR(&pdev->dev, "failed to get memory resource: %s\n", name);
+>                 return ERR_PTR(-EINVAL);
+>         }
+>
+> @@ -141,7 +142,8 @@ void __iomem *msm_ioremap(struct platform_device *pdev, const char *name,
+>
+>         ptr = devm_ioremap(&pdev->dev, res->start, size);
+>         if (!ptr) {
+> -               DRM_DEV_ERROR(&pdev->dev, "failed to ioremap: %s\n", name);
+> +               if (!quiet)
+> +                       DRM_DEV_ERROR(&pdev->dev, "failed to ioremap: %s\n", name);
+>                 return ERR_PTR(-ENOMEM);
+>         }
+>
+> @@ -151,6 +153,18 @@ void __iomem *msm_ioremap(struct platform_device *pdev, const char *name,
+>         return ptr;
+>  }
+>
+> +void __iomem *msm_ioremap(struct platform_device *pdev, const char *name,
+> +                         const char *dbgname)
+> +{
+> +       return _msm_ioremap(pdev, name, dbgname, false);
+> +}
+> +
+> +void __iomem *msm_ioremap_quiet(struct platform_device *pdev, const char *name,
+> +                               const char *dbgname)
+> +{
+> +       return _msm_ioremap(pdev, name, dbgname, true);
+> +}
+> +
+>  void msm_writel(u32 data, void __iomem *addr)
+>  {
+>         if (reglog)
+> diff --git a/drivers/gpu/drm/msm/msm_drv.h b/drivers/gpu/drm/msm/msm_drv.h
+> index e2d6a6056418..2687f7a42c15 100644
+> --- a/drivers/gpu/drm/msm/msm_drv.h
+> +++ b/drivers/gpu/drm/msm/msm_drv.h
+> @@ -411,6 +411,8 @@ struct clk *msm_clk_bulk_get_clock(struct clk_bulk_data *bulk, int count,
+>         const char *name);
+>  void __iomem *msm_ioremap(struct platform_device *pdev, const char *name,
+>                 const char *dbgname);
+> +void __iomem *msm_ioremap_quiet(struct platform_device *pdev, const char *name,
+> +               const char *dbgname);
+>  void msm_writel(u32 data, void __iomem *addr);
+>  u32 msm_readl(const void __iomem *addr);
+>
+> --
+> 2.26.2
+>
