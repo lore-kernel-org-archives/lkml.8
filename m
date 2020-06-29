@@ -2,61 +2,62 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A85C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:29:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01A7CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D3531206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:29:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC7FD20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:29:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462573;
-	bh=qPmb8nADJ/fGtJUgCbimYNTWKsU//6MpTOpdHRzcIkU=;
+	s=default; t=1593462579;
+	bh=xW060RWo+YfnYM7oM17YdaGdbVKZX6R9bk/4a89M/4o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iVN6nMOXHIaZmjBpcQXoXtUhCB9wmp4wbBASkaP9k6Ozz+UDgI3X2vFEjVvqaCHgf
-	 rQIowMrFVYM/Yygbe4/ZXRMoSqEogWFhWi+pwpU/+j7FX1auUl70dynsCNN9IC+Ebz
-	 tg0iwnzafy8hB85i5Zp6fpdw4/jLMNXvINNFB9QY=
+	b=tRk+MLecZhAYdyaAOWsNFGQ8t9cm9r4d3+AuPd7TILIePpNJeRDzrj/tTI82licj+
+	 o8Ko8GR6oi4h0kF/kWx3tGQ0oiaBAnJBELF3zeAcaKliYFppyM6n7tUfV9r8LKuhjY
+	 CZms2CbCAmApUzq7BJacYQy3jhOOHsafZI59tZxQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389241AbgF2U3c (ORCPT
+        id S1732527AbgF2U3i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:29:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37070 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:29:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731281AbgF2TZW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:25:22 -0400
+        id S1732495AbgF2TZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:25:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25086253A3;
-        Mon, 29 Jun 2020 15:41:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C088225328;
+        Mon, 29 Jun 2020 15:39:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445269;
-        bh=qPmb8nADJ/fGtJUgCbimYNTWKsU//6MpTOpdHRzcIkU=;
+        s=default; t=1593445159;
+        bh=xW060RWo+YfnYM7oM17YdaGdbVKZX6R9bk/4a89M/4o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HhmWJ3e/dlDfql10HWjIbyc5ouoNPLkhJnGsi1uWPvndBxhHP16wJ3/6ECHRumWig
-         w2AikLjShvkWmAFgTrw/pGBCRWEtw6rXpbYF9i8pOJh0zCBXsA0T5HnY9K2ZQmcVIR
-         qvrmvAmWprQY+K3TWzQ7QwDk0qVo8AjC8T2DmoXY=
+        b=XyPChSQYYZ/F4TkjQC44cjP1ZG5nLQkIS69jIhK7HcqWaON+87pQ5aYtXzGfltABi
+         X0PIfoGnE7/gcHxno8dsb2zgou0BLNVlcEKEMOeRGl6VQs1eQkF1nRGYTMtmoyc9C0
+         vnH9zFPcnLqgw2MuqgxW8B8aNOtMldW4ye04O68o=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 049/191] clk: samsung: exynos5433: Add IGNORE_UNUSED flag to sclk_i2s1
-Date:   Mon, 29 Jun 2020 11:37:45 -0400
-Message-Id: <20200629154007.2495120-50-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        yuu ichii <byahu140@heisei.be>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.14 60/78] ACPI: sysfs: Fix pm_profile_attr type
+Date:   Mon, 29 Jun 2020 11:37:48 -0400
+Message-Id: <20200629153806.2494953-61-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
-References: <20200629154007.2495120-1-sashal@kernel.org>
+In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
+References: <20200629153806.2494953-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.229-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.9.y
+X-KernelTest-Branch: linux-4.14.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.9.229-rc1
-X-KernelTest-Deadline: 2020-07-01T15:39+00:00
+X-KernelTest-Version: 4.14.186-rc1
+X-KernelTest-Deadline: 2020-07-01T15:38+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -65,66 +66,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marek Szyprowski <m.szyprowski@samsung.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 25bdae0f1c6609ceaf55fe6700654f0be2253d8e ]
+commit e6d701dca9893990d999fd145e3e07223c002b06 upstream.
 
-Mark the SCLK clock for Exynos5433 I2S1 device with IGNORE_UNUSED flag to
-match its behaviour with SCLK clock for AUD_I2S (I2S0) device until
-a proper fix for Exynos I2S driver is ready.
+When running a kernel with Clang's Control Flow Integrity implemented,
+there is a violation that happens when accessing
+/sys/firmware/acpi/pm_profile:
 
-This fixes the following synchronous abort issue revealed by the probe
-order change caused by the commit 93d2e4322aa7 ("of: platform: Batch
-fwnode parsing when adding all top level devices")
+$ cat /sys/firmware/acpi/pm_profile
+0
 
-Internal error: synchronous external abort: 96000210 [#1] PREEMPT SMP
-Modules linked in:
-CPU: 0 PID: 50 Comm: kworker/0:1 Not tainted 5.7.0-rc5+ #701
-Hardware name: Samsung TM2E board (DT)
-Workqueue: events deferred_probe_work_func
-pstate: 60000005 (nZCv daif -PAN -UAO)
-pc : samsung_i2s_probe+0x768/0x8f0
-lr : samsung_i2s_probe+0x688/0x8f0
+$ dmesg
 ...
-Call trace:
- samsung_i2s_probe+0x768/0x8f0
- platform_drv_probe+0x50/0xa8
- really_probe+0x108/0x370
- driver_probe_device+0x54/0xb8
- __device_attach_driver+0x90/0xc0
- bus_for_each_drv+0x70/0xc8
- __device_attach+0xdc/0x140
- device_initial_probe+0x10/0x18
- bus_probe_device+0x94/0xa0
- deferred_probe_work_func+0x70/0xa8
- process_one_work+0x2a8/0x718
- worker_thread+0x48/0x470
- kthread+0x134/0x160
- ret_from_fork+0x10/0x1c
-Code: 17ffffaf d503201f f94086c0 91003000 (88dffc00)
----[ end trace ccf721c9400ddbd6 ]---
+[   17.352564] ------------[ cut here ]------------
+[   17.352568] CFI failure (target: acpi_show_profile+0x0/0x8):
+[   17.352572] WARNING: CPU: 3 PID: 497 at kernel/cfi.c:29 __cfi_check_fail+0x33/0x40
+[   17.352573] Modules linked in:
+[   17.352575] CPU: 3 PID: 497 Comm: cat Tainted: G        W         5.7.0-microsoft-standard+ #1
+[   17.352576] RIP: 0010:__cfi_check_fail+0x33/0x40
+[   17.352577] Code: 48 c7 c7 50 b3 85 84 48 c7 c6 50 0a 4e 84 e8 a4 d8 60 00 85 c0 75 02 5b c3 48 c7 c7 dc 5e 49 84 48 89 de 31 c0 e8 7d 06 eb ff <0f> 0b 5b c3 00 00 cc cc 00 00 cc cc 00 85 f6 74 25 41 b9 ea ff ff
+[   17.352577] RSP: 0018:ffffaa6dc3c53d30 EFLAGS: 00010246
+[   17.352578] RAX: 331267e0c06cee00 RBX: ffffffff83d85890 RCX: ffffffff8483a6f8
+[   17.352579] RDX: ffff9cceabbb37c0 RSI: 0000000000000082 RDI: ffffffff84bb9e1c
+[   17.352579] RBP: ffffffff845b2bc8 R08: 0000000000000001 R09: ffff9cceabbba200
+[   17.352579] R10: 000000000000019d R11: 0000000000000000 R12: ffff9cc947766f00
+[   17.352580] R13: ffffffff83d6bd50 R14: ffff9ccc6fa80000 R15: ffffffff845bd328
+[   17.352582] FS:  00007fdbc8d13580(0000) GS:ffff9cce91ac0000(0000) knlGS:0000000000000000
+[   17.352582] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   17.352583] CR2: 00007fdbc858e000 CR3: 00000005174d0000 CR4: 0000000000340ea0
+[   17.352584] Call Trace:
+[   17.352586]  ? rev_id_show+0x8/0x8
+[   17.352587]  ? __cfi_check+0x45bac/0x4b640
+[   17.352589]  ? kobj_attr_show+0x73/0x80
+[   17.352590]  ? sysfs_kf_seq_show+0xc1/0x140
+[   17.352592]  ? ext4_seq_options_show.cfi_jt+0x8/0x8
+[   17.352593]  ? seq_read+0x180/0x600
+[   17.352595]  ? sysfs_create_file_ns.cfi_jt+0x10/0x10
+[   17.352596]  ? tlbflush_read_file+0x8/0x8
+[   17.352597]  ? __vfs_read+0x6b/0x220
+[   17.352598]  ? handle_mm_fault+0xa23/0x11b0
+[   17.352599]  ? vfs_read+0xa2/0x130
+[   17.352599]  ? ksys_read+0x6a/0xd0
+[   17.352601]  ? __do_sys_getpgrp+0x8/0x8
+[   17.352602]  ? do_syscall_64+0x72/0x120
+[   17.352603]  ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[   17.352604] ---[ end trace 7b1fa81dc897e419 ]---
 
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+When /sys/firmware/acpi/pm_profile is read, sysfs_kf_seq_show is called,
+which in turn calls kobj_attr_show, which gets the ->show callback
+member by calling container_of on attr (casting it to struct
+kobj_attribute) then calls it.
+
+There is a CFI violation because pm_profile_attr is of type
+struct device_attribute but kobj_attr_show calls ->show expecting it
+to be from struct kobj_attribute. CFI checking ensures that function
+pointer types match when doing indirect calls. Fix pm_profile_attr to
+be defined in terms of kobj_attribute so there is no violation or
+mismatch.
+
+Fixes: 362b646062b2 ("ACPI: Export FADT pm_profile integer value to userspace")
+Link: https://github.com/ClangBuiltLinux/linux/issues/1051
+Reported-by: yuu ichii <byahu140@heisei.be>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Cc: 3.10+ <stable@vger.kernel.org> # 3.10+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/clk/samsung/clk-exynos5433.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/acpi/sysfs.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/samsung/clk-exynos5433.c b/drivers/clk/samsung/clk-exynos5433.c
-index 09cdd35dc434d..a082b026791af 100644
---- a/drivers/clk/samsung/clk-exynos5433.c
-+++ b/drivers/clk/samsung/clk-exynos5433.c
-@@ -1672,7 +1672,8 @@ static const struct samsung_gate_clock peric_gate_clks[] __initconst = {
- 	GATE(CLK_SCLK_PCM1, "sclk_pcm1", "sclk_pcm1_peric",
- 			ENABLE_SCLK_PERIC, 7, CLK_SET_RATE_PARENT, 0),
- 	GATE(CLK_SCLK_I2S1, "sclk_i2s1", "sclk_i2s1_peric",
--			ENABLE_SCLK_PERIC, 6, CLK_SET_RATE_PARENT, 0),
-+			ENABLE_SCLK_PERIC, 6,
-+			CLK_SET_RATE_PARENT | CLK_IGNORE_UNUSED, 0),
- 	GATE(CLK_SCLK_SPI2, "sclk_spi2", "sclk_spi2_peric", ENABLE_SCLK_PERIC,
- 			5, CLK_SET_RATE_PARENT, 0),
- 	GATE(CLK_SCLK_SPI1, "sclk_spi1", "sclk_spi1_peric", ENABLE_SCLK_PERIC,
+diff --git a/drivers/acpi/sysfs.c b/drivers/acpi/sysfs.c
+index a663014cfa522..3b7e23866b42a 100644
+--- a/drivers/acpi/sysfs.c
++++ b/drivers/acpi/sysfs.c
+@@ -942,13 +942,13 @@ static void __exit interrupt_stats_exit(void)
+ }
+ 
+ static ssize_t
+-acpi_show_profile(struct device *dev, struct device_attribute *attr,
++acpi_show_profile(struct kobject *kobj, struct kobj_attribute *attr,
+ 		  char *buf)
+ {
+ 	return sprintf(buf, "%d\n", acpi_gbl_FADT.preferred_profile);
+ }
+ 
+-static const struct device_attribute pm_profile_attr =
++static const struct kobj_attribute pm_profile_attr =
+ 	__ATTR(pm_profile, S_IRUGO, acpi_show_profile, NULL);
+ 
+ static ssize_t hotplug_enabled_show(struct kobject *kobj,
 -- 
 2.25.1
 
