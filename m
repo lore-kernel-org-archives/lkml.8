@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5964C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AEA7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:50:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B94F9206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77638206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:50:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460199;
-	bh=u5J6/w7nXVFSdEDy9CHpEXoG5nI+WM56tguUkFYQr60=;
+	s=default; t=1593460207;
+	bh=6NadJLY2JjTTBHnBAPPLUmClRu1ve21sHbvw0vkswdI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jEqCorYOr0HL2ooxlHFoYn6907j90dTc4bBTUob9KpJown8+PrIAwv45CCbeMduIk
-	 lBMYjX3X9i2FG7orQmmFBxEbLs+3lmUixycmpD4meahxU1ZcazQp3iaxB0Af2CBPkJ
-	 GKY3X7XP6fpWUFFOHpIY+ywXVtSGPkcvLUI23AGk=
+	b=UcAVsnB5yROdqPcXCRKdilRGRxfi7nw7hnE2K8ep+0SpqKLgKvpGR5O5yBeNlD6fc
+	 o6D5a70lTEwhFl91b5I3PRPcctzG2tjlyMhesvL0wdiWCnXedP2tSTjrIa0/nGuCmY
+	 lO/SL0o2aTsVTSfd2S0we0rIq1OAZw8jaQbhgqf0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388228AbgF2Tts (ORCPT
+        id S2388114AbgF2TuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:49:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47682 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:50:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387755AbgF2Tkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387749AbgF2Tkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3668A251DA;
-        Mon, 29 Jun 2020 15:28:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5816A248B8;
+        Mon, 29 Jun 2020 15:26:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444499;
-        bh=u5J6/w7nXVFSdEDy9CHpEXoG5nI+WM56tguUkFYQr60=;
+        s=default; t=1593444412;
+        bh=6NadJLY2JjTTBHnBAPPLUmClRu1ve21sHbvw0vkswdI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pqeYDMXi2WQ50+7Vk7rQ2mTDFyuqcjuwWrxiZvvJVrpwrjCUVFPOtNEXzSmceZcLK
-         tkcQi/vvETpQHP3Pc1tQaUF2woacR0a6STwUMmEMPIae8MgzC+SjRTkwFWcSqsL9H1
-         BGktNLnyVtTaY8dHsIRGWsqt7ybcExOt8yRe59nw=
+        b=LXOIm8UAM0NUjetVID4P0LzeD3bqiZwt8p1+HTMabulZqtP01sIFOaHBMgmljBUWT
+         jvEqDfMXAPJwK06hGQmGUZYxs8TXC1xMbPPmbedCFcEeX6yWSsyKm1Vp578ZgfwLCf
+         oi4EP3Jpnt8yeo67/8++gH4bKnJLcmKloAALdxVM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zheng Bin <zhengbin13@huawei.com>,
-        Ren Xudong <renxudong1@huawei.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 177/178] xfs: add agf freeblocks verify in xfs_agf_verify
-Date:   Mon, 29 Jun 2020 11:25:22 -0400
-Message-Id: <20200629152523.2494198-178-sashal@kernel.org>
+Cc:     Lu Baolu <baolu.lu@linux.intel.com>,
+        Lalithambika Krishnakumar <lalithambika.krishnakumar@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 090/178] iommu/vt-d: Enable PCI ACS for platform opt in hint
+Date:   Mon, 29 Jun 2020 11:23:55 -0400
+Message-Id: <20200629152523.2494198-91-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -66,110 +67,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zheng Bin <zhengbin13@huawei.com>
+From: Lu Baolu <baolu.lu@linux.intel.com>
 
-[ Upstream commit d0c7feaf87678371c2c09b3709400be416b2dc62 ]
+[ Upstream commit 50310600ebda74b9988467e2e6128711c7ba56fc ]
 
-We recently used fuzz(hydra) to test XFS and automatically generate
-tmp.img(XFS v5 format, but some metadata is wrong)
+PCI ACS is disabled if Intel IOMMU is off by default or intel_iommu=off
+is used in command line. Unfortunately, Intel IOMMU will be forced on if
+there're devices sitting on an external facing PCI port that is marked
+as untrusted (for example, thunderbolt peripherals). That means, PCI ACS
+is disabled while Intel IOMMU is forced on to isolate those devices. As
+the result, the devices of an MFD will be grouped by a single group even
+the ACS is supported on device.
 
-xfs_repair information(just one AG):
-agf_freeblks 0, counted 3224 in ag 0
-agf_longest 536874136, counted 3224 in ag 0
-sb_fdblocks 613, counted 3228
+[    0.691263] pci 0000:00:07.1: Adding to iommu group 3
+[    0.691277] pci 0000:00:07.2: Adding to iommu group 3
+[    0.691292] pci 0000:00:07.3: Adding to iommu group 3
 
-Test as follows:
-mount tmp.img tmpdir
-cp file1M tmpdir
-sync
+Fix it by requesting PCI ACS when Intel IOMMU is detected with platform
+opt in hint.
 
-In 4.19-stable, sync will stuck, the reason is:
-xfs_mountfs
-  xfs_check_summary_counts
-    if ((!xfs_sb_version_haslazysbcount(&mp->m_sb) ||
-       XFS_LAST_UNMOUNT_WAS_CLEAN(mp)) &&
-       !xfs_fs_has_sickness(mp, XFS_SICK_FS_COUNTERS))
-	return 0;  -->just return, incore sb_fdblocks still be 613
-    xfs_initialize_perag_data
-
-cp file1M tmpdir -->ok(write file to pagecache)
-sync -->stuck(write pagecache to disk)
-xfs_map_blocks
-  xfs_iomap_write_allocate
-    while (count_fsb != 0) {
-      nimaps = 0;
-      while (nimaps == 0) { --> endless loop
-         nimaps = 1;
-         xfs_bmapi_write(..., &nimaps) --> nimaps becomes 0 again
-xfs_bmapi_write
-  xfs_bmap_alloc
-    xfs_bmap_btalloc
-      xfs_alloc_vextent
-        xfs_alloc_fix_freelist
-          xfs_alloc_space_available -->fail(agf_freeblks is 0)
-
-In linux-next, sync not stuck, cause commit c2b3164320b5 ("xfs:
-use the latest extent at writeback delalloc conversion time") remove
-the above while, dmesg is as follows:
-[   55.250114] XFS (loop0): page discard on page ffffea0008bc7380, inode 0x1b0c, offset 0.
-
-Users do not know why this page is discard, the better soultion is:
-1. Like xfs_repair, make sure sb_fdblocks is equal to counted
-(xfs_initialize_perag_data did this, who is not called at this mount)
-2. Add agf verify, if fail, will tell users to repair
-
-This patch use the second soultion.
-
-Signed-off-by: Zheng Bin <zhengbin13@huawei.com>
-Signed-off-by: Ren Xudong <renxudong1@huawei.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Fixes: 89a6079df791a ("iommu/vt-d: Force IOMMU on for platform opt in hint")
+Co-developed-by: Lalithambika Krishnakumar <lalithambika.krishnakumar@intel.com>
+Signed-off-by: Lalithambika Krishnakumar <lalithambika.krishnakumar@intel.com>
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc: Ashok Raj <ashok.raj@intel.com>
+Link: https://lore.kernel.org/r/20200622231345.29722-5-baolu.lu@linux.intel.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/xfs/libxfs/xfs_alloc.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/iommu/dmar.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/fs/xfs/libxfs/xfs_alloc.c b/fs/xfs/libxfs/xfs_alloc.c
-index 533b04aaf6f6b..0a36f532cf86c 100644
---- a/fs/xfs/libxfs/xfs_alloc.c
-+++ b/fs/xfs/libxfs/xfs_alloc.c
-@@ -2598,6 +2598,13 @@ xfs_agf_verify(
- 	      be32_to_cpu(agf->agf_flcount) <= xfs_agfl_size(mp)))
- 		return __this_address;
- 
-+	if (be32_to_cpu(agf->agf_length) > mp->m_sb.sb_dblocks)
-+		return __this_address;
-+
-+	if (be32_to_cpu(agf->agf_freeblks) < be32_to_cpu(agf->agf_longest) ||
-+	    be32_to_cpu(agf->agf_freeblks) > be32_to_cpu(agf->agf_length))
-+		return __this_address;
-+
- 	if (be32_to_cpu(agf->agf_levels[XFS_BTNUM_BNO]) < 1 ||
- 	    be32_to_cpu(agf->agf_levels[XFS_BTNUM_CNT]) < 1 ||
- 	    be32_to_cpu(agf->agf_levels[XFS_BTNUM_BNO]) > XFS_BTREE_MAXLEVELS ||
-@@ -2609,6 +2616,10 @@ xfs_agf_verify(
- 	     be32_to_cpu(agf->agf_levels[XFS_BTNUM_RMAP]) > XFS_BTREE_MAXLEVELS))
- 		return __this_address;
- 
-+	if (xfs_sb_version_hasrmapbt(&mp->m_sb) &&
-+	    be32_to_cpu(agf->agf_rmap_blocks) > be32_to_cpu(agf->agf_length))
-+		return __this_address;
-+
- 	/*
- 	 * during growfs operations, the perag is not fully initialised,
- 	 * so we can't use it for any useful checking. growfs ensures we can't
-@@ -2622,6 +2633,11 @@ xfs_agf_verify(
- 	    be32_to_cpu(agf->agf_btreeblks) > be32_to_cpu(agf->agf_length))
- 		return __this_address;
- 
-+	if (xfs_sb_version_hasreflink(&mp->m_sb) &&
-+	    be32_to_cpu(agf->agf_refcount_blocks) >
-+	    be32_to_cpu(agf->agf_length))
-+		return __this_address;
-+
- 	if (xfs_sb_version_hasreflink(&mp->m_sb) &&
- 	    (be32_to_cpu(agf->agf_refcount_level) < 1 ||
- 	     be32_to_cpu(agf->agf_refcount_level) > XFS_BTREE_MAXLEVELS))
+diff --git a/drivers/iommu/dmar.c b/drivers/iommu/dmar.c
+index 9e393b9c50911..30ac0ba55864e 100644
+--- a/drivers/iommu/dmar.c
++++ b/drivers/iommu/dmar.c
+@@ -898,7 +898,8 @@ int __init detect_intel_iommu(void)
+ 	if (!ret)
+ 		ret = dmar_walk_dmar_table((struct acpi_table_dmar *)dmar_tbl,
+ 					   &validate_drhd_cb);
+-	if (!ret && !no_iommu && !iommu_detected && !dmar_disabled) {
++	if (!ret && !no_iommu && !iommu_detected &&
++	    (!dmar_disabled || dmar_platform_optin())) {
+ 		iommu_detected = 1;
+ 		/* Make sure ACS will be enabled */
+ 		pci_request_acs();
 -- 
 2.25.1
 
