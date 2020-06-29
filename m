@@ -5,70 +5,74 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85700C433E8
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6050C433EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B6C42065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:54:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90AC920656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:54:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q366rras"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CITmqLc3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728238AbgF2Syu (ORCPT
+        id S1729121AbgF2Syx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:54:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40032 "EHLO
+        Mon, 29 Jun 2020 14:54:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40072 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729802AbgF2Swv (ORCPT
+        with ESMTP id S1729803AbgF2Swv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:52:51 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADEA9C00F816
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 05:32:21 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id l17so15223812wmj.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 05:32:21 -0700 (PDT)
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59E5FC02E2D9
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:05:08 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id a6so16688858wrm.4
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:05:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=NcJWzHYOpdeqh8qGaDVcQ5xRq4JhsD2PhceqG1yeYgA=;
-        b=Q366rrasZM+J0LbW/35YiKvihiuoapb6NfN+Zb4zZsqCvq9+SkLa23MzIyUfk8kh5e
-         Tfzz+oPvckK85IfjKcsT2gzRYKGkjA9x48l/nKQyaBoJf04WdVxDuu5uycO/0JeIVv7l
-         lOtSMb0HK9cCkVoeyc2/p1hyWjQjR6EecqDrCwB0F4vdpGgomiwLq5Ge5NkeB38l2s9p
-         /RPpmnw26+sNuVt41FF5MJ94lR5+1+dlEqGMEV38RM0R9mtgMDHgqIuG7D8kGbWJx/HQ
-         SSsL2oC165G4yp4HZa8wpyhQ42TMENenXjRufPEz16j5xH7YcPE37CvTwtIEREwDv7Hd
-         yPOg==
+        bh=ObKoaiwUBMsH7RgwRp2nwwP2sLs2C+zRlkZVkrEZxL8=;
+        b=CITmqLc3nbGdsGtKVJszDGHLgzCb7zsuvkz+o0c8ghMxDpU6eESRHcmbaHok/SMQ2R
+         3BU+t5KbBGhwJFZI+r+/nkGDxLbMDFjegBajaC6W6wItOi04H/OIE/Hth21EIcoxTgPS
+         zEG/Pxz8a4/dNmmparDp0h0BLY0sTcsOeYI4rE6yK7E6G6mLkhST9OS1rTALTq79Fozc
+         74S2ArYQU1OOHSZ/moJCDIwcmWgFtR5hTcH7/j3iFTt3wuPylApkTXnwcx5VF99WNeKD
+         RJvoNJm9t4E/z0j1kjIWLSVgkJIarplQvWgTVfehAFzcmf0+Zp+yvd8G5B8KZftONrdD
+         4z5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=NcJWzHYOpdeqh8qGaDVcQ5xRq4JhsD2PhceqG1yeYgA=;
-        b=VVfZILbmcYV9fQiQV5z8I8TnZ9+XyDXuZXU7KxXdwaZRIbBfSI2OSnpm/dPlIsJAEZ
-         eIDK9JpwpeqQYVQIggcCwb5F0MqWtyI1Z2pIhoedBfoEFHOYN4L+NnjrGZ+cHi/FgmdR
-         NtAcWSa+8msGj72nvf3PKBYa43rT0CfpvoDx4U0ju9WCMqrDADNGumNKKmVz48d9CJoE
-         BV/64gf8361wpNpIJPdCWjTIkEhs5MRjRcGDfrjV68h1Ekw+35nsxCynB7LTq3ckOWXT
-         XMBuIP3/9qRexse2jcc9lVP3hIgS9cnndMlrXNySiSpkJ963TKXc5bNIw0bPLLMnNReI
-         CpqA==
-X-Gm-Message-State: AOAM531eKjYHkD/X5AlmfDqtLVjzS3HwM/Osh86Af3GVR2l4VrPPXSg7
-        pb7tl5dD2z44NJn4IeFDPgkjRg==
-X-Google-Smtp-Source: ABdhPJx4+0k8HqfmTYlIin6K3HPVFB67u5CbChkf/P40Ljl2tLMP9fSC9+ZutsjMFevxWA0Kb++IlQ==
-X-Received: by 2002:a1c:9cd3:: with SMTP id f202mr15608911wme.64.1593433940462;
-        Mon, 29 Jun 2020 05:32:20 -0700 (PDT)
+        bh=ObKoaiwUBMsH7RgwRp2nwwP2sLs2C+zRlkZVkrEZxL8=;
+        b=k1yplDKU9lIg0/Ae9q/nRm3eEKr1vQK/5Qdgkj3SuvjX0hWE1SBoM9vqRYFNACr60l
+         ywWkllpV66mvxIlv9REzs01Wdm9kvTqUkCmZSOrk3ywZje7sCJQTuTndXwogLTuwCuNh
+         oXjA8DyPFHkgpXLjvfCzyaqw2EqF0IVZhYFUxuz82WHnYSEilNVQZhXxU8BFkEK2i/6P
+         zbaAsXSMSJZSr9n8Me8ItiHqRC9wVsivfLByhgMLatuXYNe3/NVNJflWPnzmwpOQlFhc
+         Q94BUAKwYHENpLJdCeoMFBlyehBKt3xJwMrKKZJAsB4OChqknOgqbxU9pvn7+6gNrofm
+         n0Qg==
+X-Gm-Message-State: AOAM533Z4KTnqWy3iZx5cVIjGSunuzUpB/dlNZEQB45hBtTtGbL7SJav
+        oLxD/D/+IBJ3UkGqh83FKP1/Sw==
+X-Google-Smtp-Source: ABdhPJxkqzk0GPRCr9K1MAup+ksNzBdsY/taKwJeGxTcrmTr/Z34GpJMd3SoWqWuUsqXZ3BvIKddTg==
+X-Received: by 2002:adf:fe0e:: with SMTP id n14mr16825329wrr.325.1593439507115;
+        Mon, 29 Jun 2020 07:05:07 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id d201sm28064111wmd.34.2020.06.29.05.32.18
+        by smtp.gmail.com with ESMTPSA id p14sm15394928wrj.14.2020.06.29.07.05.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 05:32:19 -0700 (PDT)
+        Mon, 29 Jun 2020 07:05:06 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
-To:     lee.jones@linaro.org
+To:     arnd@arndb.de, gregkh@linuxfoundation.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH 1/5] mfd: si476x-cmd: Add missing documentation for si476x_cmd_fm_rds_status()'s arg 'report'
-Date:   Mon, 29 Jun 2020 13:32:11 +0100
-Message-Id: <20200629123215.1014747-2-lee.jones@linaro.org>
+        Lee Jones <lee.jones@linaro.org>,
+        Michael Jung <mijung@gmx.net>,
+        Michael Ruettger <michael@ibmra.de>,
+        Frank Haverkamp <haver@linux.ibm.com>,
+        Joerg-Stephan Vogt <jsvogt@de.ibm.com>
+Subject: [PATCH 17/20] misc: genwqe: card_base: Do not  pass unused argument 'fatal_err'
+Date:   Mon, 29 Jun 2020 15:04:39 +0100
+Message-Id: <20200629140442.1043957-18-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629123215.1014747-1-lee.jones@linaro.org>
-References: <20200629123215.1014747-1-lee.jones@linaro.org>
+In-Reply-To: <20200629140442.1043957-1-lee.jones@linaro.org>
+References: <20200629140442.1043957-1-lee.jones@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,33 +80,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kerneldoc syntax is used, but not complete.
+'fatal_err' is taken as an argument to a static function which is only
+invoked once.  During this invocation 'fatal_err' is not set.  There
+doesn't appear to be a good reason to keep it around.
 
-Descriptions are required for all arguments.
+Also fixes the following W=1 kernel build warning:
 
-Fixes the following W=1 build warning:
+ drivers/misc/genwqe/card_base.c:588: warning: Function parameter or member 'fatal_err' not described in 'genwqe_recover_card'
 
- drivers/mfd/si476x-cmd.c:907: warning: Function parameter or member 'report' not described in 'si476x_core_cmd_fm_rds_status'
-
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Michael Jung <mijung@gmx.net>
+Cc: Michael Ruettger <michael@ibmra.de>
+Cc: Frank Haverkamp <haver@linux.ibm.com>
+Cc: Joerg-Stephan Vogt <jsvogt@de.ibm.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/mfd/si476x-cmd.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/misc/genwqe/card_base.c | 18 +++---------------
+ 1 file changed, 3 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/mfd/si476x-cmd.c b/drivers/mfd/si476x-cmd.c
-index 0a40c5cb751db..d15b3e7833692 100644
---- a/drivers/mfd/si476x-cmd.c
-+++ b/drivers/mfd/si476x-cmd.c
-@@ -892,6 +892,8 @@ EXPORT_SYMBOL_GPL(si476x_core_cmd_fm_seek_start);
-  *                rest RDS data contains the last valid info received
-  * @mtfifo: if set the command clears RDS receive FIFO
-  * @intack: if set the command clards the RDSINT bit.
-+ * @report: - all signal quality information retured by the command
-+ *           (if NULL then the output of the command is ignored)
+diff --git a/drivers/misc/genwqe/card_base.c b/drivers/misc/genwqe/card_base.c
+index bceebf49de2d5..809a6f46f6de3 100644
+--- a/drivers/misc/genwqe/card_base.c
++++ b/drivers/misc/genwqe/card_base.c
+@@ -569,30 +569,18 @@ static int genwqe_stop(struct genwqe_dev *cd)
+ 
+ /**
+  * genwqe_recover_card() - Try to recover the card if it is possible
+- *
+- * If fatal_err is set no register access is possible anymore. It is
+- * likely that genwqe_start fails in that situation. Proper error
+- * handling is required in this case.
++ * @cd: GenWQE device information
   *
-  * Function returns 0 on success and negative error code on failure
+  * genwqe_bus_reset() will cause the pci code to call genwqe_remove()
+  * and later genwqe_probe() for all virtual functions.
   */
+-static int genwqe_recover_card(struct genwqe_dev *cd, int fatal_err)
++static int genwqe_recover_card(struct genwqe_dev *cd)
+ {
+ 	int rc;
+ 	struct pci_dev *pci_dev = cd->pci_dev;
+ 
+ 	genwqe_stop(cd);
+ 
+-	/*
+-	 * Make sure chip is not reloaded to maintain FFDC. Write SLU
+-	 * Reset Register, CPLDReset field to 0.
+-	 */
+-	if (!fatal_err) {
+-		cd->softreset = 0x70ull;
+-		__genwqe_writeq(cd, IO_SLC_CFGREG_SOFTRESET, cd->softreset);
+-	}
+-
+ 	rc = genwqe_bus_reset(cd);
+ 	if (rc != 0) {
+ 		dev_err(&pci_dev->dev,
+@@ -958,7 +946,7 @@ static int genwqe_health_thread(void *data)
+ 
+ 			cd->card_state = GENWQE_CARD_FATAL_ERROR;
+ 
+-			rc = genwqe_recover_card(cd, 0);
++			rc = genwqe_recover_card(cd);
+ 			if (rc < 0) {
+ 				/* FIXME Card is unusable and needs unbind! */
+ 				goto fatal_error;
 -- 
 2.25.1
 
