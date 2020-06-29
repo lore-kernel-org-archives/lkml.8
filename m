@@ -2,222 +2,157 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE89EC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09153C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:01:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4B57206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:00:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D61B7206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:01:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="L+0FGQXW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389889AbgF2VAw (ORCPT
+        id S2389549AbgF2VBD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:00:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43394 "EHLO
+        Mon, 29 Jun 2020 17:01:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731212AbgF2TM6 (ORCPT
+        with ESMTP id S1731205AbgF2TM6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:12:58 -0400
-Received: from mail-il1-x147.google.com (mail-il1-x147.google.com [IPv6:2607:f8b0:4864:20::147])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BB7FC035463
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 21:55:12 -0700 (PDT)
-Received: by mail-il1-x147.google.com with SMTP id m14so11578095iln.2
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 21:55:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=coULT2Cs0I87tcigCYfrNVk5i5S5iytBctTFCl4ZahM=;
-        b=EWvtOp4VOvx5vPWWavPvR/ytipO8P4teGwNbs65WbBAL/prJ4E2Q500QQjt0XtpDnQ
-         IzMH5SqsFLDC/SYHIP353dK4Qf8UMUg0Bu7PF9Qkq3HEjXy5P+de347HqWl7RrEMaYn2
-         07PruSy2WUDjRGIOyC2ohMzZ9iWkPrJHe9k9e5h5TbhFjUCqqA/E26oEaTFHJJ0og7sZ
-         cWX0KZ49AHALtb+Zo7B+shNji956xrXLDhraE1OFuucPT9TMFzJqDVOvxxJu27+lHO+S
-         xC2iSainKbTG4L1DAss89j3Ljjv1lr9ZggDtEqvleBGy1TtNx5ILTOj7AQDAyxBJBcdQ
-         lYEw==
-X-Gm-Message-State: AOAM533YOfVRkCcBH3kk1BEZHSqgE79c2lCPMKtuisJJwOwtdraQtIPW
-        IzU2I3A+eHhcxiKGKrfzThdRhmq+P3K4ept+BCH7G5aWAK9U
-X-Google-Smtp-Source: ABdhPJxfqyrYiupAU4Sv3epmYco9oZE6HZQzpJnitJwwU101DyMbRvGFr9CEcvMCkkHTDb4ui0CnKUjieFA6XOsHUDnZORUIcmYR
+Received: from EUR02-VE1-obe.outbound.protection.outlook.com (mail-ve1eur02on0616.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe06::616])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B722C014AC5
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 03:45:12 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=khbgQ4O5JEH7Dhc5bj3UDqVhgwNWJfjNCdJnDR6BaxfFqPcIvwghT9tRcYlTn524DPQQlXmaStT4xapFj1S/af/so+UJoieb7iqwuRdKYXdhLcGE18wdo1q9cdFqqMKsoAJZr/L9toldirWUWx7LJK5vcP7jZrKhrsF3Hc1wIwF+5Ygpk6jo96wJtB8w6d5KzIBY0CR+uCmvTNLxEOfjdf33d8bujnNrUHcHbrAhuRG2zLSOZonAn7lpMTasujz1fL4H8+VqDp0NSecyaw4FpH8NZAsozVVyuHG1sVs8e4O0kaXl7HP4K96CkPp1s6OyNGeza/yv5Iidq0oQyGVFoQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CF/oA4hF9nhQlOufwm1QIM6oQFHmnIfWYFHxXFWWQvw=;
+ b=JhjT825Dj9ASQGPxmLKY8TbWIc60D5UXwNfeDpnCbMw6j3//c1kmh+KEp9jXvANi3CReGumoEJIgLk1kMAZBkJpAGTT3Qy5X2mAbT3zmyKZcJ7hpSxu8H9IybRsHBt1no7nVmle5W/ApAJq4LPdK7BlxLnqFxFQt4WRdrTfxOkfAWfwOu48eYnkmoyEPlNH0N/cQ86OFm8og9bRPKVZtG2sPML1lhnWcweTJzH2w1YeImSsB8ygvHIVpzxwTY0BGojwO4bM2AVWRd6zCDMS2r37u4zZgAJALH8f+gPmVyq+6Sg/lBHpPQMtcx6pEAZr+VKVKiCRJzpqgN6dpos8fBg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CF/oA4hF9nhQlOufwm1QIM6oQFHmnIfWYFHxXFWWQvw=;
+ b=L+0FGQXWThdMzzr4lsU/kecmLMzl2Wv28Qurw2OSKPEUdCu00HtBZzwl1orugl+6fMtbNFok7k3xLfzIhX93AENkdiVDE4CIc7f0qKtGHrWy997sJDjRf1i9MZQfYMX4+dAYj8m6b0nR6S05DpTTwnEFsV8qgLHVJinH5GnPHio=
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
+ by DB8PR04MB5801.eurprd04.prod.outlook.com (2603:10a6:10:a8::23) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.20; Mon, 29 Jun
+ 2020 10:45:07 +0000
+Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::1dab:b68c:e028:acb3]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
+ ([fe80::1dab:b68c:e028:acb3%6]) with mapi id 15.20.3131.027; Mon, 29 Jun 2020
+ 10:45:07 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Stefan Agner <stefan.agner@toradex.com>,
+        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Leo Li <leoyang.li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Olof Johansson <olof@lixom.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH 1/3] reset: imx7: Support module build
+Thread-Topic: [PATCH 1/3] reset: imx7: Support module build
+Thread-Index: AQHWTf+gVil33+KDPEOiQKx/rvC/xajvZ8CAgAAAWbA=
+Date:   Mon, 29 Jun 2020 10:45:07 +0000
+Message-ID: <DB3PR0402MB3916292FC3FDE4F28AFEB5EBF56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+References: <1593425623-31810-1-git-send-email-Anson.Huang@nxp.com>
+ <CAK8P3a1pr8YbZMpSXg6o_UeDvaU=dDqfo45DudTASNcsxeg3kg@mail.gmail.com>
+In-Reply-To: <CAK8P3a1pr8YbZMpSXg6o_UeDvaU=dDqfo45DudTASNcsxeg3kg@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: arndb.de; dkim=none (message not signed)
+ header.d=none;arndb.de; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [183.192.13.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 6bf23ae4-7313-45d0-48a2-08d81c197d71
+x-ms-traffictypediagnostic: DB8PR04MB5801:
+x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB8PR04MB5801E07E7617D1DC008C99BCF56E0@DB8PR04MB5801.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 044968D9E1
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: c+/Y2NLookdSJcEdsESIA5syihS5Ss5XEH9ex/0P2rmo4GS89YLBO36FjQhIAVWZVTIOseUhdD67S5mqdCaU2JJRJ5+XSqPp5T0NlxjuEHypJfsCRQ+dUjxY5ppR2qXC3Wh0QkGEwgnCXWUqAH5VwKe21WsQT8LgOEYgb/+2+BR7aI9ki2cDsNumjFfPjdw6NQGppPQPonzj+k3UxOsKlvXBBplq7Dko7euCdMhq98v1fYHhmhMo/Bxud2L7wRdD3o42oe1ja3v1cO2Rw9gtdek73vItpsSsuAuXMgJMzLb2yUXTIarY2wEFYiVyePuk3j29piw0hIWMVNLxPZ0Z5g==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(136003)(346002)(396003)(39860400002)(376002)(6916009)(44832011)(7696005)(4326008)(54906003)(6506007)(53546011)(66446008)(66556008)(64756008)(66476007)(66946007)(55016002)(76116006)(7416002)(71200400001)(33656002)(9686003)(2906002)(83380400001)(316002)(478600001)(8936002)(52536014)(86362001)(5660300002)(8676002)(26005)(186003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: lZxTYlEAw+sk85o562FMNz7lUBc5HCd0SZXHG0b95NDx22UkCfUXAD4+jKs5qRSFWoVPlK59MlKiOpbUhbOT6TUYEeRq1q6nGj58Uh5Nw5kOKR+zydWAyiw44kt8CPCLHjg8/pBJakv1Bre53fXIaVfhCGwvvsnuCB1n7MMd8kOyux0X3MRl8cKHMr3Ka9lJk3TmGt9IivlROqPbMK1SZI8SlHdLncWyIf7Mq7IxyLI3aqp59YYtImRqjBf1RPLwYXvIjxN5jZv2r1Ksv4zp6qKjJUsS22zuXXCWyWFjM1ETvv9PI0jVboOi7aSQ+5cHLT6xTGDdUbzY/Yt48pJfsLdxYZbeQsJcUhDkXvqVzEMUAvKEXpSBw14zDuXKpWL2usfxBAdUNQMo82CNizpXsOb51+qsfH+lzdrLjGPeJI8vtvY7A9ALlhYYq6hoeA912ywUWSvJAgzWbMsEwrSBK3w67o1HeRtHurNyftwUD0EGPf+NEovpZ6KRylcfgtPe
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Received: by 2002:a92:cc06:: with SMTP id s6mr14862178ilp.86.1593406511062;
- Sun, 28 Jun 2020 21:55:11 -0700 (PDT)
-Date:   Sun, 28 Jun 2020 21:55:11 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000013259505a931dd26@google.com>
-Subject: KASAN: use-after-free Read in decode_session6
-From:   syzbot <syzbot+5be8aebb1b7dfa90ef31@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, herbert@gondor.apana.org.au, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        steffen.klassert@secunet.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DB3PR0402MB3916.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6bf23ae4-7313-45d0-48a2-08d81c197d71
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jun 2020 10:45:07.6951
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: +CMUpVTfEcr14T5cXbIs2XjFrXuloFNSvV/jcg905cBKzr8mJW+aeYLbGN8oRODrAus9SF1+ZLtagH4DNRYTPg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB5801
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    b08866f4 Merge branch 'net-atlantic-various-non-functional..
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=17096b55100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2172f4d0dbc37e27
-dashboard link: https://syzkaller.appspot.com/bug?extid=5be8aebb1b7dfa90ef31
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+5be8aebb1b7dfa90ef31@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: use-after-free in decode_session6+0xe7c/0x1580 net/xfrm/xfrm_policy.c:3389
-Read of size 1 at addr ffff88808f61c0ad by task syz-executor.3/13170
-
-CPU: 0 PID: 13170 Comm: syz-executor.3 Not tainted 5.8.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xae/0x436 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- decode_session6+0xe7c/0x1580 net/xfrm/xfrm_policy.c:3389
- __xfrm_decode_session+0x50/0xb0 net/xfrm/xfrm_policy.c:3481
- xfrm_decode_session include/net/xfrm.h:1135 [inline]
- vti6_tnl_xmit+0x40d/0x1c80 net/ipv6/ip6_vti.c:577
- __netdev_start_xmit include/linux/netdevice.h:4611 [inline]
- netdev_start_xmit include/linux/netdevice.h:4625 [inline]
- xmit_one net/core/dev.c:3562 [inline]
- dev_hard_start_xmit+0x193/0x950 net/core/dev.c:3578
- sch_direct_xmit+0x2ea/0xc00 net/sched/sch_generic.c:313
- qdisc_restart net/sched/sch_generic.c:376 [inline]
- __qdisc_run+0x4b9/0x1630 net/sched/sch_generic.c:384
- __dev_xmit_skb net/core/dev.c:3801 [inline]
- __dev_queue_xmit+0x1995/0x2d60 net/core/dev.c:4106
- neigh_output include/net/neighbour.h:509 [inline]
- ip6_finish_output2+0x8b6/0x17b0 net/ipv6/ip6_output.c:117
- __ip6_finish_output net/ipv6/ip6_output.c:143 [inline]
- __ip6_finish_output+0x447/0xab0 net/ipv6/ip6_output.c:128
- ip6_finish_output+0x34/0x1f0 net/ipv6/ip6_output.c:153
- NF_HOOK_COND include/linux/netfilter.h:296 [inline]
- ip6_output+0x1db/0x520 net/ipv6/ip6_output.c:176
- dst_output include/net/dst.h:435 [inline]
- NF_HOOK include/linux/netfilter.h:307 [inline]
- NF_HOOK include/linux/netfilter.h:301 [inline]
- mld_sendpack+0x92a/0xdb0 net/ipv6/mcast.c:1679
- mld_send_cr net/ipv6/mcast.c:1975 [inline]
- mld_ifc_timer_expire+0x60a/0xf10 net/ipv6/mcast.c:2474
- call_timer_fn+0x1ac/0x760 kernel/time/timer.c:1404
- expire_timers kernel/time/timer.c:1449 [inline]
- __run_timers.part.0+0x54c/0xa20 kernel/time/timer.c:1773
- __run_timers kernel/time/timer.c:1745 [inline]
- run_timer_softirq+0xae/0x1a0 kernel/time/timer.c:1786
- __do_softirq+0x34c/0xa60 kernel/softirq.c:292
- asm_call_on_stack+0xf/0x20 arch/x86/entry/entry_64.S:711
- </IRQ>
- __run_on_irqstack arch/x86/include/asm/irq_stack.h:22 [inline]
- run_on_irqstack_cond arch/x86/include/asm/irq_stack.h:48 [inline]
- do_softirq_own_stack+0x111/0x170 arch/x86/kernel/irq_64.c:77
- invoke_softirq kernel/softirq.c:387 [inline]
- __irq_exit_rcu kernel/softirq.c:417 [inline]
- irq_exit_rcu+0x229/0x270 kernel/softirq.c:429
- sysvec_apic_timer_interrupt+0x12d/0x220 arch/x86/kernel/apic/apic.c:1091
- asm_sysvec_apic_timer_interrupt+0x12/0x20 arch/x86/include/asm/idtentry.h:596
-RIP: 0010:ip_sk_use_pmtu include/net/ip.h:425 [inline]
-RIP: 0010:ip_setup_cork+0x171/0x910 net/ipv4/ip_output.c:1265
-Code: 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 0f b6 14 02 48 89 f8 83 e0 07 83 c0 03 38 d0 7c 08 84 d2 0f 85 fd 05 00 00 44 89 7b 04 <e8> 2a ce cc fa 49 8d bc 24 df 04 00 00 48 b8 00 00 00 00 00 fc ff
-RSP: 0018:ffffc90004b47260 EFLAGS: 00000246
-RAX: dffffc0000000000 RBX: ffffc90004b47568 RCX: ffffc9000ff09000
-RDX: 1ffff92000968e9a RSI: ffffffff86a680fc RDI: ffffc90004b474d0
-RBP: ffffc90004b474b8 R08: 0000000000000008 R09: 0000000000000008
-R10: 0000000000000000 R11: 0000000000000000 R12: ffff88809458a000
-R13: ffffc90004b47498 R14: ffff8880a1c86400 R15: 0000000000000000
- ip_make_skb+0x174/0x2a0 net/ipv4/ip_output.c:1628
- udp_sendmsg+0x1c2d/0x26c0 net/ipv4/udp.c:1176
- udpv6_sendmsg+0x14dd/0x2b90 net/ipv6/udp.c:1286
- inet6_sendmsg+0x99/0xe0 net/ipv6/af_inet6.c:638
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x331/0x810 net/socket.c:2352
- ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
- __sys_sendmmsg+0x195/0x480 net/socket.c:2496
- __do_sys_sendmmsg net/socket.c:2525 [inline]
- __se_sys_sendmmsg net/socket.c:2522 [inline]
- __x64_sys_sendmmsg+0x99/0x100 net/socket.c:2522
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x45cb19
-Code: Bad RIP value.
-RSP: 002b:00007f459bcffc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000133
-RAX: ffffffffffffffda RBX: 00000000004fd680 RCX: 000000000045cb19
-RDX: 00000000000005c3 RSI: 0000000020000240 RDI: 0000000000000003
-RBP: 000000000078bf00 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000902 R14: 00000000004cbde8 R15: 00007f459bd006d4
-
-Allocated by task 13105:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
- kmem_cache_alloc_trace+0x14f/0x2d0 mm/slab.c:3551
- kmalloc include/linux/slab.h:555 [inline]
- kzalloc include/linux/slab.h:669 [inline]
- kobject_uevent_env+0x227/0x12c0 lib/kobject_uevent.c:523
- netdev_queue_add_kobject net/core/net-sysfs.c:1554 [inline]
- netdev_queue_update_kobjects+0x2f9/0x3c0 net/core/net-sysfs.c:1588
- register_queue_kobjects net/core/net-sysfs.c:1649 [inline]
- netdev_register_kobject+0x2ee/0x3b0 net/core/net-sysfs.c:1892
- register_netdevice+0xd29/0x1540 net/core/dev.c:9522
- __tun_chr_ioctl.isra.0+0x2c09/0x4170 drivers/net/tun.c:2817
- vfs_ioctl fs/ioctl.c:48 [inline]
- ksys_ioctl+0x11a/0x180 fs/ioctl.c:753
- __do_sys_ioctl fs/ioctl.c:762 [inline]
- __se_sys_ioctl fs/ioctl.c:760 [inline]
- __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:760
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Freed by task 13110:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- kasan_set_free_info mm/kasan/common.c:316 [inline]
- __kasan_slab_free+0xf5/0x140 mm/kasan/common.c:455
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x103/0x2c0 mm/slab.c:3757
- call_usermodehelper_freeinfo kernel/umh.c:47 [inline]
- umh_complete+0x74/0x90 kernel/umh.c:62
- call_usermodehelper_exec_async+0x460/0x710 kernel/umh.c:122
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-
-The buggy address belongs to the object at ffff88808f61c000
- which belongs to the cache kmalloc-4k of size 4096
-The buggy address is located 173 bytes inside of
- 4096-byte region [ffff88808f61c000, ffff88808f61d000)
-The buggy address belongs to the page:
-page:ffffea00023d8700 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 head:ffffea00023d8700 order:1 compound_mapcount:0
-flags: 0xfffe0000010200(slab|head)
-raw: 00fffe0000010200 ffffea0001af9708 ffffea000140d688 ffff8880aa002000
-raw: 0000000000000000 ffff88808f61c000 0000000100000001 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff88808f61bf80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff88808f61c000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff88808f61c080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                  ^
- ffff88808f61c100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff88808f61c180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+DQoNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzNdIHJlc2V0OiBpbXg3OiBTdXBwb3J0IG1vZHVs
+ZSBidWlsZA0KPiANCj4gT24gTW9uLCBKdW4gMjksIDIwMjAgYXQgMTI6MjUgUE0gQW5zb24gSHVh
+bmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+IHdyb3RlOg0KPiA+DQo+ID4gQWRkIG1vZHVsZSBk
+ZXZpY2UgdGFibGUsIG1vZHVsZSBsaWNlbnNlIHRvIHN1cHBvcnQgbW9kdWxlIGJ1aWxkLg0KPiA+
+DQo+ID4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+
+ID4gLS0tDQo+ID4gIGRyaXZlcnMvcmVzZXQvS2NvbmZpZyAgICAgIHwgNCArKy0tDQo+ID4gIGRy
+aXZlcnMvcmVzZXQvcmVzZXQtaW14Ny5jIHwgNCArKystDQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwg
+NSBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvcmVzZXQvS2NvbmZpZyBiL2RyaXZlcnMvcmVzZXQvS2NvbmZpZyBpbmRleA0KPiA+IGQ5
+ZWZiZmQuLjAzM2FiNjAgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9yZXNldC9LY29uZmlnDQo+
+ID4gKysrIGIvZHJpdmVycy9yZXNldC9LY29uZmlnDQo+ID4gQEAgLTY1LDkgKzY1LDkgQEAgY29u
+ZmlnIFJFU0VUX0hTREsNCj4gPiAgICAgICAgICAgVGhpcyBlbmFibGVzIHRoZSByZXNldCBjb250
+cm9sbGVyIGRyaXZlciBmb3IgSFNESyBib2FyZC4NCj4gPg0KPiA+ICBjb25maWcgUkVTRVRfSU1Y
+Nw0KPiA+IC0gICAgICAgYm9vbCAiaS5NWDcvOCBSZXNldCBEcml2ZXIiIGlmIENPTVBJTEVfVEVT
+VA0KPiA+ICsgICAgICAgdHJpc3RhdGUgImkuTVg3LzggUmVzZXQgRHJpdmVyIg0KPiA+ICAgICAg
+ICAgZGVwZW5kcyBvbiBIQVNfSU9NRU0NCj4gPiAtICAgICAgIGRlZmF1bHQgU09DX0lNWDdEIHx8
+IChBUk02NCAmJiBBUkNIX01YQykNCj4gPiArICAgICAgIGRlcGVuZHMgb24gU09DX0lNWDdEIHx8
+IChBUk02NCAmJiBBUkNIX01YQykgfHwNCj4gQ09NUElMRV9URVNUDQo+ID4gICAgICAgICBzZWxl
+Y3QgTUZEX1NZU0NPTg0KPiANCj4gWW91IGFyZSBkcm9wcGluZyB0aGUgJ2RlZmF1bHQnIGxpbmUs
+IHNvIHRoZSBkcml2ZXIgaXMgbm93IGRpc2FibGVkIGluIGEgZGVmY29uZmlnDQo+IGJ1aWxkLCB3
+aGljaCBpcyBub3QgbWVudGlvbmVkIGluIHRoZSBwYXRjaCBkZXNjcmlwdGlvbi4NCj4gDQo+IE1h
+eWJlIG1ha2UgaXQgJ2RlZmF1bHQgbSc/DQo+IA0KPiBjb25maWcgUkVTRVRfSU1YNw0KPiAgICAg
+ICAgdHJpc3RhdGUgImkuTVg3LzggUmVzZXQgRHJpdmVyIg0KPiAgICAgICAgZGVwZW5kcyBvbiBI
+QVNfSU9NRU0NCj4gICAgICAgIGRlcGVuZHMgb24gU09DX0lNWDdEIHx8IChBUk02NCAmJiBBUkNI
+X01YQykgfHwNCj4gQ09NUElMRV9URVNUDQo+ICAgICAgICBkZWZhdWx0IG0gaWYgKFNPQ19JTVg3
+RCB8fCAoQVJNNjQgJiYgQVJDSF9NWEMpKQ0KPiAgICAgICAgc2VsZWN0IE1GRF9TWVNDT04NCj4g
+DQo+ID4gQEAgLTM5NSwzICszOTYsNCBAQCBzdGF0aWMgc3RydWN0IHBsYXRmb3JtX2RyaXZlciBp
+bXg3X3Jlc2V0X2RyaXZlciA9IHsNCj4gPiAgICAgICAgIH0sDQo+ID4gIH07DQo+ID4gIGJ1aWx0
+aW5fcGxhdGZvcm1fZHJpdmVyKGlteDdfcmVzZXRfZHJpdmVyKTsNCj4gPiArTU9EVUxFX0xJQ0VO
+U0UoIkdQTCB2MiIpOw0KPiANCj4gR2VuZXJhbGx5IHNwZWFraW5nOiB3aGVuIHlvdSBhZGQgYSBN
+T0RVTEVfTElDRU5TRSB0YWcsIHBsZWFzZSBhbHNvIGFkZA0KPiBNT0RVTEVfQVVUSE9SIGFuZCBN
+T0RVTEVfREVTQ1JJUFRJT04uDQo+IA0KDQpPSywgd2lsbCBhZGQgdGhlbSBpbiBWMi4NCg0KPiBU
+aGUgJ2J1aWx0aW5fcGxhdGZvcm1fZHJpdmVyKCknIHNob3VsZCB3b3JrIGNvcnJlY3RseSBidXQg
+cHJldmVudCB1bmxvYWRpbmcNCj4gdGhlIG1vZHVsZS4gSWRlYWxseSBwbGVhc2UgY2hhbmdlZCB0
+byAnbW9kdWxlX3BsYXRmb3JtX2RyaXZlcigpJyBhbmQgYWRkDQo+IGEgLnJlbW92ZSBmdW5jdGlv
+biBmb3IgdGhlIHBsYXRmb3JtX2RyaXZlci4NCj4gDQoNClRoZSByZXNldCBkcml2ZXIgbm9ybWFs
+bHkgd29uJ3QgYmUgcmVtb3ZlZCBzaW5jZSBpdCBpcyBuZWNlc3NhcnkgZm9yIGRyaXZlcnMgd2hp
+Y2gNCm5lZWQgaXQsIGl0IGlzIGp1c3QgZm9yIEFuZHJvaWQgR0tJIHN1cHBvcnQsIGluIHRoaXMg
+Y2FzZSwgZG8gd2UgbmVlZCB0byBjaGFuZ2UgaXQgdG8NCm1vZHVsZV9wbGF0Zm9ybV9kcml2ZXIo
+KT8gDQoNClRoYW5rcywNCkFuc29uDQo=
