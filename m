@@ -4,62 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDA0C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73CF3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B1D9206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:35:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47E59206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:35:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593459309;
-	bh=Jofg5uL56/LdgjP5jFN/MLCW+s24eX2YwTHGnd9iqk4=;
+	s=default; t=1593459315;
+	bh=VS1CPfZGGl3IXFs3WZontZttp1TBg5R/bIFBI+ppRM4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rih2rcbmviqTReR1oQ5aKS9kqjwJWrkgCdWgJGTkCaWEM4StQZx3bxSbe5bt008Wo
-	 uY7BDHyz1Pi3/FTX/42RXjxyxjFhEXFStCLet2sD3f0K0lvGSR4i2TvepVvhAugFk9
-	 C1KtEoRFT2fWhW+k9Xv/9fbkLh0s0VDMgxcTloHA=
+	b=YCOdBJVIDhfrJJkdQGb4IzIggft8RbV69HjcU7+eP1733pc2yIvCT/uRd7OUbTttI
+	 tS3y6WRRn8Sk1uSZ3rroYkQGJ07M9DUmHNxig+fE+bv0kr6DTneSPYfj1fxGqDjyoU
+	 odBnRgpaAUnYQTROPFfvEVJGE8pPnBilj2fDhWjQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733133AbgF2TbU (ORCPT
+        id S1733122AbgF2TbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:31:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40572 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:31:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733022AbgF2Taf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:30:35 -0400
+        id S1732687AbgF2Tad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:30:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA97C2527E;
-        Mon, 29 Jun 2020 15:36:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 48D13252E6;
+        Mon, 29 Jun 2020 15:38:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444988;
-        bh=Jofg5uL56/LdgjP5jFN/MLCW+s24eX2YwTHGnd9iqk4=;
+        s=default; t=1593445116;
+        bh=VS1CPfZGGl3IXFs3WZontZttp1TBg5R/bIFBI+ppRM4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xI67r9+n7FZjzm7mYPlfkHzmUXYG0kAs4Wl9cNV5+8Eah1yEQFv4l9hoqALu7JTpw
-         71SxhLlYBgW7Qd3XEKNFIEqeDPSeVBfX4P7wGmSalmSXxCThzOmqyZk0I/7Eu1a8Nw
-         J+fbMVAT8F/HduGN6LBBKHUPanxSrv1heVBNujgI=
+        b=rcYFLq2mFBehsid0JInu6MTBf6IJiaRHNOi2XtfS1rdIKBzemdGE3drAdXmRQJ/Sd
+         mIMatbU/65TbiDC4BCneLbiZ1zgjdTVj8lhUnTrzFdskTwlzZnr+ymw9/0ssW1sSBJ
+         Obn7pKr7jVKC344PP1Ms2Z5lOjad1qvWUd4hnljA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Juri Lelli <juri.lelli@redhat.com>,
-        syzbot+5ac8bac25f95e8b221e7@syzkaller.appspotmail.com,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Daniel Wagner <dwagner@suse.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 088/131] sched/deadline: Initialize ->dl_boosted
-Date:   Mon, 29 Jun 2020 11:34:19 -0400
-Message-Id: <20200629153502.2494656-89-sashal@kernel.org>
+Cc:     Taehee Yoo <ap420073@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.14 22/78] net: core: reduce recursion limit value
+Date:   Mon, 29 Jun 2020 11:37:10 -0400
+Message-Id: <20200629153806.2494953-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
-References: <20200629153502.2494656-1-sashal@kernel.org>
+In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
+References: <20200629153806.2494953-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.19.y
+X-KernelTest-Branch: linux-4.14.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.19.131-rc1
-X-KernelTest-Deadline: 2020-07-01T15:34+00:00
+X-KernelTest-Version: 4.14.186-rc1
+X-KernelTest-Deadline: 2020-07-01T15:38+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -68,46 +65,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juri Lelli <juri.lelli@redhat.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit ce9bc3b27f2a21a7969b41ffb04df8cf61bd1592 ]
+[ Upstream commit fb7861d14c8d7edac65b2fcb6e8031cb138457b2 ]
 
-syzbot reported the following warning triggered via SYSC_sched_setattr():
+In the current code, ->ndo_start_xmit() can be executed recursively only
+10 times because of stack memory.
+But, in the case of the vxlan, 10 recursion limit value results in
+a stack overflow.
+In the current code, the nested interface is limited by 8 depth.
+There is no critical reason that the recursion limitation value should
+be 10.
+So, it would be good to be the same value with the limitation value of
+nesting interface depth.
 
-  WARNING: CPU: 0 PID: 6973 at kernel/sched/deadline.c:593 setup_new_dl_entity /kernel/sched/deadline.c:594 [inline]
-  WARNING: CPU: 0 PID: 6973 at kernel/sched/deadline.c:593 enqueue_dl_entity /kernel/sched/deadline.c:1370 [inline]
-  WARNING: CPU: 0 PID: 6973 at kernel/sched/deadline.c:593 enqueue_task_dl+0x1c17/0x2ba0 /kernel/sched/deadline.c:1441
+Test commands:
+    ip link add vxlan10 type vxlan vni 10 dstport 4789 srcport 4789 4789
+    ip link set vxlan10 up
+    ip a a 192.168.10.1/24 dev vxlan10
+    ip n a 192.168.10.2 dev vxlan10 lladdr fc:22:33:44:55:66 nud permanent
 
-This happens because the ->dl_boosted flag is currently not initialized by
-__dl_clear_params() (unlike the other flags) and setup_new_dl_entity()
-rightfully complains about it.
+    for i in {9..0}
+    do
+        let A=$i+1
+	ip link add vxlan$i type vxlan vni $i dstport 4789 srcport 4789 4789
+	ip link set vxlan$i up
+	ip a a 192.168.$i.1/24 dev vxlan$i
+	ip n a 192.168.$i.2 dev vxlan$i lladdr fc:22:33:44:55:66 nud permanent
+	bridge fdb add fc:22:33:44:55:66 dev vxlan$A dst 192.168.$i.2 self
+    done
+    hping3 192.168.10.2 -2 -d 60000
 
-Initialize dl_boosted to 0.
+Splat looks like:
+[  103.814237][ T1127] =============================================================================
+[  103.871955][ T1127] BUG kmalloc-2k (Tainted: G    B            ): Padding overwritten. 0x00000000897a2e4f-0x000
+[  103.873187][ T1127] -----------------------------------------------------------------------------
+[  103.873187][ T1127]
+[  103.874252][ T1127] INFO: Slab 0x000000005cccc724 objects=5 used=5 fp=0x0000000000000000 flags=0x10000000001020
+[  103.881323][ T1127] CPU: 3 PID: 1127 Comm: hping3 Tainted: G    B             5.7.0+ #575
+[  103.882131][ T1127] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+[  103.883006][ T1127] Call Trace:
+[  103.883324][ T1127]  dump_stack+0x96/0xdb
+[  103.883716][ T1127]  slab_err+0xad/0xd0
+[  103.884106][ T1127]  ? _raw_spin_unlock+0x1f/0x30
+[  103.884620][ T1127]  ? get_partial_node.isra.78+0x140/0x360
+[  103.885214][ T1127]  slab_pad_check.part.53+0xf7/0x160
+[  103.885769][ T1127]  ? pskb_expand_head+0x110/0xe10
+[  103.886316][ T1127]  check_slab+0x97/0xb0
+[  103.886763][ T1127]  alloc_debug_processing+0x84/0x1a0
+[  103.887308][ T1127]  ___slab_alloc+0x5a5/0x630
+[  103.887765][ T1127]  ? pskb_expand_head+0x110/0xe10
+[  103.888265][ T1127]  ? lock_downgrade+0x730/0x730
+[  103.888762][ T1127]  ? pskb_expand_head+0x110/0xe10
+[  103.889244][ T1127]  ? __slab_alloc+0x3e/0x80
+[  103.889675][ T1127]  __slab_alloc+0x3e/0x80
+[  103.890108][ T1127]  __kmalloc_node_track_caller+0xc7/0x420
+[ ... ]
 
-Fixes: 2d3d891d3344 ("sched/deadline: Add SCHED_DEADLINE inheritance logic")
-Reported-by: syzbot+5ac8bac25f95e8b221e7@syzkaller.appspotmail.com
-Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Tested-by: Daniel Wagner <dwagner@suse.de>
-Link: https://lkml.kernel.org/r/20200617072919.818409-1-juri.lelli@redhat.com
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 11a766ce915f ("net: Increase xmit RECURSION_LIMIT to 10.")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- kernel/sched/deadline.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/netdevice.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index ebec37cb3be9a..8aecfb143859d 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -2688,6 +2688,7 @@ void __dl_clear_params(struct task_struct *p)
- 	dl_se->dl_bw			= 0;
- 	dl_se->dl_density		= 0;
+diff --git a/include/linux/netdevice.h b/include/linux/netdevice.h
+index 31fc54757bf2e..3512c337a4a6b 100644
+--- a/include/linux/netdevice.h
++++ b/include/linux/netdevice.h
+@@ -2449,7 +2449,7 @@ void synchronize_net(void);
+ int init_dummy_netdev(struct net_device *dev);
  
-+	dl_se->dl_boosted		= 0;
- 	dl_se->dl_throttled		= 0;
- 	dl_se->dl_yielded		= 0;
- 	dl_se->dl_non_contending	= 0;
+ DECLARE_PER_CPU(int, xmit_recursion);
+-#define XMIT_RECURSION_LIMIT	10
++#define XMIT_RECURSION_LIMIT	8
+ 
+ static inline int dev_recursion_level(void)
+ {
 -- 
 2.25.1
 
