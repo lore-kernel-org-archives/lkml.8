@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC33C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC520C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB0E82076C
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B098720760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467455;
-	bh=HQUvo0mlc9rK+gcTau9SRds3qCJmeoUzrohT/q4RGEk=;
+	s=default; t=1593467458;
+	bh=hzkKtFgSEYFIiPa3IGNswtmW/A5ZusfTPARTOvKVHxU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b0QstQfxnv1wCecaez3h5xMlzP/CjqwZxTplZ0zhCs9EFvwmCm9x8TKFaEggZLCr+
-	 rZggz7I1Oz70UiJIqqfsIO6thLwIiW6eRGrgi9UTEMZV6laQbUapIXDqu0SE2kTgXH
-	 jo8/dcUVCXCZ2Dhv7A757rxmtKJxmkqKpt/7gJeA=
+	b=pWpG2a9DnK9oCDjHxa0VaJmF5c89dU9so6ms4N85+f0L1YU0mO03cyERxPi2SZXLR
+	 cjNxpvaeZmB4VjvWYKTgkst37CjUefILuIzaKtXhx0Zc4e/mB5mWg9Guf2w5YMueTl
+	 0ldttMOw9da0OWhzljMdhjCk8A8vFEN/miZGx1uk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404192AbgF2Vuy (ORCPT
+        id S2404509AbgF2Vu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:50:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56796 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:50:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726679AbgF2Sfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726678AbgF2Sfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8AC4E24764;
-        Mon, 29 Jun 2020 15:21:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C1B62465D;
+        Mon, 29 Jun 2020 15:19:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444080;
-        bh=HQUvo0mlc9rK+gcTau9SRds3qCJmeoUzrohT/q4RGEk=;
+        s=default; t=1593443972;
+        bh=hzkKtFgSEYFIiPa3IGNswtmW/A5ZusfTPARTOvKVHxU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pg+7Ey24USpSefxMpXBpF7n5vwlU1nIv3izzB8C2ZS7o/bSHLHh8r8RDSKjrCHEqf
-         f0vumDrIzAiGx7GQ7ygUcktw/UcLC4T2ZbMRUNjM1JTsfWXHH6OHaAheTkmkj3n5Rd
-         iMKeFcSIJCuY0FyA5+PZ9PLfzW/qbw+jShn+oY4s=
+        b=hhKqkA7LEVgpoKrNg7rONAGPyO9reJAwZw0WlqDZ1dxNWBndVQWrVRdJyyoIL2hjY
+         E3q37Oqa0EVQJgu+Gd7EVc4ObSh+QxrIwx98y7FMijEY9aXTDp81aEys1akFGzY4TT
+         z9RWv3lI1dtqWhENc5NSaTC7RX6qh3kDU1AQCi8Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Falcon <tlfalcon@linux.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 189/265] ibmvnic: Harden device login requests
-Date:   Mon, 29 Jun 2020 11:17:02 -0400
-Message-Id: <20200629151818.2493727-190-sashal@kernel.org>
+Cc:     Macpaul Lin <macpaul.lin@mediatek.com>,
+        Chihhao Chen <chihhao.chen@mediatek.com>,
+        Takashi Iwai <tiwai@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 076/265] ALSA: usb-audio: add quirk for Samsung USBC Headset (AKG)
+Date:   Mon, 29 Jun 2020 11:15:09 -0400
+Message-Id: <20200629151818.2493727-77-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -65,72 +66,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Falcon <tlfalcon@linux.ibm.com>
+From: Macpaul Lin <macpaul.lin@mediatek.com>
 
-[ Upstream commit dff515a3e71dc8ab3b9dcc2e23a9b5fca88b3c18 ]
+commit a32a1fc99807244d920d274adc46ba04b538cc8a upstream.
 
-The VNIC driver's "login" command sequence is the final step
-in the driver's initialization process with device firmware,
-confirming the available device queue resources to be utilized
-by the driver. Under high system load, firmware may not respond
-to the request in a timely manner or may abort the request. In
-such cases, the driver should reattempt the login command
-sequence. In case of a device error, the number of retries
-is bounded.
+We've found Samsung USBC Headset (AKG) (VID: 0x04e8, PID: 0xa051)
+need a tiny delay after each class compliant request.
+Otherwise the device might not be able to be recognized each times.
 
-Signed-off-by: Thomas Falcon <tlfalcon@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Chihhao Chen <chihhao.chen@mediatek.com>
+Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/1592910203-24035-1-git-send-email-macpaul.lin@mediatek.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/ibm/ibmvnic.c | 21 +++++++++++++++++----
- 1 file changed, 17 insertions(+), 4 deletions(-)
+ sound/usb/quirks.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/net/ethernet/ibm/ibmvnic.c b/drivers/net/ethernet/ibm/ibmvnic.c
-index 1b4d04e4474bb..2baf7b3ff4cbf 100644
---- a/drivers/net/ethernet/ibm/ibmvnic.c
-+++ b/drivers/net/ethernet/ibm/ibmvnic.c
-@@ -842,12 +842,13 @@ static int ibmvnic_login(struct net_device *netdev)
- 	struct ibmvnic_adapter *adapter = netdev_priv(netdev);
- 	unsigned long timeout = msecs_to_jiffies(30000);
- 	int retry_count = 0;
-+	int retries = 10;
- 	bool retry;
- 	int rc;
+diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
+index b5e9fe0486189..d7d900ebcf37f 100644
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -1647,6 +1647,14 @@ void snd_usb_ctl_msg_quirk(struct usb_device *dev, unsigned int pipe,
+ 	     chip->usb_id == USB_ID(0x0951, 0x16ad)) &&
+ 	    (requesttype & USB_TYPE_MASK) == USB_TYPE_CLASS)
+ 		usleep_range(1000, 2000);
++
++	/*
++	 * Samsung USBC Headset (AKG) need a tiny delay after each
++	 * class compliant request. (Model number: AAM625R or AAM627R)
++	 */
++	if (chip->usb_id == USB_ID(0x04e8, 0xa051) &&
++	    (requesttype & USB_TYPE_MASK) == USB_TYPE_CLASS)
++		usleep_range(5000, 6000);
+ }
  
- 	do {
- 		retry = false;
--		if (retry_count > IBMVNIC_MAX_QUEUES) {
-+		if (retry_count > retries) {
- 			netdev_warn(netdev, "Login attempts exceeded\n");
- 			return -1;
- 		}
-@@ -862,11 +863,23 @@ static int ibmvnic_login(struct net_device *netdev)
- 
- 		if (!wait_for_completion_timeout(&adapter->init_done,
- 						 timeout)) {
--			netdev_warn(netdev, "Login timed out\n");
--			return -1;
-+			netdev_warn(netdev, "Login timed out, retrying...\n");
-+			retry = true;
-+			adapter->init_done_rc = 0;
-+			retry_count++;
-+			continue;
- 		}
- 
--		if (adapter->init_done_rc == PARTIALSUCCESS) {
-+		if (adapter->init_done_rc == ABORTED) {
-+			netdev_warn(netdev, "Login aborted, retrying...\n");
-+			retry = true;
-+			adapter->init_done_rc = 0;
-+			retry_count++;
-+			/* FW or device may be busy, so
-+			 * wait a bit before retrying login
-+			 */
-+			msleep(500);
-+		} else if (adapter->init_done_rc == PARTIALSUCCESS) {
- 			retry_count++;
- 			release_sub_crqs(adapter, 1);
- 
+ /*
 -- 
 2.25.1
 
