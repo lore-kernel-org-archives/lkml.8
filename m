@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51F17C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7697C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3852222281
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:36:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8C5D21D81
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:36:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593455774;
-	bh=7VlxaRnLEAXuzxc1DqjOaN93RU3LWp7PGuQKVENWRGI=;
+	s=default; t=1593455777;
+	bh=3xpw2/nluRUYHk+2t0LVKeUAmmf5nv6Rgbkmmm9xDYs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jrHdnz0g45z3FaEQq/vLmeyBfbNVQmnBudK36exm3qKf5HG4LUj/CdO20PjzEwXOj
-	 cRLUXUHuaaNSNkvafQBhmmkDB+mNL/YFTTaexSSdhPMEeqogmtAz74zKrCygyaNiGP
-	 irdy1FcKnCcGVQK0+SrTIPLgbWpk/cTMJvKHRg9g=
+	b=qHEWnVBm3ZHwaeSr2bowz8uqCFJiDF8Hfij35G76lYwqDqXazVfp5PKSw4lHtJUkp
+	 Ei0+ZKJW3LDO9VSX8IqkM6jlFhQUKW+YttlxspjYGnrXwINWGk7ljO9ZN2/FMf9Vss
+	 E7zNZ/23GEJRKjF7SsERrShf4vuYv5pjMnkn1yeQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726082AbgF2SgM (ORCPT
+        id S1726947AbgF2SgO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:36:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56892 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 14:36:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726632AbgF2Sfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:39 -0400
+        id S1726667AbgF2Sfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35CA02468A;
-        Mon, 29 Jun 2020 15:19:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4DCC246BC;
+        Mon, 29 Jun 2020 15:20:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443986;
-        bh=7VlxaRnLEAXuzxc1DqjOaN93RU3LWp7PGuQKVENWRGI=;
+        s=default; t=1593444013;
+        bh=3xpw2/nluRUYHk+2t0LVKeUAmmf5nv6Rgbkmmm9xDYs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hjb/P3hWbOp5rp0qejC78C+JuRJqvFcJicEYiIh1m073CDzK3quy6GUQ4ZfpD46t5
-         tSQsDqW2CIK2nf7QJ9I0FDWHZ+FxXhXynL7CvgQtO8IZENDuxEzPXzgIE1Z7rMbJBi
-         0IrY9ESK8HCSB5fIHTJN8Gleu46CUggJZoyO3VRI=
+        b=bP1/o96mXp/Uc7ZP4VSsoWcTKlHc087+Mlomd+Y9M2C3FE3aEVi4fyZowA5ZxxDzD
+         Fxco22WenHiDN4FApLPh5Ees0IaEG3xMfaHrAFj5vieexVFOpiRyaqDVFlFAMycJWb
+         7JOzyvTbYo/ylXAPdEjFaA7R7eLfCWAZ8/wW5WqI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zheng Bin <zhengbin13@huawei.com>, Christoph Hellwig <hch@lst.de>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 090/265] loop: replace kill_bdev with invalidate_bdev
-Date:   Mon, 29 Jun 2020 11:15:23 -0400
-Message-Id: <20200629151818.2493727-91-sashal@kernel.org>
+Cc:     Gaurav Singh <gaurav1086@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 119/265] bpf, xdp, samples: Fix null pointer dereference in *_user code
+Date:   Mon, 29 Jun 2020 11:15:52 -0400
+Message-Id: <20200629151818.2493727-120-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -66,76 +67,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zheng Bin <zhengbin13@huawei.com>
+From: Gaurav Singh <gaurav1086@gmail.com>
 
-[ Upstream commit f4bd34b139a3fa2808c4205f12714c65e1548c6c ]
+[ Upstream commit 6903cdae9f9f08d61e49c16cbef11c293e33a615 ]
 
-When a filesystem is mounted on a loop device and on a loop ioctl
-LOOP_SET_STATUS64, because of kill_bdev, buffer_head mappings are getting
-destroyed.
-kill_bdev
-  truncate_inode_pages
-    truncate_inode_pages_range
-      do_invalidatepage
-        block_invalidatepage
-          discard_buffer  -->clear BH_Mapped flag
+Memset on the pointer right after malloc can cause a NULL pointer
+deference if it failed to allocate memory. A simple fix is to
+replace malloc()/memset() pair with a simple call to calloc().
 
-sb_bread
-  __bread_gfp
-  bh = __getblk_gfp
-  -->discard_buffer clear BH_Mapped flag
-  __bread_slow
-    submit_bh
-      submit_bh_wbc
-        BUG_ON(!buffer_mapped(bh))  --> hit this BUG_ON
-
-Fixes: 5db470e229e2 ("loop: drop caches if offset or block_size are changed")
-Signed-off-by: Zheng Bin <zhengbin13@huawei.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 0fca931a6f21 ("samples/bpf: program demonstrating access to xdp_rxq_info")
+Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
+Acked-by: John Fastabend <john.fastabend@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/block/loop.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ samples/bpf/xdp_monitor_user.c      |  8 ++------
+ samples/bpf/xdp_redirect_cpu_user.c |  7 ++-----
+ samples/bpf/xdp_rxq_info_user.c     | 13 +++----------
+ 3 files changed, 7 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index da693e6a834e5..418bb4621255a 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -1289,7 +1289,7 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
- 	if (lo->lo_offset != info->lo_offset ||
- 	    lo->lo_sizelimit != info->lo_sizelimit) {
- 		sync_blockdev(lo->lo_device);
--		kill_bdev(lo->lo_device);
-+		invalidate_bdev(lo->lo_device);
+diff --git a/samples/bpf/xdp_monitor_user.c b/samples/bpf/xdp_monitor_user.c
+index dd558cbb23094..ef53b93db5732 100644
+--- a/samples/bpf/xdp_monitor_user.c
++++ b/samples/bpf/xdp_monitor_user.c
+@@ -509,11 +509,8 @@ static void *alloc_rec_per_cpu(int record_size)
+ {
+ 	unsigned int nr_cpus = bpf_num_possible_cpus();
+ 	void *array;
+-	size_t size;
+ 
+-	size = record_size * nr_cpus;
+-	array = malloc(size);
+-	memset(array, 0, size);
++	array = calloc(nr_cpus, record_size);
+ 	if (!array) {
+ 		fprintf(stderr, "Mem alloc error (nr_cpus:%u)\n", nr_cpus);
+ 		exit(EXIT_FAIL_MEM);
+@@ -528,8 +525,7 @@ static struct stats_record *alloc_stats_record(void)
+ 	int i;
+ 
+ 	/* Alloc main stats_record structure */
+-	rec = malloc(sizeof(*rec));
+-	memset(rec, 0, sizeof(*rec));
++	rec = calloc(1, sizeof(*rec));
+ 	if (!rec) {
+ 		fprintf(stderr, "Mem alloc error\n");
+ 		exit(EXIT_FAIL_MEM);
+diff --git a/samples/bpf/xdp_redirect_cpu_user.c b/samples/bpf/xdp_redirect_cpu_user.c
+index 9b8f21abeac47..e86fed5cdb92c 100644
+--- a/samples/bpf/xdp_redirect_cpu_user.c
++++ b/samples/bpf/xdp_redirect_cpu_user.c
+@@ -210,11 +210,8 @@ static struct datarec *alloc_record_per_cpu(void)
+ {
+ 	unsigned int nr_cpus = bpf_num_possible_cpus();
+ 	struct datarec *array;
+-	size_t size;
+ 
+-	size = sizeof(struct datarec) * nr_cpus;
+-	array = malloc(size);
+-	memset(array, 0, size);
++	array = calloc(nr_cpus, sizeof(struct datarec));
+ 	if (!array) {
+ 		fprintf(stderr, "Mem alloc error (nr_cpus:%u)\n", nr_cpus);
+ 		exit(EXIT_FAIL_MEM);
+@@ -229,11 +226,11 @@ static struct stats_record *alloc_stats_record(void)
+ 
+ 	size = sizeof(*rec) + n_cpus * sizeof(struct record);
+ 	rec = malloc(size);
+-	memset(rec, 0, size);
+ 	if (!rec) {
+ 		fprintf(stderr, "Mem alloc error\n");
+ 		exit(EXIT_FAIL_MEM);
  	}
++	memset(rec, 0, size);
+ 	rec->rx_cnt.cpu    = alloc_record_per_cpu();
+ 	rec->redir_err.cpu = alloc_record_per_cpu();
+ 	rec->kthread.cpu   = alloc_record_per_cpu();
+diff --git a/samples/bpf/xdp_rxq_info_user.c b/samples/bpf/xdp_rxq_info_user.c
+index 4fe47502ebed4..caa4e7ffcfc7b 100644
+--- a/samples/bpf/xdp_rxq_info_user.c
++++ b/samples/bpf/xdp_rxq_info_user.c
+@@ -198,11 +198,8 @@ static struct datarec *alloc_record_per_cpu(void)
+ {
+ 	unsigned int nr_cpus = bpf_num_possible_cpus();
+ 	struct datarec *array;
+-	size_t size;
  
- 	/* I/O need to be drained during transfer transition */
-@@ -1320,7 +1320,7 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
+-	size = sizeof(struct datarec) * nr_cpus;
+-	array = malloc(size);
+-	memset(array, 0, size);
++	array = calloc(nr_cpus, sizeof(struct datarec));
+ 	if (!array) {
+ 		fprintf(stderr, "Mem alloc error (nr_cpus:%u)\n", nr_cpus);
+ 		exit(EXIT_FAIL_MEM);
+@@ -214,11 +211,8 @@ static struct record *alloc_record_per_rxq(void)
+ {
+ 	unsigned int nr_rxqs = bpf_map__def(rx_queue_index_map)->max_entries;
+ 	struct record *array;
+-	size_t size;
  
- 	if (lo->lo_offset != info->lo_offset ||
- 	    lo->lo_sizelimit != info->lo_sizelimit) {
--		/* kill_bdev should have truncated all the pages */
-+		/* invalidate_bdev should have truncated all the pages */
- 		if (lo->lo_device->bd_inode->i_mapping->nrpages) {
- 			err = -EAGAIN;
- 			pr_warn("%s: loop%d (%s) has still dirty pages (nrpages=%lu)\n",
-@@ -1565,11 +1565,11 @@ static int loop_set_block_size(struct loop_device *lo, unsigned long arg)
- 		return 0;
+-	size = sizeof(struct record) * nr_rxqs;
+-	array = malloc(size);
+-	memset(array, 0, size);
++	array = calloc(nr_rxqs, sizeof(struct record));
+ 	if (!array) {
+ 		fprintf(stderr, "Mem alloc error (nr_rxqs:%u)\n", nr_rxqs);
+ 		exit(EXIT_FAIL_MEM);
+@@ -232,8 +226,7 @@ static struct stats_record *alloc_stats_record(void)
+ 	struct stats_record *rec;
+ 	int i;
  
- 	sync_blockdev(lo->lo_device);
--	kill_bdev(lo->lo_device);
-+	invalidate_bdev(lo->lo_device);
- 
- 	blk_mq_freeze_queue(lo->lo_queue);
- 
--	/* kill_bdev should have truncated all the pages */
-+	/* invalidate_bdev should have truncated all the pages */
- 	if (lo->lo_device->bd_inode->i_mapping->nrpages) {
- 		err = -EAGAIN;
- 		pr_warn("%s: loop%d (%s) has still dirty pages (nrpages=%lu)\n",
+-	rec = malloc(sizeof(*rec));
+-	memset(rec, 0, sizeof(*rec));
++	rec = calloc(1, sizeof(struct stats_record));
+ 	if (!rec) {
+ 		fprintf(stderr, "Mem alloc error\n");
+ 		exit(EXIT_FAIL_MEM);
 -- 
 2.25.1
 
