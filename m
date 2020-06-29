@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 262B9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:01:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A537C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04E4820760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:01:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1ACDC20780
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:01:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468102;
-	bh=NZBpvXR0toR/Aek7Lz0RRaujuuhv5ZM2HJX/D3SBmPo=;
+	s=default; t=1593468107;
+	bh=+kFvMppVPhbb1Jbt3yVA+kAco1Bh+AKTYk60GeSAHeo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bdr56uJasubkGNmOEuGtrwqdQPUGCEOpHl1qM/CvldPgxf0sY1OdoTuaC0G0j+mIe
-	 YflAej/KI+gFxquMNHyheAiLnHcXzbY7CCk/8bZCwIfLDaYyKeelRcqVTuvBMO5Z+b
-	 V5M2L8a4GnVjORE/1R18DpDloX/5d1Hc0y824UB0=
+	b=XNuLimciwV/Bxlplmz21rRDC5SOBH0H5Pn1RyNzIMmY6QaP6ivG5MI/svmF1kDYZx
+	 JqOh+x7Js8X/TLbTzAOkj2ESpoDOggSP9PGol/c/cqM7Gp2QCFrkDJ6cmjOBId32U6
+	 /Q/Ia8lo/UnTosQ75JoY/noD5v4AzQapdcj9J5O8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731982AbgF2WBk (ORCPT
+        id S2387442AbgF2WBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:01:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56904 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:01:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726245AbgF2SfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726251AbgF2SfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26D3E246B9;
-        Mon, 29 Jun 2020 15:20:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B8A3246EE;
+        Mon, 29 Jun 2020 15:20:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444007;
-        bh=NZBpvXR0toR/Aek7Lz0RRaujuuhv5ZM2HJX/D3SBmPo=;
+        s=default; t=1593444034;
+        bh=+kFvMppVPhbb1Jbt3yVA+kAco1Bh+AKTYk60GeSAHeo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EeZbPeUEAOC90haDojY/P3BrCjPXMrKkRZN9+rFx5wrdpACbZDcqWCBlPOWIhEmQg
-         zkNY6OFO6gJWYinE6BOeqPNrQhDBDCG/KA4VHIaHsQ9jWumm8phDwn5yM2n7lROijW
-         YIOePzpaOBzoR/g1dPdNYsxLe7WT/x0dy3uZdaPM=
+        b=xfcFr44IHwtqW740QHre5TD7xZZNhGDD/D3bOUM6b7sGfuk4M0vQPdEauHkZCfm5X
+         1zgsBvICU1G/1XKen09CWlNh7CIr3SJjawvxQJD2VATWvFLXwOFZlxafuXrpfCjQSf
+         6nckHmlURt2swsoZzJQoKm3fUTf+TeNWUbj+VEgw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Robin Gong <yibin.gong@nxp.com>,
-        Christophe Meynard <Christophe.Meynard@ign.fr>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 113/265] regualtor: pfuze100: correct sw1a/sw2 on pfuze3000
-Date:   Mon, 29 Jun 2020 11:15:46 -0400
-Message-Id: <20200629151818.2493727-114-sashal@kernel.org>
+Cc:     Lu Baolu <baolu.lu@linux.intel.com>, Xin Zeng <xin.zeng@intel.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 142/265] iommu/vt-d: Set U/S bit in first level page table by default
+Date:   Mon, 29 Jun 2020 11:16:15 -0400
+Message-Id: <20200629151818.2493727-143-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -66,119 +64,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Gong <yibin.gong@nxp.com>
+From: Lu Baolu <baolu.lu@linux.intel.com>
 
-[ Upstream commit 6f1cf5257acc6e6242ddf2f52bc7912aed77b79f ]
+[ Upstream commit 16ecf10e815d70d11d2300243f4a3b4c7c5acac7 ]
 
-PFUZE100_SWB_REG is not proper for sw1a/sw2, because enable_mask/enable_reg
-is not correct. On PFUZE3000, sw1a/sw2 should be the same as sw1a/sw2 on
-pfuze100 except that voltages are not linear, so add new PFUZE3000_SW_REG
-and pfuze3000_sw_regulator_ops which like the non-linear PFUZE100_SW_REG
-and pfuze100_sw_regulator_ops.
+When using first-level translation for IOVA, currently the U/S bit in the
+page table is cleared which implies DMA requests with user privilege are
+blocked. As the result, following error messages might be observed when
+passing through a device to user level:
 
-Fixes: 1dced996ee70 ("regulator: pfuze100: update voltage setting for pfuze3000 sw1a")
-Reported-by: Christophe Meynard <Christophe.Meynard@ign.fr>
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-Link: https://lore.kernel.org/r/1592171648-8752-1-git-send-email-yibin.gong@nxp.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+DMAR: DRHD: handling fault status reg 3
+DMAR: [DMA Read] Request device [41:00.0] PASID 1 fault addr 7ecdcd000
+        [fault reason 129] SM: U/S set 0 for first-level translation
+        with user privilege
+
+This fixes it by setting U/S bit in the first level page table and makes
+IOVA over first level compatible with previous second-level translation.
+
+Fixes: b802d070a52a1 ("iommu/vt-d: Use iova over first level")
+Reported-by: Xin Zeng <xin.zeng@intel.com>
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Link: https://lore.kernel.org/r/20200622231345.29722-3-baolu.lu@linux.intel.com
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/regulator/pfuze100-regulator.c | 60 +++++++++++++++++---------
- 1 file changed, 39 insertions(+), 21 deletions(-)
+ drivers/iommu/intel-iommu.c | 5 ++---
+ include/linux/intel-iommu.h | 1 +
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/regulator/pfuze100-regulator.c b/drivers/regulator/pfuze100-regulator.c
-index 689537927f6f7..4c8e8b4722872 100644
---- a/drivers/regulator/pfuze100-regulator.c
-+++ b/drivers/regulator/pfuze100-regulator.c
-@@ -209,6 +209,19 @@ static const struct regulator_ops pfuze100_swb_regulator_ops = {
- 
- };
- 
-+static const struct regulator_ops pfuze3000_sw_regulator_ops = {
-+	.enable = regulator_enable_regmap,
-+	.disable = regulator_disable_regmap,
-+	.is_enabled = regulator_is_enabled_regmap,
-+	.list_voltage = regulator_list_voltage_table,
-+	.map_voltage = regulator_map_voltage_ascend,
-+	.set_voltage_sel = regulator_set_voltage_sel_regmap,
-+	.get_voltage_sel = regulator_get_voltage_sel_regmap,
-+	.set_voltage_time_sel = regulator_set_voltage_time_sel,
-+	.set_ramp_delay = pfuze100_set_ramp_delay,
-+
-+};
-+
- #define PFUZE100_FIXED_REG(_chip, _name, base, voltage)	\
- 	[_chip ## _ ## _name] = {	\
- 		.desc = {	\
-@@ -318,23 +331,28 @@ static const struct regulator_ops pfuze100_swb_regulator_ops = {
- 	.stby_mask = 0x20,	\
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index fde7aba49b746..a0b9ea0805210 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -943,7 +943,7 @@ static struct dma_pte *pfn_to_dma_pte(struct dmar_domain *domain,
+ 			domain_flush_cache(domain, tmp_page, VTD_PAGE_SIZE);
+ 			pteval = ((uint64_t)virt_to_dma_pfn(tmp_page) << VTD_PAGE_SHIFT) | DMA_PTE_READ | DMA_PTE_WRITE;
+ 			if (domain_use_first_level(domain))
+-				pteval |= DMA_FL_PTE_XD;
++				pteval |= DMA_FL_PTE_XD | DMA_FL_PTE_US;
+ 			if (cmpxchg64(&pte->val, 0ULL, pteval))
+ 				/* Someone else set it while we were thinking; use theirs. */
+ 				free_pgtable_page(tmp_page);
+@@ -2034,7 +2034,6 @@ static inline void
+ context_set_sm_rid2pasid(struct context_entry *context, unsigned long pasid)
+ {
+ 	context->hi |= pasid & ((1 << 20) - 1);
+-	context->hi |= (1 << 20);
  }
  
--
--#define PFUZE3000_SW2_REG(_chip, _name, base, min, max, step)	{	\
--	.desc = {	\
--		.name = #_name,\
--		.n_voltages = ((max) - (min)) / (step) + 1,	\
--		.ops = &pfuze100_sw_regulator_ops,	\
--		.type = REGULATOR_VOLTAGE,	\
--		.id = _chip ## _ ## _name,	\
--		.owner = THIS_MODULE,	\
--		.min_uV = (min),	\
--		.uV_step = (step),	\
--		.vsel_reg = (base) + PFUZE100_VOL_OFFSET,	\
--		.vsel_mask = 0x7,	\
--	},	\
--	.stby_reg = (base) + PFUZE100_STANDBY_OFFSET,	\
--	.stby_mask = 0x7,	\
--}
-+/* No linar case for the some switches of PFUZE3000 */
-+#define PFUZE3000_SW_REG(_chip, _name, base, mask, voltages)	\
-+	[_chip ## _ ##  _name] = {	\
-+		.desc = {	\
-+			.name = #_name,	\
-+			.n_voltages = ARRAY_SIZE(voltages),	\
-+			.ops = &pfuze3000_sw_regulator_ops,	\
-+			.type = REGULATOR_VOLTAGE,	\
-+			.id = _chip ## _ ## _name,	\
-+			.owner = THIS_MODULE,	\
-+			.volt_table = voltages,	\
-+			.vsel_reg = (base) + PFUZE100_VOL_OFFSET,	\
-+			.vsel_mask = (mask),	\
-+			.enable_reg = (base) + PFUZE100_MODE_OFFSET,	\
-+			.enable_mask = 0xf,	\
-+			.enable_val = 0x8,	\
-+			.enable_time = 500,	\
-+		},	\
-+		.stby_reg = (base) + PFUZE100_STANDBY_OFFSET,	\
-+		.stby_mask = (mask),	\
-+		.sw_reg = true,		\
-+	}
+ /*
+@@ -2326,7 +2325,7 @@ static int __domain_mapping(struct dmar_domain *domain, unsigned long iov_pfn,
  
- #define PFUZE3000_SW3_REG(_chip, _name, base, min, max, step)	{	\
- 	.desc = {	\
-@@ -391,9 +409,9 @@ static struct pfuze_regulator pfuze200_regulators[] = {
- };
+ 	attr = prot & (DMA_PTE_READ | DMA_PTE_WRITE | DMA_PTE_SNP);
+ 	if (domain_use_first_level(domain))
+-		attr |= DMA_FL_PTE_PRESENT | DMA_FL_PTE_XD;
++		attr |= DMA_FL_PTE_PRESENT | DMA_FL_PTE_XD | DMA_FL_PTE_US;
  
- static struct pfuze_regulator pfuze3000_regulators[] = {
--	PFUZE100_SWB_REG(PFUZE3000, SW1A, PFUZE100_SW1ABVOL, 0x1f, pfuze3000_sw1a),
-+	PFUZE3000_SW_REG(PFUZE3000, SW1A, PFUZE100_SW1ABVOL, 0x1f, pfuze3000_sw1a),
- 	PFUZE100_SW_REG(PFUZE3000, SW1B, PFUZE100_SW1CVOL, 700000, 1475000, 25000),
--	PFUZE100_SWB_REG(PFUZE3000, SW2, PFUZE100_SW2VOL, 0x7, pfuze3000_sw2lo),
-+	PFUZE3000_SW_REG(PFUZE3000, SW2, PFUZE100_SW2VOL, 0x7, pfuze3000_sw2lo),
- 	PFUZE3000_SW3_REG(PFUZE3000, SW3, PFUZE100_SW3AVOL, 900000, 1650000, 50000),
- 	PFUZE100_SWB_REG(PFUZE3000, SWBST, PFUZE100_SWBSTCON1, 0x3, pfuze100_swbst),
- 	PFUZE100_SWB_REG(PFUZE3000, VSNVS, PFUZE100_VSNVSVOL, 0x7, pfuze100_vsnvs),
-@@ -407,8 +425,8 @@ static struct pfuze_regulator pfuze3000_regulators[] = {
- };
+ 	if (!sg) {
+ 		sg_res = nr_pages;
+diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+index de23fb95fe918..64a5335046b00 100644
+--- a/include/linux/intel-iommu.h
++++ b/include/linux/intel-iommu.h
+@@ -40,6 +40,7 @@
+ #define DMA_PTE_SNP		BIT_ULL(11)
  
- static struct pfuze_regulator pfuze3001_regulators[] = {
--	PFUZE100_SWB_REG(PFUZE3001, SW1, PFUZE100_SW1ABVOL, 0x1f, pfuze3000_sw1a),
--	PFUZE100_SWB_REG(PFUZE3001, SW2, PFUZE100_SW2VOL, 0x7, pfuze3000_sw2lo),
-+	PFUZE3000_SW_REG(PFUZE3001, SW1, PFUZE100_SW1ABVOL, 0x1f, pfuze3000_sw1a),
-+	PFUZE3000_SW_REG(PFUZE3001, SW2, PFUZE100_SW2VOL, 0x7, pfuze3000_sw2lo),
- 	PFUZE3000_SW3_REG(PFUZE3001, SW3, PFUZE100_SW3AVOL, 900000, 1650000, 50000),
- 	PFUZE100_SWB_REG(PFUZE3001, VSNVS, PFUZE100_VSNVSVOL, 0x7, pfuze100_vsnvs),
- 	PFUZE100_VGEN_REG(PFUZE3001, VLDO1, PFUZE100_VGEN1VOL, 1800000, 3300000, 100000),
+ #define DMA_FL_PTE_PRESENT	BIT_ULL(0)
++#define DMA_FL_PTE_US		BIT_ULL(2)
+ #define DMA_FL_PTE_XD		BIT_ULL(63)
+ 
+ #define CONTEXT_TT_MULTI_LEVEL	0
 -- 
 2.25.1
 
