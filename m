@@ -2,51 +2,52 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56C43C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8C15C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2A5DD206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C616C206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468222;
-	bh=Z1QEs3Oj9n1CWnpZuG8UpDqDYz8a9LXYk7Syj9bwlK8=;
+	s=default; t=1593468225;
+	bh=JvPxeEh2+VWlLdBUzputQqXq+2ISNZvpSxQnslm+XE8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vjoN+jHGz7ORtPnvbl4O0ewNgm0f3nyqzm6nZ0rkLK0wfmTRj/EzRAlt3/B2gBC/H
-	 QI0HMvqSrsOE8gpX5IKcEHOsSOf+sYEYC+5zyunQIz/r0N+67bR7+NZoA8jmRXs52N
-	 LvZ8arZioyDRxcOQDEx/l0NvK1QUyzGikQnVsTmY=
+	b=KcycpuxUhb4sUkBWAb0zyvSUDEFxaY5S4Ol6sGj0sYfQx7KWr5RE23O8S4w9InXMN
+	 Oagy+VMV9/vVzDhHYNdhLyI7+zcMZqK28E0g5bOYII5cTN3AADLcauVPd7ngtpM9A+
+	 4P2dxfR+ATKK6Ln3mW0jk+v8MHJfaAJ8oErDgPz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391695AbgF2WDk (ORCPT
+        id S2391714AbgF2WDn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:03:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56764 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:03:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726192AbgF2SfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:22 -0400
+        id S1726217AbgF2SfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D48F246DB;
-        Mon, 29 Jun 2020 15:20:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C349B246C2;
+        Mon, 29 Jun 2020 15:20:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444022;
-        bh=Z1QEs3Oj9n1CWnpZuG8UpDqDYz8a9LXYk7Syj9bwlK8=;
+        s=default; t=1593444014;
+        bh=JvPxeEh2+VWlLdBUzputQqXq+2ISNZvpSxQnslm+XE8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zf8JybDWet7RS2N7RRFn/Q3cmQ90g9kwZ9WoAe1sWK/zpmfEJvrkyDigGeD1ypc2h
-         JWHHN4ZgfU4suNRtKYcQ9z/Otdc1Fx3zUUV7EHDoLpII4ZkWJhgul60m4KdSByoxxM
-         L5kg6Ug0HvjU3I1Du+Bt8oxHtj6njhN2o7wrAP9U=
+        b=u1A6VxSb4fVEbLUaih84xoN8OiG+kmCCQOvpY7X5O2FFel1aNN7s1+zftA1ezybF4
+         fbeVGRdEWpaxFPq8HNbjF6CXQo3aubS8PFCb+G+pi60cRiJliZSpaNzdjIbipwAng+
+         /y1GyDIk0xksZ1gKSJUD20hIH0rSerH8QqRGetgc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matthew Hagan <mnhagan88@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
+Cc:     Drew Fustini <drew@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>,
+        Tony Lindgren <tony@atomide.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 129/265] ARM: dts: NSP: Correct FA2 mailbox node
-Date:   Mon, 29 Jun 2020 11:16:02 -0400
-Message-Id: <20200629151818.2493727-130-sashal@kernel.org>
+Subject: [PATCH 5.7 120/265] ARM: dts: am335x-pocketbeagle: Fix mmc0 Write Protect
+Date:   Mon, 29 Jun 2020 11:15:53 -0400
+Message-Id: <20200629151818.2493727-121-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -65,40 +66,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Hagan <mnhagan88@gmail.com>
+From: Drew Fustini <drew@beagleboard.org>
 
-[ Upstream commit ac4e106d8934a5894811fc263f4b03fc8ed0fb7a ]
+[ Upstream commit d7af722344e6dc52d87649100516515263e15c75 ]
 
-The FA2 mailbox is specified at 0x18025000 but should actually be
-0x18025c00, length 0x400 according to socregs_nsp.h and board_bu.c. Also
-the interrupt was off by one and should be GIC SPI 151 instead of 150.
+AM3358 pin mcasp0_aclkr (ZCZ ball B13) [0] is routed to P1.31 header [1]
+Mode 4 of this pin is mmc0_sdwp (SD Write Protect).  A signal connected
+to P1.31 may accidentally trigger mmc0 write protection.  To avoid this
+situation, do not put mcasp0_aclkr in mode 4 (mmc0_sdwp) by default.
 
-Fixes: 17d517172300 ("ARM: dts: NSP: Add mailbox (PDC) to NSP")
-Signed-off-by: Matthew Hagan <mnhagan88@gmail.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+[0] http://www.ti.com/lit/ds/symlink/am3358.pdf
+[1] https://github.com/beagleboard/pocketbeagle/wiki/System-Reference-Manual#531_Expansion_Headers
+
+Fixes: 047905376a16 (ARM: dts: Add am335x-pocketbeagle)
+Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
+Signed-off-by: Drew Fustini <drew@beagleboard.org>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/bcm-nsp.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/am335x-pocketbeagle.dts | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/bcm-nsp.dtsi b/arch/arm/boot/dts/bcm-nsp.dtsi
-index 920c0f561e5ce..3175266ede646 100644
---- a/arch/arm/boot/dts/bcm-nsp.dtsi
-+++ b/arch/arm/boot/dts/bcm-nsp.dtsi
-@@ -259,10 +259,10 @@
- 			status = "disabled";
- 		};
+diff --git a/arch/arm/boot/dts/am335x-pocketbeagle.dts b/arch/arm/boot/dts/am335x-pocketbeagle.dts
+index 4da719098028f..f0b222201b867 100644
+--- a/arch/arm/boot/dts/am335x-pocketbeagle.dts
++++ b/arch/arm/boot/dts/am335x-pocketbeagle.dts
+@@ -88,7 +88,6 @@
+ 			AM33XX_PADCONF(AM335X_PIN_MMC0_DAT3, PIN_INPUT_PULLUP, MUX_MODE0)
+ 			AM33XX_PADCONF(AM335X_PIN_MMC0_CMD, PIN_INPUT_PULLUP, MUX_MODE0)
+ 			AM33XX_PADCONF(AM335X_PIN_MMC0_CLK, PIN_INPUT_PULLUP, MUX_MODE0)
+-			AM33XX_PADCONF(AM335X_PIN_MCASP0_ACLKR, PIN_INPUT, MUX_MODE4)		/* (B12) mcasp0_aclkr.mmc0_sdwp */
+ 		>;
+ 	};
  
--		mailbox: mailbox@25000 {
-+		mailbox: mailbox@25c00 {
- 			compatible = "brcm,iproc-fa2-mbox";
--			reg = <0x25000 0x445>;
--			interrupts = <GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>;
-+			reg = <0x25c00 0x400>;
-+			interrupts = <GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>;
- 			#mbox-cells = <1>;
- 			brcm,rx-status-len = <32>;
- 			brcm,use-bcm-hdr;
 -- 
 2.25.1
 
