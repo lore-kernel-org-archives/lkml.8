@@ -2,116 +2,94 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6168C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:40:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51FE1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:40:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B20D020672
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:40:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C12A20672
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:40:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nX6H72rw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733105AbgF2TkJ (ORCPT
+        id S1730100AbgF2TkV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:40:09 -0400
-Received: from foss.arm.com ([217.140.110.172]:41800 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731818AbgF2Tjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:39:55 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2974A1509;
-        Mon, 29 Jun 2020 06:40:57 -0700 (PDT)
-Received: from bogus (unknown [10.37.12.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AA0C43F73C;
-        Mon, 29 Jun 2020 06:40:54 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 14:40:47 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "geert+renesas@glider.be" <geert+renesas@glider.be>,
-        "magnus.damm@gmail.com" <magnus.damm@gmail.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH/RFC v4 2/4] regulator: fixed: add regulator_ops members
- for suspend/resume
-Message-ID: <20200629134011.GA23284@bogus>
-References: <1593163942-5087-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1593163942-5087-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20200626143914.GE5289@sirena.org.uk>
- <TY2PR01MB3692A3B12CEF7F9708A8A59CD86E0@TY2PR01MB3692.jpnprd01.prod.outlook.com>
- <20200629125756.GC5499@sirena.org.uk>
+        Mon, 29 Jun 2020 15:40:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48038 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733202AbgF2TkM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:40:12 -0400
+Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF841C03E97A;
+        Mon, 29 Jun 2020 12:40:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=U8tCb4h17a0rL+ZZdq18PAV+yDbvWsH96GC5gLr1vuc=; b=nX6H72rwNYY0Uodz17aYP0bvqk
+        9gSPPIErWrLN9tgBHhvIIJkOaKgVsJo4ToReNXQeJGEcFnMtOneeM9lvCktfvClRYHDtNElRZj2F6
+        8v+5TR40P7wF9sVI6FNZgxu5kOa2TO9rd1Tk/CVbrQpxDd6MTudpLktSUdh658nMTs0t6pbT8L0DU
+        oLPd3ny9KNPaRYcpjp5BKqZJvHEO/AQA8V3gJ3oEvuI02EACAolGm1l5wddF6nve0W3P8jOwehhxt
+        HUK/Vlvd1nnX1ZKXj4mHlQgYSZ/JMOLFPBM2+5fH9Dc8Y+nLWvs6b4VA5Ugvca4/Jx5cC4ko7Xilx
+        7KEB9k7g==;
+Received: from [2001:4bb8:184:76e3:fcca:c8dc:a4bf:12fa] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jpzd9-0004Eg-CR; Mon, 29 Jun 2020 19:39:52 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     dm-devel@redhat.com, linux-kernel@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-xtensa@linux-xtensa.org,
+        drbd-dev@lists.linbit.com, linuxppc-dev@lists.ozlabs.org,
+        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-nvme@lists.infradead.org,
+        linux-s390@vger.kernel.org
+Subject: [PATCH 01/20] nfblock: stop using ->queuedata
+Date:   Mon, 29 Jun 2020 21:39:28 +0200
+Message-Id: <20200629193947.2705954-2-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200629193947.2705954-1-hch@lst.de>
+References: <20200629193947.2705954-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200629125756.GC5499@sirena.org.uk>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 01:57:56PM +0100, Mark Brown wrote:
-> On Mon, Jun 29, 2020 at 02:42:26AM +0000, Yoshihiro Shimoda wrote:
-> > > From: Mark Brown, Sent: Friday, June 26, 2020 11:39 PM
->
-> Copying in Sudeep for the feedback on firmware interfaces.
->
+Instead of setting up the queuedata as well just use one private data
+field.
 
-Thanks Mark.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ arch/m68k/emu/nfblock.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-> > > According to the changelog this is all about reflecting changes in the
-> > > system state done by firmware but there's no interaction with firmware
-> > > here which means this will be at best fragile.  If we need to reflect
-> > > changes in firmware configuration I'd expect there to be some
-> > > interaction with firmware about how it is configured, or at least that
-> > > the configuration would come from the same source.
->
+diff --git a/arch/m68k/emu/nfblock.c b/arch/m68k/emu/nfblock.c
+index c3a630440512e9..87e8b1700acd28 100644
+--- a/arch/m68k/emu/nfblock.c
++++ b/arch/m68k/emu/nfblock.c
+@@ -61,7 +61,7 @@ struct nfhd_device {
+ 
+ static blk_qc_t nfhd_make_request(struct request_queue *queue, struct bio *bio)
+ {
+-	struct nfhd_device *dev = queue->queuedata;
++	struct nfhd_device *dev = bio->bi_disk->private_data;
+ 	struct bio_vec bvec;
+ 	struct bvec_iter iter;
+ 	int dir, len, shift;
+@@ -122,7 +122,6 @@ static int __init nfhd_init_one(int id, u32 blocks, u32 bsize)
+ 	if (dev->queue == NULL)
+ 		goto free_dev;
+ 
+-	dev->queue->queuedata = dev;
+ 	blk_queue_logical_block_size(dev->queue, bsize);
+ 
+ 	dev->disk = alloc_disk(16);
+-- 
+2.26.2
 
-I agree.
-
-> > I should have described background of previous patch series though,
-> > according to previous discussion [1] the firmware side (like PSCI) is
-> > also fragile unfortunately... So, I thought using regulator-off-in-suspend
-> > in a regulator was better.
->
-
-Please fix the firmware. You might have bigger problem than this if the
-PSCI firmware is fragile as you state. Better to disable power management
-on the platform if the firmware can't be fixed.
-
-> > On other hand, Ulf is talking about either adding a property (perhaps like
-> > regulator-off-in-suspend) into a regulator or just adding a new property
-> > into MMC [2]. What do you think about Ulf' comment? I'm thinking
-> > adding a new property "full-pwr-cycle-in-suspend" is the best solution.
-> > This is because using a regulator property and reflecting a state of regulator without
-> > firmware is fragile, as you said.
-
-I haven't followed all the threads, but if it related to the policy you
-want in the Linux, then may be use DT property or something. I don't know.
-But if this is to indicate something based on firmware runtime/configuration,
-then NACK for any approaches unconditionally.
-
->
-> TBH I worry about a property drifting out of sync with the firmware on
-> systems where the firmware can be updated.  Personally my default
-> assumption would always be that we're going to loose power for anything
-> except the RAM and whatever is needed for wake sources during suspend so
-> I find the discussion a bit surprising but in any case that seems like a
-> better option than trying to shoehorn things in the way the series here
-> did.  Like I said in my earlier replies if this is done through the
-> regulator API I'd expect it to be via the suspend interface.
->
-
-+1. If this platform needs Linux to keep some state on for users in the
-firmware or anything outside Linux, it must resume back in the same state
-as we entered the suspend state from the kernel.
-
---
-Regards,
-Sudeep
