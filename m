@@ -2,96 +2,162 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B9E4C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:36:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18B9CC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 78C4820672
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:36:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0F7E20672
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:36:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593459378;
+	bh=RzXAjMmGzzKS5k8+jstiPlLW6zk1B3ca+8BBYKNBiM0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=AP9B5YGnj79HMagQgt9N/ElpsHjPPYIZojbHDu6PGvnGAdpnLe53Oytlla8eCzOTM
+	 6x2uPjIFp5Q7CpR/4JTdNAqFRvFIGdo7c1GvUFGcw+ZdD0/GP0rcOfo2TpLHfbg2HL
+	 kD/Ulao8rYS0KyvRz2Ziupb/v3LCj2fevjYg2buM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730432AbgF2TgK (ORCPT
+        id S1733067AbgF2Tay (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:36:10 -0400
-Received: from outbound-smtp30.blacknight.com ([81.17.249.61]:60650 "EHLO
-        outbound-smtp30.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729568AbgF2Ta6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:30:58 -0400
-Received: from mail.blacknight.com (pemlinmail01.blacknight.ie [81.17.254.10])
-        by outbound-smtp30.blacknight.com (Postfix) with ESMTPS id A74EDBA9E6
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 15:41:46 +0100 (IST)
-Received: (qmail 22832 invoked from network); 29 Jun 2020 14:41:46 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.5])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 29 Jun 2020 14:41:46 -0000
-Date:   Mon, 29 Jun 2020 15:41:45 +0100
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Jan Kara <jack@suse.cz>, Maxim Levitsky <mlevitsk@redhat.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Amir Goldstein <amir73il@gmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>
-Subject: [PATCH] Revert "fs: Do not check if there is a fsnotify watcher on
- pseudo inodes"
-Message-ID: <20200629144145.GA3183@techsingularity.net>
-References: <7b4aa1e985007c6d582fffe5e8435f8153e28e0f.camel@redhat.com>
- <CAOQ4uxg8E-im=B6L0PQNaTTKdtxVAO=MSJki7kxq875ME4hOLw@mail.gmail.com>
- <20200629130915.GF26507@quack2.suse.cz>
- <CAOQ4uxhdOMbn9vL_PAGKLtriVzkjwBkuEgbdB5+uH2ZM6uA97w@mail.gmail.com>
+        Mon, 29 Jun 2020 15:30:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40584 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732868AbgF2TaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:30:20 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6FC06252DB;
+        Mon, 29 Jun 2020 15:38:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593445107;
+        bh=RzXAjMmGzzKS5k8+jstiPlLW6zk1B3ca+8BBYKNBiM0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=JuwYTfvD0N0fDTUhKCkc7UMPnZUa67x6rxe1hW3g6oEieoedwxBBXSdF+tEfHblZB
+         suNZzLhlu8B8wNvvq5nkhUaqXCHZd/eBFUvwP3ksdJsLc07d6rNH3kiD6u3CeBvrF0
+         oYHs/vtUQHsBM6a9TrFzaizskCkINmlaap27GOGc=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Eric Dumazet <edumazet@google.com>,
+        Venkat Venkatsubra <venkat.x.venkatsubra@oracle.com>,
+        Neal Cardwell <ncardwell@google.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.14 15/78] tcp: grow window for OOO packets only for SACK flows
+Date:   Mon, 29 Jun 2020 11:37:03 -0400
+Message-Id: <20200629153806.2494953-16-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
+References: <20200629153806.2494953-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <CAOQ4uxhdOMbn9vL_PAGKLtriVzkjwBkuEgbdB5+uH2ZM6uA97w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.14.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.14.186-rc1
+X-KernelTest-Deadline: 2020-07-01T15:38+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit e9c15badbb7b ("fs: Do not check if there is a
-fsnotify watcher on pseudo inodes"). The commit intended to eliminate
-fsnotify-related overhead for pseudo inodes but it is broken in
-concept. inotify can receive events of pipe files under /proc/X/fd and
-chromium relies on close and open events for sandboxing. Maxim Levitsky
-reported the following
+From: Eric Dumazet <edumazet@google.com>
 
-  Chromium starts as a white rectangle, shows few white rectangles that
-  resemble its notifications and then crashes.
+[ Upstream commit 662051215c758ae8545451628816204ed6cd372d ]
 
-  The stdout output from chromium:
+Back in 2013, we made a change that broke fast retransmit
+for non SACK flows.
 
-  [mlevitsk@starship ~]$chromium-freeworld
-  mesa: for the   --simplifycfg-sink-common option: may only occur zero or one times!
-  mesa: for the   --global-isel-abort option: may only occur zero or one times!
-  [3379:3379:0628/135151.440930:ERROR:browser_switcher_service.cc(238)] XXX Init()
-  ../../sandbox/linux/seccomp-bpf-helpers/sigsys_handlers.cc:**CRASHING**:seccomp-bpf failure in syscall 0072
-  Received signal 11 SEGV_MAPERR 0000004a9048
+Indeed, for these flows, a sender needs to receive three duplicate
+ACK before starting fast retransmit. Sending ACK with different
+receive window do not count.
 
-Crashes are not universal but even if chromium does not crash, it certainly
-does not work properly. While filtering just modify and access might be
-safe, the benefit is not worth the risk hence the revert.
+Even if enabling SACK is strongly recommended these days,
+there still are some cases where it has to be disabled.
 
-Reported-by: Maxim Levitsky <mlevitsk@redhat.com>
-Fixes: e9c15badbb7b ("fs: Do not check if there is a fsnotify watcher on pseudo inodes")
-Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
+Not increasing the window seems better than having to
+rely on RTO.
+
+After the fix, following packetdrill test gives :
+
+// Initialize connection
+    0 socket(..., SOCK_STREAM, IPPROTO_TCP) = 3
+   +0 setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
+   +0 bind(3, ..., ...) = 0
+   +0 listen(3, 1) = 0
+
+   +0 < S 0:0(0) win 32792 <mss 1000,nop,wscale 7>
+   +0 > S. 0:0(0) ack 1 <mss 1460,nop,wscale 8>
+   +0 < . 1:1(0) ack 1 win 514
+
+   +0 accept(3, ..., ...) = 4
+
+   +0 < . 1:1001(1000) ack 1 win 514
+// Quick ack
+   +0 > . 1:1(0) ack 1001 win 264
+
+   +0 < . 2001:3001(1000) ack 1 win 514
+// DUPACK : Normally we should not change the window
+   +0 > . 1:1(0) ack 1001 win 264
+
+   +0 < . 3001:4001(1000) ack 1 win 514
+// DUPACK : Normally we should not change the window
+   +0 > . 1:1(0) ack 1001 win 264
+
+   +0 < . 4001:5001(1000) ack 1 win 514
+// DUPACK : Normally we should not change the window
+    +0 > . 1:1(0) ack 1001 win 264
+
+   +0 < . 1001:2001(1000) ack 1 win 514
+// Hole is repaired.
+   +0 > . 1:1(0) ack 5001 win 272
+
+Fixes: 4e4f1fc22681 ("tcp: properly increase rcv_ssthresh for ofo packets")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: Venkat Venkatsubra <venkat.x.venkatsubra@oracle.com>
+Acked-by: Neal Cardwell <ncardwell@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/file_table.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv4/tcp_input.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/fs/file_table.c b/fs/file_table.c
-index 65603502fed6..656647f9575a 100644
---- a/fs/file_table.c
-+++ b/fs/file_table.c
-@@ -230,7 +230,7 @@ struct file *alloc_file_pseudo(struct inode *inode, struct vfsmount *mnt,
- 		d_set_d_op(path.dentry, &anon_ops);
- 	path.mnt = mntget(mnt);
- 	d_instantiate(path.dentry, inode);
--	file = alloc_file(&path, flags | FMODE_NONOTIFY, fops);
-+	file = alloc_file(&path, flags, fops);
- 	if (IS_ERR(file)) {
- 		ihold(inode);
- 		path_put(&path);
+diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+index 29f3df4ddd1fe..a2c26c2b3a94b 100644
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -4507,7 +4507,11 @@ static void tcp_data_queue_ofo(struct sock *sk, struct sk_buff *skb)
+ 	if (tcp_ooo_try_coalesce(sk, tp->ooo_last_skb,
+ 				 skb, &fragstolen)) {
+ coalesce_done:
+-		tcp_grow_window(sk, skb);
++		/* For non sack flows, do not grow window to force DUPACK
++		 * and trigger fast retransmit.
++		 */
++		if (tcp_is_sack(tp))
++			tcp_grow_window(sk, skb);
+ 		kfree_skb_partial(skb, fragstolen);
+ 		skb = NULL;
+ 		goto add_sack;
+@@ -4591,7 +4595,11 @@ static void tcp_data_queue_ofo(struct sock *sk, struct sk_buff *skb)
+ 		tcp_sack_new_ofo_skb(sk, seq, end_seq);
+ end:
+ 	if (skb) {
+-		tcp_grow_window(sk, skb);
++		/* For non sack flows, do not grow window to force DUPACK
++		 * and trigger fast retransmit.
++		 */
++		if (tcp_is_sack(tp))
++			tcp_grow_window(sk, skb);
+ 		skb_condense(skb);
+ 		skb_set_owner_r(skb, sk);
+ 	}
+-- 
+2.25.1
+
