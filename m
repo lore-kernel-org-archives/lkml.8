@@ -4,50 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F852C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C48F9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E5C1D206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:55:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6078206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:55:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467719;
-	bh=ue/TOYNTeUlIw1lHZQKDweXd+oqqOYXRjPf3N8LD+RU=;
+	s=default; t=1593467723;
+	bh=JlCPYTpFqqQ42W/PHGp9eRBzhh4t6fJ0tvG04jWsRWc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kce47tq5LO8oXNrSx/eH7S+kkDFDdBdtZhcTAj2UMzDUOXMxgc0Ai2HaxLD0Mwz1g
-	 seblh68U1qAiUhLFC6yk+4nZB1/Y67xQOo/gl3BUF3nCFnz8wwSo0+dbtZRfX3IYHx
-	 IfqD7yMOhuKuMVw5eNKnA7AvLv8YOyui8xyJ6FIg=
+	b=uUPOZSS3t9JwIu7MLzBhY8GhbkzeCSa9F+8wqRY/lHixV3dx8KAFaJxXVk4G7UquM
+	 Qqkl/iOohpI9hBaO83wY/D0uOEv8Fz6pXFwfgLM0LBt3kblAEr87AURJbISCJR3wzK
+	 oefSqT+EGJ7W1uIfVthM8fzOgaD73wOtdLR4FqLs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391541AbgF2VzR (ORCPT
+        id S2391545AbgF2VzV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:55:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56886 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:55:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726503AbgF2Sfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726522AbgF2Sfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 537EC247DE;
-        Mon, 29 Jun 2020 15:22:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55E9B24682;
+        Mon, 29 Jun 2020 15:19:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444147;
-        bh=ue/TOYNTeUlIw1lHZQKDweXd+oqqOYXRjPf3N8LD+RU=;
+        s=default; t=1593443977;
+        bh=JlCPYTpFqqQ42W/PHGp9eRBzhh4t6fJ0tvG04jWsRWc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CPylx21kQXt5BskxOsUi9F4KORfjEyfTCNOqxnEtPc5DnUBn5WcoRn13lDp1pFFMQ
-         NrsCMxgsobpJW3VfAdE82TswFsMGPuD87a3J9A5poGajzebrHT+PJseJhGsufLluH2
-         kM2UFeEmNXqSGpKFh7FnVAx/FBCfnsN0y+2tpV68=
+        b=vaoTNxPwbiuyTb6NdU4AJC9dZYrWhkyPLp5Uw7Dm6MBaAvgFm+h1gQW5uRdlPqrh0
+         NLvGvcSgkdMebKPH+tjF89UHK43gLfa0ag52+h/FnugQHq9O56YgEBL7C9jNrdlwrU
+         qGarvOSedOMvyjGyIYaGLT2+QtVZaLp+Qv7Uc2fs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Adam Ford <aford173@gmail.com>, Sam Ravnborg <sam@ravnborg.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        dri-devel@lists.freedesktop.org,
+Cc:     Roman Bolshakov <r.bolshakov@yadro.com>,
+        Quinn Tran <qutran@marvell.com>, Arun Easi <aeasi@marvell.com>,
+        Nilesh Javali <njavali@marvell.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Daniel Wagner <dwagner@suse.de>,
+        Himanshu Madhani <himanshu.madhani@oracle.com>,
+        Martin Wilck <mwilck@suse.com>,
+        Shyam Sundar <ssundar@marvell.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 252/265] drm/panel-simple: fix connector type for LogicPD Type28 Display
-Date:   Mon, 29 Jun 2020 11:18:05 -0400
-Message-Id: <20200629151818.2493727-253-sashal@kernel.org>
+Subject: [PATCH 5.7 081/265] scsi: qla2xxx: Keep initiator ports after RSCN
+Date:   Mon, 29 Jun 2020 11:15:14 -0400
+Message-Id: <20200629151818.2493727-82-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -66,42 +72,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adam Ford <aford173@gmail.com>
+From: Roman Bolshakov <r.bolshakov@yadro.com>
 
-commit efb94790852ae673b18efde1b171d284689ff333 upstream.
+commit 632f24f09d5b7c8a2f94932c3391ca957ae76cc4 upstream.
 
-The LogicPD Type28 display used by several Logic PD products has not
-worked since v5.6.
+The driver performs SCR (state change registration) in all modes including
+pure target mode.
 
-The connector type for the LogicPD Type 28 display is missing and
-drm_panel_bridge_add() requires connector type to be set.
+For each RSCN, scan_needed flag is set in qla2x00_handle_rscn() for the
+port mentioned in the RSCN and fabric rescan is scheduled. During the
+rescan, GNN_FT handler, qla24xx_async_gnnft_done() deletes session of the
+port that caused the RSCN.
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
-Fixes: 0d35408afbeb ("drm/panel: simple: Add Logic PD Type 28 display support")
-Cc: Adam Ford <aford173@gmail.com>
-Cc: Sam Ravnborg <sam@ravnborg.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>
-Cc: dri-devel@lists.freedesktop.org
-Cc: <stable@vger.kernel.org> # v5.6+
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Link: https://patchwork.freedesktop.org/patch/msgid/20200615131934.12440-1-aford173@gmail.com
+In target mode, the session deletion has an impact on ATIO handler,
+qlt_24xx_atio_pkt(). Target responds with SAM STATUS BUSY to I/O incoming
+from the deleted session. qlt_handle_cmd_for_atio() and
+qlt_handle_task_mgmt() return -EFAULT if they are not able to find session
+of the command/TMF, and that results in invocation of qlt_send_busy():
+
+  qlt_24xx_atio_pkt_all_vps: qla_target(0): type 6 ox_id 0014
+  qla_target(0): Unable to send command to target, sending BUSY status
+
+Such response causes command timeout on the initiator. Error handler thread
+on the initiator will be spawned to abort the commands:
+
+  scsi 23:0:0:0: tag#0 abort scheduled
+  scsi 23:0:0:0: tag#0 aborting command
+  qla2xxx [0000:af:00.0]-188c:23: Entered qla24xx_abort_command.
+  qla2xxx [0000:af:00.0]-801c:23: Abort command issued nexus=23:0:0 -- 0 2003.
+
+Command abort is rejected by target and fails (2003), error handler then
+tries to perform DEVICE RESET and TARGET RESET but they're also doomed to
+fail because TMFs are ignored for the deleted sessions.
+
+Then initiator makes BUS RESET that resets the link via
+qla2x00_full_login_lip(). BUS RESET succeeds and brings initiator port up,
+SAN switch detects that and sends RSCN to the target port and it fails
+again the same way as described above. It never goes out of the loop.
+
+The change breaks the RSCN loop by keeping initiator sessions mentioned in
+RSCN payload in all modes, including dual and pure target mode.
+
+Link: https://lore.kernel.org/r/20200605144435.27023-1-r.bolshakov@yadro.com
+Fixes: 2037ce49d30a ("scsi: qla2xxx: Fix stale session")
+Cc: Quinn Tran <qutran@marvell.com>
+Cc: Arun Easi <aeasi@marvell.com>
+Cc: Nilesh Javali <njavali@marvell.com>
+Cc: Bart Van Assche <bvanassche@acm.org>
+Cc: Daniel Wagner <dwagner@suse.de>
+Cc: Himanshu Madhani <himanshu.madhani@oracle.com>
+Cc: Martin Wilck <mwilck@suse.com>
+Cc: stable@vger.kernel.org # v5.4+
+Reviewed-by: Daniel Wagner <dwagner@suse.de>
+Reviewed-by: Shyam Sundar <ssundar@marvell.com>
+Reviewed-by: Himanshu Madhani <himanshu.madhani@oracle.com>
+Signed-off-by: Roman Bolshakov <r.bolshakov@yadro.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/gpu/drm/panel/panel-simple.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/qla2xxx/qla_gs.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
-index 00c1a8dc4ce8f..db91b3c031a13 100644
---- a/drivers/gpu/drm/panel/panel-simple.c
-+++ b/drivers/gpu/drm/panel/panel-simple.c
-@@ -2297,6 +2297,7 @@ static const struct panel_desc logicpd_type_28 = {
- 	.bus_format = MEDIA_BUS_FMT_RGB888_1X24,
- 	.bus_flags = DRM_BUS_FLAG_DE_HIGH | DRM_BUS_FLAG_PIXDATA_DRIVE_POSEDGE |
- 		     DRM_BUS_FLAG_SYNC_DRIVE_NEGEDGE,
-+	.connector_type = DRM_MODE_CONNECTOR_DPI,
- };
- 
- static const struct panel_desc mitsubishi_aa070mc01 = {
+diff --git a/drivers/scsi/qla2xxx/qla_gs.c b/drivers/scsi/qla2xxx/qla_gs.c
+index 42c3ad27f1cbc..df670fba2ab8a 100644
+--- a/drivers/scsi/qla2xxx/qla_gs.c
++++ b/drivers/scsi/qla2xxx/qla_gs.c
+@@ -3496,7 +3496,9 @@ void qla24xx_async_gnnft_done(scsi_qla_host_t *vha, srb_t *sp)
+ 				qla2x00_clear_loop_id(fcport);
+ 				fcport->flags |= FCF_FABRIC_DEVICE;
+ 			} else if (fcport->d_id.b24 != rp->id.b24 ||
+-				fcport->scan_needed) {
++				   (fcport->scan_needed &&
++				    fcport->port_type != FCT_INITIATOR &&
++				    fcport->port_type != FCT_NVME_INITIATOR)) {
+ 				qlt_schedule_sess_for_deletion(fcport);
+ 			}
+ 			fcport->d_id.b24 = rp->id.b24;
 -- 
 2.25.1
 
