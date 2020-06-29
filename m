@@ -4,53 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 186D5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:25:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB7AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:25:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EBF472067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:25:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1CA212078A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:25:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593458751;
-	bh=ypQggd1jTN90dgiL1MA75jtztYY5Xc4dxZIh5jqZWCo=;
+	s=default; t=1593458753;
+	bh=3lzka7GUEHHZvBdDCkYMxm2rjJTw2qLkb03atsx6oXU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vPlUG+qGR7OV57NORo6Wz0ZHtP1C2e9KPvbZ3Y3xeDv62PleRqERRUAjT96X9dxSs
-	 jYAJMY7cJOOlLUUezIfITOo7Jx8JDktCA0qdNCTNj9azAvLrrc/RgaiXk2089R/vKG
-	 zYHmA3jZDfYJ/GvKjQiiLPMOZM9TB2QeSQwgbZZw=
+	b=y+3yPr9I1quBNSJV0nbRXZc1do4vCRxc47GH9/BTg2Parn0gNmmxXE14crsck8MmH
+	 qXXPlA/6p2PswbY8Hmb3hwcROV52FGosaAZyuQJVeTClsa7YJHaPLvPewzUw3my8MH
+	 WV0hc5Gk3OAMfr12kh4yfXqR2KF74UTzAHlHTw5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730962AbgF2TZt (ORCPT
+        id S1731149AbgF2TZw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:25:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37042 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:25:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732506AbgF2TZY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:25:24 -0400
+        id S1732458AbgF2TZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:25:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60D932537D;
-        Mon, 29 Jun 2020 15:40:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D24F625446;
+        Mon, 29 Jun 2020 15:43:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445244;
-        bh=ypQggd1jTN90dgiL1MA75jtztYY5Xc4dxZIh5jqZWCo=;
+        s=default; t=1593445396;
+        bh=3lzka7GUEHHZvBdDCkYMxm2rjJTw2qLkb03atsx6oXU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IZMaIWJHs0ynEWyBtnWRuVYi5bhu5FBji4qsW6BrpzGRaE+hE8s3A8j6/uLVNIxmr
-         SqKlH7kzLui3A/tkxgGovAoHYqzMpG687brkuTRgrHZ3DS2eS5Z0R7+T8kp3NbgIQR
-         u2+Cg6alNa9pACXJmnC0fARswDzvR53+fuBlTu2g=
+        b=mYFjwLLqr+Y3690SBnSiPoJzZpwqKUG5W+bYKebVvGqt3mGrm5b7gY4iuiTH4M8Wc
+         ed7OiKGQ5XWFtscWEhPiryH0Spm/SK1weXYGGuag7KVk39xF8cGdrRaBGn8CNinsTF
+         RBM8SeJAxLR1L1LPCBBvkoUEYFB+8xSOdEYwdhjM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Raghavendra Rao Ananta <rananta@codeaurora.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 028/191] tty: hvc: Fix data abort due to race in hvc_open
-Date:   Mon, 29 Jun 2020 11:37:24 -0400
-Message-Id: <20200629154007.2495120-29-sashal@kernel.org>
+Cc:     Longfang Liu <liulongfang@huawei.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.9 149/191] USB: ehci: reopen solution for Synopsys HC bug
+Date:   Mon, 29 Jun 2020 11:39:25 -0400
+Message-Id: <20200629154007.2495120-150-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.229-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-4.9.y
@@ -65,79 +66,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Raghavendra Rao Ananta <rananta@codeaurora.org>
+From: Longfang Liu <liulongfang@huawei.com>
 
-[ Upstream commit e2bd1dcbe1aa34ff5570b3427c530e4332ecf0fe ]
+commit 1ddcb71a3edf0e1682b6e056158e4c4b00325f66 upstream.
 
-Potentially, hvc_open() can be called in parallel when two tasks calls
-open() on /dev/hvcX. In such a scenario, if the hp->ops->notifier_add()
-callback in the function fails, where it sets the tty->driver_data to
-NULL, the parallel hvc_open() can see this NULL and cause a memory abort.
-Hence, serialize hvc_open and check if tty->private_data is NULL before
-proceeding ahead.
+A Synopsys USB2.0 core used in Huawei Kunpeng920 SoC has a bug which
+might cause the host controller not issuing ping.
 
-The issue can be easily reproduced by launching two tasks simultaneously
-that does nothing but open() and close() on /dev/hvcX.
-For example:
-$ ./simple_open_close /dev/hvc0 & ./simple_open_close /dev/hvc0 &
+Bug description:
+After indicating an Interrupt on Async Advance, the software uses the
+doorbell mechanism to delete the Next Link queue head of the last
+executed queue head. At this time, the host controller still references
+the removed queue head(the queue head is NULL). NULL reference causes
+the host controller to lose the USB device.
 
-Signed-off-by: Raghavendra Rao Ananta <rananta@codeaurora.org>
-Link: https://lore.kernel.org/r/20200428032601.22127-1-rananta@codeaurora.org
+Solution:
+After deleting the Next Link queue head, when has_synopsys_hc_bug set
+to 1，the software can write one of the valid queue head addresses to
+the ASYNCLISTADDR register to allow the host controller to get
+the valid queue head. in order to solve that problem, this patch set
+the flag for Huawei Kunpeng920
+
+There are detailed instructions and solutions in this patch:
+commit 2f7ac6c19997 ("USB: ehci: add workaround for Synopsys HC bug")
+
+Signed-off-by: Longfang Liu <liulongfang@huawei.com>
+Cc: stable <stable@vger.kernel.org>
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Link: https://lore.kernel.org/r/1591588019-44284-1-git-send-email-liulongfang@huawei.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/hvc/hvc_console.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ drivers/usb/host/ehci-pci.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/tty/hvc/hvc_console.c b/drivers/tty/hvc/hvc_console.c
-index 985f49a659068..35d591287734d 100644
---- a/drivers/tty/hvc/hvc_console.c
-+++ b/drivers/tty/hvc/hvc_console.c
-@@ -89,6 +89,8 @@ static LIST_HEAD(hvc_structs);
-  */
- static DEFINE_SPINLOCK(hvc_structs_lock);
+diff --git a/drivers/usb/host/ehci-pci.c b/drivers/usb/host/ehci-pci.c
+index 3b3649d88c5f0..08b3f8c806016 100644
+--- a/drivers/usb/host/ehci-pci.c
++++ b/drivers/usb/host/ehci-pci.c
+@@ -229,6 +229,13 @@ static int ehci_pci_setup(struct usb_hcd *hcd)
+ 		ehci_info(ehci, "applying MosChip frame-index workaround\n");
+ 		ehci->frame_index_bug = 1;
+ 		break;
++	case PCI_VENDOR_ID_HUAWEI:
++		/* Synopsys HC bug */
++		if (pdev->device == 0xa239) {
++			ehci_info(ehci, "applying Synopsys HC workaround\n");
++			ehci->has_synopsys_hc_bug = 1;
++		}
++		break;
+ 	}
  
-+/* Mutex to serialize hvc_open */
-+static DEFINE_MUTEX(hvc_open_mutex);
- /*
-  * This value is used to assign a tty->index value to a hvc_struct based
-  * upon order of exposure via hvc_probe(), when we can not match it to
-@@ -333,16 +335,24 @@ static int hvc_install(struct tty_driver *driver, struct tty_struct *tty)
-  */
- static int hvc_open(struct tty_struct *tty, struct file * filp)
- {
--	struct hvc_struct *hp = tty->driver_data;
-+	struct hvc_struct *hp;
- 	unsigned long flags;
- 	int rc = 0;
- 
-+	mutex_lock(&hvc_open_mutex);
-+
-+	hp = tty->driver_data;
-+	if (!hp) {
-+		rc = -EIO;
-+		goto out;
-+	}
-+
- 	spin_lock_irqsave(&hp->port.lock, flags);
- 	/* Check and then increment for fast path open. */
- 	if (hp->port.count++ > 0) {
- 		spin_unlock_irqrestore(&hp->port.lock, flags);
- 		hvc_kick();
--		return 0;
-+		goto out;
- 	} /* else count == 0 */
- 	spin_unlock_irqrestore(&hp->port.lock, flags);
- 
-@@ -370,6 +380,8 @@ static int hvc_open(struct tty_struct *tty, struct file * filp)
- 	/* Force wakeup of the polling thread */
- 	hvc_kick();
- 
-+out:
-+	mutex_unlock(&hvc_open_mutex);
- 	return rc;
- }
- 
+ 	/* optional debug port, normally in the first BAR */
 -- 
 2.25.1
 
