@@ -2,118 +2,224 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF9EEC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3EC9C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BEA8220842
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:44:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3D4520885
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:44:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oByy/EXs"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Zb+p9V5X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387925AbgF2ToD (ORCPT
+        id S2387971AbgF2ToF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:44:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48502 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387966AbgF2Tmm (ORCPT
+        Mon, 29 Jun 2020 15:44:05 -0400
+Received: from mail.efficios.com ([167.114.26.124]:33194 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732797AbgF2Tn6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:42:42 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2945FC0307BA
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:06:09 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id 207so7906258pfu.3
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:06:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Hd2ztXk1vCQk2wKYG462cRN4nuwUe31pLKUP0eS2DPs=;
-        b=oByy/EXs3Sua6IxFhmLKuu1yCt1mraiv5y8rkvS2ofpAw6W5y2hcFRMu1fzsyV7kIe
-         AkmJIkwLYYjKcr0yNXy0Gh0fkHuhpqMZ6UxG7olLFBcM7PrBakbHwVvnZHcNEPwLYh1z
-         iFcf75y1DRs8b03UeSX2DWhmxCwKrYAM+WnP8=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Hd2ztXk1vCQk2wKYG462cRN4nuwUe31pLKUP0eS2DPs=;
-        b=WqBW59d+7bhuqkgcegheEJ0iy7YK1RcSHUV1hdtoPHS5ZEFHXQ062hMub/QDNTm2i5
-         AauNAWa4ElhveJah0dLRd4qg3R9rSLc0M88OMYmFhiOEn2VW1S/D4dZdIcyZPkxpiI+s
-         uutnyWoIpblseFi96dDpxEavFIscKor9VhBuuomWicje95oEdQUlditmZq9wjf3DCiJ6
-         MEPJqxtnZLKW7B0eOyySYoBl1ILKp/OdVuIIKD9qKiMvmFpbT5FFtswi9y52e7cFpov0
-         ZjIPgeJNxVSh0KNK/IQywASRN403IJJaP3qelRXXyKfjSRvuCwAZjn1AnBHU2UeRAmYe
-         PYmw==
-X-Gm-Message-State: AOAM533mXWCUJ2WDL93iUgDD7G1vny5OY81Tj/mMqV994H34XMS5yc+b
-        viB0avaMyqO9Iaf204XH/1TDDw==
-X-Google-Smtp-Source: ABdhPJy9noqH+1qN4YXU+pVP49CfNJCdlJxq5gFL48QPyB9J6qBJ1eK5ra4BIxq+7K6YiI08/a/kkw==
-X-Received: by 2002:a63:6dc1:: with SMTP id i184mr10942111pgc.345.1593446768762;
-        Mon, 29 Jun 2020 09:06:08 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id gk5sm62829pjb.4.2020.06.29.09.06.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 09:06:07 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 09:06:07 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Arvind Sankar <nivedita@alum.mit.edu>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Fangrui Song <maskray@google.com>,
-        Dmitry Golovin <dima@golovin.in>,
-        clang-built-linux@googlegroups.com,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "H . J . Lu" <hjl@sourceware.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 6/7] x86/boot: Remove runtime relocations from
- head_{32,64}.S
-Message-ID: <202006290905.7531731A@keescook>
-References: <20200629140928.858507-1-nivedita@alum.mit.edu>
- <20200629140928.858507-7-nivedita@alum.mit.edu>
+        Mon, 29 Jun 2020 15:43:58 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 57E8026BE90;
+        Mon, 29 Jun 2020 15:43:57 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id jKS2OsRBiPF4; Mon, 29 Jun 2020 15:43:56 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id E456326BE04;
+        Mon, 29 Jun 2020 15:43:56 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com E456326BE04
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1593459836;
+        bh=iP3PjzJ6XSqU6iD5jcFMqznuwbwfOTCeMrtF+SzoIxA=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=Zb+p9V5XcwPNNTTPWdcilNsn2aGU2lz7a7/PgtBKt1e2OjYnYtasalPhFQHv4ygdd
+         RkRpqOQNC5cXdmRmS+PZ+1R70E4ZmDs7Kr6tVw3oCykO7aRMtPklSP9nCYfccmzCjG
+         F2OOszRVIlpNIL5uFP2fU24d5we1PKVV4hiBKQULZhBQqUY9y7EnArJF+Blx+eNaVf
+         ooV5Bm2ZGojLC+Ntbfp1RjN3+t6syLAin22SMllmW5brKuATpfFUqnwjhk2EWNmQGm
+         l5o5b5rOJXwzFqhFaW60/Vp7e4OvpH0Iw4TnlBzKuxIKzi+iibJankV9mFCenWMIwS
+         tekm46Nbemxyg==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id QlU3a6Iszu31; Mon, 29 Jun 2020 15:43:56 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id D147626B9F3;
+        Mon, 29 Jun 2020 15:43:56 -0400 (EDT)
+Date:   Mon, 29 Jun 2020 15:43:56 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Eric Dumazet <edumazet@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Yuchung Cheng <ycheng@google.com>,
+        Jonathan Rajotte-Julien <joraj@efficios.com>
+Message-ID: <1132973300.15954.1593459836756.JavaMail.zimbra@efficios.com>
+In-Reply-To: <CANn89iL26OMWWAi18PqoQK4VBfFvRvxBJUioqXDk=8ZbKq_Efg@mail.gmail.com>
+References: <341326348.19635.1589398715534.JavaMail.zimbra@efficios.com> <CANn89i+GH2ukLZUcWYGquvKg66L9Vbto0FxyEt3pOJyebNxqBg@mail.gmail.com> <CANn89iL26OMWWAi18PqoQK4VBfFvRvxBJUioqXDk=8ZbKq_Efg@mail.gmail.com>
+Subject: Re: [regression] TCP_MD5SIG on established sockets
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200629140928.858507-7-nivedita@alum.mit.edu>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3945 (ZimbraWebClient - FF77 (Linux)/8.8.15_GA_3928)
+Thread-Topic: TCP_MD5SIG on established sockets
+Thread-Index: 0Jvbhp6DCumjwNDk8z7Y2feQgYejnA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 10:09:27AM -0400, Arvind Sankar wrote:
-> The BFD linker generates runtime relocations for z_input_len and
-> z_output_len, even though they are absolute symbols.
-> 
-> This is fixed for binutils-2.35 [1]. Work around this for earlier
-> versions by defining two variables input_len and output_len in addition
-> to the symbols, and use them via position-independent references.
-> 
-> This eliminates the last two runtime relocations in the head code and
-> allows us to drop the -z noreloc-overflow flag to the linker.
-> 
-> [1] https://sourceware.org/bugzilla/show_bug.cgi?id=25754
-> 
-> Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
-> Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
-> Reviewed-by: Fangrui Song <maskray@google.com>
-> ---
->  arch/x86/boot/compressed/Makefile  |  8 --------
->  arch/x86/boot/compressed/head_32.S | 17 ++++++++---------
->  arch/x86/boot/compressed/head_64.S |  4 ++--
->  arch/x86/boot/compressed/mkpiggy.c |  6 ++++++
->  4 files changed, 16 insertions(+), 19 deletions(-)
+----- On May 13, 2020, at 3:56 PM, Eric Dumazet edumazet@google.com wrote:
 
-I continue to really enjoy the smaller code. Anything that makes
-mkpiggy.c smaller is a win. :)
+> On Wed, May 13, 2020 at 12:49 PM Eric Dumazet <edumazet@google.com> wrote:
+>>
+>>
+>> On Wed, May 13, 2020 at 12:38 PM Mathieu Desnoyers
+>> <mathieu.desnoyers@efficios.com> wrote:
+>> >
+>> > Hi,
+>> >
+>> > I am reporting a regression with respect to use of TCP_MD5SIG/TCP_MD5SIG_EXT
+>> > on established sockets. It is observed by a customer.
+>> >
+>> > This issue is introduced by this commit:
+>> >
+>> > commit 721230326891 "tcp: md5: reject TCP_MD5SIG or TCP_MD5SIG_EXT on
+>> > established sockets"
+>> >
+>> > The intent of this commit appears to be to fix a use of uninitialized value in
+>> > tcp_parse_options(). The change introduced by this commit is to disallow setting
+>> > the TCP_MD5SIG{,_EXT} socket options on an established socket.
+>> >
+>> > The justification for this change appears in the commit message:
+>> >
+>> >    "I believe this was caused by a TCP_MD5SIG being set on live
+>> >     flow.
+>> >
+>> >     This is highly unexpected, since TCP option space is limited.
+>> >
+>> >     For instance, presence of TCP MD5 option automatically disables
+>> >     TCP TimeStamp option at SYN/SYNACK time, which we can not do
+>> >     once flow has been established.
+>> >
+>> >     Really, adding/deleting an MD5 key only makes sense on sockets
+>> >     in CLOSE or LISTEN state."
+>> >
+>> > However, reading through RFC2385 [1], this justification does not appear
+>> > correct. Quoting to the RFC:
+>> >
+>> >    "This password never appears in the connection stream, and the actual
+>> >     form of the password is up to the application. It could even change
+>> >     during the lifetime of a particular connection so long as this change
+>> >     was synchronized on both ends"
+>> >
+>> > The paragraph above clearly underlines that changing the MD5 signature of
+>> > a live TCP socket is allowed.
+>> >
+>> > I also do not understand why it would be invalid to transition an established
+>> > TCP socket from no-MD5 to MD5, or transition from MD5 to no-MD5. Quoting the
+>> > RFC:
+>> >
+>> >   "The total header size is also an issue.  The TCP header specifies
+>> >    where segment data starts with a 4-bit field which gives the total
+>> >    size of the header (including options) in 32-byte words.  This means
+>> >    that the total size of the header plus option must be less than or
+>> >    equal to 60 bytes -- this leaves 40 bytes for options."
+>> >
+>> > The paragraph above seems to be the only indication that some TCP options
+>> > cannot be combined on a given TCP socket: if the resulting header size does
+>> > not fit. However, I do not see anything in the specification preventing any
+>> > of the following use-cases on an established TCP socket:
+>> >
+>> > - Transition from no-MD5 to MD5,
+>> > - Transition from MD5 to no-MD5,
+>> > - Changing the MD5 key associated with a socket.
+>> >
+>> > As long as the resulting combination of options does not exceed the available
+>> > header space.
+>> >
+>> > Can we please fix this KASAN report in a way that does not break user-space
+>> > applications expectations about Linux' implementation of RFC2385 ?
+[...]
+>> > [1] RFC2385: https://tools.ietf.org/html/rfc2385
+>>
+>>
+>> I do not think we want to transition sockets in the middle. since
+>> packets can be re-ordered in the network.
+>>
+>> MD5 is about security (and a loose form of it), so better make sure
+>> all packets have it from the beginning of the flow.
+>>
+>> A flow with TCP TS on can not suddenly be sending packets without TCP TS.
+>>
+>> Clearly, trying to support this operation is a can of worms, I do not
+>> want to maintain such atrocity.
+>>
+>> RFC can state whatever it wants, sometimes reality forces us to have
+>> sane operations.
+>>
+>> Thanks.
+>>
+> Also the RFC states :
+> 
+> "This password never appears in the connection stream, and the actual
+>    form of the password is up to the application. It could even change
+>    during the lifetime of a particular connection so long as this change
+>    was synchronized on both ends"
+> 
+> It means the key can be changed, but this does not imply the option
+> can be turned on/off dynamically.
+> 
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+The change discussed previously (introduced by commit 721230326891 "tcp:
+md5: reject TCP_MD5SIG or TCP_MD5SIG_EXT on established sockets") breaks
+user-space ABI. As an example, the following BGP application uses
+setsockopt TCP_MD5SIG on a live TCP socket:
+
+https://github.com/IPInfusion/SDN-IP
+
+In addition to break user-space, it also breaks network protocol
+expectations for network equipment vendors implementing RFC2385.
+Considering that the goal of these protocols is interaction between
+different network equipment, breaking compatibility on that side
+is unexpected as well. Requiring to bring down/up the connection
+just to change the TCP MD5 password is a no-go in networks with
+high availability requirements. Changing the BGP authentication
+password must be allowed without tearing down and re-establishing
+the TCP sockets. Otherwise it doesn't scale for large network
+operators to have to individually manage each individual TCP socket
+in their network. However, based on the feedback I received, it
+would be acceptable to tear-down the TCP connections and re-establish
+them when enabling or disabling the MD5 option.
+
+Here is a list of a few network vendors along with their behavior
+with respect to TCP MD5:
+
+- Cisco: Allows for password to be changed, but within the hold-down
+timer (~180 seconds).
+- Juniper: When password is initially set on active connection it will
+reset, but after that any subsequent password changes no network
+resets.
+- Nokia: No notes on if they flap the tcp connection or not.
+- Ericsson/RedBack: Allows for 2 password (old/new) to co-exist until
+both sides are ok with new passwords.
+- Meta-Switch: Expects the password to be set before a connection is
+attempted, but no further info on whether they reset the TCP
+connection on a change.
+- Avaya: Disable the neighbor, then set password, then re-enable.
+- Zebos: Would normally allow the change when socket connected.
+
+Thanks,
+
+Mathieu
 
 -- 
-Kees Cook
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
