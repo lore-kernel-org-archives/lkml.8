@@ -2,105 +2,99 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F3FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C05EC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:30:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D8B72073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:30:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 205862073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:30:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466252;
-	bh=Z/tKZZxO+tm5/UIKAv5Jl82sEFtufynPHLTjeFGDuN8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tGe7nWvLZw5US5NFJjKsdi/hsqr1JRnKuSEUnztLcmHxoP4eAX7dP9suzPXL3tSbu
-	 RECQE5DciolPk9N3Ng3aU+klPgM73yHoHDyADeR0vTR4B+rd7rxwvsnxzk3U4JRAiq
-	 K5N1ujOBxAC8SVp1zAejbILphoSG3sT6z7xH3yGU=
+	s=default; t=1593466257;
+	bh=ftGuVRVgqjk9PwokZ1ZSRnJZM48vH8egkh8R/K03F7Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2Fq5+ABkTEjRdxS7SkNj99eJl1nDR1t1w5rOXbzaxF+5vMCdkig6NL+3qdqgy6QRh
+	 lpzIwhb9dXczniYE4hpzSHogHmUclq8B00JHfBj+MqQ1Q9vdA4JHmDHl/Lx7iGu3kH
+	 oKL5Kixwh1q7gOv0yZEXsDTRAjmJ2v6qaZeG20dQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728793AbgF2Vau (ORCPT
+        id S2391245AbgF2Vaz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:30:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60594 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:30:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728834AbgF2SlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728828AbgF2SlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:41:20 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AD85823F27;
-        Mon, 29 Jun 2020 15:18:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A853023134;
+        Mon, 29 Jun 2020 08:10:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443909;
-        bh=Z/tKZZxO+tm5/UIKAv5Jl82sEFtufynPHLTjeFGDuN8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qWepjuNY1i+W6vF30HDz5ZqIRSjPdkv4/LTn3hUhcKyURX+qQCxn6N5wmsZFszFbp
-         B9YooaqlKCj4trJmmhX9wcJgtIt3rC4hACJ7RMEb5jR2iAZyo79bb6H0q0MzcUdhhS
-         POuvGXrM2tIOREKp4NUaBOv+wGvE8mXxVU103+uo=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Auhagen <sven.auhagen@voleatech.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 009/265] mvpp2: ethtool rxtx stats fix
-Date:   Mon, 29 Jun 2020 11:14:02 -0400
-Message-Id: <20200629151818.2493727-10-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
-References: <20200629151818.2493727-1-sashal@kernel.org>
+        s=default; t=1593418249;
+        bh=ftGuVRVgqjk9PwokZ1ZSRnJZM48vH8egkh8R/K03F7Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=EKuRkQ2BiHMfRIFe8CdjR0qvDn5rm9WrsWhrFDzsY8en1EUHyk0ruTgCkPe/OYRt0
+         2+mzFCouHUepwnCP70mA3qtzrpPe1KZ5WvIrkzLiWNdrfzBdQSoVgYlB0z/wyBUTi0
+         jrwx4ip6uZf+jqAyXNew5BbRdkospW90++G+Oxn8=
+Date:   Mon, 29 Jun 2020 10:10:39 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Colin Ian King <colin.king@canonical.com>
+Subject: Re: [PATCH 2/2] usb: mtu3: fix NULL pointer dereference
+Message-ID: <20200629081039.GA1221843@kroah.com>
+References: <1593410434-19406-1-git-send-email-chunfeng.yun@mediatek.com>
+ <1593410434-19406-2-git-send-email-chunfeng.yun@mediatek.com>
+ <99fc1f6e-7907-6723-612a-8b68ffa871e5@web.de>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.7.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.7.7-rc1
-X-KernelTest-Deadline: 2020-07-01T15:14+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <99fc1f6e-7907-6723-612a-8b68ffa871e5@web.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Auhagen <sven.auhagen@voleatech.de>
+On Mon, Jun 29, 2020 at 10:00:22AM +0200, Markus Elfring wrote:
+> > Some pointers are dereferenced before successful checks.
+> 
+> I suggest to reconsider and improve the change description.
+> 
+> * Would a null pointer dereference be possible only with the variables “mep”
+>   and “mreq” in the implementation of the function “mtu3_gadget_dequeue”?
+> 
+> * How do you think about to adjust any more variable initialisations?
+> 
+> * Will it become helpful to add the tag “Fixes” to the commit message?
+> 
+> Regards,
+> Markus
 
-[ Upstream commit cc970925feb9a38c2f0d34305518e00a3084ce85 ]
+Hi,
 
-The ethtool rx and tx queue statistics are reporting wrong values.
-Fix reading out the correct ones.
+This is the semi-friendly patch-bot of Greg Kroah-Hartman.
 
-Signed-off-by: Sven Auhagen <sven.auhagen@voleatech.de>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Markus, you seem to have sent a nonsensical or otherwise pointless
+review comment to a patch submission on a Linux kernel developer mailing
+list.  I strongly suggest that you not do this anymore.  Please do not
+bother developers who are actively working to produce patches and
+features with comments that, in the end, are a waste of time.
 
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-index b7b553602ea9f..24f4d8e0da989 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-@@ -1544,7 +1544,7 @@ static void mvpp2_read_stats(struct mvpp2_port *port)
- 	for (q = 0; q < port->ntxqs; q++)
- 		for (i = 0; i < ARRAY_SIZE(mvpp2_ethtool_txq_regs); i++)
- 			*pstats++ += mvpp2_read_index(port->priv,
--						      MVPP22_CTRS_TX_CTR(port->id, i),
-+						      MVPP22_CTRS_TX_CTR(port->id, q),
- 						      mvpp2_ethtool_txq_regs[i].offset);
- 
- 	/* Rxqs are numbered from 0 from the user standpoint, but not from the
-@@ -1553,7 +1553,7 @@ static void mvpp2_read_stats(struct mvpp2_port *port)
- 	for (q = 0; q < port->nrxqs; q++)
- 		for (i = 0; i < ARRAY_SIZE(mvpp2_ethtool_rxq_regs); i++)
- 			*pstats++ += mvpp2_read_index(port->priv,
--						      port->first_rxq + i,
-+						      port->first_rxq + q,
- 						      mvpp2_ethtool_rxq_regs[i].offset);
- }
- 
--- 
-2.25.1
+Patch submitter, please ignore Markus's suggestion; you do not need to
+follow it at all.  The person/bot/AI that sent it is being ignored by
+almost all Linux kernel maintainers for having a persistent pattern of
+behavior of producing distracting and pointless commentary, and
+inability to adapt to feedback.  Please feel free to also ignore emails
+from them.
 
+thanks,
+
+greg k-h's patch email bot
