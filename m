@@ -7,46 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92526C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCA6C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 65BF5206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDB23206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:45:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593459936;
-	bh=RMVHADc1MCpldmDojQ2vsBF9hMOtSGGGcm9B/f+bWkk=;
+	s=default; t=1593459938;
+	bh=5oDWEkB1sLYRUmO1YsxZvNbgy/+T0odht9oFM5i34vI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KFWytobYB5s52c1WrIofzyI6yCMkxtCuuvO4QlLjaJXDPdSEz+eQEuQjvVZzMfzT+
-	 C07V6fpfGiZcT1LQyXDJT/e8hXqP4qbrB4rA8UQBjCh/r4s8F282HYSp61Vz7YkrM4
-	 3tugac0LsBFCp8nk15oAvpHB+UEHx0yp0l9qSHQk=
+	b=lEAH8pl9UgCFgkyT5nS4D1Vkm9scaoxp6uSEE2MoCpQhkG/Ms7BXG1FGfSuZLZblj
+	 nE2jgRiYXmHyFbFWSW+jtw0MfoNoC9ws51VO4eUlTxHWCg1FOm17JV+KBzAguPJCNV
+	 P8p4qSXnU92vGrLlrTNdkH34pR2lK10Qbp5i67Jw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388048AbgF2Tpe (ORCPT
+        id S2388055AbgF2Tpg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:45:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47692 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:45:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387821AbgF2Tko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387816AbgF2Tko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A489024872;
-        Mon, 29 Jun 2020 15:26:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8A9524925;
+        Mon, 29 Jun 2020 15:27:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444370;
-        bh=RMVHADc1MCpldmDojQ2vsBF9hMOtSGGGcm9B/f+bWkk=;
+        s=default; t=1593444480;
+        bh=5oDWEkB1sLYRUmO1YsxZvNbgy/+T0odht9oFM5i34vI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ekrUpZ8kFJq9EiA6A+ODg4/YRKUUx9OI+7LQw9HC/sCEsJ87St9Lvu2nNXMJNMWir
-         zreM6BteJASTLmpSxBg0KRey3JN+J0FBfxYGsT4L0JGbsvM0wwycBEsVXtW3psNDNW
-         Q9Q//XdeWqr27GMJfBZeNIdaBWOOvciytk63hHAE=
+        b=BIEiExqe1RSNMEst6SZ2sBXFzaBpeQC/pl2zNkblkwucHT5USacM9MECY02hqJxV8
+         dveCfRbwRPdWA4n862mLQ7yWsJzK8V9KzByXQsxc2gwqfNmmSK53eqdcV2sF5JylSL
+         h7RE+B9m2vWnZco1HrVYkougkU/fS9CMpNAQjfVg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Peter Chen <peter.chen@nxp.com>, Jun Li <jun.li@nxp.com>,
-        Felipe Balbi <balbi@kernel.org>,
+Cc:     Junxiao Bi <junxiao.bi@oracle.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Jun Piao <piaojun@huawei.com>, Mark Fasheh <mark@fasheh.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 047/178] usb: cdns3: ep0: fix the test mode set incorrectly
-Date:   Mon, 29 Jun 2020 11:23:12 -0400
-Message-Id: <20200629152523.2494198-48-sashal@kernel.org>
+Subject: [PATCH 5.4 158/178] ocfs2: fix panic on nfs server over ocfs2
+Date:   Mon, 29 Jun 2020 11:25:03 -0400
+Message-Id: <20200629152523.2494198-159-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -65,37 +70,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Chen <peter.chen@nxp.com>
+From: Junxiao Bi <junxiao.bi@oracle.com>
 
-commit b51e1cf64f93acebb6d8afbacd648a6ecefc39b4 upstream.
+commit e5a15e17a78d58f933d17cafedfcf7486a29f5b4 upstream.
 
-The 'tmode' is ctrl->wIndex, changing it as the real test
-mode value for register assignment.
+The following kernel panic was captured when running nfs server over
+ocfs2, at that time ocfs2_test_inode_bit() was checking whether one
+inode locating at "blkno" 5 was valid, that is ocfs2 root inode, its
+"suballoc_slot" was OCFS2_INVALID_SLOT(65535) and it was allocted from
+//global_inode_alloc, but here it wrongly assumed that it was got from per
+slot inode alloctor which would cause array overflow and trigger kernel
+panic.
 
+  BUG: unable to handle kernel paging request at 0000000000001088
+  IP: [<ffffffff816f6898>] _raw_spin_lock+0x18/0xf0
+  PGD 1e06ba067 PUD 1e9e7d067 PMD 0
+  Oops: 0002 [#1] SMP
+  CPU: 6 PID: 24873 Comm: nfsd Not tainted 4.1.12-124.36.1.el6uek.x86_64 #2
+  Hardware name: Huawei CH121 V3/IT11SGCA1, BIOS 3.87 02/02/2018
+  RIP: _raw_spin_lock+0x18/0xf0
+  RSP: e02b:ffff88005ae97908  EFLAGS: 00010206
+  RAX: ffff88005ae98000 RBX: 0000000000001088 RCX: 0000000000000000
+  RDX: 0000000000020000 RSI: 0000000000000009 RDI: 0000000000001088
+  RBP: ffff88005ae97928 R08: 0000000000000000 R09: ffff880212878e00
+  R10: 0000000000007ff0 R11: 0000000000000000 R12: 0000000000001088
+  R13: ffff8800063c0aa8 R14: ffff8800650c27d0 R15: 000000000000ffff
+  FS:  0000000000000000(0000) GS:ffff880218180000(0000) knlGS:ffff880218180000
+  CS:  e033 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 0000000000001088 CR3: 00000002033d0000 CR4: 0000000000042660
+  Call Trace:
+    igrab+0x1e/0x60
+    ocfs2_get_system_file_inode+0x63/0x3a0 [ocfs2]
+    ocfs2_test_inode_bit+0x328/0xa00 [ocfs2]
+    ocfs2_get_parent+0xba/0x3e0 [ocfs2]
+    reconnect_path+0xb5/0x300
+    exportfs_decode_fh+0xf6/0x2b0
+    fh_verify+0x350/0x660 [nfsd]
+    nfsd4_putfh+0x4d/0x60 [nfsd]
+    nfsd4_proc_compound+0x3d3/0x6f0 [nfsd]
+    nfsd_dispatch+0xe0/0x290 [nfsd]
+    svc_process_common+0x412/0x6a0 [sunrpc]
+    svc_process+0x123/0x210 [sunrpc]
+    nfsd+0xff/0x170 [nfsd]
+    kthread+0xcb/0xf0
+    ret_from_fork+0x61/0x90
+  Code: 83 c2 02 0f b7 f2 e8 18 dc 91 ff 66 90 eb bf 0f 1f 40 00 55 48 89 e5 41 56 41 55 41 54 53 0f 1f 44 00 00 48 89 fb ba 00 00 02 00 <f0> 0f c1 17 89 d0 45 31 e4 45 31 ed c1 e8 10 66 39 d0 41 89 c6
+  RIP   _raw_spin_lock+0x18/0xf0
+  CR2: 0000000000001088
+  ---[ end trace 7264463cd1aac8f9 ]---
+  Kernel panic - not syncing: Fatal exception
+
+Link: http://lkml.kernel.org/r/20200616183829.87211-4-junxiao.bi@oracle.com
+Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Jun Piao <piaojun@huawei.com>
+Cc: Mark Fasheh <mark@fasheh.com>
 Cc: <stable@vger.kernel.org>
-Fixes: 7733f6c32e36 ("usb: cdns3: Add Cadence USB3 DRD Driver")
-Reviewed-by: Jun Li <jun.li@nxp.com>
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/usb/cdns3/ep0.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/ocfs2/suballoc.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/usb/cdns3/ep0.c b/drivers/usb/cdns3/ep0.c
-index e71240b386b49..f785ce84aba62 100644
---- a/drivers/usb/cdns3/ep0.c
-+++ b/drivers/usb/cdns3/ep0.c
-@@ -327,7 +327,8 @@ static int cdns3_ep0_feature_handle_device(struct cdns3_device *priv_dev,
- 		if (!set || (tmode & 0xff) != 0)
- 			return -EINVAL;
+diff --git a/fs/ocfs2/suballoc.c b/fs/ocfs2/suballoc.c
+index 69c21a3843af8..503e724d39f53 100644
+--- a/fs/ocfs2/suballoc.c
++++ b/fs/ocfs2/suballoc.c
+@@ -2827,9 +2827,12 @@ int ocfs2_test_inode_bit(struct ocfs2_super *osb, u64 blkno, int *res)
+ 		goto bail;
+ 	}
  
--		switch (tmode >> 8) {
-+		tmode >>= 8;
-+		switch (tmode) {
- 		case TEST_J:
- 		case TEST_K:
- 		case TEST_SE0_NAK:
+-	inode_alloc_inode =
+-		ocfs2_get_system_file_inode(osb, INODE_ALLOC_SYSTEM_INODE,
+-					    suballoc_slot);
++	if (suballoc_slot == (u16)OCFS2_INVALID_SLOT)
++		inode_alloc_inode = ocfs2_get_system_file_inode(osb,
++			GLOBAL_INODE_ALLOC_SYSTEM_INODE, suballoc_slot);
++	else
++		inode_alloc_inode = ocfs2_get_system_file_inode(osb,
++			INODE_ALLOC_SYSTEM_INODE, suballoc_slot);
+ 	if (!inode_alloc_inode) {
+ 		/* the error code could be inaccurate, but we are not able to
+ 		 * get the correct one. */
 -- 
 2.25.1
 
