@@ -2,170 +2,128 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73B7CC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8939EC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49B37204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:49:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ukitFuYQ"
+	by mail.kernel.org (Postfix) with ESMTP id 78F88204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:49:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbgF2Stb (ORCPT
+        id S1729425AbgF2Stk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:49:31 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:25340 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726178AbgF2StX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:49:23 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593456562; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=oISdcZeNyMoDDttsitQszm0YRjEiAJPv4XIM51liqTc=; b=ukitFuYQ55VbSiEFpe6ai9udh0fHv4MVTuNMRn3SYgd3TguhJHlIZRg/LlvejnX0iyUOVHZ9
- Ij+PkrjFo4pFnmuHRmehaxBNoLSt8XdjJFxzlp5yG0lzVLC/W0k2cPDRBVQTryzbzcfx0VZ0
- XXCC1Q/aJPxiP8LReAxtTawnmkI=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n15.prod.us-west-2.postgun.com with SMTP id
- 5efa195a4c9690533a7b2ad7 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 29 Jun 2020 16:39:54
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id ACC10C433CA; Mon, 29 Jun 2020 16:39:54 +0000 (UTC)
-Received: from malabar-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbhatt)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 19EA4C433CB;
-        Mon, 29 Jun 2020 16:39:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 19EA4C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bbhatt@codeaurora.org
-From:   Bhaumik Bhatt <bbhatt@codeaurora.org>
-To:     manivannan.sadhasivam@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, hemantk@codeaurora.org,
-        jhugo@codeaurora.org, linux-kernel@vger.kernel.org,
-        Bhaumik Bhatt <bbhatt@codeaurora.org>
-Subject: [PATCH v4 3/9] bus: mhi: core: Use helper API to trigger a non-blocking host resume
-Date:   Mon, 29 Jun 2020 09:39:36 -0700
-Message-Id: <1593448782-8385-4-git-send-email-bbhatt@codeaurora.org>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1593448782-8385-1-git-send-email-bbhatt@codeaurora.org>
-References: <1593448782-8385-1-git-send-email-bbhatt@codeaurora.org>
+        Mon, 29 Jun 2020 14:49:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38374 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729127AbgF2Smw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:42:52 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7C6EC033C27;
+        Mon, 29 Jun 2020 11:26:34 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jpyUC-002DwI-63; Mon, 29 Jun 2020 18:26:32 +0000
+From:   Al Viro <viro@ZenIV.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        David Miller <davem@davemloft.net>,
+        Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>
+Subject: [PATCH 30/41] riscv: switch to ->get2()
+Date:   Mon, 29 Jun 2020 19:26:17 +0100
+Message-Id: <20200629182628.529995-30-viro@ZenIV.linux.org.uk>
+X-Mailer: git-send-email 2.25.4
+In-Reply-To: <20200629182628.529995-1-viro@ZenIV.linux.org.uk>
+References: <20200629182349.GA2786714@ZenIV.linux.org.uk>
+ <20200629182628.529995-1-viro@ZenIV.linux.org.uk>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Autonomous low power mode support requires the MHI host to resume from
-multiple places and post a wakeup source to exit system suspend. This
-needs to be done in a non-blocking manner. Introduce a helper API to
-trigger the host resume for data transfers and other non-blocking use
-cases while supporting implementation of autonomous low power modes.
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-Signed-off-by: Bhaumik Bhatt <bbhatt@codeaurora.org>
+Note: riscv_fpr_get() used to forget to zero-pad at the end.
+Not worth -stable...
+
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- drivers/bus/mhi/core/internal.h |  8 ++++++++
- drivers/bus/mhi/core/main.c     | 21 +++++++--------------
- drivers/bus/mhi/core/pm.c       |  6 ++----
- 3 files changed, 17 insertions(+), 18 deletions(-)
+ arch/riscv/kernel/ptrace.c | 33 +++++++++++----------------------
+ 1 file changed, 11 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/bus/mhi/core/internal.h b/drivers/bus/mhi/core/internal.h
-index bcfa7b6..cb32eaf 100644
---- a/drivers/bus/mhi/core/internal.h
-+++ b/drivers/bus/mhi/core/internal.h
-@@ -599,6 +599,14 @@ int mhi_queue_state_transition(struct mhi_controller *mhi_cntrl,
- int mhi_send_cmd(struct mhi_controller *mhi_cntrl, struct mhi_chan *mhi_chan,
- 		 enum mhi_cmd_type cmd);
+diff --git a/arch/riscv/kernel/ptrace.c b/arch/riscv/kernel/ptrace.c
+index 444dc7b0fd78..a6896449eff8 100644
+--- a/arch/riscv/kernel/ptrace.c
++++ b/arch/riscv/kernel/ptrace.c
+@@ -30,13 +30,10 @@ enum riscv_regset {
  
-+static inline void mhi_trigger_resume(struct mhi_controller *mhi_cntrl,
-+				      bool hard_wakeup)
-+{
-+	pm_wakeup_dev_event(&mhi_cntrl->mhi_dev->dev, 0, hard_wakeup);
-+	mhi_cntrl->runtime_get(mhi_cntrl);
-+	mhi_cntrl->runtime_put(mhi_cntrl);
-+}
-+
- /* Register access methods */
- void mhi_db_brstmode(struct mhi_controller *mhi_cntrl, struct db_cfg *db_cfg,
- 		     void __iomem *db_addr, dma_addr_t db_val);
-diff --git a/drivers/bus/mhi/core/main.c b/drivers/bus/mhi/core/main.c
-index 1f622ce..8d6ec34 100644
---- a/drivers/bus/mhi/core/main.c
-+++ b/drivers/bus/mhi/core/main.c
-@@ -909,8 +909,7 @@ void mhi_ctrl_ev_task(unsigned long data)
- 		 * process it since we are probably in a suspended state,
- 		 * so trigger a resume.
- 		 */
--		mhi_cntrl->runtime_get(mhi_cntrl);
--		mhi_cntrl->runtime_put(mhi_cntrl);
-+		mhi_trigger_resume(mhi_cntrl, false);
+ static int riscv_gpr_get(struct task_struct *target,
+ 			 const struct user_regset *regset,
+-			 unsigned int pos, unsigned int count,
+-			 void *kbuf, void __user *ubuf)
++			 struct membuf to)
+ {
+-	struct pt_regs *regs;
+-
+-	regs = task_pt_regs(target);
+-	return user_regset_copyout(&pos, &count, &kbuf, &ubuf, regs, 0, -1);
++	return membuf_write(&to, task_pt_regs(target),
++			    sizeof(struct user_regs_struct));
+ }
  
- 		return;
- 	}
-@@ -971,10 +970,8 @@ int mhi_queue_skb(struct mhi_device *mhi_dev, enum dma_data_direction dir,
- 	}
+ static int riscv_gpr_set(struct task_struct *target,
+@@ -55,21 +52,13 @@ static int riscv_gpr_set(struct task_struct *target,
+ #ifdef CONFIG_FPU
+ static int riscv_fpr_get(struct task_struct *target,
+ 			 const struct user_regset *regset,
+-			 unsigned int pos, unsigned int count,
+-			 void *kbuf, void __user *ubuf)
++			 struct membuf to)
+ {
+-	int ret;
+ 	struct __riscv_d_ext_state *fstate = &target->thread.fstate;
  
- 	/* we're in M3 or transitioning to M3 */
--	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
--		mhi_cntrl->runtime_get(mhi_cntrl);
--		mhi_cntrl->runtime_put(mhi_cntrl);
+-	ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf, fstate, 0,
+-				  offsetof(struct __riscv_d_ext_state, fcsr));
+-	if (!ret) {
+-		ret = user_regset_copyout(&pos, &count, &kbuf, &ubuf, fstate, 0,
+-					  offsetof(struct __riscv_d_ext_state, fcsr) +
+-					  sizeof(fstate->fcsr));
 -	}
-+	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
-+		mhi_trigger_resume(mhi_cntrl, false);
+-
+-	return ret;
++	membuf_write(&to, fstate, offsetof(struct __riscv_d_ext_state, fcsr));
++	membuf_store(&to, fstate->fcsr);
++	return membuf_zero(&to, 4);	// explicitly pad
+ }
  
- 	/* Toggle wake to exit out of M2 */
- 	mhi_cntrl->wake_toggle(mhi_cntrl);
-@@ -1032,10 +1029,8 @@ int mhi_queue_dma(struct mhi_device *mhi_dev, enum dma_data_direction dir,
- 	}
- 
- 	/* we're in M3 or transitioning to M3 */
--	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
--		mhi_cntrl->runtime_get(mhi_cntrl);
--		mhi_cntrl->runtime_put(mhi_cntrl);
--	}
-+	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
-+		mhi_trigger_resume(mhi_cntrl, false);
- 
- 	/* Toggle wake to exit out of M2 */
- 	mhi_cntrl->wake_toggle(mhi_cntrl);
-@@ -1147,10 +1142,8 @@ int mhi_queue_buf(struct mhi_device *mhi_dev, enum dma_data_direction dir,
- 	read_lock_irqsave(&mhi_cntrl->pm_lock, flags);
- 
- 	/* we're in M3 or transitioning to M3 */
--	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
--		mhi_cntrl->runtime_get(mhi_cntrl);
--		mhi_cntrl->runtime_put(mhi_cntrl);
--	}
-+	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
-+		mhi_trigger_resume(mhi_cntrl, false);
- 
- 	/* Toggle wake to exit out of M2 */
- 	mhi_cntrl->wake_toggle(mhi_cntrl);
-diff --git a/drivers/bus/mhi/core/pm.c b/drivers/bus/mhi/core/pm.c
-index 661d704..5e3994e 100644
---- a/drivers/bus/mhi/core/pm.c
-+++ b/drivers/bus/mhi/core/pm.c
-@@ -1139,10 +1139,8 @@ void mhi_device_put(struct mhi_device *mhi_dev)
- 
- 	mhi_dev->dev_wake--;
- 	read_lock_bh(&mhi_cntrl->pm_lock);
--	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state)) {
--		mhi_cntrl->runtime_get(mhi_cntrl);
--		mhi_cntrl->runtime_put(mhi_cntrl);
--	}
-+	if (MHI_PM_IN_SUSPEND_STATE(mhi_cntrl->pm_state))
-+		mhi_trigger_resume(mhi_cntrl, false);
- 
- 	mhi_cntrl->wake_put(mhi_cntrl, false);
- 	read_unlock_bh(&mhi_cntrl->pm_lock);
+ static int riscv_fpr_set(struct task_struct *target,
+@@ -98,8 +87,8 @@ static const struct user_regset riscv_user_regset[] = {
+ 		.n = ELF_NGREG,
+ 		.size = sizeof(elf_greg_t),
+ 		.align = sizeof(elf_greg_t),
+-		.get = &riscv_gpr_get,
+-		.set = &riscv_gpr_set,
++		.get2 = riscv_gpr_get,
++		.set = riscv_gpr_set,
+ 	},
+ #ifdef CONFIG_FPU
+ 	[REGSET_F] = {
+@@ -107,8 +96,8 @@ static const struct user_regset riscv_user_regset[] = {
+ 		.n = ELF_NFPREG,
+ 		.size = sizeof(elf_fpreg_t),
+ 		.align = sizeof(elf_fpreg_t),
+-		.get = &riscv_fpr_get,
+-		.set = &riscv_fpr_set,
++		.get2 = riscv_fpr_get,
++		.set = riscv_fpr_set,
+ 	},
+ #endif
+ };
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.11.0
 
