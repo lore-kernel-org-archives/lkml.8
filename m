@@ -2,242 +2,160 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFA90C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:55:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44592C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B9C020656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:55:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="PyYdn9Db"
+	by mail.kernel.org (Postfix) with ESMTP id 3257C20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:55:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730006AbgF2Sz3 (ORCPT
+        id S1730016AbgF2Szd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:55:29 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:54415 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729183AbgF2SzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:55:16 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593456915; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=tNiuQ+4uhjgZPnPAVe1RZE3rFmZ//xK6MB4wZLBlQDU=; b=PyYdn9DbMAY2/fSUU6Fl5Yh91mJKcu3wP7y0/oIOwHRxglLwVyA1JVPJFPpKCMgyaYnVmrsL
- fN2WMioV8gSZmr87i7pV0ZY8rP62OMe7FjxRk6c30//THUw1KjEIoF/Zw/H82bBLBXV/kvZ5
- kLJ5BHxSPvaTIM1SVIsgvw/hzfo=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n03.prod.us-east-1.postgun.com with SMTP id
- 5efa01398fe116ddd906311b (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 29 Jun 2020 14:56:57
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 1124BC43395; Mon, 29 Jun 2020 14:56:56 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6D5F8C433C8;
-        Mon, 29 Jun 2020 14:56:53 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6D5F8C433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Mon, 29 Jun 2020 08:56:50 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     Sean Paul <sean@poorly.run>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Jonathan Marek <jonathan@marek.ca>,
-        David Airlie <airlied@linux.ie>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Akhil P Oommen <akhilpo@codeaurora.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Eric Anholt <eric@anholt.net>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>, " <iommu@lists.linux-foundation.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Emil Velikov <emil.velikov@collabora.com>
-Subject: Re: [Freedreno] [PATCH v2 6/6] drm/msm/a6xx: Add support for
- per-instance pagetables
-Message-ID: <20200629145650.GC25740@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        Jonathan Marek <jonathan@marek.ca>, David Airlie <airlied@linux.ie>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Akhil P Oommen <akhilpo@codeaurora.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Eric Anholt <eric@anholt.net>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg Roedel <joro@8bytes.org>, " <iommu@lists.linux-foundation.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Emil Velikov <emil.velikov@collabora.com>
-References: <20200626200414.14382-1-jcrouse@codeaurora.org>
- <20200626200414.14382-7-jcrouse@codeaurora.org>
- <CAF6AEGvFPtiFcBg5j3An5piPWy3Sg3=-o2k8Xzzf6anzVi9_ZA@mail.gmail.com>
- <CAF6AEGtOcA1V33KgaYKjn=FBk9_q4u8fF5Tgoyq7Y3vUp2pKjg@mail.gmail.com>
+        Mon, 29 Jun 2020 14:55:33 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51060 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726399AbgF2Sz0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:55:26 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05TGbilX079593;
+        Mon, 29 Jun 2020 12:48:41 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31ydmqnnu6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 29 Jun 2020 12:48:41 -0400
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05TGeQ0B090545;
+        Mon, 29 Jun 2020 12:48:41 -0400
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31ydmqnnt5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 29 Jun 2020 12:48:41 -0400
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05TGfcbo015555;
+        Mon, 29 Jun 2020 16:48:38 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+        by ppma04ams.nl.ibm.com with ESMTP id 31wwr8ajr0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 29 Jun 2020 16:48:38 +0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05TGmZ6b33161402
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 29 Jun 2020 16:48:36 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DCB584C059;
+        Mon, 29 Jun 2020 16:48:34 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 006AF4C050;
+        Mon, 29 Jun 2020 16:48:31 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.79.64])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 29 Jun 2020 16:48:30 +0000 (GMT)
+Subject: Re: [PATCH v3 1/1] s390: virtio: let arch accept devices without
+ IOMMU feature
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, pasic@linux.ibm.com,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com, jasowang@redhat.com,
+        cohuck@redhat.com, kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, thomas.lendacky@amd.com,
+        david@gibson.dropbear.id.au, linuxram@us.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com
+References: <1592390637-17441-1-git-send-email-pmorel@linux.ibm.com>
+ <1592390637-17441-2-git-send-email-pmorel@linux.ibm.com>
+ <20200629115952-mutt-send-email-mst@kernel.org>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Message-ID: <66f808f2-5dd9-9127-d0e8-6bafbf13fc62@linux.ibm.com>
+Date:   Mon, 29 Jun 2020 18:48:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAF6AEGtOcA1V33KgaYKjn=FBk9_q4u8fF5Tgoyq7Y3vUp2pKjg@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200629115952-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-06-29_18:2020-06-29,2020-06-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
+ spamscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0
+ mlxlogscore=868 adultscore=0 clxscore=1015 priorityscore=1501
+ suspectscore=0 mlxscore=0 cotscore=-2147483648 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006290107
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 27, 2020 at 01:11:14PM -0700, Rob Clark wrote:
-> On Sat, Jun 27, 2020 at 12:56 PM Rob Clark <robdclark@gmail.com> wrote:
-> >
-> > On Fri, Jun 26, 2020 at 1:04 PM Jordan Crouse <jcrouse@codeaurora.org> wrote:
-> > >
-> > > Add support for using per-instance pagetables if all the dependencies are
-> > > available.
-> > >
-> > > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> > > ---
-> > >
-> > >  drivers/gpu/drm/msm/adreno/a6xx_gpu.c | 43 +++++++++++++++++++++++++++
-> > >  drivers/gpu/drm/msm/msm_ringbuffer.h  |  1 +
-> > >  2 files changed, 44 insertions(+)
-> > >
-> > > diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> > > index aa53f47b7e8b..95ed2ceac121 100644
-> > > --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> > > +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-> > > @@ -79,6 +79,34 @@ static void get_stats_counter(struct msm_ringbuffer *ring, u32 counter,
-> > >         OUT_RING(ring, upper_32_bits(iova));
-> > >  }
-> > >
-> > > +static void a6xx_set_pagetable(struct msm_gpu *gpu, struct msm_ringbuffer *ring,
-> > > +               struct msm_file_private *ctx)
-> > > +{
-> > > +       phys_addr_t ttbr;
-> > > +       u32 asid;
-> > > +
-> > > +       if (msm_iommu_pagetable_params(ctx->aspace->mmu, &ttbr, &asid))
-> > > +               return;
-> > > +
-> > > +       /* Execute the table update */
-> > > +       OUT_PKT7(ring, CP_SMMU_TABLE_UPDATE, 4);
-> > > +       OUT_RING(ring, lower_32_bits(ttbr));
-> > > +       OUT_RING(ring, (((u64) asid) << 48) | upper_32_bits(ttbr));
-> > > +       /* CONTEXTIDR is currently unused */
-> > > +       OUT_RING(ring, 0);
-> > > +       /* CONTEXTBANK is currently unused */
-> > > +       OUT_RING(ring, 0);
-> > > +
-> > > +       /*
-> > > +        * Write the new TTBR0 to the memstore. This is good for debugging.
-> > > +        */
-> > > +       OUT_PKT7(ring, CP_MEM_WRITE, 4);
-> > > +       OUT_RING(ring, lower_32_bits(rbmemptr(ring, ttbr0)));
-> > > +       OUT_RING(ring, upper_32_bits(rbmemptr(ring, ttbr0)));
-> > > +       OUT_RING(ring, lower_32_bits(ttbr));
-> > > +       OUT_RING(ring, (((u64) asid) << 48) | upper_32_bits(ttbr));
-> > > +}
-> > > +
-> > >  static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
-> > >         struct msm_file_private *ctx)
-> > >  {
-> > > @@ -89,6 +117,8 @@ static void a6xx_submit(struct msm_gpu *gpu, struct msm_gem_submit *submit,
-> > >         struct msm_ringbuffer *ring = submit->ring;
-> > >         unsigned int i;
-> > >
-> > > +       a6xx_set_pagetable(gpu, ring, ctx);
-> > > +
-> > >         get_stats_counter(ring, REG_A6XX_RBBM_PERFCTR_CP_0_LO,
-> > >                 rbmemptr_stats(ring, index, cpcycles_start));
-> > >
-> > > @@ -872,6 +902,18 @@ static unsigned long a6xx_gpu_busy(struct msm_gpu *gpu)
-> > >         return (unsigned long)busy_time;
-> > >  }
-> > >
-> > > +struct msm_gem_address_space *a6xx_address_space_instance(struct msm_gpu *gpu)
-> > > +{
-> > > +       struct msm_mmu *mmu;
-> > > +
-> > > +       mmu = msm_iommu_pagetable_create(gpu->aspace->mmu);
-> > > +       if (IS_ERR(mmu))
-> > > +               return msm_gem_address_space_get(gpu->aspace);
-> > > +
-> > > +       return msm_gem_address_space_create(mmu,
-> > > +               "gpu", 0x100000000ULL, 0x1ffffffffULL);
-> > > +}
-> > > +
-> > >  static const struct adreno_gpu_funcs funcs = {
-> > >         .base = {
-> > >                 .get_param = adreno_get_param,
-> > > @@ -895,6 +937,7 @@ static const struct adreno_gpu_funcs funcs = {
-> > >                 .gpu_state_put = a6xx_gpu_state_put,
-> > >  #endif
-> > >                 .create_address_space = adreno_iommu_create_address_space,
-> > > +               .address_space_instance = a6xx_address_space_instance,
-> >
-> > Hmm, maybe instead of .address_space_instance, something like
-> > .create_context_address_space?
-> >
-> > Since like .create_address_space, it is creating an address space..
-> > the difference is that it is a per context/process aspace..
-> >
 
-This is a good suggestion. I'm always open to changing function names.
+
+On 2020-06-29 18:09, Michael S. Tsirkin wrote:
+> On Wed, Jun 17, 2020 at 12:43:57PM +0200, Pierre Morel wrote:
+>> An architecture protecting the guest memory against unauthorized host
+>> access may want to enforce VIRTIO I/O device protection through the
+>> use of VIRTIO_F_IOMMU_PLATFORM.
+>> Let's give a chance to the architecture to accept or not devices
+>> without VIRTIO_F_IOMMU_PLATFORM.
+> 
+> I agree it's a bit misleading. Protection is enforced by memory
+> encryption, you can't trust the hypervisor to report the bit correctly
+> so using that as a securoty measure would be pointless.
+> The real gain here is that broken configs are easier to
+> debug.
+> 
+> Here's an attempt at a better description:
+> 
+> 	On some architectures, guest knows that VIRTIO_F_IOMMU_PLATFORM is
+> 	required for virtio to function: e.g. this is the case on s390 protected
+> 	virt guests, since otherwise guest passes encrypted guest memory to devices,
+> 	which the device can't read. Without VIRTIO_F_IOMMU_PLATFORM the
+> 	result is that affected memory (or even a whole page containing
+> 	it is corrupted). Detect and fail probe instead - that is easier
+> 	to debug.
+
+Thanks indeed better aside from the "encrypted guest memory": the 
+mechanism used to avoid the access to the guest memory from the host by 
+s390 is not encryption but a hardware feature denying the general host 
+access and allowing pieces of memory to be shared between guest and host.
+As a consequence the data read from memory is not corrupted but not read 
+at all and the read error kills the hypervizor with a SIGSEGV.
+
 
 > 
-> 
-> or maybe just .create_pgtable and return the 'struct msm_mmu' (which
-> is itself starting to become less of a great name)..
-> 
-> The only other thing a6xx_address_space_instance() adds is knowing
-> where the split is between the kernel and user pgtables, and I suppose
-> that isn't a thing that would really be changing between gens?
+> however, now that we have described what it is (hypervisor
+> misconfiguration) I ask a question: can we be sure this will never
+> ever work? E.g. what if some future hypervisor gains ability to
+> access the protected guest memory in some abstractly secure manner?
 
-In theory the split is determined by the hardware but its been the same for all
-a5xx/a6xx targets.
+The goal of the s390 PV feature is to avoid this possibility so I don't 
+think so; however, there is a possibility that some hardware VIRTIO 
+device gain access to the guest's protected memory, even such device 
+does not exist yet.
 
-Jordan
+At the moment such device exists we will need a driver for it, at least 
+to enable the feature and apply policies, it is also one of the reasons 
+why a hook to the architecture is interesting.
 
-> BR,
-> -R
+> We are blocking this here, and it's hard to predict the future,
+> and a broken hypervisor can always find ways to crash the guest ...
+
+yes, this is also something to fix on the hypervizor side, Halil is 
+working on it.
+
 > 
-> > BR,
-> > -R
-> >
-> > >         },
-> > >         .get_timestamp = a6xx_get_timestamp,
-> > >  };
-> > > diff --git a/drivers/gpu/drm/msm/msm_ringbuffer.h b/drivers/gpu/drm/msm/msm_ringbuffer.h
-> > > index 7764373d0ed2..0987d6bf848c 100644
-> > > --- a/drivers/gpu/drm/msm/msm_ringbuffer.h
-> > > +++ b/drivers/gpu/drm/msm/msm_ringbuffer.h
-> > > @@ -31,6 +31,7 @@ struct msm_rbmemptrs {
-> > >         volatile uint32_t fence;
-> > >
-> > >         volatile struct msm_gpu_submit_stats stats[MSM_GPU_SUBMIT_STATS_COUNT];
-> > > +       volatile u64 ttbr0;
-> > >  };
-> > >
-> > >  struct msm_ringbuffer {
-> > > --
-> > > 2.17.1
-> > >
-> _______________________________________________
-> Freedreno mailing list
-> Freedreno@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/freedreno
+> IMHO it would be safer to just print a warning.
+> What do you think?
+
+Sadly, putting a warning may not help as qemu is killed if it accesses 
+the protected memory.
+Also note that the crash occurs not only on start but also on hotplug.
+
+Thanks,
+Pierre
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Pierre Morel
+IBM Lab Boeblingen
