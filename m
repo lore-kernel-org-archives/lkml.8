@@ -2,372 +2,168 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5761C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:21:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65FB3C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:21:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98270206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:21:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49EE020702
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:21:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="hi3ywJ0H"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="wJxsuJFv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730348AbgF2TUy (ORCPT
+        id S1731955AbgF2TVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:20:54 -0400
-Received: from mailout1.samsung.com ([203.254.224.24]:18097 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728039AbgF2TUj (ORCPT
+        Mon, 29 Jun 2020 15:21:19 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:26142 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731293AbgF2TVI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:20:39 -0400
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200629073302epoutp0137a4402258f10cd34b9b3a1e35bbd727~c82TVhY9c2768027680epoutp01G
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:33:02 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200629073302epoutp0137a4402258f10cd34b9b3a1e35bbd727~c82TVhY9c2768027680epoutp01G
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1593415982;
-        bh=k4PRx7IG+B7Ka1qP9mmE1ScKrGBFqVzGsJu8AYFM+2k=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=hi3ywJ0Hw5myVfvATvGWhLisEEiatYqRdsu3+599+kFekspldq4XUu4VxcyFnvxwD
-         eCk8mYp4ugEVnhL5NimXXNBECWNERA72DvSRiKC/EqsM3YhBwofOIaTWICubcy+f02
-         IaIsRju4iDpYjffcbU5esXR6GLZahZxxejnjmOSQ=
-Received: from epcpadp2 (unknown [182.195.40.12]) by epcas1p3.samsung.com
-        (KnoxPortal) with ESMTP id
-        20200629073302epcas1p3a4ce66057afa567d0cf5f55bab423e78~c82S8oa1h1627716277epcas1p3x;
-        Mon, 29 Jun 2020 07:33:02 +0000 (GMT)
-Mime-Version: 1.0
-Subject: [PATCH v4 5/5] scsi: ufs: Prepare HPB read for cached sub-region
-Reply-To: daejun7.park@samsung.com
-From:   Daejun Park <daejun7.park@samsung.com>
-To:     Daejun Park <daejun7.park@samsung.com>,
-        "avri.altman@wdc.com" <avri.altman@wdc.com>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
-        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
-        "beanhuo@micron.com" <beanhuo@micron.com>,
-        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
-        "cang@codeaurora.org" <cang@codeaurora.org>,
-        "bvanassche@acm.org" <bvanassche@acm.org>,
-        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
-        ALIM AKHTAR <alim.akhtar@samsung.com>
-CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sang-yoon Oh <sangyoon.oh@samsung.com>,
-        Sung-Jun Park <sungjun07.park@samsung.com>,
-        yongmyung lee <ymhungry.lee@samsung.com>,
-        Jinyoung CHOI <j-young.choi@samsung.com>,
-        Adel Choi <adel.choi@samsung.com>,
-        BoRam Shin <boram.shin@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <963815509.21593415684555.JavaMail.epsvc@epcpadp2>
-X-CPGS-Detection: blocking_info_exchange
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <963815509.21593415982157.JavaMail.epsvc@epcpadp2>
-Date:   Mon, 29 Jun 2020 16:31:08 +0900
-X-CMS-MailID: 20200629073108epcms2p236b1bc0a90fd3252b15d94cf782f0d3a
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-X-CPGSPASS: Y
-X-CPGSPASS: Y
-X-Hop-Count: 3
-X-CMS-RootMailID: 20200629064323epcms2p787baba58a416fef7fdd3927f8da701da
-References: <963815509.21593415684555.JavaMail.epsvc@epcpadp2>
-        <1239183618.61593413882377.JavaMail.epsvc@epcpadp2>
-        <963815509.21593413582881.JavaMail.epsvc@epcpadp2>
-        <1239183618.61593413402991.JavaMail.epsvc@epcpadp1>
-        <231786897.01593413281727.JavaMail.epsvc@epcpadp2>
-        <CGME20200629064323epcms2p787baba58a416fef7fdd3927f8da701da@epcms2p2>
+        Mon, 29 Jun 2020 15:21:08 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05TB5X2X029757;
+        Mon, 29 Jun 2020 04:06:03 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding : content-type; s=pfpt0818;
+ bh=3aOA3OUjBLYvL08USywN1kGPx4VsQhFs8Gld/FjshXY=;
+ b=wJxsuJFvM40bUiApi3gsZ9gfiLXxlQW6SaJ8qRgQVDeFPpTtCnK8TwQMZpnuMbgkNDw2
+ vW4U8xOENP50bJuQtpKTU/9u7SoVng7mPQVsmM6NMqoNlsKwbbxEjB8mtOrhoIf3VJoE
+ DxbQauoqBj5wumJd5GxeAp+8Nn7PBz1Dug8eEj+xZXuotXb7qP0KaaLKi5yEb2D1i+P1
+ yxkiVPztZFXVpaahna9VbEy7Kgbj95sDQiiXoZUoq8RR1y25lR8+dz0TkZ0PtAeZho2v
+ HReRZnkMmwnkt01pMsxcVdCsf2TsFfAWSLZKnZABtdGOPds0nuhZbUe44ngfSmcQ5yAM mA== 
+Received: from sc-exch04.marvell.com ([199.233.58.184])
+        by mx0a-0016f401.pphosted.com with ESMTP id 31y0wrtfxp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 29 Jun 2020 04:06:03 -0700
+Received: from DC5-EXCH01.marvell.com (10.69.176.38) by SC-EXCH04.marvell.com
+ (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 29 Jun
+ 2020 04:06:02 -0700
+Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
+ (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 29 Jun 2020 04:06:02 -0700
+Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.54.6])
+        by maili.marvell.com (Postfix) with ESMTP id D9A3E3F703F;
+        Mon, 29 Jun 2020 04:05:58 -0700 (PDT)
+From:   Alexander Lobakin <alobakin@marvell.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>
+CC:     Igor Russkikh <irusskikh@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        Ariel Elior <aelior@marvell.com>,
+        "Alexander Lobakin" <alobakin@marvell.com>,
+        <GR-everest-linux-l2@marvell.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH net-next 1/6] net: qed: correct existing SPDX tags
+Date:   Mon, 29 Jun 2020 14:05:07 +0300
+Message-ID: <20200629110512.1812-2-alobakin@marvell.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629110512.1812-1-alobakin@marvell.com>
+References: <20200629110512.1812-1-alobakin@marvell.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
+ definitions=2020-06-29_11:2020-06-29,2020-06-29 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch changes the read I/O to the HPB read I/O.
+QLogic QED drivers source code is dual licensed under
+GPL-2.0/BSD-3-Clause.
+Correct already existing but wrong SPDX tags to match the actual
+license.
 
-If the logical address of the read I/O belongs to active sub-region, the
-HPB driver modifies the read I/O command to HPB read. It modifies the upiu
-command of UFS instead of modifying the existing SCSI command.
-
-In the HPB version 1.0, the maximum read I/O size that can be converted to
-HPB read is 4KB.
-
-The dirty map of the active sub-region prevents an incorrect HPB read that
-has stale physical page number which is updated by previous write I/O.
-
-Signed-off-by: Daejun Park <daejun7.park@samsung.com>
+Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
+Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
 ---
- drivers/scsi/ufs/ufshpb.c | 235 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 235 insertions(+)
+ drivers/net/ethernet/qlogic/qed/Makefile       | 3 ++-
+ drivers/net/ethernet/qlogic/qed/qed_debug.c    | 2 +-
+ drivers/net/ethernet/qlogic/qed/qed_debug.h    | 2 +-
+ drivers/net/ethernet/qlogic/qed/qed_mng_tlv.c  | 3 ++-
+ drivers/net/ethernet/qlogic/qed/qed_selftest.h | 3 ++-
+ include/linux/qed/fcoe_common.h                | 2 +-
+ include/linux/qed/qed_fcoe_if.h                | 3 ++-
+ 7 files changed, 11 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/scsi/ufs/ufshpb.c b/drivers/scsi/ufs/ufshpb.c
-index 45510c207a98..8e8b273d88d9 100644
---- a/drivers/scsi/ufs/ufshpb.c
-+++ b/drivers/scsi/ufs/ufshpb.c
-@@ -26,6 +26,22 @@ static inline int ufshpb_is_valid_srgn(struct ufshpb_region *rgn,
- 		srgn->srgn_state == HPB_SRGN_VALID;
- }
+diff --git a/drivers/net/ethernet/qlogic/qed/Makefile b/drivers/net/ethernet/qlogic/qed/Makefile
+index a0acb94d65f0..cee566faba2f 100644
+--- a/drivers/net/ethernet/qlogic/qed/Makefile
++++ b/drivers/net/ethernet/qlogic/qed/Makefile
+@@ -1,4 +1,5 @@
+-# SPDX-License-Identifier: GPL-2.0
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
++
+ obj-$(CONFIG_QED) := qed.o
  
-+static inline bool ufshpb_is_read_cmd(struct scsi_cmnd *cmd)
-+{
-+	return req_op(cmd->request) == REQ_OP_READ;
-+}
+ qed-y := qed_cxt.o qed_dev.o qed_hw.o qed_init_fw_funcs.o qed_init_ops.o \
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_debug.c b/drivers/net/ethernet/qlogic/qed/qed_debug.c
+index 81e8fbe4a05b..8b14e6852daf 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_debug.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_debug.c
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0-only
++// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
+ /* QLogic qed NIC Driver
+  * Copyright (c) 2015 QLogic Corporation
+  */
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_debug.h b/drivers/net/ethernet/qlogic/qed/qed_debug.h
+index edf99d296bd1..685696878ec2 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_debug.h
++++ b/drivers/net/ethernet/qlogic/qed/qed_debug.h
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: GPL-2.0-only */
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
+ /* QLogic qed NIC Driver
+  * Copyright (c) 2015 QLogic Corporation
+  */
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_mng_tlv.c b/drivers/net/ethernet/qlogic/qed/qed_mng_tlv.c
+index 6c16158d8090..56b7567d7a60 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_mng_tlv.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_mng_tlv.c
+@@ -1,4 +1,5 @@
+-// SPDX-License-Identifier: GPL-2.0
++// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
 +
-+static inline bool ufshpb_is_write_discard_cmd(struct scsi_cmnd *cmd)
-+{
-+	return op_is_write(req_op(cmd->request)) ||
-+	       op_is_discard(req_op(cmd->request));
-+}
+ #include <linux/types.h>
+ #include <asm/byteorder.h>
+ #include <linux/bug.h>
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_selftest.h b/drivers/net/ethernet/qlogic/qed/qed_selftest.h
+index ad00d082fec8..d8121fd39bc1 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_selftest.h
++++ b/drivers/net/ethernet/qlogic/qed/qed_selftest.h
+@@ -1,4 +1,5 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
 +
-+static inline bool ufshpb_is_support_chunk(int transfer_len)
-+{
-+	return transfer_len <= HPB_MULTI_CHUNK_HIGH;
-+}
+ #ifndef _QED_SELFTEST_API_H
+ #define _QED_SELFTEST_API_H
+ #include <linux/types.h>
+diff --git a/include/linux/qed/fcoe_common.h b/include/linux/qed/fcoe_common.h
+index 98cfc195abe2..a669d7d84284 100644
+--- a/include/linux/qed/fcoe_common.h
++++ b/include/linux/qed/fcoe_common.h
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: GPL-2.0-only */
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
+ /* QLogic qed NIC Driver
+  * Copyright (c) 2015 QLogic Corporation
+  */
+diff --git a/include/linux/qed/qed_fcoe_if.h b/include/linux/qed/qed_fcoe_if.h
+index 46082480a2c3..65d0317ef67e 100644
+--- a/include/linux/qed/qed_fcoe_if.h
++++ b/include/linux/qed/qed_fcoe_if.h
+@@ -1,4 +1,5 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
 +
- static inline bool ufshpb_is_general_lun(int lun)
- {
- 	return lun < UFS_UPIU_MAX_UNIT_NUM_ID;
-@@ -117,6 +133,224 @@ static inline void ufshpb_lu_put(struct ufshpb_lu *hpb)
- 	put_device(&hpb->hpb_lu_dev);
- }
- 
-+static inline u32 ufshpb_get_lpn(struct scsi_cmnd *cmnd)
-+{
-+	return blk_rq_pos(cmnd->request) >>
-+		(ilog2(cmnd->device->sector_size) - 9);
-+}
-+
-+static inline unsigned int ufshpb_get_len(struct scsi_cmnd *cmnd)
-+{
-+	return blk_rq_sectors(cmnd->request) >>
-+		(ilog2(cmnd->device->sector_size) - 9);
-+}
-+
-+static void ufshpb_set_ppn_dirty(struct ufshpb_lu *hpb, int rgn_idx,
-+			     int srgn_idx, int srgn_offset, int cnt)
-+{
-+	struct ufshpb_region *rgn;
-+	struct ufshpb_subregion *srgn;
-+	int set_bit_len;
-+	int bitmap_len = hpb->entries_per_srgn;
-+
-+next_srgn:
-+	rgn = hpb->rgn_tbl + rgn_idx;
-+	srgn = rgn->srgn_tbl + srgn_idx;
-+
-+	if ((srgn_offset + cnt) > bitmap_len)
-+		set_bit_len = bitmap_len - srgn_offset;
-+	else
-+		set_bit_len = cnt;
-+
-+	if (rgn->rgn_state != HPB_RGN_INACTIVE &&
-+	    srgn->srgn_state == HPB_SRGN_VALID)
-+		bitmap_set(srgn->mctx->ppn_dirty, srgn_offset, set_bit_len);
-+
-+	srgn_offset = 0;
-+	if (++srgn_idx == hpb->srgns_per_rgn) {
-+		srgn_idx = 0;
-+		rgn_idx++;
-+	}
-+
-+	cnt -= set_bit_len;
-+	if (cnt > 0)
-+		goto next_srgn;
-+
-+	WARN_ON(cnt < 0);
-+}
-+
-+static bool ufshpb_test_ppn_dirty(struct ufshpb_lu *hpb, int rgn_idx,
-+				   int srgn_idx, int srgn_offset, int cnt)
-+{
-+	struct ufshpb_region *rgn;
-+	struct ufshpb_subregion *srgn;
-+	int bitmap_len = hpb->entries_per_srgn;
-+	int bit_len;
-+
-+next_srgn:
-+	rgn = hpb->rgn_tbl + rgn_idx;
-+	srgn = rgn->srgn_tbl + srgn_idx;
-+
-+	if (!ufshpb_is_valid_srgn(rgn, srgn))
-+		return true;
-+
-+	/*
-+	 * If the region state is active, mctx must be allocated.
-+	 * In this case, check whether the region is evicted or
-+	 * mctx allcation fail.
-+	 */
-+	WARN_ON(!srgn->mctx);
-+
-+	if ((srgn_offset + cnt) > bitmap_len)
-+		bit_len = bitmap_len - srgn_offset;
-+	else
-+		bit_len = cnt;
-+
-+	if (find_next_bit(srgn->mctx->ppn_dirty,
-+			  bit_len, srgn_offset) >= srgn_offset)
-+		return true;
-+
-+	srgn_offset = 0;
-+	if (++srgn_idx == hpb->srgns_per_rgn) {
-+		srgn_idx = 0;
-+		rgn_idx++;
-+	}
-+
-+	cnt -= bit_len;
-+	if (cnt > 0)
-+		goto next_srgn;
-+
-+	return false;
-+}
-+
-+static u64 ufshpb_get_ppn(struct ufshpb_lu *hpb,
-+			  struct ufshpb_map_ctx *mctx, int pos, int *error)
-+{
-+	u64 *ppn_table;
-+	struct page *page;
-+	int index, offset;
-+
-+	index = pos / (PAGE_SIZE / HPB_ENTRY_SIZE);
-+	offset = pos % (PAGE_SIZE / HPB_ENTRY_SIZE);
-+
-+	page = mctx->m_page[index];
-+	if (unlikely(!page)) {
-+		*error = -ENOMEM;
-+		dev_err(&hpb->hpb_lu_dev,
-+			"error. cannot find page in mctx\n");
-+		return 0;
-+	}
-+
-+	ppn_table = page_address(page);
-+	if (unlikely(!ppn_table)) {
-+		*error = -ENOMEM;
-+		dev_err(&hpb->hpb_lu_dev, "error. cannot get ppn_table\n");
-+		return 0;
-+	}
-+
-+	return ppn_table[offset];
-+}
-+
-+static inline void
-+ufshpb_get_pos_from_lpn(struct ufshpb_lu *hpb, unsigned long lpn, int *rgn_idx,
-+			int *srgn_idx, int *offset)
-+{
-+	int rgn_offset;
-+
-+	*rgn_idx = lpn >> hpb->entries_per_rgn_shift;
-+	rgn_offset = lpn & hpb->entries_per_rgn_mask;
-+	*srgn_idx = rgn_offset >> hpb->entries_per_srgn_shift;
-+	*offset = rgn_offset & hpb->entries_per_srgn_mask;
-+}
-+
-+static void
-+ufshpb_set_hpb_read_to_upiu(struct ufshpb_lu *hpb, struct ufshcd_lrb *lrbp,
-+				  u32 lpn, u64 ppn,  unsigned int transfer_len)
-+{
-+	unsigned char *cdb = lrbp->ucd_req_ptr->sc.cdb;
-+
-+	cdb[0] = UFSHPB_READ;
-+
-+	put_unaligned_be64(ppn, &cdb[6]);
-+	cdb[14] = transfer_len;
-+}
-+
-+/* routine : READ10 -> HPB_READ  */
-+static void ufshpb_prep_fn(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
-+{
-+	struct ufshpb_lu *hpb;
-+	struct ufshpb_region *rgn;
-+	struct ufshpb_subregion *srgn;
-+	struct scsi_cmnd *cmd = lrbp->cmd;
-+	u32 lpn;
-+	u64 ppn;
-+	unsigned long flags;
-+	int transfer_len, rgn_idx, srgn_idx, srgn_offset;
-+	int err = 0;
-+
-+	hpb = ufshpb_get_hpb_data(cmd);
-+	err = ufshpb_lu_get(hpb);
-+	if (unlikely(err))
-+		return;
-+
-+	WARN_ON(hpb->lun != cmd->device->lun);
-+	if (!ufshpb_is_write_discard_cmd(cmd) &&
-+	    !ufshpb_is_read_cmd(cmd))
-+		goto put_hpb;
-+
-+	transfer_len = ufshpb_get_len(cmd);
-+	if (unlikely(!transfer_len))
-+		goto put_hpb;
-+
-+	lpn = ufshpb_get_lpn(cmd);
-+	ufshpb_get_pos_from_lpn(hpb, lpn, &rgn_idx, &srgn_idx, &srgn_offset);
-+	rgn = hpb->rgn_tbl + rgn_idx;
-+	srgn = rgn->srgn_tbl + srgn_idx;
-+
-+	/* If command type is WRITE or DISCARD, set bitmap as drity */
-+	if (ufshpb_is_write_discard_cmd(cmd)) {
-+		spin_lock_irqsave(&hpb->hpb_state_lock, flags);
-+		ufshpb_set_ppn_dirty(hpb, rgn_idx, srgn_idx, srgn_offset,
-+				 transfer_len);
-+		spin_unlock_irqrestore(&hpb->hpb_state_lock, flags);
-+		goto put_hpb;
-+	}
-+
-+	WARN_ON(!ufshpb_is_read_cmd(cmd));
-+
-+	if (!ufshpb_is_support_chunk(transfer_len))
-+		goto put_hpb;
-+
-+	spin_lock_irqsave(&hpb->hpb_state_lock, flags);
-+	if (ufshpb_test_ppn_dirty(hpb, rgn_idx, srgn_idx, srgn_offset,
-+				   transfer_len)) {
-+		atomic_inc(&hpb->stats.miss_cnt);
-+		spin_unlock_irqrestore(&hpb->hpb_state_lock, flags);
-+		goto put_hpb;
-+	}
-+
-+	ppn = ufshpb_get_ppn(hpb, srgn->mctx, srgn_offset, &err);
-+	spin_unlock_irqrestore(&hpb->hpb_state_lock, flags);
-+	if (unlikely(err)) {
-+		/*
-+		 * In this case, the region state is active,
-+		 * but the ppn table is not allocated.
-+		 * Make sure that ppn table must be allocated on
-+		 * active state.
-+		 */
-+		WARN_ON(true);
-+		dev_err(&hpb->hpb_lu_dev,
-+			"ufshpb_get_ppn failed. err %d\n", err);
-+		goto put_hpb;
-+	}
-+
-+	ufshpb_set_hpb_read_to_upiu(hpb, lrbp, lpn, ppn, transfer_len);
-+
-+	atomic_inc(&hpb->stats.hit_cnt);
-+put_hpb:
-+	ufshpb_lu_put(hpb);
-+}
-+
- static struct ufshpb_req *ufshpb_get_map_req(struct ufshpb_lu *hpb,
- 					     struct ufshpb_subregion *srgn)
- {
-@@ -1672,6 +1906,7 @@ static struct ufshpb_driver ufshpb_drv = {
- 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
- 	},
- 	.ufshpb_ops = {
-+		.prep_fn = ufshpb_prep_fn,
- 		.reset = ufshpb_reset,
- 		.reset_host = ufshpb_reset_host,
- 		.suspend = ufshpb_suspend,
+ #ifndef _QED_FCOE_IF_H
+ #define _QED_FCOE_IF_H
+ #include <linux/types.h>
 -- 
-2.17.1
-
+2.25.1
 
