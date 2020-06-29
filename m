@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBEBAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9FD1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:56:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B08122067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 871BD204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:56:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593456966;
-	bh=Q5bwQkRY743XCiSdqiliDAuIeq9xfC1buCDIUfDYiWM=;
+	s=default; t=1593456971;
+	bh=4d8E+xxY6HjJP5yT1ceEnqlab49ZVk3WLYdMr1sR3qI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bFm30CZDK/IWt+THQSraTUIGgtioTw3uV1INTAlWIoYQI6CEoGV8MCxWl9StmtfsT
-	 kqT+5unnxc9LjH1+ddUOx3reEhvxD7l4bkO94YU41e8mMZgkY2TC6O+dj1ag3+dZYx
-	 zm/ahgC5M5IvW89YILzkU3gdmd7/0FueZWpJlB8Y=
+	b=zNMSg5q0AfQyGgEPN3w4G+kjlHcRcGRPwQrNNwU8QUoV55Z6TPLW0KkNMkcVQ5ZW3
+	 rCPwYN0Dj//CyICjDy2T9iEOLuhWM1yrgm3ZojmZB6BmaVllEjICwKAJF9b17CmBkR
+	 ON4NEqQ8y//7jnxhHmmQZvtXBmtU3CNgfSPbSuM0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728397AbgF2S4E (ORCPT
+        id S1730028AbgF2S4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:56:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42430 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 14:56:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729976AbgF2SzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729972AbgF2SzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:55:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81EB9248C3;
-        Mon, 29 Jun 2020 15:55:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87BEB25564;
+        Mon, 29 Jun 2020 15:55:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446118;
-        bh=Q5bwQkRY743XCiSdqiliDAuIeq9xfC1buCDIUfDYiWM=;
+        s=default; t=1593446127;
+        bh=4d8E+xxY6HjJP5yT1ceEnqlab49ZVk3WLYdMr1sR3qI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DIKmiur++nZSLsFAii6bsXkAqAcyeTBnZrzfuDyia9vQJWcmS+topKE5HvYEaXI3G
-         rYnOJuPBPSqu6dXtlSeRR2CrCfvroEq5F6uGBWNBHvU1aEW5Sv4A7g5xK6hEhxShp6
-         mbvAcyRZRCxIP9OooKXNybyurEywK/Y67vIG4p/g=
+        b=zEBWlRO/YV5IrZmllkovqNrcQMLRqPzwHO4OQo4Yu4sT6yWpxK7t68NNbZaqYavJi
+         QKw+2SiNrTYx4kkhnIhnbrsAKIX7mpblW/r0nA9QGhIWwOjUI+VgP/wV7OtMS+zxvJ
+         L/MIl4S/GbBNTgWk3WsrzLW5ibljMAiLk0WFTTtU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhang Xiaoxu <zhangxiaoxu5@huawei.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>,
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 109/135] cifs/smb3: Fix data inconsistent when punch hole
-Date:   Mon, 29 Jun 2020 11:52:43 -0400
-Message-Id: <20200629155309.2495516-110-sashal@kernel.org>
+Subject: [PATCH 4.4 118/135] kbuild: improve cc-option to clean up all temporary files
+Date:   Mon, 29 Jun 2020 11:52:52 -0400
+Message-Id: <20200629155309.2495516-119-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -66,55 +64,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit acc91c2d8de4ef46ed751c5f9df99ed9a109b100 ]
+[ Upstream commit f2f02ebd8f3833626642688b2d2c6a7b3c141fa9 ]
 
-When punch hole success, we also can read old data from file:
-  # strace -e trace=pread64,fallocate xfs_io -f -c "pread 20 40" \
-           -c "fpunch 20 40" -c"pread 20 40" file
-  pread64(3, " version 5.8.0-rc1+"..., 40, 20) = 40
-  fallocate(3, FALLOC_FL_KEEP_SIZE|FALLOC_FL_PUNCH_HOLE, 20, 40) = 0
-  pread64(3, " version 5.8.0-rc1+"..., 40, 20) = 40
+When cc-option and friends evaluate compiler flags, the temporary file
+$$TMP is created as an output object, and automatically cleaned up.
+The actual file path of $$TMP is .<pid>.tmp, here <pid> is the process
+ID of $(shell ...) invoked from cc-option. (Please note $$$$ is the
+escape sequence of $$).
 
-CIFS implements the fallocate(FALLOCATE_FL_PUNCH_HOLE) with send SMB
-ioctl(FSCTL_SET_ZERO_DATA) to server. It just set the range of the
-remote file to zero, but local page caches not updated, then the
-local page caches inconsistent with server.
+Such garbage files are cleaned up in most cases, but some compiler flags
+create additional output files.
 
-Also can be found by xfstests generic/316.
+For example, -gsplit-dwarf creates a .dwo file.
 
-So, we need to remove the page caches before send the SMB
-ioctl(FSCTL_SET_ZERO_DATA) to server.
+When CONFIG_DEBUG_INFO_SPLIT=y, you will see a bunch of .<pid>.dwo files
+left in the top of build directories. You may not notice them unless you
+do 'ls -a', but the garbage files will increase every time you run 'make'.
 
-Fixes: 31742c5a33176 ("enable fallocate punch hole ("fallocate -p") for SMB3")
-Suggested-by: Pavel Shilovsky <pshilov@microsoft.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
-Cc: stable@vger.kernel.org # v3.17
-Signed-off-by: Steve French <stfrench@microsoft.com>
+This commit changes the temporary object path to .tmp_<pid>/tmp, and
+removes .tmp_<pid> directory when exiting. Separate build artifacts such
+as *.dwo will be cleaned up all together because their file paths are
+usually determined based on the base name of the object.
+
+Another example is -ftest-coverage, which outputs the coverage data into
+<base-name-of-object>.gcno
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/smb2ops.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ scripts/Kbuild.include | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
-index 0fcf42401a5df..870b7e763bab9 100644
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -1201,6 +1201,12 @@ static long smb3_punch_hole(struct file *file, struct cifs_tcon *tcon,
- 	if (!smb2_set_sparse(xid, tcon, cfile, inode, set_sparse))
- 		return -EOPNOTSUPP;
+diff --git a/scripts/Kbuild.include b/scripts/Kbuild.include
+index e61a5c29b08c5..b6f055157b89a 100644
+--- a/scripts/Kbuild.include
++++ b/scripts/Kbuild.include
+@@ -81,20 +81,21 @@ cc-cross-prefix =  \
+ 		fi)))
  
-+	/*
-+	 * We implement the punch hole through ioctl, so we need remove the page
-+	 * caches first, otherwise the data may be inconsistent with the server.
-+	 */
-+	truncate_pagecache_range(inode, offset, offset + len - 1);
-+
- 	cifs_dbg(FYI, "offset %lld len %lld", offset, len);
+ # output directory for tests below
+-TMPOUT := $(if $(KBUILD_EXTMOD),$(firstword $(KBUILD_EXTMOD))/)
++TMPOUT = $(if $(KBUILD_EXTMOD),$(firstword $(KBUILD_EXTMOD))/).tmp_$$$$
  
- 	fsctl_buf.FileOffset = cpu_to_le64(offset);
+ # try-run
+ # Usage: option = $(call try-run, $(CC)...-o "$$TMP",option-ok,otherwise)
+ # Exit code chooses option. "$$TMP" is can be used as temporary file and
+ # is automatically cleaned up.
+ try-run = $(shell set -e;		\
+-	TMP="$(TMPOUT).$$$$.tmp";	\
+-	TMPO="$(TMPOUT).$$$$.o";	\
++	TMP=$(TMPOUT)/tmp;		\
++	TMPO=$(TMPOUT)/tmp.o;		\
++	mkdir -p $(TMPOUT);		\
++	trap "rm -rf $(TMPOUT)" EXIT;	\
+ 	if ($(1)) >/dev/null 2>&1;	\
+ 	then echo "$(2)";		\
+ 	else echo "$(3)";		\
+-	fi;				\
+-	rm -f "$$TMP" "$$TMPO")
++	fi)
+ 
+ # as-option
+ # Usage: cflags-y += $(call as-option,-Wa$(comma)-isa=foo,)
 -- 
 2.25.1
 
