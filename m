@@ -2,51 +2,51 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLACK,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D066FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:08:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DC1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD67A206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:08:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82460206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:08:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593464883;
-	bh=bhyJGtb/BvgA8n0B8soZ5ozfqmaGs0j1uCclP71HvnE=;
+	s=default; t=1593464895;
+	bh=jG4XWYFGXJnz4ForPt/MAmTEi7umlnV2RuQuuTSRVbI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZFu0ZmEaLo8Fa2xPPE/YnY8TMojfijNT9G4zQ+0J+Rk4mJbnTjey4r57gaDPQVPVX
-	 9dz/MW3cB8+qmB1jJSFYoIKjiYEb52MRkAS+OG9lgb5exPxdkusxCzkNyAkvOw4fXo
-	 cEDcr7004somMjVWl+4O2UwglMobEBmCVI/ygEsA=
+	b=zWb4R86TcBt1Qo2YeH676eYbS5Zp/vMNpeEwmx9TAmzw4zJlqp84BBtgRMs8GUJPF
+	 6FhE9Y5z3GZqnzZgRco0zhyZaFHBnXBIR9h7aIkgXVJPdi7swfWMpd0dynCxAQE2UP
+	 3FAjmdUwKU1HlrDPGEgncgtd0gWlsddhH+XuNUN4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390390AbgF2VHy (ORCPT
+        id S2387684AbgF2VIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:07:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53708 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:08:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729908AbgF2TKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:10:16 -0400
+        id S1730322AbgF2TAT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:00:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D5F1254A9;
-        Mon, 29 Jun 2020 15:53:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E97C25509;
+        Mon, 29 Jun 2020 15:54:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446002;
-        bh=bhyJGtb/BvgA8n0B8soZ5ozfqmaGs0j1uCclP71HvnE=;
+        s=default; t=1593446066;
+        bh=jG4XWYFGXJnz4ForPt/MAmTEi7umlnV2RuQuuTSRVbI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nJ00es0k58nIM91s0jKNf7Ibz3eNind8bl9HhY9VUV4xIMGkvhGPwDdylYY67saLz
-         bpqT3lMt8IaoUrFQLa1xEjuVz3sZ5O3+Z1xH+UjqInUVGrKbAGWj0NfltEzFerhxve
-         +oK9Z65S2ihTnr6c2YGSv38mw+ImHLcTCihP7WTk=
+        b=HQbrxacfxvQzZSzpKfQheiY5S1aVXbV5FFuSyY9SRHQBVZVwKiIUCkaJe7Imnar89
+         hB4HKdkC3aoHy6nta13VRJrvSMRBeFXVds/9/gOEZd1YLNKX343tIIOoRoPOYkVnDg
+         ReMuPwnV9fMJN523cQiEBX9YjRcbz04MS8RxHIQg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qian Cai <cai@lca.pw>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 010/135] vfio/pci: fix memory leaks in alloc_perm_bits()
-Date:   Mon, 29 Jun 2020 11:51:04 -0400
-Message-Id: <20200629155309.2495516-11-sashal@kernel.org>
+Cc:     Jeffle Xu <jefflexu@linux.alibaba.com>,
+        Eric Whitney <enwlinux@gmail.com>, stable@kernel.org,
+        Theodore Ts'o <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 065/135] ext4: fix partial cluster initialization when splitting extent
+Date:   Mon, 29 Jun 2020 11:51:59 -0400
+Message-Id: <20200629155309.2495516-66-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -65,72 +65,120 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qian Cai <cai@lca.pw>
+From: Jeffle Xu <jefflexu@linux.alibaba.com>
 
-[ Upstream commit 3e63b94b6274324ff2e7d8615df31586de827c4e ]
+[ Upstream commit cfb3c85a600c6aa25a2581b3c1c4db3460f14e46 ]
 
-vfio_pci_disable() calls vfio_config_free() but forgets to call
-free_perm_bits() resulting in memory leaks,
+Fix the bug when calculating the physical block number of the first
+block in the split extent.
 
-unreferenced object 0xc000000c4db2dee0 (size 16):
-  comm "qemu-kvm", pid 4305, jiffies 4295020272 (age 3463.780s)
-  hex dump (first 16 bytes):
-    00 00 ff 00 ff ff ff ff ff ff ff ff ff ff 00 00  ................
-  backtrace:
-    [<00000000a6a4552d>] alloc_perm_bits+0x58/0xe0 [vfio_pci]
-    [<00000000ac990549>] vfio_config_init+0xdf0/0x11b0 [vfio_pci]
-    init_pci_cap_msi_perm at drivers/vfio/pci/vfio_pci_config.c:1125
-    (inlined by) vfio_msi_cap_len at drivers/vfio/pci/vfio_pci_config.c:1180
-    (inlined by) vfio_cap_len at drivers/vfio/pci/vfio_pci_config.c:1241
-    (inlined by) vfio_cap_init at drivers/vfio/pci/vfio_pci_config.c:1468
-    (inlined by) vfio_config_init at drivers/vfio/pci/vfio_pci_config.c:1707
-    [<000000006db873a1>] vfio_pci_open+0x234/0x700 [vfio_pci]
-    [<00000000630e1906>] vfio_group_fops_unl_ioctl+0x8e0/0xb84 [vfio]
-    [<000000009e34c54f>] ksys_ioctl+0xd8/0x130
-    [<000000006577923d>] sys_ioctl+0x28/0x40
-    [<000000006d7b1cf2>] system_call_exception+0x114/0x1e0
-    [<0000000008ea7dd5>] system_call_common+0xf0/0x278
-unreferenced object 0xc000000c4db2e330 (size 16):
-  comm "qemu-kvm", pid 4305, jiffies 4295020272 (age 3463.780s)
-  hex dump (first 16 bytes):
-    00 ff ff 00 ff ff ff ff ff ff ff ff ff ff 00 00  ................
-  backtrace:
-    [<000000004c71914f>] alloc_perm_bits+0x44/0xe0 [vfio_pci]
-    [<00000000ac990549>] vfio_config_init+0xdf0/0x11b0 [vfio_pci]
-    [<000000006db873a1>] vfio_pci_open+0x234/0x700 [vfio_pci]
-    [<00000000630e1906>] vfio_group_fops_unl_ioctl+0x8e0/0xb84 [vfio]
-    [<000000009e34c54f>] ksys_ioctl+0xd8/0x130
-    [<000000006577923d>] sys_ioctl+0x28/0x40
-    [<000000006d7b1cf2>] system_call_exception+0x114/0x1e0
-    [<0000000008ea7dd5>] system_call_common+0xf0/0x278
+This bug will cause xfstests shared/298 failure on ext4 with bigalloc
+enabled occasionally. Ext4 error messages indicate that previously freed
+blocks are being freed again, and the following fsck will fail due to
+the inconsistency of block bitmap and bg descriptor.
 
-Fixes: 89e1f7d4c66d ("vfio: Add PCI device driver")
-Signed-off-by: Qian Cai <cai@lca.pw>
-[aw: rolled in follow-up patch]
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
+The following is an example case:
+
+1. First, Initialize a ext4 filesystem with cluster size '16K', block size
+'4K', in which case, one cluster contains four blocks.
+
+2. Create one file (e.g., xxx.img) on this ext4 filesystem. Now the extent
+tree of this file is like:
+
+...
+36864:[0]4:220160
+36868:[0]14332:145408
+51200:[0]2:231424
+...
+
+3. Then execute PUNCH_HOLE fallocate on this file. The hole range is
+like:
+
+..
+ext4_ext_remove_space: dev 254,16 ino 12 since 49506 end 49506 depth 1
+ext4_ext_remove_space: dev 254,16 ino 12 since 49544 end 49546 depth 1
+ext4_ext_remove_space: dev 254,16 ino 12 since 49605 end 49607 depth 1
+...
+
+4. Then the extent tree of this file after punching is like
+
+...
+49507:[0]37:158047
+49547:[0]58:158087
+...
+
+5. Detailed procedure of punching hole [49544, 49546]
+
+5.1. The block address space:
+```
+lblk        ~49505  49506   49507~49543     49544~49546    49547~
+	  ---------+------+-------------+----------------+--------
+	    extent | hole |   extent	|	hole	 | extent
+	  ---------+------+-------------+----------------+--------
+pblk       ~158045  158046  158047~158083  158084~158086   158087~
+```
+
+5.2. The detailed layout of cluster 39521:
+```
+		cluster 39521
+	<------------------------------->
+
+		hole		  extent
+	<----------------------><--------
+
+lblk      49544   49545   49546   49547
+	+-------+-------+-------+-------+
+	|	|	|	|	|
+	+-------+-------+-------+-------+
+pblk     158084  1580845  158086  158087
+```
+
+5.3. The ftrace output when punching hole [49544, 49546]:
+- ext4_ext_remove_space (start 49544, end 49546)
+  - ext4_ext_rm_leaf (start 49544, end 49546, last_extent [49507(158047), 40], partial [pclu 39522 lblk 0 state 2])
+    - ext4_remove_blocks (extent [49507(158047), 40], from 49544 to 49546, partial [pclu 39522 lblk 0 state 2]
+      - ext4_free_blocks: (block 158084 count 4)
+        - ext4_mballoc_free (extent 1/6753/1)
+
+5.4. Ext4 error message in dmesg:
+EXT4-fs error (device vdb): mb_free_blocks:1457: group 1, block 158084:freeing already freed block (bit 6753); block bitmap corrupt.
+EXT4-fs error (device vdb): ext4_mb_generate_buddy:747: group 1, block bitmap and bg descriptor inconsistent: 19550 vs 19551 free clusters
+
+In this case, the whole cluster 39521 is freed mistakenly when freeing
+pblock 158084~158086 (i.e., the first three blocks of this cluster),
+although pblock 158087 (the last remaining block of this cluster) has
+not been freed yet.
+
+The root cause of this isuue is that, the pclu of the partial cluster is
+calculated mistakenly in ext4_ext_remove_space(). The correct
+partial_cluster.pclu (i.e., the cluster number of the first block in the
+next extent, that is, lblock 49597 (pblock 158086)) should be 39521 rather
+than 39522.
+
+Fixes: f4226d9ea400 ("ext4: fix partial cluster initialization")
+Signed-off-by: Jeffle Xu <jefflexu@linux.alibaba.com>
+Reviewed-by: Eric Whitney <enwlinux@gmail.com>
+Cc: stable@kernel.org # v3.19+
+Link: https://lore.kernel.org/r/1590121124-37096-1-git-send-email-jefflexu@linux.alibaba.com
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/vfio/pci/vfio_pci_config.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ fs/ext4/extents.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-index 98a12be76c9cf..bf65572f47a8f 100644
---- a/drivers/vfio/pci/vfio_pci_config.c
-+++ b/drivers/vfio/pci/vfio_pci_config.c
-@@ -1644,8 +1644,11 @@ void vfio_config_free(struct vfio_pci_device *vdev)
- 	vdev->vconfig = NULL;
- 	kfree(vdev->pci_config_map);
- 	vdev->pci_config_map = NULL;
--	kfree(vdev->msi_perm);
--	vdev->msi_perm = NULL;
-+	if (vdev->msi_perm) {
-+		free_perm_bits(vdev->msi_perm);
-+		kfree(vdev->msi_perm);
-+		vdev->msi_perm = NULL;
-+	}
- }
- 
- /*
+diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
+index 96336830f0350..fc2746e14c42a 100644
+--- a/fs/ext4/extents.c
++++ b/fs/ext4/extents.c
+@@ -2902,7 +2902,7 @@ int ext4_ext_remove_space(struct inode *inode, ext4_lblk_t start,
+ 			 * in use to avoid freeing it when removing blocks.
+ 			 */
+ 			if (sbi->s_cluster_ratio > 1) {
+-				pblk = ext4_ext_pblock(ex) + end - ee_block + 2;
++				pblk = ext4_ext_pblock(ex) + end - ee_block + 1;
+ 				partial_cluster =
+ 					-(long long) EXT4_B2C(sbi, pblk);
+ 			}
 -- 
 2.25.1
 
