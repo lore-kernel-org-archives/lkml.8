@@ -2,143 +2,199 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DF05C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4416C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 15E7C206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:58:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9463B206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:58:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rV9faRfd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GV0KvGGX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389925AbgF2U6X (ORCPT
+        id S2390017AbgF2U6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:58:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43352 "EHLO
+        Mon, 29 Jun 2020 16:58:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43390 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731256AbgF2TNE (ORCPT
+        with ESMTP id S1731255AbgF2TNE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:13:04 -0400
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on0605.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe0c::605])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DC4CC0068F8;
-        Mon, 29 Jun 2020 04:43:32 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WuOXzDdn5ofkp+emIv9mQCL040pAkrHADA+mtboYXx6ty0ntNlsSn1qqL/CDvgFOc8vCF0HW7nCVE48lhLBBqbNyqAsSGWBjsLTtc+55kqSKyw3N85JYvyCNW1+2048wAGTs5xyeFzzL9s3fI1urleZuPqYQlxBHvr+Iuj37tgj6tHS2ntcSC/X076tNgZlRoJDuau3nbZ8iRQvhMHUFzxkCIMSeRo93qN2c3IDmvDAT7mntvgK+nTp303SODkjdlINWjgpPg5okiVSm+37hUYUMI9/anI70SiVQEZ80YEN+aWyDl/JPGURvow9+mqHBAuCSRY/hHeTKuJ9V51YHCA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=r9VJ7773uWe3X9v7POf1jrJm6noNEStB8eJLtbZyfF8=;
- b=Zn/Ax3HhGDplZyTIQPGET1USpnZQEbj25H8O7cW1ACiNjyq56ZbsqzS0ox02RXqP7I3eE+8BieFoPoGZxfmiJyOVXjjta+PqiVdaNs12+A1I/NXUpHVIi09OHAIJsHbQ2hS99/FzOQ94ezpIc/UEoM6u15Iv47iSwFQC5Q3yJr5RiDF6EY0eTNXnpNCQHkNBlarUFCril681yLKkhUVVJkkDqSdc+xKAqqTofMri3iukPOA9K/jO8KQIjQgWRIrJPuVF9GCXjF3CwabgdV2i6JGUCdOzdeNEQ0VKDqas7vDTXFxu7qgEKP5RhuPvevsO21RdafpxABWv7PWcPhfxuQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=r9VJ7773uWe3X9v7POf1jrJm6noNEStB8eJLtbZyfF8=;
- b=rV9faRfdmNZYEsXAoonZHOb5NxPqXy85SZFsZ0NB6B5YOQQ3AA/C5wvF+aTCPeHSigkNtPPQMaLKLms2l+4HdZOCWUtcrg8ra+BkFSAaaMHOk4Fmkonz3MrkXnZD+1B25fiZwICesKhU1SY2YdesMSuZ2Qs93uDlOGJc6/C3/8Y=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (2603:10a6:8:10::18)
- by DB8PR04MB5803.eurprd04.prod.outlook.com (2603:10a6:10:a9::27) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21; Mon, 29 Jun
- 2020 11:43:28 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::1dab:b68c:e028:acb3]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::1dab:b68c:e028:acb3%6]) with mapi id 15.20.3131.027; Mon, 29 Jun 2020
- 11:43:28 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-CC:     Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
-        Stefan Agner <stefan.agner@toradex.com>,
-        Peng Fan <peng.fan@nxp.com>, Abel Vesa <abel.vesa@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Andy Duan <fugang.duan@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V3 10/10] clk: imx8qxp: Support module build
-Thread-Topic: [PATCH V3 10/10] clk: imx8qxp: Support module build
-Thread-Index: AQHWTdtpxysJAMB9PU24IC+6g53x0qjveHSAgAAAPqA=
-Date:   Mon, 29 Jun 2020 11:43:28 +0000
-Message-ID: <DB3PR0402MB3916911E2321760C65AB3293F56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1593410042-10598-1-git-send-email-Anson.Huang@nxp.com>
- <1593410042-10598-11-git-send-email-Anson.Huang@nxp.com>
- <CAK8P3a1W4Wxj0o3dtcjGq0L5VQqsH0=ntego=jmH2Von97+H-w@mail.gmail.com>
-In-Reply-To: <CAK8P3a1W4Wxj0o3dtcjGq0L5VQqsH0=ntego=jmH2Von97+H-w@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: arndb.de; dkim=none (message not signed)
- header.d=none;arndb.de; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [183.192.13.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 7bcc12cf-ced1-4ed1-cfa1-08d81c21a423
-x-ms-traffictypediagnostic: DB8PR04MB5803:
-x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB8PR04MB580336C45074FF880B504E87F56E0@DB8PR04MB5803.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4303;
-x-forefront-prvs: 044968D9E1
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: yivByYm8hHLNRPS5cNoKYDH/fd8gHBi8YgrkB/kaGPy+KgE9AkTblfi2WqmRoVSLPjHuoMJnVG1tub5SZc0SJyynCNXQCpVA85V6EOL1rVQEvF9AAVb4qpY7rvicYxCD7lJ6SPVNNzJUkTv05qdRy+pN2lnF1btTwmkvKuOatX5XlL6jUPCqmoGrVIeb9/x8Ifv0D/EfxuS0extqy2NaGfvVOgP0wF5mg0RegCFOELS+DFpf/yxy4YqVTF3MlMi9h3z1AxGhDfpqwCD/BQYIueedoezirf1SRvSJeAAOzV6WndK9Dao1z5fUURsmd9yWgoLeXxMO80MCZf3NVYxPwABDFQuz/jjnTgXYzuz35MXUl37fA2pB+nOPgSIGENai
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(346002)(366004)(39860400002)(396003)(376002)(5660300002)(33656002)(71200400001)(478600001)(76116006)(64756008)(66446008)(66946007)(7696005)(66476007)(66556008)(4326008)(26005)(2906002)(9686003)(52536014)(55016002)(8676002)(86362001)(8936002)(186003)(6916009)(54906003)(53546011)(44832011)(6506007)(83380400001)(316002)(7416002)(32563001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: jdUTKSUAR31B9gw4zPtexxcvVUYQxUe+PYlH7kE9YWOHI++2P+diEs8Y+sUipPeOT6FCvRNqF7SSKFVhR6jHHTOD007chNvSpDXbJ8Kmb1ZhkZIjHxeZwNprnQN1UbLgfriUSvgBVUqNdLrWFtUlrquDWmvLYq36NDwcPi3u/HosHb2wnn+8nTwjAuWXkZ/MaqdzgLOxS1gPrXKMjlP+79JBklKb2Wfag1j6ju03R6je9ahkoNQjNfwmIZy9yRUf6Nnve2qXDV3qwXG3vnL7wntDiTt0a1LtVO1UkLoZGU5rg+D5AjtUgsKl+4QqcUqSxx4WodqDJcWxmtlQDVua0KzvGcNdvEz6z7Nz5xoabpIdxS569nPYe2O4+CvtVhMtchzRKByVuok/9EqnKcpWhrNWMyGMOPDhf2QNgWdJtT3IUSvmbGe9zD/ZFHJgYscDreVN6OiriWaj+dn2Tt+XOG5hcyRLEsy9nmG4h6VU96p1zt3CefNnw+cHaiRD/N6J
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28A4CC0086DD;
+        Mon, 29 Jun 2020 02:31:40 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id z5so8039474pgb.6;
+        Mon, 29 Jun 2020 02:31:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ayAl0LoNSdRH5ysQrzi9ZVtfNrMXxNYN9qeSjnl571U=;
+        b=GV0KvGGX4dJpz/Wcl9nBaTIGm6slYAAJClid5ntya+hSHoQshp9o8aro6FvFHtt3QY
+         D9DNF1s9O9XiHhwhAk1gjjifrTGvawv6ZbQnHsxHHkOIrK/rt38r+iaZuYejiSFv8f0H
+         vXzVPrjXgzjvl0Bp0LmYH9HKRbWmihJ5KuF1g6LUH/03IsCMryUbichVVlfjSFPpRPw5
+         x3fnnUnUovLSp/DqQgHTAMju1MG1BQ2HLkpTYlydRrgeYoPA8ijwr/94gfGkUgRH5N2N
+         I7gdEp+00LPtV+avLCRnOgYhiR4Ieg3y5ys2aUj3PM2SGrSB8vccHGahSoNMSpfSa8/Q
+         /ctw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ayAl0LoNSdRH5ysQrzi9ZVtfNrMXxNYN9qeSjnl571U=;
+        b=MsNT4uTYh2vU5aoEmOwFCpI0PIXML4H7xYovOQtCkiwg7UX/5kND1U8O/jIeDcZM+G
+         OOOq2v2ygGUow58UTSRo6w5kA2T+1wXMYcF4TFP9p6uT4Gey2nIOsrQX6bG3d2PifDsr
+         DNV3fYaLP793vnHLfRQCdOx7FVZGcTcod7CnmAb8Rdlb5HbSx27Nn1C9/RR4symzvc5o
+         eyADLfk4GjucOO+aH0l0r3++V27S7cqtBvH8rYry/a8PK6slNYtAzWXV6g26B15sbP7Z
+         iIR23T48wJ/2t7NlxiO/2msmjum3DSCQnnnSwvQYxakVJLfuevSWqf0Euy+2K1qDuaHq
+         AG/w==
+X-Gm-Message-State: AOAM5300omtjR31ClpjJJjcUx3O2TvYbammPwWscDCviOJg6WndIG+gR
+        leY5da+JmyXlBYWwNNhlrII=
+X-Google-Smtp-Source: ABdhPJwRDli2Y2bH5K3wrG95jVuSEXZnknlpezTd2aULIFClM3Bmo5xukNXS6A/E8xgqSTqHNHa17A==
+X-Received: by 2002:a63:5623:: with SMTP id k35mr10075750pgb.325.1593423099692;
+        Mon, 29 Jun 2020 02:31:39 -0700 (PDT)
+Received: from varodek.localdomain ([106.210.40.90])
+        by smtp.gmail.com with ESMTPSA id q20sm2921286pfn.111.2020.06.29.02.31.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 02:31:39 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+Subject: [PATCH v1 4/5] ixgbevf: use generic power management
+Date:   Mon, 29 Jun 2020 14:59:42 +0530
+Message-Id: <20200629092943.227910-5-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200629092943.227910-1-vaibhavgupta40@gmail.com>
+References: <20200629092943.227910-1-vaibhavgupta40@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB3PR0402MB3916.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7bcc12cf-ced1-4ed1-cfa1-08d81c21a423
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jun 2020 11:43:28.4564
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: keeJnTkSx/9yOfYchrjcA5sVfybvhQ1ZeVGZk2yurFAOfI4MZmhCQDptaoBRoLqMq1bYmOWVptinzt5gtvPtVA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB5803
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIEFybmQNCg0KDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggVjMgMTAvMTBdIGNsazogaW14OHF4
-cDogU3VwcG9ydCBtb2R1bGUgYnVpbGQNCj4gDQo+IE9uIE1vbiwgSnVuIDI5LCAyMDIwIGF0IDg6
-MDYgQU0gQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+IHdyb3RlOg0KPiA+DQo+
-ID4gU3VwcG9ydCBidWlsZGluZyBpLk1YOFFYUCBjbG9jayBkcml2ZXIgYXMgbW9kdWxlLg0KPiA+
-DQo+ID4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+
-IA0KPiBJIHdvdWxkIGp1c3QgY29tYmluZSB0aGUgcGVyLXNvYyBwYXRjaGVzIGludG8gb25lLCBh
-cyB0aGV5IGFsbCBoYXZlIHRoZSBzYW1lDQo+IGNoYW5nZWxvZyB0ZXh0Lg0KDQpPSywgSSB3aWxs
-IG1lcmdlIHRob3NlIHBhdGNoZXMgd2l0aCBzYW1lIGNoYW5nZWxvZyB0ZXh0IGludG8gb25lIHBh
-dGNoLg0KQnV0IGZvciBpLk1YOFFYUCBjbG9jayBkcml2ZXIsIGFzIEkgbmVlZCB0byBhZGQgbW9y
-ZSBjaGFuZ2VzIGFib3V0IG1vZHVsZSBhdXRob3INCmV0Yy4sIEkgd2lsbCBrZWVwIGl0IGFzIGEg
-c2VwYXJhdGUgcGF0Y2guDQoNCj4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL2lteC9j
-bGstaW14OHF4cC1scGNnLmMNCj4gPiBiL2RyaXZlcnMvY2xrL2lteC9jbGstaW14OHF4cC1scGNn
-LmMNCj4gPiBpbmRleCAwNGM4ZWUzLi44YWZhZWZjIDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMv
-Y2xrL2lteC9jbGstaW14OHF4cC1scGNnLmMNCj4gPiArKysgYi9kcml2ZXJzL2Nsay9pbXgvY2xr
-LWlteDhxeHAtbHBjZy5jDQo+ID4gQEAgLTIzMiwzICsyMzIsNCBAQCBzdGF0aWMgc3RydWN0IHBs
-YXRmb3JtX2RyaXZlcg0KPiA+IGlteDhxeHBfbHBjZ19jbGtfZHJpdmVyID0geyAgfTsNCj4gPg0K
-PiA+ICBidWlsdGluX3BsYXRmb3JtX2RyaXZlcihpbXg4cXhwX2xwY2dfY2xrX2RyaXZlcik7DQo+
-ID4gK01PRFVMRV9MSUNFTlNFKCJHUEwgdjIiKTsNCj4gDQo+IFNhbWUgdGhpbmcgaGVyZTogcGxl
-YXNlIHRyeSB0byBtYWtlIGl0IHBvc3NpYmxlIHRvIHVubG9hZCB0aGVzZSBkcml2ZXJzLCBhbmQN
-Cj4gYWRkIE1PRFVMRV9BVVRIT1IvTU9EVUxFX0RFU0NSSVBUSU9OIHRhZ3MgaW4gYWRkaXRpb24g
-dG8NCj4gTU9EVUxFX0xJQ0VOU0UuDQo+IA0KDQpPSywgd2lsbCBpbXByb3ZlIGl0IGluIG5leHQg
-cGF0Y2ggc2VyaWVzLg0KDQpUaGFua3MsDQpBbnNvbg0K
+With legacy PM, drivers themselves were responsible for managing the
+device's power states and takes care of register states.
+
+After upgrading to the generic structure, PCI core will take care of
+required tasks and drivers should do only device-specific operations.
+
+The driver was invoking PCI helper functions like pci_save/restore_state(),
+and pci_enable/disable_device(), which is not recommended.
+
+Compile-tested only.
+
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+---
+ .../net/ethernet/intel/ixgbevf/ixgbevf_main.c | 44 +++++--------------
+ 1 file changed, 10 insertions(+), 34 deletions(-)
+
+diff --git a/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c b/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
+index a39e2cb384dd..988345aeae4a 100644
+--- a/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
++++ b/drivers/net/ethernet/intel/ixgbevf/ixgbevf_main.c
+@@ -4300,13 +4300,10 @@ static int ixgbevf_change_mtu(struct net_device *netdev, int new_mtu)
+ 	return 0;
+ }
+ 
+-static int ixgbevf_suspend(struct pci_dev *pdev, pm_message_t state)
++static int __maybe_unused ixgbevf_suspend(struct device *dev_d)
+ {
+-	struct net_device *netdev = pci_get_drvdata(pdev);
++	struct net_device *netdev = dev_get_drvdata(dev_d);
+ 	struct ixgbevf_adapter *adapter = netdev_priv(netdev);
+-#ifdef CONFIG_PM
+-	int retval = 0;
+-#endif
+ 
+ 	rtnl_lock();
+ 	netif_device_detach(netdev);
+@@ -4317,37 +4314,16 @@ static int ixgbevf_suspend(struct pci_dev *pdev, pm_message_t state)
+ 	ixgbevf_clear_interrupt_scheme(adapter);
+ 	rtnl_unlock();
+ 
+-#ifdef CONFIG_PM
+-	retval = pci_save_state(pdev);
+-	if (retval)
+-		return retval;
+-
+-#endif
+-	if (!test_and_set_bit(__IXGBEVF_DISABLED, &adapter->state))
+-		pci_disable_device(pdev);
+-
+ 	return 0;
+ }
+ 
+-#ifdef CONFIG_PM
+-static int ixgbevf_resume(struct pci_dev *pdev)
++static int __maybe_unused ixgbevf_resume(struct device *dev_d)
+ {
++	struct pci_dev *pdev = to_pci_dev(dev_d);
+ 	struct net_device *netdev = pci_get_drvdata(pdev);
+ 	struct ixgbevf_adapter *adapter = netdev_priv(netdev);
+ 	u32 err;
+ 
+-	pci_restore_state(pdev);
+-	/* pci_restore_state clears dev->state_saved so call
+-	 * pci_save_state to restore it.
+-	 */
+-	pci_save_state(pdev);
+-
+-	err = pci_enable_device_mem(pdev);
+-	if (err) {
+-		dev_err(&pdev->dev, "Cannot enable PCI device from suspend\n");
+-		return err;
+-	}
+-
+ 	adapter->hw.hw_addr = adapter->io_addr;
+ 	smp_mb__before_atomic();
+ 	clear_bit(__IXGBEVF_DISABLED, &adapter->state);
+@@ -4368,10 +4344,9 @@ static int ixgbevf_resume(struct pci_dev *pdev)
+ 	return err;
+ }
+ 
+-#endif /* CONFIG_PM */
+ static void ixgbevf_shutdown(struct pci_dev *pdev)
+ {
+-	ixgbevf_suspend(pdev, PMSG_SUSPEND);
++	ixgbevf_suspend(&pdev->dev);
+ }
+ 
+ static void ixgbevf_get_tx_ring_stats(struct rtnl_link_stats64 *stats,
+@@ -4891,16 +4866,17 @@ static const struct pci_error_handlers ixgbevf_err_handler = {
+ 	.resume = ixgbevf_io_resume,
+ };
+ 
++static SIMPLE_DEV_PM_OPS(ixgbevf_pm_ops, ixgbevf_suspend, ixgbevf_resume);
++
+ static struct pci_driver ixgbevf_driver = {
+ 	.name		= ixgbevf_driver_name,
+ 	.id_table	= ixgbevf_pci_tbl,
+ 	.probe		= ixgbevf_probe,
+ 	.remove		= ixgbevf_remove,
+-#ifdef CONFIG_PM
++
+ 	/* Power Management Hooks */
+-	.suspend	= ixgbevf_suspend,
+-	.resume		= ixgbevf_resume,
+-#endif
++	.driver.pm	= &ixgbevf_pm_ops,
++
+ 	.shutdown	= ixgbevf_shutdown,
+ 	.err_handler	= &ixgbevf_err_handler
+ };
+-- 
+2.27.0
+
