@@ -7,57 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A545C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2322C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E707220656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:55:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABAA320656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:55:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593456924;
-	bh=NzJiSt9g1A0IkY1gDVeVFO1A+AGElzRZS2z5eg2GhWk=;
+	s=default; t=1593456928;
+	bh=0bQKSbV06uF3Fy86wdZrTACqP+ZgxQPNSlkVIp9y6To=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2tktfvkSd0EYkEgEtajtmabLnW51ebv//kdLuBCc+xAHyrqkMR3ykAxCjB/qWkR6n
-	 AWZFEMW5A1gIotF2kgrir9BQu9TA0P3tsQqEpvLdt2N/8bnO+RuIoibt/M75MlyZSX
-	 SAhAT0LBCtCjrAROkcWXtZNff8mkADqmKquuNDm0=
+	b=jqwM0KhDb9HfsYmY9FaUyVDxEHKxa5+UKE5sqa2W4kkHR2Kl8whd9e0o63yUMYvr6
+	 8A6VrP/GrgOR4lSWaWD8nbjUREwnbzl2UKHeFLNpUaOuM/6khwerdIOZmYBkinwpmg
+	 fBd1ucIKGdmtn8eKyDwjXZBMNAk83WRHLNKNp+pg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729996AbgF2SzV (ORCPT
+        id S1726887AbgF2Sz0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:55:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42432 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 14:55:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729943AbgF2SzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729915AbgF2SzQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:55:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CABCC2556D;
-        Mon, 29 Jun 2020 15:55:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE0EB25576;
+        Mon, 29 Jun 2020 15:55:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446132;
-        bh=NzJiSt9g1A0IkY1gDVeVFO1A+AGElzRZS2z5eg2GhWk=;
+        s=default; t=1593446141;
+        bh=0bQKSbV06uF3Fy86wdZrTACqP+ZgxQPNSlkVIp9y6To=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bJinHi6L2hle1kHSTGQADdjxYiHX9z9DjaHCQ1Ljttb0U1vrEWpQeDShfdjrOLQNN
-         012Y8oZU0lTl6CNC6Miq7ujGNxxKxG/knWiMTUeZhP8eJ5LDPYxnmqMcJI1Iqvc5Fk
-         Q+WoaNVUgkeisnHNvaocP4RDshpNcUeg5KbP+/s0=
+        b=AdScB9VmfKJRGP+k1OBK8m2REXCCVxNVEWbAaoVErQXxoJXewRVZeBfvlu5fF0lue
+         CgVbd/Gc4BaDIXlSiXRlfUpqcrfzaBNVecp5L3yO+CEyTgD8tp5U83Eamq0ONuO4+H
+         lx72MjtHziRvzvVo7c1BLvuideeI3n9s5wzd9j+g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Waiman Long <longman@redhat.com>, Michal Hocko <mhocko@suse.com>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Joe Perches <joe@perches.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Rientjes <rientjes@google.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "Jason A . Donenfeld" <Jason@zx2c4.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+Cc:     Vasily Averin <vvs@virtuozzo.com>,
+        Jeff Layton <jlayton@redhat.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.4 122/135] mm/slab: use memzero_explicit() in kzfree()
-Date:   Mon, 29 Jun 2020 11:52:56 -0400
-Message-Id: <20200629155309.2495516-123-sashal@kernel.org>
+Subject: [PATCH 4.4 129/135] sunrpc: fixed rollback in rpc_gssd_dummy_populate()
+Date:   Mon, 29 Jun 2020 11:53:03 -0400
+Message-Id: <20200629155309.2495516-130-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -76,56 +66,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Waiman Long <longman@redhat.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-commit 8982ae527fbef170ef298650c15d55a9ccd33973 upstream.
+commit b7ade38165ca0001c5a3bd5314a314abbbfbb1b7 upstream.
 
-The kzfree() function is normally used to clear some sensitive
-information, like encryption keys, in the buffer before freeing it back to
-the pool.  Memset() is currently used for buffer clearing.  However
-unlikely, there is still a non-zero probability that the compiler may
-choose to optimize away the memory clearing especially if LTO is being
-used in the future.
+__rpc_depopulate(gssd_dentry) was lost on error path
 
-To make sure that this optimization will never happen,
-memzero_explicit(), which is introduced in v3.18, is now used in
-kzfree() to future-proof it.
-
-Link: http://lkml.kernel.org/r/20200616154311.12314-2-longman@redhat.com
-Fixes: 3ef0e5ba4673 ("slab: introduce kzfree()")
-Signed-off-by: Waiman Long <longman@redhat.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: James Morris <jmorris@namei.org>
-Cc: "Serge E. Hallyn" <serge@hallyn.com>
-Cc: Joe Perches <joe@perches.com>
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Dan Carpenter <dan.carpenter@oracle.com>
-Cc: "Jason A . Donenfeld" <Jason@zx2c4.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+cc: stable@vger.kernel.org
+Fixes: commit 4b9a445e3eeb ("sunrpc: create a new dummy pipe for gssd to hold open")
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Reviewed-by: Jeff Layton <jlayton@redhat.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- mm/slab_common.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/sunrpc/rpc_pipe.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index 01e7246de8dfa..5d8c809a3ff71 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -1269,7 +1269,7 @@ void kzfree(const void *p)
- 	if (unlikely(ZERO_OR_NULL_PTR(mem)))
- 		return;
- 	ks = ksize(mem);
--	memset(mem, 0, ks);
-+	memzero_explicit(mem, ks);
- 	kfree(mem);
- }
- EXPORT_SYMBOL(kzfree);
+diff --git a/net/sunrpc/rpc_pipe.c b/net/sunrpc/rpc_pipe.c
+index 9103dd15511cc..12dd5cc499c1e 100644
+--- a/net/sunrpc/rpc_pipe.c
++++ b/net/sunrpc/rpc_pipe.c
+@@ -1347,6 +1347,7 @@ rpc_gssd_dummy_populate(struct dentry *root, struct rpc_pipe *pipe_data)
+ 	q.len = strlen(gssd_dummy_clnt_dir[0].name);
+ 	clnt_dentry = d_hash_and_lookup(gssd_dentry, &q);
+ 	if (!clnt_dentry) {
++		__rpc_depopulate(gssd_dentry, gssd_dummy_clnt_dir, 0, 1);
+ 		pipe_dentry = ERR_PTR(-ENOENT);
+ 		goto out;
+ 	}
 -- 
 2.25.1
 
