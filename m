@@ -2,107 +2,163 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A4DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4885FC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 439E820760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:01:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E3B620760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:01:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468089;
-	bh=Oo98y6pYj0A3fHoJ4nCFgO638tICpwmV/Jv5/9EVvWI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SPnmOOskPPmcsON9BzbD8g0wjZndFT/ZAmcVPL17/kkKjXfdP8JBU+C6QwpQTJB5A
-	 69l2ZvS/cvv96pY8IJ+Z6Db1xQFkvZlcl2kUJ8qpoTHVIJjpsh7mGeQuoi+kxXXiBw
-	 Dw9MhqdFRVCUo+eFmHwPU0SRJ+bUeLNrXhMHCSD4=
+	s=default; t=1593468099;
+	bh=gnsYxH96Bjz9snSuLZhMaPlkC3GQAaOV3NO/+KV8V38=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=A0I8UL1wmdMR1MWXQm1KY6ib/6+hPRq6Fl/TJzzmys0o6NSiCXphj+BVmVGbQjQGq
+	 XajJZhH1VotHhX5pkDrBQj9B1shiTUZL/0QBlZ2YdoVy7XQ4aEVS2SPfc4jZ8j5RWF
+	 QN2UhmN8AKmde6VVGRD4Kq1UsD6vOWxZ4s8f4BJ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404851AbgF2WBX (ORCPT
+        id S1732000AbgF2WBh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:01:23 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:39879 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2404855AbgF2WBU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 18:01:20 -0400
-Received: by mail-io1-f68.google.com with SMTP id f23so18885604iof.6;
-        Mon, 29 Jun 2020 15:01:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=v/KUmmRiKcWgfKCyfnFrzAagW5p/jFMXIxMzqZIoYfY=;
-        b=LupuPoV2llzNCorpeUSvpgFPVCw3uXTLJRUjtxM8QiPHMyhv/6qkYn+TzcCncAcCpx
-         UafSf++EOIHmUWlcdZpX81j6WZhabkuKamfO5ErnoK5q0QcV8G3ffMVjMnZihZbtruKw
-         XhA7ku96rIvktauHY2V0iaL9AjGSjyeTPP1MmTDnulxAn8Zwzv0IGpJkyqL9mn2GfojT
-         kYIY91T68/Yswbg8zQM/sRD0mDGIRzajK2rwLfokSHRriYfcQvu9FmvIdGeqlxKWUfU5
-         dW8kPBi4wyRbhMPi9WGLzA/c/+nKedqOOVNfDKPJLD3wKn3ysJvJ6brxT7an73EhM+MZ
-         bk1g==
-X-Gm-Message-State: AOAM531u69pQsssKPUcNz2OT5bkaI/rz0lWZbPPbXXLJu2FKcJPJdpA0
-        HypcAHE4jwmPAD50JmFJpA==
-X-Google-Smtp-Source: ABdhPJx3GoxKdwtb+VbFNr2bGORwXmR+865eXNvVgw1BleWY0FbMaV7pPRLHLXJWpHXJbxupf5/0ag==
-X-Received: by 2002:a02:7818:: with SMTP id p24mr20445841jac.131.1593468079258;
-        Mon, 29 Jun 2020 15:01:19 -0700 (PDT)
-Received: from xps15 ([64.188.179.255])
-        by smtp.gmail.com with ESMTPSA id v62sm668402ila.37.2020.06.29.15.01.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 15:01:18 -0700 (PDT)
-Received: (nullmailer pid 3012987 invoked by uid 1000);
-        Mon, 29 Jun 2020 22:01:17 -0000
-Date:   Mon, 29 Jun 2020 16:01:17 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Sungbo Eo <mans0n@gorani.run>
-Cc:     linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 2/2] dt-bindings: gpio: Add bindings for NXP PCA9570
-Message-ID: <20200629220117.GA3012245@bogus>
-References: <20200625075957.364273-1-mans0n@gorani.run>
+        Mon, 29 Jun 2020 18:01:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56910 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726274AbgF2SfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:24 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2477C241A6;
+        Mon, 29 Jun 2020 15:19:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593443958;
+        bh=gnsYxH96Bjz9snSuLZhMaPlkC3GQAaOV3NO/+KV8V38=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=f97gPBUDXv6wDc++ONGoUdKUcjNT3ivYzIJsfITvGVYrBMEDvKmFMUAHWnT9bVoa+
+         Rhm3O7FNhNu2hfxXh4LfZswMh8MUni8iPK0T7TOunKAgxOovUBfSDcMOILyykqHpyO
+         No6SE8PU18B72rz2mHbVFsxYQSXL23tGarJYEgnc=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Alexander Usyskin <alexander.usyskin@intel.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 061/265] mei: me: add tiger lake point device ids for H platforms.
+Date:   Mon, 29 Jun 2020 11:14:54 -0400
+Message-Id: <20200629151818.2493727-62-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
+References: <20200629151818.2493727-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200625075957.364273-1-mans0n@gorani.run>
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.7.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.7.7-rc1
+X-KernelTest-Deadline: 2020-07-01T15:14+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 25 Jun 2020 16:59:57 +0900, Sungbo Eo wrote:
-> This patch adds device tree bindings for the NXP PCA9570,
-> a 4-bit I2C GPO expander.
-> 
-> Signed-off-by: Sungbo Eo <mans0n@gorani.run>
-> ---
-> I don't feel I can really maintain this driver, but it seems all yaml docs
-> have a maintainers field so I just added it...
-> ---
->  .../bindings/gpio/gpio-pca9570.yaml           | 42 +++++++++++++++++++
->  1 file changed, 42 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml
-> 
+From: Alexander Usyskin <alexander.usyskin@intel.com>
 
+commit 8c289ea064165237891a7b4be77b74d5cba8fa99 upstream.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Add Tiger Lake device ids H for HECI1.
+TGH_H is also used in Tatlow SPS platform we need to
+disable the mei interface there.
 
-Documentation/devicetree/bindings/gpio/gpio-pca9570.example.dts:21.13-26: Warning (reg_format): /example-0/gpio@24:reg: property has invalid length (4 bytes) (#address-cells == 1, #size-cells == 1)
-Documentation/devicetree/bindings/gpio/gpio-pca9570.example.dt.yaml: Warning (pci_device_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/gpio/gpio-pca9570.example.dt.yaml: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/gpio/gpio-pca9570.example.dt.yaml: Warning (simple_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/gpio/gpio-pca9570.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
-Documentation/devicetree/bindings/gpio/gpio-pca9570.example.dt.yaml: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/gpio/gpio-pca9570.example.dt.yaml: example-0: gpio@24:reg:0: [36] is too short
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Alexander Usyskin <alexander.usyskin@intel.com>
+Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+Link: https://lore.kernel.org/r/20200619165121.2145330-7-tomas.winkler@intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/misc/mei/hw-me-regs.h |  1 +
+ drivers/misc/mei/hw-me.c      | 10 ++++++++++
+ drivers/misc/mei/hw-me.h      |  4 ++++
+ drivers/misc/mei/pci-me.c     |  1 +
+ 4 files changed, 16 insertions(+)
 
-
-See https://patchwork.ozlabs.org/patch/1316796
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
+diff --git a/drivers/misc/mei/hw-me-regs.h b/drivers/misc/mei/hw-me-regs.h
+index 01b1bf74f2626..7becfc768bbcc 100644
+--- a/drivers/misc/mei/hw-me-regs.h
++++ b/drivers/misc/mei/hw-me-regs.h
+@@ -94,6 +94,7 @@
+ #define MEI_DEV_ID_JSP_N      0x4DE0  /* Jasper Lake Point N */
+ 
+ #define MEI_DEV_ID_TGP_LP     0xA0E0  /* Tiger Lake Point LP */
++#define MEI_DEV_ID_TGP_H      0x43E0  /* Tiger Lake Point H */
+ 
+ #define MEI_DEV_ID_MCC        0x4B70  /* Mule Creek Canyon (EHL) */
+ #define MEI_DEV_ID_MCC_4      0x4B75  /* Mule Creek Canyon 4 (EHL) */
+diff --git a/drivers/misc/mei/hw-me.c b/drivers/misc/mei/hw-me.c
+index f8155c1e811d7..7649710a2ab9e 100644
+--- a/drivers/misc/mei/hw-me.c
++++ b/drivers/misc/mei/hw-me.c
+@@ -1526,6 +1526,15 @@ static const struct mei_cfg mei_me_pch15_cfg = {
+ 	MEI_CFG_TRC,
+ };
+ 
++/* Tiger Lake with quirk for SPS 5.0 and newer Firmware exclusion */
++static const struct mei_cfg mei_me_pch15_sps_cfg = {
++	MEI_CFG_PCH8_HFS,
++	MEI_CFG_FW_VER_SUPP,
++	MEI_CFG_DMA_128,
++	MEI_CFG_TRC,
++	MEI_CFG_FW_SPS,
++};
++
+ /*
+  * mei_cfg_list - A list of platform platform specific configurations.
+  * Note: has to be synchronized with  enum mei_cfg_idx.
+@@ -1544,6 +1553,7 @@ static const struct mei_cfg *const mei_cfg_list[] = {
+ 	[MEI_ME_PCH12_SPS_CFG] = &mei_me_pch12_sps_cfg,
+ 	[MEI_ME_PCH12_SPS_NODMA_CFG] = &mei_me_pch12_nodma_sps_cfg,
+ 	[MEI_ME_PCH15_CFG] = &mei_me_pch15_cfg,
++	[MEI_ME_PCH15_SPS_CFG] = &mei_me_pch15_sps_cfg,
+ };
+ 
+ const struct mei_cfg *mei_me_get_cfg(kernel_ulong_t idx)
+diff --git a/drivers/misc/mei/hw-me.h b/drivers/misc/mei/hw-me.h
+index 52e0c6d578f27..6a8973649c490 100644
+--- a/drivers/misc/mei/hw-me.h
++++ b/drivers/misc/mei/hw-me.h
+@@ -87,6 +87,9 @@ struct mei_me_hw {
+  *                         servers platforms with quirk for
+  *                         SPS firmware exclusion.
+  * @MEI_ME_PCH15_CFG:      Platform Controller Hub Gen15 and newer
++ * @MEI_ME_PCH15_SPS_CFG:  Platform Controller Hub Gen15 and newer
++ *                         servers platforms with quirk for
++ *                         SPS firmware exclusion.
+  * @MEI_ME_NUM_CFG:        Upper Sentinel.
+  */
+ enum mei_cfg_idx {
+@@ -103,6 +106,7 @@ enum mei_cfg_idx {
+ 	MEI_ME_PCH12_SPS_CFG,
+ 	MEI_ME_PCH12_SPS_NODMA_CFG,
+ 	MEI_ME_PCH15_CFG,
++	MEI_ME_PCH15_SPS_CFG,
+ 	MEI_ME_NUM_CFG,
+ };
+ 
+diff --git a/drivers/misc/mei/pci-me.c b/drivers/misc/mei/pci-me.c
+index f74c6113812d6..81e759674c1b5 100644
+--- a/drivers/misc/mei/pci-me.c
++++ b/drivers/misc/mei/pci-me.c
+@@ -96,6 +96,7 @@ static const struct pci_device_id mei_me_pci_tbl[] = {
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_ICP_LP, MEI_ME_PCH12_CFG)},
+ 
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_TGP_LP, MEI_ME_PCH15_CFG)},
++	{MEI_PCI_DEVICE(MEI_DEV_ID_TGP_H, MEI_ME_PCH15_SPS_CFG)},
+ 
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_JSP_N, MEI_ME_PCH15_CFG)},
+ 
+-- 
+2.25.1
 
