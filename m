@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E7B5C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98FB2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2483206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:34:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A821206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:34:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466487;
-	bh=VdCvBULUEvQmmVuxWkyEmYYD54v+XsoI/gX+pxPXyWY=;
+	s=default; t=1593466492;
+	bh=9RXugjxgZPVLmp6PmQyW2EJxoLz85zklzqLqg4hPVVo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CLFQiLYQv9ex7d5tFrT02OP9UaXAYC/w/P/CCb81wZwEJIFojSpwTxuO+osdAZu0c
-	 6FXqjME3CnEYITUOb5hVFeg9drcH+pDOHpyfJeU0YIQVAYdS0iqFgWR15dqjQxZx5k
-	 imgurColpMccPsLWNG2GzR3asM8mJ+7Qj2Qx9O0A=
+	b=v0JRjfZ7GMD4VNrADixo6JBHHJ4DVzQdx1mAV+ZYimfhFW81C49mnJvJXwB3hk3VI
+	 qlOOZexXq7wFFFqPepZwRkP8XRKg6Nwl+Acah+WrcSB0sjKUSy8dFWVdsMkbRK49PA
+	 Wf6R91WWS4j+thjWKwn5l+yfSoOdBPqxz5z6i0zs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391283AbgF2Vep (ORCPT
+        id S2403781AbgF2Vev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:34:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60672 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:34:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728590AbgF2Skz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728588AbgF2Skz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:40:55 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C6CC24153;
-        Mon, 29 Jun 2020 15:18:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5721823F58;
+        Mon, 29 Jun 2020 15:18:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443940;
-        bh=VdCvBULUEvQmmVuxWkyEmYYD54v+XsoI/gX+pxPXyWY=;
+        s=default; t=1593443916;
+        bh=9RXugjxgZPVLmp6PmQyW2EJxoLz85zklzqLqg4hPVVo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1+KQgbsPuzQISCC7NrWIO4OlmihMUcmtDdofhxjRlyNnA6xSzrO1MXiKLidPexuPA
-         cazQHdq01jEx2X7saREXxACXD/9tsUjEk0gNzJ/SnaB6/cxL57AyvZEQKM66NOZprP
-         Y1ww5UW+BkyZnh0o7omNBDVy5Fcw7SvEN1AdBMzg=
+        b=KpnaG5J/EYXnT3jnr2ZbRM9t9WxS1y6BiO5Omnrs4XWIyJcVLGnGsT7jRTDFIjDL/
+         qgGGc5pEFqzZ5VKo861Vaop2olRuAAVCzdMpDnO8du0ppKa5WFH3ZDv5RK0cbi0okM
+         M/Nv0hoUawTAuammZTXUO/8ebU/jitu0NFkiLRgI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Geliang Tang <geliangtang@gmail.com>,
-        Matthieu Baerts <matthieu.baerts@tessares.net>,
+Cc:     Jeremy Kerr <jk@ozlabs.org>,
         "David S . Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 041/265] mptcp: drop sndr_key in mptcp_syn_options
-Date:   Mon, 29 Jun 2020 11:14:34 -0400
-Message-Id: <20200629151818.2493727-42-sashal@kernel.org>
+Subject: [PATCH 5.7 017/265] net: usb: ax88179_178a: fix packet alignment padding
+Date:   Mon, 29 Jun 2020 11:14:10 -0400
+Message-Id: <20200629151818.2493727-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -66,36 +65,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Geliang Tang <geliangtang@gmail.com>
+From: Jeremy Kerr <jk@ozlabs.org>
 
-[ Upstream commit b562f58bbc12444219b74a5d6524977a3d87a022 ]
+[ Upstream commit e869e7a17798d85829fa7d4f9bbe1eebd4b2d3f6 ]
 
-In RFC 8684, we don't need to send sndr_key in SYN package anymore, so drop
-it.
+Using a AX88179 device (0b95:1790), I see two bytes of appended data on
+every RX packet. For example, this 48-byte ping, using 0xff as a
+payload byte:
 
-Fixes: cc7972ea1932 ("mptcp: parse and emit MP_CAPABLE option according to v1 spec")
-Signed-off-by: Geliang Tang <geliangtang@gmail.com>
-Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+  04:20:22.528472 IP 192.168.1.1 > 192.168.1.2: ICMP echo request, id 2447, seq 1, length 64
+	0x0000:  000a cd35 ea50 000a cd35 ea4f 0800 4500
+	0x0010:  0054 c116 4000 4001 f63e c0a8 0101 c0a8
+	0x0020:  0102 0800 b633 098f 0001 87ea cd5e 0000
+	0x0030:  0000 dcf2 0600 0000 0000 ffff ffff ffff
+	0x0040:  ffff ffff ffff ffff ffff ffff ffff ffff
+	0x0050:  ffff ffff ffff ffff ffff ffff ffff ffff
+	0x0060:  ffff 961f
+
+Those last two bytes - 96 1f - aren't part of the original packet.
+
+In the ax88179 RX path, the usbnet rx_fixup function trims a 2-byte
+'alignment pseudo header' from the start of the packet, and sets the
+length from a per-packet field populated by hardware. It looks like that
+length field *includes* the 2-byte header; the current driver assumes
+that it's excluded.
+
+This change trims the 2-byte alignment header after we've set the packet
+length, so the resulting packet length is correct. While we're moving
+the comment around, this also fixes the spelling of 'pseudo'.
+
+Signed-off-by: Jeremy Kerr <jk@ozlabs.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/mptcp/options.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/net/usb/ax88179_178a.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 1c20dd14b2aa2..2430bbfa34059 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -336,9 +336,7 @@ bool mptcp_syn_options(struct sock *sk, const struct sk_buff *skb,
- 	 */
- 	subflow->snd_isn = TCP_SKB_CB(skb)->end_seq;
- 	if (subflow->request_mptcp) {
--		pr_debug("local_key=%llu", subflow->local_key);
- 		opts->suboptions = OPTION_MPTCP_MPC_SYN;
--		opts->sndr_key = subflow->local_key;
- 		*size = TCPOLEN_MPTCP_MPC_SYN;
- 		return true;
- 	} else if (subflow->request_join) {
+diff --git a/drivers/net/usb/ax88179_178a.c b/drivers/net/usb/ax88179_178a.c
+index 93044cf1417a5..1fe4cc28d154d 100644
+--- a/drivers/net/usb/ax88179_178a.c
++++ b/drivers/net/usb/ax88179_178a.c
+@@ -1414,10 +1414,10 @@ static int ax88179_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
+ 		}
+ 
+ 		if (pkt_cnt == 0) {
+-			/* Skip IP alignment psudo header */
+-			skb_pull(skb, 2);
+ 			skb->len = pkt_len;
+-			skb_set_tail_pointer(skb, pkt_len);
++			/* Skip IP alignment pseudo header */
++			skb_pull(skb, 2);
++			skb_set_tail_pointer(skb, skb->len);
+ 			skb->truesize = pkt_len + sizeof(struct sk_buff);
+ 			ax88179_rx_checksum(skb, pkt_hdr);
+ 			return 1;
+@@ -1426,8 +1426,9 @@ static int ax88179_rx_fixup(struct usbnet *dev, struct sk_buff *skb)
+ 		ax_skb = skb_clone(skb, GFP_ATOMIC);
+ 		if (ax_skb) {
+ 			ax_skb->len = pkt_len;
+-			ax_skb->data = skb->data + 2;
+-			skb_set_tail_pointer(ax_skb, pkt_len);
++			/* Skip IP alignment pseudo header */
++			skb_pull(ax_skb, 2);
++			skb_set_tail_pointer(ax_skb, ax_skb->len);
+ 			ax_skb->truesize = pkt_len + sizeof(struct sk_buff);
+ 			ax88179_rx_checksum(ax_skb, pkt_hdr);
+ 			usbnet_skb_return(dev, ax_skb);
 -- 
 2.25.1
 
