@@ -2,140 +2,101 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BFB7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:51:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90317C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:51:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47E3820663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:51:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F64420663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:51:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="UGuj7q/W"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="gtPgUF8F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389744AbgF2Uvf (ORCPT
+        id S2389844AbgF2Uvp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:51:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43366 "EHLO
+        Mon, 29 Jun 2020 16:51:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731397AbgF2TN3 (ORCPT
+        with ESMTP id S1731388AbgF2TN1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:13:29 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45A5BC08EAD6
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:18:45 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id u5so7455337pfn.7
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:18:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=JYEfxa7OKW4v9GzIhRwTOUIFBqV9srsfVDhYF/BxOH4=;
-        b=UGuj7q/WS0KExRsg2CLBONUZs7T3XsjCMG/yvyLhtdKaUxcYROcvoBOHpNAFhy3W6X
-         hRSrOBP/yNeMA7/dIhR3oCJW8Q2Ny4KVxmm6Vjh8bZXH5/6i5EtAUXUY8d0+u7DSSe3D
-         eLJOO3rK0lYMIO5dti5mWzX97ev2/r072VzHI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=JYEfxa7OKW4v9GzIhRwTOUIFBqV9srsfVDhYF/BxOH4=;
-        b=cFFvtqG9f31iOrE6wXB745x6rI9WXboj4zFGMUo3RrE70CsnmuH+7zBNI75i5NMYqp
-         6xMbHLzmjPp2G2MDgW4zE9JplgofjpVgZBOagUtCK+B0iAtPJ7BHOIXdw5xDhu5wPmSy
-         oItohpnTRt1wMvA1R9qWlm23/H/r33Byc0y9NTbOFfhyzgSow0/Y6bfodYgoWero2WUy
-         PO//uYNT1TJwXCGZxSYW1GhPd3brDK80VV2OJKAtSEFlpDbYEsSFM/emh+jFFBiFbuWu
-         3GZ+H3Ch9mmj8xnJIY9vK9vmkS+dewZP7QjwE6nD2aY5T++vSYwyBjTh5OOnY2Czafd4
-         KbYw==
-X-Gm-Message-State: AOAM530ZmVwFxJpseZTuAwd0coIoQ8vEWPiNKVtlFjlKI1kq6EDv+sRZ
-        W8J/YxmABZHCMv6zJXkFsA0r4QnioUA=
-X-Google-Smtp-Source: ABdhPJw01U8lgdzVeHYlSAg3jRburoo7yEiQmP++SKqH4gvPoLztfxnPJpbsXaeAqVpc8BiwbFDEkg==
-X-Received: by 2002:a05:6a00:148c:: with SMTP id v12mr12987122pfu.171.1593411524779;
-        Sun, 28 Jun 2020 23:18:44 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id o207sm33243245pfd.56.2020.06.28.23.18.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jun 2020 23:18:43 -0700 (PDT)
-From:   Kees Cook <keescook@chromium.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Peter Collingbourne <pcc@google.com>,
-        James Morse <james.morse@arm.com>,
-        Borislav Petkov <bp@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
-        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 02/17] vmlinux.lds.h: Avoid KASAN and KCSAN's unwanted sections
-Date:   Sun, 28 Jun 2020 23:18:25 -0700
-Message-Id: <20200629061840.4065483-3-keescook@chromium.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629061840.4065483-1-keescook@chromium.org>
-References: <20200629061840.4065483-1-keescook@chromium.org>
+        Mon, 29 Jun 2020 15:13:27 -0400
+Received: from ozlabs.org (ozlabs.org [IPv6:2401:3900:2:1::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D295AC014A45;
+        Mon, 29 Jun 2020 01:10:18 -0700 (PDT)
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49wKsz3Ldfz9sQt;
+        Mon, 29 Jun 2020 18:10:15 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1593418216;
+        bh=crWSNNu528LAfdEMbW7KUH2pWweNYViIJO8WxsWa4Tg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=gtPgUF8F34Ded9aBpbOEfWwctqu5d+tOBBKJlXtDhz8JMTTPXSq+uEvPSdBn7KKUT
+         bmaQ6MtpVIKTRe66ARLKx1zUgwYpHkjC3OrYo+TxOLHDHhObDYeYO0T8QkQBgODIAu
+         oh2VqKR6ex1ZL8Fb90YQuxmvhSoqQj40bqtgdTNyP4eF1JczGAEdXaZY9vPcRYAyXH
+         x2ZQfocM5NtmJRCpYY359kDoWbibNM8lroymr0q3d/xhnTa17iomgdmPR0hXZ3tovF
+         UWrw6WJlmfVs9rzf+KldX6fLpa8lWJ02r1ZKsxNsdn0Oo+OcCYeb+ogRNl7jyE1bsO
+         qFJkl3sfKPHQQ==
+Date:   Mon, 29 Jun 2020 18:10:14 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     akpm@linux-foundation.org, Randy Dunlap <rdunlap@infradead.org>,
+        broonie@kernel.org, mhocko@suse.cz, linux-next@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, mm-commits@vger.kernel.org
+Subject: Re: [PATCH] slab: Fix misplaced __free_one()
+Message-ID: <20200629181014.02f2022d@canb.auug.org.au>
+In-Reply-To: <202006261306.0D82A2B@keescook>
+References: <202006261306.0D82A2B@keescook>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/Dyu5QPdDe/MilO+Q7TeeL45";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KASAN (-fsanitize=kernel-address) and KCSAN (-fsanitize=thread) produce
-unwanted[1] .eh_frame and .init_array.* sections. Add them to DISCARDS,
-except with CONFIG_CONSTRUCTORS, which wants to keep .init_array.*
-sections.
+--Sig_/Dyu5QPdDe/MilO+Q7TeeL45
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-[1] https://bugs.llvm.org/show_bug.cgi?id=46478
+Hi Kees,
 
-Signed-off-by: Kees Cook <keescook@chromium.org>
----
- include/asm-generic/vmlinux.lds.h | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+On Fri, 26 Jun 2020 13:07:53 -0700 Kees Cook <keescook@chromium.org> wrote:
+>
+> The implementation of __free_one() was accidentally placed inside a
+> CONFIG_NUMA #ifdef. Move it above.
+>=20
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Link: https://lore.kernel.org/lkml/7ff248c7-d447-340c-a8e2-8c02972aca70@i=
+nfradead.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index 1248a206be8d..e53a2d4f47f6 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -927,10 +927,30 @@
- 	EXIT_DATA
- #endif
- 
-+/*
-+ * Clang's -fsanitize=kernel-address and -fsanitize=thread produce
-+ * unwanted sections (.eh_frame and .init_array.*), but
-+ * CONFIG_CONSTRUCTORS wants to keep any .init_array.* sections.
-+ * https://bugs.llvm.org/show_bug.cgi?id=46478
-+ */
-+#if defined(CONFIG_KASAN_GENERIC) || defined(CONFIG_KCSAN)
-+# ifdef CONFIG_CONSTRUCTORS
-+#  define KASAN_DISCARDS						\
-+	*(.eh_frame)
-+# else
-+#  define KASAN_DISCARDS						\
-+	*(.init_array) *(.init_array.*)					\
-+	*(.eh_frame)
-+# endif
-+#else
-+# define KASAN_DISCARDS
-+#endif
-+
- #define DISCARDS							\
- 	/DISCARD/ : {							\
- 	EXIT_DISCARDS							\
- 	EXIT_CALL							\
-+	KASAN_DISCARDS							\
- 	*(.discard)							\
- 	*(.discard.*)							\
- 	*(.modinfo)							\
--- 
-2.25.1
+I added that to linux-next for today.
 
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Dyu5QPdDe/MilO+Q7TeeL45
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl75oeYACgkQAVBC80lX
+0Gw23Af9G6llJx86wM9f653I6RddIKgNYCd1+ZQBm0e3vsDC982acrw12+AxRXyy
+Yk4Gv8seQChMrSjgw9AXifoxKsoYrHncHeM1QerK8B9xtvvWxlMrCYwca9jVdhqQ
+d6CHpFvQWxLRjJRFkTgFHQJVrt8GUrsbDuIJ477V3ipJ/91jG18Z/tbF1zidhU7d
+KOXO0J/BsASSac4czoLQnSj/jC9+K+cADlIL5dvfwNn6iVRwSYRpJmGSv/ZyHoGO
+O5jpNs0c5AVaHXtq4FzwkDvY9KsTMxnWEGx+wUypYxuszAx+U9rm6wytDvbcPsFS
+A1nE5D5dEnbiZbH6jLRoyeTJep6bIw==
+=1SDg
+-----END PGP SIGNATURE-----
+
+--Sig_/Dyu5QPdDe/MilO+Q7TeeL45--
