@@ -4,60 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 424EAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 879BFC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:12:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1699820675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:12:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57FE920675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:12:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461549;
-	bh=+fjJTwtTffvmuCdEVZGk9qwlYddz6jrFPC0zOsFVzGY=;
+	s=default; t=1593461552;
+	bh=nULSmqGEhmQIT2xXjTf3HDKmeDaPmfs7XfWtTTe2MXw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Uu+xX0kN+tkzYHi9Nw0Uu445zNq+0cWvq1arDyXw3FgD8BO3fZRoiUDwVwrd0UmHZ
-	 XMcQPGWsHKih0k5q/aYYCHyl31DCgRMD5avnhuAOYLGLFYv4VY45NwyjdUZJrd7ZfQ
-	 6M4ThcmsorYX1JBRvTMQEZP3hsUWDc1DrVMQJc5M=
+	b=qNoc6ty3IYJD07lkWDwIVUjmzVMj7GWGzNFfDDhnIRf1si+sbp3jrE2uPfS8/icE8
+	 HL9wea+hAgSgtPI7OcQ6arSIJdaWR8oaw7nY+Ra6SSNu7iY5QXPyKFqSLVA0p3Pq9h
+	 MnGwc7VtK+iQUaB06JytXNmCd/MVQnr8AhlegwNg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730557AbgF2UM0 (ORCPT
+        id S1730615AbgF2UMa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:12:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40574 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:12:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732885AbgF2TaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732880AbgF2TaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DACF525283;
-        Mon, 29 Jun 2020 15:36:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B5D2252D7;
+        Mon, 29 Jun 2020 15:38:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444994;
-        bh=+fjJTwtTffvmuCdEVZGk9qwlYddz6jrFPC0zOsFVzGY=;
+        s=default; t=1593445103;
+        bh=nULSmqGEhmQIT2xXjTf3HDKmeDaPmfs7XfWtTTe2MXw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TYIrEJqPk8PmGUUFzyucKdWrLJpiAB4GXEK7Sa9ZoRrfsR1x4350TbQYM/JdE8YJK
-         Dtl45iEeeaXJ3aciSSBBQ10X90EYbOClxwDT4Z6S3jnrfqJ0xGG67tsm3pMnwFE9wa
-         v+5zkh060UJcV94HtsD2yH0m3sptxqEhZpAg8i+A=
+        b=RUGmo2SaTQLvaLNUNHtdI/o0BMyGliBHdZCb0/8apwuh5nTPTYt3XF4OnA/Lh483c
+         +TADVpkBDGw7UXReQp9Fkd4gRlEnJiO2zO735+unBoWKcO7Cj294SK9+5rArhqLK9E
+         9nWyPqvhllOtrMMFNvfPi1zFirok2HqQH4tr6f+0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dinghao Liu <dinghao.liu@zju.edu.cn>,
-        Alexander Sverdlin <alexander.sverdlin@nokia.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 094/131] hwrng: ks-sa - Fix runtime PM imbalance on error
-Date:   Mon, 29 Jun 2020 11:34:25 -0400
-Message-Id: <20200629153502.2494656-95-sashal@kernel.org>
+Cc:     Aditya Pakki <pakki001@umn.edu>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.14 12/78] rocker: fix incorrect error handling in dma_rings_init
+Date:   Mon, 29 Jun 2020 11:37:00 -0400
+Message-Id: <20200629153806.2494953-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
-References: <20200629153502.2494656-1-sashal@kernel.org>
+In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
+References: <20200629153806.2494953-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.19.y
+X-KernelTest-Branch: linux-4.14.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.19.131-rc1
-X-KernelTest-Deadline: 2020-07-01T15:34+00:00
+X-KernelTest-Version: 4.14.186-rc1
+X-KernelTest-Deadline: 2020-07-01T15:38+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -66,34 +65,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dinghao Liu <dinghao.liu@zju.edu.cn>
+From: Aditya Pakki <pakki001@umn.edu>
 
-[ Upstream commit 95459261c99f1621d90bc628c2a48e60b7cf9a88 ]
+[ Upstream commit 58d0c864e1a759a15c9df78f50ea5a5c32b3989e ]
 
-pm_runtime_get_sync() increments the runtime PM usage counter even
-the call returns an error code. Thus a pairing decrement is needed
-on the error handling path to keep the counter balanced.
+In rocker_dma_rings_init, the goto blocks in case of errors
+caused by the functions rocker_dma_cmd_ring_waits_alloc() and
+rocker_dma_ring_create() are incorrect. The patch fixes the
+order consistent with cleanup in rocker_dma_rings_fini().
 
-Signed-off-by: Dinghao Liu <dinghao.liu@zju.edu.cn>
-Reviewed-by: Alexander Sverdlin <alexander.sverdlin@nokia.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Aditya Pakki <pakki001@umn.edu>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/char/hw_random/ks-sa-rng.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/rocker/rocker_main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/char/hw_random/ks-sa-rng.c b/drivers/char/hw_random/ks-sa-rng.c
-index 62c6696c1dbd8..b6d7db362b217 100644
---- a/drivers/char/hw_random/ks-sa-rng.c
-+++ b/drivers/char/hw_random/ks-sa-rng.c
-@@ -216,6 +216,7 @@ static int ks_sa_rng_probe(struct platform_device *pdev)
- 	ret = pm_runtime_get_sync(dev);
- 	if (ret < 0) {
- 		dev_err(dev, "Failed to enable SA power-domain\n");
-+		pm_runtime_put_noidle(dev);
- 		pm_runtime_disable(dev);
- 		return ret;
- 	}
+diff --git a/drivers/net/ethernet/rocker/rocker_main.c b/drivers/net/ethernet/rocker/rocker_main.c
+index 056cb60936303..8ad05e5008299 100644
+--- a/drivers/net/ethernet/rocker/rocker_main.c
++++ b/drivers/net/ethernet/rocker/rocker_main.c
+@@ -651,10 +651,10 @@ static int rocker_dma_rings_init(struct rocker *rocker)
+ err_dma_event_ring_bufs_alloc:
+ 	rocker_dma_ring_destroy(rocker, &rocker->event_ring);
+ err_dma_event_ring_create:
++	rocker_dma_cmd_ring_waits_free(rocker);
++err_dma_cmd_ring_waits_alloc:
+ 	rocker_dma_ring_bufs_free(rocker, &rocker->cmd_ring,
+ 				  PCI_DMA_BIDIRECTIONAL);
+-err_dma_cmd_ring_waits_alloc:
+-	rocker_dma_cmd_ring_waits_free(rocker);
+ err_dma_cmd_ring_bufs_alloc:
+ 	rocker_dma_ring_destroy(rocker, &rocker->cmd_ring);
+ 	return err;
 -- 
 2.25.1
 
