@@ -2,140 +2,495 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60DB7C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:36:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FEACC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:36:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 35216206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:36:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24D8E206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:36:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="VCAl77z4"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="vh68/fxo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403799AbgF2VgQ (ORCPT
+        id S2391338AbgF2VgZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:36:16 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:33481 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726869AbgF2Skn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 17:36:25 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:10037 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728424AbgF2Skn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:40:43 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593456043; h=Content-Transfer-Encoding: MIME-Version:
- Message-Id: Date: Subject: Cc: To: From: Sender;
- bh=MMgpD5DCLQ6JjRpMGo318xv/+oipR7QB8aPXFQoSC2I=; b=VCAl77z4c2Yw0uwrj5anPBR+fJRd3a3E+5q6FwIM5E2fWRS1Gy9hiN/hxk6B25cr2+JwZCAt
- yiWl6XGml7FpdjxrV/VhdqZLPO1qvnyRqc92RPVMJkO7QJmPTPqFwOxort9kxJzTNVgv8MT0
- u0ax27SW84XAkU3yNN2hEljfVlM=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n04.prod.us-west-2.postgun.com with SMTP id
- 5efa0e694c9690533a5f0fc1 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 29 Jun 2020 15:53:13
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8BDA9C433B1; Mon, 29 Jun 2020 15:53:13 +0000 (UTC)
-Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 467E3C433CA;
-        Mon, 29 Jun 2020 15:53:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 467E3C433CA
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        Rob Clark <robdclark@gmail.com>
-Cc:     iommu@lists.linux-foundation.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Sean Paul <sean@poorly.run>,
-        Sharat Masetty <smasetty@codeaurora.org>,
-        Akhil P Oommen <akhilpo@codeaurora.org>,
-        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        Emil Velikov <emil.velikov@collabora.com>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org,
-        "Kristian H . Kristensen" <hoegsberg@google.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCHv3 0/7] System Cache support for GPU and required SMMU support
-Date:   Mon, 29 Jun 2020 21:22:43 +0530
-Message-Id: <cover.1593344119.git.saiprakash.ranjan@codeaurora.org>
-X-Mailer: git-send-email 2.27.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200629065303epoutp01f1711bd5efc8df7116346f615fcfe1e2~c8TY26e6X2023320233epoutp01W
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 06:53:03 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200629065303epoutp01f1711bd5efc8df7116346f615fcfe1e2~c8TY26e6X2023320233epoutp01W
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593413583;
+        bh=7bdDrtKfhDIeoE6nA3jqgvIZ53z3Zzgsj9GRaApA+3s=;
+        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+        b=vh68/fxo0BXeKLPxfU2BSZz300/5XF1N4O65/cGh8MmE7IxnbJMTJ8TKr88+6Malh
+         zRP5406vPg949HTvlVIqszXBKgVT5Xds5qAXXCC+84rfv92amSB1oi/r7MVutEYjXx
+         vXz8me3rGiocnrJLNL83e2OTk951UOXWiugSp51M=
+Received: from epcpadp2 (unknown [182.195.40.12]) by epcas1p2.samsung.com
+        (KnoxPortal) with ESMTP id
+        20200629065302epcas1p2eb3ffeb26eb214d361ac7007ce1b8291~c8TYc09-71437714377epcas1p25;
+        Mon, 29 Jun 2020 06:53:02 +0000 (GMT)
+Mime-Version: 1.0
+Subject: [PATCH v4 2/5] scsi: ufs: Add UFS-feature layer
+Reply-To: daejun7.park@samsung.com
+From:   Daejun Park <daejun7.park@samsung.com>
+To:     Daejun Park <daejun7.park@samsung.com>,
+        "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <1239183618.61593413402991.JavaMail.epsvc@epcpadp1>
+X-CPGS-Detection: blocking_info_exchange
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <963815509.21593413582881.JavaMail.epsvc@epcpadp2>
+Date:   Mon, 29 Jun 2020 15:50:52 +0900
+X-CMS-MailID: 20200629065052epcms2p3096e06bb5ac384bf6a5158996eef31c4
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+X-CPGSPASS: Y
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20200629064323epcms2p787baba58a416fef7fdd3927f8da701da
+References: <1239183618.61593413402991.JavaMail.epsvc@epcpadp1>
+        <231786897.01593413281727.JavaMail.epsvc@epcpadp2>
+        <CGME20200629064323epcms2p787baba58a416fef7fdd3927f8da701da@epcms2p3>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some hardware variants contain a system cache or the last level
-cache(llc). This cache is typically a large block which is shared
-by multiple clients on the SOC. GPU uses the system cache to cache
-both the GPU data buffers(like textures) as well the SMMU pagetables.
-This helps with improved render performance as well as lower power
-consumption by reducing the bus traffic to the system memory.
+This patch is adding UFS feature layer to UFS core driver.
 
-The system cache architecture allows the cache to be split into slices
-which then be used by multiple SOC clients. This patch series is an
-effort to enable and use two of those slices perallocated for the GPU,
-one for the GPU data buffers and another for the GPU SMMU hardware
-pagetables.
+UFS Driver data structure (struct ufs_hba)
+=09=E2=94=82
+=E2=94=8C--------------=E2=94=90
+=E2=94=82 UFS feature  =E2=94=82 <-- HPB module
+=E2=94=82    layer     =E2=94=82 <-- other extended feature module
+=E2=94=94--------------=E2=94=98
+Each extended UFS-Feature module has a bus of ufs-ext feature type.
+The UFS feature layer manages common APIs used by each extended feature
+module. The APIs are set of UFS Query requests and UFS Vendor commands
+related to each extended feature module.
 
-Patch 1 adds a init_context_bank implementation hook to set SCTLR.HUPCF.
-Patch 2,3,6,7 adds system cache support in SMMU and GPU driver.
-Patch 4 and 5 are minor cleanups for arm-smmu impl.
+Other extended features can also be implemented using the proposed APIs.
+For example, in Write Booster, "prep_fn" can be used to guarantee the
+lifetime of UFS by updating the amount of write IO.
+And reset/reset_host/suspend/resume can be used to manage the kernel task
+for checking lifetime of UFS.
 
-Changes in v3:
- * Fix domain attribute setting to before iommu_attach_device()
- * Fix few code style and checkpatch warnings
- * Rebase on top of Jordan's latest split pagetables and per-instance
-   pagetables support [1][2]
+The following 6 callback functions have been added to "ufshcd.c".
+prep_fn: called after construct upiu structure
+reset: called after proving hba
+reset_host: called before ufshcd_host_reset_and_restore
+suspend: called before ufshcd_suspend
+resume: called after ufshcd_resume
+rsp_upiu: called in ufshcd_transfer_rsp_status with SAM_STAT_GOOD state
 
-Changes in v2:
- * Addressed review comments and rebased on top of Jordan's split
-   pagetables series
+Signed-off-by: Daejun Park <daejun7.park@samsung.com>
+---
+ drivers/scsi/ufs/Makefile     |   2 +-
+ drivers/scsi/ufs/ufsfeature.c | 148 ++++++++++++++++++++++++++++++++++
+ drivers/scsi/ufs/ufsfeature.h |  69 ++++++++++++++++
+ drivers/scsi/ufs/ufshcd.c     |  17 ++++
+ drivers/scsi/ufs/ufshcd.h     |   3 +
+ 5 files changed, 238 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/scsi/ufs/ufsfeature.c
+ create mode 100644 drivers/scsi/ufs/ufsfeature.h
 
-[1] https://lore.kernel.org/patchwork/cover/1264446/
-[2] https://lore.kernel.org/patchwork/cover/1264460/
+diff --git a/drivers/scsi/ufs/Makefile b/drivers/scsi/ufs/Makefile
+index f0c5b95ec9cc..433b871badfa 100644
+--- a/drivers/scsi/ufs/Makefile
++++ b/drivers/scsi/ufs/Makefile
+@@ -6,7 +6,7 @@ obj-$(CONFIG_SCSI_UFS_CDNS_PLATFORM) +=3D cdns-pltfrm.o
+ obj-$(CONFIG_SCSI_UFS_QCOM) +=3D ufs-qcom.o
+ obj-$(CONFIG_SCSI_UFS_EXYNOS) +=3D ufs-exynos.o
+ obj-$(CONFIG_SCSI_UFSHCD) +=3D ufshcd-core.o
+-ufshcd-core-y=09=09=09=09+=3D ufshcd.o ufs-sysfs.o
++ufshcd-core-y=09=09=09=09+=3D ufshcd.o ufs-sysfs.o ufsfeature.o
+ ufshcd-core-$(CONFIG_SCSI_UFS_BSG)=09+=3D ufs_bsg.o
+ obj-$(CONFIG_SCSI_UFSHCD_PCI) +=3D ufshcd-pci.o
+ obj-$(CONFIG_SCSI_UFSHCD_PLATFORM) +=3D ufshcd-pltfrm.o
+diff --git a/drivers/scsi/ufs/ufsfeature.c b/drivers/scsi/ufs/ufsfeature.c
+new file mode 100644
+index 000000000000..94c6be6babd3
+--- /dev/null
++++ b/drivers/scsi/ufs/ufsfeature.c
+@@ -0,0 +1,148 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Universal Flash Storage Feature Support
++ *
++ * Copyright (C) 2017-2018 Samsung Electronics Co., Ltd.
++ *
++ * Authors:
++ *=09Yongmyung Lee <ymhungry.lee@samsung.com>
++ *=09Jinyoung Choi <j-young.choi@samsung.com>
++ */
++
++#include "ufshcd.h"
++#include "ufsfeature.h"
++
++inline void ufsf_slave_configure(struct ufs_hba *hba,
++=09=09=09=09 struct scsi_device *sdev)
++{
++=09/* skip well-known LU */
++=09if (sdev->lun >=3D UFS_UPIU_MAX_UNIT_NUM_ID)
++=09=09return;
++
++=09if (!(hba->dev_info.b_ufs_feature_sup & UFS_DEV_HPB_SUPPORT))
++=09=09return;
++
++=09atomic_inc(&hba->ufsf.slave_conf_cnt);
++
++=09wake_up(&hba->ufsf.sdev_wait);
++}
++
++inline void ufsf_ops_prep_fn(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
++{
++=09struct ufshpb_driver *ufshpb_drv;
++
++=09ufshpb_drv =3D dev_get_drvdata(&hba->ufsf.hpb_dev);
++
++=09if (ufshpb_drv && ufshpb_drv->ufshpb_ops.prep_fn)
++=09=09ufshpb_drv->ufshpb_ops.prep_fn(hba, lrbp);
++}
++
++inline void ufsf_ops_rsp_upiu(struct ufs_hba *hba, struct ufshcd_lrb *lrbp=
+)
++{
++=09struct ufshpb_driver *ufshpb_drv;
++
++=09ufshpb_drv =3D dev_get_drvdata(&hba->ufsf.hpb_dev);
++
++=09if (ufshpb_drv && ufshpb_drv->ufshpb_ops.rsp_upiu)
++=09=09ufshpb_drv->ufshpb_ops.rsp_upiu(hba, lrbp);
++}
++
++inline void ufsf_ops_reset_host(struct ufs_hba *hba)
++{
++=09struct ufshpb_driver *ufshpb_drv;
++
++=09ufshpb_drv =3D dev_get_drvdata(&hba->ufsf.hpb_dev);
++
++=09if (ufshpb_drv && ufshpb_drv->ufshpb_ops.reset_host)
++=09=09ufshpb_drv->ufshpb_ops.reset_host(hba);
++}
++
++inline void ufsf_ops_reset(struct ufs_hba *hba)
++{
++=09struct ufshpb_driver *ufshpb_drv;
++
++=09ufshpb_drv =3D dev_get_drvdata(&hba->ufsf.hpb_dev);
++
++=09if (ufshpb_drv && ufshpb_drv->ufshpb_ops.reset)
++=09=09ufshpb_drv->ufshpb_ops.reset(hba);
++}
++
++inline void ufsf_ops_suspend(struct ufs_hba *hba)
++{
++=09struct ufshpb_driver *ufshpb_drv;
++
++=09ufshpb_drv =3D dev_get_drvdata(&hba->ufsf.hpb_dev);
++
++=09if (ufshpb_drv && ufshpb_drv->ufshpb_ops.suspend)
++=09=09ufshpb_drv->ufshpb_ops.suspend(hba);
++}
++
++inline void ufsf_ops_resume(struct ufs_hba *hba)
++{
++=09struct ufshpb_driver *ufshpb_drv;
++
++=09ufshpb_drv =3D dev_get_drvdata(&hba->ufsf.hpb_dev);
++
++=09if (ufshpb_drv && ufshpb_drv->ufshpb_ops.resume)
++=09=09ufshpb_drv->ufshpb_ops.resume(hba);
++}
++
++struct device_type ufshpb_dev_type =3D {
++=09.name =3D "ufshpb_device"
++};
++EXPORT_SYMBOL(ufshpb_dev_type);
++
++static int ufsf_bus_match(struct device *dev,
++=09=09=09 struct device_driver *gendrv)
++{
++=09if (dev->type =3D=3D &ufshpb_dev_type)
++=09=09return 1;
++
++=09return 0;
++}
++
++struct bus_type ufsf_bus_type =3D {
++=09.name =3D "ufsf_bus",
++=09.match =3D ufsf_bus_match,
++};
++EXPORT_SYMBOL(ufsf_bus_type);
++
++static void ufsf_dev_release(struct device *dev)
++{
++=09put_device(dev->parent);
++}
++
++void ufsf_scan_features(struct ufs_hba *hba)
++{
++=09int ret;
++
++=09init_waitqueue_head(&hba->ufsf.sdev_wait);
++=09atomic_set(&hba->ufsf.slave_conf_cnt, 0);
++
++=09if (hba->dev_info.wspecversion >=3D HPB_SUPPORTED_VERSION &&
++=09    (hba->dev_info.b_ufs_feature_sup & UFS_DEV_HPB_SUPPORT)) {
++=09=09device_initialize(&hba->ufsf.hpb_dev);
++
++=09=09hba->ufsf.hpb_dev.bus =3D &ufsf_bus_type;
++=09=09hba->ufsf.hpb_dev.type =3D &ufshpb_dev_type;
++=09=09hba->ufsf.hpb_dev.parent =3D get_device(hba->dev);
++=09=09hba->ufsf.hpb_dev.release =3D ufsf_dev_release;
++
++=09=09dev_set_name(&hba->ufsf.hpb_dev, "ufshpb");
++=09=09ret =3D device_add(&hba->ufsf.hpb_dev);
++=09=09if (ret)
++=09=09=09dev_warn(hba->dev, "ufshpb: failed to add device\n");
++=09}
++}
++
++static int __init ufsf_init(void)
++{
++=09int ret;
++
++=09ret =3D bus_register(&ufsf_bus_type);
++=09if (ret)
++=09=09pr_err("%s bus_register failed\n", __func__);
++
++=09return ret;
++}
++device_initcall(ufsf_init);
+diff --git a/drivers/scsi/ufs/ufsfeature.h b/drivers/scsi/ufs/ufsfeature.h
+new file mode 100644
+index 000000000000..1822d9d8e745
+--- /dev/null
++++ b/drivers/scsi/ufs/ufsfeature.h
+@@ -0,0 +1,69 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++/*
++ * Universal Flash Storage Feature Support
++ *
++ * Copyright (C) 2017-2018 Samsung Electronics Co., Ltd.
++ *
++ * Authors:
++ *=09Yongmyung Lee <ymhungry.lee@samsung.com>
++ *=09Jinyoung Choi <j-young.choi@samsung.com>
++ */
++
++#ifndef _UFSFEATURE_H_
++#define _UFSFEATURE_H_
++
++#define HPB_SUPPORTED_VERSION=09=09=090x0310
++
++struct ufs_hba;
++struct ufshcd_lrb;
++
++/**
++ * struct ufsf_operation - UFS feature specific callbacks
++ * @prep_fn: called after construct upiu structure. The prep_fn should wor=
+k
++ *=09     properly even if it processes the same SCSI command multiple
++ *=09     times by requeuing.
++ * @reset: called after probing hba
++ * @reset_host: called before ufshcd_host_reset_and_restore
++ * @suspend: called before ufshcd_suspend
++ * @resume: called after ufshcd_resume
++ * @rsp_upiu: called in ufshcd_transfer_rsp_status with SAM_STAT_GOOD stat=
+e
++ */
++struct ufsf_operation {
++=09void (*prep_fn)(struct ufs_hba *hba, struct ufshcd_lrb *lrbp);
++=09void (*reset)(struct ufs_hba *hba);
++=09void (*reset_host)(struct ufs_hba *hba);
++=09void (*suspend)(struct ufs_hba *hba);
++=09void (*resume)(struct ufs_hba *hba);
++=09void (*rsp_upiu)(struct ufs_hba *hba, struct ufshcd_lrb *lrbp);
++};
++
++struct ufshpb_driver {
++=09struct device_driver drv;
++=09struct list_head lh_hpb_lu;
++
++=09struct ufsf_operation ufshpb_ops;
++
++=09/* memory management */
++=09struct kmem_cache *ufshpb_mctx_cache;
++=09mempool_t *ufshpb_mctx_pool;
++=09mempool_t *ufshpb_page_pool;
++
++=09struct workqueue_struct *ufshpb_wq;
++};
++
++struct ufsf_feature_info {
++=09atomic_t slave_conf_cnt;
++=09wait_queue_head_t sdev_wait;
++=09struct device hpb_dev;
++};
++
++void ufsf_slave_configure(struct ufs_hba *hba, struct scsi_device *sdev);
++void ufsf_scan_features(struct ufs_hba *hba);
++void ufsf_ops_prep_fn(struct ufs_hba *hba, struct ufshcd_lrb *lrbp);
++void ufsf_ops_rsp_upiu(struct ufs_hba *hba, struct ufshcd_lrb *lrbp);
++void ufsf_ops_reset_host(struct ufs_hba *hba);
++void ufsf_ops_reset(struct ufs_hba *hba);
++void ufsf_ops_suspend(struct ufs_hba *hba);
++void ufsf_ops_resume(struct ufs_hba *hba);
++
++#endif /* End of Header */
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 59358bb75014..d02106bf80d8 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -2533,6 +2533,8 @@ static int ufshcd_queuecommand(struct Scsi_Host *host=
+, struct scsi_cmnd *cmd)
+=20
+ =09ufshcd_comp_scsi_upiu(hba, lrbp);
+=20
++=09ufsf_ops_prep_fn(hba, lrbp);
++
+ =09err =3D ufshcd_map_sg(hba, lrbp);
+ =09if (err) {
+ =09=09lrbp->cmd =3D NULL;
+@@ -4665,6 +4667,8 @@ static int ufshcd_slave_configure(struct scsi_device =
+*sdev)
+ =09struct ufs_hba *hba =3D shost_priv(sdev->host);
+ =09struct request_queue *q =3D sdev->request_queue;
+=20
++=09ufsf_slave_configure(hba, sdev);
++
+ =09blk_queue_update_dma_pad(q, PRDT_DATA_BYTE_COUNT_PAD - 1);
+=20
+ =09if (ufshcd_is_rpm_autosuspend_allowed(hba))
+@@ -4791,6 +4795,9 @@ ufshcd_transfer_rsp_status(struct ufs_hba *hba, struc=
+t ufshcd_lrb *lrbp)
+ =09=09=09=09 */
+ =09=09=09=09pm_runtime_get_noresume(hba->dev);
+ =09=09=09}
++
++=09=09=09if (scsi_status =3D=3D SAM_STAT_GOOD)
++=09=09=09=09ufsf_ops_rsp_upiu(hba, lrbp);
+ =09=09=09break;
+ =09=09case UPIU_TRANSACTION_REJECT_UPIU:
+ =09=09=09/* TODO: handle Reject UPIU Response */
+@@ -6539,6 +6546,8 @@ static int ufshcd_host_reset_and_restore(struct ufs_h=
+ba *hba)
+ =09 * Stop the host controller and complete the requests
+ =09 * cleared by h/w
+ =09 */
++=09ufsf_ops_reset_host(hba);
++
+ =09ufshcd_hba_stop(hba);
+=20
+ =09spin_lock_irqsave(hba->host->host_lock, flags);
+@@ -6973,6 +6982,7 @@ static int ufs_get_device_desc(struct ufs_hba *hba)
+ =09/* getting Specification Version in big endian format */
+ =09dev_info->wspecversion =3D desc_buf[DEVICE_DESC_PARAM_SPEC_VER] << 8 |
+ =09=09=09=09      desc_buf[DEVICE_DESC_PARAM_SPEC_VER + 1];
++=09dev_info->b_ufs_feature_sup =3D desc_buf[DEVICE_DESC_PARAM_UFS_FEAT];
+=20
+ =09model_index =3D desc_buf[DEVICE_DESC_PARAM_PRDCT_NAME];
+=20
+@@ -7343,6 +7353,7 @@ static int ufshcd_add_lus(struct ufs_hba *hba)
+ =09}
+=20
+ =09ufs_bsg_probe(hba);
++=09ufsf_scan_features(hba);
+ =09scsi_scan_host(hba->host);
+ =09pm_runtime_put_sync(hba->dev);
+=20
+@@ -7431,6 +7442,7 @@ static int ufshcd_probe_hba(struct ufs_hba *hba, bool=
+ async)
+ =09/* Enable Auto-Hibernate if configured */
+ =09ufshcd_auto_hibern8_enable(hba);
+=20
++=09ufsf_ops_reset(hba);
+ out:
+=20
+ =09trace_ufshcd_init(dev_name(hba->dev), ret,
+@@ -8188,6 +8200,8 @@ static int ufshcd_suspend(struct ufs_hba *hba, enum u=
+fs_pm_op pm_op)
+ =09=09req_link_state =3D UIC_LINK_OFF_STATE;
+ =09}
+=20
++=09ufsf_ops_suspend(hba);
++
+ =09/*
+ =09 * If we can't transition into any of the low power modes
+ =09 * just gate the clocks.
+@@ -8309,6 +8323,7 @@ static int ufshcd_suspend(struct ufs_hba *hba, enum u=
+fs_pm_op pm_op)
+ =09hba->clk_gating.is_suspended =3D false;
+ =09hba->dev_info.b_rpm_dev_flush_capable =3D false;
+ =09ufshcd_release(hba);
++=09ufsf_ops_resume(hba);
+ out:
+ =09if (hba->dev_info.b_rpm_dev_flush_capable) {
+ =09=09schedule_delayed_work(&hba->rpm_dev_flush_recheck_work,
+@@ -8405,6 +8420,8 @@ static int ufshcd_resume(struct ufs_hba *hba, enum uf=
+s_pm_op pm_op)
+ =09/* Enable Auto-Hibernate if configured */
+ =09ufshcd_auto_hibern8_enable(hba);
+=20
++=09ufsf_ops_resume(hba);
++
+ =09if (hba->dev_info.b_rpm_dev_flush_capable) {
+ =09=09hba->dev_info.b_rpm_dev_flush_capable =3D false;
+ =09=09cancel_delayed_work(&hba->rpm_dev_flush_recheck_work);
+diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+index c774012582b4..6fe5c9b3a0e7 100644
+--- a/drivers/scsi/ufs/ufshcd.h
++++ b/drivers/scsi/ufs/ufshcd.h
+@@ -46,6 +46,7 @@
+ #include "ufs.h"
+ #include "ufs_quirks.h"
+ #include "ufshci.h"
++#include "ufsfeature.h"
+=20
+ #define UFSHCD "ufshcd"
+ #define UFSHCD_DRIVER_VERSION "0.2"
+@@ -736,6 +737,8 @@ struct ufs_hba {
+ =09bool wb_buf_flush_enabled;
+ =09bool wb_enabled;
+ =09struct delayed_work rpm_dev_flush_recheck_work;
++
++=09struct ufsf_feature_info ufsf;
+ };
+=20
+ /* Returns true if clocks can be gated. Otherwise false */
+--=20
+2.17.1
 
-Jordan Crouse (1):
-  iommu/arm-smmu: Add a init_context_bank implementation hook
-
-Sai Prakash Ranjan (4):
-  iommu/io-pgtable-arm: Add support to use system cache
-  iommu/arm-smmu: Add domain attribute for system cache
-  iommu: arm-smmu-impl: Remove unwanted extra blank lines
-  iommu: arm-smmu-impl: Convert to use of_match_node() for qcom impl
-
-Sharat Masetty (2):
-  drm/msm: rearrange the gpu_rmw() function
-  drm/msm/a6xx: Add support for using system cache(LLC)
-
- drivers/gpu/drm/msm/adreno/a6xx_gpu.c   | 82 +++++++++++++++++++++++++
- drivers/gpu/drm/msm/adreno/a6xx_gpu.h   |  3 +
- drivers/gpu/drm/msm/adreno/adreno_gpu.c | 23 ++++++-
- drivers/gpu/drm/msm/msm_drv.c           |  8 +++
- drivers/gpu/drm/msm/msm_drv.h           |  1 +
- drivers/gpu/drm/msm/msm_gpu.h           |  5 +-
- drivers/gpu/drm/msm/msm_iommu.c         |  3 +
- drivers/gpu/drm/msm/msm_mmu.h           |  4 ++
- drivers/iommu/arm-smmu-impl.c           | 13 ++--
- drivers/iommu/arm-smmu-qcom.c           | 13 ++++
- drivers/iommu/arm-smmu.c                | 46 +++++++++-----
- drivers/iommu/arm-smmu.h                | 13 ++++
- drivers/iommu/io-pgtable-arm.c          |  7 ++-
- include/linux/io-pgtable.h              |  4 ++
- include/linux/iommu.h                   |  1 +
- 15 files changed, 198 insertions(+), 28 deletions(-)
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
 
