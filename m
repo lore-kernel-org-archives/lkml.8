@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A2DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 432D3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7312420674
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:58:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2259E20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:58:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460706;
-	bh=mfDFS8D7iKgXefOgDDNed7cMp9TqQlEMh+b4QZDqsu0=;
+	s=default; t=1593460717;
+	bh=W4IM7D2E1FmkEYvPp8iWmlQ9o/pvtw/YUi/t1cXKruE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N3s/mucKbnNzLXaookM8/CBS3+9B46YHcZbO2/eXfcFds8YTYlGI2xTHU5OPpRIMI
-	 fwd1nCa5BBsi6SXFEqgx9AX1hnP5HwIf/IGB8dyBTW4VNJiPbvj5VQFY4SU+u0RGur
-	 /ni3picypk6uixKyYLbHVLWCRKaouSmJ03Yk9l20=
+	b=TmynLCVWqj124schEvOJTL9xxMnvV3Vv/KGbhmyGApHeADTPXabre3UQ2YTzT/Eyf
+	 glY+Qc27XPLJ1z4dL5YMv3k80YuZP+UBiwvi2YMa9bQ8JLVuhq7sBE4NtjWBapOSsZ
+	 ZLaI2hQ12nQ2vMkm1+ZXGQmbbvU8+pCDO0lvJt6A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388481AbgF2T6Z (ORCPT
+        id S2388492AbgF2T6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:58:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47696 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:58:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387595AbgF2TkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387601AbgF2TkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C9EF248FE;
-        Mon, 29 Jun 2020 15:27:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1498D248C8;
+        Mon, 29 Jun 2020 15:27:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444451;
-        bh=mfDFS8D7iKgXefOgDDNed7cMp9TqQlEMh+b4QZDqsu0=;
+        s=default; t=1593444421;
+        bh=W4IM7D2E1FmkEYvPp8iWmlQ9o/pvtw/YUi/t1cXKruE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t2OD/ksNtK9vXh7fo2CiuNzzZE478RxTtCkL89sYQlNtdlGLQC9xNO4v+w1/LNHhg
-         8CEVoV+vM9ZQjD2gHoKvK43DPuJH0fR40qIcNVwsY/ENqW6xF/wJ43I0wapiVHXmpf
-         Z3lG0RWoDRc1yZKuZ17pC2YZE8luk6fP2vhwm3dc=
+        b=d4Y81AkSkE3OVSpGBpZ2TR/Jbw6/AY0+jUzBr9XzMGdm/dVHfg/Lh5cF9FaNAP8E7
+         6GWXN7uJsIg933wGzfl3Ex+OYWLZpMy9SS0gOcPPeLOi2DRrTctVvNCqGmLjlX7+F+
+         OsHzewZipz+xy+h284Tn5JySCmWPtwBKXBaqtqG8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+Cc:     Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 131/178] s390/vdso: fix vDSO clock_getres()
-Date:   Mon, 29 Jun 2020 11:24:36 -0400
-Message-Id: <20200629152523.2494198-132-sashal@kernel.org>
+Subject: [PATCH 5.4 099/178] cxgb4: move handling L2T ARP failures to caller
+Date:   Mon, 29 Jun 2020 11:24:04 -0400
+Message-Id: <20200629152523.2494198-100-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -67,117 +65,103 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincenzo Frascino <vincenzo.frascino@arm.com>
+From: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
 
-[ Upstream commit 478237a595120a18e9b52fd2c57a6e8b7a01e411 ]
+[ Upstream commit 11d8cd5c9f3b46f397f889cefdb66795518aaebd ]
 
-clock_getres in the vDSO library has to preserve the same behaviour
-of posix_get_hrtimer_res().
+Move code handling L2T ARP failures to the only caller.
 
-In particular, posix_get_hrtimer_res() does:
-    sec = 0;
-    ns = hrtimer_resolution;
-and hrtimer_resolution depends on the enablement of the high
-resolution timers that can happen either at compile or at run time.
+Fixes following sparse warning:
+skbuff.h:2091:29: warning: context imbalance in
+'handle_failed_resolution' - unexpected unlock
 
-Fix the s390 vdso implementation of clock_getres keeping a copy of
-hrtimer_resolution in vdso data and using that directly.
-
-Link: https://lkml.kernel.org/r/20200324121027.21665-1-vincenzo.frascino@arm.com
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Acked-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
-[heiko.carstens@de.ibm.com: use llgf for proper zero extension]
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Fixes: 749cb5fe48bb ("cxgb4: Replace arpq_head/arpq_tail with SKB double link-list code")
+Signed-off-by: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/include/asm/vdso.h           |  1 +
- arch/s390/kernel/asm-offsets.c         |  2 +-
- arch/s390/kernel/time.c                |  1 +
- arch/s390/kernel/vdso64/clock_getres.S | 10 +++++-----
- 4 files changed, 8 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/chelsio/cxgb4/l2t.c | 52 +++++++++++-------------
+ 1 file changed, 24 insertions(+), 28 deletions(-)
 
-diff --git a/arch/s390/include/asm/vdso.h b/arch/s390/include/asm/vdso.h
-index 169d7604eb804..f3ba84fa9bd18 100644
---- a/arch/s390/include/asm/vdso.h
-+++ b/arch/s390/include/asm/vdso.h
-@@ -36,6 +36,7 @@ struct vdso_data {
- 	__u32 tk_shift;			/* Shift used for xtime_nsec	0x60 */
- 	__u32 ts_dir;			/* TOD steering direction	0x64 */
- 	__u64 ts_end;			/* TOD steering end		0x68 */
-+	__u32 hrtimer_res;		/* hrtimer resolution		0x70 */
- };
- 
- struct vdso_per_cpu_data {
-diff --git a/arch/s390/kernel/asm-offsets.c b/arch/s390/kernel/asm-offsets.c
-index b6628586ab702..a65cb4924bdbd 100644
---- a/arch/s390/kernel/asm-offsets.c
-+++ b/arch/s390/kernel/asm-offsets.c
-@@ -76,6 +76,7 @@ int main(void)
- 	OFFSET(__VDSO_TK_SHIFT, vdso_data, tk_shift);
- 	OFFSET(__VDSO_TS_DIR, vdso_data, ts_dir);
- 	OFFSET(__VDSO_TS_END, vdso_data, ts_end);
-+	OFFSET(__VDSO_CLOCK_REALTIME_RES, vdso_data, hrtimer_res);
- 	OFFSET(__VDSO_ECTG_BASE, vdso_per_cpu_data, ectg_timer_base);
- 	OFFSET(__VDSO_ECTG_USER, vdso_per_cpu_data, ectg_user_time);
- 	OFFSET(__VDSO_CPU_NR, vdso_per_cpu_data, cpu_nr);
-@@ -87,7 +88,6 @@ int main(void)
- 	DEFINE(__CLOCK_REALTIME_COARSE, CLOCK_REALTIME_COARSE);
- 	DEFINE(__CLOCK_MONOTONIC_COARSE, CLOCK_MONOTONIC_COARSE);
- 	DEFINE(__CLOCK_THREAD_CPUTIME_ID, CLOCK_THREAD_CPUTIME_ID);
--	DEFINE(__CLOCK_REALTIME_RES, MONOTONIC_RES_NSEC);
- 	DEFINE(__CLOCK_COARSE_RES, LOW_RES_NSEC);
- 	BLANK();
- 	/* idle data offsets */
-diff --git a/arch/s390/kernel/time.c b/arch/s390/kernel/time.c
-index e8766beee5ad8..8ea9db599d38d 100644
---- a/arch/s390/kernel/time.c
-+++ b/arch/s390/kernel/time.c
-@@ -310,6 +310,7 @@ void update_vsyscall(struct timekeeper *tk)
- 
- 	vdso_data->tk_mult = tk->tkr_mono.mult;
- 	vdso_data->tk_shift = tk->tkr_mono.shift;
-+	vdso_data->hrtimer_res = hrtimer_resolution;
- 	smp_wmb();
- 	++vdso_data->tb_update_count;
+diff --git a/drivers/net/ethernet/chelsio/cxgb4/l2t.c b/drivers/net/ethernet/chelsio/cxgb4/l2t.c
+index e6fe2870137b0..a440c1cf0b61e 100644
+--- a/drivers/net/ethernet/chelsio/cxgb4/l2t.c
++++ b/drivers/net/ethernet/chelsio/cxgb4/l2t.c
+@@ -506,41 +506,20 @@ u64 cxgb4_select_ntuple(struct net_device *dev,
  }
-diff --git a/arch/s390/kernel/vdso64/clock_getres.S b/arch/s390/kernel/vdso64/clock_getres.S
-index 081435398e0a1..0c79caa32b592 100644
---- a/arch/s390/kernel/vdso64/clock_getres.S
-+++ b/arch/s390/kernel/vdso64/clock_getres.S
-@@ -17,12 +17,14 @@
- 	.type  __kernel_clock_getres,@function
- __kernel_clock_getres:
- 	CFI_STARTPROC
--	larl	%r1,4f
-+	larl	%r1,3f
-+	lg	%r0,0(%r1)
- 	cghi	%r2,__CLOCK_REALTIME_COARSE
- 	je	0f
- 	cghi	%r2,__CLOCK_MONOTONIC_COARSE
- 	je	0f
--	larl	%r1,3f
-+	larl	%r1,_vdso_data
-+	llgf	%r0,__VDSO_CLOCK_REALTIME_RES(%r1)
- 	cghi	%r2,__CLOCK_REALTIME
- 	je	0f
- 	cghi	%r2,__CLOCK_MONOTONIC
-@@ -36,7 +38,6 @@ __kernel_clock_getres:
- 	jz	2f
- 0:	ltgr	%r3,%r3
- 	jz	1f				/* res == NULL */
--	lg	%r0,0(%r1)
- 	xc	0(8,%r3),0(%r3)			/* set tp->tv_sec to zero */
- 	stg	%r0,8(%r3)			/* store tp->tv_usec */
- 1:	lghi	%r2,0
-@@ -45,6 +46,5 @@ __kernel_clock_getres:
- 	svc	0
- 	br	%r14
- 	CFI_ENDPROC
--3:	.quad	__CLOCK_REALTIME_RES
--4:	.quad	__CLOCK_COARSE_RES
-+3:	.quad	__CLOCK_COARSE_RES
- 	.size	__kernel_clock_getres,.-__kernel_clock_getres
+ EXPORT_SYMBOL(cxgb4_select_ntuple);
+ 
+-/*
+- * Called when address resolution fails for an L2T entry to handle packets
+- * on the arpq head.  If a packet specifies a failure handler it is invoked,
+- * otherwise the packet is sent to the device.
+- */
+-static void handle_failed_resolution(struct adapter *adap, struct l2t_entry *e)
+-{
+-	struct sk_buff *skb;
+-
+-	while ((skb = __skb_dequeue(&e->arpq)) != NULL) {
+-		const struct l2t_skb_cb *cb = L2T_SKB_CB(skb);
+-
+-		spin_unlock(&e->lock);
+-		if (cb->arp_err_handler)
+-			cb->arp_err_handler(cb->handle, skb);
+-		else
+-			t4_ofld_send(adap, skb);
+-		spin_lock(&e->lock);
+-	}
+-}
+-
+ /*
+  * Called when the host's neighbor layer makes a change to some entry that is
+  * loaded into the HW L2 table.
+  */
+ void t4_l2t_update(struct adapter *adap, struct neighbour *neigh)
+ {
+-	struct l2t_entry *e;
+-	struct sk_buff_head *arpq = NULL;
+-	struct l2t_data *d = adap->l2t;
+ 	unsigned int addr_len = neigh->tbl->key_len;
+ 	u32 *addr = (u32 *) neigh->primary_key;
+-	int ifidx = neigh->dev->ifindex;
+-	int hash = addr_hash(d, addr, addr_len, ifidx);
++	int hash, ifidx = neigh->dev->ifindex;
++	struct sk_buff_head *arpq = NULL;
++	struct l2t_data *d = adap->l2t;
++	struct l2t_entry *e;
+ 
++	hash = addr_hash(d, addr, addr_len, ifidx);
+ 	read_lock_bh(&d->lock);
+ 	for (e = d->l2tab[hash].first; e; e = e->next)
+ 		if (!addreq(e, addr) && e->ifindex == ifidx) {
+@@ -573,8 +552,25 @@ void t4_l2t_update(struct adapter *adap, struct neighbour *neigh)
+ 			write_l2e(adap, e, 0);
+ 	}
+ 
+-	if (arpq)
+-		handle_failed_resolution(adap, e);
++	if (arpq) {
++		struct sk_buff *skb;
++
++		/* Called when address resolution fails for an L2T
++		 * entry to handle packets on the arpq head. If a
++		 * packet specifies a failure handler it is invoked,
++		 * otherwise the packet is sent to the device.
++		 */
++		while ((skb = __skb_dequeue(&e->arpq)) != NULL) {
++			const struct l2t_skb_cb *cb = L2T_SKB_CB(skb);
++
++			spin_unlock(&e->lock);
++			if (cb->arp_err_handler)
++				cb->arp_err_handler(cb->handle, skb);
++			else
++				t4_ofld_send(adap, skb);
++			spin_lock(&e->lock);
++		}
++	}
+ 	spin_unlock_bh(&e->lock);
+ }
+ 
 -- 
 2.25.1
 
