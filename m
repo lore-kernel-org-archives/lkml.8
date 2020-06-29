@@ -2,426 +2,372 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B393EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:21:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5761C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FF09206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:21:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98270206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:21:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marvell.com header.i=@marvell.com header.b="w53KbBWB"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="hi3ywJ0H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732151AbgF2TVK (ORCPT
+        id S1730348AbgF2TUy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:21:10 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:26142 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726078AbgF2TVG (ORCPT
+        Mon, 29 Jun 2020 15:20:54 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:18097 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728039AbgF2TUj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:21:06 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05TB5W9C029754;
-        Mon, 29 Jun 2020 04:06:17 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding : content-type; s=pfpt0818;
- bh=OH9aer3J1GSf82LNXO61/2zVdbXA+VwaY6PFfQp2rK0=;
- b=w53KbBWBieZxMvk1LFSg4heNqbGDNFFsMks4KV5qgaIe9E9l+bwxfCDsfFHNjV4CQSno
- 7qMnrT/mEeJAZX+zhYnCtOgNbtVjzA2UKQNK943NiicrjSny4zx58TrpP+mL+blvrLby
- 6uApJMosER5+E229KksUY7oiUzSbLrrhAsQE+9YwCi86+ziCipYAahGEu+3aA/m6XKP1
- nlipYFqUtOtNnCbO0MHBwvfj6tBC7YGPpknnhr0FDEDj3uJK83kOilesrMfLikU7MFU1
- tHPZBg2KPoakTG004PiAqdd35BWEcNUgb8eRRCIcatbR9h9ihfIiEkFSm8IITFNEr7i1 Lw== 
-Received: from sc-exch02.marvell.com ([199.233.58.182])
-        by mx0a-0016f401.pphosted.com with ESMTP id 31y0wrtg02-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 29 Jun 2020 04:06:16 -0700
-Received: from DC5-EXCH02.marvell.com (10.69.176.39) by SC-EXCH02.marvell.com
- (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 29 Jun
- 2020 04:06:16 -0700
-Received: from DC5-EXCH01.marvell.com (10.69.176.38) by DC5-EXCH02.marvell.com
- (10.69.176.39) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 29 Jun
- 2020 04:06:15 -0700
-Received: from maili.marvell.com (10.69.176.80) by DC5-EXCH01.marvell.com
- (10.69.176.38) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Mon, 29 Jun 2020 04:06:15 -0700
-Received: from NN-LT0049.marvell.com (NN-LT0049.marvell.com [10.193.54.6])
-        by maili.marvell.com (Postfix) with ESMTP id 9DD073F7041;
-        Mon, 29 Jun 2020 04:06:12 -0700 (PDT)
-From:   Alexander Lobakin <alobakin@marvell.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>
-CC:     Igor Russkikh <irusskikh@marvell.com>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        Ariel Elior <aelior@marvell.com>,
-        "Alexander Lobakin" <alobakin@marvell.com>,
-        <GR-everest-linux-l2@marvell.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH net-next 5/6] net: qede: convert to SPDX License Identifiers
-Date:   Mon, 29 Jun 2020 14:05:11 +0300
-Message-ID: <20200629110512.1812-6-alobakin@marvell.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629110512.1812-1-alobakin@marvell.com>
-References: <20200629110512.1812-1-alobakin@marvell.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.216,18.0.687
- definitions=2020-06-29_11:2020-06-29,2020-06-29 signatures=0
+        Mon, 29 Jun 2020 15:20:39 -0400
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200629073302epoutp0137a4402258f10cd34b9b3a1e35bbd727~c82TVhY9c2768027680epoutp01G
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:33:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200629073302epoutp0137a4402258f10cd34b9b3a1e35bbd727~c82TVhY9c2768027680epoutp01G
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593415982;
+        bh=k4PRx7IG+B7Ka1qP9mmE1ScKrGBFqVzGsJu8AYFM+2k=;
+        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+        b=hi3ywJ0Hw5myVfvATvGWhLisEEiatYqRdsu3+599+kFekspldq4XUu4VxcyFnvxwD
+         eCk8mYp4ugEVnhL5NimXXNBECWNERA72DvSRiKC/EqsM3YhBwofOIaTWICubcy+f02
+         IaIsRju4iDpYjffcbU5esXR6GLZahZxxejnjmOSQ=
+Received: from epcpadp2 (unknown [182.195.40.12]) by epcas1p3.samsung.com
+        (KnoxPortal) with ESMTP id
+        20200629073302epcas1p3a4ce66057afa567d0cf5f55bab423e78~c82S8oa1h1627716277epcas1p3x;
+        Mon, 29 Jun 2020 07:33:02 +0000 (GMT)
+Mime-Version: 1.0
+Subject: [PATCH v4 5/5] scsi: ufs: Prepare HPB read for cached sub-region
+Reply-To: daejun7.park@samsung.com
+From:   Daejun Park <daejun7.park@samsung.com>
+To:     Daejun Park <daejun7.park@samsung.com>,
+        "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "beanhuo@micron.com" <beanhuo@micron.com>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <963815509.21593415684555.JavaMail.epsvc@epcpadp2>
+X-CPGS-Detection: blocking_info_exchange
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <963815509.21593415982157.JavaMail.epsvc@epcpadp2>
+Date:   Mon, 29 Jun 2020 16:31:08 +0900
+X-CMS-MailID: 20200629073108epcms2p236b1bc0a90fd3252b15d94cf782f0d3a
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+X-CPGSPASS: Y
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20200629064323epcms2p787baba58a416fef7fdd3927f8da701da
+References: <963815509.21593415684555.JavaMail.epsvc@epcpadp2>
+        <1239183618.61593413882377.JavaMail.epsvc@epcpadp2>
+        <963815509.21593413582881.JavaMail.epsvc@epcpadp2>
+        <1239183618.61593413402991.JavaMail.epsvc@epcpadp1>
+        <231786897.01593413281727.JavaMail.epsvc@epcpadp2>
+        <CGME20200629064323epcms2p787baba58a416fef7fdd3927f8da701da@epcms2p2>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QLogic QED drivers source code is dual licensed under
-GPL-2.0/BSD-3-Clause.
-Remove all the boilerplates in the existing code and replace it with the
-correct SPDX tag.
+This patch changes the read I/O to the HPB read I/O.
 
-Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
-Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+If the logical address of the read I/O belongs to active sub-region, the
+HPB driver modifies the read I/O command to HPB read. It modifies the upiu
+command of UFS instead of modifying the existing SCSI command.
+
+In the HPB version 1.0, the maximum read I/O size that can be converted to
+HPB read is 4KB.
+
+The dirty map of the active sub-region prevents an incorrect HPB read that
+has stale physical page number which is updated by previous write I/O.
+
+Signed-off-by: Daejun Park <daejun7.park@samsung.com>
 ---
- drivers/net/ethernet/qlogic/qede/qede.h       | 30 ++-----------------
- .../net/ethernet/qlogic/qede/qede_ethtool.c   | 30 ++-----------------
- .../net/ethernet/qlogic/qede/qede_filter.c    | 30 ++-----------------
- drivers/net/ethernet/qlogic/qede/qede_fp.c    | 30 ++-----------------
- drivers/net/ethernet/qlogic/qede/qede_main.c  | 30 ++-----------------
- drivers/net/ethernet/qlogic/qede/qede_ptp.c   | 30 ++-----------------
- drivers/net/ethernet/qlogic/qede/qede_ptp.h   | 30 ++-----------------
- drivers/net/ethernet/qlogic/qede/qede_rdma.c  | 30 ++-----------------
- 8 files changed, 16 insertions(+), 224 deletions(-)
+ drivers/scsi/ufs/ufshpb.c | 235 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 235 insertions(+)
 
-diff --git a/drivers/net/ethernet/qlogic/qede/qede.h b/drivers/net/ethernet/qlogic/qede/qede.h
-index 8857da1208d7..8567f295a12f 100644
---- a/drivers/net/ethernet/qlogic/qede/qede.h
-+++ b/drivers/net/ethernet/qlogic/qede/qede.h
-@@ -1,34 +1,8 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qede NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
-+
- #ifndef _QEDE_H_
- #define _QEDE_H_
- #include <linux/compiler.h>
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_ethtool.c b/drivers/net/ethernet/qlogic/qede/qede_ethtool.c
-index 24cc68391ac4..26acfb380dc3 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_ethtool.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_ethtool.c
-@@ -1,34 +1,8 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- /* QLogic qede NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
-+
- #include <linux/version.h>
- #include <linux/types.h>
- #include <linux/netdevice.h>
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_filter.c b/drivers/net/ethernet/qlogic/qede/qede_filter.c
-index fe72bb6c9455..e03d6a957ceb 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_filter.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_filter.c
-@@ -1,34 +1,8 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- /* QLogic qede NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
-+
- #include <linux/netdevice.h>
- #include <linux/etherdevice.h>
- #include <net/udp_tunnel.h>
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_fp.c b/drivers/net/ethernet/qlogic/qede/qede_fp.c
-index 7598ebe0962a..c21d4c53121b 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_fp.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_fp.c
-@@ -1,34 +1,8 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- /* QLogic qede NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
-+
- #include <linux/netdevice.h>
- #include <linux/etherdevice.h>
- #include <linux/skbuff.h>
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_main.c b/drivers/net/ethernet/qlogic/qede/qede_main.c
-index 29e285430f99..01c20b2d81e2 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_main.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_main.c
-@@ -1,34 +1,8 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- /* QLogic qede NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
-+
- #include <linux/crash_dump.h>
- #include <linux/module.h>
- #include <linux/pci.h>
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_ptp.c b/drivers/net/ethernet/qlogic/qede/qede_ptp.c
-index cd5841a9415e..797ce187d683 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_ptp.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_ptp.c
-@@ -1,34 +1,8 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- /* QLogic qede NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
-+
- #include "qede_ptp.h"
- #define QEDE_PTP_TX_TIMEOUT (2 * HZ)
+diff --git a/drivers/scsi/ufs/ufshpb.c b/drivers/scsi/ufs/ufshpb.c
+index 45510c207a98..8e8b273d88d9 100644
+--- a/drivers/scsi/ufs/ufshpb.c
++++ b/drivers/scsi/ufs/ufshpb.c
+@@ -26,6 +26,22 @@ static inline int ufshpb_is_valid_srgn(struct ufshpb_region *rgn,
+ 		srgn->srgn_state == HPB_SRGN_VALID;
+ }
  
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_ptp.h b/drivers/net/ethernet/qlogic/qede/qede_ptp.h
-index 89c7f3cf3ee2..00ff981efa66 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_ptp.h
-+++ b/drivers/net/ethernet/qlogic/qede/qede_ptp.h
-@@ -1,34 +1,8 @@
-+/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause) */
- /* QLogic qede NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
++static inline bool ufshpb_is_read_cmd(struct scsi_cmnd *cmd)
++{
++	return req_op(cmd->request) == REQ_OP_READ;
++}
 +
- #ifndef _QEDE_PTP_H_
- #define _QEDE_PTP_H_
++static inline bool ufshpb_is_write_discard_cmd(struct scsi_cmnd *cmd)
++{
++	return op_is_write(req_op(cmd->request)) ||
++	       op_is_discard(req_op(cmd->request));
++}
++
++static inline bool ufshpb_is_support_chunk(int transfer_len)
++{
++	return transfer_len <= HPB_MULTI_CHUNK_HIGH;
++}
++
+ static inline bool ufshpb_is_general_lun(int lun)
+ {
+ 	return lun < UFS_UPIU_MAX_UNIT_NUM_ID;
+@@ -117,6 +133,224 @@ static inline void ufshpb_lu_put(struct ufshpb_lu *hpb)
+ 	put_device(&hpb->hpb_lu_dev);
+ }
  
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_rdma.c b/drivers/net/ethernet/qlogic/qede/qede_rdma.c
-index 668ccc9d49f8..2228f1d1166f 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_rdma.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_rdma.c
-@@ -1,34 +1,8 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
- /* QLogic qedr NIC Driver
-  * Copyright (c) 2015-2017  QLogic Corporation
-- *
-- * This software is available to you under a choice of one of two
-- * licenses.  You may choose to be licensed under the terms of the GNU
-- * General Public License (GPL) Version 2, available from the file
-- * COPYING in the main directory of this source tree, or the
-- * OpenIB.org BSD license below:
-- *
-- *     Redistribution and use in source and binary forms, with or
-- *     without modification, are permitted provided that the following
-- *     conditions are met:
-- *
-- *      - Redistributions of source code must retain the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer.
-- *
-- *      - Redistributions in binary form must reproduce the above
-- *        copyright notice, this list of conditions and the following
-- *        disclaimer in the documentation and /or other materials
-- *        provided with the distribution.
-- *
-- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
-- * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
-- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-- * SOFTWARE.
-  */
++static inline u32 ufshpb_get_lpn(struct scsi_cmnd *cmnd)
++{
++	return blk_rq_pos(cmnd->request) >>
++		(ilog2(cmnd->device->sector_size) - 9);
++}
 +
- #include <linux/pci.h>
- #include <linux/netdevice.h>
- #include <linux/list.h>
++static inline unsigned int ufshpb_get_len(struct scsi_cmnd *cmnd)
++{
++	return blk_rq_sectors(cmnd->request) >>
++		(ilog2(cmnd->device->sector_size) - 9);
++}
++
++static void ufshpb_set_ppn_dirty(struct ufshpb_lu *hpb, int rgn_idx,
++			     int srgn_idx, int srgn_offset, int cnt)
++{
++	struct ufshpb_region *rgn;
++	struct ufshpb_subregion *srgn;
++	int set_bit_len;
++	int bitmap_len = hpb->entries_per_srgn;
++
++next_srgn:
++	rgn = hpb->rgn_tbl + rgn_idx;
++	srgn = rgn->srgn_tbl + srgn_idx;
++
++	if ((srgn_offset + cnt) > bitmap_len)
++		set_bit_len = bitmap_len - srgn_offset;
++	else
++		set_bit_len = cnt;
++
++	if (rgn->rgn_state != HPB_RGN_INACTIVE &&
++	    srgn->srgn_state == HPB_SRGN_VALID)
++		bitmap_set(srgn->mctx->ppn_dirty, srgn_offset, set_bit_len);
++
++	srgn_offset = 0;
++	if (++srgn_idx == hpb->srgns_per_rgn) {
++		srgn_idx = 0;
++		rgn_idx++;
++	}
++
++	cnt -= set_bit_len;
++	if (cnt > 0)
++		goto next_srgn;
++
++	WARN_ON(cnt < 0);
++}
++
++static bool ufshpb_test_ppn_dirty(struct ufshpb_lu *hpb, int rgn_idx,
++				   int srgn_idx, int srgn_offset, int cnt)
++{
++	struct ufshpb_region *rgn;
++	struct ufshpb_subregion *srgn;
++	int bitmap_len = hpb->entries_per_srgn;
++	int bit_len;
++
++next_srgn:
++	rgn = hpb->rgn_tbl + rgn_idx;
++	srgn = rgn->srgn_tbl + srgn_idx;
++
++	if (!ufshpb_is_valid_srgn(rgn, srgn))
++		return true;
++
++	/*
++	 * If the region state is active, mctx must be allocated.
++	 * In this case, check whether the region is evicted or
++	 * mctx allcation fail.
++	 */
++	WARN_ON(!srgn->mctx);
++
++	if ((srgn_offset + cnt) > bitmap_len)
++		bit_len = bitmap_len - srgn_offset;
++	else
++		bit_len = cnt;
++
++	if (find_next_bit(srgn->mctx->ppn_dirty,
++			  bit_len, srgn_offset) >= srgn_offset)
++		return true;
++
++	srgn_offset = 0;
++	if (++srgn_idx == hpb->srgns_per_rgn) {
++		srgn_idx = 0;
++		rgn_idx++;
++	}
++
++	cnt -= bit_len;
++	if (cnt > 0)
++		goto next_srgn;
++
++	return false;
++}
++
++static u64 ufshpb_get_ppn(struct ufshpb_lu *hpb,
++			  struct ufshpb_map_ctx *mctx, int pos, int *error)
++{
++	u64 *ppn_table;
++	struct page *page;
++	int index, offset;
++
++	index = pos / (PAGE_SIZE / HPB_ENTRY_SIZE);
++	offset = pos % (PAGE_SIZE / HPB_ENTRY_SIZE);
++
++	page = mctx->m_page[index];
++	if (unlikely(!page)) {
++		*error = -ENOMEM;
++		dev_err(&hpb->hpb_lu_dev,
++			"error. cannot find page in mctx\n");
++		return 0;
++	}
++
++	ppn_table = page_address(page);
++	if (unlikely(!ppn_table)) {
++		*error = -ENOMEM;
++		dev_err(&hpb->hpb_lu_dev, "error. cannot get ppn_table\n");
++		return 0;
++	}
++
++	return ppn_table[offset];
++}
++
++static inline void
++ufshpb_get_pos_from_lpn(struct ufshpb_lu *hpb, unsigned long lpn, int *rgn_idx,
++			int *srgn_idx, int *offset)
++{
++	int rgn_offset;
++
++	*rgn_idx = lpn >> hpb->entries_per_rgn_shift;
++	rgn_offset = lpn & hpb->entries_per_rgn_mask;
++	*srgn_idx = rgn_offset >> hpb->entries_per_srgn_shift;
++	*offset = rgn_offset & hpb->entries_per_srgn_mask;
++}
++
++static void
++ufshpb_set_hpb_read_to_upiu(struct ufshpb_lu *hpb, struct ufshcd_lrb *lrbp,
++				  u32 lpn, u64 ppn,  unsigned int transfer_len)
++{
++	unsigned char *cdb = lrbp->ucd_req_ptr->sc.cdb;
++
++	cdb[0] = UFSHPB_READ;
++
++	put_unaligned_be64(ppn, &cdb[6]);
++	cdb[14] = transfer_len;
++}
++
++/* routine : READ10 -> HPB_READ  */
++static void ufshpb_prep_fn(struct ufs_hba *hba, struct ufshcd_lrb *lrbp)
++{
++	struct ufshpb_lu *hpb;
++	struct ufshpb_region *rgn;
++	struct ufshpb_subregion *srgn;
++	struct scsi_cmnd *cmd = lrbp->cmd;
++	u32 lpn;
++	u64 ppn;
++	unsigned long flags;
++	int transfer_len, rgn_idx, srgn_idx, srgn_offset;
++	int err = 0;
++
++	hpb = ufshpb_get_hpb_data(cmd);
++	err = ufshpb_lu_get(hpb);
++	if (unlikely(err))
++		return;
++
++	WARN_ON(hpb->lun != cmd->device->lun);
++	if (!ufshpb_is_write_discard_cmd(cmd) &&
++	    !ufshpb_is_read_cmd(cmd))
++		goto put_hpb;
++
++	transfer_len = ufshpb_get_len(cmd);
++	if (unlikely(!transfer_len))
++		goto put_hpb;
++
++	lpn = ufshpb_get_lpn(cmd);
++	ufshpb_get_pos_from_lpn(hpb, lpn, &rgn_idx, &srgn_idx, &srgn_offset);
++	rgn = hpb->rgn_tbl + rgn_idx;
++	srgn = rgn->srgn_tbl + srgn_idx;
++
++	/* If command type is WRITE or DISCARD, set bitmap as drity */
++	if (ufshpb_is_write_discard_cmd(cmd)) {
++		spin_lock_irqsave(&hpb->hpb_state_lock, flags);
++		ufshpb_set_ppn_dirty(hpb, rgn_idx, srgn_idx, srgn_offset,
++				 transfer_len);
++		spin_unlock_irqrestore(&hpb->hpb_state_lock, flags);
++		goto put_hpb;
++	}
++
++	WARN_ON(!ufshpb_is_read_cmd(cmd));
++
++	if (!ufshpb_is_support_chunk(transfer_len))
++		goto put_hpb;
++
++	spin_lock_irqsave(&hpb->hpb_state_lock, flags);
++	if (ufshpb_test_ppn_dirty(hpb, rgn_idx, srgn_idx, srgn_offset,
++				   transfer_len)) {
++		atomic_inc(&hpb->stats.miss_cnt);
++		spin_unlock_irqrestore(&hpb->hpb_state_lock, flags);
++		goto put_hpb;
++	}
++
++	ppn = ufshpb_get_ppn(hpb, srgn->mctx, srgn_offset, &err);
++	spin_unlock_irqrestore(&hpb->hpb_state_lock, flags);
++	if (unlikely(err)) {
++		/*
++		 * In this case, the region state is active,
++		 * but the ppn table is not allocated.
++		 * Make sure that ppn table must be allocated on
++		 * active state.
++		 */
++		WARN_ON(true);
++		dev_err(&hpb->hpb_lu_dev,
++			"ufshpb_get_ppn failed. err %d\n", err);
++		goto put_hpb;
++	}
++
++	ufshpb_set_hpb_read_to_upiu(hpb, lrbp, lpn, ppn, transfer_len);
++
++	atomic_inc(&hpb->stats.hit_cnt);
++put_hpb:
++	ufshpb_lu_put(hpb);
++}
++
+ static struct ufshpb_req *ufshpb_get_map_req(struct ufshpb_lu *hpb,
+ 					     struct ufshpb_subregion *srgn)
+ {
+@@ -1672,6 +1906,7 @@ static struct ufshpb_driver ufshpb_drv = {
+ 		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
+ 	},
+ 	.ufshpb_ops = {
++		.prep_fn = ufshpb_prep_fn,
+ 		.reset = ufshpb_reset,
+ 		.reset_host = ufshpb_reset_host,
+ 		.suspend = ufshpb_suspend,
 -- 
-2.25.1
+2.17.1
+
 
