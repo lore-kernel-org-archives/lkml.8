@@ -2,162 +2,100 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC50C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE93C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:07:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4E83D20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:07:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593457628;
-	bh=yixfN7ccO44MqzgMpW3HYIsge8QklCebeIHvXKNdYHI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=jmBuysllFDaelpoGx7O7NX2nA9f+2+yWqnkMYCDXInTeirR2aRMn1FiRHU7CI9TYZ
-	 Sq7PjAUT1BOUPC6Nh/rGsLF6Mu1Z6VCsFn8iLtr8JtMAlKe+WFDy9BSLIG9FaG2s/Q
-	 jOzEIwPBwrrpJWBMYInx0OXIV4KzxbNJXm4uzisQ=
+	by mail.kernel.org (Postfix) with ESMTP id A988420663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:07:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730755AbgF2TGc (ORCPT
+        id S1730405AbgF2THP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 29 Jun 2020 15:07:15 -0400
+Received: from mga17.intel.com ([192.55.52.151]:62621 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729064AbgF2TGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:06:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41744 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730525AbgF2TCn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:02:43 -0400
-Received: from mail-ot1-x342.google.com (mail-ot1-x342.google.com [IPv6:2607:f8b0:4864:20::342])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45E39C02A54F;
-        Mon, 29 Jun 2020 06:02:47 -0700 (PDT)
-Received: by mail-ot1-x342.google.com with SMTP id n5so15423190otj.1;
-        Mon, 29 Jun 2020 06:02:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7nlhWJJwNwhWkeMdSwXObsiOh2VHz3Q74vTd3L4F/E4=;
-        b=lGDfCfLqwyum+wheMtxLdsXH0kBg80MIs9SllgK3dlDn7I2Hoo8MoBDen1jtsdaAvs
-         pgcCEGXBUBtaIS6g5b1tZsw1sk0+/ATD9U+Yn1qMJ/E4dEi+kWcpGAZyTI/JCnzP0cRc
-         XR1RnL5PwpnVI7ezWGLTCFlRRzWZclbns1W2vNzY+EP0VjlwitiMDDLlxdivoa8i0ER4
-         6fJSfzPNOkaJ6CxzpdQQAlnd1Om2Z3fow1qjzQTqJvV6fOSfdPaajcdM/LKIi0B9Givj
-         X8Oa2kuKHAVLgvMMjsQS+2h+GiQD98GFYQEt2luBeMjlm1Ig8eQ18hWVa+eQhJIquOVd
-         eX6g==
-X-Gm-Message-State: AOAM530NYrlYHf+0nzK8xQoU7g74mUSKAppZEL68Ilkrfzdmrhh+AgcC
-        hHg4kOWniClj8vs4n6w9L/BXIw/RG7uE20dyiIBJUwjf
-X-Google-Smtp-Source: ABdhPJzIQwbdDVQsoe/mDFdG+UuqRokNsn9twuQiuHEM1ZLnII4nXYOarqbPDTLCqJLyUEpbS+m1QKmIfJ6D/m1WVN0=
-X-Received: by 2002:a9d:7d15:: with SMTP id v21mr12817982otn.118.1593435766462;
- Mon, 29 Jun 2020 06:02:46 -0700 (PDT)
-MIME-Version: 1.0
-References: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com>
- <2713141.s8EVnczdoM@kreacher> <13749323.0m2ImmhSHx@kreacher> <MWHPR11MB1599FBA57730E5C74B9B4588F0930@MWHPR11MB1599.namprd11.prod.outlook.com>
-In-Reply-To: <MWHPR11MB1599FBA57730E5C74B9B4588F0930@MWHPR11MB1599.namprd11.prod.outlook.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Mon, 29 Jun 2020 15:02:31 +0200
-Message-ID: <CAJZ5v0iXzYVb6RAR9p2mH=RjSjo4c9g39T7uaccXMm6uoLWDzw@mail.gmail.com>
-Subject: Re: [RFT][PATCH v2 3/4] ACPICA: Preserve memory opregion mappings if
- supported by OS
-To:     "Kaneda, Erik" <erik.kaneda@intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "Williams, Dan J" <dan.j.williams@intel.com>,
-        "Moore, Robert" <robert.moore@intel.com>,
-        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
-        Len Brown <lenb@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        "Weiny, Ira" <ira.weiny@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>
-Content-Type: text/plain; charset="UTF-8"
+IronPort-SDR: o4TYOTXhqg3RgA9L97IlRf6f3E9noCLc8rNkVbfrm23brw1ypOHL2pdW/F74vL1/Wg1u83RqFG
+ PV4z0qVH8Phw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="126075739"
+X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
+   d="scan'208";a="126075739"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 02:20:43 -0700
+IronPort-SDR: cOzZ3MveNN8ZkbfE9/UZ7zDb6zrOiJ4QiAtskA+98Zcgjn20GDDQ8C0kndkJhIstM5YOhvkhfM
+ Qw858FEfr2/w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
+   d="scan'208";a="303001190"
+Received: from ahunter-desktop.fi.intel.com ([10.237.72.73])
+  by fmsmga004.fm.intel.com with ESMTP; 29 Jun 2020 02:20:42 -0700
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH 5/6] perf scripts python: exported-sql-viewer.py: Fix zero id in call tree 'Find' result
+Date:   Mon, 29 Jun 2020 12:19:54 +0300
+Message-Id: <20200629091955.17090-6-adrian.hunter@intel.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200629091955.17090-1-adrian.hunter@intel.com>
+References: <20200629091955.17090-1-adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 27, 2020 at 12:53 AM Kaneda, Erik <erik.kaneda@intel.com> wrote:
->
->
->
-> > -----Original Message-----
-> > From: Rafael J. Wysocki <rjw@rjwysocki.net>
-> > Sent: Monday, June 22, 2020 7:02 AM
-> > To: Williams, Dan J <dan.j.williams@intel.com>; Kaneda, Erik
-> > <erik.kaneda@intel.com>
-> > Cc: Wysocki, Rafael J <rafael.j.wysocki@intel.com>; Len Brown
-> > <lenb@kernel.org>; Borislav Petkov <bp@alien8.de>; Weiny, Ira
-> > <ira.weiny@intel.com>; James Morse <james.morse@arm.com>; Myron
-> > Stowe <myron.stowe@redhat.com>; Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com>; linux-kernel@vger.kernel.org; linux-
-> > acpi@vger.kernel.org; linux-nvdimm@lists.01.org; Moore, Robert
-> > <robert.moore@intel.com>
-> > Subject: [RFT][PATCH v2 3/4] ACPICA: Preserve memory opregion mappings
-> > if supported by OS
-> >
-> > From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-> >
-> > The ACPICA's strategy with respect to the handling of memory mappings
-> > associated with memory operation regions is to avoid mapping the
-> > entire region at once which may be problematic at least in principle
-> > (for example, it may lead to conflicts with overlapping mappings
-> > having different attributes created by drivers).  It may also be
-> > wasteful, because memory opregions on some systems take up vast
-> > chunks of address space while the fields in those regions actually
-> > accessed by AML are sparsely distributed.
-> >
-> > For this reason, a one-page "window" is mapped for a given opregion
-> > on the first memory access through it and if that "window" does not
-> > cover an address range accessed through that opregion subsequently,
-> > it is unmapped and a new "window" is mapped to replace it.  Next,
-> > if the new "window" is not sufficient to access memory through the
-> > opregion in question in the future, it will be replaced with yet
-> > another "window" and so on.  That may lead to a suboptimal sequence
-> > of memory mapping and unmapping operations, for example if two fields
-> > in one opregion separated from each other by a sufficiently wide
-> > chunk of unused address space are accessed in an alternating pattern.
-> >
-> > The situation may still be suboptimal if the deferred unmapping
-> > introduced previously is supported by the OS layer.  For instance,
-> > the alternating memory access pattern mentioned above may produce
-> > a relatively long list of mappings to release with substantial
-> > duplication among the entries in it, which could be avoided if
-> > acpi_ex_system_memory_space_handler() did not release the mapping
-> > used by it previously as soon as the current access was not covered
-> > by it.
-> >
-> > In order to improve that, modify acpi_ex_system_memory_space_handler()
-> > to take advantage of the memory mappings reference counting at the OS
-> > level if a suitable interface is provided.
-> >
-> Hi,
->
-> > Namely, if ACPI_USE_FAST_PATH_MAPPING is set, the OS is expected to
-> > implement acpi_os_map_memory_fast_path() that will return NULL if
-> > there is no mapping covering the given address range known to it.
-> > If such a mapping is there, however, its reference counter will be
-> > incremented and a pointer representing the requested virtual address
-> > will be returned right away without any additional consequences.
->
-> I do not fully understand why this is under a #ifdef. Is this to support operating systems that might not want to add support for this behavior?
+Using ctrl-F ('Find') would not find 'unknown' because it matches id zero.
+Fix by excluding id zero from selection.
 
-Yes, and to protect the ones that have not added support for it just yet.
+Example:
+ $ perf record -e intel_pt//u uname
+ Linux
+ [ perf record: Woken up 1 times to write data ]
+ [ perf record: Captured and wrote 0.034 MB perf.data ]
+ $ perf script --itrace=bep -s ~/libexec/perf-core/scripts/python/export-to-sqlite.py perf.data.db branches calls
+ 2020-06-26 15:32:14.928997 Creating database ...
+ 2020-06-26 15:32:14.933971 Writing records...
+ 2020-06-26 15:32:15.535251 Adding indexes
+ 2020-06-26 15:32:15.542993 Dropping unused tables
+ 2020-06-26 15:32:15.549716 Done
+ $ python3 ~/libexec/perf-core/scripts/python/exported-sql-viewer.py perf.data.db
 
-Without the "fast-path" mapping support, ACPICA has no way to obtain
-additional references to known-existing mappings and the new code
-won't work as expected without it, so it is better to avoid building
-that code at all in those cases IMO.
+ Select: Reports -> Call Tree
+ Press: Ctrl-F
+ Enter: unknown
+ Press: Enter
 
-> Also, instead of using the terminology fast_path, I think it would be easier to use terminology that describes the mechanism..
-> It might be easier for other Operating systems to understand something like acpi_os_map_preserved_memory or acpi_os_map_sysmem_opregion_memory.
+ Before: displays 'unknown' not found
+ After: tree is expanded to line showing 'unknown'
 
-Well, the naming is not particularly important to me to be honest, but
-this is mostly about being able to get a new reference to a
-known-existing memory mapping.
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Fixes: ae8b887c00d3f ("perf scripts python: exported-sql-viewer.py: Add call tree")
+Cc: stable@vger.kernel.org
+---
+ tools/perf/scripts/python/exported-sql-viewer.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-So something like acpi_os_ref_memory_map() perhaps?
+diff --git a/tools/perf/scripts/python/exported-sql-viewer.py b/tools/perf/scripts/python/exported-sql-viewer.py
+index e0c90aeff15e..0f295055ac6b 100755
+--- a/tools/perf/scripts/python/exported-sql-viewer.py
++++ b/tools/perf/scripts/python/exported-sql-viewer.py
+@@ -964,7 +964,8 @@ class CallTreeModel(CallGraphModelBase):
+ 						" FROM calls"
+ 						" INNER JOIN call_paths ON calls.call_path_id = call_paths.id"
+ 						" INNER JOIN symbols ON call_paths.symbol_id = symbols.id"
+-						" WHERE symbols.name" + match +
++						" WHERE calls.id <> 0"
++						" AND symbols.name" + match +
+ 						" ORDER BY comm_id, thread_id, call_time, calls.id")
+ 
+ 	def FindPath(self, query):
+-- 
+2.17.1
 
-But I'm thinking that this can be implemented without the "fast-path"
-mapping support too, let me try to do that.
-
-Cheers!
