@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 424C9C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:46:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07729C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:46:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21BA520760
+	by mail.kernel.org (Postfix) with ESMTP id D957520760
 	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:46:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1593459970;
-	bh=HvIP+oZU1OCGd0ewBuGfwMvoxLUrf6FtdWCiTJkCP/U=;
+	bh=0okLdBoZkWrN8SDpGVKjebcXjF2uKNAn1y6JpGgYnqo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=USKEo/W73ApCOxSZ01j7bDnDUVwpOmc3SxVuYbWBVfZu2/U5tbyVf8Db65PDpuSpe
-	 P7xUEdZd6ncKyr/Mged5hEbkdbJ4s3Wkv0mstWWALP04VBKrBOaapkGtqwnqFkzX0h
-	 kRnOYTAZXM45dyTgn+aswCN87Xoe+FFqJfd/sotw=
+	b=US2dunSC6X/iNdYyYd/6IgDhQHA3s7AV4AedA01j1/kkPKXbKkHOisNe4oF6eu5w2
+	 kBOZx7Tqb89f23WMH4QAuAcPrGdIFCKumY81txgX8tpHayakJVV4UWlVcrNLZSTrz3
+	 OjwDdGdv69/CEM57IppvQbR0H5XxAfkAZjCZ/5WY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388065AbgF2Tpv (ORCPT
+        id S2388058AbgF2Tps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:45:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47676 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:45:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387814AbgF2Tko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387826AbgF2Tko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADAFB2481E;
-        Mon, 29 Jun 2020 15:25:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4103724816;
+        Mon, 29 Jun 2020 15:25:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444341;
-        bh=HvIP+oZU1OCGd0ewBuGfwMvoxLUrf6FtdWCiTJkCP/U=;
+        s=default; t=1593444334;
+        bh=0okLdBoZkWrN8SDpGVKjebcXjF2uKNAn1y6JpGgYnqo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NGVGksDlSAIC5LuAvldZO/2ixmuwT1CtvlYR2CmaCltq0LjX/PUgMcWbm9dmB5xnF
-         /mVo4J5uDY+xEf8OUUBiyDohzNFiSD6lc65bgqcoHcLQgrTo8yMoVANg19pet7u4dq
-         OUZB7MJhXgWVPurDuhXA5I3JhSI/9N3SyL/1mUcs=
+        b=Q/KS4H6pE02P0Axo0zwPbrtzWS5vWGl1AwmokA84niSYYBMJrVs6XsBBHXVm6+QRj
+         c8QKeXzKtbzsM/9Nk0MWIrn/OBInGCMNdgg3ESlcocmbNK2B5qcJoaRvzsxg9CiGsN
+         Q5TKKTA0cw/im+jjz4K+oqZ+fdDCLhKN84GcfQLc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Howells <dhowells@redhat.com>,
-        syzbot+d3eccef36ddbd02713e9@syzkaller.appspotmail.com,
+Cc:     Tariq Toukan <tariqt@mellanox.com>,
+        Boris Pismenny <borisp@mellanox.com>,
         "David S . Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 016/178] rxrpc: Fix notification call on completion of discarded calls
-Date:   Mon, 29 Jun 2020 11:22:41 -0400
-Message-Id: <20200629152523.2494198-17-sashal@kernel.org>
+Subject: [PATCH 5.4 009/178] net: Do not clear the sock TX queue in sk_set_socket()
+Date:   Mon, 29 Jun 2020 11:22:34 -0400
+Message-Id: <20200629152523.2494198-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -66,149 +66,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Tariq Toukan <tariqt@mellanox.com>
 
-[ Upstream commit 0041cd5a50442db6e456b145892a0eaf2dff061f ]
+[ Upstream commit 41b14fb8724d5a4b382a63cb4a1a61880347ccb8 ]
 
-When preallocated service calls are being discarded, they're passed to
-->discard_new_call() to have the caller clean up any attached higher-layer
-preallocated pieces before being marked completed.  However, the act of
-marking them completed now invokes the call's notification function - which
-causes a problem because that function might assume that the previously
-freed pieces of memory are still there.
+Clearing the sock TX queue in sk_set_socket() might cause unexpected
+out-of-order transmit when called from sock_orphan(), as outstanding
+packets can pick a different TX queue and bypass the ones already queued.
 
-Fix this by setting a dummy notification function on the socket after
-calling ->discard_new_call().
+This is undesired in general. More specifically, it breaks the in-order
+scheduling property guarantee for device-offloaded TLS sockets.
 
-This results in the following kasan message when the kafs module is
-removed.
+Remove the call to sk_tx_queue_clear() in sk_set_socket(), and add it
+explicitly only where needed.
 
-==================================================================
-BUG: KASAN: use-after-free in afs_wake_up_async_call+0x6aa/0x770 fs/afs/rxrpc.c:707
-Write of size 1 at addr ffff8880946c39e4 by task kworker/u4:1/21
-
-CPU: 0 PID: 21 Comm: kworker/u4:1 Not tainted 5.8.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: netns cleanup_net
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xd3/0x413 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- afs_wake_up_async_call+0x6aa/0x770 fs/afs/rxrpc.c:707
- rxrpc_notify_socket+0x1db/0x5d0 net/rxrpc/recvmsg.c:40
- __rxrpc_set_call_completion.part.0+0x172/0x410 net/rxrpc/recvmsg.c:76
- __rxrpc_call_completed net/rxrpc/recvmsg.c:112 [inline]
- rxrpc_call_completed+0xca/0xf0 net/rxrpc/recvmsg.c:111
- rxrpc_discard_prealloc+0x781/0xab0 net/rxrpc/call_accept.c:233
- rxrpc_listen+0x147/0x360 net/rxrpc/af_rxrpc.c:245
- afs_close_socket+0x95/0x320 fs/afs/rxrpc.c:110
- afs_net_exit+0x1bc/0x310 fs/afs/main.c:155
- ops_exit_list.isra.0+0xa8/0x150 net/core/net_namespace.c:186
- cleanup_net+0x511/0xa50 net/core/net_namespace.c:603
- process_one_work+0x965/0x1690 kernel/workqueue.c:2269
- worker_thread+0x96/0xe10 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:291
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-
-Allocated by task 6820:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc mm/kasan/common.c:494 [inline]
- __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:467
- kmem_cache_alloc_trace+0x153/0x7d0 mm/slab.c:3551
- kmalloc include/linux/slab.h:555 [inline]
- kzalloc include/linux/slab.h:669 [inline]
- afs_alloc_call+0x55/0x630 fs/afs/rxrpc.c:141
- afs_charge_preallocation+0xe9/0x2d0 fs/afs/rxrpc.c:757
- afs_open_socket+0x292/0x360 fs/afs/rxrpc.c:92
- afs_net_init+0xa6c/0xe30 fs/afs/main.c:125
- ops_init+0xaf/0x420 net/core/net_namespace.c:151
- setup_net+0x2de/0x860 net/core/net_namespace.c:341
- copy_net_ns+0x293/0x590 net/core/net_namespace.c:482
- create_new_namespaces+0x3fb/0xb30 kernel/nsproxy.c:110
- unshare_nsproxy_namespaces+0xbd/0x1f0 kernel/nsproxy.c:231
- ksys_unshare+0x43d/0x8e0 kernel/fork.c:2983
- __do_sys_unshare kernel/fork.c:3051 [inline]
- __se_sys_unshare kernel/fork.c:3049 [inline]
- __x64_sys_unshare+0x2d/0x40 kernel/fork.c:3049
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Freed by task 21:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- kasan_set_free_info mm/kasan/common.c:316 [inline]
- __kasan_slab_free+0xf7/0x140 mm/kasan/common.c:455
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x109/0x2b0 mm/slab.c:3757
- afs_put_call+0x585/0xa40 fs/afs/rxrpc.c:190
- rxrpc_discard_prealloc+0x764/0xab0 net/rxrpc/call_accept.c:230
- rxrpc_listen+0x147/0x360 net/rxrpc/af_rxrpc.c:245
- afs_close_socket+0x95/0x320 fs/afs/rxrpc.c:110
- afs_net_exit+0x1bc/0x310 fs/afs/main.c:155
- ops_exit_list.isra.0+0xa8/0x150 net/core/net_namespace.c:186
- cleanup_net+0x511/0xa50 net/core/net_namespace.c:603
- process_one_work+0x965/0x1690 kernel/workqueue.c:2269
- worker_thread+0x96/0xe10 kernel/workqueue.c:2415
- kthread+0x3b5/0x4a0 kernel/kthread.c:291
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:293
-
-The buggy address belongs to the object at ffff8880946c3800
- which belongs to the cache kmalloc-1k of size 1024
-The buggy address is located 484 bytes inside of
- 1024-byte region [ffff8880946c3800, ffff8880946c3c00)
-The buggy address belongs to the page:
-page:ffffea000251b0c0 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea0002546508 ffffea00024fa248 ffff8880aa000c40
-raw: 0000000000000000 ffff8880946c3000 0000000100000002 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8880946c3880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8880946c3900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff8880946c3980: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                       ^
- ffff8880946c3a00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8880946c3a80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-Reported-by: syzbot+d3eccef36ddbd02713e9@syzkaller.appspotmail.com
-Fixes: 5ac0d62226a0 ("rxrpc: Fix missing notification")
-Signed-off-by: David Howells <dhowells@redhat.com>
+Fixes: e022f0b4a03f ("net: Introduce sk_tx_queue_mapping")
+Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
+Reviewed-by: Boris Pismenny <borisp@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/rxrpc/call_accept.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ include/net/sock.h | 1 -
+ net/core/sock.c    | 2 ++
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/rxrpc/call_accept.c b/net/rxrpc/call_accept.c
-index b7611cc159e51..032ed76c0166d 100644
---- a/net/rxrpc/call_accept.c
-+++ b/net/rxrpc/call_accept.c
-@@ -22,6 +22,11 @@
- #include <net/ip.h>
- #include "ar-internal.h"
+diff --git a/include/net/sock.h b/include/net/sock.h
+index 6c5a3809483ea..8263bbf756a22 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -1803,7 +1803,6 @@ static inline int sk_rx_queue_get(const struct sock *sk)
  
-+static void rxrpc_dummy_notify(struct sock *sk, struct rxrpc_call *call,
-+			       unsigned long user_call_ID)
-+{
-+}
-+
- /*
-  * Preallocate a single service call, connection and peer and, if possible,
-  * give them a user ID and attach the user's side of the ID to them.
-@@ -228,6 +233,8 @@ void rxrpc_discard_prealloc(struct rxrpc_sock *rx)
- 		if (rx->discard_new_call) {
- 			_debug("discard %lx", call->user_call_ID);
- 			rx->discard_new_call(call, call->user_call_ID);
-+			if (call->notify_rx)
-+				call->notify_rx = rxrpc_dummy_notify;
- 			rxrpc_put_call(call, rxrpc_call_put_kernel);
- 		}
- 		rxrpc_call_completed(call);
+ static inline void sk_set_socket(struct sock *sk, struct socket *sock)
+ {
+-	sk_tx_queue_clear(sk);
+ 	sk->sk_socket = sock;
+ }
+ 
+diff --git a/net/core/sock.c b/net/core/sock.c
+index 0adf7a9e5a90d..0a2aef870d002 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -1679,6 +1679,7 @@ struct sock *sk_alloc(struct net *net, int family, gfp_t priority,
+ 		cgroup_sk_alloc(&sk->sk_cgrp_data);
+ 		sock_update_classid(&sk->sk_cgrp_data);
+ 		sock_update_netprioidx(&sk->sk_cgrp_data);
++		sk_tx_queue_clear(sk);
+ 	}
+ 
+ 	return sk;
+@@ -1895,6 +1896,7 @@ struct sock *sk_clone_lock(const struct sock *sk, const gfp_t priority)
+ 		 */
+ 		sk_refcnt_debug_inc(newsk);
+ 		sk_set_socket(newsk, NULL);
++		sk_tx_queue_clear(newsk);
+ 		RCU_INIT_POINTER(newsk->sk_wq, NULL);
+ 
+ 		if (newsk->sk_prot->sockets_allocated)
 -- 
 2.25.1
 
