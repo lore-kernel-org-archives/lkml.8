@@ -2,64 +2,64 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80CCCC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 02:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B76C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 02:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 42EAC206F2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 02:55:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF99920776
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 02:55:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ope0b0Rj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T1DZgEFM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726247AbgF2CzX (ORCPT
+        id S1726395AbgF2Cza (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 22:55:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34122 "EHLO
+        Sun, 28 Jun 2020 22:55:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725998AbgF2CzU (ORCPT
+        with ESMTP id S1726342AbgF2CzZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 22:55:20 -0400
+        Sun, 28 Jun 2020 22:55:25 -0400
 Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65967C03E979;
-        Sun, 28 Jun 2020 19:55:19 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id e4so16345163ljn.4;
-        Sun, 28 Jun 2020 19:55:19 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 791DCC03E97E;
+        Sun, 28 Jun 2020 19:55:24 -0700 (PDT)
+Received: by mail-lj1-x241.google.com with SMTP id h19so16292186ljg.13;
+        Sun, 28 Jun 2020 19:55:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=2bBZ4/OM3Bgigj/UdpYLb8PF3OD0GLj7NhydyaDoS/Q=;
-        b=Ope0b0Rj7CKyYEWYFxYFRSL5bW9kYxv150eCEtL6WchIU6PNJhozooIkK0CTg4ReEG
-         rNxCpu0JfYz10//ZgrN3kAJUtZK9c7CuVWRdSqkdAMdFb5ivCPHhKCSFKBnLpp6bADCK
-         TdVcEt2QV7MEg7ChcoBBX/yI96W947VH2Zt6NkrhFT3EZPGxnZzuCl/TaU4Et0cpSPD3
-         4qbVCt+7zsQXM46QvjVkrY5uCGpDGifkQzqQyd6Az9FA/eZf9LBLA77OuAhsoSKwlyww
-         4BMvJ4deelnH6pir0lQHIjemiex+aTxhw8SLNp0N1MhcRAFaWMGdNnXdCMdpJN3hQXiy
-         EDdA==
+        bh=muqetkKSeyxLWHOW3JDXtsHD97uiTdaNVy4i+sl8/60=;
+        b=T1DZgEFMTYrQ9sHcGfO8KCr1EMcm3xE8un8UQjhxwPDoSdepAmSMv+pzJHlqxhgoaP
+         ew2CwfgplZXxNg0zuwmE+43ckW7MaZJepFcMm170p/FoETwlGmM4XhGfFefJff/dKChk
+         ozp61u1EfzQOA9TyXUR+Zb8RiRwnQu9urEgFOvqrnXJdy26kMJP3JBHMpA5iNyVqapTF
+         LET8n5YrDoD5vULNdRZEhnBgU9CW7PNvYyFCqpzrJwDPEk2LYE9qd37Xs1l8ty+y+Bni
+         nloyhsO4TMMZfgB+NlFYgsSBvfnO+nFifW7qvA729voDyE0AL3Sbnj3TZeA4rF6D9C6Y
+         Aazw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=2bBZ4/OM3Bgigj/UdpYLb8PF3OD0GLj7NhydyaDoS/Q=;
-        b=Dm7DaTG3OLhAZozOd3BftKgmVCjrj746KRBVcTVgBN6PeQw+F502k1adc+7PrPX2Ga
-         M/isnMg+dYFHrfZACSkL1d83Fcnen9vLAGQHR6Z+ejflSyRiJ+ZSCu9Sq+hQxpZVwvAN
-         g1b+j2bB9DmRaTU84bdz0LUAySNIOrIbLOfvqbeNHDBf2Db1P0jOmN7WwVEOZay1ISEh
-         A63A7zFxZE1LmYRp6IbGFhY+0ekdCZkxUlBkXbYwfpTDD1vL6WyX4CDiSstYJVzL+Lu7
-         Gud7Y7/5gOJA9TeRZqU9QR90m+MhAGZbEw/t3n2PDiybj3DI1ZRDmMejFed62NTHfvlI
-         AJ2g==
-X-Gm-Message-State: AOAM530ILcsqi/dyqOLZxt4FSuTYZeUf6P+GP6uUCFQ1zXGhVUj0HcyC
-        2FTGhrQyVohs/fpMdoEH+j2q1L6F0GI=
-X-Google-Smtp-Source: ABdhPJwlli+ntEap7OnHuI174L0bT6ShQ+GQ7OD3aGFevHwvIIOROHxoKD6Y9MmWgXKBZvqe4uWHgA==
-X-Received: by 2002:a2e:a58a:: with SMTP id m10mr7064746ljp.347.1593399317158;
-        Sun, 28 Jun 2020 19:55:17 -0700 (PDT)
+        bh=muqetkKSeyxLWHOW3JDXtsHD97uiTdaNVy4i+sl8/60=;
+        b=BSlYnWzuouJi0h8boo0s6YipIyt7+2gL7UFUZ+YOTWxB4RnP8391lBor2I7lPMIacR
+         AwqtBpfj7XZkfjKsihV+pLqkY5pdAKlx2bxmGlvtxoT+TgptrWcrmWL6W23KtIPbyiqY
+         eYbOO+HiWSggwXPGXUXTmy+c1+Ox1vFJaW9tNq1oNrThUF8GirJJEWO5Rt8vrrSQVjCE
+         EHdlWx+Mdv8wIFpTYBwnK8haKvnX53XVLrb5ioZZ2ESwK/n4fxrNekvK40mk7qsFr4nT
+         oZ/9Qmt9YN6c0C/9evrcDV2FuUiB5NNsYpjNKKvfDhXy2SbvxQkKkAVImHwN2I9lKoCy
+         2PNA==
+X-Gm-Message-State: AOAM532RZo/Z7W6S/cgPeE1yIIzlUWLNBpjHMsIZcfPOs4+n4OzJdixU
+        e5TRPz1BuuEVjQzt3fupDIM=
+X-Google-Smtp-Source: ABdhPJzDgFqQ3FRcuaTUhBcXHYhYvcebt9fKAnFHFu3CKrs6Fn6n4/1HIUWw/tRmuQpLXLqe3A2Vlg==
+X-Received: by 2002:a2e:9c16:: with SMTP id s22mr6803671lji.289.1593399322978;
+        Sun, 28 Jun 2020 19:55:22 -0700 (PDT)
 Received: from localhost.localdomain (79-139-237-54.dynamic.spd-mgts.ru. [79.139.237.54])
-        by smtp.gmail.com with ESMTPSA id o4sm8820527lfb.52.2020.06.28.19.55.16
+        by smtp.gmail.com with ESMTPSA id o4sm8820527lfb.52.2020.06.28.19.55.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 28 Jun 2020 19:55:16 -0700 (PDT)
+        Sun, 28 Jun 2020 19:55:22 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
@@ -74,9 +74,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         Zack Pearsall <zpearsall@yahoo.com>
 Cc:     linux-tegra@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v10 1/6] ARM: tegra: Add device-tree for Acer Iconia Tab A500
-Date:   Mon, 29 Jun 2020 05:54:51 +0300
-Message-Id: <20200629025456.28124-2-digetx@gmail.com>
+Subject: [PATCH v10 6/6] ARM: tegra_defconfig: Enable options useful for Nexus 7 and Acer A500
+Date:   Mon, 29 Jun 2020 05:54:56 +0300
+Message-Id: <20200629025456.28124-7-digetx@gmail.com>
 X-Mailer: git-send-email 2.26.0
 In-Reply-To: <20200629025456.28124-1-digetx@gmail.com>
 References: <20200629025456.28124-1-digetx@gmail.com>
@@ -87,1472 +87,176 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device-tree for Acer Iconia Tab A500, which is NVIDIA Tegra20-based
-tablet device.
+Enable several very useful options and drivers for hardware that is found
+on Nexus 7 and Acer A500 tablet devices. Please note that some drivers may
+require firmware files extracted from original Android image.
 
+Link: https://github.com/grate-driver/linux-firmware
+Link: https://github.com/grate-driver/alsa-ucm-conf
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- arch/arm/boot/dts/Makefile                    |    1 +
- .../boot/dts/tegra20-acer-a500-picasso.dts    | 1438 +++++++++++++++++
- 2 files changed, 1439 insertions(+)
- create mode 100644 arch/arm/boot/dts/tegra20-acer-a500-picasso.dts
+ arch/arm/configs/tegra_defconfig | 42 ++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 74dd94e72848..5168edd17611 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -1199,6 +1199,7 @@ dtb-$(CONFIG_MACH_SUNIV) += \
- dtb-$(CONFIG_ARCH_TANGO) += \
- 	tango4-vantage-1172.dtb
- dtb-$(CONFIG_ARCH_TEGRA_2x_SOC) += \
-+	tegra20-acer-a500-picasso.dtb \
- 	tegra20-harmony.dtb \
- 	tegra20-colibri-eval-v3.dtb \
- 	tegra20-colibri-iris.dtb \
-diff --git a/arch/arm/boot/dts/tegra20-acer-a500-picasso.dts b/arch/arm/boot/dts/tegra20-acer-a500-picasso.dts
-new file mode 100644
-index 000000000000..2d683c9a1a5d
---- /dev/null
-+++ b/arch/arm/boot/dts/tegra20-acer-a500-picasso.dts
-@@ -0,0 +1,1438 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/dts-v1/;
-+
-+#include <dt-bindings/input/gpio-keys.h>
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/thermal/thermal.h>
-+
-+#include "tegra20.dtsi"
-+#include "tegra20-cpu-opp.dtsi"
-+#include "tegra20-cpu-opp-microvolt.dtsi"
-+
-+/ {
-+	model = "Acer Iconia Tab A500";
-+	compatible = "acer,picasso", "nvidia,tegra20";
-+
-+	aliases {
-+		rtc0 = &pmic;
-+		rtc1 = "/rtc@7000e000";
-+
-+		serial0 = &uartd; /* Docking station */
-+		serial1 = &uartc; /* Bluetooth */
-+		serial2 = &uartb; /* GPS */
-+	};
-+
-+	/*
-+	 * The decompressor and also some bootloaders rely on a
-+	 * pre-existing /chosen node to be available to insert the
-+	 * command line and merge other ATAGS info.
-+	 */
-+	chosen {};
-+
-+	memory@0 {
-+		reg = <0x00000000 0x40000000>;
-+	};
-+
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		ramoops@2ffe0000 {
-+			compatible = "ramoops";
-+			reg = <0x2ffe0000 0x10000>;	/* 64kB */
-+			console-size = <0x8000>;	/* 32kB */
-+			record-size = <0x400>;		/*  1kB */
-+			ecc-size = <16>;
-+		};
-+
-+		linux,cma@30000000 {
-+			compatible = "shared-dma-pool";
-+			alloc-ranges = <0x30000000 0x10000000>;
-+			size = <0x10000000>; /* 256MiB */
-+			linux,cma-default;
-+			reusable;
-+		};
-+	};
-+
-+	host1x@50000000 {
-+		dc@54200000 {
-+			rgb {
-+				status = "okay";
-+
-+				port@0 {
-+					lcd_output: endpoint {
-+						remote-endpoint = <&lvds_encoder_input>;
-+						bus-width = <18>;
-+					};
-+				};
-+			};
-+		};
-+
-+		hdmi@54280000 {
-+			status = "okay";
-+
-+			vdd-supply = <&hdmi_vdd_reg>;
-+			pll-supply = <&hdmi_pll_reg>;
-+			hdmi-supply = <&vdd_5v0_sys>;
-+
-+			nvidia,ddc-i2c-bus = <&hdmi_ddc>;
-+			nvidia,hpd-gpio = <&gpio TEGRA_GPIO(N, 7)
-+				GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
-+	pinmux@70000014 {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&state_default>;
-+
-+		state_default: pinmux {
-+			ata {
-+				nvidia,pins = "ata";
-+				nvidia,function = "ide";
-+			};
-+			atb {
-+				nvidia,pins = "atb", "gma", "gme";
-+				nvidia,function = "sdio4";
-+			};
-+			atc {
-+				nvidia,pins = "atc";
-+				nvidia,function = "nand";
-+			};
-+			atd {
-+				nvidia,pins = "atd", "ate", "gmb", "spia",
-+					"spib", "spic";
-+				nvidia,function = "gmi";
-+			};
-+			cdev1 {
-+				nvidia,pins = "cdev1";
-+				nvidia,function = "plla_out";
-+			};
-+			cdev2 {
-+				nvidia,pins = "cdev2";
-+				nvidia,function = "pllp_out4";
-+			};
-+			crtp {
-+				nvidia,pins = "crtp", "lm1";
-+				nvidia,function = "crt";
-+			};
-+			csus {
-+				nvidia,pins = "csus";
-+				nvidia,function = "vi_sensor_clk";
-+			};
-+			dap1 {
-+				nvidia,pins = "dap1";
-+				nvidia,function = "dap1";
-+			};
-+			dap2 {
-+				nvidia,pins = "dap2";
-+				nvidia,function = "dap2";
-+			};
-+			dap3 {
-+				nvidia,pins = "dap3";
-+				nvidia,function = "dap3";
-+			};
-+			dap4 {
-+				nvidia,pins = "dap4";
-+				nvidia,function = "dap4";
-+			};
-+			dta {
-+				nvidia,pins = "dta", "dtb", "dtc", "dtd", "dte";
-+				nvidia,function = "vi";
-+			};
-+			dtf {
-+				nvidia,pins = "dtf";
-+				nvidia,function = "i2c3";
-+			};
-+			gmc {
-+				nvidia,pins = "gmc";
-+				nvidia,function = "uartd";
-+			};
-+			gmd {
-+				nvidia,pins = "gmd";
-+				nvidia,function = "sflash";
-+			};
-+			gpu {
-+				nvidia,pins = "gpu";
-+				nvidia,function = "pwm";
-+			};
-+			gpu7 {
-+				nvidia,pins = "gpu7";
-+				nvidia,function = "rtck";
-+			};
-+			gpv {
-+				nvidia,pins = "gpv", "slxa";
-+				nvidia,function = "pcie";
-+			};
-+			hdint {
-+				nvidia,pins = "hdint";
-+				nvidia,function = "hdmi";
-+			};
-+			i2cp {
-+				nvidia,pins = "i2cp";
-+				nvidia,function = "i2cp";
-+			};
-+			irrx {
-+				nvidia,pins = "irrx", "irtx";
-+				nvidia,function = "uartb";
-+			};
-+			kbca {
-+				nvidia,pins = "kbca", "kbcb", "kbcc", "kbcd",
-+					"kbce", "kbcf";
-+				nvidia,function = "kbc";
-+			};
-+			lcsn {
-+				nvidia,pins = "lcsn", "ldc", "lm0", "lpw1",
-+					"lsdi", "lvp0";
-+				nvidia,function = "rsvd4";
-+			};
-+			ld0 {
-+				nvidia,pins = "ld0", "ld1", "ld2", "ld3", "ld4",
-+					"ld5", "ld6", "ld7", "ld8", "ld9",
-+					"ld10", "ld11", "ld12", "ld13", "ld14",
-+					"ld15", "ld16", "ld17", "ldi", "lhp0",
-+					"lhp1", "lhp2", "lhs", "lpp", "lsc0",
-+					"lsc1", "lsck", "lsda", "lspi", "lvp1",
-+					"lvs";
-+				nvidia,function = "displaya";
-+			};
-+			owc {
-+				nvidia,pins = "owc", "spdi", "spdo", "uac";
-+				nvidia,function = "rsvd2";
-+			};
-+			pmc {
-+				nvidia,pins = "pmc";
-+				nvidia,function = "pwr_on";
-+			};
-+			rm {
-+				nvidia,pins = "rm";
-+				nvidia,function = "i2c1";
-+			};
-+			sdb {
-+				nvidia,pins = "sdb", "sdc", "sdd", "slxc", "slxk";
-+				nvidia,function = "sdio3";
-+			};
-+			sdio1 {
-+				nvidia,pins = "sdio1";
-+				nvidia,function = "sdio1";
-+			};
-+			slxd {
-+				nvidia,pins = "slxd";
-+				nvidia,function = "spdif";
-+			};
-+			spid {
-+				nvidia,pins = "spid", "spie", "spif";
-+				nvidia,function = "spi1";
-+			};
-+			spig {
-+				nvidia,pins = "spig", "spih";
-+				nvidia,function = "spi2_alt";
-+			};
-+			uaa {
-+				nvidia,pins = "uaa", "uab", "uda";
-+				nvidia,function = "ulpi";
-+			};
-+			uad {
-+				nvidia,pins = "uad";
-+				nvidia,function = "irda";
-+			};
-+			uca {
-+				nvidia,pins = "uca", "ucb";
-+				nvidia,function = "uartc";
-+			};
-+			conf_ata {
-+				nvidia,pins = "ata", "atb", "atc", "atd",
-+					"cdev1", "cdev2", "csus", "dap1",
-+					"dap4", "dte", "dtf", "gma", "gmc",
-+					"gme", "gpu", "gpu7", "gpv", "i2cp",
-+					"irrx", "irtx", "pta", "rm",
-+					"sdc", "sdd", "slxc", "slxd", "slxk",
-+					"spdi", "spdo", "uac", "uad", "uda";
-+				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
-+				nvidia,tristate = <TEGRA_PIN_DISABLE>;
-+			};
-+			conf_ate {
-+				nvidia,pins = "ate", "dap2", "dap3",
-+					"gmd", "owc", "spia", "spib", "spic",
-+					"spid", "spie";
-+				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
-+				nvidia,tristate = <TEGRA_PIN_ENABLE>;
-+			};
-+			conf_ck32 {
-+				nvidia,pins = "ck32", "ddrc", "pmca", "pmcb",
-+					"pmcc", "pmcd", "pmce", "xm2c", "xm2d";
-+				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
-+			};
-+			conf_crtp {
-+				nvidia,pins = "crtp", "gmb", "slxa", "spig",
-+					"spih";
-+				nvidia,pull = <TEGRA_PIN_PULL_UP>;
-+				nvidia,tristate = <TEGRA_PIN_ENABLE>;
-+			};
-+			conf_dta {
-+				nvidia,pins = "dta", "dtb", "dtc", "dtd", "kbcb";
-+				nvidia,pull = <TEGRA_PIN_PULL_DOWN>;
-+				nvidia,tristate = <TEGRA_PIN_DISABLE>;
-+			};
-+			conf_dte {
-+				nvidia,pins = "spif";
-+				nvidia,pull = <TEGRA_PIN_PULL_DOWN>;
-+				nvidia,tristate = <TEGRA_PIN_ENABLE>;
-+			};
-+			conf_hdint {
-+				nvidia,pins = "hdint", "lcsn", "ldc", "lm1",
-+					"lpw1", "lsck", "lsda", "lsdi",
-+					"lvp0";
-+				nvidia,tristate = <TEGRA_PIN_ENABLE>;
-+			};
-+			conf_kbca {
-+				nvidia,pins = "kbca", "kbcc", "kbcd",
-+					"kbce", "kbcf", "sdio1", "uaa",
-+					"uab", "uca", "ucb";
-+				nvidia,pull = <TEGRA_PIN_PULL_UP>;
-+				nvidia,tristate = <TEGRA_PIN_DISABLE>;
-+			};
-+			conf_lc {
-+				nvidia,pins = "lc", "ls";
-+				nvidia,pull = <TEGRA_PIN_PULL_UP>;
-+			};
-+			conf_ld0 {
-+				nvidia,pins = "ld0", "ld1", "ld2", "ld3", "ld4",
-+					"ld5", "ld6", "ld7", "ld8", "ld9",
-+					"ld10", "ld11", "ld12", "ld13", "ld14",
-+					"ld15", "ld16", "ld17", "ldi", "lhp0",
-+					"lhp1", "lhp2", "lhs", "lm0", "lpp",
-+					"lpw0", "lpw2", "lsc0", "lsc1", "lspi",
-+					"lvp1", "lvs", "pmc", "sdb";
-+				nvidia,tristate = <TEGRA_PIN_DISABLE>;
-+			};
-+			conf_ld17_0 {
-+				nvidia,pins = "ld17_0";
-+				nvidia,pull = <TEGRA_PIN_PULL_NONE>;
-+			};
-+			drive_ddc {
-+				nvidia,pins = "drive_ddc",
-+						"drive_vi1",
-+						"drive_sdio1";
-+				nvidia,schmitt = <TEGRA_PIN_ENABLE>;
-+				nvidia,low-power-mode = <TEGRA_PIN_LP_DRIVE_DIV_4>;
-+			};
-+			drive_dbg {
-+				nvidia,pins = "drive_dbg",
-+						"drive_vi2",
-+						"drive_at1",
-+						"drive_ao1";
-+				nvidia,schmitt = <TEGRA_PIN_ENABLE>;
-+				nvidia,low-power-mode = <TEGRA_PIN_LP_DRIVE_DIV_4>;
-+				nvidia,slew-rate-rising = <TEGRA_PIN_SLEW_RATE_FASTEST>;
-+				nvidia,slew-rate-falling = <TEGRA_PIN_SLEW_RATE_FASTEST>;
-+			};
-+		};
-+
-+		state_i2cmux_ddc: pinmux_i2cmux_ddc {
-+			ddc {
-+				nvidia,pins = "ddc";
-+				nvidia,function = "i2c2";
-+			};
-+			pta {
-+				nvidia,pins = "pta";
-+				nvidia,function = "rsvd4";
-+			};
-+		};
-+
-+		state_i2cmux_pta: pinmux_i2cmux_pta {
-+			ddc {
-+				nvidia,pins = "ddc";
-+				nvidia,function = "rsvd4";
-+			};
-+			pta {
-+				nvidia,pins = "pta";
-+				nvidia,function = "i2c2";
-+			};
-+		};
-+
-+		state_i2cmux_idle: pinmux_i2cmux_idle {
-+			ddc {
-+				nvidia,pins = "ddc";
-+				nvidia,function = "rsvd4";
-+			};
-+			pta {
-+				nvidia,pins = "pta";
-+				nvidia,function = "rsvd4";
-+			};
-+		};
-+	};
-+
-+	tegra_i2s1: i2s@70002800 {
-+		status = "okay";
-+	};
-+
-+	uartb: serial@70006040 {
-+		compatible = "nvidia,tegra20-hsuart";
-+		/* GPS BCM4751 */
-+	};
-+
-+	uartc: serial@70006200 {
-+		compatible = "nvidia,tegra20-hsuart";
-+		status = "okay";
-+
-+		/* Azurewave AW-NH665 BCM4329B1 */
-+		bluetooth {
-+			compatible = "brcm,bcm4329-bt";
-+
-+			/* PLLP 216MHz / 16 / 4 */
-+			max-speed = <3375000>;
-+
-+			clocks = <&rtc_32k_wifi>;
-+			clock-names = "txco";
-+
-+			vbat-supply  = <&vdd_3v3_sys>;
-+			vddio-supply = <&vdd_1v8_sys>;
-+
-+			device-wakeup-gpios = <&gpio TEGRA_GPIO(U, 1) GPIO_ACTIVE_HIGH>;
-+			host-wakeup-gpios =   <&gpio TEGRA_GPIO(U, 6) GPIO_ACTIVE_HIGH>;
-+			shutdown-gpios =      <&gpio TEGRA_GPIO(U, 0) GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+
-+	uartd: serial@70006300 {
-+		/* Docking station */
-+	};
-+
-+	i2c@7000c000 {
-+		clock-frequency = <400000>;
-+		status = "okay";
-+
-+		wm8903: audio-codec@1a {
-+			compatible = "wlf,wm8903";
-+			reg = <0x1a>;
-+
-+			interrupt-parent = <&gpio>;
-+			interrupts = <TEGRA_GPIO(X, 3) IRQ_TYPE_LEVEL_HIGH>;
-+
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+
-+			gpio-cfg = <
-+				0x0000 /* MIC_LR_OUT#    GPIO, output, low */
-+				0x0000 /* FM2018-enable  GPIO, output, low */
-+				0x0000 /* Speaker-enable GPIO, output, low */
-+				0x0200 /* Interrupt, output */
-+				0x01a0 /* BCLK, input, active high */
-+			>;
-+
-+			AVDD-supply  = <&vdd_1v8_sys>;
-+			CPVDD-supply = <&vdd_1v8_sys>;
-+			DBVDD-supply = <&vdd_1v8_sys>;
-+			DCVDD-supply = <&vdd_1v8_sys>;
-+		};
-+
-+		touchscreen@4c {
-+			compatible = "atmel,maxtouch";
-+			reg = <0x4c>;
-+
-+			atmel,cfg_name = "maxtouch-acer-iconia-tab-a500.cfg";
-+
-+			interrupt-parent = <&gpio>;
-+			interrupts = <TEGRA_GPIO(V, 6) IRQ_TYPE_LEVEL_LOW>;
-+
-+			reset-gpios = <&gpio TEGRA_GPIO(Q, 7) GPIO_ACTIVE_HIGH>;
-+
-+			avdd-supply = <&vdd_3v3_sys>;
-+			vdd-supply  = <&vdd_3v3_sys>;
-+		};
-+
-+		gyroscope@68 {
-+			compatible = "invensense,mpu3050";
-+			reg = <0x68>;
-+
-+			interrupt-parent = <&gpio>;
-+			interrupts = <TEGRA_GPIO(Z, 4) IRQ_TYPE_EDGE_RISING>;
-+
-+			vdd-supply    = <&vdd_3v3_sys>;
-+			vlogic-supply = <&vdd_1v8_sys>;
-+
-+			mount-matrix =	 "0",  "1",  "0",
-+					 "1",  "0",  "0",
-+					 "0",  "0", "-1";
-+
-+			i2c-gate {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				accelerometer@f {
-+					compatible = "kionix,kxtf9";
-+					reg = <0x0f>;
-+
-+					interrupt-parent = <&gpio>;
-+					interrupts = <TEGRA_GPIO(S, 7) IRQ_TYPE_EDGE_RISING>;
-+
-+					mount-matrix =	 "0",  "1",  "0",
-+							 "1",  "0",  "0",
-+							 "0",  "0", "-1";
-+				};
-+			};
-+		};
-+	};
-+
-+	i2c@7000c400 {
-+		clock-frequency = <10000>;
-+		status = "okay";
-+	};
-+
-+	i2cmux {
-+		compatible = "i2c-mux-pinctrl";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		i2c-parent = <&{/i2c@7000c400}>;
-+
-+		pinctrl-names = "ddc", "pta", "idle";
-+		pinctrl-0 = <&state_i2cmux_ddc>;
-+		pinctrl-1 = <&state_i2cmux_pta>;
-+		pinctrl-2 = <&state_i2cmux_idle>;
-+
-+		hdmi_ddc: i2c@0 {
-+			reg = <0>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+
-+		panel_ddc: i2c@1 {
-+			reg = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+		};
-+	};
-+
-+	pwm: pwm@7000a000 {
-+		status = "okay";
-+	};
-+
-+	i2c@7000d000 {
-+		clock-frequency = <100000>;
-+		status = "okay";
-+
-+		magnetometer@c {
-+			compatible = "ak,ak8975";
-+			reg = <0x0c>;
-+
-+			interrupt-parent = <&gpio>;
-+			interrupts = <TEGRA_GPIO(N, 5) IRQ_TYPE_EDGE_RISING>;
-+
-+			vdd-supply = <&vdd_3v3_sys>;
-+			vid-supply = <&vdd_1v8_sys>;
-+
-+			mount-matrix =	"1",  "0",  "0",
-+					"0", "-1",  "0",
-+					"0",  "0", "-1";
-+		};
-+
-+		pmic: pmic@34 {
-+			compatible = "ti,tps6586x";
-+			reg = <0x34>;
-+
-+			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
-+
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+
-+			sys-supply       = <&vdd_5v0_sys>;
-+			vin-sm0-supply   = <&sys_reg>;
-+			vin-sm1-supply   = <&sys_reg>;
-+			vin-sm2-supply   = <&sys_reg>;
-+			vinldo01-supply  = <&sm2_reg>;
-+			vinldo23-supply  = <&sm2_reg>;
-+			vinldo4-supply   = <&sm2_reg>;
-+			vinldo678-supply = <&sm2_reg>;
-+			vinldo9-supply   = <&sm2_reg>;
-+
-+			regulators {
-+				sys_reg: sys {
-+					regulator-name = "vdd_sys";
-+					regulator-always-on;
-+				};
-+
-+				vdd_core: sm0 {
-+					regulator-name = "vdd_sm0,vdd_core";
-+					regulator-min-microvolt = <1200000>;
-+					regulator-max-microvolt = <1300000>;
-+					regulator-coupled-with = <&rtc_vdd &vdd_cpu>;
-+					regulator-coupled-max-spread = <170000 550000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+
-+					nvidia,tegra-core-regulator;
-+				};
-+
-+				vdd_cpu: sm1 {
-+					regulator-name = "vdd_sm1,vdd_cpu";
-+					regulator-min-microvolt = <750000>;
-+					regulator-max-microvolt = <1125000>;
-+					regulator-coupled-with = <&vdd_core &rtc_vdd>;
-+					regulator-coupled-max-spread = <550000 550000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+
-+					nvidia,tegra-cpu-regulator;
-+				};
-+
-+				sm2_reg: sm2 {
-+					regulator-name = "vdd_sm2,vin_ldo*";
-+					regulator-min-microvolt = <3700000>;
-+					regulator-max-microvolt = <3700000>;
-+					regulator-always-on;
-+				};
-+
-+				/* LDO0 is not connected to anything */
-+
-+				ldo1 {
-+					regulator-name = "vdd_ldo1,avdd_pll*";
-+					regulator-min-microvolt = <1100000>;
-+					regulator-max-microvolt = <1100000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				rtc_vdd: ldo2 {
-+					regulator-name = "vdd_ldo2,vdd_rtc";
-+					regulator-min-microvolt = <1200000>;
-+					regulator-max-microvolt = <1300000>;
-+					regulator-coupled-with = <&vdd_core &vdd_cpu>;
-+					regulator-coupled-max-spread = <170000 550000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+
-+					nvidia,tegra-rtc-regulator;
-+				};
-+
-+				ldo3 {
-+					regulator-name = "vdd_ldo3,avdd_usb*";
-+					regulator-min-microvolt = <3300000>;
-+					regulator-max-microvolt = <3300000>;
-+					regulator-always-on;
-+				};
-+
-+				ldo4 {
-+					regulator-name = "vdd_ldo4,avdd_osc,vddio_sys";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				vcore_emmc: ldo5 {
-+					regulator-name = "vdd_ldo5,vcore_mmc";
-+					regulator-min-microvolt = <2850000>;
-+					regulator-max-microvolt = <2850000>;
-+					regulator-always-on;
-+				};
-+
-+				avdd_vdac_reg: ldo6 {
-+					regulator-name = "vdd_ldo6,avdd_vdac";
-+					regulator-min-microvolt = <2850000>;
-+					regulator-max-microvolt = <2850000>;
-+				};
-+
-+				hdmi_vdd_reg: ldo7 {
-+					regulator-name = "vdd_ldo7,avdd_hdmi";
-+					regulator-min-microvolt = <3300000>;
-+					regulator-max-microvolt = <3300000>;
-+				};
-+
-+				hdmi_pll_reg: ldo8 {
-+					regulator-name = "vdd_ldo8,avdd_hdmi_pll";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+				};
-+
-+				ldo9 {
-+					regulator-name = "vdd_ldo9,avdd_2v85,vdd_ddr_rx";
-+					regulator-min-microvolt = <2850000>;
-+					regulator-max-microvolt = <2850000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+
-+				ldo_rtc {
-+					regulator-name = "vdd_rtc_out,vdd_cell";
-+					regulator-min-microvolt = <3300000>;
-+					regulator-max-microvolt = <3300000>;
-+					regulator-always-on;
-+					regulator-boot-on;
-+				};
-+			};
-+		};
-+
-+		nct1008: temperature-sensor@4c {
-+			compatible = "onnn,nct1008";
-+			reg = <0x4c>;
-+			vcc-supply = <&vdd_3v3_sys>;
-+			#thermal-sensor-cells = <1>;
-+		};
-+	};
-+
-+	pmc@7000e400 {
-+		nvidia,invert-interrupt;
-+		nvidia,suspend-mode = <1>;
-+		nvidia,cpu-pwr-good-time = <2000>;
-+		nvidia,cpu-pwr-off-time = <100>;
-+		nvidia,core-pwr-good-time = <3845 3845>;
-+		nvidia,core-pwr-off-time = <458>;
-+		nvidia,sys-clock-req-active-high;
-+	};
-+
-+	usb@c5000000 {
-+		compatible = "nvidia,tegra20-udc";
-+		status = "okay";
-+		dr_mode = "peripheral";
-+	};
-+
-+	usb-phy@c5000000 {
-+		status = "okay";
-+		dr_mode = "peripheral";
-+		nvidia,xcvr-setup-use-fuses;
-+		nvidia,xcvr-lsfslew = <2>;
-+		nvidia,xcvr-lsrslew = <2>;
-+		vbus-supply = <&vdd_vbus1>;
-+	};
-+
-+	usb@c5008000 {
-+		status = "okay";
-+	};
-+
-+	usb-phy@c5008000 {
-+		status = "okay";
-+		nvidia,xcvr-setup-use-fuses;
-+		nvidia,xcvr-lsfslew = <2>;
-+		nvidia,xcvr-lsrslew = <2>;
-+		vbus-supply = <&vdd_vbus3>;
-+	};
-+
-+	brcm_wifi_pwrseq: wifi-pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+
-+		clocks = <&rtc_32k_wifi>;
-+		clock-names = "ext_clock";
-+
-+		reset-gpios = <&gpio TEGRA_GPIO(K, 6) GPIO_ACTIVE_LOW>;
-+		post-power-on-delay-ms = <300>;
-+		power-off-delay-us = <300>;
-+	};
-+
-+	mmc@c8000000 {
-+		status = "okay";
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		max-frequency = <25000000>;
-+		keep-power-in-suspend;
-+		bus-width = <4>;
-+		non-removable;
-+
-+		mmc-pwrseq = <&brcm_wifi_pwrseq>;
-+		vmmc-supply = <&vdd_3v3_sys>;
-+		vqmmc-supply = <&vdd_3v3_sys>;
-+
-+		/* Azurewave AW-NH611 BCM4329 */
-+		wifi@1 {
-+			reg = <1>;
-+			compatible = "brcm,bcm4329-fmac";
-+			interrupt-parent = <&gpio>;
-+			interrupts = <TEGRA_GPIO(S, 0) IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "host-wake";
-+		};
-+	};
-+
-+	mmc@c8000400 {
-+		status = "okay";
-+		bus-width = <4>;
-+		cd-gpios = <&gpio TEGRA_GPIO(I, 5) GPIO_ACTIVE_LOW>;
-+		power-gpios = <&gpio TEGRA_GPIO(I, 6) GPIO_ACTIVE_HIGH>;
-+		vmmc-supply = <&vdd_3v3_sys>;
-+		vqmmc-supply = <&vdd_3v3_sys>;
-+	};
-+
-+	mmc@c8000600 {
-+		status = "okay";
-+		bus-width = <8>;
-+		vmmc-supply = <&vcore_emmc>;
-+		vqmmc-supply = <&vdd_3v3_sys>;
-+		non-removable;
-+	};
-+
-+	mains: ac-adapter-detect {
-+		compatible = "gpio-charger";
-+		charger-type = "mains";
-+		gpios = <&gpio TEGRA_GPIO(V, 3) GPIO_ACTIVE_LOW>;
-+	};
-+
-+	backlight: backlight {
-+		compatible = "pwm-backlight";
-+
-+		enable-gpios = <&gpio TEGRA_GPIO(D, 4) GPIO_ACTIVE_HIGH>;
-+		power-supply = <&vdd_3v3_sys>;
-+		pwms = <&pwm 2 41667>;
-+
-+		brightness-levels = <7 255>;
-+		num-interpolated-steps = <248>;
-+		default-brightness-level = <20>;
-+	};
-+
-+	/* PMIC has a built-in 32KHz oscillator which is used by PMC */
-+	clk32k_in: clock@0 {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <32768>;
-+		clock-output-names = "tps658621-out32k";
-+	};
-+
-+	/*
-+	 * This standalone onboard fixed-clock always-ON 32KHz
-+	 * oscillator is used as a reference clock-source by the
-+	 * Azurewave WiFi/BT module.
-+	 */
-+	rtc_32k_wifi: clock@1 {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <32768>;
-+		clock-output-names = "kk3270032";
-+	};
-+
-+	cpus {
-+		cpu0: cpu@0 {
-+			cpu-supply = <&vdd_cpu>;
-+			operating-points-v2 = <&cpu0_opp_table>;
-+			#cooling-cells = <2>;
-+		};
-+
-+		cpu@1 {
-+			cpu-supply = <&vdd_cpu>;
-+			operating-points-v2 = <&cpu0_opp_table>;
-+		};
-+	};
-+
-+	display-panel {
-+		compatible = "auo,b101ew05", "panel-lvds";
-+
-+		ddc-i2c-bus = <&panel_ddc>;
-+		power-supply = <&vdd_pnl>;
-+		backlight = <&backlight>;
-+
-+		width-mm = <218>;
-+		height-mm = <135>;
-+
-+		data-mapping = "jeida-18";
-+
-+		panel-timing {
-+			clock-frequency = <71200000>;
-+			hactive = <1280>;
-+			vactive = <800>;
-+			hfront-porch = <8>;
-+			hback-porch = <18>;
-+			hsync-len = <184>;
-+			vsync-len = <3>;
-+			vfront-porch = <4>;
-+			vback-porch = <8>;
-+		};
-+
-+		port {
-+			panel_input: endpoint {
-+				remote-endpoint = <&lvds_encoder_output>;
-+			};
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		power {
-+			label = "Power";
-+			gpios = <&gpio TEGRA_GPIO(I, 3) GPIO_ACTIVE_HIGH>;
-+			linux,code = <KEY_POWER>;
-+			debounce-interval = <10>;
-+			wakeup-event-action = <EV_ACT_ASSERTED>;
-+			wakeup-source;
-+		};
-+
-+		rotation-lock {
-+			label = "Rotate-lock";
-+			gpios = <&gpio TEGRA_GPIO(Q, 2) GPIO_ACTIVE_HIGH>;
-+			linux,code = <SW_ROTATE_LOCK>;
-+			linux,input-type = <EV_SW>;
-+			debounce-interval = <10>;
-+		};
-+
-+		volume-up {
-+			label = "Volume Up";
-+			gpios = <&gpio TEGRA_GPIO(Q, 4) GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_VOLUMEUP>;
-+			debounce-interval = <10>;
-+			wakeup-event-action = <EV_ACT_ASSERTED>;
-+			wakeup-source;
-+		};
-+
-+		volume-down {
-+			label = "Volume Down";
-+			gpios = <&gpio TEGRA_GPIO(Q, 5) GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_VOLUMEDOWN>;
-+			debounce-interval = <10>;
-+			wakeup-event-action = <EV_ACT_ASSERTED>;
-+			wakeup-source;
-+		};
-+	};
-+
-+	haptic-feedback {
-+		compatible = "gpio-vibrator";
-+		enable-gpios = <&gpio TEGRA_GPIO(V, 5) GPIO_ACTIVE_HIGH>;
-+		vcc-supply = <&vdd_3v3_sys>;
-+	};
-+
-+	lvds-encoder {
-+		compatible = "ti,sn75lvds83", "lvds-encoder";
-+
-+		powerdown-gpios = <&gpio TEGRA_GPIO(B, 2) GPIO_ACTIVE_LOW>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+
-+				lvds_encoder_input: endpoint {
-+					remote-endpoint = <&lcd_output>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+
-+				lvds_encoder_output: endpoint {
-+					remote-endpoint = <&panel_input>;
-+				};
-+			};
-+		};
-+	};
-+
-+	vdd_5v0_sys: regulator@0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vdd_5v0";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+	};
-+
-+	vdd_3v3_sys: regulator@1 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vdd_3v3_vs";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-always-on;
-+		vin-supply = <&vdd_5v0_sys>;
-+	};
-+
-+	vdd_1v8_sys: regulator@2 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vdd_1v8_vs";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-always-on;
-+		vin-supply = <&vdd_5v0_sys>;
-+	};
-+
-+	vdd_pnl: regulator@3 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vdd_panel";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		regulator-enable-ramp-delay = <300000>;
-+		gpio = <&gpio TEGRA_GPIO(C, 6) GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		vin-supply = <&vdd_5v0_sys>;
-+	};
-+
-+	vdd_vbus1: regulator@4 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vdd_usb1_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+		gpio = <&gpio TEGRA_GPIO(D, 0) GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		vin-supply = <&vdd_5v0_sys>;
-+	};
-+
-+	vdd_vbus3: regulator@5 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vdd_usb3_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-always-on;
-+		gpio = <&gpio TEGRA_GPIO(D, 3) GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		vin-supply = <&vdd_5v0_sys>;
-+	};
-+
-+	sound {
-+		compatible = "nvidia,tegra-audio-wm8903-picasso",
-+			     "nvidia,tegra-audio-wm8903";
-+		nvidia,model = "Acer Iconia Tab A500 WM8903";
-+
-+		nvidia,audio-routing =
-+			"Headphone Jack", "HPOUTR",
-+			"Headphone Jack", "HPOUTL",
-+			"Int Spk", "LINEOUTL",
-+			"Int Spk", "LINEOUTR",
-+			"Mic Jack", "MICBIAS",
-+			"IN2L", "Mic Jack",
-+			"IN2R", "Mic Jack",
-+			"IN1L", "Int Mic",
-+			"IN1R", "Int Mic";
-+
-+		nvidia,i2s-controller = <&tegra_i2s1>;
-+		nvidia,audio-codec = <&wm8903>;
-+
-+		nvidia,spkr-en-gpios = <&wm8903 2 GPIO_ACTIVE_HIGH>;
-+		nvidia,hp-det-gpios = <&gpio TEGRA_GPIO(W, 2) GPIO_ACTIVE_HIGH>;
-+		nvidia,int-mic-en-gpios = <&wm8903 1 GPIO_ACTIVE_HIGH>;
-+		nvidia,headset;
-+
-+		clocks = <&tegra_car TEGRA20_CLK_PLL_A>,
-+			 <&tegra_car TEGRA20_CLK_PLL_A_OUT0>,
-+			 <&tegra_car TEGRA20_CLK_CDEV1>;
-+		clock-names = "pll_a", "pll_a_out0", "mclk";
-+	};
-+
-+	thermal-zones {
-+		nct1008-local {
-+			polling-delay-passive = <1000>; /* milliseconds */
-+			polling-delay = <0>; /* milliseconds */
-+
-+			thermal-sensors = <&nct1008 0>;
-+		};
-+
-+		nct1008-remote {
-+			polling-delay-passive = <1000>; /* milliseconds */
-+			polling-delay = <5000>; /* milliseconds */
-+
-+			thermal-sensors = <&nct1008 1>;
-+
-+			trips {
-+				trip0: cpu-alert0 {
-+					/* start throttling at 50C */
-+					temperature = <50000>;
-+					hysteresis = <3000>;
-+					type = "passive";
-+				};
-+
-+				trip1: cpu-crit {
-+					/* shut down at 60C */
-+					temperature = <60000>;
-+					hysteresis = <2000>;
-+					type = "critical";
-+				};
-+			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&trip0>;
-+					cooling-device = <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
-+		};
-+	};
-+
-+	memory-controller@7000f400 {
-+		nvidia,use-ram-code;
-+
-+		emc-tables@0 {
-+			nvidia,ram-code = <0>; /* elpida-8gb */
-+
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			emc-table@25000 {
-+				reg = <25000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <25000>;
-+				nvidia,emc-registers = <0x00000002 0x00000006
-+					0x00000003 0x00000003 0x00000006 0x00000004
-+					0x00000002 0x00000009 0x00000003 0x00000003
-+					0x00000002 0x00000002 0x00000002 0x00000004
-+					0x00000003 0x00000008 0x0000000b 0x0000004d
-+					0x00000000 0x00000003 0x00000003 0x00000003
-+					0x00000008 0x00000001 0x0000000a 0x00000004
-+					0x00000003 0x00000008 0x00000004 0x00000006
-+					0x00000002 0x00000068 0x00000000 0x00000003
-+					0x00000000 0x00000000 0x00000282 0xa0ae04ae
-+					0x00070000 0x00000000 0x00000000 0x00000003
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
-+			};
-+
-+			emc-table@50000 {
-+				reg = <50000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <50000>;
-+				nvidia,emc-registers = <0x00000003 0x00000007
-+					0x00000003 0x00000003 0x00000006 0x00000004
-+					0x00000002 0x00000009 0x00000003 0x00000003
-+					0x00000002 0x00000002 0x00000002 0x00000005
-+					0x00000003 0x00000008 0x0000000b 0x0000009f
-+					0x00000000 0x00000003 0x00000003 0x00000003
-+					0x00000008 0x00000001 0x0000000a 0x00000007
-+					0x00000003 0x00000008 0x00000004 0x00000006
-+					0x00000002 0x000000d0 0x00000000 0x00000000
-+					0x00000000 0x00000000 0x00000282 0xa0ae04ae
-+					0x00070000 0x00000000 0x00000000 0x00000005
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
-+			};
-+
-+			emc-table@75000 {
-+				reg = <75000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <75000>;
-+				nvidia,emc-registers = <0x00000005 0x0000000a
-+					0x00000004 0x00000003 0x00000006 0x00000004
-+					0x00000002 0x00000009 0x00000003 0x00000003
-+					0x00000002 0x00000002 0x00000002 0x00000005
-+					0x00000003 0x00000008 0x0000000b 0x000000ff
-+					0x00000000 0x00000003 0x00000003 0x00000003
-+					0x00000008 0x00000001 0x0000000a 0x0000000b
-+					0x00000003 0x00000008 0x00000004 0x00000006
-+					0x00000002 0x00000138 0x00000000 0x00000000
-+					0x00000000 0x00000000 0x00000282 0xa0ae04ae
-+					0x00070000 0x00000000 0x00000000 0x00000007
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
-+			};
-+
-+			emc-table@150000 {
-+				reg = <150000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <150000>;
-+				nvidia,emc-registers = <0x00000009 0x00000014
-+					0x00000007 0x00000003 0x00000006 0x00000004
-+					0x00000002 0x00000009 0x00000003 0x00000003
-+					0x00000002 0x00000002 0x00000002 0x00000005
-+					0x00000003 0x00000008 0x0000000b 0x0000021f
-+					0x00000000 0x00000003 0x00000003 0x00000003
-+					0x00000008 0x00000001 0x0000000a 0x00000015
-+					0x00000003 0x00000008 0x00000004 0x00000006
-+					0x00000002 0x00000270 0x00000000 0x00000001
-+					0x00000000 0x00000000 0x00000282 0xa07c04ae
-+					0x007dd510 0x00000000 0x00000000 0x0000000e
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
-+			};
-+
-+			emc-table@300000 {
-+				reg = <300000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <300000>;
-+				nvidia,emc-registers = <0x00000012 0x00000027
-+					0x0000000d 0x00000006 0x00000007 0x00000005
-+					0x00000003 0x00000009 0x00000006 0x00000006
-+					0x00000003 0x00000003 0x00000002 0x00000006
-+					0x00000003 0x00000009 0x0000000c 0x0000045f
-+					0x00000000 0x00000004 0x00000004 0x00000006
-+					0x00000008 0x00000001 0x0000000e 0x0000002a
-+					0x00000003 0x0000000f 0x00000007 0x00000005
-+					0x00000002 0x000004e1 0x00000005 0x00000002
-+					0x00000000 0x00000000 0x00000282 0xe059048b
-+					0x007e1510 0x00000000 0x00000000 0x0000001b
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
-+			};
-+		};
-+
-+		emc-tables@1 {
-+			nvidia,ram-code = <1>; /* elpida-4gb */
-+
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			emc-table@25000 {
-+				reg = <25000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <25000>;
-+				nvidia,emc-registers = <0x00000002 0x00000006
-+					0x00000003 0x00000003 0x00000006 0x00000004
-+					0x00000002 0x00000009 0x00000003 0x00000003
-+					0x00000002 0x00000002 0x00000002 0x00000004
-+					0x00000003 0x00000008 0x0000000b 0x0000004d
-+					0x00000000 0x00000003 0x00000003 0x00000003
-+					0x00000008 0x00000001 0x0000000a 0x00000004
-+					0x00000003 0x00000008 0x00000004 0x00000006
-+					0x00000002 0x00000068 0x00000000 0x00000003
-+					0x00000000 0x00000000 0x00000282 0xa0ae04ae
-+					0x0007c000 0x00000000 0x00000000 0x00000003
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
-+			};
-+
-+			emc-table@50000 {
-+				reg = <50000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <50000>;
-+				nvidia,emc-registers = <0x00000003 0x00000007
-+					0x00000003 0x00000003 0x00000006 0x00000004
-+					0x00000002 0x00000009 0x00000003 0x00000003
-+					0x00000002 0x00000002 0x00000002 0x00000005
-+					0x00000003 0x00000008 0x0000000b 0x0000009f
-+					0x00000000 0x00000003 0x00000003 0x00000003
-+					0x00000008 0x00000001 0x0000000a 0x00000007
-+					0x00000003 0x00000008 0x00000004 0x00000006
-+					0x00000002 0x000000d0 0x00000000 0x00000000
-+					0x00000000 0x00000000 0x00000282 0xa0ae04ae
-+					0x0007c000 0x00000000 0x00000000 0x00000005
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
-+			};
-+
-+			emc-table@75000 {
-+				reg = <75000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <75000>;
-+				nvidia,emc-registers = <0x00000005 0x0000000a
-+					0x00000004 0x00000003 0x00000006 0x00000004
-+					0x00000002 0x00000009 0x00000003 0x00000003
-+					0x00000002 0x00000002 0x00000002 0x00000005
-+					0x00000003 0x00000008 0x0000000b 0x000000ff
-+					0x00000000 0x00000003 0x00000003 0x00000003
-+					0x00000008 0x00000001 0x0000000a 0x0000000b
-+					0x00000003 0x00000008 0x00000004 0x00000006
-+					0x00000002 0x00000138 0x00000000 0x00000000
-+					0x00000000 0x00000000 0x00000282 0xa0ae04ae
-+					0x0007c000 0x00000000 0x00000000 0x00000007
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
-+			};
-+
-+			emc-table@150000 {
-+				reg = <150000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <150000>;
-+				nvidia,emc-registers = <0x00000009 0x00000014
-+					0x00000007 0x00000003 0x00000006 0x00000004
-+					0x00000002 0x00000009 0x00000003 0x00000003
-+					0x00000002 0x00000002 0x00000002 0x00000005
-+					0x00000003 0x00000008 0x0000000b 0x0000021f
-+					0x00000000 0x00000003 0x00000003 0x00000003
-+					0x00000008 0x00000001 0x0000000a 0x00000015
-+					0x00000003 0x00000008 0x00000004 0x00000006
-+					0x00000002 0x00000270 0x00000000 0x00000001
-+					0x00000000 0x00000000 0x00000282 0xa07c04ae
-+					0x007e4010 0x00000000 0x00000000 0x0000000e
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
-+			};
-+
-+			emc-table@300000 {
-+				reg = <300000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <300000>;
-+				nvidia,emc-registers = <0x00000012 0x00000027
-+					0x0000000d 0x00000006 0x00000007 0x00000005
-+					0x00000003 0x00000009 0x00000006 0x00000006
-+					0x00000003 0x00000003 0x00000002 0x00000006
-+					0x00000003 0x00000009 0x0000000c 0x0000045f
-+					0x00000000 0x00000004 0x00000004 0x00000006
-+					0x00000008 0x00000001 0x0000000e 0x0000002a
-+					0x00000003 0x0000000f 0x00000007 0x00000005
-+					0x00000002 0x000004e1 0x00000005 0x00000002
-+					0x00000000 0x00000000 0x00000282 0xe059048b
-+					0x007e0010 0x00000000 0x00000000 0x0000001b
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
-+			};
-+		};
-+
-+		emc-tables@2 {
-+			nvidia,ram-code = <2>; /* hynix-8gb */
-+
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			emc-table@25000 {
-+				reg = <25000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <25000>;
-+				nvidia,emc-registers = <0x00000002 0x00000006
-+					0x00000003 0x00000003 0x00000006 0x00000004
-+					0x00000002 0x00000009 0x00000003 0x00000003
-+					0x00000002 0x00000002 0x00000002 0x00000004
-+					0x00000003 0x00000008 0x0000000b 0x0000004d
-+					0x00000000 0x00000003 0x00000003 0x00000003
-+					0x00000008 0x00000001 0x0000000a 0x00000004
-+					0x00000003 0x00000008 0x00000004 0x00000006
-+					0x00000002 0x00000068 0x00000000 0x00000003
-+					0x00000000 0x00000000 0x00000282 0xa0ae04ae
-+					0x00070000 0x00000000 0x00000000 0x00000003
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
-+			};
-+
-+			emc-table@50000 {
-+				reg = <50000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <50000>;
-+				nvidia,emc-registers = <0x00000003 0x00000007
-+					0x00000003 0x00000003 0x00000006 0x00000004
-+					0x00000002 0x00000009 0x00000003 0x00000003
-+					0x00000002 0x00000002 0x00000002 0x00000005
-+					0x00000003 0x00000008 0x0000000b 0x0000009f
-+					0x00000000 0x00000003 0x00000003 0x00000003
-+					0x00000008 0x00000001 0x0000000a 0x00000007
-+					0x00000003 0x00000008 0x00000004 0x00000006
-+					0x00000002 0x000000d0 0x00000000 0x00000000
-+					0x00000000 0x00000000 0x00000282 0xa0ae04ae
-+					0x00070000 0x00000000 0x00000000 0x00000005
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
-+			};
-+
-+			emc-table@75000 {
-+				reg = <75000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <75000>;
-+				nvidia,emc-registers = <0x00000005 0x0000000a
-+					0x00000004 0x00000003 0x00000006 0x00000004
-+					0x00000002 0x00000009 0x00000003 0x00000003
-+					0x00000002 0x00000002 0x00000002 0x00000005
-+					0x00000003 0x00000008 0x0000000b 0x000000ff
-+					0x00000000 0x00000003 0x00000003 0x00000003
-+					0x00000008 0x00000001 0x0000000a 0x0000000b
-+					0x00000003 0x00000008 0x00000004 0x00000006
-+					0x00000002 0x00000138 0x00000000 0x00000000
-+					0x00000000 0x00000000 0x00000282 0xa0ae04ae
-+					0x00070000 0x00000000 0x00000000 0x00000007
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
-+			};
-+
-+			emc-table@150000 {
-+				reg = <150000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <150000>;
-+				nvidia,emc-registers = <0x00000009 0x00000014
-+					0x00000007 0x00000003 0x00000006 0x00000004
-+					0x00000002 0x00000009 0x00000003 0x00000003
-+					0x00000002 0x00000002 0x00000002 0x00000005
-+					0x00000003 0x00000008 0x0000000b 0x0000021f
-+					0x00000000 0x00000003 0x00000003 0x00000003
-+					0x00000008 0x00000001 0x0000000a 0x00000015
-+					0x00000003 0x00000008 0x00000004 0x00000006
-+					0x00000002 0x00000270 0x00000000 0x00000001
-+					0x00000000 0x00000000 0x00000282 0xa07c04ae
-+					0x007dd010 0x00000000 0x00000000 0x0000000e
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
-+			};
-+
-+			emc-table@300000 {
-+				reg = <300000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <300000>;
-+				nvidia,emc-registers = <0x00000012 0x00000027
-+					0x0000000d 0x00000006 0x00000007 0x00000005
-+					0x00000003 0x00000009 0x00000006 0x00000006
-+					0x00000003 0x00000003 0x00000002 0x00000006
-+					0x00000003 0x00000009 0x0000000c 0x0000045f
-+					0x00000000 0x00000004 0x00000004 0x00000006
-+					0x00000008 0x00000001 0x0000000e 0x0000002a
-+					0x00000003 0x0000000f 0x00000007 0x00000005
-+					0x00000002 0x000004e1 0x00000005 0x00000002
-+					0x00000000 0x00000000 0x00000282 0xe059048b
-+					0x007e2010 0x00000000 0x00000000 0x0000001b
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
-+			};
-+		};
-+
-+		emc-tables@3 {
-+			nvidia,ram-code = <3>; /* hynix-4gb */
-+
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			emc-table@25000 {
-+				reg = <25000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <25000>;
-+				nvidia,emc-registers = <0x00000002 0x00000006
-+					0x00000003 0x00000003 0x00000006 0x00000004
-+					0x00000002 0x00000009 0x00000003 0x00000003
-+					0x00000002 0x00000002 0x00000002 0x00000004
-+					0x00000003 0x00000008 0x0000000b 0x0000004d
-+					0x00000000 0x00000003 0x00000003 0x00000003
-+					0x00000008 0x00000001 0x0000000a 0x00000004
-+					0x00000003 0x00000008 0x00000004 0x00000006
-+					0x00000002 0x00000068 0x00000000 0x00000003
-+					0x00000000 0x00000000 0x00000282 0xa0ae04ae
-+					0x0007c000 0x00000000 0x00000000 0x00000003
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
-+			};
-+
-+			emc-table@50000 {
-+				reg = <50000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <50000>;
-+				nvidia,emc-registers = <0x00000003 0x00000007
-+					0x00000003 0x00000003 0x00000006 0x00000004
-+					0x00000002 0x00000009 0x00000003 0x00000003
-+					0x00000002 0x00000002 0x00000002 0x00000005
-+					0x00000003 0x00000008 0x0000000b 0x0000009f
-+					0x00000000 0x00000003 0x00000003 0x00000003
-+					0x00000008 0x00000001 0x0000000a 0x00000007
-+					0x00000003 0x00000008 0x00000004 0x00000006
-+					0x00000002 0x000000d0 0x00000000 0x00000000
-+					0x00000000 0x00000000 0x00000282 0xa0ae04ae
-+					0x0007c000 0x00078000 0x00000000 0x00000005
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
-+			};
-+
-+			emc-table@75000 {
-+				reg = <75000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <75000>;
-+				nvidia,emc-registers = <0x00000005 0x0000000a
-+					0x00000004 0x00000003 0x00000006 0x00000004
-+					0x00000002 0x00000009 0x00000003 0x00000003
-+					0x00000002 0x00000002 0x00000002 0x00000005
-+					0x00000003 0x00000008 0x0000000b 0x000000ff
-+					0x00000000 0x00000003 0x00000003 0x00000003
-+					0x00000008 0x00000001 0x0000000a 0x0000000b
-+					0x00000003 0x00000008 0x00000004 0x00000006
-+					0x00000002 0x00000138 0x00000000 0x00000000
-+					0x00000000 0x00000000 0x00000282 0xa0ae04ae
-+					0x0007c000 0x00000000 0x00000000 0x00000007
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
-+			};
-+
-+			emc-table@150000 {
-+				reg = <150000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <150000>;
-+				nvidia,emc-registers = <0x00000009 0x00000014
-+					0x00000007 0x00000003 0x00000006 0x00000004
-+					0x00000002 0x00000009 0x00000003 0x00000003
-+					0x00000002 0x00000002 0x00000002 0x00000005
-+					0x00000003 0x00000008 0x0000000b 0x0000021f
-+					0x00000000 0x00000003 0x00000003 0x00000003
-+					0x00000008 0x00000001 0x0000000a 0x00000015
-+					0x00000003 0x00000008 0x00000004 0x00000006
-+					0x00000002 0x00000270 0x00000000 0x00000001
-+					0x00000000 0x00000000 0x00000282 0xa07c04ae
-+					0x007e4010 0x00000000 0x00000000 0x0000000e
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
-+			};
-+
-+			emc-table@300000 {
-+				reg = <300000>;
-+				compatible = "nvidia,tegra20-emc-table";
-+				clock-frequency = <300000>;
-+				nvidia,emc-registers = <0x00000012 0x00000027
-+					0x0000000d 0x00000006 0x00000007 0x00000005
-+					0x00000003 0x00000009 0x00000006 0x00000006
-+					0x00000003 0x00000003 0x00000002 0x00000006
-+					0x00000003 0x00000009 0x0000000c 0x0000045f
-+					0x00000000 0x00000004 0x00000004 0x00000006
-+					0x00000008 0x00000001 0x0000000e 0x0000002a
-+					0x00000003 0x0000000f 0x00000007 0x00000005
-+					0x00000002 0x000004e1 0x00000005 0x00000002
-+					0x00000000 0x00000000 0x00000282 0xe059048b
-+					0x007e0010 0x00000000 0x00000000 0x0000001b
-+					0x00000000 0x00000000 0x00000000 0x00000000>;
-+			};
-+		};
-+	};
-+};
+diff --git a/arch/arm/configs/tegra_defconfig b/arch/arm/configs/tegra_defconfig
+index aa94369bdd0f..9b01f8cc8262 100644
+--- a/arch/arm/configs/tegra_defconfig
++++ b/arch/arm/configs/tegra_defconfig
+@@ -10,6 +10,8 @@ CONFIG_RT_GROUP_SCHED=y
+ CONFIG_CGROUP_FREEZER=y
+ CONFIG_CGROUP_CPUACCT=y
+ CONFIG_CGROUP_DEBUG=y
++CONFIG_NAMESPACES=y
++CONFIG_USER_NS=y
+ CONFIG_BLK_DEV_INITRD=y
+ # CONFIG_ELF_CORE is not set
+ CONFIG_EMBEDDED=y
+@@ -18,6 +20,7 @@ CONFIG_SLAB=y
+ CONFIG_ARCH_TEGRA=y
+ CONFIG_SMP=y
+ CONFIG_HIGHMEM=y
++CONFIG_SECCOMP=y
+ CONFIG_ZBOOT_ROM_TEXT=0x0
+ CONFIG_ZBOOT_ROM_BSS=0x0
+ CONFIG_KEXEC=y
+@@ -63,11 +66,17 @@ CONFIG_BT_RFCOMM=y
+ CONFIG_BT_BNEP=y
+ CONFIG_BT_HIDP=y
+ CONFIG_BT_HCIBTUSB=m
++CONFIG_BT_HCIUART=y
++CONFIG_BT_HCIUART_BCM=y
+ CONFIG_CFG80211=y
+ CONFIG_MAC80211=y
+ CONFIG_RFKILL=y
+ CONFIG_RFKILL_INPUT=y
+ CONFIG_RFKILL_GPIO=y
++CONFIG_NFC=y
++CONFIG_NFC_HCI=y
++CONFIG_NFC_SHDLC=y
++CONFIG_NFC_PN544_I2C=y
+ CONFIG_PCI=y
+ CONFIG_PCIEPORTBUS=y
+ CONFIG_PCI_MSI=y
+@@ -106,20 +115,24 @@ CONFIG_INPUT_JOYDEV=y
+ CONFIG_INPUT_EVDEV=y
+ CONFIG_KEYBOARD_GPIO=y
+ CONFIG_KEYBOARD_TEGRA=y
++CONFIG_KEYBOARD_CAP11XX=y
+ CONFIG_KEYBOARD_CROS_EC=y
+ CONFIG_MOUSE_PS2_ELANTECH=y
+ CONFIG_INPUT_TOUCHSCREEN=y
+ CONFIG_TOUCHSCREEN_ATMEL_MXT=y
++CONFIG_TOUCHSCREEN_ELAN=y
+ CONFIG_TOUCHSCREEN_WM97XX=y
+ # CONFIG_TOUCHSCREEN_WM9705 is not set
+ # CONFIG_TOUCHSCREEN_WM9713 is not set
+ CONFIG_TOUCHSCREEN_STMPE=y
+ CONFIG_INPUT_MISC=y
++CONFIG_INPUT_GPIO_VIBRA=y
+ # CONFIG_LEGACY_PTYS is not set
+ CONFIG_SERIAL_8250=y
+ CONFIG_SERIAL_8250_CONSOLE=y
+ CONFIG_SERIAL_OF_PLATFORM=y
+ CONFIG_SERIAL_TEGRA=y
++CONFIG_SERIAL_DEV_BUS=y
+ # CONFIG_HW_RANDOM is not set
+ # CONFIG_I2C_COMPAT is not set
+ CONFIG_I2C_CHARDEV=y
+@@ -131,10 +144,12 @@ CONFIG_SPI_TEGRA114=y
+ CONFIG_SPI_TEGRA20_SFLASH=y
+ CONFIG_SPI_TEGRA20_SLINK=y
+ CONFIG_PINCTRL_AS3722=y
++CONFIG_PINCTRL_MAX77620=y
+ CONFIG_PINCTRL_PALMAS=y
+ CONFIG_GPIO_SYSFS=y
+ CONFIG_GPIO_PCA953X=y
+ CONFIG_GPIO_PCA953X_IRQ=y
++CONFIG_GPIO_MAX77620=y
+ CONFIG_GPIO_PALMAS=y
+ CONFIG_GPIO_TPS6586X=y
+ CONFIG_GPIO_TPS65910=y
+@@ -142,13 +157,21 @@ CONFIG_POWER_RESET=y
+ CONFIG_POWER_RESET_AS3722=y
+ CONFIG_POWER_RESET_GPIO=y
+ CONFIG_BATTERY_SBS=y
++CONFIG_BATTERY_BQ27XXX=y
++CONFIG_CHARGER_GPIO=y
++CONFIG_CHARGER_SMB347=y
+ CONFIG_CHARGER_TPS65090=y
+ CONFIG_SENSORS_LM90=y
+ CONFIG_SENSORS_LM95245=y
++CONFIG_THERMAL=y
++CONFIG_THERMAL_STATISTICS=y
++CONFIG_CPU_THERMAL=y
+ CONFIG_WATCHDOG=y
++CONFIG_MAX77620_WATCHDOG=y
+ CONFIG_TEGRA_WATCHDOG=y
+ CONFIG_MFD_AS3722=y
+ CONFIG_MFD_CROS_EC=y
++CONFIG_MFD_MAX77620=y
+ CONFIG_MFD_MAX8907=y
+ CONFIG_MFD_STMPE=y
+ CONFIG_MFD_PALMAS=y
+@@ -159,6 +182,7 @@ CONFIG_REGULATOR=y
+ CONFIG_REGULATOR_FIXED_VOLTAGE=y
+ CONFIG_REGULATOR_AS3722=y
+ CONFIG_REGULATOR_GPIO=y
++CONFIG_REGULATOR_MAX77620=y
+ CONFIG_REGULATOR_MAX8907=y
+ CONFIG_REGULATOR_PALMAS=y
+ CONFIG_REGULATOR_TPS51632=y
+@@ -174,7 +198,10 @@ CONFIG_USB_GSPCA=y
+ CONFIG_DRM=y
+ CONFIG_DRM_NOUVEAU=m
+ CONFIG_DRM_TEGRA=y
++CONFIG_DRM_TEGRA_STAGING=y
++CONFIG_DRM_PANEL_LVDS=y
+ CONFIG_DRM_PANEL_SIMPLE=y
++CONFIG_DRM_LVDS_CODEC=y
+ # CONFIG_LCD_CLASS_DEVICE is not set
+ CONFIG_BACKLIGHT_CLASS_DEVICE=y
+ # CONFIG_BACKLIGHT_GENERIC is not set
+@@ -238,6 +265,7 @@ CONFIG_RTC_CLASS=y
+ CONFIG_RTC_DRV_AS3722=y
+ CONFIG_RTC_DRV_DS1307=y
+ CONFIG_RTC_DRV_MAX8907=y
++CONFIG_RTC_DRV_MAX77686=y
+ CONFIG_RTC_DRV_PALMAS=y
+ CONFIG_RTC_DRV_TPS6586X=y
+ CONFIG_RTC_DRV_TPS65910=y
+@@ -259,11 +287,18 @@ CONFIG_ARCH_TEGRA_2x_SOC=y
+ CONFIG_ARCH_TEGRA_3x_SOC=y
+ CONFIG_ARCH_TEGRA_114_SOC=y
+ CONFIG_ARCH_TEGRA_124_SOC=y
++CONFIG_PM_DEVFREQ=y
++CONFIG_ARM_TEGRA_DEVFREQ=y
++CONFIG_ARM_TEGRA20_DEVFREQ=y
+ CONFIG_MEMORY=y
+ CONFIG_IIO=y
++CONFIG_KXCJK1013=y
+ CONFIG_MPU3050_I2C=y
++CONFIG_INV_MPU6050_I2C=y
++CONFIG_AL3010=y
+ CONFIG_SENSORS_ISL29018=y
+ CONFIG_SENSORS_ISL29028=y
++CONFIG_AK8974=y
+ CONFIG_AK8975=y
+ CONFIG_PWM=y
+ CONFIG_PWM_TEGRA=y
+@@ -282,6 +317,13 @@ CONFIG_TMPFS_POSIX_ACL=y
+ CONFIG_SQUASHFS=y
+ CONFIG_SQUASHFS_LZO=y
+ CONFIG_SQUASHFS_XZ=y
++CONFIG_PSTORE=y
++CONFIG_PSTORE_LZO_COMPRESS=y
++CONFIG_PSTORE_LZ4_COMPRESS=y
++CONFIG_PSTORE_LZ4HC_COMPRESS=y
++CONFIG_PSTORE_842_COMPRESS=y
++CONFIG_PSTORE_CONSOLE=y
++CONFIG_PSTORE_RAM=y
+ CONFIG_NFS_FS=y
+ CONFIG_NFS_V4=y
+ CONFIG_ROOT_NFS=y
 -- 
 2.26.0
 
