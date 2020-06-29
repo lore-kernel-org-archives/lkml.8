@@ -2,335 +2,249 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE931C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:34:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C47F6C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:35:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD24D20672
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:34:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB0ED207E8
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:35:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389398AbgF2Ue6 (ORCPT
+        id S2389409AbgF2UfB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:34:58 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59506 "EHLO mx2.suse.de"
+        Mon, 29 Jun 2020 16:35:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59488 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732208AbgF2TVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732206AbgF2TVe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:21:34 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 3513DAF0B;
-        Mon, 29 Jun 2020 15:09:53 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     gregkh@linuxfoundation.org
-Cc:     kernel-list@raspberrypi.com, laurent.pinchart@ideasonboard.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org,
-        Dave Stevenson <dave.stevenson@raspberrypi.org>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH v2 02/47] staging: mmal-vchiq: Make a mmal_buf struct for passing parameters
-Date:   Mon, 29 Jun 2020 17:09:00 +0200
-Message-Id: <20200629150945.10720-3-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200629150945.10720-1-nsaenzjulienne@suse.de>
-References: <20200629150945.10720-1-nsaenzjulienne@suse.de>
+        by mx2.suse.de (Postfix) with ESMTP id C8EFAAF38;
+        Mon, 29 Jun 2020 10:10:54 +0000 (UTC)
+Subject: Re: [PATCH for v5.8 1/3] mm: workingset: age nonresident information
+ alongside anonymous pages
+To:     js1304@gmail.com, Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Rik van Riel <riel@surriel.com>,
+        Minchan Kim <minchan.kim@gmail.com>,
+        Michal Hocko <mhocko@suse.com>, kernel-team@lge.com,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+References: <1592288204-27734-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <1592288204-27734-2-git-send-email-iamjoonsoo.kim@lge.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <8bdd9612-389e-c3db-8cfa-36a0ec262b94@suse.cz>
+Date:   Mon, 29 Jun 2020 12:10:53 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1592288204-27734-2-git-send-email-iamjoonsoo.kim@lge.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Stevenson <dave.stevenson@raspberrypi.org>
+On 6/16/20 8:16 AM, js1304@gmail.com wrote:
+> From: Johannes Weiner <hannes@cmpxchg.org>
+> 
+> After ("mm: workingset: let cache workingset challenge anon fix"), we
 
-The callback from vchi_mmal to the client was growing lots of extra
-parameters. Consolidate them into a single struct instead of
-growing the list further.
-The struct is associated with the client buffer, therefore there
-are various changes to setup various containers for the struct,
-and pass the appropriate members.
+This could now be updated to:
+After commit 34e58cac6d8f ("mm: workingset: let cache workingset challenge
+anon"), we ...
 
-Signed-off-by: Dave Stevenson <dave.stevenson@raspberrypi.org>
-Signed-off-by: Jacopo Mondi <jacopo@jmondi.org>
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
----
- .../bcm2835-camera/bcm2835-camera.c           | 64 +++++++++++--------
- .../vc04_services/vchiq-mmal/mmal-common.h    |  5 ++
- .../vc04_services/vchiq-mmal/mmal-vchiq.c     | 29 ++++++---
- .../vc04_services/vchiq-mmal/mmal-vchiq.h     |  3 +-
- 4 files changed, 65 insertions(+), 36 deletions(-)
+> compare refault distances to active_file + anon. But age of the
+> non-resident information is only driven by the file LRU. As a result,
+> we may overestimate the recency of any incoming refaults and activate
+> them too eagerly, causing unnecessary LRU churn in certain situations.
+> 
+> Make anon aging drive nonresident age as well to address that.
 
-diff --git a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
-index 4f1adddb804f..73b2354a6bb7 100644
---- a/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
-+++ b/drivers/staging/vc04_services/bcm2835-camera/bcm2835-camera.c
-@@ -75,6 +75,12 @@ static const struct v4l2_fract
- 	tpf_max     = {.numerator = 1,	        .denominator = FPS_MIN},
- 	tpf_default = {.numerator = 1000,	.denominator = 30000};
- 
-+/* Container for MMAL and VB2 buffers*/
-+struct vb2_mmal_buffer {
-+	struct vb2_v4l2_buffer	vb;
-+	struct mmal_buffer	mmal;
-+};
-+
- /* video formats */
- static struct mmal_fmt formats[] = {
- 	{
-@@ -261,14 +267,15 @@ static int buffer_init(struct vb2_buffer *vb)
- {
- 	struct bm2835_mmal_dev *dev = vb2_get_drv_priv(vb->vb2_queue);
- 	struct vb2_v4l2_buffer *vb2 = to_vb2_v4l2_buffer(vb);
--	struct mmal_buffer *buf = container_of(vb2, struct mmal_buffer, vb);
-+	struct vb2_mmal_buffer *buf =
-+				container_of(vb2, struct vb2_mmal_buffer, vb);
- 
- 	v4l2_dbg(1, bcm2835_v4l2_debug, &dev->v4l2_dev, "%s: dev:%p, vb %p\n",
- 		 __func__, dev, vb);
--	buf->buffer = vb2_plane_vaddr(&buf->vb.vb2_buf, 0);
--	buf->buffer_size = vb2_plane_size(&buf->vb.vb2_buf, 0);
-+	buf->mmal.buffer = vb2_plane_vaddr(&buf->vb.vb2_buf, 0);
-+	buf->mmal.buffer_size = vb2_plane_size(&buf->vb.vb2_buf, 0);
- 
--	return mmal_vchi_buffer_init(dev->instance, buf);
-+	return mmal_vchi_buffer_init(dev->instance, &buf->mmal);
- }
- 
- static int buffer_prepare(struct vb2_buffer *vb)
-@@ -297,11 +304,13 @@ static void buffer_cleanup(struct vb2_buffer *vb)
- {
- 	struct bm2835_mmal_dev *dev = vb2_get_drv_priv(vb->vb2_queue);
- 	struct vb2_v4l2_buffer *vb2 = to_vb2_v4l2_buffer(vb);
--	struct mmal_buffer *buf = container_of(vb2, struct mmal_buffer, vb);
-+	struct vb2_mmal_buffer *buf =
-+				container_of(vb2, struct vb2_mmal_buffer, vb);
- 
- 	v4l2_dbg(1, bcm2835_v4l2_debug, &dev->v4l2_dev, "%s: dev:%p, vb %p\n",
- 		 __func__, dev, vb);
--	mmal_vchi_buffer_cleanup(buf);
-+
-+	mmal_vchi_buffer_cleanup(&buf->mmal);
- }
- 
- static inline bool is_capturing(struct bm2835_mmal_dev *dev)
-@@ -313,14 +322,16 @@ static inline bool is_capturing(struct bm2835_mmal_dev *dev)
- static void buffer_cb(struct vchiq_mmal_instance *instance,
- 		      struct vchiq_mmal_port *port,
- 		      int status,
--		      struct mmal_buffer *buf,
--		      unsigned long length, u32 mmal_flags, s64 dts, s64 pts)
-+		      struct mmal_buffer *mmal_buf)
- {
- 	struct bm2835_mmal_dev *dev = port->cb_ctx;
-+	struct vb2_mmal_buffer *buf =
-+			container_of(mmal_buf, struct vb2_mmal_buffer, mmal);
- 
- 	v4l2_dbg(1, bcm2835_v4l2_debug, &dev->v4l2_dev,
- 		 "%s: status:%d, buf:%p, length:%lu, flags %u, pts %lld\n",
--		 __func__, status, buf, length, mmal_flags, pts);
-+		 __func__, status, buf, mmal_buf->length, mmal_buf->mmal_flags,
-+		 mmal_buf->pts);
- 
- 	if (status) {
- 		/* error in transfer */
-@@ -331,7 +342,7 @@ static void buffer_cb(struct vchiq_mmal_instance *instance,
- 		return;
- 	}
- 
--	if (length == 0) {
-+	if (mmal_buf->length == 0) {
- 		/* stream ended */
- 		if (dev->capture.frame_count) {
- 			/* empty buffer whilst capturing - expected to be an
-@@ -347,7 +358,8 @@ static void buffer_cb(struct vchiq_mmal_instance *instance,
- 					&dev->capture.frame_count,
- 					sizeof(dev->capture.frame_count));
- 			}
--			if (vchiq_mmal_submit_buffer(instance, port, buf))
-+			if (vchiq_mmal_submit_buffer(instance, port,
-+						     &buf->mmal))
- 				v4l2_dbg(1, bcm2835_v4l2_debug, &dev->v4l2_dev,
- 					 "Failed to return EOS buffer");
- 		} else {
-@@ -367,16 +379,16 @@ static void buffer_cb(struct vchiq_mmal_instance *instance,
- 		return;
- 	}
- 
--	if (dev->capture.vc_start_timestamp != -1 && pts) {
-+	if (dev->capture.vc_start_timestamp != -1 && mmal_buf->pts) {
- 		ktime_t timestamp;
--		s64 runtime_us = pts - dev->capture.vc_start_timestamp;
--
-+		s64 runtime_us = mmal_buf->pts -
-+		    dev->capture.vc_start_timestamp;
- 		timestamp = ktime_add_us(dev->capture.kernel_start_ts,
- 					 runtime_us);
- 		v4l2_dbg(1, bcm2835_v4l2_debug, &dev->v4l2_dev,
- 			 "Convert start time %llu and %llu with offset %llu to %llu\n",
- 			 ktime_to_ns(dev->capture.kernel_start_ts),
--			 dev->capture.vc_start_timestamp, pts,
-+			 dev->capture.vc_start_timestamp, mmal_buf->pts,
- 			 ktime_to_ns(timestamp));
- 		buf->vb.vb2_buf.timestamp = ktime_to_ns(timestamp);
- 	} else {
-@@ -385,13 +397,13 @@ static void buffer_cb(struct vchiq_mmal_instance *instance,
- 	buf->vb.sequence = dev->capture.sequence++;
- 	buf->vb.field = V4L2_FIELD_NONE;
- 
--	vb2_set_plane_payload(&buf->vb.vb2_buf, 0, length);
--	if (mmal_flags & MMAL_BUFFER_HEADER_FLAG_KEYFRAME)
-+	vb2_set_plane_payload(&buf->vb.vb2_buf, 0, mmal_buf->length);
-+	if (mmal_buf->mmal_flags & MMAL_BUFFER_HEADER_FLAG_KEYFRAME)
- 		buf->vb.flags |= V4L2_BUF_FLAG_KEYFRAME;
- 
- 	vb2_buffer_done(&buf->vb.vb2_buf, VB2_BUF_STATE_DONE);
- 
--	if (mmal_flags & MMAL_BUFFER_HEADER_FLAG_EOS &&
-+	if (mmal_buf->mmal_flags & MMAL_BUFFER_HEADER_FLAG_EOS &&
- 	    is_capturing(dev)) {
- 		v4l2_dbg(1, bcm2835_v4l2_debug, &dev->v4l2_dev,
- 			 "Grab another frame as buffer has EOS");
-@@ -472,14 +484,16 @@ static void buffer_queue(struct vb2_buffer *vb)
- {
- 	struct bm2835_mmal_dev *dev = vb2_get_drv_priv(vb->vb2_queue);
- 	struct vb2_v4l2_buffer *vb2 = to_vb2_v4l2_buffer(vb);
--	struct mmal_buffer *buf = container_of(vb2, struct mmal_buffer, vb);
-+	struct vb2_mmal_buffer *buf =
-+				container_of(vb2, struct vb2_mmal_buffer, vb);
- 	int ret;
- 
- 	v4l2_dbg(1, bcm2835_v4l2_debug, &dev->v4l2_dev,
- 		 "%s: dev:%p buf:%p, idx %u\n",
- 		 __func__, dev, buf, vb2->vb2_buf.index);
- 
--	ret = vchiq_mmal_submit_buffer(dev->instance, dev->capture.port, buf);
-+	ret = vchiq_mmal_submit_buffer(dev->instance, dev->capture.port,
-+				       &buf->mmal);
- 	if (ret < 0)
- 		v4l2_err(&dev->v4l2_dev, "%s: error submitting buffer\n",
- 			 __func__);
-@@ -592,7 +606,7 @@ static void stop_streaming(struct vb2_queue *vq)
- 	dev->capture.frame_count = 0;
- 
- 	/* ensure a format has actually been set */
--	if (!dev->capture.port) {
-+	if (!port) {
- 		v4l2_err(&dev->v4l2_dev,
- 			 "no capture port - stream not started?\n");
- 		return;
-@@ -612,11 +626,11 @@ static void stop_streaming(struct vb2_queue *vq)
- 
- 	/* disable the connection from camera to encoder */
- 	ret = vchiq_mmal_port_disable(dev->instance, dev->capture.camera_port);
--	if (!ret && dev->capture.camera_port != dev->capture.port) {
-+	if (!ret && dev->capture.camera_port != port) {
- 		v4l2_dbg(1, bcm2835_v4l2_debug, &dev->v4l2_dev,
- 			 "disabling port\n");
--		ret = vchiq_mmal_port_disable(dev->instance, dev->capture.port);
--	} else if (dev->capture.camera_port != dev->capture.port) {
-+		ret = vchiq_mmal_port_disable(dev->instance, port);
-+	} else if (dev->capture.camera_port != port) {
- 		v4l2_err(&dev->v4l2_dev, "port_disable failed, error %d\n",
- 			 ret);
- 	}
-@@ -1916,7 +1930,7 @@ static int bcm2835_mmal_probe(struct platform_device *pdev)
- 		q->type = V4L2_BUF_TYPE_VIDEO_CAPTURE;
- 		q->io_modes = VB2_MMAP | VB2_USERPTR | VB2_READ;
- 		q->drv_priv = dev;
--		q->buf_struct_size = sizeof(struct mmal_buffer);
-+		q->buf_struct_size = sizeof(struct vb2_mmal_buffer);
- 		q->ops = &bm2835_mmal_video_qops;
- 		q->mem_ops = &vb2_vmalloc_memops;
- 		q->timestamp_flags = V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC;
-diff --git a/drivers/staging/vc04_services/vchiq-mmal/mmal-common.h b/drivers/staging/vc04_services/vchiq-mmal/mmal-common.h
-index ce88fac7c24b..5bd7410a034a 100644
---- a/drivers/staging/vc04_services/vchiq-mmal/mmal-common.h
-+++ b/drivers/staging/vc04_services/vchiq-mmal/mmal-common.h
-@@ -49,6 +49,11 @@ struct mmal_buffer {
- 	unsigned long buffer_size; /* size of allocated buffer */
- 
- 	struct mmal_msg_context *msg_context;
-+
-+	unsigned long length;
-+	u32 mmal_flags;
-+	s64 dts;
-+	s64 pts;
- };
- 
- /* */
-diff --git a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
-index ebe7fb078830..6404d4e60350 100644
---- a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
-+++ b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
-@@ -253,17 +253,25 @@ static void buffer_work_cb(struct work_struct *work)
- {
- 	struct mmal_msg_context *msg_context =
- 		container_of(work, struct mmal_msg_context, u.bulk.work);
-+	struct mmal_buffer *buffer = msg_context->u.bulk.buffer;
-+
-+	if (!buffer) {
-+		pr_err("%s: ctx: %p, No mmal buffer to pass details\n",
-+		       __func__, msg_context);
-+		return;
-+	}
-+
-+	buffer->length = msg_context->u.bulk.buffer_used;
-+	buffer->mmal_flags = msg_context->u.bulk.mmal_flags;
-+	buffer->dts = msg_context->u.bulk.dts;
-+	buffer->pts = msg_context->u.bulk.pts;
- 
- 	atomic_dec(&msg_context->u.bulk.port->buffers_with_vpu);
- 
- 	msg_context->u.bulk.port->buffer_cb(msg_context->u.bulk.instance,
- 					    msg_context->u.bulk.port,
- 					    msg_context->u.bulk.status,
--					    msg_context->u.bulk.buffer,
--					    msg_context->u.bulk.buffer_used,
--					    msg_context->u.bulk.mmal_flags,
--					    msg_context->u.bulk.dts,
--					    msg_context->u.bulk.pts);
-+					    msg_context->u.bulk.buffer);
- }
- 
- /* workqueue scheduled callback to handle receiving buffers
-@@ -1321,11 +1329,14 @@ static int port_disable(struct vchiq_mmal_instance *instance,
- 			mmalbuf = list_entry(buf_head, struct mmal_buffer,
- 					     list);
- 			list_del(buf_head);
--			if (port->buffer_cb)
-+			if (port->buffer_cb) {
-+				mmalbuf->length = 0;
-+				mmalbuf->mmal_flags = 0;
-+				mmalbuf->dts = MMAL_TIME_UNKNOWN;
-+				mmalbuf->pts = MMAL_TIME_UNKNOWN;
- 				port->buffer_cb(instance,
--						port, 0, mmalbuf, 0, 0,
--						MMAL_TIME_UNKNOWN,
--						MMAL_TIME_UNKNOWN);
-+						port, 0, mmalbuf);
-+			}
- 		}
- 
- 		spin_unlock_irqrestore(&port->slock, flags);
-diff --git a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.h b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.h
-index 4e34728d87e5..cca7289761c2 100644
---- a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.h
-+++ b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.h
-@@ -44,8 +44,7 @@ struct vchiq_mmal_port;
- typedef void (*vchiq_mmal_buffer_cb)(
- 		struct vchiq_mmal_instance  *instance,
- 		struct vchiq_mmal_port *port,
--		int status, struct mmal_buffer *buffer,
--		unsigned long length, u32 mmal_flags, s64 dts, s64 pts);
-+		int status, struct mmal_buffer *buffer);
- 
- struct vchiq_mmal_port {
- 	u32 enabled:1;
--- 
-2.27.0
+Fixes: 34e58cac6d8f ("mm: workingset: let cache workingset challenge anon")
+
+> Reported-by: Joonsoo Kim <js1304@gmail.com>
+> Signed-off-by: Johannes Weiner <hannes@cmpxchg.org>
+> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+
+> ---
+>  include/linux/mmzone.h |  4 ++--
+>  include/linux/swap.h   |  1 +
+>  mm/vmscan.c            |  3 +++
+>  mm/workingset.c        | 46 +++++++++++++++++++++++++++-------------------
+>  4 files changed, 33 insertions(+), 21 deletions(-)
+> 
+> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> index c4c37fd..f6f8849 100644
+> --- a/include/linux/mmzone.h
+> +++ b/include/linux/mmzone.h
+> @@ -257,8 +257,8 @@ struct lruvec {
+>  	 */
+>  	unsigned long			anon_cost;
+>  	unsigned long			file_cost;
+> -	/* Evictions & activations on the inactive file list */
+> -	atomic_long_t			inactive_age;
+> +	/* Non-resident age, driven by LRU movement */
+> +	atomic_long_t			nonresident_age;
+>  	/* Refaults at the time of last reclaim cycle */
+>  	unsigned long			refaults;
+>  	/* Various lruvec state flags (enum lruvec_flags) */
+> diff --git a/include/linux/swap.h b/include/linux/swap.h
+> index 4c5974b..5b3216b 100644
+> --- a/include/linux/swap.h
+> +++ b/include/linux/swap.h
+> @@ -313,6 +313,7 @@ struct vma_swap_readahead {
+>  };
+>  
+>  /* linux/mm/workingset.c */
+> +void workingset_age_nonresident(struct lruvec *lruvec, unsigned long nr_pages);
+>  void *workingset_eviction(struct page *page, struct mem_cgroup *target_memcg);
+>  void workingset_refault(struct page *page, void *shadow);
+>  void workingset_activation(struct page *page);
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index b6d8432..749d239 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -904,6 +904,7 @@ static int __remove_mapping(struct address_space *mapping, struct page *page,
+>  		__delete_from_swap_cache(page, swap);
+>  		xa_unlock_irqrestore(&mapping->i_pages, flags);
+>  		put_swap_page(page, swap);
+> +		workingset_eviction(page, target_memcg);
+>  	} else {
+>  		void (*freepage)(struct page *);
+>  		void *shadow = NULL;
+> @@ -1884,6 +1885,8 @@ static unsigned noinline_for_stack move_pages_to_lru(struct lruvec *lruvec,
+>  				list_add(&page->lru, &pages_to_free);
+>  		} else {
+>  			nr_moved += nr_pages;
+> +			if (PageActive(page))
+> +				workingset_age_nonresident(lruvec, nr_pages);
+>  		}
+>  	}
+>  
+> diff --git a/mm/workingset.c b/mm/workingset.c
+> index d481ea4..50b7937 100644
+> --- a/mm/workingset.c
+> +++ b/mm/workingset.c
+> @@ -156,8 +156,8 @@
+>   *
+>   *		Implementation
+>   *
+> - * For each node's file LRU lists, a counter for inactive evictions
+> - * and activations is maintained (node->inactive_age).
+> + * For each node's LRU lists, a counter for inactive evictions and
+> + * activations is maintained (node->nonresident_age).
+>   *
+>   * On eviction, a snapshot of this counter (along with some bits to
+>   * identify the node) is stored in the now empty page cache
+> @@ -213,7 +213,17 @@ static void unpack_shadow(void *shadow, int *memcgidp, pg_data_t **pgdat,
+>  	*workingsetp = workingset;
+>  }
+>  
+> -static void advance_inactive_age(struct mem_cgroup *memcg, pg_data_t *pgdat)
+> +/**
+> + * workingset_age_nonresident - age non-resident entries as LRU ages
+> + * @memcg: the lruvec that was aged
+> + * @nr_pages: the number of pages to count
+> + *
+> + * As in-memory pages are aged, non-resident pages need to be aged as
+> + * well, in order for the refault distances later on to be comparable
+> + * to the in-memory dimensions. This function allows reclaim and LRU
+> + * operations to drive the non-resident aging along in parallel.
+> + */
+> +void workingset_age_nonresident(struct lruvec *lruvec, unsigned long nr_pages)
+>  {
+>  	/*
+>  	 * Reclaiming a cgroup means reclaiming all its children in a
+> @@ -227,11 +237,8 @@ static void advance_inactive_age(struct mem_cgroup *memcg, pg_data_t *pgdat)
+>  	 * the root cgroup's, age as well.
+>  	 */
+>  	do {
+> -		struct lruvec *lruvec;
+> -
+> -		lruvec = mem_cgroup_lruvec(memcg, pgdat);
+> -		atomic_long_inc(&lruvec->inactive_age);
+> -	} while (memcg && (memcg = parent_mem_cgroup(memcg)));
+> +		atomic_long_add(nr_pages, &lruvec->nonresident_age);
+> +	} while ((lruvec = parent_lruvec(lruvec)));
+>  }
+>  
+>  /**
+> @@ -254,12 +261,11 @@ void *workingset_eviction(struct page *page, struct mem_cgroup *target_memcg)
+>  	VM_BUG_ON_PAGE(page_count(page), page);
+>  	VM_BUG_ON_PAGE(!PageLocked(page), page);
+>  
+> -	advance_inactive_age(page_memcg(page), pgdat);
+> -
+>  	lruvec = mem_cgroup_lruvec(target_memcg, pgdat);
+> +	workingset_age_nonresident(lruvec, hpage_nr_pages(page));
+>  	/* XXX: target_memcg can be NULL, go through lruvec */
+>  	memcgid = mem_cgroup_id(lruvec_memcg(lruvec));
+> -	eviction = atomic_long_read(&lruvec->inactive_age);
+> +	eviction = atomic_long_read(&lruvec->nonresident_age);
+>  	return pack_shadow(memcgid, pgdat, eviction, PageWorkingset(page));
+>  }
+>  
+> @@ -309,20 +315,20 @@ void workingset_refault(struct page *page, void *shadow)
+>  	if (!mem_cgroup_disabled() && !eviction_memcg)
+>  		goto out;
+>  	eviction_lruvec = mem_cgroup_lruvec(eviction_memcg, pgdat);
+> -	refault = atomic_long_read(&eviction_lruvec->inactive_age);
+> +	refault = atomic_long_read(&eviction_lruvec->nonresident_age);
+>  
+>  	/*
+>  	 * Calculate the refault distance
+>  	 *
+>  	 * The unsigned subtraction here gives an accurate distance
+> -	 * across inactive_age overflows in most cases. There is a
+> +	 * across nonresident_age overflows in most cases. There is a
+>  	 * special case: usually, shadow entries have a short lifetime
+>  	 * and are either refaulted or reclaimed along with the inode
+>  	 * before they get too old.  But it is not impossible for the
+> -	 * inactive_age to lap a shadow entry in the field, which can
+> -	 * then result in a false small refault distance, leading to a
+> -	 * false activation should this old entry actually refault
+> -	 * again.  However, earlier kernels used to deactivate
+> +	 * nonresident_age to lap a shadow entry in the field, which
+> +	 * can then result in a false small refault distance, leading
+> +	 * to a false activation should this old entry actually
+> +	 * refault again.  However, earlier kernels used to deactivate
+>  	 * unconditionally with *every* reclaim invocation for the
+>  	 * longest time, so the occasional inappropriate activation
+>  	 * leading to pressure on the active list is not a problem.
+> @@ -359,7 +365,7 @@ void workingset_refault(struct page *page, void *shadow)
+>  		goto out;
+>  
+>  	SetPageActive(page);
+> -	advance_inactive_age(memcg, pgdat);
+> +	workingset_age_nonresident(lruvec, hpage_nr_pages(page));
+>  	inc_lruvec_state(lruvec, WORKINGSET_ACTIVATE);
+>  
+>  	/* Page was active prior to eviction */
+> @@ -382,6 +388,7 @@ void workingset_refault(struct page *page, void *shadow)
+>  void workingset_activation(struct page *page)
+>  {
+>  	struct mem_cgroup *memcg;
+> +	struct lruvec *lruvec;
+>  
+>  	rcu_read_lock();
+>  	/*
+> @@ -394,7 +401,8 @@ void workingset_activation(struct page *page)
+>  	memcg = page_memcg_rcu(page);
+>  	if (!mem_cgroup_disabled() && !memcg)
+>  		goto out;
+> -	advance_inactive_age(memcg, page_pgdat(page));
+> +	lruvec = mem_cgroup_page_lruvec(page, page_pgdat(page));
+> +	workingset_age_nonresident(lruvec, hpage_nr_pages(page));
+>  out:
+>  	rcu_read_unlock();
+>  }
+> 
 
