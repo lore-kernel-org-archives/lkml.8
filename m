@@ -2,104 +2,112 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76D58C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 783F2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:04:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 47CAB206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EB61206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:04:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468233;
-	bh=uhgx90ReH2lg8RDTwDIx75LdlJVQowsGqEzwBIC1kXc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xmKj6WTQZOzmOED6NCjqvxAar1QZeV4Yf/7KYy+RV0vmQ86ErcKzRPEBvcwb8jS1g
-	 vAylPC4ooZkGSaCKDDNZ8lgjO61Nac58SZPxO36oJOX/nwpmmW+Z56yxxaxw4cS9Mk
-	 +4n99sA+SWJhRVk9iXlS7xMVHmyt3ZCGS7EvFoAA=
+	s=default; t=1593468240;
+	bh=uOIerWNxr3amIWYSQ8f1i8k0cU06ZCo/aaSinvlZEE4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=IzCiVg+rd1OjZorwUBNXKRZbtJsN22ZASES6K1wkIRBqDMZ90BniXoDufPb5fsOm6
+	 hmAF0XJfuZP3pR8Vsex1gryd6bJScEEFQt/l7+MEDBxOB1GPJtFz21rKn5bIQsovIW
+	 VHV8STlSQIUt1yEa+9oxN/zQQKgtrh7W3+AJQCC0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391779AbgF2WDv (ORCPT
+        id S2391784AbgF2WD7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:03:51 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:38804 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726235AbgF2WDa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 18:03:30 -0400
-Received: by mail-io1-f68.google.com with SMTP id f6so3269520ioj.5;
-        Mon, 29 Jun 2020 15:03:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cCuA/1H5zPFkQibB/1FVyUKxdfeDC7D9Mc34Pi/i1Bk=;
-        b=TahneyMEvXAwMXkAVcepLu2TEJe6a44UQUlMXNF588bh9E55ftMgEnRjslBkwEgFVw
-         1lZzxACgKsSVl6pjB4KC9BNsrfZMYLlquQjcL5aJJyGyTIEUcE1EHhoui6UU/KczTLW9
-         7O9CWwnKCNEpBlRU3aIUhBg/eM8KcxsQ7kWBPN7lFvnmyQhb/Ulkc9SqCyhR9y2o7ZrT
-         h21xnilNaHQvr8jsIy/zecePgniZ2DAafmMsywrPAZVxP3bmOMgWjqKBBscBPYfzDT/1
-         NI4b181pR4dyVKwxeYDW6+5wp3VAWeIbq7uzjcVlYSAtWjXL+rfvzDqOfEJ5hsPTpglL
-         dWcw==
-X-Gm-Message-State: AOAM532+uLIIMkfIpxfH4BUtPK0VxNet1PjRUEJjUGcVvR0QVeOuvsHW
-        +vCEikfAogM1rVgd/Pa3xg==
-X-Google-Smtp-Source: ABdhPJzQNlss41FGC2hfOql88X+H8ZgwM3IXBHQO6+dHsWdZNlR+AYQSnEQVWlioy6ByTnwwWVx/Bg==
-X-Received: by 2002:a5e:9b0b:: with SMTP id j11mr19140572iok.17.1593468209250;
-        Mon, 29 Jun 2020 15:03:29 -0700 (PDT)
-Received: from xps15 ([64.188.179.255])
-        by smtp.gmail.com with ESMTPSA id q4sm606515ils.11.2020.06.29.15.03.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 15:03:28 -0700 (PDT)
-Received: (nullmailer pid 3018066 invoked by uid 1000);
-        Mon, 29 Jun 2020 22:03:26 -0000
-Date:   Mon, 29 Jun 2020 16:03:26 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Pawel Laszczak <pawell@cadence.com>
-Cc:     devicetree@vger.kernel.org, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, ben.dooks@codethink.co.uk,
-        jpawar@cadence.com, sparmar@cadence.com, weiyongjun1@huawei.com,
-        rogerq@ti.com, linux-kernel@vger.kernel.org,
-        dan.carpenter@oracle.com, robh+dt@kernel.org,
-        colin.king@canonical.com, balbi@kernel.org, kurahul@cadene.com,
-        peter.chen@nxp.com
-Subject: Re: [PATCH RFC 1/5] dt-bindings: add binding for CDNSP-DRD controller
-Message-ID: <20200629220326.GA3017609@bogus>
-References: <20200626045450.10205-1-pawell@cadence.com>
- <20200626045450.10205-2-pawell@cadence.com>
+        Mon, 29 Jun 2020 18:03:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56762 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726206AbgF2SfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:22 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDFDD24658;
+        Mon, 29 Jun 2020 15:19:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593443970;
+        bh=uOIerWNxr3amIWYSQ8f1i8k0cU06ZCo/aaSinvlZEE4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PzClul7BLgGshIQ425oHQ/9pTdm2OGAt5QRD+I4nOGbblmzYFeRrc23t4J+oQmo1x
+         Q/f6fa813MOMHkp0WO0klqxmkcGiK6Xxow9svMtIuUeDEzIyckmMnIK7SbvIkpOW1Q
+         d61c8wm26JKvRDWPdKFIH/i+pD0n+pv+J8U+4tP8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Christopher Swenson <swenson@swenson.io>,
+        Takashi Iwai <tiwai@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 074/265] ALSA: usb-audio: Set 48 kHz rate for Rodecaster
+Date:   Mon, 29 Jun 2020 11:15:07 -0400
+Message-Id: <20200629151818.2493727-75-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
+References: <20200629151818.2493727-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200626045450.10205-2-pawell@cadence.com>
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.7.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.7.7-rc1
+X-KernelTest-Deadline: 2020-07-01T15:14+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Jun 2020 06:54:46 +0200, Pawel Laszczak wrote:
-> This patch aim at documenting USB related dt-bindings for the
-> Cadence CDNSP-DRD controller.
-> 
-> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
-> ---
->  .../devicetree/bindings/usb/cdns-cdnsp.yaml   | 104 ++++++++++++++++++
->  1 file changed, 104 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/cdns-cdnsp.yaml
-> 
+From: Christopher Swenson <swenson@swenson.io>
 
+commit 8abf41dcd1bcdda0d09905fb59d18f45c035c752 upstream.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Like the Line6 devices, the Rode Rodecaster Pro does not support
+UAC2_CS_RANGE and only supports a sample rate of 48 kHz.
 
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/usb/cdns-cdnsp.example.dt.yaml: example-0: usb@f3000000:reg:0: [0, 29437952, 0, 1024] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/usb/cdns-cdnsp.example.dt.yaml: example-0: usb@f3000000:reg:1: [0, 4076929024, 0, 65536] is too long
-/builds/robherring/linux-dt-review/Documentation/devicetree/bindings/usb/cdns-cdnsp.example.dt.yaml: example-0: usb@f3000000:reg:2: [0, 4076994560, 0, 65536] is too long
+Tested against a Rode Rodecaster Pro.
 
+Tested-by: Christopher Swenson <swenson@swenson.io>
+Signed-off-by: Christopher Swenson <swenson@swenson.io>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/ebdb9e72-9649-0b5e-b9b9-d757dbf26927@swenson.io
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ sound/usb/format.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-See https://patchwork.ozlabs.org/patch/1317380
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
+diff --git a/sound/usb/format.c b/sound/usb/format.c
+index 5ffb457cc88cf..1b28d01d1f4cd 100644
+--- a/sound/usb/format.c
++++ b/sound/usb/format.c
+@@ -394,8 +394,9 @@ skip_rate:
+ 	return nr_rates;
+ }
+ 
+-/* Line6 Helix series don't support the UAC2_CS_RANGE usb function
+- * call. Return a static table of known clock rates.
++/* Line6 Helix series and the Rode Rodecaster Pro don't support the
++ * UAC2_CS_RANGE usb function call. Return a static table of known
++ * clock rates.
+  */
+ static int line6_parse_audio_format_rates_quirk(struct snd_usb_audio *chip,
+ 						struct audioformat *fp)
+@@ -408,6 +409,7 @@ static int line6_parse_audio_format_rates_quirk(struct snd_usb_audio *chip,
+ 	case USB_ID(0x0e41, 0x4248): /* Line6 Helix >= fw 2.82 */
+ 	case USB_ID(0x0e41, 0x4249): /* Line6 Helix Rack >= fw 2.82 */
+ 	case USB_ID(0x0e41, 0x424a): /* Line6 Helix LT >= fw 2.82 */
++	case USB_ID(0x19f7, 0x0011): /* Rode Rodecaster Pro */
+ 		return set_fixed_rate(fp, 48000, SNDRV_PCM_RATE_48000);
+ 	}
+ 
+-- 
+2.25.1
 
