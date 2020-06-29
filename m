@@ -2,100 +2,114 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD573C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:46:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB847C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:46:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B16AC206C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:46:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593463570;
-	bh=UCUfaDjUVmlDpTU3LRBvAL1Yi4B0vDt8IAFLorzpyrA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iIXUnTqZBMxgtHimu8h7bGxUeMNqxPuBqzZTEncZ54B5TWVB+z6aCs0+I100IdE4i
-	 e+QGRQeop3vmKijxAUYRhE0UWVW883dcdYE2XwlYPP6W6Kue8GctpWlWrYn8HOfyyj
-	 Ub74TnetOcP4bwr2TFJEazs/+RLjbjdTKmzU8okw=
+	by mail.kernel.org (Postfix) with ESMTP id 97B0A20720
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:46:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="VgKSnKwU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389738AbgF2UqJ (ORCPT
+        id S2388017AbgF2UqP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:46:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43366 "EHLO
+        Mon, 29 Jun 2020 16:46:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731559AbgF2TNx (ORCPT
+        with ESMTP id S1731561AbgF2TNx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:13:53 -0400
-Received: from mail-ed1-x541.google.com (mail-ed1-x541.google.com [IPv6:2a00:1450:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62D95C08ECB9;
-        Sun, 28 Jun 2020 23:52:14 -0700 (PDT)
-Received: by mail-ed1-x541.google.com with SMTP id n2so2833421edr.5;
-        Sun, 28 Jun 2020 23:52:14 -0700 (PDT)
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 708C5C0086EB
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 02:44:58 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id o11so15842097wrv.9
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 02:44:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ige0bLI228QBtpujPXwJLumrVk0AINfrstrNdcA8YTE=;
+        b=VgKSnKwUGko3Ufn+PVIGXdWOFYC3GeRMX1JUUPmyLweEIpus3fNNVqIF8myZY7hlPE
+         mr8DasZ/JN8K9fhWSlAQYeKQ/YmQ8PYVPaXy/H07HwRtbS2dhvX5wXjvO4nc/yDELJwe
+         2TbfTcbgSB8q4MeYSkW0iafbaWGyYraCjuEn6v+4xx7kVYviV1W41/a8FGa6sOqE1S1y
+         hH+nJ4gOdQXKp2UOwJD4PSyfxRiI7mNwIJEmAaFSwv5lky0FrvZF/mpAT/cbLZA49uD8
+         SvtlG08UiwKF3810F0flrzRismFPAR2pXcJ41rA8pIxJwuidFTD83kZ9UeuHX5H/QFm2
+         haew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MJNvhIQCteTm5VtFSyzzsWJRKykcFhaBMFS+SgAaulE=;
-        b=uNI53+DW4ONYlbuHphXC9uYMySsEMjyWfy5sBfX+nJbg4OS9i4+HWrsrE1tWTK/Hef
-         02OIFYUVziudbAsKub4UzWh1xRVhXjYE5FnNrbLcGcXQ7qr+7Ilpk6XFAzB9kDwAr/QX
-         oVGpNc84c8tKZEO/yPLs7jAyvT8qSv0+gbiIG00uGK+Gwk026vO4birTebkPxwjQCQhf
-         /tHgX4kwxIn/+TzpFtRp457rHdY1XnQlQxPZnPfuwaj4Aa1o+VvZR5OWzyPUY0G5Aev4
-         cvLIOMRCe4/yYTnMIyWSIVYfHH2FtVDSQs1Xw2AFfqOuYKr//f3g2FyzEjOUPiRn0ykP
-         zNZA==
-X-Gm-Message-State: AOAM532Z9dACPIuq4ShX8Zn+MRhc06Y3FtBXyvPT6EdT5VC2gN9OcQ9L
-        8+/oJ1CkwU6vJkS4NbTiDc0=
-X-Google-Smtp-Source: ABdhPJw9FZnwCiOCE7JrbDHqCcdYHvx1EqL2R+gxeefz5/+dK9PWLHMqdziIkts4ezYexqkOwTWX0w==
-X-Received: by 2002:a50:f047:: with SMTP id u7mr16877181edl.274.1593413532938;
-        Sun, 28 Jun 2020 23:52:12 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.195])
-        by smtp.googlemail.com with ESMTPSA id m14sm9438582ejx.80.2020.06.28.23.52.11
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 28 Jun 2020 23:52:12 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 08:52:10 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>, linux-iio@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: iio: bmc150_magn: Document and fix
- missing compatibles
-Message-ID: <20200629065210.GB5879@kozik-lap>
-References: <20200622060110.23192-1-krzk@kernel.org>
- <20200627144359.1ae30bb0@archlinux>
+         :mime-version:content-disposition:in-reply-to;
+        bh=ige0bLI228QBtpujPXwJLumrVk0AINfrstrNdcA8YTE=;
+        b=TdB89q8Gs2WCdOGNLKB0BFqjjJElRaGhRV3gA7usAvbV+pTLfeJigxQN2jub9++UT1
+         oOYzCPDUD+lBnBFdBdvDXWa/7I1+yWAMXAy9tcWZU6oFnsSVZOcykMO96+NlBtU7ju08
+         6DlcVkuCXFtXG9hnrhCpNAPb6fCjdJGbmTAx6WCWJV77xoUsweQobxk6jpp9uSOIlttv
+         p9iT63gyJNsXGa5TbB248GegZpbNYN9t6VMrGo4TTD+M6Pu9JejoHq/gn1D5+u9U8Mu2
+         SKqeaGuLxuR0+r0Z5sbMGoDvELFtOb0yfOMwsAF7Ev5PI3GhDOREz6QKTlzIZeyf5rs8
+         5+Qw==
+X-Gm-Message-State: AOAM531WOPuMq2MSjWI3gBk7c6r8ac/jt4y20alUQd6Yt6Hb9g6i3tHG
+        xKX0XmgZcfAIvzPNfH5NEnfp0Q==
+X-Google-Smtp-Source: ABdhPJwHWrygg6BiK5fEk9EEnZAfF+5PYEBh9CUJkPtjUQ71I4bDVU2Q2M33ksNBJ9Sr+c3MY7lBAw==
+X-Received: by 2002:adf:f38f:: with SMTP id m15mr14681272wro.173.1593423896894;
+        Mon, 29 Jun 2020 02:44:56 -0700 (PDT)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id 138sm29810979wma.23.2020.06.29.02.44.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 02:44:55 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 10:44:52 +0100
+From:   Quentin Perret <qperret@google.com>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Rafael Wysocki <rjw@rjwysocki.net>,
+        Jonathan Corbet <corbet@lwn.net>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        kernel-team@android.com, tkjos@google.com, adharmap@codeaurora.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V4 3/3] cpufreq: Specify default governor on command line
+Message-ID: <20200629094452.GB1228312@google.com>
+References: <cover.1593418662.git.viresh.kumar@linaro.org>
+ <96b6e6ca02b664194ff3e57e1ec768fbc597bf38.1593418662.git.viresh.kumar@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200627144359.1ae30bb0@archlinux>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <96b6e6ca02b664194ff3e57e1ec768fbc597bf38.1593418662.git.viresh.kumar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 27, 2020 at 02:43:59PM +0100, Jonathan Cameron wrote:
-> On Mon, 22 Jun 2020 08:01:09 +0200
-> Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> 
-> > The driver supports also BMC156B and BMM150B but these compatibles had
-> > redundant suffix "_magn".  Add existing compatibles marking them
-> > deprecated along with adding a new, proper one for this family of
-> > devices.
-> Thanks for tidying this up.
-> 
-> The BMC156B is a dual magnetometer and accelerometer chip
-> so for that one the _magn postfix probably is needed.
-> 
-> Or am I missing something?
-> 
-> The way this does SPI is rather odd but seems to be the same as the bmc150
-> (two chips with non overlapping register maps).
+On Monday 29 Jun 2020 at 13:55:00 (+0530), Viresh Kumar wrote:
+>  static int __init cpufreq_core_init(void)
+>  {
+> +	struct cpufreq_governor *gov = cpufreq_default_governor();
+> +
+>  	if (cpufreq_disabled())
+>  		return -ENODEV;
+>  
+>  	cpufreq_global_kobject = kobject_create_and_add("cpufreq", &cpu_subsys.dev_root->kobj);
+>  	BUG_ON(!cpufreq_global_kobject);
+>  
+> +	if (!strlen(default_governor))
 
-You're right, only one compatible should be trimmed from suffix. I'll
-send v3.
+Should we test '!strlen(default_governor) && gov' here actually?
+We check the return value of cpufreq_default_governor() in
+cpufreq_init_policy(), so I'm guessing we should do the same here to be
+on the safe side.
 
-Best regards,
-Krzysztof
+> +		strncpy(default_governor, gov->name, CPUFREQ_NAME_LEN);
+> +
+>  	return 0;
+>  }
+>  module_param(off, int, 0444);
+> +module_param_string(default_governor, default_governor, CPUFREQ_NAME_LEN, 0444);
+>  core_initcall(cpufreq_core_init);
+> -- 
+> 2.25.0.rc1.19.g042ed3e048af
 
+
+Other than that, the whole series looks good to me.
+
+Thanks,
+Quentin
