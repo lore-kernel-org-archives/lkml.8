@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAF1C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B2ABC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 878E1206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:07:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D69D920768
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:07:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593464856;
-	bh=HNyBE1hTrNXbSBGAqMnk8Ynsekr44GsKu7muWPFXWPo=;
+	s=default; t=1593464857;
+	bh=/yquSOXHUSX0WMYJM8Ct5M6u/+o+EQ73rUrDH7s2lWI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vGN5d+FxOIWbbXLrmgptRPmfCg+y4mwW9wVbOvZlsqkxVzIBt5atbImzuEiJpoAkA
-	 nFXotm8QpxIk5m0Hc4xNMyJFo5Nr7bE03lUvxCPTdya7IdGRT2DQ4iWODz+8SNU+7j
-	 GV+35qZx2WoDIRmMfQAqtw89yUYLupG1njH6rQJM=
+	b=0/BjMp/jOorcWURWHRstSpNRHE3T1hjcJwCaXc8jPcKimJRlRRlralVBoRWTeNcRA
+	 wlXjMwtoo1kPPOHFveTlgvNfNx5Ir3ja7fWLoK+813I/mn58Kyjc73yNKTo3Cr+0w/
+	 e3iqNOP8kbWSmcX2xlWHLQAv6ZbX5fMjGPq/HiNQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388091AbgF2VHf (ORCPT
+        id S2390372AbgF2VHd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:07:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53724 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:07:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730828AbgF2TKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730876AbgF2TKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:10:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12156254C8;
-        Mon, 29 Jun 2020 15:53:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2042825498;
+        Mon, 29 Jun 2020 15:53:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446021;
-        bh=HNyBE1hTrNXbSBGAqMnk8Ynsekr44GsKu7muWPFXWPo=;
+        s=default; t=1593445993;
+        bh=/yquSOXHUSX0WMYJM8Ct5M6u/+o+EQ73rUrDH7s2lWI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eXbPthKr1UZRXuLsB8TOp8DJPpkKewLzAC7TPZUqXaqQz1WUYPOn8V5ZVIZsTDLnq
-         RiG+MYD2c5Hfx9EsZi/lz8vyhLOr4vj1o7LSYoi4PGTdOJIrprvXWdg9QkoFTQiYwF
-         0xAiqZlN1o1wG8bIiL3jHuL+emca+/ZvR3htLcxQ=
+        b=faea7LZl5wzlVkOWAWdf7ZdZ6WeVZ0wmx7zW3877yxnOXviit4u+fbUgBICc5ix5a
+         Y7mNAficGIXp3kbsetz2MCrYuHqtcgk6E9apulhfeQYRILfwW5ZawevQDYek8VGlB6
+         8xDOrj3ZjU58O9utfMStEushL+FZ8cM63kQHG7yw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Suganath Prabu S <suganath-prabu.subramani@broadcom.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
+Cc:     Rikard Falkeborn <rikard.falkeborn@gmail.com>,
+        Maxime Ripard <maxime@cerno.tech>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 028/135] scsi: mpt3sas: Fix double free warnings
-Date:   Mon, 29 Jun 2020 11:51:22 -0400
-Message-Id: <20200629155309.2495516-29-sashal@kernel.org>
+Subject: [PATCH 4.4 002/135] clk: sunxi: Fix incorrect usage of round_down()
+Date:   Mon, 29 Jun 2020 11:50:56 -0400
+Message-Id: <20200629155309.2495516-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -66,41 +65,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Suganath Prabu S <suganath-prabu.subramani@broadcom.com>
+From: Rikard Falkeborn <rikard.falkeborn@gmail.com>
 
-[ Upstream commit cbbfdb2a2416c9f0cde913cf09670097ac281282 ]
+[ Upstream commit ee25d9742dabed3fd18158b518f846abeb70f319 ]
 
-Fix following warning from Smatch static analyser:
+round_down() can only round to powers of 2. If round_down() is asked
+to round to something that is not a power of 2, incorrect results are
+produced. The incorrect results can be both too large and too small.
 
-drivers/scsi/mpt3sas/mpt3sas_base.c:5256 _base_allocate_memory_pools()
-warn: 'ioc->hpr_lookup' double freed
+Instead, use rounddown() which can round to any number.
 
-drivers/scsi/mpt3sas/mpt3sas_base.c:5256 _base_allocate_memory_pools()
-warn: 'ioc->internal_lookup' double freed
-
-Link: https://lore.kernel.org/r/20200508110738.30732-1-suganath-prabu.subramani@broadcom.com
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Suganath Prabu S <suganath-prabu.subramani@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 6a721db180a2 ("clk: sunxi: Add A31 clocks support")
+Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Signed-off-by: Maxime Ripard <maxime@cerno.tech>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/mpt3sas/mpt3sas_base.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/clk/sunxi/clk-sunxi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/mpt3sas/mpt3sas_base.c b/drivers/scsi/mpt3sas/mpt3sas_base.c
-index 7af7a08594785..8d52afd1f71db 100644
---- a/drivers/scsi/mpt3sas/mpt3sas_base.c
-+++ b/drivers/scsi/mpt3sas/mpt3sas_base.c
-@@ -3136,7 +3136,9 @@ _base_release_memory_pools(struct MPT3SAS_ADAPTER *ioc)
- 		ioc->scsi_lookup = NULL;
- 	}
- 	kfree(ioc->hpr_lookup);
-+	ioc->hpr_lookup = NULL;
- 	kfree(ioc->internal_lookup);
-+	ioc->internal_lookup = NULL;
- 	if (ioc->chain_lookup) {
- 		for (i = 0; i < ioc->chain_depth; i++) {
- 			if (ioc->chain_lookup[i].chain_buffer)
+diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+index 9c79af0c03b21..2cec9e83831fd 100644
+--- a/drivers/clk/sunxi/clk-sunxi.c
++++ b/drivers/clk/sunxi/clk-sunxi.c
+@@ -311,7 +311,7 @@ static void sun6i_a31_get_pll1_factors(u32 *freq, u32 parent_rate,
+ 	 * Round down the frequency to the closest multiple of either
+ 	 * 6 or 16
+ 	 */
+-	u32 round_freq_6 = round_down(freq_mhz, 6);
++	u32 round_freq_6 = rounddown(freq_mhz, 6);
+ 	u32 round_freq_16 = round_down(freq_mhz, 16);
+ 
+ 	if (round_freq_6 > round_freq_16)
 -- 
 2.25.1
 
