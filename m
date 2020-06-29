@@ -2,52 +2,52 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43FAAC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:20:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC1AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:20:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22748206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:20:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5403206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:20:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593458449;
-	bh=hoCMlla39SLvw5n04FRhF9LJw31TGSiSnqjCWRv5ILM=;
+	s=default; t=1593458458;
+	bh=Zsuzx71pZooDjmFzEE3YE2X6XtW6hgWY+zfdN6AS70g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XyxUFBVVU675ketx32lw1VoewIYOTUrePJ07mZNpB291zqSRRBC0neaRxEHObTdJ+
-	 ZeVky24HqScEooWMxFhQxalK7Q+j3CnHxY9J5E1J2YyvqnYSXpj60ip93DmxmRDxyy
-	 sZN6qTadnLUWYzUrEQAFfQ3aZWvOZ/6Hs7/j2n4o=
+	b=MG3Zo5orjyMcWAIwZBnJNUM9fr2oUTk4jIbBAidqQZUkvGqAFfY/6wLcBd5P0y6uo
+	 5PXiTBCw1Jf4MA1qfyn5CLZpgfgD1mN2x0sw5n9rtTTdNfQU7iAbs5at7lhxhsgoEf
+	 4hB0OAa4pFkN7yzT00G5aD5cE1fkWHyGU6QqXOio=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731894AbgF2TUr (ORCPT
+        id S1731889AbgF2TU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:20:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33184 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:20:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732106AbgF2TUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732111AbgF2TUS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:20:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3397D2547F;
-        Mon, 29 Jun 2020 15:44:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4575525474;
+        Mon, 29 Jun 2020 15:43:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445441;
-        bh=hoCMlla39SLvw5n04FRhF9LJw31TGSiSnqjCWRv5ILM=;
+        s=default; t=1593445430;
+        bh=Zsuzx71pZooDjmFzEE3YE2X6XtW6hgWY+zfdN6AS70g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sxKPXQruW7dYSeDV1ndXS5H+mUmWT2agvikX9YVt2wsRTH0xy8YEHCb/P13n+CHXt
-         JyjT4GIRBzcnmdSDh9YNpvA2kJxY1vM6MCwBCCfDNE/yw1R11bPAQBM//ldZSg04mr
-         /Mqhf2c0v25YpWhK43FCgAHLHR3fpvoOlssJGk60=
+        b=v0Nu6K+OEJVExLKLL7rpCLasa0XaH3lmQ1C8ca/nFrtZLaoNzIOcky1dtA7FAJ3sQ
+         /y8qKXP0mpkAFZmgZBsleJLqdqhISOGFuDHlGFrFQrhHN7iUbxpg5VIpRGOmdcCjsI
+         kh4xAypyTDM8O70xXPm9/6T8Nms/fSoh0GDOkdJo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiping Ma <jiping.ma2@windriver.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        yuu ichii <byahu140@heisei.be>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.9 182/191] arm64: perf: Report the PC value in REGS_ABI_32 mode
-Date:   Mon, 29 Jun 2020 11:39:58 -0400
-Message-Id: <20200629154007.2495120-183-sashal@kernel.org>
+Subject: [PATCH 4.9 176/191] ACPI: sysfs: Fix pm_profile_attr type
+Date:   Mon, 29 Jun 2020 11:39:52 -0400
+Message-Id: <20200629154007.2495120-177-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -66,69 +66,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiping Ma <jiping.ma2@windriver.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-commit 8dfe804a4031ca6ba3a3efb2048534249b64f3a5 upstream.
+commit e6d701dca9893990d999fd145e3e07223c002b06 upstream.
 
-A 32-bit perf querying the registers of a compat task using REGS_ABI_32
-will receive zeroes from w15, when it expects to find the PC.
+When running a kernel with Clang's Control Flow Integrity implemented,
+there is a violation that happens when accessing
+/sys/firmware/acpi/pm_profile:
 
-Return the PC value for register dwarf register 15 when returning register
-values for a compat task to perf.
+$ cat /sys/firmware/acpi/pm_profile
+0
 
-Cc: <stable@vger.kernel.org>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Jiping Ma <jiping.ma2@windriver.com>
-Link: https://lore.kernel.org/r/1589165527-188401-1-git-send-email-jiping.ma2@windriver.com
-[will: Shuffled code and added a comment]
-Signed-off-by: Will Deacon <will@kernel.org>
+$ dmesg
+...
+[   17.352564] ------------[ cut here ]------------
+[   17.352568] CFI failure (target: acpi_show_profile+0x0/0x8):
+[   17.352572] WARNING: CPU: 3 PID: 497 at kernel/cfi.c:29 __cfi_check_fail+0x33/0x40
+[   17.352573] Modules linked in:
+[   17.352575] CPU: 3 PID: 497 Comm: cat Tainted: G        W         5.7.0-microsoft-standard+ #1
+[   17.352576] RIP: 0010:__cfi_check_fail+0x33/0x40
+[   17.352577] Code: 48 c7 c7 50 b3 85 84 48 c7 c6 50 0a 4e 84 e8 a4 d8 60 00 85 c0 75 02 5b c3 48 c7 c7 dc 5e 49 84 48 89 de 31 c0 e8 7d 06 eb ff <0f> 0b 5b c3 00 00 cc cc 00 00 cc cc 00 85 f6 74 25 41 b9 ea ff ff
+[   17.352577] RSP: 0018:ffffaa6dc3c53d30 EFLAGS: 00010246
+[   17.352578] RAX: 331267e0c06cee00 RBX: ffffffff83d85890 RCX: ffffffff8483a6f8
+[   17.352579] RDX: ffff9cceabbb37c0 RSI: 0000000000000082 RDI: ffffffff84bb9e1c
+[   17.352579] RBP: ffffffff845b2bc8 R08: 0000000000000001 R09: ffff9cceabbba200
+[   17.352579] R10: 000000000000019d R11: 0000000000000000 R12: ffff9cc947766f00
+[   17.352580] R13: ffffffff83d6bd50 R14: ffff9ccc6fa80000 R15: ffffffff845bd328
+[   17.352582] FS:  00007fdbc8d13580(0000) GS:ffff9cce91ac0000(0000) knlGS:0000000000000000
+[   17.352582] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   17.352583] CR2: 00007fdbc858e000 CR3: 00000005174d0000 CR4: 0000000000340ea0
+[   17.352584] Call Trace:
+[   17.352586]  ? rev_id_show+0x8/0x8
+[   17.352587]  ? __cfi_check+0x45bac/0x4b640
+[   17.352589]  ? kobj_attr_show+0x73/0x80
+[   17.352590]  ? sysfs_kf_seq_show+0xc1/0x140
+[   17.352592]  ? ext4_seq_options_show.cfi_jt+0x8/0x8
+[   17.352593]  ? seq_read+0x180/0x600
+[   17.352595]  ? sysfs_create_file_ns.cfi_jt+0x10/0x10
+[   17.352596]  ? tlbflush_read_file+0x8/0x8
+[   17.352597]  ? __vfs_read+0x6b/0x220
+[   17.352598]  ? handle_mm_fault+0xa23/0x11b0
+[   17.352599]  ? vfs_read+0xa2/0x130
+[   17.352599]  ? ksys_read+0x6a/0xd0
+[   17.352601]  ? __do_sys_getpgrp+0x8/0x8
+[   17.352602]  ? do_syscall_64+0x72/0x120
+[   17.352603]  ? entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[   17.352604] ---[ end trace 7b1fa81dc897e419 ]---
+
+When /sys/firmware/acpi/pm_profile is read, sysfs_kf_seq_show is called,
+which in turn calls kobj_attr_show, which gets the ->show callback
+member by calling container_of on attr (casting it to struct
+kobj_attribute) then calls it.
+
+There is a CFI violation because pm_profile_attr is of type
+struct device_attribute but kobj_attr_show calls ->show expecting it
+to be from struct kobj_attribute. CFI checking ensures that function
+pointer types match when doing indirect calls. Fix pm_profile_attr to
+be defined in terms of kobj_attribute so there is no violation or
+mismatch.
+
+Fixes: 362b646062b2 ("ACPI: Export FADT pm_profile integer value to userspace")
+Link: https://github.com/ClangBuiltLinux/linux/issues/1051
+Reported-by: yuu ichii <byahu140@heisei.be>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Cc: 3.10+ <stable@vger.kernel.org> # 3.10+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm64/kernel/perf_regs.c | 25 ++++++++++++++++++++++---
- 1 file changed, 22 insertions(+), 3 deletions(-)
+ drivers/acpi/sysfs.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/kernel/perf_regs.c b/arch/arm64/kernel/perf_regs.c
-index 3f62b35fb6f15..815c395a1076c 100644
---- a/arch/arm64/kernel/perf_regs.c
-+++ b/arch/arm64/kernel/perf_regs.c
-@@ -13,15 +13,34 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
- 		return 0;
+diff --git a/drivers/acpi/sysfs.c b/drivers/acpi/sysfs.c
+index 7502441b14000..764786cfb0d94 100644
+--- a/drivers/acpi/sysfs.c
++++ b/drivers/acpi/sysfs.c
+@@ -843,13 +843,13 @@ static void __exit interrupt_stats_exit(void)
+ }
  
- 	/*
--	 * Compat (i.e. 32 bit) mode:
--	 * - PC has been set in the pt_regs struct in kernel_entry,
--	 * - Handle SP and LR here.
-+	 * Our handling of compat tasks (PERF_SAMPLE_REGS_ABI_32) is weird, but
-+	 * we're stuck with it for ABI compatability reasons.
-+	 *
-+	 * For a 32-bit consumer inspecting a 32-bit task, then it will look at
-+	 * the first 16 registers (see arch/arm/include/uapi/asm/perf_regs.h).
-+	 * These correspond directly to a prefix of the registers saved in our
-+	 * 'struct pt_regs', with the exception of the PC, so we copy that down
-+	 * (x15 corresponds to SP_hyp in the architecture).
-+	 *
-+	 * So far, so good.
-+	 *
-+	 * The oddity arises when a 64-bit consumer looks at a 32-bit task and
-+	 * asks for registers beyond PERF_REG_ARM_MAX. In this case, we return
-+	 * SP_usr, LR_usr and PC in the positions where the AArch64 SP, LR and
-+	 * PC registers would normally live. The initial idea was to allow a
-+	 * 64-bit unwinder to unwind a 32-bit task and, although it's not clear
-+	 * how well that works in practice, somebody might be relying on it.
-+	 *
-+	 * At the time we make a sample, we don't know whether the consumer is
-+	 * 32-bit or 64-bit, so we have to cater for both possibilities.
- 	 */
- 	if (compat_user_mode(regs)) {
- 		if ((u32)idx == PERF_REG_ARM64_SP)
- 			return regs->compat_sp;
- 		if ((u32)idx == PERF_REG_ARM64_LR)
- 			return regs->compat_lr;
-+		if (idx == 15)
-+			return regs->pc;
- 	}
+ static ssize_t
+-acpi_show_profile(struct device *dev, struct device_attribute *attr,
++acpi_show_profile(struct kobject *kobj, struct kobj_attribute *attr,
+ 		  char *buf)
+ {
+ 	return sprintf(buf, "%d\n", acpi_gbl_FADT.preferred_profile);
+ }
  
- 	if ((u32)idx == PERF_REG_ARM64_SP)
+-static const struct device_attribute pm_profile_attr =
++static const struct kobj_attribute pm_profile_attr =
+ 	__ATTR(pm_profile, S_IRUGO, acpi_show_profile, NULL);
+ 
+ static ssize_t hotplug_enabled_show(struct kobject *kobj,
 -- 
 2.25.1
 
