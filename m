@@ -2,50 +2,51 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7CBC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:48:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0862CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7F3AE20780
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:48:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDB7E20760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:48:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467333;
-	bh=oMx8hRqY3J/55UxEYvezLAHGiHIP7THkkH2dLbd4euI=;
+	s=default; t=1593467338;
+	bh=jCXcHNF4ffgYfk2J1Ar2eqA5w3GtOFqVWiURn6wkmOQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tj3wfqRwi0MKufOBE2b2T6G1RqFXZcovIGCiWEyRAZM6H1N2wO8w5Z0R5SDBsELK4
-	 71mMI6JGJg7nwLDaKnSU4/8ZLk6x54IeXK28gEBm2DONM2S4lHB9+uw6/RWW0JlSJP
-	 KmEET+yMdrze4ghocqdADd1tjCaldi6xwgqFa/ZY=
+	b=IU/YYrCj6mIdFqFZmnVQXJjEQjCwMHHmZpjBT6KBF1AoJHmD6qT8gcMnpd4Tpx94W
+	 LnJxbcqG7YvoUSU2qawGhxOSbBNM2PZohe6ABVFSI/iXiGb615BLXFoxkofRoG+Kiz
+	 AinaIIvFkt9GRrqjTpveVhXgI/gfVKTREbWRbMwk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404322AbgF2Vsv (ORCPT
+        id S2404331AbgF2Vs5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:48:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56788 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:48:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726704AbgF2Sfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726703AbgF2Sfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A91E32477D;
-        Mon, 29 Jun 2020 15:21:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A49DB2475B;
+        Mon, 29 Jun 2020 15:21:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444091;
-        bh=oMx8hRqY3J/55UxEYvezLAHGiHIP7THkkH2dLbd4euI=;
+        s=default; t=1593444076;
+        bh=jCXcHNF4ffgYfk2J1Ar2eqA5w3GtOFqVWiURn6wkmOQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n/hMiYUUy9XteVo0876cAGI2aFDyTOQHComFyT86kECtnjzAsVJ6QIpFqcwVa/Pgt
-         CLh+82hdPZfz1t02Q1iPRITBuWoWOb9or9/EedyqmViIG8Vpto3kvd0IpCbGPTmPyp
-         bDZBsJTcWiedKiOwLdA3+dCtUEy7YOsXIM0zME1A=
+        b=fAyOaYDO4sCeU91wdoQCwloPogmSHJfismcEPDzp+jvNRzwLltu9qLk40XYyELH8a
+         PvK86sqFVKT8EtCz8D9ey30KcvgDSR9HcISKthfb3Cyz6H8dVc5oihe+q3XXNaxBEL
+         oyeyrsYM7UUrB05oXm0ww4fL9p7680RJ4x/CHtQA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+Cc:     Nathan Huckleberry <nhuck@google.com>,
+        Palmer Dabbelt <palmerdabbelt@google.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 201/265] kbuild: improve cc-option to clean up all temporary files
-Date:   Mon, 29 Jun 2020 11:17:14 -0400
-Message-Id: <20200629151818.2493727-202-sashal@kernel.org>
+Subject: [PATCH 5.7 185/265] riscv/atomic: Fix sign extension for RV64I
+Date:   Mon, 29 Jun 2020 11:16:58 -0400
+Message-Id: <20200629151818.2493727-186-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -64,70 +65,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masahiro Yamada <masahiroy@kernel.org>
+From: Nathan Huckleberry <nhuck@google.com>
 
-[ Upstream commit f2f02ebd8f3833626642688b2d2c6a7b3c141fa9 ]
+[ Upstream commit 6c58f25e6938c073198af8b1e1832f83f8f0df33 ]
 
-When cc-option and friends evaluate compiler flags, the temporary file
-$$TMP is created as an output object, and automatically cleaned up.
-The actual file path of $$TMP is .<pid>.tmp, here <pid> is the process
-ID of $(shell ...) invoked from cc-option. (Please note $$$$ is the
-escape sequence of $$).
+The argument passed to cmpxchg is not guaranteed to be sign
+extended, but lr.w sign extends on RV64I. This makes cmpxchg
+fail on clang built kernels when __old is negative.
 
-Such garbage files are cleaned up in most cases, but some compiler flags
-create additional output files.
+To fix this, we just cast __old to long which sign extends on
+RV64I. With this fix, clang built RISC-V kernels now boot.
 
-For example, -gsplit-dwarf creates a .dwo file.
-
-When CONFIG_DEBUG_INFO_SPLIT=y, you will see a bunch of .<pid>.dwo files
-left in the top of build directories. You may not notice them unless you
-do 'ls -a', but the garbage files will increase every time you run 'make'.
-
-This commit changes the temporary object path to .tmp_<pid>/tmp, and
-removes .tmp_<pid> directory when exiting. Separate build artifacts such
-as *.dwo will be cleaned up all together because their file paths are
-usually determined based on the base name of the object.
-
-Another example is -ftest-coverage, which outputs the coverage data into
-<base-name-of-object>.gcno
-
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Link: https://github.com/ClangBuiltLinux/linux/issues/867
+Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+Signed-off-by: Palmer Dabbelt <palmerdabbelt@google.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/Kbuild.include | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ arch/riscv/include/asm/cmpxchg.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/scripts/Kbuild.include b/scripts/Kbuild.include
-index 6cabf20ce66a3..fe427f7fcfb31 100644
---- a/scripts/Kbuild.include
-+++ b/scripts/Kbuild.include
-@@ -86,20 +86,21 @@ cc-cross-prefix = $(firstword $(foreach c, $(1), \
- 			$(if $(shell command -v -- $(c)gcc 2>/dev/null), $(c))))
- 
- # output directory for tests below
--TMPOUT := $(if $(KBUILD_EXTMOD),$(firstword $(KBUILD_EXTMOD))/)
-+TMPOUT = $(if $(KBUILD_EXTMOD),$(firstword $(KBUILD_EXTMOD))/).tmp_$$$$
- 
- # try-run
- # Usage: option = $(call try-run, $(CC)...-o "$$TMP",option-ok,otherwise)
- # Exit code chooses option. "$$TMP" serves as a temporary file and is
- # automatically cleaned up.
- try-run = $(shell set -e;		\
--	TMP="$(TMPOUT).$$$$.tmp";	\
--	TMPO="$(TMPOUT).$$$$.o";	\
-+	TMP=$(TMPOUT)/tmp;		\
-+	TMPO=$(TMPOUT)/tmp.o;		\
-+	mkdir -p $(TMPOUT);		\
-+	trap "rm -rf $(TMPOUT)" EXIT;	\
- 	if ($(1)) >/dev/null 2>&1;	\
- 	then echo "$(2)";		\
- 	else echo "$(3)";		\
--	fi;				\
--	rm -f "$$TMP" "$$TMPO")
-+	fi)
- 
- # as-option
- # Usage: cflags-y += $(call as-option,-Wa$(comma)-isa=foo,)
+diff --git a/arch/riscv/include/asm/cmpxchg.h b/arch/riscv/include/asm/cmpxchg.h
+index d969bab4a26b5..262e5bbb27760 100644
+--- a/arch/riscv/include/asm/cmpxchg.h
++++ b/arch/riscv/include/asm/cmpxchg.h
+@@ -179,7 +179,7 @@
+ 			"	bnez %1, 0b\n"				\
+ 			"1:\n"						\
+ 			: "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)	\
+-			: "rJ" (__old), "rJ" (__new)			\
++			: "rJ" ((long)__old), "rJ" (__new)		\
+ 			: "memory");					\
+ 		break;							\
+ 	case 8:								\
+@@ -224,7 +224,7 @@
+ 			RISCV_ACQUIRE_BARRIER				\
+ 			"1:\n"						\
+ 			: "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)	\
+-			: "rJ" (__old), "rJ" (__new)			\
++			: "rJ" ((long)__old), "rJ" (__new)		\
+ 			: "memory");					\
+ 		break;							\
+ 	case 8:								\
+@@ -270,7 +270,7 @@
+ 			"	bnez %1, 0b\n"				\
+ 			"1:\n"						\
+ 			: "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)	\
+-			: "rJ" (__old), "rJ" (__new)			\
++			: "rJ" ((long)__old), "rJ" (__new)		\
+ 			: "memory");					\
+ 		break;							\
+ 	case 8:								\
+@@ -316,7 +316,7 @@
+ 			"	fence rw, rw\n"				\
+ 			"1:\n"						\
+ 			: "=&r" (__ret), "=&r" (__rc), "+A" (*__ptr)	\
+-			: "rJ" (__old), "rJ" (__new)			\
++			: "rJ" ((long)__old), "rJ" (__new)		\
+ 			: "memory");					\
+ 		break;							\
+ 	case 8:								\
 -- 
 2.25.1
 
