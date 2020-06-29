@@ -2,111 +2,181 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAA4BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:45:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3096C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A3A0A2063A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:45:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XMQy1CXV"
+	by mail.kernel.org (Postfix) with ESMTP id C521F2063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:45:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404065AbgF2VpU (ORCPT
+        id S2404072AbgF2VpX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:45:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37560 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727779AbgF2Sho (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:37:44 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81118C02F033
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 08:01:14 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id q21so8255067otc.7
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 08:01:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e77xl3a0rUVRcLQU1oC50Ds8tydYE4Dms5PHNqeAu/k=;
-        b=XMQy1CXVlqSYhEurPprg8PGiPgE1Rib39cTW09WzQAffWwG7ga+mJUImPuQjU3hKBz
-         aMiLQH+uoAR+QqXiAp7sDCqQr5VQgfujaZk/HxPsHQ7JWVFlBD9YOjNEm+KPNdPY1skY
-         Xxgw8Lzy27lSZoIjcUaaMSZ5UJL7aK6dVQbrbBKi8z9t16Ir1bF/W+UCXVChiKMwnlVr
-         pja+8G2+B0w9fCTjslr2a6pAc+tIpyLi2T0HkBtvPahOiKs0nUOFya8C5YPuohKNIija
-         aS8Q7PqpakqtxX6a8KfLaVo8K1AGsc+9jZ4S0m/Wd/G5xXloS79fEavwA5t4Vjj11Fx+
-         P9wA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e77xl3a0rUVRcLQU1oC50Ds8tydYE4Dms5PHNqeAu/k=;
-        b=YhxriyKUHpDISbMtMUt6K3BKuDq6wph0LiPNUPuZBU7D7D+tN3joOerSDDWudRX+WZ
-         J/WsbXL/fuzEckAHs+WWEOaXq2rSID29lB/ZvqxHk8oDAjSJXj7UDNriwM2i0p863TTa
-         wRjPWsQzAkhKhr0UFVmGiA01RUKbA1v4xKTSOIDNMvCbhBIvC9BMSEVaK/FRRCeRAVXj
-         xVNDRgAVvxQsKFbgnzNSlB9IgNWvnX9EFJyTZx2UtMLrW1dg93vkrpLDzi8w1/LCB/uy
-         kRfGxDf/RXU1j0S63CDlxkVbiVM30KlcAfLmoi3gtUvkWY6C2tNE4KudrUG4uA2B2QL2
-         MGUw==
-X-Gm-Message-State: AOAM531BKxbPmendFzCoT8xwd/vBCx82lLhZJQSlsXOHykehgGeEhJG0
-        JAvcxP/BdIY2R6n3I/j686dQAEXuO+ituB2luxs=
-X-Google-Smtp-Source: ABdhPJxFZkCXG8p4u8jtirweZHRw3Zm3HpCOYXiTJk93I7XtfkyjfulYGVNkoX+Wbg3ThmFgvmNP5bQgChAlfrjYrN4=
-X-Received: by 2002:a9d:6254:: with SMTP id i20mr13643292otk.145.1593442873894;
- Mon, 29 Jun 2020 08:01:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200629140442.1043957-1-lee.jones@linaro.org> <20200629140442.1043957-8-lee.jones@linaro.org>
-In-Reply-To: <20200629140442.1043957-8-lee.jones@linaro.org>
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-Date:   Mon, 29 Jun 2020 18:00:45 +0300
-Message-ID: <CAFCwf115Hm+Rf7r0bZmMbnGgz6jUm=ZK=Zvij_aD1WKEBUvOGw@mail.gmail.com>
-Subject: Re: [PATCH 07/20] misc: habanalabs: pci: Scrub documentation for
- non-present function argument
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>,
-        Tomer Tayar <ttayar@habana.ai>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 29 Jun 2020 17:45:23 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:49522 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727120AbgF2Shn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:37:43 -0400
+Received: from kvm-dev1.localdomain (unknown [10.2.5.134])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dxn9566flezmRMAA--.4772S3;
+        Mon, 29 Jun 2020 21:15:43 +0800 (CST)
+From:   bibo mao <maobibo@loongson.cn>
+To:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Bibo Mao <maobibo@loongson.cn>
+Subject: [PATCH 2/2] hugetlb: use lightweight tlb flush when update huge tlb on mips
+Date:   Mon, 29 Jun 2020 21:15:33 +0800
+Message-Id: <1593436533-8645-2-git-send-email-maobibo@loongson.cn>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1593436533-8645-1-git-send-email-maobibo@loongson.cn>
+References: <1593436533-8645-1-git-send-email-maobibo@loongson.cn>
+X-CM-TRANSID: AQAAf9Dxn9566flezmRMAA--.4772S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxuF15Ww1xJw1DZw4xAry7Jrb_yoWrCw1rpF
+        9rCan8C3y8trWkurZ7Zr4qvr15Jwn0ga4IvryIqayYvw1aqw1a9F4DGw4fA3yrurWrGay7
+        Ca1Ygrs8WF4fZw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUBF14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2048vs2IY020E87I2jVAFwI0_Jr4l82xGYIkIc2
+        x26xkF7I0E14v26r1I6r4UM28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0
+        Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84
+        ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AI
+        xVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20x
+        vE14v26r106r15McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xv
+        r2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVCm-wCF04k20xvY0x
+        0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+        7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
+        C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF
+        04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7
+        CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUHyIUUUUUU=
+X-CM-SenderInfo: xpdruxter6z05rqj20fqof0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 5:04 PM Lee Jones <lee.jones@linaro.org> wrote:
->
-> 'dma_mask' is not passed directly into hl_pci_set_dma_mask() as
-> an argument.  Instead, it is pulled from struct hl_device *hdev.
->
-> Fixed the following W=1 warning:
->
->  drivers/misc/habanalabs/pci.c:328: warning: Excess function parameter 'dma_mask' description in 'hl_pci_set_dma_mask
->
-> Cc: Oded Gabbay <oded.gabbay@gmail.com>
-> Cc: Tomer Tayar <ttayar@habana.ai>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  drivers/misc/habanalabs/pci.c | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/drivers/misc/habanalabs/pci.c b/drivers/misc/habanalabs/pci.c
-> index 24073e8eb8df9..61a8bb07262cf 100644
-> --- a/drivers/misc/habanalabs/pci.c
-> +++ b/drivers/misc/habanalabs/pci.c
-> @@ -317,7 +317,6 @@ int hl_pci_init_iatu(struct hl_device *hdev, u64 sram_base_address,
->  /**
->   * hl_pci_set_dma_mask() - Set DMA masks for the device.
->   * @hdev: Pointer to hl_device structure.
-> - * @dma_mask: number of bits for the requested dma mask.
->   *
->   * This function sets the DMA masks (regular and consistent) for a specified
->   * value. If it doesn't succeed, it tries to set it to a fall-back value
-> --
-> 2.25.1
->
+From: Bibo Mao <maobibo@loongson.cn>
 
-This patch is:
-Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+On mips platform huge pte pointers to invalid_pte_table if
+huge_pte_none return true. TLB entry with normal page size is
+added if huge pte entry is none. When updating huge pte entry,
+older tlb entry with normal page needs to be invalid.
+
+This patch uses lightweight tlb flush function local_flush_tlb_page,
+rather than flush_tlb_range which will flush all tlb entries instead.
+Also this patch adds new huge tlb update function named
+update_mmu_cache_huge, page faulting address is passed rather than
+huge page start address.
+
+Signed-off-by: Bibo Mao <maobibo@loongson.cn>
+---
+ arch/mips/include/asm/hugetlb.h | 17 ++++++++++++-----
+ include/linux/hugetlb.h         |  9 +++++++++
+ mm/hugetlb.c                    | 12 +++++++-----
+ 3 files changed, 28 insertions(+), 10 deletions(-)
+
+diff --git a/arch/mips/include/asm/hugetlb.h b/arch/mips/include/asm/hugetlb.h
+index c214440..fce09b4 100644
+--- a/arch/mips/include/asm/hugetlb.h
++++ b/arch/mips/include/asm/hugetlb.h
+@@ -72,15 +72,22 @@ static inline int huge_ptep_set_access_flags(struct vm_area_struct *vma,
+ 
+ 	if (changed) {
+ 		set_pte_at(vma->vm_mm, addr, ptep, pte);
+-		/*
+-		 * There could be some standard sized pages in there,
+-		 * get them all.
+-		 */
+-		flush_tlb_range(vma, addr, addr + HPAGE_SIZE);
+ 	}
+ 	return changed;
+ }
+ 
++#define update_mmu_cache_huge	update_mmu_cache_huge
++static inline void update_mmu_cache_huge(struct vm_area_struct *vma,
++					unsigned long address, pte_t *ptep)
++{
++	/*
++	 * There could be some standard sized page in there,
++	 * parameter address must be page faulting address rather than
++	 * start address of huge page
++	 */
++	local_flush_tlb_page(vma, address);
++	update_mmu_cache(vma, address & huge_page_mask(hstate_vma(vma)), ptep);
++}
+ #include <asm-generic/hugetlb.h>
+ 
+ #endif /* __ASM_HUGETLB_H */
+diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
+index 858522e..2f3f9eb 100644
+--- a/include/linux/hugetlb.h
++++ b/include/linux/hugetlb.h
+@@ -746,6 +746,15 @@ static inline void huge_ptep_modify_prot_commit(struct vm_area_struct *vma,
+ }
+ #endif
+ 
++#ifndef update_mmu_cache_huge
++#define update_mmu_cache_huge	update_mmu_cache_huge
++static inline void update_mmu_cache_huge(struct vm_area_struct *vma,
++					unsigned long address, pte_t *ptep)
++{
++	update_mmu_cache(vma, address & huge_page_mask(hstate_vma(vma)), ptep);
++}
++#endif
++
+ #else	/* CONFIG_HUGETLB_PAGE */
+ struct hstate {};
+ 
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index 1410e62..96faad7 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -3757,10 +3757,12 @@ static void set_huge_ptep_writable(struct vm_area_struct *vma,
+ 				   unsigned long address, pte_t *ptep)
+ {
+ 	pte_t entry;
++	struct hstate *h = hstate_vma(vma);
++	unsigned long haddr = address & huge_page_mask(h);
+ 
+ 	entry = huge_pte_mkwrite(huge_pte_mkdirty(huge_ptep_get(ptep)));
+-	if (huge_ptep_set_access_flags(vma, address, ptep, entry, 1))
+-		update_mmu_cache(vma, address, ptep);
++	if (huge_ptep_set_access_flags(vma, haddr, ptep, entry, 1))
++		update_mmu_cache_huge(vma, address, ptep);
+ }
+ 
+ bool is_hugetlb_entry_migration(pte_t pte)
+@@ -4128,7 +4130,7 @@ static vm_fault_t hugetlb_cow(struct mm_struct *mm, struct vm_area_struct *vma,
+ 	 * and just make the page writable */
+ 	if (page_mapcount(old_page) == 1 && PageAnon(old_page)) {
+ 		page_move_anon_rmap(old_page, vma);
+-		set_huge_ptep_writable(vma, haddr, ptep);
++		set_huge_ptep_writable(vma, address, ptep);
+ 		return 0;
+ 	}
+ 
+@@ -4630,7 +4632,7 @@ vm_fault_t hugetlb_fault(struct mm_struct *mm, struct vm_area_struct *vma,
+ 	entry = pte_mkyoung(entry);
+ 	if (huge_ptep_set_access_flags(vma, haddr, ptep, entry,
+ 						flags & FAULT_FLAG_WRITE))
+-		update_mmu_cache(vma, haddr, ptep);
++		update_mmu_cache_huge(vma, address, ptep);
+ out_put_page:
+ 	if (page != pagecache_page)
+ 		unlock_page(page);
+@@ -4770,7 +4772,7 @@ int hugetlb_mcopy_atomic_pte(struct mm_struct *dst_mm,
+ 	hugetlb_count_add(pages_per_huge_page(h), dst_mm);
+ 
+ 	/* No need to invalidate - it was non-present before */
+-	update_mmu_cache(dst_vma, dst_addr, dst_pte);
++	update_mmu_cache_huge(dst_vma, dst_addr, dst_pte);
+ 
+ 	spin_unlock(ptl);
+ 	set_page_huge_active(page);
+-- 
+1.8.3.1
+
