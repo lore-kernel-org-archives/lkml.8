@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F866C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 105E8C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:56:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9D1420760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:56:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB67C20760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:56:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467789;
-	bh=B6B7CbmE1beGD7a0XoTWkaxDA7EpKHPavxaZ8XF46Fo=;
+	s=default; t=1593467793;
+	bh=mRm22jjjhmYNa0dWj85l2ScqLQVog5bM7J59aF+g4kY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MlzZbvzMSTzeD0iyopV8JvdD8YK+zkD3DyorOpLuylqW7x1UjeZD+6ISwf3rQl6f7
-	 sRGn9vvZvjfsS/7wvUuJTePiFoa5HAg0cimOZ+gADgCAInkP0L5WrCcz5ystDlM9vz
-	 6m02EsdDNnfyzuxnh39+kHV6Lgcw/chWhgvyMeWE=
+	b=hq7CLEB3e6Gd2as+5H3e6IwwyKNdhfxOEYdH0w/imo6pKdHWYWmpWOicpXlPuFH3h
+	 htN9ubAvzXk6AwvdAAswizU2uoxYTseYLs3Pwo8w3BYOZaaqMYjq6tJudRgVSn8Yao
+	 ZEw7dmAXfRivpnyLb+vmDgM3rfUzsuCT0H2hD8VA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404685AbgF2V41 (ORCPT
+        id S2391606AbgF2V4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:56:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56890 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:56:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56796 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726548AbgF2Sfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726532AbgF2Sfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5391B24688;
-        Mon, 29 Jun 2020 15:19:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52A3D246C7;
+        Mon, 29 Jun 2020 15:20:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443984;
-        bh=B6B7CbmE1beGD7a0XoTWkaxDA7EpKHPavxaZ8XF46Fo=;
+        s=default; t=1593444018;
+        bh=mRm22jjjhmYNa0dWj85l2ScqLQVog5bM7J59aF+g4kY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qnu+SUqFuA5dU8DNBa4oZ8bctBrdorWb5RuEAUSvJht2ljfaoD0Rm5Ejp1rG3qZ0m
-         na/oRj5n2w3/tOlBEfKpcea+uZDkdUs5uMRe5uaX50eCkzsqs6+jKMlAJRJLTvmPxj
-         kEdjBhKA7a/Ea9Lj+WhL3UPUxPiTox8GdQaVRUFc=
+        b=oVcHRrjhF9V0N1URwbarN/5SIti0FlcWx6sC6GnZ/kdKcFiW/gmCNX9Js2TrsaLIi
+         Gece93Dhxq/R7N5Eez+rJXDNeHjEEGrWa2x8j03pcoxe7dtowi0vo4J1Doxrb+kLe+
+         CXwn5jHxsea1ym6zRL8EJ0+1CgQ5a0io7Px10De4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Joakim Tjernlund <joakim.tjernlund@infinera.com>,
-        Oliver Neukum <oneukum@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 089/265] cdc-acm: Add DISABLE_ECHO quirk for Microchip/SMSC chip
-Date:   Mon, 29 Jun 2020 11:15:22 -0400
-Message-Id: <20200629151818.2493727-90-sashal@kernel.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 125/265] efi/x86: Setup stack correctly for efi_pe_entry
+Date:   Mon, 29 Jun 2020 11:15:58 -0400
+Message-Id: <20200629151818.2493727-126-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -65,36 +65,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joakim Tjernlund <joakim.tjernlund@infinera.com>
+From: Arvind Sankar <nivedita@alum.mit.edu>
 
-commit 03894573f2913181ee5aae0089f333b2131f2d4b upstream.
+[ Upstream commit 41d90b0c1108d1e46c48cf79964636c553844f4c ]
 
-USB_DEVICE(0x0424, 0x274e) can send data before cdc_acm is ready,
-causing garbage chars on the TTY causing stray input to the shell
-and/or login prompt.
+Commit
 
-Signed-off-by: Joakim Tjernlund <joakim.tjernlund@infinera.com>
-Cc: stable@vger.kernel.org
-Acked-by: Oliver Neukum <oneukum@suse.com>
-Link: https://lore.kernel.org/r/20200605105418.22263-1-joakim.tjernlund@infinera.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  17054f492dfd ("efi/x86: Implement mixed mode boot without the handover protocol")
+
+introduced a new entry point for the EFI stub to be booted in mixed mode
+on 32-bit firmware.
+
+When entered via efi32_pe_entry, control is first transferred to
+startup_32 to setup for the switch to long mode, and then the EFI stub
+proper is entered via efi_pe_entry. efi_pe_entry is an MS ABI function,
+and the ABI requires 32 bytes of shadow stack space to be allocated by
+the caller, as well as the stack being aligned to 8 mod 16 on entry.
+
+Allocate 40 bytes on the stack before switching to 64-bit mode when
+calling efi_pe_entry to account for this.
+
+For robustness, explicitly align boot_stack_end to 16 bytes. It is
+currently implicitly aligned since .bss is cacheline-size aligned,
+head_64.o is the first object file with a .bss section, and the heap and
+boot sizes are aligned.
+
+Fixes: 17054f492dfd ("efi/x86: Implement mixed mode boot without the handover protocol")
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+Link: https://lore.kernel.org/r/20200617131957.2507632-1-nivedita@alum.mit.edu
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/class/cdc-acm.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/boot/compressed/head_64.S | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/class/cdc-acm.c b/drivers/usb/class/cdc-acm.c
-index f67088bb8218b..d5187b50fc828 100644
---- a/drivers/usb/class/cdc-acm.c
-+++ b/drivers/usb/class/cdc-acm.c
-@@ -1689,6 +1689,8 @@ static int acm_pre_reset(struct usb_interface *intf)
+diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
+index 76d1d64d51e38..41f7922086220 100644
+--- a/arch/x86/boot/compressed/head_64.S
++++ b/arch/x86/boot/compressed/head_64.S
+@@ -213,7 +213,6 @@ SYM_FUNC_START(startup_32)
+ 	 * We place all of the values on our mini stack so lret can
+ 	 * used to perform that far jump.
+ 	 */
+-	pushl	$__KERNEL_CS
+ 	leal	startup_64(%ebp), %eax
+ #ifdef CONFIG_EFI_MIXED
+ 	movl	efi32_boot_args(%ebp), %edi
+@@ -224,11 +223,20 @@ SYM_FUNC_START(startup_32)
+ 	movl	efi32_boot_args+8(%ebp), %edx	// saved bootparams pointer
+ 	cmpl	$0, %edx
+ 	jnz	1f
++	/*
++	 * efi_pe_entry uses MS calling convention, which requires 32 bytes of
++	 * shadow space on the stack even if all arguments are passed in
++	 * registers. We also need an additional 8 bytes for the space that
++	 * would be occupied by the return address, and this also results in
++	 * the correct stack alignment for entry.
++	 */
++	subl	$40, %esp
+ 	leal	efi_pe_entry(%ebp), %eax
+ 	movl	%edi, %ecx			// MS calling convention
+ 	movl	%esi, %edx
+ 1:
+ #endif
++	pushl	$__KERNEL_CS
+ 	pushl	%eax
  
- static const struct usb_device_id acm_ids[] = {
- 	/* quirky and broken devices */
-+	{ USB_DEVICE(0x0424, 0x274e), /* Microchip Technology, Inc. (formerly SMSC) */
-+	  .driver_info = DISABLE_ECHO, }, /* DISABLE ECHO in termios flag */
- 	{ USB_DEVICE(0x076d, 0x0006), /* Denso Cradle CU-321 */
- 	.driver_info = NO_UNION_NORMAL, },/* has no union descriptor */
- 	{ USB_DEVICE(0x17ef, 0x7000), /* Lenovo USB modem */
+ 	/* Enter paged protected Mode, activating Long Mode */
+@@ -776,6 +784,7 @@ SYM_DATA_LOCAL(boot_heap,	.fill BOOT_HEAP_SIZE, 1, 0)
+ 
+ SYM_DATA_START_LOCAL(boot_stack)
+ 	.fill BOOT_STACK_SIZE, 1, 0
++	.balign 16
+ SYM_DATA_END_LABEL(boot_stack, SYM_L_LOCAL, boot_stack_end)
+ 
+ /*
 -- 
 2.25.1
 
