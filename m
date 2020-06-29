@@ -2,167 +2,142 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F25B3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40C15C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:01:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CC31B206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:01:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E899206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:01:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="tF+QglDt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MU7Kdc7O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390151AbgF2VBs (ORCPT
+        id S2390156AbgF2VBv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:01:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43394 "EHLO
+        Mon, 29 Jun 2020 17:01:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730026AbgF2TM5 (ORCPT
+        with ESMTP id S1731189AbgF2TM4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:12:57 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 949DBC008740
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 01:28:06 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id q15so14508622wmj.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 01:28:06 -0700 (PDT)
+        Mon, 29 Jun 2020 15:12:56 -0400
+Received: from mail-ed1-x544.google.com (mail-ed1-x544.google.com [IPv6:2a00:1450:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FA82C008628;
+        Mon, 29 Jun 2020 03:53:39 -0700 (PDT)
+Received: by mail-ed1-x544.google.com with SMTP id dg28so12426584edb.3;
+        Mon, 29 Jun 2020 03:53:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jhEnhfJli6ncCAHeEoV+qwFqYEF14Keo1BCmMzJ2sq4=;
-        b=tF+QglDtRAjOHWBI/3gKzqBKloDVbRGAKLYcxV1LbyTdKUE+5nig4RbBh0fONEI8x4
-         Y7r9tJXD7LxxnB22VEYyPJVLXiwq9xcsDbkKC+VcdfaTrInqIgrvbKlMBqjzShgvhR7l
-         LSZDy4CppWY/0hqO+Si0dlwNOiRL2voiE/CuXyvxbpCnwnXwOQXy01j2jT8sxSud3jGG
-         8jz/NcnJpe04JGW7XHfyleMRRjW7Fs0hgUsIDbqxJCq1+CdGHUREetAnZfWR3W9tur5C
-         nOSn9jX7Z2mDI4dT8QZJpkvkTIo6Fx19ai+TVh6jmZ1LE5wgxJVTwdUGESI5khXeCw1G
-         jW8g==
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=FsOFBl0QB6zx23xfzrS8aK4P4neU3RbWXHogsiEZatw=;
+        b=MU7Kdc7Ob8B8dy9hUmI+Fx+V7qhiDei7qidjsUhk5ObQFvrAweOE1oAePMdMe12OIw
+         RHJItSD3Kx+9vbz7YpvR0/MDzAAwuTXYYcvFc+M/v/PKUkAuqwfj8qgMVegagkpSMMip
+         l6Sg6Ho7t8QRcKtJkCVMFfMYd7qiw37ncToFKkG9j/68/RnjDRHTPhpWXNsdf/agthRQ
+         LZ6aJjc2e+l14TJ2JgQZ4SPmVBYhZtPUo3etA8wMfl/L4L9SVsU7ujAKkdi0fhDB8yTX
+         b3lL9V3RHy39yB6/Ak8Dr0rae09gSb2ka7ZmExRBBlpQOiwkB61vlq6jvRP5rxhiVfMf
+         pOMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jhEnhfJli6ncCAHeEoV+qwFqYEF14Keo1BCmMzJ2sq4=;
-        b=Kpb0+6QnwbTD+rkZdwnW0BKZpqtlT5KwgKP+KwFORuXL3uQVhMsoJW+DLj6KqNuaxB
-         e3RQfa7wc94NePd0vBhDTWpPnEG6pFUDAkYOtmlyDapgr8XJLMWfK0YOLrKNxehhoMc+
-         T6g/4OegPDFV99DF1e8ex/zX4sTcVcDUeNDqLITsjRE115tjatYvV/HHU8FRqWR40+q1
-         Gt9092TktMjTvKFiON9B8GLAWXwuJhO3QV/k6ljeV1E/YAr1eo0OxKlFe27K+5zs1LnM
-         51e9afcAiGB6/RKO6Bx2903xad5UCXwYlodNXvknOEHGPU+G9DttCG/E6/Jnh0TMAR6N
-         ltKw==
-X-Gm-Message-State: AOAM533xGirqO5RMhSnvTPdommUvscfIr+dc5yf8yfY9jKTXlz5PUDuT
-        ixYG9CVAWETHKJqVKDwBlK6063i4NGmt3+4FnimIRg==
-X-Google-Smtp-Source: ABdhPJzhxZXUqBgnQ1HG5bYWm22c4NWgWogtnDllPgrVAfM1+RuGad+1r2gECEyARZuQzWa2/NHIF5M79bJ57DUtFFY=
-X-Received: by 2002:a1c:f30a:: with SMTP id q10mr15292236wmq.3.1593419285032;
- Mon, 29 Jun 2020 01:28:05 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1593397455.git.zong.li@sifive.com> <CAAhSdy1uFt3rqf8cSHqS=W90AoeQjo10R_Ak4Cknb_QUvH1SPQ@mail.gmail.com>
- <CANXhq0p_HoD6npHmoxxYHohBsgihfe5S-0DG04xLpQ3VO1w7oQ@mail.gmail.com>
-In-Reply-To: <CANXhq0p_HoD6npHmoxxYHohBsgihfe5S-0DG04xLpQ3VO1w7oQ@mail.gmail.com>
-From:   Anup Patel <anup@brainfault.org>
-Date:   Mon, 29 Jun 2020 13:57:53 +0530
-Message-ID: <CAAhSdy0Ed8zQ5LVZva6p2TWqTOzrDRtL0JJkAdmpzWFhzJLUfg@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/6] Support raw event and DT for perf on RISC-V
-To:     Zong Li <zong.li@sifive.com>
-Cc:     Alan Kao <alankao@andestech.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=FsOFBl0QB6zx23xfzrS8aK4P4neU3RbWXHogsiEZatw=;
+        b=cHy7h7fqk0Og7/Yp1xU4KpKcQfAT9NesMkk9eCGb9edIo++emGvKTmxA+LUm2+mcsF
+         nTzTwd7kEs4sgmSiPEJX5FsOXyhTt/CIFM6gAI7jIro4KPgFiuOkU++f3ckcBZcufN2I
+         Hrf7t7tVQw7uSMp3LG9ukOb1709xmsP7ai/qnC+L1o95hzhUpDcMIw2ijHSSN5VltaKz
+         gGIrvIsjd0ed4pvM14MtQXnC07uBrYg7865FpuEnuA9YAwUqoK8he8TCCy3GxoUOFdsC
+         CsToRvHziQqLubI/GNUKUO+MwCgmLEd1l03J0rIjB3vLoSJXgQQSUqq2ox0mynuRAN53
+         eKCw==
+X-Gm-Message-State: AOAM533h/d9StauF+ZVq96B0b39xb9gg74kIkaWQ0t3Xoz36N5SxRzJe
+        T+nFWjigwiJwwdwMOZh8LH0=
+X-Google-Smtp-Source: ABdhPJykV01EDeGyuxaYjCr9exivEEGHsAzKyojNyhR+3xCf/yQo4ub3oUQ2mdLgaywyAFHSaa47+Q==
+X-Received: by 2002:aa7:c545:: with SMTP id s5mr4897369edr.19.1593428018276;
+        Mon, 29 Jun 2020 03:53:38 -0700 (PDT)
+Received: from ubuntu-laptop ([2a01:598:b88e:dd15:40fc:c0bc:1cfd:2755])
+        by smtp.googlemail.com with ESMTPSA id z20sm9708065edq.97.2020.06.29.03.53.35
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 29 Jun 2020 03:53:37 -0700 (PDT)
+Message-ID: <94775ad5c35b68d457fdca5a6c89908e227d14af.camel@gmail.com>
+Subject: Re: [RFC PATCH v3 0/5] scsi: ufs: Add Host Performance Booster
+ Support
+From:   Bean Huo <huobean@gmail.com>
+To:     Avri Altman <Avri.Altman@wdc.com>,
+        "daejun7.park@samsung.com" <daejun7.park@samsung.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>
+Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
+Date:   Mon, 29 Jun 2020 12:53:29 +0200
+In-Reply-To: <SN6PR04MB464004B3DC7FB046A1E38F43FC6E0@SN6PR04MB4640.namprd04.prod.outlook.com>
+References: <CGME20200623010201epcms2p11aebdf1fbc719b409968cba997507114@epcms2p1>
+                 <963815509.21592879582091.JavaMail.epsvc@epcpadp2>
+         <948f573d136b39410f7d610e5019aafc9c04fe62.camel@gmail.com>
+         <SN6PR04MB464004B3DC7FB046A1E38F43FC6E0@SN6PR04MB4640.namprd04.prod.outlook.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 11:22 AM Zong Li <zong.li@sifive.com> wrote:
->
-> On Mon, Jun 29, 2020 at 12:53 PM Anup Patel <anup@brainfault.org> wrote:
-> >
-> > On Mon, Jun 29, 2020 at 8:49 AM Zong Li <zong.li@sifive.com> wrote:
-> > >
-> > > This patch set adds raw event support on RISC-V. In addition, we
-> > > introduce the DT mechanism to make our perf more generic and common.
-> > >
-> > > Currently, we set the hardware events by writing the mhpmeventN CSRs, it
-> > > would raise an illegal instruction exception and trap into m-mode to
-> > > emulate event selector CSRs access. It doesn't make sense because we
-> > > shouldn't write the m-mode CSRs in s-mode. Ideally, we should set event
-> > > selector through standard SBI call or the shadow CSRs of s-mode. We have
-> > > prepared a proposal of a new SBI extension, called "PMU SBI extension",
-> > > but we also discussing the feasibility of accessing these PMU CSRs on
-> > > s-mode at the same time, such as delegation mechanism, so I was
-> > > wondering if we could use SBI calls first and make the PMU SBI extension
-> > > as legacy when s-mode access mechanism is accepted by Foundation? or
-> > > keep the current situation to see what would happen in the future.
-> > >
-> > > This patch set also introduces the DT mechanism, we don't want to add too
-> > > much platform-dependency code in perf like other architectures, so we
-> > > put the mapping of generic hardware events to DT, then we can easy to
-> > > transfer generic hardware events to vendor's own hardware events without
-> > > any platfrom-dependency stuff in our perf.
-> >
-> > Please re-write this series to have RISC-V PMU driver as a regular
-> > platform driver as drivers/perf/riscv_pmu.c.
-> >
-> > The PMU related sources will have to be removed from arch/riscv.
-> >
-> > Based on implementation of final drivers/perf/riscv_pmu.c we will
-> > come-up with drivers/perf/riscv_sbi_pmu.c driver for SBI perf counters.
-> >
->
-> There are some different ways to implement perf, and current
-> implementation seems to be consensus when perf was introduced at the
-> beginning [0][1]. I don't persist to which one, I could change the
-> implementation as you mentioned if it is a new consensus one.
->
-> [0] https://github.com/riscv/riscv-linux/pull/124#issuecomment-367563910
+Hi Avri
 
-I would not recommend taking the original RISC-V linux fork as reference.
+On Mon, 2020-06-29 at 05:24 +0000, Avri Altman wrote:
+> Hi Bean,
+> > 
+> > Hi Daejun
+> > 
+> > Seems you intentionally ignored to give you comments on my
+> > suggestion.
+> > let me provide the reason.
+> > 
+> > Before submitting your next version patch, please check your L2P
+> > mapping HPB reqeust submission logical algorithem. I have did
+> > performance comparison testing on 4KB, there are about 13%
+> > performance
+> > drop. Also the hit count is lower. I don't know if this is related
+> > to
+> > your current work queue scheduling, since you didn't add the timer
+> > for
+> > each HPB request.
+> 
+> In device control mode, the various decisions,
+> and specifically those that are causing repetitive evictions,
+> are made by the device.
+> Is this the issue that you are referring to? 
+> 
 
-Rather we should study how things are done on other architectures.
+For this device mode, if HPB mapping table of the active region becomes
+dirty in the UFS device side, there is repetitive inactive rsp, but it
+is not the reason for the condition I mentioned here.  
 
-I really appreciate the attempt to make RISC-V PMU driver depend on DT
-but if we are going this route then we should maximize the use of Linux
-platform driver framework. In fact, whenever possible we should integrate
-RISC-V features as platform drivers under the drivers/ directory.
+> As for the driver, do you see any issue that is causing unnecessary
+> latency? 
+> 
 
-I thought about SBI PMU counters as well. In future, we can easily
-expose SBI PMU counters as RAW events in the same RISC-V PMU
-driver. The sbi_probe_extension() can be used in RISC-V PMU driver
-to check for SBI PMU counters so no special provisions needed in DT
-for SBI PMU counters.
+In Daejun's patch, it now uses work_queue, and as long there is new RSP of thesubregion to be activated, the driver will queue "work" to this work
+queue, actually, this is deferred work. we don't know when it will be
+scheduled/finished. we need to optimize it.
 
-Also, the RISC-V PMU driver can be implemented such that it will
-work for RV32, RV64, NoMMU RV32, and NoMMU RV64.
 
-Regards,
-Anup
+Thanks,
+Bean
 
-> [1] https://groups.google.com/a/groups.riscv.org/g/sw-dev/c/f19TmCNP6yA
->
-> > Regards,
-> > Anup
-> >
-> > >
-> > > Zong Li (6):
-> > >   dt-bindings: riscv: Add YAML documentation for PMU
-> > >   riscv: dts: sifive: Add DT support for PMU
-> > >   riscv: add definition of hpmcounter CSRs
-> > >   riscv: perf: Add raw event support
-> > >   riscv: perf: introduce DT mechanism
-> > >   riscv: remove PMU menu of Kconfig
-> > >
-> > >  .../devicetree/bindings/riscv/pmu.yaml        |  59 +++
-> > >  arch/riscv/Kconfig                            |  13 -
-> > >  arch/riscv/boot/dts/sifive/fu540-c000.dtsi    |  13 +
-> > >  arch/riscv/include/asm/csr.h                  |  58 +++
-> > >  arch/riscv/include/asm/perf_event.h           | 100 ++--
-> > >  arch/riscv/kernel/Makefile                    |   2 +-
-> > >  arch/riscv/kernel/perf_event.c                | 471 +++++++++++-------
-> > >  7 files changed, 471 insertions(+), 245 deletions(-)
-> > >  create mode 100644 Documentation/devicetree/bindings/riscv/pmu.yaml
-> > >
-> > > --
-> > > 2.27.0
-> > >
+
+
