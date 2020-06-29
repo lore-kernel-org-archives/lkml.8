@@ -2,120 +2,93 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B30C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 857E1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:40:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8D9C206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:40:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FE0B206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:40:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466806;
-	bh=yOH9Px7xVSmNfzSVpvbBpqmuiCQSgKoq+a38kHqIvgs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=BQwjKOyDZ0VBquLDRyw/FYRAVeU9f+xfblyO8vo94mXwpqSxsMO5EDgGJLaqf3A2S
-	 s2AttBbXC/QzpBsC0UEgdyNC0wTcZxw5JbHxVy3HvXmkN8rmEdey0JuT3DVr+pgX0u
-	 oGYpH7kCX/WQRBrlsTLHt39lAWXF0DImNHVlNdcQ=
+	s=default; t=1593466810;
+	bh=S/028/T4D/qxOGzfnD82RkUsGl9B5obM8ntirv37wV4=;
+	h=From:To:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0rfIAo7+0q5isoVWNn+mJC3dI5twZHcR7FAlwLJEmyd0zqjGsaMfGJcc1Ox6o3d8R
+	 27/mINZRM4MC5lRJYkFeNThxuaQElCLI5756jxkzP4JLSnUEMHJTYHkqObr/DKuSdY
+	 L6B0oLfrbH0CW5dNqH30T5ZsrmqUevx++PnDk3GM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728282AbgF2Sk3 (ORCPT
+        id S2388585AbgF2VkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:40:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60572 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:40:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728167AbgF2SkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:40:15 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728269AbgF2Sk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:40:29 -0400
+Received: from localhost.localdomain (unknown [194.230.155.195])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99E9323D6B;
-        Mon, 29 Jun 2020 13:22:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C90E423788;
+        Mon, 29 Jun 2020 10:05:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593436951;
-        bh=yOH9Px7xVSmNfzSVpvbBpqmuiCQSgKoq+a38kHqIvgs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=znzomeGJ/GfbNcF+5ZnhUcAlMqeiqwSoc52iW5wJAeb7DKq+GOyZpg2qyev2E7u44
-         RdgDFJCSrbrHQ+WZCx+taVcl48kB+PlVjTZyDIYT8mKgWzGaNv0Uv90TABDpKqVo4c
-         6LUnn+d/BIvGXS65lWnk+uNTvsH/zH34K9oxR5GI=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jptjx-007KON-RM; Mon, 29 Jun 2020 14:22:29 +0100
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 29 Jun 2020 14:22:29 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        =?UTF-8?Q?Heik?= =?UTF-8?Q?o_St=C3=BCbner?= <heiko@sntech.de>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        kernel-team@android.com, stable@vger.kernel.org
-Subject: Re: [PATCH v2] PM / devfreq: rk3399_dmc: Fix kernel oops when
- rockchip,pmu is absent
-In-Reply-To: <154fe5b6-6a05-c2b7-3014-2f7b9c2049f9@samsung.com>
-References: <CGME20200622152844epcas1p2309f34247eb9653acdfd3818b7e6a569@epcas1p2.samsung.com>
- <20200622152824.1054946-1-maz@kernel.org>
- <784808d7-8943-44ab-f15a-34821e6d4d5f@samsung.com>
- <87tuyue142.wl-maz@kernel.org>
- <c1a5b730-0554-bb90-9d8d-b50390482e96@samsung.com>
- <3de68490-d788-e416-dd5f-d4d6e7eca61a@collabora.com>
- <154fe5b6-6a05-c2b7-3014-2f7b9c2049f9@samsung.com>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <636bcc73fa658747626e36d71bfcc4f9@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: cw00.choi@samsung.com, enric.balletbo@collabora.com, heiko@sntech.de, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, kernel-team@android.com, stable@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        s=default; t=1593425160;
+        bh=S/028/T4D/qxOGzfnD82RkUsGl9B5obM8ntirv37wV4=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=bxBHW4gXnKqLBK8or9GGXDtuPP5ZrAlrmdMO+Zn6Aij5ea7VVa+R9hPgMGy06aG3j
+         mY6Rmf1yuC4smyM5Rs/xi/+nzi72DjrH1mGk9/55Mclf3i2CUzGyfG0ywyEZaBsmod
+         +L9RtJ0iRC/a6WE5Sca7VBMX2r8VZr5ZKAa75sTM=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 2/2] iio: magnetometer: bmc150: Add proper compatible for BMM150
+Date:   Mon, 29 Jun 2020 12:05:37 +0200
+Message-Id: <20200629100537.20365-2-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200629100537.20365-1-krzk@kernel.org>
+References: <20200629100537.20365-1-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-29 12:29, Chanwoo Choi wrote:
-> Hi Enric and Mark,
-> 
-> On 6/29/20 8:05 PM, Enric Balletbo i Serra wrote:
->> Hi Chanwoo and Marc,
->> 
->> On 29/6/20 13:09, Chanwoo Choi wrote:
->>> Hi Enric,
->>> 
->>> Could you check this issue? Your patch[1] causes this issue.
->>> As Marc mentioned, although rk3399-dmc.c handled 'rockchip,pmu'
->>> as the mandatory property, your patch[1] didn't add the 
->>> 'rockchip,pmu'
->>> property to the documentation.
->>> 
->> 
->> I think the problem is that the DT binding patch, for some reason, was 
->> missed
->> and didn't land. The patch seems to have all the required reviews and 
->> acks.
->> 
->>   https://patchwork.kernel.org/patch/10901593/
->> 
->> Sorry because I didn't notice this issue when 9173c5ceb035 landed. And 
->> thanks
->> for fixing the issue.
-> 
-> If the 'rockchip,pmu' propery is mandatory, instead of Mark's patch,
-> we better to require the merge of patch[1] to DT maintainer.
+The compatible for BMM150 should not have "_magn" suffix because, unlike
+two other Bosch devices, it is only a magnetometer.
 
-It is way too late. Firmware exists (mainline u-boot, for one) that
-do not expose the new property, and you can't demand that people
-upgrade. This is an ABI bug, and we now have to live with it.
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-So, yes to fixing the DT, and no to *only* fixing the DT.
+---
 
-Thanks,
+Changes since v2:
+1. Add compatible only for bmm150.
 
-         M.
+Changes since v1:
+1. New patch.
+---
+ drivers/iio/magnetometer/bmc150_magn_i2c.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/iio/magnetometer/bmc150_magn_i2c.c b/drivers/iio/magnetometer/bmc150_magn_i2c.c
+index fb45b63c56e4..876e96005e33 100644
+--- a/drivers/iio/magnetometer/bmc150_magn_i2c.c
++++ b/drivers/iio/magnetometer/bmc150_magn_i2c.c
+@@ -58,7 +58,8 @@ MODULE_DEVICE_TABLE(i2c, bmc150_magn_i2c_id);
+ static const struct of_device_id bmc150_magn_of_match[] = {
+ 	{ .compatible = "bosch,bmc150_magn" },
+ 	{ .compatible = "bosch,bmc156_magn" },
+-	{ .compatible = "bosch,bmm150_magn" },
++	{ .compatible = "bosch,bmm150_magn" }, /* deprecated compatible */
++	{ .compatible = "bosch,bmm150" },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, bmc150_magn_of_match);
 -- 
-Jazz is not dead. It just smells funny...
+2.17.1
+
