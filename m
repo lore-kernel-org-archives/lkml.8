@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F39F2C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:21:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C6FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB12F20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:21:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6889A206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:21:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462102;
-	bh=TMpL60Nf2nyZupKtYwuwJcMVd4KNYDLpjIbjzkn2xXQ=;
+	s=default; t=1593462111;
+	bh=cKDiOq3ZvzBhL2L6Dbu7KNUxFI/87qtPbFZqATkHA0Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CxV3EqFV8Ayz55zHQwbJ3vcXomgHBIWVBUbpww2ILh9vASHrYtnR5RbWCfpnjRw6c
-	 nwqGC9dxbm9gfzqYHDwYYL6qg3gvJM3ge41z6thVztw3BCDx+AR+yy/geUTe6qhAZS
-	 5uEOmWX9LGdbb01m6B10o6HOoHcaA6dihQjNoP90=
+	b=1uMWExnu3HIJJ4tbGnW8FNZwzAOwe4qD1t0EokIs9sjiB0eoTyeUIxM2I+ElXAemP
+	 jOntBUGE03w1EeXjXBONgTTm80zMr5LPnHkBiD5d0Jb7PkFqIb+XTkywt+J7Lm/q8M
+	 fLxK0eMpgjsuNj+5Dy2N0WDeq+ahALQciHS5rnVY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732596AbgF2UVl (ORCPT
+        id S1733205AbgF2UVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:21:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37054 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:21:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732589AbgF2TZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732590AbgF2TZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:34 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3E7CE253A1;
-        Mon, 29 Jun 2020 15:41:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D79A253FB;
+        Mon, 29 Jun 2020 15:42:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445268;
-        bh=TMpL60Nf2nyZupKtYwuwJcMVd4KNYDLpjIbjzkn2xXQ=;
+        s=default; t=1593445346;
+        bh=cKDiOq3ZvzBhL2L6Dbu7KNUxFI/87qtPbFZqATkHA0Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xCOgVQahUTYLrkDCzQnYqQB9k51m56JR904t9tzXRFdBXKKRkw7BNK11Ul5o/TGJY
-         pFVaX2gGsSZELbrSUdiVjFeFCmjUbVx8bmfHNerpHbH4m3nWmkj8+i0XKGsqHsyrwe
-         HupaLwiC3SbXlwpca4yW+vyhSTfPoieQVlvREZEg=
+        b=TEneXf7G2vTAAX8/y4YypANxuac6oVy5hmEYuF5US9cZcdCxPTW0d+QAIRfKAjF+u
+         aZ+gG/vbSLfVQgvknq14IvxhrTYWeBkOQb5r4AlZ2K8SnOeP2smd2Z68hl/oUxtQBv
+         tc0vz32VOvmhZ2ef0YVKekKIXQv/zBjrmbM2+UiY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 048/191] tty: n_gsm: Fix bogus i++ in gsm_data_kick
-Date:   Mon, 29 Jun 2020 11:37:44 -0400
-Message-Id: <20200629154007.2495120-49-sashal@kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab@s-opensource.com>,
+        Honza Petrous <jpetrous@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.9 104/191] media: stv6110: get rid of a srate dead code
+Date:   Mon, 29 Jun 2020 11:38:40 -0400
+Message-Id: <20200629154007.2495120-105-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -65,51 +66,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
+From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
 
-[ Upstream commit 4dd31f1ffec6c370c3c2e0c605628bf5e16d5c46 ]
+commit 282996925b4d78f9795d176f7fb409281c98d56d upstream
 
-When submitting the previous fix "tty: n_gsm: Fix waking up upper tty
-layer when room available". It was suggested to switch from a while to
-a for loop, but when doing it, there was a remaining bogus i++.
+The stv6110 has a weird code that checks if get_property
+and set_property ioctls are defined. If they're, it initializes
+a "srate" var from properties cache. Otherwise, it sets to
+15MBaud, with won't make any sense.
 
-This patch removes this i++ and also reorganizes the code making it more
-compact.
+Thankfully, it seems that someone else discovered the issue in
+the past, as "srate" is currently not used anywhere!
 
-Fixes: e1eaea46bb40 ("tty: n_gsm line discipline")
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Link: https://lore.kernel.org/r/20200518084517.2173242-3-gregory.clement@bootlin.com
+So, get rid of that really weird dead code logic.
+
+Reported-by: Honza Petrous <jpetrous@gmail.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/n_gsm.c | 14 +++-----------
- 1 file changed, 3 insertions(+), 11 deletions(-)
+ drivers/media/dvb-frontends/stv6110.c | 9 ---------
+ 1 file changed, 9 deletions(-)
 
-diff --git a/drivers/tty/n_gsm.c b/drivers/tty/n_gsm.c
-index 56716f5250303..1ab9bd4335421 100644
---- a/drivers/tty/n_gsm.c
-+++ b/drivers/tty/n_gsm.c
-@@ -719,17 +719,9 @@ static void gsm_data_kick(struct gsm_mux *gsm, struct gsm_dlci *dlci)
- 		} else {
- 			int i = 0;
+diff --git a/drivers/media/dvb-frontends/stv6110.c b/drivers/media/dvb-frontends/stv6110.c
+index 66a5a7f2295c0..93262b13c6447 100644
+--- a/drivers/media/dvb-frontends/stv6110.c
++++ b/drivers/media/dvb-frontends/stv6110.c
+@@ -263,11 +263,9 @@ static int stv6110_get_frequency(struct dvb_frontend *fe, u32 *frequency)
+ static int stv6110_set_frequency(struct dvb_frontend *fe, u32 frequency)
+ {
+ 	struct stv6110_priv *priv = fe->tuner_priv;
+-	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
+ 	u8 ret = 0x04;
+ 	u32 divider, ref, p, presc, i, result_freq, vco_freq;
+ 	s32 p_calc, p_calc_opt = 1000, r_div, r_div_opt = 0, p_val;
+-	s32 srate;
  
--			for (i = 0; i < NUM_DLCI; i++) {
--				struct gsm_dlci *dlci;
+ 	dprintk("%s, freq=%d kHz, mclk=%d Hz\n", __func__,
+ 						frequency, priv->mclk);
+@@ -278,13 +276,6 @@ static int stv6110_set_frequency(struct dvb_frontend *fe, u32 frequency)
+ 				((((priv->mclk / 1000000) - 16) & 0x1f) << 3);
+ 
+ 	/* BB_GAIN = db/2 */
+-	if (fe->ops.set_property && fe->ops.get_property) {
+-		srate = c->symbol_rate;
+-		dprintk("%s: Get Frontend parameters: srate=%d\n",
+-							__func__, srate);
+-	} else
+-		srate = 15000000;
 -
--				dlci = gsm->dlci[i];
--				if (dlci == NULL) {
--					i++;
--					continue;
--				}
--
--				tty_port_tty_wakeup(&dlci->port);
--			}
-+			for (i = 0; i < NUM_DLCI; i++)
-+				if (gsm->dlci[i])
-+					tty_port_tty_wakeup(&gsm->dlci[i]->port);
- 		}
- 	}
- }
+ 	priv->regs[RSTV6110_CTRL2] &= ~0x0f;
+ 	priv->regs[RSTV6110_CTRL2] |= (priv->gain & 0x0f);
+ 
 -- 
 2.25.1
 
