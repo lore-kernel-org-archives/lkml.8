@@ -2,132 +2,171 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3FE8C433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60981C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4DEE2053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:05:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="eVgVYnsc"
+	by mail.kernel.org (Postfix) with ESMTP id 4E93C2053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:05:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730449AbgF2TE6 (ORCPT
+        id S1730680AbgF2TFC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:04:58 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:48704 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730681AbgF2TEy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:04:54 -0400
-Received: from sequoia (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
-        by linux.microsoft.com (Postfix) with ESMTPSA id AEAE920B4901;
-        Mon, 29 Jun 2020 07:16:16 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com AEAE920B4901
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1593440177;
-        bh=v+wyGBDonImB9MBWCw9EMxRuWEDmYg128Fe9bnY0g6c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eVgVYnscENhuNhNQTyhZbFymcwHwtaCB1JVO/5//WlJM4Nv5RhfXHxEmzNS8HBHRk
-         p5XfObD9Ymg9erl91qvwxM3XsQMB/o/hLnkyCgNzIHXK+B6Dg2Bykqevr0UVq7cUGd
-         ArzJcUXJf0dxujES9z46s7zXvQxC856nBBvZzEaE=
-Date:   Mon, 29 Jun 2020 09:16:14 -0500
-From:   Tyler Hicks <tyhicks@linux.microsoft.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Prakhar Srivastava <prsriva02@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: Re: [PATCH v2 09/11] ima: Move validation of the keyrings
- conditional into ima_validate_rule()
-Message-ID: <20200629141614.GD4694@sequoia>
-References: <20200626223900.253615-1-tyhicks@linux.microsoft.com>
- <20200626223900.253615-10-tyhicks@linux.microsoft.com>
- <0e7012e7-e1df-466d-9d51-a691f779570a@linux.microsoft.com>
+        Mon, 29 Jun 2020 15:05:02 -0400
+Received: from foss.arm.com ([217.140.110.172]:37928 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730521AbgF2TEz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:04:55 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C7DD1143D;
+        Mon, 29 Jun 2020 04:56:48 -0700 (PDT)
+Received: from [10.57.21.32] (unknown [10.57.21.32])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 509373F73C;
+        Mon, 29 Jun 2020 04:56:47 -0700 (PDT)
+Subject: Re: [PATCH 1/2] iommu: Add iommu_group_get/set_domain()
+To:     Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Alex Williamson <alex.williamson@redhat.com>
+Cc:     Kevin Tian <kevin.tian@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, kvm@vger.kernel.org,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+References: <20200627031532.28046-1-baolu.lu@linux.intel.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <acc0a8fd-bd23-fc34-aecc-67796ab216e7@arm.com>
+Date:   Mon, 29 Jun 2020 12:56:46 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0e7012e7-e1df-466d-9d51-a691f779570a@linux.microsoft.com>
+In-Reply-To: <20200627031532.28046-1-baolu.lu@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-27 16:49:46, Lakshmi Ramasubramanian wrote:
-> On 6/26/20 3:38 PM, Tyler Hicks wrote:
+On 2020-06-27 04:15, Lu Baolu wrote:
+> The hardware assistant vfio mediated device is a use case of iommu
+> aux-domain. The interactions between vfio/mdev and iommu during mdev
+> creation and passthr are:
 > 
-> > Use ima_validate_rule() to ensure that the combination of a hook
-> > function and the keyrings conditional is valid and that the keyrings
-> > conditional is not specified without an explicit KEY_CHECK func
-> > conditional. This is a code cleanup and has no user-facing change.
+> - Create a group for mdev with iommu_group_alloc();
+> - Add the device to the group with
+>          group = iommu_group_alloc();
+>          if (IS_ERR(group))
+>                  return PTR_ERR(group);
 > 
-> In addition to checking for func=KEY_CHECK and the keyrings conditional, the
-> patch also validates the flags for other IMA hooks (such as
-> KEXEC_KERNEL_CHECK, POLICY_CHECK, etc.) Would be good to mention that in the
-> patch description.
+>          ret = iommu_group_add_device(group, &mdev->dev);
+>          if (!ret)
+>                  dev_info(&mdev->dev, "MDEV: group_id = %d\n",
+>                           iommu_group_id(group));
+> - Allocate an aux-domain
+> 	iommu_domain_alloc()
+> - Attach the aux-domain to the physical device from which the mdev is
+>    created.
+> 	iommu_aux_attach_device()
+> 
+> In the whole process, an iommu group was allocated for the mdev and an
+> iommu domain was attached to the group, but the group->domain leaves
+> NULL. As the result, iommu_get_domain_for_dev() doesn't work anymore.
+> 
+> This adds iommu_group_get/set_domain() so that group->domain could be
+> managed whenever a domain is attached or detached through the aux-domain
+> api's.
 
-It actually doesn't do any additional validation of other IMA hooks at
-this time. That check on entry->flags is an allowlist of every possible
-conditional flag except IMA_KEYRINGS. The ima_parse_rule() function is
-already validating all of these conditional flags.
+Letting external callers poke around directly in the internals of 
+iommu_group doesn't look right to me.
 
-Tyler
+If a regular device is attached to one or more aux domains for PASID 
+use, iommu_get_domain_for_dev() is still going to return the primary 
+domain, so why should it be expected to behave differently for mediated 
+devices? AFAICS it's perfectly legitimate to have no primary domain if 
+traffic-without-PASID is invalid.
 
+Robin.
+
+> Fixes: 7bd50f0cd2fd5 ("vfio/type1: Add domain at(de)taching group helpers")
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> ---
+>   drivers/iommu/iommu.c | 28 ++++++++++++++++++++++++++++
+>   include/linux/iommu.h | 14 ++++++++++++++
+>   2 files changed, 42 insertions(+)
 > 
->  -lakshmi
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index d43120eb1dc5..e2b665303d70 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -715,6 +715,34 @@ int iommu_group_set_name(struct iommu_group *group, const char *name)
+>   }
+>   EXPORT_SYMBOL_GPL(iommu_group_set_name);
+>   
+> +/**
+> + * iommu_group_get_domain - get domain of a group
+> + * @group: the group
+> + *
+> + * This is called to get the domain of a group.
+> + */
+> +struct iommu_domain *iommu_group_get_domain(struct iommu_group *group)
+> +{
+> +	return group->domain;
+> +}
+> +EXPORT_SYMBOL_GPL(iommu_group_get_domain);
+> +
+> +/**
+> + * iommu_group_set_domain - set domain for a group
+> + * @group: the group
+> + * @domain: iommu domain
+> + *
+> + * This is called to set the domain for a group. In aux-domain case, a domain
+> + * might attach or detach to an iommu group through the aux-domain apis, but
+> + * the group->domain doesn't get a chance to be updated there.
+> + */
+> +void iommu_group_set_domain(struct iommu_group *group,
+> +			    struct iommu_domain *domain)
+> +{
+> +	group->domain = domain;
+> +}
+> +EXPORT_SYMBOL_GPL(iommu_group_set_domain);
+> +
+>   static int iommu_create_device_direct_mappings(struct iommu_group *group,
+>   					       struct device *dev)
+>   {
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index 5f0b7859d2eb..ff88d548a870 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -496,6 +496,9 @@ extern void iommu_group_set_iommudata(struct iommu_group *group,
+>   				      void *iommu_data,
+>   				      void (*release)(void *iommu_data));
+>   extern int iommu_group_set_name(struct iommu_group *group, const char *name);
+> +extern struct iommu_domain *iommu_group_get_domain(struct iommu_group *group);
+> +extern void iommu_group_set_domain(struct iommu_group *group,
+> +				   struct iommu_domain *domain);
+>   extern int iommu_group_add_device(struct iommu_group *group,
+>   				  struct device *dev);
+>   extern void iommu_group_remove_device(struct device *dev);
+> @@ -840,6 +843,17 @@ static inline int iommu_group_set_name(struct iommu_group *group,
+>   	return -ENODEV;
+>   }
+>   
+> +static inline
+> +struct iommu_domain *iommu_group_get_domain(struct iommu_group *group)
+> +{
+> +	return NULL;
+> +}
+> +
+> +static inline void iommu_group_set_domain(struct iommu_group *group,
+> +					  struct iommu_domain *domain)
+> +{
+> +}
+> +
+>   static inline int iommu_group_add_device(struct iommu_group *group,
+>   					 struct device *dev)
+>   {
 > 
-> > 
-> > Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
-> > ---
-> > 
-> > * v2
-> >    - Allowed IMA_DIGSIG_REQUIRED, IMA_PERMIT_DIRECTIO,
-> >      IMA_MODSIG_ALLOWED, and IMA_CHECK_BLACKLIST conditionals to be
-> >      present in the rule entry flags for non-buffer hook functions.
-> > 
-> >   security/integrity/ima/ima_policy.c | 13 +++++++++++--
-> >   1 file changed, 11 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-> > index 8cdca2399d59..43d49ad958fb 100644
-> > --- a/security/integrity/ima/ima_policy.c
-> > +++ b/security/integrity/ima/ima_policy.c
-> > @@ -1000,6 +1000,15 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
-> >   		case KEXEC_KERNEL_CHECK:
-> >   		case KEXEC_INITRAMFS_CHECK:
-> >   		case POLICY_CHECK:
-> > +			if (entry->flags & ~(IMA_FUNC | IMA_MASK | IMA_FSMAGIC |
-> > +					     IMA_UID | IMA_FOWNER | IMA_FSUUID |
-> > +					     IMA_INMASK | IMA_EUID | IMA_PCR |
-> > +					     IMA_FSNAME | IMA_DIGSIG_REQUIRED |
-> > +					     IMA_PERMIT_DIRECTIO |
-> > +					     IMA_MODSIG_ALLOWED |
-> > +					     IMA_CHECK_BLACKLIST))
-> > +				return false;
-> > +
-> >   			break;
-> >   		case KEXEC_CMDLINE:
-> >   			if (entry->action & ~(MEASURE | DONT_MEASURE))
-> > @@ -1027,7 +1036,8 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
-> >   		default:
-> >   			return false;
-> >   		}
-> > -	}
-> > +	} else if (entry->flags & IMA_KEYRINGS)
-> > +		return false;
-> >   	return true;
-> >   }
-> > @@ -1209,7 +1219,6 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
-> >   			keyrings_len = strlen(args[0].from) + 1;
-> >   			if ((entry->keyrings) ||
-> > -			    (entry->func != KEY_CHECK) ||
-> >   			    (keyrings_len < 2)) {
-> >   				result = -EINVAL;
-> >   				break;
-> > 
