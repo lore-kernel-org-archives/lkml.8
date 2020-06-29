@@ -2,112 +2,182 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1695C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81070C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:25:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8BFC5208B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:25:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59B5521582
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:25:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FpwdF7V1"
+	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="USGV60Zz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729117AbgF2VZY (ORCPT
+        id S2388799AbgF2VZ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:25:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38368 "EHLO
+        Mon, 29 Jun 2020 17:25:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38396 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729123AbgF2Smv (ORCPT
+        with ESMTP id S1729122AbgF2Smv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:42:51 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79FF4C030F05;
-        Mon, 29 Jun 2020 09:13:18 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id o18so12702400eje.7;
-        Mon, 29 Jun 2020 09:13:18 -0700 (PDT)
+Received: from mail-qk1-x743.google.com (mail-qk1-x743.google.com [IPv6:2607:f8b0:4864:20::743])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2ADCC031C48
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 10:27:09 -0700 (PDT)
+Received: by mail-qk1-x743.google.com with SMTP id c139so15947747qkg.12
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 10:27:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ZdeFEpNDYkXFwTK4R5nfayVzl1J/Ocu3hnRhqkjhhqg=;
-        b=FpwdF7V1gcTCIKfgLOQYaXG7D5pZHEOv2lGFKzleZXMdNHT09dvKTyMItQ4HR6jw5Y
-         Jn1uJKAT3IKyK5wua6R4aKYRCSoZo1w1VhHVcmVVnswhrM7QW694+fjN0hd3bWxPkDGx
-         xK3hLXGvQPqAfzFJ5XEV/JF2Dd6PB+LD2Ae33nTPyvaANMoWkFDyV5BR0Rl+A96BHNXe
-         CPY5G4klZQI/aD7U5KuruNhhBf7tH3HtnhReiQ7RtnsLWsBUt/uuXnj3tm2qc/b32v1w
-         kfDRIpwqeDPHNcpCiiaphYtEwFMHWEmQnHZy4VM9C8Zcyly67SJk9+8AdbL2khyWCnyp
-         jhdA==
+        d=marek-ca.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=pqe14MaPsMfgtT/LBcuvaSN2cytXk1SleFgshIkTKVM=;
+        b=USGV60ZzR1pxKQN2xImazAMTEN9Qly93rcztD+sYyGT3yq/2h+C2ZfM6tWNpO2TSuW
+         sI+F0KtJIs/Rz04s9xPFkJ6DTpB5pPPAprIj3AnIMP4sEaqqcurmdjYTdABfIZZ40Awr
+         ck9UYLevqJHyUS4oEHxtxwTJ6+9/xo1gykYlCpdGmF+khLkasVMr0e8eMjVr7eSur2Hl
+         zCQK8g35HbE5WDa5bKhJmyaMG+KMygFxJkSi6qYWbZsQ3Cms7DeKU2Du8peGOUpdqvEH
+         7h199ie9F89cNHIX9BXnlcW832fl9cx4Yo0HLEglG8PnZM5iD1OX6Sbr1P9Jnusg65cJ
+         bQ/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ZdeFEpNDYkXFwTK4R5nfayVzl1J/Ocu3hnRhqkjhhqg=;
-        b=rMcdN1rhKPGpbdymli0Fye89pK8TTumgt3u1a06EZolSucmi9f7ZWmsK1jUPbe4mVQ
-         mx8iPBK4keGO9CdHGXHK/euCQXzoM3mzUyfItrBOViDBkAG4Jw44mKHJ2V5ZaxdMZ6BN
-         c9Nkrk6E4IoWnOo8Owrp324qT6qHiaJRDMHaRP6VIqqldztQTMcEqhsxCpDtFycCVPns
-         kRRXKk1evfVcqhEGl2xH79oXRFPgUUHEC+BY3jFsluhWg5r/zcG9r9qB/GwwMNaX3RRC
-         ckjRNWSKHVLAwccsnxwtM/LS1nILoV3c08CBAV7aOK0VQpW8HGj1aFXflD8MIuDxZBRq
-         cEuw==
-X-Gm-Message-State: AOAM530EK7ofJ00/v6b5FGd2hxAz5tXxJ7oi9bQpCm5DbWEWf2ErShZ2
-        KDi7I0Ni7wE23MwuZsPpFR0=
-X-Google-Smtp-Source: ABdhPJyYH8JXIDkgPspXRN2vNPMMQ+uX2Q9v7t9x0iqMg6ZIkNek0dm4JqwSffuIxDQxiUiNWQCxMQ==
-X-Received: by 2002:a17:906:71d4:: with SMTP id i20mr15394732ejk.533.1593447197127;
-        Mon, 29 Jun 2020 09:13:17 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:a03f:b7f9:7600:8d8b:2aae:ac29:9590])
-        by smtp.gmail.com with ESMTPSA id l1sm222822edi.33.2020.06.29.09.13.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 09:13:16 -0700 (PDT)
-From:   Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mike Rapoport <rppt@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Subject: [PATCH v2] doc: add link to sparse's home page/internal docs
-Date:   Mon, 29 Jun 2020 18:13:10 +0200
-Message-Id: <20200629161310.89783-1-luc.vanoostenryck@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200629044154.GB1492837@kernel.org>
-References: <20200629044154.GB1492837@kernel.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pqe14MaPsMfgtT/LBcuvaSN2cytXk1SleFgshIkTKVM=;
+        b=Ak7W6DemT01hf4T3iVvZUdyCBGJU8rG9We3Ol3ND6eNHRtKFvCuU9lMpkS/bn1g+1J
+         hdYKPFkQpxAAQf9YKlYMfKXg3s/+vF6nO7HMSod2Q5hzZUvOuAgqLJQjIZsdfH0iNnwM
+         ZrqUBQV/rtmbniis/RHtVIytGviC+W9Lv2AdcgsAx/2rewHidP2Xx9CQJULEuFVHMBV2
+         iq5wbaBY3+k9sYVxnuH0PMXcdKps9Cyqq5odUlvY0SDH+KZj6KWmlQc2eGSlRDrlhSxz
+         V3JKTpuMEh83PAFH+GU1g0bcWTSs/oB2w/UN6k1PrCRaYrpjRwYVsFlu0HRFI5HwO2xU
+         EE/A==
+X-Gm-Message-State: AOAM532AGZ5BxJUDTb0AG6TdruaVTjoxp27FZ3D8MG9V0BeyAi7FxFi2
+        4n69MU513DsLG+vfk9+8Sqc9kQ==
+X-Google-Smtp-Source: ABdhPJz6/7Q13mZzwNNVBWoMSVx5buOlaqi44+cTUPkY+oXRmbqWOckeIL2jAiQfaU3iBb439UfzvA==
+X-Received: by 2002:a37:7741:: with SMTP id s62mr4110200qkc.263.1593451628633;
+        Mon, 29 Jun 2020 10:27:08 -0700 (PDT)
+Received: from [192.168.0.189] ([147.253.86.153])
+        by smtp.gmail.com with ESMTPSA id x19sm372668qtc.36.2020.06.29.10.27.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jun 2020 10:27:08 -0700 (PDT)
+Subject: Re: [PATCH 07/10] clk: qcom: Add graphics clock controller driver for
+ SM8150
+To:     Stephen Boyd <sboyd@kernel.org>, linux-arm-msm@vger.kernel.org
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+References: <20200524210615.17035-1-jonathan@marek.ca>
+ <20200524210615.17035-8-jonathan@marek.ca>
+ <159056904079.88029.16161248455546031414@swboyd.mtv.corp.google.com>
+From:   Jonathan Marek <jonathan@marek.ca>
+Message-ID: <231bd673-aa99-6223-fa74-54e9a488833e@marek.ca>
+Date:   Mon, 29 Jun 2020 13:27:21 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <159056904079.88029.16161248455546031414@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse's home page used to be a wiki (sparse.wiki.kernel.org)
-but this wiki only contained a short intro and the release notes.
-But nowadays, sparse's main page is sparse.docs.kernel.org,
-which contains all what was in the wiki but also other documentation,
-mainly oriented about sparse's internals.
+On 5/27/20 4:44 AM, Stephen Boyd wrote:
+> Quoting Jonathan Marek (2020-05-24 14:06:08)
+>> diff --git a/drivers/clk/qcom/gpucc-sm8150.c b/drivers/clk/qcom/gpucc-sm8150.c
+>> new file mode 100644
+>> index 000000000000..6e1fff0cde75
+>> --- /dev/null
+>> +++ b/drivers/clk/qcom/gpucc-sm8150.c
+>> @@ -0,0 +1,429 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + * Copyright (c) 2017-2020, The Linux Foundation. All rights reserved.
+>> + */
+>> +
+>> +#include <linux/clk-provider.h>
+>> +#include <linux/module.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/regmap.h>
+>> +
+>> +#include <dt-bindings/clock/qcom,gpucc-sm8150.h>
+> [..]
+>> +
+>> +static struct clk_rcg2 gpu_cc_gmu_clk_src = {
+>> +       .cmd_rcgr = 0x1120,
+>> +       .mnd_width = 0,
+>> +       .hid_width = 5,
+>> +       .parent_map = gpu_cc_parent_map_0,
+>> +       .freq_tbl = ftbl_gpu_cc_gmu_clk_src,
+>> +       .clkr.hw.init = &(struct clk_init_data){
+>> +               .name = "gpu_cc_gmu_clk_src",
+>> +               .parent_names = gpu_cc_parent_names_0,
+>> +               .num_parents = 6,
+>> +               .flags = CLK_SET_RATE_PARENT,
+>> +               .ops = &clk_rcg2_ops,
+>> +       },
+>> +};
+>> +
+>> +static struct clk_branch gpu_cc_ahb_clk = {
+>> +       .halt_reg = 0x1078,
+>> +       .halt_check = BRANCH_HALT_DELAY,
+>> +       .clkr = {
+>> +               .enable_reg = 0x1078,
+>> +               .enable_mask = BIT(0),
+>> +               .hw.init = &(struct clk_init_data){
+>> +                       .name = "gpu_cc_ahb_clk",
+>> +                       .flags = CLK_IS_CRITICAL,
+> 
+> Why is this CLK_IS_CRITICAL? Why not just enable the clk manually with
+> a register write in probe and then remove this clk from the system? We
+> can save some memory that way.
+> 
 
-So, add a link to this in the kernel documentation.
+I copied this from downstream, so I don't know why. It works without it, 
+so I removed the CLK_IS_CRITICAL in my v2 (from both sm8150 and sm8250).
 
-Signed-off-by: Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
----
+>> +                       .ops = &clk_branch2_ops,
+>> +               },
+>> +       },
+>> +};
+>> +
+> [...]
+>> +
+>> +static struct gdsc gpu_cx_gdsc = {
+>> +       .gdscr = 0x106c,
+>> +       .gds_hw_ctrl = 0x1540,
+>> +       .pd = {
+>> +               .name = "gpu_cx_gdsc",
+>> +       },
+>> +       .pwrsts = PWRSTS_OFF_ON,
+>> +       .flags = VOTABLE,
+>> +};
+>> +
+>> +/* see comment in gpucc-sdm845 about this */
+>> +static int gx_gdsc_enable(struct generic_pm_domain *domain)
+>> +{
+>> +       /* Do nothing but give genpd the impression that we were successful */
+>> +       return 0;
+>> +}
+> 
+> Maybe we should export a helper from gdsc.c for this with the comment
+> and it named something obvious? gx_gdsc_do_nothing_enable()?
+> 
 
-Changes since v1:
-* fix a typo (s/kernl/kernel/) thanks to Mike Rapoport.
+Made this change in my v2.
 
- Documentation/dev-tools/sparse.rst | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/dev-tools/sparse.rst b/Documentation/dev-tools/sparse.rst
-index 8a7055593c31..02102be7ff49 100644
---- a/Documentation/dev-tools/sparse.rst
-+++ b/Documentation/dev-tools/sparse.rst
-@@ -9,6 +9,8 @@ Sparse is a semantic checker for C programs; it can be used to find a
- number of potential problems with kernel code.  See
- https://lwn.net/Articles/689907/ for an overview of sparse; this document
- contains some kernel-specific sparse information.
-+More information on sparse, mainly about its internals, can be found in
-+its official pages at https://sparse.docs.kernel.org.
- 
- 
- Using sparse for typechecking
--- 
-2.27.0
-
+>> +
+>> +static struct gdsc gpu_gx_gdsc = {
+>> +       .gdscr = 0x100c,
+>> +       .clamp_io_ctrl = 0x1508,
+>> +       .pd = {
+>> +               .name = "gpu_gx_gdsc",
+>> +               .power_on = gx_gdsc_enable,
+>> +       },
+>> +       .pwrsts = PWRSTS_OFF_ON,
+>> +       .flags = CLAMP_IO | AON_RESET | POLL_CFG_GDSCR,
+>> +};
+>> +
