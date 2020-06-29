@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8766DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:30:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 468A2C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6082E2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:30:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18DDC2067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:30:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593459047;
-	bh=zVxml5wEXF6c7i/SNNh3TfWm82mK2HgfMq8Uwz/nyfw=;
+	s=default; t=1593459051;
+	bh=kQvr20PH6P7HMgnnOg/6cEQl1b6N7Ru9B3CPfUxmv1w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1M4RGTl8ngNz03osR6AGjGvDpYTdkbEZaGPiwyoolg/jKXquksgpiB2ysld6XBAI2
-	 5NwaQvLp006L+5u8K9KlumXQcuof2NDd13dZjGQFAZAZH7QffP7UM8iyZOk9Ce3InT
-	 7T+sppwwl9KoW7lMGldIUTPOlARuV6jHlVUa9/ps=
+	b=T4xM583d9r1SAHO4ad2MyYuwTQUGKJRflgleVRk6oXdi/woufUvIgI95I25ZGxv3M
+	 4Krn15yYuJMfoXOzm39bf+6kB1mVTRwRIrASgrRAC+e2S8P17lZ3ZARVHHCEu7TUdc
+	 rx/+V3nHhk/pbo1k3SqQPM4f6jN8TaY+6Q2Vt/40=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733048AbgF2Tap (ORCPT
+        id S1730811AbgF2Tat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:30:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40568 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:30:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732759AbgF2TaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732865AbgF2TaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66AFA25224;
-        Mon, 29 Jun 2020 15:35:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6B5E92526C;
+        Mon, 29 Jun 2020 15:36:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444944;
-        bh=zVxml5wEXF6c7i/SNNh3TfWm82mK2HgfMq8Uwz/nyfw=;
+        s=default; t=1593444980;
+        bh=kQvr20PH6P7HMgnnOg/6cEQl1b6N7Ru9B3CPfUxmv1w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cjqjaCrcRE4fi7kYY/ToRvI13CxDfLjxbkKfNs8DPRwOTHPa5BvUBtsasd1KcH4vF
-         gjYw0uFTiXy+VXBSUe0UCvMgRrWmjLpxmKv2gWajw6t0vIZ+13nHQjEMEu7c7coZhq
-         SaGlKP1c12E+gYCkHisIa7eye+5DWsvaN7+SDYyY=
+        b=HAqwueatsyJYvAONsz7fZp3n++lwZz8kZbPR7x9Lt3OaInz1S5L+71yq4sUqXiPVb
+         0TvuYe0p8SeH/jtVzqV/cIQB0d9PQ4U9S8j5gi55jLplUeLKqMQyyoKf/uQui+k6bx
+         rRgEKEleTG7GBapsqV6Pynw8warfUf5mngQIp5/E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 041/131] USB: ohci-sm501: Add missed iounmap() in remove
-Date:   Mon, 29 Jun 2020 11:33:32 -0400
-Message-Id: <20200629153502.2494656-42-sashal@kernel.org>
+Cc:     yu kuai <yukuai3@huawei.com>, Shawn Guo <shawnguo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 079/131] ARM: imx5: add missing put_device() call in imx_suspend_alloc_ocram()
+Date:   Mon, 29 Jun 2020 11:34:10 -0400
+Message-Id: <20200629153502.2494656-80-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
@@ -65,36 +64,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: yu kuai <yukuai3@huawei.com>
 
-commit 07c112fb09c86c0231f6ff0061a000ffe91c8eb9 upstream.
+[ Upstream commit 586745f1598ccf71b0a5a6df2222dee0a865954e ]
 
-This driver misses calling iounmap() in remove to undo the ioremap()
-called in probe.
-Add the missed call to fix it.
+if of_find_device_by_node() succeed, imx_suspend_alloc_ocram() doesn't
+have a corresponding put_device(). Thus add a jump target to fix the
+exception handling for this function implementation.
 
-Fixes: f54aab6ebcec ("usb: ohci-sm501 driver")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Link: https://lore.kernel.org/r/20200610024844.3628408-1-hslester96@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 1579c7b9fe01 ("ARM: imx53: Set DDR pins to high impedance when in suspend to RAM.")
+Signed-off-by: yu kuai <yukuai3@huawei.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/ohci-sm501.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/mach-imx/pm-imx5.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/host/ohci-sm501.c b/drivers/usb/host/ohci-sm501.c
-index c9233cddf9a23..0a39dc58f3767 100644
---- a/drivers/usb/host/ohci-sm501.c
-+++ b/drivers/usb/host/ohci-sm501.c
-@@ -196,6 +196,7 @@ static int ohci_hcd_sm501_drv_remove(struct platform_device *pdev)
- 	struct resource	*mem;
+diff --git a/arch/arm/mach-imx/pm-imx5.c b/arch/arm/mach-imx/pm-imx5.c
+index 868781fd460c7..14c630c899c5d 100644
+--- a/arch/arm/mach-imx/pm-imx5.c
++++ b/arch/arm/mach-imx/pm-imx5.c
+@@ -301,14 +301,14 @@ static int __init imx_suspend_alloc_ocram(
+ 	if (!ocram_pool) {
+ 		pr_warn("%s: ocram pool unavailable!\n", __func__);
+ 		ret = -ENODEV;
+-		goto put_node;
++		goto put_device;
+ 	}
  
- 	usb_remove_hcd(hcd);
-+	iounmap(hcd->regs);
- 	release_mem_region(hcd->rsrc_start, hcd->rsrc_len);
- 	usb_put_hcd(hcd);
- 	dma_release_declared_memory(&pdev->dev);
+ 	ocram_base = gen_pool_alloc(ocram_pool, size);
+ 	if (!ocram_base) {
+ 		pr_warn("%s: unable to alloc ocram!\n", __func__);
+ 		ret = -ENOMEM;
+-		goto put_node;
++		goto put_device;
+ 	}
+ 
+ 	phys = gen_pool_virt_to_phys(ocram_pool, ocram_base);
+@@ -318,6 +318,8 @@ static int __init imx_suspend_alloc_ocram(
+ 	if (virt_out)
+ 		*virt_out = virt;
+ 
++put_device:
++	put_device(&pdev->dev);
+ put_node:
+ 	of_node_put(node);
+ 
 -- 
 2.25.1
 
