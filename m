@@ -2,273 +2,151 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D018CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 01:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FB3BC433E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 02:00:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A7AFE206D7
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 01:59:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593395983;
-	bh=dX0ond8LQtfn1hNhjsh/h9hbAMSX/l0mn+zPmUSb8l4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=T5RmbGSxOy4LdE8z1kY9JxO/e7bbowp44PTFIsewWlDpDHDvbIF/VNu2LiXckKwVa
-	 6jHSlEz9YWpQhdgLxIpUxoGWocaL7A/ZkzZbhlnWKU7ZKYQNb56DTUF6WXHHv45wBH
-	 iweFvIupk74cEFbOZjbzb96dfTy01aGtetzQiCg4=
+	by mail.kernel.org (Postfix) with ESMTP id 6B5C82065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 02:00:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="ee9t3F11"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbgF2B7T (ORCPT
+        id S1726824AbgF2CAg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 21:59:19 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:52993 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726395AbgF2B7S (ORCPT
+        Sun, 28 Jun 2020 22:00:36 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:22033 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726395AbgF2CAf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 21:59:18 -0400
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id 05T1wrhY026679;
-        Mon, 29 Jun 2020 10:58:54 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com 05T1wrhY026679
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1593395934;
-        bh=9tkczWrDF94rquYkpshg2066UxbdWAU7/IQZMMHgcHk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=MoUBXjDjfwrD004XaAp3FMcLiojjTf55KcU/DYvYxStWC40CZcjrT78rvjMFch90P
-         HlltjJnPbG5QhlSt/EgW0HF0IOWOWgOV53vEtx00cOensKuUnjk2K/kGI+j4ChWX4/
-         aLK1eEe0SuGPdgm4MgdKa2VPfhrPI6RylthG0HnLGEnfl05LWSFqbVsopd8RcsjOvg
-         nwqFY9A1QflE19mYgLutRkBS4+jqQNisPOgT8pEaVffVsgYpNDeCiZ3CMqj0GOhfft
-         v77TMKMVIZXlx442Ad8ptxX1TasPNVvfUbOXIkj240jKJ5k4XJ+Zu9b97pusJypkIN
-         EPEHtVDLArEKQ==
-X-Nifty-SrcIP: [209.85.217.52]
-Received: by mail-vs1-f52.google.com with SMTP id p25so603529vsg.4;
-        Sun, 28 Jun 2020 18:58:54 -0700 (PDT)
-X-Gm-Message-State: AOAM533PkJpGLG87aVtYiN8garf64zRObOUFm5K8B0HRucVRIyTB5pmE
-        6QZPkC7/BbLQHRxt8SKq9i+Bi210dknkgxiSKe8=
-X-Google-Smtp-Source: ABdhPJwwt9nTyJt4lJs7J7MMu8vv3Mejl87SDD9G5fLdcZ9lM2EsdqTD+d8PRiUxM0DLIMECB7cyX4bKJHxdyHuX5I8=
-X-Received: by 2002:a67:6383:: with SMTP id x125mr9987726vsb.54.1593395933076;
- Sun, 28 Jun 2020 18:58:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200623114614.792648-1-yamada.masahiro@socionext.com>
- <20200623114614.792648-4-yamada.masahiro@socionext.com> <20200623122413.GA954398@dell>
- <CAK7LNAR-dm6Zbtt9MsUunn9+qqwTtRCbq4Wzb=8uKLtfaLK6TQ@mail.gmail.com>
- <20200624181605.GJ954398@dell> <CAK7LNATFUX56t=wn-3qOSYLwESp63gqDWjADEVQ1g1CYrGxA3g@mail.gmail.com>
- <20200625145726.GT954398@dell>
-In-Reply-To: <20200625145726.GT954398@dell>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Mon, 29 Jun 2020 10:58:16 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQdoe_eS8d9AoF1p4QgAB7oUM9aA+qgFS2GwPZsZbTnhg@mail.gmail.com>
-Message-ID: <CAK7LNAQdoe_eS8d9AoF1p4QgAB7oUM9aA+qgFS2GwPZsZbTnhg@mail.gmail.com>
-Subject: Re: [PATCH 4/4] ARM: dts: uniphier: change support card to simple-mfd
- from simple-bus
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Sun, 28 Jun 2020 22:00:35 -0400
+X-UUID: d4dad5e9f2de48a7b2effb1e3118ad79-20200629
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=4lFMxuhJ25naDr/+y71J6EdZIeUqF8IshiKTFLqt/kg=;
+        b=ee9t3F11yR6wmVzfKNgLjYBuVH3SHqVpPM23ra21biUVzpNs3XC0xuqdYq37SPMLS84+IF0Ank/3XrMyFFQKj7535J5eATL8tnBkNId7+85wQio3V8U4BjPctq9IE8qeSshLnzA0i2p8JEPh9F4yjVhVEDgzgvYY02gEoOX0jcc=;
+X-UUID: d4dad5e9f2de48a7b2effb1e3118ad79-20200629
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <qii.wang@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1803340885; Mon, 29 Jun 2020 10:00:28 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS32N1.mediatek.inc
+ (172.27.4.71) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Mon, 29 Jun
+ 2020 10:00:26 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Mon, 29 Jun 2020 10:00:26 +0800
+Message-ID: <1593396009.15820.6.camel@mhfsdcap03>
+Subject: Re: [PATCH] i2c: mediatek: Add to support continuous mode
+From:   Qii Wang <qii.wang@mediatek.com>
+To:     Qiangming Xia <qiangming.xia@mediatek.com>
+CC:     <wsa@the-dreams.de>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>, <srv_heupstream@mediatek.com>
+Date:   Mon, 29 Jun 2020 10:00:09 +0800
+In-Reply-To: <20200619080643.25269-1-qiangming.xia@mediatek.com>
+References: <20200619080643.25269-1-qiangming.xia@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: C31847E92F6DEFDA176D4CA2DAB465987940A895748A3FC01C0609B5BC4887B02000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 11:57 PM Lee Jones <lee.jones@linaro.org> wrote:
->
-> On Thu, 25 Jun 2020, Masahiro Yamada wrote:
->
-> > On Thu, Jun 25, 2020 at 3:16 AM Lee Jones <lee.jones@linaro.org> wrote:
-> > >
-> > > On Thu, 25 Jun 2020, Masahiro Yamada wrote:
-> > >
-> > > > On Tue, Jun 23, 2020 at 9:24 PM Lee Jones <lee.jones@linaro.org> wr=
-ote:
-> > > > >
-> > > > > On Tue, 23 Jun 2020, Masahiro Yamada wrote:
-> > > > >
-> > > > > > 'make ARCH=3Darm dtbs_check' emits the following warning:
-> > > > > >
-> > > > > >   support-card@1,1f00000: $nodename:0: 'support-card@1,1f00000'=
- does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
-> > > > > >
-> > > > > > Maybe, simple-mfd could be a better fit for this device.
-> > > > >
-> > > > > The two should be equivalent.
-> > > >
-> > > > Yes, I know.
-> > > > That's why I can change "simple-bus" to "simple-mfd"
-> > > > with no risk.
-> > > >
-> > > > The difference is schema-check.
-> > > >
-> > > > The node name for "simple-bus" is checked by 'make dtbs_check'.
-> > > >
-> > > > See this code:
-> > > > https://github.com/robherring/dt-schema/blob/v2020.05/schemas/simpl=
-e-bus.yaml#L17
-> > > >
-> > > > Even if I rename the node, it does not accept the
-> > > > unit name '1,1f00000'
-> > > >
-> > > > > What do you mean by "maybe"?  Does this squash the warning?
-> > > >
-> > > > "maybe" means I am not quite sure
-> > > > which compatible is a better fit
-> > > > to describe this device.
-> > > >
-> > > > As mentioned above, simple-bus and simple-mfd
-> > > > are interchangeable from a driver point of view.
-> > > >
-> > > > This add-on board is integrated with various peripherals
-> > > > such as 16550a serial, smsc9115 ether etc.
-> > > > The address-decode is implemented in a CPLD device.
-> > > > It has chip selects and local addresses, which are mapped to
-> > > > the parent.
-> > > >
-> > > > It can be either simple-bus or simple-mfd, I think.
-> > > >
-> > > >
-> > > > dt-schema checks the node name of simple-bus.
-> > > > Currently, there is no check for simple-mfd.
-> > > >
-> > > > So, I think this patch is an easy solution
-> > > > to fix the warning.
-> > >
-> > > Yes, looking at the documentation it seems as though 'simple-mfd'
-> > > would be a better fit.  Is the device a single IP with various
-> > > different functions?
-> >
-> > Not an IP.
-> >
-> > This is a small board that consists of
-> > a CPLD + ethernet controller + serial controller + LED, etc.
->
-> Then simple MFD does not seem like a good fit.
->
-> Neither does 'simple-bus'.
+SGkgUWlhbmdtaW5nOg0KCURvIHlvdSBoYXZlIHRoZSBzcGVjaWZpYyB0aW1pbmcgY29zdCBkYXRh
+IGFib3V0IHRoZSAiY29udGludW91cyBtb2RlIj8NCklzIGl0IGJldHRlciB0aGFuIHRoZSBkZWZh
+dWx0IG11bHRpLXdyaXRlIG1vZGUob25lIG1lc3NhZ2UgYnkgb25lDQptZXNzYWdlKSA/SSBuZWVk
+IHRvIGtub3cgaWYgdGhpcyBwYXRjaCBpcyB2ZXJ5IG5lY2Vzc2FyeS4NCg0KT24gRnJpLCAyMDIw
+LTA2LTE5IGF0IDE2OjA2ICswODAwLCBRaWFuZ21pbmcgWGlhIHdyb3RlOg0KPiBGcm9tOiAicWlh
+bmdtaW5nLnhpYSIgPHFpYW5nbWluZy54aWFAbWVkaWF0ZWsuY29tPg0KPiANCj4gICAgIE1lZGlh
+dGVrIGkyYyBjb250cm9sbGVyIHN1cHBvcnQgZm9yIGNvbnRpbnVvdXMgbW9kZSwNCj4gaXQgYWxs
+b3cgdG8gdHJhbnNmZXIgb25jZSBtdWx0aXBsZSB3cml0aW5nIG1lc3NhZ2VzIG9mIGVxdWFsIGxl
+bmd0aC4NCj4gICAgIEZvciBleGFtcGxlLCBhIHNsYXZlIG5lZWQgd3JpdGUgYSBzZXJpYWwgb2Yg
+bm9uLWNvbnRpbnVvdXMNCj4gb2Zmc2V0IHJhbmdlIGluIGNoaXAsZS5nLiB3cml0aW5nIG9mZnNl
+dCAwLG9mZnNldCAyIGFuZCBvZmZzZXQgNC4NCj4gTm9ybWFsbHksIGl0IG5lZWQgdGhyZWUgdGlt
+ZXMgaTJjIHdyaXRlIG9wZXJhdGlvbi4gSG93ZXZlcixpdCBjYW4NCj4gdXNlIG9uY2UgdHJhbnNm
+ZXIgdG8gZmluaXNoIGl0IGJ5IHVzaW5nIGNvbnRpbnVvdXMgbW9kZS4NCj4gDQo+IENoYW5nZS1J
+ZDogSWYwNjk5MWUzZmQzMjg2N2JkZWFhY2YxNWJiMjQ4NjRkNWM1OTA0ZDANCj4gU2lnbmVkLW9m
+Zi1ieTogUWlhbmdtaW5nIFhpYSA8cWlhbmdtaW5nLnhpYUBtZWRpYXRlay5jb20+DQo+IC0tLQ0K
+PiAgZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1tdDY1eHguYyB8IDY3ICsrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKw0KPiAgMSBmaWxlIGNoYW5nZWQsIDY3IGluc2VydGlvbnMoKykNCj4g
+DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLW10NjV4eC5jIGIvZHJpdmVy
+cy9pMmMvYnVzc2VzL2kyYy1tdDY1eHguYw0KPiBpbmRleCBkZWVmNjllNTY5MDYuLjc2ZWM2NWQ4
+NjlmNiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9pMmMvYnVzc2VzL2kyYy1tdDY1eHguYw0KPiAr
+KysgYi9kcml2ZXJzL2kyYy9idXNzZXMvaTJjLW10NjV4eC5jDQo+IEBAIC05Nyw2ICs5Nyw3IEBA
+IGVudW0gbXRrX3RyYW5zX29wIHsNCj4gIAlJMkNfTUFTVEVSX1dSID0gMSwNCj4gIAlJMkNfTUFT
+VEVSX1JELA0KPiAgCUkyQ19NQVNURVJfV1JSRCwNCj4gKwlJMkNfTUFTVEVSX0NPTlRJTlVPVVNf
+V1IsDQo+ICB9Ow0KPiAgDQo+ICBlbnVtIEkyQ19SRUdTX09GRlNFVCB7DQo+IEBAIC04NDYsNiAr
+ODQ3LDkgQEAgc3RhdGljIGludCBtdGtfaTJjX2RvX3RyYW5zZmVyKHN0cnVjdCBtdGtfaTJjICpp
+MmMsIHN0cnVjdCBpMmNfbXNnICptc2dzLA0KPiAgCQkJCQkgICAgT0ZGU0VUX1RSQU5TRkVSX0xF
+Tik7DQo+ICAJCX0NCj4gIAkJbXRrX2kyY193cml0ZXcoaTJjLCBJMkNfV1JSRF9UUkFOQUNfVkFM
+VUUsIE9GRlNFVF9UUkFOU0FDX0xFTik7DQo+ICsJfSBlbHNlIGlmIChpMmMtPm9wID09IEkyQ19N
+QVNURVJfQ09OVElOVU9VU19XUikgew0KPiArCQltdGtfaTJjX3dyaXRldyhpMmMsIG1zZ3MtPmxl
+biAvIG51bSwgT0ZGU0VUX1RSQU5TRkVSX0xFTik7DQo+ICsJCW10a19pMmNfd3JpdGV3KGkyYywg
+bnVtLCBPRkZTRVRfVFJBTlNBQ19MRU4pOw0KPiAgCX0gZWxzZSB7DQo+ICAJCW10a19pMmNfd3Jp
+dGV3KGkyYywgbXNncy0+bGVuLCBPRkZTRVRfVFJBTlNGRVJfTEVOKTsNCj4gIAkJbXRrX2kyY193
+cml0ZXcoaTJjLCBudW0sIE9GRlNFVF9UUkFOU0FDX0xFTik7DQo+IEBAIC04OTYsNiArOTAwLDIz
+IEBAIHN0YXRpYyBpbnQgbXRrX2kyY19kb190cmFuc2ZlcihzdHJ1Y3QgbXRrX2kyYyAqaTJjLCBz
+dHJ1Y3QgaTJjX21zZyAqbXNncywNCj4gIAkJCXdyaXRlbChyZWdfNGdfbW9kZSwgaTJjLT5wZG1h
+YmFzZSArIE9GRlNFVF9UWF80R19NT0RFKTsNCj4gIAkJfQ0KPiAgDQo+ICsJCXdyaXRlbCgodTMy
+KXdwYWRkciwgaTJjLT5wZG1hYmFzZSArIE9GRlNFVF9UWF9NRU1fQUREUik7DQo+ICsJCXdyaXRl
+bChtc2dzLT5sZW4sIGkyYy0+cGRtYWJhc2UgKyBPRkZTRVRfVFhfTEVOKTsNCj4gKwl9IGVsc2Ug
+aWYgKGkyYy0+b3AgPT0gSTJDX01BU1RFUl9DT05USU5VT1VTX1dSKSB7DQo+ICsJCXdyaXRlbChJ
+MkNfRE1BX0lOVF9GTEFHX05PTkUsIGkyYy0+cGRtYWJhc2UgKyBPRkZTRVRfSU5UX0ZMQUcpOw0K
+PiArCQl3cml0ZWwoSTJDX0RNQV9DT05fVFgsIGkyYy0+cGRtYWJhc2UgKyBPRkZTRVRfQ09OKTsN
+Cj4gKwkJd3BhZGRyID0gZG1hX21hcF9zaW5nbGUoaTJjLT5kZXYsIG1zZ3MtPmJ1ZiwNCj4gKwkJ
+CQkJbXNncy0+bGVuLCBETUFfVE9fREVWSUNFKTsNCj4gKwkJaWYgKGRtYV9tYXBwaW5nX2Vycm9y
+KGkyYy0+ZGV2LCB3cGFkZHIpKSB7DQo+ICsJCQlrZnJlZShtc2dzLT5idWYpOw0KPiArCQkJcmV0
+dXJuIC1FTk9NRU07DQo+ICsJCX0NCj4gKw0KPiArCQlpZiAoaTJjLT5kZXZfY29tcC0+c3VwcG9y
+dF8zM2JpdHMpIHsNCj4gKwkJCXJlZ180Z19tb2RlID0gbXRrX2kyY19zZXRfNGdfbW9kZSh3cGFk
+ZHIpOw0KPiArCQkJd3JpdGVsKHJlZ180Z19tb2RlLCBpMmMtPnBkbWFiYXNlICsgT0ZGU0VUX1RY
+XzRHX01PREUpOw0KPiArCQl9DQo+ICsNCj4gIAkJd3JpdGVsKCh1MzIpd3BhZGRyLCBpMmMtPnBk
+bWFiYXNlICsgT0ZGU0VUX1RYX01FTV9BRERSKTsNCj4gIAkJd3JpdGVsKG1zZ3MtPmxlbiwgaTJj
+LT5wZG1hYmFzZSArIE9GRlNFVF9UWF9MRU4pOw0KPiAgCX0gZWxzZSB7DQo+IEBAIC05NzksNiAr
+MTAwMCwxMSBAQCBzdGF0aWMgaW50IG10a19pMmNfZG9fdHJhbnNmZXIoc3RydWN0IG10a19pMmMg
+KmkyYywgc3RydWN0IGkyY19tc2cgKm1zZ3MsDQo+ICAJCQkJIG1zZ3MtPmxlbiwgRE1BX0ZST01f
+REVWSUNFKTsNCj4gIA0KPiAgCQlpMmNfcHV0X2RtYV9zYWZlX21zZ19idWYoZG1hX3JkX2J1Ziwg
+bXNncywgdHJ1ZSk7DQo+ICsJfSBlbHNlIGlmIChpMmMtPm9wID09IEkyQ19NQVNURVJfQ09OVElO
+VU9VU19XUikgew0KPiArCQlkbWFfdW5tYXBfc2luZ2xlKGkyYy0+ZGV2LCB3cGFkZHIsDQo+ICsJ
+CQkJIG1zZ3MtPmxlbiwgRE1BX1RPX0RFVklDRSk7DQo+ICsNCj4gKwkJa2ZyZWUobXNncy0+YnVm
+KTsNCj4gIAl9IGVsc2Ugew0KPiAgCQlkbWFfdW5tYXBfc2luZ2xlKGkyYy0+ZGV2LCB3cGFkZHIs
+IG1zZ3MtPmxlbiwNCj4gIAkJCQkgRE1BX1RPX0RFVklDRSk7DQo+IEBAIC0xMDA5LDYgKzEwMzUs
+OSBAQCBzdGF0aWMgaW50IG10a19pMmNfdHJhbnNmZXIoc3RydWN0IGkyY19hZGFwdGVyICphZGFw
+LA0KPiAgew0KPiAgCWludCByZXQ7DQo+ICAJaW50IGxlZnRfbnVtID0gbnVtOw0KPiArCWludCBp
+LCBqOw0KPiArCXU4ICpkbWFfbXVsdGlfd3JfYnVmOw0KPiArCXN0cnVjdCBpMmNfbXNnIG11bHRp
+X21zZ1sxXTsNCj4gIAlzdHJ1Y3QgbXRrX2kyYyAqaTJjID0gaTJjX2dldF9hZGFwZGF0YShhZGFw
+KTsNCj4gIA0KPiAgCXJldCA9IG10a19pMmNfY2xvY2tfZW5hYmxlKGkyYyk7DQo+IEBAIC0xMDI1
+LDYgKzEwNTQsNDQgQEAgc3RhdGljIGludCBtdGtfaTJjX3RyYW5zZmVyKHN0cnVjdCBpMmNfYWRh
+cHRlciAqYWRhcCwNCj4gIAkJfQ0KPiAgCX0NCj4gIA0KPiArCWlmIChudW0gPiAxKSB7DQo+ICsJ
+CWZvciAoaSA9IDA7IGkgPCBudW0gLSAxOyBpKyspIHsNCj4gKwkJCWlmICghKG1zZ3NbaV0uZmxh
+Z3MgJiBJMkNfTV9SRCkgJiYgIShtc2dzW2krMV0uZmxhZ3MgJg0KPiArCQkJCUkyQ19NX1JEKSAm
+JiAobXNnc1tpXS5hZGRyID09IG1zZ3NbaSsxXS5hZGRyKQ0KPiArCQkJCQkmJiAobXNnc1tpXS5s
+ZW4gPT0gbXNnc1tpKzFdLmxlbikpIHsNCj4gKwkJCQljb250aW51ZTsNCj4gKwkJCX0gZWxzZQ0K
+PiArCQkJCWJyZWFrOw0KPiArCQl9DQo+ICsJCWlmIChpID49IG51bSAtIDEpIHsNCj4gKwkJCWky
+Yy0+b3AgPSBJMkNfTUFTVEVSX0NPTlRJTlVPVVNfV1I7DQo+ICsJCQlqID0gMDsNCj4gKwkJCWRt
+YV9tdWx0aV93cl9idWYgPSBremFsbG9jKG1zZ3MtPmxlbiAqIG51bSwgR0ZQX0tFUk5FTCk7DQo+
+ICsJCQlpZiAoIWRtYV9tdWx0aV93cl9idWYpIHsNCj4gKwkJCQlyZXQgPSAgLUVOT01FTTsNCj4g
+KwkJCQlnb3RvIGVycl9leGl0Ow0KPiArCQkJfQ0KPiArCQkJbXVsdGlfbXNnLT5hZGRyICA9IG1z
+Z3MtPmFkZHI7DQo+ICsJCQltdWx0aV9tc2ctPmxlbiAgID0gbXNncy0+bGVuICogbnVtOw0KPiAr
+CQkJbXVsdGlfbXNnLT5idWYgICA9IGRtYV9tdWx0aV93cl9idWY7DQo+ICsJCQltdWx0aV9tc2ct
+PmZsYWdzICA9IDA7DQo+ICsJCQl3aGlsZSAoaiA8IG51bSkgew0KPiArCQkJCW1lbWNweShkbWFf
+bXVsdGlfd3JfYnVmICsgbXNncy0+bGVuICogaiwNCj4gKwkJCQkJCQltc2dzLT5idWYsIG1zZ3Mt
+Pmxlbik7DQo+ICsJCQkJaisrOw0KPiArCQkJCW1zZ3MrKzsNCj4gKwkJCQl9DQo+ICsNCj4gKwkJ
+CWkyYy0+aWdub3JlX3Jlc3RhcnRfaXJxID0gZmFsc2U7DQo+ICsJCQlyZXQgPSBtdGtfaTJjX2Rv
+X3RyYW5zZmVyKGkyYywgbXVsdGlfbXNnLCBudW0sIDApOw0KPiArCQkJaWYgKHJldCA8IDApDQo+
+ICsJCQkJZ290byBlcnJfZXhpdDsNCj4gKwkJCXJldCA9IG51bTsNCj4gKwkJCQlnb3RvIGVycl9l
+eGl0Ow0KPiArDQo+ICsJCX0NCj4gKwl9DQo+ICsNCj4gIAlpZiAoaTJjLT5hdXRvX3Jlc3RhcnQg
+JiYgbnVtID49IDIgJiYgaTJjLT5zcGVlZF9oeiA+IEkyQ19NQVhfRkFTVF9NT0RFX0ZSRVEpDQo+
+ICAJCS8qIGlnbm9yZSB0aGUgZmlyc3QgcmVzdGFydCBpcnEgYWZ0ZXIgdGhlIG1hc3RlciBjb2Rl
+LA0KPiAgCQkgKiBvdGhlcndpc2UgdGhlIGZpcnN0IHRyYW5zZmVyIHdpbGwgYmUgZGlzY2FyZGVk
+Lg0KDQo=
 
-Then, I do not know what to do.
-
-
-This board connection is so simple
-that no hardware initialization needed to get access
-to peripherals.
-
-So, 'simple-bus' or 'simple-mfd' is preferred.
-
-If this is not either simple-bus or simple-mfd,
-I need a special driver to probe the
-child devices such as ethernet, serial etc.
-
-
-
-> What is it you're trying to describe in the device hierarchy?
-
-
-The connection is as follows:
-
-
-|-Main board -|      |----- add-on board ----|
-|             |      |     (this board)      |
-|             |      |                       |
-|    (SoC) ---|------|--- CPLD --- ethernet  |
-|             |      |          |- serial    |
-|-------------|      |          |- LED       |
-                     |                       |
-                     |-----------------------|
-
-
-
-uniphier-support-card.dtsi describes the
-"add-on board" part.
-Address-decode is implemented in CPLD.
-
-
-So, the criteria to become MFD is
-whether it is an IP integrated into SoC.
-
-
-- implemented in an SoC  --> MFD
-
-- implemented in a board + CPLD  --> not MFD
-
-
-Right?
-
-
-
-
->
-> > > > Rob is in Cc. Please add comments if any.
-> > > >
-> > > > > Isn't the issue caused by the ','?
-> > > >
-> > > > Right.
-> > > >
-> > > > The node name of simple-bus
-> > > > must meet the regular expression:
-> > > > "^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$"
-> > > >
-> > > >
-> > > > Even if I rename the node
-> > > > "support-card@1,1f00000"
-> > > > to "bus@1,1f00000", the warning is still
-> > > > displayed due to ','
-> > > >
-> > > > "1,1f00000" means
-> > > > the address 0x01f00000 of chip select 1.
-> > >
-> > > Is this an officially accepted format?
-> >
-> > I am not sure if it is official.
-> >
-> > Rob said the data fields should be separated by commas.
-> > https://www.spinics.net/lists/devicetree/msg201565.html
->
-> Are you sure he doesn't mean in the 'reg' property.
->
-> Rather than the node-name@NNNNNNNN syntax.
->
-> BTW, I think the error you link to above is related to the
-> node-name@NNNNNNNN not matching the value listed in the 'reg'
-> property.
-
-
-If I get rid of @NNNNNNNN part,
-DTC warns the following for W=3D1 builds:
-
-arch/arm/boot/dts/uniphier-support-card.dtsi:12.29-32.4: Warning
-(unit_address_vs_reg): /soc/system-bus@58c00000/support-card: node has
-a reg or ranges property, but no unit name
-
-
-
-So, 'reg' or 'range' requires a unit name.
-
-A unit name should be a base address.
-If it has a chip select, the format is
-<chip-select>,<base-address>
-
-But the schema does not allow commas
-in a unit name of simple-bus.
-
-This is the problem I am trying to do something for.
-
-
-
-
-
->
-> --
-> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
-> Senior Technical Lead - Developer Services
-> Linaro.org =E2=94=82 Open source software for Arm SoCs
-> Follow Linaro: Facebook | Twitter | Blog
-
-
-
---=20
-Best Regards
-Masahiro Yamada
