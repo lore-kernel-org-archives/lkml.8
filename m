@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE80C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:12:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F22E0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3118C20768
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:12:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC2A2206F1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:12:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390582AbgF2VMF (ORCPT
+        id S2390577AbgF2VME (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:12:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40896 "EHLO
+        Mon, 29 Jun 2020 17:12:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730164AbgF2S5p (ORCPT
+        with ESMTP id S1730169AbgF2S5p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:57:45 -0400
 Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC2DBC02E2E4
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:09:37 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id q22so6386801qtl.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:09:37 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B719AC02E2E5
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:09:38 -0700 (PDT)
+Received: by mail-qt1-x842.google.com with SMTP id i16so12897190qtr.7
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:09:38 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Ow5IjitOhPe4K+XzmWKutH7vNHBYnOBggpvRv8VxVJs=;
-        b=BtcHvDSqW1ZzjjTPCigcDDLPJolh7XImv0pPKPNBEsVjlcvMxr3qrSfmlE3N+18kZm
-         1bqOFBVPuA4ZSoMunHUx6JhrWVacbLwRAZcQRRvufZqvT7v2MGKMBtaZ50a0L26jtlfg
-         Io4Rhc3jQX/xPeuSj79idRn/UTY+JbTD2cpIDX7do0fXjKcWK+roxuFoF/d7d87nfp1C
-         /P0G6Ye9smfmQbGuAWxkungW+NI0iBWWwZVKH4vj8IgLG4oCG3abYLClSZN17Degf+D+
-         O/xEUgS5nL+y+ppVNYuzc4wFnlKoI5XGml8ACpdUKqsCk2Bq+bTksG2FHvKH0inNWZGC
-         KyYg==
-X-Gm-Message-State: AOAM530A1/I7lvfrBJ0XGASQ+ahUijdO6SywL+kPJakoi09cj3+iPhht
-        jB+LyQT3TxmjEQ2iwjBceO8=
-X-Google-Smtp-Source: ABdhPJzcKZZYOMjC9uZ2/0WY5dbETnkJBTAitU959jVf9n3KWSY30yjlYk9vzj1jof90pzp4Iq6FOw==
-X-Received: by 2002:ac8:6b90:: with SMTP id z16mr15883022qts.217.1593439776808;
-        Mon, 29 Jun 2020 07:09:36 -0700 (PDT)
+        bh=OyRLhmmg196boVRym4uq/3Xo7lzHpOrDcyVkIVFndQ8=;
+        b=nDvX6vBHbRbIWGoWReWIGjnSixepQqloCRikuQQbQ9fB82JxBDmmBWw5/mn0FO08gj
+         ziDM7vC1z4Xall//tO7pePxCmidu1yhii8lQrMXTag+2TmTcaT7jD2rnrP7hIOkJlzEE
+         sjlYRATVmOa46MZNviyGgmd40b6P09JjFdDi7IDzUvd3QkSXGGsu4qqiYIYFpEX+Ux5j
+         KqK7n/jK05u9BpQQNdC0ELNNzsjdhH8MKe/ysEK8hW+TuLDWDemrrUP2pi80LOn67mXg
+         PIdVYm3xTAFRdwxu5HWQXV2wFbktRyEYR67q+RWD26BNAbdzq2uJlkQzOoKn8cKD10UD
+         5wuw==
+X-Gm-Message-State: AOAM533wLKwgejIT4KycSzZ3EACVjhJSBDWxDrT+1kiPsD+25K7brZyg
+        vallkh58pTsx/X26bhFJtqI=
+X-Google-Smtp-Source: ABdhPJxdZReBffM64gHa8N6wU30s4iNr1z5tYJ+NO1qz4x9Mqpr5kXHfG16a6rjxxUrxLPWAmqZYSw==
+X-Received: by 2002:ac8:32da:: with SMTP id a26mr15995141qtb.379.1593439777847;
+        Mon, 29 Jun 2020 07:09:37 -0700 (PDT)
 Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id i26sm10741461qkh.14.2020.06.29.07.09.35
+        by smtp.gmail.com with ESMTPSA id i26sm10741461qkh.14.2020.06.29.07.09.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 07:09:36 -0700 (PDT)
+        Mon, 29 Jun 2020 07:09:37 -0700 (PDT)
 From:   Arvind Sankar <nivedita@alum.mit.edu>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
@@ -62,9 +62,9 @@ Cc:     Nick Desaulniers <ndesaulniers@google.com>,
         Nathan Chancellor <natechancellor@gmail.com>,
         Arnd Bergmann <arnd@arndb.de>,
         "H . J . Lu" <hjl@sourceware.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 6/7] x86/boot: Remove runtime relocations from head_{32,64}.S
-Date:   Mon, 29 Jun 2020 10:09:27 -0400
-Message-Id: <20200629140928.858507-7-nivedita@alum.mit.edu>
+Subject: [PATCH v3 7/7] x86/boot: Check that there are no runtime relocations
+Date:   Mon, 29 Jun 2020 10:09:28 -0400
+Message-Id: <20200629140928.858507-8-nivedita@alum.mit.edu>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <20200629140928.858507-1-nivedita@alum.mit.edu>
 References: <20200629140928.858507-1-nivedita@alum.mit.edu>
@@ -75,112 +75,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The BFD linker generates runtime relocations for z_input_len and
-z_output_len, even though they are absolute symbols.
+Add a linker script check that there are no runtime relocations, and
+remove the old one that tries to check via looking for specially-named
+sections in the object files.
 
-This is fixed for binutils-2.35 [1]. Work around this for earlier
-versions by defining two variables input_len and output_len in addition
-to the symbols, and use them via position-independent references.
-
-This eliminates the last two runtime relocations in the head code and
-allows us to drop the -z noreloc-overflow flag to the linker.
-
-[1] https://sourceware.org/bugzilla/show_bug.cgi?id=25754
+Drop the tests for -fPIE compiler option and -pie linker option, as they
+are available in all supported gcc and binutils versions (as well as
+clang and lld).
 
 Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
 Reviewed-by: Fangrui Song <maskray@google.com>
 ---
- arch/x86/boot/compressed/Makefile  |  8 --------
- arch/x86/boot/compressed/head_32.S | 17 ++++++++---------
- arch/x86/boot/compressed/head_64.S |  4 ++--
- arch/x86/boot/compressed/mkpiggy.c |  6 ++++++
- 4 files changed, 16 insertions(+), 19 deletions(-)
+ arch/x86/boot/compressed/Makefile      | 28 +++-----------------------
+ arch/x86/boot/compressed/vmlinux.lds.S |  8 ++++++++
+ 2 files changed, 11 insertions(+), 25 deletions(-)
 
 diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index b01c8aed0f23..242b291037e8 100644
+index 242b291037e8..9b064ea55537 100644
 --- a/arch/x86/boot/compressed/Makefile
 +++ b/arch/x86/boot/compressed/Makefile
-@@ -51,15 +51,7 @@ UBSAN_SANITIZE :=n
+@@ -29,7 +29,7 @@ targets := vmlinux vmlinux.bin vmlinux.bin.gz vmlinux.bin.bz2 vmlinux.bin.lzma \
+ 	vmlinux.bin.xz vmlinux.bin.lzo vmlinux.bin.lz4
+ 
+ KBUILD_CFLAGS := -m$(BITS) -O2
+-KBUILD_CFLAGS += -fno-strict-aliasing $(call cc-option, -fPIE, -fPIC)
++KBUILD_CFLAGS += -fno-strict-aliasing -fPIE
+ KBUILD_CFLAGS += -DDISABLE_BRANCH_PROFILING
+ cflags-$(CONFIG_X86_32) := -march=i386
+ cflags-$(CONFIG_X86_64) := -mcmodel=small
+@@ -51,7 +51,7 @@ UBSAN_SANITIZE :=n
  KBUILD_LDFLAGS := -m elf_$(UTS_MACHINE)
  # Compressed kernel should be built as PIE since it may be loaded at any
  # address by the bootloader.
--ifeq ($(CONFIG_X86_32),y)
- KBUILD_LDFLAGS += $(call ld-option, -pie) $(call ld-option, --no-dynamic-linker)
--else
--# To build 64-bit compressed kernel as PIE, we disable relocation
--# overflow check to avoid relocation overflow error with a new linker
--# command-line option, -z noreloc-overflow.
--KBUILD_LDFLAGS += $(shell $(LD) --help 2>&1 | grep -q "\-z noreloc-overflow" \
--	&& echo "-z noreloc-overflow -pie --no-dynamic-linker")
--endif
+-KBUILD_LDFLAGS += $(call ld-option, -pie) $(call ld-option, --no-dynamic-linker)
++KBUILD_LDFLAGS += -pie $(call ld-option, --no-dynamic-linker)
  LDFLAGS_vmlinux := -T
  
  hostprogs	:= mkpiggy
-diff --git a/arch/x86/boot/compressed/head_32.S b/arch/x86/boot/compressed/head_32.S
-index 8c1a4f5610f5..659fad53ca82 100644
---- a/arch/x86/boot/compressed/head_32.S
-+++ b/arch/x86/boot/compressed/head_32.S
-@@ -178,18 +178,17 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
- /*
-  * Do the extraction, and jump to the new kernel..
-  */
--				/* push arguments for extract_kernel: */
--	pushl	$z_output_len	/* decompressed length, end of relocs */
-+	/* push arguments for extract_kernel: */
+@@ -86,30 +86,8 @@ vmlinux-objs-$(CONFIG_ACPI) += $(obj)/acpi.o
+ vmlinux-objs-$(CONFIG_EFI_STUB) += $(objtree)/drivers/firmware/efi/libstub/lib.a
+ vmlinux-objs-$(CONFIG_EFI_MIXED) += $(obj)/efi_thunk_$(BITS).o
  
--	pushl	%ebp		/* output address */
+-# The compressed kernel is built with -fPIC/-fPIE so that a boot loader
+-# can place it anywhere in memory and it will still run. However, since
+-# it is executed as-is without any ELF relocation processing performed
+-# (and has already had all relocation sections stripped from the binary),
+-# none of the code can use data relocations (e.g. static assignments of
+-# pointer values), since they will be meaningless at runtime. This check
+-# will refuse to link the vmlinux if any of these relocations are found.
+-quiet_cmd_check_data_rel = DATAREL $@
+-define cmd_check_data_rel
+-	for obj in $(filter %.o,$^); do \
+-		$(READELF) -S $$obj | grep -qF .rel.local && { \
+-			echo "error: $$obj has data relocations!" >&2; \
+-			exit 1; \
+-		} || true; \
+-	done
+-endef
 -
--	pushl	$z_input_len	/* input_len */
-+	pushl	output_len@GOTOFF(%ebx)	/* decompressed length, end of relocs */
-+	pushl	%ebp			/* output address */
-+	pushl	input_len@GOTOFF(%ebx)	/* input_len */
- 	leal	input_data@GOTOFF(%ebx), %eax
--	pushl	%eax		/* input_data */
-+	pushl	%eax			/* input_data */
- 	leal	boot_heap@GOTOFF(%ebx), %eax
--	pushl	%eax		/* heap area */
--	pushl	%esi		/* real mode pointer */
--	call	extract_kernel	/* returns kernel location in %eax */
-+	pushl	%eax			/* heap area */
-+	pushl	%esi			/* real mode pointer */
-+	call	extract_kernel		/* returns kernel location in %eax */
- 	addl	$24, %esp
+-# We need to run two commands under "if_changed", so merge them into a
+-# single invocation.
+-quiet_cmd_check-and-link-vmlinux = LD      $@
+-      cmd_check-and-link-vmlinux = $(cmd_check_data_rel); $(cmd_ld)
+-
+ $(obj)/vmlinux: $(vmlinux-objs-y) FORCE
+-	$(call if_changed,check-and-link-vmlinux)
++	$(call if_changed,ld)
  
- /*
-diff --git a/arch/x86/boot/compressed/head_64.S b/arch/x86/boot/compressed/head_64.S
-index 11429092c224..9e46729cf162 100644
---- a/arch/x86/boot/compressed/head_64.S
-+++ b/arch/x86/boot/compressed/head_64.S
-@@ -534,9 +534,9 @@ SYM_FUNC_START_LOCAL_NOALIGN(.Lrelocated)
- 	movq	%rsi, %rdi		/* real mode address */
- 	leaq	boot_heap(%rip), %rsi	/* malloc area for uncompression */
- 	leaq	input_data(%rip), %rdx  /* input_data */
--	movl	$z_input_len, %ecx	/* input_len */
-+	movl	input_len(%rip), %ecx	/* input_len */
- 	movq	%rbp, %r8		/* output target address */
--	movl	$z_output_len, %r9d	/* decompressed length, end of relocs */
-+	movl	output_len(%rip), %r9d	/* decompressed length, end of relocs */
- 	call	extract_kernel		/* returns kernel location in %rax */
- 	popq	%rsi
- 
-diff --git a/arch/x86/boot/compressed/mkpiggy.c b/arch/x86/boot/compressed/mkpiggy.c
-index 7e01248765b2..52aa56cdbacc 100644
---- a/arch/x86/boot/compressed/mkpiggy.c
-+++ b/arch/x86/boot/compressed/mkpiggy.c
-@@ -60,6 +60,12 @@ int main(int argc, char *argv[])
- 	printf(".incbin \"%s\"\n", argv[1]);
- 	printf("input_data_end:\n");
- 
-+	printf(".section \".rodata\",\"a\",@progbits\n");
-+	printf(".globl input_len\n");
-+	printf("input_len:\n\t.long %lu\n", ilen);
-+	printf(".globl output_len\n");
-+	printf("output_len:\n\t.long %lu\n", (unsigned long)olen);
+ OBJCOPYFLAGS_vmlinux.bin :=  -R .comment -S
+ $(obj)/vmlinux.bin: vmlinux FORCE
+diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+index a4a4a59a2628..a78510046eec 100644
+--- a/arch/x86/boot/compressed/vmlinux.lds.S
++++ b/arch/x86/boot/compressed/vmlinux.lds.S
+@@ -42,6 +42,12 @@ SECTIONS
+ 		*(.rodata.*)
+ 		_erodata = . ;
+ 	}
++	.rel.dyn : {
++		*(.rel.*)
++	}
++	.rela.dyn : {
++		*(.rela.*)
++	}
+ 	.got : {
+ 		*(.got)
+ 	}
+@@ -85,3 +91,5 @@ ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0x18, "Unexpected GOT/PLT en
+ #else
+ ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0xc, "Unexpected GOT/PLT entries detected!")
+ #endif
 +
- 	retval = 0;
- bail:
- 	if (f)
++ASSERT(SIZEOF(.rel.dyn) == 0 && SIZEOF(.rela.dyn) == 0, "Unexpected runtime relocations detected!")
 -- 
 2.26.2
 
