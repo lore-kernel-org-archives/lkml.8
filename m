@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3879C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B1C6C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 883EE2067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:31:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 624EB206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:31:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593459060;
-	bh=cN7Ws5kFubXu9Ze739Ig/VKXejpZSMxSGXVMrzTa6eU=;
+	s=default; t=1593459063;
+	bh=2vFKNigD7oMHuLwaNxIF2gFZUJqN+YixCMTfvvhg3rY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Z7Vx8BAVWnfA5aE0VUbnHVeIvOXbaZOviAPN6CJrY1WDsUdCXv2CgD3kR6rOkjVsF
-	 TqgVfp0hBGfpFzqmrn6B360lEGbYeRSisHHaAdg//5FfaldqJnHXHk8SsCPeDMOlCq
-	 wzugbclb8ikR20jVCnSthcP2JyivpTgECDWLu2i8=
+	b=H65UGaAUfp7lwn+sqy1EFp1zExHHYzeGVbzY+Z/kQns7caygGMT9QtFCXEPX9kghW
+	 PzUoVuPMgzSHBQMbkn4u2rC33ZsZ1lBJ2eX8WJYCLdq1973hBQ39lJ5pJyz7AXBMYA
+	 SKW2OXVeEv1bkYHgLxb/+FKwY+yiOdxlfTydlFdA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733078AbgF2Ta6 (ORCPT
+        id S1733080AbgF2TbB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:30:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40594 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:31:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732882AbgF2TaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732895AbgF2TaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1BE925285;
-        Mon, 29 Jun 2020 15:36:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D1CC525219;
+        Mon, 29 Jun 2020 15:35:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444995;
-        bh=cN7Ws5kFubXu9Ze739Ig/VKXejpZSMxSGXVMrzTa6eU=;
+        s=default; t=1593444935;
+        bh=2vFKNigD7oMHuLwaNxIF2gFZUJqN+YixCMTfvvhg3rY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0pgpET9zrMoInm+oUnSKxk1nLF9tKeAKNDdY/Ae5TUQH0PMEWQMoTMQHDEST18ilp
-         l6ija1OTbFTfBd6nqBpT9yK2lmIipepRyM3cnOSuQrzaNt2hanq8lzcSoLe2bgwVCS
-         +irXn5o05bjVtMIyk7VnOKvHWw7oO+tlEXgt0Exc=
+        b=0NBsvQuqeizSwZmYBSifczOOEhGTtUNlQlqFRbghithzt1dLBluxos67BESNPaQfb
+         5tupvQAEYaaSrO2OUB3qi4n6CJewNFd4f39Z01yPPkdms5kpmM5Bdg2WtuCRq/Q8En
+         YOdjsUTvCbjx/+wlX79nam9e/VGR/p61zRKbKqds=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Dave Martin <Dave.Martin@arm.com>, Will Deacon <will@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 095/131] arm64/sve: Eliminate data races on sve_default_vl
-Date:   Mon, 29 Jun 2020 11:34:26 -0400
-Message-Id: <20200629153502.2494656-96-sashal@kernel.org>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.19 032/131] net: phy: Check harder for errors in get_phy_id()
+Date:   Mon, 29 Jun 2020 11:33:23 -0400
+Message-Id: <20200629153502.2494656-33-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
@@ -64,118 +66,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Martin <Dave.Martin@arm.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 1e570f512cbdc5e9e401ba640d9827985c1bea1e ]
+[ Upstream commit b2ffc75e2e990b09903f9d15ccd53bc5f3a4217c ]
 
-sve_default_vl can be modified via the /proc/sys/abi/sve_default_vl
-sysctl concurrently with use, and modified concurrently by multiple
-threads.
+Commit 02a6efcab675 ("net: phy: allow scanning busses with missing
+phys") added a special condition to return -ENODEV in case -ENODEV or
+-EIO was returned from the first read of the MII_PHYSID1 register.
 
-Adding a lock for this seems overkill, and I don't want to think any
-more than necessary, so just define wrappers using READ_ONCE()/
-WRITE_ONCE().
+In case the MDIO bus data line pull-up is not strong enough, the MDIO
+bus controller will not flag this as a read error. This can happen when
+a pluggable daughter card is not connected and weak internal pull-ups
+are used (since that is the only option, otherwise the pins are
+floating).
 
-This will avoid the possibility of torn accesses and repeated loads
-and stores.
+The second read of MII_PHYSID2 will be correctly flagged an error
+though, but now we will return -EIO which will be treated as a hard
+error, thus preventing MDIO bus scanning loops to continue succesfully.
 
-There's no evidence yet that this is going wrong in practice: this
-is just hygiene.  For generic sysctl users, it would be better to
-build this kind of thing into the sysctl common code somehow.
+Apply the same logic to both register reads, thus allowing the scanning
+logic to proceed.
 
-Reported-by: Will Deacon <will@kernel.org>
-Signed-off-by: Dave Martin <Dave.Martin@arm.com>
-Link: https://lore.kernel.org/r/1591808590-20210-3-git-send-email-Dave.Martin@arm.com
-[will: move set_sve_default_vl() inside #ifdef to squash allnoconfig warning]
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 02a6efcab675 ("net: phy: allow scanning busses with missing phys")
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm64/kernel/fpsimd.c | 25 ++++++++++++++++++-------
- 1 file changed, 18 insertions(+), 7 deletions(-)
+ drivers/net/phy/phy_device.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
-index 14fdbaa6ee3ab..af59b42973141 100644
---- a/arch/arm64/kernel/fpsimd.c
-+++ b/arch/arm64/kernel/fpsimd.c
-@@ -22,6 +22,7 @@
- #include <linux/bug.h>
- #include <linux/cache.h>
- #include <linux/compat.h>
-+#include <linux/compiler.h>
- #include <linux/cpu.h>
- #include <linux/cpu_pm.h>
- #include <linux/kernel.h>
-@@ -124,10 +125,20 @@ struct fpsimd_last_state_struct {
- static DEFINE_PER_CPU(struct fpsimd_last_state_struct, fpsimd_last_state);
+diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
+index 302d183beb9e8..54ac599cffb4d 100644
+--- a/drivers/net/phy/phy_device.c
++++ b/drivers/net/phy/phy_device.c
+@@ -606,8 +606,10 @@ static int get_phy_id(struct mii_bus *bus, int addr, u32 *phy_id,
  
- /* Default VL for tasks that don't set it explicitly: */
--static int sve_default_vl = -1;
-+static int __sve_default_vl = -1;
-+
-+static int get_sve_default_vl(void)
-+{
-+	return READ_ONCE(__sve_default_vl);
-+}
+ 	/* Grab the bits from PHYIR2, and put them in the lower half */
+ 	phy_reg = mdiobus_read(bus, addr, MII_PHYSID2);
+-	if (phy_reg < 0)
+-		return -EIO;
++	if (phy_reg < 0) {
++		/* returning -ENODEV doesn't stop bus scanning */
++		return (phy_reg == -EIO || phy_reg == -ENODEV) ? -ENODEV : -EIO;
++	}
  
- #ifdef CONFIG_ARM64_SVE
+ 	*phy_id |= (phy_reg & 0xffff);
  
-+static void set_sve_default_vl(int val)
-+{
-+	WRITE_ONCE(__sve_default_vl, val);
-+}
-+
- /* Maximum supported vector length across all CPUs (initially poisoned) */
- int __ro_after_init sve_max_vl = SVE_VL_MIN;
- /* Set of available vector lengths, as vq_to_bit(vq): */
-@@ -311,7 +322,7 @@ static int sve_proc_do_default_vl(struct ctl_table *table, int write,
- 				  loff_t *ppos)
- {
- 	int ret;
--	int vl = sve_default_vl;
-+	int vl = get_sve_default_vl();
- 	struct ctl_table tmp_table = {
- 		.data = &vl,
- 		.maxlen = sizeof(vl),
-@@ -328,7 +339,7 @@ static int sve_proc_do_default_vl(struct ctl_table *table, int write,
- 	if (!sve_vl_valid(vl))
- 		return -EINVAL;
- 
--	sve_default_vl = find_supported_vector_length(vl);
-+	set_sve_default_vl(find_supported_vector_length(vl));
- 	return 0;
- }
- 
-@@ -772,12 +783,12 @@ void __init sve_setup(void)
- 	 * For the default VL, pick the maximum supported value <= 64.
- 	 * VL == 64 is guaranteed not to grow the signal frame.
- 	 */
--	sve_default_vl = find_supported_vector_length(64);
-+	set_sve_default_vl(find_supported_vector_length(64));
- 
- 	pr_info("SVE: maximum available vector length %u bytes per vector\n",
- 		sve_max_vl);
- 	pr_info("SVE: default vector length %u bytes per vector\n",
--		sve_default_vl);
-+		get_sve_default_vl());
- 
- 	sve_efi_setup();
- }
-@@ -914,13 +925,13 @@ void fpsimd_flush_thread(void)
- 		 * vector length configured: no kernel task can become a user
- 		 * task without an exec and hence a call to this function.
- 		 * By the time the first call to this function is made, all
--		 * early hardware probing is complete, so sve_default_vl
-+		 * early hardware probing is complete, so __sve_default_vl
- 		 * should be valid.
- 		 * If a bug causes this to go wrong, we make some noise and
- 		 * try to fudge thread.sve_vl to a safe value here.
- 		 */
- 		vl = current->thread.sve_vl_onexec ?
--			current->thread.sve_vl_onexec : sve_default_vl;
-+			current->thread.sve_vl_onexec : get_sve_default_vl();
- 
- 		if (WARN_ON(!sve_vl_valid(vl)))
- 			vl = SVE_VL_MIN;
 -- 
 2.25.1
 
