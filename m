@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9233CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A380C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70938206C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:51:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D34E20760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:51:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467466;
-	bh=aZX3bH4RlKLW5bh/pndxC1n7t5/JBse0G0JucZ29OCg=;
+	s=default; t=1593467470;
+	bh=+85BCrhMl4avR7Mdde403GEQ02BYJJXhgxi8M8Ui5Do=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cS+MrDY47wCwJRLDDRvqkwSZA4GZDdK4cKnoh/NkfGkJCm6uBTl53KMlc5WxiA27m
-	 thQFYvsdYosk6DxdUIz4XPDjsywtumQkZzJYcY9wxDQC2+RO6o0LNG0ixpjREI4WhL
-	 g6fDvgAue3S8u3NXLIOI1PZhrF2H7H/FCMOjAypU=
+	b=Lby6n/xlj7/cGtOQod46fWnstk1QY9SVF3Oz1iGxzLY7mbvP+1O6IZiLf3T4aFO3+
+	 91aEdTI6hOSxC3JY8u/mUULJSoPdjIix3/fiRT5ekTMfP2IA0DlxlqFwX/Yvfyghpn
+	 Bwz9JSD/NfJsIXGDxPmqTOYjIUSD12GFdJK1/nis=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404523AbgF2VvE (ORCPT
+        id S2404262AbgF2VvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:51:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56912 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:51:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726666AbgF2Sfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726660AbgF2Sfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B45B12476F;
-        Mon, 29 Jun 2020 15:21:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAFB9246E1;
+        Mon, 29 Jun 2020 15:20:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444087;
-        bh=aZX3bH4RlKLW5bh/pndxC1n7t5/JBse0G0JucZ29OCg=;
+        s=default; t=1593444027;
+        bh=+85BCrhMl4avR7Mdde403GEQ02BYJJXhgxi8M8Ui5Do=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B1tTum5Rs/zc+xqhP7PcTlSA01KnnXnlr3CDnNe2s171OczQwYWT5g7PG+BrReTsc
-         6vlI/IXaRPA2C8/oEJdN7xXJzu+s9MUkDVQtvVtgS5QcooTu1CG93Ur2gzrCKmhTkR
-         Bgd3Ob7PdVClrF/QoBIOO4WZzQr8vdAlqbNfC36A=
+        b=zCu77SjbRVy/Jzs+LP2kCnzmofhmZ5qu2p3Ojgtvl2tfGzOx/VjM7oYHstZwGiYxD
+         J4yBIb/rEb9ol4Ju7UixTS//ie93PCQX+cE8Nu0cyGInAsDv8nktwMVc8ph1gZEiYy
+         7uDDNuUk8BT2PDXQ9ufHUoZXjMdgSEcFpfBXLhcA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Schnelle <svens@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+Cc:     Mark Zhang <markz@mellanox.com>,
+        Maor Gottlieb <maorg@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 197/265] s390/ptrace: fix setting syscall number
-Date:   Mon, 29 Jun 2020 11:17:10 -0400
-Message-Id: <20200629151818.2493727-198-sashal@kernel.org>
+Subject: [PATCH 5.7 134/265] RDMA/cma: Protect bind_list and listen_list while finding matching cm id
+Date:   Mon, 29 Jun 2020 11:16:07 -0400
+Message-Id: <20200629151818.2493727-135-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -65,90 +67,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Schnelle <svens@linux.ibm.com>
+From: Mark Zhang <markz@mellanox.com>
 
-[ Upstream commit 873e5a763d604c32988c4a78913a8dab3862d2f9 ]
+[ Upstream commit 730c8912484186d4623d0c76509066d285c3a755 ]
 
-When strace wants to update the syscall number, it sets GPR2
-to the desired number and updates the GPR via PTRACE_SETREGSET.
-It doesn't update regs->int_code which would cause the old syscall
-executed on syscall restart. As we cannot change the ptrace ABI and
-don't have a field for the interruption code, check whether the tracee
-is in a syscall and the last instruction was svc. In that case assume
-that the tracer wants to update the syscall number and copy the GPR2
-value to regs->int_code.
+The bind_list and listen_list must be accessed under a lock, add the
+missing locking around the access in cm_ib_id_from_event()
 
-Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+In addition add lockdep asserts to make it clearer what the locking
+semantic is here.
+
+  general protection fault: 0000 [#1] SMP NOPTI
+  CPU: 226 PID: 126135 Comm: kworker/226:1 Tainted: G OE 4.12.14-150.47-default #1 SLE15
+  Hardware name: Cray Inc. Windom/Windom, BIOS 0.8.7 01-10-2020
+  Workqueue: ib_cm cm_work_handler [ib_cm]
+  task: ffff9c5a60a1d2c0 task.stack: ffffc1d91f554000
+  RIP: 0010:cma_ib_req_handler+0x3f1/0x11b0 [rdma_cm]
+  RSP: 0018:ffffc1d91f557b40 EFLAGS: 00010286
+  RAX: deacffffffffff30 RBX: 0000000000000001 RCX: ffff9c2af5bb6000
+  RDX: 00000000000000a9 RSI: ffff9c5aa4ed2f10 RDI: ffffc1d91f557b08
+  RBP: ffffc1d91f557d90 R08: ffff9c340cc80000 R09: ffff9c2c0f901900
+  R10: 0000000000000000 R11: 0000000000000001 R12: deacffffffffff30
+  R13: ffff9c5a48aeec00 R14: ffffc1d91f557c30 R15: ffff9c5c2eea3688
+  FS: 0000000000000000(0000) GS:ffff9c5c2fa80000(0000) knlGS:0000000000000000
+  CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 00002b5cc03fa320 CR3: 0000003f8500a000 CR4: 00000000003406e0
+  Call Trace:
+  ? rdma_addr_cancel+0xa0/0xa0 [ib_core]
+  ? cm_process_work+0x28/0x140 [ib_cm]
+  cm_process_work+0x28/0x140 [ib_cm]
+  ? cm_get_bth_pkey.isra.44+0x34/0xa0 [ib_cm]
+  cm_work_handler+0xa06/0x1a6f [ib_cm]
+  ? __switch_to_asm+0x34/0x70
+  ? __switch_to_asm+0x34/0x70
+  ? __switch_to_asm+0x40/0x70
+  ? __switch_to_asm+0x34/0x70
+  ? __switch_to_asm+0x40/0x70
+  ? __switch_to_asm+0x34/0x70
+  ? __switch_to_asm+0x40/0x70
+  ? __switch_to+0x7c/0x4b0
+  ? __switch_to_asm+0x40/0x70
+  ? __switch_to_asm+0x34/0x70
+  process_one_work+0x1da/0x400
+  worker_thread+0x2b/0x3f0
+  ? process_one_work+0x400/0x400
+  kthread+0x118/0x140
+  ? kthread_create_on_node+0x40/0x40
+  ret_from_fork+0x22/0x40
+  Code: 00 66 83 f8 02 0f 84 ca 05 00 00 49 8b 84 24 d0 01 00 00 48 85 c0 0f 84 68 07 00 00 48 2d d0 01
+  00 00 49 89 c4 0f 84 59 07 00 00 <41> 0f b7 44 24 20 49 8b 77 50 66 83 f8 0a 75 9e 49 8b 7c 24 28
+
+Fixes: 4c21b5bcef73 ("IB/cma: Add net_dev and private data checks to RDMA CM")
+Link: https://lore.kernel.org/r/20200616104304.2426081-1-leon@kernel.org
+Signed-off-by: Mark Zhang <markz@mellanox.com>
+Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/ptrace.c | 31 ++++++++++++++++++++++++++++++-
- 1 file changed, 30 insertions(+), 1 deletion(-)
+ drivers/infiniband/core/cma.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/arch/s390/kernel/ptrace.c b/arch/s390/kernel/ptrace.c
-index fca78b269349d..e007224b65bb2 100644
---- a/arch/s390/kernel/ptrace.c
-+++ b/arch/s390/kernel/ptrace.c
-@@ -324,6 +324,25 @@ static inline void __poke_user_per(struct task_struct *child,
- 		child->thread.per_user.end = data;
- }
+diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
+index 26e6f7df247b6..12ada58c96a90 100644
+--- a/drivers/infiniband/core/cma.c
++++ b/drivers/infiniband/core/cma.c
+@@ -1619,6 +1619,8 @@ static struct rdma_id_private *cma_find_listener(
+ {
+ 	struct rdma_id_private *id_priv, *id_priv_dev;
  
-+static void fixup_int_code(struct task_struct *child, addr_t data)
-+{
-+	struct pt_regs *regs = task_pt_regs(child);
-+	int ilc = regs->int_code >> 16;
-+	u16 insn;
++	lockdep_assert_held(&lock);
 +
-+	if (ilc > 6)
-+		return;
-+
-+	if (ptrace_access_vm(child, regs->psw.addr - (regs->int_code >> 16),
-+			&insn, sizeof(insn), FOLL_FORCE) != sizeof(insn))
-+		return;
-+
-+	/* double check that tracee stopped on svc instruction */
-+	if ((insn >> 8) != 0xa)
-+		return;
-+
-+	regs->int_code = 0x20000 | (data & 0xffff);
-+}
- /*
-  * Write a word to the user area of a process at location addr. This
-  * operation does have an additional problem compared to peek_user.
-@@ -335,7 +354,9 @@ static int __poke_user(struct task_struct *child, addr_t addr, addr_t data)
- 	struct user *dummy = NULL;
- 	addr_t offset;
+ 	if (!bind_list)
+ 		return ERR_PTR(-EINVAL);
  
-+
- 	if (addr < (addr_t) &dummy->regs.acrs) {
-+		struct pt_regs *regs = task_pt_regs(child);
- 		/*
- 		 * psw and gprs are stored on the stack
- 		 */
-@@ -353,7 +374,11 @@ static int __poke_user(struct task_struct *child, addr_t addr, addr_t data)
- 				/* Invalid addressing mode bits */
- 				return -EINVAL;
+@@ -1665,6 +1667,7 @@ cma_ib_id_from_event(struct ib_cm_id *cm_id,
  		}
--		*(addr_t *)((addr_t) &task_pt_regs(child)->psw + addr) = data;
-+
-+		if (test_pt_regs_flag(regs, PIF_SYSCALL) &&
-+			addr == offsetof(struct user, regs.gprs[2]))
-+			fixup_int_code(child, data);
-+		*(addr_t *)((addr_t) &regs->psw + addr) = data;
+ 	}
  
- 	} else if (addr < (addr_t) (&dummy->regs.orig_gpr2)) {
- 		/*
-@@ -719,6 +744,10 @@ static int __poke_user_compat(struct task_struct *child,
- 			regs->psw.mask = (regs->psw.mask & ~PSW_MASK_BA) |
- 				(__u64)(tmp & PSW32_ADDR_AMODE);
- 		} else {
++	mutex_lock(&lock);
+ 	/*
+ 	 * Net namespace might be getting deleted while route lookup,
+ 	 * cm_id lookup is in progress. Therefore, perform netdevice
+@@ -1706,6 +1709,7 @@ cma_ib_id_from_event(struct ib_cm_id *cm_id,
+ 	id_priv = cma_find_listener(bind_list, cm_id, ib_event, req, *net_dev);
+ err:
+ 	rcu_read_unlock();
++	mutex_unlock(&lock);
+ 	if (IS_ERR(id_priv) && *net_dev) {
+ 		dev_put(*net_dev);
+ 		*net_dev = NULL;
+@@ -2481,6 +2485,8 @@ static void cma_listen_on_dev(struct rdma_id_private *id_priv,
+ 	struct net *net = id_priv->id.route.addr.dev_addr.net;
+ 	int ret;
+ 
++	lockdep_assert_held(&lock);
 +
-+			if (test_pt_regs_flag(regs, PIF_SYSCALL) &&
-+				addr == offsetof(struct compat_user, regs.gprs[2]))
-+				fixup_int_code(child, data);
- 			/* gpr 0-15 */
- 			*(__u32*)((addr_t) &regs->psw + addr*2 + 4) = tmp;
- 		}
+ 	if (cma_family(id_priv) == AF_IB && !rdma_cap_ib_cm(cma_dev->device, 1))
+ 		return;
+ 
+@@ -3308,6 +3314,8 @@ static void cma_bind_port(struct rdma_bind_list *bind_list,
+ 	u64 sid, mask;
+ 	__be16 port;
+ 
++	lockdep_assert_held(&lock);
++
+ 	addr = cma_src_addr(id_priv);
+ 	port = htons(bind_list->port);
+ 
+@@ -3336,6 +3344,8 @@ static int cma_alloc_port(enum rdma_ucm_port_space ps,
+ 	struct rdma_bind_list *bind_list;
+ 	int ret;
+ 
++	lockdep_assert_held(&lock);
++
+ 	bind_list = kzalloc(sizeof *bind_list, GFP_KERNEL);
+ 	if (!bind_list)
+ 		return -ENOMEM;
+@@ -3362,6 +3372,8 @@ static int cma_port_is_unique(struct rdma_bind_list *bind_list,
+ 	struct sockaddr  *saddr = cma_src_addr(id_priv);
+ 	__be16 dport = cma_port(daddr);
+ 
++	lockdep_assert_held(&lock);
++
+ 	hlist_for_each_entry(cur_id, &bind_list->owners, node) {
+ 		struct sockaddr  *cur_daddr = cma_dst_addr(cur_id);
+ 		struct sockaddr  *cur_saddr = cma_src_addr(cur_id);
+@@ -3401,6 +3413,8 @@ static int cma_alloc_any_port(enum rdma_ucm_port_space ps,
+ 	unsigned int rover;
+ 	struct net *net = id_priv->id.route.addr.dev_addr.net;
+ 
++	lockdep_assert_held(&lock);
++
+ 	inet_get_local_port_range(net, &low, &high);
+ 	remaining = (high - low) + 1;
+ 	rover = prandom_u32() % remaining + low;
+@@ -3448,6 +3462,8 @@ static int cma_check_port(struct rdma_bind_list *bind_list,
+ 	struct rdma_id_private *cur_id;
+ 	struct sockaddr *addr, *cur_addr;
+ 
++	lockdep_assert_held(&lock);
++
+ 	addr = cma_src_addr(id_priv);
+ 	hlist_for_each_entry(cur_id, &bind_list->owners, node) {
+ 		if (id_priv == cur_id)
+@@ -3478,6 +3494,8 @@ static int cma_use_port(enum rdma_ucm_port_space ps,
+ 	unsigned short snum;
+ 	int ret;
+ 
++	lockdep_assert_held(&lock);
++
+ 	snum = ntohs(cma_port(cma_src_addr(id_priv)));
+ 	if (snum < PROT_SOCK && !capable(CAP_NET_BIND_SERVICE))
+ 		return -EACCES;
 -- 
 2.25.1
 
