@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66091C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:35:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 158FCC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EBBD22269
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:35:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6FE922269
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:35:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593455734;
-	bh=VdLNrCbuwMYCY9QDHYOlAwoBGMDQ4WJP7+Rn3wVFuD4=;
+	s=default; t=1593455738;
+	bh=+BScHcEoWoNxBeKrIFUTdorvUOhsOsh1PWnSVcUlz+c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0FHRlvSSmRCx89aYv7I5mIxnNutACGmC0sByPz7/NFCZgiZLG9FGm+1BzRP0+3QSu
-	 01C2ZUFXdDZl0A/Zvr+tTgdPBHkX8iZLSR4jhICkn+QHmGItSH57mlpANf368nhR6x
-	 U4hgz68nR4mH7Z1l1GGiDKMahBJaCmXzg4ZNt3l0=
+	b=Y7lURh6BzRA1gboBQugE0oLxQxSkGIyOl4yMVTB3uBZZo4Csxxj6O1hgJVdM8b9/w
+	 3qdrccB+nkHnh1SmGk3JfSmQ5NorD3/5sXlEasdGn08emcHiW8devUGYD7Bfc6DojW
+	 U+fFRKubVQRjs0I+R4ppR7r4Pt3Liq4s02Q3MrIE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726575AbgF2Sfc (ORCPT
+        id S1726607AbgF2Sfg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:35:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56762 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 14:35:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726107AbgF2SfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:18 -0400
+        id S1726175AbgF2SfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:22 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 936FE2478B;
-        Mon, 29 Jun 2020 15:21:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16422247C9;
+        Mon, 29 Jun 2020 15:22:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444096;
-        bh=VdLNrCbuwMYCY9QDHYOlAwoBGMDQ4WJP7+Rn3wVFuD4=;
+        s=default; t=1593444135;
+        bh=+BScHcEoWoNxBeKrIFUTdorvUOhsOsh1PWnSVcUlz+c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vSWB0TwhwjFkK5NmiLpXHSxT4yExyjAhniJ+MF+kmXjyq1h/x488Ljg22ek08dH5w
-         cwVhQg/WbQaCCJpRnDHCme1CY4A0Cq5Ts14ZuUIhSzy5sOsam8b8JmzF/Ymp1bqgMA
-         PU28FRR1kjfZFZiRSk5RDDeLBr6HbtbV+Wq7EKhc=
+        b=C7ZZEU5o/tSeT1CJRSnZB4t4L2xwXudOXzi6nGDqaHhfiGax9+j92QEpq9pg9pXib
+         /FesMi5G1tSLGrCgPs4GY+LSFWbt+ZJD1LLOVN7jSe+pS0sKIh8ZpLpJFH4/M0I+MI
+         Nulj7Z+FEOpX0NpN3kipMPcrcJUFKbtIa31S5bDM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Weiping Zhang <zhangweiping@didiglobal.com>,
-        Ming Lei <ming.lei@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 206/265] block: update hctx map when use multiple maps
-Date:   Mon, 29 Jun 2020 11:17:19 -0400
-Message-Id: <20200629151818.2493727-207-sashal@kernel.org>
+Cc:     Sascha Ortmann <sascha.ortmann@stud.uni-hannover.de>,
+        linux-kernel@i4.cs.fau.de,
+        Maximilian Werner <maximilian.werner96@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 241/265] tracing/boottime: Fix kprobe multiple events
+Date:   Mon, 29 Jun 2020 11:17:54 -0400
+Message-Id: <20200629151818.2493727-242-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -65,57 +68,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Weiping Zhang <zhangweiping@didiglobal.com>
+From: Sascha Ortmann <sascha.ortmann@stud.uni-hannover.de>
 
-[ Upstream commit fe35ec58f0d339221643287bbb7cee15c93a5389 ]
+commit 20dc3847cc2fc886ee4eb9112e6e2fad9419b0c7 upstream.
 
-There is an issue when tune the number for read and write queues,
-if the total queue count was not changed. The hctx->type cannot
-be updated, since __blk_mq_update_nr_hw_queues will return directly
-if the total queue count has not been changed.
+Fix boottime kprobe events to report and abort after each failure when
+adding probes.
 
-Reproduce:
+As an example, when we try to set multiprobe kprobe events in
+bootconfig like this:
 
-dmesg | grep "default/read/poll"
-[    2.607459] nvme nvme0: 48/0/0 default/read/poll queues
-cat /sys/kernel/debug/block/nvme0n1/hctx*/type | sort | uniq -c
-     48 default
+ftrace.event.kprobes.vfsevents {
+        probes = "vfs_read $arg1 $arg2,,
+                 !error! not reported;?", // leads to error
+                 "vfs_write $arg1 $arg2"
+}
 
-tune the write queues to 24:
-echo 24 > /sys/module/nvme/parameters/write_queues
-echo 1 > /sys/block/nvme0n1/device/reset_controller
+This will not work as expected. After
+commit da0f1f4167e3af69e ("tracing/boottime: Fix kprobe event API usage"),
+the function trace_boot_add_kprobe_event will not produce any error
+message when adding a probe fails at kprobe_event_gen_cmd_start.
+Furthermore, we continue to add probes when kprobe_event_gen_cmd_end fails
+(and kprobe_event_gen_cmd_start did not fail). In this case the function
+even returns successfully when the last call to kprobe_event_gen_cmd_end
+is successful.
 
-dmesg | grep "default/read/poll"
-[  433.547235] nvme nvme0: 24/24/0 default/read/poll queues
+The behaviour of reporting and aborting after failures is not
+consistent.
 
-cat /sys/kernel/debug/block/nvme0n1/hctx*/type | sort | uniq -c
-     48 default
+The function trace_boot_add_kprobe_event now reports each failure and
+stops adding probes immediately.
 
-The driver's hardware queue mapping is not same as block layer.
+Link: https://lkml.kernel.org/r/20200618163301.25854-1-sascha.ortmann@stud.uni-hannover.de
 
-Signed-off-by: Weiping Zhang <zhangweiping@didiglobal.com>
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: stable@vger.kernel.org
+Cc: linux-kernel@i4.cs.fau.de
+Co-developed-by: Maximilian Werner <maximilian.werner96@gmail.com>
+Fixes: da0f1f4167e3 ("tracing/boottime: Fix kprobe event API usage")
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Maximilian Werner <maximilian.werner96@gmail.com>
+Signed-off-by: Sascha Ortmann <sascha.ortmann@stud.uni-hannover.de>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- block/blk-mq.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ kernel/trace/trace_boot.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 98a702761e2cc..8f580e66691b9 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -3328,7 +3328,9 @@ static void __blk_mq_update_nr_hw_queues(struct blk_mq_tag_set *set,
+diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
+index 9de29bb45a27f..fdc5abc00bf84 100644
+--- a/kernel/trace/trace_boot.c
++++ b/kernel/trace/trace_boot.c
+@@ -101,12 +101,16 @@ trace_boot_add_kprobe_event(struct xbc_node *node, const char *event)
+ 		kprobe_event_cmd_init(&cmd, buf, MAX_BUF_LEN);
  
- 	if (set->nr_maps == 1 && nr_hw_queues > nr_cpu_ids)
- 		nr_hw_queues = nr_cpu_ids;
--	if (nr_hw_queues < 1 || nr_hw_queues == set->nr_hw_queues)
-+	if (nr_hw_queues < 1)
-+		return;
-+	if (set->nr_maps == 1 && nr_hw_queues == set->nr_hw_queues)
- 		return;
+ 		ret = kprobe_event_gen_cmd_start(&cmd, event, val);
+-		if (ret)
++		if (ret) {
++			pr_err("Failed to generate probe: %s\n", buf);
+ 			break;
++		}
  
- 	list_for_each_entry(q, &set->tag_list, tag_set_list)
+ 		ret = kprobe_event_gen_cmd_end(&cmd);
+-		if (ret)
++		if (ret) {
+ 			pr_err("Failed to add probe: %s\n", buf);
++			break;
++		}
+ 	}
+ 
+ 	return ret;
 -- 
 2.25.1
 
