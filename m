@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE99C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E204DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:08:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9B66C207D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:08:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFD6020760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:08:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461285;
-	bh=+CZ1Ya6xfPZttiJxEVIJEq0Qr4UQlcxzo5YMQg1Qbts=;
+	s=default; t=1593461290;
+	bh=TxMID6fxqEkgSgeo9KtR8+r1rroRp8nPjSidQB2ZTrE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F9RYfq14+hfBcOHtgpFD+9+ovC/KszKSE5Nov+0wIjOjhgHhNz8o0hFicGu+bvx5k
-	 20PNqNHu6cg7KOnkPv7QufT7SotPRL6QoXwFj21Al5d6z1HrcgzlNMDrxQzeok039+
-	 hkgBb1DPWwGxvil7tH+stJArTfq6xQiR2fMQQzQ0=
+	b=ZSW4ACLT8y8n4GV2jIKNITMU2Q7HOFqRIsi0l2g2dvyojzVJeLBpG8NcxncV+qy2j
+	 6X5CWO/E5aeAvKjzbEAPjI48QLY72R36TvOEnHQ4+kxWv+gy2S8jF33BKEAskM8p0X
+	 FcBSVBoKf5av3NhfQ7tMW8egtH26bmx9/QcR7oIg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388929AbgF2UIE (ORCPT
+        id S2388944AbgF2UIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:08:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40574 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:08:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40570 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732935AbgF2TaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732931AbgF2TaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0ACFB25242;
-        Mon, 29 Jun 2020 15:35:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08CF925258;
+        Mon, 29 Jun 2020 15:36:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444958;
-        bh=+CZ1Ya6xfPZttiJxEVIJEq0Qr4UQlcxzo5YMQg1Qbts=;
+        s=default; t=1593444969;
+        bh=TxMID6fxqEkgSgeo9KtR8+r1rroRp8nPjSidQB2ZTrE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vg8LIWdLl+IGqyKYrcmDkFJ0rL9NvDAzm/9ceLA7So6N/9AfeZ5sf/0y/xgtm7c0p
-         S31nGLAuOwPrrCbpo6elffhvfUfKWS1Lyk0f3SpaBfH3iE/wy+kMFqc0H5piBh8M5M
-         xMLQSz8rmhj5YgtAkYv2pZb8kSIqrY6l6B3Io4PA=
+        b=ZINXOserTlZi0MgghE/kUTegrk3bhFWV4J781C+6mvjixL1z69WpCntUOMGYI2IRv
+         060xmSNMnH3CXJOF/939Wa9PHEO62YsNviTemiL+Layr8PVJ4QCqhrXjZ+dYdrLzJH
+         M/Wxc5XV1NQBkNSMdw1COYO1uMiPQxfvY28RXT74=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zheng Bin <zhengbin13@huawei.com>, Christoph Hellwig <hch@lst.de>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 057/131] loop: replace kill_bdev with invalidate_bdev
-Date:   Mon, 29 Jun 2020 11:33:48 -0400
-Message-Id: <20200629153502.2494656-58-sashal@kernel.org>
+Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 068/131] regmap: Fix memory leak from regmap_register_patch
+Date:   Mon, 29 Jun 2020 11:33:59 -0400
+Message-Id: <20200629153502.2494656-69-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
@@ -66,67 +65,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zheng Bin <zhengbin13@huawei.com>
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
 
-commit f4bd34b139a3fa2808c4205f12714c65e1548c6c upstream.
+[ Upstream commit 95b2c3ec4cb1689db2389c251d39f64490ba641c ]
 
-When a filesystem is mounted on a loop device and on a loop ioctl
-LOOP_SET_STATUS64, because of kill_bdev, buffer_head mappings are getting
-destroyed.
-kill_bdev
-  truncate_inode_pages
-    truncate_inode_pages_range
-      do_invalidatepage
-        block_invalidatepage
-          discard_buffer  -->clear BH_Mapped flag
+When a register patch is registered the reg_sequence is copied but the
+memory allocated is never freed. Add a kfree in regmap_exit to clean it
+up.
 
-sb_bread
-  __bread_gfp
-  bh = __getblk_gfp
-  -->discard_buffer clear BH_Mapped flag
-  __bread_slow
-    submit_bh
-      submit_bh_wbc
-        BUG_ON(!buffer_mapped(bh))  --> hit this BUG_ON
-
-Fixes: 5db470e229e2 ("loop: drop caches if offset or block_size are changed")
-Signed-off-by: Zheng Bin <zhengbin13@huawei.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 22f0d90a3482 ("regmap: Support register patch sets")
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Link: https://lore.kernel.org/r/20200617152129.19655-1-ckeepax@opensource.cirrus.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/block/loop.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/base/regmap/regmap.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index c1341c86bcded..728681a20b7f4 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -1238,7 +1238,7 @@ loop_set_status(struct loop_device *lo, const struct loop_info64 *info)
- 	if (lo->lo_offset != info->lo_offset ||
- 	    lo->lo_sizelimit != info->lo_sizelimit) {
- 		sync_blockdev(lo->lo_device);
--		kill_bdev(lo->lo_device);
-+		invalidate_bdev(lo->lo_device);
- 	}
- 
- 	/* I/O need to be drained during transfer transition */
-@@ -1512,12 +1512,12 @@ static int loop_set_block_size(struct loop_device *lo, unsigned long arg)
- 
- 	if (lo->lo_queue->limits.logical_block_size != arg) {
- 		sync_blockdev(lo->lo_device);
--		kill_bdev(lo->lo_device);
-+		invalidate_bdev(lo->lo_device);
- 	}
- 
- 	blk_mq_freeze_queue(lo->lo_queue);
- 
--	/* kill_bdev should have truncated all the pages */
-+	/* invalidate_bdev should have truncated all the pages */
- 	if (lo->lo_queue->limits.logical_block_size != arg &&
- 			lo->lo_device->bd_inode->i_mapping->nrpages) {
- 		err = -EAGAIN;
+diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
+index 6c9f6988bc093..b38b2d8c333d5 100644
+--- a/drivers/base/regmap/regmap.c
++++ b/drivers/base/regmap/regmap.c
+@@ -1336,6 +1336,7 @@ void regmap_exit(struct regmap *map)
+ 	if (map->hwlock)
+ 		hwspin_lock_free(map->hwlock);
+ 	kfree_const(map->name);
++	kfree(map->patch);
+ 	kfree(map);
+ }
+ EXPORT_SYMBOL_GPL(regmap_exit);
 -- 
 2.25.1
 
