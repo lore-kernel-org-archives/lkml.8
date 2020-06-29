@@ -2,53 +2,53 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51151C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70759C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:59:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1D7F020724
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:58:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5394520702
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:59:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460737;
-	bh=goxvCIsyGxrPg+Ermk+bFpwWIgMVXg8sZhEEI/NXmpM=;
+	s=default; t=1593460740;
+	bh=/yIniaPFKZ11CTcjGIIKnnQplSH1xgEGXA3jO9oQshA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nLtvVlUvEJRqbp2XrHVt3wpf6CIX5lSLyOaR6wTRurSSZrwkPNBugfUob10AiZ/2u
-	 dupWtkIxSc6duHPtdXlNAA60wys4Jx/0LD0uGun0Zm8S4vlbSHIp3h15BinH5GtnRy
-	 FOMlZs6yfYihT6qkFIcxoBjokfmyd6dd3+xZck5E=
+	b=1VuVuOMhn+1riDTTW3tVV3hXbYKQiSIop9W4PAF/5t1waUbSJaRnQWFhkaGF+XnxV
+	 Fl2ROH/Z+nfj/lWgidap3KpcCr03qTqpBRk7nCxV79xv6a6xD/evRu6nxwvhA1fJVt
+	 4GAge36B8cvEkDJM1B9K1ltrhjL4EAYxyYViskU8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388350AbgF2T6z (ORCPT
+        id S1731957AbgF2T66 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:58:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47680 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:58:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47676 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387584AbgF2TkR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387582AbgF2TkR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10AC62491C;
-        Mon, 29 Jun 2020 15:27:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11A5C248FD;
+        Mon, 29 Jun 2020 15:27:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444471;
-        bh=goxvCIsyGxrPg+Ermk+bFpwWIgMVXg8sZhEEI/NXmpM=;
+        s=default; t=1593444450;
+        bh=/yIniaPFKZ11CTcjGIIKnnQplSH1xgEGXA3jO9oQshA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MfW2h1xLHYmQ/kG0MrCkekZSmXdO7ih1NwvKzGv/4c8apd3jfVJU5/THxjp8IW5HU
-         2W8gvJJizg8GKbcGAelGXJosM4P09z5Rz9571X0AkkFsuihU23Q9mXMoLbzsUzGzJw
-         JtfcizYp2R+q4rgZqdx/N821duqQNiiHa0mT9SRg=
+        b=wbeRL4tR7ihLCg4/rNQlrchZ306zwve4xxxg9X1/RnMaA5AGCHRgzYCf0FZ/04Ff3
+         Dfp/naWRwvsYO+GSSt0YcV+Cp6ec+bJaHanrsEWSQ3hdkT0FR9IuP280cWETA/xaL/
+         gNfYr5xtLi1YD1vyfeimyl/3DIiEI1DrpJDMJ8P0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Filipe Manana <fdmanana@suse.com>,
-        kernel test robot <rong.a.chen@intel.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 152/178] btrfs: check if a log root exists before locking the log_mutex on unlink
-Date:   Mon, 29 Jun 2020 11:24:57 -0400
-Message-Id: <20200629152523.2494198-153-sashal@kernel.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 130/178] s390/vdso: Use $(LD) instead of $(CC) to link vDSO
+Date:   Mon, 29 Jun 2020 11:24:35 -0400
+Message-Id: <20200629152523.2494198-131-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -67,152 +67,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-commit e7a79811d0db136dc2d336b56d54cf1b774ce972 upstream.
+[ Upstream commit 2b2a25845d534ac6d55086e35c033961fdd83a26 ]
 
-This brings back an optimization that commit e678934cbe5f02 ("btrfs:
-Remove unnecessary check from join_running_log_trans") removed, but in
-a different form. So it's almost equivalent to a revert.
+Currently, the VDSO is being linked through $(CC). This does not match
+how the rest of the kernel links objects, which is through the $(LD)
+variable.
 
-That commit removed an optimization where we avoid locking a root's
-log_mutex when there is no log tree created in the current transaction.
-The affected code path is triggered through unlink operations.
+When clang is built in a default configuration, it first attempts to use
+the target triple's default linker, which is just ld. However, the user
+can override this through the CLANG_DEFAULT_LINKER cmake define so that
+clang uses another linker by default, such as LLVM's own linker, ld.lld.
+This can be useful to get more optimized links across various different
+projects.
 
-That commit was based on the assumption that the optimization was not
-necessary because we used to have the following checks when the patch
-was authored:
+However, this is problematic for the s390 vDSO because ld.lld does not
+have any s390 emulatiom support:
 
-  int btrfs_del_dir_entries_in_log(...)
-  {
-        (...)
-        if (dir->logged_trans < trans->transid)
-            return 0;
+https://github.com/llvm/llvm-project/blob/llvmorg-10.0.1-rc1/lld/ELF/Driver.cpp#L132-L150
 
-        ret = join_running_log_trans(root);
-        (...)
-   }
+Thus, if a user is using a toolchain with ld.lld as the default, they
+will see an error, even if they have specified ld.bfd through the LD
+make variable:
 
-   int btrfs_del_inode_ref_in_log(...)
-   {
-        (...)
-        if (inode->logged_trans < trans->transid)
-            return 0;
+$ make -j"$(nproc)" -s ARCH=s390 CROSS_COMPILE=s390x-linux-gnu- LLVM=1 \
+                       LD=s390x-linux-gnu-ld \
+                       defconfig arch/s390/kernel/vdso64/
+ld.lld: error: unknown emulation: elf64_s390
+clang-11: error: linker command failed with exit code 1 (use -v to see invocation)
 
-        ret = join_running_log_trans(root);
-        (...)
-   }
+Normally, '-fuse-ld=bfd' could be used to get around this; however, this
+can be fragile, depending on paths and variable naming. The cleaner
+solution for the kernel is to take advantage of the fact that $(LD) can
+be invoked directly, which bypasses the heuristics of $(CC) and respects
+the user's choice. Similar changes have been done for ARM, ARM64, and
+MIPS.
 
-However before that patch was merged, another patch was merged first which
-replaced those checks because they were buggy.
-
-That other patch corresponds to commit 803f0f64d17769 ("Btrfs: fix fsync
-not persisting dentry deletions due to inode evictions"). The assumption
-that if the logged_trans field of an inode had a smaller value then the
-current transaction's generation (transid) meant that the inode was not
-logged in the current transaction was only correct if the inode was not
-evicted and reloaded in the current transaction. So the corresponding bug
-fix changed those checks and replaced them with the following helper
-function:
-
-  static bool inode_logged(struct btrfs_trans_handle *trans,
-                           struct btrfs_inode *inode)
-  {
-        if (inode->logged_trans == trans->transid)
-                return true;
-
-        if (inode->last_trans == trans->transid &&
-            test_bit(BTRFS_INODE_NEEDS_FULL_SYNC, &inode->runtime_flags) &&
-            !test_bit(BTRFS_FS_LOG_RECOVERING, &trans->fs_info->flags))
-                return true;
-
-        return false;
-  }
-
-So if we have a subvolume without a log tree in the current transaction
-(because we had no fsyncs), every time we unlink an inode we can end up
-trying to lock the log_mutex of the root through join_running_log_trans()
-twice, once for the inode being unlinked (by btrfs_del_inode_ref_in_log())
-and once for the parent directory (with btrfs_del_dir_entries_in_log()).
-
-This means if we have several unlink operations happening in parallel for
-inodes in the same subvolume, and the those inodes and/or their parent
-inode were changed in the current transaction, we end up having a lot of
-contention on the log_mutex.
-
-The test robots from intel reported a -30.7% performance regression for
-a REAIM test after commit e678934cbe5f02 ("btrfs: Remove unnecessary check
-from join_running_log_trans").
-
-So just bring back the optimization to join_running_log_trans() where we
-check first if a log root exists before trying to lock the log_mutex. This
-is done by checking for a bit that is set on the root when a log tree is
-created and removed when a log tree is freed (at transaction commit time).
-
-Commit e678934cbe5f02 ("btrfs: Remove unnecessary check from
-join_running_log_trans") was merged in the 5.4 merge window while commit
-803f0f64d17769 ("Btrfs: fix fsync not persisting dentry deletions due to
-inode evictions") was merged in the 5.3 merge window. But the first
-commit was actually authored before the second commit (May 23 2019 vs
-June 19 2019).
-
-Reported-by: kernel test robot <rong.a.chen@intel.com>
-Link: https://lore.kernel.org/lkml/20200611090233.GL12456@shao2-debian/
-Fixes: e678934cbe5f02 ("btrfs: Remove unnecessary check from join_running_log_trans")
-CC: stable@vger.kernel.org # 5.4+
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lkml.kernel.org/r/20200602192523.32758-1-natechancellor@gmail.com
+Link: https://github.com/ClangBuiltLinux/linux/issues/1041
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+[heiko.carstens@de.ibm.com: add --build-id flag]
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/ctree.h    | 2 ++
- fs/btrfs/tree-log.c | 5 +++++
- 2 files changed, 7 insertions(+)
+ arch/s390/kernel/vdso64/Makefile | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/fs/btrfs/ctree.h b/fs/btrfs/ctree.h
-index 6d2c277c6e0a4..36cd210ee2ef7 100644
---- a/fs/btrfs/ctree.h
-+++ b/fs/btrfs/ctree.h
-@@ -940,6 +940,8 @@ enum {
- 	BTRFS_ROOT_DEAD_RELOC_TREE,
- 	/* Mark dead root stored on device whose cleanup needs to be resumed */
- 	BTRFS_ROOT_DEAD_TREE,
-+	/* The root has a log tree. Used only for subvolume roots. */
-+	BTRFS_ROOT_HAS_LOG_TREE,
- };
+diff --git a/arch/s390/kernel/vdso64/Makefile b/arch/s390/kernel/vdso64/Makefile
+index bec19e7e6e1cf..4a66a1cb919b1 100644
+--- a/arch/s390/kernel/vdso64/Makefile
++++ b/arch/s390/kernel/vdso64/Makefile
+@@ -18,8 +18,8 @@ KBUILD_AFLAGS_64 += -m64 -s
  
- /*
-diff --git a/fs/btrfs/tree-log.c b/fs/btrfs/tree-log.c
-index 7d464b049507a..f46afbff668eb 100644
---- a/fs/btrfs/tree-log.c
-+++ b/fs/btrfs/tree-log.c
-@@ -167,6 +167,7 @@ static int start_log_trans(struct btrfs_trans_handle *trans,
- 		if (ret)
- 			goto out;
+ KBUILD_CFLAGS_64 := $(filter-out -m64,$(KBUILD_CFLAGS))
+ KBUILD_CFLAGS_64 += -m64 -fPIC -shared -fno-common -fno-builtin
+-KBUILD_CFLAGS_64 += -nostdlib -Wl,-soname=linux-vdso64.so.1 \
+-		    -Wl,--hash-style=both
++ldflags-y := -fPIC -shared -nostdlib -soname=linux-vdso64.so.1 \
++	     --hash-style=both --build-id -T
  
-+		set_bit(BTRFS_ROOT_HAS_LOG_TREE, &root->state);
- 		clear_bit(BTRFS_ROOT_MULTI_LOG_TASKS, &root->state);
- 		root->log_start_pid = current->pid;
- 	}
-@@ -193,6 +194,9 @@ static int join_running_log_trans(struct btrfs_root *root)
- {
- 	int ret = -ENOENT;
+ $(targets:%=$(obj)/%.dbg): KBUILD_CFLAGS = $(KBUILD_CFLAGS_64)
+ $(targets:%=$(obj)/%.dbg): KBUILD_AFLAGS = $(KBUILD_AFLAGS_64)
+@@ -37,8 +37,8 @@ KASAN_SANITIZE := n
+ $(obj)/vdso64_wrapper.o : $(obj)/vdso64.so
  
-+	if (!test_bit(BTRFS_ROOT_HAS_LOG_TREE, &root->state))
-+		return ret;
-+
- 	mutex_lock(&root->log_mutex);
- 	if (root->log_root) {
- 		ret = 0;
-@@ -3327,6 +3331,7 @@ int btrfs_free_log(struct btrfs_trans_handle *trans, struct btrfs_root *root)
- 	if (root->log_root) {
- 		free_log_tree(trans, root->log_root);
- 		root->log_root = NULL;
-+		clear_bit(BTRFS_ROOT_HAS_LOG_TREE, &root->state);
- 	}
- 	return 0;
- }
+ # link rule for the .so file, .lds has to be first
+-$(obj)/vdso64.so.dbg: $(src)/vdso64.lds $(obj-vdso64) FORCE
+-	$(call if_changed,vdso64ld)
++$(obj)/vdso64.so.dbg: $(obj)/vdso64.lds $(obj-vdso64) FORCE
++	$(call if_changed,ld)
+ 
+ # strip rule for the .so file
+ $(obj)/%.so: OBJCOPYFLAGS := -S
+@@ -50,8 +50,6 @@ $(obj-vdso64): %.o: %.S FORCE
+ 	$(call if_changed_dep,vdso64as)
+ 
+ # actual build commands
+-quiet_cmd_vdso64ld = VDSO64L $@
+-      cmd_vdso64ld = $(CC) $(c_flags) -Wl,-T $(filter %.lds %.o,$^) -o $@
+ quiet_cmd_vdso64as = VDSO64A $@
+       cmd_vdso64as = $(CC) $(a_flags) -c -o $@ $<
+ 
 -- 
 2.25.1
 
