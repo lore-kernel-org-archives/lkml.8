@@ -2,52 +2,49 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BBB0C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FC92C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:18:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DBDDA20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:18:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3159A20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:18:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461923;
-	bh=UtOGDCQ0LkIdsGgGXpJ2cOVcKx+TMDn7L1I9XokcdmY=;
+	s=default; t=1593461926;
+	bh=5sygOEUEHK7dK3X8fR8FlA4NhqPgFJ3+yDxttz1/BtQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k0d2JIMbwZqT4QNq5/A43tufJfMfaSE2p0JGAVonMUmRHfu4y0IY4dA8qrPQ7OpVT
-	 EYLad6LvCxqmgvN+lojzbyvmcVZGufGbpaLHiUEhWH+ipZXwrD1rvCVylCz9zHVEU1
-	 LQGvjY03fGnEYCwZn2KUMEQzE7uShf9Vmh1DSxNU=
+	b=oTyeqCKUQBcF/WIpBavp2lsuSrk6CLLWFEV/Rc5DQFxkp+1K5YxyMokh83fv9WSAH
+	 wc116fBxNMQv6irNx7RHb5nY1bJCzXrmxHJgNxcCJO8Cr8O3Ul4lNp1wa1EKbKstvE
+	 B5Y0QC5sGqaWvo8VbOMQ4Y+Pm5U63kbDVKCv6qgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730883AbgF2USn (ORCPT
+        id S2388658AbgF2USp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:18:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37028 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:18:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732638AbgF2TZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730593AbgF2TZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB3FB25327;
-        Mon, 29 Jun 2020 15:39:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB774252FE;
+        Mon, 29 Jun 2020 15:38:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445157;
-        bh=UtOGDCQ0LkIdsGgGXpJ2cOVcKx+TMDn7L1I9XokcdmY=;
+        s=default; t=1593445128;
+        bh=5sygOEUEHK7dK3X8fR8FlA4NhqPgFJ3+yDxttz1/BtQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q1R+r2/lCLbKE5tzkllV7vgzkiBs9t65qNg6Os51W/QxeOGl+cnLmqnGcEzPiYa4I
-         dJt6ZyDsRM0v3CTTggpXUAhRbwr2vV+C4rYIBoBEB2jG4L5TeJ6SXyD4gPbKdPghPb
-         zJaNlahBxxbucoC7o7aekm0OhtrI2ywC2mXFQKiM=
+        b=oTgSKb0/Bb3NsW+HSodVYoFKhQMrNTFMkmQMUEu68TxXjDyKoULifhsmCcm6Kty47
+         mNEcK/AqhB/XFlMb9Z4dI6PvAyZbX5rThhDjRp/btPIPP3d31JU46PT33tvQ3V5+aF
+         tkToTICTnmPxHsMEmdPv3RtwPk5h70C6xqLBQUmk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Luis Chamberlain <mcgrof@kernel.org>, Jan Kara <jack@suse.cz>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 58/78] blktrace: break out of blktrace setup on concurrent calls
-Date:   Mon, 29 Jun 2020 11:37:46 -0400
-Message-Id: <20200629153806.2494953-59-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 35/78] ALSA: usb-audio: Clean up mixer element list traverse
+Date:   Mon, 29 Jun 2020 11:37:23 -0400
+Message-Id: <20200629153806.2494953-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
 References: <20200629153806.2494953-1-sashal@kernel.org>
@@ -66,91 +63,157 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luis Chamberlain <mcgrof@kernel.org>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 1b0b283648163dae2a214ca28ed5a99f62a77319 ]
+[ Upstream commit 8c558076c740e8009a96c6fdc3d4245dde62be77 ]
 
-We use one blktrace per request_queue, that means one per the entire
-disk.  So we cannot run one blktrace on say /dev/vda and then /dev/vda1,
-or just two calls on /dev/vda.
+Introduce a new macro for iterating over mixer element list for
+avoiding the open codes in many places.  Also the open-coded
+container_of() and the forced cast to struct usb_mixer_elem_info are
+replaced with another simple macro, too.
 
-We check for concurrent setup only at the very end of the blktrace setup though.
+No functional changes but just readability improvement.
 
-If we try to run two concurrent blktraces on the same block device the
-second one will fail, and the first one seems to go on. However when
-one tries to kill the first one one will see things like this:
-
-The kernel will show these:
-
-```
-debugfs: File 'dropped' in directory 'nvme1n1' already present!
-debugfs: File 'msg' in directory 'nvme1n1' already present!
-debugfs: File 'trace0' in directory 'nvme1n1' already present!
-``
-
-And userspace just sees this error message for the second call:
-
-```
-blktrace /dev/nvme1n1
-BLKTRACESETUP(2) /dev/nvme1n1 failed: 5/Input/output error
-```
-
-The first userspace process #1 will also claim that the files
-were taken underneath their nose as well. The files are taken
-away form the first process given that when the second blktrace
-fails, it will follow up with a BLKTRACESTOP and BLKTRACETEARDOWN.
-This means that even if go-happy process #1 is waiting for blktrace
-data, we *have* been asked to take teardown the blktrace.
-
-This can easily be reproduced with break-blktrace [0] run_0005.sh test.
-
-Just break out early if we know we're already going to fail, this will
-prevent trying to create the files all over again, which we know still
-exist.
-
-[0] https://github.com/mcgrof/break-blktrace
-
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
-Signed-off-by: Jan Kara <jack@suse.cz>
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/blktrace.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ sound/usb/mixer.c          | 20 +++++++++-----------
+ sound/usb/mixer.h          |  6 ++++++
+ sound/usb/mixer_quirks.c   |  2 +-
+ sound/usb/mixer_scarlett.c |  6 ++----
+ 4 files changed, 18 insertions(+), 16 deletions(-)
 
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index 304a164f5e7e7..9a55c5bc52434 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -15,6 +15,9 @@
-  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-  *
-  */
-+
-+#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-+
- #include <linux/kernel.h>
- #include <linux/blkdev.h>
- #include <linux/blktrace_api.h>
-@@ -504,6 +507,16 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
- 	 */
- 	strreplace(buts->name, '/', '_');
+diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
+index 33deb5ec8b7a1..1a8d706491e65 100644
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -2403,9 +2403,9 @@ void snd_usb_mixer_notify_id(struct usb_mixer_interface *mixer, int unitid)
+ {
+ 	struct usb_mixer_elem_list *list;
  
-+	/*
-+	 * bdev can be NULL, as with scsi-generic, this is a helpful as
-+	 * we can be.
-+	 */
-+	if (q->blk_trace) {
-+		pr_warn("Concurrent blktraces are not allowed on %s\n",
-+			buts->name);
-+		return -EBUSY;
-+	}
+-	for (list = mixer->id_elems[unitid]; list; list = list->next_id_elem) {
++	for_each_mixer_elem(list, mixer, unitid) {
+ 		struct usb_mixer_elem_info *info =
+-			(struct usb_mixer_elem_info *)list;
++			mixer_elem_list_to_info(list);
+ 		/* invalidate cache, so the value is read from the device */
+ 		info->cached = 0;
+ 		snd_ctl_notify(mixer->chip->card, SNDRV_CTL_EVENT_MASK_VALUE,
+@@ -2416,7 +2416,7 @@ void snd_usb_mixer_notify_id(struct usb_mixer_interface *mixer, int unitid)
+ static void snd_usb_mixer_dump_cval(struct snd_info_buffer *buffer,
+ 				    struct usb_mixer_elem_list *list)
+ {
+-	struct usb_mixer_elem_info *cval = (struct usb_mixer_elem_info *)list;
++	struct usb_mixer_elem_info *cval = mixer_elem_list_to_info(list);
+ 	static char *val_types[] = {"BOOLEAN", "INV_BOOLEAN",
+ 				    "S8", "U8", "S16", "U16"};
+ 	snd_iprintf(buffer, "    Info: id=%i, control=%i, cmask=0x%x, "
+@@ -2442,8 +2442,7 @@ static void snd_usb_mixer_proc_read(struct snd_info_entry *entry,
+ 				mixer->ignore_ctl_error);
+ 		snd_iprintf(buffer, "Card: %s\n", chip->card->longname);
+ 		for (unitid = 0; unitid < MAX_ID_ELEMS; unitid++) {
+-			for (list = mixer->id_elems[unitid]; list;
+-			     list = list->next_id_elem) {
++			for_each_mixer_elem(list, mixer, unitid) {
+ 				snd_iprintf(buffer, "  Unit: %i\n", list->id);
+ 				if (list->kctl)
+ 					snd_iprintf(buffer,
+@@ -2473,19 +2472,19 @@ static void snd_usb_mixer_interrupt_v2(struct usb_mixer_interface *mixer,
+ 		return;
+ 	}
+ 
+-	for (list = mixer->id_elems[unitid]; list; list = list->next_id_elem)
++	for_each_mixer_elem(list, mixer, unitid)
+ 		count++;
+ 
+ 	if (count == 0)
+ 		return;
+ 
+-	for (list = mixer->id_elems[unitid]; list; list = list->next_id_elem) {
++	for_each_mixer_elem(list, mixer, unitid) {
+ 		struct usb_mixer_elem_info *info;
+ 
+ 		if (!list->kctl)
+ 			continue;
+ 
+-		info = (struct usb_mixer_elem_info *)list;
++		info = mixer_elem_list_to_info(list);
+ 		if (count > 1 && info->control != control)
+ 			continue;
+ 
+@@ -2705,7 +2704,7 @@ int snd_usb_mixer_suspend(struct usb_mixer_interface *mixer)
+ 
+ static int restore_mixer_value(struct usb_mixer_elem_list *list)
+ {
+-	struct usb_mixer_elem_info *cval = (struct usb_mixer_elem_info *)list;
++	struct usb_mixer_elem_info *cval = mixer_elem_list_to_info(list);
+ 	int c, err, idx;
+ 
+ 	if (cval->cmask) {
+@@ -2741,8 +2740,7 @@ int snd_usb_mixer_resume(struct usb_mixer_interface *mixer, bool reset_resume)
+ 	if (reset_resume) {
+ 		/* restore cached mixer values */
+ 		for (id = 0; id < MAX_ID_ELEMS; id++) {
+-			for (list = mixer->id_elems[id]; list;
+-			     list = list->next_id_elem) {
++			for_each_mixer_elem(list, mixer, id) {
+ 				if (list->resume) {
+ 					err = list->resume(list);
+ 					if (err < 0)
+diff --git a/sound/usb/mixer.h b/sound/usb/mixer.h
+index ba27f7ade670e..e02653465e292 100644
+--- a/sound/usb/mixer.h
++++ b/sound/usb/mixer.h
+@@ -53,6 +53,12 @@ struct usb_mixer_elem_list {
+ 	usb_mixer_elem_resume_func_t resume;
+ };
+ 
++/* iterate over mixer element list of the given unit id */
++#define for_each_mixer_elem(list, mixer, id)	\
++	for ((list) = (mixer)->id_elems[id]; (list); (list) = (list)->next_id_elem)
++#define mixer_elem_list_to_info(list) \
++	container_of(list, struct usb_mixer_elem_info, head)
 +
- 	bt = kzalloc(sizeof(*bt), GFP_KERNEL);
- 	if (!bt)
- 		return -ENOMEM;
+ struct usb_mixer_elem_info {
+ 	struct usb_mixer_elem_list head;
+ 	unsigned int control;	/* CS or ICN (high byte) */
+diff --git a/sound/usb/mixer_quirks.c b/sound/usb/mixer_quirks.c
+index b9ea4a42aee4e..ead0456a747c2 100644
+--- a/sound/usb/mixer_quirks.c
++++ b/sound/usb/mixer_quirks.c
+@@ -1171,7 +1171,7 @@ void snd_emuusb_set_samplerate(struct snd_usb_audio *chip,
+ 	int unitid = 12; /* SamleRate ExtensionUnit ID */
+ 
+ 	list_for_each_entry(mixer, &chip->mixer_list, list) {
+-		cval = (struct usb_mixer_elem_info *)mixer->id_elems[unitid];
++		cval = mixer_elem_list_to_info(mixer->id_elems[unitid]);
+ 		if (cval) {
+ 			snd_usb_mixer_set_ctl_value(cval, UAC_SET_CUR,
+ 						    cval->control << 8,
+diff --git a/sound/usb/mixer_scarlett.c b/sound/usb/mixer_scarlett.c
+index c33e2378089d5..4aeb9488a0c99 100644
+--- a/sound/usb/mixer_scarlett.c
++++ b/sound/usb/mixer_scarlett.c
+@@ -287,8 +287,7 @@ static int scarlett_ctl_switch_put(struct snd_kcontrol *kctl,
+ 
+ static int scarlett_ctl_resume(struct usb_mixer_elem_list *list)
+ {
+-	struct usb_mixer_elem_info *elem =
+-		container_of(list, struct usb_mixer_elem_info, head);
++	struct usb_mixer_elem_info *elem = mixer_elem_list_to_info(list);
+ 	int i;
+ 
+ 	for (i = 0; i < elem->channels; i++)
+@@ -447,8 +446,7 @@ static int scarlett_ctl_enum_put(struct snd_kcontrol *kctl,
+ 
+ static int scarlett_ctl_enum_resume(struct usb_mixer_elem_list *list)
+ {
+-	struct usb_mixer_elem_info *elem =
+-		container_of(list, struct usb_mixer_elem_info, head);
++	struct usb_mixer_elem_info *elem = mixer_elem_list_to_info(list);
+ 
+ 	if (elem->cached)
+ 		snd_usb_set_cur_mix_value(elem, 0, 0, *elem->cache_val);
 -- 
 2.25.1
 
