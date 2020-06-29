@@ -7,56 +7,55 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 879BFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:12:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD5BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 57FE920675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:12:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE3B720675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:12:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461552;
-	bh=nULSmqGEhmQIT2xXjTf3HDKmeDaPmfs7XfWtTTe2MXw=;
+	s=default; t=1593461555;
+	bh=U/ajtNUXgrI79PR52vEqduc3fXP2kxHpfe7LhEmubNI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qNoc6ty3IYJD07lkWDwIVUjmzVMj7GWGzNFfDDhnIRf1si+sbp3jrE2uPfS8/icE8
-	 HL9wea+hAgSgtPI7OcQ6arSIJdaWR8oaw7nY+Ra6SSNu7iY5QXPyKFqSLVA0p3Pq9h
-	 MnGwc7VtK+iQUaB06JytXNmCd/MVQnr8AhlegwNg=
+	b=dO55RXC85Jcy8S2x/z6m6+YCaGqruAr7U2jqGSAqSppi93Iek6c7pVctKR0KUCm9g
+	 9UfJB0lEKLt7JB4UEjMC1HTCqSYmrfI6+YdN5TKSnhqW90ihW5VUrImesf7ukS7P2n
+	 ktTj+B0sbL4zgOCsH2vorgb3BRk8/l2ZljQum5+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730615AbgF2UMa (ORCPT
+        id S1726824AbgF2UMe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:12:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40572 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:12:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732880AbgF2TaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732876AbgF2TaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B5D2252D7;
-        Mon, 29 Jun 2020 15:38:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6832A2528E;
+        Mon, 29 Jun 2020 15:36:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445103;
-        bh=nULSmqGEhmQIT2xXjTf3HDKmeDaPmfs7XfWtTTe2MXw=;
+        s=default; t=1593445000;
+        bh=U/ajtNUXgrI79PR52vEqduc3fXP2kxHpfe7LhEmubNI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RUGmo2SaTQLvaLNUNHtdI/o0BMyGliBHdZCb0/8apwuh5nTPTYt3XF4OnA/Lh483c
-         +TADVpkBDGw7UXReQp9Fkd4gRlEnJiO2zO735+unBoWKcO7Cj294SK9+5rArhqLK9E
-         9nWyPqvhllOtrMMFNvfPi1zFirok2HqQH4tr6f+0=
+        b=GNMiOx9V9Gjm+8VKZIUFEvrCb8xv04TKO3OcCfpQxZiIG1WxDFGBwwuRT7/qqHvvt
+         x6cFbrqEUeMObZdFSO1+gwUO531G/oceU+kci3Fc3L0IMSXH4tdKcZhcjAl9wRKfjU
+         r79UPtxZIGSFL0d5rBZIUI5Z9RtqHoTUubpKxU5w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Aditya Pakki <pakki001@umn.edu>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.14 12/78] rocker: fix incorrect error handling in dma_rings_init
-Date:   Mon, 29 Jun 2020 11:37:00 -0400
-Message-Id: <20200629153806.2494953-13-sashal@kernel.org>
+Cc:     Will Deacon <will@kernel.org>, Dave Martin <Dave.Martin@arm.com>,
+        Qian Cai <cai@lca.pw>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 100/131] arm64: sve: Fix build failure when ARM64_SVE=y and SYSCTL=n
+Date:   Mon, 29 Jun 2020 11:34:31 -0400
+Message-Id: <20200629153502.2494656-101-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
-References: <20200629153806.2494953-1-sashal@kernel.org>
+In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
+References: <20200629153502.2494656-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.14.y
+X-KernelTest-Branch: linux-4.19.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.14.186-rc1
-X-KernelTest-Deadline: 2020-07-01T15:38+00:00
+X-KernelTest-Version: 4.19.131-rc1
+X-KernelTest-Deadline: 2020-07-01T15:34+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -65,39 +64,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aditya Pakki <pakki001@umn.edu>
+From: Will Deacon <will@kernel.org>
 
-[ Upstream commit 58d0c864e1a759a15c9df78f50ea5a5c32b3989e ]
+[ Upstream commit e575fb9e76c8e33440fb859572a8b7d430f053d6 ]
 
-In rocker_dma_rings_init, the goto blocks in case of errors
-caused by the functions rocker_dma_cmd_ring_waits_alloc() and
-rocker_dma_ring_create() are incorrect. The patch fixes the
-order consistent with cleanup in rocker_dma_rings_fini().
+When I squashed the 'allnoconfig' compiler warning about the
+set_sve_default_vl() function being defined but not used in commit
+1e570f512cbd ("arm64/sve: Eliminate data races on sve_default_vl"), I
+accidentally broke the build for configs where ARM64_SVE is enabled, but
+SYSCTL is not.
 
-Signed-off-by: Aditya Pakki <pakki001@umn.edu>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fix this by only compiling the SVE sysctl support if both CONFIG_SVE=y
+and CONFIG_SYSCTL=y.
+
+Cc: Dave Martin <Dave.Martin@arm.com>
+Reported-by: Qian Cai <cai@lca.pw>
+Link: https://lore.kernel.org/r/20200616131808.GA1040@lca.pw
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/rocker/rocker_main.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/kernel/fpsimd.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/rocker/rocker_main.c b/drivers/net/ethernet/rocker/rocker_main.c
-index 056cb60936303..8ad05e5008299 100644
---- a/drivers/net/ethernet/rocker/rocker_main.c
-+++ b/drivers/net/ethernet/rocker/rocker_main.c
-@@ -651,10 +651,10 @@ static int rocker_dma_rings_init(struct rocker *rocker)
- err_dma_event_ring_bufs_alloc:
- 	rocker_dma_ring_destroy(rocker, &rocker->event_ring);
- err_dma_event_ring_create:
-+	rocker_dma_cmd_ring_waits_free(rocker);
-+err_dma_cmd_ring_waits_alloc:
- 	rocker_dma_ring_bufs_free(rocker, &rocker->cmd_ring,
- 				  PCI_DMA_BIDIRECTIONAL);
--err_dma_cmd_ring_waits_alloc:
--	rocker_dma_cmd_ring_waits_free(rocker);
- err_dma_cmd_ring_bufs_alloc:
- 	rocker_dma_ring_destroy(rocker, &rocker->cmd_ring);
- 	return err;
+diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
+index af59b42973141..177363abbd3e3 100644
+--- a/arch/arm64/kernel/fpsimd.c
++++ b/arch/arm64/kernel/fpsimd.c
+@@ -315,7 +315,7 @@ static unsigned int find_supported_vector_length(unsigned int vl)
+ 	return sve_vl_from_vq(bit_to_vq(bit));
+ }
+ 
+-#ifdef CONFIG_SYSCTL
++#if defined(CONFIG_ARM64_SVE) && defined(CONFIG_SYSCTL)
+ 
+ static int sve_proc_do_default_vl(struct ctl_table *table, int write,
+ 				  void __user *buffer, size_t *lenp,
+@@ -361,9 +361,9 @@ static int __init sve_sysctl_init(void)
+ 	return 0;
+ }
+ 
+-#else /* ! CONFIG_SYSCTL */
++#else /* ! (CONFIG_ARM64_SVE && CONFIG_SYSCTL) */
+ static int __init sve_sysctl_init(void) { return 0; }
+-#endif /* ! CONFIG_SYSCTL */
++#endif /* ! (CONFIG_ARM64_SVE && CONFIG_SYSCTL) */
+ 
+ #define ZREG(sve_state, vq, n) ((char *)(sve_state) +		\
+ 	(SVE_SIG_ZREG_OFFSET(vq, n) - SVE_SIG_REGS_OFFSET))
 -- 
 2.25.1
 
