@@ -7,142 +7,156 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A7BC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 130ABC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6FD6D20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6778204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:47:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GxauVzyQ"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="hSk0c1AM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729326AbgF2Srj (ORCPT
+        id S1729339AbgF2Srr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:47:39 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28761 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728003AbgF2Srg (ORCPT
+        Mon, 29 Jun 2020 14:47:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39182 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728003AbgF2Srm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:47:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593456454;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=is53wqYM+DH4GlUOLl6eyQhk3j5Rkm24u9IsygULR3E=;
-        b=GxauVzyQtrQIIUd2O6H6OByChCMIQRNojC8fysrQGmM2GRz+lcW5rrRYhDwa0R1i0yLZCL
-        r5Oz5NJypK8f2YvSI1CSU72TIMf1mhZaIPwHxLLs9GH4iLpDkXmLMeLYzLv52l+uiCap2Z
-        PJkXTEplIeIghUzvhfv8vBFGPhLCiZI=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-294-dFBC5HF2MFm5pRnxUx_OBA-1; Mon, 29 Jun 2020 09:46:46 -0400
-X-MC-Unique: dFBC5HF2MFm5pRnxUx_OBA-1
-Received: by mail-ed1-f69.google.com with SMTP id x20so14170367edr.20
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 06:46:46 -0700 (PDT)
+        Mon, 29 Jun 2020 14:47:42 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84AB6C030F10
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:20:33 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id bj10so2056975plb.11
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:20:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=bmVfJADPu1Rf4BNpweJIobmBh11XdYvG31saYbh8f2A=;
+        b=hSk0c1AMBltSrv0MFlxEGcT9a7odSjKO2OJZOsVk7IVAdXiahqsmRRyTe2RDOpfyoD
+         eLWi3Gayo01bsT5h8X0z083tmA258K5YNdwWx5e774rxk5zFYwaRA4kJHRdEdpWKW2x4
+         bhw9e5UVXTBAKIauThvNjKld6jnT21xxDT3Gs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=is53wqYM+DH4GlUOLl6eyQhk3j5Rkm24u9IsygULR3E=;
-        b=kwQiAoSMBuLt8977Ryg7kwYfbcEcxxLKEFVVTPfjnvULZTartwXfi0x/3oF+4uid82
-         +8alk+07xWX/z0JPwxSNP4pFQn+LTDxPwgb9sIfVXhH01aotuAfT+L4LYY8dmD0Vha8i
-         lz1h1j8CcB1LKQwaGAzZu6TVC5Kau97hliKq3xmPot0wZgXx2tmx9e2IAzrDfq1nEt9/
-         B5HmVNkkOk5ap0pNYnILnAqX483b+DR4fVxAjjw9r2OxFBh3hAizUDWRWooV8WEcjl5f
-         XTMKdXsyPY3PzExG49a5qq3cJX/JW4aoKidG+Om3HejGhmbzHPFLQplKCpBhCH1yXM0/
-         4Z0A==
-X-Gm-Message-State: AOAM531woLmkLJFZOVvaBsbib4JTh6vc0zf61k9tBDNwl9MlmiNK8Yxw
-        wsSFBXOUpN4tFRLS4f7ZFZsfx24msjgrFq4VCz5NZTFVVVTzBReufzXUBOLhe9tleU+yJWkcQDt
-        gEiPPtewgQEivYYj3KkPqEd87
-X-Received: by 2002:a17:906:8607:: with SMTP id o7mr13831839ejx.142.1593438405550;
-        Mon, 29 Jun 2020 06:46:45 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxewVMMB60DfYI8z+2p9BsuKt4Mh3TKFrImVLPlOVRyz+wPv5CMtmyRSbX5oxgxbsyu8yAeIg==
-X-Received: by 2002:a17:906:8607:: with SMTP id o7mr13831812ejx.142.1593438405243;
-        Mon, 29 Jun 2020 06:46:45 -0700 (PDT)
-Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
-        by smtp.gmail.com with ESMTPSA id d12sm54628edx.80.2020.06.29.06.46.44
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=bmVfJADPu1Rf4BNpweJIobmBh11XdYvG31saYbh8f2A=;
+        b=PweYMWkFfVrtORlNwQZkG4Hsi5BwysZGURJNnVGYxF2ey+zhm1HqXE/d0+cjKjmmvi
+         L9wuVjfNa4eACmVnSObmTi48V6xB32Qjoivt5VJCzoiP5QV+PacFnO8JDHcIsayoMsvb
+         nij75FKLIGTlBIbjOasp+t4uI8NRH1DXyCOo2xoTL2D9K51Sr69WWLIjE1M968wjLyBr
+         mUxJyRFNmZQJjI+mHkm4lKbM7x2UlnM/hDWIcaR4SJnIb8Kswp1WclTE4D+EJre1y7K8
+         AM9auolNxKv8E9w4DWb4x00oHouyfv8WZTDVyfRpx+uBf3/z7zaxobzHv6mV9DKSEjv2
+         +53A==
+X-Gm-Message-State: AOAM531A6dZ1KOwk8mjmYgrIAGNAA9++gVYEv1y+xC2ekzvasQFR3FUK
+        Lw1M1qN7EW1OgFNWoCLYoxu/5Q==
+X-Google-Smtp-Source: ABdhPJxdY6T6YIkc52fIDIkfbZFZRf5nOE0zNSJIWoPRUElmwT4gZhLFby0kBqLvZ66cSZdAp4VOiw==
+X-Received: by 2002:a17:90a:9292:: with SMTP id n18mr17806395pjo.112.1593447632977;
+        Mon, 29 Jun 2020 09:20:32 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id m2sm183486pfb.164.2020.06.29.09.20.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 06:46:44 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Vivek Goyal <vgoyal@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [PATCH] KVM: X86: Fix async pf caused null-ptr-deref
-In-Reply-To: <1593426391-8231-1-git-send-email-wanpengli@tencent.com>
-References: <1593426391-8231-1-git-send-email-wanpengli@tencent.com>
-Date:   Mon, 29 Jun 2020 15:46:43 +0200
-Message-ID: <877dvqc7cs.fsf@vitty.brq.redhat.com>
+        Mon, 29 Jun 2020 09:20:32 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 09:20:31 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Fangrui Song <maskray@google.com>,
+        Dmitry Golovin <dima@golovin.in>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Daniel Kiper <daniel.kiper@oracle.com>,
+        Sedat Dilek <sedat.dilek@gmail.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "H . J . Lu" <hjl@sourceware.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 7/7] x86/boot: Check that there are no runtime
+ relocations
+Message-ID: <202006290919.93C759C62@keescook>
+References: <20200629140928.858507-1-nivedita@alum.mit.edu>
+ <20200629140928.858507-8-nivedita@alum.mit.edu>
+ <202006290907.E5EF18A@keescook>
+ <CAMj1kXFge5aWL2BY8Y1=m1TonB+SrDq6p7TQWuO5JkzcR2dhjQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXFge5aWL2BY8Y1=m1TonB+SrDq6p7TQWuO5JkzcR2dhjQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wanpeng Li <kernellwp@gmail.com> writes:
+On Mon, Jun 29, 2020 at 06:11:59PM +0200, Ard Biesheuvel wrote:
+> On Mon, 29 Jun 2020 at 18:09, Kees Cook <keescook@chromium.org> wrote:
+> >
+> > On Mon, Jun 29, 2020 at 10:09:28AM -0400, Arvind Sankar wrote:
+> > > Add a linker script check that there are no runtime relocations, and
+> > > remove the old one that tries to check via looking for specially-named
+> > > sections in the object files.
+> > >
+> > > Drop the tests for -fPIE compiler option and -pie linker option, as they
+> > > are available in all supported gcc and binutils versions (as well as
+> > > clang and lld).
+> > >
+> > > Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
+> > > Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+> > > Reviewed-by: Fangrui Song <maskray@google.com>
+> > > ---
+> > >  arch/x86/boot/compressed/Makefile      | 28 +++-----------------------
+> > >  arch/x86/boot/compressed/vmlinux.lds.S |  8 ++++++++
+> > >  2 files changed, 11 insertions(+), 25 deletions(-)
+> >
+> > Reviewed-by: Kees Cook <keescook@chromium.org>
+> >
+> > question below ...
+> >
+> > > diff --git a/arch/x86/boot/compressed/vmlinux.lds.S b/arch/x86/boot/compressed/vmlinux.lds.S
+> > > index a4a4a59a2628..a78510046eec 100644
+> > > --- a/arch/x86/boot/compressed/vmlinux.lds.S
+> > > +++ b/arch/x86/boot/compressed/vmlinux.lds.S
+> > > @@ -42,6 +42,12 @@ SECTIONS
+> > >               *(.rodata.*)
+> > >               _erodata = . ;
+> > >       }
+> > > +     .rel.dyn : {
+> > > +             *(.rel.*)
+> > > +     }
+> > > +     .rela.dyn : {
+> > > +             *(.rela.*)
+> > > +     }
+> > >       .got : {
+> > >               *(.got)
+> > >       }
+> >
+> > Should these be marked (INFO) as well?
+> >
+> 
+> Given that sections marked as (INFO) will still be emitted into the
+> ELF image, it does not really make a difference to do this for zero
+> sized sections.
 
-> From: Wanpeng Li <wanpengli@tencent.com>
->
-> Syzbot reported that:
->
->   CPU: 1 PID: 6780 Comm: syz-executor153 Not tainted 5.7.0-syzkaller #0
->   Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
->   RIP: 0010:__apic_accept_irq+0x46/0xb80
->   Call Trace:
->    kvm_arch_async_page_present+0x7de/0x9e0
->    kvm_check_async_pf_completion+0x18d/0x400
->    kvm_arch_vcpu_ioctl_run+0x18bf/0x69f0
->    kvm_vcpu_ioctl+0x46a/0xe20
->    ksys_ioctl+0x11a/0x180
->    __x64_sys_ioctl+0x6f/0xb0
->    do_syscall_64+0xf6/0x7d0
->    entry_SYSCALL_64_after_hwframe+0x49/0xb3
->  
-> The testcase enables APF mechanism in MSR_KVM_ASYNC_PF_EN with ASYNC_PF_INT 
-> enabled w/o setting MSR_KVM_ASYNC_PF_INT before, what's worse, interrupt 
-> based APF 'page ready' event delivery depends on in kernel lapic, however, 
-> we didn't bail out when lapic is not in kernel during guest setting 
-> MSR_KVM_ASYNC_PF_EN which causes the null-ptr-deref in host later. 
-> This patch fixes it.
->
-> Reported-by: syzbot+1bf777dfdde86d64b89b@syzkaller.appspotmail.com
-> Fixes: 2635b5c4a0 (KVM: x86: interrupt based APF 'page ready' event delivery)
+Oh, I misunderstood -- I though they were _not_ emitted; I see now what
+you said was not allocated. So, disk space used for the .got.plt case,
+but not memory space used. Sorry for the confusion!
 
-Thanks!
+-Kees
 
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> ---
->  arch/x86/kvm/x86.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 00c88c2..1c0b4f5 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -2693,6 +2693,9 @@ static int kvm_pv_enable_async_pf(struct kvm_vcpu *vcpu, u64 data)
->  	if (data & 0x30)
->  		return 1;
->  
-> +	if (!lapic_in_kernel(vcpu))
-> +		return 1;
-> +
-
-I'm not sure how much we care about !lapic_in_kernel() case but this
-change should be accompanied with userspace changes to not expose
-KVM_FEATURE_ASYNC_PF_INT or how would the guest know that writing a
-legitimate value will result in #GP?
-
-Alternatively, we may just return '0' here: guest will be able to check
-what's in the MSR to see if the feature was enabled. Normally, guests
-shouldn't care about this but maybe there are cases when they do?
-
->  	vcpu->arch.apf.msr_en_val = data;
->  
->  	if (!kvm_pv_async_pf_enabled(vcpu)) {
+> 
+> > > @@ -85,3 +91,5 @@ ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0x18, "Unexpected GOT/PLT en
+> > >  #else
+> > >  ASSERT(SIZEOF(.got.plt) == 0 || SIZEOF(.got.plt) == 0xc, "Unexpected GOT/PLT entries detected!")
+> > >  #endif
+> > > +
+> > > +ASSERT(SIZEOF(.rel.dyn) == 0 && SIZEOF(.rela.dyn) == 0, "Unexpected runtime relocations detected!")
+> >
+> > I think I should be doing this same ASSERT style for other explicit
+> > DISCARDS in my orphan series so we'll notice if they change, instead
+> > of being silently dropped if they grow.
+> >
 
 -- 
-Vitaly
-
+Kees Cook
