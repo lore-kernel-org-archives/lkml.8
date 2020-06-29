@@ -2,176 +2,127 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF4A9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFDE0C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:45:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88F7D20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:45:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A4CE206C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:45:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nAWQ987y"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="M9ZSb4qo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732496AbgF2Upm (ORCPT
+        id S2389731AbgF2Upp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:45:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43376 "EHLO
+        Mon, 29 Jun 2020 16:45:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731571AbgF2TN5 (ORCPT
+        with ESMTP id S1731566AbgF2TN5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:13:57 -0400
-Received: from mail-wm1-x34a.google.com (mail-wm1-x34a.google.com [IPv6:2a00:1450:4864:20::34a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75C37C008623
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 03:42:27 -0700 (PDT)
-Received: by mail-wm1-x34a.google.com with SMTP id f68so8291821wmf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 03:42:27 -0700 (PDT)
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E894C08EB01
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:18:50 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id q17so7445824pfu.8
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:18:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=YyMZU7GxNPbypFBfmDC57uoWU5tN/2mz7Tk7sznQPgo=;
-        b=nAWQ987yfOBPOOEYeLfBpTKXjHDjRk++j9AZflXKZXWLCMXVvd7yIsAChgHiHkG1Sb
-         Ro38pXUoJKYD0KZynPUgyFkyXcggBZGtHKERFokBWq0fCQ+qKUB3HKLP7JCPiKvS2DDU
-         1utkIHtk9qixo7oMbkagnHxUtzaR/8DJlPuCsGHhKo5gp92ooPOwjZo0VDpbtmLWlIP7
-         flby1Y3JacGPnRjvosmrKnWbZ8lxhinI0u/YB/CamcoduNbgp/eZQuK398sUFUxKl5hY
-         D5luhsAxu540KejG7TSErFAVenWrZqEs+zkoMYCh436eVyjx/ikSt4cxCc35SUYPGzAa
-         HCIA==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=g0c7XOOnQF00ZfjeTQGIw9PaJthVip/aX3zS1dRtJoE=;
+        b=M9ZSb4qoWIq549nkDC9nITi2Y+iOVB3dYWRDDV3WRmfzVjtQks65kDEF7l1+ij9SlB
+         Ohi65fuChmNNYze5qrvJVk6IOjVJ/rxa8jvdv0qO+qmBCzMBaCbtUOo4//H/OjguzP5R
+         T/UGeSUbVaM1bo/CG0rdGvwUKCmIM2bIikow4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=YyMZU7GxNPbypFBfmDC57uoWU5tN/2mz7Tk7sznQPgo=;
-        b=nsSkhaElOtKxUeAnr8SbIdH+1gEqmLS1nLYk6H4wKq7jvL+PX6AxGXJv+JK3nqyBet
-         ElKzEj54T7HE/Esi9joh5kd0XshhJQOWONAb0VxxpQKQ5a8BezTbRqaIxR3dFxAreT7M
-         NKhcjdO0Su2Dkxl/Lxxti4a74qQk+Qi3UCyNLtv0x1mfx/yQAZLfb6miBkTr1xHkhPSA
-         X5w1AZ9AbBSmwrpMOW8d30reMupxmqk1VUoKwuBaBEy2tk+L7NtbNOgivGbKQOCl/CYm
-         GZ2xA6HWDgjrkwA3bq5c9RV06PtxaP6EFO+kp6r0SNZJdaELornH2FVo96F5EgZvGHKq
-         Pn+Q==
-X-Gm-Message-State: AOAM531PLzVjrcy02xf2K5S6g9lcZQxiL+olGVSmtjSh4/uqDi/IWgNK
-        NkwXauvJTx2X70GycX/MPu1YF2Ec7Q==
-X-Google-Smtp-Source: ABdhPJyMWL2D57ylMog0xr3NH7coG2BEQ8Z7wiwp0oZ1Ynp0EmpoOKeBp65JMLFjr+o/s1Uhc9XWJsZreA==
-X-Received: by 2002:a1c:1b90:: with SMTP id b138mr15963963wmb.21.1593427346060;
- Mon, 29 Jun 2020 03:42:26 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 12:41:57 +0200
-In-Reply-To: <20200629104157.3242503-1-elver@google.com>
-Message-Id: <20200629104157.3242503-2-elver@google.com>
-Mime-Version: 1.0
-References: <20200629104157.3242503-1-elver@google.com>
-X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-Subject: [PATCH 2/2] kasan: Update required compiler versions in documentation
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com, akpm@linux-foundation.org
-Cc:     dvyukov@google.com, glider@google.com, andreyknvl@google.com,
-        linux-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
-        aryabinin@virtuozzo.com, ndesaulniers@google.com,
-        walter-zh.wu@mediatek.com, arnd@arndb.de, dja@axtens.net,
-        linux-doc@vger.kernel.org, clang-built-linux@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=g0c7XOOnQF00ZfjeTQGIw9PaJthVip/aX3zS1dRtJoE=;
+        b=daR3UDIJ7K/RJpApQ8DwUWSM1bzWt2R3+hEHK3chSwwTRNPbwULKJ/wZQUJzxZgLvj
+         Y2bvHHotB47XtygRQ2HvknKCYexle1VCKphe58Agj3Qv2PTZMwRw5sIZ+aFmPor2cj2A
+         MO6a0FbG5maZ0Pz9+4e4nPy69wZqERyGEwrxZof6oLekZO3NWVa87O+tyJbu4nnz1QKh
+         7bnolxI7FhYx0SYqQ7mHkrvSMQqMO+vw7cJNkWYA37z3zP2wKsBPzzYazCliEVO4Lgqp
+         k6fSul9C1Gx2C+k8jmqHadreDHJKrxZ0nscSWPE54VTx3CGUBjwy2QM2SjyhJp5DUeKh
+         DMAQ==
+X-Gm-Message-State: AOAM530Vyq62UeWWzpfbidr4dTKCs5CWMs2KiAXvNlElXzXTvjIsKoRv
+        aU0rl/3V+ZOSOxGnYkWwXDv/Pg==
+X-Google-Smtp-Source: ABdhPJw58QIF5f/Yv5c9CUFM9Nx42xHsS2ePKHv+mXeT2M6dXWhB9Q/p3SvpYavVwb4WSrkztjUiRQ==
+X-Received: by 2002:a63:4419:: with SMTP id r25mr2949678pga.198.1593411530134;
+        Sun, 28 Jun 2020 23:18:50 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id q10sm34391423pfk.86.2020.06.28.23.18.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Jun 2020 23:18:47 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, x86@kernel.org,
+        clang-built-linux@googlegroups.com, linux-arch@vger.kernel.org,
+        linux-efi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 07/17] arm64/build: Use common DISCARDS in linker script
+Date:   Sun, 28 Jun 2020 23:18:30 -0700
+Message-Id: <20200629061840.4065483-8-keescook@chromium.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629061840.4065483-1-keescook@chromium.org>
+References: <20200629061840.4065483-1-keescook@chromium.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Updates the recently changed compiler requirements for KASAN. In
-particular, we require GCC >= 8.3.0, and add a note that Clang 11
-supports OOB detection of globals.
+Use the common DISCARDS rule for the linker script in an effort to
+regularize the linker script to prepare for warning on orphaned
+sections. Additionally clean up left-over no-op macros.
 
-Fixes: 7b861a53e46b ("kasan: Bump required compiler version")
-Fixes: acf7b0bf7dcf ("kasan: Fix required compiler version")
-Signed-off-by: Marco Elver <elver@google.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Acked-by: Will Deacon <will@kernel.org>
 ---
- Documentation/dev-tools/kasan.rst |  7 ++-----
- lib/Kconfig.kasan                 | 24 +++++++++++++++---------
- 2 files changed, 17 insertions(+), 14 deletions(-)
+ arch/arm64/kernel/vmlinux.lds.S | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/dev-tools/kasan.rst b/Documentation/dev-tools/kasan.rst
-index c652d740735d..15a2a53e77b0 100644
---- a/Documentation/dev-tools/kasan.rst
-+++ b/Documentation/dev-tools/kasan.rst
-@@ -13,11 +13,8 @@ KASAN uses compile-time instrumentation to insert validity checks before every
- memory access, and therefore requires a compiler version that supports that.
+diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
+index 55ae731b6368..b5a94ec1eada 100644
+--- a/arch/arm64/kernel/vmlinux.lds.S
++++ b/arch/arm64/kernel/vmlinux.lds.S
+@@ -6,6 +6,7 @@
+  */
  
- Generic KASAN is supported in both GCC and Clang. With GCC it requires version
--4.9.2 or later for basic support and version 5.0 or later for detection of
--out-of-bounds accesses for stack and global variables and for inline
--instrumentation mode (see the Usage section). With Clang it requires version
--7.0.0 or later and it doesn't support detection of out-of-bounds accesses for
--global variables yet.
-+8.3.0 or later. With Clang it requires version 7.0.0 or later, but detection of
-+out-of-bounds accesses for global variables is only supported since Clang 11.
+ #define RO_EXCEPTION_TABLE_ALIGN	8
++#define RUNTIME_DISCARD_EXIT
  
- Tag-based KASAN is only supported in Clang and requires version 7.0.0 or later.
- 
-diff --git a/lib/Kconfig.kasan b/lib/Kconfig.kasan
-index 89053defc0d9..047b53dbfd58 100644
---- a/lib/Kconfig.kasan
-+++ b/lib/Kconfig.kasan
-@@ -40,6 +40,7 @@ choice
- 	  software tag-based KASAN (a version based on software memory
- 	  tagging, arm64 only, similar to userspace HWASan, enabled with
- 	  CONFIG_KASAN_SW_TAGS).
-+
- 	  Both generic and tag-based KASAN are strictly debugging features.
- 
- config KASAN_GENERIC
-@@ -51,16 +52,18 @@ config KASAN_GENERIC
- 	select STACKDEPOT
- 	help
- 	  Enables generic KASAN mode.
--	  Supported in both GCC and Clang. With GCC it requires version 4.9.2
--	  or later for basic support and version 5.0 or later for detection of
--	  out-of-bounds accesses for stack and global variables and for inline
--	  instrumentation mode (CONFIG_KASAN_INLINE). With Clang it requires
--	  version 3.7.0 or later and it doesn't support detection of
--	  out-of-bounds accesses for global variables yet.
-+
-+	  This mode is supported in both GCC and Clang. With GCC it requires
-+	  version 8.3.0 or later. With Clang it requires version 7.0.0 or
-+	  later, but detection of out-of-bounds accesses for global variables
-+	  is supported only since Clang 11.
-+
- 	  This mode consumes about 1/8th of available memory at kernel start
- 	  and introduces an overhead of ~x1.5 for the rest of the allocations.
- 	  The performance slowdown is ~x3.
-+
- 	  For better error detection enable CONFIG_STACKTRACE.
-+
- 	  Currently CONFIG_KASAN_GENERIC doesn't work with CONFIG_DEBUG_SLAB
- 	  (the resulting kernel does not boot).
- 
-@@ -73,15 +76,19 @@ config KASAN_SW_TAGS
- 	select STACKDEPOT
- 	help
- 	  Enables software tag-based KASAN mode.
-+
- 	  This mode requires Top Byte Ignore support by the CPU and therefore
--	  is only supported for arm64.
--	  This mode requires Clang version 7.0.0 or later.
-+	  is only supported for arm64. This mode requires Clang version 7.0.0
-+	  or later.
-+
- 	  This mode consumes about 1/16th of available memory at kernel start
- 	  and introduces an overhead of ~20% for the rest of the allocations.
- 	  This mode may potentially introduce problems relating to pointer
- 	  casting and comparison, as it embeds tags into the top byte of each
- 	  pointer.
-+
- 	  For better error detection enable CONFIG_STACKTRACE.
-+
- 	  Currently CONFIG_KASAN_SW_TAGS doesn't work with CONFIG_DEBUG_SLAB
- 	  (the resulting kernel does not boot).
- 
-@@ -107,7 +114,6 @@ config KASAN_INLINE
- 	  memory accesses. This is faster than outline (in some workloads
- 	  it gives about x2 boost over outline instrumentation), but
- 	  make kernel's .text size much bigger.
--	  For CONFIG_KASAN_GENERIC this requires GCC 5.0 or later.
- 
- endchoice
- 
+ #include <asm-generic/vmlinux.lds.h>
+ #include <asm/cache.h>
+@@ -89,10 +90,8 @@ SECTIONS
+ 	 * matching the same input section name.  There is no documented
+ 	 * order of matching.
+ 	 */
++	DISCARDS
+ 	/DISCARD/ : {
+-		EXIT_CALL
+-		*(.discard)
+-		*(.discard.*)
+ 		*(.interp .dynamic)
+ 		*(.dynsym .dynstr .hash .gnu.hash)
+ 		*(.eh_frame)
 -- 
-2.27.0.212.ge8ba1cc988-goog
+2.25.1
 
