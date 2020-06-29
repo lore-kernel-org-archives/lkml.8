@@ -2,88 +2,180 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6393EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DFFAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 459AD206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:50:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593463821;
-	bh=bf1gx6HwyAGL1lgUaDDu+79hOVdRZJ+m+V17HLQNqP8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=AoCOSrlNMQ2Z13MyPOUdbqoseQ70N/dtgYvWn7lQ+yGmtKmYmIeG8L+JUdQi8YNDT
-	 wHB6NvbsZB3Al9Fdu3NKOFm877srGvIws2I2PDVARQxSN0KdtSADR/cHNQ0y4Pct8z
-	 UvtesTUXlFMteOIE+jyFiWekd99Uu3nVa+GFdUQo=
+	by mail.kernel.org (Postfix) with ESMTP id 438082065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:50:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="H9p2ftgM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732292AbgF2UuS (ORCPT
+        id S2387894AbgF2Uu1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:50:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46664 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731473AbgF2UuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 16:50:08 -0400
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4DEE020720;
-        Mon, 29 Jun 2020 20:50:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593463807;
-        bh=bf1gx6HwyAGL1lgUaDDu+79hOVdRZJ+m+V17HLQNqP8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=13bkz6rT88bW5ozmcTVlIDpLKBOZ9RXp5Dr9YU/HxouH/lD3TjAXms857cHHw2KkV
-         /2ixNXRUdyyGI63P/xu6opcacLXslGJGqcQJutmchqqO/13Dp1GMejsr+c+vg2puDb
-         qanzweqYc6g3z+fdluowc8Z2mlJoZ+ONrT0Cw5pw=
-Received: by mail-ot1-f45.google.com with SMTP id d4so16724576otk.2;
-        Mon, 29 Jun 2020 13:50:07 -0700 (PDT)
-X-Gm-Message-State: AOAM530enl5d2ZGClclltXDXi9w2bAcDslvSppaGQZUxrk+FJUEOQVwb
-        E3C8G1nI7fIl4noVO/zSJ+k5EZMzh9Tx4SgQlg==
-X-Google-Smtp-Source: ABdhPJzzF4kN7KDy2z2NmYmJxIweiy6VO0KsRTtdXWY9U7ErrDy0wmMgtxFXM1W9UJjV4JYyi44/uK+KLXtRv6Qmytk=
-X-Received: by 2002:a9d:2646:: with SMTP id a64mr14052433otb.107.1593463806654;
- Mon, 29 Jun 2020 13:50:06 -0700 (PDT)
+        Mon, 29 Jun 2020 16:50:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43388 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730446AbgF2TNg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:13:36 -0400
+Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 304DCC00860F
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 03:24:27 -0700 (PDT)
+Received: by mail-vk1-xa41.google.com with SMTP id y3so3312140vkg.11
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 03:24:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jXIzNUJKIGOWB+vmizHHKW6F1IB6+PeDc+RdNQZfG4E=;
+        b=H9p2ftgM6BDXXXU7ok8FHRr0sq4G6s1m37NDNFG1eDXJ2qFH1yJopBKuPGyReljBc2
+         kwUimi0R9cmeDvpOSRiQyQhHNeL/nurHP9Jh+UQbHEFANJyAEqzIRzvwW8/RZGiBJf0s
+         dBKMsE70llEhUl45joNctOxC5GYrj+/jp30sU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jXIzNUJKIGOWB+vmizHHKW6F1IB6+PeDc+RdNQZfG4E=;
+        b=l5Biyyahr6XKwTdp3oBXtzVRKvEhElthUj+qsP5Wtat41EPFjyvh9bOu4CqCMpnC5E
+         H0W5IZaiWUW4hsQuZgqvcqdUEDWqGOiCLDE7oMzCz1JXrk9vDYqSWPSVOs5iKV+U8idv
+         z8DLHXjjB1ZXXvjf8llZityVsRf1dAlq8o4H8J+zR+2kpVVby15RFfsXjJKfF2TVXcsX
+         KqO1AEGA2qyRGlYkNyj6r23QWhQy6ohk9lQelXozmb9ITmqFl2yIe+oowZaCrXnSVFIf
+         eBsldnWeKC/dGE5RzPoB3JyfE7FbFzGbGxYkv0MeJYqoy4MdyWkZB+6UI7X1aAsbAqgq
+         kMHQ==
+X-Gm-Message-State: AOAM530GCs1j9Opgh3UxLDqYeC++cUo2xZpZW1at8T9jiZ9i8O+kDlXY
+        fzMw/sMRN+uu+jmJtl5/7sgHAIV5c/kPVblUnh+Nvg==
+X-Google-Smtp-Source: ABdhPJwbhBKd5emQSa+NeM2N/t2NxnVvt7PQYuLqxuOf9/8087m6YgWuvv1HZwoG38pvPAxhwYkyo0VJbv0pY52R32g=
+X-Received: by 2002:a1f:17c1:: with SMTP id 184mr9308345vkx.51.1593426266169;
+ Mon, 29 Jun 2020 03:24:26 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200625170434.635114-1-masahiroy@kernel.org> <20200625170434.635114-5-masahiroy@kernel.org>
-In-Reply-To: <20200625170434.635114-5-masahiroy@kernel.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 29 Jun 2020 14:49:55 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqL4pTFK_pSNn1cSvjzwdg71dVzM3P06BYYEwDj2t+swPA@mail.gmail.com>
-Message-ID: <CAL_JsqL4pTFK_pSNn1cSvjzwdg71dVzM3P06BYYEwDj2t+swPA@mail.gmail.com>
-Subject: Re: [PATCH 4/4] dt-bindings: split DT schema check rules
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     devicetree@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200616055223.119360-1-ikjn@chromium.org> <159293933210.62212.706350398043250620@swboyd.mtv.corp.google.com>
+In-Reply-To: <159293933210.62212.706350398043250620@swboyd.mtv.corp.google.com>
+From:   Ikjoon Jang <ikjn@chromium.org>
+Date:   Mon, 29 Jun 2020 18:24:15 +0800
+Message-ID: <CAATdQgA4aoGWtuWb6AWpzD-VSfPV5u7++0rUoQN-cjwA7UpcVA@mail.gmail.com>
+Subject: Re: [PATCH] clk: Provide future parent in clk notification
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-clk@vger.kernel.org,
+        Michael Turquette <mturquette@baylibre.com>,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 11:05 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+On Wed, Jun 24, 2020 at 3:08 AM Stephen Boyd <sboyd@kernel.org> wrote:
 >
-> When building %.dt.yaml from %.dts, two things happen in a row:
+> Quoting Ikjoon Jang (2020-06-15 22:52:23)
+> > Current clk notification handlers cannot know its new parent in
+> > PRE_RATE_CHANGE event. This patch simply adds parent clk to
+> > clk_notifier_data so the child clk is now able to know its future
+> > parent prior to reparenting.
 >
->  [1] Run DTC to convert %.dts into %.dt.yaml
->
->  [2] Run dt-validate against %.dt.yaml
->
-> Currently, when any .yaml schema file is updated, processed-schema.yaml
-> is regenerated, then both [1] and [2] are rerun for all .dts files.
->
-> Actually, we do not need to rerun [1] since the original .dts is not
-> updated.
+> Yes, but why is that important?
 
-I have plans (and an intern working on it) to integrate the schema
-checks into dtc. That's going to make turning on the schema checks
-just a flag to dtc. I'm not sure if adding the complexity here is
-worth it as I'd expect much of this patch to go away again.
+Basically I wondered if there are some cases needed to check more
+conditions other than
+clock rate (e.g. parent clock's internal properties).
 
-Is there any negative impact on the absolute clean build time? I'm
-more concerned about that than optimizing rerunning.
+In my case,  now I'm trying to make a wrapper clock on a mux clock which has
+a rate adjustable PLL clock and a fixed temporary clock as its parents.
 
-Rob
+clkPLL   clkTMP
+        \     /
+      clkMUX
+
+Current device driver is using three different clocks specified from
+the device tree
+and the driver handles clocks like this way to change operating clock speed.
+
+clk_set_parent(clkMUX, clkTMP);
+clk_set_rate(clkPLL, HZ);
+udelay(10);
+clk_set_parent(clkMUX, clkPLL);
+
+Now what I want to do is to supply only one clock to a device node,
+make the driver
+call clk_set_rate() only, and clkMUX 's notification handler does
+set_parent() things instead.
+So it's good to know that clkMUX's rate changing is not caused by
+clk_set_parent() and
+deny its rate changing when an inappropriate parent is set.
+
+Sorry for the long story for a simple reason, and maybe there could be
+a more plausible reason
+for this in near future?
+
+>
+> >
+> > Change-Id: I099a784d5302a93951bdc6254d85f8df8c770462
+>
+> Please remove these.
+
+Oops, thanks!
+
+>
+> > Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+> > ---
+> >  drivers/clk/clk.c   | 30 +++++++++++++++++-------------
+> >  include/linux/clk.h |  9 ++++++---
+> >  2 files changed, 23 insertions(+), 16 deletions(-)
+> >
+> > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> > index 3f588ed06ce3..62c4e7b50ae5 100644
+> > --- a/drivers/clk/clk.c
+> > +++ b/drivers/clk/clk.c
+> > @@ -1846,7 +1849,7 @@ static int __clk_set_parent(struct clk_core *core, struct clk_core *parent,
+> >   * take on the rate of its parent.
+> >   */
+> >  static int __clk_speculate_rates(struct clk_core *core,
+> > -                                unsigned long parent_rate)
+> > +                                struct clk_core *parent)
+> >  {
+> >         struct clk_core *child;
+> >         unsigned long new_rate;
+> > @@ -1854,11 +1857,12 @@ static int __clk_speculate_rates(struct clk_core *core,
+> >
+> >         lockdep_assert_held(&prepare_lock);
+> >
+> > -       new_rate = clk_recalc(core, parent_rate);
+> > +       new_rate = clk_recalc(core, parent ? parent->rate : 0);
+> >
+> >         /* abort rate change if a driver returns NOTIFY_BAD or NOTIFY_STOP */
+> >         if (core->notifier_count)
+> > -               ret = __clk_notify(core, PRE_RATE_CHANGE, core->rate, new_rate);
+> > +               ret = __clk_notify(core, parent, PRE_RATE_CHANGE,
+> > +                                  core->rate, new_rate);
+> >
+> >         if (ret & NOTIFY_STOP_MASK) {
+> >                 pr_debug("%s: clk notifier callback for clock %s aborted with error %d\n",
+> > @@ -1867,7 +1871,7 @@ static int __clk_speculate_rates(struct clk_core *core,
+> >         }
+> >
+> >         hlist_for_each_entry(child, &core->children, child_node) {
+> > -               ret = __clk_speculate_rates(child, new_rate);
+> > +               ret = __clk_speculate_rates(child, core);
+>
+> How does this work? core->rate isn't assigned yet when we're speculating
+> rates down the tree to the leaves. So that clk_recalc() in the above
+> hunk would need to save the rate away, which is wrong because it isn't
+> changed yet, for this line to make sense.
+>
+Yes, you're right, this was simply wrong..
+
+> Given that I had to read this for a few minutes to figure this out it
+> seems that trying to combine the parent and the rate as arguments is
+> actually more complicated than adding another parameter. Please just add
+> another argument.
+>
+> >                 if (ret & NOTIFY_STOP_MASK)
+> >                         break;
+> >         }
+
+Agree,
+Thank you for the review.
