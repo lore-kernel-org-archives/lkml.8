@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E35C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:44:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54625C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:44:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CCA342082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:44:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B7062082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:44:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593459882;
-	bh=vDonOcKvTVviv84ID8+0kpiU/cxKre9WvHVBTDnUkjo=;
+	s=default; t=1593459886;
+	bh=WCjtbpjQ4nsvFwRlVNbbY7Rzz1MwGVeN88ApKGRWaO0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D29pTSlcGpuysWeZALgo0dumNBUjd3UdxvZsGykjW4gYIHt5hbUr37Qoa/XqRcDzp
-	 muSU7jXWhScj9s6NOj45KhxQOajl+B6i76zHdxS6t8YZwFuhQIZyyZyp1F50g6Am2G
-	 3L1C97UFIDAgfbHb6RSmRh1c18JMv5eBVFI3wnmQ=
+	b=HvxbzH2/AyVvQxG5h4AaWR/nxa2Fnt/4+NzZt2vka4QbIN2YI7jN2hVCkCI0+37jw
+	 mNjz2P977V9N1m3D46f0byZtouwbWtoiGDK3v9o6QvjZLZZT+ZiJ10I5CL46LPy0Et
+	 5LjbUFJ2S4SlJobHfKIJW4pguSTAGtHEWXVfdzao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732049AbgF2Tol (ORCPT
+        id S1731781AbgF2Too (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:44:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47674 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:44:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387836AbgF2Tkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387837AbgF2Tkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:45 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A2AC2485E;
-        Mon, 29 Jun 2020 15:26:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FF57248DC;
+        Mon, 29 Jun 2020 15:27:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444362;
-        bh=vDonOcKvTVviv84ID8+0kpiU/cxKre9WvHVBTDnUkjo=;
+        s=default; t=1593444434;
+        bh=WCjtbpjQ4nsvFwRlVNbbY7Rzz1MwGVeN88ApKGRWaO0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eozEOx/qilxmk2yR35UygR9TxJdcDHgqpLL9JfARvv2p57Oq5j1Xu054jVPwQZb90
-         5iQk03XO5A15P37TAyRg3t9CXEZUpVmWn+/rGc5qXlX9cImpZE59hLxoFd30O86yHO
-         pIdBsQFBhHFQmxNhvPQjOAJNj/aYEKlYF0lC7RKo=
+        b=VQh/8WH/jtM18lSaP5N5BSoWqCfCj4fxMOVvJWznAoSlKBozSl44Ssw8BaNAGXIUK
+         MD+rF1/UuyDmyfseOZCBYQEMb1SnlbdY0p78cK41hLGFwnWt3M/85/PiDPkXa5hl17
+         LluABOEUdiq/V0xw78Oo4yr2zAPFbDVZ/ilFKjZs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Macpaul Lin <macpaul.lin@mediatek.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 038/178] usb: host: xhci-mtk: avoid runtime suspend when removing hcd
-Date:   Mon, 29 Jun 2020 11:23:03 -0400
-Message-Id: <20200629152523.2494198-39-sashal@kernel.org>
+Cc:     Eddie James <eajames@linux.ibm.com>, Joel Stanley <joel@jms.id.au>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 112/178] i2c: fsi: Fix the port number field in status register
+Date:   Mon, 29 Jun 2020 11:24:17 -0400
+Message-Id: <20200629152523.2494198-113-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -66,48 +64,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Macpaul Lin <macpaul.lin@mediatek.com>
+From: Eddie James <eajames@linux.ibm.com>
 
-commit a24d5072e87457a14023ee1dd3fc8b1e76f899ef upstream.
+[ Upstream commit 502035e284cc7e9efef22b01771d822d49698ab9 ]
 
-When runtime suspend was enabled, runtime suspend might happen
-when xhci is removing hcd. This might cause kernel panic when hcd
-has been freed but runtime pm suspend related handle need to
-reference it.
+The port number field in the status register was not correct, so fix it.
 
-Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
-Reviewed-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/20200624135949.22611-4-mathias.nyman@linux.intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: d6ffb6300116 ("i2c: Add FSI-attached I2C master algorithm")
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+Signed-off-by: Joel Stanley <joel@jms.id.au>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/xhci-mtk.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/i2c/busses/i2c-fsi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
-index b18a6baef204a..85f1ff0399a9c 100644
---- a/drivers/usb/host/xhci-mtk.c
-+++ b/drivers/usb/host/xhci-mtk.c
-@@ -592,6 +592,9 @@ static int xhci_mtk_remove(struct platform_device *dev)
- 	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
- 	struct usb_hcd  *shared_hcd = xhci->shared_hcd;
- 
-+	pm_runtime_put_noidle(&dev->dev);
-+	pm_runtime_disable(&dev->dev);
-+
- 	usb_remove_hcd(shared_hcd);
- 	xhci->shared_hcd = NULL;
- 	device_init_wakeup(&dev->dev, false);
-@@ -602,8 +605,6 @@ static int xhci_mtk_remove(struct platform_device *dev)
- 	xhci_mtk_sch_exit(mtk);
- 	xhci_mtk_clks_disable(mtk);
- 	xhci_mtk_ldos_disable(mtk);
--	pm_runtime_put_sync(&dev->dev);
--	pm_runtime_disable(&dev->dev);
- 
- 	return 0;
- }
+diff --git a/drivers/i2c/busses/i2c-fsi.c b/drivers/i2c/busses/i2c-fsi.c
+index e0c256922d4f1..977d6f524649c 100644
+--- a/drivers/i2c/busses/i2c-fsi.c
++++ b/drivers/i2c/busses/i2c-fsi.c
+@@ -98,7 +98,7 @@
+ #define I2C_STAT_DAT_REQ	BIT(25)
+ #define I2C_STAT_CMD_COMP	BIT(24)
+ #define I2C_STAT_STOP_ERR	BIT(23)
+-#define I2C_STAT_MAX_PORT	GENMASK(19, 16)
++#define I2C_STAT_MAX_PORT	GENMASK(22, 16)
+ #define I2C_STAT_ANY_INT	BIT(15)
+ #define I2C_STAT_SCL_IN		BIT(11)
+ #define I2C_STAT_SDA_IN		BIT(10)
 -- 
 2.25.1
 
