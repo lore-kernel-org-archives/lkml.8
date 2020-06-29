@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA882C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98A42C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:29:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE3552065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:29:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D3912065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:29:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593458972;
-	bh=gVJflXQ4k/D6U5LvCohtVMPvXIJOtj1sJnDB3U4jl4E=;
+	s=default; t=1593458980;
+	bh=ihjGdyocaFqppYkjMVdv4mk/Ld1RGtOTZZieHUJPaDM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xTXXpK+D6DmZEsKu6FrWTX4o9wm9PcKqJEDFRBfb6syqL7rTYUTPJwPKrZ+ZU1T3C
-	 BxOndO0OndhZtvDm/WvxsxKtGS2rPZ1rG/14Khk1tFX51zqkL8VfNqZ8UwWGO5T+XQ
-	 7R6ILnotpVDEdiHcNtof+7tvKRRmdxkT9BKSmYIA=
+	b=Pmk3ijpESd9mmMHpoKwtqKwQpU8o+Bk4PppCA8Fq7ARRy/n53V+sE9mGLeX5PPfrH
+	 tdeB4ceLHbAg6poAf6ipyNytfcg2lDPy1uat96cBpWKQOYdOPbGaUnfTl1nRKBbdii
+	 8+O7y0eaKWK7oeDoEfdWHTwb1zi4tgLRF6wG6np0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732323AbgF2T3b (ORCPT
+        id S1732454AbgF2T3i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:29:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37054 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:29:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732660AbgF2TZn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:25:43 -0400
+        id S1732654AbgF2TZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:25:42 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5E1725323;
-        Mon, 29 Jun 2020 15:39:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45C1C25344;
+        Mon, 29 Jun 2020 15:39:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445155;
-        bh=gVJflXQ4k/D6U5LvCohtVMPvXIJOtj1sJnDB3U4jl4E=;
+        s=default; t=1593445184;
+        bh=ihjGdyocaFqppYkjMVdv4mk/Ld1RGtOTZZieHUJPaDM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PqyIEIEskSP97cixkSTr/yipVtdPA02QUB++udWVYLkLSYCAHox3yP5BDP5bTU04m
-         agomTbNEUXKTv+H8OxziHvNnwPdBuFJf3yOEudwFjcDBB+mzoDO60SwybzLOL1Blzi
-         nTDm5QnxDhsn2a8n6zmbrSCrFJQk67mHO6QlvPng=
+        b=Yf/PkQ9ks+ezgmz7gxTyVUENY+/DiWsoqFQ+hp547CyFl2jTJZ7Me4Zbcyhkh9IQW
+         CsbdvMpgqPTtuycEAR6VHvMS61Oid4RAM7ODrh7z2+fOQXJjPWoWbHeG6wIY1x4i0n
+         XvXjpfY5CpYc4LS0FxFCrgtORivX3vUFJ3UnKBZ8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Schnelle <svens@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 56/78] s390/ptrace: fix setting syscall number
-Date:   Mon, 29 Jun 2020 11:37:44 -0400
-Message-Id: <20200629153806.2494953-57-sashal@kernel.org>
+Cc:     Olga Kornievskaia <olga.kornievskaia@gmail.com>,
+        Olga Kornievskaia <kolga@netapp.com>,
+        Neil Brown <neilb@suse.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.14 75/78] NFSv4 fix CLOSE not waiting for direct IO compeletion
+Date:   Mon, 29 Jun 2020 11:38:03 -0400
+Message-Id: <20200629153806.2494953-76-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
 References: <20200629153806.2494953-1-sashal@kernel.org>
@@ -65,90 +67,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Schnelle <svens@linux.ibm.com>
+From: Olga Kornievskaia <olga.kornievskaia@gmail.com>
 
-[ Upstream commit 873e5a763d604c32988c4a78913a8dab3862d2f9 ]
+commit d03727b248d0dae6199569a8d7b629a681154633 upstream.
 
-When strace wants to update the syscall number, it sets GPR2
-to the desired number and updates the GPR via PTRACE_SETREGSET.
-It doesn't update regs->int_code which would cause the old syscall
-executed on syscall restart. As we cannot change the ptrace ABI and
-don't have a field for the interruption code, check whether the tracee
-is in a syscall and the last instruction was svc. In that case assume
-that the tracer wants to update the syscall number and copy the GPR2
-value to regs->int_code.
+Figuring out the root case for the REMOVE/CLOSE race and
+suggesting the solution was done by Neil Brown.
 
-Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Currently what happens is that direct IO calls hold a reference
+on the open context which is decremented as an asynchronous task
+in the nfs_direct_complete(). Before reference is decremented,
+control is returned to the application which is free to close the
+file. When close is being processed, it decrements its reference
+on the open_context but since directIO still holds one, it doesn't
+sent a close on the wire. It returns control to the application
+which is free to do other operations. For instance, it can delete a
+file. Direct IO is finally releasing its reference and triggering
+an asynchronous close. Which races with the REMOVE. On the server,
+REMOVE can be processed before the CLOSE, failing the REMOVE with
+EACCES as the file is still opened.
+
+Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
+Suggested-by: Neil Brown <neilb@suse.com>
+CC: stable@vger.kernel.org
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/s390/kernel/ptrace.c | 31 ++++++++++++++++++++++++++++++-
- 1 file changed, 30 insertions(+), 1 deletion(-)
+ fs/nfs/direct.c | 13 +++++++++----
+ fs/nfs/file.c   |  1 +
+ 2 files changed, 10 insertions(+), 4 deletions(-)
 
-diff --git a/arch/s390/kernel/ptrace.c b/arch/s390/kernel/ptrace.c
-index 56e0190d6e651..42e4cd20fbbed 100644
---- a/arch/s390/kernel/ptrace.c
-+++ b/arch/s390/kernel/ptrace.c
-@@ -322,6 +322,25 @@ static inline void __poke_user_per(struct task_struct *child,
- 		child->thread.per_user.end = data;
+diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
+index e6ea4511c41ce..3cef33b0f7e08 100644
+--- a/fs/nfs/direct.c
++++ b/fs/nfs/direct.c
+@@ -396,8 +396,6 @@ static void nfs_direct_complete(struct nfs_direct_req *dreq)
+ {
+ 	struct inode *inode = dreq->inode;
+ 
+-	inode_dio_end(inode);
+-
+ 	if (dreq->iocb) {
+ 		long res = (long) dreq->error;
+ 		if (dreq->count != 0) {
+@@ -409,7 +407,10 @@ static void nfs_direct_complete(struct nfs_direct_req *dreq)
+ 
+ 	complete(&dreq->completion);
+ 
++	igrab(inode);
+ 	nfs_direct_req_release(dreq);
++	inode_dio_end(inode);
++	iput(inode);
  }
  
-+static void fixup_int_code(struct task_struct *child, addr_t data)
-+{
-+	struct pt_regs *regs = task_pt_regs(child);
-+	int ilc = regs->int_code >> 16;
-+	u16 insn;
-+
-+	if (ilc > 6)
-+		return;
-+
-+	if (ptrace_access_vm(child, regs->psw.addr - (regs->int_code >> 16),
-+			&insn, sizeof(insn), FOLL_FORCE) != sizeof(insn))
-+		return;
-+
-+	/* double check that tracee stopped on svc instruction */
-+	if ((insn >> 8) != 0xa)
-+		return;
-+
-+	regs->int_code = 0x20000 | (data & 0xffff);
-+}
- /*
-  * Write a word to the user area of a process at location addr. This
-  * operation does have an additional problem compared to peek_user.
-@@ -333,7 +352,9 @@ static int __poke_user(struct task_struct *child, addr_t addr, addr_t data)
- 	struct user *dummy = NULL;
- 	addr_t offset;
+ static void nfs_direct_read_completion(struct nfs_pgio_header *hdr)
+@@ -539,8 +540,10 @@ static ssize_t nfs_direct_read_schedule_iovec(struct nfs_direct_req *dreq,
+ 	 * generic layer handle the completion.
+ 	 */
+ 	if (requested_bytes == 0) {
+-		inode_dio_end(inode);
++		igrab(inode);
+ 		nfs_direct_req_release(dreq);
++		inode_dio_end(inode);
++		iput(inode);
+ 		return result < 0 ? result : -EIO;
+ 	}
  
-+
- 	if (addr < (addr_t) &dummy->regs.acrs) {
-+		struct pt_regs *regs = task_pt_regs(child);
- 		/*
- 		 * psw and gprs are stored on the stack
- 		 */
-@@ -351,7 +372,11 @@ static int __poke_user(struct task_struct *child, addr_t addr, addr_t data)
- 				/* Invalid addressing mode bits */
- 				return -EINVAL;
- 		}
--		*(addr_t *)((addr_t) &task_pt_regs(child)->psw + addr) = data;
-+
-+		if (test_pt_regs_flag(regs, PIF_SYSCALL) &&
-+			addr == offsetof(struct user, regs.gprs[2]))
-+			fixup_int_code(child, data);
-+		*(addr_t *)((addr_t) &regs->psw + addr) = data;
+@@ -957,8 +960,10 @@ static ssize_t nfs_direct_write_schedule_iovec(struct nfs_direct_req *dreq,
+ 	 * generic layer handle the completion.
+ 	 */
+ 	if (requested_bytes == 0) {
+-		inode_dio_end(inode);
++		igrab(inode);
+ 		nfs_direct_req_release(dreq);
++		inode_dio_end(inode);
++		iput(inode);
+ 		return result < 0 ? result : -EIO;
+ 	}
  
- 	} else if (addr < (addr_t) (&dummy->regs.orig_gpr2)) {
- 		/*
-@@ -717,6 +742,10 @@ static int __poke_user_compat(struct task_struct *child,
- 			regs->psw.mask = (regs->psw.mask & ~PSW_MASK_BA) |
- 				(__u64)(tmp & PSW32_ADDR_AMODE);
- 		} else {
-+
-+			if (test_pt_regs_flag(regs, PIF_SYSCALL) &&
-+				addr == offsetof(struct compat_user, regs.gprs[2]))
-+				fixup_int_code(child, data);
- 			/* gpr 0-15 */
- 			*(__u32*)((addr_t) &regs->psw + addr*2 + 4) = tmp;
- 		}
+diff --git a/fs/nfs/file.c b/fs/nfs/file.c
+index 81cca49a83750..7da2cea1e7a06 100644
+--- a/fs/nfs/file.c
++++ b/fs/nfs/file.c
+@@ -82,6 +82,7 @@ nfs_file_release(struct inode *inode, struct file *filp)
+ 	dprintk("NFS: release(%pD2)\n", filp);
+ 
+ 	nfs_inc_stats(inode, NFSIOS_VFSRELEASE);
++	inode_dio_wait(inode);
+ 	nfs_file_clear_open_context(filp);
+ 	return 0;
+ }
 -- 
 2.25.1
 
