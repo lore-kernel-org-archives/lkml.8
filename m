@@ -2,125 +2,94 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F75C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB2DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D982B206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:56:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460586;
-	bh=X6PyK9vQHq019m+5vte1gbSKyERkXScBvVNW3TjqUCU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GsbT54mFFJmBw3aRO/gWoST0LjLmrE2Uz/XmZm2nuAOTIidywhaNT01fZ3XS/oMYi
-	 WIYSHenguejBcrWJ3HgRiTZ0Rar+hDbjg6EQceSSr/Ig26p59daXAp4lgWRiDTT+ms
-	 RxvadmyQbqyTlJJfYOXv6pUeNuD1ZhvYoBEvOEQM=
+	by mail.kernel.org (Postfix) with ESMTP id A36DD20724
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:56:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oq4DxXRy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388042AbgF2T4U (ORCPT
+        id S2388310AbgF2T43 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:56:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47656 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387648AbgF2TkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:56:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48088 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387656AbgF2TkY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:24 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2559B2491B;
-        Mon, 29 Jun 2020 15:27:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444472;
-        bh=X6PyK9vQHq019m+5vte1gbSKyERkXScBvVNW3TjqUCU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xIFKLgLC/vEmowtyN3B5xnNG55ytXIGwzxB5+z+mMPutqd8zE+VO4PGx25Nqxh0+L
-         3w6KbAEdMQLgapndIPu/2K2hnbMERjHshh7p60TW9h2LTIRs2yfwnv+npkvyhHbgL0
-         PWA2Q5c+b3raNaX6qstRBEQY0zMNN95adk99Z1/8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Filipe Manana <fdmanana@suse.com>, David Sterba <dsterba@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 153/178] btrfs: fix failure of RWF_NOWAIT write into prealloc extent beyond eof
-Date:   Mon, 29 Jun 2020 11:24:58 -0400
-Message-Id: <20200629152523.2494198-154-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
-References: <20200629152523.2494198-1-sashal@kernel.org>
+Received: from casper.infradead.org (unknown [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B7EDC03E979;
+        Mon, 29 Jun 2020 12:40:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description;
+        bh=KKN2Rzx949H+NoG0kbydbtU4p/7MhBgkwEQu/fGRZVo=; b=oq4DxXRygnkoBpVqu4ShnFx67a
+        pJSZTPl/8bQB6t5SbLzEq7GEtk7yVppnDQoMDkwlIASlkU5Gv3TVvPrB44rfw3eqnI/6/46THwVdz
+        bpj2LW1dF9GjmaqLsSZnWCGOiWCgne+0b3/wk5CW3PxduJhQZcvYQZkZnB44cjXI3RV8EqpdASKu/
+        RkLdLy683AjRfxZt01zPKBwDhf+S1bMB3O91CxDduFf+rpctsL9V3FYWiqw0E6KmkpHgdogcoq/bv
+        FM6mYXGlxSu8Yj3wFLmkB7cMQ6vzzc2fkWPIa1S/y8ELqgdqrW/IuX4PrQsWtaDG8vRqd88y0uRuj
+        7Jl9LgYQ==;
+Received: from [2001:4bb8:184:76e3:fcca:c8dc:a4bf:12fa] (helo=localhost)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jpzdN-0004Ju-WF; Mon, 29 Jun 2020 19:40:06 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     dm-devel@redhat.com, linux-kernel@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-xtensa@linux-xtensa.org,
+        drbd-dev@lists.linbit.com, linuxppc-dev@lists.ozlabs.org,
+        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-nvme@lists.infradead.org,
+        linux-s390@vger.kernel.org
+Subject: [PATCH 10/20] dm: stop using ->queuedata
+Date:   Mon, 29 Jun 2020 21:39:37 +0200
+Message-Id: <20200629193947.2705954-11-hch@lst.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200629193947.2705954-1-hch@lst.de>
+References: <20200629193947.2705954-1-hch@lst.de>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.50-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.4.50-rc1
-X-KernelTest-Deadline: 2020-07-01T15:25+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+Instead of setting up the queuedata as well just use one private data
+field.
 
-commit 4b1946284dd6641afdb9457101056d9e6ee6204c upstream.
-
-If we attempt to write to prealloc extent located after eof using a
-RWF_NOWAIT write, we always fail with -EAGAIN.
-
-We do actually check if we have an allocated extent for the write at
-the start of btrfs_file_write_iter() through a call to check_can_nocow(),
-but later when we go into the actual direct IO write path we simply
-return -EAGAIN if the write starts at or beyond EOF.
-
-Trivial to reproduce:
-
-  $ mkfs.btrfs -f /dev/sdb
-  $ mount /dev/sdb /mnt
-
-  $ touch /mnt/foo
-  $ chattr +C /mnt/foo
-
-  $ xfs_io -d -c "pwrite -S 0xab 0 64K" /mnt/foo
-  wrote 65536/65536 bytes at offset 0
-  64 KiB, 16 ops; 0.0004 sec (135.575 MiB/sec and 34707.1584 ops/sec)
-
-  $ xfs_io -c "falloc -k 64K 1M" /mnt/foo
-
-  $ xfs_io -d -c "pwrite -N -V 1 -S 0xfe -b 64K 64K 64K" /mnt/foo
-  pwrite: Resource temporarily unavailable
-
-On xfs and ext4 the write succeeds, as expected.
-
-Fix this by removing the wrong check at btrfs_direct_IO().
-
-Fixes: edf064e7c6fec3 ("btrfs: nowait aio support")
-CC: stable@vger.kernel.org # 4.14+
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- fs/btrfs/inode.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/md/dm.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index 0984601418e50..280c45c91ddc4 100644
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -8857,9 +8857,6 @@ static ssize_t btrfs_direct_IO(struct kiocb *iocb, struct iov_iter *iter)
- 			dio_data.overwrite = 1;
- 			inode_unlock(inode);
- 			relock = true;
--		} else if (iocb->ki_flags & IOCB_NOWAIT) {
--			ret = -EAGAIN;
--			goto out;
- 		}
- 		ret = btrfs_delalloc_reserve_space(inode, &data_reserved,
- 						   offset, count);
+diff --git a/drivers/md/dm.c b/drivers/md/dm.c
+index e44473fe0f4873..c8d91f271c272e 100644
+--- a/drivers/md/dm.c
++++ b/drivers/md/dm.c
+@@ -1789,7 +1789,7 @@ static blk_qc_t dm_process_bio(struct mapped_device *md,
+ 
+ static blk_qc_t dm_make_request(struct request_queue *q, struct bio *bio)
+ {
+-	struct mapped_device *md = q->queuedata;
++	struct mapped_device *md = bio->bi_disk->private_data;
+ 	blk_qc_t ret = BLK_QC_T_NONE;
+ 	int srcu_idx;
+ 	struct dm_table *map;
+@@ -1995,7 +1995,6 @@ static struct mapped_device *alloc_dev(int minor)
+ 	md->queue = blk_alloc_queue(dm_make_request, numa_node_id);
+ 	if (!md->queue)
+ 		goto bad;
+-	md->queue->queuedata = md;
+ 
+ 	md->disk = alloc_disk_node(1, md->numa_node_id);
+ 	if (!md->disk)
 -- 
-2.25.1
+2.26.2
 
