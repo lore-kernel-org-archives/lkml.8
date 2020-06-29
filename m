@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B61FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9439C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DB2EE20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:56:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF6AC20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:56:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593456991;
-	bh=i8Z4pq02HlIQq7mnk4M7zGdB1Rt3YMJGxBQpYLuK0QE=;
+	s=default; t=1593456993;
+	bh=HMYTN0rthApnSgRbc8HR0EZ95JaKoA184P4oglDPkFQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k6MsdMsEvZEgHvVL32GUuS+8oagHQN1GxIA8xNQzPRSdYWPQGZPTiFhXuRNTQ7iMg
-	 XV4PGk8trA8MJ0zqmWC8aYrNup99pPMM5005sYUSoTPL0VAWIjnGrQfjAYxfeSR4Mh
-	 aYkYbzlBa0g+urS2ydjxoVfsgrEyAphf7EKYaoF8=
+	b=vo04MrB/RIu5DWTJ0N4WFTSYIVC5BGt2R0Bi6YFPIdEhHkAUi+Ha00485q/nDof/I
+	 iCqjFziAK5YdvsaVfXytewEL38EWIejVl7jOSLKjdEQSWsR47jwqW3HPrRiLSwGmoh
+	 9pHuLn6fJaN/+yewKrQIxE7TnKlxr5wcvsDE7YaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727889AbgF2S43 (ORCPT
+        id S1730048AbgF2S4b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:56:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42472 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 14:56:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729968AbgF2SzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729966AbgF2SzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:55:17 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5B172556E;
-        Mon, 29 Jun 2020 15:55:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8904820720;
+        Mon, 29 Jun 2020 15:55:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446134;
-        bh=i8Z4pq02HlIQq7mnk4M7zGdB1Rt3YMJGxBQpYLuK0QE=;
+        s=default; t=1593446116;
+        bh=HMYTN0rthApnSgRbc8HR0EZ95JaKoA184P4oglDPkFQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aqmZf+btYSquC38j1yZqKsevSu75B5cQvLuULek+Ya3Fq1PYXtZ1GlAhqUNVeOFAD
-         lYcgRqPaRBnrI2zpfeDvTsK7kLAI+VwwrECbuUEwFLUc6OfTkydarib6n+54oaPgRn
-         Uom7kaognmwlrJ63EV5ZZm4MpCoLahbpjq7Kf+DU=
+        b=Iob4gZU9ZJ+jq5NReZuBrtVRgV2EzcLkY2+sGR2ZWFCGlOAr1HCx5FoGjhd3T36In
+         DZDrBJsgu3IINzwRjHhc1+A6UHvVL8XDF7EieZn5IsEgKLdMhc99kQuh0yChJzboql
+         R1b7MHANJd+HU6IyOQLN2ewJ7W1iFKGgj9cOLKek=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Junxiao Bi <junxiao.bi@oracle.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Jun Piao <piaojun@huawei.com>, Mark Fasheh <mark@fasheh.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.4 123/135] ocfs2: load global_inode_alloc
-Date:   Mon, 29 Jun 2020 11:52:57 -0400
-Message-Id: <20200629155309.2495516-124-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>,
+        syzbot+fb14314433463ad51625@syzkaller.appspotmail.com,
+        syzbot+2405ca3401e943c538b5@syzkaller.appspotmail.com,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 107/135] ALSA: usb-audio: Fix OOB access of mixer element list
+Date:   Mon, 29 Jun 2020 11:52:41 -0400
+Message-Id: <20200629155309.2495516-108-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -70,45 +66,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Junxiao Bi <junxiao.bi@oracle.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 7569d3c754e452769a5747eeeba488179e38a5da upstream.
+[ Upstream commit 220345e98f1cdc768eeb6e3364a0fa7ab9647fe7 ]
 
-Set global_inode_alloc as OCFS2_FIRST_ONLINE_SYSTEM_INODE, that will
-make it load during mount.  It can be used to test whether some
-global/system inodes are valid.  One use case is that nfsd will test
-whether root inode is valid.
+The USB-audio mixer code holds a linked list of usb_mixer_elem_list,
+and several operations are performed for each mixer element.  A few of
+them (snd_usb_mixer_notify_id() and snd_usb_mixer_interrupt_v2())
+assume each mixer element being a usb_mixer_elem_info object that is a
+subclass of usb_mixer_elem_list, cast via container_of() and access it
+members.  This may result in an out-of-bound access when a
+non-standard list element has been added, as spotted by syzkaller
+recently.
 
-Link: http://lkml.kernel.org/r/20200616183829.87211-3-junxiao.bi@oracle.com
-Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Jun Piao <piaojun@huawei.com>
-Cc: Mark Fasheh <mark@fasheh.com>
+This patch adds a new field, is_std_info, in usb_mixer_elem_list to
+indicate that the element is the usb_mixer_elem_info type or not, and
+skip the access to such an element if needed.
+
+Reported-by: syzbot+fb14314433463ad51625@syzkaller.appspotmail.com
+Reported-by: syzbot+2405ca3401e943c538b5@syzkaller.appspotmail.com
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lore.kernel.org/r/20200624122340.9615-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/ocfs2_fs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/usb/mixer.c        | 15 +++++++++++----
+ sound/usb/mixer.h        |  9 +++++++--
+ sound/usb/mixer_quirks.c |  3 ++-
+ 3 files changed, 20 insertions(+), 7 deletions(-)
 
-diff --git a/fs/ocfs2/ocfs2_fs.h b/fs/ocfs2/ocfs2_fs.h
-index 540ab5b75dbb0..88c1bd3898faf 100644
---- a/fs/ocfs2/ocfs2_fs.h
-+++ b/fs/ocfs2/ocfs2_fs.h
-@@ -340,8 +340,8 @@ struct ocfs2_system_inode_info {
- enum {
- 	BAD_BLOCK_SYSTEM_INODE = 0,
- 	GLOBAL_INODE_ALLOC_SYSTEM_INODE,
-+#define OCFS2_FIRST_ONLINE_SYSTEM_INODE GLOBAL_INODE_ALLOC_SYSTEM_INODE
- 	SLOT_MAP_SYSTEM_INODE,
--#define OCFS2_FIRST_ONLINE_SYSTEM_INODE SLOT_MAP_SYSTEM_INODE
- 	HEARTBEAT_SYSTEM_INODE,
- 	GLOBAL_BITMAP_SYSTEM_INODE,
- 	USER_QUOTA_SYSTEM_INODE,
+diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
+index c29931cd461fc..9b9d653d5e90b 100644
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -584,8 +584,9 @@ static int check_matrix_bitmap(unsigned char *bmap,
+  * if failed, give up and free the control instance.
+  */
+ 
+-int snd_usb_mixer_add_control(struct usb_mixer_elem_list *list,
+-			      struct snd_kcontrol *kctl)
++int snd_usb_mixer_add_list(struct usb_mixer_elem_list *list,
++			   struct snd_kcontrol *kctl,
++			   bool is_std_info)
+ {
+ 	struct usb_mixer_interface *mixer = list->mixer;
+ 	int err;
+@@ -598,6 +599,7 @@ int snd_usb_mixer_add_control(struct usb_mixer_elem_list *list,
+ 		return err;
+ 	}
+ 	list->kctl = kctl;
++	list->is_std_info = is_std_info;
+ 	list->next_id_elem = mixer->id_elems[list->id];
+ 	mixer->id_elems[list->id] = list;
+ 	return 0;
+@@ -2331,8 +2333,11 @@ void snd_usb_mixer_notify_id(struct usb_mixer_interface *mixer, int unitid)
+ 	struct usb_mixer_elem_list *list;
+ 
+ 	for_each_mixer_elem(list, mixer, unitid) {
+-		struct usb_mixer_elem_info *info =
+-			mixer_elem_list_to_info(list);
++		struct usb_mixer_elem_info *info;
++
++		if (!list->is_std_info)
++			continue;
++		info = mixer_elem_list_to_info(list);
+ 		/* invalidate cache, so the value is read from the device */
+ 		info->cached = 0;
+ 		snd_ctl_notify(mixer->chip->card, SNDRV_CTL_EVENT_MASK_VALUE,
+@@ -2410,6 +2415,8 @@ static void snd_usb_mixer_interrupt_v2(struct usb_mixer_interface *mixer,
+ 
+ 		if (!list->kctl)
+ 			continue;
++		if (!list->is_std_info)
++			continue;
+ 
+ 		info = mixer_elem_list_to_info(list);
+ 		if (count > 1 && info->control != control)
+diff --git a/sound/usb/mixer.h b/sound/usb/mixer.h
+index 004d99037210f..7d16a92210705 100644
+--- a/sound/usb/mixer.h
++++ b/sound/usb/mixer.h
+@@ -48,6 +48,7 @@ struct usb_mixer_elem_list {
+ 	struct usb_mixer_elem_list *next_id_elem; /* list of controls with same id */
+ 	struct snd_kcontrol *kctl;
+ 	unsigned int id;
++	bool is_std_info;
+ 	usb_mixer_elem_dump_func_t dump;
+ 	usb_mixer_elem_resume_func_t resume;
+ };
+@@ -85,8 +86,12 @@ void snd_usb_mixer_notify_id(struct usb_mixer_interface *mixer, int unitid);
+ int snd_usb_mixer_set_ctl_value(struct usb_mixer_elem_info *cval,
+ 				int request, int validx, int value_set);
+ 
+-int snd_usb_mixer_add_control(struct usb_mixer_elem_list *list,
+-			      struct snd_kcontrol *kctl);
++int snd_usb_mixer_add_list(struct usb_mixer_elem_list *list,
++			   struct snd_kcontrol *kctl,
++			   bool is_std_info);
++
++#define snd_usb_mixer_add_control(list, kctl) \
++	snd_usb_mixer_add_list(list, kctl, true)
+ 
+ void snd_usb_mixer_elem_init_std(struct usb_mixer_elem_list *list,
+ 				 struct usb_mixer_interface *mixer,
+diff --git a/sound/usb/mixer_quirks.c b/sound/usb/mixer_quirks.c
+index 5d6af9c861ad9..198515f86fcc2 100644
+--- a/sound/usb/mixer_quirks.c
++++ b/sound/usb/mixer_quirks.c
+@@ -168,7 +168,8 @@ static int add_single_ctl_with_resume(struct usb_mixer_interface *mixer,
+ 		return -ENOMEM;
+ 	}
+ 	kctl->private_free = snd_usb_mixer_elem_free;
+-	return snd_usb_mixer_add_control(list, kctl);
++	/* don't use snd_usb_mixer_add_control() here, this is a special list element */
++	return snd_usb_mixer_add_list(list, kctl, false);
+ }
+ 
+ /*
 -- 
 2.25.1
 
