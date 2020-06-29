@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5977EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B076C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 33DFD206F1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:09:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3287C206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:09:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593457768;
-	bh=KdJ/ah3nXbr2EVG/1M2SKqJ5uUF0nci/3d/WZ35yXto=;
+	s=default; t=1593457772;
+	bh=GGxbJOfbtAE6e03+LO15Vu7dDc/n1vkzpcClBCmxWjM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DYrI0VCerNJ81yx29lEYRI1coLgDP/ShtKJxJubW7L3gNkzIzSi+BI4E5lblJuplC
-	 HsnRhY3U5EvSZfAEX0swEdBPP3de65H3UNmFb316hoi6mH8d2IE/9BAmeLHqre39I0
-	 MhmieTtDBgVycPtlhK2NlZkhsYTuKJfO5i95BfvA=
+	b=1YnOypWLsnXBDCq6P1nmQaMY9MEKnOr72X/RXMN6acfoO6w9+9R1BAre/jqKEqdug
+	 vwfEL2AAGJsvUSdoDNfYokTlmFADn5WLviWOye+6Wvm0iv2MHd9GOws1900w1kuR8U
+	 2hDmLNhRFbe62j86xvdlwIikkfsDyDlEpDu2adp0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730677AbgF2TJ0 (ORCPT
+        id S1730704AbgF2TJa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:09:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45462 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:09:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730348AbgF2TAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730341AbgF2TAU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:00:20 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8412E254D2;
-        Mon, 29 Jun 2020 15:53:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0D9C2553D;
+        Mon, 29 Jun 2020 15:55:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446029;
-        bh=KdJ/ah3nXbr2EVG/1M2SKqJ5uUF0nci/3d/WZ35yXto=;
+        s=default; t=1593446104;
+        bh=GGxbJOfbtAE6e03+LO15Vu7dDc/n1vkzpcClBCmxWjM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sSQqFSwHEgYcmfzHN7Y1XISns1O4CoJ7DqRxsFhx9deJVro2uV1LjAapVFQZZOlHx
-         1376UNJARnf9P/P9cEW2E/eSe/MGuQPvP9sigNW2+8mNPfeBujuXmcKiTERnbDcuM+
-         OBy24UDIkFCXXnAOzl7ub3nWJ+P8i5ZvCkGARCx8=
+        b=GnErIBMIor16GJWvkOI8/DlOsexEl4jcZA2yf841Vp8najHvUElhWOt9z0kt00Yva
+         MOobbtMZrKo6e/dBbkcUDKWgk8yc88B+ayCZzSV3dDr0fT95pj2ZEg04R+BdQmpXzA
+         nQ6GhEb50m9uQvpEUVENoarnu3vv4GpucGtTKOss=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 035/135] vfio-pci: Mask cap zero
-Date:   Mon, 29 Jun 2020 11:51:29 -0400
-Message-Id: <20200629155309.2495516-36-sashal@kernel.org>
+Cc:     =?UTF-8?q?Tomasz=20Meresi=C5=84ski?= <tomasz@meresinski.eu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.4 096/135] usb: add USB_QUIRK_DELAY_INIT for Logitech C922
+Date:   Mon, 29 Jun 2020 11:52:30 -0400
+Message-Id: <20200629155309.2495516-97-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.229-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-4.4.y
@@ -65,48 +65,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Williamson <alex.williamson@redhat.com>
+From: Tomasz Meresiński <tomasz@meresinski.eu>
 
-[ Upstream commit bc138db1b96264b9c1779cf18d5a3b186aa90066 ]
+commit 5d8021923e8a8cc37a421a64e27c7221f0fee33c upstream.
 
-The PCI Code and ID Assignment Specification changed capability ID 0
-from reserved to a NULL capability in the v1.1 revision.  The NULL
-capability is defined to include only the 16-bit capability header,
-ie. only the ID and next pointer.  Unfortunately vfio-pci creates a
-map of config space, where ID 0 is used to reserve the standard type
-0 header.  Finding an actual capability with this ID therefore results
-in a bogus range marked in that map and conflicts with subsequent
-capabilities.  As this seems to be a dummy capability anyway and we
-already support dropping capabilities, let's hide this one rather than
-delving into the potentially subtle dependencies within our map.
+The Logitech C922, just like other Logitech webcams,
+needs the USB_QUIRK_DELAY_INIT or it will randomly
+not respond after device connection
 
-Seen on an NVIDIA Tesla T4.
-
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Alex Williamson <alex.williamson@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Tomasz Meresiński <tomasz@meresinski.eu>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200603203347.7792-1-tomasz@meresinski.eu
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/vfio/pci/vfio_pci_config.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/usb/core/quirks.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/vfio/pci/vfio_pci_config.c b/drivers/vfio/pci/vfio_pci_config.c
-index bf65572f47a8f..666b234acca0a 100644
---- a/drivers/vfio/pci/vfio_pci_config.c
-+++ b/drivers/vfio/pci/vfio_pci_config.c
-@@ -1405,7 +1405,12 @@ static int vfio_cap_init(struct vfio_pci_device *vdev)
- 		if (ret)
- 			return ret;
+diff --git a/drivers/usb/core/quirks.c b/drivers/usb/core/quirks.c
+index 27d05f0134de8..e6e0f786547bf 100644
+--- a/drivers/usb/core/quirks.c
++++ b/drivers/usb/core/quirks.c
+@@ -73,11 +73,12 @@ static const struct usb_device_id usb_quirk_list[] = {
+ 	/* Logitech HD Webcam C270 */
+ 	{ USB_DEVICE(0x046d, 0x0825), .driver_info = USB_QUIRK_RESET_RESUME },
  
--		if (cap <= PCI_CAP_ID_MAX) {
-+		/*
-+		 * ID 0 is a NULL capability, conflicting with our fake
-+		 * PCI_CAP_ID_BASIC.  As it has no content, consider it
-+		 * hidden for now.
-+		 */
-+		if (cap && cap <= PCI_CAP_ID_MAX) {
- 			len = pci_cap_length[cap];
- 			if (len == 0xFF) { /* Variable length */
- 				len = vfio_cap_len(vdev, cap, pos);
+-	/* Logitech HD Pro Webcams C920, C920-C, C925e and C930e */
++	/* Logitech HD Pro Webcams C920, C920-C, C922, C925e and C930e */
+ 	{ USB_DEVICE(0x046d, 0x082d), .driver_info = USB_QUIRK_DELAY_INIT },
+ 	{ USB_DEVICE(0x046d, 0x0841), .driver_info = USB_QUIRK_DELAY_INIT },
+ 	{ USB_DEVICE(0x046d, 0x0843), .driver_info = USB_QUIRK_DELAY_INIT },
+ 	{ USB_DEVICE(0x046d, 0x085b), .driver_info = USB_QUIRK_DELAY_INIT },
++	{ USB_DEVICE(0x046d, 0x085c), .driver_info = USB_QUIRK_DELAY_INIT },
+ 
+ 	/* Logitech ConferenceCam CC3000e */
+ 	{ USB_DEVICE(0x046d, 0x0847), .driver_info = USB_QUIRK_DELAY_INIT },
 -- 
 2.25.1
 
