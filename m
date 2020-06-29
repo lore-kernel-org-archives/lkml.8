@@ -2,122 +2,119 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9335C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A549C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:30:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF124206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:30:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 624A02073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:30:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388760AbgF2VaZ (ORCPT
+        id S1728862AbgF2VaX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:30:25 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51804 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728873AbgF2VaW (ORCPT
+        Mon, 29 Jun 2020 17:30:23 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:41545 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727842AbgF2VaV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 17:30:22 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05TL3oWa041064;
-        Mon, 29 Jun 2020 17:30:10 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31ydk9e64q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 Jun 2020 17:30:10 -0400
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05TLTiJq191397;
-        Mon, 29 Jun 2020 17:30:10 -0400
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31ydk9e63h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 Jun 2020 17:30:09 -0400
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-        by ppma04ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05TLJIH4021282;
-        Mon, 29 Jun 2020 21:30:07 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma04ams.nl.ibm.com with ESMTP id 31wwr8atb6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 Jun 2020 21:30:07 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05TLU51O55640508
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 29 Jun 2020 21:30:05 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3A950A405D;
-        Mon, 29 Jun 2020 21:30:05 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0B4A3A4040;
-        Mon, 29 Jun 2020 21:30:04 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.137.220])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 29 Jun 2020 21:30:03 +0000 (GMT)
-Message-ID: <1593466203.5085.62.camel@linux.ibm.com>
-Subject: Re: [PATCH] ima: Rename internal audit rule functions
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Tyler Hicks <tyhicks@linux.microsoft.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
-Cc:     James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        linux-audit@redhat.com
-Date:   Mon, 29 Jun 2020 17:30:03 -0400
-In-Reply-To: <20200629153037.337349-1-tyhicks@linux.microsoft.com>
-References: <20200629153037.337349-1-tyhicks@linux.microsoft.com>
+        Mon, 29 Jun 2020 17:30:21 -0400
+Received: from mail-qv1-f49.google.com ([209.85.219.49]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MKbPg-1jX6cV011A-00KzBD for <linux-kernel@vger.kernel.org>; Mon, 29 Jun
+ 2020 14:02:39 +0200
+Received: by mail-qv1-f49.google.com with SMTP id m9so7486313qvx.5
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 05:02:38 -0700 (PDT)
+X-Gm-Message-State: AOAM531OhSZ4Zoi9/bYdMoK6biOyoO+eqbwsGGTmbZ0keiM5SDlWoVK6
+        jvLxNsogocXhhjDiosJIyLVA7aNEJN3Iu2Ozak4=
+X-Google-Smtp-Source: ABdhPJznG3KXhGobnsMvegA1SAcvtwATKB5v7VQ9LDYftJtnSRjGxsomTyailCW05ySyhsOgMimFanF2ob2IwX+YusM=
+X-Received: by 2002:a0c:f385:: with SMTP id i5mr15202056qvk.4.1593432157860;
+ Mon, 29 Jun 2020 05:02:37 -0700 (PDT)
+MIME-Version: 1.0
+References: <1593425623-31810-1-git-send-email-Anson.Huang@nxp.com>
+ <1593425623-31810-3-git-send-email-Anson.Huang@nxp.com> <CAK8P3a2wsaS9i9BrV6o845Qx4TJrZM=+13C1haqBLg17HKVgXw@mail.gmail.com>
+ <DB3PR0402MB3916E7A184549BF302C7401FF56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+ <CAK8P3a1qSdiKfcgXLAQ8JTWeg4_i+8+qh-7hH5rYiEjp-dJMkA@mail.gmail.com> <DB3PR0402MB3916A6B7F90D3A11AF093499F56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <DB3PR0402MB3916A6B7F90D3A11AF093499F56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 29 Jun 2020 14:02:22 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a26Z74V__7sCv6Q=ByFJs1f_8wJ9OtgxHgxndeoUCiFRw@mail.gmail.com>
+Message-ID: <CAK8P3a26Z74V__7sCv6Q=ByFJs1f_8wJ9OtgxHgxndeoUCiFRw@mail.gmail.com>
+Subject: Re: [PATCH 3/3] ARM: imx: Select RESET_IMX7 for i.MX7D
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Stefan Agner <stefan.agner@toradex.com>,
+        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Leo Li <leoyang.li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Olof Johansson <olof@lixom.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-06-29_21:2020-06-29,2020-06-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
- suspectscore=2 adultscore=0 mlxlogscore=999 lowpriorityscore=0
- clxscore=1015 bulkscore=0 malwarescore=0 cotscore=-2147483648
- impostorscore=0 spamscore=0 priorityscore=1501 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006290130
+X-Provags-ID: V03:K1:l3q3mI9pQkh4SjS+dXvkIKT5eYVF8JrWprPUbEW3p4wwCMyfXFe
+ ZfHtRl84B7bpttx5J2tcvJtlOKAywx4+Ydkh6Za6y0lbVZM9vHJixqjStLPjM4MjPZzGK1L
+ KnOahbsge/xvleZjhRWJtv4s9SWBg0fX02UB7fNom6/O2JrCXRQfccDmkO/763/3AWapiBn
+ 0e2Qi+ElsCUefFaJIbQ/g==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:wmc4CPQsBmY=:RBuD1LHCvp2XO9aoQRAm0M
+ jMdSK7uHIgbNX8kRlMUX6ieO7YzI8HZhUc25Xvkffr3Tpmq9NRsfElXDsEdWdMc2GQDEHokj6
+ PLfg+vCYjJJSgjaCIf5fXhauq125u7vqS6Wh7f5S+vIkyTLWYt+Q4CYp/NUTvRn+HNbgIvmlJ
+ 4zslJiYwVh8wFnywq0G8AyEuj4C4IO2HFncqxM8hLnvJuqqXGzxjL6Oj/4Wy7LLBQN1h18j9Q
+ tZLY2mbcuFgGuauy6Zuyk/WDANOjgkBbmtaJAAZuZ05I5g0UeLg5yQbTtx2oc4tPENUGfpcDs
+ P7E1ZI6E76Ld4Oz/d/kIEqFdAG6J1qv4en0knpaAOAPrv4T50j+Dl4hb9EYtKURXdIZfGdPyI
+ a2OEaxup0NiPJUG12g4hG1eNUxdWieinbQp7WNTWzsnyQXvjHLbpENQnF1Atf+cTn4d/IZ/Kt
+ ttbMyAuVLlAZaVGC4XkXQ5s/Q84MP1WQpgW1u7KItZB1Gvsggiuu1PCJQzo46zTGKzbLgbRS8
+ K4oecPTPhSi5ekI0PojUo9uI5pYX2z56sCCxXq3xxbDJSmk2bJHKCOEHatoUB8IzBLnxppgwS
+ x4AXC/wWoVKWxaSYEsDQSVVjWdpPW8F8Qir0wgCSMBP102hjWfsrvHfPd6TVeMjXgykQxj1Ii
+ pnsf4+mhFBm0/dc1hkCIJ7lfPL0dU/07EPf1XDtQ3Rnk8vQvNOgdKaiER/pINKM1OWiidKoXs
+ q8YdF7WiQn3j7j9x5QxQMP2mpp9PHb/rd3zpvI/qDDn/4jgwxioOT8k+Z4avEtof+BeDhUkBo
+ 4TpkGA83tIlrS3RIhR4AJiqs5gyVfmWBSDVUy1KF9LEI76lyMc=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Cc'ing the audit mailing list]
+On Mon, Jun 29, 2020 at 1:54 PM Anson Huang <anson.huang@nxp.com> wrote:
+> > Subject: Re: [PATCH 3/3] ARM: imx: Select RESET_IMX7 for i.MX7D
+> >
+> > On Mon, Jun 29, 2020 at 1:36 PM Anson Huang <anson.huang@nxp.com>
+> > wrote:
+> > > > Subject: Re: [PATCH 3/3] ARM: imx: Select RESET_IMX7 for i.MX7D
+> > > > On Mon, Jun 29, 2020 at 12:25 PM Anson Huang
+> > <Anson.Huang@nxp.com> wrote:
 
-On Mon, 2020-06-29 at 10:30 -0500, Tyler Hicks wrote:
-> 
-> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-> index ff2bf57ff0c7..5d62ee8319f4 100644
-> --- a/security/integrity/ima/ima.h
-> +++ b/security/integrity/ima/ima.h
-> @@ -419,24 +419,24 @@ static inline void ima_free_modsig(struct modsig *modsig)
->  /* LSM based policy rules require audit */
->  #ifdef CONFIG_IMA_LSM_RULES
->  
-> -#define security_filter_rule_init security_audit_rule_init
-> -#define security_filter_rule_free security_audit_rule_free
-> -#define security_filter_rule_match security_audit_rule_match
-> +#define ima_audit_rule_init security_audit_rule_init
-> +#define ima_audit_rule_free security_audit_rule_free
-> +#define ima_audit_rule_match security_audit_rule_match
+> > I don't understand. Why can't this driver be a loadable module on i.MX7?
+> > Please clarify in the changelog what the bug is on i.MX7.
+> >
+> > > ARMv7 SoCs is NOT in the plan, that is why I add this patch to make it
+> > > same as previously when this reset driver is =y by default. Without
+> > > this patch, this reset driver will NOT be enabled by default for i.MX ARMv7
+> > SoCs, function will be broken.
+> >
+> > But it's the same driver, make it work the same way on all chips!
+> >
+> > I think artificially limiting a new driver feature to one chip just because nobody
+> > asked for it on another chip is not helpful.
+> >
+>
+> Understood, what if I don't select it in SOC config which is NOT flexible, but put it in
+> imx_v6_v7_defconfig, then user can select either =y or =m according their requirement?
 
-Instead of defining an entirely new method of identifying files, IMA
-piggybacks on top of the existing audit rule syntax.  IMA policy rules
-"filter" based on this information.
+I would recommend using a 'default m if SOC_IMX7' or 'default y if SOC_IMX7', so
+any distros and users that have their own defconfigs still get a reasonable
+default, but can choose between =m and =y based on their needs.
 
-IMA already audits security/integrity related events.  Using the word
-"audit" here will make things even more confusing than they currently
-are.  Renaming these functions as ima_audit_rule_XXX provides no
-benefit.  At that point, IMA might as well call the
-security_audit_rule prefixed function names directly.  As a quick fix,
-rename them as "ima_filter_rule".
+> And in imx_v6_v7_defconfig make it =y by default.
 
-The correct solution would probably be to rename these prefixed
-"security_audit_rule" functions as "security_filter_rule", so that
-both the audit subsystem and IMA could use them.
+Having =y in imx_v6_v7_defconfig sounds reasonable if you go with 'default m'.
 
-Mimi
+     Arnd
