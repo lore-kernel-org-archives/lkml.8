@@ -7,57 +7,58 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47FDFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:11:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC61C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:11:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2167D20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:11:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3780420675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:11:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461485;
-	bh=xBydR85Xw3oZdwyEPqIAGB3pDSaorho/nfwB9NnPA6M=;
+	s=default; t=1593461491;
+	bh=qwjgMEJOUXMxAEhruOdIpoJgjvepYjoKozzLvbHfU84=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NrVRpfUO8SW1MTBEpFVuJTHSi61cVwbcXjbV1cVQ3SS1wfth9UPqqnM8Ipgm3Tz8D
-	 xNivxUvo2KYuV0Oxz1SrEToQgiCmzkPnKQJ/mAAc4dPF0YDe3279AhFbSWY2oAomoj
-	 DefTJUw7IKmJ2xUkTBeaauzl0AlOu9oWCjW6ioUE=
+	b=vsN9sx/5qKEZ1jz1QwdTy2XZ0kJmqBsoiIvQajJjrbh67qeE9ma0/EvXk6OCcPtlG
+	 6VHHEeKykUoucYpWnZ+DqvULMUtogvzd8BcAl49uj3SzikiUpByC24cw0LEE0LkY6e
+	 fqJgPsDqS2VfXXyqrUWXwis9CjOWnFbn6EGZp1mY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729966AbgF2ULX (ORCPT
+        id S1730005AbgF2ULa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:11:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40598 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:11:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732898AbgF2TaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732896AbgF2TaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:21 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76C7425302;
-        Mon, 29 Jun 2020 15:38:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7EB1E2526A;
+        Mon, 29 Jun 2020 15:36:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445132;
-        bh=xBydR85Xw3oZdwyEPqIAGB3pDSaorho/nfwB9NnPA6M=;
+        s=default; t=1593444978;
+        bh=qwjgMEJOUXMxAEhruOdIpoJgjvepYjoKozzLvbHfU84=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R7W26FQHNGVT5UU3ruRT0w16OgMGQPj/3LiXjuLQX52bp0l4GeEjbIxKSGK5Bh9mz
-         Pmpn9ha7eYgXpfzv7xK7D8utIZxV+05jEDmRGgr6rVxQ5qXrrTUVRWNKjgJM12iDeD
-         ihqf40mlqhjYmRBEbLVAAtSv7E2ydOpt1hRRnHtA=
+        b=sFkR6uf/SoXsaRxEwIDCXKyDAsuQdlaBi2xiJ3EwQuI7jBSpce5CdnWmI/YwOXyjN
+         E4FlGbbfZFLzdQoQLjXMEHBd/c2qsEaXFKI+XG97ga8nHB3VlBvehwUTPbT7meVy3Q
+         r2eSwGt812gYsuwWh2Q5rLtv5BYKxmbhp/r7tVIQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhang Xiaoxu <zhangxiaoxu5@huawei.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>,
+Cc:     Alexander Lobakin <alobakin@marvell.com>,
+        Igor Russkikh <irusskikh@marvell.com>,
+        Michal Kalderon <michal.kalderon@marvell.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 38/78] cifs/smb3: Fix data inconsistent when punch hole
-Date:   Mon, 29 Jun 2020 11:37:26 -0400
-Message-Id: <20200629153806.2494953-39-sashal@kernel.org>
+Subject: [PATCH 4.19 077/131] net: qed: fix excessive QM ILT lines consumption
+Date:   Mon, 29 Jun 2020 11:34:08 -0400
+Message-Id: <20200629153502.2494656-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
-References: <20200629153806.2494953-1-sashal@kernel.org>
+In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
+References: <20200629153502.2494656-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.14.y
+X-KernelTest-Branch: linux-4.19.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.14.186-rc1
-X-KernelTest-Deadline: 2020-07-01T15:38+00:00
+X-KernelTest-Version: 4.19.131-rc1
+X-KernelTest-Deadline: 2020-07-01T15:34+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -66,55 +67,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+From: Alexander Lobakin <alobakin@marvell.com>
 
-[ Upstream commit acc91c2d8de4ef46ed751c5f9df99ed9a109b100 ]
+[ Upstream commit d434d02f7e7c24c721365fd594ed781acb18e0da ]
 
-When punch hole success, we also can read old data from file:
-  # strace -e trace=pread64,fallocate xfs_io -f -c "pread 20 40" \
-           -c "fpunch 20 40" -c"pread 20 40" file
-  pread64(3, " version 5.8.0-rc1+"..., 40, 20) = 40
-  fallocate(3, FALLOC_FL_KEEP_SIZE|FALLOC_FL_PUNCH_HOLE, 20, 40) = 0
-  pread64(3, " version 5.8.0-rc1+"..., 40, 20) = 40
+This is likely a copy'n'paste mistake. The amount of ILT lines to
+reserve for a single VF was being multiplied by the total VFs count.
+This led to a huge redundancy in reservation and potential lines
+drainouts.
 
-CIFS implements the fallocate(FALLOCATE_FL_PUNCH_HOLE) with send SMB
-ioctl(FSCTL_SET_ZERO_DATA) to server. It just set the range of the
-remote file to zero, but local page caches not updated, then the
-local page caches inconsistent with server.
-
-Also can be found by xfstests generic/316.
-
-So, we need to remove the page caches before send the SMB
-ioctl(FSCTL_SET_ZERO_DATA) to server.
-
-Fixes: 31742c5a33176 ("enable fallocate punch hole ("fallocate -p") for SMB3")
-Suggested-by: Pavel Shilovsky <pshilov@microsoft.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
-Cc: stable@vger.kernel.org # v3.17
-Signed-off-by: Steve French <stfrench@microsoft.com>
+Fixes: 1408cc1fa48c ("qed: Introduce VFs")
+Signed-off-by: Alexander Lobakin <alobakin@marvell.com>
+Signed-off-by: Igor Russkikh <irusskikh@marvell.com>
+Signed-off-by: Michal Kalderon <michal.kalderon@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/smb2ops.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/ethernet/qlogic/qed/qed_cxt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
-index 951c444d83e7b..61ea429e1210b 100644
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -1824,6 +1824,12 @@ static long smb3_punch_hole(struct file *file, struct cifs_tcon *tcon,
- 		return rc;
+diff --git a/drivers/net/ethernet/qlogic/qed/qed_cxt.c b/drivers/net/ethernet/qlogic/qed/qed_cxt.c
+index f1977aa440e5d..f3d7c38f539a8 100644
+--- a/drivers/net/ethernet/qlogic/qed/qed_cxt.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_cxt.c
+@@ -397,7 +397,7 @@ static void qed_cxt_qm_iids(struct qed_hwfn *p_hwfn,
+ 		vf_tids += segs[NUM_TASK_PF_SEGMENTS].count;
  	}
  
-+	/*
-+	 * We implement the punch hole through ioctl, so we need remove the page
-+	 * caches first, otherwise the data may be inconsistent with the server.
-+	 */
-+	truncate_pagecache_range(inode, offset, offset + len - 1);
-+
- 	cifs_dbg(FYI, "offset %lld len %lld", offset, len);
+-	iids->vf_cids += vf_cids * p_mngr->vf_count;
++	iids->vf_cids = vf_cids;
+ 	iids->tids += vf_tids * p_mngr->vf_count;
  
- 	fsctl_buf.FileOffset = cpu_to_le64(offset);
+ 	DP_VERBOSE(p_hwfn, QED_MSG_ILT,
 -- 
 2.25.1
 
