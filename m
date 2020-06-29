@@ -2,124 +2,217 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C664FC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B42C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8F4D20760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:12:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461523;
-	bh=AxsttLVOxrBP8cPcE8rjkd3YtVNE7N+1sqoYyZwdLSI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=daSeBCUCZzX1WcqaHl0YuRRhu0GdD0jKQidybJdsy6m9V4EEMnKzS4gKpZq1X21ZH
-	 pfHioQCOY7BsaSA9M2UgX6GQa+kZoZV1CybZy9Ljt/5bS5MmakTgyWXCLEtXmcYWoR
-	 5ZotOJlf1lzA4rwhje5/LYOHZOV9JMFEvd354rWA=
+	by mail.kernel.org (Postfix) with ESMTP id BC41720760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:12:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730401AbgF2UMC (ORCPT
+        id S1726770AbgF2UMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:12:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40596 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732889AbgF2TaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:30:21 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D307F252AA;
-        Mon, 29 Jun 2020 15:36:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445018;
-        bh=AxsttLVOxrBP8cPcE8rjkd3YtVNE7N+1sqoYyZwdLSI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y5ICjroh/l6BUqS4m7Y3SvT0QYLCNjIe9TGI+KSIElFuah5AEi2WeJlvxYG3m5nH5
-         zt4OHDHXuAWBOGKotq53eptbl4XNxiOhSowDusRwBiXb0gVy8W5VSEJnv7++qWmDIq
-         Ir0KQLKDansdGf/sBoQLlsaiaFdDHoKFEkpWqvmE=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Junxiao Bi <junxiao.bi@oracle.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Jun Piao <piaojun@huawei.com>,
+        Mon, 29 Jun 2020 16:12:09 -0400
+Received: from out03.mta.xmission.com ([166.70.13.233]:41400 "EHLO
+        out03.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730419AbgF2UMF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 16:12:05 -0400
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out03.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.90_1)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jq08J-0006ex-F7; Mon, 29 Jun 2020 14:12:03 -0600
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1jq08I-0004pf-EV; Mon, 29 Jun 2020 14:12:03 -0600
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     <linux-kernel@vger.kernel.org>
+Cc:     David Miller <davem@davemloft.net>,
+        Greg Kroah-Hartman <greg@kroah.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 116/131] ocfs2: fix value of OCFS2_INVALID_SLOT
-Date:   Mon, 29 Jun 2020 11:34:47 -0400
-Message-Id: <20200629153502.2494656-117-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
-References: <20200629153502.2494656-1-sashal@kernel.org>
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <20200625095725.GA3303921@kroah.com>
+        <778297d2-512a-8361-cf05-42d9379e6977@i-love.sakura.ne.jp>
+        <20200625120725.GA3493334@kroah.com>
+        <20200625.123437.2219826613137938086.davem@davemloft.net>
+        <CAHk-=whuTwGHEPjvtbBvneHHXeqJC=q5S09mbPnqb=Q+MSPMag@mail.gmail.com>
+        <87pn9mgfc2.fsf_-_@x220.int.ebiederm.org>
+        <87y2oac50p.fsf@x220.int.ebiederm.org>
+        <87bll17ili.fsf_-_@x220.int.ebiederm.org>
+Date:   Mon, 29 Jun 2020 15:07:31 -0500
+In-Reply-To: <87bll17ili.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
+        message of "Mon, 29 Jun 2020 14:55:05 -0500")
+Message-ID: <87y2o53abg.fsf_-_@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.19.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.19.131-rc1
-X-KernelTest-Deadline: 2020-07-01T15:34+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-XM-SPF: eid=1jq08I-0004pf-EV;;;mid=<87y2o53abg.fsf_-_@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX194iXzsXzdd1IVjcj63pz62HU+UBCmqU8Y=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: [PATCH v2 14/15] umd: Remove exit_umh
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Junxiao Bi <junxiao.bi@oracle.com>
 
-commit 9277f8334ffc719fe922d776444d6e4e884dbf30 upstream.
+The bffilter code no longer uses the umd_info.cleanup callback.  This
+callback is what exit_umh exists to call.  So remove exit_umh and all
+of it's associated booking.
 
-In the ocfs2 disk layout, slot number is 16 bits, but in ocfs2
-implementation, slot number is 32 bits.  Usually this will not cause any
-issue, because slot number is converted from u16 to u32, but
-OCFS2_INVALID_SLOT was defined as -1, when an invalid slot number from
-disk was obtained, its value was (u16)-1, and it was converted to u32.
-Then the following checking in get_local_system_inode will be always
-skipped:
-
- static struct inode **get_local_system_inode(struct ocfs2_super *osb,
-                                               int type,
-                                               u32 slot)
- {
- 	BUG_ON(slot == OCFS2_INVALID_SLOT);
-	...
- }
-
-Link: http://lkml.kernel.org/r/20200616183829.87211-5-junxiao.bi@oracle.com
-Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Jun Piao <piaojun@huawei.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lkml.kernel.org/r/87bll6dlte.fsf_-_@x220.int.ebiederm.org
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 ---
- fs/ocfs2/ocfs2_fs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/sched.h |  1 -
+ include/linux/umd.h   | 16 ----------------
+ kernel/exit.c         |  3 ---
+ kernel/umd.c          | 28 ----------------------------
+ 4 files changed, 48 deletions(-)
 
-diff --git a/fs/ocfs2/ocfs2_fs.h b/fs/ocfs2/ocfs2_fs.h
-index 263e28ebeeabe..d50b7f2c7395e 100644
---- a/fs/ocfs2/ocfs2_fs.h
-+++ b/fs/ocfs2/ocfs2_fs.h
-@@ -303,7 +303,7 @@
- #define OCFS2_MAX_SLOTS			255
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 59d1e92bb88e..edb2020875ad 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1511,7 +1511,6 @@ extern struct pid *cad_pid;
+ #define PF_KTHREAD		0x00200000	/* I am a kernel thread */
+ #define PF_RANDOMIZE		0x00400000	/* Randomize virtual address space */
+ #define PF_SWAPWRITE		0x00800000	/* Allowed to write to swap */
+-#define PF_UMH			0x02000000	/* I'm an Usermodehelper process */
+ #define PF_NO_SETAFFINITY	0x04000000	/* Userland is not allowed to meddle with cpus_mask */
+ #define PF_MCE_EARLY		0x08000000      /* Early kill for mce process policy */
+ #define PF_MEMALLOC_NOCMA	0x10000000	/* All allocation request will have _GFP_MOVABLE cleared */
+diff --git a/include/linux/umd.h b/include/linux/umd.h
+index edb1c62c62f4..71d8f4a41ad7 100644
+--- a/include/linux/umd.h
++++ b/include/linux/umd.h
+@@ -4,26 +4,10 @@
+ #include <linux/umh.h>
+ #include <linux/path.h>
  
- /* Slot map indicator for an empty slot */
--#define OCFS2_INVALID_SLOT		-1
-+#define OCFS2_INVALID_SLOT		((u16)-1)
+-#ifdef CONFIG_BPFILTER
+-void __exit_umh(struct task_struct *tsk);
+-
+-static inline void exit_umh(struct task_struct *tsk)
+-{
+-	if (unlikely(tsk->flags & PF_UMH))
+-		__exit_umh(tsk);
+-}
+-#else
+-static inline void exit_umh(struct task_struct *tsk)
+-{
+-}
+-#endif
+-
+ struct umd_info {
+ 	const char *driver_name;
+ 	struct file *pipe_to_umh;
+ 	struct file *pipe_from_umh;
+-	struct list_head list;
+-	void (*cleanup)(struct umd_info *info);
+ 	struct path wd;
+ 	struct pid *tgid;
+ };
+diff --git a/kernel/exit.c b/kernel/exit.c
+index b53107abdd31..42f079eb71e5 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -63,7 +63,6 @@
+ #include <linux/random.h>
+ #include <linux/rcuwait.h>
+ #include <linux/compat.h>
+-#include <linux/umd.h>
  
- #define OCFS2_VOL_UUID_LEN		16
- #define OCFS2_MAX_VOL_LABEL_LEN		64
+ #include <linux/uaccess.h>
+ #include <asm/unistd.h>
+@@ -805,8 +804,6 @@ void __noreturn do_exit(long code)
+ 	exit_task_namespaces(tsk);
+ 	exit_task_work(tsk);
+ 	exit_thread(tsk);
+-	if (group_dead)
+-		exit_umh(tsk);
+ 
+ 	/*
+ 	 * Flush inherited counters to the parent - before the parent
+diff --git a/kernel/umd.c b/kernel/umd.c
+index c1e8eccaee76..4188b71de267 100644
+--- a/kernel/umd.c
++++ b/kernel/umd.c
+@@ -9,9 +9,6 @@
+ #include <linux/task_work.h>
+ #include <linux/umd.h>
+ 
+-static LIST_HEAD(umh_list);
+-static DEFINE_MUTEX(umh_list_lock);
+-
+ static struct vfsmount *blob_to_mnt(const void *data, size_t len, const char *name)
+ {
+ 	struct file_system_type *type;
+@@ -134,7 +131,6 @@ static int umd_setup(struct subprocess_info *info, struct cred *new)
+ 	umd_info->pipe_to_umh = to_umh[1];
+ 	umd_info->pipe_from_umh = from_umh[0];
+ 	umd_info->tgid = get_pid(task_tgid(current));
+-	current->flags |= PF_UMH;
+ 	return 0;
+ }
+ 
+@@ -182,11 +178,6 @@ int fork_usermode_driver(struct umd_info *info)
+ 		goto out;
+ 
+ 	err = call_usermodehelper_exec(sub_info, UMH_WAIT_EXEC);
+-	if (!err) {
+-		mutex_lock(&umh_list_lock);
+-		list_add(&info->list, &umh_list);
+-		mutex_unlock(&umh_list_lock);
+-	}
+ out:
+ 	if (argv)
+ 		argv_free(argv);
+@@ -194,23 +185,4 @@ int fork_usermode_driver(struct umd_info *info)
+ }
+ EXPORT_SYMBOL_GPL(fork_usermode_driver);
+ 
+-void __exit_umh(struct task_struct *tsk)
+-{
+-	struct umd_info *info;
+-	struct pid *tgid = task_tgid(tsk);
+-
+-	mutex_lock(&umh_list_lock);
+-	list_for_each_entry(info, &umh_list, list) {
+-		if (info->tgid == tgid) {
+-			list_del(&info->list);
+-			mutex_unlock(&umh_list_lock);
+-			goto out;
+-		}
+-	}
+-	mutex_unlock(&umh_list_lock);
+-	return;
+-out:
+-	if (info->cleanup)
+-		info->cleanup(info);
+-}
+ 
 -- 
-2.25.1
+2.25.0
 
