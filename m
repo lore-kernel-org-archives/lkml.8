@@ -2,127 +2,112 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5C76C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:35:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDA0C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4BBF20702
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:35:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B1D9206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:35:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593459309;
+	bh=Jofg5uL56/LdgjP5jFN/MLCW+s24eX2YwTHGnd9iqk4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rih2rcbmviqTReR1oQ5aKS9kqjwJWrkgCdWgJGTkCaWEM4StQZx3bxSbe5bt008Wo
+	 uY7BDHyz1Pi3/FTX/42RXjxyxjFhEXFStCLet2sD3f0K0lvGSR4i2TvepVvhAugFk9
+	 C1KtEoRFT2fWhW+k9Xv/9fbkLh0s0VDMgxcTloHA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731846AbgF2TfC (ORCPT
+        id S1733133AbgF2TbU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:35:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36622 "EHLO mx2.suse.de"
+        Mon, 29 Jun 2020 15:31:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733147AbgF2TbZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:31:25 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 9E7FCADAA;
-        Mon, 29 Jun 2020 16:18:55 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     f.fainelli@gmail.com, gregkh@linuxfoundation.org, robh@kernel.org,
-        wahrenst@gmx.net, p.zabel@pengutronix.de, andy.shevchenko@gmail.com
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, tim.gover@raspberrypi.org,
-        linux-pci@vger.kernel.org, helgaas@kernel.org,
-        mathias.nyman@linux.intel.com, lorenzo.pieralisi@arm.com,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH v5 1/9] dt-bindings: reset: Add a binding for the RPi Firmware reset controller
-Date:   Mon, 29 Jun 2020 18:18:37 +0200
-Message-Id: <20200629161845.6021-2-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200629161845.6021-1-nsaenzjulienne@suse.de>
-References: <20200629161845.6021-1-nsaenzjulienne@suse.de>
+        id S1733022AbgF2Taf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:30:35 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA97C2527E;
+        Mon, 29 Jun 2020 15:36:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593444988;
+        bh=Jofg5uL56/LdgjP5jFN/MLCW+s24eX2YwTHGnd9iqk4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xI67r9+n7FZjzm7mYPlfkHzmUXYG0kAs4Wl9cNV5+8Eah1yEQFv4l9hoqALu7JTpw
+         71SxhLlYBgW7Qd3XEKNFIEqeDPSeVBfX4P7wGmSalmSXxCThzOmqyZk0I/7Eu1a8Nw
+         J+fbMVAT8F/HduGN6LBBKHUPanxSrv1heVBNujgI=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Juri Lelli <juri.lelli@redhat.com>,
+        syzbot+5ac8bac25f95e8b221e7@syzkaller.appspotmail.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Daniel Wagner <dwagner@suse.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 088/131] sched/deadline: Initialize ->dl_boosted
+Date:   Mon, 29 Jun 2020 11:34:19 -0400
+Message-Id: <20200629153502.2494656-89-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
+References: <20200629153502.2494656-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.19.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.19.131-rc1
+X-KernelTest-Deadline: 2020-07-01T15:34+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The firmware running on the RPi VideoCore can be used to reset and
-initialize HW controlled by the firmware.
+From: Juri Lelli <juri.lelli@redhat.com>
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+[ Upstream commit ce9bc3b27f2a21a7969b41ffb04df8cf61bd1592 ]
 
+syzbot reported the following warning triggered via SYSC_sched_setattr():
+
+  WARNING: CPU: 0 PID: 6973 at kernel/sched/deadline.c:593 setup_new_dl_entity /kernel/sched/deadline.c:594 [inline]
+  WARNING: CPU: 0 PID: 6973 at kernel/sched/deadline.c:593 enqueue_dl_entity /kernel/sched/deadline.c:1370 [inline]
+  WARNING: CPU: 0 PID: 6973 at kernel/sched/deadline.c:593 enqueue_task_dl+0x1c17/0x2ba0 /kernel/sched/deadline.c:1441
+
+This happens because the ->dl_boosted flag is currently not initialized by
+__dl_clear_params() (unlike the other flags) and setup_new_dl_entity()
+rightfully complains about it.
+
+Initialize dl_boosted to 0.
+
+Fixes: 2d3d891d3344 ("sched/deadline: Add SCHED_DEADLINE inheritance logic")
+Reported-by: syzbot+5ac8bac25f95e8b221e7@syzkaller.appspotmail.com
+Signed-off-by: Juri Lelli <juri.lelli@redhat.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Tested-by: Daniel Wagner <dwagner@suse.de>
+Link: https://lkml.kernel.org/r/20200617072919.818409-1-juri.lelli@redhat.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-Changes since v2:
- - Add include file for reset IDs
+ kernel/sched/deadline.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Changes since v1:
- - Correct cells binding as per Florian's comment
- - Change compatible string to be more generic
-
- .../arm/bcm/raspberrypi,bcm2835-firmware.yaml | 21 +++++++++++++++++++
- .../reset/raspberrypi,firmware-reset.h        | 13 ++++++++++++
- 2 files changed, 34 insertions(+)
- create mode 100644 include/dt-bindings/reset/raspberrypi,firmware-reset.h
-
-diff --git a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
-index b48ed875eb8e..23a885af3a28 100644
---- a/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
-+++ b/Documentation/devicetree/bindings/arm/bcm/raspberrypi,bcm2835-firmware.yaml
-@@ -39,6 +39,22 @@ properties:
-       - compatible
-       - "#clock-cells"
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index ebec37cb3be9a..8aecfb143859d 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -2688,6 +2688,7 @@ void __dl_clear_params(struct task_struct *p)
+ 	dl_se->dl_bw			= 0;
+ 	dl_se->dl_density		= 0;
  
-+  reset:
-+    type: object
-+
-+    properties:
-+      compatible:
-+        const: raspberrypi,firmware-reset
-+
-+      "#reset-cells":
-+        const: 1
-+        description: >
-+          The argument is the ID of the firmware reset line to affect.
-+
-+    required:
-+      - compatible
-+      - "#reset-cells"
-+
-     additionalProperties: false
- 
- required:
-@@ -55,5 +71,10 @@ examples:
-             compatible = "raspberrypi,firmware-clocks";
-             #clock-cells = <1>;
-         };
-+
-+        reset: reset {
-+            compatible = "raspberrypi,firmware-reset";
-+            #reset-cells = <1>;
-+        };
-     };
- ...
-diff --git a/include/dt-bindings/reset/raspberrypi,firmware-reset.h b/include/dt-bindings/reset/raspberrypi,firmware-reset.h
-new file mode 100644
-index 000000000000..1a4f4c792723
---- /dev/null
-+++ b/include/dt-bindings/reset/raspberrypi,firmware-reset.h
-@@ -0,0 +1,13 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Copyright (c) 2020 Nicolas Saenz Julienne
-+ * Author: Nicolas Saenz Julienne <nsaenzjulienne@suse.com>
-+ */
-+
-+#ifndef _DT_BINDINGS_RASPBERRYPI_FIRMWARE_RESET_H
-+#define _DT_BINDINGS_RASPBERRYPI_FIRMWARE_RESET_H
-+
-+#define RASPBERRYPI_FIRMWARE_RESET_ID_USB	0
-+#define RASPBERRYPI_FIRMWARE_RESET_NUM_IDS	1
-+
-+#endif
++	dl_se->dl_boosted		= 0;
+ 	dl_se->dl_throttled		= 0;
+ 	dl_se->dl_yielded		= 0;
+ 	dl_se->dl_non_contending	= 0;
 -- 
-2.27.0
+2.25.1
 
