@@ -2,167 +2,88 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5CB7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C2AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:32:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 829EA206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:32:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F334C2073E
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:32:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593466322;
-	bh=xpClRmG+Ihfwp71EU0kLzMCSVxYC4LHRRu1oX53w1nM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c/9dqg0LyJs1+OwCU3qrMyidnPNyH4YbaG36UVMbjSVTPvWmg/Nuwt/j1xe+jAg7a
-	 QzwStdIBOPdMXYueXPBYfBKqi7JBz4gsAZvmkZq0M8jRKtldUWK8Id13aFQMfxyaMz
-	 KkHoyyXOrk2dJ47KpvkqZ4UEblqh2CyHke/XYB1M=
+	s=default; t=1593466327;
+	bh=IBzxuR0hFcqeAgG2EU4dUDO26QpO4vvo3eIUQ7aMYKs=;
+	h=Date:From:To:In-Reply-To:References:Subject:List-ID:From;
+	b=ntU2NLV5Jo3OISSILQDg/ADym3mWtXd4N0d5CAV1O0ykbcZSiyU2G1d5hYgssAqj0
+	 yneN1zhL88tGGhICaNicE2dhBj3Ftw44+N78/NJoghO7ArJFyc94SIuDc64fxoo+d4
+	 TmiZQWdP4U6Yj7nB+0EXz+yVyZP6Up9OnTqayDNE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388801AbgF2Vb7 (ORCPT
+        id S1730092AbgF2VcF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:31:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60654 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:32:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728716AbgF2SlK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728718AbgF2SlK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:41:10 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B9A1223EF5;
-        Mon, 29 Jun 2020 15:18:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA1A6255C6;
+        Mon, 29 Jun 2020 18:15:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443908;
-        bh=xpClRmG+Ihfwp71EU0kLzMCSVxYC4LHRRu1oX53w1nM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zq7ejhvGH9NCD0RNdYeAkJZNlanYb0/mu69rtoP5HeKVo2bPUx2PG7sXBHF4Mv2xX
-         +x/oNJJ82tqW6wej/R+ay6bhw+ypvuTcFr7566eBe1UzCYz4y4sjdYsF7JpAKDHZFU
-         jI5kxTCAg5+b69ti24SWiOJLuCpRn2sqLQ/yfypg=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ido Schimmel <idosch@mellanox.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 008/265] mlxsw: spectrum: Do not rely on machine endianness
-Date:   Mon, 29 Jun 2020 11:14:01 -0400
-Message-Id: <20200629151818.2493727-9-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
-References: <20200629151818.2493727-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.7.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.7.7-rc1
-X-KernelTest-Deadline: 2020-07-01T15:14+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        s=default; t=1593454514;
+        bh=IBzxuR0hFcqeAgG2EU4dUDO26QpO4vvo3eIUQ7aMYKs=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=HhFbS7Xj84k5nI21HMV4EP97C8ujn6/pwl4GBB890EsnHh3ZXTOLzkKgzqeZl81WU
+         Xijs/8HCFr6FhZk9osR4uMa+tVN+OsJjzUheuC352EhRUC14A0dbpu4dyacGK2brPJ
+         ZP7SQkQ9NYQ3oZ7m0FAZXPHq8rzV3OnVtt3UpK/Q=
+Date:   Mon, 29 Jun 2020 19:15:11 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Randy Dunlap <rdunlap@infradead.org>, Takashi Iwai <tiwai@suse.de>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        moderated for non-subscribers <alsa-devel@alsa-project.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <a9f59f30-8cf2-ea82-567c-1706fd64fe62@infradead.org>
+References: <a9f59f30-8cf2-ea82-567c-1706fd64fe62@infradead.org>
+Subject: Re: [PATCH -next] ASoC: Documentation: fix reference to renamed source file
+Message-Id: <159345450675.54191.15555131185550091270.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
+On Sun, 28 Jun 2020 20:23:33 -0700, Randy Dunlap wrote:
+> sound/soc/soc-io.c was merged into sound/soc/soc-component.c, so fixup
+> the Documentation to use the updated file name.
+> 
+> Error: Cannot open file ../sound/soc/soc-io.c
+> WARNING: kernel-doc '../scripts/kernel-doc -rst -enable-lineno ../sound/soc/soc-io.c' failed with return code 1
 
-[ Upstream commit f3fe412b0a634286a6a3753c3f9ff201e6bec716 ]
+Applied to
 
-The second commit cited below performed a cast of 'u32 buffsize' to
-'(u16 *)' when calling mlxsw_sp_port_headroom_8x_adjust():
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-mlxsw_sp_port_headroom_8x_adjust(mlxsw_sp_port, (u16 *) &buffsize);
+Thanks!
 
-Colin noted that this will behave differently on big endian
-architectures compared to little endian architectures.
+[1/1] ASoC: Documentation: fix reference to renamed source file
+      commit: 4946cd45ef665d99074796fdd8ce04ba37ce1bdf
 
-Fix this by following Colin's suggestion and have the function accept
-and return 'u32' instead of passing the current size by reference.
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-Fixes: da382875c616 ("mlxsw: spectrum: Extend to support Spectrum-3 ASIC")
-Fixes: 60833d54d56c ("mlxsw: spectrum: Adjust headroom buffers for 8x ports")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Reported-by: Colin Ian King <colin.king@canonical.com>
-Suggested-by: Colin Ian King <colin.king@canonical.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/mellanox/mlxsw/spectrum.c         | 4 ++--
- drivers/net/ethernet/mellanox/mlxsw/spectrum.h         | 8 +++-----
- drivers/net/ethernet/mellanox/mlxsw/spectrum_buffers.c | 2 +-
- drivers/net/ethernet/mellanox/mlxsw/spectrum_span.c    | 2 +-
- 4 files changed, 7 insertions(+), 9 deletions(-)
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-index 3e4199246a18d..d9a2267aeaea2 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-@@ -990,10 +990,10 @@ int __mlxsw_sp_port_headroom_set(struct mlxsw_sp_port *mlxsw_sp_port, int mtu,
- 
- 		lossy = !(pfc || pause_en);
- 		thres_cells = mlxsw_sp_pg_buf_threshold_get(mlxsw_sp, mtu);
--		mlxsw_sp_port_headroom_8x_adjust(mlxsw_sp_port, &thres_cells);
-+		thres_cells = mlxsw_sp_port_headroom_8x_adjust(mlxsw_sp_port, thres_cells);
- 		delay_cells = mlxsw_sp_pg_buf_delay_get(mlxsw_sp, mtu, delay,
- 							pfc, pause_en);
--		mlxsw_sp_port_headroom_8x_adjust(mlxsw_sp_port, &delay_cells);
-+		delay_cells = mlxsw_sp_port_headroom_8x_adjust(mlxsw_sp_port, delay_cells);
- 		total_cells = thres_cells + delay_cells;
- 
- 		taken_headroom_cells += total_cells;
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum.h b/drivers/net/ethernet/mellanox/mlxsw/spectrum.h
-index e28ecb84b8164..6b2e4e730b189 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.h
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.h
-@@ -395,17 +395,15 @@ mlxsw_sp_port_vlan_find_by_vid(const struct mlxsw_sp_port *mlxsw_sp_port,
- 	return NULL;
- }
- 
--static inline void
-+static inline u32
- mlxsw_sp_port_headroom_8x_adjust(const struct mlxsw_sp_port *mlxsw_sp_port,
--				 u16 *p_size)
-+				 u32 size_cells)
- {
- 	/* Ports with eight lanes use two headroom buffers between which the
- 	 * configured headroom size is split. Therefore, multiply the calculated
- 	 * headroom size by two.
- 	 */
--	if (mlxsw_sp_port->mapping.width != 8)
--		return;
--	*p_size *= 2;
-+	return mlxsw_sp_port->mapping.width == 8 ? 2 * size_cells : size_cells;
- }
- 
- enum mlxsw_sp_flood_type {
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_buffers.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_buffers.c
-index 19bf0768ed788..2fb2cbd4f229e 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_buffers.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_buffers.c
-@@ -312,7 +312,7 @@ static int mlxsw_sp_port_pb_init(struct mlxsw_sp_port *mlxsw_sp_port)
- 
- 		if (i == MLXSW_SP_PB_UNUSED)
- 			continue;
--		mlxsw_sp_port_headroom_8x_adjust(mlxsw_sp_port, &size);
-+		size = mlxsw_sp_port_headroom_8x_adjust(mlxsw_sp_port, size);
- 		mlxsw_reg_pbmc_lossy_buffer_pack(pbmc_pl, i, size);
- 	}
- 	mlxsw_reg_pbmc_lossy_buffer_pack(pbmc_pl,
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_span.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_span.c
-index 7c5032f9c8fff..76242c70d41ad 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_span.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_span.c
-@@ -776,7 +776,7 @@ mlxsw_sp_span_port_buffsize_update(struct mlxsw_sp_port *mlxsw_sp_port, u16 mtu)
- 		speed = 0;
- 
- 	buffsize = mlxsw_sp_span_buffsize_get(mlxsw_sp, speed, mtu);
--	mlxsw_sp_port_headroom_8x_adjust(mlxsw_sp_port, (u16 *) &buffsize);
-+	buffsize = mlxsw_sp_port_headroom_8x_adjust(mlxsw_sp_port, buffsize);
- 	mlxsw_reg_sbib_pack(sbib_pl, mlxsw_sp_port->local_port, buffsize);
- 	return mlxsw_reg_write(mlxsw_sp->core, MLXSW_REG(sbib), sbib_pl);
- }
--- 
-2.25.1
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
