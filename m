@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C792CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44218C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FA2E20780
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 261272065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468185;
-	bh=j2PgZ/whi0LQa51s89tNZ3et6wNy7JuSHDp1a9QO73A=;
+	s=default; t=1593468187;
+	bh=VKjYd9w/iLilRizjFkGuP8LDcAOj554owitDPp/Vwjc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zGOXjubVIyBSws4jrSAbx3MLvvilKaO1k+xCz8OHvAFTiu1QIAjVeG87dxDHT2uw7
-	 D4PJ8IWAxoHuIGkmX+GXjY3DJtOZxQ/wHVJKV6Wh/CMhIOW1EK2HKx58Kx/9WAHN6p
-	 AK4p8W4faJVH27L+5k97YTYvrTa/qO1NDda57BIY=
+	b=ltKQ5vW7V6hcCy0ifOb8IgDDo2CrNtg/06ieCFvcLyL/lXXQCaKKUltVKwJgSTPuq
+	 T6XQY8c2/L2sxcQ2MvBw5ETwSOSunx8wVX5q3iNpYa8JlbxcaY8rrB4Up5KUgLMyOt
+	 R4DGrjnXaDoxHxsg1NOeYsSBgU9BCkGmNMlU8lhs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390469AbgF2WDD (ORCPT
+        id S2390375AbgF2WDB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:03:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56886 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:03:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726226AbgF2SfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726237AbgF2SfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6FCC246AE;
-        Mon, 29 Jun 2020 15:20:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F8842415D;
+        Mon, 29 Jun 2020 15:19:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444011;
-        bh=j2PgZ/whi0LQa51s89tNZ3et6wNy7JuSHDp1a9QO73A=;
+        s=default; t=1593443941;
+        bh=VKjYd9w/iLilRizjFkGuP8LDcAOj554owitDPp/Vwjc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V7SGgFssjOgpxsr375i0F/0Me5PwsAYUE6AO+NszV2MNtNa7aaG/X4B4bW58uDa0G
-         WPA9045TDOmYTSRe0ihmmq89oqzJJcXsJAIvxKzbX0QZq6NrWM3ZdLmwbOT3XGfmgC
-         MPna5n6BxNHIcDTpZH/gipwj4zBBd7Tec86iasmE=
+        b=vU1GwDk2lKucC+BicY1dkfua6xeeJUpChT4R2bY+gKsC7eFj6fcl+RthNeumKULvS
+         38Jcir+fIq9ALQYaV3rp32qxT+Z+mbT7be3OUycUgnbyWi2/2B1Fupb7kwdaJ1Bijc
+         u+FdXMYEy9T6Sku/S2SYfstBQwvxzY8YgKs76E50=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 117/265] ASoC: fsl_ssi: Fix bclk calculation for mono channel
-Date:   Mon, 29 Jun 2020 11:15:50 -0400
-Message-Id: <20200629151818.2493727-118-sashal@kernel.org>
+Cc:     Alexander Lobakin <alobakin@pm.me>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 043/265] net: ethtool: add missing NETIF_F_GSO_FRAGLIST feature string
+Date:   Mon, 29 Jun 2020 11:14:36 -0400
+Message-Id: <20200629151818.2493727-44-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -66,68 +66,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shengjiu Wang <shengjiu.wang@nxp.com>
+From: Alexander Lobakin <alobakin@pm.me>
 
-[ Upstream commit ed1220df6e666500ebf58c4f2fccc681941646fb ]
+[ Upstream commit eddbf5d0204e550ee59de02bdc19fe90d4203dd6 ]
 
-For mono channel, SSI will switch to Normal mode.
+Commit 3b33583265ed ("net: Add fraglist GRO/GSO feature flags") missed
+an entry for NETIF_F_GSO_FRAGLIST in netdev_features_strings array. As
+a result, fraglist GSO feature is not shown in 'ethtool -k' output and
+can't be toggled on/off.
+The fix is trivial.
 
-In Normal mode and Network mode, the Word Length Control bits
-control the word length divider in clock generator, which is
-different with I2S Master mode (the word length is fixed to
-32bit), it should be the value of params_width(hw_params).
-
-The condition "slots == 2" is not good for I2S Master mode,
-because for Network mode and Normal mode, the slots can also
-be 2. Then we need to use (ssi->i2s_net & SSI_SCR_I2S_MODE_MASK)
-to check if it is I2S Master mode.
-
-So we refine the formula for mono channel, otherwise there
-will be sound issue for S24_LE.
-
-Fixes: b0a7043d5c2c ("ASoC: fsl_ssi: Caculate bit clock rate using slot number and width")
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Reviewed-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Link: https://lore.kernel.org/r/034eff1435ff6ce300b6c781130cefd9db22ab9a.1592276147.git.shengjiu.wang@nxp.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 3b33583265ed ("net: Add fraglist GRO/GSO feature flags")
+Signed-off-by: Alexander Lobakin <alobakin@pm.me>
+Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- sound/soc/fsl/fsl_ssi.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ net/ethtool/common.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/sound/soc/fsl/fsl_ssi.c b/sound/soc/fsl/fsl_ssi.c
-index bad89b0d129e7..1a2fa7f181423 100644
---- a/sound/soc/fsl/fsl_ssi.c
-+++ b/sound/soc/fsl/fsl_ssi.c
-@@ -678,8 +678,9 @@ static int fsl_ssi_set_bclk(struct snd_pcm_substream *substream,
- 	struct regmap *regs = ssi->regs;
- 	u32 pm = 999, div2, psr, stccr, mask, afreq, factor, i;
- 	unsigned long clkrate, baudrate, tmprate;
--	unsigned int slots = params_channels(hw_params);
--	unsigned int slot_width = 32;
-+	unsigned int channels = params_channels(hw_params);
-+	unsigned int slot_width = params_width(hw_params);
-+	unsigned int slots = 2;
- 	u64 sub, savesub = 100000;
- 	unsigned int freq;
- 	bool baudclk_is_used;
-@@ -688,10 +689,14 @@ static int fsl_ssi_set_bclk(struct snd_pcm_substream *substream,
- 	/* Override slots and slot_width if being specifically set... */
- 	if (ssi->slots)
- 		slots = ssi->slots;
--	/* ...but keep 32 bits if slots is 2 -- I2S Master mode */
--	if (ssi->slot_width && slots != 2)
-+	if (ssi->slot_width)
- 		slot_width = ssi->slot_width;
+diff --git a/net/ethtool/common.c b/net/ethtool/common.c
+index 7f7fff88c5d3e..aaecfc916a4db 100644
+--- a/net/ethtool/common.c
++++ b/net/ethtool/common.c
+@@ -44,6 +44,7 @@ const char netdev_features_strings[NETDEV_FEATURE_COUNT][ETH_GSTRING_LEN] = {
+ 	[NETIF_F_GSO_SCTP_BIT] =	 "tx-sctp-segmentation",
+ 	[NETIF_F_GSO_ESP_BIT] =		 "tx-esp-segmentation",
+ 	[NETIF_F_GSO_UDP_L4_BIT] =	 "tx-udp-segmentation",
++	[NETIF_F_GSO_FRAGLIST_BIT] =	 "tx-gso-list",
  
-+	/* ...but force 32 bits for stereo audio using I2S Master Mode */
-+	if (channels == 2 &&
-+	    (ssi->i2s_net & SSI_SCR_I2S_MODE_MASK) == SSI_SCR_I2S_MODE_MASTER)
-+		slot_width = 32;
-+
- 	/* Generate bit clock based on the slot number and slot width */
- 	freq = slots * slot_width * params_rate(hw_params);
- 
+ 	[NETIF_F_FCOE_CRC_BIT] =         "tx-checksum-fcoe-crc",
+ 	[NETIF_F_SCTP_CRC_BIT] =        "tx-checksum-sctp",
 -- 
 2.25.1
 
