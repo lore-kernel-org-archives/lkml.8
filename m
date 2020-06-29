@@ -2,219 +2,120 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BECADC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F265AC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96FE3208B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDC92208B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:26:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Q8HPwYcP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391075AbgF2V0U (ORCPT
+        id S2391081AbgF2V0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:26:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38374 "EHLO
+        Mon, 29 Jun 2020 17:26:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729087AbgF2Smr (ORCPT
+        with ESMTP id S1729096AbgF2Smr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:42:47 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69E04C033C12;
-        Mon, 29 Jun 2020 11:26:31 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jpyU9-002Du1-MY; Mon, 29 Jun 2020 18:26:29 +0000
-From:   Al Viro <viro@ZenIV.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        David Miller <davem@davemloft.net>,
-        Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>
-Subject: [PATCH 12/41] sparc32: get rid of odd callers of copy_regset_from_user()
-Date:   Mon, 29 Jun 2020 19:25:59 +0100
-Message-Id: <20200629182628.529995-12-viro@ZenIV.linux.org.uk>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200629182628.529995-1-viro@ZenIV.linux.org.uk>
-References: <20200629182349.GA2786714@ZenIV.linux.org.uk>
- <20200629182628.529995-1-viro@ZenIV.linux.org.uk>
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E368C033C3E
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 11:37:18 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id d6so8388668pjs.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 11:37:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=mHYFnEmrPBB0EoPbZgrylZKEYeUJ7dEY2zbQRVE/TE0=;
+        b=Q8HPwYcPpk6cvqNepdjj7GzG1i+hF0OU2K7lY/4cN3hqsYfjspAjYrh+e2x1oQ7izt
+         iGyhkr4NRFSf1YHoPA7GUZuTdUCb2hwxF7gz7vNnMwVjF3WqMxXPlRNOJMDLab1+merl
+         8ySrtV3vm5xm4BTKo0/QkZC1k/74EuL1hVQtU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mHYFnEmrPBB0EoPbZgrylZKEYeUJ7dEY2zbQRVE/TE0=;
+        b=KvW5uzXjFp+h+ZQIjPu14FhHCVN15rTX9r/Az0LKSuLxBFFnznBXdIwatwaT5e6bHI
+         D5A/K4XxpvRc9suclUjZoJWVNajAZMBC1xdI4PvdNFk5SY6egjglHq1k/CDIZ17mTTVP
+         GOL5q8Hint/Ek+Z71UkKANZFdLAlwEtkeq3Rwc+q0FiH3k53ivIdKwtDo8hlAN7mvOUR
+         iH4KYnDJepPurME6RK9YIDvUbEblOkEO8kfiY5HdFa3ZRic9FsFJPNKePA4ACAZli/UO
+         2nlk53Um9HcY5V3yemuHdkoI/Zyo1KGvblPpqqLPU/k3orDXOpVQdlEwvAZAwZ2P1Cfk
+         2qFg==
+X-Gm-Message-State: AOAM533AYDmMEjJaCUqBlXHeW+VHabM39sDu7oqTKMaPW4QZtl5IySbw
+        xR+OQe0GU2shob1xwArfwza/8A==
+X-Google-Smtp-Source: ABdhPJyO5LBgTD5AtbVt3yk/cj+JfeKTEZLWvpJPG/3xUjAxL4UTeU1IkJQNAdsLcqAC0lW924PkIQ==
+X-Received: by 2002:a17:90a:e884:: with SMTP id h4mr9418062pjy.229.1593455837971;
+        Mon, 29 Jun 2020 11:37:17 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id n15sm457229pgs.25.2020.06.29.11.37.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 11:37:17 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 11:37:16 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Ard Biesheuvel <ardb@kernel.org>, Will Deacon <will@kernel.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Peter Collingbourne <pcc@google.com>,
+        James Morse <james.morse@arm.com>,
+        Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, X86 ML <x86@kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Daniel Kiss <daniel.kiss@arm.com>
+Subject: Re: [PATCH v4 05/17] ctype: Work around Clang
+ -mbranch-protection=none bug
+Message-ID: <202006291136.E6DF8242@keescook>
+References: <20200629061840.4065483-1-keescook@chromium.org>
+ <20200629061840.4065483-6-keescook@chromium.org>
+ <CAMj1kXE+toCd=Bx-zw7D9bvDRNB2aPn5-_7CY7MOKcVGA-azVg@mail.gmail.com>
+ <202006290806.3BDE2A8@keescook>
+ <CAKwvOd=DMfmvfiEX7KDPLs75SbNz+LAGSwC3V_=LgGH3kjtE=g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOd=DMfmvfiEX7KDPLs75SbNz+LAGSwC3V_=LgGH3kjtE=g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+On Mon, Jun 29, 2020 at 11:02:51AM -0700, Nick Desaulniers wrote:
+> This is definitely better than the empty function.  Though a patch is
+> posted for fixing this in LLVM. Assuming that lands before this, we
+> might not actually need this workaround?
+> 
+> arch/arm64/Kconfig
+> 1625 config ARM64_BTI_KERNEL
+> ...
+> 1633   # https://reviews.llvm.org/rGb8ae3fdfa579dbf366b1bb1cbfdbf8c51db7fa55
+> 1634   depends on !CC_IS_CLANG || CLANG_VERSION >= 100001
+> 
+> So if Daniel's patch lands AND is backported into the clang 10.0.1
+> release, then we might not need to carry this workaround?  Either way,
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
- arch/sparc/kernel/ptrace_32.c | 109 ++++++++++++++++++++++++++++--------------
- 1 file changed, 73 insertions(+), 36 deletions(-)
+True, though as I mentioned in the review, I don't think it's quite
+right -- the warning getting removed is actually quite valuable.
 
-diff --git a/arch/sparc/kernel/ptrace_32.c b/arch/sparc/kernel/ptrace_32.c
-index f72b7d2c4716..0856e0104539 100644
---- a/arch/sparc/kernel/ptrace_32.c
-+++ b/arch/sparc/kernel/ptrace_32.c
-@@ -137,19 +137,18 @@ static int genregs32_set(struct task_struct *target,
- 	if (ret || !count)
- 		return ret;
- 
--	if (pos < 32 * sizeof(u32)) {
--		if (regwindow32_get(target, regs, uregs))
--			return -EFAULT;
--		ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
--					 uregs,
--					 16 * sizeof(u32), 32 * sizeof(u32));
--		if (ret)
--			return ret;
--		if (regwindow32_set(target, regs, uregs))
--			return -EFAULT;
--		if (!count)
--			return 0;
--	}
-+	if (regwindow32_get(target, regs, uregs))
-+		return -EFAULT;
-+	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
-+				 uregs,
-+				 16 * sizeof(u32), 32 * sizeof(u32));
-+	if (ret)
-+		return ret;
-+	if (regwindow32_set(target, regs, uregs))
-+		return -EFAULT;
-+	if (!count)
-+		return 0;
-+
- 	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
- 				 &psr,
- 				 32 * sizeof(u32), 33 * sizeof(u32));
-@@ -241,13 +240,11 @@ static int fpregs32_set(struct task_struct *target,
- 		user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
- 					  32 * sizeof(u32),
- 					  33 * sizeof(u32));
--	if (!ret && count > 0) {
-+	if (!ret)
- 		ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
- 					 &target->thread.fsr,
- 					 33 * sizeof(u32),
- 					 34 * sizeof(u32));
--	}
--
- 	if (!ret)
- 		ret = user_regset_copyin_ignore(&pos, &count, &kbuf, &ubuf,
- 						34 * sizeof(u32), -1);
-@@ -313,6 +310,31 @@ static int getregs_get(struct task_struct *target,
- 				  4 * sizeof(u32), 19 * sizeof(u32));
- }
- 
-+static int setregs_set(struct task_struct *target,
-+			 const struct user_regset *regset,
-+			 unsigned int pos, unsigned int count,
-+			 const void *kbuf, const void __user *ubuf)
-+{
-+	struct pt_regs *regs = target->thread.kregs;
-+	u32 v[4];
-+	int ret;
-+
-+	if (target == current)
-+		flush_user_windows();
-+
-+	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
-+				 v,
-+				 0, 4 * sizeof(u32));
-+	regs->psr = (regs->psr & ~(PSR_ICC | PSR_SYSCALL)) |
-+		    (v[0] & (PSR_ICC | PSR_SYSCALL));
-+	regs->pc = v[1];
-+	regs->npc = v[2];
-+	regs->y = v[3];
-+	return user_regset_copyin(&pos, &count, &kbuf, &ubuf,
-+				 regs->u_regs + 1,
-+				 4 * sizeof(u32) , 19 * sizeof(u32));
-+}
-+
- static int getfpregs_get(struct task_struct *target,
- 			const struct user_regset *regset,
- 			unsigned int pos, unsigned int count,
-@@ -340,12 +362,37 @@ static int getfpregs_get(struct task_struct *target,
- 				  33 * sizeof(u32), 68 * sizeof(u32));
- }
- 
-+static int setfpregs_set(struct task_struct *target,
-+			const struct user_regset *regset,
-+			unsigned int pos, unsigned int count,
-+			const void *kbuf, const void __user *ubuf)
-+{
-+	unsigned long *fpregs = target->thread.float_regs;
-+	int ret;
-+
-+#if 0
-+	if (target == current)
-+		save_and_clear_fpu();
-+#endif
-+	ret = user_regset_copyin(&pos, &count, &kbuf, &ubuf,
-+				 fpregs,
-+				 0, 32 * sizeof(u32));
-+	if (ret)
-+		return ret;
-+	return user_regset_copyin(&pos, &count, &kbuf, &ubuf,
-+				 &target->thread.fsr,
-+				 32 * sizeof(u32),
-+				 33 * sizeof(u32));
-+}
-+
- static const struct user_regset ptrace32_regsets[] = {
- 	[REGSET_GENERAL] = {
--		.n = 19, .size = sizeof(u32), .get = getregs_get,
-+		.n = 19, .size = sizeof(u32),
-+		.get = getregs_get, .set = setregs_set,
- 	},
- 	[REGSET_FP] = {
--		.n = 68, .size = sizeof(u32), .get = getfpregs_get,
-+		.n = 68, .size = sizeof(u32),
-+		.get = getfpregs_get, .set = setfpregs_set,
- 	},
- };
- 
-@@ -400,15 +447,10 @@ long arch_ptrace(struct task_struct *child, long request,
- 	}
- 
- 	case PTRACE_SETREGS: {
--		ret = copy_regset_from_user(child, view, REGSET_GENERAL,
--					    32 * sizeof(u32),
--					    4 * sizeof(u32),
--					    &pregs->psr);
--		if (!ret)
--			copy_regset_from_user(child, view, REGSET_GENERAL,
--					      1 * sizeof(u32),
--					      15 * sizeof(u32),
--					      &pregs->u_regs[0]);
-+		ret = copy_regset_from_user(child, &ptrace32_view,
-+					    REGSET_GENERAL, 0,
-+					    19 * sizeof(u32),
-+					    pregs);
- 		break;
- 	}
- 
-@@ -421,15 +463,10 @@ long arch_ptrace(struct task_struct *child, long request,
- 	}
- 
- 	case PTRACE_SETFPREGS: {
--		ret = copy_regset_from_user(child, view, REGSET_FP,
--					    0 * sizeof(u32),
--					    32 * sizeof(u32),
--					    &fps->regs[0]);
--		if (!ret)
--			ret = copy_regset_from_user(child, view, REGSET_FP,
--						    33 * sizeof(u32),
--						    1 * sizeof(u32),
--						    &fps->fsr);
-+		ret = copy_regset_from_user(child, &ptrace32_view,
-+					  REGSET_FP, 0,
-+					  33 * sizeof(u32),
-+					  fps);
- 		break;
- 	}
- 
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+
+Thanks!
+
 -- 
-2.11.0
-
+Kees Cook
