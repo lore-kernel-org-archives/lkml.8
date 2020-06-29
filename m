@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DC42C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD21C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:16:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20DF9206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:16:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C31E320724
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:16:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593465361;
-	bh=hoCMlla39SLvw5n04FRhF9LJw31TGSiSnqjCWRv5ILM=;
+	s=default; t=1593465363;
+	bh=UQu+7V1cXILSqWmsj5TqeEtkMiRO+mIQRZp8rW3iTS8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UO5qTohLLG9aqNYYeNYQ9RYJ6+O1rhZxSIi+MO0ZB8/SDZk+WyhkRgu+PXhE1EJT9
-	 KfMkOhoig3EAoMadRfp9F9LLaLJ6Fpia3RjnUfUEHsPNQc7lp8h212GkjjVpbRvXAD
-	 1gtHaE6RqZB8IDQNngVp6ACYmAxUmveFFM6kLIho=
+	b=yOUAvtYvVNJ2gVGukIZ2Fivre8XYMmNCvW8V2aqNGYAVv53PzBzX1j4DIguUfXl+L
+	 PASast6Hrca+DVlGCBlI0jcNo1W2PcWHWncXMfwLCbtzbiL+USZhoitdnIokaE8fog
+	 TrUKOl5nb4ACMc/wKeRMGVika7T+xg7Is/BnHLBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390682AbgF2VQA (ORCPT
+        id S2390693AbgF2VQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:16:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42434 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:16:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729944AbgF2SzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729947AbgF2SzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:55:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6A8A25572;
-        Mon, 29 Jun 2020 15:55:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 680B225554;
+        Mon, 29 Jun 2020 15:55:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446138;
-        bh=hoCMlla39SLvw5n04FRhF9LJw31TGSiSnqjCWRv5ILM=;
+        s=default; t=1593446121;
+        bh=UQu+7V1cXILSqWmsj5TqeEtkMiRO+mIQRZp8rW3iTS8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SgyXR+q6V6r4aIJu5QFVSiYO9UcMhv3iXlF6N62tHKlcVRb7RO280+UaxuTE9fWnH
-         zzkfCwI60qssvSLsQgx3HmkfIVEnDZggYQkZbIi3i73NkDw+HWVq2cQBn5yk+kZPGG
-         eK9CaPvoe54GTlPuN65PmvDm6QwPTpEHYmPrcBEw=
+        b=kj1c03mM85vLRRTV/wqBIERNgmVF5l2DHJPoETr7ldr0k8birB0omqyWwOpbKWGpS
+         QurUX/qVs0l678aZzrbtfr40VZFAw9rFPxJDFTUJa+ayEQsjRJ5GQzP0cGSGyPXMDC
+         q/ZIXcfrprkLKMuR23lW/TgVxg8Mgv9kg5Wgxm8g=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Jiping Ma <jiping.ma2@windriver.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.4 126/135] arm64: perf: Report the PC value in REGS_ABI_32 mode
-Date:   Mon, 29 Jun 2020 11:53:00 -0400
-Message-Id: <20200629155309.2495516-127-sashal@kernel.org>
+Cc:     Fan Guo <guofan5@huawei.com>, Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 112/135] RDMA/mad: Fix possible memory leak in ib_mad_post_receive_mads()
+Date:   Mon, 29 Jun 2020 11:52:46 -0400
+Message-Id: <20200629155309.2495516-113-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -66,69 +64,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiping Ma <jiping.ma2@windriver.com>
+From: Fan Guo <guofan5@huawei.com>
 
-commit 8dfe804a4031ca6ba3a3efb2048534249b64f3a5 upstream.
+[ Upstream commit a17f4bed811c60712d8131883cdba11a105d0161 ]
 
-A 32-bit perf querying the registers of a compat task using REGS_ABI_32
-will receive zeroes from w15, when it expects to find the PC.
+If ib_dma_mapping_error() returns non-zero value,
+ib_mad_post_receive_mads() will jump out of loops and return -ENOMEM
+without freeing mad_priv. Fix this memory-leak problem by freeing mad_priv
+in this case.
 
-Return the PC value for register dwarf register 15 when returning register
-values for a compat task to perf.
-
-Cc: <stable@vger.kernel.org>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Jiping Ma <jiping.ma2@windriver.com>
-Link: https://lore.kernel.org/r/1589165527-188401-1-git-send-email-jiping.ma2@windriver.com
-[will: Shuffled code and added a comment]
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 2c34e68f4261 ("IB/mad: Check and handle potential DMA mapping errors")
+Link: https://lore.kernel.org/r/20200612063824.180611-1-guofan5@huawei.com
+Signed-off-by: Fan Guo <guofan5@huawei.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/perf_regs.c | 25 ++++++++++++++++++++++---
- 1 file changed, 22 insertions(+), 3 deletions(-)
+ drivers/infiniband/core/mad.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/kernel/perf_regs.c b/arch/arm64/kernel/perf_regs.c
-index 3f62b35fb6f15..815c395a1076c 100644
---- a/arch/arm64/kernel/perf_regs.c
-+++ b/arch/arm64/kernel/perf_regs.c
-@@ -13,15 +13,34 @@ u64 perf_reg_value(struct pt_regs *regs, int idx)
- 		return 0;
- 
- 	/*
--	 * Compat (i.e. 32 bit) mode:
--	 * - PC has been set in the pt_regs struct in kernel_entry,
--	 * - Handle SP and LR here.
-+	 * Our handling of compat tasks (PERF_SAMPLE_REGS_ABI_32) is weird, but
-+	 * we're stuck with it for ABI compatability reasons.
-+	 *
-+	 * For a 32-bit consumer inspecting a 32-bit task, then it will look at
-+	 * the first 16 registers (see arch/arm/include/uapi/asm/perf_regs.h).
-+	 * These correspond directly to a prefix of the registers saved in our
-+	 * 'struct pt_regs', with the exception of the PC, so we copy that down
-+	 * (x15 corresponds to SP_hyp in the architecture).
-+	 *
-+	 * So far, so good.
-+	 *
-+	 * The oddity arises when a 64-bit consumer looks at a 32-bit task and
-+	 * asks for registers beyond PERF_REG_ARM_MAX. In this case, we return
-+	 * SP_usr, LR_usr and PC in the positions where the AArch64 SP, LR and
-+	 * PC registers would normally live. The initial idea was to allow a
-+	 * 64-bit unwinder to unwind a 32-bit task and, although it's not clear
-+	 * how well that works in practice, somebody might be relying on it.
-+	 *
-+	 * At the time we make a sample, we don't know whether the consumer is
-+	 * 32-bit or 64-bit, so we have to cater for both possibilities.
- 	 */
- 	if (compat_user_mode(regs)) {
- 		if ((u32)idx == PERF_REG_ARM64_SP)
- 			return regs->compat_sp;
- 		if ((u32)idx == PERF_REG_ARM64_LR)
- 			return regs->compat_lr;
-+		if (idx == 15)
-+			return regs->pc;
- 	}
- 
- 	if ((u32)idx == PERF_REG_ARM64_SP)
+diff --git a/drivers/infiniband/core/mad.c b/drivers/infiniband/core/mad.c
+index 616173b7a5e8a..c26fdcb7dddf8 100644
+--- a/drivers/infiniband/core/mad.c
++++ b/drivers/infiniband/core/mad.c
+@@ -2912,6 +2912,7 @@ static int ib_mad_post_receive_mads(struct ib_mad_qp_info *qp_info,
+ 						 DMA_FROM_DEVICE);
+ 		if (unlikely(ib_dma_mapping_error(qp_info->port_priv->device,
+ 						  sg_list.addr))) {
++			kfree(mad_priv);
+ 			ret = -ENOMEM;
+ 			break;
+ 		}
 -- 
 2.25.1
 
