@@ -7,45 +7,44 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7499FC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:16:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C9F8C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:16:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 45CC4206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:16:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D5D1206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:16:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593465373;
-	bh=68vB2YRlflfM6eEWY7FVvsbIyR/+gueoV8EbSaIbw6g=;
+	s=default; t=1593465375;
+	bh=T879Ggz8zg9MIuGjLYvLFAyf/Cw5E5Q2TNLL9+LsFGs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0eTRKOWbAhzBZ3zLnlErL235VwKrqRU6OHB2vADUetXg2HWMvwjCuGBlAzB1W9llg
-	 2nbwrm0rjW1drArEaQf4JjbG7VGX+dwDAVEf320eknsIdCw7QgXzxWVon9UASt/ZaP
-	 euEgLrWQ7shp6lEDDSM2u0k9ILNdoO9rpWKxDc5w=
+	b=qYGCqMfGrWN3NbdtkNfNffbTsXf5m6vv1oN6DWvqYj10+YA7CerzQ/jUmG3bH5pbL
+	 Da+Hn+YySlhuQSvayLLx3QpVYULJbZ9CzCK0I5yonVx1+Xn9RJmRvZ0TxibIVrdTn0
+	 foH7aQ/XHD3cgZwnyrNHvLYZLOSyfJ4bET9TBHVA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390703AbgF2VQL (ORCPT
+        id S2387585AbgF2VQO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:16:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42430 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:16:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729942AbgF2SzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729938AbgF2SzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:55:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15F562557D;
-        Mon, 29 Jun 2020 15:55:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98FF325553;
+        Mon, 29 Jun 2020 15:55:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446146;
-        bh=68vB2YRlflfM6eEWY7FVvsbIyR/+gueoV8EbSaIbw6g=;
+        s=default; t=1593446115;
+        bh=T879Ggz8zg9MIuGjLYvLFAyf/Cw5E5Q2TNLL9+LsFGs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bg5Jtcz0COl9dpeK6wWAFlB54hNUbA7jul0pbSijsy+R7qdSLuajiafBHp8lJe5Do
-         ed3Qvi/rCKzexdF/TfQBy3kBItFBfsLefC+S7F+f6vJZTQ5rWbdmY0MhfMmTSb4Vw9
-         Li8G0IIG1/AT2nJ7TSHwYnfIwbUC1MaBCxB7VeE0=
+        b=VD6lE4OQAwgAcV/r79S6WbDG8VFlAhNjk0j8QFi8ZFBpWwKVgCrqPZV9Wep+U/UYH
+         pysOPC1mKE6Ns7g3DJzMm1OVG2dtMEOM0TnbQ69mLQ2sJuGiLP9lAvLZ3OfHMwAnzO
+         Y9sL4ld7XsjkGASSKxp4JeovS4t5d1+8DGDoBViw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Takashi Iwai <tiwai@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.4 134/135] ALSA: usb-audio: Fix invalid NULL check in snd_emuusb_set_samplerate()
-Date:   Mon, 29 Jun 2020 11:53:08 -0400
-Message-Id: <20200629155309.2495516-135-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 106/135] ALSA: usb-audio: Clean up mixer element list traverse
+Date:   Mon, 29 Jun 2020 11:52:40 -0400
+Message-Id: <20200629155309.2495516-107-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
 References: <20200629155309.2495516-1-sashal@kernel.org>
@@ -66,53 +65,155 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Takashi Iwai <tiwai@suse.de>
 
-commit 6de3c9e3f6b3eaf66859e1379b3f35dda781416b upstream.
+[ Upstream commit 8c558076c740e8009a96c6fdc3d4245dde62be77 ]
 
-The quirk function snd_emuusb_set_samplerate() has a NULL check for
-the mixer element, but this is useless in the current code.  It used
-to be a check against mixer->id_elems[unitid] but it was changed later
-to the value after mixer_eleme_list_to_info() which is always non-NULL
-due to the container_of() usage.
+Introduce a new macro for iterating over mixer element list for
+avoiding the open codes in many places.  Also the open-coded
+container_of() and the forced cast to struct usb_mixer_elem_info are
+replaced with another simple macro, too.
 
-This patch fixes the check before the conversion.
+No functional changes but just readability improvement.
 
-While we're at it, correct a typo in the comment in the function,
-too.
-
-Fixes: 8c558076c740 ("ALSA: usb-audio: Clean up mixer element list traverse")
-Cc: <stable@vger.kernel.org>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/mixer_quirks.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ sound/usb/mixer.c          | 20 +++++++++-----------
+ sound/usb/mixer.h          |  6 ++++++
+ sound/usb/mixer_quirks.c   |  2 +-
+ sound/usb/mixer_scarlett.c |  6 ++----
+ 4 files changed, 18 insertions(+), 16 deletions(-)
 
+diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
+index eb98e60e57335..c29931cd461fc 100644
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -2330,9 +2330,9 @@ void snd_usb_mixer_notify_id(struct usb_mixer_interface *mixer, int unitid)
+ {
+ 	struct usb_mixer_elem_list *list;
+ 
+-	for (list = mixer->id_elems[unitid]; list; list = list->next_id_elem) {
++	for_each_mixer_elem(list, mixer, unitid) {
+ 		struct usb_mixer_elem_info *info =
+-			(struct usb_mixer_elem_info *)list;
++			mixer_elem_list_to_info(list);
+ 		/* invalidate cache, so the value is read from the device */
+ 		info->cached = 0;
+ 		snd_ctl_notify(mixer->chip->card, SNDRV_CTL_EVENT_MASK_VALUE,
+@@ -2343,7 +2343,7 @@ void snd_usb_mixer_notify_id(struct usb_mixer_interface *mixer, int unitid)
+ static void snd_usb_mixer_dump_cval(struct snd_info_buffer *buffer,
+ 				    struct usb_mixer_elem_list *list)
+ {
+-	struct usb_mixer_elem_info *cval = (struct usb_mixer_elem_info *)list;
++	struct usb_mixer_elem_info *cval = mixer_elem_list_to_info(list);
+ 	static char *val_types[] = {"BOOLEAN", "INV_BOOLEAN",
+ 				    "S8", "U8", "S16", "U16"};
+ 	snd_iprintf(buffer, "    Info: id=%i, control=%i, cmask=0x%x, "
+@@ -2369,8 +2369,7 @@ static void snd_usb_mixer_proc_read(struct snd_info_entry *entry,
+ 				mixer->ignore_ctl_error);
+ 		snd_iprintf(buffer, "Card: %s\n", chip->card->longname);
+ 		for (unitid = 0; unitid < MAX_ID_ELEMS; unitid++) {
+-			for (list = mixer->id_elems[unitid]; list;
+-			     list = list->next_id_elem) {
++			for_each_mixer_elem(list, mixer, unitid) {
+ 				snd_iprintf(buffer, "  Unit: %i\n", list->id);
+ 				if (list->kctl)
+ 					snd_iprintf(buffer,
+@@ -2400,19 +2399,19 @@ static void snd_usb_mixer_interrupt_v2(struct usb_mixer_interface *mixer,
+ 		return;
+ 	}
+ 
+-	for (list = mixer->id_elems[unitid]; list; list = list->next_id_elem)
++	for_each_mixer_elem(list, mixer, unitid)
+ 		count++;
+ 
+ 	if (count == 0)
+ 		return;
+ 
+-	for (list = mixer->id_elems[unitid]; list; list = list->next_id_elem) {
++	for_each_mixer_elem(list, mixer, unitid) {
+ 		struct usb_mixer_elem_info *info;
+ 
+ 		if (!list->kctl)
+ 			continue;
+ 
+-		info = (struct usb_mixer_elem_info *)list;
++		info = mixer_elem_list_to_info(list);
+ 		if (count > 1 && info->control != control)
+ 			continue;
+ 
+@@ -2632,7 +2631,7 @@ int snd_usb_mixer_suspend(struct usb_mixer_interface *mixer)
+ 
+ static int restore_mixer_value(struct usb_mixer_elem_list *list)
+ {
+-	struct usb_mixer_elem_info *cval = (struct usb_mixer_elem_info *)list;
++	struct usb_mixer_elem_info *cval = mixer_elem_list_to_info(list);
+ 	int c, err, idx;
+ 
+ 	if (cval->cmask) {
+@@ -2668,8 +2667,7 @@ int snd_usb_mixer_resume(struct usb_mixer_interface *mixer, bool reset_resume)
+ 	if (reset_resume) {
+ 		/* restore cached mixer values */
+ 		for (id = 0; id < MAX_ID_ELEMS; id++) {
+-			for (list = mixer->id_elems[id]; list;
+-			     list = list->next_id_elem) {
++			for_each_mixer_elem(list, mixer, id) {
+ 				if (list->resume) {
+ 					err = list->resume(list);
+ 					if (err < 0)
+diff --git a/sound/usb/mixer.h b/sound/usb/mixer.h
+index 545d99b09706b..004d99037210f 100644
+--- a/sound/usb/mixer.h
++++ b/sound/usb/mixer.h
+@@ -52,6 +52,12 @@ struct usb_mixer_elem_list {
+ 	usb_mixer_elem_resume_func_t resume;
+ };
+ 
++/* iterate over mixer element list of the given unit id */
++#define for_each_mixer_elem(list, mixer, id)	\
++	for ((list) = (mixer)->id_elems[id]; (list); (list) = (list)->next_id_elem)
++#define mixer_elem_list_to_info(list) \
++	container_of(list, struct usb_mixer_elem_info, head)
++
+ struct usb_mixer_elem_info {
+ 	struct usb_mixer_elem_list head;
+ 	unsigned int control;	/* CS or ICN (high byte) */
 diff --git a/sound/usb/mixer_quirks.c b/sound/usb/mixer_quirks.c
-index 198515f86fcc2..9646513f4b4ad 100644
+index 723b535ca2ec5..5d6af9c861ad9 100644
 --- a/sound/usb/mixer_quirks.c
 +++ b/sound/usb/mixer_quirks.c
-@@ -1168,17 +1168,17 @@ void snd_emuusb_set_samplerate(struct snd_usb_audio *chip,
- {
- 	struct usb_mixer_interface *mixer;
- 	struct usb_mixer_elem_info *cval;
--	int unitid = 12; /* SamleRate ExtensionUnit ID */
-+	int unitid = 12; /* SampleRate ExtensionUnit ID */
+@@ -1170,7 +1170,7 @@ void snd_emuusb_set_samplerate(struct snd_usb_audio *chip,
+ 	int unitid = 12; /* SamleRate ExtensionUnit ID */
  
  	list_for_each_entry(mixer, &chip->mixer_list, list) {
--		cval = mixer_elem_list_to_info(mixer->id_elems[unitid]);
--		if (cval) {
-+		if (mixer->id_elems[unitid]) {
-+			cval = mixer_elem_list_to_info(mixer->id_elems[unitid]);
+-		cval = (struct usb_mixer_elem_info *)mixer->id_elems[unitid];
++		cval = mixer_elem_list_to_info(mixer->id_elems[unitid]);
+ 		if (cval) {
  			snd_usb_mixer_set_ctl_value(cval, UAC_SET_CUR,
  						    cval->control << 8,
- 						    samplerate_id);
- 			snd_usb_mixer_notify_id(mixer, unitid);
-+			break;
- 		}
--		break;
- 	}
- }
+diff --git a/sound/usb/mixer_scarlett.c b/sound/usb/mixer_scarlett.c
+index 7438e7c4a842d..2876cd9b35b38 100644
+--- a/sound/usb/mixer_scarlett.c
++++ b/sound/usb/mixer_scarlett.c
+@@ -287,8 +287,7 @@ static int scarlett_ctl_switch_put(struct snd_kcontrol *kctl,
  
+ static int scarlett_ctl_resume(struct usb_mixer_elem_list *list)
+ {
+-	struct usb_mixer_elem_info *elem =
+-		container_of(list, struct usb_mixer_elem_info, head);
++	struct usb_mixer_elem_info *elem = mixer_elem_list_to_info(list);
+ 	int i;
+ 
+ 	for (i = 0; i < elem->channels; i++)
+@@ -447,8 +446,7 @@ static int scarlett_ctl_enum_put(struct snd_kcontrol *kctl,
+ 
+ static int scarlett_ctl_enum_resume(struct usb_mixer_elem_list *list)
+ {
+-	struct usb_mixer_elem_info *elem =
+-		container_of(list, struct usb_mixer_elem_info, head);
++	struct usb_mixer_elem_info *elem = mixer_elem_list_to_info(list);
+ 
+ 	if (elem->cached)
+ 		snd_usb_set_cur_mix_value(elem, 0, 0, *elem->cache_val);
 -- 
 2.25.1
 
