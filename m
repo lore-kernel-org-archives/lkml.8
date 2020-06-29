@@ -2,125 +2,140 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E81C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71AE2C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:36:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 27E1921D81
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:36:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5381D22269
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:36:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Z0Ni7pv5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726994AbgF2Sgc (ORCPT
+        id S1727005AbgF2Sgg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:36:32 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:3142 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726010AbgF2Sg2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:36:28 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05TFVmEb143871;
-        Mon, 29 Jun 2020 11:50:19 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31ycd47q5g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 Jun 2020 11:50:19 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05TFgPG5072291;
-        Mon, 29 Jun 2020 11:50:18 -0400
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31ycd47q4j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 Jun 2020 11:50:18 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05TFedhq030594;
-        Mon, 29 Jun 2020 15:50:16 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma04fra.de.ibm.com with ESMTP id 31wwr816ge-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 Jun 2020 15:50:15 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05TFoDsj48824470
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 29 Jun 2020 15:50:13 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9F15AAE045;
-        Mon, 29 Jun 2020 15:50:13 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4C1DEAE051;
-        Mon, 29 Jun 2020 15:50:13 +0000 (GMT)
-Received: from oc3871087118.ibm.com (unknown [9.145.156.24])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 29 Jun 2020 15:50:13 +0000 (GMT)
-From:   Alexander Gordeev <agordeev@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Alexander Gordeev <agordeev@linux.ibm.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: [PATCH 3/3] perf bench numa: fix wrong benchmark configuration
-Date:   Mon, 29 Jun 2020 17:50:09 +0200
-Message-Id: <18a2e6a19e61a67bf456852eae1d652ec37f4712.1593445668.git.agordeev@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <cover.1593445668.git.agordeev@linux.ibm.com>
-References: <cover.1593445668.git.agordeev@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-06-29_15:2020-06-29,2020-06-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- spamscore=0 cotscore=-2147483648 malwarescore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 suspectscore=1 phishscore=0 impostorscore=0 clxscore=1015
- priorityscore=1501 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006290103
+        Mon, 29 Jun 2020 14:36:36 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:13146 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726949AbgF2SgR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:36:17 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593455776; h=Content-Transfer-Encoding: MIME-Version:
+ References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=9FYkAqjYflD6eZbmJt0uRp2jmZWwtscz4u7DhzViLx0=; b=Z0Ni7pv5nX3GzCAV/rEDAluyg5FSUY+TsCSqCwB28tXkunMVccjc+RfRP5Cu83VvhDY1Tb+8
+ UIpqpeV4LVR17QtO9mTkPP1a4CoTUf1jELhISD+qNR4ZYVAiIytAhT2wpSPnFhHyhOpHkdIn
+ zw1ZDhoJhnqqj9HfpLYmH0CwroU=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n02.prod.us-west-2.postgun.com with SMTP id
+ 5efa0e816bebe35deb5ce19f (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 29 Jun 2020 15:53:37
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id DC6F2C433AD; Mon, 29 Jun 2020 15:53:37 +0000 (UTC)
+Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A6E45C433C8;
+        Mon, 29 Jun 2020 15:53:31 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A6E45C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>
+Cc:     iommu@lists.linux-foundation.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Sean Paul <sean@poorly.run>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Akhil P Oommen <akhilpo@codeaurora.org>,
+        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        "Kristian H . Kristensen" <hoegsberg@google.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCHv3 2/7] iommu/io-pgtable-arm: Add support to use system cache
+Date:   Mon, 29 Jun 2020 21:22:45 +0530
+Message-Id: <e167bbb8625c0ab6701f2b48416b88d260bd0ab0.1593344119.git.saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <cover.1593344119.git.saiprakash.ranjan@codeaurora.org>
+References: <cover.1593344119.git.saiprakash.ranjan@codeaurora.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This update fixes a wrong number of processes for one
-benchmark and re-groups two others in a more unified way.
+Add a quirk IO_PGTABLE_QUIRK_SYS_CACHE to override the
+attributes set in TCR for the page table walker when
+using system cache.
 
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 ---
- tools/perf/bench/numa.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/iommu/io-pgtable-arm.c | 7 ++++++-
+ include/linux/io-pgtable.h     | 4 ++++
+ 2 files changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
-index 7965a55..30fa6ef 100644
---- a/tools/perf/bench/numa.c
-+++ b/tools/perf/bench/numa.c
-@@ -1753,7 +1753,7 @@ static int run_bench_numa(const char *name, const char **argv)
-    { " 1x3-convergence,", "mem",  "-p",  "1", "-t",  "3", "-P",  "512", OPT_CONV },
-    { " 1x4-convergence,", "mem",  "-p",  "1", "-t",  "4", "-P",  "512", OPT_CONV },
-    { " 1x6-convergence,", "mem",  "-p",  "1", "-t",  "6", "-P", "1020", OPT_CONV },
--   { " 2x3-convergence,", "mem",  "-p",  "3", "-t",  "3", "-P", "1020", OPT_CONV },
-+   { " 2x3-convergence,", "mem",  "-p",  "2", "-t",  "3", "-P", "1020", OPT_CONV },
-    { " 3x3-convergence,", "mem",  "-p",  "3", "-t",  "3", "-P", "1020", OPT_CONV },
-    { " 4x4-convergence,", "mem",  "-p",  "4", "-t",  "4", "-P",  "512", OPT_CONV },
-    { " 4x4-convergence-NOTHP,",
-@@ -1782,6 +1782,8 @@ static int run_bench_numa(const char *name, const char **argv)
-    { " 1x8-bw-thread,",   "mem",  "-p",  "1", "-t",  "8", "-T",  "256", OPT_BW },
-    { "1x16-bw-thread,",   "mem",  "-p",  "1", "-t", "16", "-T",  "128", OPT_BW },
-    { "1x32-bw-thread,",   "mem",  "-p",  "1", "-t", "32", "-T",   "64", OPT_BW },
-+   { "1x32-bw-thread-NOTHP,",
-+			  "mem",  "-p",  "1", "-t", "32", "-T",   "64", OPT_BW_NOTHP },
+diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
+index 04fbd4bf0ff9..0a6cb82fd98a 100644
+--- a/drivers/iommu/io-pgtable-arm.c
++++ b/drivers/iommu/io-pgtable-arm.c
+@@ -792,7 +792,8 @@ arm_64_lpae_alloc_pgtable_s1(struct io_pgtable_cfg *cfg, void *cookie)
  
-    { " 2x3-bw-process,",  "mem",  "-p",  "2", "-t",  "3", "-P",  "512", OPT_BW },
-    { " 4x4-bw-process,",  "mem",  "-p",  "4", "-t",  "4", "-P",  "512", OPT_BW },
-@@ -1795,9 +1797,6 @@ static int run_bench_numa(const char *name, const char **argv)
-    { "2x16-bw-process,",  "mem",  "-p",  "2", "-t", "16", "-P",  "512", OPT_BW },
-    { "1x32-bw-process,",  "mem",  "-p",  "1", "-t", "32", "-P", "2048", OPT_BW },
+ 	if (cfg->quirks & ~(IO_PGTABLE_QUIRK_ARM_NS |
+ 			    IO_PGTABLE_QUIRK_NON_STRICT |
+-			    IO_PGTABLE_QUIRK_ARM_TTBR1))
++			    IO_PGTABLE_QUIRK_ARM_TTBR1 |
++			    IO_PGTABLE_QUIRK_SYS_CACHE))
+ 		return NULL;
  
--   { "1x32-bw-thread,",   "mem",  "-p",  "1", "-t", "32", "-T",   "32", OPT_BW },
--   { "1x32-bw-thread-NOTHP,",
--			  "mem",  "-p",  "1", "-t", "32", "-T",   "32", OPT_BW_NOTHP },
-    { "2x16-bw-thread,",   "mem",  "-p",  "2", "-t", "16", "-T",  "192", OPT_BW },
-    { "2x16-bw-thread-NOTHP,",
- 			  "mem",  "-p",  "2", "-t", "16", "-T",  "192", OPT_BW_NOTHP },
+ 	data = arm_lpae_alloc_pgtable(cfg);
+@@ -804,6 +805,10 @@ arm_64_lpae_alloc_pgtable_s1(struct io_pgtable_cfg *cfg, void *cookie)
+ 		tcr->sh = ARM_LPAE_TCR_SH_IS;
+ 		tcr->irgn = ARM_LPAE_TCR_RGN_WBWA;
+ 		tcr->orgn = ARM_LPAE_TCR_RGN_WBWA;
++	} else if (cfg->quirks & IO_PGTABLE_QUIRK_SYS_CACHE) {
++		tcr->sh = ARM_LPAE_TCR_SH_OS;
++		tcr->irgn = ARM_LPAE_TCR_RGN_NC;
++		tcr->orgn = ARM_LPAE_TCR_RGN_WBWA;
+ 	} else {
+ 		tcr->sh = ARM_LPAE_TCR_SH_OS;
+ 		tcr->irgn = ARM_LPAE_TCR_RGN_NC;
+diff --git a/include/linux/io-pgtable.h b/include/linux/io-pgtable.h
+index bbed1d3925ba..23114b3fe2a5 100644
+--- a/include/linux/io-pgtable.h
++++ b/include/linux/io-pgtable.h
+@@ -86,6 +86,9 @@ struct io_pgtable_cfg {
+ 	 *
+ 	 * IO_PGTABLE_QUIRK_ARM_TTBR1: (ARM LPAE format) Configure the table
+ 	 *	for use in the upper half of a split address space.
++	 *
++	 * IO_PGTABLE_QUIRK_SYS_CACHE: Override the attributes set in TCR for
++	 *	the page table walker when using system cache.
+ 	 */
+ 	#define IO_PGTABLE_QUIRK_ARM_NS		BIT(0)
+ 	#define IO_PGTABLE_QUIRK_NO_PERMS	BIT(1)
+@@ -93,6 +96,7 @@ struct io_pgtable_cfg {
+ 	#define IO_PGTABLE_QUIRK_ARM_MTK_EXT	BIT(3)
+ 	#define IO_PGTABLE_QUIRK_NON_STRICT	BIT(4)
+ 	#define IO_PGTABLE_QUIRK_ARM_TTBR1	BIT(5)
++	#define IO_PGTABLE_QUIRK_SYS_CACHE	BIT(6)
+ 	unsigned long			quirks;
+ 	unsigned long			pgsize_bitmap;
+ 	unsigned int			ias;
 -- 
-1.8.3.1
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
