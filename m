@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 601F5C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:27:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08C69C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4228720663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:27:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E008E20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:27:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593458853;
-	bh=VC0RHqcVsa2hE+dmNr1/xgwrg5FMctxrbBQx02b4w1w=;
+	s=default; t=1593458859;
+	bh=xPMuZO5O/Jy6Op+1E1+PCul+bO+Kwo+5tm/LDP35Ixs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gtzvdpcqRPP4nAIaSIlr7IiAsplMcX15yetMBX3cNQIibioAcjSN9m151wRjqdS4r
-	 G0JANYm6XSnFHV4r5a7PfQMNHagAscKn3hsmM9Q/Q7kI1mrTiWbvTVOoYUtqeYy/CW
-	 TXEVWle/SBUbhxpaFghWUdf/V3OojYVfWG8/v6UA=
+	b=CiVRYmf3enBA64bfmX+uNFiDfn2Aw2+CCQSEPswJdw5hNdPZKSF7CMqoOh/CshFvR
+	 C6xXlXM9FlFU+6Tv40nfzf6yuUk6r5CPzxDyvIqmfpFV97ANfZLUFc1cODmpVEHzvF
+	 3QbTr6Uyyb/NC8cHyM8QloDUBe0Jc+E1KAlOmCm4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732450AbgF2T12 (ORCPT
+        id S1729254AbgF2T1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:27:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37068 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:27:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732663AbgF2TZn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732662AbgF2TZn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E99AC2540A;
-        Mon, 29 Jun 2020 15:42:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E056925403;
+        Mon, 29 Jun 2020 15:42:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445355;
-        bh=VC0RHqcVsa2hE+dmNr1/xgwrg5FMctxrbBQx02b4w1w=;
+        s=default; t=1593445351;
+        bh=xPMuZO5O/Jy6Op+1E1+PCul+bO+Kwo+5tm/LDP35Ixs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dLNjKlVhlNc4uFRMiw0cmwyaR7eVRPBVQE7PdMU2mMiQCyxzzbI0w4XvxDqozRet0
-         Aw5Wi0OkamoB1VtpUK4WmM7wG1rZppuTxWV1ufR9K0uwNHba66GnvfGKOJgNJQnmb9
-         jVxs0YBCfqaWbxFJeZTURhqUuPvQFnYyKadreQRs=
+        b=hA0cy/JW0Q6G3iQoZ19x1C0t796SnQTPnBkNGiu/x4I6c3LhxYp207cHqb3gr8PQk
+         4l5fU1g6faUbFM2yYoD5tLs5YSTTPyts5SunNg87Dnj7UjOt38Oku+37gmwwjrzxey
+         c5AAmC+/z3nABDH11XHQNhT0TC5nHdfGmHx+E7kM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Mauro Carvalho Chehab <mchehab@s-opensource.com>,
-        Daniel Scheller <d.scheller@gmx.net>,
+        Shuah Khan <shuahkg@osg.samsung.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.9 113/191] media: dvb_frontend: be sure to init dvb_frontend_handle_ioctl() return code
-Date:   Mon, 29 Jun 2020 11:38:49 -0400
-Message-Id: <20200629154007.2495120-114-sashal@kernel.org>
+Subject: [PATCH 4.9 109/191] media: dvb_frontend: get rid of property cache's state
+Date:   Mon, 29 Jun 2020 11:38:45 -0400
+Message-Id: <20200629154007.2495120-110-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -68,58 +68,101 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
 
-commit a9cb97c3e628902e37583d8a40bb28cf76522cf1 upstream
+commit ef2cc27cf860b79874e9fde1419dd67c3372e41c upstream
 
-As smatch warned:
-	drivers/media/dvb-core/dvb_frontend.c:2468 dvb_frontend_handle_ioctl() error: uninitialized symbol 'err'.
+In the past, I guess the idea was to use state in order to
+allow an autofush logic. However, in the current code, it is
+used only for debug messages, on a poor man's solution, as
+there's already a debug message to indicate when the properties
+got flushed.
 
-The ioctl handler actually got a regression here: before changeset
-d73dcf0cdb95 ("media: dvb_frontend: cleanup ioctl handling logic"),
-the code used to return -EOPNOTSUPP if an ioctl handler was not
-implemented on a driver. After the change, it may return a random
-value.
+So, just get rid of it for good.
 
-Fixes: d73dcf0cdb95 ("media: dvb_frontend: cleanup ioctl handling logic")
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Tested-by: Daniel Scheller <d.scheller@gmx.net>
+Reviewed-by: Shuah Khan <shuahkg@osg.samsung.com>
 Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
 Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/media/dvb-core/dvb_frontend.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/media/dvb-core/dvb_frontend.c | 20 ++++++--------------
+ drivers/media/dvb-core/dvb_frontend.h |  5 -----
+ 2 files changed, 6 insertions(+), 19 deletions(-)
 
 diff --git a/drivers/media/dvb-core/dvb_frontend.c b/drivers/media/dvb-core/dvb_frontend.c
-index a9ae9e5092050..6f9ee78a18703 100644
+index 5b06ac91420ff..a7ba8e200b677 100644
 --- a/drivers/media/dvb-core/dvb_frontend.c
 +++ b/drivers/media/dvb-core/dvb_frontend.c
-@@ -2113,7 +2113,7 @@ static int dvb_frontend_handle_ioctl(struct file *file,
+@@ -932,8 +932,6 @@ static int dvb_frontend_clear_cache(struct dvb_frontend *fe)
+ 	memset(c, 0, offsetof(struct dtv_frontend_properties, strength));
+ 	c->delivery_system = delsys;
+ 
+-	c->state = DTV_CLEAR;
+-
+ 	dev_dbg(fe->dvb->device, "%s: Clearing cache for delivery system %d\n",
+ 			__func__, c->delivery_system);
+ 
+@@ -1760,13 +1758,13 @@ static int dtv_property_process_set(struct dvb_frontend *fe,
+ 		dvb_frontend_clear_cache(fe);
+ 		break;
+ 	case DTV_TUNE:
+-		/* interpret the cache of data, build either a traditional frontend
+-		 * tunerequest so we can pass validation in the FE_SET_FRONTEND
+-		 * ioctl.
++		/*
++		 * Use the cached Digital TV properties to tune the
++		 * frontend
+ 		 */
+-		c->state = tvp->cmd;
+-		dev_dbg(fe->dvb->device, "%s: Finalised property cache\n",
+-				__func__);
++		dev_dbg(fe->dvb->device,
++			"%s: Setting the frontend from property cache\n",
++			__func__);
+ 
+ 		r = dtv_set_frontend(fe);
+ 		break;
+@@ -1915,7 +1913,6 @@ static int dvb_frontend_ioctl(struct file *file, unsigned int cmd, void *parg)
+ {
+ 	struct dvb_device *dvbdev = file->private_data;
  	struct dvb_frontend *fe = dvbdev->priv;
+-	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
  	struct dvb_frontend_private *fepriv = fe->frontend_priv;
- 	struct dtv_frontend_properties *c = &fe->dtv_property_cache;
--	int i, err;
-+	int i, err = -EOPNOTSUPP;
+ 	int err;
  
- 	dev_dbg(fe->dvb->device, "%s:\n", __func__);
+@@ -1935,7 +1932,6 @@ static int dvb_frontend_ioctl(struct file *file, unsigned int cmd, void *parg)
+ 		return -EPERM;
+ 	}
  
-@@ -2148,6 +2148,7 @@ static int dvb_frontend_handle_ioctl(struct file *file,
+-	c->state = DTV_UNDEFINED;
+ 	err = dvb_frontend_handle_ioctl(file, cmd, parg);
+ 
+ 	up(&fepriv->sem);
+@@ -2119,10 +2115,6 @@ static int dvb_frontend_handle_ioctl(struct file *file,
  			}
+ 			(tvp + i)->result = err;
  		}
+-
+-		if (c->state == DTV_TUNE)
+-			dev_dbg(fe->dvb->device, "%s: Property cache is full, tuning\n", __func__);
+-
  		kfree(tvp);
-+		err = 0;
  		break;
  	}
- 	case FE_GET_PROPERTY: {
-@@ -2198,6 +2199,7 @@ static int dvb_frontend_handle_ioctl(struct file *file,
- 			return -EFAULT;
- 		}
- 		kfree(tvp);
-+		err = 0;
- 		break;
- 	}
+diff --git a/drivers/media/dvb-core/dvb_frontend.h b/drivers/media/dvb-core/dvb_frontend.h
+index f852f0a49f422..8a6267ad56d69 100644
+--- a/drivers/media/dvb-core/dvb_frontend.h
++++ b/drivers/media/dvb-core/dvb_frontend.h
+@@ -615,11 +615,6 @@ struct dtv_frontend_properties {
+ 	struct dtv_fe_stats	post_bit_count;
+ 	struct dtv_fe_stats	block_error;
+ 	struct dtv_fe_stats	block_count;
+-
+-	/* private: */
+-	/* Cache State */
+-	u32			state;
+-
+ };
  
+ #define DVB_FE_NO_EXIT  0
 -- 
 2.25.1
 
