@@ -2,95 +2,84 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F239C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86097C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3250F2065D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C5A32076C
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:03:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593468215;
-	bh=GZC9kGIvaaQaiIdoIERM7cmqDj/kun1P6DXSKhfyYk0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HQKhtAE6QHEosqYDi+0JLHcMkEs/sSvoRrQ2DJYy/pa+wtHvVoNVDDJQ7xMGpMtuk
-	 4kcKMEEcbjVnAHtiO/AJHkd59slAydsF/heubbEpWgpmawwlQnNzvNTlO8EznQFHKQ
-	 jL/WgcVnMrRvteiyu8P3l3w1iLTrIM/I+59nijNE=
+	s=default; t=1593468218;
+	bh=HME3jm5v+kI3YX0e1z9z2PFpSji4Pm/di2GGIvU+mpM=;
+	h=Date:From:To:In-Reply-To:References:Subject:List-ID:From;
+	b=Bn946Jh7MKzUa/eeVBW+RXDvi65RpLxzK/VoRPzBqGQKenEzlLCyTx3K6VTYhAdWh
+	 yPZlKiDceYyM/W4BTY2xOQ2MslJzPsEp0IUgDll4CobcjT+yG3wv6Nyh623SVN8ONr
+	 8emX85nNcMzaJ1wZxfInjMJC0ve3ypA2iv3cst5Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391648AbgF2WDc (ORCPT
+        id S2391665AbgF2WDh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:03:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56782 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 18:03:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726208AbgF2SfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726236AbgF2SfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:23 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6203246A6;
-        Mon, 29 Jun 2020 15:19:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C94A025599;
+        Mon, 29 Jun 2020 18:15:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443999;
-        bh=GZC9kGIvaaQaiIdoIERM7cmqDj/kun1P6DXSKhfyYk0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PhmtJnBHq3cqBHTvjOt599cFk9D6ieFnnOIHQUqPfdi+2p8KUC/MCcCxivV/y1HmJ
-         N55+9MM+navxK8ghrwnrJ+5rjaTtJ7vlWyeJ520sh2VYOMKptCa2+Dybm4q/RK8s86
-         pHeIvP/cH5SHQThWPit5oMTv/XWrLCl+rXrOtuKM=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matthew Hagan <mnhagan88@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 104/265] ARM: bcm: Select ARM_TIMER_SP804 for ARCH_BCM_NSP
-Date:   Mon, 29 Jun 2020 11:15:37 -0400
-Message-Id: <20200629151818.2493727-105-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
-References: <20200629151818.2493727-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.7.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.7.7-rc1
-X-KernelTest-Deadline: 2020-07-01T15:14+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        s=default; t=1593454519;
+        bh=HME3jm5v+kI3YX0e1z9z2PFpSji4Pm/di2GGIvU+mpM=;
+        h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+        b=pqTxBMQQ7VvDugyQK5aqKCae+tDtwremB2oe11I/J6sXrgwhq/Q0XqQLNhuX2KBdW
+         RJm+2Bg0tIzcZeRo+V6/Bxo56MsCI22ceSzjrC4OXFpxcA/oPBE79FSBezP5486YaP
+         5ZduXoLhipDZghr8b07IILTLCqqlCy55LSMj29SQ=
+Date:   Mon, 29 Jun 2020 19:15:17 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     lgirdwood@gmail.com, perex@perex.cz, plai@codeaurora.org,
+        alsa-devel@alsa-project.org, tiwai@suse.com,
+        linux-kernel@vger.kernel.org, Rohit kumar <rohitkr@codeaurora.org>
+In-Reply-To: <1593265030-1451-1-git-send-email-rohitkr@codeaurora.org>
+References: <1593265030-1451-1-git-send-email-rohitkr@codeaurora.org>
+Subject: Re: [PATCH] asoc: Update supported rate and format for dummy dai
+Message-Id: <159345450675.54191.18376967903850938054.b4-ty@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matthew Hagan <mnhagan88@gmail.com>
+On Sat, 27 Jun 2020 19:07:10 +0530, Rohit kumar wrote:
+> Add support for 384KHz sample rate and S24_3LE
+> bitwidth for dummy dai.
 
-[ Upstream commit 0386e9ce5877ee73e07675529d5ae594d00f0900 ]
+Applied to
 
-The NSP SoC includes an SP804 timer so should be enabled here.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
 
-Fixes: a0efb0d28b77 ("ARM: dts: NSP: Add SP804 Support to DT")
-Signed-off-by: Matthew Hagan <mnhagan88@gmail.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/mach-bcm/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+Thanks!
 
-diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
-index 6aa938b949db2..1df0ee01ee02b 100644
---- a/arch/arm/mach-bcm/Kconfig
-+++ b/arch/arm/mach-bcm/Kconfig
-@@ -53,6 +53,7 @@ config ARCH_BCM_NSP
- 	select ARM_ERRATA_754322
- 	select ARM_ERRATA_775420
- 	select ARM_ERRATA_764369 if SMP
-+	select ARM_TIMER_SP804
- 	select THERMAL
- 	select THERMAL_OF
- 	help
--- 
-2.25.1
+[1/1] asoc: Update supported rate and format for dummy dai
+      commit: abc17b2974d634c17d25be7f4472890c8533a005
 
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
