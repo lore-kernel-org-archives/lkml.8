@@ -7,46 +7,44 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C85C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:13:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7C78C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7BDDF20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:13:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C676E20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:13:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461618;
-	bh=vwUcq+Pr5pEMmHNpdNnBYPcbAgx8A+mHieqn7yHIbVE=;
+	s=default; t=1593461619;
+	bh=O6JNdoJ52kUwwUPeBFB466TCuwQkvz1e1LXBO24N7SI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CZOyoMatoFYa7WXhHswHGUeXE8E4syLDv7Bq5M+Cup4ko9/Uyt6w1ZIjfwfRexT8c
-	 wFiUZLoISpdp5sN+mv2Sys8zlDv/kIIzgYP5LeDDlhC9qTVNLA4wJ9skhhrVbu0VIX
-	 h86mTG3RBXRaaN4PC8A3mN1y4cE6TrMo5ezqdO8s=
+	b=EVRy+7GAhigixzdtACKSildz0zfp4TZIVXfsamsrpqXNRpkoZPg7am6KTD+fPCpNA
+	 ONlmDQRi2poGjv8cy+/8cUfxJjCXFZP+iW1Iu0zkg/NizZRFFsL/3xCef0HjbF4PoD
+	 IPOJAHFtvza/muWONozAP2EAE/kZxBwXjTGqw4X4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731806AbgF2UNg (ORCPT
+        id S1731935AbgF2UNi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:13:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40600 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:13:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732854AbgF2TaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732861AbgF2TaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C58D251E9;
-        Mon, 29 Jun 2020 15:35:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2603125257;
+        Mon, 29 Jun 2020 15:36:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444908;
-        bh=vwUcq+Pr5pEMmHNpdNnBYPcbAgx8A+mHieqn7yHIbVE=;
+        s=default; t=1593444967;
+        bh=O6JNdoJ52kUwwUPeBFB466TCuwQkvz1e1LXBO24N7SI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CfcKx7T/tzA1rXZpap3p9EHZUo9jkn/2tZOUXdbZyDgss6Gn4RCP8MXiQy5K7W5wx
-         s0/yIW7cOKJQ/+lHmZnk6Lq3wk2zmQFYriLeRDoTRdPzsj/4Oyw9ekMKQAKWVsyARC
-         CBa9DPcqBI9OcK5r+JiNzjh+ILnRh4LPcjAVYo08=
+        b=Vse+/6cTt4G2T39m+e0GSmwTGsSr38l4ncbt+hrvD3Kc8/S4iqTti6EKM2TgPS44g
+         8zVKHjWdvvEAjCdNk6swVCKDQQOwQT+0+rgAbERLOaqBtkwOX4ScvUVYIVCYPzRBU3
+         9GJ3uwut8aN3Xy2KVvtAu4aI3rZK7wFJhJ79gx/k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 004/131] mtd: rawnand: marvell: Fix the condition on a return code
-Date:   Mon, 29 Jun 2020 11:32:55 -0400
-Message-Id: <20200629153502.2494656-5-sashal@kernel.org>
+Cc:     Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 066/131] ARM: dts: Fix duovero smsc interrupt for suspend
+Date:   Mon, 29 Jun 2020 11:33:57 -0400
+Message-Id: <20200629153502.2494656-67-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
@@ -65,53 +63,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miquel Raynal <miquel.raynal@bootlin.com>
+From: Tony Lindgren <tony@atomide.com>
 
-[ Upstream commit c27075772d1f1c8aaf276db9943b35adda8a8b65 ]
+[ Upstream commit 9cf28e41f9f768791f54ee18333239fda6927ed8 ]
 
-In a previous fix, I changed the condition on which the timeout of an
-IRQ is reached from:
+While testing the recent suspend and resume regressions I noticed that
+duovero can still end up losing edge gpio interrupts on runtime
+suspend. This causes NFSroot easily stopping working after resume on
+duovero.
 
-    if (!ret)
+Let's fix the issue by using gpio level interrupts for smsc as then
+the gpio interrupt state is seen by the gpio controller on resume.
 
-into:
-
-    if (ret && !pending)
-
-While having a non-zero return code is usual in the Linux kernel, here
-ret comes from a wait_for_completion_timeout() which returns 0 when
-the waiting period is too long.
-
-Hence, the revised condition should be:
-
-    if (!ret && !pending)
-
-The faulty patch did not produce any error because of the !pending
-condition so this change is finally purely cosmetic and does not
-change the actual driver behavior.
-
-Fixes: cafb56dd741e ("mtd: rawnand: marvell: prevent timeouts on a loaded machine")
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-Link: https://lore.kernel.org/linux-mtd/20200424164501.26719-2-miquel.raynal@bootlin.com
+Fixes: 731b409878a3 ("ARM: dts: Configure duovero for to allow core retention during idle")
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mtd/nand/raw/marvell_nand.c | 2 +-
+ arch/arm/boot/dts/omap4-duovero-parlor.dts | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mtd/nand/raw/marvell_nand.c b/drivers/mtd/nand/raw/marvell_nand.c
-index 3e542224dd115..a917bc242c9cc 100644
---- a/drivers/mtd/nand/raw/marvell_nand.c
-+++ b/drivers/mtd/nand/raw/marvell_nand.c
-@@ -637,7 +637,7 @@ static int marvell_nfc_wait_op(struct nand_chip *chip, unsigned int timeout_ms)
- 	 * In case the interrupt was not served in the required time frame,
- 	 * check if the ISR was not served or if something went actually wrong.
- 	 */
--	if (ret && !pending) {
-+	if (!ret && !pending) {
- 		dev_err(nfc->dev, "Timeout waiting for RB signal\n");
- 		return -ETIMEDOUT;
- 	}
+diff --git a/arch/arm/boot/dts/omap4-duovero-parlor.dts b/arch/arm/boot/dts/omap4-duovero-parlor.dts
+index cfcac0d73851e..93d6fb6db5785 100644
+--- a/arch/arm/boot/dts/omap4-duovero-parlor.dts
++++ b/arch/arm/boot/dts/omap4-duovero-parlor.dts
+@@ -142,7 +142,7 @@
+ 	ethernet@gpmc {
+ 		reg = <5 0 0xff>;
+ 		interrupt-parent = <&gpio2>;
+-		interrupts = <12 IRQ_TYPE_EDGE_FALLING>;	/* gpio_44 */
++		interrupts = <12 IRQ_TYPE_LEVEL_LOW>;		/* gpio_44 */
+ 
+ 		phy-mode = "mii";
+ 
 -- 
 2.25.1
 
