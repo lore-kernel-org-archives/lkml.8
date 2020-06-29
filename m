@@ -2,224 +2,123 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A380C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:51:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD00C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D34E20760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:51:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467470;
-	bh=+85BCrhMl4avR7Mdde403GEQ02BYJJXhgxi8M8Ui5Do=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lby6n/xlj7/cGtOQod46fWnstk1QY9SVF3Oz1iGxzLY7mbvP+1O6IZiLf3T4aFO3+
-	 91aEdTI6hOSxC3JY8u/mUULJSoPdjIix3/fiRT5ekTMfP2IA0DlxlqFwX/Yvfyghpn
-	 Bwz9JSD/NfJsIXGDxPmqTOYjIUSD12GFdJK1/nis=
+	by mail.kernel.org (Postfix) with ESMTP id 66A8E206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:51:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uGRgKAii"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404262AbgF2VvG (ORCPT
+        id S1731658AbgF2VvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:51:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56780 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726660AbgF2Sfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:40 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAFB9246E1;
-        Mon, 29 Jun 2020 15:20:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444027;
-        bh=+85BCrhMl4avR7Mdde403GEQ02BYJJXhgxi8M8Ui5Do=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zCu77SjbRVy/Jzs+LP2kCnzmofhmZ5qu2p3Ojgtvl2tfGzOx/VjM7oYHstZwGiYxD
-         J4yBIb/rEb9ol4Ju7UixTS//ie93PCQX+cE8Nu0cyGInAsDv8nktwMVc8ph1gZEiYy
-         7uDDNuUk8BT2PDXQ9ufHUoZXjMdgSEcFpfBXLhcA=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mark Zhang <markz@mellanox.com>,
-        Maor Gottlieb <maorg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 134/265] RDMA/cma: Protect bind_list and listen_list while finding matching cm id
-Date:   Mon, 29 Jun 2020 11:16:07 -0400
-Message-Id: <20200629151818.2493727-135-sashal@kernel.org>
+        Mon, 29 Jun 2020 17:51:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40474 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2404373AbgF2VtY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 17:49:24 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9217AC061755
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 14:49:24 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id i25so18911189iog.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 14:49:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=OnwKMPzUR7vm+fNhfAe4BP95ZmBSiCousJyVZMr+eU4=;
+        b=uGRgKAiimrgL2i7Xoqg6kmfwYFmRBO1K+Hf2WRe219l2vR8aW/OqlhuegRdkChRdnc
+         rEWIRCb8GE4FvyD09etNE9iSoN66TFoedqfseGxy3t/ApZOdAWdhxQf6B8bBOQSOftS8
+         2P+qW5At3Ax4AqjfZVFTIpQGDm2A5NvFvPIvJv0NNZx6/t/jqaxv0r/K/R2ZZgkG7DBb
+         R8Rp46qzgzYKi2/RcXo92Efw+ZSAAMW9H0sm6Nanma6Vr90PCjA5lK5gj1G30t2HFupD
+         GrRfqkvcrxE5h0e4j5J/9sgEEnH9T/9T1oEnU7jgIUS27wS1H8ThmX0gfIGXYHG6ER0w
+         GGCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=OnwKMPzUR7vm+fNhfAe4BP95ZmBSiCousJyVZMr+eU4=;
+        b=jD+sfnL2hbi95Q3Os4rFvbdRm61MrWwvNlX/Q2e4/TI6A8hBzETMV7QFxpb1+QJU/P
+         7CFSxz/7EmjZ+siAZxvhYIOIt9xaGz5y1kym1Ti13DyN1bkBKDKSVWfGSOU6djxnRTKx
+         yCiZXKTr6j7Ewy3KhRzkOioQP3KEitf80hczqmjv2h8jeqVakGCaJULGIn9h8JV1io31
+         nmncYLKT1exaKZOP6C7XIZzjWJ3anDmgsdKjPVBNn+qI5atbHDpmk6tZMczIfsT6+NkS
+         AEEiPDUe6m8DASGqiAkB+GX26LZKCVJ9qDIzxOJ9H9McKXUiwYifAMr6TzwDmMmloQW+
+         sHPQ==
+X-Gm-Message-State: AOAM532ImgMkyWWtQa4/S5Zfc/5zoD6I9QuD2T/SiFtTgz2B+2FMRAQF
+        iXz1EDy/UWkJrjHqKTAGK5wdPw==
+X-Google-Smtp-Source: ABdhPJzQw2nxuO3eOLUdcXu6/d/nND+rrrENJbWNxkhhgZktkVnd+vMwypSgufU/1EQnjqLTnT2seA==
+X-Received: by 2002:a05:6638:601:: with SMTP id g1mr20258787jar.137.1593467363991;
+        Mon, 29 Jun 2020 14:49:23 -0700 (PDT)
+Received: from presto.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.gmail.com with ESMTPSA id u10sm555500iow.38.2020.06.29.14.49.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 14:49:23 -0700 (PDT)
+From:   Alex Elder <elder@linaro.org>
+To:     davem@davemloft.net, kuba@kernel.org
+Cc:     evgreen@chromium.org, subashab@codeaurora.org,
+        cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next 1/5] net: ipa: head-of-line block registers are RX only
+Date:   Mon, 29 Jun 2020 16:49:15 -0500
+Message-Id: <20200629214919.1196017-2-elder@linaro.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
-References: <20200629151818.2493727-1-sashal@kernel.org>
+In-Reply-To: <20200629214919.1196017-1-elder@linaro.org>
+References: <20200629214919.1196017-1-elder@linaro.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.7.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.7.7-rc1
-X-KernelTest-Deadline: 2020-07-01T15:14+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Zhang <markz@mellanox.com>
+The INIT_HOL_BLOCK_EN and INIT_HOL_BLOCK_TIMER endpoint registers
+are only valid for RX endpoints.
 
-[ Upstream commit 730c8912484186d4623d0c76509066d285c3a755 ]
+Have ipa_endpoint_modem_hol_block_clear_all() skip writing these
+registers for TX endpoints.
 
-The bind_list and listen_list must be accessed under a lock, add the
-missing locking around the access in cm_ib_id_from_event()
-
-In addition add lockdep asserts to make it clearer what the locking
-semantic is here.
-
-  general protection fault: 0000 [#1] SMP NOPTI
-  CPU: 226 PID: 126135 Comm: kworker/226:1 Tainted: G OE 4.12.14-150.47-default #1 SLE15
-  Hardware name: Cray Inc. Windom/Windom, BIOS 0.8.7 01-10-2020
-  Workqueue: ib_cm cm_work_handler [ib_cm]
-  task: ffff9c5a60a1d2c0 task.stack: ffffc1d91f554000
-  RIP: 0010:cma_ib_req_handler+0x3f1/0x11b0 [rdma_cm]
-  RSP: 0018:ffffc1d91f557b40 EFLAGS: 00010286
-  RAX: deacffffffffff30 RBX: 0000000000000001 RCX: ffff9c2af5bb6000
-  RDX: 00000000000000a9 RSI: ffff9c5aa4ed2f10 RDI: ffffc1d91f557b08
-  RBP: ffffc1d91f557d90 R08: ffff9c340cc80000 R09: ffff9c2c0f901900
-  R10: 0000000000000000 R11: 0000000000000001 R12: deacffffffffff30
-  R13: ffff9c5a48aeec00 R14: ffffc1d91f557c30 R15: ffff9c5c2eea3688
-  FS: 0000000000000000(0000) GS:ffff9c5c2fa80000(0000) knlGS:0000000000000000
-  CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 00002b5cc03fa320 CR3: 0000003f8500a000 CR4: 00000000003406e0
-  Call Trace:
-  ? rdma_addr_cancel+0xa0/0xa0 [ib_core]
-  ? cm_process_work+0x28/0x140 [ib_cm]
-  cm_process_work+0x28/0x140 [ib_cm]
-  ? cm_get_bth_pkey.isra.44+0x34/0xa0 [ib_cm]
-  cm_work_handler+0xa06/0x1a6f [ib_cm]
-  ? __switch_to_asm+0x34/0x70
-  ? __switch_to_asm+0x34/0x70
-  ? __switch_to_asm+0x40/0x70
-  ? __switch_to_asm+0x34/0x70
-  ? __switch_to_asm+0x40/0x70
-  ? __switch_to_asm+0x34/0x70
-  ? __switch_to_asm+0x40/0x70
-  ? __switch_to+0x7c/0x4b0
-  ? __switch_to_asm+0x40/0x70
-  ? __switch_to_asm+0x34/0x70
-  process_one_work+0x1da/0x400
-  worker_thread+0x2b/0x3f0
-  ? process_one_work+0x400/0x400
-  kthread+0x118/0x140
-  ? kthread_create_on_node+0x40/0x40
-  ret_from_fork+0x22/0x40
-  Code: 00 66 83 f8 02 0f 84 ca 05 00 00 49 8b 84 24 d0 01 00 00 48 85 c0 0f 84 68 07 00 00 48 2d d0 01
-  00 00 49 89 c4 0f 84 59 07 00 00 <41> 0f b7 44 24 20 49 8b 77 50 66 83 f8 0a 75 9e 49 8b 7c 24 28
-
-Fixes: 4c21b5bcef73 ("IB/cma: Add net_dev and private data checks to RDMA CM")
-Link: https://lore.kernel.org/r/20200616104304.2426081-1-leon@kernel.org
-Signed-off-by: Mark Zhang <markz@mellanox.com>
-Reviewed-by: Maor Gottlieb <maorg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- drivers/infiniband/core/cma.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/net/ipa/ipa_endpoint.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/core/cma.c b/drivers/infiniband/core/cma.c
-index 26e6f7df247b6..12ada58c96a90 100644
---- a/drivers/infiniband/core/cma.c
-+++ b/drivers/infiniband/core/cma.c
-@@ -1619,6 +1619,8 @@ static struct rdma_id_private *cma_find_listener(
- {
- 	struct rdma_id_private *id_priv, *id_priv_dev;
+diff --git a/drivers/net/ipa/ipa_endpoint.c b/drivers/net/ipa/ipa_endpoint.c
+index 9f50d0d11704..3f5a41fc1997 100644
+--- a/drivers/net/ipa/ipa_endpoint.c
++++ b/drivers/net/ipa/ipa_endpoint.c
+@@ -642,6 +642,8 @@ static int ipa_endpoint_init_hol_block_timer(struct ipa_endpoint *endpoint,
+ 	u32 offset;
+ 	u32 val;
  
-+	lockdep_assert_held(&lock);
++	/* assert(!endpoint->toward_ipa); */
 +
- 	if (!bind_list)
- 		return ERR_PTR(-EINVAL);
+ 	/* XXX We'll fix this when the register definition is clear */
+ 	if (microseconds) {
+ 		struct device *dev = &ipa->pdev->dev;
+@@ -671,6 +673,8 @@ ipa_endpoint_init_hol_block_enable(struct ipa_endpoint *endpoint, bool enable)
+ 	u32 offset;
+ 	u32 val;
  
-@@ -1665,6 +1667,7 @@ cma_ib_id_from_event(struct ib_cm_id *cm_id,
- 		}
- 	}
- 
-+	mutex_lock(&lock);
- 	/*
- 	 * Net namespace might be getting deleted while route lookup,
- 	 * cm_id lookup is in progress. Therefore, perform netdevice
-@@ -1706,6 +1709,7 @@ cma_ib_id_from_event(struct ib_cm_id *cm_id,
- 	id_priv = cma_find_listener(bind_list, cm_id, ib_event, req, *net_dev);
- err:
- 	rcu_read_unlock();
-+	mutex_unlock(&lock);
- 	if (IS_ERR(id_priv) && *net_dev) {
- 		dev_put(*net_dev);
- 		*net_dev = NULL;
-@@ -2481,6 +2485,8 @@ static void cma_listen_on_dev(struct rdma_id_private *id_priv,
- 	struct net *net = id_priv->id.route.addr.dev_addr.net;
- 	int ret;
- 
-+	lockdep_assert_held(&lock);
++	/* assert(!endpoint->toward_ipa); */
 +
- 	if (cma_family(id_priv) == AF_IB && !rdma_cap_ib_cm(cma_dev->device, 1))
- 		return;
+ 	val = u32_encode_bits(enable ? 1 : 0, HOL_BLOCK_EN_FMASK);
+ 	offset = IPA_REG_ENDP_INIT_HOL_BLOCK_EN_N_OFFSET(endpoint_id);
+ 	iowrite32(val, endpoint->ipa->reg_virt + offset);
+@@ -683,7 +687,7 @@ void ipa_endpoint_modem_hol_block_clear_all(struct ipa *ipa)
+ 	for (i = 0; i < IPA_ENDPOINT_MAX; i++) {
+ 		struct ipa_endpoint *endpoint = &ipa->endpoint[i];
  
-@@ -3308,6 +3314,8 @@ static void cma_bind_port(struct rdma_bind_list *bind_list,
- 	u64 sid, mask;
- 	__be16 port;
+-		if (endpoint->ee_id != GSI_EE_MODEM)
++		if (endpoint->toward_ipa || endpoint->ee_id != GSI_EE_MODEM)
+ 			continue;
  
-+	lockdep_assert_held(&lock);
-+
- 	addr = cma_src_addr(id_priv);
- 	port = htons(bind_list->port);
- 
-@@ -3336,6 +3344,8 @@ static int cma_alloc_port(enum rdma_ucm_port_space ps,
- 	struct rdma_bind_list *bind_list;
- 	int ret;
- 
-+	lockdep_assert_held(&lock);
-+
- 	bind_list = kzalloc(sizeof *bind_list, GFP_KERNEL);
- 	if (!bind_list)
- 		return -ENOMEM;
-@@ -3362,6 +3372,8 @@ static int cma_port_is_unique(struct rdma_bind_list *bind_list,
- 	struct sockaddr  *saddr = cma_src_addr(id_priv);
- 	__be16 dport = cma_port(daddr);
- 
-+	lockdep_assert_held(&lock);
-+
- 	hlist_for_each_entry(cur_id, &bind_list->owners, node) {
- 		struct sockaddr  *cur_daddr = cma_dst_addr(cur_id);
- 		struct sockaddr  *cur_saddr = cma_src_addr(cur_id);
-@@ -3401,6 +3413,8 @@ static int cma_alloc_any_port(enum rdma_ucm_port_space ps,
- 	unsigned int rover;
- 	struct net *net = id_priv->id.route.addr.dev_addr.net;
- 
-+	lockdep_assert_held(&lock);
-+
- 	inet_get_local_port_range(net, &low, &high);
- 	remaining = (high - low) + 1;
- 	rover = prandom_u32() % remaining + low;
-@@ -3448,6 +3462,8 @@ static int cma_check_port(struct rdma_bind_list *bind_list,
- 	struct rdma_id_private *cur_id;
- 	struct sockaddr *addr, *cur_addr;
- 
-+	lockdep_assert_held(&lock);
-+
- 	addr = cma_src_addr(id_priv);
- 	hlist_for_each_entry(cur_id, &bind_list->owners, node) {
- 		if (id_priv == cur_id)
-@@ -3478,6 +3494,8 @@ static int cma_use_port(enum rdma_ucm_port_space ps,
- 	unsigned short snum;
- 	int ret;
- 
-+	lockdep_assert_held(&lock);
-+
- 	snum = ntohs(cma_port(cma_src_addr(id_priv)));
- 	if (snum < PROT_SOCK && !capable(CAP_NET_BIND_SERVICE))
- 		return -EACCES;
+ 		(void)ipa_endpoint_init_hol_block_timer(endpoint, 0);
 -- 
 2.25.1
 
