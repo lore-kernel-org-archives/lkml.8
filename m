@@ -4,54 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E10C5C433E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B28CFC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC8CB2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:05:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91B052067D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:05:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461129;
-	bh=NWUUJ1ukVy0W+JRdz6CTMeUjSDfAUf92Fvbytatqz4E=;
+	s=default; t=1593461133;
+	bh=3LP08SwRXW/pyJM4D6dCQ1NAnxGrOLJBPo7i5vR62t0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oEAGeaf57K9TdYfNjGjtDp3cCzUhbeeW0QqsScinEZwjNIb6J9ZjEzfGOptsHEwpk
-	 Y+9+6lIOJ7DYDUMODEuGbwiNz34N9lIS+/8ZnTsmgN5xpXubR1y4sndV0ACZUan8/9
-	 YbBPsn+TtzUEQJREnHTLeyhXto2vmaitxe5eJ4fc=
+	b=X4JUCbfqeQBqPQYOb4wvOAH/1tkFphFGXoYtzQCzSwmPvNrM2/Jce5Q2BovTWShp4
+	 b8rAhmxJlsISgqseNXDtAKkuL5c6MS/hN24tiKTflrMlBUsqA395j6OGul20D/C01c
+	 L0BXIEUQq3Qmef87BiaUWvkb/hsTBRksohEeHhSI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388731AbgF2UF2 (ORCPT
+        id S2388836AbgF2UFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:05:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40610 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:05:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40572 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732970AbgF2Ta2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732974AbgF2Ta2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6C4325222;
-        Mon, 29 Jun 2020 15:35:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2000252A4;
+        Mon, 29 Jun 2020 15:36:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444940;
-        bh=NWUUJ1ukVy0W+JRdz6CTMeUjSDfAUf92Fvbytatqz4E=;
+        s=default; t=1593445013;
+        bh=3LP08SwRXW/pyJM4D6dCQ1NAnxGrOLJBPo7i5vR62t0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jv/saoPFwZKxPlWqaM2tSxQiwktyMYuLKyVacJBLvqPp9iw7QeJUNS7AK5nmjSzjo
-         YagJ8zQskBctFNvmbJLYE7e0z7PDxQ1ZV1kcxDD12LkJkj1aLrtFnW9SJOquvca7OR
-         QxlPRkmVcIbixAUwymKRyMD2lDNjg65ekCnv2+zg=
+        b=wktRnhAP8C3i1Zc5qQ8C8hOQLJ9lWUe2kyLxBhhfXB2+1srkv1mjj4Vc38wxP1tYp
+         aPkQdiT08BiRbxK/cbfTHc5gFx+LPydr0qqgXVPxmsm5NPN6PsrAQVxxupldxCyDgz
+         QhNa8LE6qmwA/jJLfl+lBH46p5NTlw/SXte2ocIY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Waiman Long <longman@redhat.com>, Michal Hocko <mhocko@suse.com>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Joe Perches <joe@perches.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Rientjes <rientjes@google.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        "Jason A . Donenfeld" <Jason@zx2c4.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 037/131] sch_cake: don't call diffserv parsing code when it is not needed
-Date:   Mon, 29 Jun 2020 11:33:28 -0400
-Message-Id: <20200629153502.2494656-38-sashal@kernel.org>
+Subject: [PATCH 4.19 113/131] mm/slab: use memzero_explicit() in kzfree()
+Date:   Mon, 29 Jun 2020 11:34:44 -0400
+Message-Id: <20200629153502.2494656-114-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
 References: <20200629153502.2494656-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-4.19.y
@@ -66,64 +76,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Toke Høiland-Jørgensen <toke@redhat.com>
+From: Waiman Long <longman@redhat.com>
 
-[ Upstream commit 8c95eca0bb8c4bd2231a0d581f1ad0d50c90488c ]
+commit 8982ae527fbef170ef298650c15d55a9ccd33973 upstream.
 
-As a further optimisation of the diffserv parsing codepath, we can skip it
-entirely if CAKE is configured to neither use diffserv-based
-classification, nor to zero out the diffserv bits.
+The kzfree() function is normally used to clear some sensitive
+information, like encryption keys, in the buffer before freeing it back to
+the pool.  Memset() is currently used for buffer clearing.  However
+unlikely, there is still a non-zero probability that the compiler may
+choose to optimize away the memory clearing especially if LTO is being
+used in the future.
 
-Fixes: c87b4ecdbe8d ("sch_cake: Make sure we can write the IP header before changing DSCP bits")
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+To make sure that this optimization will never happen,
+memzero_explicit(), which is introduced in v3.18, is now used in
+kzfree() to future-proof it.
+
+Link: http://lkml.kernel.org/r/20200616154311.12314-2-longman@redhat.com
+Fixes: 3ef0e5ba4673 ("slab: introduce kzfree()")
+Signed-off-by: Waiman Long <longman@redhat.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc: James Morris <jmorris@namei.org>
+Cc: "Serge E. Hallyn" <serge@hallyn.com>
+Cc: Joe Perches <joe@perches.com>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: "Jason A . Donenfeld" <Jason@zx2c4.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/sch_cake.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ mm/slab_common.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/sched/sch_cake.c b/net/sched/sch_cake.c
-index d8064cb521c4c..d03f843647aea 100644
---- a/net/sched/sch_cake.c
-+++ b/net/sched/sch_cake.c
-@@ -1508,7 +1508,7 @@ static unsigned int cake_drop(struct Qdisc *sch, struct sk_buff **to_free)
- 	return idx + (tin << 16);
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index 39e382acb0b86..b5776b1301f0c 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -1540,7 +1540,7 @@ void kzfree(const void *p)
+ 	if (unlikely(ZERO_OR_NULL_PTR(mem)))
+ 		return;
+ 	ks = ksize(mem);
+-	memset(mem, 0, ks);
++	memzero_explicit(mem, ks);
+ 	kfree(mem);
  }
- 
--static u8 cake_handle_diffserv(struct sk_buff *skb, u16 wash)
-+static u8 cake_handle_diffserv(struct sk_buff *skb, bool wash)
- {
- 	const int offset = skb_network_offset(skb);
- 	u16 *buf, buf_;
-@@ -1569,13 +1569,16 @@ static struct cake_tin_data *cake_select_tin(struct Qdisc *sch,
- {
- 	struct cake_sched_data *q = qdisc_priv(sch);
- 	u32 tin;
-+	bool wash;
- 	u8 dscp;
- 
- 	/* Tin selection: Default to diffserv-based selection, allow overriding
--	 * using firewall marks or skb->priority.
-+	 * using firewall marks or skb->priority. Call DSCP parsing early if
-+	 * wash is enabled, otherwise defer to below to skip unneeded parsing.
- 	 */
--	dscp = cake_handle_diffserv(skb,
--				    q->rate_flags & CAKE_FLAG_WASH);
-+	wash = !!(q->rate_flags & CAKE_FLAG_WASH);
-+	if (wash)
-+		dscp = cake_handle_diffserv(skb, wash);
- 
- 	if (q->tin_mode == CAKE_DIFFSERV_BESTEFFORT)
- 		tin = 0;
-@@ -1586,6 +1589,8 @@ static struct cake_tin_data *cake_select_tin(struct Qdisc *sch,
- 		tin = q->tin_order[TC_H_MIN(skb->priority) - 1];
- 
- 	else {
-+		if (!wash)
-+			dscp = cake_handle_diffserv(skb, wash);
- 		tin = q->tin_index[dscp];
- 
- 		if (unlikely(tin >= q->tin_cnt))
+ EXPORT_SYMBOL(kzfree);
 -- 
 2.25.1
 
