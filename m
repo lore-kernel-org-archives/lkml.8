@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 377A4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F866C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0D1F020760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:56:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9D1420760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:56:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467785;
-	bh=ENgkJVTolnCjsYCFo4x7kLx6RHWaOF/1KVZMARmqOnI=;
+	s=default; t=1593467789;
+	bh=B6B7CbmE1beGD7a0XoTWkaxDA7EpKHPavxaZ8XF46Fo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QI58S3DgNqcE966tsQnjjx3bUUwVYKwVIuNQVEQ9lpmX4PYaAr/5KhuA3UY61ooYb
-	 H9Oh8jY3QH6EK1meOEVyFc/t1qmpm1sJrRQgqYIAcbhSvvBhlJF3mVKnbDsRkr7jr4
-	 CxDlCwNcIsDRT0pYMvWLQhzgqDi5XoyGxGnrP5nc=
+	b=MlzZbvzMSTzeD0iyopV8JvdD8YK+zkD3DyorOpLuylqW7x1UjeZD+6ISwf3rQl6f7
+	 sRGn9vvZvjfsS/7wvUuJTePiFoa5HAg0cimOZ+gADgCAInkP0L5WrCcz5ystDlM9vz
+	 6m02EsdDNnfyzuxnh39+kHV6Lgcw/chWhgvyMeWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404678AbgF2V4Y (ORCPT
+        id S2404685AbgF2V41 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:56:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56814 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:56:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726539AbgF2Sfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726548AbgF2Sfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:31 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5EEF0247AF;
-        Mon, 29 Jun 2020 15:21:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5391B24688;
+        Mon, 29 Jun 2020 15:19:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444114;
-        bh=ENgkJVTolnCjsYCFo4x7kLx6RHWaOF/1KVZMARmqOnI=;
+        s=default; t=1593443984;
+        bh=B6B7CbmE1beGD7a0XoTWkaxDA7EpKHPavxaZ8XF46Fo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0U0fsl1q1b6UvByWqAqwnu3EsnYaiPmSNUrD3GyXN7j48EuSbPDLDgPsPc2A56i2I
-         xUYUh9gJIy0E/I7V3ci806ZuPStCTOW0u+6LO78p5rL0+RoPkROLRrvb6CrCGxw8wh
-         yFQqy/9sIigjxQwq2xGugXSLPOVop8lXZ3lwtn+M=
+        b=Qnu+SUqFuA5dU8DNBa4oZ8bctBrdorWb5RuEAUSvJht2ljfaoD0Rm5Ejp1rG3qZ0m
+         na/oRj5n2w3/tOlBEfKpcea+uZDkdUs5uMRe5uaX50eCkzsqs6+jKMlAJRJLTvmPxj
+         kEdjBhKA7a/Ea9Lj+WhL3UPUxPiTox8GdQaVRUFc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Filipe Manana <fdmanana@suse.com>, David Sterba <dsterba@suse.com>,
+Cc:     Joakim Tjernlund <joakim.tjernlund@infinera.com>,
+        Oliver Neukum <oneukum@suse.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 225/265] btrfs: fix hang on snapshot creation after RWF_NOWAIT write
-Date:   Mon, 29 Jun 2020 11:17:38 -0400
-Message-Id: <20200629151818.2493727-226-sashal@kernel.org>
+Subject: [PATCH 5.7 089/265] cdc-acm: Add DISABLE_ECHO quirk for Microchip/SMSC chip
+Date:   Mon, 29 Jun 2020 11:15:22 -0400
+Message-Id: <20200629151818.2493727-90-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -64,55 +65,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Joakim Tjernlund <joakim.tjernlund@infinera.com>
 
-commit f2cb2f39ccc30fa13d3ac078d461031a63960e5b upstream.
+commit 03894573f2913181ee5aae0089f333b2131f2d4b upstream.
 
-If we do a successful RWF_NOWAIT write we end up locking the snapshot lock
-of the inode, through a call to check_can_nocow(), but we never unlock it.
+USB_DEVICE(0x0424, 0x274e) can send data before cdc_acm is ready,
+causing garbage chars on the TTY causing stray input to the shell
+and/or login prompt.
 
-This means the next attempt to create a snapshot on the subvolume will
-hang forever.
-
-Trivial reproducer:
-
-  $ mkfs.btrfs -f /dev/sdb
-  $ mount /dev/sdb /mnt
-
-  $ touch /mnt/foobar
-  $ chattr +C /mnt/foobar
-  $ xfs_io -d -c "pwrite -S 0xab 0 64K" /mnt/foobar
-  $ xfs_io -d -c "pwrite -N -V 1 -S 0xfe 0 64K" /mnt/foobar
-
-  $ btrfs subvolume snapshot -r /mnt /mnt/snap
-    --> hangs
-
-Fix this by unlocking the snapshot lock if check_can_nocow() returned
-success.
-
-Fixes: edf064e7c6fec3 ("btrfs: nowait aio support")
-CC: stable@vger.kernel.org # 4.14+
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Joakim Tjernlund <joakim.tjernlund@infinera.com>
+Cc: stable@vger.kernel.org
+Acked-by: Oliver Neukum <oneukum@suse.com>
+Link: https://lore.kernel.org/r/20200605105418.22263-1-joakim.tjernlund@infinera.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/btrfs/file.c | 2 ++
+ drivers/usb/class/cdc-acm.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/fs/btrfs/file.c b/fs/btrfs/file.c
-index 719e68ab552c5..484803f8b2290 100644
---- a/fs/btrfs/file.c
-+++ b/fs/btrfs/file.c
-@@ -1922,6 +1922,8 @@ static ssize_t btrfs_file_write_iter(struct kiocb *iocb,
- 			inode_unlock(inode);
- 			return -EAGAIN;
- 		}
-+		/* check_can_nocow() locks the snapshot lock on success */
-+		btrfs_drew_write_unlock(&root->snapshot_lock);
- 	}
+diff --git a/drivers/usb/class/cdc-acm.c b/drivers/usb/class/cdc-acm.c
+index f67088bb8218b..d5187b50fc828 100644
+--- a/drivers/usb/class/cdc-acm.c
++++ b/drivers/usb/class/cdc-acm.c
+@@ -1689,6 +1689,8 @@ static int acm_pre_reset(struct usb_interface *intf)
  
- 	current->backing_dev_info = inode_to_bdi(inode);
+ static const struct usb_device_id acm_ids[] = {
+ 	/* quirky and broken devices */
++	{ USB_DEVICE(0x0424, 0x274e), /* Microchip Technology, Inc. (formerly SMSC) */
++	  .driver_info = DISABLE_ECHO, }, /* DISABLE ECHO in termios flag */
+ 	{ USB_DEVICE(0x076d, 0x0006), /* Denso Cradle CU-321 */
+ 	.driver_info = NO_UNION_NORMAL, },/* has no union descriptor */
+ 	{ USB_DEVICE(0x17ef, 0x7000), /* Lenovo USB modem */
 -- 
 2.25.1
 
