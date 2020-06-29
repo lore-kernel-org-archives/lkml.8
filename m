@@ -2,232 +2,195 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F618C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:47:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ACA0C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 804F820663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:47:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5017920672
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:48:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sj3Z3WaQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HYzbq7y7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389805AbgF2Urd (ORCPT
+        id S2389770AbgF2UrV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:47:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58682 "EHLO
+        Mon, 29 Jun 2020 16:47:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389787AbgF2UrY (ORCPT
+        with ESMTP id S1731540AbgF2TNw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 16:47:24 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FF3AC03E979
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 13:47:24 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id j19so5999850ybj.1
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 13:47:24 -0700 (PDT)
+        Mon, 29 Jun 2020 15:13:52 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60A48C0086DB;
+        Mon, 29 Jun 2020 02:31:27 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id l63so8020384pge.12;
+        Mon, 29 Jun 2020 02:31:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UYdsVW3BBX8OC9WrPhf4Ap0SclutgAMBOwsFuhmAiUc=;
-        b=sj3Z3WaQ1XCj7qzBWUHl68lvUTLwnu6zeQufplCvQ7tx0Qlt+QJveoGV1nfGTLWyLv
-         M9vMyUf7RdkMji4al4luUrBJcN0XeDmkmrOP/FKVt6KzO3zJABVlVDOmki4v00ZinZsG
-         W3QatwpjQU/iv2XPFNkb3pk0fgKTqufJuLYy7G9ouIXrZNHI0mXMv8bpiQaKt1wr0Hey
-         zXQiFGGxuXjY2dwQ4qTyezFna1+McjHL8mJYxtwlnFmhj8/4Na+fIdw6DCLrOsEZz6vp
-         nrfN7LVua3jDjmxgQfa07/uAThOHhECLgI6qrP4c4P5428H7aUw8G6BVfA7qjCy+fXsF
-         LhdQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ywkIyM7V2PjtWkJiS8MsW9js5hP4ibuo2yhx5IWsTOA=;
+        b=HYzbq7y7ft+b+SgtlZUKORkLXD8Ox0BEYlONq/fc08nJbzaWhEHray6rrcNVvj3vq3
+         QETe5Qt14tj9Qqde3VfFY7V1p+X/OjRGb7RIIUDfxYf+sJeQ2Aqx+n9WO+lRRwzJSEID
+         ea+v0EZnOptAUfaa3/MOYbbbGW3EZgtd6RsRk/2ZC0W5sUsuwj6Wag7T0M3Zsc/M2Yrq
+         LzhtGOI4lwgKdGPkOwoCuI2TmrIdqNFqxLf+qOCannsKEu2R7HU2IOGCIRs8hd2X4+Z6
+         zEHKs0Px4+cpBGIeSKREsUL+0QLT/ZLg3ztZZiI6Xdrqrzc3hUnHSHO6UyBeCKFugOLF
+         Tx9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UYdsVW3BBX8OC9WrPhf4Ap0SclutgAMBOwsFuhmAiUc=;
-        b=DszULbdszLBJsLGMGbEZueKHbI6Jb3mMqKFjmsAJ5qP/nfrRmMum9Zo893jz7wdwJy
-         Z9OZY5W/XGUIByKbpCx7zBc2k5CTBgrHyFM13DxKFmKWPgdnG7hrV3j37OKzitwwBeuj
-         lH5Rmb1HIA/P2kE5QK7X8eeIYcnoPpn662JEju3pG6MLoXbv1TgsMsMdY+HZUnaxkski
-         3mYe4T2CSxeutiaYgtVep2dN/sKVJt7zHMJ3mWoIAuSU7zSvTZKXK+B8U++nWylGAncC
-         m2LbS/FpYl3r3nan6UVfL0rDWALPmYSIbwfSnxXwgHzYO7TUa/m8s/wM/luNOyo+d2o7
-         FesA==
-X-Gm-Message-State: AOAM533VFIdD9Cswk2HhgufPfEtTTtIROW5R/Xm6bHCjM8nRaUmf8xkX
-        6alBQZ9AEKQ4arUJ6JhX0DMecqLpmiXUnHkZW7XIkw==
-X-Google-Smtp-Source: ABdhPJxtcxHf4vay9U02xLtRTxdahfswH8fg2jT+pmXLYU6yoQ0LrxrKPuLTeJOmlFoMAdLKDEoo0vUghrQVCwVvJug=
-X-Received: by 2002:a25:cd87:: with SMTP id d129mr27206628ybf.395.1593463642859;
- Mon, 29 Jun 2020 13:47:22 -0700 (PDT)
-MIME-Version: 1.0
-References: <341326348.19635.1589398715534.JavaMail.zimbra@efficios.com>
- <CANn89i+GH2ukLZUcWYGquvKg66L9Vbto0FxyEt3pOJyebNxqBg@mail.gmail.com>
- <CANn89iL26OMWWAi18PqoQK4VBfFvRvxBJUioqXDk=8ZbKq_Efg@mail.gmail.com> <1132973300.15954.1593459836756.JavaMail.zimbra@efficios.com>
-In-Reply-To: <1132973300.15954.1593459836756.JavaMail.zimbra@efficios.com>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Mon, 29 Jun 2020 13:47:11 -0700
-Message-ID: <CANn89iJ4nh6VRsMt_rh_YwC-pn=hBqsP-LD9ykeRTnDC-P5iog@mail.gmail.com>
-Subject: Re: [regression] TCP_MD5SIG on established sockets
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ywkIyM7V2PjtWkJiS8MsW9js5hP4ibuo2yhx5IWsTOA=;
+        b=iJ3QGPrFhcheBWdg9K1D6QqK5GIlpk/wnJzByO8KlXkNJ/zIclZP1uZA4NZh7g6twy
+         UceLErIkvnljVZRReJzKelGZBlTsZFKCl9aAO0nir0CKNpSMS5rWi1rNqBqGtK6wXrST
+         0BWJe8uYYVyFQSXeckTrMhVRvUBEQep4D+r8r7AZkbtAR/4yK9V243O2bok7em9v5HTU
+         AAzGeH7EFmJmF6CqkVAHJY/k7cVzlwo1dt7SM2JhB/k3Cpt/yBS0Xk/k8KAEYMgKl1Tj
+         VimntgxG1aJtW8iNc8ZfXotHj2FYwXPMoUMr0iJPNSW30e5qdxghxA77PJR48MFZvAV+
+         Ijbg==
+X-Gm-Message-State: AOAM530lE+/VDmzzgKxP5FLrSq/uI//QASBPd0BFxWWfBW7xgbeAhQX6
+        nF3hw8r4co3P7doFNSOnw5ONutZ4L7c=
+X-Google-Smtp-Source: ABdhPJzlRgVbHpNX+XulZrbU31t1gGCVj4aLHjb27mH1TsN3aLjlO4iG3QLYEo7yQtCkNOykRft0Fw==
+X-Received: by 2002:a65:62c9:: with SMTP id m9mr9172551pgv.392.1593423086940;
+        Mon, 29 Jun 2020 02:31:26 -0700 (PDT)
+Received: from varodek.localdomain ([106.210.40.90])
+        by smtp.gmail.com with ESMTPSA id q20sm2921286pfn.111.2020.06.29.02.31.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 02:31:26 -0700 (PDT)
+From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
+        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Yuchung Cheng <ycheng@google.com>,
-        Jonathan Rajotte-Julien <joraj@efficios.com>
-Content-Type: text/plain; charset="UTF-8"
+        Jakub Kicinski <kuba@kernel.org>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+Subject: [PATCH v1 2/5] igbvf: netdev: use generic power management
+Date:   Mon, 29 Jun 2020 14:59:40 +0530
+Message-Id: <20200629092943.227910-3-vaibhavgupta40@gmail.com>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <20200629092943.227910-1-vaibhavgupta40@gmail.com>
+References: <20200629092943.227910-1-vaibhavgupta40@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 12:43 PM Mathieu Desnoyers
-<mathieu.desnoyers@efficios.com> wrote:
->
-> ----- On May 13, 2020, at 3:56 PM, Eric Dumazet edumazet@google.com wrote:
->
-> > On Wed, May 13, 2020 at 12:49 PM Eric Dumazet <edumazet@google.com> wrote:
-> >>
-> >>
-> >> On Wed, May 13, 2020 at 12:38 PM Mathieu Desnoyers
-> >> <mathieu.desnoyers@efficios.com> wrote:
-> >> >
-> >> > Hi,
-> >> >
-> >> > I am reporting a regression with respect to use of TCP_MD5SIG/TCP_MD5SIG_EXT
-> >> > on established sockets. It is observed by a customer.
-> >> >
-> >> > This issue is introduced by this commit:
-> >> >
-> >> > commit 721230326891 "tcp: md5: reject TCP_MD5SIG or TCP_MD5SIG_EXT on
-> >> > established sockets"
-> >> >
-> >> > The intent of this commit appears to be to fix a use of uninitialized value in
-> >> > tcp_parse_options(). The change introduced by this commit is to disallow setting
-> >> > the TCP_MD5SIG{,_EXT} socket options on an established socket.
-> >> >
-> >> > The justification for this change appears in the commit message:
-> >> >
-> >> >    "I believe this was caused by a TCP_MD5SIG being set on live
-> >> >     flow.
-> >> >
-> >> >     This is highly unexpected, since TCP option space is limited.
-> >> >
-> >> >     For instance, presence of TCP MD5 option automatically disables
-> >> >     TCP TimeStamp option at SYN/SYNACK time, which we can not do
-> >> >     once flow has been established.
-> >> >
-> >> >     Really, adding/deleting an MD5 key only makes sense on sockets
-> >> >     in CLOSE or LISTEN state."
-> >> >
-> >> > However, reading through RFC2385 [1], this justification does not appear
-> >> > correct. Quoting to the RFC:
-> >> >
-> >> >    "This password never appears in the connection stream, and the actual
-> >> >     form of the password is up to the application. It could even change
-> >> >     during the lifetime of a particular connection so long as this change
-> >> >     was synchronized on both ends"
-> >> >
-> >> > The paragraph above clearly underlines that changing the MD5 signature of
-> >> > a live TCP socket is allowed.
-> >> >
-> >> > I also do not understand why it would be invalid to transition an established
-> >> > TCP socket from no-MD5 to MD5, or transition from MD5 to no-MD5. Quoting the
-> >> > RFC:
-> >> >
-> >> >   "The total header size is also an issue.  The TCP header specifies
-> >> >    where segment data starts with a 4-bit field which gives the total
-> >> >    size of the header (including options) in 32-byte words.  This means
-> >> >    that the total size of the header plus option must be less than or
-> >> >    equal to 60 bytes -- this leaves 40 bytes for options."
-> >> >
-> >> > The paragraph above seems to be the only indication that some TCP options
-> >> > cannot be combined on a given TCP socket: if the resulting header size does
-> >> > not fit. However, I do not see anything in the specification preventing any
-> >> > of the following use-cases on an established TCP socket:
-> >> >
-> >> > - Transition from no-MD5 to MD5,
-> >> > - Transition from MD5 to no-MD5,
-> >> > - Changing the MD5 key associated with a socket.
-> >> >
-> >> > As long as the resulting combination of options does not exceed the available
-> >> > header space.
-> >> >
-> >> > Can we please fix this KASAN report in a way that does not break user-space
-> >> > applications expectations about Linux' implementation of RFC2385 ?
-> [...]
-> >> > [1] RFC2385: https://tools.ietf.org/html/rfc2385
-> >>
-> >>
-> >> I do not think we want to transition sockets in the middle. since
-> >> packets can be re-ordered in the network.
-> >>
-> >> MD5 is about security (and a loose form of it), so better make sure
-> >> all packets have it from the beginning of the flow.
-> >>
-> >> A flow with TCP TS on can not suddenly be sending packets without TCP TS.
-> >>
-> >> Clearly, trying to support this operation is a can of worms, I do not
-> >> want to maintain such atrocity.
-> >>
-> >> RFC can state whatever it wants, sometimes reality forces us to have
-> >> sane operations.
-> >>
-> >> Thanks.
-> >>
-> > Also the RFC states :
-> >
-> > "This password never appears in the connection stream, and the actual
-> >    form of the password is up to the application. It could even change
-> >    during the lifetime of a particular connection so long as this change
-> >    was synchronized on both ends"
-> >
-> > It means the key can be changed, but this does not imply the option
-> > can be turned on/off dynamically.
-> >
->
-> The change discussed previously (introduced by commit 721230326891 "tcp:
-> md5: reject TCP_MD5SIG or TCP_MD5SIG_EXT on established sockets") breaks
-> user-space ABI. As an example, the following BGP application uses
-> setsockopt TCP_MD5SIG on a live TCP socket:
->
-> https://github.com/IPInfusion/SDN-IP
->
-> In addition to break user-space, it also breaks network protocol
-> expectations for network equipment vendors implementing RFC2385.
-> Considering that the goal of these protocols is interaction between
-> different network equipment, breaking compatibility on that side
-> is unexpected as well. Requiring to bring down/up the connection
-> just to change the TCP MD5 password is a no-go in networks with
-> high availability requirements. Changing the BGP authentication
-> password must be allowed without tearing down and re-establishing
-> the TCP sockets. Otherwise it doesn't scale for large network
-> operators to have to individually manage each individual TCP socket
-> in their network. However, based on the feedback I received, it
-> would be acceptable to tear-down the TCP connections and re-establish
-> them when enabling or disabling the MD5 option.
->
-> Here is a list of a few network vendors along with their behavior
-> with respect to TCP MD5:
->
-> - Cisco: Allows for password to be changed, but within the hold-down
-> timer (~180 seconds).
-> - Juniper: When password is initially set on active connection it will
-> reset, but after that any subsequent password changes no network
-> resets.
-> - Nokia: No notes on if they flap the tcp connection or not.
-> - Ericsson/RedBack: Allows for 2 password (old/new) to co-exist until
-> both sides are ok with new passwords.
-> - Meta-Switch: Expects the password to be set before a connection is
-> attempted, but no further info on whether they reset the TCP
-> connection on a change.
-> - Avaya: Disable the neighbor, then set password, then re-enable.
-> - Zebos: Would normally allow the change when socket connected.
->
->
+Remove legacy PM callbacks and use generic operations. With legacy code,
+drivers were responsible for handling PCI PM operations like
+pci_save_state(). In generic code, all these hre andled by PCI core.
 
-If you want to be able to _change_ md5 key, this is fine by me, please
-send a patch.
+The generic suspend() and resume() are called at the same point the legacy
+ones were called. Thus, it does not affect the normal functioning of the
+driver.
 
-We can not dynamically turn on MD5, this is mentioned briefly in
-tcp_synack_options().
+__maybe_unused attribute is used with .resume() but not with .suspend(), as
+.suspend() is calleb by .shutdown().
 
-If you want to turn on MD5 on an established flow, then you must
-ensure that both SACK and TS were not enabled in the 3WHS,
-and then make sure nothing blows up in the stack.
+Compile-tested only.
+
+Signed-off-by: Vaibhav Gupta <vaibhavgupta40@gmail.com>
+---
+ drivers/net/ethernet/intel/igbvf/netdev.c | 37 +++++------------------
+ 1 file changed, 8 insertions(+), 29 deletions(-)
+
+diff --git a/drivers/net/ethernet/intel/igbvf/netdev.c b/drivers/net/ethernet/intel/igbvf/netdev.c
+index 5b1800c3ba82..76285724b1f3 100644
+--- a/drivers/net/ethernet/intel/igbvf/netdev.c
++++ b/drivers/net/ethernet/intel/igbvf/netdev.c
+@@ -2459,13 +2459,10 @@ static int igbvf_ioctl(struct net_device *netdev, struct ifreq *ifr, int cmd)
+ 	}
+ }
+ 
+-static int igbvf_suspend(struct pci_dev *pdev, pm_message_t state)
++static int igbvf_suspend(struct device *dev_d)
+ {
+-	struct net_device *netdev = pci_get_drvdata(pdev);
++	struct net_device *netdev = dev_get_drvdata(dev_d);
+ 	struct igbvf_adapter *adapter = netdev_priv(netdev);
+-#ifdef CONFIG_PM
+-	int retval = 0;
+-#endif
+ 
+ 	netif_device_detach(netdev);
+ 
+@@ -2475,31 +2472,16 @@ static int igbvf_suspend(struct pci_dev *pdev, pm_message_t state)
+ 		igbvf_free_irq(adapter);
+ 	}
+ 
+-#ifdef CONFIG_PM
+-	retval = pci_save_state(pdev);
+-	if (retval)
+-		return retval;
+-#endif
+-
+-	pci_disable_device(pdev);
+-
+ 	return 0;
+ }
+ 
+-#ifdef CONFIG_PM
+-static int igbvf_resume(struct pci_dev *pdev)
++static int __maybe_unused igbvf_resume(struct device *dev_d)
+ {
++	struct pci_dev *pdev = to_pci_dev(dev_d);
+ 	struct net_device *netdev = pci_get_drvdata(pdev);
+ 	struct igbvf_adapter *adapter = netdev_priv(netdev);
+ 	u32 err;
+ 
+-	pci_restore_state(pdev);
+-	err = pci_enable_device_mem(pdev);
+-	if (err) {
+-		dev_err(&pdev->dev, "Cannot enable PCI device from suspend\n");
+-		return err;
+-	}
+-
+ 	pci_set_master(pdev);
+ 
+ 	if (netif_running(netdev)) {
+@@ -2517,11 +2499,10 @@ static int igbvf_resume(struct pci_dev *pdev)
+ 
+ 	return 0;
+ }
+-#endif
+ 
+ static void igbvf_shutdown(struct pci_dev *pdev)
+ {
+-	igbvf_suspend(pdev, PMSG_SUSPEND);
++	igbvf_suspend(&pdev->dev);
+ }
+ 
+ #ifdef CONFIG_NET_POLL_CONTROLLER
+@@ -2962,17 +2943,15 @@ static const struct pci_device_id igbvf_pci_tbl[] = {
+ };
+ MODULE_DEVICE_TABLE(pci, igbvf_pci_tbl);
+ 
++static SIMPLE_DEV_PM_OPS(igbvf_pm_ops, igbvf_suspend, igbvf_resume);
++
+ /* PCI Device API Driver */
+ static struct pci_driver igbvf_driver = {
+ 	.name		= igbvf_driver_name,
+ 	.id_table	= igbvf_pci_tbl,
+ 	.probe		= igbvf_probe,
+ 	.remove		= igbvf_remove,
+-#ifdef CONFIG_PM
+-	/* Power Management Hooks */
+-	.suspend	= igbvf_suspend,
+-	.resume		= igbvf_resume,
+-#endif
++	.driver.pm	= &igbvf_pm_ops,
+ 	.shutdown	= igbvf_shutdown,
+ 	.err_handler	= &igbvf_err_handler
+ };
+-- 
+2.27.0
+
