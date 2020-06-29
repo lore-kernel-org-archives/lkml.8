@@ -2,116 +2,226 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F4E8C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:52:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA56C433E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B11B20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:52:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2806B20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:52:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="sl7VZh2i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729749AbgF2SwT (ORCPT
+        id S1729124AbgF2SwY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:52:19 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40828 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727854AbgF2SwP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:52:15 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05TF3Y9n183022;
-        Mon, 29 Jun 2020 11:27:19 -0400
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 31ycj95mkv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 Jun 2020 11:27:18 -0400
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-        by ppma02fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05TFG1Mf006442;
-        Mon, 29 Jun 2020 15:27:17 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma02fra.de.ibm.com with ESMTP id 31wwr7s67s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 29 Jun 2020 15:27:16 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05TFRE9647186124
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 29 Jun 2020 15:27:14 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BEEE7A4055;
-        Mon, 29 Jun 2020 15:27:14 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 07673A4040;
-        Mon, 29 Jun 2020 15:27:14 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.137.220])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 29 Jun 2020 15:27:13 +0000 (GMT)
-Message-ID: <1593444433.5085.15.camel@linux.ibm.com>
-Subject: [GIT PULL] integrity additional change v5.8 (#2)
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-integrity <linux-integrity@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Maurizio Drocco <maurizio.drocco@ibm.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>
-Date:   Mon, 29 Jun 2020 11:27:13 -0400
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+        Mon, 29 Jun 2020 14:52:24 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:36456 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729742AbgF2SwV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:52:21 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593456741; h=Content-Transfer-Encoding: MIME-Version:
+ References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=Ky6EgIpsLXuCQ1ZyQQj8TAObCq/x3v8ZEUf9hqB0i5U=; b=sl7VZh2iZdbPyFnP4RxQwa/bcxiSA8kp8SGaKYNt9VjNHXXwescF/Yc4pxEsNPK6dPvjKN3I
+ FKoHAgrGWMz0Kj8kZQR4ViPPBmbQun39i/m/xgseMSY3fp8vfnC3y9cIlLjkI2l3xxCprGwV
+ 4QakvCi87sq+cT3EKPl7E1Y+ORA=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n14.prod.us-west-2.postgun.com with SMTP id
+ 5efa0e78f3deea03f3b21908 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 29 Jun 2020 15:53:28
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B1D31C43395; Mon, 29 Jun 2020 15:53:28 +0000 (UTC)
+Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 36CB3C433C8;
+        Mon, 29 Jun 2020 15:53:21 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 36CB3C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Robin Murphy <robin.murphy@arm.com>, Will Deacon <will@kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>
+Cc:     iommu@lists.linux-foundation.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Sean Paul <sean@poorly.run>,
+        Sharat Masetty <smasetty@codeaurora.org>,
+        Akhil P Oommen <akhilpo@codeaurora.org>,
+        freedreno@lists.freedesktop.org, Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Emil Velikov <emil.velikov@collabora.com>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        "Kristian H . Kristensen" <hoegsberg@google.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCHv3 1/7] iommu/arm-smmu: Add a init_context_bank implementation hook
+Date:   Mon, 29 Jun 2020 21:22:44 +0530
+Message-Id: <cdcc6a1c95a84e774790389dc8b3b7feeee490dc.1593344119.git.saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.27.0
+In-Reply-To: <cover.1593344119.git.saiprakash.ranjan@codeaurora.org>
+References: <cover.1593344119.git.saiprakash.ranjan@codeaurora.org>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-06-29_15:2020-06-29,2020-06-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- impostorscore=0 mlxlogscore=999 lowpriorityscore=0 spamscore=0
- priorityscore=1501 phishscore=0 suspectscore=0 adultscore=0
- cotscore=-2147483648 bulkscore=0 clxscore=1011 mlxscore=0 classifier=spam
- adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006290103
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+From: Jordan Crouse <jcrouse@codeaurora.org>
 
-Prior to Linux 5.8 the SHA1 "boot_aggregate" value was padded with 0's
-and extended into the other TPM 2.0 banks.  Included in the Linux 5.8
-open window, TPM 2.0 PCR bank specific "boot_aggregate" values (PCRs 0
-- 7) are calculated and extended into the TPM banks.
+Add a new implementation hook to allow the implementation specific code
+to tweek the context bank configuration just before it gets written.
+The first user will be the Adreno GPU implementation to turn on
+SCTLR.HUPCF to ensure that a page fault doesn't terminating pending
+transactions. Doing so could hang the GPU if one of the terminated
+transactions is a CP read.
 
-Distro releases are now shipping grub2 with TPM support, which extend
-PCRs 8 & 9.  I'd like for PCRs 8 & 9 to be included in the new
-"boot_aggregate" calculations.  For backwards compatibility, PCRs 8 &
-9 are not included in the SHA1 TPM bank "boot_aggregate" calculation.
+This depends on the arm-smmu adreno SMMU implementation [1].
 
-I'd appreciate your merging this additional change.
+[1] https://lore.kernel.org/patchwork/patch/1264452/
 
-thanks,
+Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+---
+ drivers/iommu/arm-smmu-qcom.c | 13 +++++++++++++
+ drivers/iommu/arm-smmu.c      | 29 +++++++++++++----------------
+ drivers/iommu/arm-smmu.h      | 12 ++++++++++++
+ 3 files changed, 38 insertions(+), 16 deletions(-)
 
-Mimi
+diff --git a/drivers/iommu/arm-smmu-qcom.c b/drivers/iommu/arm-smmu-qcom.c
+index cb2acb6b19dd..6462fb00f493 100644
+--- a/drivers/iommu/arm-smmu-qcom.c
++++ b/drivers/iommu/arm-smmu-qcom.c
+@@ -17,6 +17,18 @@ static bool qcom_adreno_smmu_is_gpu_device(struct arm_smmu_domain *smmu_domain)
+ 	return of_device_is_compatible(smmu_domain->dev->of_node, "qcom,adreno");
+ }
+ 
++static void qcom_adreno_smmu_init_context_bank(struct arm_smmu_domain *smmu_domain,
++		struct arm_smmu_cb *cb)
++{
++	/*
++	 * On the GPU device we want to process subsequent transactions after a
++	 * fault to keep the GPU from hanging
++	 */
++
++	if (qcom_adreno_smmu_is_gpu_device(smmu_domain))
++		cb->sctlr |= ARM_SMMU_SCTLR_HUPCF;
++}
++
+ static int qcom_adreno_smmu_init_context(struct arm_smmu_domain *smmu_domain,
+ 		struct io_pgtable_cfg *pgtbl_cfg)
+ {
+@@ -92,6 +104,7 @@ static const struct arm_smmu_impl qcom_adreno_smmu_impl = {
+ 	.init_context = qcom_adreno_smmu_init_context,
+ 	.def_domain_type = qcom_smmu_def_domain_type,
+ 	.reset = qcom_smmu500_reset,
++	.init_context_bank = qcom_adreno_smmu_init_context_bank,
+ };
+ 
+ 
+diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+index 4bd247dfd703..b2564f93d685 100644
+--- a/drivers/iommu/arm-smmu.c
++++ b/drivers/iommu/arm-smmu.c
+@@ -86,14 +86,6 @@ struct arm_smmu_smr {
+ 	bool				valid;
+ };
+ 
+-struct arm_smmu_cb {
+-	u64				ttbr[2];
+-	u32				tcr[2];
+-	u32				mair[2];
+-	struct arm_smmu_cfg		*cfg;
+-	atomic_t			aux;
+-};
+-
+ struct arm_smmu_master_cfg {
+ 	struct arm_smmu_device		*smmu;
+ 	s16				smendx[];
+@@ -580,6 +572,18 @@ static void arm_smmu_init_context_bank(struct arm_smmu_domain *smmu_domain,
+ 			cb->mair[1] = pgtbl_cfg->arm_lpae_s1_cfg.mair >> 32;
+ 		}
+ 	}
++
++	cb->sctlr = ARM_SMMU_SCTLR_CFIE | ARM_SMMU_SCTLR_CFRE | ARM_SMMU_SCTLR_AFE |
++		ARM_SMMU_SCTLR_TRE | ARM_SMMU_SCTLR_M;
++
++	if (stage1)
++		cb->sctlr |= ARM_SMMU_SCTLR_S1_ASIDPNE;
++	if (IS_ENABLED(CONFIG_CPU_BIG_ENDIAN))
++		cb->sctlr |= ARM_SMMU_SCTLR_E;
++
++	/* Give the implementation a chance to adjust the configuration */
++	if (smmu_domain->smmu->impl && smmu_domain->smmu->impl->init_context_bank)
++		smmu_domain->smmu->impl->init_context_bank(smmu_domain, cb);
+ }
+ 
+ static void arm_smmu_write_context_bank(struct arm_smmu_device *smmu, int idx)
+@@ -658,14 +662,7 @@ static void arm_smmu_write_context_bank(struct arm_smmu_device *smmu, int idx)
+ 	}
+ 
+ 	/* SCTLR */
+-	reg = ARM_SMMU_SCTLR_CFIE | ARM_SMMU_SCTLR_CFRE | ARM_SMMU_SCTLR_AFE |
+-	      ARM_SMMU_SCTLR_TRE | ARM_SMMU_SCTLR_M;
+-	if (stage1)
+-		reg |= ARM_SMMU_SCTLR_S1_ASIDPNE;
+-	if (IS_ENABLED(CONFIG_CPU_BIG_ENDIAN))
+-		reg |= ARM_SMMU_SCTLR_E;
+-
+-	arm_smmu_cb_write(smmu, idx, ARM_SMMU_CB_SCTLR, reg);
++	arm_smmu_cb_write(smmu, idx, ARM_SMMU_CB_SCTLR, cb->sctlr);
+ }
+ 
+ /*
+diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
+index 79d441024043..4a335ef3d97a 100644
+--- a/drivers/iommu/arm-smmu.h
++++ b/drivers/iommu/arm-smmu.h
+@@ -142,6 +142,7 @@ enum arm_smmu_cbar_type {
+ 
+ #define ARM_SMMU_CB_SCTLR		0x0
+ #define ARM_SMMU_SCTLR_S1_ASIDPNE	BIT(12)
++#define ARM_SMMU_SCTLR_HUPCF		BIT(8)
+ #define ARM_SMMU_SCTLR_CFCFG		BIT(7)
+ #define ARM_SMMU_SCTLR_CFIE		BIT(6)
+ #define ARM_SMMU_SCTLR_CFRE		BIT(5)
+@@ -349,6 +350,15 @@ struct arm_smmu_domain {
+ 	bool				aux;
+ };
+ 
++struct arm_smmu_cb {
++	u64			ttbr[2];
++	u32			tcr[2];
++	u32			mair[2];
++	u32			sctlr;
++	struct arm_smmu_cfg	*cfg;
++	atomic_t		aux;
++};
++
+ static inline u32 arm_smmu_lpae_tcr(struct io_pgtable_cfg *cfg)
+ {
+ 	u32 tcr = FIELD_PREP(ARM_SMMU_TCR_TG0, cfg->arm_lpae_s1_cfg.tcr.tg) |
+@@ -403,6 +413,8 @@ struct arm_smmu_impl {
+ 	void (*tlb_sync)(struct arm_smmu_device *smmu, int page, int sync,
+ 			 int status);
+ 	int (*def_domain_type)(struct device *dev);
++	void (*init_context_bank)(struct arm_smmu_domain *smmu_domain,
++			struct arm_smmu_cb *cb);
+ };
+ 
+ static inline void __iomem *arm_smmu_page(struct arm_smmu_device *smmu, int n)
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
-The following changes since commit 48778464bb7d346b47157d21ffde2af6b2d39110:
-
-  Linux 5.8-rc2 (2020-06-21 15:45:29 -0700)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/zohar/linux-integrity.git tags/integrity-v5.8-fix-2
-
-for you to fetch changes up to 20c59ce010f84300f6c655d32db2610d3433f85c:
-
-  ima: extend boot_aggregate with kernel measurements (2020-06-24 20:47:24 -0400)
-
-----------------------------------------------------------------
-Include PCRs 8 & 9 in per TPM 2.0 bank boot_aggregate calculation
-
-----------------------------------------------------------------
-Maurizio Drocco (1):
-      ima: extend boot_aggregate with kernel measurements
-
- security/integrity/ima/ima.h        |  2 +-
- security/integrity/ima/ima_crypto.c | 15 ++++++++++++++-
- 2 files changed, 15 insertions(+), 2 deletions(-)
