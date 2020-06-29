@@ -2,188 +2,184 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DATE_IN_PAST_03_06,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 513CCC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 609FEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:04:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F3A02073E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:04:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Zhnvic0K"
+	by mail.kernel.org (Postfix) with ESMTP id 42EF520759
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:04:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390255AbgF2VEQ (ORCPT
+        id S2390245AbgF2VEH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:04:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33306 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389982AbgF2VEH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 17:04:07 -0400
-Received: from mail-ua1-x943.google.com (mail-ua1-x943.google.com [IPv6:2607:f8b0:4864:20::943])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97426C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 14:04:06 -0700 (PDT)
-Received: by mail-ua1-x943.google.com with SMTP id u6so3016619uau.8
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 14:04:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EDDadDrSXYKtXL/TsWS5vlQswAboTcT6W+3/Oif1F20=;
-        b=Zhnvic0KQUbDVX5LSFm3hAeLEERhKCRPhYViT3hL3yJyva8CW+btVllsX8lmru+EeN
-         mvetgyKknHBgMwldDe67snB8PwHBZBQDGudwVnaGCiiwsZng5RVqjW+9G7Ul26gvfXoZ
-         55TX9gVBEka/btSKGV2IxuxB22BeiWRHiweFM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EDDadDrSXYKtXL/TsWS5vlQswAboTcT6W+3/Oif1F20=;
-        b=cy0Y6CzEXEj1R3uEeE/p7zpOC/4L/XgpMrx7+w36Mc2z2Plzhm0tl1p6bLezEIeXPS
-         m5RLiCufAZgcfp2VbXSSaB0zxfFFephLu76G6wqMupKQbjMtzoyuQqmKnwu7xtfKG4z9
-         x+8RM255Re/p7QmrcwWYRC9aP8BSoJFhaSoYq+w7uPNLxO026rA6ki/rCQTLuzKdIG0+
-         azoGCXqEfXFvRmHLtAPOCDKGMt5hKCT96uvSvtLOCwNTWO0fH8fY3ZFqB1+FRIrrQdjF
-         R+NUKOR4zMrBuV8CqvJpFcMwym/jPJVqaz77iQGHfPsa4ZRx/fY/Ihsswn+RDfGXII7V
-         s7mQ==
-X-Gm-Message-State: AOAM531IgS9krZm+1vvZND7X5+x188d0RJSH5FDqCIF9kcAnWOlsxuKC
-        Uu9SMVWwhv+cxylAWrVgXCpBo1cKs6g=
-X-Google-Smtp-Source: ABdhPJznfXDEUKe9puzsUOyOmE/k/240+M6m+Wm2F6tJg5KidSREAYk8sXZp6E1jpYnD5jXE83AktQ==
-X-Received: by 2002:ab0:217:: with SMTP id 23mr12435567uas.51.1593464645510;
-        Mon, 29 Jun 2020 14:04:05 -0700 (PDT)
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com. [209.85.221.180])
-        by smtp.gmail.com with ESMTPSA id v141sm148622vkd.9.2020.06.29.14.04.04
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jun 2020 14:04:04 -0700 (PDT)
-Received: by mail-vk1-f180.google.com with SMTP id y3so3764701vkg.11
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 14:04:04 -0700 (PDT)
-X-Received: by 2002:a1f:280c:: with SMTP id o12mr11043341vko.92.1593464644374;
- Mon, 29 Jun 2020 14:04:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200629171529.558003-1-daniel.thompson@linaro.org>
-In-Reply-To: <20200629171529.558003-1-daniel.thompson@linaro.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 29 Jun 2020 14:03:52 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=W9rdEsO1jP-kg6OetXmZO+kC9LenZM=CdxjUvv8BEU4g@mail.gmail.com>
-Message-ID: <CAD=FV=W9rdEsO1jP-kg6OetXmZO+kC9LenZM=CdxjUvv8BEU4g@mail.gmail.com>
-Subject: Re: [PATCH] kgdb: Resolve races during kgdb_io_register/unregister_module
-To:     Daniel Thompson <daniel.thompson@linaro.org>
-Cc:     Jason Wessel <jason.wessel@windriver.com>,
-        Petr Mladek <pmladek@suse.com>,
-        kgdb-bugreport@lists.sourceforge.net,
-        LKML <linux-kernel@vger.kernel.org>,
-        Patch Tracking <patches@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43370 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731122AbgF2TMp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:12:45 -0400
+Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [IPv6:2a02:1800:110:4::f00:19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BBB8C0076FE
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 04:28:42 -0700 (PDT)
+Received: from ramsan ([IPv6:2a02:1810:ac12:ed20:ddd:9277:6399:6268])
+        by laurent.telenet-ops.be with bizsmtp
+        id wzUg220071qNRsK01zUgdS; Mon, 29 Jun 2020 13:28:40 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jprxo-0000yh-3Y
+        for linux-kernel@vger.kernel.org; Mon, 29 Jun 2020 13:28:40 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1jpocW-00020R-6S
+        for linux-kernel@vger.kernel.org; Mon, 29 Jun 2020 09:54:28 +0200
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+To:     linux-kernel@vger.kernel.org
+Subject: Build regressions/improvements in v5.8-rc3
+Date:   Mon, 29 Jun 2020 09:54:28 +0200
+Message-Id: <20200629075428.7645-1-geert@linux-m68k.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Below is the list of build error/warning regressions/improvements in
+v5.8-rc3[1] compared to v5.7[2].
 
-On Mon, Jun 29, 2020 at 10:15 AM Daniel Thompson
-<daniel.thompson@linaro.org> wrote:
->
-> Currently kgdb_register_callbacks() and kgdb_unregister_callbacks()
-> are called outside the scope of the kgdb_registration_lock. This
-> allows them to race with each other. This could do all sorts of crazy
-> things up to and including dbg_io_ops becoming NULL partway through the
-> execution of the kgdb trap handler (which isn't allowed and would be
-> fatal).
->
-> Fix this by bringing the trap handler setup and teardown into the scope
-> of the registration lock.
->
-> Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-> ---
->  kernel/debug/debug_core.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
->
-> diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
-> index 9e5934780f41..9799f2c6dc94 100644
-> --- a/kernel/debug/debug_core.c
-> +++ b/kernel/debug/debug_core.c
-> @@ -1117,9 +1117,8 @@ int kgdb_register_io_module(struct kgdb_io *new_dbg_io_ops)
->
->         dbg_io_ops = new_dbg_io_ops;
->
-> -       spin_unlock(&kgdb_registration_lock);
-> -
->         if (old_dbg_io_ops) {
-> +               spin_unlock(&kgdb_registration_lock);
->                 old_dbg_io_ops->deinit();
->                 return 0;
->         }
-> @@ -1129,6 +1128,8 @@ int kgdb_register_io_module(struct kgdb_io *new_dbg_io_ops)
->         /* Arm KGDB now. */
->         kgdb_register_callbacks();
->
-> +       spin_unlock(&kgdb_registration_lock);
+Summarized:
+  - build errors: +4/-4
+  - build warnings: +42/-41
 
-From looking at code paths, I think this is illegal, isn't it?  You're
-now calling kgdb_register_callbacks() while holding a spinlock, but:
+JFYI, when comparing v5.8-rc3[1] to v5.8-rc2[3], the summaries are:
+  - build errors: +0/-0
+  - build warnings: +5/-30
 
-kgdb_register_callbacks()
--> register_console()
---> console_lock()
----> might_sleep()
-----> <boom!>
+Note that there may be false regressions, as some logs are incomplete.
+Still, they're build errors/warnings.
+
+Happy fixing! ;-)
+
+Thanks to the linux-next team for providing the build service.
+
+[1] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/9ebcfadb0610322ac537dd7aa5d9cbc2b2894c68/ (192 out of 194 configs)
+[2] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/3d77e6a8804abcc0504c904bd6e5cdf3a5cf8162/ (all 194 configs)
+[3] http://kisskb.ellerman.id.au/kisskb/branch/linus/head/48778464bb7d346b47157d21ffde2af6b2d39110/ (192 out of 194 configs)
 
 
-I'm a little curious about the exact race we're trying to solve.
-Calling unregister on an IO module before register even finished seems
-like an error on the caller, so I guess it would be calling register
-from a 2nd thread for a different IO module while the first thread was
-partway through unregistering?  Even that seems awfully sketchy since
-you're risking registering a 2nd IO ops while the first is still there
-and that's illegal enough that we do a pr_err() for it (though we
-don't crash), but let's say we're trying to solve that one.
+*** ERRORS ***
 
-Looking at it closely, I _think_ the only race in this case is if the
-one we're trying to unregister had a deinit() function and we going to
-replace it?  If it didn't have a deinit function:
+4 error regressions:
+  + error: arch/sparc/kernel/head_32.o: relocation truncated to fit: R_SPARC_WDISP22 against `.init.text':  => (.head.text+0x5100), (.head.text+0x5040)
+  + error: arch/sparc/kernel/head_32.o: relocation truncated to fit: R_SPARC_WDISP22 against symbol `leon_smp_cpu_startup' defined in .text section in arch/sparc/kernel/trampoline_32.o:  => (.init.text+0xa4)
+  + error: arch/sparc/kernel/process_32.o: relocation truncated to fit: R_SPARC_WDISP22 against `.text':  => (.fixup+0xc), (.fixup+0x4)
+  + error: arch/sparc/kernel/signal_32.o: relocation truncated to fit: R_SPARC_WDISP22 against `.text':  => (.fixup+0x10), (.fixup+0x1c), (.fixup+0x4), (.fixup+0x34), (.fixup+0x28)
 
-cpu1 (unregister)                 cpu2 (register):
------------------                 ----------------------
-kgdb_unregister_callbacks()
-                                  spin_lock() <got>
-spin_lock() <blocked>
-                                  if (old_dbg_io_ops) <true>
-                                    if (has dinit) <false>
-                                      print error
-                                      spin_unlock()
-                                      return -EBUSY
-<finish unregister>
+4 error improvements:
+  - error: modpost: "devm_ioremap" [drivers/net/ethernet/xilinx/ll_temac.ko] undefined!: N/A => 
+  - error: modpost: "devm_ioremap_resource" [drivers/net/ethernet/xilinx/xilinx_emac.ko] undefined!: N/A => 
+  - error: modpost: "devm_ioremap_resource" [drivers/ptp/ptp_ines.ko] undefined!: N/A => 
+  - error: modpost: "devm_of_iomap" [drivers/net/ethernet/xilinx/ll_temac.ko] undefined!: N/A => 
 
-The above is fine and is the same thing that would happen if the
-whole register function ran before the unregister even started, right?
 
-Also: if the unregister won the race that should also be fine.
+*** WARNINGS ***
 
-So really the problem is this:
+42 warning regressions:
+  + /kisskb/src/block/genhd.c: warning: the frame size of 1160 bytes is larger than 1024 bytes [-Wframe-larger-than=]:  => 1623:1
+  + /kisskb/src/drivers/gpu/drm/drm_managed.c: warning: format '%zu' expects argument of type 'size_t', but argument 4 has type 'unsigned int' [-Wformat=]:  => 205:23
+  + /kisskb/src/drivers/gpu/drm/drm_managed.c: warning: format '%zu' expects argument of type 'size_t', but argument 6 has type 'unsigned int' [-Wformat=]:  => 67:23
+  + /kisskb/src/drivers/mailbox/imx-mailbox.c: warning: 'imx_mu_resume_noirq' defined but not used [-Wunused-function]:  => 611:12
+  + /kisskb/src/drivers/mailbox/imx-mailbox.c: warning: 'imx_mu_runtime_resume' defined but not used [-Wunused-function]:  => 638:12
+  + /kisskb/src/drivers/mailbox/imx-mailbox.c: warning: 'imx_mu_runtime_suspend' defined but not used [-Wunused-function]:  => 629:12
+  + /kisskb/src/drivers/mailbox/imx-mailbox.c: warning: 'imx_mu_suspend_noirq' defined but not used [-Wunused-function]:  => 601:12
+  + /kisskb/src/drivers/net/ethernet/intel/ice/ice_flow.h: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]:  => 197:33
+  + /kisskb/src/drivers/net/ethernet/intel/ice/ice_flow.h: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]:  => 198:32
+  + /kisskb/src/drivers/scsi/dc395x.c: warning: value computed is not used [-Wunused-value]:  => 155:36
+  + /kisskb/src/drivers/target/iscsi/cxgbit/cxgbit_target.c: warning: 'cxgbit_tx_datain_iso.isra.39' uses dynamic stack allocation:  => 498:1
+  + /kisskb/src/include/linux/compiler_attributes.h: warning: statement will never be executed [-Wswitch-unreachable]:  => 201:41
+  + /kisskb/src/include/linux/kern_levels.h: warning: format '%lu' expects argument of type 'long unsigned int', but argument 2 has type 'unsigned int' [-Wformat=]:  => 5:18
+  + /kisskb/src/include/linux/kern_levels.h: warning: format '%zd' expects argument of type 'signed size_t', but argument 2 has type 'ssize_t {aka int}' [-Wformat=]:  => 5:18
+  + /kisskb/src/kernel/bpf/syscall.c: warning: 'bpf_prog_get_info_by_fd.isra.24' uses dynamic stack allocation:  => 3498:1
+  + /kisskb/src/kernel/rcu/rcuperf.c: warning: format '%lu' expects argument of type 'long unsigned int', but argument 2 has type 'unsigned int' [-Wformat=]:  => 726:65
+  + /kisskb/src/mm/slub.c: warning: 'deactivate_slab.isra.57' uses dynamic stack allocation:  => 2230:1
+  + /kisskb/src/mm/slub.c: warning: 'get_partial_node.isra.56' uses dynamic stack allocation:  => 1929:1
+  + /kisskb/src/mm/slub.c: warning: 'unfreeze_partials.isra.55' uses dynamic stack allocation:  => 2298:1
+  + /kisskb/src/net/smc/smc_llc.c: warning: (near initialization for 'add_llc.hd') [-Wmissing-braces]:  => 1145:9
+  + /kisskb/src/net/smc/smc_llc.c: warning: (near initialization for 'del_llc.hd') [-Wmissing-braces]:  => 1178:9
+  + /kisskb/src/net/smc/smc_llc.c: warning: (near initialization for 'delllc.hd') [-Wmissing-braces]:  => 1250:9
+  + /kisskb/src/net/smc/smc_llc.c: warning: missing braces around initializer [-Wmissing-braces]:  => 1145:9, 1250:9, 1178:9
+  + /kisskb/src/net/sunrpc/svcsock.c: warning: "ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE" is not defined [-Wundef]:  => 226:5
+  + /kisskb/src/net/sunrpc/svcsock.c: warning: "ARCH_IMPLEMENTS_FLUSH_DCACHE_PAGE" is not defined, evaluates to 0 [-Wundef]:  => 226:5
+  + /kisskb/src/samples/seccomp/user-trap.c: warning: dereferencing type-punned pointer will break strict-aliasing rules [-Wstrict-aliasing]:  => 50:2, 83:2
+  + modpost: WARNING: modpost: EXPORT symbol "___rw_read_enter" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "___rw_read_exit" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "___rw_read_try" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "___rw_write_enter" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "__ashldi3" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "__ashrdi3" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "__copy_1page" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "__divdi3" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "__lshrdi3" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "__muldi3" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "__ndelay" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "__udelay" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "bzero_1page" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + modpost: WARNING: modpost: EXPORT symbol "empty_zero_page" [vmlinux] version generation failed, symbol will not be versioned.:  => N/A
+  + warning: 136 bad relocations:  => N/A
+  + warning: 148 bad relocations:  => N/A
 
-cpu1 (unregister)                 cpu2 (register):
------------------                 ----------------------
-kgdb_unregister_callbacks()
-                                  spin_lock() <got>
-spin_lock() <blocked>
-                                  if (old_dbg_io_ops) <true>
-                                    if (has dinit) <true>
-                                      print Replacing
-                                  init new IO ops
-                                  spin_unlock()
-                                  if (old_dbg_io_ops) <true>
-                                    finish deinit of old
-                                    return true
-WARN_ON() <hits and shouts!>
-dbg_io_ops = NULL
-spin_unlock()
-if (deinit) <true>
-  double-call to deinit of old
+41 warning improvements:
+  - /kisskb/src/arch/m68k/include/asm/amigahw.h: warning: this statement may fall through [-Wimplicit-fallthrough=]: 42:50 => 
+  - /kisskb/src/block/genhd.c: warning: the frame size of 1192 bytes is larger than 1024 bytes [-Wframe-larger-than=]: 1617:1 => 
+  - /kisskb/src/drivers/android/binderfs.c: warning: (near initialization for 'device_info.name') [-Wmissing-braces]: 653:9 => 
+  - /kisskb/src/drivers/android/binderfs.c: warning: missing braces around initializer [-Wmissing-braces]: 653:9 => 
+  - /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/bios/command_table2.c: warning: (near initialization for 'encoder_control.header') [-Wmissing-braces]: 116:9 => 
+  - /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/bios/command_table2.c: warning: (near initialization for 'pixel_clock.header') [-Wmissing-braces]: 342:9 => 
+  - /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/bios/command_table2.c: warning: missing braces around initializer [-Wmissing-braces]: 342:9, 116:9 => 
+  - /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/dcn21/dcn21_hubp.c: warning: (near initialization for 'PLAT_54186_wa.header') [-Wmissing-braces]: 781:9 => 
+  - /kisskb/src/drivers/gpu/drm/amd/amdgpu/../display/dc/dcn21/dcn21_hubp.c: warning: missing braces around initializer [-Wmissing-braces]: 368:9, 781:9 => 368:9
+  - /kisskb/src/drivers/gpu/drm/bridge/tc358768.c: warning: the frame size of 2224 bytes is larger than 2048 bytes [-Wframe-larger-than=]: 840:1 => 
+  - /kisskb/src/drivers/gpu/drm/drm_dp_mst_topology.c: warning: (near initialization for 'desc.ident') [-Wmissing-braces]: 5502:9 => 
+  - /kisskb/src/drivers/gpu/drm/drm_dp_mst_topology.c: warning: missing braces around initializer [-Wmissing-braces]: 5502:9 => 
+  - /kisskb/src/drivers/target/iscsi/cxgbit/cxgbit_target.c: warning: 'cxgbit_tx_datain_iso.isra.34' uses dynamic stack allocation: 498:1 => 
+  - /kisskb/src/kernel/bpf/syscall.c: warning: 'bpf_prog_get_info_by_fd.isra.23' uses dynamic stack allocation: 3269:1 => 
+  - /kisskb/src/lib/test_kasan.c: warning: 'kasan_alloca_oob_left' uses dynamic stack allocation: 547:1 => 
+  - /kisskb/src/lib/test_kasan.c: warning: 'kasan_alloca_oob_right' uses dynamic stack allocation: 557:1 => 
+  - /kisskb/src/mm/slub.c: warning: 'deactivate_slab.isra.42' uses dynamic stack allocation: 2203:1 => 
+  - /kisskb/src/mm/slub.c: warning: 'get_partial_node.isra.41' uses dynamic stack allocation: 1910:1 => 
+  - /kisskb/src/mm/slub.c: warning: 'unfreeze_partials.isra.40' uses dynamic stack allocation: 2271:1 => 
+  - /kisskb/src/security/integrity/ima/ima_crypto.c: warning: the frame size of 1032 bytes is larger than 1024 bytes [-Wframe-larger-than=]: 510:1 => 
+  - modpost: WARNING: modpost: "clear_page" [drivers/md/dm-integrity.ko] has no CRC!: N/A => 
+  - modpost: WARNING: modpost: "clear_page" [drivers/md/raid456.ko] has no CRC!: N/A => 
+  - modpost: WARNING: modpost: "clear_page" [drivers/scsi/sd_mod.ko] has no CRC!: N/A => 
+  - modpost: WARNING: modpost: "clear_page" [fs/btrfs/btrfs.ko] has no CRC!: N/A => 
+  - modpost: WARNING: modpost: "clear_page" [fs/fuse/fuse.ko] has no CRC!: N/A => 
+  - modpost: WARNING: modpost: "clear_page" [fs/gfs2/gfs2.ko] has no CRC!: N/A => 
+  - modpost: WARNING: modpost: "clear_page" [fs/ntfs/ntfs.ko] has no CRC!: N/A => 
+  - modpost: WARNING: modpost: "clear_page" [fs/ocfs2/dlm/ocfs2_dlm.ko] has no CRC!: N/A => 
+  - modpost: WARNING: modpost: "copy_page" [drivers/block/drbd/drbd.ko] has no CRC!: N/A => 
+  - modpost: WARNING: modpost: "copy_page" [drivers/md/dm-integrity.ko] has no CRC!: N/A => 
+  - modpost: WARNING: modpost: "copy_page" [fs/btrfs/btrfs.ko] has no CRC!: N/A => 
+  - modpost: WARNING: modpost: "copy_page" [fs/cachefiles/cachefiles.ko] has no CRC!: N/A => 
+  - modpost: WARNING: modpost: "copy_page" [fs/fuse/fuse.ko] has no CRC!: N/A => 
+  - modpost: WARNING: modpost: "copy_page" [fs/nilfs2/nilfs2.ko] has no CRC!: N/A => 
+  - modpost: WARNING: modpost: lib/test_bitmap.o(.text.unlikely+0x58): Section mismatch in reference from the function bitmap_equal() to the variable .init.rodata:clump_exp: N/A => 
+  - modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x1a0): Section mismatch in reference from the function early_init_mmu() to the function .init.text:radix__early_init_mmu(): N/A => 
+  - modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x1ac): Section mismatch in reference from the function early_init_mmu() to the function .init.text:hash__early_init_mmu(): N/A => 
+  - modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x2b0): Section mismatch in reference from the function early_init_mmu() to the function .init.text:radix__early_init_mmu(): N/A => 
+  - modpost: WARNING: modpost: vmlinux.o(.text.unlikely+0x2bc): Section mismatch in reference from the function early_init_mmu() to the function .init.text:hash__early_init_mmu(): N/A => 
+  - warning: 12 bad relocations: N/A => 
+  - warning: unmet direct dependencies detected for SND_SOC_WM9712: N/A => 
 
-So in this case we'll hit a WARN_ON(), incorrectly unregister the new
-IO ops, and call deinit twice.
+Gr{oetje,eeting}s,
 
--Doug
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
