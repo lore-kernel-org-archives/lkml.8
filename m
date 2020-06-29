@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD3F3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:28:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB0F5C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9F9EB206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:28:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE04C206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:28:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462535;
-	bh=oXYsxO/Y4HJTL/WFtml54ucpWBeTT0F1I+foZy/j25E=;
+	s=default; t=1593462538;
+	bh=Yi0rkYte0Ul8/AyWWV2kwBrjlTBSzJEKQoFAOQiac0E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UZfTmDPQ7G7OpzRvvbt2+tLgZa4O7ALi22NPZuOZ/BkEk4RgnEHLul9Jq5E4KFO1/
-	 A39+O34V/i/JUmhylK/x92i5IghGZUdxbXIBSrpvImbwIjN+QY7iCbh9EeznenEJuD
-	 tQUYgQK++LLjmZCEvduBGsC5fdr3PYnmrDVPMedg=
+	b=Qrft/dfKuJhTZOQevNcnmD81vmh7hSrOr843FURM2qp87NMPtXALJpqe6qlMKFmn+
+	 Uvp/DIjIF0/6CuH58n4FYvGRLWT6Dyo9pDPzIoDTsR43EcYWG4xP0IuLmoIKUfekgT
+	 OXYs7HOJJvpC+j/iVOzvUXIknR8mCyPB84oijIJo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389223AbgF2U2y (ORCPT
+        id S2389009AbgF2U2t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:28:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37026 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:28:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37020 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732499AbgF2TZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732504AbgF2TZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:23 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28F6A2543A;
-        Mon, 29 Jun 2020 15:43:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 648A825388;
+        Mon, 29 Jun 2020 15:40:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445388;
-        bh=oXYsxO/Y4HJTL/WFtml54ucpWBeTT0F1I+foZy/j25E=;
+        s=default; t=1593445254;
+        bh=Yi0rkYte0Ul8/AyWWV2kwBrjlTBSzJEKQoFAOQiac0E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QKlkc7H9IDq9wQbMAyoH61YHWEI9krw82WyGCaiebOxFcBQUcal4U7kZQRjDVdbdH
-         CL6QdNorsgRuw+S2pMxmLBDlu0YLGeeAZWHvtN3zimX9DUXAbcOXYJBIBMpF+ae37y
-         0rBs4O+pMJ/3ngm+mXy57wvxUWFxhBO9eljcUj1g=
+        b=PVPfaNprHtJ8XeovBCvfHF9dvj9dhaLH9o23B91xssKG9uQngJmsYa9JyVF5ku/wF
+         5ywIo6Cmg7flTDANqMXwKslnLIritE2XpyFS9Uo2gYt22TcocnI1azEdnGPPm0RTR3
+         Ekz2JR7+ZCfqw8EuVOQrEJl9Jj7PX7wqagaARlEo=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Corey Minyard <cminyard@mvista.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.9 142/191] sctp: Don't advertise IPv4 addresses if ipv6only is set on the socket
-Date:   Mon, 29 Jun 2020 11:39:18 -0400
-Message-Id: <20200629154007.2495120-143-sashal@kernel.org>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        David Heidelberg <david@ixit.cz>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 036/191] power: supply: smb347-charger: IRQSTAT_D is volatile
+Date:   Mon, 29 Jun 2020 11:37:32 -0400
+Message-Id: <20200629154007.2495120-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -66,95 +66,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-[ Upstream commit 471e39df96b9a4c4ba88a2da9e25a126624d7a9c ]
+[ Upstream commit c32ea07a30630ace950e07ffe7a18bdcc25898e1 ]
 
-If a socket is set ipv6only, it will still send IPv4 addresses in the
-INIT and INIT_ACK packets. This potentially misleads the peer into using
-them, which then would cause association termination.
+Fix failure when USB cable is connected:
+smb347 2-006a: reading IRQSTAT_D failed
 
-The fix is to not add IPv4 addresses to ipv6only sockets.
+Fixes: 1502cfe19bac ("smb347-charger: Fix battery status reporting logic for charger faults")
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Reported-by: Corey Minyard <cminyard@mvista.com>
-Signed-off-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Tested-by: Corey Minyard <cminyard@mvista.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Tested-by: David Heidelberg <david@ixit.cz>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: David Heidelberg <david@ixit.cz>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/net/sctp/constants.h | 8 +++++---
- net/sctp/associola.c         | 5 ++++-
- net/sctp/bind_addr.c         | 1 +
- net/sctp/protocol.c          | 1 +
- 4 files changed, 11 insertions(+), 4 deletions(-)
+ drivers/power/supply/smb347-charger.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/net/sctp/constants.h b/include/net/sctp/constants.h
-index 5b847e49f7e9b..8890fd66021dd 100644
---- a/include/net/sctp/constants.h
-+++ b/include/net/sctp/constants.h
-@@ -357,11 +357,13 @@ typedef enum {
- 	 ipv4_is_anycast_6to4(a))
- 
- /* Flags used for the bind address copy functions.  */
--#define SCTP_ADDR6_ALLOWED	0x00000001	/* IPv6 address is allowed by
-+#define SCTP_ADDR4_ALLOWED	0x00000001	/* IPv4 address is allowed by
- 						   local sock family */
--#define SCTP_ADDR4_PEERSUPP	0x00000002	/* IPv4 address is supported by
-+#define SCTP_ADDR6_ALLOWED	0x00000002	/* IPv6 address is allowed by
-+						   local sock family */
-+#define SCTP_ADDR4_PEERSUPP	0x00000004	/* IPv4 address is supported by
- 						   peer */
--#define SCTP_ADDR6_PEERSUPP	0x00000004	/* IPv6 address is supported by
-+#define SCTP_ADDR6_PEERSUPP	0x00000008	/* IPv6 address is supported by
- 						   peer */
- 
- /* Reasons to retransmit. */
-diff --git a/net/sctp/associola.c b/net/sctp/associola.c
-index 16e120b84118e..8c5597d07240a 100644
---- a/net/sctp/associola.c
-+++ b/net/sctp/associola.c
-@@ -1583,12 +1583,15 @@ void sctp_assoc_rwnd_decrease(struct sctp_association *asoc, unsigned int len)
- int sctp_assoc_set_bind_addr_from_ep(struct sctp_association *asoc,
- 				     sctp_scope_t scope, gfp_t gfp)
- {
-+	struct sock *sk = asoc->base.sk;
- 	int flags;
- 
- 	/* Use scoping rules to determine the subset of addresses from
- 	 * the endpoint.
- 	 */
--	flags = (PF_INET6 == asoc->base.sk->sk_family) ? SCTP_ADDR6_ALLOWED : 0;
-+	flags = (PF_INET6 == sk->sk_family) ? SCTP_ADDR6_ALLOWED : 0;
-+	if (!inet_v6_ipv6only(sk))
-+		flags |= SCTP_ADDR4_ALLOWED;
- 	if (asoc->peer.ipv4_address)
- 		flags |= SCTP_ADDR4_PEERSUPP;
- 	if (asoc->peer.ipv6_address)
-diff --git a/net/sctp/bind_addr.c b/net/sctp/bind_addr.c
-index 401c60750b206..dc4335d817d80 100644
---- a/net/sctp/bind_addr.c
-+++ b/net/sctp/bind_addr.c
-@@ -451,6 +451,7 @@ static int sctp_copy_one_addr(struct net *net, struct sctp_bind_addr *dest,
- 		 * well as the remote peer.
- 		 */
- 		if ((((AF_INET == addr->sa.sa_family) &&
-+		      (flags & SCTP_ADDR4_ALLOWED) &&
- 		      (flags & SCTP_ADDR4_PEERSUPP))) ||
- 		    (((AF_INET6 == addr->sa.sa_family) &&
- 		      (flags & SCTP_ADDR6_ALLOWED) &&
-diff --git a/net/sctp/protocol.c b/net/sctp/protocol.c
-index c5a2a538279b7..b2c242facf1b9 100644
---- a/net/sctp/protocol.c
-+++ b/net/sctp/protocol.c
-@@ -210,6 +210,7 @@ int sctp_copy_local_addr_list(struct net *net, struct sctp_bind_addr *bp,
- 			 * sock as well as the remote peer.
- 			 */
- 			if ((((AF_INET == addr->a.sa.sa_family) &&
-+			      (copy_flags & SCTP_ADDR4_ALLOWED) &&
- 			      (copy_flags & SCTP_ADDR4_PEERSUPP))) ||
- 			    (((AF_INET6 == addr->a.sa.sa_family) &&
- 			      (copy_flags & SCTP_ADDR6_ALLOWED) &&
+diff --git a/drivers/power/supply/smb347-charger.c b/drivers/power/supply/smb347-charger.c
+index 072c5189bd6d1..0655dbdc7000d 100644
+--- a/drivers/power/supply/smb347-charger.c
++++ b/drivers/power/supply/smb347-charger.c
+@@ -1141,6 +1141,7 @@ static bool smb347_volatile_reg(struct device *dev, unsigned int reg)
+ 	switch (reg) {
+ 	case IRQSTAT_A:
+ 	case IRQSTAT_C:
++	case IRQSTAT_D:
+ 	case IRQSTAT_E:
+ 	case IRQSTAT_F:
+ 	case STAT_A:
 -- 
 2.25.1
 
