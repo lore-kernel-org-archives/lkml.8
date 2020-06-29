@@ -2,141 +2,90 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E677C433DF
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C6DC433E0
 	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21755208B6
+	by mail.kernel.org (Postfix) with ESMTP id 4E17B21D7D
 	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:26:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391047AbgF2VZ4 (ORCPT
+        id S2391060AbgF2VZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:25:56 -0400
-Received: from mga18.intel.com ([134.134.136.126]:30075 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729104AbgF2Smt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:42:49 -0400
-IronPort-SDR: uD6OGMuOo7eiurt2635f876GBaK9NIfB4a1RgygfC3tflqLoF/uVKoB9sSCIjVJ9EHEAYgkoM0
- blEspmYeY5PA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="133384436"
-X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
-   d="scan'208";a="133384436"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 05:34:00 -0700
-IronPort-SDR: 8fG8xVq429eM07+smEpJlcZATwZAdR411SM5hbOvFo4KF+c+JTOBJhxcoqkoKcPlEbrNOEBgfV
- GQ0M+UzUEuOA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
-   d="scan'208";a="294869715"
-Received: from cli6-desk1.ccr.corp.intel.com (HELO [10.239.161.135]) ([10.239.161.135])
-  by orsmga002.jf.intel.com with ESMTP; 29 Jun 2020 05:33:55 -0700
-Subject: Re: [RFC PATCH 00/13] Core scheduling v5
-To:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Julien Desfossez <jdesfossez@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Aaron Lu <aaron.lwe@gmail.com>,
-        Aubrey Li <aubrey.intel@gmail.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Paul Turner <pjt@google.com>
-References: <cover.1583332764.git.vpillai@digitalocean.com>
- <CANaguZBQMarzMb-iXBEx8wJqkTYtRskTL+xQnShuAW7hP9UdqA@mail.gmail.com>
-From:   "Li, Aubrey" <aubrey.li@linux.intel.com>
-Message-ID: <1e3c84b1-78c3-af2c-cfe5-bdd96f520576@linux.intel.com>
-Date:   Mon, 29 Jun 2020 20:33:54 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 29 Jun 2020 17:25:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38402 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729099AbgF2Sms (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:42:48 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64594C033C11;
+        Mon, 29 Jun 2020 11:26:31 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jpyU9-002DtJ-3f; Mon, 29 Jun 2020 18:26:29 +0000
+From:   Al Viro <viro@ZenIV.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        David Miller <davem@davemloft.net>,
+        Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>
+Subject: [PATCH 05/41] [ia64] teach elf_access_reg() to handle the missing range (r16..r31)
+Date:   Mon, 29 Jun 2020 19:25:52 +0100
+Message-Id: <20200629182628.529995-5-viro@ZenIV.linux.org.uk>
+X-Mailer: git-send-email 2.25.4
+In-Reply-To: <20200629182628.529995-1-viro@ZenIV.linux.org.uk>
+References: <20200629182349.GA2786714@ZenIV.linux.org.uk>
+ <20200629182628.529995-1-viro@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <CANaguZBQMarzMb-iXBEx8wJqkTYtRskTL+xQnShuAW7hP9UdqA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vineeth,
+From: Al Viro <viro@zeniv.linux.org.uk>
 
-On 2020/6/26 4:12, Vineeth Remanan Pillai wrote:
-> On Wed, Mar 4, 2020 at 12:00 PM vpillai <vpillai@digitalocean.com> wrote:
->>
->>
->> Fifth iteration of the Core-Scheduling feature.
->>
-> Its probably time for an iteration and We are planning to post v6 based
-> on this branch:
->  https://github.com/digitalocean/linux-coresched/tree/coresched/pre-v6-v5.7.y
-> 
-> Just wanted to share the details about v6 here before posting the patch
-> series. If there is no objection to the following, we shall be posting
-> the v6 early next week.
-> 
-> The main changes from v6 are the following:
-> 1. Address Peter's comments in v5
->    - Code cleanup
->    - Remove fixes related to hotplugging.
->    - Split the patch out for force idling starvation
-> 3. Fix for RCU deadlock
-> 4. core wide priority comparison minor re-work.
-> 5. IRQ Pause patch
-> 6. Documentation
->    - https://github.com/digitalocean/linux-coresched/blob/coresched/pre-v6-v5.7.y/Documentation/admin-guide/hw-vuln/core-scheduling.rst
-> 
-> This version is much leaner compared to v5 due to the removal of hotplug
-> support. As a result, dynamic coresched enable/disable on cpus due to
-> smt on/off on the core do not function anymore. I tried to reproduce the
-> crashes during hotplug, but could not reproduce reliably. The plan is to
-> try to reproduce the crashes with v6, and document each corner case for crashes
-> as we fix those. Previously, we randomly fixed the issues without a clear
-> documentation and the fixes became complex over time.
-> 
-> TODO lists:
-> 
->  - Interface discussions could not come to a conclusion in v5 and hence would
->    like to restart the discussion and reach a consensus on it.
->    - https://lwn.net/ml/linux-kernel/20200520222642.70679-1-joel@joelfernandes.org
-> 
->  - Core wide vruntime calculation needs rework:
->    - https://lwn.net/ml/linux-kernel/20200506143506.GH5298@hirez.programming.kicks-ass.net
-> 
->  - Load balancing/migration changes ignores group weights:
->    - https://lwn.net/ml/linux-kernel/20200225034438.GA617271@ziqianlu-desktop.localdomain
+Now it's easy to make elf_access_gpreg() handle the rest of global
+registers (r16..r31).  That gets rid of the hole in the registers
+elf_access_reg() can handle, which will allow to simplify its callers
+later in the series.
 
-According to Aaron's response below:
-https://lwn.net/ml/linux-kernel/20200305085231.GA12108@ziqianlu-desktop.localdomain/
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+---
+ arch/ia64/kernel/ptrace.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-The following logic seems to be helpful for Aaron's case.
+diff --git a/arch/ia64/kernel/ptrace.c b/arch/ia64/kernel/ptrace.c
+index b9d068903b98..37b5140d0dfe 100644
+--- a/arch/ia64/kernel/ptrace.c
++++ b/arch/ia64/kernel/ptrace.c
+@@ -1273,12 +1273,14 @@ struct regset_getset {
+ 	int ret;
+ };
+ 
+-static const ptrdiff_t pt_offsets[16] =
++static const ptrdiff_t pt_offsets[32] =
+ {
+ #define R(n) offsetof(struct pt_regs, r##n)
+ 	[0] = -1, R(1), R(2), R(3),
+ 	[4] = -1, [5] = -1, [6] = -1, [7] = -1,
+ 	R(8), R(9), R(10), R(11), R(12), R(13), R(14), R(15),
++	R(16), R(17), R(18), R(19), R(20), R(21), R(22), R(23),
++	R(24), R(25), R(26), R(27), R(28), R(29), R(30), R(31),
+ #undef R
+ };
+ 
+@@ -1479,7 +1481,7 @@ static int
+ access_elf_reg(struct task_struct *target, struct unw_frame_info *info,
+ 		unsigned long addr, unsigned long *data, int write_access)
+ {
+-	if (addr >= ELF_GR_OFFSET(1) && addr <= ELF_GR_OFFSET(15))
++	if (addr >= ELF_GR_OFFSET(1) && addr <= ELF_GR_OFFSET(31))
+ 		return access_elf_gpreg(target, info, addr, data, write_access);
+ 	else if (addr >= ELF_BR_OFFSET(0) && addr <= ELF_BR_OFFSET(7))
+ 		return access_elf_breg(target, info, addr, data, write_access);
+-- 
+2.11.0
 
-+	/*
-+	 * Ignore cookie match if there is a big imbalance between the src rq
-+	 * and dst rq.
-+	 */
-+	if ((src_rq->cfs.h_nr_running - rq->cfs.h_nr_running) > 1)
-+		return true;
-
-I didn't see any other comments on the patch at here:
-https://lwn.net/ml/linux-kernel/67e46f79-51c2-5b69-71c6-133ec10b68c4@linux.intel.com/
-
-Do we have another way to address this issue?
-
-Thanks,
--Aubrey
