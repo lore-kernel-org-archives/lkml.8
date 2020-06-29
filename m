@@ -2,107 +2,77 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B6AC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F03C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:01:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C4732053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:01:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593457306;
-	bh=vmugkxIgB19790+fzgwfilMygv1QF9obfzL5aEYFQwQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w1fcoOzNMRTZyqoLnG7tfT4aVSFdFaXnWs5l1SEz2dsV80mAl0GQyXMxSqHcjyiGg
-	 UbX4jZZ83RqxIHm4nAx1XJMM0kcUZaoB6qc5qOffzj1KsWEuhf51+TWn0TDIUOqKWP
-	 YnKoT15atkwSGMMUGJ7/qbW3m+RGKeFd4WssUO6M=
+	by mail.kernel.org (Postfix) with ESMTP id 63E432053B
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:01:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="VWuRDzoV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729571AbgF2TBp (ORCPT
+        id S1730462AbgF2TBt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:01:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45424 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:01:49 -0400
+Received: from m12-14.163.com ([220.181.12.14]:51505 "EHLO m12-14.163.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730361AbgF2TAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:00:22 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B72F254EA;
-        Mon, 29 Jun 2020 15:54:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593446044;
-        bh=vmugkxIgB19790+fzgwfilMygv1QF9obfzL5aEYFQwQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uSeAthm1045V1Qi6sU1ahrrBZeSKEb6RGUX7eczTnfI9FK8omPWTMqe46phwUhj8q
-         a/W7OCbsMY2A9hJrB1SsJoPg6RpkPGPAA0YS3YRxRtXnwnjbWRff+dX23rXb3rNh1I
-         hXPo3YkN0eDCcbRuNbXYlX5He2HgTIZHjoa3LPlM=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 048/135] gfs2: Allow lock_nolock mount to specify jid=X
-Date:   Mon, 29 Jun 2020 11:51:42 -0400
-Message-Id: <20200629155309.2495516-49-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
-References: <20200629155309.2495516-1-sashal@kernel.org>
+        id S1728171AbgF2TBh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:01:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=Date:From:Subject:Message-ID:MIME-Version; bh=Hvy7C
+        q8rT4BgdG7jY1sZ9yj6W+j3Whjfwevbqonqeco=; b=VWuRDzoVvVJbps476+X/O
+        pxQcQfJ0RRSNyB2SDRUJtYfI7W7p1bwlziWLZe2YAQy4ef7Xecs6TLDh7DDmLiw6
+        ZVmAby0PFGJ7AddKuqkq2S+j37/MpAPNK2H3HtyFs81Zlvfwsc++d91kIzS2Kkvw
+        IGSbttAyOkTaBgJbeTUym0=
+Received: from localhost (unknown [101.86.215.249])
+        by smtp10 (Coremail) with SMTP id DsCowADHscVHJfpeN+61Iw--.48796S2;
+        Tue, 30 Jun 2020 01:30:48 +0800 (CST)
+Date:   Tue, 30 Jun 2020 01:30:47 +0800
+From:   Su Hui <sh_def@163.com>
+To:     akpm@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: [PATCH] mm: remove the redundancy code
+Message-ID: <20200629173047.GA38128@ubuntu>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.229-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.4.229-rc1
-X-KernelTest-Deadline: 2020-07-01T15:53+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-CM-TRANSID: DsCowADHscVHJfpeN+61Iw--.48796S2
+X-Coremail-Antispam: 1Uf129KBjvdXoWrtw18Zw15uryDZw1xAFWrXwb_yoWxCrgEvw
+        12y34FkrWYyF4S9w48Aa17Krn2qryvkF18GF13KF13t3W2y3ZYq3WkAwnxAryUWrZ7uryU
+        Cr4DZFWxtryaqjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU0PPE3UUUUU==
+X-Originating-IP: [101.86.215.249]
+X-CM-SenderInfo: xvkbvvri6rljoofrz/1tbiLghSX1SIoztm4wAAsq
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bob Peterson <rpeterso@redhat.com>
-
-[ Upstream commit ea22eee4e6027d8927099de344f7fff43c507ef9 ]
-
-Before this patch, a simple typo accidentally added \n to the jid=
-string for lock_nolock mounts. This made it impossible to mount a
-gfs2 file system with a journal other than journal0. Thus:
-
-mount -tgfs2 -o hostdata="jid=1" <device> <mount pt>
-
-Resulted in:
-mount: wrong fs type, bad option, bad superblock on <device>
-
-In most cases this is not a problem. However, for debugging and
-testing purposes we sometimes want to test the integrity of other
-journals. This patch removes the unnecessary \n and thus allows
-lock_nolock users to specify an alternate journal.
-
-Signed-off-by: Bob Peterson <rpeterso@redhat.com>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+remove the redundancy code, the zone_start_pfn
+is assigned from zone->zone_start_pfn
+Signed-off-by: Su Hui <sh_def@163.com>
 ---
- fs/gfs2/ops_fstype.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/page_alloc.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/fs/gfs2/ops_fstype.c b/fs/gfs2/ops_fstype.c
-index de7143e2b361a..b7b43d00cc6d7 100644
---- a/fs/gfs2/ops_fstype.c
-+++ b/fs/gfs2/ops_fstype.c
-@@ -916,7 +916,7 @@ static int init_per_node(struct gfs2_sbd *sdp, int undo)
- }
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 3c4eb750a199..3372a8c9fbc4 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -6215,8 +6215,6 @@ void __meminit init_currently_empty_zone(struct zone *zone,
+ 	if (zone_idx > pgdat->nr_zones)
+ 		pgdat->nr_zones = zone_idx;
  
- static const match_table_t nolock_tokens = {
--	{ Opt_jid, "jid=%d\n", },
-+	{ Opt_jid, "jid=%d", },
- 	{ Opt_err, NULL },
- };
- 
+-	zone->zone_start_pfn = zone_start_pfn;
+-
+ 	mminit_dprintk(MMINIT_TRACE, "memmap_init",
+ 			"Initialising map node %d zone %lu pfns %lu -> %lu\n",
+ 			pgdat->node_id,
 -- 
 2.25.1
+
 
