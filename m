@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C342C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF41C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0702A2076C
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BC1A206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:58:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467881;
-	bh=BWncpzPC+Rb9or2yBrKBq8PfXfe7Y6glSYItgDGDzys=;
+	s=default; t=1593467883;
+	bh=0V9LpGvwu46MBFnwcEy1Q6J7udxjm8FaxSsiywu298U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wZpaN6RWt1GFOpn4MdKcBwU8z1j8mjciY6li8fBEnDF1XAqtA+yz/er6Kk03TqCM8
-	 mo4Sv3ogI+pA6OlXHkZ0QdvHyFLfmo4uZUbG5Bo/824jzZpEnwEhLsleYtsg3Cb29F
-	 ikqzHGfe2uViI2L5b2DVLj7GAKMKcsO4FCgwgxP4=
+	b=ycdYg2umGdO+CUAeVbtysqKHKuXa1ZZZMWHIUsxzuY0iDjKL2XOXe8DmnSXq8hoYZ
+	 PFLt0WqdRShlGag+KEnGMqJiZcO7y5x/7FIg+nTKYJT1Wa/6b6z8nxzThUrPfqXXC1
+	 GGSVSXOAlyKiOhoXXeyd6No6HaTyLwcT5SAhf820=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404759AbgF2V56 (ORCPT
+        id S2404765AbgF2V6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:57:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56786 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:58:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56912 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726473AbgF2Sf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726466AbgF2Sf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0E4D24051;
-        Mon, 29 Jun 2020 15:18:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3DD224738;
+        Mon, 29 Jun 2020 15:20:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593443922;
-        bh=BWncpzPC+Rb9or2yBrKBq8PfXfe7Y6glSYItgDGDzys=;
+        s=default; t=1593444056;
+        bh=0V9LpGvwu46MBFnwcEy1Q6J7udxjm8FaxSsiywu298U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ycKfTCiGcUYiR8MpTGGaN6t0H0pQTG9zWH43t3Q4ESEoTAiA9YTdKXzt9NFqe2vVA
-         r7SyINtzqe8cibbgJ0YpWjFjYlHz2fBrjH6pe+IZ9teX7bWEz8V+Jbet9ZRoIgA2le
-         vp78ZTGW6z7fyDrU8XJSmykf2XHOVbtVEqTi10lA=
+        b=x7oDvbLvISdolKsP5JSxwzA+L1pjeKuD7AXha3ttxMf4C7U9dNIOaDN0l709ZQXPA
+         KyAedZhybjzrjOUD5WuAmU0k97sU8udyipksSDx5NSyMZVxrAC8QvvHSTgEjq3ZwNX
+         7Gun/mdGVbJuvw5eDdrOxKpXRIfR3tiifPpA1tys=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Dumazet <edumazet@google.com>,
-        Venkat Venkatsubra <venkat.x.venkatsubra@oracle.com>,
-        Neal Cardwell <ncardwell@google.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 023/265] tcp: grow window for OOO packets only for SACK flows
-Date:   Mon, 29 Jun 2020 11:14:16 -0400
-Message-Id: <20200629151818.2493727-24-sashal@kernel.org>
+Cc:     Sagi Grimberg <sagi@grimberg.me>,
+        Anton Eidelman <anton@lightbitslabs.com>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 164/265] nvme: don't protect ns mutation with ns->head->lock
+Date:   Mon, 29 Jun 2020 11:16:37 -0400
+Message-Id: <20200629151818.2493727-165-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -67,97 +65,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Sagi Grimberg <sagi@grimberg.me>
 
-[ Upstream commit 662051215c758ae8545451628816204ed6cd372d ]
+[ Upstream commit e164471dcf19308d154adb69e7760d8ba426a77f ]
 
-Back in 2013, we made a change that broke fast retransmit
-for non SACK flows.
+Right now ns->head->lock is protecting namespace mutation
+which is wrong and unneeded. Move it to only protect
+against head mutations. While we're at it, remove unnecessary
+ns->head reference as we already have head pointer.
 
-Indeed, for these flows, a sender needs to receive three duplicate
-ACK before starting fast retransmit. Sending ACK with different
-receive window do not count.
+The problem with this is that the head->lock spans
+mpath disk node I/O that may block under some conditions (if
+for example the controller is disconnecting or the path
+became inaccessible), The locking scheme does not allow any
+other path to enable itself, preventing blocked I/O to complete
+and forward-progress from there.
 
-Even if enabling SACK is strongly recommended these days,
-there still are some cases where it has to be disabled.
+This is a preparation patch for the fix in a subsequent patch
+where the disk I/O will also be done outside the head->lock.
 
-Not increasing the window seems better than having to
-rely on RTO.
-
-After the fix, following packetdrill test gives :
-
-// Initialize connection
-    0 socket(..., SOCK_STREAM, IPPROTO_TCP) = 3
-   +0 setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
-   +0 bind(3, ..., ...) = 0
-   +0 listen(3, 1) = 0
-
-   +0 < S 0:0(0) win 32792 <mss 1000,nop,wscale 7>
-   +0 > S. 0:0(0) ack 1 <mss 1460,nop,wscale 8>
-   +0 < . 1:1(0) ack 1 win 514
-
-   +0 accept(3, ..., ...) = 4
-
-   +0 < . 1:1001(1000) ack 1 win 514
-// Quick ack
-   +0 > . 1:1(0) ack 1001 win 264
-
-   +0 < . 2001:3001(1000) ack 1 win 514
-// DUPACK : Normally we should not change the window
-   +0 > . 1:1(0) ack 1001 win 264
-
-   +0 < . 3001:4001(1000) ack 1 win 514
-// DUPACK : Normally we should not change the window
-   +0 > . 1:1(0) ack 1001 win 264
-
-   +0 < . 4001:5001(1000) ack 1 win 514
-// DUPACK : Normally we should not change the window
-    +0 > . 1:1(0) ack 1001 win 264
-
-   +0 < . 1001:2001(1000) ack 1 win 514
-// Hole is repaired.
-   +0 > . 1:1(0) ack 5001 win 272
-
-Fixes: 4e4f1fc22681 ("tcp: properly increase rcv_ssthresh for ofo packets")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: Venkat Venkatsubra <venkat.x.venkatsubra@oracle.com>
-Acked-by: Neal Cardwell <ncardwell@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 0d0b660f214d ("nvme: add ANA support")
+Signed-off-by: Anton Eidelman <anton@lightbitslabs.com>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/tcp_input.c | 12 ++++++++++--
- 1 file changed, 10 insertions(+), 2 deletions(-)
+ drivers/nvme/host/multipath.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-index ccab8bc29e2b1..1fa009999f577 100644
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -4603,7 +4603,11 @@ static void tcp_data_queue_ofo(struct sock *sk, struct sk_buff *skb)
- 	if (tcp_ooo_try_coalesce(sk, tp->ooo_last_skb,
- 				 skb, &fragstolen)) {
- coalesce_done:
--		tcp_grow_window(sk, skb);
-+		/* For non sack flows, do not grow window to force DUPACK
-+		 * and trigger fast retransmit.
-+		 */
-+		if (tcp_is_sack(tp))
-+			tcp_grow_window(sk, skb);
- 		kfree_skb_partial(skb, fragstolen);
- 		skb = NULL;
- 		goto add_sack;
-@@ -4687,7 +4691,11 @@ add_sack:
- 		tcp_sack_new_ofo_skb(sk, seq, end_seq);
- end:
- 	if (skb) {
--		tcp_grow_window(sk, skb);
-+		/* For non sack flows, do not grow window to force DUPACK
-+		 * and trigger fast retransmit.
-+		 */
-+		if (tcp_is_sack(tp))
-+			tcp_grow_window(sk, skb);
- 		skb_condense(skb);
- 		skb_set_owner_r(skb, sk);
+diff --git a/drivers/nvme/host/multipath.c b/drivers/nvme/host/multipath.c
+index fece4654fa3e7..f4287d8550a9f 100644
+--- a/drivers/nvme/host/multipath.c
++++ b/drivers/nvme/host/multipath.c
+@@ -410,11 +410,10 @@ static void nvme_mpath_set_live(struct nvme_ns *ns)
+ {
+ 	struct nvme_ns_head *head = ns->head;
+ 
+-	lockdep_assert_held(&ns->head->lock);
+-
+ 	if (!head->disk)
+ 		return;
+ 
++	mutex_lock(&head->lock);
+ 	if (!(head->disk->flags & GENHD_FL_UP))
+ 		device_add_disk(&head->subsys->dev, head->disk,
+ 				nvme_ns_id_attr_groups);
+@@ -427,9 +426,10 @@ static void nvme_mpath_set_live(struct nvme_ns *ns)
+ 			__nvme_find_path(head, node);
+ 		srcu_read_unlock(&head->srcu, srcu_idx);
  	}
++	mutex_unlock(&head->lock);
+ 
+-	synchronize_srcu(&ns->head->srcu);
+-	kblockd_schedule_work(&ns->head->requeue_work);
++	synchronize_srcu(&head->srcu);
++	kblockd_schedule_work(&head->requeue_work);
+ }
+ 
+ static int nvme_parse_ana_log(struct nvme_ctrl *ctrl, void *data,
+@@ -484,14 +484,12 @@ static inline bool nvme_state_is_live(enum nvme_ana_state state)
+ static void nvme_update_ns_ana_state(struct nvme_ana_group_desc *desc,
+ 		struct nvme_ns *ns)
+ {
+-	mutex_lock(&ns->head->lock);
+ 	ns->ana_grpid = le32_to_cpu(desc->grpid);
+ 	ns->ana_state = desc->state;
+ 	clear_bit(NVME_NS_ANA_PENDING, &ns->flags);
+ 
+ 	if (nvme_state_is_live(ns->ana_state))
+ 		nvme_mpath_set_live(ns);
+-	mutex_unlock(&ns->head->lock);
+ }
+ 
+ static int nvme_update_ana_state(struct nvme_ctrl *ctrl,
+@@ -670,10 +668,8 @@ void nvme_mpath_add_disk(struct nvme_ns *ns, struct nvme_id_ns *id)
+ 			nvme_update_ns_ana_state(&desc, ns);
+ 		}
+ 	} else {
+-		mutex_lock(&ns->head->lock);
+ 		ns->ana_state = NVME_ANA_OPTIMIZED; 
+ 		nvme_mpath_set_live(ns);
+-		mutex_unlock(&ns->head->lock);
+ 	}
+ 
+ 	if (bdi_cap_stable_pages_required(ns->queue->backing_dev_info)) {
 -- 
 2.25.1
 
