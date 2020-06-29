@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FFD2C433E7
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C395BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E85932067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:32:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92AD9206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:32:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462723;
-	bh=C4pLqg9guNpwTOM939XRXDfQJWlayJHsoVrefLXAvhI=;
+	s=default; t=1593462731;
+	bh=M0Gmi0m7PMQlTQc9AoafKO7dPwCzW7fBqUhcUXM3QS0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dl9n/7J0lgAFTY9dWsO4FnTuXhc2iciUtKtJvPl+UcGdewpGaySf9AvVlrM5Glyd5
-	 K3XQwjF17OrRRzo9uCRjeIN/OocLa5pz3ILqv7MsQyNtCmq4nIDmiWq0m/Q8Bi1uAt
-	 eU31OCwjSimDgbXpFiElZzHL1XdrSxR515sJIrgY=
+	b=1i5fWEF98cnPg9vE23Qv9mCF2ORqs4A+5U/CtIm6KZFBP82Ii+TZ9SAo3HhsYaOP5
+	 GTzyJjh+X3EHDb+PsUIgEWc8GkYyndmqq6d6k4CusFHh6iM5Uaqbz7kLcI/jcJKreX
+	 NbcA/JO8PykcXn+5Twd5taguAKHrEqyKkDMWKT1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389227AbgF2Ubs (ORCPT
+        id S2389214AbgF2UcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:31:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37042 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:32:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732476AbgF2TZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732414AbgF2TZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F4FC2544A;
-        Mon, 29 Jun 2020 15:43:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1520625356;
+        Mon, 29 Jun 2020 15:40:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445397;
-        bh=C4pLqg9guNpwTOM939XRXDfQJWlayJHsoVrefLXAvhI=;
+        s=default; t=1593445215;
+        bh=M0Gmi0m7PMQlTQc9AoafKO7dPwCzW7fBqUhcUXM3QS0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ruj4C4Wof3bOyExsX3JnN6Kd1TJitdIf8BIoI88L2xbZYu7Wc48vwsFEmvc+3GVBX
-         oR1yP8lzTvkAJjJUU9sK4nZ1YMjgiZj0oKVEdQQ+9bJSI/bZimM7MqQK0cVwvPlbJF
-         171equJJ8gpi+XueIfPOsIkxDi0XGMJxy0im/1mY=
+        b=LF3KgU7hasDU4t7meQB6ioyLfs9a7k+QXf43oSKD00iGgy1A5mJhtg14KZEHBQOx5
+         B7gynoAX/77ayl70+/k3TtP0so6lipHNmV7DjmzJR4vl4Pu+TIK1nL8KYtkxQzclBO
+         kyl44S9+Uwk5cV5JDeKJqlbhUKevyITtSrTEMhMc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Tang Bin <tangbin@cmss.chinamobile.com>,
-        Zhang Shengju <zhangshengju@cmss.chinamobile.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.9 150/191] usb: host: ehci-exynos: Fix error check in exynos_ehci_probe()
-Date:   Mon, 29 Jun 2020 11:39:26 -0400
-Message-Id: <20200629154007.2495120-151-sashal@kernel.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 004/191] iio: pressure: bmp280: Tolerate IRQ before registering
+Date:   Mon, 29 Jun 2020 11:37:00 -0400
+Message-Id: <20200629154007.2495120-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -65,42 +66,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tang Bin <tangbin@cmss.chinamobile.com>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-commit 44ed240d62736ad29943ec01e41e194b96f7c5e9 upstream.
+[ Upstream commit 97b31a6f5fb95b1ec6575b78a7240baddba34384 ]
 
-If the function platform_get_irq() failed, the negative value
-returned will not be detected here. So fix error handling in
-exynos_ehci_probe(). And when get irq failed, the function
-platform_get_irq() logs an error message, so remove redundant
-message here.
+With DEBUG_SHIRQ enabled we have a kernel crash
 
-Fixes: 1bcc5aa87f04 ("USB: Add initial S5P EHCI driver")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Zhang Shengju <zhangshengju@cmss.chinamobile.com>
-Signed-off-by: Tang Bin <tangbin@cmss.chinamobile.com>
-Link: https://lore.kernel.org/r/20200602114708.28620-1-tangbin@cmss.chinamobile.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[  116.482696] BUG: kernel NULL pointer dereference, address: 0000000000000000
+
+...
+
+[  116.606571] Call Trace:
+[  116.609023]  <IRQ>
+[  116.611047]  complete+0x34/0x50
+[  116.614206]  bmp085_eoc_irq+0x9/0x10 [bmp280]
+
+because DEBUG_SHIRQ mechanism fires an IRQ before registration and drivers
+ought to be able to handle an interrupt happening before request_irq() returns.
+
+Fixes: aae953949651 ("iio: pressure: bmp280: add support for BMP085 EOC interrupt")
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/ehci-exynos.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+ drivers/iio/pressure/bmp280-core.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/host/ehci-exynos.c b/drivers/usb/host/ehci-exynos.c
-index 7a603f66a9bc5..44b7c3e780f67 100644
---- a/drivers/usb/host/ehci-exynos.c
-+++ b/drivers/usb/host/ehci-exynos.c
-@@ -199,9 +199,8 @@ static int exynos_ehci_probe(struct platform_device *pdev)
- 	hcd->rsrc_len = resource_size(res);
+diff --git a/drivers/iio/pressure/bmp280-core.c b/drivers/iio/pressure/bmp280-core.c
+index c9263acc190b6..36f03fdf4d4f9 100644
+--- a/drivers/iio/pressure/bmp280-core.c
++++ b/drivers/iio/pressure/bmp280-core.c
+@@ -630,7 +630,7 @@ static int bmp180_measure(struct bmp280_data *data, u8 ctrl_meas)
+ 	unsigned int ctrl;
  
- 	irq = platform_get_irq(pdev, 0);
--	if (!irq) {
--		dev_err(&pdev->dev, "Failed to get IRQ\n");
--		err = -ENODEV;
-+	if (irq < 0) {
-+		err = irq;
- 		goto fail_io;
+ 	if (data->use_eoc)
+-		init_completion(&data->done);
++		reinit_completion(&data->done);
+ 
+ 	ret = regmap_write(data->regmap, BMP280_REG_CTRL_MEAS, ctrl_meas);
+ 	if (ret)
+@@ -886,6 +886,9 @@ static int bmp085_fetch_eoc_irq(struct device *dev,
+ 			"trying to enforce it\n");
+ 		irq_trig = IRQF_TRIGGER_RISING;
  	}
- 
++
++	init_completion(&data->done);
++
+ 	ret = devm_request_threaded_irq(dev,
+ 			irq,
+ 			bmp085_eoc_irq,
 -- 
 2.25.1
 
