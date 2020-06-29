@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 234F3C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB882C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 01321206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89B5E20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:22:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462172;
-	bh=KIqz86iLPbGE0xfrJUfeaiRP4YEt5cJQXJcpZvxjiMo=;
+	s=default; t=1593462179;
+	bh=68vB2YRlflfM6eEWY7FVvsbIyR/+gueoV8EbSaIbw6g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aeXZpzHujThyRluAIA7plNLE2Qx2mER6BurOrgue5/+v2/icwmvF9iHhmpI1DRRUp
-	 6A029KZAstFXeNF4OsaKHnymUN2IY640ynKnk8mnZ+M+G0w1jW/U0tKuQFxxQn+eyr
-	 MAbQKleAhSJRuISS5NKQMFHbx64uIbNODd1QDjEE=
+	b=yIO8afBUeKoT4MymFeB46Z1wMGNy+g0HjNg42N/P86+sUtkCEhWlBDWcNN7AYTZwP
+	 7Yy37+tRF2PFHzqJ19Pk8vh+2k2utZq2UWrLVyc1H6nylNsJ9p1ZKjiZkEJc7UKFVI
+	 LDy0BFSAF5q7bYLY3xepa9mMzJpgXarVwLZi/Dww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732714AbgF2UWu (ORCPT
+        id S1732576AbgF2UW5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:22:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37038 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:22:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37072 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732582AbgF2TZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732578AbgF2TZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3752025456;
-        Mon, 29 Jun 2020 15:43:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F4B52548D;
+        Mon, 29 Jun 2020 15:44:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445410;
-        bh=KIqz86iLPbGE0xfrJUfeaiRP4YEt5cJQXJcpZvxjiMo=;
+        s=default; t=1593445450;
+        bh=68vB2YRlflfM6eEWY7FVvsbIyR/+gueoV8EbSaIbw6g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ItTgehNiLDU9LDBTnS9bY2bRzLmOLL3tyyh0MSE0IClURo/kpXwgINeZ1+XNP7sN8
-         5yTxbK5BRNdjhoe/7/4BDs/gretc2XQwyr2ByZTeXc9M+/GtPysKxFhoJW4anRA0nX
-         o/ZdPruR0S2P8pG0AFYmZbKfqbApjoy0CL33LbZw=
+        b=wV/P3X5yG/WdAL2qYnxy6+l5DglLyFfrK5BqjrAbgSLslpkfp/637JyFPZIOPVPIP
+         dXpZ0O8mYMwn6faUgCsxc6eMDo3zjbkyUtMH8MvflHkt04LkHHr5GUJ+UoCmxi8AfV
+         e1CvOAYwf79Qx9ELFPnrTzDT5b1U5pR2ukPSiJ5E=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Qiushi Wu <wu000273@umn.edu>, Ard Biesheuvel <ardb@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 161/191] efi/esrt: Fix reference count leak in esre_create_sysfs_entry.
-Date:   Mon, 29 Jun 2020 11:39:37 -0400
-Message-Id: <20200629154007.2495120-162-sashal@kernel.org>
+Cc:     Takashi Iwai <tiwai@suse.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.9 189/191] ALSA: usb-audio: Fix invalid NULL check in snd_emuusb_set_samplerate()
+Date:   Mon, 29 Jun 2020 11:40:05 -0400
+Message-Id: <20200629154007.2495120-190-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -64,37 +64,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Qiushi Wu <wu000273@umn.edu>
+From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 4ddf4739be6e375116c375f0a68bf3893ffcee21 ]
+commit 6de3c9e3f6b3eaf66859e1379b3f35dda781416b upstream.
 
-kobject_init_and_add() takes reference even when it fails.
-If this function returns an error, kobject_put() must be called to
-properly clean up the memory associated with the object. Previous
-commit "b8eb718348b8" fixed a similar problem.
+The quirk function snd_emuusb_set_samplerate() has a NULL check for
+the mixer element, but this is useless in the current code.  It used
+to be a check against mixer->id_elems[unitid] but it was changed later
+to the value after mixer_eleme_list_to_info() which is always non-NULL
+due to the container_of() usage.
 
-Fixes: 0bb549052d33 ("efi: Add esrt support")
-Signed-off-by: Qiushi Wu <wu000273@umn.edu>
-Link: https://lore.kernel.org/r/20200528183804.4497-1-wu000273@umn.edu
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+This patch fixes the check before the conversion.
+
+While we're at it, correct a typo in the comment in the function,
+too.
+
+Fixes: 8c558076c740 ("ALSA: usb-audio: Clean up mixer element list traverse")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/firmware/efi/esrt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/usb/mixer_quirks.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/firmware/efi/esrt.c b/drivers/firmware/efi/esrt.c
-index 241dd7c63d2c8..481b2f0a190b0 100644
---- a/drivers/firmware/efi/esrt.c
-+++ b/drivers/firmware/efi/esrt.c
-@@ -180,7 +180,7 @@ static int esre_create_sysfs_entry(void *esre, int entry_num)
- 		rc = kobject_init_and_add(&entry->kobj, &esre1_ktype, NULL,
- 					  "entry%d", entry_num);
- 		if (rc) {
--			kfree(entry);
-+			kobject_put(&entry->kobj);
- 			return rc;
+diff --git a/sound/usb/mixer_quirks.c b/sound/usb/mixer_quirks.c
+index 198515f86fcc2..9646513f4b4ad 100644
+--- a/sound/usb/mixer_quirks.c
++++ b/sound/usb/mixer_quirks.c
+@@ -1168,17 +1168,17 @@ void snd_emuusb_set_samplerate(struct snd_usb_audio *chip,
+ {
+ 	struct usb_mixer_interface *mixer;
+ 	struct usb_mixer_elem_info *cval;
+-	int unitid = 12; /* SamleRate ExtensionUnit ID */
++	int unitid = 12; /* SampleRate ExtensionUnit ID */
+ 
+ 	list_for_each_entry(mixer, &chip->mixer_list, list) {
+-		cval = mixer_elem_list_to_info(mixer->id_elems[unitid]);
+-		if (cval) {
++		if (mixer->id_elems[unitid]) {
++			cval = mixer_elem_list_to_info(mixer->id_elems[unitid]);
+ 			snd_usb_mixer_set_ctl_value(cval, UAC_SET_CUR,
+ 						    cval->control << 8,
+ 						    samplerate_id);
+ 			snd_usb_mixer_notify_id(mixer, unitid);
++			break;
  		}
+-		break;
  	}
+ }
+ 
 -- 
 2.25.1
 
