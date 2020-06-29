@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5581AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EAA8C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 31593206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E309B206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:50:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467440;
-	bh=LjpRqfLzZxCARXyxYn/UGAlTTNcE5bmGQyWx9hTCtSM=;
+	s=default; t=1593467441;
+	bh=HHhK9UsZxKWOzpspuvRyxFbdt7ogMPoLlSp61E5kjtM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jxw/GhK9b+2O5hhsz5qglPF8cRK5dChGerepvyE3hIwD/GITAb7HZF2hdLqQuVQsg
-	 2rgVOXnpxkQwQbmKP39ITEzULyAXPFqkfV3oX+f+b4ZvTcQDYrZvupPSJkwg1tXF99
-	 OB0Z+pzVFo0yyWq2Yba2HYRTW6x3sh/wVxz08qOI=
+	b=0wGFENEuE1G2apmqtPLAo41rYtq7Az1eDbxSP9iE4x7yokPEjRqVzWx/+JaNRg5yN
+	 SndbXnDB0Kw8TSwZncyDkV/S75HBlMco4uVW2C/guhTrwYxWTo5XREqIDQdJ0ZF9zq
+	 h/ojuWu3TPD1E7znjPRAog0MiMUJ46u5wI9mvj/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404234AbgF2Vui (ORCPT
+        id S2404480AbgF2Vuk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:50:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56814 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:50:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726677AbgF2Sfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726676AbgF2Sfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:40 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89D74247A2;
-        Mon, 29 Jun 2020 15:21:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8124A2466D;
+        Mon, 29 Jun 2020 15:19:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444110;
-        bh=LjpRqfLzZxCARXyxYn/UGAlTTNcE5bmGQyWx9hTCtSM=;
+        s=default; t=1593443973;
+        bh=HHhK9UsZxKWOzpspuvRyxFbdt7ogMPoLlSp61E5kjtM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k3aaZsZjgXDm/yvBmsAcF1glFZMbCd6ljZNYespqvZ3jnL6dqN2Fb2c5jbqLHwzDV
-         +vTWl0KvakiaYK6MHc2fgg0DjS+9XjX6bU9gCXV1Coz9l3jLuFaqEbj+zKAE0grK/H
-         lkI7/NjnVIAe1CP4HNIF/ihzNd9NTckEkSThXM2c=
+        b=fDNqCK/bq+kxMgvgkRtV/noYKBGPwIt2ipRBBkCtr2ZYwgkTQPXGUEy3JX8WZ/wMA
+         k2ILCZxreHxnlGUv8xKwYeFC+pHRxJkhPcifVOUSH01TQYD4Y8XlIDqQu9/Gw5JHxA
+         zTvNTh8aKo+OJ+E3aeXqnNusMi8PcXbjSjlMdNo4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Matt Fleming <matt@codeblueprint.co.uk>,
-        Borislav Petkov <bp@suse.de>,
+Cc:     Takashi Iwai <tiwai@suse.de>,
+        syzbot+fb14314433463ad51625@syzkaller.appspotmail.com,
+        syzbot+2405ca3401e943c538b5@syzkaller.appspotmail.com,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 221/265] x86/asm/64: Align start of __clear_user() loop to 16-bytes
-Date:   Mon, 29 Jun 2020 11:17:34 -0400
-Message-Id: <20200629151818.2493727-222-sashal@kernel.org>
+Subject: [PATCH 5.7 077/265] ALSA: usb-audio: Fix OOB access of mixer element list
+Date:   Mon, 29 Jun 2020 11:15:10 -0400
+Message-Id: <20200629151818.2493727-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -65,66 +66,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matt Fleming <matt@codeblueprint.co.uk>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit bb5570ad3b54e7930997aec76ab68256d5236d94 upstream.
+commit 220345e98f1cdc768eeb6e3364a0fa7ab9647fe7 upstream.
 
-x86 CPUs can suffer severe performance drops if a tight loop, such as
-the ones in __clear_user(), straddles a 16-byte instruction fetch
-window, or worse, a 64-byte cacheline. This issues was discovered in the
-SUSE kernel with the following commit,
+The USB-audio mixer code holds a linked list of usb_mixer_elem_list,
+and several operations are performed for each mixer element.  A few of
+them (snd_usb_mixer_notify_id() and snd_usb_mixer_interrupt_v2())
+assume each mixer element being a usb_mixer_elem_info object that is a
+subclass of usb_mixer_elem_list, cast via container_of() and access it
+members.  This may result in an out-of-bound access when a
+non-standard list element has been added, as spotted by syzkaller
+recently.
 
-  1153933703d9 ("x86/asm/64: Micro-optimize __clear_user() - Use immediate constants")
+This patch adds a new field, is_std_info, in usb_mixer_elem_list to
+indicate that the element is the usb_mixer_elem_info type or not, and
+skip the access to such an element if needed.
 
-which increased the code object size from 10 bytes to 15 bytes and
-caused the 8-byte copy loop in __clear_user() to be split across a
-64-byte cacheline.
-
-Aligning the start of the loop to 16-bytes makes this fit neatly inside
-a single instruction fetch window again and restores the performance of
-__clear_user() which is used heavily when reading from /dev/zero.
-
-Here are some numbers from running libmicro's read_z* and pread_z*
-microbenchmarks which read from /dev/zero:
-
-  Zen 1 (Naples)
-
-  libmicro-file
-                                        5.7.0-rc6              5.7.0-rc6              5.7.0-rc6
-                                                    revert-1153933703d9+               align16+
-  Time mean95-pread_z100k       9.9195 (   0.00%)      5.9856 (  39.66%)      5.9938 (  39.58%)
-  Time mean95-pread_z10k        1.1378 (   0.00%)      0.7450 (  34.52%)      0.7467 (  34.38%)
-  Time mean95-pread_z1k         0.2623 (   0.00%)      0.2251 (  14.18%)      0.2252 (  14.15%)
-  Time mean95-pread_zw100k      9.9974 (   0.00%)      6.0648 (  39.34%)      6.0756 (  39.23%)
-  Time mean95-read_z100k        9.8940 (   0.00%)      5.9885 (  39.47%)      5.9994 (  39.36%)
-  Time mean95-read_z10k         1.1394 (   0.00%)      0.7483 (  34.33%)      0.7482 (  34.33%)
-
-Note that this doesn't affect Haswell or Broadwell microarchitectures
-which seem to avoid the alignment issue by executing the loop straight
-out of the Loop Stream Detector (verified using perf events).
-
-Fixes: 1153933703d9 ("x86/asm/64: Micro-optimize __clear_user() - Use immediate constants")
-Signed-off-by: Matt Fleming <matt@codeblueprint.co.uk>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: <stable@vger.kernel.org> # v4.19+
-Link: https://lkml.kernel.org/r/20200618102002.30034-1-matt@codeblueprint.co.uk
+Reported-by: syzbot+fb14314433463ad51625@syzkaller.appspotmail.com
+Reported-by: syzbot+2405ca3401e943c538b5@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200624122340.9615-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/lib/usercopy_64.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/usb/mixer.c        | 15 +++++++++++----
+ sound/usb/mixer.h        |  9 +++++++--
+ sound/usb/mixer_quirks.c |  3 ++-
+ 3 files changed, 20 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/lib/usercopy_64.c b/arch/x86/lib/usercopy_64.c
-index fff28c6f73a21..b0dfac3d3df71 100644
---- a/arch/x86/lib/usercopy_64.c
-+++ b/arch/x86/lib/usercopy_64.c
-@@ -24,6 +24,7 @@ unsigned long __clear_user(void __user *addr, unsigned long size)
- 	asm volatile(
- 		"	testq  %[size8],%[size8]\n"
- 		"	jz     4f\n"
-+		"	.align 16\n"
- 		"0:	movq $0,(%[dst])\n"
- 		"	addq   $8,%[dst]\n"
- 		"	decl %%ecx ; jnz   0b\n"
+diff --git a/sound/usb/mixer.c b/sound/usb/mixer.c
+index 15769f266790e..eab0fd4fd7c33 100644
+--- a/sound/usb/mixer.c
++++ b/sound/usb/mixer.c
+@@ -581,8 +581,9 @@ static int check_matrix_bitmap(unsigned char *bmap,
+  * if failed, give up and free the control instance.
+  */
+ 
+-int snd_usb_mixer_add_control(struct usb_mixer_elem_list *list,
+-			      struct snd_kcontrol *kctl)
++int snd_usb_mixer_add_list(struct usb_mixer_elem_list *list,
++			   struct snd_kcontrol *kctl,
++			   bool is_std_info)
+ {
+ 	struct usb_mixer_interface *mixer = list->mixer;
+ 	int err;
+@@ -596,6 +597,7 @@ int snd_usb_mixer_add_control(struct usb_mixer_elem_list *list,
+ 		return err;
+ 	}
+ 	list->kctl = kctl;
++	list->is_std_info = is_std_info;
+ 	list->next_id_elem = mixer->id_elems[list->id];
+ 	mixer->id_elems[list->id] = list;
+ 	return 0;
+@@ -3234,8 +3236,11 @@ void snd_usb_mixer_notify_id(struct usb_mixer_interface *mixer, int unitid)
+ 	unitid = delegate_notify(mixer, unitid, NULL, NULL);
+ 
+ 	for_each_mixer_elem(list, mixer, unitid) {
+-		struct usb_mixer_elem_info *info =
+-			mixer_elem_list_to_info(list);
++		struct usb_mixer_elem_info *info;
++
++		if (!list->is_std_info)
++			continue;
++		info = mixer_elem_list_to_info(list);
+ 		/* invalidate cache, so the value is read from the device */
+ 		info->cached = 0;
+ 		snd_ctl_notify(mixer->chip->card, SNDRV_CTL_EVENT_MASK_VALUE,
+@@ -3315,6 +3320,8 @@ static void snd_usb_mixer_interrupt_v2(struct usb_mixer_interface *mixer,
+ 
+ 		if (!list->kctl)
+ 			continue;
++		if (!list->is_std_info)
++			continue;
+ 
+ 		info = mixer_elem_list_to_info(list);
+ 		if (count > 1 && info->control != control)
+diff --git a/sound/usb/mixer.h b/sound/usb/mixer.h
+index 41ec9dc4139bb..c29e27ac43a7a 100644
+--- a/sound/usb/mixer.h
++++ b/sound/usb/mixer.h
+@@ -66,6 +66,7 @@ struct usb_mixer_elem_list {
+ 	struct usb_mixer_elem_list *next_id_elem; /* list of controls with same id */
+ 	struct snd_kcontrol *kctl;
+ 	unsigned int id;
++	bool is_std_info;
+ 	usb_mixer_elem_dump_func_t dump;
+ 	usb_mixer_elem_resume_func_t resume;
+ };
+@@ -103,8 +104,12 @@ void snd_usb_mixer_notify_id(struct usb_mixer_interface *mixer, int unitid);
+ int snd_usb_mixer_set_ctl_value(struct usb_mixer_elem_info *cval,
+ 				int request, int validx, int value_set);
+ 
+-int snd_usb_mixer_add_control(struct usb_mixer_elem_list *list,
+-			      struct snd_kcontrol *kctl);
++int snd_usb_mixer_add_list(struct usb_mixer_elem_list *list,
++			   struct snd_kcontrol *kctl,
++			   bool is_std_info);
++
++#define snd_usb_mixer_add_control(list, kctl) \
++	snd_usb_mixer_add_list(list, kctl, true)
+ 
+ void snd_usb_mixer_elem_init_std(struct usb_mixer_elem_list *list,
+ 				 struct usb_mixer_interface *mixer,
+diff --git a/sound/usb/mixer_quirks.c b/sound/usb/mixer_quirks.c
+index aad2683ff7933..260607144f565 100644
+--- a/sound/usb/mixer_quirks.c
++++ b/sound/usb/mixer_quirks.c
+@@ -158,7 +158,8 @@ static int add_single_ctl_with_resume(struct usb_mixer_interface *mixer,
+ 		return -ENOMEM;
+ 	}
+ 	kctl->private_free = snd_usb_mixer_elem_free;
+-	return snd_usb_mixer_add_control(list, kctl);
++	/* don't use snd_usb_mixer_add_control() here, this is a special list element */
++	return snd_usb_mixer_add_list(list, kctl, false);
+ }
+ 
+ /*
 -- 
 2.25.1
 
