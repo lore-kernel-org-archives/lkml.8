@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 602B7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94A2DC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:58:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3083E20674
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:58:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7312420674
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:58:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460703;
-	bh=7K9g6zPSWAiKmBVe5pDdMcG6lBbophJ9e+RIFXD0hJs=;
+	s=default; t=1593460706;
+	bh=mfDFS8D7iKgXefOgDDNed7cMp9TqQlEMh+b4QZDqsu0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SUvZk3kxaYoSMf0UJFW8AM7ryI4LC0dE16m+ilBvvGhFfDrDuvq4pr3sg15myFcFY
-	 //lntlPyzNz48b0RsVxW4WJtQeZBxbOax/F/RQMJ6qP5qkSJfx5o/gnd7RScKI77l+
-	 XHQFaJPjUQ28QS3EHzHGY4v++ZYfN+rycbJAIQKU=
+	b=N3s/mucKbnNzLXaookM8/CBS3+9B46YHcZbO2/eXfcFds8YTYlGI2xTHU5OPpRIMI
+	 fwd1nCa5BBsi6SXFEqgx9AX1hnP5HwIf/IGB8dyBTW4VNJiPbvj5VQFY4SU+u0RGur
+	 /ni3picypk6uixKyYLbHVLWCRKaouSmJ03Yk9l20=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388419AbgF2T6U (ORCPT
+        id S2388481AbgF2T6Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:58:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47670 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:58:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47696 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387600AbgF2TkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387595AbgF2TkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A1682491A;
-        Mon, 29 Jun 2020 15:27:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C9EF248FE;
+        Mon, 29 Jun 2020 15:27:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444470;
-        bh=7K9g6zPSWAiKmBVe5pDdMcG6lBbophJ9e+RIFXD0hJs=;
+        s=default; t=1593444451;
+        bh=mfDFS8D7iKgXefOgDDNed7cMp9TqQlEMh+b4QZDqsu0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U7xGaTJAHYWkiPiXrsA4H3BZFYfgeD4ryM4+0XAwxeyPFb4kIXHA2UG4sdbqRlC2E
-         7weJLZU7jVCAmPfFyw6CY7OqfWfk3JngfuZevxkOyzSf3v7f/jmyLvjJB6jVXO/5bJ
-         ZyJC4YIcSljZM6mLAlZc6Cp/bf0mQe/pjNglq/CA=
+        b=t2OD/ksNtK9vXh7fo2CiuNzzZE478RxTtCkL89sYQlNtdlGLQC9xNO4v+w1/LNHhg
+         8CEVoV+vM9ZQjD2gHoKvK43DPuJH0fR40qIcNVwsY/ENqW6xF/wJ43I0wapiVHXmpf
+         Z3lG0RWoDRc1yZKuZ17pC2YZE8luk6fP2vhwm3dc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Filipe Manana <fdmanana@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 151/178] btrfs: fix data block group relocation failure due to concurrent scrub
-Date:   Mon, 29 Jun 2020 11:24:56 -0400
-Message-Id: <20200629152523.2494198-152-sashal@kernel.org>
+Cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 131/178] s390/vdso: fix vDSO clock_getres()
+Date:   Mon, 29 Jun 2020 11:24:36 -0400
+Message-Id: <20200629152523.2494198-132-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -66,196 +67,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Vincenzo Frascino <vincenzo.frascino@arm.com>
 
-commit 432cd2a10f1c10cead91fe706ff5dc52f06d642a upstream.
+[ Upstream commit 478237a595120a18e9b52fd2c57a6e8b7a01e411 ]
 
-When running relocation of a data block group while scrub is running in
-parallel, it is possible that the relocation will fail and abort the
-current transaction with an -EINVAL error:
+clock_getres in the vDSO library has to preserve the same behaviour
+of posix_get_hrtimer_res().
 
-   [134243.988595] BTRFS info (device sdc): found 14 extents, stage: move data extents
-   [134243.999871] ------------[ cut here ]------------
-   [134244.000741] BTRFS: Transaction aborted (error -22)
-   [134244.001692] WARNING: CPU: 0 PID: 26954 at fs/btrfs/ctree.c:1071 __btrfs_cow_block+0x6a7/0x790 [btrfs]
-   [134244.003380] Modules linked in: btrfs blake2b_generic xor raid6_pq (...)
-   [134244.012577] CPU: 0 PID: 26954 Comm: btrfs Tainted: G        W         5.6.0-rc7-btrfs-next-58 #5
-   [134244.014162] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
-   [134244.016184] RIP: 0010:__btrfs_cow_block+0x6a7/0x790 [btrfs]
-   [134244.017151] Code: 48 c7 c7 (...)
-   [134244.020549] RSP: 0018:ffffa41607863888 EFLAGS: 00010286
-   [134244.021515] RAX: 0000000000000000 RBX: ffff9614bdfe09c8 RCX: 0000000000000000
-   [134244.022822] RDX: 0000000000000001 RSI: ffffffffb3d63980 RDI: 0000000000000001
-   [134244.024124] RBP: ffff961589e8c000 R08: 0000000000000000 R09: 0000000000000001
-   [134244.025424] R10: ffffffffc0ae5955 R11: 0000000000000000 R12: ffff9614bd530d08
-   [134244.026725] R13: ffff9614ced41b88 R14: ffff9614bdfe2a48 R15: 0000000000000000
-   [134244.028024] FS:  00007f29b63c08c0(0000) GS:ffff9615ba600000(0000) knlGS:0000000000000000
-   [134244.029491] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-   [134244.030560] CR2: 00007f4eb339b000 CR3: 0000000130d6e006 CR4: 00000000003606f0
-   [134244.031997] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-   [134244.033153] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-   [134244.034484] Call Trace:
-   [134244.034984]  btrfs_cow_block+0x12b/0x2b0 [btrfs]
-   [134244.035859]  do_relocation+0x30b/0x790 [btrfs]
-   [134244.036681]  ? do_raw_spin_unlock+0x49/0xc0
-   [134244.037460]  ? _raw_spin_unlock+0x29/0x40
-   [134244.038235]  relocate_tree_blocks+0x37b/0x730 [btrfs]
-   [134244.039245]  relocate_block_group+0x388/0x770 [btrfs]
-   [134244.040228]  btrfs_relocate_block_group+0x161/0x2e0 [btrfs]
-   [134244.041323]  btrfs_relocate_chunk+0x36/0x110 [btrfs]
-   [134244.041345]  btrfs_balance+0xc06/0x1860 [btrfs]
-   [134244.043382]  ? btrfs_ioctl_balance+0x27c/0x310 [btrfs]
-   [134244.045586]  btrfs_ioctl_balance+0x1ed/0x310 [btrfs]
-   [134244.045611]  btrfs_ioctl+0x1880/0x3760 [btrfs]
-   [134244.049043]  ? do_raw_spin_unlock+0x49/0xc0
-   [134244.049838]  ? _raw_spin_unlock+0x29/0x40
-   [134244.050587]  ? __handle_mm_fault+0x11b3/0x14b0
-   [134244.051417]  ? ksys_ioctl+0x92/0xb0
-   [134244.052070]  ksys_ioctl+0x92/0xb0
-   [134244.052701]  ? trace_hardirqs_off_thunk+0x1a/0x1c
-   [134244.053511]  __x64_sys_ioctl+0x16/0x20
-   [134244.054206]  do_syscall_64+0x5c/0x280
-   [134244.054891]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-   [134244.055819] RIP: 0033:0x7f29b51c9dd7
-   [134244.056491] Code: 00 00 00 (...)
-   [134244.059767] RSP: 002b:00007ffcccc1dd08 EFLAGS: 00000202 ORIG_RAX: 0000000000000010
-   [134244.061168] RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 00007f29b51c9dd7
-   [134244.062474] RDX: 00007ffcccc1dda0 RSI: 00000000c4009420 RDI: 0000000000000003
-   [134244.063771] RBP: 0000000000000003 R08: 00005565cea4b000 R09: 0000000000000000
-   [134244.065032] R10: 0000000000000541 R11: 0000000000000202 R12: 00007ffcccc2060a
-   [134244.066327] R13: 00007ffcccc1dda0 R14: 0000000000000002 R15: 00007ffcccc1dec0
-   [134244.067626] irq event stamp: 0
-   [134244.068202] hardirqs last  enabled at (0): [<0000000000000000>] 0x0
-   [134244.069351] hardirqs last disabled at (0): [<ffffffffb2abdedf>] copy_process+0x74f/0x2020
-   [134244.070909] softirqs last  enabled at (0): [<ffffffffb2abdedf>] copy_process+0x74f/0x2020
-   [134244.072392] softirqs last disabled at (0): [<0000000000000000>] 0x0
-   [134244.073432] ---[ end trace bd7c03622e0b0a99 ]---
+In particular, posix_get_hrtimer_res() does:
+    sec = 0;
+    ns = hrtimer_resolution;
+and hrtimer_resolution depends on the enablement of the high
+resolution timers that can happen either at compile or at run time.
 
-The -EINVAL error comes from the following chain of function calls:
+Fix the s390 vdso implementation of clock_getres keeping a copy of
+hrtimer_resolution in vdso data and using that directly.
 
-  __btrfs_cow_block() <-- aborts the transaction
-    btrfs_reloc_cow_block()
-      replace_file_extents()
-        get_new_location() <-- returns -EINVAL
-
-When relocating a data block group, for each allocated extent of the block
-group, we preallocate another extent (at prealloc_file_extent_cluster()),
-associated with the data relocation inode, and then dirty all its pages.
-These preallocated extents have, and must have, the same size that extents
-from the data block group being relocated have.
-
-Later before we start the relocation stage that updates pointers (bytenr
-field of file extent items) to point to the the new extents, we trigger
-writeback for the data relocation inode. The expectation is that writeback
-will write the pages to the previously preallocated extents, that it
-follows the NOCOW path. That is generally the case, however, if a scrub
-is running it may have turned the block group that contains those extents
-into RO mode, in which case writeback falls back to the COW path.
-
-However in the COW path instead of allocating exactly one extent with the
-expected size, the allocator may end up allocating several smaller extents
-due to free space fragmentation - because we tell it at cow_file_range()
-that the minimum allocation size can match the filesystem's sector size.
-This later breaks the relocation's expectation that an extent associated
-to a file extent item in the data relocation inode has the same size as
-the respective extent pointed by a file extent item in another tree - in
-this case the extent to which the relocation inode poins to is smaller,
-causing relocation.c:get_new_location() to return -EINVAL.
-
-For example, if we are relocating a data block group X that has a logical
-address of X and the block group has an extent allocated at the logical
-address X + 128KiB with a size of 64KiB:
-
-1) At prealloc_file_extent_cluster() we allocate an extent for the data
-   relocation inode with a size of 64KiB and associate it to the file
-   offset 128KiB (X + 128KiB - X) of the data relocation inode. This
-   preallocated extent was allocated at block group Z;
-
-2) A scrub running in parallel turns block group Z into RO mode and
-   starts scrubing its extents;
-
-3) Relocation triggers writeback for the data relocation inode;
-
-4) When running delalloc (btrfs_run_delalloc_range()), we try first the
-   NOCOW path because the data relocation inode has BTRFS_INODE_PREALLOC
-   set in its flags. However, because block group Z is in RO mode, the
-   NOCOW path (run_delalloc_nocow()) falls back into the COW path, by
-   calling cow_file_range();
-
-5) At cow_file_range(), in the first iteration of the while loop we call
-   btrfs_reserve_extent() to allocate a 64KiB extent and pass it a minimum
-   allocation size of 4KiB (fs_info->sectorsize). Due to free space
-   fragmentation, btrfs_reserve_extent() ends up allocating two extents
-   of 32KiB each, each one on a different iteration of that while loop;
-
-6) Writeback of the data relocation inode completes;
-
-7) Relocation proceeds and ends up at relocation.c:replace_file_extents(),
-   with a leaf which has a file extent item that points to the data extent
-   from block group X, that has a logical address (bytenr) of X + 128KiB
-   and a size of 64KiB. Then it calls get_new_location(), which does a
-   lookup in the data relocation tree for a file extent item starting at
-   offset 128KiB (X + 128KiB - X) and belonging to the data relocation
-   inode. It finds a corresponding file extent item, however that item
-   points to an extent that has a size of 32KiB, which doesn't match the
-   expected size of 64KiB, resuling in -EINVAL being returned from this
-   function and propagated up to __btrfs_cow_block(), which aborts the
-   current transaction.
-
-To fix this make sure that at cow_file_range() when we call the allocator
-we pass it a minimum allocation size corresponding the desired extent size
-if the inode belongs to the data relocation tree, otherwise pass it the
-filesystem's sector size as the minimum allocation size.
-
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: https://lkml.kernel.org/r/20200324121027.21665-1-vincenzo.frascino@arm.com
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+Acked-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+[heiko.carstens@de.ibm.com: use llgf for proper zero extension]
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/btrfs/inode.c | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+ arch/s390/include/asm/vdso.h           |  1 +
+ arch/s390/kernel/asm-offsets.c         |  2 +-
+ arch/s390/kernel/time.c                |  1 +
+ arch/s390/kernel/vdso64/clock_getres.S | 10 +++++-----
+ 4 files changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index 48c8e5a4c9120..0984601418e50 100644
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -975,6 +975,7 @@ static noinline int cow_file_range(struct inode *inode,
- 	u64 num_bytes;
- 	unsigned long ram_size;
- 	u64 cur_alloc_size = 0;
-+	u64 min_alloc_size;
- 	u64 blocksize = fs_info->sectorsize;
- 	struct btrfs_key ins;
- 	struct extent_map *em;
-@@ -1025,10 +1026,26 @@ static noinline int cow_file_range(struct inode *inode,
- 	btrfs_drop_extent_cache(BTRFS_I(inode), start,
- 			start + num_bytes - 1, 0);
+diff --git a/arch/s390/include/asm/vdso.h b/arch/s390/include/asm/vdso.h
+index 169d7604eb804..f3ba84fa9bd18 100644
+--- a/arch/s390/include/asm/vdso.h
++++ b/arch/s390/include/asm/vdso.h
+@@ -36,6 +36,7 @@ struct vdso_data {
+ 	__u32 tk_shift;			/* Shift used for xtime_nsec	0x60 */
+ 	__u32 ts_dir;			/* TOD steering direction	0x64 */
+ 	__u64 ts_end;			/* TOD steering end		0x68 */
++	__u32 hrtimer_res;		/* hrtimer resolution		0x70 */
+ };
  
-+	/*
-+	 * Relocation relies on the relocated extents to have exactly the same
-+	 * size as the original extents. Normally writeback for relocation data
-+	 * extents follows a NOCOW path because relocation preallocates the
-+	 * extents. However, due to an operation such as scrub turning a block
-+	 * group to RO mode, it may fallback to COW mode, so we must make sure
-+	 * an extent allocated during COW has exactly the requested size and can
-+	 * not be split into smaller extents, otherwise relocation breaks and
-+	 * fails during the stage where it updates the bytenr of file extent
-+	 * items.
-+	 */
-+	if (root->root_key.objectid == BTRFS_DATA_RELOC_TREE_OBJECTID)
-+		min_alloc_size = num_bytes;
-+	else
-+		min_alloc_size = fs_info->sectorsize;
-+
- 	while (num_bytes > 0) {
- 		cur_alloc_size = num_bytes;
- 		ret = btrfs_reserve_extent(root, cur_alloc_size, cur_alloc_size,
--					   fs_info->sectorsize, 0, alloc_hint,
-+					   min_alloc_size, 0, alloc_hint,
- 					   &ins, 1, 1);
- 		if (ret < 0)
- 			goto out_unlock;
+ struct vdso_per_cpu_data {
+diff --git a/arch/s390/kernel/asm-offsets.c b/arch/s390/kernel/asm-offsets.c
+index b6628586ab702..a65cb4924bdbd 100644
+--- a/arch/s390/kernel/asm-offsets.c
++++ b/arch/s390/kernel/asm-offsets.c
+@@ -76,6 +76,7 @@ int main(void)
+ 	OFFSET(__VDSO_TK_SHIFT, vdso_data, tk_shift);
+ 	OFFSET(__VDSO_TS_DIR, vdso_data, ts_dir);
+ 	OFFSET(__VDSO_TS_END, vdso_data, ts_end);
++	OFFSET(__VDSO_CLOCK_REALTIME_RES, vdso_data, hrtimer_res);
+ 	OFFSET(__VDSO_ECTG_BASE, vdso_per_cpu_data, ectg_timer_base);
+ 	OFFSET(__VDSO_ECTG_USER, vdso_per_cpu_data, ectg_user_time);
+ 	OFFSET(__VDSO_CPU_NR, vdso_per_cpu_data, cpu_nr);
+@@ -87,7 +88,6 @@ int main(void)
+ 	DEFINE(__CLOCK_REALTIME_COARSE, CLOCK_REALTIME_COARSE);
+ 	DEFINE(__CLOCK_MONOTONIC_COARSE, CLOCK_MONOTONIC_COARSE);
+ 	DEFINE(__CLOCK_THREAD_CPUTIME_ID, CLOCK_THREAD_CPUTIME_ID);
+-	DEFINE(__CLOCK_REALTIME_RES, MONOTONIC_RES_NSEC);
+ 	DEFINE(__CLOCK_COARSE_RES, LOW_RES_NSEC);
+ 	BLANK();
+ 	/* idle data offsets */
+diff --git a/arch/s390/kernel/time.c b/arch/s390/kernel/time.c
+index e8766beee5ad8..8ea9db599d38d 100644
+--- a/arch/s390/kernel/time.c
++++ b/arch/s390/kernel/time.c
+@@ -310,6 +310,7 @@ void update_vsyscall(struct timekeeper *tk)
+ 
+ 	vdso_data->tk_mult = tk->tkr_mono.mult;
+ 	vdso_data->tk_shift = tk->tkr_mono.shift;
++	vdso_data->hrtimer_res = hrtimer_resolution;
+ 	smp_wmb();
+ 	++vdso_data->tb_update_count;
+ }
+diff --git a/arch/s390/kernel/vdso64/clock_getres.S b/arch/s390/kernel/vdso64/clock_getres.S
+index 081435398e0a1..0c79caa32b592 100644
+--- a/arch/s390/kernel/vdso64/clock_getres.S
++++ b/arch/s390/kernel/vdso64/clock_getres.S
+@@ -17,12 +17,14 @@
+ 	.type  __kernel_clock_getres,@function
+ __kernel_clock_getres:
+ 	CFI_STARTPROC
+-	larl	%r1,4f
++	larl	%r1,3f
++	lg	%r0,0(%r1)
+ 	cghi	%r2,__CLOCK_REALTIME_COARSE
+ 	je	0f
+ 	cghi	%r2,__CLOCK_MONOTONIC_COARSE
+ 	je	0f
+-	larl	%r1,3f
++	larl	%r1,_vdso_data
++	llgf	%r0,__VDSO_CLOCK_REALTIME_RES(%r1)
+ 	cghi	%r2,__CLOCK_REALTIME
+ 	je	0f
+ 	cghi	%r2,__CLOCK_MONOTONIC
+@@ -36,7 +38,6 @@ __kernel_clock_getres:
+ 	jz	2f
+ 0:	ltgr	%r3,%r3
+ 	jz	1f				/* res == NULL */
+-	lg	%r0,0(%r1)
+ 	xc	0(8,%r3),0(%r3)			/* set tp->tv_sec to zero */
+ 	stg	%r0,8(%r3)			/* store tp->tv_usec */
+ 1:	lghi	%r2,0
+@@ -45,6 +46,5 @@ __kernel_clock_getres:
+ 	svc	0
+ 	br	%r14
+ 	CFI_ENDPROC
+-3:	.quad	__CLOCK_REALTIME_RES
+-4:	.quad	__CLOCK_COARSE_RES
++3:	.quad	__CLOCK_COARSE_RES
+ 	.size	__kernel_clock_getres,.-__kernel_clock_getres
 -- 
 2.25.1
 
