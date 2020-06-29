@@ -2,150 +2,186 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE81C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B974C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E17A720663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:48:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C54120663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:48:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vs7YwODt"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="FYmhjDIX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389565AbgF2UsY (ORCPT
+        id S2389572AbgF2Use (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:48:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43372 "EHLO
+        Mon, 29 Jun 2020 16:48:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43394 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731524AbgF2TNu (ORCPT
+        with ESMTP id S1731520AbgF2TNt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:13:50 -0400
-Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66AD4C08EB40
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:42:08 -0700 (PDT)
-Received: by mail-qk1-x744.google.com with SMTP id 80so14342590qko.7
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:42:08 -0700 (PDT)
+        Mon, 29 Jun 2020 15:13:49 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F6E9C08ECB1
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:50:21 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id h5so15320696wrc.7
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:50:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=v2cUY6dn/8hM5Fe6/vgpIOBYGaKKOrNbvFVWUTgCzZQ=;
-        b=Vs7YwODtzdw0nnL5dB4Bd0RIlci2u3B6noXOgRab6ppKE6A7jRezT7TVbcrQUOLYRY
-         mSYHQ9313VtfFpaqCJUqSOmM3NyAk4uOeGSqtTmP6loy9QRx94fliMk2r7+UKJK26jQk
-         MzBme0vl0WF1haS0FMA8EQHF13IyO//f7brDudNRT/3PLrvJ8xn6sn9aI8kmHud3GmlU
-         waSMIXTzUMlD/BwM5BY2YW0IZAOcYacRRBtm5gR8hUEmFmD23EA8VB6yZqkc18X09o1H
-         JUjqtBpZTlw/XJFzBvxgumP78wbUDw2mMOo1InHOcQfdteWj4NAwzTKEO5IA/Do6JFrW
-         cbTg==
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=HQLZ+jko03ajYiEU9tKzGTq9iSv1zZX+07bBcjYcbLA=;
+        b=FYmhjDIXqE+19n161Ij01cT38yTbnnKTVcBm5nfxvt0mQoxdX8jT5GCNuSmoKGQ2il
+         zlOMuHkFhRAhof+11xURpM5Ke9pgsEcriQuwBOd7e7VKbccssUwJ9KxNsQDeqO4m5yuT
+         CgkHnWe1BxhBEASU/SLGzD8cRrDNVjdIEF+BGPRnD7hDJ2xzsV1jeWo7vkuqUQmaNAZ6
+         Gm84ZPAyV54o4Y60vwDt0COyyKKs3duQp77LiMGGjUsxBO+z7tCOdsozVT9eEkf+ahFl
+         Idog53/4Cl4F2ELArDr6T+/8gsp/dA2WV2zXGEzT00o2WxhlEeOg4DIy1JjL+7hu6hvP
+         BimA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=v2cUY6dn/8hM5Fe6/vgpIOBYGaKKOrNbvFVWUTgCzZQ=;
-        b=PpuuRTkwFsMsNUVwIA2N8xgQuXePH+1DlEq5hziSSC7O4Pok/4HRKSuOXr8TIkABBj
-         idtnXHYbqG8NNEGXvj9QprKXL1AnOILcDA7ydq7KlCnpNEv8LXNoYlBhtRREXyah5vYW
-         W54CgO2L3uaxX+bHqjdQY85NnONKoASWScxVLTMXv57SHkY8i3+BP5KyLDBAPxraVZg0
-         z5+6R5zv2CjTFBQqooI1KxWCXqoi7AyjQR6zLC5p87F41kLTRWdcam8dVDm/Hjhp2MNp
-         geQIWpWvIZXeus2pTr4098bcObfpksZ7e/OQAPxqAgseairrfeN8AZWejILz9u1iW14g
-         MVvQ==
-X-Gm-Message-State: AOAM533jcbTieKSCAzkeGC35XW2Qsh2Z9DDXI589lE4620Waf25+94e1
-        xBZQGJ/aTo8TUfPgETihbMudxeq4t/PeslFxxBM=
-X-Google-Smtp-Source: ABdhPJy06spvE0O/+QHN1s639aC0ijZEMrz9WuEYm1H8fxF5KAdsz+aO5ojKo1uKVsFR2ceSNLKEWZswC0rNB1kK1sI=
-X-Received: by 2002:ae9:e20c:: with SMTP id c12mr12959301qkc.187.1593412927403;
- Sun, 28 Jun 2020 23:42:07 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=HQLZ+jko03ajYiEU9tKzGTq9iSv1zZX+07bBcjYcbLA=;
+        b=FshWzkF8sp3XvJ4WyiflLWgml5keywgg0al2vEafjIJrSrQfuwIY+sPRIqjnjQRsCw
+         jC1tm36iCmGlcH7z6bYfMFM39o5cMeS/BS6hr5+N7I6nWTunf6oLBXX3BpmrZkA3PMhg
+         sdwF/Lcs+A/8kTiH7KebJ1PU4Del/Y+FVrEZA25PTTkYez53argtrKYJbgjoLYoA2MfV
+         bJhLujw/uccdSjeaDOZXqsFvO48kyS9NchrGKHDNpBRck0FfElTIx8XTUCh0XCzsLtu+
+         Vd6WH3oh82LKg2CdiIKCIpJWIngS1Im2ZU0clnoWEHbER512aZ/Pg9uCTSaJhXMOQpj8
+         /k+Q==
+X-Gm-Message-State: AOAM531B7eGEVgHKfJA8SPi4jrt2BjSOcQiAYLVG6NgnHwiIHB40pp97
+        KG6rtvsEOvyf0h46/K4vlSV31Q==
+X-Google-Smtp-Source: ABdhPJx4pF05M7pSnBLMBSCCL5/gux2FQqGxkWxH+G1Fjsdujj7JidMEWyZnEHhaT+WmVt1X6gqXvg==
+X-Received: by 2002:adf:f8d1:: with SMTP id f17mr15609276wrq.59.1593413420219;
+        Sun, 28 Jun 2020 23:50:20 -0700 (PDT)
+Received: from localhost.localdomain (lfbn-nic-1-65-232.w2-15.abo.wanadoo.fr. [2.15.156.232])
+        by smtp.gmail.com with ESMTPSA id z25sm26400850wmk.28.2020.06.28.23.50.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 28 Jun 2020 23:50:19 -0700 (PDT)
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Jean Delvare <jdelvare@suse.com>
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hwmon@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: [PATCH v2 5/6] devres: provide devm_krealloc()
+Date:   Mon, 29 Jun 2020 08:50:07 +0200
+Message-Id: <20200629065008.27620-6-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.26.1
+In-Reply-To: <20200629065008.27620-1-brgl@bgdev.pl>
+References: <20200629065008.27620-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-References: <1592892828-1934-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1592892828-1934-6-git-send-email-iamjoonsoo.kim@lge.com> <20200625120550.GF1320@dhcp22.suse.cz>
- <CAAmzW4ObN=GAzCLw8betLftTeCEsLs4OihfNXvtg4CaWyWiBCw@mail.gmail.com> <20200626073342.GU1320@dhcp22.suse.cz>
-In-Reply-To: <20200626073342.GU1320@dhcp22.suse.cz>
-From:   Joonsoo Kim <js1304@gmail.com>
-Date:   Mon, 29 Jun 2020 15:41:37 +0900
-Message-ID: <CAAmzW4PT+M8mUwXMPhQSKLhz9nkPATivL5D-yLyyfC9SOwPnYQ@mail.gmail.com>
-Subject: Re: [PATCH v3 5/8] mm/migrate: make a standard migration target
- allocation function
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, kernel-team@lge.com,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Hellwig <hch@infradead.org>,
-        Roman Gushchin <guro@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=EB=85=84 6=EC=9B=94 26=EC=9D=BC (=EA=B8=88) =EC=98=A4=ED=9B=84 4:33, M=
-ichal Hocko <mhocko@kernel.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
->
-> On Fri 26-06-20 14:02:49, Joonsoo Kim wrote:
-> > 2020=EB=85=84 6=EC=9B=94 25=EC=9D=BC (=EB=AA=A9) =EC=98=A4=ED=9B=84 9:0=
-5, Michal Hocko <mhocko@kernel.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
-> > >
-> > > On Tue 23-06-20 15:13:45, Joonsoo Kim wrote:
-> [...]
-> > > > -struct page *new_page_nodemask(struct page *page,
-> > > > -                             int preferred_nid, nodemask_t *nodema=
-sk)
-> > > > +struct page *alloc_migration_target(struct page *page, unsigned lo=
-ng private)
-> > > >  {
-> > > > -     gfp_t gfp_mask =3D GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAY=
-FAIL;
-> > > > +     struct migration_target_control *mtc;
-> > > > +     gfp_t gfp_mask;
-> > > >       unsigned int order =3D 0;
-> > > >       struct page *new_page =3D NULL;
-> > > > +     int zidx;
-> > > > +
-> > > > +     mtc =3D (struct migration_target_control *)private;
-> > > > +     gfp_mask =3D mtc->gfp_mask;
-> > > >
-> > > >       if (PageHuge(page)) {
-> > > >               return alloc_huge_page_nodemask(
-> > > > -                             page_hstate(compound_head(page)),
-> > > > -                             preferred_nid, nodemask, 0, false);
-> > > > +                             page_hstate(compound_head(page)), mtc=
-->nid,
-> > > > +                             mtc->nmask, gfp_mask, false);
-> > > >       }
-> > > >
-> > > >       if (PageTransHuge(page)) {
-> > > > +             gfp_mask &=3D ~__GFP_RECLAIM;
-> > >
-> > > What's up with this gfp_mask modification?
-> >
-> > THP page allocation uses a standard gfp masks, GFP_TRANSHUGE_LIGHT and
-> > GFP_TRANHUGE. __GFP_RECLAIM flags is a big part of this standard mask d=
-esign.
-> > So, I clear it here so as not to disrupt the THP gfp mask.
->
-> Why this wasn't really needed before? I guess I must be missing
-> something here. This patch should be mostly mechanical convergence of
-> existing migration callbacks but this change adds a new behavior AFAICS.
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Before this patch, a user cannot specify a gfp_mask and THP allocation
-uses GFP_TRANSHUGE
-statically. After this patch, a user can specify a gfp_mask and it
-could conflict with GFP_TRANSHUGE.
-This code tries to avoid this conflict.
+Implement the managed variant of krealloc(). This function works with
+all memory allocated by devm_kmalloc() (or devres functions using it
+implicitly like devm_kmemdup(), devm_kstrdup() etc.).
 
-> It would effectively drop __GFP_RETRY_MAYFAIL and __GFP_KSWAPD_RECLAIM
+Managed realloc'ed chunks can be manually released with devm_kfree().
 
-__GFP_RETRY_MAYFAIL isn't dropped. __GFP_RECLAIM is
-"___GFP_DIRECT_RECLAIM|___GFP_KSWAPD_RECLAIM".
-So, __GFP_KSWAPD_RECLAIM would be dropped for THP allocation.
-IIUC, THP allocation doesn't use __GFP_KSWAPD_RECLAIM since it's overhead i=
-s
-too large and this overhead should be given to the caller rather than
-system thread (kswapd)
-and so on.
+Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+---
+ .../driver-api/driver-model/devres.rst        |  1 +
+ drivers/base/devres.c                         | 50 +++++++++++++++++++
+ include/linux/device.h                        |  2 +
+ 3 files changed, 53 insertions(+)
 
-Thanks.
+diff --git a/Documentation/driver-api/driver-model/devres.rst b/Documentation/driver-api/driver-model/devres.rst
+index e0b58c392e4f..0a2572c3813c 100644
+--- a/Documentation/driver-api/driver-model/devres.rst
++++ b/Documentation/driver-api/driver-model/devres.rst
+@@ -352,6 +352,7 @@ MEM
+   devm_kfree()
+   devm_kmalloc()
+   devm_kmalloc_array()
++  devm_krealloc()
+   devm_kmemdup()
+   devm_kstrdup()
+   devm_kvasprintf()
+diff --git a/drivers/base/devres.c b/drivers/base/devres.c
+index ed615d3b9cf1..4b8870ef6a3f 100644
+--- a/drivers/base/devres.c
++++ b/drivers/base/devres.c
+@@ -837,6 +837,56 @@ void *devm_kmalloc(struct device *dev, size_t size, gfp_t gfp)
+ }
+ EXPORT_SYMBOL_GPL(devm_kmalloc);
+ 
++void *devm_krealloc(struct device *dev, void *ptr, size_t new_size, gfp_t gfp)
++{
++	struct devres *old_dr, *new_dr;
++	struct list_head old_head;
++	unsigned long flags;
++	void *ret = NULL;
++	size_t tot_size;
++
++	if (unlikely(!new_size)) {
++		devm_kfree(dev, ptr);
++		return ZERO_SIZE_PTR;
++	}
++
++	if (unlikely(ZERO_OR_NULL_PTR(ptr)))
++		return devm_kmalloc(dev, new_size, gfp);
++
++	if (WARN_ON(is_kernel_rodata((unsigned long)ptr)))
++		/*
++		 * We cannot reliably realloc a const string returned by
++		 * devm_kstrdup_const().
++		 */
++		return NULL;
++
++	if (!check_dr_size(new_size, &tot_size))
++		return NULL;
++
++	spin_lock_irqsave(&dev->devres_lock, flags);
++
++	old_dr = find_dr(dev, devm_kmalloc_release, devm_kmalloc_match, ptr);
++	if (WARN_ON(!old_dr))
++		/* Memory chunk not managed or managed by a different device. */
++		goto out;
++
++	old_head = old_dr->node.entry;
++
++	new_dr = krealloc(old_dr, tot_size, gfp);
++	if (!new_dr)
++		goto out;
++
++	if (new_dr != old_dr)
++		list_replace(&old_head, &new_dr->node.entry);
++
++	ret = new_dr->data;
++
++out:
++	spin_unlock_irqrestore(&dev->devres_lock, flags);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(devm_krealloc);
++
+ /**
+  * devm_kstrdup - Allocate resource managed space and
+  *                copy an existing string into that.
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 9cadb647cacc..228063c6392c 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -201,6 +201,8 @@ int devres_release_group(struct device *dev, void *id);
+ 
+ /* managed devm_k.alloc/kfree for device drivers */
+ void *devm_kmalloc(struct device *dev, size_t size, gfp_t gfp) __malloc;
++void *devm_krealloc(struct device *dev, void *ptr, size_t size,
++		    gfp_t gfp) __must_check;
+ __printf(3, 0) char *devm_kvasprintf(struct device *dev, gfp_t gfp,
+ 				     const char *fmt, va_list ap) __malloc;
+ __printf(3, 4) char *devm_kasprintf(struct device *dev, gfp_t gfp,
+-- 
+2.26.1
+
