@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26413C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:40:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25B63C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0012420786
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:40:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F363E206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:40:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593459651;
-	bh=8U2lto+MbErabC19mkBLZ3pfvdEMeuF2mKDQB2xk8s0=;
+	s=default; t=1593459656;
+	bh=3oKAkGkifbDgX3Z5v+1FPNUaEczT6noSTkhiC9qvSdc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IAAQ4/D+LliRAl22svKwuY6NQDk5Cq2amMcDZ9NDyq95AvbhJwkEjao2Yx/4LWWL8
-	 jdv8yCwtNqgVCEeCPr5idHwwv1p6UNvOrZtXcJSfWf+4+5eMpHczpv8WzZnorCm6mk
-	 4jPeTLqTzqg0da4lzwTvd10V0u3kjQRQMKyq5FYg=
+	b=T7TwXnfhCTk/ix3GJ793oJS5+9eni8KQeDoOg096q858Hp5QgprfJMlEZuGsfak47
+	 n9EMbXbYFaUO6T8Q32jrimBISrHASx8aE7VWSvBvFdj2v/AcHVl4/rrX+5V2Pvmf78
+	 24Z/xBKy2Zq2px/Hk76dCPDPRqDeqeUIACYyjF48=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387854AbgF2Tks (ORCPT
+        id S2387882AbgF2Tky (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:40:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47668 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:40:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733156AbgF2Tk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:40:26 -0400
+        id S2387760AbgF2Tkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:40:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 674F72485F;
-        Mon, 29 Jun 2020 15:26:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 36492248E5;
+        Mon, 29 Jun 2020 15:27:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444361;
-        bh=8U2lto+MbErabC19mkBLZ3pfvdEMeuF2mKDQB2xk8s0=;
+        s=default; t=1593444440;
+        bh=3oKAkGkifbDgX3Z5v+1FPNUaEczT6noSTkhiC9qvSdc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GbnBuFLYEfIAn5wwi2uqJlnkxBScdVwJ/RVgpEdjalm9FBrLzOP72s7gyg6+qDWs6
-         4Iq5HbWTLTaUA8wK52hCGCgIemsu0FUI++IABu1WW1LZa55kq+34ySQVZBTme0Bm7P
-         GmCUUGUY+9l58BFNPeXTje1jRt0fK0TQeQWAsY2A=
+        b=tVKM7yjX0GtfycxX1DU261/G0VL24BQfVYGaZ4a2ZJ/SpOgVSolr9aQJh2CUlZ/lh
+         0zWN267k8JM3vZUfYzOkrPdr8CpK2TxsMgI9fe1olTcR3pWFTcGt3mJ0MPGphceJay
+         IuQZG/PIwCyCosgEdlarNbO3mU0/EWmcNPUjzIOw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Longfang Liu <liulongfang@huawei.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 037/178] USB: ehci: reopen solution for Synopsys HC bug
-Date:   Mon, 29 Jun 2020 11:23:02 -0400
-Message-Id: <20200629152523.2494198-38-sashal@kernel.org>
+Cc:     Denis Efremov <efremov@linux.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 119/178] drm/amd/display: Use kfree() to free rgb_user in calculate_user_regamma_ramp()
+Date:   Mon, 29 Jun 2020 11:24:24 -0400
+Message-Id: <20200629152523.2494198-120-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.50-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
 X-KernelTest-Branch: linux-5.4.y
@@ -66,57 +65,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Longfang Liu <liulongfang@huawei.com>
+From: Denis Efremov <efremov@linux.com>
 
-commit 1ddcb71a3edf0e1682b6e056158e4c4b00325f66 upstream.
+[ Upstream commit 43a562774fceba867e8eebba977d7d42f8a2eac7 ]
 
-A Synopsys USB2.0 core used in Huawei Kunpeng920 SoC has a bug which
-might cause the host controller not issuing ping.
+Use kfree() instead of kvfree() to free rgb_user in
+calculate_user_regamma_ramp() because the memory is allocated with
+kcalloc().
 
-Bug description:
-After indicating an Interrupt on Async Advance, the software uses the
-doorbell mechanism to delete the Next Link queue head of the last
-executed queue head. At this time, the host controller still references
-the removed queue head(the queue head is NULL). NULL reference causes
-the host controller to lose the USB device.
-
-Solution:
-After deleting the Next Link queue head, when has_synopsys_hc_bug set
-to 1，the software can write one of the valid queue head addresses to
-the ASYNCLISTADDR register to allow the host controller to get
-the valid queue head. in order to solve that problem, this patch set
-the flag for Huawei Kunpeng920
-
-There are detailed instructions and solutions in this patch:
-commit 2f7ac6c19997 ("USB: ehci: add workaround for Synopsys HC bug")
-
-Signed-off-by: Longfang Liu <liulongfang@huawei.com>
-Cc: stable <stable@vger.kernel.org>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Link: https://lore.kernel.org/r/1591588019-44284-1-git-send-email-liulongfang@huawei.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Denis Efremov <efremov@linux.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/ehci-pci.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/gpu/drm/amd/display/modules/color/color_gamma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/host/ehci-pci.c b/drivers/usb/host/ehci-pci.c
-index b0882c13a1d16..66713c2537653 100644
---- a/drivers/usb/host/ehci-pci.c
-+++ b/drivers/usb/host/ehci-pci.c
-@@ -216,6 +216,13 @@ static int ehci_pci_setup(struct usb_hcd *hcd)
- 		ehci_info(ehci, "applying MosChip frame-index workaround\n");
- 		ehci->frame_index_bug = 1;
- 		break;
-+	case PCI_VENDOR_ID_HUAWEI:
-+		/* Synopsys HC bug */
-+		if (pdev->device == 0xa239) {
-+			ehci_info(ehci, "applying Synopsys HC workaround\n");
-+			ehci->has_synopsys_hc_bug = 1;
-+		}
-+		break;
- 	}
+diff --git a/drivers/gpu/drm/amd/display/modules/color/color_gamma.c b/drivers/gpu/drm/amd/display/modules/color/color_gamma.c
+index 207435fa4f2c6..51d07a4561ce9 100644
+--- a/drivers/gpu/drm/amd/display/modules/color/color_gamma.c
++++ b/drivers/gpu/drm/amd/display/modules/color/color_gamma.c
+@@ -1862,7 +1862,7 @@ bool calculate_user_regamma_ramp(struct dc_transfer_func *output_tf,
  
- 	/* optional debug port, normally in the first BAR */
+ 	kfree(rgb_regamma);
+ rgb_regamma_alloc_fail:
+-	kvfree(rgb_user);
++	kfree(rgb_user);
+ rgb_user_alloc_fail:
+ 	return ret;
+ }
 -- 
 2.25.1
 
