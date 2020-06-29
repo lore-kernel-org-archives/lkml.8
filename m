@@ -2,145 +2,119 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC48DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1072DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:59:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8B39720663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:58:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF03F204EC
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:59:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726087AbgF2S65 (ORCPT
+        id S1730258AbgF2S7F convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:58:57 -0400
-Received: from mga09.intel.com ([134.134.136.24]:65096 "EHLO mga09.intel.com"
+        Mon, 29 Jun 2020 14:59:05 -0400
+Received: from mga09.intel.com ([134.134.136.24]:65099 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730054AbgF2S6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:58:53 -0400
-IronPort-SDR: /yGCPAkqG9sc4h2oB6gwcdxvpkIicGY388mhnaENyHtoXFAGIHGqxPvcpQYSgersaBFM8HuOY7
- Ns9IkctAOe6w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="147520959"
-X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
-   d="scan'208";a="147520959"
+        id S1726960AbgF2S6y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:58:54 -0400
+IronPort-SDR: eKoD8V2wqTWUE0QfvlcDWBj2fUJGp1JQFAZEWCcOdd9RB6Iz2k79WYN3SDqzCHfZ5x5HJtYUrS
+ TCxYV5wPo5rQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="147558727"
+X-IronPort-AV: E=Sophos;i="5.75,295,1589266800"; 
+   d="scan'208";a="147558727"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 07:27:43 -0700
-IronPort-SDR: BSspi29QHN1giz7bYmWq7siym1rPQ93Ev4pV8M7jezL+/1lE0VYJuaWQGMVl9Vymh9dojUCqNQ
- k2w7/p3kdiqA==
-X-IronPort-AV: E=Sophos;i="5.75,294,1589266800"; 
-   d="scan'208";a="454212148"
-Received: from tclumbax-mobl2.gar.corp.intel.com (HELO [10.255.1.194]) ([10.255.1.194])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 07:27:42 -0700
-From:   Dave Hansen <dave.hansen@intel.com>
-Subject: Re: [PATCH] mm/vmscan: restore zone_reclaim_mode ABI
-To:     Baoquan He <bhe@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        ben.widawsky@intel.com, alex.shi@linux.alibaba.com,
-        dwagner@suse.de, tobin@kernel.org, cl@linux.com,
-        akpm@linux-foundation.org, stable@kernel.org
-References: <20200626003459.D8E015CA@viggo.jf.intel.com>
- <20200629065203.GJ3346@MiWiFi-R3L-srv>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
- z5cecg==
-Message-ID: <3ba94f19-3b18-9d52-a070-f652620c88e6@intel.com>
-Date:   Mon, 29 Jun 2020 07:27:41 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200629065203.GJ3346@MiWiFi-R3L-srv>
-Content-Type: text/plain; charset=utf-8
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 10:18:48 -0700
+IronPort-SDR: PfovTJ7ctRVVTVNzrBgATY6YChrZ/17qHIHtYJnPMMZEpZLRlO/kZ9uRGO0xFF6kZv7z2obVoF
+ C6l1q1l38H6w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,295,1589266800"; 
+   d="scan'208";a="424885466"
+Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
+  by orsmga004.jf.intel.com with ESMTP; 29 Jun 2020 10:18:47 -0700
+Received: from orsmsx112.amr.corp.intel.com ([169.254.3.199]) by
+ ORSMSX106.amr.corp.intel.com ([169.254.1.104]) with mapi id 14.03.0439.000;
+ Mon, 29 Jun 2020 10:18:47 -0700
+From:   "Kirsher, Jeffrey T" <jeffrey.t.kirsher@intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "Heiner Kallweit" <hkallweit1@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "Florian Fainelli" <f.fainelli@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        "Rob Herring" <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: RE: [PATCH v2 02/10] net: ethernet: ixgbe: don't call
+ devm_mdiobus_free()
+Thread-Topic: [PATCH v2 02/10] net: ethernet: ixgbe: don't call
+ devm_mdiobus_free()
+Thread-Index: AQHWTg2KqoUStuk1GEW2zcU3EcxbWKjv1lQw
+Date:   Mon, 29 Jun 2020 17:18:46 +0000
+Message-ID: <61CC2BC414934749BD9F5BF3D5D940449874064D@ORSMSX112.amr.corp.intel.com>
+References: <20200629120346.4382-1-brgl@bgdev.pl>
+ <20200629120346.4382-3-brgl@bgdev.pl>
+In-Reply-To: <20200629120346.4382-3-brgl@bgdev.pl>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.138]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/28/20 11:52 PM, Baoquan He wrote:
-> On 06/25/20 at 05:34pm, Dave Hansen wrote:
->>
->> From: Dave Hansen <dave.hansen@linux.intel.com>
->>
->> I went to go add a new RECLAIM_* mode for the zone_reclaim_mode
->> sysctl.  Like a good kernel developer, I also went to go update the
->> documentation.  I noticed that the bits in the documentation didn't
->> match the bits in the #defines.
->>
->> The VM evidently stopped caring about RECLAIM_ZONE at some point (or
->> never cared) and the #define itself was later removed as a cleanup.
+> -----Original Message-----
+> From: Bartosz Golaszewski <brgl@bgdev.pl>
+> Sent: Monday, June 29, 2020 05:04
+> To: Kirsher, Jeffrey T <jeffrey.t.kirsher@intel.com>; David S . Miller
+> <davem@davemloft.net>; Jakub Kicinski <kuba@kernel.org>; John Crispin
+> <john@phrozen.org>; Sean Wang <sean.wang@mediatek.com>; Mark Lee
+> <Mark-MC.Lee@mediatek.com>; Matthias Brugger
+> <matthias.bgg@gmail.com>; Heiner Kallweit <hkallweit1@gmail.com>; Andrew
+> Lunn <andrew@lunn.ch>; Florian Fainelli <f.fainelli@gmail.com>; Russell King
+> <linux@armlinux.org.uk>; Rob Herring <robh+dt@kernel.org>; Frank Rowand
+> <frowand.list@gmail.com>
+> Cc: linux-kernel@vger.kernel.org; netdev@vger.kernel.org; linux-arm-
+> kernel@lists.infradead.org; linux-mediatek@lists.infradead.org;
+> devicetree@vger.kernel.org; Bartosz Golaszewski
+> <bgolaszewski@baylibre.com>
+> Subject: [PATCH v2 02/10] net: ethernet: ixgbe: don't call
+> devm_mdiobus_free()
 > 
->>From git history, it seems to never care about the RECLAIM_ZONE bit.
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> I think this patch is justified. I have one question about adding back
-> the RECLAIM_ZONE bit. Since we introduced RECLAIM_ZONE in the first
-> place, but never use it, removing it truly may fail some existing
-> script, does it mean we will never have chance to fix/clean up this kind
-> of mess?
+> The idea behind devres is that the release callbacks are called if probe fails. As
+> we now check the return value of ixgbe_mii_bus_init(), we can drop the call
+> devm_mdiobus_free() in error path as the release callback will be called
+> automatically.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+ 
+Acked-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
 
-Our #1 rule is "don't break userspace".  We only break userspace when we
-have no other choice.
-
-This case a bit fuzzier because we don't know if anyone is depending on
-the ignored bit to do anything.  But, it *was* documented.  To me, that
-means it might have been used, even though it would have been a
-"placebo" bit.
-
-> Do we have possibility to remove it in mainline tree, let distos or
-> stable kernel maintainer take care of the back porting? Like this, any
-> stable kernel after 5.8, or any distrols which chooses post v5.8 kenrel
-> as base won't have this confusion. I am not objecting this patch, just
-> be curious if we have a way to fix/clean up for this type of issue.
-
-The only way I can plausibly think of "cleaning up" the RECLAIM_ZONE bit
-would be to raise our confidence that it is truly unused.  That takes
-time, and probably a warning if we see it being set.  If we don't run
-into anybody setting it or depending on it being set in a few years, we
-can remove it.
-
-Backporting a _warning_ into the -stable trees might be an interesting
-way to find users of older kernels mucking with it.
+> ---
+>  drivers/net/ethernet/intel/ixgbe/ixgbe_phy.c | 14 +++-----------
+>  1 file changed, 3 insertions(+), 11 deletions(-)
