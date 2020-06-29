@@ -2,110 +2,115 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA26C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2307CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:45:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7C2C8206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0849206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:45:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pyiSRomZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TqYbZi1I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404034AbgF2Vor (ORCPT
+        id S1727797AbgF2Vo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:44:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37592 "EHLO
+        Mon, 29 Jun 2020 17:44:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37564 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727811AbgF2Shp (ORCPT
+        with ESMTP id S1727802AbgF2Shp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:37:45 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DFC5C031415;
-        Mon, 29 Jun 2020 10:19:56 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id k1so7359191pls.2;
-        Mon, 29 Jun 2020 10:19:56 -0700 (PDT)
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96EEAC00F832
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 05:47:58 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id 22so15255694wmg.1
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 05:47:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jpuhbA135WXku8iFW2x2VvwuaDgLtebbBEPR7YXw648=;
-        b=pyiSRomZfO/v5T2TO4PBu72bMxJtvlvYt9qn0So/n2vOJYsgca9/r25apCJ18O7EDf
-         vMfcp3cOVV4rme9OvMqo4DoUTOCALh92vvYyuW/kq7eVEZkajTgshIYvr6szi5sOUp98
-         fKrhTrRne6uAZt8ZSE1vZsLqQrJynXAP4nSJsO1UAdlErlGfFyohaWi2RuTHux7PGM4w
-         iTuXu8hG5PMzmB+tz/SO5gSusxCCQHv/uC0RZk5Z39E9g9c9/58mKt8U15k5+y7S0MSk
-         M0p9mDLrAq7H1AShxkuLAcd1zTKgsv4JK+vlwR4egy1rNiWkdYDLNysTunTFO091fvMJ
-         eexA==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=R3CtQwwHBAUYt5tWEUptOpRirDIZjfKx8cL/+kZ0aGU=;
+        b=TqYbZi1IpvUJDffa5OV7Qjrr0N+cDJ9cZOajkmxHXTv6jjxCNtpB2is8KLr+GUNZ6D
+         wsWKBVDUmapCkLaM/97Mquh2EEnsU4aZLcuUyRYGkjA9TdTd3MvA8NhMxPf9bSdIUiuf
+         sesF6dNfGI25PtjY4+evZRcAg+Pj/rNSZgcudJgTOg4rBIkEPZhFvFPt/hTc20elA1AT
+         W07BruFYC45AsFzkmPBPtwvfC9B5Cbe1Zdirxm0UNAQ8oGSf3UL5DJtsts8XTQsP4Oec
+         +2n10RLzXOTsbHl6bR1aWOWxe0cfxgqBp4/RhSW6l0vlVG6pun/AG8d7Vahpwcdjd/br
+         RGXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jpuhbA135WXku8iFW2x2VvwuaDgLtebbBEPR7YXw648=;
-        b=em5G4BuCSDIaw0sZG0oC4/WKcOJ9WIdpVI9QF3zRS90wnsESiIY0OfL5naUbI860Co
-         7bJ47vY96I7KK4JM7vo1Bt9N6P0v8ae6g6JK/vE2nejMcbjjtdoBPDbhxHeq9qOE2hPb
-         vn3m43qNjYO2H0jLNtmrTlZ6Gt+O7JVMQZ9BmcTPPi3yZFxm1dXIqYjvqT8Gdq1zZDaf
-         jqV0bpHPP0KHDZrVFDcLmPyZ0jbD9YP43jYIwploF6ybpxDAlxPTVHnEN/S79lL0tPNT
-         IsRDj7fGbRJ+NpOxW3XNXXUApJxwQtlm7iecB1uwqXoWI6ydDIVUvJhdSXoEnuQaxOw7
-         HGGw==
-X-Gm-Message-State: AOAM532G6Z1EtzD8DV7ksPjQFKeDKU605i5luoefhacHf/xXoMC+RDKT
-        yRScJ5Xqwz+SAHNsH/YxuKc=
-X-Google-Smtp-Source: ABdhPJycUnUhTacxELkkzMTHqJCc1AEZ6djKxUQSXRPs+TD5RBzndAEK/awekMblZLe8/TYOxfN4dQ==
-X-Received: by 2002:a17:90a:d48a:: with SMTP id s10mr1743434pju.116.1593451196167;
-        Mon, 29 Jun 2020 10:19:56 -0700 (PDT)
-Received: from [10.230.30.107] ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id u128sm257548pfu.148.2020.06.29.10.19.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jun 2020 10:19:55 -0700 (PDT)
-Subject: Re: [PATCH v2 06/10] phy: mdio: add kerneldoc for
- __devm_mdiobus_register()
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Russell King <linux@armlinux.org.uk>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20200629120346.4382-1-brgl@bgdev.pl>
- <20200629120346.4382-7-brgl@bgdev.pl>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <1ad2dbe6-ed87-4be0-f431-b5f223b9dd6c@gmail.com>
-Date:   Mon, 29 Jun 2020 10:19:53 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Firefox/68.0 Thunderbird/68.9.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=R3CtQwwHBAUYt5tWEUptOpRirDIZjfKx8cL/+kZ0aGU=;
+        b=q8Q2sx81CQvZqFflogCnDpblswayfbvAllX860i39M5czLuNdpPMrp4ADnD8EAivGs
+         Dev7nwMxTELpHVwIT+nKx5j3JY+Sf1tZpTwxRN7K9NIGmidgCKwWm4ryVlQhcK3BPI6s
+         BvqPXSzFCCRHKo3hQQUE4L99CvvwsZFBmcDJgs7TIK5KHmPgLGTJe1bQ6aS2HPgh7uDQ
+         r5ciRV1NmPXRgY6oDPjqGxaLXYyLpbPwvvbvZt+LinmWbxm4LW/TSP3ouLkZc75lT5dt
+         2Eyew6EHqaUqXja7l8lwP0DM2/tMj9cOxEg76LjirOD4v/nuCOFOK/H+R1fNaWmg9BgY
+         HYgw==
+X-Gm-Message-State: AOAM530qEdYy3Pvwo5yYjkQfkx/iaE92ll3wr/ZuN4rDVufkjvyR3DC8
+        WouaRIpNnSFI8/CpMbEwO9sXZg==
+X-Google-Smtp-Source: ABdhPJxeGeJLZE8P8dHdFHVkY80hy0oIW4BMYmEqs8sF7naCIUyVXxBQDOR2f7ZO+bDIvrZQdliD6w==
+X-Received: by 2002:a7b:c055:: with SMTP id u21mr16091687wmc.132.1593434877370;
+        Mon, 29 Jun 2020 05:47:57 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id e17sm12995924wrr.88.2020.06.29.05.47.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 05:47:56 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
+        linux-pwm@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com
+Subject: [PATCH 2/4] pwm: bcm-kona: Remove impossible comparison when validating duty cycle
+Date:   Mon, 29 Jun 2020 13:47:50 +0100
+Message-Id: <20200629124752.1018358-3-lee.jones@linaro.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629124752.1018358-1-lee.jones@linaro.org>
+References: <20200629124752.1018358-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20200629120346.4382-7-brgl@bgdev.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+'dc' here is an unsigned long, thus checking for <0 will always
+evaluate to false.
 
+Fixes the following W=1 warning:
 
-On 6/29/2020 5:03 AM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> This function is not documented. Add a short kerneldoc description.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+ drivers/pwm/pwm-bcm-kona.c:141:35: warning: comparison of unsigned expression < 0 is always false [-Wtype-limits]
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Ray Jui <rjui@broadcom.com>
+Cc: Scott Branden <sbranden@broadcom.com>
+Cc: bcm-kernel-feedback-list@broadcom.com
+Cc: linux-pwm@vger.kernel.org
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ drivers/pwm/pwm-bcm-kona.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pwm/pwm-bcm-kona.c b/drivers/pwm/pwm-bcm-kona.c
+index 81da91df2529a..16c5898b934a8 100644
+--- a/drivers/pwm/pwm-bcm-kona.c
++++ b/drivers/pwm/pwm-bcm-kona.c
+@@ -138,7 +138,7 @@ static int kona_pwmc_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		dc = div64_u64(val, div);
+ 
+ 		/* If duty_ns or period_ns are not achievable then return */
+-		if (pc < PERIOD_COUNT_MIN || dc < DUTY_CYCLE_HIGH_MIN)
++		if (pc < PERIOD_COUNT_MIN)
+ 			return -EINVAL;
+ 
+ 		/* If pc and dc are in bounds, the calculation is done */
 -- 
-Florian
+2.25.1
+
