@@ -2,151 +2,236 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EBB3C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:43:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81021C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 508092078A
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:43:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5473320780
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 23:45:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="JP+KeEw5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QwZWD7lZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728146AbgF2XnV (ORCPT
+        id S1728106AbgF2XpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 19:43:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58340 "EHLO
+        Mon, 29 Jun 2020 19:45:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727065AbgF2XnU (ORCPT
+        with ESMTP id S1726814AbgF2XpK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 19:43:20 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06653C03E979
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 16:43:20 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id z5so9041949pgb.6
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 16:43:20 -0700 (PDT)
+        Mon, 29 Jun 2020 19:45:10 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09E1AC061755;
+        Mon, 29 Jun 2020 16:45:10 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id d10so7715630pls.5;
+        Mon, 29 Jun 2020 16:45:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QciK5tXPc0ig4ewp8mAOTjfJLOJkGR17cLI3UFIq7P4=;
-        b=JP+KeEw5Ge2u0AgRunHG6CylzE+cjwR7RMtG2QLQWVY0SIR3gmC+cjStYNxrDVrF0T
-         cWYhp3nhvP0oIs8lc57KPy6JBKX03zycDRKQa4/w1+HqdRKKW1wBReQJuZaLVWtpYpWY
-         zztg+w4Z21un2gOixaBjAOXx1LE6O+uO7LIIc=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zr9bjHoe5t2IZ795ERlDEmoQCHQtYYorfRKzQD5hK90=;
+        b=QwZWD7lZPgSxTpH1THyX7KS8hYI8BYiaijETny4n3EvUUN2iMOkFNhy+Q9OQZMygtf
+         eN45sAqvZRTW5GWzNs5g/mSZ5M5uHVAjzKs+big9GX7Y5eUA0/F9sXE6sX2u1LFvR45Y
+         nA8W/Ywm6uRQMv/TqdXnvYbTD6j69+LmQEzk9P7MJAscOUC9iCDCzF7hIg2k7cEGBeIu
+         ntrhT0s+sI9W2fsB8ejAUFjCUpZbVtWrirLFBoDB1/V8F1ljqU9lLHBdTghEXmzJ/PQ+
+         aAfoykI3a7Ii1m69yIlFW61wGNDnpIfLBVcKHA0Dt2ney7q/L4PTu09szbdbGUyyCGWu
+         i+bw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=QciK5tXPc0ig4ewp8mAOTjfJLOJkGR17cLI3UFIq7P4=;
-        b=ueJAuoDguJkAvZ6JyBN6uptEaE5cX2TqJ7rCC0yxh3AetqHUp97kVdKMeXRWnNCHRd
-         TU1iC3rTCO9+RSc3OV95PlXMtsoDtvNyF0n8a0YKmNcMyOF5Nk82HIQ0JqcZLsIaAIH0
-         NuPwPbsJYzXgu+nw6LUykbb3DS3IKzUhK5B0SfEz0QI1SfKO0MWvzYl7eRX90nXuU0vG
-         Er8zvLog1w/LfgHP5S12mkVad3F0MloMnvTdueEbQTXXhBy55aZOc+Bj84I0eMAl5auh
-         MTvDX+/6bsLiXHQTSo3QqQ5f/1027xnYi59wXWmp27RmoMjXjq78SObDLHfagmaFO2es
-         cafQ==
-X-Gm-Message-State: AOAM531lvF0mNrA2oikle3iJ6RU8rsxZ348ezWFmLqMOauulYPCEEGzz
-        g2wTmCI4k6OORW+Mrid0Hcz8bA==
-X-Google-Smtp-Source: ABdhPJyI8g97mTqP8wUF/YUNfuHe3OhvjyzPpoxFXcVqURHplY/uOe+v6Yiqilg3jnWEFhYr70yfWQ==
-X-Received: by 2002:aa7:988f:: with SMTP id r15mr7635504pfl.2.1593474199348;
-        Mon, 29 Jun 2020 16:43:19 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id s30sm753535pgn.34.2020.06.29.16.43.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 16:43:18 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Benson Leung <bleung@chromium.org>,
-        linux-arm-msm@vger.kernel.org,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        swboyd@chromium.org, Douglas Anderson <dianders@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
-Subject: [PATCH] spi: Avoid setting the chip select if we don't need to
-Date:   Mon, 29 Jun 2020 16:41:06 -0700
-Message-Id: <20200629164103.1.Ied8e8ad8bbb2df7f947e3bc5ea1c315e041785a2@changeid>
-X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zr9bjHoe5t2IZ795ERlDEmoQCHQtYYorfRKzQD5hK90=;
+        b=XAmzspSmQVr/w5MykwVYpmlNMcsjuUwqtdv7czQiOJQilwi2ZDIuzONGOWSdnNj/Bs
+         qvxsvSkVj9oJhupftZoLHKMBGzOZElb1rpZwgLxRbs7bpM08alrJ9w81ZDe0QjxAmpsJ
+         P3QRLFqTAetHCwXUmXRqLPP3oZ76pQuBZXv194Rq/EqaPLYdI8PWLRjDzOyNCyURSh5Y
+         Spb0B0ccSrxIWEBrzrpuwE9DwrUjq9GuvXXVUI+r9eoTpBkwMS/I8k95ywWCXJfAVlPF
+         moe/1Q89Jm9rodxQ45oBH3bYVGaB7doiirmh80FYBX8YBcrUWTegQ3KQJ1Tjd2kWKCBM
+         cBag==
+X-Gm-Message-State: AOAM533Sd97mSBNcWW5D5NzC0s1Grv6GpGW1l2z3aqURNLHd88tBLYSk
+        bAL0l4VzJjUsUwsxNqNP4jRXCtmfoUBWpeFCl3rTJb7P
+X-Google-Smtp-Source: ABdhPJzDnn2bIgg7gAfyGd2qVEHmJTIs7EtelrntJDFjSzeo01Jm6xhylRwdT1hmCN9uq4EQvmkC4vESWxaMcQaw3dE=
+X-Received: by 2002:a17:90a:35c:: with SMTP id 28mr11213069pjf.63.1593474309411;
+ Mon, 29 Jun 2020 16:45:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200629200227.1518784-1-lkmlabelt@gmail.com> <20200629200227.1518784-2-lkmlabelt@gmail.com>
+ <20200629204653.o6q3a2fufgq62pzo@liuwe-devbox-debian-v2> <CAGpZZ6sUXOnggeQyPfxkdK50=1AhTUqbvBvc2bEs4qwwk+rSPg@mail.gmail.com>
+ <20200629222040.bh7tkkridwt7sdlw@liuwe-devbox-debian-v2>
+In-Reply-To: <20200629222040.bh7tkkridwt7sdlw@liuwe-devbox-debian-v2>
+From:   Andres Beltran <lkmlabelt@gmail.com>
+Date:   Mon, 29 Jun 2020 19:45:00 -0400
+Message-ID: <CAGpZZ6teQ1KDKZ28Q50DSOZ3dF4oqEHagC2YSkb9WjKZ1io5Mw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] Drivers: hv: vmbus: Add vmbus_requestor data
+ structure for VMBus hardening
+To:     Wei Liu <wei.liu@kernel.org>
+Cc:     Andres Beltran <t-mabelt@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        Andrea Parri <parri.andrea@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On some SPI controllers (like spi-geni-qcom) setting the chip select
-is a heavy operation.  For instance on spi-geni-qcom, with the current
-code, is was measured as taking upwards of 20 us.  Even on SPI
-controllers that aren't as heavy, setting the chip select is at least
-something like a MMIO operation over some peripheral bus which isn't
-as fast as a RAM access.
+On Mon, Jun 29, 2020 at 6:20 PM Wei Liu <wei.liu@kernel.org> wrote:
+>
+> On Mon, Jun 29, 2020 at 05:51:05PM -0400, Andres Beltran wrote:
+> > On Mon, Jun 29, 2020 at 4:46 PM Wei Liu <wei.liu@kernel.org> wrote:
+> > >
+> > > On Mon, Jun 29, 2020 at 04:02:25PM -0400, Andres Beltran wrote:
+> > > > Currently, VMbus drivers use pointers into guest memory as request IDs
+> > > > for interactions with Hyper-V. To be more robust in the face of errors
+> > > > or malicious behavior from a compromised Hyper-V, avoid exposing
+> > > > guest memory addresses to Hyper-V. Also avoid Hyper-V giving back a
+> > > > bad request ID that is then treated as the address of a guest data
+> > > > structure with no validation. Instead, encapsulate these memory
+> > > > addresses and provide small integers as request IDs.
+> > > >
+> > > > Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
+> > > > ---
+> > > > Changes in v2:
+> > > >       - Get rid of "rqstor" variable in __vmbus_open().
+> > > >
+> > > >  drivers/hv/channel.c   | 146 +++++++++++++++++++++++++++++++++++++++++
+> > > >  include/linux/hyperv.h |  21 ++++++
+> > > >  2 files changed, 167 insertions(+)
+> > > >
+> > > > diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
+> > > > index 3ebda7707e46..c89d57d0c2d2 100644
+> > > > --- a/drivers/hv/channel.c
+> > > > +++ b/drivers/hv/channel.c
+> > > > @@ -112,6 +112,70 @@ int vmbus_alloc_ring(struct vmbus_channel *newchannel,
+> > > >  }
+> > > >  EXPORT_SYMBOL_GPL(vmbus_alloc_ring);
+> > > >
+> > > > +/**
+> > > > + * request_arr_init - Allocates memory for the requestor array. Each slot
+> > > > + * keeps track of the next available slot in the array. Initially, each
+> > > > + * slot points to the next one (as in a Linked List). The last slot
+> > > > + * does not point to anything, so its value is U64_MAX by default.
+> > > > + * @size The size of the array
+> > > > + */
+> > > > +static u64 *request_arr_init(u32 size)
+> > > > +{
+> > > > +     int i;
+> > > > +     u64 *req_arr;
+> > > > +
+> > > > +     req_arr = kcalloc(size, sizeof(u64), GFP_KERNEL);
+> > > > +     if (!req_arr)
+> > > > +             return NULL;
+> > > > +
+> > > > +     for (i = 0; i < size - 1; i++)
+> > > > +             req_arr[i] = i + 1;
+> > > > +
+> > > > +     /* Last slot (no more available slots) */
+> > > > +     req_arr[i] = U64_MAX;
+> > > > +
+> > > > +     return req_arr;
+> > > > +}
+> > > > +
+> > > > +/*
+> > > > + * vmbus_alloc_requestor - Initializes @rqstor's fields.
+> > > > + * Slot at index 0 is the first free slot.
+> > > > + * @size: Size of the requestor array
+> > > > + */
+> > > > +static int vmbus_alloc_requestor(struct vmbus_requestor *rqstor, u32 size)
+> > > > +{
+> > > > +     u64 *rqst_arr;
+> > > > +     unsigned long *bitmap;
+> > > > +
+> > > > +     rqst_arr = request_arr_init(size);
+> > > > +     if (!rqst_arr)
+> > > > +             return -ENOMEM;
+> > > > +
+> > > > +     bitmap = bitmap_zalloc(size, GFP_KERNEL);
+> > > > +     if (!bitmap) {
+> > > > +             kfree(rqst_arr);
+> > > > +             return -ENOMEM;
+> > > > +     }
+> > > > +
+> > > > +     rqstor->req_arr = rqst_arr;
+> > > > +     rqstor->req_bitmap = bitmap;
+> > > > +     rqstor->size = size;
+> > > > +     rqstor->next_request_id = 0;
+> > > > +     spin_lock_init(&rqstor->req_lock);
+> > > > +
+> > > > +     return 0;
+> > > > +}
+> > > > +
+> > > > +/*
+> > > > + * vmbus_free_requestor - Frees memory allocated for @rqstor
+> > > > + * @rqstor: Pointer to the requestor struct
+> > > > + */
+> > > > +static void vmbus_free_requestor(struct vmbus_requestor *rqstor)
+> > > > +{
+> > > > +     kfree(rqstor->req_arr);
+> > > > +     bitmap_free(rqstor->req_bitmap);
+> > > > +}
+> > > > +
+> > > >  static int __vmbus_open(struct vmbus_channel *newchannel,
+> > > >                      void *userdata, u32 userdatalen,
+> > > >                      void (*onchannelcallback)(void *context), void *context)
+> > > > @@ -132,6 +196,12 @@ static int __vmbus_open(struct vmbus_channel *newchannel,
+> > > >       if (newchannel->state != CHANNEL_OPEN_STATE)
+> > > >               return -EINVAL;
+> > > >
+> > > > +     /* Create and init requestor */
+> > > > +     if (newchannel->rqstor_size) {
+> > > > +             if (vmbus_alloc_requestor(&newchannel->requestor, newchannel->rqstor_size))
+> > > > +                     return -ENOMEM;
+> > > > +     }
+> > > > +
+> > >
+> > > Sorry for not noticing this in the last round: this infrastructure is
+> > > initialized conditionally but used unconditionally.
+> > >
+> > > I can think of two options here:
+> > >
+> > >   1. Mandate rqstor_size to be non-zero. Always initialize this
+> > >      infra.
+> > >   2. Modify vmbus_next_request_id and vmbus_request_addr to deal with
+> > >      uninitialized state.
+> > >
+> > > For #2, you can simply check rqstor->size _before_ taking the lock
+> > > (because it may be uninitialized, and the assumption is ->size will not
+> > > change during the channel's lifetime, hence no lock is needed) and
+> > > simply return the same value to the caller.
+> > >
+> > > Wei.
+> >
+> > Right. I think option #2 would be preferable in this case, because #1 works
+> > if we had a default non-zero size for cases where rqstor_size has not been
+> > set to a non-zero value before calling vmbus_alloc_requestor(). For #2, what
+> > do you mean by "same value"? I think we would need to return
+> > VMBUS_RQST_ERROR if the size is 0, because otherwise we would be
+> > returning the same guest memory address which we don't want to expose.
+>
+> By "same value", I meant reverting back to using guest memory address.
+> I thought downgrading gracefully is better than making the driver stop
+> working.
+>
+> If exposing guest address is not acceptable, you can return
+> VMBUS_RQST_ERROR -- but at the point you may as well mandate requestor
+> infrastructure to be always initialized, right?
+>
 
-While it would be good to find ways to mitigate problems like this in
-the drivers for those SPI controllers, it can also be noted that the
-SPI framework could also help out.  Specifically, in some situations,
-we can see the SPI framework calling the driver's set_cs() with the
-same parameter several times in a row.  This is specifically observed
-when looking at the way the Chrome OS EC SPI driver (cros_ec_spi)
-works but other drivers likely trip it to some extent.
+If the allocation of the requestor fails during runtime, vmbus_open()
+fails too and therefore,
+the channel and the requestor will not be created. So, the 2 functions
+(next_id, requestor_addr)
+will never get called, right? The only case in which we hit this edge
+case is if a driver is using this
+mechanism with a size of 0 (i.e. rqstor_size is not set to a non-zero
+value before calling vmbus_open()),
+but that would be more like a coding bug. So, I think it would be
+better to return VMBUS_RQST_ERROR
+as a way to assert that there is a bug in the code. I don't know if
+I'm missing something here.
 
-Let's solve this by caching the chip select state in the core and only
-calling into the controller if there was a change.  We check not only
-the "enable" state but also the chip select mode (active high or
-active low) since controllers may care about both the mode and the
-enable flag in their callback.
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-
- drivers/spi/spi.c       | 11 +++++++++++
- include/linux/spi/spi.h |  4 ++++
- 2 files changed, 15 insertions(+)
-
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 6fa56590bba2..d4ba723a30da 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -778,6 +778,17 @@ static void spi_set_cs(struct spi_device *spi, bool enable)
- {
- 	bool enable1 = enable;
- 
-+	/*
-+	 * Avoid calling into the driver (or doing delays) if the chip select
-+	 * isn't actually changing from the last time this was called.
-+	 */
-+	if ((spi->controller->last_cs_enable == enable) &&
-+	    (spi->controller->last_cs_mode_high == (spi->mode & SPI_CS_HIGH)))
-+		return;
-+
-+	spi->controller->last_cs_enable = enable;
-+	spi->controller->last_cs_mode_high = spi->mode & SPI_CS_HIGH;
-+
- 	if (!spi->controller->set_cs_timing) {
- 		if (enable1)
- 			spi_delay_exec(&spi->controller->cs_setup, NULL);
-diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-index b4917df79637..0e67a9a3a1d3 100644
---- a/include/linux/spi/spi.h
-+++ b/include/linux/spi/spi.h
-@@ -368,6 +368,8 @@ static inline void spi_unregister_driver(struct spi_driver *sdrv)
-  * @cur_msg_prepared: spi_prepare_message was called for the currently
-  *                    in-flight message
-  * @cur_msg_mapped: message has been mapped for DMA
-+ * @last_cs_enable: was enable true on the last call to set_cs.
-+ * @last_cs_mode_high: was (mode & SPI_CS_HIGH) true on the last call to set_cs.
-  * @xfer_completion: used by core transfer_one_message()
-  * @busy: message pump is busy
-  * @running: message pump is running
-@@ -604,6 +606,8 @@ struct spi_controller {
- 	bool				auto_runtime_pm;
- 	bool                            cur_msg_prepared;
- 	bool				cur_msg_mapped;
-+	bool				last_cs_enable;
-+	bool				last_cs_mode_high;
- 	bool                            fallback;
- 	struct completion               xfer_completion;
- 	size_t				max_dma_len;
--- 
-2.27.0.212.ge8ba1cc988-goog
-
+Andres.
