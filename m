@@ -2,121 +2,127 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2019AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:45:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 576CEC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F16D920760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:45:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593459959;
-	bh=ioSyaGjCvfzZnI3fdQwKqO/uLgNluVhF9QS4HsmDDZg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kU060+uOk3muXYG4nKubXFg9h27QKVeQP3HR5YMW3pspfidToXpeHjSxyPQmkA0Yf
-	 qkVVzHXuQsDc0GXBcObJ0vyc2NKSwE25NhKZB1DeiWamteBZwX1EmSNowEL3OhOOqj
-	 zuoiYdKyLBuj5wob+VUva2ibeiUfLgx7hXNcvPrs=
+	by mail.kernel.org (Postfix) with ESMTP id 3AEAF2082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:46:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726607AbgF2Tp5 (ORCPT
+        id S2388086AbgF2TqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:45:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47666 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387815AbgF2Tko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:40:44 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA3022488D;
-        Mon, 29 Jun 2020 15:26:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444388;
-        bh=ioSyaGjCvfzZnI3fdQwKqO/uLgNluVhF9QS4HsmDDZg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tW99CFfkhLQ3TxNL0BfAdEzF98Vge19ogavxYoat4mivLoM0WSRZDPOZC4C3kkhZW
-         sU0oum6lWW7QHPxFII1VG3JibF9TZL1JA7XdfnkoPYS/VwT7jHP0YKp/whU3+uNeF6
-         jwWBzHRj+0pwu7apXMpkL3/Wiq4AczoYr5ZThCUg=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 065/178] ASoC: q6asm: handle EOS correctly
-Date:   Mon, 29 Jun 2020 11:23:30 -0400
-Message-Id: <20200629152523.2494198-66-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
-References: <20200629152523.2494198-1-sashal@kernel.org>
+        Mon, 29 Jun 2020 15:46:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49052 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388083AbgF2Tp4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:45:56 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 216B8C03E979
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 12:45:56 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jpziy-00084a-Re; Mon, 29 Jun 2020 21:45:52 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jpziy-0005Sc-2g; Mon, 29 Jun 2020 21:45:52 +0200
+Date:   Mon, 29 Jun 2020 21:45:51 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     thierry.reding@gmail.com, linux-pwm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        Yendapally Reddy Dhananjaya Reddy 
+        <yendapally.reddy@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com
+Subject: Re: [PATCH 1/4] pwm: bcm-iproc: Remove impossible comparison when
+ validating duty cycle
+Message-ID: <20200629194551.nlsgjlc6g35taks6@pengutronix.de>
+References: <20200629124752.1018358-1-lee.jones@linaro.org>
+ <20200629124752.1018358-2-lee.jones@linaro.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.50-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-5.4.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 5.4.50-rc1
-X-KernelTest-Deadline: 2020-07-01T15:25+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="nfpd2ci3eiscija7"
+Content-Disposition: inline
+In-Reply-To: <20200629124752.1018358-2-lee.jones@linaro.org>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-[ Upstream commit 6476b60f32866be49d05e2e0163f337374c55b06 ]
+--nfpd2ci3eiscija7
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Successful send of EOS command does not indicate that EOS is actually
-finished, correct event to wait EOS is finished is EOS_RENDERED event.
-EOS_RENDERED means that the DSP has finished processing all the buffers
-for that particular session and stream.
+On Mon, Jun 29, 2020 at 01:47:49PM +0100, Lee Jones wrote:
+> 'duty' here is an unsigned int, thus checking for <0 will always
+> evaluate to false.
+>=20
+> Fixes the following W=3D1 warning:
+>=20
+>  drivers/pwm/pwm-bcm-iproc.c:147:12: warning: comparison of unsigned expr=
+ession < 0 is always false [-Wtype-limits]
+>=20
+> Cc: Ray Jui <rjui@broadcom.com>
+> Cc: Scott Branden <sbranden@broadcom.com>
+> Cc: Yendapally Reddy Dhananjaya Reddy <yendapally.reddy@broadcom.com>
+> Cc: bcm-kernel-feedback-list@broadcom.com
+> Cc: linux-pwm@vger.kernel.org
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  drivers/pwm/pwm-bcm-iproc.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/pwm/pwm-bcm-iproc.c b/drivers/pwm/pwm-bcm-iproc.c
+> index 1f829edd8ee70..46f0a45e9049c 100644
+> --- a/drivers/pwm/pwm-bcm-iproc.c
+> +++ b/drivers/pwm/pwm-bcm-iproc.c
+> @@ -143,8 +143,7 @@ static int iproc_pwmc_apply(struct pwm_chip *chip, st=
+ruct pwm_device *pwm,
+>  		value =3D rate * state->duty_cycle;
+>  		duty =3D div64_u64(value, div);
+> =20
+> -		if (period < IPROC_PWM_PERIOD_MIN ||
+> -		    duty < IPROC_PWM_DUTY_CYCLE_MIN)
+> +		if (period < IPROC_PWM_PERIOD_MIN)
+>  			return -EINVAL;
+> =20
+>  		if (period <=3D IPROC_PWM_PERIOD_MAX &&
 
-This patch fixes EOS handling!
+Acked-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
 
-Fixes: 68fd8480bb7b ("ASoC: qdsp6: q6asm: Add support to audio stream apis")
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Link: https://lore.kernel.org/r/20200611124159.20742-3-srinivas.kandagatla@linaro.org
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/soc/qcom/qdsp6/q6asm.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+Thanks
+Uwe
 
-diff --git a/sound/soc/qcom/qdsp6/q6asm.c b/sound/soc/qcom/qdsp6/q6asm.c
-index e8141a33a55e5..835ac98a789cd 100644
---- a/sound/soc/qcom/qdsp6/q6asm.c
-+++ b/sound/soc/qcom/qdsp6/q6asm.c
-@@ -25,6 +25,7 @@
- #define ASM_STREAM_CMD_FLUSH			0x00010BCE
- #define ASM_SESSION_CMD_PAUSE			0x00010BD3
- #define ASM_DATA_CMD_EOS			0x00010BDB
-+#define ASM_DATA_EVENT_RENDERED_EOS		0x00010C1C
- #define ASM_NULL_POPP_TOPOLOGY			0x00010C68
- #define ASM_STREAM_CMD_FLUSH_READBUFS		0x00010C09
- #define ASM_STREAM_CMD_SET_ENCDEC_PARAM		0x00010C10
-@@ -546,9 +547,6 @@ static int32_t q6asm_stream_callback(struct apr_device *adev,
- 		case ASM_SESSION_CMD_SUSPEND:
- 			client_event = ASM_CLIENT_EVENT_CMD_SUSPEND_DONE;
- 			break;
--		case ASM_DATA_CMD_EOS:
--			client_event = ASM_CLIENT_EVENT_CMD_EOS_DONE;
--			break;
- 		case ASM_STREAM_CMD_FLUSH:
- 			client_event = ASM_CLIENT_EVENT_CMD_FLUSH_DONE;
- 			break;
-@@ -651,6 +649,9 @@ static int32_t q6asm_stream_callback(struct apr_device *adev,
- 			spin_unlock_irqrestore(&ac->lock, flags);
- 		}
- 
-+		break;
-+	case ASM_DATA_EVENT_RENDERED_EOS:
-+		client_event = ASM_CLIENT_EVENT_CMD_EOS_DONE;
- 		break;
- 	}
- 
--- 
-2.25.1
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
+--nfpd2ci3eiscija7
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl76ROwACgkQwfwUeK3K
+7Ambxwf/R6wYgRkhf9eNfmHQhlvmhydLzULYpt4yxZAlGdgVBIv5d0queLbzMC/A
++Rg9YS0L+QlaHXscl/HMURmyNE/ogz70JD/K+RD9gtRABEX1qC6VCXudZ372QVkZ
+CnsUQXpva36Q680MkvM7Df3pJmj82YvCRDkpyOfXdb66d28bKKZXfqnACTzESIzp
+7eAIMtkdY1sOUA9pFIGrujjVrtpvXjUy7X+eq0lxspMoRxeMb9fqm40kVCbPCdEO
+gILougjq73SO3L2Q14oh/3XydBgc87caM1yhihbz3OamZd6m/BEp0pUvHTeNHpdJ
+GIXb0dYXi44CkLHakoWrXsYEAoelcA==
+=0gnH
+-----END PGP SIGNATURE-----
+
+--nfpd2ci3eiscija7--
