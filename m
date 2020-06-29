@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 946CDC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:17:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B020BC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:17:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 760BA20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:17:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EBB820656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:17:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461821;
-	bh=3LWzOVAj8WtQ+FGMklS4trCAmcgSyc3EfKkGnueDztU=;
+	s=default; t=1593461830;
+	bh=jG48EIU4dr9zDxGG51f0h/mF76bDGtCruCg/QBobqhw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=etQ/AIbw/LzAtFRP5Qx4QRaX5RFEvauSG0Nt2xU3d/KdIWb46xsrwaqiqin1EiJ4C
-	 3b/aN+YjxblwX1vHXTf783LU75WSQYh+AGi7It8a6sRUgNiyM7zBGE9XU1fO4jnbzu
-	 S6/I/6CB1aKjQ86igQijJpXOua5YxX3ccIsy+j/0=
+	b=gPARfIux7x9VTUPToico4gNX8RBo/RL4Zz7GvveZSLEq9snqDcnJ0GMI93561juj6
+	 upun+Cu1EHojHDR+gyDq50rGxQEDQh1h06HwB3qoyfsjpYvkY/KFqnoDT9BvwYX/ZF
+	 L2l4iC26KPLYtRswWt0m/3A65cKy7jkA8Sc/Iu9o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732974AbgF2URA (ORCPT
+        id S1733018AbgF2URJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:17:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40536 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:17:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732258AbgF2TaP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730777AbgF2TaP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:15 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 97F73252DF;
-        Mon, 29 Jun 2020 15:38:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99A17252CC;
+        Mon, 29 Jun 2020 15:38:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445108;
-        bh=3LWzOVAj8WtQ+FGMklS4trCAmcgSyc3EfKkGnueDztU=;
+        s=default; t=1593445094;
+        bh=jG48EIU4dr9zDxGG51f0h/mF76bDGtCruCg/QBobqhw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hnw0PZVL8u8GGOT7+41240R0ukmo3cd0I2fDCWtxBOneAmaDLrs61dvQuX1dkJbH1
-         hnLxBPPYKXhiVC2e3HCn5Gu4ANaY9/nIjLMGwkrlXNoiQmfOlDjdJpQTkm5dubqojd
-         SyXbVOY2sC6zB4GDT2JD7TVKxR70SJ+Av2bp6K0M=
+        b=aTAflVfxPDtUQ4wUyDgg7uEIY0ad47DaZ6g2gSeVKbZuemQb3sv1rzLTNxA1eGNOs
+         d3ZQX4nRpUkT9BrTQVsbzZ+fam/eXxiLrmQ+84ev80KiB8u5kIeURc2AF0dNIgqdY1
+         5ivuHcXst3h5ILXgqQiYc1A75gfkYNqgsf9/UEE8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Christensen <drc@linux.vnet.ibm.com>,
-        Michael Chan <michael.chan@broadcom.com>,
+Cc:     Valentin Longchamp <valentin@longchamp.me>,
         "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.14 16/78] tg3: driver sleeps indefinitely when EEH errors exceed eeh_max_freezes
-Date:   Mon, 29 Jun 2020 11:37:04 -0400
-Message-Id: <20200629153806.2494953-17-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 04/78] net: sched: export __netdev_watchdog_up()
+Date:   Mon, 29 Jun 2020 11:36:52 -0400
+Message-Id: <20200629153806.2494953-5-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
 References: <20200629153806.2494953-1-sashal@kernel.org>
@@ -66,40 +65,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Christensen <drc@linux.vnet.ibm.com>
+From: Valentin Longchamp <valentin@longchamp.me>
 
-[ Upstream commit 3a2656a211caf35e56afc9425e6e518fa52f7fbc ]
+[ Upstream commit 1a3db27ad9a72d033235b9673653962c02e3486e ]
 
-The driver function tg3_io_error_detected() calls napi_disable twice,
-without an intervening napi_enable, when the number of EEH errors exceeds
-eeh_max_freezes, resulting in an indefinite sleep while holding rtnl_lock.
+Since the quiesce/activate rework, __netdev_watchdog_up() is directly
+called in the ucc_geth driver.
 
-Add check for pcierr_recovery which skips code already executed for the
-"Frozen" state.
+Unfortunately, this function is not available for modules and thus
+ucc_geth cannot be built as a module anymore. Fix it by exporting
+__netdev_watchdog_up().
 
-Signed-off-by: David Christensen <drc@linux.vnet.ibm.com>
-Reviewed-by: Michael Chan <michael.chan@broadcom.com>
+Since the commit introducing the regression was backported to stable
+branches, this one should ideally be as well.
+
+Fixes: 79dde73cf9bc ("net/ethernet/freescale: rework quiesce/activate for ucc_geth")
+Signed-off-by: Valentin Longchamp <valentin@longchamp.me>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/broadcom/tg3.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/sched/sch_generic.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/broadcom/tg3.c b/drivers/net/ethernet/broadcom/tg3.c
-index bc0221eafe5c4..e40d31b405253 100644
---- a/drivers/net/ethernet/broadcom/tg3.c
-+++ b/drivers/net/ethernet/broadcom/tg3.c
-@@ -18179,8 +18179,8 @@ static pci_ers_result_t tg3_io_error_detected(struct pci_dev *pdev,
+diff --git a/net/sched/sch_generic.c b/net/sched/sch_generic.c
+index 21b981abbacb5..091a9746627fa 100644
+--- a/net/sched/sch_generic.c
++++ b/net/sched/sch_generic.c
+@@ -341,6 +341,7 @@ void __netdev_watchdog_up(struct net_device *dev)
+ 			dev_hold(dev);
+ 	}
+ }
++EXPORT_SYMBOL_GPL(__netdev_watchdog_up);
  
- 	rtnl_lock();
- 
--	/* We probably don't have netdev yet */
--	if (!netdev || !netif_running(netdev))
-+	/* Could be second call or maybe we don't have netdev yet */
-+	if (!netdev || tp->pcierr_recovery || !netif_running(netdev))
- 		goto done;
- 
- 	/* We needn't recover from permanent error */
+ static void dev_watchdog_up(struct net_device *dev)
+ {
 -- 
 2.25.1
 
