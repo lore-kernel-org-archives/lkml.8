@@ -2,126 +2,130 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17BE7C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:16:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A889C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ECA6E206A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:16:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iQSpfw6T"
+	by mail.kernel.org (Postfix) with ESMTP id 64EC4206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:17:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390733AbgF2VQ4 (ORCPT
+        id S2390724AbgF2VRE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:16:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35322 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729803AbgF2VQy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 17:16:54 -0400
-Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55F42C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 14:16:53 -0700 (PDT)
-Received: by mail-ua1-x941.google.com with SMTP id e3so5806466uan.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 14:16:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Glv9KPcU1i2kTi/iXapQFW9l12MhBnrThVYjifxz8EM=;
-        b=iQSpfw6Tm/KPuTk+bUTfK5sUy4UnMTGDe2HrdR0LJ5iy/NBxQZbLKaAMr5P8IsFaKS
-         jlx65KlHQsr6onY+QHMDKYDN0o/+INkFidVgT0E/5uY2DgBuPiWIVZPfHlo/wnPJUZ6E
-         9jTXUZ6lxK0iNtd4wO6o08CCwbn+1DdmLYhvg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Glv9KPcU1i2kTi/iXapQFW9l12MhBnrThVYjifxz8EM=;
-        b=eZSOLjfLCLNTPgakZUZGP6Gs13hcaSC7hRC3n8cQPip+HqeoKu+MfJqT7/0kv0dj0C
-         jI1nbb8zwJw7PH57wIEFGz+1UFcnyJq1s9yLP4i4l/djl4ymVVnlECQB2tE/NTEQb8cH
-         S9LBOv7ZWT0AkXKqrIpuxwuH59eAkmnAybY3ou1ynUZ2B1dSap8Khd4widhw6K7ABF30
-         D0DMuxbS3NsHTQJRZMU6GBmm3avhix7nzou2K1HSrqEj7lLSlg+C1LVNdNmSwkeCi5xs
-         A2G+WNwz3HwYwXbWJoeRX6bI4QbLmjFw6Z0Ca3qQGkdIAMpGKfZAolYxnPUOvUba93+u
-         Si2w==
-X-Gm-Message-State: AOAM533X/WRAfqBH15rnEms2H6CVkMt6dwc6uknh8w+a+8rjOZOccmCD
-        1nHBHEjiHqIb4JfAQYV69qTxd/0o3UE=
-X-Google-Smtp-Source: ABdhPJzVSmtEtrcVFXXzdPcfzeT/wrFBA5UMHTzNqDsKEMzgXcV2FzMH9sJyDDmHCjq/qZWxY+0FMQ==
-X-Received: by 2002:ab0:3055:: with SMTP id x21mr12245784ual.106.1593465412330;
-        Mon, 29 Jun 2020 14:16:52 -0700 (PDT)
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com. [209.85.222.46])
-        by smtp.gmail.com with ESMTPSA id b9sm89814vsp.24.2020.06.29.14.16.51
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jun 2020 14:16:51 -0700 (PDT)
-Received: by mail-ua1-f46.google.com with SMTP id q15so5595845uap.4
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 14:16:51 -0700 (PDT)
-X-Received: by 2002:ab0:29c1:: with SMTP id i1mr12275723uaq.120.1593465411383;
- Mon, 29 Jun 2020 14:16:51 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200629153756.cxg74nec3repa4lu@holly.lan> <20200629205012.3263-1-cengiz@kernel.wtf>
-In-Reply-To: <20200629205012.3263-1-cengiz@kernel.wtf>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Mon, 29 Jun 2020 14:16:39 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=XWYKqHEMDt-0PYHty_syJ9MO6Oz8DVBbacNZS5zGXk9A@mail.gmail.com>
-Message-ID: <CAD=FV=XWYKqHEMDt-0PYHty_syJ9MO6Oz8DVBbacNZS5zGXk9A@mail.gmail.com>
-Subject: Re: [PATCH v2] kdb: remove unnecessary null check of dbg_io_ops
-To:     Cengiz Can <cengiz@kernel.wtf>
-Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        kgdb-bugreport@lists.sourceforge.net,
-        LKML <linux-kernel@vger.kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Sumit Garg <sumit.garg@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 29 Jun 2020 17:17:04 -0400
+Received: from foss.arm.com ([217.140.110.172]:36814 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729802AbgF2Sy6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:54:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 347081529;
+        Mon, 29 Jun 2020 09:26:38 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6B2EC3F71E;
+        Mon, 29 Jun 2020 09:26:36 -0700 (PDT)
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Chris Redpath <chris.redpath@arm.com>,
+        Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH v5 0/2] sched: Optionally skip uclamp logic in fast path
+Date:   Mon, 29 Jun 2020 17:26:31 +0100
+Message-Id: <20200629162633.8800-1-qais.yousef@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This series attempts to address the report that uclamp logic could be expensive
+sometimes and shows a regression in netperf UDP_STREAM under certain
+conditions.
 
-On Mon, Jun 29, 2020 at 1:50 PM Cengiz Can <cengiz@kernel.wtf> wrote:
->
-> `kdb_msg_write` operates on a global `struct kgdb_io *` called
-> `dbg_io_ops`.
->
-> It's initialized in `debug_core.c` and checked throughout the debug
-> flow.
->
-> There's a null check in `kdb_msg_write` which triggers static analyzers
-> and gives the (almost entirely wrong) impression that it can be null.
->
-> Coverity scanner caught this as CID 1465042.
->
-> I have removed the unnecessary null check and eliminated false-positive
-> forward null dereference warning.
->
-> Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
-> ---
->  kernel/debug/kdb/kdb_io.c | 12 +++++-------
->  1 file changed, 5 insertions(+), 7 deletions(-)
->
-> diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
-> index 683a799618ad..4ac59a4fbeec 100644
-> --- a/kernel/debug/kdb/kdb_io.c
-> +++ b/kernel/debug/kdb/kdb_io.c
-> @@ -549,14 +549,12 @@ static void kdb_msg_write(const char *msg, int msg_len)
->         if (msg_len == 0)
->                 return;
->
-> -       if (dbg_io_ops) {
-> -               const char *cp = msg;
-> -               int len = msg_len;
-> +       const char *cp = msg;
-> +       int len = msg_len;
+The first patch is a fix for how struct uclamp_rq is initialized which is
+required by the 2nd patch which contains the real 'fix'.
 
-kernel/debug/kdb/kdb_io.c:552:14:
-warning: ISO C90 forbids mixing declarations and code
-[-Wdeclaration-after-statement]
+Worth noting that the root cause of the overhead is believed to be system
+specific or related to potential certain code/data layout issues, leading to
+worse I/D $ performance.
 
--Doug
+Different systems exhibited different behaviors and the regression did
+disappear in certain kernel version while attempting to reporoduce.
+
+More info can be found here:
+
+https://lore.kernel.org/lkml/20200616110824.dgkkbyapn3io6wik@e107158-lin/
+
+Having the static key seemed the best thing to do to ensure the effect of
+uclamp is minimized for kernels that compile it in but don't have a userspace
+that uses it, which will allow distros to distribute uclamp capable kernels by
+default without having to compromise on performance for some systems that could
+be affected.
+
+Changes in v5:
+	* Fix a race that could happen when order of enqueue/dequeue of tasks
+	  A and B is not done in order, and sched_uclamp_used is enabled in
+	  between.
+	* Add more comments explaining the race and the behavior of
+	  uclamp_rq_util_with() which is now protected with a static key to be
+	  a NOP. When no uclamp aggregation at rq level is done, this function
+	  can't do much.
+
+Changes in v4:
+	* Fix broken boosting of RT tasks when static key is disabled.
+
+Changes in v3:
+	* Avoid double negatives and rename the static key to uclamp_used
+	* Unconditionally enable the static key through any of the paths where
+	  the user can modify the default uclamp value.
+	* Use C99 named struct initializer for struct uclamp_rq which is easier
+	  to read than the memset().
+
+Changes in v2:
+	* Add more info in the commit message about the result of perf diff to
+	  demonstrate that the activate/deactivate_task pressure is reduced in
+	  the fast path.
+
+	* Fix sparse warning reported by the test robot.
+
+	* Add an extra commit about using static_branch_likely() instead of
+	  static_branc_unlikely().
+
+Thanks
+
+--
+Qais Yousef
+
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Ben Segall <bsegall@google.com>
+Cc: Mel Gorman <mgorman@suse.de>
+CC: Patrick Bellasi <patrick.bellasi@matbug.net>
+Cc: Chris Redpath <chris.redpath@arm.com>
+Cc: Lukasz Luba <lukasz.luba@arm.com>
+Cc: linux-kernel@vger.kernel.org
+
+
+Qais Yousef (2):
+  sched/uclamp: Fix initialization of struct uclamp_rq
+  sched/uclamp: Protect uclamp fast path code with static key
+
+ kernel/sched/core.c              | 86 +++++++++++++++++++++++++++++---
+ kernel/sched/cpufreq_schedutil.c |  2 +-
+ kernel/sched/sched.h             | 39 ++++++++++++++-
+ 3 files changed, 117 insertions(+), 10 deletions(-)
+
+-- 
+2.17.1
+
