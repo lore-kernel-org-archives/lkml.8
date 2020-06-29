@@ -5,68 +5,68 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 378F7C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F9AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:38:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0901C2072D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:38:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C0C0206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:38:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ejhcrD4Y"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GZWd/qtl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732091AbgF2ViE (ORCPT
+        id S1731044AbgF2ViV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:38:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38628 "EHLO
+        Mon, 29 Jun 2020 17:38:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730288AbgF2Vhq (ORCPT
+        with ESMTP id S1729417AbgF2Vho (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 17:37:46 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3BE78C03E979
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 14:37:46 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id i4so18783748iov.11
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 14:37:46 -0700 (PDT)
+        Mon, 29 Jun 2020 17:37:44 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07FFFC03E97A
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 14:37:44 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id c16so18803754ioi.9
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 14:37:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=eLTQ/BXwwpfHpVShbhLkZS+cPuKECaCCqq8B2X4LXh4=;
-        b=ejhcrD4Y89kBPVJsFpjT/RoUICQrZFfy643iMMYadxxh7gcn8SjEwassGmdFdFqEbi
-         tKyy5z7sC9594m9pJDVbfu9kIGgUewkXyPt+UGhiaB7miUhvFjF6/C0NEccVDOJScyco
-         yJdb/WJREk3+LhhHnUe2u80siBc1lRe7O2EzoW4fu0X9sPvPn9asBTb+dC75LeU9vUR5
-         K5wDGd45/297qxbyqqHv4yYGX70ZfvIRLWRddqMVgMcTQ1eOGmfIHP7VaKOWxAF30B4Q
-         yRoBD81nT2teZO3GsVnL9U+ynfwztL4Xzn8IeL/yKciha8neTxsLgiTV8aQbaJCfb/hq
-         58IA==
+        bh=3I76P37Yz2wf4pLUPaNpx3FXvV0p8jPdg/DBK+vqw3Q=;
+        b=GZWd/qtlc+92FjMe/OMEp2bIn0RAaMb+EeHyk6vppCzb085oe1L6NG+NgY0/Vz8ybB
+         ZVXyWeltVBqIzzAOme9mNQjf+d8a0Q7PcjtfiKXNSXqG+AE62c09mGCnYaz7k91QPJBz
+         0uAY7NtwK6oTExqGJYYguVLlODHcdsXrag/TiriZuwAA/ty+FTsYEG6eBWkIQCqdpHsj
+         RDpL9IMB4aUb3XRz3XZdO2ZlvY/udBEUmD55/5iw8mhaQm+Id7o9zu+HaNq2AAG5bLpB
+         5rUPu2mUbTWW+G6p3nJNLqSdWilR5KI1cq/eMtXBGbUpeIQuSI+z0kRuGbYHQypeSwyR
+         swdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=eLTQ/BXwwpfHpVShbhLkZS+cPuKECaCCqq8B2X4LXh4=;
-        b=GPKTY5Yu++t5DOTQ7l+3gisRbgL7Gi6pcODUasmuzdjR8S/vKpkV3Uur9YLVfsMdHv
-         p7BUjY2QCPhRxG1YJhDvuyHtBXeu/kr01QtH7bp/C0M9ErmsbmbMjNpY1YSEiEDX2K7A
-         QAdP4r1O0EgrWfVHvYqeijbyVB4wNf2p/O7ZVr2Z1pu4RRdN+VM2jbdwW6AySOx7VqUz
-         l9qkufXT97Ur2/Ww4Lc2OOQ1k2u7Z+cbO7zsziGtSEzX0T8eorxzyT7bSWu2Bz4DVybY
-         ZpM1cfzm4S7+UQK262vr9zLuGc6NmbgRuXlAUyFb+KvmMLexlQi6/TixLRuAnFqXDavl
-         J7xg==
-X-Gm-Message-State: AOAM532gJcUwkgqlv5TK6cHKmy34bvy56axv4qp11waK9ZDAwIFtXnqz
-        REzom9e7ub2CeXNrBriT2oxCWQ==
-X-Google-Smtp-Source: ABdhPJy4AtJafFmJl5e85TTe/atf6cKo9tyPof0+mKPn8YE2AwhWzryOwRkRPweMcAkulCAEeDIQIQ==
-X-Received: by 2002:a05:6602:22c5:: with SMTP id e5mr19273885ioe.9.1593466665582;
-        Mon, 29 Jun 2020 14:37:45 -0700 (PDT)
+        bh=3I76P37Yz2wf4pLUPaNpx3FXvV0p8jPdg/DBK+vqw3Q=;
+        b=I/9luN2YhCSuJS4q1Vhp63xdY13rvJi2TaSUPTSKFTrY9C4NXfyk6Cesk/q0v3Rmiv
+         CT1Z20n7r/9bCg0yMvB/xBcPxYhrKWCTUi1K1EWcCgQbn6AZaduzRNgazXpnDdgrciJv
+         EFO4rQ+25hpmYc5MC51vDzTG+jbmTrV4YQvszeg6F7qghGaGjtLh5xx2pd4AYvvbty2A
+         hd1fEJppGo8q8E01Fg6JvpB8bej/02s/jBlJsLF4L5VeV465SsZi+4IjYmK/jXX1A5pB
+         SQjpyxyyv3JHxh2TeZARv9zTxfAlm1i56DopB9V7klqHc2r02+mMQbrvQsNKB6Nk5DZq
+         8ijg==
+X-Gm-Message-State: AOAM532nzIs8z9N6RfAu7PTwm4kMzfcNLeX3BTlG3snF/yGR5y9ropD8
+        wP1Wdufg/3cJcrhz2f8tbdZOTw==
+X-Google-Smtp-Source: ABdhPJyI5WhewIb4jHcE1fDjCf/mXvO4wP6i+SfwrhN3JqRZDw7gomj86EHSwfm2LZTvcvXd+SbMgQ==
+X-Received: by 2002:a05:6638:2601:: with SMTP id m1mr9163980jat.43.1593466663340;
+        Mon, 29 Jun 2020 14:37:43 -0700 (PDT)
 Received: from presto.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.gmail.com with ESMTPSA id u6sm571353ilg.32.2020.06.29.14.37.44
+        by smtp.gmail.com with ESMTPSA id u6sm571353ilg.32.2020.06.29.14.37.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 14:37:45 -0700 (PDT)
+        Mon, 29 Jun 2020 14:37:42 -0700 (PDT)
 From:   Alex Elder <elder@linaro.org>
 To:     davem@davemloft.net, kuba@kernel.org
 Cc:     evgreen@chromium.org, subashab@codeaurora.org,
         cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
         netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next 3/3] net: ipa: kill IPA_MEM_UC_OFFSET
-Date:   Mon, 29 Jun 2020 16:37:38 -0500
-Message-Id: <20200629213738.1180618-4-elder@linaro.org>
+Subject: [PATCH net-next 1/3] net: ipa: always report GSI state errors
+Date:   Mon, 29 Jun 2020 16:37:36 -0500
+Message-Id: <20200629213738.1180618-2-elder@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629213738.1180618-1-elder@linaro.org>
 References: <20200629213738.1180618-1-elder@linaro.org>
@@ -77,46 +77,212 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The microcontroller shared memory area is at the beginning of the
-IPA resident memory.  IPA_MEM_UC_OFFSET was defined as the offset
-within that region where it's found, but it's 0, and it's never
-actually used.  Just get rid of the definition, and move some of the
-description it had to be above the definition of the ipa_uc_mem_area
-structure.
+We check the state of an event ring or channel both before and after
+any GSI command issued that will change that state.  In most--but
+not all--cases, if the state is something different than expected we
+report an error message.
+
+Add error messages where missing, so that all unexpected states
+provide information about what went wrong.  Drop the parentheses
+around the state value shown in all cases.
 
 Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- drivers/net/ipa/ipa_uc.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ drivers/net/ipa/gsi.c | 54 ++++++++++++++++++++++++-------------------
+ 1 file changed, 30 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/net/ipa/ipa_uc.c b/drivers/net/ipa/ipa_uc.c
-index a1f8db00d55a..9f9980ec2ed3 100644
---- a/drivers/net/ipa/ipa_uc.c
-+++ b/drivers/net/ipa/ipa_uc.c
-@@ -35,12 +35,6 @@
-  */
- /* Supports hardware interface version 0x2000 */
+diff --git a/drivers/net/ipa/gsi.c b/drivers/net/ipa/gsi.c
+index 55226b264e3c..7e4e54ee09b1 100644
+--- a/drivers/net/ipa/gsi.c
++++ b/drivers/net/ipa/gsi.c
+@@ -358,13 +358,15 @@ static int gsi_evt_ring_alloc_command(struct gsi *gsi, u32 evt_ring_id)
  
--/* Offset relative to the base of the IPA shared address space of the
-- * shared region used for communication with the microcontroller.  The
-- * region is 128 bytes in size, but only the first 40 bytes are used.
-- */
--#define IPA_MEM_UC_OFFSET	0x0000
+ 	/* Get initial event ring state */
+ 	evt_ring->state = gsi_evt_ring_state(gsi, evt_ring_id);
 -
- /* Delay to allow a the microcontroller to save state when crashing */
- #define IPA_SEND_DELAY		100	/* microseconds */
+-	if (evt_ring->state != GSI_EVT_RING_STATE_NOT_ALLOCATED)
++	if (evt_ring->state != GSI_EVT_RING_STATE_NOT_ALLOCATED) {
++		dev_err(gsi->dev, "bad event ring state %u before alloc\n",
++			evt_ring->state);
+ 		return -EINVAL;
++	}
  
-@@ -60,6 +54,10 @@
-  * @hw_state:		state of hardware (including error type information)
-  * @warning_counter:	counter of non-fatal hardware errors
-  * @interface_version:	hardware-reported interface version
-+ *
-+ * A shared memory area at the base of IPA resident memory is used for
-+ * communication with the microcontroller.  The region is 128 bytes in
-+ * size, but only the first 40 bytes (structured this way) are used.
-  */
- struct ipa_uc_mem_area {
- 	u8 command;		/* enum ipa_uc_command */
+ 	ret = evt_ring_command(gsi, evt_ring_id, GSI_EVT_ALLOCATE);
+ 	if (!ret && evt_ring->state != GSI_EVT_RING_STATE_ALLOCATED) {
+-		dev_err(gsi->dev, "bad event ring state (%u) after alloc\n",
++		dev_err(gsi->dev, "bad event ring state %u after alloc\n",
+ 			evt_ring->state);
+ 		ret = -EIO;
+ 	}
+@@ -381,14 +383,14 @@ static void gsi_evt_ring_reset_command(struct gsi *gsi, u32 evt_ring_id)
+ 
+ 	if (state != GSI_EVT_RING_STATE_ALLOCATED &&
+ 	    state != GSI_EVT_RING_STATE_ERROR) {
+-		dev_err(gsi->dev, "bad event ring state (%u) before reset\n",
++		dev_err(gsi->dev, "bad event ring state %u before reset\n",
+ 			evt_ring->state);
+ 		return;
+ 	}
+ 
+ 	ret = evt_ring_command(gsi, evt_ring_id, GSI_EVT_RESET);
+ 	if (!ret && evt_ring->state != GSI_EVT_RING_STATE_ALLOCATED)
+-		dev_err(gsi->dev, "bad event ring state (%u) after reset\n",
++		dev_err(gsi->dev, "bad event ring state %u after reset\n",
+ 			evt_ring->state);
+ }
+ 
+@@ -399,14 +401,14 @@ static void gsi_evt_ring_de_alloc_command(struct gsi *gsi, u32 evt_ring_id)
+ 	int ret;
+ 
+ 	if (evt_ring->state != GSI_EVT_RING_STATE_ALLOCATED) {
+-		dev_err(gsi->dev, "bad event ring state (%u) before dealloc\n",
++		dev_err(gsi->dev, "bad event ring state %u before dealloc\n",
+ 			evt_ring->state);
+ 		return;
+ 	}
+ 
+ 	ret = evt_ring_command(gsi, evt_ring_id, GSI_EVT_DE_ALLOC);
+ 	if (!ret && evt_ring->state != GSI_EVT_RING_STATE_NOT_ALLOCATED)
+-		dev_err(gsi->dev, "bad event ring state (%u) after dealloc\n",
++		dev_err(gsi->dev, "bad event ring state %u after dealloc\n",
+ 			evt_ring->state);
+ }
+ 
+@@ -448,21 +450,23 @@ gsi_channel_command(struct gsi_channel *channel, enum gsi_ch_cmd_opcode opcode)
+ static int gsi_channel_alloc_command(struct gsi *gsi, u32 channel_id)
+ {
+ 	struct gsi_channel *channel = &gsi->channel[channel_id];
++	struct device *dev = gsi->dev;
+ 	enum gsi_channel_state state;
+ 	int ret;
+ 
+ 	/* Get initial channel state */
+ 	state = gsi_channel_state(channel);
+-	if (state != GSI_CHANNEL_STATE_NOT_ALLOCATED)
++	if (state != GSI_CHANNEL_STATE_NOT_ALLOCATED) {
++		dev_err(dev, "bad channel state %u before alloc\n", state);
+ 		return -EINVAL;
++	}
+ 
+ 	ret = gsi_channel_command(channel, GSI_CH_ALLOCATE);
+ 
+ 	/* Channel state will normally have been updated */
+ 	state = gsi_channel_state(channel);
+ 	if (!ret && state != GSI_CHANNEL_STATE_ALLOCATED) {
+-		dev_err(gsi->dev, "bad channel state (%u) after alloc\n",
+-			state);
++		dev_err(dev, "bad channel state %u after alloc\n", state);
+ 		ret = -EIO;
+ 	}
+ 
+@@ -472,21 +476,23 @@ static int gsi_channel_alloc_command(struct gsi *gsi, u32 channel_id)
+ /* Start an ALLOCATED channel */
+ static int gsi_channel_start_command(struct gsi_channel *channel)
+ {
++	struct device *dev = channel->gsi->dev;
+ 	enum gsi_channel_state state;
+ 	int ret;
+ 
+ 	state = gsi_channel_state(channel);
+ 	if (state != GSI_CHANNEL_STATE_ALLOCATED &&
+-	    state != GSI_CHANNEL_STATE_STOPPED)
++	    state != GSI_CHANNEL_STATE_STOPPED) {
++		dev_err(dev, "bad channel state %u before start\n", state);
+ 		return -EINVAL;
++	}
+ 
+ 	ret = gsi_channel_command(channel, GSI_CH_START);
+ 
+ 	/* Channel state will normally have been updated */
+ 	state = gsi_channel_state(channel);
+ 	if (!ret && state != GSI_CHANNEL_STATE_STARTED) {
+-		dev_err(channel->gsi->dev,
+-			"bad channel state (%u) after start\n", state);
++		dev_err(dev, "bad channel state %u after start\n", state);
+ 		ret = -EIO;
+ 	}
+ 
+@@ -496,13 +502,16 @@ static int gsi_channel_start_command(struct gsi_channel *channel)
+ /* Stop a GSI channel in STARTED state */
+ static int gsi_channel_stop_command(struct gsi_channel *channel)
+ {
++	struct device *dev = channel->gsi->dev;
+ 	enum gsi_channel_state state;
+ 	int ret;
+ 
+ 	state = gsi_channel_state(channel);
+ 	if (state != GSI_CHANNEL_STATE_STARTED &&
+-	    state != GSI_CHANNEL_STATE_STOP_IN_PROC)
++	    state != GSI_CHANNEL_STATE_STOP_IN_PROC) {
++		dev_err(dev, "bad channel state %u before stop\n", state);
+ 		return -EINVAL;
++	}
+ 
+ 	ret = gsi_channel_command(channel, GSI_CH_STOP);
+ 
+@@ -515,8 +524,7 @@ static int gsi_channel_stop_command(struct gsi_channel *channel)
+ 	if (state == GSI_CHANNEL_STATE_STOP_IN_PROC)
+ 		return -EAGAIN;
+ 
+-	dev_err(channel->gsi->dev,
+-		"bad channel state (%u) after stop\n", state);
++	dev_err(dev, "bad channel state %u after stop\n", state);
+ 
+ 	return -EIO;
+ }
+@@ -524,6 +532,7 @@ static int gsi_channel_stop_command(struct gsi_channel *channel)
+ /* Reset a GSI channel in ALLOCATED or ERROR state. */
+ static void gsi_channel_reset_command(struct gsi_channel *channel)
+ {
++	struct device *dev = channel->gsi->dev;
+ 	enum gsi_channel_state state;
+ 	int ret;
+ 
+@@ -532,8 +541,7 @@ static void gsi_channel_reset_command(struct gsi_channel *channel)
+ 	state = gsi_channel_state(channel);
+ 	if (state != GSI_CHANNEL_STATE_STOPPED &&
+ 	    state != GSI_CHANNEL_STATE_ERROR) {
+-		dev_err(channel->gsi->dev,
+-			"bad channel state (%u) before reset\n", state);
++		dev_err(dev, "bad channel state %u before reset\n", state);
+ 		return;
+ 	}
+ 
+@@ -542,21 +550,20 @@ static void gsi_channel_reset_command(struct gsi_channel *channel)
+ 	/* Channel state will normally have been updated */
+ 	state = gsi_channel_state(channel);
+ 	if (!ret && state != GSI_CHANNEL_STATE_ALLOCATED)
+-		dev_err(channel->gsi->dev,
+-			"bad channel state (%u) after reset\n", state);
++		dev_err(dev, "bad channel state %u after reset\n", state);
+ }
+ 
+ /* Deallocate an ALLOCATED GSI channel */
+ static void gsi_channel_de_alloc_command(struct gsi *gsi, u32 channel_id)
+ {
+ 	struct gsi_channel *channel = &gsi->channel[channel_id];
++	struct device *dev = gsi->dev;
+ 	enum gsi_channel_state state;
+ 	int ret;
+ 
+ 	state = gsi_channel_state(channel);
+ 	if (state != GSI_CHANNEL_STATE_ALLOCATED) {
+-		dev_err(gsi->dev,
+-			"bad channel state (%u) before dealloc\n", state);
++		dev_err(dev, "bad channel state %u before dealloc\n", state);
+ 		return;
+ 	}
+ 
+@@ -565,8 +572,7 @@ static void gsi_channel_de_alloc_command(struct gsi *gsi, u32 channel_id)
+ 	/* Channel state will normally have been updated */
+ 	state = gsi_channel_state(channel);
+ 	if (!ret && state != GSI_CHANNEL_STATE_NOT_ALLOCATED)
+-		dev_err(gsi->dev,
+-			"bad channel state (%u) after dealloc\n", state);
++		dev_err(dev, "bad channel state %u after dealloc\n", state);
+ }
+ 
+ /* Ring an event ring doorbell, reporting the last entry processed by the AP.
 -- 
 2.25.1
 
