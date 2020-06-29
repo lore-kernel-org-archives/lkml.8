@@ -2,165 +2,112 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A3F0C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:22:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF8C2C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:22:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3555F2158C
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:22:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mExcRW14"
+	by mail.kernel.org (Postfix) with ESMTP id D5E6521582
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:22:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730700AbgF2VWQ (ORCPT
+        id S2390964AbgF2VWU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:22:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40016 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729539AbgF2Swm (ORCPT
+        Mon, 29 Jun 2020 17:22:20 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:52597 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730572AbgF2VWL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:52:42 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7940C02E2CE
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:04:54 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id f18so8626116wrs.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:04:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=eCTcGJHtSmaPBnZUOms/69xtZG01NEK1s+KL4aDek/0=;
-        b=mExcRW14yTqdrE+npdERL83UBRuofRErdA5/zgO3vl9BxrfDKDkoQbWF20CyrH2IUS
-         8UGyTrSsNjnnKbfg/JmvpnQmPPE+9II9m4mQ1g3abKPLo/CHKonJEB9B2KyTk40TL7zZ
-         wJelDv5eKmyMI8SV1t20g5eXswq7iBjDP7X11tsetirsv9dUe16SDowmC7QpfiHTMG+x
-         XvDbt0wa3fLD8MJ8wtrAGo1AQyLuSl7AIsI5m7XxErYSsKc6UKyp0O771NkG9DgFhEm6
-         NN/AlfVVuxiSc3efXqK8IquWgOi6l6dGg0dGxvvifTk7+/navEyuFGkz6eRr2WYZVKZy
-         IMow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=eCTcGJHtSmaPBnZUOms/69xtZG01NEK1s+KL4aDek/0=;
-        b=IWBdMMwAN+gjSGQrrv+xZmZfCFW2KDImMpRZ1EA8zvgVUlBvIm8oQXDcTH6kDLk8WH
-         D+0PHXmjWEBI4q45Z2VAxYD8An+HnnHw4R/kxknyeGh9lEtLMjdqg/3yg1pqWiyEfHbg
-         zWivR/vEGpzmoK5zx+ZR2AQfhosR32bvhZUpcUiEdisnlegG3I8zxBEuFvyByapm2l7E
-         jvEyvuW8hQm8E44DuOyHHzqPGGvPVNCUCQOeAPwJ+LOYjwqTfhA6o426EU+bjMaH6JSr
-         kNQRwxp6GeYcThpEgA60n1chrQ6jWhZT2/r1N6J4dqEzLpcz5IWQcFFetLAmELhWhHQ1
-         qgrQ==
-X-Gm-Message-State: AOAM531OhwK+SClB/+COtbTJHh1w/3v1CRVT5MkbCFqjlTlI2KzuQtpp
-        qBGBXlm/5XmvqeboJRg8XT9f7Q==
-X-Google-Smtp-Source: ABdhPJygUbnUrJAbW4jXvLREPQuFQ/kwh1F2Ffox4kxTw9ORCJFsMC95XOvyQ46XY78Axn7iLPLN1w==
-X-Received: by 2002:a5d:6846:: with SMTP id o6mr17264874wrw.370.1593439493674;
-        Mon, 29 Jun 2020 07:04:53 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id p14sm15394928wrj.14.2020.06.29.07.04.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 07:04:53 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     arnd@arndb.de, gregkh@linuxfoundation.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>,
-        Oded Gabbay <oded.gabbay@gmail.com>,
-        Tomer Tayar <ttayar@habana.ai>
-Subject: [PATCH 06/20] misc: habanalabs: goya: Omit pointless check ensuring addr is >=0
-Date:   Mon, 29 Jun 2020 15:04:28 +0100
-Message-Id: <20200629140442.1043957-7-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629140442.1043957-1-lee.jones@linaro.org>
-References: <20200629140442.1043957-1-lee.jones@linaro.org>
+        Mon, 29 Jun 2020 17:22:11 -0400
+Received: from mail-qk1-f172.google.com ([209.85.222.172]) by
+ mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MDv1A-1jiCrd0EKK-00A1GE for <linux-kernel@vger.kernel.org>; Mon, 29 Jun
+ 2020 13:54:01 +0200
+Received: by mail-qk1-f172.google.com with SMTP id e11so14934554qkm.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 04:54:00 -0700 (PDT)
+X-Gm-Message-State: AOAM530VGvvB5fkMRMjDUeJj9aDLE47Y+6lLHa+oUn8CFAkbksOym1Er
+        76fNb0cx8XAOeXkQ+4a8n+NcRl4669mfr8rlViU=
+X-Google-Smtp-Source: ABdhPJwtBbHqFdSpCDwcXLaF0RSEsXGs33hzlBafcTQfeX/aXKD8IfSc9Jxe9Akfl5VitHcd5Y1zZ6gLJV9ZpAZ843A=
+X-Received: by 2002:a37:9dd6:: with SMTP id g205mr15063847qke.352.1593431639955;
+ Mon, 29 Jun 2020 04:53:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+References: <1593425623-31810-1-git-send-email-Anson.Huang@nxp.com>
+ <1593425623-31810-2-git-send-email-Anson.Huang@nxp.com> <CAK8P3a31coESQTssW1mndGuZ1pvxXSRRpY=XT1ZO+pkj9aabxg@mail.gmail.com>
+ <DB3PR0402MB3916987E13C37013ACF59EB1F56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+In-Reply-To: <DB3PR0402MB3916987E13C37013ACF59EB1F56E0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 29 Jun 2020 13:53:44 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a3Ar3TnSuxpUUMj4NjCK0Qb0pD9cVbcFUcdeGa85m2fUQ@mail.gmail.com>
+Message-ID: <CAK8P3a3Ar3TnSuxpUUMj4NjCK0Qb0pD9cVbcFUcdeGa85m2fUQ@mail.gmail.com>
+Subject: Re: [PATCH 2/3] arm64: defconfig: Select CONFIG_RESET_IMX7 by default
+To:     Anson Huang <anson.huang@nxp.com>
+Cc:     Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Stefan Agner <stefan.agner@toradex.com>,
+        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Leo Li <leoyang.li@nxp.com>, Vinod Koul <vkoul@kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Olof Johansson <olof@lixom.net>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:NIOSdfESoXFSE8b/DuYR3KL4+W+WZjWDOStjhIIYEq3ceB+isZb
+ Eiq1GkmUNJPAj68nWgC7PYKycit+ZrxUAdM/2CKx1wrGKhXDtCi6zlwSOl69jUHNXsEmCe7
+ R25isb36HglKPLXxIIzWGVRSKQXj2BzB1KA0dkVL9LmYThRrK0f0MkdH8tQhHMOvxffyHVI
+ blL85jSVrgafEUnJ8rSFQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:GIwaNzaF97M=:6INQF6qF6yeJQlhCQ4O+W1
+ +AHvlspnFmowebU86qfyDbkZ3+rGbzf1hIIOQUxo49v8CbDRRcVGEqZpM17VzHrP7ID4cHCXA
+ Hhghh+z8FrdvEXG9YGWWFbOdww6AFpaFfDNPq2GwT47CSz6K6/bnN7d2DgwhW3IBpdYAoERiB
+ foAW/29+wgSomKuLULrWbqMtT2djCiZ44/iZmypUCa/9V7m0R8FEkbEGOIO81RyV10BemSiS7
+ TnhUoOgzXQb/JXVtnIwW7y7UsOt99CjwOvuD4sxxcgiQT29TfBDb/V3ysGyZ2sLOl/XwtnR8d
+ vMB7UDoHf1Cs5bBzXePg5LP7KOElbG2R++/PNPoV+BXNGfgvLt5VZVZCL104qcN481OfREmDb
+ i97qTfbSDR6Qey35DA+8DfGf5mf/sjImXRnmgAWUVerilm6W5jeSq5lynyResp5wMp60zI/2g
+ 7BW6OUpXwdP4lT9CLeYdYSD+yKPA5txOE2TevkFd0f7ohBv8/k6B4oIUgqHsv6kjhSCoFGTlX
+ 9FpE2liUP0jkUBOi/kNf5n7VWi/rdgCVkcAT7vzaPlWm9ImUPLj10PrbqIhGi5Wxc+OHzjnbx
+ z4kaRn+qbeCgNNOkCW+m5IogeP90bvOraYqWoP1eccXrmkxcwpO/g2y9iF120MrwAEnGLu0fv
+ xmTmYqwnpFnyXnIInkPj1kRP2QDn6aBoeV2GEHMVlmlmVgNwgEGsOj4/nhqDIWSeyUnta2OqQ
+ vWbJIXF5ucYKAMckXSgGTrTKj+3KUqLT5NzBw8QeaULfxh8ooMSewdgyiVZTkgUOygEjZBgDk
+ Io2XUNYzZZckSiQKw6LIi7JAVQNebpxSl4/g1+tWe6FrwZ061k=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Seeing as 'addr' is unsigned, it would be impossible for the assigned
-value to be anything other than zero or positive.
+On Mon, Jun 29, 2020 at 1:34 PM Anson Huang <anson.huang@nxp.com> wrote:
+> > Subject: Re: [PATCH 2/3] arm64: defconfig: Select CONFIG_RESET_IMX7 by
+> > default
+> >
+> > On Mon, Jun 29, 2020 at 12:25 PM Anson Huang <Anson.Huang@nxp.com>
+> > wrote:
+> > >
+> > > i.MX7 reset driver now supports module build, it is no longer built in
+> > > by default, need to select it explicitly.
+> > >
+> > > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> >
+> > Why not make it =m now that this is possible?
+>
+> It is because some drivers depends on this reset driver to work, such as PCIe,
+> If by default make it =m, it may impact PCIe's function, adding module support
+> at this point is try to provide function of loadable module for Android, but don't
+> want to impact any function which is working previously.
 
-Squashes the following W=1 warnings:
+It sounds like your patch 1/3 is not ready to be merged then.
 
- drivers/misc/habanalabs/goya/goya.c: In function ‘goya_debugfs_read32’:
- drivers/misc/habanalabs/goya/goya.c:3945:19: warning: comparison of unsigned expression >= 0 is always true [-Wtype-limits]
- 3945 | } else if ((addr >= DRAM_PHYS_BASE) &&
- | ^~
- drivers/misc/habanalabs/goya/goya.c: In function ‘goya_debugfs_write32’:
- drivers/misc/habanalabs/goya/goya.c:4002:19: warning: comparison of unsigned expression >= 0 is always true [-Wtype-limits]
- 4002 | } else if ((addr >= DRAM_PHYS_BASE) &&
- | ^~
- drivers/misc/habanalabs/goya/goya.c: In function ‘goya_debugfs_read64’:
- drivers/misc/habanalabs/goya/goya.c:4047:19: warning: comparison of unsigned expression >= 0 is always true [-Wtype-limits]
- 4047 | } else if ((addr >= DRAM_PHYS_BASE) &&
- | ^~
- drivers/misc/habanalabs/goya/goya.c: In function ‘goya_debugfs_write64’:
- drivers/misc/habanalabs/goya/goya.c:4091:19: warning: comparison of unsigned expression >= 0 is always true [-Wtype-limits]
- 4091 | } else if ((addr >= DRAM_PHYS_BASE) &&
- | ^~
- drivers/misc/habanalabs/pci.c:328: warning: Excess function parameter 'dma_mask' description in 'hl_pci_set_dma_mask'
- drivers/misc/habanalabs/goya/goya_coresight.c: In function ‘goya_debug_coresight’:
- drivers/misc/habanalabs/goya/goya_coresight.c:643:6: warning: variable ‘val’ set but not used [-Wunused-but-set-variable]
- 643 | u32 val;
- | ^~~
+Please make sure that loading it later does not break other drivers
+that depend on it. Other drivers don't have to be able to deal with
+missing dependencies if this one is never loaded or disabled at
+compile-time. However before you make it possible to turn this into
+a loadable module, anything that depends on it must be able to
+deal with the modules getting loaded in a random order first.
 
-Cc: Oded Gabbay <oded.gabbay@gmail.com>
-Cc: Tomer Tayar <ttayar@habana.ai>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/misc/habanalabs/goya/goya.c | 16 ++++++----------
- 1 file changed, 6 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
-index 0d2952bb58dfb..a4a20e27ed3b4 100644
---- a/drivers/misc/habanalabs/goya/goya.c
-+++ b/drivers/misc/habanalabs/goya/goya.c
-@@ -3942,8 +3942,7 @@ static int goya_debugfs_read32(struct hl_device *hdev, u64 addr, u32 *val)
- 		*val = readl(hdev->pcie_bar[SRAM_CFG_BAR_ID] +
- 				(addr - SRAM_BASE_ADDR));
- 
--	} else if ((addr >= DRAM_PHYS_BASE) &&
--			(addr < DRAM_PHYS_BASE + hdev->asic_prop.dram_size)) {
-+	} else if (addr < DRAM_PHYS_BASE + hdev->asic_prop.dram_size) {
- 
- 		u64 bar_base_addr = DRAM_PHYS_BASE +
- 				(addr & ~(prop->dram_pci_bar_size - 0x1ull));
-@@ -3999,8 +3998,7 @@ static int goya_debugfs_write32(struct hl_device *hdev, u64 addr, u32 val)
- 		writel(val, hdev->pcie_bar[SRAM_CFG_BAR_ID] +
- 					(addr - SRAM_BASE_ADDR));
- 
--	} else if ((addr >= DRAM_PHYS_BASE) &&
--			(addr < DRAM_PHYS_BASE + hdev->asic_prop.dram_size)) {
-+	} else if (addr < DRAM_PHYS_BASE + hdev->asic_prop.dram_size) {
- 
- 		u64 bar_base_addr = DRAM_PHYS_BASE +
- 				(addr & ~(prop->dram_pci_bar_size - 0x1ull));
-@@ -4044,9 +4042,8 @@ static int goya_debugfs_read64(struct hl_device *hdev, u64 addr, u64 *val)
- 		*val = readq(hdev->pcie_bar[SRAM_CFG_BAR_ID] +
- 				(addr - SRAM_BASE_ADDR));
- 
--	} else if ((addr >= DRAM_PHYS_BASE) &&
--		   (addr <=
--		    DRAM_PHYS_BASE + hdev->asic_prop.dram_size - sizeof(u64))) {
-+	} else if (addr <=
-+		   DRAM_PHYS_BASE + hdev->asic_prop.dram_size - sizeof(u64)) {
- 
- 		u64 bar_base_addr = DRAM_PHYS_BASE +
- 				(addr & ~(prop->dram_pci_bar_size - 0x1ull));
-@@ -4088,9 +4085,8 @@ static int goya_debugfs_write64(struct hl_device *hdev, u64 addr, u64 val)
- 		writeq(val, hdev->pcie_bar[SRAM_CFG_BAR_ID] +
- 					(addr - SRAM_BASE_ADDR));
- 
--	} else if ((addr >= DRAM_PHYS_BASE) &&
--		   (addr <=
--		    DRAM_PHYS_BASE + hdev->asic_prop.dram_size - sizeof(u64))) {
-+	} else if (addr <=
-+		   DRAM_PHYS_BASE + hdev->asic_prop.dram_size - sizeof(u64)) {
- 
- 		u64 bar_base_addr = DRAM_PHYS_BASE +
- 				(addr & ~(prop->dram_pci_bar_size - 0x1ull));
--- 
-2.25.1
-
+       Arnd
