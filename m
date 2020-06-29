@@ -2,329 +2,596 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0950C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4EDC433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:13:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A00AB206E9
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:13:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 024D2206E9
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:13:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="L1zcjV0C"
+	dkim=pass (2048-bit key) header.d=brainfault-org.20150623.gappssmtp.com header.i=@brainfault-org.20150623.gappssmtp.com header.b="OmSP7K/F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731464AbgF2TNm (ORCPT
+        id S1730099AbgF2TNr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:13:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43358 "EHLO
+        Mon, 29 Jun 2020 15:13:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43370 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731364AbgF2TN2 (ORCPT
+        with ESMTP id S1731394AbgF2TN2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:13:28 -0400
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on061b.outbound.protection.outlook.com [IPv6:2a01:111:f400:fe0c::61b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CEACC08EB19
-        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 23:25:52 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Ffb0tryf3+WMusuxriFspTuyCD0jR5nujp/rzdzc6JR92rJsWlAVE8I313MSQBTprU4nobwvSXgu8vR4rC/9MeFgvPh//pXnseXz3XbJJeHjIQvsLIahqtiVa8KEaN9fHGnvZSy0Qr2bIC0t8RsRIlKBpkSTaXkMpmqT4lBXcrwyiy3yRA56Fu5tl5PlYR3gujgCm468frMy1aWF1CvKp2yVN54FRB03txEI8SJjwDXXSKDDSXjfCX+wrBVk/Q/ZEKZ4SrwGQolzsfMcR1OnB2Har2Lpfb/Ija4WBx086MLPPMNYBJ7IIQGt86NYaNEcT872f7hEX+HmJhFpUXIotg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZVinsJJnviT21i7XI0KnA6+56MrUkVoRCxqh0lP/y9s=;
- b=hhaBE5XukKYUuZPClQoZo29++2XadgB3N0uZbP+RCVP7EAwcu+hbgCHnj3aXOesCe+pkNU7XRSV8Ou/voG/N+htBPj3/yP+oH2Yaopp9jCu5sfSbGNirApS0dBqcGjopmO6lqSmhxcAPk4la3xmEWlDpfcoKaVM1sIcSBLhitZ8EooVWcd8K5aJ2K7WUjGESlCyvEBgwabFwCl32r9iD+JQ8DLt6kQGyiRPbQcvFmL+M9zrsuF4/j0tG2aVNLogbhNBb8oQA1iD08zMf505DtilMBXEcq6hEj/dCBKYAiRfxkVVUkn/3qlyRE8tn5V0wigeEriicm7ltAw0eBkVfLw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZVinsJJnviT21i7XI0KnA6+56MrUkVoRCxqh0lP/y9s=;
- b=L1zcjV0CGehZeD7cB6ZqeDkIn8Wkfl30zMXdjW2xafn6zwlvwrzgTksmnOEBJzLvcWyZ6S5jRwc2qF+4dQcok7dMBsqvuQZeQcu1Nq4ClyFRoPBTAzyYPCluwfjmtoQeVQDqjbDH5VaFL36TLFhMmuaD6uecdAr6PLacwaycXQs=
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com (2603:10a6:4:a1::14)
- by DB8PR04MB6715.eurprd04.prod.outlook.com (2603:10a6:10:10d::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.24; Mon, 29 Jun
- 2020 06:25:41 +0000
-Received: from DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::2d36:b569:17c:7701]) by DB6PR0402MB2760.eurprd04.prod.outlook.com
- ([fe80::2d36:b569:17c:7701%4]) with mapi id 15.20.3131.026; Mon, 29 Jun 2020
- 06:25:41 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-CC:     Stefano Stabellini <sstabellini@kernel.org>,
-        "boris.ostrovsky@oracle.com" <boris.ostrovsky@oracle.com>,
-        "jgross@suse.com" <jgross@suse.com>,
-        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH] xen: introduce xen_vring_use_dma
-Thread-Topic: [PATCH] xen: introduce xen_vring_use_dma
-Thread-Index: AQHWSgTusARd8c8cRkWwDit233DtZajneYoAgACU6oCAAC7QAIAAEpoAgAAGSwCAAUK2gIABcSaAgAPk6cCAADgrAIAAAH5w
-Date:   Mon, 29 Jun 2020 06:25:41 +0000
-Message-ID: <DB6PR0402MB27602AB2A9A242D79343CE48886E0@DB6PR0402MB2760.eurprd04.prod.outlook.com>
-References: <20200624091732.23944-1-peng.fan@nxp.com>
- <20200624050355-mutt-send-email-mst@kernel.org>
- <alpine.DEB.2.21.2006241047010.8121@sstabellini-ThinkPad-T480s>
- <20200624163940-mutt-send-email-mst@kernel.org>
- <alpine.DEB.2.21.2006241351430.8121@sstabellini-ThinkPad-T480s>
- <20200624181026-mutt-send-email-mst@kernel.org>
- <alpine.DEB.2.21.2006251014230.8121@sstabellini-ThinkPad-T480s>
- <20200626110629-mutt-send-email-mst@kernel.org>
- <DB6PR0402MB27601CA74B85DA5A9F5E5DD6886E0@DB6PR0402MB2760.eurprd04.prod.outlook.com>
- <20200629022124-mutt-send-email-mst@kernel.org>
-In-Reply-To: <20200629022124-mutt-send-email-mst@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.71]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: a5e1c4cb-0c5f-447d-9984-08d81bf53f1b
-x-ms-traffictypediagnostic: DB8PR04MB6715:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DB8PR04MB67159207B33C95FEA00FE33F886E0@DB8PR04MB6715.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 044968D9E1
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: ZcomgzT8z0TV8AdfcgQXBFI1wdcxYJJGw2fCPEYYV2HF5Asq2udSyAxCqG2x424rMSoSB19NYDH2/cltuOnvwJewUKeUap9q6OxMr5rpTs8qTvM0LWCCHaMxslX2x5Kw4P7LsAUS1MV7Kq4NCH8IeoHXVqZKXLZibUu8OQX77pe7RD8Uehe92lYOxg0IIjmPTpaHPU0xUSv/747T7V1t3n1n48YZVipEAlJ36w5LfLqcdQ+tM+iQSH4ToueQp8TeBuAY6VX0Q58g6J0FYF2UT9WNDIgd/mcTxuqk9BIhCZLzlEi3VhJVXiwxs91dLexhPfI0y1+TDhStDySFnLh6ldmQZIVSnILpem5NP3bMP+iYGcSEJHYXGraspfUuTcmgpiGqfDQUzCt4h/o1602WSQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0402MB2760.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(346002)(376002)(396003)(366004)(6916009)(186003)(86362001)(9686003)(76116006)(66446008)(45080400002)(7696005)(55016002)(5660300002)(66946007)(26005)(83380400001)(71200400001)(66476007)(66556008)(64756008)(33656002)(7416002)(52536014)(4326008)(6506007)(54906003)(478600001)(44832011)(8676002)(316002)(966005)(8936002)(2906002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: yAnM0ejSbejlrSnR31b9U9qBdkL0+lYs1XiRprTYLdv0aTF4h/fK7BMlL9j5/Efdh2jIQq3P9IpIsXCvMJ2nZp+QjeRsYQm1Vi/g0bWtsGrlC3mbi/7RplbNGBRgqLxfttNrsnazacGBy45PpLP3jDu0ITIVyZpFgmxR9zw17h9ODKv0sZaBHTyCbDQFt089cdMTCluY+rur3KLU5ty7nI5NdQGto4tY2Dm2oF8USaJ6t4OF7YAV14XQTV+CudulV3zH9eqWt3wcc/hymm1fdv8dvk37aNah9MbPftxJ3VGKSXDRLYm9jStQZqeUX2riVQHl8UGnTJ7DGJf7NAr7RPRjlBJvG7/F8Ty57bgrPoIR6Ll9jJIp+nvIt8VTBbHf0wF8y6qy/ahygmI8ZyXSTe1b1nScNRKRQcKU08ce8oglUa3Zte1r/wHFyA33zb/H9JbBjaOotRYHXU476nK0MAbxPyhdWD/HfkU3sQuzjtH5XhTNtJJYQGeDjUZzm5OK
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47D21C08C5F3
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 21:37:13 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id q15so14050374wmj.2
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 21:37:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brainfault-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9BuRZbsQSVawCPMcscVv5I1a2tQ7JLUzF77XaHSUmes=;
+        b=OmSP7K/Fp8ycjP0MQRFzk3m0N05+BXFdvrBWIKNIflOxOaygzKAl3/jWKF8mlQLMV9
+         7nDQ8zacSRXcaeBDszwo9uWFqT0DbvbUQ2kyLRP3mYc/GMdvOfJe5EEIXW5oQepaqCNN
+         9FjTdxCfQiEwYwcrjHkXGxj7mE586/fAQdNbQG82hENixj86aKnv6rvqQ5Z2XaB7zxaB
+         vmJGzEFqDmLJGyp5bPlKNC2mXoW2dsc0PPuJLxTXGFjD5SIQ8JD/0Mm4wYHsXvtBRe1G
+         9/svfs+lR+nTNzD4wP5XrQXNKWrEARDI0m8PWPw5rmkKAK3VQmVSRHO+ExIWVvDNLnLg
+         /ilA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9BuRZbsQSVawCPMcscVv5I1a2tQ7JLUzF77XaHSUmes=;
+        b=XaKEagHNeWEr0T8oAT/A5l+zrlT5vW1jCUHSi6c9cxn9SRHbZWzdLe7msOs+siw7mh
+         Il/hK84d40rTSxwmGWpMiL/XJrUPxn3KDUDSGaYCx7nNQsKKURHteWyQNgLlv2OXA7Tz
+         uF841uEL0svTjoeP/GcmllvlCv6z/kc9aKweYPUYAhvuPUVHNm3yKxLE1hv5xhaazXUB
+         PueGz4n8Zn3y7dXUAdko/jKidTazqYh61nK+UJKVaVasrB5+CqCt5k/0ZOVkbyCpUE5Y
+         t7H9/bYPBzV1av/zr42c/Ypucn5RZKgIpYQ0MuGXzwy4rkS0une1b1Jfk7cO+h0OWDS0
+         UaOw==
+X-Gm-Message-State: AOAM531JRCFWeOPKUDMARcy1J1I2NHh8aAOwn3ushXdK3hNBj8jZ6RJ5
+        hAADgprdeerqky3FWDZez3ZC+ycHUuo7EQoJ/MvtJg==
+X-Google-Smtp-Source: ABdhPJxwMKc1T/xx1mGxQmMC31/mbZKHBDAGZiJ1dAaiWIEmGnv0plAQ8rDW+U3JTAXPnSFFk6fHBZvXajAum94ocYI=
+X-Received: by 2002:a1c:a3c5:: with SMTP id m188mr14496922wme.152.1593405430040;
+ Sun, 28 Jun 2020 21:37:10 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DB6PR0402MB2760.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a5e1c4cb-0c5f-447d-9984-08d81bf53f1b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jun 2020 06:25:41.1516
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Jlca2JAB/hh8X/P93HXsVW0tsA8+sgSQYIkgLQ2VlEVRDYpq8IaCerlyTe74kscdoLfBrQC2fq3z4lL2GPh/QQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB8PR04MB6715
+References: <cover.1593397455.git.zong.li@sifive.com> <da261dc8b456fc0dd67508d98b16838bcd697220.1593397455.git.zong.li@sifive.com>
+In-Reply-To: <da261dc8b456fc0dd67508d98b16838bcd697220.1593397455.git.zong.li@sifive.com>
+From:   Anup Patel <anup@brainfault.org>
+Date:   Mon, 29 Jun 2020 10:06:56 +0530
+Message-ID: <CAAhSdy1qTtGvtYe+fUqVGOxOzfiLjXvy-7uDMCUJbbDEFp=nUw@mail.gmail.com>
+Subject: Re: [RFC PATCH 5/6] riscv: perf: introduce DT mechanism
+To:     Zong Li <zong.li@sifive.com>
+Cc:     Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Subject: Re: [PATCH] xen: introduce xen_vring_use_dma
->=20
-> On Mon, Jun 29, 2020 at 03:05:19AM +0000, Peng Fan wrote:
-> > > Subject: Re: [PATCH] xen: introduce xen_vring_use_dma
-> > >
-> > > On Thu, Jun 25, 2020 at 10:31:27AM -0700, Stefano Stabellini wrote:
-> > > > On Wed, 24 Jun 2020, Michael S. Tsirkin wrote:
-> > > > > On Wed, Jun 24, 2020 at 02:53:54PM -0700, Stefano Stabellini wrot=
-e:
-> > > > > > On Wed, 24 Jun 2020, Michael S. Tsirkin wrote:
-> > > > > > > On Wed, Jun 24, 2020 at 10:59:47AM -0700, Stefano Stabellini
-> wrote:
-> > > > > > > > On Wed, 24 Jun 2020, Michael S. Tsirkin wrote:
-> > > > > > > > > On Wed, Jun 24, 2020 at 05:17:32PM +0800, Peng Fan wrote:
-> > > > > > > > > > Export xen_swiotlb for all platforms using xen swiotlb
-> > > > > > > > > >
-> > > > > > > > > > Use xen_swiotlb to determine when vring should use dma
-> > > > > > > > > > APIs to map the
-> > > > > > > > > > ring: when xen_swiotlb is enabled the dma API is requir=
-ed.
-> > > > > > > > > > When it is disabled, it is not required.
-> > > > > > > > > >
-> > > > > > > > > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > > > > > > > >
-> > > > > > > > > Isn't there some way to use VIRTIO_F_IOMMU_PLATFORM for
-> > > this?
-> > > > > > > > > Xen was there first, but everyone else is using that now.
-> > > > > > > >
-> > > > > > > > Unfortunately it is complicated and it is not related to
-> > > > > > > > VIRTIO_F_IOMMU_PLATFORM :-(
-> > > > > > > >
-> > > > > > > >
-> > > > > > > > The Xen subsystem in Linux uses dma_ops via swiotlb_xen to
-> > > > > > > > translate foreign mappings (memory coming from other VMs)
-> > > > > > > > to
-> > > physical addresses.
-> > > > > > > > On x86, it also uses dma_ops to translate Linux's idea of
-> > > > > > > > a physical address into a real physical address (this is
-> > > > > > > > unneeded on ARM.)
-> > > > > > > >
-> > > > > > > >
-> > > > > > > > So regardless of VIRTIO_F_IOMMU_PLATFORM, dma_ops should
-> > > > > > > > be used on Xen/x86 always and on Xen/ARM if Linux is Dom0
-> > > > > > > > (because it has foreign
-> > > > > > > > mappings.) That is why we have the if (xen_domain) return
-> > > > > > > > true; in vring_use_dma_api.
-> > > > > > >
-> > > > > > > VIRTIO_F_IOMMU_PLATFORM makes guest always use DMA ops.
-> > > > > > >
-> > > > > > > Xen hack predates VIRTIO_F_IOMMU_PLATFORM so it *also*
-> > > > > > > forces DMA ops even if VIRTIO_F_IOMMU_PLATFORM is clear.
-> > > > > > >
-> > > > > > > Unfortunately as a result Xen never got around to properly
-> > > > > > > setting VIRTIO_F_IOMMU_PLATFORM.
-> > > > > >
-> > > > > > I don't think VIRTIO_F_IOMMU_PLATFORM would be correct for
-> > > > > > this because the usage of swiotlb_xen is not a property of
-> > > > > > virtio,
-> > > > >
-> > > > >
-> > > > > Basically any device without VIRTIO_F_ACCESS_PLATFORM (that is
-> > > > > it's name in latest virtio spec, VIRTIO_F_IOMMU_PLATFORM is what
-> > > > > linux calls it) is declared as "special, don't follow normal
-> > > > > rules for access".
-> > > > >
-> > > > > So yes swiotlb_xen is not a property of virtio, but what *is* a
-> > > > > property of virtio is that it's not special, just a regular
-> > > > > device from DMA
-> > > POV.
-> > > >
-> > > > I am trying to understand what you meant but I think I am missing
-> > > > something.
-> > > >
-> > > > Are you saying that modern virtio should always have
-> > > > VIRTIO_F_ACCESS_PLATFORM, hence use normal dma_ops as any other
-> > > devices?
-> > >
-> > > I am saying it's a safe default. Clear VIRTIO_F_ACCESS_PLATFORM if
-> > > you have some special needs e.g. you are very sure it's ok to bypass
-> > > DMA ops, or you need to support a legacy guest (produced in the
-> > > window between virtio 1 support in 2014 and support for
-> VIRTIO_F_ACCESS_PLATFORM in 2016).
-> > >
-> > >
-> > > > If that is the case, how is it possible that virtio breaks on ARM
-> > > > using the default dma_ops? The breakage is not Xen related (except
-> > > > that Xen turns dma_ops on). The original message from Peng was:
-> > > >
-> > > >   vring_map_one_sg -> vring_use_dma_api
-> > > >                    -> dma_map_page
-> > > >   		       -> __swiotlb_map_page
-> > > >   		                ->swiotlb_map_page
-> > > >   				->__dma_map_area(phys_to_virt(dma_to_phys(dev,
-> > > dev_addr)), size, dir);
-> > > >   However we are using per device dma area for rpmsg, phys_to_virt
-> > > >   could not return a correct virtual address for virtual address in
-> > > >   vmalloc area. Then kernel panic.
-> > > >
-> > > > I must be missing something. Maybe it is because it has to do with
-> RPMesg?
-> > >
-> > > I think it's an RPMesg bug, yes
-> >
-> > rpmsg bug is another issue, it should not use dma_alloc_coherent for
-> > reserved area, and use vmalloc_to_page.
-> >
-> > Anyway here using dma api will also trigger issue.
-> >
-> > >
-> > > >
-> > > > > > > > You might have noticed that I missed one possible case abov=
-e:
-> > > > > > > > Xen/ARM DomU :-)
-> > > > > > > >
-> > > > > > > > Xen/ARM domUs don't need swiotlb_xen, it is not even
-> > > > > > > > initialized. So if
-> > > > > > > > (xen_domain) return true; would give the wrong answer in th=
-at
-> case.
-> > > > > > > > Linux would end up calling the "normal" dma_ops, not
-> > > > > > > > swiotlb-xen, and the "normal" dma_ops fail.
-> > > > > > > >
-> > > > > > > >
-> > > > > > > > The solution I suggested was to make the check in
-> > > > > > > > vring_use_dma_api more flexible by returning true if the
-> > > > > > > > swiotlb_xen is supposed to be used, not in general for all
-> > > > > > > > Xen domains, because that is what the check was really mean=
-t to
-> do.
-> > > > > > >
-> > > > > > > Why not fix DMA ops so they DTRT (nop) on Xen/ARM DomU?
-> What
-> > > > > > > is
-> > > wrong with that?
-> > > > > >
-> > > > > > swiotlb-xen is not used on Xen/ARM DomU, the default dma_ops
-> > > > > > are the ones that are used. So you are saying, why don't we
-> > > > > > fix the default dma_ops to work with virtio?
-> > > > > >
-> > > > > > It is bad that the default dma_ops crash with virtio, so yes I
-> > > > > > think it would be good to fix that. However, even if we fixed
-> > > > > > that, the if
-> > > > > > (xen_domain()) check in vring_use_dma_api is still a problem.
-> > > > >
-> > > > > Why is it a problem? It just makes virtio use DMA API.
-> > > > > If that in turn works, problem solved.
-> > > >
-> > > > You are correct in the sense that it would work. However I do
-> > > > think it is wrong for vring_use_dma_api to enable
-> > > > dma_ops/swiotlb-xen for Xen/ARM DomUs that don't need it. There
-> > > > are many different types of Xen guests, Xen x86 is drastically
-> > > > different from Xen ARM, it seems wrong to treat them the same way.
-> > >
-> > > I could imagine some future Xen hosts setting a flag somewhere in
-> > > the platform capability saying "no xen specific flag, rely on
-> > > "VIRTIO_F_ACCESS_PLATFORM". Then you set that accordingly in QEMU.
-> > > How about that?
-> > >
-> >
-> > Michael, Stefano,
-> >
-> > So what's your suggestion here, that we could avoid similar issue for
-> > virtio drivers in ARM DomU?
-> >
-> > Thanks,
-> > Peng.
-> >
-> > >
-> > > >
-> > > >
-> > > > Anyway, re-reading the last messages of the original thread [1],
-> > > > it looks like Peng had a clear idea on how to fix the general issue=
-.
-> > > > Peng, what happened with that?
-> >
-> > We shrinked the rpmsg reserved area to workaround the issue.
-> > So still use the dma apis in rpmsg.
-> >
-> > But here I am going to address domu android trusty issue using virtio.
->=20
-> My suggestion is to first of all fix DMA API so it works properly.
+On Mon, Jun 29, 2020 at 8:49 AM Zong Li <zong.li@sifive.com> wrote:
+>
+> Each architecture is responsible for mapping generic hardware and cache
+> events to their own specific encoding of hardware events. For each
+> architecture, it also have to distinguish the defination of hardware
+> events of different platforms of each vendor. We use DT file to describe
+> platform-specific information to make our perf implementation more
+> generic and common.
+>
+> Signed-off-by: Zong Li <zong.li@sifive.com>
+> ---
+>  arch/riscv/include/asm/perf_event.h |  55 ++----
+>  arch/riscv/kernel/perf_event.c      | 273 +++++++++++++---------------
+>  2 files changed, 139 insertions(+), 189 deletions(-)
+>
+> diff --git a/arch/riscv/include/asm/perf_event.h b/arch/riscv/include/asm/perf_event.h
+> index 41d515a1f331..e95d3bbaae3e 100644
+> --- a/arch/riscv/include/asm/perf_event.h
+> +++ b/arch/riscv/include/asm/perf_event.h
+> @@ -17,6 +17,8 @@
+>  #define RISCV_EVENT_COUNTERS   29
+>  #define RISCV_TOTAL_COUNTERS   (RISCV_BASE_COUNTERS + RISCV_EVENT_COUNTERS)
+>
+> +#define RISCV_DEFAULT_WIDTH_COUNTER    64
+> +
+>  /*
+>   * According to the spec, an implementation can support counter up to
+>   * mhpmcounter31, but many high-end processors has at most 6 general
+> @@ -33,9 +35,21 @@
+>
+>  #define RISCV_PMU_HPMCOUNTER_FIRST     3
+>  #define RISCV_PMU_HPMCOUNTER_LAST                                      \
+> -       (RISCV_PMU_HPMCOUNTER_FIRST + riscv_pmu->num_counters - 1)
+> +       (RISCV_PMU_HPMCOUNTER_FIRST + riscv_pmu.num_event_cntr - 1)
+> +
+> +#define RISCV_OP_UNSUPP                        (-EOPNOTSUPP)
+> +
+> +#define RISCV_MAP_ALL_UNSUPPORTED                                      \
+> +       [0 ... PERF_COUNT_HW_MAX - 1] = RISCV_OP_UNSUPP
+>
+> -#define RISCV_OP_UNSUPP                (-EOPNOTSUPP)
+> +#define C(x) PERF_COUNT_HW_CACHE_##x
+> +
+> +#define RISCV_CACHE_MAP_ALL_UNSUPPORTED                                        \
+> +[0 ... C(MAX) - 1] = {                                                 \
+> +       [0 ... C(OP_MAX) - 1] = {                                       \
+> +               [0 ... C(RESULT_MAX) - 1] = RISCV_OP_UNSUPP,            \
+> +       },                                                              \
+> +}
+>
+>  /* Hardware cache event encoding */
+>  #define PERF_HW_CACHE_TYPE             0
+> @@ -65,43 +79,6 @@
+>  #define CSR_MHPMEVENT7 0x327
+>  #define CSR_MHPMEVENT8 0x328
+>
+> -struct cpu_hw_events {
+> -       /* # currently enabled events*/
+> -       int                     n_events;
+> -       /* currently enabled events */
+> -       struct perf_event       *events[RISCV_EVENT_COUNTERS];
+> -       /* bitmap of used event counters */
+> -       unsigned long           used_cntr_mask;
+> -       /* vendor-defined PMU data */
+> -       void                    *platform;
+> -};
+> -
+> -struct riscv_pmu {
+> -       struct pmu      *pmu;
+> -
+> -       /* generic hw/cache events table */
+> -       const int       *hw_events;
+> -       const int       (*cache_events)[PERF_COUNT_HW_CACHE_MAX]
+> -                                      [PERF_COUNT_HW_CACHE_OP_MAX]
+> -                                      [PERF_COUNT_HW_CACHE_RESULT_MAX];
+> -       /* method used to map hw/cache events */
+> -       int             (*map_hw_event)(u64 config);
+> -       int             (*map_cache_event)(u64 config);
+> -
+> -       /* max generic hw events in map */
+> -       int             max_events;
+> -       /* number total counters, 2(base) + x(general) */
+> -       int             num_counters;
+> -       /* the width of the counter */
+> -       int             counter_width;
+> -
+> -       /* vendor-defined PMU features */
+> -       void            *platform;
+> -
+> -       irqreturn_t     (*handle_irq)(int irq_num, void *dev);
+> -       int             irq;
+> -};
+> -
+>  #endif
+>  #ifdef CONFIG_PERF_EVENTS
+>  #define perf_arch_bpf_user_pt_regs(regs) (struct user_regs_struct *)regs
+> diff --git a/arch/riscv/kernel/perf_event.c b/arch/riscv/kernel/perf_event.c
+> index 0cfcd6f1e57b..3bdfbe4efd5c 100644
+> --- a/arch/riscv/kernel/perf_event.c
+> +++ b/arch/riscv/kernel/perf_event.c
+> @@ -9,6 +9,7 @@
+>   * Copyright (C) 2009 Google, Inc., Stephane Eranian
+>   * Copyright 2014 Tilera Corporation. All Rights Reserved.
+>   * Copyright (C) 2018 Andes Technology Corporation
+> + * Copyright (C) 2020 SiFive
+>   *
+>   * Perf_events support for RISC-V platforms.
+>   *
+> @@ -30,113 +31,55 @@
+>  #include <linux/perf_event.h>
+>  #include <linux/atomic.h>
+>  #include <linux/of.h>
+> +#include <asm/csr.h>
+>  #include <asm/perf_event.h>
+>
+> -static const struct riscv_pmu *riscv_pmu __read_mostly;
+> +static struct riscv_pmu {
+> +       struct pmu      *pmu;
+> +
+> +       /* number of event counters */
+> +       int             num_event_cntr;
+> +
+> +       /* the width of base counters */
+> +       int             width_base_cntr;
+> +
+> +       /* the width of event counters */
+> +       int             width_event_cntr;
+> +
+> +       irqreturn_t     (*handle_irq)(int irq_num, void *dev);
+> +
+> +       int             irq;
+> +} riscv_pmu;
+> +
+> +struct cpu_hw_events {
+> +       /* # currently enabled events*/
+> +       int                     n_events;
+> +
+> +       /* currently enabled events */
+> +       struct perf_event       *events[RISCV_EVENT_COUNTERS];
+> +
+> +       /* bitmap of used event counters */
+> +       unsigned long           used_cntr_mask;
+> +};
+> +
+>  static DEFINE_PER_CPU(struct cpu_hw_events, cpu_hw_events);
+>
+>  /*
+>   * Hardware & cache maps and their methods
+>   */
+>
+> -static const int riscv_hw_event_map[] = {
+> -       [PERF_COUNT_HW_CPU_CYCLES]              = RISCV_PMU_CYCLE,
+> -       [PERF_COUNT_HW_INSTRUCTIONS]            = RISCV_PMU_INSTRET,
+> -       [PERF_COUNT_HW_CACHE_REFERENCES]        = RISCV_OP_UNSUPP,
+> -       [PERF_COUNT_HW_CACHE_MISSES]            = RISCV_OP_UNSUPP,
+> -       [PERF_COUNT_HW_BRANCH_INSTRUCTIONS]     = RISCV_OP_UNSUPP,
+> -       [PERF_COUNT_HW_BRANCH_MISSES]           = RISCV_OP_UNSUPP,
+> -       [PERF_COUNT_HW_BUS_CYCLES]              = RISCV_OP_UNSUPP,
+> +static int riscv_hw_event_map[PERF_COUNT_HW_MAX] = {
+> +       RISCV_MAP_ALL_UNSUPPORTED,
+> +
+> +       /* Specify base pmu, even if they aren't present in DT file */
+> +       [PERF_COUNT_HW_CPU_CYCLES]      = RISCV_PMU_CYCLE,
+> +       [PERF_COUNT_HW_INSTRUCTIONS]    = RISCV_PMU_INSTRET,
+>  };
+>
+> -#define C(x) PERF_COUNT_HW_CACHE_##x
+> -static const int riscv_cache_event_map[PERF_COUNT_HW_CACHE_MAX]
+> -[PERF_COUNT_HW_CACHE_OP_MAX]
+> -[PERF_COUNT_HW_CACHE_RESULT_MAX] = {
+> -       [C(L1D)] = {
+> -               [C(OP_READ)] = {
+> -                       [C(RESULT_ACCESS)] = RISCV_OP_UNSUPP,
+> -                       [C(RESULT_MISS)] = RISCV_OP_UNSUPP,
+> -               },
+> -               [C(OP_WRITE)] = {
+> -                       [C(RESULT_ACCESS)] = RISCV_OP_UNSUPP,
+> -                       [C(RESULT_MISS)] = RISCV_OP_UNSUPP,
+> -               },
+> -               [C(OP_PREFETCH)] = {
+> -                       [C(RESULT_ACCESS)] = RISCV_OP_UNSUPP,
+> -                       [C(RESULT_MISS)] = RISCV_OP_UNSUPP,
+> -               },
+> -       },
+> -       [C(L1I)] = {
+> -               [C(OP_READ)] = {
+> -                       [C(RESULT_ACCESS)] = RISCV_OP_UNSUPP,
+> -                       [C(RESULT_MISS)] = RISCV_OP_UNSUPP,
+> -               },
+> -               [C(OP_WRITE)] = {
+> -                       [C(RESULT_ACCESS)] = RISCV_OP_UNSUPP,
+> -                       [C(RESULT_MISS)] = RISCV_OP_UNSUPP,
+> -               },
+> -               [C(OP_PREFETCH)] = {
+> -                       [C(RESULT_ACCESS)] = RISCV_OP_UNSUPP,
+> -                       [C(RESULT_MISS)] = RISCV_OP_UNSUPP,
+> -               },
+> -       },
+> -       [C(LL)] = {
+> -               [C(OP_READ)] = {
+> -                       [C(RESULT_ACCESS)] = RISCV_OP_UNSUPP,
+> -                       [C(RESULT_MISS)] = RISCV_OP_UNSUPP,
+> -               },
+> -               [C(OP_WRITE)] = {
+> -                       [C(RESULT_ACCESS)] = RISCV_OP_UNSUPP,
+> -                       [C(RESULT_MISS)] = RISCV_OP_UNSUPP,
+> -               },
+> -               [C(OP_PREFETCH)] = {
+> -                       [C(RESULT_ACCESS)] = RISCV_OP_UNSUPP,
+> -                       [C(RESULT_MISS)] = RISCV_OP_UNSUPP,
+> -               },
+> -       },
+> -       [C(DTLB)] = {
+> -               [C(OP_READ)] = {
+> -                       [C(RESULT_ACCESS)] =  RISCV_OP_UNSUPP,
+> -                       [C(RESULT_MISS)] =  RISCV_OP_UNSUPP,
+> -               },
+> -               [C(OP_WRITE)] = {
+> -                       [C(RESULT_ACCESS)] = RISCV_OP_UNSUPP,
+> -                       [C(RESULT_MISS)] = RISCV_OP_UNSUPP,
+> -               },
+> -               [C(OP_PREFETCH)] = {
+> -                       [C(RESULT_ACCESS)] = RISCV_OP_UNSUPP,
+> -                       [C(RESULT_MISS)] = RISCV_OP_UNSUPP,
+> -               },
+> -       },
+> -       [C(ITLB)] = {
+> -               [C(OP_READ)] = {
+> -                       [C(RESULT_ACCESS)] = RISCV_OP_UNSUPP,
+> -                       [C(RESULT_MISS)] = RISCV_OP_UNSUPP,
+> -               },
+> -               [C(OP_WRITE)] = {
+> -                       [C(RESULT_ACCESS)] = RISCV_OP_UNSUPP,
+> -                       [C(RESULT_MISS)] = RISCV_OP_UNSUPP,
+> -               },
+> -               [C(OP_PREFETCH)] = {
+> -                       [C(RESULT_ACCESS)] = RISCV_OP_UNSUPP,
+> -                       [C(RESULT_MISS)] = RISCV_OP_UNSUPP,
+> -               },
+> -       },
+> -       [C(BPU)] = {
+> -               [C(OP_READ)] = {
+> -                       [C(RESULT_ACCESS)] = RISCV_OP_UNSUPP,
+> -                       [C(RESULT_MISS)] = RISCV_OP_UNSUPP,
+> -               },
+> -               [C(OP_WRITE)] = {
+> -                       [C(RESULT_ACCESS)] = RISCV_OP_UNSUPP,
+> -                       [C(RESULT_MISS)] = RISCV_OP_UNSUPP,
+> -               },
+> -               [C(OP_PREFETCH)] = {
+> -                       [C(RESULT_ACCESS)] = RISCV_OP_UNSUPP,
+> -                       [C(RESULT_MISS)] = RISCV_OP_UNSUPP,
+> -               },
+> -       },
+> +static int riscv_cache_event_map[PERF_COUNT_HW_CACHE_MAX]
+> +                               [PERF_COUNT_HW_CACHE_OP_MAX]
+> +                               [PERF_COUNT_HW_CACHE_RESULT_MAX] = {
+> +       RISCV_CACHE_MAP_ALL_UNSUPPORTED,
+>  };
+>
+>  /*
+> @@ -154,6 +97,17 @@ static inline int is_event_counter(int idx)
+>                 idx <= RISCV_PMU_HPMCOUNTER_LAST);
+>  }
+>
+> +static inline int get_counter_width(int idx)
+> +{
+> +       if (is_base_counter(idx))
+> +               return riscv_pmu.width_base_cntr;
+> +
+> +       if (is_event_counter(idx))
+> +               return riscv_pmu.width_event_cntr;
+> +
+> +       return 0;
+> +}
+> +
+>  static inline int get_available_counter(struct perf_event *event)
+>  {
+>         struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+> @@ -188,10 +142,14 @@ static inline int get_available_counter(struct perf_event *event)
+>   */
+>  static int riscv_map_hw_event(u64 config)
+>  {
+> -       if (config >= riscv_pmu->max_events)
+> +       int ret;
+> +
+> +       if (config >= PERF_COUNT_HW_MAX)
+>                 return -EINVAL;
+>
+> -       return riscv_pmu->hw_events[config];
+> +       ret = riscv_hw_event_map[config];
+> +
+> +       return ret == RISCV_OP_UNSUPP ? -ENOENT : ret;
+>  }
+>
+>  /*
+> @@ -355,7 +313,7 @@ static void riscv_pmu_read(struct perf_event *event)
+>          * delta is the value to update the counter we maintain in the kernel.
+>          */
+>         delta = (new_raw_count - prev_raw_count) &
+> -               ((1ULL << riscv_pmu->counter_width) - 1);
+> +               ((1ULL << get_counter_width(idx)) - 1);
+>
+>         local64_add(delta, &event->count);
+>         /*
+> @@ -386,7 +344,7 @@ static void riscv_pmu_stop(struct perf_event *event, int flags)
+>         hwc->state |= PERF_HES_STOPPED;
+>
+>         if ((flags & PERF_EF_UPDATE) && !(hwc->state & PERF_HES_UPTODATE)) {
+> -               riscv_pmu->pmu->read(event);
+> +               riscv_pmu_read(event);
+>                 hwc->state |= PERF_HES_UPTODATE;
+>         }
+>  }
+> @@ -429,7 +387,7 @@ static int riscv_pmu_add(struct perf_event *event, int flags)
+>         struct hw_perf_event *hwc = &event->hw;
+>         int count_idx;
+>
+> -       if (cpuc->n_events == riscv_pmu->num_counters)
+> +       if (cpuc->n_events == riscv_pmu.num_event_cntr)
+>                 return -ENOSPC;
+>
+>         count_idx = get_available_counter(event);
+> @@ -437,13 +395,13 @@ static int riscv_pmu_add(struct perf_event *event, int flags)
+>                 return -ENOSPC;
+>
+>         cpuc->n_events++;
+> +
+>         hwc->idx = count_idx;
+> -       cpuc->events[hwc->idx] = event;
+>
+>         hwc->state = PERF_HES_UPTODATE | PERF_HES_STOPPED;
+>
+>         if (flags & PERF_EF_START)
+> -               riscv_pmu->pmu->start(event, PERF_EF_RELOAD);
+> +               riscv_pmu_start(event, PERF_EF_RELOAD);
+>
+>         return 0;
+>  }
+> @@ -459,8 +417,8 @@ static void riscv_pmu_del(struct perf_event *event, int flags)
+>         cpuc->n_events--;
+>         __clear_bit(hwc->idx, &cpuc->used_cntr_mask);
+>
+> -       cpuc->events[hwc->idx] = NULL;
+> -       riscv_pmu->pmu->stop(event, PERF_EF_UPDATE);
+> +       riscv_pmu_stop(event, PERF_EF_UPDATE);
+> +
+>         perf_event_update_userpage(event);
+>  }
+>
+> @@ -470,7 +428,7 @@ static void riscv_pmu_del(struct perf_event *event, int flags)
+>
+>  static DEFINE_MUTEX(pmc_reserve_mutex);
+>
+> -static irqreturn_t riscv_base_pmu_handle_irq(int irq_num, void *dev)
+> +static irqreturn_t riscv_pmu_handle_irq(int irq_num, void *dev)
+>  {
+>         return IRQ_NONE;
+>  }
+> @@ -480,8 +438,8 @@ static int reserve_pmc_hardware(void)
+>         int err = 0;
+>
+>         mutex_lock(&pmc_reserve_mutex);
+> -       if (riscv_pmu->irq >= 0 && riscv_pmu->handle_irq) {
+> -               err = request_irq(riscv_pmu->irq, riscv_pmu->handle_irq,
+> +       if (riscv_pmu.irq >= 0 && riscv_pmu.handle_irq) {
+> +               err = request_irq(riscv_pmu.irq, riscv_pmu.handle_irq,
+>                                   IRQF_PERCPU, "riscv-base-perf", NULL);
+>         }
+>         mutex_unlock(&pmc_reserve_mutex);
+> @@ -492,8 +450,8 @@ static int reserve_pmc_hardware(void)
+>  static void release_pmc_hardware(void)
+>  {
+>         mutex_lock(&pmc_reserve_mutex);
+> -       if (riscv_pmu->irq >= 0)
+> -               free_irq(riscv_pmu->irq, NULL);
+> +       if (riscv_pmu.irq >= 0)
+> +               free_irq(riscv_pmu.irq, NULL);
+>         mutex_unlock(&pmc_reserve_mutex);
+>  }
+>
+> @@ -529,10 +487,10 @@ static int riscv_event_init(struct perf_event *event)
+>
+>         switch (event->attr.type) {
+>         case PERF_TYPE_HARDWARE:
+> -               code = riscv_pmu->map_hw_event(attr->config);
+> +               code = riscv_map_hw_event(attr->config);
+>                 break;
+>         case PERF_TYPE_HW_CACHE:
+> -               code = riscv_pmu->map_cache_event(attr->config);
+> +               code = riscv_map_cache_event(attr->config);
+>                 break;
+>         case PERF_TYPE_RAW:
+>                 code = attr->config;
+> @@ -555,9 +513,6 @@ static int riscv_event_init(struct perf_event *event)
+>         /*
+>          * idx is set to -1 because the index of a general event should not be
+>          * decided until binding to some counter in pmu->add().
+> -        *
+> -        * But since we don't have such support, later in pmu->add(), we just
+> -        * use hwc->config as the index instead.
+>          */
+>         hwc->config_base = config_base;
+>         hwc->config = code;
+> @@ -570,52 +525,70 @@ static int riscv_event_init(struct perf_event *event)
+>   * Initialization
+>   */
+>
+> -static struct pmu min_pmu = {
+> -       .name           = "riscv-base",
+> -       .event_init     = riscv_event_init,
+> -       .add            = riscv_pmu_add,
+> -       .del            = riscv_pmu_del,
+> -       .start          = riscv_pmu_start,
+> -       .stop           = riscv_pmu_stop,
+> -       .read           = riscv_pmu_read,
+> -};
+> +static struct riscv_pmu riscv_pmu = {
+> +       .pmu = &(struct pmu) {
+> +               .name           = "riscv-pmu",
+> +               .event_init     = riscv_event_init,
+> +               .add            = riscv_pmu_add,
+> +               .del            = riscv_pmu_del,
+> +               .start          = riscv_pmu_start,
+> +               .stop           = riscv_pmu_stop,
+> +               .read           = riscv_pmu_read,
+> +       },
+>
+> -static const struct riscv_pmu riscv_base_pmu = {
+> -       .pmu = &min_pmu,
+> -       .max_events = ARRAY_SIZE(riscv_hw_event_map),
+> -       .map_hw_event = riscv_map_hw_event,
+> -       .hw_events = riscv_hw_event_map,
+> -       .map_cache_event = riscv_map_cache_event,
+> -       .cache_events = &riscv_cache_event_map,
+> -       .counter_width = 63,
+> -       .num_counters = RISCV_BASE_COUNTERS + 0,
+> -       .handle_irq = &riscv_base_pmu_handle_irq,
+> +       .num_event_cntr = 0,
+> +       .width_event_cntr = RISCV_DEFAULT_WIDTH_COUNTER,
+> +       .width_base_cntr = RISCV_DEFAULT_WIDTH_COUNTER,
+>
+> +       .handle_irq = &riscv_pmu_handle_irq,
+>         /* This means this PMU has no IRQ. */
+>         .irq = -1,
+>  };
+>
+> -static const struct of_device_id riscv_pmu_of_ids[] = {
+> -       {.compatible = "riscv,base-pmu",        .data = &riscv_base_pmu},
+> -       { /* sentinel value */ }
+> -};
+> +static int __init init_riscv_pmu(struct device_node *node)
+> +{
+> +       int num_events, key, value, i;
+> +
+> +       of_property_read_u32(node, "riscv,width-base-cntr", &riscv_pmu.width_base_cntr);
+> +
+> +       of_property_read_u32(node, "riscv,width-event-cntr", &riscv_pmu.width_event_cntr);
+> +
+> +       of_property_read_u32(node, "riscv,n-event-cntr", &riscv_pmu.num_event_cntr);
+> +       if (riscv_pmu.num_event_cntr > RISCV_EVENT_COUNTERS)
+> +               riscv_pmu.num_event_cntr = RISCV_EVENT_COUNTERS;
+> +
+> +       num_events = of_property_count_u32_elems(node, "riscv,hw-event-map");
+> +       if (num_events > 0 && num_events % 2 == 0)
+> +               for (i = 0; i < num_events;) {
+> +                       of_property_read_u32_index(node, "riscv,hw-event-map", i++, &key);
+> +                       of_property_read_u32_index(node, "riscv,hw-event-map", i++, &value);
+> +                       riscv_hw_event_map[key] = value;
+> +               }
+> +
+> +       num_events = of_property_count_u32_elems(node, "riscv,hw-cache-event-map");
+> +       if (num_events > 0 && num_events % 2 == 0)
+> +               for (i = 0; i < num_events;) {
+> +                       of_property_read_u32_index(node, "riscv,hw-cache-event-map", i++, &key);
+> +                       of_property_read_u32_index(node, "riscv,hw-cache-event-map", i++, &value);
+> +                       riscv_cache_event_map
+> +                               [(key >> PERF_HW_CACHE_TYPE) & PERF_HW_CACHE_MASK]
+> +                               [(key >> PERF_HW_CACHE_OP) & PERF_HW_CACHE_MASK]
+> +                               [(key >> PERF_HW_CACHE_RESULT) & PERF_HW_CACHE_MASK] = value;
+> +               }
+> +
+> +       return 0;
+> +}
+>
+>  static int __init init_hw_perf_events(void)
+>  {
+> -       struct device_node *node = of_find_node_by_type(NULL, "pmu");
+> -       const struct of_device_id *of_id;
+> +       struct device_node *node = of_find_compatible_node(NULL, NULL, "riscv,pmu");
+>
+> -       riscv_pmu = &riscv_base_pmu;
+> +       if (node)
+> +               init_riscv_pmu(node);
+>
+> -       if (node) {
+> -               of_id = of_match_node(riscv_pmu_of_ids, node);
+> -
+> -               if (of_id)
+> -                       riscv_pmu = of_id->data;
+> -               of_node_put(node);
+> -       }
+> +       /* Even if there is no pmu node in DT, we reach here for base PMU. */
+> +       perf_pmu_register(riscv_pmu.pmu, "cpu", PERF_TYPE_RAW);
+>
+> -       perf_pmu_register(riscv_pmu->pmu, "cpu", PERF_TYPE_RAW);
+>         return 0;
+>  }
+>  arch_initcall(init_hw_perf_events);
 
-Could you please elaborate more details?
+Why does this have to arch_initcall() ??
+Why can't we just probe this like a regular DT based driver ??
 
-You mean the DMA API usage of rpmsg? Or xen domu dma_ops?
+This driver needs total re-write because it has to be a platform driver.
+Even the names of counters are not registered. The implementation
+specific counter names should come from DT property.
 
-Thanks,
-Peng.=20
+Regards,
+Anup
 
->=20
-> > > >
-> > > >
-> > > > [1]
-> > > > https://eur01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2=
-F
-> > > > lore
-> > > > .kernel.org%2Fpatchwork%2Fpatch%2F1033801%2F%231222404&amp;
-> dat
-> > > a=3D02%7C0
-> > > >
-> > >
-> 1%7Cpeng.fan%40nxp.com%7C08ba48d3b3d54e775a8108d819e62fd0%7C68
-> > > 6ea1d3bc
-> > > >
-> > >
-> 2b4c6fa92cd99c5c301635%7C0%7C0%7C637287823721994475&amp;sdata
-> > > =3DCw4FHWrH
-> > > > uVKBCn3%2BKS2VM7cWuGoTI6R7SHJrJSLY5Io%3D&amp;reserved=3D0
-
+> --
+> 2.27.0
+>
