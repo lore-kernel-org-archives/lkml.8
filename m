@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70291C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A9FC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:14:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 533A920760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:14:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6D4E20760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:14:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461666;
-	bh=6EppaO/PVMjvUXoOY2z4oct3VoTOlS1yzr/bcz2SewE=;
+	s=default; t=1593461670;
+	bh=mHTMAWW1raNFP2h5TTT6iMi2R378EA2fCHGDsRw1TvM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AvEiBbplFUHa2inuiTltytxunwa/6OHi/5u35Dg6aZi1n9/D+2s2MPTraLzRnmOhs
-	 u8ix8QXOQg++eHTeo263yzKxT9Y3XnC+57uiod7bXNGr7gcm9ePnZSqYwQBl5Ev4yu
-	 XGcT6/l13/M8pNa8szmLj7R/cu43vtuBtJ4EvT9c=
+	b=Jbt0BJoSEPlKw93hb/WsZ3illEQp5gF1juOBx1bCt6RYyXZ9jlCJI0OZ5rTl0UbDX
+	 ky42LNyVHAnii3aujupdeiSnOCMuvq2jL+9c1BPQ7IXiB1OnYiGEFGqq025wc28V9e
+	 EX0hmoggtmbkaw6eo3OsHzPvhfMj3P/+ck55tTUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732645AbgF2UOZ (ORCPT
+        id S1732656AbgF2UO3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:14:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40598 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:14:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732834AbgF2TaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732844AbgF2TaS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C71402521B;
-        Mon, 29 Jun 2020 15:35:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20C8C252E4;
+        Mon, 29 Jun 2020 15:38:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444936;
-        bh=6EppaO/PVMjvUXoOY2z4oct3VoTOlS1yzr/bcz2SewE=;
+        s=default; t=1593445115;
+        bh=mHTMAWW1raNFP2h5TTT6iMi2R378EA2fCHGDsRw1TvM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wf0t6Emxob7eiS+tHKRTd860Vg4VwvH7iO1XNPPM12PQQJY0Sj8m45Y/j2Qa3SpAr
-         gZqk3PErkLeUltrvRoD6FTqu/Wi8xCEXbkZggZmXCWmsA7UiTO4TRnivS6PwX0IqKV
-         jP4/MuMoFPcOn+2ln6L/0Jelig7uZuZTfeiadpOg=
+        b=1PSwTOMpjxYANKD6gJ8/VFCnoyTP4L2OHn3x8GD9a2ZUYT/m3qdp/UQeqDU+bkM2c
+         KBCLC1i0v7R+LWZ/++M5DtriP3EoI1oWl7NK2IQ0B76A1WVQNY7cMiKg1lO3FLwrIJ
+         mh5GYcpP+d6vmTV4bZ4rBQ2urKeiriccJiAj/Cxs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Taehee Yoo <ap420073@gmail.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
+Cc:     Tariq Toukan <tariqt@mellanox.com>,
+        Boris Pismenny <borisp@mellanox.com>,
         "David S . Miller" <davem@davemloft.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 033/131] ip_tunnel: fix use-after-free in ip_tunnel_lookup()
-Date:   Mon, 29 Jun 2020 11:33:24 -0400
-Message-Id: <20200629153502.2494656-34-sashal@kernel.org>
+Subject: [PATCH 4.14 21/78] net: Do not clear the sock TX queue in sk_set_socket()
+Date:   Mon, 29 Jun 2020 11:37:09 -0400
+Message-Id: <20200629153806.2494953-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
-References: <20200629153502.2494656-1-sashal@kernel.org>
+In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
+References: <20200629153806.2494953-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.19.y
+X-KernelTest-Branch: linux-4.14.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.19.131-rc1
-X-KernelTest-Deadline: 2020-07-01T15:34+00:00
+X-KernelTest-Version: 4.14.186-rc1
+X-KernelTest-Deadline: 2020-07-01T15:38+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -66,120 +66,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Tariq Toukan <tariqt@mellanox.com>
 
-[ Upstream commit ba61539c6ae57f4146284a5cb4f7b7ed8d42bf45 ]
+[ Upstream commit 41b14fb8724d5a4b382a63cb4a1a61880347ccb8 ]
 
-In the datapath, the ip_tunnel_lookup() is used and it internally uses
-fallback tunnel device pointer, which is fb_tunnel_dev.
-This pointer variable should be set to NULL when a fb interface is deleted.
-But there is no routine to set fb_tunnel_dev pointer to NULL.
-So, this pointer will be still used after interface is deleted and
-it eventually results in the use-after-free problem.
+Clearing the sock TX queue in sk_set_socket() might cause unexpected
+out-of-order transmit when called from sock_orphan(), as outstanding
+packets can pick a different TX queue and bypass the ones already queued.
 
-Test commands:
-    ip netns add A
-    ip netns add B
-    ip link add eth0 type veth peer name eth1
-    ip link set eth0 netns A
-    ip link set eth1 netns B
+This is undesired in general. More specifically, it breaks the in-order
+scheduling property guarantee for device-offloaded TLS sockets.
 
-    ip netns exec A ip link set lo up
-    ip netns exec A ip link set eth0 up
-    ip netns exec A ip link add gre1 type gre local 10.0.0.1 \
-	    remote 10.0.0.2
-    ip netns exec A ip link set gre1 up
-    ip netns exec A ip a a 10.0.100.1/24 dev gre1
-    ip netns exec A ip a a 10.0.0.1/24 dev eth0
+Remove the call to sk_tx_queue_clear() in sk_set_socket(), and add it
+explicitly only where needed.
 
-    ip netns exec B ip link set lo up
-    ip netns exec B ip link set eth1 up
-    ip netns exec B ip link add gre1 type gre local 10.0.0.2 \
-	    remote 10.0.0.1
-    ip netns exec B ip link set gre1 up
-    ip netns exec B ip a a 10.0.100.2/24 dev gre1
-    ip netns exec B ip a a 10.0.0.2/24 dev eth1
-    ip netns exec A hping3 10.0.100.2 -2 --flood -d 60000 &
-    ip netns del B
-
-Splat looks like:
-[   77.793450][    C3] ==================================================================
-[   77.794702][    C3] BUG: KASAN: use-after-free in ip_tunnel_lookup+0xcc4/0xf30
-[   77.795573][    C3] Read of size 4 at addr ffff888060bd9c84 by task hping3/2905
-[   77.796398][    C3]
-[   77.796664][    C3] CPU: 3 PID: 2905 Comm: hping3 Not tainted 5.8.0-rc1+ #616
-[   77.797474][    C3] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[   77.798453][    C3] Call Trace:
-[   77.798815][    C3]  <IRQ>
-[   77.799142][    C3]  dump_stack+0x9d/0xdb
-[   77.799605][    C3]  print_address_description.constprop.7+0x2cc/0x450
-[   77.800365][    C3]  ? ip_tunnel_lookup+0xcc4/0xf30
-[   77.800908][    C3]  ? ip_tunnel_lookup+0xcc4/0xf30
-[   77.801517][    C3]  ? ip_tunnel_lookup+0xcc4/0xf30
-[   77.802145][    C3]  kasan_report+0x154/0x190
-[   77.802821][    C3]  ? ip_tunnel_lookup+0xcc4/0xf30
-[   77.803503][    C3]  ip_tunnel_lookup+0xcc4/0xf30
-[   77.804165][    C3]  __ipgre_rcv+0x1ab/0xaa0 [ip_gre]
-[   77.804862][    C3]  ? rcu_read_lock_sched_held+0xc0/0xc0
-[   77.805621][    C3]  gre_rcv+0x304/0x1910 [ip_gre]
-[   77.806293][    C3]  ? lock_acquire+0x1a9/0x870
-[   77.806925][    C3]  ? gre_rcv+0xfe/0x354 [gre]
-[   77.807559][    C3]  ? erspan_xmit+0x2e60/0x2e60 [ip_gre]
-[   77.808305][    C3]  ? rcu_read_lock_sched_held+0xc0/0xc0
-[   77.809032][    C3]  ? rcu_read_lock_held+0x90/0xa0
-[   77.809713][    C3]  gre_rcv+0x1b8/0x354 [gre]
-[ ... ]
-
-Suggested-by: Eric Dumazet <eric.dumazet@gmail.com>
-Fixes: c54419321455 ("GRE: Refactor GRE tunneling code.")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Fixes: e022f0b4a03f ("net: Introduce sk_tx_queue_mapping")
+Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
+Reviewed-by: Boris Pismenny <borisp@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/ip_tunnel.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ include/net/sock.h | 1 -
+ net/core/sock.c    | 2 ++
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/ipv4/ip_tunnel.c b/net/ipv4/ip_tunnel.c
-index b37abba3b369e..375d0e516d85f 100644
---- a/net/ipv4/ip_tunnel.c
-+++ b/net/ipv4/ip_tunnel.c
-@@ -98,9 +98,10 @@ struct ip_tunnel *ip_tunnel_lookup(struct ip_tunnel_net *itn,
- 				   __be32 remote, __be32 local,
- 				   __be32 key)
+diff --git a/include/net/sock.h b/include/net/sock.h
+index c6a003bc4737c..a2e10d0b12804 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -1687,7 +1687,6 @@ static inline int sk_tx_queue_get(const struct sock *sk)
+ 
+ static inline void sk_set_socket(struct sock *sk, struct socket *sock)
  {
--	unsigned int hash;
- 	struct ip_tunnel *t, *cand = NULL;
- 	struct hlist_head *head;
-+	struct net_device *ndev;
-+	unsigned int hash;
- 
- 	hash = ip_tunnel_hash(key, remote);
- 	head = &itn->tunnels[hash];
-@@ -175,8 +176,9 @@ struct ip_tunnel *ip_tunnel_lookup(struct ip_tunnel_net *itn,
- 	if (t && t->dev->flags & IFF_UP)
- 		return t;
- 
--	if (itn->fb_tunnel_dev && itn->fb_tunnel_dev->flags & IFF_UP)
--		return netdev_priv(itn->fb_tunnel_dev);
-+	ndev = READ_ONCE(itn->fb_tunnel_dev);
-+	if (ndev && ndev->flags & IFF_UP)
-+		return netdev_priv(ndev);
- 
- 	return NULL;
+-	sk_tx_queue_clear(sk);
+ 	sk->sk_socket = sock;
  }
-@@ -1212,9 +1214,9 @@ void ip_tunnel_uninit(struct net_device *dev)
- 	struct ip_tunnel_net *itn;
  
- 	itn = net_generic(net, tunnel->ip_tnl_net_id);
--	/* fb_tunnel_dev will be unregisted in net-exit call. */
--	if (itn->fb_tunnel_dev != dev)
--		ip_tunnel_del(itn, netdev_priv(dev));
-+	ip_tunnel_del(itn, netdev_priv(dev));
-+	if (itn->fb_tunnel_dev == dev)
-+		WRITE_ONCE(itn->fb_tunnel_dev, NULL);
+diff --git a/net/core/sock.c b/net/core/sock.c
+index d2cb2051d0453..08ca2ec0ce60a 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -1538,6 +1538,7 @@ struct sock *sk_alloc(struct net *net, int family, gfp_t priority,
+ 		cgroup_sk_alloc(&sk->sk_cgrp_data);
+ 		sock_update_classid(&sk->sk_cgrp_data);
+ 		sock_update_netprioidx(&sk->sk_cgrp_data);
++		sk_tx_queue_clear(sk);
+ 	}
  
- 	dst_cache_reset(&tunnel->dst_cache);
- }
+ 	return sk;
+@@ -1740,6 +1741,7 @@ struct sock *sk_clone_lock(const struct sock *sk, const gfp_t priority)
+ 		 */
+ 		sk_refcnt_debug_inc(newsk);
+ 		sk_set_socket(newsk, NULL);
++		sk_tx_queue_clear(newsk);
+ 		newsk->sk_wq = NULL;
+ 
+ 		if (newsk->sk_prot->sockets_allocated)
 -- 
 2.25.1
 
