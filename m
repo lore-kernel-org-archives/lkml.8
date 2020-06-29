@@ -2,56 +2,52 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99896C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B9A6C433E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A0752088E
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68CEF20760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460178;
-	bh=6PkC7+lZGXPGXlhRK9bOQe75j3/4h5PZW8Cn6tUZsL0=;
+	s=default; t=1593460183;
+	bh=hFQJICwU052rIK+9JNM9FVqIF3neST2AjhP/RaDghLY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yvvV+SgG3crHMRUzSqw1o7z+X/KK0uA5BqU2bU680GHs91t6FwolmIY8J4RQ8usbS
-	 BCCNFELpdp7lSZU9S9kpEID0QaQbLT/CqEpWBwxxWc8rkeAE2vNegzIxzxpF0ickvF
-	 g8uAEyy/NbHQnp47MQkrifheLSSbsAfAg85ewprg=
+	b=H+0bMJ1qK7eobUfvak3k5fTaNk5LitEmkBv2vdRNbIBl94Z5ECJB/7d4I1Ni/TsY+
+	 Sx9JKY5qlln/mZLqBAR0QAed23RMPQUat2NB3EWLV1VZLrYr5IcMWephLJY9AdfVDs
+	 XadVQno3G6PY2D3f7G6f/9GpLWJ+F4/qb+wpCEtU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388215AbgF2Tt1 (ORCPT
+        id S2388146AbgF2Ttm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:49:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47656 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:49:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387751AbgF2Tkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387748AbgF2Tkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 370A524928;
-        Mon, 29 Jun 2020 15:28:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0316F24904;
+        Mon, 29 Jun 2020 15:27:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444482;
-        bh=6PkC7+lZGXPGXlhRK9bOQe75j3/4h5PZW8Cn6tUZsL0=;
+        s=default; t=1593444456;
+        bh=hFQJICwU052rIK+9JNM9FVqIF3neST2AjhP/RaDghLY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X5wubIwOH8phwwvJwayuc8l+OfNwvXnbSHI+vJOnTlMIYgilz3js+jmHuPY5uKb6g
-         J2sLtAZy5++V04w83k/frr3zuXxEypH3N8qcT3iHz2VkI6cxpq50Lq1Zl3oOVX98Mb
-         7QeZcz0RcrZ+umZraRYw2hep5Wp2vfxhMi87cKZs=
+        b=YXUIozjHlynpHsy0h9o5VTAJbon2YNauVl5KCqxlBjEiFH4GCPQ7ROBuGlLINYfw5
+         YawIptCPzgPCCZ0C1+P3QEhBH6SGlNqrWdXSNNbN7GNniol/yChDjNEa11lTm/Kgk1
+         zqebdE4n4+dir43Ut6DnM/L1JzQcEezfv+X39RHU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Muchun Song <songmuchun@bytedance.com>,
-        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Qian Cai <cai@lca.pw>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 159/178] mm/memcontrol.c: add missed css_put()
-Date:   Mon, 29 Jun 2020 11:25:04 -0400
-Message-Id: <20200629152523.2494198-160-sashal@kernel.org>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>, Jan Kara <jack@suse.cz>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 136/178] blktrace: break out of blktrace setup on concurrent calls
+Date:   Mon, 29 Jun 2020 11:24:41 -0400
+Message-Id: <20200629152523.2494198-137-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -70,44 +66,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Muchun Song <songmuchun@bytedance.com>
+From: Luis Chamberlain <mcgrof@kernel.org>
 
-commit 3a98990ae2150277ed34d3b248c60e68bf2244b2 upstream.
+[ Upstream commit 1b0b283648163dae2a214ca28ed5a99f62a77319 ]
 
-We should put the css reference when memory allocation failed.
+We use one blktrace per request_queue, that means one per the entire
+disk.  So we cannot run one blktrace on say /dev/vda and then /dev/vda1,
+or just two calls on /dev/vda.
 
-Link: http://lkml.kernel.org/r/20200614122653.98829-1-songmuchun@bytedance.com
-Fixes: f0a3a24b532d ("mm: memcg/slab: rework non-root kmem_cache lifecycle management")
-Signed-off-by: Muchun Song <songmuchun@bytedance.com>
-Acked-by: Roman Gushchin <guro@fb.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: Qian Cai <cai@lca.pw>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+We check for concurrent setup only at the very end of the blktrace setup though.
+
+If we try to run two concurrent blktraces on the same block device the
+second one will fail, and the first one seems to go on. However when
+one tries to kill the first one one will see things like this:
+
+The kernel will show these:
+
+```
+debugfs: File 'dropped' in directory 'nvme1n1' already present!
+debugfs: File 'msg' in directory 'nvme1n1' already present!
+debugfs: File 'trace0' in directory 'nvme1n1' already present!
+``
+
+And userspace just sees this error message for the second call:
+
+```
+blktrace /dev/nvme1n1
+BLKTRACESETUP(2) /dev/nvme1n1 failed: 5/Input/output error
+```
+
+The first userspace process #1 will also claim that the files
+were taken underneath their nose as well. The files are taken
+away form the first process given that when the second blktrace
+fails, it will follow up with a BLKTRACESTOP and BLKTRACETEARDOWN.
+This means that even if go-happy process #1 is waiting for blktrace
+data, we *have* been asked to take teardown the blktrace.
+
+This can easily be reproduced with break-blktrace [0] run_0005.sh test.
+
+Just break out early if we know we're already going to fail, this will
+prevent trying to create the files all over again, which we know still
+exist.
+
+[0] https://github.com/mcgrof/break-blktrace
+
+Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/memcontrol.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ kernel/trace/blktrace.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 0d6f3ea867381..a3f4c35bb5fa0 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -2895,8 +2895,10 @@ static void memcg_schedule_kmem_cache_create(struct mem_cgroup *memcg,
- 		return;
+diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+index a677aa84ccb6e..eaee960153e1e 100644
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -3,6 +3,9 @@
+  * Copyright (C) 2006 Jens Axboe <axboe@kernel.dk>
+  *
+  */
++
++#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
++
+ #include <linux/kernel.h>
+ #include <linux/blkdev.h>
+ #include <linux/blktrace_api.h>
+@@ -495,6 +498,16 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+ 	 */
+ 	strreplace(buts->name, '/', '_');
  
- 	cw = kmalloc(sizeof(*cw), GFP_NOWAIT | __GFP_NOWARN);
--	if (!cw)
-+	if (!cw) {
-+		css_put(&memcg->css);
- 		return;
++	/*
++	 * bdev can be NULL, as with scsi-generic, this is a helpful as
++	 * we can be.
++	 */
++	if (q->blk_trace) {
++		pr_warn("Concurrent blktraces are not allowed on %s\n",
++			buts->name);
++		return -EBUSY;
 +	}
- 
- 	cw->memcg = memcg;
- 	cw->cachep = cachep;
++
+ 	bt = kzalloc(sizeof(*bt), GFP_KERNEL);
+ 	if (!bt)
+ 		return -ENOMEM;
 -- 
 2.25.1
 
