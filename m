@@ -4,58 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 983A9C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:23:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A910AC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79EA62067D
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:23:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 891DB20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:23:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462231;
-	bh=qZwIWYIJGBVkV7epgfcVhNDcWnZ6eQ/wY1kVipmEu5k=;
+	s=default; t=1593462238;
+	bh=DLpiSkuHHXGMoU/1ydEngL9Q0QpIlhx2bgN93M2f1Mg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0iXST6pkGqnFCBT0TX7MflX8wsUxnsS0qDFV2NPEWVIH7BJhzoy33Qfi2jw2SBEMq
-	 q+ZBKwYnCbUt4IYqVrH4HaP4UPYqlb3rWyRlF3c9A1zVgPi/yGjHla2ALatOiibYQG
-	 7+/GvOpYsKXd5T7L2UTTOrM/c1QKVkRIUsBxybOU=
+	b=xxmkmtvGxyTdkDigG4lx1F/ayqZX7OeOVkPJYr0bYlWyeJHguJNfz5VQBHkCrlcqp
+	 onvE6deyjJXIJ4vnQw+cwHHJPJoDP6L4ox6s7WvPSkTQnHMvHbh655x6HPu36T9D1A
+	 o+moLSaoBlumG8aeGvkK/PEZG6XH3LYHNXqHWSkI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388877AbgF2UXu (ORCPT
+        id S2388879AbgF2UX5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:23:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37020 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:23:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732568AbgF2TZc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732572AbgF2TZc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04110252F3;
-        Mon, 29 Jun 2020 15:38:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FEE6253DA;
+        Mon, 29 Jun 2020 15:41:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445122;
-        bh=qZwIWYIJGBVkV7epgfcVhNDcWnZ6eQ/wY1kVipmEu5k=;
+        s=default; t=1593445316;
+        bh=DLpiSkuHHXGMoU/1ydEngL9Q0QpIlhx2bgN93M2f1Mg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GhIZZD16niAEAdEW6X/cXu4KGrylsfSZGDXQWho2G04XGI06I5YzVvWi7u9m4eEX3
-         lwumsAoaIkvIeqCzK799PH5J2vmLAtGtTq/rmN/Cdk/2dAc71IJNaZk2xwsiARsJ4b
-         5wk7B9vWZqHMpQgjETmq1hTzfLwtuMrZZgWhyqO0=
+        b=n6puT8skakobD/2XHKunsj8j71BKQRnNaghG5v6dIS8fhh9x4c873D6wYSicjOkra
+         gPruup3y1ZIT7d0AcmWE8Jc20sGtoV6vsdQ5XajQ+e9cV9oe+CklN9P5NcIK9cjWD3
+         VntxRI8MgR5QuQuA90BHCG1ifagkXzKU4IrxUPAw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "Yick W. Tse" <y_w_tse@yahoo.com.hk>, Takashi Iwai <tiwai@suse.de>,
+Cc:     Tom Rix <trix@redhat.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Paul Moore <paul@paul-moore.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.14 29/78] ALSA: usb-audio: add quirk for Denon DCD-1500RE
-Date:   Mon, 29 Jun 2020 11:37:17 -0400
-Message-Id: <20200629153806.2494953-30-sashal@kernel.org>
+Subject: [PATCH 4.9 084/191] selinux: fix double free
+Date:   Mon, 29 Jun 2020 11:38:20 -0400
+Message-Id: <20200629154007.2495120-85-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
-References: <20200629153806.2494953-1-sashal@kernel.org>
+In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
+References: <20200629154007.2495120-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.229-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.14.y
+X-KernelTest-Branch: linux-4.9.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.14.186-rc1
-X-KernelTest-Deadline: 2020-07-01T15:38+00:00
+X-KernelTest-Version: 4.9.229-rc1
+X-KernelTest-Deadline: 2020-07-01T15:39+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -64,41 +66,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Yick W. Tse" <y_w_tse@yahoo.com.hk>
+From: Tom Rix <trix@redhat.com>
 
-commit c9808bbfed3cfc911ecb60fe8e80c0c27876c657 upstream.
+commit 65de50969a77509452ae590e9449b70a22b923bb upstream.
 
-fix error "clock source 41 is not valid, cannot use"
+Clang's static analysis tool reports these double free memory errors.
 
-[] New USB device found, idVendor=154e, idProduct=1002, bcdDevice= 1.00
-[] New USB device strings: Mfr=1, Product=2, SerialNumber=0
-[] Product: DCD-1500RE
-[] Manufacturer: D & M Holdings Inc.
-[]
-[] clock source 41 is not valid, cannot use
-[] usbcore: registered new interface driver snd-usb-audio
+security/selinux/ss/services.c:2987:4: warning: Attempt to free released memory [unix.Malloc]
+                        kfree(bnames[i]);
+                        ^~~~~~~~~~~~~~~~
+security/selinux/ss/services.c:2990:2: warning: Attempt to free released memory [unix.Malloc]
+        kfree(bvalues);
+        ^~~~~~~~~~~~~~
 
-Signed-off-by: Yick W. Tse <y_w_tse@yahoo.com.hk>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/1373857985.210365.1592048406997@mail.yahoo.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+So improve the security_get_bools error handling by freeing these variables
+and setting their return pointers to NULL and the return len to 0
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Tom Rix <trix@redhat.com>
+Acked-by: Stephen Smalley <stephen.smalley.work@gmail.com>
+Signed-off-by: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- sound/usb/quirks.c | 1 +
- 1 file changed, 1 insertion(+)
+ security/selinux/ss/services.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
-index f29a8ed4f8564..cd36394e27ae6 100644
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -1164,6 +1164,7 @@ bool snd_usb_get_sample_rate_quirk(struct snd_usb_audio *chip)
- static bool is_itf_usb_dsd_2alts_dac(unsigned int id)
- {
- 	switch (id) {
-+	case USB_ID(0x154e, 0x1002): /* Denon DCD-1500RE */
- 	case USB_ID(0x154e, 0x1003): /* Denon DA-300USB */
- 	case USB_ID(0x154e, 0x3005): /* Marantz HD-DAC1 */
- 	case USB_ID(0x154e, 0x3006): /* Marantz SA-14S1 */
+diff --git a/security/selinux/ss/services.c b/security/selinux/ss/services.c
+index bfc4ffa1fa1a4..6ca297821d459 100644
+--- a/security/selinux/ss/services.c
++++ b/security/selinux/ss/services.c
+@@ -2616,8 +2616,12 @@ int security_get_bools(int *len, char ***names, int **values)
+ 	if (*names) {
+ 		for (i = 0; i < *len; i++)
+ 			kfree((*names)[i]);
++		kfree(*names);
+ 	}
+ 	kfree(*values);
++	*len = 0;
++	*names = NULL;
++	*values = NULL;
+ 	goto out;
+ }
+ 
 -- 
 2.25.1
 
