@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E67DFC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 734CBC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2C3020674
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:55:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5347020674
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:55:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460521;
-	bh=qXhl6f3tE/AFL2UssmPeIznukIP+VOVhMpj7CYLZ9QQ=;
+	s=default; t=1593460523;
+	bh=Zwd2UDIgV9gzJZvzusMDwP5lbmSKJVOpDo/8rnFUOwA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iCFBAKJYv4Gt2X8uhcACWzZPRz5eRsnHrebVYb8d3iI+g4G0paaaD/2Gz4AMa7NLU
-	 0VSs+ptPXKQXHYbfcm2o72tDbaafB3qKDuxoxXGIsbT1n3wkilXPs+Xc7Dyy3m0xUu
-	 FCCGSrmSbF9IPJWfKnlxGXeln5wg/x404aB/hhgI=
+	b=ujti1xgM+2xcm1rdloICBpbf1GA/urHUKsgf2NtSgXKzCZ2SMTEM0LSpbGJu1rczi
+	 zW7vjJlmMQyzPtWqAEg5W9ljfufFsqEMWKlwE7NxcKB5LrPTHTxWYAoWjxtL/9r0Q9
+	 o/1hKvxtYjvZco5B2SsFicBFoGeRT/L40GsdTOUQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388375AbgF2TzU (ORCPT
+        id S1730256AbgF2TzQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:55:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47694 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:55:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47672 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387661AbgF2TkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387662AbgF2TkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:25 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 265C224878;
-        Mon, 29 Jun 2020 15:26:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28014248E2;
+        Mon, 29 Jun 2020 15:27:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444375;
-        bh=qXhl6f3tE/AFL2UssmPeIznukIP+VOVhMpj7CYLZ9QQ=;
+        s=default; t=1593444435;
+        bh=Zwd2UDIgV9gzJZvzusMDwP5lbmSKJVOpDo/8rnFUOwA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FsDT3nl88xSkVSmWbE7e45Ey29UTCmvSbEZxonGVBT9+3umR33rfa0QVkpC8KS9vB
-         cYO3aP/PdfszOqK9Zr7lhoN8fINiicSkrPVGTz1Skf/tqVGwntOBILxlOXASLzKyYP
-         OoICQG9QPx7dwAyq9FK4ZB1jZiQFQKOQPSP8Ty1Y=
+        b=qE59pdMk58sbLhYpYpMLB1SV3NSt69TbDJ5xECl7feGe1arlySD9/mSHgTaTDqg+Q
+         WirU5aOMG16oTonfVOBwYpQDbqWVWG2H3+tVjScaFO1e23wdrzmCaR1r7f61xTjKzb
+         XN/b4lNCdxxiTMmQXDdJFreKRP7jMcaxF5nDQ9Dw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Zhang Xiaoxu <zhangxiaoxu5@huawei.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>,
-        Steve French <stfrench@microsoft.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 052/178] cifs/smb3: Fix data inconsistent when punch hole
-Date:   Mon, 29 Jun 2020 11:23:17 -0400
-Message-Id: <20200629152523.2494198-53-sashal@kernel.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 114/178] afs: Fix storage of cell names
+Date:   Mon, 29 Jun 2020 11:24:19 -0400
+Message-Id: <20200629152523.2494198-115-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -66,55 +66,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
+From: David Howells <dhowells@redhat.com>
 
-commit acc91c2d8de4ef46ed751c5f9df99ed9a109b100 upstream.
+[ Upstream commit 719fdd32921fb7e3208db8832d32ae1c2d68900f ]
 
-When punch hole success, we also can read old data from file:
-  # strace -e trace=pread64,fallocate xfs_io -f -c "pread 20 40" \
-           -c "fpunch 20 40" -c"pread 20 40" file
-  pread64(3, " version 5.8.0-rc1+"..., 40, 20) = 40
-  fallocate(3, FALLOC_FL_KEEP_SIZE|FALLOC_FL_PUNCH_HOLE, 20, 40) = 0
-  pread64(3, " version 5.8.0-rc1+"..., 40, 20) = 40
+The cell name stored in the afs_cell struct is a 64-char + NUL buffer -
+when it needs to be able to handle up to AFS_MAXCELLNAME (256 chars) + NUL.
 
-CIFS implements the fallocate(FALLOCATE_FL_PUNCH_HOLE) with send SMB
-ioctl(FSCTL_SET_ZERO_DATA) to server. It just set the range of the
-remote file to zero, but local page caches not updated, then the
-local page caches inconsistent with server.
+Fix this by changing the array to a pointer and allocating the string.
 
-Also can be found by xfstests generic/316.
+Found using Coverity.
 
-So, we need to remove the page caches before send the SMB
-ioctl(FSCTL_SET_ZERO_DATA) to server.
-
-Fixes: 31742c5a33176 ("enable fallocate punch hole ("fallocate -p") for SMB3")
-Suggested-by: Pavel Shilovsky <pshilov@microsoft.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-Signed-off-by: Zhang Xiaoxu <zhangxiaoxu5@huawei.com>
-Cc: stable@vger.kernel.org # v3.17
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 989782dcdc91 ("afs: Overhaul cell database management")
+Reported-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/cifs/smb2ops.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ fs/afs/cell.c     | 9 +++++++++
+ fs/afs/internal.h | 2 +-
+ 2 files changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
-index f5e893ed48aaa..e38f21c44133d 100644
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -3036,6 +3036,12 @@ static long smb3_punch_hole(struct file *file, struct cifs_tcon *tcon,
- 		return rc;
+diff --git a/fs/afs/cell.c b/fs/afs/cell.c
+index 78ba5f9322879..296b489861a9a 100644
+--- a/fs/afs/cell.c
++++ b/fs/afs/cell.c
+@@ -154,10 +154,17 @@ static struct afs_cell *afs_alloc_cell(struct afs_net *net,
+ 		return ERR_PTR(-ENOMEM);
  	}
  
-+	/*
-+	 * We implement the punch hole through ioctl, so we need remove the page
-+	 * caches first, otherwise the data may be inconsistent with the server.
-+	 */
-+	truncate_pagecache_range(inode, offset, offset + len - 1);
++	cell->name = kmalloc(namelen + 1, GFP_KERNEL);
++	if (!cell->name) {
++		kfree(cell);
++		return ERR_PTR(-ENOMEM);
++	}
 +
- 	cifs_dbg(FYI, "Offset %lld len %lld\n", offset, len);
+ 	cell->net = net;
+ 	cell->name_len = namelen;
+ 	for (i = 0; i < namelen; i++)
+ 		cell->name[i] = tolower(name[i]);
++	cell->name[i] = 0;
  
- 	fsctl_buf.FileOffset = cpu_to_le64(offset);
+ 	atomic_set(&cell->usage, 2);
+ 	INIT_WORK(&cell->manager, afs_manage_cell);
+@@ -203,6 +210,7 @@ static struct afs_cell *afs_alloc_cell(struct afs_net *net,
+ 	if (ret == -EINVAL)
+ 		printk(KERN_ERR "kAFS: bad VL server IP address\n");
+ error:
++	kfree(cell->name);
+ 	kfree(cell);
+ 	_leave(" = %d", ret);
+ 	return ERR_PTR(ret);
+@@ -483,6 +491,7 @@ static void afs_cell_destroy(struct rcu_head *rcu)
+ 
+ 	afs_put_vlserverlist(cell->net, rcu_access_pointer(cell->vl_servers));
+ 	key_put(cell->anonymous_key);
++	kfree(cell->name);
+ 	kfree(cell);
+ 
+ 	_leave(" [destroyed]");
+diff --git a/fs/afs/internal.h b/fs/afs/internal.h
+index 555ad7c9afcb6..7fe88d918b238 100644
+--- a/fs/afs/internal.h
++++ b/fs/afs/internal.h
+@@ -397,7 +397,7 @@ struct afs_cell {
+ 	struct afs_vlserver_list __rcu *vl_servers;
+ 
+ 	u8			name_len;	/* Length of name */
+-	char			name[64 + 1];	/* Cell name, case-flattened and NUL-padded */
++	char			*name;		/* Cell name, case-flattened and NUL-padded */
+ };
+ 
+ /*
 -- 
 2.25.1
 
