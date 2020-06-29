@@ -2,113 +2,288 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CC4C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:54:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDEC4C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68BB2206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3B2A206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:55:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467695;
-	bh=5rhii0RPtqMd801EeEYeeEKTbuvPVzbyTh8iApbbK/o=;
-	h=Date:From:To:List-Id:Cc:Subject:References:In-Reply-To:List-ID:
-	 From;
-	b=dGlAzUGjaJFQ8v7BzSuhNNZIaN4GdyRgJxWw4g53/UM3GI57xGVcdNO0BZoWA5Buv
-	 3uYyHyTDdrvoxSJIZuODZ0jyDD/4GGaNHNhUPESKoB/eU20TLiFcPgPWoNQn6Fp3/p
-	 9WB3/bpoXPBCLeCD3VfkNeJZuUQcaTZXChc+g7jI=
+	s=default; t=1593467714;
+	bh=esX7GwYz/akZW9Mo7rVMUHb6u/ZZjIe4uOnKDwYVESw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=sHh4eetcOmDaPAuqvVD2BZfbBjXJeLBNA7DekGgqkeOa8+/sd+3ZqnyGih/1HsDSC
+	 BzLldDfPbukuTK8eIPhN63xlUMX2TzOplpmo721buh50m+1JfBnri9/YIoQb0LCuJN
+	 XJhTspCrZ6z1ibPLJqHCRDDLQoOybqHeOAwLE6cY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404498AbgF2Vyx (ORCPT
+        id S2391505AbgF2VzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:54:53 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:45362 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389336AbgF2Vy2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 17:54:28 -0400
-Received: by mail-il1-f194.google.com with SMTP id l9so15863059ilq.12;
-        Mon, 29 Jun 2020 14:54:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=C8dUSvhRmWNPjC/Gxl3IeAC98sriVh3zuvoUxs+yN3o=;
-        b=UBGlhBo9qQTRssFhh/7fDs7y1nRpj6NGSpivSRzbxVhbqioJnjpyEUM1gcyKvEW7+O
-         9r6V7uHJntwbWG2yU/yxqXmZwOOoyIekPFG+eV1yfOZjO777pUzf1BZ/HOrcXK/mCR39
-         xa5slE+1Pc/zUdOA9EjBUMcbj+1+mZxMck6m6QRHCS8niYmTv4+BaXLMKqpZwRl2uUM7
-         xgnTQFGRVTxJv4AXMzjnnXMNhjc5OVoYB5BjwCikOtvbv6yZ+UBEP4QSMyItrmYwbAcH
-         6s6YqZNkkMMoRwEvp8Qu8x3pKimkgGwocb/dq9Py6Qmlof8grR1fRyCafi0Bj6eZwiO8
-         YzIQ==
-X-Gm-Message-State: AOAM533ECi4X4Pn4EG5gkgtKTfI1CMX3I/gJ12qzgrZGPhs9yrdabM3V
-        JqBCCSAP9Yy0afdh9+GTmg==
-X-Google-Smtp-Source: ABdhPJydHNBwHC1sjSL393mIV8ElpWA8UM200L9n5v4oEctdkRP/KNOR4wq2uIs9B/BUiGXS1q9B0w==
-X-Received: by 2002:a92:d4cf:: with SMTP id o15mr15678654ilm.160.1593467667476;
-        Mon, 29 Jun 2020 14:54:27 -0700 (PDT)
-Received: from xps15 ([64.188.179.255])
-        by smtp.gmail.com with ESMTPSA id t18sm611073ilm.55.2020.06.29.14.54.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 14:54:26 -0700 (PDT)
-Received: (nullmailer pid 2997019 invoked by uid 1000);
-        Mon, 29 Jun 2020 21:54:24 -0000
-Date:   Mon, 29 Jun 2020 15:54:24 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Lars Povlsen <lars.povlsen@microchip.com>
-List-Id: <soc.lore.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        SoC Team <soc@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        linux-mmc@vger.kernel.org,
-        Microchip Linux Driver Support <UNGLinuxDriver@microchip.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v4 1/3] dt-bindings: mmc: Add Sparx5 SDHCI controller
- bindings
-Message-ID: <20200629215424.GA2996213@bogus>
-References: <20200618141326.25723-1-lars.povlsen@microchip.com>
- <20200618141326.25723-2-lars.povlsen@microchip.com>
+        Mon, 29 Jun 2020 17:55:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56908 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726534AbgF2Sfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:31 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5E464241A5;
+        Mon, 29 Jun 2020 15:19:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593443957;
+        bh=esX7GwYz/akZW9Mo7rVMUHb6u/ZZjIe4uOnKDwYVESw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gDuX+AYqHJ6fjjPq1rMvuzwnGERAtA1l8EErSdIwpwIKFccENcUEDld44y45AS+4e
+         H8Dwq0avXGaNWV2D/iE5U5l146tZKboIUX8cOVxyL0cRdIQmUUxDHGkleENn4RvbTh
+         sPa8Ir/H64NsXsu7try5HRkuAb1nVpxwsjwHtrM8=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Tomas Winkler <tomas.winkler@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 060/265] mei: me: disable mei interface on Mehlow server platforms
+Date:   Mon, 29 Jun 2020 11:14:53 -0400
+Message-Id: <20200629151818.2493727-61-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
+References: <20200629151818.2493727-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200618141326.25723-2-lars.povlsen@microchip.com>
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.7-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-5.7.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 5.7.7-rc1
+X-KernelTest-Deadline: 2020-07-01T15:14+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 18 Jun 2020 16:13:24 +0200, Lars Povlsen wrote:
-> The Sparx5 SDHCI controller is based on the Designware controller IP.
-> 
-> Signed-off-by: Lars Povlsen <lars.povlsen@microchip.com>
-> ---
->  .../mmc/microchip,dw-sparx5-sdhci.yaml        | 65 +++++++++++++++++++
->  1 file changed, 65 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.yaml
-> 
+From: Tomas Winkler <tomas.winkler@intel.com>
 
+commit f76d77f50b343bc7f7d01e4c2771d43fb074f617 upstream.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+For SPS firmware versions 5.0 and newer the way detection has changed.
+The detection is done now via PCI_CFG_HFS_3 register.
+To prevent conflict the previous method will get sps_4 suffix
+Disable both CNP_H and CNP_H_3 interfaces. CNP_H_3 requires
+a separate configuration as it doesn't support DMA.
 
-Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.example.dts:20:18: fatal error: dt-bindings/clock/microchip,sparx5.h: No such file or directory
-         #include <dt-bindings/clock/microchip,sparx5.h>
-                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-compilation terminated.
-scripts/Makefile.lib:315: recipe for target 'Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.example.dt.yaml' failed
-make[1]: *** [Documentation/devicetree/bindings/mmc/microchip,dw-sparx5-sdhci.example.dt.yaml] Error 1
-make[1]: *** Waiting for unfinished jobs....
-Makefile:1347: recipe for target 'dt_binding_check' failed
-make: *** [dt_binding_check] Error 2
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+Link: https://lore.kernel.org/r/20200619165121.2145330-1-tomas.winkler@intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/misc/mei/hw-me-regs.h |  2 ++
+ drivers/misc/mei/hw-me.c      | 60 +++++++++++++++++++++++++++++++----
+ drivers/misc/mei/hw-me.h      | 13 +++++---
+ drivers/misc/mei/pci-me.c     | 16 +++++-----
+ 4 files changed, 73 insertions(+), 18 deletions(-)
 
-
-See https://patchwork.ozlabs.org/patch/1312158
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure dt-schema is up to date:
-
-pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
-
-Please check and re-submit.
+diff --git a/drivers/misc/mei/hw-me-regs.h b/drivers/misc/mei/hw-me-regs.h
+index 9392934e3a060..01b1bf74f2626 100644
+--- a/drivers/misc/mei/hw-me-regs.h
++++ b/drivers/misc/mei/hw-me-regs.h
+@@ -107,6 +107,8 @@
+ #  define PCI_CFG_HFS_1_D0I3_MSK     0x80000000
+ #define PCI_CFG_HFS_2         0x48
+ #define PCI_CFG_HFS_3         0x60
++#  define PCI_CFG_HFS_3_FW_SKU_MSK   0x00000070
++#  define PCI_CFG_HFS_3_FW_SKU_SPS   0x00000060
+ #define PCI_CFG_HFS_4         0x64
+ #define PCI_CFG_HFS_5         0x68
+ #define PCI_CFG_HFS_6         0x6C
+diff --git a/drivers/misc/mei/hw-me.c b/drivers/misc/mei/hw-me.c
+index f620442addf52..f8155c1e811d7 100644
+--- a/drivers/misc/mei/hw-me.c
++++ b/drivers/misc/mei/hw-me.c
+@@ -1366,7 +1366,7 @@ static bool mei_me_fw_type_nm(struct pci_dev *pdev)
+ #define MEI_CFG_FW_NM                           \
+ 	.quirk_probe = mei_me_fw_type_nm
+ 
+-static bool mei_me_fw_type_sps(struct pci_dev *pdev)
++static bool mei_me_fw_type_sps_4(struct pci_dev *pdev)
+ {
+ 	u32 reg;
+ 	unsigned int devfn;
+@@ -1382,7 +1382,36 @@ static bool mei_me_fw_type_sps(struct pci_dev *pdev)
+ 	return (reg & 0xf0000) == 0xf0000;
+ }
+ 
+-#define MEI_CFG_FW_SPS                           \
++#define MEI_CFG_FW_SPS_4                          \
++	.quirk_probe = mei_me_fw_type_sps_4
++
++/**
++ * mei_me_fw_sku_sps() - check for sps sku
++ *
++ * Read ME FW Status register to check for SPS Firmware.
++ * The SPS FW is only signaled in pci function 0
++ *
++ * @pdev: pci device
++ *
++ * Return: true in case of SPS firmware
++ */
++static bool mei_me_fw_type_sps(struct pci_dev *pdev)
++{
++	u32 reg;
++	u32 fw_type;
++	unsigned int devfn;
++
++	devfn = PCI_DEVFN(PCI_SLOT(pdev->devfn), 0);
++	pci_bus_read_config_dword(pdev->bus, devfn, PCI_CFG_HFS_3, &reg);
++	trace_mei_pci_cfg_read(&pdev->dev, "PCI_CFG_HFS_3", PCI_CFG_HFS_3, reg);
++	fw_type = (reg & PCI_CFG_HFS_3_FW_SKU_MSK);
++
++	dev_dbg(&pdev->dev, "fw type is %d\n", fw_type);
++
++	return fw_type == PCI_CFG_HFS_3_FW_SKU_SPS;
++}
++
++#define MEI_CFG_FW_SPS                          \
+ 	.quirk_probe = mei_me_fw_type_sps
+ 
+ #define MEI_CFG_FW_VER_SUPP                     \
+@@ -1452,10 +1481,17 @@ static const struct mei_cfg mei_me_pch8_cfg = {
+ };
+ 
+ /* PCH8 Lynx Point with quirk for SPS Firmware exclusion */
+-static const struct mei_cfg mei_me_pch8_sps_cfg = {
++static const struct mei_cfg mei_me_pch8_sps_4_cfg = {
+ 	MEI_CFG_PCH8_HFS,
+ 	MEI_CFG_FW_VER_SUPP,
+-	MEI_CFG_FW_SPS,
++	MEI_CFG_FW_SPS_4,
++};
++
++/* LBG with quirk for SPS (4.0) Firmware exclusion */
++static const struct mei_cfg mei_me_pch12_sps_4_cfg = {
++	MEI_CFG_PCH8_HFS,
++	MEI_CFG_FW_VER_SUPP,
++	MEI_CFG_FW_SPS_4,
+ };
+ 
+ /* Cannon Lake and newer devices */
+@@ -1465,8 +1501,18 @@ static const struct mei_cfg mei_me_pch12_cfg = {
+ 	MEI_CFG_DMA_128,
+ };
+ 
+-/* LBG with quirk for SPS Firmware exclusion */
++/* Cannon Lake with quirk for SPS 5.0 and newer Firmware exclusion */
+ static const struct mei_cfg mei_me_pch12_sps_cfg = {
++	MEI_CFG_PCH8_HFS,
++	MEI_CFG_FW_VER_SUPP,
++	MEI_CFG_DMA_128,
++	MEI_CFG_FW_SPS,
++};
++
++/* Cannon Lake with quirk for SPS 5.0 and newer Firmware exclusion
++ * w/o DMA support
++ */
++static const struct mei_cfg mei_me_pch12_nodma_sps_cfg = {
+ 	MEI_CFG_PCH8_HFS,
+ 	MEI_CFG_FW_VER_SUPP,
+ 	MEI_CFG_FW_SPS,
+@@ -1492,9 +1538,11 @@ static const struct mei_cfg *const mei_cfg_list[] = {
+ 	[MEI_ME_PCH7_CFG] = &mei_me_pch7_cfg,
+ 	[MEI_ME_PCH_CPT_PBG_CFG] = &mei_me_pch_cpt_pbg_cfg,
+ 	[MEI_ME_PCH8_CFG] = &mei_me_pch8_cfg,
+-	[MEI_ME_PCH8_SPS_CFG] = &mei_me_pch8_sps_cfg,
++	[MEI_ME_PCH8_SPS_4_CFG] = &mei_me_pch8_sps_4_cfg,
+ 	[MEI_ME_PCH12_CFG] = &mei_me_pch12_cfg,
++	[MEI_ME_PCH12_SPS_4_CFG] = &mei_me_pch12_sps_4_cfg,
+ 	[MEI_ME_PCH12_SPS_CFG] = &mei_me_pch12_sps_cfg,
++	[MEI_ME_PCH12_SPS_NODMA_CFG] = &mei_me_pch12_nodma_sps_cfg,
+ 	[MEI_ME_PCH15_CFG] = &mei_me_pch15_cfg,
+ };
+ 
+diff --git a/drivers/misc/mei/hw-me.h b/drivers/misc/mei/hw-me.h
+index b6b94e2114645..52e0c6d578f27 100644
+--- a/drivers/misc/mei/hw-me.h
++++ b/drivers/misc/mei/hw-me.h
+@@ -1,6 +1,6 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /*
+- * Copyright (c) 2012-2019, Intel Corporation. All rights reserved.
++ * Copyright (c) 2012-2020, Intel Corporation. All rights reserved.
+  * Intel Management Engine Interface (Intel MEI) Linux driver
+  */
+ 
+@@ -76,11 +76,14 @@ struct mei_me_hw {
+  *                         with quirk for Node Manager exclusion.
+  * @MEI_ME_PCH8_CFG:       Platform Controller Hub Gen8 and newer
+  *                         client platforms.
+- * @MEI_ME_PCH8_SPS_CFG:   Platform Controller Hub Gen8 and newer
++ * @MEI_ME_PCH8_SPS_4_CFG: Platform Controller Hub Gen8 and newer
+  *                         servers platforms with quirk for
+  *                         SPS firmware exclusion.
+  * @MEI_ME_PCH12_CFG:      Platform Controller Hub Gen12 and newer
+- * @MEI_ME_PCH12_SPS_CFG:  Platform Controller Hub Gen12 and newer
++ * @MEI_ME_PCH12_SPS_4_CFG:Platform Controller Hub Gen12 up to 4.0
++ *                         servers platforms with quirk for
++ *                         SPS firmware exclusion.
++ * @MEI_ME_PCH12_SPS_CFG:  Platform Controller Hub Gen12 5.0 and newer
+  *                         servers platforms with quirk for
+  *                         SPS firmware exclusion.
+  * @MEI_ME_PCH15_CFG:      Platform Controller Hub Gen15 and newer
+@@ -94,9 +97,11 @@ enum mei_cfg_idx {
+ 	MEI_ME_PCH7_CFG,
+ 	MEI_ME_PCH_CPT_PBG_CFG,
+ 	MEI_ME_PCH8_CFG,
+-	MEI_ME_PCH8_SPS_CFG,
++	MEI_ME_PCH8_SPS_4_CFG,
+ 	MEI_ME_PCH12_CFG,
++	MEI_ME_PCH12_SPS_4_CFG,
+ 	MEI_ME_PCH12_SPS_CFG,
++	MEI_ME_PCH12_SPS_NODMA_CFG,
+ 	MEI_ME_PCH15_CFG,
+ 	MEI_ME_NUM_CFG,
+ };
+diff --git a/drivers/misc/mei/pci-me.c b/drivers/misc/mei/pci-me.c
+index a1ed375fed374..f74c6113812d6 100644
+--- a/drivers/misc/mei/pci-me.c
++++ b/drivers/misc/mei/pci-me.c
+@@ -59,18 +59,18 @@ static const struct pci_device_id mei_me_pci_tbl[] = {
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_PPT_1, MEI_ME_PCH7_CFG)},
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_PPT_2, MEI_ME_PCH7_CFG)},
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_PPT_3, MEI_ME_PCH7_CFG)},
+-	{MEI_PCI_DEVICE(MEI_DEV_ID_LPT_H, MEI_ME_PCH8_SPS_CFG)},
+-	{MEI_PCI_DEVICE(MEI_DEV_ID_LPT_W, MEI_ME_PCH8_SPS_CFG)},
++	{MEI_PCI_DEVICE(MEI_DEV_ID_LPT_H, MEI_ME_PCH8_SPS_4_CFG)},
++	{MEI_PCI_DEVICE(MEI_DEV_ID_LPT_W, MEI_ME_PCH8_SPS_4_CFG)},
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_LPT_LP, MEI_ME_PCH8_CFG)},
+-	{MEI_PCI_DEVICE(MEI_DEV_ID_LPT_HR, MEI_ME_PCH8_SPS_CFG)},
++	{MEI_PCI_DEVICE(MEI_DEV_ID_LPT_HR, MEI_ME_PCH8_SPS_4_CFG)},
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_WPT_LP, MEI_ME_PCH8_CFG)},
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_WPT_LP_2, MEI_ME_PCH8_CFG)},
+ 
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT, MEI_ME_PCH8_CFG)},
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_2, MEI_ME_PCH8_CFG)},
+-	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_H, MEI_ME_PCH8_SPS_CFG)},
+-	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_H_2, MEI_ME_PCH8_SPS_CFG)},
+-	{MEI_PCI_DEVICE(MEI_DEV_ID_LBG, MEI_ME_PCH12_SPS_CFG)},
++	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_H, MEI_ME_PCH8_SPS_4_CFG)},
++	{MEI_PCI_DEVICE(MEI_DEV_ID_SPT_H_2, MEI_ME_PCH8_SPS_4_CFG)},
++	{MEI_PCI_DEVICE(MEI_DEV_ID_LBG, MEI_ME_PCH12_SPS_4_CFG)},
+ 
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_BXT_M, MEI_ME_PCH8_CFG)},
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_APL_I, MEI_ME_PCH8_CFG)},
+@@ -84,8 +84,8 @@ static const struct pci_device_id mei_me_pci_tbl[] = {
+ 
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_CNP_LP, MEI_ME_PCH12_CFG)},
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_CNP_LP_3, MEI_ME_PCH8_CFG)},
+-	{MEI_PCI_DEVICE(MEI_DEV_ID_CNP_H, MEI_ME_PCH12_CFG)},
+-	{MEI_PCI_DEVICE(MEI_DEV_ID_CNP_H_3, MEI_ME_PCH8_CFG)},
++	{MEI_PCI_DEVICE(MEI_DEV_ID_CNP_H, MEI_ME_PCH12_SPS_CFG)},
++	{MEI_PCI_DEVICE(MEI_DEV_ID_CNP_H_3, MEI_ME_PCH12_SPS_NODMA_CFG)},
+ 
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_LP, MEI_ME_PCH12_CFG)},
+ 	{MEI_PCI_DEVICE(MEI_DEV_ID_CMP_LP_3, MEI_ME_PCH8_CFG)},
+-- 
+2.25.1
 
