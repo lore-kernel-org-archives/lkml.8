@@ -2,119 +2,95 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D79E9C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D50AAC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:24:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B1A2B206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:24:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3096206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:24:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462274;
-	bh=nz8sNK96jXzc9FT3K7EvGHTNEFG3swOaqKT6ksWMWxk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=go857hJ7GWhy+a5f7FM4ph9r47duo5UbHhGGyjJ0FmN8bP01/eo3fWx+kxV/LfkIH
-	 uKx6tk12JrCMoUsqLUaJNxq6lK1eSn7GThQLEQhu9FuMVrX+rq4QwBB5+WmiWKshY5
-	 W4KvtcRrvBK8pJhsr2ivsncgUt1bZvCoHSnWYdTU=
+	s=default; t=1593462280;
+	bh=wEIaLX71dfGicqQIWZky1iByqXvab7v8PvlHmX+vmWI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RIAz/Z5kZv81uzo2E4zQzyjsh0WARduI8EF2yMT7joEFG2i6+FMrJqyMCdbEj4cbs
+	 xbxC78aW6SoEY9C9FWHPtE4V1M27odTIgZ9X1JgHMCOQBxmQ3HdVksLlKz/xHOHtMv
+	 9LJl+fM503VHjvxOqWUEavYI7TDoj9NvhimDKD0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387502AbgF2UYT (ORCPT
+        id S2388688AbgF2UYj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:24:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37070 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:24:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732551AbgF2TZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:25:28 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1732546AbgF2UYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 16:24:35 -0400
+Received: from kernel.org (unknown [87.71.40.38])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F21D25342;
-        Mon, 29 Jun 2020 15:39:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 744072067D;
+        Mon, 29 Jun 2020 20:24:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445183;
-        bh=nz8sNK96jXzc9FT3K7EvGHTNEFG3swOaqKT6ksWMWxk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P2U6NE/BhEBC+rXJzbZtHUwC2+sicmjQUE4mm0475oE/IZTPz+9N4mvehke1SWF+c
-         caQPEEx2z+LJt1/fkrADiIJ88w+kPoNcX0Hz/d6mIceAfLt0vGFRR99tb2n4TbY1eP
-         yOFc3oaSGzWfgZBDjypkQqVPp2/GVoCZk/MRH8BM=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.14 74/78] pNFS/flexfiles: Fix list corruption if the mirror count changes
-Date:   Mon, 29 Jun 2020 11:38:02 -0400
-Message-Id: <20200629153806.2494953-75-sashal@kernel.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
-References: <20200629153806.2494953-1-sashal@kernel.org>
+        s=default; t=1593462275;
+        bh=wEIaLX71dfGicqQIWZky1iByqXvab7v8PvlHmX+vmWI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ow0w90ZCmyfal+adkRjsIQpW7g7XWqTq/MOUKtMTpPj6QkRvuUBvney2UMWoRZg+P
+         9FT+ytQ5jYVsJE4wvynybaWOkXYN+Rvu2RcVkggJAcvQZwwdFVWX528Qco0/BAJx8z
+         /ul5NvzHoiwFUAWCGITz6BO3KRpf7MJs5iB8TjoU=
+Date:   Mon, 29 Jun 2020 23:24:29 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     David Rientjes <rientjes@google.com>
+Cc:     Su Hui <sh_def@163.com>, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH] mm: remove the redundancy code
+Message-ID: <20200629202429.GG1492837@kernel.org>
+References: <20200629173047.GA38128@ubuntu>
+ <alpine.DEB.2.22.394.2006291149040.1030250@chino.kir.corp.google.com>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.14.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.14.186-rc1
-X-KernelTest-Deadline: 2020-07-01T15:38+00:00
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.22.394.2006291149040.1030250@chino.kir.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trond.myklebust@hammerspace.com>
+On Mon, Jun 29, 2020 at 11:50:15AM -0700, David Rientjes wrote:
+> On Tue, 30 Jun 2020, Su Hui wrote:
+> 
+> > remove the redundancy code, the zone_start_pfn
+> > is assigned from zone->zone_start_pfn
+> > Signed-off-by: Su Hui <sh_def@163.com>
+> 
+> I don't think this is redundant, it's used by memory hotplug when onlining 
+> new memory.
 
-commit 8b04013737341442ed914b336cde866b902664ae upstream.
+Right, it is:
 
-If the mirror count changes in the new layout we pick up inside
-ff_layout_pg_init_write(), then we can end up adding the
-request to the wrong mirror and corrupting the mirror->pg_list.
+$ git grep -wn init_currently_empty_zone mm/memory_hotplug.c
+mm/memory_hotplug.c:697:            init_currently_empty_zone(zone, start_pfn, nr_pages);
 
-Fixes: d600ad1f2bdb ("NFS41: pop some layoutget errors to application")
-Cc: stable@vger.kernel.org
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- fs/nfs/flexfilelayout/flexfilelayout.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/fs/nfs/flexfilelayout/flexfilelayout.c b/fs/nfs/flexfilelayout/flexfilelayout.c
-index 8dbde5ded0425..74f15498c9bfd 100644
---- a/fs/nfs/flexfilelayout/flexfilelayout.c
-+++ b/fs/nfs/flexfilelayout/flexfilelayout.c
-@@ -921,9 +921,8 @@ ff_layout_pg_init_write(struct nfs_pageio_descriptor *pgio,
- 		goto out_mds;
- 
- 	/* Use a direct mapping of ds_idx to pgio mirror_idx */
--	if (WARN_ON_ONCE(pgio->pg_mirror_count !=
--	    FF_LAYOUT_MIRROR_COUNT(pgio->pg_lseg)))
--		goto out_mds;
-+	if (pgio->pg_mirror_count != FF_LAYOUT_MIRROR_COUNT(pgio->pg_lseg))
-+		goto out_eagain;
- 
- 	for (i = 0; i < pgio->pg_mirror_count; i++) {
- 		ds = nfs4_ff_layout_prepare_ds(pgio->pg_lseg, i, true);
-@@ -942,11 +941,15 @@ ff_layout_pg_init_write(struct nfs_pageio_descriptor *pgio,
- 	}
- 
- 	return;
--
-+out_eagain:
-+	pnfs_generic_pg_cleanup(pgio);
-+	pgio->pg_error = -EAGAIN;
-+	return;
- out_mds:
- 	pnfs_put_lseg(pgio->pg_lseg);
- 	pgio->pg_lseg = NULL;
- 	nfs_pageio_reset_write_mds(pgio);
-+	pgio->pg_error = -EAGAIN;
- }
- 
- static unsigned int
+> > ---
+> >  mm/page_alloc.c | 2 --
+> >  1 file changed, 2 deletions(-)
+> > 
+> > diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> > index 3c4eb750a199..3372a8c9fbc4 100644
+> > --- a/mm/page_alloc.c
+> > +++ b/mm/page_alloc.c
+> > @@ -6215,8 +6215,6 @@ void __meminit init_currently_empty_zone(struct zone *zone,
+> >  	if (zone_idx > pgdat->nr_zones)
+> >  		pgdat->nr_zones = zone_idx;
+> >  
+> > -	zone->zone_start_pfn = zone_start_pfn;
+> > -
+> >  	mminit_dprintk(MMINIT_TRACE, "memmap_init",
+> >  			"Initialising map node %d zone %lu pfns %lu -> %lu\n",
+> >  			pgdat->node_id,
+> 
+
 -- 
-2.25.1
-
+Sincerely yours,
+Mike.
