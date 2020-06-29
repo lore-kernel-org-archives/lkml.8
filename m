@@ -2,207 +2,124 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C9D2C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:06:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D4DCC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:06:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 40D7420760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:06:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4338620760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:06:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593461208;
+	bh=Mc2QQwWYQqh2QYAyDo4U+G0QkLWISzXdyWlG8++wAQs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=MwT54IBrzgaOUJdiDuK7PgoFx3hc3Ybz7itXikipHdHodkFa2mQ2U5oc5irIraYQU
+	 FOVxLt2cJuPJTKCqeLeoiaaUvREbj5ijumXQnTOP6iH3q7mdTdPUggjyyUe/LSrclx
+	 KsU2+o9mSC0iO8tDVsRmp7OHyHaFqeKUPO/76dJU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388872AbgF2UGl (ORCPT
+        id S2388696AbgF2UG2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:06:41 -0400
-Received: from out02.mta.xmission.com ([166.70.13.232]:35920 "EHLO
-        out02.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388859AbgF2UGc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 16:06:32 -0400
-Received: from in01.mta.xmission.com ([166.70.13.51])
-        by out02.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.90_1)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jq02t-0003N6-VO; Mon, 29 Jun 2020 14:06:28 -0600
-Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
-        by in01.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.87)
-        (envelope-from <ebiederm@xmission.com>)
-        id 1jq02s-0000GO-Gg; Mon, 29 Jun 2020 14:06:27 -0600
-From:   ebiederm@xmission.com (Eric W. Biederman)
-To:     <linux-kernel@vger.kernel.org>
-Cc:     David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <greg@kroah.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20200625095725.GA3303921@kroah.com>
-        <778297d2-512a-8361-cf05-42d9379e6977@i-love.sakura.ne.jp>
-        <20200625120725.GA3493334@kroah.com>
-        <20200625.123437.2219826613137938086.davem@davemloft.net>
-        <CAHk-=whuTwGHEPjvtbBvneHHXeqJC=q5S09mbPnqb=Q+MSPMag@mail.gmail.com>
-        <87pn9mgfc2.fsf_-_@x220.int.ebiederm.org>
-        <87y2oac50p.fsf@x220.int.ebiederm.org>
-        <87bll17ili.fsf_-_@x220.int.ebiederm.org>
-Date:   Mon, 29 Jun 2020 15:01:55 -0500
-In-Reply-To: <87bll17ili.fsf_-_@x220.int.ebiederm.org> (Eric W. Biederman's
-        message of "Mon, 29 Jun 2020 14:55:05 -0500")
-Message-ID: <878sg563po.fsf_-_@x220.int.ebiederm.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 29 Jun 2020 16:06:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40574 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732966AbgF2Ta1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:30:27 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF559252D3;
+        Mon, 29 Jun 2020 15:38:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593445098;
+        bh=Mc2QQwWYQqh2QYAyDo4U+G0QkLWISzXdyWlG8++wAQs=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=GEBzhRM9oQeg+fHiEhliN9WQttXu+BL8UVczn2YzUDTDzdShIs6hx5OHf4cWPRDDK
+         uRRvcEKH3T4fpuGYU48g5DAocdnZlOeHUYa1KoF8N3W1M3RbjBtCAH2tlifAv+QlFT
+         3+nYdOzfqptTaPY6BNPzONOQGZDyMbO8Rfo5KUsQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Wang Hai <wanghai38@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Hangbin Liu <liuhangbin@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.14 08/78] mld: fix memory leak in ipv6_mc_destroy_dev()
+Date:   Mon, 29 Jun 2020 11:36:56 -0400
+Message-Id: <20200629153806.2494953-9-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
+References: <20200629153806.2494953-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-XM-SPF: eid=1jq02s-0000GO-Gg;;;mid=<878sg563po.fsf_-_@x220.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
-X-XM-AID: U2FsdGVkX1/xzYzSGIoZRKG59bBBeB+kZ2XZYfxfOB4=
-X-SA-Exim-Connect-IP: 68.227.160.95
-X-SA-Exim-Mail-From: ebiederm@xmission.com
-Subject: [PATCH v2 06/15] umd: For clarity rename umh_info umd_info
-X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
-X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.14.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.14.186-rc1
+X-KernelTest-Deadline: 2020-07-01T15:38+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Wang Hai <wanghai38@huawei.com>
 
-This structure is only used for user mode drivers so change
-the prefix from umh to umd to make that clear.
+[ Upstream commit ea2fce88d2fd678ed9d45354ff49b73f1d5615dd ]
 
-Link: https://lkml.kernel.org/r/87o8p6f0kw.fsf_-_@x220.int.ebiederm.org
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Commit a84d01647989 ("mld: fix memory leak in mld_del_delrec()") fixed
+the memory leak of MLD, but missing the ipv6_mc_destroy_dev() path, in
+which mca_sources are leaked after ma_put().
+
+Using ip6_mc_clear_src() to take care of the missing free.
+
+BUG: memory leak
+unreferenced object 0xffff8881113d3180 (size 64):
+  comm "syz-executor071", pid 389, jiffies 4294887985 (age 17.943s)
+  hex dump (first 32 bytes):
+    00 00 00 00 00 00 00 00 ff 02 00 00 00 00 00 00  ................
+    00 00 00 00 00 00 00 01 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<000000002cbc483c>] kmalloc include/linux/slab.h:555 [inline]
+    [<000000002cbc483c>] kzalloc include/linux/slab.h:669 [inline]
+    [<000000002cbc483c>] ip6_mc_add1_src net/ipv6/mcast.c:2237 [inline]
+    [<000000002cbc483c>] ip6_mc_add_src+0x7f5/0xbb0 net/ipv6/mcast.c:2357
+    [<0000000058b8b1ff>] ip6_mc_source+0xe0c/0x1530 net/ipv6/mcast.c:449
+    [<000000000bfc4fb5>] do_ipv6_setsockopt.isra.12+0x1b2c/0x3b30 net/ipv6/ipv6_sockglue.c:754
+    [<00000000e4e7a722>] ipv6_setsockopt+0xda/0x150 net/ipv6/ipv6_sockglue.c:950
+    [<0000000029260d9a>] rawv6_setsockopt+0x45/0x100 net/ipv6/raw.c:1081
+    [<000000005c1b46f9>] __sys_setsockopt+0x131/0x210 net/socket.c:2132
+    [<000000008491f7db>] __do_sys_setsockopt net/socket.c:2148 [inline]
+    [<000000008491f7db>] __se_sys_setsockopt net/socket.c:2145 [inline]
+    [<000000008491f7db>] __x64_sys_setsockopt+0xba/0x150 net/socket.c:2145
+    [<00000000c7bc11c5>] do_syscall_64+0xa1/0x530 arch/x86/entry/common.c:295
+    [<000000005fb7a3f3>] entry_SYSCALL_64_after_hwframe+0x49/0xb3
+
+Fixes: 1666d49e1d41 ("mld: do not remove mld souce list info when set link down")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Wang Hai <wanghai38@huawei.com>
+Acked-by: Hangbin Liu <liuhangbin@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/bpfilter.h    |  2 +-
- include/linux/umd.h         |  6 +++---
- kernel/umd.c                | 20 ++++++++++----------
- net/ipv4/bpfilter/sockopt.c |  2 +-
- 4 files changed, 15 insertions(+), 15 deletions(-)
+ net/ipv6/mcast.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/include/linux/bpfilter.h b/include/linux/bpfilter.h
-index b42e44e29033..4b43d2240172 100644
---- a/include/linux/bpfilter.h
-+++ b/include/linux/bpfilter.h
-@@ -11,7 +11,7 @@ int bpfilter_ip_set_sockopt(struct sock *sk, int optname, char __user *optval,
- int bpfilter_ip_get_sockopt(struct sock *sk, int optname, char __user *optval,
- 			    int __user *optlen);
- struct bpfilter_umh_ops {
--	struct umh_info info;
-+	struct umd_info info;
- 	/* since ip_getsockopt() can run in parallel, serialize access to umh */
- 	struct mutex lock;
- 	int (*sockopt)(struct sock *sk, int optname,
-diff --git a/include/linux/umd.h b/include/linux/umd.h
-index ef40bee590c1..58a9c603c78d 100644
---- a/include/linux/umd.h
-+++ b/include/linux/umd.h
-@@ -17,14 +17,14 @@ static inline void exit_umh(struct task_struct *tsk)
- }
- #endif
+diff --git a/net/ipv6/mcast.c b/net/ipv6/mcast.c
+index 611dc5d55fa09..959057515fc9c 100644
+--- a/net/ipv6/mcast.c
++++ b/net/ipv6/mcast.c
+@@ -2599,6 +2599,7 @@ void ipv6_mc_destroy_dev(struct inet6_dev *idev)
+ 		idev->mc_list = i->next;
  
--struct umh_info {
-+struct umd_info {
- 	const char *cmdline;
- 	struct file *pipe_to_umh;
- 	struct file *pipe_from_umh;
- 	struct list_head list;
--	void (*cleanup)(struct umh_info *info);
-+	void (*cleanup)(struct umd_info *info);
- 	pid_t pid;
- };
--int fork_usermode_blob(void *data, size_t len, struct umh_info *info);
-+int fork_usermode_blob(void *data, size_t len, struct umd_info *info);
- 
- #endif /* __LINUX_UMD_H__ */
-diff --git a/kernel/umd.c b/kernel/umd.c
-index 99af9d594eca..f7dacb19c705 100644
---- a/kernel/umd.c
-+++ b/kernel/umd.c
-@@ -11,7 +11,7 @@ static DEFINE_MUTEX(umh_list_lock);
- 
- static int umd_setup(struct subprocess_info *info, struct cred *new)
- {
--	struct umh_info *umh_info = info->data;
-+	struct umd_info *umd_info = info->data;
- 	struct file *from_umh[2];
- 	struct file *to_umh[2];
- 	int err;
-@@ -43,21 +43,21 @@ static int umd_setup(struct subprocess_info *info, struct cred *new)
- 		return err;
+ 		write_unlock_bh(&idev->lock);
++		ip6_mc_clear_src(i);
+ 		ma_put(i);
+ 		write_lock_bh(&idev->lock);
  	}
- 
--	umh_info->pipe_to_umh = to_umh[1];
--	umh_info->pipe_from_umh = from_umh[0];
--	umh_info->pid = task_pid_nr(current);
-+	umd_info->pipe_to_umh = to_umh[1];
-+	umd_info->pipe_from_umh = from_umh[0];
-+	umd_info->pid = task_pid_nr(current);
- 	current->flags |= PF_UMH;
- 	return 0;
- }
- 
- static void umd_cleanup(struct subprocess_info *info)
- {
--	struct umh_info *umh_info = info->data;
-+	struct umd_info *umd_info = info->data;
- 
- 	/* cleanup if umh_setup() was successful but exec failed */
- 	if (info->retval) {
--		fput(umh_info->pipe_to_umh);
--		fput(umh_info->pipe_from_umh);
-+		fput(umd_info->pipe_to_umh);
-+		fput(umd_info->pipe_from_umh);
- 	}
- }
- 
-@@ -72,12 +72,12 @@ static void umd_cleanup(struct subprocess_info *info)
-  *
-  * Returns either negative error or zero which indicates success
-  * in executing a blob of bytes as a usermode process. In such
-- * case 'struct umh_info *info' is populated with two pipes
-+ * case 'struct umd_info *info' is populated with two pipes
-  * and a pid of the process. The caller is responsible for health
-  * check of the user process, killing it via pid, and closing the
-  * pipes when user process is no longer needed.
-  */
--int fork_usermode_blob(void *data, size_t len, struct umh_info *info)
-+int fork_usermode_blob(void *data, size_t len, struct umd_info *info)
- {
- 	const char *cmdline = (info->cmdline) ? info->cmdline : "usermodehelper";
- 	struct subprocess_info *sub_info;
-@@ -126,7 +126,7 @@ EXPORT_SYMBOL_GPL(fork_usermode_blob);
- 
- void __exit_umh(struct task_struct *tsk)
- {
--	struct umh_info *info;
-+	struct umd_info *info;
- 	pid_t pid = tsk->pid;
- 
- 	mutex_lock(&umh_list_lock);
-diff --git a/net/ipv4/bpfilter/sockopt.c b/net/ipv4/bpfilter/sockopt.c
-index 0480918bfc7c..c0dbcc86fcdb 100644
---- a/net/ipv4/bpfilter/sockopt.c
-+++ b/net/ipv4/bpfilter/sockopt.c
-@@ -12,7 +12,7 @@
- struct bpfilter_umh_ops bpfilter_ops;
- EXPORT_SYMBOL_GPL(bpfilter_ops);
- 
--static void bpfilter_umh_cleanup(struct umh_info *info)
-+static void bpfilter_umh_cleanup(struct umd_info *info)
- {
- 	mutex_lock(&bpfilter_ops.lock);
- 	bpfilter_ops.stop = true;
 -- 
-2.25.0
+2.25.1
 
