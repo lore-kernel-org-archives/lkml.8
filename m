@@ -2,89 +2,135 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82BFDC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B751C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 56A2A208B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:29:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46090208B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:29:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593466152;
+	bh=ksjoalilAGETILI4C2Fb8kfMt/3YgClKp8iz0w9OlPI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ESFLiFTZdk0Ya3D7ViH1kLZXtnsvdPnJe68/jgOLtaPZvsV0mRke5g04+FKdJAiw+
+	 JZ8j1i6Q0LsonI20Q+/iZpKvR56QSw8f0rNA3B3h+L5htpZTgPXB8wBk0LA5LGNJed
+	 Mo83LwV2ThNrnuzJrqS1wUZ7jTD7KzZKcskVs5tA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391217AbgF2V3F (ORCPT
+        id S1728142AbgF2Sml (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:29:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38358 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729005AbgF2Smm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:42:42 -0400
-Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7CDEC033C0E;
-        Mon, 29 Jun 2020 11:26:30 -0700 (PDT)
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jpyU9-002DtV-8b; Mon, 29 Jun 2020 18:26:29 +0000
-From:   Al Viro <viro@ZenIV.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
-        David Miller <davem@davemloft.net>,
-        Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>
-Subject: [PATCH 07/41] [ia64] access_uarea(): stop bothering with gpregs_[gs]et()
-Date:   Mon, 29 Jun 2020 19:25:54 +0100
-Message-Id: <20200629182628.529995-7-viro@ZenIV.linux.org.uk>
-X-Mailer: git-send-email 2.25.4
-In-Reply-To: <20200629182628.529995-1-viro@ZenIV.linux.org.uk>
-References: <20200629182349.GA2786714@ZenIV.linux.org.uk>
- <20200629182628.529995-1-viro@ZenIV.linux.org.uk>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 29 Jun 2020 14:42:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60656 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728942AbgF2Sl0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:41:26 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E08832336F;
+        Mon, 29 Jun 2020 08:18:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593418720;
+        bh=ksjoalilAGETILI4C2Fb8kfMt/3YgClKp8iz0w9OlPI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=MyLQDkq02SKSj9rUzc6knp5WSEHw7e5jjf6jdK8o/cTtZGNm59oWgApuO3Nc5+FcT
+         CTltAC0tlCi3t9Udl0iYzIPdNQst8jUWEcljds/tnRQL3bfstyuBWmPaGjgd706MDj
+         1xdvYhVfrI33UCGK3ZHiIsN88k1j8gkAYhTI6Owk=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=wait-a-minute.misterjones.org)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jpozu-007HM1-A9; Mon, 29 Jun 2020 09:18:38 +0100
+Date:   Mon, 29 Jun 2020 09:18:37 +0100
+Message-ID: <87tuyue142.wl-maz@kernel.org>
+From:   Marc Zyngier <maz@kernel.org>
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        kernel-team@android.com,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH v2] PM / devfreq: rk3399_dmc: Fix kernel oops when rockchip,pmu is absent
+In-Reply-To: <784808d7-8943-44ab-f15a-34821e6d4d5f@samsung.com>
+References: <CGME20200622152844epcas1p2309f34247eb9653acdfd3818b7e6a569@epcas1p2.samsung.com>
+        <20200622152824.1054946-1-maz@kernel.org>
+        <784808d7-8943-44ab-f15a-34821e6d4d5f@samsung.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26.3
+ (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: cw00.choi@samsung.com, heiko@sntech.de, enric.balletbo@collabora.com, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, kernel-team@android.com, stable@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+Hi Chanwoo,
 
-We know this won't be called for child == current, so we don't need
-to bother with callbacks, etc. - just do unw_init_from_blocked_task(),
-unw_unwind_to_user() and do the payload of gpregs_[gs]et().  For
-one register.  Which is to say, access_elf_reg().
+On Mon, 29 Jun 2020 03:43:37 +0100,
+Chanwoo Choi <cw00.choi@samsung.com> wrote:
+> 
+> Hi Marc,
+> 
+> On 6/23/20 12:28 AM, Marc Zyngier wrote:
 
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
- arch/ia64/kernel/ptrace.c | 17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+[...]
 
-diff --git a/arch/ia64/kernel/ptrace.c b/arch/ia64/kernel/ptrace.c
-index be635f6f93c9..e0813c8e4b47 100644
---- a/arch/ia64/kernel/ptrace.c
-+++ b/arch/ia64/kernel/ptrace.c
-@@ -1936,15 +1936,14 @@ access_uarea(struct task_struct *child, unsigned long addr,
- 	}
- 
- 	if (pos != -1) {
--		if (write_access)
--			ret = gpregs_set(child, NULL, pos,
--				sizeof(unsigned long), data, NULL);
--		else
--			ret = gpregs_get(child, NULL, pos,
--				sizeof(unsigned long), data, NULL);
--		if (ret != 0)
--			return -1;
--		return 0;
-+		struct unw_frame_info info;
-+
-+		memset(&info, 0, sizeof(info));
-+		unw_init_from_blocked_task(&info, child);
-+		if (unw_unwind_to_user(&info) < 0)
-+			return 0;
-+
-+		return access_elf_reg(child, &info, pos, data, write_access);
- 	}
- 
- 	/* access debug registers */
+> It looks good to me. But, I think that it is not necessary
+> fully kernel panic log about NULL pointer. It is enoughspsp
+> just mentioning the NULL pointer issue without full kernel panic log.
+
+I personally find the backtrace useful as it allows people with the
+same issue to trawl the kernel log and find whether it has already be
+fixed upstream. But it's only me, and I'm not attached to it.
+
+> So, how about editing the patch description as following or others simply?
+> and we need to add 'stable@vger.kernel.org' to Cc list for applying it
+> to stable branch.
+
+Looks good to me.
+
+> 
+> 
+>   PM / devfreq: rk3399_dmc: Fix kernel oops when rockchip,pmu is absent
+> 
+>     Booting a recent kernel on a rk3399-based system (nanopc-t4),
+>     equipped with a recent u-boot and ATF results in the kernel panic
+>     about NULL pointer issue.
+
+nit: "results in a kernel panic on dereferencing a NULL pointer".
+
+> 
+>     This turns out to be due to the rk3399-dmc driver looking for
+>     an *undocumented* property (rockchip,pmu), and happily using
+>     a NULL pointer when the property isn't there.
+>
+>     Instead, make most of what was brought in with 9173c5ceb035
+>     ("PM / devfreq: rk3399_dmc: Pass ODT and auto power down parameters
+>     to TF-A.") conditioned on finding this property in the device-tree,
+>     preventing the driver from exploding.
+> 
+>     Fixes: 9173c5ceb035 ("PM / devfreq: rk3399_dmc: Pass ODT and auto power down parameters to TF-A.")
+>     Signed-off-by: Marc Zyngier <maz@kernel.org>
+>     Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+
+
+Note that the biggest issue is still there: the driver is using an
+undocumented property, and this patch is just papering over it.
+Since I expect this property to be useful for something, it would be
+good for whoever knows what it does to document it.
+
+Thanks,
+
+	M.
+
 -- 
-2.11.0
-
+Without deviation from the norm, progress is not possible.
