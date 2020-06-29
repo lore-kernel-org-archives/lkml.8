@@ -7,51 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 106BBC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25024C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:58:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D9465206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:58:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0ADF206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:58:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467902;
-	bh=rbSBEUz87mo2rkVNbEzsT+fjgkXmUHQGPy9SNfProqo=;
+	s=default; t=1593467910;
+	bh=24oy7kmAFgmeG35RsEfqYo+QUXhKwm3aNJvZm5JWm2k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HjfYiDr0e5Ay8bdwnCKBJ4zP2DzpENySE8a8mqarxfSHtHJF7WEmKVnhA5euo/apT
-	 uCjAnjhJTRay70YmrE1x/mmnzj0cOoSLjYZy1AHnzor+GBxePsi4ebG+3ndmAk7u3s
-	 abkcn4+amT/nC9n47AJSIjjIRVVKdnPbXmu3qQFI=
+	b=mgYwZ8NKV1NAwDwJxeY/eSPmSp8X8cBDCjeNiIRS3GaEBwe7Q8934QAkdl6GqHxD0
+	 oYahL8RusClafqK/oXgAcnYa+Rc7WX6G8T3RiWDYMMjQr1xEHjdlD/GCL+ODIEx8Dt
+	 pHCl8BK4GCkMvZ9H1DMohNfWapXjzVNOvOmu1tSA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732723AbgF2V6V (ORCPT
+        id S2391651AbgF2V60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:58:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56790 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:58:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726460AbgF2Sf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726449AbgF2Sf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:28 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79AAB247B9;
-        Mon, 29 Jun 2020 15:22:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70E9B24745;
+        Mon, 29 Jun 2020 15:21:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444123;
-        bh=rbSBEUz87mo2rkVNbEzsT+fjgkXmUHQGPy9SNfProqo=;
+        s=default; t=1593444064;
+        bh=24oy7kmAFgmeG35RsEfqYo+QUXhKwm3aNJvZm5JWm2k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JDo4JI4fB8bdzf3mJmnBj58NqIJ1aMyu7AxMGSPcYlTew9IwpqxagZHGUtiEZQKzW
-         Ohb2ssRARG8PozDyJEx2MzbWSAaMfsUgx30Lp3vzXKmGFvN0kvaRRaGPjPf0y6nsY3
-         dGdRo5GOTcuu1BSAMhmTyAQAAnrrTXUUmC1g2g8s=
+        b=tOTejcIgE8ubgu2ZhIKELOyjJ50+oFYSvaSCOH0iN24FnmalFvW1Exv1jeF1pOubn
+         xKTf84Em70YhtuKufoih+z18qah9SHv4tmo+clJhoOwS+4dJ9rVA8PwWtgLThq7zZp
+         MMJVvpZM14jytWXDFJvumQbRCm92jPUIIIH7j63Q=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Junxiao Bi <junxiao.bi@oracle.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Jun Piao <piaojun@huawei.com>, Mark Fasheh <mark@fasheh.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 232/265] ocfs2: load global_inode_alloc
-Date:   Mon, 29 Jun 2020 11:17:45 -0400
-Message-Id: <20200629151818.2493727-233-sashal@kernel.org>
+Cc:     Claudiu Beznea <claudiu.beznea@microchip.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 172/265] net: macb: free resources on failure path of at91ether_open()
+Date:   Mon, 29 Jun 2020 11:16:45 -0400
+Message-Id: <20200629151818.2493727-173-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -70,45 +65,209 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Junxiao Bi <junxiao.bi@oracle.com>
+From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-commit 7569d3c754e452769a5747eeeba488179e38a5da upstream.
+[ Upstream commit 33fdef24c9ac20c68b71b363e423fbf9ad2bfc1e ]
 
-Set global_inode_alloc as OCFS2_FIRST_ONLINE_SYSTEM_INODE, that will
-make it load during mount.  It can be used to test whether some
-global/system inodes are valid.  One use case is that nfsd will test
-whether root inode is valid.
+DMA buffers were not freed on failure path of at91ether_open().
+Along with changes for freeing the DMA buffers the enable/disable
+interrupt instructions were moved to at91ether_start()/at91ether_stop()
+functions and the operations on at91ether_stop() were done in
+their reverse order (compared with how is done in at91ether_start()):
+before this patch the operation order on interface open path
+was as follows:
+1/ alloc DMA buffers
+2/ enable tx, rx
+3/ enable interrupts
+and the order on interface close path was as follows:
+1/ disable tx, rx
+2/ disable interrupts
+3/ free dma buffers.
 
-Link: http://lkml.kernel.org/r/20200616183829.87211-3-junxiao.bi@oracle.com
-Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Jun Piao <piaojun@huawei.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 7897b071ac3b ("net: macb: convert to phylink")
+Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/ocfs2_fs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/cadence/macb_main.c | 116 ++++++++++++++---------
+ 1 file changed, 73 insertions(+), 43 deletions(-)
 
-diff --git a/fs/ocfs2/ocfs2_fs.h b/fs/ocfs2/ocfs2_fs.h
-index 0dd8c41bafd4c..3fc99659ed09d 100644
---- a/fs/ocfs2/ocfs2_fs.h
-+++ b/fs/ocfs2/ocfs2_fs.h
-@@ -326,8 +326,8 @@ struct ocfs2_system_inode_info {
- enum {
- 	BAD_BLOCK_SYSTEM_INODE = 0,
- 	GLOBAL_INODE_ALLOC_SYSTEM_INODE,
-+#define OCFS2_FIRST_ONLINE_SYSTEM_INODE GLOBAL_INODE_ALLOC_SYSTEM_INODE
- 	SLOT_MAP_SYSTEM_INODE,
--#define OCFS2_FIRST_ONLINE_SYSTEM_INODE SLOT_MAP_SYSTEM_INODE
- 	HEARTBEAT_SYSTEM_INODE,
- 	GLOBAL_BITMAP_SYSTEM_INODE,
- 	USER_QUOTA_SYSTEM_INODE,
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index 5705359a36124..52582e8ed90e5 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -3762,15 +3762,9 @@ static int macb_init(struct platform_device *pdev)
+ 
+ static struct sifive_fu540_macb_mgmt *mgmt;
+ 
+-/* Initialize and start the Receiver and Transmit subsystems */
+-static int at91ether_start(struct net_device *dev)
++static int at91ether_alloc_coherent(struct macb *lp)
+ {
+-	struct macb *lp = netdev_priv(dev);
+ 	struct macb_queue *q = &lp->queues[0];
+-	struct macb_dma_desc *desc;
+-	dma_addr_t addr;
+-	u32 ctl;
+-	int i;
+ 
+ 	q->rx_ring = dma_alloc_coherent(&lp->pdev->dev,
+ 					 (AT91ETHER_MAX_RX_DESCR *
+@@ -3792,6 +3786,43 @@ static int at91ether_start(struct net_device *dev)
+ 		return -ENOMEM;
+ 	}
+ 
++	return 0;
++}
++
++static void at91ether_free_coherent(struct macb *lp)
++{
++	struct macb_queue *q = &lp->queues[0];
++
++	if (q->rx_ring) {
++		dma_free_coherent(&lp->pdev->dev,
++				  AT91ETHER_MAX_RX_DESCR *
++				  macb_dma_desc_get_size(lp),
++				  q->rx_ring, q->rx_ring_dma);
++		q->rx_ring = NULL;
++	}
++
++	if (q->rx_buffers) {
++		dma_free_coherent(&lp->pdev->dev,
++				  AT91ETHER_MAX_RX_DESCR *
++				  AT91ETHER_MAX_RBUFF_SZ,
++				  q->rx_buffers, q->rx_buffers_dma);
++		q->rx_buffers = NULL;
++	}
++}
++
++/* Initialize and start the Receiver and Transmit subsystems */
++static int at91ether_start(struct macb *lp)
++{
++	struct macb_queue *q = &lp->queues[0];
++	struct macb_dma_desc *desc;
++	dma_addr_t addr;
++	u32 ctl;
++	int i, ret;
++
++	ret = at91ether_alloc_coherent(lp);
++	if (ret)
++		return ret;
++
+ 	addr = q->rx_buffers_dma;
+ 	for (i = 0; i < AT91ETHER_MAX_RX_DESCR; i++) {
+ 		desc = macb_rx_desc(q, i);
+@@ -3813,9 +3844,39 @@ static int at91ether_start(struct net_device *dev)
+ 	ctl = macb_readl(lp, NCR);
+ 	macb_writel(lp, NCR, ctl | MACB_BIT(RE) | MACB_BIT(TE));
+ 
++	/* Enable MAC interrupts */
++	macb_writel(lp, IER, MACB_BIT(RCOMP)	|
++			     MACB_BIT(RXUBR)	|
++			     MACB_BIT(ISR_TUND)	|
++			     MACB_BIT(ISR_RLE)	|
++			     MACB_BIT(TCOMP)	|
++			     MACB_BIT(ISR_ROVR)	|
++			     MACB_BIT(HRESP));
++
+ 	return 0;
+ }
+ 
++static void at91ether_stop(struct macb *lp)
++{
++	u32 ctl;
++
++	/* Disable MAC interrupts */
++	macb_writel(lp, IDR, MACB_BIT(RCOMP)	|
++			     MACB_BIT(RXUBR)	|
++			     MACB_BIT(ISR_TUND)	|
++			     MACB_BIT(ISR_RLE)	|
++			     MACB_BIT(TCOMP)	|
++			     MACB_BIT(ISR_ROVR) |
++			     MACB_BIT(HRESP));
++
++	/* Disable Receiver and Transmitter */
++	ctl = macb_readl(lp, NCR);
++	macb_writel(lp, NCR, ctl & ~(MACB_BIT(TE) | MACB_BIT(RE)));
++
++	/* Free resources. */
++	at91ether_free_coherent(lp);
++}
++
+ /* Open the ethernet interface */
+ static int at91ether_open(struct net_device *dev)
+ {
+@@ -3835,27 +3896,20 @@ static int at91ether_open(struct net_device *dev)
+ 
+ 	macb_set_hwaddr(lp);
+ 
+-	ret = at91ether_start(dev);
++	ret = at91ether_start(lp);
+ 	if (ret)
+ 		goto pm_exit;
+ 
+-	/* Enable MAC interrupts */
+-	macb_writel(lp, IER, MACB_BIT(RCOMP)	|
+-			     MACB_BIT(RXUBR)	|
+-			     MACB_BIT(ISR_TUND)	|
+-			     MACB_BIT(ISR_RLE)	|
+-			     MACB_BIT(TCOMP)	|
+-			     MACB_BIT(ISR_ROVR)	|
+-			     MACB_BIT(HRESP));
+-
+ 	ret = macb_phylink_connect(lp);
+ 	if (ret)
+-		goto pm_exit;
++		goto stop;
+ 
+ 	netif_start_queue(dev);
+ 
+ 	return 0;
+ 
++stop:
++	at91ether_stop(lp);
+ pm_exit:
+ 	pm_runtime_put_sync(&lp->pdev->dev);
+ 	return ret;
+@@ -3865,37 +3919,13 @@ pm_exit:
+ static int at91ether_close(struct net_device *dev)
+ {
+ 	struct macb *lp = netdev_priv(dev);
+-	struct macb_queue *q = &lp->queues[0];
+-	u32 ctl;
+-
+-	/* Disable Receiver and Transmitter */
+-	ctl = macb_readl(lp, NCR);
+-	macb_writel(lp, NCR, ctl & ~(MACB_BIT(TE) | MACB_BIT(RE)));
+-
+-	/* Disable MAC interrupts */
+-	macb_writel(lp, IDR, MACB_BIT(RCOMP)	|
+-			     MACB_BIT(RXUBR)	|
+-			     MACB_BIT(ISR_TUND)	|
+-			     MACB_BIT(ISR_RLE)	|
+-			     MACB_BIT(TCOMP)	|
+-			     MACB_BIT(ISR_ROVR) |
+-			     MACB_BIT(HRESP));
+ 
+ 	netif_stop_queue(dev);
+ 
+ 	phylink_stop(lp->phylink);
+ 	phylink_disconnect_phy(lp->phylink);
+ 
+-	dma_free_coherent(&lp->pdev->dev,
+-			  AT91ETHER_MAX_RX_DESCR *
+-			  macb_dma_desc_get_size(lp),
+-			  q->rx_ring, q->rx_ring_dma);
+-	q->rx_ring = NULL;
+-
+-	dma_free_coherent(&lp->pdev->dev,
+-			  AT91ETHER_MAX_RX_DESCR * AT91ETHER_MAX_RBUFF_SZ,
+-			  q->rx_buffers, q->rx_buffers_dma);
+-	q->rx_buffers = NULL;
++	at91ether_stop(lp);
+ 
+ 	return pm_runtime_put(&lp->pdev->dev);
+ }
 -- 
 2.25.1
 
