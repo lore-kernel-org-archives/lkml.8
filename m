@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 197EBC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:26:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 079A7C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E7E3C2065F
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:26:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF57A2065F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:26:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593458807;
-	bh=rLbaZMUAKQYB56Bo7i9S1VPwfxj7Poup/AXcT8jRPHg=;
+	s=default; t=1593458808;
+	bh=dWZgweTsH9O0pwJFdmAD8JiQLLkCnmL0L87Gdd4f6ug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rmnt9szS9EPPa8UN0pNoFgIMYIeqg7bVqqraVht/I7m6GN0ZqIm1i6VhTvoeW5Npw
-	 R/jAvSoPH0lZSsVYYxPtYiYx/lgRBVU0+p6NmsTuGDqL1pN82unfLJzrNXTGd6lxMt
-	 FJymdmiJZxBwwGeGWxkasTspjdEKHDJaXBaJxIHo=
+	b=QWwXxQ04zzDW3lSg6O0EmkV9mpfItFOy53lM+g3bRSJjWq1LUIGTvYWCSsWh/wVum
+	 hmg5nFNv/wZaOPf7h4gdOyXeMHT18CiFspaf6G1sTZqEXA1oE9YpnvYOqchZ//hvWy
+	 LEaV80c8bwBS0aV2MUtdgkSzmMoutfXgBell2uuk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730760AbgF2T0p (ORCPT
+        id S1732097AbgF2T0r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:26:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37070 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:26:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732678AbgF2TZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732677AbgF2TZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2C4225370;
-        Mon, 29 Jun 2020 15:40:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE63C25406;
+        Mon, 29 Jun 2020 15:42:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445235;
-        bh=rLbaZMUAKQYB56Bo7i9S1VPwfxj7Poup/AXcT8jRPHg=;
+        s=default; t=1593445356;
+        bh=dWZgweTsH9O0pwJFdmAD8JiQLLkCnmL0L87Gdd4f6ug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VQCMZ+bn+vL3UgQ+42wBZIVplzaa13iZsLGHWMBST/tcRSz0Vl16bzLV8wP9FisqX
-         sT0wwaBzSc047iMB4Yg6zttWIBU1cKTffogKHQJITgZmVSwEkORsVPOsSLaAPJP+ms
-         tBQrEz6WuDCVsqe+gGlrMrhc37pUlAoMFpdcmgfY=
+        b=AbWYBw9D2GXIibDy89SnRLmEUuZlvxj40JV2N3Il3CYLj8aOH2X6xM4bzPQKPdDf6
+         ay7bg/D9wI0GzDWBmo42xSDm59WdnXNLYGadpdFz5C/IpgMt7Gws9xqMLAGfat0FDe
+         w0DUalXimooXMlWBhYoHXvpLf58r7Z3/urABPIw4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xiyu Yang <xiyuyang19@fudan.edu.cn>,
-        Xin Tan <tanxin.ctf@gmail.com>,
-        "J . Bruce Fields" <bfields@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 020/191] nfsd: Fix svc_xprt refcnt leak when setup callback client failed
-Date:   Mon, 29 Jun 2020 11:37:16 -0400
-Message-Id: <20200629154007.2495120-21-sashal@kernel.org>
+Cc:     Jaedon Shin <jaedon.shin@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.9 114/191] media: dvb_frontend: Add unlocked_ioctl in dvb_frontend.c
+Date:   Mon, 29 Jun 2020 11:38:50 -0400
+Message-Id: <20200629154007.2495120-115-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -66,42 +66,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xiyu Yang <xiyuyang19@fudan.edu.cn>
+From: Jaedon Shin <jaedon.shin@gmail.com>
 
-[ Upstream commit a4abc6b12eb1f7a533c2e7484cfa555454ff0977 ]
+commit a2282fd1fe2ebcda480426dbfaaa7c4e87e27399 upstream
 
-nfsd4_process_cb_update() invokes svc_xprt_get(), which increases the
-refcount of the "c->cn_xprt".
+Adds unlocked ioctl function directly in dvb_frontend.c instead of using
+dvb_generic_ioctl().
 
-The reference counting issue happens in one exception handling path of
-nfsd4_process_cb_update(). When setup callback client failed, the
-function forgets to decrease the refcnt increased by svc_xprt_get(),
-causing a refcnt leak.
-
-Fix this issue by calling svc_xprt_put() when setup callback client
-failed.
-
-Signed-off-by: Xiyu Yang <xiyuyang19@fudan.edu.cn>
-Signed-off-by: Xin Tan <tanxin.ctf@gmail.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Jaedon Shin <jaedon.shin@gmail.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/nfsd/nfs4callback.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/media/dvb-core/dvb_frontend.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/fs/nfsd/nfs4callback.c b/fs/nfsd/nfs4callback.c
-index 8d842282111be..172f697864ab5 100644
---- a/fs/nfsd/nfs4callback.c
-+++ b/fs/nfsd/nfs4callback.c
-@@ -1156,6 +1156,8 @@ static void nfsd4_process_cb_update(struct nfsd4_callback *cb)
- 	err = setup_callback_client(clp, &conn, ses);
- 	if (err) {
- 		nfsd4_mark_cb_down(clp, err);
-+		if (c)
-+			svc_xprt_put(c->cn_xprt);
- 		return;
- 	}
+diff --git a/drivers/media/dvb-core/dvb_frontend.c b/drivers/media/dvb-core/dvb_frontend.c
+index 6f9ee78a18703..dacc467e24af2 100644
+--- a/drivers/media/dvb-core/dvb_frontend.c
++++ b/drivers/media/dvb-core/dvb_frontend.c
+@@ -1926,7 +1926,8 @@ static int dtv_property_process_set(struct dvb_frontend *fe,
+ 	return r;
  }
+ 
+-static int dvb_frontend_ioctl(struct file *file, unsigned int cmd, void *parg)
++static int dvb_frontend_do_ioctl(struct file *file, unsigned int cmd,
++				 void *parg)
+ {
+ 	struct dvb_device *dvbdev = file->private_data;
+ 	struct dvb_frontend *fe = dvbdev->priv;
+@@ -1969,6 +1970,17 @@ static int dvb_frontend_ioctl(struct file *file, unsigned int cmd, void *parg)
+ 	return err;
+ }
+ 
++static long dvb_frontend_ioctl(struct file *file, unsigned int cmd,
++			       unsigned long arg)
++{
++	struct dvb_device *dvbdev = file->private_data;
++
++	if (!dvbdev)
++		return -ENODEV;
++
++	return dvb_usercopy(file, cmd, arg, dvb_frontend_do_ioctl);
++}
++
+ static int dtv_set_frontend(struct dvb_frontend *fe)
+ {
+ 	struct dvb_frontend_private *fepriv = fe->frontend_priv;
+@@ -2638,7 +2650,7 @@ static int dvb_frontend_release(struct inode *inode, struct file *file)
+ 
+ static const struct file_operations dvb_frontend_fops = {
+ 	.owner		= THIS_MODULE,
+-	.unlocked_ioctl	= dvb_generic_ioctl,
++	.unlocked_ioctl	= dvb_frontend_ioctl,
+ 	.poll		= dvb_frontend_poll,
+ 	.open		= dvb_frontend_open,
+ 	.release	= dvb_frontend_release,
+@@ -2706,7 +2718,6 @@ int dvb_register_frontend(struct dvb_adapter* dvb,
+ #if defined(CONFIG_MEDIA_CONTROLLER_DVB)
+ 		.name = fe->ops.info.name,
+ #endif
+-		.kernel_ioctl = dvb_frontend_ioctl
+ 	};
+ 
+ 	dev_dbg(dvb->device, "%s:\n", __func__);
 -- 
 2.25.1
 
