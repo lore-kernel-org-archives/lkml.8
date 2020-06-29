@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C52C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E45BC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F075A20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:22:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 348AB206A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:22:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462153;
-	bh=J38Dy0/4rkAgW0VBoEWSxJgsCohC7R8TO4UdK0nob/0=;
+	s=default; t=1593462155;
+	bh=3QfZnQo+zF7MCyetgb4B2F3EwnmyYwrJykkGmO7e+tc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sf2aD5kfVf223YxnVBaLU9IFa8kOCFD/V/mwNMp4pE+ci5AYuC+3y5Nn5IBbmSKyq
-	 pm99kKZsj8uCQIQR0P26JNXw1EinKdbY8BA7aGKTfoPa5rJ6/jEKeuvz2qmkNxq63d
-	 J23dyVPCdE0ZVEo3MyvJCYRxyu2xRup0u5Pg2JDE=
+	b=lAPs9NvqMvX7c8q+b+QGkDdjneWmNhUPhOkPqTcCPF+yCZVCx1j7GbQA/Ash98ImN
+	 sStuy4vADOcjhjQEIX4PcM/L+bUlgUoWNFcakWu0+Oo9jPIIhkfBAcdQ2iYe5z2Cfy
+	 9df7B5BW/4OchO+vPR3PMyI4kCKCdwNCg5gaF4jk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388818AbgF2UW3 (ORCPT
+        id S2388804AbgF2UW1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:22:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37070 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:22:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732583AbgF2TZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732586AbgF2TZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:33 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F5C825371;
-        Mon, 29 Jun 2020 15:40:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D212253CE;
+        Mon, 29 Jun 2020 15:41:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445237;
-        bh=J38Dy0/4rkAgW0VBoEWSxJgsCohC7R8TO4UdK0nob/0=;
+        s=default; t=1593445302;
+        bh=3QfZnQo+zF7MCyetgb4B2F3EwnmyYwrJykkGmO7e+tc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BlGVUUgkHMlq0KhguAASSq0KVoV7FBKxo+sjeoRpmlmIbkBPKPIytvcWb2JnnNlVr
-         /51JcAOorxIBHQxitgdjOZ7DtpdBK8CAuTyGt3p0aohefQP1KZJ51bJ+samjbBt3ee
-         YY48pKQIs0RDAW/H9XEST0Q6S2gwa9alhi3bGU7A=
+        b=IdctsUE3pIt68NiuFrrmXkTnmmTACbfBdqdTDWnCDxj9cIXRnd8qxX5/1dit1IBTE
+         HpEzTHoTj3xjQCze0urg3NCrY4X9aCS6z+RDnQT5hATix4Y/YSmaDmHPS3kqkyZdOl
+         iZ36oE346iZ/2baO61aHY6seHI6UpQ4GYxdbWIss=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Pingfan Liu <kernelfans@gmail.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 021/191] powerpc/crashkernel: Take "mem=" option into account
-Date:   Mon, 29 Jun 2020 11:37:17 -0400
-Message-Id: <20200629154007.2495120-22-sashal@kernel.org>
+Subject: [PATCH 4.9 074/191] scsi: acornscsi: Fix an error handling path in acornscsi_probe()
+Date:   Mon, 29 Jun 2020 11:38:10 -0400
+Message-Id: <20200629154007.2495120-75-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -66,79 +65,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pingfan Liu <kernelfans@gmail.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-[ Upstream commit be5470e0c285a68dc3afdea965032f5ddc8269d7 ]
+[ Upstream commit 42c76c9848e13dbe0538d7ae0147a269dfa859cb ]
 
-'mem=" option is an easy way to put high pressure on memory during
-some test. Hence after applying the memory limit, instead of total
-mem, the actual usable memory should be considered when reserving mem
-for crashkernel. Otherwise the boot up may experience OOM issue.
+'ret' is known to be 0 at this point.  Explicitly return -ENOMEM if one of
+the 'ecardm_iomap()' calls fail.
 
-E.g. it would reserve 4G prior to the change and 512M afterward, if
-passing
-crashkernel="2G-4G:384M,4G-16G:512M,16G-64G:1G,64G-128G:2G,128G-:4G",
-and mem=5G on a 256G machine.
-
-This issue is powerpc specific because it puts higher priority on
-fadump and kdump reservation than on "mem=". Referring the following
-code:
-    if (fadump_reserve_mem() == 0)
-            reserve_crashkernel();
-    ...
-    /* Ensure that total memory size is page-aligned. */
-    limit = ALIGN(memory_limit ?: memblock_phys_mem_size(), PAGE_SIZE);
-    memblock_enforce_memory_limit(limit);
-
-While on other arches, the effect of "mem=" takes a higher priority
-and pass through memblock_phys_mem_size() before calling
-reserve_crashkernel().
-
-Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-Reviewed-by: Hari Bathini <hbathini@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/1585749644-4148-1-git-send-email-kernelfans@gmail.com
+Link: https://lore.kernel.org/r/20200530081622.577888-1-christophe.jaillet@wanadoo.fr
+Fixes: e95a1b656a98 ("[ARM] rpc: acornscsi: update to new style ecard driver")
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kernel/machine_kexec.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/scsi/arm/acornscsi.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/machine_kexec.c b/arch/powerpc/kernel/machine_kexec.c
-index 9dafd7af39b8f..cb4d6cd949fc4 100644
---- a/arch/powerpc/kernel/machine_kexec.c
-+++ b/arch/powerpc/kernel/machine_kexec.c
-@@ -113,11 +113,12 @@ void machine_kexec(struct kimage *image)
+diff --git a/drivers/scsi/arm/acornscsi.c b/drivers/scsi/arm/acornscsi.c
+index 12b88294d667d..76ad20e491263 100644
+--- a/drivers/scsi/arm/acornscsi.c
++++ b/drivers/scsi/arm/acornscsi.c
+@@ -2913,8 +2913,10 @@ static int acornscsi_probe(struct expansion_card *ec, const struct ecard_id *id)
  
- void __init reserve_crashkernel(void)
- {
--	unsigned long long crash_size, crash_base;
-+	unsigned long long crash_size, crash_base, total_mem_sz;
- 	int ret;
+ 	ashost->base = ecardm_iomap(ec, ECARD_RES_MEMC, 0, 0);
+ 	ashost->fast = ecardm_iomap(ec, ECARD_RES_IOCFAST, 0, 0);
+-	if (!ashost->base || !ashost->fast)
++	if (!ashost->base || !ashost->fast) {
++		ret = -ENOMEM;
+ 		goto out_put;
++	}
  
-+	total_mem_sz = memory_limit ? memory_limit : memblock_phys_mem_size();
- 	/* use common parsing */
--	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
-+	ret = parse_crashkernel(boot_command_line, total_mem_sz,
- 			&crash_size, &crash_base);
- 	if (ret == 0 && crash_size > 0) {
- 		crashk_res.start = crash_base;
-@@ -176,6 +177,7 @@ void __init reserve_crashkernel(void)
- 	/* Crash kernel trumps memory limit */
- 	if (memory_limit && memory_limit <= crashk_res.end) {
- 		memory_limit = crashk_res.end + 1;
-+		total_mem_sz = memory_limit;
- 		printk("Adjusted memory limit for crashkernel, now 0x%llx\n",
- 		       memory_limit);
- 	}
-@@ -184,7 +186,7 @@ void __init reserve_crashkernel(void)
- 			"for crashkernel (System RAM: %ldMB)\n",
- 			(unsigned long)(crash_size >> 20),
- 			(unsigned long)(crashk_res.start >> 20),
--			(unsigned long)(memblock_phys_mem_size() >> 20));
-+			(unsigned long)(total_mem_sz >> 20));
- 
- 	if (!memblock_is_region_memory(crashk_res.start, crash_size) ||
- 	    memblock_reserve(crashk_res.start, crash_size)) {
+ 	host->irq = ec->irq;
+ 	ashost->host = host;
 -- 
 2.25.1
 
