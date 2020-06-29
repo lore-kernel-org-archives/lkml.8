@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7697C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 364B1C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A8C5D21D81
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:36:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11A872236F
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 18:36:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593455777;
-	bh=3xpw2/nluRUYHk+2t0LVKeUAmmf5nv6Rgbkmmm9xDYs=;
+	s=default; t=1593455780;
+	bh=K8+LwfUHm44DtcHH9wCOgg7GmT6oZ3W6ubALuIjbOXs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qHEWnVBm3ZHwaeSr2bowz8uqCFJiDF8Hfij35G76lYwqDqXazVfp5PKSw4lHtJUkp
-	 Ei0+ZKJW3LDO9VSX8IqkM6jlFhQUKW+YttlxspjYGnrXwINWGk7ljO9ZN2/FMf9Vss
-	 E7zNZ/23GEJRKjF7SsERrShf4vuYv5pjMnkn1yeQ=
+	b=EbXYHi4N0UkC6cEIxnfqKHNEZIddrQbGe0far3HmC1whHgsCJnLz3Gv3V8sXjylsu
+	 eFeI5o5pAfxCGtd/Mpr/9T44SRMW532mtIXVhxCYlZswzMC36zc81FNf4W8Fzwdj37
+	 uTaqOsCCCkSW+0mWbWisZScuQuGP20MZdMGAsd+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726947AbgF2SgO (ORCPT
+        id S1726957AbgF2SgS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 14:36:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56908 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 14:36:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726667AbgF2Sfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:40 -0400
+        id S1726776AbgF2Sfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4DCC246BC;
-        Mon, 29 Jun 2020 15:20:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E54AF247E5;
+        Mon, 29 Jun 2020 15:22:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444013;
-        bh=3xpw2/nluRUYHk+2t0LVKeUAmmf5nv6Rgbkmmm9xDYs=;
+        s=default; t=1593444151;
+        bh=K8+LwfUHm44DtcHH9wCOgg7GmT6oZ3W6ubALuIjbOXs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bP1/o96mXp/Uc7ZP4VSsoWcTKlHc087+Mlomd+Y9M2C3FE3aEVi4fyZowA5ZxxDzD
-         Fxco22WenHiDN4FApLPh5Ees0IaEG3xMfaHrAFj5vieexVFOpiRyaqDVFlFAMycJWb
-         7JOzyvTbYo/ylXAPdEjFaA7R7eLfCWAZ8/wW5WqI=
+        b=wld+Rvmx9dt+X21AAiXZEcBydEDxxlvH50AFTu37m3vfchJ3m3TAzLy3OrZUQbLEV
+         SScxTZjkKecoUA5cn1SsHf5jTu60800zGlXr1KMk10RtQpvBUcWmBPQYAF6V7xOFUt
+         u9QF04LaU9zQgrKiKKSqycK8rQtfcPXpUYI4DL0k=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gaurav Singh <gaurav1086@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 119/265] bpf, xdp, samples: Fix null pointer dereference in *_user code
-Date:   Mon, 29 Jun 2020 11:15:52 -0400
-Message-Id: <20200629151818.2493727-120-sashal@kernel.org>
+Cc:     Vasily Averin <vvs@virtuozzo.com>,
+        Jeff Layton <jlayton@redhat.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 257/265] sunrpc: fixed rollback in rpc_gssd_dummy_populate()
+Date:   Mon, 29 Jun 2020 11:18:10 -0400
+Message-Id: <20200629151818.2493727-258-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -67,123 +66,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gaurav Singh <gaurav1086@gmail.com>
+From: Vasily Averin <vvs@virtuozzo.com>
 
-[ Upstream commit 6903cdae9f9f08d61e49c16cbef11c293e33a615 ]
+commit b7ade38165ca0001c5a3bd5314a314abbbfbb1b7 upstream.
 
-Memset on the pointer right after malloc can cause a NULL pointer
-deference if it failed to allocate memory. A simple fix is to
-replace malloc()/memset() pair with a simple call to calloc().
+__rpc_depopulate(gssd_dentry) was lost on error path
 
-Fixes: 0fca931a6f21 ("samples/bpf: program demonstrating access to xdp_rxq_info")
-Signed-off-by: Gaurav Singh <gaurav1086@gmail.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Acked-by: John Fastabend <john.fastabend@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+cc: stable@vger.kernel.org
+Fixes: commit 4b9a445e3eeb ("sunrpc: create a new dummy pipe for gssd to hold open")
+Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+Reviewed-by: Jeff Layton <jlayton@redhat.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- samples/bpf/xdp_monitor_user.c      |  8 ++------
- samples/bpf/xdp_redirect_cpu_user.c |  7 ++-----
- samples/bpf/xdp_rxq_info_user.c     | 13 +++----------
- 3 files changed, 7 insertions(+), 21 deletions(-)
+ net/sunrpc/rpc_pipe.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/samples/bpf/xdp_monitor_user.c b/samples/bpf/xdp_monitor_user.c
-index dd558cbb23094..ef53b93db5732 100644
---- a/samples/bpf/xdp_monitor_user.c
-+++ b/samples/bpf/xdp_monitor_user.c
-@@ -509,11 +509,8 @@ static void *alloc_rec_per_cpu(int record_size)
- {
- 	unsigned int nr_cpus = bpf_num_possible_cpus();
- 	void *array;
--	size_t size;
- 
--	size = record_size * nr_cpus;
--	array = malloc(size);
--	memset(array, 0, size);
-+	array = calloc(nr_cpus, record_size);
- 	if (!array) {
- 		fprintf(stderr, "Mem alloc error (nr_cpus:%u)\n", nr_cpus);
- 		exit(EXIT_FAIL_MEM);
-@@ -528,8 +525,7 @@ static struct stats_record *alloc_stats_record(void)
- 	int i;
- 
- 	/* Alloc main stats_record structure */
--	rec = malloc(sizeof(*rec));
--	memset(rec, 0, sizeof(*rec));
-+	rec = calloc(1, sizeof(*rec));
- 	if (!rec) {
- 		fprintf(stderr, "Mem alloc error\n");
- 		exit(EXIT_FAIL_MEM);
-diff --git a/samples/bpf/xdp_redirect_cpu_user.c b/samples/bpf/xdp_redirect_cpu_user.c
-index 9b8f21abeac47..e86fed5cdb92c 100644
---- a/samples/bpf/xdp_redirect_cpu_user.c
-+++ b/samples/bpf/xdp_redirect_cpu_user.c
-@@ -210,11 +210,8 @@ static struct datarec *alloc_record_per_cpu(void)
- {
- 	unsigned int nr_cpus = bpf_num_possible_cpus();
- 	struct datarec *array;
--	size_t size;
- 
--	size = sizeof(struct datarec) * nr_cpus;
--	array = malloc(size);
--	memset(array, 0, size);
-+	array = calloc(nr_cpus, sizeof(struct datarec));
- 	if (!array) {
- 		fprintf(stderr, "Mem alloc error (nr_cpus:%u)\n", nr_cpus);
- 		exit(EXIT_FAIL_MEM);
-@@ -229,11 +226,11 @@ static struct stats_record *alloc_stats_record(void)
- 
- 	size = sizeof(*rec) + n_cpus * sizeof(struct record);
- 	rec = malloc(size);
--	memset(rec, 0, size);
- 	if (!rec) {
- 		fprintf(stderr, "Mem alloc error\n");
- 		exit(EXIT_FAIL_MEM);
+diff --git a/net/sunrpc/rpc_pipe.c b/net/sunrpc/rpc_pipe.c
+index 39e14d5edaf13..e9d0953522f09 100644
+--- a/net/sunrpc/rpc_pipe.c
++++ b/net/sunrpc/rpc_pipe.c
+@@ -1317,6 +1317,7 @@ rpc_gssd_dummy_populate(struct dentry *root, struct rpc_pipe *pipe_data)
+ 	q.len = strlen(gssd_dummy_clnt_dir[0].name);
+ 	clnt_dentry = d_hash_and_lookup(gssd_dentry, &q);
+ 	if (!clnt_dentry) {
++		__rpc_depopulate(gssd_dentry, gssd_dummy_clnt_dir, 0, 1);
+ 		pipe_dentry = ERR_PTR(-ENOENT);
+ 		goto out;
  	}
-+	memset(rec, 0, size);
- 	rec->rx_cnt.cpu    = alloc_record_per_cpu();
- 	rec->redir_err.cpu = alloc_record_per_cpu();
- 	rec->kthread.cpu   = alloc_record_per_cpu();
-diff --git a/samples/bpf/xdp_rxq_info_user.c b/samples/bpf/xdp_rxq_info_user.c
-index 4fe47502ebed4..caa4e7ffcfc7b 100644
---- a/samples/bpf/xdp_rxq_info_user.c
-+++ b/samples/bpf/xdp_rxq_info_user.c
-@@ -198,11 +198,8 @@ static struct datarec *alloc_record_per_cpu(void)
- {
- 	unsigned int nr_cpus = bpf_num_possible_cpus();
- 	struct datarec *array;
--	size_t size;
- 
--	size = sizeof(struct datarec) * nr_cpus;
--	array = malloc(size);
--	memset(array, 0, size);
-+	array = calloc(nr_cpus, sizeof(struct datarec));
- 	if (!array) {
- 		fprintf(stderr, "Mem alloc error (nr_cpus:%u)\n", nr_cpus);
- 		exit(EXIT_FAIL_MEM);
-@@ -214,11 +211,8 @@ static struct record *alloc_record_per_rxq(void)
- {
- 	unsigned int nr_rxqs = bpf_map__def(rx_queue_index_map)->max_entries;
- 	struct record *array;
--	size_t size;
- 
--	size = sizeof(struct record) * nr_rxqs;
--	array = malloc(size);
--	memset(array, 0, size);
-+	array = calloc(nr_rxqs, sizeof(struct record));
- 	if (!array) {
- 		fprintf(stderr, "Mem alloc error (nr_rxqs:%u)\n", nr_rxqs);
- 		exit(EXIT_FAIL_MEM);
-@@ -232,8 +226,7 @@ static struct stats_record *alloc_stats_record(void)
- 	struct stats_record *rec;
- 	int i;
- 
--	rec = malloc(sizeof(*rec));
--	memset(rec, 0, sizeof(*rec));
-+	rec = calloc(1, sizeof(struct stats_record));
- 	if (!rec) {
- 		fprintf(stderr, "Mem alloc error\n");
- 		exit(EXIT_FAIL_MEM);
 -- 
 2.25.1
 
