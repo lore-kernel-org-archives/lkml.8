@@ -2,169 +2,319 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE62EC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB66C433E1
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93D69206E2
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:22:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAFE0206E2
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:22:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732277AbgF2TV7 (ORCPT
+        id S1732282AbgF2TWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:21:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59532 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732217AbgF2TVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:22:01 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:59190 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732200AbgF2TVf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:21:35 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 64CCCB131;
-        Mon, 29 Jun 2020 15:10:12 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     gregkh@linuxfoundation.org
-Cc:     kernel-list@raspberrypi.com, laurent.pinchart@ideasonboard.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devel@driverdev.osuosl.org,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH v2 47/47] staging: vchiq: Move vchiq.h into include directory
-Date:   Mon, 29 Jun 2020 17:09:45 +0200
-Message-Id: <20200629150945.10720-48-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200629150945.10720-1-nsaenzjulienne@suse.de>
-References: <20200629150945.10720-1-nsaenzjulienne@suse.de>
+Received: from 89-64-84-69.dynamic.chello.pl (89.64.84.69) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.415)
+ id 4a4c27ae3a89cb78; Mon, 29 Jun 2020 18:34:53 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>
+Cc:     rafael.j.wysocki@intel.com, Len Brown <lenb@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Ira Weiny <ira.weiny@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Myron Stowe <myron.stowe@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-nvdimm@lists.01.org, Bob Moore <robert.moore@intel.com>
+Subject: [PATCH v4 1/2] ACPI: OSL: Implement deferred unmapping of ACPI memory
+Date:   Mon, 29 Jun 2020 18:33:10 +0200
+Message-ID: <7504970.auntBLC07g@kreacher>
+In-Reply-To: <1666722.UopIai5n7p@kreacher>
+References: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com> <2788992.3K7huLjdjL@kreacher> <1666722.UopIai5n7p@kreacher>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To make the separation clear between vchiq's header files and vchiq.h,
-which is to be used by services and is the 'public' API, move it into a
-dedicated includes directory.
+From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+The ACPI OS layer in Linux uses RCU to protect the walkers of the
+list of ACPI memory mappings from seeing an inconsistent state
+while it is being updated.  Among other situations, that list can
+be walked in (NMI and non-NMI) interrupt context, so using a
+sleeping lock to protect it is not an option.
 
+However, performance issues related to the RCU usage in there
+appear, as described by Dan Williams:
+
+"Recently a performance problem was reported for a process invoking
+a non-trival ASL program. The method call in this case ends up
+repetitively triggering a call path like:
+
+    acpi_ex_store
+    acpi_ex_store_object_to_node
+    acpi_ex_write_data_to_field
+    acpi_ex_insert_into_field
+    acpi_ex_write_with_update_rule
+    acpi_ex_field_datum_io
+    acpi_ex_access_region
+    acpi_ev_address_space_dispatch
+    acpi_ex_system_memory_space_handler
+    acpi_os_map_cleanup.part.14
+    _synchronize_rcu_expedited.constprop.89
+    schedule
+
+The end result of frequent synchronize_rcu_expedited() invocation is
+tiny sub-millisecond spurts of execution where the scheduler freely
+migrates this apparently sleepy task. The overhead of frequent
+scheduler invocation multiplies the execution time by a factor
+of 2-3X."
+
+The source of this is that acpi_ex_system_memory_space_handler()
+unmaps the memory mapping currently cached by it at the access time
+if that mapping doesn't cover the memory area being accessed.
+Consequently, if there is a memory opregion with two fields
+separated from each other by an unused chunk of address space that
+is large enough for not being covered by a single mapping, and they
+happen to be used in an alternating pattern, the unmapping will
+occur on every acpi_ex_system_memory_space_handler() invocation for
+that memory opregion and that will lead to significant overhead.
+
+Moreover, acpi_ex_system_memory_space_handler() carries out the
+memory unmapping with the namespace and interpreter mutexes held
+which may lead to additional latency, because all of the tasks
+wanting to acquire on of these mutexes need to wait for the
+memory unmapping operation to complete.
+
+To address that, rework acpi_os_unmap_memory() so that it does not
+release the memory mapping covering the given address range right
+away and instead make it queue up the mapping at hand for removal
+via queue_rcu_work().
+
+Reported-by: Dan Williams <dan.j.williams@intel.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
-Changes since v1:
- - Remove unwarranted include
+ drivers/acpi/osl.c | 112 +++++++++++++++++++++++++++++++--------------
+ 1 file changed, 77 insertions(+), 35 deletions(-)
 
- drivers/staging/vc04_services/Makefile                         | 2 +-
- drivers/staging/vc04_services/bcm2835-audio/Makefile           | 2 +-
- drivers/staging/vc04_services/bcm2835-audio/bcm2835.h          | 2 +-
- .../{interface/vchiq_arm => include/linux/raspberrypi}/vchiq.h | 0
- drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.h | 2 +-
- .../staging/vc04_services/interface/vchiq_arm/vchiq_ioctl.h    | 2 +-
- drivers/staging/vc04_services/vchiq-mmal/Makefile              | 1 +
- drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c          | 3 +--
- 8 files changed, 7 insertions(+), 7 deletions(-)
- rename drivers/staging/vc04_services/{interface/vchiq_arm => include/linux/raspberrypi}/vchiq.h (100%)
-
-diff --git a/drivers/staging/vc04_services/Makefile b/drivers/staging/vc04_services/Makefile
-index e02a9c2abf77..7546d70116a0 100644
---- a/drivers/staging/vc04_services/Makefile
-+++ b/drivers/staging/vc04_services/Makefile
-@@ -12,5 +12,5 @@ obj-$(CONFIG_SND_BCM2835)		+= bcm2835-audio/
- obj-$(CONFIG_VIDEO_BCM2835)		+= bcm2835-camera/
- obj-$(CONFIG_BCM2835_VCHIQ_MMAL)	+= vchiq-mmal/
+diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
+index 762c5d50b8fe..5ced89a756a8 100644
+--- a/drivers/acpi/osl.c
++++ b/drivers/acpi/osl.c
+@@ -77,7 +77,10 @@ struct acpi_ioremap {
+ 	void __iomem *virt;
+ 	acpi_physical_address phys;
+ 	acpi_size size;
+-	unsigned long refcount;
++	union {
++		unsigned long refcount;
++		struct rcu_work rwork;
++	} track;
+ };
  
--ccflags-y += -D__VCCOREVER__=0x04000000
-+ccflags-y += -I $(srctree)/$(src)/include  -D__VCCOREVER__=0x04000000
+ static LIST_HEAD(acpi_ioremaps);
+@@ -250,7 +253,7 @@ void __iomem *acpi_os_get_iomem(acpi_physical_address phys, unsigned int size)
+ 	map = acpi_map_lookup(phys, size);
+ 	if (map) {
+ 		virt = map->virt + (phys - map->phys);
+-		map->refcount++;
++		map->track.refcount++;
+ 	}
+ 	mutex_unlock(&acpi_ioremap_lock);
+ 	return virt;
+@@ -335,7 +338,7 @@ void __iomem __ref
+ 	/* Check if there's a suitable mapping already. */
+ 	map = acpi_map_lookup(phys, size);
+ 	if (map) {
+-		map->refcount++;
++		map->track.refcount++;
+ 		goto out;
+ 	}
  
-diff --git a/drivers/staging/vc04_services/bcm2835-audio/Makefile b/drivers/staging/vc04_services/bcm2835-audio/Makefile
-index 13fa6d7d9745..d59fe4dde615 100644
---- a/drivers/staging/vc04_services/bcm2835-audio/Makefile
-+++ b/drivers/staging/vc04_services/bcm2835-audio/Makefile
-@@ -2,4 +2,4 @@
- obj-$(CONFIG_SND_BCM2835)	+= snd-bcm2835.o
- snd-bcm2835-objs		:= bcm2835.o bcm2835-ctl.o bcm2835-pcm.o bcm2835-vchiq.o
+@@ -358,7 +361,7 @@ void __iomem __ref
+ 	map->virt = virt;
+ 	map->phys = pg_off;
+ 	map->size = pg_sz;
+-	map->refcount = 1;
++	map->track.refcount = 1;
  
--ccflags-y += -I $(srctree)/$(src)/.. -D__VCCOREVER__=0x04000000
-+ccflags-y += -I $(srctree)/$(src)/../include -D__VCCOREVER__=0x04000000
-diff --git a/drivers/staging/vc04_services/bcm2835-audio/bcm2835.h b/drivers/staging/vc04_services/bcm2835-audio/bcm2835.h
-index ca220f5230ec..1b36475872d6 100644
---- a/drivers/staging/vc04_services/bcm2835-audio/bcm2835.h
-+++ b/drivers/staging/vc04_services/bcm2835-audio/bcm2835.h
-@@ -6,10 +6,10 @@
+ 	list_add_tail_rcu(&map->list, &acpi_ioremaps);
  
- #include <linux/device.h>
- #include <linux/wait.h>
-+#include <linux/raspberrypi/vchiq.h>
- #include <sound/core.h>
- #include <sound/pcm.h>
- #include <sound/pcm-indirect.h>
--#include "interface/vchiq_arm/vchiq.h"
+@@ -374,41 +377,46 @@ void *__ref acpi_os_map_memory(acpi_physical_address phys, acpi_size size)
+ }
+ EXPORT_SYMBOL_GPL(acpi_os_map_memory);
  
- #define MAX_SUBSTREAMS   (8)
- #define AVAIL_SUBSTREAMS_MASK  (0xff)
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq.h b/drivers/staging/vc04_services/include/linux/raspberrypi/vchiq.h
-similarity index 100%
-rename from drivers/staging/vc04_services/interface/vchiq_arm/vchiq.h
-rename to drivers/staging/vc04_services/include/linux/raspberrypi/vchiq.h
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.h
-index 8a27f3d7217e..e67692879249 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.h
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_core.h
-@@ -10,10 +10,10 @@
- #include <linux/kref.h>
- #include <linux/rcupdate.h>
- #include <linux/wait.h>
-+#include <linux/raspberrypi/vchiq.h>
++static void acpi_os_map_remove(struct acpi_ioremap *map)
++{
++	acpi_unmap(map->phys, map->virt);
++	kfree(map);
++}
++
++static void acpi_os_map_cleanup_deferred(struct work_struct *work)
++{
++	acpi_os_map_remove(container_of(to_rcu_work(work), struct acpi_ioremap,
++					track.rwork));
++}
++
+ /* Must be called with mutex_lock(&acpi_ioremap_lock) */
+-static unsigned long acpi_os_drop_map_ref(struct acpi_ioremap *map)
++static bool acpi_os_drop_map_ref(struct acpi_ioremap *map, bool defer)
+ {
+-	unsigned long refcount = --map->refcount;
++	if (--map->track.refcount)
++		return true;
  
- #include "vchiq_cfg.h"
+-	if (!refcount)
+-		list_del_rcu(&map->list);
+-	return refcount;
++	list_del_rcu(&map->list);
++
++	if (defer) {
++		INIT_RCU_WORK(&map->track.rwork, acpi_os_map_cleanup_deferred);
++		queue_rcu_work(system_wq, &map->track.rwork);
++	}
++	return defer;
+ }
  
--#include "vchiq.h"
+ static void acpi_os_map_cleanup(struct acpi_ioremap *map)
+ {
++	if (!map)
++		return;
++
+ 	synchronize_rcu_expedited();
+-	acpi_unmap(map->phys, map->virt);
+-	kfree(map);
++	acpi_os_map_remove(map);
+ }
  
- /* Do this so that we can test-build the code on non-rpi systems */
- #if IS_ENABLED(CONFIG_RASPBERRYPI_FIRMWARE)
-diff --git a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_ioctl.h b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_ioctl.h
-index f285d754ad28..3653fd99d8a1 100644
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_ioctl.h
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_ioctl.h
-@@ -5,7 +5,7 @@
- #define VCHIQ_IOCTLS_H
+-/**
+- * acpi_os_unmap_iomem - Drop a memory mapping reference.
+- * @virt: Start of the address range to drop a reference to.
+- * @size: Size of the address range to drop a reference to.
+- *
+- * Look up the given virtual address range in the list of existing ACPI memory
+- * mappings, drop a reference to it and unmap it if there are no more active
+- * references to it.
+- *
+- * During early init (when acpi_permanent_mmap has not been set yet) this
+- * routine simply calls __acpi_unmap_table() to get the job done.  Since
+- * __acpi_unmap_table() is an __init function, the __ref annotation is needed
+- * here.
+- */
+-void __ref acpi_os_unmap_iomem(void __iomem *virt, acpi_size size)
++static void __ref __acpi_os_unmap_iomem(void __iomem *virt, acpi_size size,
++					bool defer)
+ {
+ 	struct acpi_ioremap *map;
+-	unsigned long refcount;
  
- #include <linux/ioctl.h>
--#include "vchiq.h"
-+#include <linux/raspberrypi/vchiq.h>
+ 	if (!acpi_permanent_mmap) {
+ 		__acpi_unmap_table(virt, size);
+@@ -416,23 +424,56 @@ void __ref acpi_os_unmap_iomem(void __iomem *virt, acpi_size size)
+ 	}
  
- #define VCHIQ_IOC_MAGIC 0xc4
- #define VCHIQ_INVALID_HANDLE (~0)
-diff --git a/drivers/staging/vc04_services/vchiq-mmal/Makefile b/drivers/staging/vc04_services/vchiq-mmal/Makefile
-index f8164c33aec3..b2a830f48acc 100644
---- a/drivers/staging/vc04_services/vchiq-mmal/Makefile
-+++ b/drivers/staging/vc04_services/vchiq-mmal/Makefile
-@@ -5,4 +5,5 @@ obj-$(CONFIG_BCM2835_VCHIQ_MMAL) += bcm2835-mmal-vchiq.o
+ 	mutex_lock(&acpi_ioremap_lock);
++
+ 	map = acpi_map_lookup_virt(virt, size);
+ 	if (!map) {
+ 		mutex_unlock(&acpi_ioremap_lock);
+ 		WARN(true, PREFIX "%s: bad address %p\n", __func__, virt);
+ 		return;
+ 	}
+-	refcount = acpi_os_drop_map_ref(map);
++	if (acpi_os_drop_map_ref(map, defer))
++		map = NULL;
++
+ 	mutex_unlock(&acpi_ioremap_lock);
  
- ccflags-y += \
- 	-I$(srctree)/$(src)/.. \
-+	-I$(srctree)/$(src)/../include \
- 	-D__VCCOREVER__=0x04000000
-diff --git a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
-index 7da9a4c1ac03..a075cd63da7f 100644
---- a/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
-+++ b/drivers/staging/vc04_services/vchiq-mmal/mmal-vchiq.c
-@@ -23,14 +23,13 @@
- #include <linux/slab.h>
- #include <linux/completion.h>
- #include <linux/vmalloc.h>
-+#include <linux/raspberrypi/vchiq.h>
- #include <media/videobuf2-vmalloc.h>
+-	if (!refcount)
+-		acpi_os_map_cleanup(map);
++	acpi_os_map_cleanup(map);
++}
++
++/**
++ * acpi_os_unmap_iomem - Drop a memory mapping reference.
++ * @virt: Start of the address range to drop a reference to.
++ * @size: Size of the address range to drop a reference to.
++ *
++ * Look up the given virtual address range in the list of existing ACPI memory
++ * mappings, drop a reference to it and unmap it if there are no more active
++ * references to it.
++ *
++ * During early init (when acpi_permanent_mmap has not been set yet) this
++ * routine simply calls __acpi_unmap_table() to get the job done.  Since
++ * __acpi_unmap_table() is an __init function, the __ref annotation is needed
++ * here.
++ */
++void __ref acpi_os_unmap_iomem(void __iomem *virt, acpi_size size)
++{
++	__acpi_os_unmap_iomem(virt, size, false);
+ }
+ EXPORT_SYMBOL_GPL(acpi_os_unmap_iomem);
  
- #include "mmal-common.h"
- #include "mmal-vchiq.h"
- #include "mmal-msg.h"
++/**
++ * acpi_os_unmap_memory - Drop a memory mapping reference.
++ * @virt: Start of the address range to drop a reference to.
++ * @size: Size of the address range to drop a reference to.
++ *
++ * Look up the given virtual address range in the list of existing ACPI memory
++ * mappings, drop a reference to it and if there are no more active references
++ * to it, put it in the list of unused memory mappings.
++ *
++ * During early init (when acpi_permanent_mmap has not been set yet) this
++ * routine behaves like acpi_os_unmap_iomem().
++ */
+ void __ref acpi_os_unmap_memory(void *virt, acpi_size size)
+ {
+-	return acpi_os_unmap_iomem((void __iomem *)virt, size);
++	__acpi_os_unmap_iomem((void __iomem *)virt, size, true);
+ }
+ EXPORT_SYMBOL_GPL(acpi_os_unmap_memory);
  
--#include "interface/vchiq_arm/vchiq.h"
--
- /*
-  * maximum number of components supported.
-  * This matches the maximum permitted by default on the VPU
+@@ -461,7 +502,6 @@ void acpi_os_unmap_generic_address(struct acpi_generic_address *gas)
+ {
+ 	u64 addr;
+ 	struct acpi_ioremap *map;
+-	unsigned long refcount;
+ 
+ 	if (gas->space_id != ACPI_ADR_SPACE_SYSTEM_MEMORY)
+ 		return;
+@@ -472,16 +512,18 @@ void acpi_os_unmap_generic_address(struct acpi_generic_address *gas)
+ 		return;
+ 
+ 	mutex_lock(&acpi_ioremap_lock);
++
+ 	map = acpi_map_lookup(addr, gas->bit_width / 8);
+ 	if (!map) {
+ 		mutex_unlock(&acpi_ioremap_lock);
+ 		return;
+ 	}
+-	refcount = acpi_os_drop_map_ref(map);
++	if (acpi_os_drop_map_ref(map, false))
++		map = NULL;
++
+ 	mutex_unlock(&acpi_ioremap_lock);
+ 
+-	if (!refcount)
+-		acpi_os_map_cleanup(map);
++	acpi_os_map_cleanup(map);
+ }
+ EXPORT_SYMBOL(acpi_os_unmap_generic_address);
+ 
 -- 
-2.27.0
+2.26.2
+
+
+
 
