@@ -2,172 +2,111 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA2CC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED530C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 68CC820656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:42:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9C6E20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:42:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marek-ca.20150623.gappssmtp.com header.i=@marek-ca.20150623.gappssmtp.com header.b="OMKFcKDr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nt/jc4Xm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727925AbgF2VmB (ORCPT
+        id S2403927AbgF2VmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:42:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37572 "EHLO
+        Mon, 29 Jun 2020 17:42:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727940AbgF2Sh7 (ORCPT
+        with ESMTP id S1727930AbgF2Sh6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:37:59 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 172F5C031425
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 10:21:06 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id t11so5946423qvk.1
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 10:21:06 -0700 (PDT)
+        Mon, 29 Jun 2020 14:37:58 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55871C031414;
+        Mon, 29 Jun 2020 10:19:38 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id g67so7703338pgc.8;
+        Mon, 29 Jun 2020 10:19:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=marek-ca.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=0ufJ+qo3NfI0pabE9TlU5wbhOS8NacG5qNuj9VUJYPk=;
-        b=OMKFcKDrueeyAPoA5OL/u+H5xzaq00FILSbTOVAi+N3SEtlp8hpaP/IDWZoxs0d4ew
-         +sBK5UiS0nXSrilEKSGD4wzUOszhbHGyMeJBzOvUx/hI0EUnxruMBe3zf1Qt/nhbXs0c
-         qoQeZsA6V9ZBnAN/4r+5B5IPeQqLi1kq2qEVl5jc/wPf8tX5twMJ4sPsnC3nBqjg4PyU
-         sQYDK1d2pUrg1xYUcsKlZSAPaTlbgvlOvVskif7nCYjrIx4SScOY0PSSUCGyt/V2o4jg
-         bI1WRU3euefu9A9HL6hgH9D+en/DXyshXvMsHWCGd8tJjX5lgiFIAtolwhQCAevaN2Sb
-         QUpA==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=kyRzeVuvIOnKhsJ+5uonKu8f8yeOpAny5n1VdDosRFk=;
+        b=Nt/jc4Xm3mvn5WqweNAwuOw5XVFPe3sw7g1bxrnFrB14aW4N+u8tzFVgRTc90SHXRB
+         ZiXp58toYoc0ODij/6SbIdGrnrSdEZo7/jEOUGj0GahDzCeX/xMZNKq2+bK/otDzj4cz
+         9NsaMQbXza8P6bwQW3R7MhLu/ahcGjau2xeGrfvMhoIIviu7q/uSvncMPj4rd4I8V58E
+         G2z0UuGPGV55wArpeJlarXOVZfwvYi8EM6ltHIpaAoMlUzAi1xe9MmrQkStUPNzjyJa1
+         DYBGvYHBHW56EC5ACRP0KFpMU3rjMPnfG5B26lphNu2nqAxgbskxmS4SFidlzo5ff7l4
+         QSLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=0ufJ+qo3NfI0pabE9TlU5wbhOS8NacG5qNuj9VUJYPk=;
-        b=F9Y3INv3NYyxqKVF5hL1rR2eg/q/Ntx8xIsRyI8Hkj/i53BFZ+wFyrIW9zvRFtWXgu
-         GNFcgNRoHxOgAunKJ1r2iYmQ0Bp20meAE3rYSvQM6zsMGqH3NsviiREpWYdcnbfm6JVH
-         Ar0QGz5DHu511fp4+VCbPRPfTZQasvViBbDa1Ru7CQtqUevvc2VNYdCAp7dct0oKL4GN
-         IZQmME8D1mRuw8J+32F0xwQSGhWK+NNi0rLBG6tWymyfmsAexQ+9EHYtoGrK9E85puj8
-         S6cewiLCWs9TqoM9s0oCl97tc27NAGPfmLjxKZv4ipPj5mnjvZSixHsPRTwzw5TXvLd7
-         ph1g==
-X-Gm-Message-State: AOAM530aR5pekUuoxj0nHRgrEGwVo6OVY8FxI+IKIoGUwh7Kbfu24So4
-        HDSXvyn5lhmAiDOfsMaNJu7L3w==
-X-Google-Smtp-Source: ABdhPJz8pJS6NEBzMCzGxe3fMXEDZTIp+qlfGMxwpTu++ezpcDWHCsvWqMxpRKYmLhixDhcOZZ7X9w==
-X-Received: by 2002:a0c:800e:: with SMTP id 14mr6319433qva.92.1593451265173;
-        Mon, 29 Jun 2020 10:21:05 -0700 (PDT)
-Received: from localhost.localdomain ([147.253.86.153])
-        by smtp.gmail.com with ESMTPSA id q5sm408363qtf.12.2020.06.29.10.21.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 10:21:04 -0700 (PDT)
-From:   Jonathan Marek <jonathan@marek.ca>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        linux-clk@vger.kernel.org (open list:COMMON CLK FRAMEWORK),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 04/13] clk: qcom: clk-alpha-pll: use the right PCAL_DONE value for lucid pll
-Date:   Mon, 29 Jun 2020 13:20:34 -0400
-Message-Id: <20200629172049.30452-5-jonathan@marek.ca>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200629172049.30452-1-jonathan@marek.ca>
-References: <20200629172049.30452-1-jonathan@marek.ca>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kyRzeVuvIOnKhsJ+5uonKu8f8yeOpAny5n1VdDosRFk=;
+        b=k6TEzmiboAZOZ9a+3Viah9V4Lso+MjXejSBIw6/f4GZiZtvr0rDQEaRSosOLEdWNna
+         FIgwAJTPgioti2BrrFZiuEJn+08murrR5shPzZ0/5XNTqGXrJk3xpeskocg0noKQynfh
+         OvM3eVK5+pfB7dwI58B2eD0M/MIlVU+TIik0U5IW2KyQ5oIs8vw+mz5iCnPfsDfIg8ZH
+         4C0RTHcePtAevheHhqB+iIzLokrcUk6XHXhP6uKOxUXp5r+p9stwJGIwiDivO9Z+LEje
+         DAkRUKoFi+TVr2XnX8bDvR/eRyq0Os3Dwyp6OaC4V20PBVyVX5bVGB7i0pUYU9BLz20w
+         0aGA==
+X-Gm-Message-State: AOAM532Agf8e2ktFA87JIkmEeqBT0rbjXiA32Vxtsy4g44xs+28FALJN
+        7IlU4HL+Wc6CKqBqgMVdolU=
+X-Google-Smtp-Source: ABdhPJwBz4zO1nux6YEsGIypPIa2qPGaoUx75nn3Ar1oull1wcbktACCA97kxB2CT7b9kqFFkD3b1w==
+X-Received: by 2002:a63:8c5d:: with SMTP id q29mr10983595pgn.249.1593451177944;
+        Mon, 29 Jun 2020 10:19:37 -0700 (PDT)
+Received: from [10.230.30.107] ([192.19.223.252])
+        by smtp.gmail.com with ESMTPSA id g12sm257852pfb.190.2020.06.29.10.19.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jun 2020 10:19:37 -0700 (PDT)
+Subject: Re: [PATCH v2 05/10] phy: un-inline devm_mdiobus_register()
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Russell King <linux@armlinux.org.uk>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20200629120346.4382-1-brgl@bgdev.pl>
+ <20200629120346.4382-6-brgl@bgdev.pl>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Message-ID: <a88026d5-8a4e-52be-93fd-e683fb2ff05d@gmail.com>
+Date:   Mon, 29 Jun 2020 10:19:35 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Firefox/68.0 Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200629120346.4382-6-brgl@bgdev.pl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lucid PCAL_DONE is different from trion.
 
-Signed-off-by: Jonathan Marek <jonathan@marek.ca>
----
- drivers/clk/qcom/clk-alpha-pll.c | 28 ++++++++++++++++++++++++++--
- drivers/clk/qcom/clk-alpha-pll.h |  2 +-
- 2 files changed, 27 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/qcom/clk-alpha-pll.c b/drivers/clk/qcom/clk-alpha-pll.c
-index be7ffeae21b1..26139ef005e4 100644
---- a/drivers/clk/qcom/clk-alpha-pll.c
-+++ b/drivers/clk/qcom/clk-alpha-pll.c
-@@ -143,6 +143,9 @@ EXPORT_SYMBOL_GPL(clk_alpha_pll_regs);
- #define TRION_PLL_CAL_VAL	0x44
- #define TRION_PCAL_DONE		BIT(26)
- 
-+/* LUCID PLL specific settings and offsets */
-+#define LUCID_PCAL_DONE		BIT(27)
-+
- #define pll_alpha_width(p)					\
- 		((PLL_ALPHA_VAL_U(p) - PLL_ALPHA_VAL(p) == 4) ?	\
- 				 ALPHA_REG_BITWIDTH : ALPHA_REG_16BIT_WIDTH)
-@@ -1447,7 +1450,7 @@ EXPORT_SYMBOL_GPL(clk_trion_pll_configure);
-  * The TRION PLL requires a power-on self-calibration which happens when the
-  * PLL comes out of reset. Calibrate in case it is not completed.
-  */
--static int alpha_pll_trion_prepare(struct clk_hw *hw)
-+static int __alpha_pll_trion_prepare(struct clk_hw *hw, u32 pcal_done)
- {
- 	struct clk_alpha_pll *pll = to_clk_alpha_pll(hw);
- 	u32 regval;
-@@ -1455,7 +1458,7 @@ static int alpha_pll_trion_prepare(struct clk_hw *hw)
- 
- 	/* Return early if calibration is not needed. */
- 	regmap_read(pll->clkr.regmap, PLL_STATUS(pll), &regval);
--	if (regval & TRION_PCAL_DONE)
-+	if (regval & pcal_done)
- 		return 0;
- 
- 	/* On/off to calibrate */
-@@ -1466,6 +1469,16 @@ static int alpha_pll_trion_prepare(struct clk_hw *hw)
- 	return ret;
- }
- 
-+static int alpha_pll_trion_prepare(struct clk_hw *hw)
-+{
-+	return __alpha_pll_trion_prepare(hw, TRION_PCAL_DONE);
-+}
-+
-+static int alpha_pll_lucid_prepare(struct clk_hw *hw)
-+{
-+	return __alpha_pll_trion_prepare(hw, LUCID_PCAL_DONE);
-+}
-+
- static int alpha_pll_trion_set_rate(struct clk_hw *hw, unsigned long rate,
- 				    unsigned long prate)
- {
-@@ -1529,6 +1542,17 @@ const struct clk_ops clk_alpha_pll_trion_ops = {
- 	.round_rate = clk_alpha_pll_round_rate,
- 	.set_rate = alpha_pll_trion_set_rate,
- };
-+EXPORT_SYMBOL_GPL(clk_alpha_pll_trion_ops);
-+
-+const struct clk_ops clk_alpha_pll_lucid_ops = {
-+	.prepare = alpha_pll_lucid_prepare,
-+	.enable = clk_trion_pll_enable,
-+	.disable = clk_trion_pll_disable,
-+	.is_enabled = clk_trion_pll_is_enabled,
-+	.recalc_rate = clk_trion_pll_recalc_rate,
-+	.round_rate = clk_alpha_pll_round_rate,
-+	.set_rate = alpha_pll_trion_set_rate,
-+};
- EXPORT_SYMBOL_GPL(clk_alpha_pll_lucid_ops);
- 
- const struct clk_ops clk_alpha_pll_postdiv_lucid_ops = {
-diff --git a/drivers/clk/qcom/clk-alpha-pll.h b/drivers/clk/qcom/clk-alpha-pll.h
-index 67f1fd271931..69337c1b5850 100644
---- a/drivers/clk/qcom/clk-alpha-pll.h
-+++ b/drivers/clk/qcom/clk-alpha-pll.h
-@@ -132,7 +132,7 @@ extern const struct clk_ops clk_alpha_pll_trion_ops;
- extern const struct clk_ops clk_alpha_pll_fixed_trion_ops;
- extern const struct clk_ops clk_alpha_pll_postdiv_trion_ops;
- 
--#define clk_alpha_pll_lucid_ops clk_alpha_pll_trion_ops
-+extern const struct clk_ops clk_alpha_pll_lucid_ops;
- #define clk_alpha_pll_fixed_lucid_ops clk_alpha_pll_fixed_trion_ops
- extern const struct clk_ops clk_alpha_pll_postdiv_lucid_ops;
- 
+On 6/29/2020 5:03 AM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> Functions should only be static inline if they're very short. This
+> devres helper is already over 10 lines and it will grow soon as we'll
+> be improving upon its approach. Pull it into mdio_devres.c.
+> 
+> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 -- 
-2.26.1
-
+Florian
