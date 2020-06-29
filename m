@@ -2,102 +2,112 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C3A6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:09:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 215DAC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7CE2B20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:09:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s9pAv/an"
+	by mail.kernel.org (Postfix) with ESMTP id F122620656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:10:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730165AbgF2WJS (ORCPT
+        id S1730358AbgF2WKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:09:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43724 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726157AbgF2WJR (ORCPT
+        Mon, 29 Jun 2020 18:10:25 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:56811 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726129AbgF2WKZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 18:09:17 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54660C061755;
-        Mon, 29 Jun 2020 15:09:16 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id z5so8946586pgb.6;
-        Mon, 29 Jun 2020 15:09:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rwnaIBxmlVU5yw/jsEjsqibWX+NWsHn0EL+Q3wi7R7o=;
-        b=s9pAv/anEg0LouIOdLZSVi5xU92+CqCAvTjVhLN6iA9WF4DzXi7loIelOpUD2RUXAy
-         6KfiiLkMZSYXQfD+70ZN97ATGl5wjk86QDrv+aZXKJ96oYiAtTV00ev0GqR++/qnpIFw
-         ms8kub6SVh04WS6NSkUZw2vqzdNP37sF/SjYm+NizUsUnVWNtkd8WD1oHouSYnB16uTx
-         aLK7NkKMyos13044FWbR+a+84658j29h+KxERte3SuneKpGc7W3oQH4pupNYvXWICcXA
-         UyGFlYV8MMR7HcjhjXkEVdLrs+ltfMliLAtu4nPnFDuCUnMvb9hEKzWTuAycHc/6H/B1
-         2ZSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rwnaIBxmlVU5yw/jsEjsqibWX+NWsHn0EL+Q3wi7R7o=;
-        b=Kie1dSGSzH/bHMrhqHTWo4VZQcgZpLP+zr5m4QppEchIaYt65bZMSBwbR77T8EkwIM
-         D8mRRIf71pr2PV3p+SihW1lhrFBDpTL9YMge0BxOlU1w9rTNYK37BYWfnJC+3Ew9/JHp
-         reNrLVs1wfPPxPCbP86rsO5H/6Cpwj9gbkFYwwClRg1KWH4F0Y8oTQW8llNMyL3nAznI
-         TeGwmFxQv0d2wpQqg8wKS02LTXxmwYK9muEd5UYFAxrje9hZbbgUl8KPWJSiUpKDHNLq
-         j1JIk9ZeZT1s3noUN1wrI119sMVtmpiGiGOlFT+LxvpvvE9UUMik2Hy/s4UE3ZKdOFYh
-         3wFw==
-X-Gm-Message-State: AOAM530AWuu11LWyPBaCljZ8UIdlOXfmDg8qke6Y///hd9fmm4CoL+S8
-        /2gqcNsEStFq2Vn2KJmhfb/WsE+9VY0/d/gncuM=
-X-Google-Smtp-Source: ABdhPJwW+kIfqYNuaEhBXt3QXAFS7eLOSnfmcOLZEE9+VO3Hhu3oi1bfnAdtUyEaBr73GKpt8WWVqKu4fZL7SqNw+Ic=
-X-Received: by 2002:a63:457:: with SMTP id 84mr12351993pge.219.1593468555920;
- Mon, 29 Jun 2020 15:09:15 -0700 (PDT)
+        Mon, 29 Jun 2020 18:10:25 -0400
+X-Originating-IP: 176.88.144.104
+Received: from [192.168.1.4] (unknown [176.88.144.104])
+        (Authenticated sender: cengiz@kernel.wtf)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 29A3A20007;
+        Mon, 29 Jun 2020 22:10:20 +0000 (UTC)
+From:   Cengiz Can <cengiz@kernel.wtf>
+To:     Doug Anderson <dianders@chromium.org>
+CC:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        <kgdb-bugreport@lists.sourceforge.net>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sumit Garg <sumit.garg@linaro.org>
+Date:   Tue, 30 Jun 2020 01:10:19 +0300
+Message-ID: <173022188f8.2bfa.85c738e3968116fc5c0dc2de74002084@kernel.wtf>
+In-Reply-To: <CAD=FV=XWYKqHEMDt-0PYHty_syJ9MO6Oz8DVBbacNZS5zGXk9A@mail.gmail.com>
+References: <20200629153756.cxg74nec3repa4lu@holly.lan>
+ <20200629205012.3263-1-cengiz@kernel.wtf>
+ <CAD=FV=XWYKqHEMDt-0PYHty_syJ9MO6Oz8DVBbacNZS5zGXk9A@mail.gmail.com>
+User-Agent: AquaMail/1.25.0-1628 (build: 102500003)
+Subject: Re: [PATCH v2] kdb: remove unnecessary null check of dbg_io_ops
 MIME-Version: 1.0
-References: <20200629200227.1518784-1-lkmlabelt@gmail.com> <20200629200227.1518784-2-lkmlabelt@gmail.com>
- <20200629204653.o6q3a2fufgq62pzo@liuwe-devbox-debian-v2> <CAGpZZ6sUXOnggeQyPfxkdK50=1AhTUqbvBvc2bEs4qwwk+rSPg@mail.gmail.com>
- <MW2PR2101MB1052D0B7884A022D2DB6BED2D76E0@MW2PR2101MB1052.namprd21.prod.outlook.com>
-In-Reply-To: <MW2PR2101MB1052D0B7884A022D2DB6BED2D76E0@MW2PR2101MB1052.namprd21.prod.outlook.com>
-From:   Andres Beltran <lkmlabelt@gmail.com>
-Date:   Mon, 29 Jun 2020 18:09:06 -0400
-Message-ID: <CAGpZZ6tjc0Zzdpt+OFznAFU2NbAt5=7nvRyDmL_phSbnDM_eYA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] Drivers: hv: vmbus: Add vmbus_requestor data
- structure for VMBus hardening
-To:     Michael Kelley <mikelley@microsoft.com>
-Cc:     Wei Liu <wei.liu@kernel.org>,
-        Andres Beltran <t-mabelt@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andrea Parri <parri.andrea@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; format=flowed; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 5:56 PM Michael Kelley <mikelley@microsoft.com> wrote:
-> I'm not understanding the problem here.  Any VMbus driver that uses
-> this requestID allocation mechanism must set newchannel->rqstor_size
-> to a non-zero value.  But if a VMbus driver doesn't use the mechanism,
-> then newchannel->rqstor_size will default to zero, and the mechanism
-> will not be initialized for the channels used by that driver.  I think the
-> cleanup of the mechanism handles the case where it wasn't ever
-> initialized.  Or am I missing something?
+
+On June 30, 2020 00:16:54 Doug Anderson <dianders@chromium.org> wrote:
+
+> Hi,
 >
-> Michael
+> On Mon, Jun 29, 2020 at 1:50 PM Cengiz Can <cengiz@kernel.wtf> wrote:
+>>
+>> `kdb_msg_write` operates on a global `struct kgdb_io *` called
+>> `dbg_io_ops`.
+>>
+>> It's initialized in `debug_core.c` and checked throughout the debug
+>> flow.
+>>
+>> There's a null check in `kdb_msg_write` which triggers static analyzers
+>> and gives the (almost entirely wrong) impression that it can be null.
+>>
+>> Coverity scanner caught this as CID 1465042.
+>>
+>> I have removed the unnecessary null check and eliminated false-positive
+>> forward null dereference warning.
+>>
+>> Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
+>> ---
+>> kernel/debug/kdb/kdb_io.c | 12 +++++-------
+>> 1 file changed, 5 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
+>> index 683a799618ad..4ac59a4fbeec 100644
+>> --- a/kernel/debug/kdb/kdb_io.c
+>> +++ b/kernel/debug/kdb/kdb_io.c
+>> @@ -549,14 +549,12 @@ static void kdb_msg_write(const char *msg, int msg_len)
+>> if (msg_len == 0)
+>>        return;
+>>
+>> -       if (dbg_io_ops) {
+>> -               const char *cp = msg;
+>> -               int len = msg_len;
+>> +       const char *cp = msg;
+>> +       int len = msg_len;
+>
+> kernel/debug/kdb/kdb_io.c:552:14:
+> warning: ISO C90 forbids mixing declarations and code
+> [-Wdeclaration-after-statement]
 
-Yes, that is correct. I think the validation is necessary if there
-exists an instance
-where a driver call vmbus_next_request_id or vmbus_request_addr() with a rqstor
-that has not been previously initialized. Currently, the rqstor
-pointer is not being
-validated in these 2 functions, because we assume that the driver has
-initialized the
-array with a non-zero value before calling next_id() or request_addr().
+Oops!
 
-Andres.
+Sorry for that..
+
+I admit I didn't compile check my second attempt.
+
+/me ducks and covers
+
+Will fix it asap.
+
+Thanks!
+
+>
+> -Doug
+
+
+
