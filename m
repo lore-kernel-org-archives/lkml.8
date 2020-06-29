@@ -3,118 +3,131 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8246FC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F196DC433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F57A20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:02:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C15B320675
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:02:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460960;
-	bh=Ug3cNKJnHBGUb+VWWfyKVtee2sfQFS0RCEUa9nf5CuE=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=jfaFEPkvAbx5dX3dVvKWNSGCIIzalZVxIp/db4s97mlLG4sZeo70sG/StFxpiYIJK
-	 IhDVpT8Wk1orrSHGxXimQn3grxTynTC+bTRuPRO+RL+L2sMSyJNYsZp9M8kb0+Cv3G
-	 x+mU/J2bRweJNnX+fpzr8rdjzTjQcy7sQSHAEY2U=
+	s=default; t=1593460970;
+	bh=bsjkEPlMaZYEEPYBQu3CvF/iDRd/LbjtbUl6h2D/N7c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=q6/odUKBSDjrq9nOCpMHBrIdDAd8Jjednn3FdctQEhrAY2a/svKolgimJiLB7lWjN
+	 o1e2JeS1VO2v5/RrFhLLMUfO9E2xvsLCjb3WM+Aq/KuxrPZk4NE04M7KNSfc/vN0pr
+	 l4WaXTSv2i4eSYn3ayi3Dt9uqFhz6D1hBwqk2VH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731849AbgF2UCj (ORCPT
+        id S2387603AbgF2UCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:02:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51634 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387619AbgF2UC0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 16:02:26 -0400
-Received: from mail-ot1-x344.google.com (mail-ot1-x344.google.com [IPv6:2607:f8b0:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC7A3C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 13:02:26 -0700 (PDT)
-Received: by mail-ot1-x344.google.com with SMTP id d4so16620354otk.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 13:02:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=w8kvw01QtTGGnsYhL3inZ/4k+CD9olJ2CUCa3W61+0s=;
-        b=h1L1Z7dCrx47MCg268EgH0SJuOWCGNJVYK3LrZsWGdpQSI8cXVvV77KMlhMRwkXl+5
-         5h1ZObJbPaMgUG071GI4uGPvN/JpsOIq1j302pkxd768GBERzyTzZYqMyV0ncuu27CI3
-         uSwpLhh/RwPv04MiUhVNRC07ZflqVrx0sZYNU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=w8kvw01QtTGGnsYhL3inZ/4k+CD9olJ2CUCa3W61+0s=;
-        b=LZrq25wCRFUs+3i2PS+b/h+efD38ZS6cMbUs17oNDvl3gaGxmlvso+JLyVLmYdNn5e
-         p5H/I4Mm+tbsr6QXzOSmP+cxmKk9+N2/lJ01tgPLH1GsB0tJvs3hNdF4qIhLXcV/HJ7q
-         cxpnKrgiRRodHvVrftrr+Y0ZdLmdfL3tq2oW3yL85XxfhTa3MT5NCPGxYMM42mdqpYJs
-         ot8WQTD69b0piUmUn3MsEHTmQMcSPpHP/xjEuo8NY+gs9lgDBfy0cAphb8x6cMIhV8fX
-         93OIFubZBVUxt4bzUftMlThU6xralSc9ykd1AchSSw4Qo5fWoUUcq69OpmgQ1ZhEAe6D
-         xyPg==
-X-Gm-Message-State: AOAM532KVcPTU9uUBLkIkHLRqHhpTmzRKRGu01YK1ohUpcvbEdR5/GP7
-        Qf86oKGttJ+xeDZiLdtKLnWEYA==
-X-Google-Smtp-Source: ABdhPJy2ZGQSMxPZ9QL1oqxm59wX+vcuGd8XulqX+fkUvR7Vkg2vUHQVJYME6VOTN++A2JPcd7OKJg==
-X-Received: by 2002:a9d:4810:: with SMTP id c16mr2708947otf.197.1593460946248;
-        Mon, 29 Jun 2020 13:02:26 -0700 (PDT)
-Received: from shuah-t480s.internal (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
-        by smtp.gmail.com with ESMTPSA id p73sm213895oop.36.2020.06.29.13.02.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 13:02:25 -0700 (PDT)
-From:   Shuah Khan <skhan@linuxfoundation.org>
-To:     trenn@suse.com, shuah@kernel.org
-Cc:     Shuah Khan <skhan@linuxfoundation.org>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] cpupower: Fix comparing pointer to 0 coccicheck warns
-Date:   Mon, 29 Jun 2020 14:02:22 -0600
-Message-Id: <20200629200223.27322-1-skhan@linuxfoundation.org>
+        Mon, 29 Jun 2020 16:02:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40580 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733006AbgF2Tad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:30:33 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EDCB2524A;
+        Mon, 29 Jun 2020 15:36:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593444963;
+        bh=bsjkEPlMaZYEEPYBQu3CvF/iDRd/LbjtbUl6h2D/N7c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=19uSIz6z6FktWfetDSXEsAwrXpx2BAudyDIfW6ttCSPkUe2FhcV3TIyEhxnT2nnd+
+         7FwA6ZO4uPUOVLnFSaJaY3OBMfwV4Cmsika/jzYWmdC9MoJw6+lME4Fy26w16l/oQO
+         iYAB/xorfoc/WU2tfMrrFG9gFSo1hOyBN2LZE8Mw=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Huy Nguyen <huyn@mellanox.com>,
+        Boris Pismenny <borisp@mellanox.com>,
+        Raed Salem <raeds@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 061/131] xfrm: Fix double ESP trailer insertion in IPsec crypto offload.
+Date:   Mon, 29 Jun 2020 11:33:52 -0400
+Message-Id: <20200629153502.2494656-62-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
+References: <20200629153502.2494656-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.19.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.19.131-rc1
+X-KernelTest-Deadline: 2020-07-01T15:34+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix cocciccheck wanrns found by:
-make coccicheck MODE=report M=tools/power/cpupower/
+From: Huy Nguyen <huyn@mellanox.com>
 
-tools/power/cpupower/utils/helpers/bitmask.c:29:12-13: WARNING comparing pointer to 0, suggest !E
-tools/power/cpupower/utils/helpers/bitmask.c:29:12-13: WARNING comparing pointer to 0
-tools/power/cpupower/utils/helpers/bitmask.c:43:12-13: WARNING comparing pointer to 0
+[ Upstream commit 94579ac3f6d0820adc83b5dc5358ead0158101e9 ]
 
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+During IPsec performance testing, we see bad ICMP checksum. The error packet
+has duplicated ESP trailer due to double validate_xmit_xfrm calls. The first call
+is from ip_output, but the packet cannot be sent because
+netif_xmit_frozen_or_stopped is true and the packet gets dev_requeue_skb. The second
+call is from NET_TX softirq. However after the first call, the packet already
+has the ESP trailer.
+
+Fix by marking the skb with XFRM_XMIT bit after the packet is handled by
+validate_xmit_xfrm to avoid duplicate ESP trailer insertion.
+
+Fixes: f6e27114a60a ("net: Add a xfrm validate function to validate_xmit_skb")
+Signed-off-by: Huy Nguyen <huyn@mellanox.com>
+Reviewed-by: Boris Pismenny <borisp@mellanox.com>
+Reviewed-by: Raed Salem <raeds@mellanox.com>
+Reviewed-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/power/cpupower/utils/helpers/bitmask.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ include/net/xfrm.h     | 1 +
+ net/xfrm/xfrm_device.c | 4 +++-
+ 2 files changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/power/cpupower/utils/helpers/bitmask.c b/tools/power/cpupower/utils/helpers/bitmask.c
-index 6c7932f5bd66..649d87cb8b0f 100644
---- a/tools/power/cpupower/utils/helpers/bitmask.c
-+++ b/tools/power/cpupower/utils/helpers/bitmask.c
-@@ -26,11 +26,11 @@ struct bitmask *bitmask_alloc(unsigned int n)
- 	struct bitmask *bmp;
+diff --git a/include/net/xfrm.h b/include/net/xfrm.h
+index 48dc1ce2170d8..f087c8d125b8f 100644
+--- a/include/net/xfrm.h
++++ b/include/net/xfrm.h
+@@ -1083,6 +1083,7 @@ struct xfrm_offload {
+ #define	XFRM_GRO		32
+ #define	XFRM_ESP_NO_TRAILER	64
+ #define	XFRM_DEV_RESUME		128
++#define	XFRM_XMIT		256
  
- 	bmp = malloc(sizeof(*bmp));
--	if (bmp == 0)
-+	if (!bmp)
- 		return 0;
- 	bmp->size = n;
- 	bmp->maskp = calloc(longsperbits(n), sizeof(unsigned long));
--	if (bmp->maskp == 0) {
-+	if (!bmp->maskp) {
- 		free(bmp);
- 		return 0;
+ 	__u32			status;
+ #define CRYPTO_SUCCESS				1
+diff --git a/net/xfrm/xfrm_device.c b/net/xfrm/xfrm_device.c
+index 8634ce6771421..e7a0ce98479f3 100644
+--- a/net/xfrm/xfrm_device.c
++++ b/net/xfrm/xfrm_device.c
+@@ -33,7 +33,7 @@ struct sk_buff *validate_xmit_xfrm(struct sk_buff *skb, netdev_features_t featur
+ 	netdev_features_t esp_features = features;
+ 	struct xfrm_offload *xo = xfrm_offload(skb);
+ 
+-	if (!xo)
++	if (!xo || (xo->flags & XFRM_XMIT))
+ 		return skb;
+ 
+ 	if (!(features & NETIF_F_HW_ESP))
+@@ -53,6 +53,8 @@ struct sk_buff *validate_xmit_xfrm(struct sk_buff *skb, netdev_features_t featur
+ 		return skb;
  	}
-@@ -40,7 +40,7 @@ struct bitmask *bitmask_alloc(unsigned int n)
- /* Free `struct bitmask` */
- void bitmask_free(struct bitmask *bmp)
- {
--	if (bmp == 0)
-+	if (!bmp)
- 		return;
- 	free(bmp->maskp);
- 	bmp->maskp = (unsigned long *)0xdeadcdef;  /* double free tripwire */
+ 
++	xo->flags |= XFRM_XMIT;
++
+ 	if (skb_is_gso(skb)) {
+ 		struct net_device *dev = skb->dev;
+ 
 -- 
 2.25.1
 
