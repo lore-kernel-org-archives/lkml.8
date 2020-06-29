@@ -2,133 +2,161 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4D4AC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:39:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A556AC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A63CC20672
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:39:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="WyYrYczh"
+	by mail.kernel.org (Postfix) with ESMTP id 80BCC20672
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:39:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593459584;
+	bh=lKaoxD5baWqBra+UjxTPw0o4s09kf96wr0Lu7J2gTcE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ytKORybDqGLKEYayufVri+3wO0RhsyGCYIkEtACKJTmdb6vchEo1+IBhxxLteJAMk
+	 Js2S82iMT3cwyUsbnnz8jfVXxJ4dhMEvUx0rw98Og1RBvCPj4bAILjBJXIFbitHCbV
+	 nQQ14z/IZ17C8+Y9kS89vmsi92QJrHLX3UIigTB8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbgF2Tjc (ORCPT
+        id S2387411AbgF2Tjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:39:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47596 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387432AbgF2Thm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:37:42 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2AE8BC02F008
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:48:51 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id 22so15662357wmg.1
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 07:48:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZxWvZji5uwPrBPLXbTQpjJxSQCSpKGpn8looTURrQN8=;
-        b=WyYrYczh0g57iO1M/3PZQmqqn0ef7wzvX9DLIV1uukA+2PpqHYZ7E6OBj6I7s17huF
-         xmGWQRdLEubX+y6SkKC54vXAFQ6Xl/CTDEx/3KylJCe/LlZhOzvq1ElIEgk8Oa7GAkmQ
-         fYm66uB0xFybdfCb4r9EeDsd00vpmTOZ8y96W7AK552t1dlbgF1QcStEa/8CUVbTKJc/
-         ely4zsciMu3Fyo29Ujl2EWo4okAYj2xsRXgj1HIjUznpZL1Ie73LfKfv2kNYGQVi4Mg9
-         RDQ39xjVRpeENYn7Upp83vdvwviKs08pkCW50ZCIxE2z0G0z/aaMlFa+x4uppoMBDjVN
-         sNSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ZxWvZji5uwPrBPLXbTQpjJxSQCSpKGpn8looTURrQN8=;
-        b=PBpIgyFaddagAh/8iQwGLXzRJ07HExy/97LNJQH8bl8BzC2BTUw15UJcVAE6BQ3/vc
-         mgeKnE4Sdwfb5Ye2ZbHixlPA8wiWJngmN1tGfpkTYMK727BXReQ3f5wpS/th+yzOaFAg
-         wC9tz4yMNwmLQBX0Q8lnLsZIwLxcTrwlRLNhtUn1QNFgQVuQ1Y2Al1uqTnfIZY4IW9ya
-         T2cNDQ6DhwyHLnvmKsbxlblgg11U6valRYBhBfXtH2oHzUny1uvkdxNlbub6o3+4JFKl
-         5CkRZUaau8YMfZCJGcbWaSOwnS7/bp7GLiR3fZSce80Mxp0tW8yZ5lo5Kd4oFWYtc+X7
-         RALA==
-X-Gm-Message-State: AOAM530ap6+KnvF+oUoV2/jmot/0ZZJDeEdNZcy9PijdXXMBZFZZrzeZ
-        P79rsTJE4wJwE0J7k4WsRCOXtdUGxpwYOw==
-X-Google-Smtp-Source: ABdhPJyhcL6Zm2U1C2In86LV4SojZFiIqTxId35maboanIazbArCthThg95opG9C6764Isy3fZHRpA==
-X-Received: by 2002:a05:600c:281:: with SMTP id 1mr17249958wmk.143.1593442129517;
-        Mon, 29 Jun 2020 07:48:49 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id s8sm42786336wru.38.2020.06.29.07.48.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 07:48:48 -0700 (PDT)
-From:   Dmitry Safonov <dima@arista.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
-        Dmitry Safonov <dima@arista.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org
-Subject: [PATCH v2 0/3] x86/dumpstack: Print registers with the same log level as the backtrace
-Date:   Mon, 29 Jun 2020 15:48:44 +0100
-Message-Id: <20200629144847.492794-1-dima@arista.com>
-X-Mailer: git-send-email 2.27.0
+        Mon, 29 Jun 2020 15:39:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40566 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733011AbgF2Tad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:30:33 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4123252DD;
+        Mon, 29 Jun 2020 15:38:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593445106;
+        bh=lKaoxD5baWqBra+UjxTPw0o4s09kf96wr0Lu7J2gTcE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=DCY+1uHOIrU5zc4T198b0f1DOnnRLSLQpgF/DJf9VRRNSrkBJ5ljpQlo5ThwU0wnJ
+         VyUJQbJQM1Z6bZeDHYYmy3kvqiGMZ91Re3ZUpUMj3lwj5aMcWbbq3Le6mdq5cqf3Jx
+         IWCUzdgDmsbylthNXIJ6AjK+Oij/sPj/z/hbxD+4=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Corey Minyard <cminyard@mvista.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.14 14/78] sctp: Don't advertise IPv4 addresses if ipv6only is set on the socket
+Date:   Mon, 29 Jun 2020 11:37:02 -0400
+Message-Id: <20200629153806.2494953-15-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
+References: <20200629153806.2494953-1-sashal@kernel.org>
 MIME-Version: 1.0
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.14.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.14.186-rc1
+X-KernelTest-Deadline: 2020-07-01T15:38+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changes since v1 [3]:
-- Use (enum show_regs_mode) instead of (int) [nit by Jann, thanks!]
-- Add acks from Petr
+From: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
 
-show_trace_log_lvl() provides x86 platform-specific way to unwind
-backtrace with a given log level. Unfortunately, registers dump(s) are
-not printed with the same log level - instead, KERN_DEFAULT is always
-used.
+[ Upstream commit 471e39df96b9a4c4ba88a2da9e25a126624d7a9c ]
 
-Arista's switches uses quite common setup with rsyslog, where only
-urgent messages goes to console (console_log_level=KERN_ERR), everything
-else goes into /var/log/ as the console baud-rate often is indecently
-slow (9600 bps).
+If a socket is set ipv6only, it will still send IPv4 addresses in the
+INIT and INIT_ACK packets. This potentially misleads the peer into using
+them, which then would cause association termination.
 
-Backtrace dumps without registers printed have proven to be as useful as
-morning standups. Furthermore, in order to introduce KERN_UNSUPPRESSED
-(which I believe is still the most elegant way to fix raciness of sysrq[1])
-the log level should be passed down the stack to register dumping
-functions. Besides, I have a potential use-case for printing traces
-with KERN_DEBUG level [2] (where registers dump shouldn't appear with
-higher log level than the backtrace).
+The fix is to not add IPv4 addresses to ipv6only sockets.
 
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Petr Mladek <pmladek@suse.com>
-Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86@kernel.org
-[1]: https://lore.kernel.org/lkml/20190528002412.1625-1-dima@arista.com/
-[2]: https://lore.kernel.org/linux-doc/20190724170249.9644-1-dima@arista.com/
-[3]: https://lore.kernel.org/lkml/20200623162958.331051-1-dima@arista.com/
-Dmitry Safonov (3):
-  x86/dumpstack: Add log_lvl to show_iret_regs()
-  x86/dumpstack: Add log_lvl to __show_regs()
-  x86/dumpstack: Show registers dump with trace's log level
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Reported-by: Corey Minyard <cminyard@mvista.com>
+Signed-off-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Tested-by: Corey Minyard <cminyard@mvista.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ include/net/sctp/constants.h | 8 +++++---
+ net/sctp/associola.c         | 5 ++++-
+ net/sctp/bind_addr.c         | 1 +
+ net/sctp/protocol.c          | 3 ++-
+ 4 files changed, 12 insertions(+), 5 deletions(-)
 
- arch/x86/include/asm/kdebug.h |  5 ++--
- arch/x86/kernel/dumpstack.c   | 23 +++++++++-------
- arch/x86/kernel/process_32.c  | 29 ++++++++++----------
- arch/x86/kernel/process_64.c  | 51 ++++++++++++++++++-----------------
- 4 files changed, 57 insertions(+), 51 deletions(-)
-
+diff --git a/include/net/sctp/constants.h b/include/net/sctp/constants.h
+index deaafa9b09cbe..d4da07048aa3e 100644
+--- a/include/net/sctp/constants.h
++++ b/include/net/sctp/constants.h
+@@ -361,11 +361,13 @@ enum {
+ 	 ipv4_is_anycast_6to4(a))
+ 
+ /* Flags used for the bind address copy functions.  */
+-#define SCTP_ADDR6_ALLOWED	0x00000001	/* IPv6 address is allowed by
++#define SCTP_ADDR4_ALLOWED	0x00000001	/* IPv4 address is allowed by
+ 						   local sock family */
+-#define SCTP_ADDR4_PEERSUPP	0x00000002	/* IPv4 address is supported by
++#define SCTP_ADDR6_ALLOWED	0x00000002	/* IPv6 address is allowed by
++						   local sock family */
++#define SCTP_ADDR4_PEERSUPP	0x00000004	/* IPv4 address is supported by
+ 						   peer */
+-#define SCTP_ADDR6_PEERSUPP	0x00000004	/* IPv6 address is supported by
++#define SCTP_ADDR6_PEERSUPP	0x00000008	/* IPv6 address is supported by
+ 						   peer */
+ 
+ /* Reasons to retransmit. */
+diff --git a/net/sctp/associola.c b/net/sctp/associola.c
+index dd1a3bd80be5f..0a5764016721b 100644
+--- a/net/sctp/associola.c
++++ b/net/sctp/associola.c
+@@ -1598,12 +1598,15 @@ void sctp_assoc_rwnd_decrease(struct sctp_association *asoc, unsigned int len)
+ int sctp_assoc_set_bind_addr_from_ep(struct sctp_association *asoc,
+ 				     enum sctp_scope scope, gfp_t gfp)
+ {
++	struct sock *sk = asoc->base.sk;
+ 	int flags;
+ 
+ 	/* Use scoping rules to determine the subset of addresses from
+ 	 * the endpoint.
+ 	 */
+-	flags = (PF_INET6 == asoc->base.sk->sk_family) ? SCTP_ADDR6_ALLOWED : 0;
++	flags = (PF_INET6 == sk->sk_family) ? SCTP_ADDR6_ALLOWED : 0;
++	if (!inet_v6_ipv6only(sk))
++		flags |= SCTP_ADDR4_ALLOWED;
+ 	if (asoc->peer.ipv4_address)
+ 		flags |= SCTP_ADDR4_PEERSUPP;
+ 	if (asoc->peer.ipv6_address)
+diff --git a/net/sctp/bind_addr.c b/net/sctp/bind_addr.c
+index 7df3704982f54..38d01cfb313e5 100644
+--- a/net/sctp/bind_addr.c
++++ b/net/sctp/bind_addr.c
+@@ -453,6 +453,7 @@ static int sctp_copy_one_addr(struct net *net, struct sctp_bind_addr *dest,
+ 		 * well as the remote peer.
+ 		 */
+ 		if ((((AF_INET == addr->sa.sa_family) &&
++		      (flags & SCTP_ADDR4_ALLOWED) &&
+ 		      (flags & SCTP_ADDR4_PEERSUPP))) ||
+ 		    (((AF_INET6 == addr->sa.sa_family) &&
+ 		      (flags & SCTP_ADDR6_ALLOWED) &&
+diff --git a/net/sctp/protocol.c b/net/sctp/protocol.c
+index 785456df75051..8fe9c06462052 100644
+--- a/net/sctp/protocol.c
++++ b/net/sctp/protocol.c
+@@ -213,7 +213,8 @@ int sctp_copy_local_addr_list(struct net *net, struct sctp_bind_addr *bp,
+ 		 * sock as well as the remote peer.
+ 		 */
+ 		if (addr->a.sa.sa_family == AF_INET &&
+-		    !(copy_flags & SCTP_ADDR4_PEERSUPP))
++		    (!(copy_flags & SCTP_ADDR4_ALLOWED) ||
++		     !(copy_flags & SCTP_ADDR4_PEERSUPP)))
+ 			continue;
+ 		if (addr->a.sa.sa_family == AF_INET6 &&
+ 		    (!(copy_flags & SCTP_ADDR6_ALLOWED) ||
 -- 
-2.27.0
+2.25.1
 
