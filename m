@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF162C433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F486C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:32:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B3807206A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:32:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22646206A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:32:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593462733;
-	bh=ndz9JqMuoWKFJXjIUL+1TD9ie22pA9R+CVEVaN8GQd8=;
+	s=default; t=1593462738;
+	bh=3ALKqSb//yNIIQlkl8NRcrYMmxqeQWP1nF4+ZNgu8uA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cY9VkygZx3o62kiSIEPW1y8bF3PycFMuHpblQ0oW3VVEGkSvbq4MWN4ZZataqSny1
-	 U+MXlrbhBbTekdMhZawXC812YqRbgjBVnMdAi8DCMLcPEwY5Dd5oSkFGSTyv1YoW/+
-	 SLiozPm0WRbOuX3VlKbJo3C0xXmJtDslGrPs7dQg=
+	b=1alElWRqLDg2Nh/GLXUSLAMETdDH07ezjiAXI/TSuDtVc9E5dHeTmuvXGKI3LA6z0
+	 JEm/HTkSvFOXPd9pIdemoLZkIOR5idiuENoBFoyhdlQd99VVlEK4OqmOSb+d+bYMyB
+	 bQRMi2nJ+StZUEQIPE8BdHFVBbb8yazD6CGfwqIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388435AbgF2UcI (ORCPT
+        id S2389195AbgF2UcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:32:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37040 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:32:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37038 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732472AbgF2TZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732475AbgF2TZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:19 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1310B253F3;
-        Mon, 29 Jun 2020 15:42:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B30625358;
+        Mon, 29 Jun 2020 15:40:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445340;
-        bh=ndz9JqMuoWKFJXjIUL+1TD9ie22pA9R+CVEVaN8GQd8=;
+        s=default; t=1593445219;
+        bh=3ALKqSb//yNIIQlkl8NRcrYMmxqeQWP1nF4+ZNgu8uA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SQeTzuYw+sNTeNeLUhyE+n4E+PZP0or0R7Q6JIBxSLpU+7wdrMN2xRruwrATR+ogo
-         1m5+vh8fihOUZ/Dlo7i4eLCADEg266KNgQE1BB939+chxbLGCJatcwfZpbk04hJEG3
-         1Be7bU9c/MGoEPWgEIFRv80BsI6TVmYhUD+Jzz7k=
+        b=XTs/Mp2RLBPEGm8OlqV0b9no7FybZXziCfnyS0BEG4X4ZBumFjjvI70bKuGsx/7rz
+         WuFb4RjOqgi+xEWAHUqmWjmCGOTv3rV0dCgNvaYjM3TQ/0kzjIWhfcTHsozNkB4jMu
+         YbNeS13pa9rsTaekcdou4tH9eIEJ6UB9tpzxu7TE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Colin Ian King <colin.king@canonical.com>,
-        Shuah Khan <shuahkh@osg.samsung.com>,
-        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.9 099/191] media: dvb_frontend: initialize variable s with FE_NONE instead of 0
-Date:   Mon, 29 Jun 2020 11:38:35 -0400
-Message-Id: <20200629154007.2495120-100-sashal@kernel.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 007/191] ARM: integrator: Add some Kconfig selections
+Date:   Mon, 29 Jun 2020 11:37:03 -0400
+Message-Id: <20200629154007.2495120-8-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -67,38 +64,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-commit 450694c3b9f47b826a002089c463b9454b4bbe42 upstream.
+[ Upstream commit d2854bbe5f5c4b4bec8061caf4f2e603d8819446 ]
 
-GIT_AUTHOR_NAME=Colin King
-GIT_AUTHOR_EMAIL=colin.king@canonical.com
+The CMA and DMA_CMA Kconfig options need to be selected
+by the Integrator in order to produce boot console on some
+Integrator systems.
 
-In a previous commit, we added FE_NONE as an unknown fe_status.
-Initialize variable s to FE_NONE instead of the more opaque value 0.
+The REGULATOR and REGULATOR_FIXED_VOLTAGE need to be
+selected in order to boot the system from an external
+MMC card when using MMCI/PL181 from the device tree
+probe path.
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Shuah Khan <shuahkh@osg.samsung.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Select these things directly from the Kconfig so we are
+sure to be able to bring the systems up with console
+from any device tree.
+
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/dvb-core/dvb_frontend.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/mach-integrator/Kconfig | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/media/dvb-core/dvb_frontend.c b/drivers/media/dvb-core/dvb_frontend.c
-index 372057cabea45..3b045298546c7 100644
---- a/drivers/media/dvb-core/dvb_frontend.c
-+++ b/drivers/media/dvb-core/dvb_frontend.c
-@@ -458,7 +458,7 @@ static int dvb_frontend_swzigzag_autotune(struct dvb_frontend *fe, int check_wra
+diff --git a/arch/arm/mach-integrator/Kconfig b/arch/arm/mach-integrator/Kconfig
+index cefe44f6889bd..ba124f8704fac 100644
+--- a/arch/arm/mach-integrator/Kconfig
++++ b/arch/arm/mach-integrator/Kconfig
+@@ -3,6 +3,8 @@ menuconfig ARCH_INTEGRATOR
+ 	depends on ARCH_MULTI_V4T || ARCH_MULTI_V5 || ARCH_MULTI_V6
+ 	select ARM_AMBA
+ 	select COMMON_CLK_VERSATILE
++	select CMA
++	select DMA_CMA
+ 	select HAVE_TCM
+ 	select ICST
+ 	select MFD_SYSCON
+@@ -34,14 +36,13 @@ config INTEGRATOR_IMPD1
+ 	select ARM_VIC
+ 	select GPIO_PL061
+ 	select GPIOLIB
++	select REGULATOR
++	select REGULATOR_FIXED_VOLTAGE
+ 	help
+ 	  The IM-PD1 is an add-on logic module for the Integrator which
+ 	  allows ARM(R) Ltd PrimeCells to be developed and evaluated.
+ 	  The IM-PD1 can be found on the Integrator/PP2 platform.
  
- static void dvb_frontend_swzigzag(struct dvb_frontend *fe)
- {
--	enum fe_status s = 0;
-+	enum fe_status s = FE_NONE;
- 	int retval = 0;
- 	struct dvb_frontend_private *fepriv = fe->frontend_priv;
- 	struct dtv_frontend_properties *c = &fe->dtv_property_cache, tmp;
+-	  To compile this driver as a module, choose M here: the
+-	  module will be called impd1.
+-
+ config INTEGRATOR_CM7TDMI
+ 	bool "Integrator/CM7TDMI core module"
+ 	depends on ARCH_INTEGRATOR_AP
 -- 
 2.25.1
 
