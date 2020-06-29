@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD69C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBD17C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DA66C20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:49:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C502520656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:49:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467349;
-	bh=S4OBt6uJBfnbnKcJpzwKgOczPbY5w4kwCO+lHH4TmuU=;
+	s=default; t=1593467352;
+	bh=Top0jrTBsS+WN/rfoZdoiU42xWmYKRZ9EXLESTgsQtw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YFZklKyF90CmE5DQiAUxEpd9GEMfFw0cIYuyZfc8rOFLMNvF4lM/0oOfJa8Nrd+bt
-	 xzychqu9QTIACmyATN8tSii9JvEcUPsJwhXi4WUQcg2JBAhycm09KTgTl8yUK0xyFK
-	 PaQtzFZ3qqqY8Aq+Ialvgk7KCgyQ3ZV/Q0LOnqQk=
+	b=l/tm0RoRJV5yNMkXQxzgKcAFeNsiCCJ6ZqcfVC3G6WX8QT1leJ2Y0rgizDrdLm4x8
+	 AZqwXzFFyw/cfxToIrRxGOu8qsyJkzj/xisV0LVyZqI2lp7qniErAciA9i43IfLfoo
+	 zY8CmscE/wVQC0K3fitTaRq4rVHkwfLyO/PqQJcU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbgF2VtH (ORCPT
+        id S2404354AbgF2VtK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:49:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56910 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:49:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56886 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726697AbgF2Sfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726689AbgF2Sfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:35:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 885952475E;
-        Mon, 29 Jun 2020 15:21:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 890122479F;
+        Mon, 29 Jun 2020 15:21:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444077;
-        bh=S4OBt6uJBfnbnKcJpzwKgOczPbY5w4kwCO+lHH4TmuU=;
+        s=default; t=1593444108;
+        bh=Top0jrTBsS+WN/rfoZdoiU42xWmYKRZ9EXLESTgsQtw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wBU89bRvtrD0hN08gCF4gMyvZge8vyaAND1NfjjuYgyrd9TiTRRelHfiC+jN08tBC
-         zC/Xfj7V3M8CPMAK6weRmTsqGsYapy1P88HXfASH2+QUVLMJHTfT8um283LYIo+/9V
-         a7KZKZXmvcoSfqqCAkG/FRlCDWzcAdfGuD7+khJY=
+        b=EfLCgj9gBY0FcqFBtn7BTh9djoSzJ8jknpACV1ZnQ+vc/I5cffiHZjr3SNGayTXQQ
+         YervzJ5H1xkcFBu2kLF3O0a6yE2Ii8eTc/ItORY+u0Ie4VACjiBaXSJRc2c+j/4cE2
+         iX1DSRijr5sB8MMTO9Tv6NRoJYhnurDPUm/xu8gk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mauricio Faria de Oliveira <mfo@canonical.com>,
-        Ryan Finnie <ryan@finnie.org>,
-        Sebastian Marsching <sebastian@marsching.com>,
-        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.7 186/265] bcache: check and adjust logical block size for backing devices
-Date:   Mon, 29 Jun 2020 11:16:59 -0400
-Message-Id: <20200629151818.2493727-187-sashal@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 5.7 219/265] x86/cpu: Use pinning mask for CR4 bits needing to be 0
+Date:   Mon, 29 Jun 2020 11:17:32 -0400
+Message-Id: <20200629151818.2493727-220-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -67,180 +65,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mauricio Faria de Oliveira <mfo@canonical.com>
+From: Kees Cook <keescook@chromium.org>
 
-[ Upstream commit dcacbc1242c71e18fa9d2eadc5647e115c9c627d ]
+commit a13b9d0b97211579ea63b96c606de79b963c0f47 upstream.
 
-It's possible for a block driver to set logical block size to
-a value greater than page size incorrectly; e.g. bcache takes
-the value from the superblock, set by the user w/ make-bcache.
+The X86_CR4_FSGSBASE bit of CR4 should not change after boot[1]. Older
+kernels should enforce this bit to zero, and newer kernels need to
+enforce it depending on boot-time configuration (e.g. "nofsgsbase").
+To support a pinned bit being either 1 or 0, use an explicit mask in
+combination with the expected pinned bit values.
 
-This causes a BUG/NULL pointer dereference in the path:
+[1] https://lore.kernel.org/lkml/20200527103147.GI325280@hirez.programming.kicks-ass.net
 
-  __blkdev_get()
-  -> set_init_blocksize() // set i_blkbits based on ...
-     -> bdev_logical_block_size()
-        -> queue_logical_block_size() // ... this value
-  -> bdev_disk_changed()
-     ...
-     -> blkdev_readpage()
-        -> block_read_full_page()
-           -> create_page_buffers() // size = 1 << i_blkbits
-              -> create_empty_buffers() // give size/take pointer
-                 -> alloc_page_buffers() // return NULL
-                 .. BUG!
-
-Because alloc_page_buffers() is called with size > PAGE_SIZE,
-thus it initializes head = NULL, skips the loop, return head;
-then create_empty_buffers() gets (and uses) the NULL pointer.
-
-This has been around longer than commit ad6bf88a6c19 ("block:
-fix an integer overflow in logical block size"); however, it
-increased the range of values that can trigger the issue.
-
-Previously only 8k/16k/32k (on x86/4k page size) would do it,
-as greater values overflow unsigned short to zero, and queue_
-logical_block_size() would then use the default of 512.
-
-Now the range with unsigned int is much larger, and users w/
-the 512k value, which happened to be zero'ed previously and
-work fine, started to hit this issue -- as the zero is gone,
-and queue_logical_block_size() does return 512k (>PAGE_SIZE.)
-
-Fix this by checking the bcache device's logical block size,
-and if it's greater than page size, fallback to the backing/
-cached device's logical page size.
-
-This doesn't affect cache devices as those are still checked
-for block/page size in read_super(); only the backing/cached
-devices are not.
-
-Apparently it's a regression from commit 2903381fce71 ("bcache:
-Take data offset from the bdev superblock."), moving the check
-into BCACHE_SB_VERSION_CDEV only. Now that we have superblocks
-of backing devices out there with this larger value, we cannot
-refuse to load them (i.e., have a similar check in _BDEV.)
-
-Ideally perhaps bcache should use all values from the backing
-device (physical/logical/io_min block size)? But for now just
-fix the problematic case.
-
-Test-case:
-
-    # IMG=/root/disk.img
-    # dd if=/dev/zero of=$IMG bs=1 count=0 seek=1G
-    # DEV=$(losetup --find --show $IMG)
-    # make-bcache --bdev $DEV --block 8k
-      < see dmesg >
-
-Before:
-
-    # uname -r
-    5.7.0-rc7
-
-    [   55.944046] BUG: kernel NULL pointer dereference, address: 0000000000000000
-    ...
-    [   55.949742] CPU: 3 PID: 610 Comm: bcache-register Not tainted 5.7.0-rc7 #4
-    ...
-    [   55.952281] RIP: 0010:create_empty_buffers+0x1a/0x100
-    ...
-    [   55.966434] Call Trace:
-    [   55.967021]  create_page_buffers+0x48/0x50
-    [   55.967834]  block_read_full_page+0x49/0x380
-    [   55.972181]  do_read_cache_page+0x494/0x610
-    [   55.974780]  read_part_sector+0x2d/0xaa
-    [   55.975558]  read_lba+0x10e/0x1e0
-    [   55.977904]  efi_partition+0x120/0x5a6
-    [   55.980227]  blk_add_partitions+0x161/0x390
-    [   55.982177]  bdev_disk_changed+0x61/0xd0
-    [   55.982961]  __blkdev_get+0x350/0x490
-    [   55.983715]  __device_add_disk+0x318/0x480
-    [   55.984539]  bch_cached_dev_run+0xc5/0x270
-    [   55.986010]  register_bcache.cold+0x122/0x179
-    [   55.987628]  kernfs_fop_write+0xbc/0x1a0
-    [   55.988416]  vfs_write+0xb1/0x1a0
-    [   55.989134]  ksys_write+0x5a/0xd0
-    [   55.989825]  do_syscall_64+0x43/0x140
-    [   55.990563]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-    [   55.991519] RIP: 0033:0x7f7d60ba3154
-    ...
-
-After:
-
-    # uname -r
-    5.7.0.bcachelbspgsz
-
-    [   31.672460] bcache: bcache_device_init() bcache0: sb/logical block size (8192) greater than page size (4096) falling back to device logical block size (512)
-    [   31.675133] bcache: register_bdev() registered backing device loop0
-
-    # grep ^ /sys/block/bcache0/queue/*_block_size
-    /sys/block/bcache0/queue/logical_block_size:512
-    /sys/block/bcache0/queue/physical_block_size:8192
-
-Reported-by: Ryan Finnie <ryan@finnie.org>
-Reported-by: Sebastian Marsching <sebastian@marsching.com>
-Signed-off-by: Mauricio Faria de Oliveira <mfo@canonical.com>
-Signed-off-by: Coly Li <colyli@suse.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/202006082013.71E29A42@keescook
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/md/bcache/super.c | 22 +++++++++++++++++++---
- 1 file changed, 19 insertions(+), 3 deletions(-)
+ arch/x86/kernel/cpu/common.c | 24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/md/bcache/super.c b/drivers/md/bcache/super.c
-index 4d8bf731b118c..a2e5a0fcd7d5c 100644
---- a/drivers/md/bcache/super.c
-+++ b/drivers/md/bcache/super.c
-@@ -819,7 +819,8 @@ static void bcache_device_free(struct bcache_device *d)
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index e2e4af685f9b4..c669a5756bdf6 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -348,6 +348,9 @@ out:
+ 	cr4_clear_bits(X86_CR4_UMIP);
  }
  
- static int bcache_device_init(struct bcache_device *d, unsigned int block_size,
--			      sector_t sectors, make_request_fn make_request_fn)
-+			      sector_t sectors, make_request_fn make_request_fn,
-+			      struct block_device *cached_bdev)
++/* These bits should not change their value after CPU init is finished. */
++static const unsigned long cr4_pinned_mask =
++	X86_CR4_SMEP | X86_CR4_SMAP | X86_CR4_UMIP | X86_CR4_FSGSBASE;
+ static DEFINE_STATIC_KEY_FALSE_RO(cr_pinning);
+ static unsigned long cr4_pinned_bits __ro_after_init;
+ 
+@@ -372,20 +375,20 @@ EXPORT_SYMBOL(native_write_cr0);
+ 
+ void native_write_cr4(unsigned long val)
  {
- 	struct request_queue *q;
- 	const size_t max_stripes = min_t(size_t, INT_MAX,
-@@ -885,6 +886,21 @@ static int bcache_device_init(struct bcache_device *d, unsigned int block_size,
- 	q->limits.io_min		= block_size;
- 	q->limits.logical_block_size	= block_size;
- 	q->limits.physical_block_size	= block_size;
-+
-+	if (q->limits.logical_block_size > PAGE_SIZE && cached_bdev) {
-+		/*
-+		 * This should only happen with BCACHE_SB_VERSION_BDEV.
-+		 * Block/page size is checked for BCACHE_SB_VERSION_CDEV.
-+		 */
-+		pr_info("%s: sb/logical block size (%u) greater than page size "
-+			"(%lu) falling back to device logical block size (%u)",
-+			d->disk->disk_name, q->limits.logical_block_size,
-+			PAGE_SIZE, bdev_logical_block_size(cached_bdev));
-+
-+		/* This also adjusts physical block size/min io size if needed */
-+		blk_queue_logical_block_size(q, bdev_logical_block_size(cached_bdev));
-+	}
-+
- 	blk_queue_flag_set(QUEUE_FLAG_NONROT, d->disk->queue);
- 	blk_queue_flag_clear(QUEUE_FLAG_ADD_RANDOM, d->disk->queue);
- 	blk_queue_flag_set(QUEUE_FLAG_DISCARD, d->disk->queue);
-@@ -1342,7 +1358,7 @@ static int cached_dev_init(struct cached_dev *dc, unsigned int block_size)
+-	unsigned long bits_missing = 0;
++	unsigned long bits_changed = 0;
  
- 	ret = bcache_device_init(&dc->disk, block_size,
- 			 dc->bdev->bd_part->nr_sects - dc->sb.data_offset,
--			 cached_dev_make_request);
-+			 cached_dev_make_request, dc->bdev);
- 	if (ret)
- 		return ret;
+ set_register:
+ 	asm volatile("mov %0,%%cr4": "+r" (val), "+m" (cr4_pinned_bits));
  
-@@ -1455,7 +1471,7 @@ static int flash_dev_run(struct cache_set *c, struct uuid_entry *u)
- 	kobject_init(&d->kobj, &bch_flash_dev_ktype);
+ 	if (static_branch_likely(&cr_pinning)) {
+-		if (unlikely((val & cr4_pinned_bits) != cr4_pinned_bits)) {
+-			bits_missing = ~val & cr4_pinned_bits;
+-			val |= bits_missing;
++		if (unlikely((val & cr4_pinned_mask) != cr4_pinned_bits)) {
++			bits_changed = (val & cr4_pinned_mask) ^ cr4_pinned_bits;
++			val = (val & ~cr4_pinned_mask) | cr4_pinned_bits;
+ 			goto set_register;
+ 		}
+-		/* Warn after we've set the missing bits. */
+-		WARN_ONCE(bits_missing, "CR4 bits went missing: %lx!?\n",
+-			  bits_missing);
++		/* Warn after we've corrected the changed bits. */
++		WARN_ONCE(bits_changed, "pinned CR4 bits changed: 0x%lx!?\n",
++			  bits_changed);
+ 	}
+ }
+ EXPORT_SYMBOL(native_write_cr4);
+@@ -397,7 +400,7 @@ void cr4_init(void)
+ 	if (boot_cpu_has(X86_FEATURE_PCID))
+ 		cr4 |= X86_CR4_PCIDE;
+ 	if (static_branch_likely(&cr_pinning))
+-		cr4 |= cr4_pinned_bits;
++		cr4 = (cr4 & ~cr4_pinned_mask) | cr4_pinned_bits;
  
- 	if (bcache_device_init(d, block_bytes(c), u->sectors,
--			flash_dev_make_request))
-+			flash_dev_make_request, NULL))
- 		goto err;
+ 	__write_cr4(cr4);
  
- 	bcache_device_attach(d, c, u - c->uuids);
+@@ -412,10 +415,7 @@ void cr4_init(void)
+  */
+ static void __init setup_cr_pinning(void)
+ {
+-	unsigned long mask;
+-
+-	mask = (X86_CR4_SMEP | X86_CR4_SMAP | X86_CR4_UMIP);
+-	cr4_pinned_bits = this_cpu_read(cpu_tlbstate.cr4) & mask;
++	cr4_pinned_bits = this_cpu_read(cpu_tlbstate.cr4) & cr4_pinned_mask;
+ 	static_key_enable(&cr_pinning.key);
+ }
+ 
 -- 
 2.25.1
 
