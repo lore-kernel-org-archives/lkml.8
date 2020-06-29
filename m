@@ -2,197 +2,112 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48973C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:21:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E61CC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20F6520826
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:21:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59A5B20826
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:21:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="wDExhoy0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a+Nlvf8b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729994AbgF2VV1 (ORCPT
+        id S1730114AbgF2VVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:21:27 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:10502 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728014AbgF2Swn (ORCPT
+        Mon, 29 Jun 2020 17:21:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40020 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729767AbgF2Swn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:52:43 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593456762; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=SBDpthJsACP4X9l/XtUwp2evGNFSv28FhmlHvAnZ2bs=; b=wDExhoy0GnfX4nnXMLLO4x3pu1lTjZJ/Q2kFm1iyzGb2OpvH4d5pi5HEka426FtaoEzlIG9G
- jwLWgWMmADIFS35S2bIk2ctol3hoFR/75iMoc4MTbqYYHoP3uZ2Vj3vb9Z47tk2imXzP82Mx
- W7OTsLQQSFpQWvgxh49ayhI1W+I=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n15.prod.us-east-1.postgun.com with SMTP id
- 5efa001ba3d8a4474330b27c (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 29 Jun 2020 14:52:11
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 0B4CDC433AF; Mon, 29 Jun 2020 14:52:09 +0000 (UTC)
-Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jcrouse)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A262AC433C6;
-        Mon, 29 Jun 2020 14:52:07 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A262AC433C6
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
-Date:   Mon, 29 Jun 2020 08:52:04 -0600
-From:   Jordan Crouse <jcrouse@codeaurora.org>
-To:     Rob Clark <robdclark@gmail.com>
-Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Takashi Iwai <tiwai@suse.de>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Shawn Guo <shawn.guo@linaro.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Brian Masney <masneyb@onstation.org>
-Subject: Re: [Freedreno] [PATCH v9 6/7] drm/msm: Set the global virtual
- address range from the IOMMU domain
-Message-ID: <20200629145203.GB25740@jcrouse1-lnx.qualcomm.com>
-Mail-Followup-To: Rob Clark <robdclark@gmail.com>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
-        David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Takashi Iwai <tiwai@suse.de>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        John Stultz <john.stultz@linaro.org>,
-        Daniel Vetter <daniel@ffwll.ch>, Shawn Guo <shawn.guo@linaro.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Brian Masney <masneyb@onstation.org>
-References: <20200626200042.13713-1-jcrouse@codeaurora.org>
- <20200626200042.13713-7-jcrouse@codeaurora.org>
- <CAF6AEGuNSAYNMG6CH6VMuyjiz5dfRoLWQ9OAFxPJrFmBrHe+Wg@mail.gmail.com>
+Received: from mail-qk1-x744.google.com (mail-qk1-x744.google.com [IPv6:2607:f8b0:4864:20::744])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27425C031C58
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 10:37:24 -0700 (PDT)
+Received: by mail-qk1-x744.google.com with SMTP id l6so16021789qkc.6
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 10:37:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gX63ojcBTGYgpVQDnPBqhrIrSpeuTImvwcad9Nat98g=;
+        b=a+Nlvf8b0GAArIMrvHg0EqEamnQp9ja+U/Uaeg7YODf1sy6MdhXEIbIC32Z9sDUOi1
+         n0YTthCuO1TCQA9Gzu9gdMfESJL1GeRhxHUT5p3EQI87TVgx1NNb13ujax0hp50ZogcJ
+         aF7GNAKqkDl24FtYhc1YG1eiDGxe/idMS4E9EP3/SB84Y5mO2I5eNGd+tzlL9pJroJfe
+         udmz34RIobKyserhWvMPiFQwaQxXynM9r2sJ0ecK2CcGyL5m3mtv3P35aXs4rPoKs0cb
+         ajDa4SmE0yv8vLaOdd76VlRleFAgNw48fp+Nj4vHQ4VJJQKY/gRToo7RdOUsg5NMN62E
+         O3qA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=gX63ojcBTGYgpVQDnPBqhrIrSpeuTImvwcad9Nat98g=;
+        b=KDBc9dqOU0asuzIX4ZIWZK1I+3BkloMky4TgSb2G7VKNbSBAUjRQOsWBgFFfqr5AKl
+         BIKLFrbBfKhYel2AgF37NBXy5W4BO5tuahLTUaOS0jFxpghQXFG9TDdy1KegLguAGXrq
+         hsA7r98cPkwlw8Q+Vs3fs2SVVkKbCRdEVLJXLFoMBon65UmwcId6GsutjfcWXPelfx1s
+         eD7GqnjYVnAROEUoTsqinF0X3PzVT9SPGPFmLPdWvvLN3zHeKG/F2Z9gCTaI29Sgglrb
+         mL5n12cdeyDA5vk04bZ8dbaMcj0gOyf1wo4za+t3vObO9J6y9I3mYV1LL9c7LdWMvjkB
+         mrAQ==
+X-Gm-Message-State: AOAM533xj1ihkR6FMluR1jRm4PHF3WLTCBc44O5JD/62su8qJrbSr+YD
+        k3aocfjlXb0x0tj/OKKyh/8=
+X-Google-Smtp-Source: ABdhPJx+LIz0P/8LenwLfgW7Ca7V5ftnp3ugGg/IPNoNTAFicH4tYhzrZM00ANPF8tSjhiRWFCtTWw==
+X-Received: by 2002:a05:620a:2051:: with SMTP id d17mr16203522qka.237.1593452243400;
+        Mon, 29 Jun 2020 10:37:23 -0700 (PDT)
+Received: from mooncell.myfiosgateway.com (pool-173-75-208-99.phlapa.fios.verizon.net. [173.75.208.99])
+        by smtp.gmail.com with ESMTPSA id s46sm355282qts.85.2020.06.29.10.37.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 10:37:22 -0700 (PDT)
+From:   Brooke Basile <brookebasile@gmail.com>
+To:     Larry.Finger@lwfinger.net, gregkh@linuxfoundation.org,
+        straube.linux@gmail.com, yepeilin.cs@gmail.com,
+        colin.king@canonical.com
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        Brooke Basile <brookebasile@gmail.com>
+Subject: [PATCH v2] staging: rtl8188eu: Replace function name with __func__
+Date:   Mon, 29 Jun 2020 13:37:11 -0400
+Message-Id: <20200629173711.5158-1-brookebasile@gmail.com>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAF6AEGuNSAYNMG6CH6VMuyjiz5dfRoLWQ9OAFxPJrFmBrHe+Wg@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 27, 2020 at 10:10:14AM -0700, Rob Clark wrote:
-> On Fri, Jun 26, 2020 at 1:01 PM Jordan Crouse <jcrouse@codeaurora.org> wrote:
-> >
-> > Use the aperture settings from the IOMMU domain to set up the virtual
-> > address range for the GPU. This allows us to transparently deal with
-> > IOMMU side features (like split pagetables).
-> >
-> > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> > ---
-> >
-> >  drivers/gpu/drm/msm/adreno/adreno_gpu.c | 13 +++++++++++--
-> >  drivers/gpu/drm/msm/msm_iommu.c         |  7 +++++++
-> >  2 files changed, 18 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> > index 5db06b590943..3e717c1ebb7f 100644
-> > --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> > +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> > @@ -192,9 +192,18 @@ adreno_iommu_create_address_space(struct msm_gpu *gpu,
-> >         struct iommu_domain *iommu = iommu_domain_alloc(&platform_bus_type);
-> >         struct msm_mmu *mmu = msm_iommu_new(&pdev->dev, iommu);
-> >         struct msm_gem_address_space *aspace;
-> > +       u64 start, size;
-> >
-> > -       aspace = msm_gem_address_space_create(mmu, "gpu", SZ_16M,
-> > -               0xffffffff - SZ_16M);
-> > +       /*
-> > +        * Use the aperture start or SZ_16M, whichever is greater. This will
-> > +        * ensure that we align with the allocated pagetable range while still
-> > +        * allowing room in the lower 32 bits for GMEM and whatnot
-> > +        */
-> > +       start = max_t(u64, SZ_16M, iommu->geometry.aperture_start);
-> > +       size = iommu->geometry.aperture_end - start + 1;
-> > +
-> > +       aspace = msm_gem_address_space_create(mmu, "gpu",
-> > +               start & GENMASK(48, 0), size);
-> 
-> hmm, I kinda think this isn't going to play well for the 32b gpus
-> (pre-a5xx).. possibly we should add address space size to 'struct
-> adreno_info'?
+Fix the following checkpatch warning:
+	WARNING: Prefer using '"%s...", __func__' to using 'rtw_get_bcn_info', this function's name, in a string
 
-I checked and qcom-iommu sets the aperture correctly so this should be okay for
-everybody. To be honest, I'm nots sure if we even need to mask the start to 49
-bits. It seems that all of the iommu implementations do the right thing.  Of
-course it would be worth a check if you have a 4xx handy.
+Signed-off-by: Brooke Basile <brookebasile@gmail.com>
+---
+Changes in v2:
+	- This should fix the previous issue that caused the patch to
+	  fail to apply. 
 
-> Or I guess it is always going to be the same for all devices within a
-> generation?  So it could just be passed in to adreno_gpu_init()
+ drivers/staging/rtl8188eu/core/rtw_ieee80211.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-We can do that easily if we are worried about it (see also: a2xx). I just
-figured this might save us a bit of code.
-
-> Hopefully that makes things smoother if we someday had more than 48bits..
-
-We'll be at 49 bits for as far ahead as I can see. 49 bits has a special
-meaning in the SMMU so it is a natural fit for the GPU hardware. If we change in
-N generations we can just shift to a family specific function at that point.
-
-Jordan
-
-> BR,
-> -R
-> 
-> >
-> >         if (IS_ERR(aspace) && !IS_ERR(mmu))
-> >                 mmu->funcs->destroy(mmu);
-> > diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
-> > index 3a381a9674c9..1b6635504069 100644
-> > --- a/drivers/gpu/drm/msm/msm_iommu.c
-> > +++ b/drivers/gpu/drm/msm/msm_iommu.c
-> > @@ -36,6 +36,10 @@ static int msm_iommu_map(struct msm_mmu *mmu, uint64_t iova,
-> >         struct msm_iommu *iommu = to_msm_iommu(mmu);
-> >         size_t ret;
-> >
-> > +       /* The arm-smmu driver expects the addresses to be sign extended */
-> > +       if (iova & BIT_ULL(48))
-> > +               iova |= GENMASK_ULL(63, 49);
-> > +
-> >         ret = iommu_map_sg(iommu->domain, iova, sgt->sgl, sgt->nents, prot);
-> >         WARN_ON(!ret);
-> >
-> > @@ -46,6 +50,9 @@ static int msm_iommu_unmap(struct msm_mmu *mmu, uint64_t iova, size_t len)
-> >  {
-> >         struct msm_iommu *iommu = to_msm_iommu(mmu);
-> >
-> > +       if (iova & BIT_ULL(48))
-> > +               iova |= GENMASK_ULL(63, 49);
-> > +
-> >         iommu_unmap(iommu->domain, iova, len);
-> >
-> >         return 0;
-> > --
-> > 2.17.1
-> >
-> > _______________________________________________
-> > Freedreno mailing list
-> > Freedreno@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/freedreno
-
+diff --git a/drivers/staging/rtl8188eu/core/rtw_ieee80211.c b/drivers/staging/rtl8188eu/core/rtw_ieee80211.c
+index 3316059238e0..b80273611fb8 100644
+--- a/drivers/staging/rtl8188eu/core/rtw_ieee80211.c
++++ b/drivers/staging/rtl8188eu/core/rtw_ieee80211.c
+@@ -987,10 +987,10 @@ void rtw_get_bcn_info(struct wlan_network *pnetwork)
+ 		if (bencrypt)
+ 			pnetwork->BcnInfo.encryp_protocol = ENCRYP_PROTOCOL_WEP;
+ 	}
+-	RT_TRACE(_module_rtl871x_mlme_c_, _drv_info_, ("rtw_get_bcn_info: pnetwork->encryp_protocol is %x\n",
+-						       pnetwork->BcnInfo.encryp_protocol));
+-	RT_TRACE(_module_rtl871x_mlme_c_, _drv_info_, ("rtw_get_bcn_info: pnetwork->encryp_protocol is %x\n",
+-						       pnetwork->BcnInfo.encryp_protocol));
++	RT_TRACE(_module_rtl871x_mlme_c_, _drv_info_, ("%s: pnetwork->encryp_protocol is %x\n",
++							__func__, pnetwork->BcnInfo.encryp_protocol));
++	RT_TRACE(_module_rtl871x_mlme_c_, _drv_info_, ("%s: pnetwork->encryp_protocol is %x\n",
++							__func__, pnetwork->BcnInfo.encryp_protocol));
+ 	rtw_get_cipher_info(pnetwork);
+ 
+ 	/* get bwmode and ch_offset */
 -- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.27.0
+
