@@ -2,116 +2,116 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F09DCC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:39:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16440C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:39:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D46CD20702
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:39:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9663206C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 22:39:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728421AbgF2Wjl (ORCPT
+        id S1728513AbgF2Wjo convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 18:39:41 -0400
+        Mon, 29 Jun 2020 18:39:44 -0400
 Received: from youngberry.canonical.com ([91.189.89.112]:50114 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728308AbgF2Wjg (ORCPT
+        with ESMTP id S1726311AbgF2Wjn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 18:39:36 -0400
-Received: from mail-il1-f200.google.com ([209.85.166.200])
+        Mon, 29 Jun 2020 18:39:43 -0400
+Received: from mail-pg1-f199.google.com ([209.85.215.199])
         by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
-        (envelope-from <seth.forshee@canonical.com>)
-        id 1jpt07-0006Yj-Dn
-        for linux-kernel@vger.kernel.org; Mon, 29 Jun 2020 12:35:07 +0000
-Received: by mail-il1-f200.google.com with SMTP id o2so12193502ilg.14
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 05:35:07 -0700 (PDT)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jpsyW-0006Sb-3E
+        for linux-kernel@vger.kernel.org; Mon, 29 Jun 2020 12:33:28 +0000
+Received: by mail-pg1-f199.google.com with SMTP id z16so12333545pgh.21
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 05:33:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=d3wAD+FwY/apCHMWEbeYwrensmYJ31fzvIHVdi3AjOc=;
-        b=VyOG5HndfgGbPATU6G4YYrSiCOgUL9/rCywNeBBuAXXqsMT2Q0h3ce5WJL6BkNaTAQ
-         Vkhj6SgPFATzh1qfPaiDxdJingEsO0gK2kSRriM/xwBJPulwmVx3Yo7REPeW8+aEEdfu
-         YKR3wQeBMTEn/s2OyijfL2rsM5LYepuVS1pSeGusso6ZwFw5k1GZuiGOZSyrv6KVPWIS
-         PJWnkEVPA0yoKPhEah8iOtBy0grNsqyt6E3SyksO4iLh394gzdnWx8V9BQFMQK6zzJUB
-         WpEElLtbXYvP6u4YWegJwI7C9uoQVaJpjqnQLPl5zubkKS0wDLy+OmzVUC5CoWY8g8sa
-         bg6Q==
-X-Gm-Message-State: AOAM531yL8YoNFwCLRWtm41zf9YPMpjiRi+pk+KMAOGtjFZkmrfiV7xk
-        rdPDoAu9qz/+6mrgz5+JvtSCKlDGSbipCMoT/RAUzIhbCtGk6QxwnW7/MCawEhEburNEwpqvP4k
-        xRkXq5vb68toc0pSGLquY/6VvW4E2xUbhW8Sp1Bja1Q==
-X-Received: by 2002:a05:6602:2584:: with SMTP id p4mr17011702ioo.30.1593434106459;
-        Mon, 29 Jun 2020 05:35:06 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxxO+NSoKtLYJDs5amRG3FY0ewjylJLex5PUDsxJbLwE0b+jaD8LtRlSybHl9IyUxFufDoH9Q==
-X-Received: by 2002:a05:6602:2584:: with SMTP id p4mr17011678ioo.30.1593434106233;
-        Mon, 29 Jun 2020 05:35:06 -0700 (PDT)
-Received: from localhost ([136.37.150.243])
-        by smtp.gmail.com with ESMTPSA id d18sm351778ils.34.2020.06.29.05.35.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 05:35:05 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 07:35:04 -0500
-From:   Seth Forshee <seth.forshee@canonical.com>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: remove obsolete entry after file renaming
-Message-ID: <20200629123504.GA10686@ubuntu-x1>
-References: <20200628180229.5068-1-lukas.bulwahn@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200628180229.5068-1-lukas.bulwahn@gmail.com>
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=6rSGUcxEtasmikuRjUacPJe3K2leqY94Ck1/E/gRXXI=;
+        b=s6/hTmU3ducQme/h801M0JGULh6dnjAikD1L0GNjCZBDPuPtus9V7uXe2NBuZsesbV
+         hbD2xuRY26sumxY6Fmpu+R80bhQEYWPSDQweZGqjlGgCpdZjsNlZMUBemf5fukZU9KFu
+         vc3RFterKZIj3eoCw6to9AGu566tbTUPI0R8cnzSa6Jn1b1Mx89vLwqVnR2wQ6YyCQgM
+         gLwW6ewVKMMXVKUORNq96X32DiN0DuWc4yZduDLcPc1nHfVuOMQ/b0D6VwCGTrGQFS2t
+         G7twFaOkNuZPzRYn9Dp5njEteAA74ZQnDxiVtFbHwPjLmHdzH822lHT/nHC36yAYKC52
+         aW/w==
+X-Gm-Message-State: AOAM530JXWdOnI0KnD1GNRWDBEhWRpkHVYSdfFSWf9GzGxdMYgmrE0Og
+        Zoum2WhHXSMpuadbmeMYNZ2Yqp5DLHyUNG1lUPgJ+G0zJpv5gUPUhWk9UFFt/el8q9UxLws3dcu
+        QKwMAm5uF8fG8dHmMEBkrhR5xoq8jWQ6Uhqj+6iTUlw==
+X-Received: by 2002:aa7:8b01:: with SMTP id f1mr14720684pfd.223.1593434006590;
+        Mon, 29 Jun 2020 05:33:26 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzSfSEI9VTobq3zQg6b2gevJg3MoMRLSL2CpTKRfwrmyfWZi30iMQn8TPZ63aVpR46Cp+GCvg==
+X-Received: by 2002:aa7:8b01:: with SMTP id f1mr14720649pfd.223.1593434006025;
+        Mon, 29 Jun 2020 05:33:26 -0700 (PDT)
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id bf11sm3556197pjb.48.2020.06.29.05.33.24
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jun 2020 05:33:25 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [Regression] "iommu/amd: Relax locking in dma_ops path" makes tg3
+ ethernet transmit queue timeout
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <8D375E06-A763-4B5E-9C6D-DA5EBC62530E@canonical.com>
+Date:   Mon, 29 Jun 2020 20:33:22 +0800
+Cc:     iommu@lists.linux-foundation.org,
+        open list <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <CFC22DE4-E342-4F32-B758-6A690755C498@canonical.com>
+References: <4E9B03FB-9DA5-4831-B4CE-A0AA645D3F22@canonical.com>
+ <20200518133209.GM8135@suse.de>
+ <381D21C9-C913-4C33-A6F4-0440B5D11670@canonical.com>
+ <8D375E06-A763-4B5E-9C6D-DA5EBC62530E@canonical.com>
+To:     Joerg Roedel <jroedel@suse.de>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 28, 2020 at 08:02:29PM +0200, Lukas Bulwahn wrote:
-> Commit f16861b12fa0 ("regulator: rename da903x to da903x-regulator") missed
-> to adjust the DIALOG SEMICONDUCTOR DRIVERS section in MAINTAINERS.
-> 
-> Hence, ./scripts/get_maintainer.pl --self-test=patterns complains:
-> 
->   warning: no file matches    F:    drivers/regulator/da903x.c
-> 
-> The da903x-regulator.c file is already covered by the pattern
-> drivers/regulator/da9???-regulator.[ch] in the section.
-> 
-> So, simply remove the non-matching file entry in MAINTAINERS.
-> 
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 
-I didn't think to check MAINTAINERS when renaming the file. This makes
-sense to me.
+> On May 18, 2020, at 23:32, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
+> 
+> 
+> 
+>> On May 18, 2020, at 22:05, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
+>> 
+>> 
+>> 
+>>> On May 18, 2020, at 21:32, Joerg Roedel <jroedel@suse.de> wrote:
+>>> 
+>>> On Mon, May 18, 2020 at 05:06:45PM +0800, Kai-Heng Feng wrote:
+>>>> Particularly, as soon as the spinlock is removed, the issue can be reproduced.
+>>>> Function domain_flush_complete() doesn't seem to affect the status.
+>>>> 
+>>>> However, the .map_page callback was removed by be62dbf554c5
+>>>> ("iommu/amd: Convert AMD iommu driver to the dma-iommu api"), so
+>>>> there's no easy revert for this issue.
+>>>> 
+>>>> This is still reproducible as of today's mainline kernel, v5.7-rc6.
+>>> 
+>>> Is there any error message from the IOMMU driver?
+>>> 
+>> 
+>> As of mainline kernel, there's no error message from IOMMU driver.
+>> There are some complains from v4.15-rc1:
+>> https://pastebin.ubuntu.com/p/qn4TXkFxsc/
+> 
+> Just tested v5.7-rc6, the issue disappears as soon as kernel boots with "iommu=off".
 
-Acked-by: Seth Forshee <seth.forshee@canonical.com>
+I am still seeing the issue on v5.8-rc3. The issue goes away as soon as "iommu=off" is added.
 
-> ---
-> applies cleanly on next-20200626
+Kai-Heng
+
 > 
-> Seth, please ack.
-> Mark, please pick this minor non-urgent patch into your -next tree.
+> Kai-Heng
 > 
->  MAINTAINERS | 1 -
->  1 file changed, 1 deletion(-)
+>> 
+>> Kai-Heng
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 04fceaee5200..970136e262c2 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -5021,7 +5021,6 @@ F:	drivers/mfd/da91??-*.c
->  F:	drivers/pinctrl/pinctrl-da90??.c
->  F:	drivers/power/supply/da9052-battery.c
->  F:	drivers/power/supply/da91??-*.c
-> -F:	drivers/regulator/da903x.c
->  F:	drivers/regulator/da9???-regulator.[ch]
->  F:	drivers/regulator/slg51000-regulator.[ch]
->  F:	drivers/rtc/rtc-da90??.c
-> -- 
-> 2.17.1
-> 
+
