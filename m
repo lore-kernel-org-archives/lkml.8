@@ -2,59 +2,109 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D51CC433E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4FF7C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E892204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:00:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E85B20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:00:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593457223;
+	bh=UgfCiv1gs4JKcHfxdAmSLmxM2UvXVFPdYMcT4vykE1A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gaarQJo5z4zyeVDYTMdxtnsGpdOz8DFA+lw86O35lqOQvMyqtSdXJWOj3+mLvplT5
+	 dz+3W8eMsaMoFKrKU7Xni+hkM08p0Q4+eTMnmuzs+F45umG8Yz+KVJa8XrPi1HoXz/
+	 a4xoTAHt0H6qfahSEN0SG84lOKcU/krx7xXG5wwo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730299AbgF2TAM (ORCPT
+        id S1730367AbgF2TAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:00:12 -0400
-Received: from muru.com ([72.249.23.125]:59960 "EHLO muru.com"
+        Mon, 29 Jun 2020 15:00:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728088AbgF2TAK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:00:10 -0400
-Received: from atomide.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTPS id D90A5819C;
-        Mon, 29 Jun 2020 16:32:16 +0000 (UTC)
-Date:   Mon, 29 Jun 2020 09:31:21 -0700
-From:   Tony Lindgren <tony@atomide.com>
-To:     Drew Fustini <drew@beagleboard.org>
-Cc:     Rob Herring <robh+dt@kernel.org>, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        devicetree@vger.kernel.org, bcousson@baylibre.com,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>
-Subject: Re: [PATCH v3 0/3] pinctrl: single: support #pinctrl-cells = 2
-Message-ID: <20200629163121.GS37466@atomide.com>
-References: <20200622172951.524306-1-drew@beagleboard.org>
- <20200629122858.GA506802@x1>
+        id S1730118AbgF2TAR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 15:00:17 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 18C8A2554A;
+        Mon, 29 Jun 2020 15:55:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593446111;
+        bh=UgfCiv1gs4JKcHfxdAmSLmxM2UvXVFPdYMcT4vykE1A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=w5Lgb5a6JOuhIODPeVE/Rcz0JgzhEj4NeCa6cEzlWKpg+cariGuyVsgAM3l7nQtrJ
+         7RETSLHtKklalQbbp+oOACVgFZTAjWH77ThDZTc8lGsde24L8c0aohNqcRJQo5/vG2
+         hJ69gyqvfbS3UEaUDyUSIz/N41OvFh0Do+oGHWvU=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Al Cooper <alcooperx@gmail.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.4 102/135] xhci: Fix enumeration issue when setting max packet size for FS devices.
+Date:   Mon, 29 Jun 2020 11:52:36 -0400
+Message-Id: <20200629155309.2495516-103-sashal@kernel.org>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
+References: <20200629155309.2495516-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200629122858.GA506802@x1>
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.4.229-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.4.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.4.229-rc1
+X-KernelTest-Deadline: 2020-07-01T15:53+00:00
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Drew Fustini <drew@beagleboard.org> [200629 12:29]:
-> Hi Tony - do you think this series is useful as-is?
-> 
-> Or do you want to see some usage of the seperate conf and mux values
-> first?
+From: Al Cooper <alcooperx@gmail.com>
 
-Hmm to me it seems you should squash patches 2 and 3 together as
-otherwise git bisect will fail to boot probably at patch 2.
+commit a73d9d9cfc3cfceabd91fb0b0c13e4062b6dbcd7 upstream.
 
-Regards,
+Unable to complete the enumeration of a USB TV Tuner device.
 
-Tony
+Per XHCI spec (4.6.5), the EP state field of the input context shall
+be cleared for a set address command. In the special case of an FS
+device that has "MaxPacketSize0 = 8", the Linux XHCI driver does
+not do this before evaluating the context. With an XHCI controller
+that checks the EP state field for parameter context error this
+causes a problem in cases such as the device getting reset again
+after enumeration.
+
+When that field is cleared, the problem does not occur.
+
+This was found and fixed by Sasi Kumar.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Al Cooper <alcooperx@gmail.com>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/20200624135949.22611-3-mathias.nyman@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/usb/host/xhci.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+index af4e68152776e..7272c98becb8b 100644
+--- a/drivers/usb/host/xhci.c
++++ b/drivers/usb/host/xhci.c
+@@ -1340,6 +1340,7 @@ static int xhci_check_maxpacket(struct xhci_hcd *xhci, unsigned int slot_id,
+ 				xhci->devs[slot_id]->out_ctx, ep_index);
+ 
+ 		ep_ctx = xhci_get_ep_ctx(xhci, command->in_ctx, ep_index);
++		ep_ctx->ep_info &= cpu_to_le32(~EP_STATE_MASK);/* must clear */
+ 		ep_ctx->ep_info2 &= cpu_to_le32(~MAX_PACKET_MASK);
+ 		ep_ctx->ep_info2 |= cpu_to_le32(MAX_PACKET(max_packet_size));
+ 
+-- 
+2.25.1
+
