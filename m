@@ -2,148 +2,248 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41E1DC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 02:12:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16749C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 02:13:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 197DF206BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 02:12:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEAF8206BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 02:13:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="krSnPLyV"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q6BfHYVp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726413AbgF2CMc (ORCPT
+        id S1726428AbgF2CNN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 28 Jun 2020 22:12:32 -0400
-Received: from mail-eopbgr1310095.outbound.protection.outlook.com ([40.107.131.95]:23308
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726071AbgF2CMb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 28 Jun 2020 22:12:31 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ofkjOjXreZOaCWPflEp/z2ZStl2p7cWkF2Rw75wJoxNTeVR4F82QgNMRhiMCA8IQ1o9h04N7UwdYrr6VlQ4JdyRzOCG6ZcpbWKCXIIGSImRRiagauoqS15jp2BLMW9zyaM8KinUAErC36IhluMM0dIK1OpnR2hhZu1mkualYgPFhGqw5XVc00Lmy5wR8SFAtzwbf4aDXZTK32CvofmQ8v33DoH/Ve0adlQ6B2UtAPoKNVQhY2zlKdw8SkDtBUS+ZORI/NRSmoCM2MYOxwH6oSNrQ4+bdjFw6xbeuX8uV6JRom3ITE5lJkTzLzSGb8B7XxkMJ2oWL/AjKiiflKsZkWQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PZ7M6Xtgvft+1JeobBbMcL+gTkR42pOFS815r7RIFcM=;
- b=PjBp50SUvLO3t3Ls+HUSo1cemZg3AB/peKBei/k691Id7R0+KWgd/azxqvuwKs3tXJ+YUSwQErOK3ktddb/SMzERYtJq2aNKJKMo6p7KQil51FHnTtsmMYe0PXC5Agr/Be40dDJaPjNmxK/GkfkiE8tQYD/GVlDD1/12sK0h0WOH3xm5imejUCajDTLpa5l+P7jzzGkraMwzGWhPwfG6/3HzYHpXh5mzKKRixXefSmSq+QQxyD5hlmkWHHhV2QwapVpJYEYytypJFN00p5bFmX0O1cOR4MBCtvxRLPrlokgyycz90Qdxdw+S5e+Rx79tSec6RJTG4W90D9hRhtThXQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
+        Sun, 28 Jun 2020 22:13:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55878 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726071AbgF2CNN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 28 Jun 2020 22:13:13 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E3E9C03E979
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 19:13:13 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id p3so7604370pgh.3
+        for <linux-kernel@vger.kernel.org>; Sun, 28 Jun 2020 19:13:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PZ7M6Xtgvft+1JeobBbMcL+gTkR42pOFS815r7RIFcM=;
- b=krSnPLyVvChJcd+OjexFXWlqmH1YKjrJR7I0dfnUt3/gRkGT3WdP6pvxiU1ASofGwZUkC8U15tfjFDgpAdjzZ35hu4cQlEAxqDG+P8i7iqD6fomryAJcDcGmh4nmhg+UktnYBuxZyqRf8RXGrLX+eiKJndrn7fQ7nJsemUMc9dw=
-Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com (2603:1096:404:d5::22)
- by TY2PR01MB4025.jpnprd01.prod.outlook.com (2603:1096:404:d6::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.25; Mon, 29 Jun
- 2020 02:12:26 +0000
-Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com
- ([fe80::9083:6001:8090:9f3]) by TY2PR01MB3692.jpnprd01.prod.outlook.com
- ([fe80::9083:6001:8090:9f3%6]) with mapi id 15.20.3131.026; Mon, 29 Jun 2020
- 02:12:26 +0000
-From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-To:     Mark Brown <broonie@kernel.org>
-CC:     "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "geert+renesas@glider.be" <geert+renesas@glider.be>,
-        "magnus.damm@gmail.com" <magnus.damm@gmail.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH/RFC v4 1/4] regulator: core: add prepare and resume_early
-Thread-Topic: [PATCH/RFC v4 1/4] regulator: core: add prepare and resume_early
-Thread-Index: AQHWS5y2xTHB/bN5kEWVx8Xm0qNT0Kjq9VyAgAPa5aA=
-Date:   Mon, 29 Jun 2020 02:12:25 +0000
-Message-ID: <TY2PR01MB3692FA79B8187D100F947327D86E0@TY2PR01MB3692.jpnprd01.prod.outlook.com>
-References: <1593163942-5087-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <1593163942-5087-2-git-send-email-yoshihiro.shimoda.uh@renesas.com>
- <20200626143009.GD5289@sirena.org.uk>
-In-Reply-To: <20200626143009.GD5289@sirena.org.uk>
-Accept-Language: ja-JP, en-US
-Content-Language: ja-JP
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: kernel.org; dkim=none (message not signed)
- header.d=none;kernel.org; dmarc=none action=none header.from=renesas.com;
-x-originating-ip: [124.210.22.195]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: fbc9484c-c5d4-4578-2055-08d81bd1de12
-x-ms-traffictypediagnostic: TY2PR01MB4025:
-x-microsoft-antispam-prvs: <TY2PR01MB402503D8CE14D1A8B7B07FD3D86E0@TY2PR01MB4025.jpnprd01.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 044968D9E1
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: W48lhslR0ohBnU1UjuUouw6mSBw2ZmecXOuyb/2DJo29dxrMiqqJe/wPo539MKTKqRxX19N3UPo/6UeqBEP41FEhBvDfadk3Oubr4DufTD7AwoY9cNIDtajP5hIX2eVn9fE7GxoP6uPw6SYLObLPCX+DwC2p/NDZMTDAQKI0m/MgqvVJVUZAlMksuDn4ORxpOyw6s3ZxavR5vzaNQIwNO27KIWbZAx6JICT3cVPfDKS2NrCNwwxqT+JLaOIudDei9kVtrr9Cjazivhg+TMwvq/LUCM2nqVVU/WPnXktLQv7cBRBf8AZBwiV4bhTbmroh
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR01MB3692.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(39860400002)(136003)(396003)(346002)(366004)(83380400001)(5660300002)(26005)(186003)(55236004)(6506007)(8676002)(52536014)(33656002)(8936002)(71200400001)(478600001)(316002)(6916009)(54906003)(55016002)(4326008)(86362001)(7696005)(66946007)(64756008)(66476007)(2906002)(66556008)(76116006)(9686003)(66446008);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: 504OAqcfSCDCDC2KCyizwIfIHBpq9LxSZSm0suuMGh55YiodkOZVxgKFbpMMLBjLoP9rpyTm2HHmzP4XclKKQEd7Xw9AdH12zNSWPMi+uXPeNGwwfaum5w3+GGJVOtia7/rDUEpfivdUGMv/Nhl7nSO4If2lskCE0NWucJ8kd4KpvZWCEDtkYk4NXCywIOhbnoPuRXzK/TTTgW5c3OfOH7906BrjyLwu+lia38h2IwrfUCCzjYmR2md/+/xQu/AexSbMKjWA6d3FEnsOi2pqwDMocIzWqc+DMGOON2S4/0bIu3IW9rhnDRCmKQuLsEthULeGy2dTn13GDxH65/s6XXjiWVZJMgybnzwCUzuth5nFzrh10zt1kLtBsvQ7Tg9/7ie6eczkJY6+dZLqYrFp/4PYvIwHcw39L2gRjGKJXuJ2N9nlmLdpEc7lBbdkej5rd4U9bsDKR/U5Af4eV5j8+uWuTspS/lbY3MpWiRSK0iRpGu4IWUmbzlQN31iczFjC
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4aOh6K38CeMQY1FtFBf/NMwzq86hurcT+zKRKgSbL7A=;
+        b=Q6BfHYVpPfL1FFh2ZfrB7Wj1GXHUnk2hK67waJ7nTZqs2xoOEg4R5u6ZE66hvI3ChB
+         9y/t13POZWLw0DnXw4kYqydS8unJHBtO/L+HW0LD/1/LOQ6Ya0VAm6APQepzIDcDDvIf
+         E8i4sPuHCNuxh9GNK+XMStirw3I0RKPAQ+lv/lGNTFX34UokdgXKiUHE5dUWK8FAsJkY
+         r97VaXscL6/YVJTSADWwanhoiTs3Ug2w6CP0cmv29ZRT+MRkVZhcNqsINUqi9QIUlN2q
+         5aSwH7Q9op/JauN8yxZE4nNowAYzp5AmeUaf1Zzq4UJkqiYZu6KH1V83v1XIRoG7OjwA
+         lsUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4aOh6K38CeMQY1FtFBf/NMwzq86hurcT+zKRKgSbL7A=;
+        b=BG1j+dhKuJEj8XQ44rc9RS0BrCLQDtIbVH7r5o+1g12f4epmuSl9YwZh3oxXc+PQ5q
+         UOYvdjgKltZ1fOfx5N8GSeS/l9BGXcKvKxG3T+Rwmhh/2PC3GsS1ysZkzi+hSWc5hO9D
+         2vi5SnByNUNhl5n1vR0goBVYSQgXz8iSBu97dt0XUnVLJ4iBkAClCq02Tp+lWbbKk1MW
+         rlKkzZHBzDo5xZFGrzPp4OG938xJqqaqRbdPaP6LXt8Jeo09mXDbibQCr2NSTicG/kAy
+         6tsosxFxAFylh0ZFzCamchRiVAkFEK7sfGUu2q2Cf6e/EecYuVRWF6z4TddkdiGHZx9t
+         Szgg==
+X-Gm-Message-State: AOAM531Uipvy0Tt4kXd7zg5GpGxeIQT57JYAMMbiumkcSP7Lx5JYYLRV
+        xPPpTJaBvluNIpKk1/br/l4fyA==
+X-Google-Smtp-Source: ABdhPJwvLKD/7lHYEZrVUBEFJx/PRrsLgZ3K2dgI1NYRw7IiiY17jYW0ch4koUrL9on3EpTZRqtayQ==
+X-Received: by 2002:a05:6a00:78b:: with SMTP id g11mr11934621pfu.86.1593396792494;
+        Sun, 28 Jun 2020 19:13:12 -0700 (PDT)
+Received: from localhost ([122.172.127.76])
+        by smtp.gmail.com with ESMTPSA id g4sm19166499pgn.64.2020.06.28.19.13.11
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 28 Jun 2020 19:13:11 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 07:43:09 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Quentin Perret <qperret@google.com>
+Cc:     Rafael Wysocki <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        kernel-team@android.com, tkjos@google.com, adharmap@codeaurora.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 1/3] cpufreq: Fix locking issues with governors
+Message-ID: <20200629021309.eleyysuh5f5g52qw@vireshk-i7>
+References: <cover.1593143118.git.viresh.kumar@linaro.org>
+ <f366ed3dd3dd111e42173b366fe4dd5a0e4647fd.1593143118.git.viresh.kumar@linaro.org>
+ <20200626082433.GA284605@google.com>
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY2PR01MB3692.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fbc9484c-c5d4-4578-2055-08d81bd1de12
-X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jun 2020 02:12:25.8521
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mUcEBLmCumC3J91srB9O9/XWU8nxNADXXChP4xWF202u73lsflvwglNZhZDqNw9z2GODXml1+uIcx4x8YWa8wFD4IdQoU26qCPF//MpBr4lX12NVHbQlV9wYIE2kULH6
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY2PR01MB4025
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200626082433.GA284605@google.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+On 26-06-20, 09:24, Quentin Perret wrote:
+> On Friday 26 Jun 2020 at 09:21:42 (+0530), Viresh Kumar wrote:
+> > The locking around governors handling isn't adequate currently. The list
+> > of governors should never be traversed without locking in place. Also we
+> > must make sure the governor isn't removed while it is still referenced
+> > by code.
+> > 
+> > Reported-by: Quentin Perret <qperret@google.com>
+> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > ---
+> >  drivers/cpufreq/cpufreq.c | 59 ++++++++++++++++++++++++---------------
+> >  1 file changed, 36 insertions(+), 23 deletions(-)
+> > 
+> > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> > index 0128de3603df..e798a1193bdf 100644
+> > --- a/drivers/cpufreq/cpufreq.c
+> > +++ b/drivers/cpufreq/cpufreq.c
+> > @@ -621,6 +621,24 @@ static struct cpufreq_governor *find_governor(const char *str_governor)
+> >  	return NULL;
+> >  }
+> >  
+> > +static struct cpufreq_governor *get_governor(const char *str_governor)
+> > +{
+> > +	struct cpufreq_governor *t;
+> > +
+> > +	mutex_lock(&cpufreq_governor_mutex);
+> > +	t = find_governor(str_governor);
+> > +	if (!t)
+> > +		goto unlock;
+> > +
+> > +	if (!try_module_get(t->owner))
+> > +		t = NULL;
+> > +
+> > +unlock:
+> > +	mutex_unlock(&cpufreq_governor_mutex);
+> > +
+> > +	return t;
+> > +}
+> > +
+> >  static unsigned int cpufreq_parse_policy(char *str_governor)
+> >  {
+> >  	if (!strncasecmp(str_governor, "performance", CPUFREQ_NAME_LEN))
+> > @@ -640,28 +658,14 @@ static struct cpufreq_governor *cpufreq_parse_governor(char *str_governor)
+> >  {
+> >  	struct cpufreq_governor *t;
+> >  
+> > -	mutex_lock(&cpufreq_governor_mutex);
+> > -
+> > -	t = find_governor(str_governor);
+> > -	if (!t) {
+> > -		int ret;
+> > -
+> > -		mutex_unlock(&cpufreq_governor_mutex);
+> > -
+> > -		ret = request_module("cpufreq_%s", str_governor);
+> > -		if (ret)
+> > -			return NULL;
+> > -
+> > -		mutex_lock(&cpufreq_governor_mutex);
+> > +	t = get_governor(str_governor);
+> > +	if (t)
+> > +		return t;
+> >  
+> > -		t = find_governor(str_governor);
+> > -	}
+> > -	if (t && !try_module_get(t->owner))
+> > -		t = NULL;
+> > -
+> > -	mutex_unlock(&cpufreq_governor_mutex);
+> > +	if (request_module("cpufreq_%s", str_governor))
+> > +		return NULL;
+> >  
+> > -	return t;
+> > +	return get_governor(str_governor);
+> >  }
+> >  
+> >  /**
+> > @@ -815,12 +819,14 @@ static ssize_t show_scaling_available_governors(struct cpufreq_policy *policy,
+> >  		goto out;
+> >  	}
+> >  
+> > +	mutex_lock(&cpufreq_governor_mutex);
+> >  	for_each_governor(t) {
+> >  		if (i >= (ssize_t) ((PAGE_SIZE / sizeof(char))
+> >  		    - (CPUFREQ_NAME_LEN + 2)))
+> > -			goto out;
+> > +			break;
+> >  		i += scnprintf(&buf[i], CPUFREQ_NAME_PLEN, "%s ", t->name);
+> >  	}
+> > +	mutex_unlock(&cpufreq_governor_mutex);
+> >  out:
+> >  	i += sprintf(&buf[i], "\n");
+> >  	return i;
+> > @@ -1058,11 +1064,14 @@ static int cpufreq_init_policy(struct cpufreq_policy *policy)
+> >  	struct cpufreq_governor *def_gov = cpufreq_default_governor();
+> >  	struct cpufreq_governor *gov = NULL;
+> >  	unsigned int pol = CPUFREQ_POLICY_UNKNOWN;
+> > +	bool put_governor = false;
+> > +	int ret;
+> >  
+> >  	if (has_target()) {
+> >  		/* Update policy governor to the one used before hotplug. */
+> > -		gov = find_governor(policy->last_governor);
+> > +		gov = get_governor(policy->last_governor);
+> >  		if (gov) {
+> > +			put_governor = true;
+> >  			pr_debug("Restoring governor %s for cpu %d\n",
+> >  				 policy->governor->name, policy->cpu);
+> >  		} else if (def_gov) {
+> > @@ -1089,7 +1098,11 @@ static int cpufreq_init_policy(struct cpufreq_policy *policy)
+> >  			return -ENODATA;
+> >  	}
+> >  
+> > -	return cpufreq_set_policy(policy, gov, pol);
+> > +	ret = cpufreq_set_policy(policy, gov, pol);
+> > +	if (put_governor)
+> > +		module_put(gov->owner);
+> 
+> Nit: I think you could safely do
+> 
+> 	if (gov)
+> 		module_put(gov->owner);
+> 
+> and get rid of 'put_governor', given that try_module_get() and
+> module_put() are nops if owner is NULL (which is guaranteed for
+> the result of cpufreq_default_governor() as it is builtin).
 
-> From: Mark Brown, Sent: Friday, June 26, 2020 11:30 PM
->=20
-> On Fri, Jun 26, 2020 at 06:32:19PM +0900, Yoshihiro Shimoda wrote:
->=20
-> > The regulator-fixed driver is possible to be off by firmware
-> > like PSCI while the system is suspended. If a consumer could get
-> > such a condition from regulator_is_enabled(), it's useful by
-> > consumers.
->=20
-> > The regulator subsystem already has regulator-state-(standby|mem|disk)
-> > sub-nodes and regulator-off-in-suspend property. However,
-> > suitable regulator_ops APIs didn't exist.
->=20
-> > So, add new regulator_ops APIs and prepare()/resume_early() in
-> > the regulator_pm_ops to set/clear the condition by new APIs before
-> > suspend() functions of consumers are called.
->=20
-> I can't follow this explanation at all, I really can't understand what
-> these functions are supposed to do or how they are supposed to be used.
-> Nothing in the rest of this series is at all enlightening either.  It
-> seems there is some need for a consumer to query things about the
-> suspend state but there is no obvious connection from that to adding
-> these new operations for regulator drivers.
+I described why I chose to keep it that way in the other email, but I
+am all for dropping the variable. And so what about this ?
 
-I'm very sorry for lack description... Perhaps I should have described
-one of use cases like below.
+diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+index e798a1193bdf..d9e9ae7051bb 100644
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -1064,18 +1064,17 @@ static int cpufreq_init_policy(struct cpufreq_policy *policy)
+        struct cpufreq_governor *def_gov = cpufreq_default_governor();
+        struct cpufreq_governor *gov = NULL;
+        unsigned int pol = CPUFREQ_POLICY_UNKNOWN;
+-       bool put_governor = false;
+        int ret;
+ 
+        if (has_target()) {
+                /* Update policy governor to the one used before hotplug. */
+                gov = get_governor(policy->last_governor);
+                if (gov) {
+-                       put_governor = true;
+                        pr_debug("Restoring governor %s for cpu %d\n",
+                                 policy->governor->name, policy->cpu);
+                } else if (def_gov) {
+                        gov = def_gov;
++                       module_get(gov->owner);
+                } else {
+                        return -ENODATA;
+                }
+@@ -1099,7 +1098,7 @@ static int cpufreq_init_policy(struct cpufreq_policy *policy)
+        }
+ 
+        ret = cpufreq_set_policy(policy, gov, pol);
+-       if (put_governor)
++       if (gov)
+                module_put(gov->owner);
+ 
+        return ret;
 
-regulator_prepare()
---> call regulator_ops.set_prepare_disable() if DISABLE_IN_SUSPEND
- --> A regulator can be disabled by the operation.
- --> We can guarantee an order which is called before a consumer if
-     it uses dev_pm_ops.suspend().
-..
-A consumer driver's suspend().
---> call regulator_is_enabled()
- --> If the regulator was called set_prepare_disable(), this can returns fa=
-lse.
-
-Best regards,
-Yoshihiro Shimoda
-
+-- 
+viresh
