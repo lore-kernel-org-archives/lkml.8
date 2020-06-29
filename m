@@ -2,157 +2,191 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D30C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:43:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E64C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ED2F820656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:43:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TG6rKq8O"
+	by mail.kernel.org (Postfix) with ESMTP id C18212063A
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:43:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2403953AbgF2VnS (ORCPT
+        id S2403974AbgF2VnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:43:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37568 "EHLO
+        Mon, 29 Jun 2020 17:43:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727875AbgF2Shw (ORCPT
+        with ESMTP id S1726779AbgF2Shv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:37:52 -0400
-Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39DF2C031C7F
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 11:18:32 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id a127so8221478pfa.12
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 11:18:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RVpg6vIouDiH3on4zq6Qkvcb4IcnV9Eg7LBox0nJvvM=;
-        b=TG6rKq8OIgA/7NkvNhVbwcp7Zv81JPFjOf+X5UcCa1t+7uVP1xbpgSP9j7A1oaOrDB
-         URqVDRAfG2f8ZVotshyU0N6vx7j9gnEMkN2ZKla0nhU8H+hqEabOCXFHgrmhkdiUNDc0
-         c10xCi1y0+t2AOlKgfjDJ3AF633ROwnB2UluF8oFnaHIxW/ZNI4eeEh/Tnaf0n3YeW+T
-         YTW9iGyu6ShQ6xVj1DqYA0MHDO/YQTZJ6l/Re/dhnJklZQC8rIkaANrpwMxz2E/eYA6E
-         q6tGvHjkbrH7RdYeDdgMCAj7jYCOqIERf7OTSeWu13R4TJZinjirQ0MiAVPZ4kdnGlSh
-         PMWw==
+        Mon, 29 Jun 2020 14:37:51 -0400
+Received: from mail-il1-x148.google.com (mail-il1-x148.google.com [IPv6:2607:f8b0:4864:20::148])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39DB5C030F02
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:11:17 -0700 (PDT)
+Received: by mail-il1-x148.google.com with SMTP id o4so12652716ilc.15
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:11:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RVpg6vIouDiH3on4zq6Qkvcb4IcnV9Eg7LBox0nJvvM=;
-        b=WGwJqk95sXsvtpldIN0w2oQEpXj0A05PF4edrwN9J2AgDq3jmm+2WPQ5e/VxqFoDad
-         wMXyFD2A+oUNCknCGYR9bhhnYtHO82IGaEaLc7AQPyTFdsQegm3nNixv/lgte0VtaR0y
-         E7Iv7NlX5MIiHrEL9P0oRBwEQ/wU1kl4NFOYvtKbuqgDQjmcAbDtt6gK2yjMXIZwdce9
-         1luEoPZgvimXZSv8XHs8yYbQwipCGtVayd0W+bjAtaWAljDkQ1hdGVRKh1xOuTTe3bbj
-         5GBxeywrHUPsKnFdhZYpV51UF1SfTNyKMax0zOx2hBhLx/SakJE74jCG2IZ7k0w0qJUA
-         6toA==
-X-Gm-Message-State: AOAM533KzOw0cKC5OwbzqJxEhaLujCESvNVC5PXagVUu/3/fDigYw0ew
-        uT0OaHt5bXGlI9RnsLIikniFZxYUwx2RniMeqke2vs8H
-X-Google-Smtp-Source: ABdhPJx9DCxKOqTyOvK/N39qAKQF4pHJeiMiGtVuafF9ig7zbCcl+2HZ5M9JzPJoDZZmvSgVG0JvPipv8QimLEaooNg=
-X-Received: by 2002:a63:5644:: with SMTP id g4mr11018260pgm.381.1593454711516;
- Mon, 29 Jun 2020 11:18:31 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=GaRDhX7cOPGC7KOMXOAFCs/7Rjn+jmhfg9ZC0k5r71U=;
+        b=dOthf3zS9Iyl0OdnGv77ASXPBEmDoupfR6ltRXLd93ddhTitgrTJiGsFvdfxy8hXLG
+         Yw7TzFD9cMlgCakmEwAjAMts8xSCNyRPHGSvFMpE1oMtfoo0O1nWsADqwQAJ9dtvjKDW
+         WM0iQxbZcSfsptMlnd2vrpsmWYlngQHG5qweF4YzAINrb/3Oh/kd+PA/xjT0kLntYWaC
+         XznFwOCmTombilM3ae0KrnqzXMzQK69Sh1s/I0IlnB1PGg0Qoa7DFnSsusHgN6LuTjtc
+         3eLwH8LT2gkVj4wqUvKf70sXu1wmiCqHxFbk/WSrcvQxtFQKVBuesvbzC3w+wvfjmqry
+         AKkg==
+X-Gm-Message-State: AOAM532DWk+aiHDtRTiznvi8lfYTCtchi/8XnZ00VROFrWwS73zsDzVi
+        TNYXKB6xPvIA5phJjyBkyPsjNZJgUrm39743/XtlzCceUh10
+X-Google-Smtp-Source: ABdhPJw3z2t1uM0GJaA/Osa2SsZoIxIS7OgCF3fDdFOVi6vY4GhZg/Hf0xiq2OUimUiGtPWglLDG9mSqk6Zl/leZAjbX/wyNWmbr
 MIME-Version: 1.0
-References: <202006210249.QHly8bQZ%lkp@intel.com> <CA+h21hpABfDvthiwq_JwWGpqZ68VJxu5TOBVbw_Gaxpq8j+XQg@mail.gmail.com>
- <CAKwvOdnAKR_CtOccZohR_r1kzKKVuvo8LbpLi0s3ek+3u+c_zw@mail.gmail.com> <CA+h21hokCCF52O1wxkg0gLqS9ZcGtB0xMBm07_--i56=anJ=Rg@mail.gmail.com>
-In-Reply-To: <CA+h21hokCCF52O1wxkg0gLqS9ZcGtB0xMBm07_--i56=anJ=Rg@mail.gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 29 Jun 2020 11:18:20 -0700
-Message-ID: <CAKwvOdkcPWT4krC5FuCpiXaoY+GiTeUa=CiamFCk5tPJOz4Cjw@mail.gmail.com>
-Subject: Re: drivers/gpu/drm/panel/panel-samsung-ld9040.c:240:12: warning:
- stack frame size of 8312 bytes in function 'ld9040_prepare'
-To:     Vladimir Oltean <olteanv@gmail.com>
-Cc:     kernel test robot <lkp@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        kbuild-all@lists.01.org,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>
+X-Received: by 2002:a02:5d49:: with SMTP id w70mr18854000jaa.16.1593447076495;
+ Mon, 29 Jun 2020 09:11:16 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 09:11:16 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000f6883a05a93b4e6d@google.com>
+Subject: KASAN: use-after-free Read in tipc_nl_publ_dump (2)
+From:   syzbot <syzbot+6db30c775c0fb130e335@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, jmaloy@redhat.com, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com,
+        tipc-discussion@lists.sourceforge.net, ying.xue@windriver.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 27, 2020 at 12:43 PM Vladimir Oltean <olteanv@gmail.com> wrote:
->
-> Hi Nick,
->
-> On Mon, 22 Jun 2020 at 19:50, Nick Desaulniers <ndesaulniers@google.com> wrote:
-> >
->
-> > > I really don't get what's the problem here. The listing of
-> > > ld9040_prepare at the given commit and with the given .config is:
-> >
-> > I wrote a tool to help debug these.
-> > https://github.com/ClangBuiltLinux/frame-larger-than
-> > If you fetch the randconfig and rebuild with debug info, that tool
-> > will help show you which variables are used in which stack frames and
-> > what their sizes are.  Also note that strange things get dug up from
-> > randconfigs.
-> >
-> >
-> > --
-> > Thanks,
-> > ~Nick Desaulniers
->
-> I ran your tool and it basically told me that all 11 calls to
+Hello,
 
-Cool? No bugs running it? (I still need to extend support for many
-architectures)
+syzbot found the following crash on:
 
-> ld9040_dcs_write from within ld9040_init are inlined by the compiler.
-> Each of these ld9040_dcs_write functions calls ld9040_spi_write_word
-> twice, so 22 inline calls to that. Now, sizeof(struct
-> spi_transfer)=136 and sizeof(struct spi_message)=104, so, no wonder we
-> run out of stack pretty quickly.
+HEAD commit:    4e99b321 Merge tag 'nfs-for-5.8-2' of git://git.linux-nfs...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=122afae3100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=bf3aec367b9ab569
+dashboard link: https://syzkaller.appspot.com/bug?extid=6db30c775c0fb130e335
+compiler:       gcc (GCC) 10.1.0-syz 20200507
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=158718cd100000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=131b33c5100000
 
-I'd expect these to have distinct lifetimes resulting in stack slot
-reuse.  When the compiler inlines functions, it introduces a lexical
-scope. You can imagine it inlining the body, but within a new `{}`
-delineated compound statement.  Then the compiler knows that the
-variables local to those scopes can't outlive each other, and can
-reuse their stack slots in the containing function.  Escape analysis
-comes into play, too, but I'm not sure that's an issue here.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+6db30c775c0fb130e335@syzkaller.appspotmail.com
 
->
-> But my question is: what's wrong with the code, if anything at all?
+netlink: 8 bytes leftover after parsing attributes in process `syz-executor007'.
+==================================================================
+BUG: KASAN: use-after-free in nla_len include/net/netlink.h:1135 [inline]
+BUG: KASAN: use-after-free in nla_parse_nested_deprecated include/net/netlink.h:1218 [inline]
+BUG: KASAN: use-after-free in tipc_nl_publ_dump+0xae0/0xce0 net/tipc/socket.c:3766
+Read of size 2 at addr ffff8880a7ee0284 by task syz-executor007/6830
 
-The general case we try to find+fix with this warning is excessively
-large stack allocations that probably should be heap allocated,
-percpu, or static.  Also, the `noinline_for_stack` function annotation
-is used frequently for this.
+CPU: 0 PID: 6830 Comm: syz-executor007 Not tainted 5.8.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x18f/0x20d lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xae/0x436 mm/kasan/report.c:383
+ __kasan_report mm/kasan/report.c:513 [inline]
+ kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+ nla_len include/net/netlink.h:1135 [inline]
+ nla_parse_nested_deprecated include/net/netlink.h:1218 [inline]
+ tipc_nl_publ_dump+0xae0/0xce0 net/tipc/socket.c:3766
+ genl_lock_dumpit+0x7f/0xb0 net/netlink/genetlink.c:575
+ netlink_dump+0x4cd/0xf60 net/netlink/af_netlink.c:2245
+ __netlink_dump_start+0x643/0x900 net/netlink/af_netlink.c:2353
+ genl_family_rcv_msg_dumpit+0x2ac/0x310 net/netlink/genetlink.c:638
+ genl_family_rcv_msg net/netlink/genetlink.c:733 [inline]
+ genl_rcv_msg+0x797/0x9e0 net/netlink/genetlink.c:753
+ netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
+ genl_rcv+0x24/0x40 net/netlink/genetlink.c:764
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
+ ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x445f09
+Code: Bad RIP value.
+RSP: 002b:00007fffb147d488 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000445f09
+RDX: 0000000000000000 RSI: 0000000020000500 RDI: 0000000000000004
+RBP: 00000000006d0018 R08: 0000000000000000 R09: 00000000004002e0
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000004030a0
+R13: 0000000000403130 R14: 0000000000000000 R15: 0000000000000000
 
-One known case of issues are the sanitizers, which can generally
-prevent the reuse of stack slots.  Were any of those set in this
-config, since this was a randconfig?  I'd check this first, then
-consider if `noinline_for_stack` is appropriate on any of the related
-functions.
+Allocated by task 6828:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
+ __kmalloc_reserve net/core/skbuff.c:142 [inline]
+ __alloc_skb+0xae/0x550 net/core/skbuff.c:210
+ alloc_skb include/linux/skbuff.h:1083 [inline]
+ netlink_alloc_large_skb net/netlink/af_netlink.c:1175 [inline]
+ netlink_sendmsg+0x94f/0xd90 net/netlink/af_netlink.c:1893
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
+ ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-> Why does the compiler try to inline it, and then complain that it's
-> using too much stack
+Freed by task 6828:
+ save_stack+0x1b/0x40 mm/kasan/common.c:48
+ set_track mm/kasan/common.c:56 [inline]
+ kasan_set_free_info mm/kasan/common.c:316 [inline]
+ __kasan_slab_free+0xf5/0x140 mm/kasan/common.c:455
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x103/0x2c0 mm/slab.c:3757
+ skb_free_head net/core/skbuff.c:590 [inline]
+ skb_release_data+0x6d9/0x910 net/core/skbuff.c:610
+ skb_release_all net/core/skbuff.c:664 [inline]
+ __kfree_skb net/core/skbuff.c:678 [inline]
+ consume_skb net/core/skbuff.c:837 [inline]
+ consume_skb+0xc2/0x160 net/core/skbuff.c:831
+ netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
+ netlink_unicast+0x53b/0x7d0 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xcf/0x120 net/socket.c:672
+ ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
+ ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
+ __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-The flag -Wframe-larger-than= is a warning on semantics, not really an
-optimization flag controlling the maximum stack depth of the function
-being inlined into.
+The buggy address belongs to the object at ffff8880a7ee0000
+ which belongs to the cache kmalloc-1k of size 1024
+The buggy address is located 644 bytes inside of
+ 1024-byte region [ffff8880a7ee0000, ffff8880a7ee0400)
+The buggy address belongs to the page:
+page:ffffea00029fb800 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea000278a308 ffffea00025273c8 ffff8880aa000c40
+raw: 0000000000000000 ffff8880a7ee0000 0000000100000002 0000000000000000
+page dumped because: kasan: bad access detected
 
-> when basically nobody appears to have asked it to
-> inline it?
+Memory state around the buggy address:
+ ffff8880a7ee0180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8880a7ee0200: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff8880a7ee0280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                   ^
+ ffff8880a7ee0300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8880a7ee0380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
 
-That's not really how inlining works.  If you don't specify compiler
-attributes, then the compiler can decide to inline or not at its
-discretion.  The `inline` keyword or its absence doesn't really affect
-this.  __attribute__((always_inline)) and __attribute__((noinline))
-can give you more control, but there are hyper obscure edge cases
-where even those don't work as advertised.
 
--- 
-Thanks,
-~Nick Desaulniers
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
