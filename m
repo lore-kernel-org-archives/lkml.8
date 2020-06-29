@@ -4,59 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB14C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E1BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71D3D20760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:06:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A8B520760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:07:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461218;
-	bh=YK6IZuWhIAJFjW9rWwOcDZzB6/GbImMqt7AIHrkOW2w=;
+	s=default; t=1593461221;
+	bh=mnT2yJesXZAOGtKIXAb3DzWwFxtj/hQi1jbByk/WOt8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F4ZkVwFop48WvwYpvNzzmfDkPU7BZr5hjCOFPuNiZKZpcu6j7TDk+7Q6aNxe2W1kB
-	 JQ/7kW6B41Rcs5OL7J1ODr/nAD7873ioDXq0hpLC8jFk67MdyF8redI/AaaYsbaRPL
-	 UulXcUqWjONMYK0/sCp1bowQ2RTBV4Bj6wQ6CZCY=
+	b=GArp6C00PvMjTp6m6r4eUwQ5ejIJ6WEEDpbEo3UDLUVEHC8eSclWVeo4R1jxuCWyg
+	 r6gBfPdnYxX1uwEz0Oc5qjb2t0u2X58sUFiG9eZ3urYvnPW8+x0JwvnHCW08B6GVNi
+	 7cMpg9epJVDnfZmLZ/qcR7XbD/Dy1tV/eKrOW8XE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388876AbgF2UG4 (ORCPT
+        id S2388587AbgF2UG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:06:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40592 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:06:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40608 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732961AbgF2Ta1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732757AbgF2Ta1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:30:27 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F61F252E8;
-        Mon, 29 Jun 2020 15:38:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3B1F725281;
+        Mon, 29 Jun 2020 15:36:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445116;
-        bh=YK6IZuWhIAJFjW9rWwOcDZzB6/GbImMqt7AIHrkOW2w=;
+        s=default; t=1593444991;
+        bh=mnT2yJesXZAOGtKIXAb3DzWwFxtj/hQi1jbByk/WOt8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rgz+fv1LeYuKZmVUvfBkLeP/L1g2lIAzUwSmJMuNbOYgiWRbbI2vRePiklC27m4PS
-         OUUUrkcMAxYfwzL2T3b89Zzv9goT7dxEl3kjMHY1NPWmzyQHOOe/4OmK080QvUfbNR
-         fq6MkgwClLrjcIbP2QwTdLTxKebt36dH/SfC0fvA=
+        b=TzqzDg7+Hl6/GLUAJ4af77t+O6BW99+J71JL/PyY+aCBpX61p/+06IHOC4RdSV2Pb
+         i5udTH0yhPz6hxQQnvCdtYnGoVtoKCNnE0VfAq9mkPaF4WjES+gQ6xbe0sIXhFj+Cp
+         xoICSdROCXXgG8Qlg0cTMezv+XmkE+/2xeXo6vMc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Chuhong Yuan <hslester96@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.14 23/78] USB: ohci-sm501: Add missed iounmap() in remove
-Date:   Mon, 29 Jun 2020 11:37:11 -0400
-Message-Id: <20200629153806.2494953-24-sashal@kernel.org>
+Cc:     Ye Bin <yebin10@huawei.com>, Jens Axboe <axboe@kernel.dk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 091/131] ata/libata: Fix usage of page address by page_address in ata_scsi_mode_select_xlat function
+Date:   Mon, 29 Jun 2020 11:34:22 -0400
+Message-Id: <20200629153502.2494656-92-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
-References: <20200629153806.2494953-1-sashal@kernel.org>
+In-Reply-To: <20200629153502.2494656-1-sashal@kernel.org>
+References: <20200629153502.2494656-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.186-rc1.gz
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.131-rc1.gz
 X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.14.y
+X-KernelTest-Branch: linux-4.19.y
 X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.14.186-rc1
-X-KernelTest-Deadline: 2020-07-01T15:38+00:00
+X-KernelTest-Version: 4.19.131-rc1
+X-KernelTest-Deadline: 2020-07-01T15:34+00:00
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -65,36 +64,179 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Ye Bin <yebin10@huawei.com>
 
-commit 07c112fb09c86c0231f6ff0061a000ffe91c8eb9 upstream.
+[ Upstream commit f650ef61e040bcb175dd8762164b00a5d627f20e ]
 
-This driver misses calling iounmap() in remove to undo the ioremap()
-called in probe.
-Add the missed call to fix it.
+BUG: KASAN: use-after-free in ata_scsi_mode_select_xlat+0x10bd/0x10f0
+drivers/ata/libata-scsi.c:4045
+Read of size 1 at addr ffff88803b8cd003 by task syz-executor.6/12621
 
-Fixes: f54aab6ebcec ("usb: ohci-sm501 driver")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Link: https://lore.kernel.org/r/20200610024844.3628408-1-hslester96@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CPU: 1 PID: 12621 Comm: syz-executor.6 Not tainted 4.19.95 #1
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+1.10.2-1ubuntu1 04/01/2014
+Call Trace:
+__dump_stack lib/dump_stack.c:77 [inline]
+dump_stack+0xac/0xee lib/dump_stack.c:118
+print_address_description+0x60/0x223 mm/kasan/report.c:253
+kasan_report_error mm/kasan/report.c:351 [inline]
+kasan_report mm/kasan/report.c:409 [inline]
+kasan_report.cold+0xae/0x2d8 mm/kasan/report.c:393
+ata_scsi_mode_select_xlat+0x10bd/0x10f0 drivers/ata/libata-scsi.c:4045
+ata_scsi_translate+0x2da/0x680 drivers/ata/libata-scsi.c:2035
+__ata_scsi_queuecmd drivers/ata/libata-scsi.c:4360 [inline]
+ata_scsi_queuecmd+0x2e4/0x790 drivers/ata/libata-scsi.c:4409
+scsi_dispatch_cmd+0x2ee/0x6c0 drivers/scsi/scsi_lib.c:1867
+scsi_queue_rq+0xfd7/0x1990 drivers/scsi/scsi_lib.c:2170
+blk_mq_dispatch_rq_list+0x1e1/0x19a0 block/blk-mq.c:1186
+blk_mq_do_dispatch_sched+0x147/0x3d0 block/blk-mq-sched.c:108
+blk_mq_sched_dispatch_requests+0x427/0x680 block/blk-mq-sched.c:204
+__blk_mq_run_hw_queue+0xbc/0x200 block/blk-mq.c:1308
+__blk_mq_delay_run_hw_queue+0x3c0/0x460 block/blk-mq.c:1376
+blk_mq_run_hw_queue+0x152/0x310 block/blk-mq.c:1413
+blk_mq_sched_insert_request+0x337/0x6c0 block/blk-mq-sched.c:397
+blk_execute_rq_nowait+0x124/0x320 block/blk-exec.c:64
+blk_execute_rq+0xc5/0x112 block/blk-exec.c:101
+sg_scsi_ioctl+0x3b0/0x6a0 block/scsi_ioctl.c:507
+sg_ioctl+0xd37/0x23f0 drivers/scsi/sg.c:1106
+vfs_ioctl fs/ioctl.c:46 [inline]
+file_ioctl fs/ioctl.c:501 [inline]
+do_vfs_ioctl+0xae6/0x1030 fs/ioctl.c:688
+ksys_ioctl+0x76/0xa0 fs/ioctl.c:705
+__do_sys_ioctl fs/ioctl.c:712 [inline]
+__se_sys_ioctl fs/ioctl.c:710 [inline]
+__x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:710
+do_syscall_64+0xa0/0x2e0 arch/x86/entry/common.c:293
+entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x45c479
+Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89
+f7 48
+89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff
+ff 0f
+83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fb0e9602c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007fb0e96036d4 RCX: 000000000045c479
+RDX: 0000000020000040 RSI: 0000000000000001 RDI: 0000000000000003
+RBP: 000000000076bfc0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
+R13: 000000000000046d R14: 00000000004c6e1a R15: 000000000076bfcc
+
+Allocated by task 12577:
+set_track mm/kasan/kasan.c:460 [inline]
+kasan_kmalloc mm/kasan/kasan.c:553 [inline]
+kasan_kmalloc+0xbf/0xe0 mm/kasan/kasan.c:531
+__kmalloc+0xf3/0x1e0 mm/slub.c:3749
+kmalloc include/linux/slab.h:520 [inline]
+load_elf_phdrs+0x118/0x1b0 fs/binfmt_elf.c:441
+load_elf_binary+0x2de/0x4610 fs/binfmt_elf.c:737
+search_binary_handler fs/exec.c:1654 [inline]
+search_binary_handler+0x15c/0x4e0 fs/exec.c:1632
+exec_binprm fs/exec.c:1696 [inline]
+__do_execve_file.isra.0+0xf52/0x1a90 fs/exec.c:1820
+do_execveat_common fs/exec.c:1866 [inline]
+do_execve fs/exec.c:1883 [inline]
+__do_sys_execve fs/exec.c:1964 [inline]
+__se_sys_execve fs/exec.c:1959 [inline]
+__x64_sys_execve+0x8a/0xb0 fs/exec.c:1959
+do_syscall_64+0xa0/0x2e0 arch/x86/entry/common.c:293
+entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Freed by task 12577:
+set_track mm/kasan/kasan.c:460 [inline]
+__kasan_slab_free+0x129/0x170 mm/kasan/kasan.c:521
+slab_free_hook mm/slub.c:1370 [inline]
+slab_free_freelist_hook mm/slub.c:1397 [inline]
+slab_free mm/slub.c:2952 [inline]
+kfree+0x8b/0x1a0 mm/slub.c:3904
+load_elf_binary+0x1be7/0x4610 fs/binfmt_elf.c:1118
+search_binary_handler fs/exec.c:1654 [inline]
+search_binary_handler+0x15c/0x4e0 fs/exec.c:1632
+exec_binprm fs/exec.c:1696 [inline]
+__do_execve_file.isra.0+0xf52/0x1a90 fs/exec.c:1820
+do_execveat_common fs/exec.c:1866 [inline]
+do_execve fs/exec.c:1883 [inline]
+__do_sys_execve fs/exec.c:1964 [inline]
+__se_sys_execve fs/exec.c:1959 [inline]
+__x64_sys_execve+0x8a/0xb0 fs/exec.c:1959
+do_syscall_64+0xa0/0x2e0 arch/x86/entry/common.c:293
+entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+The buggy address belongs to the object at ffff88803b8ccf00
+which belongs to the cache kmalloc-512 of size 512
+The buggy address is located 259 bytes inside of
+512-byte region [ffff88803b8ccf00, ffff88803b8cd100)
+The buggy address belongs to the page:
+page:ffffea0000ee3300 count:1 mapcount:0 mapping:ffff88806cc03080
+index:0xffff88803b8cc780 compound_mapcount: 0
+flags: 0x100000000008100(slab|head)
+raw: 0100000000008100 ffffea0001104080 0000000200000002 ffff88806cc03080
+raw: ffff88803b8cc780 00000000800c000b 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ffff88803b8ccf00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ffff88803b8ccf80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff88803b8cd000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+^
+ffff88803b8cd080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ffff88803b8cd100: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+
+You can refer to "https://www.lkml.org/lkml/2019/1/17/474" reproduce
+this error.
+
+The exception code is "bd_len = p[3];", "p" value is ffff88803b8cd000
+which belongs to the cache kmalloc-512 of size 512. The "page_address(sg_page(scsi_sglist(scmd)))"
+maybe from sg_scsi_ioctl function "buffer" which allocated by kzalloc, so "buffer"
+may not page aligned.
+This also looks completely buggy on highmem systems and really needs to use a
+kmap_atomic.      --Christoph Hellwig
+To address above bugs, Paolo Bonzini advise to simpler to just make a char array
+of size CACHE_MPAGE_LEN+8+8+4-2(or just 64 to make it easy), use sg_copy_to_buffer
+to copy from the sglist into the buffer, and workthere.
+
+Signed-off-by: Ye Bin <yebin10@huawei.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/host/ohci-sm501.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/ata/libata-scsi.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/usb/host/ohci-sm501.c b/drivers/usb/host/ohci-sm501.c
-index d4e0f7cd96fa4..b5592fb518e35 100644
---- a/drivers/usb/host/ohci-sm501.c
-+++ b/drivers/usb/host/ohci-sm501.c
-@@ -195,6 +195,7 @@ static int ohci_hcd_sm501_drv_remove(struct platform_device *pdev)
- 	struct resource	*mem;
+diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
+index 0c1572a1cc5ed..6c2c2b07f029e 100644
+--- a/drivers/ata/libata-scsi.c
++++ b/drivers/ata/libata-scsi.c
+@@ -3995,12 +3995,13 @@ static unsigned int ata_scsi_mode_select_xlat(struct ata_queued_cmd *qc)
+ {
+ 	struct scsi_cmnd *scmd = qc->scsicmd;
+ 	const u8 *cdb = scmd->cmnd;
+-	const u8 *p;
+ 	u8 pg, spg;
+ 	unsigned six_byte, pg_len, hdr_len, bd_len;
+ 	int len;
+ 	u16 fp = (u16)-1;
+ 	u8 bp = 0xff;
++	u8 buffer[64];
++	const u8 *p = buffer;
  
- 	usb_remove_hcd(hcd);
-+	iounmap(hcd->regs);
- 	release_mem_region(hcd->rsrc_start, hcd->rsrc_len);
- 	usb_put_hcd(hcd);
- 	dma_release_declared_memory(&pdev->dev);
+ 	VPRINTK("ENTER\n");
+ 
+@@ -4034,12 +4035,14 @@ static unsigned int ata_scsi_mode_select_xlat(struct ata_queued_cmd *qc)
+ 	if (!scsi_sg_count(scmd) || scsi_sglist(scmd)->length < len)
+ 		goto invalid_param_len;
+ 
+-	p = page_address(sg_page(scsi_sglist(scmd)));
+-
+ 	/* Move past header and block descriptors.  */
+ 	if (len < hdr_len)
+ 		goto invalid_param_len;
+ 
++	if (!sg_copy_to_buffer(scsi_sglist(scmd), scsi_sg_count(scmd),
++			       buffer, sizeof(buffer)))
++		goto invalid_param_len;
++
+ 	if (six_byte)
+ 		bd_len = p[3];
+ 	else
 -- 
 2.25.1
 
