@@ -2,117 +2,197 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 464FAC433E1
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48973C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:21:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 20FED204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:21:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20F6520826
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:21:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X8/CAFiD"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="wDExhoy0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390492AbgF2VVW (ORCPT
+        id S1729994AbgF2VV1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:21:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40022 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729762AbgF2Swn (ORCPT
+        Mon, 29 Jun 2020 17:21:27 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:10502 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728014AbgF2Swn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:52:43 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92E75C031C53;
-        Mon, 29 Jun 2020 10:36:13 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id k71so4843467pje.0;
-        Mon, 29 Jun 2020 10:36:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=G0sYP00DyHcgSiz/UpCj0vFSMqhUdJtVPzxSy22jFRs=;
-        b=X8/CAFiDKcy1LRoopU/VXQqrF/ZXGGSBw4D5FArGbTOu2n4JamyvFgiWlugGFsqSWM
-         /9xVgVu+f/ncxxEz0VlzZr31y1FxZzC8Jc+sF648c86tQga2eom8sl6/lfJxOcC2zbt3
-         nfj2/wL562qfy3sqaGoUnWITVNcwjvE/Df3g3LcC+6PyutlOA9UrYFg+s4HWkAao31gd
-         sjRuHnBD8imlkO9/NQEO6ZY6sbgFNfk5G7L7A3OtSQhS5yHQ7ZRroV6u+Zz/9N2L7ACz
-         SpWvD/+s2hgECa2/k9Apgoa1nwhlGvHGZNScfJzhTUsFEHyivbspJCM5V40cttfUNNBU
-         ti3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=G0sYP00DyHcgSiz/UpCj0vFSMqhUdJtVPzxSy22jFRs=;
-        b=Cv8md3T3U6bAAFwBDFW/aoTHCQEgBk9+dmmJjSO3rUL4uWF0sHOE+irZcUVwl5sNG+
-         p5eUWxkLE68mXQVC/vf4G2tGdiEy6NL3WViZSHOUdhizm1eeQUjHS7pdBVFn38xVbe/X
-         M4d28H0eit8i+WLaFh2T1Xe5UI+VUtE6g5xpZdHkcID6CdUJSn4LQwKONFw9mF8JEGYd
-         KX31kHP0CWZKnJX5F//DW3p1YbTWebUiziS2eNcOKNA2lij0jx5pcpmouJyN4MiBt9aR
-         UzWTmh9SBN/3P3b1K1ieLGAP2o4lUer8NPoIJrA7Cxs5jMJyU25OAiNCiilW9RWQDMPR
-         9x3Q==
-X-Gm-Message-State: AOAM531ub9V0scIXKbvkB73yJci0lITm9RB40McHcGdWADMhzW8YJZH4
-        qVhUqHv7DxJxeR5iAyrRcwU=
-X-Google-Smtp-Source: ABdhPJytPqaMuxgD0wTHbLQsj7ArRGy3HFUVO8WFw4oHOZsTmYK70wTx5FpJaZY3EXhIhz/1MrYa7A==
-X-Received: by 2002:a17:90a:ac14:: with SMTP id o20mr11765030pjq.185.1593452173081;
-        Mon, 29 Jun 2020 10:36:13 -0700 (PDT)
-Received: from varodek.iballbatonwifi.com ([103.105.153.57])
-        by smtp.gmail.com with ESMTPSA id k23sm331461pgb.92.2020.06.29.10.36.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 10:36:12 -0700 (PDT)
-From:   Vaibhav Gupta <vaibhavgupta40@gmail.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>, bjorn@helgaas.com,
-        Vaibhav Gupta <vaibhav.varodek@gmail.com>,
-        Manish Chopra <manishc@marvell.com>,
-        GR-Linux-NIC-Dev@marvell.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Vaibhav Gupta <vaibhavgupta40@gmail.com>, netdev@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org
-Subject: [PATCH v2 0/4] drivers/staging: use generic power management
-Date:   Mon, 29 Jun 2020 23:04:55 +0530
-Message-Id: <20200629173459.262075-1-vaibhavgupta40@gmail.com>
-X-Mailer: git-send-email 2.27.0
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593456762; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=SBDpthJsACP4X9l/XtUwp2evGNFSv28FhmlHvAnZ2bs=; b=wDExhoy0GnfX4nnXMLLO4x3pu1lTjZJ/Q2kFm1iyzGb2OpvH4d5pi5HEka426FtaoEzlIG9G
+ jwLWgWMmADIFS35S2bIk2ctol3hoFR/75iMoc4MTbqYYHoP3uZ2Vj3vb9Z47tk2imXzP82Mx
+ W7OTsLQQSFpQWvgxh49ayhI1W+I=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n15.prod.us-east-1.postgun.com with SMTP id
+ 5efa001ba3d8a4474330b27c (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Mon, 29 Jun 2020 14:52:11
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 0B4CDC433AF; Mon, 29 Jun 2020 14:52:09 +0000 (UTC)
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A262AC433C6;
+        Mon, 29 Jun 2020 14:52:07 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A262AC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Mon, 29 Jun 2020 08:52:04 -0600
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Takashi Iwai <tiwai@suse.de>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Shawn Guo <shawn.guo@linaro.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Brian Masney <masneyb@onstation.org>
+Subject: Re: [Freedreno] [PATCH v9 6/7] drm/msm: Set the global virtual
+ address range from the IOMMU domain
+Message-ID: <20200629145203.GB25740@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Rob Clark <robdclark@gmail.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>,
+        David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Takashi Iwai <tiwai@suse.de>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Daniel Vetter <daniel@ffwll.ch>, Shawn Guo <shawn.guo@linaro.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Brian Masney <masneyb@onstation.org>
+References: <20200626200042.13713-1-jcrouse@codeaurora.org>
+ <20200626200042.13713-7-jcrouse@codeaurora.org>
+ <CAF6AEGuNSAYNMG6CH6VMuyjiz5dfRoLWQ9OAFxPJrFmBrHe+Wg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAF6AEGuNSAYNMG6CH6VMuyjiz5dfRoLWQ9OAFxPJrFmBrHe+Wg@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linux Kernel Mentee: Remove Legacy Power Management.
+On Sat, Jun 27, 2020 at 10:10:14AM -0700, Rob Clark wrote:
+> On Fri, Jun 26, 2020 at 1:01 PM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+> >
+> > Use the aperture settings from the IOMMU domain to set up the virtual
+> > address range for the GPU. This allows us to transparently deal with
+> > IOMMU side features (like split pagetables).
+> >
+> > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> > ---
+> >
+> >  drivers/gpu/drm/msm/adreno/adreno_gpu.c | 13 +++++++++++--
+> >  drivers/gpu/drm/msm/msm_iommu.c         |  7 +++++++
+> >  2 files changed, 18 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> > index 5db06b590943..3e717c1ebb7f 100644
+> > --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> > +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> > @@ -192,9 +192,18 @@ adreno_iommu_create_address_space(struct msm_gpu *gpu,
+> >         struct iommu_domain *iommu = iommu_domain_alloc(&platform_bus_type);
+> >         struct msm_mmu *mmu = msm_iommu_new(&pdev->dev, iommu);
+> >         struct msm_gem_address_space *aspace;
+> > +       u64 start, size;
+> >
+> > -       aspace = msm_gem_address_space_create(mmu, "gpu", SZ_16M,
+> > -               0xffffffff - SZ_16M);
+> > +       /*
+> > +        * Use the aperture start or SZ_16M, whichever is greater. This will
+> > +        * ensure that we align with the allocated pagetable range while still
+> > +        * allowing room in the lower 32 bits for GMEM and whatnot
+> > +        */
+> > +       start = max_t(u64, SZ_16M, iommu->geometry.aperture_start);
+> > +       size = iommu->geometry.aperture_end - start + 1;
+> > +
+> > +       aspace = msm_gem_address_space_create(mmu, "gpu",
+> > +               start & GENMASK(48, 0), size);
+> 
+> hmm, I kinda think this isn't going to play well for the 32b gpus
+> (pre-a5xx).. possibly we should add address space size to 'struct
+> adreno_info'?
 
-The purpose of this patch series is to remove legacy power management callbacks
-from amd ethernet drivers.
+I checked and qcom-iommu sets the aperture correctly so this should be okay for
+everybody. To be honest, I'm nots sure if we even need to mask the start to 49
+bits. It seems that all of the iommu implementations do the right thing.  Of
+course it would be worth a check if you have a 4xx handy.
 
-The callbacks performing suspend() and resume() operations are still calling
-pci_save_state(), pci_set_power_state(), etc. and handling the power management
-themselves, which is not recommended.
+> Or I guess it is always going to be the same for all devices within a
+> generation?  So it could just be passed in to adreno_gpu_init()
 
-The conversion requires the removal of the those function calls and change the
-callback definition accordingly and make use of dev_pm_ops structure.
+We can do that easily if we are worried about it (see also: a2xx). I just
+figured this might save us a bit of code.
 
-All patches are compile-tested only.
+> Hopefully that makes things smoother if we someday had more than 48bits..
 
-v2: An error was reported by kbuild in v1. pci_set_master() function call in
-drivers/staging/qlge/qlge_main.c, inside qlge_resume(), was passing argument
-which got deprecated after upgrade to generic PM. The error is fixed in v2.
+We'll be at 49 bits for as far ahead as I can see. 49 bits has a special
+meaning in the SMMU so it is a natural fit for the GPU hardware. If we change in
+N generations we can just shift to a family specific function at that point.
 
-Vaibhav Gupta (4):
-  qlge/qlge_main.c: use generic power management
-  staging/rtl8192e: use generic power management
-  rts5208/rtsx.c: use generic power management
-  vt6655/device_main.c: use generic power management
+Jordan
 
- drivers/staging/qlge/qlge_main.c             | 38 ++++++--------------
- drivers/staging/rtl8192e/rtl8192e/rtl_core.c |  5 +--
- drivers/staging/rtl8192e/rtl8192e/rtl_pm.c   | 26 ++++----------
- drivers/staging/rtl8192e/rtl8192e/rtl_pm.h   |  4 +--
- drivers/staging/rts5208/rtsx.c               | 30 +++++-----------
- drivers/staging/vt6655/device_main.c         | 25 ++++---------
- 6 files changed, 37 insertions(+), 91 deletions(-)
+> BR,
+> -R
+> 
+> >
+> >         if (IS_ERR(aspace) && !IS_ERR(mmu))
+> >                 mmu->funcs->destroy(mmu);
+> > diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
+> > index 3a381a9674c9..1b6635504069 100644
+> > --- a/drivers/gpu/drm/msm/msm_iommu.c
+> > +++ b/drivers/gpu/drm/msm/msm_iommu.c
+> > @@ -36,6 +36,10 @@ static int msm_iommu_map(struct msm_mmu *mmu, uint64_t iova,
+> >         struct msm_iommu *iommu = to_msm_iommu(mmu);
+> >         size_t ret;
+> >
+> > +       /* The arm-smmu driver expects the addresses to be sign extended */
+> > +       if (iova & BIT_ULL(48))
+> > +               iova |= GENMASK_ULL(63, 49);
+> > +
+> >         ret = iommu_map_sg(iommu->domain, iova, sgt->sgl, sgt->nents, prot);
+> >         WARN_ON(!ret);
+> >
+> > @@ -46,6 +50,9 @@ static int msm_iommu_unmap(struct msm_mmu *mmu, uint64_t iova, size_t len)
+> >  {
+> >         struct msm_iommu *iommu = to_msm_iommu(mmu);
+> >
+> > +       if (iova & BIT_ULL(48))
+> > +               iova |= GENMASK_ULL(63, 49);
+> > +
+> >         iommu_unmap(iommu->domain, iova, len);
+> >
+> >         return 0;
+> > --
+> > 2.17.1
+> >
+> > _______________________________________________
+> > Freedreno mailing list
+> > Freedreno@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/freedreno
 
 -- 
-2.27.0
-
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
