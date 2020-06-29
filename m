@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D0B8C433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7CBC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:48:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D09D620760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:48:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F3AE20780
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:48:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593467328;
-	bh=brRajcykVy9yW26Z2PG9o1IhYOjKjuI0mu4oVX9mPHU=;
+	s=default; t=1593467333;
+	bh=oMx8hRqY3J/55UxEYvezLAHGiHIP7THkkH2dLbd4euI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=olyBLdnCdtT6CDHwkE1qXRtHW0LT60xnoeXwgzqj10/jmMKBc8vSEacycbVwV5PiA
-	 0mDW8edpeHS4aDR5dx0lHDzMX4IS3qYxOHtBLL+ISFkaFbKVcSUVwdJFYZhlmYQAeU
-	 84oC52MLznGa3KgrLY1K1nZUG3ELd+o+q5Zn6vnE=
+	b=Tj3wfqRwi0MKufOBE2b2T6G1RqFXZcovIGCiWEyRAZM6H1N2wO8w5Z0R5SDBsELK4
+	 71mMI6JGJg7nwLDaKnSU4/8ZLk6x54IeXK28gEBm2DONM2S4lHB9+uw6/RWW0JlSJP
+	 KmEET+yMdrze4ghocqdADd1tjCaldi6xwgqFa/ZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730461AbgF2Vsr (ORCPT
+        id S2404322AbgF2Vsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:48:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56786 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 17:48:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726715AbgF2Sfm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 14:35:42 -0400
+        id S1726704AbgF2Sfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 14:35:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4406247DA;
-        Mon, 29 Jun 2020 15:22:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A91E32477D;
+        Mon, 29 Jun 2020 15:21:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444144;
-        bh=brRajcykVy9yW26Z2PG9o1IhYOjKjuI0mu4oVX9mPHU=;
+        s=default; t=1593444091;
+        bh=oMx8hRqY3J/55UxEYvezLAHGiHIP7THkkH2dLbd4euI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gGyNNCvz0ezcM+nOeIZ9k7ON8ZRg+/wFaF16KfSV+xgDEdw+lOLecZfTn60bN6w4c
-         CElDJS60/UFhgJcjik4pw63D12sXe3Gg77MuwUQAJQ2XYs+zAPhUWTlPm4upvjGrD6
-         70YwwUAie/14cC9g/mFV24IKYsL0sDv5zKx6mQsc=
+        b=n/hMiYUUy9XteVo0876cAGI2aFDyTOQHComFyT86kECtnjzAsVJ6QIpFqcwVa/Pgt
+         CLh+82hdPZfz1t02Q1iPRITBuWoWOb9or9/EedyqmViIG8Vpto3kvd0IpCbGPTmPyp
+         bDZBsJTcWiedKiOwLdA3+dCtUEy7YOsXIM0zME1A=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Wenhui Sheng <Wenhui.Sheng@amd.com>,
-        Hawking Zhang <Hawking.Zhang@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.7 249/265] drm/amdgpu: add fw release for sdma v5_0
-Date:   Mon, 29 Jun 2020 11:18:02 -0400
-Message-Id: <20200629151818.2493727-250-sashal@kernel.org>
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.7 201/265] kbuild: improve cc-option to clean up all temporary files
+Date:   Mon, 29 Jun 2020 11:17:14 -0400
+Message-Id: <20200629151818.2493727-202-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
 References: <20200629151818.2493727-1-sashal@kernel.org>
@@ -66,39 +64,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wenhui Sheng <Wenhui.Sheng@amd.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-commit edfaf6fa73f15568d4337f208b2333f647c35810 upstream.
+[ Upstream commit f2f02ebd8f3833626642688b2d2c6a7b3c141fa9 ]
 
-sdma fw isn't released when module exit
+When cc-option and friends evaluate compiler flags, the temporary file
+$$TMP is created as an output object, and automatically cleaned up.
+The actual file path of $$TMP is .<pid>.tmp, here <pid> is the process
+ID of $(shell ...) invoked from cc-option. (Please note $$$$ is the
+escape sequence of $$).
 
-Reviewed-by: Hawking Zhang <Hawking.Zhang@amd.com>
-Signed-off-by: Wenhui Sheng <Wenhui.Sheng@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Such garbage files are cleaned up in most cases, but some compiler flags
+create additional output files.
+
+For example, -gsplit-dwarf creates a .dwo file.
+
+When CONFIG_DEBUG_INFO_SPLIT=y, you will see a bunch of .<pid>.dwo files
+left in the top of build directories. You may not notice them unless you
+do 'ls -a', but the garbage files will increase every time you run 'make'.
+
+This commit changes the temporary object path to .tmp_<pid>/tmp, and
+removes .tmp_<pid> directory when exiting. Separate build artifacts such
+as *.dwo will be cleaned up all together because their file paths are
+usually determined based on the base name of the object.
+
+Another example is -ftest-coverage, which outputs the coverage data into
+<base-name-of-object>.gcno
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ scripts/Kbuild.include | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c b/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c
-index d2840c2f62865..1dc57079933ce 100644
---- a/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c
-+++ b/drivers/gpu/drm/amd/amdgpu/sdma_v5_0.c
-@@ -1261,8 +1261,12 @@ static int sdma_v5_0_sw_fini(void *handle)
- 	struct amdgpu_device *adev = (struct amdgpu_device *)handle;
- 	int i;
+diff --git a/scripts/Kbuild.include b/scripts/Kbuild.include
+index 6cabf20ce66a3..fe427f7fcfb31 100644
+--- a/scripts/Kbuild.include
++++ b/scripts/Kbuild.include
+@@ -86,20 +86,21 @@ cc-cross-prefix = $(firstword $(foreach c, $(1), \
+ 			$(if $(shell command -v -- $(c)gcc 2>/dev/null), $(c))))
  
--	for (i = 0; i < adev->sdma.num_instances; i++)
-+	for (i = 0; i < adev->sdma.num_instances; i++) {
-+		if (adev->sdma.instance[i].fw != NULL)
-+			release_firmware(adev->sdma.instance[i].fw);
-+
- 		amdgpu_ring_fini(&adev->sdma.instance[i].ring);
-+	}
+ # output directory for tests below
+-TMPOUT := $(if $(KBUILD_EXTMOD),$(firstword $(KBUILD_EXTMOD))/)
++TMPOUT = $(if $(KBUILD_EXTMOD),$(firstword $(KBUILD_EXTMOD))/).tmp_$$$$
  
- 	return 0;
- }
+ # try-run
+ # Usage: option = $(call try-run, $(CC)...-o "$$TMP",option-ok,otherwise)
+ # Exit code chooses option. "$$TMP" serves as a temporary file and is
+ # automatically cleaned up.
+ try-run = $(shell set -e;		\
+-	TMP="$(TMPOUT).$$$$.tmp";	\
+-	TMPO="$(TMPOUT).$$$$.o";	\
++	TMP=$(TMPOUT)/tmp;		\
++	TMPO=$(TMPOUT)/tmp.o;		\
++	mkdir -p $(TMPOUT);		\
++	trap "rm -rf $(TMPOUT)" EXIT;	\
+ 	if ($(1)) >/dev/null 2>&1;	\
+ 	then echo "$(2)";		\
+ 	else echo "$(3)";		\
+-	fi;				\
+-	rm -f "$$TMP" "$$TMPO")
++	fi)
+ 
+ # as-option
+ # Usage: cflags-y += $(call as-option,-Wa$(comma)-isa=foo,)
 -- 
 2.25.1
 
