@@ -2,171 +2,127 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CEA6C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:43:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 650A3C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 178E520656
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:43:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44DF020656
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 21:43:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kkVk4vA2"
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="Qt5Lh88+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731841AbgF2Vnd (ORCPT
+        id S2403996AbgF2Vni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 17:43:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37560 "EHLO
+        Mon, 29 Jun 2020 17:43:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37580 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727860AbgF2Sht (ORCPT
+        with ESMTP id S1727849AbgF2Sht (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 14:37:49 -0400
-Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 451F2C0307BC
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:08:45 -0700 (PDT)
-Received: by mail-qv1-xf41.google.com with SMTP id t7so7866819qvl.8
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 09:08:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OQexXlGBKJdk3D0CRqMaYBwtQzQ2Na2WWKz2a9JUMcM=;
-        b=kkVk4vA2nur6Ml4FZZwrw8YeLgGwNqqa4dh75/DY22m+lPTOkfIr04r4MUkXHwMw52
-         3Qq2S9tSvfvY9hy7OsJ9keWL3GBzxD+aI3k/i5794r+rdHuOsfJVfQCDmjV6CUwU37UB
-         OmrGrKuM/J5SyX78ZJShUM8IYT62sSLpP3PIA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OQexXlGBKJdk3D0CRqMaYBwtQzQ2Na2WWKz2a9JUMcM=;
-        b=FW8saY8EUPT5dOrn8/H4LvDW4OF9wPN3DqQvZ0nKNHftWaiJb31RdPO4M3i0RUue37
-         qHqHGtZNg/m+QVivz69nJ2CyN33EnOT4JyhON5/0A1kYTyUh0LTc8WHVJhyBa48gDO5e
-         9hrmASn10lDdhvrfJbninN1rofv7gSM+X1Kevh/TV5xOR/FrqZUrwoRBdgl3dTK6u8Ct
-         AlJ+HUnynMCpGjhm4CaAYvxxNik/lKjt3bw++hJXkxtvsTzJXULqC6AccfyDdOa318is
-         /gK/+KoC5oUigNxMwcZ88lRt97cFq8YhSyF5feiHYR2t0UUIFOWhc3ucoV6amji5v46o
-         CD0g==
-X-Gm-Message-State: AOAM533eegjcoslzz0hNgurq774nbPq6zurm//Ck2OWaVO7a7E0Z7UIm
-        71W1NzdiOnzFfz54tP4QbFchrbG/8eGr9LeRm+tB/A==
-X-Google-Smtp-Source: ABdhPJw7oYxe86+vPz7ga8OTzT65uq/FKjKsrrMcs9OJqqprO2kMPcZz7RR93Rcxm6Eq7BLnP6mTa1hgWoaD/Unue64=
-X-Received: by 2002:a0c:b507:: with SMTP id d7mr15066362qve.133.1593446924258;
- Mon, 29 Jun 2020 09:08:44 -0700 (PDT)
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F53DC031C7E;
+        Mon, 29 Jun 2020 11:18:20 -0700 (PDT)
+Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id 2AD6822FE5;
+        Mon, 29 Jun 2020 20:18:18 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1593454698;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cNOkHiPv2byQuAj2pn9ZPa3+Ddro6cPpf6otG6XMIXU=;
+        b=Qt5Lh88+98GRoG6VG+zgAmNMRTGGa5VpEv+Ku63uodMS0RsBKLYndk4AYHhmRbWS8RtJ6w
+        UYR3Ctbmic8zNcTFOnYMnlHam8JyvG0QERHY2zeMl3NObqvIJQpNv+AE/65FH/xg5yR9qY
+        wSoZZ3y9pgoFrus6TXetUx3rMtdENHE=
+From:   Michael Walle <michael@walle.cc>
+To:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Michael Walle <michael@walle.cc>
+Subject: [PATCH 2/2] can: flexcan: add support for ISO CAN-FD
+Date:   Mon, 29 Jun 2020 20:18:09 +0200
+Message-Id: <20200629181809.25338-3-michael@walle.cc>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200629181809.25338-1-michael@walle.cc>
+References: <20200629181809.25338-1-michael@walle.cc>
 MIME-Version: 1.0
-References: <20200627045840.1314019-1-pmalani@chromium.org>
- <20200627045840.1314019-2-pmalani@chromium.org> <cf26168d-bc97-7e35-6f86-a769a36fcc4a@collabora.com>
-In-Reply-To: <cf26168d-bc97-7e35-6f86-a769a36fcc4a@collabora.com>
-From:   Prashant Malani <pmalani@chromium.org>
-Date:   Mon, 29 Jun 2020 09:08:32 -0700
-Message-ID: <CACeCKacaGvAshk0DgMfem23YRppdnSHU=Ewj5qAjUv2x-bqyCA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] platform/chrome: cros_ec_typec: Add PM support
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Enric,
+Up until now, the controller used non-ISO CAN-FD mode, although it
+supports it. Add support for ISO mode, too. By default the hardware
+is in non-ISO mode and an enable bit has to be explicitly set.
 
-Thanks for reviewing the patch.
+Signed-off-by: Michael Walle <michael@walle.cc>
+---
+ drivers/net/can/flexcan.c | 19 ++++++++++++++++---
+ 1 file changed, 16 insertions(+), 3 deletions(-)
 
-On Mon, Jun 29, 2020 at 3:51 AM Enric Balletbo i Serra
-<enric.balletbo@collabora.com> wrote:
->
-> Hi Prashant,
->
-> Thank you for the patch.
->
-> On 27/6/20 6:58, Prashant Malani wrote:
-> > Define basic suspend resume functions for cros-ec-typec. On suspend, we
-> > simply ensure that any pending port update work is completed, and on
-> > resume, we re-poll the port state to account for any
-> > changes/disconnections that might have occurred during suspend.
-> >
-> > Signed-off-by: Prashant Malani <pmalani@chromium.org>
-> > ---
-> >  drivers/platform/chrome/cros_ec_typec.c | 34 +++++++++++++++++++++++++
-> >  1 file changed, 34 insertions(+)
-> >
-> > diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-> > index 630170fb2cbe..68f15a47450c 100644
-> > --- a/drivers/platform/chrome/cros_ec_typec.c
-> > +++ b/drivers/platform/chrome/cros_ec_typec.c
-> > @@ -725,11 +725,45 @@ static int cros_typec_probe(struct platform_device *pdev)
-> >       return ret;
-> >  }
-> >
-> > +#ifdef CONFIG_PM_SLEEP
-> > +
-> > +static int cros_typec_suspend(struct device *dev)
->
-> I'd prefer if you can mark these function as __maybe_unused (to avoid the
-> compiler warning) rather than wrapping it in a preprocessor conditional, it
-> makes the code a bit more simple.
+diff --git a/drivers/net/can/flexcan.c b/drivers/net/can/flexcan.c
+index 183e094f8d66..a92d3cdf4195 100644
+--- a/drivers/net/can/flexcan.c
++++ b/drivers/net/can/flexcan.c
+@@ -94,6 +94,7 @@
+ #define FLEXCAN_CTRL2_MRP		BIT(18)
+ #define FLEXCAN_CTRL2_RRS		BIT(17)
+ #define FLEXCAN_CTRL2_EACEN		BIT(16)
++#define FLEXCAN_CTRL2_ISOCANFDEN	BIT(12)
+ 
+ /* FLEXCAN memory error control register (MECR) bits */
+ #define FLEXCAN_MECR_ECRWRDIS		BIT(31)
+@@ -1344,14 +1345,25 @@ static int flexcan_chip_start(struct net_device *dev)
+ 	else
+ 		reg_mcr |= FLEXCAN_MCR_SRX_DIS;
+ 
+-	/* MCR - CAN-FD */
+-	if (priv->can.ctrlmode & CAN_CTRLMODE_FD)
++	/* MCR, CTRL2
++	 *
++	 * CAN-FD mode
++	 * ISO CAN-FD mode
++	 */
++	reg_ctrl2 = priv->read(&regs->ctrl2);
++	if (priv->can.ctrlmode & CAN_CTRLMODE_FD) {
+ 		reg_mcr |= FLEXCAN_MCR_FDEN;
+-	else
++		reg_ctrl2 |= FLEXCAN_CTRL2_ISOCANFDEN;
++	} else {
+ 		reg_mcr &= ~FLEXCAN_MCR_FDEN;
++	}
++
++	if (priv->can.ctrlmode & CAN_CTRLMODE_FD_NON_ISO)
++		reg_ctrl2 &= ~FLEXCAN_CTRL2_ISOCANFDEN;
+ 
+ 	netdev_dbg(dev, "%s: writing mcr=0x%08x", __func__, reg_mcr);
+ 	priv->write(reg_mcr, &regs->mcr);
++	priv->write(reg_ctrl2, &regs->ctrl2);
+ 
+ 	/* CTRL
+ 	 *
+@@ -1952,6 +1964,7 @@ static int flexcan_probe(struct platform_device *pdev)
+ 
+ 	if (priv->devtype_data->quirks & FLEXCAN_QUIRK_SUPPORT_FD) {
+ 		priv->can.ctrlmode_supported |= CAN_CTRLMODE_FD;
++		priv->can.ctrlmode_supported |= CAN_CTRLMODE_FD_NON_ISO;
+ 		priv->can.bittiming_const = &flexcan_fd_bittiming_const;
+ 		priv->can.data_bittiming_const =
+ 			&flexcan_fd_data_bittiming_const;
+-- 
+2.20.1
 
-Done.
-
->
-> > +{
-> > +     struct cros_typec_data *typec = dev_get_drvdata(dev);
-> > +
-> > +     cancel_work_sync(&typec->port_work);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int cros_typec_resume(struct device *dev)
->
-> __maybe_unused ?
-
-Done.
-
->
-> > +{
-> > +     struct cros_typec_data *typec = dev_get_drvdata(dev);
-> > +
-> > +     /* Refresh port state. */
-> > +     schedule_work(&typec->port_work);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static const struct dev_pm_ops cros_typec_pm_ops = {
-> > +     SET_SYSTEM_SLEEP_PM_OPS(cros_typec_suspend, cros_typec_resume)
-> > +};
-> > +
-> > +#define DEV_PM_OPS   (&cros_typec_pm_ops)
-> > +
-> > +#else
-> > +
-> > +#define DEV_PM_OPS   NULL
-> > +
-> > +#endif /* CONFIG_PM_SLEEP */
->
-> and remove the ifdefy
->
-
-Done.
-
-> > +
-> >  static struct platform_driver cros_typec_driver = {
-> >       .driver = {
-> >               .name = DRV_NAME,
-> >               .acpi_match_table = ACPI_PTR(cros_typec_acpi_id),
-> >               .of_match_table = of_match_ptr(cros_typec_of_match),
-> > +             .pm = DEV_PM_OPS,
->
->                 .pm = &cros_typec_pm_ops,
->
-> >       },
-> >       .probe = cros_typec_probe,
-> >  };
-> >
->
-> Thanks,
->  Enric
