@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56474C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02544C433DF
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2DAC620675
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF67B2065D
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 20:19:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593461945;
-	bh=48s3Xz4kc7u4FZNVKO6n+YOqtbnStGjUXYAV3in3A9Y=;
+	s=default; t=1593461950;
+	bh=9o5x72zZZnWSCJ6J+SEm8U/hiA+ojDbeHCsxOYiiEwM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gcJriXSD3Ge1H87GkdkSTi60lgUSuOjUVXKejdEl10qJGu+hxWebLCsTx30qPN5wV
-	 JIEDxbMo3p/Fhke6NhiGqLN6En3/ucA8T/sLxWMHlBrRWlCV6pTSJ7cOmtAeQspHTm
-	 6We8E/9Jz6PJw23eusgLh0PnTLCxCdROXsYP5ykE=
+	b=XBPoL0pTwOAvLfEyr3DiuwVAGp9sMFr9CFODmqFMYHdn4PpX+mY35GN7KBrsIf7hg
+	 N9iGXZT8nCKGk/Tqjd0gon0j1xtEfYPwjpZ9jz/hp9OSbA3guNKkmxgMwfSpz+nNjv
+	 TyJHzcCbmOXWnYnzqfqLRXi3vWRmsf3xAIUNGcOk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729259AbgF2USc (ORCPT
+        id S1730420AbgF2UTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 16:18:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37054 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 16:19:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732636AbgF2TZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732631AbgF2TZl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:25:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A68B425422;
-        Mon, 29 Jun 2020 15:42:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEF1E25381;
+        Mon, 29 Jun 2020 15:40:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593445374;
-        bh=48s3Xz4kc7u4FZNVKO6n+YOqtbnStGjUXYAV3in3A9Y=;
+        s=default; t=1593445246;
+        bh=9o5x72zZZnWSCJ6J+SEm8U/hiA+ojDbeHCsxOYiiEwM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MeiOJc7HCZTnoEMp1pLZzWFlr4PL9JFQ54a7+Bzewn/A4co5/wL3MZ1MkgkJoPEyR
-         CY511Y2Ivtar23qNBjifB8JGoXLV4IKIgWYTf0eodlHbhQfKkHIM3eEKVTjEu+40ZR
-         Xn9BwRZEsgbuWTiQJYYXKl/0mW9e0YLLNyNTJyS8=
+        b=erWO35jjJYLPPwes7c2a8yPgO+MeuxHg88BJ9u9CZHQaX+tJ/wOecN4ueXSqbG1Gs
+         Gu3wlfh18yTIKF8WrMdYmnwonAwJ4GMID9yT6hqwdrIHXopmAqkt/VQQP1rZtHkKVR
+         2oio3N19iHNgJlHXIU9s4EhWpWkl53EAMJBMp6Hc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ridge Kennedy <ridge.kennedy@alliedtelesis.co.nz>,
-        James Chapman <jchapman@katalix.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.9 129/191] l2tp: Allow duplicate session creation with UDP
-Date:   Mon, 29 Jun 2020 11:39:05 -0400
-Message-Id: <20200629154007.2495120-130-sashal@kernel.org>
+Cc:     Russell King <rmk+kernel@armlinux.org.uk>,
+        Wolfram Sang <wsa@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 030/191] i2c: pxa: fix i2c_pxa_scream_blue_murder() debug output
+Date:   Mon, 29 Jun 2020 11:37:26 -0400
+Message-Id: <20200629154007.2495120-31-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
 References: <20200629154007.2495120-1-sashal@kernel.org>
@@ -67,51 +64,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ridge Kennedy <ridge.kennedy@alliedtelesis.co.nz>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-commit 0d0d9a388a858e271bb70e71e99e7fe2a6fd6f64 upstream.
+[ Upstream commit 88b73ee7ca4c90baf136ed5a8377fc5a9b73ac08 ]
 
-In the past it was possible to create multiple L2TPv3 sessions with the
-same session id as long as the sessions belonged to different tunnels.
-The resulting sessions had issues when used with IP encapsulated tunnels,
-but worked fine with UDP encapsulated ones. Some applications began to
-rely on this behaviour to avoid having to negotiate unique session ids.
+The IRQ log output is supposed to appear on a single line.  However,
+commit 3a2dc1677b60 ("i2c: pxa: Update debug function to dump more info
+on error") resulted in it being printed one-entry-per-line, which is
+excessively long.
 
-Some time ago a change was made to require session ids to be unique across
-all tunnels, breaking the applications making use of this "feature".
+Fixing this is not a trivial matter; using pr_cont() doesn't work as
+the previous dev_dbg() may not have been compiled in, or may be
+dynamic.
 
-This change relaxes the duplicate session id check to allow duplicates
-if both of the colliding sessions belong to UDP encapsulated tunnels.
+Since the rest of this function output is at error level, and is also
+debug output, promote this to error level as well to avoid this
+problem.
 
-Fixes: dbdbc73b4478 ("l2tp: fix duplicate session creation")
-Signed-off-by: Ridge Kennedy <ridge.kennedy@alliedtelesis.co.nz>
-Acked-by: James Chapman <jchapman@katalix.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Cc: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reduce the number of always zero prefix digits to save screen real-
+estate.
+
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Wolfram Sang <wsa@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/l2tp/l2tp_core.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-pxa.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/net/l2tp/l2tp_core.c b/net/l2tp/l2tp_core.c
-index fdc1de1cb4fa6..c191ea65a6c7f 100644
---- a/net/l2tp/l2tp_core.c
-+++ b/net/l2tp/l2tp_core.c
-@@ -351,8 +351,13 @@ int l2tp_session_register(struct l2tp_session *session,
+diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
+index e49af19852098..fb191ad8fc3aa 100644
+--- a/drivers/i2c/busses/i2c-pxa.c
++++ b/drivers/i2c/busses/i2c-pxa.c
+@@ -297,11 +297,10 @@ static void i2c_pxa_scream_blue_murder(struct pxa_i2c *i2c, const char *why)
+ 	dev_err(dev, "IBMR: %08x IDBR: %08x ICR: %08x ISR: %08x\n",
+ 		readl(_IBMR(i2c)), readl(_IDBR(i2c)), readl(_ICR(i2c)),
+ 		readl(_ISR(i2c)));
+-	dev_dbg(dev, "log: ");
++	dev_err(dev, "log:");
+ 	for (i = 0; i < i2c->irqlogidx; i++)
+-		pr_debug("[%08x:%08x] ", i2c->isrlog[i], i2c->icrlog[i]);
+-
+-	pr_debug("\n");
++		pr_cont(" [%03x:%05x]", i2c->isrlog[i], i2c->icrlog[i]);
++	pr_cont("\n");
+ }
  
- 		spin_lock_bh(&pn->l2tp_session_hlist_lock);
- 
-+		/* IP encap expects session IDs to be globally unique, while
-+		 * UDP encap doesn't.
-+		 */
- 		hlist_for_each_entry(session_walk, g_head, global_hlist)
--			if (session_walk->session_id == session->session_id) {
-+			if (session_walk->session_id == session->session_id &&
-+			    (session_walk->tunnel->encap == L2TP_ENCAPTYPE_IP ||
-+			     tunnel->encap == L2TP_ENCAPTYPE_IP)) {
- 				err = -EEXIST;
- 				goto err_tlock_pnlock;
- 			}
+ #else /* ifdef DEBUG */
 -- 
 2.25.1
 
