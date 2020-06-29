@@ -2,115 +2,86 @@ Return-Path: <SRS0=6VGy=AK=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B25DC433E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7E0C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:06:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 054DD20663
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:06:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 622BE20663
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:06:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730720AbgF2TGA (ORCPT
+        id S1730726AbgF2TGF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:06:00 -0400
-Received: from outbound-smtp28.blacknight.com ([81.17.249.11]:57185 "EHLO
-        outbound-smtp28.blacknight.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729673AbgF2TF5 (ORCPT
+        Mon, 29 Jun 2020 15:06:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41726 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730406AbgF2TCn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 15:05:57 -0400
-Received: from mail.blacknight.com (pemlinmail02.blacknight.ie [81.17.254.11])
-        by outbound-smtp28.blacknight.com (Postfix) with ESMTPS id 77A72CCAFF
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 16:29:59 +0100 (IST)
-Received: (qmail 5487 invoked from network); 29 Jun 2020 15:29:59 -0000
-Received: from unknown (HELO techsingularity.net) (mgorman@techsingularity.net@[84.203.18.5])
-  by 81.17.254.9 with ESMTPSA (AES256-SHA encrypted, authenticated); 29 Jun 2020 15:29:59 -0000
-Date:   Mon, 29 Jun 2020 16:29:57 +0100
-From:   Mel Gorman <mgorman@techsingularity.net>
-To:     Eric Dumazet <eric.dumazet@gmail.com>
-Cc:     Jan Kara <jack@suse.cz>, Amir Goldstein <amir73il@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] fs: Do not check if there is a fsnotify watcher on
- pseudo inodes
-Message-ID: <20200629152957.GD3183@techsingularity.net>
-References: <20200615121358.GF3183@techsingularity.net>
- <CAOQ4uxi0fqKFZ9=U-+DQ78233hR9TXEU44xRih4q=M556ynphA@mail.gmail.com>
- <20200616074701.GA20086@quack2.suse.cz>
- <4f6c8dab-4b54-d523-8636-2b01c03d14d3@gmail.com>
+        Mon, 29 Jun 2020 15:02:43 -0400
+X-Greylist: delayed 1419 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 29 Jun 2020 07:16:46 PDT
+Received: from www62.your-server.de (www62.your-server.de [IPv6:2a01:4f8:d0a:276a::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 337D4C02E2E8;
+        Mon, 29 Jun 2020 07:16:46 -0700 (PDT)
+Received: from sslproxy03.your-server.de ([88.198.220.132])
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jpuDM-0001DH-6o; Mon, 29 Jun 2020 15:52:52 +0200
+Received: from [178.196.57.75] (helo=pc-9.home)
+        by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1jpuDL-0002Xa-QH; Mon, 29 Jun 2020 15:52:51 +0200
+Subject: Re: [PATCH net] xsk: remove cheap_dma optimization
+To:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@lst.de>
+Cc:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>,
+        netdev@vger.kernel.org, davem@davemloft.net,
+        konrad.wilk@oracle.com, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        maximmi@mellanox.com, magnus.karlsson@intel.com,
+        jonathan.lemon@gmail.com
+References: <20200626134358.90122-1-bjorn.topel@gmail.com>
+ <c60dfb5a-2bf3-20bd-74b3-6b5e215f73f8@iogearbox.net>
+ <20200627070406.GB11854@lst.de>
+ <88d27e1b-dbda-301c-64ba-2391092e3236@intel.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <e879bcc8-5f7d-b1b3-9b66-1032dec6245d@iogearbox.net>
+Date:   Mon, 29 Jun 2020 15:52:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-15
-Content-Disposition: inline
-In-Reply-To: <4f6c8dab-4b54-d523-8636-2b01c03d14d3@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <88d27e1b-dbda-301c-64ba-2391092e3236@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.102.3/25857/Sun Jun 28 15:28:36 2020)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 08:17:02AM -0700, Eric Dumazet wrote:
+On 6/28/20 7:16 PM, Björn Töpel wrote:
+> On 2020-06-27 09:04, Christoph Hellwig wrote:
+>> On Sat, Jun 27, 2020 at 01:00:19AM +0200, Daniel Borkmann wrote:
+>>> Given there is roughly a ~5 weeks window at max where this removal could
+>>> still be applied in the worst case, could we come up with a fix / proposal
+>>> first that moves this into the DMA mapping core? If there is something that
+>>> can be agreed upon by all parties, then we could avoid re-adding the 9%
+>>> slowdown. :/
+>>
+>> I'd rather turn it upside down - this abuse of the internals blocks work
+>> that has basically just missed the previous window and I'm not going
+>> to wait weeks to sort out the API misuse.  But we can add optimizations
+>> back later if we find a sane way.
 > 
-> 
-> On 6/16/20 12:47 AM, Jan Kara wrote:
-> > On Mon 15-06-20 19:26:38, Amir Goldstein wrote:
-> >>> This patch changes alloc_file_pseudo() to always opt out of fsnotify by
-> >>> setting FMODE_NONOTIFY flag so that no check is made for fsnotify watchers
-> >>> on pseudo files. This should be safe as the underlying helper for the
-> >>> dentry is d_alloc_pseudo which explicitly states that no lookups are ever
-> >>> performed meaning that fanotify should have nothing useful to attach to.
-> >>>
-> >>> The test motivating this was "perf bench sched messaging --pipe". On
-> >>> a single-socket machine using threads the difference of the patch was
-> >>> as follows.
-> >>>
-> >>>                               5.7.0                  5.7.0
-> >>>                             vanilla        nofsnotify-v1r1
-> >>> Amean     1       1.3837 (   0.00%)      1.3547 (   2.10%)
-> >>> Amean     3       3.7360 (   0.00%)      3.6543 (   2.19%)
-> >>> Amean     5       5.8130 (   0.00%)      5.7233 *   1.54%*
-> >>> Amean     7       8.1490 (   0.00%)      7.9730 *   2.16%*
-> >>> Amean     12     14.6843 (   0.00%)     14.1820 (   3.42%)
-> >>> Amean     18     21.8840 (   0.00%)     21.7460 (   0.63%)
-> >>> Amean     24     28.8697 (   0.00%)     29.1680 (  -1.03%)
-> >>> Amean     30     36.0787 (   0.00%)     35.2640 *   2.26%*
-> >>> Amean     32     38.0527 (   0.00%)     38.1223 (  -0.18%)
-> >>>
-> >>> The difference is small but in some cases it's outside the noise so
-> >>> while marginal, there is still some small benefit to ignoring fsnotify
-> >>> for files allocated via alloc_file_pseudo in some cases.
-> >>>
-> >>> Signed-off-by: Mel Gorman <mgorman@techsingularity.net>
-> >>
-> >> Reviewed-by: Amir Goldstein <amir73il@gmail.com>
-> > 
-> > Thanks for the patch Mel and for review Amir! I've added the patch to my
-> > tree with small amendments to the changelog.
-> > 
-> > 								Honza
-> > 
-> 
-> Note this patch broke some user programs (one instance being packetdrill)
-> 
-> Typical legacy packetdrill script has :
-> 
-> // Create a socket and set it to non-blocking.
->     0 socket(..., SOCK_STREAM, IPPROTO_TCP) = 3
->    +0 fcntl(3, F_GETFL) = 0x2 (flags O_RDWR)
->    +0 fcntl(3, F_SETFL, O_RDWR|O_NONBLOCK) = 0
-> 
-> 
-> But after this change, fcntl(3, F_GETFL) returns 0x4000002 
-> 
-> FMODE_NONOTIFY was not meant to be visible to user space. (otherwise
-> there would be a O_NONOTIFY) ?
-> 
+> I'm not super excited about the performance loss, but I do get
+> Christoph's frustration about gutting the DMA API making it harder for
+> DMA people to get work done. Lets try to solve this properly using
+> proper DMA APIs.
 
-A revert has been sent because it broke chrome as well. It's not visible
-on lkml yet because delivery appears to be delayed there for some unknown
-reason.
-
--- 
-Mel Gorman
-SUSE Labs
+Ok, fair enough, please work with DMA folks to get this properly integrated and
+restored then. Applied, thanks!
