@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B1BEC433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 204E9C433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4734A20760
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F07EA20760
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:49:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460187;
-	bh=SrV5cXXsBccjf35hFWEA1E2p80pMETKwb96DN6XalTE=;
+	s=default; t=1593460193;
+	bh=wUuYCyPvSVKhGvpP66IJOSYqfV3P4xzWIrHqXDhl3cY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Md50VNg2TsCiQlIHdyLRwOAVRjj1rfUBIYX9VbElILmfNm0T4UZrcIwVrRNZAuAx7
-	 gB0IdldNxZHuMuIP6Qs7I2fM/NojVEGe3ko0iPoTs71P1n3WWnCzSMmpBXOZXDR1Op
-	 Yt+1pApa+OIsbFXnRV5IE2sYbPC9S3Fdjy+POaMU=
+	b=y//M7Cng1hOEQp6QWXyGcHPFCk79js5qXlLGFwa5ch0KpWfQjPCEQ1Byy7AhN/d9K
+	 Lwwaq7ux7rQ0O9DGkMCtfWbIoX3Lydz4Gaz+mdaVoNwJq9ATUnkvF1Hm82ETZUsmDZ
+	 WN+f5Bf54iz3B9THZtNwj4TlmMRpwnsB5ZypZdtI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387829AbgF2Ttq (ORCPT
+        id S2387983AbgF2Ttu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:49:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47654 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:49:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387580AbgF2Tkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387759AbgF2Tkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:37 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5592A251C4;
-        Mon, 29 Jun 2020 15:28:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BE0F24921;
+        Mon, 29 Jun 2020 15:27:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444496;
-        bh=SrV5cXXsBccjf35hFWEA1E2p80pMETKwb96DN6XalTE=;
+        s=default; t=1593444476;
+        bh=wUuYCyPvSVKhGvpP66IJOSYqfV3P4xzWIrHqXDhl3cY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z/m2rDhdNrK9DYxQhKlB3HJSZ3l5FPM3IGRZcl8TGb2MMT9ZUJfjWYj6kS2HAjEIQ
-         +Onqpqaswl9Yuu7MH3l2R2Yp0mrTO7CeLD7PHTbl6mZJ17vl+1VuELEi2G1+Vm8xXi
-         DGuY/G+C49YMhvXO2rZX5nwTm5+IcKHkTpwXgBSo=
+        b=vxJojArVtWrUNBRULFfbhB9PCh8b+yoe70mpWHbVPU4cemcO4A52W/8Y/4FMdeUXF
+         c59ht7End2M3IU8/xJD/NE+Ck6gsENt2icgpL0eIz1P5siKIzRGln9qj5lSTHWg2YW
+         u4oShPjsypE2gu0dIobDdf1LbMsjf/gQmH9kO+68=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Olga Kornievskaia <olga.kornievskaia@gmail.com>,
-        Olga Kornievskaia <kolga@netapp.com>,
-        Neil Brown <neilb@suse.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+Cc:     Junxiao Bi <junxiao.bi@oracle.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Jun Piao <piaojun@huawei.com>, Mark Fasheh <mark@fasheh.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 173/178] NFSv4 fix CLOSE not waiting for direct IO compeletion
-Date:   Mon, 29 Jun 2020 11:25:18 -0400
-Message-Id: <20200629152523.2494198-174-sashal@kernel.org>
+Subject: [PATCH 5.4 155/178] ocfs2: avoid inode removal while nfsd is accessing it
+Date:   Mon, 29 Jun 2020 11:25:00 -0400
+Message-Id: <20200629152523.2494198-156-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -67,96 +70,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Olga Kornievskaia <olga.kornievskaia@gmail.com>
+From: Junxiao Bi <junxiao.bi@oracle.com>
 
-commit d03727b248d0dae6199569a8d7b629a681154633 upstream.
+commit 4cd9973f9ff69e37dd0ba2bd6e6423f8179c329a upstream.
 
-Figuring out the root case for the REMOVE/CLOSE race and
-suggesting the solution was done by Neil Brown.
+Patch series "ocfs2: fix nfsd over ocfs2 issues", v2.
 
-Currently what happens is that direct IO calls hold a reference
-on the open context which is decremented as an asynchronous task
-in the nfs_direct_complete(). Before reference is decremented,
-control is returned to the application which is free to close the
-file. When close is being processed, it decrements its reference
-on the open_context but since directIO still holds one, it doesn't
-sent a close on the wire. It returns control to the application
-which is free to do other operations. For instance, it can delete a
-file. Direct IO is finally releasing its reference and triggering
-an asynchronous close. Which races with the REMOVE. On the server,
-REMOVE can be processed before the CLOSE, failing the REMOVE with
-EACCES as the file is still opened.
+This is a series of patches to fix issues on nfsd over ocfs2.  patch 1
+is to avoid inode removed while nfsd access it patch 2 & 3 is to fix a
+panic issue.
 
-Signed-off-by: Olga Kornievskaia <kolga@netapp.com>
-Suggested-by: Neil Brown <neilb@suse.com>
-CC: stable@vger.kernel.org
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+This patch (of 4):
+
+When nfsd is getting file dentry using handle or parent dentry of some
+dentry, one cluster lock is used to avoid inode removed from other node,
+but it still could be removed from local node, so use a rw lock to avoid
+this.
+
+Link: http://lkml.kernel.org/r/20200616183829.87211-1-junxiao.bi@oracle.com
+Link: http://lkml.kernel.org/r/20200616183829.87211-2-junxiao.bi@oracle.com
+Signed-off-by: Junxiao Bi <junxiao.bi@oracle.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Jun Piao <piaojun@huawei.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- fs/nfs/direct.c | 13 +++++++++----
- fs/nfs/file.c   |  1 +
- 2 files changed, 10 insertions(+), 4 deletions(-)
+ fs/ocfs2/dlmglue.c | 17 ++++++++++++++++-
+ fs/ocfs2/ocfs2.h   |  1 +
+ 2 files changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/fs/nfs/direct.c b/fs/nfs/direct.c
-index 6b0bf4ebd8124..70cf8c5760c73 100644
---- a/fs/nfs/direct.c
-+++ b/fs/nfs/direct.c
-@@ -367,8 +367,6 @@ static void nfs_direct_complete(struct nfs_direct_req *dreq)
+diff --git a/fs/ocfs2/dlmglue.c b/fs/ocfs2/dlmglue.c
+index 8a2e284ccfcdb..e2c34c704185d 100644
+--- a/fs/ocfs2/dlmglue.c
++++ b/fs/ocfs2/dlmglue.c
+@@ -689,6 +689,12 @@ static void ocfs2_nfs_sync_lock_res_init(struct ocfs2_lock_res *res,
+ 				   &ocfs2_nfs_sync_lops, osb);
+ }
+ 
++static void ocfs2_nfs_sync_lock_init(struct ocfs2_super *osb)
++{
++	ocfs2_nfs_sync_lock_res_init(&osb->osb_nfs_sync_lockres, osb);
++	init_rwsem(&osb->nfs_sync_rwlock);
++}
++
+ void ocfs2_trim_fs_lock_res_init(struct ocfs2_super *osb)
  {
- 	struct inode *inode = dreq->inode;
+ 	struct ocfs2_lock_res *lockres = &osb->osb_trim_fs_lockres;
+@@ -2855,6 +2861,11 @@ int ocfs2_nfs_sync_lock(struct ocfs2_super *osb, int ex)
+ 	if (ocfs2_is_hard_readonly(osb))
+ 		return -EROFS;
  
--	inode_dio_end(inode);
--
- 	if (dreq->iocb) {
- 		long res = (long) dreq->error;
- 		if (dreq->count != 0) {
-@@ -380,7 +378,10 @@ static void nfs_direct_complete(struct nfs_direct_req *dreq)
++	if (ex)
++		down_write(&osb->nfs_sync_rwlock);
++	else
++		down_read(&osb->nfs_sync_rwlock);
++
+ 	if (ocfs2_mount_local(osb))
+ 		return 0;
  
- 	complete(&dreq->completion);
- 
-+	igrab(inode);
- 	nfs_direct_req_release(dreq);
-+	inode_dio_end(inode);
-+	iput(inode);
+@@ -2873,6 +2884,10 @@ void ocfs2_nfs_sync_unlock(struct ocfs2_super *osb, int ex)
+ 	if (!ocfs2_mount_local(osb))
+ 		ocfs2_cluster_unlock(osb, lockres,
+ 				     ex ? LKM_EXMODE : LKM_PRMODE);
++	if (ex)
++		up_write(&osb->nfs_sync_rwlock);
++	else
++		up_read(&osb->nfs_sync_rwlock);
  }
  
- static void nfs_direct_read_completion(struct nfs_pgio_header *hdr)
-@@ -510,8 +511,10 @@ static ssize_t nfs_direct_read_schedule_iovec(struct nfs_direct_req *dreq,
- 	 * generic layer handle the completion.
- 	 */
- 	if (requested_bytes == 0) {
--		inode_dio_end(inode);
-+		igrab(inode);
- 		nfs_direct_req_release(dreq);
-+		inode_dio_end(inode);
-+		iput(inode);
- 		return result < 0 ? result : -EIO;
- 	}
+ int ocfs2_trim_fs_lock(struct ocfs2_super *osb,
+@@ -3340,7 +3355,7 @@ int ocfs2_dlm_init(struct ocfs2_super *osb)
+ local:
+ 	ocfs2_super_lock_res_init(&osb->osb_super_lockres, osb);
+ 	ocfs2_rename_lock_res_init(&osb->osb_rename_lockres, osb);
+-	ocfs2_nfs_sync_lock_res_init(&osb->osb_nfs_sync_lockres, osb);
++	ocfs2_nfs_sync_lock_init(osb);
+ 	ocfs2_orphan_scan_lock_res_init(&osb->osb_orphan_scan.os_lockres, osb);
  
-@@ -923,8 +926,10 @@ static ssize_t nfs_direct_write_schedule_iovec(struct nfs_direct_req *dreq,
- 	 * generic layer handle the completion.
- 	 */
- 	if (requested_bytes == 0) {
--		inode_dio_end(inode);
-+		igrab(inode);
- 		nfs_direct_req_release(dreq);
-+		inode_dio_end(inode);
-+		iput(inode);
- 		return result < 0 ? result : -EIO;
- 	}
- 
-diff --git a/fs/nfs/file.c b/fs/nfs/file.c
-index 95dc90570786c..7b31367532054 100644
---- a/fs/nfs/file.c
-+++ b/fs/nfs/file.c
-@@ -83,6 +83,7 @@ nfs_file_release(struct inode *inode, struct file *filp)
- 	dprintk("NFS: release(%pD2)\n", filp);
- 
- 	nfs_inc_stats(inode, NFSIOS_VFSRELEASE);
-+	inode_dio_wait(inode);
- 	nfs_file_clear_open_context(filp);
- 	return 0;
- }
+ 	osb->cconn = conn;
+diff --git a/fs/ocfs2/ocfs2.h b/fs/ocfs2/ocfs2.h
+index 9150cfa4df7dc..9461bd3e1c0c8 100644
+--- a/fs/ocfs2/ocfs2.h
++++ b/fs/ocfs2/ocfs2.h
+@@ -394,6 +394,7 @@ struct ocfs2_super
+ 	struct ocfs2_lock_res osb_super_lockres;
+ 	struct ocfs2_lock_res osb_rename_lockres;
+ 	struct ocfs2_lock_res osb_nfs_sync_lockres;
++	struct rw_semaphore nfs_sync_rwlock;
+ 	struct ocfs2_lock_res osb_trim_fs_lockres;
+ 	struct mutex obs_trim_fs_mutex;
+ 	struct ocfs2_dlm_debug *osb_dlm_debug;
 -- 
 2.25.1
 
