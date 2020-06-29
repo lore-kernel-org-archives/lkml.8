@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D14C433DF
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE6BC433E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:56:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E9D9920702
-	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:56:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AD8420674
+	for <linux-kernel@archiver.kernel.org>; Mon, 29 Jun 2020 19:56:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593460616;
-	bh=bFiSsjGfjHqZFs1IdDoWv8IHc8C3Jrkn+G/VfOZ8JG4=;
+	s=default; t=1593460618;
+	bh=8CWrnoZjvbvp1XGWiHnOivYZmItC6ki18O8fBSx/xcE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TXhC6SzBjOTlTqNsnaAArOK2pT6j0kwS4BAXie2/TMIBIGYWWF3Icnm1dXOm2hIle
-	 MeeAY7o/Ld6B0k6+mmTkakZBkRp5r7kelWjTwpzN0P2GOlKtOhH9bgPWj5E7lm4DgW
-	 fKRAelL5HOhgLJkcdXu+pbMMxW33t4cH2j1NAq10=
+	b=FkI+6WvNp6GGb13rktlNQbNlXNfWahukXJraUFj4HRZIBRAAg4QWecsZEXarrEoaB
+	 01krwVhbB2NBjuAPHCBP6tIkJJwrfKBpAEsSoSKez22jhhE+p2g5cw+uk0qI+CI+WX
+	 a7sWa8HsuASOOBPiFL836TCTG+RtPLut7wfk5a0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388331AbgF2T4y (ORCPT
+        id S2387639AbgF2T4s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 15:56:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47666 "EHLO mail.kernel.org"
+        Mon, 29 Jun 2020 15:56:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387638AbgF2TkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S2387630AbgF2TkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 29 Jun 2020 15:40:24 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C19062486B;
-        Mon, 29 Jun 2020 15:26:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA665248CC;
+        Mon, 29 Jun 2020 15:27:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593444367;
-        bh=bFiSsjGfjHqZFs1IdDoWv8IHc8C3Jrkn+G/VfOZ8JG4=;
+        s=default; t=1593444423;
+        bh=8CWrnoZjvbvp1XGWiHnOivYZmItC6ki18O8fBSx/xcE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OgMU7YOmc3LNZxiwkX9iUuD2IXhtqjyfmDUO8MQkSdp0aYFTpFZL4xTKybLTFZwKb
-         1tk2njDepx4bVtLr9YE4UqWC7xsQ80JKxcAjljxIXYsawe115QE8dsiveYtzy7UJCD
-         nEWWjgx/KXYXc2DScGmupQQSfliAyFXF3Ek0n/Hc=
+        b=zNDgylcG3KCTnpj6qww2m6LTXx1pWKs7B7eEeDrccl9td5EZ/xOXgoEysgxXf/6Jn
+         pvqaiGs9FR6AaY9ZLXZJA1kvWJH+/+0iGzCIhwj6v4WKbf8GKaFujZtkKXqVjurp/+
+         jeXRHOFhr5KhbTbeSSmGwT75PvpZJQucEDU14+Ws=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Macpaul Lin <macpaul.lin@mediatek.com>,
-        Chihhao Chen <chihhao.chen@mediatek.com>,
-        Takashi Iwai <tiwai@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 5.4 044/178] ALSA: usb-audio: add quirk for Samsung USBC Headset (AKG)
-Date:   Mon, 29 Jun 2020 11:23:09 -0400
-Message-Id: <20200629152523.2494198-45-sashal@kernel.org>
+Cc:     SeongJae Park <sjpark@amazon.de>,
+        James Smart <james.smart@broadcom.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 101/178] scsi: lpfc: Avoid another null dereference in lpfc_sli4_hba_unset()
+Date:   Mon, 29 Jun 2020 11:24:06 -0400
+Message-Id: <20200629152523.2494198-102-sashal@kernel.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200629152523.2494198-1-sashal@kernel.org>
 References: <20200629152523.2494198-1-sashal@kernel.org>
@@ -66,43 +66,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Macpaul Lin <macpaul.lin@mediatek.com>
+From: SeongJae Park <sjpark@amazon.de>
 
-commit a32a1fc99807244d920d274adc46ba04b538cc8a upstream.
+[ Upstream commit 46da547e21d6cefceec3fb3dba5ebbca056627fc ]
 
-We've found Samsung USBC Headset (AKG) (VID: 0x04e8, PID: 0xa051)
-need a tiny delay after each class compliant request.
-Otherwise the device might not be able to be recognized each times.
+Commit cdb42becdd40 ("scsi: lpfc: Replace io_channels for nvme and fcp with
+general hdw_queues per cpu") has introduced static checker warnings for
+potential null dereferences in 'lpfc_sli4_hba_unset()' and commit 1ffdd2c0440d
+("scsi: lpfc: resolve static checker warning in lpfc_sli4_hba_unset") has
+tried to fix it.  However, yet another potential null dereference is
+remaining.  This commit fixes it.
 
-Signed-off-by: Chihhao Chen <chihhao.chen@mediatek.com>
-Signed-off-by: Macpaul Lin <macpaul.lin@mediatek.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/1592910203-24035-1-git-send-email-macpaul.lin@mediatek.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This bug was discovered and resolved using Coverity Static Analysis
+Security Testing (SAST) by Synopsys, Inc.
+
+Link: https://lore.kernel.org/r/20200623084122.30633-1-sjpark@amazon.com
+Fixes: 1ffdd2c0440d ("scsi: lpfc: resolve static checker warning inlpfc_sli4_hba_unset")
+Fixes: cdb42becdd40 ("scsi: lpfc: Replace io_channels for nvme and fcp with general hdw_queues per cpu")
+Reviewed-by: James Smart <james.smart@broadcom.com>
+Signed-off-by: SeongJae Park <sjpark@amazon.de>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/usb/quirks.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/scsi/lpfc/lpfc_init.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
-index eb3da0b71269c..bf5083a20b6d5 100644
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -1603,6 +1603,14 @@ void snd_usb_ctl_msg_quirk(struct usb_device *dev, unsigned int pipe,
- 	     chip->usb_id == USB_ID(0x0951, 0x16ad)) &&
- 	    (requesttype & USB_TYPE_MASK) == USB_TYPE_CLASS)
- 		usleep_range(1000, 2000);
-+
-+	/*
-+	 * Samsung USBC Headset (AKG) need a tiny delay after each
-+	 * class compliant request. (Model number: AAM625R or AAM627R)
-+	 */
-+	if (chip->usb_id == USB_ID(0x04e8, 0xa051) &&
-+	    (requesttype & USB_TYPE_MASK) == USB_TYPE_CLASS)
-+		usleep_range(5000, 6000);
- }
+diff --git a/drivers/scsi/lpfc/lpfc_init.c b/drivers/scsi/lpfc/lpfc_init.c
+index 14d9f41977f1c..95abffd9ad100 100644
+--- a/drivers/scsi/lpfc/lpfc_init.c
++++ b/drivers/scsi/lpfc/lpfc_init.c
+@@ -11542,7 +11542,8 @@ lpfc_sli4_hba_unset(struct lpfc_hba *phba)
+ 	lpfc_sli4_xri_exchange_busy_wait(phba);
  
- /*
+ 	/* per-phba callback de-registration for hotplug event */
+-	lpfc_cpuhp_remove(phba);
++	if (phba->pport)
++		lpfc_cpuhp_remove(phba);
+ 
+ 	/* Disable PCI subsystem interrupt */
+ 	lpfc_sli4_disable_intr(phba);
 -- 
 2.25.1
 
