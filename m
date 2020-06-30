@@ -2,207 +2,94 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A2BC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5215BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:11:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71E2E20771
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:10:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BB032073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:11:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732327AbgF3KKZ (ORCPT
+        id S1732247AbgF3KLk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 06:10:25 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:34554 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732310AbgF3KKY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 06:10:24 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id BFA4B80522;
-        Tue, 30 Jun 2020 12:10:20 +0200 (CEST)
-Date:   Tue, 30 Jun 2020 12:10:19 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, od@zcrc.me
-Subject: Re: [PATCH v2 04/10] drm/ingenic: Add missing CR in debug strings
-Message-ID: <20200630101019.GC553950@ravnborg.org>
-References: <20200629235210.441709-1-paul@crapouillou.net>
- <20200629235210.441709-4-paul@crapouillou.net>
+        Tue, 30 Jun 2020 06:11:40 -0400
+Received: from foss.arm.com ([217.140.110.172]:34892 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730237AbgF3KLj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 06:11:39 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CDAEB30E;
+        Tue, 30 Jun 2020 03:11:38 -0700 (PDT)
+Received: from [10.37.12.90] (unknown [10.37.12.90])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1205A3F68F;
+        Tue, 30 Jun 2020 03:11:36 -0700 (PDT)
+Subject: Re: [PATCH] arm64/cpufeature: Validate feature bits spacing in
+ arm64_ftr_regs[]
+To:     anshuman.khandual@arm.com, linux-arm-kernel@lists.infradead.org
+Cc:     catalin.marinas@arm.com, will@kernel.org, broonie@kernel.org,
+        mark.rutland@arm.com, linux-kernel@vger.kernel.org
+References: <1592274331-19006-1-git-send-email-anshuman.khandual@arm.com>
+ <ec04ed20-1ad8-6130-ebd9-0157e5753ef6@arm.com>
+ <25fd985f-65b8-3884-02f4-10311d3f55fe@arm.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <9c2a5410-044e-03cb-9233-900389d0dfea@arm.com>
+Date:   Tue, 30 Jun 2020 11:16:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200629235210.441709-4-paul@crapouillou.net>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=ER_8r6IbAAAA:8 a=7gkXJVJtAAAA:8 a=e5mUnYsNAAAA:8
-        a=O7-e7zmCaJ8UY64ll6EA:9 a=CjuIK1q_8ugA:10 a=9LHmKk7ezEChjTCyhBa9:22
-        a=E9Po1WZjFZOl8hwRPBS3:22 a=Vxmtnl_E_bksehYqCbjh:22
-        a=pHzHmUro8NiASowvMSCR:22 a=nt3jZW36AmriUCFCBwmW:22
+In-Reply-To: <25fd985f-65b8-3884-02f4-10311d3f55fe@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 01:52:04AM +0200, Paul Cercueil wrote:
-> If you pass a string that is not terminated with a carriage return to
-> dev_err(), it will eventually be printed with a carriage return, but
-> not right away, since the kernel will wait for a pr_cont().
+On 06/30/2020 02:49 AM, Anshuman Khandual wrote:
 > 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> 
+> On 06/29/2020 04:12 PM, Suzuki K Poulose wrote:
+>> On 06/16/2020 03:25 AM, Anshuman Khandual wrote:
+>>> arm64_feature_bits for a register in arm64_ftr_regs[] are in a descending
+>>> order as per their shift values. Validate that these features bits are
+>>> defined correctly and do not overlap with each other. This check protects
+>>> against any inadvertent erroneous changes to the register definitions.
+>>>
+>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>>> Cc: Will Deacon <will@kernel.org>
+>>> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+>>> Cc: Mark Brown <broonie@kernel.org>
+>>> Cc: Mark Rutland <mark.rutland@arm.com>
+>>> Cc: linux-arm-kernel@lists.infradead.org
+>>> Cc: linux-kernel@vger.kernel.org
+>>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>>> ---
+>>> Applies on 5.8-rc1.
+>>>
+>>>    arch/arm64/kernel/cpufeature.c | 45 +++++++++++++++++++++++++++++++---
+>>>    1 file changed, 42 insertions(+), 3 deletions(-)
 
-It would have been nice if most was converted to drm_err() and friends
-when touching these.
-That may come later..
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
+>>> +        }
+>>>    -    /* Check that the array is sorted so that we can do the binary search */
+>>> -    for (i = 1; i < ARRAY_SIZE(arm64_ftr_regs); i++)
+>>> +        /*
+>>> +         * Skip the first register. There is nothing to
+>>> +         * compare against for now.
+>>> +         */
+>>> +        if (i == 0)
+>>> +            continue;
+>>
+>> You are starting at 1 already, so you may skip this check.
+> 
+> Actually, now we are starting with 0 instead for both i and j.
+> Hence this check would be required.
 
-> ---
-> 
-> Notes:
->     v2: New patch
-> 
->  drivers/gpu/drm/ingenic/ingenic-drm-drv.c | 30 +++++++++++------------
->  1 file changed, 15 insertions(+), 15 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/ingenic/ingenic-drm-drv.c b/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
-> index 16f0740df507..a15f9a1940c6 100644
-> --- a/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
-> +++ b/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
-> @@ -623,14 +623,14 @@ static int ingenic_drm_probe(struct platform_device *pdev)
->  
->  	base = devm_platform_ioremap_resource(pdev, 0);
->  	if (IS_ERR(base)) {
-> -		dev_err(dev, "Failed to get memory resource");
-> +		dev_err(dev, "Failed to get memory resource\n");
->  		return PTR_ERR(base);
->  	}
->  
->  	priv->map = devm_regmap_init_mmio(dev, base,
->  					  &ingenic_drm_regmap_config);
->  	if (IS_ERR(priv->map)) {
-> -		dev_err(dev, "Failed to create regmap");
-> +		dev_err(dev, "Failed to create regmap\n");
->  		return PTR_ERR(priv->map);
->  	}
->  
-> @@ -641,21 +641,21 @@ static int ingenic_drm_probe(struct platform_device *pdev)
->  	if (soc_info->needs_dev_clk) {
->  		priv->lcd_clk = devm_clk_get(dev, "lcd");
->  		if (IS_ERR(priv->lcd_clk)) {
-> -			dev_err(dev, "Failed to get lcd clock");
-> +			dev_err(dev, "Failed to get lcd clock\n");
->  			return PTR_ERR(priv->lcd_clk);
->  		}
->  	}
->  
->  	priv->pix_clk = devm_clk_get(dev, "lcd_pclk");
->  	if (IS_ERR(priv->pix_clk)) {
-> -		dev_err(dev, "Failed to get pixel clock");
-> +		dev_err(dev, "Failed to get pixel clock\n");
->  		return PTR_ERR(priv->pix_clk);
->  	}
->  
->  	ret = drm_of_find_panel_or_bridge(dev->of_node, 0, 0, &panel, &bridge);
->  	if (ret) {
->  		if (ret != -EPROBE_DEFER)
-> -			dev_err(dev, "Failed to get panel handle");
-> +			dev_err(dev, "Failed to get panel handle\n");
->  		return ret;
->  	}
->  
-> @@ -684,7 +684,7 @@ static int ingenic_drm_probe(struct platform_device *pdev)
->  				       ARRAY_SIZE(ingenic_drm_primary_formats),
->  				       NULL, DRM_PLANE_TYPE_PRIMARY, NULL);
->  	if (ret) {
-> -		dev_err(dev, "Failed to register primary plane: %i", ret);
-> +		dev_err(dev, "Failed to register primary plane: %i\n", ret);
->  		return ret;
->  	}
->  
-> @@ -693,7 +693,7 @@ static int ingenic_drm_probe(struct platform_device *pdev)
->  	ret = drm_crtc_init_with_planes(drm, &priv->crtc, &priv->primary,
->  					NULL, &ingenic_drm_crtc_funcs, NULL);
->  	if (ret) {
-> -		dev_err(dev, "Failed to init CRTC: %i", ret);
-> +		dev_err(dev, "Failed to init CRTC: %i\n", ret);
->  		return ret;
->  	}
->  
-> @@ -705,25 +705,25 @@ static int ingenic_drm_probe(struct platform_device *pdev)
->  	ret = drm_simple_encoder_init(drm, &priv->encoder,
->  				      DRM_MODE_ENCODER_DPI);
->  	if (ret) {
-> -		dev_err(dev, "Failed to init encoder: %i", ret);
-> +		dev_err(dev, "Failed to init encoder: %i\n", ret);
->  		return ret;
->  	}
->  
->  	ret = drm_bridge_attach(&priv->encoder, bridge, NULL, 0);
->  	if (ret) {
-> -		dev_err(dev, "Unable to attach bridge");
-> +		dev_err(dev, "Unable to attach bridge\n");
->  		return ret;
->  	}
->  
->  	ret = drm_irq_install(drm, irq);
->  	if (ret) {
-> -		dev_err(dev, "Unable to install IRQ handler");
-> +		dev_err(dev, "Unable to install IRQ handler\n");
->  		return ret;
->  	}
->  
->  	ret = drm_vblank_init(drm, 1);
->  	if (ret) {
-> -		dev_err(dev, "Failed calling drm_vblank_init()");
-> +		dev_err(dev, "Failed calling drm_vblank_init()\n");
->  		return ret;
->  	}
->  
-> @@ -731,7 +731,7 @@ static int ingenic_drm_probe(struct platform_device *pdev)
->  
->  	ret = clk_prepare_enable(priv->pix_clk);
->  	if (ret) {
-> -		dev_err(dev, "Unable to start pixel clock");
-> +		dev_err(dev, "Unable to start pixel clock\n");
->  		return ret;
->  	}
->  
-> @@ -746,20 +746,20 @@ static int ingenic_drm_probe(struct platform_device *pdev)
->  		 */
->  		ret = clk_set_rate(priv->lcd_clk, parent_rate);
->  		if (ret) {
-> -			dev_err(dev, "Unable to set LCD clock rate");
-> +			dev_err(dev, "Unable to set LCD clock rate\n");
->  			goto err_pixclk_disable;
->  		}
->  
->  		ret = clk_prepare_enable(priv->lcd_clk);
->  		if (ret) {
-> -			dev_err(dev, "Unable to start lcd clock");
-> +			dev_err(dev, "Unable to start lcd clock\n");
->  			goto err_pixclk_disable;
->  		}
->  	}
->  
->  	ret = drm_dev_register(drm, 0);
->  	if (ret) {
-> -		dev_err(dev, "Failed to register DRM driver");
-> +		dev_err(dev, "Failed to register DRM driver\n");
->  		goto err_devclk_disable;
->  	}
->  
-> -- 
-> 2.27.0
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Sorry, ignore that.
+
+Suzuki
+
+
+
