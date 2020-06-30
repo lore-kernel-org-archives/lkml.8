@@ -2,189 +2,148 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE87C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CF13C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D4382074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:00:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23AE62074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:01:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="oc98M6If"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H8RbPjwX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389952AbgF3RAc (ORCPT
+        id S2389962AbgF3RBB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 13:00:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48732 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727850AbgF3RAb (ORCPT
+        Tue, 30 Jun 2020 13:01:01 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53587 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727850AbgF3RBA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 13:00:31 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5E81C061755;
-        Tue, 30 Jun 2020 10:00:31 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id AC28422F53;
-        Tue, 30 Jun 2020 19:00:26 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1593536427;
+        Tue, 30 Jun 2020 13:01:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593536459;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=UDbH7pLz+12WxuhpnPo2DJiE1S7gV9ax36puEK6+/QY=;
-        b=oc98M6IfaUjWWnZvhfzupxBBG5qhZ9Uk28Ad8ZN4cLXuQ+UU3G4zUr1YS0/Y9L9rJwGDlN
-        Mfa5ibwsl2C4NvLtQc8g3+FBXRJRBGVZzCxlRaUevToaAUiU2k/jGWkOhO7jP61kjTRqxL
-        sDWxJ1RonQP9IApCA+hxEbLXmn3B3pQ=
+        bh=azoIcMNsTD1M3uWCtFVYKKqCF4iC+1VT6noiu+rx+98=;
+        b=H8RbPjwXDU0Ot0KdS7NWXyRdmBEZq8qP5q3fefZJ7aMRU9q6/wWsfXjsv6V+/B7VmLV2wI
+        zJ8ko1dG5LBVsLP9fClJCgWWZw8xmIieKwyrwCqMPjvEhAsSsc5+xq+dDz8pYFaiCbBTCV
+        C/4dZ0CbwnAT6Tg9ArqUo6LEFYD0R/k=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-149-v_DFkjQ9PmiHTwVMhNkzIQ-1; Tue, 30 Jun 2020 13:00:49 -0400
+X-MC-Unique: v_DFkjQ9PmiHTwVMhNkzIQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D1FD6800C60;
+        Tue, 30 Jun 2020 17:00:47 +0000 (UTC)
+Received: from localhost (ovpn-116-7.gru2.redhat.com [10.97.116.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AD44D7419A;
+        Tue, 30 Jun 2020 17:00:44 +0000 (UTC)
+Date:   Tue, 30 Jun 2020 14:00:43 -0300
+From:   Bruno Meneguele <bmeneg@redhat.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        erichte@linux.ibm.com, nayna@linux.ibm.com
+Subject: Re: [PATCH v3 2/2] ima: move APPRAISE_BOOTPARAM dependency on
+ ARCH_POLICY to runtime
+Message-ID: <20200630170043.GE2944@glitch>
+References: <20200623202640.4936-1-bmeneg@redhat.com>
+ <20200623202640.4936-3-bmeneg@redhat.com>
+ <1593204023.27152.476.camel@linux.ibm.com>
+ <20200629234744.GA2756@glitch>
+ <1593514848.5085.82.camel@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Tue, 30 Jun 2020 19:00:26 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Oliver Hartkopp <socketcan@hartkopp.net>
-Cc:     Joakim Zhang <qiangqing.zhang@nxp.com>, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH 2/2] can: flexcan: add support for ISO CAN-FD
-In-Reply-To: <5f6e0843-8504-e941-b6a3-1dc8599db39e@hartkopp.net>
-References: <20200629181809.25338-1-michael@walle.cc>
- <20200629181809.25338-3-michael@walle.cc>
- <DB8PR04MB679504980A67DB8B1EEC8386E66F0@DB8PR04MB6795.eurprd04.prod.outlook.com>
- <a42e035c8ee3334a721a089b5f8f0580@walle.cc>
- <5f6e0843-8504-e941-b6a3-1dc8599db39e@hartkopp.net>
-User-Agent: Roundcube Webmail/1.4.6
-Message-ID: <e5b56262c291422160e822e4a378dd2c@walle.cc>
-X-Sender: michael@walle.cc
+In-Reply-To: <1593514848.5085.82.camel@linux.ibm.com>
+X-PGP-Key: http://keys.gnupg.net/pks/lookup?op=get&search=0x3823031E4660608D
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Authentication-Results: relay.mimecast.com;
+        auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=bmeneg@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="qFgkTsE6LiHkLPZw"
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2020-06-30 18:15, schrieb Oliver Hartkopp:
-> On 30.06.20 07:53, Michael Walle wrote:
->> [+ Oliver]
->> 
->> Hi Joakim,
->> 
->> Am 2020-06-30 04:42, schrieb Joakim Zhang:
->>>> -----Original Message-----
->>>> From: Michael Walle <michael@walle.cc>
->>>> Sent: 2020年6月30日 2:18
->>>> To: linux-can@vger.kernel.org; netdev@vger.kernel.org;
->>>> linux-kernel@vger.kernel.org
->>>> Cc: Wolfgang Grandegger <wg@grandegger.com>; Marc Kleine-Budde
->>>> <mkl@pengutronix.de>; David S . Miller <davem@davemloft.net>; Jakub
->>>> Kicinski <kuba@kernel.org>; Joakim Zhang <qiangqing.zhang@nxp.com>;
->>>> dl-linux-imx <linux-imx@nxp.com>; Michael Walle <michael@walle.cc>
->>>> Subject: [PATCH 2/2] can: flexcan: add support for ISO CAN-FD
->>>> 
->>>> Up until now, the controller used non-ISO CAN-FD mode, although it 
->>>> supports it.
->>>> Add support for ISO mode, too. By default the hardware is in non-ISO 
->>>> mode and
->>>> an enable bit has to be explicitly set.
->>>> 
->>>> Signed-off-by: Michael Walle <michael@walle.cc>
->>>> ---
->>>>  drivers/net/can/flexcan.c | 19 ++++++++++++++++---
->>>>  1 file changed, 16 insertions(+), 3 deletions(-)
->>>> 
->>>> diff --git a/drivers/net/can/flexcan.c b/drivers/net/can/flexcan.c 
->>>> index
->>>> 183e094f8d66..a92d3cdf4195 100644
->>>> --- a/drivers/net/can/flexcan.c
->>>> +++ b/drivers/net/can/flexcan.c
->>>> @@ -94,6 +94,7 @@
->>>>  #define FLEXCAN_CTRL2_MRP        BIT(18)
->>>>  #define FLEXCAN_CTRL2_RRS        BIT(17)
->>>>  #define FLEXCAN_CTRL2_EACEN        BIT(16)
->>>> +#define FLEXCAN_CTRL2_ISOCANFDEN    BIT(12)
->>>> 
->>>>  /* FLEXCAN memory error control register (MECR) bits */
->>>>  #define FLEXCAN_MECR_ECRWRDIS        BIT(31)
->>>> @@ -1344,14 +1345,25 @@ static int flexcan_chip_start(struct 
->>>> net_device
->>>> *dev)
->>>>      else
->>>>          reg_mcr |= FLEXCAN_MCR_SRX_DIS;
->>>> 
->>>> -    /* MCR - CAN-FD */
->>>> -    if (priv->can.ctrlmode & CAN_CTRLMODE_FD)
->>>> +    /* MCR, CTRL2
->>>> +     *
->>>> +     * CAN-FD mode
->>>> +     * ISO CAN-FD mode
->>>> +     */
->>>> +    reg_ctrl2 = priv->read(&regs->ctrl2);
->>>> +    if (priv->can.ctrlmode & CAN_CTRLMODE_FD) {
->>>>          reg_mcr |= FLEXCAN_MCR_FDEN;
->>>> -    else
->>>> +        reg_ctrl2 |= FLEXCAN_CTRL2_ISOCANFDEN;
->>>> +    } else {
->>>>          reg_mcr &= ~FLEXCAN_MCR_FDEN;
->>>> +    }
->>>> +
->>>> +    if (priv->can.ctrlmode & CAN_CTRLMODE_FD_NON_ISO)
->>>> +        reg_ctrl2 &= ~FLEXCAN_CTRL2_ISOCANFDEN;
+--qFgkTsE6LiHkLPZw
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[1]
+On Tue, Jun 30, 2020 at 07:00:48AM -0400, Mimi Zohar wrote:
+> On Mon, 2020-06-29 at 20:47 -0300, Bruno Meneguele wrote:
+>=20
+> >=20
+> > > I'm not if the "secure_boot" flag is available prior to calling
+> > > default_appraise_setup(), but if it is, you could modify the test
+> > > there to also check if the system is booted in secure boot mode (eg.
+> > > IS_ENABLED(CONFIG_IMA_APPRAISE_BOOTPARAM) &&
+> > > !arch_ima_get_secureboot())
+> > >=20
+> >=20
+> > Well pointed. I built a custom x86 kernel with some workaround to get
+> > this flag status within default_appraise_setup() and as a result the
+> > flag is was correctly available.=20
+> >=20
+> > Considering the nature of this flag (platform's firmware (in all
+> > arches?)) can we trust that every arch supporting secure/trusted boot
+> > will have it available in the __setup() call time?
+>=20
+> Calling=A0default_appraise_setup() could be deferred.
+>=20
 
->> [..]
->>> ip link set can0 up type can bitrate 1000000 dbitrate 5000000 fd on
->>> ip link set can0 up type can bitrate 1000000 dbitrate 5000000 fd on \
->>>    fd-non-iso on
->> 
->> vs.
->> 
->>> ip link set can0 up type can bitrate 1000000 dbitrate 5000000 
->>> fd-non-iso on
->> 
->> I haven't found anything if CAN_CTRLMODE_FD_NON_ISO depends on
->> CAN_CTRLMODE_FD. I.e. wether CAN_CTRLMODE_FD_NON_ISO can only be set 
->> if
->> CAN_CTRLMODE_FD is also set.
->> 
->> Only the following piece of code, which might be a hint that you
->> have to set CAN_CTRLMODE_FD if you wan't to use 
->> CAN_CTRLMODE_FD_NON_ISO:
->> 
->> drivers/net/can/dev.c:
->>    /* do not check for static fd-non-iso if 'fd' is disabled */
->>    if (!(maskedflags & CAN_CTRLMODE_FD))
->>            ctrlstatic &= ~CAN_CTRLMODE_FD_NON_ISO;
->> 
->> If CAN_CTRLMODE_FD_NON_ISO can be set without CAN_CTRLMODE_FD, what
->> should be the mode if both are set at the same time?
-> 
-> CAN_CTRLMODE_FD_NON_ISO is only relevant when CAN_CTRLMODE_FD is set.
-> 
-> So in the example from above
-> 
-> ip link set can0 up type can bitrate 1000000 dbitrate 5000000 
-> fd-non-iso on
-> 
-> either the setting of 'dbitrate 5000000' and 'fd-non-iso on' is 
-> pointless.
-> 
-> When switching to FD-mode with 'fd on' the FD relevant settings need
-> to be applied.
-> 
-> FD ISO is the default.
-> 
-> Did this help or did I get anything wrong?
+Hmmm.. ok, I'm going to investigate it further.
+Didn't really know that.
 
-Thanks for the explanation. Yes this helped a great deal and this
-patch should be correct; it sets ISO mode if CAN_CTRLMODE_FD is set
-and masks it again if CAN_CTRLMODE_FD_NON_ISO is set. See [1].
+> >=20
+> > > > +=09=09/* In secure and/or trusted boot the appraisal must be
+> > > > +=09=09 * enforced, regardless kernel parameters, preventing
+> > > > +=09=09 * runtime changes */
+> > >=20
+> > > Only "appraise" rules are enforced.
+> > >=20
+> >=20
+> > Hmm.. do you mean the comment wording is wrong/"could be better",
+> > pointing the "appraise" action explicitly?
+>=20
+> No, it's more than just the comment. =A0Like "trusted boot", IMA-
+> measurement only measures files, never enforces integrity.
+> =A0"ima_appraise" mode is only applicable to IMA-appraisal.
 
--michael
+ah! Ok, I see it now and in fact it shouldn't be part of the check
+alongside secureboot.
+
+Well, I'm going to rethink the approach entirely then.
+As you said, only deferring default_appraise_setup() may be probably
+enough.
+
+Thanks Mimi.
+
+--=20
+bmeneg=20
+PGP Key: http://bmeneg.com/pubkey.txt
+
+--qFgkTsE6LiHkLPZw
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEdWo6nTbnZdbDmXutYdRkFR+RokMFAl77b7sACgkQYdRkFR+R
+okNjGwf/UV+yrhufZYUFNEextDOOPfw6c/3n7RAhFG0NrZcLmvEaDGVjrbJ7HflX
+MFgr2AnUqeKnBUR4LG+zeVacjf3YDTITxX1ng3momgz257i0HbIYGSagCb8+h0p4
+N/ITdenByra0lACxP/IK8kXsJpRXIRmTQ1Poz79uTyXqShG6W5P3GPxSzluHsBWn
+FvJ06zKHysoJnF4hf/Mn4+d7LXgMs+VYOEMmuw+8U94ZNE2Az62/dqUmd3VbatM+
+J6Gi+ZymVAsLhEwzIY99pgOWAO/PU2AHfgBOvghVQmQCEc7GnOxbPmgz7REQwM8t
++Q/KFfuiYbNtS6MLXgtCWgEVmfqBsw==
+=j8Da
+-----END PGP SIGNATURE-----
+
+--qFgkTsE6LiHkLPZw--
+
