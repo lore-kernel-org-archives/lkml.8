@@ -2,140 +2,82 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD756C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 22:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5DFFC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 22:58:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8691620722
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 22:57:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="K0xR/Nvi"
+	by mail.kernel.org (Postfix) with ESMTP id 82B2E20771
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 22:58:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726150AbgF3W5e (ORCPT
+        id S1726305AbgF3W6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 18:57:34 -0400
-Received: from mail29.static.mailgun.info ([104.130.122.29]:55743 "EHLO
-        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725791AbgF3W5e (ORCPT
+        Tue, 30 Jun 2020 18:58:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47674 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725994AbgF3W6E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 18:57:34 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593557853; h=Content-Transfer-Encoding: Content-Type:
- MIME-Version: Message-ID: Date: Subject: In-Reply-To: References: Cc:
- To: From: Reply-To: Sender;
- bh=VpubEwscYy9Um/86J1tXHFPq+iEVca+qWyYHhgHXdzY=; b=K0xR/NvipBz9bWASkykf7+vBfdvgjUXqMa6IQ5lJjc3i1+0BZWlYC1hh21khN1iVaE2NVA3h
- 8SdoXjfQXcWTnWYm0V0yOKsLZSLsaaYmetuefVQdskpoo9sIF/W9JY78H/QFC5Fmco1GUEks
- MZrrabcKyCsGxSxWo/NrBF+bK84=
-X-Mailgun-Sending-Ip: 104.130.122.29
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n12.prod.us-west-2.postgun.com with SMTP id
- 5efbc35dad153efa348e61c0 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 30 Jun 2020 22:57:33
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E8C15C433A1; Tue, 30 Jun 2020 22:57:32 +0000 (UTC)
-Received: from BCAIN (104-54-226-75.lightspeed.austtx.sbcglobal.net [104.54.226.75])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bcain)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 43377C433C8;
-        Tue, 30 Jun 2020 22:57:31 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 43377C433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=bcain@codeaurora.org
-Reply-To: <bcain@codeaurora.org>
-From:   "Brian Cain" <bcain@codeaurora.org>
-To:     "'Peter Xu'" <peterx@redhat.com>, <linux-mm@kvack.org>,
-        <linux-kernel@vger.kernel.org>
-Cc:     "'Andrew Morton'" <akpm@linux-foundation.org>,
-        "'John Hubbard'" <jhubbard@nvidia.com>,
-        "'Michael Ellerman'" <mpe@ellerman.id.au>,
-        "'Gerald Schaefer'" <gerald.schaefer@de.ibm.com>,
-        "'Andrea Arcangeli'" <aarcange@redhat.com>,
-        "'Linus Torvalds'" <torvalds@linux-foundation.org>,
-        "'Will Deacon'" <will@kernel.org>, <linux-hexagon@vger.kernel.org>
-References: <20200630204519.38809-1-peterx@redhat.com>
-In-Reply-To: <20200630204519.38809-1-peterx@redhat.com>
-Subject: RE: [PATCH v4 07/26] mm/hexagon: Use general page fault accounting
-Date:   Tue, 30 Jun 2020 17:57:29 -0500
-Message-ID: <283701d64f31$d63a11d0$82ae3570$@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
+        Tue, 30 Jun 2020 18:58:04 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 809CDC061755;
+        Tue, 30 Jun 2020 15:58:04 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 0DA8E127BE238;
+        Tue, 30 Jun 2020 15:58:02 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 15:58:02 -0700 (PDT)
+Message-Id: <20200630.155802.2190042564289803175.davem@davemloft.net>
+To:     brgl@bgdev.pl
+Cc:     jeffrey.t.kirsher@intel.com, kuba@kernel.org, john@phrozen.org,
+        sean.wang@mediatek.com, Mark-MC.Lee@mediatek.com,
+        matthias.bgg@gmail.com, hkallweit1@gmail.com, andrew@lunn.ch,
+        f.fainelli@gmail.com, linux@armlinux.org.uk, robh+dt@kernel.org,
+        frowand.list@gmail.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        bgolaszewski@baylibre.com
+Subject: Re: [PATCH v2 00/10] net: improve devres helpers
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200629120346.4382-1-brgl@bgdev.pl>
+References: <20200629120346.4382-1-brgl@bgdev.pl>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQLNld+hj8aHZMBe5LJcSEztg0/Qa6cDN8Ig
-Content-Language: en-us
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 30 Jun 2020 15:58:03 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 29 Jun 2020 14:03:36 +0200
 
-> -----Original Message-----
-> From: linux-hexagon-owner@vger.kernel.org <linux-hexagon-
-...
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> So it seems like there's no support for relaxing certain networking devres
+> helpers to not require previously allocated structures to also be managed.
+> However the way mdio devres variants are implemented is still wrong and I
+> modified my series to address it while keeping the functions strict.
+> 
+> First two patches modify the ixgbe driver to get rid of the last user of
+> devm_mdiobus_free().
+> 
+> Patches 3, 4, 5 and 6 are mostly cosmetic.
+> 
+> Patch 7 fixes the way devm_mdiobus_register() is implemented.
+> 
+> Patches 8 & 9 provide a managed variant of of_mdiobus_register() and
+> last patch uses it in mtk-star-emac driver.
+> 
+> v1 -> v2:
+> - drop the patch relaxing devm_register_netdev()
+> - require struct mii_bus to be managed in devm_mdiobus_register() and
+>   devm_of_mdiobus_register() but don't store that information in the
+>   structure itself: use devres_find() instead
 
-Acked-by: Brian Cain <bcain@codeaurora.org>
-
-> CC: Brian Cain <bcain@codeaurora.org>
-> CC: linux-hexagon@vger.kernel.org
-> Signed-off-by: Peter Xu <peterx@redhat.com>
-> ---
->  arch/hexagon/mm/vm_fault.c | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/hexagon/mm/vm_fault.c b/arch/hexagon/mm/vm_fault.c
-> index f12f330e7946..ef32c5a84ff3 100644
-> --- a/arch/hexagon/mm/vm_fault.c
-> +++ b/arch/hexagon/mm/vm_fault.c
-> @@ -18,6 +18,7 @@
->  #include <linux/signal.h>
->  #include <linux/extable.h>
->  #include <linux/hardirq.h>
-> +#include <linux/perf_event.h>
-> 
->  /*
->   * Decode of hardware exception sends us to one of several @@ -53,6 +54,8
-> @@ void do_page_fault(unsigned long address, long cause, struct pt_regs
-> *regs)
-> 
->  	if (user_mode(regs))
->  		flags |= FAULT_FLAG_USER;
-> +
-> +	perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, address);
->  retry:
->  	mmap_read_lock(mm);
->  	vma = find_vma(mm, address);
-> @@ -88,7 +91,7 @@ void do_page_fault(unsigned long address, long cause,
-> struct pt_regs *regs)
->  		break;
->  	}
-> 
-> -	fault = handle_mm_fault(vma, address, flags, NULL);
-> +	fault = handle_mm_fault(vma, address, flags, regs);
-> 
->  	if (fault_signal_pending(fault, regs))
->  		return;
-> @@ -96,10 +99,6 @@ void do_page_fault(unsigned long address, long cause,
-> struct pt_regs *regs)
->  	/* The most common case -- we are done. */
->  	if (likely(!(fault & VM_FAULT_ERROR))) {
->  		if (flags & FAULT_FLAG_ALLOW_RETRY) {
-> -			if (fault & VM_FAULT_MAJOR)
-> -				current->maj_flt++;
-> -			else
-> -				current->min_flt++;
->  			if (fault & VM_FAULT_RETRY) {
->  				flags |= FAULT_FLAG_TRIED;
->  				goto retry;
-> --
-> 2.26.2
-
-
+Series applied, thank you.
