@@ -2,149 +2,263 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D6DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F087C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 601D220722
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:53:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E517F20723
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:53:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rJsvB1h/"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CVgtFTy2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389794AbgF3QxA (ORCPT
+        id S2389857AbgF3QxG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 12:53:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47552 "EHLO
+        Tue, 30 Jun 2020 12:53:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389637AbgF3QxA (ORCPT
+        with ESMTP id S2389637AbgF3QxF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 12:53:00 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35AC5C061755;
-        Tue, 30 Jun 2020 09:53:00 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id e18so10213142pgn.7;
-        Tue, 30 Jun 2020 09:53:00 -0700 (PDT)
+        Tue, 30 Jun 2020 12:53:05 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3F1BC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 09:53:04 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id 17so20271311wmo.1
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 09:53:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to;
-        bh=7m7BWKf9NH63+N5h5/gDSmYkD28Bo1dCGyGDwrhMPes=;
-        b=rJsvB1h/D9oEezvMx1P4beLY1ixZ/SQlPDAKD5yc76QgEA8ooNxvlPuahEYOi2GIw8
-         F5w0a+e+zyLuaXugwkzXDzywfBvOLJJuOk/ynrdK3ghg+QmvF0yHxLcPPtC2L+cc4a4Q
-         sk8Vbc7YrfyDS7CYMk70M3O4Xh6Wjwud5PY7z3X1PEW2ApudEAs0GSGklikDiVRFylSe
-         PWcTP7YWrFG1K5W8iT0p0NwGdcacNzmYMWkCoiSCFQa138ppevpsO0VTZR9gA93xZyCe
-         bO0/vy8f5qc+EVBVFTkhHp357HJ6kMlwMb5fo74bjHg4BsDh7wL2ZTqiJi3LHwQsngWE
-         rsCg==
+        bh=PL3gqYes7408Y9j0oN+9/8tWxq6suSL5CFMjvoIOGD8=;
+        b=CVgtFTy2QTfqoViXoqnmGJ/iZi91tUj2Bpdip43Pq0diQqzgGNBkGq5N9G2XQWvogo
+         68V3n2TQHlygtYUjKpStr7tg1ROHAbvN648GHZPuqq49G5p7U3AlcHrOQaxXfINfdefd
+         Gk9ELgymUifA8xcKS3fnlBXshAs1nJ7VDRI+M=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=7m7BWKf9NH63+N5h5/gDSmYkD28Bo1dCGyGDwrhMPes=;
-        b=TXL6SOPFHIUjyJ18PVowQltepCdK45/LmN4LdW2cGJHJ4B9vSJGOMDokGd5wOcY9jG
-         9CcST5OFpquAf9Uby19FnNSUZNjVLPSs15kV6El1askJZMBr31s97s74GhjF5GSOyktv
-         HgRvxHvrsuRF2s6xoPvR5I/FZKTrVYY7Numwrh83jpw5euti63B97RmqwWAj0KXfjdLU
-         Q+en70tR3sBVEJkEPbsni2sy+uxkpB6eWssulqaSdYu8+FXSjWNAYipkKOW9h9PALsQu
-         GfUq8m/HssCiT3LZt0qNBYcS+YJ8+XChw1zaYT8PsaSC9l6Xq6LIpW76FjFgXvxwxZ9h
-         kkTQ==
-X-Gm-Message-State: AOAM533tkd/FgNwV5z+xYD6+H08+qPE1jTEUDVlRe9Xudn8adEYKyDCg
-        Y2wHdbUErMdz2uyUqrI5XQg=
-X-Google-Smtp-Source: ABdhPJyaNE57OnczyCfGWK8wGKBCOXLKYElCtMBWWJs+8LEIpVJpM9nCH0vBWlDH4gjRoyz1llNIqw==
-X-Received: by 2002:a62:1b04:: with SMTP id b4mr1266896pfb.145.1593535979744;
-        Tue, 30 Jun 2020 09:52:59 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:e083])
-        by smtp.gmail.com with ESMTPSA id w22sm3225840pfn.5.2020.06.30.09.52.57
+        bh=PL3gqYes7408Y9j0oN+9/8tWxq6suSL5CFMjvoIOGD8=;
+        b=nDkv8l/MHNB2W1f22yMMMFJl89towbXk4QFrC4Z/fL+b2QnP/I1qaaVPHaoN1OTHZZ
+         q7hgwi7nzKfpDj/bPa/8BRRZs97G7E5J0qlJsqe+dqYlqjE2PEJkl0IB+LjXnLGSX65i
+         vMzSoWBOZBKqaAOWPK07O4u1IN7yObOMezE+ifednDBxmYoFnkAWbcqXLtIlBR4CZGx2
+         l+HnMevNzelyCRZjuJsFDGCQ8gVXywgrVD9h6OqxynvaAfu+FS97f4cfd0zgH3TJWbnE
+         bdSTYhqD0xMDKmvTwKcsFA8QyCeBxYL5+Ov9Bwa8pNVfZco5PyFBMlStEpTLj70VmiXw
+         UznQ==
+X-Gm-Message-State: AOAM532fLB2dqYXuXBYM24T0P5wtGWnkbNfNd49xgjUdN7EbAcO6iVpV
+        FaqdCXHwpeoVZVlx45Cbwav7QQ==
+X-Google-Smtp-Source: ABdhPJxKifqOAzYOp4J9Bly4NiQnEMA2gDFLYP7zxPsqUSediKZtqJghVuv6mAfW2Fa0i+QexvGymA==
+X-Received: by 2002:a1c:bcd4:: with SMTP id m203mr22111391wmf.124.1593535983680;
+        Tue, 30 Jun 2020 09:53:03 -0700 (PDT)
+Received: from chromium.org (205.215.190.35.bc.googleusercontent.com. [35.190.215.205])
+        by smtp.gmail.com with ESMTPSA id f186sm4010614wmf.29.2020.06.30.09.53.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 09:52:58 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 09:52:56 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <greg@kroah.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2 00/15] Make the user mode driver code a better citizen
-Message-ID: <20200630165256.i7wdfjxmqu73fewc@ast-mbp.dhcp.thefacebook.com>
-References: <20200625095725.GA3303921@kroah.com>
- <778297d2-512a-8361-cf05-42d9379e6977@i-love.sakura.ne.jp>
- <20200625120725.GA3493334@kroah.com>
- <20200625.123437.2219826613137938086.davem@davemloft.net>
- <CAHk-=whuTwGHEPjvtbBvneHHXeqJC=q5S09mbPnqb=Q+MSPMag@mail.gmail.com>
- <87pn9mgfc2.fsf_-_@x220.int.ebiederm.org>
- <87y2oac50p.fsf@x220.int.ebiederm.org>
- <87bll17ili.fsf_-_@x220.int.ebiederm.org>
- <20200629221231.jjc2czk3ul2roxkw@ast-mbp.dhcp.thefacebook.com>
- <87eepwzqhd.fsf@x220.int.ebiederm.org>
+        Tue, 30 Jun 2020 09:53:03 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 16:53:01 +0000
+From:   Tomasz Figa <tfiga@chromium.org>
+To:     Xia Jiang <xia.jiang@mediatek.com>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rick Chang <rick.chang@mediatek.com>,
+        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        srv_heupstream@mediatek.com, senozhatsky@chromium.org,
+        mojahsu@chromium.org, drinkcat@chromium.org,
+        maoguang.meng@mediatek.com, sj.huang@mediatek.com
+Subject: Re: [PATCH RESEND v9 18/18] media: platform: Add jpeg enc feature
+Message-ID: <20200630165301.GA1212092@chromium.org>
+References: <20200604090553.10861-1-xia.jiang@mediatek.com>
+ <20200604090553.10861-20-xia.jiang@mediatek.com>
+ <20200611184640.GC8694@chromium.org>
+ <1593485781.20112.43.camel@mhfsdcap03>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87eepwzqhd.fsf@x220.int.ebiederm.org>
+In-Reply-To: <1593485781.20112.43.camel@mhfsdcap03>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 07:29:34AM -0500, Eric W. Biederman wrote:
-> 
-> diff --git a/net/bpfilter/bpfilter_kern.c b/net/bpfilter/bpfilter_kern.c
-> index 91474884ddb7..3e1874030daa 100644
-> --- a/net/bpfilter/bpfilter_kern.c
-> +++ b/net/bpfilter/bpfilter_kern.c
-> @@ -19,8 +19,8 @@ static void shutdown_umh(void)
->         struct pid *tgid = info->tgid;
->  
->         if (tgid) {
-> -               kill_pid_info(SIGKILL, SEND_SIG_PRIV, tgid);
-> -               wait_event(tgid->wait_pidfd, !pid_task(tgid, PIDTYPE_TGID));
-> +               kill_pid(tgid, SIGKILL, 1);
-> +               wait_event(tgid->wait_pidfd, !pid_has_task(tgid, PIDTYPE_TGID));
->                 bpfilter_umh_cleanup(info);
->         }
->  }
-> 
-> > And then did:
-> > while true; do iptables -L;rmmod bpfilter; done
-> >  
-> > Unfortunately sometimes 'rmmod bpfilter' hangs in wait_event().
-> 
-> Hmm.  The wake up happens just of tgid->wait_pidfd happens just before
-> release_task is called so there is a race.  As it is possible to wake
-> up and then go back to sleep before pid_has_task becomes false.
-> 
-> So I think I need a friendly helper that does:
-> 
-> bool task_has_exited(struct pid *tgid)
-> {
-> 	bool exited = false;
-> 
-> 	rcu_read_lock();
->         tsk = pid_task(tgid, PIDTYPE_TGID);
->         exited = !!tsk;
->         if (tsk) {
->         	exited = !!tsk->exit_state;
-> out:
-> 	rcu_unlock();
-> 	return exited;
-> }
+Hi Xia,
 
-All makes sense to me.
-If I understood the race condition such helper should indeed solve it.
-Are you going to add such patch to your series?
-I'll proceed with my work on top of your series and will ignore this
-race for now, but I think it should be fixed before we land this set
-into multiple trees.
+On Tue, Jun 30, 2020 at 10:56:21AM +0800, Xia Jiang wrote:
+> On Thu, 2020-06-11 at 18:46 +0000, Tomasz Figa wrote:
+> > Hi Xia,
+> > 
+> > On Thu, Jun 04, 2020 at 05:05:53PM +0800, Xia Jiang wrote:
+[snip]
+> > > +static void mtk_jpeg_enc_device_run(void *priv)
+> > > +{
+> > > +	struct mtk_jpeg_ctx *ctx = priv;
+> > > +	struct mtk_jpeg_dev *jpeg = ctx->jpeg;
+> > > +	struct vb2_v4l2_buffer *src_buf, *dst_buf;
+> > > +	enum vb2_buffer_state buf_state = VB2_BUF_STATE_ERROR;
+> > > +	unsigned long flags;
+> > > +	struct mtk_jpeg_src_buf *jpeg_src_buf;
+> > > +	struct mtk_jpeg_enc_bs enc_bs;
+> > > +	int ret;
+> > > +
+> > > +	src_buf = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
+> > > +	dst_buf = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
+> > > +	jpeg_src_buf = mtk_jpeg_vb2_to_srcbuf(&src_buf->vb2_buf);
+> > > +
+> > > +	ret = pm_runtime_get_sync(jpeg->dev);
+> > > +	if (ret < 0)
+> > > +		goto enc_end;
+> > > +
+> > > +	spin_lock_irqsave(&jpeg->hw_lock, flags);
+> > > +
+> > > +	/*
+> > > +	 * Resetting the hardware every frame is to ensure that all the
+> > > +	 * registers are cleared. This is a hardware requirement.
+> > > +	 */
+> > > +	mtk_jpeg_enc_reset(jpeg->reg_base);
+> > > +
+> > > +	mtk_jpeg_set_enc_dst(ctx, jpeg->reg_base, &dst_buf->vb2_buf, &enc_bs);
+> > > +	mtk_jpeg_set_enc_src(ctx, jpeg->reg_base, &src_buf->vb2_buf);
+> > > +	mtk_jpeg_enc_set_config(jpeg->reg_base, ctx->out_q.fmt->hw_format,
+> > > +				ctx->enable_exif, ctx->enc_quality,
+> > > +				ctx->restart_interval);
+> > > +	mtk_jpeg_enc_start(jpeg->reg_base);
+> > 
+> > Could we just move the above 5 functions into one function inside
+> > mtk_jpeg_enc_hw.c that takes mtk_jpeg_dev pointer as its argument, let's
+> > say mtk_jpeg_enc_hw_run() and simply program all the data to the registers
+> > directly, without the extra level of abstractions?
+> I can move the 5 functions into one function(mtk_jpeg_enc_hw_run()), but
+> this function will be very long, because it contains computation code
+> such as setting dst addr, blk_num, quality.
+> In v4, you have adviced the following architecture:
+> How about the following model, as used by many other drivers:
+> 
+> mtk_jpeg_enc_set_src()
+> {
+>         // Set any registers related to source format and buffer
+> }
+> 
+> mtk_jpeg_enc_set_dst()
+> {
+>         // Set any registers related to destination format and buffer
+> }
+> 
+> mtk_jpeg_enc_set_params()
+> {
+>         // Set any registers related to additional encoding parameters
+> }
+> 
+> mtk_jpeg_enc_device_run(enc, ctx)
+> {
+>         mtk_jpeg_enc_set_src(enc, src_buf, src_fmt);
+>         mtk_jpeg_enc_set_dst(enc, dst_buf, dst_fmt);
+>         mtk_jpeg_enc_set_params(enc, ctx);
+>         // Trigger the hardware run
+> }
+> I think that this architecture is more clear(mtk_jpeg_enc_set_config is
+> equivalent to mtk_jpeg_enc_set_params).
+> Should I keep the original architecture or move 5 functions into
+> mtk_jpeg_enc_hw_run?
+
+Sounds good to me.
+
+My biggest issue with the code that it ends up introducing one more
+level of abstraction, but with the approach you suggested, the arguments
+just accept standard structs, which avoids that problem.
+
+[snip]
+> > > +
+> > > +	ctx->fh.ctrl_handler = &ctx->ctrl_hdl;
+> > > +	ctx->colorspace = V4L2_COLORSPACE_JPEG,
+> > > +	ctx->ycbcr_enc = V4L2_YCBCR_ENC_DEFAULT;
+> > > +	ctx->quantization = V4L2_QUANTIZATION_DEFAULT;
+> > > +	ctx->xfer_func = V4L2_XFER_FUNC_DEFAULT;
+> > 
+> > Since we already have a v4l2_pix_format_mplane struct which has fields for
+> > the above 4 values, could we just store them there?
+> > 
+> > Also, I don't see this driver handling the colorspaces in any way, but it
+> > seems to allow changing them from the userspace. This is incorrect, because
+> > the userspace has no way to know that the colorspace is not handled.
+> > Instead, the try_fmt implementation should always override the
+> > userspace-provided colorspace configuration with the ones that the driver
+> > assumes.
+> > 
+> > > +	pix_mp->width = MTK_JPEG_MIN_WIDTH;
+> > > +	pix_mp->height = MTK_JPEG_MIN_HEIGHT;
+> > > +
+> > > +	q->fmt = mtk_jpeg_find_format(V4L2_PIX_FMT_YUYV,
+> > > +				      MTK_JPEG_FMT_FLAG_ENC_OUTPUT);
+> > > +	vidioc_try_fmt(container_of(pix_mp, struct v4l2_format,
+> > > +				    fmt.pix_mp), q->fmt);
+> > > +	q->w = pix_mp->width;
+> > > +	q->h = pix_mp->height;
+> > > +	q->crop_rect.width = pix_mp->width;
+> > > +	q->crop_rect.height = pix_mp->height;
+> > > +	q->sizeimage[0] = pix_mp->plane_fmt[0].sizeimage;
+> > > +	q->bytesperline[0] = pix_mp->plane_fmt[0].bytesperline;
+> > 
+> > Actually, do we need this custom mtk_jpeg_q_data struct? Why couldn't we
+> > just keep the same values inside the standard v4l2_pix_format_mplane
+> > struct?
+> I think that we need mtk_jpeg_q_data struct.If we delete it, how can we
+> know these values(w, h, sizeimage, bytesperline, mtk_jpeg_fmt) belong to
+> output or capture(output and capture's sizeimages are different, width
+> and height are differnt too for jpeg dec )?We have
+> s_fmt_vid_out_mplane/cap_mplane function to set these values.
+> 
+> But we can use standard v4l2_pix_format_mplane struct replacing the w, h
+> bytesperline, sizeimage in mtk_jpeg_q_data struct like this:
+> struct mtk_jpeg_q_data{
+> 	struct mtk_jpeg_fmt *fmt;
+> 	struct v4l2_pix_format_mplane pix_mp;
+> 	struct v4l2_rect enc_crop_rect
+> }
+> Then delete ctx->colorspace ctx->ycbcr_enc ctx->quantization
+> ctx->xfer_func, becuase v4l2_pix_format_mplane in q_data has contained
+> them and assign them for out_q and cap_q separately.
+> 
+> WDYT?
+
+Sounds good to me. I was considering just making it like
+
+struct mtk_jpeg_ctx {
+	struct mtk_jpeg_fmt *src_fmt;
+	struct v4l2_pix_format_mplane src_pix_mp;
+	struct v4l2_rect src_crop;
+
+	struct mtk_jpeg_fmt *dst_fmt;
+	struct v4l2_pix_format_mplane dst_pix_mp;
+	struct v4l2_rect dst_crop;
+};
+
+but I like your suggestion as well, as long as custom data structures
+are not used to store standard information.
+[snip]
+> > > @@ -1042,8 +1619,12 @@ static int mtk_jpeg_probe(struct platform_device *pdev)
+> > >  		return jpeg_irq;
+> > >  	}
+> > >  
+> > > -	ret = devm_request_irq(&pdev->dev, jpeg_irq, mtk_jpeg_dec_irq, 0,
+> > > -			       pdev->name, jpeg);
+> > > +	if (jpeg->variant->is_encoder)
+> > > +		ret = devm_request_irq(&pdev->dev, jpeg_irq, mtk_jpeg_enc_irq,
+> > > +				       0, pdev->name, jpeg);
+> > > +	else
+> > > +		ret = devm_request_irq(&pdev->dev, jpeg_irq, mtk_jpeg_dec_irq,
+> > > +				       0, pdev->name, jpeg);
+> > 
+> > Rather than having "is_encoder" in the variant struct, would it make more
+> > sense to have "irq_handler" instead? That would avoid the explicit if.
+> Do you mean to delete "is_encoder"? It is used 8 times in the
+> driver.Should I move them all to the match data?
+
+Yes. It would make the code linear and the varability between the
+decoder and encoder would be self-contained in the variant struct.
+
+Best regards,
+Tomasz
