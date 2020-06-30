@@ -2,106 +2,283 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9DADC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:34:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D46C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4BE9206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:34:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 158E4206BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:37:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KxiRDAkz"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ET617ItK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731534AbgF3Iea (ORCPT
+        id S1731546AbgF3Ih2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 04:34:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55298 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727059AbgF3Ie3 (ORCPT
+        Tue, 30 Jun 2020 04:37:28 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:17597 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731476AbgF3Ih0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 04:34:29 -0400
-Received: from mail-oi1-x229.google.com (mail-oi1-x229.google.com [IPv6:2607:f8b0:4864:20::229])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DC7CC061755;
-        Tue, 30 Jun 2020 01:34:29 -0700 (PDT)
-Received: by mail-oi1-x229.google.com with SMTP id j11so14103834oiw.12;
-        Tue, 30 Jun 2020 01:34:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=Xvujs7uAlZ7v9VquTZvFNbU+VMvTAkp34dsAu9VXmjo=;
-        b=KxiRDAkzJ8aG9D0Qr90cMtm85Rahd+HiuZQkZhIj+K/uwsvDMMZ1GlBjYcO3L8w3Ay
-         BO11tTAe3RiVGGia8ZvGJVbsFv2RnWGkuEyIA7CW1bLicZF5MFD+7hmfJ0JNj4Ed75vg
-         qFhmjVXpgO0VcNIOWGvLpTb9I1EdCr+jI4qRffdMgqPH/Es39pwUgdtyYD1UPnQ9CA7L
-         xX0+kGodTdCB5kZaC7a1kyIpc6ZkMu0Om8vU5h5SOY5GsMDPpDVkIgFDjhb0IhIxTgJ3
-         Tj5TUXU8WmyD5Gr5ynQjhDmxYOLzD41YiVJYRlBdeDin0l7VOhIkEbv/c1YanPGhU8qm
-         1cTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=Xvujs7uAlZ7v9VquTZvFNbU+VMvTAkp34dsAu9VXmjo=;
-        b=JVlvpfV3DjPCZoUx8UUb5ZL2ha7J/DJCYS61EI9pmkHcEITWpASz/JYoVuaC1znc1L
-         I1WuS2YxCWxbFXiMLr6hx/vtosMb8A3SNg0vPYvRv7LgCd5vMqk2RlGo0efOEIO11obo
-         AX5ddXHkyut5xlIefYrs3jEAktihNsEGw4ACUKqViJSLnOIppz9uUlbJdinmTzzhABNy
-         s15OHFoe8Q4i3hytOe+GqyewFXhSYqJtzNw4NpwSAmGSeDOKMP2LAPn8CFcN4T7cyeFr
-         zb/Tj/icm+mB7e0+gKZQmhfo7E00ABIyIAF6qd6dKNZ9Q3SfOcwH8Uu7IHKw/c1bY/HM
-         tBQw==
-X-Gm-Message-State: AOAM533dQTaeUyu0UyoY8poxw7flshdG2fw4YiSQt7SurTcggyr5VAEP
-        OTeT5fCHIitIvyWqAqzXBdo3+qIP8l/nn1XTZMkvZBXT
-X-Google-Smtp-Source: ABdhPJxad4tFEc/Did5pkIuHZfL40b8vqMlDvlHTmoM81ZIQ75oj6ttPsWfIVgkCxWLpqZ8+Ieh2b/cINyieF/NpPbE=
-X-Received: by 2002:aca:603:: with SMTP id 3mr14319288oig.89.1593506068111;
- Tue, 30 Jun 2020 01:34:28 -0700 (PDT)
+        Tue, 30 Jun 2020 04:37:26 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5efaf9950000>; Tue, 30 Jun 2020 01:36:37 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 30 Jun 2020 01:37:26 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 30 Jun 2020 01:37:26 -0700
+Received: from [10.26.75.203] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 30 Jun
+ 2020 08:37:18 +0000
+Subject: Re: [PATCH v8 3/3] iommu/arm-smmu: Add global/context fault
+ implementation hooks
+To:     Krishna Reddy <vdumpa@nvidia.com>
+CC:     <joro@8bytes.org>, <will@kernel.org>, <robin.murphy@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <treding@nvidia.com>,
+        <yhsu@nvidia.com>, <snikam@nvidia.com>, <praithatha@nvidia.com>,
+        <talho@nvidia.com>, <bbiswas@nvidia.com>, <mperttunen@nvidia.com>,
+        <nicolinc@nvidia.com>, <bhuntsman@nvidia.com>,
+        <nicoleotsuka@gmail.com>
+References: <20200630001051.12350-1-vdumpa@nvidia.com>
+ <20200630001051.12350-4-vdumpa@nvidia.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <4b4b20af-7baa-0987-e40d-af74235153f6@nvidia.com>
+Date:   Tue, 30 Jun 2020 09:37:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-From:   richard clark <richard.xnu.clark@gmail.com>
-Date:   Tue, 30 Jun 2020 16:34:17 +0800
-Message-ID: <CAJNi4rNvzQ4Eqzxo-OokF+zfOvJ=kKUMUVGt8osji0mcaaxhkQ@mail.gmail.com>
-Subject: External kmod build failed on KASAN-enabled kernel
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200630001051.12350-4-vdumpa@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1593506197; bh=72sjvS5OeRNzGJemrzzyR9F18Oc7fZfIj/1NnRKYpRE=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=ET617ItKPJmQZ4OggW+dP3YjoRaXe52rJ9jAGLKIQUJy3aEXp6LQk9LWIE9mhYvtx
+         42FDez1ciM7+tNTX9sCKur+62GgByXXDNzH2mVGcydjTQZGYRJ1348qS3XKDWAEkSu
+         yjye/IuiSPNEHXDvKoMrCboVoHHl42o5pDmKa4lKtXrKHPxdutKHGRy3vAwlR3XtmQ
+         KPV/ed3C1AfrJ6wWbxg0QxUsAE70geTiHmAk5GjlTxfy8KRxClCPfx6gjNSCntjBhE
+         DvJTvpQVVKFnK0nMk1vN+xTfnFeHZ2akRuCIchO5eWm7cFi1wNHaQlcknIiWe2A9VS
+         tZV0G0cQJ85tw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-The same kmod source code can be built on KASAN-disabled kernel
-(5.7.0), but after enable it with CONFIG_KASAN=y, the kmod can't build
-on the new installed KASAN-enabled kernel with below error message,
-seems no relevant answers for this issue with google:
+On 30/06/2020 01:10, Krishna Reddy wrote:
+> Add global/context fault hooks to allow NVIDIA SMMU implementation
+> handle faults across multiple SMMUs.
 
-root@build-ws:/home/mm/slab# make
+Nit ... this is not just for NVIDIA, but this allows anyone to add
+custom global/context and fault hooks. So I think that the changelog
+should be clear that this change permits custom fault hooks and that
+custom fault hooks are needed for the Tegra194 SMMU. You may also want
+to say why.
 
-make -C /lib/modules/5.7.0/build M=/home/mm/slab modules
+> 
+> Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
+> ---
+>  drivers/iommu/arm-smmu-nvidia.c | 98 +++++++++++++++++++++++++++++++++
+>  drivers/iommu/arm-smmu.c        | 17 +++++-
+>  drivers/iommu/arm-smmu.h        |  3 +
+>  3 files changed, 116 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/iommu/arm-smmu-nvidia.c b/drivers/iommu/arm-smmu-nvidia.c
+> index 1124f0ac1823a..c9423b4199c65 100644
+> --- a/drivers/iommu/arm-smmu-nvidia.c
+> +++ b/drivers/iommu/arm-smmu-nvidia.c
+> @@ -147,6 +147,102 @@ static int nvidia_smmu_reset(struct arm_smmu_device *smmu)
+>  	return 0;
+>  }
+>  
+> +static struct arm_smmu_domain *to_smmu_domain(struct iommu_domain *dom)
+> +{
+> +	return container_of(dom, struct arm_smmu_domain, domain);
+> +}
+> +
+> +static irqreturn_t nvidia_smmu_global_fault_inst(int irq,
+> +					       struct arm_smmu_device *smmu,
+> +					       int inst)
+> +{
+> +	u32 gfsr, gfsynr0, gfsynr1, gfsynr2;
+> +	void __iomem *gr0_base = nvidia_smmu_page(smmu, inst, 0);
+> +
+> +	gfsr = readl_relaxed(gr0_base + ARM_SMMU_GR0_sGFSR);
+> +	if (!gfsr)
+> +		return IRQ_NONE;
+> +
+> +	gfsynr0 = readl_relaxed(gr0_base + ARM_SMMU_GR0_sGFSYNR0);
+> +	gfsynr1 = readl_relaxed(gr0_base + ARM_SMMU_GR0_sGFSYNR1);
+> +	gfsynr2 = readl_relaxed(gr0_base + ARM_SMMU_GR0_sGFSYNR2);
+> +
+> +	dev_err_ratelimited(smmu->dev,
+> +		"Unexpected global fault, this could be serious\n");
+> +	dev_err_ratelimited(smmu->dev,
+> +		"\tGFSR 0x%08x, GFSYNR0 0x%08x, GFSYNR1 0x%08x, GFSYNR2 0x%08x\n",
+> +		gfsr, gfsynr0, gfsynr1, gfsynr2);
+> +
+> +	writel_relaxed(gfsr, gr0_base + ARM_SMMU_GR0_sGFSR);
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static irqreturn_t nvidia_smmu_global_fault(int irq, void *dev)
+> +{
+> +	int inst;
 
-make[1]: Entering directory '/home/linux-5.7'
+Should be unsigned
 
-  CC [M]  /home/mm/slab/tap_slab.o
+> +	irqreturn_t irq_ret = IRQ_NONE;
+> +	struct arm_smmu_device *smmu = dev;
+> +	struct nvidia_smmu *nvidia_smmu = to_nvidia_smmu(smmu);
+> +
+> +	for (inst = 0; inst < nvidia_smmu->num_inst; inst++) {
+> +		irq_ret = nvidia_smmu_global_fault_inst(irq, smmu, inst);
+> +		if (irq_ret == IRQ_HANDLED)
+> +			return irq_ret;
 
-  MODPOST 1 modules
+Any chance there could be more than one SMMU faulting by the time we
+service the interrupt?
 
-ERROR: modpost: "__asan_register_globals" [/home/mm/slab/tap_slab.ko] undefined!
+> +	}
+> +
+> +	return irq_ret;
+> +}
+> +
+> +static irqreturn_t nvidia_smmu_context_fault_bank(int irq,
+> +					    struct arm_smmu_device *smmu,
+> +					    int idx, int inst)
+> +{
+> +	u32 fsr, fsynr, cbfrsynra;
+> +	unsigned long iova;
+> +	void __iomem *gr1_base = nvidia_smmu_page(smmu, inst, 1);
+> +	void __iomem *cb_base = nvidia_smmu_page(smmu, inst, smmu->numpage + idx);
+> +
+> +	fsr = readl_relaxed(cb_base + ARM_SMMU_CB_FSR);
+> +	if (!(fsr & ARM_SMMU_FSR_FAULT))
+> +		return IRQ_NONE;
+> +
+> +	fsynr = readl_relaxed(cb_base + ARM_SMMU_CB_FSYNR0);
+> +	iova = readq_relaxed(cb_base + ARM_SMMU_CB_FAR);
+> +	cbfrsynra = readl_relaxed(gr1_base + ARM_SMMU_GR1_CBFRSYNRA(idx));
+> +
+> +	dev_err_ratelimited(smmu->dev,
+> +	"Unhandled context fault: fsr=0x%x, iova=0x%08lx, fsynr=0x%x, cbfrsynra=0x%x, cb=%d\n",
+> +			    fsr, iova, fsynr, cbfrsynra, idx);
+> +
+> +	writel_relaxed(fsr, cb_base + ARM_SMMU_CB_FSR);
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static irqreturn_t nvidia_smmu_context_fault(int irq, void *dev)
+> +{
+> +	int inst, idx;
 
-ERROR: modpost: "__asan_unregister_globals"
-[/home/mm/slab/tap_slab.ko] undefined!
+Unsigned
 
-ERROR: modpost: "__asan_load8_noabort" [/home/mm/slab/tap_slab.ko] undefined!
+> +	irqreturn_t irq_ret = IRQ_NONE;
+> +	struct iommu_domain *domain = dev;
+> +	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
+> +	struct arm_smmu_device *smmu = smmu_domain->smmu;
+> +
+> +	for (inst = 0; inst < to_nvidia_smmu(smmu)->num_inst; inst++) {
+> +		/*
+> +		 * Interrupt line shared between all context faults.
+> +		 * Check for faults across all contexts.
+> +		 */
+> +		for (idx = 0; idx < smmu->num_context_banks; idx++) {
+> +			irq_ret = nvidia_smmu_context_fault_bank(irq, smmu,
+> +								 idx, inst);
+> +
+> +			if (irq_ret == IRQ_HANDLED)
+> +				return irq_ret;
 
-scripts/Makefile.modpost:94: recipe for target '__modpost' failed
+Any reason why we don't check all banks?
 
-make[2]: *** [__modpost] Error 1
+> +		}
+> +	}
+> +
+> +	return irq_ret;
+> +}
+> +
+>  static const struct arm_smmu_impl nvidia_smmu_impl = {
+>  	.read_reg = nvidia_smmu_read_reg,
+>  	.write_reg = nvidia_smmu_write_reg,
+> @@ -154,6 +250,8 @@ static const struct arm_smmu_impl nvidia_smmu_impl = {
+>  	.write_reg64 = nvidia_smmu_write_reg64,
+>  	.reset = nvidia_smmu_reset,
+>  	.tlb_sync = nvidia_smmu_tlb_sync,
+> +	.global_fault = nvidia_smmu_global_fault,
+> +	.context_fault = nvidia_smmu_context_fault,
+>  };
+>  
+>  struct arm_smmu_device *nvidia_smmu_impl_init(struct arm_smmu_device *smmu)
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index 243bc4cb2705b..3bb0aba15a356 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -673,6 +673,7 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+>  	enum io_pgtable_fmt fmt;
+>  	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
+>  	struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
+> +	irqreturn_t (*context_fault)(int irq, void *dev);
+>  
+>  	mutex_lock(&smmu_domain->init_mutex);
+>  	if (smmu_domain->smmu)
+> @@ -835,7 +836,13 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+>  	 * handler seeing a half-initialised domain state.
+>  	 */
+>  	irq = smmu->irqs[smmu->num_global_irqs + cfg->irptndx];
+> -	ret = devm_request_irq(smmu->dev, irq, arm_smmu_context_fault,
+> +
+> +	if (smmu->impl && smmu->impl->context_fault)
+> +		context_fault = smmu->impl->context_fault;
+> +	else
+> +		context_fault = arm_smmu_context_fault;
 
-Makefile:1642: recipe for target 'modules' failed
+Why not see the default smmu->impl->context_fault to
+arm_smmu_context_fault in arm_smmu_impl_init() and then allow the
+various implementations to override as necessary? Then you can get rid
+of this context_fault variable here and just use
+smmu->impl->context_fault below.
 
-make[1]: *** [modules] Error 2
+> +
+> +	ret = devm_request_irq(smmu->dev, irq, context_fault,
+>  			       IRQF_SHARED, "arm-smmu-context-fault", domain);
+>  	if (ret < 0) {
+>  		dev_err(smmu->dev, "failed to request context IRQ %d (%u)\n",
+> @@ -2107,6 +2114,7 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+>  	struct arm_smmu_device *smmu;
+>  	struct device *dev = &pdev->dev;
+>  	int num_irqs, i, err;
+> +	irqreturn_t (*global_fault)(int irq, void *dev);
+>  
+>  	smmu = devm_kzalloc(dev, sizeof(*smmu), GFP_KERNEL);
+>  	if (!smmu) {
+> @@ -2193,9 +2201,14 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+>  		smmu->num_context_irqs = smmu->num_context_banks;
+>  	}
+>  
+> +	if (smmu->impl && smmu->impl->global_fault)
+> +		global_fault = smmu->impl->global_fault;
+> +	else
+> +		global_fault = arm_smmu_global_fault;
+> +
 
-make[1]: Leaving directory '/home/linux-5.7'
+Same here.
 
-Makefile:6: recipe for target 'default' failed
+Jon
 
-make: *** [default] Error 2
-===
-Regards,
-Richard
+-- 
+nvpublic
