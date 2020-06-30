@@ -2,223 +2,335 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F9CBC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89709C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 460AB2074F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:31:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DD2F20760
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:32:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FITHPola"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O0XFknHW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389462AbgF3Pbf (ORCPT
+        id S2389495AbgF3PcK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 11:31:35 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41589 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725872AbgF3Pbe (ORCPT
+        Tue, 30 Jun 2020 11:32:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35088 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389464AbgF3PcJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 11:31:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593531092;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=PBKI1wC0EuMeGlMbsqBq9OEOnaCFXkQPIi7EgKbzMjY=;
-        b=FITHPolaPaePnODpPoD2ugghgTwlBozXZrpVisyoyYslACWfOvFSr8im0d75s1qDHxIt5y
-        seBkvI8DJMhKsp/1sd3jy59Jn7az5CJCW5GxSasiTmxJavWpzfgTM5JxXm13vY3Bupdugs
-        23xV3C4K4E8r9AM1RYEP+Tb/X2VsfHM=
-Received: from mail-ot1-f69.google.com (mail-ot1-f69.google.com
- [209.85.210.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-158-W9pE3VMSMFmWgMnOfAaw_A-1; Tue, 30 Jun 2020 11:31:30 -0400
-X-MC-Unique: W9pE3VMSMFmWgMnOfAaw_A-1
-Received: by mail-ot1-f69.google.com with SMTP id l32so13473200otc.7
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 08:31:30 -0700 (PDT)
+        Tue, 30 Jun 2020 11:32:09 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE8E4C03E979;
+        Tue, 30 Jun 2020 08:32:08 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id t11so4714865pfq.11;
+        Tue, 30 Jun 2020 08:32:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:reply-to:content-transfer-encoding;
+        bh=yl8ZGVMnIZScPJ5u5Qoi3cLlP9EpCyr8JjM1uqQWie4=;
+        b=O0XFknHWvQNmRFJg5ant2MW2WXTj4bQqfR81LlhH4l7xWwMBiQBErRCBI0jGTmBgH9
+         hsblCmF2Gv49vZRccbIO+Pc/HyCfU9TOT8HQCJaIQOsdQ2eflYdcn3PvfDztu3Jo72P/
+         rcMrvtMlS0KCpWEGZ/QRC8n74FpV97Q0o6mr5z+jCR2vEltlL/e1hrTX9XtMXCZgM6x3
+         e6+8SkzjudCDleTr+tCInO4t5kiCn3Tv9QJ/fFBVxgig89WSN61XOyeg5naAtW0bXshx
+         sG4+r0gO8k97sAP2qoZWTRSEgwTHyNo/bSssSFzl9BLivcQJsSVzqWLD/t3vm7brqpow
+         i0KQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PBKI1wC0EuMeGlMbsqBq9OEOnaCFXkQPIi7EgKbzMjY=;
-        b=SwoMbHtk/5inVY3cRRoUDI1XaqHhhRJqg4VtvhN0JceCCwlGBbp9vRq9SJMHc16PgE
-         OKer/esROQRrOSOPu23wC9iXx3gVmT3daeYCFHXDZLkMwlGjk9g6XDcNyi53P6EwQcDJ
-         rdgKPBoUVaOYc5V4NJMSGLE2hSTF4OVqYgPp0NQu7Nq7F6JdsZVZ5dSRPQf7MnbirFno
-         UhdqCcA/kPVT/9o5boEbXZwoy63mNGzeqeq216cwEZMqNvfv192lfXJrOqkV+A/KYToE
-         JtWt6EDtcCm9y+mPnUiEcdocG0kGiYWD7C53b2pqbvVC+hwng1oNzjmdECb1t08CduC8
-         s70Q==
-X-Gm-Message-State: AOAM531jW+avyL1Q8i2TWQfePZjilstRtJM5+lZcL1KkjLM2KTXwOhz2
-        BAufmX5A7vznBRYkXli2ctY0yzhIb+t+a2n04Y6lvbZ84PCogbEjRFYxf+X2WqZUP9m2L7vT7FS
-        MinaqyCiE6kGSBwg2W6GcP6Be
-X-Received: by 2002:a9d:904:: with SMTP id 4mr18989714otp.339.1593531089416;
-        Tue, 30 Jun 2020 08:31:29 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxUIjP8aNkaGnNl54laVK9WUVYeVxAerVTjXDpA8fj551U6q8mWoUYLYsFhCJT6XWllk8jyZg==
-X-Received: by 2002:a9d:904:: with SMTP id 4mr18989675otp.339.1593531089054;
-        Tue, 30 Jun 2020 08:31:29 -0700 (PDT)
-Received: from localhost (c-67-165-232-89.hsd1.co.comcast.net. [67.165.232.89])
-        by smtp.gmail.com with ESMTPSA id y14sm767795ooq.24.2020.06.30.08.31.28
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:reply-to:content-transfer-encoding;
+        bh=yl8ZGVMnIZScPJ5u5Qoi3cLlP9EpCyr8JjM1uqQWie4=;
+        b=qIVWs1liu6tguAHXVCXOgie5OJh92lOUxYdHqQzkdpDiUixCUOXkClax1NZNpS0ZYz
+         HAHmytTdRCEwkZfEyipckVZt8pDJbeHwYSsN53k5lycYTrxxQRAe4Qm82Z1vDK9VE1KY
+         7VElrwmmlyEHejvnrRWQcoz7YjEKmfaHPIl0Ii9hieuWiCndVV0kUVFCIHIQyYzLFJbA
+         7VQm/AtVi7s9IxKpwcz05EqemgJlCUtQfA3Ccc8J2/mqHJ5Of6lIBrMh1AwihSTTaTgR
+         9x1hn1e0llcNmOGwQmKV60zYZf6VT1ao/+zU9yb5eq41i6gBi7xR6zADgD6SizQgSSel
+         ozpw==
+X-Gm-Message-State: AOAM531XGc81YxaScUJoBRZWRe3BYNkqZLSGJTQPOOkGZwbnk43Ds9t1
+        38PxG77I9cEKsUDAv87suyY=
+X-Google-Smtp-Source: ABdhPJwwHjRhOKw7PKKgb6S2A1KyT4BJi9gpg5hUCvoXzOLxn4zxaVuK6TEGJd0Lumq97aftyRDMKg==
+X-Received: by 2002:aa7:91d9:: with SMTP id z25mr5488703pfa.111.1593531128229;
+        Tue, 30 Jun 2020 08:32:08 -0700 (PDT)
+Received: from localhost.localdomain ([131.107.174.194])
+        by smtp.gmail.com with ESMTPSA id 140sm3067433pfz.154.2020.06.30.08.32.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 08:31:28 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 09:31:27 -0600
-From:   Al Stone <ahs3@redhat.com>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Len Brown <lenb@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Ira Weiny <ira.weiny@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        Bob Moore <robert.moore@intel.com>
-Subject: Re: [PATCH v4 2/2] ACPICA: Preserve memory opregion mappings
-Message-ID: <20200630153127.GP1237914@redhat.com>
-References: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com>
- <2788992.3K7huLjdjL@kreacher>
- <1666722.UopIai5n7p@kreacher>
- <1794490.F2OrUDcHQn@kreacher>
- <20200629205708.GK1237914@redhat.com>
- <CAJZ5v0hiAVfgWTLcP2N5PWLsqL7mpHbuL1_de79svYYhd3R57A@mail.gmail.com>
+        Tue, 30 Jun 2020 08:32:07 -0700 (PDT)
+From:   Andres Beltran <lkmlabelt@gmail.com>
+To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        wei.liu@kernel.org
+Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mikelley@microsoft.com, parri.andrea@gmail.com,
+        skarade@microsoft.com, Andres Beltran <lkmlabelt@gmail.com>
+Subject: [PATCH v3 1/3] Drivers: hv: vmbus: Add vmbus_requestor data structure for VMBus hardening
+Date:   Tue, 30 Jun 2020 11:31:58 -0400
+Message-Id: <20200630153200.1537105-2-lkmlabelt@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200630153200.1537105-1-lkmlabelt@gmail.com>
+References: <20200630153200.1537105-1-lkmlabelt@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0hiAVfgWTLcP2N5PWLsqL7mpHbuL1_de79svYYhd3R57A@mail.gmail.com>
-User-Agent: Mutt/1.14.0 (2020-05-02)
+Reply-To: t-mabelt@microsoft.com
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30 Jun 2020 13:44, Rafael J. Wysocki wrote:
-> On Mon, Jun 29, 2020 at 10:57 PM Al Stone <ahs3@redhat.com> wrote:
-> >
-> > On 29 Jun 2020 18:33, Rafael J. Wysocki wrote:
-> > > From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-> > >
-> > > The ACPICA's strategy with respect to the handling of memory mappings
-> > > associated with memory operation regions is to avoid mapping the
-> > > entire region at once which may be problematic at least in principle
-> > > (for example, it may lead to conflicts with overlapping mappings
-> > > having different attributes created by drivers).  It may also be
-> > > wasteful, because memory opregions on some systems take up vast
-> > > chunks of address space while the fields in those regions actually
-> > > accessed by AML are sparsely distributed.
-> > >
-> > > For this reason, a one-page "window" is mapped for a given opregion
-> > > on the first memory access through it and if that "window" does not
-> > > cover an address range accessed through that opregion subsequently,
-> > > it is unmapped and a new "window" is mapped to replace it.  Next,
-> > > if the new "window" is not sufficient to acess memory through the
-> > > opregion in question in the future, it will be replaced with yet
-> > > another "window" and so on.  That may lead to a suboptimal sequence
-> > > of memory mapping and unmapping operations, for example if two fields
-> > > in one opregion separated from each other by a sufficiently wide
-> > > chunk of unused address space are accessed in an alternating pattern.
-> > >
-> > > The situation may still be suboptimal if the deferred unmapping
-> > > introduced previously is supported by the OS layer.  For instance,
-> > > the alternating memory access pattern mentioned above may produce
-> > > a relatively long list of mappings to release with substantial
-> > > duplication among the entries in it, which could be avoided if
-> > > acpi_ex_system_memory_space_handler() did not release the mapping
-> > > used by it previously as soon as the current access was not covered
-> > > by it.
-> > >
-> > > In order to improve that, modify acpi_ex_system_memory_space_handler()
-> > > to preserve all of the memory mappings created by it until the memory
-> > > regions associated with them go away.
-> > >
-> > > Accordingly, update acpi_ev_system_memory_region_setup() to unmap all
-> > > memory associated with memory opregions that go away.
-> > >
-> > > Reported-by: Dan Williams <dan.j.williams@intel.com>
-> > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > ---
-> > >  drivers/acpi/acpica/evrgnini.c | 14 ++++----
-> > >  drivers/acpi/acpica/exregion.c | 65 ++++++++++++++++++++++++----------
-> > >  include/acpi/actypes.h         | 12 +++++--
-> > >  3 files changed, 64 insertions(+), 27 deletions(-)
-> > >
-> > > diff --git a/drivers/acpi/acpica/evrgnini.c b/drivers/acpi/acpica/evrgnini.c
-> > > index aefc0145e583..89be3ccdad53 100644
-> > > --- a/drivers/acpi/acpica/evrgnini.c
-> > > +++ b/drivers/acpi/acpica/evrgnini.c
-> > > @@ -38,6 +38,7 @@ acpi_ev_system_memory_region_setup(acpi_handle handle,
-> > >       union acpi_operand_object *region_desc =
-> > >           (union acpi_operand_object *)handle;
-> > >       struct acpi_mem_space_context *local_region_context;
-> > > +     struct acpi_mem_mapping *mm;
-> > >
-> > >       ACPI_FUNCTION_TRACE(ev_system_memory_region_setup);
-> > >
-> > > @@ -46,13 +47,14 @@ acpi_ev_system_memory_region_setup(acpi_handle handle,
-> > >                       local_region_context =
-> > >                           (struct acpi_mem_space_context *)*region_context;
-> > >
-> > > -                     /* Delete a cached mapping if present */
-> > > +                     /* Delete memory mappings if present */
-> > >
-> > > -                     if (local_region_context->mapped_length) {
-> > > -                             acpi_os_unmap_memory(local_region_context->
-> > > -                                                  mapped_logical_address,
-> > > -                                                  local_region_context->
-> > > -                                                  mapped_length);
-> > > +                     while (local_region_context->first_mm) {
-> > > +                             mm = local_region_context->first_mm;
-> > > +                             local_region_context->first_mm = mm->next_mm;
-> > > +                             acpi_os_unmap_memory(mm->logical_address,
-> > > +                                                  mm->length);
-> > > +                             ACPI_FREE(mm);
-> > >                       }
-> > >                       ACPI_FREE(local_region_context);
-> > >                       *region_context = NULL;
-> > > diff --git a/drivers/acpi/acpica/exregion.c b/drivers/acpi/acpica/exregion.c
-> > > index d15a66de26c0..fd68f2134804 100644
-> > > --- a/drivers/acpi/acpica/exregion.c
-> > > +++ b/drivers/acpi/acpica/exregion.c
-> > > @@ -41,6 +41,7 @@ acpi_ex_system_memory_space_handler(u32 function,
-> > >       acpi_status status = AE_OK;
-> > >       void *logical_addr_ptr = NULL;
-> > >       struct acpi_mem_space_context *mem_info = region_context;
-> > > +     struct acpi_mem_mapping *mm = mem_info->cur_mm;
-> > >       u32 length;
-> > >       acpi_size map_length;
-> >
-> > I think this needs to be:
-> >
-> >         acpi_size map_length = mem_info->length;
-> >
-> > since it now gets used in the ACPI_ERROR() call below.
-> 
-> No, it's better to print the length value in the message.
+Currently, VMbus drivers use pointers into guest memory as request IDs
+for interactions with Hyper-V. To be more robust in the face of errors
+or malicious behavior from a compromised Hyper-V, avoid exposing
+guest memory addresses to Hyper-V. Also avoid Hyper-V giving back a
+bad request ID that is then treated as the address of a guest data
+structure with no validation. Instead, encapsulate these memory
+addresses and provide small integers as request IDs.
 
-Yeah, that was the other option.
+Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
+---
+Changes in v3:
+	- Check that requestor has been initialized in
+	  vmbus_next_request_id() and vmbus_request_addr().
+Changes in v2:
+        - Get rid of "rqstor" variable in __vmbus_open().
 
-> >  I'm getting a "maybe used unitialized" error on compilation.
-> 
-> Thanks for reporting!
-> 
-> I've updated the commit in the acpica-osl branch with the fix.
+ drivers/hv/channel.c   | 154 +++++++++++++++++++++++++++++++++++++++++
+ include/linux/hyperv.h |  21 ++++++
+ 2 files changed, 175 insertions(+)
 
-Thanks, Rafael.
-
-Do you have a generic way of testing this?  I can see a way to do it
--- timing a call of a method in a dynamically loaded SSDT -- but if
-you had a test case laying around, I could continue to be lazy :).
-
+diff --git a/drivers/hv/channel.c b/drivers/hv/channel.c
+index 3ebda7707e46..e89a4a2e1b5e 100644
+--- a/drivers/hv/channel.c
++++ b/drivers/hv/channel.c
+@@ -112,6 +112,70 @@ int vmbus_alloc_ring(struct vmbus_channel *newchannel,
+ }
+ EXPORT_SYMBOL_GPL(vmbus_alloc_ring);
+ 
++/**
++ * request_arr_init - Allocates memory for the requestor array. Each slot
++ * keeps track of the next available slot in the array. Initially, each
++ * slot points to the next one (as in a Linked List). The last slot
++ * does not point to anything, so its value is U64_MAX by default.
++ * @size The size of the array
++ */
++static u64 *request_arr_init(u32 size)
++{
++	int i;
++	u64 *req_arr;
++
++	req_arr = kcalloc(size, sizeof(u64), GFP_KERNEL);
++	if (!req_arr)
++		return NULL;
++
++	for (i = 0; i < size - 1; i++)
++		req_arr[i] = i + 1;
++
++	/* Last slot (no more available slots) */
++	req_arr[i] = U64_MAX;
++
++	return req_arr;
++}
++
++/*
++ * vmbus_alloc_requestor - Initializes @rqstor's fields.
++ * Slot at index 0 is the first free slot.
++ * @size: Size of the requestor array
++ */
++static int vmbus_alloc_requestor(struct vmbus_requestor *rqstor, u32 size)
++{
++	u64 *rqst_arr;
++	unsigned long *bitmap;
++
++	rqst_arr = request_arr_init(size);
++	if (!rqst_arr)
++		return -ENOMEM;
++
++	bitmap = bitmap_zalloc(size, GFP_KERNEL);
++	if (!bitmap) {
++		kfree(rqst_arr);
++		return -ENOMEM;
++	}
++
++	rqstor->req_arr = rqst_arr;
++	rqstor->req_bitmap = bitmap;
++	rqstor->size = size;
++	rqstor->next_request_id = 0;
++	spin_lock_init(&rqstor->req_lock);
++
++	return 0;
++}
++
++/*
++ * vmbus_free_requestor - Frees memory allocated for @rqstor
++ * @rqstor: Pointer to the requestor struct
++ */
++static void vmbus_free_requestor(struct vmbus_requestor *rqstor)
++{
++	kfree(rqstor->req_arr);
++	bitmap_free(rqstor->req_bitmap);
++}
++
+ static int __vmbus_open(struct vmbus_channel *newchannel,
+ 		       void *userdata, u32 userdatalen,
+ 		       void (*onchannelcallback)(void *context), void *context)
+@@ -132,6 +196,12 @@ static int __vmbus_open(struct vmbus_channel *newchannel,
+ 	if (newchannel->state != CHANNEL_OPEN_STATE)
+ 		return -EINVAL;
+ 
++	/* Create and init requestor */
++	if (newchannel->rqstor_size) {
++		if (vmbus_alloc_requestor(&newchannel->requestor, newchannel->rqstor_size))
++			return -ENOMEM;
++	}
++
+ 	newchannel->state = CHANNEL_OPENING_STATE;
+ 	newchannel->onchannel_callback = onchannelcallback;
+ 	newchannel->channel_callback_context = context;
+@@ -228,6 +298,7 @@ static int __vmbus_open(struct vmbus_channel *newchannel,
+ error_clean_ring:
+ 	hv_ringbuffer_cleanup(&newchannel->outbound);
+ 	hv_ringbuffer_cleanup(&newchannel->inbound);
++	vmbus_free_requestor(&newchannel->requestor);
+ 	newchannel->state = CHANNEL_OPEN_STATE;
+ 	return err;
+ }
+@@ -703,6 +774,9 @@ static int vmbus_close_internal(struct vmbus_channel *channel)
+ 		channel->ringbuffer_gpadlhandle = 0;
+ 	}
+ 
++	if (!ret)
++		vmbus_free_requestor(&channel->requestor);
++
+ 	return ret;
+ }
+ 
+@@ -937,3 +1011,83 @@ int vmbus_recvpacket_raw(struct vmbus_channel *channel, void *buffer,
+ 				  buffer_actual_len, requestid, true);
+ }
+ EXPORT_SYMBOL_GPL(vmbus_recvpacket_raw);
++
++/*
++ * vmbus_next_request_id - Returns a new request id. It is also
++ * the index at which the guest memory address is stored.
++ * Uses a spin lock to avoid race conditions.
++ * @rqstor: Pointer to the requestor struct
++ * @rqst_add: Guest memory address to be stored in the array
++ */
++u64 vmbus_next_request_id(struct vmbus_requestor *rqstor, u64 rqst_addr)
++{
++	unsigned long flags;
++	u64 current_id;
++
++	/* Check rqstor has been initialized */
++	if (!rqstor->size)
++		return VMBUS_RQST_ERROR;
++
++	spin_lock_irqsave(&rqstor->req_lock, flags);
++	current_id = rqstor->next_request_id;
++
++	/* Requestor array is full */
++	if (current_id >= rqstor->size) {
++		current_id = VMBUS_RQST_ERROR;
++		goto exit;
++	}
++
++	rqstor->next_request_id = rqstor->req_arr[current_id];
++	rqstor->req_arr[current_id] = rqst_addr;
++
++	/* The already held spin lock provides atomicity */
++	bitmap_set(rqstor->req_bitmap, current_id, 1);
++
++exit:
++	spin_unlock_irqrestore(&rqstor->req_lock, flags);
++	return current_id;
++}
++EXPORT_SYMBOL_GPL(vmbus_next_request_id);
++
++/*
++ * vmbus_request_addr - Returns the memory address stored at @trans_id
++ * in @rqstor. Uses a spin lock to avoid race conditions.
++ * @rqstor: Pointer to the requestor struct
++ * @trans_id: Request id sent back from Hyper-V. Becomes the requestor's
++ * next request id.
++ */
++u64 vmbus_request_addr(struct vmbus_requestor *rqstor, u64 trans_id)
++{
++	unsigned long flags;
++	u64 req_addr;
++
++	/* Check rqstor has been initialized */
++	if (!rqstor->size)
++		return VMBUS_RQST_ERROR;
++
++	spin_lock_irqsave(&rqstor->req_lock, flags);
++
++	/* Invalid trans_id */
++	if (trans_id >= rqstor->size) {
++		req_addr = VMBUS_RQST_ERROR;
++		goto exit;
++	}
++
++	/* Invalid trans_id: empty slot */
++	if (!test_bit(trans_id, rqstor->req_bitmap)) {
++		req_addr = VMBUS_RQST_ERROR;
++		goto exit;
++	}
++
++	req_addr = rqstor->req_arr[trans_id];
++	rqstor->req_arr[trans_id] = rqstor->next_request_id;
++	rqstor->next_request_id = trans_id;
++
++	/* The already held spin lock provides atomicity */
++	bitmap_clear(rqstor->req_bitmap, trans_id, 1);
++
++exit:
++	spin_unlock_irqrestore(&rqstor->req_lock, flags);
++	return req_addr;
++}
++EXPORT_SYMBOL_GPL(vmbus_request_addr);
+diff --git a/include/linux/hyperv.h b/include/linux/hyperv.h
+index 38100e80360a..c509d20ab7db 100644
+--- a/include/linux/hyperv.h
++++ b/include/linux/hyperv.h
+@@ -716,6 +716,21 @@ enum vmbus_device_type {
+ 	HV_UNKNOWN,
+ };
+ 
++/*
++ * Provides request ids for VMBus. Encapsulates guest memory
++ * addresses and stores the next available slot in req_arr
++ * to generate new ids in constant time.
++ */
++struct vmbus_requestor {
++	u64 *req_arr;
++	unsigned long *req_bitmap; /* is a given slot available? */
++	u32 size;
++	u64 next_request_id;
++	spinlock_t req_lock; /* provides atomicity */
++};
++
++#define VMBUS_RQST_ERROR U64_MAX
++
+ struct vmbus_device {
+ 	u16  dev_type;
+ 	guid_t guid;
+@@ -940,8 +955,14 @@ struct vmbus_channel {
+ 	u32 fuzz_testing_interrupt_delay;
+ 	u32 fuzz_testing_message_delay;
+ 
++	/* request/transaction ids for VMBus */
++	struct vmbus_requestor requestor;
++	u32 rqstor_size;
+ };
+ 
++u64 vmbus_next_request_id(struct vmbus_requestor *rqstor, u64 rqst_addr);
++u64 vmbus_request_addr(struct vmbus_requestor *rqstor, u64 trans_id);
++
+ static inline bool is_hvsock_channel(const struct vmbus_channel *c)
+ {
+ 	return !!(c->offermsg.offer.chn_flags &
 -- 
-ciao,
-al
------------------------------------
-Al Stone
-Software Engineer
-Red Hat, Inc.
-ahs3@redhat.com
------------------------------------
+2.25.1
 
