@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12AE3C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:46:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54D07C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:46:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E2B0420672
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:46:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2670120672
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:46:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="rvJu64eY";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3GnXUT0N"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pvp96H4i";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bubS8uRO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729998AbgF3FqR (ORCPT
+        id S1730008AbgF3FqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 01:46:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57582 "EHLO
+        Tue, 30 Jun 2020 01:46:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57602 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729811AbgF3FqL (ORCPT
+        with ESMTP id S1729811AbgF3FqS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 01:46:11 -0400
+        Tue, 30 Jun 2020 01:46:18 -0400
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 545A4C061755;
-        Mon, 29 Jun 2020 22:46:11 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8AB5C061755;
+        Mon, 29 Jun 2020 22:46:17 -0700 (PDT)
 From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1593495970;
+        s=2020; t=1593495974;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=xAbB9oKLEGHYN+w+z0ndpRUVlVFavwl3/3bbk6nkTI4=;
-        b=rvJu64eY7bS9Ir5/N1LjQAVQ+/Gc9LNl7dorDdUgfJ6rNE76pkrh8yBaGyMhMHUJxHxQS3
-        PuFvFbljhuqZ6545iZTwIpoYPqMS6cDFZonmj8Y5Ksndbnx9FYokvglbh8tCN5jb9Mf5Rh
-        r0wHtUcZChUAcCLk+McJrQa8F1RhsIzyn4Tkulo1KFDtfIXd2ZlBgnjiAGf4bUbgIxuT3p
-        6IYvDV/ifvRjjVimphEALE6OpqHwqcIXo+j3aLJ+RwsDgi8VYCxNIuOP9WEttxOczzyOzI
-        9o8hhieha3cFaC+eJE7fcFddc9wvGhITO01/I0oG5QN51Ziwv5pNrCdzJqHKBw==
+        bh=vfYSUZS8JZq7HVay19OnCOeM8/mTHwEIgTvq+ENWzMI=;
+        b=pvp96H4iQqNONXW4zyWYZzvxi1jOlybOnNyCWu2riCBBYMbwf0ApWBSHmJuJUveUB6U9GX
+        UMTNbHIHYs6GON3rEQkV2mBUAX7/XOfvg8O3UZ2nRBB2dA5DAShNRylOZYLjv7U33WYT7J
+        F/BRVCPSOBzjGQkZIJS3XydlncswTLb0YKs9yHVO9Bf1VmJpi3W7kIHdvPYIY9hg07kePP
+        Jv0U/Z1gjOiyr8T+k82QWvh+eQeknAjDftyu9fM3wknrVv16BNikn16OmkHZrogeMhzBD5
+        GWksKGwAeNNFUwyggz9V1j1iyH7whyZSRBr3Nrv8SWRkgZe6ymnFmq7+RHG1tA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1593495970;
+        s=2020e; t=1593495974;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=xAbB9oKLEGHYN+w+z0ndpRUVlVFavwl3/3bbk6nkTI4=;
-        b=3GnXUT0NYEOA76vJPT7kAU6dbj67yPQUf13YdD2IP3Zlpm1MaZJHQahoCp1iP6wKoJGsW8
-        /pAHwcMnUFN2EVBA==
+        bh=vfYSUZS8JZq7HVay19OnCOeM8/mTHwEIgTvq+ENWzMI=;
+        b=bubS8uROJrXnhzhr5fH8WHY2+wNeGelizK4c4jDcoCej4j/YkrRrRRjw9edPLPSmPW7ytA
+        2ZtBSo6QOIsXANCw==
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
@@ -57,10 +57,10 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Steven Rostedt <rostedt@goodmis.org>,
         LKML <linux-kernel@vger.kernel.org>,
         "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Song Liu <song@kernel.org>, linux-raid@vger.kernel.org
-Subject: [PATCH v3 15/20] raid5: Use sequence counter with associated spinlock
-Date:   Tue, 30 Jun 2020 07:44:47 +0200
-Message-Id: <20200630054452.3675847-16-a.darwish@linutronix.de>
+        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
+Subject: [PATCH v3 16/20] iocost: Use sequence counter with associated spinlock
+Date:   Tue, 30 Jun 2020 07:44:48 +0200
+Message-Id: <20200630054452.3675847-17-a.darwish@linutronix.de>
 In-Reply-To: <20200630054452.3675847-1-a.darwish@linutronix.de>
 References: <20200519214547.352050-1-a.darwish@linutronix.de>
  <20200630054452.3675847-1-a.darwish@linutronix.de>
@@ -86,36 +86,39 @@ neither storage size nor runtime overhead.
 
 Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
 ---
- drivers/md/raid5.c | 2 +-
- drivers/md/raid5.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ block/blk-iocost.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/md/raid5.c b/drivers/md/raid5.c
-index ab8067f9ce8c..892aefe88fa7 100644
---- a/drivers/md/raid5.c
-+++ b/drivers/md/raid5.c
-@@ -6935,7 +6935,7 @@ static struct r5conf *setup_conf(struct mddev *mddev)
- 	} else
- 		goto abort;
- 	spin_lock_init(&conf->device_lock);
--	seqcount_init(&conf->gen_lock);
-+	seqcount_spinlock_init(&conf->gen_lock, &conf->device_lock);
- 	mutex_init(&conf->cache_size_mutex);
- 	init_waitqueue_head(&conf->wait_for_quiescent);
- 	init_waitqueue_head(&conf->wait_for_stripe);
-diff --git a/drivers/md/raid5.h b/drivers/md/raid5.h
-index f90e0704bed9..a2c9e9e9f5ac 100644
---- a/drivers/md/raid5.h
-+++ b/drivers/md/raid5.h
-@@ -589,7 +589,7 @@ struct r5conf {
- 	int			prev_chunk_sectors;
- 	int			prev_algo;
- 	short			generation; /* increments with every reshape */
--	seqcount_t		gen_lock;	/* lock against generation changes */
-+	seqcount_spinlock_t	gen_lock;	/* lock against generation changes */
- 	unsigned long		reshape_checkpoint; /* Time we last updated
- 						     * metadata */
- 	long long		min_offset_diff; /* minimum difference between
+diff --git a/block/blk-iocost.c b/block/blk-iocost.c
+index 8ac4aad66ebc..8e940c27c27c 100644
+--- a/block/blk-iocost.c
++++ b/block/blk-iocost.c
+@@ -406,7 +406,7 @@ struct ioc {
+ 	enum ioc_running		running;
+ 	atomic64_t			vtime_rate;
+ 
+-	seqcount_t			period_seqcount;
++	seqcount_spinlock_t		period_seqcount;
+ 	u32				period_at;	/* wallclock starttime */
+ 	u64				period_at_vtime; /* vtime starttime */
+ 
+@@ -873,7 +873,6 @@ static void ioc_now(struct ioc *ioc, struct ioc_now *now)
+ 
+ static void ioc_start_period(struct ioc *ioc, struct ioc_now *now)
+ {
+-	lockdep_assert_held(&ioc->lock);
+ 	WARN_ON_ONCE(ioc->running != IOC_RUNNING);
+ 
+ 	write_seqcount_begin(&ioc->period_seqcount);
+@@ -2001,7 +2000,7 @@ static int blk_iocost_init(struct request_queue *q)
+ 
+ 	ioc->running = IOC_IDLE;
+ 	atomic64_set(&ioc->vtime_rate, VTIME_PER_USEC);
+-	seqcount_init(&ioc->period_seqcount);
++	seqcount_spinlock_init(&ioc->period_seqcount, &ioc->lock);
+ 	ioc->period_at = ktime_to_us(ktime_get());
+ 	atomic64_set(&ioc->cur_period, 0);
+ 	atomic_set(&ioc->hweight_gen, 0);
 -- 
 2.20.1
 
