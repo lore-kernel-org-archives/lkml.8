@@ -2,93 +2,239 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C822C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:20:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9296C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:21:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E996F206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:20:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oI50TMe2"
+	by mail.kernel.org (Postfix) with ESMTP id BADB820781
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:21:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727980AbgF3AUW (ORCPT
+        id S1726978AbgF3AVv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 20:20:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35800 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726093AbgF3AUV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 20:20:21 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 043F7C061755;
-        Mon, 29 Jun 2020 17:20:20 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id l63so9059649pge.12;
-        Mon, 29 Jun 2020 17:20:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FWK3DfhYfO3UHL4cxXA6Y0Ld3ensf1xyhgg8G+yWtcI=;
-        b=oI50TMe2xBfOzc2M0pHo5fT0QTa2wegSrqG3zYGoEyAkDSI0e0QE3MM6rwT3oiC709
-         KrTrfPNNGZ5nITh7cbqTtW85whu6QeWHc3gX8l98IdxZQhOW6wzJUBsgNmf0J48kpl8L
-         tTj8OqyPkLrGUsQUgfISUR83GbUHSS0oFu5YR/fSjo+A4LXKB/2HHeVUiI/nULf1E96S
-         WWgsa3VDgw7Ko90vklLUbSaRp1QF8WBu1BRlNhwivnLNMKEAPNcDOUwO6jeG2HfnVcLP
-         0C3Ltb80596GA9SZ4GCLK6KqC7n7baElPDg3rbev7jwqZ4FhHF1EEB+0oo28YlL5LyEr
-         Ya1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FWK3DfhYfO3UHL4cxXA6Y0Ld3ensf1xyhgg8G+yWtcI=;
-        b=tEAGT99yZBCZHfS/I0EVowXfXZANQpurJeUBWzVxRt/+Iu/DhB9gJEo0KTUoZbMOOR
-         aUYn7MQKX9UvDHd4NNtA+ysFdKvSkoQKO0jSVGtpeMTbw3F20a7UhwSICBNyiqlmOhmM
-         DgNu/70tCKyFzc9hKOTlhJ5XEcRkPdE1/zg5xYLFcGOf8R8k1HwvAMOuM4fRtf2Kop3w
-         TVH7hOqVe6AH7wr4q6GADwr7OJDsu9CrX4fr3F1MroBoHx8BpQYl5rA8BTF0wvDxQ+eP
-         G+T1IvHBtEn4aRU+OdS9p0W820908ZyK9MwCqnSxG/GShgt6zPvJ0Uvxl6nbUn7eyTBW
-         xJDA==
-X-Gm-Message-State: AOAM531MCk2kuBrTMDNQ4sPjBU/SMXBAVlYVTXikeC/uM0Qb04ceU+mQ
-        njACRTlLuMLKWyuX1e8liEU=
-X-Google-Smtp-Source: ABdhPJyAivB5SKR3ucS3Ljurs/kgEQoxUcVTCRr2JfoIE5sQKZeOxCi0wuNgvi31rmjNjG3nBWmmoQ==
-X-Received: by 2002:a63:525a:: with SMTP id s26mr12250066pgl.155.1593476420411;
-        Mon, 29 Jun 2020 17:20:20 -0700 (PDT)
-Received: from Asurada-Nvidia (searspoint.nvidia.com. [216.228.112.21])
-        by smtp.gmail.com with ESMTPSA id f6sm715556pfe.174.2020.06.29.17.20.19
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Jun 2020 17:20:20 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 17:19:47 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Krishna Reddy <vdumpa@nvidia.com>
-Cc:     joro@8bytes.org, will@kernel.org, robin.murphy@arm.com,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-tegra@vger.kernel.org, treding@nvidia.com, yhsu@nvidia.com,
-        snikam@nvidia.com, praithatha@nvidia.com, talho@nvidia.com,
-        bbiswas@nvidia.com, mperttunen@nvidia.com, nicolinc@nvidia.com,
-        bhuntsman@nvidia.com
-Subject: Re: [PATCH v8 3/3] iommu/arm-smmu: Add global/context fault
- implementation hooks
-Message-ID: <20200630001947.GB7427@Asurada-Nvidia>
-References: <20200630001051.12350-1-vdumpa@nvidia.com>
- <20200630001051.12350-4-vdumpa@nvidia.com>
+        Mon, 29 Jun 2020 20:21:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36688 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726065AbgF3AVv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 20:21:51 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 50A93206A5;
+        Tue, 30 Jun 2020 00:21:48 +0000 (UTC)
+Date:   Mon, 29 Jun 2020 20:21:46 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Yordan Karadzhov <y.karadz@gmail.com>,
+        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Jason Behmer <jbehmer@google.com>,
+        Julia Lawall <julia.lawall@inria.fr>,
+        Clark Williams <williams@redhat.com>,
+        bristot <bristot@redhat.com>, Daniel Wagner <wagi@monom.org>,
+        Darren Hart <dvhart@vmware.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Suresh E. Warrier" <warrier@linux.vnet.ibm.com>,
+        Joel Fernandes <joel@joelfernandes.org>
+Subject: Re: [RFC][PATCH] ring-buffer: Have nested events still record
+ running time stamp
+Message-ID: <20200629202146.29520925@oasis.local.home>
+In-Reply-To: <79426976.13417.1593113702719.JavaMail.zimbra@efficios.com>
+References: <20200625094454.732790f7@oasis.local.home>
+        <1548518134.13177.1593107707149.JavaMail.zimbra@efficios.com>
+        <20200625143525.2f3a2902@oasis.local.home>
+        <79426976.13417.1593113702719.JavaMail.zimbra@efficios.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200630001051.12350-4-vdumpa@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 05:10:51PM -0700, Krishna Reddy wrote:
-> Add global/context fault hooks to allow NVIDIA SMMU implementation
-> handle faults across multiple SMMUs.
-> 
-> Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
+On Thu, 25 Jun 2020 15:35:02 -0400 (EDT)
+Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
 
-Reviewed-by: Nicolin Chen <nicoleotsuka@gmail.com>
+> >> So the reservation is not "just" an add instruction, it's actually an
+> >> xadd on x86. Is that really faster than a cmpxchg ?  
+> > 
+> > I believe the answer is still yes. But I can run some benchmarks to
+> > make sure.  
+> 
+> This would be interesting to see, because if xadd and cmpxchg have
+> similar overhead, then going for a cmpxchg-loop for the space
+> reservation could vastly decrease the overall complexity of this
+> timestamp+space reservation algorithm.
+
+So I tested this on three different machines to see how it compared. I
+applied this patch:
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index c2c0d25ea004..8a7d62375eb3 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -3161,7 +3161,19 @@ __rb_reserve_next(struct ring_buffer_per_cpu *cpu_buffer,
+ 
+  /*B*/	rb_time_set(&cpu_buffer->before_stamp, info->ts);
+ 
++#if 0
+  /*C*/	write = local_add_return(info->length, &tail_page->write);
++#else
++	{
++		unsigned long expect, result;
++
++		do {
++			expect = local_read(&tail_page->write);
++			write = expect + info->length;
++			result = local_cmpxchg(&tail_page->write, expect, write);
++		} while (expect != result);
++	}
++#endif
+ 
+ 	/* set write to only the index of the write */
+ 	write &= RB_WRITE_MASK;
+
+
+And tested before and after the results.
+
+To test, I used my fedora 31 kernel config, and enabled
+CONFIG_TRACEPOINT_BENCHMARK.
+
+When that trace event is enabled, a kthread is kicked off that runs in
+a loop (see kernel/trace/trace_benchmark.c) that basically does:
+
+	local_irq_disable();
+	start = trace_clock_local();
+	trace_benchmark_event();
+	end = trace_clock_local();
+	local_irq_enable();
+
+It takes the delta of end - start. As the first time through is cold
+cache it records it separately, and after that it creates a string that
+lists the delta of the last event recorded (as it can't make the delta
+before it records the end time stamp). The first time stamp (the cold
+cache one), the max, min, running average. It also records a running
+standard deviation. All numbers are in nanoseconds.
+
+The test was simply doing:
+
+ # trace-cmd record -e benchmark:benchmark_event -o trace-tp-bench-{inc|cmpxchg}.dat sleep 3
+ # trace-cmd report trace-tp-bench-{inc|cmpxchg}.dat | tail
+
+The reason for the tail, is to let the machine settle, as x86 has all
+sorts of crazy optimizations there's a lot of noise in the beginning.
+
+Anyway, here's the results of my three machines, and feel free to test
+this out yourself.
+
+Going from my fastest to slowest machines:
+
+Machine 1:
+
+ model name	: Intel(R) Core(TM) i7-3770 CPU @ 3.40GHz
+ (4 core / 8 logical)
+
+# trace-cmd report trace-tp-bench-inc.dat |tail 
+ event_benchmark-2072  [003]  2234.664661 benchmark_event:      last=92 first=2794 max=11707 min=81 avg=93 std=49 std^2=2469
+ event_benchmark-2072  [003]  2234.664662 benchmark_event:      last=92 first=2794 max=11707 min=81 avg=93 std=49 std^2=2469
+ event_benchmark-2072  [003]  2234.664662 benchmark_event:      last=88 first=2794 max=11707 min=81 avg=93 std=49 std^2=2469
+ event_benchmark-2072  [003]  2234.664663 benchmark_event:      last=85 first=2794 max=11707 min=81 avg=93 std=49 std^2=2469
+ event_benchmark-2072  [003]  2234.664663 benchmark_event:      last=89 first=2794 max=11707 min=81 avg=93 std=49 std^2=2469
+ event_benchmark-2072  [003]  2234.664664 benchmark_event:      last=86 first=2794 max=11707 min=81 avg=93 std=49 std^2=2469
+ event_benchmark-2072  [003]  2234.664664 benchmark_event:      last=88 first=2794 max=11707 min=81 avg=93 std=49 std^2=2469
+ event_benchmark-2072  [003]  2234.664665 benchmark_event:      last=171 first=2794 max=11707 min=81 avg=93 std=49 std^2=2469
+ event_benchmark-2072  [003]  2234.664665 benchmark_event:      last=88 first=2794 max=11707 min=81 avg=93 std=49 std^2=2469
+ event_benchmark-2072  [003]  2234.664666 benchmark_event:      last=87 first=2794 max=11707 min=81 avg=93 std=49 std^2=2469
+
+
+# trace-cmd report trace-tp-bench-cmpxchg.dat |tail 
+ event_benchmark-1924  [000]   499.515711 benchmark_event:      last=309 first=2955 max=10636 min=81 avg=93 std=73 std^2=5367
+ event_benchmark-1924  [000]   499.515711 benchmark_event:      last=96 first=2955 max=10636 min=81 avg=93 std=73 std^2=5367
+ event_benchmark-1924  [000]   499.515712 benchmark_event:      last=189 first=2955 max=10636 min=81 avg=93 std=73 std^2=5367
+ event_benchmark-1924  [000]   499.515713 benchmark_event:      last=134 first=2955 max=10636 min=81 avg=93 std=73 std^2=5367
+ event_benchmark-1924  [000]   499.515713 benchmark_event:      last=92 first=2955 max=10636 min=81 avg=93 std=73 std^2=5367
+ event_benchmark-1924  [000]   499.515714 benchmark_event:      last=93 first=2955 max=10636 min=81 avg=93 std=73 std^2=5367
+ event_benchmark-1924  [000]   499.515714 benchmark_event:      last=92 first=2955 max=10636 min=81 avg=93 std=73 std^2=5367
+ event_benchmark-1924  [000]   499.515715 benchmark_event:      last=89 first=2955 max=10636 min=81 avg=93 std=73 std^2=5367
+ event_benchmark-1924  [000]   499.515715 benchmark_event:      last=86 first=2955 max=10636 min=81 avg=93 std=73 std^2=5367
+ event_benchmark-1924  [000]   499.515716 benchmark_event:      last=107 first=2955 max=10636 min=81 avg=93 std=73 std^2=5367
+
+
+Machine 2:
+
+model name	: Intel(R) Core(TM) i3-4130 CPU @ 3.40GHz
+ (2 core / 4 logical)
+
+# trace-cmd report trace-tp-bench-inc.dat |tail 
+ event_benchmark-3179  [001]   606.466907: benchmark_event:      last=132 first=1463 max=1938 min=115 avg=140 std=36 std^2=1341
+ event_benchmark-3179  [001]   606.466907: benchmark_event:      last=133 first=1463 max=1938 min=115 avg=140 std=36 std^2=1341
+ event_benchmark-3179  [001]   606.466908: benchmark_event:      last=136 first=1463 max=1938 min=115 avg=140 std=36 std^2=1341
+ event_benchmark-3179  [001]   606.466909: benchmark_event:      last=135 first=1463 max=1938 min=115 avg=140 std=36 std^2=1341
+ event_benchmark-3179  [001]   606.466909: benchmark_event:      last=135 first=1463 max=1938 min=115 avg=140 std=36 std^2=1341
+ event_benchmark-3179  [001]   606.466910: benchmark_event:      last=133 first=1463 max=1938 min=115 avg=140 std=36 std^2=1341
+ event_benchmark-3179  [001]   606.466911: benchmark_event:      last=131 first=1463 max=1938 min=115 avg=140 std=36 std^2=1341
+ event_benchmark-3179  [001]   606.466912: benchmark_event:      last=132 first=1463 max=1938 min=115 avg=140 std=36 std^2=1341
+ event_benchmark-3179  [001]   606.466913: benchmark_event:      last=134 first=1463 max=1938 min=115 avg=140 std=36 std^2=1341
+ event_benchmark-3179  [001]   606.466913: benchmark_event:      last=223 first=1463 max=1938 min=115 avg=140 std=36 std^2=1341
+
+
+# trace-cmd report trace-tp-bench-cmpxchg.dat |tail 
+ event_benchmark-3169  [001]   477.024485: benchmark_event:      last=102 first=1820 max=12210 min=95 avg=266 std=75 std^2=5768
+ event_benchmark-3169  [001]   477.024486: benchmark_event:      last=103 first=1820 max=12210 min=95 avg=266 std=75 std^2=5768
+ event_benchmark-3169  [001]   477.024486: benchmark_event:      last=131 first=1820 max=12210 min=95 avg=266 std=75 std^2=5768
+ event_benchmark-3169  [001]   477.024487: benchmark_event:      last=104 first=1820 max=12210 min=95 avg=266 std=75 std^2=5768
+ event_benchmark-3169  [001]   477.024487: benchmark_event:      last=181 first=1820 max=12210 min=95 avg=266 std=75 std^2=5768
+ event_benchmark-3169  [001]   477.024488: benchmark_event:      last=195 first=1820 max=12210 min=95 avg=266 std=75 std^2=5768
+ event_benchmark-3169  [001]   477.024489: benchmark_event:      last=155 first=1820 max=12210 min=95 avg=266 std=75 std^2=5768
+ event_benchmark-3169  [001]   477.024489: benchmark_event:      last=102 first=1820 max=12210 min=95 avg=266 std=75 std^2=5768
+ event_benchmark-3169  [001]   477.024490: benchmark_event:      last=166 first=1820 max=12210 min=95 avg=266 std=75 std^2=5768
+ event_benchmark-3169  [001]   477.024490: benchmark_event:      last=256 first=1820 max=12210 min=95 avg=266 std=75 std^2=5768
+
+
+Machine 3:
+
+model name	: Intel(R) Core(TM)2 Quad  CPU   Q9450  @ 2.66GHz
+( 4 cores / no hyperthreading enabled )
+
+# trace-cmd report trace-tp-bench-inc.dat| tail
+ event_benchmark-2686  [000]   860.217674: benchmark_event:      last=195 first=2527 max=4571 min=186 avg=264 std=144 std^2=20943
+ event_benchmark-2686  [000]   860.217675: benchmark_event:      last=196 first=2527 max=4571 min=186 avg=264 std=144 std^2=20943
+ event_benchmark-2686  [000]   860.217676: benchmark_event:      last=196 first=2527 max=4571 min=186 avg=264 std=144 std^2=20943
+ event_benchmark-2686  [000]   860.217677: benchmark_event:      last=193 first=2527 max=4571 min=186 avg=264 std=144 std^2=20943
+ event_benchmark-2686  [000]   860.217679: benchmark_event:      last=195 first=2527 max=4571 min=186 avg=264 std=144 std^2=20943
+ event_benchmark-2686  [000]   860.217680: benchmark_event:      last=195 first=2527 max=4571 min=186 avg=264 std=144 std^2=20943
+ event_benchmark-2686  [000]   860.217681: benchmark_event:      last=195 first=2527 max=4571 min=186 avg=264 std=144 std^2=20943
+ event_benchmark-2686  [000]   860.217682: benchmark_event:      last=193 first=2527 max=4571 min=186 avg=264 std=144 std^2=20943
+ event_benchmark-2686  [000]   860.217683: benchmark_event:      last=196 first=2527 max=4571 min=186 avg=264 std=144 std^2=20943
+ event_benchmark-2686  [000]   860.217684: benchmark_event:      last=195 first=2527 max=4571 min=186 avg=264 std=144 std^2=20943
+
+
+# trace-cmd report trace-tp-bench-cmpxchg.dat| tail
+ event_benchmark-2393  [003]   380.342603: benchmark_event:      last=199 first=2707 max=3215 min=189 avg=297 std=163 std^2=26612
+ event_benchmark-2393  [003]   380.342604: benchmark_event:      last=196 first=2707 max=3215 min=189 avg=297 std=163 std^2=26612
+ event_benchmark-2393  [003]   380.342606: benchmark_event:      last=201 first=2707 max=3215 min=189 avg=297 std=163 std^2=26612
+ event_benchmark-2393  [003]   380.342607: benchmark_event:      last=195 first=2707 max=3215 min=189 avg=297 std=163 std^2=26612
+ event_benchmark-2393  [003]   380.342608: benchmark_event:      last=195 first=2707 max=3215 min=189 avg=297 std=163 std^2=26612
+ event_benchmark-2393  [003]   380.342609: benchmark_event:      last=198 first=2707 max=3215 min=189 avg=297 std=163 std^2=26612
+ event_benchmark-2393  [003]   380.342610: benchmark_event:      last=199 first=2707 max=3215 min=189 avg=297 std=163 std^2=26612
+ event_benchmark-2393  [003]   380.342611: benchmark_event:      last=196 first=2707 max=3215 min=189 avg=297 std=163 std^2=26612
+ event_benchmark-2393  [003]   380.342613: benchmark_event:      last=196 first=2707 max=3215 min=189 avg=297 std=163 std^2=26612
+ event_benchmark-2393  [003]   380.342614: benchmark_event:      last=199 first=2707 max=3215 min=189 avg=297 std=163 std^2=26612
+
+
+Not that big of a difference, but there is a difference. And the
+standard deviation appears to be better, which would make sense as an
+local_add_return() needs no repeat on collision.
+
+-- Steve
