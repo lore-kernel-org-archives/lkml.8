@@ -2,100 +2,151 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9DD4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:05:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6459EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 72FB12073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:05:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 436642073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:07:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v3MS5Ulp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BhR7jMFg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730615AbgF3HF5 (ORCPT
+        id S1730621AbgF3HHe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 03:05:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41622 "EHLO
+        Tue, 30 Jun 2020 03:07:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730386AbgF3HF5 (ORCPT
+        with ESMTP id S1730386AbgF3HHd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 03:05:57 -0400
-Received: from mail-qt1-x849.google.com (mail-qt1-x849.google.com [IPv6:2607:f8b0:4864:20::849])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CADF2C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 00:05:56 -0700 (PDT)
-Received: by mail-qt1-x849.google.com with SMTP id 94so13508838qtb.21
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 00:05:56 -0700 (PDT)
+        Tue, 30 Jun 2020 03:07:33 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FB0DC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 00:07:31 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id f18so10910550wrs.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 00:07:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=hQbCC2Qtr4ZiCu8Gyf8ZErDlr2Im7SfT6dGGEw7uc9s=;
-        b=v3MS5UlpyyIOGIgiRkyrMu89BT/RmNLmfvCiTy3zQfQL5chxlg4UNWuuPqWEdHsVkP
-         h+MFK3DHpk2T0r7qjo/Y8tef+6qHC3Zrz3maD/Ls2G/URaqS0e65WoGof7TkOTZpouyY
-         HGc5oey1D1jZTZ8Z7Bfmw7wBPdPdrLdbq5JmCNIim1n7BFDBG7wcLl9JHtpS+Xv43SRT
-         WP1xr3TkS3H3hdQdmzNdarusxOd/r4VUcGckXxvYJ1PeZ2bAa+rLniX36Yu9kg2R1pEO
-         qw0q+roZW3oKRI4UvWTNunmMojxDVwo9vU70LYaVgPd6OfsDl8TBAYj3mCjUeOmFafxR
-         wiMw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=cbt8RXvND2R7NfXRVkB9C3T19Zq+4hqCDYLNIwxNyiY=;
+        b=BhR7jMFgZlw5cQh00kFtL2pJSCn1hWja/Led3VfEYPsjIxBljrb+B4/CBOiQ5nnu9y
+         /znBl9lg3qENbK4iLftHtGynyuEGD/9p0+RzwEAdIG7YVwlNNqhwnSOch0u9LYPSWl+i
+         RnSks5rfX9g/xboxbo3oh2jy1jJPx9KioIBDiN4v6b7uKYm4T3FD86slPHd2xwNn6p89
+         WSFO2Acw61/widLlMELCMPCZljptKR8cZkQv1yGtMDo9tyHAsnPopvfNh3oYWY7lmlWV
+         qsQXXaa8SpcStFqpisCkb1JYs5vkb5X8dLe3xJ0X6+3n2ibWq+xQ7NhbiEikA40AKaZq
+         j05g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=hQbCC2Qtr4ZiCu8Gyf8ZErDlr2Im7SfT6dGGEw7uc9s=;
-        b=Y6xomnolkPVsYc9hrzf9ySq5h/b52K0ipttXLkdjlI1PaU7uo7JD+FJd8R+vTeGijp
-         L8Jg8S1umX/WGFd7kUTCoz3DoSpkSfZVhAX5mi+YcsVRPB1Q9Y0P3aTKfgrf3MzfbsLa
-         pDcjW7dqxuiB8pG4ujfrf6GsIkLpccC81/URzvzB2wjXsZI1ZE4z8ygbU1Ju+TrwXTvJ
-         45C541HUvNCTqK3YyhV/iwrmZ9MUPMWOofL1zmCfJFPnK8CscoJwTchQT1/9DmaPCzS7
-         c2tNrUzhCN8CTUwcs4LiAYAkP7gJQcrAhkN1k5uf552vJuaoXDSeluOMdDz7RwYOkywm
-         H0Fg==
-X-Gm-Message-State: AOAM5318O/pPbYAIo0a8kdGvbel3LByoM9Am7zrmFCh7BsgJvwb/JFUx
-        aH6xZxzhq7zdA3osPcu857fZ0F00SqK+og==
-X-Google-Smtp-Source: ABdhPJwN7uykbB/bDW1h89wzKPqw2CED5tJDZtdxDVSbRv8kD4qujFvyuDzeIzBDwuH35ErSNiRk9MyWZPBwbg==
-X-Received: by 2002:ad4:5042:: with SMTP id m2mr8029298qvq.225.1593500755983;
- Tue, 30 Jun 2020 00:05:55 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 00:05:52 -0700
-Message-Id: <20200630070552.1110864-1-davidgow@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-Subject: [PATCH] iio: adc: Specify IOMEM dependency for adi-axi-adc driver
-From:   David Gow <davidgow@google.com>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        David Gow <davidgow@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=cbt8RXvND2R7NfXRVkB9C3T19Zq+4hqCDYLNIwxNyiY=;
+        b=Z2kruK2GpEl4xF/mosxcntjZjHKH0I0wLt+wjUcebO2nhxMMVCKVBei3G9GpXoDFJ8
+         nHq3HR77KuyueGyp9QTEayAcBCZ2AgT/Lvh+dN5rU0QgXJ2OP3HhAcBhhYPSLYLIWI4X
+         l5Mmy/PfSeVjwcKtOBlaRZ8GfF3Xz7O0tMT1GaUCXSpA30qjqiqqZXmqMru2rVcSldux
+         vYcYGpUaLoYTP80qiVkaxKPE4oqhbUqsmZZ0Lmjb7tpKajt0iv/DunNBZPVN5DlGiZrS
+         GWJsCYZoCFVkchinff+sHPygFJGJO+WNWpvjceuvWCKsDvsr3jnhHNVfHE/ga3o6JCAe
+         fWXQ==
+X-Gm-Message-State: AOAM5324Trwg8zca825k6X73huHQ1E03UY2r1/gqwNq4w5v+HZnsVU+0
+        gsZ3PWun6e5tl3LzSgiSKSUPxg==
+X-Google-Smtp-Source: ABdhPJyIxIvJd4Ymeeq0IQ887XAPkISAZdn0OrmMLkuxYxQP44rhKLPtXjZS5XRJcNb/i1cecRL42g==
+X-Received: by 2002:adf:a396:: with SMTP id l22mr20309972wrb.24.1593500850292;
+        Tue, 30 Jun 2020 00:07:30 -0700 (PDT)
+Received: from dell ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id e8sm2551614wrp.26.2020.06.30.00.07.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 00:07:29 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 08:07:27 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org
+Subject: Re: [PATCH 1/1] crypto: ux500: hash: Add namespacing to hash_init()
+Message-ID: <20200630070727.GD1179328@dell>
+References: <20200629123003.1014387-1-lee.jones@linaro.org>
+ <20200630041029.GA20892@gondor.apana.org.au>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200630041029.GA20892@gondor.apana.org.au>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Analog Devices AXI ADC driver uses the devm_ioremap_resource
-function, but does not specify a dependency on IOMEM in Kconfig. This
-causes a build failure on architectures without IOMEM, for example, UML
-(notably with make allyesconfig).
+On Tue, 30 Jun 2020, Herbert Xu wrote:
 
-Fix this by making CONFIG_ADI_AXI_ADC depend on CONFIG_IOMEM.
+> On Mon, Jun 29, 2020 at 01:30:03PM +0100, Lee Jones wrote:
+> > A recent change to the Regulator consumer API (which this driver
+> > utilises) add prototypes for the some suspend functions.  These
+> > functions require including header file include/linux/suspend.h.
+> > 
+> > The following tree of includes affecting this driver will be
+> > present:
+> > 
+> >    In file included from include/linux/elevator.h:6,
+> >                     from include/linux/blkdev.h:288,
+> >                     from include/linux/blk-cgroup.h:23,
+> >                     from include/linux/writeback.h:14,
+> >                     from include/linux/memcontrol.h:22,
+> >                     from include/linux/swap.h:9,
+> >                     from include/linux/suspend.h:5,
+> >                     from include/linux/regulator/consumer.h:35,
+> >                     from drivers/crypto/ux500/hash/hash_core.c:28:
+> > 
+> > include/linux/elevator.h pulls in include/linux/hashtable.h which
+> > contains its own version of hash_init().  This confuses the build
+> > system and results in the following error (amongst others):
+> > 
+> >  drivers/crypto/ux500/hash/hash_core.c:1362:19: error: passing argument 1 of '__hash_init' from incompatible pointer type [-Werror=incompatible-pointer-types]
+> >  1362 |  return hash_init(req);
+> > 
+> > Fix this by namespacing the local hash_init() such that the
+> > source of confusion is removed.
+> > 
+> > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> > Cc: David S. Miller <davem@davemloft.net>
+> > Cc: linux-crypto@vger.kernel.org
+> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > ---
+> > 
+> > Ideally this should go into v5.8's -rcs else it runs the risk of
+> > breaking when Linus pulls everything in for v5.9-rc1.
 
-Signed-off-by: David Gow <davidgow@google.com>
----
- drivers/iio/adc/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+[...]
 
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index ff3569635ce0..f5009b61b80c 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -263,6 +263,7 @@ config AD9467
- 
- config ADI_AXI_ADC
- 	tristate "Analog Devices Generic AXI ADC IP core driver"
-+	depends on IOMEM
- 	select IIO_BUFFER
- 	select IIO_BUFFER_HW_CONSUMER
- 	select IIO_BUFFER_DMAENGINE
+> I also dislike pulling in the kitchen sink when all you need in
+> consumer.h is the definition of suspend_state_t.  A better solution
+> would be to move the definition of suspend_state_t into linux/types.h
+> and including that instead of suspend.h in consumer.h.
+
+IMHO, including (whole) headers into source/header files is the norm.
+Even if only a small portion is actually referenced.  Very seldom do
+consumers of an API use more than a fraction of what is available.
+Whether it's a couple of function calls, a struct or a type.
+
+Pulling headers apart and placing items in more convenient places
+i.e. into headers which are more commonly included, messes with the
+compartmentalisation of subsystems and sounds like more of a hack than
+simply saying "to enable suspend functions we need to reference the
+suspend API" like we are here.
+
+> I have no objections to this patch.  However, I'd rather put
+> it on a topic branch which you could pull rather than pushing
+> it into 5.8 straight away.
+
+An immutable branch sounds like a sensible solution.  Thanks.
+
 -- 
-2.27.0.212.ge8ba1cc988-goog
-
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
