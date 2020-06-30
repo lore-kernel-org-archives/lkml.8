@@ -2,168 +2,120 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5118FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:12:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27438C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:13:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 350F52073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:12:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AF942073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:13:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730781AbgF3HMH (ORCPT
+        id S1730783AbgF3HNx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 03:12:07 -0400
-Received: from mailout2n.rrzn.uni-hannover.de ([130.75.2.113]:41044 "EHLO
-        mailout2n.rrzn.uni-hannover.de" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730637AbgF3HMH (ORCPT
+        Tue, 30 Jun 2020 03:13:53 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59110 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730635AbgF3HNx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 03:12:07 -0400
-Received: from ytterbium.maphy.uni-hannover.de (ytterbium.maphy.uni-hannover.de [130.75.75.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailout2n.rrzn.uni-hannover.de (Postfix) with ESMTPSA id B92E61F3C4;
-        Tue, 30 Jun 2020 09:12:04 +0200 (CEST)
-Received: by ytterbium.maphy.uni-hannover.de (sSMTP sendmail emulation); Tue, 30 Jun 2020 09:12:04 +0200
-Date:   Tue, 30 Jun 2020 09:12:04 +0200
-From:   Tammo Block <tammo.block@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>
-Subject: [PATCH v1 6/6] Documentation: Describe console mouse reporting
-Message-ID: <ae41a64c682a2af6c8c0fbaa8d94c7b63a6f2450.1593499846.git.tammo.block@gmail.com>
-References: <cover.1593499846.git.tammo.block@gmail.com>
+        Tue, 30 Jun 2020 03:13:53 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05U73tFe053725;
+        Tue, 30 Jun 2020 03:13:49 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31xkqkcubr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 Jun 2020 03:13:49 -0400
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05U6WrKr055742;
+        Tue, 30 Jun 2020 03:13:49 -0400
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31xkqkcubj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 Jun 2020 03:13:49 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05U7AdjX009630;
+        Tue, 30 Jun 2020 07:13:48 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma03wdc.us.ibm.com with ESMTP id 31wwr8e3mu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 Jun 2020 07:13:48 +0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05U7DlhG49021424
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Jun 2020 07:13:47 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B8E77C6055;
+        Tue, 30 Jun 2020 07:13:47 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 86DAFC605A;
+        Tue, 30 Jun 2020 07:13:47 +0000 (GMT)
+Received: from ltc.linux.ibm.com (unknown [9.16.170.189])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 30 Jun 2020 07:13:47 +0000 (GMT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1593499846.git.tammo.block@gmail.com>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 30 Jun 2020 09:13:47 +0200
+From:   haver <haver@linux.vnet.ibm.com>
+To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, arnd@arndb.de,
+        gregkh@linuxfoundation.org, Frank Haverkamp <haver@linux.ibm.com>
+Subject: Re: [PATCH 2/4] misc: genwqe: Constify struct pci_error_handlers
+In-Reply-To: <20200610224704.27082-3-rikard.falkeborn@gmail.com>
+References: <20200610224704.27082-1-rikard.falkeborn@gmail.com>
+ <20200610224704.27082-3-rikard.falkeborn@gmail.com>
+Message-ID: <c91aed2e8b1530c2f4334774af510814@linux.vnet.ibm.com>
+X-Sender: haver@linux.vnet.ibm.com
+User-Agent: Roundcube Webmail/1.0.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-06-30_01:2020-06-30,2020-06-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 bulkscore=0
+ mlxscore=0 adultscore=0 clxscore=1011 phishscore=0 priorityscore=1501
+ malwarescore=0 lowpriorityscore=0 suspectscore=0 cotscore=-2147483648
+ spamscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006300048
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds a description of the kernel interface(s) used for vt
-console mouse reporting and describes the protocols and bitmasks.
+On 2020-06-11 00:47, Rikard Falkeborn wrote:
+> genwqe_err_handler is never modified, so it can be made const to allow
+> the compiler to put it in read-only memory.
+> 
+> Before:
+>    text    data     bss     dec     hex filename
+>   20174    6104    2464   28742    7046 drivers/misc/genwqe/card_base.o
+> 
+> After:
+>    text    data     bss     dec     hex filename
+>   20270    6008    2464   28742    7046 drivers/misc/genwqe/card_base.o
+> 
+> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+> ---
+>  drivers/misc/genwqe/card_base.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/misc/genwqe/card_base.c 
+> b/drivers/misc/genwqe/card_base.c
+> index 1dc6c7c5cbce..9969c0003f15 100644
+> --- a/drivers/misc/genwqe/card_base.c
+> +++ b/drivers/misc/genwqe/card_base.c
+> @@ -1324,7 +1324,7 @@ static int genwqe_sriov_configure(struct pci_dev
+> *dev, int numvfs)
+>  	return 0;
+>  }
+> 
+> -static struct pci_error_handlers genwqe_err_handler = {
+> +static const struct pci_error_handlers genwqe_err_handler = {
+>  	.error_detected = genwqe_err_error_detected,
+>  	.mmio_enabled	= genwqe_err_result_none,
+>  	.slot_reset	= genwqe_err_slot_reset,
 
-Signed-off-by: Tammo Block <tammo.block@gmail.com>
----
- .../admin-guide/console-mouse-reporting.rst   | 92 +++++++++++++++++++
- Documentation/admin-guide/index.rst           |  1 +
- 2 files changed, 93 insertions(+)
- create mode 100644 Documentation/admin-guide/console-mouse-reporting.rst
+Good idea. Thanks for the contribution.
 
-diff --git a/Documentation/admin-guide/console-mouse-reporting.rst b/Documentation/admin-guide/console-mouse-reporting.rst
-new file mode 100644
-index 000000000000..11287cb233ba
---- /dev/null
-+++ b/Documentation/admin-guide/console-mouse-reporting.rst
-@@ -0,0 +1,92 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+=======================
-+Console Mouse Reporting
-+=======================
-+
-+A terminal may send escape sequences to enable applications to react to mouse
-+input. As the kernel does not know when to emit these events a mouse daemon
-+is needed to react to mouse movements and signal the kernel accordingly. The
-+kernel will then send an escape sequence to the application. This is called
-+mouse reporting and several types and protocols have been developed over time.
-+
-+See tiocl.h, the :manpage:`ioctl_console(2)` and :manpage:`console_codes(4)`
-+man pages and the xterm [1]_ or terminalguide [2]_ home pages for a detailed
-+list and description of the various protocols, their bit layout as well as
-+their limitations.
-+
-+Events and formats
-+++++++++++++++++++
-+
-+A linux console keeps state about two different aspects of mouse reporting,
-+the kind of **events** to be reported and the **format** to send to userspace.
-+
-+A mouse daemon can check which kind of mouse events a clients wants to be
-+informed about via the TIOCLINUX ioctl, using the TIOCL_GETMOUSEREPORTING
-+subcall. The values of the supported event classes (9, 1000, 1002, 1003) are
-+described in tiocl.h. Based on this information the daemon is responsible
-+for not sending data packages for unrequested events.
-+
-+A userspace client may request to be informed by the kernel about one of
-+the event classes and chose one of the data formats URXVT (1005), SRG
-+(1006) or X10/X11 (default) via console escape sequences. In general all
-+of them encode similar information, only the escape sequences differ.
-+
-+See the xterm [1]_ or terminalguide [2]_ home pages for all details.
-+
-+Reports from kernel to userspace client
-++++++++++++++++++++++++++++++++++++++++
-+
-+The requested events are sent by the kernel to userspace encoded in a
-+escape sequence, details depend on the chosen format. All of them use one
-+based pointer coordinates and a single byte to encode the button status.
-+
-+Short summary (we call this the SRG button format for the rest of this text):
-+
-+ - 1,2 : Buttons, lower bits (see notes below)
-+ - 3-5 : Modifier keys (Shift, Alt and Ctrl)
-+ - 6   : Mouse movement only, no button status change
-+ - 7-8 : Buttons, upper bits (for buttons 4-15)
-+
-+Reports send from daemon to kernel
-+++++++++++++++++++++++++++++++++++
-+
-+A report is send by a mouse daemon to the kernel via the TIOCLINUX ioctl,
-+using the TIOCL_SETSEL subcall. The coordinates are encoded zero based in
-+xs and ys, with 0,0 as upper left corner, but see note below.
-+The format used by the userspace mouse daemon for button encoding is almost
-+identical to the SRG button layout decribed above and is put into the sel_mode
-+of the tiocl_selection struct. All bits masked in TIOCL_SELBUTTONMASK are
-+unchanged compared to the SRG button format above, the remaining three are
-+changed the following way :
-+
-+- 3,4  : Unused, must be zero. The kernel knows modifier key state anyway.
-+- 5    : Always 1, identifies mouse report / TIOCL_SELMOUSEREPORT
-+
-+Notes
-++++++
-+
-+Button numbers are encoded like this:
-+
-+- 0-2  : Left, middle and right button
-+- 3    : No button pressed / Button release
-+- 4-15 : More buttons, e.g. 4 and 5 are scroll wheel
-+
-+Please note that button releases should only be reported for buttons 0-2.
-+
-+Also note that coordinates (xs,ys,xe,ye) are zero based for the TIOCL_SETSEL
-+syscall but one based for the escape sequences sent by the kernel, so the
-+kernel will increase all coordinates by one.
-+
-+Older kernels only used the lower 4 bits of sel_mode, effectively limiting
-+the protocol to 3 buttons and button click only. The meaning of the 4 bits
-+is equivalent to the SRG button layout. Note that newer kernel will ignore
-+the upper two bits (modifier keys).
-+
-+.. [1] https://invisible-island.net/xterm/ctlseqs/ctlseqs.html#h2-Mouse-Tracking
-+.. [2] https://terminalguide.namepad.de/mouse/
-+
-+
-+
-+
-+
-diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
-index 58c7f9fc2396..c535902f3851 100644
---- a/Documentation/admin-guide/index.rst
-+++ b/Documentation/admin-guide/index.rst
-@@ -71,6 +71,7 @@ configure specific aspects of kernel behavior to your liking.
-    cgroup-v2
-    cifs/index
-    clearing-warn-once
-+   console-mouse-reporting
-    cpu-load
-    cputopology
-    dell_rbu
--- 
-2.27.0
-
+Signed-off-by: Frank Haverkamp <haver@linux.ibm.com>
