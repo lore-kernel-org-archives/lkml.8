@@ -2,241 +2,122 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75987C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:34:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25ABDC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 49FA820672
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:34:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="raCbWFaC"
+	by mail.kernel.org (Postfix) with ESMTP id 09759206BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:34:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388983AbgF3Oe3 (ORCPT
+        id S2389002AbgF3Oe6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 10:34:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54436 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726576AbgF3Oe1 (ORCPT
+        Tue, 30 Jun 2020 10:34:58 -0400
+Received: from esa1.mentor.iphmx.com ([68.232.129.153]:52161 "EHLO
+        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728506AbgF3Oe5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 10:34:27 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C593C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 07:34:27 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id c21so11540541lfb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 07:34:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OPTfcG4gw86cqf+bXWQHwjUpVxHs9rAeEYQveC2K6mI=;
-        b=raCbWFaCuFz4Sv4IKRxwMOi1UoN4AaBakxHisHY4kRbxVJPgmZHmux4KQJiNdv8mZr
-         y0kvthOS2ycFUYlgUu1PnMMJElEa22KVSDvQu8kwT9mC0/PNiOKxOydniH2AeTK4VlWE
-         C+lTLxHRX204/iQzKGZL+zH1/i0hnvVTjmJY52GEFz5c6ZuPaVUC4F4hENPnwXD2ctyy
-         HNzKyT4FfwJqAGHTs4Xab9Li7TSPOHrP4W+QOMGS1Ra7a44eL8xrt7e9j0NNnsah26TK
-         1j/qJ3MnVVO+UWtoR001X7XUOh6ckEeFSP91/fCRWCCwuIaojNszspnw1L+j7TPzMEH3
-         Olkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OPTfcG4gw86cqf+bXWQHwjUpVxHs9rAeEYQveC2K6mI=;
-        b=X6oIQu6DMZEdnHtJeDUVpHnDS53ZDNGGYgUTMsXAV4YIXAjCYbHf+mLttn9X/vA4pY
-         eLfKItYKzeUvazo0sS4gby3yw/7B0wwvAwBnVPs8H05rn38lj9BrWyLekOpz6THdVxhg
-         G5kyUrNJ5Ll3d9SZ2DengOcYgRXFh0BQHRcdAcFAtb5Gms9U1LGtBngIFJTdi10OVTe+
-         xt6f0EOyYr/yol8dXwa12rrQhYc52b9/d9wZRVQ5C6PPeu4hX7AGfXZgIJABKiW49H87
-         wgiCnaKOGULhvPk0HzuRo5G79m9oEg4ODLoF4uL7al4j96htJSBU9Eco6GdYpnQa4yTL
-         Ymjw==
-X-Gm-Message-State: AOAM5333YOwddFqdS6ggpxeaJpJJ9vW6tjf5+yDnuVr/j4VTULhOrXgi
-        fJKTP8vHc7elo2cA9PLQxFvCbk0LL7JaZ9cGWPladw==
-X-Google-Smtp-Source: ABdhPJxEtQ7b02opM+OEEbWfolNyhOMBpHCPwD4P+ZAcfj6npZoypHyKE8ttqJgbJ7zIyfUazosjvRwtQzPrKeh6m6E=
-X-Received: by 2002:a19:be53:: with SMTP id o80mr1417943lff.33.1593527665209;
- Tue, 30 Jun 2020 07:34:25 -0700 (PDT)
+        Tue, 30 Jun 2020 10:34:57 -0400
+IronPort-SDR: 4I8/vFeNRXlhMlEpZcVV1IeyDlqRUjfqjysrXpI7YQ5XXyO9VWifYDX94ejNZgEMi3nlA2bOZP
+ tlzBO/U8sglH6xCY419aHZS7zFldDTB+xOsdr/Fa19ays6XxKwP4SVkndeyWwPB0CZoypsMNa5
+ 4WGeC/oxe4E0L3C42NIuet3yIBcoCS9AQUmDOFUs29aTGbjuVwtGf3AYBHuV7p34ZRKWfubGkv
+ pBvxG0xQfPO/Jiei0OjdekcDWhJw6DGo1hNp91P9PdBdz7T51e4qNZeYG1yOHe8gl8mqCFZEmL
+ eJM=
+X-IronPort-AV: E=Sophos;i="5.75,297,1589270400"; 
+   d="scan'208";a="52594895"
+Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
+  by esa1.mentor.iphmx.com with ESMTP; 30 Jun 2020 06:34:56 -0800
+IronPort-SDR: 32+6r2MiDOyHDFTHTPQkDXrsJFWUqG8DPXUk+FSjEtbVI5Qm35vjVue2739JLsK3TZLVdylCC7
+ 37cx5Trcu9fgccn2fKHR42Zqwkhk7fhx6pZxz1RJbxgzysoMwpCO2mxSn4j6n1/3yzmHKyjWKY
+ yz6yYuqYyhxxFXa0p6zMBUXX0caDPKEkPvkQPB77poZ7fFzqf1QPiTDzCc/R0oFn5VXb7EPp5B
+ JmBUu67oQqQGcT8skdzg9FweWDJGJ0lQMRZEpqThqK/9myWMowCzXDumWvKkhBbsOEYrqlG2kJ
+ xeE=
+Subject: Re: [PATCH v11 05/56] Input: atmel_mxt_ts - output status from T48
+ Noise Supression
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+CC:     <nick@shmanahar.org>, <jikos@kernel.org>,
+        <benjamin.tissoires@redhat.com>, <bsz@semihalf.com>,
+        <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>
+References: <20200508055656.96389-1-jiada_wang@mentor.com>
+ <20200508055656.96389-6-jiada_wang@mentor.com>
+ <20200511222347.GZ89269@dtor-ws>
+From:   "Wang, Jiada" <jiada_wang@mentor.com>
+Message-ID: <448a6d77-56bd-a45a-2ccf-dee93f9fc5e8@mentor.com>
+Date:   Tue, 30 Jun 2020 23:34:51 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200630004413.1423733-1-shakeelb@google.com> <20200630032353.GA26969@carbon.dhcp.thefacebook.com>
-In-Reply-To: <20200630032353.GA26969@carbon.dhcp.thefacebook.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Tue, 30 Jun 2020 07:34:13 -0700
-Message-ID: <CALvZod6BMBuJrw2SnaUR8gWUzoX1NYnTC0=XbMYM+B_F4O5sUQ@mail.gmail.com>
-Subject: Re: [PATCH] mm: memcontrol: account kernel stack per node
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200511222347.GZ89269@dtor-ws>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SVR-ORW-MBX-06.mgc.mentorg.com (147.34.90.206) To
+ svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 8:24 PM Roman Gushchin <guro@fb.com> wrote:
->
-> On Mon, Jun 29, 2020 at 05:44:13PM -0700, Shakeel Butt wrote:
-> > Currently the kernel stack is being accounted per-zone. There is no need
-> > to do that. In addition due to being per-zone, memcg has to keep a
-> > separate MEMCG_KERNEL_STACK_KB. Make the stat per-node and deprecate
-> > MEMCG_KERNEL_STACK_KB as memcg_stat_item is an extension of
-> > node_stat_item.
-> >
-> > Signed-off-by: Shakeel Butt <shakeelb@google.com>
-> > ---
-> >  drivers/base/node.c        |  4 ++--
-> >  fs/proc/meminfo.c          |  4 ++--
-> >  include/linux/memcontrol.h |  2 --
-> >  include/linux/mmzone.h     |  8 ++++----
-> >  kernel/fork.c              | 29 ++++++++++-------------------
-> >  kernel/scs.c               |  2 +-
-> >  mm/memcontrol.c            |  2 +-
-> >  mm/page_alloc.c            | 16 ++++++++--------
-> >  mm/vmstat.c                |  8 ++++----
-> >  9 files changed, 32 insertions(+), 43 deletions(-)
-> >
-> > diff --git a/drivers/base/node.c b/drivers/base/node.c
-> > index 0cf13e31603c..508b80f6329b 100644
-> > --- a/drivers/base/node.c
-> > +++ b/drivers/base/node.c
-> > @@ -440,9 +440,9 @@ static ssize_t node_read_meminfo(struct device *dev,
-> >                      nid, K(node_page_state(pgdat, NR_FILE_MAPPED)),
-> >                      nid, K(node_page_state(pgdat, NR_ANON_MAPPED)),
-> >                      nid, K(i.sharedram),
-> > -                    nid, sum_zone_node_page_state(nid, NR_KERNEL_STACK_KB),
-> > +                    nid, node_page_state(pgdat, NR_KERNEL_STACK_KB),
-> >  #ifdef CONFIG_SHADOW_CALL_STACK
-> > -                    nid, sum_zone_node_page_state(nid, NR_KERNEL_SCS_KB),
-> > +                    nid, node_page_state(pgdat, NR_KERNEL_SCS_KB),
-> >  #endif
-> >                      nid, K(sum_zone_node_page_state(nid, NR_PAGETABLE)),
-> >                      nid, 0UL,
-> > diff --git a/fs/proc/meminfo.c b/fs/proc/meminfo.c
-> > index f262bff3ca31..887a5532e449 100644
-> > --- a/fs/proc/meminfo.c
-> > +++ b/fs/proc/meminfo.c
-> > @@ -101,10 +101,10 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
-> >       show_val_kb(m, "SReclaimable:   ", sreclaimable);
-> >       show_val_kb(m, "SUnreclaim:     ", sunreclaim);
-> >       seq_printf(m, "KernelStack:    %8lu kB\n",
-> > -                global_zone_page_state(NR_KERNEL_STACK_KB));
-> > +                global_node_page_state(NR_KERNEL_STACK_KB));
-> >  #ifdef CONFIG_SHADOW_CALL_STACK
-> >       seq_printf(m, "ShadowCallStack:%8lu kB\n",
-> > -                global_zone_page_state(NR_KERNEL_SCS_KB));
-> > +                global_node_page_state(NR_KERNEL_SCS_KB));
-> >  #endif
-> >       show_val_kb(m, "PageTables:     ",
-> >                   global_zone_page_state(NR_PAGETABLE));
-> > diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-> > index ba1e42715ecf..a3ddb236898e 100644
-> > --- a/include/linux/memcontrol.h
-> > +++ b/include/linux/memcontrol.h
-> > @@ -33,8 +33,6 @@ enum memcg_stat_item {
-> >       MEMCG_SWAP = NR_VM_NODE_STAT_ITEMS,
-> >       MEMCG_SOCK,
-> >       MEMCG_PERCPU_B,
-> > -     /* XXX: why are these zone and not node counters? */
-> > -     MEMCG_KERNEL_STACK_KB,
-> >       MEMCG_NR_STAT,
-> >  };
-> >
-> > diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-> > index 8e859444927a..b79f73ce8b57 100644
-> > --- a/include/linux/mmzone.h
-> > +++ b/include/linux/mmzone.h
-> > @@ -153,10 +153,6 @@ enum zone_stat_item {
-> >       NR_ZONE_WRITE_PENDING,  /* Count of dirty, writeback and unstable pages */
-> >       NR_MLOCK,               /* mlock()ed pages found and moved off LRU */
-> >       NR_PAGETABLE,           /* used for pagetables */
-> > -     NR_KERNEL_STACK_KB,     /* measured in KiB */
-> > -#if IS_ENABLED(CONFIG_SHADOW_CALL_STACK)
-> > -     NR_KERNEL_SCS_KB,       /* measured in KiB */
-> > -#endif
-> >       /* Second 128 byte cacheline */
-> >       NR_BOUNCE,
-> >  #if IS_ENABLED(CONFIG_ZSMALLOC)
-> > @@ -201,6 +197,10 @@ enum node_stat_item {
-> >       NR_KERNEL_MISC_RECLAIMABLE,     /* reclaimable non-slab kernel pages */
-> >       NR_FOLL_PIN_ACQUIRED,   /* via: pin_user_page(), gup flag: FOLL_PIN */
-> >       NR_FOLL_PIN_RELEASED,   /* pages returned via unpin_user_page() */
-> > +     NR_KERNEL_STACK_KB,     /* measured in KiB */
-> > +#if IS_ENABLED(CONFIG_SHADOW_CALL_STACK)
-> > +     NR_KERNEL_SCS_KB,       /* measured in KiB */
-> > +#endif
-> >       NR_VM_NODE_STAT_ITEMS
-> >  };
-> >
-> > diff --git a/kernel/fork.c b/kernel/fork.c
-> > index 73fdfa9674b5..ee5393350ef7 100644
-> > --- a/kernel/fork.c
-> > +++ b/kernel/fork.c
-> > @@ -278,7 +278,7 @@ static inline void free_thread_stack(struct task_struct *tsk)
-> >
-> >               for (i = 0; i < THREAD_SIZE / PAGE_SIZE; i++) {
-> >                       mod_memcg_page_state(vm->pages[i],
-> > -                                          MEMCG_KERNEL_STACK_KB,
-> > +                                          NR_KERNEL_STACK_KB,
-> >                                            -(int)(PAGE_SIZE / 1024));
->
-> Hello, Shakeel!
->
-> Thank you for the cleanup, it makes total sense to me.
->
-> However I have some concerns: mod_memcg_page_state() does change only memcg's counters,
-> but not lruvec counters. So to make it per-node per-memcg (aka  lruvec)
-> we need to use mod_lruvec_state(), otherwise we won't have global per-node values.
->
-> >
-> >                       memcg_kmem_uncharge_page(vm->pages[i], 0);
-> > @@ -381,32 +381,23 @@ static void account_kernel_stack(struct task_struct *tsk, int account)
-> >  {
-> >       void *stack = task_stack_page(tsk);
-> >       struct vm_struct *vm = task_stack_vm_area(tsk);
-> > +     struct page *page;
-> >
-> >       BUILD_BUG_ON(IS_ENABLED(CONFIG_VMAP_STACK) && PAGE_SIZE % 1024 != 0);
-> >
-> >       if (vm) {
-> > -             int i;
-> > -
-> >               BUG_ON(vm->nr_pages != THREAD_SIZE / PAGE_SIZE);
-> > +             page = vm->pages[0];
-> >
-> > -             for (i = 0; i < THREAD_SIZE / PAGE_SIZE; i++) {
-> > -                     mod_zone_page_state(page_zone(vm->pages[i]),
-> > -                                         NR_KERNEL_STACK_KB,
-> > -                                         PAGE_SIZE / 1024 * account);
-> > -             }
-> >       } else {
-> > -             /*
-> > -              * All stack pages are in the same zone and belong to the
-> > -              * same memcg.
-> > -              */
-> > -             struct page *first_page = virt_to_page(stack);
-> > -
-> > -             mod_zone_page_state(page_zone(first_page), NR_KERNEL_STACK_KB,
-> > -                                 THREAD_SIZE / 1024 * account);
-> > -
-> > -             mod_memcg_obj_state(stack, MEMCG_KERNEL_STACK_KB,
-> > +             page = virt_to_page(stack);
-> > +             mod_memcg_obj_state(stack, NR_KERNEL_STACK_KB,
-> >                                   account * (THREAD_SIZE / 1024));
-> >       }
-> > +
-> > +     /* All stack pages are in the same node. */
-> > +     mod_node_page_state(page_pgdat(page), NR_KERNEL_STACK_KB,
-> > +                         THREAD_SIZE / 1024 * account);
-> >  }
->
-> And then we probably don't need a separate change for memcg- and per-node counters.
->
+Hello Dmitry
 
-Yes, I thought about combining memcg and per-node counters but got
-worried that the cached stacks for CONFIG_VMAP_STACK would not be
-accounted for in the per-node global counters but I see that we
-already don't account for them in both counters. I will further
-simplify these. Thanks for the suggestion.
+On 2020/05/12 7:23, Dmitry Torokhov wrote:
+> On Thu, May 07, 2020 at 10:56:05PM -0700, Jiada Wang wrote:
+>> From: Nick Dyer <nick.dyer@itdev.co.uk>
+>>
+>> This patch outputs status from T48 Noise Supression
+>>
+>> Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
+>> Acked-by: Benson Leung <bleung@chromium.org>
+>> Acked-by: Yufeng Shen <miletus@chromium.org>
+>> (cherry picked from ndyer/linux/for-upstream commit 2895a6ff150a49f27a02938f8d262be238b296d8)
+>> Signed-off-by: George G. Davis <george_davis@mentor.com>
+>> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+>> ---
+>>   drivers/input/touchscreen/atmel_mxt_ts.c | 25 ++++++++++++++++++++++++
+>>   1 file changed, 25 insertions(+)
+>>
+>> diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+>> index 7e6a66e3e1e0..a53985a7736f 100644
+>> --- a/drivers/input/touchscreen/atmel_mxt_ts.c
+>> +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+>> @@ -324,6 +324,7 @@ struct mxt_data {
+>>   	u16 T18_address;
+>>   	u8 T19_reportid;
+>>   	u16 T44_address;
+>> +	u8 T48_reportid;
+>>   	u8 T100_reportid_min;
+>>   	u8 T100_reportid_max;
+>>   
+>> @@ -978,6 +979,24 @@ static void mxt_proc_t100_message(struct mxt_data *data, u8 *message)
+>>   	data->update_input = true;
+>>   }
+>>   
+>> +static int mxt_proc_t48_messages(struct mxt_data *data, u8 *msg)
+>> +{
+>> +	struct device *dev = &data->client->dev;
+>> +	u8 status, state;
+>> +
+>> +	status = msg[1];
+>> +	state  = msg[4];
+>> +
+>> +	dev_dbg(dev, "T48 state %d status %02X %s%s%s%s%s\n", state, status,
+>> +		status & 0x01 ? "FREQCHG " : "",
+>> +		status & 0x02 ? "APXCHG " : "",
+>> +		status & 0x04 ? "ALGOERR " : "",
+>> +		status & 0x10 ? "STATCHG " : "",
+>> +		status & 0x20 ? "NLVLCHG " : "");
+> 
+> Should we define symbolic names for these bits, like you did for T42
+> in the next patch?
 
-Shakeel
+will replace with symbolic names in next version
+
+Thanks,
+Jiada
+> 
+> Thanks.
+> 
