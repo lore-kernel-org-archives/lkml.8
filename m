@@ -2,101 +2,199 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45808C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D843C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:15:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0BA7C206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 032B120702
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:15:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XOd0G8vh"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="gKHdRUe5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbgF3TNJ (ORCPT
+        id S1726714AbgF3TPg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 15:13:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40900 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726324AbgF3TNH (ORCPT
+        Tue, 30 Jun 2020 15:15:36 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:52892 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726217AbgF3TPg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 15:13:07 -0400
-Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5D3BC061755;
-        Tue, 30 Jun 2020 12:13:06 -0700 (PDT)
-Received: by mail-lf1-x141.google.com with SMTP id g2so12060037lfb.0;
-        Tue, 30 Jun 2020 12:13:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Qh5qpq0DRF5ItkAziSeZrTjhiLljM/TKCiqFCudwnKM=;
-        b=XOd0G8vhwKM7selbWtFimmDM/t7yIBdIbFHaIpaOZDjzlFp/okhd6dlzL/sbJGEbQX
-         pcAsfzq7TpGSA68FtpbIm5sxxeIin/i9ENVGMlnKvFiYwh69RUnFvt4qWuVG/My88Vy7
-         gtCLu7aUzXUEKTUcBSbxBJ4mg2fYWpRRXukG7mvtoL7NRog9XjT9XBS5dcJZ3Xs0Mr6W
-         4EGLzQ9CJ9PI0CAcePP6J7OMOfXMBWh5f1e2cBDXK/U959+zti4VXqIRRwfXGVb0wHcc
-         3+DJWEsAwwuJq8UOnEqbXMk0AHa+4XDV9TlIjeZLofvXlMsCfzOzaX57ZD+CbGjjorYn
-         xsHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Qh5qpq0DRF5ItkAziSeZrTjhiLljM/TKCiqFCudwnKM=;
-        b=ecFhUsPzaf5JI0U8iBZmtd+l5F6sXjV5U/Zd0FZGnvdLuxJWecMkv39RE1kzINFjDC
-         imqXE9Ku2ixDAMDG+gk1Hkc3BeSgb4Dxv1aQds9vAM8rK0kTFkEmosqHwtnxbrz1wCN1
-         FNaQ+ap16s6nv0Qno76npNcabIPMwoHRnKlxU5IjsFZXpKY6W1tkRnBenH8pxtWLf7PO
-         Di9Ln+EXTsgGFGkLR9JRZdBA+r0ZgdRdala4qFgDTV90jFHX7boJDOhtfQvL527Vgl+j
-         h58yDTJYmfWBwjDTK1oj05HWM6NGaNUw3M4nfRC4tVhnRt2kGdK1E9fkLp83EOd/4wME
-         X3Ag==
-X-Gm-Message-State: AOAM533au4Y+SJf9QwpYQlrG4KTuBHTaC76UV28r6q27VzG/TtGMz2EE
-        DGiIr7ogzaKjni21QyY1nkBQ8uYFDfIE7LbQxcoTaQ==
-X-Google-Smtp-Source: ABdhPJwQe6pLq/YzqmjnIc7IaWJPawPhkGrywWgSTur5Pcmb3rRRjEPqThtHf7kj9EHlaRsXb/uVLoOMP4jScwen3IY=
-X-Received: by 2002:ac2:46f0:: with SMTP id q16mr12862291lfo.51.1593544385174;
- Tue, 30 Jun 2020 12:13:05 -0700 (PDT)
+        Tue, 30 Jun 2020 15:15:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1593544533; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=zyzWH6/6MTK+rTxq8XDIprmsIZUC3mOvx5/gSWX5RU8=;
+        b=gKHdRUe5icVdTNy4SwD7Ti8ml9qLxB56EZX3c9BlcAZGFT1A0WA2UptnBHuIvikc8nsN8N
+        qtzWKUrU1a2gYB8NlYn0gGotbADHD3N6M5scnB0RXSysaepRpjN4bWig3mKo2ddOkJDwSy
+        HeD9n6CYSII4P6FpvlinY6Z+0YlajSM=
+Date:   Tue, 30 Jun 2020 21:15:21 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v3 1/2] dt-bindings: timer: Add Ingenic X1000 OST
+ bindings.
+To:     =?UTF-8?b?5ZGo55Cw5p2w?= <zhouyanjie@wanyeetech.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        daniel.lezcano@linaro.org, tglx@linutronix.de, robh+dt@kernel.org,
+        dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
+        rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
+        sernia.zhou@foxmail.com, zhenwenjin@gmail.com
+Message-Id: <LT6RCQ.V5ANBLLSA4OD3@crapouillou.net>
+In-Reply-To: <20200630171553.70670-2-zhouyanjie@wanyeetech.com>
+References: <20200630171553.70670-1-zhouyanjie@wanyeetech.com>
+        <20200630171553.70670-2-zhouyanjie@wanyeetech.com>
 MIME-Version: 1.0
-References: <20200629085911.1676554-1-masahiroy@kernel.org>
- <CAKwvOd=qe5KE1vdUYQmpsW2zmDbk5i-MgRujs9B7wqnAj+af0w@mail.gmail.com> <CAK7LNAR49jFZkEmBqpACE0V_-VyCXfFRcKe1Zq+cqO65QX1ozg@mail.gmail.com>
-In-Reply-To: <CAK7LNAR49jFZkEmBqpACE0V_-VyCXfFRcKe1Zq+cqO65QX1ozg@mail.gmail.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Tue, 30 Jun 2020 21:12:54 +0200
-Message-ID: <CANiq72nE+1F3yM+e9XzfphzOe3mb9DUcRCAtPuLMyFE4Rh38pg@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: make Clang build userprogs for target architecture
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 6:26 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> I can reproduce this in the following
-> simple test code:
->
->
-> ----------------->8----------------
-> #include <stdio.h>
->
-> int main(void)
-> {
->         ssize_t x = 1;
->
->         printf("%zd", x);
->
->         return 0;
-> }
-> --------------->8-------------------
+Hi Zhou,
 
-That is the old implicit int rule. Try including sys/types.h or
-compiling with a standard like -std=c99 for instance.
+Le mer. 1 juil. 2020 =C3=A0 1:15, =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie)=
+=20
+<zhouyanjie@wanyeetech.com> a =C3=A9crit :
+> Add the OST bindings for the X10000 SoC from Ingenic.
+>=20
+> Tested-by: =E5=91=A8=E6=AD=A3 (Zhou Zheng) <sernia.zhou@foxmail.com>
+> Signed-off-by: =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wany=
+eetech.com>
+> ---
+>=20
+> Notes:
+>     v1->v2:
+>     No change.
+>=20
+>     v2->v3:
+>     Fix wrong parameters in "clocks".
+>=20
+>  .../devicetree/bindings/timer/ingenic,ost.yaml     | 61=20
+> ++++++++++++++++++++++
+>  include/dt-bindings/clock/ingenic,ost.h            | 12 +++++
+
+Please name them ingenic,sysost.yaml and ingenic,sysost.h, to=20
+differenciate with the OST that is in the JZ SoCs.
+
+>  2 files changed, 73 insertions(+)
+>  create mode 100644=20
+> Documentation/devicetree/bindings/timer/ingenic,ost.yaml
+>  create mode 100644 include/dt-bindings/clock/ingenic,ost.h
+>=20
+> diff --git a/Documentation/devicetree/bindings/timer/ingenic,ost.yaml=20
+> b/Documentation/devicetree/bindings/timer/ingenic,ost.yaml
+> new file mode 100644
+> index 000000000000..459dd3d161c2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/ingenic,ost.yaml
+> @@ -0,0 +1,61 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/timer/ingenic,ost.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Bindings for SYSOST in Ingenic XBurst family SoCs
+> +
+> +maintainers:
+> +  - =E5=91=A8=E7=90=B0=E6=9D=B0 (Zhou Yanjie) <zhouyanjie@wanyeetech.com=
+>
+> +
+> +description:
+> +  The SYSOST in an Ingenic SoC provides one 64bit timer for=20
+> clocksource
+> +  and one or more than one 32bit timers for clockevent.
+
+"and one or more than one" -> "and one or more"
+
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +
+> +      - description: SYSOST in Ingenic XBurst family SoCs
+
+XBurst is the name of the CPU, not a SoC family, so you would just=20
+write 'Ingenic SoCs'. But just drop the description alltogether, it=20
+does not add anything valuable.
+
+> +        enum:
+> +          - ingenic,x1000-ost
+> +          - ingenic,x2000-ost
+
+You have "ingenic,x2000-ost" as a compatible string, but your driver=20
+(in patch [2/2]) only handles the first compatible string. Either they=20
+are different, in this case the driver should handle both, or they work=20
+the same, and in the case the "ingenic,x2000-ost" string should use=20
+"ingenic,x1000-ost" as a fallback string.
 
 Cheers,
-Miguel
+-Paul
+
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: ost
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +required:
+> +  - "#clock-cells"
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - interrupts
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/x1000-cgu.h>
+> +
+> +    ost: timer@12000000 {
+> +    		compatible =3D "ingenic,x1000-ost";
+> +    		reg =3D <0x12000000 0x3c>;
+> +
+> +    		#clock-cells =3D <1>;
+> +
+> +    		clocks =3D <&cgu X1000_CLK_OST>;
+> +    		clock-names =3D "ost";
+> +
+> +    		interrupt-parent =3D <&cpuintc>;
+> +    		interrupts =3D <3>;
+> +    	};
+> +...
+> diff --git a/include/dt-bindings/clock/ingenic,ost.h=20
+> b/include/dt-bindings/clock/ingenic,ost.h
+> new file mode 100644
+> index 000000000000..9ac88e90babf
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/ingenic,ost.h
+> @@ -0,0 +1,12 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * This header provides clock numbers for the ingenic,tcu DT binding.
+> + */
+> +
+> +#ifndef __DT_BINDINGS_CLOCK_INGENIC_OST_H__
+> +#define __DT_BINDINGS_CLOCK_INGENIC_OST_H__
+> +
+> +#define OST_CLK_PERCPU_TIMER	0
+> +#define OST_CLK_GLOBAL_TIMER	1
+> +
+> +#endif /* __DT_BINDINGS_CLOCK_INGENIC_OST_H__ */
+> --
+> 2.11.0
+>=20
+
+
