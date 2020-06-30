@@ -2,179 +2,270 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F15F5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1992EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CDE13206CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA8BA206CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:28:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="nzwt2UEd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729857AbgF3FZ5 (ORCPT
+        id S1729084AbgF3F2Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 01:25:57 -0400
-Received: from mga18.intel.com ([134.134.136.126]:14465 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727842AbgF3FZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 01:25:56 -0400
-IronPort-SDR: VvQLDTm5lQCG6pgCG2jodocLpGw3eKB7qJrKK66QtyL4bRrdb5SMIaaBLZU8HVkf/aDunXCzac
- V2OK6mgywjcQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="133593945"
-X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
-   d="scan'208";a="133593945"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 22:25:55 -0700
-IronPort-SDR: 6toO2+WEROaRpdLmlhBTocqmJ0ab/uPB8f7X4XolBo209QA8i/+4+pZ88sid9qJUCj8admSqnq
- +QR9c3/D2aeQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
-   d="scan'208";a="355671324"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga001.jf.intel.com with ESMTP; 29 Jun 2020 22:25:55 -0700
-Date:   Mon, 29 Jun 2020 22:25:55 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org
-Cc:     "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Subject: Re: [PATCH] x86/split_lock: Don't write MSR_TEST_CTRL on CPUs that
- aren't whitelisted
-Message-ID: <20200630052555.GR12312@linux.intel.com>
-References: <20200605192605.7439-1-sean.j.christopherson@intel.com>
+        Tue, 30 Jun 2020 01:28:24 -0400
+Received: from mail-eopbgr70044.outbound.protection.outlook.com ([40.107.7.44]:24452
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726015AbgF3F2X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 01:28:23 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Iz0zMau0dkqhDSxEoyzi65R0oEKKlXpx/TPiyXq9DQIIpqn1IXnhTqju0CB55jhAxkwKq3C+t+hG01RgdNuwiLRj75TGdqn9L9eDNBXaAumxrKuJSUbZda+Q3X8yArP5X9bgHTqLCqWufLhIirHUOKki1HuzXy3RdN9BGzyU4strp5hWaYZQEVax/FQ+cjB71iHF9K4svGmT3igBG3BPLdyoYaDkEDnO63O0Rya6LDqAwrA8O+Qw8gVzrWHDOaUXvdhxqgSeWC+JVV/IialT7AhqDbEB4DzqZffyFaGEJImadfS52fqP6y+H5DKFxItpFimIcjSRqjHh7bLhqfn9yw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lF6plXu65UdsuRH3ZRGToErneNpkGcq9PN+qbD4wdEA=;
+ b=eCARefYb8xzTmovRTwEauO9EPxgafl/wkyHdCnvHtdqEbero8NFMWeKwEUOQA3Zv89qYEuvdXjDoguOIo6YWvrgFPxRHnThCrYbZZs1vDbZAfCizLU1tLKNxO5P1a1BRW5lNQnECI3CRY+clzE9zTr22W5Bq0OSA5gjgFpC6MJiYEM42lOJ/a58kxHFVxVhb5rxYeiLuE63VXzQNTZj2e29MQ0UK5hLpRBfA+WTXnz/HSmeYziGvpvI4bHIuzE/8BFfe/R1jWxVuj9B1XVzY8FPDgvMRTbtZuxYqBRXATYufMnX2xu3aSEm4fVurov7ukSTkNRBlP7WEoYpfr6b99Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lF6plXu65UdsuRH3ZRGToErneNpkGcq9PN+qbD4wdEA=;
+ b=nzwt2UEd85UW6WVikjX8ujDtzHD1fOlf847Jae7O3q6M9pTaHmmod461dBg77u+ZyurPvH5saPghbOCvy4xjiVQ+aUyzHqqgKJdKs0DhFc7KmS+nqh36tDErQsHtpLrrZ7/JkGUNxpWasQJfBFqdrU5oCHbmPNKX8Fr9cVdekpc=
+Received: from DBBPR04MB6090.eurprd04.prod.outlook.com (2603:10a6:10:c4::22)
+ by DB6PR04MB3032.eurprd04.prod.outlook.com (2603:10a6:6:10::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.26; Tue, 30 Jun
+ 2020 05:28:16 +0000
+Received: from DBBPR04MB6090.eurprd04.prod.outlook.com
+ ([fe80::c11b:3254:dd7b:66d]) by DBBPR04MB6090.eurprd04.prod.outlook.com
+ ([fe80::c11b:3254:dd7b:66d%7]) with mapi id 15.20.3131.028; Tue, 30 Jun 2020
+ 05:28:16 +0000
+From:   Andy Tang <andy.tang@nxp.com>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+CC:     Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        lakml <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] Re: [PATCH 1/2] arm64: dts: ls1088a: add more thermal zone
+ support
+Thread-Topic: [EXT] Re: [PATCH 1/2] arm64: dts: ls1088a: add more thermal zone
+ support
+Thread-Index: AQHWTo44S8AorskBBEKeL2bS3reQjqjwnPGAgAAC6hA=
+Date:   Tue, 30 Jun 2020 05:28:16 +0000
+Message-ID: <DBBPR04MB609085CD69E4CCBDD49CCF66F36F0@DBBPR04MB6090.eurprd04.prod.outlook.com>
+References: <20200630032014.22956-1-andy.tang@nxp.com>
+ <CAHLCerO3B4Z67KP8VaF957Jkid21gLvzhS49gNeqUC+6muPkjA@mail.gmail.com>
+In-Reply-To: <CAHLCerO3B4Z67KP8VaF957Jkid21gLvzhS49gNeqUC+6muPkjA@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: linaro.org; dkim=none (message not signed)
+ header.d=none;linaro.org; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [92.121.68.129]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 4671f3c2-0890-4e61-516e-08d81cb6648b
+x-ms-traffictypediagnostic: DB6PR04MB3032:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DB6PR04MB30321A711D9F683EA1643762F36F0@DB6PR04MB3032.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4714;
+x-forefront-prvs: 0450A714CB
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +xaIAgirmH60gQVwBjqhFSxsqVg+KIaxt4B/AO0ZaRbSfx2NPMhkY+Ym9GwWkgGDKBaGy2RiJgOhthHt2Lvp8oMXzo2ZP1E2qaOLFBDZ3GpkNQ/cNSRiICVYsRHNHU3ahGFEpWZdnj5jrGbkuNd9IZ7SLTxXqI3J7IrF98B1+lpnlN3uJNKI1hEEPrUrJ0JakDUOQ8ZwwwkX+lNh0BTzemo06peLjJ9nyM4cW6uqdDOX6CED1xL6Fu0mX7qRaz4IhYET/6iHT9qqAwLGqUtnF99C19K4wpC0ncQwup3MjP2Mx0MvtVwyPi/P0iCHlSZ7WQyvXYwXIuBhrWKcQvv/3w==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DBBPR04MB6090.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(136003)(39860400002)(396003)(346002)(376002)(54906003)(64756008)(9686003)(76116006)(7696005)(55016002)(8676002)(2906002)(86362001)(83380400001)(66446008)(186003)(6916009)(26005)(52536014)(4326008)(66556008)(33656002)(44832011)(5660300002)(316002)(8936002)(66946007)(6506007)(478600001)(53546011)(71200400001)(66476007);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: 8NbHHRRV1Bs+UJwRlmbi11cUKny7WfXJNoVvGoqtOPvTTjWTFjZnRBqQkZY9yEqfDkMoQTZjDMZ2GE75U5jYUvoA0izAljvI6XDIzIOEhoLX+WZq7DqbQf/lzw2eH1txy2VVxNC6lkpbDH662yjFmBNtJKlBUkhOGU0l8ad17X7Nd3LotlOsUDTY8uAUwzAT3HcS+X31VYnzVumUJoQNC/WJYdofuNTP5WOqvP5hhcu312HcBjDCugaCns5ZATIjVrMyiRqdpB81aSiPRvNbgQBwr8ig3CeXs+q2igmFpbItNzmdKjJ2qMmpQwX1LHhh4XU2OOCq9m7baqvE8ZNv3c/+a2fsbF0fUiUS2/Y9s47xcP+b1UJ62c6MHt+VwObmOOMsFc0VkcQSfbl7YkCQr1Qdj5V4aIYkowKQlbAVeY489pCrwF8bVJmo63R1m9V1XGGGwpyVl0QeKJXpHj2224dft/es+SyLRPqSNJv30n0=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200605192605.7439-1-sean.j.christopherson@intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DBBPR04MB6090.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4671f3c2-0890-4e61-516e-08d81cb6648b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2020 05:28:16.8513
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: N8FQn1n1H58dz34M7gTtscmiwboAorpN8myYqdkbnoW/vAX0k0L6xg1YJ5UThZAtTAZo5+nHoD5qxGXDARg7ww==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR04MB3032
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ping.  This would ideally get into 5.8, the bad behavior is quite nasty.
-
-On Fri, Jun 05, 2020 at 12:26:05PM -0700, Sean Christopherson wrote:
-> Choo! Choo!  All aboard the Split Lock Express, with direct service to
-> Wreckage!
-> 
-> Skip split_lock_verify_msr() if the CPU isn't whitelisted as a possible
-> SLD-enabled CPU model to avoid writing MSR_TEST_CTRL.  MSR_TEST_CTRL
-> exists, and is writable, on many generations of CPUs.  Writing the MSR,
-> even with '0', can result in bizarre, undocumented behavior.
-> 
-> This fixes a crash on Haswell when resuming from suspend with a live KVM
-> guest.  Because APs use the standard SMP boot flow for resume, they will
-> go through split_lock_init() and the subsequent RDMSR/WRMSR sequence,
-> which runs even when sld_state==sld_off to ensure SLD is disabled.  On
-> Haswell (at least, my Haswell), writing MSR_TEST_CTRL with '0' will
-> succeed and _may_ take the SMT _sibling_ out of VMX root mode.
-> 
-> When KVM has an active guest, KVM performs VMXON as part of CPU onlining
-> (see kvm_starting_cpu()).  Because SMP boot is serialized, the resulting
-> flow is effectively:
-> 
->   on_each_ap_cpu() {
->      WRMSR(MSR_TEST_CTRL, 0)
->      VMXON
->   }
-> 
-> As a result, the WRMSR can disable VMX on a different CPU that has
-> already done VMXON.  This ultimately results in a #UD on VMPTRLD when
-> KVM regains control and attempt run its vCPUs.
-> 
-> The above voodoo was confirmed by reworking KVM's VMXON flow to write
-> MSR_TEST_CTRL prior to VMXON, and to serialize the sequence as above.
-> Further verification of the insanity was done by redoing VMXON on all
-> APs after the initial WRMSR->VMXON sequence.  The additional VMXON,
-> which should VM-Fail, occasionally succeeded, and also eliminated the
-> unexpected #UD on VMPTRLD.
-> 
-> The damage done by writing MSR_TEST_CTRL doesn't appear to be limited
-> to VMX, e.g. after suspend with an active KVM guest, subsequent reboots
-> almost always hang (even when fudging VMXON), a #UD on a random Jcc was
-> observed, suspend/resume stability is qualitatively poor, and so on and
-> so forth.
-> 
->   kernel BUG at arch/x86/kvm/x86.c:386!
->   invalid opcode: 0000 [#7] SMP
->   CPU: 1 PID: 2592 Comm: CPU 6/KVM Tainted: G      D
->   Hardware name: ASUS Q87M-E/Q87M-E, BIOS 1102 03/03/2014
->   RIP: 0010:kvm_spurious_fault+0xf/0x20
->   Code: <0f> 0b 0f 1f 44 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00
->   RSP: 0018:ffffc0bcc1677b78 EFLAGS: 00010246
->   RAX: 0000617640000000 RBX: ffff9e8d01d80000 RCX: ffff9e8d4fa40000
->   RDX: ffff9e8d03360000 RSI: 00000003c3360000 RDI: ffff9e8d03360000
->   RBP: 0000000000000001 R08: ffff9e8d046d9d40 R09: 0000000000000018
->   R10: ffffc0bcc1677b80 R11: 0000000000000008 R12: 0000000000000006
->   R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
->   FS:  00007fe16c9f9700(0000) GS:ffff9e8d4fa40000(0000) knlGS:0000000000000000
->   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->   CR2: 0000000000d7a418 CR3: 00000003c47b1006 CR4: 00000000001626e0
->   Call Trace:
->    vmx_vcpu_load_vmcs+0x1fb/0x2b0
->    vmx_vcpu_load+0x3e/0x160
->    kvm_arch_vcpu_load+0x48/0x260
->    finish_task_switch+0x140/0x260
->    __schedule+0x460/0x720
->    _cond_resched+0x2d/0x40
->    kvm_arch_vcpu_ioctl_run+0x82e/0x1ca0
->    kvm_vcpu_ioctl+0x363/0x5c0
->    ksys_ioctl+0x88/0xa0
->    __x64_sys_ioctl+0x16/0x20
->    do_syscall_64+0x4c/0x170
->    entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> 
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Xiaoyao Li <xiaoyao.li@intel.com>
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: kvm@vger.kernel.org
-> Fixes: dbaba47085b0c ("x86/split_lock: Rework the initialization flow of split lock detection")
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> ---
->  arch/x86/kernel/cpu/intel.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-> index a19a680542ce..19b6c42739fc 100644
-> --- a/arch/x86/kernel/cpu/intel.c
-> +++ b/arch/x86/kernel/cpu/intel.c
-> @@ -48,6 +48,13 @@ enum split_lock_detect_state {
->  static enum split_lock_detect_state sld_state __ro_after_init = sld_off;
->  static u64 msr_test_ctrl_cache __ro_after_init;
->  
-> +/*
-> + * With a name like MSR_TEST_CTL it should go without saying, but don't touch
-> + * MSR_TEST_CTL unless the CPU is one of the whitelisted models.  Writing it
-> + * on CPUs that do not support SLD can cause fireworks, even when writing '0'.
-> + */
-> +static bool cpu_model_supports_sld __ro_after_init;
-> +
->  /*
->   * Processors which have self-snooping capability can handle conflicting
->   * memory type across CPUs by snooping its own cache. However, there exists
-> @@ -1064,7 +1071,8 @@ static void sld_update_msr(bool on)
->  
->  static void split_lock_init(void)
->  {
-> -	split_lock_verify_msr(sld_state != sld_off);
-> +	if (cpu_model_supports_sld)
-> +		split_lock_verify_msr(sld_state != sld_off);
->  }
->  
->  static void split_lock_warn(unsigned long ip)
-> @@ -1167,5 +1175,6 @@ void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c)
->  		return;
->  	}
->  
-> +	cpu_model_supports_sld = true;
->  	split_lock_setup();
->  }
-> -- 
-> 2.26.0
-> 
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogQW1pdCBLdWNoZXJpYSA8
+YW1pdC5rdWNoZXJpYUBsaW5hcm8ub3JnPg0KPiBTZW50OiAyMDIw5bm0NuaciDMw5pelIDEzOjEy
+DQo+IFRvOiBBbmR5IFRhbmcgPGFuZHkudGFuZ0BueHAuY29tPg0KPiBDYzogU2hhd24gR3VvIDxz
+aGF3bmd1b0BrZXJuZWwub3JnPjsgTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBSb2INCj4g
+SGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgbGFrbWwgPGxpbnV4LWFybS1rZXJuZWxAbGlz
+dHMuaW5mcmFkZWFkLm9yZz47DQo+IG9wZW4gbGlzdDpPUEVOIEZJUk1XQVJFIEFORCBGTEFUVEVO
+RUQgREVWSUNFIFRSRUUgQklORElOR1MNCj4gPGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnPjsg
+TEtNTCA8bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZz4NCj4gU3ViamVjdDogW0VYVF0gUmU6
+IFtQQVRDSCAxLzJdIGFybTY0OiBkdHM6IGxzMTA4OGE6IGFkZCBtb3JlIHRoZXJtYWwgem9uZQ0K
+PiBzdXBwb3J0DQo+IA0KPiBDYXV0aW9uOiBFWFQgRW1haWwNCj4gDQo+IE9uIFR1ZSwgSnVuIDMw
+LCAyMDIwIGF0IDg6NTYgQU0gPGFuZHkudGFuZ0BueHAuY29tPiB3cm90ZToNCj4gPg0KPiA+IEZy
+b206IFl1YW50aWFuIFRhbmcgPGFuZHkudGFuZ0BueHAuY29tPg0KPiA+DQo+ID4gVGhlcmUgYXJl
+IDIgdGhlcm1hbCB6b25lcyBpbiBsczEwODhhIHNvYy4gQWRkIHRoZSBvdGhlciB0aGVybWFsIHpv
+bmUNCj4gPiBub2RlIHRvIGVuYWJsZSBpdC4NCj4gPiBBbHNvIHVwZGF0ZSB0aGUgdmFsdWVzIGlu
+IGNhbGlicmF0aW9uIHRhYmxlIHRvIG1ha2UgdGhlIHRlbXBlcmF0dXJlcw0KPiA+IG1vbml0b3Jl
+ZCBtb3JlIHByZWNpc2UuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBZdWFudGlhbiBUYW5nIDxh
+bmR5LnRhbmdAbnhwLmNvbT4NCj4gPiAtLS0NCj4gPiAgLi4uL2FybTY0L2Jvb3QvZHRzL2ZyZWVz
+Y2FsZS9mc2wtbHMxMDg4YS5kdHNpIHwgMTAwDQo+ID4gKysrKysrKysrKystLS0tLS0tDQo+ID4g
+IDEgZmlsZSBjaGFuZ2VkLCA2MiBpbnNlcnRpb25zKCspLCAzOCBkZWxldGlvbnMoLSkNCj4gPg0K
+PiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDg4
+YS5kdHNpDQo+ID4gYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9mc2wtbHMxMDg4YS5k
+dHNpDQo+ID4gaW5kZXggMzZhNzk5NTU0NjIwLi5jY2JiYzIzZTZjODUgMTAwNjQ0DQo+ID4gLS0t
+IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvZnNsLWxzMTA4OGEuZHRzaQ0KPiA+ICsr
+KyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2ZzbC1sczEwODhhLmR0c2kNCj4gPiBA
+QCAtMTI5LDE5ICsxMjksMTkgQEANCj4gPiAgICAgICAgIH07DQo+ID4NCj4gPiAgICAgICAgIHRo
+ZXJtYWwtem9uZXMgew0KPiA+IC0gICAgICAgICAgICAgICBjcHVfdGhlcm1hbDogY3B1LXRoZXJt
+YWwgew0KPiA+ICsgICAgICAgICAgICAgICBjb3JlLWNsdXN0ZXIgew0KPiA+ICAgICAgICAgICAg
+ICAgICAgICAgICAgIHBvbGxpbmctZGVsYXktcGFzc2l2ZSA9IDwxMDAwPjsNCj4gPiAgICAgICAg
+ICAgICAgICAgICAgICAgICBwb2xsaW5nLWRlbGF5ID0gPDUwMDA+Ow0KPiA+ICAgICAgICAgICAg
+ICAgICAgICAgICAgIHRoZXJtYWwtc2Vuc29ycyA9IDwmdG11IDA+Ow0KPiA+DQo+ID4gICAgICAg
+ICAgICAgICAgICAgICAgICAgdHJpcHMgew0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgY3B1X2FsZXJ0OiBjcHUtYWxlcnQgew0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgY29yZV9jbHVzdGVyX2FsZXJ0Og0KPiBjb3JlLWNsdXN0ZXItYWxlcnQNCj4gPiAr
+IHsNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdGVtcGVyYXR1
+cmUgPSA8ODUwMDA+Ow0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICBoeXN0ZXJlc2lzID0gPDIwMDA+Ow0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICB0eXBlID0gInBhc3NpdmUiOw0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgfTsNCj4gPg0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY3B1
+X2NyaXQ6IGNwdS1jcml0IHsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNv
+cmVfY2x1c3Rlcl9jcml0OiBjb3JlLWNsdXN0ZXItY3JpdCB7DQo+ID4gICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIHRlbXBlcmF0dXJlID0gPDk1MDAwPjsNCj4gPiAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaHlzdGVyZXNpcyA9IDwyMDAwPjsN
+Cj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdHlwZSA9ICJjcml0
+aWNhbCI7IEBADQo+IC0xNTAsNw0KPiA+ICsxNTAsNyBAQA0KPiA+DQo+ID4gICAgICAgICAgICAg
+ICAgICAgICAgICAgY29vbGluZy1tYXBzIHsNCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIG1hcDAgew0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICB0cmlwID0gPCZjcHVfYWxlcnQ+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICB0cmlwID0NCj4gPCZjb3JlX2NsdXN0ZXJfYWxlcnQ+Ow0KPiA+ICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb29saW5nLWRldmljZSA9DQo+ID4gICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPCZjcHUwDQo+IFRI
+RVJNQUxfTk9fTElNSVQgVEhFUk1BTF9OT19MSU1JVD4sDQo+ID4gICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPCZjcHUxDQo+ID4gVEhFUk1BTF9OT19MSU1J
+VCBUSEVSTUFMX05PX0xJTUlUPiwgQEAgLTE2Myw2ICsxNjMsMjYgQEANCj4gPiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIH07DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgfTsN
+Cj4gPiAgICAgICAgICAgICAgICAgfTsNCj4gPiArDQo+ID4gKyAgICAgICAgICAgICAgIHNvYyB7
+DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgcG9sbGluZy1kZWxheS1wYXNzaXZlID0gPDEw
+MDA+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHBvbGxpbmctZGVsYXkgPSA8NTAwMD47
+DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgdGhlcm1hbC1zZW5zb3JzID0gPCZ0bXUgMT47
+DQo+ID4gKw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHRyaXBzIHsNCj4gPiArICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIHNvYy1hbGVydCB7DQo+ID4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIHRlbXBlcmF0dXJlID0gPDg1MDAwPjsNCj4gPiArICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaHlzdGVyZXNpcyA9IDwyMDAwPjsN
+Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdHlwZSA9ICJwYXNz
+aXZlIjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH07DQo+ID4gKw0KPiA+
+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc29jLWNyaXQgew0KPiA+ICsgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0ZW1wZXJhdHVyZSA9IDw5NTAwMD47DQo+
+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGh5c3RlcmVzaXMgPSA8
+MjAwMD47DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHR5cGUg
+PSAiY3JpdGljYWwiOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfTsNCj4g
+PiArICAgICAgICAgICAgICAgICAgICAgICB9Ow0KPiA+ICsgICAgICAgICAgICAgICB9Ow0KPiAN
+Cj4gWW91IHNob3VsZCBhbHNvIGFkZCBhIGNvb2xpbmctbWFwcyBzZWN0aW9uIGZvciB0aGlzIHRo
+ZXJtYWwgem9uZSBnaXZlbiB0aGF0IGl0DQo+IGhhcyBhIHBhc3NpdmUgdHJpcCB0eXBlLiBPdGhl
+cndpc2UgdGhlcmUgaXMgbm8gdXNlIGZvciBhIHBhc3NpdmUgdHJpcCB0eXBlLg0KSXQgaXMgYmV0
+dGVyIHRvIGhhdmUgYSBjb29saW5nIGRldmljZS4gQnV0IHRoZXJlIGlzIG9ubHkgb25lIGNvb2xp
+bmcgZGV2aWNlIG9uIHRoaXMgcGxhdGZvcm0NCndoaWNoIGlzIHVzZWQgYnkgY29yZS1jbHVzdGVy
+LiBTbyB0aGVyZSBpcyBubyBleHRyYSBjb29saW5nIGRldmljZSBmb3IgaXQuDQpUaGlzIHpvbmUg
+Y2FuIHRha2UgYWN0aW9uIHdoZW4gY3JpdGljYWwgdGVtcCBpcyByZWFjaGVkLiBTbyBpdCBpcyBz
+dGlsbCB1c2VmdWwuDQpXaGF0IGRvIHlvdSBzdWdnZXN0PyANCg0KQlIsDQpBbmR5DQo+IA0KPiA+
+ICAgICAgICAgfTsNCj4gPg0KPiA+ICAgICAgICAgdGltZXIgew0KPiA+IEBAIC0yMDksNDUgKzIy
+OSw0OSBAQA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiZnNsLHFv
+cmlxLXRtdSI7DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4MCAweDFmODAw
+MDAgMHgwIDB4MTAwMDA+Ow0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIGludGVycnVwdHMg
+PSA8MCAyMyAweDQ+Ow0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAgIGZzbCx0bXUtcmFuZ2Ug
+PSA8MHhiMDAwMCAweDkwMDJhIDB4NjAwNGMNCj4gMHgzMDA2Mj47DQo+ID4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgZnNsLHRtdS1yYW5nZSA9IDwweGIwMDAwIDB4OTAwMmEgMHg2MDA0Yw0KPiA+
+ICsgMHg3MDA2Mj47DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgZnNsLHRtdS1jYWxpYnJh
+dGlvbiA9DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAvKiBDYWxpYnJhdGlv
+biBkYXRhIGdyb3VwIDEgKi8NCj4gPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDww
+eDAwMDAwMDAwIDB4MDAwMDAwMjYNCj4gPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IDB4MDAwMDAwMDEgMHgwMDAwMDAyZA0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgMHgwMDAwMDAwMiAweDAwMDAwMDMyDQo+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAweDAwMDAwMDAzIDB4MDAwMDAwMzkNCj4gPiAtICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIDB4MDAwMDAwMDQgMHgwMDAwMDAzZg0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgMHgwMDAwMDAwNSAweDAwMDAwMDQ2DQo+ID4gLSAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAweDAwMDAwMDA2IDB4MDAwMDAwNGQNCj4gPiAtICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIDB4MDAwMDAwMDcgMHgwMDAwMDA1NA0KPiA+IC0gICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgMHgwMDAwMDAwOCAweDAwMDAwMDVhDQo+ID4gLSAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAweDAwMDAwMDA5IDB4MDAwMDAwNjENCj4gPiAtICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIDB4MDAwMDAwMGEgMHgwMDAwMDA2YQ0KPiA+IC0gICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgMHgwMDAwMDAwYiAweDAwMDAwMDcxDQo+ID4gKyAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICA8MHgwMDAwMDAwMCAweDAwMDAwMDIzDQo+ID4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAweDAwMDAwMDAxIDB4MDAwMDAwMmENCj4gPiArICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MDAwMDAwMDIgMHgwMDAwMDAzMA0KPiA+ICsg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMDAwMDAwMyAweDAwMDAwMDM3DQo+ID4g
+KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDAwMDAwMDA0IDB4MDAwMDAwM2QNCj4g
+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MDAwMDAwMDUgMHgwMDAwMDA0NA0K
+PiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMDAwMDAwNiAweDAwMDAwMDRh
+DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDAwMDAwMDA3IDB4MDAwMDAw
+NTENCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MDAwMDAwMDggMHgwMDAw
+MDA1Nw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMDAwMDAwOSAweDAw
+MDAwMDVlDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDAwMDAwMDBhIDB4
+MDAwMDAwNjQNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MDAwMDAwMGIg
+MHgwMDAwMDA2Yg0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLyogQ2FsaWJy
+YXRpb24gZGF0YSBncm91cCAyICovDQo+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAweDAwMDEwMDAwIDB4MDAwMDAwMjUNCj4gPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIDB4MDAwMTAwMDEgMHgwMDAwMDAyYw0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgMHgwMDAxMDAwMiAweDAwMDAwMDM1DQo+ID4gLSAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAweDAwMDEwMDAzIDB4MDAwMDAwM2QNCj4gPiAtICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIDB4MDAwMTAwMDQgMHgwMDAwMDA0NQ0KPiA+IC0gICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgMHgwMDAxMDAwNSAweDAwMDAwMDRlDQo+ID4gLSAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAweDAwMDEwMDA2IDB4MDAwMDAwNTcNCj4gPiAtICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIDB4MDAwMTAwMDcgMHgwMDAwMDA2MQ0KPiA+IC0gICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgMHgwMDAxMDAwOCAweDAwMDAwMDZiDQo+ID4gLSAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAweDAwMDEwMDA5IDB4MDAwMDAwNzYNCj4gPiArICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIDB4MDAwMTAwMDAgMHgwMDAwMDAyMg0KPiA+ICsgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgMHgwMDAxMDAwMSAweDAwMDAwMDJhDQo+ID4gKyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAweDAwMDEwMDAyIDB4MDAwMDAwMzINCj4gPiArICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MDAwMTAwMDMgMHgwMDAwMDAzYQ0KPiA+ICsg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMDAxMDAwNCAweDAwMDAwMDQyDQo+ID4g
+KyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDAwMDEwMDA1IDB4MDAwMDAwNGENCj4g
+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MDAwMTAwMDYgMHgwMDAwMDA1Mg0K
+PiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMDAxMDAwNyAweDAwMDAwMDVh
+DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDAwMDEwMDA4IDB4MDAwMDAw
+NjINCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MDAwMTAwMDkgMHgwMDAw
+MDA2YQ0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLyogQ2FsaWJyYXRpb24g
+ZGF0YSBncm91cCAzICovDQo+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDAw
+MDIwMDAwIDB4MDAwMDAwMjkNCj4gPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4
+MDAwMjAwMDEgMHgwMDAwMDAzMw0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+MHgwMDAyMDAwMiAweDAwMDAwMDNkDQo+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAweDAwMDIwMDAzIDB4MDAwMDAwNDkNCj4gPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIDB4MDAwMjAwMDQgMHgwMDAwMDA1Ng0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgMHgwMDAyMDAwNSAweDAwMDAwMDYxDQo+ID4gLSAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAweDAwMDIwMDA2IDB4MDAwMDAwNmQNCj4gPiArICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgIDB4MDAwMjAwMDAgMHgwMDAwMDAyMQ0KPiA+ICsgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgMHgwMDAyMDAwMSAweDAwMDAwMDJiDQo+ID4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAweDAwMDIwMDAyIDB4MDAwMDAwMzUNCj4gPiArICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIDB4MDAwMjAwMDMgMHgwMDAwMDA0MA0KPiA+ICsgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgMHgwMDAyMDAwNCAweDAwMDAwMDRhDQo+ID4gKyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAweDAwMDIwMDA1IDB4MDAwMDAwNTQNCj4gPiArICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgIDB4MDAwMjAwMDYgMHgwMDAwMDA1ZQ0KPiA+ICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgLyogQ2FsaWJyYXRpb24gZGF0YSBncm91cCA0ICovDQo+
+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDAwMDMwMDAwIDB4MDAwMDAwMjEN
+Cj4gPiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MDAwMzAwMDEgMHgwMDAwMDAy
+YQ0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMDAzMDAwMiAweDAwMDAw
+MDNjDQo+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDAwMDMwMDAzIDB4MDAw
+MDAwNGU+Ow0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMDAzMDAwMCAw
+eDAwMDAwMDEwDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDAwMDMwMDAx
+IDB4MDAwMDAwMWMNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MDAwMzAw
+MDIgMHgwMDAwMDAyNw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMDAz
+MDAwMyAweDAwMDAwMDMyDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDAw
+MDMwMDA0IDB4MDAwMDAwM2UNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4
+MDAwMzAwMDUgMHgwMDAwMDA0OQ0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+MHgwMDAzMDAwNiAweDAwMDAwMDU0DQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAweDAwMDMwMDA3IDB4MDAwMDAwNjA+Ow0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIGxp
+dHRsZS1lbmRpYW47DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgI3RoZXJtYWwtc2Vuc29y
+LWNlbGxzID0gPDE+Ow0KPiA+ICAgICAgICAgICAgICAgICB9Ow0KPiA+IC0tDQo+ID4gMi4xNy4x
+DQo+ID4NCg==
