@@ -2,98 +2,128 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C26EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3CB6C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:44:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4C177206B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:43:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B5A520723
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:44:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qd3qNcBc"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="RpzzfzIx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389386AbgF3Qn5 (ORCPT
+        id S2389425AbgF3Qob (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 12:43:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46164 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733117AbgF3Qn4 (ORCPT
+        Tue, 30 Jun 2020 12:44:31 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:3335 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729257AbgF3Qob (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 12:43:56 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA4F2C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 09:43:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=vsk0mxwJOaXt9uCahr9TNdYqbSQlm97pZd45zIWHEk4=; b=qd3qNcBcxEqYNYgoRnSH7hTBEc
-        gYI0fVzAbNRpEPUhanWf0EyL60M0YKgvTOBuJ8Jny5YsDrwVuvUBjS3zOygzJf7mjidgjF5QqJYxY
-        phhvwY5tZDJg08B2FMOx+mbjg/BgTeopjCnFgoQCitn7tTJXHhgR321KJt5Au/gaOXuVWMQfhkLzO
-        tcILF8yWfVCzTJUhxKY8sIchPQi7LB54I+pg2NhiNx+Cf8I+N75VcKsIo81mUSoj5bgb2FE5C4TLz
-        2Q5Fyuyw0CjWpK+YhS8jYLxHQdYEDP039VTIMboNA0bMmCpTl6acWRnqRoqivX+svx5I92wZ5cSyM
-        zyil8cXA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jqJL0-0001us-Js; Tue, 30 Jun 2020 16:42:26 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 055C130015A;
-        Tue, 30 Jun 2020 18:42:26 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E5C9920CF3986; Tue, 30 Jun 2020 18:42:25 +0200 (CEST)
-Date:   Tue, 30 Jun 2020 18:42:25 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Liang, Kan" <kan.liang@linux.intel.com>
-Cc:     mingo@redhat.com, acme@kernel.org, tglx@linutronix.de,
-        bp@alien8.de, x86@kernel.org, linux-kernel@vger.kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org, dave.hansen@intel.com,
-        yu-cheng.yu@intel.com, bigeasy@linutronix.de, gorcunov@gmail.com,
-        hpa@zytor.com, alexey.budankov@linux.intel.com, eranian@google.com,
-        ak@linux.intel.com, like.xu@linux.intel.com,
-        yao.jin@linux.intel.com, wei.w.wang@intel.com
-Subject: Re: [PATCH V2 14/23] perf/x86/intel/lbr: Support Architectural LBR
-Message-ID: <20200630164225.GZ4817@hirez.programming.kicks-ass.net>
-References: <1593195620-116988-1-git-send-email-kan.liang@linux.intel.com>
- <1593195620-116988-15-git-send-email-kan.liang@linux.intel.com>
- <20200630154954.GU4781@hirez.programming.kicks-ass.net>
- <c597c040-57d5-ca9a-9acf-3dfc2debcf0e@linux.intel.com>
+        Tue, 30 Jun 2020 12:44:31 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5efb6bbc0002>; Tue, 30 Jun 2020 09:43:40 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 30 Jun 2020 09:44:30 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 30 Jun 2020 09:44:30 -0700
+Received: from [10.26.75.203] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 30 Jun
+ 2020 16:44:25 +0000
+Subject: Re: [PATCH v8 1/3] iommu/arm-smmu: add NVIDIA implementation for dual
+ ARM MMU-500 usage
+From:   Jon Hunter <jonathanh@nvidia.com>
+To:     Krishna Reddy <vdumpa@nvidia.com>
+CC:     "joro@8bytes.org" <joro@8bytes.org>,
+        "will@kernel.org" <will@kernel.org>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        "Yu-Huan Hsu" <YHsu@nvidia.com>, Sachin Nikam <Snikam@nvidia.com>,
+        Pritesh Raithatha <praithatha@nvidia.com>,
+        Timo Alho <talho@nvidia.com>,
+        Bitan Biswas <bbiswas@nvidia.com>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Nicolin Chen <nicolinc@nvidia.com>,
+        Bryan Huntsman <bhuntsman@nvidia.com>,
+        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>
+References: <20200630001051.12350-1-vdumpa@nvidia.com>
+ <20200630001051.12350-2-vdumpa@nvidia.com>
+ <e6da9661-4e62-6e34-ac21-63ff993ca8bc@nvidia.com>
+ <BYAPR12MB282210677459B8D62623C642B36F0@BYAPR12MB2822.namprd12.prod.outlook.com>
+ <4037efc7-fbed-e8cf-dac7-212c65014e4e@nvidia.com>
+Message-ID: <eb0ffc7e-f41b-d17c-6a90-049335098cd2@nvidia.com>
+Date:   Tue, 30 Jun 2020 17:44:23 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c597c040-57d5-ca9a-9acf-3dfc2debcf0e@linux.intel.com>
+In-Reply-To: <4037efc7-fbed-e8cf-dac7-212c65014e4e@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1593535420; bh=wfS2EeHQkmlhZY5U4/UFUr69ArCFndTN9ROhcFPEI1M=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=RpzzfzIx5Pvr8kBRvnnxiXZncwQ9u01wYvBZU7qtc0WldUlzAiBfBsBypPux7uaZ7
+         Mq2kKQhObMQz4+2w6EMvtTBA2Ze5CTHbAPKzP1ViLUXqbGrxMWtiCASh0ZReWsE5Ml
+         KQJdovzVUgyfbtAeQd4TtYuX+9pIP9FMdQcRi1nuCwpLbEIzI583GI2XPALg8/8drf
+         zGPquwH0ymfoL/FVTw2J3LhGOh+oMmQ2OGDookibXrLDT6YEKcRBUVw+lhkyqeGSto
+         KkUNRaHAYsNB+kcYkssfiGLkwASZSzb9ID3DyV+xlku+sYrTx0K5DXc+wjxbrnqIP5
+         iaVGNwznKEgSw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 12:17:57PM -0400, Liang, Kan wrote:
 
-> > > +static inline bool is_lbr_call_stack_bit_set(u64 config)
-> > > +{
-> > > +	if (x86_pmu.arch_lbr)
-> > > +		return !!(config & ARCH_LBR_CALL_STACK);
-> > > +
-> > > +	return !!(config & LBR_CALL_STACK);
-> > > +}
-
-> > > +	x86_pmu.arch_lbr = true;
-
-> > How about we make this here clear FEATURE_ARCH_LBR if it fails and then
-> > do away with x86_pmu.arch_lbr and use
-> > static_cpu_has(X86_FEATURE_ARCH_LBR) a lot more?
+On 30/06/2020 17:32, Jon Hunter wrote:
+> On 30/06/2020 17:23, Krishna Reddy wrote:
+>>>> +struct arm_smmu_device *nvidia_smmu_impl_init(struct arm_smmu_device 
+>>>> +*smmu) {
+>>>> +	unsigned int i;
+>> ....
+>>>> +	for (i = 1; i < MAX_SMMU_INSTANCES; i++) {
+>>>> +		struct resource *res;
+>>>> +
+>>>> +		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
+>>>> +		if (!res)
+>>>> +			break;
+>>
+>>> Currently this driver is only supported for Tegra194 which I understand has 3 SMMUs. Therefore, I don't feel that we should fail silently here, I think it is better to return an error if all 3 cannot be initialised.
+>>
+>> Initialization of all the three SMMU instances is not necessary here.
 > 
-> Yes, it's doable. So we can save a bit for arch_lbr in structure x86_pmu.
+> That is not what I am saying.
+> 
+>> The driver can work with all the possible number of instances 1, 2 and 3 based on the DT config though it doesn't make much sense to use it with 1 instance.
+>> There is no silent failure here from driver point of view. If there is misconfig in DT, SMMU faults would catch issues.
+> 
+> I disagree and you should return a proper error here.
 
-Mostly it's about getting rid of a load-test-branch.
+OK, well I see what you are saying, but if we intended to support all 3
+for Tegra194, then we should ensure all 3 are initialised correctly.
 
-> I will clear the FEATURE_ARCH_LBR via clear_cpu_cap(&boot_cpu_data,
-> X86_FEATURE_ARCH_LBR);, if the check fails.
-> I will replace x86_pmu.arch_lbr with static_cpu_has(X86_FEATURE_ARCH_LBR)
-> everywhere.
+My concern here is testing, because when things break in upstream I am
+usually the one that tracks it down. Not having clear warning/error
+messages when something is not initialised as expected makes it harder.
 
-Thanks!
+It would be better to query the number of SMMUs populated in device-tree
+and then ensure that all are initialised correctly.
+
+Jon
+
+-- 
+nvpublic
