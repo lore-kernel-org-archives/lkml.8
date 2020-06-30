@@ -6,55 +6,43 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F2CFC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:27:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF0F5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:27:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 52E40206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:27:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86133206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:27:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390337AbgF3R1E (ORCPT
+        id S2387521AbgF3R1o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 13:27:04 -0400
-Received: from mga06.intel.com ([134.134.136.31]:3228 "EHLO mga06.intel.com"
+        Tue, 30 Jun 2020 13:27:44 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36356 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390325AbgF3R1B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 13:27:01 -0400
-IronPort-SDR: kCtanIoavveucYJWOOgyx2YDmpAADwhbLYdubUMBZaa6NhqX3RmHHurb4+A/FRXXwnE4jLq5Ii
- EBJLvaqmRMGA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="207832996"
-X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
-   d="scan'208";a="207832996"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 10:27:00 -0700
-IronPort-SDR: Z7x4fpl5QBPCt0yGQhLxehb9wwa3icsJnhTonGBQYdcWh4ESmn32vMryMjX4d1BR7rQyQsa5TY
- 7XQYwNFkx4CA==
-X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
-   d="scan'208";a="281307477"
-Received: from dnoeunx-mobl.amr.corp.intel.com (HELO [10.254.77.113]) ([10.254.77.113])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 10:26:59 -0700
-Subject: Re: [PATCH 8/9] soundwire: intel: add wake interrupt support
-To:     Vinod Koul <vkoul@kernel.org>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
-        jank@cadence.com, srinivas.kandagatla@linaro.org,
-        rander.wang@linux.intel.com, ranjani.sridharan@linux.intel.com,
-        hui.wang@canonical.com, sanyog.r.kale@intel.com,
-        slawomir.blauciak@intel.com, mengdong.lin@intel.com,
-        bard.liao@intel.com
-References: <20200623173546.21870-1-yung-chuan.liao@linux.intel.com>
- <20200623173546.21870-9-yung-chuan.liao@linux.intel.com>
- <20200630165126.GT2599@vkoul-mobl>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <a69aa5d0-613a-6ef6-9263-378b1e99770a@linux.intel.com>
-Date:   Tue, 30 Jun 2020 12:18:51 -0500
+        id S1725872AbgF3R1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 13:27:43 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 1BF59AE2D;
+        Tue, 30 Jun 2020 17:27:42 +0000 (UTC)
+Subject: Re: [PATCH v6 1/6] mm/vmscan: make active/inactive ratio as 1:1 for
+ anon lru
+To:     js1304@gmail.com, Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>, kernel-team@lge.com,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+References: <1592371583-30672-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <1592371583-30672-2-git-send-email-iamjoonsoo.kim@lge.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <7a5c8298-a1e5-93f9-eea6-214b0732ca33@suse.cz>
+Date:   Tue, 30 Jun 2020 19:27:38 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200630165126.GT2599@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <1592371583-30672-2-git-send-email-iamjoonsoo.kim@lge.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -62,163 +50,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 6/30/20 11:51 AM, Vinod Koul wrote:
-> On 24-06-20, 01:35, Bard Liao wrote:
->> From: Rander Wang <rander.wang@intel.com>
->>
->> When system is suspended in clock stop mode on intel platforms, both
->> master and slave are in clock stop mode and soundwire bus is taken
->> over by a glue hardware. The bus message for jack event is processed
->> by this glue hardware, which will trigger an interrupt to resume audio
->> pci device. Then audio pci driver will resume soundwire master and slave,
->> transfer bus ownership to master, finally slave will report jack event
->> to master and codec driver is triggered to check jack status.
->>
->> if a slave has been attached to a bus, the slave->dev_num_sticky
->> should be non-zero, so we can check this value to skip the
->> ghost devices defined in ACPI table but not populated in hardware.
->>
->> Signed-off-by: Rander Wang <rander.wang@intel.com>
->> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
->> Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
->> ---
->>   drivers/soundwire/intel.c      | 48 +++++++++++++++++++++++++++++++++-
->>   drivers/soundwire/intel.h      |  1 +
->>   drivers/soundwire/intel_init.c | 22 ++++++++++++++++
->>   3 files changed, 70 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
->> index 06c553d94890..22d9fd3e34fa 100644
->> --- a/drivers/soundwire/intel.c
->> +++ b/drivers/soundwire/intel.c
->> @@ -13,6 +13,7 @@
->>   #include <linux/io.h>
->>   #include <linux/platform_device.h>
->>   #include <sound/pcm_params.h>
->> +#include <linux/pm_runtime.h>
->>   #include <sound/soc.h>
->>   #include <linux/soundwire/sdw_registers.h>
->>   #include <linux/soundwire/sdw.h>
->> @@ -436,7 +437,7 @@ static int intel_shim_init(struct sdw_intel *sdw, bool clock_stop)
->>   	return ret;
->>   }
->>   
->> -static void __maybe_unused intel_shim_wake(struct sdw_intel *sdw, bool wake_enable)
->> +static void intel_shim_wake(struct sdw_intel *sdw, bool wake_enable)
+On 6/17/20 7:26 AM, js1304@gmail.com wrote:
+> From: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 > 
-> why drop __maybe?
-
-the __maybe was used in previous patches to avoid throwing 'defined but 
-not used' errors.
-
-In this patch this function is actually used so there's no longer a 
-reason to keep it.
-
->>   {
->>   	void __iomem *shim = sdw->link_res->shim;
->>   	unsigned int link_id = sdw->instance;
->> @@ -1337,6 +1338,51 @@ static int intel_master_remove(struct platform_device *pdev)
->>   	return 0;
->>   }
->>   
->> +int intel_master_process_wakeen_event(struct platform_device *pdev)
->> +{
->> +	struct device *dev = &pdev->dev;
->> +	struct sdw_intel *sdw;
->> +	struct sdw_bus *bus;
->> +	struct sdw_slave *slave;
->> +	void __iomem *shim;
->> +	u16 wake_sts;
->> +
->> +	sdw = platform_get_drvdata(pdev);
->> +	bus = &sdw->cdns.bus;
->> +
->> +	if (bus->prop.hw_disabled) {
->> +		dev_dbg(dev,
->> +			"SoundWire master %d is disabled, ignoring\n",
->> +			bus->link_id);
+> Current implementation of LRU management for anonymous page has some
+> problems. Most important one is that it doesn't protect the workingset,
+> that is, pages on the active LRU list. Although, this problem will be
+> fixed in the following patchset, the preparation is required and
+> this patch does it.
 > 
-> single line pls
+> What following patchset does is to restore workingset protection. In this
 
-ok
+"Restore" sounds as if the protection used to be there and then it was removed.
+If it's the case, it should be said what commit did that. Otherwise I would say
+"implement", not "restore"?
 
->> +		return 0;
->> +	}
->> +
->> +	shim = sdw->link_res->shim;
->> +	wake_sts = intel_readw(shim, SDW_SHIM_WAKESTS);
->> +
->> +	if (!(wake_sts & BIT(sdw->instance)))
->> +		return 0;
->> +
->> +	/* disable WAKEEN interrupt ASAP to prevent interrupt flood */
->> +	intel_shim_wake(sdw, false);
+> case, newly created or swap-in pages are started their lifetime on the
+
+I would rephrase it: "After the following patch, newly created or swap-in pages
+will start their lifetime... "
+
+> inactive list. If inactive list is too small, there is not enough chance
+> to be referenced and the page cannot become the workingset.
 > 
-> when & where is this enabled?
+> In order to provide enough chance to the newly anonymous pages, this patch
 
-in follow-up patches where the clock-stop mode is enabled.
+"In order to provide the newly anonymous pages enough chance to be referenced
+again..."
 
-	} else if (clock_stop_quirks & SDW_INTEL_CLK_STOP_BUS_RESET ||
-		   !clock_stop_quirks) {
+> makes active/inactive LRU ratio as 1:1.
 
-		ret = sdw_cdns_clock_stop(cdns, true);
-		if (ret < 0) {
-			dev_err(dev, "cannot enable clock stop on suspend\n");
-			return ret;
-		}
+Here I would add:
 
-		ret = sdw_cdns_enable_interrupt(cdns, false);
-		if (ret < 0) {
-			dev_err(dev, "cannot disable interrupts on suspend\n");
-			return ret;
-		}
+This is just a temporary measure. Later patch in the series introduces
+workingset detection for anonymous LRU that will be used to better decide if
+pages should start on the active and inactive list. Afterwards this patch is
+effectively reverted.
 
-		ret = intel_link_power_down(sdw);
-		if (ret) {
-			dev_err(dev, "Link power down failed: %d", ret);
-			return ret;
-		}
+> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+> Signed-off-by: Joonsoo Kim <iamjoonsoo.kim@lge.com>
 
-		intel_shim_wake(sdw, true);
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
 
->> +
->> +	/*
->> +	 * wake up master and slave so that slave can notify master
->> +	 * the wakeen event and let codec driver check codec status
->> +	 */
->> +	list_for_each_entry(slave, &bus->slaves, node) {
->> +		/*
->> +		 * discard devices that are defined in ACPI tables but
->> +		 * not physically present and devices that cannot
->> +		 * generate wakes
->> +		 */
->> +		if (slave->dev_num_sticky && slave->prop.wake_capable)
->> +			pm_request_resume(&slave->dev);
+> ---
+>  mm/vmscan.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Hmmm, shouldn't slave do this? would it not make sense to notify the
-> slave thru callback and then slave decides to resume or not..?
-
-In this mode, the bus is clock-stop mode, and events are detected with 
-level detector tied to PCI events. The master and slave devices are all 
-in pm_runtime suspended states. The codec cannot make any decisions on 
-its own since the bus is stopped, it needs to first resume, which 
-assumes that the master resumes first and the enumeration re-done before 
-it can access any of its registers.
-
-By looping through the list of devices that can generate events, you 
-end-up first forcing the master to resume, and then each slave resumes 
-and can check who generated the event and what happened while suspended. 
-if the codec didn't generate the event it will go back to suspended mode 
-after the usual timeout.
-
-We can add a callback but that callback would only be used for Intel 
-solutions, but internally it would only do a pm_request_resume() since 
-the codec cannot make any decisions before first resuming. In other 
-words, it would be an Intel-specific callback that is implemented using 
-generic resume operations. It's probably better to keep this in 
-Intel-specific code, no?
-
-
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index 749d239..9f940c4 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -2212,7 +2212,7 @@ static bool inactive_is_low(struct lruvec *lruvec, enum lru_list inactive_lru)
+>  	active = lruvec_page_state(lruvec, NR_LRU_BASE + active_lru);
+>  
+>  	gb = (inactive + active) >> (30 - PAGE_SHIFT);
+> -	if (gb)
+> +	if (gb && is_file_lru(inactive_lru))
+>  		inactive_ratio = int_sqrt(10 * gb);
+>  	else
+>  		inactive_ratio = 1;
+> 
 
