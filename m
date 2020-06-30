@@ -2,76 +2,256 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E28C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55AE6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EA4F520768
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:48:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YV4Bczfd"
+	by mail.kernel.org (Postfix) with ESMTP id 2C4A6206CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:49:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593488959;
+	bh=lpsIvelkjihOnmpTVyd61Q+ncJXr0zdE2nXYr+Gy9AU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=myg7IVTo9Sszk1GxupfzKuAB/gEOffD7FzfbsRaBFeP1ngYEYX9hI7IaKWInFLwwj
+	 nU+GRlN9KukSFAczfTx5Yv401CtF61L/vlo5KGt0MbdB7fgM2awCZDyz4IIEgksMyi
+	 rid9z8LXwbBR7jY/C8MyHiLoDWPPMjBvv/B7M3mc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729254AbgF3Dsf (ORCPT
+        id S1729272AbgF3DtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 23:48:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39432 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726686AbgF3Dse (ORCPT
+        Mon, 29 Jun 2020 23:49:18 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:30217 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726686AbgF3DtR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 23:48:34 -0400
-Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2706C061755;
-        Mon, 29 Jun 2020 20:48:34 -0700 (PDT)
-Received: by mail-il1-x134.google.com with SMTP id k1so15288840ils.2;
-        Mon, 29 Jun 2020 20:48:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yAZduYcEKm4wiOoLB6wnk1hlMRtoPsLgtKlyIvlMUUk=;
-        b=YV4Bczfd6bRQ9u+eV78DMYCoXm1i8z9d/3fuFQu+vwiA2aPI3YZ8WhC292HaKBRfNP
-         RhhGynlz+72LZnDTTao74cspJhBAu2YxIMiWQ9DhiT/yP3HuVYfdJDj26IHtkZJUuMkj
-         2KhwW3iVCq6490GoCXVJh6wortfVW1+8f6nIw30m8JeXLBOqhVEwQ2vnmO3eKWP5ujDP
-         +q06XRpDXWU9ea+yNtouGjdWF43ssCft2kSjUrF8flgz9DeUB5wZG+1+OQ9DzLc8YgeW
-         bFyiRbF0fEQEk6wF2r/i3P1SOKsfsunzwwSDwTGwudBthnqM1VNsRtafBDlx6wHaH1Pr
-         MCQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yAZduYcEKm4wiOoLB6wnk1hlMRtoPsLgtKlyIvlMUUk=;
-        b=O8IBU5Pmd2QjNqvLPsX0IPOprGGPWtvWVnpyIh6gZKV2bGBD8Q5ZfrDtQYttRPubgz
-         wclATHuB7ejw4SP7K/Wv4YKMm7aAmVUPSF85SwdZBg0ZbVfneQmLyrTcsRjTo4GNZBZd
-         iRzfxiH+36h4DbhxcqOkOtpQCt7FpP7x2xYNq0nE+Oc2xzP2LWsl3xthgBLGG74V59TP
-         QGAlt/d9MmUr6iB6YrqV35/hCAmI8DjDjyfNBc+DSyt+a3VeA8lt7uhXFyQW7sYwTcx5
-         Uf/YppLT4pOlCnmXHqN1OVpSILlW7/PXzU0D7Y3y4R76oDIjSyV0jAU3TqBF5Satn5nk
-         AEKw==
-X-Gm-Message-State: AOAM533CtexwywBOIPNpym45kE72Xk3sptPywaQTcKlLXbOPZwRlf0Gt
-        AWv4skIs91aDMAxLj5mRBK4ThO+5jzUDx3EPpRE=
-X-Google-Smtp-Source: ABdhPJyjkFEj14utEUhY6LxqYobmK3bsy7i35K8spE7FGJtI1qZq51d4GS5sK0tLkpXIkrKSpdNa3biT5pTxesm4ysI=
-X-Received: by 2002:a92:bb0b:: with SMTP id w11mr756075ili.238.1593488914196;
- Mon, 29 Jun 2020 20:48:34 -0700 (PDT)
+        Mon, 29 Jun 2020 23:49:17 -0400
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 05U3moGX023631;
+        Tue, 30 Jun 2020 12:48:50 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 05U3moGX023631
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1593488931;
+        bh=L5bF0/i/eZ19PQIKyGrIclMJgHgazVnFvKT56waBheY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=fQtNDef/4gbBj4sH8OyYiGSHcVVTVW/todIP66Irykh3b2OXoTHHL+smNd+G7YAIp
+         w8Kmok1bdmEEhjYCX4VVFCmAucuiCHvK3CdIadCQkSAmjg3thGW+DoJ5sW1ew1vW5o
+         W7fWOJxX+gPdh4VxrBR/foabnqwz3RNJ5tTkOvWh3E3tGFyP2ZgLuWcgiPF1NcVXj/
+         wioVVkcq9cdcYC2/ee/0IIQtsgIyzFnjzd1WcxZk2+QwpOYvSt/kP8WtZRkclUs6+v
+         n/9xPwxanT68SrTcTPMrz3zk9xXxi+ijhtuJV+JYphDG78wknkh3wsXa9edDgbDGmK
+         TySXLjDoPcQOg==
+X-Nifty-SrcIP: [209.85.222.46]
+Received: by mail-ua1-f46.google.com with SMTP id c7so4563686uap.0;
+        Mon, 29 Jun 2020 20:48:50 -0700 (PDT)
+X-Gm-Message-State: AOAM530cSt/CIf0dnVqrZv9sWq1eDckTN4MYvUdUxX7BjYl8hOP9htwR
+        Iw4UInp6nfQahP5dXkg3QcpzWb4ZA/NhaydYIWk=
+X-Google-Smtp-Source: ABdhPJxafqb6wU0aahd+d4klMRfJurxLwUz2ixEpZl5qdTwMQ4C9xAcUyuO1leT0C0/nEqECxK2CI9Ti4GX8Ieh/mhc=
+X-Received: by 2002:a9f:2204:: with SMTP id 4mr13372786uad.40.1593488929471;
+ Mon, 29 Jun 2020 20:48:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <000000000000744a6805a93b969a@google.com>
-In-Reply-To: <000000000000744a6805a93b969a@google.com>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Mon, 29 Jun 2020 20:48:23 -0700
-Message-ID: <CAM_iQpV0oPkXPwca_annXc4Rr=_Wa-izZ63tFqML2WmxXuYV_g@mail.gmail.com>
-Subject: Re: KASAN: use-after-free Read in devlink_get_from_attrs
-To:     syzbot <syzbot+09b4a3f42f32d58b8982@syzkaller.appspotmail.com>
-Cc:     David Miller <davem@davemloft.net>, Jiri Pirko <jiri@mellanox.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Kernel Network Developers <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+References: <cover.1593423060.git.mchehab+huawei@kernel.org> <b10b8bf2c21f4288ecb6081a967c302000346ff1.1593423060.git.mchehab+huawei@kernel.org>
+In-Reply-To: <b10b8bf2c21f4288ecb6081a967c302000346ff1.1593423060.git.mchehab+huawei@kernel.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 30 Jun 2020 12:48:13 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARkzq=D8hhqYERcjRzv5LXsepunQCX8rhG7nORZuBAj7Q@mail.gmail.com>
+Message-ID: <CAK7LNARkzq=D8hhqYERcjRzv5LXsepunQCX8rhG7nORZuBAj7Q@mail.gmail.com>
+Subject: Re: [PATCH v2 4/5] kconfig: qconf: make debug links work again
+To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc:     Maxim Levitsky <mlevitsk@redhat.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-#syz fix: genetlink: get rid of family->attrbuf
+On Mon, Jun 29, 2020 at 6:35 PM Mauro Carvalho Chehab
+<mchehab+huawei@kernel.org> wrote:
+>
+> The Qt5 conversion broke support for debug info links.
+>
+> Restore the behaviour added by changeset
+> ab45d190fd4a ("kconfig: create links in info window").
+>
+> The original approach were to pass a pointer for a data struct
+
+"were" -> "was" ?
+
+
+> via an <a href>. That doesn't sound a good idea, as, if something
+> gets wrong, the app could crash. So, instead, pass the name of
+> the symbol, and validate such symbol at the hyperlink handling
+> logic.
+>
+> Link: https://lore.kernel.org/lkml/20200628125421.12458086@coco.lan/
+> Reported-by: Maxim Levitsky <mlevitsk@redhat.com>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+
+
+
+This patch does not cause segmentation fault any more.
+Thanks.
+
+
+> ---
+>  scripts/kconfig/qconf.cc | 75 +++++++++++++++++++++++++++++++++++++---
+>  scripts/kconfig/qconf.h  |  1 +
+>  2 files changed, 71 insertions(+), 5 deletions(-)
+>
+> diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
+> index 85782da3e464..49f0688fceb8 100644
+> --- a/scripts/kconfig/qconf.cc
+> +++ b/scripts/kconfig/qconf.cc
+> @@ -7,6 +7,7 @@
+>  #include <QAction>
+>  #include <QApplication>
+>  #include <QCloseEvent>
+> +#include <QDebug>
+>  #include <QDesktopWidget>
+>  #include <QFileDialog>
+>  #include <QLabel>
+> @@ -1012,7 +1013,7 @@ ConfigInfoView::ConfigInfoView(QWidget* parent, const char *name)
+>         : Parent(parent), sym(0), _menu(0)
+>  {
+>         setObjectName(name);
+> -
+> +       setOpenLinks(false);
+>
+>         if (!objectName().isEmpty()) {
+>                 configSettings->beginGroup(objectName());
+> @@ -1085,7 +1086,7 @@ void ConfigInfoView::menuInfo(void)
+>                         if (sym->name) {
+>                                 head += " (";
+>                                 if (showDebug())
+> -                                       head += QString().sprintf("<a href=\"s%p\">", sym);
+> +                                       head += QString().sprintf("<a href=\"s%s\">", sym->name);
+>                                 head += print_filter(sym->name);
+>                                 if (showDebug())
+>                                         head += "</a>";
+> @@ -1094,7 +1095,7 @@ void ConfigInfoView::menuInfo(void)
+>                 } else if (sym->name) {
+>                         head += "<big><b>";
+>                         if (showDebug())
+> -                               head += QString().sprintf("<a href=\"s%p\">", sym);
+> +                               head += QString().sprintf("<a href=\"s%s\">", sym->name);
+>                         head += print_filter(sym->name);
+>                         if (showDebug())
+>                                 head += "</a>";
+> @@ -1145,7 +1146,7 @@ QString ConfigInfoView::debug_info(struct symbol *sym)
+>                 switch (prop->type) {
+>                 case P_PROMPT:
+>                 case P_MENU:
+> -                       debug += QString().sprintf("prompt: <a href=\"m%p\">", prop->menu);
+> +                       debug += QString().sprintf("prompt: <a href=\"m%s\">", sym->name);
+>                         debug += print_filter(prop->text);
+>                         debug += "</a><br>";
+>                         break;
+> @@ -1217,13 +1218,74 @@ void ConfigInfoView::expr_print_help(void *data, struct symbol *sym, const char
+>         QString str2 = print_filter(str);
+>
+>         if (sym && sym->name && !(sym->flags & SYMBOL_CONST)) {
+> -               *text += QString().sprintf("<a href=\"s%p\">", sym);
+> +               *text += QString().sprintf("<a href=\"s%s\">", sym->name);
+>                 *text += str2;
+>                 *text += "</a>";
+>         } else
+>                 *text += str2;
+>  }
+>
+> +void ConfigInfoView::clicked(const QUrl &url)
+> +{
+> +       QByteArray str = url.toEncoded();
+> +       const std::size_t count = str.size();
+> +       char *data = new char[count + 1];
+> +       struct symbol **result;
+> +       struct menu *m = NULL;
+> +       char type;
+> +
+> +       if (count < 1) {
+> +               qInfo() << "Clicked link is empty";
+> +               delete data;
+> +               return;
+> +       }
+> +
+> +       memcpy(data, str.constData(), count);
+> +       data[count] = '\0';
+> +       type = data[0];
+> +
+> +       /* Seek for exact match */
+> +       data[0] = '^';
+> +       strcat(data, "$");
+> +       result = sym_re_search(data);
+> +       if (!result) {
+> +               qInfo() << "Clicked symbol is invalid:" << data;
+> +               delete data;
+> +               return;
+> +       }
+> +
+> +       sym = *result;
+> +       if (type == 's') {
+> +               symbolInfo();
+> +               emit showDebugChanged(true);
+> +               free(result);
+> +               delete data;
+> +               return;
+> +       }
+> +
+> +       /* URL is a menu */
+> +       for (struct property *prop = sym->prop; prop; prop = prop->next) {
+> +                   if (prop->type != P_PROMPT && prop->type != P_MENU)
+> +                           continue;
+> +                   m = prop->menu;
+> +                   break;
+> +       }
+> +
+> +       if (!m) {
+> +               qInfo() << "Clicked menu is invalid:" << data;
+> +               free(result);
+> +               delete data;
+> +               return;
+> +       }
+> +
+> +       _menu = m;
+> +       menuInfo();
+> +
+> +       emit showDebugChanged(true);
+> +       free(result);
+> +       delete data;
+> +}
+> +
+>  QMenu* ConfigInfoView::createStandardContextMenu(const QPoint & pos)
+>  {
+>         QMenu* popup = Parent::createStandardContextMenu(pos);
+> @@ -1497,6 +1559,9 @@ ConfigMainWindow::ConfigMainWindow(void)
+>         helpMenu->addAction(showIntroAction);
+>         helpMenu->addAction(showAboutAction);
+>
+> +       connect (helpText, SIGNAL (anchorClicked (const QUrl &)),
+> +                helpText, SLOT (clicked (const QUrl &)) );
+> +
+>         connect(configList, SIGNAL(menuChanged(struct menu *)),
+>                 helpText, SLOT(setInfo(struct menu *)));
+>         connect(configList, SIGNAL(menuSelected(struct menu *)),
+> diff --git a/scripts/kconfig/qconf.h b/scripts/kconfig/qconf.h
+> index d913a02967ae..a193137f2314 100644
+> --- a/scripts/kconfig/qconf.h
+> +++ b/scripts/kconfig/qconf.h
+> @@ -250,6 +250,7 @@ public slots:
+>         void setInfo(struct menu *menu);
+>         void saveSettings(void);
+>         void setShowDebug(bool);
+> +       void clicked (const QUrl &url);
+>
+>  signals:
+>         void showDebugChanged(bool);
+> --
+> 2.26.2
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
