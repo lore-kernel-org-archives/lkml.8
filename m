@@ -2,206 +2,151 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7808C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82CD6C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:43:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90E2020724
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5908E2074F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:43:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Wiw+xl2Q"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="GFGPy40K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389621AbgF3Pld (ORCPT
+        id S2389668AbgF3Png (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 11:41:33 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:43546 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729105AbgF3Plc (ORCPT
+        Tue, 30 Jun 2020 11:43:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36844 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389653AbgF3Pne (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 11:41:32 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200630154130euoutp0119b76a99a4cc62d0f3b749732fac0d8f~dXKEpbmH33091230912euoutp011
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 15:41:30 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200630154130euoutp0119b76a99a4cc62d0f3b749732fac0d8f~dXKEpbmH33091230912euoutp011
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1593531690;
-        bh=9+ZLNHccDw6coz73gcRe7hN+aPPjOugZXhzt0Urpb10=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=Wiw+xl2QnqJRK70fj0aslQhPtb6MNS8iJKs7ADL6AMmR67lZJ4DEUnU6eo93oeVA2
-         hEarkjDbsK5LT6MAD1yOFUwDU5QtY8iJKZsSR4nVOunctkJG6aMakPbgxY2T8stuPq
-         2N/7XY36JADRaEAFA7izWH8ga04sPdsvA4MHTxuI=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200630154129eucas1p17cd71ea4c71e6b908bd03beb386f8352~dXKD949CJ1267712677eucas1p1B;
-        Tue, 30 Jun 2020 15:41:29 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id A2.6C.06456.92D5BFE5; Tue, 30
-        Jun 2020 16:41:29 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200630154129eucas1p1b9fe4f782eaacfc3997bbb3742816326~dXKDjZNdh0182201822eucas1p1F;
-        Tue, 30 Jun 2020 15:41:29 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200630154129eusmtrp1704148f4f0ae4aab4cfadc825f5a57d6~dXKDigtoR0929409294eusmtrp1N;
-        Tue, 30 Jun 2020 15:41:29 +0000 (GMT)
-X-AuditID: cbfec7f2-809ff70000001938-27-5efb5d291577
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id B0.27.06314.92D5BFE5; Tue, 30
-        Jun 2020 16:41:29 +0100 (BST)
-Received: from [106.210.85.205] (unknown [106.210.85.205]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200630154127eusmtip12655edbc046a96b358ecc5ebb417ec9c~dXKB8M9py1474314743eusmtip10;
-        Tue, 30 Jun 2020 15:41:27 +0000 (GMT)
-Subject: Re: [PATCH v6 2/4] driver core: add deferring probe reason to
- devices_deferred property
-To:     Grygorii Strashko <grygorii.strashko@ti.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Jonas Karlman <jonas@kwiboo.se>, linux-kernel@vger.kernel.org,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        andy.shevchenko@gmail.com, Mark Brown <broonie@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-From:   Andrzej Hajda <a.hajda@samsung.com>
-Message-ID: <21f5ec9c-2d1d-5f28-5aeb-ac0db144a55e@samsung.com>
-Date:   Tue, 30 Jun 2020 17:41:26 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.9.0
+        Tue, 30 Jun 2020 11:43:34 -0400
+Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 478A4C03E97A
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 08:43:34 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id f3so10142092pgr.2
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 08:43:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Czyj7qztvQ/ET90pA6Cgm802J9mg/c4CrHX1EyYszQQ=;
+        b=GFGPy40KuPsHkZUJdbeyZcQSvGfgs5FvnkigPPk9SV7CG59Zt39VKpM1zlVSVXoRDt
+         yCeVdinmT/3C3Jtmhrs/ytEmj7Wsnn2qAcbIAA0lgRJAkDSMH3qtVX2x5ups9P63e9d7
+         P9x2xILnsZVnyM3LolHHJ5MFrhP7fYB+ZvvgJsDeODXoJ2PGrPKhFRUVpy4BweeZ7T88
+         7TInXYSLaUF36rQyQh/ug2yeZtWjhx06VQWrVd2dOvf947KJmX/LErgbh6FwQ3ULFM07
+         +NsZiEDxchja6NsLMdoWiv7fTvOttuxXSfOyaHVhHUidelj6tLF2XevCAgd1imXsny29
+         D7Hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Czyj7qztvQ/ET90pA6Cgm802J9mg/c4CrHX1EyYszQQ=;
+        b=T7HodZsFOZo3qXA1oXkoEOeVV3tDRJuDLHpW/oPidxXXufMRo/0W3QRfpJn+k5GLy7
+         eBhz9MVatSwfiinR794qh+NSQXT0/sMin7CWgnJcZmcnrUq1c/n3bGlD0GLtpVbBPn1f
+         qgCGmXtj8zxV2cDGbu98I1E3s5U+blatnWcj5D0L1NzL1vftSpYyTGXkBMeq/0/vpOND
+         6dakc2425oRuVPdxjs3dsEHcxtk09CpoRY1DojL5ghFBwHAVi+p3Dn0wRbNgJ7ySLk/6
+         GJbO8t77pImJR8G/Ik3JsmeAprzCfVoIJBboOSPQ80Bl5AlTkfQL4EE6EkAPVmpT8hsW
+         K8pg==
+X-Gm-Message-State: AOAM532iZha5Ry+y/gl5/iThZ9SIEnF3bmOqOjgsVDLGUi75v8e5JBS7
+        fzF7kpmQL87D7SaL40MvurDo/w==
+X-Google-Smtp-Source: ABdhPJx6lEIGGyQAAazhh6sEGODM0EvGn2wcc8uAkFeSAVS9hqQhG93iUqi0nvo2CJcI+RwKQRfdOw==
+X-Received: by 2002:a65:5a0f:: with SMTP id y15mr15197406pgs.6.1593531813542;
+        Tue, 30 Jun 2020 08:43:33 -0700 (PDT)
+Received: from ?IPv6:2605:e000:100e:8c61:4113:50ea:3eb3:a39b? ([2605:e000:100e:8c61:4113:50ea:3eb3:a39b])
+        by smtp.gmail.com with ESMTPSA id w68sm3185027pff.191.2020.06.30.08.43.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Jun 2020 08:43:32 -0700 (PDT)
+Subject: Re: rename ->make_request_fn and move it to the
+ block_device_operations
+From:   Jens Axboe <axboe@kernel.dk>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     dm-devel@redhat.com, linux-kernel@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-xtensa@linux-xtensa.org,
+        drbd-dev@lists.linbit.com, linuxppc-dev@lists.ozlabs.org,
+        linux-bcache@vger.kernel.org, linux-raid@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-nvme@lists.infradead.org,
+        linux-s390@vger.kernel.org
+References: <20200629193947.2705954-1-hch@lst.de>
+ <bd1443c0-be37-115b-1110-df6f0e661a50@kernel.dk>
+Message-ID: <6ddbe343-0fc2-58c8-3726-c4ba9952994f@kernel.dk>
+Date:   Tue, 30 Jun 2020 09:43:31 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <66faa188-5ef6-d449-07fe-28c8be5e559c@ti.com>
-Content-Transfer-Encoding: 8bit
-Content-Language: en-GB
-X-Brightmail-Tracker: H4sIAAAAAAAAA02SWUwTURSGczvT6VAtDAXTE3CJdQloRIloxiXELTrERH10CWjBkUUopLUK
-        vkBEtKAsFRu1gCFgAevSUhYFQyDFWAyyCLJIgGoUY1VopCwRlUiZEnn7zv3P/59zkkti4mm+
-        Hxkrv8Aq5LJ4KSHEa1/96tgUGP47YsuH3jW0Pa8Z0ZV3jXxa+/EzQb+bdBB0eqmRoB/exume
-        aTtGv/7Rg9OZmgcC2vypl0931xcStEXbgOgnL4cEtCXnFF00ocX2eDHdvW8xxtGfIWDqdEMC
-        pkB9j8+YDZkE05LXxWMaix4LGNsNK4+pepDK5FQbENOUnY8z1v5nPMZpXnlMdFK4+ywbH3uR
-        VWwOPSOMMbTY8KQ+7+SRzvg01OuZhTxIoELAlDvKy0JCUkxVILg/PYZxxQSCokazu3AiKC3/
-        QyxYXpi+E5xQjqBPM+PuciCYKWoVuLp8qEgYqm7gu9iXioJfg7PzDoyqxWHw/ot5gaAC4W/V
-        +/lYERUKA+0d82acWgcd12Z5Ll5GhUOOvtjd4w2v733GXexB7YRHpmHkYoxaBek1BRjHErgy
-        8ZDvGgaUnoQ3+ib33gdgaqqMz7EPfLNWCzheDq35N3GOU8FWcRXjzGoENaY6jBN2wWD7zFwQ
-        OTchEIz1m10I1F7Qf9rOoSf0j3pzK3jCrdo7GPcsAvU1MZexGmxtNe48Ceg7J4k8JNUtOky3
-        6BjdomN0/8cWI9yAJKxKmRDNKoPl7KUgpSxBqZJHB0UlJpjR3HdsnbWOP0eTXZEWRJFIulSk
-        XvE7QsyXXVSmJFgQkJjUV7SvrTVCLDorS7nMKhJPK1TxrNKC/ElcKhFtLbGHi6lo2QX2PMsm
-        sYoFlUd6+KUhg8Qr76uhRHpubb2fzdf/8Hp/Q9DTy3/tYXXGJcXjtqa3GvPHjHYobs9QOa/v
-        SLT7WMdV2oDC422OXcOnTgTklnhGaiZyj4SPOUvNEFvSqIkRhJQfisq6nX2wauOWnOSu0TJ1
-        pQPEP68O5Du/bGMKmo/GKc6Eee9/lhEXYxppkOLKGFnwBkyhlP0DUG3b4ooDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupileLIzCtJLcpLzFFi42I5/e/4XV3N2N9xBv/7OSxeTjjMaLFxxnpW
-        i6kPn7BZXPn6ns2iefF6NouVU1gsrn5/yWxx8s1VFovOiUvYLTY9vsZqcXnXHDaLQ1P3Mlqs
-        PXKX3eJQX7TF3C9TmR34PS5fu8js8f5GK7vHzll32T1md8xk9di0qpPN48SES0we++euYfe4
-        332cyWPzknqPvi2rGD0O9E5m8Th+YzuTx+dNcgG8UXo2RfmlJakKGfnFJbZK0YYWRnqGlhZ6
-        RiaWeobG5rFWRqZK+nY2Kak5mWWpRfp2CXoZq07cZym4Lljx9EJOA+M1vi5GTg4JAROJ3Rte
-        s4HYQgJLGSVW/dCDiItL7J7/lhnCFpb4c60LqIYLqOYto8Sh32vAEsICSRJ3t+xlBbFFBJIl
-        vnS8YAEpYhbYxSJx4m8DO0THBSaJKTO2g61gE9CU+Lv5JpjNK2AncevceXYQm0VAVeJ82z8m
-        EFtUIFbi270tUDWCEidnPmEBsTkFrCRWb7jHCGIzC5hJzNv8kBnClpdo3jobyhaXaPqyknUC
-        o9AsJO2zkLTMQtIyC0nLAkaWVYwiqaXFuem5xYZ6xYm5xaV56XrJ+bmbGIHpYNuxn5t3MF7a
-        GHyIUYCDUYmHt0P2d5wQa2JZcWXuIUYJDmYlEV6ns6fjhHhTEiurUovy44tKc1KLDzGaAj03
-        kVlKNDkfmKrySuINTQ3NLSwNzY3Njc0slMR5OwQOxggJpCeWpGanphakFsH0MXFwSjUwtm3o
-        eOq+40Vz+ByOubarKzQWad/x/P5jw8ZZn4yuX+kXvhP4c078/sc7t0/zd+4odY09OHWRLo/H
-        M+XiqiDxO7/CZr6+OPHijqk/FHvs5u7fsjpv31KFl6xiO5+0/399/mzt3urP/Qf9fb4lrety
-        6N5w/u/XDZKRlmqhbw9tWci6pd8y6afmjm1KLMUZiYZazEXFiQAhCqvUHQMAAA==
-X-CMS-MailID: 20200630154129eucas1p1b9fe4f782eaacfc3997bbb3742816326
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200626100110eucas1p2c5b91f2c98a5c6e5739f5af3207d192e
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200626100110eucas1p2c5b91f2c98a5c6e5739f5af3207d192e
-References: <20200626100103.18879-1-a.hajda@samsung.com>
-        <CGME20200626100110eucas1p2c5b91f2c98a5c6e5739f5af3207d192e@eucas1p2.samsung.com>
-        <20200626100103.18879-3-a.hajda@samsung.com>
-        <5f159e00-44fd-515b-dd8c-4db9845dc9e6@ti.com>
-        <7e3c924b-c025-a829-6868-78e2935c70eb@samsung.com>
-        <66faa188-5ef6-d449-07fe-28c8be5e559c@ti.com>
+In-Reply-To: <bd1443c0-be37-115b-1110-df6f0e661a50@kernel.dk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 30.06.2020 10:59, Grygorii Strashko wrote:
-> Hi
->
-> On 29/06/2020 14:28, Andrzej Hajda wrote:
->> Hi Grygorii,
+On 6/30/20 7:57 AM, Jens Axboe wrote:
+> On 6/29/20 1:39 PM, Christoph Hellwig wrote:
+>> Hi Jens,
 >>
->> (...)
->>
->>>>    /*
->>>>     * deferred_devs_show() - Show the devices in the deferred probe
->>>> pending list.
->>>>     */
->>>> @@ -221,7 +241,8 @@ static int deferred_devs_show(struct seq_file *s,
->>>> void *data)
->>>>        mutex_lock(&deferred_probe_mutex);
->>>>          list_for_each_entry(curr, &deferred_probe_pending_list,
->>>> deferred_probe)
->>>> -        seq_printf(s, "%s\n", dev_name(curr->device));
->>>> +        seq_printf(s, "%s\t%s", dev_name(curr->device),
->>>> + curr->device->p->deferred_probe_reason ?: "\n");
->>>>          mutex_unlock(&deferred_probe_mutex);
->>>>
->>>
->>> Sry, may be i missing smth, but shouldn't it be optional
->>> (CONFIG_DEBUG_FS is probably too generic).
->>>
->>
->> I am not sure what exactly are you referring to, but this patch does not
->> add new property, it just extends functionality of existing one.
->
-> Sry, needed to be more specific.
->
-> You've added  device_set_deferred_probe_reson(dev, &vaf);
-> which expected to be used on every EPROBE_DEFER in dev_err_probe() in 
-> combination with
->
-> +       } else {
-> +               device_set_deferred_probe_reson(dev, &vaf);
->                 dev_dbg(dev, "error %d: %pV", err, &vaf);
->
-> ^^ dev_dbg() does not add any runtime overhead during boot unless enabled
-> +       }
->
-> But:
->
-> +void device_set_deferred_probe_reson(const struct device *dev, struct 
-> va_format *vaf)
-> +{
-> +       const char *drv = dev_driver_string(dev);
-> +
-> +       mutex_lock(&deferred_probe_mutex);
-> +
-> +       kfree(dev->p->deferred_probe_reason);
-> +       dev->p->deferred_probe_reason = kasprintf(GFP_KERNEL, "%s: 
-> %pV", drv, vaf);
-> +
-> +       mutex_unlock(&deferred_probe_mutex);
-> +}
->
-> ^^ Adds locking, kfree() and kasprintf() for every deferred probe 
-> during boot and can't be disabled.
->
-> Right?
+>> this series moves the make_request_fn method into block_device_operations
+>> with the much more descriptive ->submit_bio name.  It then also gives
+>> generic_make_request a more descriptive name, and further optimize the
+>> path to issue to blk-mq, removing the need for the direct_make_request
+>> bypass.
+> 
+> Looks good to me, and it's a nice cleanup as well. Applied.
 
+Dropped, insta-crashes with dm:
 
-Right, but usually the burden should be insignificant in comparison to 
-probe time, so I do not think it is worth optimizing.
+[   10.240134] BUG: kernel NULL pointer dereference, address: 0000000000000000
+[   10.241000] #PF: supervisor instruction fetch in kernel mode
+[   10.241666] #PF: error_code(0x0010) - not-present page
+[   10.242280] PGD 0 P4D 0 
+[   10.242600] Oops: 0010 [#1] PREEMPT SMP
+[   10.243073] CPU: 1 PID: 2110 Comm: systemd-udevd Not tainted 5.8.0-rc3+ #6655
+[   10.243939] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1 04/01/2014
+[   10.245012] RIP: 0010:0x0
+[   10.245322] Code: Bad RIP value.
+[   10.245695] RSP: 0018:ffffc900002f7af8 EFLAGS: 00010246
+[   10.246333] RAX: ffffffff81c83520 RBX: ffff8881b805dea8 RCX: ffff88819e844070
+[   10.247227] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88819e844070
+[   10.248112] RBP: ffffc900002f7b48 R08: ffff8881b6f38800 R09: ffff88818ff0ea58
+[   10.248994] R10: 0000000000000000 R11: ffff88818ff0ea58 R12: ffff88819e844070
+[   10.250077] R13: 00000000ffffffff R14: 0000000000000000 R15: ffff888107812948
+[   10.251168] FS:  00007f5c3ed66a80(0000) GS:ffff8881b9c80000(0000) knlGS:0000000000000000
+[   10.252161] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   10.253189] CR2: ffffffffffffffd6 CR3: 00000001b2953003 CR4: 00000000001606e0
+[   10.254157] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   10.255279] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   10.256365] Call Trace:
+[   10.256781]  submit_bio_noacct+0x1f6/0x3d0
+[   10.257297]  submit_bio+0x37/0x130
+[   10.257780]  ? guard_bio_eod+0x2e/0x70
+[   10.258418]  mpage_readahead+0x13c/0x180
+[   10.259096]  ? blkdev_direct_IO+0x490/0x490
+[   10.259654]  read_pages+0x68/0x2d0
+[   10.260051]  page_cache_readahead_unbounded+0x1b7/0x220
+[   10.260818]  generic_file_buffered_read+0x865/0xc80
+[   10.261587]  ? _copy_to_user+0x6d/0x80
+[   10.262171]  ? cp_new_stat+0x119/0x130
+[   10.262680]  new_sync_read+0xfe/0x170
+[   10.263155]  vfs_read+0xc8/0x180
+[   10.263647]  ksys_read+0x53/0xc0
+[   10.264209]  do_syscall_64+0x3c/0x70
+[   10.264759]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[   10.265200] RIP: 0033:0x7f5c3fcc9ab2
+[   10.265510] Code: Bad RIP value.
+[   10.265775] RSP: 002b:00007ffc8e0cf9c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
+[   10.266426] RAX: ffffffffffffffda RBX: 000055d5eca76c68 RCX: 00007f5c3fcc9ab2
+[   10.267012] RDX: 0000000000000040 RSI: 000055d5eca76c78 RDI: 0000000000000006
+[   10.267591] RBP: 000055d5eca44890 R08: 000055d5eca76c50 R09: 00007f5c3fd99a40
+[   10.268168] R10: 0000000000000008 R11: 0000000000000246 R12: 000000003bd90000
+[   10.268744] R13: 0000000000000040 R14: 000055d5eca76c50 R15: 000055d5eca448e0
+[   10.269319] Modules linked in:
+[   10.269562] CR2: 0000000000000000
+[   10.269845] ---[ end trace f09b8963e5a3593b ]---
 
+-- 
+Jens Axboe
 
-Regards
-
-Andrzej
-
-
->
->
