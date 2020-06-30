@@ -2,159 +2,229 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18978C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:16:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DEA2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B774520759
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:16:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qxavm+h/"
+	by mail.kernel.org (Postfix) with ESMTP id 6A14020759
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:16:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593504999;
+	bh=+xHB9lVucHx2niSXqGbLIy1TUh7LI7CcDCWoI7xv9/Y=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=FeLhOFC8EfxdnAsno3vjGowV3T7f/8ZfxKXrIRt+P/8QsrvRqrD7Qluu+ozhewD77
+	 fPy/XNxetHpM/+CDw8in0NlPF76l4oPrhhfNCRZ8TOK7q6Cp74YPQjfgBt6ZD+h8zP
+	 gsdoFguupxYoPeOqPzgiAClI9WX4Bg4EaiVSbZ4o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730819AbgF3IQR (ORCPT
+        id S1730992AbgF3IQh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 04:16:17 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:33962 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726994AbgF3IQQ (ORCPT
+        Tue, 30 Jun 2020 04:16:37 -0400
+Received: from mail-ej1-f65.google.com ([209.85.218.65]:39668 "EHLO
+        mail-ej1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728749AbgF3IQf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 04:16:16 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200630081613euoutp0193ad9943f48d6abe016d4b2b91391b21~dRFTAutuR0447904479euoutp01j
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 08:16:13 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200630081613euoutp0193ad9943f48d6abe016d4b2b91391b21~dRFTAutuR0447904479euoutp01j
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1593504974;
-        bh=Gc3IcEU2dlUOQ0VkbrJOiLpYc9GeFRiwO6+2Vp65ZaQ=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=qxavm+h/9+NdNejMLLYosvdtMfLcJKS0Sxw9z024J9wk//WuFFPLut3wIu8peNQxi
-         J7/AOAL+i7FaUMa8majcLUEJOEL7w2XxBJuLEhu8dOGerdagVYPjBwor8gP9hpoKZ0
-         ezwK2of1whefCf7AP5U+Z/cUl61WMpUNAenwVQ20=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200630081613eucas1p1a70a7bec7dd97570d7b323334ae5fd92~dRFS1-ICi3086430864eucas1p1N;
-        Tue, 30 Jun 2020 08:16:13 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id BA.4F.06456.DC4FAFE5; Tue, 30
-        Jun 2020 09:16:13 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200630081613eucas1p2af288e1a5b91c8e62cb8af2901cc45a4~dRFSg84fd2938129381eucas1p2f;
-        Tue, 30 Jun 2020 08:16:13 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200630081613eusmtrp116e2dfc8e1d5da89f9107f06a848f45a~dRFSalIzk0231002310eusmtrp1O;
-        Tue, 30 Jun 2020 08:16:13 +0000 (GMT)
-X-AuditID: cbfec7f2-7efff70000001938-d5-5efaf4cd4bf4
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id B5.5E.06314.DC4FAFE5; Tue, 30
-        Jun 2020 09:16:13 +0100 (BST)
-Received: from AMDC2765.digital.local (unknown [106.120.51.73]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200630081612eusmtip1f757a87664781dbfdcc874991439ce9e~dRFSBs3N81581115811eusmtip18;
-        Tue, 30 Jun 2020 08:16:12 +0000 (GMT)
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-To:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH] scatterlist: protect parameters of the sg_table related
- macros
-Date:   Tue, 30 Jun 2020 10:16:02 +0200
-Message-Id: <20200630081602.30594-1-m.szyprowski@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA0VSa0hTcRztv3t3dx2trpvgDyuTkUVR2tAPA01NEvZRP0WGj5WXabopuz4r
-        QRRChln4KJOysQTnY24OWaWQOSuj6dStcpkmlgVqlq9ovnNetW/nnN85nPPhR2LCadyPTFNl
-        02qVPENM8HHLm+WBM/1LK4lnZ54GSdtqjFxpY/NrjlTbFSZ1djwkpIZXYzxp99wkN4qQtdS1
-        IFmlqwHJOj8VEbLy9iYkWzT7x3Lj+eEpdEZaLq0Ojkjmp/a/HcKzhg/mjxRPEEXonkCDvEig
-        QqF2ahPTID4ppPQIhsybHJYsIXCPVXFZsojA0Oni7Ea+rbXw2EMDgsnb5by9SM8dC+FxEZQE
-        NLOaLUySPlQ0OB8EeDwY1YrA1s16RFQczFS7cQ/GqUD4sVSBebCAOgc9fToe23YUmk0vtwcC
-        5STAbljYmXEBRl2rOItFMN3bvhM4DLbKMpwNlCCYsBt4LClD4CyuQawrDEbtK9vzMOokGDuC
-        Wfk8mPo+4B4ZqAPgmvX2yNgWrLDcx1hZAKW3hKz7ONT2tu7Vdg86MBbLoK5Ks60LqQTQPR/m
-        3kX+tf+7tAg1IV86h1EqaEaiovOCGLmSyVEpgq5mKs1o6wNsG70Lz9AfxxUrokgk3i9Iti8n
-        CrnyXKZAaUVAYmIfQXS/LVEoSJEXXKfVmUnqnAyasaJDJC72FYTophKElEKeTafTdBat3r1y
-        SC+/IhTlvmFlcId3zHLo7O9L6fsK30UY6yXep+MGSxyx0ZeDdVmKNdETk2X+s74Q+xIon1i/
-        2WU+Ys7fwB+/+KmZ/yvSg/69z6N46Wpe44n1kKTVr8ZxTuTFgo+RA7k94bYRbb35GFYf6Oec
-        q24b+y75tXmtNGSjq1NrqnSoY8bdAWKcSZVLTmFqRv4P50OPw/0CAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrALMWRmVeSWpSXmKPExsVy+t/xu7pnv/yKMzh3k9di44z1rBYrVx9l
-        sliw39ri8q45bBZrj9xltzj44QmrA5vHmnlrGD0m31jO6LH7ZgObR9+WVYwenzfJBbBG6dkU
-        5ZeWpCpk5BeX2CpFG1oY6RlaWugZmVjqGRqbx1oZmSrp29mkpOZklqUW6dsl6GWcPXGRpeA6
-        f8WtpodsDYzTeLsYOTkkBEwkHv9Zw97FyMUhJLCUUaL38VpmiISMxMlpDawQtrDEn2tdbBBF
-        nxglrr94xQiSYBMwlOh6C5Lg5BARcJH4sHklE0gRs8AGRonJe++ygySEBfwl/n+9DzaVRUBV
-        4tmXSWA2r4CtxOEzi9ghNshLrN5wgHkCI88CRoZVjCKppcW56bnFhnrFibnFpXnpesn5uZsY
-        gaG37djPzTsYL20MPsQowMGoxMObcO5nnBBrYllxZe4hRgkOZiURXqezp+OEeFMSK6tSi/Lj
-        i0pzUosPMZoCLZ/ILCWanA+Mi7ySeENTQ3MLS0NzY3NjMwslcd4OgYMxQgLpiSWp2ampBalF
-        MH1MHJxSDYw5+mF35+VUdR68Ev7fzckrQi2mvMPjqHq0zIN7/Z77vcWXJq0sfiGqYtu9evn9
-        T39Efov4xZz6Zhp5Xzky4KD8vl0TdkyYveTr7KY6uSeTmya/mOHM0HBpaduJg0tmZPemPWiZ
-        nd+u8v/u5Um6Z0/n8aqVXVM2kajR/Gq4aLvQDwnbk9euSN5VYinOSDTUYi4qTgQAy4Y/+1MC
-        AAA=
-X-CMS-MailID: 20200630081613eucas1p2af288e1a5b91c8e62cb8af2901cc45a4
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200630081613eucas1p2af288e1a5b91c8e62cb8af2901cc45a4
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200630081613eucas1p2af288e1a5b91c8e62cb8af2901cc45a4
-References: <CGME20200630081613eucas1p2af288e1a5b91c8e62cb8af2901cc45a4@eucas1p2.samsung.com>
+        Tue, 30 Jun 2020 04:16:35 -0400
+Received: by mail-ej1-f65.google.com with SMTP id w6so19595900ejq.6
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 01:16:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=hko1yfUAmudr64+h8Vvsv9yxyiMyDyCQW7gtzOjfOyw=;
+        b=sGUVa3Ou8h6GtBNmyibfGg7+VlBBYFyXiVhDaZxTm6gVMIpsT5TeHGtwLmO1DB3ycC
+         MGAgxNk9k09L/rgDOnIHQayV5RcldMbBnFGg1xUK+/in/W04PxwkmmEIUEArAK20Au25
+         ZiDyGdJgQtPxMZoFkAxwgS7KoqUvgzQeiov6RsJokYU2qYBZYvkEufBB2qkDPxPv9hx4
+         96+gIQXVsqS6BKZ7LdFun+pDLnLvB3XsCvnrcekzmrdJeUrLw7lcyW7JxvNmYs5/NJvC
+         VikyTXOXv5TPfxtEP0LjEa/w1AY/NJ0/PYyCgLERgpwz/fIZqHsurmwdNHGW3uNF5cxz
+         KFxw==
+X-Gm-Message-State: AOAM530XElYhI6n1W4I5pQgD+xt3ZGfTpE6SN2KF4++XWJI9YN2mP3Qp
+        eGv4sNYxXDojgwcqhApmJNA=
+X-Google-Smtp-Source: ABdhPJzuh51THrXwyTfekdCcie3/eFyVUGsVbZAlUy6KQbb5+18rK8QRUVY1MZv2JSBvm/IbR3X2Sg==
+X-Received: by 2002:a17:906:ad9:: with SMTP id z25mr17291439ejf.53.1593504992761;
+        Tue, 30 Jun 2020 01:16:32 -0700 (PDT)
+Received: from ?IPv6:2a0b:e7c0:0:107::70f? ([2a0b:e7c0:0:107::70f])
+        by smtp.gmail.com with ESMTPSA id ck6sm1121256edb.18.2020.06.30.01.16.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Jun 2020 01:16:31 -0700 (PDT)
+Subject: Re: [PATCH v1 6/6] Documentation: Describe console mouse reporting
+To:     Tammo Block <tammo.block@gmail.com>, linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+References: <cover.1593499846.git.tammo.block@gmail.com>
+ <ae41a64c682a2af6c8c0fbaa8d94c7b63a6f2450.1593499846.git.tammo.block@gmail.com>
+From:   Jiri Slaby <jirislaby@kernel.org>
+Autocrypt: addr=jslaby@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <cf6e7168-3de7-7269-9421-0275c2b29986@kernel.org>
+Date:   Tue, 30 Jun 2020 10:16:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+MIME-Version: 1.0
+In-Reply-To: <ae41a64c682a2af6c8c0fbaa8d94c7b63a6f2450.1593499846.git.tammo.block@gmail.com>
+Content-Type: text/plain; charset=iso-8859-2
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add brackets to protect parameters of the recently added sg_table related
-macros from side-effects.
+Cc Randy who commented on v0 (you should have done it).
 
-Fixes: 709d6d73c756 ("scatterlist: add generic wrappers for iterating over sgtable objects")
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
----
- include/linux/scatterlist.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+On 30. 06. 20, 9:12, Tammo Block wrote:
+> This patch adds a description of the kernel interface(s) used for vt
+> console mouse reporting and describes the protocols and bitmasks.
+> 
+> Signed-off-by: Tammo Block <tammo.block@gmail.com>
+> ---
+>  .../admin-guide/console-mouse-reporting.rst   | 92 +++++++++++++++++++
+>  Documentation/admin-guide/index.rst           |  1 +
+>  2 files changed, 93 insertions(+)
+>  create mode 100644 Documentation/admin-guide/console-mouse-reporting.rst
+> 
+> diff --git a/Documentation/admin-guide/console-mouse-reporting.rst b/Documentation/admin-guide/console-mouse-reporting.rst
+> new file mode 100644
+> index 000000000000..11287cb233ba
+> --- /dev/null
+> +++ b/Documentation/admin-guide/console-mouse-reporting.rst
+> @@ -0,0 +1,92 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +=======================
+> +Console Mouse Reporting
+> +=======================
+> +
+> +A terminal may send escape sequences to enable applications to react to mouse
+> +input. As the kernel does not know when to emit these events a mouse daemon
+> +is needed to react to mouse movements and signal the kernel accordingly. The
+> +kernel will then send an escape sequence to the application. This is called
+> +mouse reporting and several types and protocols have been developed over time.
+> +
+> +See tiocl.h, the :manpage:`ioctl_console(2)` and :manpage:`console_codes(4)`
+> +man pages and the xterm [1]_ or terminalguide [2]_ home pages for a detailed
+> +list and description of the various protocols, their bit layout as well as
+> +their limitations.
+> +
+> +Events and formats
+> +++++++++++++++++++
+> +
+> +A linux console keeps state about two different aspects of mouse reporting,
+> +the kind of **events** to be reported and the **format** to send to userspace.
+> +
+> +A mouse daemon can check which kind of mouse events a clients wants to be
 
-diff --git a/include/linux/scatterlist.h b/include/linux/scatterlist.h
-index 4f922afb607a..45cf7b69d852 100644
---- a/include/linux/scatterlist.h
-+++ b/include/linux/scatterlist.h
-@@ -155,7 +155,7 @@ static inline void sg_set_buf(struct scatterlist *sg, const void *buf,
-  * Loop over each sg element in the given sg_table object.
-  */
- #define for_each_sgtable_sg(sgt, sg, i)		\
--	for_each_sg(sgt->sgl, sg, sgt->orig_nents, i)
-+	for_each_sg((sgt)->sgl, sg, (sgt)->orig_nents, i)
- 
- /*
-  * Loop over each sg element in the given *DMA mapped* sg_table object.
-@@ -163,7 +163,7 @@ static inline void sg_set_buf(struct scatterlist *sg, const void *buf,
-  * of the each element.
-  */
- #define for_each_sgtable_dma_sg(sgt, sg, i)	\
--	for_each_sg(sgt->sgl, sg, sgt->nents, i)
-+	for_each_sg((sgt)->sgl, sg, (sgt)->nents, i)
- 
- /**
-  * sg_chain - Chain two sglists together
-@@ -451,7 +451,7 @@ sg_page_iter_dma_address(struct sg_dma_page_iter *dma_iter)
-  * See also for_each_sg_page(). In each loop it operates on PAGE_SIZE unit.
-  */
- #define for_each_sgtable_page(sgt, piter, pgoffset)	\
--	for_each_sg_page(sgt->sgl, piter, sgt->orig_nents, pgoffset)
-+	for_each_sg_page((sgt)->sgl, piter, (sgt)->orig_nents, pgoffset)
- 
- /**
-  * for_each_sgtable_dma_page - iterate over the DMA mapped sg_table object
-@@ -465,7 +465,7 @@ sg_page_iter_dma_address(struct sg_dma_page_iter *dma_iter)
-  * unit.
-  */
- #define for_each_sgtable_dma_page(sgt, dma_iter, pgoffset)	\
--	for_each_sg_dma_page(sgt->sgl, dma_iter, sgt->nents, pgoffset)
-+	for_each_sg_dma_page((sgt)->sgl, dma_iter, (sgt)->nents, pgoffset)
- 
- 
- /*
+client
+
+> +informed about via the TIOCLINUX ioctl, using the TIOCL_GETMOUSEREPORTING
+> +subcall. The values of the supported event classes (9, 1000, 1002, 1003) are
+> +described in tiocl.h. Based on this information the daemon is responsible
+> +for not sending data packages for unrequested events.
+> +
+> +A userspace client may request to be informed by the kernel about one of
+> +the event classes and chose one of the data formats URXVT (1005), SRG
+> +(1006) or X10/X11 (default) via console escape sequences. In general all
+> +of them encode similar information, only the escape sequences differ.
+> +
+> +See the xterm [1]_ or terminalguide [2]_ home pages for all details.
+> +
+> +Reports from kernel to userspace client
+> ++++++++++++++++++++++++++++++++++++++++
+> +
+> +The requested events are sent by the kernel to userspace encoded in a
+
+an
+
+> +escape sequence, details depend on the chosen format. All of them use one
+> +based pointer coordinates and a single byte to encode the button status.
+> +
+> +Short summary (we call this the SRG button format for the rest of this text):
+> +
+> + - 1,2 : Buttons, lower bits (see notes below)
+> + - 3-5 : Modifier keys (Shift, Alt and Ctrl)
+> + - 6   : Mouse movement only, no button status change
+> + - 7-8 : Buttons, upper bits (for buttons 4-15)
+> +
+> +Reports send from daemon to kernel
+
+sent
+
+> +++++++++++++++++++++++++++++++++++
+> +
+> +A report is send by a mouse daemon to the kernel via the TIOCLINUX ioctl,
+
+sent (Randy pointed out this one already)
+
+> +using the TIOCL_SETSEL subcall. The coordinates are encoded zero based in
+> +xs and ys, with 0,0 as upper left corner, but see note below.
+
+I think "the" is missing twice in that sentence, but leave it as is
+unless some native speaker confirms.
+
+> +The format used by the userspace mouse daemon for button encoding is almost
+> +identical to the SRG button layout decribed above and is put into the sel_mode
+
+described
+
+> +of the tiocl_selection struct. All bits masked in TIOCL_SELBUTTONMASK are
+> +unchanged compared to the SRG button format above, the remaining three are
+> +changed the following way :
+
+no space belongs before colons, here in Europe.
+
+> +
+> +- 3,4  : Unused, must be zero. The kernel knows modifier key state anyway.
+> +- 5    : Always 1, identifies mouse report / TIOCL_SELMOUSEREPORT
+> +
+> +Notes
+> ++++++
+...
+
+thanks,
 -- 
-2.17.1
-
+js
+suse labs
