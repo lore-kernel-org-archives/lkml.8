@@ -2,71 +2,59 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96EBAC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF10C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A5B4206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:26:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2D972074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:27:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390308AbgF3R04 (ORCPT
+        id S2390320AbgF3R07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 13:26:56 -0400
+        Tue, 30 Jun 2020 13:26:59 -0400
 Received: from mga06.intel.com ([134.134.136.31]:3228 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729892AbgF3R0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 13:26:55 -0400
-IronPort-SDR: it0o/H8U+k9HIzdtbzjGHPq7CuOBBQnJbbGOJsM0UFoUt8d6IOzevnY9Iq+65Y9hMSbAqF6K+9
- Cqu+kxMGxL+Q==
-X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="207832970"
+        id S1729892AbgF3R04 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 13:26:56 -0400
+IronPort-SDR: C3bv6z/E+an3RS0R4agyic4qg/Q27EXuerRCUAkfIeN0ZnGBgEvs/Y9I8lmLT4XUmibw83GFCN
+ ilqJoPW1OGXA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="207832972"
 X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
-   d="scan'208";a="207832970"
+   d="scan'208";a="207832972"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 10:26:53 -0700
-IronPort-SDR: NAstuiCUVlQGHNxXkQ2FxTLqs6zfTlwZYqkktIFIgfcMxPut9azCbPgqywpOIDNKa0p+iXR9MY
- NeR+sApAgfVg==
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 10:26:56 -0700
+IronPort-SDR: 5wf0i0PMojENL5HhlZkscnuDRzLVNrKMmryjUbywGuvdnAkjBKzT5bT/rXOCEZns6IxKfgvHhh
+ z96zAKfI9WjA==
 X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
-   d="scan'208";a="281307447"
+   d="scan'208";a="281307454"
 Received: from dnoeunx-mobl.amr.corp.intel.com (HELO [10.254.77.113]) ([10.254.77.113])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 10:26:52 -0700
-Subject: Re: [PATCH] ASoC: Intel: bxt-da7219-max98357a: support MAX98390
- speaker amp
-To:     "Lu, Brent" <brent.lu@intel.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-Cc:     "Rojewski, Cezary" <cezary.rojewski@intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        "M, Naveen" <naveen.m@intel.com>, "Zhi, Yong" <yong.zhi@intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Libin Yang <libin.yang@linux.intel.com>,
-        "Chiang, Mac" <mac.chiang@intel.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        "Song, Chao" <chao.song@intel.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Jason Yan <yanaijie@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1593498722-7074-1-git-send-email-brent.lu@intel.com>
- <DM6PR11MB4316CA5F11462D11D1751C6C976F0@DM6PR11MB4316.namprd11.prod.outlook.com>
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 10:26:54 -0700
+Subject: Re: [PATCH 7/9] soundwire: intel/cadence: merge Soundwire interrupt
+ handlers/threads
+To:     Vinod Koul <vkoul@kernel.org>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
+        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+        ranjani.sridharan@linux.intel.com, hui.wang@canonical.com,
+        broonie@kernel.org, srinivas.kandagatla@linaro.org,
+        jank@cadence.com, mengdong.lin@intel.com,
+        slawomir.blauciak@intel.com, sanyog.r.kale@intel.com,
+        rander.wang@linux.intel.com, bard.liao@intel.com
+References: <20200623173546.21870-1-yung-chuan.liao@linux.intel.com>
+ <20200623173546.21870-8-yung-chuan.liao@linux.intel.com>
+ <20200630162448.GS2599@vkoul-mobl>
 From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <e7bd9caf-1bf8-d57c-2b67-13a63d23ebf9@linux.intel.com>
-Date:   Tue, 30 Jun 2020 11:26:53 -0500
+Message-ID: <55fbc41e-cb41-8bdf-bdbd-1d1b76938683@linux.intel.com>
+Date:   Tue, 30 Jun 2020 11:46:59 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <DM6PR11MB4316CA5F11462D11D1751C6C976F0@DM6PR11MB4316.namprd11.prod.outlook.com>
+In-Reply-To: <20200630162448.GS2599@vkoul-mobl>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -76,112 +64,113 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
->> diff --git a/sound/soc/intel/boards/Kconfig
->> b/sound/soc/intel/boards/Kconfig index 3d820e1..b3b863e 100644
->> --- a/sound/soc/intel/boards/Kconfig
->> +++ b/sound/soc/intel/boards/Kconfig
->> @@ -291,9 +291,17 @@ config
->> SND_SOC_INTEL_DA7219_MAX98357A_GENERIC
->>   	select SND_SOC_DMIC
->>   	select SND_SOC_HDAC_HDMI
->>
->> +config SND_SOC_INTEL_DA7219_MAX98390_GENERIC
->> +	tristate
->> +	select SND_SOC_DA7219
->> +	select SND_SOC_MAX98390
->> +	select SND_SOC_DMIC
->> +	select SND_SOC_HDAC_HDMI
+
+>> +irqreturn_t sdw_intel_thread(int irq, void *dev_id)
+>> +{
+>> +	struct sdw_intel_ctx *ctx = dev_id;
+>> +	struct sdw_intel_link_res *link;
 >> +
->>   config SND_SOC_INTEL_BXT_DA7219_MAX98357A_COMMON
->>   	tristate
->>   	select SND_SOC_INTEL_DA7219_MAX98357A_GENERIC
->> +	select SND_SOC_INTEL_DA7219_MAX98390_GENERIC
-
-this doesn't look too good, the only difference is the addition of 
-MAX98090 which should be added in SND_SOC_INTEL_DA7219_MAX98357A_GENERIC 
-above.
-
->>
->>   if SND_SOC_INTEL_APL
->>
->> @@ -309,6 +317,18 @@ config
->> SND_SOC_INTEL_BXT_DA7219_MAX98357A_MACH
->>   	   Say Y or m if you have such a device. This is a recommended option.
->>   	   If unsure select "N".
->>
->> +config SND_SOC_INTEL_BXT_DA7219_MAX98390_MACH
->> +	tristate "Broxton with DA7219 and MAX98390 in I2S Mode"
->> +	depends on I2C && ACPI && GPIOLIB
->> +	depends on MFD_INTEL_LPSS || COMPILE_TEST
->> +	depends on SND_HDA_CODEC_HDMI
->> +	select SND_SOC_INTEL_BXT_DA7219_MAX98357A_COMMON
->> +	help
->> +	   This adds support for ASoC machine driver for Broxton-P platforms
->> +	   with DA7219 + MAX98390 I2S audio codec.
->> +	   Say Y or m if you have such a device. This is a recommended option.
->> +	   If unsure select "N".
+>> +	list_for_each_entry(link, &ctx->link_list, list)
+>> +		sdw_cdns_irq(irq, link->cdns);
 >> +
+>> +	sdw_intel_enable_irq(ctx->mmio_base, true);
+>> +	return IRQ_HANDLED;
+>> +}
+>> +EXPORT_SYMBOL(sdw_intel_thread);
+> 
+> Who will call this API? Also don't see header for this..
 
-i don't think you need a different top-level config, just extend the 
-existing one to say MAX98357A or MAX98390.
+the header was merged 6 months ago:
 
-[...]
+6cd1d670bee6 soundwire: intel: update headers for interrupts
 
->>   	if (soc_intel_is_glk())
->>   		snd_soc_dapm_add_routes(&card->dapm, gemini_map,
->>   					ARRAY_SIZE(gemini_map));
->> @@ -631,17 +719,17 @@ static int bxt_card_late_probe(struct snd_soc_card
->> *card)
->>   		component = pcm->codec_dai->component;
->>   		snprintf(jack_name, sizeof(jack_name),
->>   			"HDMI/DP, pcm=%d Jack", pcm->device);
->> -		err = snd_soc_card_jack_new(card, jack_name,
->> +		ret = snd_soc_card_jack_new(card, jack_name,
->>   					SND_JACK_AVOUT,
->> &broxton_hdmi[i],
->>   					NULL, 0);
->>
->> -		if (err)
->> -			return err;
->> +		if (ret)
->> +			return ret;
->>
->> -		err = hdac_hdmi_jack_init(pcm->codec_dai, pcm->device,
->> +		ret = hdac_hdmi_jack_init(pcm->codec_dai, pcm->device,
->>   						&broxton_hdmi[i]);
->> -		if (err < 0)
->> -			return err;
->> +		if (ret < 0)
->> +			return ret;
+This function is called by the SOF driver:
 
-these look like unrelated changes?
+static irqreturn_t hda_dsp_sdw_thread(int irq, void *context)
+{
+	return sdw_intel_thread(irq, context);
+}
+
+the SOF driver implements a fallback when CONFIG_SOUNDWIRE is not defined.
+
+static inline irqreturn_t hda_dsp_sdw_thread(int irq, void *context)
+{
+	return IRQ_HANDLED;
+}
+
+> Is this called from irq context or irq thread or something else?
+
+from IRQ thread, hence the name, see pointers above.
+
+The key part is that we could only make the hardware work as intended by 
+using a single thread for all interrupt sources, and that patch is just 
+the generalization of what was implemented for HDaudio in mid-2019 after 
+months of lost interrupts and IPC errors. See below the code from 
+sound/soc/sof/intel/hda.c for interrupt handling.
+
+static irqreturn_t hda_dsp_interrupt_handler(int irq, void *context)
+{
+	struct snd_sof_dev *sdev = context;
+
+	/*
+	 * Get global interrupt status. It includes all hardware interrupt
+	 * sources in the Intel HD Audio controller.
+	 */
+	if (snd_sof_dsp_read(sdev, HDA_DSP_HDA_BAR, SOF_HDA_INTSTS) &
+	    SOF_HDA_INTSTS_GIS) {
+
+		/* disable GIE interrupt */
+		snd_sof_dsp_update_bits(sdev, HDA_DSP_HDA_BAR,
+					SOF_HDA_INTCTL,
+					SOF_HDA_INT_GLOBAL_EN,
+					0);
+
+		return IRQ_WAKE_THREAD;
+	}
+
+	return IRQ_NONE;
+}
+
+static irqreturn_t hda_dsp_interrupt_thread(int irq, void *context)
+{
+	struct snd_sof_dev *sdev = context;
+	struct sof_intel_hda_dev *hdev = sdev->pdata->hw_pdata;
+
+	/* deal with streams and controller first */
+	if (hda_dsp_check_stream_irq(sdev))
+		hda_dsp_stream_threaded_handler(irq, sdev);
+
+	if (hda_dsp_check_ipc_irq(sdev))
+		sof_ops(sdev)->irq_thread(irq, sdev);
+
+	if (hda_dsp_check_sdw_irq(sdev))
+		hda_dsp_sdw_thread(irq, hdev->sdw);
+
+	if (hda_sdw_check_wakeen_irq(sdev))
+		hda_sdw_process_wakeen(sdev);
+
+	/* enable GIE interrupt */
+	snd_sof_dsp_update_bits(sdev, HDA_DSP_HDA_BAR,
+				SOF_HDA_INTCTL,
+				SOF_HDA_INT_GLOBAL_EN,
+				SOF_HDA_INT_GLOBAL_EN);
+
+	return IRQ_HANDLED;
+}
 
 
->> --- a/sound/soc/intel/common/soc-acpi-intel-cml-match.c
->> +++ b/sound/soc/intel/common/soc-acpi-intel-cml-match.c
->> @@ -15,8 +15,8 @@ static struct snd_soc_acpi_codecs rt1011_spk_codecs =
->> {  };
->>
->>   static struct snd_soc_acpi_codecs max98357a_spk_codecs = {
->> -	.num_codecs = 1,
->> -	.codecs = {"MX98357A"}
->> +	.num_codecs = 2,
->> +	.codecs = {"MX98357A", "MX98390"}
 
-That looks just wrong?
+> Also no EXPORT_SYMBOL_NS() for this one?
 
-It would be really odd to list two devices as prerequisites for loading 
-a driver, when in practice they are mutually exclusive? Something's 
-broken in coreboot if both are present.
+Good catch, it's a miss, all the exported functions should use a NS:
 
-see below what we used for JSL:
+EXPORT_SYMBOL_NS(sdw_intel_enable_irq, SOUNDWIRE_INTEL_INIT);
+EXPORT_SYMBOL(sdw_intel_thread);
+EXPORT_SYMBOL_NS(sdw_intel_acpi_scan, SOUNDWIRE_INTEL_INIT);
+EXPORT_SYMBOL_NS(sdw_intel_probe, SOUNDWIRE_INTEL_INIT);
+EXPORT_SYMBOL_NS(sdw_intel_startup, SOUNDWIRE_INTEL_INIT);
+EXPORT_SYMBOL_NS(sdw_intel_exit, SOUNDWIRE_INTEL_INIT);
+EXPORT_SYMBOL_NS(sdw_intel_process_wakeen_event, SOUNDWIRE_INTEL_INIT);
 
-see static struct snd_soc_acpi_codecs jsl_7219_98373_codecs = {
-	.num_codecs = 1,
-	.codecs = {"MX98373"}
-};
 
-static struct snd_soc_acpi_codecs mx98360a_spk = {
-	.num_codecs = 1,
-	.codecs = {"MX98360A"}
-};
+
