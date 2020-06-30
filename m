@@ -2,90 +2,127 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F9F7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBFDDC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:41:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 70953206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:41:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAC09206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:41:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z/CHPW7Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731215AbgF3Nlu (ORCPT
+        id S2387661AbgF3Nl5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 09:41:50 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:57252 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726248AbgF3Nlu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 09:41:50 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 09CA1F219864EDC93449;
-        Tue, 30 Jun 2020 21:41:49 +0800 (CST)
-Received: from DESKTOP-8RFUVS3.china.huawei.com (10.174.185.226) by
- DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 30 Jun 2020 21:41:38 +0800
-From:   Zenghui Yu <yuzenghui@huawei.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     <maz@kernel.org>, <wanghaibin.wang@huawei.com>,
-        Zenghui Yu <yuzenghui@huawei.com>
-Subject: [PATCH] irqchip/gic-v3: Remove the unused register definition
-Date:   Tue, 30 Jun 2020 21:41:26 +0800
-Message-ID: <20200630134126.880-1-yuzenghui@huawei.com>
-X-Mailer: git-send-email 2.23.0.windows.1
+        Tue, 30 Jun 2020 09:41:57 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:32377 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1733290AbgF3Nl4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 09:41:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593524515;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ipmBc6HojCARbwllHbnHwrqfgLM8sbDtOUTY+0qFSa4=;
+        b=Z/CHPW7ZPP/7DqQL7QBywU2imJQfVQVCVhiGszwxdE+XTac8ieWa82DlRDrV7FLRUQi5L7
+        /gouPBo2Iylppv9iOIR5bwvKy1A63u+1GPN7i0JDhep+sd1qaB8QDOnRz5+CT4e9sBr4K7
+        pVOWFx2ldTQa/jmyAY5enmyPu8sRgAc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-53-4OQ2FzdZMgiVBtD4MAQSww-1; Tue, 30 Jun 2020 09:41:53 -0400
+X-MC-Unique: 4OQ2FzdZMgiVBtD4MAQSww-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8596880183C;
+        Tue, 30 Jun 2020 13:41:52 +0000 (UTC)
+Received: from starship (unknown [10.35.206.251])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EBCB71001B0B;
+        Tue, 30 Jun 2020 13:41:50 +0000 (UTC)
+Message-ID: <08986e161635cc83d2d96b9729257dec91fc4562.camel@redhat.com>
+Subject: Re: [PATCH 2/2] kvm/x86: don't expose MSR_IA32_UMWAIT_CONTROL
+ unconditionally
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>, Tao Xu <tao3.xu@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Tue, 30 Jun 2020 16:41:49 +0300
+In-Reply-To: <3642373d-8d1d-de80-d3db-e835a8f29449@redhat.com>
+References: <20200520160740.6144-1-mlevitsk@redhat.com>
+         <20200520160740.6144-3-mlevitsk@redhat.com>
+         <b8ca9ea1-2958-3ab4-2e86-2edbee1ca9d9@redhat.com>
+         <81228a0e-7797-4f34-3d6d-5b0550c10a8f@intel.com>
+         <c1cbcfe4-07a1-a166-afaf-251cc0319aad@intel.com>
+         <ad6c9663-2d9d-cfbd-f10d-5745731488fa@intel.com>
+         <6c99b807-fe67-23b5-3332-b7200bf5d639@intel.com>
+         <3642373d-8d1d-de80-d3db-e835a8f29449@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.4 (3.34.4-1.fc31) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.174.185.226]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As per the GICv3 specification, GIC{D,R}_SEIR are not assigned and the
-locations (0x0068) are actually Reserved. GICR_MOV{LPI,ALL}R are two IMP
-DEF registers and might be defined by some specific micro-architecture,
-Linux doesn't use them.
+On Thu, 2020-05-21 at 10:40 +0200, Paolo Bonzini wrote:
+> On 21/05/20 08:44, Tao Xu wrote:
+> > I am sorry, I mean:
+> > By default, we don't expose WAITPKG to guest. For QEMU, we can use
+> > "-overcommit cpu-pm=on" to use WAITPKG.
+> 
+> But UMONITOR, UMWAIT and TPAUSE are not NOPs on older processors (which
+> I should have checked before committing your patch, I admit).  So you
+> have broken "-cpu host -overcommit cpu-pm=on" on any processor that
+> doesn't have WAITPKG.  I'll send a patch.
+> 
+> Paolo
+> 
+Any update on that?
 
-As they're not used anywhere in the kernel, just drop all of them.
+I accidently hit this today while updating my guest's kernel.
+Turns out I had '-overcommit cpu-pm=on' enabled and -cpu host,
+and waitpkg (which my AMD cpu doesn't have by any means) was silently
+exposed to the guest but it didn't use it, but the mainline kernel started
+using it and so it crashes.
+Took me some time to realize that I am hitting this issue.
 
-Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
----
 
-Compile tested on top of mainline.
+The CPUID_7_0_ECX_WAITPKG is indeed cleared in KVM_GET_SUPPORTED_CPUID,
+and code in qemu sets/clears it depending on 'cpu-pm' value.
 
- include/linux/irqchip/arm-gic-v3.h | 4 ----
- 1 file changed, 4 deletions(-)
+This patch (copy-pasted so probably not to apply) works for me regardless if we want to fix the KVM_GET_SUPPORTED_CPUID
+returned value (which I think we should).
+It basically detects the presence of the UMWAIT by presense of MSR_IA32_UMWAIT_CONTROL
+in the global KVM_GET_MSR_INDEX_LIST, which I recently fixed too, to not return this
+msr if the host CPUID doesn't support it.
+So this works but is a bit ugly IMHO.
 
-diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
-index 6c36b6cc3edf..f6d092fdb93d 100644
---- a/include/linux/irqchip/arm-gic-v3.h
-+++ b/include/linux/irqchip/arm-gic-v3.h
-@@ -19,7 +19,6 @@
- #define GICD_CLRSPI_NSR			0x0048
- #define GICD_SETSPI_SR			0x0050
- #define GICD_CLRSPI_SR			0x0058
--#define GICD_SEIR			0x0068
- #define GICD_IGROUPR			0x0080
- #define GICD_ISENABLER			0x0100
- #define GICD_ICENABLER			0x0180
-@@ -119,14 +118,11 @@
- #define GICR_WAKER			0x0014
- #define GICR_SETLPIR			0x0040
- #define GICR_CLRLPIR			0x0048
--#define GICR_SEIR			GICD_SEIR
- #define GICR_PROPBASER			0x0070
- #define GICR_PENDBASER			0x0078
- #define GICR_INVLPIR			0x00A0
- #define GICR_INVALLR			0x00B0
- #define GICR_SYNCR			0x00C0
--#define GICR_MOVLPIR			0x0100
--#define GICR_MOVALLR			0x0110
- #define GICR_IDREGS			GICD_IDREGS
- #define GICR_PIDR2			GICD_PIDR2
- 
+diff --git a/target/i386/kvm.c b/target/i386/kvm.c
+index 6adbff3d74..e9933d2e68 100644
+--- a/target/i386/kvm.c
++++ b/target/i386/kvm.c
+@@ -412,7 +412,7 @@ uint32_t kvm_arch_get_supported_cpuid(KVMState *s, uint32_t function,
+             ret &= ~(CPUID_7_0_EBX_RTM | CPUID_7_0_EBX_HLE);
+         }
+     } else if (function == 7 && index == 0 && reg == R_ECX) {
+-        if (enable_cpu_pm) {
++        if (enable_cpu_pm && has_msr_umwait) {
+             ret |= CPUID_7_0_ECX_WAITPKG;
+         } else {
+             ret &= ~CPUID_7_0_ECX_WAITPKG;
 -- 
-2.19.1
+
+Should I send this patch officially?
+
+Best regards,
+	Maxim Levitsky
+
 
