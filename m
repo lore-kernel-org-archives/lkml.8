@@ -2,105 +2,143 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BEF4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70544C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:55:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2736020780
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:55:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F57520774
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:55:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="H21t0clf"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="Q/LSsYXZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733171AbgF3LzF (ORCPT
+        id S1733191AbgF3LzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 07:55:05 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:16640 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732491AbgF3LzF (ORCPT
+        Tue, 30 Jun 2020 07:55:10 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:57292 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729580AbgF3LzG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 07:55:05 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5efb27e70002>; Tue, 30 Jun 2020 04:54:15 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 30 Jun 2020 04:55:04 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 30 Jun 2020 04:55:04 -0700
-Received: from [10.25.97.62] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 30 Jun
- 2020 11:54:54 +0000
-CC:     <spujar@nvidia.com>, <perex@perex.cz>, <tiwai@suse.com>,
-        <kuninori.morimoto.gx@renesas.com>, <robh+dt@kernel.org>,
-        <lgirdwood@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <digetx@gmail.com>,
-        <alsa-devel@alsa-project.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <sharadg@nvidia.com>,
-        <mkumard@nvidia.com>, <viswanathl@nvidia.com>,
-        <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
-        <atalambedu@nvidia.com>, <nwartikar@nvidia.com>,
-        <swarren@nvidia.com>, <nicoleotsuka@gmail.com>
-Subject: Re: Re: [PATCH v4 00/23] Add support for Tegra210 Audio
-To:     Mark Brown <broonie@kernel.org>
-References: <1593233625-14961-1-git-send-email-spujar@nvidia.com>
- <20200630105142.GF5272@sirena.org.uk>
-From:   Sameer Pujar <spujar@nvidia.com>
-Message-ID: <b44cf9a8-f01b-5c73-5929-d02c4502832e@nvidia.com>
-Date:   Tue, 30 Jun 2020 17:24:50 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 30 Jun 2020 07:55:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1593518102; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=iLivQZbuAtImOA556A9/GwUMm1HUXka6DPlyQAzwKuo=;
+        b=Q/LSsYXZWBuyh3RUShBSmnkCNm3OyljvBxuq7YsUziu9aEZs299XhTkBGr9tr0Vk/6OK0l
+        0ehGwufTYFqKBASWXDhdCexfbuQqnfAcYbmJZLcPrEdMC6yBgFauZJXyceTNFvTKj/2stY
+        u8pTDrig8VjQB57LdZpNC3n9/a9sxxo=
+Date:   Tue, 30 Jun 2020 13:54:51 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 06/10] drm/ingenic: Set DMA descriptor chain address in
+ probe
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, od@zcrc.me
+Message-Id: <FFMQCQ.LQ37IHUC6U3Z@crapouillou.net>
+In-Reply-To: <20200630114453.GB560155@ravnborg.org>
+References: <20200629235210.441709-1-paul@crapouillou.net>
+        <20200629235210.441709-6-paul@crapouillou.net>
+        <20200630114453.GB560155@ravnborg.org>
 MIME-Version: 1.0
-In-Reply-To: <20200630105142.GF5272@sirena.org.uk>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1593518055; bh=aqJ2upnaq3qCdZVAi6vfeAtGXsTFXwxy04lLWsSjgro=;
-        h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=H21t0clf+ESX3Od8FVqcK5gF9fZG/EUdlFKDC3XhnyXrw6fVxcoWIf0w1/Cpajsr2
-         6VetDIIzPOi0BA+1zTh4B73h3xNayfS9R0gF2aof1JJrljcsrshrWTiwKCSGFl4zbu
-         hWf9OTFMoGsB+dosGpJqCInbxpxgJWxX78KrLlYWzR9gps5pIwodyG0Hq6M+43kqic
-         MCZPJKCyQNxtykKcNpUxIrEN6OIh4WZnL0Bim+mk476Hb2q1c/DCXbzMcGKf3f5VN1
-         vKaBCrtQD54fv/DlxFcHUIhj6Azi59YOhzUKce4yr/TWqXjUwhOWPJTBTNe3iiwVXd
-         96jpXFk5aTrHQ==
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Sam,
 
+Le mar. 30 juin 2020 =E0 13:44, Sam Ravnborg <sam@ravnborg.org> a =E9crit=20
+:
+> Hi Paul.
+>=20
+> On Tue, Jun 30, 2020 at 01:52:06AM +0200, Paul Cercueil wrote:
+>>  The address of the DMA descriptor never changes. It can therefore=20
+>> be set
+>>  in the probe function.
+>>=20
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  ---
+>>=20
+>>  Notes:
+>>      v2: No change
+>>=20
+>>   drivers/gpu/drm/ingenic/ingenic-drm-drv.c | 5 +++--
+>>   1 file changed, 3 insertions(+), 2 deletions(-)
+>>=20
+>>  diff --git a/drivers/gpu/drm/ingenic/ingenic-drm-drv.c=20
+>> b/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
+>>  index 924c8daf071a..f7b0c5dc8cd8 100644
+>>  --- a/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
+>>  +++ b/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
+>>  @@ -358,8 +358,6 @@ static void=20
+>> ingenic_drm_crtc_atomic_flush(struct drm_crtc *crtc,
+>>   		ingenic_drm_crtc_update_ctrl(priv, finfo);
+>>=20
+>>   		clk_set_rate(priv->pix_clk, state->adjusted_mode.clock * 1000);
+>>  -
+>>  -		regmap_write(priv->map, JZ_REG_LCD_DA0, priv->dma_hwdesc->next);
+>>   	}
+>>=20
+>>   	if (event) {
+>>  @@ -757,6 +755,9 @@ static int ingenic_drm_probe(struct=20
+>> platform_device *pdev)
+>>   		}
+>>   	}
+>>=20
+>>  +	/* Set address of our DMA descriptor chain */
+>>  +	regmap_write(priv->map, JZ_REG_LCD_DA0, priv->dma_hwdesc_phys);
+>>  +
+>=20
+>=20
+> What is the purpose of this code after the assignment was moved:
+>=20
+> static int ingenic_drm_probe(struct platform_device *pdev)
+> {
+> ...
+> 	priv->dma_hwdesc->next =3D priv->dma_hwdesc_phys;
+>=20
+> I do not see ->next used anymore.
+> Could this assignment be dropped?
+>=20
+>=20
+> And the following line:
+> 	priv->dma_hwdesc->id =3D 0xdeafbead;
+>=20
+> I can only see ->id be assingned, it is never referenced??
+>=20
+> Maybe this is all related to the structure assumed by the data pointed
+> to by JZ_REG_LCD_DA0?
 
-On 6/30/2020 4:21 PM, Mark Brown wrote:
-> On Sat, Jun 27, 2020 at 10:23:22AM +0530, Sameer Pujar wrote:
->
->> Following is the summary of current series.
->>   * Add YAML DT binding documentation for above mentioned modules.
->>   * Helper function for ACIF programming is exposed for Tegra210 and later.
->>   * Add ASoC driver components for each of the above modules.
->>   * Add DT entries for above components for Tegra210, Tegra186 and
->>     Tegra194.
->>   * Enable these components for Jetson Nano/TX1/TX2/Xavier
->>   * Enhance simple-card DPCM driver to suit Tegra Audio applications with
->>     few changes in core.
->>   * To begin with, enable sound card support for Tegra210 based platforms
->>     like Jetson Nano/TX1.
-> This series is too big and covers a few different topics which makes it
-> difficult to manage, please split it up.  The most obvious thing here is
-> that it contains both the drivers you're adding and a bunch of changes
-> to the generic audio cards (which are a single throwaway line in your
-> cover letter) - splitting out the generic card changes into a separate
-> series would result in more manageable sizes.
+As its name suggests, 'dma_hwdesc' points to a DMA hardware descriptor.=20
+Setting ->next sets the address of the next descriptor (which is itself=20
+since we only use one descriptor). The 'id' field will be copied by the=20
+hardware to a register when the DMA descriptor is loaded, so we can=20
+know from userspace (debugfs) what DMA descriptors are loaded by=20
+looking up the IDs.
 
-My initial thought was, it would be better to present a entire picture 
-where complete audio path can be tested or reviewed and hence added 
-simple-card patches in the series. I will split this up in next revision.
+-Paul
+
+> 	Sam
+>=20
+>>   	ret =3D drm_dev_register(drm, 0);
+>>   	if (ret) {
+>>   		dev_err(dev, "Failed to register DRM driver\n");
+>>  --
+>>  2.27.0
+>>=20
+>>  _______________________________________________
+>>  dri-devel mailing list
+>>  dri-devel@lists.freedesktop.org
+>>  https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
 
