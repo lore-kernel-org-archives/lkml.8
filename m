@@ -2,165 +2,110 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82032C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:27:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D843C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5647320774
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:27:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1924520826
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:30:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="J4PMh6rF"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="dYwznZ8Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732002AbgF3J1u (ORCPT
+        id S1731621AbgF3JaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 05:27:50 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:46420 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730256AbgF3J1l (ORCPT
+        Tue, 30 Jun 2020 05:30:16 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:65283 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730256AbgF3JaP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 05:27:41 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05U9RdIN080172;
-        Tue, 30 Jun 2020 04:27:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593509259;
-        bh=gtnBfikQgeKFXoCbSTClfcF4fEw+NTU1+ewwsYoy6H0=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=J4PMh6rFDjB92KyKCwMoRcTM8jcci1MAVpb3Q61G3lGW62GHNmN+DcZmZ7NIGVckf
-         DU6vEWL+gtp+aB7ghrp52ZgIPEI82uINK2mO2ccsyV4qWyBPvJ+1Zp/9CKDB1W9ITX
-         KGuQZsNwJxVDe1Dkkx9ZjWq/iLKnTz+0LCeV9qoc=
-Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05U9RdCq030347
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 30 Jun 2020 04:27:39 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 30
- Jun 2020 04:27:39 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 30 Jun 2020 04:27:39 -0500
-Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05U9RUU7003947;
-        Tue, 30 Jun 2020 04:27:37 -0500
-From:   Roger Quadros <rogerq@ti.com>
-To:     <kishon@ti.com>
-CC:     <robh+dt@kernel.org>, <nsekhar@ti.com>, <vigneshr@ti.com>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        Roger Quadros <rogerq@ti.com>, Bin Liu <b-liu@ti.com>
-Subject: [PATCH v3 3/3] phy: omap-usb2-phy: disable PHY charger detect
-Date:   Tue, 30 Jun 2020 12:27:29 +0300
-Message-ID: <20200630092729.15346-4-rogerq@ti.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200630092729.15346-1-rogerq@ti.com>
-References: <20200630092729.15346-1-rogerq@ti.com>
+        Tue, 30 Jun 2020 05:30:15 -0400
+X-UUID: 7b295ccc4bdc413da5e5e47488a17a45-20200630
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=qWezObeQUl2l9qNQFUNHf2rax4BUh9tFvDVgI6m22bM=;
+        b=dYwznZ8YP/LHBxn1267ZqK5zW70isCJDsHqF26+mzHhAKp6HxunfsocMGiwcws++SXhyuMW0Qn7cdm1GCLN/c87mrP7KCp3TLQ1rBAWBf6RL8kyd9767HuXNAeP2tAdZsmHtssr9umUcA4DHSEvUqdnMPiD01rQYSDq01ld/i1Q=;
+X-UUID: 7b295ccc4bdc413da5e5e47488a17a45-20200630
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <neal.liu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 1659440202; Tue, 30 Jun 2020 17:30:10 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1497.2; Tue, 30 Jun 2020 17:29:59 +0800
+Received: from [172.21.77.33] (172.21.77.33) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 30 Jun 2020 17:30:00 +0800
+Message-ID: <1593509401.4597.2.camel@mtkswgap22>
+Subject: Re: [PATCH v2 1/2] dt-bindings: devapc: add bindings for
+ devapc-mt6873
+From:   Neal Liu <neal.liu@mediatek.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     Neal Liu <neal.liu@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <wsd_upstream@mediatek.com>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        "Rob Herring" <robh+dt@kernel.org>
+Date:   Tue, 30 Jun 2020 17:30:01 +0800
+In-Reply-To: <20200629215606.GA3000557@bogus>
+References: <1592559720-8482-1-git-send-email-neal.liu@mediatek.com>
+         <1592559720-8482-2-git-send-email-neal.liu@mediatek.com>
+         <20200629215606.GA3000557@bogus>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-TM-SNTS-SMTP: 3175C1BF43F1CAF0F6007F915B1493F2B7BBFB5C28F83E2A1A19B3F75235C5422000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-AM654x PG1.0 has a silicon bug that D+ is pulled high after POR, which
-could cause enumeration failure with some USB hubs.  Disabling the
-USB2_PHY Charger Detect function will put D+ into the normal state.
-
-Using property "ti,disable-charger-det" in the DT usb2-phy node to
-enable this workaround for AM654x PG1.0.
-
-This addresses Silicon Errata:
-i2075 - "USB2PHY: USB2PHY Charger Detect is Enabled by Default Without VBUS
-Presence"
-
-Signed-off-by: Bin Liu <b-liu@ti.com>
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
-Signed-off-by: Roger Quadros <rogerq@ti.com>
----
- drivers/phy/ti/phy-omap-usb2.c | 35 +++++++++++++++++++++++++++-------
- 1 file changed, 28 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/phy/ti/phy-omap-usb2.c b/drivers/phy/ti/phy-omap-usb2.c
-index cb2dd3230fa7..21c3904d4efc 100644
---- a/drivers/phy/ti/phy-omap-usb2.c
-+++ b/drivers/phy/ti/phy-omap-usb2.c
-@@ -26,6 +26,10 @@
- #define USB2PHY_ANA_CONFIG1		0x4c
- #define USB2PHY_DISCON_BYP_LATCH	BIT(31)
- 
-+#define USB2PHY_CHRG_DET			0x14
-+#define USB2PHY_CHRG_DET_USE_CHG_DET_REG	BIT(29)
-+#define USB2PHY_CHRG_DET_DIS_CHG_DET		BIT(28)
-+
- /* SoC Specific USB2_OTG register definitions */
- #define AM654_USB2_OTG_PD		BIT(8)
- #define AM654_USB2_VBUS_DET_EN		BIT(5)
-@@ -43,6 +47,7 @@
- #define OMAP_USB2_HAS_START_SRP			BIT(0)
- #define OMAP_USB2_HAS_SET_VBUS			BIT(1)
- #define OMAP_USB2_CALIBRATE_FALSE_DISCONNECT	BIT(2)
-+#define OMAP_USB2_DISABLE_CHRG_DET		BIT(3)
- 
- struct omap_usb {
- 	struct usb_phy		phy;
-@@ -236,6 +241,13 @@ static int omap_usb_init(struct phy *x)
- 		omap_usb_writel(phy->phy_base, USB2PHY_ANA_CONFIG1, val);
- 	}
- 
-+	if (phy->flags & OMAP_USB2_DISABLE_CHRG_DET) {
-+		val = omap_usb_readl(phy->phy_base, USB2PHY_CHRG_DET);
-+		val |= USB2PHY_CHRG_DET_USE_CHG_DET_REG |
-+		       USB2PHY_CHRG_DET_DIS_CHG_DET;
-+		omap_usb_writel(phy->phy_base, USB2PHY_CHRG_DET, val);
-+	}
-+
- 	return 0;
- }
- 
-@@ -366,14 +378,12 @@ static int omap_usb2_probe(struct platform_device *pdev)
- 	phy->mask		= phy_data->mask;
- 	phy->power_on		= phy_data->power_on;
- 	phy->power_off		= phy_data->power_off;
-+	phy->flags		= phy_data->flags;
- 
--	if (phy_data->flags & OMAP_USB2_CALIBRATE_FALSE_DISCONNECT) {
--		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--		phy->phy_base = devm_ioremap_resource(&pdev->dev, res);
--		if (IS_ERR(phy->phy_base))
--			return PTR_ERR(phy->phy_base);
--		phy->flags |= OMAP_USB2_CALIBRATE_FALSE_DISCONNECT;
--	}
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	phy->phy_base = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(phy->phy_base))
-+		return PTR_ERR(phy->phy_base);
- 
- 	phy->syscon_phy_power = syscon_regmap_lookup_by_phandle(node,
- 							"syscon-phy-power");
-@@ -405,6 +415,17 @@ static int omap_usb2_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	/*
-+	 * Errata i2075: USB2PHY: USB2PHY Charger Detect is Enabled by
-+	 * Default Without VBUS Presence.
-+	 *
-+	 * AM654x SR1.0 has a silicon bug due to which D+ is pulled high after
-+	 * POR, which could cause enumeration failure with some USB hubs.
-+	 * Disabling the USB2_PHY Charger Detect function will put D+
-+	 * into the normal state.
-+	 */
-+	if (of_property_read_bool(node, "ti,disable-charger-det"))
-+		phy->flags |= OMAP_USB2_DISABLE_CHRG_DET;
- 
- 	phy->wkupclk = devm_clk_get(phy->dev, "wkupclk");
- 	if (IS_ERR(phy->wkupclk)) {
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+T24gTW9uLCAyMDIwLTA2LTI5IGF0IDE1OjU2IC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
+T24gRnJpLCAxOSBKdW4gMjAyMCAxNzo0MTo1OSArMDgwMCwgTmVhbCBMaXUgd3JvdGU6DQo+ID4g
+QWRkIGJpbmRpbmdzIGZvciBNVDY4NzMgZGV2YXBjLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6
+IE5lYWwgTGl1IDxuZWFsLmxpdUBtZWRpYXRlay5jb20+DQo+ID4gLS0tDQo+ID4gIC4uLi9zb2Mv
+bWVkaWF0ZWsvZGV2YXBjL2RldmFwYy1tdDY4NzMueWFtbCAgICAgICAgIHwgICA2MSArKysrKysr
+KysrKysrKysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgNjEgaW5zZXJ0aW9ucygrKQ0KPiA+
+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Nv
+Yy9tZWRpYXRlay9kZXZhcGMvZGV2YXBjLW10Njg3My55YW1sDQo+ID4gDQo+IA0KPiANCj4gTXkg
+Ym90IGZvdW5kIGVycm9ycyBydW5uaW5nICdtYWtlIGR0X2JpbmRpbmdfY2hlY2snIG9uIHlvdXIg
+cGF0Y2g6DQo+IA0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3L0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2MvbWVkaWF0ZWsvZGV2YXBjL2RldmFwYy1tdDY4
+NzMuZXhhbXBsZS5kdC55YW1sOiBleGFtcGxlLTA6IGRldmFwY0AxMDIwNzAwMDpyZWc6MDogWzAs
+IDI3MDU2MTI4MCwgMCwgNDA5Nl0gaXMgdG9vIGxvbmcNCj4gL2J1aWxkcy9yb2JoZXJyaW5nL2xp
+bnV4LWR0LXJldmlldy9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL21lZGlh
+dGVrL2RldmFwYy9kZXZhcGMtbXQ2ODczLmV4YW1wbGUuZHQueWFtbDogZXhhbXBsZS0wOiBkZXZh
+cGNAMTAyMDcwMDA6cmVnOjE6IFswLCAyNzEwMDc3NDQsIDAsIDQwOTZdIGlzIHRvbyBsb25nDQo+
+IC9idWlsZHMvcm9iaGVycmluZy9saW51eC1kdC1yZXZpZXcvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL3NvYy9tZWRpYXRlay9kZXZhcGMvZGV2YXBjLW10Njg3My5leGFtcGxlLmR0
+LnlhbWw6IGV4YW1wbGUtMDogZGV2YXBjQDEwMjA3MDAwOnJlZzoyOiBbMCwgMjcxMDExODQwLCAw
+LCA0MDk2XSBpcyB0b28gbG9uZw0KPiAvYnVpbGRzL3JvYmhlcnJpbmcvbGludXgtZHQtcmV2aWV3
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb2MvbWVkaWF0ZWsvZGV2YXBjL2Rl
+dmFwYy1tdDY4NzMuZXhhbXBsZS5kdC55YW1sOiBleGFtcGxlLTA6IGRldmFwY0AxMDIwNzAwMDpy
+ZWc6MzogWzAsIDI4NTM0Mzc0NCwgMCwgNDA5Nl0gaXMgdG9vIGxvbmcNCj4gL2J1aWxkcy9yb2Jo
+ZXJyaW5nL2xpbnV4LWR0LXJldmlldy9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+c29jL21lZGlhdGVrL2RldmFwYy9kZXZhcGMtbXQ2ODczLmV4YW1wbGUuZHQueWFtbDogZXhhbXBs
+ZS0wOiBkZXZhcGNAMTAyMDcwMDA6cmVnOjQ6IFswLCAyNzA1ODk5NTIsIDAsIDQwOTZdIGlzIHRv
+byBsb25nDQo+IA0KPiANCj4gU2VlIGh0dHBzOi8vcGF0Y2h3b3JrLm96bGFicy5vcmcvcGF0Y2gv
+MTMxMjc0MQ0KPiANCj4gSWYgeW91IGFscmVhZHkgcmFuICdtYWtlIGR0X2JpbmRpbmdfY2hlY2sn
+IGFuZCBkaWRuJ3Qgc2VlIHRoZSBhYm92ZQ0KPiBlcnJvcihzKSwgdGhlbiBtYWtlIHN1cmUgZHQt
+c2NoZW1hIGlzIHVwIHRvIGRhdGU6DQo+IA0KPiBwaXAzIGluc3RhbGwgZ2l0K2h0dHBzOi8vZ2l0
+aHViLmNvbS9kZXZpY2V0cmVlLW9yZy9kdC1zY2hlbWEuZ2l0QG1hc3RlciAtLXVwZ3JhZGUNCj4g
+DQo+IFBsZWFzZSBjaGVjayBhbmQgcmUtc3VibWl0Lg0KPiANCg0KSSBqdXN0IHB1bGwgdGhlIGxh
+dGVzdCBkdC1zY2hlbWEgZnJvbSBnaXRodWIsIGFuZCBpdCdzIHN0aWxsIHN1Y2Nlc3NmdWwuDQpJ
+cyB0aGVyZSBhbnkgb3RoZXIgY2x1ZSBmb3IgdGhpcyBkaWZmZXJlbmNlPw0KDQokIFBBVEg9fi92
+aXJ0X3Rlc3QvcHl0aG9uMzYvYmluOiRQQVRIIEFSQ0g9YXJtNjQgbWFrZSBkdF9iaW5kaW5nX2No
+ZWNrDQpEVF9TQ0hFTUFfRklMRVM9RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Nv
+Yy9tZWRpYXRlay9kZXZhcGMvZGV2YXBjLW10Njg3My55YW1sDQogIENIS0RUDQpEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL21lZGlhdGVrL2RldmFwYy9kZXZhcGMtbXQ2ODcz
+LnlhbWwNCiAgRFRDDQpEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc29jL21lZGlh
+dGVrL2RldmFwYy9kZXZhcGMtbXQ2ODczLmV4YW1wbGUuZHQueWFtbA0KICBDSEVDSw0KRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvYy9tZWRpYXRlay9kZXZhcGMvZGV2YXBjLW10
+Njg3My5leGFtcGxlLmR0LnlhbWwNCg0K
 
