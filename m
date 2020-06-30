@@ -2,125 +2,114 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 792DCC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7036FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:17:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4F28B20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:14:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C23A20656
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:17:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SJdukTyi"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="BMWsT4ae"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729313AbgF3VOd (ORCPT
+        id S1729447AbgF3VRs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 17:14:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59684 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728585AbgF3VOc (ORCPT
+        Tue, 30 Jun 2020 17:17:48 -0400
+Received: from mail.efficios.com ([167.114.26.124]:48592 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbgF3VRs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 17:14:32 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10F00C061755;
-        Tue, 30 Jun 2020 14:14:32 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id f3so10544222pgr.2;
-        Tue, 30 Jun 2020 14:14:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=jd9buR0lAUndx68KN2YMQq4trG2iraWW+d933aJz8jk=;
-        b=SJdukTyiNtAfSOBg4IZfNyPT6gQ94u4Vtbm8yQbTxd0UbdLEMSA00rYipN2tbdPbVN
-         a28a4Xkbs2XbmtE5jJcH2/bvlGvXVxV3lQCs+5aqMFW4YLKW38KTsUhO6jtytFtJmW6O
-         I3fsLOhaFQHcJflpUTDmcSjlofWYHNN3vn8v+ge5BetPNYKyIyrilStC6QHh9ed4mi3c
-         ic8WsuaOxv+Tx4cwtT2XNw4/Rx1OQvtoeMgnvCGkGopNvY63PgfrfRqlndN5/tVFy5sw
-         BiTV17ZKCz89i3ub/PBO9YaKKU2fXq7vya580zo5JgcmYEzCHjgRMmHavJ4+a7EFXFYp
-         1PMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=jd9buR0lAUndx68KN2YMQq4trG2iraWW+d933aJz8jk=;
-        b=M7xB7bDBN4mQq5gE0AYQs54IlCJwAGVaSAxcvxjFslt5PPoP9hYJIwPURkHss9R2cb
-         VdQvYVktXE42Ay4vFr8+Osl5QzQq2HVPMdzgz2XlzlDZmcXfyyP5S5trDOlOTiVBstVr
-         FpUpJHX7A9hEnOuVzHP+bO2PqvbCBKOvsYrDvRjLlsBc8z8r4/Q9A8xmXOg1wV4B6/zc
-         NbfcGIbmHAhlchIml3LVZZtqOp0l7bq7z82o/heWKzbCN5aO8InZx9gRGFWemsHBSs48
-         WPCSLnCF9jTxb4eN4xj2R7uBD/s36dG1mZ04ScFAxMxyy8wKHvKorVx++B4Oi8Nf9veP
-         SbOw==
-X-Gm-Message-State: AOAM531Z2YOBpf5s1Ux1hDAjZeNwow3Ln7On1oM/8KhD5mIZe/CKg/SJ
-        CTGDs2+cG0and6mQejloCyA=
-X-Google-Smtp-Source: ABdhPJyLh/WE/XGDpaTbEN4uc8Kt8tW4wUzCToJ38CNmK/xHc9RAU7Nvy4NJ5IawcEUgZT+r551nTw==
-X-Received: by 2002:a62:158d:: with SMTP id 135mr11234007pfv.254.1593551670529;
-        Tue, 30 Jun 2020 14:14:30 -0700 (PDT)
-Received: from ubuntu-s3-xlarge-x86 ([2604:1380:1000:7a00::1])
-        by smtp.gmail.com with ESMTPSA id s22sm3312413pfm.164.2020.06.30.14.14.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 14:14:30 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 14:14:28 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH v2 2/2] kbuild: make Clang build userprogs for target
- architecture
-Message-ID: <20200630211428.GB4163361@ubuntu-s3-xlarge-x86>
-References: <20200630150625.12056-1-masahiroy@kernel.org>
- <20200630150625.12056-2-masahiroy@kernel.org>
+        Tue, 30 Jun 2020 17:17:48 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 125932C72E3;
+        Tue, 30 Jun 2020 17:17:47 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id dX8LJcERVS4j; Tue, 30 Jun 2020 17:17:46 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id B14522C7393;
+        Tue, 30 Jun 2020 17:17:46 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com B14522C7393
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1593551866;
+        bh=dzOtmJ7mD/siyGoPxQC/+AbiDTyc52D1unXi3sYhHw4=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=BMWsT4ae0NFCJ7Ar9Wj/SDYypbB4SF4CqanRW+dwWOnP+GK8ukFotA8/0X3ZNkB/T
+         1V95PFBjmkA5EYmVmvP3OKlTGV7mLADFG4gJ62Nm2NV4PQCGiBWaRktNCvUmZlckwu
+         r7ZWl5ZhfWVO8a3kcgf9YovcOjsHZ/HYtGUAxThOmKOvsnsmtBlN5hz8RRoNR3zdEv
+         MolT2QWCjHCKHUoyJkeBtPOXhn2r+G4/sT+OaxU3KE9i4psxZ02NjnPLQuBJST3H5f
+         jIU1V9zvvQyWxBuezPLl8Tv38IGeQlrelEw8V7iNEUrUu2Vwtjs9kTtUP8j00T3SMb
+         tuMOsYxVkRlEw==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id RjPVrSqWHdX1; Tue, 30 Jun 2020 17:17:46 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 9DE582C71DC;
+        Tue, 30 Jun 2020 17:17:46 -0400 (EDT)
+Date:   Tue, 30 Jun 2020 17:17:46 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Eric Dumazet <edumazet@google.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Yuchung Cheng <ycheng@google.com>,
+        Jonathan Rajotte-Julien <joraj@efficios.com>
+Message-ID: <474095696.17969.1593551866537.JavaMail.zimbra@efficios.com>
+In-Reply-To: <CANn89i+b-LeaPvaaHvj0yc0mJ2qwZ0981fQHVp0+sqXYp=kdkA@mail.gmail.com>
+References: <CAHk-=wjEghg5_pX_GhNP+BfcUK6CRZ+4mh3bciitm9JwXvR7aQ@mail.gmail.com> <312079189.17903.1593549293094.JavaMail.zimbra@efficios.com> <CANn89iJ+rkMrLrHrKXO-57frXNb32epB93LYLRuHX00uWc-0Uw@mail.gmail.com> <20200630.134429.1590957032456466647.davem@davemloft.net> <CANn89i+b-LeaPvaaHvj0yc0mJ2qwZ0981fQHVp0+sqXYp=kdkA@mail.gmail.com>
+Subject: Re: [regression] TCP_MD5SIG on established sockets
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200630150625.12056-2-masahiroy@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3945 (ZimbraWebClient - FF77 (Linux)/8.8.15_GA_3928)
+Thread-Topic: TCP_MD5SIG on established sockets
+Thread-Index: bT5tgAuCnz/dlB46lWW2qWJ3mIXuLQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jul 01, 2020 at 12:06:25AM +0900, Masahiro Yamada wrote:
-> Programs added 'userprogs' should be compiled for the target
-> architecture i.e. the same architecture as the kernel.
-> 
-> GCC does this correctly since the target architecture is implied
-> by the toolchain prefix.
-> 
-> Clang builds userspace programs always for the host architecture
-> because the target triple is currently missing.
-> 
-> Fix this.
-> 
-> Fixes: 7f3a59db274c ("kbuild: add infrastructure to build userspace programs")
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+----- On Jun 30, 2020, at 4:56 PM, Eric Dumazet edumazet@google.com wrote:
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+> On Tue, Jun 30, 2020 at 1:44 PM David Miller <davem@davemloft.net> wrote:
+>>
+>> From: Eric Dumazet <edumazet@google.com>
+>> Date: Tue, 30 Jun 2020 13:39:27 -0700
+>>
+>> > The (C) & (B) case are certainly doable.
+>> >
+>> > A) case is more complex, I have no idea of breakages of various TCP
+>> > stacks if a flow got SACK
+>> > at some point (in 3WHS) but suddenly becomes Reno.
+>>
+>> I agree that C and B are the easiest to implement without having to
+>> add complicated code to handle various negotiated TCP option
+>> scenerios.
+>>
+>> It does seem to be that some entities do A, or did I misread your
+>> behavioral analysis of various implementations Mathieu?
+>>
+>> Thanks.
+> 
+> Yes, another question about Mathieu cases is do determine the behavior
+> of all these stacks vs :
+> SACK option
+> TCP TS option.
 
-> ---
-> 
-> (no changes since v1)
-> 
->  Makefile | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Makefile b/Makefile
-> index ac2c61c37a73..bc48810d1655 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -970,8 +970,8 @@ LDFLAGS_vmlinux	+= --pack-dyn-relocs=relr
->  endif
->  
->  # Align the bit size of userspace programs with the kernel
-> -KBUILD_USERCFLAGS  += $(filter -m32 -m64, $(KBUILD_CFLAGS))
-> -KBUILD_USERLDFLAGS += $(filter -m32 -m64, $(KBUILD_CFLAGS))
-> +KBUILD_USERCFLAGS  += $(filter -m32 -m64 --target=%, $(KBUILD_CFLAGS))
-> +KBUILD_USERLDFLAGS += $(filter -m32 -m64 --target=%, $(KBUILD_CFLAGS))
->  
->  # make the checker run with the right architecture
->  CHECKFLAGS += --arch=$(ARCH)
-> -- 
-> 2.25.1
- 
+I will ask my customer's networking team to investigate these behaviors,
+which will allow me to prepare a thorough reply to the questions raised
+by Eric and David. I expect to have an answer within 2-3 weeks at most.
+
+Thank you!
+
+Mathieu
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
