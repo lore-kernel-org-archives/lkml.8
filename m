@@ -2,194 +2,165 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01CD7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:14:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54BD8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D285A20720
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:14:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30C6920722
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:16:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pTpqk02a"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hZU0yUL1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727769AbgF3FO1 (ORCPT
+        id S1727051AbgF3FQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 01:14:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52666 "EHLO
+        Tue, 30 Jun 2020 01:16:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbgF3FO1 (ORCPT
+        with ESMTP id S1725845AbgF3FQX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 01:14:27 -0400
-Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FE8DC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 22:14:27 -0700 (PDT)
-Received: by mail-lf1-x143.google.com with SMTP id c11so10573784lfh.8
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 22:14:26 -0700 (PDT)
+        Tue, 30 Jun 2020 01:16:23 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32E4BC061755;
+        Mon, 29 Jun 2020 22:16:23 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id d10so8002973pls.5;
+        Mon, 29 Jun 2020 22:16:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=W69ph+i0GrUHBE6EcCTuT/obYcwfDKs0cbLyOStqOtc=;
-        b=pTpqk02aElatHhMshdGJvvxKDo+gn5r+Y5C8oJa5VR6XW/ufOsRmN6rKqFSkDMFldr
-         NIjKL9FJ/D/qmY/tSL/kaizmj6RY1k9g2F7scQZlqvf3bEM5FzTv3EFnmayHtWQsezTM
-         UHweAyFsN2MNPY39HDzkYbPXvA5fq79JNmhdr/gD3TGQvE0jU0OSHewzV1mdaHzUvyw0
-         hXbnegzNBrMvJI+6jdO2j9buU3bgxf63F/zC8y/YqBEfHqGLHu8/ba8Crk+DqI3G1fEj
-         dSfBUWQvlKjgOLV3qRpyWL1OHCVI0K6qUkom5qULrF46JRKbGfsCZ5aSYcV2edvduRyr
-         YZNg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=KRE9HsVlW2ijkl1bDdvucGdd1+JiCPkhH6g/2ZjIZAo=;
+        b=hZU0yUL1AN1k4PEsFBvtVzeLaj4e39AO8qO24WkHVfTj+4cSk+/I/gRZksRFSG0P5F
+         ct2PWPUBlKDpPzKRGDul3OMYXd0g7RDTDruf/E28UZb71mT5tfbUls8ysYiRT8G65UYH
+         WXr7i62LjidQPmb9tKyxxDCYw6/jEN+foXc0rarHW0s9FI9ntM4/09tLYurk9cIomrF6
+         iaytL1nO0crq0BiNqX/aY8kQMu9EyFLT9nGa3Sv7drPToQYKBcmLglC8YQL8jj0EQXze
+         sV0E0H43baIXcZvb10l3oMrx165I5YBkqUbl5R8JibP4SRnUYfRDOwJRIYqH+XxgHCt0
+         ZWOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=W69ph+i0GrUHBE6EcCTuT/obYcwfDKs0cbLyOStqOtc=;
-        b=QWB9Wx3b5wEp3ZYAM1/UNX+TeF1ECXWm9D4s1EtYB708Qw5G7jVkk4WB2DzXYCUT0Q
-         KOu5Q0Tn7XBsiYVeKFD7Sc9iBSRG/dqJB+6HNLrJvjtnNhIWkUNGutrWUN6xUqvH9rfY
-         EMAfjuGIIfmMEYAfWUi3M8QPhrKL014Id8jWhiEyp1TSUWK79DJn8SBoERnw4UpoYmld
-         cruXZJInugjYSKN7ZgrApFuwWD9SBJ4TFA2aQQ7Du69fHjNBY5tvpept6jVBr/2RaI/T
-         EsxWAi3sgwlQC9TvChSfNyTZBhUOFz0MEiOQYR94vPeDtIr843gHjnTMQldtbLosBini
-         mM9g==
-X-Gm-Message-State: AOAM5306XXKxOTO0bzVhrVRc30wp0udnalka/ytakqYqZiOrOytAaq0J
-        4MmdD5UqLoNUH6A4qyWvwVDmg9wjaKkFKPYcPAdUBw==
-X-Google-Smtp-Source: ABdhPJyQyCEgfdcfcd4bxOyQ1pV8XyLXbUtS8COBDcfz+GkZVBiKtmMhGz4nw8J25sfNsNCGjyX9Ud3h+W31/CCxGN4=
-X-Received: by 2002:a19:4285:: with SMTP id p127mr10507224lfa.74.1593494063781;
- Mon, 29 Jun 2020 22:14:23 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=KRE9HsVlW2ijkl1bDdvucGdd1+JiCPkhH6g/2ZjIZAo=;
+        b=esL9aE/fJ9hNUt60vCbhaLei/gSPMWSuXD07D6WdMzZoQm33oqrnGoLaBmelM8sLwm
+         rDMepjM19ftytNOtu52naZvC24MHnBFQoAVNoMYHH6fFaiAhDpRyBRilsearq2wyaMtz
+         uTwrLQR5Y6THaBuxFjbHfxYyXj0hN+daz1jSDR8UYStRXBSWD3rWg19Ww+zTnB0cY++5
+         +w5Hvf0mwdxSy3Tw3ymXKVKy6IcYEN08rru+HOs3OPkTFTDKU13a//zBYhoMbv0eIQ+u
+         7wxUJhVH4fH45quNeEV6MZqaueHVUXM+Lj9Dpm5mKT89uf8WnsIUcvi0Kt9PwMn2+D4y
+         y17g==
+X-Gm-Message-State: AOAM531GtaYzO1ajJxuz+XiLFTaYW1kZXAbheGQ5JuhpT1jI8Fh4yybp
+        JtYVcjt5oIvgp0pOy8unGfnaNdqN
+X-Google-Smtp-Source: ABdhPJz5L6z5VGRh2LLZ5I+cwIBdPBP86ivSnmaciY39M5h8VH4ZPau1l7IsaW3SrtWjGT73gxu7mQ==
+X-Received: by 2002:a17:902:aa97:: with SMTP id d23mr16732653plr.128.1593494181579;
+        Mon, 29 Jun 2020 22:16:21 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:3c2a:73a9:c2cf:7f45])
+        by smtp.gmail.com with ESMTPSA id u24sm1289938pga.47.2020.06.29.22.16.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 22:16:20 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 22:16:19 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Derek Basehore <dbasehore@chromium.org>
+Cc:     jiada_wang@mentor.com, jeffrey.l.hugo@gmail.com,
+        benjamin.tissoires@redhat.com, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Input: elan_i2c - only increment wakeup count on touch
+Message-ID: <20200630051619.GG248110@dtor-ws>
+References: <20200630005707.2181126-1-dbasehore@chromium.org>
 MIME-Version: 1.0
-References: <20200629151818.2493727-1-sashal@kernel.org>
-In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 30 Jun 2020 10:44:12 +0530
-Message-ID: <CA+G9fYu0Vq2KbqonYwp-mm+STOg5yKDjqHvSeFQ_u-VbaLjgUA@mail.gmail.com>
-Subject: Re: [PATCH 5.7 000/265] 5.7.7-rc1 review
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        linux- stable <stable@vger.kernel.org>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        patches@kernelci.org, lkft-triage@lists.linaro.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200630005707.2181126-1-dbasehore@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Jun 2020 at 20:48, Sasha Levin <sashal@kernel.org> wrote:
->
->
-> This is the start of the stable review cycle for the 5.7.7 release.
-> There are 265 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed 01 Jul 2020 03:14:48 PM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git/patch/?id=3Dlinux-5.7.y&id2=3Dv5.7.6
->
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.7.y
-> and the diffstat can be found below.
->
-> --
-> Thanks,
-> Sasha
+On Mon, Jun 29, 2020 at 05:57:07PM -0700, Derek Basehore wrote:
+> This moves the wakeup increment for elan devices to the touch report.
+> This prevents the drivers from incorrectly reporting a wakeup when the
+> resume callback resets then device, which causes an interrupt to
+> occur. This also avoids error messages when these interrupts occur,
+> since this behavior is expected.
+> 
+> Signed-off-by: Derek Basehore <dbasehore@chromium.org>
+> ---
+>  drivers/input/mouse/elan_i2c_core.c | 16 +++++++++++++---
+>  1 file changed, 13 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
+> index cdbe6b38c73c1..6ad53a75f9807 100644
+> --- a/drivers/input/mouse/elan_i2c_core.c
+> +++ b/drivers/input/mouse/elan_i2c_core.c
+> @@ -49,6 +49,7 @@
+>  
+>  #define ETP_MAX_FINGERS		5
+>  #define ETP_FINGER_DATA_LEN	5
+> +#define ETP_REPORT_LEN_OFFSET	0
+>  #define ETP_REPORT_ID		0x5D
+>  #define ETP_TP_REPORT_ID	0x5E
+>  #define ETP_REPORT_ID_OFFSET	2
+> @@ -1018,6 +1019,8 @@ static void elan_report_absolute(struct elan_tp_data *data, u8 *packet)
+>  	u8 hover_info = packet[ETP_HOVER_INFO_OFFSET];
+>  	bool contact_valid, hover_event;
+>  
+> +	pm_wakeup_event(&data->client->dev, 0);
+> +
+>  	hover_event = hover_info & 0x40;
+>  	for (i = 0; i < ETP_MAX_FINGERS; i++) {
+>  		contact_valid = tp_info & (1U << (3 + i));
+> @@ -1041,6 +1044,8 @@ static void elan_report_trackpoint(struct elan_tp_data *data, u8 *report)
+>  	u8 *packet = &report[ETP_REPORT_ID_OFFSET + 1];
+>  	int x, y;
+>  
+> +	pm_wakeup_event(&data->client->dev, 0);
+> +
+>  	if (!data->tp_input) {
+>  		dev_warn_once(&data->client->dev,
+>  			      "received a trackpoint report while no trackpoint device has been created. Please report upstream.\n");
+> @@ -1065,7 +1070,6 @@ static void elan_report_trackpoint(struct elan_tp_data *data, u8 *report)
+>  static irqreturn_t elan_isr(int irq, void *dev_id)
+>  {
+>  	struct elan_tp_data *data = dev_id;
+> -	struct device *dev = &data->client->dev;
+>  	int error;
+>  	u8 report[ETP_MAX_REPORT_LEN];
+>  
+> @@ -1083,7 +1087,13 @@ static irqreturn_t elan_isr(int irq, void *dev_id)
+>  	if (error)
+>  		goto out;
+>  
+> -	pm_wakeup_event(dev, 0);
+> +	/*
+> +	 * Controllers may send a full length report on power on and reset
+> +	 * cases. There are only meaningless bytes in these reports except for
+> +	 * report[ETP_REPORT_LEN_OFFSET], which is 0.
+> +	 */
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Is this true for all versions of firmware? Also, should we pay attention
+to the value of this field for various types of reports?
 
-Summary
-------------------------------------------------------------------------
+> +	if (!report[ETP_REPORT_LEN_OFFSET])
+> +		goto out;
+>  
+>  	switch (report[ETP_REPORT_ID_OFFSET]) {
+>  	case ETP_REPORT_ID:
+> @@ -1093,7 +1103,7 @@ static irqreturn_t elan_isr(int irq, void *dev_id)
+>  		elan_report_trackpoint(data, report);
+>  		break;
+>  	default:
+> -		dev_err(dev, "invalid report id data (%x)\n",
+> +		dev_err(&data->client->dev, "invalid report id data (%x)\n",
+>  			report[ETP_REPORT_ID_OFFSET]);
+>  	}
+>  
+> -- 
+> 2.27.0.212.ge8ba1cc988-goog
+> 
 
-kernel: 5.7.7-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.7.y
-git commit: 97943c6d41ef2b05f4e064eb49a538ff4b405809
-git describe: v5.7.6-265-g97943c6d41ef
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.7-oe/bui=
-ld/v5.7.6-265-g97943c6d41ef
+Thanks.
 
-No regressions (compared to build v5.7.6)
-
-No fixes (compared to build v5.7.6)
-
-
-Ran 36511 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- juno-r2-compat
-- juno-r2-kasan
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-- x86-kasan
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* kselftest/net
-* libhugetlbfs
-* linux-log-parser
-* ltp-containers-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-mm-tests
-* ltp-sched-tests
-* ltp-syscalls-tests
-* perf
-* v4l2-compliance
-* kvm-unit-tests
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-math-tests
-* network-basic-tests
-* ltp-controllers-tests
-* ltp-nptl-tests
-* ltp-open-posix-tests
-* ltp-pty-tests
-* ltp-securebits-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-native/drivers
-* kselftest-vsyscall-mode-native/filesystems
-* kselftest-vsyscall-mode-native/net
-* kselftest-vsyscall-mode-none
-* kselftest-vsyscall-mode-none/drivers
-* kselftest-vsyscall-mode-none/filesystems
-* kselftest-vsyscall-mode-none/net
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+-- 
+Dmitry
