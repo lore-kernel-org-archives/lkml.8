@@ -2,63 +2,75 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CF5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 171AEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C199420720
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:07:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F050820720
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:07:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726909AbgF3FHR (ORCPT
+        id S1728282AbgF3FHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 01:07:17 -0400
-Received: from verein.lst.de ([213.95.11.211]:34411 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726019AbgF3FHR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 01:07:17 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 04C636736F; Tue, 30 Jun 2020 07:07:13 +0200 (CEST)
-Date:   Tue, 30 Jun 2020 07:07:12 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Daniel Borkmann <daniel@iogearbox.net>
-Cc:     =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@lst.de>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@gmail.com>,
-        netdev@vger.kernel.org, davem@davemloft.net,
-        konrad.wilk@oracle.com, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        maximmi@mellanox.com, magnus.karlsson@intel.com,
-        jonathan.lemon@gmail.com
-Subject: Re: [PATCH net] xsk: remove cheap_dma optimization
-Message-ID: <20200630050712.GA26840@lst.de>
-References: <20200626134358.90122-1-bjorn.topel@gmail.com> <c60dfb5a-2bf3-20bd-74b3-6b5e215f73f8@iogearbox.net> <20200627070406.GB11854@lst.de> <88d27e1b-dbda-301c-64ba-2391092e3236@intel.com> <e879bcc8-5f7d-b1b3-9b66-1032dec6245d@iogearbox.net> <81aec200-c1a0-6d57-e3b6-26dad30790b8@intel.com> <903c646c-dc74-a15c-eb33-e1b67bc7da0d@iogearbox.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <903c646c-dc74-a15c-eb33-e1b67bc7da0d@iogearbox.net>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        Tue, 30 Jun 2020 01:07:54 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:62030 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726019AbgF3FHx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 01:07:53 -0400
+Date:   30 Jun 2020 14:07:52 +0900
+X-IronPort-AV: E=Sophos;i="5.75,296,1589209200"; 
+   d="scan'208";a="50702037"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 30 Jun 2020 14:07:52 +0900
+Received: from mercury.renesas.com (unknown [10.166.252.133])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 296C44193CE4;
+        Tue, 30 Jun 2020 14:07:52 +0900 (JST)
+Message-ID: <87k0zpywe1.wl-kuninori.morimoto.gx@renesas.com>
+From:   Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+To:     Sameer Pujar <spujar@nvidia.com>
+Cc:     <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
+        <robh+dt@kernel.org>, <lgirdwood@gmail.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <digetx@gmail.com>, <alsa-devel@alsa-project.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sharadg@nvidia.com>, <mkumard@nvidia.com>,
+        <viswanathl@nvidia.com>, <rlokhande@nvidia.com>,
+        <dramesh@nvidia.com>, <atalambedu@nvidia.com>,
+        <nwartikar@nvidia.com>, <swarren@nvidia.com>,
+        <nicoleotsuka@gmail.com>
+Subject: Re: [PATCH v4 10/23] ASoC: simple-card: Wrong daifmt for CPU end of DPCM DAI link
+In-Reply-To: <841ac69f-1c3f-2b13-17f9-6f196811ce52@nvidia.com>
+References: <1593233625-14961-1-git-send-email-spujar@nvidia.com>
+        <1593233625-14961-11-git-send-email-spujar@nvidia.com>
+        <877dvq1yhy.wl-kuninori.morimoto.gx@renesas.com>
+        <6e27daa5-331e-968b-4027-2e30aeb7d382@nvidia.com>
+        <87o8p1z81b.wl-kuninori.morimoto.gx@renesas.com>
+        <841ac69f-1c3f-2b13-17f9-6f196811ce52@nvidia.com>
+User-Agent: Wanderlust/2.15.9 Emacs/26.3 Mule/6.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 05:18:38PM +0200, Daniel Borkmann wrote:
-> On 6/29/20 5:10 PM, Björn Töpel wrote:
->> On 2020-06-29 15:52, Daniel Borkmann wrote:
->>>
->>> Ok, fair enough, please work with DMA folks to get this properly integrated and
->>> restored then. Applied, thanks!
->>
->> Daniel, you were too quick! Please revert this one; Christoph just submitted a 4-patch-series that addresses both the DMA API, and the perf regression!
->
-> Nice, tossed from bpf tree then! (Looks like it didn't land on the bpf list yet,
-> but seems other mails are currently stuck as well on vger. I presume it will be
-> routed to Linus via Christoph?)
 
-I send the patches to the bpf list, did you get them now that vger
-is unclogged?  Thinking about it the best route might be through
-bpf/net, so if that works for you please pick it up.
+Hi Sameer
+
+> For DPCM links I don't want to flip based on one Codec reference. My
+> goal was to make the binding work for multiple CPU/Codec link. Hence I
+> thought it would be better to explicitly describe the 'Master' DAI. We
+> can eventually get rid of 'codec' argument from
+> simple_dai_link_of_dpcm().
+
+Yes. 'codec' argument on current simple_dai_link_of_dpcm()
+is not good match for multi Codec support.
+
+Thank you for your help !!
+
+Best regards
+---
+Kuninori Morimoto
