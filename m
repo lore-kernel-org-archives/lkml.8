@@ -2,122 +2,183 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 180BFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:45:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19613C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF40920759
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:45:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8D8120759
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:45:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593517511;
+	bh=fzoPvu7fpcgPYLuhrtGH/u4nGDdxiPmKhNE7SbHeLuw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=2Sux2j1L0lzrCXvi1jwbwU3BLad+bMBVeKvAq6rVBL1pjFDODpv9faHnR8UWypTMP
+	 de4XIK/b4o66kSQ0B5u8t/w5m2sAiSVqbcr7yrzpFwkmiu0OWFI0llQp8IAd7hDa9w
+	 tBac2KGiWV29EmXMHCBworYRZk3/e9DiiUy+xQHo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733068AbgF3LpA (ORCPT
+        id S1733074AbgF3LpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 07:45:00 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:43102 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733050AbgF3Lo6 (ORCPT
+        Tue, 30 Jun 2020 07:45:09 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:44102 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733050AbgF3LpF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 07:44:58 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 738CA804B4;
-        Tue, 30 Jun 2020 13:44:54 +0200 (CEST)
-Date:   Tue, 30 Jun 2020 13:44:53 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, od@zcrc.me
-Subject: Re: [PATCH v2 06/10] drm/ingenic: Set DMA descriptor chain address
- in probe
-Message-ID: <20200630114453.GB560155@ravnborg.org>
-References: <20200629235210.441709-1-paul@crapouillou.net>
- <20200629235210.441709-6-paul@crapouillou.net>
+        Tue, 30 Jun 2020 07:45:05 -0400
+Received: by mail-oi1-f195.google.com with SMTP id k6so13283772oij.11;
+        Tue, 30 Jun 2020 04:45:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bsb4MIquaSTYBlodVHOtWcad2ied9oc2sDMq3Pcztr8=;
+        b=RgSem/6hKZyL5bnr0I6wtLTuCIU5eROtT/fbswHXXSku/UQ2FfVFZVCMp9r9nr9WQB
+         aec61BhzkmYKzfgrzP/DgGQnP6lMtJ2RzTCuUjCsN/m3xcPqTweGY5HNprJ94XpnDNb5
+         NgpWcDcMcf5c7UdTeqbyIRuun0aiNR2LyPxYzbxB3NFhqqciSD/THcuqUeRMuK/dyD05
+         R10iqJK12/QJp6atG70VOckH6wasXnGiKf53Rn632euLG8nJVHNubwJ5jaNVC6A4Qu/C
+         Z8rE0b5OmY4VfWXnqCPyg5MLrGew7UlpzjInvJOf7dkGLohNgsjNS923/KOb4jxdPmJ3
+         1nHA==
+X-Gm-Message-State: AOAM532WGeazL+Lr7cNC8mtMi8z16lbjGa3pZ+i49gOkzewesTYPr6kz
+        lr0pzGQySBaixg6WdH+xapZ+SeRmJ3+rxsXIyh8=
+X-Google-Smtp-Source: ABdhPJwFw2GAEuZCNbPr0iNOFM+E2OWBK7BzCaHpl9FhHHuLN3NQg/TnqaWOD86/EaQux1Nj8hPKxgTGiCH4OqeDwRQ=
+X-Received: by 2002:aca:f58a:: with SMTP id t132mr9785173oih.68.1593517504450;
+ Tue, 30 Jun 2020 04:45:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200629235210.441709-6-paul@crapouillou.net>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=ER_8r6IbAAAA:8 a=e5mUnYsNAAAA:8
-        a=_F4ZNtTwmw7fjDG2MVkA:9 a=7tZkzEg-RNLL3d5o:21 a=j8Rw1sZxBYetKqRA:21
-        a=CjuIK1q_8ugA:10 a=9LHmKk7ezEChjTCyhBa9:22 a=Vxmtnl_E_bksehYqCbjh:22
-        a=pHzHmUro8NiASowvMSCR:22 a=nt3jZW36AmriUCFCBwmW:22
+References: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <2788992.3K7huLjdjL@kreacher> <1666722.UopIai5n7p@kreacher>
+ <1794490.F2OrUDcHQn@kreacher> <20200629205708.GK1237914@redhat.com>
+In-Reply-To: <20200629205708.GK1237914@redhat.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 30 Jun 2020 13:44:52 +0200
+Message-ID: <CAJZ5v0hiAVfgWTLcP2N5PWLsqL7mpHbuL1_de79svYYhd3R57A@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] ACPICA: Preserve memory opregion mappings
+To:     Al Stone <ahs3@redhat.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Len Brown <lenb@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Ira Weiny <ira.weiny@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Myron Stowe <myron.stowe@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        Bob Moore <robert.moore@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Paul.
+On Mon, Jun 29, 2020 at 10:57 PM Al Stone <ahs3@redhat.com> wrote:
+>
+> On 29 Jun 2020 18:33, Rafael J. Wysocki wrote:
+> > From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+> >
+> > The ACPICA's strategy with respect to the handling of memory mappings
+> > associated with memory operation regions is to avoid mapping the
+> > entire region at once which may be problematic at least in principle
+> > (for example, it may lead to conflicts with overlapping mappings
+> > having different attributes created by drivers).  It may also be
+> > wasteful, because memory opregions on some systems take up vast
+> > chunks of address space while the fields in those regions actually
+> > accessed by AML are sparsely distributed.
+> >
+> > For this reason, a one-page "window" is mapped for a given opregion
+> > on the first memory access through it and if that "window" does not
+> > cover an address range accessed through that opregion subsequently,
+> > it is unmapped and a new "window" is mapped to replace it.  Next,
+> > if the new "window" is not sufficient to acess memory through the
+> > opregion in question in the future, it will be replaced with yet
+> > another "window" and so on.  That may lead to a suboptimal sequence
+> > of memory mapping and unmapping operations, for example if two fields
+> > in one opregion separated from each other by a sufficiently wide
+> > chunk of unused address space are accessed in an alternating pattern.
+> >
+> > The situation may still be suboptimal if the deferred unmapping
+> > introduced previously is supported by the OS layer.  For instance,
+> > the alternating memory access pattern mentioned above may produce
+> > a relatively long list of mappings to release with substantial
+> > duplication among the entries in it, which could be avoided if
+> > acpi_ex_system_memory_space_handler() did not release the mapping
+> > used by it previously as soon as the current access was not covered
+> > by it.
+> >
+> > In order to improve that, modify acpi_ex_system_memory_space_handler()
+> > to preserve all of the memory mappings created by it until the memory
+> > regions associated with them go away.
+> >
+> > Accordingly, update acpi_ev_system_memory_region_setup() to unmap all
+> > memory associated with memory opregions that go away.
+> >
+> > Reported-by: Dan Williams <dan.j.williams@intel.com>
+> > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > ---
+> >  drivers/acpi/acpica/evrgnini.c | 14 ++++----
+> >  drivers/acpi/acpica/exregion.c | 65 ++++++++++++++++++++++++----------
+> >  include/acpi/actypes.h         | 12 +++++--
+> >  3 files changed, 64 insertions(+), 27 deletions(-)
+> >
+> > diff --git a/drivers/acpi/acpica/evrgnini.c b/drivers/acpi/acpica/evrgnini.c
+> > index aefc0145e583..89be3ccdad53 100644
+> > --- a/drivers/acpi/acpica/evrgnini.c
+> > +++ b/drivers/acpi/acpica/evrgnini.c
+> > @@ -38,6 +38,7 @@ acpi_ev_system_memory_region_setup(acpi_handle handle,
+> >       union acpi_operand_object *region_desc =
+> >           (union acpi_operand_object *)handle;
+> >       struct acpi_mem_space_context *local_region_context;
+> > +     struct acpi_mem_mapping *mm;
+> >
+> >       ACPI_FUNCTION_TRACE(ev_system_memory_region_setup);
+> >
+> > @@ -46,13 +47,14 @@ acpi_ev_system_memory_region_setup(acpi_handle handle,
+> >                       local_region_context =
+> >                           (struct acpi_mem_space_context *)*region_context;
+> >
+> > -                     /* Delete a cached mapping if present */
+> > +                     /* Delete memory mappings if present */
+> >
+> > -                     if (local_region_context->mapped_length) {
+> > -                             acpi_os_unmap_memory(local_region_context->
+> > -                                                  mapped_logical_address,
+> > -                                                  local_region_context->
+> > -                                                  mapped_length);
+> > +                     while (local_region_context->first_mm) {
+> > +                             mm = local_region_context->first_mm;
+> > +                             local_region_context->first_mm = mm->next_mm;
+> > +                             acpi_os_unmap_memory(mm->logical_address,
+> > +                                                  mm->length);
+> > +                             ACPI_FREE(mm);
+> >                       }
+> >                       ACPI_FREE(local_region_context);
+> >                       *region_context = NULL;
+> > diff --git a/drivers/acpi/acpica/exregion.c b/drivers/acpi/acpica/exregion.c
+> > index d15a66de26c0..fd68f2134804 100644
+> > --- a/drivers/acpi/acpica/exregion.c
+> > +++ b/drivers/acpi/acpica/exregion.c
+> > @@ -41,6 +41,7 @@ acpi_ex_system_memory_space_handler(u32 function,
+> >       acpi_status status = AE_OK;
+> >       void *logical_addr_ptr = NULL;
+> >       struct acpi_mem_space_context *mem_info = region_context;
+> > +     struct acpi_mem_mapping *mm = mem_info->cur_mm;
+> >       u32 length;
+> >       acpi_size map_length;
+>
+> I think this needs to be:
+>
+>         acpi_size map_length = mem_info->length;
+>
+> since it now gets used in the ACPI_ERROR() call below.
 
-On Tue, Jun 30, 2020 at 01:52:06AM +0200, Paul Cercueil wrote:
-> The address of the DMA descriptor never changes. It can therefore be set
-> in the probe function.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
-> 
-> Notes:
->     v2: No change
-> 
->  drivers/gpu/drm/ingenic/ingenic-drm-drv.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/ingenic/ingenic-drm-drv.c b/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
-> index 924c8daf071a..f7b0c5dc8cd8 100644
-> --- a/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
-> +++ b/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
-> @@ -358,8 +358,6 @@ static void ingenic_drm_crtc_atomic_flush(struct drm_crtc *crtc,
->  		ingenic_drm_crtc_update_ctrl(priv, finfo);
->  
->  		clk_set_rate(priv->pix_clk, state->adjusted_mode.clock * 1000);
-> -
-> -		regmap_write(priv->map, JZ_REG_LCD_DA0, priv->dma_hwdesc->next);
->  	}
->  
->  	if (event) {
-> @@ -757,6 +755,9 @@ static int ingenic_drm_probe(struct platform_device *pdev)
->  		}
->  	}
->  
-> +	/* Set address of our DMA descriptor chain */
-> +	regmap_write(priv->map, JZ_REG_LCD_DA0, priv->dma_hwdesc_phys);
-> +
+No, it's better to print the length value in the message.
 
+>  I'm getting a "maybe used unitialized" error on compilation.
 
-What is the purpose of this code after the assignment was moved:
+Thanks for reporting!
 
-static int ingenic_drm_probe(struct platform_device *pdev)
-{
-...
-	priv->dma_hwdesc->next = priv->dma_hwdesc_phys;
-
-I do not see ->next used anymore.
-Could this assignment be dropped?
-
-
-And the following line:
-	priv->dma_hwdesc->id = 0xdeafbead;
-
-I can only see ->id be assingned, it is never referenced??
-
-Maybe this is all related to the structure assumed by the data pointed
-to by JZ_REG_LCD_DA0?
-
-	Sam
-
->  	ret = drm_dev_register(drm, 0);
->  	if (ret) {
->  		dev_err(dev, "Failed to register DRM driver\n");
-> -- 
-> 2.27.0
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+I've updated the commit in the acpica-osl branch with the fix.
