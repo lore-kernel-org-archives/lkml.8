@@ -2,192 +2,106 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36418C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9DADC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:34:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 022C9206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:32:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4BE9206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:34:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="KmSIO0W5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KxiRDAkz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731532AbgF3IcN (ORCPT
+        id S1731534AbgF3Iea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 04:32:13 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:51704 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727059AbgF3IcK (ORCPT
+        Tue, 30 Jun 2020 04:34:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55298 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727059AbgF3Ie3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 04:32:10 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200630083209euoutp0201dc1f8f7a868e41ca324fc6d4866b3c~dRTMuEgeh2977029770euoutp02Z
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 08:32:09 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200630083209euoutp0201dc1f8f7a868e41ca324fc6d4866b3c~dRTMuEgeh2977029770euoutp02Z
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1593505929;
-        bh=OrShDEn2h+7V7n/pSCbJmSQRC9bDfacS5k/0XuTGJqU=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=KmSIO0W5uj3N0E1IwulAs4duzBuKnRX/1UaBO+LZFgtbKlk0zhtg08PldrQWbTZen
-         ykz4368BzQDYc1j9cwGxiH3C2bYo2cstk2aCXgYvETESR0chxXCzxe+6cLgiQMFcjR
-         B6FhfdbkL4mpHWIfjWICihR7dr9vxr3ErRIAM4fw=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200630083208eucas1p1558a15c47073cce1b218ca7fe15b5f47~dRTMSXtRJ1712317123eucas1p1t;
-        Tue, 30 Jun 2020 08:32:08 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges1new.samsung.com (EUCPMTA) with SMTP id 44.92.06456.888FAFE5; Tue, 30
-        Jun 2020 09:32:08 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200630083208eucas1p1257700c209a1dcb586555e49d50aee28~dRTL-3BDg1712317123eucas1p1s;
-        Tue, 30 Jun 2020 08:32:08 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200630083208eusmtrp1f2d30f34ef9d152e57d6333239e9ed3f~dRTL_7l1r1295012950eusmtrp1I;
-        Tue, 30 Jun 2020 08:32:08 +0000 (GMT)
-X-AuditID: cbfec7f2-7efff70000001938-e6-5efaf888c0d8
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id A6.71.06314.888FAFE5; Tue, 30
-        Jun 2020 09:32:08 +0100 (BST)
-Received: from [106.210.85.205] (unknown [106.210.85.205]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200630083206eusmtip10335b85cc1556d9bd2a674b2e778ef06~dRTKcfrrC2905729057eusmtip1N;
-        Tue, 30 Jun 2020 08:32:06 +0000 (GMT)
-Subject: Re: [PATCH v7 2/4] driver core: add deferring probe reason to
- devices_deferred property
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Mark Brown <broonie@kernel.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-From:   Andrzej Hajda <a.hajda@samsung.com>
-Message-ID: <a48ab93c-0d9c-ed8b-76dd-62007826bf6f@samsung.com>
-Date:   Tue, 30 Jun 2020 10:32:06 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.9.0
+        Tue, 30 Jun 2020 04:34:29 -0400
+Received: from mail-oi1-x229.google.com (mail-oi1-x229.google.com [IPv6:2607:f8b0:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DC7CC061755;
+        Tue, 30 Jun 2020 01:34:29 -0700 (PDT)
+Received: by mail-oi1-x229.google.com with SMTP id j11so14103834oiw.12;
+        Tue, 30 Jun 2020 01:34:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=Xvujs7uAlZ7v9VquTZvFNbU+VMvTAkp34dsAu9VXmjo=;
+        b=KxiRDAkzJ8aG9D0Qr90cMtm85Rahd+HiuZQkZhIj+K/uwsvDMMZ1GlBjYcO3L8w3Ay
+         BO11tTAe3RiVGGia8ZvGJVbsFv2RnWGkuEyIA7CW1bLicZF5MFD+7hmfJ0JNj4Ed75vg
+         qFhmjVXpgO0VcNIOWGvLpTb9I1EdCr+jI4qRffdMgqPH/Es39pwUgdtyYD1UPnQ9CA7L
+         xX0+kGodTdCB5kZaC7a1kyIpc6ZkMu0Om8vU5h5SOY5GsMDPpDVkIgFDjhb0IhIxTgJ3
+         Tj5TUXU8WmyD5Gr5ynQjhDmxYOLzD41YiVJYRlBdeDin0l7VOhIkEbv/c1YanPGhU8qm
+         1cTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=Xvujs7uAlZ7v9VquTZvFNbU+VMvTAkp34dsAu9VXmjo=;
+        b=JVlvpfV3DjPCZoUx8UUb5ZL2ha7J/DJCYS61EI9pmkHcEITWpASz/JYoVuaC1znc1L
+         I1WuS2YxCWxbFXiMLr6hx/vtosMb8A3SNg0vPYvRv7LgCd5vMqk2RlGo0efOEIO11obo
+         AX5ddXHkyut5xlIefYrs3jEAktihNsEGw4ACUKqViJSLnOIppz9uUlbJdinmTzzhABNy
+         s15OHFoe8Q4i3hytOe+GqyewFXhSYqJtzNw4NpwSAmGSeDOKMP2LAPn8CFcN4T7cyeFr
+         zb/Tj/icm+mB7e0+gKZQmhfo7E00ABIyIAF6qd6dKNZ9Q3SfOcwH8Uu7IHKw/c1bY/HM
+         tBQw==
+X-Gm-Message-State: AOAM533dQTaeUyu0UyoY8poxw7flshdG2fw4YiSQt7SurTcggyr5VAEP
+        OTeT5fCHIitIvyWqAqzXBdo3+qIP8l/nn1XTZMkvZBXT
+X-Google-Smtp-Source: ABdhPJxad4tFEc/Did5pkIuHZfL40b8vqMlDvlHTmoM81ZIQ75oj6ttPsWfIVgkCxWLpqZ8+Ieh2b/cINyieF/NpPbE=
+X-Received: by 2002:aca:603:: with SMTP id 3mr14319288oig.89.1593506068111;
+ Tue, 30 Jun 2020 01:34:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VdS_u8h4qfBxsQRUp1-2SL_hq20=dQkpteXH7Xg7epArQ@mail.gmail.com>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRjm2zk7Ow5nx2n4UmE4LCqoJV04UEiFP07+qPwXhstZh7lyJpsz
-        9UdGOpma4jI117xkmhcMa3Olgl2Wl8osM6+RqRnBSlFSU5eO3M4k/z3v8z7P+z0PfCQm/sXf
-        QirjE1l1vDxOQgjxJ53LH/bqlxyy/fZyKW3Pf4Xox3ca+XThxHeC7l+YIej0+40EPbBox+g3
-        UwM4nWWoEtDmyUE+/anVRNC2wjZEP2wfFdC2vHN06XwhdsyH+TT4EWNmhnUCpsU4KmDu6kv4
-        jLk+i2Be5/fxmOelDQJmLKeLx1iq0pi8pnrEvMgtwJk5c+AZ70jh0YtsnDKJVUtDo4Wxg84c
-        PKHHJ9lYFXgdjQuzkRcJ1EHo/TpGZCMhKaZqESw2zfK5YR5Bg86Ec8McgtGm2/x1S1lXpmdR
-        g6DP2uvxzyAYmqgnXCo/KgacgwZeNhKQ/pQUnie5JBiVzoeV6n73IYLaDauWEbdcRIWCdVG3
-        hkkSp3bAnGOni95MRUFedYVH4gtvSr7jLokXFQHtdaSLxqjt8HTahHE4AG7M17kLAFVCQoVp
-        VcBlDoPimkmMw37ws6vJw2+D7oKbOIfTYKw2A+PMegTWRy0ewxH48t7hzoatZW5slXL0cWhv
-        nnTTQPnA8LQvl8EHbj0pxjhaBPpMMacOgrEeq+dgAFT3LhD5SGLcUMy4oY1xQxvj/3crEF6P
-        AlitRqVgNSHx7NV9GrlKo41X7LtwRWVGa1+w29n1uxkt9MXYEEUiibco+v2yTMyXJ2lSVDYE
-        JCbxF53o6ZaJRRflKams+sp5tTaO1djQVhKXBIgOVNqjxJRCnsheZtkEVr2+5ZFeW66jrMOj
-        h/6etb4MXioOyU3o+BNlC7cUtEhXkkfCQ8U/Tr4bH5p0nuqsMDfcI6c2LT/7wRPqHij8sqIr
-        O9Mrb1yK2GUgHDmp15TJ/kGRlraRcsvmz8Flb8Puy7Tf6A7F6ZUim1YdVN2c3qFs0ztDDUU1
-        qRNUWsY356yM6I8gw1+nSXBNrDxkD6bWyP8BqGOo0n4DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrHIsWRmVeSWpSXmKPExsVy+t/xu7odP37FGZx+KGHxcsJhRouNM9az
-        Wkx9+ITN4srX92wWzYvXs1lc/f6S2eLkm6ssFp0Tl7BbbHp8jdXi8q45bBaHpu5ltFh75C67
-        xaG+aIu5X6YyO/B5XL52kdnj/Y1Wdo+ds+6ye8zumMnqsWlVJ5vHiQmXmDz2z13D7nG/+ziT
-        x+Yl9R59W1Yxehzonczi8XmTXABPlJ5NUX5pSapCRn5xia1StKGFkZ6hpYWekYmlnqGxeayV
-        kamSvp1NSmpOZllqkb5dgl7GtX/dLAVn+SpmLZFrYHzA1cXIySEhYCIx73gbSxcjF4eQwFJG
-        ia7jX9kgEuISu+e/ZYawhSX+XOtigyh6yyjx+uQmFpCEsECSxL9rE5m6GNk5RAT0JfaXgZQw
-        C7SzSrw5sJ4Zor6JSeL3hkPsIPVsApoSfzffBFvAK2AnsfV7K5DNwcEioCrx+ZcaSFhUIFbi
-        270tUCWCEidnPmEBKeEUCJQ4spIDJMwsYCYxb/NDZghbXmL72zlQtrhE05eVrBMYhWYh6Z6F
-        pGUWkpZZSFoWMLKsYhRJLS3OTc8tNtQrTswtLs1L10vOz93ECIz7bcd+bt7BeGlj8CFGAQ5G
-        JR7ehHM/44RYE8uKK3MPMUpwMCuJ8DqdPR0nxJuSWFmVWpQfX1Sak1p8iNEU6LWJzFKiyfnA
-        lJRXEm9oamhuYWlobmxubGahJM7bIXAwRkggPbEkNTs1tSC1CKaPiYNTqoExyOv8/9KD5hdm
-        vN3oOsHCefZMxfzaV5ke2kv2q59+1zJtvuuhSwckKpcr+F5cdIbzudAX5tcTVblObNPuYIv/
-        EGxbLtk2R9XsOdt5rlDT0O8GtWE3+3j+a224ydOw6Z1c6PkyvRl6n/oynHasu7CB027brNsn
-        JasPVJk+Lgl9cDGnT4RF3KFIiaU4I9FQi7moOBEA4N7ROREDAAA=
-X-CMS-MailID: 20200630083208eucas1p1257700c209a1dcb586555e49d50aee28
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200629112249eucas1p160b845444f8fbad96bdec41e9d3938da
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200629112249eucas1p160b845444f8fbad96bdec41e9d3938da
-References: <CGME20200629112249eucas1p160b845444f8fbad96bdec41e9d3938da@eucas1p1.samsung.com>
-        <20200629112242.18380-1-a.hajda@samsung.com>
-        <20200629112242.18380-3-a.hajda@samsung.com>
-        <CAHp75VdS_u8h4qfBxsQRUp1-2SL_hq20=dQkpteXH7Xg7epArQ@mail.gmail.com>
+From:   richard clark <richard.xnu.clark@gmail.com>
+Date:   Tue, 30 Jun 2020 16:34:17 +0800
+Message-ID: <CAJNi4rNvzQ4Eqzxo-OokF+zfOvJ=kKUMUVGt8osji0mcaaxhkQ@mail.gmail.com>
+Subject: External kmod build failed on KASAN-enabled kernel
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-On 29.06.2020 18:36, Andy Shevchenko wrote:
-> On Mon, Jun 29, 2020 at 2:22 PM Andrzej Hajda <a.hajda@samsung.com> wrote:
->> /sys/kernel/debug/devices_deferred property contains list of deferred devices.
->> This list does not contain reason why the driver deferred probe, the patch
->> improves it.
->> The natural place to set the reason is dev_err_probe function introduced recently,
->> ie. if dev_err_probe will be called with -EPROBE_DEFER instead of printk the message
->> will be attached to deferred device and printed when user read devices_deferred
-> to a deferred
->
-> reads
-OK, thx.
->
->> property.
-> ...
->
->> @@ -3984,10 +3986,12 @@ int dev_err_probe(const struct device *dev, int err, const char *fmt, ...)
->>          vaf.fmt = fmt;
->>          vaf.va = &args;
->>
->> -       if (err != -EPROBE_DEFER)
->> +       if (err != -EPROBE_DEFER) {
-> Why not positive conditional? (Okay, I'm fine with either in this case)
+The same kmod source code can be built on KASAN-disabled kernel
+(5.7.0), but after enable it with CONFIG_KASAN=y, the kmod can't build
+on the new installed KASAN-enabled kernel with below error message,
+seems no relevant answers for this issue with google:
 
+root@build-ws:/home/mm/slab# make
 
-I put more natural branch 1st.
+make -C /lib/modules/5.7.0/build M=/home/mm/slab modules
 
+make[1]: Entering directory '/home/linux-5.7'
 
->
->>                  dev_err(dev, "error %d: %pV", err, &vaf);
->> -       else
->> +       } else {
->> +               device_set_deferred_probe_reson(dev, &vaf);
->>                  dev_dbg(dev, "error %d: %pV", err, &vaf);
->> +       }
-> To reduce churn, you may move {} addition to the first patch.
+  CC [M]  /home/mm/slab/tap_slab.o
 
+  MODPOST 1 modules
 
-But then I need to explain why it is there :)
+ERROR: modpost: "__asan_register_globals" [/home/mm/slab/tap_slab.ko] undefined!
 
+ERROR: modpost: "__asan_unregister_globals"
+[/home/mm/slab/tap_slab.ko] undefined!
 
->
-> ...
->
->>          list_for_each_entry(curr, &deferred_probe_pending_list, deferred_probe)
->> -               seq_printf(s, "%s\n", dev_name(curr->device));
->> +               seq_printf(s, "%s\t%s", dev_name(curr->device),
->> +                          curr->device->p->deferred_probe_reason ?: "\n");
-> Hmm... "\t" will be dangling in the latter case
+ERROR: modpost: "__asan_load8_noabort" [/home/mm/slab/tap_slab.ko] undefined!
 
+scripts/Makefile.modpost:94: recipe for target '__modpost' failed
 
-Hmm, I followed your advice [1] :)
+make[2]: *** [__modpost] Error 1
 
-[1]: 
-https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1787370.html
+Makefile:1642: recipe for target 'modules' failed
 
+make[1]: *** [modules] Error 2
 
-Regards
+make[1]: Leaving directory '/home/linux-5.7'
 
-Andrzej
+Makefile:6: recipe for target 'default' failed
 
-
->
+make: *** [default] Error 2
+===
+Regards,
+Richard
