@@ -2,154 +2,138 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98F88C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:08:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 089D5C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7790320781
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:08:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB075206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:08:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uqxlb5ba"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="mzDNPm+n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731815AbgF3JIT (ORCPT
+        id S1731884AbgF3JIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 05:08:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60520 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731666AbgF3JIS (ORCPT
+        Tue, 30 Jun 2020 05:08:45 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:26080 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731666AbgF3JIo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 05:08:18 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77A25C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 02:08:18 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id d194so6281302pga.13
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 02:08:18 -0700 (PDT)
+        Tue, 30 Jun 2020 05:08:44 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=992mBVKl8fRwzZCwrZpqSt5GDbC/BVSNr7NmNu7bQpE=;
-        b=uqxlb5ba17VM+ybVvn42BLZxmPfWtJ/V4Z/qPvDeUzYaxDgNqFmqmi0rMD9J748joD
-         5HYAlgKYN8Zoe303R8nJKh/W224WLIOXvXNMVUREgKhDderoMS47PstIFlvcnBaGXEYk
-         pWLKryEZ1v2LeFEVD+ZBu1LMcZ87JDdyJHvc1XLE0CknZNPJzZKR73ELjMQVDUgi+7zN
-         7/U7DYSlYIRuOkvt2YN+6vSg9lrtq7MUcj1wCugecd4XU7Lhxes9NCofvzAZkAB47NVD
-         0ulWpIjVx/IGYSXBpN3XcpUGCrvwbj4kg8mbGG2nndeiOek86aL8Zw8UakhaijtBk8f4
-         pkxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=992mBVKl8fRwzZCwrZpqSt5GDbC/BVSNr7NmNu7bQpE=;
-        b=WHiZcLozFlGjbWTvcOh8Xcf1UCjyYf+KGinZSBWt5edqH+7hHZ0v65ukMQbsyrL9oy
-         02ANqvbM5G6pHIoB/k5Vqd0xNE45Q+IaPM9n/BK7+X40bxqy04NDzeCbuYlv3a9H5wQm
-         dUJNfTvhmkKVuz9RL7ip7+6RUpKPsrkTzAIQQ4MKfp9G0kZWc+zfWezo7k00uGixePbs
-         wceEjO+dxYv+yuvMJeCSFpC9zKfnwmD2A+R78J+QdXVC10jDJgiyQ5LcEgiSoMrhl68+
-         HV8g2OeNVUQEspVrm0d2M7GiIMRMYzqoCnenI0Y0Azb6Ii9tmlSMs8EKnAy720eftRmu
-         E77Q==
-X-Gm-Message-State: AOAM531z1rrCOvvPumNRy9gYRv211ttVoiWmYhAkWWFRQXVb8R08/zpx
-        Q1+ra8j4acz8dmkgjyt22ZI=
-X-Google-Smtp-Source: ABdhPJz8lADVxcqO7souJtMhhOOZfe1KIbqhcs0hYa3xac2OQwnCod8tYvOzioUi5PWM8DY9BFFMog==
-X-Received: by 2002:a63:e404:: with SMTP id a4mr11163444pgi.79.1593508097935;
-        Tue, 30 Jun 2020 02:08:17 -0700 (PDT)
-Received: from localhost (61-68-186-125.tpgi.com.au. [61.68.186.125])
-        by smtp.gmail.com with ESMTPSA id b4sm1588100pjo.57.2020.06.30.02.08.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 02:08:16 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 19:08:10 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: wait_on_page_bit_common(TASK_KILLABLE, EXCLUSIVE) can miss
- wakeup?
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>, Jan Kara <jack@suse.cz>,
-        Lukas Czerner <lczerner@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20200624161142.GA12184@redhat.com>
-        <20200624162042.GA12238@redhat.com>
-        <CAHk-=wjJA2Z3kUFb-5s=6+n0qbTs8ELqKFt9B3pH85a8fGD73w@mail.gmail.com>
-        <20200626154313.GI4817@hirez.programming.kicks-ass.net>
-        <CAHk-=whvVWNXPJq1k566zn4SfXAifXtiA7T+7JFweR3rQ0nc9A@mail.gmail.com>
-        <1593396958.ydiznwsuu8.astroid@bobo.none>
-        <20200629140245.GB20323@redhat.com>
-        <1593482844.k3rh7s05o8.astroid@bobo.none>
-        <20200630061708.GA21263@redhat.com>
-In-Reply-To: <20200630061708.GA21263@redhat.com>
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1593508124; x=1625044124;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=5n5MJugzhcrSeTK9NLulOvMBQ+MVsMc5zw8tneUXurM=;
+  b=mzDNPm+nPege7qlvXC27kifyiGTp4XTnYrz4I/f0gvQwvr8ZzBcRPJJX
+   6LJ7n34kO3hvo+6dykN83wiKqtG/7ylBj1bQu5feTIBX1qrzj6qQ/SO/h
+   PjhDs3MkhkR+11aKZ5aM4l2+4eH50/KlVXLMCO8yWuxmnipQ6xw7VhrMp
+   M=;
+IronPort-SDR: 1FuC4n/N1heBbR2UfmJjtI/St0Aok87VCumCXcOdEPUYCUotoC7Ewk1KHAarkIB3Vthtv9l+nq
+ RfVwVNI5g/pA==
+X-IronPort-AV: E=Sophos;i="5.75,296,1589241600"; 
+   d="scan'208";a="54946739"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-807d4a99.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 30 Jun 2020 09:08:41 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-807d4a99.us-east-1.amazon.com (Postfix) with ESMTPS id 4AAA8A185A;
+        Tue, 30 Jun 2020 09:08:39 +0000 (UTC)
+Received: from EX13D16EUB001.ant.amazon.com (10.43.166.28) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 30 Jun 2020 09:08:38 +0000
+Received: from 38f9d34ed3b1.ant.amazon.com (10.43.162.248) by
+ EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 30 Jun 2020 09:08:31 +0000
+Subject: Re: [PATCH v4 07/18] nitro_enclaves: Init misc device providing the
+ ioctl interface
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        Anthony Liguori <aliguori@amazon.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Colm MacCarthaigh <colmmacc@amazon.com>,
+        Bjoern Doebel <doebel@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Frank van der Linden <fllinden@amazon.com>,
+        "Alexander Graf" <graf@amazon.de>,
+        Martin Pohlack <mpohlack@amazon.de>,
+        Matt Wilson <msw@amazon.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Balbir Singh <sblbir@amazon.com>,
+        Stefano Garzarella <sgarzare@redhat.com>,
+        "Stefan Hajnoczi" <stefanha@redhat.com>,
+        Stewart Smith <trawets@amazon.com>,
+        "Uwe Dannowski" <uwed@amazon.de>, <kvm@vger.kernel.org>,
+        <ne-devel-upstream@amazon.com>
+References: <20200622200329.52996-1-andraprs@amazon.com>
+ <20200622200329.52996-8-andraprs@amazon.com>
+ <20200629162013.GA718066@kroah.com>
+ <b87e2eeb-39cf-8de5-0f5f-1db04b3e2794@amazon.com>
+ <20200630080535.GD619174@kroah.com>
+From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
+Message-ID: <7166a6aa-2e8f-fed9-6b95-f53b823e5bb7@amazon.com>
+Date:   Tue, 30 Jun 2020 12:08:18 +0300
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.9.0
 MIME-Version: 1.0
-Message-Id: <1593505946.t0nxq8q8kj.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200630080535.GD619174@kroah.com>
+Content-Language: en-US
+X-Originating-IP: [10.43.162.248]
+X-ClientProxiedBy: EX13d09UWA002.ant.amazon.com (10.43.160.186) To
+ EX13D16EUB001.ant.amazon.com (10.43.166.28)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from Oleg Nesterov's message of June 30, 2020 4:17 pm:
-> On 06/30, Nicholas Piggin wrote:
->> Excerpts from Oleg Nesterov's message of June 30, 2020 12:02 am:
->> > On 06/29, Nicholas Piggin wrote:
->> >>
->> >> prepare_to_wait_event() has a pretty good pattern (and comment), I wo=
-uld
->> >> favour using that (test the signal when inserting on the waitqueue).
->> >>
->> >> @@ -1133,6 +1133,15 @@ static inline int wait_on_page_bit_common(wait=
-_queue_head_t *q,
->> >>         for (;;) {
->> >>                 spin_lock_irq(&q->lock);
->> >>
->> >> +               if (signal_pending_state(state, current)) {
->> >> +                       /* Must not lose an exclusive wake up, see
->> >> +                        * prepare_to_wait_event comment */
->> >> +                       list_del_init(&wait->entry);
->> >> +                       spin_unlock_irq(&q->lock);
->> >> +                       ret =3D -EINTR;
->> >
->> > Basically this is what my patch in the 1st email does. But note that w=
-e can't
->> > just set "ret =3D -EINTR" here, we will need to clear "ret" if test_an=
-d_set_bit()
->> > below succeeds. That is why I used another "int intr" variable.
->>
->> You snipped off one more important line of context. No such games are
->> required AFAIKS.
->=20
-> 		for (;;) {
-> 			spin_lock_irq(&q->lock);
-> 	=20
-> 	+               if (signal_pending_state(state, current)) {
-> 	+                       /* Must not lose an exclusive wake up, see
-> 	+                        * prepare_to_wait_event comment */
-> 	+                       list_del_init(&wait->entry);
-> 	+                       spin_unlock_irq(&q->lock);
-> 	+                       ret =3D -EINTR;
-> 	+                       break;
-> 	+               }
->=20
->=20
-> so wait_on_page_bit_common() just returns -EINTR if signal_pending_state(=
-) =3D=3D T.
-> And this is wrong if "current" was already woken up by unlock_page().
->=20
-> That is why ___wait_event() checks the condition even if prepare_to_wait_=
-event()
-> returns -EINTR. The comment in prepare_to_wait_event() tries to explain t=
-his.
+CgpPbiAzMC8wNi8yMDIwIDExOjA1LCBHcmVnIEtIIHdyb3RlOgo+Cj4gT24gTW9uLCBKdW4gMjks
+IDIwMjAgYXQgMDg6NDU6MjVQTSArMDMwMCwgUGFyYXNjaGl2LCBBbmRyYS1JcmluYSB3cm90ZToK
+Pj4KPj4gT24gMjkvMDYvMjAyMCAxOToyMCwgR3JlZyBLSCB3cm90ZToKPj4+IE9uIE1vbiwgSnVu
+IDIyLCAyMDIwIGF0IDExOjAzOjE4UE0gKzAzMDAsIEFuZHJhIFBhcmFzY2hpdiB3cm90ZToKPj4+
+PiArc3RhdGljIGludCBfX2luaXQgbmVfaW5pdCh2b2lkKQo+Pj4+ICt7Cj4+Pj4gKyAgICAgc3Ry
+dWN0IHBjaV9kZXYgKnBkZXYgPSBwY2lfZ2V0X2RldmljZShQQ0lfVkVORE9SX0lEX0FNQVpPTiwK
+Pj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFBDSV9ERVZJ
+Q0VfSURfTkUsIE5VTEwpOwo+Pj4+ICsgICAgIGludCByYyA9IC1FSU5WQUw7Cj4+Pj4gKwo+Pj4+
+ICsgICAgIGlmICghcGRldikKPj4+PiArICAgICAgICAgICAgIHJldHVybiAtRU5PREVWOwo+Pj4g
+SWNrLCB0aGF0J3MgYSBfdmVyeV8gb2xkLXNjaG9vbCB3YXkgb2YgYmluZGluZyB0byBhIHBjaSBk
+ZXZpY2UuICBQbGVhc2UKPj4+IGp1c3QgYmUgYSAicmVhbCIgcGNpIGRyaXZlciBhbmQgeW91ciBw
+cm9iZSBmdW5jdGlvbiB3aWxsIGJlIGNhbGxlZCBpZgo+Pj4geW91ciBoYXJkd2FyZSBpcyBwcmVz
+ZW50IChvciB3aGVuIGl0IHNob3dzIHVwLikgIFRvIGRvIGl0IHRoaXMgd2F5Cj4+PiBwcmV2ZW50
+cyB5b3VyIGRyaXZlciBmcm9tIGJlaW5nIGF1dG8tbG9hZGVkIGZvciB3aGVuIHlvdXIgaGFyZHdh
+cmUgaXMKPj4+IHNlZW4gaW4gdGhlIHN5c3RlbSwgYXMgd2VsbCBhcyBsb3RzIG9mIG90aGVyIHRo
+aW5ncy4KPj4gVGhpcyBjaGVjayBpcyBtYWlubHkgaGVyZSBpbiB0aGUgY2FzZSBhbnkgY29kZWJh
+c2UgaXMgYWRkZWQgYmVmb3JlIHRoZSBwY2kKPj4gZHJpdmVyIHJlZ2lzdGVyIGNhbGwgYmVsb3cu
+Cj4gV2hhdCBkbyB5b3UgbWVhbiBieSAiY29kZWJhc2UiPyAgWW91IGNvbnRyb2wgdGhpcyBkcml2
+ZXIsIGp1c3QgZG8gYWxsIG9mCj4gdGhlIGxvZ2ljIGluIHRoZSBwcm9iZSgpIGZ1bmN0aW9uLCBu
+byBuZWVkIHRvIGRvIHRoaXMgaW4gdGhlIG1vZHVsZSBpbml0Cj4gY2FsbC4KPgo+PiBBbmQgaWYg
+d2UgbG9nIGFueSBlcnJvciB3aXRoIGRldl9lcnIoKSBpbnN0ZWFkIG9mIHByX2VycigpIGJlZm9y
+ZSB0aGUgZHJpdmVyCj4+IHJlZ2lzdGVyLgo+IERvbid0IGRvIHRoYXQuCj4KPj4gVGhhdCBjaGVj
+ayB3YXMgb25seSBmb3IgbG9nZ2luZyBwdXJwb3NlcywgaWYgZG9uZSB3aXRoIGRldl9lcnIoKS4g
+SSByZW1vdmVkCj4+IHRoZSBjaGVjayBpbiB2NS4KPiBBZ2FpbiwgZG9uJ3QgZG8gaXQgOikKPgo+
+Pj4+ICsKPj4+PiArICAgICBpZiAoIXphbGxvY19jcHVtYXNrX3ZhcigmbmVfY3B1X3Bvb2wuYXZh
+aWwsIEdGUF9LRVJORUwpKQo+Pj4+ICsgICAgICAgICAgICAgcmV0dXJuIC1FTk9NRU07Cj4+Pj4g
+Kwo+Pj4+ICsgICAgIG11dGV4X2luaXQoJm5lX2NwdV9wb29sLm11dGV4KTsKPj4+PiArCj4+Pj4g
+KyAgICAgcmMgPSBwY2lfcmVnaXN0ZXJfZHJpdmVyKCZuZV9wY2lfZHJpdmVyKTsKPj4+IE5pY2Us
+IHlvdSBkaWQgaXQgcmlnaHQgaGVyZSwgYnV0IHdoeSB0aGUgYWJvdmUgY3JhenkgdGVzdD8KPj4+
+Cj4+Pj4gKyAgICAgaWYgKHJjIDwgMCkgewo+Pj4+ICsgICAgICAgICAgICAgZGV2X2VycigmcGRl
+di0+ZGV2LAo+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAiRXJyb3IgaW4gcGNpIHJlZ2lzdGVy
+IGRyaXZlciBbcmM9JWRdXG4iLCByYyk7Cj4+Pj4gKwo+Pj4+ICsgICAgICAgICAgICAgZ290byBm
+cmVlX2NwdW1hc2s7Cj4+Pj4gKyAgICAgfQo+Pj4+ICsKPj4+PiArICAgICByZXR1cm4gMDsKPj4+
+IFlvdSBsZWFrZWQgYSByZWZlcmVuY2Ugb24gdGhhdCBwY2kgZGV2aWNlLCBkaWRuJ3QgeW91PyAg
+Tm90IGdvb2QgOigKPj4gWWVzLCB0aGUgcGNpIGdldCBkZXZpY2UgY2FsbCBuZWVkcyBpdHMgcGFp
+ciAtIHBjaV9kZXZfcHV0KCkuIEkgYWRkZWQgaXQgaGVyZQo+PiBhbmQgZm9yIHRoZSBvdGhlciBv
+Y2N1cnJlbmNlcyB3aGVyZSBpdCB3YXMgbWlzc2luZy4KPiBBZ2FpbiwganVzdCBkb24ndCBkbyBp
+dCBhbmQgdGhlbiB5b3UgZG9uJ3QgaGF2ZSB0byB3b3JyeSBhYm91dCBhbnkgb2YKPiB0aGlzLgoK
+WXVwLCBhbHJlYWR5IHN0YXJ0ZWQgdGhpcyBtb3JuaW5nIHRvIGNoZWNrICYgdXBkYXRlIHdoZXJl
+IHdlIGNhbiBnbyAKd2l0aG91dCB0aGlzIGNhbGwgdG8gZ2V0IGEgUENJIGRldmljZSByZWZlcmVu
+Y2UsIGFzIGEgZm9sbG93LXVwIHRvIHdoYXQgCndlIGRpc2N1c3NlZCB5ZXN0ZXJkYXkuCgpUaGFu
+a3MsCkFuZHJhCgoKCkFtYXpvbiBEZXZlbG9wbWVudCBDZW50ZXIgKFJvbWFuaWEpIFMuUi5MLiBy
+ZWdpc3RlcmVkIG9mZmljZTogMjdBIFNmLiBMYXphciBTdHJlZXQsIFVCQzUsIGZsb29yIDIsIElh
+c2ksIElhc2kgQ291bnR5LCA3MDAwNDUsIFJvbWFuaWEuIFJlZ2lzdGVyZWQgaW4gUm9tYW5pYS4g
+UmVnaXN0cmF0aW9uIG51bWJlciBKMjIvMjYyMS8yMDA1Lgo=
 
-Hmm, yeah because we can loop around here with task in task sleeping=20
-state. Which comes back to Linus' fix. Thanks.
-
-It looks like I broke this with 62906027091f1, then Linus mostly fixed
-it in a8b169afbf06a. My patch is what actually introduced this ugly
-bit test, but do we even need it at all? If we do then it's=20
-under-commented, I can't see it wouldn't be racy though. Can we just
-get rid of it entirely?
-
-Thanks,
-Nick
