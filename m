@@ -2,142 +2,101 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9EFC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B74B8C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B0F19206BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:30:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96343206BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:31:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="eKjqwS3M"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P5fahlT9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388081AbgF3QaY (ORCPT
+        id S2388169AbgF3QbV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 12:30:24 -0400
-Received: from mail-eopbgr140048.outbound.protection.outlook.com ([40.107.14.48]:12006
-        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728931AbgF3QaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 12:30:23 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FpFd9CUBKYC4MNWcElD5SgG2ZiJFqQa0jpgRNLrQNn1IXZN4n8fez1U8pcp27WWPjl8DKURnbWnmWvGU+XI63fP8JzuWtM3JMceubf+0AnuUaYGFjphtlr7jStB9MtX+P3BfNeRRGzAPIJfwl+vZ3sTThxsPlAhL2t4Y8bI6Fm2kepcWOeYJzwGdOHEtam94H02NjLmwkpzh62FARwxP0gc1ATJ23w/jSfn5crsdtKwKIryLbVNhRLSBPaBncbEaqYTGeqS8HwS7yySJ8GoWOq2wk9TXqz1dkcrkc3UOKuWd/AbVXOYNKyJlmy9gLKopF3kTho4LyptLk4jMarAKJQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wnXfu0paMgHDZuPgSRYMEJjYEKH7bsB1DXAcGtUkyA4=;
- b=oRspW8aBhI9pl91GG6mkVm6Zgm2eiLLeoqA2p6NBPPyMda+OAmR5u41egUf66g+Nbbglz0jln9G4bDPkQC4veIsM/y1TAguxxbK/pFWNEorjZSFKia63TM4MkR4RjTCJTF9BzVU6Jf+Zjl3sXlTC+upKmIugYnHdPcqO4+Jsc1fMMDHUm0wZRtJa+BK/cHa1TG1c2aU5z6yBNE+vu+eULmQENZ+9zzPMiQOABuFQTEbTaN0ZnOPHTo/auh+aoddHMyjL2hOyE9pGirRVVC6UZ34chWnOlUDVuQC74HzbHnuCNy3j8Fu4x0AqJDIsny47fzH2rhhn3U1cmhEoTwXnEQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wnXfu0paMgHDZuPgSRYMEJjYEKH7bsB1DXAcGtUkyA4=;
- b=eKjqwS3MuLH67FxrNmz5JpilAQCvLrG2SH4c7+De7kEQJL6dXPo4+hnR23QnSE5FWB4bx7WwA7u+kSkT9vGd03ZukF+uKBbwe0s1hzRuigqQhTFSgnefDaMXgb4kIWmVhzrQa031ZKV5tx6YrYj6i32ms9eVa2340EwJzbS++HE=
-Authentication-Results: vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=none action=none
- header.from=mellanox.com;
-Received: from VI1PR0501MB2205.eurprd05.prod.outlook.com
- (2603:10a6:800:2a::20) by VI1PR05MB6333.eurprd05.prod.outlook.com
- (2603:10a6:803:f8::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.20; Tue, 30 Jun
- 2020 16:30:19 +0000
-Received: from VI1PR0501MB2205.eurprd05.prod.outlook.com
- ([fe80::d58c:3ca1:a6bb:e5fe]) by VI1PR0501MB2205.eurprd05.prod.outlook.com
- ([fe80::d58c:3ca1:a6bb:e5fe%5]) with mapi id 15.20.3131.028; Tue, 30 Jun 2020
- 16:30:19 +0000
-Subject: Re: [PATCH][next] net/mlx5e: fix memory leak of tls
-To:     Colin King <colin.king@canonical.com>,
-        Boris Pismenny <borisp@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200630151646.517757-1-colin.king@canonical.com>
-From:   Tariq Toukan <tariqt@mellanox.com>
-Message-ID: <7c3bb6e8-6658-1a73-b5c7-b70bc6255576@mellanox.com>
-Date:   Tue, 30 Jun 2020 19:30:15 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-In-Reply-To: <20200630151646.517757-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: AM4PR0701CA0013.eurprd07.prod.outlook.com
- (2603:10a6:200:42::23) To VI1PR0501MB2205.eurprd05.prod.outlook.com
- (2603:10a6:800:2a::20)
+        Tue, 30 Jun 2020 12:31:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44194 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728931AbgF3QbU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 12:31:20 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5AFFC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 09:31:20 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id e9so10180517pgo.9
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 09:31:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hpHucya7a8dIbm3wn4a+7ihI+YD3U03xQgOBmUslQ5o=;
+        b=P5fahlT9Hus7d9QA8pdqL3XA8RGUa3MyYrdNdlIbpjs2/pTb11AgLGZQt5zvEE+zST
+         0kTUImtlf+5a7qxDQovr0j8SVJ6AeDOJcqzQf+HxPF4gD/LOY8eE4jfiRnl3+FHZKDj7
+         HJwjf/1WKIZv1WVA2jqujSlPyALyKI4rz29BKhhMG4K2DP/c+LCB/g0a71tTTC4f2Pvv
+         TPfudfi/ipvVOe58ujypt6hVAP6GW/EHJXkoEmyywcH8Ha/YpDOZqdkH8TpjRf026uRY
+         m4s5CAYpYTkAXNeJcvYxBp2zK3LvaehPDT7/fdZtTBmpHExeESjio0Oz06ybDbEIAeSW
+         Za9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hpHucya7a8dIbm3wn4a+7ihI+YD3U03xQgOBmUslQ5o=;
+        b=I+uZcNcxc9CrZLlbGNFqnfkq4ApetykDwaTv06RJKCHHC4sroXf9UA2m6usx/Bpr+k
+         bACl6pcnoMD17z1b1oerfj4Tvmr4ZTGHUdEoo7Hk38/Mxbi6VAn4eYoKdKE+rJB+i3UP
+         /axiR0ceGIpDAj9oLtWNZ9L1qpVuhqRBkJhfBYq5/lr4V70MaeH7wOjHL5NIrZIQ8inQ
+         9/NfKVLhnOHuLCv8LkDK+lIhBWl0L3Sg2I0b3T4CgokVEzgAfdV7HKTXPJWGtV1c5JHL
+         XVudzYqB1ZwfnhxenCgszrbjesSaJDUOTNPuZztjhDsz6pLwpcPVglwJ1GsDPTN0og4m
+         fl0w==
+X-Gm-Message-State: AOAM533xYMXe886FvwNt94YJ9F8DQ7CdWJNZl4fbpirwEeTuc2pE1E5w
+        6NgKUiEKDyZfh8Iitu9NSmFZSw==
+X-Google-Smtp-Source: ABdhPJzxC74HqZ6+A4CZOG8QIFOijrZosi5zg/Dajb3WL7cYjh6fzO73uKGMJ5h7n1yH4qYiub2HcA==
+X-Received: by 2002:a62:d418:: with SMTP id a24mr6786540pfh.249.1593534680348;
+        Tue, 30 Jun 2020 09:31:20 -0700 (PDT)
+Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id n4sm3184606pfq.9.2020.06.30.09.31.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 09:31:19 -0700 (PDT)
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     ohad@wizery.com, bjorn.andersson@linaro.org, paul@crapouillou.net,
+        s-anna@ti.com
+Cc:     linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] remoteproc: Address runtime PM issues 
+Date:   Tue, 30 Jun 2020 10:31:16 -0600
+Message-Id: <20200630163118.3830422-1-mathieu.poirier@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [192.168.1.110] (77.126.86.173) by AM4PR0701CA0013.eurprd07.prod.outlook.com (2603:10a6:200:42::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.12 via Frontend Transport; Tue, 30 Jun 2020 16:30:17 +0000
-X-Originating-IP: [77.126.86.173]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 6b9a14d2-7793-4739-9da5-08d81d12e0c4
-X-MS-TrafficTypeDiagnostic: VI1PR05MB6333:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VI1PR05MB6333F9C4A6E35C3CB25BEE5BAE6F0@VI1PR05MB6333.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1850;
-X-Forefront-PRVS: 0450A714CB
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: /sVMxTXPiZ7+/yI6NZQRg52g1x1b7vAVa8Ecj+B1zP1aOqZMQ4D4tzmoqCkzvdsM4bYdBEZ2joOoZ/kiQcC2SBTP039Rh0DqI+5IeV7vbmsiCVE/Z3HghOkJVfRD1CAgpcS0qfeoA2VbDmdMRx8hsAHUL8tWu3BOR7x2A6YdM1+LtYYW6eiW2r7EfrMqEzOfc4iNLvMnUTaf7ULYwOCigVzWYMVJbyzjbBVetqPI8DUUFt9B9xLngpD7/NGShLxqXv+LhJ84eYf3cLgWSgUyT8ImuCIhTheYZTtT3+Zh0O2YbrMJKmWNU208b6zt+l8kRSCslXQCTvGRDDe6+vgOI8aIiQZyCs4xDdnaSpTZYIDJCcz4h5iZ8m/PVXW3Cx0v
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0501MB2205.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(376002)(346002)(366004)(136003)(396003)(31686004)(478600001)(16576012)(26005)(186003)(6486002)(16526019)(316002)(956004)(2616005)(110136005)(4326008)(52116002)(53546011)(2906002)(31696002)(36756003)(86362001)(5660300002)(83380400001)(8676002)(66946007)(8936002)(66476007)(66556008)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: qq9FTn3TtGJplUfJMRyD1YNZqZkIDNoKgI6+I9CvlSjokV3O2INM2rXKtbAvkM2RMOqyuB9x98j4haekXCpcBm03l5JU613Q7m4CckMLrq0gqVm0mE09BLhSm4Ph6IHzu72F+NlgJw6jTu3BOdyvG74LdbTMLBxS1TpGLHKakE8O6xB3SZCqB1+uxNUQ+vLOkr1jSeJUpqHetjm4Ilm4QcK3rMbtv4qIm1lecz2F2he4JQ4yAATUAI2q6xzzI/h+vhbqMQ8YmLCWIzylfJ7ZChVjvMemoS7GGlZT3QLCJvyAQWs8L3udOku6URX05zzfanDNH/Lw+WjzPlHgKe3ObvMXcjHCYcDbaxzA3ha3PjyyE28rYzBj3G8rFysUR95OPmln6mFRsupb9zTJ7fAmajhVEf7pYxoK0mxPfdXzeCVDTB02eAbfv95gVtUJmvnHTfXRUJsPVVZ5C6DwmYwUzfVfsqZ3Q+AGOacqY6EfUcw8nBNCpvPHcvrddOJSPAOq
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6b9a14d2-7793-4739-9da5-08d81d12e0c4
-X-MS-Exchange-CrossTenant-AuthSource: VI1PR0501MB2205.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2020 16:30:19.1833
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 6h06H+g8rJej/mcswVic/IBoO+E7TG5jlqtjaCntjSDjD7h6QCprtPHBAsyOi9lJ7b89PU9xWFCdf50/lCHjVQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6333
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This set follows the conversation that took place here[1] and provides
+the "two small patches" I alluded to at the end of the thread.
 
+Paul Cercueil: patch 1/2 is compile tested only - please see that it does what
+you want.
+Suman Anna: Please test on your side and confirm that it addresses the Omap
+regression.
 
-On 6/30/2020 6:16 PM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> The error return path when create_singlethread_workqueue fails currently
-> does not kfree tls and leads to a memory leak. Fix this by kfree'ing
-> tls before returning -ENOMEM.
-> 
-> Addresses-Coverity: ("Resource leak")
-> Fixes: 1182f3659357 ("net/mlx5e: kTLS, Add kTLS RX HW offload support")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->   drivers/net/ethernet/mellanox/mlx5/core/en_accel/tls.c | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/tls.c b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/tls.c
-> index 99beb928feff..fee991f5ee7c 100644
-> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/tls.c
-> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/tls.c
-> @@ -232,8 +232,10 @@ int mlx5e_tls_init(struct mlx5e_priv *priv)
->   		return -ENOMEM;
->   
->   	tls->rx_wq = create_singlethread_workqueue("mlx5e_tls_rx");
-> -	if (!tls->rx_wq)
-> +	if (!tls->rx_wq) {
-> +		kfree(tls);
->   		return -ENOMEM;
-> +	}
->   
->   	priv->tls = tls;
->   	return 0;
-> 
+Applies on top of rproc-next (7dcef3988eed)
 
-Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
-Thanks.
+Thanks,
+Mathieu
+
+[1]. https://lore.kernel.org/linux-remoteproc/20200515104340.10473-1-paul@crapouillou.net/T/#t
+
+Mathieu Poirier (2):
+  remoteproc: ingenic: Move clock handling to prepare/unprepare
+    callbacks
+  Revert "remoteproc: Add support for runtime PM"
+
+ drivers/remoteproc/ingenic_rproc.c   | 84 +++++++++-------------------
+ drivers/remoteproc/remoteproc_core.c | 17 +-----
+ 2 files changed, 27 insertions(+), 74 deletions(-)
+
+-- 
+2.25.1
+
