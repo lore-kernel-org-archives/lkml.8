@@ -2,112 +2,100 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70321C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A0ACC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:11:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 463D020771
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:10:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HlrgKG2D"
+	by mail.kernel.org (Postfix) with ESMTP id 2F0A72067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:11:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593515503;
+	bh=zmldPMDKQh2PN35Sf8qleUdJiiaUFT01iAnkn7OifRM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aj1i65PdMrvezStyiTarWel6nLVdez5bvbFHsycq2WXF63GsF+syAd13T0JuzxNjb
+	 ZmqSDoMC4Yxgq8SwqI7lNnwKNk3YM2zsfAnxWklFZwsmdyQ8FYc1O05zmpKYC3A41q
+	 adNKBBCP5msDZz48U12W8nOSgVfChzmSQDWKKTTE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732902AbgF3LKY (ORCPT
+        id S1732912AbgF3LLl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 07:10:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51138 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728534AbgF3LKX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 07:10:23 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83CA6C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 04:10:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=FvrrK/Zy4oNMNTQ5mQ1U736JPljSAmF+qXchxQYaclg=; b=HlrgKG2DC8paN+LTqvuSqXgqzM
-        1Q3pMnqS9M+QZbcY0XO+hxZAcEqzdUAXVqKltiwH4WyW5DDGnmZluzl5Q8kkWj1nu9JrzWxeEyDMa
-        SlETLdDc2+dz5jfJ058pX1SC7B6OfNIMrVJCJmOwVnk42RaLQy3eY6vwFU13+1AT0RRPPLgBHWadq
-        6FT6UiqILV1Si8CSTRjAWn7lq6Es5xHSkNksHzg3iAiuRmWn7pDJCZ2dO1vZyCEKFu+OTNffz/WMO
-        RvMdkor0Ty0VrrArNpD3Kx7VmOxQEAKOjkdLoLC+lrGdbKeh6NRNSVKpACtsehpqnoPJugQjv71XS
-        JFMxnqIA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jqE9X-0000UB-55; Tue, 30 Jun 2020 11:10:15 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Tue, 30 Jun 2020 07:11:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36348 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728534AbgF3LLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 07:11:40 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8BE2230015A;
-        Tue, 30 Jun 2020 13:10:12 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 690DF2140512D; Tue, 30 Jun 2020 13:10:12 +0200 (CEST)
-Date:   Tue, 30 Jun 2020 13:10:12 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H . Peter Anvin " <hpa@zytor.com>
-Subject: Re: [PATCH 1/2] x86/entry: Use should_resched() in
- idtentry_exit_cond_resched()
-Message-ID: <20200630111012.GM4800@hirez.programming.kicks-ass.net>
-References: <20200630102209.1143072-1-bigeasy@linutronix.de>
- <20200630102209.1143072-2-bigeasy@linutronix.de>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83D3720663;
+        Tue, 30 Jun 2020 11:11:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593515500;
+        bh=zmldPMDKQh2PN35Sf8qleUdJiiaUFT01iAnkn7OifRM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=b8vo2LQZHqQeWnQbXqHnEa0398EhX0YldJVQRmTq+P7VTbUb9g6PJOSA4jDPjmqGm
+         avmK7zlPBQfE6iqQlOqjOeYIE0sZKWpnANPpajyivzwMJ+y8CsnoXwBS0RvY7zyUCw
+         Bg9ddKyTUZlWp84nAH/PFIVyX2YPenARjfx19C2g=
+Date:   Tue, 30 Jun 2020 12:11:37 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Daisuke Yamane <yamane07ynct@gmail.com>
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] spi: a3700: fix hang caused by
+ a3700_spi_transfer_one_fifo()
+Message-ID: <20200630111137.GI5272@sirena.org.uk>
+References: <20200629174421.25784-1-yamane07ynct@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="nO3oAMapP4dBpMZi"
 Content-Disposition: inline
-In-Reply-To: <20200630102209.1143072-2-bigeasy@linutronix.de>
+In-Reply-To: <20200629174421.25784-1-yamane07ynct@gmail.com>
+X-Cookie: Walk softly and carry a megawatt laser.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 12:22:08PM +0200, Sebastian Andrzej Siewior wrote:
-> The TIF_NEED_RESCHED bit is inlined on x86 into the preemption counter.
-> So instead checking the preemption counter against zero via
-> preempt_count() and later checking the TIF_NEED_RESCHED bit via
-> need_resched() we could use should_resched() which does both checks in
-> one go.
-> The functional difference is that we don't enter the if statement with
-> preempt_count == 0 and TIF_NEED_RESCHED not set.
-> 
-> Use should_resched() instead need_resched() + preempt_count().
-> 
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> ---
->  arch/x86/entry/common.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
-> index bd3f14175193c..212382f61b8e4 100644
-> --- a/arch/x86/entry/common.c
-> +++ b/arch/x86/entry/common.c
-> @@ -612,13 +612,12 @@ bool noinstr idtentry_enter_cond_rcu(struct pt_regs *regs)
->  
->  static void idtentry_exit_cond_resched(struct pt_regs *regs, bool may_sched)
->  {
-> -	if (may_sched && !preempt_count()) {
-> +	if (may_sched && should_resched(0)) {
->  		/* Sanity check RCU and thread stack */
->  		rcu_irq_exit_check_preempt();
->  		if (IS_ENABLED(CONFIG_DEBUG_ENTRY))
->  			WARN_ON_ONCE(!on_thread_stack());
 
-This was done on purpose, your change avoids hitting this WARN.
+--nO3oAMapP4dBpMZi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The thing is, if we could preempt (but not nessecarily have to) we want
-to validate we're on the thread stack.
+On Tue, Jun 30, 2020 at 02:44:21AM +0900, Daisuke Yamane wrote:
+> transfer_one() must call spi_finalize_current_transfer() before
+> returning to inform current transfer has finished. Otherwise spi driver
+> doesn't issue next transfer, and hang.
 
-> -		if (need_resched())
-> -			preempt_schedule_irq();
-> +		preempt_schedule_irq();
->  	}
->  	/* Covers both tracing and lockdep */
->  	trace_hardirqs_on();
-> -- 
-> 2.27.0
-> 
+To be clear it can also return a positive value and then finalize later,
+there's no need to finalize before returning (otherwise finalizing would
+be a bit redundant) and if the driver doesn't return a positive value
+there should be no need to finalize at all.
+
+> However a3700_spi_transfer_one_fifo() doesn't call it if waiting for
+> "wfifo empty" or "xfer ready" has timed out.
+> Thus, this patch corrects error handling of them.
+
+The core shouldn't be waiting at all if the driver returned an error, we
+only wait if the return value was positive.  Looking at the code it's
+not clear to me how we manage to end up waiting - it looks like the
+driver passes back the error correctly and the core looks like it does
+the right thing.  Have you seen hangs in operation?
+
+--nO3oAMapP4dBpMZi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl77HekACgkQJNaLcl1U
+h9C9GAf7BOBbQ8W6d1EZQomRhHlyv6OdI7j5yinGfEYnzGfYBeYZi7/648GrllxA
+xosv4KzNVIP5c/Tpy+OHu3wGML47/HJ/yItVfti9LKfmu6AlyFVBtrUBKeCoNiGP
+n+SwkgByb2sR7gMI4SaAraTKcMRw4MpLBuaStyPk65AMldb3zcX/vta74iVJGfIM
+A3uOOJr2mRASOwG1eQElSY/p2Z/wmqHk0JjKbs5+7OM+kum9ptLlncc3y6uc+f5V
+bQX68vwEO7ao4Q8JrCEy8bVu06Ahyv1Rr/ZR6Xxpux5x/84A+O2ygZIfz3GN+/SN
+2VkGNB6PgfiflrpI6ONvvnfpJ73WNg==
+=xwt9
+-----END PGP SIGNATURE-----
+
+--nO3oAMapP4dBpMZi--
