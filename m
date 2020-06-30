@@ -2,135 +2,149 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A587C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5341C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:36:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6066F20759
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:36:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAEBE20759
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:36:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d2Z/LJOr"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VftuRyFz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733004AbgF3Lgq (ORCPT
+        id S1733013AbgF3Lgt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 07:36:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55158 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727108AbgF3Lgp (ORCPT
+        Tue, 30 Jun 2020 07:36:49 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:46731 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731518AbgF3Lgq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 07:36:45 -0400
-Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8A04C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 04:36:44 -0700 (PDT)
-Received: by mail-lf1-x144.google.com with SMTP id c21so11139184lfb.3
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 04:36:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZwFfXOGz4fxYZqVjks/MQV6KVpu2SdXqlr5+gsasvuE=;
-        b=d2Z/LJOrxI2sK/tnaStkPJbMfShNAs6iVqT+bRYw0LM4swNXBIn2gO3o+QA/oDFXXu
-         1H7pynjzt1f7s6oQ7MJ7ffa/nyEWclXo/+z/QgQEAqK5MR9ISJaKinJpScZQLM1BUqtD
-         oItWSrmUk6BAJEfVY5q8jDk1QbUIIVylOrDDym0HHRr/4uskhZMJqxMveoFBUO7CnKi6
-         tgFnwrDpCuFVoQCdrq5oOmrBbjcGyRMaKhWnlsaNWLba76yPtqZegF2oogYgqqsJ54Gb
-         jNdCJGUm0ietNh0RWrauTNTxTIjpkx0LttlMXfKYPPLIk6gbIexfbYcDPL0TbzOcvABn
-         n1UQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZwFfXOGz4fxYZqVjks/MQV6KVpu2SdXqlr5+gsasvuE=;
-        b=cvlMPGysdCxk1VSnsh1VgPyuVsWOxXoy0Hy+Or9hrZpGu4FDQCs7X+1ywsgGLbN/13
-         nBG8SKfzyZyb57d1ndIZVJvCMUwWGVnOIXpvS43S67DXNHomN6n+xGgW2n6EwT9UlWMe
-         MzbyUHtDGY2RBDQy0efd15sv4GxLrbbS2hcPR21IMsl3g/K9VO8YQkojc1h3vbfw/Mse
-         H+x3AA13Xr7DLezxZJhO5v5rsTbgCJX3kwkd9ou4EgdXqDCrwjiHuAe2LGwetj8xpMNQ
-         ldsSPQk4qoreC6K/ZX8thsBUpdHpHH6teSqxjiFZPmmKIHNg7fIsTtb03CvjRdZLI02t
-         mNGQ==
-X-Gm-Message-State: AOAM531F6jg/7hv1UJL5f4Y+FRNOAnKEVnSyvxA2GknEW+F1gP48voia
-        ct6U4FK/YZzZkRa1lqEclJB+Kot7GiLhZmKDaXC8swCyfH8J8Q==
-X-Google-Smtp-Source: ABdhPJy4I/6mxnpgXaNzE6Z3Ywobj35ziVNzhzkEx84vEjsqwwojs1dmBLrfTNEH+2Ne4WTLUHFLueH+JsJLBp1XV1c=
-X-Received: by 2002:a19:cc93:: with SMTP id c141mr11746250lfg.15.1593517003341;
- Tue, 30 Jun 2020 04:36:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAFA6WYNpCG2xPERd=NeKf+EthbX+1R4iieOL52kWnBp8y_+Nbw@mail.gmail.com>
- <20200630082922.28672-1-cengiz@kernel.wtf>
-In-Reply-To: <20200630082922.28672-1-cengiz@kernel.wtf>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Tue, 30 Jun 2020 17:06:31 +0530
-Message-ID: <CAFA6WYPDTKQ4cm+TMmRt+qDiF+s3gggCsW1gfzCaaOdP9rJgdQ@mail.gmail.com>
-Subject: Re: [PATCH v3] kdb: remove unnecessary null check of dbg_io_ops
-To:     Cengiz Can <cengiz@kernel.wtf>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        kgdb-bugreport@lists.sourceforge.net,
+        Tue, 30 Jun 2020 07:36:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593517004;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=/oRSdnp7JTePrpxppJwBc3//8NED9qY95i3scyFp4pM=;
+        b=VftuRyFzFKdpHgaMDGgUNiDbWIQ0e1kmCnBAlYooOI58FpzbhaKgxNxBGGzEkM1PQfJgM7
+        xX2FqEBe03UCiwZZIxKGQvBTSlbLR50N63O+OmBWJFXCpj09xd8HuMfeoQq+AxEkw96XL2
+        0meZh2f5TfiIc3LD64TK0MOTeZnHY4o=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-444-N6GbB0IlN0upZmzxxckXQQ-1; Tue, 30 Jun 2020 07:36:42 -0400
+X-MC-Unique: N6GbB0IlN0upZmzxxckXQQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4169A19200C0;
+        Tue, 30 Jun 2020 11:36:41 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.195.229])
+        by smtp.corp.redhat.com (Postfix) with SMTP id B68925D9D3;
+        Tue, 30 Jun 2020 11:36:38 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Tue, 30 Jun 2020 13:36:40 +0200 (CEST)
+Date:   Tue, 30 Jun 2020 13:36:37 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Nicholas Piggin <npiggin@gmail.com>
+Cc:     Andi Kleen <ak@linux.intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>, Jan Kara <jack@suse.cz>,
+        Lukas Czerner <lczerner@redhat.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Petr Mladek <pmladek@suse.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mel Gorman <mgorman@techsingularity.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: wait_on_page_bit_common(TASK_KILLABLE, EXCLUSIVE) can miss
+ wakeup?
+Message-ID: <20200630113637.GC23871@redhat.com>
+References: <20200624162042.GA12238@redhat.com>
+ <CAHk-=wjJA2Z3kUFb-5s=6+n0qbTs8ELqKFt9B3pH85a8fGD73w@mail.gmail.com>
+ <20200626154313.GI4817@hirez.programming.kicks-ass.net>
+ <CAHk-=whvVWNXPJq1k566zn4SfXAifXtiA7T+7JFweR3rQ0nc9A@mail.gmail.com>
+ <1593396958.ydiznwsuu8.astroid@bobo.none>
+ <20200629140245.GB20323@redhat.com>
+ <1593482844.k3rh7s05o8.astroid@bobo.none>
+ <20200630061708.GA21263@redhat.com>
+ <1593505946.t0nxq8q8kj.astroid@bobo.none>
+ <20200630105354.GB23871@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200630105354.GB23871@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Jun 2020 at 14:00, Cengiz Can <cengiz@kernel.wtf> wrote:
+On 06/30, Oleg Nesterov wrote:
 >
-> `kdb_msg_write` operates on a global `struct kgdb_io *` called
-> `dbg_io_ops`.
+> On 06/30, Nicholas Piggin wrote:
+> >
+> > My patch is what actually introduced this ugly
+> > bit test, but do we even need it at all? If we do then it's
+> > under-commented, I can't see it wouldn't be racy though. Can we just
+> > get rid of it entirely?
 >
-> It's initialized in `debug_core.c` and checked throughout the debug
-> flow.
->
-> There's a null check in `kdb_msg_write` which triggers static analyzers
-> and gives the (almost entirely wrong) impression that it can be null.
->
-> Coverity scanner caught this as CID 1465042.
->
-> I have removed the unnecessary null check and eliminated false-positive
-> forward null dereference warning.
->
-> Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
-> ---
->  kernel/debug/kdb/kdb_io.c | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
->
+> But then we will need to move io_schedule() down, after test_and_set_bit().
+> And we will have the same problem with task->state != RUNNING. Plus more
+> complications with "behavior == DROP".
 
-Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
+may be someting like this
 
-> diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
-> index 683a799618ad..81783ecaec58 100644
-> --- a/kernel/debug/kdb/kdb_io.c
-> +++ b/kernel/debug/kdb/kdb_io.c
-> @@ -545,18 +545,18 @@ static int kdb_search_string(char *searched, char *searchfor)
->  static void kdb_msg_write(const char *msg, int msg_len)
->  {
->         struct console *c;
-> +       const char *cp;
-> +       int len;
->
->         if (msg_len == 0)
->                 return;
->
-> -       if (dbg_io_ops) {
-> -               const char *cp = msg;
-> -               int len = msg_len;
-> +       cp = msg;
-> +       len = msg_len;
->
-> -               while (len--) {
-> -                       dbg_io_ops->write_char(*cp);
-> -                       cp++;
-> -               }
-> +       while (len--) {
-> +               dbg_io_ops->write_char(*cp);
-> +               cp++;
->         }
->
->         for_each_console(c) {
-> --
-> 2.27.0
->
+	for (;;) {
+		int intr = 0;
+
+		spin_lock_irq(&q->lock);
+		if (signal_pending_state(state, current)) {
+			/* see the comment in prepare_to_wait_event() */
+			list_del_init(&wait->entry);
+			intr = 1;
+		} else {
+			if (likely(list_empty(&wait->entry))) {
+				__add_wait_queue_entry_tail(q, wait);
+				SetPageWaiters(page);
+			}
+			set_current_state(state);
+		}
+		spin_unlock_irq(&q->lock);
+
+		if (behavior == EXCLUSIVE) {
+			if (!test_and_set_bit_lock(bit_nr, &page->flags))
+				break;
+		} else {
+			int is_set = test_bit(bit_nr, &page->flags);
+			if (behavior == DROP)
+				put_page(page);
+			if (!is_set)
+				break;
+		}
+
+		if (intr) {
+			ret = -EINTR;
+			break;
+		}
+
+		io_schedule();
+
+		if (behavior == DROP) {
+			/*
+			 * We can no longer safely access page->flags:
+			 * even if CONFIG_MEMORY_HOTREMOVE is not enabled,
+			 * there is a risk of waiting forever on a page reused
+			 * for something that keeps it locked indefinitely.
+			 * But best check for -EINTR before breaking.
+			 */
+			if (signal_pending_state(state, current))
+				ret = -EINTR;
+			break;
+		}
+	}
+
+? I dunno...
+
+Oleg.
+
