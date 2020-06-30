@@ -5,70 +5,68 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B10EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0989FC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:34:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 69C5220722
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:34:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C72E72074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:34:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a52p8zpD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LDOoBlOc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388209AbgF3NeJ (ORCPT
+        id S2388218AbgF3NeM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 09:34:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44968 "EHLO
+        Tue, 30 Jun 2020 09:34:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388164AbgF3Ndy (ORCPT
+        with ESMTP id S2388151AbgF3Nd4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 09:33:54 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3AB66C03E97B
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:33:54 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id l2so18130349wmf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:33:54 -0700 (PDT)
+        Tue, 30 Jun 2020 09:33:56 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 69196C08C5DE
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:33:56 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id h5so20179070wrc.7
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:33:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=LxMqnKZ6/vF3Sz1VG4ZmVbGw0fGc694S11E5HGVbx6s=;
-        b=a52p8zpDtHp2BZaKl7cLaCsGbQRImiqq+vdYMe+DEp24dRvPaj0y8e3Kju7zD0XhYx
-         CLwU8KT53+rUeG44oD/jA/JijDdkch9F3RMzyJ1ppCeX6KBs/ucps8SozbJzpjtw6mOt
-         jBoBo02vlcgoUfsxeIazznL9FhHExCEjjRFK8stugey1p6cx+rMZ1SxHayD+46hcaVCM
-         8V8ZwOXV3CqPMIqYBokS0zQGkEJG0UQuUU44tgL2m9+EtAqzEEXvqj+MCGmqaek2aBnk
-         AuLUNAngsZhaTMBEpLkFjYtH/YvrrGCbOElVQH/o+cZUwBRqtDsh5w6OHa0fU394DeRV
-         X+6Q==
+        bh=ed8H2szCHThwNArdetIOxqgfOUbWnaN816hTwHMkdbs=;
+        b=LDOoBlOcdm5PNPBUjDlyXJMjFJoTSFbyLvEFfk2MSUYrchcD9tFEd0BZXO9SrTscoH
+         eA/vQ6GAXtpXOUjef9fBRpi0CJvg8ckXzJXuEz09kLvdNWWqgqE1w+ordm7P5ftaJrHD
+         a0mfbn07kQRfTm7ePl7W2Q76YlUgaNcjabzztkrqEVWKBpwBuKDZpQ0ySSp7J3V99l2j
+         FbzF3FM16U5AgKguFp3o6KOWA4WGAskO5BV+OW1Ott1uuGymscZa01d/Fo66kvqK+Cnd
+         3apKWuCiSlV53s2VaJ5tXUiP4AQaF9MKFHjnCVFdG0y9wiripankDZXkPRCESZJ47G42
+         r9QQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=LxMqnKZ6/vF3Sz1VG4ZmVbGw0fGc694S11E5HGVbx6s=;
-        b=lE5CMzrG2yEb8xq8NK572l1UCoIdPJR4cVvrWsCDoP/+FuIFNe3SClhTUV/5xs4SlY
-         rigaT0PDnrcvarcPR+SYWU6tucC+XZe1OVyqp6OHZ2Yk/55oyqIOrXP9SiRgMt3iFpty
-         3W6/zotjRSlxb5sr1xSt1m1P2NZoKSi5S6hRja+UC4rnkTTSOlwuve+Yg2AoDLW6uXEE
-         5ETCI7PcTzcqbDKH+FAfaRVhQDfALApne7tIKZUpK+jRmifduCEIyjIJGtcFLYwRMQMB
-         4XGrc2XRhX3SzvFJgppkZdWUJVLSnaxAXe9v/HgILHoDRJlNefh4WSU8xVzGhRjvT+AB
-         qe9A==
-X-Gm-Message-State: AOAM530k6hq5DlHuL353ZgClB0oey6UzASQBu8JFEn7tGn+RPP3A+/EO
-        +u4isnPWlrfUVdPH+33Lrufk3A==
-X-Google-Smtp-Source: ABdhPJxjet3Fft4nPy2UchykKdNnrGWHxB31uPrnPEyWDLwTGsb3FgesECowF9Jy/VDozg8ma6IePQ==
-X-Received: by 2002:a1c:1d04:: with SMTP id d4mr22807105wmd.156.1593524032982;
-        Tue, 30 Jun 2020 06:33:52 -0700 (PDT)
+        bh=ed8H2szCHThwNArdetIOxqgfOUbWnaN816hTwHMkdbs=;
+        b=PBXyPgZuGaw9wz+DQlAsQGwJ++UMiPcCV1dlji0zJ0lHfuARj/pdqmi7xr5dvfhSqf
+         ANg2NYg2soeB/MVXm6DoyNeP2UID4kvihMgU5PTcyPkjZf+O/mYUs/eu5jv9j/+JhrJB
+         XiA8lRsGDNJAwbg1Bg4NZEOtwm62Ckxd3+0LXGvPFADErBobOKnniL0gz0KFC+dj+nN0
+         w9lWHjdlIsiHscpZnZ6OoNbNtcnF+Ng9U+8JJqOIvrWvSue2xjr5DNiP5ttu1qSjO5F+
+         /bkWL9WLbyVNwyRsvwF1NDSx5KryjirQYqeHV8bQZvJbGnELCRkyWBujldab6JBsww53
+         LPkg==
+X-Gm-Message-State: AOAM531+rB8yRUELRF7cLKdUza2N+Qkeo1qRHAn6VUa/JJY3lOCqUxyS
+        UcA2k7YqU3FP5As33/c4pQ9kEw==
+X-Google-Smtp-Source: ABdhPJyIWL/M5/vUrifTjtGsuJrzIOD9u8Z0C8MXhKYor95Ji0p/tqz8z4BB9eU13U9cbdzmuzJG4g==
+X-Received: by 2002:a05:6000:1006:: with SMTP id a6mr20905598wrx.332.1593524035124;
+        Tue, 30 Jun 2020 06:33:55 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id z16sm3682464wrr.35.2020.06.30.06.33.51
+        by smtp.gmail.com with ESMTPSA id z16sm3682464wrr.35.2020.06.30.06.33.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 06:33:52 -0700 (PDT)
+        Tue, 30 Jun 2020 06:33:54 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-gpio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang7@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>
-Subject: [PATCH 04/10] gpio: gpio-pmic-eic-sprd: Fix incorrectly named property 'map'
-Date:   Tue, 30 Jun 2020 14:33:39 +0100
-Message-Id: <20200630133345.2232932-5-lee.jones@linaro.org>
+        Alexander Shiyan <shc_work@mail.ru>
+Subject: [PATCH 06/10] gpio: gpio-syscon: Fix formatting issues which confuse kerneldoc
+Date:   Tue, 30 Jun 2020 14:33:41 +0100
+Message-Id: <20200630133345.2232932-7-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200630133345.2232932-1-lee.jones@linaro.org>
 References: <20200630133345.2232932-1-lee.jones@linaro.org>
@@ -79,35 +77,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A good attempt has been made to properly document 'struct
-sprd_pmic_eic', but 'map' has been incorrectly described as
-'regmap' since the driver's inception in 2018.
+Kerneldoc expects struct properties to be documented using the syntax
+'@.*: ', but no '@' has been provided in 'struct syscon_gpio_data's
+header.  Add them to stop confusing kerneldoc.
 
-Fixes the following W=1 kernel build warning:
+Fixes the following W=1 warnings:
 
- drivers/gpio/gpio-pmic-eic-sprd.c:65: warning: Function parameter or member 'map' not described in 'sprd_pmic_eic'
+ drivers/gpio/gpio-syscon.c:48: warning: Function parameter or member 'compatible' not described in 'syscon_gpio_data'
+ drivers/gpio/gpio-syscon.c:48: warning: Function parameter or member 'flags' not described in 'syscon_gpio_data'
+ drivers/gpio/gpio-syscon.c:48: warning: Function parameter or member 'bit_count' not described in 'syscon_gpio_data'
+ drivers/gpio/gpio-syscon.c:48: warning: Function parameter or member 'dat_bit_offset' not described in 'syscon_gpio_data'
+ drivers/gpio/gpio-syscon.c:48: warning: Function parameter or member 'dir_bit_offset' not described in 'syscon_gpio_data'
+ drivers/gpio/gpio-syscon.c:48: warning: Function parameter or member 'set' not described in 'syscon_gpio_data'
 
-Cc: Orson Zhai <orsonzhai@gmail.com>
-Cc: Baolin Wang <baolin.wang7@gmail.com>
-Cc: Chunyan Zhang <zhang.lyra@gmail.com>
+Cc: Alexander Shiyan <shc_work@mail.ru>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/gpio/gpio-pmic-eic-sprd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpio/gpio-syscon.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpio/gpio-pmic-eic-sprd.c b/drivers/gpio/gpio-pmic-eic-sprd.c
-index 05000cace9b24..9382851905662 100644
---- a/drivers/gpio/gpio-pmic-eic-sprd.c
-+++ b/drivers/gpio/gpio-pmic-eic-sprd.c
-@@ -48,7 +48,7 @@ enum {
-  * struct sprd_pmic_eic - PMIC EIC controller
-  * @chip: the gpio_chip structure.
-  * @intc: the irq_chip structure.
-- * @regmap: the regmap from the parent device.
-+ * @map:  the regmap from the parent device.
-  * @offset: the EIC controller's offset address of the PMIC.
-  * @reg: the array to cache the EIC registers.
-  * @buslock: for bus lock/sync and unlock.
+diff --git a/drivers/gpio/gpio-syscon.c b/drivers/gpio/gpio-syscon.c
+index 31f332074d7d5..fdd3d497b5350 100644
+--- a/drivers/gpio/gpio-syscon.c
++++ b/drivers/gpio/gpio-syscon.c
+@@ -24,16 +24,16 @@
+ 
+ /**
+  * struct syscon_gpio_data - Configuration for the device.
+- * compatible:		SYSCON driver compatible string.
+- * flags:		Set of GPIO_SYSCON_FEAT_ flags:
++ * @compatible:		SYSCON driver compatible string.
++ * @flags:		Set of GPIO_SYSCON_FEAT_ flags:
+  *			GPIO_SYSCON_FEAT_IN:	GPIOs supports input,
+  *			GPIO_SYSCON_FEAT_OUT:	GPIOs supports output,
+  *			GPIO_SYSCON_FEAT_DIR:	GPIOs supports switch direction.
+- * bit_count:		Number of bits used as GPIOs.
+- * dat_bit_offset:	Offset (in bits) to the first GPIO bit.
+- * dir_bit_offset:	Optional offset (in bits) to the first bit to switch
++ * @bit_count:		Number of bits used as GPIOs.
++ * @dat_bit_offset:	Offset (in bits) to the first GPIO bit.
++ * @dir_bit_offset:	Optional offset (in bits) to the first bit to switch
+  *			GPIO direction (Used with GPIO_SYSCON_FEAT_DIR flag).
+- * set:		HW specific callback to assigns output value
++ * @set:		HW specific callback to assigns output value
+  *			for signal "offset"
+  */
+ 
 -- 
 2.25.1
 
