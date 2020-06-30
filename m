@@ -2,70 +2,92 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6890C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:33:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7834C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8FB5720786
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:33:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8331A20760
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:35:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593477321;
+	bh=KBmUTWrG93ENkO07tKesnl5kivSN3j2CtPaBFAdgfY4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=xpHAIC05qXvGULYTQ8kJx5v9KHQMszefWbzkongK4BC2TCP7Qtq6wCir8Eskk3bNC
+	 qUjA/JRGcKNwzf0oePK3j0Vmc+Z74/7csmVrcB58t6hC8AtgxZgzvImHYOPX4zm1NR
+	 js8cYhGmxxsxF8WkfrrT6OSGRY5vcXpsXjkUTihY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728475AbgF3Ad5 (ORCPT
+        id S1728797AbgF3AfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 20:33:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37874 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbgF3Ad5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 20:33:57 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA7BAC061755;
-        Mon, 29 Jun 2020 17:33:56 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id BF8E6127C1B86;
-        Mon, 29 Jun 2020 17:33:54 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 17:33:53 -0700 (PDT)
-Message-Id: <20200629.173353.2205232220417102627.davem@davemloft.net>
-To:     po.liu@nxp.com
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        alexandre.belloni@bootlin.com, andrew@lunn.ch,
-        vivien.didelot@gmail.com, f.fainelli@gmail.com, kuba@kernel.org,
-        jiri@resnulli.us, vlad@buslov.dev, claudiu.manoil@nxp.com,
-        vladimir.oltean@nxp.com, alexandru.marginean@nxp.com,
-        michael.chan@broadcom.com, vishal@chelsio.com, saeedm@mellanox.com,
-        leon@kernel.org, jiri@mellanox.com, idosch@mellanox.com,
-        UNGLinuxDriver@microchip.com, jhs@mojatatu.com,
-        xiyou.wangcong@gmail.com, simon.horman@netronome.com,
-        pablo@netfilter.org, moshe@mellanox.com, oss-drivers@netronome.com
-Subject: Re: [v2,net-next] net:qos: police action offloading parameter
- 'burst' change to the original value
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200629065416.31111-1-po.liu@nxp.com>
-References: <20200629020420.30412-2-po.liu@nxp.com>
-        <20200629065416.31111-1-po.liu@nxp.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Mon, 29 Jun 2020 20:35:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38914 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728666AbgF3AfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 20:35:19 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA78720760;
+        Tue, 30 Jun 2020 00:35:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593477319;
+        bh=KBmUTWrG93ENkO07tKesnl5kivSN3j2CtPaBFAdgfY4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=zfYVeUoSATL27kpxgjL8IlQEdwmRo9q6TX33ruLpLSInROW4Bg7uaB/znM10mmmch
+         Y7TDli4Mu1jHgT9gAMKz+pEYcynmfLfcgbviDbzSVy1BKRZ9iM1h2Glkq32I7IyGkz
+         c49m0iomoa+Cw7e7l4nm+vc1RUEV6a+grDxd+Aew=
+Date:   Mon, 29 Jun 2020 17:35:17 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Alex Elder <elder@linaro.org>
+Cc:     davem@davemloft.net, evgreen@chromium.org, subashab@codeaurora.org,
+        cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next 1/5] net: ipa: head-of-line block registers are
+ RX only
+Message-ID: <20200629173517.40716282@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200629214919.1196017-2-elder@linaro.org>
+References: <20200629214919.1196017-1-elder@linaro.org>
+        <20200629214919.1196017-2-elder@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 29 Jun 2020 17:33:55 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Po Liu <po.liu@nxp.com>
-Date: Mon, 29 Jun 2020 14:54:16 +0800
-
-> Since 'tcfp_burst' with TICK factor, driver side always need to recover
-> it to the original value, this patch moves the generic calculation and
-> recover to the 'burst' original value before offloading to device driver.
+On Mon, 29 Jun 2020 16:49:15 -0500 Alex Elder wrote:
+> The INIT_HOL_BLOCK_EN and INIT_HOL_BLOCK_TIMER endpoint registers
+> are only valid for RX endpoints.
 > 
-> Signed-off-by: Po Liu <po.liu@nxp.com>
-> Acked-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+> Have ipa_endpoint_modem_hol_block_clear_all() skip writing these
+> registers for TX endpoints.
+> 
+> Signed-off-by: Alex Elder <elder@linaro.org>
+> ---
+>  drivers/net/ipa/ipa_endpoint.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ipa/ipa_endpoint.c b/drivers/net/ipa/ipa_endpoint.c
+> index 9f50d0d11704..3f5a41fc1997 100644
+> --- a/drivers/net/ipa/ipa_endpoint.c
+> +++ b/drivers/net/ipa/ipa_endpoint.c
+> @@ -642,6 +642,8 @@ static int ipa_endpoint_init_hol_block_timer(struct ipa_endpoint *endpoint,
+>  	u32 offset;
+>  	u32 val;
+>  
+> +	/* assert(!endpoint->toward_ipa); */
+> +
+>  	/* XXX We'll fix this when the register definition is clear */
+>  	if (microseconds) {
+>  		struct device *dev = &ipa->pdev->dev;
+> @@ -671,6 +673,8 @@ ipa_endpoint_init_hol_block_enable(struct ipa_endpoint *endpoint, bool enable)
+>  	u32 offset;
+>  	u32 val;
+>  
+> +	/* assert(!endpoint->toward_ipa); */
 
-Applied, thank you.
+What are these assert comments for? :S
