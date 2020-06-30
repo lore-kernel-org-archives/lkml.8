@@ -2,164 +2,107 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9755C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:04:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF4CC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:08:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 93C0A2065F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:04:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593515095;
-	bh=xo5FORiPSBj2TxwXLX3hhEJsXz99kPSbVqoDyV/Iolw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=V21GwE+52D6YlT/D18rMxfu5GhDwqI4Qfe0G78ml4P3MgcTNEEJmM8KVMIm8jrU2o
-	 jwpqlAm+wev/0EbwhjCLXyFun9ici6KnAoghr5t7asVYz0NLtSBYozbQ9oz9QRlA2F
-	 wfq91ygAPrev5+9LDb4Y5PjStmB/rVdLaJ2jxsEg=
+	by mail.kernel.org (Postfix) with ESMTP id ACFB12065F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:08:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=tsoy.me header.i=@tsoy.me header.b="J6WB1C5p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732840AbgF3LEy (ORCPT
+        id S1732850AbgF3LIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 07:04:54 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:35377 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729924AbgF3LEe (ORCPT
+        Tue, 30 Jun 2020 07:08:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50790 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728534AbgF3LIL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 07:04:34 -0400
-Received: by mail-oi1-f195.google.com with SMTP id k4so17089222oik.2;
-        Tue, 30 Jun 2020 04:04:33 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vXIRIHHncqo0zBLK3dtMRuMsQ9p5Az0FH+7MVXNOGgk=;
-        b=K5bwXcOtIDbWYFJlyEiw59h4My36mdbLWRkhv3MFfX+NYheBF5pZfd2BGi3ClR3hEu
-         hLDVBqU/tSrTKlkdPywoXRo/+PwakNZ//my+yhx7JCwud5WYcSzkrvBKfShFuIz9l8iN
-         3EopntkNX19JvqoroTbhpOWzW82mUXdSs7XaVZJbZomdo/AMJgRp5Np7OhJr0bfI2Cv1
-         lp2ea7eJtltKrrPDn1SxJ4CC614Ggge4UvltBeydnZcTbanvP1pPPQD2LuCAlF+DmKun
-         Q2yDo4GSMlbeO+jI1cdKcoaWB73dePvWRKpAo6SAblx103jV0hr1YWGmGA6np7nEZyft
-         gysw==
-X-Gm-Message-State: AOAM532h4iok/G8EI4d3+U0rUKmuPbUPvZWlzEU+ovbY9F8cqXTjZJJC
-        CKgz5edLrPGRtJbJ7yhqfhiJxUfk7RvSSbmIOgI=
-X-Google-Smtp-Source: ABdhPJyrXV+odnKMMsJSNg1252EbQtYugp1MCGhfn0n9yvdE0dCa6B3S5wf96DbBHiDa3tUn2DkDotITWi/UNHXvnXk=
-X-Received: by 2002:a54:4585:: with SMTP id z5mr16015967oib.110.1593515073282;
- Tue, 30 Jun 2020 04:04:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com>
- <2713141.s8EVnczdoM@kreacher> <2788992.3K7huLjdjL@kreacher>
- <CAPcyv4hXkzpTr3bif7zyVx5EqoWTwLgYrt87Aj2=gVMo+jtUyg@mail.gmail.com>
- <CAJZ5v0h4Hj4ax1mmMJn3z3VGtVWkoXzO0kOQ7CYnFKJV2cUGzw@mail.gmail.com> <CAPcyv4iZA6hHH=sh=CZPJ-6skJfeuAVRVAuMeTdD5LYVPRrTqQ@mail.gmail.com>
-In-Reply-To: <CAPcyv4iZA6hHH=sh=CZPJ-6skJfeuAVRVAuMeTdD5LYVPRrTqQ@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 30 Jun 2020 13:04:21 +0200
-Message-ID: <CAJZ5v0g8=tXU8HHkoXSOwSmRhTgwb5rW8N8QQga6AU91kp1dVw@mail.gmail.com>
-Subject: Re: [RFT][PATCH v3 0/4] ACPI: ACPICA / OSL: Avoid unmapping ACPI
- memory inside of the AML interpreter
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        Rafael J Wysocki <rafael.j.wysocki@intel.com>,
-        Len Brown <lenb@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Ira Weiny <ira.weiny@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ACPI <linux-acpi@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Bob Moore <robert.moore@intel.com>
+        Tue, 30 Jun 2020 07:08:11 -0400
+X-Greylist: delayed 1084 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 30 Jun 2020 04:08:09 PDT
+Received: from puleglot.ru (puleglot.ru [IPv6:2a01:4f8:1c0c:58e8::2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D591CC061755;
+        Tue, 30 Jun 2020 04:08:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=tsoy.me;
+        s=mymail; h=Sender:Content-Transfer-Encoding:MIME-Version:Content-Type:
+        References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-ID
+        :Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:
+        Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe
+        :List-Post:List-Owner:List-Archive;
+        bh=T93SLtnPb6wB9FBMjQial71KQSEtfSKw0717TcvmAh8=; b=J6WB1C5pQWATN7nSRT+Efii6bO
+        /7JzRtqiraqSjFjAoUfaqK5gRtm6EBsnDXGXUfonkqWpP0c6zCp9eQr7FvYI/Zf73a5Y+2LwYhlJF
+        ACFyPz7hGf8YX5FBxCcosVyPS0QAihfj1L8KXw2ATSGF2XQnUXmNBlOr97O8ELdlxT6E=;
+Received: from [10.8.10.223] (helo=work)
+        by puleglot.ru with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+        (Exim 4.93.0.4)
+        (envelope-from <puleglot@puleglot.ru>)
+        id 1jqDpx-001PGV-MF; Tue, 30 Jun 2020 13:50:01 +0300
+Message-ID: <e033669a50b53e439f5071ad12d05c2d02ab6cfc.camel@tsoy.me>
+Subject: Re: [PATCH 4.9 026/191] ALSA: usb-audio: Improve frames size
+ computation
+From:   Alexander Tsoy <alexander@tsoy.me>
+To:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Cc:     Takashi Iwai <tiwai@suse.de>
+Date:   Tue, 30 Jun 2020 13:49:50 +0300
+In-Reply-To: <20200629154007.2495120-27-sashal@kernel.org>
+References: <20200629154007.2495120-1-sashal@kernel.org>
+         <20200629154007.2495120-27-sashal@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 10:46 PM Dan Williams <dan.j.williams@intel.com> wrote:
->
-> On Sun, Jun 28, 2020 at 10:09 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >
-> > On Fri, Jun 26, 2020 at 8:41 PM Dan Williams <dan.j.williams@intel.com> wrote:
-> > >
-> > > On Fri, Jun 26, 2020 at 10:34 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> > > >
-> > > > Hi All,
-> > > >
-> > > > On Monday, June 22, 2020 3:50:42 PM CEST Rafael J. Wysocki wrote:
-> > > > > Hi All,
-> > > > >
-> > > > > This series is to address the problem with RCU synchronization occurring,
-> > > > > possibly relatively often, inside of acpi_ex_system_memory_space_handler(),
-> > > > > when the namespace and interpreter mutexes are held.
-> > > > >
-> > > > > Like I said before, I had decided to change the approach used in the previous
-> > > > > iteration of this series and to allow the unmap operations carried out by
-> > > > > acpi_ex_system_memory_space_handler() to be deferred in the first place,
-> > > > > which is done in patches [1-2/4].
-> > > >
-> > > > In the meantime I realized that calling syncrhonize_rcu_expedited() under the
-> > > > "tables" mutex within ACPICA is not quite a good idea too and that there is no
-> > > > reason for any users of acpi_os_unmap_memory() in the tree to use the "sync"
-> > > > variant of unmapping.
-> > > >
-> > > > So, unless I'm missing something, acpi_os_unmap_memory() can be changed to
-> > > > always defer the final unmapping and the only ACPICA change needed to support
-> > > > that is the addition of the acpi_os_release_unused_mappings() call to get rid
-> > > > of the unused mappings when leaving the interpreter (module the extra call in
-> > > > the debug code for consistency).
-> > > >
-> > > > So patches [1-2/4] have been changed accordingly.
-> > > >
-> > > > > However, it turns out that the "fast-path" mapping is still useful on top of
-> > > > > the above to reduce the number of ioremap-iounmap cycles for the same address
-> > > > > range and so it is introduced by patches [3-4/4].
-> > > >
-> > > > Patches [3-4/4] still do what they did, but they have been simplified a bit
-> > > > after rebasing on top of the new [1-2/4].
-> > > >
-> > > > The below information is still valid, but it applies to the v3, of course.
-> > > >
-> > > > > For details, please refer to the patch changelogs.
-> > > > >
-> > > > > The series is available from the git branch at
-> > > > >
-> > > > >  git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git \
-> > > > >  acpica-osl
-> > > > >
-> > > > > for easier testing.
-> > > >
-> > > > Also the series have been tested locally.
-> > >
-> > > Ok, I'm still trying to get the original reporter to confirm this
-> > > reduces the execution time for ASL routines with a lot of OpRegion
-> > > touches. Shall I rebuild that test kernel with these changes, or are
-> > > the results from the original RFT still interesting?
-> >
-> > I'm mostly interested in the results with the v3 applied.
-> >
->
-> Ok, I just got feedback on v2 and it still showed the 30 minute
-> execution time where 7 minutes was achieved previously.
+В Пн, 29/06/2020 в 11:37 -0400, Sasha Levin пишет:
+> From: Alexander Tsoy <alexander@tsoy.me>
+> 
+> [ Upstream commit f0bd62b64016508938df9babe47f65c2c727d25c ]
+> 
+> For computation of the the next frame size current value of fs/fps
+> and
+> accumulated fractional parts of fs/fps are used, where values are
+> stored
+> in Q16.16 format. This is quite natural for computing frame size for
+> asynchronous endpoints driven by explicit feedback, since in this
+> case
+> fs/fps is a value provided by the feedback endpoint and it's already
+> in
+> the Q format. If an error is accumulated over time, the device can
+> adjust fs/fps value to prevent buffer overruns/underruns.
+> 
+> But for synchronous endpoints the accuracy provided by these
+> computations
+> is not enough. Due to accumulated error the driver periodically
+> produces
+> frames with incorrect size (+/- 1 audio sample).
+> 
+> This patch fixes this issue by implementing a different algorithm for
+> frame size computation. It is based on accumulating of the remainders
+> from division fs/fps and it doesn't accumulate errors over time. This
+> new method is enabled for synchronous and adaptive playback
+> endpoints.
+> 
+> Signed-off-by: Alexander Tsoy <alexander@tsoy.me>
+> Link: 
+> https://lore.kernel.org/r/20200424022449.14972-1-alexander@tsoy.me
+> Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  sound/usb/card.h     |  4 ++++
+>  sound/usb/endpoint.c | 43 ++++++++++++++++++++++++++++++++++++++--
+> ---
+>  sound/usb/endpoint.h |  1 +
+>  sound/usb/pcm.c      |  2 ++
+>  4 files changed, 45 insertions(+), 5 deletions(-)
 
-This probably means that "transient" memory opregions, which appear
-and go away during the AML execution, are involved and so moving the
-RCU synchronization outside of the interpreter and namespace locks is
-not enough to cover this case.
+Please drop this patch from the queue for now (and for 4.4 as well). It
+introduced a regression for some devices. The fix is available, but not
+accepted yet.
 
-It should be covered by the v4
-(https://lore.kernel.org/linux-acpi/1666722.UopIai5n7p@kreacher/T/#u),
-though, because the unmapping is completely asynchronous in there and
-it doesn't add any significant latency to the interpreter exit path.
-So I would expect to see much better results with the v4, so I'd
-recommend testing this one next.
-
-> > Also it would be good to check the impact of the first two patches
-> > alone relative to all four.
->
-> I'll start with the full set and see if they can also support the
-> "first 2" experiment.
-
-In the v4 there are just two patches, so it should be straightforward
-enough to test with and without the top-most one. :-)
