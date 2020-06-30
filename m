@@ -2,140 +2,98 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A22EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3737C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 364EC206CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:02:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B845E20759
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:04:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="P+OSWT6F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730585AbgF3HCR (ORCPT
+        id S1730592AbgF3HE2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 03:02:17 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:46723 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725440AbgF3HCQ (ORCPT
+        Tue, 30 Jun 2020 03:04:28 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:39226 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730386AbgF3HE1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 03:02:16 -0400
-Received: by mail-io1-f70.google.com with SMTP id z65so11124275iof.13
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 00:02:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=ECzA0dtAJHjhAvJtCFt9qVVpvMOwHbK1fmaElxhvgYw=;
-        b=GQW4dMSNRrgKiyL97NP/v1ML0CB8rsxbT+UlG+/CdwSPLOc8bX0JT8kPNXSsEd5GG2
-         jmf4E0kbDTfawwnd8mMOtNHLG4fEsy/IRTZDRjeJ+qNlGg5dpi05hRSIaPP03Z7pUCGt
-         XV1Wq1qE/8/PTad5z9F31V55WwGZKDdqj1Fd5Sgn1E627XpLg75cNYz+IjBwHa/OrLp6
-         GeYlFYzE77lBrCFGfpqw7gXOGCrrPDasyeCm4LxRZKi65JrZVuqDzVThgxy0SUCP2Bx/
-         d29SWLl4Hd2uUrO5JrOtjDqWars3PmfBqFRlNfn6PDnvoIf3AnRK3HT+1+CqI+mmQtNV
-         e+hg==
-X-Gm-Message-State: AOAM533D1QZLnR8iNAGL19JmwsQfnl6IiugyYcFslyi9Lekz/P1LCYjs
-        M9BqCs89rbUaGra9HXFh1D+C8gq4ZpSKmCFcHUhnFQrvHRU5
-X-Google-Smtp-Source: ABdhPJzTG/kuqgmwJS3mcXjkL9h0Lc571CELKWsFFh2qHpXJc6I7ogmcz5bq3MdTCfOCjDrkpL0sOCgHPx2oDK0uTnFcDJamR9Ez
-MIME-Version: 1.0
-X-Received: by 2002:a6b:b457:: with SMTP id d84mr20392610iof.21.1593500535403;
- Tue, 30 Jun 2020 00:02:15 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 00:02:15 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005cb9dc05a947c16e@google.com>
-Subject: general protection fault in create_empty_buffers (3)
-From:   syzbot <syzbot+66017672f8ea3c492d56@syzkaller.appspotmail.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+        Tue, 30 Jun 2020 03:04:27 -0400
+X-UUID: 24aee6f623034ba788fcf49abffd2938-20200630
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=85Y8+6bkZLH5yMFgsr9O3/8M6UcByJwt+cBROWXTJxI=;
+        b=P+OSWT6F21j9ksS46fSGcHQdhA/2bejizLU1uJCuAa9XA+6VnvoNpdrGX/F2dNeBvm2rymKbuIQcALj8BS374rJgdXYcXX5pgeQ+0rUDU9GTRmVJ8Qz4fZDThMywhMIayoVtk5luXCsbQPHhbqWQ01EnbfSRB7Hd66Hq8FcktwY=;
+X-UUID: 24aee6f623034ba788fcf49abffd2938-20200630
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 2056151911; Tue, 30 Jun 2020 15:04:12 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33N2.mediatek.inc
+ (172.27.4.76) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 30 Jun
+ 2020 15:04:10 +0800
+Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
+ Transport; Tue, 30 Jun 2020 15:04:09 +0800
+Message-ID: <1593500631.3798.9.camel@mhfsdcap03>
+Subject: Re: [PATCH 1/2] usb: mtu3: disable USB2 LPM
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Peter Chen <hzpeterchen@gmail.com>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        USB list <linux-usb@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        <linux-mediatek@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Markus Elfring <Markus.Elfring@web.de>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Tue, 30 Jun 2020 15:03:51 +0800
+In-Reply-To: <CAL411-qVjxYk7f+b74XHfj7jpxALS4LYUKe0XdSfwRZcQibNfA@mail.gmail.com>
+References: <1593410434-19406-1-git-send-email-chunfeng.yun@mediatek.com>
+         <CAL411-qVjxYk7f+b74XHfj7jpxALS4LYUKe0XdSfwRZcQibNfA@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-TM-SNTS-SMTP: FC147824681EC42AD367BF2416B37B5EB0CDBAF9C30100AADD32FDD739E780162000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+T24gTW9uLCAyMDIwLTA2LTI5IGF0IDE1OjM3ICswODAwLCBQZXRlciBDaGVuIHdyb3RlOg0KPiBP
+biBNb24sIEp1biAyOSwgMjAyMCBhdCAyOjA0IFBNIENodW5mZW5nIFl1biA8Y2h1bmZlbmcueXVu
+QG1lZGlhdGVrLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBBIFN1cGVyU3BlZWQgZGV2aWNlIHNoYWxs
+IGluY2x1ZGUgdGhlIFVTQiAyLjAgZXh0ZW5zaW9uIGRlc2NyaXB0b3INCj4gPiBhbmQgc2hhbGwg
+c3VwcG9ydCBMUE0gd2hlbiBvcGVyYXRpbmcgaW4gVVNCIDIuMCBIUyBtb2RlKHNlZSB1c2IzLjIN
+Cj4gPiBzcGVjOS42LjIuMSkuIEJ1dCB3ZSBhbHdheXMgZG9uJ3Qgc3VwcG9ydCBpdCwgc28gZGlz
+YWJsZSBpdCBieQ0KPiA+IGRlZmF1bHQsIG90aGVyd2lzZSBkZXZpY2Ugd2lsbCBlbnRlciBMUE0g
+c3VzcGVuZCBtb2RlIHdoZW4NCj4gPiBjb25uZWN0ZWQgdG8gV2luMTAgc3lzdGVtLg0KPiANCj4g
+TGludXggYWxzbyBzdXBwb3J0cyBVU0IyIExQTS4gQmVzaWRlcywgVVNCLUlGIENIOSB0ZXN0IHdp
+bGwgY2hlY2sNCj4gTFBNIHN1cHBvcnQgaWYgdGhlIGRldmljZSBpcyBVU0IgMi4xLCBob3cgY291
+bGQgeW91IGRlYWwgd2l0aCBpdD8NCkluZGVlZCBuZWVkIHN1cHBvcnQgaXQgZm9yIFNTIGRldmlj
+ZSwgSSdsbCBjaGVjayBpdCBhZ2FpbiwgdGhhbmtzIGEgbG90DQoNCj4gDQo+IFBldGVyDQo+IA0K
+PiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQ2h1bmZlbmcgWXVuIDxjaHVuZmVuZy55dW5AbWVkaWF0
+ZWsuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL3VzYi9tdHUzL210dTNfY29yZS5jIHwgMiAr
+Kw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspDQo+ID4NCj4gPiBkaWZmIC0t
+Z2l0IGEvZHJpdmVycy91c2IvbXR1My9tdHUzX2NvcmUuYyBiL2RyaXZlcnMvdXNiL210dTMvbXR1
+M19jb3JlLmMNCj4gPiBpbmRleCA5ZGQwMjE2Li41MGQ2YTQwIDEwMDY0NA0KPiA+IC0tLSBhL2Ry
+aXZlcnMvdXNiL210dTMvbXR1M19jb3JlLmMNCj4gPiArKysgYi9kcml2ZXJzL3VzYi9tdHUzL210
+dTNfY29yZS5jDQo+ID4gQEAgLTYwNCw2ICs2MDQsOCBAQCBzdGF0aWMgdm9pZCBtdHUzX3JlZ3Nf
+aW5pdChzdHJ1Y3QgbXR1MyAqbXR1KQ0KPiA+ICAgICAgICAgbXR1M19jbHJiaXRzKG1iYXNlLCBV
+M0RfTUlTQ19DVFJMLCBWQlVTX0ZSQ19FTiB8IFZCVVNfT04pOw0KPiA+ICAgICAgICAgLyogZW5h
+YmxlIGF1dG9tYXRpY2FsIEhXUlcgZnJvbSBMMSAqLw0KPiA+ICAgICAgICAgbXR1M19zZXRiaXRz
+KG1iYXNlLCBVM0RfUE9XRVJfTUFOQUdFTUVOVCwgTFBNX0hSV0UpOw0KPiA+ICsgICAgICAgLyog
+YWx3YXlzIHJlamVjdCBMUE0gcmVxdWVzdCAqLw0KPiA+ICsgICAgICAgbXR1M19zZXRiaXRzKG1i
+YXNlLCBVM0RfUE9XRVJfTUFOQUdFTUVOVCwgTFBNX01PREUoMSkpOw0KPiA+DQo+ID4gICAgICAg
+ICAvKiB1c2UgbmV3IFFNVSBmb3JtYXQgd2hlbiBIVyB2ZXJzaW9uID49IDB4MTAwMyAqLw0KPiA+
+ICAgICAgICAgaWYgKG10dS0+Z2VuMmNwKQ0KPiA+IC0tDQo+ID4gMS45LjENCj4gPiBfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KPiA+IGxpbnV4LWFybS1r
+ZXJuZWwgbWFpbGluZyBsaXN0DQo+ID4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
+b3JnDQo+ID4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51
+eC1hcm0ta2VybmVsDQoNCg==
 
-syzbot found the following crash on:
-
-HEAD commit:    4e99b321 Merge tag 'nfs-for-5.8-2' of git://git.linux-nfs...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14355b4b100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=bf3aec367b9ab569
-dashboard link: https://syzkaller.appspot.com/bug?extid=66017672f8ea3c492d56
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+66017672f8ea3c492d56@syzkaller.appspotmail.com
-
-general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
-CPU: 0 PID: 3911 Comm: systemd-udevd Not tainted 5.8.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:create_empty_buffers+0x4f/0x820 fs/buffer.c:1565
-Code: 89 ef e8 94 9a ff ff 49 bc 00 00 00 00 00 fc ff df 48 89 44 24 08 48 89 c3 eb 03 48 89 c3 e8 78 9c a6 ff 48 89 d8 48 c1 e8 03 <42> 80 3c 20 00 0f 85 a8 06 00 00 4c 09 2b 48 8d 7b 08 48 89 f8 48
-RSP: 0018:ffffc90001577858 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff81cc51b9
-RDX: ffff8880a0d5c580 RSI: ffffffff81ccb478 RDI: 0000000000000005
-RBP: ffffea00027d2dc0 R08: 0000000000000001 R09: ffff8880a0d5ce48
-R10: 0000000000000000 R11: 0000000000000000 R12: dffffc0000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: dead000000000100
-FS:  00007fbeb87098c0(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000400200 CR3: 00000000a03ad000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- create_page_buffers+0x295/0x3b0 fs/buffer.c:1679
- block_read_full_page+0xcf/0xed0 fs/buffer.c:2269
- do_read_cache_page+0x8d4/0x1390 mm/filemap.c:2765
- read_mapping_page include/linux/pagemap.h:437 [inline]
- read_part_sector+0xf6/0x5af block/partitions/core.c:772
- adfspart_check_ICS+0x9d/0xc90 block/partitions/acorn.c:360
- check_partition block/partitions/core.c:140 [inline]
- blk_add_partitions+0x44b/0xe10 block/partitions/core.c:700
- bdev_disk_changed+0x1ea/0x370 fs/block_dev.c:1524
- blkdev_reread_part block/ioctl.c:103 [inline]
- blkdev_common_ioctl+0x13d1/0x1760 block/ioctl.c:549
- blkdev_ioctl+0x1a3/0x6c0 block/ioctl.c:618
- block_ioctl+0xf9/0x140 fs/block_dev.c:1988
- vfs_ioctl fs/ioctl.c:48 [inline]
- ksys_ioctl+0x11a/0x180 fs/ioctl.c:753
- __do_sys_ioctl fs/ioctl.c:762 [inline]
- __se_sys_ioctl fs/ioctl.c:760 [inline]
- __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:760
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x7fbeb7582017
-Code: Bad RIP value.
-RSP: 002b:00007fff18b4d7e8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00007fff18b4d960 RCX: 00007fbeb7582017
-RDX: 0000000000000000 RSI: 000000000000125f RDI: 000000000000000e
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000010
-R10: 0000000000000020 R11: 0000000000000246 R12: 00007fff18b4d990
-R13: 000055f766174010 R14: 000055f767066210 R15: 00007fff18b4d860
-Modules linked in:
----[ end trace 3a62581c64dab56e ]---
-RIP: 0010:create_empty_buffers+0x4f/0x820 fs/buffer.c:1565
-Code: 89 ef e8 94 9a ff ff 49 bc 00 00 00 00 00 fc ff df 48 89 44 24 08 48 89 c3 eb 03 48 89 c3 e8 78 9c a6 ff 48 89 d8 48 c1 e8 03 <42> 80 3c 20 00 0f 85 a8 06 00 00 4c 09 2b 48 8d 7b 08 48 89 f8 48
-RSP: 0018:ffffc90001577858 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff81cc51b9
-RDX: ffff8880a0d5c580 RSI: ffffffff81ccb478 RDI: 0000000000000005
-RBP: ffffea00027d2dc0 R08: 0000000000000001 R09: ffff8880a0d5ce48
-R10: 0000000000000000 R11: 0000000000000000 R12: dffffc0000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: dead000000000100
-FS:  00007fbeb87098c0(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000001b32f2d000 CR3: 00000000a03ad000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
