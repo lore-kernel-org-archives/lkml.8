@@ -2,233 +2,148 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA17BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D94AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C4BA520759
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:18:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EDFD20759
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:19:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y8UWkbex"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H2rKoBD3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731267AbgF3ISO (ORCPT
+        id S1731312AbgF3ITP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 04:18:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52814 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730670AbgF3ISN (ORCPT
+        Tue, 30 Jun 2020 04:19:15 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:55597 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730183AbgF3ITN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 04:18:13 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B505CC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 01:18:12 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id 9so21411978ljv.5
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 01:18:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=1r+fUBQ7kWB8Uv5rfkuJJaXftZ7SqcgrOU/0C4lpw48=;
-        b=y8UWkbexM6m5wZUvoAG+hNiiQfSPtNgQKsjf/8PeqtajR9DrNkSBGC5L6y4dAkCLuS
-         xuDemxYn6H3zRDft4hqAZw1cPRiene0Qet9vNBhuJKQBd50oOSZDLbXuZVRiIrU2Ib5M
-         t1Xuivd0R6zXP7kAZPlZV5J33RfVvxCQG8t6x9ar0vQEILsOuoWrqP+hNji3l3gUvqxd
-         l2GqsPjh2LvlGdx4lQjTIXNErr7igeArDanyT0M3EVldLDVfcpAnQctrOFPAvhgDZq3c
-         NGyC6KqZjedBejVcfcV+wiO/pYYtGmQo8BbmD/8aLlmh0d6vcj8VRV8t+r+2mIMVwUG8
-         2T6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=1r+fUBQ7kWB8Uv5rfkuJJaXftZ7SqcgrOU/0C4lpw48=;
-        b=CNZhmeT0j5xjMOOyMyP1WHoFNrMRi78/3uQhQz53vmkGPY8FNuu/zNblBzsS9h3Tv2
-         Vy+DXCyWHLwoyFp/R8n2KywdmF+duyyheE8jFm1xyu3++ebtGve0eK1/GPO/XW/GL82W
-         klBgYO1cFF0WUJyrB9jwKVjJabVsj8oXlGSAQd59rvBKrGhA0oxnyXsJg9jrLml3E2Kb
-         BmQR9r6fv/eROEuNhg3ekuZD54/kTnIUmEenb6cSS3OmxbwSpYdHLuybCmRbDhHCKy6t
-         O/dLHX9sW5RakaaKleoDwhMjsaXHLvj4A8RQf59eLwYCX0ik7wkiM1UQ7boGdySqGhz/
-         s/Ig==
-X-Gm-Message-State: AOAM531A1VI2kImK5cmyrSXwkGjqzIxiIrev08WxpcqMJ94mFC9NfGAU
-        zw0CjlFVk5qgK4JnVOBdTmI2Ok/JBM3kTzE9pKnY5j9FPAxmMQ==
-X-Google-Smtp-Source: ABdhPJxVdxUi7BDIoQdNduhhR5pnn/GQRUmiMMo93SUXrMpBcQC4Gh1/dGRZWipN3WU4ovRG/yKp3KWJJL4kmvknDjo=
-X-Received: by 2002:a2e:9089:: with SMTP id l9mr2669728ljg.431.1593505091028;
- Tue, 30 Jun 2020 01:18:11 -0700 (PDT)
+        Tue, 30 Jun 2020 04:19:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593505152;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=+NwluuLnwCyk2a0mUX9hCx+g9u/xnsF6zQojeN4n8xs=;
+        b=H2rKoBD3moTV9kis8MSu/eQbVl+eqI1x99fenVZQkK4hrlThlFPk7PtKoxpbE+1HHkJTGL
+        KswT6F0fQuUTSz/HV3wfMyoh76KgrXXF33OYUnKw4JwSo7SgwjhimYIou72sXDjZUvrnJf
+        ZI+kAgUtMLl9hBY6ki6BspZMykeILmY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-45-Gd2_LVKEOg-Rgr_PuBaLPw-1; Tue, 30 Jun 2020 04:19:10 -0400
+X-MC-Unique: Gd2_LVKEOg-Rgr_PuBaLPw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 271F518FE861;
+        Tue, 30 Jun 2020 08:19:09 +0000 (UTC)
+Received: from [10.36.114.56] (ovpn-114-56.ams2.redhat.com [10.36.114.56])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7B03D5C290;
+        Tue, 30 Jun 2020 08:19:07 +0000 (UTC)
+Subject: Re: [PATCH v1 1/2] mm/memblock: expose only miminal interface to
+ add/walk physmem
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, linux-mm@kvack.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20200630081730.6862-1-david@redhat.com>
+ <20200630081730.6862-2-david@redhat.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABtCREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT6JAlgEEwEIAEICGwMFCQlmAYAGCwkIBwMCBhUI
+ AgkKCwQWAgMBAh4BAheAFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl3pImkCGQEACgkQTd4Q
+ 9wD/g1o+VA//SFvIHUAvul05u6wKv/pIR6aICPdpF9EIgEU448g+7FfDgQwcEny1pbEzAmiw
+ zAXIQ9H0NZh96lcq+yDLtONnXk/bEYWHHUA014A1wqcYNRY8RvY1+eVHb0uu0KYQoXkzvu+s
+ Dncuguk470XPnscL27hs8PgOP6QjG4jt75K2LfZ0eAqTOUCZTJxA8A7E9+XTYuU0hs7QVrWJ
+ jQdFxQbRMrYz7uP8KmTK9/Cnvqehgl4EzyRaZppshruKMeyheBgvgJd5On1wWq4ZUV5PFM4x
+ II3QbD3EJfWbaJMR55jI9dMFa+vK7MFz3rhWOkEx/QR959lfdRSTXdxs8V3zDvChcmRVGN8U
+ Vo93d1YNtWnA9w6oCW1dnDZ4kgQZZSBIjp6iHcA08apzh7DPi08jL7M9UQByeYGr8KuR4i6e
+ RZI6xhlZerUScVzn35ONwOC91VdYiQgjemiVLq1WDDZ3B7DIzUZ4RQTOaIWdtXBWb8zWakt/
+ ztGhsx0e39Gvt3391O1PgcA7ilhvqrBPemJrlb9xSPPRbaNAW39P8ws/UJnzSJqnHMVxbRZC
+ Am4add/SM+OCP0w3xYss1jy9T+XdZa0lhUvJfLy7tNcjVG/sxkBXOaSC24MFPuwnoC9WvCVQ
+ ZBxouph3kqc4Dt5X1EeXVLeba+466P1fe1rC8MbcwDkoUo65Ag0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAGJAiUEGAECAA8FAlXLn5ECGwwFCQlmAYAACgkQTd4Q
+ 9wD/g1qA6w/+M+ggFv+JdVsz5+ZIc6MSyGUozASX+bmIuPeIecc9UsFRatc91LuJCKMkD9Uv
+ GOcWSeFpLrSGRQ1Z7EMzFVU//qVs6uzhsNk0RYMyS0B6oloW3FpyQ+zOVylFWQCzoyyf227y
+ GW8HnXunJSC+4PtlL2AY4yZjAVAPLK2l6mhgClVXTQ/S7cBoTQKP+jvVJOoYkpnFxWE9pn4t
+ H5QIFk7Ip8TKr5k3fXVWk4lnUi9MTF/5L/mWqdyIO1s7cjharQCstfWCzWrVeVctpVoDfJWp
+ 4LwTuQ5yEM2KcPeElLg5fR7WB2zH97oI6/Ko2DlovmfQqXh9xWozQt0iGy5tWzh6I0JrlcxJ
+ ileZWLccC4XKD1037Hy2FLAjzfoWgwBLA6ULu0exOOdIa58H4PsXtkFPrUF980EEibUp0zFz
+ GotRVekFAceUaRvAj7dh76cToeZkfsjAvBVb4COXuhgX6N4pofgNkW2AtgYu1nUsPAo+NftU
+ CxrhjHtLn4QEBpkbErnXQyMjHpIatlYGutVMS91XTQXYydCh5crMPs7hYVsvnmGHIaB9ZMfB
+ njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
+ FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
+Organization: Red Hat GmbH
+Message-ID: <db028915-dbad-6989-600a-27d9ea59ba76@redhat.com>
+Date:   Tue, 30 Jun 2020 10:19:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <20200629155309.2495516-1-sashal@kernel.org>
-In-Reply-To: <20200629155309.2495516-1-sashal@kernel.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 30 Jun 2020 13:47:58 +0530
-Message-ID: <CA+G9fYvjZyJfc3U5tUPLQiwiUa9mgqdAzumWsh8iheb6F2LSOQ@mail.gmail.com>
-Subject: Re: [PATCH 4.4 000/135] 4.4.229-rc1 review
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        linux- stable <stable@vger.kernel.org>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        patches@kernelci.org, lkft-triage@lists.linaro.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200630081730.6862-2-david@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Jun 2020 at 21:23, Sasha Levin <sashal@kernel.org> wrote:
->
->
-> This is the start of the stable review cycle for the 4.4.229 release.
-> There are 135 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed 01 Jul 2020 03:53:07 PM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git/patch/?id=3Dlinux-4.4.y&id2=3Dv4.4.228
->
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.4.y
-> and the diffstat can be found below.
->
-> --
-> Thanks,
-> Sasha
+On 30.06.20 10:17, David Hildenbrand wrote:
+> "physmem" in the memblock allocator is somewhat weird: it's not actually
+> used for allocation, it's simply information collected during boot, which
+> describes the unmodified physical memory map at boot time, without any
+> standby/hotplugged memory. It's only used on s390x and is currently the
+> only reason s390x keeps using CONFIG_ARCH_KEEP_MEMBLOCK.
+> 
+> Physmem isn't numa aware and current users don't specify any flags. Let's
+> hide it from the user, exposing only for_each_physmem(), and simplify. The
+> interface for physmem is now really minimalistic:
+> - memblock_physmem_add() to add ranges
+> - for_each_physmem() / __next_physmem_range() to walk physmem ranges
+> 
+> Don't place it into an __init section and don't discard it without
+> CONFIG_ARCH_KEEP_MEMBLOCK. As we're reusing __next_mem_range(), remove
+> the __meminit notifier to avoid section mismatch warnings once
+> CONFIG_ARCH_KEEP_MEMBLOCK is no longer used with
+> CONFIG_HAVE_MEMBLOCK_PHYS_MAP.
+> 
+> We can stop setting CONFIG_HAVE_MEMBLOCK_PHYS_MAP for s390x next.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+(how I hate to spot typos just after I send stuff :) )
 
-Summary
-------------------------------------------------------------------------
+s/CONFIG_HAVE_MEMBLOCK_PHYS_MAP/CONFIG_ARCH_KEEP_MEMBLOCK/
 
-kernel: 4.4.229-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.4.y
-git commit: 136455f30e399451a9ddc66f1473d12ad4c23e3c
-git describe: v4.4.228-135-g136455f30e39
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.4-oe/bui=
-ld/v4.4.228-135-g136455f30e39
 
-No regressions (compared to build v4.4.228)
+-- 
+Thanks,
 
-No fixes (compared to build v4.4.228)
+David / dhildenb
 
-Ran 18159 total tests in the following environments and test suites.
-
-Environments
---------------
-- i386
-- juno-r2 - arm64
-- juno-r2-compat
-- juno-r2-kasan
-- x15 - arm
-- x86_64
-- x86-kasan
-
-Test Suites
------------
-* build
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-controllers-tests
-* ltp-cpuhotplug-tests
-* ltp-crypto-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-open-posix-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* perf
-* v4l2-compliance
-* libhugetlbfs
-* install-android-platform-tools-r2600
-* install-android-platform-tools-r2800
-* kselftest/net
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 4.4.229-rc1
-git repo: https://git.linaro.org/lkft/arm64-stable-rc.git
-git branch: 4.4.229-rc1-hikey-20200629-759
-git commit: d32bb5b0e45faf6152d5b4771924d4680e4d3e0c
-git describe: 4.4.229-rc1-hikey-20200629-759
-Test details: https://qa-reports.linaro.org/lkft/linaro-hikey-stable-rc-4.4=
--oe/build/4.4.229-rc1-hikey-20200629-759
-
-No regressions (compared to build 4.4.229-rc1-hikey-20200623-756)
-
-No fixes (compared to build 4.4.229-rc1-hikey-20200623-756)
-
-Ran 1841 total tests in the following environments and test suites.
-
-Environments
---------------
-- hi6220-hikey - arm64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* kselftest/drivers
-* kselftest/filesystems
-* libhugetlbfs
-* linux-log-parser
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
