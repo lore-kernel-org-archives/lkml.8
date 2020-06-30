@@ -2,108 +2,159 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45CDBC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE4FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 21294206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:02:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 241E8206BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:02:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="sazdzRWz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DIhlUCsv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388522AbgF3OCA (ORCPT
+        id S2388543AbgF3OCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 10:02:00 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:30580 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727796AbgF3OB7 (ORCPT
+        Tue, 30 Jun 2020 10:02:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49540 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727796AbgF3OCs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 10:01:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1593525719; x=1625061719;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=5cqbwaFqSkabewkIE0PH8u9d3WrDYtEIAmtYZ+31MBM=;
-  b=sazdzRWzRkKVtQQkvtztDSRYf2zDcvGcbmkNS1pnHElhPUgGGOHCWxm3
-   97s0gtJCdXyxdtD9FOrN/5sI8r6JdqtRZ7Vr2nDkxJ5PUjqilR5wNxP+6
-   R8Bo+wLIIJYMzbHlNCPzKjzIsX6AiPpMnuy746SLLygzdAT8yKN+cBBDK
-   4=;
-IronPort-SDR: wcfL+7NxfY4PeRhWkaHXuaQ8Ft+JFHZsqJMKprw6Tld+8s54LXls7GQjlpHHqrFInsVpEnOuIV
- Icon7/Pwa00w==
-X-IronPort-AV: E=Sophos;i="5.75,297,1589241600"; 
-   d="scan'208";a="48066445"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-55156cd4.us-west-2.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 30 Jun 2020 14:01:56 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2b-55156cd4.us-west-2.amazon.com (Postfix) with ESMTPS id B25A3A1A3F;
-        Tue, 30 Jun 2020 14:01:54 +0000 (UTC)
-Received: from EX13D08EUC004.ant.amazon.com (10.43.164.176) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 30 Jun 2020 14:01:54 +0000
-Received: from [10.28.84.91] (10.43.162.109) by EX13D08EUC004.ant.amazon.com
- (10.43.164.176) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 30 Jun
- 2020 14:01:50 +0000
-Subject: Re: [PATCH] nvme: validate cntlid's only for nvme >= 1.1.0
-To:     Christoph Hellwig <hch@lst.de>
-CC:     Amit Shah <aams@amazon.de>, <stable@vger.kernel.org>,
-        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        <linux-nvme@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20200630122923.70282-1-mheyne@amazon.de>
- <20200630133358.GA20602@lst.de> <20200630133609.GA20809@lst.de>
-From:   Maximilian Heyne <mheyne@amazon.de>
-Message-ID: <b3b621d9-b653-45c4-4164-f5a492cabd6a@amazon.de>
-Date:   Tue, 30 Jun 2020 16:01:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 30 Jun 2020 10:02:48 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38B29C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 07:02:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=jGbDx0iht4VbXUm5qyIJkbSPl9JgtYBM8SkXbZAhpsE=; b=DIhlUCsvuGrpKc7Rrm2FXX77cG
+        1C4PAjF9kvzJuzySUE32J3ycmGzAaYiFU935f2IFUPOYVFq5bnLgaAJ1Lkul1mhOyayoK2VAgXfGt
+        u0zH5V9WwKYKBkHvrRYancJClUKQGo7DV/D+/AoaAbeJackg+fjjP42/xL3Kv5r/paQewkS19Mbs8
+        FsNBxm3LJYKKmjKeTaX0xsFW+ZILenbjLQ3aVCyhIbSeToS4OV4us+gp3aKbMqT9i706e6l7AwKz2
+        nc1u+3CM0QyFWO84/wJK1JG1QW6NEbh9YS2VGILoW+NTFz5kOn54e8Tq2f/DsRd51ZvqSBgbsiQUD
+        at7Chw0w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jqGqG-0001LJ-SJ; Tue, 30 Jun 2020 14:02:33 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4BC283013E5;
+        Tue, 30 Jun 2020 16:02:31 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 386032122FE61; Tue, 30 Jun 2020 16:02:31 +0200 (CEST)
+Date:   Tue, 30 Jun 2020 16:02:31 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     kernel test robot <lkp@intel.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        lkp@lists.01.org, keescook@chromium.org, hjl.tools@gmail.com
+Subject: Re: [sched] c3a340f7e7: invalid_opcode:#[##]
+Message-ID: <20200630140231.GW4817@hirez.programming.kicks-ass.net>
+References: <20200629003127.GB5535@shao2-debian>
+ <20200630124628.GV4817@hirez.programming.kicks-ass.net>
+ <5b7286c9-ef4f-c1d0-fae3-ebb198aa0742@rasmusvillemoes.dk>
 MIME-Version: 1.0
-In-Reply-To: <20200630133609.GA20809@lst.de>
-Content-Language: en-US
-X-Originating-IP: [10.43.162.109]
-X-ClientProxiedBy: EX13D44UWC001.ant.amazon.com (10.43.162.26) To
- EX13D08EUC004.ant.amazon.com (10.43.164.176)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5b7286c9-ef4f-c1d0-fae3-ebb198aa0742@rasmusvillemoes.dk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CgpPbiA2LzMwLzIwIDM6MzYgUE0sIENocmlzdG9waCBIZWxsd2lnIHdyb3RlOgo+IE9uIFR1ZSwg
-SnVuIDMwLCAyMDIwIGF0IDAzOjMzOjU4UE0gKzAyMDAsIENocmlzdG9waCBIZWxsd2lnIHdyb3Rl
-Ogo+PiBPbiBUdWUsIEp1biAzMCwgMjAyMCBhdCAxMjoyOToyM1BNICswMDAwLCBNYXhpbWlsaWFu
-IEhleW5lIHdyb3RlOgo+Pj4gQ29udHJvbGxlciBJRCdzIChjbnRsaWQpIGZvciBOVk1lIGRldmlj
-ZXMgd2VyZSBpbnRyb2R1Y2VkIGluIHZlcnNpb24KPj4+IDEuMS4wIG9mIHRoZSBzcGVjaWZpY2F0
-aW9uLiBDb250cm9sbGVycyB0aGF0IGZvbGxvdyB0aGUgb2xkZXIgMS4wLjAgc3BlYwo+Pj4gZG9u
-J3Qgc2V0IHRoaXMgZmllbGQgc28gaXQgZG9lc24ndCBtYWtlIHNlbnNlIHRvIHZhbGlkYXRlIGl0
-LiBPbiB0aGUKPj4+IGNvbnRyYXJ5LCB3aGVuIHVzaW5nIFNSLUlPViB0aGlzIGNoZWNrIGJyZWFr
-cyBWRnMgYXMgdGhleSBhcmUgYWxsIHBhcnQKPj4+IG9mIHRoZSBzYW1lIE5WTWUgc3Vic3lzdGVt
-Lgo+Pj4KPj4+IFNpZ25lZC1vZmYtYnk6IE1heGltaWxpYW4gSGV5bmUgPG1oZXluZUBhbWF6b24u
-ZGU+Cj4+PiBDYzogPHN0YWJsZUB2Z2VyLmtlcm5lbC5vcmc+ICMgNS40Kwo+Pgo+PiBUaGUgZmly
-c3QgaHVuayBsb29rcyBvaywgdGhlIHNlY29uZCBkb2Vzbid0IG1ha2Ugc2Vuc2UgYXMgZmFicmlj
-cwo+PiB3YXMgb25seSBhZGRlZCB3aXRoIE5WTWUgMS4yLjIuICBJIGNhbiBmaXggaXQgdXAgd2hl
-biBhcHBseWluZyBpZiB5b3UKPj4gYXJlIG9rIHdpdGggdGhhdC4KCkknZCBiZSB0b3RhbGx5IG9r
-IHdpdGggdGhhdC4KCj4+Cj4+IEJ1dCB5b3UgZ3V5cyByZWFsbHkgc2hvdWxkbid0IGJlIGRvaW5n
-IFNSLUlPViB3aXRoIDEuMCBjb250cm9sbGVycwo+PiBpbmRlcGVuZGVudCBvZiB0aGlzLi4KClNv
-IGZhciBpdCB3b3JrZWQuLi4KCj4gCj4gQW5kIGFjdHVhbGx5IC0gMS4wIGRpZCBub3QgaGF2ZSB0
-aGUgY29uY2VwdCBvZiBhIHN1YnN5c3RlbS4gIFNvIGhhdmluZwo+IGEgZHVwbGljYXRlIHNlcmlh
-bCBudW1iZXIgZm9yIGEgMS4wIGNvbnRyb2xsZXIgYWN0dWFsbHkgaXMgYSBwcmV0dHkKPiBuYXN0
-eSBidWcuICBDYW4geW91IHBvaW50IG1lIHRvIHRoaXMgYnJva2VuIGNvbnRyb2xsZXI/ICBEbyB5
-b3UgdGhpbmsKPiB0aGUgT0VNIGNvdWxkIGZpeCBpdCB1cCB0byByZXBvcnQgYSBwcm9wZXIgdmVy
-c2lvbiBudW1iZXIgYW5kIGNvbnRyb2xsZXIKPiBJRD8KPiAKCkkgbWVhbnQgdGhhdCB0aGUgVkYg
-TlZNZSBjb250cm9sbGVycyB3aWxsIGFsbCBsYW5kIGluIHRoZSBzYW1lIHN1YnN5c3RlbSBmcm9t
-CnRoZSBrZXJuZWwncyBwb2ludCBvZiB2aWV3LCBiZWNhdXNlLCBhcyB5b3Ugc2FpZCwgdGhlcmUg
-d2FzIG5vIGlkZWEgb2YgZGlmZmVyZW50CnN1YnN5c3RlbXMgaW4gdGhlIDEuMCBzcGVjLgpJdCdz
-IGFuIG9sZGVyIGluLWhvdXNlIGNvbnRyb2xsZXIuIFNlZW1zIHRvIHNldCB0aGUgc2FtZSBzZXJp
-YWwgbnVtYmVyIGZvciBhbGwKVkYncy4gU2hvdWxkIHRoZSBmaXJtd2FyZSBzZXQgdW5pcXVlIHNl
-cmlhbHMgZm9yIHRoZSBWRidzIGluc3RlYWQ/CgpUaGFua3MKTWF4CgoKCkFtYXpvbiBEZXZlbG9w
-bWVudCBDZW50ZXIgR2VybWFueSBHbWJICktyYXVzZW5zdHIuIDM4CjEwMTE3IEJlcmxpbgpHZXNj
-aGFlZnRzZnVlaHJ1bmc6IENocmlzdGlhbiBTY2hsYWVnZXIsIEpvbmF0aGFuIFdlaXNzCkVpbmdl
-dHJhZ2VuIGFtIEFtdHNnZXJpY2h0IENoYXJsb3R0ZW5idXJnIHVudGVyIEhSQiAxNDkxNzMgQgpT
-aXR6OiBCZXJsaW4KVXN0LUlEOiBERSAyODkgMjM3IDg3OQoKCg==
+On Tue, Jun 30, 2020 at 03:55:05PM +0200, Rasmus Villemoes wrote:
 
+> > Consistently so with GCC-4.9. Any other GCC I tried does the sane thing.
+> 
+> Does that include gcc 4.8, or is it only "anything newer than 4.9"?
+
+It includes 4.8 :-)
+
+> so the section it was put in has an alignment of 64. The generated
+> assembly is indeed
+> 
+>         .globl  fair_sched_class
+>         .section        __fair_sched_class,"a",@progbits
+>         .align 64
+> 
+> /me goes brew coffee
+
+Right.. so I now have the below patch, and with that I get:
+
+62931: c1e62c20     0 NOTYPE  GLOBAL DEFAULT    2 __begin_sched_classes
+65736: c1e62e40   128 OBJECT  GLOBAL DEFAULT    2 stop_sched_class
+71813: c1e62cc0   128 OBJECT  GLOBAL DEFAULT    2 fair_sched_class
+78689: c1e62c40   128 OBJECT  GLOBAL DEFAULT    2 idle_sched_class
+78953: c1e62ec0     0 NOTYPE  GLOBAL DEFAULT    2 __end_sched_classes
+79090: c1e62d40   128 OBJECT  GLOBAL DEFAULT    2 rt_sched_class
+79431: c1e62dc0   128 OBJECT  GLOBAL DEFAULT    2 dl_sched_class
+
+
+Which has me stumped on __begin_sched_classes being on a 32byte edge
+(and crashes differently due to that).
+
+Argh!!
+
+
+
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index 66fb84c3dc7ee..b4704fb12b2dd 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -108,6 +108,17 @@
+ #define SBSS_MAIN .sbss
+ #endif
+ 
++/*
++ * Align to a 32 byte boundary equal to the
++ * alignment gcc 4.5 uses for a struct
++ */
++#if GCC_VERSION >= 40900 && GCC_VERSION < 50000
++#define STRUCT_ALIGNMENT 64
++#else
++#define STRUCT_ALIGNMENT 32
++#endif
++#define STRUCT_ALIGN() . = ALIGN(STRUCT_ALIGNMENT)
++
+ /*
+  * The order of the sched class addresses are important, as they are
+  * used to determine the order of the priority of each sched class in
+@@ -123,13 +134,6 @@
+ 	*(__stop_sched_class)			\
+ 	__end_sched_classes = .;
+ 
+-/*
+- * Align to a 32 byte boundary equal to the
+- * alignment gcc 4.5 uses for a struct
+- */
+-#define STRUCT_ALIGNMENT 32
+-#define STRUCT_ALIGN() . = ALIGN(STRUCT_ALIGNMENT)
+-
+ /* The actual configuration determine if the init/exit sections
+  * are handled as text/data or they can be discarded (which
+  * often happens at runtime)
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 4165c06d1d7bd..33251d0ab62e7 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -67,6 +67,7 @@
+ #include <linux/tsacct_kern.h>
+ 
+ #include <asm/tlb.h>
++#include <asm-generic/vmlinux.lds.h>
+ 
+ #ifdef CONFIG_PARAVIRT
+ # include <asm/paravirt.h>
+@@ -1811,7 +1812,7 @@ struct sched_class {
+ #ifdef CONFIG_FAIR_GROUP_SCHED
+ 	void (*task_change_group)(struct task_struct *p, int type);
+ #endif
+-} __aligned(32); /* STRUCT_ALIGN(), vmlinux.lds.h */
++} __aligned(STRUCT_ALIGNMENT); /* STRUCT_ALIGN(), vmlinux.lds.h */
+ 
+ static inline void put_prev_task(struct rq *rq, struct task_struct *prev)
+ {
