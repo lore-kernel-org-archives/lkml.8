@@ -2,137 +2,70 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B670AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:48:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A96C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9AB9D207F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:48:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8DFF20780
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:51:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727069AbgF3Asz (ORCPT
+        id S1726863AbgF3Avz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 20:48:55 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6880 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726056AbgF3Asz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 20:48:55 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 53CFF9DD4C284405C498;
-        Mon, 29 Jun 2020 17:01:50 +0800 (CST)
-Received: from [127.0.0.1] (10.67.76.251) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.487.0; Mon, 29 Jun 2020
- 17:01:41 +0800
-Subject: Re: [Patch v3 1/3] lib: Restrict cpumask_local_spread to houskeeping
- CPUs
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Nitesh Narayan Lal <nitesh@redhat.com>
-CC:     <linux-kernel@vger.kernel.org>, <linux-api@vger.kernel.org>,
-        <frederic@kernel.org>, <mtosatti@redhat.com>,
-        <juri.lelli@redhat.com>, <abelits@marvell.com>,
-        <bhelgaas@google.com>, <linux-pci@vger.kernel.org>,
-        <rostedt@goodmis.org>, <mingo@kernel.org>, <peterz@infradead.org>,
-        <tglx@linutronix.de>, <davem@davemloft.net>,
-        <sfr@canb.auug.org.au>, <stephen@networkplumber.org>,
-        <rppt@linux.vnet.ibm.com>, yuqi jin <jinyuqi@huawei.com>
-References: <20200623192331.215557-1-nitesh@redhat.com>
- <20200623192331.215557-2-nitesh@redhat.com>
- <20200624122647.766bec7760d9197ba71a58c4@linux-foundation.org>
-From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
-Message-ID: <e6c261a1-1fec-3faf-c49c-51a88a7f521c@hisilicon.com>
-Date:   Mon, 29 Jun 2020 17:01:41 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.1
+        Mon, 29 Jun 2020 20:51:55 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:38360 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725998AbgF3Avy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 20:51:54 -0400
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94)
+        (envelope-from <andrew@lunn.ch>)
+        id 1jq4Ux-002upS-UH; Tue, 30 Jun 2020 02:51:43 +0200
+Date:   Tue, 30 Jun 2020 02:51:43 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        "Madalin Bucur (OSS)" <madalin.bucur@oss.nxp.com>,
+        Florinel Iordache <florinel.iordache@nxp.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "kuba@kernel.org" <kuba@kernel.org>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        Ioana Ciornei <ioana.ciornei@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH net-next v3 4/7] net: phy: add backplane kr driver support
+Message-ID: <20200630005143.GC597495@lunn.ch>
+References: <1592832924-31733-1-git-send-email-florinel.iordache@nxp.com>
+ <1592832924-31733-5-git-send-email-florinel.iordache@nxp.com>
+ <20200622142430.GP279339@lunn.ch>
+ <AM6PR04MB397677E90EFBD9749D01B061EC970@AM6PR04MB3976.eurprd04.prod.outlook.com>
+ <7b12d7f1-9e36-e3ee-7a51-d8d8628e2e6f@gmail.com>
+ <20200629135842.GU1551@shell.armlinux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20200624122647.766bec7760d9197ba71a58c4@linux-foundation.org>
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.76.251]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200629135842.GU1551@shell.armlinux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
+> So, I think, further progress in public on backplane support needs to
+> wait until we have the general situation for PCS resolved.
+> 
+> Makes sense?
 
-ÔÚ 2020/6/25 3:26, Andrew Morton Ð´µÀ:
-> On Tue, 23 Jun 2020 15:23:29 -0400 Nitesh Narayan Lal <nitesh@redhat.com> wrote:
-> 
->> From: Alex Belits <abelits@marvell.com>
->>
->> The current implementation of cpumask_local_spread() does not respect the
->> isolated CPUs, i.e., even if a CPU has been isolated for Real-Time task,
->> it will return it to the caller for pinning of its IRQ threads. Having
->> these unwanted IRQ threads on an isolated CPU adds up to a latency
->> overhead.
->>
->> Restrict the CPUs that are returned for spreading IRQs only to the
->> available housekeeping CPUs.
->>
->> ...
->>
->> --- a/lib/cpumask.c
->> +++ b/lib/cpumask.c
->> @@ -6,6 +6,7 @@
->>  #include <linux/export.h>
->>  #include <linux/memblock.h>
->>  #include <linux/numa.h>
->> +#include <linux/sched/isolation.h>
->>  
->>  /**
->>   * cpumask_next - get the next cpu in a cpumask
->> @@ -205,22 +206,27 @@ void __init free_bootmem_cpumask_var(cpumask_var_t mask)
->>   */
->>  unsigned int cpumask_local_spread(unsigned int i, int node)
->>  {
->> -	int cpu;
->> +	int cpu, hk_flags;
->> +	const struct cpumask *mask;
->>  
->> +	hk_flags = HK_FLAG_DOMAIN | HK_FLAG_WQ;
->> +	mask = housekeeping_cpumask(hk_flags);
->>  	/* Wrap: we always want a cpu. */
->> -	i %= num_online_cpus();
->> +	i %= cpumask_weight(mask);
->>  
->>  	if (node == NUMA_NO_NODE) {
->> -		for_each_cpu(cpu, cpu_online_mask)
->> +		for_each_cpu(cpu, mask) {
->>  			if (i-- == 0)
->>  				return cpu;
->> +		}
->>  	} else {
->>  		/* NUMA first. */
->> -		for_each_cpu_and(cpu, cpumask_of_node(node), cpu_online_mask)
->> +		for_each_cpu_and(cpu, cpumask_of_node(node), mask) {
->>  			if (i-- == 0)
->>  				return cpu;
->> +		}
->>  
->> -		for_each_cpu(cpu, cpu_online_mask) {
->> +		for_each_cpu(cpu, mask) {
->>  			/* Skip NUMA nodes, done above. */
->>  			if (cpumask_test_cpu(cpu, cpumask_of_node(node)))
->>  				continue;
-> 
-> Are you aware of these changes to cpu_local_spread()?
-> https://lore.kernel.org/lkml/1582768688-2314-1-git-send-email-zhangshaokun@hisilicon.com/
-> 
-> I don't see a lot of overlap but it would be nice for you folks to
+Hi Russell
 
-Yeah, it's a different issue from Nitesh. About our's patch, it has been
-linux-next long time, will it be merged in Linus's tree?
+Does to me.
 
-Thanks,
-Shaokun
-
-> check each other's homework ;)
-> 
-> 
-> 
-> .
-> 
-
+Thanks
+	Andrew
