@@ -7,277 +7,256 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB97C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F52C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:24:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 382EE20759
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:24:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CE0620759
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:24:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593534293;
-	bh=kIfUiVrpBir3v/fG8NxVe/vOD4Hn9v/O4aai8kR925w=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=T5wYw+3BMCQXubugIppB3TpQe0taxGmufek2lDsln/la/qj+eWgqXQdWj8+Ybm08R
-	 qvMM6bYYOhJYSax41MguVM+MvHlvVwYpRvqzN/xxDEjvng0cKyKYK4+m444FwDy1ZG
-	 Cc/FxpeyduYfkTsgTlz/qk7gmCXRWkw8z/E5qwTQ=
+	s=default; t=1593534297;
+	bh=CA3nHyfxTt5b1R32rWUTSv3+CAfH63brn8Mthhcj5GY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Opah8AB8dd81HAWy5on8eEoz2zyRl8HIK3TBMDkZ0jhtY8ZH3ZDg4aJybpUVNW7Lv
+	 MrcPc8H+th5zYarJjxG/RPcCQNQfkU69795kiMa04tHW7bky9t26Kp6h0W+VjPf5tH
+	 6mfApj/GYSUYZAKkOf49Mk1eyRKX3OLVhB1m9Uf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387573AbgF3QYv (ORCPT
+        id S2387622AbgF3QYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 12:24:51 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:65505 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387536AbgF3QYu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 12:24:50 -0400
-Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 05UGOUAt006348;
-        Wed, 1 Jul 2020 01:24:31 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 05UGOUAt006348
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1593534271;
-        bh=c+cwIU+8oEzxj68ZnGZslrDy3urCnpH1lM48REJOvoU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=XXPv9vQqyADKyq3jd7G6TRPRrM8vHD9nUvlxNK1VSuz+JsmzLPp0OTC6v3ivaGECi
-         aIhqUaPFcRKJDaa3ELeg/R18bYCRruusTSSezqCabHO6PEN6g0ugLzPvqYd7tZ/iaU
-         y1te4HF8En3Flcg3/THoA1yn0rLYBDtTraL8YqTrxWrihiAOwHRnPoq5+gCkoUFyc8
-         q1lRMDaI5VMnUUwxEgmHv4D/yx6y73L/O1aTZWQP395aDZwT0RVeZAjlYzAL/pJ8Bs
-         tuRDwDDM0XirpswMf6yXLp96JWEqPkyJJBvA3Fe3uXTIaNAKL12VRxVl57cB3Yv5m/
-         wIk7p+f+PgGYg==
-X-Nifty-SrcIP: [209.85.217.42]
-Received: by mail-vs1-f42.google.com with SMTP id e15so11551787vsc.7;
-        Tue, 30 Jun 2020 09:24:31 -0700 (PDT)
-X-Gm-Message-State: AOAM5308w6A4chstu6GPvfDbw3g2e1RWUzMC+LH9GPd64PbJD4s6BXfA
-        t4dBf3K5KFFTwRXIAakP8KhfE7d13Zs0TR7c6dM=
-X-Google-Smtp-Source: ABdhPJxhr/KzZrCvSgoAkTh6B1GjTstTBZbIvfVZjezbczVQ33Y/X1OC/4s5dEZ/jDG57qhe8RuZkEZjHt8G0I7aoFo=
-X-Received: by 2002:a67:694d:: with SMTP id e74mr16230065vsc.155.1593534270033;
- Tue, 30 Jun 2020 09:24:30 -0700 (PDT)
+        Tue, 30 Jun 2020 12:24:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44612 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387536AbgF3QYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 12:24:53 -0400
+Received: from localhost (unknown [122.182.251.219])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8BA22074F;
+        Tue, 30 Jun 2020 16:24:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593534292;
+        bh=CA3nHyfxTt5b1R32rWUTSv3+CAfH63brn8Mthhcj5GY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=X5lsBO7eBmQN0ZvntviXS602smRp2C8rAqVZdsdqUO9nGyAejBF+LOBiHRNsxv2wk
+         1ws6EOhs9mxfKon7LaUP/KeC3ckDEw4XWAlmNEtqEjUy93K8ybjaRD5FxTiqa4C+xA
+         osGXLf+A+HzRDVguyAiliwW7hY9xTtHyhh1X9PYE=
+Date:   Tue, 30 Jun 2020 21:54:48 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Bard Liao <yung-chuan.liao@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        jank@cadence.com, srinivas.kandagatla@linaro.org,
+        rander.wang@linux.intel.com, ranjani.sridharan@linux.intel.com,
+        hui.wang@canonical.com, pierre-louis.bossart@linux.intel.com,
+        sanyog.r.kale@intel.com, slawomir.blauciak@intel.com,
+        mengdong.lin@intel.com, bard.liao@intel.com
+Subject: Re: [PATCH 7/9] soundwire: intel/cadence: merge Soundwire interrupt
+ handlers/threads
+Message-ID: <20200630162448.GS2599@vkoul-mobl>
+References: <20200623173546.21870-1-yung-chuan.liao@linux.intel.com>
+ <20200623173546.21870-8-yung-chuan.liao@linux.intel.com>
 MIME-Version: 1.0
-References: <20200629085911.1676554-1-masahiroy@kernel.org> <CAKwvOd=qe5KE1vdUYQmpsW2zmDbk5i-MgRujs9B7wqnAj+af0w@mail.gmail.com>
-In-Reply-To: <CAKwvOd=qe5KE1vdUYQmpsW2zmDbk5i-MgRujs9B7wqnAj+af0w@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 1 Jul 2020 01:23:53 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAR49jFZkEmBqpACE0V_-VyCXfFRcKe1Zq+cqO65QX1ozg@mail.gmail.com>
-Message-ID: <CAK7LNAR49jFZkEmBqpACE0V_-VyCXfFRcKe1Zq+cqO65QX1ozg@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: make Clang build userprogs for target architecture
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200623173546.21870-8-yung-chuan.liao@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 2:39 AM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> On Mon, Jun 29, 2020 at 1:59 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
-> >
-> > Programs added 'userprogs' should be compiled for the target
-> > architecture i.e. the same architecture as the kernel.
-> >
-> > GCC does this correctly since the target architecture is implied
-> > by the toolchain prefix.
-> >
-> > Clang builds standalone programs always for the host architecture
-> > because the target triple is currently missing.
-> >
-> > Fix this.
-> >
-> > Fixes: 7f3a59db274c ("kbuild: add infrastructure to build userspace programs")
->
-> This is a neat feature I didn't know about; looks relatively new.
-> What's the test case command line invocation to test this with Clang?
+On 24-06-20, 01:35, Bard Liao wrote:
+> The existing code uses one pair of interrupt handler/thread per link
+> but at the hardware level the interrupt is shared. This works fine for
+> legacy PCI interrupts, but leads to timeouts in MSI (Message-Signaled
+> Interrupt) mode, likely due to edges being lost.
+> 
+> This patch unifies interrupt handling for all links. The dedicated
+> handler is removed since we use a common one for all shared interrupt
+> sources, and the thread function takes care of dealing with interrupt
+> sources. This partition follows the model used for the SOF IPC on
+> HDaudio platforms, where similar timeout issues were noticed and doing
+> all the interrupt handling/clearing in the thread improved
+> reliability/stability.
+> 
+> Validation results with 4 links active in parallel show a night-and-day
+> improvement with no timeouts noticed even during stress tests. Latency
+> and quality of service are not affected by the change - mostly because
+> events on a SoundWire link are throttled by the bus frame rate
+> (typically 8..48kHz).
+> 
+> Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+> ---
+>  drivers/soundwire/cadence_master.c | 18 ++++++++++--------
+>  drivers/soundwire/cadence_master.h |  4 ++++
+>  drivers/soundwire/intel.c          | 15 ---------------
+>  drivers/soundwire/intel.h          |  4 ++++
+>  drivers/soundwire/intel_init.c     | 19 +++++++++++++++++++
+>  5 files changed, 37 insertions(+), 23 deletions(-)
+> 
+> diff --git a/drivers/soundwire/cadence_master.c b/drivers/soundwire/cadence_master.c
+> index 613dbd415b91..24eafe0aa1c3 100644
+> --- a/drivers/soundwire/cadence_master.c
+> +++ b/drivers/soundwire/cadence_master.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/soundwire/sdw.h>
+>  #include <sound/pcm_params.h>
+>  #include <sound/soc.h>
+> +#include <linux/workqueue.h>
+>  #include "bus.h"
+>  #include "cadence_master.h"
+>  
+> @@ -790,7 +791,7 @@ irqreturn_t sdw_cdns_irq(int irq, void *dev_id)
+>  			     CDNS_MCP_INT_SLAVE_MASK, 0);
+>  
+>  		int_status &= ~CDNS_MCP_INT_SLAVE_MASK;
+> -		ret = IRQ_WAKE_THREAD;
+> +		schedule_work(&cdns->work);
+>  	}
+>  
+>  	cdns_writel(cdns, CDNS_MCP_INTSTAT, int_status);
+> @@ -799,13 +800,15 @@ irqreturn_t sdw_cdns_irq(int irq, void *dev_id)
+>  EXPORT_SYMBOL(sdw_cdns_irq);
+>  
+>  /**
+> - * sdw_cdns_thread() - Cadence irq thread handler
+> - * @irq: irq number
+> - * @dev_id: irq context
+> + * To update slave status in a work since we will need to handle
+> + * other interrupts eg. CDNS_MCP_INT_RX_WL during the update slave
+> + * process.
+> + * @work: cdns worker thread
+>   */
+> -irqreturn_t sdw_cdns_thread(int irq, void *dev_id)
+> +static void cdns_update_slave_status_work(struct work_struct *work)
+>  {
+> -	struct sdw_cdns *cdns = dev_id;
+> +	struct sdw_cdns *cdns =
+> +		container_of(work, struct sdw_cdns, work);
+>  	u32 slave0, slave1;
+>  
+>  	dev_dbg_ratelimited(cdns->dev, "Slave status change\n");
+> @@ -822,9 +825,7 @@ irqreturn_t sdw_cdns_thread(int irq, void *dev_id)
+>  	cdns_updatel(cdns, CDNS_MCP_INTMASK,
+>  		     CDNS_MCP_INT_SLAVE_MASK, CDNS_MCP_INT_SLAVE_MASK);
+>  
+> -	return IRQ_HANDLED;
+>  }
+> -EXPORT_SYMBOL(sdw_cdns_thread);
+>  
+>  /*
+>   * init routines
+> @@ -1427,6 +1428,7 @@ int sdw_cdns_probe(struct sdw_cdns *cdns)
+>  	init_completion(&cdns->tx_complete);
+>  	cdns->bus.port_ops = &cdns_port_ops;
+>  
+> +	INIT_WORK(&cdns->work, cdns_update_slave_status_work);
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL(sdw_cdns_probe);
+> diff --git a/drivers/soundwire/cadence_master.h b/drivers/soundwire/cadence_master.h
+> index b410656f8194..7638858397df 100644
+> --- a/drivers/soundwire/cadence_master.h
+> +++ b/drivers/soundwire/cadence_master.h
+> @@ -129,6 +129,10 @@ struct sdw_cdns {
+>  
+>  	bool link_up;
+>  	unsigned int msg_count;
+> +
+> +	struct work_struct work;
+> +
+> +	struct list_head list;
+>  };
+>  
+>  #define bus_to_cdns(_bus) container_of(_bus, struct sdw_cdns, bus)
+> diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
+> index 0a4fc7f65743..06c553d94890 100644
+> --- a/drivers/soundwire/intel.c
+> +++ b/drivers/soundwire/intel.c
+> @@ -1258,21 +1258,7 @@ static int intel_master_probe(struct platform_device *pdev)
+>  			 "SoundWire master %d is disabled, will be ignored\n",
+>  			 bus->link_id);
+>  
+> -	/* Acquire IRQ */
+> -	ret = request_threaded_irq(sdw->link_res->irq,
+> -				   sdw_cdns_irq, sdw_cdns_thread,
+> -				   IRQF_SHARED, KBUILD_MODNAME, cdns);
+> -	if (ret < 0) {
+> -		dev_err(dev, "unable to grab IRQ %d, disabling device\n",
+> -			sdw->link_res->irq);
+> -		goto err_init;
+> -	}
+> -
+>  	return 0;
+> -
+> -err_init:
+> -	sdw_bus_master_delete(bus);
+> -	return ret;
+>  }
+>  
+>  int intel_master_startup(struct platform_device *pdev)
+> @@ -1344,7 +1330,6 @@ static int intel_master_remove(struct platform_device *pdev)
+>  	if (!bus->prop.hw_disabled) {
+>  		intel_debugfs_exit(sdw);
+>  		sdw_cdns_enable_interrupt(cdns, false);
+> -		free_irq(sdw->link_res->irq, sdw);
+>  		snd_soc_unregister_component(dev);
+>  	}
+>  	sdw_bus_master_delete(bus);
+> diff --git a/drivers/soundwire/intel.h b/drivers/soundwire/intel.h
+> index d6bdd4d63e08..bf127c88eb51 100644
+> --- a/drivers/soundwire/intel.h
+> +++ b/drivers/soundwire/intel.h
+> @@ -17,6 +17,8 @@
+>   * @dev: device implementing hw_params and free callbacks
+>   * @shim_lock: mutex to handle access to shared SHIM registers
+>   * @shim_mask: global pointer to check SHIM register initialization
+> + * @cdns: Cadence master descriptor
+> + * @list: used to walk-through all masters exposed by the same controller
+>   */
+>  struct sdw_intel_link_res {
+>  	struct platform_device *pdev;
+> @@ -29,6 +31,8 @@ struct sdw_intel_link_res {
+>  	struct device *dev;
+>  	struct mutex *shim_lock; /* protect shared registers */
+>  	u32 *shim_mask;
+> +	struct sdw_cdns *cdns;
+> +	struct list_head list;
+>  };
+>  
+>  struct sdw_intel {
+> diff --git a/drivers/soundwire/intel_init.c b/drivers/soundwire/intel_init.c
+> index ad3175272e88..63b3beda443d 100644
+> --- a/drivers/soundwire/intel_init.c
+> +++ b/drivers/soundwire/intel_init.c
+> @@ -9,6 +9,7 @@
+>  
+>  #include <linux/acpi.h>
+>  #include <linux/export.h>
+> +#include <linux/interrupt.h>
+>  #include <linux/io.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+> @@ -166,6 +167,19 @@ void sdw_intel_enable_irq(void __iomem *mmio_base, bool enable)
+>  }
+>  EXPORT_SYMBOL_NS(sdw_intel_enable_irq, SOUNDWIRE_INTEL_INIT);
+>  
+> +irqreturn_t sdw_intel_thread(int irq, void *dev_id)
+> +{
+> +	struct sdw_intel_ctx *ctx = dev_id;
+> +	struct sdw_intel_link_res *link;
+> +
+> +	list_for_each_entry(link, &ctx->link_list, list)
+> +		sdw_cdns_irq(irq, link->cdns);
+> +
+> +	sdw_intel_enable_irq(ctx->mmio_base, true);
+> +	return IRQ_HANDLED;
+> +}
+> +EXPORT_SYMBOL(sdw_intel_thread);
 
+Who will call this API? Also don't see header for this..
+Is this called from irq context or irq thread or something else?
 
-
-Test command:
-
-$ make -j24 ARCH=arm  LLVM=1 CROSS_COMPILE=arm-linux-gnueabi-
-allyesconfig  samples/
-  [ snip ]
-  CC [U]  samples/watch_queue/watch_test
-  CC [U]  samples/timers/hpet_example
-  CC [U]  samples/vfs/test-fsmount
-  CC [U]  samples/binderfs/binderfs_example
-  CC [U]  samples/auxdisplay/cfag12864b-example
-  CC [U]  samples/hidraw/hid-example
-  CC [U]  samples/uhid/uhid-example
-  CC [U]  samples/connector/ucon
-  CC [U]  samples/watchdog/watchdog-simple
-  CC [U]  samples/vfs/test-statx
-
-
-Then, check if the sample programs
-were correctly built for ARM.
-
-
-
-Before this commit:
-
-$ file samples/vfs/test-statx
-samples/vfs/test-statx: ELF 64-bit LSB executable, x86-64, version 1
-(SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2,
-for GNU/Linux 3.2.0, not stripped
-
-
-
-After this commit:
-
-$ file samples/vfs/test-statx
-samples/vfs/test-statx: ELF 32-bit LSB executable, ARM, EABI5 version
-1 (SYSV), dynamically linked, interpreter /lib/ld-linux.so.3, for
-GNU/Linux 3.2.0, not stripped
-
-
-
-To test this, having LLVM is not enough
-because building userspace programs
-requires target-specific libraries.
-
-As for GCC, libc is usually bundled together
-with toolchains, but as for LLVM we need
-to provide target-specific libc.
-
-This introduces a different kind of complexity
-than building the kernel.
-
-I read this article:
-https://clang.llvm.org/docs/CrossCompilation.html
-
-
-I use tc-build to compile llvm from source code,
-but I also needed to install ARM libc.
-
-"apt install gcc-arm-linux-gnueabi"
-especially
-"apt install libc6-dev-armel-cross".
-
-
-
-
-
-If I build sample code for ARCH=arm64,
-I see the following warnings.
-
-
-$ make -j24 ARCH=arm64  LLVM=1 CROSS_COMPILE=aarch64-linux-gnu-
-allyesconfig  samples/
-  [ snip ]
-  CC [U]  samples/uhid/uhid-example
-samples/uhid/uhid-example.c:169:4: warning: format specifies type
-'ssize_t' (aka 'long') but the argument has type 'ssize_t' (aka 'int')
-[-Wformat]
-                        ret, sizeof(ev));
-                        ^~~
-samples/uhid/uhid-example.c:240:4: warning: format specifies type
-'ssize_t' (aka 'long') but the argument has type 'ssize_t' (aka 'int')
-[-Wformat]
-                        ret, sizeof(ev));
-                        ^~~
-2 warnings generated.
-  CC [U]  samples/vfs/test-fsmount
-  CC [U]  samples/vfs/test-statx
-  CC [U]  samples/watch_queue/watch_test
-samples/watch_queue/watch_test.c:86:50: warning: format specifies type
-'ssize_t' (aka 'long') but the argument has type 'ssize_t' (aka 'int')
-[-Wformat]
-                        fprintf(stderr, "Read buffer overrun: %zd\n", buf_len);
-                                                              ~~~     ^~~~~~~
-                                                              %d
-samples/watch_queue/watch_test.c:90:28: warning: format specifies type
-'ssize_t' (aka 'long') but the argument has type 'ssize_t' (aka 'int')
-[-Wformat]
-                printf("read() = %zd\n", buf_len);
-                                 ~~~     ^~~~~~~
-                                 %d
-2 warnings generated.
-  CC [U]  samples/watchdog/watchdog-simple
-  AR      samples/built-in.a
-
-
-
-
-
-I do not know how to solve this issue.
-
-
-I can reproduce this in the following
-simple test code:
-
-
------------------>8----------------
-#include <stdio.h>
-
-int main(void)
-{
-        ssize_t x = 1;
-
-        printf("%zd", x);
-
-        return 0;
-}
---------------->8-------------------
-
-$ clang --target=aarch64-linux-gnu test.c
-test.c:7:16: warning: format specifies type 'ssize_t' (aka 'long') but
-the argument has type 'ssize_t' (aka 'int') [-Wformat]
-        printf("%zd", x);
-                ~~~   ^
-                %zd
-1 warning generated.
-
-
-ssize_t is defined in /usr/include/stdio.h
-but perhaps this is not suitable
-for cross-compilation for aarch64.
-
-
-
-Is there any solution?
-
-
-
-
-
-
-> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> > ---
-> >
-> >  Makefile | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/Makefile b/Makefile
-> > index 73948798ce3f..cac29cc2ec25 100644
-> > --- a/Makefile
-> > +++ b/Makefile
-> > @@ -970,8 +970,8 @@ LDFLAGS_vmlinux     += --pack-dyn-relocs=relr
-> >  endif
-> >
-> >  # Align the bit size of userspace programs with the kernel
-> > -KBUILD_USERCFLAGS  += $(filter -m32 -m64, $(KBUILD_CFLAGS))
-> > -KBUILD_USERLDFLAGS += $(filter -m32 -m64, $(KBUILD_CFLAGS))
-> > +KBUILD_USERCFLAGS  += $(filter -m32 -m64 --target=%, $(KBUILD_CFLAGS))
-> > +KBUILD_USERLDFLAGS += $(filter -m32 -m64 --target=%, $(KBUILD_CFLAGS))
->
-> That should be fine.
-> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-> https://www.gnu.org/software/make/manual/html_node/Text-Functions.html
->
-> >
-> >  # make the checker run with the right architecture
-> >  CHECKFLAGS += --arch=$(ARCH)
-> > --
->
->
-> --
-> Thanks,
-> ~Nick Desaulniers
-
-
+Also no EXPORT_SYMBOL_NS() for this one?
 
 -- 
-Best Regards
-Masahiro Yamada
+~Vinod
