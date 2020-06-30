@@ -2,101 +2,71 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31387C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E45BEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 08B69206BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:41:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="VO8gB20o"
+	by mail.kernel.org (Postfix) with ESMTP id B9D01207D0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:42:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593506525;
+	bh=mJs4t0mBRaMgW/kxuteoU02aAN42rC3YXh1wDRb09bY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WU5qv7Is10oSg+YntRDOoICPgAXrCylcOp5OAcZ4EWuKyNOFgvHk+SpevIxoUD2db
+	 lIqMs9dG2d7+C+dQSX6FGJoWcEnbnTTYIVCRlFucXoKfVogyrh6ZSWTcTqvDM8Shju
+	 6R+2N1Sn3wB7lN3kXBKRngZanLuzJayIb58jMEWI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731586AbgF3Ilh (ORCPT
+        id S1731599AbgF3ImE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 04:41:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56380 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728132AbgF3Ilg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 04:41:36 -0400
-Received: from mail.skyhub.de (mail.skyhub.de [IPv6:2a01:4f8:190:11c2::b:1457])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1396CC061755;
-        Tue, 30 Jun 2020 01:41:36 -0700 (PDT)
-Received: from zn.tnic (p200300ec2f0eff00c5d3fc2efff9f4b6.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:ff00:c5d3:fc2e:fff9:f4b6])
+        Tue, 30 Jun 2020 04:42:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53436 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728132AbgF3ImD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 04:42:03 -0400
+Received: from localhost (unknown [84.241.197.94])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 6A5531EC022C;
-        Tue, 30 Jun 2020 10:41:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1593506494;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=ue2iecCNcCz8MqiJJqArPW8phjfA3/MN25DhE18wPNM=;
-        b=VO8gB20oMAHm26xXaegwffMDcAMXlnx8ejK7HFksmCaogo82YZgyWJ74ELZ5bFMy7jK4Th
-        abFvh+rcCg8dG/0WAEHrAAapSphDK6yFXy6HWsFnHeFgAxNp0uLNwusiMYcdMykPGXSwlB
-        2IXm1KO57nmFygYwySEO0teHcIiw288=
-Date:   Tue, 30 Jun 2020 10:41:28 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org,
-        linux-sgx@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Lutomirski <luto@amacapital.net>,
-        Jethro Beekman <jethro@fortanix.com>,
-        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
-        asapek@google.com, cedric.xing@intel.com, chenalexchen@google.com,
-        conradparker@google.com, cyhanish@google.com,
-        dave.hansen@intel.com, haitao.huang@intel.com,
-        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
-        kmoy@google.com, ludloff@google.com, luto@kernel.org,
-        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
-        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
-Subject: Re: [PATCH v33 15/21] x86/vdso: Add support for exception fixup in
- vDSO functions
-Message-ID: <20200630084128.GA1093@zn.tnic>
-References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
- <20200617220844.57423-16-jarkko.sakkinen@linux.intel.com>
- <20200629171022.GC32176@zn.tnic>
- <20200630060055.GS12312@linux.intel.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id A37D120768;
+        Tue, 30 Jun 2020 08:42:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593506523;
+        bh=mJs4t0mBRaMgW/kxuteoU02aAN42rC3YXh1wDRb09bY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VoOof0SEl4WeUh4qu63HU7NkAq3d04JuRsgFTRVsAlCZI8E4jr7+M8uqEC1HZdmVx
+         bS0ORnZmbD8FyZWc7odqk1cYvvOcr7zK97K2rnI+b8WoDfS8juPdJTqq45cRFUllka
+         dmyAeYl/5sw4gA1GS4gD5QxgDPMOKT9sEZEPyBbE=
+Date:   Tue, 30 Jun 2020 10:42:00 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Paul Menzel <pmenzel@molgen.mpg.de>
+Cc:     Mathias Nyman <mathias.nyman@intel.com>,
+        USB list <linux-usb@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mario Limonciello <mario.limonciello@dell.com>
+Subject: Re: Dell XPS 13 9360: PM: Device 0000:39:00.0 failed to resume
+ async: error -19
+Message-ID: <20200630084200.GB637154@kroah.com>
+References: <407332cd-c176-23b9-7e5f-76b27c9c7c06@molgen.mpg.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200630060055.GS12312@linux.intel.com>
+In-Reply-To: <407332cd-c176-23b9-7e5f-76b27c9c7c06@molgen.mpg.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 11:00:55PM -0700, Sean Christopherson wrote:
-> E.g. the vDSO function should get the fixup even if userspace screws
-> up mmap() and invokes __vdso_sgx_enter_enclave() without being tagged
-> an SGX task.
+On Mon, Jun 29, 2020 at 10:30:59PM +0200, Paul Menzel wrote:
+> Dear Linux folks,
+> 
+> 
+> On the Dell XPS 13 9360 with Ubuntu 20.04 LTS and Linux 5.4.0-39-generic,
 
-I sincerely hope you don't mean this seriously.
+That is an old kernel (and a distro one), can you please try 5.7.6 from
+kernel.org?
 
-Please add a member to task_struct which denotes that a task is an
-sgx task, test that member where needed and forget real quickly about
-running *any* *fixup* for unrelated tasks.
+thanks,
 
-> No hard dependency, it's normal kernel code.  My reasoning for dropping it
-> in .../vdso was largely to co-locate it with vdso/extable.h due to the
-> dependency on the format of 'struct vdso_exception_table_entry'.
-
-A struct which you defined instead of simply using struct
-exception_table_entry even if it has a handler member which would remain
-unused?
-
-Let's not put code in vdso/ if it doesn't really belong there pls.
-
-> Ya, shouldn't be a problem to stub it out for SGX=n.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+greg k-h
