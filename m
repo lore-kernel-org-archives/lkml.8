@@ -7,109 +7,223 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C76C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA40C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A904D206BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:51:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2367C2073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:51:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JROVTSMx"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HmuUR+42"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388409AbgF3Nv0 (ORCPT
+        id S2388400AbgF3NvZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 09:51:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47674 "EHLO
+        Tue, 30 Jun 2020 09:51:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388313AbgF3NvX (ORCPT
+        with ESMTP id S1729787AbgF3NvP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 09:51:23 -0400
-Received: from mail-wm1-x341.google.com (mail-wm1-x341.google.com [IPv6:2a00:1450:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5507C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:51:22 -0700 (PDT)
-Received: by mail-wm1-x341.google.com with SMTP id l2so18190993wmf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:51:22 -0700 (PDT)
+        Tue, 30 Jun 2020 09:51:15 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFA91C03E979
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:51:14 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id z13so20279919wrw.5
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:51:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=xbSUqKBCxymsC6lBBef3Qyn0QkDTIAKXJyfnYrQoXC8=;
-        b=JROVTSMxcYpya04e8YJ8NvbOL9s6Y8mdWsTPgTWrjU6LHmLpBqI+RWcUkPq3iU12Ce
-         Oh+Byu/dqxO3e7TDVyj21qrQM80IuHA9vi8gT+czeAw1IWM5YBrS1FjDXkUkeNGpb8n7
-         0inwVFXMPKT5ghvUXxvbM3OAEBSbZHRjzhzoV8JDCRs+tFLRv3Ky7RDB+6PglnHeMFpo
-         9n4VRksZq8uKFBm3VX8GA8J/ivxO+xegMzjP84WffpO7u/NoT6bFy73L5ljK2jAry31O
-         BOKtaDEWKMnua+idVaSdZsHXOC0ejVXpf2SeDpzPJ5molGB5WIftQn0uGLBaqVmDfG/D
-         fidw==
+        bh=1tAsKayZdJ/bssiKZaLewML1qJ1Qy+lK1MBLKE8UREg=;
+        b=HmuUR+42Bn4cTBDsI05lTD2ybzQaTZdf85wQG+9YuVjwQPKeeP1tNYCTEcHXqTrEEM
+         T4z+jbv5tiNasZ6KmWnhlPG3QrEUrk/mMnYUOJsCJr6zrIDphWWO6uLDw76IRRzJVXc4
+         TLUyYMKT9neCKXZ+YO+leUiN+5MszBevEmTVS2AyFbJmk7XkV+VbUU3NKN2vGSdQ+ROA
+         4Lq+q5YSoYDj7Bda8DG5nn8T2TEXTgAqloWvajJ3guqnQBP5KTjMZi+BBUENM/oLgqox
+         R9HTq7j3jdyvH478RgakzrBZVsYX3BX+2508Ti/I99uQAOYeoJdK4AM8Dlgn5m+Ws9vn
+         omBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=xbSUqKBCxymsC6lBBef3Qyn0QkDTIAKXJyfnYrQoXC8=;
-        b=pPOstOrSRYFCzfeoehzDJgQQOA4rzn35l1FRNzj16RvwgjU/6gTRG79yQ1FVO7TYjM
-         bc86AW3LyWZ+rSvsXtLVipTsBV3jHu+9Ax65GdE1taBVSMFBauLyETqnA2YCeKssJBDG
-         PuSupAArqhYGF7QQu6zeiD3TLkodBhVEe5IZx8zB1Rtha69fdgj8S4TdSL1CT+ztoMz0
-         NgnlCLpaUsf2UwNEkviiwp1S/ukxY4Exgx7nNEFHQk9Z3rEmqA11m47vREZ0IsFvGSYJ
-         L90MgrWnfcV9VCKM+qU/kfjpL3PNbbm99Bo4K5jTG+uRV5GRojp8oimYF6dr5dsvOSrR
-         Md/Q==
-X-Gm-Message-State: AOAM5333Yel6XuQpXjBipYqdALKYIIYlndmau23ua33H7QQMLHx7NNwS
-        uCLJDYtR1Hh/hNXaWjNDeJj7RxQzq7M=
-X-Google-Smtp-Source: ABdhPJw0jWJJPA9KNfsgcxxlrnj5t8iBR+bMqFMhI7nW9X7rHQGhd1hfd2q0Q1rm2llFxBbChW9waA==
-X-Received: by 2002:a1c:e285:: with SMTP id z127mr21764312wmg.162.1593525081517;
-        Tue, 30 Jun 2020 06:51:21 -0700 (PDT)
+        bh=1tAsKayZdJ/bssiKZaLewML1qJ1Qy+lK1MBLKE8UREg=;
+        b=uPTPUzxDm0YImxqSBLFn6tiKSLGFZlMuoVw8HfzmVaRKgQ0iU0+a+mwEBkXZE9Mbo+
+         du3zIeIpmywLxhIG+LeqO0AgCUKoCJyGU4weR4krtDLlPQN6pwDKndwd/5/JiyemNjeV
+         BUzUUzV2TJMZ50Ip4KgkDMxRFtPSZijgajvXgZ01uGjpbBODWkrhFJqygIYhsMii5FsX
+         73sonBCAzMb/Iwp5n/XInhaT6szF5MgH+iNH+1tDdyzZDKZ/MICJN5w/JoWAo/csafpO
+         6YjuQBxpxvYr+RDqDrX97wD/uy+tTeDOGpRxhX4GItRxbIFZt4LEMbFQQSBiIzeq5TxN
+         E00Q==
+X-Gm-Message-State: AOAM531KXXdiLN8NFFkE2A5v38L8axOt9tOgWeZF/lfHhmkkpLOW8mBr
+        fPlWV89D2WDggz9ZryB2Ps8P2A==
+X-Google-Smtp-Source: ABdhPJxIo7/ko+Ybgyw1T84vSapma04jKlDgzkG2BjzAzen18pjnBD0YX9WF7hVrDcmqSZnly+BvqQ==
+X-Received: by 2002:adf:db4d:: with SMTP id f13mr21658826wrj.336.1593525073582;
+        Tue, 30 Jun 2020 06:51:13 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id t4sm3876746wmf.4.2020.06.30.06.51.20
+        by smtp.gmail.com with ESMTPSA id t4sm3876746wmf.4.2020.06.30.06.51.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 06:51:20 -0700 (PDT)
+        Tue, 30 Jun 2020 06:51:13 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     arnd@arndb.de, gregkh@linuxfoundation.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
-        George Zhang <georgezhang@vmware.com>
-Subject: [PATCH 07/30] misc: vmw_vmci_defs: 'struct vmci_handle VMCI_ANON_SRC_HANDLE' cannot be static
-Date:   Tue, 30 Jun 2020 14:50:47 +0100
-Message-Id: <20200630135110.2236389-8-lee.jones@linaro.org>
+        Michael Jung <mijung@gmx.net>,
+        Michael Ruettger <michael@ibmra.de>,
+        Frank Haverkamp <haver@linux.ibm.com>,
+        Joerg-Stephan Vogt <jsvogt@de.ibm.com>
+Subject: [PATCH 01/30] misc: genwqe: card_ddcb: Fix a variety of kerneldoc issues
+Date:   Tue, 30 Jun 2020 14:50:41 +0100
+Message-Id: <20200630135110.2236389-2-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200630135110.2236389-1-lee.jones@linaro.org>
 References: <20200630135110.2236389-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This header file is included into source files which do not make
-use to 'struct vmci_handle VMCI_ANON_SRC_HANDLE' which results in
-the following W=1 warnings:
+Including; demoting file header from kerneldoc to standard comment/
+header, adding a variety of missing function argument documentation,
+re-ordering of #defines i.e. not placed between kerneldoc headers
+and the functions they are documenting and re-documenting of changed/
+renamed arguments.
 
- In file included from drivers/misc/vmw_vmci/vmci_context.c:8:
- include/linux/vmw_vmci_defs.h:162:33: warning: ‘VMCI_ANON_SRC_HANDLE’ defined but not used [-Wunused-const-variable=]
- 162 | static const struct vmci_handle VMCI_ANON_SRC_HANDLE = {
- | ^~~~~~~~~~~~~~~~~~~~
- In file included from drivers/misc/vmw_vmci/vmci_datagram.c:8:
- include/linux/vmw_vmci_defs.h:162:33: warning: ‘VMCI_ANON_SRC_HANDLE’ defined but not used [-Wunused-const-variable=]
- 162 | static const struct vmci_handle VMCI_ANON_SRC_HANDLE = {
-| ^~~~~~~~~~~~~~~~~~~~
+Fixes the following W=1 kernel build warnings:
 
-Cc: George Zhang <georgezhang@vmware.com>
+ drivers/misc/genwqe/card_ddcb.c:83: warning: Function parameter or member 'queue' not described in 'queue_empty'
+ drivers/misc/genwqe/card_ddcb.c:262: warning: Excess function parameter 'cd' description in 'RET_DDCB_APPENDED'
+ drivers/misc/genwqe/card_ddcb.c:262: warning: Excess function parameter 'queue' description in 'RET_DDCB_APPENDED'
+ drivers/misc/genwqe/card_ddcb.c:262: warning: Excess function parameter 'ddcb_no' description in 'RET_DDCB_APPENDED'
+ drivers/misc/genwqe/card_ddcb.c:329: warning: Function parameter or member 'req' not described in 'copy_ddcb_results'
+ drivers/misc/genwqe/card_ddcb.c:329: warning: Function parameter or member 'ddcb_no' not described in 'copy_ddcb_results'
+ drivers/misc/genwqe/card_ddcb.c:364: warning: Function parameter or member 'queue' not described in 'genwqe_check_ddcb_queue'
+ drivers/misc/genwqe/card_ddcb.c:565: warning: Function parameter or member 'queue' not described in 'get_next_ddcb'
+ drivers/misc/genwqe/card_ddcb.c:565: warning: Function parameter or member 'num' not described in 'get_next_ddcb'
+ drivers/misc/genwqe/card_ddcb.c:909: warning: Function parameter or member 'cmd' not described in '__genwqe_execute_raw_ddcb'
+ drivers/misc/genwqe/card_ddcb.c:909: warning: Excess function parameter 'req' description in '__genwqe_execute_raw_ddcb'
+ drivers/misc/genwqe/card_ddcb.c:972: warning: Function parameter or member 'cd' not described in 'genwqe_next_ddcb_ready'
+ drivers/misc/genwqe/card_ddcb.c:1002: warning: Function parameter or member 'cd' not described in 'genwqe_ddcbs_in_flight'
+ drivers/misc/genwqe/card_ddcb.c:1181: warning: Function parameter or member 'data' not described in 'genwqe_card_thread'
+ drivers/misc/genwqe/card_ddcb.c:1308: warning: Function parameter or member 'cd' not described in 'queue_wake_up_all'
+ drivers/misc/genwqe/card_ddcb.c:1333: warning: Function parameter or member 'cd' not described in 'genwqe_finish_queue'
+
+Cc: Michael Jung <mijung@gmx.net>
+Cc: Michael Ruettger <michael@ibmra.de>
+Cc: Frank Haverkamp <haver@linux.ibm.com>
+Cc: Joerg-Stephan Vogt <jsvogt@de.ibm.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- include/linux/vmw_vmci_defs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/misc/genwqe/card_ddcb.c | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/vmw_vmci_defs.h b/include/linux/vmw_vmci_defs.h
-index fefb5292403bc..0374dd3cda3df 100644
---- a/include/linux/vmw_vmci_defs.h
-+++ b/include/linux/vmw_vmci_defs.h
-@@ -159,7 +159,7 @@ static inline bool vmci_handle_is_invalid(struct vmci_handle h)
+diff --git a/drivers/misc/genwqe/card_ddcb.c b/drivers/misc/genwqe/card_ddcb.c
+index 905106579935a..0db4000dedf20 100644
+--- a/drivers/misc/genwqe/card_ddcb.c
++++ b/drivers/misc/genwqe/card_ddcb.c
+@@ -1,5 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0-only
+-/**
++/*
+  * IBM Accelerator Family 'GenWQE'
+  *
+  * (C) Copyright IBM Corp. 2013
+@@ -244,10 +244,13 @@ static int ddcb_requ_finished(struct genwqe_dev *cd, struct ddcb_requ *req)
+ 		(cd->card_state != GENWQE_CARD_USED);
+ }
+ 
++#define RET_DDCB_APPENDED 1
++#define RET_DDCB_TAPPED   2
+ /**
+  * enqueue_ddcb() - Enqueue a DDCB
+  * @cd:         pointer to genwqe device descriptor
+  * @queue:	queue this operation should be done on
++ * @pddcb:      pointer to ddcb structure
+  * @ddcb_no:    pointer to ddcb number being tapped
+  *
+  * Start execution of DDCB by tapping or append to queue via NEXT
+@@ -259,9 +262,6 @@ static int ddcb_requ_finished(struct genwqe_dev *cd, struct ddcb_requ *req)
+  * Return: 1 if new DDCB is appended to previous
+  *         2 if DDCB queue is tapped via register/simulation
   */
- #define VMCI_ANON_SRC_CONTEXT_ID   VMCI_INVALID_ID
- #define VMCI_ANON_SRC_RESOURCE_ID  VMCI_INVALID_ID
--static const struct vmci_handle VMCI_ANON_SRC_HANDLE = {
-+const struct vmci_handle VMCI_ANON_SRC_HANDLE = {
- 	.context = VMCI_ANON_SRC_CONTEXT_ID,
- 	.resource = VMCI_ANON_SRC_RESOURCE_ID
- };
+-#define RET_DDCB_APPENDED 1
+-#define RET_DDCB_TAPPED   2
+-
+ static int enqueue_ddcb(struct genwqe_dev *cd, struct ddcb_queue *queue,
+ 			struct ddcb *pddcb, int ddcb_no)
+ {
+@@ -316,6 +316,8 @@ static int enqueue_ddcb(struct genwqe_dev *cd, struct ddcb_queue *queue,
+ 
+ /**
+  * copy_ddcb_results() - Copy output state from real DDCB to request
++ * @req:        pointer to requsted DDCB parameters
++ * @ddcb_no:    pointer to ddcb number being tapped
+  *
+  * Copy DDCB ASV to request struct. There is no endian
+  * conversion made, since data structure in ASV is still
+@@ -356,6 +358,7 @@ static void copy_ddcb_results(struct ddcb_requ *req, int ddcb_no)
+ /**
+  * genwqe_check_ddcb_queue() - Checks DDCB queue for completed work equests.
+  * @cd:         pointer to genwqe device descriptor
++ * @queue:	queue to be checked
+  *
+  * Return: Number of DDCBs which were finished
+  */
+@@ -553,6 +556,8 @@ int __genwqe_wait_ddcb(struct genwqe_dev *cd, struct ddcb_requ *req)
+ /**
+  * get_next_ddcb() - Get next available DDCB
+  * @cd:         pointer to genwqe device descriptor
++ * @queue:      DDCB queue
++ * @num:        internal DDCB number
+  *
+  * DDCB's content is completely cleared but presets for PRE and
+  * SEQNUM. This function must only be called when ddcb_lock is held.
+@@ -900,7 +905,7 @@ int __genwqe_enqueue_ddcb(struct genwqe_dev *cd, struct ddcb_requ *req,
+ /**
+  * __genwqe_execute_raw_ddcb() - Setup and execute DDCB
+  * @cd:         pointer to genwqe device descriptor
+- * @req:        user provided DDCB request
++ * @cmd:        user provided DDCB command
+  * @f_flags:    file mode: blocking, non-blocking
+  */
+ int __genwqe_execute_raw_ddcb(struct genwqe_dev *cd,
+@@ -965,6 +970,7 @@ int __genwqe_execute_raw_ddcb(struct genwqe_dev *cd,
+ 
+ /**
+  * genwqe_next_ddcb_ready() - Figure out if the next DDCB is already finished
++ * @cd:         pointer to genwqe device descriptor
+  *
+  * We use this as condition for our wait-queue code.
+  */
+@@ -993,6 +999,7 @@ static int genwqe_next_ddcb_ready(struct genwqe_dev *cd)
+ 
+ /**
+  * genwqe_ddcbs_in_flight() - Check how many DDCBs are in flight
++ * @cd:         pointer to genwqe device descriptor
+  *
+  * Keep track on the number of DDCBs which ware currently in the
+  * queue. This is needed for statistics as well as conditon if we want
+@@ -1171,6 +1178,7 @@ static irqreturn_t genwqe_vf_isr(int irq, void *dev_id)
+ 
+ /**
+  * genwqe_card_thread() - Work thread for the DDCB queue
++ * @data:         pointer to genwqe device descriptor
+  *
+  * The idea is to check if there are DDCBs in processing. If there are
+  * some finished DDCBs, we process them and wakeup the
+@@ -1299,6 +1307,7 @@ int genwqe_setup_service_layer(struct genwqe_dev *cd)
+ 
+ /**
+  * queue_wake_up_all() - Handles fatal error case
++ * @cd:         pointer to genwqe device descriptor
+  *
+  * The PCI device got unusable and we have to stop all pending
+  * requests as fast as we can. The code after this must purge the
+@@ -1323,6 +1332,7 @@ static int queue_wake_up_all(struct genwqe_dev *cd)
+ 
+ /**
+  * genwqe_finish_queue() - Remove any genwqe devices and user-interfaces
++ * @cd:         pointer to genwqe device descriptor
+  *
+  * Relies on the pre-condition that there are no users of the card
+  * device anymore e.g. with open file-descriptors.
 -- 
 2.25.1
 
