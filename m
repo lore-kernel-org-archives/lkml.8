@@ -2,151 +2,130 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD42CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33FECC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 822C020672
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:47:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C51220672
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:48:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d68s4qdC"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="0PNp5hsO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733102AbgF3Lrf (ORCPT
+        id S1733110AbgF3Lsf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 07:47:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56814 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728419AbgF3Lre (ORCPT
+        Tue, 30 Jun 2020 07:48:35 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:40398 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728419AbgF3Lse (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 07:47:34 -0400
-Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B11D5C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 04:47:33 -0700 (PDT)
-Received: by mail-lf1-x142.google.com with SMTP id u25so11179488lfm.1
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 04:47:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TFC+WBq7XDcW3TVW9x+KN+I5qxP4pcdSU4SbEe6OPp0=;
-        b=d68s4qdCmK1TtORh+eQRf0S7WXOcI+wvGvLs0azHsmlx3wZ3fI54RdBA5MqjXEH0p+
-         Dno6/2KH6VsHo19RJMbFwmdFbzQMnSLyHtrAwgCBbwyjgEzbuLqg9DKsoJh7YhxkHfbm
-         tUL3kppZ8Sk8n2Af1NYQHQcMuczHcJ3e4AOZZpCTh+/uiCYXxwhp3IHzo4bKbUiJc1QQ
-         1ArdlHjQ0zEZBV3RpZBrpGl6hTIjj1jY0wI3SkzUY3vg+qU7IchTcVxls8NUWxD1QXk1
-         +du+8q924Xyfm35vp3ktf98nOwNKpTPgL2hUzZf++WzzPjFbIjwGpoLqiIcJN6Q8GN12
-         DjMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TFC+WBq7XDcW3TVW9x+KN+I5qxP4pcdSU4SbEe6OPp0=;
-        b=HEixW+QJtGoK3ncXnhSkk4dvbAUAmTJmoGHZ34/jnJN2oV611X5OM3fPj+/b5mpopz
-         dKOvxvMbLliqBa3XzbrnB1dTgIU/j2hEoxgplpypJU+Hbzb3uoHXSzqmP20SBh4EqGGn
-         C7rvDIpF9MdBCjC0eYWKLnK22OG20fWHCB7oBTJG+n0/Cjtt3wdzMg5eoIwD4vMNuEDk
-         tYpBAKe8jK0RQ9XBrgHh76Q5dzDNpLqNsQDWH4ExYHR98tFg63QqenQGlTWN15ECe0PG
-         1ym7wnnJ6VeS2gysIws1Tuh8V5CoJxUuZ7eizcnUveXv4ROBD+uRCz56m76LvzaAppbr
-         cqnw==
-X-Gm-Message-State: AOAM533pfZFlV8xXUKL8SuZTDTfoN9bNuRfRHEDGzrkhyQ8iIIE9GdJM
-        gpTQLISdUpYfvW5lsr2xg6H1mihAzBl7spj7s06/0bQI
-X-Google-Smtp-Source: ABdhPJwt26oQzvsh96ZHTy2TwPcowmHp/AIV+YTF2oMGp3rjnTbFRwFrzSq6RtZFwbFkyJsPWznIdHy8/vEzrb45av8=
-X-Received: by 2002:a19:c797:: with SMTP id x145mr11835531lff.143.1593517652008;
- Tue, 30 Jun 2020 04:47:32 -0700 (PDT)
+        Tue, 30 Jun 2020 07:48:34 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05UBgPfe196081;
+        Tue, 30 Jun 2020 11:48:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type : in-reply-to;
+ s=corp-2020-01-29; bh=uxq/cKx519UunETtqtXYq6fCE8XXU5EvXIx0epdZCQQ=;
+ b=0PNp5hsOdKn/2ZW4WNcy+g0QBDBJFtgNvFg2QdwkyrVFYC00HITHoZC2+Ru7jzyzpjj7
+ 02TYcGSIw8YNNP1HxahgRhEJBFUxJSeW/rpv0flsj56YnPmokDRU8D5QF6DTPCYlUk3Z
+ QBTTwpF6ERCpZDJDVhUqs20Ej0M4L9GTQM095rcvjsSpnxmzgrwcRnj7BK0JLoSIu169
+ YfW9wautb92/9mRca/RpT8MJJVz1Ij41RQ7o3A/cP8pjoehGwc2ebpct8Nh+3aZK9gJc
+ Gh+YJN2WGtDIvQyeX5HHQ9rsRBj34qHzQf+WMCGFb9QWo/Ucx/8vcw64EgeGaStGyfkV Jg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 31xx1dru06-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 30 Jun 2020 11:48:25 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05UBgYO4189853;
+        Tue, 30 Jun 2020 11:46:25 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3030.oracle.com with ESMTP id 31y52hrqxw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Jun 2020 11:46:25 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05UBkMau003808;
+        Tue, 30 Jun 2020 11:46:23 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 30 Jun 2020 11:46:22 +0000
+Date:   Tue, 30 Jun 2020 14:46:15 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Jakub Kicinski <kuba@kernel.org>, Wang Wenhu <wenhu.wang@vivo.com>,
+        Wen Gong <wgong@codeaurora.org>,
+        Carl Huang <cjhuang@codeaurora.org>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: [PATCH net] net: qrtr: Fix an out of bounds read qrtr_endpoint_post()
+Message-ID: <20200630114615.GA21891@mwanda>
 MIME-Version: 1.0
-References: <20200625144509.17918-1-daniel.lezcano@linaro.org> <20200625144509.17918-3-daniel.lezcano@linaro.org>
-In-Reply-To: <20200625144509.17918-3-daniel.lezcano@linaro.org>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Tue, 30 Jun 2020 17:17:20 +0530
-Message-ID: <CAP245DUMjTQr2vKirZ+FxEYWC=VQ_k+OegxQgXcKDU8ThWuCsQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/5] thermal: core: Remove old uapi generic netlink
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Zhang Rui <rui.zhang@intel.com>,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Ram Chandrasekar <rkumbako@codeaurora.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200628104623.GA3357@Mani-XPS-13-9360>
+X-Mailer: git-send-email haha only kidding
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9667 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 mlxscore=0
+ adultscore=0 suspectscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006300087
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9667 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1011 adultscore=0
+ suspectscore=0 mlxlogscore=999 cotscore=-2147483648 lowpriorityscore=0
+ malwarescore=0 phishscore=0 impostorscore=0 mlxscore=0 spamscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006300087
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 8:15 PM Daniel Lezcano
-<daniel.lezcano@linaro.org> wrote:
->
-> In order to set the scene for the new generic netlink thermal
-> management and notifications, let remove the old dead code remaining
+This code assumes that the user passed in enough data for a
+qrtr_hdr_v1 or qrtr_hdr_v2 struct, but it's not necessarily true.  If
+the buffer is too small then it will read beyond the end.
 
-s/management/management api/
+Reported-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Reported-by: syzbot+b8fe393f999a291a9ea6@syzkaller.appspotmail.com
+Fixes: 194ccc88297a ("net: qrtr: Support decoding incoming v2 packets")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ net/qrtr/qrtr.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-s/let/let's/
+diff --git a/net/qrtr/qrtr.c b/net/qrtr/qrtr.c
+index 2d8d6131bc5f..7eccbbf6f8ad 100644
+--- a/net/qrtr/qrtr.c
++++ b/net/qrtr/qrtr.c
+@@ -427,7 +427,7 @@ int qrtr_endpoint_post(struct qrtr_endpoint *ep, const void *data, size_t len)
+ 	unsigned int ver;
+ 	size_t hdrlen;
+ 
+-	if (len & 3)
++	if (len == 0 || len & 3)
+ 		return -EINVAL;
+ 
+ 	skb = netdev_alloc_skb(NULL, len);
+@@ -441,6 +441,8 @@ int qrtr_endpoint_post(struct qrtr_endpoint *ep, const void *data, size_t len)
+ 
+ 	switch (ver) {
+ 	case QRTR_PROTO_VER_1:
++		if (len < sizeof(*v1))
++			goto err;
+ 		v1 = data;
+ 		hdrlen = sizeof(*v1);
+ 
+@@ -454,6 +456,8 @@ int qrtr_endpoint_post(struct qrtr_endpoint *ep, const void *data, size_t len)
+ 		size = le32_to_cpu(v1->size);
+ 		break;
+ 	case QRTR_PROTO_VER_2:
++		if (len < sizeof(*v2))
++			goto err;
+ 		v2 = data;
+ 		hdrlen = sizeof(*v2) + v2->optlen;
+ 
+-- 
+2.27.0
 
-> in the uapi headers.
->
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> ---
->  include/linux/thermal.h      |  5 -----
->  include/uapi/linux/thermal.h | 12 +-----------
->  2 files changed, 1 insertion(+), 16 deletions(-)
->
-> diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-> index faf7ad031e42..fc93a6348082 100644
-> --- a/include/linux/thermal.h
-> +++ b/include/linux/thermal.h
-> @@ -302,11 +302,6 @@ struct thermal_zone_params {
->         int offset;
->  };
->
-> -struct thermal_genl_event {
-> -       u32 orig;
-> -       enum events event;
-> -};
-> -
->  /**
->   * struct thermal_zone_of_device_ops - scallbacks for handling DT based zones
->   *
-> diff --git a/include/uapi/linux/thermal.h b/include/uapi/linux/thermal.h
-> index 96218378dda8..22df67ed9e9c 100644
-> --- a/include/uapi/linux/thermal.h
-> +++ b/include/uapi/linux/thermal.h
-> @@ -6,21 +6,12 @@
->
->  /* Adding event notification support elements */
->  #define THERMAL_GENL_FAMILY_NAME                "thermal_event"
-> -#define THERMAL_GENL_VERSION                    0x01
-> +#define THERMAL_GENL_VERSION                    0x02
-
-This hunk should be removed since you set version back to 1 in the
-next patch and we don't actually intend to bump the version yet.
-
-
->  #define THERMAL_GENL_MCAST_GROUP_NAME           "thermal_mc_grp"
->
-> -/* Events supported by Thermal Netlink */
-> -enum events {
-> -       THERMAL_AUX0,
-> -       THERMAL_AUX1,
-> -       THERMAL_CRITICAL,
-> -       THERMAL_DEV_FAULT,
-> -};
-> -
->  /* attributes of thermal_genl_family */
->  enum {
->         THERMAL_GENL_ATTR_UNSPEC,
-> -       THERMAL_GENL_ATTR_EVENT,
->         __THERMAL_GENL_ATTR_MAX,
->  };
->  #define THERMAL_GENL_ATTR_MAX (__THERMAL_GENL_ATTR_MAX - 1)
-> @@ -28,7 +19,6 @@ enum {
->  /* commands supported by the thermal_genl_family */
->  enum {
->         THERMAL_GENL_CMD_UNSPEC,
-> -       THERMAL_GENL_CMD_EVENT,
->         __THERMAL_GENL_CMD_MAX,
->  };
->  #define THERMAL_GENL_CMD_MAX (__THERMAL_GENL_CMD_MAX - 1)
-> --
-> 2.17.1
->
