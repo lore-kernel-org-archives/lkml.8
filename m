@@ -2,117 +2,122 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A52C7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A16C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:07:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 802062053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:05:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79AE52053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:07:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ll1q8Q6N"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LKhpFwpK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728646AbgF3VF5 (ORCPT
+        id S1728578AbgF3VHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 17:05:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58360 "EHLO
+        Tue, 30 Jun 2020 17:07:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbgF3VF4 (ORCPT
+        with ESMTP id S1726084AbgF3VHw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 17:05:56 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39903C061755;
-        Tue, 30 Jun 2020 14:05:56 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id gc9so3522805pjb.2;
-        Tue, 30 Jun 2020 14:05:56 -0700 (PDT)
+        Tue, 30 Jun 2020 17:07:52 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 038EBC061755;
+        Tue, 30 Jun 2020 14:07:51 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id x72so519590pfc.6;
+        Tue, 30 Jun 2020 14:07:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=7YJzM68xF5+T7oFwixHoGmxrMD80y0Idtu8GDH5eoGs=;
-        b=Ll1q8Q6NPvtJ9gux80N+4epUWpVp2kVuyAmSUrOnAccbgOaadBM1J1JxWdB8LnXk3L
-         xBDAb/6LnxpFIoTJ3Xmmxx/gIIKMZV/REgqy7Aljk1jeGpL8i9h95WanWPhLo/Dya49b
-         xxei+axxgXCcBJ11NXuf3fcgD0t/sEWCowtnvD+x6sPJJjAh0FwFvN7gGocoUaeE+bgv
-         TL8SM8OdEs/5Q20aVXsWF6IPCoi2kZa4UhBrGu/qKhTxTxqZvc7tFpzV9F1l5RuRcpoR
-         0AI7iw/EzbjU53mPOjAVYnTLxIWdd846zHX9vK1Wl2Z8bLB5daSfY8hdOmClHP7G5zj7
-         LU+Q==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GU6vPKQf4uXQIkirjbYE3xtNV9UQ8YIx9I4Z3o6US34=;
+        b=LKhpFwpKGk2r98ftbnVNAdzfHUcOB+/gdY2agjd4zGB1qP+EkUM8q0WGmOVglXGU10
+         PuCvLSxCjltm3ohKZgn9jTkjp4DcY7eosb1ZTk10BM25+y01VHExjshJKRureC1F+nce
+         v0xad9veeijdnaDqA1UgCl0nk76gQra0hPvGncwykvVKjK1gMNa+uyfE+WFQft3csldf
+         aaeyfNB3/FRVlNORJ73r+TViuXB2et4HHKMPIvIHJyVLGe7HaDIlVnM+Yu7oMtbmW/Lj
+         se/DGk4xFdQ7jpSbNYnafeYtsQQnoc9NpYJpvVuv4GkI5PT8YH738mVFqY8xsbIJvOUS
+         rnZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=7YJzM68xF5+T7oFwixHoGmxrMD80y0Idtu8GDH5eoGs=;
-        b=dwBVzjy3ymMaco+OSIDpLbN4mDTGHxNjOrsYL6k1TLnQTsEM3GbulNIeUojgZWg2nZ
-         CZi6pLnsi9XjOaCrqxklWYZ0NIpdJmEswwqUrAUzaMFquJJHolAnkz7fqghhVI2uiK1k
-         6y3aUf35Xq93lFslqXeXf38K8OeyN1E+k9rnKVgmrTUTEcMJDgf3NIOuQHch5bFlzoWT
-         GowX6+eCmqm9YTecwwRO9YihO7oEaWPz+aBTyk07UgyaS+8iO8+UMug5Nu9DAVHIkk2+
-         34bJCoVERbG+Uc0Zbm/aPp3UYSKv3pKDkDK9N1KPW/aTCRG4PJUNJqinsEG007Kn5P2F
-         zYEA==
-X-Gm-Message-State: AOAM533B+9eCJQ1YtJ0yFQ9V7VpsOvvECjVVs96ZbVgQFSRd17KYlKLF
-        1TSC+fazyTFn4JR0tXqOrcM=
-X-Google-Smtp-Source: ABdhPJxeLJp0yfbLRrAt4jASBtFaw2qen6+OCgR/gSCl/omhdWgXqt/uF6uRIbULcUTrjMLFU8/qnQ==
-X-Received: by 2002:a17:90a:d709:: with SMTP id y9mr24500675pju.30.1593551155767;
-        Tue, 30 Jun 2020 14:05:55 -0700 (PDT)
-Received: from ubuntu-s3-xlarge-x86 ([2604:1380:1000:7a00::1])
-        by smtp.gmail.com with ESMTPSA id w1sm3615703pfq.53.2020.06.30.14.05.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 14:05:55 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 14:05:53 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Dennis Dalessandro <dennis.dalessandro@intel.com>
-Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] IB/hfi1: Add explicit cast OPA_MTU_8192 to 'enum ib_mtu'
-Message-ID: <20200630210553.GB3710423@ubuntu-s3-xlarge-x86>
-References: <20200623005224.492239-1-natechancellor@gmail.com>
- <5f98c547-1bac-bb05-1c75-cefb8616964a@intel.com>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GU6vPKQf4uXQIkirjbYE3xtNV9UQ8YIx9I4Z3o6US34=;
+        b=rg7jtwGrR04Mwp5p52pTYjclTFkv1cFj2Vi54xye9M8KMaFctw5BFJjVTE7aPuNQus
+         Ks0iKdMylcT6Rp4ntf1WgvxJ0IcOUtFLqGxDzzURVWmUwvLSeq8iwhTIrqL4/kizD+LT
+         K2Tout55lU+tidHfZKSdvwDW4ve+SqmvxM/07twQTS4KOfBASDF1/b/Tc9/yf6mqAzfc
+         xsK7YLI+osR/lSTszhOGw40S2icBG8uQ3Y/Po2j/GK+bSZ9wwDgeYzwljvfptJFZC9oc
+         qrVy7C5l5au5OzPvakvELKW7+KAKGRmBQmgrZZP8E41V67TJiiqqRpAy6nBt1vr9R+rn
+         WDqA==
+X-Gm-Message-State: AOAM532ArxP39ddUlcRc/BiGIZ6JCm9rpvpl5wZ3VblnE4GPuYZHqZHp
+        ppo1cTjZh0kBc/sc5H/LeZI=
+X-Google-Smtp-Source: ABdhPJyTuPK8hg3+kUrbWtvwAIvHSm7IDUVa3HMy1BhtYmQLCeYg7eVD4HxiPCBvSbSG9UgK4phH+g==
+X-Received: by 2002:a63:7d16:: with SMTP id y22mr15792454pgc.136.1593551271458;
+        Tue, 30 Jun 2020 14:07:51 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id b11sm3649839pfr.179.2020.06.30.14.07.50
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 30 Jun 2020 14:07:50 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 14:07:49 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Ahmad Fatoum <a.fatoum@pengutronix.de>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Giel van Schijndel <me@mortis.eu>,
+        linux-watchdog@vger.kernel.org, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 3/8] watchdog: f71808e_wdt: remove use of wrong
+ watchdog_info option
+Message-ID: <20200630210749.GA22948@roeck-us.net>
+References: <20200611191750.28096-1-a.fatoum@pengutronix.de>
+ <20200611191750.28096-4-a.fatoum@pengutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5f98c547-1bac-bb05-1c75-cefb8616964a@intel.com>
+In-Reply-To: <20200611191750.28096-4-a.fatoum@pengutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 02:22:08PM -0400, Dennis Dalessandro wrote:
-> On 6/22/2020 8:52 PM, Nathan Chancellor wrote:
-> > Clang warns:
-> > 
-> > drivers/infiniband/hw/hfi1/qp.c:198:9: warning: implicit conversion from
-> > enumeration type 'enum opa_mtu' to different enumeration type 'enum
-> > ib_mtu' [-Wenum-conversion]
-> >                  mtu = OPA_MTU_8192;
-> >                      ~ ^~~~~~~~~~~~
-> > 1 warning generated.
-> > 
-> > enum opa_mtu extends enum ib_mtu. There are typically two ways to deal
-> > with this:
-> > 
-> > * Remove the expected types and just use 'int' for all parameters and
-> >    types.
-> > 
-> > * Explicitly cast the enums between each other.
-> > 
-> > This driver chooses to do the later so do the same thing here.
-> > 
-> > Fixes: 6d72344cf6c4 ("IB/ipoib: Increase ipoib Datagram mode MTU's upper limit")
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/1062
-> > Link: https://lore.kernel.org/linux-rdma/20200527040350.GA3118979@ubuntu-s3-xlarge-x86/
-> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> > ---
+On Thu, Jun 11, 2020 at 09:17:44PM +0200, Ahmad Fatoum wrote:
+> The flags that should be or-ed into the watchdog_info.options by drivers
+> all start with WDIOF_, e.g. WDIOF_SETTIMEOUT, which indicates that the
+> driver's watchdog_ops has a usable set_timeout.
 > 
-> Acked-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+> WDIOC_SETTIMEOUT was used instead, which expands to 0xc0045706, which
+> equals:
 > 
+>    WDIOF_FANFAULT | WDIOF_EXTERN1 | WDIOF_PRETIMEOUT | WDIOF_ALARMONLY |
+>    WDIOF_MAGICCLOSE | 0xc0045000
+> 
+> These were so far indicated to userspace on WDIOC_GETSUPPORT.
+> As the driver has not yet been migrated to the new watchdog kernel API,
+> the constant can just be dropped without substitute.
+> 
+> Fixes: 96cb4eb019ce ("watchdog: f71808e_wdt: new watchdog driver for
+>        Fintek F71808E and F71882FG")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
 
-Thanks! Who should pick up this patch? This warning is in mainline now,
-it would be nice if this could go via an -rc branch but if it is too
-late for that, I understand.
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-Cheers,
-Nathan
+> ---
+>  drivers/watchdog/f71808e_wdt.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/watchdog/f71808e_wdt.c b/drivers/watchdog/f71808e_wdt.c
+> index c8ce80c13403..8e5584c54423 100644
+> --- a/drivers/watchdog/f71808e_wdt.c
+> +++ b/drivers/watchdog/f71808e_wdt.c
+> @@ -690,8 +690,7 @@ static int __init watchdog_init(int sioaddr)
+>  	 * into the module have been registered yet.
+>  	 */
+>  	watchdog.sioaddr = sioaddr;
+> -	watchdog.ident.options = WDIOC_SETTIMEOUT
+> -				| WDIOF_MAGICCLOSE
+> +	watchdog.ident.options = WDIOF_MAGICCLOSE
+>  				| WDIOF_KEEPALIVEPING
+>  				| WDIOF_CARDRESET;
+>  
