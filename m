@@ -2,157 +2,210 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF38C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:50:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD52C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C8C3520675
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:50:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jHfwOHAe"
+	by mail.kernel.org (Postfix) with ESMTP id E74E020663
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:53:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593532386;
+	bh=7zv+7PF7ZlSBPq5WBZDD0jT9PvGkMFBumBDqNldM2hI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=S35fQNviPxdXnQgL+CY/SDHgKcct5A+ujIHln/EkPABap8vGeoKSPvLw0DaQ+XCG1
+	 g/8Oo+f249OWC0c5XktwrxPqIzX5nHzYgwTTnSYdYugZU749NTO6hZMW4oplpB1Sh/
+	 Tz7Ci/1GgG4ZlWoRiSOPO/PpGVkYAQlkii5YbaLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389764AbgF3Pum (ORCPT
+        id S2389781AbgF3PxE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 11:50:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37952 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389713AbgF3Pul (ORCPT
+        Tue, 30 Jun 2020 11:53:04 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:33512 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389385AbgF3PxD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 11:50:41 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 189E5C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 08:50:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=v/jrtnOfvxmU6E2XWKXiaVm+SlXnKp+0/fe1boRMCVg=; b=jHfwOHAeugatzhfFuoUzA/sWVf
-        qlFcQvPUmtvXVJdnjnTPGmFpJ+BUJIImuCkEGf6UgNB3bhJJ1+6VHEj3iGJdlVuFWL8vAg7muLJyY
-        GRYrjE7vRVD/N6SCaPg9KN7ONwdoRjy3biugAy3bpaauPjk10Y1rP0vGj6SI4LawKku88NW3+Nepr
-        46d+InjxfbHRXjwSCcZAmQMVZtffktPzwIEzHevLlTeV3Fz1xqt1qECBbj6q7whXsnqxMWh7Lzfy0
-        T6qRCIuOe4cok36hlJs9mG5rKSnWQXxbfG4zNnxihR+45m+v1dTti1sAySLD571XelAofN7ylDKS/
-        2NRwnt/Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jqIWC-0007iu-K5; Tue, 30 Jun 2020 15:49:56 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 48C92302753;
-        Tue, 30 Jun 2020 17:49:54 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 3570D20CF3979; Tue, 30 Jun 2020 17:49:54 +0200 (CEST)
-Date:   Tue, 30 Jun 2020 17:49:54 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     kan.liang@linux.intel.com
-Cc:     mingo@redhat.com, acme@kernel.org, tglx@linutronix.de,
-        bp@alien8.de, x86@kernel.org, linux-kernel@vger.kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org, dave.hansen@intel.com,
-        yu-cheng.yu@intel.com, bigeasy@linutronix.de, gorcunov@gmail.com,
-        hpa@zytor.com, alexey.budankov@linux.intel.com, eranian@google.com,
-        ak@linux.intel.com, like.xu@linux.intel.com,
-        yao.jin@linux.intel.com, wei.w.wang@intel.com
-Subject: Re: [PATCH V2 14/23] perf/x86/intel/lbr: Support Architectural LBR
-Message-ID: <20200630154954.GU4781@hirez.programming.kicks-ass.net>
-References: <1593195620-116988-1-git-send-email-kan.liang@linux.intel.com>
- <1593195620-116988-15-git-send-email-kan.liang@linux.intel.com>
+        Tue, 30 Jun 2020 11:53:03 -0400
+Received: by mail-ot1-f66.google.com with SMTP id n6so18821614otl.0;
+        Tue, 30 Jun 2020 08:53:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BeGbI6TV+haW2F8p5+60mh0zp8T26FQUSPwAAL8OJU8=;
+        b=e1+7/6qdomONgx8sGa+HNUuNNCZlikyDzWBahVbRrLQ+bEKbk/EGR8pfazVBx9nRea
+         Vg3rOrq6J9v+QITJKreJPhioPz00Wqi8YutfcWQZWJbyVLl+p4CzmbniSiZGPO+Lz0kY
+         4FxDySwMI1Cx8baqxX/uw3Bm1eRvtaXNWHtXPOTnIpwDShkBPFSToJ0hA/JnlJ4/lDDN
+         GUHvGYIoH8An05PXVTGqSwf/FkdQ3eRtFNxch9Q/Yrs5015H8Ej2TXcJmUqPjkme6l/X
+         wWAALiWerzOekfFQWE7PcyA9WPk+H6juN/bsDJ9QbICzscu9xfNBeZSf5Li5tKiUqY/L
+         da6w==
+X-Gm-Message-State: AOAM5309I+FGJyHiQ34hLgo4DgrOAlWYpP6dzvBV7WjdnUk5R7d1rwK/
+        +loAuUFppZhu073ZKD7a5tNP5JZ/fERw6fiFz+Q=
+X-Google-Smtp-Source: ABdhPJzqX7NzZBPZYOk7h2+zMQdsatMA7pVfRhktyZ6wg8EiraoRJvqPlZVDW6JoVIc75Ds/Pz8hdGk5IAwCtzicWHM=
+X-Received: by 2002:a9d:39f5:: with SMTP id y108mr18773658otb.262.1593532382114;
+ Tue, 30 Jun 2020 08:53:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1593195620-116988-15-git-send-email-kan.liang@linux.intel.com>
+References: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <2788992.3K7huLjdjL@kreacher> <1666722.UopIai5n7p@kreacher>
+ <1794490.F2OrUDcHQn@kreacher> <20200629205708.GK1237914@redhat.com>
+ <CAJZ5v0hiAVfgWTLcP2N5PWLsqL7mpHbuL1_de79svYYhd3R57A@mail.gmail.com> <20200630153127.GP1237914@redhat.com>
+In-Reply-To: <20200630153127.GP1237914@redhat.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 30 Jun 2020 17:52:51 +0200
+Message-ID: <CAJZ5v0hpe2pB76h=p+E4GpOFrDAP5ZGrreyQ-QVtga=08HQNUA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] ACPICA: Preserve memory opregion mappings
+To:     Al Stone <ahs3@redhat.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Erik Kaneda <erik.kaneda@intel.com>,
+        Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Len Brown <lenb@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Ira Weiny <ira.weiny@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Myron Stowe <myron.stowe@redhat.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        Bob Moore <robert.moore@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 11:20:11AM -0700, kan.liang@linux.intel.com wrote:
+On Tue, Jun 30, 2020 at 5:31 PM Al Stone <ahs3@redhat.com> wrote:
+>
+> On 30 Jun 2020 13:44, Rafael J. Wysocki wrote:
+> > On Mon, Jun 29, 2020 at 10:57 PM Al Stone <ahs3@redhat.com> wrote:
+> > >
+> > > On 29 Jun 2020 18:33, Rafael J. Wysocki wrote:
+> > > > From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+> > > >
+> > > > The ACPICA's strategy with respect to the handling of memory mappings
+> > > > associated with memory operation regions is to avoid mapping the
+> > > > entire region at once which may be problematic at least in principle
+> > > > (for example, it may lead to conflicts with overlapping mappings
+> > > > having different attributes created by drivers).  It may also be
+> > > > wasteful, because memory opregions on some systems take up vast
+> > > > chunks of address space while the fields in those regions actually
+> > > > accessed by AML are sparsely distributed.
+> > > >
+> > > > For this reason, a one-page "window" is mapped for a given opregion
+> > > > on the first memory access through it and if that "window" does not
+> > > > cover an address range accessed through that opregion subsequently,
+> > > > it is unmapped and a new "window" is mapped to replace it.  Next,
+> > > > if the new "window" is not sufficient to acess memory through the
+> > > > opregion in question in the future, it will be replaced with yet
+> > > > another "window" and so on.  That may lead to a suboptimal sequence
+> > > > of memory mapping and unmapping operations, for example if two fields
+> > > > in one opregion separated from each other by a sufficiently wide
+> > > > chunk of unused address space are accessed in an alternating pattern.
+> > > >
+> > > > The situation may still be suboptimal if the deferred unmapping
+> > > > introduced previously is supported by the OS layer.  For instance,
+> > > > the alternating memory access pattern mentioned above may produce
+> > > > a relatively long list of mappings to release with substantial
+> > > > duplication among the entries in it, which could be avoided if
+> > > > acpi_ex_system_memory_space_handler() did not release the mapping
+> > > > used by it previously as soon as the current access was not covered
+> > > > by it.
+> > > >
+> > > > In order to improve that, modify acpi_ex_system_memory_space_handler()
+> > > > to preserve all of the memory mappings created by it until the memory
+> > > > regions associated with them go away.
+> > > >
+> > > > Accordingly, update acpi_ev_system_memory_region_setup() to unmap all
+> > > > memory associated with memory opregions that go away.
+> > > >
+> > > > Reported-by: Dan Williams <dan.j.williams@intel.com>
+> > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > > ---
+> > > >  drivers/acpi/acpica/evrgnini.c | 14 ++++----
+> > > >  drivers/acpi/acpica/exregion.c | 65 ++++++++++++++++++++++++----------
+> > > >  include/acpi/actypes.h         | 12 +++++--
+> > > >  3 files changed, 64 insertions(+), 27 deletions(-)
+> > > >
+> > > > diff --git a/drivers/acpi/acpica/evrgnini.c b/drivers/acpi/acpica/evrgnini.c
+> > > > index aefc0145e583..89be3ccdad53 100644
+> > > > --- a/drivers/acpi/acpica/evrgnini.c
+> > > > +++ b/drivers/acpi/acpica/evrgnini.c
+> > > > @@ -38,6 +38,7 @@ acpi_ev_system_memory_region_setup(acpi_handle handle,
+> > > >       union acpi_operand_object *region_desc =
+> > > >           (union acpi_operand_object *)handle;
+> > > >       struct acpi_mem_space_context *local_region_context;
+> > > > +     struct acpi_mem_mapping *mm;
+> > > >
+> > > >       ACPI_FUNCTION_TRACE(ev_system_memory_region_setup);
+> > > >
+> > > > @@ -46,13 +47,14 @@ acpi_ev_system_memory_region_setup(acpi_handle handle,
+> > > >                       local_region_context =
+> > > >                           (struct acpi_mem_space_context *)*region_context;
+> > > >
+> > > > -                     /* Delete a cached mapping if present */
+> > > > +                     /* Delete memory mappings if present */
+> > > >
+> > > > -                     if (local_region_context->mapped_length) {
+> > > > -                             acpi_os_unmap_memory(local_region_context->
+> > > > -                                                  mapped_logical_address,
+> > > > -                                                  local_region_context->
+> > > > -                                                  mapped_length);
+> > > > +                     while (local_region_context->first_mm) {
+> > > > +                             mm = local_region_context->first_mm;
+> > > > +                             local_region_context->first_mm = mm->next_mm;
+> > > > +                             acpi_os_unmap_memory(mm->logical_address,
+> > > > +                                                  mm->length);
+> > > > +                             ACPI_FREE(mm);
+> > > >                       }
+> > > >                       ACPI_FREE(local_region_context);
+> > > >                       *region_context = NULL;
+> > > > diff --git a/drivers/acpi/acpica/exregion.c b/drivers/acpi/acpica/exregion.c
+> > > > index d15a66de26c0..fd68f2134804 100644
+> > > > --- a/drivers/acpi/acpica/exregion.c
+> > > > +++ b/drivers/acpi/acpica/exregion.c
+> > > > @@ -41,6 +41,7 @@ acpi_ex_system_memory_space_handler(u32 function,
+> > > >       acpi_status status = AE_OK;
+> > > >       void *logical_addr_ptr = NULL;
+> > > >       struct acpi_mem_space_context *mem_info = region_context;
+> > > > +     struct acpi_mem_mapping *mm = mem_info->cur_mm;
+> > > >       u32 length;
+> > > >       acpi_size map_length;
+> > >
+> > > I think this needs to be:
+> > >
+> > >         acpi_size map_length = mem_info->length;
+> > >
+> > > since it now gets used in the ACPI_ERROR() call below.
+> >
+> > No, it's better to print the length value in the message.
+>
+> Yeah, that was the other option.
+>
+> > >  I'm getting a "maybe used unitialized" error on compilation.
+> >
+> > Thanks for reporting!
+> >
+> > I've updated the commit in the acpica-osl branch with the fix.
+>
+> Thanks, Rafael.
+>
+> Do you have a generic way of testing this?  I can see a way to do it
+> -- timing a call of a method in a dynamically loaded SSDT -- but if
+> you had a test case laying around, I could continue to be lazy :).
 
-> +	if (boot_cpu_has(X86_FEATURE_ARCH_LBR))
-> +		intel_pmu_arch_lbr_init();
+I don't check the timing, but instrument the code to see if what
+happens is what is expected.
 
-> +static inline bool is_lbr_call_stack_bit_set(u64 config)
-> +{
-> +	if (x86_pmu.arch_lbr)
-> +		return !!(config & ARCH_LBR_CALL_STACK);
-> +
-> +	return !!(config & LBR_CALL_STACK);
-> +}
-
-> +	if (!x86_pmu.arch_lbr && !pmi && cpuc->lbr_sel)
->  		wrmsrl(MSR_LBR_SELECT, lbr_select);
-
-> +	if (!x86_pmu.arch_lbr)
-> +		debugctl |= DEBUGCTLMSR_LBR;
-
-> +	if (x86_pmu.arch_lbr)
-> +		wrmsrl(MSR_ARCH_LBR_CTL, lbr_select | ARCH_LBR_CTL_LBREN);
->  }
-
-etc...
-
-> +void __init intel_pmu_arch_lbr_init(void)
-> +{
-> +	unsigned int unused_edx;
-> +	u64 lbr_nr;
-> +
-> +	/* Arch LBR Capabilities */
-> +	cpuid(28, &x86_pmu.lbr_eax.full, &x86_pmu.lbr_ebx.full,
-> +		  &x86_pmu.lbr_ecx.full, &unused_edx);
-> +
-> +	lbr_nr = x86_pmu_get_max_arch_lbr_nr();
-> +	if (!lbr_nr)
-> +		return;
-> +
-> +	/* Apply the max depth of Arch LBR */
-> +	if (wrmsrl_safe(MSR_ARCH_LBR_DEPTH, lbr_nr))
-> +		return;
-> +
-> +	x86_pmu.lbr_nr = lbr_nr;
-> +	x86_get_pmu()->task_ctx_size = sizeof(struct x86_perf_task_context_arch_lbr) +
-> +				       lbr_nr * sizeof(struct lbr_entry);
-> +
-> +	x86_pmu.lbr_from = MSR_ARCH_LBR_FROM_0;
-> +	x86_pmu.lbr_to = MSR_ARCH_LBR_TO_0;
-> +	x86_pmu.lbr_info = MSR_ARCH_LBR_INFO_0;
-> +
-> +	/* LBR callstack requires both CPL and Branch Filtering support */
-> +	if (!x86_pmu.lbr_ebx.split.lbr_cpl ||
-> +	    !x86_pmu.lbr_ebx.split.lbr_filter ||
-> +	    !x86_pmu.lbr_ebx.split.lbr_call_stack)
-> +		arch_lbr_ctl_map[PERF_SAMPLE_BRANCH_CALL_STACK_SHIFT] = LBR_NOT_SUPP;
-> +
-> +	if (!x86_pmu.lbr_ebx.split.lbr_cpl) {
-> +		arch_lbr_ctl_map[PERF_SAMPLE_BRANCH_USER_SHIFT] = LBR_NOT_SUPP;
-> +		arch_lbr_ctl_map[PERF_SAMPLE_BRANCH_KERNEL_SHIFT] = LBR_NOT_SUPP;
-> +	} else if (!x86_pmu.lbr_ebx.split.lbr_filter) {
-> +		arch_lbr_ctl_map[PERF_SAMPLE_BRANCH_ANY_SHIFT] = LBR_NOT_SUPP;
-> +		arch_lbr_ctl_map[PERF_SAMPLE_BRANCH_ANY_RETURN_SHIFT] = LBR_NOT_SUPP;
-> +		arch_lbr_ctl_map[PERF_SAMPLE_BRANCH_ANY_CALL_SHIFT] = LBR_NOT_SUPP;
-> +		arch_lbr_ctl_map[PERF_SAMPLE_BRANCH_IND_CALL_SHIFT] = LBR_NOT_SUPP;
-> +		arch_lbr_ctl_map[PERF_SAMPLE_BRANCH_COND_SHIFT] = LBR_NOT_SUPP;
-> +		arch_lbr_ctl_map[PERF_SAMPLE_BRANCH_IND_JUMP_SHIFT] = LBR_NOT_SUPP;
-> +		arch_lbr_ctl_map[PERF_SAMPLE_BRANCH_CALL_SHIFT] = LBR_NOT_SUPP;
-> +	}
-> +
-> +	x86_pmu.lbr_ctl_mask = ARCH_LBR_CTL_MASK;
-> +	x86_pmu.lbr_ctl_map  = arch_lbr_ctl_map;
-> +
-> +	if (!x86_pmu.lbr_ebx.split.lbr_cpl && !x86_pmu.lbr_ebx.split.lbr_filter)
-> +		x86_pmu.lbr_ctl_map = NULL;
-> +
-> +	x86_pmu.lbr_reset = intel_pmu_arch_lbr_reset;
-> +	x86_pmu.lbr_read = intel_pmu_arch_lbr_read;
-> +	x86_pmu.lbr_save = intel_pmu_arch_lbr_save;
-> +	x86_pmu.lbr_restore = intel_pmu_arch_lbr_restore;
-> +
-> +	x86_pmu.arch_lbr = true;
-> +	pr_cont("Architectural LBR, ");
-> +}
-
-How about we make this here clear FEATURE_ARCH_LBR if it fails and then
-do away with x86_pmu.arch_lbr and use
-static_cpu_has(X86_FEATURE_ARCH_LBR) a lot more?
+Now, the overhead reduction resulting from this change in Linux is
+quite straightforward: Every time the current mapping doesn't cover
+the request at hand, an unmap is carried out by the original code,
+which involves a linear search through acpi_ioremaps, and which
+generally is (at least a bit) more expensive than the linear search
+through the list of opregion-specific mappings introduced by the
+$subject patch, because quite likely the acpi_ioremaps list holds more
+items.  And, of course, if the opregion in question holds many fields
+and they are not covered by one mapping, each of them needs to be
+mapped just once per the opregion life cycle.
