@@ -2,104 +2,95 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50588C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D58C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:45:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 310D1206CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:44:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0AB4206CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:45:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i7fj2XBv"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="tGZFtzXv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726170AbgF3So0 (ORCPT
+        id S1726251AbgF3SpN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 14:44:26 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:42555 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726094AbgF3SoY (ORCPT
+        Tue, 30 Jun 2020 14:45:13 -0400
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:61133 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbgF3SpM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 14:44:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593542662;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PedFDc2DtQMOIGWMojnCcvUFPVJqYYNEpNxS2Hp4sso=;
-        b=i7fj2XBv3if4K7+j7KNAQtaSAoTUBGb7H2DlLBcgqbCN6wYRBXx0Nf8ZpZIJyhN8ASuGHe
-        /WfS0RGr62yiyTpGbPqU6GWu0w7m7jdDq5ydDEsQ0CbSlbJYpm7648vZNvMZDlpDrE/YIx
-        XcXxLo8gf+1H5hMCRIiBme8keSGI62U=
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
- [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-15-Sc-geY15PtKpUIgIcEiQ5w-1; Tue, 30 Jun 2020 14:44:20 -0400
-X-MC-Unique: Sc-geY15PtKpUIgIcEiQ5w-1
-Received: by mail-qt1-f197.google.com with SMTP id e6so14117483qtb.19
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 11:44:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=PedFDc2DtQMOIGWMojnCcvUFPVJqYYNEpNxS2Hp4sso=;
-        b=SVZpXFfKnKIoCIshLZZx2jfpCarn9Z5wGCL5adXc4kviFdglJB1s9YRY9Ez8ePs2Rb
-         vGV4axkvbuPdN3bGzDOS3g1t+Y30ARi4UknbbtIIAR6skPAxN6Jp77prnlsf01Sd9Law
-         +46fbpobgw/ChieGnq3ugpbwdcPp6RIkY4MzRR8mmiapD3SS//hwoWlFun4qUhcddkP3
-         Hg2gHNzCpJHnB1TRkZMVIDB6uprovRZQDafPiZ8jieZNZ+7rFN1xUe5Rnb7GTPe0XdH/
-         Qpm0Yr4gskiC+k2Q4QpVZ3rBS6Aqoyc9dSMyQVwmal+It41TCSwDrydLnD07FkfiSJud
-         DXwQ==
-X-Gm-Message-State: AOAM531KpoA08q+Og1k4AFsiYjRlXkVQvf46kajOcPjSDRII8fg1gI+c
-        LSs2JB9kw4GgjQ3eAuM9cVz4gmBn8/XNcisEZqoaM+rZl8lhw4WykAMyJoY/aBWSBPy54nPu2CS
-        fIkknvQc63UrOlYciqw+6AGVH
-X-Received: by 2002:a37:a14c:: with SMTP id k73mr21323494qke.145.1593542659924;
-        Tue, 30 Jun 2020 11:44:19 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJzwBx2LZuulFWLqg/mQP1Ihml2J1c5LqD4NJxngK+OBmKCXx8SAyvZunhLXcfXhUVrRNoRbpA==
-X-Received: by 2002:a37:a14c:: with SMTP id k73mr21323479qke.145.1593542659736;
-        Tue, 30 Jun 2020 11:44:19 -0700 (PDT)
-Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
-        by smtp.gmail.com with ESMTPSA id a11sm3208689qkh.103.2020.06.30.11.44.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jun 2020 11:44:18 -0700 (PDT)
-Subject: Re: [RFC 1/1] fpga: dfl: RFC PCI config
-To:     Randy Dunlap <rdunlap@infradead.org>, hao.wu@intel.com,
-        mdf@kernel.org, corbet@lwn.net
-Cc:     linux-fpga@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200630171656.20151-1-trix@redhat.com>
- <20200630171656.20151-2-trix@redhat.com>
- <67f7f2b8-3567-aadd-30d6-4cfbc0bc8ce5@infradead.org>
-From:   Tom Rix <trix@redhat.com>
-Message-ID: <78a250ab-29ad-f7cb-3fa2-482e76db207a@redhat.com>
-Date:   Tue, 30 Jun 2020 11:44:16 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 30 Jun 2020 14:45:12 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1593542712; x=1625078712;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=gVXFKwkoilJ+WRsAX2ilDSQvX1wsECjHxbakjfFTTiA=;
+  b=tGZFtzXvjzO9lbqNel/0gcYL4b4H+zhgg3c4Dnt4UZCgiT2VgKFm448F
+   RGSERHcKSG9aisUbyRWvhi6+ZI468HnjmvF3E1JgyUnRKbnINzecotvNV
+   EOBBooR4ItH4rowB2QvtgbYMkz1bcCy7xLMV0rO9Dwx6bqajdQKMh+b2L
+   XGqHl395ojo/leeoyk+9XOuQBtD9lSMsnJ6YUvx5asBl4v5OEnytjF3Ly
+   /K1wxhHF5Nwuo718zhvP0Sd9NUDSUzlw8FgyRuXM6Yzu76Txs66COEgHO
+   VOiE17X4BZkO/zmJrQmigt+KPJi1tfg+JJ9Rnk76+rs/yeSjqd6Ey8mcd
+   Q==;
+IronPort-SDR: B2IzWVA38/w48UWB3itF4A+Rwr6HJm/1RLFOSZ1jh39DRujU3c63OwDplG43A2Tbp2nc5hoNrz
+ Q5KdOLy+yOLRAA4y0rrUYrDsk2evMj9CnJcr3+92gd9QLctf+O+80XTKTEiXCSq6hvhrqFw8ep
+ 6BkF3fRKu6/AGsvBMp7b1qD46yAVTV42KfDZEI657Qbg8LSn/k7C8lyVgszI6rwAjNcnzt0khD
+ 5HTDUhLIQENl3UyPtxLlx4dmMmgDUmFpeLIffoAg+i1Hm70/VWNsjhmjWEPtGkIxXMilVAzEkc
+ YQE=
+X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
+   d="scan'208";a="17608615"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 30 Jun 2020 11:45:11 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1979.3; Tue, 30 Jun 2020 11:45:11 -0700
+Received: from localhost (10.10.115.15) by chn-vm-ex03.mchp-main.com
+ (10.10.85.151) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
+ Transport; Tue, 30 Jun 2020 11:45:11 -0700
+Date:   Tue, 30 Jun 2020 20:45:09 +0200
+From:   Horatiu Vultur <horatiu.vultur@microchip.com>
+To:     Jakub Kicinski <kuba@kernel.org>
+CC:     <nikolay@cumulusnetworks.com>, <roopa@cumulusnetworks.com>,
+        <davem@davemloft.net>, <jiri@mellanox.com>,
+        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <bridge@lists.linux-foundation.org>, <UNGLinuxDriver@microchip.com>
+Subject: Re: [PATCH net-next 2/3] bridge: mrp: Add br_mrp_fill_info
+Message-ID: <20200630184509.oliwf3ui4gxno756@soft-dev3.localdomain>
+References: <20200630134424.4114086-1-horatiu.vultur@microchip.com>
+ <20200630134424.4114086-3-horatiu.vultur@microchip.com>
+ <20200630091243.124869e2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
 MIME-Version: 1.0
-In-Reply-To: <67f7f2b8-3567-aadd-30d6-4cfbc0bc8ce5@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+In-Reply-To: <20200630091243.124869e2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> I haven't tested this, but in general it's not safe to select something like
-> SENSORS* or HWMON* unless you first check that CONFIG_HWMON is enabled.
-> Otherwise this would usually cause kconfig warning(s).
->
-> But don't add things like
-> 	select HWMON
-> 	select SPI
-> 	select SPI_MASTER
->
-> because we don't enable subsystems (like HWMON or SPI) just inside one
-> driver's kconfig entry.
-> The driver(s) should instead depend on HWMON, SPI, SPI_MASTER etc.
+The 06/30/2020 09:12, Jakub Kicinski wrote:
+> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
+> 
+> On Tue, 30 Jun 2020 15:44:23 +0200 Horatiu Vultur wrote:
+> > Add the function br_mrp_fill_info which populates the MRP attributes
+> > regarding the status of each MRP instance.
+> >
+> > Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
+> 
+> This adds warnings when built with W=1 C=1:
 
-Yes, I thought this was ugly. The next rev addresses this issue.  The config will not be fully automagic.  User will have enough information in the doc to figure out the other subsystems.  
+The warnings at line 316 will be fixed once net will be merged into
+net-next. But I need to fix the others.
 
-Tom
+> 
+> net/bridge/br_mrp_netlink.c:316:9: warning: dereference of noderef expression
+> net/bridge/br_mrp_netlink.c:325:36: warning: dereference of noderef expression
+> net/bridge/br_mrp_netlink.c:328:36: warning: dereference of noderef expression
+> net/bridge/br_mrp_netlink.c:316:9: warning: dereference of noderef expression
 
+-- 
+/Horatiu
