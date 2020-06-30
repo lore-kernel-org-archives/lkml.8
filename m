@@ -2,117 +2,142 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94607C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A60C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 729EC2068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:35:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF191206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:35:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593542123;
-	bh=gyfWpjnOJwwzGi1tgl/VLHZLp+8PSWYx42nMxv5kKvo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=01gnjZaJp/3zMcOSTs+TBO1SYgcOS6OMrhE9KxBBXCaL2mmkws/eYLA7pIs8ry29K
-	 Br2tIqdWk96AqPTzNNjhzdO5dItzSKusGmFAZLhBJ1T7VFBykmyMJCzxVTfP+sxL7T
-	 kz1p9if0CezsfGyZ9dTDrLo5Cq1uo0z7zjMC3mJg=
+	s=default; t=1593542137;
+	bh=RYKTZT8L2YCF69DV1EdcAmR1v9iwHZlvoOwk9RIUBfI=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=DL6TrTyLVS1HODbCBYjFjcJjQ531Gc9cBEgA6A+K5L+PjMGJaFm6MeRojT9z3RUeP
+	 7+gX/4Cd+FMl+6fdBRjCWW9WEN+49kbGcFsBHeRq29zlFRDB2b+xOZyTqvymHwypvr
+	 jqg7E+LCGNN4QzqnsR7FVltJ7OG6NdvottPNU8U0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387911AbgF3SfV (ORCPT
+        id S1733208AbgF3Sff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 14:35:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43916 "EHLO mail.kernel.org"
+        Tue, 30 Jun 2020 14:35:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731452AbgF3SfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 14:35:20 -0400
-Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725963AbgF3Sff (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 14:35:35 -0400
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F91C206CB;
-        Tue, 30 Jun 2020 18:35:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A66392068F;
+        Tue, 30 Jun 2020 18:35:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593542119;
-        bh=gyfWpjnOJwwzGi1tgl/VLHZLp+8PSWYx42nMxv5kKvo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=VreS75mCNztVC55O5WYtKQ3ty6sypfwjFtEvCpKGJF/P6+aSEBXzu2b1RZvZfzGpB
-         fU3Crxvs7MtpRNg03J0qHtUpL7695T+IUbeYINW2k2LPMvnhMrjK404HPe1gY8RZrK
-         tm1PctHJAhBK3iKVLx00O8lxXyMtdbS71s+sKX4c=
-Received: by mail-ot1-f48.google.com with SMTP id c25so1622230otf.7;
-        Tue, 30 Jun 2020 11:35:19 -0700 (PDT)
-X-Gm-Message-State: AOAM532IMyqxNf0bTcKWksra+d6le2VoHnmV/JK7CkBuWDk8jVKT+CnD
-        8aoK56lNRYZ2JCso6aURqnwvImcCjPbE7V8M1Q==
-X-Google-Smtp-Source: ABdhPJyxGkRB5nAl2gD00aoXYNA+A7QZAkg3P0qe89BJ5GCB6sKgUEuOFJbEZFHSpYjGUE+sPWFRo4oj5kH9Y3fJIos=
-X-Received: by 2002:a9d:3a36:: with SMTP id j51mr19503925otc.129.1593542118992;
- Tue, 30 Jun 2020 11:35:18 -0700 (PDT)
+        s=default; t=1593542134;
+        bh=RYKTZT8L2YCF69DV1EdcAmR1v9iwHZlvoOwk9RIUBfI=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=Jo7cYQcSnqavmJu3py5reMUEBjHqYsP72S5+fGaXFuuliQXf7MQYLdi8xzpH6+94s
+         yOpBKjGschI641wSf53+P5BFQnemkANvqB/pnhkl8YlF25Q+M5ykes5xA3/hcfIss2
+         1gLogO1nUHFCaKYCML6eGu8CDKtrccY50qPfZMmw=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 74B173522640; Tue, 30 Jun 2020 11:35:34 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 11:35:34 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     joel@joelfernandes.org, rcu@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
+        jiangshanlai@gmail.com, dipankar@in.ibm.com,
+        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
+        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
+        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
+        fweisbec@gmail.com, oleg@redhat.com,
+        Uladzislau Rezki <urezki@gmail.com>
+Subject: Re: [PATCH tip/core/rcu 03/17] rcu/tree: Skip entry into the page
+ allocator for PREEMPT_RT
+Message-ID: <20200630183534.GG9247@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200624201200.GA28901@paulmck-ThinkPad-P72>
+ <20200624201226.21197-3-paulmck@kernel.org>
+ <20200630164543.4mdcf6zb4zfclhln@linutronix.de>
 MIME-Version: 1.0
-References: <20200520133932.30441-1-erwan.leray@st.com> <20200520133932.30441-2-erwan.leray@st.com>
- <20200627141801.GA1945477@kroah.com>
-In-Reply-To: <20200627141801.GA1945477@kroah.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Tue, 30 Jun 2020 12:35:08 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+PFmeN_bFRD1M_E+1NOTsMowViG3CUWDWgy5=3kpC=xw@mail.gmail.com>
-Message-ID: <CAL_Jsq+PFmeN_bFRD1M_E+1NOTsMowViG3CUWDWgy5=3kpC=xw@mail.gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: serial: add generic DT binding for
- announcing RTS/CTS lines
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Erwan Le Ray <erwan.leray@st.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linaro-mm-sig@lists.linaro.org,
-        Fabrice Gasnier <fabrice.gasnier@st.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200630164543.4mdcf6zb4zfclhln@linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 27, 2020 at 8:18 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Wed, May 20, 2020 at 03:39:31PM +0200, Erwan Le Ray wrote:
-> > Add support of generic DT binding for annoucing RTS/CTS lines. The initial
-> > binding 'st,hw-flow-control' is not needed anymore since generic binding
-> > is available, but is kept for backward compatibility.
-> >
-> > Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
-> >
-> > diff --git a/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml b/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml
-> > index 75b8521eb7cb..06d5f251ec88 100644
-> > --- a/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml
-> > +++ b/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml
-> > @@ -35,9 +35,11 @@ properties:
-> >      description: label associated with this uart
-> >
-> >    st,hw-flow-ctrl:
-> > -    description: enable hardware flow control
-> > +    description: enable hardware flow control (deprecated)
-> >      $ref: /schemas/types.yaml#/definitions/flag
-> >
-> > +  uart-has-rtscts: true
-> > +
-> >    dmas:
-> >      minItems: 1
-> >      maxItems: 2
-> > --
-> > 2.17.1
-> >
->
-> Did this get ignored by the DT maintainers?  :(
+On Tue, Jun 30, 2020 at 06:45:43PM +0200, Sebastian Andrzej Siewior wrote:
+> On 2020-06-24 13:12:12 [-0700], paulmck@kernel.org wrote:
+> > From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+> > 
+> > To keep the kfree_rcu() code working in purely atomic sections on RT,
+> > such as non-threaded IRQ handlers and raw spinlock sections, avoid
+> > calling into the page allocator which uses sleeping locks on RT.
+> > 
+> > In fact, even if the  caller is preemptible, the kfree_rcu() code is
+> > not, as the krcp->lock is a raw spinlock.
+> > 
+> > Calling into the page allocator is optional and avoiding it should be
+> > Ok, especially with the page pre-allocation support in future patches.
+> > Such pre-allocation would further avoid the a need for a dynamically
+> > allocated page in the first place.
+> > 
+> > Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> > Reviewed-by: Uladzislau Rezki <urezki@gmail.com>
+> > Co-developed-by: Uladzislau Rezki <urezki@gmail.com>
+> > Signed-off-by: Uladzislau Rezki <urezki@gmail.com>
+> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+> > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> > ---
+> >  kernel/rcu/tree.c | 12 ++++++++++++
+> >  1 file changed, 12 insertions(+)
+> > 
+> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
+> > index 64592b4..dbdd509 100644
+> > --- a/kernel/rcu/tree.c
+> > +++ b/kernel/rcu/tree.c
+> > @@ -3184,6 +3184,18 @@ kfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp,
+> >  		if (!bnode) {
+> >  			WARN_ON_ONCE(sizeof(struct kfree_rcu_bulk_data) > PAGE_SIZE);
+> >  
+> > +			/*
+> > +			 * To keep this path working on raw non-preemptible
+> > +			 * sections, prevent the optional entry into the
+> > +			 * allocator as it uses sleeping locks. In fact, even
+> > +			 * if the caller of kfree_rcu() is preemptible, this
+> > +			 * path still is not, as krcp->lock is a raw spinlock.
+> > +			 * With additional page pre-allocation in the works,
+> > +			 * hitting this return is going to be much less likely.
+> > +			 */
+> > +			if (IS_ENABLED(CONFIG_PREEMPT_RT))
+> > +				return false;
+> 
+> This is not going to work together with the "wait context validator"
+> (CONFIG_PROVE_RAW_LOCK_NESTING). As of -rc3 it should complain about
+> printk() which is why it is still disabled by default.
 
-When it doesn't go to the DT list, you are playing roulette whether I
-happen to see it. :(
+Fixing that should be "interesting".  In particular, RCU CPU stall
+warnings rely on the raw spin lock to reduce false positives due
+to race conditions.  Some thought will be required here.
 
-Anyways,
+> So assume that this is fixed and enabled then on !PREEMPT_RT it will
+> complain that you have a raw_spinlock_t acquired (the one from patch
+> 02/17) and attempt to acquire a spinlock_t in the memory allocator.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Given that the slab allocator doesn't acquire any locks until it gets
+a fair way in, wouldn't it make sense to allow a "shallow" allocation
+while a raw spinlock is held?  This would require yet another GFP_ flag,
+but that won't make all that much of a difference in the total.  ;-)
+
+							Thanx, Paul
+
+> >  			bnode = (struct kfree_rcu_bulk_data *)
+> >  				__get_free_page(GFP_NOWAIT | __GFP_NOWARN);
+> >  		}
+> 
+> Sebastian
