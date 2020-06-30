@@ -2,734 +2,375 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ECD0C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 02:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B38BC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 02:17:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C4912078B
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 02:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B49EA2078C
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 02:17:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ICl+orHl"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="imH8p2rG";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="r7oBKRXC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbgF3CQq (ORCPT
+        id S1728374AbgF3CRd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 22:16:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53686 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbgF3CQo (ORCPT
+        Mon, 29 Jun 2020 22:17:33 -0400
+Received: from esa3.hgst.iphmx.com ([216.71.153.141]:46472 "EHLO
+        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725988AbgF3CRc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 22:16:44 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A8C69C061755;
-        Mon, 29 Jun 2020 19:16:44 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id u8so8532255pje.4;
-        Mon, 29 Jun 2020 19:16:44 -0700 (PDT)
+        Mon, 29 Jun 2020 22:17:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1593483452; x=1625019452;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=qQy6BsmzxHpiBSC3/+rlBRsH2Bbm74Pxi3v73AJacKY=;
+  b=imH8p2rGJs2vXh5MizNUovNWlRqOE/5XcTtH6fi1cx5nT8VeEjvU4BBb
+   lx50dGiTECp3rDKQECLGWCf9QaAOdWGBfzLgbzd8qjkq3UKaz9g7TEweN
+   XwaAz1Pzh8vngNML88eTd8gMD7q+J8071/MJHgdjIdT5qg+dgmChlIzUd
+   zNcmi/YTyq/ctGobrepUg+BFyxoYAGAQVz4HcYJ0vvomzpxI89sR2Yvdh
+   h3cUe1J76W0c3vIZj/nV2SB0JHpGnyr0f86mvDoAglR9GOYcLxV9ZpNoj
+   8QSxXdOjpXcsSgilgK3W7guLHJaqTSMJVd54NJaN68I5Jq5dqwrs8RMat
+   g==;
+IronPort-SDR: Bekc53BuuaZoqiza1RWAOxY9AwyE3F9eXCXVLr/rINe18GrGNyBNqt3argWlYmFspFQmK6W/q1
+ x/3FmiDDY4V/J4vGJOD84CqZAJqxAOW6Fs1zs+iogp2If9KLWIaU108nG3kESeNTCOQ7T65Jil
+ E7cy8XBjVnXXli4haII3FwK9CLhv9tQenyOT82QAITNMkYlsNdXrn5PA+A6sfewR6Nx4EC7xr6
+ +bqj4T1sDj0gfmgbLjzbHjFdL2nahVQ8UxlU905hxGGD4qOZ5Gxhl/ljlizI/hkEJ6rlRYka/x
+ /64=
+X-IronPort-AV: E=Sophos;i="5.75,296,1589212800"; 
+   d="scan'208";a="145556204"
+Received: from mail-bn8nam12lp2173.outbound.protection.outlook.com (HELO NAM12-BN8-obe.outbound.protection.outlook.com) ([104.47.55.173])
+  by ob1.hgst.iphmx.com with ESMTP; 30 Jun 2020 10:17:30 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DdvrpgEZgUbVeK5ajVGraEOGcwnvrSgkCiX+KlggIAbXSNxJgqJmMIiU7is92Amo189ls+S3Ay2HET1si7UG7Wc1bmzEf81uOJ5s40rpwxn6xNiTvwTayRRys/AaIHuWMw9J6Ll+Z0q00egxpU2Yq7Ox22QreOj0bCZpo0OsG6BbfmvviwOrAji4amc++0P2tg9vGjCj/4qebL+nbjLTbFBRHY0z7cuPBYmFzOgbqGuOXiIgXT4kW5S0xa+JBIb9PCF6YPbdhh+MU/R7c7EJPYf84h0esvphu04AF6FrVxbURSxMRSHCJBDLUYVLCagIr/9WneZEKfvlz1qm15fpjA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HPf5TterA0xKCq7OFJvncAJZ1pt/7XqBpDd/5TdKgIM=;
+ b=F9KIGt+brbtrlAIAg5z3SGfMCN0tb+9QCZVxYhq6IILQsu59hxH3gUUnPLq3EcAMrBDYzZ7iRt4CG2Qgg6WkvvUj4f+BRCsh4BXNlSi8l7Ul0bsCKNgnHqRobIQbz4cZW0OY0LEsXS5Huis0S5jGvMQebSxHQ+XLc9F70ue5P6qFZiH9svLBFTRX3K2Vv09w5Eyd1E+oZLqpMv64uErKw/QEibo2JMwfVGdhyCTPvjr3R845Ms3GwORswu3Ld3G0FWHCKKOlJgxOtUcOm0b3QyvyziNaJI8WrThJKxf47MDZxr4wtwJcnWGo12E957QWdJbbehqULJK8cActMlV34Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ApSsryW/U0rzL3lRYI3fkLNuST8n9x5+LCJ7Z/gpjq8=;
-        b=ICl+orHlBsvlRBp9WjMHXMdLMbT7CAxo/ycJIuBJmcz5ObmKoeNsNUKG4GJBu3tzyO
-         EsE2r2lKzo/dXMCuf/X2zsaKpd6d703VcgEGCU7yI9xZEu4Nclq5DIqtF9JWR1IdnDTz
-         LikFkw5wlwKnNznAxXJMVkhGfJHRMk/rRKuzsN1eQF7fA1NRoJlr30oT2iuMJKS/GyfD
-         g0BMpbsCdmyccnyY9rPlrJ7GE5Ufmkm/u0QQNUUwrItr0fnRpd2YEsiavW00PpJQSYQs
-         DqK7kLTyA7TuYkmzmoGqODDtNsdMp2lA96YviDfROH+v7qFvSK2yNiURnzs+/RFgQWyI
-         oHxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ApSsryW/U0rzL3lRYI3fkLNuST8n9x5+LCJ7Z/gpjq8=;
-        b=cLKhpWOmtZ2v4FYJie5+Nf6vyyMy/irq6GFDP9BY6hVs/nsMUzjebep38DwNqeUqfC
-         TrziUEs7KMIA/06JdlJQLdfWdb7yiFpOuJYo8h8+GvIBS9ojnQr5jN5BHM2Cxt+xh/k+
-         B5fw0XDIe0To1VdEhgsiDxuYI7YvOT7jH7tc9pycNTdVgbv5cb6D84Ho0aankhXJPjVb
-         McTB1g2A7Qg2PCWHFs2PqkqaZG6nXftK/in6ujStCjocTmtiXRFZH2k4MZsMMcXaPEE2
-         3sTi7HyWY8Gx0SAFOrn/4e7/RFfsqyExC33laSMd/WoH65sRtPre09sBy/eeINqDAKVB
-         1b2Q==
-X-Gm-Message-State: AOAM532mGUeGavMNVqSdHDhcIV1U378R4vy3ezMlZ/EdUsvy+m8edOVW
-        FtsDkPQHs5jvNBl3mlL+H58=
-X-Google-Smtp-Source: ABdhPJy9D0OH4A1PusjjMF+cJubElVbfGmdn/iS7idFqEk+lLo/NMxQw7JZUORe0NOQvk7CXVr2JEg==
-X-Received: by 2002:a17:90a:e602:: with SMTP id j2mr17043491pjy.200.1593483404094;
-        Mon, 29 Jun 2020 19:16:44 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id t24sm918235pgm.10.2020.06.29.19.16.42
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Jun 2020 19:16:43 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 19:16:42 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Marius Zachmann <mail@mariuszachmann.de>
-Cc:     Jean Delvare <jdelvare@suse.com>, Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-input@vger.kernel.org
-Subject: Re: [PATCH v7] hwmon: add Corsair Commander Pro driver
-Message-ID: <20200630021642.GA155878@roeck-us.net>
-References: <20200626055936.4441-1-mail@mariuszachmann.de>
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HPf5TterA0xKCq7OFJvncAJZ1pt/7XqBpDd/5TdKgIM=;
+ b=r7oBKRXC/SziRhuke+V4t7hJUhBaVFYQgcMTsWdglUBy5xBiscRz/oeiAgdMAzl49Mfd1fbNNx+OptHu3lAc0MTw1Xh1+sOZ3gcYSqtvrtkfa44x73w95d0kMqHFVQ549jS8VakuKdOM0G7/w4tYlqKBkaB1hKXnds0vchnTyEw=
+Received: from CY4PR04MB3751.namprd04.prod.outlook.com (2603:10b6:903:ec::14)
+ by CY4PR04MB1032.namprd04.prod.outlook.com (2603:10b6:910:50::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.23; Tue, 30 Jun
+ 2020 02:17:28 +0000
+Received: from CY4PR04MB3751.namprd04.prod.outlook.com
+ ([fe80::c593:f271:eebe:ac7]) by CY4PR04MB3751.namprd04.prod.outlook.com
+ ([fe80::c593:f271:eebe:ac7%9]) with mapi id 15.20.3131.024; Tue, 30 Jun 2020
+ 02:17:28 +0000
+From:   Damien Le Moal <Damien.LeMoal@wdc.com>
+To:     Niklas Cassel <Niklas.Cassel@wdc.com>,
+        Jonathan Corbet <corbet@lwn.net>, Jens Axboe <axboe@kernel.dk>,
+        Keith Busch <kbusch@kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+CC:     "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+Subject: Re: [PATCH 1/2] block: add max_open_zones to blk-sysfs
+Thread-Topic: [PATCH 1/2] block: add max_open_zones to blk-sysfs
+Thread-Index: AQHWQ8jtlLWiiEumE0+QMSt8tXUnYw==
+Date:   Tue, 30 Jun 2020 02:17:28 +0000
+Message-ID: <CY4PR04MB375135B0E421C421EBAD3C06E76F0@CY4PR04MB3751.namprd04.prod.outlook.com>
+References: <20200616102546.491961-1-niklas.cassel@wdc.com>
+ <20200616102546.491961-2-niklas.cassel@wdc.com>
+ <CY4PR04MB3751C2C03ACCA263541DA348E76F0@CY4PR04MB3751.namprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: wdc.com; dkim=none (message not signed)
+ header.d=none;wdc.com; dmarc=none action=none header.from=wdc.com;
+x-originating-ip: [199.255.47.5]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 32c6fa78-8a8c-4ecf-86eb-08d81c9bbccb
+x-ms-traffictypediagnostic: CY4PR04MB1032:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR04MB10328CB3778F25695BED2BBAE76F0@CY4PR04MB1032.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0450A714CB
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: //u+AGoqWn4r/0txNg2HiPZ9P+U6YV8tZUJdPMTO7sKGnReVO7gY9CVhYef70FmcxrhlBxbgGxNkApGmH1pRrZTG2c7IVuw3l2SYFKI4xVGsvCXM4VtZDi4RAa6aVbawdqN4+1IOqF/TnCAkN3r/ChGnjDC9WO0dmMxodCXaTmzjLR+71TG/N23e8CkTREvF2SLONEsZ0TMJ0mJh6+ctYg5ULHlG5aLsdi0Qlc/BJU65sAyYgjYTvfpwH+KhBzKBEc4lYnaj/iyiTnAOVVUBPGEHNsBYdS+wA3NCFZsZirgaOVLYn12OL3FOA9GY4fUJbHiUpJSvoDXPbELVoeoiCQ==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR04MB3751.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(396003)(376002)(346002)(366004)(4326008)(2906002)(8676002)(54906003)(71200400001)(110136005)(316002)(8936002)(5660300002)(478600001)(83380400001)(7416002)(186003)(6506007)(53546011)(33656002)(9686003)(52536014)(26005)(7696005)(76116006)(66446008)(64756008)(66556008)(66476007)(91956017)(55016002)(66946007)(86362001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: KQsI6L3FEarlL39CaJf2VCp0dvdyIU8LCg0a0IcPhOyePwGOQZMP0EuoxmKVjUGOiaziJ1mkh5D3XJx0u+hhsW4/+wkV9uw4A0d8QE3fbYbhvd0UBj82KWgYsfKPX2ygr5WNWeDQ2HYXDD1H9bZJNrh9fCBOrZIhwf3VESr6Jue3kjOJnmOK0IbuOXUOfp6pcAzKSbO20jVts81fJqpGbEw8eW39WI2U7DAogz4Ss5STDGwDkEEyESr93PtZDzSy90oBgw5g3jP4Dirz7N+tTtqpcdBbThqcOAjeO2opTLx3LYeTVh2SjxQZPZiorbxM2hSXoSG+fxPIPl+F3foJPhhhNFx64YpEGiC5TllOSh5YvTAsN+ewbmJEglyec25VouM2mc6T+hKET2lbJR0A5DbR6KJyB7Vbwi06rgSwD+hvCEursgcLFhnlUeU31CWyTDUSN8TQ15PL6VS/8qpIY6VVYK6kZPGn5yGqm8w+Tec=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200626055936.4441-1-mail@mariuszachmann.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CY4PR04MB3751.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 32c6fa78-8a8c-4ecf-86eb-08d81c9bbccb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2020 02:17:28.5468
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: suJGY+u8SS0pZ6HoW2lowzZ3nmlfdhhdavNt1p494bqnXcY8R+ZdG3inrmDeN88togLT4vJOkPUE6Pnx3xtbjw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR04MB1032
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 07:59:36AM +0200, Marius Zachmann wrote:
-> This is v7 of a driver for the Corsair Commander Pro.
-> It provides sysfs attributes for:
-> - Reading fan speed
-> - Reading temp sensors
-> - Reading voltage values
-> - Writing pwm and reading last written pwm
-> - Reading fan and temp connection status
-> 
-> It is an usb driver, so it needs to be ignored by usbhid.
-> The Corsair Commander Pro is a fan controller and provides
-> no means for user interaction.
-> The two device numbers are there, because there is a slightly
-> different version of the same device. (Only difference
-> seem to be in some presets.)
-> 
-> This is based on the staging/hwmon tree.
-> 
-> Signed-off-by: Marius Zachmann <mail@mariuszachmann.de>
-
-For my reference:
-
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-
-Waiting for Ack from HID maintainer.
-
-Guenter
-
-> ---
-> 
-> Changes from v6
-> - used break after connection checks in ccp_is_visible
-> 
-> Changes from v5
-> - added bitmaps for temp_cnct and fan_cnct
-> - ccp_visible returns 0 when there is no connection
->   and removed tests for connection in other functions
-> - removed temp labels
-> - add define for fan and temp sensor count
-> - removed unneccesary mutex from get_temp_cnct and get_fan_cnct
->   and moved these functions directly above ccp_probe
-> - no more setting return values in ccp_read, ccp_read_string, ccp_write
->   just return directly instead of break
-> - get_data returns values (always >= 0) directly
-> - inlined get_temp
-> - removed first two error messages in send_usb_cmd and
->   changed last one to dev_dbg
-> - comment alignments and clarifications
-> - renamed goto label to "out_unlock"
-> 
-> Changes from v4
-> - squashed 3 commits into one.
-> 
-> Changes from v3
-> - add device ids to hid_ignore_list in hid-quirks.h
-> - removed unused update_interval
-> - ccp_disconnect is static
-> ---
->  Documentation/hwmon/corsair-cpro.rst |  39 +++
->  Documentation/hwmon/index.rst        |   1 +
->  MAINTAINERS                          |   6 +
->  drivers/hid/hid-quirks.c             |   2 +
->  drivers/hwmon/Kconfig                |  10 +
->  drivers/hwmon/Makefile               |   1 +
->  drivers/hwmon/corsair-cpro.c         | 456 +++++++++++++++++++++++++++
->  7 files changed, 515 insertions(+)
->  create mode 100644 Documentation/hwmon/corsair-cpro.rst
->  create mode 100644 drivers/hwmon/corsair-cpro.c
-> 
-> --
-> 2.27.0
-> 
-> diff --git a/Documentation/hwmon/corsair-cpro.rst b/Documentation/hwmon/corsair-cpro.rst
-> new file mode 100644
-> index 000000000000..5913e23d764c
-> --- /dev/null
-> +++ b/Documentation/hwmon/corsair-cpro.rst
-> @@ -0,0 +1,39 @@
-> +.. SPDX-License-Identifier: GPL-2.0-or-later
-> +
-> +Kernel driver corsair-cpro
-> +==========================
-> +
-> +Supported devices:
-> +
-> +  * Corsair Commander Pro
-> +  * Corsair Commander Pro (1000D)
-> +
-> +Author: Marius Zachmann
-> +
-> +Description
-> +-----------
-> +
-> +This driver implements the sysfs interface for the Corsair Commander Pro.
-> +The Corsair Commander Pro is a USB device with 6 fan connectors,
-> +4 temperature sensor connectors and 2 Corsair LED connectors.
-> +It can read the voltage levels on the SATA power connector.
-> +
-> +Usage Notes
-> +-----------
-> +
-> +Since it is a USB device, hotswapping is possible. The device is autodetected.
-> +
-> +Sysfs entries
-> +-------------
-> +
-> +======================= =====================================================================
-> +in0_input		Voltage on SATA 12v
-> +in1_input		Voltage on SATA 5v
-> +in2_input		Voltage on SATA 3.3v
-> +temp[1-4]_input		Temperature on connected temperature sensors
-> +fan[1-6]_input		Connected fan rpm.
-> +fan[1-6]_label		Shows fan type as detected by the device.
-> +pwm[1-6]		Sets the fan speed. Values from 0-255.
-> +			When reading, it reports the last value if it was set by the driver.
-> +			Otherwise returns 0.
-> +======================= =====================================================================
-> diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
-> index 55ff4b7c5349..750d3a975d82 100644
-> --- a/Documentation/hwmon/index.rst
-> +++ b/Documentation/hwmon/index.rst
-> @@ -47,6 +47,7 @@ Hardware Monitoring Kernel Drivers
->     bel-pfe
->     bt1-pvt
->     coretemp
-> +   corsair-cpro
->     da9052
->     da9055
->     dell-smm-hwmon
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 68f21d46614c..47b0361718f4 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -4400,6 +4400,12 @@ S:	Maintained
->  F:	Documentation/hwmon/coretemp.rst
->  F:	drivers/hwmon/coretemp.c
-> 
-> +CORSAIR-CPRO HARDWARE MONITOR DRIVER
-> +M:	Marius  <mail@mariuszachmann.de>
-> +L:	linux-hwmon@vger.kernel.org
-> +S:	Maintained
-> +F:	drivers/hwmon/corsair-cpro.c
-> +
->  COSA/SRP SYNC SERIAL DRIVER
->  M:	Jan "Yenya" Kasprzak <kas@fi.muni.cz>
->  S:	Maintained
-> diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-> index ca8b5c261c7c..7b7bc7737c53 100644
-> --- a/drivers/hid/hid-quirks.c
-> +++ b/drivers/hid/hid-quirks.c
-> @@ -699,6 +699,8 @@ static const struct hid_device_id hid_ignore_list[] = {
->  	{ HID_USB_DEVICE(USB_VENDOR_ID_AXENTIA, USB_DEVICE_ID_AXENTIA_FM_RADIO) },
->  	{ HID_USB_DEVICE(USB_VENDOR_ID_BERKSHIRE, USB_DEVICE_ID_BERKSHIRE_PCWD) },
->  	{ HID_USB_DEVICE(USB_VENDOR_ID_CIDC, 0x0103) },
-> +	{ HID_USB_DEVICE(USB_VENDOR_ID_CORSAIR, 0x0c10) },
-> +	{ HID_USB_DEVICE(USB_VENDOR_ID_CORSAIR, 0x1d00) },
->  	{ HID_USB_DEVICE(USB_VENDOR_ID_CYGNAL, USB_DEVICE_ID_CYGNAL_RADIO_SI470X) },
->  	{ HID_USB_DEVICE(USB_VENDOR_ID_CYGNAL, USB_DEVICE_ID_CYGNAL_RADIO_SI4713) },
->  	{ HID_USB_DEVICE(USB_VENDOR_ID_CMEDIA, USB_DEVICE_ID_CM109) },
-> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> index 288ae9f63588..8b046a5dfa40 100644
-> --- a/drivers/hwmon/Kconfig
-> +++ b/drivers/hwmon/Kconfig
-> @@ -439,6 +439,16 @@ config SENSORS_BT1_PVT_ALARMS
->  	  the data conversion will be periodically performed and the data will be
->  	  saved in the internal driver cache.
-> 
-> +config SENSORS_CORSAIR_CPRO
-> +	tristate "Corsair Commander Pro controller"
-> +	depends on USB
-> +	help
-> +	  If you say yes here you get support for the Corsair Commander Pro
-> +	  controller.
-> +
-> +	  This driver can also be built as a module. If so, the module
-> +	  will be called corsair-cpro.
-> +
->  config SENSORS_DRIVETEMP
->  	tristate "Hard disk drives with temperature sensors"
->  	depends on SCSI && ATA
-> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-> index 3e32c21f5efe..18e1ef74ade7 100644
-> --- a/drivers/hwmon/Makefile
-> +++ b/drivers/hwmon/Makefile
-> @@ -56,6 +56,7 @@ obj-$(CONFIG_SENSORS_ATXP1)	+= atxp1.o
->  obj-$(CONFIG_SENSORS_AXI_FAN_CONTROL) += axi-fan-control.o
->  obj-$(CONFIG_SENSORS_BT1_PVT)	+= bt1-pvt.o
->  obj-$(CONFIG_SENSORS_CORETEMP)	+= coretemp.o
-> +obj-$(CONFIG_SENSORS_CORSAIR_CPRO) += corsair-cpro.o
->  obj-$(CONFIG_SENSORS_DA9052_ADC)+= da9052-hwmon.o
->  obj-$(CONFIG_SENSORS_DA9055)+= da9055-hwmon.o
->  obj-$(CONFIG_SENSORS_DELL_SMM)	+= dell-smm-hwmon.o
-> diff --git a/drivers/hwmon/corsair-cpro.c b/drivers/hwmon/corsair-cpro.c
-> new file mode 100644
-> index 000000000000..a22583acc229
-> --- /dev/null
-> +++ b/drivers/hwmon/corsair-cpro.c
-> @@ -0,0 +1,456 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * corsair-cpro.c - Linux driver for Corsair Commander Pro
-> + * Copyright (C) 2020 Marius Zachmann <mail@mariuszachmann.de>
-> + */
-> +
-> +#include <linux/bitops.h>
-> +#include <linux/kernel.h>
-> +#include <linux/hwmon.h>
-> +#include <linux/module.h>
-> +#include <linux/mutex.h>
-> +#include <linux/slab.h>
-> +#include <linux/types.h>
-> +#include <linux/usb.h>
-> +
-> +#define USB_VENDOR_ID_CORSAIR			0x1b1c
-> +#define USB_PRODUCT_ID_CORSAIR_COMMANDERPRO	0x0c10
-> +#define USB_PRODUCT_ID_CORSAIR_1000D		0x1d00
-> +
-> +#define OUT_BUFFER_SIZE		63
-> +#define IN_BUFFER_SIZE		16
-> +#define LABEL_LENGTH		11
-> +
-> +#define CTL_GET_TMP_CNCT	0x10	/*
-> +					 * returns in bytes 1-4 for each temp sensor:
-> +					 * 0 not connected
-> +					 * 1 connected
-> +					 */
-> +#define CTL_GET_TMP		0x11	/*
-> +					 * send: byte 1 is channel, rest zero
-> +					 * rcv:  returns temp for channel in centi-degree celsius
-> +					 * in bytes 1 and 2
-> +					 * returns 17 in byte 0 if no sensor is connected
-> +					 */
-> +#define CTL_GET_VOLT		0x12	/*
-> +					 * send: byte 1 is rail number: 0 = 12v, 1 = 5v, 2 = 3.3v
-> +					 * rcv:  returns millivolt in bytes 1,2
-> +					 */
-> +#define CTL_GET_FAN_CNCT	0x20	/*
-> +					 * returns in bytes 1-6 for each fan:
-> +					 * 0 not connected
-> +					 * 1 3pin
-> +					 * 2 4pin
-> +					 */
-> +#define CTL_GET_FAN_RPM		0x21	/*
-> +					 * send: byte 1 is channel, rest zero
-> +					 * rcv:  returns rpm in bytes 1,2
-> +					 */
-> +#define CTL_SET_FAN_FPWM	0x23	/*
-> +					 * set fixed pwm
-> +					 * send: byte 1 is fan number
-> +					 * send: byte 2 is percentage from 0 - 100
-> +					 */
-> +
-> +#define NUM_FANS		6
-> +#define NUM_TEMP_SENSORS	4
-> +
-> +struct ccp_device {
-> +	struct usb_device *udev;
-> +	struct mutex mutex; /* whenever buffer is used, lock before send_usb_cmd */
-> +	u8 *buffer;
-> +	int pwm[6];
-> +	DECLARE_BITMAP(temp_cnct, NUM_TEMP_SENSORS);
-> +	DECLARE_BITMAP(fan_cnct, NUM_FANS);
-> +	char fan_label[6][LABEL_LENGTH];
-> +};
-> +
-> +/* send command, check for error in response, response in ccp->buffer */
-> +static int send_usb_cmd(struct ccp_device *ccp, u8 command, u8 byte1, u8 byte2)
-> +{
-> +	int actual_length;
-> +	int ret;
-> +
-> +	memset(ccp->buffer, 0x00, OUT_BUFFER_SIZE);
-> +	ccp->buffer[0] = command;
-> +	ccp->buffer[1] = byte1;
-> +	ccp->buffer[2] = byte2;
-> +
-> +	ret = usb_bulk_msg(ccp->udev, usb_sndintpipe(ccp->udev, 2), ccp->buffer, OUT_BUFFER_SIZE,
-> +			   &actual_length, 1000);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* response needs to be received every time */
-> +	ret = usb_bulk_msg(ccp->udev, usb_rcvintpipe(ccp->udev, 1), ccp->buffer, IN_BUFFER_SIZE,
-> +			   &actual_length, 1000);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/* first byte of response is error code */
-> +	if (ccp->buffer[0] != 0x00) {
-> +		dev_dbg(&ccp->udev->dev, "device response error: %d", ccp->buffer[0]);
-> +		return -EIO;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/* requests and returns single data values depending on channel */
-> +static int get_data(struct ccp_device *ccp, int command, int channel)
-> +{
-> +	int ret;
-> +
-> +	mutex_lock(&ccp->mutex);
-> +
-> +	ret = send_usb_cmd(ccp, command, channel, 0);
-> +	if (ret)
-> +		goto out_unlock;
-> +
-> +	ret = (ccp->buffer[1] << 8) + ccp->buffer[2];
-> +
-> +out_unlock:
-> +	mutex_unlock(&ccp->mutex);
-> +	return ret;
-> +}
-> +
-> +static int set_pwm(struct ccp_device *ccp, int channel, long val)
-> +{
-> +	int ret;
-> +
-> +	if (val < 0 || val > 255)
-> +		return -EINVAL;
-> +
-> +	ccp->pwm[channel] = val;
-> +
-> +	/* The Corsair Commander Pro uses values from 0-100 */
-> +	val = DIV_ROUND_CLOSEST(val * 100, 255);
-> +
-> +	mutex_lock(&ccp->mutex);
-> +
-> +	ret = send_usb_cmd(ccp, CTL_SET_FAN_FPWM, channel, val);
-> +
-> +	mutex_unlock(&ccp->mutex);
-> +	return ret;
-> +}
-> +
-> +static int ccp_read_string(struct device *dev, enum hwmon_sensor_types type,
-> +			   u32 attr, int channel, const char **str)
-> +{
-> +	struct ccp_device *ccp = dev_get_drvdata(dev);
-> +
-> +	switch (type) {
-> +	case hwmon_fan:
-> +		switch (attr) {
-> +		case hwmon_fan_label:
-> +			*str = ccp->fan_label[channel];
-> +			return 0;
-> +		default:
-> +			break;
-> +		}
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +static int ccp_read(struct device *dev, enum hwmon_sensor_types type,
-> +		    u32 attr, int channel, long *val)
-> +{
-> +	struct ccp_device *ccp = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	switch (type) {
-> +	case hwmon_temp:
-> +		switch (attr) {
-> +		case hwmon_temp_input:
-> +			ret = get_data(ccp, CTL_GET_TMP, channel);
-> +			if (ret < 0)
-> +				return ret;
-> +			*val = ret * 10;
-> +			return 0;
-> +		default:
-> +			break;
-> +		}
-> +		break;
-> +	case hwmon_fan:
-> +		switch (attr) {
-> +		case hwmon_fan_input:
-> +			ret = get_data(ccp, CTL_GET_FAN_RPM, channel);
-> +			if (ret < 0)
-> +				return ret;
-> +			*val = ret;
-> +			return 0;
-> +		default:
-> +			break;
-> +		}
-> +		break;
-> +	case hwmon_pwm:
-> +		switch (attr) {
-> +		case hwmon_pwm_input:
-> +			/* how to read pwm values from the device is currently unknown */
-> +			/* driver returns last set value or 0		               */
-> +			*val = ccp->pwm[channel];
-> +			return 0;
-> +		default:
-> +			break;
-> +		}
-> +		break;
-> +	case hwmon_in:
-> +		switch (attr) {
-> +		case hwmon_in_input:
-> +			ret = get_data(ccp, CTL_GET_VOLT, channel);
-> +			if (ret < 0)
-> +				return ret;
-> +			*val = ret;
-> +			return 0;
-> +		default:
-> +			break;
-> +		}
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	return -EOPNOTSUPP;
-> +};
-> +
-> +static int ccp_write(struct device *dev, enum hwmon_sensor_types type,
-> +		     u32 attr, int channel, long val)
-> +{
-> +	struct ccp_device *ccp = dev_get_drvdata(dev);
-> +
-> +	switch (type) {
-> +	case hwmon_pwm:
-> +		switch (attr) {
-> +		case hwmon_pwm_input:
-> +			return set_pwm(ccp, channel, val);
-> +		default:
-> +			break;
-> +		}
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	return -EOPNOTSUPP;
-> +};
-> +
-> +static umode_t ccp_is_visible(const void *data, enum hwmon_sensor_types type,
-> +			      u32 attr, int channel)
-> +{
-> +	const struct ccp_device *ccp = data;
-> +
-> +	switch (type) {
-> +	case hwmon_temp:
-> +		if (!test_bit(channel, ccp->temp_cnct))
-> +			break;
-> +
-> +		switch (attr) {
-> +		case hwmon_temp_input:
-> +			return 0444;
-> +		case hwmon_temp_label:
-> +			return 0444;
-> +		default:
-> +			break;
-> +		}
-> +		break;
-> +	case hwmon_fan:
-> +		if (!test_bit(channel, ccp->fan_cnct))
-> +			break;
-> +
-> +		switch (attr) {
-> +		case hwmon_fan_input:
-> +			return 0444;
-> +		case hwmon_fan_label:
-> +			return 0444;
-> +		default:
-> +			break;
-> +		}
-> +		break;
-> +	case hwmon_pwm:
-> +		if (!test_bit(channel, ccp->fan_cnct))
-> +			break;
-> +
-> +		switch (attr) {
-> +		case hwmon_pwm_input:
-> +			return 0644;
-> +		default:
-> +			break;
-> +		}
-> +		break;
-> +	case hwmon_in:
-> +		switch (attr) {
-> +		case hwmon_in_input:
-> +			return 0444;
-> +		default:
-> +			break;
-> +		}
-> +		break;
-> +	default:
-> +		break;
-> +	}
-> +
-> +	return 0;
-> +};
-> +
-> +static const struct hwmon_ops ccp_hwmon_ops = {
-> +	.is_visible = ccp_is_visible,
-> +	.read = ccp_read,
-> +	.read_string = ccp_read_string,
-> +	.write = ccp_write,
-> +};
-> +
-> +static const struct hwmon_channel_info *ccp_info[] = {
-> +	HWMON_CHANNEL_INFO(chip,
-> +			   HWMON_C_REGISTER_TZ),
-> +	HWMON_CHANNEL_INFO(temp,
-> +			   HWMON_T_INPUT,
-> +			   HWMON_T_INPUT,
-> +			   HWMON_T_INPUT,
-> +			   HWMON_T_INPUT
-> +			   ),
-> +	HWMON_CHANNEL_INFO(fan,
-> +			   HWMON_F_INPUT | HWMON_F_LABEL,
-> +			   HWMON_F_INPUT | HWMON_F_LABEL,
-> +			   HWMON_F_INPUT | HWMON_F_LABEL,
-> +			   HWMON_F_INPUT | HWMON_F_LABEL,
-> +			   HWMON_F_INPUT | HWMON_F_LABEL,
-> +			   HWMON_F_INPUT | HWMON_F_LABEL
-> +			   ),
-> +	HWMON_CHANNEL_INFO(pwm,
-> +			   HWMON_PWM_INPUT,
-> +			   HWMON_PWM_INPUT,
-> +			   HWMON_PWM_INPUT,
-> +			   HWMON_PWM_INPUT,
-> +			   HWMON_PWM_INPUT,
-> +			   HWMON_PWM_INPUT
-> +			   ),
-> +	HWMON_CHANNEL_INFO(in,
-> +			   HWMON_I_INPUT,
-> +			   HWMON_I_INPUT,
-> +			   HWMON_I_INPUT
-> +			   ),
-> +	NULL
-> +};
-> +
-> +static const struct hwmon_chip_info ccp_chip_info = {
-> +	.ops = &ccp_hwmon_ops,
-> +	.info = ccp_info,
-> +};
-> +
-> +/* read fan connection status and set labels */
-> +static int get_fan_cnct(struct ccp_device *ccp)
-> +{
-> +	int channel;
-> +	int mode;
-> +	int ret;
-> +
-> +	ret = send_usb_cmd(ccp, CTL_GET_FAN_CNCT, 0, 0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	for (channel = 0; channel < NUM_FANS; channel++) {
-> +		mode = ccp->buffer[channel + 1];
-> +		if (mode == 0)
-> +			continue;
-> +
-> +		set_bit(channel, ccp->fan_cnct);
-> +
-> +		switch (mode) {
-> +		case 1:
-> +			scnprintf(ccp->fan_label[channel], LABEL_LENGTH,
-> +				  "fan%d 3pin", channel + 1);
-> +			break;
-> +		case 2:
-> +			scnprintf(ccp->fan_label[channel], LABEL_LENGTH,
-> +				  "fan%d 4pin", channel + 1);
-> +			break;
-> +		default:
-> +			scnprintf(ccp->fan_label[channel], LABEL_LENGTH,
-> +				  "fan%d other", channel + 1);
-> +			break;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/* read temp sensor connection status */
-> +static int get_temp_cnct(struct ccp_device *ccp)
-> +{
-> +	int channel;
-> +	int mode;
-> +	int ret;
-> +
-> +	ret = send_usb_cmd(ccp, CTL_GET_TMP_CNCT, 0, 0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	for (channel = 0; channel < NUM_TEMP_SENSORS; channel++) {
-> +		mode = ccp->buffer[channel + 1];
-> +		if (mode == 0)
-> +			continue;
-> +
-> +		set_bit(channel, ccp->temp_cnct);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int ccp_probe(struct usb_interface *intf, const struct usb_device_id *id)
-> +{
-> +	struct device *hwmon_dev;
-> +	struct ccp_device *ccp;
-> +	int ret;
-> +
-> +	ccp = devm_kzalloc(&intf->dev, sizeof(*ccp), GFP_KERNEL);
-> +	if (!ccp)
-> +		return -ENOMEM;
-> +
-> +	ccp->buffer = devm_kmalloc(&intf->dev, OUT_BUFFER_SIZE, GFP_KERNEL);
-> +	if (!ccp->buffer)
-> +		return -ENOMEM;
-> +
-> +	mutex_init(&ccp->mutex);
-> +
-> +	ccp->udev = interface_to_usbdev(intf);
-> +
-> +	/* temp and fan connection status only updates when device is powered on */
-> +	ret = get_temp_cnct(ccp);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = get_fan_cnct(ccp);
-> +	if (ret)
-> +		return ret;
-> +
-> +	hwmon_dev = devm_hwmon_device_register_with_info(&intf->dev, "corsaircpro", ccp,
-> +							 &ccp_chip_info, 0);
-> +
-> +	return PTR_ERR_OR_ZERO(hwmon_dev);
-> +}
-> +
-> +static void ccp_disconnect(struct usb_interface *intf)
-> +{
-> +}
-> +
-> +static const struct usb_device_id ccp_devices[] = {
-> +	{ USB_DEVICE(USB_VENDOR_ID_CORSAIR, USB_PRODUCT_ID_CORSAIR_COMMANDERPRO) },
-> +	{ USB_DEVICE(USB_VENDOR_ID_CORSAIR, USB_PRODUCT_ID_CORSAIR_1000D) },
-> +	{ }
-> +};
-> +
-> +static struct usb_driver ccp_driver = {
-> +	.name = "corsair-cpro",
-> +	.probe = ccp_probe,
-> +	.disconnect = ccp_disconnect,
-> +	.id_table = ccp_devices
-> +};
-> +
-> +MODULE_DEVICE_TABLE(usb, ccp_devices);
-> +MODULE_LICENSE("GPL");
-> +
-> +module_usb_driver(ccp_driver);
+On 2020/06/30 10:49, Damien Le Moal wrote:=0A=
+> On 2020/06/16 19:28, Niklas Cassel wrote:=0A=
+>> Add a new max_open_zones definition in the sysfs documentation.=0A=
+>> This definition will be common for all devices utilizing the zoned block=
+=0A=
+>> device support in the kernel.=0A=
+>>=0A=
+>> Export max open zones according to this new definition for NVMe Zoned=0A=
+>> Namespace devices, ZAC ATA devices (which are treated as SCSI devices by=
+=0A=
+>> the kernel), and ZBC SCSI devices.=0A=
+>>=0A=
+>> Add the new max_open_zones struct member to the request_queue, rather=0A=
+> =0A=
+> Add the new max_open_zones member to struct request_queue...=0A=
+> =0A=
+>> than as a queue limit, since this property cannot be split across stacki=
+ng=0A=
+>> drivers.=0A=
+> =0A=
+> But device-mapper target device have a request queue too and it looks lik=
+e your=0A=
+> patch is not setting any value, using the default 0 for dm-linear and dm-=
+flakey.=0A=
+> Attaching the new attribute directly to the request queue rather than add=
+ing it=0A=
+> as part of the queue limits seems odd. Even if DM case is left unsupporte=
+d=0A=
+> (using the default 0 =3D no limit), it may be cleaner to add the field as=
+ part of=0A=
+> the limit struct.=0A=
+> =0A=
+> Adding the field as a device attribute rather than a queue limit, similar=
+ly to=0A=
+> the device maximum queue depth would be another option. In such case, inc=
+luding=0A=
+> the field directly as part of the request queue makes more sense.=0A=
+=0A=
+Thinking more about this one, struct request_queue has nr_zones field, whic=
+h is=0A=
+not a queue limit but still exported as a queue attribute. Device mapper=0A=
+exposing a zoned drive target do set this field manually. So I guess the sa=
+me=0A=
+approach is valid for max_open_zones (and max_active_zones). So OK, disrega=
+rd=0A=
+this comment.=0A=
+=0A=
+The other comments I sent below remain though.=0A=
+=0A=
+> =0A=
+>>=0A=
+>> Signed-off-by: Niklas Cassel <niklas.cassel@wdc.com>=0A=
+>> ---=0A=
+>>  Documentation/block/queue-sysfs.rst |  7 +++++++=0A=
+>>  block/blk-sysfs.c                   | 15 +++++++++++++++=0A=
+>>  drivers/nvme/host/zns.c             |  1 +=0A=
+>>  drivers/scsi/sd_zbc.c               |  4 ++++=0A=
+>>  include/linux/blkdev.h              | 20 ++++++++++++++++++++=0A=
+>>  5 files changed, 47 insertions(+)=0A=
+>>=0A=
+>> diff --git a/Documentation/block/queue-sysfs.rst b/Documentation/block/q=
+ueue-sysfs.rst=0A=
+>> index 6a8513af9201..f01cf8530ae4 100644=0A=
+>> --- a/Documentation/block/queue-sysfs.rst=0A=
+>> +++ b/Documentation/block/queue-sysfs.rst=0A=
+>> @@ -117,6 +117,13 @@ Maximum number of elements in a DMA scatter/gather =
+list with integrity=0A=
+>>  data that will be submitted by the block layer core to the associated=
+=0A=
+>>  block driver.=0A=
+>>  =0A=
+>> +max_open_zones (RO)=0A=
+>> +-------------------=0A=
+>> +For zoned block devices (zoned attribute indicating "host-managed" or=
+=0A=
+>> +"host-aware"), the sum of zones belonging to any of the zone states:=0A=
+>> +EXPLICIT OPEN or IMPLICIT OPEN, is limited by this value.=0A=
+>> +If this value is 0, there is no limit.=0A=
+>> +=0A=
+>>  max_sectors_kb (RW)=0A=
+>>  -------------------=0A=
+>>  This is the maximum number of kilobytes that the block layer will allow=
+=0A=
+>> diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c=0A=
+>> index 02643e149d5e..fa42961e9678 100644=0A=
+>> --- a/block/blk-sysfs.c=0A=
+>> +++ b/block/blk-sysfs.c=0A=
+>> @@ -305,6 +305,11 @@ static ssize_t queue_nr_zones_show(struct request_q=
+ueue *q, char *page)=0A=
+>>  	return queue_var_show(blk_queue_nr_zones(q), page);=0A=
+>>  }=0A=
+>>  =0A=
+>> +static ssize_t queue_max_open_zones_show(struct request_queue *q, char =
+*page)=0A=
+>> +{=0A=
+>> +	return queue_var_show(queue_max_open_zones(q), page);=0A=
+>> +}=0A=
+>> +=0A=
+>>  static ssize_t queue_nomerges_show(struct request_queue *q, char *page)=
+=0A=
+>>  {=0A=
+>>  	return queue_var_show((blk_queue_nomerges(q) << 1) |=0A=
+>> @@ -667,6 +672,11 @@ static struct queue_sysfs_entry queue_nr_zones_entr=
+y =3D {=0A=
+>>  	.show =3D queue_nr_zones_show,=0A=
+>>  };=0A=
+>>  =0A=
+>> +static struct queue_sysfs_entry queue_max_open_zones_entry =3D {=0A=
+>> +	.attr =3D {.name =3D "max_open_zones", .mode =3D 0444 },=0A=
+>> +	.show =3D queue_max_open_zones_show,=0A=
+>> +};=0A=
+>> +=0A=
+>>  static struct queue_sysfs_entry queue_nomerges_entry =3D {=0A=
+>>  	.attr =3D {.name =3D "nomerges", .mode =3D 0644 },=0A=
+>>  	.show =3D queue_nomerges_show,=0A=
+>> @@ -765,6 +775,7 @@ static struct attribute *queue_attrs[] =3D {=0A=
+>>  	&queue_nonrot_entry.attr,=0A=
+>>  	&queue_zoned_entry.attr,=0A=
+>>  	&queue_nr_zones_entry.attr,=0A=
+>> +	&queue_max_open_zones_entry.attr,=0A=
+>>  	&queue_nomerges_entry.attr,=0A=
+>>  	&queue_rq_affinity_entry.attr,=0A=
+>>  	&queue_iostats_entry.attr,=0A=
+>> @@ -792,6 +803,10 @@ static umode_t queue_attr_visible(struct kobject *k=
+obj, struct attribute *attr,=0A=
+>>  		(!q->mq_ops || !q->mq_ops->timeout))=0A=
+>>  			return 0;=0A=
+>>  =0A=
+>> +	if (attr =3D=3D &queue_max_open_zones_entry.attr &&=0A=
+>> +	    !blk_queue_is_zoned(q))=0A=
+>> +		return 0;=0A=
+>> +=0A=
+>>  	return attr->mode;=0A=
+>>  }=0A=
+>>  =0A=
+>> diff --git a/drivers/nvme/host/zns.c b/drivers/nvme/host/zns.c=0A=
+>> index c08f6281b614..af156529f3b6 100644=0A=
+>> --- a/drivers/nvme/host/zns.c=0A=
+>> +++ b/drivers/nvme/host/zns.c=0A=
+>> @@ -82,6 +82,7 @@ int nvme_update_zone_info(struct gendisk *disk, struct=
+ nvme_ns *ns,=0A=
+>>  =0A=
+>>  	q->limits.zoned =3D BLK_ZONED_HM;=0A=
+>>  	blk_queue_flag_set(QUEUE_FLAG_ZONE_RESETALL, q);=0A=
+>> +	blk_queue_max_open_zones(q, le32_to_cpu(id->mor) + 1);=0A=
+>>  free_data:=0A=
+>>  	kfree(id);=0A=
+>>  	return status;=0A=
+>> diff --git a/drivers/scsi/sd_zbc.c b/drivers/scsi/sd_zbc.c=0A=
+>> index 183a20720da9..aa3564139b40 100644=0A=
+>> --- a/drivers/scsi/sd_zbc.c=0A=
+>> +++ b/drivers/scsi/sd_zbc.c=0A=
+>> @@ -717,6 +717,10 @@ int sd_zbc_read_zones(struct scsi_disk *sdkp, unsig=
+ned char *buf)=0A=
+>>  	/* The drive satisfies the kernel restrictions: set it up */=0A=
+>>  	blk_queue_flag_set(QUEUE_FLAG_ZONE_RESETALL, q);=0A=
+>>  	blk_queue_required_elevator_features(q, ELEVATOR_F_ZBD_SEQ_WRITE);=0A=
+>> +	if (sdkp->zones_max_open =3D=3D U32_MAX)=0A=
+>> +		blk_queue_max_open_zones(q, 0);=0A=
+>> +	else=0A=
+>> +		blk_queue_max_open_zones(q, sdkp->zones_max_open);=0A=
+> =0A=
+> This is correct only for host-managed drives. Host-aware models define th=
+e=0A=
+> "OPTIMAL NUMBER OF OPEN SEQUENTIAL WRITE PREFERRED ZONES" instead of a ma=
+ximum=0A=
+> number of open sequential write required zones.=0A=
+> =0A=
+> Since the standard does not actually explicitly define what the value of =
+the=0A=
+> maximum number of open sequential write required zones should be for a=0A=
+> host-aware drive, I would suggest to always have the max_open_zones value=
+ set to=0A=
+> 0 for host-aware disks.=0A=
+> =0A=
+>>  	nr_zones =3D round_up(sdkp->capacity, zone_blocks) >> ilog2(zone_block=
+s);=0A=
+>>  =0A=
+>>  	/* READ16/WRITE16 is mandatory for ZBC disks */=0A=
+>> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h=0A=
+>> index 8fd900998b4e..2f332f00501d 100644=0A=
+>> --- a/include/linux/blkdev.h=0A=
+>> +++ b/include/linux/blkdev.h=0A=
+>> @@ -520,6 +520,7 @@ struct request_queue {=0A=
+>>  	unsigned int		nr_zones;=0A=
+>>  	unsigned long		*conv_zones_bitmap;=0A=
+>>  	unsigned long		*seq_zones_wlock;=0A=
+>> +	unsigned int		max_open_zones;=0A=
+>>  #endif /* CONFIG_BLK_DEV_ZONED */=0A=
+>>  =0A=
+>>  	/*=0A=
+>> @@ -729,6 +730,17 @@ static inline bool blk_queue_zone_is_seq(struct req=
+uest_queue *q,=0A=
+>>  		return true;=0A=
+>>  	return !test_bit(blk_queue_zone_no(q, sector), q->conv_zones_bitmap);=
+=0A=
+>>  }=0A=
+>> +=0A=
+>> +static inline void blk_queue_max_open_zones(struct request_queue *q,=0A=
+>> +		unsigned int max_open_zones)=0A=
+>> +{=0A=
+>> +	q->max_open_zones =3D max_open_zones;=0A=
+>> +}=0A=
+>> +=0A=
+>> +static inline unsigned int queue_max_open_zones(const struct request_qu=
+eue *q)=0A=
+>> +{=0A=
+>> +	return q->max_open_zones;=0A=
+>> +}=0A=
+>>  #else /* CONFIG_BLK_DEV_ZONED */=0A=
+>>  static inline unsigned int blk_queue_nr_zones(struct request_queue *q)=
+=0A=
+>>  {=0A=
+>> @@ -744,6 +756,14 @@ static inline unsigned int blk_queue_zone_no(struct=
+ request_queue *q,=0A=
+>>  {=0A=
+>>  	return 0;=0A=
+>>  }=0A=
+>> +static inline void blk_queue_max_open_zones(struct request_queue *q,=0A=
+>> +		unsigned int max_open_zones)=0A=
+>> +{=0A=
+>> +}=0A=
+> =0A=
+> Why is this one necessary ? For the !CONFIG_BLK_DEV_ZONED case, no driver=
+ should=0A=
+> ever call this function.=0A=
+> =0A=
+>> +static inline unsigned int queue_max_open_zones(const struct request_qu=
+eue *q)=0A=
+>> +{=0A=
+>> +	return 0;=0A=
+>> +}=0A=
+>>  #endif /* CONFIG_BLK_DEV_ZONED */=0A=
+>>  =0A=
+>>  static inline bool rq_is_sync(struct request *rq)=0A=
+>>=0A=
+> =0A=
+> =0A=
+=0A=
+=0A=
+-- =0A=
+Damien Le Moal=0A=
+Western Digital Research=0A=
