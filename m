@@ -2,93 +2,104 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B06D2C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50588C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89B50206CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:40:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 310D1206CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:44:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="JFx5kCLq"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="i7fj2XBv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbgF3Skd (ORCPT
+        id S1726170AbgF3So0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 14:40:33 -0400
-Received: from cmta20.telus.net ([209.171.16.93]:38406 "EHLO cmta20.telus.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726127AbgF3Skc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 14:40:32 -0400
-Received: from dougxps ([173.180.45.4])
-        by cmsmtp with SMTP
-        id qLBAjf7NpmPBRqLBBjqXbR; Tue, 30 Jun 2020 12:40:30 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
-        t=1593542430; bh=5lsW47LwcbLEtRnjtW+QOJmsT1zddKUIUZH9u4fGksw=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date;
-        b=JFx5kCLqN4LamJppGxGwSOJsn9jznwF87fwxh6722QXMSiD2/1+2vTC85iCounDJb
-         A/Z1VDokZ03f16c18KzTQxFYcSgkuv074Ma8DrxSwwVwoLzIXPhWjGBUDcMmV1TusO
-         2g1lQsIoGpa5OvVx2cr9IHRSxC+2H2o6w3faGo1GXOX9WlX/hmePbyAqkLNJj5p8iu
-         ubPQyGnTpuSlA/ybpuVdEyQ77F0Edsjh5ah37tDwyM3akuBuFXdg7FxVO7hdLiga4W
-         BjeKpRvtnUhPJH6ntLUqUHz/BEylmPF7ncqJqtw4/iLK9fCTpG9Dz07tF/UhhLcwUn
-         OkLGi/j2H5uCg==
-X-Telus-Authed: none
-X-Authority-Analysis: v=2.3 cv=ZvmT1OzG c=1 sm=1 tr=0
- a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
- a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=kj9zAlcOel0A:10 a=OM2GBPE6UocqHCZ_6TsA:9
- a=CjuIK1q_8ugA:10
-From:   "Doug Smythies" <dsmythies@telus.net>
-To:     "'Srinivas Pandruvada'" <srinivas.pandruvada@linux.intel.com>
-Cc:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <x86@kernel.org>, <rjw@rjwysocki.net>, <viresh.kumar@linaro.org>,
-        <lenb@kernel.org>, <bp@alien8.de>, <tglx@linutronix.de>,
-        <mingo@redhat.com>, <hpa@zytor.com>, <peterz@infradead.org>
-References: <20200626183401.1495090-1-srinivas.pandruvada@linux.intel.com> <20200626183401.1495090-3-srinivas.pandruvada@linux.intel.com>
-In-Reply-To: <20200626183401.1495090-3-srinivas.pandruvada@linux.intel.com>
-Subject: RE: [PATCH v4 2/2] cpufreq: intel_pstate: Allow raw energy performance preference value
-Date:   Tue, 30 Jun 2020 11:40:24 -0700
-Message-ID: <002301d64f0d$ee4bea10$cae3be30$@net>
+        Tue, 30 Jun 2020 14:44:26 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:42555 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726094AbgF3SoY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 14:44:24 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593542662;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=PedFDc2DtQMOIGWMojnCcvUFPVJqYYNEpNxS2Hp4sso=;
+        b=i7fj2XBv3if4K7+j7KNAQtaSAoTUBGb7H2DlLBcgqbCN6wYRBXx0Nf8ZpZIJyhN8ASuGHe
+        /WfS0RGr62yiyTpGbPqU6GWu0w7m7jdDq5ydDEsQ0CbSlbJYpm7648vZNvMZDlpDrE/YIx
+        XcXxLo8gf+1H5hMCRIiBme8keSGI62U=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-15-Sc-geY15PtKpUIgIcEiQ5w-1; Tue, 30 Jun 2020 14:44:20 -0400
+X-MC-Unique: Sc-geY15PtKpUIgIcEiQ5w-1
+Received: by mail-qt1-f197.google.com with SMTP id e6so14117483qtb.19
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 11:44:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=PedFDc2DtQMOIGWMojnCcvUFPVJqYYNEpNxS2Hp4sso=;
+        b=SVZpXFfKnKIoCIshLZZx2jfpCarn9Z5wGCL5adXc4kviFdglJB1s9YRY9Ez8ePs2Rb
+         vGV4axkvbuPdN3bGzDOS3g1t+Y30ARi4UknbbtIIAR6skPAxN6Jp77prnlsf01Sd9Law
+         +46fbpobgw/ChieGnq3ugpbwdcPp6RIkY4MzRR8mmiapD3SS//hwoWlFun4qUhcddkP3
+         Hg2gHNzCpJHnB1TRkZMVIDB6uprovRZQDafPiZ8jieZNZ+7rFN1xUe5Rnb7GTPe0XdH/
+         Qpm0Yr4gskiC+k2Q4QpVZ3rBS6Aqoyc9dSMyQVwmal+It41TCSwDrydLnD07FkfiSJud
+         DXwQ==
+X-Gm-Message-State: AOAM531KpoA08q+Og1k4AFsiYjRlXkVQvf46kajOcPjSDRII8fg1gI+c
+        LSs2JB9kw4GgjQ3eAuM9cVz4gmBn8/XNcisEZqoaM+rZl8lhw4WykAMyJoY/aBWSBPy54nPu2CS
+        fIkknvQc63UrOlYciqw+6AGVH
+X-Received: by 2002:a37:a14c:: with SMTP id k73mr21323494qke.145.1593542659924;
+        Tue, 30 Jun 2020 11:44:19 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJzwBx2LZuulFWLqg/mQP1Ihml2J1c5LqD4NJxngK+OBmKCXx8SAyvZunhLXcfXhUVrRNoRbpA==
+X-Received: by 2002:a37:a14c:: with SMTP id k73mr21323479qke.145.1593542659736;
+        Tue, 30 Jun 2020 11:44:19 -0700 (PDT)
+Received: from trix.remote.csb (075-142-250-213.res.spectrum.com. [75.142.250.213])
+        by smtp.gmail.com with ESMTPSA id a11sm3208689qkh.103.2020.06.30.11.44.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Jun 2020 11:44:18 -0700 (PDT)
+Subject: Re: [RFC 1/1] fpga: dfl: RFC PCI config
+To:     Randy Dunlap <rdunlap@infradead.org>, hao.wu@intel.com,
+        mdf@kernel.org, corbet@lwn.net
+Cc:     linux-fpga@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200630171656.20151-1-trix@redhat.com>
+ <20200630171656.20151-2-trix@redhat.com>
+ <67f7f2b8-3567-aadd-30d6-4cfbc0bc8ce5@infradead.org>
+From:   Tom Rix <trix@redhat.com>
+Message-ID: <78a250ab-29ad-f7cb-3fa2-482e76db207a@redhat.com>
+Date:   Tue, 30 Jun 2020 11:44:16 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Office Outlook 12.0
-Content-Language: en-ca
-Thread-Index: AdZL6GfN1BQpAfQRQwWuKbhHibbLRAA8mfVA
-X-CMAE-Envelope: MS4wfO7oaIfxSFx3svGsM9XZ/bOt6LbDnNC2uVTFiGTFwNKr2B82MLeELAmZZnTJX9D9cQCCyy14mIw/vSa16A5QxZSJUQ5UYE6UBTogEYH0rzdE9/6yAVIE
- 2ydKkpE+D+89ZJRgt3xkzdaV49R4nSSX8Po2vgWhqAmunKRhEstLsHdakLxbjFUwSl+stHrUB77scr66zINi+bBKFdl52IRDkP0t5daD8bJ4XdXOwSB/hOTo
- KPCPX2Ed4tyrVMDckiKrnIOfip7pPWw+s/Xhx2BKKJmBabElLJcBgYGcvd7lTMYodgtxaSiWz47J1icIBbuzRFFU6HKZjpKSwUO/4RBWy/LoYmJpdolVg7Mg
- 2v2yIELSTDG/9hfPLu0SgK/WjLRjhNBBprEmOD95TerlpGMmRyUqmkCpxGdy+RTKPexLmorgC0ovlGRny4eMtN4WBraxNvRzrK4mHuOgHYXQkyrX+DPUAGtI
- EDDmKt2C82CvTn5KO961z5k4rNaeDIiuwophog==
+In-Reply-To: <67f7f2b8-3567-aadd-30d6-4cfbc0bc8ce5@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Srinivas,
+> I haven't tested this, but in general it's not safe to select something like
+> SENSORS* or HWMON* unless you first check that CONFIG_HWMON is enabled.
+> Otherwise this would usually cause kconfig warning(s).
+>
+> But don't add things like
+> 	select HWMON
+> 	select SPI
+> 	select SPI_MASTER
+>
+> because we don't enable subsystems (like HWMON or SPI) just inside one
+> driver's kconfig entry.
+> The driver(s) should instead depend on HWMON, SPI, SPI_MASTER etc.
 
-Thanks for all your work on this.
-I have fallen behind, and not sure when I can catch up.
-However...
+Yes, I thought this was ugly. The next rev addresses this issue.  The config will not be fully automagic.  User will have enough information in the doc to figure out the other subsystems.  
 
-On 2020.06.26 11:34 Srinivas Pandruvada wrote:
-
-> Similarly on battery the default "balance_performance" mode can be
-> aggressive in power consumption. But picking up the next choice
-> "balance power" results in too much loss of performance, which results in
-> bad user experience in use cases like "Google Hangout". It was observed
-> that some value between these two EPP is optimal.
-
-There is a possibility that one of the issues I have been ranting
-about could be a contributing factor to things like this.
-(I don't know if it actually is.)
-One way to compensate is to lower EPP.
-
-I am going to send a new e-mail in a minute about it.
-Please consider the possibility that some of these
-EPP adjustments might just be programming around the issue.
-
-... Doug
-
+Tom
 
