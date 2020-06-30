@@ -2,210 +2,119 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2B45C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AED1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D154206CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:45:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 455082068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:46:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="tM+dHm+G"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WrlziTiD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726500AbgF3Spj (ORCPT
+        id S1726586AbgF3SqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 14:45:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36616 "EHLO
+        Tue, 30 Jun 2020 14:46:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726213AbgF3Sp1 (ORCPT
+        with ESMTP id S1726213AbgF3SqX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 14:45:27 -0400
-Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 861CCC03E97A
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 11:45:26 -0700 (PDT)
-Received: by mail-pj1-x1041.google.com with SMTP id b92so9860295pjc.4
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 11:45:26 -0700 (PDT)
+        Tue, 30 Jun 2020 14:46:23 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4AFDC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 11:46:22 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id g139so11991878lfd.10
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 11:46:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=6mvVREkDVIeNCrD7qi8PMtAVT+USyRgLji8dDcK1MZI=;
-        b=tM+dHm+GPgciq6qnWfKbJo4Kq5Tayh8q0IFFz6A7wCZjuzwVo/FSrLEbDCu/fnQyBQ
-         jqsvcSJWViFdBp1grNeoyvO7uDBJqWq551Ws9xRJ4INAtpeDu14PXZD4DTga/5DppuZ/
-         JGneIRzbaZq5NBpkuP4eRsx52aJsUUWyO3n0AFdbCyM4AFTjnYBY8SpWrfh6R8G7P8s5
-         zLO6a0RrsmwbyZ7b4KwKEQhXLgFxo9rfv/nod+0In7WVqCKZj5EzcL7UkqwEmFU8/bHH
-         Ct2lJoZQXQvMzl/3hHA4JdyGPr8pudetykENgjEM3wfLX5z9C24aUMVSzFVD70zO47wi
-         1Rzg==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vFuGFxLjY8MbMo7U24jI5f07679fmJ9gh5uKn5H5mfc=;
+        b=WrlziTiDeexaiFvnx66t1nVCdoYMolZgaOuLsj7EplpI+pSGit3wIf1JizoglqrsY4
+         qaGF8w9bIsV4V9LvA5f5vxhmTVrKoQ/0OJHe9t2+PT/EutbJPMzH0b9GDY2YfHyRVIJm
+         uOLw5Qrr16/ElSYa7syx4MmOoAq8fMrqyUoG8SNntv/+f67ctqm3adHunkhzrVEPtD+C
+         1RDDiZak0T9QY0pDEjCai0NpXszVGkg6mIwDuG4IrDhGzQIyyXuLAZEch1RVShDcdt5z
+         kEJoa6cOl6UYxHsEyNCp3h35mW3XxVmTCfnDmdPlsW4YVKjzJ28eDqPbQCa8RVSySyUK
+         XhSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=6mvVREkDVIeNCrD7qi8PMtAVT+USyRgLji8dDcK1MZI=;
-        b=go+QdAXm6a3Cl+8UIClPl9hmjAtQzVRT3PLYrdsncSFALi8gHHnTeVP2Acnzh2RleZ
-         oCQfolWCAiGZ+Cp9bim18AyTVgIdP6deJSWT8g930XMLLaWbmk+WbsHVa/unUdwE1S6x
-         AAqmYc6lULmqpkbomli5I2GntbJJ/2EgU72U0KqaZa5u26iAa1fhe+sil5DSp3U+XsmU
-         Aby9Znf7rf1wLa2kIY477EJ6EfHGrESSYF7Cwou9dwEvIzxhhbi2KRXT6yVlVO9PZ1L8
-         HeL7LGMLUGFWsuJ1obm7d8J05k75ZPg+iwX11G4aWHy9GuPBnkuqlhsVyenMT2tE2qlP
-         6dFA==
-X-Gm-Message-State: AOAM533eKGVcV6+Qo9cJQFVzY7Ohgm2ZARLLLVq/lE4BuhiiXPff8NAm
-        lFs1oqUpOz9SR7wa+eZGv0HX4A==
-X-Google-Smtp-Source: ABdhPJyq42/4G38YKmmdE3qsIa6PN0u2bg0XuBD4ozWyinzBPeXVqQCsyzLFwjhKG9yVm+5zjUzYnQ==
-X-Received: by 2002:a17:90a:1ac3:: with SMTP id p61mr24724332pjp.23.1593542726013;
-        Tue, 30 Jun 2020 11:45:26 -0700 (PDT)
-Received: from localhost.localdomain ([2605:e000:100e:8c61:4113:50ea:3eb3:a39b])
-        by smtp.gmail.com with ESMTPSA id n7sm2898108pjq.22.2020.06.30.11.45.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 11:45:25 -0700 (PDT)
-From:   Jens Axboe <axboe@kernel.dk>
-To:     io-uring@vger.kernel.org
-Cc:     oleg@redhat.com, peterz@infradead.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 1/2] task_work: teach task_work_add() to do signal_wake_up()
-Date:   Tue, 30 Jun 2020 12:45:17 -0600
-Message-Id: <20200630184518.696101-2-axboe@kernel.dk>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200630184518.696101-1-axboe@kernel.dk>
-References: <20200630184518.696101-1-axboe@kernel.dk>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vFuGFxLjY8MbMo7U24jI5f07679fmJ9gh5uKn5H5mfc=;
+        b=eemQ9BvxAYqxYSX8Z8RJFIGQRlyjPnVbL9WKzyNg2gT8zC4e/D1pJyfMQZISn7QvRY
+         QsDlwX7gquNmD7hksDbqm5IVT4uMATQ7tyKJJa4jKp567sb984Hef7c0l42PjRSAKdaH
+         rOkI8tCHQ+q/W94HjoU0UgBlw9wjf/o7KSvXEF8pva1IOAdMjZJrtXHL0OgRgnsZIdC5
+         wdHhmwdA8udGlyJdaIamgd+pKn3ymaLJlGjXUSCpPCDjh/T1ExeLUTFsoMpC8FscoFp1
+         XCHIg+7Lpss0exwN5qz/7b113fpBS57z1xi4arUfhX/WZBME4z8BS/RXl91YEqelGbt5
+         pZTA==
+X-Gm-Message-State: AOAM530DY4yw1heLuH+Ej5m+hCAaC4xvxmx9Lr/xUGE/NtuSFMGXrKZo
+        j7MkgB/3MkEl5+vTzkQWtzIlC7YzTiQo/Y5gZiELx7rW
+X-Google-Smtp-Source: ABdhPJyuD/QmkIZ4GaET8YqyAzhOCbA1xOtAHYtLjnr4JcUmIvOqYdaFhjNiECjG8mm30iJ0MnsggSH5efYy/WQESn0=
+X-Received: by 2002:a05:6512:31d5:: with SMTP id j21mr1815560lfe.83.1593542781204;
+ Tue, 30 Jun 2020 11:46:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200625144509.17918-1-daniel.lezcano@linaro.org>
+ <CAP245DVy+Z9D+6=-cX4TaGFoK-e2N+mWwOvNYOe_E9Fh=7vnaA@mail.gmail.com> <bed1d41f81f369e7123a2eab7fde3e81a3b063aa.camel@intel.com>
+In-Reply-To: <bed1d41f81f369e7123a2eab7fde3e81a3b063aa.camel@intel.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Wed, 1 Jul 2020 00:16:09 +0530
+Message-ID: <CAP245DW4ntkK9rWCZT8KX07tBJoHaUkXPVRH4Vp2yRHi=m6JCg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] thermal: core: Add helpers to browse the cdev, tz
+ and governor list
+To:     Zhang Rui <rui.zhang@intel.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Ram Chandrasekar <rkumbako@codeaurora.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oleg Nesterov <oleg@redhat.com>
+On Tue, Jun 30, 2020 at 8:40 PM Zhang Rui <rui.zhang@intel.com> wrote:
+>
+> Hi, Daniel,
+>
+> seems that you forgot to cc linux-pm mailing list.
+>
+> On Tue, 2020-06-30 at 17:16 +0530, Amit Kucheria wrote:
+> > On Thu, Jun 25, 2020 at 8:15 PM Daniel Lezcano
+> > <daniel.lezcano@linaro.org> wrote:
+> > >
+> > > The cdev, tz and governor list, as well as their respective locks
+> > > are
+> > > statically defined in the thermal_core.c file.
+> > >
+> > > In order to give a sane access to these list, like browsing all the
+> > > thermal zones or all the cooling devices, let's define a set of
+> > > helpers where we pass a callback as a parameter to be called for
+> > > each
+> > > thermal entity.
+> > >
+> > > We keep the self-encapsulation and ensure the locks are correctly
+> > > taken when looking at the list.
+> > >
+> > > Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> > > ---
+> > >  drivers/thermal/thermal_core.c | 51
+> > > ++++++++++++++++++++++++++++++++++
+> >
+> > Is the idea to not use thermal_helpers.c from now on? It fits
+> > perfectly with a patch I have to merge all its contents to
+> > thermal_core.c :-)
+>
+> I agree these changes should be in thermal_helper.c
 
-So that the target task will exit the wait_event_interruptible-like
-loop and call task_work_run() asap.
+I was actually serious about killing thermal_helper.c :-)
 
-The patch turns "bool notify" into 0,TWA_RESUME,TWA_SIGNAL enum, the
-new TWA_SIGNAL flag implies signal_wake_up().  However, it needs to
-avoid the race with recalc_sigpending(), so the patch also adds the
-new JOBCTL_TASK_WORK bit included in JOBCTL_PENDING_MASK.
+What is the reason for those 5-6 functions to live outside
+thermal_core.c? Functions in thermal_helper.c are called by governors
+and drivers, just like the functions in thermal_core.c. I couldn't
+find a pattern.
 
-TODO: once this patch is merged we need to change all current users
-of task_work_add(notify = true) to use TWA_RESUME.
-
-Cc: stable@vger.kernel.org # v5.7
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
----
- include/linux/sched/jobctl.h |  4 +++-
- include/linux/task_work.h    |  5 ++++-
- kernel/signal.c              | 10 +++++++---
- kernel/task_work.c           | 16 ++++++++++++++--
- 4 files changed, 28 insertions(+), 7 deletions(-)
-
-diff --git a/include/linux/sched/jobctl.h b/include/linux/sched/jobctl.h
-index fa067de9f1a9..d2b4204ba4d3 100644
---- a/include/linux/sched/jobctl.h
-+++ b/include/linux/sched/jobctl.h
-@@ -19,6 +19,7 @@ struct task_struct;
- #define JOBCTL_TRAPPING_BIT	21	/* switching to TRACED */
- #define JOBCTL_LISTENING_BIT	22	/* ptracer is listening for events */
- #define JOBCTL_TRAP_FREEZE_BIT	23	/* trap for cgroup freezer */
-+#define JOBCTL_TASK_WORK_BIT	24	/* set by TWA_SIGNAL */
- 
- #define JOBCTL_STOP_DEQUEUED	(1UL << JOBCTL_STOP_DEQUEUED_BIT)
- #define JOBCTL_STOP_PENDING	(1UL << JOBCTL_STOP_PENDING_BIT)
-@@ -28,9 +29,10 @@ struct task_struct;
- #define JOBCTL_TRAPPING		(1UL << JOBCTL_TRAPPING_BIT)
- #define JOBCTL_LISTENING	(1UL << JOBCTL_LISTENING_BIT)
- #define JOBCTL_TRAP_FREEZE	(1UL << JOBCTL_TRAP_FREEZE_BIT)
-+#define JOBCTL_TASK_WORK	(1UL << JOBCTL_TASK_WORK_BIT)
- 
- #define JOBCTL_TRAP_MASK	(JOBCTL_TRAP_STOP | JOBCTL_TRAP_NOTIFY)
--#define JOBCTL_PENDING_MASK	(JOBCTL_STOP_PENDING | JOBCTL_TRAP_MASK)
-+#define JOBCTL_PENDING_MASK	(JOBCTL_STOP_PENDING | JOBCTL_TRAP_MASK | JOBCTL_TASK_WORK)
- 
- extern bool task_set_jobctl_pending(struct task_struct *task, unsigned long mask);
- extern void task_clear_jobctl_trapping(struct task_struct *task);
-diff --git a/include/linux/task_work.h b/include/linux/task_work.h
-index bd9a6a91c097..0fb93aafa478 100644
---- a/include/linux/task_work.h
-+++ b/include/linux/task_work.h
-@@ -13,7 +13,10 @@ init_task_work(struct callback_head *twork, task_work_func_t func)
- 	twork->func = func;
- }
- 
--int task_work_add(struct task_struct *task, struct callback_head *twork, bool);
-+#define TWA_RESUME	1
-+#define TWA_SIGNAL	2
-+int task_work_add(struct task_struct *task, struct callback_head *twork, int);
-+
- struct callback_head *task_work_cancel(struct task_struct *, task_work_func_t);
- void task_work_run(void);
- 
-diff --git a/kernel/signal.c b/kernel/signal.c
-index 5ca48cc5da76..ee22ec78fd6d 100644
---- a/kernel/signal.c
-+++ b/kernel/signal.c
-@@ -2529,9 +2529,6 @@ bool get_signal(struct ksignal *ksig)
- 	struct signal_struct *signal = current->signal;
- 	int signr;
- 
--	if (unlikely(current->task_works))
--		task_work_run();
--
- 	if (unlikely(uprobe_deny_signal()))
- 		return false;
- 
-@@ -2544,6 +2541,13 @@ bool get_signal(struct ksignal *ksig)
- 
- relock:
- 	spin_lock_irq(&sighand->siglock);
-+	current->jobctl &= ~JOBCTL_TASK_WORK;
-+	if (unlikely(current->task_works)) {
-+		spin_unlock_irq(&sighand->siglock);
-+		task_work_run();
-+		goto relock;
-+	}
-+
- 	/*
- 	 * Every stopped thread goes here after wakeup. Check to see if
- 	 * we should notify the parent, prepare_signal(SIGCONT) encodes
-diff --git a/kernel/task_work.c b/kernel/task_work.c
-index 825f28259a19..5c0848ca1287 100644
---- a/kernel/task_work.c
-+++ b/kernel/task_work.c
-@@ -25,9 +25,10 @@ static struct callback_head work_exited; /* all we need is ->next == NULL */
-  * 0 if succeeds or -ESRCH.
-  */
- int
--task_work_add(struct task_struct *task, struct callback_head *work, bool notify)
-+task_work_add(struct task_struct *task, struct callback_head *work, int notify)
- {
- 	struct callback_head *head;
-+	unsigned long flags;
- 
- 	do {
- 		head = READ_ONCE(task->task_works);
-@@ -36,8 +37,19 @@ task_work_add(struct task_struct *task, struct callback_head *work, bool notify)
- 		work->next = head;
- 	} while (cmpxchg(&task->task_works, head, work) != head);
- 
--	if (notify)
-+	switch (notify) {
-+	case TWA_RESUME:
- 		set_notify_resume(task);
-+		break;
-+	case TWA_SIGNAL:
-+		if (lock_task_sighand(task, &flags)) {
-+			task->jobctl |= JOBCTL_TASK_WORK;
-+			signal_wake_up(task, 0);
-+			unlock_task_sighand(task, &flags);
-+		}
-+		break;
-+	}
-+
- 	return 0;
- }
- 
--- 
-2.27.0
-
+Regards,
+Amit
