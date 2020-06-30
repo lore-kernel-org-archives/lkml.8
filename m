@@ -2,275 +2,170 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FFDBC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E24C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:52:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 64C98206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:51:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEF5B206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:52:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="iANo6QFw"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="YFZmn6CK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728796AbgF3TvQ (ORCPT
+        id S1728807AbgF3TwM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 15:51:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46830 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728745AbgF3TvO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 15:51:14 -0400
-Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8BC6C03E979
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 12:51:14 -0700 (PDT)
-Received: by mail-pf1-x444.google.com with SMTP id q17so9860549pfu.8
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 12:51:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=iNCHcq75Fyx9uiWciOcCfYEZ90izFqxrP5nDdLzvmsw=;
-        b=iANo6QFw3dFn64R//mzh8CGnOtwCTI07fMSLn4iXWhcZaDlm8T4nKjXX4DgWqUtJRm
-         WbFCzN0sk0oDeZp//4HbCsw6Qlv5GNGMQFYfegGruuGXSif0Npk15PsG2bkGmZ89pctg
-         nJp5i4Oy0O4RxUr2IyBVS/l0x2v5dzMDt9bRTd0oqanImWcBs4fFRlsWSuO9hHppo+j6
-         RUgbyhxLIwrYCpX82PUx3p/h//PesgIHOs9qew9s3Vug1klshcKosbbkBxcerjCQo1Bq
-         S6yecic8eQtnBLd1o9iPY/GhutpM3W0FLklfmznDv8FGZU/yfIs1/PvyinmthLmkuGNo
-         iEJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=iNCHcq75Fyx9uiWciOcCfYEZ90izFqxrP5nDdLzvmsw=;
-        b=H8twPENiya0fJid9PyiUCYmHQ/Db0oq953ekMPso7o1jGgmr5anc8pzCTQTTem+I/i
-         W7zvpO1XYEa+kIMx6+XGgzenMQZjU7Qff+uz6tebvL41H01PjEclDfF8ookIOBIiNZ2R
-         MZic1YQcPuCeYtPH/mjhnzPxok/JwGjUIwfL/5SS5NzIqaWFw7udFqZeXOIGZIuT+g5i
-         x7lECYJlxC2slLFp7ueparIb9qVbMRMdwPdr9mLbHRuEnQjIxxcig2gl3l9mFCfxJLnl
-         EWcsmhiKDHfIdJIVfeyPOB4ON6RCwaqO6pQIOHA/k8fes5vTULcrhLafnxKbBoK5H2IB
-         DS5Q==
-X-Gm-Message-State: AOAM531XCms+aXqjnIE3TQdx3g5bwjRp14mHGUrnKdhu3YMalliTaGn/
-        nNs12iBkhNtXTiyHRvFzlI6ALvIIWPFkMg==
-X-Google-Smtp-Source: ABdhPJzs9zAJFf8WCGlWWqtREEMo8c7fen5CasqKQOZh6AO2PVKIYYKZ9eCuadpNYQ5qv9MMvJqY1w==
-X-Received: by 2002:aa7:818e:: with SMTP id g14mr15142886pfi.27.1593546674145;
-        Tue, 30 Jun 2020 12:51:14 -0700 (PDT)
-Received: from kaaira-HP-Pavilion-Notebook ([103.113.213.178])
-        by smtp.gmail.com with ESMTPSA id j16sm3376988pgb.33.2020.06.30.12.51.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 12:51:13 -0700 (PDT)
-From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
-To:     Helen Koike <helen.koike@collabora.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hverkuil@xs4all.nl,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc:     Kaaira Gupta <kgupta@es.iitr.ac.in>
-Subject: [PATCH v8 3/3] media: vimc: Add a control to display info on test image
-Date:   Wed,  1 Jul 2020 01:20:52 +0530
-Message-Id: <20200630195052.23880-4-kgupta@es.iitr.ac.in>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200630195052.23880-1-kgupta@es.iitr.ac.in>
-References: <20200630195052.23880-1-kgupta@es.iitr.ac.in>
+        Tue, 30 Jun 2020 15:52:12 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:60175 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728449AbgF3TwM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 15:52:12 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593546731; h=Content-Transfer-Encoding: MIME-Version:
+ Message-Id: Date: Subject: Cc: To: From: Sender;
+ bh=khdI7KK3P5HEXu5fVmHtaSFBLxX53kdpZO9nigjlUsg=; b=YFZmn6CKwEzCrbXZhhliA+vJ6ZCZ7Y9+k+LNLpL2NA1CN2p6PpXt3k9AOoGA6bX5ftl0flN/
+ jl3MLQ6Et6Fjhr7LK0liqH7D+pWOEIzIrpqJ5MMZ6UUawdakRSS6d8k5ed8bBgdJ//uGNDXz
+ AENpMW49r1ISv5KY80GZr6g8LZs=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n19.prod.us-west-2.postgun.com with SMTP id
+ 5efb97e85866879c76f8cffa (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 30 Jun 2020 19:52:08
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 65414C433C6; Tue, 30 Jun 2020 19:52:08 +0000 (UTC)
+Received: from linuxdisplay-lab-04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tanmay)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DBF0AC433C6;
+        Tue, 30 Jun 2020 19:52:06 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DBF0AC433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tanmay@codeaurora.org
+From:   Tanmay Shah <tanmay@codeaurora.org>
+To:     swboyd@chromium.org, seanpaul@chromium.org
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        sam@ravnborg.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        robdclark@gmail.com, aravindh@codeaurora.org,
+        abhinavk@codeaurora.org, chandanu@codeaurora.org,
+        varar@codeaurora.org, Tanmay Shah <tanmay@codeaurora.org>
+Subject: [PATCH v3] arm64: dts: qcom: sc7180: Add Display Port dt node
+Date:   Tue, 30 Jun 2020 12:51:51 -0700
+Message-Id: <20200630195151.347-1-tanmay@codeaurora.org>
+X-Mailer: git-send-email 2.27.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a control in VIMC to display information such as the correct order of
-colors for a given test pattern, counter, brightness, hue, saturation,
-contrast, width and height at sensor over test image.
+Add DP device node on sc7180.
 
-Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+Changes in v2:
+
+- Add assigned-clocks and assigned-clock-parents
+- Remove cell-index and pixel_rcg
+- Change compatible to qcom,sc7180-dp
+
+Changes in v3:
+- Update commit text
+- Make DP child node of MDSS
+- Remove data-lanes property from SOC dts
+- Disable DP node in SOC dts
+- Assign DP to Port2 in MDP node
+- Add MDSS AHB clock in DP device node
+
+This patch depends-on:
+	https://patchwork.freedesktop.org/series/78953/
+
+Signed-off-by: Tanmay Shah <tanmay@codeaurora.org>
 ---
- drivers/media/test-drivers/vimc/Kconfig       |  2 +
- drivers/media/test-drivers/vimc/vimc-common.h |  1 +
- drivers/media/test-drivers/vimc/vimc-core.c   | 10 +++
- drivers/media/test-drivers/vimc/vimc-sensor.c | 67 +++++++++++++++++++
- 4 files changed, 80 insertions(+)
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 49 ++++++++++++++++++++++++++--
+ 1 file changed, 47 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/test-drivers/vimc/Kconfig b/drivers/media/test-drivers/vimc/Kconfig
-index 4068a67585f9..da4b2ad6e40c 100644
---- a/drivers/media/test-drivers/vimc/Kconfig
-+++ b/drivers/media/test-drivers/vimc/Kconfig
-@@ -2,6 +2,8 @@
- config VIDEO_VIMC
- 	tristate "Virtual Media Controller Driver (VIMC)"
- 	depends on VIDEO_DEV && VIDEO_V4L2
-+	select FONT_SUPPORT
-+	select FONT_8x16
- 	select MEDIA_CONTROLLER
- 	select VIDEO_V4L2_SUBDEV_API
- 	select VIDEOBUF2_VMALLOC
-diff --git a/drivers/media/test-drivers/vimc/vimc-common.h b/drivers/media/test-drivers/vimc/vimc-common.h
-index ae163dec2459..a289434e75ba 100644
---- a/drivers/media/test-drivers/vimc/vimc-common.h
-+++ b/drivers/media/test-drivers/vimc/vimc-common.h
-@@ -20,6 +20,7 @@
- #define VIMC_CID_VIMC_CLASS		(0x00f00000 | 1)
- #define VIMC_CID_TEST_PATTERN		(VIMC_CID_VIMC_BASE + 0)
- #define VIMC_CID_MEAN_WIN_SIZE		(VIMC_CID_VIMC_BASE + 1)
-+#define VIMC_CID_OSD_TEXT_MODE		(VIMC_CID_VIMC_BASE + 2)
- 
- #define VIMC_FRAME_MAX_WIDTH 4096
- #define VIMC_FRAME_MAX_HEIGHT 2160
-diff --git a/drivers/media/test-drivers/vimc/vimc-core.c b/drivers/media/test-drivers/vimc/vimc-core.c
-index 11210aaa2551..4b0ae6f51d76 100644
---- a/drivers/media/test-drivers/vimc/vimc-core.c
-+++ b/drivers/media/test-drivers/vimc/vimc-core.c
-@@ -5,10 +5,12 @@
-  * Copyright (C) 2015-2017 Helen Koike <helen.fornazier@gmail.com>
-  */
- 
-+#include <linux/font.h>
- #include <linux/init.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <media/media-device.h>
-+#include <media/tpg/v4l2-tpg.h>
- #include <media/v4l2-device.h>
- 
- #include "vimc-common.h"
-@@ -263,11 +265,19 @@ static int vimc_register_devices(struct vimc_device *vimc)
- 
- static int vimc_probe(struct platform_device *pdev)
- {
-+	const struct font_desc *font = find_font("VGA8x16");
- 	struct vimc_device *vimc;
- 	int ret;
- 
- 	dev_dbg(&pdev->dev, "probe");
- 
-+	if (!font) {
-+		dev_err(&pdev->dev, "could not find font\n");
-+		return -ENODEV;
-+	}
+diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+index 31b9217bb5bf..271d55db62ab 100644
+--- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
++++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+@@ -2371,6 +2371,13 @@ dpu_intf1_out: endpoint {
+ 							remote-endpoint = <&dsi0_in>;
+ 						};
+ 					};
 +
-+	tpg_set_font(font->data);
-+
- 	vimc = kzalloc(sizeof(*vimc), GFP_KERNEL);
- 	if (!vimc)
- 		return -ENOMEM;
-diff --git a/drivers/media/test-drivers/vimc/vimc-sensor.c b/drivers/media/test-drivers/vimc/vimc-sensor.c
-index a2f09ac9a360..ec9ddd42984c 100644
---- a/drivers/media/test-drivers/vimc/vimc-sensor.c
-+++ b/drivers/media/test-drivers/vimc/vimc-sensor.c
-@@ -14,11 +14,15 @@
++					port@2 {
++						reg = <2>;
++						dpu_intf0_out: endpoint {
++							remote-endpoint = <&dp_in>;
++						};
++					};
+ 				};
+ 			};
  
- #include "vimc-common.h"
+@@ -2440,6 +2447,44 @@ dsi_phy: dsi-phy@ae94400 {
  
-+enum osd_mode {OSD_SHOW_ALL = 0, OSD_SHOW_COUNTERS = 1, OSD_SHOW_NONE = 2};
+ 				status = "disabled";
+ 			};
 +
- struct vimc_sen_device {
- 	struct vimc_ent_device ved;
- 	struct v4l2_subdev sd;
- 	struct tpg_data tpg;
- 	u8 *frame;
-+	enum osd_mode osd_value;
-+	u64 start_stream_ts;
- 	/* The active format */
- 	struct v4l2_mbus_framefmt mbus_format;
- 	struct v4l2_ctrl_handler hdl;
-@@ -187,8 +191,49 @@ static void *vimc_sen_process_frame(struct vimc_ent_device *ved,
- {
- 	struct vimc_sen_device *vsen = container_of(ved, struct vimc_sen_device,
- 						    ved);
-+	const unsigned int line_height = 16;
-+	u8 *basep[TPG_MAX_PLANES][2];
-+	unsigned int line = 1;
-+	char str[100];
++			msm_dp: displayport-controller@ae90000{
++				status = "disabled";
++				compatible = "qcom,sc7180-dp";
++
++				reg = <0 0xae90000 0 0x1400>;
++				reg-names = "dp_controller";
++
++				interrupt-parent = <&mdss>;
++				interrupts = <12 0>;
++
++				clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>,
++					 <&dispcc DISP_CC_MDSS_DP_AUX_CLK>,
++					 <&dispcc DISP_CC_MDSS_DP_LINK_CLK>,
++					 <&dispcc DISP_CC_MDSS_DP_LINK_INTF_CLK>,
++					 <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK>;
++				clock-names = "core_iface", "core_aux", "ctrl_link",
++					      "ctrl_link_iface", "stream_pixel";
++				#clock-cells = <1>;
++				assigned-clocks = <&dispcc DISP_CC_MDSS_DP_PIXEL_CLK_SRC>;
++				assigned-clock-parents = <&msm_dp 1>;
++
++				ports {
++					#address-cells = <1>;
++					#size-cells = <0>;
++					port@0 {
++						reg = <0>;
++						dp_in: endpoint {
++							remote-endpoint = <&dpu_intf0_out>;
++						};
++					};
++
++					port@1 {
++						reg = <1>;
++						dp_out: endpoint { };
++					};
++				};
++			};
+ 		};
  
- 	tpg_fill_plane_buffer(&vsen->tpg, 0, 0, vsen->frame);
-+	tpg_calc_text_basep(&vsen->tpg, basep, 0, vsen->frame);
-+	switch (vsen->osd_value) {
-+	case OSD_SHOW_ALL: {
-+		const char *order = tpg_g_color_order(&vsen->tpg);
-+
-+		tpg_gen_text(&vsen->tpg, basep, line++ * line_height,
-+			     16, order);
-+		snprintf(str, sizeof(str),
-+			 "brightness %3d, contrast %3d, saturation %3d, hue %d ",
-+			 vsen->tpg.brightness,
-+			 vsen->tpg.contrast,
-+			 vsen->tpg.saturation,
-+			 vsen->tpg.hue);
-+		tpg_gen_text(&vsen->tpg, basep, line++ * line_height, 16, str);
-+		snprintf(str, sizeof(str), "sensor size: %dx%d",
-+			 vsen->mbus_format.width,
-+			 vsen->mbus_format.height);
-+		tpg_gen_text(&vsen->tpg, basep, line++ * line_height, 16, str);
-+	fallthrough;
-+	}
-+	case OSD_SHOW_COUNTERS: {
-+		unsigned int ms;
-+
-+		ms = (ktime_get_ns() - vsen->start_stream_ts) / 1000000;
-+		snprintf(str, sizeof(str), "%02d:%02d:%02d:%03d",
-+			 (ms / (60 * 60 * 1000)) % 24,
-+			 (ms / (60 * 1000)) % 60,
-+			 (ms / 1000) % 60,
-+			 ms % 1000);
-+		tpg_gen_text(&vsen->tpg, basep, line++ * line_height, 16, str);
-+		break;
-+	}
-+	case OSD_SHOW_NONE:
-+	default:
-+		break;
-+	}
-+
- 	return vsen->frame;
- }
- 
-@@ -201,6 +246,8 @@ static int vimc_sen_s_stream(struct v4l2_subdev *sd, int enable)
- 		const struct vimc_pix_map *vpix;
- 		unsigned int frame_size;
- 
-+		vsen->start_stream_ts = ktime_get_ns();
-+
- 		/* Calculate the frame size */
- 		vpix = vimc_pix_map_by_code(vsen->mbus_format.code);
- 		frame_size = vsen->mbus_format.width * vpix->bpp *
-@@ -269,6 +316,9 @@ static int vimc_sen_s_ctrl(struct v4l2_ctrl *ctrl)
- 	case V4L2_CID_SATURATION:
- 		tpg_s_saturation(&vsen->tpg, ctrl->val);
- 		break;
-+	case VIMC_CID_OSD_TEXT_MODE:
-+		vsen->osd_value = ctrl->val;
-+		break;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -307,6 +357,22 @@ static const struct v4l2_ctrl_config vimc_sen_ctrl_test_pattern = {
- 	.qmenu = tpg_pattern_strings,
- };
- 
-+static const char * const vimc_ctrl_osd_mode_strings[] = {
-+	"All",
-+	"Counters Only",
-+	"None",
-+	NULL,
-+};
-+
-+static const struct v4l2_ctrl_config vimc_sen_ctrl_osd_mode = {
-+	.ops = &vimc_sen_ctrl_ops,
-+	.id = VIMC_CID_OSD_TEXT_MODE,
-+	.name = "Show Information",
-+	.type = V4L2_CTRL_TYPE_MENU,
-+	.max = ARRAY_SIZE(vimc_ctrl_osd_mode_strings) - 2,
-+	.qmenu = vimc_ctrl_osd_mode_strings,
-+};
-+
- static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
- 					    const char *vcfg_name)
- {
-@@ -323,6 +389,7 @@ static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
- 
- 	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_class, NULL);
- 	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_test_pattern, NULL);
-+	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_osd_mode, NULL);
- 	v4l2_ctrl_new_std(&vsen->hdl, &vimc_sen_ctrl_ops,
- 			  V4L2_CID_VFLIP, 0, 1, 1, 0);
- 	v4l2_ctrl_new_std(&vsen->hdl, &vimc_sen_ctrl_ops,
+ 		dispcc: clock-controller@af00000 {
+@@ -2449,8 +2494,8 @@ dispcc: clock-controller@af00000 {
+ 				 <&gcc GCC_DISP_GPLL0_CLK_SRC>,
+ 				 <&dsi_phy 0>,
+ 				 <&dsi_phy 1>,
+-				 <0>,
+-				 <0>;
++				 <&msm_dp 0>,
++				 <&msm_dp 1>;
+ 			clock-names = "bi_tcxo",
+ 				      "gcc_disp_gpll0_clk_src",
+ 				      "dsi0_phy_pll_out_byteclk",
 -- 
-2.17.1
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
 
