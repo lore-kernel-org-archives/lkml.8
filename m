@@ -2,122 +2,217 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A48C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51103C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2812C20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:29:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AE0B20672
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:30:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="H2gEzFv0"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="f1+k9zM/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387611AbgF3M3n (ORCPT
+        id S2387675AbgF3Mag (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 08:29:43 -0400
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:3750 "EHLO
-        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730095AbgF3M3m (ORCPT
+        Tue, 30 Jun 2020 08:30:36 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:58610 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730095AbgF3Maf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 08:29:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1593520181; x=1625056181;
-  h=from:to:cc:subject:date:message-id:mime-version;
-  bh=1SYBHjTB+q5E+ZB8QENYuEXlQudyQrqQO5pO6Am+EEU=;
-  b=H2gEzFv0kVTs7zN9dem+WBaSAh/9oFVo0mO+eDE3d7n+zPvwGeS0grV/
-   zBUFkFHBSXAaaWrYTinmEcyIxPM8Jeit5zAww9HJFp1USU8yiwc7JToPV
-   FTwQbL3GyalSH86SK/gHo9rQIVZVxZBSD7dS7F57vlb4EjtoOmqPAOOmp
-   8=;
-IronPort-SDR: 24GE8aKjT5T9+JGempUpxCY0xCGWdMUQzMqL9jkMNbtduu4ZyyCdQF6qGsE8klTAMuwe714Jgk
- xvtVzeu8wrVQ==
-X-IronPort-AV: E=Sophos;i="5.75,297,1589241600"; 
-   d="scan'208";a="39354207"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-69849ee2.us-west-2.amazon.com) ([10.43.8.6])
-  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 30 Jun 2020 12:29:39 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
-        by email-inbound-relay-2a-69849ee2.us-west-2.amazon.com (Postfix) with ESMTPS id DD6ADA23B6;
-        Tue, 30 Jun 2020 12:29:38 +0000 (UTC)
-Received: from EX13D18EUC001.ant.amazon.com (10.43.164.108) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 30 Jun 2020 12:29:38 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
- EX13D18EUC001.ant.amazon.com (10.43.164.108) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 30 Jun 2020 12:29:37 +0000
-Received: from dev-dsk-mheyne-60001.pdx1.corp.amazon.com (10.184.85.242) by
- mail-relay.amazon.com (10.43.61.243) with Microsoft SMTP Server id
- 15.0.1497.2 via Frontend Transport; Tue, 30 Jun 2020 12:29:36 +0000
-Received: by dev-dsk-mheyne-60001.pdx1.corp.amazon.com (Postfix, from userid 5466572)
-        id 92633222EA; Tue, 30 Jun 2020 12:29:35 +0000 (UTC)
-From:   Maximilian Heyne <mheyne@amazon.de>
-CC:     Amit Shah <aams@amazon.de>, Maximilian Heyne <mheyne@amazon.de>,
-        <stable@vger.kernel.org>, Keith Busch <kbusch@kernel.org>,
-        Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        <linux-nvme@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] nvme: validate cntlid's only for nvme >= 1.1.0
-Date:   Tue, 30 Jun 2020 12:29:23 +0000
-Message-ID: <20200630122923.70282-1-mheyne@amazon.de>
-X-Mailer: git-send-email 2.16.6
+        Tue, 30 Jun 2020 08:30:35 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05UCUP88019337;
+        Tue, 30 Jun 2020 07:30:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1593520225;
+        bh=EQaiKYjbNB8HuWa8sKmWUugU4qHf1DWCOZOkP4WeozE=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=f1+k9zM/36lJdPIRS8gFxcSqGMIxVd0UCp5ElLP8pLL7qaaXTe3SIKaj7wBs4Pcx5
+         3g2eX0O4IatLF2thOPiDorUTsNZkGGeuSBQ2wFcVhX27+RFP5OduqGzrhHIMs3uJPk
+         8buDOcxXgfTeDbJFZnvJ9AWoSWqD8xAl3aGKwHDg=
+Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05UCUPL8124644;
+        Tue, 30 Jun 2020 07:30:25 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 30
+ Jun 2020 07:30:14 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 30 Jun 2020 07:30:14 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05UCUC24033373;
+        Tue, 30 Jun 2020 07:30:12 -0500
+Subject: Re: DMA Engine: Transfer From Userspace
+To:     Thomas Ruf <freelancer@rufusul.de>, Vinod Koul <vkoul@kernel.org>
+CC:     Federico Vaga <federico.vaga@cern.ch>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <5614531.lOV4Wx5bFT@harkonnen>
+ <fe199e18-be45-cadc-8bad-4a83ed87bfba@intel.com>
+ <20200621072457.GA2324254@vkoul-mobl>
+ <20200621203634.y3tejmh6j4knf5iz@cwe-513-vol689.cern.ch>
+ <20200622044733.GB2324254@vkoul-mobl>
+ <419762761.402939.1592827272368@mailbusiness.ionos.de>
+ <20200622155440.GM2324254@vkoul-mobl>
+ <1835214773.354594.1592843644540@mailbusiness.ionos.de>
+ <2077253476.601371.1592991035969@mailbusiness.ionos.de>
+ <20200624093800.GV2324254@vkoul-mobl>
+ <3a4b1b55-7bce-2c48-b897-51e23e850127@ti.com>
+ <1666251320.1024432.1593007095381@mailbusiness.ionos.de>
+ <1a610c67-73a4-f66d-877a-5c4d35cbf76a@ti.com>
+ <1819433567.1017000.1593443883087@mailbusiness.ionos.de>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+X-Pep-Version: 2.0
+Message-ID: <391e0aee-e35b-fa39-ab86-18fe33a776ee@ti.com>
+Date:   Tue, 30 Jun 2020 15:31:11 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <1819433567.1017000.1593443883087@mailbusiness.ionos.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Controller ID's (cntlid) for NVMe devices were introduced in version
-1.1.0 of the specification. Controllers that follow the older 1.0.0 spec
-don't set this field so it doesn't make sense to validate it. On the
-contrary, when using SR-IOV this check breaks VFs as they are all part
-of the same NVMe subsystem.
-
-Signed-off-by: Maximilian Heyne <mheyne@amazon.de>
-Cc: <stable@vger.kernel.org> # 5.4+
----
- drivers/nvme/host/core.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 28f4388c1337..c4a991acc949 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -2773,7 +2773,8 @@ static int nvme_init_subsystem(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
- 		put_device(&subsys->dev);
- 		subsys = found;
- 
--		if (!nvme_validate_cntlid(subsys, ctrl, id)) {
-+		if (ctrl->vs >= NVME_VS(1, 1, 0) &&
-+		    !nvme_validate_cntlid(subsys, ctrl, id)) {
- 			ret = -EINVAL;
- 			goto out_put_subsystem;
- 		}
-@@ -2883,7 +2884,7 @@ int nvme_init_identify(struct nvme_ctrl *ctrl)
- 			goto out_free;
- 	}
- 
--	if (!(ctrl->ops->flags & NVME_F_FABRICS))
-+	if (!(ctrl->ops->flags & NVME_F_FABRICS) && ctrl->vs >= NVME_VS(1, 1, 0))
- 		ctrl->cntlid = le16_to_cpu(id->cntlid);
- 
- 	if (!ctrl->identified) {
--- 
-2.16.6
 
 
+On 29/06/2020 18.18, Thomas Ruf wrote:
+>=20
+>> On 26 June 2020 at 12:29 Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:=
 
+>>
+>> On 24/06/2020 16.58, Thomas Ruf wrote:
+>>>
+>>>> On 24 June 2020 at 14:07 Peter Ujfalusi <peter.ujfalusi@ti.com> wrot=
+e:
+>>>> On 24/06/2020 12.38, Vinod Koul wrote:
+>>>>> On 24-06-20, 11:30, Thomas Ruf wrote:
+>>>>>
+>>>>>> To make it short - i have two questions:
+>>>>>> - what are the chances to revive DMA_SG?
+>>>>>
+>>>>> 100%, if we have a in-kernel user
+>>>>
+>>>> Most DMAs can not handle differently provisioned sg_list for src and=
+ dst.
+>>>> Even if they could handle non symmetric SG setup it requires entirel=
+y
+>>>> different setup (two independent channels sending the data to each
+>>>> other, one reads, the other writes?).
+>>>
+>>> Ok, i implemented that using zynqmp_dma on a Xilinx Zynq platform (ob=
+viously ;-) and it works nicely for us.
+>>
+>> I see, if the HW does not support it then something along the lines of=
 
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
+>> what the atc_prep_dma_sg did can be implemented for most engines.
+>>
+>> In essence: create a new set of sg_list which is symmetric.
+>=20
+> Sorry, not sure if i understand you right?
+> You suggest that in case DMA_SG gets revived we should restrict the sup=
+port to symmetric sg_lists?
 
+No, not at all. That would not make much sense.
 
+> Just had a glance at the deleted code and the *_prep_dma_sg of these dr=
+ivers had code to support asymmetric lists and by that "unaligend" memory=
+ (relative to page start):
+> at_hdmac.c        =20
+> dmaengine.c       =20
+> dmatest.c         =20
+> fsldma.c          =20
+> mv_xor.c          =20
+> nbpfaxi.c         =20
+> ste_dma40.c       =20
+> xgene-dma.c       =20
+> xilinx/zynqmp_dma.c
+>=20
+> Why not just revive that and keep this nice functionality? ;-)
+
+What I'm saying is that the drivers (at least at_hdmac) in essence
+creates aligned sg_list out from the received non aligned ones.
+It does this w/o actually creating the sg_list itself, but that's just a
+small detail.
+
+In a longer run what might make sense is to have a helper function to
+convert two non symmetric sg_list into two symmetric ones so drivers
+will not have to re-implement the same code and they will only need to
+care about symmetric sg lists.
+
+Note, some DMAs can actually handle non symmetric src and dst lists, but
+I believe it is rare.
+
+>> What might be plausible is to introduce hw offloading support for memc=
+py
+>> type of operations in a similar fashion how for example crypto does it=
+?
+>=20
+> Sounds good to me, my proxy driver implementation could be a good start=
+ for that, too!
+
+It needs to find it's place as well... I'm not sure where that would be.
+Simple block-copy offload, sg copy offload, interleaved offload (frame
+extraction) offload, dmabuf copy offload comes to mind as candidates.
+
+>> The issue with a user space implemented logic is that it is not portab=
+le
+>> between systems with different DMAs. It might be that on one DMA the
+>> setup takes longer than do a CPU copy of X bytes, on the other DMA it
+>> might be significantly less or higher.
+>=20
+> Fully agree with that!
+> I was also unsure how my approach will perform but in our case the late=
+ncy was increased by ~20%, cpu load roughly stayed the same, of course th=
+is was the benchmark from user memory to user memory.
+> From uncached to user memory the DMA was around 15 times faster.
+
+It depends on the size of the transfer. Lots of small individual
+transfers might be worst via DMA do the the setup time, completion
+handling, etc.
+
+>> Using CPU vs DMA for a copy in certain lengths and setups should not b=
+e
+>> a concern of the user space.
+>=20
+> Also fully agree with that!
+
+There is one and big issue with the fallback to CPU copy... If you used
+DMA then you might need to do cache operation to get things in their
+right place.
+If you have done it with CPU then you most like do not need to care
+about it.
+Handling this should be done in level where we are aware which path is
+taken.
+
+>> Yes, you have a closed system with controlled parameters, but a generi=
+c
+>> mem2mem_offload framework should be usable on other setups and the sam=
+e
+>> binary should be working on different DMAs where one is not efficient
+>> for <512 bytes, the other shows benefits under 128bytes.
+>=20
+> Usable: of course
+> "Faster": not necessarily as long as it is an option
+>=20
+> Thanks for your valuable input and suggestions!
+>=20
+> best regards,
+> Thomas
+>=20
+
+- P=C3=A9ter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
