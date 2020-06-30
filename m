@@ -2,124 +2,134 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C00C9C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53203C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BC232067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:03:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DDDD2067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:03:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="foy66+GK"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dujKLgF7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728941AbgF3GDI (ORCPT
+        id S1729597AbgF3GDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 02:03:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60188 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbgF3GDH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 02:03:07 -0400
-Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CB75C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 23:03:07 -0700 (PDT)
-Received: by mail-ej1-x644.google.com with SMTP id dp18so19234887ejc.8
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 23:03:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition;
-        bh=EQD1bFwrLDnCLEnmgIyqsRXwmZjYXtc7//XWLwadNSE=;
-        b=foy66+GKYBpuHqY/QElQJV7z2X5WD0AEJ6cPUdaT3FRpJ6tWtKriP6i/hwMww8xFsO
-         QpaygkSG8C5ftwo3TmL4XFdpxUqNfbeOYXxhG2axAWvMfw2uXw5PnvN3b5q0iLHP73Bm
-         EfpKC79geBMGz9Nf0BPZmcZEtlwt6YmrYtM/s0V9E0Uk0e5wLbw+QZQwc+aeXBnTSwSF
-         X0W1OIuyOi4UI8BPOD26eVTIi0RS1J/v+G5+ouSaz0igX5d+4Cq9HmsJFRF3Cb2ppN5y
-         M0N/IY3QKD4zrUPTtKF2x6305e1BCC+mWdTy05yu/6kEEjmaUAjlHIt9nsEYIWAodw9Z
-         FnvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition;
-        bh=EQD1bFwrLDnCLEnmgIyqsRXwmZjYXtc7//XWLwadNSE=;
-        b=rQcporL46cXRhFfLBnKF79iRGYsWlXy5PK8842A2nxZmie09CtumS8cNkEu9PQH/g+
-         h0GtMXr78pH6bFCVRIkTBi1v8XYlc8OjsqOezR6kni45EfT2YINm9Ow1E7h4Zj3bhuAt
-         1lPRWCTMM5iw3dw9CwPHOueC+OFSmrx+2erNbClGia1etJkCA3uZnlRKJGqkttqwEHJx
-         uTT2KQEklSCCGVpVOFa9zrm8ml2oThTrty3EnNjA7+eZREa4DIxVWnVvzyzbeuQJ/+8G
-         CojDzWtLvk9sSCiR2/ofSUAMcI8d36piSi/QorB6g2Wq4aYGzMW7KvkHIEMMzylEeqRX
-         N2sw==
-X-Gm-Message-State: AOAM530oNZdxC0jDT8PZlcGIBA8+9UaOR1ozv9N9MXxpFGT0RV8T9BXw
-        KUGnqDOn6iFaZ7UHNDzsljyE4+LQ
-X-Google-Smtp-Source: ABdhPJwAF8f/rg1wetky0kH6Oy/tsv9I2rLXjaf75ITfq9FZBjZ5vUt3BnUqkx0Y7uCCx+iy6xH4oA==
-X-Received: by 2002:a17:906:3282:: with SMTP id 2mr16336199ejw.93.1593496986141;
-        Mon, 29 Jun 2020 23:03:06 -0700 (PDT)
-Received: from limone.gonsolo.de ([46.114.35.110])
-        by smtp.gmail.com with ESMTPSA id v27sm1163417ejg.36.2020.06.29.23.03.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 23:03:05 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 08:03:01 +0200
-From:   Gon Solo <gonsolo@gmail.com>
-To:     alexander.deucher@amd.com, christian.koenig@amd.com,
-        airlied@linux.ie, daniel@ffwll.ch, Hawking.Zhang@amd.com,
-        tao.zhou1@amd.com, Dennis.Li@amd.com, guchun.chen@amd.com,
-        tom.stdenis@amd.com, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        torvalds@linux-foundation.org
-Subject: Unused lines
-Message-ID: <20200630060301.GA108674@limone.gonsolo.de>
+        Tue, 30 Jun 2020 02:03:51 -0400
+Received: from ozlabs.org ([203.11.71.1]:54073 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726047AbgF3GDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 02:03:51 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49wv1c1lCqz9s6w;
+        Tue, 30 Jun 2020 16:03:47 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1593497029;
+        bh=plUTU+BvylG7MItduitdeiVnlDPkDDfUW76N7F3yT2o=;
+        h=Date:From:To:Cc:Subject:From;
+        b=dujKLgF7xci1JyJToctrdgAzUb0F1sOFZJMemJjbhVEmrLp7x11BRTs5rMjK/HLtS
+         uQ165adRDAlPL86NrmUzUOLpd2H7fByd+akhInmDXXjnlYpf+mRih2l6OWyuyDScLF
+         KcpySV4J3Ea204yPJBHD8U+luv4jTFXmoQg1b0ZKHwOX0uwueJ2HTOfEUwDzNMMfv8
+         1khrsLZ72ACDa468x9OqRld+1gF+JaTJz8SbUS+M1LsNKs2vem6v7nL6item54+EoJ
+         6ic9Jp9nr6l6fM5/IqejXRkM1+z4HahofXFCNeqsCzgWtlauBtxUhhzho6vWyot/9Q
+         cTAki51S2zTbQ==
+Date:   Tue, 30 Jun 2020 16:03:46 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Brendan Higgins <brendanhiggins@google.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alan Maguire <alan.maguire@oracle.com>
+Subject: linux-next: build failure after merge of the thunderbolt tree
+Message-ID: <20200630160346.696f6419@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="+HP7ph2BbKc20aGI"
-Content-Disposition: inline
+Content-Type: multipart/signed; boundary="Sig_/PANaBPwAFEIYYBZ6Zwr+7fT";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/PANaBPwAFEIYYBZ6Zwr+7fT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
---+HP7ph2BbKc20aGI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hi all,
 
-Hi!
-
-Are the 147MB or 1.6 million(!) lines in
-drivers/gpu/drm/amd/include/asic_reg really necessary? I grepped a few
-of them and they don't seem to be used, neither in the kernel nor drm or
-mesa. As an example I removed one of the unused lines (see the attached
-patch) and the amdgpu driver seems to build just fine.
-
-Cheers,
-g
+After merging the thunderbolt tree, today's linux-next build (powerpc
+allyesconfig) failed like this:
 
 
---+HP7ph2BbKc20aGI
-Content-Type: text/x-diff; charset=us-ascii
-Content-Disposition: attachment; filename="0001-Remove-unused-line.patch"
+Caused by commit
 
-From 6dbc3e4d129ce46f952c8365f6ca22b2e1aaa33b Mon Sep 17 00:00:00 2001
-From: Gon Solo <gonsolo@gmail.com>
-Date: Tue, 30 Jun 2020 07:47:12 +0200
-Subject: [PATCH] Remove unused line.
+  54509f5005ca ("thunderbolt: Add KUnit tests for path walking")
 
+interacting with commit
+
+  d4cdd146d0db ("kunit: generalize kunit_resource API beyond allocated reso=
+urces")
+
+from the kunit-next tree.
+
+I have applied the following merge fix patch.
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Tue, 30 Jun 2020 15:51:50 +1000
+Subject: [PATCH] thunderbolt: merge fix for kunix_resource changes
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 ---
- drivers/gpu/drm/amd/include/asic_reg/nbio/nbio_6_1_sh_mask.h | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/thunderbolt/test.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/include/asic_reg/nbio/nbio_6_1_sh_mask.h b/drivers/gpu/drm/amd/include/asic_reg/nbio/nbio_6_1_sh_mask.h
-index 29af5167cd00..d45bd18a05dd 100644
---- a/drivers/gpu/drm/amd/include/asic_reg/nbio/nbio_6_1_sh_mask.h
-+++ b/drivers/gpu/drm/amd/include/asic_reg/nbio/nbio_6_1_sh_mask.h
-@@ -24,7 +24,6 @@
- 
- // addressBlock: nbio_pcie_pswuscfg0_cfgdecp
- //PSWUSCFG0_VENDOR_ID
--#define PSWUSCFG0_VENDOR_ID__VENDOR_ID__SHIFT                                                                 0x0
- #define PSWUSCFG0_VENDOR_ID__VENDOR_ID_MASK                                                                   0xFFFFL
- //PSWUSCFG0_DEVICE_ID
- #define PSWUSCFG0_DEVICE_ID__DEVICE_ID__SHIFT                                                                 0x0
--- 
-2.25.1
+diff --git a/drivers/thunderbolt/test.c b/drivers/thunderbolt/test.c
+index acb8b6256847..a4d78811f7e2 100644
+--- a/drivers/thunderbolt/test.c
++++ b/drivers/thunderbolt/test.c
+@@ -17,13 +17,13 @@ static int __ida_init(struct kunit_resource *res, void =
+*context)
+ 	struct ida *ida =3D context;
+=20
+ 	ida_init(ida);
+-	res->allocation =3D ida;
++	res->data =3D ida;
+ 	return 0;
+ }
+=20
+ static void __ida_destroy(struct kunit_resource *res)
+ {
+-	struct ida *ida =3D res->allocation;
++	struct ida *ida =3D res->data;
+=20
+ 	ida_destroy(ida);
+ }
+--=20
+2.27.0
 
+--=20
+Cheers,
+Stephen Rothwell
 
---+HP7ph2BbKc20aGI--
+--Sig_/PANaBPwAFEIYYBZ6Zwr+7fT
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl761cIACgkQAVBC80lX
+0Gwv1AgAhslxYtdHIbnYIMtfrNpPxK4oDcoq7vGVyOOTt7r2lWHdpfnk+u52pQrn
+umb5XC7d0al0OBPr0/vjkaWOtZfctxJHo8/zI96uRsMMpIrJvCJ6SY+AGMe/FRaX
+/Y+pLRHSWNJB/ls8q7/gmrQP+ss4MHWMMpYXd8Rcp12Zw5uZnHPBa9qNmpXLxaPg
+/6A3MT6XUXoF9Poa/ebszs1OfomX75d1xMiObJjSjsbmtQWIdBIU3YIiqb8r5vTN
+BlI9IpxebQIuJIDzS7qJV6zvOjLC4oDDRk06fU9HTa8P5MjCmMciOnuCPySDa8Iv
+Ts0TWOO1IR4G6J1WfQQs7Hh9aks/Nw==
+=zmmO
+-----END PGP SIGNATURE-----
+
+--Sig_/PANaBPwAFEIYYBZ6Zwr+7fT--
