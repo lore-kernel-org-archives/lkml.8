@@ -2,148 +2,148 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33252C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25DD7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1334120768
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:40:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593499259;
-	bh=RX90ObIhUmfx3K1A2GZuj3Lg7k384IJge1N8Jz6T0PI=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=0Gi/uU2K4VzKurf9slMZIjiHS8gE+ky8JnW40OeuSx2weF6kq98f5yOcT14Et+A6Y
-	 7ODG29n3f7ZQe1cUb/I21H9Drx5y5CJ86bsbe69xfSsG+lotMkrNJbay42rksIOxCM
-	 VuMFKvZWFXq4pFSPHrR/kaim0/SjL4apJRJ2mJmI=
+	by mail.kernel.org (Postfix) with ESMTP id 00119207E8
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:41:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="kMxKmpbG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730401AbgF3Gk6 (ORCPT
+        id S1730432AbgF3Gl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 02:40:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59894 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730190AbgF3Gk5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 02:40:57 -0400
-Received: from localhost (p54b336a9.dip0.t-ipconnect.de [84.179.54.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7745D20759;
-        Tue, 30 Jun 2020 06:40:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593499257;
-        bh=RX90ObIhUmfx3K1A2GZuj3Lg7k384IJge1N8Jz6T0PI=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=aUX8D9fzGJti06YARU2Lq98HrOC60xHG8vez6U/y7A1phBsgbnyHcoNvhEIeNNp+b
-         4o9wJS9INTSWmIOIiTZtAYM6fLElg8o/ChSSgeCzxRcELzhJka7CQoKgaq8jTD/Akk
-         gTtVPoxw8EB4+y0yfJJb97P4YtrRSFsBkWvjv6iw=
-Date:   Tue, 30 Jun 2020 08:40:50 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        fabrice.gasnier@st.com
-Subject: Re: [PATCH 4/4] i2c: stm32f7: Add SMBus-specific protocols support
-Message-ID: <20200630064050.GA996@ninjato>
-References: <1588657871-14747-1-git-send-email-alain.volmat@st.com>
- <1588657871-14747-5-git-send-email-alain.volmat@st.com>
- <20200523110140.GD3459@ninjato>
- <20200526103938.GC14423@gnbcxd0016.gnb.st.com>
+        Tue, 30 Jun 2020 02:41:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37848 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730190AbgF3Gl1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 02:41:27 -0400
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC320C061755;
+        Mon, 29 Jun 2020 23:41:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=dqdqP9RRgNiXtHwuMESvsYqArYSjsXn6hYwLSXg9Z+E=; b=kMxKmpbGA6gEpK5aXTTnvAWOIn
+        aJE8zIQ54SyYGKsa11ofbBkJH+aaExjMqYDyRiaDklgGG2rE7Og+YI8cTnmEDr4LNXeDxyzaICYFe
+        Mx67qtcLaPRekFa4PhhKpSEIkrDkwNeHwhkGiVynpoKPdQUkr3nHf/bY9gBk84xwHseQ=;
+Received: from p200300ccff14dd001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff14:dd00:1a3d:a2ff:febf:d33a] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1jq9wq-0004vi-W6; Tue, 30 Jun 2020 08:40:53 +0200
+Date:   Tue, 30 Jun 2020 08:40:51 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>
+Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Josua Mayer <josua.mayer@jm0.eu>
+Subject: Re: [RFC PATCH 00/10] Netronix embedded controller driver for Kobo
+ and Tolino ebook readers
+Message-ID: <20200630084051.66feadea@aktux>
+In-Reply-To: <20200620223915.1311485-1-j.neuschaefer@gmx.net>
+References: <20200620223915.1311485-1-j.neuschaefer@gmx.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="n8g4imXOkfNTN/H1"
-Content-Disposition: inline
-In-Reply-To: <20200526103938.GC14423@gnbcxd0016.gnb.st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
---n8g4imXOkfNTN/H1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Sun, 21 Jun 2020 00:39:04 +0200
+Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net> wrote:
 
-Hi Alain,
-
-> > So, as mentioned in the other review, I'd like to evaluate other
-> > possibilities for the above:
-> >=20
-> > - One option is to enable it globally in probe(). Then you lose the
-> >   possibility to have a device at address 0x08.
+> Hi,
 >=20
-> I'd prefer avoid this solution to not lose the address 0x08.
-
-Understandably.
-
-> > - Enable it in probe() only if there is a generic binding "host-notify".
+> This patchset adds basic support for the embedded controller found on
+> older ebook reader boards designed by/with the ODM Netronix Inc.[1] and
+> sold by Kobo or Tolino, for example the Kobo Aura and the Tolino Shine.
+> These drivers are based on the vendor kernel sources, but in order to
+> all information in a single place, I documented the register interface
+> of the EC on GitHub[4].
 >=20
-> Do you mean having the adapter walk through childs node and see if at lea=
-st
-> one of them have the host-notify property ? This mean that such solution
-> wouldn't work for device relying on platform data rather than DT nodes.
-
-I meant a generic binding for the host-controller. It could be seen as a
-HW description if we need HostNotify on that bus or not.
-
-Maybe it becomes more clear with the R-Car I2C controller as an example.
-It only supports one slave address. If I want HostNotify there, I can't
-use another slave backend. Now, it could be that I need the slave EEPROM
-backend, although there is a HostNotify capable device on the bus. So, I
-am leaning to have a generic "host-notify" binding for the host.
-
-I consider platform_data legacy. If we use device_property, we should be
-safe regarding all current and future HW descriptions, or?
-
-> > - Let the core scan for a device with HOST_NOTIFY when registering an
-> >   adapter and then call back into the driver somehow?
+> A few things still needs to be ironed out, hence the RFC tag:
+>  - The reboot/reset handler in patch 3/10 calls into I2C code, which may
+>    sleep, but reboot handlers are apparently not allowed to sleep.
+>  - I'm not sure I got the YAML DT bindings right. I have also included
+>    the plain text DT bindings for reference.
 >=20
-> You mean at adapter registration time only ? Not device probing time ?
-> At probing time, we could have the core (i2c_device_probe) check for the =
-flag
-> HOST_NOTIFY and if setted call a dedicated host-notify reg callback ?
+>=20
+got a chance to test it on a Tolino Shine 2 HD.
+It uses the RTC from the RC5T619 but backlight seems to go via MSP430
+EC.
 
-As said above, I am leaning to the generic property. In addition, it
-doesn't feel right to me to add/remove the HostNotify feature at runtime
-depending on the client devices. Imagine someone changes another slave
-backend to address 0x08 and the HostNotify device comes later. Then, it
-won't work all of a sudden.
+I got this.
 
-It feels much safer to me to declare HostNotify as a feature of the IP
-core which it either has or it has not, configurable at boot-time.
+[    1.453603] ntxec 0-0043: Netronix embedded controller version f110 dete=
+cted.
+[   10.723638] ntxec-rtc 21a0000.i2c:embedded-controller@43:rtc: registered=
+ as rtc0
+[   10.775276] ntxec-pwm: probe of 21a0000.i2c:embedded-controller@43:pwm f=
+ailed with error -5
+[   10.850597] ntxec-rtc 21a0000.i2c:embedded-controller@43:rtc: hctosys: u=
+nable to read the hardware clock
 
-Makes sense?
+version number matchess with what the vendor kernel reports. Maybe we
+should document which version is running on which devices?
 
-Kind regards,
+&i2c1 {
+        pinctrl-names =3D "default","sleep";
+        pinctrl-0 =3D <&pinctrl_i2c1>;
+        pinctrl-1 =3D <&pinctrl_i2c1_sleep>;
+        status =3D "okay";
 
-   Wolfram
+        embedded-controller@43 {
+//              pinctrl-names =3D "default";
+//              pinctrl-0 =3D <&pinctrl_ec>;
+                compatible =3D "netronix,ntxec";
+                reg =3D <0x43>;
+                interrupts-extended =3D <&gpio5 11 IRQ_TYPE_EDGE_FALLING>;
+                interrupt-controller;
+                #interrupt-cells =3D <1>;
 
+                ec_pwm: pwm {
+                        compatible =3D "netronix,ntxec-pwm";
+                        #pwm-cells =3D <2>;
+                };
 
---n8g4imXOkfNTN/H1
-Content-Type: application/pgp-signature; name="signature.asc"
+                rtc {
+                        compatible =3D "netronix,ntxec-rtc";
+                };
+        };
+};
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl763m0ACgkQFA3kzBSg
-KbaoHA//ZP1N+SLlANCFN1u1vk5xwRz/j0YJbS8Spi7/Gx0c9+tDSJbPrSEe5BhQ
-KyI8OB/LtPVhDlk4xAGXRDIOTq9Ul629zbLFyLt3rIjq5wDL/4JfhntZAOsTdEuA
-Y9w1OQrh5tv6oYx3P/iKyQkCHOPTL9hvaWaRx9RMNF7Z8EuHeiQniozJSyM56E6w
-bDEu05wsSIoJgt8MlAfpCeeU74FJn4aa9iu5muFTeL077BgFB8qQTrUIJlbCy7gR
-uPF5vvB4nq35sVjgRTCs/Bj5foGuLpi/q2yK0zDAvMRCF6fDX0HNXHclrx505NnZ
-iTgFOutoRxscMHQS7rA3CGxEI5Gb6+W1SNXwpmT6hlFqXQkmcwrrNmcDbMuPXsC9
-StNMDE1HpxdpQ5quVQ6Y/pLdfYVDD2O9QHadsHg5ldxp+I0x3oe+x4Th+uXvtxaz
-OtM+VDKbJ33pBwb5QHLOmse+KHcQFfoFJ+0l2XDcQ6+qOyLN/9eOI1A3lEnA6m+W
-r6EhwIV4pzohjRXpV/SlW2m2cI2wZPluvnRuSuD811A9H67oTAHsFEEE/IN0GwP6
-JCbX2TDa8zwglLHq+goqVyS1E9VtQkN35Igk0zhpSeJ04xJSdI1mU07SHR+stXCw
-cWrMSoqsOKJdzlotxv37dr6q9VscBNd2thkdC8DP+VoufMX8aJ8=
-=HRaX
------END PGP SIGNATURE-----
-
---n8g4imXOkfNTN/H1--
+Regards,
+Andreas
