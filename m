@@ -2,137 +2,140 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10AD2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10EB8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D1777206BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:56:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593507407;
-	bh=RMkfOv+c5EL2QlsPXrFbfPa5buPm5V8aN83cTazCr9s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gm8jUsAi853eP/c/rDYsR6GI1tjhxEJdF1ej/r5KOsRY/JUUyXYNYEmot7W88jUBu
-	 B2DYjJN36EEWUnn4nwqN60znqa0qLMMo53/VqC2SiOqK/no1ij2HtJ0PV/ya+vdL29
-	 nuV/bpR/VuFXV88s7Ae+E62pI7pICvGAi6XOAtaA=
+	by mail.kernel.org (Postfix) with ESMTP id EBBB6206BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:57:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731708AbgF3I4q (ORCPT
+        id S1731757AbgF3I5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 04:56:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56698 "EHLO mail.kernel.org"
+        Tue, 30 Jun 2020 04:57:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40932 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729992AbgF3I4p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 04:56:45 -0400
-Received: from localhost (unknown [84.241.197.94])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 544B220759;
-        Tue, 30 Jun 2020 08:56:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593507405;
-        bh=RMkfOv+c5EL2QlsPXrFbfPa5buPm5V8aN83cTazCr9s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sORZvxL8YlMIovX+fTWnmJeH68eF70iC78FC6rsnRerQnoEzU9MGmg4rOEWWS5RvC
-         0Z3kPFW6XcRofM0kLRef2FUs9aES0j3+1rOdb5JAeT2bs4iShNlnkg9EuHDXDT/T+n
-         JI1+Zdsxm3TAYyyirQ/hC2Se4wpZQVq5B12o2NGU=
-Date:   Tue, 30 Jun 2020 10:56:41 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Daniel Gutson <daniel.gutson@eclypsium.com>
-Cc:     Derek Kiernan <derek.kiernan@xilinx.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Richard Hughes <hughsient@gmail.com>,
-        Alex Bazhaniuk <alex@eclypsium.com>
-Subject: Re: [PATCH] SPI LPC information kernel module
-Message-ID: <20200630085641.GD637809@kroah.com>
-References: <20200629225932.5036-1-daniel.gutson@eclypsium.com>
+        id S1729992AbgF3I5J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 04:57:09 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 87A42AE61;
+        Tue, 30 Jun 2020 08:57:06 +0000 (UTC)
+Received: by lion.mk-sys.cz (Postfix, from userid 1000)
+        id E8BAB604DC; Tue, 30 Jun 2020 10:57:05 +0200 (CEST)
+Date:   Tue, 30 Jun 2020 10:57:05 +0200
+From:   Michal Kubecek <mkubecek@suse.cz>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Sam Ravnborg <sam@ravnborg.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Networking <netdev@vger.kernel.org>
+Subject: Re: [PATCH 04/16] net: bpfilter: use 'userprogs' syntax to build
+ bpfilter_umh
+Message-ID: <20200630085705.txwn62zixvxxs7rt@lion.mk-sys.cz>
+References: <20200423073929.127521-1-masahiroy@kernel.org>
+ <20200423073929.127521-5-masahiroy@kernel.org>
+ <20200608115628.osizkpo76cgn2ci7@lion.mk-sys.cz>
+ <CAK7LNARGKCyWbfWUOX3nLLOBS3gi1QU3acdXLPVK4C+ErMDLpA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200629225932.5036-1-daniel.gutson@eclypsium.com>
+In-Reply-To: <CAK7LNARGKCyWbfWUOX3nLLOBS3gi1QU3acdXLPVK4C+ErMDLpA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 07:59:32PM -0300, Daniel Gutson wrote:
-> This kernel module exports configuration attributes for the
-> system SPI chip.
-> This initial version exports the BIOS Write Enable (bioswe),
-> BIOS Lock Enable (ble), and the SMM Bios Write Protect (SMM_BWP)
-> fields of the Bios Control register. The idea is to keep adding more
-> flags, not only from the BC but also from other registers in following
-> versions.
+On Tue, Jun 30, 2020 at 03:30:04PM +0900, Masahiro Yamada wrote:
+> On Mon, Jun 8, 2020 at 8:56 PM Michal Kubecek <mkubecek@suse.cz> wrote:
+> >
+> > I just noticed that this patch (now in mainline as commit 8a2cc0505cc4)
+> > drops the test if CONFIG_BPFILTER_UMH is "y" so that -static is now
+> > passed to the linker even if bpfilter_umh is built as a module which
+> > wasn't the case in v5.7.
+> >
+> > This is not mentioned in the commit message and the comment still says
+> > "*builtin* bpfilter_umh should be linked with -static" so this change
+> > doesn't seem to be intentional. Did I miss something?
 > 
-> The goal is that the attributes are avilable to fwupd when SecureBoot
-> is turned on.
+> I was away for a while from this because I saw long discussion in
+> "net/bpfilter: Remove this broken and apparently unmaintained"
 > 
-> A technical note: I check if *ppos == BUFFER_SIZE in the reading function
-> to exit early and avoid an extra access to the HW, for example when using
-> the 'cat' command, which causes two read operations.
-
-Why not use the simple_* functions which should prevent that type of
-thing?
-
-
-
 > 
-> Signed-off-by: Daniel Gutson <daniel.gutson@eclypsium.com>
-> ---
->  Documentation/ABI/stable/securityfs-spi-lpc |  23 +
-
-Why is this going in securityfs at all?  Why not just sysfs as it is a
-CPU attribute, right?
-
-
->  MAINTAINERS                                 |   6 +
->  drivers/misc/Kconfig                        |   1 +
->  drivers/misc/Makefile                       |   1 +
->  drivers/misc/spi_lpc/Kconfig                |  20 +
->  drivers/misc/spi_lpc/Makefile               |   8 +
->  drivers/misc/spi_lpc/bios_data_access.c     | 559 +++++++++++++++++++
->  drivers/misc/spi_lpc/bios_data_access.h     | 181 +++++++
->  drivers/misc/spi_lpc/low_level_access.c     |  59 ++
->  drivers/misc/spi_lpc/low_level_access.h     |  21 +
->  drivers/misc/spi_lpc/spi_lpc_main.c         | 176 ++++++
->  drivers/misc/spi_lpc/viddid_arch_map.c      | 566 ++++++++++++++++++++
->  drivers/misc/spi_lpc/viddid_arch_map.h      |  17 +
->  13 files changed, 1638 insertions(+)
->  create mode 100644 Documentation/ABI/stable/securityfs-spi-lpc
->  create mode 100644 drivers/misc/spi_lpc/Kconfig
->  create mode 100644 drivers/misc/spi_lpc/Makefile
->  create mode 100644 drivers/misc/spi_lpc/bios_data_access.c
->  create mode 100644 drivers/misc/spi_lpc/bios_data_access.h
->  create mode 100644 drivers/misc/spi_lpc/low_level_access.c
->  create mode 100644 drivers/misc/spi_lpc/low_level_access.h
->  create mode 100644 drivers/misc/spi_lpc/spi_lpc_main.c
->  create mode 100644 drivers/misc/spi_lpc/viddid_arch_map.c
->  create mode 100644 drivers/misc/spi_lpc/viddid_arch_map.h
+> Please let me resume this topic now.
 > 
-> diff --git a/Documentation/ABI/stable/securityfs-spi-lpc b/Documentation/ABI/stable/securityfs-spi-lpc
-> new file mode 100644
-> index 000000000000..22660a7fd914
-> --- /dev/null
-> +++ b/Documentation/ABI/stable/securityfs-spi-lpc
-> @@ -0,0 +1,23 @@
-> +What:		/sys/kernel/security/firmware/bioswe
-> +Date:		June 2020
-> +KernelVersion:	5.8.0
-> +Contact:	daniel.gutson@eclypsium.com
-> +Description:	If the system firmware set BIOS Write Enable.
-> +		0: writes disabled, 1: writes enabled.
+> 
+> The original behavior of linking umh was like this:
+>   - If CONFIG_BPFILTER_UMH=y, bpfilter_umh was linked with -static
+>   - If CONFIG_BPFILTER_UMH=m, bpfilter_umh was linked without -static
+> 
+> 
+> 
+> Restoring the original behavior will add more complexity because
+> now we have CONFIG_CC_CAN_LINK and CONFIG_CC_CAN_LINK_STATIC
+> since commit b1183b6dca3e0d5
+> 
+> If CONFIG_BPFILTER_UMH=y, we need to check CONFIG_CC_CAN_LINK_STATIC.
+> If CONFIG_BPFILTER_UMH=m, we need to check CONFIG_CC_CAN_LINK.
+> This would make the Kconfig dependency logic too complicated.
+> 
+> 
+> To make it simpler, I'd like to suggest two options.
+> 
+> 
+> 
+> Idea 1:
+> 
+>   Always use -static irrespective of whether
+>   CONFIG_BPFILTER_UMH is y or m.
+> 
+>   Add two more lines to clarify this
+>   in the comment in net/bpfilter/Makefile:
+> 
+>   # builtin bpfilter_umh should be linked with -static
+>   # since rootfs isn't mounted at the time of __init
+>   # function is called and do_execv won't find elf interpreter.
+>   # Static linking is not required when bpfilter is modular, but
+>   # we always pass -static to keep the 'depends on' in Kconfig simple.
 
-THis is very x86-specific, what about ARM/MIPS/anything else?  Perhaps a
-cpu/arch-specific thing instead?
+I wouldn't be very happy with this solution as that would mean adding an
+extra build dependency which we don't really need. We might even
+consider disabling CONFIG_BPFILTER_UMH instead.
 
-Again, which makes it seem like securityfs is not the thing for this, as
-it describes the hardware, not a security model which is what securityfs
-has been for in the past, right?
+> Idea 2:
+> 
+>    Allow umh to become only modular,
+>    and drop -static flag entirely.
+> 
+>    If you look at net/bpfilter/Kconfig,
+>    BPFILTER_UMH already has 'default m'.
+>    So, I assume the most expected use-case
+>    is modular.
+> 
+>    My suggestion is to replace 'default m' with 'depends on m'.
+> 
+>    config BPFILTER_UMH
+>            tristate "bpfilter kernel module with user mode helper"
+>            depends on CC_CAN_LINK
+>            depends on m
+> 
+>    Then BPFILTER_UMH will be restricted to either m or n.
+>    Link umh dynamically because we can expect rootfs
+>    is already mounted for the module case.
 
-thanks,
+This wouldn't be a problem for me or openSUSE kernels as we already have
+CONFIG_BPFILTER_UMH=m. But I can't speak for others, I'm not sure if
+there are some use cases requiring CONFIG_BPFILTER_UMH=y.
 
-greg k-h
+Michal
