@@ -2,151 +2,126 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6459EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A32AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 436642073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:07:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BhR7jMFg"
+	by mail.kernel.org (Postfix) with ESMTP id 3A68820768
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:07:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730621AbgF3HHe (ORCPT
+        id S1730633AbgF3HHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 03:07:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41864 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730386AbgF3HHd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 03:07:33 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FB0DC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 00:07:31 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id f18so10910550wrs.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 00:07:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=cbt8RXvND2R7NfXRVkB9C3T19Zq+4hqCDYLNIwxNyiY=;
-        b=BhR7jMFgZlw5cQh00kFtL2pJSCn1hWja/Led3VfEYPsjIxBljrb+B4/CBOiQ5nnu9y
-         /znBl9lg3qENbK4iLftHtGynyuEGD/9p0+RzwEAdIG7YVwlNNqhwnSOch0u9LYPSWl+i
-         RnSks5rfX9g/xboxbo3oh2jy1jJPx9KioIBDiN4v6b7uKYm4T3FD86slPHd2xwNn6p89
-         WSFO2Acw61/widLlMELCMPCZljptKR8cZkQv1yGtMDo9tyHAsnPopvfNh3oYWY7lmlWV
-         qsQXXaa8SpcStFqpisCkb1JYs5vkb5X8dLe3xJ0X6+3n2ibWq+xQ7NhbiEikA40AKaZq
-         j05g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=cbt8RXvND2R7NfXRVkB9C3T19Zq+4hqCDYLNIwxNyiY=;
-        b=Z2kruK2GpEl4xF/mosxcntjZjHKH0I0wLt+wjUcebO2nhxMMVCKVBei3G9GpXoDFJ8
-         nHq3HR77KuyueGyp9QTEayAcBCZ2AgT/Lvh+dN5rU0QgXJ2OP3HhAcBhhYPSLYLIWI4X
-         l5Mmy/PfSeVjwcKtOBlaRZ8GfF3Xz7O0tMT1GaUCXSpA30qjqiqqZXmqMru2rVcSldux
-         vYcYGpUaLoYTP80qiVkaxKPE4oqhbUqsmZZ0Lmjb7tpKajt0iv/DunNBZPVN5DlGiZrS
-         GWJsCYZoCFVkchinff+sHPygFJGJO+WNWpvjceuvWCKsDvsr3jnhHNVfHE/ga3o6JCAe
-         fWXQ==
-X-Gm-Message-State: AOAM5324Trwg8zca825k6X73huHQ1E03UY2r1/gqwNq4w5v+HZnsVU+0
-        gsZ3PWun6e5tl3LzSgiSKSUPxg==
-X-Google-Smtp-Source: ABdhPJyIxIvJd4Ymeeq0IQ887XAPkISAZdn0OrmMLkuxYxQP44rhKLPtXjZS5XRJcNb/i1cecRL42g==
-X-Received: by 2002:adf:a396:: with SMTP id l22mr20309972wrb.24.1593500850292;
-        Tue, 30 Jun 2020 00:07:30 -0700 (PDT)
-Received: from dell ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id e8sm2551614wrp.26.2020.06.30.00.07.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 00:07:29 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 08:07:27 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org
-Subject: Re: [PATCH 1/1] crypto: ux500: hash: Add namespacing to hash_init()
-Message-ID: <20200630070727.GD1179328@dell>
-References: <20200629123003.1014387-1-lee.jones@linaro.org>
- <20200630041029.GA20892@gondor.apana.org.au>
+        Tue, 30 Jun 2020 03:07:46 -0400
+Received: from mga12.intel.com ([192.55.52.136]:2116 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730386AbgF3HHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 03:07:46 -0400
+IronPort-SDR: hMOBxv46gEWRiUELMFJ/DDcT67owjSTk6G5DQ20loaaBjVoak47/A3lUPAJCbaEM/qf5Gund4X
+ ORm/jDbCzTKg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="125796951"
+X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
+   d="scan'208";a="125796951"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 00:07:45 -0700
+IronPort-SDR: zN0xCHYhnQTCKA6dD9R2SaSnOqW7vy7mgzTVJKR9fw9+XOH8P45kstYiWnpOjPL58W/EcoHYFt
+ KioPeOKNjU5g==
+X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
+   d="scan'208";a="454499042"
+Received: from letingex-mobl.ger.corp.intel.com ([10.214.248.180])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 00:07:37 -0700
+Message-ID: <e7068d39c8ca60159ba7d1d5f917ef209570bb86.camel@linux.intel.com>
+Subject: Re: [PATCH 0/7] Add initial Keem Bay SoC / Board support
+From:   Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>
+To:     linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Cc:     devicetree@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-kernel@vger.kernel.org, Dinh Nguyen <dinguyen@kernel.org>,
+        Paul Murphy <paul.j.murphy@intel.com>,
+        Will Deacon <will@kernel.org>,
+        Daniele Alessandrelli <daniele.alessandrelli@intel.com>
+Date:   Tue, 30 Jun 2020 08:07:28 +0100
+In-Reply-To: <20200616155613.121242-1-daniele.alessandrelli@linux.intel.com>
+References: <20200616155613.121242-1-daniele.alessandrelli@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200630041029.GA20892@gondor.apana.org.au>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Jun 2020, Herbert Xu wrote:
+On Tue, 2020-06-16 at 16:56 +0100, Daniele Alessandrelli wrote:
+> Hi,
+> 
+> This patch-set adds initial support for a new Intel Movidius SoC
+> code-named
+> Keem Bay. The SoC couples an ARM Cortex A53 CPU with an Intel
+> Movidius VPU.
+> 
+> This initial patch-set enables only the minimal set of components
+> required to
+> make the Keem Bay EVM board boot into initramfs.
+> 
+> Brief summary of the patch-set:
+> * Patches 1-2 add the Keem Bay SCMI Mailbox driver (needed to enable
+> SCMI in
+>   Keem Bay)
+> * Patch 3 adds the ARCH_KEEMBAY config option
+> * Patches 4-7 add minimal device tree for Keem Bay SoC and Keem Bay
+> EVM
+>   (together with information about the SoC maintainers)
+> 
+> Regards,
+> Daniele
+> 
+> 
+> Daniele Alessandrelli (5):
+>   arm64: Add config for Keem Bay SoC
+>   dt-bindings: arm: Add Keem Bay bindings
+>   MAINTAINERS: Add maintainers for Keem Bay SoC
+>   arm64: dts: keembay: Add device tree for Keem Bay SoC
+>   arm64: dts: keembay: Add device tree for Keem Bay EVM board
+> 
+> Paul Murphy (2):
+>   dt-bindings: mailbox: Add Keem Bay SCMI mailbox bindings
+>   mailbox: keembay-scmi-mailbox: Add support for Keem Bay mailbox
+> 
+>  .../devicetree/bindings/arm/keembay.yaml      |  19 ++
+>  .../mailbox/intel,keembay-scmi-mailbox.yaml   |  44 ++++
+>  MAINTAINERS                                   |  16 ++
+>  arch/arm64/Kconfig.platforms                  |   5 +
+>  arch/arm64/boot/dts/intel/Makefile            |   1 +
+>  arch/arm64/boot/dts/intel/keembay-evm.dts     |  55 +++++
+>  arch/arm64/boot/dts/intel/keembay-soc.dtsi    | 172 +++++++++++++++
+>  drivers/mailbox/Kconfig                       |   9 +
+>  drivers/mailbox/Makefile                      |   2 +
+>  drivers/mailbox/keembay-scmi-mailbox.c        | 203
+> ++++++++++++++++++
+>  include/dt-bindings/clock/keembay-clocks.h    | 188 ++++++++++++++++
+>  include/dt-bindings/power/keembay-power.h     |  19 ++
+>  12 files changed, 733 insertions(+)
+>  create mode 100644
+> Documentation/devicetree/bindings/arm/keembay.yaml
+>  create mode 100644
+> Documentation/devicetree/bindings/mailbox/intel,keembay-scmi-
+> mailbox.yaml
+>  create mode 100644 arch/arm64/boot/dts/intel/keembay-evm.dts
+>  create mode 100644 arch/arm64/boot/dts/intel/keembay-soc.dtsi
+>  create mode 100644 drivers/mailbox/keembay-scmi-mailbox.c
+>  create mode 100644 include/dt-bindings/clock/keembay-clocks.h
+>  create mode 100644 include/dt-bindings/power/keembay-power.h
+> 
 
-> On Mon, Jun 29, 2020 at 01:30:03PM +0100, Lee Jones wrote:
-> > A recent change to the Regulator consumer API (which this driver
-> > utilises) add prototypes for the some suspend functions.  These
-> > functions require including header file include/linux/suspend.h.
-> > 
-> > The following tree of includes affecting this driver will be
-> > present:
-> > 
-> >    In file included from include/linux/elevator.h:6,
-> >                     from include/linux/blkdev.h:288,
-> >                     from include/linux/blk-cgroup.h:23,
-> >                     from include/linux/writeback.h:14,
-> >                     from include/linux/memcontrol.h:22,
-> >                     from include/linux/swap.h:9,
-> >                     from include/linux/suspend.h:5,
-> >                     from include/linux/regulator/consumer.h:35,
-> >                     from drivers/crypto/ux500/hash/hash_core.c:28:
-> > 
-> > include/linux/elevator.h pulls in include/linux/hashtable.h which
-> > contains its own version of hash_init().  This confuses the build
-> > system and results in the following error (amongst others):
-> > 
-> >  drivers/crypto/ux500/hash/hash_core.c:1362:19: error: passing argument 1 of '__hash_init' from incompatible pointer type [-Werror=incompatible-pointer-types]
-> >  1362 |  return hash_init(req);
-> > 
-> > Fix this by namespacing the local hash_init() such that the
-> > source of confusion is removed.
-> > 
-> > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > Cc: Herbert Xu <herbert@gondor.apana.org.au>
-> > Cc: David S. Miller <davem@davemloft.net>
-> > Cc: linux-crypto@vger.kernel.org
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > ---
-> > 
-> > Ideally this should go into v5.8's -rcs else it runs the risk of
-> > breaking when Linus pulls everything in for v5.9-rc1.
+Ping
 
-[...]
 
-> I also dislike pulling in the kitchen sink when all you need in
-> consumer.h is the definition of suspend_state_t.  A better solution
-> would be to move the definition of suspend_state_t into linux/types.h
-> and including that instead of suspend.h in consumer.h.
 
-IMHO, including (whole) headers into source/header files is the norm.
-Even if only a small portion is actually referenced.  Very seldom do
-consumers of an API use more than a fraction of what is available.
-Whether it's a couple of function calls, a struct or a type.
-
-Pulling headers apart and placing items in more convenient places
-i.e. into headers which are more commonly included, messes with the
-compartmentalisation of subsystems and sounds like more of a hack than
-simply saying "to enable suspend functions we need to reference the
-suspend API" like we are here.
-
-> I have no objections to this patch.  However, I'd rather put
-> it on a topic branch which you could pull rather than pushing
-> it into 5.8 straight away.
-
-An immutable branch sounds like a sensible solution.  Thanks.
-
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
