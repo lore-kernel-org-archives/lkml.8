@@ -2,126 +2,141 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0727CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE31BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8C4920672
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:31:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="i+FRdFxL"
+	by mail.kernel.org (Postfix) with ESMTP id B156320672
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:33:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387707AbgF3Mb4 (ORCPT
+        id S2387721AbgF3Mdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 08:31:56 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:33630 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730095AbgF3Mbz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 08:31:55 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593520315; h=Message-ID: References: In-Reply-To: Subject:
- To: From: Date: Content-Transfer-Encoding: Content-Type: MIME-Version:
- Sender; bh=k0MdTyKtV4z22dAVkmjS3nxPgaMUlZ3id20kmVJEhWM=; b=i+FRdFxLZeLEInFPxsSSvAEM7JxW9so+NAx/vtrmnbAsmOXiZwR2HGXG05WMbwLUPM0T+u5j
- BnOxvaxIdMA8mbZDuSafTk6JVkpMxFV5+6MPacy+UZtJ/eQayvItbwEc45SjCunthFWrs5xz
- 5YKtH6F5X7bG/WAiSBQh9qBu1oI=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n13.prod.us-east-1.postgun.com with SMTP id
- 5efb30b1c4bb4f886db6ea4e (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 30 Jun 2020 12:31:45
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 4C166C4339C; Tue, 30 Jun 2020 12:31:44 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: gokulsri)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9A0D0C433C8;
-        Tue, 30 Jun 2020 12:31:43 +0000 (UTC)
+        Tue, 30 Jun 2020 08:33:39 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:18824 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732042AbgF3Mdh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 08:33:37 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05UCWcBc034487;
+        Tue, 30 Jun 2020 08:33:30 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3204yvh57b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 Jun 2020 08:33:30 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05UCX8r6039165;
+        Tue, 30 Jun 2020 08:33:29 -0400
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 3204yvh553-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 Jun 2020 08:33:29 -0400
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05UCGQOu007689;
+        Tue, 30 Jun 2020 12:33:27 GMT
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (d06relay12.portsmouth.uk.ibm.com [9.149.109.197])
+        by ppma06fra.de.ibm.com with ESMTP id 31wwcgsq0s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 Jun 2020 12:33:27 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05UCXOV365077476
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Jun 2020 12:33:24 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4FA0311C04C;
+        Tue, 30 Jun 2020 12:33:24 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8310A11C05B;
+        Tue, 30 Jun 2020 12:33:23 +0000 (GMT)
+Received: from localhost (unknown [9.145.78.150])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 30 Jun 2020 12:33:23 +0000 (GMT)
+Date:   Tue, 30 Jun 2020 14:33:20 +0200
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Dmitry Vyukov <dvyukov@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Alexander Potapenko <glider@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>
+Subject: Re: [PATCH] mm/page_alloc: silence a KASAN false positive
+Message-ID: <your-ad-here.call-01593520400-ext-3384@work.hours>
+References: <20200610052154.5180-1-cai@lca.pw>
+ <CACT4Y+Ze=cddKcU_bYf4L=GaHuJRUjY=AdFFpM7aKy2+aZrmyQ@mail.gmail.com>
+ <20200610122600.GB954@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 30 Jun 2020 18:01:43 +0530
-From:   gokulsri@codeaurora.org
-To:     gokulsri@codeaurora.org, sboyd@kernel.org, agross@kernel.org,
-        bjorn.andersson@linaro.org, david.brown@linaro.org,
-        devicetree@vger.kernel.org, jassisinghbrar@gmail.com,
-        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        mark.rutland@arm.com, mturquette@baylibre.com, ohad@wizery.com,
-        robh+dt@kernel.org, sricharan@codeaurora.org,
-        nprakash@codeaurora.org
-Subject: Re: [PATCH V5 00/10] remoteproc: qcom: q6v5-wcss: Add support for
- secure pil
-In-Reply-To: <1589362265-22702-1-git-send-email-gokulsri@codeaurora.org>
-References: <1589362265-22702-1-git-send-email-gokulsri@codeaurora.org>
-Message-ID: <14579d9dbcc06bca392b41ace1b0ce49@codeaurora.org>
-X-Sender: gokulsri@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200610122600.GB954@lca.pw>
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-06-30_06:2020-06-30,2020-06-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
+ lowpriorityscore=0 mlxlogscore=999 priorityscore=1501 suspectscore=21
+ clxscore=1011 malwarescore=0 phishscore=0 adultscore=0 bulkscore=0
+ impostorscore=0 cotscore=-2147483648 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006300090
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  Hi Bjorn,
-  My below patch series (https://patchwork.kernel.org/cover/11545511/) 
-with all the review comments addressed and this is on top of
-  Govind's series (https://patchwork.kernel.org/cover/11060629/) "[v5] 
-"Add non PAS wcss Q6 support for QCS404".
-  Need your help to know how should I proceed further to merge these 
-patches.
+On Wed, Jun 10, 2020 at 08:26:00AM -0400, Qian Cai wrote:
+> On Wed, Jun 10, 2020 at 07:54:50AM +0200, Dmitry Vyukov wrote:
+> > On Wed, Jun 10, 2020 at 7:22 AM Qian Cai <cai@lca.pw> wrote:
+> > >
+> > > kernel_init_free_pages() will use memset() on s390 to clear all pages
+> > > from kmalloc_order() which will override KASAN redzones because a
+> > > redzone was setup from the end of the allocation size to the end of the
+> > > last page. Silence it by not reporting it there. An example of the
+> > > report is,
+> > 
+> > Interesting. The reason why we did not hit it on x86_64 is because
+> > clear_page is implemented in asm (arch/x86/lib/clear_page_64.S) and
+> > thus is not instrumented. Arm64 probably does the same. However, on
+> > s390 clear_page is defined to memset.
+> > clear_[high]page are pretty extensively used in the kernel.
+> > We can either do this, or make clear_page non instrumented on s390 as
+> > well to match the existing implicit assumption. The benefit of the
+> > current approach is that we can find some real use-after-free's and
+> > maybe out-of-bounds on clear_page. The downside is that we may need
+> > more of these annotations. Thoughts?
+> 
+> Since we had already done the same thing in poison_page(), I suppose we
+> could do the same here. Also, clear_page() has been used in many places
+> on s390, and it is not clear to me if those are all safe like this.
+> 
+> There might be more annotations required, so it probably up to s390
+> maintainers (CC'ed) if they prefer not instrumenting clear_page() like
+> other arches.
+> 
 
-  Regards,
-  Gokul
+Sorry for delay. I assume you tested it without CONFIG_JUMP_LABEL.
+I had to fix couple of things before I was able to use init_on_alloc=1
+and init_on_free=1 boot options on s390 to reproduce KASAN problem:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?h=v5.8-rc3&id=998f5bbe3dbdab81c1cfb1aef7c3892f5d24f6c7
+https://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git/commit/?h=fixes&id=95e61b1b5d6394b53d147c0fcbe2ae70fbe09446
+https://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git/commit/?h=fixes&id=d6df52e9996dcc2062c3d9c9123288468bb95b52
 
-On 2020-05-13 15:00, Gokul Sriram Palanisamy wrote:
-> IPQ8074 needs support for secure pil as well.
-> Also, currently only unified firmware is supported.
-> IPQ8074 supports split firmware for q6 and m3, so
-> adding support for that.
-> 
-> This series is based on Govind's
-> "[v5] Add non PAS wcss Q6 support for QCS404"
-> 
-> changes since v4:
->  - Rebased patch 8
-> 
-> changes since v3:
->  - In patch 10, Added release_firmware to free up
->    memory requested for m3 firmware.
-> 
-> changes since v2:
->  - In patch 5, Added a driver data 'bcr_reset_required'
->    to select if bcr reset is required
->  - In patch 10, Removed syscon implementation and moved
->    to mailbox framework to access APCS IPC
-> 
-> changes since v1:
->  - In patch 10, Addressed minor review comments.
-> 
-> Gokul Sriram Palanisamy (10):
->   remoteproc: qcom: Add PRNG proxy clock
->   remoteproc: qcom: Add secure PIL support
->   remoteproc: qcom: Add support for split q6 + m3 wlan firmware
->   remoteproc: qcom: Add ssr subdevice identifier
->   remoteproc: qcom: Update regmap offsets for halt register
->   dt-bindings: clock: qcom: Add reset for WCSSAON
->   clk: qcom: Add WCSSAON reset
->   dt-bindings: firmware: qcom: Add compatible for IPQ8074 SoC
->   arm64: dts: Add support for scm on IPQ8074 SoCs
->   arm64: dts: qcom: Enable Q6v5 WCSS for ipq8074 SoC
-> 
->  .../devicetree/bindings/firmware/qcom,scm.txt      |   1 +
->  arch/arm64/boot/dts/qcom/ipq8074.dtsi              | 127 
-> +++++++++++++++++
->  drivers/clk/qcom/gcc-ipq8074.c                     |   1 +
->  drivers/remoteproc/qcom_q6v5_wcss.c                | 157 
-> +++++++++++++++++----
->  include/dt-bindings/clock/qcom,gcc-ipq8074.h       |   1 +
->  5 files changed, 258 insertions(+), 29 deletions(-)
+Back to clear_page - we could certainly make it non-instrumented. But
+it didn't cause any problems so far. And as Dmitry pointed out we
+could potentially find additional bugs with it. So, I'm leaning
+towards original solution proposed. For that you have my
+
+Acked-by: Vasily Gorbik <gor@linux.ibm.com>
+Tested-by: Vasily Gorbik <gor@linux.ibm.com>
+
+Thank you for looking into this!
+
+Andrew, would you pick this change up?
+Thank you
+
+Vasily
