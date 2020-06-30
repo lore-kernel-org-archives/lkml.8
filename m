@@ -2,166 +2,168 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F61C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0760EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:37:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AEE0A2074F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:36:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593534966;
-	bh=oYCSw4PCki/SDdawcCRdB1g+bOTmh7QoW+EwDPjWJjs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lYyFnCu0l1BSEPJ2IfPaXO1Rg9afi8zYWHuJ8/s4E9sSKVeHZChLkf2RO6JQxcHMV
-	 r80vH8oPnAtbb3itOGEtaDTo+c5aMbs6AZMot4dXbd4Cn8aACzVaBnCo61rUvwKB+T
-	 SBm8/nRJd28QwYg9mRYThup5B1KsM3DhvKcICKd4=
+	by mail.kernel.org (Postfix) with ESMTP id CE6B2206B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:37:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FvP75sPJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389295AbgF3QgF (ORCPT
+        id S1731786AbgF3Qhv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 12:36:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48450 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389026AbgF3QgE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 12:36:04 -0400
-Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CCC320724;
-        Tue, 30 Jun 2020 16:36:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593534964;
-        bh=oYCSw4PCki/SDdawcCRdB1g+bOTmh7QoW+EwDPjWJjs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=noDzOs3heH2s23yBmSBcGq/OZohTqVn/ojDBf6gA96/4WN2xjKm4lG9twKUxbMMP6
-         /6Mu7njaHhCw40O1BjBNqlxJKQx/UwhBVi59PLW4+qPEmQy12oBARxLGCu5TGYIZwk
-         Rc/Er/Xmw8xInG6ajcNADFdvHSTbvJYg8LdH5rdQ=
-Date:   Tue, 30 Jun 2020 09:35:52 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Mikulas Patocka <mpatocka@redhat.com>
-Cc:     Mike Snitzer <msnitzer@redhat.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Zaibo Xu <xuzaibo@huawei.com>, linux-kernel@vger.kernel.org,
-        Wei Xu <xuwei5@hisilicon.com>, dm-devel@redhat.com,
-        George Cherian <gcherian@marvell.com>,
-        linux-crypto@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Milan Broz <mbroz@redhat.com>
-Subject: Re: [dm-devel] [PATCH 1/3 v4] crypto: introduce the flag
- CRYPTO_ALG_ALLOCATES_MEMORY
-Message-ID: <20200630163552.GA837@sol.localdomain>
-References: <alpine.LRH.2.02.2006161101080.28052@file01.intranet.prod.int.rdu2.redhat.com>
- <20200616173620.GA207319@gmail.com>
- <alpine.LRH.2.02.2006171107220.18714@file01.intranet.prod.int.rdu2.redhat.com>
- <alpine.LRH.2.02.2006171108440.18714@file01.intranet.prod.int.rdu2.redhat.com>
- <20200626044534.GA2870@gondor.apana.org.au>
- <alpine.LRH.2.02.2006261109520.11899@file01.intranet.prod.int.rdu2.redhat.com>
- <alpine.LRH.2.02.2006261215480.13882@file01.intranet.prod.int.rdu2.redhat.com>
- <20200626164617.GA211634@gmail.com>
- <alpine.LRH.2.02.2006281505250.347@file01.intranet.prod.int.rdu2.redhat.com>
- <alpine.LRH.2.02.2006300954150.15237@file01.intranet.prod.int.rdu2.redhat.com>
+        Tue, 30 Jun 2020 12:37:51 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:44974 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729518AbgF3Qhu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 12:37:50 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05UGNhsQ020571;
+        Tue, 30 Jun 2020 16:37:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=ewYdjojVC93tCg3UT6Oa+SXr42PA5Lh+ZYRd+YHHiIQ=;
+ b=FvP75sPJ9ve43af6dy5B2vqDN6xPAR+T1R+CdFECYuEaAQM5dkU5CGshoiv3hNei0toB
+ Ddu54VWLXbeUThq8t9+Mo1RFfKbJaAtcTLli56KZ2oqlunppKJrYkBtcA5iUGKEtcFyD
+ xCyz7kl+y7p/ZQadLyokCVIGmCICKj5BiVl7Kfz/L+xtQMcT4UuNtATIDsr/RHkwIuOf
+ t4dynU+mf537E/+xMK7Ua8Dx0Tb3jCDERAgpK0iwG6TgP132LGK4rg9q67+PnKDRzpir
+ cL0QFYdZdA+jWyUUYtK0upflvnU+rmiVwJewV/22aiJgnMHTfNERnVGTGREWBP2BfXsJ Zg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 31ywrbkw78-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 30 Jun 2020 16:37:22 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05UGMqu8098168;
+        Tue, 30 Jun 2020 16:37:21 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 31y52j5m54-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Jun 2020 16:37:21 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 05UGbIs0019025;
+        Tue, 30 Jun 2020 16:37:19 GMT
+Received: from [192.168.2.112] (/50.38.35.18)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 30 Jun 2020 16:37:18 +0000
+Subject: Re: [PATCH v3 4/8] mm/hugetlb: make hugetlb migration callback CMA
+ aware
+To:     Joonsoo Kim <js1304@gmail.com>, Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, kernel-team@lge.com,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Hellwig <hch@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+References: <1592892828-1934-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <1592892828-1934-5-git-send-email-iamjoonsoo.kim@lge.com>
+ <20200625115422.GE1320@dhcp22.suse.cz>
+ <CAAmzW4MHuRhNqVXMntLAc_x4kJgkgQ-pD5GfFxRxJRchrEFr9g@mail.gmail.com>
+ <20200626072324.GT1320@dhcp22.suse.cz>
+ <CAAmzW4NLVwvqtoUb+JJ+WV=7_n800vA+YYC0LyrDS6iQ7wxcdg@mail.gmail.com>
+ <20200629075510.GA32461@dhcp22.suse.cz>
+ <CAAmzW4PFEEs0FGe+XMHzRdXr0LpdF3TZZG2L3E+opRyZWDZ48A@mail.gmail.com>
+ <20200630064256.GB2369@dhcp22.suse.cz>
+ <CAAmzW4MFw_Xd_3rV8OVL_8jXfhUWT2v69xEFHaVLY4NKZPhD1A@mail.gmail.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <eebb68b9-99f8-3f55-9b35-59fe8ddd1b75@oracle.com>
+Date:   Tue, 30 Jun 2020 09:37:16 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.LRH.2.02.2006300954150.15237@file01.intranet.prod.int.rdu2.redhat.com>
+In-Reply-To: <CAAmzW4MFw_Xd_3rV8OVL_8jXfhUWT2v69xEFHaVLY4NKZPhD1A@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9667 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 phishscore=0 mlxscore=0
+ adultscore=0 suspectscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006300116
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9667 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 spamscore=0 mlxlogscore=999
+ clxscore=1015 cotscore=-2147483648 priorityscore=1501 lowpriorityscore=0
+ malwarescore=0 mlxscore=0 adultscore=0 suspectscore=0 impostorscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2004280000 definitions=main-2006300116
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 09:56:22AM -0400, Mikulas Patocka wrote:
-> Index: linux-2.6/crypto/cryptd.c
-> ===================================================================
-> --- linux-2.6.orig/crypto/cryptd.c	2020-06-29 16:03:07.346417000 +0200
-> +++ linux-2.6/crypto/cryptd.c	2020-06-30 15:49:04.206417000 +0200
-> @@ -202,6 +202,7 @@ static inline void cryptd_check_internal
->  
->  	*type |= algt->type & CRYPTO_ALG_INTERNAL;
->  	*mask |= algt->mask & CRYPTO_ALG_INTERNAL;
-> +	*mask |= algt->mask & CRYPTO_ALG_INHERITED_FLAGS;
->  }
+On 6/30/20 12:22 AM, Joonsoo Kim wrote:
+> 2020년 6월 30일 (화) 오후 3:42, Michal Hocko <mhocko@kernel.org>님이 작성:
+>>
+>> On Tue 30-06-20 15:30:04, Joonsoo Kim wrote:
+>>> 2020년 6월 29일 (월) 오후 4:55, Michal Hocko <mhocko@kernel.org>님이 작성:
+>> [...]
+>>>> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+>>>> index 57ece74e3aae..c1595b1d36f3 100644
+>>>> --- a/mm/hugetlb.c
+>>>> +++ b/mm/hugetlb.c
+>>>> @@ -1092,10 +1092,14 @@ static struct page *dequeue_huge_page_nodemask(struct hstate *h, gfp_t gfp_mask,
+>>>>  /* Movability of hugepages depends on migration support. */
+>>>>  static inline gfp_t htlb_alloc_mask(struct hstate *h)
+>>>>  {
+>>>> +       gfp_t gfp;
+>>>> +
+>>>>         if (hugepage_movable_supported(h))
+>>>> -               return GFP_HIGHUSER_MOVABLE;
+>>>> +               gfp = GFP_HIGHUSER_MOVABLE;
+>>>>         else
+>>>> -               return GFP_HIGHUSER;
+>>>> +               gfp = GFP_HIGHUSER;
+>>>> +
+>>>> +       return current_gfp_context(gfp);
+>>>>  }
+>>>>
+>>>>  static struct page *dequeue_huge_page_vma(struct hstate *h,
+>>>>
+>>>> If we even fix this general issue for other allocations and allow a
+>>>> better CMA exclusion then it would be implemented consistently for
+>>>> everybody.
+>>>
+>>> Yes, I have reviewed the memalloc_nocma_{} APIs and found the better way
+>>> for CMA exclusion. I will do it after this patch is finished.
+>>>
+>>>> Does this make more sense to you are we still not on the same page wrt
+>>>> to the actual problem?
+>>>
+>>> Yes, but we have different opinions about it. As said above, I will make
+>>> a patch for better CMA exclusion after this patchset. It will make
+>>> code consistent.
+>>> I'd really appreciate it if you wait until then.
+>>
+>> As I've said I would _prefer_ simplicity over "correctness" if it is only
+>> partial and hard to reason about from the userspace experience but this
+>> is not something I would _insist_ on. If Mike as a maintainer of the
+>> code is ok with that then I will not stand in the way.
+> 
+> Okay.
 
-This needs to use the correct logic (crypto_alg_inherited_mask) to decide which
-inherited flags to set in 'mask'.
+I was OK with Joonsoo's original patch which is why I Ack'ed it.  However,
+my sense of simplicity and style may not be the norm as I have spent too
+much time with the hugetlbfs code. :)  That is why I did not chime in and
+let Michal and Joonsoo discuss.  I can see both sides of the issue.  For
+now, I am OK to go with Joonsoo's patch as long as the issue below is
+considered in the the next patchset.
+-- 
+Mike Kravetz
 
-> --- linux-2.6.orig/crypto/adiantum.c	2020-06-29 16:03:07.346417000 +0200
-> +++ linux-2.6/crypto/adiantum.c	2020-06-29 16:03:07.346417000 +0200
-> @@ -507,7 +507,7 @@ static int adiantum_create(struct crypto
->  	if ((algt->type ^ CRYPTO_ALG_TYPE_SKCIPHER) & algt->mask)
->  		return -EINVAL;
->  
-> -	mask = crypto_requires_sync(algt->type, algt->mask);
-> +	mask = crypto_alg_inherited_mask(algt->type, algt->mask);
->  
->  	inst = kzalloc(sizeof(*inst) + sizeof(*ictx), GFP_KERNEL);
->  	if (!inst)
-
-This is still missing setting the flags correctly on the template instance being
-constructed.  The flags need to be inherited from all "inner" algorithms:
-
-	inst->alg.base.cra_flags = (streamcipher_alg->base.cra_flags |
-				    blockcipher_alg->cra_flags |
-				    hash_alg->base.cra_flags) &
-				   CRYPTO_ALG_INHERITED_FLAGS;
-
-If we don't do that, the template instance may allocate memory but not have
-CRYPTO_ALG_ALLOCATES_MEMORY set.
-
-> Index: linux-2.6/crypto/pcrypt.c
-> ===================================================================
-> --- linux-2.6.orig/crypto/pcrypt.c	2020-06-29 16:03:07.346417000 +0200
-> +++ linux-2.6/crypto/pcrypt.c	2020-06-30 15:47:32.776417000 +0200
-> @@ -263,7 +263,9 @@ static int pcrypt_create_aead(struct cry
->  	if (err)
->  		goto err_free_inst;
->  
-> -	inst->alg.base.cra_flags = CRYPTO_ALG_ASYNC;
-> +	inst->alg.base.cra_flags =
-> +		CRYPTO_ALG_ASYNC |
-> +		(alg->base.cra_flags & CRYPTO_ALG_INHERITED_FLAGS);
->  
->  	inst->alg.ivsize = crypto_aead_alg_ivsize(alg);
->  	inst->alg.maxauthsize = crypto_aead_alg_maxauthsize(alg);
-
-And this is still missing setting the mask:
-
-diff --git a/crypto/pcrypt.c b/crypto/pcrypt.c
-index 7240e8bbdebb..643f7f1cc91c 100644
---- a/crypto/pcrypt.c
-+++ b/crypto/pcrypt.c
-@@ -232,12 +232,15 @@ static int pcrypt_create_aead(struct crypto_template *tmpl, struct rtattr **tb,
- 	struct crypto_attr_type *algt;
- 	struct aead_instance *inst;
- 	struct aead_alg *alg;
-+	u32 mask;
- 	int err;
- 
- 	algt = crypto_get_attr_type(tb);
- 	if (IS_ERR(algt))
- 		return PTR_ERR(algt);
- 
-+	mask = crypto_alg_inherited_mask(algt->type, algt->mask);
-+
- 	inst = kzalloc(sizeof(*inst) + sizeof(*ctx), GFP_KERNEL);
- 	if (!inst)
- 		return -ENOMEM;
-@@ -254,7 +257,7 @@ static int pcrypt_create_aead(struct crypto_template *tmpl, struct rtattr **tb,
- 		goto err_free_inst;
- 
- 	err = crypto_grab_aead(&ctx->spawn, aead_crypto_instance(inst),
--			       crypto_attr_alg_name(tb[1]), 0, 0);
-+			       crypto_attr_alg_name(tb[1]), 0, mask);
- 	if (err)
- 		goto err_free_inst;
- 
-
-Can you please think logically about what you're trying to accomplish?
-
-In particular, if someone requests an algorithm that doesn't allocate memory
-(which is indicated by type=0, mask=CRYPTO_ALG_ALLOCATES_MEMORY), that request
-needs to be honored.
-
-- Eric
+>> But please note that a missing current_gfp_context inside
+>> htlb_alloc_mask is a subtle bug. I do not think it matters right now but
+>> with a growing use of scoped apis this might actually hit some day so I
+>> believe we want to have it in place.
+> 
+> Okay. I will keep in mind and consider it when fixing CMA exclusion on the
+> other patchset.
+> 
+> Thanks.
