@@ -2,219 +2,136 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E09FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 22:04:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD15C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 22:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38A3A2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 22:04:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="S1+omJoi"
+	by mail.kernel.org (Postfix) with ESMTP id 471652073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 22:04:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593554672;
+	bh=mGA2YplFVjTnmZVR4xUfskfFkFqNGscVAmlQNbhySbI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=nzJ4MW+wiJgIzwAG0MDnB1ulgWhqLU6qOq8ULVmGn4HaQ5BXms60404G6s6EtAPvI
+	 HFtNBi2J9tMonVKjkURRU7uxOAcmvu4cXSTiQK5uDgfyE3JMJSjsPCNwz97B6acp77
+	 7TD1hxkSu6Mo8ppfBfvUzuqjmrox83hLx7CXDT6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbgF3WD6 (ORCPT
+        id S1726345AbgF3WEa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 18:03:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39312 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726262AbgF3WD5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 18:03:57 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C756C03E97A
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 15:03:56 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id 9so24487686ljv.5
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 15:03:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=xdNoXenycdknAZtX1Bd4pirlygryBFdZq5W7DISDEy4=;
-        b=S1+omJoiEMRnT0XLriHCwXfXnnWsNgUS3wg9ns59m7eyzAViGx1zAwYojbKooCeo0k
-         p32CN3QVNMxkjZqhNYFr+5H6BE/0sJCMZJoAy+gD9MthYbzQclpyF5Bc9jHvaWo4ltWP
-         wUJmspg/rgiWsVGwVbk1oZ1K9G0M0M6KkYoccVlqJkpD64xdpOoRyGxJU2RPOGj78Uhy
-         cBSM6ECzaIiVsXO6iEJrFSrnZZKM4fVZa43XnEH0Ns2GTpwMeHVPPSIcU9hqAJ3w7uC9
-         z9M3YWFf9igVtCzlzZWmPwhu0h0vN6wsbBU94MDZXUeZJmah3y7ZfgAOj4lYQziV1FFk
-         FyEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=xdNoXenycdknAZtX1Bd4pirlygryBFdZq5W7DISDEy4=;
-        b=EBG61evGPBP1ma/rX0nclSSqRTTNdHsBRtyZJqyoGdglAJ+2+VWmgGiRnVEm663hs/
-         8JwFxQskKy1gBtVPm5wBqaMl22UTht0OvvEIOPlUNKkXbKZy/o7cy+CEsSBGk1FfbudC
-         oGWTvO9EaSo3ZCEfEU3W537wk9oSAwv4yU6xSMT1D5/A8lGvLSVpQjQEW7W+cNGJnkk8
-         cO+x2VAVQACCSYlb6AQF/45B2e4iEOVjm/3I8UimUd3hDoYJ+yha/YutVzMBqEZ6wKAa
-         aqCUXbpDaPGDvISNziSJnCpcQYFyCMGThOzspyoScqBCOFEMy8+ke3X5dOEvTvIw7zIN
-         NANg==
-X-Gm-Message-State: AOAM5332V0zKd9KdmyjXMX9qB0uIczoMoTIl7VDHdVwq9lwz4b7rGGwx
-        V23QUYZYCFVgBWLJ3f1++j+7HQ==
-X-Google-Smtp-Source: ABdhPJy/V4jlChNsI5ZIPhawDkQpYe3Ajx4aHOxXwknaD2WISsRIG0xD7nVmJYMjCAEqwH50kqOyPw==
-X-Received: by 2002:a2e:b0f0:: with SMTP id h16mr4867724ljl.167.1593554634836;
-        Tue, 30 Jun 2020 15:03:54 -0700 (PDT)
-Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
-        by smtp.gmail.com with ESMTPSA id v20sm983322lfr.74.2020.06.30.15.03.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 15:03:54 -0700 (PDT)
-Date:   Wed, 1 Jul 2020 00:03:53 +0200
-From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
-        <niklas.soderlund@ragnatech.se>
-To:     Suresh Udipi <sudipi@jp.adit-jv.com>
-Cc:     mrodin@de.adit-jv.com, akiyama@nds-osk.co.jp,
-        efriedrich@de.adit-jv.com, erosca@de.adit-jv.com,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, mchehab@kernel.org,
-        michael@rodin.online, securitycheck@denso.co.jp
-Subject: Re: [PATCH v8 1/3] media: rcar-csi2: Correct the selection of
- hsfreqrange
-Message-ID: <20200630220353.GJ2365286@oden.dyn.berto.se>
-References: <20200617133705.GA88066@vmlxhi-121.adit-jv.com>
- <1592476472-26235-1-git-send-email-sudipi@jp.adit-jv.com>
+        Tue, 30 Jun 2020 18:04:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58210 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726117AbgF3WEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 18:04:30 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99E39206B6;
+        Tue, 30 Jun 2020 22:04:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593554670;
+        bh=mGA2YplFVjTnmZVR4xUfskfFkFqNGscVAmlQNbhySbI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=p8yt4+qi4BuB9Mc9sfNMTpAWkpq2htNh7wMHhY4tNUsL/Fh9A3cwxhjWGkISAx3Wp
+         sRhF5Ux4mEMe8xmN49t3JK0CAshd5Zu4uuTNMTzeutSp9T6zbWhvuM0eFcn+YNHd0a
+         oK1kV4BY9JJS+2AuSLrL8lm7XIJrf9RPuBbGTpUQ=
+Date:   Tue, 30 Jun 2020 17:04:28 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Piotr Stankiewicz <piotr.stankiewicz@intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Jian-Hong Pan <jian-hong@endlessm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] PCI/MSI: Forward MSI-X vector enable error code in
+ pci_alloc_irq_vectors_affinity()
+Message-ID: <20200630220428.GA3490187@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1592476472-26235-1-git-send-email-sudipi@jp.adit-jv.com>
+In-Reply-To: <20200616073318.20229-1-piotr.stankiewicz@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Suresh,
+On Tue, Jun 16, 2020 at 09:33:16AM +0200, Piotr Stankiewicz wrote:
+> When debugging an issue where I was asking the PCI machinery to enable a
+> set of MSI-X vectors, without falling back on MSI, I ran across a
+> behaviour which seems odd. The pci_alloc_irq_vectors_affinity() will
+> always return -ENOSPC on failure, when allocating MSI-X vectors only,
+> whereas with MSI fallback it will forward any error returned by
+> __pci_enable_msi_range(). This is a confusing behaviour, so have the
+> pci_alloc_irq_vectors_affinity() forward the error code from
+> __pci_enable_msix_range() when appropriate.
+> 
+> Signed-off-by: Piotr Stankiewicz <piotr.stankiewicz@intel.com>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
 
-Thanks for your work.
-
-On 2020-06-18 19:34:30 +0900, Suresh Udipi wrote:
-> hsfreqrange should be chosen based on the calculated mbps which
-> is closer to the default bit rate  and within the range as per
-> table[1]. But current calculation always selects first value which
-> is greater than or equal to the calculated mbps which may lead
-> to chosing a wrong range in some cases.
-> 
-> For example for 360 mbps for H3/M3N
-> Existing logic selects
-> Calculated value 360Mbps : Default 400Mbps Range [368.125 -433.125 mbps]
-> 
-> This hsfreqrange is out of range.
-> 
-> The logic is changed to get the default value which is closest to the
-> calculated value [1]
-> 
-> Calculated value 360Mbps : Default 350Mbps  Range [320.625 -380.625 mpbs]
-> 
-> [1] specs r19uh0105ej0200-r-car-3rd-generation.pdf [Table 25.9]
-> 
-> Please note that According to Renesas in Table 25.9 the range for
-> 220 default value is corrected as below
-> 
->  |Range (Mbps)     |  Default  Bit rate (Mbps) |
->  -----------------------------------------------
->  | 197.125-244.125 |     220                   |
->  -----------------------------------------------
-> 
-> Fixes: 769afd212b16 ("media: rcar-csi2: add Renesas R-Car MIPI CSI-2 receiver driver")
-> 
-> Signed-off-by: Suresh Udipi <sudipi@jp.adit-jv.com>
-> Signed-off-by: Kazuyoshi Akiyama <akiyama@nds-osk.co.jp>
-> Signed-off-by: Michael Rodin <mrodin@de.adit-jv.com>
-
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+Applied to pci/msi for v5.8, thanks!
 
 > ---
->  Changes in v2:
->   - Added the boundary check for the maximum bit rate.
+>  drivers/pci/msi.c | 22 +++++++++-------------
+>  1 file changed, 9 insertions(+), 13 deletions(-)
 > 
->   - Simplified the logic by remmoving range check
->     as only the closest default value covers most
->     of the use cases.
-> 
->   - Aligning the commit message based on the above change
-> 
-> 
->  Changes in v3:
->     - Added max member from struct rcsi2_mbps_reg.
->       mbps varialbe cannot be removed from rcsi2_mbps_reg,
->       since this structure is reused for
->       phtw_mbps_h3_v3h_m3n/phtw_mbps_v3m_e3 where mbps is
->       used.
-> 
-> 
->    -  Update the walk of the array in rcsi2_set_phypll() so that it finds
->       the first entry where the calculated bit rate is less than the max.
-> 
->    - Support lower bit rates less than 80Mbps like 48Mbps
->      (Raspberry pi camera 640x480 connected to Kingfisher)
->      can also be supported by selecting the lowest default bit rate 80Mbps
->      as done before this fix
-> 
->    - Alignement of the commit message based on above changes.
-> 
->  Changes in v4:
->   -  Remove unncessary braces.
-> 
->  Changes in v5:
->    - Removed mbps variable in rcsi2_mbps_reg and aligned all
->      tables accordingly
-> 
-> 
->  Changes in v6
->    - Renesas correct the range of default value 220Mbps. Now
->      if we select the nearest value to the default value all
->          the values are in range. So reverting back to original patch
->   
->    - Added warning for values less than Minimum 80Mbps
->       
-> Changes in v7
->   - Create a seperate commit for the warning message less
->     than minimum 80Mbps 
->   
->   - Reorder the statements to increase readability
->   
-> Changes in v8
->   - Extended the logic of selection of nearest mbps to
->     PHTW registers value less than 250Mbps. A new commit
->     is added
-> 	
->  drivers/media/platform/rcar-vin/rcar-csi2.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c b/drivers/media/platform/rcar-vin/rcar-csi2.c
-> index 151e6a9..f18dedc 100644
-> --- a/drivers/media/platform/rcar-vin/rcar-csi2.c
-> +++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
-> @@ -431,16 +431,23 @@ static int rcsi2_wait_phy_start(struct rcar_csi2 *priv)
->  static int rcsi2_set_phypll(struct rcar_csi2 *priv, unsigned int mbps)
+> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
+> index 6b43a5455c7a..cade9be68b09 100644
+> --- a/drivers/pci/msi.c
+> +++ b/drivers/pci/msi.c
+> @@ -1191,8 +1191,7 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
+>  				   struct irq_affinity *affd)
 >  {
->  	const struct rcsi2_mbps_reg *hsfreq;
-> +	const struct rcsi2_mbps_reg *hsfreq_prev = NULL;
+>  	struct irq_affinity msi_default_affd = {0};
+> -	int msix_vecs = -ENOSPC;
+> -	int msi_vecs = -ENOSPC;
+> +	int nvecs = -ENOSPC;
 >  
-> -	for (hsfreq = priv->info->hsfreqrange; hsfreq->mbps != 0; hsfreq++)
-> +	for (hsfreq = priv->info->hsfreqrange; hsfreq->mbps != 0; hsfreq++) {
->  		if (hsfreq->mbps >= mbps)
->  			break;
-> +		hsfreq_prev = hsfreq;
-> +	}
->  
->  	if (!hsfreq->mbps) {
->  		dev_err(priv->dev, "Unsupported PHY speed (%u Mbps)", mbps);
->  		return -ERANGE;
+>  	if (flags & PCI_IRQ_AFFINITY) {
+>  		if (!affd)
+> @@ -1203,17 +1202,16 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
 >  	}
 >  
-> +	if (hsfreq_prev &&
-> +	    ((mbps - hsfreq_prev->mbps) <= (hsfreq->mbps - mbps)))
-> +		hsfreq = hsfreq_prev;
-> +
->  	rcsi2_write(priv, PHYPLL_REG, PHYPLL_HSFREQRANGE(hsfreq->reg));
+>  	if (flags & PCI_IRQ_MSIX) {
+> -		msix_vecs = __pci_enable_msix_range(dev, NULL, min_vecs,
+> -						    max_vecs, affd, flags);
+> -		if (msix_vecs > 0)
+> -			return msix_vecs;
+> +		nvecs = __pci_enable_msix_range(dev, NULL, min_vecs, max_vecs,
+> +						affd, flags);
+> +		if (nvecs > 0)
+> +			return nvecs;
+>  	}
 >  
->  	return 0;
+>  	if (flags & PCI_IRQ_MSI) {
+> -		msi_vecs = __pci_enable_msi_range(dev, min_vecs, max_vecs,
+> -						  affd);
+> -		if (msi_vecs > 0)
+> -			return msi_vecs;
+> +		nvecs = __pci_enable_msi_range(dev, min_vecs, max_vecs, affd);
+> +		if (nvecs > 0)
+> +			return nvecs;
+>  	}
+>  
+>  	/* use legacy IRQ if allowed */
+> @@ -1231,9 +1229,7 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
+>  		}
+>  	}
+>  
+> -	if (msix_vecs == -ENOSPC)
+> -		return -ENOSPC;
+> -	return msi_vecs;
+> +	return nvecs;
+>  }
+>  EXPORT_SYMBOL(pci_alloc_irq_vectors_affinity);
+>  
 > -- 
-> 2.7.4
+> 2.17.2
 > 
-
--- 
-Regards,
-Niklas Söderlund
