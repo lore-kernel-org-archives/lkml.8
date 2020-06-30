@@ -2,106 +2,122 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A33C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:44:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 180BFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0827620759
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:44:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HjdFdCHe"
+	by mail.kernel.org (Postfix) with ESMTP id EF40920759
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:45:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733052AbgF3Lo4 (ORCPT
+        id S1733068AbgF3LpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 07:44:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56410 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730225AbgF3Loz (ORCPT
+        Tue, 30 Jun 2020 07:45:00 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:43102 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733050AbgF3Lo6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 07:44:55 -0400
-Received: from mail-qk1-x729.google.com (mail-qk1-x729.google.com [IPv6:2607:f8b0:4864:20::729])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE6E4C061755;
-        Tue, 30 Jun 2020 04:44:54 -0700 (PDT)
-Received: by mail-qk1-x729.google.com with SMTP id j80so18205562qke.0;
-        Tue, 30 Jun 2020 04:44:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=WTlfR6UYku/WsXJmWLdLkNeTBNSHfzrCWj49YXg6FX4=;
-        b=HjdFdCHeNG5nSwIBlIe5sqleDI8IXYCBlhSvWIGcRBFUPiTeG8MeTFl4DeTEfTVFgi
-         LvWWGMrWiy0QNbCzHJseGA9p3os+NRj0StvEpKbSG11ho5qCdH+Oj8T0FgPcq8aL5mDW
-         +8MiiJQi5+r8voU3GgKhUkM+zk0w7UyyKJEc/Pk3PlIXerlZFMVwEZMWwlmTWKu1KC+S
-         xwDBkh/cJ2cCXiHZY615RI/9xqmhG0cacyRh0gaQEDz2I8mNc+VsN0QUe8zt6RUUyEuL
-         0nRFpTQ0aXvR2em5kLnUzQcbRAsjL/ijWz6JkOzhQ9OXC1M2YbOgCtOAyROVQT0aq0ls
-         kFtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=WTlfR6UYku/WsXJmWLdLkNeTBNSHfzrCWj49YXg6FX4=;
-        b=OqsgsK0uAPpgWQ6Y/liZ1nUY4UfD7OvFUiywS05tJF/mBNPogJlIX4jqqE4deee/3N
-         eNGPU5DVE03U/z8uiWM23XDdEH/xIBcHv3jeyhFv/YgVtH8nIEAp2+Qhb8Kjx/7Hvn26
-         CEqOa+Mt24R46GCG8um188s0p6DZIhVaGgS9FNdxxT5bh8jBa+lSybzaj3i7PH/gqo+a
-         bmNEQB+GbC5AmdEvGg9/KLc4xxkLGUjVDqwHU3avCDFSESDeRSqVpFspTMe29SpMrbw0
-         Za3XspTpHmoshQVNYozX14dJz9q9cPmyck/lulq+zO9eTh0eaTHtqi7+EcS1jKBlhzGs
-         jy8A==
-X-Gm-Message-State: AOAM530DRagZVjNrNPJhZP8mA8W3zBnOdyFw5AC8z2890VR7MNzdPcq4
-        zUeVbLe45xXqMRUb/IEOXFk=
-X-Google-Smtp-Source: ABdhPJzuiJ0gpGbMOpAqXquDKD4CvabrxLl8YTRauEEFPMj26k4aBQ9eN4DWf4qneJrroIG9QRncYg==
-X-Received: by 2002:a05:620a:635:: with SMTP id 21mr19760883qkv.491.1593517493723;
-        Tue, 30 Jun 2020 04:44:53 -0700 (PDT)
-Received: from localhost.localdomain ([2804:14c:482:92b:d42f:2bc1:abe3:59f0])
-        by smtp.gmail.com with ESMTPSA id i8sm2613647qtr.90.2020.06.30.04.44.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 04:44:52 -0700 (PDT)
-From:   Fabio Estevam <festevam@gmail.com>
-To:     robh+dt@kernel.org
-Cc:     lee.jones@linaro.org, benjamin.gaignard@st.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH] dt-bindings: mfd: st,stmfx: Remove extra additionalProperties
-Date:   Tue, 30 Jun 2020 08:44:43 -0300
-Message-Id: <20200630114443.26414-1-festevam@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 30 Jun 2020 07:44:58 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 738CA804B4;
+        Tue, 30 Jun 2020 13:44:54 +0200 (CEST)
+Date:   Tue, 30 Jun 2020 13:44:53 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-mips@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, od@zcrc.me
+Subject: Re: [PATCH v2 06/10] drm/ingenic: Set DMA descriptor chain address
+ in probe
+Message-ID: <20200630114453.GB560155@ravnborg.org>
+References: <20200629235210.441709-1-paul@crapouillou.net>
+ <20200629235210.441709-6-paul@crapouillou.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200629235210.441709-6-paul@crapouillou.net>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=ER_8r6IbAAAA:8 a=e5mUnYsNAAAA:8
+        a=_F4ZNtTwmw7fjDG2MVkA:9 a=7tZkzEg-RNLL3d5o:21 a=j8Rw1sZxBYetKqRA:21
+        a=CjuIK1q_8ugA:10 a=9LHmKk7ezEChjTCyhBa9:22 a=Vxmtnl_E_bksehYqCbjh:22
+        a=pHzHmUro8NiASowvMSCR:22 a=nt3jZW36AmriUCFCBwmW:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following build error is seen with 'make dt_binding_check':
+Hi Paul.
 
-  CHKDT   Documentation/devicetree/bindings/mfd/st,stmfx.yaml
-/home/fabio/linux-next/Documentation/devicetree/bindings/mfd/st,stmfx.yaml: properties:pinctrl:patternProperties: {'enum': ['$ref', 'additionalItems', 'additionalProperties', 'allOf', 'anyOf', 'const', 'contains', 'default', 'dependencies', 'deprecated', 'description', 'else', 'enum', 'if', 'items', 'maxItems', 'maximum', 'minItems', 'minimum', 'multipleOf', 'not', 'oneOf', 'pattern', 'patternProperties', 'properties', 'propertyNames', 'required', 'then', 'unevaluatedProperties']} is not allowed for 'additionalProperties'
+On Tue, Jun 30, 2020 at 01:52:06AM +0200, Paul Cercueil wrote:
+> The address of the DMA descriptor never changes. It can therefore be set
+> in the probe function.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+> 
+> Notes:
+>     v2: No change
+> 
+>  drivers/gpu/drm/ingenic/ingenic-drm-drv.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/ingenic/ingenic-drm-drv.c b/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
+> index 924c8daf071a..f7b0c5dc8cd8 100644
+> --- a/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
+> +++ b/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
+> @@ -358,8 +358,6 @@ static void ingenic_drm_crtc_atomic_flush(struct drm_crtc *crtc,
+>  		ingenic_drm_crtc_update_ctrl(priv, finfo);
+>  
+>  		clk_set_rate(priv->pix_clk, state->adjusted_mode.clock * 1000);
+> -
+> -		regmap_write(priv->map, JZ_REG_LCD_DA0, priv->dma_hwdesc->next);
+>  	}
+>  
+>  	if (event) {
+> @@ -757,6 +755,9 @@ static int ingenic_drm_probe(struct platform_device *pdev)
+>  		}
+>  	}
+>  
+> +	/* Set address of our DMA descriptor chain */
+> +	regmap_write(priv->map, JZ_REG_LCD_DA0, priv->dma_hwdesc_phys);
+> +
 
-Remove the extra 'additionalProperties' to pass the build.
 
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-Changes since RFC:
-- Added Rob's Reviewed-by
-- Added lkml on Cc
+What is the purpose of this code after the assignment was moved:
 
- Documentation/devicetree/bindings/mfd/st,stmfx.yaml | 2 --
- 1 file changed, 2 deletions(-)
+static int ingenic_drm_probe(struct platform_device *pdev)
+{
+...
+	priv->dma_hwdesc->next = priv->dma_hwdesc_phys;
 
-diff --git a/Documentation/devicetree/bindings/mfd/st,stmfx.yaml b/Documentation/devicetree/bindings/mfd/st,stmfx.yaml
-index 0ce56a0da553..bed22d4abffb 100644
---- a/Documentation/devicetree/bindings/mfd/st,stmfx.yaml
-+++ b/Documentation/devicetree/bindings/mfd/st,stmfx.yaml
-@@ -73,8 +73,6 @@ properties:
-           output-high: true
-           output-low: true
- 
--      additionalProperties: false
--
-     additionalProperties: false
- 
-     required:
--- 
-2.17.1
+I do not see ->next used anymore.
+Could this assignment be dropped?
 
+
+And the following line:
+	priv->dma_hwdesc->id = 0xdeafbead;
+
+I can only see ->id be assingned, it is never referenced??
+
+Maybe this is all related to the structure assumed by the data pointed
+to by JZ_REG_LCD_DA0?
+
+	Sam
+
+>  	ret = drm_dev_register(drm, 0);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to register DRM driver\n");
+> -- 
+> 2.27.0
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
