@@ -2,213 +2,156 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A1CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F2BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABEDF20775
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:44:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AIvFwiVm"
+	by mail.kernel.org (Postfix) with ESMTP id C845320775
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:44:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbgF3RoR (ORCPT
+        id S2388245AbgF3RoZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 13:44:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55444 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730386AbgF3RoO (ORCPT
+        Tue, 30 Jun 2020 13:44:25 -0400
+Received: from mail-ej1-f66.google.com ([209.85.218.66]:42010 "EHLO
+        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730386AbgF3RoV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 13:44:14 -0400
-Received: from mail-ot1-x341.google.com (mail-ot1-x341.google.com [IPv6:2607:f8b0:4864:20::341])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41F1BC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 10:44:14 -0700 (PDT)
-Received: by mail-ot1-x341.google.com with SMTP id d4so19113078otk.2
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 10:44:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pvrPSyad64a06y3emmBaHBraeMnCfgt6QtYJn+H41Ho=;
-        b=AIvFwiVmHfWa0dr/Zj/nl3/Gf+Dd7lJR5y4sPWVHQ6irUWAzRxeWoOb/p2Glgrk5x7
-         TDEjkGmBqHJFS3FeMsKSUuM+D3gUcPWXfX8izqzDYuu0i5RlpD4ZYEGNnt5HD5TFGK/4
-         +VZg7MDSEIbgEZSrQtROVsWPTIRaGegwbqGtn6aYm7ZDVsTuiNa6Vz1uvzRXOMzrKN6M
-         vrZA71ayaPMxJ7T9dyamhd8XLmDYQA3mCTowCoZLR+iNzAZTh88X+FxrewQAkskd6ncd
-         EOt1xr66NGeLzGOPzxdLzf+Wr/iHl7eww9QdEkZ4ZlS5fCywYXwwCJ9aTWMyMziBOyS6
-         r9rA==
+        Tue, 30 Jun 2020 13:44:21 -0400
+Received: by mail-ej1-f66.google.com with SMTP id i14so21522513ejr.9
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 10:44:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pvrPSyad64a06y3emmBaHBraeMnCfgt6QtYJn+H41Ho=;
-        b=RnHIhj+iYdfBi5wuNJ16oSIOcrSz5j/XguGE9rLBFC2UR4dMizJFK3TLXhIOaz35PP
-         7ZZlpfxNawuDaqtKwnWBi/W25y4jvfm3Tpo4DodoDAgGVuYIXCOxiKhrvqtUgU1k/V/B
-         IjKHZx1+B64tbJflrxDxuYkTT6X2odQowE88jU3dmaXJERmunSFmj2B0ngn6dZlvUwZV
-         OLYTxEjcTbS4/QLZ1woWQflZZueWBTMFTuFp79D4eLRn5dm0xnZ5kwvn4G090sHqp5Eu
-         Es9R4Q6BmZaamA4e7wiyjERNG2Mv4wkwUAgUeSdZ73aTRaW/caebWwdW31KBMn4TcucN
-         MV1w==
-X-Gm-Message-State: AOAM5300W2mdsVYPngnwhk+izk2azftY8vQ9XLLCSMdiieY+WsNvmpYX
-        jeXFh3UWPLNwsLP54UhFbbc4A71jerfTDhLOQ0wC/Q==
-X-Google-Smtp-Source: ABdhPJxvmOdBgLv+Am0qzfX+NxBE+/4lC8/0GP2QXouYO+Xni8icBayVXFLmI+l2lGzBS6ZBGHtQIVdLNxB8n7tHCR8=
-X-Received: by 2002:a9d:8ea:: with SMTP id 97mr11889961otf.231.1593539053111;
- Tue, 30 Jun 2020 10:44:13 -0700 (PDT)
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:message-id:date:mime-version;
+        bh=A5m4iIJZB8g0jtmUtDpb9yGTt+vhjXl0DvXeBfp21DY=;
+        b=EXMscsB+lamX2FZP93m9eXhjDCirDCPmvgtbShBOgTRtzObntoEtZmynpmAevVfN+E
+         mkIDdiQ6pCsq38nPODOphMZTI6wqPkg+5ZFVpedrQsqWp+sz3iKUYaW2fIm/Jf22QnfL
+         fJ5nsN86xMxVn3o6uhRwwDu/Wdn3wBoTxmZclxl3NIdMZI4HhJ3pLLMbJlzxy12McDmG
+         PuOj7QUlUGPyIg2bp9xAAAskgXz7ZI8AWWXP35J+AYiqu8Sm73xHqsuJFemeeALZkvhS
+         +umBwiCTWOpE+ClkFANyiUjRPqLxmGrHrcJ/b39mQAYsrKgqlSZQXfsqBqumWN2wgPBR
+         16EQ==
+X-Gm-Message-State: AOAM533AlOV8j4WosRvQhBanUtGbsV+piiX3NuJVFCQlQxx9RS1BHbrM
+        +pEsYg6rGM3TNzRk5bAJrjpMA24lqAQ=
+X-Google-Smtp-Source: ABdhPJxUaqM/iJdLSAxeMt09Wp9qhA1Z1WMtMWevGkkfRG7LbW+Qe2cOaM2HmISXWMUJeRr1kCWK5g==
+X-Received: by 2002:a17:906:364e:: with SMTP id r14mr8680093ejb.258.1593539058617;
+        Tue, 30 Jun 2020 10:44:18 -0700 (PDT)
+Received: from darkstar ([2a04:ee41:4:5025:8295:1d2:ca0d:985e])
+        by smtp.gmail.com with ESMTPSA id j24sm3452711edp.22.2020.06.30.10.44.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 10:44:17 -0700 (PDT)
+References: <20200629162633.8800-1-qais.yousef@arm.com> <20200629162633.8800-3-qais.yousef@arm.com> <87366dnfaq.derkling@matbug.net> <20200630094623.hnlqtgavauqlsuyd@e107158-lin.cambridge.arm.com> <87zh8kmwlt.derkling@matbug.net> <20200630154033.5r6zi7ajgag7jlec@e107158-lin.cambridge.arm.com>
+User-agent: mu4e 1.4.10; emacs 26.3
+From:   Patrick Bellasi <patrick.bellasi@matbug.net>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Chris Redpath <chris.redpath@arm.com>,
+        Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/2] sched/uclamp: Protect uclamp fast path code with static key
+In-reply-to: <20200630154033.5r6zi7ajgag7jlec@e107158-lin.cambridge.arm.com>
+Message-ID: <87wo3omot7.derkling@matbug.net>
+Date:   Tue, 30 Jun 2020 19:44:04 +0200
 MIME-Version: 1.0
-References: <20200630044943.3425049-1-rajatja@google.com> <20200630044943.3425049-6-rajatja@google.com>
-In-Reply-To: <20200630044943.3425049-6-rajatja@google.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Tue, 30 Jun 2020 10:43:37 -0700
-Message-ID: <CAGETcx9hgV70DVdbOvCF+tO4b-6+1JzN1_OmPmnWjj9qJhB_dw@mail.gmail.com>
-Subject: Re: [PATCH v2 5/7] driver core: Add device location to "struct
- device" and expose it in sysfs
-To:     Rajat Jain <rajatja@google.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Raj Ashok <ashok.raj@intel.com>,
-        lalithambika.krishnakumar@intel.com,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        oohall@gmail.com, Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 9:49 PM Rajat Jain <rajatja@google.com> wrote:
->
-> Add a new (optional) field to denote the physical location of a device
-> in the system, and expose it in sysfs. This was discussed here:
-> https://lore.kernel.org/linux-acpi/20200618184621.GA446639@kroah.com/
->
-> (The primary choice for attribute name i.e. "location" is already
-> exposed as an ABI elsewhere, so settled for "site"). Individual buses
-> that want to support this new attribute can opt-in by setting a flag in
-> bus_type, and then populating the location of device while enumerating
-> it.
->
-> Signed-off-by: Rajat Jain <rajatja@google.com>
-> ---
-> v2: (Initial version)
->
->  drivers/base/core.c        | 35 +++++++++++++++++++++++++++++++
->  include/linux/device.h     | 42 ++++++++++++++++++++++++++++++++++++++
->  include/linux/device/bus.h |  8 ++++++++
->  3 files changed, 85 insertions(+)
->
 
-<snip> I'm not CC'ed in 4/7, so just replying
+On Tue, Jun 30, 2020 at 17:40:34 +0200, Qais Yousef <qais.yousef@arm.com> wrote...
 
-> diff --git a/include/linux/device.h b/include/linux/device.h
-> index 15460a5ac024a..a4143735ae712 100644
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -428,6 +428,31 @@ enum dl_dev_state {
->         DL_DEV_UNBINDING,
->  };
+> Hi Patrick
 >
-> +/**
-> + * enum device_site - Physical location of the device in the system.
-> + * The semantics of values depend on subsystem / bus:
-> + *
-> + * @SITE_UNKNOWN:  Location is Unknown (default)
-> + *
-> + * @SITE_INTERNAL: Device is internal to the system, and cannot be (easily)
-> + *                 removed. E.g. SoC internal devices, onboard soldered
-> + *                 devices, internal M.2 cards (that cannot be removed
-> + *                 without opening the chassis).
-> + * @SITE_EXTENDED: Device sits an extension of the system. E.g. devices
-> + *                 on external PCIe trays, docking stations etc. These
-> + *                 devices may be removable, but are generally housed
-> + *                 internally on an extension board, so they are removed
-> + *                 only when that whole extension board is removed.
-> + * @SITE_EXTERNAL: Devices truly external to the system (i.e. plugged on
-> + *                 an external port) that may be removed or added frequently.
-> + */
-> +enum device_site {
-> +       SITE_UNKNOWN = 0,
-> +       SITE_INTERNAL,
-> +       SITE_EXTENDED,
-> +       SITE_EXTERNAL,
-> +};
-> +
->  /**
->   * struct dev_links_info - Device data related to device links.
->   * @suppliers: List of links to supplier devices.
-> @@ -513,6 +538,7 @@ struct dev_links_info {
->   *             device (i.e. the bus driver that discovered the device).
->   * @iommu_group: IOMMU group the device belongs to.
->   * @iommu:     Per device generic IOMMU runtime data
-> + * @site:      Physical location of the device w.r.t. the system
->   *
->   * @offline_disabled: If set, the device is permanently online.
->   * @offline:   Set after successful invocation of bus type's .offline().
-> @@ -613,6 +639,8 @@ struct device {
->         struct iommu_group      *iommu_group;
->         struct dev_iommu        *iommu;
+> On 06/30/20 16:55, Patrick Bellasi wrote:
+>> 
+>> Hi Qais,
+>> sorry for commenting on v5 with a v6 already posted, but...
+>> ... I cannot keep up with your re-spinning rate ;)
 >
-> +       enum device_site        site;   /* Device physical location */
-> +
->         bool                    offline_disabled:1;
->         bool                    offline:1;
->         bool                    of_node_reused:1;
-> @@ -806,6 +834,20 @@ static inline bool dev_has_sync_state(struct device *dev)
->         return false;
->  }
+> I classified that as a nit really and doesn't affect correctness. We have
+> different subjective view on what is better here. I did all the work in the
+> past 2 weeks and I think as the author of this patch I have the right to keep
+> my preference on subjective matters. I did consider your feedback and didn't
+> ignore it and improved the naming and added a comment to make sure there's no
+> confusion.
 >
-> +static inline int dev_set_site(struct device *dev, enum device_site site)
-> +{
-> +       if (site < SITE_UNKNOWN || site > SITE_EXTERNAL)
-> +               return -EINVAL;
-> +
-> +       dev->site = site;
-> +       return 0;
-> +}
-> +
-> +static inline bool dev_is_external(struct device *dev)
-> +{
-> +       return dev->site == SITE_EXTERNAL;
-> +}
+> We could nitpick the best name forever, but is it really that important?
 
-I'm not CC'ed in the rest of the patches in this series, so just
-responding here. I see you use this function in patch 6/7 to decide if
-the PCI device is trusted. Anything other than EXTERNAL is being
-treated as trusted. I'd argue that anything that's not internal should
-be distrusted. For example, I can have a hacked up laptop dock that I
-can share with you when you visit my home/office and now you are
-trusting it when you shouldn't be.
+Which leans toward confirming the impression I had while reading your
+previous response, i.e. you stopped reading at the name change
+observation, which would be _just_ a nit-picking, although still worth
+IMHO.
 
-Also, "UNKNOWN" is treated as trusted in patch 6/7. I'm guessing this
-is because some of the devices might not have the info in their
-firmware? At which point, this feature isn't even protecting all the
-PCI ports properly? This adds to Greg point that this should be a
-userspace policy so that it can override whatever is wrong/missing in
-the firmware.
+Instead, I went further and asked you to consider a different approach:
+not adding a new kernel symbol to represent a concept already there.
 
--Saravana
+> I really don't see any added value for one approach or another here to start
+> a long debate about it.
+
+Then you could have just called out that instead of silently ignoring
+the comment/proposal.
+
+> The comments were small enough that I didn't see any controversy that
+> warrants holding the patches longer. I agreed with your proposal to use
+> uc_se->active and clarified why your other suggestions don't hold.
+>
+> You pointed that uclamp_is_enabled() confused you; and I responded that I'll
+> change the name.
+
+Perhaps it would not confuse only me having 'something_enabled()'
+referring to 'something_used'.
+
+> Sorry for not being explicit about answering the below, but
+> I thought my answer implied that I don't prefer it.
+
+Your answer was about a name change, don't see correlation with a
+different approach... but should be just me.
+
+>> >> Thus, perhaps we can just use the same pattern used by the
+>> >> sched_numa_balancing static key:
+>> >> 
+>> >>   $ git grep sched_numa_balancing
+>> >>   kernel/sched/core.c:DEFINE_STATIC_KEY_FALSE(sched_numa_balancing);
+>> >>   kernel/sched/core.c:            static_branch_enable(&sched_numa_balancing);
+>> >>   kernel/sched/core.c:            static_branch_disable(&sched_numa_balancing);
+>> >>   kernel/sched/core.c:    int state = static_branch_likely(&sched_numa_balancing);
+>> >>   kernel/sched/fair.c:    if (!static_branch_likely(&sched_numa_balancing))
+>> >>   kernel/sched/fair.c:    if (!static_branch_likely(&sched_numa_balancing))
+>> >>   kernel/sched/fair.c:    if (!static_branch_likely(&sched_numa_balancing))
+>> >>   kernel/sched/fair.c:    if (static_branch_unlikely(&sched_numa_balancing))
+>> >>   kernel/sched/sched.h:extern struct static_key_false sched_numa_balancing;
+>> >> 
+>> >> IOW: unconditionally define sched_uclamp_used as non static in core.c,
+>> >> and use it directly on schedutil too.
+>> 
+>> So, what about this instead of adding the (renamed) method above?
+>
+> I am sorry there's no written rule that says one should do it in a specific
+> way. And AFAIK both way are implemented in the kernel. I appreciate your
+> suggestion but as the person who did all the hard work, I think my preference
+> matters here too.
+
+You sure know that sometime reviewing code can be an "hard work" too, so I
+would not go down that way at all with the discussion. Quite likely I
+have a different "subjective" view on how Open Source development works.
+
+> And actually with my approach when uclamp is not compiled in there's no need to
+> define an extra variable; and since uclamp_is_used() is defined as false for
+> !CONFIG_UCLAMP_TASK, it'll help with DCE, so less likely to end up with dead
+> code that'll never run in the final binary.
+
+Good, this is the simple and small reply I've politely asked for.
+
+Best,
+Patrick
+
