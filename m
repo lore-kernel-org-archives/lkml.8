@@ -2,109 +2,78 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C8DC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C8B6C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 833F2206BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:56:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593489362;
-	bh=XRJ/7jvqN8Ot5TfiVVvLG6PijiVUC0mh/GCXzdAiT6w=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=O7mBt8ohSU87fqBYTxf5rCnpi6hNkRowqW5+Sz9lRpJHjXOEGJIsr/kkaW0A+6ZCj
-	 ovamSLB4YfdW8GC+J1JQXwSu/CrYxcevzRXRAEMdRHOs+xuv6bk99UOwro/auBuJum
-	 ERgN8eIWXUpbNwnCOOxg6FLA+LW2fEavGuPYI2hQ=
+	by mail.kernel.org (Postfix) with ESMTP id DF80F20768
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:57:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AST/x2uF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729332AbgF3D4B (ORCPT
+        id S1729349AbgF3D5B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 23:56:01 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:61891 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726710AbgF3D4A (ORCPT
+        Mon, 29 Jun 2020 23:57:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40722 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728961AbgF3D5A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 23:56:00 -0400
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id 05U3tg65028988;
-        Tue, 30 Jun 2020 12:55:43 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 05U3tg65028988
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1593489343;
-        bh=gq5TKVsbMe0XkrK/QPet5QFotvaiYBvUAKndW6BqD2g=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=G2ZW6ilrRRT9QALZsHGMnWs+pKpNu4Ebj8GLGJ6jMWxsyLG4c/7pTgZLCyUhTThQl
-         5ZeJtirkqH6JRrQD/kDS74WBwOevFUDs/0oJyChqTWaeOgt8IrZrv3yecK2XndUx2C
-         Uo8HcKuYQT3w2KFl6ggKANuZxLPIqwJ2e40eVA/hMrJAkefoWgkF7LKK0kZJxEsfTA
-         JQ9L/1Is4vw2SB7nIwihlUgVAETRubx2HUCO71TcXzLDQahoM6SYLrx6+N+mPev0pY
-         vD+VEJ1Wxw+YVnsc0K/5IO8BfPR5RBtbJm6Qkj2t85aSDNw6VecVx603rChjZ1hTPh
-         0id3HNGxtItnQ==
-X-Nifty-SrcIP: [209.85.217.48]
-Received: by mail-vs1-f48.google.com with SMTP id m25so10421534vsp.8;
-        Mon, 29 Jun 2020 20:55:43 -0700 (PDT)
-X-Gm-Message-State: AOAM530PKE5cP2KBoQjZWcSmlQ0MoVpH3mmYmYhpcqUvkesiZyyPmXTD
-        K3nO78w4V1E6qSCNMbt8cLd3guIf/U6p9OqxKHI=
-X-Google-Smtp-Source: ABdhPJxu+ZaYh/A09rtSaQOXZ0dgclwlALoWR1ft0hQTBsskUU6p3xjJNI/Pv+KsWwqUQGp3hMKlIivYYW/H+qqbXxU=
-X-Received: by 2002:a67:694d:: with SMTP id e74mr14014925vsc.155.1593489341992;
- Mon, 29 Jun 2020 20:55:41 -0700 (PDT)
+        Mon, 29 Jun 2020 23:57:00 -0400
+Received: from mail-il1-x12d.google.com (mail-il1-x12d.google.com [IPv6:2607:f8b0:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCEC8C061755;
+        Mon, 29 Jun 2020 20:56:59 -0700 (PDT)
+Received: by mail-il1-x12d.google.com with SMTP id k1so15299759ils.2;
+        Mon, 29 Jun 2020 20:56:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yAZduYcEKm4wiOoLB6wnk1hlMRtoPsLgtKlyIvlMUUk=;
+        b=AST/x2uFdAOxU5odRsKWn9WpNVke4VbhSNvdISsxJZV/NpV7Lw4iiX0GXfsPiDW0W4
+         tUrRjKiSa62sEqDUPqKDwLjTEfwaJIzROaY0JTZ45PFyGziN68HkqYHlZgAWUgmUdiPP
+         HEwGMXZa8wYgmU3U9+2SswTLl2PyLa0FQlbDjmV8uhbQpGuo/BqKXIfX1spkVz3HteSf
+         aRC6y9fpGFIc8J0vnAIUviWUySCHN8LvMWS2m2k9nuQwY4VMIf3in26ljVIjLireNsJu
+         WIj0yyMXzaTLwD3OTnQ4fy40w42oSfRHblfTUWboKc/MMq6uDuGzjrQ141U67NzeFkvi
+         oK9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yAZduYcEKm4wiOoLB6wnk1hlMRtoPsLgtKlyIvlMUUk=;
+        b=YxzuVhjcgo3hTJSztLZzfuDPZNMzdsj5h8Ld9gx6NxdpJhA1NfJaXMurGHdeL1ymQX
+         a4Y4F3cB290YOEglXizbfuPDAjx3Qr436uVybK/9G1ExZSFFdIzqHJH1aFQJ0NxLaNMc
+         dwX4+drJtwp7cIK3TNBZiY8LC3b1xsL583VSGVB4kJX8IrVSDOz/TjoOBr9Zm/TCSVLz
+         iseNe23XgTDLYD7N64IGiwKHietr0NYZXX9y5i5jskwDlPeA82J3Tk2Z38Z0SCNYqiwj
+         ZVyfJzYsnL4OA5hej4P8gOcNVmm2SmqDHyGEUb3wDFBypKOqCgbd6JYZjligU2I3csZC
+         c+ww==
+X-Gm-Message-State: AOAM530GqSsvZo7lI2kzKho4puWCzn2I2506J6O4juaIw/pZfV5aL7vE
+        KuJJII29KhwAT20uCV6pCR2zeFRZ2MgLV6AAMvE=
+X-Google-Smtp-Source: ABdhPJxliD+RX+5z+ADoRBWAEQRMTYQaVyBjwuy4bcMqOCiNJvHeTGmICJj9i962YuR7HghZ2ecs16GvVbRu0qa8CbI=
+X-Received: by 2002:a92:bb0b:: with SMTP id w11mr777875ili.238.1593489419280;
+ Mon, 29 Jun 2020 20:56:59 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1593444492.git.mchehab+huawei@kernel.org> <781cc3dc06dfe179f19c8aca8068c14890bace52.1593444492.git.mchehab+huawei@kernel.org>
-In-Reply-To: <781cc3dc06dfe179f19c8aca8068c14890bace52.1593444492.git.mchehab+huawei@kernel.org>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 30 Jun 2020 12:55:05 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASQg8g7ad6SvZBQaq69+fcXLofV5WzRiFc8B3m6Rdy2vg@mail.gmail.com>
-Message-ID: <CAK7LNASQg8g7ad6SvZBQaq69+fcXLofV5WzRiFc8B3m6Rdy2vg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] kconfig: qconf: don't show goback button on splitMode
-To:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <00000000000084cbe605a93bcf78@google.com>
+In-Reply-To: <00000000000084cbe605a93bcf78@google.com>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Mon, 29 Jun 2020 20:56:48 -0700
+Message-ID: <CAM_iQpVpaBQ5Hg9YAGRtcOWKDhyNOpZ6jfsDRbDhg-Da1xxUkw@mail.gmail.com>
+Subject: Re: KASAN: vmalloc-out-of-bounds Read in netdev_name_node_lookup_rcu
+To:     syzbot <syzbot+1860d20cb6a6f52be167@syzkaller.appspotmail.com>
+Cc:     "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        WireGuard mailing list <wireguard@lists.zx2c4.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 12:30 AM Mauro Carvalho Chehab
-<mchehab+huawei@kernel.org> wrote:
->
-> the goback button does nothing on splitMode. So, why display
-> it?
-
-
-Hmm, I still see the goback button
-on all of the three modes...
-
-
-
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> ---
->  scripts/kconfig/qconf.cc | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
-> index d0bcc0b717f0..f49fbac91995 100644
-> --- a/scripts/kconfig/qconf.cc
-> +++ b/scripts/kconfig/qconf.cc
-> @@ -437,9 +437,10 @@ void ConfigList::updateList(ConfigItem* item)
->         if (rootEntry != &rootmenu && (mode == singleMode ||
->             (mode == symbolMode && rootEntry->parent != &rootmenu))) {
->                 item = (ConfigItem *)topLevelItem(0);
-> -               if (!item)
-> +               if (!item && mode != symbolMode) {
->                         item = new ConfigItem(this, 0, true);
-> -               last = item;
-> +                       last = item;
-> +               }
->         }
->         if ((mode == singleMode || (mode == symbolMode && !(rootEntry->flags & MENU_ROOT))) &&
->             rootEntry->sym && rootEntry->prompt) {
-> --
-> 2.26.2
->
-
-
--- 
-Best Regards
-Masahiro Yamada
+#syz fix: genetlink: get rid of family->attrbuf
