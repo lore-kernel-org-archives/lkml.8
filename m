@@ -7,136 +7,115 @@ X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B5FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7470C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B90C20759
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0CE420672
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:30:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="fY7q+dyr"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="Oj1NyUji"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730378AbgF3G25 (ORCPT
+        id S1730162AbgF3GaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 02:28:57 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:5160 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730183AbgF3G24 (ORCPT
+        Tue, 30 Jun 2020 02:30:02 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:54700 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730015AbgF3GaB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 02:28:56 -0400
-Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05U6StX9018789
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 23:28:56 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-transfer-encoding :
- content-type; s=facebook; bh=ATAIZRyF5LF5Ymt6TlkUCcEq7zggg+i+C8LAuUJjSjU=;
- b=fY7q+dyrU9O3KHHf1c7Dkel+wQFs1sj9DvNCBMuaxaShpdAzRCEKa7QAoVLxxRwtOEnJ
- e8dDtpYsgQn9xmnvbe1HuUVONKA0vlnYw6ygCU7LEXRGma+K8i8CIKan7U1LD9rKPzsY
- 4S/N6Qfows/1fJs8wnBKfw8X78I1W5dnPPQ= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 31xp398gmb-4
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 23:28:56 -0700
-Received: from intmgw003.08.frc2.facebook.com (2620:10d:c085:208::11) by
- mail.thefacebook.com (2620:10d:c085:21d::4) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Mon, 29 Jun 2020 23:28:55 -0700
-Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id 593F062E51C7; Mon, 29 Jun 2020 23:28:50 -0700 (PDT)
-Smtp-Origin-Hostprefix: devbig
-From:   Song Liu <songliubraving@fb.com>
-Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
-To:     <bpf@vger.kernel.org>, <netdev@vger.kernel.org>,
+        Tue, 30 Jun 2020 02:30:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1593498601; x=1625034601;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   mime-version;
+  bh=tJ1nJN+//wpEjNcsi2nxNdbUXSkgN0xe5Wv7VlT9jyY=;
+  b=Oj1NyUji2sgzq2gizewLKwi6+S7tNAfKTLYA42ZH68xa6WuIoOqRPpPa
+   YHMlbT6dQQlsMuI/JdK3k7c9Mh+VWUesi5Mu/5nF+PSjbvl5/6Pi08yTw
+   nZGRk6nHHeV3gIBFsQIlWY7Waua+n6zfAqatKwg9IECAF/a4EewNTKdYt
+   c=;
+IronPort-SDR: dqd7N/pkCAiROI/QrABbRhv/XE2hXrBdFbrnKkiJRP+PEUwrdUFkEiJFLlMGx0DlrkbAiqzet2
+ OXV8+8X/xE6Q==
+X-IronPort-AV: E=Sophos;i="5.75,296,1589241600"; 
+   d="scan'208";a="47964491"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 30 Jun 2020 06:29:55 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com (Postfix) with ESMTPS id D8001A082E;
+        Tue, 30 Jun 2020 06:29:54 +0000 (UTC)
+Received: from EX13D31EUA004.ant.amazon.com (10.43.165.161) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 30 Jun 2020 06:29:54 +0000
+Received: from u886c93fd17d25d.ant.amazon.com (10.43.160.100) by
+ EX13D31EUA004.ant.amazon.com (10.43.165.161) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 30 Jun 2020 06:29:50 +0000
+From:   SeongJae Park <sjpark@amazon.com>
+To:     Greg KH <gregkh@linuxfoundation.org>
+CC:     SeongJae Park <sjpark@amazon.com>, <sj38.park@gmail.com>,
+        <sashal@kernel.org>, <stable@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-CC:     <peterz@infradead.org>, <ast@kernel.org>, <daniel@iogearbox.net>,
-        <kernel-team@fb.com>, <john.fastabend@gmail.com>,
-        <kpsingh@chromium.org>, Song Liu <songliubraving@fb.com>
-Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH v5 bpf-next 0/4] bpf: introduce bpf_get_task_stack()
-Date:   Mon, 29 Jun 2020 23:28:42 -0700
-Message-ID: <20200630062846.664389-1-songliubraving@fb.com>
-X-Mailer: git-send-email 2.24.1
+Subject: Re: Re: Upstream fixes not merged in 5.4.y
+Date:   Tue, 30 Jun 2020 08:29:35 +0200
+Message-ID: <20200630062935.15087-1-sjpark@amazon.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200629161542.GA683634@kroah.com> (raw)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-FB-Internal: Safe
 Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-06-30_01:2020-06-30,2020-06-29 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 adultscore=0
- impostorscore=0 phishscore=0 cotscore=-2147483648 malwarescore=0
- lowpriorityscore=0 mlxscore=0 suspectscore=0 clxscore=1015
- priorityscore=1501 bulkscore=0 spamscore=0 mlxlogscore=999 classifier=spam
- adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006300048
-X-FB-Internal: deliver
+X-Originating-IP: [10.43.160.100]
+X-ClientProxiedBy: EX13D11UWB002.ant.amazon.com (10.43.161.20) To
+ EX13D31EUA004.ant.amazon.com (10.43.165.161)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This set introduces a new helper bpf_get_task_stack(). The primary use ca=
-se
-is to dump all /proc/*/stack to seq_file via bpf_iter__task.
+On Mon, 29 Jun 2020 18:15:42 +0200 Greg KH <gregkh@linuxfoundation.org> wrote:
 
-A few different approaches have been explored and compared:
+> On Mon, Jun 29, 2020 at 04:28:05PM +0200, SeongJae Park wrote:
+> > Hello,
+> > 
+> > 
+> > With my little script, I found below commits in the mainline tree are more than
+> > 1 week old and fixing commits that back-ported in v5.4..v5.4.49, but not merged
+> > in the stable/linux-5.4.y tree.  Are those need to be merged in but missed or
+> > dealyed?
+> > 
+> > 9210c075cef2 ("nvme-pci: avoid race between nvme_reap_pending_cqes() and nvme_poll()")
+> > 9fecd13202f5 ("btrfs: fix a block group ref counter leak after failure to remove block group")
+> > 9d964e1b82d8 ("fix a braino in "sparc32: fix register window handling in genregs32_[gs]et()"")
+> > 8ab3a3812aa9 ("drm/i915/gt: Incrementally check for rewinding")
+> > 6e2f83884c09 ("bnxt_en: Fix AER reset logic on 57500 chips.")
+> > efb94790852a ("drm/panel-simple: fix connector type for LogicPD Type28 Display")
+> > ff58bbc7b970 ("ALSA: usb-audio: Fix potential use-after-free of streams")
+> > ff58bbc7b970 ("ALSA: usb-audio: Fix potential use-after-free of streams")
+> > 8dbe4c5d5e40 ("net: dsa: bcm_sf2: Fix node reference count")
+> > ca8826095e4d ("selftests/net: report etf errors correctly")
+> > 5a8d7f126c97 ("of: of_mdio: Correct loop scanning logic")
+> > d35d3660e065 ("binder: fix null deref of proc->context")
+> > 
+> > The script found several more commits but I exclude those here, because those
+> > seems not applicable on 5.4.y or fixing trivial problems only.  If I'm not
+> > following a proper process for this kind of reports, please let me know.
+> 
+> For commits that only have a "Fixes:" tag, and not a "cc: stable..."
+> tag, wait a few weeks, or a month, for us to catch up with them.  We
+> usually get to them eventually, but it takes us a while as we have lots
+> more to deal with by developers and maintainers that are properly
+> tagging patches for this type of thing.
+> 
+> Some of the above commits are queued up already, but not all of them.
+> I'll take a look at the list after this next round of patches go out,
+> and will let you know.
+> 
+> And yes, we do want this type of list, it's greatly appreciated.
 
-  1. A simple wrapper around stack_trace_save_tsk(), as v1 [1].
+Appreciate your kind explanation.  I will keep those in my mind for future
+reports.
 
-     This approach introduces new syntax, which is different to existing
-     helper bpf_get_stack(). Therefore, this is not ideal.
 
-  2. Extend get_perf_callchain() to support "task" as argument.
+Thanks,
+SeongJae Park
 
-     This approach reuses most of bpf_get_stack(). However, extending
-     get_perf_callchain() requires non-trivial changes to architecture
-     specific code. Which is error prone.
-
-  3. Current (v2) approach, leverages most of existing bpf_get_stack(), a=
-nd
-     uses stack_trace_save_tsk() to handle architecture specific logic.
-
-[1] https://lore.kernel.org/netdev/20200623070802.2310018-1-songliubravin=
-g@fb.com/
-
-Changes v4 =3D> v5:
-1. Rebase and work around git-am issue. (Alexei)
-2. Update commit log for 4/4. (Yonghong)
-
-Changes v3 =3D> v4:
-1. Simplify the selftests with bpf_iter.h. (Yonghong)
-2. Add example output to commit log of 4/4. (Yonghong)
-
-Changes v2 =3D> v3:
-1. Rebase on top of bpf-next. (Yonghong)
-2. Sanitize get_callchain_entry(). (Peter)
-3. Use has_callchain_buf for bpf_get_task_stack. (Andrii)
-4. Other small clean up. (Yonghong, Andrii).
-
-Changes v1 =3D> v2:
-1. Reuse most of bpf_get_stack() logic. (Andrii)
-2. Fix unsigned long vs. u64 mismatch for 32-bit systems. (Yonghong)
-3. Add %pB support in bpf_trace_printk(). (Daniel)
-4. Fix buffer size to bytes.
-
-Song Liu (4):
-  perf: expose get/put_callchain_entry()
-  bpf: introduce helper bpf_get_task_stack()
-  bpf: allow %pB in bpf_seq_printf() and bpf_trace_printk()
-  selftests/bpf: add bpf_iter test with bpf_get_task_stack()
-
- include/linux/bpf.h                           |  1 +
- include/linux/perf_event.h                    |  2 +
- include/uapi/linux/bpf.h                      | 36 ++++++++-
- kernel/bpf/stackmap.c                         | 77 ++++++++++++++++++-
- kernel/bpf/verifier.c                         |  4 +-
- kernel/events/callchain.c                     | 13 ++--
- kernel/trace/bpf_trace.c                      | 12 ++-
- scripts/bpf_helpers_doc.py                    |  2 +
- tools/include/uapi/linux/bpf.h                | 36 ++++++++-
- .../selftests/bpf/prog_tests/bpf_iter.c       | 17 ++++
- .../selftests/bpf/progs/bpf_iter_task_stack.c | 37 +++++++++
- 11 files changed, 221 insertions(+), 16 deletions(-)
- create mode 100644 tools/testing/selftests/bpf/progs/bpf_iter_task_stack=
-.c
-
---
-2.24.1
+> 
+> thanks,
+> 
+> greg k-h
