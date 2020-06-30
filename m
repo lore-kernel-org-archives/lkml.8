@@ -2,112 +2,144 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32271C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 01:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 617E7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 01:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 115FB20780
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 01:11:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F80720780
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 01:17:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cSM7Pwgj"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="kDtop+xD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728062AbgF3BLD (ORCPT
+        id S1727122AbgF3BRR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 21:11:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43632 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726813AbgF3BLD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 21:11:03 -0400
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04CA8C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 18:11:03 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id z7so20892836ybz.1
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 18:11:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=3+Iq/MXOcbSUp/+nHtUzggFuUsgKGhG/vV+48k4w4OQ=;
-        b=cSM7Pwgj28gdY5CA12KGe4fYcjvJzOjCGrwQ0AmXermj1tHfdZrsjUZJBsBx2GrEPY
-         BA1q0mlnRFN2+jx1RR2i6CitfER/2t0HDTe1Ea6GnnnNQB5IPSRhOHNXqbwbNUPbT37f
-         DzH8QBrP2sy/jsH6Tq37FKzFLDwvC2ffYWXdjs9u5G58B68x0mZp4+sRmtufEXeKXBvy
-         E1cgWh7vGWO+Xo5ZffR5iH1Tnc5JVBb50PIy8cwDQ8SQP+y6sIPGW8hb40ECLqLLaRvZ
-         5kqhGq8GSvG2uX3JOUsUesKCvX7hxtmpipPnOsbmzuHn50ZPZkki9Y7lI+siCFRkCevp
-         Cbtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=3+Iq/MXOcbSUp/+nHtUzggFuUsgKGhG/vV+48k4w4OQ=;
-        b=omvV9EkjibacTw1UY44qkWY/V0FhcuDG8h9FG30p3ZhNhseE0xuHWRllqXyd5SQBuS
-         gsa7ZK0pcMaFbOvBS0sLC1s511ctEYFmdnZgHiLUQ7/wwqPWGvs1xNBcEDBhppEJj7Em
-         u+t7b1n+Soea24sQiLTRARbieDX1E0Z5D6lxAxgPeUxmJQd9fJF3knZ/CAWxU5+gMd5H
-         N5giJQhhPag9i2nqirq8X/xtyMSg1uhelG1w/JDFgnYhpl/5c3Llq8eQbSLgxpB4CilM
-         Jd0oyGrkYkRxSBY8eT+FjCv+VjEB2RwBpJDUxlughjVgWMMIhTwNU0Khh8kQXzS/g32g
-         Do5w==
-X-Gm-Message-State: AOAM5310zc1csRD2Ao5h80s9oa4HTKZX3r/K27NXsOHq9NT4WpATpB/9
-        RYZNj8q74h2J/jTRcGypC7CkXQ1g/VIj
-X-Google-Smtp-Source: ABdhPJwHlV12J3jmhSgfapnwmVJEvCJRHQHW7Wzl8yg/D9C9h0zd6idlrSpzbckw9anZCATywg6aWVmQswSM
-X-Received: by 2002:a25:b21e:: with SMTP id i30mr29661766ybj.35.1593479462230;
- Mon, 29 Jun 2020 18:11:02 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 11:10:51 +1000
-Message-Id: <20200630111047.1.I05d781ac794389337a4adc2f6402f673117e2937@changeid>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-Subject: [PATCH] regulator: mt6397: Implement of_map_mode regulator_desc function
-From:   Anand K Mistry <amistry@google.com>
-To:     linux-mediatek@lists.infradead.org
-Cc:     broonie@kernel.org, drinkcat@chromium.org,
-        hsin-hsiung.wang@mediatek.com, Anand K Mistry <amistry@google.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 29 Jun 2020 21:17:17 -0400
+Received: from ozlabs.org ([203.11.71.1]:53977 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726612AbgF3BRR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 21:17:17 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 49wmfz2qYRz9sDX;
+        Tue, 30 Jun 2020 11:17:15 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1593479835;
+        bh=c1L8DnWKBEK734+NRCMwarazgG4eaw4rI7iix+fR1fM=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=kDtop+xDEp6QqlXkx0SzTxPfqSZeaL8NAwcqTcjv6q34IAtCPjulKUhhnD+7SnUFj
+         6woeh33FoYTtI5Rd9M5jonIDa+nbkhTKULpPQ/XjloHpjsVMpNakgC96oS3KmmI74a
+         y5j0ZZNyacS46inOgRddJS7op0JOxbQc5nrAcHPzFbax0A5KX5Mdk46P2PPz0zR6SP
+         0E7Td3Cs41zmvcYGpYbbI0N5Hlkv2HZd+OrBxphVRpmm3IX0C3e0EinfIokcfq/BuM
+         lAYkckZwFbZfYIPagygrZ9AZin/b0DoRct0tdVRTR8J9WZ1NppEaXJlTOxKn80dNfB
+         5Vktad6YByV0w==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, npiggin@gmail.com,
+        segher@kernel.crashing.org
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] powerpc/uaccess: Use flexible addressing with __put_user()/__get_user()
+In-Reply-To: <878sg6862r.fsf@mpe.ellerman.id.au>
+References: <c2addbd9d76212242d3d8554a2f7ff849fb08b85.1587040754.git.christophe.leroy@c-s.fr> <7b916759-1683-b4df-0d4b-b04b3fcd9a02@csgroup.eu> <878sg6862r.fsf@mpe.ellerman.id.au>
+Date:   Tue, 30 Jun 2020 11:19:29 +1000
+Message-ID: <875zb98i5a.fsf@mpe.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Without a of_map_mode implementation, the regulator-allowed-modes
-devicetree field is skipped, and attempting to change the regulator mode
-results in an error:
-[    1.439165] vpca15: mode operation not allowed
+Michael Ellerman <mpe@ellerman.id.au> writes:
+> Christophe Leroy <christophe.leroy@csgroup.eu> writes:
+>> Hi Michael,
+>>
+>> I see this patch is marked as "defered" in patchwork, but I can't see 
+>> any related discussion. Is it normal ?
+>
+> Because it uses the "m<>" constraint which didn't work on GCC 4.6.
+>
+> https://github.com/linuxppc/issues/issues/297
+>
+> So we should be able to pick it up for v5.9 hopefully.
 
-Signed-off-by: Anand K Mistry <amistry@google.com>
+It seems to break the build with the kernel.org 4.9.4 compiler and
+corenet64_smp_defconfig:
 
----
++ make -s CC=powerpc64-linux-gnu-gcc -j 160
+In file included from /linux/include/linux/uaccess.h:11:0,
+                 from /linux/include/linux/sched/task.h:11,
+                 from /linux/include/linux/sched/signal.h:9,
+                 from /linux/include/linux/rcuwait.h:6,
+                 from /linux/include/linux/percpu-rwsem.h:7,
+                 from /linux/include/linux/fs.h:33,
+                 from /linux/include/linux/huge_mm.h:8,
+                 from /linux/include/linux/mm.h:675,
+                 from /linux/arch/powerpc/kernel/signal_32.c:17:
+/linux/arch/powerpc/kernel/signal_32.c: In function 'save_user_regs.isra.14.constprop':
+/linux/arch/powerpc/include/asm/uaccess.h:161:2: error: 'asm' operand has impossible constraints
+  __asm__ __volatile__(     \
+  ^
+/linux/arch/powerpc/include/asm/uaccess.h:197:12: note: in expansion of macro '__put_user_asm'
+    case 4: __put_user_asm(x, ptr, retval, "stw"); break; \
+            ^
+/linux/arch/powerpc/include/asm/uaccess.h:206:2: note: in expansion of macro '__put_user_size_allowed'
+  __put_user_size_allowed(x, ptr, size, retval);  \
+  ^
+/linux/arch/powerpc/include/asm/uaccess.h:220:2: note: in expansion of macro '__put_user_size'
+  __put_user_size(__pu_val, __pu_addr, __pu_size, __pu_err); \
+  ^
+/linux/arch/powerpc/include/asm/uaccess.h:96:2: note: in expansion of macro '__put_user_nocheck'
+  __put_user_nocheck((__typeof__(*(ptr)))(x), (ptr), sizeof(*(ptr)))
+  ^
+/linux/arch/powerpc/kernel/signal_32.c:120:7: note: in expansion of macro '__put_user'
+   if (__put_user((unsigned int)gregs[i], &frame->mc_gregs[i]))
+       ^
+/linux/scripts/Makefile.build:280: recipe for target 'arch/powerpc/kernel/signal_32.o' failed
+make[3]: *** [arch/powerpc/kernel/signal_32.o] Error 1
+make[3]: *** Waiting for unfinished jobs....
+In file included from /linux/include/linux/uaccess.h:11:0,
+                 from /linux/include/linux/sched/task.h:11,
+                 from /linux/include/linux/sched/signal.h:9,
+                 from /linux/include/linux/rcuwait.h:6,
+                 from /linux/include/linux/percpu-rwsem.h:7,
+                 from /linux/include/linux/fs.h:33,
+                 from /linux/include/linux/huge_mm.h:8,
+                 from /linux/include/linux/mm.h:675,
+                 from /linux/arch/powerpc/kernel/signal_64.c:12:
+/linux/arch/powerpc/kernel/signal_64.c: In function '__se_sys_swapcontext':
+/linux/arch/powerpc/include/asm/uaccess.h:319:2: error: 'asm' operand has impossible constraints
+  __asm__ __volatile__(    \
+  ^
+/linux/arch/powerpc/include/asm/uaccess.h:359:10: note: in expansion of macro '__get_user_asm'
+  case 1: __get_user_asm(x, (u8 __user *)ptr, retval, "lbz"); break; \
+          ^
+/linux/arch/powerpc/include/asm/uaccess.h:370:2: note: in expansion of macro '__get_user_size_allowed'
+  __get_user_size_allowed(x, ptr, size, retval);  \
+  ^
+/linux/arch/powerpc/include/asm/uaccess.h:393:3: note: in expansion of macro '__get_user_size'
+   __get_user_size(__gu_val, __gu_addr, __gu_size, __gu_err); \
+   ^
+/linux/arch/powerpc/include/asm/uaccess.h:94:2: note: in expansion of macro '__get_user_nocheck'
+  __get_user_nocheck((x), (ptr), sizeof(*(ptr)), true)
+  ^
+/linux/arch/powerpc/kernel/signal_64.c:672:9: note: in expansion of macro '__get_user'
+      || __get_user(tmp, (u8 __user *) new_ctx + ctx_size - 1))
+         ^
+/linux/scripts/Makefile.build:280: recipe for target 'arch/powerpc/kernel/signal_64.o' failed
+make[3]: *** [arch/powerpc/kernel/signal_64.o] Error 1
+/linux/scripts/Makefile.build:497: recipe for target 'arch/powerpc/kernel' failed
+make[2]: *** [arch/powerpc/kernel] Error 2
+/linux/Makefile:1756: recipe for target 'arch/powerpc' failed
+make[1]: *** [arch/powerpc] Error 2
+Makefile:185: recipe for target '__sub-make' failed
+make: *** [__sub-make] Error 2
 
- drivers/regulator/mt6397-regulator.c | 7 +++++++
- 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/regulator/mt6397-regulator.c b/drivers/regulator/mt6397-regulator.c
-index 269c2a6028e8..5c60b52addf1 100644
---- a/drivers/regulator/mt6397-regulator.c
-+++ b/drivers/regulator/mt6397-regulator.c
-@@ -55,6 +55,7 @@ struct mt6397_regulator_info {
- 		.vsel_mask = vosel_mask,				\
- 		.enable_reg = enreg,					\
- 		.enable_mask = BIT(0),					\
-+		.of_map_mode = mt6397_map_mode,				\
- 	},								\
- 	.qi = BIT(13),							\
- 	.vselon_reg = voselon,						\
-@@ -146,6 +147,12 @@ static const unsigned int ldo_volt_table7[] = {
- 	1300000, 1500000, 1800000, 2000000, 2500000, 2800000, 3000000, 3300000,
- };
- 
-+static unsigned int mt6397_map_mode(unsigned int mode)
-+{
-+	return mode == MT6397_BUCK_MODE_AUTO ?
-+		REGULATOR_MODE_NORMAL : REGULATOR_MODE_FAST;
-+}
-+
- static int mt6397_regulator_set_mode(struct regulator_dev *rdev,
- 				     unsigned int mode)
- {
--- 
-2.27.0.212.ge8ba1cc988-goog
-
+cheers
