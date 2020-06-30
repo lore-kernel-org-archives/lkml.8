@@ -2,212 +2,119 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB904C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F662C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DE7F20760
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:39:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="XPwYdaT3"
+	by mail.kernel.org (Postfix) with ESMTP id 67F3920724
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:40:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389596AbgF3PjH (ORCPT
+        id S2389609AbgF3Pkj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 11:39:07 -0400
-Received: from mail-dm6nam12on2079.outbound.protection.outlook.com ([40.107.243.79]:6071
-        "EHLO NAM12-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731107AbgF3PjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 11:39:03 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=B7ApMDXX31QEd5NbksuDSWjSnLPrOtOkODDfJpw97eATqRXdI1LGgzwIKfi/NzAqjX1QV8mwqKfBwl27GHFD0q2pQID1sf0HkvXQodQrkKQJpdenC5I12udkOmH8BEtTTf92TpS4xXrvzmy+TKtJdthV5tr0HhLH4N0J9gt/Xp26hlEn5c6oRyDs4N8sa4Nz7yc3YpPbPF2qzqaUmGeUAP/p829el7xCfcYhkEJXHo2WcMhMEJS6jdzA9oQiUodTexxr/SPfiFk3PQhz24f8DJmWjJgiUYErDMzev0IkCTQxad5QQ2+qmFRik3nT/BRzKdw6t5uxgppeZna1xtOv6Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ULwFnId12BOKn2lWfVbvOr5jV5Oxn938DJ4JbYf8CAY=;
- b=Q6a8mOEh3BVAytWNOBQuwQRmdj9xKD4UclPYgvg8AM3DnYoB/jI2t+aAigRbNF+d/sXaUAM4j1nYeP+MFdmwFzN41x4dJblEBPI/Pp6Wj+DCzvKal3om+EtNFxQoMbKBvGbUQNl0B7yCR/i9OsMHtBFze32vFh+jm49UeGeACiAXGULQYJejzSixEMINn1F3ghu4n9d2q4pA/LYlFK6Td2EA/hvXabEleo7HdY/uE82H5Efu2rElV0ePn9Xp+gfOGpVWAy9RFZNWISzrSMigRYvgHS35UUGqmvRNqUO+AyFxXh9YtV4Hxv9OfZjKeGiJ/4PtIubwGm1Y+ZSARupDAg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=xilinx.com; dmarc=pass action=none header.from=xilinx.com;
- dkim=pass header.d=xilinx.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ULwFnId12BOKn2lWfVbvOr5jV5Oxn938DJ4JbYf8CAY=;
- b=XPwYdaT32KIu9POyUdOrHcILcoyN8ZzHxnbL6gwt8Q1obAyQmJDhnWMnXOhDY8PTyzX1c6+ig5om8mBSLVOKXyufT3UeGMQW9RGgvBulDaveeL4IQ1CSg6/HvE1YtQ8k5EJN6n0s4KsCySQaEy4LtudaIiLadLSeVyWB3ld+U3o=
-Received: from BYAPR02MB4407.namprd02.prod.outlook.com (2603:10b6:a03:55::31)
- by BYAPR02MB5430.namprd02.prod.outlook.com (2603:10b6:a03:a4::25) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.23; Tue, 30 Jun
- 2020 15:38:58 +0000
-Received: from BYAPR02MB4407.namprd02.prod.outlook.com
- ([fe80::e59d:9815:461e:2a79]) by BYAPR02MB4407.namprd02.prod.outlook.com
- ([fe80::e59d:9815:461e:2a79%6]) with mapi id 15.20.3131.028; Tue, 30 Jun 2020
- 15:38:58 +0000
-From:   Ben Levinsky <BLEVINSK@xilinx.com>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Stefano Stabellini <stefanos@xilinx.com>
-CC:     Rob Herring <robh@kernel.org>, "ohad@wizery.com" <ohad@wizery.com>,
-        Michal Simek <michals@xilinx.com>,
-        Jolly Shah <JOLLYS@xilinx.com>, Rajan Vaja <RAJANV@xilinx.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Stefano Stabellini <stefanos@xilinx.com>
-Subject: RE: [PATCH v4 4/5] dt-bindings: remoteproc: Add documentation for
- ZynqMP R5 rproc bindings
-Thread-Topic: [PATCH v4 4/5] dt-bindings: remoteproc: Add documentation for
- ZynqMP R5 rproc bindings
-Thread-Index: AQHWGl7uxdGBAyULe0azD2FJNJZOnqijj0uAgBdEEWCAF8YrgIAeHusAgAAc24CAAN6D4A==
-Date:   Tue, 30 Jun 2020 15:38:57 +0000
-Message-ID: <BYAPR02MB44079AC22428C6D59548E7ECB56F0@BYAPR02MB4407.namprd02.prod.outlook.com>
-References: <1587749770-15082-1-git-send-email-ben.levinsky@xilinx.com>
- <1587749770-15082-5-git-send-email-ben.levinsky@xilinx.com>
- <20200511221755.GA13585@bogus>
- <BYAPR02MB44077C8B7B7FD23FDE8E31B8B5B00@BYAPR02MB4407.namprd02.prod.outlook.com>
- <CAL_JsqLGo380SRYska+xGgJhgF8NCRvY56ewafvSCU6c-LmhZw@mail.gmail.com>
- <alpine.DEB.2.21.2006291734370.8121@sstabellini-ThinkPad-T480s>
- <20200630022029.GC407764@builder.lan>
-In-Reply-To: <20200630022029.GC407764@builder.lan>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-MS-TNEF-Correlator: 
-authentication-results: linaro.org; dkim=none (message not signed)
- header.d=none;linaro.org; dmarc=none action=none header.from=xilinx.com;
-x-originating-ip: [98.207.156.201]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 01cad00d-67c5-4eeb-cd0d-08d81d0bb466
-x-ms-traffictypediagnostic: BYAPR02MB5430:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR02MB54305657D15B0347FA06BBE4B56F0@BYAPR02MB5430.namprd02.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0450A714CB
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: KvPsff1rO+AQLbVo5ETF9cvjKNO3K1mUXkVwJsAQSQe+W1rLQdINeaXtJSts3Ckq57Oay22oTS/K1O7lOdjGZ9fhJg8VRXmjlNIW9ycwMb9C31z1mT0c0Yd+TguR/y7723W+gPf4SJEK+OJJnhyStKDBuOqaRaIDOym0uETgw95zb64RWebkCPXcyjXdtE0q85uBKkHdVtm5fwrdXT43zbnG+vjfAjtolEp0sKebIAgxPgpUBiqZltpJjjoziT4y4gM2+Ch4DWbDIxNKgOWQDLoZru/c2pypw3X5f7Rgn5Jj4cCmgA3kmF0+sfu5PMBzdB50CguWd7B/Q6tbq8yJQw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR02MB4407.namprd02.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(366004)(376002)(136003)(346002)(396003)(39860400002)(33656002)(6506007)(26005)(8936002)(478600001)(53546011)(52536014)(55016002)(107886003)(2906002)(5660300002)(7696005)(6636002)(86362001)(83380400001)(8676002)(66946007)(186003)(66446008)(4326008)(54906003)(71200400001)(9686003)(66556008)(76116006)(66476007)(64756008)(316002)(110136005);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: tvxWEnce4nx7qNvcxBGpHh/p8fA5L47xk2+DfZx1VXUI9EValW3L+yYQwVJb3RLSkZVL56WHzH13gEzsh/s4qLlgN4LC8wkfu2MddLdJq6XfMxKFwdi4VKgNwu2HreAlbfRfhrm2yWQcDlyE06l5ODqH3NKNethZMTrEla1RGSYQd1GFkZANv1eMEGBAXWc+s4fdKxAIcKjxqIjgkGOPw816itgXcuctYUh1t9LXPjYIFcqPw0Dj1bY6LUdSHvhgcHDpH8DN7birvR4Bs4M0ZkmYRwBjl6dABmGbGQLbhl5DmG/zWmoYiAeU5LeUJ5OMMSHMxspdG47CrObTdYX+K3zBjB+Ai+XbisGji8eq8csTN0Gb1ia0nHtcdwPm8CID77tw4ESW4SBm5BhqLKOfGj5AX6lp45Qf5CkrbpnbHboXmBIDJ4dvKuJNNWyhwAgWtewE0RxSgCnHTQwKKdqmCObzl+w+ATdrak5s/2OBuP69yczHUOVSttrEjUf9fwBV
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 30 Jun 2020 11:40:39 -0400
+Received: from foss.arm.com ([217.140.110.172]:36818 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389589AbgF3Pkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 11:40:39 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 04B0430E;
+        Tue, 30 Jun 2020 08:40:38 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 570AF3F71E;
+        Tue, 30 Jun 2020 08:40:36 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 16:40:34 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Patrick Bellasi <patrick.bellasi@matbug.net>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Chris Redpath <chris.redpath@arm.com>,
+        Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/2] sched/uclamp: Protect uclamp fast path code with
+ static key
+Message-ID: <20200630154033.5r6zi7ajgag7jlec@e107158-lin.cambridge.arm.com>
+References: <20200629162633.8800-1-qais.yousef@arm.com>
+ <20200629162633.8800-3-qais.yousef@arm.com>
+ <87366dnfaq.derkling@matbug.net>
+ <20200630094623.hnlqtgavauqlsuyd@e107158-lin.cambridge.arm.com>
+ <87zh8kmwlt.derkling@matbug.net>
 MIME-Version: 1.0
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR02MB4407.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 01cad00d-67c5-4eeb-cd0d-08d81d0bb466
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2020 15:38:57.9328
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: oipKRxZPPA2HEXFexZrDxBYFEPbbGzKEc7CRIOagxcn4WCAClb7q1K/hGn7785pDXN/1hwXUoo+s6LW2fysvbA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR02MB5430
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <87zh8kmwlt.derkling@matbug.net>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+Hi Patrick
 
+On 06/30/20 16:55, Patrick Bellasi wrote:
+> 
+> Hi Qais,
+> sorry for commenting on v5 with a v6 already posted, but...
+> ... I cannot keep up with your re-spinning rate ;)
 
+I classified that as a nit really and doesn't affect correctness. We have
+different subjective view on what is better here. I did all the work in the
+past 2 weeks and I think as the author of this patch I have the right to keep
+my preference on subjective matters. I did consider your feedback and didn't
+ignore it and improved the naming and added a comment to make sure there's no
+confusion.
 
------Original Message-----
-From: Bjorn Andersson <bjorn.andersson@linaro.org>=20
-Sent: Monday, June 29, 2020 7:20 PM
-To: Stefano Stabellini <stefanos@xilinx.com>
-Cc: Rob Herring <robh@kernel.org>; Ben Levinsky <BLEVINSK@xilinx.com>; ohad=
-@wizery.com; Michal Simek <michals@xilinx.com>; Jolly Shah <JOLLYS@xilinx.c=
-om>; Rajan Vaja <RAJANV@xilinx.com>; mark.rutland@arm.com; linux-remoteproc=
-@vger.kernel.org; linux-arm-kernel@lists.infradead.org; devicetree@vger.ker=
-nel.org; linux-kernel@vger.kernel.org; Stefano Stabellini <stefanos@xilinx.=
-com>
-Subject: Re: [PATCH v4 4/5] dt-bindings: remoteproc: Add documentation for =
-ZynqMP R5 rproc bindings
+We could nitpick the best name forever, but is it really that important?
 
-On Mon 29 Jun 17:37 PDT 2020, Stefano Stabellini wrote:
+I really don't see any added value for one approach or another here to start
+a long debate about it.
 
-> On Wed, 10 Jun 2020, Rob Herring wrote:
-> > On Tue, May 26, 2020 at 11:40 AM Ben Levinsky <BLEVINSK@xilinx.com> wro=
-te:
-> > >
-> > > Hi Rob,
-> > >
-> > > The Xilinx R5 Remoteproc driver has been around for a long time -- ad=
-mittedly we should have upstreamed it long ago. The driver in the current f=
-orm is using an "classic" remoteproc device tree node as described here.
-> >=20
-> > I would rather not have 2 possible bindings to maintain. If there's=20
-> > been no rush to upstream this til now, then it can wait longer.
-> >=20
-> > >
-> > > I am working with Stefano to come up with an appropriate System Devic=
-e Tree representation but it is not going to be ready right away. Our prefe=
-rence would be to upstream the remoteproc node and driver in their current =
-forms while system device tree is maturing.
-> >=20
-> > There's obviously going to still need to be some sort of description=20
-> > of the interface between cores, but this has parts that obviously=20
-> > conflict with what's getting defined for system DT. The TCMs are the=20
-> > most obvious. If you can remove (or hardcode in the driver) what=20
-> > conflicts, then perhaps this can be upstreamed now.
->=20
->=20
-> Hi Rob,
->=20
-> Sorry it took a while to answer back but we wanted to do some research=20
-> to make sure the reply is correct.
->=20
->=20
-> The System Device Tree version of the OpenAMP remoteproc bindings aims=20
-> at being simpler and vendor-neutral. As anything else System Device=20
-> Tree, Lopper will read it and generate a "traditional" device tree=20
-> with the existing remoteproc bindings. In that sense, it might not=20
-> affect Linux directly.
->=20
+The comments were small enough that I didn't see any controversy that
+warrants holding the patches longer. I agreed with your proposal to use
+uc_se->active and clarified why your other suggestions don't hold.
 
-Can you give some examples of how you will be able to describe the hardware=
- involved in powering/clocking resources surrounding your remoteproc and th=
-e necessary resources in a "simpler and vendor neutral"
-way that then can be further lopped(?) into something that Linux can use to=
- control any remoteproc?
+You pointed that uclamp_is_enabled() confused you; and I responded that I'll
+change the name. Sorry for not being explicit about answering the below, but
+I thought my answer implied that I don't prefer it.
 
-> However, given the fragmentation of the remoteproc bindings across=20
-> multiple vendors (they are all different), I think it is a good idea=20
-> for Linux, for System Device Tree, and in general to come up with=20
-> simpler remoteproc bindings, more aligned between the vendors. If=20
-> nothing else, it is going to make Lopper's development easier.
->=20
+> 
+> >> Thus, perhaps we can just use the same pattern used by the
+> >> sched_numa_balancing static key:
+> >> 
+> >>   $ git grep sched_numa_balancing
+> >>   kernel/sched/core.c:DEFINE_STATIC_KEY_FALSE(sched_numa_balancing);
+> >>   kernel/sched/core.c:            static_branch_enable(&sched_numa_balancing);
+> >>   kernel/sched/core.c:            static_branch_disable(&sched_numa_balancing);
+> >>   kernel/sched/core.c:    int state = static_branch_likely(&sched_numa_balancing);
+> >>   kernel/sched/fair.c:    if (!static_branch_likely(&sched_numa_balancing))
+> >>   kernel/sched/fair.c:    if (!static_branch_likely(&sched_numa_balancing))
+> >>   kernel/sched/fair.c:    if (!static_branch_likely(&sched_numa_balancing))
+> >>   kernel/sched/fair.c:    if (static_branch_unlikely(&sched_numa_balancing))
+> >>   kernel/sched/sched.h:extern struct static_key_false sched_numa_balancing;
+> >> 
+> >> IOW: unconditionally define sched_uclamp_used as non static in core.c,
+> >> and use it directly on schedutil too.
+> 
+> So, what about this instead of adding the (renamed) method above?
 
-In my view the big reason for the fragmentation between bindings is because=
- they all describe different hardware. There has been common properties of =
-remoteprocs discussed, but apart from the firmware-name property I don't th=
-ink we have agreed on any.
+I am sorry there's no written rule that says one should do it in a specific
+way. And AFAIK both way are implemented in the kernel. I appreciate your
+suggestion but as the person who did all the hard work, I think my preference
+matters here too.
 
->=20
-> So I think it is a good idea to take this opportunity to simplify the=20
-> Xilinx remoteproc bindings as you suggested. The idea of to removing=20
-> the TCM nodes is a good one. In addition I asked Ben to have a look at=20
-> whether the mboxes and mbox-names properties can be removed too.
->=20
+And actually with my approach when uclamp is not compiled in there's no need to
+define an extra variable; and since uclamp_is_used() is defined as false for
+!CONFIG_UCLAMP_TASK, it'll help with DCE, so less likely to end up with dead
+code that'll never run in the final binary.
 
-If your remoteproc uses a mailbox for signaling, then this should be descri=
-bed in devicetree. This will allow you to reuse components in other designs=
- where either part is replaced or reused.
+Thanks a lot for all of your comments and feedback anyway!
 
-[Ben Levinsky] The Xilinx R5 remoteproc binding can optionally use the mail=
-box. That is if loading a simple binary that is not making use of IPC then =
-the mailbox is optional and not needed. Not sure if you still would prefer =
-to have the example showcasing use of mailbox then.
-
-
-Regards,
-Bjorn
-
-> Ben will reply with a simplified bindings proposal.
+--
+Qais Yousef
