@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43ED8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8152AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 19FCC20672
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:46:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56F5E20672
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:46:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XKGouWsv";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="f+ZWM/A0"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="E9otwvbs";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Xwgu3AOu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730037AbgF3Fqb (ORCPT
+        id S1730058AbgF3Fqe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 01:46:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57628 "EHLO
+        Tue, 30 Jun 2020 01:46:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730013AbgF3Fq1 (ORCPT
+        with ESMTP id S1730039AbgF3Fqc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 01:46:27 -0400
+        Tue, 30 Jun 2020 01:46:32 -0400
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E73EFC061755;
-        Mon, 29 Jun 2020 22:46:26 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED699C061755;
+        Mon, 29 Jun 2020 22:46:31 -0700 (PDT)
 From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1593495983;
+        s=2020; t=1593495988;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=mpdDlH3EimGLSv4f750ktc+2OOIPAdppOAHvCqowA5Q=;
-        b=XKGouWsvcT94/l0qMXp+/hXRs4c1E/UJ83u5UoMayTs6s2VhUCg9o6zp7BvgOgI5XJaxPk
-        eGdwDOg2vGbZ2SSI3sTICCEMQFVZfHaR3+ts/0pbo1tzLCpMj2W9sFtJR96Jv3jNeHoA6B
-        9l7lRXO90k+wqIczEZo0jUPCNM7OGpQFl6gpDQ8Za4RzydTBqxXxZ0F63HW5ua6S9i+Hg4
-        fwUuQ8krJ3aX/vPBe8RXQx4u5M8k/3H2aSdwHqA8K1JNG6SBgSDx3mE7Wuo8OuzNmfAUlb
-        oIH3Zxxjmno55CQYlYF5JWofRhEHMlCdc7o0SauzGR0HKGoMeC5Ifn+jNk6Y7g==
+        bh=0pgkphRaGEy8Yhqq7odaGRHYOVQX84dVuNSHLC82kuU=;
+        b=E9otwvbsP6fkQIQEzrCLtoiSgGeFf4td6kMkZ8W7QaDr3/zwuxbE36rk6GMf+IhaSpz0Km
+        8N0+y2u+4FGwt7XZgIvxFlBrYY1rmNeWUlaPxiAdQw0is+7Q5ONMFRg4qvt0u0xbIoPsaZ
+        k/Smy86qXZVyaa9F7wj5oEAdfphHd6WpujuJh/S+XKmsZ1YNULvHCnt/XEpacTrjCOZg6m
+        HRTxT2hGtSfcZHD3+HdElggf7j6BTDwzDpR1lPfPuTlThTYRbHFQep8zjU4lV4urLp1YmH
+        QqKOvkX7NO/LbeAxhPB9kAtvkdzb2w3Dbsj6Fcx/ACRc2ydnkE2Xu5cw841+lw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1593495983;
+        s=2020e; t=1593495988;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=mpdDlH3EimGLSv4f750ktc+2OOIPAdppOAHvCqowA5Q=;
-        b=f+ZWM/A07foL8uf6oaT9CXPbIv8JhLqZTjQJ08b9nb3g62n6CE6/tE9bF2okgV8b1m+aQ0
-        QAE53rJfJjJA54BQ==
+        bh=0pgkphRaGEy8Yhqq7odaGRHYOVQX84dVuNSHLC82kuU=;
+        b=Xwgu3AOumeCzro6vBPT+CXbrO72V/FxDvk0GJo8E3RKV5/d3jWPZxXaVH9cPcuW8jYMeTp
+        qxjJYZnEuMDaNwCw==
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
@@ -57,11 +57,10 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Steven Rostedt <rostedt@goodmis.org>,
         LKML <linux-kernel@vger.kernel.org>,
         "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH v3 18/20] userfaultfd: Use sequence counter with associated spinlock
-Date:   Tue, 30 Jun 2020 07:44:50 +0200
-Message-Id: <20200630054452.3675847-19-a.darwish@linutronix.de>
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
+Subject: [PATCH v3 19/20] kvm/eventfd: Use sequence counter with associated spinlock
+Date:   Tue, 30 Jun 2020 07:44:51 +0200
+Message-Id: <20200630054452.3675847-20-a.darwish@linutronix.de>
 In-Reply-To: <20200630054452.3675847-1-a.darwish@linutronix.de>
 References: <20200519214547.352050-1-a.darwish@linutronix.de>
  <20200630054452.3675847-1-a.darwish@linutronix.de>
@@ -86,32 +85,38 @@ If lockdep is disabled this lock association is compiled out and has
 neither storage size nor runtime overhead.
 
 Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- fs/userfaultfd.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ include/linux/kvm_irqfd.h | 2 +-
+ virt/kvm/eventfd.c        | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-index 52de29000c7e..26e8b23594fb 100644
---- a/fs/userfaultfd.c
-+++ b/fs/userfaultfd.c
-@@ -61,7 +61,7 @@ struct userfaultfd_ctx {
- 	/* waitqueue head for events */
- 	wait_queue_head_t event_wqh;
- 	/* a refile sequence protected by fault_pending_wqh lock */
--	struct seqcount refile_seq;
-+	seqcount_spinlock_t refile_seq;
- 	/* pseudo fd refcounting */
- 	refcount_t refcount;
- 	/* userfaultfd syscall flags */
-@@ -1998,7 +1998,7 @@ static void init_once_userfaultfd_ctx(void *mem)
- 	init_waitqueue_head(&ctx->fault_wqh);
- 	init_waitqueue_head(&ctx->event_wqh);
- 	init_waitqueue_head(&ctx->fd_wqh);
--	seqcount_init(&ctx->refile_seq);
-+	seqcount_spinlock_init(&ctx->refile_seq, &ctx->fault_pending_wqh.lock);
- }
+diff --git a/include/linux/kvm_irqfd.h b/include/linux/kvm_irqfd.h
+index dc1da020305b..dac047abdba7 100644
+--- a/include/linux/kvm_irqfd.h
++++ b/include/linux/kvm_irqfd.h
+@@ -42,7 +42,7 @@ struct kvm_kernel_irqfd {
+ 	wait_queue_entry_t wait;
+ 	/* Update side is protected by irqfds.lock */
+ 	struct kvm_kernel_irq_routing_entry irq_entry;
+-	seqcount_t irq_entry_sc;
++	seqcount_spinlock_t irq_entry_sc;
+ 	/* Used for level IRQ fast-path */
+ 	int gsi;
+ 	struct work_struct inject;
+diff --git a/virt/kvm/eventfd.c b/virt/kvm/eventfd.c
+index ef7ed916ad4a..d6408bb497dc 100644
+--- a/virt/kvm/eventfd.c
++++ b/virt/kvm/eventfd.c
+@@ -303,7 +303,7 @@ kvm_irqfd_assign(struct kvm *kvm, struct kvm_irqfd *args)
+ 	INIT_LIST_HEAD(&irqfd->list);
+ 	INIT_WORK(&irqfd->inject, irqfd_inject);
+ 	INIT_WORK(&irqfd->shutdown, irqfd_shutdown);
+-	seqcount_init(&irqfd->irq_entry_sc);
++	seqcount_spinlock_init(&irqfd->irq_entry_sc, &kvm->irqfds.lock);
  
- SYSCALL_DEFINE1(userfaultfd, int, flags)
+ 	f = fdget(args->fd);
+ 	if (!f.file) {
 -- 
 2.20.1
 
