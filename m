@@ -2,114 +2,466 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7036FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AEA4C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C23A20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:17:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 669F720656
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:18:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="BMWsT4ae"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FwcO7W6+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729447AbgF3VRs (ORCPT
+        id S1729826AbgF3VSd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 17:17:48 -0400
-Received: from mail.efficios.com ([167.114.26.124]:48592 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbgF3VRs (ORCPT
+        Tue, 30 Jun 2020 17:18:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60316 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbgF3VSc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 17:17:48 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 125932C72E3;
-        Tue, 30 Jun 2020 17:17:47 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id dX8LJcERVS4j; Tue, 30 Jun 2020 17:17:46 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id B14522C7393;
-        Tue, 30 Jun 2020 17:17:46 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com B14522C7393
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1593551866;
-        bh=dzOtmJ7mD/siyGoPxQC/+AbiDTyc52D1unXi3sYhHw4=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=BMWsT4ae0NFCJ7Ar9Wj/SDYypbB4SF4CqanRW+dwWOnP+GK8ukFotA8/0X3ZNkB/T
-         1V95PFBjmkA5EYmVmvP3OKlTGV7mLADFG4gJ62Nm2NV4PQCGiBWaRktNCvUmZlckwu
-         r7ZWl5ZhfWVO8a3kcgf9YovcOjsHZ/HYtGUAxThOmKOvsnsmtBlN5hz8RRoNR3zdEv
-         MolT2QWCjHCKHUoyJkeBtPOXhn2r+G4/sT+OaxU3KE9i4psxZ02NjnPLQuBJST3H5f
-         jIU1V9zvvQyWxBuezPLl8Tv38IGeQlrelEw8V7iNEUrUu2Vwtjs9kTtUP8j00T3SMb
-         tuMOsYxVkRlEw==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id RjPVrSqWHdX1; Tue, 30 Jun 2020 17:17:46 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 9DE582C71DC;
-        Tue, 30 Jun 2020 17:17:46 -0400 (EDT)
-Date:   Tue, 30 Jun 2020 17:17:46 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Yuchung Cheng <ycheng@google.com>,
-        Jonathan Rajotte-Julien <joraj@efficios.com>
-Message-ID: <474095696.17969.1593551866537.JavaMail.zimbra@efficios.com>
-In-Reply-To: <CANn89i+b-LeaPvaaHvj0yc0mJ2qwZ0981fQHVp0+sqXYp=kdkA@mail.gmail.com>
-References: <CAHk-=wjEghg5_pX_GhNP+BfcUK6CRZ+4mh3bciitm9JwXvR7aQ@mail.gmail.com> <312079189.17903.1593549293094.JavaMail.zimbra@efficios.com> <CANn89iJ+rkMrLrHrKXO-57frXNb32epB93LYLRuHX00uWc-0Uw@mail.gmail.com> <20200630.134429.1590957032456466647.davem@davemloft.net> <CANn89i+b-LeaPvaaHvj0yc0mJ2qwZ0981fQHVp0+sqXYp=kdkA@mail.gmail.com>
-Subject: Re: [regression] TCP_MD5SIG on established sockets
+        Tue, 30 Jun 2020 17:18:32 -0400
+Received: from mail-pg1-x542.google.com (mail-pg1-x542.google.com [IPv6:2607:f8b0:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAD2DC061755;
+        Tue, 30 Jun 2020 14:18:31 -0700 (PDT)
+Received: by mail-pg1-x542.google.com with SMTP id e8so10550217pgc.5;
+        Tue, 30 Jun 2020 14:18:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=k7bpmS/jKTyKnUvh9cgeOGyZQWalfirN1RQekZ4+PH4=;
+        b=FwcO7W6+Pqe37qC2G9RwhWrXvJsUlehRCB3iT7THYePZkh08gY/TzfPfOadEMezegW
+         brjYZVw7W9ap7S5/1g5BqXxBF1NfxsDUwXV36c4hKkcdXxb9e+cF9sRXxC6Tm/v1jj6I
+         Yyfle8cvS8Fou216XKbnrVEA38gdjI689d+RpOLpKEiWRVvbXF27WMaXKctHh3NX5rmy
+         hlqxKc2NjpZt26G4znh5zIckgLVcCLkS6hZeLXhBV2lL1s8qisxFCQyWPF6dTmJFLkA8
+         6q72gwwKzHbdgGzTOzOLHqKQ4N7gk+Q8Rpe/U2Utokj7+2ptSaXD4W/1vIU2TlJMmbhf
+         tlKg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=k7bpmS/jKTyKnUvh9cgeOGyZQWalfirN1RQekZ4+PH4=;
+        b=PKl1l4ClC+Fx3hqA3LKd0aNIgtLVGsrD/dDNPT84LMaJpnH4HbJwUQyVW9OWlxK4ta
+         0GgXjWfI6IGV7aqMvwLDMYhlJq5v14OoYznTXsmhrhWWwSFs06KMy/PzBhGOVEAGlw67
+         IEUQ3d3j17XGgyjyCiE/iZhTe6d3lG1qjR4sV6gWcgehphnp1SUIk4QY9ViGpxhoBSay
+         dzA6XhzpcTDXWEngV8BuPnQpKa0bXqfmz+GRBU2USmATKUoNFAQVcjfKCFaduQ5IJDfO
+         uqGKkVygNLQ2a/Eja1aAB161JpO4c9LjCnaSBdJmPZ9RO2ceLOO9lDl9ZaaO/fC5xQWs
+         fGEA==
+X-Gm-Message-State: AOAM530kSI6neY49o322YmkZ71sbAktFfZgU7VY7Cq0A9e/mZse7QHHl
+        n5AW1fmwtT0tG6zO2hTHA7Y=
+X-Google-Smtp-Source: ABdhPJx9s0GpJmkS1AmQux6fpaWCB9m2vRoBDaSBfqQVaKevN8eBxOczAVOUkIU+ukSu2TMoF+gi4A==
+X-Received: by 2002:a63:ff52:: with SMTP id s18mr17072098pgk.203.1593551911229;
+        Tue, 30 Jun 2020 14:18:31 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id p10sm3089843pjp.52.2020.06.30.14.18.30
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 30 Jun 2020 14:18:30 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 14:18:29 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Ahmad Fatoum <a.fatoum@pengutronix.de>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-watchdog@vger.kernel.org, kernel@pengutronix.de,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 6/8] watchdog: f71808e_wdt: consolidate variant
+ handling into single array
+Message-ID: <20200630211829.GA23685@roeck-us.net>
+References: <20200611191750.28096-1-a.fatoum@pengutronix.de>
+ <20200611191750.28096-7-a.fatoum@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3945 (ZimbraWebClient - FF77 (Linux)/8.8.15_GA_3928)
-Thread-Topic: TCP_MD5SIG on established sockets
-Thread-Index: bT5tgAuCnz/dlB46lWW2qWJ3mIXuLQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200611191750.28096-7-a.fatoum@pengutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Jun 30, 2020, at 4:56 PM, Eric Dumazet edumazet@google.com wrote:
-
-> On Tue, Jun 30, 2020 at 1:44 PM David Miller <davem@davemloft.net> wrote:
->>
->> From: Eric Dumazet <edumazet@google.com>
->> Date: Tue, 30 Jun 2020 13:39:27 -0700
->>
->> > The (C) & (B) case are certainly doable.
->> >
->> > A) case is more complex, I have no idea of breakages of various TCP
->> > stacks if a flow got SACK
->> > at some point (in 3WHS) but suddenly becomes Reno.
->>
->> I agree that C and B are the easiest to implement without having to
->> add complicated code to handle various negotiated TCP option
->> scenerios.
->>
->> It does seem to be that some entities do A, or did I misread your
->> behavioral analysis of various implementations Mathieu?
->>
->> Thanks.
+On Thu, Jun 11, 2020 at 09:17:47PM +0200, Ahmad Fatoum wrote:
+> Driver has two big switches: one to map hardware ID to an enum constant
+> one more to map the enum constant to the variant's pin configuration
+> routine.
 > 
-> Yes, another question about Mathieu cases is do determine the behavior
-> of all these stacks vs :
-> SACK option
-> TCP TS option.
+> Drop the enum and give every variant an array entry identifying it.
+> This arguably simplifies the code by making it a little more compact.
+> 
+> Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
 
-I will ask my customer's networking team to investigate these behaviors,
-which will allow me to prepare a thorough reply to the questions raised
-by Eric and David. I expect to have an answer within 2-3 weeks at most.
+Please run checkpatch --strict and fix the issues it reports.
 
-Thank you!
+> ---
+>  drivers/watchdog/f71808e_wdt.c | 263 +++++++++++++++------------------
+>  1 file changed, 121 insertions(+), 142 deletions(-)
+> 
+> diff --git a/drivers/watchdog/f71808e_wdt.c b/drivers/watchdog/f71808e_wdt.c
+> index 9f7823819ed1..9299ad4d4a52 100644
+> --- a/drivers/watchdog/f71808e_wdt.c
+> +++ b/drivers/watchdog/f71808e_wdt.c
+> @@ -110,22 +110,6 @@ module_param(start_withtimeout, uint, 0);
+>  MODULE_PARM_DESC(start_withtimeout, "Start watchdog timer on module load with"
+>  	" given initial timeout. Zero (default) disables this feature.");
+>  
+> -enum chips { f71808fg, f71858fg, f71862fg, f71868, f71869, f71882fg, f71889fg,
+> -	     f81803, f81865, f81866};
+> -
+> -static const char *f71808e_names[] = {
+> -	"f71808fg",
+> -	"f71858fg",
+> -	"f71862fg",
+> -	"f71868",
+> -	"f71869",
+> -	"f71882fg",
+> -	"f71889fg",
+> -	"f81803",
+> -	"f81865",
+> -	"f81866",
+> -};
+> -
+>  /* Super-I/O Function prototypes */
+>  static inline int superio_inb(int base, int reg);
+>  static inline int superio_inw(int base, int reg);
+> @@ -136,9 +120,17 @@ static inline int superio_enter(int base);
+>  static inline void superio_select(int base, int ld);
+>  static inline void superio_exit(int base);
+>  
+> +struct watchdog_data;
+> +
+> +struct f71808e_variant {
+> +	u16 id;
+> +	const char *wdt_name; /* NULL if chip lacks watchdog timer */
+> +	void (*pinconf)(struct watchdog_data *wd);
+> +};
+> +
+>  struct watchdog_data {
+>  	unsigned short	sioaddr;
+> -	enum chips	type;
+> +	const struct f71808e_variant *variant;
+>  	unsigned long	opened;
+>  	struct mutex	lock;
+>  	char		expect_close;
+> @@ -156,6 +148,12 @@ static struct watchdog_data watchdog = {
+>  	.lock = __MUTEX_INITIALIZER(watchdog.lock),
+>  };
+>  
+> +static inline bool has_f81865_wdo_conf(struct watchdog_data *wd)
+> +{
+> +	return wd->variant->id == SIO_F81865_ID
+> +		|| wd->variant->id == SIO_F81866_ID;
 
-Mathieu
+Nit: unnecessary continuation line (limit is now 100).
 
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+> +}
+> +
+>  /* Super I/O functions */
+>  static inline int superio_inb(int base, int reg)
+>  {
+> @@ -247,7 +245,7 @@ static int watchdog_set_pulse_width(unsigned int pw)
+>  	int err = 0;
+>  	unsigned int t1 = 25, t2 = 125, t3 = 5000;
+>  
+> -	if (watchdog.type == f71868) {
+> +	if (watchdog.variant->id == SIO_F71868_ID) {
+>  		t1 = 30;
+>  		t2 = 150;
+>  		t3 = 6000;
+> @@ -309,7 +307,6 @@ static int watchdog_keepalive(void)
+>  static int watchdog_start(void)
+>  {
+>  	int err;
+> -	u8 tmp;
+>  
+>  	/* Make sure we don't die as soon as the watchdog is enabled below */
+>  	err = watchdog_keepalive();
+> @@ -323,81 +320,12 @@ static int watchdog_start(void)
+>  	superio_select(watchdog.sioaddr, SIO_F71808FG_LD_WDT);
+>  
+>  	/* Watchdog pin configuration */
+> -	switch (watchdog.type) {
+> -	case f71808fg:
+> -		/* Set pin 21 to GPIO23/WDTRST#, then to WDTRST# */
+> -		superio_clear_bit(watchdog.sioaddr, SIO_REG_MFUNCT2, 3);
+> -		superio_clear_bit(watchdog.sioaddr, SIO_REG_MFUNCT3, 3);
+> -		break;
+> -
+> -	case f71862fg:
+> -		if (f71862fg_pin == 63) {
+> -			/* SPI must be disabled first to use this pin! */
+> -			superio_clear_bit(watchdog.sioaddr, SIO_REG_ROM_ADDR_SEL, 6);
+> -			superio_set_bit(watchdog.sioaddr, SIO_REG_MFUNCT3, 4);
+> -		} else if (f71862fg_pin == 56) {
+> -			superio_set_bit(watchdog.sioaddr, SIO_REG_MFUNCT1, 1);
+> -		}
+> -		break;
+> -
+> -	case f71868:
+> -	case f71869:
+> -		/* GPIO14 --> WDTRST# */
+> -		superio_clear_bit(watchdog.sioaddr, SIO_REG_MFUNCT1, 4);
+> -		break;
+> -
+> -	case f71882fg:
+> -		/* Set pin 56 to WDTRST# */
+> -		superio_set_bit(watchdog.sioaddr, SIO_REG_MFUNCT1, 1);
+> -		break;
+> -
+> -	case f71889fg:
+> -		/* set pin 40 to WDTRST# */
+> -		superio_outb(watchdog.sioaddr, SIO_REG_MFUNCT3,
+> -			superio_inb(watchdog.sioaddr, SIO_REG_MFUNCT3) & 0xcf);
+> -		break;
+> -
+> -	case f81803:
+> -		/* Enable TSI Level register bank */
+> -		superio_clear_bit(watchdog.sioaddr, SIO_REG_CLOCK_SEL, 3);
+> -		/* Set pin 27 to WDTRST# */
+> -		superio_outb(watchdog.sioaddr, SIO_REG_TSI_LEVEL_SEL, 0x5f &
+> -			superio_inb(watchdog.sioaddr, SIO_REG_TSI_LEVEL_SEL));
+> -		break;
+> -
+> -	case f81865:
+> -		/* Set pin 70 to WDTRST# */
+> -		superio_clear_bit(watchdog.sioaddr, SIO_REG_MFUNCT3, 5);
+> -		break;
+> -
+> -	case f81866:
+> -		/*
+> -		 * GPIO1 Control Register when 27h BIT3:2 = 01 & BIT0 = 0.
+> -		 * The PIN 70(GPIO15/WDTRST) is controlled by 2Ch:
+> -		 *     BIT5: 0 -> WDTRST#
+> -		 *           1 -> GPIO15
+> -		 */
+> -		tmp = superio_inb(watchdog.sioaddr, SIO_F81866_REG_PORT_SEL);
+> -		tmp &= ~(BIT(3) | BIT(0));
+> -		tmp |= BIT(2);
+> -		superio_outb(watchdog.sioaddr, SIO_F81866_REG_PORT_SEL, tmp);
+> -
+> -		superio_clear_bit(watchdog.sioaddr, SIO_F81866_REG_GPIO1, 5);
+> -		break;
+> -
+> -	default:
+> -		/*
+> -		 * 'default' label to shut up the compiler and catch
+> -		 * programmer errors
+> -		 */
+> -		err = -ENODEV;
+> -		goto exit_superio;
+> -	}
+> +	watchdog.variant->pinconf(&watchdog);
+>  
+>  	superio_select(watchdog.sioaddr, SIO_F71808FG_LD_WDT);
+>  	superio_set_bit(watchdog.sioaddr, SIO_REG_ENABLE, 0);
+>  
+> -	if (watchdog.type == f81865 || watchdog.type == f81866)
+> +	if (has_f81865_wdo_conf(&watchdog))
+>  		superio_set_bit(watchdog.sioaddr, F81865_REG_WDO_CONF,
+>  				F81865_FLAG_WDOUT_EN);
+>  	else
+> @@ -425,7 +353,6 @@ static int watchdog_start(void)
+>  				F71808FG_FLAG_WD_PULSE);
+>  	}
+>  
+> -exit_superio:
+>  	superio_exit(watchdog.sioaddr);
+>  exit_unlock:
+>  	mutex_unlock(&watchdog.lock);
+> @@ -679,7 +606,7 @@ static int __init watchdog_init(int sioaddr)
+>  
+>  	snprintf(watchdog.ident.identity,
+>  		sizeof(watchdog.ident.identity), "%s watchdog",
+> -		f71808e_names[watchdog.type]);
+> +		watchdog.variant->wdt_name);
+>  
+>  	err = superio_enter(sioaddr);
+>  	if (err)
+> @@ -772,73 +699,123 @@ static int __init watchdog_init(int sioaddr)
+>  	return err;
+>  }
+>  
+> -static int __init f71808e_find(int sioaddr)
+> +static void f71808fg_pinconf(struct watchdog_data *wd)
+> +{
+> +	/* Set pin 21 to GPIO23/WDTRST#, then to WDTRST# */
+> +	superio_clear_bit(wd->sioaddr, SIO_REG_MFUNCT2, 3);
+> +	superio_clear_bit(wd->sioaddr, SIO_REG_MFUNCT3, 3);
+> +}
+> +static void f71862fg_pinconf(struct watchdog_data *wd)
+> +{
+> +	if (f71862fg_pin == 63) {
+> +		/* SPI must be disabled first to use this pin! */
+> +		superio_clear_bit(wd->sioaddr, SIO_REG_ROM_ADDR_SEL, 6);
+> +		superio_set_bit(wd->sioaddr, SIO_REG_MFUNCT3, 4);
+> +	} else if (f71862fg_pin == 56) {
+> +		superio_set_bit(wd->sioaddr, SIO_REG_MFUNCT1, 1);
+> +	}
+> +}
+> +static void f71868_pinconf(struct watchdog_data *wd)
+> +{
+> +	/* GPIO14 --> WDTRST# */
+> +	superio_clear_bit(wd->sioaddr, SIO_REG_MFUNCT1, 4);
+> +}
+> +static void f71882fg_pinconf(struct watchdog_data *wd)
+> +{
+> +	/* Set pin 56 to WDTRST# */
+> +	superio_set_bit(wd->sioaddr, SIO_REG_MFUNCT1, 1);
+> +}
+> +static void f71889fg_pinconf(struct watchdog_data *wd)
+> +{
+> +	/* set pin 40 to WDTRST# */
+> +	superio_outb(wd->sioaddr, SIO_REG_MFUNCT3,
+> +		     superio_inb(wd->sioaddr, SIO_REG_MFUNCT3) & 0xcf);
+> +}
+> +static void f81803_pinconf(struct watchdog_data *wd)
+> +{
+> +	/* Enable TSI Level register bank */
+> +	superio_clear_bit(wd->sioaddr, SIO_REG_CLOCK_SEL, 3);
+> +	/* Set pin 27 to WDTRST# */
+> +	superio_outb(wd->sioaddr, SIO_REG_TSI_LEVEL_SEL, 0x5f &
+> +		     superio_inb(wd->sioaddr, SIO_REG_TSI_LEVEL_SEL));
+> +}
+> +static void f81865_pinconf(struct watchdog_data *wd)
+> +{
+> +	/* Set pin 70 to WDTRST# */
+> +	superio_clear_bit(wd->sioaddr, SIO_REG_MFUNCT3, 5);
+> +}
+> +static void f81866_pinconf(struct watchdog_data *wd)
+> +{
+> +	/*
+> +	 * GPIO1 Control Register when 27h BIT3:2 = 01 & BIT0 = 0.
+> +	 * The PIN 70(GPIO15/WDTRST) is controlled by 2Ch:
+> +	 *     BIT5: 0 -> WDTRST#
+> +	 *           1 -> GPIO15
+> +	 */
+> +	u8 tmp = superio_inb(wd->sioaddr, SIO_F81866_REG_PORT_SEL);
+> +	tmp &= ~(BIT(3) | BIT(0));
+> +	tmp |= BIT(2);
+> +	superio_outb(wd->sioaddr, SIO_F81866_REG_PORT_SEL, tmp);
+> +
+> +	superio_clear_bit(wd->sioaddr, SIO_F81866_REG_GPIO1, 5);
+> +}
+> +
+> +struct f71808e_variant f71808e_variants[] = {
+> +	{ SIO_F71808_ID,  "f71808fg", f71808fg_pinconf },
+> +	{ SIO_F71862_ID,  "f71862fg", f71862fg_pinconf },
+> +	{ SIO_F71868_ID,  "f71868",   f71868_pinconf },
+> +	{ SIO_F71869_ID,  "f71869",   f71868_pinconf },
+> +	{ SIO_F71869A_ID, "f71869",   f71868_pinconf },
+> +	{ SIO_F71882_ID,  "f71882fg", f71882fg_pinconf },
+> +	{ SIO_F71889_ID,  "f71889fg", f71889fg_pinconf },
+> +	{ SIO_F81803_ID,  "f81803",   f81803_pinconf },
+> +	{ SIO_F81865_ID,  "f81865",   f81865_pinconf },
+> +	{ SIO_F81866_ID,  "f81866",   f81866_pinconf },
+> +	/* Confirmed (by datasheet) not to have a watchdog. */
+> +	{ SIO_F71858_ID,  NULL,       NULL },
+> +	{ /* sentinel */ }
+> +};
+> +
+> +static struct f71808e_variant __init *f71808e_find(int sioaddr)
+>  {
+> +	struct f71808e_variant *variant;
+>  	u16 devid;
+>  	int err = superio_enter(sioaddr);
+>  	if (err)
+> -		return err;
+> +		return ERR_PTR(err);
+>  
+>  	devid = superio_inw(sioaddr, SIO_REG_MANID);
+>  	if (devid != SIO_FINTEK_ID) {
+>  		pr_debug("Not a Fintek device\n");
+> -		err = -ENODEV;
+> -		goto exit;
+> +		superio_exit(sioaddr);
+> +		return ERR_PTR(-ENODEV);
+>  	}
+>  
+>  	devid = force_id ? force_id : superio_inw(sioaddr, SIO_REG_DEVID);
+> -	switch (devid) {
+> -	case SIO_F71808_ID:
+> -		watchdog.type = f71808fg;
+> -		break;
+> -	case SIO_F71862_ID:
+> -		watchdog.type = f71862fg;
+> -		break;
+> -	case SIO_F71868_ID:
+> -		watchdog.type = f71868;
+> -		break;
+> -	case SIO_F71869_ID:
+> -	case SIO_F71869A_ID:
+> -		watchdog.type = f71869;
+> -		break;
+> -	case SIO_F71882_ID:
+> -		watchdog.type = f71882fg;
+> -		break;
+> -	case SIO_F71889_ID:
+> -		watchdog.type = f71889fg;
+> -		break;
+> -	case SIO_F71858_ID:
+> -		/* Confirmed (by datasheet) not to have a watchdog. */
+> -		err = -ENODEV;
+> -		goto exit;
+> -	case SIO_F81803_ID:
+> -		watchdog.type = f81803;
+> -		break;
+> -	case SIO_F81865_ID:
+> -		watchdog.type = f81865;
+> -		break;
+> -	case SIO_F81866_ID:
+> -		watchdog.type = f81866;
+> -		break;
+> -	default:
+> -		pr_info("Unrecognized Fintek device: %04x\n",
+> -			(unsigned int)devid);
+> -		err = -ENODEV;
+> -		goto exit;
+> +	for (variant = f71808e_variants; variant->id; variant++) {
+> +		if (variant->id == devid)
+> +			break;
+> +	}
+> +
+> +	if (!variant->wdt_name) {
+> +		if (!variant->id)
+> +			pr_info("Unrecognized Fintek device: %04x\n", devid);
+> +		superio_exit(sioaddr);
+> +		return ERR_PTR(-ENODEV);
+>  	}
+>  
+>  	pr_info("Found %s watchdog chip, revision %d\n",
+> -		f71808e_names[watchdog.type],
+> -		(int)superio_inb(sioaddr, SIO_REG_DEVREV));
+> -exit:
+> +		variant->wdt_name,
+> +		superio_inb(sioaddr, SIO_REG_DEVREV));
+> +
+>  	superio_exit(sioaddr);
+> -	return err;
+> +	return variant;
+>  }
+>  
+>  static int __init f71808e_init(void)
+>  {
+>  	static const unsigned short addrs[] = { 0x2e, 0x4e };
+> -	int err = -ENODEV;
+> +	struct f71808e_variant *variant;
+>  	int i;
+>  
+>  	if (f71862fg_pin != 63 && f71862fg_pin != 56) {
+> @@ -847,12 +824,14 @@ static int __init f71808e_init(void)
+>  	}
+>  
+>  	for (i = 0; i < ARRAY_SIZE(addrs); i++) {
+> -		err = f71808e_find(addrs[i]);
+> -		if (err == 0)
+> +		variant = f71808e_find(addrs[i]);
+> +		if (!IS_ERR(variant))
+>  			break;
+>  	}
+>  	if (i == ARRAY_SIZE(addrs))
+> -		return err;
+> +		return PTR_ERR(variant);
+> +
+> +	watchdog.variant = variant;
+>  
+>  	return watchdog_init(addrs[i]);
+>  }
