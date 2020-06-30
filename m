@@ -2,65 +2,115 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DD6C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F492C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:39:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 55C62206B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:39:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 796FD206B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:39:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g+V9Uwcb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729835AbgF3UjA (ORCPT
+        id S1729871AbgF3UjG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 16:39:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54160 "EHLO
+        Tue, 30 Jun 2020 16:39:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54174 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729341AbgF3Ui7 (ORCPT
+        with ESMTP id S1729341AbgF3UjE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 16:38:59 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3957C061755;
-        Tue, 30 Jun 2020 13:38:59 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 571841277F862;
-        Tue, 30 Jun 2020 13:38:59 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 13:38:58 -0700 (PDT)
-Message-Id: <20200630.133858.836154523537769936.davem@davemloft.net>
-To:     colin.king@canonical.com
-Cc:     borisp@mellanox.com, saeedm@mellanox.com, leon@kernel.org,
-        kuba@kernel.org, tariqt@mellanox.com, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] net/mlx5e: fix memory leak of tls
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20200630151646.517757-1-colin.king@canonical.com>
-References: <20200630151646.517757-1-colin.king@canonical.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 30 Jun 2020 13:38:59 -0700 (PDT)
+        Tue, 30 Jun 2020 16:39:04 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3324EC061755;
+        Tue, 30 Jun 2020 13:39:04 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id m22so108173pgv.9;
+        Tue, 30 Jun 2020 13:39:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SQiFOaLh1j0WoaGW8HU6ASOHGGkIHwej9YhMbLkGD8g=;
+        b=g+V9UwcbjoJZzicB/JpaUeCKluYowoLvLMVisPV+jeRGBTkI7Nz6RPIzsGk12F0fH4
+         zq/A8QQj7ER1s5L2bebyDMf6pcf4jJrFqPWsz8Nf6m0g+E9DkiBSX/L5ca6pNqUeCCcw
+         iu1N4qUwaKLe25xgQCJ55rIiIZhS9Jk/Mn1DheWX9BumrVflAOe0cqTGIDEAl2iLhDDq
+         yEsH105D84RpOGz42JNSKMcQ/fBYJZ6v5H+5+9SpjyGb2U435gTzdIYaTB+IqQSAkHYy
+         PWalaZd40GHE5Q60lwbIZU0JyTULWHVU9DbPFz8cUzJJVBeh160NzRcC6d1Gu+WZR29m
+         CsQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SQiFOaLh1j0WoaGW8HU6ASOHGGkIHwej9YhMbLkGD8g=;
+        b=AVc6+mbv1r3LFj1+3t44r3k1NaSmP/mmOsAvBgGX0a0vjFT6umw1/ngR+nX6ijsS1w
+         8JwX8bTQu3f8ThrswynZ/ChSYZJuA8L1JML/vtZceHReBzWiEW/q/OaDh9ZIT2mGYfPF
+         OUdISTxrQ4R6ck45snD9N5Nzr8mM0DE4uqI0RJGt2o1yrRCI9K8QJYaEnqpuX2CW78h/
+         HYtq1cvHO+3W9OiYw9Y76ibIlVWADRFOtVH1m6n4UfH2jkrOi4AGmhbAC2Jla7Ey89un
+         aTeisQYtBK+pAUwuI9zamx+j32bH+4NFla9WJmuwb6zg1uFeLTuTTY+2325+wvInSiKR
+         bnBQ==
+X-Gm-Message-State: AOAM533CfYMJp7cQkfiYwZ9n3e/JWc9azHsTY1/evGys1l63C4bTtTTh
+        iwF+by4GLZwTggUD7k2WUnk=
+X-Google-Smtp-Source: ABdhPJwBbu9XaH6Gaawzg4apz35khgge11T7VS3A9pjCwqj0I3uOdYn6Igtq9M7Fe91d4sXCDCowiw==
+X-Received: by 2002:a05:6a00:1507:: with SMTP id q7mr19535233pfu.131.1593549543796;
+        Tue, 30 Jun 2020 13:39:03 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 19sm3576756pfy.193.2020.06.30.13.39.02
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 30 Jun 2020 13:39:03 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 13:39:02 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     linux-watchdog@vger.kernel.org,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
+Subject: Re: [RESEND PATCHv3 2/2] dt-bindings: watchdog: Add compatible for
+ QCS404, SC7180, SDM845, SM8150
+Message-ID: <20200630203902.GA20540@roeck-us.net>
+References: <cover.1593112534.git.saiprakash.ranjan@codeaurora.org>
+ <09da1ba319dc4a27ef4e4e177e67e68f1cb4f35b.1593112534.git.saiprakash.ranjan@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <09da1ba319dc4a27ef4e4e177e67e68f1cb4f35b.1593112534.git.saiprakash.ranjan@codeaurora.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin King <colin.king@canonical.com>
-Date: Tue, 30 Jun 2020 16:16:46 +0100
-
-> From: Colin Ian King <colin.king@canonical.com>
+On Fri, Jun 26, 2020 at 12:59:05AM +0530, Sai Prakash Ranjan wrote:
+> Add missing compatible for watchdog timer on QCS404,
+> SC7180, SDM845 and SM8150 SoCs.
 > 
-> The error return path when create_singlethread_workqueue fails currently
-> does not kfree tls and leads to a memory leak. Fix this by kfree'ing
-> tls before returning -ENOMEM.
-> 
-> Addresses-Coverity: ("Resource leak")
-> Fixes: 1182f3659357 ("net/mlx5e: kTLS, Add kTLS RX HW offload support")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+> Acked-by: Rob Herring <robh@kernel.org>
 
-Applied, thanks.
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+
+> ---
+>  Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
+> index 5448cc537a03..0709ddf0b6a5 100644
+> --- a/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
+> +++ b/Documentation/devicetree/bindings/watchdog/qcom-wdt.yaml
+> @@ -15,6 +15,10 @@ allOf:
+>  properties:
+>    compatible:
+>      enum:
+> +      - qcom,apss-wdt-qcs404
+> +      - qcom,apss-wdt-sc7180
+> +      - qcom,apss-wdt-sdm845
+> +      - qcom,apss-wdt-sm8150
+>        - qcom,kpss-timer
+>        - qcom,kpss-wdt
+>        - qcom,kpss-wdt-apq8064
