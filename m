@@ -2,186 +2,130 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07772C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9BC1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DEC802074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:02:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 711CC2074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:04:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="apeVYBO1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728444AbgF3VCo (ORCPT
+        id S1727921AbgF3VEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 17:02:44 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:37474 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726739AbgF3VCo (ORCPT
+        Tue, 30 Jun 2020 17:04:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58174 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726084AbgF3VEo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 17:02:44 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 70B3F2A3C6B
-Subject: Re: [RESEND PATCH v4 0/7] Convert mtk-dsi to drm_bridge API and get
- EDID for ps8640 bridge
-To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
-Cc:     Sam Ravnborg <sam@ravnborg.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        David Airlie <airlied@linux.ie>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-References: <20200615203108.786083-1-enric.balletbo@collabora.com>
- <20200620213302.GC74146@ravnborg.org>
- <593a4666-d6aa-7d16-f3a0-ba3713047d84@collabora.com>
- <CAAOTY_9ZHemp0U76_oPjwy-XoTRXW108UMD_9JVnNXndNNsiTw@mail.gmail.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <43e5b273-d156-beea-bcfb-cc61b190a671@collabora.com>
-Date:   Tue, 30 Jun 2020 23:02:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 30 Jun 2020 17:04:44 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F1D1C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 14:04:44 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id l63so10496949pge.12
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 14:04:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=xNBGyQANiqILlDq1wBEsbi38cozHmh/XihUuNGYycM0=;
+        b=apeVYBO1IzE4K9q8w8l/ssG5Lfbnwat+ekTKnOAvohkItLv2DT6zmG6j7IO5lU/uZh
+         M5Y0zfUVbhHZdGcXd0QzwbZpGvwH/LFDaHSwd0fJC3DLpLGfsx0RFEDDJWMtUBrQIrYe
+         /6FXjUxRIpNjpdkQK+tL2I8sJRzV9KSaIlPV6J/uZtGRJvXfBimGWsoS5feUqI0JfDOP
+         Fj5EWmXMpOESrikQePf0W3hFYRcj/QSy4ULxQzARLKt4gDahSVvwHBboMp+be6jPWefV
+         on56aQwYPeI7AmM+1VqzimoQKB6KE3asb0iN1HfIy9RBKhDw5QkzwbkEAV5V6uFuyGf2
+         tUhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xNBGyQANiqILlDq1wBEsbi38cozHmh/XihUuNGYycM0=;
+        b=f8NaQrtleTA7vbCb6M20eXpTfWrm4j9zGp4RZ6At/UVeo6EgpWV5XyEJtFfLJAOSR6
+         0OlK1HXajQHBe4qhoxcoKL3+H8jJtd4To1uzkBB+7rcO2zLSt/uSwJrF4IUTTzVTRVs2
+         8Bt8Zo8mwLhwBF5iA1K01iH2e6AZnqDKvkwZsxUly68DCrlAl1tq2V4h8eBVpRDkv0Oz
+         IYUqTNdI2z2RvDLzSeXIoU+E2RXlVoBoikYo1+M3PGCi0EZRsPP/Yas+wNdHrPB656Qq
+         E7RXg4Mndhcj433Ibq7BIbGAkW7x1Lx6nsGNwwFqx9CKq8Zhsb5/7ixH3ThRyi9hqAO9
+         WvHQ==
+X-Gm-Message-State: AOAM530yIz5d+ZQ73HNZGCUhW0utUgxkUH4Olvfk7tPYmjGaYAlQNUHq
+        Gca7klU9rZPC0uFl31PxZ88=
+X-Google-Smtp-Source: ABdhPJw7UQDcd11OnB7gP5fyr6hOiKF7tfXRYP0rVvN43PiGmFgzFZN8xB7xJQUnsTns4SmS0btXSw==
+X-Received: by 2002:a65:5682:: with SMTP id v2mr16489451pgs.231.1593551083729;
+        Tue, 30 Jun 2020 14:04:43 -0700 (PDT)
+Received: from ubuntu-s3-xlarge-x86 ([2604:1380:1000:7a00::1])
+        by smtp.gmail.com with ESMTPSA id 204sm3623211pfc.18.2020.06.30.14.04.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 14:04:43 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 14:04:41 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>
+Cc:     Sia Jee Heng <jee.heng.sia@intel.com>, alsa-devel@alsa-project.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] ASoC: Intel: KeemBay: Fix header guard
+Message-ID: <20200630210441.GA3710423@ubuntu-s3-xlarge-x86>
+References: <20200617010232.23222-1-natechancellor@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAAOTY_9ZHemp0U76_oPjwy-XoTRXW108UMD_9JVnNXndNNsiTw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200617010232.23222-1-natechancellor@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chun-Kuang,
-
-On 30/6/20 18:26, Chun-Kuang Hu wrote:
-> Hi, Enric:
+On Tue, Jun 16, 2020 at 06:02:32PM -0700, Nathan Chancellor wrote:
+> Clang warns:
 > 
-> Enric Balletbo i Serra <enric.balletbo@collabora.com> 於 2020年6月30日 週二 下午10:34寫道：
->>
->> Hi Sam, Chun-Kuan,
->>
->> On 20/6/20 23:33, Sam Ravnborg wrote:
->>> Hi Enric
->>>
->>> On Mon, Jun 15, 2020 at 10:31:01PM +0200, Enric Balletbo i Serra wrote:
->>>> (This resend is to fix some trivial conflicts due the merge window)
->>>>
->>>> The PS8640 dsi-to-eDP bridge driver is using the panel bridge API,
->>>> however, not all the components in the chain have been ported to the
->>>> drm_bridge API. Actually, when a panel is attached the default panel's mode
->>>> is used, but in some cases we can't get display up if mode getting from
->>>> eDP control EDID is not chosen.
->>>>
->>>> This series address that problem, first implements the .get_edid()
->>>> callback in the PS8640 driver (which is not used until the conversion is
->>>> done) and then, converts the Mediatek DSI driver to use the drm_bridge
->>>> API.
->>>>
->>>> As far as I know, we're the only users of the mediatek dsi driver in
->>>> mainline, so should be safe to switch to the new chain of drm_bridge API
->>>> unconditionally.
->>>>
->>>> The patches has been tested on a Acer Chromebook R13 (Elm) running a
->>>> Chrome OS userspace and checking that the valid EDID mode reported by
->>>> the bridge is selected.
->>>>
->>>> Changes in v4:
->>>> - Remove double call to drm_encoder_init(). (Chun-Kuang Hu)
->>>> - Cleanup the encoder in mtk_dsi_unbind(). (Chun-Kuang Hu)
->>>>
->>>> Changes in v3:
->>>> - Replace s/bridge/next bridge/ for comment. (Laurent Pinchart)
->>>> - Add the bridge.type. (Laurent Pinchart)
->>>> - Use next_bridge field to store the panel bridge. (Laurent Pinchart)
->>>> - Add the bridge.type field. (Laurent Pinchart)
->>>> - This patch requires https://lkml.org/lkml/2020/4/16/2080 to work
->>>>   properly.
->>>> - Move the bridge.type line to the patch that adds drm_bridge support. (Laurent Pinchart)
->>>>
->>>> Changes in v2:
->>>> - Do not set connector_type for panel here. (Sam Ravnborg)
->>>>
->>>> Enric Balletbo i Serra (7):
->>>>   drm/bridge: ps8640: Get the EDID from eDP control
->>>>   drm/bridge_connector: Set default status connected for eDP connectors
->>>>   drm/mediatek: mtk_dsi: Rename bridge to next_bridge
->>>>   drm/mediatek: mtk_dsi: Convert to bridge driver
->>>>   drm/mediatek: mtk_dsi: Use simple encoder
->>>>   drm/mediatek: mtk_dsi: Use the drm_panel_bridge API
->>>>   drm/mediatek: mtk_dsi: Create connector for bridges
->>>
->>> Patch seems ready to apply. Will they be applied to a mediatek tree
->>> or to drm-misc-next?
->>> Or shall we take the first two patches via drm-misc-next, and the
->>> remaning via a mediatek tree? (I hope not)
->>>
->>
->> I think the only concern is from Chun-Kuan regarding patch 7/7 "drm/mediatek:
->> mtk_dsi: Create connector for bridges" whether we should support the old API or
->> not, but the discussion stalled.
->>
+>  In file included from sound/soc/intel/keembay/kmb_platform.c:14:
+>  sound/soc/intel/keembay/kmb_platform.h:9:9: warning: 'KMB_PLATFORM_H_'
+>  is used as a header guard here, followed by #define of a different
+>  macro [-Wheader-guard]
+>  #ifndef KMB_PLATFORM_H_
+>          ^~~~~~~~~~~~~~~
+>  sound/soc/intel/keembay/kmb_platform.h:10:9: note: 'KMB_PLATFORMP_H_'
+>  is defined here; did you mean 'KMB_PLATFORM_H_'?
+>  #define KMB_PLATFORMP_H_
+>          ^~~~~~~~~~~~~~~~
+>          KMB_PLATFORM_H_
+>  1 warning generated.
 > 
-> I get more clear now. In patch 7/7,
+> Fix the typo so that the header guard works as intended.
 > 
-> ret = drm_bridge_attach(&dsi->encoder, &dsi->bridge, NULL,
->                                         DRM_BRIDGE_ATTACH_NO_CONNECTOR);
+> Fixes: c5477e966728 ("ASoC: Intel: Add KeemBay platform driver")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/1053
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
+>  sound/soc/intel/keembay/kmb_platform.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> this would call into mtk_dsi_bridge_attach() first, and then call into
-> panel_bridge_attach() next. So panel_bridge_attach() would receive
-> DRM_BRIDGE_ATTACH_NO_CONNECTOR and it return immediately so it does
-> not call drm_panel_attach(). So where do you call drm_panel_attach()?
+> diff --git a/sound/soc/intel/keembay/kmb_platform.h b/sound/soc/intel/keembay/kmb_platform.h
+> index 29600652d8f4..6bf221aa8fff 100644
+> --- a/sound/soc/intel/keembay/kmb_platform.h
+> +++ b/sound/soc/intel/keembay/kmb_platform.h
+> @@ -7,7 +7,7 @@
+>   */
+>  
+>  #ifndef KMB_PLATFORM_H_
+> -#define KMB_PLATFORMP_H_
+> +#define KMB_PLATFORM_H_
+>  
+>  #include <linux/bits.h>
+>  #include <linux/bitfield.h>
+> 
+> base-commit: 27f70ec4fa0e0f419031f1b8d61b1a788244e313
+> -- 
+> 2.27.0
 > 
 
-Why I need to call drm_panel_attach?
+Ping? This is a rather trivial patch.
 
-I believe drm_panel_attach() was to attach a panel to a connector, but we don't
-need to do this with the new API as the connector is already created and
-attached to the "dummy" encoder.
-
-Makes that sense to you? What do you think will not work if I don't call
-drm_panel_attach?
-
-[1]
-https://elixir.bootlin.com/linux/v5.8-rc3/source/drivers/gpu/drm/drm_panel.c#L101
-
-Regards,
- Enric
-
-
-> Regards,
-> Chun-Kuang.
-> 
->> Thanks,
->>  Enric
->>
->>
->>
->>>       Sam
->>>
->>>
->>>>
->>>>  drivers/gpu/drm/bridge/parade-ps8640.c |  12 ++
->>>>  drivers/gpu/drm/drm_bridge_connector.c |   1 +
->>>>  drivers/gpu/drm/mediatek/mtk_dsi.c     | 269 ++++++++-----------------
->>>>  3 files changed, 97 insertions(+), 185 deletions(-)
->>>>
->>>> --
->>>> 2.27.0
->>>>
->>>> _______________________________________________
->>>> dri-devel mailing list
->>>> dri-devel@lists.freedesktop.org
->>>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
->>>
-> 
+Cheers,
+Nathan
