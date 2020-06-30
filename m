@@ -2,283 +2,332 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D46C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A8BCC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 158E4206BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:37:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ET617ItK"
+	by mail.kernel.org (Postfix) with ESMTP id CF384206BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:37:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731546AbgF3Ih2 (ORCPT
+        id S1731557AbgF3Ihe convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 04:37:28 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:17597 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731476AbgF3Ih0 (ORCPT
+        Tue, 30 Jun 2020 04:37:34 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:38182 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731458AbgF3Ih1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 04:37:26 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5efaf9950000>; Tue, 30 Jun 2020 01:36:37 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 30 Jun 2020 01:37:26 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 30 Jun 2020 01:37:26 -0700
-Received: from [10.26.75.203] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 30 Jun
- 2020 08:37:18 +0000
-Subject: Re: [PATCH v8 3/3] iommu/arm-smmu: Add global/context fault
- implementation hooks
-To:     Krishna Reddy <vdumpa@nvidia.com>
-CC:     <joro@8bytes.org>, <will@kernel.org>, <robin.murphy@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <treding@nvidia.com>,
-        <yhsu@nvidia.com>, <snikam@nvidia.com>, <praithatha@nvidia.com>,
-        <talho@nvidia.com>, <bbiswas@nvidia.com>, <mperttunen@nvidia.com>,
-        <nicolinc@nvidia.com>, <bhuntsman@nvidia.com>,
-        <nicoleotsuka@gmail.com>
-References: <20200630001051.12350-1-vdumpa@nvidia.com>
- <20200630001051.12350-4-vdumpa@nvidia.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <4b4b20af-7baa-0987-e40d-af74235153f6@nvidia.com>
-Date:   Tue, 30 Jun 2020 09:37:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200630001051.12350-4-vdumpa@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1593506197; bh=72sjvS5OeRNzGJemrzzyR9F18Oc7fZfIj/1NnRKYpRE=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=ET617ItKPJmQZ4OggW+dP3YjoRaXe52rJ9jAGLKIQUJy3aEXp6LQk9LWIE9mhYvtx
-         42FDez1ciM7+tNTX9sCKur+62GgByXXDNzH2mVGcydjTQZGYRJ1348qS3XKDWAEkSu
-         yjye/IuiSPNEHXDvKoMrCboVoHHl42o5pDmKa4lKtXrKHPxdutKHGRy3vAwlR3XtmQ
-         KPV/ed3C1AfrJ6wWbxg0QxUsAE70geTiHmAk5GjlTxfy8KRxClCPfx6gjNSCntjBhE
-         DvJTvpQVVKFnK0nMk1vN+xTfnFeHZ2akRuCIchO5eWm7cFi1wNHaQlcknIiWe2A9VS
-         tZV0G0cQJ85tw==
+        Tue, 30 Jun 2020 04:37:27 -0400
+Received: from mail-pf1-f197.google.com ([209.85.210.197])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1jqBlb-0007tz-4n
+        for linux-kernel@vger.kernel.org; Tue, 30 Jun 2020 08:37:23 +0000
+Received: by mail-pf1-f197.google.com with SMTP id 16so13630575pfo.23
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 01:37:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=wyvtwTjQow+LlW6bkGTLAQabOfLMRU7jhVMj5RXMOZs=;
+        b=pf623jsGkmANTwpZLko4qEHZgD+bCzm7+XGZvvJcojgzqzISlHwQvbyV989M/UCQIu
+         hpj7fO3VX1Ht3L5s0hDM8JdmaFx7VxOGO/65zrXapEbJpwC8m8FNE9X+wWR6JB3m9Upi
+         Xc3RXZEs2lWRcnUXotxfMzTDRBQgHD5yzwyOUN/ENkWMkhXBkrwuaDgsdGWdprN541jD
+         MoMGtuPuA4lxhH/6NVn87dhjxWtfc8+HWEo4GHMxWYmhSu7TBxBKgN21IWCWR7yUSMhQ
+         xF2Nq0wxIH40LkyOf9YJeBg/68c4RDGPjrYBKyrM2cG4C9mIhtv622cEgO83rm7J7TsS
+         ORmQ==
+X-Gm-Message-State: AOAM530YuCaBrCiQ58khstte+al4s3IVUWkEeXpyXB0gk8UJmlzQXWe1
+        zs8BlGNwODxnZfEhLw3zRsKtI9Gcz9LKtLj6Rwk2bLX6bfHHHEo9DrTtJ7J+tXLd3X7EHhMfEWp
+        hZnPnLks9dyKdXWIP1Bt6/UHzhll76hwm9v8wk6Mw8Q==
+X-Received: by 2002:a63:3f42:: with SMTP id m63mr14401263pga.310.1593506241701;
+        Tue, 30 Jun 2020 01:37:21 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJxeCYUt7m+hJthYXsmq7CfvyghAtFKGBLOf+R4ZQPgCClHnOvstz4fHc9TS1/dfiRgJN8LuLg==
+X-Received: by 2002:a63:3f42:: with SMTP id m63mr14401239pga.310.1593506241305;
+        Tue, 30 Jun 2020 01:37:21 -0700 (PDT)
+Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
+        by smtp.gmail.com with ESMTPSA id 4sm1983684pgk.68.2020.06.30.01.37.17
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 30 Jun 2020 01:37:20 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [PATCH v6] drm/i915: Init lspcon after HPD in intel_dp_detect()
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <20200610075542.12882-1-kai.heng.feng@canonical.com>
+Date:   Tue, 30 Jun 2020 16:37:16 +0800
+Cc:     Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        =?utf-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        =?utf-8?Q?Jos=C3=A9_Roberto_de_Souza?= <jose.souza@intel.com>,
+        Imre Deak <imre.deak@intel.com>,
+        Lucas De Marchi <lucas.demarchi@intel.com>,
+        Manasi Navare <manasi.d.navare@intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Gwan-gyeong Mun <gwan-gyeong.mun@intel.com>,
+        Ramalingam C <ramalingam.c@intel.com>,
+        Uma Shankar <uma.shankar@intel.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        intel-gfx@lists.freedesktop.org,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <21A619C1-627F-49CC-B2F4-9B533F351DF3@canonical.com>
+References: <20200610075542.12882-1-kai.heng.feng@canonical.com>
+To:     Jani Nikula <jani.nikula@linux.intel.com>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 30/06/2020 01:10, Krishna Reddy wrote:
-> Add global/context fault hooks to allow NVIDIA SMMU implementation
-> handle faults across multiple SMMUs.
-
-Nit ... this is not just for NVIDIA, but this allows anyone to add
-custom global/context and fault hooks. So I think that the changelog
-should be clear that this change permits custom fault hooks and that
-custom fault hooks are needed for the Tegra194 SMMU. You may also want
-to say why.
-
+> On Jun 10, 2020, at 15:55, Kai-Heng Feng <kai.heng.feng@canonical.com> wrote:
 > 
-> Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
+> On HP 800 G4 DM, if HDMI cable isn't plugged before boot, the HDMI port
+> becomes useless and never responds to cable hotplugging:
+> [    3.031904] [drm:lspcon_init [i915]] *ERROR* Failed to probe lspcon
+> [    3.031945] [drm:intel_ddi_init [i915]] *ERROR* LSPCON init failed on port D
+> 
+> Seems like the lspcon chip on the system only gets powered after the
+> cable is plugged.
+> 
+> Consilidate lspcon_init() into lspcon_resume() to dynamically init
+> lspcon chip, and make HDMI port work.
+> 
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+
+A gentle ping...
+
 > ---
->  drivers/iommu/arm-smmu-nvidia.c | 98 +++++++++++++++++++++++++++++++++
->  drivers/iommu/arm-smmu.c        | 17 +++++-
->  drivers/iommu/arm-smmu.h        |  3 +
->  3 files changed, 116 insertions(+), 2 deletions(-)
+> v6:
+> - Rebase on latest for-linux-next.
 > 
-> diff --git a/drivers/iommu/arm-smmu-nvidia.c b/drivers/iommu/arm-smmu-nvidia.c
-> index 1124f0ac1823a..c9423b4199c65 100644
-> --- a/drivers/iommu/arm-smmu-nvidia.c
-> +++ b/drivers/iommu/arm-smmu-nvidia.c
-> @@ -147,6 +147,102 @@ static int nvidia_smmu_reset(struct arm_smmu_device *smmu)
->  	return 0;
->  }
->  
-> +static struct arm_smmu_domain *to_smmu_domain(struct iommu_domain *dom)
+> v5:
+> - Consolidate lspcon_resume() with lspcon_init().
+> - Move more logic into lspcon code.
+> 
+> v4:
+> - Trust VBT in intel_infoframe_init().
+> - Init lspcon in intel_dp_detect().
+> 
+> v3:
+> - Make sure it's handled under long HPD case.
+> 
+> v2: 
+> - Move lspcon_init() inside of intel_dp_hpd_pulse().
+> 
+> drivers/gpu/drm/i915/display/intel_ddi.c    | 19 +------
+> drivers/gpu/drm/i915/display/intel_dp.c     | 10 ++--
+> drivers/gpu/drm/i915/display/intel_hdmi.c   |  3 +-
+> drivers/gpu/drm/i915/display/intel_lspcon.c | 63 ++++++++++++---------
+> drivers/gpu/drm/i915/display/intel_lspcon.h |  3 +-
+> 5 files changed, 43 insertions(+), 55 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/i915/display/intel_ddi.c b/drivers/gpu/drm/i915/display/intel_ddi.c
+> index aa22465bb56e..af755b1aa24b 100644
+> --- a/drivers/gpu/drm/i915/display/intel_ddi.c
+> +++ b/drivers/gpu/drm/i915/display/intel_ddi.c
+> @@ -4805,7 +4805,7 @@ void intel_ddi_init(struct drm_i915_private *dev_priv, enum port port)
+> {
+> 	struct intel_digital_port *intel_dig_port;
+> 	struct intel_encoder *encoder;
+> -	bool init_hdmi, init_dp, init_lspcon = false;
+> +	bool init_hdmi, init_dp;
+> 	enum phy phy = intel_port_to_phy(dev_priv, port);
+> 
+> 	init_hdmi = intel_bios_port_supports_dvi(dev_priv, port) ||
+> @@ -4819,7 +4819,6 @@ void intel_ddi_init(struct drm_i915_private *dev_priv, enum port port)
+> 		 * is initialized before lspcon.
+> 		 */
+> 		init_dp = true;
+> -		init_lspcon = true;
+> 		init_hdmi = false;
+> 		drm_dbg_kms(&dev_priv->drm, "VBT says port %c has lspcon\n",
+> 			    port_name(port));
+> @@ -4904,22 +4903,6 @@ void intel_ddi_init(struct drm_i915_private *dev_priv, enum port port)
+> 			goto err;
+> 	}
+> 
+> -	if (init_lspcon) {
+> -		if (lspcon_init(intel_dig_port))
+> -			/* TODO: handle hdmi info frame part */
+> -			drm_dbg_kms(&dev_priv->drm,
+> -				    "LSPCON init success on port %c\n",
+> -				    port_name(port));
+> -		else
+> -			/*
+> -			 * LSPCON init faied, but DP init was success, so
+> -			 * lets try to drive as DP++ port.
+> -			 */
+> -			drm_err(&dev_priv->drm,
+> -				"LSPCON init failed on port %c\n",
+> -				port_name(port));
+> -	}
+> -
+> 	if (INTEL_GEN(dev_priv) >= 11) {
+> 		if (intel_phy_is_tc(dev_priv, phy))
+> 			intel_dig_port->connected = intel_tc_port_connected;
+> diff --git a/drivers/gpu/drm/i915/display/intel_dp.c b/drivers/gpu/drm/i915/display/intel_dp.c
+> index ed9e53c373a7..398a104158a8 100644
+> --- a/drivers/gpu/drm/i915/display/intel_dp.c
+> +++ b/drivers/gpu/drm/i915/display/intel_dp.c
+> @@ -5962,15 +5962,14 @@ static enum drm_connector_status
+> intel_dp_detect_dpcd(struct intel_dp *intel_dp)
+> {
+> 	struct drm_i915_private *i915 = dp_to_i915(intel_dp);
+> -	struct intel_lspcon *lspcon = dp_to_lspcon(intel_dp);
+> +	struct intel_digital_port *dig_port = dp_to_dig_port(intel_dp);
+> 	u8 *dpcd = intel_dp->dpcd;
+> 	u8 type;
+> 
+> 	if (WARN_ON(intel_dp_is_edp(intel_dp)))
+> 		return connector_status_connected;
+> 
+> -	if (lspcon->active)
+> -		lspcon_resume(lspcon);
+> +	lspcon_resume(dig_port);
+> 
+> 	if (!intel_dp_get_dpcd(intel_dp))
+> 		return connector_status_disconnected;
+> @@ -7056,14 +7055,13 @@ void intel_dp_encoder_reset(struct drm_encoder *encoder)
+> {
+> 	struct drm_i915_private *dev_priv = to_i915(encoder->dev);
+> 	struct intel_dp *intel_dp = enc_to_intel_dp(to_intel_encoder(encoder));
+> -	struct intel_lspcon *lspcon = dp_to_lspcon(intel_dp);
+> +	struct intel_digital_port *dig_port = dp_to_dig_port(intel_dp);
+> 	intel_wakeref_t wakeref;
+> 
+> 	if (!HAS_DDI(dev_priv))
+> 		intel_dp->DP = intel_de_read(dev_priv, intel_dp->output_reg);
+> 
+> -	if (lspcon->active)
+> -		lspcon_resume(lspcon);
+> +	lspcon_resume(dig_port);
+> 
+> 	intel_dp->reset_link_params = true;
+> 
+> diff --git a/drivers/gpu/drm/i915/display/intel_hdmi.c b/drivers/gpu/drm/i915/display/intel_hdmi.c
+> index 010f37240710..643ad2127931 100644
+> --- a/drivers/gpu/drm/i915/display/intel_hdmi.c
+> +++ b/drivers/gpu/drm/i915/display/intel_hdmi.c
+> @@ -3155,7 +3155,8 @@ void intel_infoframe_init(struct intel_digital_port *intel_dig_port)
+> 		intel_dig_port->set_infoframes = g4x_set_infoframes;
+> 		intel_dig_port->infoframes_enabled = g4x_infoframes_enabled;
+> 	} else if (HAS_DDI(dev_priv)) {
+> -		if (intel_dig_port->lspcon.active) {
+> +		if (intel_bios_is_lspcon_present(dev_priv,
+> +						 intel_dig_port->base.port)) {
+> 			intel_dig_port->write_infoframe = lspcon_write_infoframe;
+> 			intel_dig_port->read_infoframe = lspcon_read_infoframe;
+> 			intel_dig_port->set_infoframes = lspcon_set_infoframes;
+> diff --git a/drivers/gpu/drm/i915/display/intel_lspcon.c b/drivers/gpu/drm/i915/display/intel_lspcon.c
+> index 6ff7b226f0a1..e3dde4c25604 100644
+> --- a/drivers/gpu/drm/i915/display/intel_lspcon.c
+> +++ b/drivers/gpu/drm/i915/display/intel_lspcon.c
+> @@ -525,44 +525,17 @@ u32 lspcon_infoframes_enabled(struct intel_encoder *encoder,
+> 	return 0;
+> }
+> 
+> -void lspcon_resume(struct intel_lspcon *lspcon)
+> -{
+> -	enum drm_lspcon_mode expected_mode;
+> -
+> -	if (lspcon_wake_native_aux_ch(lspcon)) {
+> -		expected_mode = DRM_LSPCON_MODE_PCON;
+> -		lspcon_resume_in_pcon_wa(lspcon);
+> -	} else {
+> -		expected_mode = DRM_LSPCON_MODE_LS;
+> -	}
+> -
+> -	if (lspcon_wait_mode(lspcon, expected_mode) == DRM_LSPCON_MODE_PCON)
+> -		return;
+> -
+> -	if (lspcon_change_mode(lspcon, DRM_LSPCON_MODE_PCON))
+> -		DRM_ERROR("LSPCON resume failed\n");
+> -	else
+> -		DRM_DEBUG_KMS("LSPCON resume success\n");
+> -}
+> -
+> void lspcon_wait_pcon_mode(struct intel_lspcon *lspcon)
+> {
+> 	lspcon_wait_mode(lspcon, DRM_LSPCON_MODE_PCON);
+> }
+> 
+> -bool lspcon_init(struct intel_digital_port *intel_dig_port)
+> +static bool lspcon_init(struct intel_digital_port *intel_dig_port)
+> {
+> 	struct intel_dp *dp = &intel_dig_port->dp;
+> 	struct intel_lspcon *lspcon = &intel_dig_port->lspcon;
+> -	struct drm_device *dev = intel_dig_port->base.base.dev;
+> -	struct drm_i915_private *dev_priv = to_i915(dev);
+> 	struct drm_connector *connector = &dp->attached_connector->base;
+> 
+> -	if (!HAS_LSPCON(dev_priv)) {
+> -		DRM_ERROR("LSPCON is not supported on this platform\n");
+> -		return false;
+> -	}
+> -
+> 	lspcon->active = false;
+> 	lspcon->mode = DRM_LSPCON_MODE_INVALID;
+> 
+> @@ -586,3 +559,37 @@ bool lspcon_init(struct intel_digital_port *intel_dig_port)
+> 	DRM_DEBUG_KMS("Success: LSPCON init\n");
+> 	return true;
+> }
+> +
+> +void lspcon_resume(struct intel_digital_port *intel_dig_port)
 > +{
-> +	return container_of(dom, struct arm_smmu_domain, domain);
-> +}
+> +	struct intel_lspcon *lspcon = &intel_dig_port->lspcon;
+> +	struct drm_device *dev = intel_dig_port->base.base.dev;
+> +	struct drm_i915_private *dev_priv = to_i915(dev);
+> +	enum drm_lspcon_mode expected_mode;
 > +
-> +static irqreturn_t nvidia_smmu_global_fault_inst(int irq,
-> +					       struct arm_smmu_device *smmu,
-> +					       int inst)
-> +{
-> +	u32 gfsr, gfsynr0, gfsynr1, gfsynr2;
-> +	void __iomem *gr0_base = nvidia_smmu_page(smmu, inst, 0);
+> +	if (!intel_bios_is_lspcon_present(dev_priv, intel_dig_port->base.port))
+> +		return;
 > +
-> +	gfsr = readl_relaxed(gr0_base + ARM_SMMU_GR0_sGFSR);
-> +	if (!gfsr)
-> +		return IRQ_NONE;
-> +
-> +	gfsynr0 = readl_relaxed(gr0_base + ARM_SMMU_GR0_sGFSYNR0);
-> +	gfsynr1 = readl_relaxed(gr0_base + ARM_SMMU_GR0_sGFSYNR1);
-> +	gfsynr2 = readl_relaxed(gr0_base + ARM_SMMU_GR0_sGFSYNR2);
-> +
-> +	dev_err_ratelimited(smmu->dev,
-> +		"Unexpected global fault, this could be serious\n");
-> +	dev_err_ratelimited(smmu->dev,
-> +		"\tGFSR 0x%08x, GFSYNR0 0x%08x, GFSYNR1 0x%08x, GFSYNR2 0x%08x\n",
-> +		gfsr, gfsynr0, gfsynr1, gfsynr2);
-> +
-> +	writel_relaxed(gfsr, gr0_base + ARM_SMMU_GR0_sGFSR);
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static irqreturn_t nvidia_smmu_global_fault(int irq, void *dev)
-> +{
-> +	int inst;
-
-Should be unsigned
-
-> +	irqreturn_t irq_ret = IRQ_NONE;
-> +	struct arm_smmu_device *smmu = dev;
-> +	struct nvidia_smmu *nvidia_smmu = to_nvidia_smmu(smmu);
-> +
-> +	for (inst = 0; inst < nvidia_smmu->num_inst; inst++) {
-> +		irq_ret = nvidia_smmu_global_fault_inst(irq, smmu, inst);
-> +		if (irq_ret == IRQ_HANDLED)
-> +			return irq_ret;
-
-Any chance there could be more than one SMMU faulting by the time we
-service the interrupt?
-
-> +	}
-> +
-> +	return irq_ret;
-> +}
-> +
-> +static irqreturn_t nvidia_smmu_context_fault_bank(int irq,
-> +					    struct arm_smmu_device *smmu,
-> +					    int idx, int inst)
-> +{
-> +	u32 fsr, fsynr, cbfrsynra;
-> +	unsigned long iova;
-> +	void __iomem *gr1_base = nvidia_smmu_page(smmu, inst, 1);
-> +	void __iomem *cb_base = nvidia_smmu_page(smmu, inst, smmu->numpage + idx);
-> +
-> +	fsr = readl_relaxed(cb_base + ARM_SMMU_CB_FSR);
-> +	if (!(fsr & ARM_SMMU_FSR_FAULT))
-> +		return IRQ_NONE;
-> +
-> +	fsynr = readl_relaxed(cb_base + ARM_SMMU_CB_FSYNR0);
-> +	iova = readq_relaxed(cb_base + ARM_SMMU_CB_FAR);
-> +	cbfrsynra = readl_relaxed(gr1_base + ARM_SMMU_GR1_CBFRSYNRA(idx));
-> +
-> +	dev_err_ratelimited(smmu->dev,
-> +	"Unhandled context fault: fsr=0x%x, iova=0x%08lx, fsynr=0x%x, cbfrsynra=0x%x, cb=%d\n",
-> +			    fsr, iova, fsynr, cbfrsynra, idx);
-> +
-> +	writel_relaxed(fsr, cb_base + ARM_SMMU_CB_FSR);
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static irqreturn_t nvidia_smmu_context_fault(int irq, void *dev)
-> +{
-> +	int inst, idx;
-
-Unsigned
-
-> +	irqreturn_t irq_ret = IRQ_NONE;
-> +	struct iommu_domain *domain = dev;
-> +	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
-> +	struct arm_smmu_device *smmu = smmu_domain->smmu;
-> +
-> +	for (inst = 0; inst < to_nvidia_smmu(smmu)->num_inst; inst++) {
-> +		/*
-> +		 * Interrupt line shared between all context faults.
-> +		 * Check for faults across all contexts.
-> +		 */
-> +		for (idx = 0; idx < smmu->num_context_banks; idx++) {
-> +			irq_ret = nvidia_smmu_context_fault_bank(irq, smmu,
-> +								 idx, inst);
-> +
-> +			if (irq_ret == IRQ_HANDLED)
-> +				return irq_ret;
-
-Any reason why we don't check all banks?
-
+> +	if (!lspcon->active) {
+> +		if (!lspcon_init(intel_dig_port)) {
+> +			DRM_ERROR("LSPCON init failed on port %c\n",
+> +				  port_name(intel_dig_port->base.port));
+> +			return;
 > +		}
 > +	}
 > +
-> +	return irq_ret;
+> +	if (lspcon_wake_native_aux_ch(lspcon)) {
+> +		expected_mode = DRM_LSPCON_MODE_PCON;
+> +		lspcon_resume_in_pcon_wa(lspcon);
+> +	} else {
+> +		expected_mode = DRM_LSPCON_MODE_LS;
+> +	}
+> +
+> +	if (lspcon_wait_mode(lspcon, expected_mode) == DRM_LSPCON_MODE_PCON)
+> +		return;
+> +
+> +	if (lspcon_change_mode(lspcon, DRM_LSPCON_MODE_PCON))
+> +		DRM_ERROR("LSPCON resume failed\n");
+> +	else
+> +		DRM_DEBUG_KMS("LSPCON resume success\n");
 > +}
-> +
->  static const struct arm_smmu_impl nvidia_smmu_impl = {
->  	.read_reg = nvidia_smmu_read_reg,
->  	.write_reg = nvidia_smmu_write_reg,
-> @@ -154,6 +250,8 @@ static const struct arm_smmu_impl nvidia_smmu_impl = {
->  	.write_reg64 = nvidia_smmu_write_reg64,
->  	.reset = nvidia_smmu_reset,
->  	.tlb_sync = nvidia_smmu_tlb_sync,
-> +	.global_fault = nvidia_smmu_global_fault,
-> +	.context_fault = nvidia_smmu_context_fault,
->  };
->  
->  struct arm_smmu_device *nvidia_smmu_impl_init(struct arm_smmu_device *smmu)
-> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-> index 243bc4cb2705b..3bb0aba15a356 100644
-> --- a/drivers/iommu/arm-smmu.c
-> +++ b/drivers/iommu/arm-smmu.c
-> @@ -673,6 +673,7 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
->  	enum io_pgtable_fmt fmt;
->  	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
->  	struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
-> +	irqreturn_t (*context_fault)(int irq, void *dev);
->  
->  	mutex_lock(&smmu_domain->init_mutex);
->  	if (smmu_domain->smmu)
-> @@ -835,7 +836,13 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
->  	 * handler seeing a half-initialised domain state.
->  	 */
->  	irq = smmu->irqs[smmu->num_global_irqs + cfg->irptndx];
-> -	ret = devm_request_irq(smmu->dev, irq, arm_smmu_context_fault,
-> +
-> +	if (smmu->impl && smmu->impl->context_fault)
-> +		context_fault = smmu->impl->context_fault;
-> +	else
-> +		context_fault = arm_smmu_context_fault;
+> diff --git a/drivers/gpu/drm/i915/display/intel_lspcon.h b/drivers/gpu/drm/i915/display/intel_lspcon.h
+> index 37cfddf8a9c5..169db35db13e 100644
+> --- a/drivers/gpu/drm/i915/display/intel_lspcon.h
+> +++ b/drivers/gpu/drm/i915/display/intel_lspcon.h
+> @@ -15,8 +15,7 @@ struct intel_digital_port;
+> struct intel_encoder;
+> struct intel_lspcon;
+> 
+> -bool lspcon_init(struct intel_digital_port *intel_dig_port);
+> -void lspcon_resume(struct intel_lspcon *lspcon);
+> +void lspcon_resume(struct intel_digital_port *intel_dig_port);
+> void lspcon_wait_pcon_mode(struct intel_lspcon *lspcon);
+> void lspcon_write_infoframe(struct intel_encoder *encoder,
+> 			    const struct intel_crtc_state *crtc_state,
+> -- 
+> 2.17.1
+> 
 
-Why not see the default smmu->impl->context_fault to
-arm_smmu_context_fault in arm_smmu_impl_init() and then allow the
-various implementations to override as necessary? Then you can get rid
-of this context_fault variable here and just use
-smmu->impl->context_fault below.
-
-> +
-> +	ret = devm_request_irq(smmu->dev, irq, context_fault,
->  			       IRQF_SHARED, "arm-smmu-context-fault", domain);
->  	if (ret < 0) {
->  		dev_err(smmu->dev, "failed to request context IRQ %d (%u)\n",
-> @@ -2107,6 +2114,7 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
->  	struct arm_smmu_device *smmu;
->  	struct device *dev = &pdev->dev;
->  	int num_irqs, i, err;
-> +	irqreturn_t (*global_fault)(int irq, void *dev);
->  
->  	smmu = devm_kzalloc(dev, sizeof(*smmu), GFP_KERNEL);
->  	if (!smmu) {
-> @@ -2193,9 +2201,14 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
->  		smmu->num_context_irqs = smmu->num_context_banks;
->  	}
->  
-> +	if (smmu->impl && smmu->impl->global_fault)
-> +		global_fault = smmu->impl->global_fault;
-> +	else
-> +		global_fault = arm_smmu_global_fault;
-> +
-
-Same here.
-
-Jon
-
--- 
-nvpublic
