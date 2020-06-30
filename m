@@ -2,150 +2,152 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B7B6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 368EFC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B99820768
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F282320768
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:05:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="DxcHdp4o"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="TCPvpvo1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731017AbgF3IFj (ORCPT
+        id S1731048AbgF3IFn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 04:05:39 -0400
-Received: from mout.web.de ([212.227.15.3]:38353 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726038AbgF3IFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 04:05:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1593504275;
-        bh=0a2jDaPAta2pGBTBPrjgK6rNlIENB8BdbiDPwlDFeKo=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=DxcHdp4oR2P+7+3wDn9A7F2moCixZuHGPBmikMnttMS+TiGShuPZMPaWq9MGTk8Ax
-         d34uc7eO1ZQB/CrEmh3xLffwJISqRWuFAcZd7PswTlWr7Ua0kBsl+X0r50CH7ZTN7P
-         R//eI+bt//9Q7vVMVwFzHU6S1olouWgGv2gHomNs=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.243.105.212]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MzCEB-1iuU9w2DZr-00wHfc; Tue, 30
- Jun 2020 10:04:35 +0200
-Subject: Re: [PATCH v2] Documentation: Coccinelle: fix typos and command
- example
-To:     Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org,
-        Coccinelle <cocci@systeme.lip6.fr>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Jonathan Corbet <corbet@lwn.net>
-References: <0616dd0c-bb86-be2b-3dc6-1c695a92c3ca@infradead.org>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <3cedcc41-38b2-d17b-3ad5-5a5b8403f953@web.de>
-Date:   Tue, 30 Jun 2020 10:04:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 30 Jun 2020 04:05:43 -0400
+Received: from mail-dm6nam11on2088.outbound.protection.outlook.com ([40.107.223.88]:6021
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730993AbgF3IF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 04:05:27 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=M4arbnuq3tpAzuJoYRrqSxNxDrI+mdDvtWn/aaw3NXmggPTcz0J0Df5z+MrRXF7pwMZCQKrTGKMkUo6vhatgOkJ+FYyyeiH7ax2/k6D/2BtnszEwLaev+2QSO5VoMj5KZ6qV5F7jsOrcOz40amZ2OHylzc/TdJGAC9RQw1/2uWA1y8qkGsP43Ff16pTDWgQXjQ67HgAiPw46iXDsXfdCq/Z6QBfXOMN4pPglawoutusvVnP5Fooy9eEy2/6wt4MIRbiahNROO8wN5uLk+xsED2qO5bm8YurV2JJ3RplFiSR9CWZaYGD+PQUI4NySSTR0m0Axi4mYv6M3MPkoq7mOCQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tTzsDbRyzcH/KAgeP7px6IIx/n9epAkYHt3PToPOesw=;
+ b=CwmFs0iejuHT7+FFFa7WmGZQLxw5fC+AsE/KjI7/nP37z5IAQlJiaLam/gbnbrtC/JcjavxejVG5JF3g5j7sQm1EhU4byfSoHtAed8vckPMPFZ8PsW/z5UpbqssDkLy32ESpUhyVsTwBVYijF9jYwABTOzBYZJDvWM993APZSI6oWFkrpHcHCCAwYkVYWDJ5KW3P3ouq1X7MPisCIo1j+mB/KSZDs/l0Hh7tUroNQbBkCglGJHLM5NJKsOECJE35jL2R8RHDhzwW6DApVNelio5u2I2B7veQfM35EvIv80UT1wjyCEXE9Bsx4Bg7S8xxuHw7edySREAWhCQ4p/GlzA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tTzsDbRyzcH/KAgeP7px6IIx/n9epAkYHt3PToPOesw=;
+ b=TCPvpvo1Idua5fTr4Vg/6GAJ7lFWFRdkNKBXvQWO5VQAXa0HyOe5lk/Prf2cpliWoukaADkmtdpmXzW5t0lBzYsAdB4uS17TR6EMvqvZvisPwwcSbVGKOUfER1DkWiIfn4UC1ykACwpJB4EZP5Wm9bQrF+HCeW4mPplL3hARPMc=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none header.from=amd.com;
+Received: from MN2PR12MB3775.namprd12.prod.outlook.com (2603:10b6:208:159::19)
+ by BL0PR12MB2515.namprd12.prod.outlook.com (2603:10b6:207:40::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21; Tue, 30 Jun
+ 2020 08:05:21 +0000
+Received: from MN2PR12MB3775.namprd12.prod.outlook.com
+ ([fe80::a16e:8812:b4c0:918d]) by MN2PR12MB3775.namprd12.prod.outlook.com
+ ([fe80::a16e:8812:b4c0:918d%6]) with mapi id 15.20.3131.027; Tue, 30 Jun 2020
+ 08:05:21 +0000
+Subject: Re: [PATCH] gpu/drm: Replace "%p" with "%pK"
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Alex Deucher <alexander.deucher@amd.com>
+Cc:     amd-gfx@lists.freedesktop.org, linux-kernel@vger.kernel.org
+References: <1593502561-15190-1-git-send-email-yangtiezhu@loongson.cn>
+From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+Message-ID: <26fcd5ec-4e90-8b98-8fbb-605f5906ad75@amd.com>
+Date:   Tue, 30 Jun 2020 10:05:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+In-Reply-To: <1593502561-15190-1-git-send-email-yangtiezhu@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-ClientProxiedBy: AM3PR05CA0127.eurprd05.prod.outlook.com
+ (2603:10a6:207:2::29) To MN2PR12MB3775.namprd12.prod.outlook.com
+ (2603:10b6:208:159::19)
 MIME-Version: 1.0
-In-Reply-To: <0616dd0c-bb86-be2b-3dc6-1c695a92c3ca@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:v+jKo3ey1TaoZykU449FsWKzY5Ns7C+OliDsLZ/420n38YLVpSh
- mHX2nyrC6/COPCjq6wmUzIfUxb0VUJeZYsvMQM9hndq/GyBnwGQ3T41FXAoP0r8DAz1t9bf
- OUlKAb/kmikcmxQ4JDFPzzhotdi7u+uxfSechjjzY5772NmUpv2lUVEYp5GOKmoNRZPNcbQ
- jfajIejT7540a3sEQFBiQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:uh3H6WoO5Ho=:/binRVePZvRad/OrOa5v62
- 6N5O3fZWaSB7wZ7q75GjYbC6EnDzQIdtG8K+5wY0u8/rukfVk6tGzbrmyPT2nzC/1ziRZjkjD
- CASfP/0GSlfz8fGMOtNqQMvtgpV4OnHAgSJbkcSUbYrBEX7Z6Ti9Q/cT8Pm1CKsvIl3IF3TPi
- wmANqjzzTlLLCDrQOABH18uFO/S/xXjKpZ0NuNakBfBGKuOjZWRkZ53oPee/8/g+kFXC1oA/I
- 4cXL5EYkEvLn+ezVX1a5zDfEuDdjEOzWeipIOmyYrbzSMIoCizZr/WgUqbSTBCldKYXBnj1eB
- lzmNEGzF7K0Ax+ZJV7ZMHaswzSWHQclCktXN1CHinLcpnwC35tgrLCz7FRSQWmqeWb6LfoqeA
- y+LAMb1I4nHOxs4GwzHhsyVsL4jl4yJbmYu7hDD0QUkvNOKmDZHHewGcU2CbFjYX2FmRu4hEX
- zsgVvrphfXozMjxKdhi/fefMAKX4akjYu+MX/NnB9UIvyuBZtp5pC5vPzgXUb/KivbOHR9iVz
- 55o255LxEj9+nlPiHmYjblpC1BJ7Y/meyv1p2MP1I/JQbo5HDsSppONFth5+vWDfA2wUQbKaF
- bVUGerzRZX6i3gSQ9SGhWUeBCuA3Lu8w3S/ATmBniaBcfOEeRQw1H/N2PM7aLX00HZQGa0s5t
- TE8OYe32u4ncu4hLah8aztFN6+kU3Hd0/4xVy76Jdry6P5ZWRRbC/d8s7PxnYK7+OhUc1MFgW
- o3uXwcwsgobSPScETDmYFvatHknYdYP+yYONNf6s1xcjVVaxtsuaM0iitbnZC3ZXRgNA3tNeE
- O8rkUTSntHzEGY1rCZQTAwy8nDqrKgSk308YDVsAzs4Rc153pcW6sp+ECM/HRBhNR9J1wTwLH
- NcBWwHlrgY72KxnTr39xkJyqv1oiJMsnNkspT5TS0EXileK280Vng+GkRyjSiUe6rX9kz/Ndf
- xuK0Z0MrUJvFcK+Z8mrQJDCZ98ZHiag5bw6cSOKdyJfk1Gijw2A79X7XW3xf6xOLaoy+RTwVV
- apGPmMJzzcgMMDalwGaiFoU+AFU8D+wsh6XHk0lQY2PAxytIdI02lAg/xC9dafaontIzn5SGz
- uL1O33zmRhhcQzElIcrq+ZtRJSTkIlDmZ4eyEiVXScUbqEhod8dh8734WjSZGHKve7VrWfdWa
- UHFlijxk9nVxxKRVi7Icz7CJFurOmas4s7/0V+eVV9dY1HRtvTSRqXvBqEwo22dID7NCYhl5a
- BdCmHtG1b9erZE9CV
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7] (2a02:908:1252:fb60:be8a:bd56:1f94:86e7) by AM3PR05CA0127.eurprd05.prod.outlook.com (2603:10a6:207:2::29) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.20 via Frontend Transport; Tue, 30 Jun 2020 08:05:20 +0000
+X-Originating-IP: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 404334cd-f06b-4961-7fc5-08d81ccc5593
+X-MS-TrafficTypeDiagnostic: BL0PR12MB2515:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BL0PR12MB251581E39ECC75E8BFB5FD33836F0@BL0PR12MB2515.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:298;
+X-Forefront-PRVS: 0450A714CB
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: BnKO4hF/8Fo14mLOTuHfyFYjRBBmPNShjivcJlKzpB390tNEYaukwDE3F2qwXVXvIslhOtyfbm2rMs07cIP+GNCvHoXVJ4QJZqZI6XY+5HSGzfOWCtB6mNRx/+SYOpMeKgBPwMtcvtreykaBmKCv/r/UPMy5pu6JyyV4r2oRw76VXBRrDb052pHIsZ35sxbhot6sGhpr647Tqe+fQT0eHf7ibdCG2ST/O5rfDMq5E8cc/Q5iIGy/18j5ZiE54W3pdjk/db3rQpp6Mzn8RcMQF6MGpQTEQEIWJivapYoRpHBch8MXQaQYW6WUh9mtytVNZRpKBnXRRYbvH3tHk6W8CYXAHf8e/xL+TaRb5bVIdk/PGWEa6XDWzi3lSPF7IA5s
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MN2PR12MB3775.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(376002)(136003)(346002)(396003)(366004)(16526019)(110136005)(31696002)(478600001)(86362001)(8676002)(4326008)(83380400001)(5660300002)(8936002)(186003)(6666004)(36756003)(52116002)(2906002)(31686004)(316002)(6636002)(6486002)(66946007)(66476007)(66556008)(2616005)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: dFLUDjdn/Ns7XVcssuFo2CRnZfz6F0n2/1OcVgk2dXMQbrJNFPJQ06TMMVCLbXREBR32/hUYgSZHLrah0UQzo9ogHxRHNfCmhi75781F9Q9wdHa9QfQEp6pl2OvLr+baupts+l6E7YDAwwgHmrs5L4REE8AJ2lCHZBvon3FYx4vmuIiixTpswDITKwkhO/hyXl2KBYwdIhpF6LSoT3DXOKOIg/PR7rJDzBx4VQLkyHpbtU9PtGRDNJU/ZRSrU4zTCH5ZoLyG/XSewy6g2sRhCXC2rrSV6Zj3aVZRimnLJmRDwNAZ8hCZ16Gi+cuZPyB5kiLyqD6JKvv9TtPMJFx6wVV+sKAiwUKULQdetY+iqV/OszYTIQRmm8zwW3xYnl0MMU4AFRz2K2CfmeeBqZ4za2RC3TAOm8aVnAcdtL1iUcaClsryUgOGpMCOQGg+OLtj3LZkhreI5V2247Edskme03Y4G0QBCBk0TT9TkopBfdR8TyKfUtmYi5HfSyA0ifmenMRIg6FqzcUrR6rDVkd3RT9a8uJJCWuaUDhm46n4Izf1lAUzkJcgDomiQh3wgozN
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 404334cd-f06b-4961-7fc5-08d81ccc5593
+X-MS-Exchange-CrossTenant-AuthSource: MN2PR12MB3775.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2020 08:05:21.0609
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 4Tk0qewnCQ7fw7+jXYcmrwDUasRgY8tnLD9jl9XiMtv3V2vdPCXwX0ZcalU5AaaJ
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR12MB2515
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> @@ -177,13 +177,13 @@ For example, to check drivers/net/wirele
->  To apply Coccinelle on a file basis, instead of a directory basis, the
->  following command may be used::
+Am 30.06.20 um 09:36 schrieb Tiezhu Yang:
+> When I update the latest kernel, I see the following "____ptrval____" boot
+> messages. Use "%pK" instead of "%p" so that the cpu address can be printed
+> when the kptr_restrict sysctl is set to 1.
 >
-> -    make C=3D1 CHECK=3D"scripts/coccicheck"
-> +    make C=3D1 CHECK=3D"scripts/coccicheck" path/to/file.c
+> Both radeon_fence_driver_start_ring() and amdgpu_fence_driver_start_ring()
+> have this similar issue, fix them.
+>
+> [    1.872600] radeon 0000:01:05.0: fence driver on ring 0 use gpu addr 0x0000000048000c00 and cpu addr 0x(____ptrval____)
+> [    1.879095] radeon 0000:01:05.0: fence driver on ring 5 use gpu addr 0x0000000040056038 and cpu addr 0x(____ptrval____)
 
-Can such information still be questionable according to usual make functio=
-nality?
+We can probably just completely drop the CPU address here.
 
-* Do you usually expect that such a source file does not need to be regene=
-rated
-  (because it should be up-to-date already according a selected revision)?
+Christian.
 
-* Would you like to trigger the generation of a corresponding source code
-  analysis log file (or a =E2=80=9Cdiff=E2=80=9D)?
+>
+> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+> ---
+>   drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c | 5 ++---
+>   drivers/gpu/drm/radeon/radeon_fence.c     | 2 +-
+>   2 files changed, 3 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
+> index d878fe7..d4d1e8c 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_fence.c
+> @@ -422,9 +422,8 @@ int amdgpu_fence_driver_start_ring(struct amdgpu_ring *ring,
+>   	ring->fence_drv.irq_type = irq_type;
+>   	ring->fence_drv.initialized = true;
+>   
+> -	DRM_DEV_DEBUG(adev->dev, "fence driver on ring %s use gpu addr "
+> -		      "0x%016llx, cpu addr 0x%p\n", ring->name,
+> -		      ring->fence_drv.gpu_addr, ring->fence_drv.cpu_addr);
+> +	DRM_DEV_DEBUG(adev->dev, "fence driver on ring %s use gpu addr 0x%016llx, cpu addr 0x%pK\n",
+> +		      ring->name, ring->fence_drv.gpu_addr, ring->fence_drv.cpu_addr);
+>   	return 0;
+>   }
+>   
+> diff --git a/drivers/gpu/drm/radeon/radeon_fence.c b/drivers/gpu/drm/radeon/radeon_fence.c
+> index 43f2f93..c51b094 100644
+> --- a/drivers/gpu/drm/radeon/radeon_fence.c
+> +++ b/drivers/gpu/drm/radeon/radeon_fence.c
+> @@ -865,7 +865,7 @@ int radeon_fence_driver_start_ring(struct radeon_device *rdev, int ring)
+>   	}
+>   	radeon_fence_write(rdev, atomic64_read(&rdev->fence_drv[ring].last_seq), ring);
+>   	rdev->fence_drv[ring].initialized = true;
+> -	dev_info(rdev->dev, "fence driver on ring %d use gpu addr 0x%016llx and cpu addr 0x%p\n",
+> +	dev_info(rdev->dev, "fence driver on ring %d use gpu addr 0x%016llx and cpu addr 0x%pK\n",
+>   		 ring, rdev->fence_drv[ring].gpu_addr, rdev->fence_drv[ring].cpu_addr);
+>   	return 0;
+>   }
 
-* How do you think about to pass an other parameter to the build target =
-=E2=80=9Ccoccicheck=E2=80=9D?
-
-Regards,
-Markus
