@@ -2,141 +2,192 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE35C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36418C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1B36F206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:30:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 022C9206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:32:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="KmSIO0W5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731527AbgF3IaV (ORCPT
+        id S1731532AbgF3IcN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 04:30:21 -0400
-Received: from esa6.hc3370-68.iphmx.com ([216.71.155.175]:19703 "EHLO
-        esa6.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727059AbgF3IaU (ORCPT
+        Tue, 30 Jun 2020 04:32:13 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:51704 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727059AbgF3IcK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 04:30:20 -0400
-Authentication-Results: esa6.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none
-IronPort-SDR: vJWCbZ24qNBCnRa1jeMfzFihapPAEXWOb/MH/cTYYQUyip68MUIwSFss/OBbvXPJYIxsyk1cMP
- fykjYjWPPolzXUfAKEKbi8v5e6uTYPGHa6se6prvblrrjZ315fDhXE1Ldp+PwYlfxKFSuTxQzJ
- fPz8b/Ptrkeq2wV7Rn+c0mEizLc08zRTfpE0PDc/3s/85ulln/xVa/ZpKNcjFMEisNHCGoh3Sk
- yQnP6MGeMNavHGNxNXThtwWpJyX4Yohpdvq55ZlG0FcG1zCwqQ5tX3XMLY0i4aQJXKK1yVMij0
- oLM=
-X-SBRS: 2.7
-X-MesageID: 21593289
-X-Ironport-Server: esa6.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.75,296,1589256000"; 
-   d="scan'208";a="21593289"
-Date:   Tue, 30 Jun 2020 10:30:06 +0200
-From:   Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
-To:     Anchal Agarwal <anchalag@amazon.com>
-CC:     Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "jgross@suse.com" <jgross@suse.com>,
-        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "Kamata, Munehisa" <kamatam@amazon.com>,
-        "sstabellini@kernel.org" <sstabellini@kernel.org>,
-        "konrad.wilk@oracle.com" <konrad.wilk@oracle.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "len.brown@intel.com" <len.brown@intel.com>,
-        "pavel@ucw.cz" <pavel@ucw.cz>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "Valentin, Eduardo" <eduval@amazon.com>,
-        "Singh, Balbir" <sblbir@amazon.com>,
-        "xen-devel@lists.xenproject.org" <xen-devel@lists.xenproject.org>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Woodhouse, David" <dwmw@amazon.co.uk>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>
-Subject: Re: [PATCH 06/12] xen-blkfront: add callbacks for PM suspend and
- hibernation]
-Message-ID: <20200630083006.GJ735@Air-de-Roger>
-References: <20200604070548.GH1195@Air-de-Roger>
- <20200616214925.GA21684@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <20200617083528.GW735@Air-de-Roger>
- <20200619234312.GA24846@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <20200622083846.GF735@Air-de-Roger>
- <20200623004314.GA28586@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <20200623081903.GP735@Air-de-Roger>
- <20200625183659.GA26586@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
- <20200626091239.GA735@Air-de-Roger>
- <20200629192035.GA13195@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+        Tue, 30 Jun 2020 04:32:10 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200630083209euoutp0201dc1f8f7a868e41ca324fc6d4866b3c~dRTMuEgeh2977029770euoutp02Z
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 08:32:09 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200630083209euoutp0201dc1f8f7a868e41ca324fc6d4866b3c~dRTMuEgeh2977029770euoutp02Z
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593505929;
+        bh=OrShDEn2h+7V7n/pSCbJmSQRC9bDfacS5k/0XuTGJqU=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=KmSIO0W5uj3N0E1IwulAs4duzBuKnRX/1UaBO+LZFgtbKlk0zhtg08PldrQWbTZen
+         ykz4368BzQDYc1j9cwGxiH3C2bYo2cstk2aCXgYvETESR0chxXCzxe+6cLgiQMFcjR
+         B6FhfdbkL4mpHWIfjWICihR7dr9vxr3ErRIAM4fw=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200630083208eucas1p1558a15c47073cce1b218ca7fe15b5f47~dRTMSXtRJ1712317123eucas1p1t;
+        Tue, 30 Jun 2020 08:32:08 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id 44.92.06456.888FAFE5; Tue, 30
+        Jun 2020 09:32:08 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200630083208eucas1p1257700c209a1dcb586555e49d50aee28~dRTL-3BDg1712317123eucas1p1s;
+        Tue, 30 Jun 2020 08:32:08 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200630083208eusmtrp1f2d30f34ef9d152e57d6333239e9ed3f~dRTL_7l1r1295012950eusmtrp1I;
+        Tue, 30 Jun 2020 08:32:08 +0000 (GMT)
+X-AuditID: cbfec7f2-7efff70000001938-e6-5efaf888c0d8
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id A6.71.06314.888FAFE5; Tue, 30
+        Jun 2020 09:32:08 +0100 (BST)
+Received: from [106.210.85.205] (unknown [106.210.85.205]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200630083206eusmtip10335b85cc1556d9bd2a674b2e778ef06~dRTKcfrrC2905729057eusmtip1N;
+        Tue, 30 Jun 2020 08:32:06 +0000 (GMT)
+Subject: Re: [PATCH v7 2/4] driver core: add deferring probe reason to
+ devices_deferred property
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Jernej Skrabec <jernej.skrabec@siol.net>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Mark Brown <broonie@kernel.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+From:   Andrzej Hajda <a.hajda@samsung.com>
+Message-ID: <a48ab93c-0d9c-ed8b-76dd-62007826bf6f@samsung.com>
+Date:   Tue, 30 Jun 2020 10:32:06 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.9.0
 MIME-Version: 1.0
+In-Reply-To: <CAHp75VdS_u8h4qfBxsQRUp1-2SL_hq20=dQkpteXH7Xg7epArQ@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-GB
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sa0hTYRjm2zk7Ow5nx2n4UmE4LCqoJV04UEiFP07+qPwXhstZh7lyJpsz
+        9UdGOpma4jI117xkmhcMa3Olgl2Wl8osM6+RqRnBSlFSU5eO3M4k/z3v8z7P+z0PfCQm/sXf
+        QirjE1l1vDxOQgjxJ53LH/bqlxyy/fZyKW3Pf4Xox3ca+XThxHeC7l+YIej0+40EPbBox+g3
+        UwM4nWWoEtDmyUE+/anVRNC2wjZEP2wfFdC2vHN06XwhdsyH+TT4EWNmhnUCpsU4KmDu6kv4
+        jLk+i2Be5/fxmOelDQJmLKeLx1iq0pi8pnrEvMgtwJk5c+AZ70jh0YtsnDKJVUtDo4Wxg84c
+        PKHHJ9lYFXgdjQuzkRcJ1EHo/TpGZCMhKaZqESw2zfK5YR5Bg86Ec8McgtGm2/x1S1lXpmdR
+        g6DP2uvxzyAYmqgnXCo/KgacgwZeNhKQ/pQUnie5JBiVzoeV6n73IYLaDauWEbdcRIWCdVG3
+        hkkSp3bAnGOni95MRUFedYVH4gtvSr7jLokXFQHtdaSLxqjt8HTahHE4AG7M17kLAFVCQoVp
+        VcBlDoPimkmMw37ws6vJw2+D7oKbOIfTYKw2A+PMegTWRy0ewxH48t7hzoatZW5slXL0cWhv
+        nnTTQPnA8LQvl8EHbj0pxjhaBPpMMacOgrEeq+dgAFT3LhD5SGLcUMy4oY1xQxvj/3crEF6P
+        AlitRqVgNSHx7NV9GrlKo41X7LtwRWVGa1+w29n1uxkt9MXYEEUiibco+v2yTMyXJ2lSVDYE
+        JCbxF53o6ZaJRRflKams+sp5tTaO1djQVhKXBIgOVNqjxJRCnsheZtkEVr2+5ZFeW66jrMOj
+        h/6etb4MXioOyU3o+BNlC7cUtEhXkkfCQ8U/Tr4bH5p0nuqsMDfcI6c2LT/7wRPqHij8sqIr
+        O9Mrb1yK2GUgHDmp15TJ/kGRlraRcsvmz8Flb8Puy7Tf6A7F6ZUim1YdVN2c3qFs0ztDDUU1
+        qRNUWsY356yM6I8gw1+nSXBNrDxkD6bWyP8BqGOo0n4DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrHIsWRmVeSWpSXmKPExsVy+t/xu7odP37FGZx+KGHxcsJhRouNM9az
+        Wkx9+ITN4srX92wWzYvXs1lc/f6S2eLkm6ssFp0Tl7BbbHp8jdXi8q45bBaHpu5ltFh75C67
+        xaG+aIu5X6YyO/B5XL52kdnj/Y1Wdo+ds+6ye8zumMnqsWlVJ5vHiQmXmDz2z13D7nG/+ziT
+        x+Yl9R59W1Yxehzonczi8XmTXABPlJ5NUX5pSapCRn5xia1StKGFkZ6hpYWekYmlnqGxeayV
+        kamSvp1NSmpOZllqkb5dgl7GtX/dLAVn+SpmLZFrYHzA1cXIySEhYCIx73gbSxcjF4eQwFJG
+        ia7jX9kgEuISu+e/ZYawhSX+XOtigyh6yyjx+uQmFpCEsECSxL9rE5m6GNk5RAT0JfaXgZQw
+        C7SzSrw5sJ4Zor6JSeL3hkPsIPVsApoSfzffBFvAK2AnsfV7K5DNwcEioCrx+ZcaSFhUIFbi
+        270tUCWCEidnPmEBKeEUCJQ4spIDJMwsYCYxb/NDZghbXmL72zlQtrhE05eVrBMYhWYh6Z6F
+        pGUWkpZZSFoWMLKsYhRJLS3OTc8tNtQrTswtLs1L10vOz93ECIz7bcd+bt7BeGlj8CFGAQ5G
+        JR7ehHM/44RYE8uKK3MPMUpwMCuJ8DqdPR0nxJuSWFmVWpQfX1Sak1p8iNEU6LWJzFKiyfnA
+        lJRXEm9oamhuYWlobmxubGahJM7bIXAwRkggPbEkNTs1tSC1CKaPiYNTqoExyOv8/9KD5hdm
+        vN3oOsHCefZMxfzaV5ke2kv2q59+1zJtvuuhSwckKpcr+F5cdIbzudAX5tcTVblObNPuYIv/
+        EGxbLtk2R9XsOdt5rlDT0O8GtWE3+3j+a224ydOw6Z1c6PkyvRl6n/oynHasu7CB027brNsn
+        JasPVJk+Lgl9cDGnT4RF3KFIiaU4I9FQi7moOBEA4N7ROREDAAA=
+X-CMS-MailID: 20200630083208eucas1p1257700c209a1dcb586555e49d50aee28
+X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200629192035.GA13195@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
-X-ClientProxiedBy: AMSPEX02CAS02.citrite.net (10.69.22.113) To
- AMSPEX02CL02.citrite.net (10.69.22.126)
+X-RootMTR: 20200629112249eucas1p160b845444f8fbad96bdec41e9d3938da
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200629112249eucas1p160b845444f8fbad96bdec41e9d3938da
+References: <CGME20200629112249eucas1p160b845444f8fbad96bdec41e9d3938da@eucas1p1.samsung.com>
+        <20200629112242.18380-1-a.hajda@samsung.com>
+        <20200629112242.18380-3-a.hajda@samsung.com>
+        <CAHp75VdS_u8h4qfBxsQRUp1-2SL_hq20=dQkpteXH7Xg7epArQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 07:20:35PM +0000, Anchal Agarwal wrote:
-> On Fri, Jun 26, 2020 at 11:12:39AM +0200, Roger Pau Monné wrote:
-> > So the frontend should do:
-> > 
-> > - Switch to Closed state (and cleanup everything required).
-> > - Wait for backend to switch to Closed state (must be done
-> >   asynchronously, handled in blkback_changed).
-> > - Switch frontend to XenbusStateInitialising, that will in turn force
-> >   the backend to switch to XenbusStateInitWait.
-> > - After that it should just follow the normal connection procedure.
-> > 
-> > I think the part that's missing is the frontend doing the state change
-> > to XenbusStateInitialising when the backend switches to the Closed
-> > state.
-> > 
-> > > I was of the view we may just want to mark frontend closed which should do
-> > > the job of freeing resources and then following the same flow as
-> > > blkfront_restore. That does not seems to work correctly 100% of the time.
-> > 
-> > I think the missing part is that you must wait for the backend to
-> > switch to the Closed state, or else the switch to
-> > XenbusStateInitialising won't be picked up correctly by the backend
-> > (because it's still doing it's cleanup).
-> > 
-> > Using blkfront_restore might be an option, but you need to assert the
-> > backend is in the initial state before using that path.
-> >
-> Yes, I agree and I make sure that XenbusStateInitialising only triggers
-> on frontend once backend is disconnected. msleep in a loop not that graceful but
-> works.
-> Frontend only switches to XenbusStateInitialising once it sees backend
-> as Closed. The issue here is and may require more debugging is:
-> 1. Hibernate instance->Closing failed, artificially created situation by not
-> marking frontend Closed in the first place during freezing.
-> 2. System comes back up fine restored to 'backend connected'.
 
-I'm not sure I'm following what is happening here, what should happen
-IMO is that the backend will eventually reach the Closed state? Ie:
-the frontend has initiated the disconnection from the backend by
-setting the Closing state, and the backend will have to eventually
-reach the Closed state.
+On 29.06.2020 18:36, Andy Shevchenko wrote:
+> On Mon, Jun 29, 2020 at 2:22 PM Andrzej Hajda <a.hajda@samsung.com> wrote:
+>> /sys/kernel/debug/devices_deferred property contains list of deferred devices.
+>> This list does not contain reason why the driver deferred probe, the patch
+>> improves it.
+>> The natural place to set the reason is dev_err_probe function introduced recently,
+>> ie. if dev_err_probe will be called with -EPROBE_DEFER instead of printk the message
+>> will be attached to deferred device and printed when user read devices_deferred
+> to a deferred
+>
+> reads
+OK, thx.
+>
+>> property.
+> ...
+>
+>> @@ -3984,10 +3986,12 @@ int dev_err_probe(const struct device *dev, int err, const char *fmt, ...)
+>>          vaf.fmt = fmt;
+>>          vaf.va = &args;
+>>
+>> -       if (err != -EPROBE_DEFER)
+>> +       if (err != -EPROBE_DEFER) {
+> Why not positive conditional? (Okay, I'm fine with either in this case)
 
-At that point the frontend can initiate a reconnection by switching to
-the Initialising state.
 
-> 3. Re-run (1) again without reboot
-> 4. (4) fails to recover basically freezing does not fail at all which is weird
->    because it should timeout as it passes through same path. It hits a BUG in
->    talk_to_blkback() and instance crashes.
+I put more natural branch 1st.
 
-It's hard to tell exactly. I guess you would have to figure what makes
-the frontend not get stuck at the same place as the first attempt.
 
-Roger.
+>
+>>                  dev_err(dev, "error %d: %pV", err, &vaf);
+>> -       else
+>> +       } else {
+>> +               device_set_deferred_probe_reson(dev, &vaf);
+>>                  dev_dbg(dev, "error %d: %pV", err, &vaf);
+>> +       }
+> To reduce churn, you may move {} addition to the first patch.
+
+
+But then I need to explain why it is there :)
+
+
+>
+> ...
+>
+>>          list_for_each_entry(curr, &deferred_probe_pending_list, deferred_probe)
+>> -               seq_printf(s, "%s\n", dev_name(curr->device));
+>> +               seq_printf(s, "%s\t%s", dev_name(curr->device),
+>> +                          curr->device->p->deferred_probe_reason ?: "\n");
+> Hmm... "\t" will be dangling in the latter case
+
+
+Hmm, I followed your advice [1] :)
+
+[1]: 
+https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1787370.html
+
+
+Regards
+
+Andrzej
+
+
+>
