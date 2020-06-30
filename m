@@ -2,109 +2,120 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74AE6C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D5E8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5187B20772
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D1C020768
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:34:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IA/L5j7g"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="MhRbq1Ii"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729519AbgF3Ucs (ORCPT
+        id S1729535AbgF3Ue4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 16:32:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53196 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgF3Ucr (ORCPT
+        Tue, 30 Jun 2020 16:34:56 -0400
+Received: from mail.efficios.com ([167.114.26.124]:55450 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbgF3Uez (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 16:32:47 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80D99C061755;
-        Tue, 30 Jun 2020 13:32:47 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id g67so9578613pgc.8;
-        Tue, 30 Jun 2020 13:32:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZOvD+yJGwWIdexNCHF7ao+M7ocFeeBUXDaMNE7cgLcQ=;
-        b=IA/L5j7gfJeTDO/PW+30Z14uTFoK3CAYSiZR4Q+MyfHAlE9YwD/wkY5q7FYwB+2Eq9
-         W/6BHnch9MdF0BJO+kwbOyNQhSdvFAyh0hUrwZb6kgR2oR8hO9u6JScyZxLOdHxW8Nwc
-         O4bg9j6oz+jpxob61BaGiJjp7WGEi+Tm31nxNshuDnZLCXCt/f56a7EZnS4T1FnrqPef
-         LjYIG2suEpsYEHLDNK8KeBJeTtPT2AJyCYuNENUnQF+s9OTdlAiVDgHBG9tdKngclGCr
-         3AeLQgKIH6H1VhKiJg6FXOx2gKiZt+Q1uWIuzl63nt/xSa9emgAElanDtI5/V0FiHwW0
-         fvYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZOvD+yJGwWIdexNCHF7ao+M7ocFeeBUXDaMNE7cgLcQ=;
-        b=UH6odYY9N82tjeJ5BOYhgJbzpfxo0VVptcdFeJCiyU0ddzMdyqTsWX9oQ/B983CwJg
-         3IFqfy877pjX7TDlhVkw3Ybi4hmGGFV8T2jybnl1u3/d37nmfIxDbKxrrtgaeu7mCTOM
-         2R2QOUuqz7axwk4Y4LrIJOoYL+YJfkQpM5/1xYKo65DThRuqHawt+Gxa/DE3+A93PxYg
-         K/lrzsBGmvJugvpwxVD3FwvDJ+R5mp1ynKlFCUELP+6511dmdFznQzPN/L0dz7t3gV3Y
-         TOMtTSdcdox3+IljLr0Qak/R8u/TotWwSGacSVyzBbmFklCpE0KQ/an78tpi94q5I5Po
-         LlMA==
-X-Gm-Message-State: AOAM533+A/gxzOIGgYQuQK/Uwkn25WdYQymnV9VjZC0/Yt1/Z0UyZbdj
-        Dx3XE5oHOdSRksewdJANn32bVHGp
-X-Google-Smtp-Source: ABdhPJwUIs/KHc1fM7VSYIVz8n691X9VHdigNFpZCXHDxispSzkaMGkBpwyOBEriVVR7bbJ32PK11Q==
-X-Received: by 2002:a63:b90a:: with SMTP id z10mr15798942pge.277.1593549167091;
-        Tue, 30 Jun 2020 13:32:47 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id i8sm3395573pfd.14.2020.06.30.13.32.46
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 30 Jun 2020 13:32:46 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 13:32:45 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc:     Evan Benn <evanbenn@chromium.org>,
-        Julius Werner <jwerner@chromium.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] MAINTAINERS: rectify entry in ARM SMC WATCHDOG DRIVER
-Message-ID: <20200630203245.GA19763@roeck-us.net>
-References: <20200602052104.7795-1-lukas.bulwahn@gmail.com>
- <828311d2-61ea-42cb-1449-a53f3772543d@roeck-us.net>
- <CAODwPW_oxDxF_5-icRs0eaRVLgtP+bDc_OSKa=EcfeSp=c6Fag@mail.gmail.com>
- <CAKz_xw0Tqr-idoZbNzg_didSCr5L+L1=76xjF=Sqj4DgpL9g7Q@mail.gmail.com>
- <CAKz_xw3KuWFSkcz-9hLHGZ2=S7nJ=K=AN6j2FJ6afZBFowJO7g@mail.gmail.com>
- <alpine.DEB.2.21.2006302156120.3966@felia>
+        Tue, 30 Jun 2020 16:34:55 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 87A1B2C6D8C;
+        Tue, 30 Jun 2020 16:34:53 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id dVsaSFwjYYPh; Tue, 30 Jun 2020 16:34:53 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 45A442C6C2E;
+        Tue, 30 Jun 2020 16:34:53 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 45A442C6C2E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1593549293;
+        bh=Vph8FFamlLOEgiAqhpk9331XsQWYPCQ7ZL7ndNaBhMQ=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=MhRbq1IiUN8q3A8o2S0VWED1BT4voByE776z9VOt72rfAj9j1TNREBLWZzN0w1jJD
+         IUxwxzTPthk/yvgB+JL0iF9UOF8vhW+Okm8D5pvJE+PVsLaoWPjEJuVdgW2GCdKVk8
+         wVQcvf/7V/yrDnIrMjdbJaCy5MNdEBmkN+IZTuc6qXn88My9/R6GsEmBxNYpKzuR6G
+         6Gk1qypUp+B7N/AVGTnv8XQzWZs3XECuK0+a1VaEMiBWucnIbAUqKgCmG3CR2ue835
+         qn2ZFB46ZIL9U+s809LsE6/UrcwkahE9XJ1Ub/4yxbGkWDaflEBxR9yhbK74LW2SgQ
+         3aID6p5GOyKXA==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 2XoXp7J1s9mu; Tue, 30 Jun 2020 16:34:53 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 3127C2C69FB;
+        Tue, 30 Jun 2020 16:34:53 -0400 (EDT)
+Date:   Tue, 30 Jun 2020 16:34:53 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Eric Dumazet <edumazet@google.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Yuchung Cheng <ycheng@google.com>,
+        Jonathan Rajotte-Julien <joraj@efficios.com>
+Message-ID: <312079189.17903.1593549293094.JavaMail.zimbra@efficios.com>
+In-Reply-To: <CAHk-=wjEghg5_pX_GhNP+BfcUK6CRZ+4mh3bciitm9JwXvR7aQ@mail.gmail.com>
+References: <341326348.19635.1589398715534.JavaMail.zimbra@efficios.com> <CANn89i+GH2ukLZUcWYGquvKg66L9Vbto0FxyEt3pOJyebNxqBg@mail.gmail.com> <CANn89iL26OMWWAi18PqoQK4VBfFvRvxBJUioqXDk=8ZbKq_Efg@mail.gmail.com> <1132973300.15954.1593459836756.JavaMail.zimbra@efficios.com> <CANn89iJ4nh6VRsMt_rh_YwC-pn=hBqsP-LD9ykeRTnDC-P5iog@mail.gmail.com> <CAHk-=wh=CEzD+xevqpJnOJ9w72=bEMjDNmKdovoR5GnESJBdqA@mail.gmail.com> <CAHk-=wjEghg5_pX_GhNP+BfcUK6CRZ+4mh3bciitm9JwXvR7aQ@mail.gmail.com>
+Subject: Re: [regression] TCP_MD5SIG on established sockets
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.2006302156120.3966@felia>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3945 (ZimbraWebClient - FF77 (Linux)/8.8.15_GA_3928)
+Thread-Topic: TCP_MD5SIG on established sockets
+Thread-Index: Wcu0dgtOM27y62oxUUFZ1+Lbhd18uw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 09:59:51PM +0200, Lukas Bulwahn wrote:
-> 
-> 
-> On Fri, 5 Jun 2020, Evan Benn wrote:
-> 
-> > AFAICT this has now been merged upstream, I'm not sure what action to take:
-> > 
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=5c24a28b4eb842ad1256496be6ae01bab15f1dcb
-> > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=72a9e7fea5866fc471fda78f05f166595c8c6ba6
-> 
-> This patch is still fully valid and still applies to next-20200630; it can 
-> be simply applied as any other bug fix to your driver code.
-> 
-> Evan, can you please ask Wim as linux-watchdog maintainer to pick-up this 
-> patch, with the reviews below?
-> 
+----- On Jun 30, 2020, at 3:52 PM, Linus Torvalds torvalds@linux-foundation.org wrote:
 
-It is in my tree. Maybe it got lost in the back-and-forth. I'll send
-a pull request to Wim in the next couple of weeks.
+> On Tue, Jun 30, 2020 at 12:43 PM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+>>
+[...]
+> So I think it's still wrong (clearly others do change passwords
+> outside of listening state), but considering that it apparently took
+> people two years to notice, at least some of the onus on figuring out
+> a better morel is on people who didn't even bother to test things in a
+> timely manner.
 
-Guenter
+I'm fully willing to work with Eric on finding a way forward with a
+fix which addresses the original issue Eric's patch was trying to
+fix while preserving ABI compatibility.
+
+The main thing we need to agree on at this stage is what is our goal. We
+can either choose to restore the original ABI behavior entirely, or only
+focus on what appears to be the most important use-cases.
+
+AFAIU, restoring full ABI compatibility would require to re-enable all
+the following scenarios:
+
+A) Transition of live socket from no key -> MD5 key.
+B) Transition of live socket from MD5 key -> no key.
+C) Transition of live socket from MD5 key to a different MD5 key.
+
+Scenario (C) appears to be the most important use-case, and probably the
+easiest to restore to its original behavior.
+
+AFAIU restoring scenarios A and B would require us to validate how
+much header space is needed by each SACK, TS and MD5 option enabled
+on the socket, and reject enabling any option that adds header space
+requirement exceeding the available space.
+
+I welcome advice on what should be the end goal here.
+
+Thanks,
+
+Mathieu
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
