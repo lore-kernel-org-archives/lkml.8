@@ -2,188 +2,287 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FBA3C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D414DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43D9820760
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:40:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BB8F20760
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:43:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="QulTsQJb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbgF3AkW (ORCPT
+        id S1728717AbgF3AnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 20:40:22 -0400
-Received: from mail-il1-f197.google.com ([209.85.166.197]:54932 "EHLO
-        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726899AbgF3AkV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 20:40:21 -0400
-Received: by mail-il1-f197.google.com with SMTP id d18so13507398ill.21
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 17:40:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=5UrWBVmoV0kWYi8xJ1uBgWYJPb/HpjZvC3ntYfBIxAU=;
-        b=rqm9hyvfjEJYZ+rbXAkQJVqzZBHqlNQVwZy3eYI9hpYQVIRerCsrDPUiJ96YD/DOHE
-         5zYfV5YzTl2DeFdplvrH3zPnW4DUG0QPkgKUqSr9IzW7aLC8A0OyyrQ3sH6eIdNImMGL
-         1BR2HM9ZbZvMqxG047jIzRnfPDcxrlXh3vxn8GRmiTtBZDcG+1+lByN9smJTMxlAagID
-         907R6GJaz4PMMZptsBeuUiekLWnUBBpuANRkMThYIex/jacEPyFneu9hSd4sRpNUe9MM
-         1Wjhu/mDM3T/0LOhmUkwnVbJwYy4kqpBQTN7WzcPI+WjRa/INav04443BiGvt94nxKZV
-         qwcg==
-X-Gm-Message-State: AOAM531tarmwTgaTo8tJXaV7ZclvCbbvpQ1HVJ7SHb25CYbsu2zDeYZ6
-        sY3N3amnkzCMurYlXZMQLxd0Sx6zmyUwYQOEQZuuNxD5tdAH
-X-Google-Smtp-Source: ABdhPJwy0gmNL9dXwfjwwXH+OxIpk9277BnY8Xkr0x3lvDbLgnSTAeIpJJbea6uWk2JNS0jLiQPL3OZZDnalABZOYPmBC/vSlJuz
+        Mon, 29 Jun 2020 20:43:06 -0400
+Received: from mail-eopbgr00066.outbound.protection.outlook.com ([40.107.0.66]:33344
+        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726959AbgF3AnF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 20:43:05 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=E66fBf1tHUXMYMUdLbb0z0QlzaCvd/4SfkD4GWA2Xg6SSb3MBCe0bS+znV2ebrljJogZQVo9U2ou8QpetAklGIw5o3aQGc6/2omExyTSrf8HBK2JdE30i+MPXSV5S0d9VFcCBK9grgyNF6m2aLa0fFAzoX78E6dg77MWNbAmzY5AEFABmxhbUDMObsmHHqGdMQ9Y2QrLiQrDTg4GtjFt220OxbJ6CkPn6BF8dAACtHCETt0mtm4Kw7ovmw1Jp6WeFJRlc2ZwIQsHfOMwtAXG3r1/w/P41eekjvLvI/58/YJuAIuWpxIYjwD+QxlsdCpJh49Kr05f2EJAu/iy+Jc8aw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5eqq9t5OO5wzBrOjemkF1jNnBo+FtsZqTSbEFhMwIhM=;
+ b=LKmnC02y5fuI4wp2RY/Jqg3eA5GLRe+4rPw0GVsO3r4puXpvckca+fdJifhAmchfTIOm3OecRu1hnxqQsXWtvj6uFUI/+Dz78Cqd3VCb49zpud76opK5PpNkLJrtDaywjMK4KuZ/X8GUG4AinjIaSMbsajo3FWbtJGGQ2Ur1CtQcgn58oAWIj6jKZ1we7BfpDvHoUtqx+xa1AWsv9VLd1UlzRpeoj2MlMN9hwlMWSvVubssa+x33mkIEx6JOcZMlw8E45ZC+KYLTn2rNj88fTewjuU1bT9nCZCa9vAWykmYqn+Ofadovjs53LGczpqIhEthF6N4fh5FNJYb2Ii+/Vw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5eqq9t5OO5wzBrOjemkF1jNnBo+FtsZqTSbEFhMwIhM=;
+ b=QulTsQJbQg3rmI1t9UT4ZtHJf2rqSlB05Njeyz+7SXTEDivS1jJD2YCoxmlkVdpnjvjlwpppOjLz5WCx3VyRAJVUVugdrTtfMweRSPigi29bkFJX2SWiwzwXtPZW/g8Oe8DWfeDNVKGoKLaOj8SOJHi9AmQy7IwAQfGlMybSNv0=
+Received: from AM7PR04MB7157.eurprd04.prod.outlook.com (2603:10a6:20b:118::20)
+ by AM6PR04MB5911.eurprd04.prod.outlook.com (2603:10a6:20b:a8::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.23; Tue, 30 Jun
+ 2020 00:43:00 +0000
+Received: from AM7PR04MB7157.eurprd04.prod.outlook.com
+ ([fe80::1101:adaa:ee89:af2a]) by AM7PR04MB7157.eurprd04.prod.outlook.com
+ ([fe80::1101:adaa:ee89:af2a%3]) with mapi id 15.20.3131.027; Tue, 30 Jun 2020
+ 00:43:00 +0000
+From:   Peter Chen <peter.chen@nxp.com>
+To:     Philippe Schenker <philippe.schenker@toradex.com>
+CC:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        Stefan Agner <stefan.agner@toradex.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] usb: chipidea: fix ci_irq for role-switching use-case
+Thread-Topic: [PATCH] usb: chipidea: fix ci_irq for role-switching use-case
+Thread-Index: AQHWS6lrNGtWbd2boEmTo3bADIlBSqjvNguAgAAr6YCAAPWjgA==
+Date:   Tue, 30 Jun 2020 00:43:00 +0000
+Message-ID: <20200630004323.GA12443@b29397-desktop>
+References: <20200626110311.221596-1-philippe.schenker@toradex.com>
+ <20200629072703.GC30684@b29397-desktop>
+ <88f0a5bf564eded8b210457204facdf2c7a9c5dc.camel@toradex.com>
+In-Reply-To: <88f0a5bf564eded8b210457204facdf2c7a9c5dc.camel@toradex.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: toradex.com; dkim=none (message not signed)
+ header.d=none;toradex.com; dmarc=none action=none header.from=nxp.com;
+x-originating-ip: [119.31.174.67]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: f7087e0d-0cde-4717-b049-08d81c8e8a3e
+x-ms-traffictypediagnostic: AM6PR04MB5911:
+x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
+x-microsoft-antispam-prvs: <AM6PR04MB5911C8E54E6EB184C6587D858B6F0@AM6PR04MB5911.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0450A714CB
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: FpIkIXKj2MTWx+lX3bg8Kz0hyO07/JSnoIw2llTyvT7tPgLHftUWf+x9+m4XlqBEu76teCNhXMFsbEbmszJnvO1JbiSP4984EuNIOnBrcBGDepq/d8BDYbflfXZQu7aegre4j7I/d6Co6WKJACZXgIpxmf8Kyn+zfZUlj7ZXN5SVJRc6P3e0INE7ajcRR7TULd1/2ym+sOxTpWBeMUuWstKZ6H5XmLpnOXRTrXmQlN+YJ9EeiC9l9hqHUWu3aFkZmT2mKtaTX294XR0Pr7H3dzo1mrpdWNcRpBNvIbRJZlqERBGg5Ag0druTonhLIxvJDcXx7+wec3+FQUabJAGw0A==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM7PR04MB7157.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(7916004)(39860400002)(376002)(346002)(136003)(366004)(396003)(83380400001)(64756008)(86362001)(66446008)(9686003)(6512007)(66556008)(66476007)(6916009)(4326008)(54906003)(1076003)(33656002)(186003)(53546011)(316002)(8676002)(478600001)(5660300002)(6486002)(76116006)(66946007)(8936002)(26005)(6506007)(91956017)(2906002)(33716001)(44832011)(71200400001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: BZNjcvW4ZlqfltZFp7V3n6ovxySqlxAl6TZBegInJLL+eQZMzypiaZ5uhVMOw182AQ3gL2UhMnyAl/m5HwhFZrqctH4hs02IPHunPFI87VH9eRVhaXi6xURoJUMUG5mZ2f8vhG/2YycgHNHLxc/b6fsQUqfUI/cbCmxxQPi5+Jw/0qKPe9IoVuXFBAlCDd1UBHBos1FXnXJSlq7LTslI5AeQT1YtF96QRK4+eXnTTJ6lkMQPZ2u5XjWKTSp5TPST5CgibY6Tp2D+mLlcSZ3c/l/TKgTM7ZrtoymLRDXB6Hm95R+JSbtNVwvG6XAq0go/NQovoj2u7bfAsgb3d3O5YKhXNG5KePWF0wGVydnGfyOzHCbYwlbsUD21YT8C6lCJp/y4q5lF2kzp51Q2CHXm99a8kBJVndThCxRY/VTTAQ2QjR9kJajHv1SqY1MhrpirOeK0SjTNmMs6TxOoTDtFudhRQnzaoIKmAMsqEHA0Zuc=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <452AFB99CCC2C24F98D0011042D3DA46@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-Received: by 2002:a02:c903:: with SMTP id t3mr3106487jao.30.1593477618905;
- Mon, 29 Jun 2020 17:40:18 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 17:40:18 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000006eb8b705a9426b8b@google.com>
-Subject: KASAN: use-after-free Read in netdev_name_node_lookup_rcu
-From:   syzbot <syzbot+a82be85e09cd5df398fe@syzkaller.appspotmail.com>
-To:     Jason@zx2c4.com, davem@davemloft.net, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, wireguard@lists.zx2c4.com
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: AM7PR04MB7157.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f7087e0d-0cde-4717-b049-08d81c8e8a3e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2020 00:43:00.2317
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: hEA3YofHQFmqdU89VfNOdZ6G1kTBAtUeUV5MZcjUuipxPXGqfwy48Laj4BxKoKk4LcFQGPX7IuyhNJEDguaJzA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR04MB5911
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 20-06-29 10:04:13, Philippe Schenker wrote:
+> On Mon, 2020-06-29 at 07:26 +0000, Peter Chen wrote:
+> > On 20-06-26 13:03:11, Philippe Schenker wrote:
+> > > If the hardware is in low-power-mode and one plugs in device or host
+> > > it did not switch the mode due to the early exit out of the
+> > > interrupt.
+> >=20
+> > Do you mean there is no coming call for role-switch? Could you please
+> > share
+> > your dts changes? Try below patch:
+>=20
+> Here are my DTS changes:
+>=20
+> diff --git a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
+> b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
+> index 97601375f2640..c424f707a1afa 100644
+> --- a/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
+> +++ b/arch/arm/boot/dts/imx7-colibri-eval-v3.dtsi
+> @@ -13,6 +13,13 @@
+>                 stdout-path =3D "serial0:115200n8";
+>         };
+> =20
+> +       extcon_usbc_det: usbc_det {
+> +               compatible =3D "linux,extcon-usb-gpio";
+> +               id-gpio =3D <&gpio7 14 GPIO_ACTIVE_HIGH>;
+> +               pinctrl-names =3D "default";
+> +               pinctrl-0 =3D <&pinctrl_usbc_det>;
+> +       };
+> +
+>         /* fixed crystal dedicated to mpc258x */
+>         clk16m: clk16m {
+>                 compatible =3D "fixed-clock";
+> @@ -174,6 +181,7 @@
+>  };
+> =20
+>  &usbotg1 {
+> +       extcon =3D <&extcon_usbc_det>, <&extcon_usbc_det>;
 
-syzbot found the following crash on:
+If you have only ID extcon, but no VBUS extcon, you only need to
+add only phandle, see dt-binding for detail please.
 
-HEAD commit:    1590a2e1 Merge tag 'acpi-5.8-rc3' of git://git.kernel.org/..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1664afad100000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=bf3aec367b9ab569
-dashboard link: https://syzkaller.appspot.com/bug?extid=a82be85e09cd5df398fe
-compiler:       gcc (GCC) 10.1.0-syz 20200507
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14a1bf1d100000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1514a06b100000
+>         status =3D "okay";
+>  };
+> =20
+> diff --git a/arch/arm/boot/dts/imx7-colibri.dtsi
+> b/arch/arm/boot/dts/imx7-colibri.dtsi
+> index e18e89dec8792..caea90d2421fd 100644
+> --- a/arch/arm/boot/dts/imx7-colibri.dtsi
+> +++ b/arch/arm/boot/dts/imx7-colibri.dtsi
+> @@ -457,7 +457,7 @@
+>  };
+> =20
+>  &usbotg1 {
+> -       dr_mode =3D "host";
+> +       dr_mode =3D "otg";
+>  };
+> =20
+>  &usdhc1 {
+> @@ -486,7 +486,7 @@
+>  &iomuxc {
+>         pinctrl-names =3D "default";
+>         pinctrl-0 =3D <&pinctrl_gpio1 &pinctrl_gpio2 &pinctrl_gpio3
+> &pinctrl_gpio4
+> -                    &pinctrl_gpio7 &pinctrl_usbc_det>;
+> +                    &pinctrl_gpio7>;
+> =20
+>         pinctrl_gpio1: gpio1-grp {
+>                 fsl,pins =3D <
+>=20
+> >=20
+> >=20
+> > diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
+> > index e8ce300ad490..9e10dcfeb98f 100644
+> > --- a/drivers/usb/chipidea/core.c
+> > +++ b/drivers/usb/chipidea/core.c
+> > @@ -1313,6 +1313,29 @@ static void ci_controller_suspend(struct
+> > ci_hdrc *ci)
+> >  	enable_irq(ci->irq);
+> >  }
+> > =20
+> > +/*
+> > + * Handle the wakeup interrupt triggered by extcon connector
+> > + * We need to call ci_irq again for extcon since the first
+> > + * interrupt (wakeup int) only let the controller be out of
+> > + * low power mode, but not handle any interrupts.
+> > + */
+> > +static void ci_extcon_wakeup_int(struct ci_hdrc *ci)
+> > +{
+> > +	struct ci_hdrc_cable *cable_id, *cable_vbus;
+> > +	u32 otgsc =3D hw_read_otgsc(ci, ~0);
+> > +
+> > +	cable_id =3D &ci->platdata->id_extcon;
+> > +	cable_vbus =3D &ci->platdata->vbus_extcon;
+> > +
+> > +	if (!IS_ERR(cable_id->edev) && ci->is_otg &&
+> > +		(otgsc & OTGSC_IDIE) && (otgsc & OTGSC_IDIS))
+> > +		ci_irq(ci->irq, ci);
+> > +
+> > +	if (!IS_ERR(cable_vbus->edev) && ci->is_otg &&
+> > +		(otgsc & OTGSC_BSVIE) && (otgsc & OTGSC_BSVIS))
+> > +		ci_irq(ci->irq, ci);
+> > +}
+> > +
+> >  static int ci_controller_resume(struct device *dev)
+> >  {
+> >  	struct ci_hdrc *ci =3D dev_get_drvdata(dev);
+> > @@ -1343,6 +1366,7 @@ static int ci_controller_resume(struct device
+> > *dev)
+> >  		enable_irq(ci->irq);
+> >  		if (ci_otg_is_fsm_mode(ci))
+> >  			ci_otg_fsm_wakeup_by_srp(ci);
+> > +		ci_extcon_wakeup_int(ci);
+> >  	}
+> > =20
+> >  	return 0;
+>=20
+> Thanks for creating this patch! I wanted also something like that, but
+> couldn't find out where to put it.=20
+>=20
+> I tried this patch and with the above devicetree changes this works
+> perfectly! Thanks Peter!
+>=20
+> Should I send the patch with you as the "Suggested-by" or do you want to
+> send the patch so you are the Author? I would have it ready in my git
+> repo.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+a82be85e09cd5df398fe@syzkaller.appspotmail.com
+This patch was a part of one patch at downstream, I will submit one and
+add your tags.
 
-==================================================================
-BUG: KASAN: use-after-free in strnlen+0x64/0x70 lib/string.c:561
-Read of size 1 at addr ffff8880933b8c18 by task syz-executor821/6893
+> > >=20
+> > > Hi Peter
+> > >=20
+> > > During my investigation I found a bug in ci_irq. I would appreciate
+> > > if you could review this. From what I see this patch should be save
+> > > to apply.
+> > >=20
+> > > This patch does not solve all of our issues. When I have RUNTIME_PM
+> > > enabled on imx6ull or imx7. RNDIS still does not come up. So there
+> > > has to be another bug hiding somewhere in the Runtime PM code to
+> > > prevent
+> > > RNDIS from working properly. I quickly looked through your patches
+> > > that added this stuff back in 2015 but couldn't spot anything
+> > > related to
+> > > usb gadget-mode.
+> > >=20
+> > > If you right away know where the problem could be hiding itself,
+> > > I would appreciate a hint.
+> > >=20
+> >=20
+> > I need information for call trace for further suggestion.
 
-CPU: 0 PID: 6893 Comm: syz-executor821 Not tainted 5.8.0-rc2-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x18f/0x20d lib/dump_stack.c:118
- print_address_description.constprop.0.cold+0xae/0x436 mm/kasan/report.c:383
- __kasan_report mm/kasan/report.c:513 [inline]
- kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
- strnlen+0x64/0x70 lib/string.c:561
- strnlen include/linux/string.h:339 [inline]
- dev_name_hash net/core/dev.c:208 [inline]
- netdev_name_node_lookup_rcu+0x22/0x150 net/core/dev.c:290
- dev_get_by_name_rcu net/core/dev.c:883 [inline]
- dev_get_by_name+0x7b/0x1e0 net/core/dev.c:905
- lookup_interface drivers/net/wireguard/netlink.c:63 [inline]
- wg_get_device_start+0x2e4/0x3f0 drivers/net/wireguard/netlink.c:203
- genl_start+0x342/0x6e0 net/netlink/genetlink.c:556
- __netlink_dump_start+0x585/0x900 net/netlink/af_netlink.c:2343
- genl_family_rcv_msg_dumpit+0x2ac/0x310 net/netlink/genetlink.c:638
- genl_family_rcv_msg net/netlink/genetlink.c:733 [inline]
- genl_rcv_msg+0x797/0x9e0 net/netlink/genetlink.c:753
- netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
- genl_rcv+0x24/0x40 net/netlink/genetlink.c:764
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
- ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
- __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
-RIP: 0033:0x445299
-Code: Bad RIP value.
-RSP: 002b:00007ffd1e794308 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000445299
-RDX: 0000000000000000 RSI: 0000000020000200 RDI: 0000000000000003
-RBP: 0000000000082a5d R08: 0000000000000000 R09: 00000000004002e0
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402430
-R13: 00000000004024c0 R14: 0000000000000000 R15: 0000000000000000
+With this patch, does your RNDIS issue be fixed or still not?
 
-Allocated by task 6894:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
- __kmalloc_reserve net/core/skbuff.c:142 [inline]
- __alloc_skb+0xae/0x550 net/core/skbuff.c:210
- alloc_skb include/linux/skbuff.h:1083 [inline]
- netlink_alloc_large_skb net/netlink/af_netlink.c:1175 [inline]
- netlink_sendmsg+0x94f/0xd90 net/netlink/af_netlink.c:1893
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
- ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
- __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Peter
+> >=20
+> > Peter
+> >=20
+> > > ---
+> > >=20
+> > >  drivers/usb/chipidea/core.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >=20
+> > > diff --git a/drivers/usb/chipidea/core.c
+> > > b/drivers/usb/chipidea/core.c
+> > > index 9a7c53d09ab4..5159420a23a4 100644
+> > > --- a/drivers/usb/chipidea/core.c
+> > > +++ b/drivers/usb/chipidea/core.c
+> > > @@ -518,7 +518,7 @@ static irqreturn_t ci_irq(int irq, void *data)
+> > >  		disable_irq_nosync(irq);
+> > >  		ci->wakeup_int =3D true;
+> > >  		pm_runtime_get(ci->dev);
+> > > -		return IRQ_HANDLED;
+> > > +		ret =3D IRQ_HANDLED;
+> > >  	}
+> > > =20
+> > >  	if (ci->is_otg) {
+> > > --=20
+> > > 2.27.0
+> > >=20
 
-Freed by task 6894:
- save_stack+0x1b/0x40 mm/kasan/common.c:48
- set_track mm/kasan/common.c:56 [inline]
- kasan_set_free_info mm/kasan/common.c:316 [inline]
- __kasan_slab_free+0xf5/0x140 mm/kasan/common.c:455
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x103/0x2c0 mm/slab.c:3757
- skb_free_head net/core/skbuff.c:590 [inline]
- skb_release_data+0x6d9/0x910 net/core/skbuff.c:610
- skb_release_all net/core/skbuff.c:664 [inline]
- __kfree_skb net/core/skbuff.c:678 [inline]
- consume_skb net/core/skbuff.c:837 [inline]
- consume_skb+0xc2/0x160 net/core/skbuff.c:831
- netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
- netlink_unicast+0x53b/0x7d0 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xcf/0x120 net/socket.c:672
- ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
- ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
- __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
- do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+--=20
 
-The buggy address belongs to the object at ffff8880933b8c00
- which belongs to the cache kmalloc-512 of size 512
-The buggy address is located 24 bytes inside of
- 512-byte region [ffff8880933b8c00, ffff8880933b8e00)
-The buggy address belongs to the page:
-page:ffffea00024cee00 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea0002a1da08 ffffea0002763a08 ffff8880aa000a80
-raw: 0000000000000000 ffff8880933b8000 0000000100000004 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8880933b8b00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff8880933b8b80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->ffff8880933b8c00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                            ^
- ffff8880933b8c80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8880933b8d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Thanks,
+Peter Chen=
