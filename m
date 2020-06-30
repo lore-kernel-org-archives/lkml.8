@@ -2,140 +2,140 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1775AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:37:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B99F2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:37:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EFE7420702
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:36:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98560206CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:37:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nlvzt4sr"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Nwd/YjD2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732513AbgF3Sg6 (ORCPT
+        id S1733294AbgF3ShR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 14:36:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35308 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbgF3Sg6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 14:36:58 -0400
-Received: from mail-lj1-x241.google.com (mail-lj1-x241.google.com [IPv6:2a00:1450:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FB70C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 11:36:57 -0700 (PDT)
-Received: by mail-lj1-x241.google.com with SMTP id h22so16629670lji.9
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 11:36:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SmMd8dJzrh6Vbw+MGljTp8jU8xpCSAjIfg+twyARNbY=;
-        b=nlvzt4srVPfvdNTbxPzMxWr2bpcP3G+zeXKZJpHtK/9tLbmDCLXFBOABQDpjJCANOb
-         tExsqVoRZuHmGThsd9zd+SDypDB/jV9PJBuemv5XHM7+ldXkLULO5yl9xg4tj9bBoHi2
-         U6DN0A5HR8j0kV1jYCHY2vTPczwW/ucBq97bCoTuq7EY7JV/ctM395nrfA7yK7jieePn
-         JLu15ue7i5arhIUCVhwHSJoZisVQ8hFpXSJRP8KX4h5v6QwEQAgPombqVdGOsG4RFQEl
-         nzHiy7vUYvbmLRMw8MkvhA1iUez/j2KbDf/fMpXPrfzvKefH4vsd30bUvJFFbCn0V41Z
-         0Z7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SmMd8dJzrh6Vbw+MGljTp8jU8xpCSAjIfg+twyARNbY=;
-        b=LeZ/maRzK7JVTNhoYAn6zghZW85u5+vGxzhQxxohiME4w7ZkwXqptlwb8AZInfSq/E
-         A1c0vv+kIFpkgD7Qu5s27ipNdqe+4+gOSBfKsYyz/uQzIoY3nD9Ag35+2nFBh9uCSB4I
-         pVHFuwdrTvydli2q0v/qVefB4JCkb0t790+P8/ompKKbq9vYsEeLyoJ83txUIi8d2bK9
-         0s80Wj6z+H6bXPXetJkUwGLJPuk9X0qQfI4LG6tR4BxfB9N1Xf0vYLpZyOkyJwfJ8VO5
-         o7umFae5d0P8GNQtoz+yLSM7ly6j/A8H2KDp2Air9BPHv8w7lm70lcPibIopxWnnMqnZ
-         bKIw==
-X-Gm-Message-State: AOAM530zq8Rk2FoCCHdypGIiaQDPo0jMdBISZyJwlcPlYCRTD2da9fVz
-        xsGYSUmztSPcZAA7Jg3B2axVVEPYDwRnfVHEaru0Ig==
-X-Google-Smtp-Source: ABdhPJzICJHyF7j4SzEYMvu9uRna6ekqoyKW/gnwuQugvxHqnSV0ara77pUHOzK2yf82Xb022rKhB9mlhUu8MbGLz6c=
-X-Received: by 2002:a2e:9585:: with SMTP id w5mr10019121ljh.58.1593542215095;
- Tue, 30 Jun 2020 11:36:55 -0700 (PDT)
+        Tue, 30 Jun 2020 14:37:17 -0400
+Received: from mail-co1nam11on2122.outbound.protection.outlook.com ([40.107.220.122]:26663
+        "EHLO NAM11-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725963AbgF3ShP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 14:37:15 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=joqCd6iMJFdFk1M5cxaaIB3ROHoklWuuR+kV01nqd3FnOLAxASHoYh56IeYMUo3BrEU44EiwMAfpcb0EtASOwkNQqGFMFHU+GnKkEWh5NYRwsolOt/YrsbBMz3EVoAJN21dzJsLqktd6txExtZ0BGmxHsu4qi9w9zxkvq/SVj4hIf3lWVFq+bF1CE/NZTDxA9W5TRxV4v98RSA/pBL/QCAV5M/qnnkRPBf4eTpPujLrQy1cK7MEX2LzcK4codXESx7yOeOT5CLXVDCs7KHojdsrjliQFIX8iDBzEyb7tefyfLCE0F3+1QRoGDJW2J9Q7bxTg5M9G27VELfVg5Fdvpg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dyasgmgxhSunXp9NuFtZ1g4nY1hUZkSUJqtZ6C49sVk=;
+ b=IUUOH8+fP2Axv2cpPdhwcvdoOJz1rNrDRBQ81YuDphxJbUTt4UGDw/g3JFcmq5T4ZzfGn8qAxL58+lB/UKk6A9Rgb1nYQeyYml5zPN/5+MDI128goaX7nQe2+J35KYAQqHJM/hcKTJ1jv/NM4QKdjLdyGTMJzWTJTtrjKmcnCKmLrLYxtiQQOjOuaBHt6gHAT6mw6uDnJaoimUO8sxb6XNP3P1di+KT7p0yoesbjlYbcPtyRQonV0D5A+FkpaHS7WTFR3F38jiABM15232KBT6tef2G83E4qMUcrYKulAaXoEvIvM8EoTvtflax26cg8pQl4yPHLx8l6mavfoybsxQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dyasgmgxhSunXp9NuFtZ1g4nY1hUZkSUJqtZ6C49sVk=;
+ b=Nwd/YjD2YE0ExNuJcIH83hONgTTkziAimRCpc2fNYNEkse4+uunp1DvNP6q9xbPTFKDkm3VvD2HW7xryjbT417nB+ByNyQckTI4F2zD+sdqbvfW18rdw3SaGM+wymn8xpJvRvGlpo/cTIUDvfALzKG5J+WE/C8oHrOTxCpZhelg=
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
+ by MW2PR2101MB1050.namprd21.prod.outlook.com (2603:10b6:302:a::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.1; Tue, 30 Jun
+ 2020 18:37:03 +0000
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::fc14:3ca6:8a8:7407]) by MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::fc14:3ca6:8a8:7407%8]) with mapi id 15.20.3174.001; Tue, 30 Jun 2020
+ 18:37:03 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Andres Beltran <t-mabelt@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "parri.andrea@gmail.com" <parri.andrea@gmail.com>,
+        Saruhan Karademir <skarade@microsoft.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+Subject: RE: [PATCH v3 2/3] scsi: storvsc: Use vmbus_requestor to generate
+ transaction IDs for VMBus hardening
+Thread-Topic: [PATCH v3 2/3] scsi: storvsc: Use vmbus_requestor to generate
+ transaction IDs for VMBus hardening
+Thread-Index: AQHWTvOfu6o2DHFLz0esRnWglbS5VajxfLkQ
+Date:   Tue, 30 Jun 2020 18:37:03 +0000
+Message-ID: <MW2PR2101MB1052A1A033D539E8B1476DA7D76F0@MW2PR2101MB1052.namprd21.prod.outlook.com>
+References: <20200630153200.1537105-1-lkmlabelt@gmail.com>
+ <20200630153200.1537105-3-lkmlabelt@gmail.com>
+In-Reply-To: <20200630153200.1537105-3-lkmlabelt@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-06-30T18:37:01Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=5ae8c8e6-c82d-4e41-8e9a-71db50331799;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
+authentication-results: microsoft.com; dkim=none (message not signed)
+ header.d=none;microsoft.com; dmarc=none action=none
+ header.from=microsoft.com;
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: b2555057-04bb-4477-fab2-08d81d249558
+x-ms-traffictypediagnostic: MW2PR2101MB1050:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MW2PR2101MB10502BEA517D5BAE3275D71BD76F0@MW2PR2101MB1050.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1332;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: K85g+zD9B/u0fDp34vcnULYBiORLbiyMN7HKmN4sM8BSqF/D2UBLhfcTOZgK4ujKcdXA+fbVDM+mzA7+TTAUYRr97IV9sDLOXdlfSG2/qEMZlD0NRw+lrfi7IulIwpCasrbW+8JI57KfZ7ElpliRD/GPbDeZ5Q989TPKB5VzIp5nHl/Xv+r3IzBM2TQzRafUL4W+I+bW2uFQrzpR+WB4beuYsIEEMoPK49k8t/pN4MtQyjsWy39LbE8oxV+KSfVaarvSB2C2qtBLU46OfzYDsv0eppe8/OMGB1+rv0gmFDpjYXTZg2sdwXbAv6qpYtkhQaQkmdnrJVxjAl3JRZOgBw==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(396003)(366004)(136003)(39860400002)(33656002)(4744005)(83380400001)(55016002)(5660300002)(9686003)(52536014)(110136005)(54906003)(66476007)(66446008)(4326008)(82960400001)(478600001)(66946007)(82950400001)(66556008)(64756008)(76116006)(10290500003)(86362001)(8936002)(186003)(2906002)(8990500004)(316002)(6506007)(8676002)(7696005)(26005)(71200400001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: mFL6mDW4cOKdV76NGeQg4GEt6I/yEJWtYqQPZ081dbCFLIQ9UQsqcdgsXGSeV5hLGOuUWFSAvY5zN/rOOTxc0yka/ejgIhip4iI6BZO5gg/bCR9pM6Kk8Ni3Br8PwwunpAVH7cCNdxJEnTnfb8OpR3SO+I+6M1vdZbGtSm6QZPwYfCbKp4BYp7E20KZgRwIq3CAFlHxRslPceE0tDqRoBM+cghS50lBkdhYHhYxszCgNwJaXmLcy1MMT1Zp1cPhwMtDSCTpt8SLK5pQtrSLHhnRwYrXD2w//svq7pt5Kw9iroUyLPJ7WoGctjd8+TdaVpJC1/Ohm8pXbZtxwlkCzkzGVcXLsnRPP6IEvaFTvhcacMjoXdh0HQwKG9N7q9xUzyHSk1shEOZYsx5XGxq6L2BEMj+jo/jVWU7KThdKJQbSAYsweRq76EnK4M+VKRPcG4oKE3s0vMafeS4wujsboB5/Va/Kkd2DsIEdmOOU5hBNqBheESDIxgkplC0pKS8fh
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20200629234503.749E5340@viggo.jf.intel.com>
-In-Reply-To: <20200629234503.749E5340@viggo.jf.intel.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Tue, 30 Jun 2020 11:36:43 -0700
-Message-ID: <CALvZod55OFzOozsDbyTkUh1uZEobo4CZ=+8JgrJJHw8QuWh0hw@mail.gmail.com>
-Subject: Re: [RFC][PATCH 0/8] Migrate Pages in lieu of discard
-To:     Dave Hansen <dave.hansen@linux.intel.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        David Rientjes <rientjes@google.com>,
-        Huang Ying <ying.huang@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW2PR2101MB1052.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b2555057-04bb-4477-fab2-08d81d249558
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2020 18:37:03.3420
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ec19mJpwKa+gR0qu26I/bgy11fVO6tgIPgw8bAzBvkESTZ1XGT/8aanbCqKaeXmMPA4TM4UVhjs9TwdD+OhQ6X4l0LmaHJIGe9MEdaifUGA=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1050
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 4:48 PM Dave Hansen <dave.hansen@linux.intel.com> wrote:
->
-> I've been sitting on these for too long.  Tha main purpose of this
-> post is to have a public discussion with the other folks who are
-> interested in this functionalty and converge on a single
-> implementation.
->
-> This set directly incorporates a statictics patch from Yang Shi and
-> also includes one to ensure good behavior with cgroup reclaim which
-> was very closely derived from this series:
->
->         https://lore.kernel.org/linux-mm/1560468577-101178-1-git-send-email-yang.shi@linux.alibaba.com/
->
-> Since the last post, the major changes are:
->  - Added patch to skip migration when doing cgroup reclaim
->  - Added stats patch from Yang Shi
->
-> The full series is also available here:
->
->         https://github.com/hansendc/linux/tree/automigrate-20200629
->
-> --
->
-> We're starting to see systems with more and more kinds of memory such
-> as Intel's implementation of persistent memory.
->
-> Let's say you have a system with some DRAM and some persistent memory.
-> Today, once DRAM fills up, reclaim will start and some of the DRAM
-> contents will be thrown out.  Allocations will, at some point, start
-> falling over to the slower persistent memory.
->
-> That has two nasty properties.  First, the newer allocations can end
-> up in the slower persistent memory.  Second, reclaimed data in DRAM
-> are just discarded even if there are gobs of space in persistent
-> memory that could be used.
->
-> This set implements a solution to these problems.  At the end of the
-> reclaim process in shrink_page_list() just before the last page
-> refcount is dropped, the page is migrated to persistent memory instead
-> of being dropped.
->
-> While I've talked about a DRAM/PMEM pairing, this approach would
-> function in any environment where memory tiers exist.
->
-> This is not perfect.  It "strands" pages in slower memory and never
-> brings them back to fast DRAM.  Other things need to be built to
-> promote hot pages back to DRAM.
->
-> This is part of a larger patch set.  If you want to apply these or
-> play with them, I'd suggest using the tree from here.  It includes
-> autonuma-based hot page promotion back to DRAM:
->
->         http://lkml.kernel.org/r/c3d6de4d-f7c3-b505-2e64-8ee5f70b2118@intel.com
->
-> This is also all based on an upstream mechanism that allows
-> persistent memory to be onlined and used as if it were volatile:
->
->         http://lkml.kernel.org/r/20190124231441.37A4A305@viggo.jf.intel.com
->
+From: Andres Beltran <lkmlabelt@gmail.com> Sent: Tuesday, June 30, 2020 8:3=
+2 AM
+>=20
+> Currently, pointers to guest memory are passed to Hyper-V as
+> transaction IDs in storvsc. In the face of errors or malicious
+> behavior in Hyper-V, storvsc should not expose or trust the transaction
+> IDs returned by Hyper-V to be valid guest memory addresses. Instead,
+> use small integers generated by vmbus_requestor as requests
+> (transaction) IDs.
+>=20
+> Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
+> Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
+> Cc: linux-scsi@vger.kernel.org
+> Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
+> ---
+> Changes in v2:
+>         - Add casts to unsigned long to fix warnings on 32bit.
+>=20
+>  drivers/scsi/storvsc_drv.c | 85 +++++++++++++++++++++++++++++++++-----
+>  1 file changed, 74 insertions(+), 11 deletions(-)
+>=20
 
-I have a high level question. Given a reclaim request for a set of
-nodes, if there is no demotion path out of that set, should the kernel
-still consider the migrations within the set of nodes? Basically
-should the decision to allow migrations within a reclaim request be
-taken at the node level or the reclaim request (or allocation level)?
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
