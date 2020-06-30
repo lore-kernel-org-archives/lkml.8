@@ -2,349 +2,142 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F98C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9EFC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 046F9206BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0F19206BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:30:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="eKjqwS3M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387986AbgF3Q3p (ORCPT
+        id S2388081AbgF3QaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 12:29:45 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:9234 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387945AbgF3Q3o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 12:29:44 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05UFWivp095874;
-        Tue, 30 Jun 2020 12:29:37 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3204s11j8t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 30 Jun 2020 12:29:37 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05UFt8HV173356;
-        Tue, 30 Jun 2020 12:29:37 -0400
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3204s11j7r-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 30 Jun 2020 12:29:37 -0400
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05UGKiR8017574;
-        Tue, 30 Jun 2020 16:29:34 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-        by ppma06fra.de.ibm.com with ESMTP id 31wwcgstk0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 30 Jun 2020 16:29:34 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05UGTVi55898536
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 30 Jun 2020 16:29:32 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D2C895204F;
-        Tue, 30 Jun 2020 16:29:31 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.202.137])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 019305204E;
-        Tue, 30 Jun 2020 16:29:30 +0000 (GMT)
-Date:   Tue, 30 Jun 2020 19:29:29 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-mm@kvack.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v1 1/2] mm/memblock: expose only miminal interface to
- add/walk physmem
-Message-ID: <20200630162929.GC2500444@linux.ibm.com>
-References: <20200630081730.6862-1-david@redhat.com>
- <20200630081730.6862-2-david@redhat.com>
+        Tue, 30 Jun 2020 12:30:24 -0400
+Received: from mail-eopbgr140048.outbound.protection.outlook.com ([40.107.14.48]:12006
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728931AbgF3QaX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 12:30:23 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=FpFd9CUBKYC4MNWcElD5SgG2ZiJFqQa0jpgRNLrQNn1IXZN4n8fez1U8pcp27WWPjl8DKURnbWnmWvGU+XI63fP8JzuWtM3JMceubf+0AnuUaYGFjphtlr7jStB9MtX+P3BfNeRRGzAPIJfwl+vZ3sTThxsPlAhL2t4Y8bI6Fm2kepcWOeYJzwGdOHEtam94H02NjLmwkpzh62FARwxP0gc1ATJ23w/jSfn5crsdtKwKIryLbVNhRLSBPaBncbEaqYTGeqS8HwS7yySJ8GoWOq2wk9TXqz1dkcrkc3UOKuWd/AbVXOYNKyJlmy9gLKopF3kTho4LyptLk4jMarAKJQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wnXfu0paMgHDZuPgSRYMEJjYEKH7bsB1DXAcGtUkyA4=;
+ b=oRspW8aBhI9pl91GG6mkVm6Zgm2eiLLeoqA2p6NBPPyMda+OAmR5u41egUf66g+Nbbglz0jln9G4bDPkQC4veIsM/y1TAguxxbK/pFWNEorjZSFKia63TM4MkR4RjTCJTF9BzVU6Jf+Zjl3sXlTC+upKmIugYnHdPcqO4+Jsc1fMMDHUm0wZRtJa+BK/cHa1TG1c2aU5z6yBNE+vu+eULmQENZ+9zzPMiQOABuFQTEbTaN0ZnOPHTo/auh+aoddHMyjL2hOyE9pGirRVVC6UZ34chWnOlUDVuQC74HzbHnuCNy3j8Fu4x0AqJDIsny47fzH2rhhn3U1cmhEoTwXnEQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wnXfu0paMgHDZuPgSRYMEJjYEKH7bsB1DXAcGtUkyA4=;
+ b=eKjqwS3MuLH67FxrNmz5JpilAQCvLrG2SH4c7+De7kEQJL6dXPo4+hnR23QnSE5FWB4bx7WwA7u+kSkT9vGd03ZukF+uKBbwe0s1hzRuigqQhTFSgnefDaMXgb4kIWmVhzrQa031ZKV5tx6YrYj6i32ms9eVa2340EwJzbS++HE=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none
+ header.from=mellanox.com;
+Received: from VI1PR0501MB2205.eurprd05.prod.outlook.com
+ (2603:10a6:800:2a::20) by VI1PR05MB6333.eurprd05.prod.outlook.com
+ (2603:10a6:803:f8::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.20; Tue, 30 Jun
+ 2020 16:30:19 +0000
+Received: from VI1PR0501MB2205.eurprd05.prod.outlook.com
+ ([fe80::d58c:3ca1:a6bb:e5fe]) by VI1PR0501MB2205.eurprd05.prod.outlook.com
+ ([fe80::d58c:3ca1:a6bb:e5fe%5]) with mapi id 15.20.3131.028; Tue, 30 Jun 2020
+ 16:30:19 +0000
+Subject: Re: [PATCH][next] net/mlx5e: fix memory leak of tls
+To:     Colin King <colin.king@canonical.com>,
+        Boris Pismenny <borisp@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200630151646.517757-1-colin.king@canonical.com>
+From:   Tariq Toukan <tariqt@mellanox.com>
+Message-ID: <7c3bb6e8-6658-1a73-b5c7-b70bc6255576@mellanox.com>
+Date:   Tue, 30 Jun 2020 19:30:15 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+In-Reply-To: <20200630151646.517757-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM4PR0701CA0013.eurprd07.prod.outlook.com
+ (2603:10a6:200:42::23) To VI1PR0501MB2205.eurprd05.prod.outlook.com
+ (2603:10a6:800:2a::20)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200630081730.6862-2-david@redhat.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-06-30_06:2020-06-30,2020-06-30 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- malwarescore=0 spamscore=0 mlxscore=0 cotscore=-2147483648 suspectscore=7
- priorityscore=1501 bulkscore=0 impostorscore=0 phishscore=0
- mlxlogscore=999 adultscore=0 clxscore=1015 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006300112
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.1.110] (77.126.86.173) by AM4PR0701CA0013.eurprd07.prod.outlook.com (2603:10a6:200:42::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3153.12 via Frontend Transport; Tue, 30 Jun 2020 16:30:17 +0000
+X-Originating-IP: [77.126.86.173]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 6b9a14d2-7793-4739-9da5-08d81d12e0c4
+X-MS-TrafficTypeDiagnostic: VI1PR05MB6333:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR05MB6333F9C4A6E35C3CB25BEE5BAE6F0@VI1PR05MB6333.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:1850;
+X-Forefront-PRVS: 0450A714CB
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: /sVMxTXPiZ7+/yI6NZQRg52g1x1b7vAVa8Ecj+B1zP1aOqZMQ4D4tzmoqCkzvdsM4bYdBEZ2joOoZ/kiQcC2SBTP039Rh0DqI+5IeV7vbmsiCVE/Z3HghOkJVfRD1CAgpcS0qfeoA2VbDmdMRx8hsAHUL8tWu3BOR7x2A6YdM1+LtYYW6eiW2r7EfrMqEzOfc4iNLvMnUTaf7ULYwOCigVzWYMVJbyzjbBVetqPI8DUUFt9B9xLngpD7/NGShLxqXv+LhJ84eYf3cLgWSgUyT8ImuCIhTheYZTtT3+Zh0O2YbrMJKmWNU208b6zt+l8kRSCslXQCTvGRDDe6+vgOI8aIiQZyCs4xDdnaSpTZYIDJCcz4h5iZ8m/PVXW3Cx0v
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0501MB2205.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(376002)(346002)(366004)(136003)(396003)(31686004)(478600001)(16576012)(26005)(186003)(6486002)(16526019)(316002)(956004)(2616005)(110136005)(4326008)(52116002)(53546011)(2906002)(31696002)(36756003)(86362001)(5660300002)(83380400001)(8676002)(66946007)(8936002)(66476007)(66556008)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: qq9FTn3TtGJplUfJMRyD1YNZqZkIDNoKgI6+I9CvlSjokV3O2INM2rXKtbAvkM2RMOqyuB9x98j4haekXCpcBm03l5JU613Q7m4CckMLrq0gqVm0mE09BLhSm4Ph6IHzu72F+NlgJw6jTu3BOdyvG74LdbTMLBxS1TpGLHKakE8O6xB3SZCqB1+uxNUQ+vLOkr1jSeJUpqHetjm4Ilm4QcK3rMbtv4qIm1lecz2F2he4JQ4yAATUAI2q6xzzI/h+vhbqMQ8YmLCWIzylfJ7ZChVjvMemoS7GGlZT3QLCJvyAQWs8L3udOku6URX05zzfanDNH/Lw+WjzPlHgKe3ObvMXcjHCYcDbaxzA3ha3PjyyE28rYzBj3G8rFysUR95OPmln6mFRsupb9zTJ7fAmajhVEf7pYxoK0mxPfdXzeCVDTB02eAbfv95gVtUJmvnHTfXRUJsPVVZ5C6DwmYwUzfVfsqZ3Q+AGOacqY6EfUcw8nBNCpvPHcvrddOJSPAOq
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6b9a14d2-7793-4739-9da5-08d81d12e0c4
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR0501MB2205.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2020 16:30:19.1833
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6h06H+g8rJej/mcswVic/IBoO+E7TG5jlqtjaCntjSDjD7h6QCprtPHBAsyOi9lJ7b89PU9xWFCdf50/lCHjVQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6333
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 10:17:29AM +0200, David Hildenbrand wrote:
-> "physmem" in the memblock allocator is somewhat weird: it's not actually
-> used for allocation, it's simply information collected during boot, which
-> describes the unmodified physical memory map at boot time, without any
-> standby/hotplugged memory. It's only used on s390x and is currently the
-> only reason s390x keeps using CONFIG_ARCH_KEEP_MEMBLOCK.
-> 
-> Physmem isn't numa aware and current users don't specify any flags. Let's
-> hide it from the user, exposing only for_each_physmem(), and simplify. The
-> interface for physmem is now really minimalistic:
-> - memblock_physmem_add() to add ranges
-> - for_each_physmem() / __next_physmem_range() to walk physmem ranges
 
-I actually hoped to move physmap to s390 next to oldmem_type someday :)
 
-> Don't place it into an __init section and don't discard it without
-> CONFIG_ARCH_KEEP_MEMBLOCK. As we're reusing __next_mem_range(), remove
-> the __meminit notifier to avoid section mismatch warnings once
-> CONFIG_ARCH_KEEP_MEMBLOCK is no longer used with
-> CONFIG_HAVE_MEMBLOCK_PHYS_MAP.
+On 6/30/2020 6:16 PM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> We can stop setting CONFIG_HAVE_MEMBLOCK_PHYS_MAP for s390x next.
+> The error return path when create_singlethread_workqueue fails currently
+> does not kfree tls and leads to a memory leak. Fix this by kfree'ing
+> tls before returning -ENOMEM.
 > 
-> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> Cc: Mike Rapoport <rppt@linux.ibm.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+> Addresses-Coverity: ("Resource leak")
+> Fixes: 1182f3659357 ("net/mlx5e: kTLS, Add kTLS RX HW offload support")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 > ---
->  arch/s390/kernel/crash_dump.c |  6 ++--
->  include/linux/memblock.h      | 17 +++++++---
->  mm/memblock.c                 | 63 +++++++++++++++++++----------------
->  3 files changed, 50 insertions(+), 36 deletions(-)
+>   drivers/net/ethernet/mellanox/mlx5/core/en_accel/tls.c | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
 > 
-> diff --git a/arch/s390/kernel/crash_dump.c b/arch/s390/kernel/crash_dump.c
-> index f96a5857bbfde..c42ce348103cc 100644
-> --- a/arch/s390/kernel/crash_dump.c
-> +++ b/arch/s390/kernel/crash_dump.c
-> @@ -549,8 +549,7 @@ static int get_mem_chunk_cnt(void)
->  	int cnt = 0;
->  	u64 idx;
->  
-> -	for_each_mem_range(idx, &memblock.physmem, &oldmem_type, NUMA_NO_NODE,
-> -			   MEMBLOCK_NONE, NULL, NULL, NULL)
-> +	for_each_physmem_range(idx, &oldmem_type, NULL, NULL)
->  		cnt++;
->  	return cnt;
->  }
-> @@ -563,8 +562,7 @@ static void loads_init(Elf64_Phdr *phdr, u64 loads_offset)
->  	phys_addr_t start, end;
->  	u64 idx;
->  
-> -	for_each_mem_range(idx, &memblock.physmem, &oldmem_type, NUMA_NO_NODE,
-> -			   MEMBLOCK_NONE, &start, &end, NULL) {
-> +	for_each_physmem_range(idx, &oldmem_type, &start, &end) {
->  		phdr->p_filesz = end - start;
->  		phdr->p_type = PT_LOAD;
->  		phdr->p_offset = start;
-> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-> index 017fae833d4ae..10d879eda1ff7 100644
-> --- a/include/linux/memblock.h
-> +++ b/include/linux/memblock.h
-> @@ -77,16 +77,12 @@ struct memblock_type {
->   * @current_limit: physical address of the current allocation limit
->   * @memory: usable memory regions
->   * @reserved: reserved memory regions
-> - * @physmem: all physical memory
->   */
->  struct memblock {
->  	bool bottom_up;  /* is bottom up direction? */
->  	phys_addr_t current_limit;
->  	struct memblock_type memory;
->  	struct memblock_type reserved;
-> -#ifdef CONFIG_HAVE_MEMBLOCK_PHYS_MAP
-> -	struct memblock_type physmem;
-> -#endif
->  };
->  
->  extern struct memblock memblock;
-> @@ -114,6 +110,19 @@ int memblock_remove(phys_addr_t base, phys_addr_t size);
->  int memblock_free(phys_addr_t base, phys_addr_t size);
->  int memblock_reserve(phys_addr_t base, phys_addr_t size);
->  #ifdef CONFIG_HAVE_MEMBLOCK_PHYS_MAP
-> +/**
-> + * for_each_physmem_range - iterate through physmem areas not included in type.
-> + * @i: u64 used as loop variable
-> + * @type: ptr to memblock_type which excludes from the iteration, can be %NULL
-> + * @p_start: ptr to phys_addr_t for start address of the range, can be %NULL
-> + * @p_end: ptr to phys_addr_t for end address of the range, can be %NULL
-> + */
-> +#define for_each_physmem_range(i, type, p_start, p_end)			\
-> +	for (i = 0, __next_physmem_range(&i, type, p_start, p_end);	\
-> +	     i != (u64)ULLONG_MAX;					\
-> +	     __next_physmem_range(&i, type, p_start, p_end))
-> +void __next_physmem_range(u64 *idx, struct memblock_type *type,
-> +			  phys_addr_t *out_start, phys_addr_t *out_end);
-
-__next_physmem_range() is not really necessary, the
-for_each_physmem_range() macro can use __next_mem_range() directly, but
-I suspect it won't look nice :)
-
-Can you please make __next_physmem_range() static inline if we are to
-keep it?
-
->  int memblock_physmem_add(phys_addr_t base, phys_addr_t size);
->  #endif
->  void memblock_trim_memory(phys_addr_t align);
-> diff --git a/mm/memblock.c b/mm/memblock.c
-> index 39aceafc57f66..5f6389af11895 100644
-> --- a/mm/memblock.c
-> +++ b/mm/memblock.c
-> @@ -44,19 +44,19 @@
->   *   in the system, for instance when the memory is restricted with
->   *   ``mem=`` command line parameter
->   * * ``reserved`` - describes the regions that were allocated
-> - * * ``physmap`` - describes the actual physical memory regardless of
-> - *   the possible restrictions; the ``physmap`` type is only available
-> - *   on some architectures.
-> + * * ``physmem`` - describes the actual physical memory available during
-> + *   boot regardless of the possible restrictions and memory hot(un)plug;
-> + *   the ``physmem`` type is only available on some architectures.
->   *
->   * Each region is represented by :c:type:`struct memblock_region` that
->   * defines the region extents, its attributes and NUMA node id on NUMA
->   * systems. Every memory type is described by the :c:type:`struct
->   * memblock_type` which contains an array of memory regions along with
-> - * the allocator metadata. The memory types are nicely wrapped with
-> - * :c:type:`struct memblock`. This structure is statically initialzed
-> - * at build time. The region arrays for the "memory" and "reserved"
-> - * types are initially sized to %INIT_MEMBLOCK_REGIONS and for the
-> - * "physmap" type to %INIT_PHYSMEM_REGIONS.
-> + * the allocator metadata. The memory types (except "physmem") are nicely
-> + * wrapped with :c:type:`struct memblock`. This structure is statically
-> + * initialized at build time. The region arrays for the "memory" and
-> + * "reserved" types are initially sized to %INIT_MEMBLOCK_REGIONS.
-
-I'd prefer
-
-	... The "memory" and "reserved" types are nicely wrapped 
-	with :c:type:`struct memblock`. This structure is statically
-        initialized at build time. 
-
-And while on this we can update the "reserved" size to match the code:
-
-	The region arrays are initilily sized to %INIT_MEMBLOCK_REGIONS
- 	for "memory" and %INIT_MEMBLOCK_RESERVED_REGIONS for "reserved".
-
-> + * The "physmem" type is sized to %INIT_PHYSMEM_REGIONS.
->   * The memblock_allow_resize() enables automatic resizing of the region
->   * arrays during addition of new regions. This feature should be used
->   * with care so that memory allocated for the region array will not
-> @@ -87,8 +87,8 @@
->   * function frees all the memory to the buddy page allocator.
->   *
->   * Unless an architecture enables %CONFIG_ARCH_KEEP_MEMBLOCK, the
-> - * memblock data structures will be discarded after the system
-> - * initialization completes.
-> + * memblock data structures (except physmem) will be discarded after the
-> + * system initialization completes.
->   */
->  
->  #ifndef CONFIG_NEED_MULTIPLE_NODES
-> @@ -104,7 +104,7 @@ unsigned long long max_possible_pfn;
->  static struct memblock_region memblock_memory_init_regions[INIT_MEMBLOCK_REGIONS] __initdata_memblock;
->  static struct memblock_region memblock_reserved_init_regions[INIT_MEMBLOCK_RESERVED_REGIONS] __initdata_memblock;
->  #ifdef CONFIG_HAVE_MEMBLOCK_PHYS_MAP
-> -static struct memblock_region memblock_physmem_init_regions[INIT_PHYSMEM_REGIONS] __initdata_memblock;
-> +static struct memblock_region memblock_physmem_init_regions[INIT_PHYSMEM_REGIONS];
->  #endif
->  
->  struct memblock memblock __initdata_memblock = {
-> @@ -118,17 +118,19 @@ struct memblock memblock __initdata_memblock = {
->  	.reserved.max		= INIT_MEMBLOCK_RESERVED_REGIONS,
->  	.reserved.name		= "reserved",
->  
-> -#ifdef CONFIG_HAVE_MEMBLOCK_PHYS_MAP
-> -	.physmem.regions	= memblock_physmem_init_regions,
-> -	.physmem.cnt		= 1,	/* empty dummy entry */
-> -	.physmem.max		= INIT_PHYSMEM_REGIONS,
-> -	.physmem.name		= "physmem",
-> -#endif
-> -
->  	.bottom_up		= false,
->  	.current_limit		= MEMBLOCK_ALLOC_ANYWHERE,
->  };
->  
-> +#ifdef CONFIG_HAVE_MEMBLOCK_PHYS_MAP
-> +struct memblock_type physmem = {
-> +	.regions		= memblock_physmem_init_regions,
-> +	.cnt			= 1,	/* empty dummy entry */
-> +	.max			= INIT_PHYSMEM_REGIONS,
-> +	.name			= "physmem",
-> +};
-> +#endif
-> +
->  int memblock_debug __initdata_memblock;
->  static bool system_has_some_mirror __initdata_memblock = false;
->  static int memblock_can_resize __initdata_memblock;
-> @@ -831,6 +833,13 @@ int __init_memblock memblock_reserve(phys_addr_t base, phys_addr_t size)
->  }
->  
->  #ifdef CONFIG_HAVE_MEMBLOCK_PHYS_MAP
-> +void __next_physmem_range(u64 *idx, struct memblock_type *type,
-> +			  phys_addr_t *out_start, phys_addr_t *out_end)
-> +{
-> +	__next_mem_range(idx, NUMA_NO_NODE, MEMBLOCK_NONE, &physmem, type,
-> +			 out_start, out_end, NULL);
-> +}
-> +
->  int __init_memblock memblock_physmem_add(phys_addr_t base, phys_addr_t size)
->  {
->  	phys_addr_t end = base + size - 1;
-> @@ -838,7 +847,7 @@ int __init_memblock memblock_physmem_add(phys_addr_t base, phys_addr_t size)
->  	memblock_dbg("%s: [%pa-%pa] %pS\n", __func__,
->  		     &base, &end, (void *)_RET_IP_);
->  
-> -	return memblock_add_range(&memblock.physmem, base, size, MAX_NUMNODES, 0);
-> +	return memblock_add_range(&physmem, base, size, MAX_NUMNODES, 0);
->  }
->  #endif
->  
-> @@ -1019,12 +1028,10 @@ static bool should_skip_region(struct memblock_region *m, int nid, int flags)
->   * As both region arrays are sorted, the function advances the two indices
->   * in lockstep and returns each intersection.
->   */
-> -void __init_memblock __next_mem_range(u64 *idx, int nid,
-> -				      enum memblock_flags flags,
-> -				      struct memblock_type *type_a,
-> -				      struct memblock_type *type_b,
-> -				      phys_addr_t *out_start,
-> -				      phys_addr_t *out_end, int *out_nid)
-> +void __next_mem_range(u64 *idx, int nid, enum memblock_flags flags,
-> +		      struct memblock_type *type_a,
-> +		      struct memblock_type *type_b, phys_addr_t *out_start,
-> +		      phys_addr_t *out_end, int *out_nid)
->  {
->  	int idx_a = *idx & 0xffffffff;
->  	int idx_b = *idx >> 32;
-> @@ -1924,7 +1931,7 @@ void __init_memblock __memblock_dump_all(void)
->  	memblock_dump(&memblock.memory);
->  	memblock_dump(&memblock.reserved);
->  #ifdef CONFIG_HAVE_MEMBLOCK_PHYS_MAP
-> -	memblock_dump(&memblock.physmem);
-> +	memblock_dump(&physmem);
->  #endif
->  }
->  
-> @@ -2064,8 +2071,8 @@ static int __init memblock_init_debugfs(void)
->  	debugfs_create_file("reserved", 0444, root,
->  			    &memblock.reserved, &memblock_debug_fops);
->  #ifdef CONFIG_HAVE_MEMBLOCK_PHYS_MAP
-> -	debugfs_create_file("physmem", 0444, root,
-> -			    &memblock.physmem, &memblock_debug_fops);
-> +	debugfs_create_file("physmem", 0444, root, &physmem,
-> +			    &memblock_debug_fops);
->  #endif
->  
->  	return 0;
-> -- 
-> 2.26.2
+> diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/tls.c b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/tls.c
+> index 99beb928feff..fee991f5ee7c 100644
+> --- a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/tls.c
+> +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/tls.c
+> @@ -232,8 +232,10 @@ int mlx5e_tls_init(struct mlx5e_priv *priv)
+>   		return -ENOMEM;
+>   
+>   	tls->rx_wq = create_singlethread_workqueue("mlx5e_tls_rx");
+> -	if (!tls->rx_wq)
+> +	if (!tls->rx_wq) {
+> +		kfree(tls);
+>   		return -ENOMEM;
+> +	}
+>   
+>   	priv->tls = tls;
+>   	return 0;
 > 
 
--- 
-Sincerely yours,
-Mike.
+Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
+Thanks.
