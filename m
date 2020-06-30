@@ -2,395 +2,152 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F27CC433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 613C7C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04E402065D
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:29:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A62420775
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:32:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qrl16l4M"
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="POTTToxP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729884AbgF3V3b (ORCPT
+        id S1726553AbgF3VcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 17:29:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33784 "EHLO
+        Tue, 30 Jun 2020 17:32:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726847AbgF3V33 (ORCPT
+        with ESMTP id S1726081AbgF3Vb7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 17:29:29 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD7EFC061755;
-        Tue, 30 Jun 2020 14:29:29 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id g17so9001031plq.12;
-        Tue, 30 Jun 2020 14:29:29 -0700 (PDT)
+        Tue, 30 Jun 2020 17:31:59 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EF11C03E97B
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 14:31:59 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id i14so22147403ejr.9
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 14:31:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=grAB+Gyt51SWTi0LITHJD1LaiBPG8ddEt0jQ6toZr6w=;
-        b=Qrl16l4MZIs/NL3ozmolvUbujlEBrFZGtzUNzWxnXcRCkzByK/zPzJdkYnCTEyBbRF
-         GqmyWz2RO5ApcWh/v3BZ+F6NYsM9zs3jX6Uu7kEn55/PIlwnvMgUifG0qPbz2BGCkV08
-         l8vGCgmEumo4f4purF9ecy1YA8eRYbalN6rFHX3QfAAZq+5ssid+ljLABZQdeJdl55ZA
-         kAaBHoIdi1WlBBox9sClkDL3Nb5dFYX5dNq9MwTvzpa6G6KrFvQd++ZSwno0XShGyQko
-         fukn6bfpwg3LPDuehG52r4jTUFRSzIwhRs4q7oH4TXgAmwc6lDwiYrTOsoSir0Ds1jH4
-         YDyA==
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=OTyuzRBwiZ4dXubOgCDgCwxBVHhrMMATaeMU0+yD1UU=;
+        b=POTTToxPzO774WR4CwnAbOgWTAfQI7Cfssb9XB6FW1Yf6+jKtJ2Z54oPc8BR2f1eqV
+         N94ZydqFmUAjG0mZN5gDTYE9VCrxt40nUojaAecQPu6i1OpQ2OwP0wTt2bpkl5N4sqaS
+         d0dwW33cnFDgikEsbxRFfN0rbDxxm5FN9qBl9Dudx87c7sJoDXTMzfB/uv83+ClsPpRb
+         qbKnQcn+HNGDkbW4CizE86wkBruzvPNnWCowdagsIZtw/fBicvPiV9sQ/AngVPayBhBq
+         gCc4kxeHxRUeF23qyYAHBac8dS2+Tv9MCqgA9Gcc+zwnfoeqNf50iVYjXMdnHPeSwCmD
+         aXrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=grAB+Gyt51SWTi0LITHJD1LaiBPG8ddEt0jQ6toZr6w=;
-        b=TxErIPy24V9xI7qDKbxG4yfJxp47c+NrXxPw8c+gwQvZfpebAUF28XP/M4wg3OqROe
-         5LokCo02saEtWDhIOv/h0gPRSwY20AUID9XxbLdkv6dzHSPKhUKMkpF5qHuMB/4f5w47
-         B54K18cEBQBvUP0ysP0uJiH2BLEBMIxOACKjiLMZZsIzSLXkp8RDpcXjgHRG6d17WknE
-         qX+f9LvfY2IIwWtBXMcD/HF1TbzIsAQkgJLLNqiZExtMPCT/HwCcn2rqXopMLix0Di3J
-         UyUe5MsUASmuBOazQzYMH//5TXIIBsAcNioNd7nnQ83W5bEHMksI71RrwEw39CGKoJe+
-         M+sA==
-X-Gm-Message-State: AOAM5309t2nvLy9pLH+PPOM7pNNUHUmUFeUl54X+pit4krKe3IfLgu8d
-        XXDiDcpa+osoT2NEKxREep4=
-X-Google-Smtp-Source: ABdhPJwZ+Plb5heklpGQyDqA+lxvZOTHV3qzfX757SQ69jlwsGUNjVJ3W+otGjaBu4v6J4RWA39+BQ==
-X-Received: by 2002:a17:90a:ff0c:: with SMTP id ce12mr24304119pjb.100.1593552569244;
-        Tue, 30 Jun 2020 14:29:29 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 27sm3137579pjg.19.2020.06.30.14.29.28
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 30 Jun 2020 14:29:28 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 14:29:27 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Ahmad Fatoum <a.fatoum@pengutronix.de>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-watchdog@vger.kernel.org, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 8/8] watchdog: f71808e_wdt: rename variant-independent
- identifiers appropriately
-Message-ID: <20200630212927.GA24643@roeck-us.net>
-References: <20200611191750.28096-1-a.fatoum@pengutronix.de>
- <20200611191750.28096-9-a.fatoum@pengutronix.de>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=OTyuzRBwiZ4dXubOgCDgCwxBVHhrMMATaeMU0+yD1UU=;
+        b=tgzc+b5fQp5K25fmbDHNYERB3CHlxdDhEQxotZX5ZhPNacoAN25YSoYdWJpi8vEDSG
+         80BCStJnLy7Tw2z6jg6Qc0FcqKb3u2ELS5Cbh/MPY9nQB/XxUd90taZYAAX8jNaXWftp
+         VaYXuBfUpwX3UC1zI8t4ssu79s+GA4iLbl8jtgztKnw3DQWHYuL/r8GBU+eKUZ+LZdXQ
+         PdR0xr1b6HcYnUfozzARO0JbjmVk2+3nlP0ttYpWwl8WvABRCBlKNoNkdU7sX9eVS21r
+         QhbV/gXBXwc8FxnRi8vcUXgQrXeBWuhgY+1y+OhVX0kcgCkLC+9Wb09xUoHTo+4h89DL
+         8opQ==
+X-Gm-Message-State: AOAM531uTHhWwZ257ITgqs8TKx/vxKeM5iyvtExiD7sj5as7BzyA7VjD
+        cB5to1PDZj2VdW0ZG3X8uxfD/Q==
+X-Google-Smtp-Source: ABdhPJyzdsv/4R92kRhkKbD+QzdCB5VchGWxCIO09/RLTW8Oj7bNRwTahUiPmsKbW4g6u1nloAD4qQ==
+X-Received: by 2002:a17:906:8401:: with SMTP id n1mr19745399ejx.479.1593552718200;
+        Tue, 30 Jun 2020 14:31:58 -0700 (PDT)
+Received: from x1 ([2001:16b8:5c28:7601:2d3c:7dcb:fbf0:3875])
+        by smtp.gmail.com with ESMTPSA id v24sm4051404eds.71.2020.06.30.14.31.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 14:31:57 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 23:31:55 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, bcousson@baylibre.com,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>,
+        "H . Nikolaus Schaller" <hns@goldelico.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2] ARM: dts: am335x-pocketbeagle: set default mux for
+ gpio pins
+Message-ID: <20200630213155.GA115731@x1>
+References: <20200628152442.322593-1-drew@beagleboard.org>
+ <20200629170358.GT37466@atomide.com>
+ <20200630020102.GA45128@x1>
+ <20200630182037.GF37466@atomide.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200611191750.28096-9-a.fatoum@pengutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200630182037.GF37466@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 09:17:49PM +0200, Ahmad Fatoum wrote:
-> Code for the common parts of the driver, either uses watchdog_ as
-> prefix for the watchdog API or f71808e_ for everything else.
+On Tue, Jun 30, 2020 at 11:20:37AM -0700, Tony Lindgren wrote:
+> * Drew Fustini <drew@beagleboard.org> [200630 02:02]:
+> > On Mon, Jun 29, 2020 at 10:03:58AM -0700, Tony Lindgren wrote:
+> > > Hi,
+> > > 
+> > > * Drew Fustini <drew@beagleboard.org> [200628 08:26]:
+> > > > v2 changes:
+> > > > - change default mux from output to input.  Input is safer as it does
+> > > >   not drive the line.  If the user wants output, they will need to edit
+> > > >   this device tree.
+> > > 
+> > > So can you please clarify this a bit, are you saying that gpio output can't
+> > > be done via userspace?
+> > 
+> > As it stands, there is no way for userspace to change a pin from gpio 
+> > input to gpio output as it is based on the reciever active bit in the
+> > pin control register (table 9-60 in the AM3358 datasheet [0]).
 > 
-> The driver now supports 9 more variants besides the f71808e,
-> so let's rename the common parts to start with fintek_ instead.
+> OK. I guess one not so nice option would be to enable receiver active
+> for all the gpio pins.. But this also affects power consumption a little.
 > 
-> This makes code browsing easier, because it's readily apparent whether a
-> function is variant-specific or not. Also the watchdog_ namespace isn't
-> used anymore for the driver-internal functions.
+> > I thought it would be useful to at least define the GPIOs available for
+> > use on the PocketBeagle by default (and eventually the other BeagleBone
+> > device trees).  Input seems to be the safest value.  This patch at least
+> > makes it more clear where the user should edit to switch from input to
+> > output.
 > 
-> Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
-> Reported-by: kernel test robot <lkp@intel.com>
-> ---
->  drivers/watchdog/f71808e_wdt.c | 98 +++++++++++++++++-----------------
->  1 file changed, 49 insertions(+), 49 deletions(-)
-> 
-> diff --git a/drivers/watchdog/f71808e_wdt.c b/drivers/watchdog/f71808e_wdt.c
-> index 7c42cbf9912e..c866d05e8788 100644
-> --- a/drivers/watchdog/f71808e_wdt.c
-> +++ b/drivers/watchdog/f71808e_wdt.c
-> @@ -114,18 +114,18 @@ static inline int superio_enter(int base);
->  static inline void superio_select(int base, int ld);
->  static inline void superio_exit(int base);
->  
-> -struct watchdog_data;
-> +struct fintek_wdog_data;
->  
-> -struct f71808e_variant {
-> +struct fintek_variant {
->  	u16 id;
->  	const char *wdt_name; /* NULL if chip lacks watchdog timer */
-> -	void (*pinconf)(struct watchdog_data *wd);
-> +	void (*pinconf)(struct fintek_wdog_data *wd);
->  };
->  
-> -struct watchdog_data {
-> +struct fintek_wdog_data {
->  	struct watchdog_device wdd;
->  	unsigned short	sioaddr;
-> -	const struct f71808e_variant *variant;
-> +	const struct fintek_variant *variant;
->  	struct watchdog_info ident;
->  
->  	u8		timer_val;	/* content for the wd_time register */
-> @@ -134,7 +134,7 @@ struct watchdog_data {
->  	char		pulse_mode;	/* enable pulse output mode? */
->  };
->  
-> -static inline bool has_f81865_wdo_conf(struct watchdog_data *wd)
-> +static inline bool has_f81865_wdo_conf(struct fintek_wdog_data *wd)
->  {
->  	return wd->variant->id == SIO_F81865_ID
->  		|| wd->variant->id == SIO_F81866_ID;
-> @@ -202,9 +202,9 @@ static inline void superio_exit(int base)
->  	release_region(base, 2);
->  }
->  
-> -static int watchdog_set_timeout(struct watchdog_device *wdd, unsigned int new_timeout)
-> +static int fintek_wdog_set_timeout(struct watchdog_device *wdd, unsigned int new_timeout)
->  {
-> -	struct watchdog_data *wd = watchdog_get_drvdata(wdd);
-> +	struct fintek_wdog_data *wd = watchdog_get_drvdata(wdd);
->  
->  	wdd->timeout = new_timeout;
->  	if (new_timeout > 0xff) {
-> @@ -218,7 +218,7 @@ static int watchdog_set_timeout(struct watchdog_device *wdd, unsigned int new_ti
->  	return 0;
->  }
->  
-> -static int watchdog_set_pulse_width(struct watchdog_data *wd, unsigned int pw)
-> +static int fintek_wdog_set_pulse_width(struct fintek_wdog_data *wd, unsigned int pw)
->  {
->  	unsigned int t1 = 25, t2 = 125, t3 = 5000;
->  
-> @@ -246,9 +246,9 @@ static int watchdog_set_pulse_width(struct watchdog_data *wd, unsigned int pw)
->  	return 0;
->  }
->  
-> -static int watchdog_keepalive(struct watchdog_device *wdd)
-> +static int fintek_wdog_keepalive(struct watchdog_device *wdd)
->  {
-> -	struct watchdog_data *wd = watchdog_get_drvdata(wdd);
-> +	struct fintek_wdog_data *wd = watchdog_get_drvdata(wdd);
->  	int err;
->  
->  	err = superio_enter(wd->sioaddr);
-> @@ -274,13 +274,13 @@ static int watchdog_keepalive(struct watchdog_device *wdd)
->  	return 0;
->  }
->  
-> -static int watchdog_start(struct watchdog_device *wdd)
-> +static int fintek_wdog_start(struct watchdog_device *wdd)
->  {
-> -	struct watchdog_data *wd = watchdog_get_drvdata(wdd);
-> +	struct fintek_wdog_data *wd = watchdog_get_drvdata(wdd);
->  	int err;
->  
->  	/* Make sure we don't die as soon as the watchdog is enabled below */
-> -	err = watchdog_keepalive(wdd);
-> +	err = fintek_wdog_keepalive(wdd);
->  	if (err)
->  		return err;
->  
-> @@ -328,9 +328,9 @@ static int watchdog_start(struct watchdog_device *wdd)
->  	return err;
->  }
->  
-> -static int watchdog_stop(struct watchdog_device *wdd)
-> +static int fintek_wdog_stop(struct watchdog_device *wdd)
->  {
-> -	struct watchdog_data *wd = watchdog_get_drvdata(wdd);
-> +	struct fintek_wdog_data *wd = watchdog_get_drvdata(wdd);
->  	int err;
->  
->  	err = superio_enter(wd->sioaddr);
-> @@ -346,21 +346,21 @@ static int watchdog_stop(struct watchdog_device *wdd)
->  	return 0;
->  }
->  
-> -static const struct watchdog_ops f71808e_wdog_ops = {
-> +static const struct watchdog_ops fintek_wdog_ops = {
->  	.owner = THIS_MODULE,
-> -	.start = watchdog_start,
-> -	.stop = watchdog_stop,
-> -	.ping = watchdog_keepalive,
-> -	.set_timeout = watchdog_set_timeout,
-> +	.start = fintek_wdog_start,
-> +	.stop = fintek_wdog_stop,
-> +	.ping = fintek_wdog_keepalive,
-> +	.set_timeout = fintek_wdog_set_timeout,
->  };
->  
-> -static bool watchdog_is_running(struct watchdog_data *wd, u8 wdt_conf)
-> +static bool fintek_wdog_is_running(struct fintek_wdog_data *wd, u8 wdt_conf)
->  {
->  	return (superio_inb(wd->sioaddr, SIO_REG_ENABLE) & BIT(0))
->  		&& (wdt_conf & BIT(F71808FG_FLAG_WD_EN));
->  }
->  
-> -static int __init watchdog_init(struct watchdog_data *wd)
-> +static int __init fintek_wdog_init(struct fintek_wdog_data *wd)
->  {
->  	struct watchdog_device *wdd = &wd->wdd;
->  	int wdt_conf, err = 0;
-> @@ -390,17 +390,17 @@ static int __init watchdog_init(struct watchdog_data *wd)
->  	superio_outb(wd->sioaddr, F71808FG_REG_WDT_CONF,
->  		     wdt_conf | BIT(F71808FG_FLAG_WDTMOUT_STS));
->  
-> -	if (watchdog_is_running(wd, wdt_conf))
-> +	if (fintek_wdog_is_running(wd, wdt_conf))
->  		set_bit(WDOG_HW_RUNNING, &wdd->status);
->  
->  	superio_exit(wd->sioaddr);
->  
-> -	err = watchdog_set_pulse_width(wd, pulse_width);
-> +	err = fintek_wdog_set_pulse_width(wd, pulse_width);
->  	if (err)
->  		return err;
->  
->  	wdd->info		= &wd->ident;
-> -	wdd->ops		= &f71808e_wdog_ops;
-> +	wdd->ops		= &fintek_wdog_ops;
->  	wdd->min_timeout	= 1;
->  	wdd->max_timeout	= max_timeout;
->  	wdd->timeout		= timeout;
-> @@ -418,18 +418,18 @@ static int __init watchdog_init(struct watchdog_data *wd)
->  	 * WATCHDOG_HANDLE_BOOT_ENABLED can result in keepalive being directly
->  	 * called without a set_timeout before, so it needs to be done here once
->  	 */
-> -	watchdog_set_timeout(wdd, wdd->timeout);
-> +	fintek_wdog_set_timeout(wdd, wdd->timeout);
->  
->  	return watchdog_register_device(wdd);
->  }
->  
-> -static void f71808fg_pinconf(struct watchdog_data *wd)
-> +static void f71808fg_pinconf(struct fintek_wdog_data *wd)
->  {
->  	/* Set pin 21 to GPIO23/WDTRST#, then to WDTRST# */
->  	superio_clear_bit(wd->sioaddr, SIO_REG_MFUNCT2, 3);
->  	superio_clear_bit(wd->sioaddr, SIO_REG_MFUNCT3, 3);
->  }
-> -static void f71862fg_pinconf(struct watchdog_data *wd)
-> +static void f71862fg_pinconf(struct fintek_wdog_data *wd)
->  {
->  	if (f71862fg_pin == 63) {
->  		/* SPI must be disabled first to use this pin! */
-> @@ -439,23 +439,23 @@ static void f71862fg_pinconf(struct watchdog_data *wd)
->  		superio_set_bit(wd->sioaddr, SIO_REG_MFUNCT1, 1);
->  	}
->  }
-> -static void f71868_pinconf(struct watchdog_data *wd)
-> +static void f71868_pinconf(struct fintek_wdog_data *wd)
->  {
->  	/* GPIO14 --> WDTRST# */
->  	superio_clear_bit(wd->sioaddr, SIO_REG_MFUNCT1, 4);
->  }
-> -static void f71882fg_pinconf(struct watchdog_data *wd)
-> +static void f71882fg_pinconf(struct fintek_wdog_data *wd)
->  {
->  	/* Set pin 56 to WDTRST# */
->  	superio_set_bit(wd->sioaddr, SIO_REG_MFUNCT1, 1);
->  }
-> -static void f71889fg_pinconf(struct watchdog_data *wd)
-> +static void f71889fg_pinconf(struct fintek_wdog_data *wd)
->  {
->  	/* set pin 40 to WDTRST# */
->  	superio_outb(wd->sioaddr, SIO_REG_MFUNCT3,
->  		     superio_inb(wd->sioaddr, SIO_REG_MFUNCT3) & 0xcf);
->  }
-> -static void f81803_pinconf(struct watchdog_data *wd)
-> +static void f81803_pinconf(struct fintek_wdog_data *wd)
->  {
->  	/* Enable TSI Level register bank */
->  	superio_clear_bit(wd->sioaddr, SIO_REG_CLOCK_SEL, 3);
-> @@ -463,12 +463,12 @@ static void f81803_pinconf(struct watchdog_data *wd)
->  	superio_outb(wd->sioaddr, SIO_REG_TSI_LEVEL_SEL, 0x5f &
->  		     superio_inb(wd->sioaddr, SIO_REG_TSI_LEVEL_SEL));
->  }
-> -static void f81865_pinconf(struct watchdog_data *wd)
-> +static void f81865_pinconf(struct fintek_wdog_data *wd)
->  {
->  	/* Set pin 70 to WDTRST# */
->  	superio_clear_bit(wd->sioaddr, SIO_REG_MFUNCT3, 5);
->  }
-> -static void f81866_pinconf(struct watchdog_data *wd)
-> +static void f81866_pinconf(struct fintek_wdog_data *wd)
->  {
->  	/*
->  	 * GPIO1 Control Register when 27h BIT3:2 = 01 & BIT0 = 0.
-> @@ -484,7 +484,7 @@ static void f81866_pinconf(struct watchdog_data *wd)
->  	superio_clear_bit(wd->sioaddr, SIO_F81866_REG_GPIO1, 5);
->  }
->  
-> -struct f71808e_variant f71808e_variants[] = {
-> +struct fintek_variant fintek_variants[] = {
+> Some TI TRMs actually have tables listing the preferred mux logic
+> for unused pins. I recall safe mode input pull down being one of the
+> preferred modes. Sorry not sure which TRM that is, maybe omap3 or
+> omap4 or omap5?
 
-0-day has a point here. Granted, that is inherited, but still ...
+Yes, the AM3358 will default to mode 7 for all of these pins and the
+receiver will be enabled (e.g. input).
 
->  	{ SIO_F71808_ID,  "f71808fg", f71808fg_pinconf },
->  	{ SIO_F71862_ID,  "f71862fg", f71862fg_pinconf },
->  	{ SIO_F71868_ID,  "f71868",   f71868_pinconf },
-> @@ -500,9 +500,9 @@ struct f71808e_variant f71808e_variants[] = {
->  	{ /* sentinel */ }
->  };
->  
-> -static struct f71808e_variant __init *f71808e_find(int sioaddr)
-> +static struct fintek_variant __init *fintek_wdog_find(int sioaddr)
->  {
-> -	struct f71808e_variant *variant;
-> +	struct fintek_variant *variant;
->  	u16 devid;
->  	int err = superio_enter(sioaddr);
->  	if (err)
-> @@ -516,7 +516,7 @@ static struct f71808e_variant __init *f71808e_find(int sioaddr)
->  	}
->  
->  	devid = force_id ? force_id : superio_inw(sioaddr, SIO_REG_DEVID);
-> -	for (variant = f71808e_variants; variant->id; variant++) {
-> +	for (variant = fintek_variants; variant->id; variant++) {
->  		if (variant->id == devid)
->  			break;
->  	}
-> @@ -536,13 +536,13 @@ static struct f71808e_variant __init *f71808e_find(int sioaddr)
->  	return variant;
->  }
->  
-> -static struct watchdog_data watchdog;
-> +static struct fintek_wdog_data watchdog;
->  
-> -static int __init f71808e_init(void)
-> +static int __init fintek_wdog_probe(void)
->  {
-> -	struct watchdog_data *wd = &watchdog;
-> +	struct fintek_wdog_data *wd = &watchdog;
->  	static const unsigned short addrs[] = { 0x2e, 0x4e };
-> -	struct f71808e_variant *variant;
-> +	struct fintek_variant *variant;
->  	int i;
->  
->  	if (f71862fg_pin != 63 && f71862fg_pin != 56) {
-> @@ -551,7 +551,7 @@ static int __init f71808e_init(void)
->  	}
->  
->  	for (i = 0; i < ARRAY_SIZE(addrs); i++) {
-> -		variant = f71808e_find(addrs[i]);
-> +		variant = fintek_wdog_find(addrs[i]);
->  		if (!IS_ERR(variant))
->  			break;
->  	}
-> @@ -561,17 +561,17 @@ static int __init f71808e_init(void)
->  	wd->variant = variant;
->  	wd->sioaddr = addrs[i];
->  
-> -	return watchdog_init(wd);
-> +	return fintek_wdog_init(wd);
->  }
->  
-> -static void __exit f71808e_exit(void)
-> +static void __exit fintek_wdog_exit(void)
->  {
->  	watchdog_unregister_device(&watchdog.wdd);
->  }
->  
-> -MODULE_DESCRIPTION("F71808E Watchdog Driver");
-> +MODULE_DESCRIPTION("Fintek F71808E Watchdog Driver");
->  MODULE_AUTHOR("Giel van Schijndel <me@mortis.eu>");
->  MODULE_LICENSE("GPL");
->  
-> -module_init(f71808e_init);
-> -module_exit(f71808e_exit);
-> +module_init(fintek_wdog_probe);
-> +module_exit(fintek_wdog_exit);
+So maybe it is redundant for me to specify in DT what is already the
+hardware reset default?
+
+I thought it might be helpful to at least show where the user should
+edit to change it from the default reset behavior.
+
+> > > Needing to change the dts does not sound good to me.. But maybe you mean
+> > > this is needed until the gpio-omap and pinctrl-single patches are merged?
+> >
+> > I agree that I would like for userspace to be able to do run-time
+> > changes.  However, I think something would need to be added to the
+> > pinconf support in pinctrl-single for that to be possible.  There are
+> > bias properties but non for receiver enable.
+> > 
+> > Does it seem sensible to add that?
+> 
+> Well let's see with Linus W says. To me it seems this might be a good
+> reason to allow a sysfs interface to change the pinctrl if we don't
+> have it yet? With the proper gpio line naming it should be quite simple
+> to use too :)
+
+I think if pinctrl-single allowed mux to be set through debugfs that
+could be one solution to the use case of users prototyping with a
+beaglebone.  Maybe that could be acceptable?
+
+Thanks,
+Drew
+
+> 
+> Regards,
+> 
+> Tony
