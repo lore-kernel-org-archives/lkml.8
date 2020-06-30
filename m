@@ -2,99 +2,121 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A18C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 04:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3653C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 04:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BF7320809
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 04:33:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WlbOS/rx"
+	by mail.kernel.org (Postfix) with ESMTP id 847C7206BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 04:36:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726372AbgF3EdM (ORCPT
+        id S1728153AbgF3Egq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 00:33:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46248 "EHLO
+        Tue, 30 Jun 2020 00:36:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46812 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbgF3EdL (ORCPT
+        with ESMTP id S1725372AbgF3Egq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 00:33:11 -0400
-Received: from mail-pf1-x44a.google.com (mail-pf1-x44a.google.com [IPv6:2607:f8b0:4864:20::44a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6846C03E979
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 21:33:10 -0700 (PDT)
-Received: by mail-pf1-x44a.google.com with SMTP id d67so11000328pfd.4
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 21:33:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=BfxhdyAtqRfaskkZwcQe9jhhrIlwrtNYUAU6BoBKsU0=;
-        b=WlbOS/rxcV/nfmL42gU+2uW5605vPpCXptWNJaFjQi66NImbnUdE6YUsetFLBNuK/Q
-         e0IrRdvdbc0ascmCOGvBQVu8qaN9dcV03MGj478OkMAON0upmpBr4NNymtMqgprgB6qJ
-         V/XgCdqQyV/4MoLD6zs7xCrSqcKAJu21Vvq451gB+OHOMv4J0/jjF/3GzHjgSxextSrw
-         FfB8Fq47pm/JhiUmx5By8xgA2xIFK+FTaUFU4l+pE01+jOU/pVRq1/VrYj0XEu2ltNaQ
-         Pe0a575vblABxCv93pMWXadn7FFRDkZtJiq3vqbvTo4Pt+7oF4jpwQWhCUgTAxR7DWfv
-         XJow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=BfxhdyAtqRfaskkZwcQe9jhhrIlwrtNYUAU6BoBKsU0=;
-        b=nfIui0ZZyrDp8CKVZhkDPJ58AL8zF6devf6YcjWXk+Rqufdb0PsTLC2CpV6+ncyD/b
-         Tx/pko2MOr4D311CTAW658t5GDImDXtz2tBSbz/dC74LNn6bbhy39aTg9PB3dBVfZp+0
-         C/o/ox0jURoF+3uutL3XoBa1ZwpVZhD+zeSGHxqI9YAu8v1bCKK0nxPvcjlKgIdTGLSZ
-         atgNVt9nM54muFvW6to9ptQfBya/HXXXGaBHsCkZ+cj3a6rc5tHAeH0iijrqx2rH1U5Y
-         tDoCaWUDP6znB8Y1Tb98ySqrLB0n0dZEJiHshaQOmKsHvcvNR22z44WsuUbtKiYUHH58
-         ixNg==
-X-Gm-Message-State: AOAM530DF+fl25/uTWbc59QyfOm/AQOmqF4WwPjexB7gj4XRHCHRSGR7
-        ZV6OFHWLE4G38/FsgbLO9Fd2tMuNNiYp8A==
-X-Google-Smtp-Source: ABdhPJzjDYrzCee7PJbQXNWpdVP3KKDk5o0jdZbS8zAHzV1bEo0J1F0IKWlOtMQhuDNnPi+Qz1VkgwhZGFZGsQ==
-X-Received: by 2002:a17:90a:246:: with SMTP id t6mr20697187pje.230.1593491590176;
- Mon, 29 Jun 2020 21:33:10 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 21:32:14 -0700
-Message-Id: <20200630043214.1080961-1-davidgow@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-Subject: [PATCH] clk: Specify IOMEM dependency for HSDK pll driver
-From:   David Gow <davidgow@google.com>
-To:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     Brendan Higgins <brendanhiggins@google.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        David Gow <davidgow@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 30 Jun 2020 00:36:46 -0400
+Received: from ZenIV.linux.org.uk (zeniv.linux.org.uk [IPv6:2002:c35c:fd02::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B03D2C061755
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 21:36:45 -0700 (PDT)
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jq80f-002ZwH-Nj; Tue, 30 Jun 2020 04:36:42 +0000
+Date:   Tue, 30 Jun 2020 05:36:41 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        David Howells <dhowells@redhat.com>,
+        Nicolas Pitre <nico@fluxnic.net>
+Subject: [RFC][PATCHES] converting FDPIC coredumps to regsets
+Message-ID: <20200630043641.GD2786714@ZenIV.linux.org.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The HSDK pll driver uses the devm_ioremap_resource function, but does
-not specify a dependency on IOMEM in Kconfig. This causes a build
-failure on architectures without IOMEM, for example, UML (notably with
-make allyesconfig).
+	Conversion of ELF coredumps to regsets has not touched
+ELF_FDPIC.  Right now all architectures that support FDPIC have
+regsets sufficient for switching it to regset-based coredumps.  A bit
+of backstory: original ELF (and ELF_FDPIC) coredumps reused the old
+helpers used by a.out coredumps.  These days a.out coredumps are gone;
+we could remove the dead code, if not for several obstacles.  And one
+of those obstacles is ELF_FDPIC.
 
-Fix this by making CONFIG_CLK_HSDK depend on CONFIG_IOMEM.
+	This series more or less reproduces the conversion done
+by Roland for ELF coredumps.  The branch is in
+git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git #work.fdpic
+and it's based on top of #regset.base there (just the introduction of
+regset_get() wrapper for ->get(); nothing else from the regset series
+is needed).  Killing the old aout helpers is _not_ in this branch;
+followup cleanups live separately.
 
-Signed-off-by: David Gow <davidgow@google.com>
----
- drivers/clk/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+	First we need to sort out the mess with struct elf_prstatus,
+though.  It's used both for ELF and ELF_FDPIC coredumps, and it
+contains a couple of fields under ifdef on CONFIG_BINFMT_ELF_FDPIC.
+ELF is MMU-dependent and most, but not all configs that allow ELF_FDPIC
+are non-MMU.  ARM is an exception - there ELF_FDPIC is allowed both for
+MMU and non-MMU configs.  That's a problem - struct elf_prstatus is a
+part of coredump layout, so ELF coredumps produced by arm kernels that
+have ELF_FDPIC enabled are incompatible with those that have it disabled.
 
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index 69934c0c3dd8..326f91b2dda9 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -50,6 +50,7 @@ source "drivers/clk/versatile/Kconfig"
- config CLK_HSDK
- 	bool "PLL Driver for HSDK platform"
- 	depends on OF || COMPILE_TEST
-+	depends on IOMEM
- 	help
- 	  This driver supports the HSDK core, system, ddr, tunnel and hdmi PLLs
- 	  control.
--- 
-2.27.0.212.ge8ba1cc988-goog
+	The obvious solution is to introduce struct elf_prstatus_fdpic
+and use that in binfmt_elf_fdpic.c, taking these fields out of the
+normal struct elf_prstatus.  Unfortunately, the damn thing is defined in
+include/uapi/linux/elfcore.h, so nominally it's a part of userland ABI.
+However, not a single userland program actually includes linux/elfcore.h.
+The reason is that the definition in there uses elf_gregset_t as a member,
+and _that_ is not defined anywhere in the exported headers.  It is defined
+in (libc) sys/procfs.h, but the same file defines struct elf_prstatus
+as well.  So if you try to include linux/elfcore.h without having already
+pulled sys/procfs.h, it'll break on incomplete type of a member.  And if
+you have pulled sys/procfs.h, it'll break on redefining a structure.
+IOW, it's not usable and it never had been; as the matter of fact,
+that's the reason sys/procfs.h had been introduced back in 1996.
 
+1/7) unexport linux/elfcore.h
+	Takes it out of include/uapi/linux and moves the stuff that used
+to live there into include/linux/elfcore.h
+
+2/7) take fdpic-related parts of elf_prstatus out
+	Now we can take that ifdef out of the definition of elf_prstatus
+(as well as compat_elf_prstatus) and put the variant with those extra
+fields into binfmt_elf_fdpic.c, calling it elf_prstatus_fdpic there.
+
+3/7) kill elf_fpxregs_t
+	All code dealing with it (both in elf_fdpic and non-regset side
+of elf) is conditional upon ELF_CORE_COPY_XFPREGS.  And no architectures
+define that anymore.  Take the dead code out.
+
+4/7) [elf-fdpic] coredump: don't bother with cyclic list for per-thread
+objects
+5/7) [elf-fdpic] move allocation of elf_thread_status into
+elf_dump_thread_status()
+6/7) [elf-fdpic] use elf_dump_thread_status() for the dumper thread as well
+	Massaging fdpic coredump logics towards the regset side of
+elf coredump.
+
+7/7) [elf-fdpic] switch coredump to regsets
+	... and now we can switch from elf_core_copy_task_{,fp}regs()
+to regset_get().
+
+
+Diffstat:
+ arch/ia64/include/asm/elf.h    |   2 -
+ arch/powerpc/include/asm/elf.h |   2 -
+ arch/x86/include/asm/elf.h     |   2 -
+ fs/binfmt_elf.c                |  30 ------
+ fs/binfmt_elf_fdpic.c          | 205 ++++++++++++++++++-----------------------
+ include/linux/elfcore-compat.h |   4 -
+ include/linux/elfcore.h        |  66 +++++++++++--
+ include/uapi/linux/elfcore.h   | 101 --------------------
+ scripts/headers_install.sh     |   1 -
+ usr/include/Makefile           |   1 -
+ 10 files changed, 146 insertions(+), 268 deletions(-)
