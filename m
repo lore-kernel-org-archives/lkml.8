@@ -2,83 +2,166 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AF3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 23:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 083CAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 23:44:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E1EEF206CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 23:43:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D494D206CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 23:44:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RA6swQmr"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="T+fNjcpV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726749AbgF3Xnv (ORCPT
+        id S1726800AbgF3XoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 19:43:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54672 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725930AbgF3Xnu (ORCPT
+        Tue, 30 Jun 2020 19:44:24 -0400
+Received: from mail.efficios.com ([167.114.26.124]:39406 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbgF3XoX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 19:43:50 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99125C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 16:43:50 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id x8so8243534plm.10
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 16:43:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=KvgIA8jCnR4C6DD9ZJKn5SWEFGMBdmtthc8Oij6QT8I=;
-        b=RA6swQmr+S0tysXaQfAHbsokJUg4uLp3g3DLvlvKvo/qX6DdU3SR9RH5I7TKhcYfKC
-         ItKCRXpYW3dwc4QDXaGfOYs3+2jB3ntNUIE0Y1Zxrv7Dob7l6+Okrlr313JiDEqdyuco
-         Ky53pudV1K74p8kFH6RXb4bdH7vKcXMO4q2R0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KvgIA8jCnR4C6DD9ZJKn5SWEFGMBdmtthc8Oij6QT8I=;
-        b=P9jr4P/beBM6S6hhUBVENfw0XGSbf+OU1o3hge05EWW2hYdDBHvjFKqhq9u6fvhORv
-         FtYA+bY5beus2qsycRD9+rGZYGnCplz4CDUdkE31taIRnzMXKikFs/K5KIzI9c2b79p4
-         lg9izjMh9HSpQ+IWO8wJ15K3XsuqQhkWN3qNjtCN4geFDsHllppT3JZuUY5FVxYLvj4c
-         tI953s5UI6CXMracfXTIYjGIDxfpwqUWslxfRI95Q982xpEda8IixUDQzaAKuTh+4ki+
-         A/Km5cnLTxhmJjNUYY0cHBDP9xMo3DiuqwA8M+aywiEzzXEockvwaFKAsx6Nd/+xGWlN
-         2Lqg==
-X-Gm-Message-State: AOAM532SI2OvX6e4Copa06P/iDHpZ4GFyPJPmyUkxys0uG/VBFu+peXq
-        P7Mh4dqdJNkTjmo+pDJjuFEvzto18x4=
-X-Google-Smtp-Source: ABdhPJzeWPD1R+nRwY8/J4yLghDQ06DrA4LcyaRFaFiu4UuLTQRflMy0ZlcOLlrct4GUqFnZQRJ++w==
-X-Received: by 2002:a17:902:d203:: with SMTP id t3mr20512091ply.168.1593560630171;
-        Tue, 30 Jun 2020 16:43:50 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
-        by smtp.gmail.com with ESMTPSA id n137sm3811575pfd.194.2020.06.30.16.43.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jun 2020 16:43:49 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 16:43:48 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] arm64: dts: sdm845: Add sdhc opps and power-domains
-Message-ID: <20200630234348.GK39073@google.com>
-References: <1593506712-24557-1-git-send-email-rnayak@codeaurora.org>
- <1593506712-24557-4-git-send-email-rnayak@codeaurora.org>
+        Tue, 30 Jun 2020 19:44:23 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id CF6BF2C8628;
+        Tue, 30 Jun 2020 19:44:21 -0400 (EDT)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 0vJOA2UfVbAo; Tue, 30 Jun 2020 19:44:21 -0400 (EDT)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 787472C8354;
+        Tue, 30 Jun 2020 19:44:21 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 787472C8354
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1593560661;
+        bh=xwV0C8vTsPSlnmGbQy2hbyNyodmOGB/RFnq+mV8bBdg=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=T+fNjcpVMrKbACA4plRKj2I5ve8mu9T+5e/l8MBCCFygcxdfisFxkQx2WbYgSW29N
+         yuiLHpu2GnTeqJKCduT8rkJxFyPL3pWHy5gkyZ/9tDMSy7NL/nCpy10GIbkwN+EoEI
+         3dhiP3KFFeysI6Uy0czTdUeuBcxbWmYM7oeK37NzQd3RKUq7VYiRlkdj9OlQnh+pqt
+         +RNSFFpQGonHhg9vzBRrFh+O5f5GnWOSr4HAGdEmqZzmCEC71cSurY9vgWL7NvQO4G
+         wbYWacIw6RoZT6TA5R+9VO5EM+sesb2hX2OrKb0HaOifUM9S0h/3yG6SdCuDrTyJrD
+         eW5WPd2/AZhGg==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id w9K2b6F0Itho; Tue, 30 Jun 2020 19:44:21 -0400 (EDT)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 665DD2C85B5;
+        Tue, 30 Jun 2020 19:44:21 -0400 (EDT)
+Date:   Tue, 30 Jun 2020 19:44:21 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Eric Dumazet <edumazet@google.com>, paulmck <paulmck@kernel.org>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Yuchung Cheng <ycheng@google.com>,
+        Jonathan Rajotte-Julien <joraj@efficios.com>
+Message-ID: <416125262.18159.1593560661355.JavaMail.zimbra@efficios.com>
+In-Reply-To: <CANn89iLPqtJG0iESCHF+RcOjo95ukan1oSzjkPjoSJgKpO2wSQ@mail.gmail.com>
+References: <CAHk-=wjEghg5_pX_GhNP+BfcUK6CRZ+4mh3bciitm9JwXvR7aQ@mail.gmail.com> <20200630.134429.1590957032456466647.davem@davemloft.net> <CANn89i+b-LeaPvaaHvj0yc0mJ2qwZ0981fQHVp0+sqXYp=kdkA@mail.gmail.com> <474095696.17969.1593551866537.JavaMail.zimbra@efficios.com> <CANn89iKK2+pznYZoKZzdCu4qkA7BjJZFqc6ABof4iaS-T-9_aw@mail.gmail.com> <CANn89i+_DUrKROb1Zkk_nmngkD=oy9UjbxwnkgyzGB=z+SKg3g@mail.gmail.com> <CANn89iJJ_WR-jGQogU3-arjD6=xcU9VWzJYSOLbyD94JQo-zAQ@mail.gmail.com> <CANn89iLPqtJG0iESCHF+RcOjo95ukan1oSzjkPjoSJgKpO2wSQ@mail.gmail.com>
+Subject: Re: [regression] TCP_MD5SIG on established sockets
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1593506712-24557-4-git-send-email-rnayak@codeaurora.org>
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3945 (ZimbraWebClient - FF77 (Linux)/8.8.15_GA_3928)
+Thread-Topic: TCP_MD5SIG on established sockets
+Thread-Index: B06Xl8CKUYbxp+VQ6LJs8ecBAejacQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 02:15:11PM +0530, Rajendra Nayak wrote:
-> Add the power domain supporting performance state and the corresponding
-> OPP tables for the sdhc device on sdm845.
+----- On Jun 30, 2020, at 6:38 PM, Eric Dumazet edumazet@google.com wrote:
+[...]
 > 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> For updates of keys, it seems existing code lacks some RCU care.
+> 
+> MD5 keys use RCU for lookups/hashes, but the replacement of a key does
+> not allocate a new piece of memory.
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+How is that RCU-safe ?
+
+Based on what I see here:
+
+tcp_md5_do_add() has a comment stating:
+
+"/* This can be called on a newly created socket, from other files */"
+
+which appears to be untrue if this can indeed be called on a live socket.
+
+The path for pre-existing keys does:
+
+        key = tcp_md5_do_lookup_exact(sk, addr, family, prefixlen, l3index);
+        if (key) {
+                /* Pre-existing entry - just update that one. */
+                memcpy(key->key, newkey, newkeylen);
+                key->keylen = newkeylen;
+                return 0;
+        }
+
+AFAIU, this works only if you assume there are no concurrent readers
+accessing key->key, else they can see a corrupted key.
+
+The change you are proposing adds smp_wmb/smp_rmb to pair stores
+to key before key_len with loads of key_len before key. I'm not sure
+what this is trying to achieve, and how it prevents the readers from
+observing a corrupted state if the key is updated on a live socket ?
+
+Based on my understanding, this path which deals with pre-existing keys
+in-place should only ever be used when there are no concurrent readers,
+else a new memory allocation would be needed to guarantee that readers
+always observe a valid copy.
+
+Thanks,
+
+Mathieu
+
+> 
+> diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+> index
+> 810cc164f795f8e1e8ca747ed5df51bb20fec8a2..ecc0e3fabce8b03bef823cbfc5c1b0a9e24df124
+> 100644
+> --- a/net/ipv4/tcp.c
+> +++ b/net/ipv4/tcp.c
+> @@ -4034,9 +4034,12 @@ EXPORT_SYMBOL(tcp_md5_hash_skb_data);
+> int tcp_md5_hash_key(struct tcp_md5sig_pool *hp, const struct
+> tcp_md5sig_key *key)
+> {
+>        struct scatterlist sg;
+> +       u8 keylen = key->keylen;
+> 
+> -       sg_init_one(&sg, key->key, key->keylen);
+> -       ahash_request_set_crypt(hp->md5_req, &sg, NULL, key->keylen);
+> +       smp_rmb(); /* paired with smp_wmb() in tcp_md5_do_add() */
+> +
+> +       sg_init_one(&sg, key->key, keylen);
+> +       ahash_request_set_crypt(hp->md5_req, &sg, NULL, keylen);
+>        return crypto_ahash_update(hp->md5_req);
+> }
+> EXPORT_SYMBOL(tcp_md5_hash_key);
+> diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
+> index
+> ad6435ba6d72ffd8caf783bb25cad7ec151d6909..99916fcc15ca0be12c2c133ff40516f79e6fdf7f
+> 100644
+> --- a/net/ipv4/tcp_ipv4.c
+> +++ b/net/ipv4/tcp_ipv4.c
+> @@ -1113,6 +1113,9 @@ int tcp_md5_do_add(struct sock *sk, const union
+> tcp_md5_addr *addr,
+>        if (key) {
+>                /* Pre-existing entry - just update that one. */
+>                memcpy(key->key, newkey, newkeylen);
+> +
+> +               smp_wmb(); /* pairs with smp_rmb() in tcp_md5_hash_key() */
+> +
+>                key->keylen = newkeylen;
+>                return 0;
+>         }
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
