@@ -2,132 +2,105 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08CA1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D30FAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D4DAE2077D
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:39:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593509965;
-	bh=zcFyweTu/Wd1j3+rxX1bMxZh2mGAoRTczca7ZVHYJok=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=NLMXKQLyL5Fc9i4xWRKT6AF4Mj8X6ljJu/gE+04kf6kS671JJp5xCNjZCXxKSYL+1
-	 FitdtQCzLJhtNFCPfiWHPVSCp/qBr2MtMeTLsjViYOQwalC9zipZSzMO1eizF5ONHF
-	 MA2PSWSbCHF0pRzpiSj5SBu1PE0qSLVoBekS+Xuk=
+	by mail.kernel.org (Postfix) with ESMTP id B403F20775
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:39:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732045AbgF3JjY (ORCPT
+        id S1732066AbgF3Jjo convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 05:39:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39126 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731616AbgF3JjW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 05:39:22 -0400
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B64E2206A1;
-        Tue, 30 Jun 2020 09:39:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593509961;
-        bh=zcFyweTu/Wd1j3+rxX1bMxZh2mGAoRTczca7ZVHYJok=;
-        h=From:To:Cc:Subject:Date:From;
-        b=tz2wl9qtszMKPQDu6x4EolZVoaWVv4gKidF81T0Xxt2KYK96pEa+JAjFtmDyQv7n2
-         aUfYIbzplPwY0VmlGl0LZP4G6C9TYsH8Gegp6A1CTd6lx0+352A5ablMQtaYwZgPOe
-         O5f5du0mAuXtNLnGTYog/i8GeRthYIEZSLxUAY3o=
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Leon Romanovsky <leonro@mellanox.com>,
-        linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        Potnuri Bharat Teja <bharat@chelsio.com>,
-        Steve Wise <larrystevenwise@gmail.com>,
-        Yishai Hadas <yishaih@mellanox.com>
-Subject: [PATCH rdma-next v1 0/7] Introduce UAPIs to query UCONTEXT, PD and MR properties
-Date:   Tue, 30 Jun 2020 12:39:09 +0300
-Message-Id: <20200630093916.332097-1-leon@kernel.org>
-X-Mailer: git-send-email 2.26.2
+        Tue, 30 Jun 2020 05:39:44 -0400
+Received: from lithops.sigma-star.at ([195.201.40.130]:44020 "EHLO
+        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732049AbgF3Jjn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 05:39:43 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id EB070607400F;
+        Tue, 30 Jun 2020 11:39:40 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id qd6xqziz9yTM; Tue, 30 Jun 2020 11:39:37 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 786BA6074029;
+        Tue, 30 Jun 2020 11:39:37 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id UNVw8191GTR5; Tue, 30 Jun 2020 11:39:37 +0200 (CEST)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 423E0607400F;
+        Tue, 30 Jun 2020 11:39:37 +0200 (CEST)
+Date:   Tue, 30 Jun 2020 11:39:37 +0200 (CEST)
+From:   Richard Weinberger <richard@nod.at>
+To:     Christophe Kerello <christophe.kerello@st.com>
+Cc:     Richard Weinberger <richard.weinberger@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, arnd@linaro.org,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Marek Vasut <marex@denx.de>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        linux-stm32@st-md-mailman.stormreply.com
+Message-ID: <1839269888.74591.1593509977137.JavaMail.zimbra@nod.at>
+In-Reply-To: <e30abadc-83c0-f010-be36-fe8d14c4aea9@st.com>
+References: <1591975362-22009-1-git-send-email-christophe.kerello@st.com> <1591975362-22009-5-git-send-email-christophe.kerello@st.com> <CAFLxGvzfh1Qa_gM9bZAxaoCbO6xCoNdaPN=Ea20Up_zPVgjugw@mail.gmail.com> <e30abadc-83c0-f010-be36-fe8d14c4aea9@st.com>
+Subject: Re: [PATCH v5 4/6] memory: stm32-fmc2-ebi: add STM32 FMC2 EBI
+ controller driver
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [195.201.40.130]
+X-Mailer: Zimbra 8.8.12_GA_3807 (ZimbraWebClient - FF68 (Linux)/8.8.12_GA_3809)
+Thread-Topic: memory: stm32-fmc2-ebi: add STM32 FMC2 EBI controller driver
+Thread-Index: IyChESkmAt61iUEj3iffmldxiXkByg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@mellanox.com>
+----- Ursprüngliche Mail -----
+> Von: "Christophe Kerello" <christophe.kerello@st.com>
+> An: "Richard Weinberger" <richard.weinberger@gmail.com>
+> CC: "Miquel Raynal" <miquel.raynal@bootlin.com>, "richard" <richard@nod.at>, "Vignesh Raghavendra" <vigneshr@ti.com>,
+> "Rob Herring" <robh+dt@kernel.org>, "Mark Rutland" <mark.rutland@arm.com>, arnd@linaro.org, "Alexandre Torgue"
+> <alexandre.torgue@st.com>, "Marek Vasut" <marex@denx.de>, "devicetree" <devicetree@vger.kernel.org>, "linux-kernel"
+> <linux-kernel@vger.kernel.org>, "linux-mtd" <linux-mtd@lists.infradead.org>, linux-stm32@st-md-mailman.stormreply.com
+> Gesendet: Dienstag, 30. Juni 2020 11:35:38
+> Betreff: Re: [PATCH v5 4/6] memory: stm32-fmc2-ebi: add STM32 FMC2 EBI controller driver
 
-Changelog
-v1:
- * Replaced "KABI" word with "UAPI".
- * Set IOVA as an optional attribute upon query MR.
-v0:
-https://lore.kernel.org/lkml/20200616105531.2428010-1-leon@kernel.org
+> Hi Richard,
+> 
+> On 6/30/20 11:13 AM, Richard Weinberger wrote:
+>> On Fri, Jun 12, 2020 at 5:24 PM Christophe Kerello
+>> <christophe.kerello@st.com> wrote:
+>>>
+>>> The driver adds the support for the STMicroelectronics FMC2 EBI controller
+>>> found on STM32MP SOCs.
+>>>
+>>> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
+>>> ---
+>>> +       if (!IS_ERR(rstc)) {
+>>> +               reset_control_assert(rstc);
+>>> +               reset_control_deassert(rstc);
+>> 
+>> Shouldn't there be a small delay between assert and deassert?
+>> Other than that the code looks good to me.
+>> 
+> 
+> Even if I have currently not met any issue, I will add a udelay(2) to be
+> safe. It will be part of v6.
 
-------------------------------------------------------------------------------
-From Yishai,
+Well, if it works and you are sure, please go for it. Like I said, I'm no expert in
+this.
+I just noticed that other users add a delay and wondered.
 
-This series introduce UAPIs to query existing UCONTEXT, PD and MR for
-their properties.
-
-By those UAPIs a user space application which owns the command FD of the
-device can retrieve and rebuild the above objects despite that it wasn't
-their creator. As of that, PDs and MRs can be shared by any process who
-owns the command FD of their creator.
-
-This functionality enables to utilize and optimize some application
-flows, few examples below.
-
-Any solution which is a single business logic based on multi-process
-design needs this. Example include NGINX, with TCP load balancing, sharing the
-RSS indirection table with RQ per process. HPC frameworks with multi-rank
-(process) solution on single hosts. UCX can share IB resources using the shared
-PD and can help dispatch data to multiple processes/MR's in single RDMA
-operation. Also, there are use cases when a primary processes registered a large
-shared memory range, and each worker process spawned will create a private QP
-on the shared PD, and use the shared MR to save the registration time
-per-process.
-
-The matching verbs APIs were introduced in the mailing list by the below RFC [1].
-
-In addition, the series enables CQ ioctl commands by default as this
-functionality is fully mature for a long time and sets IOVA on IB MR in
-the uverbs layer to let all drivers have it.
-
-[1] https://patchwork.kernel.org/patch/11540665/
-
-Yishai
-
-Yishai Hadas (7):
-  IB/uverbs: Enable CQ ioctl commands by default
-  IB/uverbs: Set IOVA on IB MR in uverbs layer
-  IB/uverbs: Expose UAPI to query ucontext
-  RDMA/mlx5: Refactor mlx5_ib_alloc_ucontext() response
-  RDMA/mlx5: Implement the query ucontext functionality
-  RDMA/mlx5: Introduce UAPI to query PD attributes
-  IB/uverbs: Expose UAPI to query MR
-
- drivers/infiniband/Kconfig                    |   8 -
- drivers/infiniband/core/device.c              |   1 +
- drivers/infiniband/core/uverbs_cmd.c          |   4 +
- drivers/infiniband/core/uverbs_ioctl.c        |   1 +
- drivers/infiniband/core/uverbs_std_types_cq.c |   3 -
- .../infiniband/core/uverbs_std_types_device.c |  41 +++-
- drivers/infiniband/core/uverbs_std_types_mr.c |  52 +++-
- drivers/infiniband/hw/cxgb4/mem.c             |   1 -
- drivers/infiniband/hw/mlx4/mr.c               |   1 -
- drivers/infiniband/hw/mlx5/Makefile           |   3 +-
- drivers/infiniband/hw/mlx5/main.c             | 232 ++++++++++--------
- drivers/infiniband/hw/mlx5/mlx5_ib.h          |   2 +
- drivers/infiniband/hw/mlx5/std_types.c        |  45 ++++
- include/rdma/ib_verbs.h                       |   4 +
- include/uapi/rdma/ib_user_ioctl_cmds.h        |  15 ++
- include/uapi/rdma/mlx5_user_ioctl_cmds.h      |  14 ++
- 16 files changed, 308 insertions(+), 119 deletions(-)
- create mode 100644 drivers/infiniband/hw/mlx5/std_types.c
-
---
-2.26.2
-
+Thanks,
+//richard
