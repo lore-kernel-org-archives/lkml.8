@@ -2,114 +2,112 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E2AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14594C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 75A6B2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:26:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD01E20768
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:30:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F4bRlhY7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TBUNJpi1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390785AbgF3S0u (ORCPT
+        id S2390790AbgF3SaM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 14:26:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33738 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729953AbgF3S0t (ORCPT
+        Tue, 30 Jun 2020 14:30:12 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:41941 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732246AbgF3SaL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 14:26:49 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F303C061755;
-        Tue, 30 Jun 2020 11:26:48 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id f23so22095536iof.6;
-        Tue, 30 Jun 2020 11:26:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zHkMrF1WG28iaGTof2SgLVlAgajf1uvvDa148L1A4YA=;
-        b=F4bRlhY7JPlFE5MOJNhH06ubJD/AwLxDSHTkK8prEd7WJaNbBFDvroFyM7nSqG00Qh
-         zC5d+FeO3qACgBJISvU47GGOic70oP3x22flzistdPNasJi0UKqQxS4c4S1sc7PWUUi4
-         xJ1Vr0NWy8FyYXBmzQVtBjQ+nMkcbeOXGvwpb547MFCGBgXdN5rR+2y2OdZGN+iUAOax
-         eyGf3xANMO+ot5QApAld1RaJ+fkECK+TohwDhBwwPWS5JKI4p9uLq/W1X0CN884zX3Zo
-         rQx7fAnGqeoTgkMm1dwc6vbRGEP8aYycGvJWlI2LbF5LRtP3K6WJKWVy90C2pYHUjGyL
-         CApA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zHkMrF1WG28iaGTof2SgLVlAgajf1uvvDa148L1A4YA=;
-        b=gPjWyL+WMBeZOG0Uo1lIdiGHop1C7yR0LsrJSGJmLPtWMjLE3U3Anc0PFMW2oI7iIc
-         LxZPA2B20LzFOJUUrAm3qXBXqGMInklpuNyFoiaMnj2jxzzfLj6d1D26lZiSAbbdw68Q
-         h7++Z5nWwJ5N2Y28e1cfM96ax27EMgwtFgJujL3fQFYZasGBt3u0p3Ch/THhAEscxRx2
-         zjpOaculwp2YdjgMWLOGsZ4GgKYEPGWqZiHMEJ7kjRSz6apn0zoMGgD1MvZk4ASbrzaj
-         KyhKxtwXOAB4YNWBV8i5z+YAI6rxY1NvL00SzweBhoEOVUpPmUuYnhI9vuakYq7lzE+A
-         17fA==
-X-Gm-Message-State: AOAM5338bQExhAz4YoQFUJkKQ6fmrhmTw0Aww/D3hw5I2VxSaridU+YN
-        TYSG5qZtshrBh71L/+8tJMLenrHL
-X-Google-Smtp-Source: ABdhPJyAPNjOe2Euzd0n2GEPfkpD1dt5csCv1TH57jPtERYO/b5rK+8mNMNPSrE+XyMWMLNVkpw8xA==
-X-Received: by 2002:a6b:d809:: with SMTP id y9mr23557963iob.209.1593541607533;
-        Tue, 30 Jun 2020 11:26:47 -0700 (PDT)
-Received: from aford-IdeaCentre-A730.lan (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
-        by smtp.gmail.com with ESMTPSA id u6sm1966164ilg.32.2020.06.30.11.26.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 11:26:46 -0700 (PDT)
-From:   Adam Ford <aford173@gmail.com>
-To:     linux-fbdev@vger.kernel.org
-Cc:     Adam Ford <aford173@gmail.com>, stable@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Dave Airlie <airlied@gmail.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Rob Clark <robdclark@gmail.com>, linux-omap@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] omapfb: dss: Fix max fclk divider for omap36xx
-Date:   Tue, 30 Jun 2020 13:26:36 -0500
-Message-Id: <20200630182636.439015-1-aford173@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 30 Jun 2020 14:30:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593541809;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=7OCgH8gBQ1PrIfBItQcZbl5DDSqpXuCS2ZxQUU3Vu/M=;
+        b=TBUNJpi1yshZvtnVEBuzYTn8Zl50rEtrZoY6A6/BTjQE/M25DLzT3NssHUX9OW5pnwpaxT
+        DzLNsCmbArxP3B44GF21d/PfpKEaUqGy8rql26KvCJq1Rk5khonaFOEcr3PpJA9MQTuLIP
+        F5A7FCNoWwZar6FyZ9lN/wlvXKjeeBk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-223-vUlTpLERMYC5hy90eKi4ZQ-1; Tue, 30 Jun 2020 14:30:07 -0400
+X-MC-Unique: vUlTpLERMYC5hy90eKi4ZQ-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 10F468900B9;
+        Tue, 30 Jun 2020 18:29:38 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.165])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 7BF3860C81;
+        Tue, 30 Jun 2020 18:29:35 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Tue, 30 Jun 2020 20:29:37 +0200 (CEST)
+Date:   Tue, 30 Jun 2020 20:29:34 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Nicholas Piggin <npiggin@gmail.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>, Jan Kara <jack@suse.cz>,
+        Lukas Czerner <lczerner@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: wait_on_page_bit_common(TASK_KILLABLE, EXCLUSIVE) can miss
+ wakeup?
+Message-ID: <20200630182933.GC26512@redhat.com>
+References: <CAHk-=whvVWNXPJq1k566zn4SfXAifXtiA7T+7JFweR3rQ0nc9A@mail.gmail.com>
+ <1593396958.ydiznwsuu8.astroid@bobo.none>
+ <20200629140245.GB20323@redhat.com>
+ <1593482844.k3rh7s05o8.astroid@bobo.none>
+ <20200630061708.GA21263@redhat.com>
+ <1593505946.t0nxq8q8kj.astroid@bobo.none>
+ <20200630105354.GB23871@redhat.com>
+ <20200630113637.GC23871@redhat.com>
+ <20200630115052.GD23871@redhat.com>
+ <CAHk-=wgfjK_-Wfkb6yXYpB5WfOv5yP2NiFO68yQfBfnzRu4yYQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgfjK_-Wfkb6yXYpB5WfOv5yP2NiFO68yQfBfnzRu4yYQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The drm/omap driver was fixed to correct an issue where using a
-divider of 32 breaks the DSS despite the TRM stating 32 is a valid
-number.  Through experimentation, it appears that 31 works, and
-it is consistent with the value used by the drm/omap driver.
+On 06/30, Linus Torvalds wrote:
+>
+> On Tue, Jun 30, 2020 at 4:51 AM Oleg Nesterov <oleg@redhat.com> wrote:
+> >
+> > On 06/30, Oleg Nesterov wrote:
+> > >
+> > > may be someting like this
+> >
+> > or this ...
+>
+> Guys, I'd suggest we either
+>
+>  (a) do the minimal ugly one-liner workaround
+>
+> or
+>
+>  (b) do something *much* more radical.
 
-This patch fixes the divider for fbdev driver instead of the drm.
+I agree, and let me repeat I think your one-liner is fine.
 
-Fixes: f76ee892a99e ("omapfb: copy omapdss & displays for omapfb")
+I just tried to discuss the possible alternatives to that on-liner for the
+start.
 
-Cc: <stable@vger.kernel.org> #4.9+
-Signed-off-by: Adam Ford <aford173@gmail.com>
----
-Linux 4.4 will need a similar patch, but it doesn't apply cleanly.
+>    the wake_page_function() would actually do
 
-The DRM version of this same fix is:
-e2c4ed148cf3 ("drm/omap: fix max fclk divider for omap36xx")
+I swear, I too thought about changing wake_page_function() but got lost ;)
 
+The very fact it returns -1 if test_bit() is true suggests it can do more.
 
-diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dss.c b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
-index 7252d22dd117..bfc5c4c5a26a 100644
---- a/drivers/video/fbdev/omap2/omapfb/dss/dss.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
-@@ -833,7 +833,7 @@ static const struct dss_features omap34xx_dss_feats = {
- };
- 
- static const struct dss_features omap3630_dss_feats = {
--	.fck_div_max		=	32,
-+	.fck_div_max		=	31,
- 	.dss_fck_multiplier	=	1,
- 	.parent_clk_name	=	"dpll4_ck",
- 	.dpi_select_source	=	&dss_dpi_select_source_omap2_omap3,
--- 
-2.25.1
+Oleg.
 
