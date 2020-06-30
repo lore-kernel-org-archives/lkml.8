@@ -7,67 +7,67 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB24C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:51:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DA0AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:51:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 852BD206BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:51:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D3F0206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:51:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sd4ljwqm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RmUE4xRR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388460AbgF3Nvm (ORCPT
+        id S2388478AbgF3Nvr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 09:51:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47706 "EHLO
+        Tue, 30 Jun 2020 09:51:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47700 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388415AbgF3Nv3 (ORCPT
+        with ESMTP id S2388412AbgF3Nv1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 09:51:29 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95C8DC03E97E
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:51:28 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id s10so20236143wrw.12
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:51:28 -0700 (PDT)
+        Tue, 30 Jun 2020 09:51:27 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B84AC03E97B
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:51:27 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id z15so9004980wrl.8
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:51:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=PcEwXK0xNmm8KLbdljUMIqWDcW1MZg3tkSRXZHPr9pQ=;
-        b=sd4ljwqmp/zYlzEoyZu1xy0nSWXuHKG4YDJ8lnb8YsfDmzJwM0MYDZEmm+1XCWSUer
-         kEcYOjz7nPz45b2R1EaJZoW1wAI9UIwneyJO56ceV1BdxO3seNPw/q3Yf0qJZ2sM+dXF
-         Zr39Osy771y39P14DYzfnfHvyUTVYsS5B13UlvieqiYUEek39OqnSmcL9pS0C1N6PAx5
-         ycM5xQ2Vp7wOT0V7xpt8oRAWeptXJLiTuEkBkKCsI/CZLRgrEUGZpIaUJNiMAB0pQVev
-         pwLjI03jAZ0xVV8yfggMZ0IQCjTTutEPkZ4T5h2Ry/WRKyV8nLkk5Ua9TTJ81pphvVfo
-         XNWw==
+        bh=RJCjtk9nocbEbC4CT5qyevqfhFFyrky+2iu8F1RJDRM=;
+        b=RmUE4xRRiwVsmYoHLqv4r8cSKHDYrBB658nvefHkaSclGp0eS91gB+SAjnzDGVUbpE
+         kdr/4pBlbcXLjisWngtOtitsAZFIpCmfZaYhQEdP1rkjRpxU1wj1JnQcqawvmOp08ZIe
+         JHNA4T0IV8DLKk3SXIU+0TtuyX/ExSs0VvHDP3FNG/f1VfGCOBoHEpDTTbZesPaUe08R
+         I6jtzOgeQr+LSTwrI4W7JVNOsHCBXa/498wBwMdpZvkemTceOt7S8bL9ELpmUO1oE3Wu
+         0sm6241qSpfPTCe+1wBtH8+48VHMraGuS2IYB7cLSaF/SXRnX51aU0xsaTZBcfgRIRxI
+         VeWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=PcEwXK0xNmm8KLbdljUMIqWDcW1MZg3tkSRXZHPr9pQ=;
-        b=Dxo+YmQZOKyHuRHO+yI5meZ+9Ky3tgriIzfYRB9sRQFZYtlxQoaO1DII73aOTrtD4N
-         aOvPazWppf1EvAbzOV8CUzNmuOjdSwfuJQetP8CBfj0X4rqX56bw8FaZor2cSuxNIgH4
-         Glqaae0y+/r1+urMzHM4GtfrAPRjxnKl+jkeV7XzKGfUe1K1LiqX4A6aKO6GzY6dOgw6
-         1vjX/XJhNRa3YUVn/4wvRttqAhefjiG4eo3hFZ1XdlN1pazT0FWGDJriota/MxWl+RP6
-         m5unp0VXFWdk7tOKF+6PvMsig+URFkhfeszX2m/xMGct+fo8R6orLgIW8NX1NcYaia7T
-         Brkw==
-X-Gm-Message-State: AOAM533Fm6OeX2t+cibd23swlaAQrPxi6SBuzNzxnGRt2kB/JDhuD6nt
-        l4KKyDCk5IWr8B4nHUEcHo9xb+lqWMA=
-X-Google-Smtp-Source: ABdhPJxZLNyr0uQ8NR+OdfFIu/76siTbfZmzTER0rduvkESdd8zMDl2QiaPTsICt2/mN/E+Xl8xGcg==
-X-Received: by 2002:adf:c382:: with SMTP id p2mr21631803wrf.283.1593525086937;
-        Tue, 30 Jun 2020 06:51:26 -0700 (PDT)
+        bh=RJCjtk9nocbEbC4CT5qyevqfhFFyrky+2iu8F1RJDRM=;
+        b=qkZ9mmp0lWqQ8C0ss+BwVDeZlHiKP6cfNmgkTut2U7D7NZ74qjCbi4OuoF4+rA1Z/7
+         /4NLP4lDZ7Z6I5wjx+INWyI5CdVfzG6xDiNtcrYT8xPykTgHMtx65pGi7Qd2j+l9eiso
+         NyIQ52I6lLbx4a41n+FJnewttIzRJFsxuih/CBgS7Ogi7/Kywcm3uFztX2+gIL0IGdLH
+         iblv7X5Xres+MpG/VpChc56VfvwJtWqjc88FsVW6QO6V8XyyW7hKt23uD506TKUZvW6n
+         u8fG3ML2d4Q1XeUIHAOCG0PmSBU7lASh2qHBvD+KcnLd28QiA/KUWhPhbpqOzuBDcEmZ
+         hOqw==
+X-Gm-Message-State: AOAM531zFIR1CwB4JHUKUznzJBdnICB7ERUwGB0buUvmfmwBOD+aHmqW
+        7T5Cy+AvwEC0nanpmh9UISWFmA==
+X-Google-Smtp-Source: ABdhPJx2kkPJCP6s7Z7K+iQmwN4Qs9Wxn6yYUEBx+rYFR+LhJUUCrVnVwUsObMJQldJQDD2uO1u9wg==
+X-Received: by 2002:a5d:60d0:: with SMTP id x16mr22596798wrt.5.1593525085786;
+        Tue, 30 Jun 2020 06:51:25 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id t4sm3876746wmf.4.2020.06.30.06.51.25
+        by smtp.gmail.com with ESMTPSA id t4sm3876746wmf.4.2020.06.30.06.51.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 06:51:26 -0700 (PDT)
+        Tue, 30 Jun 2020 06:51:25 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     arnd@arndb.de, gregkh@linuxfoundation.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
         Sudeep Dutt <sudeep.dutt@intel.com>,
         Ashutosh Dixit <ashutosh.dixit@intel.com>
-Subject: [PATCH 12/30] misc: mic: host: mic_x100: Add missing descriptions to kerneldoc headers
-Date:   Tue, 30 Jun 2020 14:50:52 +0100
-Message-Id: <20200630135110.2236389-13-lee.jones@linaro.org>
+Subject: [PATCH 11/30] misc: mic: host: mic_intr: Properly document function arguments
+Date:   Tue, 30 Jun 2020 14:50:51 +0100
+Message-Id: <20200630135110.2236389-12-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200630135110.2236389-1-lee.jones@linaro.org>
 References: <20200630135110.2236389-1-lee.jones@linaro.org>
@@ -78,48 +78,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes the following W=1 warnings:
+mic_interrupt() and mic_setup_msix() have incomplete documentation.
 
- drivers/misc/mic/host/mic_x100.c:127: warning: Function parameter or member 'doorbell' not described in 'mic_x100_send_sbox_intr'
- drivers/misc/mic/host/mic_x100.c:148: warning: Function parameter or member 'doorbell' not described in 'mic_x100_send_rdmasr_intr'
- drivers/misc/mic/host/mic_x100.c:511: warning: Function parameter or member 'dma_addr' not described in 'mic_x100_smpt_set'
- drivers/misc/mic/host/mic_x100.c:511: warning: Function parameter or member 'index' not described in 'mic_x100_smpt_set'
+Fixes the following W=1 kernel build warnings:
+
+ drivers/misc/mic/host/mic_intr.c:42: warning: Function parameter or member 'irq' not described in 'mic_interrupt'
+ drivers/misc/mic/host/mic_intr.c:42: warning: Function parameter or member 'dev' not described in 'mic_interrupt'
+ drivers/misc/mic/host/mic_intr.c:188: warning: Function parameter or member 'pdev' not described in 'mic_setup_msix'
 
 Cc: Sudeep Dutt <sudeep.dutt@intel.com>
 Cc: Ashutosh Dixit <ashutosh.dixit@intel.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/misc/mic/host/mic_x100.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/misc/mic/host/mic_intr.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/misc/mic/host/mic_x100.c b/drivers/misc/mic/host/mic_x100.c
-index 843ce13750158..f5536c1ad6071 100644
---- a/drivers/misc/mic/host/mic_x100.c
-+++ b/drivers/misc/mic/host/mic_x100.c
-@@ -121,6 +121,7 @@ static void mic_x100_disable_interrupts(struct mic_device *mdev)
+diff --git a/drivers/misc/mic/host/mic_intr.c b/drivers/misc/mic/host/mic_intr.c
+index 433d35dc17216..85b3221b5d407 100644
+--- a/drivers/misc/mic/host/mic_intr.c
++++ b/drivers/misc/mic/host/mic_intr.c
+@@ -37,6 +37,8 @@ static irqreturn_t mic_thread_fn(int irq, void *dev)
  /**
-  * mic_x100_send_sbox_intr - Send an MIC_X100_SBOX interrupt to MIC.
-  * @mdev: pointer to mic_device instance
-+ * @doorbell: doorbell number
+  * mic_interrupt - Generic interrupt handler for
+  * MSI and INTx based interrupts.
++ * @irq:  interrupt to handle (unused)
++ * @dev: pointer to the mic_device instance
   */
- static void mic_x100_send_sbox_intr(struct mic_device *mdev,
- 				    int doorbell)
-@@ -142,6 +143,7 @@ static void mic_x100_send_sbox_intr(struct mic_device *mdev,
- /**
-  * mic_x100_send_rdmasr_intr - Send an RDMASR interrupt to MIC.
-  * @mdev: pointer to mic_device instance
-+ * @doorbell: doorbell number
-  */
- static void mic_x100_send_rdmasr_intr(struct mic_device *mdev,
- 				      int doorbell)
-@@ -503,6 +505,8 @@ static u32 mic_x100_get_postcode(struct mic_device *mdev)
- /**
-  * mic_x100_smpt_set - Update an SMPT entry with a DMA address.
-  * @mdev: pointer to mic_device instance
-+ * @dma_addr: DMA address to use
-+ * @index: entry to write to
+ static irqreturn_t mic_interrupt(int irq, void *dev)
+ {
+@@ -180,7 +182,7 @@ static u8 mic_unregister_intr_callback(struct mic_device *mdev, u32 idx)
+  * mic_setup_msix - Initializes MSIx interrupts.
   *
-  * RETURNS: none.
+  * @mdev: pointer to mic_device instance
+- *
++ * @pdev: PCI device structure
+  *
+  * RETURNS: An appropriate -ERRNO error value on error, or zero for success.
   */
 -- 
 2.25.1
