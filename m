@@ -2,110 +2,140 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64438C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:07:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03170C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 325D8206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:07:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KhM5TNNJ"
+	by mail.kernel.org (Postfix) with ESMTP id D0689206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:10:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593544227;
+	bh=bvlrBIfobkJqYUwxFksgp5a8Mp33hFTvnGQJoruLeuY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=wlVYV4SsKqdS76ze8MMIujMz1pyzGSEMmIDfeL/ripaIKRNW658eK8vc0bBIcskaY
+	 saGNOpoj0YnBXlAQbK861ig1iovbVKr9PSuPDcFXWAmo3uih6rnBwlIMPvAG37EkS4
+	 aSC1KHAZ0xbHawwCHRrynkrd7ZFnRUM3qa/Z1hk4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726264AbgF3THC (ORCPT
+        id S1726404AbgF3TK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 15:07:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39962 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbgF3THC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 15:07:02 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C458C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 12:07:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=8SCcBWWb9Ctvl0dyVfm1njpm180tgPXsVuvvAerOVuw=; b=KhM5TNNJYPrfH10hkZJUsGzJc5
-        BwEd2jVXc8DS7zoUGhFjT1jHsQ4IPSZVF0W+mZGObxHsC20DvAEDRkZgs+T6WseecwsdoiUFKNuqJ
-        FVhfxQR5VwBPcx/TOb8tKEVftSfAp/MxRxy7P0aqQvjk9KcsphA7iQeMWuhBSraUq5MqkyidCqBkf
-        1enrV016vxPb3rS5YWniqhvsUQQA7lb7pU44A+BoGAYPn+owN8qJcCXruoX65JDewwc2CeqiYmejv
-        0HiicbmlGCFX9bVcLuZC/FG5FFdGYAhw1QY7BgGJT1RTXbjuBg64y+taSSos47MgIt44GkbnnTAMz
-        WDBhU77w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jqLaf-0000uI-7S; Tue, 30 Jun 2020 19:06:45 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B7E3C30015A;
-        Tue, 30 Jun 2020 21:06:43 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 99F04201A79C5; Tue, 30 Jun 2020 21:06:43 +0200 (CEST)
-Date:   Tue, 30 Jun 2020 21:06:43 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Chris Redpath <chris.redpath@arm.com>,
-        Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 2/2] sched/uclamp: Protect uclamp fast path code with
- static key
-Message-ID: <20200630190643.GC4817@hirez.programming.kicks-ass.net>
-References: <20200630112123.12076-1-qais.yousef@arm.com>
- <20200630112123.12076-3-qais.yousef@arm.com>
- <20200630170751.GA4817@hirez.programming.kicks-ass.net>
- <20200630175502.otw4seymlynghje7@e107158-lin.cambridge.arm.com>
+        Tue, 30 Jun 2020 15:10:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57008 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726347AbgF3TKY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 15:10:24 -0400
+Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82CF4206A1;
+        Tue, 30 Jun 2020 19:10:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593544223;
+        bh=bvlrBIfobkJqYUwxFksgp5a8Mp33hFTvnGQJoruLeuY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ydWGPy5P0M/MOtzOb7cUumHcgEcBKEz3HcrctoB7EZjLFRYWjETnvQegJG24Fg8zO
+         xdATpa8ivXsc6/01zIHIA/AoOIV2O+3HuDASjsb0d3HqK5nNymjAeV/55d0zIGRmBR
+         vKzo0Veies9WvUU+irZ5vR96h9P95/xMpmqmR+oQ=
+Received: by mail-ot1-f52.google.com with SMTP id t18so6510720otq.5;
+        Tue, 30 Jun 2020 12:10:23 -0700 (PDT)
+X-Gm-Message-State: AOAM530xR4yAenqF71g56/6apwLmanOn1fvEmNcQQsOvPM+50Cx0My/k
+        KlxUIXiA5sxaAwv3kDgkbwzt52xQwEuYzFbkTI8=
+X-Google-Smtp-Source: ABdhPJxyBSIMgPHRikk+QNpo1LzL2zQLLth65d1YiWHuRfZ5Bbyrei2mNQsDdeewN/53+vnvUBS3wNYrt0lG66uBKBo=
+X-Received: by 2002:a9d:4a8f:: with SMTP id i15mr20375352otf.77.1593544222958;
+ Tue, 30 Jun 2020 12:10:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200630175502.otw4seymlynghje7@e107158-lin.cambridge.arm.com>
+References: <20200615232504.1848159-1-tyhicks@linux.microsoft.com>
+ <CAMj1kXHJbsxA2-jqpbLnUeeNfM0oC8Sh70+axOKoBCFMJ8+jKQ@mail.gmail.com> <20200630185327.pasrylg7og7rlno3@redhat.com>
+In-Reply-To: <20200630185327.pasrylg7og7rlno3@redhat.com>
+From:   Ard Biesheuvel <ardb@kernel.org>
+Date:   Tue, 30 Jun 2020 21:10:11 +0200
+X-Gmail-Original-Message-ID: <CAMj1kXFtC+2VQxg8nqZL3+88nC5CT+smhibB8KgvMMTOhgtU3A@mail.gmail.com>
+Message-ID: <CAMj1kXFtC+2VQxg8nqZL3+88nC5CT+smhibB8KgvMMTOhgtU3A@mail.gmail.com>
+Subject: Re: [PATCH] tpm: Require that all digests are present in
+ TCG_PCR_EVENT2 structures
+To:     Peter Jones <pjones@redhat.com>
+Cc:     Tyler Hicks <tyhicks@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Petr Vandrovec <petr@vmware.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Thirupathaiah Annapureddy <thiruan@microsoft.com>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 06:55:02PM +0100, Qais Yousef wrote:
-> On 06/30/20 19:07, Peter Zijlstra wrote:
+On Tue, 30 Jun 2020 at 20:53, Peter Jones <pjones@redhat.com> wrote:
+>
+> On Tue, Jun 16, 2020 at 11:08:38AM +0200, Ard Biesheuvel wrote:
+> > (cc Matthew and Peter)
+> >
+> > On Tue, 16 Jun 2020 at 01:28, Tyler Hicks <tyhicks@linux.microsoft.com> wrote:
+> > >
+> > > Require that the TCG_PCR_EVENT2.digests.count value strictly matches the
+> > > value of TCG_EfiSpecIdEvent.numberOfAlgorithms in the event field of the
+> > > TCG_PCClientPCREvent event log header. Also require that
+> > > TCG_EfiSpecIdEvent.numberOfAlgorithms is non-zero.
+> > >
+> > > The TCG PC Client Platform Firmware Profile Specification section 9.1
+> > > (Family "2.0", Level 00 Revision 1.04) states:
+> > >
+> > >  For each Hash algorithm enumerated in the TCG_PCClientPCREvent entry,
+> > >  there SHALL be a corresponding digest in all TCG_PCR_EVENT2 structures.
+> > >  Note: This includes EV_NO_ACTION events which do not extend the PCR.
+> > >
+> > > Section 9.4.5.1 provides this description of
+> > > TCG_EfiSpecIdEvent.numberOfAlgorithms:
+> > >
+> > >  The number of Hash algorithms in the digestSizes field. This field MUST
+> > >  be set to a value of 0x01 or greater.
+> > >
+> > > Enforce these restrictions, as required by the above specification, in
+> > > order to better identify and ignore invalid sequences of bytes at the
+> > > end of an otherwise valid TPM2 event log. Firmware doesn't always have
+> > > the means necessary to inform the kernel of the actual event log size so
+> > > the kernel's event log parsing code should be stringent when parsing the
+> > > event log for resiliency against firmware bugs. This is true, for
+> > > example, when firmware passes the event log to the kernel via a reserved
+> > > memory region described in device tree.
+> > >
+> >
+> > When does this happen? Do we have code in mainline that does this?
+> >
+> > > Prior to this patch, a single bit set in the offset corresponding to
+> > > either the TCG_PCR_EVENT2.eventType or TCG_PCR_EVENT2.eventSize fields,
+> > > after the last valid event log entry, could confuse the parser into
+> > > thinking that an additional entry is present in the event log. This
+> > > patch raises the bar on how difficult it is for stale memory to confuse
+> > > the kernel's event log parser but there's still a reliance on firmware
+> > > to properly initialize the remainder of the memory region reserved for
+> > > the event log as the parser cannot be expected to detect a stale but
+> > > otherwise properly formatted firmware event log entry.
+> > >
+> > > Fixes: fd5c78694f3f ("tpm: fix handling of the TPM 2.0 event logs")
+> > > Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+> > > ---
+> >
+> > I am all for stringent checks, but this could potentially break
+> > measured boot on systems that are working fine today, right?
+>
+> Seems like in that case our measurement is unreliable and can't really
+> be trusted.  That said, having things that were using the measurements
+> before this suddenly stop being able to access sealed secrets is not a
+> great experience for the user who unwittingly bought the junk hardware.
+> Same with the zero-supported-hashes case.  It would be nice to at log it
+> and have a way for them to opt-in to allowing the old measurement to go
+> through, so they can recover their data, though I don't know what that
+> method would be if the measured command line is one of their
+> dependencies.
+>
 
-> > There's a fun race described in 9107c89e269d ("perf: Fix race between
-> > event install and jump_labels"), are we sure this isn't also susceptible
-> > to something similar?
-> > 
-> > I suspect not, but I just wanted to make sure.
-> 
-> IIUC, the worry is that not all CPUs might have observed the change in the
-> static key state; hence could not be running the patched
-> enqueue/dequeue_task(), so we could end up with some CPUs accounting for
-> uclamp in the enqueue/dequeue path but not others?
-> 
-> I was hoping this synchronization is guaranteed by the static_branch_*() call.
-
-It is, that isn't quite the the problem. Looking at it more I think
-commit 1dbb6704de91 ("jump_label: Fix concurrent
-static_key_enable/disable()") fixed some of it.
-
-From what I can remember there were two parts to this problem, one being
-fixed by the above commit, the other being that if we enable while a
-task is running we miss the switch-in event (exactly how in this patch
-we miss the enqueue).
-
-Due to the missing switch-in, the state is 'weird' and the subsequent
-IPI to install a remote event didn't quite work.
-
-So I put that sync_sched() call in to guarantee all CPUs have done a
-schedule() cycle after having the key switched. This makes sure that
-every running task has seen the switch-in and thus the state is as
-expected.
-
-But like I said, I think we're good, that one extra branch deals with
-the half-state.
+Maybe use a EFI variable?
