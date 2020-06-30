@@ -2,150 +2,129 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DF2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:57:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D0DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:59:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6EAED2078C
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:57:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="O+qDhqp/"
+	by mail.kernel.org (Postfix) with ESMTP id 7A97B2078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:59:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbgF3A5U (ORCPT
+        id S1727062AbgF3A7A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 20:57:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41478 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725998AbgF3A5T (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 20:57:19 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9829C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 17:57:17 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id h4so1688154plt.9
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 17:57:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NeFvl6iJeeHf87XNSUTsRy0UAvKm2bIY45kmfTiQtuI=;
-        b=O+qDhqp/9Z2C6la+HAURaKHJPO36NUGeQF/9Hch0nhYEfSMvLO07Qw7klPURSJEeOO
-         dYLCsFV4aqtI89Cx6vOLLeGR1WaptX+zc45XrmOsoTaqLQpC8lzqW2NptyvATmcPrFEm
-         hrMdn5IaZzALNyVub1B61JYK/T1QAh4ShI2m0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NeFvl6iJeeHf87XNSUTsRy0UAvKm2bIY45kmfTiQtuI=;
-        b=XRzQTMbbNGIQUIe5HXUcbi8GL3+XCT0fCZjWuDDbRMtZmti38xddEfwnpW+2DLXYDU
-         bgwxxjzgGaHemmKRWi8qLnfDZSIS8h/ynW4FzDcBfph1A8Y2TJK9k6o89TxNEhAsJ4Mq
-         csIb9c4wVhl9KOu1Cj3ps2+E0XytJfeKm75tK/A2+OJ/kI+QwvhYSPki159e8+rfz0fM
-         82vap9pTvc7ok4M498g7lAX2hvhB6LOgVubK5eDnrl+SHaC+EqW6U3YO/fZn6whLW4Nr
-         sIQsKPNKO/OQiKDkMN9hodUXbr7dstisr8p8iXSh5/8ZYQD1fodjT7VysINgUZAIEWwU
-         Sl2g==
-X-Gm-Message-State: AOAM532aWaBw0JiLGHT2g/+kzOTSINb8IW5pAAh1/iZ9nsyGDZz35nE2
-        bX8ApGPXtm2n8wltwSV7IG9N2A==
-X-Google-Smtp-Source: ABdhPJwropla7RJtZU3BGPtU4mxVdm1eWSzK3VwHZ8tH//98aeELhkJ2WuDiBwW1hFKj6t+qsxtHKA==
-X-Received: by 2002:a17:902:fe11:: with SMTP id g17mr15242772plj.145.1593478637408;
-        Mon, 29 Jun 2020 17:57:17 -0700 (PDT)
-Received: from exogeni.mtv.corp.google.com ([2620:15c:202:1:5be8:f2a6:fd7b:7459])
-        by smtp.gmail.com with ESMTPSA id x7sm715732pfq.197.2020.06.29.17.57.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 17:57:16 -0700 (PDT)
-From:   Derek Basehore <dbasehore@chromium.org>
-Cc:     dmitry.torokhov@gmail.com, dbasehore@chromium.org,
-        jiada_wang@mentor.com, jeffrey.l.hugo@gmail.com,
-        benjamin.tissoires@redhat.com, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] Input: elan_i2c - only increment wakeup count on touch
-Date:   Mon, 29 Jun 2020 17:57:07 -0700
-Message-Id: <20200630005707.2181126-1-dbasehore@chromium.org>
-X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
+        Mon, 29 Jun 2020 20:59:00 -0400
+Received: from mail.loongson.cn ([114.242.206.163]:55686 "EHLO loongson.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726175AbgF3A67 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 20:58:59 -0400
+Received: from localhost.localdomain (unknown [61.148.244.181])
+        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxD2hJjvpekrVMAA--.366S2;
+        Tue, 30 Jun 2020 08:58:54 +0800 (CST)
+From:   Lichao Liu <liulichao@loongson.cn>
+To:     tsbogend@alpha.franken.de, yuanjunqing@loongson.cn,
+        chenhc@lemote.com, jiaxun.yang@flygoat.com
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Lichao Liu <liulichao@loongson.cn>
+Subject: [PATCH] MIPS: Grant pte read permission, even if vma only have VM_WRITE permission.
+Date:   Tue, 30 Jun 2020 08:58:45 +0800
+Message-Id: <20200630005845.1239974-1-liulichao@loongson.cn>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+X-CM-TRANSID: AQAAf9DxD2hJjvpekrVMAA--.366S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxur48Aw1fuF15Zry3Kr1UAwb_yoWrGr4xpa
+        4kCryxArWaqry7Zry7Zw17Zw4rAa9IqFW8Xw1Uu3W5ua1fWryktrZIka92va4Du393Cw4U
+        Zw4UXr45uw4av37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUka14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
+        6F4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
+        4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+        I7IYx2IY67AKxVWUtVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
+        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_twCF
+        04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r
+        18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vI
+        r41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr
+        1lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY
+        6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUr73kUUUUU=
+X-CM-SenderInfo: xolxzxpfkd0qxorr0wxvrqhubq/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This moves the wakeup increment for elan devices to the touch report.
-This prevents the drivers from incorrectly reporting a wakeup when the
-resume callback resets then device, which causes an interrupt to
-occur. This also avoids error messages when these interrupts occur,
-since this behavior is expected.
+Background:
+a cpu have RIXI feature.
 
-Signed-off-by: Derek Basehore <dbasehore@chromium.org>
+Now, if a vma only have VM_WRITE permission, the vma->vm_page_prot will
+set _PAGE_NO_READ. In general case, someone read the vma will trigger
+RI exception, then do_page_fault will handle it.
+
+But in the following scene, program will hang.
+
+example scene(a trinity test case):
+futex_wake_op() will read uaddr, which is passed from user space.
+If a program mmap a vma, which only have VM_WRITE permission,
+then call futex, and use an address belonging to the vma as uaddr
+argument. futex_wake_op() will read the address after disable
+pagefault and set correct __ex_table(return -14 directly),
+do_page_fault will find the correct __ex_table, and then return -14.
+Then futex_wake_op() will try to fixup this error by call
+fault_in_user_writeable(), because the pte have write permission,
+so handle_mm_fault will do nothing, and return success.
+But the RI bit in pte and tlb entry still exsits.
+The program will deadloop:
+do_page_fault -> find __ex_table success -> return -14;
+futex_wake_op -> call fault_in_user_writeable() to fix the error -> retry;
+do_page_fault -> find __ex_table success -> return -14;
+futex_wake_op -> call fault_in_user_writeable() to fix the error -> retry;
+.....
+
+The first perspective of root cause:
+Futex think a pte have write permission will have read permission.
+When page fault, it only try to fixup with FAULT_FLAG_WRITE.
+
+The second perspective of root cause:
+MIPS platform doesn't grant pte read permission, if vma only have
+VM_WRITE permission.But X86 and arm64 will.
+
+Most of the architecture will grant pte read permission, even if
+the vma only have VM_WRITE permission.
+And if the cpu doesn't have RIXI feature, MIPS platform will
+grant pte read permission by set _PAGE_READ.
+So I think we should fixup thix problem by grant pte read permission,
+even if vma only have VM_WRITE permission.
+
+Signed-off-by: Lichao Liu <liulichao@loongson.cn>
 ---
- drivers/input/mouse/elan_i2c_core.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ arch/mips/mm/cache.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
-index cdbe6b38c73c1..6ad53a75f9807 100644
---- a/drivers/input/mouse/elan_i2c_core.c
-+++ b/drivers/input/mouse/elan_i2c_core.c
-@@ -49,6 +49,7 @@
+diff --git a/arch/mips/mm/cache.c b/arch/mips/mm/cache.c
+index ad6df1cea866..72b60c44a962 100644
+--- a/arch/mips/mm/cache.c
++++ b/arch/mips/mm/cache.c
+@@ -160,7 +160,7 @@ static inline void setup_protection_map(void)
+ 	if (cpu_has_rixi) {
+ 		protection_map[0]  = __pgprot(_page_cachable_default | _PAGE_PRESENT | _PAGE_NO_EXEC | _PAGE_NO_READ);
+ 		protection_map[1]  = __pgprot(_page_cachable_default | _PAGE_PRESENT | _PAGE_NO_EXEC);
+-		protection_map[2]  = __pgprot(_page_cachable_default | _PAGE_PRESENT | _PAGE_NO_EXEC | _PAGE_NO_READ);
++		protection_map[2]  = __pgprot(_page_cachable_default | _PAGE_PRESENT | _PAGE_NO_EXEC);
+ 		protection_map[3]  = __pgprot(_page_cachable_default | _PAGE_PRESENT | _PAGE_NO_EXEC);
+ 		protection_map[4]  = __pgprot(_page_cachable_default | _PAGE_PRESENT);
+ 		protection_map[5]  = __pgprot(_page_cachable_default | _PAGE_PRESENT);
+@@ -169,7 +169,7 @@ static inline void setup_protection_map(void)
  
- #define ETP_MAX_FINGERS		5
- #define ETP_FINGER_DATA_LEN	5
-+#define ETP_REPORT_LEN_OFFSET	0
- #define ETP_REPORT_ID		0x5D
- #define ETP_TP_REPORT_ID	0x5E
- #define ETP_REPORT_ID_OFFSET	2
-@@ -1018,6 +1019,8 @@ static void elan_report_absolute(struct elan_tp_data *data, u8 *packet)
- 	u8 hover_info = packet[ETP_HOVER_INFO_OFFSET];
- 	bool contact_valid, hover_event;
- 
-+	pm_wakeup_event(&data->client->dev, 0);
-+
- 	hover_event = hover_info & 0x40;
- 	for (i = 0; i < ETP_MAX_FINGERS; i++) {
- 		contact_valid = tp_info & (1U << (3 + i));
-@@ -1041,6 +1044,8 @@ static void elan_report_trackpoint(struct elan_tp_data *data, u8 *report)
- 	u8 *packet = &report[ETP_REPORT_ID_OFFSET + 1];
- 	int x, y;
- 
-+	pm_wakeup_event(&data->client->dev, 0);
-+
- 	if (!data->tp_input) {
- 		dev_warn_once(&data->client->dev,
- 			      "received a trackpoint report while no trackpoint device has been created. Please report upstream.\n");
-@@ -1065,7 +1070,6 @@ static void elan_report_trackpoint(struct elan_tp_data *data, u8 *report)
- static irqreturn_t elan_isr(int irq, void *dev_id)
- {
- 	struct elan_tp_data *data = dev_id;
--	struct device *dev = &data->client->dev;
- 	int error;
- 	u8 report[ETP_MAX_REPORT_LEN];
- 
-@@ -1083,7 +1087,13 @@ static irqreturn_t elan_isr(int irq, void *dev_id)
- 	if (error)
- 		goto out;
- 
--	pm_wakeup_event(dev, 0);
-+	/*
-+	 * Controllers may send a full length report on power on and reset
-+	 * cases. There are only meaningless bytes in these reports except for
-+	 * report[ETP_REPORT_LEN_OFFSET], which is 0.
-+	 */
-+	if (!report[ETP_REPORT_LEN_OFFSET])
-+		goto out;
- 
- 	switch (report[ETP_REPORT_ID_OFFSET]) {
- 	case ETP_REPORT_ID:
-@@ -1093,7 +1103,7 @@ static irqreturn_t elan_isr(int irq, void *dev_id)
- 		elan_report_trackpoint(data, report);
- 		break;
- 	default:
--		dev_err(dev, "invalid report id data (%x)\n",
-+		dev_err(&data->client->dev, "invalid report id data (%x)\n",
- 			report[ETP_REPORT_ID_OFFSET]);
- 	}
- 
+ 		protection_map[8]  = __pgprot(_page_cachable_default | _PAGE_PRESENT | _PAGE_NO_EXEC | _PAGE_NO_READ);
+ 		protection_map[9]  = __pgprot(_page_cachable_default | _PAGE_PRESENT | _PAGE_NO_EXEC);
+-		protection_map[10] = __pgprot(_page_cachable_default | _PAGE_PRESENT | _PAGE_NO_EXEC | _PAGE_WRITE | _PAGE_NO_READ);
++		protection_map[10] = __pgprot(_page_cachable_default | _PAGE_PRESENT | _PAGE_NO_EXEC | _PAGE_WRITE);
+ 		protection_map[11] = __pgprot(_page_cachable_default | _PAGE_PRESENT | _PAGE_NO_EXEC | _PAGE_WRITE);
+ 		protection_map[12] = __pgprot(_page_cachable_default | _PAGE_PRESENT);
+ 		protection_map[13] = __pgprot(_page_cachable_default | _PAGE_PRESENT);
 -- 
-2.27.0.212.ge8ba1cc988-goog
+2.25.1
 
