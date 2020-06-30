@@ -2,182 +2,99 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB1D3C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:32:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75435C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:34:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BAF0206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:32:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Iq79rUu7"
+	by mail.kernel.org (Postfix) with ESMTP id 58FEE206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:34:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593538481;
+	bh=wGCT2REQDWgV/D4xBQ32BC0eZum+4DmZ+a991g6Z2Yo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=F9ObGCEIMeppwgJkrartxVdLa+f6hH9YoWTzX2NmeXTzwgQv5sTUii7tVQxhuRYjO
+	 IDeemVMsCxWcIPEQfQME0wY7cV0wqGkOxeRoZTDNTTsQTdXDkrTmSNTXMD8vCbKBVi
+	 F3KmPQnu4/VIC9dOBJD3gwSXRradGEfVcpaB2y9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387711AbgF3Rc3 (ORCPT
+        id S2387873AbgF3Rek (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 13:32:29 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:37581 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730171AbgF3Rc2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 13:32:28 -0400
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593538347; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=ZFcSwfI5UdhOXhdrQZvHHPaea1ggOYoJbFhXiurrIwM=; b=Iq79rUu7QvScRzXQSAihxZlTWaKL5YIbxMXOFJJ6oMzDswFbZgW3r3IeEKZnxlOB+5O/mwf3
- 0JR3My1K5F21+l/z2k+92/MuqQG8iqF3J2+QiDheA2E+rVdY/FvGSuDkXmVIC/Htdchzx4Ll
- 8SUyx6Ek69TD2m0QzqnlszJCF0c=
-X-Mailgun-Sending-Ip: 69.72.43.7
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org
- (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n11.prod.us-west-2.postgun.com with SMTP id
- 5efb772aad153efa34f14356 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 30 Jun 2020 17:32:26
- GMT
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E593CC433CA; Tue, 30 Jun 2020 17:32:25 +0000 (UTC)
-Received: from [192.168.8.176] (cpe-70-95-149-85.san.res.rr.com [70.95.149.85])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: asutoshd)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D29B9C433C8;
-        Tue, 30 Jun 2020 17:32:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D29B9C433C8
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
-Subject: Re: [PATCH v2] scsi: ufs: Disable WriteBooster capability in
- non-supported UFS device
-To:     Stanley Chu <stanley.chu@mediatek.com>, linux-scsi@vger.kernel.org,
-        martin.petersen@oracle.com, avri.altman@wdc.com,
-        alim.akhtar@samsung.com, jejb@linux.ibm.com
-Cc:     beanhuo@micron.com, cang@codeaurora.org, matthias.bgg@gmail.com,
-        bvanassche@acm.org, linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
-        chun-hung.wu@mediatek.com, andy.teng@mediatek.com,
-        chaotian.jing@mediatek.com, cc.chou@mediatek.com
-References: <20200624074110.21919-1-stanley.chu@mediatek.com>
-From:   "Asutosh Das (asd)" <asutoshd@codeaurora.org>
-Message-ID: <7f826f0c-6ed1-b3a3-72c9-aae0a1680e23@codeaurora.org>
-Date:   Tue, 30 Jun 2020 10:32:23 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 30 Jun 2020 13:34:40 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:45497 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726120AbgF3Rej (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 13:34:39 -0400
+Received: by mail-ot1-f67.google.com with SMTP id m2so19063116otr.12;
+        Tue, 30 Jun 2020 10:34:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=aHbMaf3MhGCn830JpN+2/XraG8hdOCn+GvQfr38ofJs=;
+        b=aVGGWQmoN89FW/qfk3rjMGRV5qod9EuholEGHqRD32yN2tZQajUrbSZDLp6AOfaXE4
+         SoorAyHMdVHwxipHZJqe4JcMV3JEzr96Wm+dkRnelg2BODTFxD5lKXhDM5rT8OxNmXRk
+         OcGcDfV6LsvqkqwLG4m90hU+JMatr9GRIpftYT7qoHYwTtlk6Rj4mnW6OA5tOpRZizS4
+         9bPO0NsPfXVe01M+tizcJeelK6pQa07tpqDqrMGijJLmpScrKarIhHD/ekbLCA0gvndZ
+         AXfJz9pf7GZ7JhVc2eZUniuOvpiJ2cQqwKqWN2upNrl4oSV8HaQGoEu8Ka5/UvFqF372
+         a9uQ==
+X-Gm-Message-State: AOAM5304U+g5rey7N9mdRe/hC55Ovebyl85dVwBhQ4ywZauN0hCGIDs7
+        239dXFbP69yXsAx2UhkdOPuYCbrjFsGxoOG8ledW0A==
+X-Google-Smtp-Source: ABdhPJyFPGm4R7qPa9G9T+kW+CgurZWItaas1Fk14ATRaDh/a1cCwIRPWysA2S4F/mBsr4h4Ml+WnZvmNV04xPJvhG8=
+X-Received: by 2002:a9d:7d15:: with SMTP id v21mr18319330otn.118.1593538478366;
+ Tue, 30 Jun 2020 10:34:38 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200624074110.21919-1-stanley.chu@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1593531709-21749-1-git-send-email-sumeet.r.pawnikar@intel.com>
+In-Reply-To: <1593531709-21749-1-git-send-email-sumeet.r.pawnikar@intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 30 Jun 2020 19:34:27 +0200
+Message-ID: <CAJZ5v0hkdDoed7ALMK+DR6h+qxnG3WXFsGMse5z+GcVpws8HPQ@mail.gmail.com>
+Subject: Re: [PATCH] ACPI: fan: fix: Update Tiger Lake ACPI device ID
+To:     Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>
+Cc:     Rafael Wysocki <rafael.j.wysocki@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Zhang, Rui" <rui.zhang@intel.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/24/2020 12:41 AM, Stanley Chu wrote:
-> If UFS device is not qualified to enter the detection of WriteBooster
-> probing by disallowed UFS version or device quirks, then WriteBooster
-> capability in host shall be disabled to prevent any WriteBooster
-> operations in the future.
-> 
-> Fixes: 3d17b9b5ab11 ("scsi: ufs: Add write booster feature support")
-> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+[Cc linux-acpi]
+
+On Tue, Jun 30, 2020 at 5:35 PM Sumeet Pawnikar
+<sumeet.r.pawnikar@intel.com> wrote:
+>
+> Tiger Lake's new unique ACPI device ID for Fan is not valid
+> because of missing 'C' in the ID. Fix this Fan ID by updating it.
+>
+> Fixes: c248dfe7e0ca ("ACPI: fan: Add Tiger Lake ACPI device ID")
+> Signed-off-by: Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>
 > ---
->   drivers/scsi/ufs/ufshcd.c | 35 +++++++++++++++++++----------------
->   1 file changed, 19 insertions(+), 16 deletions(-)
-> 
-Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+>  drivers/acpi/fan.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/acpi/fan.c b/drivers/acpi/fan.c
+> index 873e039ad4b7..62873388b24f 100644
+> --- a/drivers/acpi/fan.c
+> +++ b/drivers/acpi/fan.c
+> @@ -25,8 +25,8 @@
+>
+>  static const struct acpi_device_id fan_device_ids[] = {
+>         {"PNP0C0B", 0},
+> -       {"INT1044", 0},
+>         {"INT3404", 0},
+> +       {"INTC1044", 0},
+>         {"", 0},
+>  };
+>  MODULE_DEVICE_TABLE(acpi, fan_device_ids);
+> --
 
-
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index f173ad1bd79f..c62bd47beeaa 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -6847,21 +6847,31 @@ static int ufshcd_scsi_add_wlus(struct ufs_hba *hba)
->   
->   static void ufshcd_wb_probe(struct ufs_hba *hba, u8 *desc_buf)
->   {
-> +	struct ufs_dev_info *dev_info = &hba->dev_info;
->   	u8 lun;
->   	u32 d_lu_wb_buf_alloc;
->   
->   	if (!ufshcd_is_wb_allowed(hba))
->   		return;
-> +	/*
-> +	 * Probe WB only for UFS-2.2 and UFS-3.1 (and later) devices or
-> +	 * UFS devices with quirk UFS_DEVICE_QUIRK_SUPPORT_EXTENDED_FEATURES
-> +	 * enabled
-> +	 */
-> +	if (!(dev_info->wspecversion >= 0x310 ||
-> +	      dev_info->wspecversion == 0x220 ||
-> +	     (hba->dev_quirks & UFS_DEVICE_QUIRK_SUPPORT_EXTENDED_FEATURES)))
-> +		goto wb_disabled;
->   
->   	if (hba->desc_size[QUERY_DESC_IDN_DEVICE] <
->   	    DEVICE_DESC_PARAM_EXT_UFS_FEATURE_SUP + 4)
->   		goto wb_disabled;
->   
-> -	hba->dev_info.d_ext_ufs_feature_sup =
-> +	dev_info->d_ext_ufs_feature_sup =
->   		get_unaligned_be32(desc_buf +
->   				   DEVICE_DESC_PARAM_EXT_UFS_FEATURE_SUP);
->   
-> -	if (!(hba->dev_info.d_ext_ufs_feature_sup & UFS_DEV_WRITE_BOOSTER_SUP))
-> +	if (!(dev_info->d_ext_ufs_feature_sup & UFS_DEV_WRITE_BOOSTER_SUP))
->   		goto wb_disabled;
->   
->   	/*
-> @@ -6870,17 +6880,17 @@ static void ufshcd_wb_probe(struct ufs_hba *hba, u8 *desc_buf)
->   	 * a max of 1 lun would have wb buffer configured.
->   	 * Now only shared buffer mode is supported.
->   	 */
-> -	hba->dev_info.b_wb_buffer_type =
-> +	dev_info->b_wb_buffer_type =
->   		desc_buf[DEVICE_DESC_PARAM_WB_TYPE];
->   
-> -	hba->dev_info.b_presrv_uspc_en =
-> +	dev_info->b_presrv_uspc_en =
->   		desc_buf[DEVICE_DESC_PARAM_WB_PRESRV_USRSPC_EN];
->   
-> -	if (hba->dev_info.b_wb_buffer_type == WB_BUF_MODE_SHARED) {
-> -		hba->dev_info.d_wb_alloc_units =
-> +	if (dev_info->b_wb_buffer_type == WB_BUF_MODE_SHARED) {
-> +		dev_info->d_wb_alloc_units =
->   		get_unaligned_be32(desc_buf +
->   				   DEVICE_DESC_PARAM_WB_SHARED_ALLOC_UNITS);
-> -		if (!hba->dev_info.d_wb_alloc_units)
-> +		if (!dev_info->d_wb_alloc_units)
->   			goto wb_disabled;
->   	} else {
->   		for (lun = 0; lun < UFS_UPIU_MAX_WB_LUN_ID; lun++) {
-> @@ -6891,7 +6901,7 @@ static void ufshcd_wb_probe(struct ufs_hba *hba, u8 *desc_buf)
->   					(u8 *)&d_lu_wb_buf_alloc,
->   					sizeof(d_lu_wb_buf_alloc));
->   			if (d_lu_wb_buf_alloc) {
-> -				hba->dev_info.wb_dedicated_lu = lun;
-> +				dev_info->wb_dedicated_lu = lun;
->   				break;
->   			}
->   		}
-> @@ -6977,14 +6987,7 @@ static int ufs_get_device_desc(struct ufs_hba *hba)
->   
->   	ufs_fixup_device_setup(hba);
->   
-> -	/*
-> -	 * Probe WB only for UFS-3.1 devices or UFS devices with quirk
-> -	 * UFS_DEVICE_QUIRK_SUPPORT_EXTENDED_FEATURES enabled
-> -	 */
-> -	if (dev_info->wspecversion >= 0x310 ||
-> -	    dev_info->wspecversion == 0x220 ||
-> -	    (hba->dev_quirks & UFS_DEVICE_QUIRK_SUPPORT_EXTENDED_FEATURES))
-> -		ufshcd_wb_probe(hba, desc_buf);
-> +	ufshcd_wb_probe(hba, desc_buf);
->   
->   	/*
->   	 * ufshcd_read_string_desc returns size of the string
-> 
-
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-Linux Foundation Collaborative Project
+Applied as 5.8-rc material with some changelog and subject edits, thanks!
