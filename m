@@ -2,100 +2,190 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 993BAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 22:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63617C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 22:38:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6B930206B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 22:37:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AB99206B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 22:38:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sNVFMT2y"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="C1qW1/fZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726173AbgF3WhD (ORCPT
+        id S1726291AbgF3Wiq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 18:37:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44402 "EHLO
+        Tue, 30 Jun 2020 18:38:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbgF3WhC (ORCPT
+        with ESMTP id S1725845AbgF3Wip (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 18:37:02 -0400
-Received: from mail-pl1-x642.google.com (mail-pl1-x642.google.com [IPv6:2607:f8b0:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1B53C061755;
-        Tue, 30 Jun 2020 15:37:02 -0700 (PDT)
-Received: by mail-pl1-x642.google.com with SMTP id 35so9089802ple.0;
-        Tue, 30 Jun 2020 15:37:02 -0700 (PDT)
+        Tue, 30 Jun 2020 18:38:45 -0400
+Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E7BAC03E979
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 15:38:45 -0700 (PDT)
+Received: by mail-yb1-xb2d.google.com with SMTP id e197so6901142yba.5
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 15:38:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=emf+0oLTtvyOulfK2JhXOE8unU2JcKcniORdAnCXj6o=;
-        b=sNVFMT2ytjauJk2DF0tK/8/LkvFGvQR2hXkOO36ROKYdgagkauGYiLtLcsqSikeNRn
-         VldMK6fH0C9+jisAahsFqdy1UUvOOvaj/sTM7AZFpSzg7H6a4QwINb9gZeR7aqsXL11f
-         N5BGG31019YW0dNSxK7LehPGIXs3EVFhNltZ+Kbye4ICwaNQ9cKrjuKSNA0qLXyIVTi9
-         gqATypqy+wlDNVuOSJQrZYSrKyv+AWlfkivU/8Yw+SomeA/7IsyvmLGDvcOwMx7dcQ8H
-         s+4Q45mlMD3yLAGYRdVjwmADL6MOEBE8HtJwNy5EO97GCdnpTMluuk4+X/uojG5SPNMI
-         ii1A==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GUMmR1bCbl8Toix//XFEea01nhUYad+cjY3JyG8gXsE=;
+        b=C1qW1/fZTX+3AmLLkkwA9JHG+ginoQf0GbKzdeNuuEjqGb2cWzJBLVIq9rGQerTqUC
+         7VMZE9UZZ/3qo88odW+ZD50UtQ4nDN2BnruoxiNp5j//JsQTA24kV9+EeJxbu1Io7OHc
+         wSnZ74IuTToY93nms4/buEo1719ZjA/KBvC1sWozlCLnqtsQUkdcWaw1vXg5VdK+RoTo
+         kNIAUtWYl0/tXOjyN7F4fEjTTVNPePZzRWkFMNQV1SuQOhGo7c4LwVJ8O+4Lqc+lvs+3
+         HqYV+24GjuPvDelt6NBeg2tVwbVX61FkkU6B/TEzsod4cSYlhkC+RRBT9QAryuWIY9If
+         QBrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=emf+0oLTtvyOulfK2JhXOE8unU2JcKcniORdAnCXj6o=;
-        b=f28hVufqPjiPR6n8xbEQ53afP9/LYPT8XHlimOpMCncyFI/re+aggvKRWzi3LPZ5px
-         L7Maff73mRAffEkB++db7TCQI0jzWCvBxnK+lSzAJyMzv3qhB/IGBOepV2/kwQa7Iidb
-         XXHC7k8163EI6QVyGq4HhtJw4pbY96kCFAv7XjjdYAHtZekj50XtUkgALycRxmn9huvN
-         O+bl036K+ebe7zWOxxBLAcAWPC9ZkUYKTH8baMObCtriZBXFrrPHjtbjDRmXmd8cYPrG
-         Q2h7K0FzC0ezl7OQq/K0HkRe4d3Vv7YmhHfkYpY52J2dOBoXaADkpgeinvuTdBjJkE8F
-         uI6w==
-X-Gm-Message-State: AOAM5318aF5FBPHzGqZth1TwcluOjneVhWSex4iSveIwxTHahyo7lOku
-        QTybSCfo8T6oYSM1E17AtHA=
-X-Google-Smtp-Source: ABdhPJxiJ7bFM2eJcMi0Xr3qA6Rus02W2+d30uR8423ZOrfXPyDeBeS0FJPXy6sJ+slc6RyZtIRVSg==
-X-Received: by 2002:a17:902:b716:: with SMTP id d22mr19462455pls.33.1593556621037;
-        Tue, 30 Jun 2020 15:37:01 -0700 (PDT)
-Received: from localhost.localdomain ([1.240.193.107])
-        by smtp.googlemail.com with ESMTPSA id c23sm3137638pfo.32.2020.06.30.15.36.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 15:37:00 -0700 (PDT)
-From:   Kangmin Park <l4stpr0gr4m@gmail.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     linux-mmc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: mmc: sdhci-sirf
-Date:   Wed,  1 Jul 2020 07:36:55 +0900
-Message-Id: <20200630223655.2627-1-l4stpr0gr4m@gmail.com>
-X-Mailer: git-send-email 2.26.2
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GUMmR1bCbl8Toix//XFEea01nhUYad+cjY3JyG8gXsE=;
+        b=biVayViGJXc1rCJQiYjoSOPNsYnmgC39/NtJb43G74elTnUU+bK5Kc8lx+EmbcTOdW
+         ROuFCR3VNK8rmcy5QdKM8U5Kn2pNATDUVW4/PYNCDtiMeKBZU76UFd557hJ5OerNxiH9
+         WN+PpH2ZOWqUntRXT/qUelE8Dw7/ymHSUYYLAuEbU4oPovIOK4KG7m7gsU03OHUDWEE3
+         yyCI3b5sM4w2TBloK9YHKnF9atQSJj+r0K1ckCIGaHlxyysuf/Hu/U5DfI30+K5cO9sO
+         4KUWMxGuK3HcKoRvaclUGCqvb29skZj22VGSQKbm6Myn6B9INd1xY/kYleIciuX0zZ4R
+         Zgjg==
+X-Gm-Message-State: AOAM532ekVTUi+hK4IKjq/19auFhYVqyLDrckVpmbNTRQL3o17UEP3Ve
+        xkIviPfPcLkdjowtMJMrQqsar6hTJQSfQmWj8eeq9A==
+X-Google-Smtp-Source: ABdhPJy9Pb5IHmIWcD95/roK2Wg/B531qJsb0LdE7Uv/xxSdLITRGFilp+pp5r1gmUm2NadF7LEK+QTm9hBN9d+oNt8=
+X-Received: by 2002:a25:b7cc:: with SMTP id u12mr22224608ybj.173.1593556723565;
+ Tue, 30 Jun 2020 15:38:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAHk-=wjEghg5_pX_GhNP+BfcUK6CRZ+4mh3bciitm9JwXvR7aQ@mail.gmail.com>
+ <312079189.17903.1593549293094.JavaMail.zimbra@efficios.com>
+ <CANn89iJ+rkMrLrHrKXO-57frXNb32epB93LYLRuHX00uWc-0Uw@mail.gmail.com>
+ <20200630.134429.1590957032456466647.davem@davemloft.net> <CANn89i+b-LeaPvaaHvj0yc0mJ2qwZ0981fQHVp0+sqXYp=kdkA@mail.gmail.com>
+ <474095696.17969.1593551866537.JavaMail.zimbra@efficios.com>
+ <CANn89iKK2+pznYZoKZzdCu4qkA7BjJZFqc6ABof4iaS-T-9_aw@mail.gmail.com>
+ <CANn89i+_DUrKROb1Zkk_nmngkD=oy9UjbxwnkgyzGB=z+SKg3g@mail.gmail.com> <CANn89iJJ_WR-jGQogU3-arjD6=xcU9VWzJYSOLbyD94JQo-zAQ@mail.gmail.com>
+In-Reply-To: <CANn89iJJ_WR-jGQogU3-arjD6=xcU9VWzJYSOLbyD94JQo-zAQ@mail.gmail.com>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Tue, 30 Jun 2020 15:38:31 -0700
+Message-ID: <CANn89iLPqtJG0iESCHF+RcOjo95ukan1oSzjkPjoSJgKpO2wSQ@mail.gmail.com>
+Subject: Re: [regression] TCP_MD5SIG on established sockets
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Yuchung Cheng <ycheng@google.com>,
+        Jonathan Rajotte-Julien <joraj@efficios.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix unit address to match the first address specified in the reg
-property of the node.
+On Tue, Jun 30, 2020 at 3:07 PM Eric Dumazet <edumazet@google.com> wrote:
+>
+> On Tue, Jun 30, 2020 at 2:54 PM Eric Dumazet <edumazet@google.com> wrote:
+> >
+> > On Tue, Jun 30, 2020 at 2:23 PM Eric Dumazet <edumazet@google.com> wrote:
+> > >
+> > > On Tue, Jun 30, 2020 at 2:17 PM Mathieu Desnoyers
+> > > <mathieu.desnoyers@efficios.com> wrote:
+> > > >
+> > > > ----- On Jun 30, 2020, at 4:56 PM, Eric Dumazet edumazet@google.com wrote:
+> > > >
+> > > > > On Tue, Jun 30, 2020 at 1:44 PM David Miller <davem@davemloft.net> wrote:
+> > > > >>
+> > > > >> From: Eric Dumazet <edumazet@google.com>
+> > > > >> Date: Tue, 30 Jun 2020 13:39:27 -0700
+> > > > >>
+> > > > >> > The (C) & (B) case are certainly doable.
+> > > > >> >
+> > > > >> > A) case is more complex, I have no idea of breakages of various TCP
+> > > > >> > stacks if a flow got SACK
+> > > > >> > at some point (in 3WHS) but suddenly becomes Reno.
+> > > > >>
+> > > > >> I agree that C and B are the easiest to implement without having to
+> > > > >> add complicated code to handle various negotiated TCP option
+> > > > >> scenerios.
+> > > > >>
+> > > > >> It does seem to be that some entities do A, or did I misread your
+> > > > >> behavioral analysis of various implementations Mathieu?
+> > > > >>
+> > > > >> Thanks.
+> > > > >
+> > > > > Yes, another question about Mathieu cases is do determine the behavior
+> > > > > of all these stacks vs :
+> > > > > SACK option
+> > > > > TCP TS option.
+> > > >
+> > > > I will ask my customer's networking team to investigate these behaviors,
+> > > > which will allow me to prepare a thorough reply to the questions raised
+> > > > by Eric and David. I expect to have an answer within 2-3 weeks at most.
+> > > >
+> > > > Thank you!
+> > >
+> > >
+> > > Great, I am working on adding back support for (B) & (C) by the end of
+> > > this week.
+> >
+> > Note that the security issue (of sending uninit bytes to the wire) has
+> > been independently fixed with [1]
+> >
+> > This means syzbot was able to have MD5+TS+SACK  ~6 months ago.
+> >
+> > It seems we (linux) do not enable this combination for PASSIVE flows,
+> > (according to tcp_synack_options()),
+> > but  for ACTIVE flows we do nothing special.
+> >
+> > So maybe code in tcp_synack_options() should be mirrored to
+> > tcp_syn_options() for consistency.
+> > (disabling TS if  both MD5 and SACK are enabled)
+>
+> Oh well, tcp_syn_options() is supposed to have the same logic.
+>
+> Maybe we have an issue with SYNCOOKIES (with MD5 + TS + SACK)
+>
+> Nice can of worms.
+>
 
-Signed-off-by: Kangmin Park <l4stpr0gr4m@gmail.com>
----
- Documentation/devicetree/bindings/mmc/sdhci-sirf.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+For updates of keys, it seems existing code lacks some RCU care.
 
-diff --git a/Documentation/devicetree/bindings/mmc/sdhci-sirf.txt b/Documentation/devicetree/bindings/mmc/sdhci-sirf.txt
-index dd6ed464bcb8..61185bbfdf9e 100644
---- a/Documentation/devicetree/bindings/mmc/sdhci-sirf.txt
-+++ b/Documentation/devicetree/bindings/mmc/sdhci-sirf.txt
-@@ -11,7 +11,7 @@ Optional properties:
- 
- Example:
- 
--	sd0: sdhci@56000000 {
-+	sd0: sdhci@cd000000 {
- 		compatible = "sirf,prima2-sdhc";
- 		reg = <0xcd000000 0x100000>;
- 		cd-gpios = <&gpio 6 0>;
--- 
-2.26.2
+MD5 keys use RCU for lookups/hashes, but the replacement of a key does
+not allocate a new piece of memory.
 
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index 810cc164f795f8e1e8ca747ed5df51bb20fec8a2..ecc0e3fabce8b03bef823cbfc5c1b0a9e24df124
+100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -4034,9 +4034,12 @@ EXPORT_SYMBOL(tcp_md5_hash_skb_data);
+ int tcp_md5_hash_key(struct tcp_md5sig_pool *hp, const struct
+tcp_md5sig_key *key)
+ {
+        struct scatterlist sg;
++       u8 keylen = key->keylen;
+
+-       sg_init_one(&sg, key->key, key->keylen);
+-       ahash_request_set_crypt(hp->md5_req, &sg, NULL, key->keylen);
++       smp_rmb(); /* paired with smp_wmb() in tcp_md5_do_add() */
++
++       sg_init_one(&sg, key->key, keylen);
++       ahash_request_set_crypt(hp->md5_req, &sg, NULL, keylen);
+        return crypto_ahash_update(hp->md5_req);
+ }
+ EXPORT_SYMBOL(tcp_md5_hash_key);
+diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
+index ad6435ba6d72ffd8caf783bb25cad7ec151d6909..99916fcc15ca0be12c2c133ff40516f79e6fdf7f
+100644
+--- a/net/ipv4/tcp_ipv4.c
++++ b/net/ipv4/tcp_ipv4.c
+@@ -1113,6 +1113,9 @@ int tcp_md5_do_add(struct sock *sk, const union
+tcp_md5_addr *addr,
+        if (key) {
+                /* Pre-existing entry - just update that one. */
+                memcpy(key->key, newkey, newkeylen);
++
++               smp_wmb(); /* pairs with smp_rmb() in tcp_md5_hash_key() */
++
+                key->keylen = newkeylen;
+                return 0;
+        }
