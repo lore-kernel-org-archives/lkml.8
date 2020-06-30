@@ -2,109 +2,86 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8447EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 23:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46A12C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 23:32:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6443F2083B
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 23:32:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DC3E2073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 23:32:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TEdNEp5d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbgF3XcC (ORCPT
+        id S1726410AbgF3XcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 19:32:02 -0400
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:35871 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726245AbgF3XcC (ORCPT
+        Tue, 30 Jun 2020 19:32:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52870 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726245AbgF3XcF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 19:32:02 -0400
-Received: by mail-pj1-f67.google.com with SMTP id h22so10200526pjf.1;
-        Tue, 30 Jun 2020 16:32:01 -0700 (PDT)
+        Tue, 30 Jun 2020 19:32:05 -0400
+Received: from mail-pf1-x441.google.com (mail-pf1-x441.google.com [IPv6:2607:f8b0:4864:20::441])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05B0CC03E979
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 16:32:05 -0700 (PDT)
+Received: by mail-pf1-x441.google.com with SMTP id b16so10092570pfi.13
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 16:32:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=HvnJ5CTY5PKNwx2rApGXMmajme3wNdK5xDZTMK/j40g=;
+        b=TEdNEp5deAlbLv+GtHt1PP8akdHtWI6rWWgfVsi4M6zH05mUytdDSQhdPrSSeF4pWz
+         gSf9+GHSZq7X+N9QEOyYNdCrJjNwJp+wwZ5pQPIKFxqRf+Bi/nd9abDHyZtIQqxFbxRg
+         NaoEe/E9nt+c/poE7PyKzspuuL15XowqC7CDo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=D4bNFQKvTqaRlrQMzRLTGcVLE92xZT7rS/otpfCsklU=;
-        b=BTgI41VCkM9PnVYtwnak5EaI6tQpsig9M27hQdnrJMTZWhHZZEtnZcw5fuMFu8Kh1n
-         dr+MUKlAtTzkwp9xflZCFDIdrI8emLrStOsHHyv3/m/mVnx6otVH+HA380k/b9eLdV3b
-         Vkrz0tBs/CiJYrA9pyYWK20ddPtzXnQGH+teo2t6RhfAqT6/feQ7dLFJwQQN5KIGAh8K
-         GvzDbPybCGkx7ZlIBDb3gJ9HOx0qlZ8q9NmIJqpoVb8nRVIjqMqVQVpgd1GUUt81+ZkD
-         Bq5XlkZA4bBj4IBMMcZxivyhZafwWiyUo4Q1GPP1Wr35ZavB4IovGcqoSybT+/sP37kw
-         MXxA==
-X-Gm-Message-State: AOAM533ZrzWPpaURijuIBYgungWINK7z23kKlZHI6WgmFkWW0YqJHoGq
-        O0w5mVxTqIwOHX675n0JiFEp9vSl
-X-Google-Smtp-Source: ABdhPJw8ZgO5iG258LcTHKSCDYOYGHhhsLRF4CJU9MnZ+JpUwEU39ckwQBr4f6PsWnCodMm2uWUfiw==
-X-Received: by 2002:a17:90b:213:: with SMTP id fy19mr24131066pjb.41.1593559921165;
-        Tue, 30 Jun 2020 16:32:01 -0700 (PDT)
-Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
-        by smtp.gmail.com with ESMTPSA id w6sm3141299pjy.15.2020.06.30.16.31.59
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=HvnJ5CTY5PKNwx2rApGXMmajme3wNdK5xDZTMK/j40g=;
+        b=cYafpeKwvZ+N86Zh74QHzixVrgfpxwdKUPWy2Cjt3QlrOP0KXG6P+kx0KqCa11Iyfh
+         rKlmEqgOyF5G5UEtgTQ7UN2PPqAn/mEkjFpRMocu3us3uA79y6to5AppPXBsya1pSg9C
+         aB4VNlPc87pyDiCw0B/04rovur17vA29ACkP+OxUV8qF5M626VEtZls9fcXO0gXQUZAl
+         6XLh8ypU1uZ7Wyhvv/JYZkK1AF1ZM7wCOmm4ooPCWWiwKGUhtVQUFO4XT2RtHguI4cIr
+         LE4ouha2nEJ87Pe35n/7qFqGK/+nn9AtjAG8ciWS0h0fQF6Z+qtVAL6CY038DVeYIGfk
+         JHRQ==
+X-Gm-Message-State: AOAM531jpzYaYL70BdwJvZ5EtpW66cikVL1pT99vEZzpsM9emTowAtI5
+        h/pYQsZC5+h/BcWj6XLw/Sy9rw==
+X-Google-Smtp-Source: ABdhPJzCrE1MU9tgfa+Vyr1llfYnQUE2NKc/S7yR8Vp5B1qGBAY8LkHusztUgu3jHMd9dCv4FVzQUA==
+X-Received: by 2002:a63:f316:: with SMTP id l22mr16538006pgh.291.1593559924524;
+        Tue, 30 Jun 2020 16:32:04 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:f693:9fff:fef4:e70a])
+        by smtp.gmail.com with ESMTPSA id c207sm3720503pfb.159.2020.06.30.16.32.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jun 2020 16:32:00 -0700 (PDT)
-Subject: Re: [PATCH] scsi: sd: add runtime pm to open / release
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Martin Kepplinger <martin.kepplinger@puri.sm>, jejb@linux.ibm.com,
-        Can Guo <cang@codeaurora.org>, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@puri.sm
-References: <20200623111018.31954-1-martin.kepplinger@puri.sm>
- <ed9ae198-4c68-f82b-04fc-2299ab16df96@acm.org>
- <eccacce9-393c-ca5d-e3b3-09961340e0db@puri.sm>
- <1379e21d-c51a-3710-e185-c2d7a9681fb7@acm.org>
- <20200626154441.GA296771@rowland.harvard.edu>
- <c19f1938-ae47-2357-669d-5b4021aec154@puri.sm>
- <20200629161536.GA405175@rowland.harvard.edu>
- <5231c57d-3f4e-1853-d4d5-cf7f04a32246@acm.org>
- <20200630180255.GA459638@rowland.harvard.edu>
- <1804723c-4aaf-a820-d3ef-e70125017cad@acm.org>
- <20200630193802.GA463609@rowland.harvard.edu>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <f17e9ebe-fc75-fb51-cc9b-851fa219f31b@acm.org>
-Date:   Tue, 30 Jun 2020 16:31:58 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 30 Jun 2020 16:32:04 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 16:32:02 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH 1/4] arm64: dts: sdm845: Add OPP table for all qup devices
+Message-ID: <20200630233202.GI39073@google.com>
+References: <1593506712-24557-1-git-send-email-rnayak@codeaurora.org>
+ <1593506712-24557-2-git-send-email-rnayak@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20200630193802.GA463609@rowland.harvard.edu>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <1593506712-24557-2-git-send-email-rnayak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-30 12:38, Alan Stern wrote:
-> Assume that BLK_MQ_REQ_PREEMPT is set in flags.  Then where exactly 
-> does blk_queue_enter(q, flags) call blk_pm_request_resume(q)?
+On Tue, Jun 30, 2020 at 02:15:09PM +0530, Rajendra Nayak wrote:
+> qup has a requirement to vote on the performance state of the CX domain
+> in sdm845 devices. Add OPP tables for these and also add power-domains
+> property for all qup instances for uart and spi.
+> i2c does not support scaling and uses a fixed clock.
+> 
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 
-Please take a look at how the *current* implementation of runtime power
-management works. Your question is relevant for the old implementation
-of runtime power management but not for the current implementation.
-
-Bart.
-
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
