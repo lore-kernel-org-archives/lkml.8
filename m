@@ -2,197 +2,114 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A835C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:07:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 586A0C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:07:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 12F5B2073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:07:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32C8920771
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:07:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="j8Q/Z4e3"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bhT2YLra"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732232AbgF3KHc (ORCPT
+        id S1732242AbgF3KHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 06:07:32 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:52823 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732220AbgF3KHa (ORCPT
+        Tue, 30 Jun 2020 06:07:52 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44061 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1732234AbgF3KHu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 06:07:30 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200630100728euoutp011ac1b7223b87efb73f688a02b07c37f7~dSmbV_jgR0580005800euoutp016
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 10:07:28 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200630100728euoutp011ac1b7223b87efb73f688a02b07c37f7~dSmbV_jgR0580005800euoutp016
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1593511648;
-        bh=O/UBH/mKXDUvagNJHSuUhhTnnDt9JbXJsJdK+XPv5UI=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=j8Q/Z4e35QiEfKTKTCJwBL5aA7IF+lresLLZlOmyDg53EkTKpqLRcsa27diO0wyP6
-         MCm1VO4ZWj8obBulZs/aCd6Rh37uhHpHRZ1cXs72rlrfPyi/qorGLNuiRFSxEI7m01
-         /mnJTOahNA5rCJLLRVmOyoPHQMec176t7wRbIGUQ=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200630100728eucas1p2058324a11592705d20c19eb2d4431545~dSma8s2PL2152321523eucas1p2k;
-        Tue, 30 Jun 2020 10:07:28 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 16.AF.05997.0EE0BFE5; Tue, 30
-        Jun 2020 11:07:28 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200630100727eucas1p2c13e286da77ef5278226b3610faf0498~dSmakSGW83241632416eucas1p2M;
-        Tue, 30 Jun 2020 10:07:27 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200630100727eusmtrp22b04e33a7a6e2b7d13c0605b6cc61d2e~dSmajTg-F0851908519eusmtrp2k;
-        Tue, 30 Jun 2020 10:07:27 +0000 (GMT)
-X-AuditID: cbfec7f4-677ff7000000176d-e6-5efb0ee08c13
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 5F.F1.06314.FDE0BFE5; Tue, 30
-        Jun 2020 11:07:27 +0100 (BST)
-Received: from [106.210.88.143] (unknown [106.210.88.143]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200630100726eusmtip2e8258a38457a6d6c86f351b866a6b807~dSmZiHLma0424204242eusmtip2D;
-        Tue, 30 Jun 2020 10:07:26 +0000 (GMT)
-Subject: Re: [PATCH v7 31/36] staging: tegra-vde: fix common struct sg_table
- related issues
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
-        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-arm-kernel@lists.infradead.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-media@vger.kernel.org, linux-tegra@vger.kernel.org,
-        devel@driverdev.osuosl.org
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <559970b6-e80f-90ec-7fb0-1fab742d99de@samsung.com>
-Date:   Tue, 30 Jun 2020 12:07:26 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.9.0
+        Tue, 30 Jun 2020 06:07:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593511669;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=6bMazijEUH/Uu9sCncXdhJdICYXtEKD+O6jGCzyyAiQ=;
+        b=bhT2YLra5NIwDrpiAkcClmLb9KhAEpcFbmJ4+jcRp314xMskjj9Ks4NGrBvxxsPwBDy0L+
+        0EGwbLzMsnXl/cfJDX0utUPEiV4ZzW9Di/VMze9Akc2nlIPLqox3xKucOVJbxBuZJtBTWv
+        w1HBY6Q2W2+C7Q1TfH3R33616p25fNY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-483-hLxQllp4PQGI9P72rIm5Eg-1; Tue, 30 Jun 2020 06:07:47 -0400
+X-MC-Unique: hLxQllp4PQGI9P72rIm5Eg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 36AF21883629;
+        Tue, 30 Jun 2020 10:07:46 +0000 (UTC)
+Received: from vitty.brq.redhat.com (unknown [10.40.195.43])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6B4EC74193;
+        Tue, 30 Jun 2020 10:07:43 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Junaid Shahid <junaids@google.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] KVM: x86: drop erroneous mmu_check_root() from fast_pgd_switch()
+Date:   Tue, 30 Jun 2020 12:07:42 +0200
+Message-Id: <20200630100742.1167961-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200621070015.0cf833ab@dimatab>
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SZ0xTURjNfauPhuKzoHzBQdIoRhNxEm6icRASn+GPfzSOgFR5AcJMy3QS
-        ioMiCk6sWhBlyBApUAXFgcEWwUIEF+JAIIoJIrEiKyDtA+XfOec73/3OSS5Lys8xbmxoZIyg
-        ilSGKxgpZXw23Lz8s9NowMru54443dJA4PKsMhpPGDNJ/KBpRIKLB7oQbvvdz2DNjTIG3yqu
-        J3DOo3U4RZdLYWtbJ4ENXa9p3FpzlcGn7lTRONWqY3C+YYzAT35203i4Rk9tkvMl+hLEf3z4
-        lOJrB3Movlr3QcIbilIZ/u7gZ5p/dK1Ewn9KMxF8xc2j/PvxLpI/97YA8fffJTF8uuYHw5+u
-        LEL8L8PCbbN2S9cHCeGhcYJqxYZAaUh5s1YSfcY1of3jbyoJpThrkQML3FoofTVIapGUlXOF
-        CIw/DIxIrAie3k2dIr8QFKfXoumVXrNmalCAwPzeQoikH8HllmHC5nLm/OHrsQHGhl04Dyio
-        H6NtJpIbp6DwcQFlGzDcKtD2aSdNLCvjNsAVk5dNprjF8Ljztd0yZ/Kd03k59ndk3GxouNxt
-        1x04T7A2dNhvkZw7aKqukCJ2hfbubHsg4MwsNH/JpcXYvjDUZCZE7AzfTZUSEc+HierpBQ2C
-        TkupRCSnELQmZ02VXgcdlhF7UpJbCmU1K0R5M/T0Xkc2GTgneNs3WwzhBGeNl0hRlsHJ43LR
-        7QE60+1/Z5+0vCQzkEI3o5puRh3djDq6/3dzEFWEXIVYdUSwoF4dKcR7qpUR6tjIYM/9UREG
-        NPlVG8dN1nuoZmxfHeJYpHCUBVqGA+S0Mk6dGFGHgCUVLjKfF40BclmQMvGAoIraq4oNF9R1
-        aB5LKVxla3J7/eVcsDJGCBOEaEE1PSVYB7ck5J5dccQnnj3gYKg8aPG9lR+VtqNK6renfXvs
-        0KKMoIuVb0r6+hft4ne16realXqv0sDRT36HV/+JPhRWFhJjqp2LJGFe+i/UgsGmFDJzyc6B
-        8/IdFwIUvm1bRk7sTj5jHFue8vzd0qyEet/6Hu+N3nuu5n9LOxvqlkgLfaXxLXkJHQpKHaJc
-        tYxUqZV/AZvSq5+mAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrCKsWRmVeSWpSXmKPExsVy+t/xe7r3+X7HGTxdomvRe+4kk8XGGetZ
-        Lf5vm8hssefML3aL1R8fM1pc+fqezaJ58Xo2i5WrjzJZLNhvbdEyaxGLxZcrD5ksNj2+xmpx
-        edccNoueDVtZLTq/zGKzWLbpD5PFwQ9PWC1+7prH4iDksWbeGkaPe/sOs3js/baAxWPnrLvs
-        HptWdbJ5bP/2gNVj/9w17B73u48zeWxeUu9x+99jZo/JN5Yzeuy+2cDm0dv8js2jb8sqRo/P
-        m+QC+KP0bIryS0tSFTLyi0tslaINLYz0DC0t9IxMLPUMjc1jrYxMlfTtbFJSczLLUov07RL0
-        Mjae72Iv6BevuHXvK0sDY4twFyMnh4SAicTLE81sXYxcHEICSxkl7p7sZIVIyEicnNYAZQtL
-        /LnWBVX0llHiyffDYAlhgViJ560f2UBsEQE1ieVH/4DFmQX+sUh0HrGFaHjFKDGr+TU7SIJN
-        wFCi6y3IJA4OXgE7idnHTUHCLAKqEgceXmMBsUWBZn67twVsJq+AoMTJmU/A4pwCehJfTt5h
-        gphvJjFv80NmCFteonnrbChbXOLWk/lMExiFZiFpn4WkZRaSlllIWhYwsqxiFEktLc5Nzy02
-        1CtOzC0uzUvXS87P3cQITCHbjv3cvIPx0sbgQ4wCHIxKPLwJ537GCbEmlhVX5h5ilOBgVhLh
-        dTp7Ok6INyWxsiq1KD++qDQntfgQoynQcxOZpUST84HpLa8k3tDU0NzC0tDc2NzYzEJJnLdD
-        4GCMkEB6YklqdmpqQWoRTB8TB6dUA2NJy7UwZ+GelgfhQS9qFp7cc/PyR9PP2jZNy5lE52xX
-        PbHuaGe0l/ujQoUu8f/npweke3zhmHNS6HqD4eOwC1du3TD9s2hm5BWGyYt2JK0rOv34ybSf
-        3687uudvXjI/NOXwrroj911PvjkVOVdGY6t9T3tJxt7jzStj/kkw16ocWfU5ZVWVVWSXEktx
-        RqKhFnNRcSIA0AcX0DcDAAA=
-X-CMS-MailID: 20200630100727eucas1p2c13e286da77ef5278226b3610faf0498
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200619103714eucas1p18db6efd1a380fc0bdb16174ee85036fa
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200619103714eucas1p18db6efd1a380fc0bdb16174ee85036fa
-References: <20200619103636.11974-1-m.szyprowski@samsung.com>
-        <CGME20200619103714eucas1p18db6efd1a380fc0bdb16174ee85036fa@eucas1p1.samsung.com>
-        <20200619103636.11974-32-m.szyprowski@samsung.com>
-        <20200621070015.0cf833ab@dimatab>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 21.06.2020 06:00, Dmitry Osipenko wrote:
-> В Fri, 19 Jun 2020 12:36:31 +0200
-> Marek Szyprowski <m.szyprowski@samsung.com> пишет:
->
->> The Documentation/DMA-API-HOWTO.txt states that the dma_map_sg()
->> function returns the number of the created entries in the DMA address
->> space. However the subsequent calls to the
->> dma_sync_sg_for_{device,cpu}() and dma_unmap_sg must be called with
->> the original number of the entries passed to the dma_map_sg().
->>
->> struct sg_table is a common structure used for describing a
->> non-contiguous memory buffer, used commonly in the DRM and graphics
->> subsystems. It consists of a scatterlist with memory pages and DMA
->> addresses (sgl entry), as well as the number of scatterlist entries:
->> CPU pages (orig_nents entry) and DMA mapped pages (nents entry).
->>
->> It turned out that it was a common mistake to misuse nents and
->> orig_nents entries, calling DMA-mapping functions with a wrong number
->> of entries or ignoring the number of mapped entries returned by the
->> dma_map_sg() function.
->>
->> To avoid such issues, lets use a common dma-mapping wrappers operating
->> directly on the struct sg_table objects and use scatterlist page
->> iterators where possible. This, almost always, hides references to the
->> nents and orig_nents entries, making the code robust, easier to follow
->> and copy/paste safe.
->>
->> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
->> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>   drivers/staging/media/tegra-vde/iommu.c | 4 ++--
->>   1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/staging/media/tegra-vde/iommu.c
->> b/drivers/staging/media/tegra-vde/iommu.c index
->> 6af863d92123..adf8dc7ee25c 100644 ---
->> a/drivers/staging/media/tegra-vde/iommu.c +++
->> b/drivers/staging/media/tegra-vde/iommu.c @@ -36,8 +36,8 @@ int
->> tegra_vde_iommu_map(struct tegra_vde *vde,
->>   	addr = iova_dma_addr(&vde->iova, iova);
->>   
->> -	size = iommu_map_sg(vde->domain, addr, sgt->sgl, sgt->nents,
->> -			    IOMMU_READ | IOMMU_WRITE);
->> +	size = iommu_map_sgtable(vde->domain, addr, sgt,
->> +				 IOMMU_READ | IOMMU_WRITE);
->>   	if (!size) {
->>   		__free_iova(&vde->iova, iova);
->>   		return -ENXIO;
-> Ahh, I saw the build failure report. You're changing the DMA API in
-> this series, while DMA API isn't used by this driver, it uses IOMMU
-> API. Hence there is no need to touch this code. Similar problem in the
-> host1x driver patch.
+Undesired triple fault gets injected to L1 guest on SVM when L2 is
+launched with certain CR3 values. It seems the mmu_check_root()
+check in fast_pgd_switch() is wrong: first of all we don't know
+if 'new_pgd' is a GPA or a nested GPA and, in case it is a nested
+GPA, we can't check it with kvm_is_visible_gfn().
 
-The issue is caused by the lack of iommu_map_sgtable() stub when no 
-IOMMU support is configured. I've posted a patch for this:
+The problematic code path is:
+nested_svm_vmrun()
+  ...
+  nested_prepare_vmcb_save()
+    kvm_set_cr3(..., nested_vmcb->save.cr3)
+      kvm_mmu_new_pgd()
+        ...
+        mmu_check_root() -> TRIPLE FAULT
 
-https://lore.kernel.org/lkml/20200630081756.18526-1-m.szyprowski@samsung.com/
+The mmu_check_root() check in fast_pgd_switch() seems to be
+superfluous even for non-nested case: when GPA is outside of the
+visible range cached_root_available() will fail for non-direct
+roots (as we can't have a matching one on the list) and we don't
+seem to care for direct ones.
 
-The patch for this driver is fine, we have to wait until the above fix 
-gets merged and then it can be applied during the next release cycle.
+Also, raising #TF immediately when a non-existent GFN is written to CR3
+doesn't seem to mach architecture behavior.
 
-Best regards
+Fixes: 7c390d350f8b ("kvm: x86: Add fast CR3 switch code path")
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+- The patch fixes the immediate issue and doesn't seem to break any
+  tests even with shadow PT but I'm not sure I properly understood
+  why the check was there in the first place. Please review!
+---
+ arch/x86/kvm/mmu/mmu.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 76817d13c86e..286c74d2ae8d 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -4277,8 +4277,7 @@ static bool fast_pgd_switch(struct kvm_vcpu *vcpu, gpa_t new_pgd,
+ 	 */
+ 	if (mmu->shadow_root_level >= PT64_ROOT_4LEVEL &&
+ 	    mmu->root_level >= PT64_ROOT_4LEVEL)
+-		return !mmu_check_root(vcpu, new_pgd >> PAGE_SHIFT) &&
+-		       cached_root_available(vcpu, new_pgd, new_role);
++		return cached_root_available(vcpu, new_pgd, new_role);
+ 
+ 	return false;
+ }
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+2.25.4
 
