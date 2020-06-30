@@ -2,118 +2,120 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97ED0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:02:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6FB7C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:02:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 722A220675
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:02:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C46C20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:02:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="zLtMTPSe"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SXQkBIHO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389191AbgF3PCR (ORCPT
+        id S2389185AbgF3PCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 11:02:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58722 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728492AbgF3PCQ (ORCPT
+        Tue, 30 Jun 2020 11:02:55 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27905 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725872AbgF3PCz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 11:02:16 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 850D6C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 08:02:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=HfCfpIxTR2SUyBh8o0BqN80WnSlV5JSBgDpMr/OUxAc=; b=zLtMTPSei8VX9Fy5r7iz4GHWLd
-        5th979QFNzPwu77fbc6Fx2xyQ5jqEPNKw79NY83xjGMBRQpO2GtP20scxbA1HFanEVvjtDNzAindg
-        UpBb+jlL4/TOgaQR5x8z+bELieK6HeXdxLBUjzA8RkTCjOMmnSygW31v5WITKY/B1A9Wh0M0J3/2P
-        Z7T0wbI76xP06DGbJU3GC0IzpZjhnMEVEm5mova+boun8dd739kG4w6jFdFq2sadW7n9n/x3D7/5H
-        +fwGCSrdT99dqO/7DBKAWS09OaikFCsr3KtHV0+nJ9pJwD42P2GWaibUieFePqPw+dihCTKaAE+MB
-        jAjcaCqQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jqHlk-00088Q-9B; Tue, 30 Jun 2020 15:01:56 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 9BC2F302753;
-        Tue, 30 Jun 2020 17:01:54 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8771C20CF3978; Tue, 30 Jun 2020 17:01:54 +0200 (CEST)
-Date:   Tue, 30 Jun 2020 17:01:54 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     kan.liang@linux.intel.com
-Cc:     mingo@redhat.com, acme@kernel.org, tglx@linutronix.de,
-        bp@alien8.de, x86@kernel.org, linux-kernel@vger.kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        jolsa@redhat.com, namhyung@kernel.org, dave.hansen@intel.com,
-        yu-cheng.yu@intel.com, bigeasy@linutronix.de, gorcunov@gmail.com,
-        hpa@zytor.com, alexey.budankov@linux.intel.com, eranian@google.com,
-        ak@linux.intel.com, like.xu@linux.intel.com,
-        yao.jin@linux.intel.com, wei.w.wang@intel.com
-Subject: Re: [PATCH V2 08/23] perf/x86: Expose CPUID enumeration bits for
- arch LBR
-Message-ID: <20200630150154.GS4781@hirez.programming.kicks-ass.net>
-References: <1593195620-116988-1-git-send-email-kan.liang@linux.intel.com>
- <1593195620-116988-9-git-send-email-kan.liang@linux.intel.com>
+        Tue, 30 Jun 2020 11:02:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593529374;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=nVqdDUMAVaPMx+jj87jZtZveQ6A0HvSwgZ1JzvOfqMI=;
+        b=SXQkBIHOaONiDOCkB5vEgcgLDxyZaSQcdmEUWy0pS+saZgi+GWP675z1GqPFL/uDLDid0a
+        JEDxagFqPXUZz4AAdQxGFvpZvStEqCukZ0UcDsffNFqGNZ+yPsP1MRXPQ/hS3MybeZ77uk
+        JIe8qKwd3InxRS9wavdsAEHjK41rnmw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-502-lqlA-EagO560bmAOpN5WUQ-1; Tue, 30 Jun 2020 11:02:48 -0400
+X-MC-Unique: lqlA-EagO560bmAOpN5WUQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5C539100CD14;
+        Tue, 30 Jun 2020 15:02:20 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 295CA10016DA;
+        Tue, 30 Jun 2020 15:02:20 +0000 (UTC)
+Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id 05UF2Jxv024072;
+        Tue, 30 Jun 2020 11:02:19 -0400
+Received: from localhost (mpatocka@localhost)
+        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id 05UF2Jpw024068;
+        Tue, 30 Jun 2020 11:02:19 -0400
+X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
+Date:   Tue, 30 Jun 2020 11:02:19 -0400 (EDT)
+From:   Mikulas Patocka <mpatocka@redhat.com>
+X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
+To:     Michal Suchanek <msuchanek@suse.de>
+cc:     linux-nvdimm@lists.01.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Jan Kara <jack@suse.cz>, Alasdair Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
+        Yuval Shaia <yuval.shaia@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Pankaj Gupta <pagupta@redhat.com>,
+        Jakub Staron <jstaron@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] dm writecache: reject asynchronous pmem.
+In-Reply-To: <20200630145335.1185-1-msuchanek@suse.de>
+Message-ID: <alpine.LRH.2.02.2006301101210.24028@file01.intranet.prod.int.rdu2.redhat.com>
+References: <20200630133546.GA20439@redhat.com> <20200630145335.1185-1-msuchanek@suse.de>
+User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1593195620-116988-9-git-send-email-kan.liang@linux.intel.com>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 11:20:05AM -0700, kan.liang@linux.intel.com wrote:
-> From: Kan Liang <kan.liang@linux.intel.com>
+
+
+On Tue, 30 Jun 2020, Michal Suchanek wrote:
+
+> The writecache driver does not handle asynchronous pmem. Reject it when
+> supplied as cache.
 > 
-> The LBR capabilities of Architecture LBR are retrieved from the CPUID
-> enumeration once at boot time. The capabilities have to be saved for
-> future usage.
+> Link: https://lore.kernel.org/linux-nvdimm/87lfk5hahc.fsf@linux.ibm.com/
+> Fixes: 6e84200c0a29 ("virtio-pmem: Add virtio pmem driver")
 > 
-> Several new fields are added into structure x86_pmu to indicate the
-> capabilities. The fields will be used in the following patches.
-> 
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+
+OK. I suggest to move this test before persistent_memory_claim (so that 
+you don't try to map the whole device).
+
+Mikulas
+
 > ---
->  arch/x86/events/perf_event.h      |  5 +++++
->  arch/x86/include/asm/perf_event.h | 40 +++++++++++++++++++++++++++++++++++++++
->  2 files changed, 45 insertions(+)
+>  drivers/md/dm-writecache.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-> index d04818b..9b0e533 100644
-> --- a/arch/x86/events/perf_event.h
-> +++ b/arch/x86/events/perf_event.h
-> @@ -690,6 +690,11 @@ struct x86_pmu {
->  	const int	*lbr_sel_map;		   /* lbr_select mappings */
->  	bool		lbr_double_abort;	   /* duplicated lbr aborts */
->  	bool		lbr_pt_coexist;		   /* (LBR|BTS) may coexist with PT */
-> +	bool		arch_lbr;		   /* Arch LBR supported */
+> diff --git a/drivers/md/dm-writecache.c b/drivers/md/dm-writecache.c
+> index 30505d70f423..1e4f37249e28 100644
+> --- a/drivers/md/dm-writecache.c
+> +++ b/drivers/md/dm-writecache.c
+> @@ -2271,6 +2271,12 @@ static int writecache_ctr(struct dm_target *ti, unsigned argc, char **argv)
+>  			ti->error = "Unable to map persistent memory for cache";
+>  			goto bad;
+>  		}
 > +
-> +	union cpuid28_eax	lbr_eax;
-> +	union cpuid28_ebx	lbr_ebx;
-> +	union cpuid28_ecx	lbr_ecx;
+> +		if (!dax_synchronous(wc->ssd_dev->dax_dev)) {
+> +			r = -EOPNOTSUPP;
+> +			ti->error = "Asynchronous persistent memory not supported as pmem cache";
+> +			goto bad;
+> +		}
+>  	} else {
+>  		size_t n_blocks, n_metadata_blocks;
+>  		uint64_t n_bitmap_bits;
+> -- 
+> 2.26.2
+> 
 
-Why keep the full CPUID leaf here? What's wrong with something like:
-
-	unsigned int	lbr_depth_mask:8;
-	unsigned int	lbr_deep_c_reset:1;
-	unsigned int	lbr_lip:1;
-	unsigned int	lbr_cpl:1;
-	unsigned int	lbr_filter:1;
-	unsigned int	lbr_call_stack:1;
-	unsigned int	lbr_mispred:1;
-	unsigned int	lbr_timed_lbr:1;
-	unsigned int	lbr_br_type:1;
-
-That's only 2 bytes, instead of 24.
-
->  	void		(*lbr_reset)(void);
->  	void		(*lbr_read)(struct cpu_hw_events *cpuc);
