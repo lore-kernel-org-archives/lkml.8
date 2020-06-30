@@ -2,136 +2,155 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 483E2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE26C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:04:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 18BFF2067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:04:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WQUwIr+W"
+	by mail.kernel.org (Postfix) with ESMTP id 5070C2067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:04:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730741AbgF3ID7 (ORCPT
+        id S1730795AbgF3IEN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 04:03:59 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:15677 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729909AbgF3IDl (ORCPT
+        Tue, 30 Jun 2020 04:04:13 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11804 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730654AbgF3IDp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 04:03:41 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5efaf1a90002>; Tue, 30 Jun 2020 01:02:49 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 30 Jun 2020 01:03:39 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 30 Jun 2020 01:03:39 -0700
-Received: from [10.25.97.62] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 30 Jun
- 2020 08:03:31 +0000
-CC:     <spujar@nvidia.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <robh+dt@kernel.org>, <lgirdwood@gmail.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <digetx@gmail.com>, <alsa-devel@alsa-project.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sharadg@nvidia.com>, <mkumard@nvidia.com>,
-        <viswanathl@nvidia.com>, <rlokhande@nvidia.com>,
-        <dramesh@nvidia.com>, <atalambedu@nvidia.com>,
-        <nwartikar@nvidia.com>, <swarren@nvidia.com>,
-        <nicoleotsuka@gmail.com>
-Subject: Re: [PATCH v4 15/23] ASoC: soc-core: Identify 'no_pcm' DAI links for
- DPCM
-To:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-References: <1593233625-14961-1-git-send-email-spujar@nvidia.com>
- <1593233625-14961-16-git-send-email-spujar@nvidia.com>
- <87h7utytlx.wl-kuninori.morimoto.gx@renesas.com>
-From:   Sameer Pujar <spujar@nvidia.com>
-Message-ID: <9c7871ae-6649-7b0d-4780-c8389c299b04@nvidia.com>
-Date:   Tue, 30 Jun 2020 13:33:27 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 30 Jun 2020 04:03:45 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05U83KU5114915;
+        Tue, 30 Jun 2020 04:03:37 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31ydjxuwuq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 Jun 2020 04:03:36 -0400
+Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05U83Yw6116319;
+        Tue, 30 Jun 2020 04:03:34 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31ydjxuwu6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 Jun 2020 04:03:34 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05U80rEh028416;
+        Tue, 30 Jun 2020 08:03:32 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma02wdc.us.ibm.com with ESMTP id 31wwr8pbmg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 Jun 2020 08:03:32 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05U83Wk153018930
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Jun 2020 08:03:32 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4F5D9AE05F;
+        Tue, 30 Jun 2020 08:03:32 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9291BAE05C;
+        Tue, 30 Jun 2020 08:03:31 +0000 (GMT)
+Received: from ltc.linux.ibm.com (unknown [9.16.170.189])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 30 Jun 2020 08:03:31 +0000 (GMT)
 MIME-Version: 1.0
-In-Reply-To: <87h7utytlx.wl-kuninori.morimoto.gx@renesas.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1593504169; bh=DnKjNwH/guC7EJEpkXLjFlHpxsWMMzSc4XkpFzGQbAg=;
-        h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=WQUwIr+WF/GGwacJzN7rnd4pRjFlBamjWeqTONoPBOOZYgq7blpSZ87MHNdErkG/V
-         Bo5un9TEvghvrPYJtlgg/3/67mIK7K7OuME2UgysIJBrQsLscV7rPe5qsImS52vi+l
-         tBtyNEId8MOyf5+oALW7p+QzyXv+QJXTIyVzbhzhl3PV7l6YaQqkhjgk3lnk4FEvP2
-         Hwh38kn4IjXhwdJaI/HKbUZjmGQYG/YPm71jdjU6NGptDUih2eCD6TgFWKc6IhKRkX
-         G1nr50EASreeu9otzItyG9V/VzGXnbHR6oGij3dXYjDlW+ElcrOlMWu8e+AzFJ1YZa
-         d+zK2Z3ASZHUA==
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Tue, 30 Jun 2020 10:03:31 +0200
+From:   haver <haver@linux.vnet.ibm.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     arnd@arndb.de, gregkh@linuxfoundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Michael Jung <mijung@gmx.net>,
+        Michael Ruettger <michael@ibmra.de>,
+        Frank Haverkamp <haver@linux.ibm.com>,
+        Joerg-Stephan Vogt <jsvogt@de.ibm.com>
+Subject: Re: [PATCH 16/20] misc: genwqe: card_base: Remove set but unused
+ variable 'rc'
+In-Reply-To: <20200630074224.GH1179328@dell>
+References: <20200629140442.1043957-1-lee.jones@linaro.org>
+ <20200629140442.1043957-17-lee.jones@linaro.org>
+ <fff00e6667c442cac13147ee5095430a@linux.vnet.ibm.com>
+ <20200630074224.GH1179328@dell>
+Message-ID: <770e66e5f2d7efcea61fc9d57e1053f0@linux.vnet.ibm.com>
+X-Sender: haver@linux.vnet.ibm.com
+User-Agent: Roundcube Webmail/1.0.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-06-30_02:2020-06-30,2020-06-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
+ cotscore=-2147483648 bulkscore=0 mlxlogscore=999 mlxscore=0
+ impostorscore=0 priorityscore=1501 suspectscore=0 spamscore=0 phishscore=0
+ lowpriorityscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006300058
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020-06-30 09:42, Lee Jones wrote:
+> On Tue, 30 Jun 2020, haver wrote:
+> 
+>> On 2020-06-29 16:04, Lee Jones wrote:
+>> > Variable 'rc' hasn't been checked since the driver's inception
+>> > in 2013.  If it hasn't caused any issues since then, it's unlikely
+>> > to in the future.  Let's take it out for now.
+>> >
+>> > Fixes the following W=1 kernel build warning(s):
+>> >
+>> >  drivers/misc/genwqe/card_base.c: In function
+>> > ‘genwqe_health_check_stop’:
+>> >
+>> > /home/lee/projects/linux/kernel/drivers/misc/genwqe/card_base.c:1046:6:
+>> > warning: variable ‘rc’ set but not used
+>> > [-Wunused-but-set-variable]
+>> >  1046 | int rc;
+>> >  | ^~
+>> >
+>> > Cc: Michael Jung <mijung@gmx.net>
+>> > Cc: Michael Ruettger <michael@ibmra.de>
+>> > Cc: Frank Haverkamp <haver@linux.ibm.com>
+>> > Cc: Joerg-Stephan Vogt <jsvogt@de.ibm.com>
+>> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+>> > ---
+>> >  drivers/misc/genwqe/card_base.c | 4 +---
+>> >  1 file changed, 1 insertion(+), 3 deletions(-)
+>> >
+>> > diff --git a/drivers/misc/genwqe/card_base.c
+>> > b/drivers/misc/genwqe/card_base.c
+>> > index 1dc6c7c5cbce9..bceebf49de2d5 100644
+>> > --- a/drivers/misc/genwqe/card_base.c
+>> > +++ b/drivers/misc/genwqe/card_base.c
+>> > @@ -1043,12 +1043,10 @@ static int genwqe_health_thread_running(struct
+>> > genwqe_dev *cd)
+>> >
+>> >  static int genwqe_health_check_stop(struct genwqe_dev *cd)
+>> >  {
+>> > -	int rc;
+>> > -
+>> >  	if (!genwqe_health_thread_running(cd))
+>> >  		return -EIO;
+>> >
+>> > -	rc = kthread_stop(cd->health_thread);
+>> > +	kthread_stop(cd->health_thread);
+>> >  	cd->health_thread = NULL;
+>> >  	return 0;
+>> >  }
+>> 
+>> Good idea. Let's remove it Thanks for the contribution.
+> 
+> No problem, and you are welcome.
+> 
+>> Signed-off-by: Frank Haverkamp <haver@linux.ibm.com>
+> 
+> Just as an aside, this should be Acked-by, unless you either
+> contributed to the patch directly or are in the delivery path i.e. you
+> plan to pick the patch and send it to, say Linus, via a pull-request.
 
+Right. Thanks for reminding me. Feel free to send it yourself.
+When was the documentation checking introduced? At the time we
+contributed the code there was no such checking.
 
-On 6/30/2020 11:37 AM, Kuninori Morimoto wrote:
-> External email: Use caution opening links or attachments
->
->
-> Hi Sameer
->
->> PCM devices are created for dai links with 'no-pcm' flag as '0'.
->> Such DAI links have CPU component which implement pcm_construct()
->> and pcm_destruct() callbacks. Based on this, current patch exposes
->> a helper function to identify such components and populate 'no_pcm'
->> flag for DPCM DAI link.
->>
->> This helps to have BE<->BE component links where PCM devices need
->> not be created for CPU components involved in the links.
->>
->> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
->> ---
-> (snip)
->> +bool soc_component_is_pcm(struct snd_soc_dai_link_component *dlc)
->> +{
->> +     struct snd_soc_component *component;
->> +     struct snd_soc_dai *dai;
->> +
->> +     for_each_component(component) {
->> +             if (!component->driver)
->> +                     continue;
->> +
->> +             for_each_component_dais(component, dai) {
->> +                     if (!dai->name || !dlc->dai_name)
->> +                             continue;
->> +
->> +                     if (strcmp(dai->name, dlc->dai_name))
->> +                             continue;
->> +
->> +                     if (component->driver->pcm_construct)
->> +                             return true;
->> +             }
->> +     }
->> +
->> +     return false;
->> +}
-> At least my CPU driver doesn't use component:pcm_construct
-> but is using DAI:pcm_new for some reasons.
-> I'm not sure checking DAI:pcm here is enough, or not...
-
-OK. If adding DAI:pcm_new above here is not sufficient, then a flag can 
-be used to describe FE component? or is there a better alternative?
->
-> Thank you for your help !!
->
-> Best regards
-> ---
-> Kuninori Morimoto
-
+Acked-by: Frank Haverkamp <haver@linux.ibm.com>
