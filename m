@@ -2,171 +2,151 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5BEAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD42CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C92720672
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 822C020672
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:47:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d68s4qdC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733099AbgF3Lq5 convert rfc822-to-8bit (ORCPT
+        id S1733102AbgF3Lrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 07:46:57 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:43157 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730471AbgF3Lqz (ORCPT
+        Tue, 30 Jun 2020 07:47:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56814 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728419AbgF3Lre (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 07:46:55 -0400
-Received: from mail-pj1-f69.google.com ([209.85.216.69])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1jqEiw-0005Al-V3
-        for linux-kernel@vger.kernel.org; Tue, 30 Jun 2020 11:46:52 +0000
-Received: by mail-pj1-f69.google.com with SMTP id h93so15838946pjb.2
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 04:46:50 -0700 (PDT)
+        Tue, 30 Jun 2020 07:47:34 -0400
+Received: from mail-lf1-x142.google.com (mail-lf1-x142.google.com [IPv6:2a00:1450:4864:20::142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B11D5C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 04:47:33 -0700 (PDT)
+Received: by mail-lf1-x142.google.com with SMTP id u25so11179488lfm.1
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 04:47:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TFC+WBq7XDcW3TVW9x+KN+I5qxP4pcdSU4SbEe6OPp0=;
+        b=d68s4qdCmK1TtORh+eQRf0S7WXOcI+wvGvLs0azHsmlx3wZ3fI54RdBA5MqjXEH0p+
+         Dno6/2KH6VsHo19RJMbFwmdFbzQMnSLyHtrAwgCBbwyjgEzbuLqg9DKsoJh7YhxkHfbm
+         tUL3kppZ8Sk8n2Af1NYQHQcMuczHcJ3e4AOZZpCTh+/uiCYXxwhp3IHzo4bKbUiJc1QQ
+         1ArdlHjQ0zEZBV3RpZBrpGl6hTIjj1jY0wI3SkzUY3vg+qU7IchTcVxls8NUWxD1QXk1
+         +du+8q924Xyfm35vp3ktf98nOwNKpTPgL2hUzZf++WzzPjFbIjwGpoLqiIcJN6Q8GN12
+         DjMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=sbuSARSoydm/w1tLY3AxmNuAm0ttrH3xHuWTiSAIdhs=;
-        b=Ocy5bD7+7kqItHQeYitR/3rxtUBldZf0sz0qyS/CeMVDJWig5MedWMQ4qKhOB5EoMM
-         m6ZPGM1sSNXkKIRNV7/NYtdS/F04gjUPyZGThNdiBT1hpBG6wc60h8tBiVD80IsCcDfQ
-         DSBLfCC2q+Mb04YtJU1TtTHHeaVPNbazNM12iKWmk2Sy8MdNCE+YSp6Gt7ohita8RXrD
-         HBh3r5oLIortyiTnfBWsw5ZyiXdtyeHF4vKx8vnrCKcgJgalxPE+qXabpJ1syyGXQxzh
-         yDeB7spNFTeQZ40H7QfQuih38/8dfHry6+MDhUckbgwe2GKm3totoafgYYBMdoM3bJxs
-         dtPw==
-X-Gm-Message-State: AOAM531QAQvioSjBZlhrzx7UMLL2C15NEjSkt6CtTZRIhB2aCVBXRete
-        0JVH1i9PTxiuOCL4wO6y7wXG5L1EBDyhvt20o7JcllbZsoCBztSkcQ3qBdsR3Xt3zQc3Ks1txXu
-        16eMAd4uoS/pIGm9/O9553uXLPDBfvxSZ5nS/LWmL4w==
-X-Received: by 2002:a63:7741:: with SMTP id s62mr14344466pgc.332.1593517609439;
-        Tue, 30 Jun 2020 04:46:49 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwDOQOH0Fg/5/jvkAJ3uPk+LCunRwlmDfZUqr3V6oarC9hx0OSnodB+Gd+bVuLpNzC0ER+fRA==
-X-Received: by 2002:a63:7741:: with SMTP id s62mr14344437pgc.332.1593517608855;
-        Tue, 30 Jun 2020 04:46:48 -0700 (PDT)
-Received: from [192.168.1.208] (220-133-187-190.HINET-IP.hinet.net. [220.133.187.190])
-        by smtp.gmail.com with ESMTPSA id g7sm2349924pfh.210.2020.06.30.04.46.47
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Jun 2020 04:46:48 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
-Subject: Re: [PATCH] xhci: Make debug message consistent with bus and port
- number
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <dd75ab92-cb02-4a7d-0a03-f105878f71cd@linux.intel.com>
-Date:   Tue, 30 Jun 2020 19:46:45 +0800
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mathias Nyman <mathias.nyman@intel.com>,
-        "open list:USB XHCI DRIVER" <linux-usb@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <2542B92A-9E0B-4907-BF29-EA244597CC7B@canonical.com>
-References: <20200507061755.13280-1-kai.heng.feng@canonical.com>
- <20200507064510.GA787064@kroah.com>
- <C4A734C8-D1C6-45BC-9C0A-92364EAEE3C0@canonical.com>
- <20200507073119.GA876666@kroah.com>
- <90D5B23E-B037-49D2-BD44-7F9B0B2FC155@canonical.com>
- <20200507082149.GE1024567@kroah.com>
- <938b0ce5-cb56-a356-dec8-3a6adc502752@linux.intel.com>
- <E6AD21DC-A086-44B9-98F5-7FB320E9B457@canonical.com>
- <dd75ab92-cb02-4a7d-0a03-f105878f71cd@linux.intel.com>
-To:     Mathias Nyman <mathias.nyman@linux.intel.com>
-X-Mailer: Apple Mail (2.3608.80.23.2.2)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TFC+WBq7XDcW3TVW9x+KN+I5qxP4pcdSU4SbEe6OPp0=;
+        b=HEixW+QJtGoK3ncXnhSkk4dvbAUAmTJmoGHZ34/jnJN2oV611X5OM3fPj+/b5mpopz
+         dKOvxvMbLliqBa3XzbrnB1dTgIU/j2hEoxgplpypJU+Hbzb3uoHXSzqmP20SBh4EqGGn
+         C7rvDIpF9MdBCjC0eYWKLnK22OG20fWHCB7oBTJG+n0/Cjtt3wdzMg5eoIwD4vMNuEDk
+         tYpBAKe8jK0RQ9XBrgHh76Q5dzDNpLqNsQDWH4ExYHR98tFg63QqenQGlTWN15ECe0PG
+         1ym7wnnJ6VeS2gysIws1Tuh8V5CoJxUuZ7eizcnUveXv4ROBD+uRCz56m76LvzaAppbr
+         cqnw==
+X-Gm-Message-State: AOAM533pfZFlV8xXUKL8SuZTDTfoN9bNuRfRHEDGzrkhyQ8iIIE9GdJM
+        gpTQLISdUpYfvW5lsr2xg6H1mihAzBl7spj7s06/0bQI
+X-Google-Smtp-Source: ABdhPJwt26oQzvsh96ZHTy2TwPcowmHp/AIV+YTF2oMGp3rjnTbFRwFrzSq6RtZFwbFkyJsPWznIdHy8/vEzrb45av8=
+X-Received: by 2002:a19:c797:: with SMTP id x145mr11835531lff.143.1593517652008;
+ Tue, 30 Jun 2020 04:47:32 -0700 (PDT)
+MIME-Version: 1.0
+References: <20200625144509.17918-1-daniel.lezcano@linaro.org> <20200625144509.17918-3-daniel.lezcano@linaro.org>
+In-Reply-To: <20200625144509.17918-3-daniel.lezcano@linaro.org>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Tue, 30 Jun 2020 17:17:20 +0530
+Message-ID: <CAP245DUMjTQr2vKirZ+FxEYWC=VQ_k+OegxQgXcKDU8ThWuCsQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/5] thermal: core: Remove old uapi generic netlink
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Ram Chandrasekar <rkumbako@codeaurora.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jun 25, 2020 at 8:15 PM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
+>
+> In order to set the scene for the new generic netlink thermal
+> management and notifications, let remove the old dead code remaining
+
+s/management/management api/
+
+s/let/let's/
+
+> in the uapi headers.
+>
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> ---
+>  include/linux/thermal.h      |  5 -----
+>  include/uapi/linux/thermal.h | 12 +-----------
+>  2 files changed, 1 insertion(+), 16 deletions(-)
+>
+> diff --git a/include/linux/thermal.h b/include/linux/thermal.h
+> index faf7ad031e42..fc93a6348082 100644
+> --- a/include/linux/thermal.h
+> +++ b/include/linux/thermal.h
+> @@ -302,11 +302,6 @@ struct thermal_zone_params {
+>         int offset;
+>  };
+>
+> -struct thermal_genl_event {
+> -       u32 orig;
+> -       enum events event;
+> -};
+> -
+>  /**
+>   * struct thermal_zone_of_device_ops - scallbacks for handling DT based zones
+>   *
+> diff --git a/include/uapi/linux/thermal.h b/include/uapi/linux/thermal.h
+> index 96218378dda8..22df67ed9e9c 100644
+> --- a/include/uapi/linux/thermal.h
+> +++ b/include/uapi/linux/thermal.h
+> @@ -6,21 +6,12 @@
+>
+>  /* Adding event notification support elements */
+>  #define THERMAL_GENL_FAMILY_NAME                "thermal_event"
+> -#define THERMAL_GENL_VERSION                    0x01
+> +#define THERMAL_GENL_VERSION                    0x02
+
+This hunk should be removed since you set version back to 1 in the
+next patch and we don't actually intend to bump the version yet.
 
 
-> On Jun 8, 2020, at 17:29, Mathias Nyman <mathias.nyman@linux.intel.com> wrote:
-> 
-> On 8.6.2020 6.57, Kai-Heng Feng wrote:
->> 
->> 
->>> On May 7, 2020, at 18:35, Mathias Nyman <mathias.nyman@linux.intel.com> wrote:
->>> 
->>> On 7.5.2020 11.21, Greg Kroah-Hartman wrote:
->>>> On Thu, May 07, 2020 at 03:58:36PM +0800, Kai-Heng Feng wrote:
->>>>> 
->>>>> 
->>>>>> On May 7, 2020, at 15:31, Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
->>>>>> 
->>>>>> On Thu, May 07, 2020 at 03:15:01PM +0800, Kai-Heng Feng wrote:
->>>>>>> 
->>>>>>> 
->>>>>>>> On May 7, 2020, at 14:45, Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
->>>>>>>> 
->>>>>>>> On Thu, May 07, 2020 at 02:17:55PM +0800, Kai-Heng Feng wrote:
->>>>>>>>> Current xhci debug message doesn't always output bus number, so it's
->>>>>>>>> hard to figure out it's from USB2 or USB3 root hub.
->>>>>>>>> 
->>>>>>>>> In addition to that, some port numbers are offset to 0 and others are
->>>>>>>>> offset to 1. Use the latter to match the USB core.
->>>>>>>>> 
->>>>>>>>> So use "bus number - port index + 1" to make debug message consistent.
->>>>>>>>> 
->>>>>>>>> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->>>>>>>>> ---
->>>>>>>>> drivers/usb/host/xhci-hub.c | 41 +++++++++++++++++++++----------------
->>>>>>>>> 1 file changed, 23 insertions(+), 18 deletions(-)
->>>>>>>>> 
->>>>>>>>> diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
->>>>>>>>> index f37316d2c8fa..83088c262cc4 100644
->>>>>>>>> --- a/drivers/usb/host/xhci-hub.c
->>>>>>>>> +++ b/drivers/usb/host/xhci-hub.c
->>>>>>>>> @@ -1241,7 +1241,8 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
->>>>>>>>> 			temp = readl(ports[wIndex]->addr);
->>>>>>>>> 			/* Disable port */
->>>>>>>>> 			if (link_state == USB_SS_PORT_LS_SS_DISABLED) {
->>>>>>>>> -				xhci_dbg(xhci, "Disable port %d\n", wIndex);
->>>>>>>>> +				xhci_dbg(xhci, "Disable port %d-%d\n",
->>>>>>>>> +					 hcd->self.busnum, wIndex + 1);
->>>>>>>> 
->>>>>>>> Shouldn't xhci_dbg() show the bus number already?  
->>>>>>> 
->>>>>>> It's the PCI bus number, different to USB2/USB3 root hub bus number...
->>>>>> 
->>>>>> But if this is using dev_dbg(), and it is, then you know how to look
->>>>>> that up by seeing where that device is in sysfs at that point in time.
->>>>>> 
->>>>>> So why add this again?
->>>>> 
->>>>> xHCI has two HCD, one for USB2 and one for USB3.
->>>>> If both of their port with same number are in use, for instance, port 1, then they are port 1-1 and port 2-1.
->>>>> Right now the debug message only show "Port 1", we still can't find the corresponding port via sysfs with insufficient info.
->>>> 
->>>> Look at the full kernel log line, the xhci hcd device should be showing
->>>> you unique information.  If not, something else is wrong.
->>>> 
->>> 
->>> What Kai-Heng suggest here makes sense, and is useful.
->>> We use similar style debugging in other places, and it is helpful as it matches
->>> usb core debugging style.
->>> 
->>> This might seem odd but reason is that the xHC controller is one device which
->>> doesn't really separate USB2 and USB3.
->>> All ports are for example in one long array.
->>> 
->>> On the xhci driver side things look very different. We register two HCD's,
->>> one for usb 2 and one for USB 3. In many cases the debugging is not tied to a HCD
->>> in any way,  (starting, stopping controller, command completion interrupts etc),
->>> other cases the debugging is very much tied to a specific hcd,
->>> for example when we are handling a port requsts for the roothub.
->> 
->> A gentle ping...
->> 
-> 
-> Added to my for-usb-next branch, (which I'll need to rebase on 5.8-rc1 once released)
-
-Hmm, not seeing this patch from mainline, next or xhci tree..
-
-Kai-Heng
-> 
-> -Mathias
-> 
-
+>  #define THERMAL_GENL_MCAST_GROUP_NAME           "thermal_mc_grp"
+>
+> -/* Events supported by Thermal Netlink */
+> -enum events {
+> -       THERMAL_AUX0,
+> -       THERMAL_AUX1,
+> -       THERMAL_CRITICAL,
+> -       THERMAL_DEV_FAULT,
+> -};
+> -
+>  /* attributes of thermal_genl_family */
+>  enum {
+>         THERMAL_GENL_ATTR_UNSPEC,
+> -       THERMAL_GENL_ATTR_EVENT,
+>         __THERMAL_GENL_ATTR_MAX,
+>  };
+>  #define THERMAL_GENL_ATTR_MAX (__THERMAL_GENL_ATTR_MAX - 1)
+> @@ -28,7 +19,6 @@ enum {
+>  /* commands supported by the thermal_genl_family */
+>  enum {
+>         THERMAL_GENL_CMD_UNSPEC,
+> -       THERMAL_GENL_CMD_EVENT,
+>         __THERMAL_GENL_CMD_MAX,
+>  };
+>  #define THERMAL_GENL_CMD_MAX (__THERMAL_GENL_CMD_MAX - 1)
+> --
+> 2.17.1
+>
