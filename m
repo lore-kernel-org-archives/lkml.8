@@ -2,190 +2,119 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E2A9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 22:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD117C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 22:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F5C420829
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 22:07:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9495120724
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 22:08:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="W96sXiTM"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="ZJWhYNW8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726319AbgF3WHV (ORCPT
+        id S1726301AbgF3WIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 18:07:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39842 "EHLO
+        Tue, 30 Jun 2020 18:08:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbgF3WHV (ORCPT
+        with ESMTP id S1726074AbgF3WIO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 18:07:21 -0400
-Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB86FC03E979
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 15:07:20 -0700 (PDT)
-Received: by mail-yb1-xb42.google.com with SMTP id e197so6857029yba.5
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 15:07:20 -0700 (PDT)
+        Tue, 30 Jun 2020 18:08:14 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53E8AC03E979
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 15:08:14 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id l17so20265901wmj.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 15:08:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=691b3xWfqIBa1A1wsIV3iMy/Zs9rJUYoT5w1uX/0Ctk=;
-        b=W96sXiTMhMyQM40ezkwKcWl+p3JTm44BhAl41PNAbXajbsh/879d3cx2+T9sAzP+XT
-         JInNu1eWE2g6KkBE9tWdwMFUn4Pb3EcbVu481NVBBPvKEyHQ9QoxwM5YglPpX6lXnIa2
-         pCX/l1f+52YbVGxWAoTB0TLJ7xIOrob1omaNexPwajinFg79X46+HciWQip+quBCUA7d
-         7Wn6PSer4JQVFVWgV6S5CbxtVzbWXivtUynxAMqr83qN0NCEdJYl1utckMyy6yd37CC2
-         q3lAflfTPwKgL9c2XUdrhu/z1niqzutO7Ohw/g9g029a+f9PrqJeiB3eBWejrqvRHozr
-         Ntbg==
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=h7TDtlGCpE+9NIF4eS7MT43wTOS1FJJy0Om2MAQ0voA=;
+        b=ZJWhYNW80aP0UjLF2kYUMHvCiLGwyo9hylEay2xarposLoORgE2Ch0QRE90zfu7d4C
+         HcWcdBfALIPOnUa82U8dsC9oj0/Qs7AQ4dWDhzRlqFbMQLj9OshNPw3e431Bqr9DV47R
+         1dE/paxnDLFlc100OSaSsF8nYGx8mKkaMx3kM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=691b3xWfqIBa1A1wsIV3iMy/Zs9rJUYoT5w1uX/0Ctk=;
-        b=GTI/FNg0Fl67T9epGzDswSdxBmFi4JaNv9ZTnaPWRgtW4CI7tSRv8SCfBIj1A2IsIw
-         1/JAu04soFpVkaMaqFgcuJd22Q7E/qGc65lZ1Czq5p2auUEH9JdBakom1ZsQ/kX7WkN0
-         JppZlnTImcMA90WazsFigEr0GvrgGEI36wQDha0O6I/7blm1gOUI5ujt0aHF5RVeeTWa
-         58QCO9vkoRcCAN9n46TkLjHXIv00aKj9K9x+31izn19uKHv900hn4gIBp+3UB9A9M7oM
-         +Z8LEQq/zu9sT9YWvG7bC3tijxh1HJlHT+CCROg9uUo4ZdCkwGM5iAb0IV5eN3GKyoPb
-         NOmA==
-X-Gm-Message-State: AOAM530bBmITA7roXCdFvSccgzz43WvjJVNXsPbNP+t/OAy7I0Xs81RX
-        nI27yb9JH9bmFUfsclyTihzHRJxmWdfAuxyKp7JByw==
-X-Google-Smtp-Source: ABdhPJzkTS1NFp9xnWmvdli40oBisekjgROtD4WCRD1u3n3F6Pj+65dZ+aHyhk2C+MrAMHUg/GQrEl59+6qXz/hixL8=
-X-Received: by 2002:a25:ec0d:: with SMTP id j13mr35035984ybh.364.1593554839938;
- Tue, 30 Jun 2020 15:07:19 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=h7TDtlGCpE+9NIF4eS7MT43wTOS1FJJy0Om2MAQ0voA=;
+        b=Q8CE8h+6dUqhVomsAz5VKovVnAjJaXxgU9c/hm6tSowzp9dzyHTFiovYRBk3B/lDox
+         s4xf31HSN5pMmmukje93IXbqEV4RATjMScDddKcBr3ublgavHW+mCZ2/iriKhN6hBV1N
+         kQaKjXHaHPrpJikEQUNf3NKupvyTR1eXXexGWYiQCncacOMFao87F57BrNbXSaShuuy6
+         f9MjGSY/7svvRULanzlB80iPIEDZXjz6Tc3mNaNzT21AfgLYrqbfMYX6vJNROVJqtnJP
+         u800eLdVS9flTXKITvs3hAsLT5Z5vkNCWOANx+exhE2rE19ROEc+P6mN3sy1nGGgYUVo
+         TO8w==
+X-Gm-Message-State: AOAM5312iaZAq7cUuNBxE9YBzxD/spLW+XjsnD+mbMxy5w0DxVyiynFS
+        oGNiUX/Dx3lNvKPaI58Rph3iUfzQdBrvAdp8xAdweTKrkOauMqGPCwHld/1daBSjjXpzsPQpKXJ
+        fvMnD1xauWb6xBj71ArC3eD6cgW28ENIA6limtCnBkRnYwkq8km7FYalSwTIIZZiME+GazSO4UI
+        Oc
+X-Google-Smtp-Source: ABdhPJzjZhl1qhrkUOIUo/m25AEPI8WGU/fDVfZi71HnMPSFwWnuM9w7rn5qy3jXU3ZrOXB6iwh9xg==
+X-Received: by 2002:a1c:24c6:: with SMTP id k189mr24732162wmk.9.1593554892402;
+        Tue, 30 Jun 2020 15:08:12 -0700 (PDT)
+Received: from [10.230.182.181] ([192.19.224.250])
+        by smtp.gmail.com with ESMTPSA id e8sm5092967wrp.26.2020.06.30.15.08.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Jun 2020 15:08:11 -0700 (PDT)
+Subject: Re: [PATCH] pinctrl: initialise nsp-mux earlier.
+To:     Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
+        rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, linus.walleij@linaro.org,
+        linux-gpio@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org
+References: <20200630212958.24030-1-mark.tomlinson@alliedtelesis.co.nz>
+From:   Ray Jui <ray.jui@broadcom.com>
+Message-ID: <a1dc8f14-187d-a804-45bb-d1fa25ff7b01@broadcom.com>
+Date:   Tue, 30 Jun 2020 15:08:05 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <CAHk-=wjEghg5_pX_GhNP+BfcUK6CRZ+4mh3bciitm9JwXvR7aQ@mail.gmail.com>
- <312079189.17903.1593549293094.JavaMail.zimbra@efficios.com>
- <CANn89iJ+rkMrLrHrKXO-57frXNb32epB93LYLRuHX00uWc-0Uw@mail.gmail.com>
- <20200630.134429.1590957032456466647.davem@davemloft.net> <CANn89i+b-LeaPvaaHvj0yc0mJ2qwZ0981fQHVp0+sqXYp=kdkA@mail.gmail.com>
- <474095696.17969.1593551866537.JavaMail.zimbra@efficios.com>
- <CANn89iKK2+pznYZoKZzdCu4qkA7BjJZFqc6ABof4iaS-T-9_aw@mail.gmail.com> <CANn89i+_DUrKROb1Zkk_nmngkD=oy9UjbxwnkgyzGB=z+SKg3g@mail.gmail.com>
-In-Reply-To: <CANn89i+_DUrKROb1Zkk_nmngkD=oy9UjbxwnkgyzGB=z+SKg3g@mail.gmail.com>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Tue, 30 Jun 2020 15:07:08 -0700
-Message-ID: <CANn89iJJ_WR-jGQogU3-arjD6=xcU9VWzJYSOLbyD94JQo-zAQ@mail.gmail.com>
-Subject: Re: [regression] TCP_MD5SIG on established sockets
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Yuchung Cheng <ycheng@google.com>,
-        Jonathan Rajotte-Julien <joraj@efficios.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200630212958.24030-1-mark.tomlinson@alliedtelesis.co.nz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 2:54 PM Eric Dumazet <edumazet@google.com> wrote:
->
-> On Tue, Jun 30, 2020 at 2:23 PM Eric Dumazet <edumazet@google.com> wrote:
-> >
-> > On Tue, Jun 30, 2020 at 2:17 PM Mathieu Desnoyers
-> > <mathieu.desnoyers@efficios.com> wrote:
-> > >
-> > > ----- On Jun 30, 2020, at 4:56 PM, Eric Dumazet edumazet@google.com wrote:
-> > >
-> > > > On Tue, Jun 30, 2020 at 1:44 PM David Miller <davem@davemloft.net> wrote:
-> > > >>
-> > > >> From: Eric Dumazet <edumazet@google.com>
-> > > >> Date: Tue, 30 Jun 2020 13:39:27 -0700
-> > > >>
-> > > >> > The (C) & (B) case are certainly doable.
-> > > >> >
-> > > >> > A) case is more complex, I have no idea of breakages of various TCP
-> > > >> > stacks if a flow got SACK
-> > > >> > at some point (in 3WHS) but suddenly becomes Reno.
-> > > >>
-> > > >> I agree that C and B are the easiest to implement without having to
-> > > >> add complicated code to handle various negotiated TCP option
-> > > >> scenerios.
-> > > >>
-> > > >> It does seem to be that some entities do A, or did I misread your
-> > > >> behavioral analysis of various implementations Mathieu?
-> > > >>
-> > > >> Thanks.
-> > > >
-> > > > Yes, another question about Mathieu cases is do determine the behavior
-> > > > of all these stacks vs :
-> > > > SACK option
-> > > > TCP TS option.
-> > >
-> > > I will ask my customer's networking team to investigate these behaviors,
-> > > which will allow me to prepare a thorough reply to the questions raised
-> > > by Eric and David. I expect to have an answer within 2-3 weeks at most.
-> > >
-> > > Thank you!
-> >
-> >
-> > Great, I am working on adding back support for (B) & (C) by the end of
-> > this week.
->
-> Note that the security issue (of sending uninit bytes to the wire) has
-> been independently fixed with [1]
->
-> This means syzbot was able to have MD5+TS+SACK  ~6 months ago.
->
-> It seems we (linux) do not enable this combination for PASSIVE flows,
-> (according to tcp_synack_options()),
-> but  for ACTIVE flows we do nothing special.
->
-> So maybe code in tcp_synack_options() should be mirrored to
-> tcp_syn_options() for consistency.
-> (disabling TS if  both MD5 and SACK are enabled)
+Hi Mark,
 
-Oh well, tcp_syn_options() is supposed to have the same logic.
+On 6/30/2020 2:29 PM, Mark Tomlinson wrote:
+> The GPIO specified in the DTS file references the pinctrl, which is
+> specified after the GPIO. If the GPIO is initialised before pinctrl,
 
-Maybe we have an issue with SYNCOOKIES (with MD5 + TS + SACK)
+May I know which GPIO driver you are referring to on NSP? Both the iProc
+GPIO driver and the NSP GPIO driver are initialized at the level of
+'arch_initcall_sync', which is supposed to be after 'arch_initcall' used
+here in the pinmux driver
 
-Nice can of worms.
+> an error message for the -EPROBE_DEFER ends up in the kernel log. Even
+> though the probe will succeed when the driver is re-initialised, the
+> error can be scary to end users. To fix this, change the time the
 
->
-> [1]
->
-> commit 9424e2e7ad93ffffa88f882c9bc5023570904b55
-> Author: Eric Dumazet <edumazet@google.com>
-> Date:   Thu Dec 5 10:10:15 2019 -0800
->
->     tcp: md5: fix potential overestimation of TCP option space
->
->     Back in 2008, Adam Langley fixed the corner case of packets for flows
->     having all of the following options : MD5 TS SACK
->
->     Since MD5 needs 20 bytes, and TS needs 12 bytes, no sack block
->     can be cooked from the remaining 8 bytes.
->
->     tcp_established_options() correctly sets opts->num_sack_blocks
->     to zero, but returns 36 instead of 32.
->
->     This means TCP cooks packets with 4 extra bytes at the end
->     of options, containing unitialized bytes.
->
->     Fixes: 33ad798c924b ("tcp: options clean up")
->     Signed-off-by: Eric Dumazet <edumazet@google.com>
->     Reported-by: syzbot <syzkaller@googlegroups.com>
->     Acked-by: Neal Cardwell <ncardwell@google.com>
->     Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
->     Signed-off-by: David S. Miller <davem@davemloft.net>
->
-> diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-> index be6d22b8190fa375074062032105879270af4be5..b184f03d743715ef4b2d166ceae651529be77953
-> 100644
-> --- a/net/ipv4/tcp_output.c
-> +++ b/net/ipv4/tcp_output.c
-> @@ -755,8 +755,9 @@ static unsigned int tcp_established_options(struct
-> sock *sk, struct sk_buff *skb
->                         min_t(unsigned int, eff_sacks,
->                               (remaining - TCPOLEN_SACK_BASE_ALIGNED) /
->                               TCPOLEN_SACK_PERBLOCK);
-> -               size += TCPOLEN_SACK_BASE_ALIGNED +
-> -                       opts->num_sack_blocks * TCPOLEN_SACK_PERBLOCK;
-> +               if (likely(opts->num_sack_blocks))
-> +                       size += TCPOLEN_SACK_BASE_ALIGNED +
-> +                               opts->num_sack_blocks * TCPOLEN_SACK_PERBLOCK;
->         }
->
->         return size;
+Scary to end users? I don't know about that. -EPROBE_DEFER was
+introduced exactly for this purpose. Perhaps users need to learn what
+-EPROBE_DEFER errno means?
+
+> pinctrl is probed, so that it is always before the GPIO driver.
+> 
+> Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+> ---
+>  drivers/pinctrl/bcm/pinctrl-nsp-mux.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pinctrl/bcm/pinctrl-nsp-mux.c b/drivers/pinctrl/bcm/pinctrl-nsp-mux.c
+> index f1d60a708815..7586949f83ec 100644
+> --- a/drivers/pinctrl/bcm/pinctrl-nsp-mux.c
+> +++ b/drivers/pinctrl/bcm/pinctrl-nsp-mux.c
+> @@ -639,4 +639,4 @@ static int __init nsp_pinmux_init(void)
+>  {
+>  	return platform_driver_register(&nsp_pinmux_driver);
+>  }
+> -arch_initcall(nsp_pinmux_init);
+> +postcore_initcall(nsp_pinmux_init);
+> 
