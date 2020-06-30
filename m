@@ -2,96 +2,209 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C7BC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:22:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B82CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0F99206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:22:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDD26206EB
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:23:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593523410;
+	bh=PGAHFgMhDN1u7gECd63b+0VCpc0amUzqW8afA0B0F9Q=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=1E9SMw4J1o1a/Nv8jUudyAteId6CmSxZQmDHrQhXYaa538FyGqmCseLVybGu+iPZS
+	 aGE1CkluB2BrM34q2FwUdiVjhkrD9VMwLPlJxpcEk3FKUF5VpnQO6lOJG8PYkbC4cb
+	 V6IaVCzX+1aD6H/xWHmgnLE8KZp2h9+CsXJ+d39o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730070AbgF3NWX (ORCPT
+        id S1730328AbgF3NX3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 09:22:23 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:53064 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726012AbgF3NWX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 09:22:23 -0400
-Received: from fsav405.sakura.ne.jp (fsav405.sakura.ne.jp [133.242.250.104])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 05UDLOlk013584;
-        Tue, 30 Jun 2020 22:21:24 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav405.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav405.sakura.ne.jp);
- Tue, 30 Jun 2020 22:21:24 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav405.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 05UDLNN3013564
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Tue, 30 Jun 2020 22:21:23 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH v2 00/15] Make the user mode driver code a better citizen
-To:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <greg@kroah.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20200625095725.GA3303921@kroah.com>
- <778297d2-512a-8361-cf05-42d9379e6977@i-love.sakura.ne.jp>
- <20200625120725.GA3493334@kroah.com>
- <20200625.123437.2219826613137938086.davem@davemloft.net>
- <CAHk-=whuTwGHEPjvtbBvneHHXeqJC=q5S09mbPnqb=Q+MSPMag@mail.gmail.com>
- <87pn9mgfc2.fsf_-_@x220.int.ebiederm.org>
- <87y2oac50p.fsf@x220.int.ebiederm.org>
- <87bll17ili.fsf_-_@x220.int.ebiederm.org>
- <20200629221231.jjc2czk3ul2roxkw@ast-mbp.dhcp.thefacebook.com>
- <87eepwzqhd.fsf@x220.int.ebiederm.org>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <1f4d8b7e-bcff-f950-7dac-76e3c4a65661@i-love.sakura.ne.jp>
-Date:   Tue, 30 Jun 2020 22:21:19 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 30 Jun 2020 09:23:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57838 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726012AbgF3NX1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 09:23:27 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2412F206B6;
+        Tue, 30 Jun 2020 13:23:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593523406;
+        bh=PGAHFgMhDN1u7gECd63b+0VCpc0amUzqW8afA0B0F9Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=OGuiOySPfq8PdDcsdgvXPH95bjBEFWPR0zMTVi0apeFlDNXxN67PFjbLyeVh0s+ok
+         S58Z+qphFJu4G0BXm0awrY4dDQd6tRfXD4tjHmXVAxtC9EVxi1/RpLnT2I1HSCKmNN
+         mUAN6PoLJU0I6z4m4wl67FJ858Rvudd1BzWXOPAE=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jqGEO-007k6P-Cp; Tue, 30 Jun 2020 14:23:24 +0100
 MIME-Version: 1.0
-In-Reply-To: <87eepwzqhd.fsf@x220.int.ebiederm.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Tue, 30 Jun 2020 14:23:24 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCH v5 2/6] PCI: uniphier: Add misc interrupt handler to
+ invoke PME and AER
+In-Reply-To: <c09ceb2f-0bf3-a5de-f918-1ccd0dba1e0a@socionext.com>
+References: <1592469493-1549-1-git-send-email-hayashi.kunihiko@socionext.com>
+ <1592469493-1549-3-git-send-email-hayashi.kunihiko@socionext.com>
+ <87v9jcet5h.wl-maz@kernel.org>
+ <c09ceb2f-0bf3-a5de-f918-1ccd0dba1e0a@socionext.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <2a2bb86a4afcbd60d3399953b5af8b69@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: hayashi.kunihiko@socionext.com, bhelgaas@google.com, lorenzo.pieralisi@arm.com, jingoohan1@gmail.com, gustavo.pimentel@synopsys.com, robh+dt@kernel.org, yamada.masahiro@socionext.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, masami.hiramatsu@linaro.org, jaswinder.singh@linaro.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/06/30 21:29, Eric W. Biederman wrote:
-> Hmm.  The wake up happens just of tgid->wait_pidfd happens just before
-> release_task is called so there is a race.  As it is possible to wake
-> up and then go back to sleep before pid_has_task becomes false.
+On 2020-06-29 10:49, Kunihiko Hayashi wrote:
+> Hi Marc,
+> 
+> On 2020/06/27 18:48, Marc Zyngier wrote:
+>> On Thu, 18 Jun 2020 09:38:09 +0100,
+>> Kunihiko Hayashi <hayashi.kunihiko@socionext.com> wrote:
+>>> 
+>>> The misc interrupts consisting of PME, AER, and Link event, is 
+>>> handled
+>>> by INTx handler, however, these interrupts should be also handled by
+>>> MSI handler.
+>>> 
+>>> This adds the function uniphier_pcie_misc_isr() that handles misc
+>>> interrupts, which is called from both INTx and MSI handlers.
+>>> This function detects PME and AER interrupts with the status 
+>>> register,
+>>> and invoke PME and AER drivers related to MSI.
+>>> 
+>>> And this sets the mask for misc interrupts from INTx if MSI is 
+>>> enabled
+>>> and sets the mask for misc interrupts from MSI if MSI is disabled.
+>>> 
+>>> Cc: Marc Zyngier <maz@kernel.org>
+>>> Cc: Jingoo Han <jingoohan1@gmail.com>
+>>> Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>>> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+>>> ---
+>>>   drivers/pci/controller/dwc/pcie-uniphier.c | 57 
+>>> ++++++++++++++++++++++++------
+>>>   1 file changed, 46 insertions(+), 11 deletions(-)
+>>> 
+>>> diff --git a/drivers/pci/controller/dwc/pcie-uniphier.c 
+>>> b/drivers/pci/controller/dwc/pcie-uniphier.c
+>>> index a5401a0..5ce2479 100644
+>>> --- a/drivers/pci/controller/dwc/pcie-uniphier.c
+>>> +++ b/drivers/pci/controller/dwc/pcie-uniphier.c
+>>> @@ -44,7 +44,9 @@
+>>>   #define PCL_SYS_AUX_PWR_DET		BIT(8)
+>>>     #define PCL_RCV_INT			0x8108
+>>> +#define PCL_RCV_INT_ALL_INT_MASK	GENMASK(28, 25)
+>>>   #define PCL_RCV_INT_ALL_ENABLE		GENMASK(20, 17)
+>>> +#define PCL_RCV_INT_ALL_MSI_MASK	GENMASK(12, 9)
+>>>   #define PCL_CFG_BW_MGT_STATUS		BIT(4)
+>>>   #define PCL_CFG_LINK_AUTO_BW_STATUS	BIT(3)
+>>>   #define PCL_CFG_AER_RC_ERR_MSI_STATUS	BIT(2)
+>>> @@ -167,7 +169,15 @@ static void uniphier_pcie_stop_link(struct 
+>>> dw_pcie *pci)
+>>>     static void uniphier_pcie_irq_enable(struct uniphier_pcie_priv 
+>>> *priv)
+>>>   {
+>>> -	writel(PCL_RCV_INT_ALL_ENABLE, priv->base + PCL_RCV_INT);
+>>> +	u32 val;
+>>> +
+>>> +	val = PCL_RCV_INT_ALL_ENABLE;
+>>> +	if (pci_msi_enabled())
+>>> +		val |= PCL_RCV_INT_ALL_INT_MASK;
+>>> +	else
+>>> +		val |= PCL_RCV_INT_ALL_MSI_MASK;
+>> 
+>> Does this affect endpoints? Or just the RC itself?
+> 
+> These interrupts are asserted by RC itself, so this part affects only 
+> RC.
+> 
+>>> +
+>>> +	writel(val, priv->base + PCL_RCV_INT);
+>>>   	writel(PCL_RCV_INTX_ALL_ENABLE, priv->base + PCL_RCV_INTX);
+>>>   }
+>>>   @@ -231,32 +241,56 @@ static const struct irq_domain_ops 
+>>> uniphier_intx_domain_ops = {
+>>>   	.map = uniphier_pcie_intx_map,
+>>>   };
+>>>   -static void uniphier_pcie_irq_handler(struct irq_desc *desc)
+>>> +static void uniphier_pcie_misc_isr(struct pcie_port *pp, bool 
+>>> is_msi)
+>>>   {
+>>> -	struct pcie_port *pp = irq_desc_get_handler_data(desc);
+>>>   	struct dw_pcie *pci = to_dw_pcie_from_pp(pp);
+>>>   	struct uniphier_pcie_priv *priv = to_uniphier_pcie(pci);
+>>> -	struct irq_chip *chip = irq_desc_get_chip(desc);
+>>> -	unsigned long reg;
+>>> -	u32 val, bit, virq;
+>>> +	u32 val, virq;
+>>>   -	/* INT for debug */
+>>>   	val = readl(priv->base + PCL_RCV_INT);
+>>>     	if (val & PCL_CFG_BW_MGT_STATUS)
+>>>   		dev_dbg(pci->dev, "Link Bandwidth Management Event\n");
+>>> +
+>>>   	if (val & PCL_CFG_LINK_AUTO_BW_STATUS)
+>>>   		dev_dbg(pci->dev, "Link Autonomous Bandwidth Event\n");
+>>> -	if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
+>>> -		dev_dbg(pci->dev, "Root Error\n");
+>>> -	if (val & PCL_CFG_PME_MSI_STATUS)
+>>> -		dev_dbg(pci->dev, "PME Interrupt\n");
+>>> +
+>>> +	if (is_msi) {
+>>> +		if (val & PCL_CFG_AER_RC_ERR_MSI_STATUS)
+>>> +			dev_dbg(pci->dev, "Root Error Status\n");
+>>> +
+>>> +		if (val & PCL_CFG_PME_MSI_STATUS)
+>>> +			dev_dbg(pci->dev, "PME Interrupt\n");
+>>> +
+>>> +		if (val & (PCL_CFG_AER_RC_ERR_MSI_STATUS |
+>>> +			   PCL_CFG_PME_MSI_STATUS)) {
+>>> +			virq = irq_linear_revmap(pp->irq_domain, 0);
+>>> +			generic_handle_irq(virq);
+>>> +		}
+>>> +	}
+>> 
+>> Please have two handlers: one for interrupts that are from the RC,
+>> another for interrupts coming from the endpoints.
+> I assume that this handler treats interrupts from the RC only and
+> this is set on the member ".msi_host_isr" added in the patch 1/6.
+> I think that the handler for interrupts coming from endpoints should be
+> treated as a normal case (after calling .msi_host_isr in
+> dw_handle_msi_irq()).
 
-What is the reason we want to wait until pid_has_task() becomes false?
+It looks pretty odd that you end-up dealing with both from the
+same "parent" interrupt. I guess this is in keeping with the
+rest of the DW PCIe hacks... :-/
 
-- wait_event(tgid->wait_pidfd, !pid_has_task(tgid, PIDTYPE_TGID));
-+ while (!wait_event_timeout(tgid->wait_pidfd, !pid_has_task(tgid, PIDTYPE_TGID), 1));
+It is for Lorenzo to make up his mind about this anyway.
 
+Thanks,
 
-
-
-By the way, commit 4a9d4b024a3102fc ("switch fput to task_work_add") says
-that use of flush_delayed_fput() has to be careful. Al, is it safe to call
-flush_delayed_fput() from blob_to_mnt() from umd_load_blob() (which might be
-called from both kernel thread and from process context (e.g. init_module()
-syscall by /sbin/insmod )) ?
+         M.
+-- 
+Jazz is not dead. It just smells funny...
