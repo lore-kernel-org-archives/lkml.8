@@ -2,109 +2,135 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC21C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF69AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:36:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 48CCA20774
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:36:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89C84206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:36:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Xiq6/Exw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mANY5A32"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731991AbgF3JgP (ORCPT
+        id S1732013AbgF3Jgp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 05:36:15 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:24584 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730613AbgF3JgO (ORCPT
+        Tue, 30 Jun 2020 05:36:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36706 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731994AbgF3Jgo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 05:36:14 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05U9Ytb1002355;
-        Tue, 30 Jun 2020 11:35:42 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=XvCnsTc0gHyxA4bCQuL6yxD7F1TD1d0nVE+Ilwp4DeE=;
- b=Xiq6/ExwBe2jgYMzd+pcK7nxWvhuZTiZD4+4aj24d34XfntXZzCOg2vU6FyXga20MRKD
- PJOMKuRZSZrEgXKkZziTieNlwWC7FC6WQ7K5ug86Uc/UuIMj1FH5c6MokhYVTyd1RB4Y
- BViFUk/QltOESaJu/VrVtyK11Z3odChqDAl2TRZxDSeOSNsesG5PvoP6T2JMLbtl24n/
- QJhdX61xYpJCFSWNu//POwF8zBpTJo0Zh/4hG69m+nY2ObKs8JX7I7gNJhF2Gsg4aJIA
- dGPTfO8/bP3n6l54ihWE3J1/86/86QAJnpe1rNONw8Ia2/X5tXbXZfJztV2RmEVDgQnS YA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 31wu89hxgm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 30 Jun 2020 11:35:42 +0200
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 314C510002A;
-        Tue, 30 Jun 2020 11:35:41 +0200 (CEST)
-Received: from Webmail-eu.st.com (sfhdag6node2.st.com [10.75.127.17])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 14BEE2ADA10;
-        Tue, 30 Jun 2020 11:35:41 +0200 (CEST)
-Received: from [10.211.8.105] (10.75.127.49) by SFHDAG6NODE2.st.com
- (10.75.127.17) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 30 Jun
- 2020 11:35:39 +0200
-Subject: Re: [PATCH v5 4/6] memory: stm32-fmc2-ebi: add STM32 FMC2 EBI
- controller driver
-To:     Richard Weinberger <richard.weinberger@gmail.com>
-CC:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, <arnd@linaro.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Marek Vasut <marex@denx.de>, <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <linux-mtd@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <1591975362-22009-1-git-send-email-christophe.kerello@st.com>
- <1591975362-22009-5-git-send-email-christophe.kerello@st.com>
- <CAFLxGvzfh1Qa_gM9bZAxaoCbO6xCoNdaPN=Ea20Up_zPVgjugw@mail.gmail.com>
-From:   Christophe Kerello <christophe.kerello@st.com>
-Message-ID: <e30abadc-83c0-f010-be36-fe8d14c4aea9@st.com>
-Date:   Tue, 30 Jun 2020 11:35:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 30 Jun 2020 05:36:44 -0400
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1003C03E979
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 02:36:43 -0700 (PDT)
+Received: by mail-wm1-x331.google.com with SMTP id o2so18924784wmh.2
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 02:36:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :content-transfer-encoding;
+        bh=yaOhFBmIqdn8G4lrtwHvUko5nSvGDP5g5mqN3hIlOT0=;
+        b=mANY5A32i8Xy+WIr5jslEb6KJMif7iF1qzxgC6tqzDIyhbXDlubrFkGRvv17KOz1vm
+         DII2C2sjbT0SA5QtOWC3rikX6g0TIDVksXlE1WBmXoEp4WtXimS2XIj+vUQDKFCQ1OwC
+         MoNz8JuOwgUmGPizW8OxgxTQcTmOKjJTQVd+q4vhbTE+4B6DCH58RLmW6IKe7DgMCgjv
+         OsXXjHFMAtwhR978XaZ0zoSIJGejy3aEkjbve+jCAezLx7GRLGipnVznG3yp4dlxWUup
+         GnB0P8WAGtunjHN9mR1OE6rxRa0jgcsUGuRObl8rCkz7RkXWovMOjDKXPf1NCvUP5Ema
+         eP5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:content-transfer-encoding;
+        bh=yaOhFBmIqdn8G4lrtwHvUko5nSvGDP5g5mqN3hIlOT0=;
+        b=TVhnCORfRaRGjePo8EvKh6S+5i+pt3aAIFypdXy1vDUHj9Oj9Lqql5pXQnDbWLcU96
+         l9uaKOVtFqxRLS3vQL5xmkuuhkd2BPvYMvWxmbujHT0V4iFePqYfOiQFCP+UqJnioeCz
+         uXF3Uqdz87FqhyD5dJsLVjOyBwI3L8Z2Q1BfU2Atstxl8523+ZPuNwSKIJJIjKLrFeoF
+         5CNPplyKr9FXqZNDErbqQuSIOXa7LtZgV6S3QdQ4YnKburEvMtruBcx2mSi+LHe9jTel
+         Uci4ldVMwIUciXQU29tBGT7eiG3wiRgzz1lDIkrixiGjpyxjqhY68U8D2HhOM/693LoC
+         zGQg==
+X-Gm-Message-State: AOAM530/M+Asc3FWjmqb/qwU6e/B8OyAChW6/oR5FwdTQwKPhstge2FZ
+        y/xelacsQPuZM4Rhcu96TP5lsQ==
+X-Google-Smtp-Source: ABdhPJwHunjXx/RLUoEt7TrvTZZBpJuDl+cFP0Xg4HKFJn9lm5Uol4Z2jknkTbH7j0IqbX1N7+ZDxQ==
+X-Received: by 2002:a1c:7306:: with SMTP id d6mr12380909wmb.113.1593509802412;
+        Tue, 30 Jun 2020 02:36:42 -0700 (PDT)
+Received: from dell ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id j41sm3102267wre.12.2020.06.30.02.36.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 02:36:41 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 10:36:40 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     corbet@lwn.net
+Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: scripts/kernel-doc update
+Message-ID: <20200630093640.GK1179328@dell>
 MIME-Version: 1.0
-In-Reply-To: <CAFLxGvzfh1Qa_gM9bZAxaoCbO6xCoNdaPN=Ea20Up_zPVgjugw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG3NODE2.st.com (10.75.127.8) To SFHDAG6NODE2.st.com
- (10.75.127.17)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-06-30_03:2020-06-30,2020-06-29 signatures=0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Richard,
+Good morning Jon, et al.,
 
-On 6/30/20 11:13 AM, Richard Weinberger wrote:
-> On Fri, Jun 12, 2020 at 5:24 PM Christophe Kerello
-> <christophe.kerello@st.com> wrote:
->>
->> The driver adds the support for the STMicroelectronics FMC2 EBI controller
->> found on STM32MP SOCs.
->>
->> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
->> ---
->> +       if (!IS_ERR(rstc)) {
->> +               reset_control_assert(rstc);
->> +               reset_control_deassert(rstc);
-> 
-> Shouldn't there be a small delay between assert and deassert?
-> Other than that the code looks good to me.
-> 
+Would someone be kind enough to update scripts/kernel-doc to elegantly
+handle complex bitmap expressions in structures please?  Presently
+only simple syntax is handled.  Something like:
 
-Even if I have currently not met any issue, I will add a udelay(2) to be 
-safe. It will be part of v6.
+struct foo {
+       u8 arg : 10;
+};
 
-Thanks,
-Christophe Kerello.
+However, the bitmap is sometimes derived from some pre-processed
+define or calculated.  Similar to the following examples.
+
+Example 1:
+---------
+
+  File: drivers/misc/vmw_balloon.c
+
+  struct vmballoon_batch_entry {
+          u64 status : 5;
+          u64 reserved : PAGE_SHIFT - 5;
+          u64 pfn : 52;
+  } __packed;
+
+Example 2:
+---------
+
+  File: include/math-emu/single.h
+  
+  union _FP_UNION_S
+  {
+    float flt;
+    struct {
+  #if __BYTE_ORDER == __BIG_ENDIAN
+      unsigned sign : 1;
+      unsigned exp  : _FP_EXPBITS_S;
+      unsigned frac : _FP_FRACBITS_S - (_FP_IMPLBIT_S != 0);
+  #else
+      unsigned frac : _FP_FRACBITS_S - (_FP_IMPLBIT_S != 0);
+      unsigned exp  : _FP_EXPBITS_S;
+      unsigned sign : 1;
+  #endif
+    } bits __attribute__((packed));
+  };
+
+The first example causes this warning:
+
+ drivers/misc/vmw_balloon.c:262: warning: Function parameter or member '5' not described in 'vmballoon_batch_entry'
+
+The second doesn't use kerneldoc, but is an example of a complex, but
+totally possible/legitimate use-case.
+
+Would it be feasible to make to make the regex which handles bitmaps
+greedy up until the ';'?  Or perhaps someone can come up with
+something more refined that would solve the problem.
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
