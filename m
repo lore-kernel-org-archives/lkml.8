@@ -8,57 +8,57 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C705AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BE0AC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:09:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A46F720780
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:09:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14BE620781
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:09:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GZswfwgE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BgsP9okA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728096AbgF3AJJ (ORCPT
+        id S1728176AbgF3AJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 20:09:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34058 "EHLO
+        Mon, 29 Jun 2020 20:09:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726082AbgF3AJE (ORCPT
+        with ESMTP id S1728018AbgF3AJF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 20:09:04 -0400
-Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E093CC061755;
-        Mon, 29 Jun 2020 17:09:03 -0700 (PDT)
-Received: by mail-pl1-x634.google.com with SMTP id 35so7748788ple.0;
-        Mon, 29 Jun 2020 17:09:03 -0700 (PDT)
+        Mon, 29 Jun 2020 20:09:05 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E01B8C061755;
+        Mon, 29 Jun 2020 17:09:04 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id q90so7918276pjh.3;
+        Mon, 29 Jun 2020 17:09:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=eqibuAlbVerKw/zefMiddrebHe1JsCRw3HQfqdX+MX8=;
-        b=GZswfwgEpHRnkCLZDWcoi5oj2YnH2/71kUslgS0hEGKRctt7+oWGXAR100Jk3nSNoY
-         RVBbfykXXOddSv0OfVfN2rgSEmJ3Wq7bkMD0+St3Lxm4AbVcd6uXuUnu5Y5XqNlWo0mG
-         ORxdMawTlko0koyR0spoOv9bocVpjmjlltuP7BSk/BvFymVrhSRwW00Fw2NYIfkbm7as
-         1Cc2XUK7+2JDYbjkyC2Stcjr3qKEb8xmlaZxXTJnfB4Sx+eXDwLgR+Xk1G2Nl8OnpS6W
-         hY6OIvnclwLsVpTj8CpUpQuI90qsJjqt4tuSZoKVcpuF0CAQ2dy0dvm+OfpCV+HxDGjn
-         73YA==
+        bh=AYRl8pOAy8o2qO178aXaRH0fdWgs7Bra1sCO7acnTT8=;
+        b=BgsP9okAqsbNdfU8Qix1naJZC6HZ/DB/tRSbhLZXsMdFJ3//c8ILFfjvIsdEtdbGe8
+         WRNNeOa/ZbF+eJSGaDMTCfI/wS+aBk3qMC8p47zIvI8LMbSGVXMCJCT2J+XbFto6Phht
+         u9IfBs6id4Woyr2Hz7pxGPdt5+63cbCRCUyetzRdWOuEDWVpVd/hpSdfjjLnKPOgKR+b
+         Q1mXnrLYH4bXjUX3snuFbNYlE36BiCXwsXxAVUgD/SA/FYvVvyF1YITEafIic7jal7pj
+         aWr1mhNFpjIaXjSzLdMpam2u7Jop5dpijsoH0GKhooN29zh9KQsueW/aWgIbBj6l/OVW
+         s8Qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=eqibuAlbVerKw/zefMiddrebHe1JsCRw3HQfqdX+MX8=;
-        b=qSdcb6np9LXZNmMKNdPfF9qTiaQ027ZFnwUVOV2YmY2fDUh+1m3pziNSZGhtKEZLcG
-         qxcr1mxk0nTBaUctLKr3STg2UP86WEeMm0Cnv1+uGbJ70KTCSgYrpRZMfKNOQqLD7lWw
-         qB0Bh9up36Tn+18A9ZNhTazFAbCDd/hs1tyroJZCXwpbbTxxLRO75i314j+FkudO9O83
-         6+52bAc3+5+3F2jUBeAxvSCP5yJ5pVEqeFNtUabFvry8jfDors9OySLZyObiUJQW1pb4
-         ea3o4AWJ2MUq69XkJ4zldqwLe0Z3pCLhK5um9j6yl7iddc2a9MYfKd0cVJDkJux1VWs9
-         vX9g==
-X-Gm-Message-State: AOAM530gSJAdR1NHsPgABdKeUlxg/nqWEoej3fMUA4bqnK8i/iQ5LAsr
-        9dbwSnR6LQgmo0i48Oh35T4=
-X-Google-Smtp-Source: ABdhPJywOKmCFfyQ5L/XOiQUMEjegV1m/9OHXGCYWL5vhYb0EzL028liqixSQqewmEE6FjLYW5NzPQ==
-X-Received: by 2002:a17:90a:ff16:: with SMTP id ce22mr20515645pjb.160.1593475743310;
-        Mon, 29 Jun 2020 17:09:03 -0700 (PDT)
+        bh=AYRl8pOAy8o2qO178aXaRH0fdWgs7Bra1sCO7acnTT8=;
+        b=JfIUMc7Ilb3hYPDcPB8dcf0jkSjsUK7Pzq1R9yFXGsJFA4zE95PnDDkCUcMggThsww
+         UrmXh3ldddIw4JWK15MyQHOI8EzvpogT9zLj/L7tCsM6lQuy+IYNIK8njbBJHbqajBD6
+         gOLU7zNA9xQ9XCp/D1foGluPOiJyPG7a0eLU2FjQaOALmFVAA+7Ca/BQCDIvRrJOqmsL
+         UpNyrKFDPFdd7jnEyay0AM7dCO55oCo/gMloyYSIdoWujzPh3lEGF2CLC8jLqt8G1zf+
+         ZBO7M+D1wK74b1jZMwOqXyr1BiD4i7O+kNWkqu8SAHT7tXaNRmm8BNPFxmmbRIPSz0cw
+         8h3Q==
+X-Gm-Message-State: AOAM530g46q4a1c5zFH3l1UEIjJm+IXq9Ki1YD6LwQJKQZpnDzQSopas
+        Mr6m8FtLPFXrOI3hb/f1MY8=
+X-Google-Smtp-Source: ABdhPJw2TID2zawq32v23OdWSYQPmDRRXwFxa4iOa/bk/gIfLeZrz1CVQRgGVdgnQJcDErCNb42UDg==
+X-Received: by 2002:a17:90b:4910:: with SMTP id kr16mr10855811pjb.126.1593475744335;
+        Mon, 29 Jun 2020 17:09:04 -0700 (PDT)
 Received: from taoren-ubuntu-R90MNF91.thefacebook.com (c-73-252-146-110.hsd1.ca.comcast.net. [73.252.146.110])
-        by smtp.gmail.com with ESMTPSA id m9sm754600pgq.61.2020.06.29.17.09.02
+        by smtp.gmail.com with ESMTPSA id m9sm754600pgq.61.2020.06.29.17.09.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 17:09:02 -0700 (PDT)
+        Mon, 29 Jun 2020 17:09:03 -0700 (PDT)
 From:   rentao.bupt@gmail.com
 To:     Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
         Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org,
@@ -66,9 +66,9 @@ To:     Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>,
         linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
         openbmc@lists.ozlabs.org, taoren@fb.com
 Cc:     Tao Ren <rentao.bupt@gmail.com>
-Subject: [PATCH 1/3] ARM: dts: aspeed: wedge40: disable a few i2c controllers
-Date:   Mon, 29 Jun 2020 17:08:49 -0700
-Message-Id: <20200630000851.26879-2-rentao.bupt@gmail.com>
+Subject: [PATCH 2/3] ARM: dts: aspeed: wedge40: enable adc device
+Date:   Mon, 29 Jun 2020 17:08:50 -0700
+Message-Id: <20200630000851.26879-3-rentao.bupt@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200630000851.26879-1-rentao.bupt@gmail.com>
 References: <20200630000851.26879-1-rentao.bupt@gmail.com>
@@ -79,44 +79,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tao Ren <rentao.bupt@gmail.com>
 
-Disable i2c bus #9, #10 and #13 as these i2c controllers are not used on
+Enable adc controller and corresponding voltage sensoring channels for
 Wedge40.
 
 Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
 ---
- arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts | 12 ------------
- 1 file changed, 12 deletions(-)
+ arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts
-index 54e508530dce..aea23c313088 100644
+index aea23c313088..1049cfa80ac2 100644
 --- a/arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts
 +++ b/arch/arm/boot/dts/aspeed-bmc-facebook-wedge40.dts
-@@ -115,14 +115,6 @@
- 	status = "okay";
+@@ -27,6 +27,11 @@
+ 	memory@40000000 {
+ 		reg = <0x40000000 0x20000000>;
+ 	};
++
++	ast-adc-hwmon {
++		compatible = "iio-hwmon";
++		io-channels = <&adc 5>, <&adc 6>, <&adc 7>, <&adc 8>, <&adc 9>;
++	};
  };
  
--&i2c9 {
--	status = "okay";
--};
--
--&i2c10 {
--	status = "okay";
--};
--
- &i2c11 {
- 	status = "okay";
- };
-@@ -131,10 +123,6 @@
- 	status = "okay";
- };
- 
--&i2c13 {
--	status = "okay";
--};
--
+ &wdt1 {
+@@ -126,3 +131,7 @@
  &vhub {
  	status = "okay";
  };
++
++&adc {
++	status = "okay";
++};
 -- 
 2.17.1
 
