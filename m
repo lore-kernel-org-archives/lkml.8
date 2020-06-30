@@ -2,113 +2,142 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89422C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD96C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B29E20780
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:12:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GFm7AzGE"
+	by mail.kernel.org (Postfix) with ESMTP id AEAD720826
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:12:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593475978;
+	bh=Eun4NbTfii0sW6QvTru7wRSuIGDGkkNEhp0AOlaNHNE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=NIortZiqY6RixJZsr0nl0wRwcYReA10RDRYUaGavmxkwEC6ijrHzxiApeCGUOO9EZ
+	 7Va/ZW7ypQCIYQ7Ftdlsxen1KeCNMFN16hZ33zJETLawzqRUevqarx7WOUCKgpKIn5
+	 yZ9S4aGAqGVAKp4jZ4H4Me7isx1bCsx0Mx2NJgmA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbgF3AMj (ORCPT
+        id S1728204AbgF3AM5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 20:12:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34606 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726182AbgF3AMi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 20:12:38 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 759D1C061755;
-        Mon, 29 Jun 2020 17:12:38 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id u17so14361889qtq.1;
-        Mon, 29 Jun 2020 17:12:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=a69CpnZLhKaGE1y0QOjVkguQ4McgCYqiRLiuKO0SAy8=;
-        b=GFm7AzGEPZ4Jj7QmMtUX1wX/lPCFF3ui8xB2R2I+qzidRQDyha1w55qUaLedEfCFAn
-         Gtxk5h8Nyi2PzXPXiAL57oPvlnPUpL1Uwka4+MMObk4LHbzbAd8tI5Dab5+LDttpOcMa
-         nQ3xL3GZ5hr1ycGewInPXZ+V4JEc6k2su+yu8nOBkBEffSSNYYVY5d8RnI/81arZ5Sd1
-         jD1vlzwMaH1tIT8cCPJAjzSKgVmNRFbSOBwX2OkNIUU2XLBc+1ugrkK+8HQxwvVIXSAz
-         vBsFQYoeU/GjPdToYcr3HYxYxNTIkmGyvuP5f3YBKCAFUJ3mgnebOHzeQQjthjERpgeo
-         BXuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=a69CpnZLhKaGE1y0QOjVkguQ4McgCYqiRLiuKO0SAy8=;
-        b=ttnlN7HwchtLoBelQsxLk9ArVd2xOhhm3GkF5hkVhZetjKUbGzKjVGMrOTVXlt30il
-         FZkwYSgJ4iNjAQpBIqD+uA2fKzeo4ZYt0Irk0NkWFLyhgcDSM6R6vhgq6uYwRiEnjV7p
-         MMrCc8AnHLNxxdfqFhjSghaFuaSmNRtsM0EyR3IEyAP90p+FgchECmf5e85wkQz7nKpl
-         mDS0K0kHWET/MR819bRvAO7YwNaQt06tNEHug72own1iDzbgkyrdYAn3dxi6fGR19zTU
-         2xhfiC9LPfc5WFs6aBcVyMBYEwCbxFu2zogfLniyrQ2OcI8EJhHdPBJlzw+FUVEqzVb+
-         J3+w==
-X-Gm-Message-State: AOAM532SP52ZVEoqrT+lGRzrz4UNcE0z5bS3TdKpYVpcbkB0jp6SqOoX
-        Fupp88Dr3G73ygGy0cIdqGFjnqJ8Cw==
-X-Google-Smtp-Source: ABdhPJwMgJpDqP2Zu3aVARiPmklrqVzcOSGKmzF5cBLo/EZlvLhWjlgVkYZbkyLFh0CPrqSrUzDOKw==
-X-Received: by 2002:ac8:3778:: with SMTP id p53mr18927663qtb.228.1593475957498;
-        Mon, 29 Jun 2020 17:12:37 -0700 (PDT)
-Received: from moria.home.lan ([2601:19b:c500:a1:7285:c2ff:fed5:c918])
-        by smtp.gmail.com with ESMTPSA id m26sm1579630qtm.73.2020.06.29.17.12.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 17:12:37 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 20:12:33 -0400
-From:   Kent Overstreet <kent.overstreet@gmail.com>
-To:     linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
-        viro@zeniv.linux.org.uk, linux-mm@kvack.org,
-        linux-fsdevel@vger.kernel.org
-Subject: Fixup patch for [PATCH 0/2] generic_file_buffered_read() refactoring
- & optimization
-Message-ID: <20200630001233.GA39358@moria.home.lan>
-References: <20200610001036.3904844-1-kent.overstreet@gmail.com>
+        Mon, 29 Jun 2020 20:12:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34692 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727834AbgF3AM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 20:12:56 -0400
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D524207E8;
+        Tue, 30 Jun 2020 00:12:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593475975;
+        bh=Eun4NbTfii0sW6QvTru7wRSuIGDGkkNEhp0AOlaNHNE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Py1tgRPvgo9LIcjYU1cqG1eObUlUJhT6HW0GA2FfobvWok6kLb/+5KWVyDjsHyTSt
+         zB7pyxrK37gPMIyrmt9QFrggg0sy2lBX5vDCK9CZzaaF6JQGmWiP+QIrjJ3p4GkYCl
+         eJ/RDztRABDZpB1hepOGzJ/XSimfXWB8LI/pko/o=
+Received: by mail-lj1-f172.google.com with SMTP id h22so13232700lji.9;
+        Mon, 29 Jun 2020 17:12:55 -0700 (PDT)
+X-Gm-Message-State: AOAM530tcDYHX8GbFfJ+XsMo1z4O5qRn0AHfi12neIzlzsnXsplBlYUT
+        pYmCZbXjlwc+bzTmJBB19qyPuubY8zRD5iPLBH4=
+X-Google-Smtp-Source: ABdhPJxjszLCB+6P/QOKJOqow+AAN21SNdoVF1M0w8qzY2jVobe7wqsxOnzyz9cWZ7vJYU0iobiOGI8eZIH6eqcyzyI=
+X-Received: by 2002:a2e:5344:: with SMTP id t4mr7382221ljd.79.1593475973227;
+ Mon, 29 Jun 2020 17:12:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200610001036.3904844-1-kent.overstreet@gmail.com>
+References: <20200629012524.c941a5f18aa7f312d325f714@kernel.org> <mhng-37e70bbc-2616-41e6-bc8a-f144ca647c97@palmerdabbelt-glaptop1>
+In-Reply-To: <mhng-37e70bbc-2616-41e6-bc8a-f144ca647c97@palmerdabbelt-glaptop1>
+From:   Guo Ren <guoren@kernel.org>
+Date:   Tue, 30 Jun 2020 08:12:41 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTQ-LcZ_fxTCkHNBYqZn-C-QVeLp12FysaTjPe6PuTQYxg@mail.gmail.com>
+Message-ID: <CAJF2gTQ-LcZ_fxTCkHNBYqZn-C-QVeLp12FysaTjPe6PuTQYxg@mail.gmail.com>
+Subject: Re: [PATCH V2] riscv: Fixup compile error BUILD_BUG_ON failed
+To:     Palmer Dabbelt <palmerdabbelt@google.com>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Greentime Hu <greentime.hu@sifive.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Anup Patel <anup@brainfault.org>, linux-csky@vger.kernel.org,
+        Zong Li <zong.li@sifive.com>,
+        Guo Ren <guoren@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Andrew - fixup patch because I got a bug report where we were trying to do an
-order 7 allocation here:
+Hi Palmer,
 
--- >8 --
-Subject: [PATCH] fixup! fs: generic_file_buffered_read() now uses
- find_get_pages_contig
+On Tue, Jun 30, 2020 at 7:22 AM Palmer Dabbelt <palmerdabbelt@google.com> w=
+rote:
+>
+> On Sun, 28 Jun 2020 09:25:24 PDT (-0700), mhiramat@kernel.org wrote:
+> > On Sun, 28 Jun 2020 16:07:37 +0000
+> > guoren@kernel.org wrote:
+> >
+> >> From: Guo Ren <guoren@linux.alibaba.com>
+> >>
+> >> Unfortunately, the current code couldn't be compiled:
+> >>
+> >>   CC      arch/riscv/kernel/patch.o
+> >> In file included from ./include/linux/kernel.h:11,
+> >>                  from ./include/linux/list.h:9,
+> >>                  from ./include/linux/preempt.h:11,
+> >>                  from ./include/linux/spinlock.h:51,
+> >>                  from arch/riscv/kernel/patch.c:6:
+> >> In function =E2=80=98fix_to_virt=E2=80=99,
+> >>     inlined from =E2=80=98patch_map=E2=80=99 at arch/riscv/kernel/patc=
+h.c:37:17:
+> >> ./include/linux/compiler.h:392:38: error: call to =E2=80=98__compileti=
+me_assert_205=E2=80=99 declared with attribute error: BUILD_BUG_ON failed: =
+idx >=3D __end_of_fixed_addresses
+> >>   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER=
+__)
+> >>                                       ^
+> >> ./include/linux/compiler.h:373:4: note: in definition of macro =E2=80=
+=98__compiletime_assert=E2=80=99
+> >>     prefix ## suffix();    \
+> >>     ^~~~~~
+> >> ./include/linux/compiler.h:392:2: note: in expansion of macro =E2=80=
+=98_compiletime_assert=E2=80=99
+> >>   _compiletime_assert(condition, msg, __compiletime_assert_, __COUNTER=
+__)
+> >>   ^~~~~~~~~~~~~~~~~~~
+> >> ./include/linux/build_bug.h:39:37: note: in expansion of macro =E2=80=
+=98compiletime_assert=E2=80=99
+> >>  #define BUILD_BUG_ON_MSG(cond, msg) compiletime_assert(!(cond), msg)
+> >>                                      ^~~~~~~~~~~~~~~~~~
+> >> ./include/linux/build_bug.h:50:2: note: in expansion of macro =E2=80=
+=98BUILD_BUG_ON_MSG=E2=80=99
+> >>   BUILD_BUG_ON_MSG(condition, "BUILD_BUG_ON failed: " #condition)
+> >>   ^~~~~~~~~~~~~~~~
+> >> ./include/asm-generic/fixmap.h:32:2: note: in expansion of macro =E2=
+=80=98BUILD_BUG_ON=E2=80=99
+> >>   BUILD_BUG_ON(idx >=3D __end_of_fixed_addresses);
+> >>   ^~~~~~~~~~~~
+> >>
+> >> Because fix_to_virt(, idx) needs a const value, not a dynamic variable=
+ of
+> >> reg-a0 or BUILD_BUG_ON failed with "idx >=3D __end_of_fixed_addresses"=
+.
+> >
+> > Looks good to me :)
+> >
+> > Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
+>
+> Is there a configuration that runs into this bug?  It's not showing up fo=
+r me,
+> and I generally try to add regressions to my test suite.
+>
+> > Thanks!
 
-We shouldn't try to pin too many pages at once, reads can be almost
-arbitrarily big.
+KPROBE, I'll send the patch soon.
 
-Signed-off-by: Kent Overstreet <kent.overstreet@gmail.com>
----
- mm/filemap.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+--=20
+Best Regards
+ Guo Ren
 
-diff --git a/mm/filemap.c b/mm/filemap.c
-index d8bd5e9647..b3a2aad1b7 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -2220,8 +2220,9 @@ static ssize_t generic_file_buffered_read(struct kiocb *iocb,
- 	struct inode *inode = mapping->host;
- 	size_t orig_count = iov_iter_count(iter);
- 	struct page *pages_onstack[8], **pages = NULL;
--	unsigned int nr_pages = ((iocb->ki_pos + iter->count + PAGE_SIZE - 1) >> PAGE_SHIFT) -
--		(iocb->ki_pos >> PAGE_SHIFT);
-+	unsigned int nr_pages = min_t(unsigned int, 512,
-+			((iocb->ki_pos + iter->count + PAGE_SIZE - 1) >> PAGE_SHIFT) -
-+			(iocb->ki_pos >> PAGE_SHIFT));
- 	int i, pg_nr, error = 0;
- 	bool writably_mapped;
- 	loff_t isize, end_offset;
--- 
-2.27.0
-
-
+ML: https://lore.kernel.org/linux-csky/
