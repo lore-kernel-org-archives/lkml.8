@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D5CFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5351C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3257A2083B
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBADF208A7
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:38:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593538721;
-	bh=oJiHZDnxfHIESA4r7ZpM5csHMecWaGiAbn/T6AdGwok=;
+	s=default; t=1593538723;
+	bh=1FGhp5sGfkpSiXhXgfH5nBXKN4fqT4jY7nbDIPuK7X4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wn0nOgU/BQIVRBvt3PizOCeQGJN+ga74exUfMtkZ40YTw2eolIlJee+aqYSN0v9TQ
-	 fPs9qqw8PsMZg0U62eZHNglleaQyPJ2LddoaW3IEYaF0eSMEce/vtazCegxRl8V0U6
-	 +Z9ok7XMhIi34qlgMCyLFzFSI7m2yC5HbFXrT4Io=
+	b=x/kqmcD7TBAwKrEZefGgU9yhC58zXoxlc7uhswwnGa9DTOnkBFdsg/mCMyotNuJbz
+	 sqGV2zI8dwrE2qdbNS9untkEWiGnnp6yw0mQsUE1J/Q29Vh2d+Z0N5yD+yR9bz8oo8
+	 PQ3dOjV7KINuHYFJ2eoRP3LQidiwrHM5ocQxahLA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390430AbgF3Rij (ORCPT
+        id S2390440AbgF3Rim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 13:38:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51672 "EHLO mail.kernel.org"
+        Tue, 30 Jun 2020 13:38:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390415AbgF3Rie (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 13:38:34 -0400
+        id S2390427AbgF3Rij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 13:38:39 -0400
 Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 796CA2082F;
-        Tue, 30 Jun 2020 17:38:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCA8F207F9;
+        Tue, 30 Jun 2020 17:38:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593538714;
-        bh=oJiHZDnxfHIESA4r7ZpM5csHMecWaGiAbn/T6AdGwok=;
+        s=default; t=1593538718;
+        bh=1FGhp5sGfkpSiXhXgfH5nBXKN4fqT4jY7nbDIPuK7X4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C5PKnvE/0qg3mUSLo1OkrA2DMpJl3hqS6i+J+rfqc59Z/5LR/CrEoUDBnSOCg+pXJ
-         MURZlW9AjY2nrCil2XFzo5MnDgeQQ72NR7wDEUr38AnACjmuMHIU0KZPPFV9aSONHK
-         wdpJv2VVSzaGnJ0iNdPEQH4by1K0sHNcJvI6akNA=
+        b=bpLGiANhTDJLC7t5bWYwDrB2C0vByZC6qRCHBvONLGHbyWqUjDr91Fhnj0Qfj8ajH
+         b6o2hJwvm0H/J4VMMeXmYx2lzjErEQ+y1AiAsdofaMJowGhiD1x/0r79lPQWnl0rpi
+         KcoNDIgVtCvUFCTCs+tjhL7w1byxja9E2be1+JP4=
 From:   Will Deacon <will@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Will Deacon <will@kernel.org>,
@@ -61,9 +61,9 @@ Cc:     Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         linux-arm-kernel@lists.infradead.org, linux-alpha@vger.kernel.org,
         virtualization@lists.linux-foundation.org, kernel-team@android.com
-Subject: [PATCH 12/18] include/linux: Remove smp_read_barrier_depends() from comments
-Date:   Tue, 30 Jun 2020 18:37:28 +0100
-Message-Id: <20200630173734.14057-13-will@kernel.org>
+Subject: [PATCH 13/18] checkpatch: Remove checks relating to [smp_]read_barrier_depends()
+Date:   Tue, 30 Jun 2020 18:37:29 +0100
+Message-Id: <20200630173734.14057-14-will@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200630173734.14057-1-will@kernel.org>
 References: <20200630173734.14057-1-will@kernel.org>
@@ -74,42 +74,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-smp_read_barrier_depends() doesn't exist any more, so reword the two
-comments that mention it to refer to "dependency ordering" instead.
+The [smp_]read_barrier_depends() macros no longer exist, so we don't
+need to deal with them in the checkpatch script.
 
 Acked-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Will Deacon <will@kernel.org>
 ---
- include/linux/percpu-refcount.h | 2 +-
- include/linux/ptr_ring.h        | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ scripts/checkpatch.pl | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
-diff --git a/include/linux/percpu-refcount.h b/include/linux/percpu-refcount.h
-index 22d9d183950d..87d8a38bdea1 100644
---- a/include/linux/percpu-refcount.h
-+++ b/include/linux/percpu-refcount.h
-@@ -155,7 +155,7 @@ static inline bool __ref_is_percpu(struct percpu_ref *ref,
- 	 * between contaminating the pointer value, meaning that
- 	 * READ_ONCE() is required when fetching it.
- 	 *
--	 * The smp_read_barrier_depends() implied by READ_ONCE() pairs
-+	 * The dependency ordering from the READ_ONCE() pairs
- 	 * with smp_store_release() in __percpu_ref_switch_to_percpu().
- 	 */
- 	percpu_ptr = READ_ONCE(ref->percpu_count_ptr);
-diff --git a/include/linux/ptr_ring.h b/include/linux/ptr_ring.h
-index 417db0a79a62..808f9d3ee546 100644
---- a/include/linux/ptr_ring.h
-+++ b/include/linux/ptr_ring.h
-@@ -107,7 +107,7 @@ static inline int __ptr_ring_produce(struct ptr_ring *r, void *ptr)
- 		return -ENOSPC;
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 4c820607540b..8032f80c5bc7 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -5903,8 +5903,7 @@ sub process {
+ 		my $barriers = qr{
+ 			mb|
+ 			rmb|
+-			wmb|
+-			read_barrier_depends
++			wmb
+ 		}x;
+ 		my $barrier_stems = qr{
+ 			mb__before_atomic|
+@@ -5953,12 +5952,6 @@ sub process {
+ 			}
+ 		}
  
- 	/* Make sure the pointer we are storing points to a valid data. */
--	/* Pairs with smp_read_barrier_depends in __ptr_ring_consume. */
-+	/* Pairs with the dependency ordering in __ptr_ring_consume. */
- 	smp_wmb();
- 
- 	WRITE_ONCE(r->queue[r->producer++], ptr);
+-# check for smp_read_barrier_depends and read_barrier_depends
+-		if (!$file && $line =~ /\b(smp_|)read_barrier_depends\s*\(/) {
+-			WARN("READ_BARRIER_DEPENDS",
+-			     "$1read_barrier_depends should only be used in READ_ONCE or DEC Alpha code\n" . $herecurr);
+-		}
+-
+ # check of hardware specific defines
+ 		if ($line =~ m@^.\s*\#\s*if.*\b(__i386__|__powerpc64__|__sun__|__s390x__)\b@ && $realfile !~ m@include/asm-@) {
+ 			CHK("ARCH_DEFINES",
 -- 
 2.27.0.212.ge8ba1cc988-goog
 
