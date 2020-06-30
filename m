@@ -2,95 +2,81 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D58C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:45:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A371BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D0AB4206CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:45:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 823FC206CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:45:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="tGZFtzXv"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="haZm16Fa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726251AbgF3SpN (ORCPT
+        id S1726419AbgF3Sp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 14:45:13 -0400
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:61133 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725930AbgF3SpM (ORCPT
+        Tue, 30 Jun 2020 14:45:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36608 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725930AbgF3Sp1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 14:45:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1593542712; x=1625078712;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=gVXFKwkoilJ+WRsAX2ilDSQvX1wsECjHxbakjfFTTiA=;
-  b=tGZFtzXvjzO9lbqNel/0gcYL4b4H+zhgg3c4Dnt4UZCgiT2VgKFm448F
-   RGSERHcKSG9aisUbyRWvhi6+ZI468HnjmvF3E1JgyUnRKbnINzecotvNV
-   EOBBooR4ItH4rowB2QvtgbYMkz1bcCy7xLMV0rO9Dwx6bqajdQKMh+b2L
-   XGqHl395ojo/leeoyk+9XOuQBtD9lSMsnJ6YUvx5asBl4v5OEnytjF3Ly
-   /K1wxhHF5Nwuo718zhvP0Sd9NUDSUzlw8FgyRuXM6Yzu76Txs66COEgHO
-   VOiE17X4BZkO/zmJrQmigt+KPJi1tfg+JJ9Rnk76+rs/yeSjqd6Ey8mcd
-   Q==;
-IronPort-SDR: B2IzWVA38/w48UWB3itF4A+Rwr6HJm/1RLFOSZ1jh39DRujU3c63OwDplG43A2Tbp2nc5hoNrz
- Q5KdOLy+yOLRAA4y0rrUYrDsk2evMj9CnJcr3+92gd9QLctf+O+80XTKTEiXCSq6hvhrqFw8ep
- 6BkF3fRKu6/AGsvBMp7b1qD46yAVTV42KfDZEI657Qbg8LSn/k7C8lyVgszI6rwAjNcnzt0khD
- 5HTDUhLIQENl3UyPtxLlx4dmMmgDUmFpeLIffoAg+i1Hm70/VWNsjhmjWEPtGkIxXMilVAzEkc
- YQE=
-X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
-   d="scan'208";a="17608615"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 30 Jun 2020 11:45:11 -0700
-Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 30 Jun 2020 11:45:11 -0700
-Received: from localhost (10.10.115.15) by chn-vm-ex03.mchp-main.com
- (10.10.85.151) with Microsoft SMTP Server id 15.1.1979.3 via Frontend
- Transport; Tue, 30 Jun 2020 11:45:11 -0700
-Date:   Tue, 30 Jun 2020 20:45:09 +0200
-From:   Horatiu Vultur <horatiu.vultur@microchip.com>
-To:     Jakub Kicinski <kuba@kernel.org>
-CC:     <nikolay@cumulusnetworks.com>, <roopa@cumulusnetworks.com>,
-        <davem@davemloft.net>, <jiri@mellanox.com>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <bridge@lists.linux-foundation.org>, <UNGLinuxDriver@microchip.com>
-Subject: Re: [PATCH net-next 2/3] bridge: mrp: Add br_mrp_fill_info
-Message-ID: <20200630184509.oliwf3ui4gxno756@soft-dev3.localdomain>
-References: <20200630134424.4114086-1-horatiu.vultur@microchip.com>
- <20200630134424.4114086-3-horatiu.vultur@microchip.com>
- <20200630091243.124869e2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+        Tue, 30 Jun 2020 14:45:27 -0400
+Received: from mail-pj1-x1031.google.com (mail-pj1-x1031.google.com [IPv6:2607:f8b0:4864:20::1031])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD77AC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 11:45:24 -0700 (PDT)
+Received: by mail-pj1-x1031.google.com with SMTP id k71so6343199pje.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 11:45:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=36Pf7vLOoIjmkl5ILc1j+cAKoyh9jGyx3eicyZDkpLY=;
+        b=haZm16FaN7L9wBGzn287iJdsYlLzqIRf1clHPgVmRu18KeNPfsyv3Mzx8qzBOvAWZ+
+         ZEiMv7f0mBIn95G8IcVh8rewTPJUNMx5gqf7cNPBCuwsmwGfctuC2Gq/Hkb6XKVDAo+4
+         6Q+6EhAhKdDq+8tAsPyclmZxtHDQeRaU94NiVLmuIEtzldU4qBjyUdFANxnJK1sw9zxG
+         ZZPQpQojp6TyBuRyNGkR2jVdlEBFEwf7QRKSANrTSJMMcP5bo/Tceilwrcgm1vKO3wu6
+         vvK2Z0z0SRFOH35GcASBAYR2wn6LNI1ZqTb6aRrJMJ0elkquw9/cDPrQRpjb1eug0OoA
+         nEmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=36Pf7vLOoIjmkl5ILc1j+cAKoyh9jGyx3eicyZDkpLY=;
+        b=AUj43ZpeEXWzS8NeKl0pygrRKh1C8AvrCOD/UA4rcKsxU9hpGHuSMy6wJg5ze5TVQ1
+         bAPQQw8l6WqNaJw8rHUuKPAKoNZQFB1VgQwezeg/kd/PQsOi8KvqkmaTGmxf4QHIOvdV
+         B2h2F7zgl/gypgF2DoGpf23Uvk0Uzx90MLsiPk28Q9D86XLGWEze9bmto3m/2x+UnJM3
+         xNNVmUekjwXI5lJYSVOHSxKM4NozWJcG9M7OcmA8KgWS2hQ0el9z2TwurH9libcycEIS
+         ft5ahHrSJ+vlzWYc6PzIXJdld+b39ZT9FqnnBcEe4upq8eumBC3YTVgspiYg4bLYvy42
+         BccA==
+X-Gm-Message-State: AOAM5326GqjbM6Vy7fBYFxIVof6BibZ0E4Av7JfFntw8yq49XUMCaAVN
+        5sQWB++Uw2DoVD2FdyTw5MVeEg==
+X-Google-Smtp-Source: ABdhPJwPaD/fLLXkzmsb4f+8hOMS05fApeg/LQl99uaMgVqHMvdpjIK/hEk3OxycS1sLEIU8isGIXg==
+X-Received: by 2002:a17:90a:1acc:: with SMTP id p70mr13487771pjp.210.1593542724210;
+        Tue, 30 Jun 2020 11:45:24 -0700 (PDT)
+Received: from localhost.localdomain ([2605:e000:100e:8c61:4113:50ea:3eb3:a39b])
+        by smtp.gmail.com with ESMTPSA id n7sm2898108pjq.22.2020.06.30.11.45.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 11:45:23 -0700 (PDT)
+From:   Jens Axboe <axboe@kernel.dk>
+To:     io-uring@vger.kernel.org
+Cc:     oleg@redhat.com, peterz@infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCHSET 0/2] Use signal based task_work running
+Date:   Tue, 30 Jun 2020 12:45:16 -0600
+Message-Id: <20200630184518.696101-1-axboe@kernel.dk>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-In-Reply-To: <20200630091243.124869e2@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 06/30/2020 09:12, Jakub Kicinski wrote:
-> EXTERNAL EMAIL: Do not click links or open attachments unless you know the content is safe
-> 
-> On Tue, 30 Jun 2020 15:44:23 +0200 Horatiu Vultur wrote:
-> > Add the function br_mrp_fill_info which populates the MRP attributes
-> > regarding the status of each MRP instance.
-> >
-> > Signed-off-by: Horatiu Vultur <horatiu.vultur@microchip.com>
-> 
-> This adds warnings when built with W=1 C=1:
-
-The warnings at line 316 will be fixed once net will be merged into
-net-next. But I need to fix the others.
-
-> 
-> net/bridge/br_mrp_netlink.c:316:9: warning: dereference of noderef expression
-> net/bridge/br_mrp_netlink.c:325:36: warning: dereference of noderef expression
-> net/bridge/br_mrp_netlink.c:328:36: warning: dereference of noderef expression
-> net/bridge/br_mrp_netlink.c:316:9: warning: dereference of noderef expression
+This fixes a regression in 5.7 with io_uring, introduced by the
+addition of using task_work for certain async events. Details are
+in patch 2/2.
 
 -- 
-/Horatiu
+Jens Axboe
+
+
