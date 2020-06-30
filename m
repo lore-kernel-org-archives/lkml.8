@@ -2,181 +2,120 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D05EAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44AAAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A39B5207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:00:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U+gdJ3Kk"
+	by mail.kernel.org (Postfix) with ESMTP id 28B2A20780
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:01:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732767AbgF3LAx (ORCPT
+        id S1732780AbgF3LA6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 07:00:53 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:57778 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732578AbgF3LAw (ORCPT
+        Tue, 30 Jun 2020 07:00:58 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43410 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732578AbgF3LA5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 07:00:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593514850;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=YPlk3hHtIg/3QWwatoM9sTH8lwQ8W3Qj2pLZMQRNWLg=;
-        b=U+gdJ3KkjXqCHGAZbdF8EWlf+TioLjJT0UdbBivshMr970ZGoWwITsjvQtPMX5zuEbHFCg
-        VLkNSIFoc/wHRFT57Cq5jal7cqtccr1VgtsfZjp5zRw43KVn9BC4HtPvU7KV3zL3YBhKVR
-        6jOhYXKh8oP14nz0c/BnEKaFuaq4zu0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-407-DRmRpGz4MN2CHU7GK9keoA-1; Tue, 30 Jun 2020 07:00:45 -0400
-X-MC-Unique: DRmRpGz4MN2CHU7GK9keoA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B4FA4188363A;
-        Tue, 30 Jun 2020 11:00:41 +0000 (UTC)
-Received: from prarit.bos.redhat.com (prarit-guest.7a2m.lab.eng.bos.redhat.com [10.16.222.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F3D8260CD1;
-        Tue, 30 Jun 2020 11:00:35 +0000 (UTC)
-Subject: Re: [PATCH v5] x86/split_lock: Sanitize userspace and guest error
- output
-To:     linux-kernel@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-References: <20200616113250.2061-1-prarit@redhat.com>
-From:   Prarit Bhargava <prarit@redhat.com>
-Message-ID: <11733c3d-056a-e723-c4fe-ec3f55c1e94a@redhat.com>
-Date:   Tue, 30 Jun 2020 07:00:35 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20200616113250.2061-1-prarit@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+        Tue, 30 Jun 2020 07:00:57 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05UAW5uE004699;
+        Tue, 30 Jun 2020 07:00:56 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31ycd52wpt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 Jun 2020 07:00:55 -0400
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05UAXjbF018111;
+        Tue, 30 Jun 2020 07:00:55 -0400
+Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31ycd52wnp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 Jun 2020 07:00:55 -0400
+Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
+        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05UAt6BY009757;
+        Tue, 30 Jun 2020 11:00:53 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+        by ppma04fra.de.ibm.com with ESMTP id 31wwr81nmc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 Jun 2020 11:00:52 +0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05UB0o2R56492310
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Jun 2020 11:00:50 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 290A9AE05F;
+        Tue, 30 Jun 2020 11:00:50 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 62A08AE071;
+        Tue, 30 Jun 2020 11:00:49 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.137.220])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 30 Jun 2020 11:00:49 +0000 (GMT)
+Message-ID: <1593514848.5085.82.camel@linux.ibm.com>
+Subject: Re: [PATCH v3 2/2] ima: move APPRAISE_BOOTPARAM dependency on
+ ARCH_POLICY to runtime
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Bruno Meneguele <bmeneg@redhat.com>
+Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        erichte@linux.ibm.com, nayna@linux.ibm.com
+Date:   Tue, 30 Jun 2020 07:00:48 -0400
+In-Reply-To: <20200629234744.GA2756@glitch>
+References: <20200623202640.4936-1-bmeneg@redhat.com>
+         <20200623202640.4936-3-bmeneg@redhat.com>
+         <1593204023.27152.476.camel@linux.ibm.com> <20200629234744.GA2756@glitch>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-06-30_04:2020-06-30,2020-06-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ spamscore=0 cotscore=-2147483648 malwarescore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 suspectscore=0 phishscore=0 impostorscore=0 clxscore=1015
+ priorityscore=1501 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006300073
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just re-pinging on this.
+On Mon, 2020-06-29 at 20:47 -0300, Bruno Meneguele wrote:
 
-P.
+> 
+> > I'm not if the "secure_boot" flag is available prior to calling
+> > default_appraise_setup(), but if it is, you could modify the test
+> > there to also check if the system is booted in secure boot mode (eg.
+> > IS_ENABLED(CONFIG_IMA_APPRAISE_BOOTPARAM) &&
+> > !arch_ima_get_secureboot())
+> > 
+> 
+> Well pointed. I built a custom x86 kernel with some workaround to get
+> this flag status within default_appraise_setup() and as a result the
+> flag is was correctly available. 
+> 
+> Considering the nature of this flag (platform's firmware (in all
+> arches?)) can we trust that every arch supporting secure/trusted boot
+> will have it available in the __setup() call time?
 
-On 6/16/20 7:32 AM, Prarit Bhargava wrote:
-> There are two problems with kernel messages in fatal mode that were found
-> during testing of guests and userspace programs.
-> 
-> The first is that no kernel message is output when the split lock detector
-> is triggered with a userspace program.  As a result the userspace process
-> dies from receiving SIGBUS with no indication to the user of what caused
-> the process to die.
-> 
-> The second problem is that only the first triggering guest causes a kernel
-> message to be output because the message is output with pr_warn_once().
-> This also results in a loss of information to the user.
-> 
-> While fixing these I noticed that the same message was being output
-> three times so I'm cleaning that up too.
-> 
-> Fix fatal mode output, and use consistent messages for fatal and
-> warn modes for both userspace and guests.
-> 
-> Co-developed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Signed-off-by: Prarit Bhargava <prarit@redhat.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: x86@kernel.org
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Tony Luck <tony.luck@intel.com>
-> Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-> Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-> Cc: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-> Cc: Xiaoyao Li <xiaoyao.li@intel.com>
-> Cc: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> ---
-> v2: Do not output a message if CPL 3 Alignment Check is turned on (xiaoyao.li)
-> v3: refactor code (sean.j.christopherson)
-> v4: Fix Sign off (sean.j.christopherson)
-> v5: Fix Sign off (sean.j.christopherson)
-> 
->  arch/x86/kernel/cpu/intel.c | 22 ++++++++++------------
->  1 file changed, 10 insertions(+), 12 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-> index 63926c94eb5f..3a373f0be674 100644
-> --- a/arch/x86/kernel/cpu/intel.c
-> +++ b/arch/x86/kernel/cpu/intel.c
-> @@ -1074,11 +1074,14 @@ static void split_lock_init(void)
->  	split_lock_verify_msr(sld_state != sld_off);
->  }
->  
-> -static void split_lock_warn(unsigned long ip)
-> +static bool handle_split_lock(unsigned long ip)
->  {
-> -	pr_warn_ratelimited("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
-> +	pr_warn("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
->  			    current->comm, current->pid, ip);
->  
-> +	if (sld_state != sld_warn)
-> +		return false;
-> +
->  	/*
->  	 * Disable the split lock detection for this task so it can make
->  	 * progress and set TIF_SLD so the detection is re-enabled via
-> @@ -1086,18 +1089,13 @@ static void split_lock_warn(unsigned long ip)
->  	 */
->  	sld_update_msr(false);
->  	set_tsk_thread_flag(current, TIF_SLD);
-> +	return true;
->  }
->  
->  bool handle_guest_split_lock(unsigned long ip)
->  {
-> -	if (sld_state == sld_warn) {
-> -		split_lock_warn(ip);
-> +	if (handle_split_lock(ip))
->  		return true;
-> -	}
-> -
-> -	pr_warn_once("#AC: %s/%d %s split_lock trap at address: 0x%lx\n",
-> -		     current->comm, current->pid,
-> -		     sld_state == sld_fatal ? "fatal" : "bogus", ip);
->  
->  	current->thread.error_code = 0;
->  	current->thread.trap_nr = X86_TRAP_AC;
-> @@ -1108,10 +1106,10 @@ EXPORT_SYMBOL_GPL(handle_guest_split_lock);
->  
->  bool handle_user_split_lock(struct pt_regs *regs, long error_code)
->  {
-> -	if ((regs->flags & X86_EFLAGS_AC) || sld_state == sld_fatal)
-> +	if (regs->flags & X86_EFLAGS_AC)
->  		return false;
-> -	split_lock_warn(regs->ip);
-> -	return true;
-> +
-> +	return handle_split_lock(regs->ip);
->  }
->  
->  /*
-> 
+Calling default_appraise_setup() could be deferred.
 
+> 
+> > > +		/* In secure and/or trusted boot the appraisal must be
+> > > +		 * enforced, regardless kernel parameters, preventing
+> > > +		 * runtime changes */
+> > 
+> > Only "appraise" rules are enforced.
+> > 
+> 
+> Hmm.. do you mean the comment wording is wrong/"could be better",
+> pointing the "appraise" action explicitly?
+
+No, it's more than just the comment.  Like "trusted boot", IMA-
+measurement only measures files, never enforces integrity.
+ "ima_appraise" mode is only applicable to IMA-appraisal.
+
+Mimi
