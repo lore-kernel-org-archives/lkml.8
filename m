@@ -2,224 +2,106 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCCACC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C0EC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6283206B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:37:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4226206B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:37:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="q827KWEC";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="Ay/GKmIj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fj2uWZRh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729630AbgF3Uhn (ORCPT
+        id S1729532AbgF3Uh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 16:37:43 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:22624 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725872AbgF3Uhl (ORCPT
+        Tue, 30 Jun 2020 16:37:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53992 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbgF3Uhy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 16:37:41 -0400
-Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05UKXfBw004334;
-        Tue, 30 Jun 2020 13:37:24 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=subject : to : cc :
- references : from : message-id : date : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=facebook;
- bh=L6lbj+8ZVRfUhgjnLEyZjTBKJEt8lULKwnRK53ecsDE=;
- b=q827KWECPhoObHqVg64pGzCLUJY7GNKjZN4+vQ4a5jc6kM5OI7I29z7O0if6p1CI2W3U
- 2gx2Kg0uXqBkfCmvfqK779gpipHqUNBgy0WexC3I+RMdRuF5b2ZOIrYRgn4puULqsDHk
- bXl7AuZ5WxGRLUiC5sviGivMsWrvEa1FAzw= 
-Received: from mail.thefacebook.com ([163.114.132.120])
-        by mx0a-00082601.pphosted.com with ESMTP id 31x3xgxdgx-7
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Tue, 30 Jun 2020 13:37:24 -0700
-Received: from NAM02-CY1-obe.outbound.protection.outlook.com (100.104.98.9) by
- o365-in.thefacebook.com (100.104.94.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1979.3; Tue, 30 Jun 2020 13:37:15 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=maBRSOf5hOB+cjWfez/gWPAPR9Nxrd4fbp0Nom1Ylfq5BbmqIisVLQq6w4s/Lqs3l0omDYSBKG4rStso8KZhO/JH4fvGihTuEw94afhYRKTBkEUmHQWVAM7NHdBNBr/mdAulF+H8bL0NnK4zxGwPOBkrBxPK3XsfIZuST7twBGPoc081DhudRqq88mko1853JEED/ROSs8fEriOOc3MHfR2V95V3SPDwswuPhrMC7aLCwEfg/l9EUGkCyGEidy/5Xv7U3BARgKQ5XZsN0HFO4Rpg1l1AuamTZ9Ia3Esdsou824LRC2d9fx9Wnmx+ed6tWvgRWzpIJcVzlYG4vy+lwQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L6lbj+8ZVRfUhgjnLEyZjTBKJEt8lULKwnRK53ecsDE=;
- b=WP/ZL3Aamnm2e5lf4xdZPCI0pNlL9gX44KEfXoj6tVtMHnjtYBK8IIQ9dJWbr44QHxqLDke2eZNjOqYvDNsMc4F/XK61GOk1iGFp+XdJHc0dkU6EqP9KyG7DKjqRwS4Vz08M5pOa8tKksdoEK5RVu5Z7ofChb4g7KU52Zk5rNsgD+vzXEDpjIYvO8Uy2Ch9suW6VbUn8nfesergMzq5pRF+ATJSrr4Oea9+wELBezF3708wH5KTFVcfT99JgmRVZKEQ+TW8hdSlo+nqzqTFNLfTgVrGWpqUaXeEtMH8ch+Za6FVxY/+12NdDgqiZ/Ku/oELhn3dTLPLWg7fNVsWFcw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L6lbj+8ZVRfUhgjnLEyZjTBKJEt8lULKwnRK53ecsDE=;
- b=Ay/GKmIjRpRgASz1C6I9Bj0/XTYDHHiiz2MPT+rf5Hds7PwUunakw2eQbao39BBWvKS0i8wofqyZ3O2PaWaYCcx4s9Ku+jKZZgjfE54n3PEfmAb0U0IlDUTwvRqjqOqVqzgYDPZ/+EaQNiWl2oQVCaquWp5QJGzoMu7TLUjxUCA=
-Authentication-Results: chromium.org; dkim=none (message not signed)
- header.d=none;chromium.org; dmarc=none action=none header.from=fb.com;
-Received: from BYAPR15MB4088.namprd15.prod.outlook.com (2603:10b6:a02:c3::18)
- by BYAPR15MB2455.namprd15.prod.outlook.com (2603:10b6:a02:90::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.26; Tue, 30 Jun
- 2020 20:37:00 +0000
-Received: from BYAPR15MB4088.namprd15.prod.outlook.com
- ([fe80::4922:9927:5d6c:5301]) by BYAPR15MB4088.namprd15.prod.outlook.com
- ([fe80::4922:9927:5d6c:5301%7]) with mapi id 15.20.3131.027; Tue, 30 Jun 2020
- 20:37:00 +0000
-Subject: Re: [PATCH bpf-next] selftests/bpf: Switch test_vmlinux to use
- hrtimer_range_start_ns.
-To:     Hao Luo <haoluo@google.com>, <netdev@vger.kernel.org>,
-        <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <clang-built-linux@googlegroups.com>,
-        <linux-kselftest@vger.kernel.org>
-CC:     <sdf@google.com>, Shuah Khan <shuah@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>
-References: <20200630184922.455439-1-haoluo@google.com>
-From:   Yonghong Song <yhs@fb.com>
-Message-ID: <49df8306-ecc7-b979-d887-b023275e4842@fb.com>
-Date:   Tue, 30 Jun 2020 13:36:57 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.9.0
-In-Reply-To: <20200630184922.455439-1-haoluo@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BYAPR07CA0066.namprd07.prod.outlook.com
- (2603:10b6:a03:60::43) To BYAPR15MB4088.namprd15.prod.outlook.com
- (2603:10b6:a02:c3::18)
+        Tue, 30 Jun 2020 16:37:54 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D9BAC061755;
+        Tue, 30 Jun 2020 13:37:54 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id i25so22581606iog.0;
+        Tue, 30 Jun 2020 13:37:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=38KZfXGo5PyBgcyR/mf9dfZW2Qk4B4rGtanP3anFAmo=;
+        b=Fj2uWZRhmQdVb+7q/isHj2wQVqMFAfhVSu3lMN2Id2l5Ye5HnMqwP4j5lQKn0fHb66
+         MUv+1SfaS35JLFwD6WJcuYE+MTOkl0W8SUYaYigvls5G1jDG5imxELY1kvoh0SxqMKJG
+         QSg4O5uFukVwLDfqc7Dqnnund7fXbQjjZ/y45OOfWnmex0OHEsNxYk5A+0JvkSBIrauZ
+         MkQAEj1MFvL3b4qJuczRsNcgPSagcw3SNnjNAD9t9HTjUJY07djMjkia9x0T/WRTkntO
+         3M154WqULBtiU0BN400kx+uc7dN0kWlmkKZZf90rbyKr6qd9xuf40grRx2k1z68xEfHC
+         nWRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=38KZfXGo5PyBgcyR/mf9dfZW2Qk4B4rGtanP3anFAmo=;
+        b=gAvwCtKOI1tZy9QqzwfG7q72cgQsEyrM8Bmo63UrseFvcVNpxcRMpTFnr2FeXTXcMX
+         hEVXuZ7jSz1IO/F4WkHPqKE1DtJtgfeUMslwFWMNEjldqGQNauf89LXwIs6hdsJlwr0G
+         0bhsC47GW5K0hj9TDKP4dI2hW4bywT1g9nYozk1Qco8VqejWvKJjpJbX9XhDXFn8JNza
+         pPyPtf+IJWnBol+UbgBStgiPvDGuhthae0C2UYMVrR2lVrNFtZpFw9ddZ8UwHdLFBlSg
+         9dF7LHUhLIBMWO1Ht/wm5FNT76ZlxHHPSJ6pH85kUcGQ3VjWaS2GZBYtxQS6xvZWQ9NS
+         YlAA==
+X-Gm-Message-State: AOAM5322Om1pzZgMq32inNyBGxJrqj5gwH2uvdAoI6OGI0Vvrcimummj
+        Bu7weJj3efIyfnwT2JA+4e6rNh+yMS2UQ/ab/VU=
+X-Google-Smtp-Source: ABdhPJyb/CEwkfINABpfWWMSQ+ML0+ykFVkIncKfSMyZm7IOmv3ls+GVwrxAUKHMFFSVIk+7vkK2LsLzL8TstG9FxFM=
+X-Received: by 2002:a02:30c4:: with SMTP id q187mr24244868jaq.102.1593549473442;
+ Tue, 30 Jun 2020 13:37:53 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from [IPv6:2620:10d:c085:21e8::15c2] (2620:10d:c090:400::5:d269) by BYAPR07CA0066.namprd07.prod.outlook.com (2603:10b6:a03:60::43) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21 via Frontend Transport; Tue, 30 Jun 2020 20:36:59 +0000
-X-Originating-IP: [2620:10d:c090:400::5:d269]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 71922cea-7fcb-486e-dc9b-08d81d355704
-X-MS-TrafficTypeDiagnostic: BYAPR15MB2455:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <BYAPR15MB24559D25935EE71F2C2B898FD36F0@BYAPR15MB2455.namprd15.prod.outlook.com>
-X-FB-Source: Internal
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-Forefront-PRVS: 0450A714CB
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: oAC4+qBqMttmidb+b9HXxqsZIngJo1KJNYrtzsfarh5c2z4/gb/lnB4CTxjWlyCqehpbIRmfTVy3ET8aLp1pk1hkdH+IAcW/CygQiUIsVJ3dj1mv+cbjJRzysdrUeCkQQxnwGjeyrZ57miSky8vo/5yWWmu/C1IGBxV9cbXSwUROoyr1/U0LsAPGOjUPD+veSxycoN+052bxR8a/HugO323SD0yPKkZDj0tTTUEv04l8Nfd6v0y1OcZlcGo8qzjVEK+ySwEFUkSvVaSMODBugyq2eTUVMr2PTQA3zu/qoEe48g0hIXwQpPzoJywIGpntoqASnHGJtA+Mn9R2NeIlOE3RO1PXFenWNTyLziv0I19NgH3wYHbno413oe1gKr85
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR15MB4088.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(376002)(346002)(366004)(39860400002)(396003)(136003)(6486002)(478600001)(7416002)(8936002)(186003)(4326008)(2616005)(16526019)(2906002)(31696002)(316002)(86362001)(83380400001)(36756003)(66556008)(66476007)(8676002)(66946007)(54906003)(31686004)(53546011)(52116002)(5660300002)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData: 0BUA+l+tirTZaBZh1gbEz0auJQBkDrh1N1OtFPXnOtMeN1PkpbgSU33fS1QH/703bmbUuo6jdToBqoKrzRiQ8ks6IlinRf5RGncG8HD1cyvUUFWrI4ArpCj8/sWmXCP18I8xkl6Bm22V/2fd5buzT2ba+vc8H4KWzVAdQ7/BOng0HpsBBxoIUK6QcaUoIG2XCqvvJZka/Pg27vBhGdCk3AEfDBwMZ3Yp/ojNtj2wj4/9wUhaVpyOy6nSolYsdIeRBs3ozPRDxQCqZikwKOofFWVQOrwjydd+8a3Rg129W9atqYG3fG8fFkGj04Z1Ea5GQBTMmKkbPPwN/y/TCiE0uuaXF+566DYvVU3BQSVomLFoMn2sCUkvlCTXOILqWLEGtd8BSwJKox9Na3OXr3Pxnyg+i6K4q/xhoxrW6JcdT2qoJy2qIspXNZ6R2UUpAvORw8rrBcqAUQ9U7kqChWxpFLIXGdv5401RSwEbL22C/69l5qYw53nHZclzJX4mFXY+fgz1/Bv2UnwV6Msh/XAjsA==
-X-MS-Exchange-CrossTenant-Network-Message-Id: 71922cea-7fcb-486e-dc9b-08d81d355704
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR15MB4088.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2020 20:37:00.5392
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: a7adu5mtmCX9KfqLp8Yci/YO7fN1EgCNeuKWWj13aU3OsjhdOvozjWuGESfXRpRD
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2455
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-06-30_06:2020-06-30,2020-06-30 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 adultscore=0
- lowpriorityscore=0 malwarescore=0 suspectscore=0 mlxlogscore=999
- bulkscore=0 priorityscore=1501 mlxscore=0 impostorscore=0 spamscore=0
- clxscore=1011 cotscore=-2147483648 phishscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006300141
-X-FB-Internal: deliver
+References: <20200602052104.7795-1-lukas.bulwahn@gmail.com>
+ <828311d2-61ea-42cb-1449-a53f3772543d@roeck-us.net> <CAODwPW_oxDxF_5-icRs0eaRVLgtP+bDc_OSKa=EcfeSp=c6Fag@mail.gmail.com>
+ <CAKz_xw0Tqr-idoZbNzg_didSCr5L+L1=76xjF=Sqj4DgpL9g7Q@mail.gmail.com>
+ <CAKz_xw3KuWFSkcz-9hLHGZ2=S7nJ=K=AN6j2FJ6afZBFowJO7g@mail.gmail.com>
+ <alpine.DEB.2.21.2006302156120.3966@felia> <20200630203245.GA19763@roeck-us.net>
+In-Reply-To: <20200630203245.GA19763@roeck-us.net>
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Date:   Tue, 30 Jun 2020 22:37:42 +0200
+Message-ID: <CAKXUXMxF8YwhGKjUr5h_c2ewmXiSz7saLYWvThn6VwyTYLKAeg@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: rectify entry in ARM SMC WATCHDOG DRIVER
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Evan Benn <evanbenn@chromium.org>,
+        Julius Werner <jwerner@chromium.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jun 30, 2020 at 10:32 PM Guenter Roeck <linux@roeck-us.net> wrote:
+>
+> On Tue, Jun 30, 2020 at 09:59:51PM +0200, Lukas Bulwahn wrote:
+> >
+> >
+> > On Fri, 5 Jun 2020, Evan Benn wrote:
+> >
+> > > AFAICT this has now been merged upstream, I'm not sure what action to take:
+> > >
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=5c24a28b4eb842ad1256496be6ae01bab15f1dcb
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=72a9e7fea5866fc471fda78f05f166595c8c6ba6
+> >
+> > This patch is still fully valid and still applies to next-20200630; it can
+> > be simply applied as any other bug fix to your driver code.
+> >
+> > Evan, can you please ask Wim as linux-watchdog maintainer to pick-up this
+> > patch, with the reviews below?
+> >
+>
+> It is in my tree. Maybe it got lost in the back-and-forth. I'll send
+> a pull request to Wim in the next couple of weeks.
+>
 
-
-On 6/30/20 11:49 AM, Hao Luo wrote:
-> The test_vmlinux test uses hrtimer_nanosleep as hook to test tracing
-> programs. But it seems Clang may have done an aggressive optimization,
-> causing fentry and kprobe to not hook on this function properly on a
-> Clang build kernel.
-
-Could you explain why it does not on clang built kernel? How did you
-build the kernel? Did you use [thin]lto?
-
-hrtimer_nanosleep is a global function who is called in several
-different files. I am curious how clang optimization can make
-function disappear, or make its function signature change, or
-rename the function?
-
-> 
-> A possible fix is switching to use a more reliable function, e.g. the
-> ones exported to kernel modules such as hrtimer_range_start_ns. After
-> we switch to using hrtimer_range_start_ns, the test passes again even
-> on a clang build kernel.
-> 
-> Tested:
->   In a clang build kernel, the test fail even when the flags
->   {fentry, kprobe}_called are set unconditionally in handle__kprobe()
->   and handle__fentry(), which implies the programs do not hook on
->   hrtimer_nanosleep() properly. This could be because clang's code
->   transformation is too aggressive.
-> 
->   test_vmlinux:PASS:skel_open 0 nsec
->   test_vmlinux:PASS:skel_attach 0 nsec
->   test_vmlinux:PASS:tp 0 nsec
->   test_vmlinux:PASS:raw_tp 0 nsec
->   test_vmlinux:PASS:tp_btf 0 nsec
->   test_vmlinux:FAIL:kprobe not called
->   test_vmlinux:FAIL:fentry not called
-> 
->   After we switch to hrtimer_range_start_ns, the test passes.
-> 
->   test_vmlinux:PASS:skel_open 0 nsec
->   test_vmlinux:PASS:skel_attach 0 nsec
->   test_vmlinux:PASS:tp 0 nsec
->   test_vmlinux:PASS:raw_tp 0 nsec
->   test_vmlinux:PASS:tp_btf 0 nsec
->   test_vmlinux:PASS:kprobe 0 nsec
->   test_vmlinux:PASS:fentry 0 nsec
-> 
-> Signed-off-by: Hao Luo <haoluo@google.com>
-> ---
->   tools/testing/selftests/bpf/progs/test_vmlinux.c | 16 ++++++++--------
->   1 file changed, 8 insertions(+), 8 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/bpf/progs/test_vmlinux.c b/tools/testing/selftests/bpf/progs/test_vmlinux.c
-> index 5611b564d3b1..29fa09d6a6c6 100644
-> --- a/tools/testing/selftests/bpf/progs/test_vmlinux.c
-> +++ b/tools/testing/selftests/bpf/progs/test_vmlinux.c
-> @@ -63,20 +63,20 @@ int BPF_PROG(handle__tp_btf, struct pt_regs *regs, long id)
->   	return 0;
->   }
->   
-> -SEC("kprobe/hrtimer_nanosleep")
-> -int BPF_KPROBE(handle__kprobe,
-> -	       ktime_t rqtp, enum hrtimer_mode mode, clockid_t clockid)
-> +SEC("kprobe/hrtimer_start_range_ns")
-> +int BPF_KPROBE(handle__kprobe, struct hrtimer *timer, ktime_t tim, u64 delta_ns,
-> +	       const enum hrtimer_mode mode)
->   {
-> -	if (rqtp == MY_TV_NSEC)
-> +	if (tim == MY_TV_NSEC)
->   		kprobe_called = true;
->   	return 0;
->   }
->   
-> -SEC("fentry/hrtimer_nanosleep")
-> -int BPF_PROG(handle__fentry,
-> -	     ktime_t rqtp, enum hrtimer_mode mode, clockid_t clockid)
-> +SEC("fentry/hrtimer_start_range_ns")
-> +int BPF_PROG(handle__fentry, struct hrtimer *timer, ktime_t tim, u64 delta_ns,
-> +	     const enum hrtimer_mode mode)
->   {
-> -	if (rqtp == MY_TV_NSEC)
-> +	if (tim == MY_TV_NSEC)
->   		fentry_called = true;
->   	return 0;
->   }
-> 
+Great! Thanks, Guenter.
