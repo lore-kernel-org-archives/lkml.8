@@ -2,159 +2,127 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE4FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:02:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E54DEC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 241E8206BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:02:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DIhlUCsv"
+	by mail.kernel.org (Postfix) with ESMTP id BF88F206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:04:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593525865;
+	bh=SqVQK1p3HM5Lh8t8VwYGyeSHYFj1rCTiTIyGwW608xs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IvF3IsUjo1XQFFA4GQpEvwnJDi1BZ9kuYS3JQ5wFLHxHySqkGMqL/TTjgyRL+1MPk
+	 1rAQ9/grB5f0c3wLj13b1BQ1dlN84f6sxpi2YgHjFWOLudf5CxlUumrdmEWLG/AeNi
+	 beqi/C7bci19wpDKnCHoYph4f1kNJgf5pa6HByHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388543AbgF3OCt (ORCPT
+        id S2388402AbgF3OEY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 10:02:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49540 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727796AbgF3OCs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 10:02:48 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38B29C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 07:02:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=jGbDx0iht4VbXUm5qyIJkbSPl9JgtYBM8SkXbZAhpsE=; b=DIhlUCsvuGrpKc7Rrm2FXX77cG
-        1C4PAjF9kvzJuzySUE32J3ycmGzAaYiFU935f2IFUPOYVFq5bnLgaAJ1Lkul1mhOyayoK2VAgXfGt
-        u0zH5V9WwKYKBkHvrRYancJClUKQGo7DV/D+/AoaAbeJackg+fjjP42/xL3Kv5r/paQewkS19Mbs8
-        FsNBxm3LJYKKmjKeTaX0xsFW+ZILenbjLQ3aVCyhIbSeToS4OV4us+gp3aKbMqT9i706e6l7AwKz2
-        nc1u+3CM0QyFWO84/wJK1JG1QW6NEbh9YS2VGILoW+NTFz5kOn54e8Tq2f/DsRd51ZvqSBgbsiQUD
-        at7Chw0w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jqGqG-0001LJ-SJ; Tue, 30 Jun 2020 14:02:33 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Tue, 30 Jun 2020 10:04:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49740 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727796AbgF3OEY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 10:04:24 -0400
+Received: from pali.im (pali.im [31.31.79.79])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4BC283013E5;
-        Tue, 30 Jun 2020 16:02:31 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 386032122FE61; Tue, 30 Jun 2020 16:02:31 +0200 (CEST)
-Date:   Tue, 30 Jun 2020 16:02:31 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     kernel test robot <lkp@intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        lkp@lists.01.org, keescook@chromium.org, hjl.tools@gmail.com
-Subject: Re: [sched] c3a340f7e7: invalid_opcode:#[##]
-Message-ID: <20200630140231.GW4817@hirez.programming.kicks-ass.net>
-References: <20200629003127.GB5535@shao2-debian>
- <20200630124628.GV4817@hirez.programming.kicks-ass.net>
- <5b7286c9-ef4f-c1d0-fae3-ebb198aa0742@rasmusvillemoes.dk>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07375206BE;
+        Tue, 30 Jun 2020 14:04:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593525863;
+        bh=SqVQK1p3HM5Lh8t8VwYGyeSHYFj1rCTiTIyGwW608xs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VC9amz8/vWzYBN4hRZC3Fmfd1OnVrNc3D+bbz2VFBnUOAutjh7xGXV5DKIW1hs9x/
+         HNYKmJFG5bIzc5eV2VqXVanjn29mwmp5zBt4ERRU0LYhgEJ3p1I8SJ4FHD7aa2ob6H
+         74dXi4rrFfcqNx5SAki+O5xSv50INVKkNsGBGn1o=
+Received: by pali.im (Postfix)
+        id C08AA81A; Tue, 30 Jun 2020 16:04:20 +0200 (CEST)
+Date:   Tue, 30 Jun 2020 16:04:20 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <amurray@thegoodpenguin.co.uk>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Tomasz Maciej Nowak <tmn505@gmail.com>,
+        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] PCI: aardvark: Don't touch PCIe registers if no card
+ connected
+Message-ID: <20200630140420.7qkuq7wturmaafzf@pali>
+References: <20200528163809.54f5ldvphrjg3zg3@pali>
+ <20200630135127.GA3414186@bjorn-Precision-5520>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <5b7286c9-ef4f-c1d0-fae3-ebb198aa0742@rasmusvillemoes.dk>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200630135127.GA3414186@bjorn-Precision-5520>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 03:55:05PM +0200, Rasmus Villemoes wrote:
-
-> > Consistently so with GCC-4.9. Any other GCC I tried does the sane thing.
+On Tuesday 30 June 2020 08:51:27 Bjorn Helgaas wrote:
+> On Thu, May 28, 2020 at 06:38:09PM +0200, Pali Rohár wrote:
+> > On Thursday 28 May 2020 11:26:04 Bjorn Helgaas wrote:
+> > > On Thu, May 28, 2020 at 04:31:41PM +0200, Pali Rohár wrote:
+> > > > When there is no PCIe card connected and advk_pcie_rd_conf() or
+> > > > advk_pcie_wr_conf() is called for PCI bus which doesn't belong to emulated
+> > > > root bridge, the aardvark driver throws the following error message:
+> > > > 
+> > > >   advk-pcie d0070000.pcie: config read/write timed out
+> > > > 
+> > > > Obviously accessing PCIe registers of disconnected card is not possible.
+> > > > 
+> > > > Extend check in advk_pcie_valid_device() function for validating
+> > > > availability of PCIe bus. If PCIe link is down, then the device is marked
+> > > > as Not Found and the driver does not try to access these registers.
+> > > > 
+> > > > Signed-off-by: Pali Rohár <pali@kernel.org>
+> > > > ---
+> > > >  drivers/pci/controller/pci-aardvark.c | 3 +++
+> > > >  1 file changed, 3 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+> > > > index 90ff291c24f0..53a4cfd7d377 100644
+> > > > --- a/drivers/pci/controller/pci-aardvark.c
+> > > > +++ b/drivers/pci/controller/pci-aardvark.c
+> > > > @@ -644,6 +644,9 @@ static bool advk_pcie_valid_device(struct advk_pcie *pcie, struct pci_bus *bus,
+> > > >  	if ((bus->number == pcie->root_bus_nr) && PCI_SLOT(devfn) != 0)
+> > > >  		return false;
+> > > >  
+> > > > +	if (bus->number != pcie->root_bus_nr && !advk_pcie_link_up(pcie))
+> > > > +		return false;
+> > > 
+> > > I don't think this is the right fix.  This makes it racy because the
+> > > link may go down after we call advk_pcie_valid_device() but before we
+> > > perform the config read.
+> > 
+> > Yes, it is racy, but I do not think it cause problems. Trying to read
+> > PCIe registers when device is not connected cause just those timeouts,
+> > printing error message and increased delay in advk_pcie_wait_pio() due
+> > to polling loop. This patch reduce unnecessary access to PCIe registers
+> > when advk_pcie_wait_pio() polling just fail.
 > 
-> Does that include gcc 4.8, or is it only "anything newer than 4.9"?
+> What happens when the device is removed after advk_pcie_link_up()
+> returns true, but before we actually do the config access?
 
-It includes 4.8 :-)
+Do you mean to remove device physically at runtime? I was told that our
+board would crash or issue reset. Removing device from mini PCIe slot
+without power off is not supported.
 
-> so the section it was put in has an alignment of 64. The generated
-> assembly is indeed
-> 
->         .globl  fair_sched_class
->         .section        __fair_sched_class,"a",@progbits
->         .align 64
-> 
-> /me goes brew coffee
-
-Right.. so I now have the below patch, and with that I get:
-
-62931: c1e62c20     0 NOTYPE  GLOBAL DEFAULT    2 __begin_sched_classes
-65736: c1e62e40   128 OBJECT  GLOBAL DEFAULT    2 stop_sched_class
-71813: c1e62cc0   128 OBJECT  GLOBAL DEFAULT    2 fair_sched_class
-78689: c1e62c40   128 OBJECT  GLOBAL DEFAULT    2 idle_sched_class
-78953: c1e62ec0     0 NOTYPE  GLOBAL DEFAULT    2 __end_sched_classes
-79090: c1e62d40   128 OBJECT  GLOBAL DEFAULT    2 rt_sched_class
-79431: c1e62dc0   128 OBJECT  GLOBAL DEFAULT    2 dl_sched_class
-
-
-Which has me stumped on __begin_sched_classes being on a 32byte edge
-(and crashes differently due to that).
-
-Argh!!
-
-
-
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index 66fb84c3dc7ee..b4704fb12b2dd 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -108,6 +108,17 @@
- #define SBSS_MAIN .sbss
- #endif
- 
-+/*
-+ * Align to a 32 byte boundary equal to the
-+ * alignment gcc 4.5 uses for a struct
-+ */
-+#if GCC_VERSION >= 40900 && GCC_VERSION < 50000
-+#define STRUCT_ALIGNMENT 64
-+#else
-+#define STRUCT_ALIGNMENT 32
-+#endif
-+#define STRUCT_ALIGN() . = ALIGN(STRUCT_ALIGNMENT)
-+
- /*
-  * The order of the sched class addresses are important, as they are
-  * used to determine the order of the priority of each sched class in
-@@ -123,13 +134,6 @@
- 	*(__stop_sched_class)			\
- 	__end_sched_classes = .;
- 
--/*
-- * Align to a 32 byte boundary equal to the
-- * alignment gcc 4.5 uses for a struct
-- */
--#define STRUCT_ALIGNMENT 32
--#define STRUCT_ALIGN() . = ALIGN(STRUCT_ALIGNMENT)
--
- /* The actual configuration determine if the init/exit sections
-  * are handled as text/data or they can be discarded (which
-  * often happens at runtime)
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 4165c06d1d7bd..33251d0ab62e7 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -67,6 +67,7 @@
- #include <linux/tsacct_kern.h>
- 
- #include <asm/tlb.h>
-+#include <asm-generic/vmlinux.lds.h>
- 
- #ifdef CONFIG_PARAVIRT
- # include <asm/paravirt.h>
-@@ -1811,7 +1812,7 @@ struct sched_class {
- #ifdef CONFIG_FAIR_GROUP_SCHED
- 	void (*task_change_group)(struct task_struct *p, int type);
- #endif
--} __aligned(32); /* STRUCT_ALIGN(), vmlinux.lds.h */
-+} __aligned(STRUCT_ALIGNMENT); /* STRUCT_ALIGN(), vmlinux.lds.h */
- 
- static inline void put_prev_task(struct rq *rq, struct task_struct *prev)
- {
+Anyway, currently we are trying to read from device registers even when
+no device is connected. So when advk_pcie_link_up() returns true and
+after that device is not connected (somehow board and kernel would be
+still alive) I guess that it would behave as without applying this
+patch. So kernel starts reading from register and would wait until
+timeout expires. As device is not connected there would be no answer,
+so kernel print error message to dmesg (same as in commit message) and
+returns error that read failed.
