@@ -2,244 +2,194 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6749FC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:12:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01CD7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:14:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3C32620720
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:12:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D285A20720
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:14:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NJIBZqjm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pTpqk02a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726972AbgF3FMd (ORCPT
+        id S1727769AbgF3FO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 01:12:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52370 "EHLO
+        Tue, 30 Jun 2020 01:14:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725372AbgF3FMc (ORCPT
+        with ESMTP id S1725845AbgF3FO1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 01:12:32 -0400
-Received: from mail-ua1-x941.google.com (mail-ua1-x941.google.com [IPv6:2607:f8b0:4864:20::941])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F706C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 22:12:32 -0700 (PDT)
-Received: by mail-ua1-x941.google.com with SMTP id e3so6079369uan.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 22:12:32 -0700 (PDT)
+        Tue, 30 Jun 2020 01:14:27 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FE8DC061755
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 22:14:27 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id c11so10573784lfh.8
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 22:14:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GZqNJf/On7BSXnSaIpAwlixbpz1QEKZR/Qh4WmlHE/w=;
-        b=NJIBZqjmorg7A0uHIHgK7pGtai2uUiiTma8MdmUkVCHd7SDCxBgURyucrMkwdp+L/X
-         dNkiucbsIrhfA1ZA0nnEKfcBG59EechfNdhez+CIs+s9SzgZdfhBNuADSBxHaNxccY9b
-         dyyUubT4IBnUVvIjV75XEkalZZR7i+fjNvR9Tr6WjP65XVjAeQ2vl5X7xU2FLERe8FQl
-         qaWhrz5R2fCn+7ZDjNdwnIzGpFnaj9ivBMMhvi5jPVtc643LBW4K2hHYPhG/Fz/f4peS
-         xBQiGYopJppEfASjygrVZtCDzqOg7lpNNWM2dSmae9wm6l4qEFLqW/fgz+8jJ6N1Z0DC
-         LfeA==
+         :cc:content-transfer-encoding;
+        bh=W69ph+i0GrUHBE6EcCTuT/obYcwfDKs0cbLyOStqOtc=;
+        b=pTpqk02aElatHhMshdGJvvxKDo+gn5r+Y5C8oJa5VR6XW/ufOsRmN6rKqFSkDMFldr
+         NIjKL9FJ/D/qmY/tSL/kaizmj6RY1k9g2F7scQZlqvf3bEM5FzTv3EFnmayHtWQsezTM
+         UHweAyFsN2MNPY39HDzkYbPXvA5fq79JNmhdr/gD3TGQvE0jU0OSHewzV1mdaHzUvyw0
+         hXbnegzNBrMvJI+6jdO2j9buU3bgxf63F/zC8y/YqBEfHqGLHu8/ba8Crk+DqI3G1fEj
+         dSfBUWQvlKjgOLV3qRpyWL1OHCVI0K6qUkom5qULrF46JRKbGfsCZ5aSYcV2edvduRyr
+         YZNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GZqNJf/On7BSXnSaIpAwlixbpz1QEKZR/Qh4WmlHE/w=;
-        b=POGvHvd1Ogo7xEGs9ogf/h6fpIfqpSno8yz1TsRvcOsS7sT/1qGcN1yh0h8ZIdALmM
-         ukD/XhQZ+1WqZDlw1eJi9cHI7+ACPIrom678Gv1Ah1XVgagawWPtnLtCL1XfiM5u63on
-         kNz3QSHgXvr3gqW+GufqjgDVtu/EiP8gQcZg2WaD/AhWPYxSGhHPgmTxE+LqJix40EWu
-         5bEymaKR3zW8jCuZRPjBAoojw5JBwVlMhPt23VbycpxUrKlEzKRPwES5XEsljfLu7Wm3
-         qGc3zwQi2kxzWzC6cK293+ILTAyQFs9MD80wuC1mZXMOJKNbR9KzqIv+9WEA18SfN+cg
-         uUFA==
-X-Gm-Message-State: AOAM5326TCce2CtV0J1bgNnFMakZLFsHUlFtRYg0bVkEcijsE+rrU5GK
-        oj4GkJM21837ndb8nCnNQBP8Gv41AeI8+GxUwk76Dw==
-X-Google-Smtp-Source: ABdhPJysDkIaaWnh2DqQmc9Gtn6fINTLTYAwh+PfYrZlIuIQbRi6Xt9uuRB0lB6S1M+uDHcG3XhPJeGk1ho0vHvBT48=
-X-Received: by 2002:a9f:3113:: with SMTP id m19mr4054878uab.77.1593493951335;
- Mon, 29 Jun 2020 22:12:31 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=W69ph+i0GrUHBE6EcCTuT/obYcwfDKs0cbLyOStqOtc=;
+        b=QWB9Wx3b5wEp3ZYAM1/UNX+TeF1ECXWm9D4s1EtYB708Qw5G7jVkk4WB2DzXYCUT0Q
+         KOu5Q0Tn7XBsiYVeKFD7Sc9iBSRG/dqJB+6HNLrJvjtnNhIWkUNGutrWUN6xUqvH9rfY
+         EMAfjuGIIfmMEYAfWUi3M8QPhrKL014Id8jWhiEyp1TSUWK79DJn8SBoERnw4UpoYmld
+         cruXZJInugjYSKN7ZgrApFuwWD9SBJ4TFA2aQQ7Du69fHjNBY5tvpept6jVBr/2RaI/T
+         EsxWAi3sgwlQC9TvChSfNyTZBhUOFz0MEiOQYR94vPeDtIr843gHjnTMQldtbLosBini
+         mM9g==
+X-Gm-Message-State: AOAM5306XXKxOTO0bzVhrVRc30wp0udnalka/ytakqYqZiOrOytAaq0J
+        4MmdD5UqLoNUH6A4qyWvwVDmg9wjaKkFKPYcPAdUBw==
+X-Google-Smtp-Source: ABdhPJyQyCEgfdcfcd4bxOyQ1pV8XyLXbUtS8COBDcfz+GkZVBiKtmMhGz4nw8J25sfNsNCGjyX9Ud3h+W31/CCxGN4=
+X-Received: by 2002:a19:4285:: with SMTP id p127mr10507224lfa.74.1593494063781;
+ Mon, 29 Jun 2020 22:14:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200630032014.22956-1-andy.tang@nxp.com>
-In-Reply-To: <20200630032014.22956-1-andy.tang@nxp.com>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Tue, 30 Jun 2020 10:42:19 +0530
-Message-ID: <CAHLCerO3B4Z67KP8VaF957Jkid21gLvzhS49gNeqUC+6muPkjA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] arm64: dts: ls1088a: add more thermal zone support
-To:     Yuantian Tang <andy.tang@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        lakml <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20200629151818.2493727-1-sashal@kernel.org>
+In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 30 Jun 2020 10:44:12 +0530
+Message-ID: <CA+G9fYu0Vq2KbqonYwp-mm+STOg5yKDjqHvSeFQ_u-VbaLjgUA@mail.gmail.com>
+Subject: Re: [PATCH 5.7 000/265] 5.7.7-rc1 review
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        linux- stable <stable@vger.kernel.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        patches@kernelci.org, lkft-triage@lists.linaro.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 8:56 AM <andy.tang@nxp.com> wrote:
+On Mon, 29 Jun 2020 at 20:48, Sasha Levin <sashal@kernel.org> wrote:
 >
-> From: Yuantian Tang <andy.tang@nxp.com>
 >
-> There are 2 thermal zones in ls1088a soc. Add the other thermal zone
-> node to enable it.
-> Also update the values in calibration table to make the temperatures
-> monitored more precise.
+> This is the start of the stable review cycle for the 5.7.7 release.
+> There are 265 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
-> ---
->  .../arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 100 +++++++++++-------
->  1 file changed, 62 insertions(+), 38 deletions(-)
+> Responses should be made by Wed 01 Jul 2020 03:14:48 PM UTC.
+> Anything received after that time might be too late.
 >
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> index 36a799554620..ccbbc23e6c85 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> @@ -129,19 +129,19 @@
->         };
+> The whole patch series can be found in one patch at:
+>         https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git/patch/?id=3Dlinux-5.7.y&id2=3Dv5.7.6
 >
->         thermal-zones {
-> -               cpu_thermal: cpu-thermal {
-> +               core-cluster {
->                         polling-delay-passive = <1000>;
->                         polling-delay = <5000>;
->                         thermal-sensors = <&tmu 0>;
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.7.y
+> and the diffstat can be found below.
 >
->                         trips {
-> -                               cpu_alert: cpu-alert {
-> +                               core_cluster_alert: core-cluster-alert {
->                                         temperature = <85000>;
->                                         hysteresis = <2000>;
->                                         type = "passive";
->                                 };
->
-> -                               cpu_crit: cpu-crit {
-> +                               core_cluster_crit: core-cluster-crit {
->                                         temperature = <95000>;
->                                         hysteresis = <2000>;
->                                         type = "critical";
-> @@ -150,7 +150,7 @@
->
->                         cooling-maps {
->                                 map0 {
-> -                                       trip = <&cpu_alert>;
-> +                                       trip = <&core_cluster_alert>;
->                                         cooling-device =
->                                                 <&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->                                                 <&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> @@ -163,6 +163,26 @@
->                                 };
->                         };
->                 };
-> +
-> +               soc {
-> +                       polling-delay-passive = <1000>;
-> +                       polling-delay = <5000>;
-> +                       thermal-sensors = <&tmu 1>;
-> +
-> +                       trips {
-> +                               soc-alert {
-> +                                       temperature = <85000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "passive";
-> +                               };
-> +
-> +                               soc-crit {
-> +                                       temperature = <95000>;
-> +                                       hysteresis = <2000>;
-> +                                       type = "critical";
-> +                               };
-> +                       };
-> +               };
-
-You should also add a cooling-maps section for this thermal zone given
-that it has a passive trip type. Otherwise there is no use for a
-passive trip type.
-
->         };
->
->         timer {
-> @@ -209,45 +229,49 @@
->                         compatible = "fsl,qoriq-tmu";
->                         reg = <0x0 0x1f80000 0x0 0x10000>;
->                         interrupts = <0 23 0x4>;
-> -                       fsl,tmu-range = <0xb0000 0x9002a 0x6004c 0x30062>;
-> +                       fsl,tmu-range = <0xb0000 0x9002a 0x6004c 0x70062>;
->                         fsl,tmu-calibration =
->                                 /* Calibration data group 1 */
-> -                               <0x00000000 0x00000026
-> -                               0x00000001 0x0000002d
-> -                               0x00000002 0x00000032
-> -                               0x00000003 0x00000039
-> -                               0x00000004 0x0000003f
-> -                               0x00000005 0x00000046
-> -                               0x00000006 0x0000004d
-> -                               0x00000007 0x00000054
-> -                               0x00000008 0x0000005a
-> -                               0x00000009 0x00000061
-> -                               0x0000000a 0x0000006a
-> -                               0x0000000b 0x00000071
-> +                               <0x00000000 0x00000023
-> +                               0x00000001 0x0000002a
-> +                               0x00000002 0x00000030
-> +                               0x00000003 0x00000037
-> +                               0x00000004 0x0000003d
-> +                               0x00000005 0x00000044
-> +                               0x00000006 0x0000004a
-> +                               0x00000007 0x00000051
-> +                               0x00000008 0x00000057
-> +                               0x00000009 0x0000005e
-> +                               0x0000000a 0x00000064
-> +                               0x0000000b 0x0000006b
->                                 /* Calibration data group 2 */
-> -                               0x00010000 0x00000025
-> -                               0x00010001 0x0000002c
-> -                               0x00010002 0x00000035
-> -                               0x00010003 0x0000003d
-> -                               0x00010004 0x00000045
-> -                               0x00010005 0x0000004e
-> -                               0x00010006 0x00000057
-> -                               0x00010007 0x00000061
-> -                               0x00010008 0x0000006b
-> -                               0x00010009 0x00000076
-> +                               0x00010000 0x00000022
-> +                               0x00010001 0x0000002a
-> +                               0x00010002 0x00000032
-> +                               0x00010003 0x0000003a
-> +                               0x00010004 0x00000042
-> +                               0x00010005 0x0000004a
-> +                               0x00010006 0x00000052
-> +                               0x00010007 0x0000005a
-> +                               0x00010008 0x00000062
-> +                               0x00010009 0x0000006a
->                                 /* Calibration data group 3 */
-> -                               0x00020000 0x00000029
-> -                               0x00020001 0x00000033
-> -                               0x00020002 0x0000003d
-> -                               0x00020003 0x00000049
-> -                               0x00020004 0x00000056
-> -                               0x00020005 0x00000061
-> -                               0x00020006 0x0000006d
-> +                               0x00020000 0x00000021
-> +                               0x00020001 0x0000002b
-> +                               0x00020002 0x00000035
-> +                               0x00020003 0x00000040
-> +                               0x00020004 0x0000004a
-> +                               0x00020005 0x00000054
-> +                               0x00020006 0x0000005e
->                                 /* Calibration data group 4 */
-> -                               0x00030000 0x00000021
-> -                               0x00030001 0x0000002a
-> -                               0x00030002 0x0000003c
-> -                               0x00030003 0x0000004e>;
-> +                               0x00030000 0x00000010
-> +                               0x00030001 0x0000001c
-> +                               0x00030002 0x00000027
-> +                               0x00030003 0x00000032
-> +                               0x00030004 0x0000003e
-> +                               0x00030005 0x00000049
-> +                               0x00030006 0x00000054
-> +                               0x00030007 0x00000060>;
->                         little-endian;
->                         #thermal-sensor-cells = <1>;
->                 };
 > --
-> 2.17.1
->
+> Thanks,
+> Sasha
+
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
+
+Summary
+------------------------------------------------------------------------
+
+kernel: 5.7.7-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.7.y
+git commit: 97943c6d41ef2b05f4e064eb49a538ff4b405809
+git describe: v5.7.6-265-g97943c6d41ef
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.7-oe/bui=
+ld/v5.7.6-265-g97943c6d41ef
+
+No regressions (compared to build v5.7.6)
+
+No fixes (compared to build v5.7.6)
+
+
+Ran 36511 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- juno-r2-compat
+- juno-r2-kasan
+- nxp-ls2088
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* kselftest/net
+* libhugetlbfs
+* linux-log-parser
+* ltp-containers-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-mm-tests
+* ltp-sched-tests
+* ltp-syscalls-tests
+* perf
+* v4l2-compliance
+* kvm-unit-tests
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-math-tests
+* network-basic-tests
+* ltp-controllers-tests
+* ltp-nptl-tests
+* ltp-open-posix-tests
+* ltp-pty-tests
+* ltp-securebits-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-native/drivers
+* kselftest-vsyscall-mode-native/filesystems
+* kselftest-vsyscall-mode-native/net
+* kselftest-vsyscall-mode-none
+* kselftest-vsyscall-mode-none/drivers
+* kselftest-vsyscall-mode-none/filesystems
+* kselftest-vsyscall-mode-none/net
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
