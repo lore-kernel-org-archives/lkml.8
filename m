@@ -2,102 +2,98 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8F8C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:28:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E99B4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E35B206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:28:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF59820702
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:29:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="co3GS2Cj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbgF3T21 (ORCPT
+        id S1728069AbgF3T3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 15:28:27 -0400
-Received: from foss.arm.com ([217.140.110.172]:59204 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726065AbgF3T21 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 15:28:27 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4231231B;
-        Tue, 30 Jun 2020 12:28:26 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 943703F68F;
-        Tue, 30 Jun 2020 12:28:24 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 20:28:22 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Patrick Bellasi <patrick.bellasi@matbug.net>,
-        Chris Redpath <chris.redpath@arm.com>,
-        Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 2/2] sched/uclamp: Protect uclamp fast path code with
- static key
-Message-ID: <20200630192821.xzg53b3mx7hvjmr4@e107158-lin.cambridge.arm.com>
-References: <20200630112123.12076-1-qais.yousef@arm.com>
- <20200630112123.12076-3-qais.yousef@arm.com>
- <20200630170751.GA4817@hirez.programming.kicks-ass.net>
- <20200630175502.otw4seymlynghje7@e107158-lin.cambridge.arm.com>
- <20200630190643.GC4817@hirez.programming.kicks-ass.net>
+        Tue, 30 Jun 2020 15:29:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43476 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726961AbgF3T3o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 15:29:44 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F17FC061755;
+        Tue, 30 Jun 2020 12:29:44 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id k5so342966pjg.3;
+        Tue, 30 Jun 2020 12:29:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=z9NbGrJNVhmDvwjE4p/JaViBJ44BVQVTuZHg6UXMIYY=;
+        b=co3GS2Cjq3IS4PBvsxpk3iaeANWXu9yXQTCa2iad2uBkShSkMJdxn3+XTqZQwNfDXy
+         RlY76zsgVjCL43sSBus5UM6FBRu0aVIGHO4JN/bDnKmaer8C5enTUMgjW4YUfz0eEODp
+         txdPInWQ7GWQUOgDHHs67W+oOI5hBCYfzX84Pyz9UvnCOi9y2q9BZsXzQtKmfkRJwZS/
+         DSpFrB5U9oQ8oRblkl/qrgws8AvvQ8uhGK98S0lQDOU8OMLjrYC4/eH9XoZZOebAzwN3
+         GMrQM3PT/yZRtiT7PUVWYyuFrPxxrQknyJOyE0djQIFkCeBzVBbtogf+f5Rg3LzrjwjY
+         5UiA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=z9NbGrJNVhmDvwjE4p/JaViBJ44BVQVTuZHg6UXMIYY=;
+        b=IJ1p4wsJ8933pTc/90QJlWLZOVSf+VxrPV0IsOJCBOVWIgIw0WzFeUgAipJCoZfo3s
+         IetVpmsBSlp0AmQJfvYJVRt8RzYYPgPGn6EgTm3pkd1t7ATGMNpRuC6Ek7b34OxIl3Ly
+         0XSy2p+RBFriT9v0pJCZyKuELLs9S1yeAoW97hvxpMRyc+zxJQq5cADi7Li8nNxd7FDK
+         ms7Tbqo7yqhbtnv9aiPDHnetMKMMKBMQrZx2IgF492WB+eNCbAbUuz7HaSLNG+27A8oa
+         SMusYD7DnsJUec00RYHnsNoCNT2ROzm81mZL6OvSSNgRRkFIyFlVAxe5uwmKhAPsm0Kk
+         bZoA==
+X-Gm-Message-State: AOAM533VYVJW+nsZ17bV/+OIiebLSAYxaGNpjw9V/EvDo7Yr2sD8fB/8
+        bmjv9GUbuTixMfrBQ309ypk=
+X-Google-Smtp-Source: ABdhPJwv4jFJgO1XEbhIRLji/2KijRhr9g67KUtACfRcPhhVmiFQ8SFh/i4yjIkB/MOaOvhH2n3yTg==
+X-Received: by 2002:a17:902:8a8f:: with SMTP id p15mr19083179plo.172.1593545383723;
+        Tue, 30 Jun 2020 12:29:43 -0700 (PDT)
+Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
+        by smtp.gmail.com with ESMTPSA id s12sm3554059pgp.54.2020.06.30.12.29.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 12:29:43 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 12:29:41 -0700
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Merlijn Wajer <merlijn@wizzup.org>
+Cc:     pavel@ucw.cz,
+        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@suse.de>,
+        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        Mattias Jacobsson <2pi@mok.nu>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Mark Gross <mgross@linux.intel.com>,
+        "open list:OMAP DEVICE TREE SUPPORT" <linux-omap@vger.kernel.org>,
+        "open list:OMAP DEVICE TREE SUPPORT" <devicetree@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." 
+        <linux-input@vger.kernel.org>
+Subject: Re: [PATCH 0/2] Add SW_MACHINE_COVER key
+Message-ID: <20200630192941.GI248110@dtor-ws>
+References: <20200612125402.18393-1-merlijn@wizzup.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200630190643.GC4817@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20200612125402.18393-1-merlijn@wizzup.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/30/20 21:06, Peter Zijlstra wrote:
-> On Tue, Jun 30, 2020 at 06:55:02PM +0100, Qais Yousef wrote:
-> > On 06/30/20 19:07, Peter Zijlstra wrote:
-> 
-> > > There's a fun race described in 9107c89e269d ("perf: Fix race between
-> > > event install and jump_labels"), are we sure this isn't also susceptible
-> > > to something similar?
-> > > 
-> > > I suspect not, but I just wanted to make sure.
-> > 
-> > IIUC, the worry is that not all CPUs might have observed the change in the
-> > static key state; hence could not be running the patched
-> > enqueue/dequeue_task(), so we could end up with some CPUs accounting for
-> > uclamp in the enqueue/dequeue path but not others?
-> > 
-> > I was hoping this synchronization is guaranteed by the static_branch_*() call.
-> 
-> It is, that isn't quite the the problem. Looking at it more I think
-> commit 1dbb6704de91 ("jump_label: Fix concurrent
-> static_key_enable/disable()") fixed some of it.
-> 
-> From what I can remember there were two parts to this problem, one being
-> fixed by the above commit, the other being that if we enable while a
-> task is running we miss the switch-in event (exactly how in this patch
-> we miss the enqueue).
-> 
-> Due to the missing switch-in, the state is 'weird' and the subsequent
-> IPI to install a remote event didn't quite work.
-> 
-> So I put that sync_sched() call in to guarantee all CPUs have done a
-> schedule() cycle after having the key switched. This makes sure that
-> every running task has seen the switch-in and thus the state is as
-> expected.
-> 
-> But like I said, I think we're good, that one extra branch deals with
-> the half-state.
+On Fri, Jun 12, 2020 at 02:53:57PM +0200, Merlijn Wajer wrote:
 
-Got it, thanks.
+Applied, thank you.
 
-Yes, we should be good for currently running tasks.
-
-Thanks
-
---
-Qais Yousef
+-- 
+Dmitry
