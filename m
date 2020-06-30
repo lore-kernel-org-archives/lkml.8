@@ -2,99 +2,108 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BE85C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45CDBC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 466CC206BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:01:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21294206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:02:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="sazdzRWz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388078AbgF3OBb (ORCPT
+        id S2388522AbgF3OCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 10:01:31 -0400
-Received: from mga06.intel.com ([134.134.136.31]:48229 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728808AbgF3OBa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 10:01:30 -0400
-IronPort-SDR: 8YGCtYurDXBvSTL2y57TNfJYpyOge87cZ+xS0L9K72M4d1tSVKGx7Ox27k3saPUuGvUGx9/GPv
- cC+u9d3QWQOA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="207750096"
-X-IronPort-AV: E=Sophos;i="5.75,297,1589266800"; 
-   d="scan'208";a="207750096"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 07:01:11 -0700
-IronPort-SDR: R0Gwqc2V4F52bCGV31q6QEEjl7oyXFNcUSJzJcUCp7JWplQU9Gi214eTU02coYDsK8LT2JrjJ6
- jedy9DJDsJ2A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,297,1589266800"; 
-   d="scan'208";a="277435003"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga003.jf.intel.com with ESMTP; 30 Jun 2020 07:01:09 -0700
-Received: from andy by smile with local (Exim 4.94)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1jqGow-00GrKd-Ty; Tue, 30 Jun 2020 17:01:10 +0300
-Date:   Tue, 30 Jun 2020 17:01:10 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Andy Shevchenko <andy@kernel.org>
-Subject: Re: [PATCH 03/10] gpio: gpio-ml-ioh: Fix missing ':' in 'struct
- ioh_gpio_reg_data
-Message-ID: <20200630140110.GT3703480@smile.fi.intel.com>
-References: <20200630133345.2232932-1-lee.jones@linaro.org>
- <20200630133345.2232932-4-lee.jones@linaro.org>
+        Tue, 30 Jun 2020 10:02:00 -0400
+Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:30580 "EHLO
+        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727796AbgF3OB7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 10:01:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1593525719; x=1625061719;
+  h=subject:to:cc:references:from:message-id:date:
+   mime-version:in-reply-to:content-transfer-encoding;
+  bh=5cqbwaFqSkabewkIE0PH8u9d3WrDYtEIAmtYZ+31MBM=;
+  b=sazdzRWzRkKVtQQkvtztDSRYf2zDcvGcbmkNS1pnHElhPUgGGOHCWxm3
+   97s0gtJCdXyxdtD9FOrN/5sI8r6JdqtRZ7Vr2nDkxJ5PUjqilR5wNxP+6
+   R8Bo+wLIIJYMzbHlNCPzKjzIsX6AiPpMnuy746SLLygzdAT8yKN+cBBDK
+   4=;
+IronPort-SDR: wcfL+7NxfY4PeRhWkaHXuaQ8Ft+JFHZsqJMKprw6Tld+8s54LXls7GQjlpHHqrFInsVpEnOuIV
+ Icon7/Pwa00w==
+X-IronPort-AV: E=Sophos;i="5.75,297,1589241600"; 
+   d="scan'208";a="48066445"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-55156cd4.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 30 Jun 2020 14:01:56 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-55156cd4.us-west-2.amazon.com (Postfix) with ESMTPS id B25A3A1A3F;
+        Tue, 30 Jun 2020 14:01:54 +0000 (UTC)
+Received: from EX13D08EUC004.ant.amazon.com (10.43.164.176) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 30 Jun 2020 14:01:54 +0000
+Received: from [10.28.84.91] (10.43.162.109) by EX13D08EUC004.ant.amazon.com
+ (10.43.164.176) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 30 Jun
+ 2020 14:01:50 +0000
+Subject: Re: [PATCH] nvme: validate cntlid's only for nvme >= 1.1.0
+To:     Christoph Hellwig <hch@lst.de>
+CC:     Amit Shah <aams@amazon.de>, <stable@vger.kernel.org>,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        <linux-nvme@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20200630122923.70282-1-mheyne@amazon.de>
+ <20200630133358.GA20602@lst.de> <20200630133609.GA20809@lst.de>
+From:   Maximilian Heyne <mheyne@amazon.de>
+Message-ID: <b3b621d9-b653-45c4-4164-f5a492cabd6a@amazon.de>
+Date:   Tue, 30 Jun 2020 16:01:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200630133345.2232932-4-lee.jones@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20200630133609.GA20809@lst.de>
+Content-Language: en-US
+X-Originating-IP: [10.43.162.109]
+X-ClientProxiedBy: EX13D44UWC001.ant.amazon.com (10.43.162.26) To
+ EX13D08EUC004.ant.amazon.com (10.43.164.176)
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 02:33:38PM +0100, Lee Jones wrote:
-> 'struct ioh_gpio_reg_data's 'ien_reg' property is missing a ':'
-> which confuses the kerneldoc tooling/parsers/validators.
-> 
-> Replacing it squashes the following W=1 warning:
-> 
->  drivers/gpio/gpio-ml-ioh.c:63: warning: Function parameter or member 'ien_reg' not described in 'ioh_gpio_reg_data'
-
-Applied, thanks!
-
-> 
-> Cc: Andy Shevchenko <andy@kernel.org>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  drivers/gpio/gpio-ml-ioh.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpio/gpio-ml-ioh.c b/drivers/gpio/gpio-ml-ioh.c
-> index 92b6e958cfed5..53d4abefa6ff2 100644
-> --- a/drivers/gpio/gpio-ml-ioh.c
-> +++ b/drivers/gpio/gpio-ml-ioh.c
-> @@ -44,7 +44,7 @@ struct ioh_regs {
->  
->  /**
->   * struct ioh_gpio_reg_data - The register store data.
-> - * @ien_reg	To store contents of interrupt enable register.
-> + * @ien_reg:	To store contents of interrupt enable register.
->   * @imask_reg:	To store contents of interrupt mask regist
->   * @po_reg:	To store contents of PO register.
->   * @pm_reg:	To store contents of PM register.
-> -- 
-> 2.25.1
-> 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+CgpPbiA2LzMwLzIwIDM6MzYgUE0sIENocmlzdG9waCBIZWxsd2lnIHdyb3RlOgo+IE9uIFR1ZSwg
+SnVuIDMwLCAyMDIwIGF0IDAzOjMzOjU4UE0gKzAyMDAsIENocmlzdG9waCBIZWxsd2lnIHdyb3Rl
+Ogo+PiBPbiBUdWUsIEp1biAzMCwgMjAyMCBhdCAxMjoyOToyM1BNICswMDAwLCBNYXhpbWlsaWFu
+IEhleW5lIHdyb3RlOgo+Pj4gQ29udHJvbGxlciBJRCdzIChjbnRsaWQpIGZvciBOVk1lIGRldmlj
+ZXMgd2VyZSBpbnRyb2R1Y2VkIGluIHZlcnNpb24KPj4+IDEuMS4wIG9mIHRoZSBzcGVjaWZpY2F0
+aW9uLiBDb250cm9sbGVycyB0aGF0IGZvbGxvdyB0aGUgb2xkZXIgMS4wLjAgc3BlYwo+Pj4gZG9u
+J3Qgc2V0IHRoaXMgZmllbGQgc28gaXQgZG9lc24ndCBtYWtlIHNlbnNlIHRvIHZhbGlkYXRlIGl0
+LiBPbiB0aGUKPj4+IGNvbnRyYXJ5LCB3aGVuIHVzaW5nIFNSLUlPViB0aGlzIGNoZWNrIGJyZWFr
+cyBWRnMgYXMgdGhleSBhcmUgYWxsIHBhcnQKPj4+IG9mIHRoZSBzYW1lIE5WTWUgc3Vic3lzdGVt
+Lgo+Pj4KPj4+IFNpZ25lZC1vZmYtYnk6IE1heGltaWxpYW4gSGV5bmUgPG1oZXluZUBhbWF6b24u
+ZGU+Cj4+PiBDYzogPHN0YWJsZUB2Z2VyLmtlcm5lbC5vcmc+ICMgNS40Kwo+Pgo+PiBUaGUgZmly
+c3QgaHVuayBsb29rcyBvaywgdGhlIHNlY29uZCBkb2Vzbid0IG1ha2Ugc2Vuc2UgYXMgZmFicmlj
+cwo+PiB3YXMgb25seSBhZGRlZCB3aXRoIE5WTWUgMS4yLjIuICBJIGNhbiBmaXggaXQgdXAgd2hl
+biBhcHBseWluZyBpZiB5b3UKPj4gYXJlIG9rIHdpdGggdGhhdC4KCkknZCBiZSB0b3RhbGx5IG9r
+IHdpdGggdGhhdC4KCj4+Cj4+IEJ1dCB5b3UgZ3V5cyByZWFsbHkgc2hvdWxkbid0IGJlIGRvaW5n
+IFNSLUlPViB3aXRoIDEuMCBjb250cm9sbGVycwo+PiBpbmRlcGVuZGVudCBvZiB0aGlzLi4KClNv
+IGZhciBpdCB3b3JrZWQuLi4KCj4gCj4gQW5kIGFjdHVhbGx5IC0gMS4wIGRpZCBub3QgaGF2ZSB0
+aGUgY29uY2VwdCBvZiBhIHN1YnN5c3RlbS4gIFNvIGhhdmluZwo+IGEgZHVwbGljYXRlIHNlcmlh
+bCBudW1iZXIgZm9yIGEgMS4wIGNvbnRyb2xsZXIgYWN0dWFsbHkgaXMgYSBwcmV0dHkKPiBuYXN0
+eSBidWcuICBDYW4geW91IHBvaW50IG1lIHRvIHRoaXMgYnJva2VuIGNvbnRyb2xsZXI/ICBEbyB5
+b3UgdGhpbmsKPiB0aGUgT0VNIGNvdWxkIGZpeCBpdCB1cCB0byByZXBvcnQgYSBwcm9wZXIgdmVy
+c2lvbiBudW1iZXIgYW5kIGNvbnRyb2xsZXIKPiBJRD8KPiAKCkkgbWVhbnQgdGhhdCB0aGUgVkYg
+TlZNZSBjb250cm9sbGVycyB3aWxsIGFsbCBsYW5kIGluIHRoZSBzYW1lIHN1YnN5c3RlbSBmcm9t
+CnRoZSBrZXJuZWwncyBwb2ludCBvZiB2aWV3LCBiZWNhdXNlLCBhcyB5b3Ugc2FpZCwgdGhlcmUg
+d2FzIG5vIGlkZWEgb2YgZGlmZmVyZW50CnN1YnN5c3RlbXMgaW4gdGhlIDEuMCBzcGVjLgpJdCdz
+IGFuIG9sZGVyIGluLWhvdXNlIGNvbnRyb2xsZXIuIFNlZW1zIHRvIHNldCB0aGUgc2FtZSBzZXJp
+YWwgbnVtYmVyIGZvciBhbGwKVkYncy4gU2hvdWxkIHRoZSBmaXJtd2FyZSBzZXQgdW5pcXVlIHNl
+cmlhbHMgZm9yIHRoZSBWRidzIGluc3RlYWQ/CgpUaGFua3MKTWF4CgoKCkFtYXpvbiBEZXZlbG9w
+bWVudCBDZW50ZXIgR2VybWFueSBHbWJICktyYXVzZW5zdHIuIDM4CjEwMTE3IEJlcmxpbgpHZXNj
+aGFlZnRzZnVlaHJ1bmc6IENocmlzdGlhbiBTY2hsYWVnZXIsIEpvbmF0aGFuIFdlaXNzCkVpbmdl
+dHJhZ2VuIGFtIEFtdHNnZXJpY2h0IENoYXJsb3R0ZW5idXJnIHVudGVyIEhSQiAxNDkxNzMgQgpT
+aXR6OiBCZXJsaW4KVXN0LUlEOiBERSAyODkgMjM3IDg3OQoKCg==
 
