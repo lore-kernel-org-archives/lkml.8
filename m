@@ -2,119 +2,152 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD117C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 22:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E5AEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 22:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9495120724
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 22:08:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7590D20724
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 22:08:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="ZJWhYNW8"
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="lPLR2ofg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726301AbgF3WIP (ORCPT
+        id S1726438AbgF3WIW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 18:08:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39978 "EHLO
+        Tue, 30 Jun 2020 18:08:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726074AbgF3WIO (ORCPT
+        with ESMTP id S1726074AbgF3WIT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 18:08:14 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53E8AC03E979
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 15:08:14 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id l17so20265901wmj.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 15:08:14 -0700 (PDT)
+        Tue, 30 Jun 2020 18:08:19 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64BA6C03E979
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 15:08:19 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id q7so11266063ljm.1
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 15:08:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=h7TDtlGCpE+9NIF4eS7MT43wTOS1FJJy0Om2MAQ0voA=;
-        b=ZJWhYNW80aP0UjLF2kYUMHvCiLGwyo9hylEay2xarposLoORgE2Ch0QRE90zfu7d4C
-         HcWcdBfALIPOnUa82U8dsC9oj0/Qs7AQ4dWDhzRlqFbMQLj9OshNPw3e431Bqr9DV47R
-         1dE/paxnDLFlc100OSaSsF8nYGx8mKkaMx3kM=
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=fpBRo4YYaRCPuKo9+pFNAbcc/b2rHaPYMI/vHtn3fbI=;
+        b=lPLR2ofgjg2De24AQXS19wK3lpxDUbnWl4gIjKZzTdlJi6mQnVR7flAfx+cnZrS0Nj
+         U2C9jXVP7qjdb4el2ChIUP8CpPwJP8f6lhFDmvBQYXVGXUEkO4pDK24+z8mopDA3mMvu
+         8ETC+MCGQFp1XZf0tPSxRroFLWSo4lZAVN4oD63EpKygx1o40jNoJEqBWk0QqmBuTvCN
+         SWHa9QKeOSTROvjiHIeDk3MP8awvfz94Jbpd4SFNpO3KglS3GhlPvEA112tP5h2kTKVI
+         xBu3iuM/T3IlcO/wjVjTyN/9rtqMQQwy0JPhJU3XbNtmS98fGr/8a5Scc7ZM2ZviWChn
+         fFOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=h7TDtlGCpE+9NIF4eS7MT43wTOS1FJJy0Om2MAQ0voA=;
-        b=Q8CE8h+6dUqhVomsAz5VKovVnAjJaXxgU9c/hm6tSowzp9dzyHTFiovYRBk3B/lDox
-         s4xf31HSN5pMmmukje93IXbqEV4RATjMScDddKcBr3ublgavHW+mCZ2/iriKhN6hBV1N
-         kQaKjXHaHPrpJikEQUNf3NKupvyTR1eXXexGWYiQCncacOMFao87F57BrNbXSaShuuy6
-         f9MjGSY/7svvRULanzlB80iPIEDZXjz6Tc3mNaNzT21AfgLYrqbfMYX6vJNROVJqtnJP
-         u800eLdVS9flTXKITvs3hAsLT5Z5vkNCWOANx+exhE2rE19ROEc+P6mN3sy1nGGgYUVo
-         TO8w==
-X-Gm-Message-State: AOAM5312iaZAq7cUuNBxE9YBzxD/spLW+XjsnD+mbMxy5w0DxVyiynFS
-        oGNiUX/Dx3lNvKPaI58Rph3iUfzQdBrvAdp8xAdweTKrkOauMqGPCwHld/1daBSjjXpzsPQpKXJ
-        fvMnD1xauWb6xBj71ArC3eD6cgW28ENIA6limtCnBkRnYwkq8km7FYalSwTIIZZiME+GazSO4UI
-        Oc
-X-Google-Smtp-Source: ABdhPJzjZhl1qhrkUOIUo/m25AEPI8WGU/fDVfZi71HnMPSFwWnuM9w7rn5qy3jXU3ZrOXB6iwh9xg==
-X-Received: by 2002:a1c:24c6:: with SMTP id k189mr24732162wmk.9.1593554892402;
-        Tue, 30 Jun 2020 15:08:12 -0700 (PDT)
-Received: from [10.230.182.181] ([192.19.224.250])
-        by smtp.gmail.com with ESMTPSA id e8sm5092967wrp.26.2020.06.30.15.08.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jun 2020 15:08:11 -0700 (PDT)
-Subject: Re: [PATCH] pinctrl: initialise nsp-mux earlier.
-To:     Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>,
-        rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, linus.walleij@linaro.org,
-        linux-gpio@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-References: <20200630212958.24030-1-mark.tomlinson@alliedtelesis.co.nz>
-From:   Ray Jui <ray.jui@broadcom.com>
-Message-ID: <a1dc8f14-187d-a804-45bb-d1fa25ff7b01@broadcom.com>
-Date:   Tue, 30 Jun 2020 15:08:05 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=fpBRo4YYaRCPuKo9+pFNAbcc/b2rHaPYMI/vHtn3fbI=;
+        b=QOX4HZYiglZ64in4WgZIjhOc5/GoaA4xCTG8JRMdhCWV5pPBhym4aDbsQy9PeQkQPF
+         wrp0UOiStf61mKDmrxYqZVQhqpi+RfrZZ9EoSZ6W54TWjb/+Bhx+Q5TXUxgPBKQndiDx
+         6Wq3K759zguUzbXQRJ+d5f9SVpDq6HE+ACWqsOCqxw/ueivtliYTN70vBNjQuWQLJbIj
+         Ar/YlPKRb9Fu7y5h/hHKiOlGCLQekDcVJI6HMDhd/qnGG4Kae6jAKKXLlsOLhedk33BI
+         dYhcf0QLSMmMj3pj3cPlpXmZcgXAtCZnURQFFk2znRzG+sJru4EqmICKzvSIYzaLbjMx
+         cj0g==
+X-Gm-Message-State: AOAM532Ubgmkwgw2FbhFujgqA1Ol+MwBVFcE7VAMMwbMvlXIJPwMhxu9
+        YEr9J0fiUcTN/+VX/fSGirnb6hKUEqE=
+X-Google-Smtp-Source: ABdhPJxIRWTSCtF7hLFn/dacR/yNlFJfL5TwxFKzzCY5yqyeKmV7nOiJ+wc2k9zo/wxV1bU0fIQCHQ==
+X-Received: by 2002:a2e:8718:: with SMTP id m24mr6235047lji.253.1593554897805;
+        Tue, 30 Jun 2020 15:08:17 -0700 (PDT)
+Received: from localhost (h-209-203.A463.priv.bahnhof.se. [155.4.209.203])
+        by smtp.gmail.com with ESMTPSA id y25sm1138733ljc.29.2020.06.30.15.08.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 15:08:17 -0700 (PDT)
+Date:   Wed, 1 Jul 2020 00:08:16 +0200
+From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>
+To:     Suresh Udipi <sudipi@jp.adit-jv.com>
+Cc:     mrodin@de.adit-jv.com, akiyama@nds-osk.co.jp,
+        efriedrich@de.adit-jv.com, erosca@de.adit-jv.com,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, mchehab@kernel.org,
+        michael@rodin.online, securitycheck@denso.co.jp
+Subject: Re: [PATCH v8 3/3] media: rcar-csi2: Optimize the selection PHTW
+ register
+Message-ID: <20200630220816.GL2365286@oden.dyn.berto.se>
+References: <20200617133705.GA88066@vmlxhi-121.adit-jv.com>
+ <1592476472-26235-1-git-send-email-sudipi@jp.adit-jv.com>
+ <1592476472-26235-3-git-send-email-sudipi@jp.adit-jv.com>
 MIME-Version: 1.0
-In-Reply-To: <20200630212958.24030-1-mark.tomlinson@alliedtelesis.co.nz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1592476472-26235-3-git-send-email-sudipi@jp.adit-jv.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+Hi Suresh,
 
-On 6/30/2020 2:29 PM, Mark Tomlinson wrote:
-> The GPIO specified in the DTS file references the pinctrl, which is
-> specified after the GPIO. If the GPIO is initialised before pinctrl,
+Thanks for your work.
 
-May I know which GPIO driver you are referring to on NSP? Both the iProc
-GPIO driver and the NSP GPIO driver are initialized at the level of
-'arch_initcall_sync', which is supposed to be after 'arch_initcall' used
-here in the pinmux driver
+On 2020-06-18 19:34:32 +0900, Suresh Udipi wrote:
+> PHTW register is selected based on default bit rate from Table[1].
+> for the bit rates less than or equal to 250. Currently first
+> value of default bit rate which is greater than or equal to
+> the caculated mbps is selected.This selection can be further
 
-> an error message for the -EPROBE_DEFER ends up in the kernel log. Even
-> though the probe will succeed when the driver is re-initialised, the
-> error can be scary to end users. To fix this, change the time the
+Missing space 'selected.This'.
 
-Scary to end users? I don't know about that. -EPROBE_DEFER was
-introduced exactly for this purpose. Perhaps users need to learn what
--EPROBE_DEFER errno means?
-
-> pinctrl is probed, so that it is always before the GPIO driver.
+> improved by selecting the default bit rate which is nearest to
+> the calculated value.
 > 
-> Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+> [1] specs r19uh0105ej0200-r-car-3rd-generation.pdf [Table 25.12]
+> 
+> Fixes: 769afd212b16 ("media: rcar-csi2: add Renesas R-Car MIPI CSI-2 receiver driver")
+
+Nit-pick: No need for a blank line between fixes and SoB.
+
+> 
+> Signed-off-by: Suresh Udipi <sudipi@jp.adit-jv.com>
+> Signed-off-by: Michael Rodin <mrodin@de.adit-jv.com>
 > ---
->  drivers/pinctrl/bcm/pinctrl-nsp-mux.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  drivers/media/platform/rcar-vin/rcar-csi2.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/pinctrl/bcm/pinctrl-nsp-mux.c b/drivers/pinctrl/bcm/pinctrl-nsp-mux.c
-> index f1d60a708815..7586949f83ec 100644
-> --- a/drivers/pinctrl/bcm/pinctrl-nsp-mux.c
-> +++ b/drivers/pinctrl/bcm/pinctrl-nsp-mux.c
-> @@ -639,4 +639,4 @@ static int __init nsp_pinmux_init(void)
+> diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c b/drivers/media/platform/rcar-vin/rcar-csi2.c
+> index 1184527..d7bf59f 100644
+> --- a/drivers/media/platform/rcar-vin/rcar-csi2.c
+> +++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
+> @@ -917,10 +917,18 @@ static int rcsi2_phtw_write_mbps(struct rcar_csi2 *priv, unsigned int mbps,
+>  				 const struct rcsi2_mbps_reg *values, u16 code)
 >  {
->  	return platform_driver_register(&nsp_pinmux_driver);
->  }
-> -arch_initcall(nsp_pinmux_init);
-> +postcore_initcall(nsp_pinmux_init);
+>  	const struct rcsi2_mbps_reg *value;
+> +	const struct rcsi2_mbps_reg *prev_value = NULL;
+>  
+> -	for (value = values; value->mbps; value++)
+> +	for (value = values; value->mbps; value++) {
+>  		if (value->mbps >= mbps)
+>  			break;
+> +		prev_value = value;
+> +	}
+> +
+> +	if (prev_value &&
+> +	    ((mbps - prev_value->mbps) <= (value->mbps - mbps)))
+> +		value = prev_value;
+> +
+
+One to many blank lines. With this and the commit message fixed,
+
+Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
+
+Nice work, thanks again for being persistent with this!
+
+>  
+>  	if (!value->mbps) {
+>  		dev_err(priv->dev, "Unsupported PHY speed (%u Mbps)", mbps);
+> -- 
+> 2.7.4
 > 
+
+-- 
+Regards,
+Niklas Söderlund
