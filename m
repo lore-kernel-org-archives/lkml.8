@@ -2,57 +2,72 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E40C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:26:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96EBAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4BF820723
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:26:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="euiEEt3U"
+	by mail.kernel.org (Postfix) with ESMTP id 7A5B4206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:26:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390300AbgF3R02 (ORCPT
+        id S2390308AbgF3R04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 13:26:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52744 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729892AbgF3R01 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 13:26:27 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F5AAC061755;
-        Tue, 30 Jun 2020 10:26:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=PTxWEstMBHu18X1ijaajKUQM5vwViAK5Whu2SCXSGc4=; b=euiEEt3UPUHl6p/MYdOwi4x4cC
-        fspyG1IF6UzfyiKaDMdNu8IZ+fxquRRrWov/i7f5ng3oQCmyFWJCVSsEMzKXjAB4Yjp2MUQ1HDaTX
-        BDonvWWco8wiRjJndN+uVBKadEYQ6G+7fuMrGy41v8p1fwNy2z16c0S83u/3si4dwZXRtqIqE4K0r
-        B6HhbFEzaOl4WtnvuAfUO/gkLPdNybIr9Qg69AYUJNS/N9RYjZvy4XWaqW5ghlWW0yyHM1Lel8gfS
-        FrRyBaV/cknODIY73QpEImRcm3jMbAntXwrhNUTNLlIGYqU6L0bIL9GaJYX2CLSqU+J7TOzgQYBcn
-        I3uRxfog==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jqK1X-0004Bo-4r; Tue, 30 Jun 2020 17:26:23 +0000
-Subject: Re: [RFC 1/1] fpga: dfl: RFC PCI config
-To:     trix@redhat.com, hao.wu@intel.com, mdf@kernel.org, corbet@lwn.net
-Cc:     linux-fpga@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200630171656.20151-1-trix@redhat.com>
- <20200630171656.20151-2-trix@redhat.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <67f7f2b8-3567-aadd-30d6-4cfbc0bc8ce5@infradead.org>
-Date:   Tue, 30 Jun 2020 10:26:19 -0700
+        Tue, 30 Jun 2020 13:26:56 -0400
+Received: from mga06.intel.com ([134.134.136.31]:3228 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729892AbgF3R0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 13:26:55 -0400
+IronPort-SDR: it0o/H8U+k9HIzdtbzjGHPq7CuOBBQnJbbGOJsM0UFoUt8d6IOzevnY9Iq+65Y9hMSbAqF6K+9
+ Cqu+kxMGxL+Q==
+X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="207832970"
+X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
+   d="scan'208";a="207832970"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 10:26:53 -0700
+IronPort-SDR: NAstuiCUVlQGHNxXkQ2FxTLqs6zfTlwZYqkktIFIgfcMxPut9azCbPgqywpOIDNKa0p+iXR9MY
+ NeR+sApAgfVg==
+X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
+   d="scan'208";a="281307447"
+Received: from dnoeunx-mobl.amr.corp.intel.com (HELO [10.254.77.113]) ([10.254.77.113])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 10:26:52 -0700
+Subject: Re: [PATCH] ASoC: Intel: bxt-da7219-max98357a: support MAX98390
+ speaker amp
+To:     "Lu, Brent" <brent.lu@intel.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+Cc:     "Rojewski, Cezary" <cezary.rojewski@intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        "M, Naveen" <naveen.m@intel.com>, "Zhi, Yong" <yong.zhi@intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Libin Yang <libin.yang@linux.intel.com>,
+        "Chiang, Mac" <mac.chiang@intel.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        "Song, Chao" <chao.song@intel.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Jason Yan <yanaijie@huawei.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1593498722-7074-1-git-send-email-brent.lu@intel.com>
+ <DM6PR11MB4316CA5F11462D11D1751C6C976F0@DM6PR11MB4316.namprd11.prod.outlook.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <e7bd9caf-1bf8-d57c-2b67-13a63d23ebf9@linux.intel.com>
+Date:   Tue, 30 Jun 2020 11:26:53 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200630171656.20151-2-trix@redhat.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <DM6PR11MB4316CA5F11462D11D1751C6C976F0@DM6PR11MB4316.namprd11.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -60,129 +75,113 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/30/20 10:16 AM, trix@redhat.com wrote:
-> From: Tom Rix <trix@redhat.com>
-> 
-> Create some top level configs the map to dfl pci cards.
-> 
-> Autoselect the parts of fpga that are needed to run these cards
-> as well as the other subsystem configs to the card's subdevices.
-> 
-> Signed-off-by: Tom Rix <trix@redhat.com>
-> ---
->  Documentation/fpga/dfl.rst | 33 +++++++++++++++++++++++++++++++++
->  drivers/fpga/Kconfig       | 28 ++++++++++++++++++++++++++++
->  2 files changed, 61 insertions(+)
-> 
-> diff --git a/Documentation/fpga/dfl.rst b/Documentation/fpga/dfl.rst
-> index d7648d7c7eee..3a872bc8e3d3 100644
-> --- a/Documentation/fpga/dfl.rst
-> +++ b/Documentation/fpga/dfl.rst
-> @@ -500,6 +500,39 @@ Developer only needs to provide a sub feature driver with matched feature id.
->  FME Partial Reconfiguration Sub Feature driver (see drivers/fpga/dfl-fme-pr.c)
->  could be a reference.
->  
-> +Kernel configuration
-> +====================
-> +
-> +While it is possible to manually setup a configuration to match your device,
-> +there are some top level configurations that collect configuations for
 
-                                                        configurations
+>> diff --git a/sound/soc/intel/boards/Kconfig
+>> b/sound/soc/intel/boards/Kconfig index 3d820e1..b3b863e 100644
+>> --- a/sound/soc/intel/boards/Kconfig
+>> +++ b/sound/soc/intel/boards/Kconfig
+>> @@ -291,9 +291,17 @@ config
+>> SND_SOC_INTEL_DA7219_MAX98357A_GENERIC
+>>   	select SND_SOC_DMIC
+>>   	select SND_SOC_HDAC_HDMI
+>>
+>> +config SND_SOC_INTEL_DA7219_MAX98390_GENERIC
+>> +	tristate
+>> +	select SND_SOC_DA7219
+>> +	select SND_SOC_MAX98390
+>> +	select SND_SOC_DMIC
+>> +	select SND_SOC_HDAC_HDMI
+>> +
+>>   config SND_SOC_INTEL_BXT_DA7219_MAX98357A_COMMON
+>>   	tristate
+>>   	select SND_SOC_INTEL_DA7219_MAX98357A_GENERIC
+>> +	select SND_SOC_INTEL_DA7219_MAX98390_GENERIC
 
-> +some reference pci cards.  Below descibes these configuration as well as
+this doesn't look too good, the only difference is the addition of 
+MAX98090 which should be added in SND_SOC_INTEL_DA7219_MAX98357A_GENERIC 
+above.
 
-                  PCI               describes
+>>
+>>   if SND_SOC_INTEL_APL
+>>
+>> @@ -309,6 +317,18 @@ config
+>> SND_SOC_INTEL_BXT_DA7219_MAX98357A_MACH
+>>   	   Say Y or m if you have such a device. This is a recommended option.
+>>   	   If unsure select "N".
+>>
+>> +config SND_SOC_INTEL_BXT_DA7219_MAX98390_MACH
+>> +	tristate "Broxton with DA7219 and MAX98390 in I2S Mode"
+>> +	depends on I2C && ACPI && GPIOLIB
+>> +	depends on MFD_INTEL_LPSS || COMPILE_TEST
+>> +	depends on SND_HDA_CODEC_HDMI
+>> +	select SND_SOC_INTEL_BXT_DA7219_MAX98357A_COMMON
+>> +	help
+>> +	   This adds support for ASoC machine driver for Broxton-P platforms
+>> +	   with DA7219 + MAX98390 I2S audio codec.
+>> +	   Say Y or m if you have such a device. This is a recommended option.
+>> +	   If unsure select "N".
+>> +
 
-> +what other kernel configs are needed for proper configuration.
-> +
-> +FPGA_DFL_PAC10
-> +Intel Arria 10 GX PCI card, PCI id 0X09C4
-> +Depends on
-> +  SPI_ALTERA
-> +  MFD_INTEL_M10_BMC
-> +  MFD_INTEL_M10_BMC_SECURE
-> +  SENSORS_INTEL_M10_BMC_HWMON
-> +
-> +FPGA_DFL_D5005
-> +Intel Stratix 10, D5005 PCI card, PCI id 0X0B2B
-> +Depends on
-> +  SPI_ALTERA
-> +  MFD_INTEL_M10_BMC
-> +  MFD_INTEL_M10_BMC_SECURE
-> +  SENSORS_INTEL_M10_BMC_HWMON
-> +  INTEL_S10_PHY
-> +
-> +FPGA_DFL_N3000
-> +Intel Network Accelerator, N3000 PCI card, PCI id 0X0B30
-> +Depends on
-> +  SPI_ALTERA
-> +  MFD_INTEL_M10_BMC
-> +  MFD_INTEL_M10_BMC_SECURE
-> +  SENSORS_INTEL_M10_BMC_HWMON
-> +  INTEL_LL_10G_MAC
->  
->  Open discussion
->  ===============
-> diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
-> index 9d53bd9094e2..b657de20bc98 100644
-> --- a/drivers/fpga/Kconfig
-> +++ b/drivers/fpga/Kconfig
-> @@ -138,6 +138,34 @@ config OF_FPGA_REGION
->  	  Support for loading FPGA images by applying a Device Tree
->  	  overlay.
->  
-> +config FPGA_DFL_PAC10
-> +	tristate "Intel Arria 10 GX PCI card"
-> +	select SPI_ALTERA
+i don't think you need a different top-level config, just extend the 
+existing one to say MAX98357A or MAX98390.
 
-above kconfig symbol:
-	depends on SPI_MASTER
+[...]
 
-> +	select MFD_INTEL_M10_BMC
-> +	select MFD_INTEL_M10_BMC_SECURE
-> +	select SENSORS_INTEL_M10_BMC_HWMON
+>>   	if (soc_intel_is_glk())
+>>   		snd_soc_dapm_add_routes(&card->dapm, gemini_map,
+>>   					ARRAY_SIZE(gemini_map));
+>> @@ -631,17 +719,17 @@ static int bxt_card_late_probe(struct snd_soc_card
+>> *card)
+>>   		component = pcm->codec_dai->component;
+>>   		snprintf(jack_name, sizeof(jack_name),
+>>   			"HDMI/DP, pcm=%d Jack", pcm->device);
+>> -		err = snd_soc_card_jack_new(card, jack_name,
+>> +		ret = snd_soc_card_jack_new(card, jack_name,
+>>   					SND_JACK_AVOUT,
+>> &broxton_hdmi[i],
+>>   					NULL, 0);
+>>
+>> -		if (err)
+>> -			return err;
+>> +		if (ret)
+>> +			return ret;
+>>
+>> -		err = hdac_hdmi_jack_init(pcm->codec_dai, pcm->device,
+>> +		ret = hdac_hdmi_jack_init(pcm->codec_dai, pcm->device,
+>>   						&broxton_hdmi[i]);
+>> -		if (err < 0)
+>> -			return err;
+>> +		if (ret < 0)
+>> +			return ret;
 
-I haven't tested this, but in general it's not safe to select something like
-SENSORS* or HWMON* unless you first check that CONFIG_HWMON is enabled.
-Otherwise this would usually cause kconfig warning(s).
-
-But don't add things like
-	select HWMON
-	select SPI
-	select SPI_MASTER
-
-because we don't enable subsystems (like HWMON or SPI) just inside one
-driver's kconfig entry.
-The driver(s) should instead depend on HWMON, SPI, SPI_MASTER etc.
-
-> +	select FPGA_DFL
-> +	select FPGA_DFL_FME
-> +	select FPGA_DFL_FME_MGR
-> +	select FPGA_DFL_FME_BRIDGE
-> +	select FPGA_DFL_FME_REGION
-> +	select FPGA_DFL_AFU
-> +	select FPGA_DFL_SPI_ALTERA
-> +	select FPGA_DFL_PCI
-> +	select IFPGA_SEC_MGR
-> +
-> +config FPGA_DFL_D5005
-> +	tristate "Intel Stratix 10, D5005 PCI card"
-> +	select FPGA_DFL_PAC10
-> +	select INTEL_S10_PHY
-> +	select FPGA_DFl_HSSI
-> +
-> +config FPGA_DFL_N3000
-> +	tristate "Intel Network Accelerator, N3000 PCI card"
-> +	select FPGA_DFL_PAC10
-> +	select INTEL_LL_10G_MAC
-> +	select FPGA_DFL_N3000_NIOS
-> +
->  config FPGA_DFL
->  	tristate "FPGA Device Feature List (DFL) support"
->  	select FPGA_BRIDGE
-> 
+these look like unrelated changes?
 
 
--- 
-~Randy
+>> --- a/sound/soc/intel/common/soc-acpi-intel-cml-match.c
+>> +++ b/sound/soc/intel/common/soc-acpi-intel-cml-match.c
+>> @@ -15,8 +15,8 @@ static struct snd_soc_acpi_codecs rt1011_spk_codecs =
+>> {  };
+>>
+>>   static struct snd_soc_acpi_codecs max98357a_spk_codecs = {
+>> -	.num_codecs = 1,
+>> -	.codecs = {"MX98357A"}
+>> +	.num_codecs = 2,
+>> +	.codecs = {"MX98357A", "MX98390"}
+
+That looks just wrong?
+
+It would be really odd to list two devices as prerequisites for loading 
+a driver, when in practice they are mutually exclusive? Something's 
+broken in coreboot if both are present.
+
+see below what we used for JSL:
+
+see static struct snd_soc_acpi_codecs jsl_7219_98373_codecs = {
+	.num_codecs = 1,
+	.codecs = {"MX98373"}
+};
+
+static struct snd_soc_acpi_codecs mx98360a_spk = {
+	.num_codecs = 1,
+	.codecs = {"MX98360A"}
+};
