@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE95C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC23C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:45:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 46AB2206BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:45:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6B97206BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:45:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ba9A/7hH";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OBX1YqwE"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="T/LmeQNK";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hObExUIP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729883AbgF3Fpl (ORCPT
+        id S1729904AbgF3Fpr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 01:45:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57490 "EHLO
+        Tue, 30 Jun 2020 01:45:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729852AbgF3Fpj (ORCPT
+        with ESMTP id S1729852AbgF3Fpo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 01:45:39 -0400
+        Tue, 30 Jun 2020 01:45:44 -0400
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3401AC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 22:45:39 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A9BAC061755;
+        Mon, 29 Jun 2020 22:45:44 -0700 (PDT)
 From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1593495936;
+        s=2020; t=1593495942;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=NZtLnEh/8Ggo1oSNGaCwKiFVpXV3Gu22apdwju3+xHU=;
-        b=Ba9A/7hHQxrkLXf0rvCy47Zkw+9B2hPA5CmF9GYaxFpYfUYK37bKRc8ldMzYgGxMPYmjWC
-        pRLhmR/+2tkRSPl5iSTACEMOizob6b5+ztZ8mhRxCe9yxXVphmuGcRwxjbWFp/u60qZgs4
-        CNPr3+LkYu7lWC/d0OgqkgPJTnJitx8QtOl4fLbUPWF5lRkmJa2ShoYYqUH2K5mVwNTGV5
-        Ib1soCjGt57cMLr5xhAsghUVLoa0IBHDOuultpdgFtsNhtr1fqZRxfC2fgfaCQFLFHbutP
-        nEBENJIUxWRip4zj8tK+VbAYaOfthQ7KRJkgU+PZaXvpXes7I2fn7FCM4IRBfA==
+        bh=clYTdArRdnx8mUCi/6xsqdXNjJnzuyuPzhNso4mGT9g=;
+        b=T/LmeQNKMc+/l/6/31my3pqQXQysJxyE2tCwhllHN8ZQ/oK8edpq5Q/9c3MNnZKzgN1vkZ
+        LNXCbhNQGiFWc+nFmdU5VxA81dryKs1inTA4p65ZnSZ6Ia85XmxS+D5JU1PxTwm+dx0wig
+        G3Lyv/AxLLySQ7s9OhVnNzoeTSAQEKM2EUG9Tmayxc7kPh66ctHdWtKVHmH2S8NyV+1dNU
+        n9DbDtcHxlk88lptGBbWldfB4V/g7Er05mu2TVk4hc1YDeQmBJWLjpwxYygxWT5rMkG9hS
+        rSahmj1jUS+Gn9FHh9PzAxDZJ93XPuWytsW1A9LLYRhxL+3HAiB5HWXRlNjwqA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1593495936;
+        s=2020e; t=1593495943;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=NZtLnEh/8Ggo1oSNGaCwKiFVpXV3Gu22apdwju3+xHU=;
-        b=OBX1YqwEJi7iGB0pX3HuWQwxwNqWtIyXA/f7x0tg57fieF+pY6ixJ3isrm4hKlWw1lKTHi
-        VL3zGoM/rJLTGLDg==
+        bh=clYTdArRdnx8mUCi/6xsqdXNjJnzuyuPzhNso4mGT9g=;
+        b=hObExUIPTGSjTrb4AjdvBqED3ALsrxTx2TXWv0SR6xcUJBZbXRRxRYjsPATEn7S3G2Fy+7
+        tVPAHbMIpvT3RYBg==
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
@@ -57,14 +57,16 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Steven Rostedt <rostedt@goodmis.org>,
         LKML <linux-kernel@vger.kernel.org>,
         "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH v3 09/20] sched: tasks: Use sequence counter with associated spinlock
-Date:   Tue, 30 Jun 2020 07:44:41 +0200
-Message-Id: <20200630054452.3675847-10-a.darwish@linutronix.de>
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org
+Subject: [PATCH v3 10/20] netfilter: conntrack: Use sequence counter with associated spinlock
+Date:   Tue, 30 Jun 2020 07:44:42 +0200
+Message-Id: <20200630054452.3675847-11-a.darwish@linutronix.de>
 In-Reply-To: <20200630054452.3675847-1-a.darwish@linutronix.de>
 References: <20200519214547.352050-1-a.darwish@linutronix.de>
  <20200630054452.3675847-1-a.darwish@linutronix.de>
@@ -90,51 +92,46 @@ neither storage size nor runtime overhead.
 
 Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
 ---
- include/linux/sched.h | 2 +-
- init/init_task.c      | 3 ++-
- kernel/fork.c         | 2 +-
- 3 files changed, 4 insertions(+), 3 deletions(-)
+ include/net/netfilter/nf_conntrack.h | 2 +-
+ net/netfilter/nf_conntrack_core.c    | 5 +++--
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 03403ca6e44e..1b4e6b8dc523 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1055,7 +1055,7 @@ struct task_struct {
- 	/* Protected by ->alloc_lock: */
- 	nodemask_t			mems_allowed;
- 	/* Seqence number to catch updates: */
--	seqcount_t			mems_allowed_seq;
-+	seqcount_spinlock_t		mems_allowed_seq;
- 	int				cpuset_mem_spread_rotor;
- 	int				cpuset_slab_spread_rotor;
- #endif
-diff --git a/init/init_task.c b/init/init_task.c
-index 15089d15010a..94fe3ba1bb60 100644
---- a/init/init_task.c
-+++ b/init/init_task.c
-@@ -154,7 +154,8 @@ struct task_struct init_task
- 	.trc_holdout_list = LIST_HEAD_INIT(init_task.trc_holdout_list),
- #endif
- #ifdef CONFIG_CPUSETS
--	.mems_allowed_seq = SEQCNT_ZERO(init_task.mems_allowed_seq),
-+	.mems_allowed_seq = SEQCNT_SPINLOCK_ZERO(init_task.mems_allowed_seq,
-+						 &init_task.alloc_lock),
- #endif
- #ifdef CONFIG_RT_MUTEXES
- 	.pi_waiters	= RB_ROOT_CACHED,
-diff --git a/kernel/fork.c b/kernel/fork.c
-index f44d70307210..eb260c6bdb8b 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -2032,7 +2032,7 @@ static __latent_entropy struct task_struct *copy_process(
- #ifdef CONFIG_CPUSETS
- 	p->cpuset_mem_spread_rotor = NUMA_NO_NODE;
- 	p->cpuset_slab_spread_rotor = NUMA_NO_NODE;
--	seqcount_init(&p->mems_allowed_seq);
-+	seqcount_spinlock_init(&p->mems_allowed_seq, &p->alloc_lock);
- #endif
- #ifdef CONFIG_TRACE_IRQFLAGS
- 	p->irq_events = 0;
+diff --git a/include/net/netfilter/nf_conntrack.h b/include/net/netfilter/nf_conntrack.h
+index 90690e37a56f..ea4e2010b246 100644
+--- a/include/net/netfilter/nf_conntrack.h
++++ b/include/net/netfilter/nf_conntrack.h
+@@ -286,7 +286,7 @@ int nf_conntrack_hash_resize(unsigned int hashsize);
+ 
+ extern struct hlist_nulls_head *nf_conntrack_hash;
+ extern unsigned int nf_conntrack_htable_size;
+-extern seqcount_t nf_conntrack_generation;
++extern seqcount_spinlock_t nf_conntrack_generation;
+ extern unsigned int nf_conntrack_max;
+ 
+ /* must be called with rcu read lock held */
+diff --git a/net/netfilter/nf_conntrack_core.c b/net/netfilter/nf_conntrack_core.c
+index 79cd9dde457b..b8c54d390f93 100644
+--- a/net/netfilter/nf_conntrack_core.c
++++ b/net/netfilter/nf_conntrack_core.c
+@@ -180,7 +180,7 @@ EXPORT_SYMBOL_GPL(nf_conntrack_htable_size);
+ 
+ unsigned int nf_conntrack_max __read_mostly;
+ EXPORT_SYMBOL_GPL(nf_conntrack_max);
+-seqcount_t nf_conntrack_generation __read_mostly;
++seqcount_spinlock_t nf_conntrack_generation __read_mostly;
+ static unsigned int nf_conntrack_hash_rnd __read_mostly;
+ 
+ static u32 hash_conntrack_raw(const struct nf_conntrack_tuple *tuple,
+@@ -2598,7 +2598,8 @@ int nf_conntrack_init_start(void)
+ 	/* struct nf_ct_ext uses u8 to store offsets/size */
+ 	BUILD_BUG_ON(total_extension_size() > 255u);
+ 
+-	seqcount_init(&nf_conntrack_generation);
++	seqcount_spinlock_init(&nf_conntrack_generation,
++			       &nf_conntrack_locks_all_lock);
+ 
+ 	for (i = 0; i < CONNTRACK_LOCKS; i++)
+ 		spin_lock_init(&nf_conntrack_locks[i]);
 -- 
 2.20.1
 
