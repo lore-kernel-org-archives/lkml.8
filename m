@@ -4,64 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF8FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 04:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA56C433E6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 04:50:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E3ABC206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 04:50:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BBE1206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 04:50:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qKfJwCm7"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Gm5cJgnN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729514AbgF3EuO (ORCPT
+        id S1729534AbgF3EuX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 00:50:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48896 "EHLO
+        Tue, 30 Jun 2020 00:50:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729497AbgF3EuC (ORCPT
+        with ESMTP id S1729365AbgF3Etw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 00:50:02 -0400
-Received: from mail-pj1-x1049.google.com (mail-pj1-x1049.google.com [IPv6:2607:f8b0:4864:20::1049])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 337F8C03E97A
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 21:50:02 -0700 (PDT)
-Received: by mail-pj1-x1049.google.com with SMTP id cl23so4880817pjb.7
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 21:50:02 -0700 (PDT)
+        Tue, 30 Jun 2020 00:49:52 -0400
+Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30E6AC03E979
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 21:49:52 -0700 (PDT)
+Received: by mail-yb1-xb49.google.com with SMTP id c17so21194634ybf.7
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 21:49:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=4vDncP2teZqEXBfb800/aEh0NO8oHsdmcXXXRRGWulY=;
-        b=qKfJwCm7AT0BlfktAUmwXkHFpGx7Oh79bjH+pxC9SFGuzzGtOsIQxWs5Yj5phY/cqR
-         45gYinm4T35G4tjqFwkV9aSr7wWQxsY1P4wUDPVSLq7L144QzVPw9Je6ohlEDpSLC9nm
-         Uqd6Gb5/YhRsTodxBhPYntMsn2Gfo/0bCSgfjk2MiN5Cc3Bivrb2skYwEKddwTq9qSSj
-         31cbZbHQz15k9yatl1muDzJiSkFI+87X7Xa5iBSnZami9myyuYwEW/ifoFJAh5sMur4H
-         zysOT+Xrvm66HaayFqV0f6nbFP2WrzQBAb4HBOufuAhGFqxcrqI+6IeKEiNqG8A/jaLj
-         KggQ==
+        bh=p5jMb0OYXUjKEO09icbDu9vKB8mUnjKS7ldJrGg6Yyk=;
+        b=Gm5cJgnNdA4j8KoD0JqCp92eh1dOmKyWbRuaafAkp7j4Tiyi/4VrofOQLz3gqmH/1f
+         vlpldBL1WmCe+59Bk7L3+Bu45rxpdaClWinZYlTrS4AghzmPY4sSK8SDAvo4ZHE4nVF8
+         dD1LOwsfjMTY6dYL4PT5+7wRAPaZZTfGFryosjGQCzjr3GjbXbC0q8rP7WwUrkKK+129
+         6iRr7B/3o9dNgxc+2YqyrOnydhVzjrhZ3STLNNjon1ze+cF/JTDek3hPTlrAhpXvbTf/
+         RbztkalEnybqiFRfvvrtExkKkmnoIKChXrimpwJ7RbEd0qnfPPsRFLzGD/3RV9k79OtQ
+         wxvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=4vDncP2teZqEXBfb800/aEh0NO8oHsdmcXXXRRGWulY=;
-        b=beXHrhf3psz4kE1gt/nXBADAHI7e0mkO2soVhuh5oXZMKoOzBgcmsU/lzKXhADBBGP
-         eeMHwZUp1ogjTfI8w6jeRXn6SqnezRGIpuaogHiuXEUcKMm+HDJj+TZu8qEodd0wUmlX
-         nS3B/nyuSa3pAomYWoQbAsHZDiaSP6PEFDom6WRfVg7dqm2Vz2wQ9K5OTHxT2vreWd4X
-         X4FcmgDwEPA+9ODRdKZ7nFlhhmiybE5W9mpn9uCx91W5UPEXHBQ1hvFu3ge5QqTxms2o
-         HppyBwFGQsyFC+duh4ZXoLDFnbwibGtj3U/2P4c2/xXhYpd+IH/zFh86oouQD0SGXafQ
-         dgZw==
-X-Gm-Message-State: AOAM532HftOhQYIgMExX5LgvD5rYhk2bFtuJlYUlovORyAX4vZDJ8ztR
-        eyDk5MlUHepI+qhkvcEZyzg+4cbrcNdD
-X-Google-Smtp-Source: ABdhPJy7/9qcpqbednFkmBX9y9QX6DThdAm5Y+t91G8xTDRUtBBKWkL0VbqPTiirQl0bhQoYHnqP79Ft+Iel
-X-Received: by 2002:a17:90a:304:: with SMTP id 4mr20033768pje.219.1593492601508;
- Mon, 29 Jun 2020 21:50:01 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 21:49:43 -0700
+        bh=p5jMb0OYXUjKEO09icbDu9vKB8mUnjKS7ldJrGg6Yyk=;
+        b=KxJFgxvWBhjF27OkVlhm/QKBc7awwJgpy1EiHA/C1oTUnrZaGXvPTRVGiIgKdSiAnD
+         rDnSBElQ8AP6SuiYE3zwT23unhsiTD+7O2rOZeQ4pqjDqGARdBb4V7WfSi1zNGel74Ax
+         sPvlg71AqKZrUWINBGIyffpfhCSG+PTsZucwfDpd8omTtiu2gxWalHFcxhzrXri9lPTT
+         z4b9UARLl4vgpVaSOwnieOwQKvj8e4pY3qN/cVlVOVYWChd+VsYCdXpHRsGbisya4Akh
+         m4VZsCfKI2aLwgID3N5rtmsht4nwzIZ7F98ixwImTM20+Kw3OvDhVl4/784tkzOYwrp0
+         IwQg==
+X-Gm-Message-State: AOAM531sPArXWiRScP0M9gTKnbVonyFY7D/9SexuNnw1r4T5nJGdfF+f
+        Kwdy8O4+A+7zqIIx/9jT6RdhTn6pjosJ
+X-Google-Smtp-Source: ABdhPJzQYV+XpQGsCmrvbSL0LKYgWoNAocwQcR3CYTfyKumjchyuds/0xjCWulL4XB9xL8VDCCUqLfTZnHHz
+X-Received: by 2002:a25:dfd2:: with SMTP id w201mr25555433ybg.230.1593492591375;
+ Mon, 29 Jun 2020 21:49:51 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 21:49:38 -0700
 In-Reply-To: <20200630044943.3425049-1-rajatja@google.com>
-Message-Id: <20200630044943.3425049-8-rajatja@google.com>
+Message-Id: <20200630044943.3425049-3-rajatja@google.com>
 Mime-Version: 1.0
 References: <20200630044943.3425049-1-rajatja@google.com>
 X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-Subject: [PATCH v2 7/7] PCI: Add parameter to disable attaching external devices
+Subject: [PATCH v2 2/7] PCI: Set "untrusted" flag for truly external devices only
 From:   Rajat Jain <rajatja@google.com>
 To:     David Woodhouse <dwmw2@infradead.org>,
         Lu Baolu <baolu.lu@linux.intel.com>,
@@ -100,93 +101,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce a PCI parameter that disables the automatic attachment of
-external devices to their drivers.
+The "ExternalFacing" devices (root ports) are still internal devices that
+sit on the internal system fabric and thus trusted. Currently they were
+being marked untrusted.
 
-This is needed to allow an admin to control which drivers he wants to
-allow on external ports. For more context, see threads at:
-https://lore.kernel.org/linux-pci/20200609210400.GA1461839@bjorn-Precision-5520/
-https://lore.kernel.org/linux-pci/CACK8Z6H-DZQYBMqtU5_H5TTwwn35Q7Yysm9a7Wj0twfQP8QBzA@mail.gmail.com/
-
-drivers_autoprobe can only be disabled after userspace comes up. So
-any external devices that were plugged in before boot may still bind
-to drivers before userspace gets a chance to clear drivers_autoprobe.
-Another problem is that even with drivers_autoprobe=0, the hot-added
-PCI devices are bound to drivers because PCI explicitly calls
-device_attach() asking driver core to find and attach a driver. This
-patch helps with both of these problems.
+This patch uses the platform flag to identify the external facing devices
+and then use it to mark any downstream devices as "untrusted". The
+external-facing devices themselves are left as "trusted". This was
+discussed here: https://lkml.org/lkml/2020/6/10/1049
 
 Signed-off-by: Rajat Jain <rajatja@google.com>
 ---
-v2: Use the newly introduced dev_is_external() from device core
-    commit log elaborated
+v2: cosmetic changes in commit log
 
- drivers/pci/bus.c | 11 ++++++++---
- drivers/pci/pci.c |  9 +++++++++
- drivers/pci/pci.h |  1 +
- 3 files changed, 18 insertions(+), 3 deletions(-)
+ drivers/iommu/intel/iommu.c |  2 +-
+ drivers/pci/of.c            |  2 +-
+ drivers/pci/pci-acpi.c      | 13 +++++++------
+ drivers/pci/probe.c         |  2 +-
+ include/linux/pci.h         |  8 ++++++++
+ 5 files changed, 18 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
-index 3cef835b375fd..c11725bccffb0 100644
---- a/drivers/pci/bus.c
-+++ b/drivers/pci/bus.c
-@@ -321,9 +321,14 @@ void pci_bus_add_device(struct pci_dev *dev)
- 	pci_bridge_d3_update(dev);
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index d759e7234e982..1ccb224f82496 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -4743,7 +4743,7 @@ static inline bool has_untrusted_dev(void)
+ 	struct pci_dev *pdev = NULL;
  
- 	dev->match_driver = true;
--	retval = device_attach(&dev->dev);
--	if (retval < 0 && retval != -EPROBE_DEFER)
--		pci_warn(dev, "device attach failed (%d)\n", retval);
-+
-+	if (pci_dont_attach_external_devs && dev_is_external(&dev->dev)) {
-+		pci_info(dev, "not attaching external device\n");
-+	} else {
-+		retval = device_attach(&dev->dev);
-+		if (retval < 0 && retval != -EPROBE_DEFER)
-+			pci_warn(dev, "device attach failed (%d)\n", retval);
-+	}
+ 	for_each_pci_dev(pdev)
+-		if (pdev->untrusted)
++		if (pdev->untrusted || pdev->external_facing)
+ 			return true;
  
- 	pci_dev_assign_added(dev, true);
+ 	return false;
+diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+index 27839cd2459f6..22727fc9558df 100644
+--- a/drivers/pci/of.c
++++ b/drivers/pci/of.c
+@@ -42,7 +42,7 @@ void pci_set_bus_of_node(struct pci_bus *bus)
+ 	} else {
+ 		node = of_node_get(bus->self->dev.of_node);
+ 		if (node && of_property_read_bool(node, "external-facing"))
+-			bus->self->untrusted = true;
++			bus->self->external_facing = true;
+ 	}
+ 
+ 	bus->dev.of_node = node;
+diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
+index 7224b1e5f2a83..492c07805caf8 100644
+--- a/drivers/pci/pci-acpi.c
++++ b/drivers/pci/pci-acpi.c
+@@ -1213,22 +1213,23 @@ static void pci_acpi_optimize_delay(struct pci_dev *pdev,
+ 	ACPI_FREE(obj);
  }
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 35f25ac39167b..3ebcfa8b33178 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -128,6 +128,13 @@ static bool pcie_ats_disabled;
- /* If set, the PCI config space of each device is printed during boot. */
- bool pci_early_dump;
  
-+/*
-+ * If set, the devices behind external-facing bridges (as marked by firmware)
-+ * shall not be attached automatically. Userspace will need to attach them
-+ * manually: echo <pci device>  > /sys/bus/pci/drivers/<driver>/bind
-+ */
-+bool pci_dont_attach_external_devs;
-+
- bool pci_ats_disabled(void)
+-static void pci_acpi_set_untrusted(struct pci_dev *dev)
++static void pci_acpi_set_external_facing(struct pci_dev *dev)
  {
- 	return pcie_ats_disabled;
-@@ -6539,6 +6546,8 @@ static int __init pci_setup(char *str)
- 				pci_add_flags(PCI_SCAN_ALL_PCIE_DEVS);
- 			} else if (!strncmp(str, "disable_acs_redir=", 18)) {
- 				disable_acs_redir_param = str + 18;
-+			} else if (!strcmp(str, "dont_attach_external_devs")) {
-+				pci_dont_attach_external_devs = true;
- 			} else {
- 				pr_err("PCI: Unknown option `%s'\n", str);
- 			}
-diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-index 12fb79fbe29d3..875fecb9b2612 100644
---- a/drivers/pci/pci.h
-+++ b/drivers/pci/pci.h
-@@ -13,6 +13,7 @@
+ 	u8 val;
  
- extern const unsigned char pcie_link_speed[];
- extern bool pci_early_dump;
-+extern bool pci_dont_attach_external_devs;
+-	if (pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
++	if (pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT &&
++	    pci_pcie_type(dev) != PCI_EXP_TYPE_DOWNSTREAM)
+ 		return;
+ 	if (device_property_read_u8(&dev->dev, "ExternalFacingPort", &val))
+ 		return;
  
- bool pcie_cap_has_lnkctl(const struct pci_dev *dev);
- bool pcie_cap_has_rtctl(const struct pci_dev *dev);
+ 	/*
+-	 * These root ports expose PCIe (including DMA) outside of the
+-	 * system so make sure we treat them and everything behind as
++	 * These root/down ports expose PCIe (including DMA) outside of the
++	 * system so make sure we treat everything behind them as
+ 	 * untrusted.
+ 	 */
+ 	if (val)
+-		dev->untrusted = 1;
++		dev->external_facing = 1;
+ }
+ 
+ static void pci_acpi_setup(struct device *dev)
+@@ -1240,7 +1241,7 @@ static void pci_acpi_setup(struct device *dev)
+ 		return;
+ 
+ 	pci_acpi_optimize_delay(pci_dev, adev->handle);
+-	pci_acpi_set_untrusted(pci_dev);
++	pci_acpi_set_external_facing(pci_dev);
+ 	pci_acpi_add_edr_notifier(pci_dev);
+ 
+ 	pci_acpi_add_pm_notifier(adev, pci_dev);
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 6d87066a5ecc5..8c40c00413e74 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1552,7 +1552,7 @@ static void set_pcie_untrusted(struct pci_dev *dev)
+ 	 * untrusted as well.
+ 	 */
+ 	parent = pci_upstream_bridge(dev);
+-	if (parent && parent->untrusted)
++	if (parent && (parent->untrusted || parent->external_facing))
+ 		dev->untrusted = true;
+ }
+ 
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index a26be5332bba6..fe1bc603fda40 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -432,6 +432,14 @@ struct pci_dev {
+ 	 * mappings to make sure they cannot access arbitrary memory.
+ 	 */
+ 	unsigned int	untrusted:1;
++	/*
++	 * Devices are marked as external-facing using info from platform
++	 * (ACPI / devicetree). An external-facing device is still an internal
++	 * trusted device, but it faces external untrusted devices. Thus any
++	 * devices enumerated downstream an external-facing device is marked
++	 * as untrusted.
++	 */
++	unsigned int	external_facing:1;
+ 	unsigned int	broken_intx_masking:1;	/* INTx masking can't be used */
+ 	unsigned int	io_window_1k:1;		/* Intel bridge 1K I/O windows */
+ 	unsigned int	irq_managed:1;
 -- 
 2.27.0.212.ge8ba1cc988-goog
 
