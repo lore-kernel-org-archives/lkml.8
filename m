@@ -7,71 +7,71 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D500C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53EB0C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:51:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3BFAD206BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:51:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B484206BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:51:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VkzyBtZb"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l0ql2sn5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388489AbgF3Nvu (ORCPT
+        id S2388499AbgF3Nvy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 09:51:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47696 "EHLO
+        Tue, 30 Jun 2020 09:51:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388407AbgF3Nv0 (ORCPT
+        with ESMTP id S2388417AbgF3Nva (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 09:51:26 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 080FAC03E97A
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:51:26 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id o8so18897529wmh.4
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:51:25 -0700 (PDT)
+        Tue, 30 Jun 2020 09:51:30 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B386C08C5DB
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:51:29 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id r12so20215674wrj.13
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:51:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ekub7s2tFsF3z7X9QKVOCDCBJvabEEOsb/caCUw91kQ=;
-        b=VkzyBtZbCjJJvhPGehZwLMGCthflX3/XiLaEsXmprAcJVpo80+gSoG8rwFsE+weyh4
-         ktuEsHJwHeeliHVIBqZbZHfxKTIhxooQjcRWF/IRKDYzwE0+BxanVd9NYSfhyIWiG53s
-         tCxie/X8WcL0U9Vj/0ZNtTRsbOsvDazA5kboXlz+kHELQbXY/ZUAToaYVXd5H8spQ0Ou
-         rwE4U1QYKcOnU7H3cbJIWJX1fKQ2wKeHi3V0r0eQQ4rkLM4VTLOYwWKNhDeT+4tOUam6
-         RIuizvWzQw2rQii5W+le77E6a2DZZCX6R8CQv+5LcI3fDCgBy3EW/p2Aahnk/Ui+KABm
-         1nyA==
+        bh=3Rr7wa1veduLhh9ZAr39E4g8k4FtFNV6OceNUbS0RKk=;
+        b=l0ql2sn5FiL9hzSkQ+yI7cAzJkka4RsC7ibUvZkRg88BN0zPoJVj2CCmPhRVJEhMTZ
+         ZvqLmbJcCy3t1cMqYZjp5vBNBLBLZAL6f+qmWr/k4xb5m2BwaOqi3jrX9vQ8JIBumN60
+         Sj/oB1X6FT9XUFRqZGk3DUe003hWauUxsyLPQqaAx+R3E8GWf28kU5e8iOq2QuiUeNu1
+         N35lUJPUUNmq+fYpMdZsUEhZ1SJUgI8i3+FL3Xit6O96cnfeTh9+/o4CNMxkpSGfcKs6
+         xexXuKA6fhyFqlmlsLD+5QaIs7CrHlxjcrLfgIQMJrafOsQ5vIAzkkEtDcRDyNXHpyT8
+         w4cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ekub7s2tFsF3z7X9QKVOCDCBJvabEEOsb/caCUw91kQ=;
-        b=o6/d9iUzbbr4lXey7p1jQ/o8koMTYyAIfN+Zyaiwfn6ofmNpupcXKhbIni1891/WDN
-         o0wEl0FZu3nmN81Wc+rbH7RJSZxomIECwqVVe+h+rokWCqkdyGEuXhjqJOAWqAcWa+Ux
-         lr/uzQDaSNSYA/b7vvuLerBOsa4SydWffVsQn2CsiJ/2fxiLbHOODIB2mbu+m95Q7P9F
-         cQ52w2vzzfjHqz0D5ElE93fdbfjW1VXgwdTFFjwd6yzr4Lcg5e3Etp4CaxyJZ/CBUjzE
-         G2XFC3AZs9QvuxcWmnzh+FcVkcAwaroJLqlxY1eHRbuaah73hipejjAaBiV78jn+9eaU
-         iuxw==
-X-Gm-Message-State: AOAM531Ag69ZzXFk8dw8/W1PNdvVirVshoepK4a/obKZGRYT6UvRDDjV
-        VTPf85r+1oyy5kKNnwiOdnTYqQ==
-X-Google-Smtp-Source: ABdhPJzXnmpgLmFJj/trdGQhzlz4Fmuvb3Xl3DNNCpx4ncsMeB/kuKfjKKh6mqpcjRvSFV0zFJrmIA==
-X-Received: by 2002:a1c:1b90:: with SMTP id b138mr21474519wmb.21.1593525084780;
-        Tue, 30 Jun 2020 06:51:24 -0700 (PDT)
+        bh=3Rr7wa1veduLhh9ZAr39E4g8k4FtFNV6OceNUbS0RKk=;
+        b=YKhLCiimHiVWx0JqQkvjupMC9tC8KSt0iGV8jFtVV+aRFCcV9LOkAhIzzRqB50oi45
+         7i0yhEIJPQiy0mqlWGXQ5hBdjvzaccSpCp8y63sDazzz0w21Ljh1ggAUmNOSy7D9RTm7
+         tqaTtCmIt+h8h3N8Dcxe7+YoFIZqjccsYNqL2jiLNZebOmRltQmyuV+0HyP1x/A2Ip+M
+         AI5uCPykxaZ8dpWjMSz/4UKvcr8WPPhXjdcFvkNUOQrcEBjvaJFrRdIiAi71GhEpdKCD
+         1hOlkZbiy7HxYORfrfqUDY6QLLgbL4CFTOerGdBFEusPRVriyhAiEUAJ7ZZJOAVlPeKx
+         n2KQ==
+X-Gm-Message-State: AOAM5334sCGH7zX+SLIML0CMe9k/BmfTOZMSQCEBr5WEjRbMcXE8JFJE
+        F8MnWhWuo9Z0MBEO1zcMK/oRfw==
+X-Google-Smtp-Source: ABdhPJx7RZSCG6MhccQsVv6Y1Q3D48aKEAlqzGQWs/ITBqKeYmpx867Pcfq0L5FYO9K0o9jZk5hI7Q==
+X-Received: by 2002:a5d:40cb:: with SMTP id b11mr22580348wrq.263.1593525088326;
+        Tue, 30 Jun 2020 06:51:28 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id t4sm3876746wmf.4.2020.06.30.06.51.23
+        by smtp.gmail.com with ESMTPSA id t4sm3876746wmf.4.2020.06.30.06.51.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 06:51:24 -0700 (PDT)
+        Tue, 30 Jun 2020 06:51:27 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     arnd@arndb.de, gregkh@linuxfoundation.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
-        =?UTF-8?q?Max=20Asb=C3=B6ck?= <amax@us.ibm.com>
-Subject: [PATCH 10/30] misc: ibmasm: dot_command: Demote function headers from kerneldoc
-Date:   Tue, 30 Jun 2020 14:50:50 +0100
-Message-Id: <20200630135110.2236389-11-lee.jones@linaro.org>
+        Sudeep Dutt <sudeep.dutt@intel.com>,
+        Ashutosh Dixit <ashutosh.dixit@intel.com>
+Subject: [PATCH 13/30] misc: mic: card: mic_debugfs: Demote function headers from kerneldoc
+Date:   Tue, 30 Jun 2020 14:50:53 +0100
+Message-Id: <20200630135110.2236389-14-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200630135110.2236389-1-lee.jones@linaro.org>
 References: <20200630135110.2236389-1-lee.jones@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -80,54 +80,71 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The correct format is not used and no attempt has been made
 to document the function arguments.  Makes sense to just demote
-the header back down to a simple comment.
+the headers back down to simple comments.
 
 Fixes the following W=1 warnings:
 
- drivers/misc/ibmasm/dot_command.c:18: warning: Function parameter or member 'sp' not described in 'ibmasm_receive_message'
- drivers/misc/ibmasm/dot_command.c:18: warning: Function parameter or member 'message' not described in 'ibmasm_receive_message'
- drivers/misc/ibmasm/dot_command.c:18: warning: Function parameter or member 'message_size' not described in 'ibmasm_receive_message'
- drivers/misc/ibmasm/dot_command.c:55: warning: Function parameter or member 'sp' not described in 'ibmasm_send_driver_vpd'
- drivers/misc/ibmasm/dot_command.c:111: warning: Function parameter or member 'sp' not described in 'ibmasm_send_os_state'
- drivers/misc/ibmasm/dot_command.c:111: warning: Function parameter or member 'os_state' not described in 'ibmasm_send_os_state'
+ drivers/misc/mic/card/mic_debugfs.c:31: warning: Function parameter or member 's' not described in 'mic_intr_show'
+ drivers/misc/mic/card/mic_debugfs.c:31: warning: Function parameter or member 'unused' not described in 'mic_intr_show'
+ drivers/misc/mic/card/mic_debugfs.c:53: warning: Function parameter or member 'mdrv' not described in 'mic_create_card_debug_dir'
+ drivers/misc/mic/card/mic_debugfs.c:67: warning: Function parameter or member 'mdrv' not described in 'mic_delete_card_debug_dir'
 
-Cc: "Max Asböck" <amax@us.ibm.com>
+Cc: Sudeep Dutt <sudeep.dutt@intel.com>
+Cc: Ashutosh Dixit <ashutosh.dixit@intel.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/misc/ibmasm/dot_command.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/misc/mic/card/mic_debugfs.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/misc/ibmasm/dot_command.c b/drivers/misc/ibmasm/dot_command.c
-index 70273a4cb3527..df389bd4c9df7 100644
---- a/drivers/misc/ibmasm/dot_command.c
-+++ b/drivers/misc/ibmasm/dot_command.c
-@@ -10,7 +10,7 @@
- #include "ibmasm.h"
- #include "dot_command.h"
+diff --git a/drivers/misc/mic/card/mic_debugfs.c b/drivers/misc/mic/card/mic_debugfs.c
+index b58608829b180..4c326e8f4d993 100644
+--- a/drivers/misc/mic/card/mic_debugfs.c
++++ b/drivers/misc/mic/card/mic_debugfs.c
+@@ -24,7 +24,7 @@
+ /* Debugfs parent dir */
+ static struct dentry *mic_dbg;
  
 -/**
 +/*
-  * Dispatch an incoming message to the specific handler for the message.
-  * Called from interrupt context.
+  * mic_intr_show - Send interrupts to host.
   */
-@@ -48,7 +48,7 @@ void ibmasm_receive_message(struct service_processor *sp, void *message, int mes
- #define INIT_BUFFER_SIZE 32
+ static int mic_intr_show(struct seq_file *s, void *unused)
+@@ -46,7 +46,7 @@ static int mic_intr_show(struct seq_file *s, void *unused)
  
+ DEFINE_SHOW_ATTRIBUTE(mic_intr);
  
 -/**
 +/*
-  * send the 4.3.5.10 dot command (driver VPD) to the service processor
+  * mic_create_card_debug_dir - Initialize MIC debugfs entries.
   */
- int ibmasm_send_driver_vpd(struct service_processor *sp)
-@@ -99,7 +99,7 @@ struct os_state_command {
- 	unsigned char			data;
- };
+ void __init mic_create_card_debug_dir(struct mic_driver *mdrv)
+@@ -60,7 +60,7 @@ void __init mic_create_card_debug_dir(struct mic_driver *mdrv)
+ 			    &mic_intr_fops);
+ }
  
 -/**
 +/*
-  * send the 4.3.6 dot command (os state) to the service processor
-  * During driver init this function is called with os state "up".
-  * This causes the service processor to start sending heartbeats the
+  * mic_delete_card_debug_dir - Uninitialize MIC debugfs entries.
+  */
+ void mic_delete_card_debug_dir(struct mic_driver *mdrv)
+@@ -68,7 +68,7 @@ void mic_delete_card_debug_dir(struct mic_driver *mdrv)
+ 	debugfs_remove_recursive(mdrv->dbg_dir);
+ }
+ 
+-/**
++/*
+  * mic_init_card_debugfs - Initialize global debugfs entry.
+  */
+ void __init mic_init_card_debugfs(void)
+@@ -76,7 +76,7 @@ void __init mic_init_card_debugfs(void)
+ 	mic_dbg = debugfs_create_dir(KBUILD_MODNAME, NULL);
+ }
+ 
+-/**
++/*
+  * mic_exit_card_debugfs - Uninitialize global debugfs entry
+  */
+ void mic_exit_card_debugfs(void)
 -- 
 2.25.1
 
