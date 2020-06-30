@@ -2,120 +2,115 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44AAAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57CF3C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:01:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28B2A20780
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3048920780
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:01:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593514866;
+	bh=yq0EKJ+zwKlc5ZQq5pq9eWRJFHa8ScWog81thjg3OHw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aN0JvxXnWvwHfomcPkoKE4Nc/OSGR2K70WQLa2+TG5kj5ZS58TPLrUdbRrUNO7dD2
+	 H5upg/Q0KlMabJ15w2gvk/+ElUo612a4tKnZNtbHXC3TJMib8MMu2dLVqmW8lrEfYL
+	 FEYtIuEiN9LQpmv1TLF90fxdr6yOU6KK9d42eMtE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732780AbgF3LA6 (ORCPT
+        id S1732789AbgF3LBF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 07:00:58 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43410 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732578AbgF3LA5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 07:00:57 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05UAW5uE004699;
-        Tue, 30 Jun 2020 07:00:56 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31ycd52wpt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 30 Jun 2020 07:00:55 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05UAXjbF018111;
-        Tue, 30 Jun 2020 07:00:55 -0400
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31ycd52wnp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 30 Jun 2020 07:00:55 -0400
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-        by ppma04fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05UAt6BY009757;
-        Tue, 30 Jun 2020 11:00:53 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-        by ppma04fra.de.ibm.com with ESMTP id 31wwr81nmc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 30 Jun 2020 11:00:52 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05UB0o2R56492310
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 30 Jun 2020 11:00:50 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 290A9AE05F;
-        Tue, 30 Jun 2020 11:00:50 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 62A08AE071;
-        Tue, 30 Jun 2020 11:00:49 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.137.220])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 30 Jun 2020 11:00:49 +0000 (GMT)
-Message-ID: <1593514848.5085.82.camel@linux.ibm.com>
-Subject: Re: [PATCH v3 2/2] ima: move APPRAISE_BOOTPARAM dependency on
- ARCH_POLICY to runtime
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Bruno Meneguele <bmeneg@redhat.com>
-Cc:     linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        erichte@linux.ibm.com, nayna@linux.ibm.com
-Date:   Tue, 30 Jun 2020 07:00:48 -0400
-In-Reply-To: <20200629234744.GA2756@glitch>
-References: <20200623202640.4936-1-bmeneg@redhat.com>
-         <20200623202640.4936-3-bmeneg@redhat.com>
-         <1593204023.27152.476.camel@linux.ibm.com> <20200629234744.GA2756@glitch>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-06-30_04:2020-06-30,2020-06-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- spamscore=0 cotscore=-2147483648 malwarescore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 suspectscore=0 phishscore=0 impostorscore=0 clxscore=1015
- priorityscore=1501 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006300073
+        Tue, 30 Jun 2020 07:01:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33440 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732578AbgF3LBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 07:01:03 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 415BC2067D;
+        Tue, 30 Jun 2020 11:01:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593514862;
+        bh=yq0EKJ+zwKlc5ZQq5pq9eWRJFHa8ScWog81thjg3OHw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cmVCthbaWYXcHgcWflGwipFqgak7qqScwUP7vj1UStWrXRF+ihacneLzao00Sk51S
+         DpFQV3T4MLt3CjbAOyR+n6HpX8ugFHL+6cKHzDumRHZ1lwRsKFfRrkvPu++A47KBga
+         B3WBJTz0axs4C9Nqbi+WhRi3PMx/9UnEQTTW20Fs=
+Date:   Tue, 30 Jun 2020 12:01:00 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Sameer Pujar <spujar@nvidia.com>
+Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        perex@perex.cz, tiwai@suse.com, robh+dt@kernel.org,
+        lgirdwood@gmail.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, digetx@gmail.com,
+        alsa-devel@alsa-project.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sharadg@nvidia.com,
+        mkumard@nvidia.com, viswanathl@nvidia.com, rlokhande@nvidia.com,
+        dramesh@nvidia.com, atalambedu@nvidia.com, nwartikar@nvidia.com,
+        swarren@nvidia.com, nicoleotsuka@gmail.com
+Subject: Re: [PATCH v4 12/23] ASoC: simple-card: Support DPCM DAI link with
+ multiple Codecs
+Message-ID: <20200630110100.GH5272@sirena.org.uk>
+References: <1593233625-14961-1-git-send-email-spujar@nvidia.com>
+ <1593233625-14961-13-git-send-email-spujar@nvidia.com>
+ <874kqu1x70.wl-kuninori.morimoto.gx@renesas.com>
+ <1e0cf6d1-bf4e-8808-5390-c8a3b7c7fe7e@nvidia.com>
+ <87mu4lz6pt.wl-kuninori.morimoto.gx@renesas.com>
+ <1d7888c7-a8cc-e891-01aa-016e31cc9113@nvidia.com>
+ <87ftadyrec.wl-kuninori.morimoto.gx@renesas.com>
+ <492079e9-4518-78ba-a227-859d31594369@nvidia.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="82evfD9Ogz2JrdWZ"
+Content-Disposition: inline
+In-Reply-To: <492079e9-4518-78ba-a227-859d31594369@nvidia.com>
+X-Cookie: Walk softly and carry a megawatt laser.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-06-29 at 20:47 -0300, Bruno Meneguele wrote:
 
-> 
-> > I'm not if the "secure_boot" flag is available prior to calling
-> > default_appraise_setup(), but if it is, you could modify the test
-> > there to also check if the system is booted in secure boot mode (eg.
-> > IS_ENABLED(CONFIG_IMA_APPRAISE_BOOTPARAM) &&
-> > !arch_ima_get_secureboot())
-> > 
-> 
-> Well pointed. I built a custom x86 kernel with some workaround to get
-> this flag status within default_appraise_setup() and as a result the
-> flag is was correctly available. 
-> 
-> Considering the nature of this flag (platform's firmware (in all
-> arches?)) can we trust that every arch supporting secure/trusted boot
-> will have it available in the __setup() call time?
+--82evfD9Ogz2JrdWZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Calling default_appraise_setup() could be deferred.
+On Tue, Jun 30, 2020 at 01:22:29PM +0530, Sameer Pujar wrote:
 
-> 
-> > > +		/* In secure and/or trusted boot the appraisal must be
-> > > +		 * enforced, regardless kernel parameters, preventing
-> > > +		 * runtime changes */
-> > 
-> > Only "appraise" rules are enforced.
-> > 
-> 
-> Hmm.. do you mean the comment wording is wrong/"could be better",
-> pointing the "appraise" action explicitly?
+> Yes there are complex use cases, but if we look at the amount of changes
+> required in simple-card driver that is not too much. Existing binding for
+> simple-card driver would still work fine for our cases. Yes there are some
+> deviations and we don't want to break existing users, that is why a *new*
+> compatible was introduced and specific items can be pushed under it.
+> Majority of the simple-card driver is getting re-used here. We just need to
+> make sure it does not affect anyone else.
 
-No, it's more than just the comment.  Like "trusted boot", IMA-
-measurement only measures files, never enforces integrity.
- "ima_appraise" mode is only applicable to IMA-appraisal.
+Why simple-card and not audio-graph-card?
 
-Mimi
+> > Using fe/be instead of cpu/codec is easy to understand.
+
+> I guess you are referring to DT binding part. The parsing code specifically
+> looks for "codec" sub node and thus present conventions had to be used.
+
+Remember that this stuff gets fixed into the ABI so we'd have to live
+with this for ever.
+
+--82evfD9Ogz2JrdWZ
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl77G2sACgkQJNaLcl1U
+h9DLaQf8CxFbnQfdwGWMqWzwX2nlKaR7uERgOdrildCUvaMKInQJ3nSQzOwEqxkq
+NMi/PKvwmR+2xteMNBYYMvXO739dNZj9Y9vvVHOmAUtPwVMEebs45t4Km2qwLx25
+t5d/6KK4UUC8RghBJr0Ls1Ywhqbp6CSieyt9ogqvrb0PrVGITmV2fpklh26gw75d
+/yzh/obJaTotGhYRuCFMvB7mTNOiitRXr08p8kRJSbEWZKw7+ebUQKhiuu6Ximk6
+1Uso6kJgROaHZhl896uSlbnW4odrn1t/JSHxJ9yRNedpvwV+E+8ZGHo75K6SEwRx
+4NOG2mHbKSXZ3Ta+h/R4+Q4B2STg3w==
+=eDum
+-----END PGP SIGNATURE-----
+
+--82evfD9Ogz2JrdWZ--
