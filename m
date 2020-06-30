@@ -2,152 +2,90 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 613C7C433E1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 287EBC433DF
 	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A62420775
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:32:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B839220775
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:32:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="POTTToxP"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="Ca7KOSLa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726553AbgF3VcC (ORCPT
+        id S1726274AbgF3VcA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 17:32:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34170 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbgF3Vb7 (ORCPT
+        Tue, 30 Jun 2020 17:32:00 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:45118 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726285AbgF3VaK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 17:31:59 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EF11C03E97B
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 14:31:59 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id i14so22147403ejr.9
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 14:31:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=OTyuzRBwiZ4dXubOgCDgCwxBVHhrMMATaeMU0+yD1UU=;
-        b=POTTToxPzO774WR4CwnAbOgWTAfQI7Cfssb9XB6FW1Yf6+jKtJ2Z54oPc8BR2f1eqV
-         N94ZydqFmUAjG0mZN5gDTYE9VCrxt40nUojaAecQPu6i1OpQ2OwP0wTt2bpkl5N4sqaS
-         d0dwW33cnFDgikEsbxRFfN0rbDxxm5FN9qBl9Dudx87c7sJoDXTMzfB/uv83+ClsPpRb
-         qbKnQcn+HNGDkbW4CizE86wkBruzvPNnWCowdagsIZtw/fBicvPiV9sQ/AngVPayBhBq
-         gCc4kxeHxRUeF23qyYAHBac8dS2+Tv9MCqgA9Gcc+zwnfoeqNf50iVYjXMdnHPeSwCmD
-         aXrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=OTyuzRBwiZ4dXubOgCDgCwxBVHhrMMATaeMU0+yD1UU=;
-        b=tgzc+b5fQp5K25fmbDHNYERB3CHlxdDhEQxotZX5ZhPNacoAN25YSoYdWJpi8vEDSG
-         80BCStJnLy7Tw2z6jg6Qc0FcqKb3u2ELS5Cbh/MPY9nQB/XxUd90taZYAAX8jNaXWftp
-         VaYXuBfUpwX3UC1zI8t4ssu79s+GA4iLbl8jtgztKnw3DQWHYuL/r8GBU+eKUZ+LZdXQ
-         PdR0xr1b6HcYnUfozzARO0JbjmVk2+3nlP0ttYpWwl8WvABRCBlKNoNkdU7sX9eVS21r
-         QhbV/gXBXwc8FxnRi8vcUXgQrXeBWuhgY+1y+OhVX0kcgCkLC+9Wb09xUoHTo+4h89DL
-         8opQ==
-X-Gm-Message-State: AOAM531uTHhWwZ257ITgqs8TKx/vxKeM5iyvtExiD7sj5as7BzyA7VjD
-        cB5to1PDZj2VdW0ZG3X8uxfD/Q==
-X-Google-Smtp-Source: ABdhPJyzdsv/4R92kRhkKbD+QzdCB5VchGWxCIO09/RLTW8Oj7bNRwTahUiPmsKbW4g6u1nloAD4qQ==
-X-Received: by 2002:a17:906:8401:: with SMTP id n1mr19745399ejx.479.1593552718200;
-        Tue, 30 Jun 2020 14:31:58 -0700 (PDT)
-Received: from x1 ([2001:16b8:5c28:7601:2d3c:7dcb:fbf0:3875])
-        by smtp.gmail.com with ESMTPSA id v24sm4051404eds.71.2020.06.30.14.31.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 14:31:57 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 23:31:55 +0200
-From:   Drew Fustini <drew@beagleboard.org>
-To:     Tony Lindgren <tony@atomide.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, bcousson@baylibre.com,
-        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jason Kridner <jkridner@beagleboard.org>,
-        Robert Nelson <robertcnelson@gmail.com>,
-        "H . Nikolaus Schaller" <hns@goldelico.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2] ARM: dts: am335x-pocketbeagle: set default mux for
- gpio pins
-Message-ID: <20200630213155.GA115731@x1>
-References: <20200628152442.322593-1-drew@beagleboard.org>
- <20200629170358.GT37466@atomide.com>
- <20200630020102.GA45128@x1>
- <20200630182037.GF37466@atomide.com>
+        Tue, 30 Jun 2020 17:30:10 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id E17508011F;
+        Wed,  1 Jul 2020 09:30:06 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1593552606;
+        bh=a9s+V2nzli8tsrcb0f2+rV3tw5YwE41Dqit8SLbbkqE=;
+        h=From:To:Cc:Subject:Date;
+        b=Ca7KOSLa8qcaM7G6uXP/Uf6OcU2/o107X/xBAUZuN7VCfORCIXCCKOGRmyBKkH06B
+         PSijTfk35h8DoUScsrf6RBRQzV5VoAouAXyF5jSsk2TOspkWF6fFN5dXzbRzlsVPyk
+         MAVlfRLd3tzRddhPTWHJqV8aARHBcYfsO+ER0jxTxSVPScgq+YojlCpPOviLc1/PhP
+         N/gKzJHmzcQQ6P0StzYI4KKaW1mGxiS2sZ3Rv5LNXKH7jJCNZhio3Llx6EsvObUyC1
+         ZDT+zSHhzo00z/mOPJEhoYo364AxoW6GAguzY3EpedrcPcO/t6fMQbnOSfOcdHFuVe
+         XP4P93b7DPyFg==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5efbaeda0000>; Wed, 01 Jul 2020 09:30:06 +1200
+Received: from markto-dl.ws.atlnz.lc (markto-dl.ws.atlnz.lc [10.33.23.25])
+        by smtp (Postfix) with ESMTP id CC9E013EF9B;
+        Wed,  1 Jul 2020 09:30:00 +1200 (NZST)
+Received: by markto-dl.ws.atlnz.lc (Postfix, from userid 1155)
+        id D06D333E9BD; Wed,  1 Jul 2020 09:30:01 +1200 (NZST)
+From:   Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+To:     rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, linus.walleij@linaro.org,
+        linux-gpio@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+Subject: [PATCH] pinctrl: initialise nsp-mux earlier.
+Date:   Wed,  1 Jul 2020 09:29:58 +1200
+Message-Id: <20200630212958.24030-1-mark.tomlinson@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200630182037.GF37466@atomide.com>
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 11:20:37AM -0700, Tony Lindgren wrote:
-> * Drew Fustini <drew@beagleboard.org> [200630 02:02]:
-> > On Mon, Jun 29, 2020 at 10:03:58AM -0700, Tony Lindgren wrote:
-> > > Hi,
-> > > 
-> > > * Drew Fustini <drew@beagleboard.org> [200628 08:26]:
-> > > > v2 changes:
-> > > > - change default mux from output to input.  Input is safer as it does
-> > > >   not drive the line.  If the user wants output, they will need to edit
-> > > >   this device tree.
-> > > 
-> > > So can you please clarify this a bit, are you saying that gpio output can't
-> > > be done via userspace?
-> > 
-> > As it stands, there is no way for userspace to change a pin from gpio 
-> > input to gpio output as it is based on the reciever active bit in the
-> > pin control register (table 9-60 in the AM3358 datasheet [0]).
-> 
-> OK. I guess one not so nice option would be to enable receiver active
-> for all the gpio pins.. But this also affects power consumption a little.
-> 
-> > I thought it would be useful to at least define the GPIOs available for
-> > use on the PocketBeagle by default (and eventually the other BeagleBone
-> > device trees).  Input seems to be the safest value.  This patch at least
-> > makes it more clear where the user should edit to switch from input to
-> > output.
-> 
-> Some TI TRMs actually have tables listing the preferred mux logic
-> for unused pins. I recall safe mode input pull down being one of the
-> preferred modes. Sorry not sure which TRM that is, maybe omap3 or
-> omap4 or omap5?
+The GPIO specified in the DTS file references the pinctrl, which is
+specified after the GPIO. If the GPIO is initialised before pinctrl,
+an error message for the -EPROBE_DEFER ends up in the kernel log. Even
+though the probe will succeed when the driver is re-initialised, the
+error can be scary to end users. To fix this, change the time the
+pinctrl is probed, so that it is always before the GPIO driver.
 
-Yes, the AM3358 will default to mode 7 for all of these pins and the
-receiver will be enabled (e.g. input).
+Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+---
+ drivers/pinctrl/bcm/pinctrl-nsp-mux.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-So maybe it is redundant for me to specify in DT what is already the
-hardware reset default?
+diff --git a/drivers/pinctrl/bcm/pinctrl-nsp-mux.c b/drivers/pinctrl/bcm/=
+pinctrl-nsp-mux.c
+index f1d60a708815..7586949f83ec 100644
+--- a/drivers/pinctrl/bcm/pinctrl-nsp-mux.c
++++ b/drivers/pinctrl/bcm/pinctrl-nsp-mux.c
+@@ -639,4 +639,4 @@ static int __init nsp_pinmux_init(void)
+ {
+ 	return platform_driver_register(&nsp_pinmux_driver);
+ }
+-arch_initcall(nsp_pinmux_init);
++postcore_initcall(nsp_pinmux_init);
+--=20
+2.27.0
 
-I thought it might be helpful to at least show where the user should
-edit to change it from the default reset behavior.
-
-> > > Needing to change the dts does not sound good to me.. But maybe you mean
-> > > this is needed until the gpio-omap and pinctrl-single patches are merged?
-> >
-> > I agree that I would like for userspace to be able to do run-time
-> > changes.  However, I think something would need to be added to the
-> > pinconf support in pinctrl-single for that to be possible.  There are
-> > bias properties but non for receiver enable.
-> > 
-> > Does it seem sensible to add that?
-> 
-> Well let's see with Linus W says. To me it seems this might be a good
-> reason to allow a sysfs interface to change the pinctrl if we don't
-> have it yet? With the proper gpio line naming it should be quite simple
-> to use too :)
-
-I think if pinctrl-single allowed mux to be set through debugfs that
-could be one solution to the use case of users prototyping with a
-beaglebone.  Maybe that could be acceptable?
-
-Thanks,
-Drew
-
-> 
-> Regards,
-> 
-> Tony
