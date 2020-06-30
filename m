@@ -2,184 +2,166 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB189C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:35:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5F61C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:36:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 82F42206B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:35:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vrFYsy4P"
+	by mail.kernel.org (Postfix) with ESMTP id AEE0A2074F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:36:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593534966;
+	bh=oYCSw4PCki/SDdawcCRdB1g+bOTmh7QoW+EwDPjWJjs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lYyFnCu0l1BSEPJ2IfPaXO1Rg9afi8zYWHuJ8/s4E9sSKVeHZChLkf2RO6JQxcHMV
+	 r80vH8oPnAtbb3itOGEtaDTo+c5aMbs6AZMot4dXbd4Cn8aACzVaBnCo61rUvwKB+T
+	 SBm8/nRJd28QwYg9mRYThup5B1KsM3DhvKcICKd4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389116AbgF3Qfr (ORCPT
+        id S2389295AbgF3QgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 12:35:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44916 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726639AbgF3Qfp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 12:35:45 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B59FFC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 09:35:44 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id h5so20837862wrc.7
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 09:35:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=UY5dDFhwanGzAjA/Hwk2nkrFK53nDw/tdJsDrb47uYk=;
-        b=vrFYsy4PUl1thVhIBI/n6B96HCHkilWvostX6tmewC49h0ySiM903UwYD1fxS29iu4
-         yOiq4Y1F1VPbwPzqlrm6Y+NfDMSiRbhA4SkEp+BZa0TPe9+QxNfVog0TbB/EPwrtMmqA
-         dkdkDd9lcFAdHIGd3N1iZ/r8mVRIbmnEVsXeXR2t5mBHnz0wOPu4Qqq8oiTEzx90ZPbE
-         P1euW+KHLG0Ghx2/f6vqQKD826gOZ7tSSs8m43sJHNB/3mVoQolt1i3kdO6KWDPBxpge
-         J+AwQRo8tLxwQhDhizaWP0hyxjlZHmfiWkyP7ld2AOQIBdzdJg8M/vkkBZdEQ69MTzwV
-         PJPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=UY5dDFhwanGzAjA/Hwk2nkrFK53nDw/tdJsDrb47uYk=;
-        b=GZUdqAP1atPoW4N6RsmHnyDG/KmtLg+OLYf+UyrhGinG6vn1UeRKB9wUNwkDVMBYe1
-         HyAvMSuf34mqoqoLXm+LaG9Ml8dck34JZhRpaX6gVzyR2AwRDrFBy3cWgUDDL5+pVqh+
-         MBCw3lt4zxp4ps48A/nRA7NQP+b8n/yDqrWIYKbx0qpT6Pm2xjMol20Idc4JmKsOXJ7n
-         AuU38vpJdskXU76AoRduur8RAosFrQunt7IUONhOgyueez+bHvDl8vE4kt33cI9q0NXM
-         +hwHUi8cYsKwPsQHb7WTbnDa01Sp5WHePqjwJZDHRpWdWvN/lWZJ17Zi0yICvRY646No
-         yQ/w==
-X-Gm-Message-State: AOAM532y2tjz0naLCT0LK6E0BAPE0wjvSxVmej6WQeuowWSaX7QZ07gR
-        Ec0gtNBPjKuwx0YYVFpYDN6pyQ==
-X-Google-Smtp-Source: ABdhPJwHpMmHLbOR2PK+c8AILDnO4gKbH2fhAO3npF+VHuPJVOUOu/Moc+PFY2jA82EhThxZdEOdtw==
-X-Received: by 2002:adf:ec90:: with SMTP id z16mr22454514wrn.52.1593534943359;
-        Tue, 30 Jun 2020 09:35:43 -0700 (PDT)
-Received: from holly.lan (cpc141214-aztw34-2-0-cust773.18-1.cable.virginm.net. [86.9.19.6])
-        by smtp.gmail.com with ESMTPSA id k126sm4324376wme.17.2020.06.30.09.35.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 09:35:42 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 17:35:41 +0100
-From:   Daniel Thompson <daniel.thompson@linaro.org>
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH] dt-bindings: backlight: Convert common backlight
- bindings to DT schema
-Message-ID: <20200630163541.cvllavnbmgdlvpfy@holly.lan>
-References: <20200618224413.1115849-1-robh@kernel.org>
- <20200619215341.GA6857@ravnborg.org>
- <20200622165730.pnx7fzbq5e6q5h4l@holly.lan>
- <CAL_JsqK1yJ09k6tKak==TjRN17VzueVkcf-WOLw2ETL2ZJv9sg@mail.gmail.com>
- <20200629191847.GA318506@ravnborg.org>
+        Tue, 30 Jun 2020 12:36:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48450 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389026AbgF3QgE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 12:36:04 -0400
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CCC320724;
+        Tue, 30 Jun 2020 16:36:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593534964;
+        bh=oYCSw4PCki/SDdawcCRdB1g+bOTmh7QoW+EwDPjWJjs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=noDzOs3heH2s23yBmSBcGq/OZohTqVn/ojDBf6gA96/4WN2xjKm4lG9twKUxbMMP6
+         /6Mu7njaHhCw40O1BjBNqlxJKQx/UwhBVi59PLW4+qPEmQy12oBARxLGCu5TGYIZwk
+         Rc/Er/Xmw8xInG6ajcNADFdvHSTbvJYg8LdH5rdQ=
+Date:   Tue, 30 Jun 2020 09:35:52 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Mikulas Patocka <mpatocka@redhat.com>
+Cc:     Mike Snitzer <msnitzer@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Zaibo Xu <xuzaibo@huawei.com>, linux-kernel@vger.kernel.org,
+        Wei Xu <xuwei5@hisilicon.com>, dm-devel@redhat.com,
+        George Cherian <gcherian@marvell.com>,
+        linux-crypto@vger.kernel.org,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Milan Broz <mbroz@redhat.com>
+Subject: Re: [dm-devel] [PATCH 1/3 v4] crypto: introduce the flag
+ CRYPTO_ALG_ALLOCATES_MEMORY
+Message-ID: <20200630163552.GA837@sol.localdomain>
+References: <alpine.LRH.2.02.2006161101080.28052@file01.intranet.prod.int.rdu2.redhat.com>
+ <20200616173620.GA207319@gmail.com>
+ <alpine.LRH.2.02.2006171107220.18714@file01.intranet.prod.int.rdu2.redhat.com>
+ <alpine.LRH.2.02.2006171108440.18714@file01.intranet.prod.int.rdu2.redhat.com>
+ <20200626044534.GA2870@gondor.apana.org.au>
+ <alpine.LRH.2.02.2006261109520.11899@file01.intranet.prod.int.rdu2.redhat.com>
+ <alpine.LRH.2.02.2006261215480.13882@file01.intranet.prod.int.rdu2.redhat.com>
+ <20200626164617.GA211634@gmail.com>
+ <alpine.LRH.2.02.2006281505250.347@file01.intranet.prod.int.rdu2.redhat.com>
+ <alpine.LRH.2.02.2006300954150.15237@file01.intranet.prod.int.rdu2.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200629191847.GA318506@ravnborg.org>
+In-Reply-To: <alpine.LRH.2.02.2006300954150.15237@file01.intranet.prod.int.rdu2.redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 09:18:47PM +0200, Sam Ravnborg wrote:
-> On Mon, Jun 29, 2020 at 11:57:37AM -0600, Rob Herring wrote:
-> > On Mon, Jun 22, 2020 at 10:57 AM Daniel Thompson
-> > <daniel.thompson@linaro.org> wrote:
-> > >
-> > > On Fri, Jun 19, 2020 at 11:53:41PM +0200, Sam Ravnborg wrote:
-> > > > > diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.yaml
-> > > > > new file mode 100644
-> > > > > index 000000000000..7e1f109a38a4
-> > > > > --- /dev/null
-> > > > > +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.yaml
-> > > > > @@ -0,0 +1,98 @@
-> > > > > +# SPDX-License-Identifier: GPL-2.0-only
-> > > > > +%YAML 1.2
-> > > > > +---
-> > > > > +$id: http://devicetree.org/schemas/leds/backlight/pwm-backlight.yaml#
-> > > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > > +
-> > > > > +title: pwm-backlight bindings
-> > > > > +
-> > > > > +maintainers:
-> > > > > +  - Lee Jones <lee.jones@linaro.org>
-> > > > > +  - Daniel Thompson <daniel.thompson@linaro.org>
-> > > > > +  - Jingoo Han <jingoohan1@gmail.com>
-> > > > > +
-> > > > > +properties:
-> > > > > +  compatible:
-> > > > > +    const: pwm-backlight
-> > > > > +
-> > > > > +  pwms:
-> > > > > +    maxItems: 1
-> > > > > +
-> > > > > +  pwm-names: true
-> > > > > +
-> > > > > +  power-supply:
-> > > > > +    description: regulator for supply voltage
-> > > > > +
-> > > > > +  enable-gpios:
-> > > > > +    description: Contains a single GPIO specifier for the GPIO which enables
-> > > > > +      and disables the backlight
-> > > > > +    maxItems: 1
-> > > > > +
-> > > > > +  post-pwm-on-delay-ms:
-> > > > > +    description: Delay in ms between setting an initial (non-zero) PWM and
-> > > > > +      enabling the backlight using GPIO.
-> > > > > +
-> > > > > +  pwm-off-delay-ms:
-> > > > > +    description: Delay in ms between disabling the backlight using GPIO
-> > > > > +      and setting PWM value to 0.
-> > > > > +
-> > > > > +  brightness-levels:
-> > > > > +    description: Array of distinct brightness levels. Typically these are
-> > > > > +      in the range from 0 to 255, but any range starting at 0 will do. The
-> > > > > +      actual brightness level (PWM duty cycle) will be interpolated from
-> > > > > +      these values. 0 means a 0% duty cycle (darkest/off), while the last
-> > > > > +      value in the array represents a 100% duty cycle (brightest).
-> > > > > +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> > > > > +
-> > > > > +  default-brightness-level:
-> > > > > +    description: The default brightness level (index into the array defined
-> > > > > +      by the "brightness-levels" property).
-> > > > > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > > > Same comment as before...
-> > >
-> > > Sorry the "ditto" meant I didn't thing about PWM as much as I should
-> > > have.
-> > >
-> > > The situation for PWM is a little different to LED. That's mostly
-> > > because we decided not to clutter the LED code with
-> > > "num-interpolated-steps".
-> > >
-> > > The PWM code implements the default-brightness-level as an index into
-> > > the brightness array *after* it has been expanded using interpolation.
-> > > In other words today Linux treats the default-brightness-level more
-> > > like[1].
-> > >
-> > >     description: The default brightness level. When
-> > >       num-interpolated-steps is not set this is simply an index into
-> > >       the array defined by the "brightness-levels" property. If
-> > >       num-interpolated-steps is set the brightness array will be
-> > >       expanded by interpolation before we index to get a default
-> > >       level.
-> > >
-> > > This is the best I have come up with so far... but I concede it still
-> > > lacks elegance.
-> > 
-> > Happy to add this or whatever folks want if there's agreement, but I
-> > don't want to get bogged down on re-reviewing and re-writing the
-> > binding on what is just a conversion. There's a mountain of bindings
-> > to convert.
-> The original explanation is ok, as pointed out by Daniel.
-> So I suggest moving forward with that and then others can improve the
-> descriptions later as necessary.
+On Tue, Jun 30, 2020 at 09:56:22AM -0400, Mikulas Patocka wrote:
+> Index: linux-2.6/crypto/cryptd.c
+> ===================================================================
+> --- linux-2.6.orig/crypto/cryptd.c	2020-06-29 16:03:07.346417000 +0200
+> +++ linux-2.6/crypto/cryptd.c	2020-06-30 15:49:04.206417000 +0200
+> @@ -202,6 +202,7 @@ static inline void cryptd_check_internal
+>  
+>  	*type |= algt->type & CRYPTO_ALG_INTERNAL;
+>  	*mask |= algt->mask & CRYPTO_ALG_INTERNAL;
+> +	*mask |= algt->mask & CRYPTO_ALG_INHERITED_FLAGS;
+>  }
 
-That's fine for me to. It would be clearer in version history (improving
-definitions during a conversion hides them when mining the changelog).
+This needs to use the correct logic (crypto_alg_inherited_mask) to decide which
+inherited flags to set in 'mask'.
 
+> --- linux-2.6.orig/crypto/adiantum.c	2020-06-29 16:03:07.346417000 +0200
+> +++ linux-2.6/crypto/adiantum.c	2020-06-29 16:03:07.346417000 +0200
+> @@ -507,7 +507,7 @@ static int adiantum_create(struct crypto
+>  	if ((algt->type ^ CRYPTO_ALG_TYPE_SKCIPHER) & algt->mask)
+>  		return -EINVAL;
+>  
+> -	mask = crypto_requires_sync(algt->type, algt->mask);
+> +	mask = crypto_alg_inherited_mask(algt->type, algt->mask);
+>  
+>  	inst = kzalloc(sizeof(*inst) + sizeof(*ictx), GFP_KERNEL);
+>  	if (!inst)
 
-Daniel.
+This is still missing setting the flags correctly on the template instance being
+constructed.  The flags need to be inherited from all "inner" algorithms:
+
+	inst->alg.base.cra_flags = (streamcipher_alg->base.cra_flags |
+				    blockcipher_alg->cra_flags |
+				    hash_alg->base.cra_flags) &
+				   CRYPTO_ALG_INHERITED_FLAGS;
+
+If we don't do that, the template instance may allocate memory but not have
+CRYPTO_ALG_ALLOCATES_MEMORY set.
+
+> Index: linux-2.6/crypto/pcrypt.c
+> ===================================================================
+> --- linux-2.6.orig/crypto/pcrypt.c	2020-06-29 16:03:07.346417000 +0200
+> +++ linux-2.6/crypto/pcrypt.c	2020-06-30 15:47:32.776417000 +0200
+> @@ -263,7 +263,9 @@ static int pcrypt_create_aead(struct cry
+>  	if (err)
+>  		goto err_free_inst;
+>  
+> -	inst->alg.base.cra_flags = CRYPTO_ALG_ASYNC;
+> +	inst->alg.base.cra_flags =
+> +		CRYPTO_ALG_ASYNC |
+> +		(alg->base.cra_flags & CRYPTO_ALG_INHERITED_FLAGS);
+>  
+>  	inst->alg.ivsize = crypto_aead_alg_ivsize(alg);
+>  	inst->alg.maxauthsize = crypto_aead_alg_maxauthsize(alg);
+
+And this is still missing setting the mask:
+
+diff --git a/crypto/pcrypt.c b/crypto/pcrypt.c
+index 7240e8bbdebb..643f7f1cc91c 100644
+--- a/crypto/pcrypt.c
++++ b/crypto/pcrypt.c
+@@ -232,12 +232,15 @@ static int pcrypt_create_aead(struct crypto_template *tmpl, struct rtattr **tb,
+ 	struct crypto_attr_type *algt;
+ 	struct aead_instance *inst;
+ 	struct aead_alg *alg;
++	u32 mask;
+ 	int err;
+ 
+ 	algt = crypto_get_attr_type(tb);
+ 	if (IS_ERR(algt))
+ 		return PTR_ERR(algt);
+ 
++	mask = crypto_alg_inherited_mask(algt->type, algt->mask);
++
+ 	inst = kzalloc(sizeof(*inst) + sizeof(*ctx), GFP_KERNEL);
+ 	if (!inst)
+ 		return -ENOMEM;
+@@ -254,7 +257,7 @@ static int pcrypt_create_aead(struct crypto_template *tmpl, struct rtattr **tb,
+ 		goto err_free_inst;
+ 
+ 	err = crypto_grab_aead(&ctx->spawn, aead_crypto_instance(inst),
+-			       crypto_attr_alg_name(tb[1]), 0, 0);
++			       crypto_attr_alg_name(tb[1]), 0, mask);
+ 	if (err)
+ 		goto err_free_inst;
+ 
+
+Can you please think logically about what you're trying to accomplish?
+
+In particular, if someone requests an algorithm that doesn't allocate memory
+(which is indicated by type=0, mask=CRYPTO_ALG_ALLOCATES_MEMORY), that request
+needs to be honored.
+
+- Eric
