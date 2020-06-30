@@ -2,144 +2,167 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8861C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B52AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8767E206CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:34:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="FdiPH5w2"
+	by mail.kernel.org (Postfix) with ESMTP id 7C9742073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:35:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731052AbgF3He5 (ORCPT
+        id S1731053AbgF3Hff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 03:34:57 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:54580 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730654AbgF3He4 (ORCPT
+        Tue, 30 Jun 2020 03:35:35 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60112 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730089AbgF3Hff (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 03:34:56 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200630073454euoutp02a62f3338248609ff9c524a3bfe9e77e3~dQhNyueii2347723477euoutp02M
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 07:34:54 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200630073454euoutp02a62f3338248609ff9c524a3bfe9e77e3~dQhNyueii2347723477euoutp02M
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1593502494;
-        bh=7394y84tn/QoCnXkp0aiwIpMkuMm1/4lmpbafY8hc0k=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=FdiPH5w2ewVvFGU4PHIyjabJhV1K0ZntXcPaK3Z98MAVJPsYv4hSJ3PYh6E57csrp
-         C0WcCkBk+hAHEcLrN81qSR3vC5Vu5K/niq5STd+z/MvX77bC0kSe2cvKMPELIPb0OR
-         T2SG7q3TZOOH4OZRJBkHzj5PMenyxktl5usv0zR8=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200630073454eucas1p1063b6b0c28413eb10e6c51ce3a57a6ab~dQhNZY2n_1986419864eucas1p1x;
-        Tue, 30 Jun 2020 07:34:54 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 6F.52.05997.D1BEAFE5; Tue, 30
-        Jun 2020 08:34:53 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200630073453eucas1p2863681e0f4c0e7b6742fe70816d11ef9~dQhNDjgNF1243012430eucas1p2i;
-        Tue, 30 Jun 2020 07:34:53 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200630073453eusmtrp14e76104236e753835f20507c816fcb34~dQhNCyvS70694406944eusmtrp1u;
-        Tue, 30 Jun 2020 07:34:53 +0000 (GMT)
-X-AuditID: cbfec7f4-65dff7000000176d-74-5efaeb1d588f
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id AD.74.06017.D1BEAFE5; Tue, 30
-        Jun 2020 08:34:53 +0100 (BST)
-Received: from [106.210.88.143] (unknown [106.210.88.143]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200630073452eusmtip11343709fff45fab3984d39e2dd80f5f0~dQhMZVy4G2427724277eusmtip1E;
-        Tue, 30 Jun 2020 07:34:52 +0000 (GMT)
-Subject: Re: [PATCH 3/4] arm64: dts: exynos: Align DMA controller bus node
- name with dtschema
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Pankaj Dubey <pankaj.dubey@samsung.com>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <3c1eb3fe-8eef-1f91-ff4e-3081a871fc80@samsung.com>
-Date:   Tue, 30 Jun 2020 09:34:52 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.9.0
+        Tue, 30 Jun 2020 03:35:35 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05U7XSqX072662;
+        Tue, 30 Jun 2020 03:35:27 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31y3xd6sbh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 Jun 2020 03:35:27 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05U7YUm9077248;
+        Tue, 30 Jun 2020 03:35:26 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 31y3xd6sb2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 Jun 2020 03:35:26 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05U7FtrG027875;
+        Tue, 30 Jun 2020 07:35:25 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma02dal.us.ibm.com with ESMTP id 31wwr8ura4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 Jun 2020 07:35:25 +0000
+Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05U7ZOAF38404402
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Jun 2020 07:35:24 GMT
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AD6C1124053;
+        Tue, 30 Jun 2020 07:35:24 +0000 (GMT)
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CF404124052;
+        Tue, 30 Jun 2020 07:35:23 +0000 (GMT)
+Received: from ltc.linux.ibm.com (unknown [9.16.170.189])
+        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 30 Jun 2020 07:35:23 +0000 (GMT)
 MIME-Version: 1.0
-In-Reply-To: <20200629204442.17336-3-krzk@kernel.org>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrLKsWRmVeSWpSXmKPExsWy7djPc7pyr3/FGTzltngwbxubxcYZ61kt
-        rn95zmox/8g5Vov+x6+ZLc6f38BusenxNVaLy7vmsFnMOL+PyWLR1i/sFq17j7BbtD99yezA
-        47FpVSebx+Yl9R59W1YxenzeJBfAEsVlk5Kak1mWWqRvl8CVseHWFraCJraK2bd3MzcwPmfp
-        YuTkkBAwkTh54hNzFyMXh5DACkaJZ6susYMkhAS+MEpMXysIYX9mlFh73AWm4VnfSSaIhuWM
-        Eg//f2aBcN4zSjQ+esYKUiUsEC/x9PJxVpCECEj35cnXmEESzAJ3GSUmTMoEsdkEDCW63nax
-        gdi8AnYSv5/eA7uJRUBVYvL7c4wgtqhArETf0gVQNYISJ2c+AavhFDCVmPx4C9RMeYntb+dA
-        2eISt57MBztPQuASu8SpX22sEHe7SPS/mMcEYQtLvDq+hR3ClpE4PbmHBaKhGeifc2vZIZwe
-        oLObZjBCVFlL3Dn3C+gMDqAVmhLrd+lDhB0lPk2fyQ4SlhDgk7jxVhDiCD6JSdumM0OEeSU6
-        2oQgqtUkZh1fB7f24IVLzBMYlWYheW0WkndmIXlnFsLeBYwsqxjFU0uLc9NTi43yUsv1ihNz
-        i0vz0vWS83M3MQIT1el/x7/sYNz1J+kQowAHoxIPb8K5n3FCrIllxZW5hxglOJiVRHidzp6O
-        E+JNSaysSi3Kjy8qzUktPsQozcGiJM5rvOhlrJBAemJJanZqakFqEUyWiYNTqoGx+M3O3Yef
-        iGeu/nNb+OIeRT7O/wzes7o6NdymLv2WfKztod0GyffqTPvufGi+tmz5wnJmJu1DGg3Ci3M0
-        TN8edpBuDbY0zs8yFuvf7lsfqcct31z4x5tru/7hlfOrJPn8Eo0SWE4vsVnQzhviyRea8Oj0
-        mYhJNYwyzZo9Ac4L7NtjdA5911ZiKc5INNRiLipOBABMNNzbUAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrEIsWRmVeSWpSXmKPExsVy+t/xu7qyr3/FGUzpU7V4MG8bm8XGGetZ
-        La5/ec5qMf/IOVaL/sevmS3On9/AbrHp8TVWi8u75rBZzDi/j8li0dYv7Bate4+wW7Q/fcns
-        wOOxaVUnm8fmJfUefVtWMXp83iQXwBKlZ1OUX1qSqpCRX1xiqxRtaGGkZ2hpoWdkYqlnaGwe
-        a2VkqqRvZ5OSmpNZllqkb5egl7Hh1ha2gia2itm3dzM3MD5n6WLk5JAQMJF41neSqYuRi0NI
-        YCmjxKSWFUwQCRmJk9MaWCFsYYk/17rYIIreMkrcedjDDJIQFoiXeHr5OCtIQkTgM6PEs8ZN
-        zCAOs8B9RonzbT/ZQaqEBDYzSrxriQex2QQMJbregozi5OAVsJP4/fQe2B0sAqoSk9+fYwSx
-        RQViJb7d2wJVIyhxcuYTsBpOAVOJyY+3gG1mFjCTmLf5IZQtL7H97RwoW1zi1pP5TBMYhWYh
-        aZ+FpGUWkpZZSFoWMLKsYhRJLS3OTc8tNtIrTswtLs1L10vOz93ECIzPbcd+btnB2PUu+BCj
-        AAejEg9vwrmfcUKsiWXFlbmHGCU4mJVEeJ3Ono4T4k1JrKxKLcqPLyrNSS0+xGgK9NxEZinR
-        5Hxg6sgriTc0NTS3sDQ0NzY3NrNQEuftEDgYIySQnliSmp2aWpBaBNPHxMEp1cBYa1fDfzak
-        7LfjzLeBvg12WxgTdLff6fSRUTnNZCsjaj85Ma5mW+PBaW2xDLWe1nL3vQ+rz23PLK5M/po7
-        RdeB7+zy4wdkN7xtLNPX7exW/bX/Z0944uLlh1/c0urmmfk6TXPB9UPfdKvNeX+/XcP7gPXF
-        1JD393a2ep459p+XY4lBwrOo1VJKLMUZiYZazEXFiQCE89+i5QIAAA==
-X-CMS-MailID: 20200630073453eucas1p2863681e0f4c0e7b6742fe70816d11ef9
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200629205541eucas1p16e9c5848ed7ac84ca87c045f3a6f928b
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200629205541eucas1p16e9c5848ed7ac84ca87c045f3a6f928b
-References: <20200629204442.17336-1-krzk@kernel.org>
-        <CGME20200629205541eucas1p16e9c5848ed7ac84ca87c045f3a6f928b@eucas1p1.samsung.com>
-        <20200629204442.17336-3-krzk@kernel.org>
+Date:   Tue, 30 Jun 2020 09:35:23 +0200
+From:   haver <haver@linux.vnet.ibm.com>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     arnd@arndb.de, gregkh@linuxfoundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Michael Jung <mijung@gmx.net>,
+        Michael Ruettger <michael@ibmra.de>,
+        Frank Haverkamp <haver@linux.ibm.com>,
+        Joerg-Stephan Vogt <jsvogt@de.ibm.com>
+Subject: Re: [PATCH 17/20] misc: genwqe: card_base: Do not      pass unused
+ argument 'fatal_err'
+In-Reply-To: <20200629140442.1043957-18-lee.jones@linaro.org>
+References: <20200629140442.1043957-1-lee.jones@linaro.org>
+ <20200629140442.1043957-18-lee.jones@linaro.org>
+Message-ID: <016718c7218cf811897cc32cf9476222@linux.vnet.ibm.com>
+X-Sender: haver@linux.vnet.ibm.com
+User-Agent: Roundcube Webmail/1.0.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-06-30_02:2020-06-30,2020-06-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ cotscore=-2147483648 clxscore=1015 impostorscore=0 lowpriorityscore=0
+ phishscore=0 bulkscore=0 adultscore=0 priorityscore=1501 malwarescore=0
+ spamscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2004280000 definitions=main-2006300054
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
+On 2020-06-29 16:04, Lee Jones wrote:
+> 'fatal_err' is taken as an argument to a static function which is only
+> invoked once.  During this invocation 'fatal_err' is not set.  There
+> doesn't appear to be a good reason to keep it around.
+> 
+> Also fixes the following W=1 kernel build warning:
+> 
+>  drivers/misc/genwqe/card_base.c:588: warning: Function parameter or
+> member 'fatal_err' not described in 'genwqe_recover_card'
+> 
+> Cc: Michael Jung <mijung@gmx.net>
+> Cc: Michael Ruettger <michael@ibmra.de>
+> Cc: Frank Haverkamp <haver@linux.ibm.com>
+> Cc: Joerg-Stephan Vogt <jsvogt@de.ibm.com>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  drivers/misc/genwqe/card_base.c | 18 +++---------------
+>  1 file changed, 3 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/misc/genwqe/card_base.c 
+> b/drivers/misc/genwqe/card_base.c
+> index bceebf49de2d5..809a6f46f6de3 100644
+> --- a/drivers/misc/genwqe/card_base.c
+> +++ b/drivers/misc/genwqe/card_base.c
+> @@ -569,30 +569,18 @@ static int genwqe_stop(struct genwqe_dev *cd)
+> 
+>  /**
+>   * genwqe_recover_card() - Try to recover the card if it is possible
+> - *
+> - * If fatal_err is set no register access is possible anymore. It is
+> - * likely that genwqe_start fails in that situation. Proper error
+> - * handling is required in this case.
+> + * @cd: GenWQE device information
+>   *
+>   * genwqe_bus_reset() will cause the pci code to call genwqe_remove()
+>   * and later genwqe_probe() for all virtual functions.
+>   */
+> -static int genwqe_recover_card(struct genwqe_dev *cd, int fatal_err)
+> +static int genwqe_recover_card(struct genwqe_dev *cd)
+>  {
+>  	int rc;
+>  	struct pci_dev *pci_dev = cd->pci_dev;
+> 
+>  	genwqe_stop(cd);
+> 
+> -	/*
+> -	 * Make sure chip is not reloaded to maintain FFDC. Write SLU
+> -	 * Reset Register, CPLDReset field to 0.
+> -	 */
+> -	if (!fatal_err) {
+> -		cd->softreset = 0x70ull;
+> -		__genwqe_writeq(cd, IO_SLC_CFGREG_SOFTRESET, cd->softreset);
+> -	}
+> -
+>  	rc = genwqe_bus_reset(cd);
+>  	if (rc != 0) {
+>  		dev_err(&pci_dev->dev,
+> @@ -958,7 +946,7 @@ static int genwqe_health_thread(void *data)
+> 
+>  			cd->card_state = GENWQE_CARD_FATAL_ERROR;
+> 
+> -			rc = genwqe_recover_card(cd, 0);
+> +			rc = genwqe_recover_card(cd);
+>  			if (rc < 0) {
+>  				/* FIXME Card is unusable and needs unbind! */
+>  				goto fatal_error;
 
-On 29.06.2020 22:44, Krzysztof Kozlowski wrote:
-> AMBA is a bus so name the node with DMA controllers just as "bus" to fix
-> dtschema warnings like:
->
->      amba: $nodename:0: 'amba' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+I think this one I want to keep. Since fatal_err is 0, !fatal_error is 1 
+and the register write is actually executed.
+I also want to keep the parameter even though it is only used with 0. 
+The register bit causes a less drastic recovery, but if we would 
+discover that that is not working ok, we rather discard the debug data 
+we get in this case instead of letting the recovery fail. I think it 
+does not hurt to keep it. Maybe you can add a comment?
 
-Do we really need a separate 'bus' for those DMA controllers?
+Thanks
 
-IMHO they are not different from the hw perspective from the other 
-devices available on the SoC. A separate bus is a historical thing, they 
-work fine when moved directly under the 'soc' node. The separate bus 
-only mimics the way Linux organizes its drivers. This comment affects 
-both ARM and ARM64.
-
-Best regards
--- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+Frank
