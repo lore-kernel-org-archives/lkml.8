@@ -2,181 +2,157 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4EF4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9167C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 847E12071A
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:01:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="lyFQhHod"
+	by mail.kernel.org (Postfix) with ESMTP id 9A6BD20748
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:02:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728970AbgF3DBw (ORCPT
+        id S1728986AbgF3DCM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 23:01:52 -0400
-Received: from mail-eopbgr20050.outbound.protection.outlook.com ([40.107.2.50]:7574
-        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        Mon, 29 Jun 2020 23:02:12 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6786 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728835AbgF3DBv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 23:01:51 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=E9U7569sUPhKH8aR69IvVj1RxSIlxgBpJPXv73YlsxFW/W3jUSKtf5brwGAFgvR/Nwv45UNjXlHrbM4AkB/FU4DVzS6Z6sSwwhmkq7xbR0RP7U8t/MJJKpfDlt4hNEK9zOFP/8TFHKYUGP3vXc72MS07jaXrghi6K03nZh9aF0G//exU2YsqA5TnWfSsNKeRQWb4pgDBsbKDkhgSNyDpAr8W9bi6W9eGzR46w15zx+DpTKnrwQkHzSWbHlDoh5IaDVh4U5lyhqLW3k9Ff6jX7f0Rr3BIlyClFnUYavInCdb1Ek3Cj4dABPWtSAF2ZGqlQDuRieb5/0SgODxRrP6mOw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tv7/cgdL0F3EOLE1mbrSq2uEbnYo62zirC1YLmTNMEQ=;
- b=mNNvuh5W8ESaPbmG5gwuUrHO7b4hil3jwn02Js8+SDK6UD0dcYGw0G5mesOOt25dgiu6Md8WZk6NEjwLqHX4hParly7g4d6/9zhpqFL6IoOosyvFoPtc3oU290KzTa6XUv7rw7XErotdmUDuKP3iVRTkQisfztTRRvUsfQWUyO81eRjZnAgBBmrEFcyHeJHQlUih49AWmhvqYyVGnkY09wRP6uAj0AyQmMjoFlyZ72jVOXcxiu4m/FSxwxEkVi27A507PplHxSHPscEI3ADyKN/t/8+4imRIg4gVlLVx0SC2l37DKRazVr9cH0bmQID/ahDOXfRW1AuuSOS7j57WUw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tv7/cgdL0F3EOLE1mbrSq2uEbnYo62zirC1YLmTNMEQ=;
- b=lyFQhHodqYNYVQTDjPwMWhDWmsJ51iCHrfnjlM4KzAWHHWIqblWyQ9ALeo2D1qmBiNb9pJp7ANm5MOz5RnuXRkC4pILJvbj2+yqoNm1uN8yZxS/qFPSH3aPH57A0LT7J9fYi/X2e9WAhtDUV1W+ZihbwQzw0ai3TE+WJHyzpOZA=
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com (2603:10a6:20b:2::14)
- by AM6PR0402MB3894.eurprd04.prod.outlook.com (2603:10a6:209:20::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.26; Tue, 30 Jun
- 2020 03:01:46 +0000
-Received: from AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::3c6c:a0e9:9a4e:c51d]) by AM6PR04MB4966.eurprd04.prod.outlook.com
- ([fe80::3c6c:a0e9:9a4e:c51d%7]) with mapi id 15.20.3131.028; Tue, 30 Jun 2020
- 03:01:46 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Arnd Bergmann <arnd@arndb.de>, Dong Aisheng <dongas86@gmail.com>
-CC:     Stephen Boyd <sboyd@kernel.org>, Abel Vesa <abel.vesa@nxp.com>,
-        Andy Duan <fugang.duan@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Peng Fan <peng.fan@nxp.com>,
-        Stefan Agner <stefan.agner@toradex.com>,
-        Allison Randal <allison@lohutok.net>,
-        Fabio Estevam <festevam@gmail.com>,
-        gregkh <gregkh@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Michael Turquette <mturquette@baylibre.com>,
-        "oleksandr.suvorov@toradex.com" <oleksandr.suvorov@toradex.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        YueHaibing <yuehaibing@huawei.com>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V2 3/9] clk: imx: Support building SCU clock driver as
- module
-Thread-Topic: [PATCH V2 3/9] clk: imx: Support building SCU clock driver as
- module
-Thread-Index: AQHWPjGl8KdpudYoFUWSs6/zaZS5vqjcqcVQgAAe9YCAAOIhAIADPk4AgASxvPCAAFrbAIAAAT6wgAERl4CAABTeEIAABqEAgAAFITCAAUwHAIAG1X0AgAAU+gCAATgGYA==
-Date:   Tue, 30 Jun 2020 03:01:46 +0000
-Message-ID: <AM6PR04MB496607DD6E1B76E1B3A79C67806F0@AM6PR04MB4966.eurprd04.prod.outlook.com>
-References: <1591687933-19495-1-git-send-email-Anson.Huang@nxp.com>
- <AM6PR04MB4966B94CFAE642E6AF5AEF79809B0@AM6PR04MB4966.eurprd04.prod.outlook.com>
- <159262367025.62212.11651547971712516448@swboyd.mtv.corp.google.com>
- <AM6PR04MB496690A045E0BFFF3D03AE0380940@AM6PR04MB4966.eurprd04.prod.outlook.com>
- <159290125202.62212.13172213909023205615@swboyd.mtv.corp.google.com>
- <AM6PR04MB49664A8400CA0B0F7321EDDE80940@AM6PR04MB4966.eurprd04.prod.outlook.com>
- <159296027133.62212.18074403520585879907@swboyd.mtv.corp.google.com>
- <AM6PR04MB4966BA60F25AE60ABA8F883180950@AM6PR04MB4966.eurprd04.prod.outlook.com>
- <DB3PR0402MB39167FB012D9BCB4A5081BEDF5950@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <AM6PR04MB496622897A67C4912715223A80950@AM6PR04MB4966.eurprd04.prod.outlook.com>
- <159303858063.62212.4991053028281879719@swboyd.mtv.corp.google.com>
- <CAA+hA=RB3H_EqCMpCuide7WDqddaZu5=LmihU1pZaCPM8b8zng@mail.gmail.com>
- <CAK8P3a2-1nFvw2rR1wws04fCmj6AyvcJ4RFwcJQ+xRPwDjUCaA@mail.gmail.com>
-In-Reply-To: <CAK8P3a2-1nFvw2rR1wws04fCmj6AyvcJ4RFwcJQ+xRPwDjUCaA@mail.gmail.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: arndb.de; dkim=none (message not signed)
- header.d=none;arndb.de; dmarc=none action=none header.from=nxp.com;
-x-originating-ip: [119.31.174.67]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 7d9b2e5a-810e-4c64-30f6-08d81ca1ecf1
-x-ms-traffictypediagnostic: AM6PR0402MB3894:
-x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR0402MB38944143ADB35E93F6460C40806F0@AM6PR0402MB3894.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 0450A714CB
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: p0XNO3rQHl3OlnHONQNK/jYazPxJkT+WS/EA9m2MXimXueHUnzwMnygcdL12n1l9Ddxqmj4+LsjQNZ45grOMrEQ/p57TAV34q+20WYbo/WTUZ1oN8llkyMqblb7kxCTM2lPu5BjBtRohkjWMfGKcG7mvw8Mqf/3tsZ4ulMyvf7QTRorqG0UWbFNfilBFk0vcYseZqHsrB4YZwlnL9a+1LdsbL/QP/D8E9W1/XQawe6hJxomA8NTDVBVAQSOXmEX0OrNu+l2IMUwLAXRKiRY0UM5J8KPKyH/nqCGe+mmCXz7CWuQuYVO+HbIj46XVfxkMCdEnYLocnVnSStAnodz3nQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR04MB4966.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39860400002)(136003)(376002)(346002)(396003)(44832011)(7416002)(53546011)(86362001)(8936002)(8676002)(6506007)(7696005)(186003)(2906002)(316002)(26005)(71200400001)(5660300002)(9686003)(55016002)(52536014)(54906003)(33656002)(83380400001)(66476007)(4326008)(66556008)(64756008)(66446008)(110136005)(76116006)(478600001)(66946007);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: mb30OU0+Of93pZM2HOxhLswrhwDo80Da8xdSxjobayulXlR5Ta7wsinZDHaP6GGR2SAdRrMPfNaSg69skBrm4/20V5ebO4KnjmsAhgrQbJCJ8rW2QOq4UypS+5Dqe3HLkDHzJ1lC+l979fsZYZOCyxMFHNJp0idpU4y6iYbpsvWCEz4UeKv6Nx3y+kLMq2S+YhC1W8R0MfWgQbFEz3Y0xwwK21IqWIAoMtZmBgAEpq+PTXqKZK0U3m4ulZTzK2nGckZYGbnc5wSbLHhLqaVFByJvNyP5mjjqYiEmjO14r+GDPeusJqAwHgQdX1MGeiIOoxmzCbDaxOhyAe1F5gmWfiS7//9fyWmaTZpH2HDuTqYnYobZv3dkGfN7Pj6e1PT7JNeY2btpnPifNpY3Dr+H31EYbCeS2b1Gzt3lJ24hqGl4ORQHTuMqhkWMi3WgNataWw7YH+GUF2WYavFEbMSsVYI+RJ3sEYff/Dw0ExgDT9k=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1728049AbgF3DCL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 23:02:11 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id DC56E6EA0334CAF29281;
+        Tue, 30 Jun 2020 11:00:59 +0800 (CST)
+Received: from [10.174.185.226] (10.174.185.226) by
+ DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
+ 14.3.487.0; Tue, 30 Jun 2020 11:00:53 +0800
+Subject: Re: [BUG] irqchip/gic-v4.1: sleeping function called from invalid
+ context
+To:     Marc Zyngier <maz@kernel.org>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        <wanghaibin.wang@huawei.com>, <kuhn.chenqun@huawei.com>,
+        <wangjingyi11@huawei.com>
+References: <1d673e99-0dd2-d287-aedf-65686eed5194@huawei.com>
+ <c401871295f68391473f2e522b920719@kernel.org>
+From:   Zenghui Yu <yuzenghui@huawei.com>
+Message-ID: <63fa30f0-4d9a-aa15-7f42-db09587c43e2@huawei.com>
+Date:   Tue, 30 Jun 2020 11:00:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR04MB4966.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7d9b2e5a-810e-4c64-30f6-08d81ca1ecf1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2020 03:01:46.1868
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: BWv/na3fVxF/LwTYJYYn9QgTea7KD59MXr0PbR5eZOCqW+8pXHhScbT4jLTbX0EnfPJvuInWx1JOrd3XPTcHtw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3894
+In-Reply-To: <c401871295f68391473f2e522b920719@kernel.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.174.185.226]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBGcm9tOiBBcm5kIEJlcmdtYW5uIDxhcm5kQGFybmRiLmRlPg0KPiBTZW50OiBNb25kYXksIEp1
-bmUgMjksIDIwMjAgNDoyMCBQTQ0KPiANCj4gT24gTW9uLCBKdW4gMjksIDIwMjAgYXQgOToxOCBB
-TSBEb25nIEFpc2hlbmcgPGRvbmdhczg2QGdtYWlsLmNvbT4NCj4gd3JvdGU6DQo+ID4gT24gVGh1
-LCBKdW4gMjUsIDIwMjAgYXQgNjo0MyBBTSBTdGVwaGVuIEJveWQgPHNib3lkQGtlcm5lbC5vcmc+
-IHdyb3RlOg0KPiA+ID4gUXVvdGluZyBBaXNoZW5nIERvbmcgKDIwMjAtMDYtMjMgMTk6NTk6MDkp
-IFdoeSBhcmVuJ3QgdGhlcmUgb3B0aW9ucw0KPiA+ID4gdG8gZW5hYmxlIGNsay1pbXg2cSBhbmQg
-Y2xrLWlteDZzbCBpbiB0aGUgY2xrL2lteC9LY29uZmlnIGZpbGU/DQo+ID4gPiBUaG9zZSBjYW4g
-YmUgYm9vbCBvciB0cmlzdGF0ZSBkZXBlbmRpbmcgb24gaWYgdGhlIFNvQyBkcml2ZXJzIHVzZQ0K
-PiA+ID4gQ0xLX09GX0RFQ0xBUkUgb3Igbm90IGFuZCBkZXBlbmQgb24gdGhlIG14Yy1jbGsgbGli
-cmFyeSBhbmQgU29DDQo+ID4gPiBjb25maWcgd2UgaGF2ZSBpbiB0aGUgbWFrZWZpbGUgdG9kYXku
-DQo+ID4NCj4gPiBZZXMsIHdlIGNhbiBkbyB0aGF0IGluIGNsay9pbXgvS2NvbmZpZyBhcyBmb2xs
-b3dzIHRoZW9yZXRpY2FsbHkuDQo+ID4gY29uZmlnIENMS19JTVg2UQ0KPiA+ICAgICAgICAgYm9v
-bA0KPiA+ICAgICAgICAgZGVmX2Jvb2wgQVJDSF9NWEMgJiYgQVJNDQo+ID4gICAgICAgICBzZWxl
-Y3QgTVhDX0NMSw0KPiA+DQo+ID4gQnV0IHdlIGhhdmUgdG90YWxseSAxNSBwbGF0Zm9ybXMgdGhh
-dCBuZWVkIHRvIGNoYW5nZS4NCj4gDQo+IEkgd291bGQgbWFrZSB0aGF0DQo+IA0KPiBjb25maWcg
-Q0xLX0lNWDZRDQo+ICAgICAgICAgIGJvb2wgIkNsb2NrIGRyaXZlciBmb3IgTlhQIGkuTVg2USIN
-Cj4gICAgICAgICAgZGVwZW5kcyBvbiBTT0NfSU1YNlEgfHwgQ09NUElMRV9URVNUDQo+ICAgICAg
-ICAgIGRlZmF1bHQgU09DX0lNWDZRDQo+ICAgICAgICAgIHNlbGVjdCBNWENfQ0xLDQo+IA0KDQpZ
-ZXMsIHRoaXMgc2VlbXMgYmV0dGVyLg0KQW5zb24sIHBscyBmb2xsb3cgdGhpcyB3YXkuDQoNCj4g
-PiBlLmcuDQo+ID4gZHJpdmVycy9jbGsvaW14L01ha2VmaWxlDQo+ID4gb2JqLSQoQ09ORklHX1NP
-Q19JTVgxKSAgICs9IGNsay1pbXgxLm8NCj4gPiBvYmotJChDT05GSUdfU09DX0lNWDIxKSAgKz0g
-Y2xrLWlteDIxLm8NCj4gPiBvYmotJChDT05GSUdfU09DX0lNWDI1KSAgKz0gY2xrLWlteDI1Lm8N
-Cj4gPiBvYmotJChDT05GSUdfU09DX0lNWDI3KSAgKz0gY2xrLWlteDI3Lm8NCj4gPiBvYmotJChD
-T05GSUdfU09DX0lNWDMxKSAgKz0gY2xrLWlteDMxLm8NCj4gPiBvYmotJChDT05GSUdfU09DX0lN
-WDM1KSAgKz0gY2xrLWlteDM1Lm8NCj4gPiBvYmotJChDT05GSUdfU09DX0lNWDUpICAgKz0gY2xr
-LWlteDUubw0KPiA+IG9iai0kKENPTkZJR19TT0NfSU1YNlEpICArPSBjbGstaW14NnEubw0KPiA+
-IG9iai0kKENPTkZJR19TT0NfSU1YNlNMKSArPSBjbGstaW14NnNsLm8NCj4gPiBvYmotJChDT05G
-SUdfU09DX0lNWDZTTEwpICs9IGNsay1pbXg2c2xsLm8NCj4gPiBvYmotJChDT05GSUdfU09DX0lN
-WDZTWCkgKz0gY2xrLWlteDZzeC5vDQo+ID4gb2JqLSQoQ09ORklHX1NPQ19JTVg2VUwpICs9IGNs
-ay1pbXg2dWwubw0KPiA+IG9iai0kKENPTkZJR19TT0NfSU1YN0QpICArPSBjbGstaW14N2Qubw0K
-PiA+IG9iai0kKENPTkZJR19TT0NfSU1YN1VMUCkgKz0gY2xrLWlteDd1bHAubw0KPiA+IG9iai0k
-KENPTkZJR19TT0NfVkY2MTApICArPSBjbGstdmY2MTAubw0KPiA+DQo+ID4gTm90IHN1cmUgaWYg
-aXQncyByZWFsbHkgd29ydGggdG8gZG8gdGhhdC4NCj4gPiBUaGUgZWFzaWVzdCB3YXkgdG8gYWRk
-cmVzcyB0aGlzIGlzc3VlIGlzIGp1c3Qgc2VsZWN0IGl0IGluDQo+ID4gYXJjaC9hcm0vbWFjaC1p
-bXgvS2NvbmZpZywNCj4gDQo+IENoYW5naW5nIHRoZW0gY2FuIGJlIGEgb25lIG9yIHR3byBwYXRj
-aGVzLCB0aGF0J3MgdG90YWxseSB3b3J0aCBpdCBJTUhPLg0KPiANCj4gSSByZWFsbHkgZG9uJ3Qg
-bGlrZSB0aGUgJ3NlbGVjdCcgaW4gYXJjaC9hcm0vbWFjaC1pbXgvS2NvbmZpZzogaWYgeW91J3Zl
-IGRvbmUgdGhlDQo+IHdvcmsgdG8gbWFrZSB0aGUgaW14OCBjbGsgZHJpdmVyIG1vZHVsYXIsIEkg
-d291bGQgZXhwZWN0IHRvIHNlZSB0aGUgc2FtZSBhdA0KPiBsZWFzdCB0cmllZCBmb3IgdGhlIG90
-aGVyIG9uZXMuDQo+IA0KDQpHb3QgaXQuDQoNCj4gRm9yIHRoZSBjbGsgZHJpdmVycyB0aGF0IGNh
-bm5vdCB5ZXQgYmUgJ3RyaXN0YXRlJyBiZWNhdXNlIG9mIHRoZQ0KPiBDTEtfT0ZfREVDTEFSRSgp
-LCBjYW4geW91IGluY2x1ZGUgYSBsaXN0IG9mIGRyaXZlcnMgdGhhdCBkZXBlbmQgb24gdGhlIGNs
-b2Nrcw0KPiBiZWluZyBhdmFpbGFibGUgZHVyaW5nIGVhcmx5IGJvb3Q/DQo+IA0KDQpJIGd1ZXNz
-IHdlIGNhbiBmaW5kIG91dCB0aGVtIG9uZSBieSBvbmUgZm9yIHRob3NlIDE1IHBsYXRmb3JtcyB3
-aGVuIGNvbnZlcnRpbmcgdGhlbQ0KdG8gbW9kdWxlcyBhcyB3ZWxsLiBDdXJyZW50bHkgd2UncmUg
-Y29udmVydGluZyBBUk02NCBjbG9jayBkcml2ZXJzIGZpcnN0Lg0KDQpSZWdhcmRzDQpBaXNoZW5n
-DQoNCj4gICAgICAgIEFybmQNCg==
+Hi Marc,
+
+On 2020/6/29 22:01, Marc Zyngier wrote:
+> Hi Zenghui,
+> 
+> On 2020-06-29 10:39, Zenghui Yu wrote:
+>> Hi All,
+>>
+>> Booting the latest kernel with DEBUG_ATOMIC_SLEEP=y on a GICv4.1 enabled
+>> box, I get the following kernel splat:
+>>
+>> [    0.053766] BUG: sleeping function called from invalid context at
+>> mm/slab.h:567
+>> [    0.053767] in_atomic(): 1, irqs_disabled(): 128, non_block: 0,
+>> pid: 0, name: swapper/1
+>> [    0.053769] CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.8.0-rc3+ #23
+>> [    0.053770] Call trace:
+>> [    0.053774]  dump_backtrace+0x0/0x218
+>> [    0.053775]  show_stack+0x2c/0x38
+>> [    0.053777]  dump_stack+0xc4/0x10c
+>> [    0.053779]  ___might_sleep+0xfc/0x140
+>> [    0.053780]  __might_sleep+0x58/0x90
+>> [    0.053782]  slab_pre_alloc_hook+0x7c/0x90
+>> [    0.053783]  kmem_cache_alloc_trace+0x60/0x2f0
+>> [    0.053785]  its_cpu_init+0x6f4/0xe40
+>> [    0.053786]  gic_starting_cpu+0x24/0x38
+>> [    0.053788]  cpuhp_invoke_callback+0xa0/0x710
+>> [    0.053789]  notify_cpu_starting+0xcc/0xd8
+>> [    0.053790]  secondary_start_kernel+0x148/0x200
+>>
+>> # ./scripts/faddr2line vmlinux its_cpu_init+0x6f4/0xe40
+>> its_cpu_init+0x6f4/0xe40:
+>> allocate_vpe_l1_table at drivers/irqchip/irq-gic-v3-its.c:2818
+>> (inlined by) its_cpu_init_lpis at drivers/irqchip/irq-gic-v3-its.c:3138
+>> (inlined by) its_cpu_init at drivers/irqchip/irq-gic-v3-its.c:5166
+> 
+> Let me guess: a system with more than a single CommonLPIAff group?
+
+I *think* you're right. E.g., when we're allocating vpe_table_mask for
+the first CPU of the second CommonLPIAff group.
+
+The truth is that all the GICv4.1 boards I'm having on hand only have a
+single CommonLPIAff group. Just to get the above backtrace, I did some
+crazy hacking on my 920 and pretend it as v4.1 capable (well, please
+ignore me). Hopefully I can get a new GICv4.1 board with more than one
+CommonLPIAff group next month and do more tests.
+
+>> I've tried to replace GFP_KERNEL flag with GFP_ATOMIC to allocate memory
+>> in this atomic context, and the splat disappears. But after a quick look
+>> at [*], it seems not a good idea to allocate memory within the CPU
+>> hotplug notifier. I really don't know much about it, please have a look.
+>>
+>> [*]
+>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=11e37d357f6ba7a9af850a872396082cc0a0001f 
+>>
+> 
+> The allocation of the cpumask is pretty benign, and could either be
+> allocated upfront for all RDs (and freed on detecting that we share
+> the same CommonLPIAff group) or made atomic.
+> 
+> The much bigger issue is the alloc_pages call just after. Allocating this
+> upfront probably is the wrong thing to do, as you are likely to allocate
+> way too much memory, even if you free it quickly afterwards.
+> 
+> At this stage, I'd rather we turn this into an atomic allocation. A 
+> notifier
+> is just another atomic context, and if this fails at such an early stage,
+> then the CPU is unlikely to continue booting...
+
+Got it.
+
+> Would you like to write a patch for this? Given that you have tested
+> something, it probably already exists. Or do you want me to do it?
+
+Yes, I had written something like below. I will add a commit message and
+send it out today.
+
+diff --git a/drivers/irqchip/irq-gic-v3-its.c 
+b/drivers/irqchip/irq-gic-v3-its.c
+index 6a5a87fc4601..b66eeca442c4 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -2814,7 +2814,7 @@ static int allocate_vpe_l1_table(void)
+  	if (val & GICR_VPROPBASER_4_1_VALID)
+  		goto out;
+
+-	gic_data_rdist()->vpe_table_mask = kzalloc(sizeof(cpumask_t), GFP_KERNEL);
++	gic_data_rdist()->vpe_table_mask = kzalloc(sizeof(cpumask_t), GFP_ATOMIC);
+  	if (!gic_data_rdist()->vpe_table_mask)
+  		return -ENOMEM;
+
+@@ -2881,7 +2881,7 @@ static int allocate_vpe_l1_table(void)
+
+  	pr_debug("np = %d, npg = %lld, psz = %d, epp = %d, esz = %d\n",
+  		 np, npg, psz, epp, esz);
+-	page = alloc_pages(GFP_KERNEL | __GFP_ZERO, get_order(np * PAGE_SIZE));
++	page = alloc_pages(GFP_ATOMIC | __GFP_ZERO, get_order(np * PAGE_SIZE));
+  	if (!page)
+  		return -ENOMEM;
+
+
+Thanks,
+Zenghui
