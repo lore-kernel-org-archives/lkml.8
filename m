@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-10.0 required=3.0
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 140BAC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64CBAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E12E52074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:01:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F8C720772
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:01:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727809AbgF3VBH (ORCPT
+        id S1728173AbgF3VB3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 17:01:07 -0400
-Received: from mga09.intel.com ([134.134.136.24]:26203 "EHLO mga09.intel.com"
+        Tue, 30 Jun 2020 17:01:29 -0400
+Received: from mga09.intel.com ([134.134.136.24]:26205 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726947AbgF3VBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 17:01:06 -0400
-IronPort-SDR: dxIgbb5/46utS22REAwuKsEyzG7tC3hgYt/AFi0SjZM0QUteiBoX0HAFFG8dm6ufWLHmiTzbuo
- YTfS+EGgxwFA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="147935008"
+        id S1727773AbgF3VBH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 17:01:07 -0400
+IronPort-SDR: x711/NqIu78GB7lCS31RGgDykjLch+Ekv9LJYMraKn4dSOkM+sTKbHxYw4uCkhQQ+yZEc4+5rj
+ wIF6Zdugd6Yw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="147935009"
 X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
-   d="scan'208";a="147935008"
+   d="scan'208";a="147935009"
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga004.jf.intel.com ([10.7.209.38])
   by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 14:01:05 -0700
-IronPort-SDR: SpsS6sneonBqQA49OBcqy5Nc5QY/QZttXq0eNjX+YI036tiPW58nCvbYd7VLT5bmD/IYJfHeFv
- jofzunfQYXUQ==
+IronPort-SDR: MIWwdf6O5TXGxxxyWM56abduEscxzDTm2BxsDHsWk5E/tgLmIcRBFSFm5gswxP/d9JiiDDT4GY
+ RYdGuRLuSeuQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
-   d="scan'208";a="425337228"
+   d="scan'208";a="425337237"
 Received: from jacob-builder.jf.intel.com ([10.7.199.155])
   by orsmga004.jf.intel.com with ESMTP; 30 Jun 2020 14:01:05 -0700
 From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
@@ -46,9 +46,9 @@ Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
         Raj Ashok <ashok.raj@intel.com>,
         Eric Auger <eric.auger@redhat.com>,
         Jacob Pan <jacob.jun.pan@linux.intel.com>
-Subject: [PATCH v2 1/7] iommu/vt-d: Enforce PASID devTLB field mask
-Date:   Tue, 30 Jun 2020 14:07:32 -0700
-Message-Id: <1593551258-39854-2-git-send-email-jacob.jun.pan@linux.intel.com>
+Subject: [PATCH v2 6/7] iommu/vt-d: Warn on out-of-range invalidation address
+Date:   Tue, 30 Jun 2020 14:07:37 -0700
+Message-Id: <1593551258-39854-7-git-send-email-jacob.jun.pan@linux.intel.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1593551258-39854-1-git-send-email-jacob.jun.pan@linux.intel.com>
 References: <1593551258-39854-1-git-send-email-jacob.jun.pan@linux.intel.com>
@@ -57,32 +57,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Liu Yi L <yi.l.liu@intel.com>
+For guest requested IOTLB invalidation, address and mask are provided as
+part of the invalidation data. VT-d HW silently ignores any address bits
+below the mask. SW shall also allow such case but give warning if
+address does not align with the mask. This patch relax the fault
+handling from error to warning and proceed with invalidation request
+with the given mask.
 
-Set proper masks to avoid invalid input spillover to reserved bits.
-
-Acked-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
 Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 ---
- include/linux/intel-iommu.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/iommu/intel/iommu.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
-index 4100bd224f5c..729386ca8122 100644
---- a/include/linux/intel-iommu.h
-+++ b/include/linux/intel-iommu.h
-@@ -380,8 +380,8 @@ enum {
+diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+index 6a0c62c7395c..88e75be5ea76 100644
+--- a/drivers/iommu/intel/iommu.c
++++ b/drivers/iommu/intel/iommu.c
+@@ -5439,13 +5439,12 @@ intel_iommu_sva_invalidate(struct iommu_domain *domain, struct device *dev,
  
- #define QI_DEV_EIOTLB_ADDR(a)	((u64)(a) & VTD_PAGE_MASK)
- #define QI_DEV_EIOTLB_SIZE	(((u64)1) << 11)
--#define QI_DEV_EIOTLB_GLOB(g)	((u64)g)
--#define QI_DEV_EIOTLB_PASID(p)	(((u64)p) << 32)
-+#define QI_DEV_EIOTLB_GLOB(g)	((u64)(g) & 0x1)
-+#define QI_DEV_EIOTLB_PASID(p)	((u64)((p) & 0xfffff) << 32)
- #define QI_DEV_EIOTLB_SID(sid)	((u64)((sid) & 0xffff) << 16)
- #define QI_DEV_EIOTLB_QDEP(qd)	((u64)((qd) & 0x1f) << 4)
- #define QI_DEV_EIOTLB_PFSID(pfsid) (((u64)(pfsid & 0xf) << 12) | \
+ 		switch (BIT(cache_type)) {
+ 		case IOMMU_CACHE_INV_TYPE_IOTLB:
++			/* HW will ignore LSB bits based on address mask */
+ 			if (inv_info->granularity == IOMMU_INV_GRANU_ADDR &&
+ 			    size &&
+ 			    (inv_info->addr_info.addr & ((BIT(VTD_PAGE_SHIFT + size)) - 1))) {
+-				pr_err_ratelimited("Address out of range, 0x%llx, size order %llu\n",
+-						   inv_info->addr_info.addr, size);
+-				ret = -ERANGE;
+-				goto out_unlock;
++				WARN_ONCE(1, "Address out of range, 0x%llx, size order %llu\n",
++					  inv_info->addr_info.addr, size);
+ 			}
+ 
+ 			/*
 -- 
 2.7.4
 
