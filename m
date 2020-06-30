@@ -2,122 +2,132 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A16C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:07:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61EC8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:08:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 79AE52053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:07:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C9012053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:08:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LKhpFwpK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oQ+3Bpe1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728578AbgF3VHw (ORCPT
+        id S1728724AbgF3VIE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 17:07:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58654 "EHLO
+        Tue, 30 Jun 2020 17:08:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbgF3VHw (ORCPT
+        with ESMTP id S1726084AbgF3VIE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 17:07:52 -0400
+        Tue, 30 Jun 2020 17:08:04 -0400
 Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 038EBC061755;
-        Tue, 30 Jun 2020 14:07:51 -0700 (PDT)
-Received: by mail-pf1-x443.google.com with SMTP id x72so519590pfc.6;
-        Tue, 30 Jun 2020 14:07:51 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CC70C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 14:08:04 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id j1so9951581pfe.4
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 14:08:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=GU6vPKQf4uXQIkirjbYE3xtNV9UQ8YIx9I4Z3o6US34=;
-        b=LKhpFwpKGk2r98ftbnVNAdzfHUcOB+/gdY2agjd4zGB1qP+EkUM8q0WGmOVglXGU10
-         PuCvLSxCjltm3ohKZgn9jTkjp4DcY7eosb1ZTk10BM25+y01VHExjshJKRureC1F+nce
-         v0xad9veeijdnaDqA1UgCl0nk76gQra0hPvGncwykvVKjK1gMNa+uyfE+WFQft3csldf
-         aaeyfNB3/FRVlNORJ73r+TViuXB2et4HHKMPIvIHJyVLGe7HaDIlVnM+Yu7oMtbmW/Lj
-         se/DGk4xFdQ7jpSbNYnafeYtsQQnoc9NpYJpvVuv4GkI5PT8YH738mVFqY8xsbIJvOUS
-         rnZg==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=TztK3Rxr7Fn5cSwLph8w89UZSXGdiaGuD8YdgAZBLhc=;
+        b=oQ+3Bpe1J49+YLFni4XKFQ3sa+QK/5kDOZgXHaTp/mNo/nfT4Jl8WEoDZoGiqe2yqY
+         ztdhanr9s4Em/BqMGX5oakTrwq22JKROPHNQHFkPnhIUEMxk3eg1TQViyJtSnP5gEcmC
+         NHLbYmEGMn9WmX3NI2dl+MGasn+a6NsvaEl5/w0gyCrQmWIq6SbbNKalnU08ZxlgE5Fm
+         vuZ4lT6Q0V/jBEFPYU+2Eh04WgRyaxmAgtU7zBejXK3+O0bNACuLgAAzHfIeFFlPA89s
+         5PMCVE2hyQhbSCnqR3L++ETZb7lAJ4ZhydHlk0E5mQCGnZaxHA8Mm3QIj//j3xKCBD7h
+         4ZiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GU6vPKQf4uXQIkirjbYE3xtNV9UQ8YIx9I4Z3o6US34=;
-        b=rg7jtwGrR04Mwp5p52pTYjclTFkv1cFj2Vi54xye9M8KMaFctw5BFJjVTE7aPuNQus
-         Ks0iKdMylcT6Rp4ntf1WgvxJ0IcOUtFLqGxDzzURVWmUwvLSeq8iwhTIrqL4/kizD+LT
-         K2Tout55lU+tidHfZKSdvwDW4ve+SqmvxM/07twQTS4KOfBASDF1/b/Tc9/yf6mqAzfc
-         xsK7YLI+osR/lSTszhOGw40S2icBG8uQ3Y/Po2j/GK+bSZ9wwDgeYzwljvfptJFZC9oc
-         qrVy7C5l5au5OzPvakvELKW7+KAKGRmBQmgrZZP8E41V67TJiiqqRpAy6nBt1vr9R+rn
-         WDqA==
-X-Gm-Message-State: AOAM532ArxP39ddUlcRc/BiGIZ6JCm9rpvpl5wZ3VblnE4GPuYZHqZHp
-        ppo1cTjZh0kBc/sc5H/LeZI=
-X-Google-Smtp-Source: ABdhPJyTuPK8hg3+kUrbWtvwAIvHSm7IDUVa3HMy1BhtYmQLCeYg7eVD4HxiPCBvSbSG9UgK4phH+g==
-X-Received: by 2002:a63:7d16:: with SMTP id y22mr15792454pgc.136.1593551271458;
-        Tue, 30 Jun 2020 14:07:51 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b11sm3649839pfr.179.2020.06.30.14.07.50
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 30 Jun 2020 14:07:50 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 14:07:49 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Ahmad Fatoum <a.fatoum@pengutronix.de>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Giel van Schijndel <me@mortis.eu>,
-        linux-watchdog@vger.kernel.org, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 3/8] watchdog: f71808e_wdt: remove use of wrong
- watchdog_info option
-Message-ID: <20200630210749.GA22948@roeck-us.net>
-References: <20200611191750.28096-1-a.fatoum@pengutronix.de>
- <20200611191750.28096-4-a.fatoum@pengutronix.de>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=TztK3Rxr7Fn5cSwLph8w89UZSXGdiaGuD8YdgAZBLhc=;
+        b=mZXPCgfIJctAPvHe+R9WgfJ4PlKmHenxrS7JtW2mytJED7VR9/9/wwxrwGRBcRMVie
+         5RPy4UFYoUiDt4fDN4c9MdsqT52x/mfo6TIQMTEzFlVXutFNksRz8FTeUw7eIE2Pk67u
+         fdE9XhYyENUIh9LQ/WK1EkIUGaiphYJAzTQMpqC171tRqdevEEcSvyJE4rZHZL1e+8co
+         CIcq5kriwpa7t3t8sgUYK3omf9WcAuWmfpw8u82vbLPYHOxi0BOWJ6ign0+Ao4KLJ3wO
+         /ozpJiGT5cNTHf3kXgqgW7sO+BY1UsnzLDpkfv4cptgDKY7G4a8L5vbxhcwU1lbU/vr8
+         QgKQ==
+X-Gm-Message-State: AOAM530iAmgoWizcTzrul/KGMeoNpMF1y74R8/lc51nlXkY+RGDZRSE0
+        cCUqbbpN5c53038TjrTrc7g=
+X-Google-Smtp-Source: ABdhPJzIJ1W4d01lMXP9WUjf+Cym20TVKfnvze08MwIPXiAPLCLsDGxc/7HfWssoCd2lnMp6OOM7nA==
+X-Received: by 2002:a65:67d0:: with SMTP id b16mr2083343pgs.60.1593551283634;
+        Tue, 30 Jun 2020 14:08:03 -0700 (PDT)
+Received: from ubuntu-s3-xlarge-x86 ([2604:1380:1000:7a00::1])
+        by smtp.gmail.com with ESMTPSA id s15sm3548300pfm.129.2020.06.30.14.08.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 14:08:03 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 14:08:01 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Aisheng Dong <aisheng.dong@nxp.com>
+Cc:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH] mailbox: imx: Mark PM functions as __maybe_unused
+Message-ID: <20200630210801.GA3920527@ubuntu-s3-xlarge-x86>
+References: <20200623010403.517691-1-natechancellor@gmail.com>
+ <AM6PR04MB4966C312C40364B5BCA18C8780940@AM6PR04MB4966.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200611191750.28096-4-a.fatoum@pengutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <AM6PR04MB4966C312C40364B5BCA18C8780940@AM6PR04MB4966.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 09:17:44PM +0200, Ahmad Fatoum wrote:
-> The flags that should be or-ed into the watchdog_info.options by drivers
-> all start with WDIOF_, e.g. WDIOF_SETTIMEOUT, which indicates that the
-> driver's watchdog_ops has a usable set_timeout.
+On Tue, Jun 23, 2020 at 02:14:05AM +0000, Aisheng Dong wrote:
+> > From: Nathan Chancellor <natechancellor@gmail.com>
+> > Sent: Tuesday, June 23, 2020 9:04 AM
+> > 
+> > When CONFIG_PM and CONFIG_PM_SLEEP are unset, the following warnings
+> > occur:
+> > 
+> > drivers/mailbox/imx-mailbox.c:638:12: warning: 'imx_mu_runtime_resume'
+> > defined but not used [-Wunused-function]
+> >   638 | static int imx_mu_runtime_resume(struct device *dev)
+> >       |            ^~~~~~~~~~~~~~~~~~~~~
+> > drivers/mailbox/imx-mailbox.c:629:12: warning: 'imx_mu_runtime_suspend'
+> > defined but not used [-Wunused-function]
+> >   629 | static int imx_mu_runtime_suspend(struct device *dev)
+> >       |            ^~~~~~~~~~~~~~~~~~~~~~
+> > drivers/mailbox/imx-mailbox.c:611:12: warning: 'imx_mu_resume_noirq'
+> > defined but not used [-Wunused-function]
+> >   611 | static int imx_mu_resume_noirq(struct device *dev)
+> >       |            ^~~~~~~~~~~~~~~~~~~
+> > drivers/mailbox/imx-mailbox.c:601:12: warning: 'imx_mu_suspend_noirq'
+> > defined but not used [-Wunused-function]
+> >   601 | static int imx_mu_suspend_noirq(struct device *dev)
+> >       |            ^~~~~~~~~~~~~~~~~~~~
+> > 
+> > Mark these functions as __maybe_unused, which is the standard procedure for
+> > PM functions.
+> > 
+> > Fixes: bb2b2624dbe2 ("mailbox: imx: Add runtime PM callback to handle MU
+> > clocks")
+> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 > 
-> WDIOC_SETTIMEOUT was used instead, which expands to 0xc0045706, which
-> equals:
+> Thanks for catching this.
 > 
->    WDIOF_FANFAULT | WDIOF_EXTERN1 | WDIOF_PRETIMEOUT | WDIOF_ALARMONLY |
->    WDIOF_MAGICCLOSE | 0xc0045000
+> Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
 > 
-> These were so far indicated to userspace on WDIOC_GETSUPPORT.
-> As the driver has not yet been migrated to the new watchdog kernel API,
-> the constant can just be dropped without substitute.
-> 
-> Fixes: 96cb4eb019ce ("watchdog: f71808e_wdt: new watchdog driver for
->        Fintek F71808E and F71882FG")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+> Regards
+> Aisheng
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Thank you for the review :)
 
-> ---
->  drivers/watchdog/f71808e_wdt.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/watchdog/f71808e_wdt.c b/drivers/watchdog/f71808e_wdt.c
-> index c8ce80c13403..8e5584c54423 100644
-> --- a/drivers/watchdog/f71808e_wdt.c
-> +++ b/drivers/watchdog/f71808e_wdt.c
-> @@ -690,8 +690,7 @@ static int __init watchdog_init(int sioaddr)
->  	 * into the module have been registered yet.
->  	 */
->  	watchdog.sioaddr = sioaddr;
-> -	watchdog.ident.options = WDIOC_SETTIMEOUT
-> -				| WDIOF_MAGICCLOSE
-> +	watchdog.ident.options = WDIOF_MAGICCLOSE
->  				| WDIOF_KEEPALIVEPING
->  				| WDIOF_CARDRESET;
->  
+These warnings were introduced by a patch in this merge window, it would
+be nice if this patch could be fixed up as a fix for that but I
+understand if it is too late for that.
+
+Cheers,
+Nathan
