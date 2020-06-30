@@ -2,126 +2,67 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE16C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC428C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 276BC206B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:36:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d7ZZOgU2"
+	by mail.kernel.org (Postfix) with ESMTP id 9E2CC206B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:37:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729551AbgF3Ugi (ORCPT
+        id S1729584AbgF3UhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 16:36:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53786 "EHLO
+        Tue, 30 Jun 2020 16:37:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgF3Ugi (ORCPT
+        with ESMTP id S1725872AbgF3UhO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 16:36:38 -0400
-Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0F56C061755;
-        Tue, 30 Jun 2020 13:36:37 -0700 (PDT)
-Received: by mail-pl1-x643.google.com with SMTP id s14so8945849plq.6;
-        Tue, 30 Jun 2020 13:36:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=1JdJb/nPVAT5gkfGcCX+Fs5CyEjoe06QaSekf6Stnh8=;
-        b=d7ZZOgU2yNglOX/gwwDdMEMpRKngen5f3Xht5ti/J2AnhUkz2mZFmxUJf9mPqaUfhg
-         NTEu3vL5APw55cgTD82Z+6eX4EloHuqjnTO4UxuBLkxdL4eFu++4DDtwo6wYCZ6ktJpU
-         LabSdjrB6EyX9qB/wxFhqht9ZHj0jEDOG/5rf+ntwJDr8rRDqL3kjhTqgoCw6l7cG0+H
-         xG0inm/xX6f0d/4+aopYs8A4ubnKiZBzMAfwdmB2xH7m/oI03/Pyn8XeeVvJuiZJAEFl
-         i96jsx5trjNl5PH5GEgfZB9K3xVXQZUNJ73RedaEKE7wcgWTxzRcmiUjzmN1cuha4TYw
-         bL5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1JdJb/nPVAT5gkfGcCX+Fs5CyEjoe06QaSekf6Stnh8=;
-        b=NFKeOrYwMwndevnL2Ea7rx+tQDWhFpOcsarERQZNiGAtgxA+MIuJG4Cnrb9qWLZvS7
-         DUNco94E2AIM/y2OyK1CeSeKPQ1fZnPcHonWHRAbByVq9IeeP01cy4nYB9e0GRq+ZumQ
-         nkYLJiMyQhllYV2fx97KiQ8frp2uKaLuI/7PrQnygx7RyUSwFLHbcdEPdoESy5q0l254
-         TLzHt+1j/zRISHsHJkJFMaNNoCJd3LfrulolBxiTG5Dusliot9M0s8NEcuCgVOsPvYV9
-         ZAwFYOWJA0ZyC8IS4SoU8lUv6u5k7aBgM6MmF++wAvAFDBz3Snh5JZgJvzzs1ipJwgnK
-         oK8g==
-X-Gm-Message-State: AOAM5324Mwz/rP2UUJreIM4yz+9SBIEiasAy2lOaC9hOCzm5QHZtRDu8
-        P4rr4Jv1R3Mk4emx0LWneOk=
-X-Google-Smtp-Source: ABdhPJymtH7xcMvVH/kgjgDOiZvw/Qgu0o7ylLg9VDhbkJIM4SHD/nGfLFAeDemh4omr59n3AiuKAA==
-X-Received: by 2002:a17:90a:67c7:: with SMTP id g7mr22748358pjm.165.1593549397427;
-        Tue, 30 Jun 2020 13:36:37 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id m4sm3012520pjs.29.2020.06.30.13.36.36
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 30 Jun 2020 13:36:36 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 13:36:36 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Tero Kristo <t-kristo@ti.com>
-Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jan.kiszka@siemens.com
-Subject: Re: [PATCH 1/2] watchdog: use __watchdog_ping in startup
-Message-ID: <20200630203636.GA20146@roeck-us.net>
-References: <20200624114534.1362-1-t-kristo@ti.com>
- <20200624114534.1362-2-t-kristo@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200624114534.1362-2-t-kristo@ti.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Tue, 30 Jun 2020 16:37:14 -0400
+Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF7C8C061755;
+        Tue, 30 Jun 2020 13:37:13 -0700 (PDT)
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id EC9631277ED77;
+        Tue, 30 Jun 2020 13:37:12 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 13:37:12 -0700 (PDT)
+Message-Id: <20200630.133712.641790280086952744.davem@davemloft.net>
+To:     colin.king@canonical.com
+Cc:     borisp@mellanox.com, aviadye@mellanox.com,
+        john.fastabend@gmail.com, daniel@iogearbox.net, kuba@kernel.org,
+        tariqt@mellanox.com, saeedm@mellanox.com, netdev@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] net/tls: fix sign extension issue when left
+ shifting u16 value
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200630142746.516188-1-colin.king@canonical.com>
+References: <20200630142746.516188-1-colin.king@canonical.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 30 Jun 2020 13:37:13 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 24, 2020 at 02:45:33PM +0300, Tero Kristo wrote:
-> Current watchdog startup functionality does not respect the minimum hw
-> heartbeat setup and the last watchdog ping timeframe when watchdog is
-> already running and userspace process attaches to it. Fix this by using
-> the __watchdog_ping from the startup also. For this code path, we can
-> also let the __watchdog_ping handle the bookkeeping for the worker and
-> last keepalive times.
-> 
-> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+From: Colin King <colin.king@canonical.com>
+Date: Tue, 30 Jun 2020 15:27:46 +0100
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-
-> ---
->  drivers/watchdog/watchdog_dev.c | 19 +++++++++++--------
->  1 file changed, 11 insertions(+), 8 deletions(-)
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
-> index 7e4cd34a8c20..bc1cfa288553 100644
-> --- a/drivers/watchdog/watchdog_dev.c
-> +++ b/drivers/watchdog/watchdog_dev.c
-> @@ -275,15 +275,18 @@ static int watchdog_start(struct watchdog_device *wdd)
->  	set_bit(_WDOG_KEEPALIVE, &wd_data->status);
->  
->  	started_at = ktime_get();
-> -	if (watchdog_hw_running(wdd) && wdd->ops->ping)
-> -		err = wdd->ops->ping(wdd);
-> -	else
-> +	if (watchdog_hw_running(wdd) && wdd->ops->ping) {
-> +		err = __watchdog_ping(wdd);
-> +		if (err == 0)
-> +			set_bit(WDOG_ACTIVE, &wdd->status);
-> +	} else {
->  		err = wdd->ops->start(wdd);
-> -	if (err == 0) {
-> -		set_bit(WDOG_ACTIVE, &wdd->status);
-> -		wd_data->last_keepalive = started_at;
-> -		wd_data->last_hw_keepalive = started_at;
-> -		watchdog_update_worker(wdd);
-> +		if (err == 0) {
-> +			set_bit(WDOG_ACTIVE, &wdd->status);
-> +			wd_data->last_keepalive = started_at;
-> +			wd_data->last_hw_keepalive = started_at;
-> +			watchdog_update_worker(wdd);
-> +		}
->  	}
->  
->  	return err;
+> Left shifting the u16 value promotes it to a int and then it
+> gets sign extended to a u64.  If len << 16 is greater than 0x7fffffff
+> then the upper bits get set to 1 because of the implicit sign extension.
+> Fix this by casting len to u64 before shifting it.
+> 
+> Addresses-Coverity: ("integer handling issues")
+> Fixes: ed9b7646b06a ("net/tls: Add asynchronous resync")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+
+Applied, thanks Colin.
