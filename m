@@ -2,115 +2,318 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57CF3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C1FBC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3048920780
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:01:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593514866;
-	bh=yq0EKJ+zwKlc5ZQq5pq9eWRJFHa8ScWog81thjg3OHw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aN0JvxXnWvwHfomcPkoKE4Nc/OSGR2K70WQLa2+TG5kj5ZS58TPLrUdbRrUNO7dD2
-	 H5upg/Q0KlMabJ15w2gvk/+ElUo612a4tKnZNtbHXC3TJMib8MMu2dLVqmW8lrEfYL
-	 FEYtIuEiN9LQpmv1TLF90fxdr6yOU6KK9d42eMtE=
+	by mail.kernel.org (Postfix) with ESMTP id 2393C2067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:01:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="leaEwUhl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732789AbgF3LBF (ORCPT
+        id S1732798AbgF3LBo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 07:01:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33440 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732578AbgF3LBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 07:01:03 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 415BC2067D;
-        Tue, 30 Jun 2020 11:01:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593514862;
-        bh=yq0EKJ+zwKlc5ZQq5pq9eWRJFHa8ScWog81thjg3OHw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cmVCthbaWYXcHgcWflGwipFqgak7qqScwUP7vj1UStWrXRF+ihacneLzao00Sk51S
-         DpFQV3T4MLt3CjbAOyR+n6HpX8ugFHL+6cKHzDumRHZ1lwRsKFfRrkvPu++A47KBga
-         B3WBJTz0axs4C9Nqbi+WhRi3PMx/9UnEQTTW20Fs=
-Date:   Tue, 30 Jun 2020 12:01:00 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Sameer Pujar <spujar@nvidia.com>
-Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        perex@perex.cz, tiwai@suse.com, robh+dt@kernel.org,
-        lgirdwood@gmail.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, digetx@gmail.com,
-        alsa-devel@alsa-project.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sharadg@nvidia.com,
-        mkumard@nvidia.com, viswanathl@nvidia.com, rlokhande@nvidia.com,
-        dramesh@nvidia.com, atalambedu@nvidia.com, nwartikar@nvidia.com,
-        swarren@nvidia.com, nicoleotsuka@gmail.com
-Subject: Re: [PATCH v4 12/23] ASoC: simple-card: Support DPCM DAI link with
- multiple Codecs
-Message-ID: <20200630110100.GH5272@sirena.org.uk>
-References: <1593233625-14961-1-git-send-email-spujar@nvidia.com>
- <1593233625-14961-13-git-send-email-spujar@nvidia.com>
- <874kqu1x70.wl-kuninori.morimoto.gx@renesas.com>
- <1e0cf6d1-bf4e-8808-5390-c8a3b7c7fe7e@nvidia.com>
- <87mu4lz6pt.wl-kuninori.morimoto.gx@renesas.com>
- <1d7888c7-a8cc-e891-01aa-016e31cc9113@nvidia.com>
- <87ftadyrec.wl-kuninori.morimoto.gx@renesas.com>
- <492079e9-4518-78ba-a227-859d31594369@nvidia.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="82evfD9Ogz2JrdWZ"
-Content-Disposition: inline
-In-Reply-To: <492079e9-4518-78ba-a227-859d31594369@nvidia.com>
-X-Cookie: Walk softly and carry a megawatt laser.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 30 Jun 2020 07:01:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49788 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729924AbgF3LBm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 07:01:42 -0400
+Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FC8BC061755;
+        Tue, 30 Jun 2020 04:01:42 -0700 (PDT)
+Received: by mail-pj1-x1043.google.com with SMTP id cv18so4086575pjb.1;
+        Tue, 30 Jun 2020 04:01:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=gEzbAtWIsd1iT+azfZmBohV/AqNwaJqbCk/ZUwUKLT0=;
+        b=leaEwUhlrx1gy/9yiqVISsuLabInmyXc8xDGKZVpuptAILgjdqoaqwXFngch1HLIrL
+         o5RCszW3eAbDwYoKQbKGUvelfXsvCtVhg+hy8tGNj+Gd2KqMH2GXXNDS2AyYcs3LXWUm
+         UAV2MnaDf51VDC0CeL6lvg/ozSDerA3hqBX1ZiVMu0efFY4UYrnjtgCdpyTSso2KpNu5
+         Je0ZeWsVXrR6prPCxCXOajTM9WPNWhgwz2QwZ4uV6D1vEJ6z/gDDQdSPk6UnaW1dc98V
+         h96WHVDFNzysBcOgQACRLDyU67m2qlCt6epxAk6MNmi95CQlUSrbl5njXSSiXGvkBMWv
+         Xakg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=gEzbAtWIsd1iT+azfZmBohV/AqNwaJqbCk/ZUwUKLT0=;
+        b=HKa2bV2ooj8/tW0qhZ1vWhsUTd9y5FScUXL0KSMDpQpxd5SVd6keduAJ1bwwQTCoUR
+         fr1djIaFPBg2Hsz66VN37PfoeiL5JgAmtpc/Ay95aYZEN+xbaL2dD9CuM7mKacy6fEdV
+         zHmx1xQ21zU9YtRXgQdRQUb+T+7Wd1z3Z4WxtCG6zQ4HuBSjnfIvfE0DLPR86eIkUyS9
+         GLT1KwIVPiWZ+9hICxv1uoL6QSQcRXNOj3+FybrIIVh2wugWBr7/du9DTOzqpxuM2L44
+         x1XX9MYrKacytHy3RHAukCqqCCjzhKZZ2mzc+BAdmOfD7ppfbHoZ/vQULieqZN3Ur+gw
+         MCAQ==
+X-Gm-Message-State: AOAM533s0nuRM3/6zP4MtuZdw9mFKCYNS2ij6sWREA7N7hzvHgYx1XIX
+        qUpLrZMbbsVqDpL5KfZwncw=
+X-Google-Smtp-Source: ABdhPJyREwXSVODTdzfEGftFAjOVrLZfFcROPLoHe2lnXV7IrZg4RB3U1hWtLlG2eK4lLlLalR/zhw==
+X-Received: by 2002:a17:90b:24a:: with SMTP id fz10mr18849189pjb.36.1593514901642;
+        Tue, 30 Jun 2020 04:01:41 -0700 (PDT)
+Received: from in099003062.routereb3c90.com ([106.51.138.45])
+        by smtp.gmail.com with ESMTPSA id j36sm2487231pgj.39.2020.06.30.04.01.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 04:01:40 -0700 (PDT)
+From:   Vinay Simha BN <simhavcs@gmail.com>
+Cc:     Vinay Simha BN <simhavcs@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        dri-devel@lists.freedesktop.org (open list:DRM DRIVERS),
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v4 1/2] dt-binding: Add DSI/LVDS TC358775 bridge bindings
+Date:   Tue, 30 Jun 2020 16:31:12 +0530
+Message-Id: <20200630110119.11885-1-simhavcs@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This driver is tested with two panels with Apq8016-IFC6309 board
+https://www.inforcecomputing.com/products/single-board-computers-sbc/qualcomm-snapdragon-410-inforce-6309-micro-sbc
 
---82evfD9Ogz2JrdWZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+1. 1366x768@60 auo,b101xtn01 data-mapping = "jeida-24"
+2. 800x480@60 innolux,at070tn92 data-mapping = "vesa-24"
 
-On Tue, Jun 30, 2020 at 01:22:29PM +0530, Sameer Pujar wrote:
+Signed-off-by: Vinay Simha BN <simhavcs@gmail.com>
 
-> Yes there are complex use cases, but if we look at the amount of changes
-> required in simple-card driver that is not too much. Existing binding for
-> simple-card driver would still work fine for our cases. Yes there are some
-> deviations and we don't want to break existing users, that is why a *new*
-> compatible was introduced and specific items can be pushed under it.
-> Majority of the simple-card driver is getting re-used here. We just need to
-> make sure it does not affect anyone else.
+---
+v1:
+ Initial version wast .txt file
 
-Why simple-card and not audio-graph-card?
+v2:
+ From txt to yaml file format
 
-> > Using fe/be instead of cpu/codec is easy to understand.
+v3:
+* Andrzej Hajda review comments incorporated
+  dual port lvds implemented
 
-> I guess you are referring to DT binding part. The parsing code specifically
-> looks for "codec" sub node and thus present conventions had to be used.
+* Laurent Pinchart review comments incorporated
+  dsi lanes property removed and it is dynamically
+  picked from the dsi ports
+  VESA/JEIDA format picked from panel-lvds dts
+---
+ .../display/bridge/toshiba,tc358775.yaml      | 204 ++++++++++++++++++
+ 1 file changed, 204 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
 
-Remember that this stuff gets fixed into the ABI so we'd have to live
-with this for ever.
+diff --git a/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
+new file mode 100644
+index 000000000000..ec53d62d408b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/bridge/toshiba,tc358775.yaml
+@@ -0,0 +1,204 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/bridge/toshiba,tc358775.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Toshiba TC358775 DSI to LVDS bridge bindings
++
++maintainers:
++ - Vinay Simha BN <simhavcs@gmail.com>
++
++description: |
++ This binding supports DSI to LVDS bridge TC358775
++
++properties:
++  compatible:
++    const: toshiba,tc358775
++
++  reg:
++    maxItems: 1
++    description: i2c address of the bridge, 0x0f
++
++  vdd-supply:
++    maxItems: 1
++    description:  1.2V LVDS Power Supply
++
++  vddio-supply:
++    maxItems: 1
++    description: 1.8V IO Power Supply
++
++  stby-gpios:
++    maxItems: 1
++    description: Standby pin, Low active
++
++  reset-gpios:
++    maxItems: 1
++    description: Hardware reset, Low active
++
++  ports:
++    type: object
++    description:
++      A node containing input and output port nodes with endpoint definitions
++      as documented in
++      Documentation/devicetree/bindings/media/video-interfaces.txt
++    properties:
++      "#address-cells":
++        const: 1
++
++      "#size-cells":
++        const: 0
++
++      port@0:
++        type: object
++        description: |
++          DSI Input. The remote endpoint phandle should be a
++          reference to a valid mipi_dsi_host device node.
++
++      port@1:
++        type: object
++        description: |
++          Video port for LVDS output (panel or connector).
++
++      port@2:
++        type: object
++        description: |
++          Video port for Dual link LVDS output (panel or connector).
++
++    required:
++      - port@0
++      - port@1
++
++required:
++ - compatible
++ - reg
++ - vdd-supply
++ - vddio-supply
++ - stby-gpios
++ - reset-gpios
++ - ports
++
++examples:
++ - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    i2c@78b8000 {
++        /* On High speed expansion */
++        label = "HS-I2C2";
++        reg = <0x078b8000 0x500>;
++        clock-frequency = <400000>; /* fastmode operation */
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        tc_bridge: bridge@f {
++            compatible = "toshiba,tc358775";
++            reg = <0x0f>;
++
++            vdd-supply = <&pm8916_l2>;
++            vddio-supply = <&pm8916_l6>;
++
++            stby-gpios = <&msmgpio 99 GPIO_ACTIVE_LOW>;
++            reset-gpios = <&msmgpio 72 GPIO_ACTIVE_LOW>;
++
++            ports {
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                port@0 {
++                    reg = <0>;
++                    d2l_in_test: endpoint {
++                        remote-endpoint = <&dsi0_out>;
++                    };
++                };
++
++                port@1 {
++                    reg = <1>;
++                    lvds_out: endpoint {
++                        remote-endpoint = <&panel_in>;
++                    };
++                };
++            };
++        };
++    };
++
++    dsi@1a98000 {
++        reg = <0x1a98000 0x25c>;
++        reg-names = "dsi_ctrl";
++
++        ports {
++            #address-cells = <1>;
++            #size-cells = <0>;
++            port@1 {
++                reg = <1>;
++                dsi0_out: endpoint {
++                    remote-endpoint = <&d2l_in_test>;
++                        data-lanes = <0 1 2 3>;
++                };
++             };
++         };
++     };
++
++ - |
++    i2c@78b8000 {
++        /* On High speed expansion */
++        label = "HS-I2C2";
++        reg = <0x078b8000 0x500>;
++        clock-frequency = <400000>; /* fastmode operation */
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        tc_bridge_dual: bridge@f {
++            compatible = "toshiba,tc358775";
++            reg = <0x0f>;
++
++            vdd-supply = <&pm8916_l2>;
++            vddio-supply = <&pm8916_l6>;
++
++            stby-gpios = <&msmgpio 99 GPIO_ACTIVE_LOW>;
++            reset-gpios = <&msmgpio 72 GPIO_ACTIVE_LOW>;
++
++            ports {
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                port@0 {
++                    reg = <0>;
++                    d2l_in_dual: endpoint {
++                        remote-endpoint = <&dsi0_out_dual>;
++                    };
++                };
++
++                port@1 {
++                    reg = <1>;
++                    lvds0_out: endpoint {
++                        remote-endpoint = <&panel_in0>;
++                    };
++                };
++
++                port@2 {
++                    reg = <2>;
++                    lvds1_out: endpoint {
++                        remote-endpoint = <&panel_in1>;
++                    };
++                };
++            };
++        };
++    };
++
++    dsi@1a98000 {
++        reg = <0x1a98000 0x25c>;
++        reg-names = "dsi_ctrl";
++
++        ports {
++            #address-cells = <1>;
++            #size-cells = <0>;
++            port@1 {
++                reg = <1>;
++                dsi0_out_dual: endpoint {
++                    remote-endpoint = <&d2l_in_dual>;
++                        data-lanes = <0 1 2 3>;
++                };
++             };
++         };
++     };
++...
+-- 
+2.17.1
 
---82evfD9Ogz2JrdWZ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl77G2sACgkQJNaLcl1U
-h9DLaQf8CxFbnQfdwGWMqWzwX2nlKaR7uERgOdrildCUvaMKInQJ3nSQzOwEqxkq
-NMi/PKvwmR+2xteMNBYYMvXO739dNZj9Y9vvVHOmAUtPwVMEebs45t4Km2qwLx25
-t5d/6KK4UUC8RghBJr0Ls1Ywhqbp6CSieyt9ogqvrb0PrVGITmV2fpklh26gw75d
-/yzh/obJaTotGhYRuCFMvB7mTNOiitRXr08p8kRJSbEWZKw7+ebUQKhiuu6Ximk6
-1Uso6kJgROaHZhl896uSlbnW4odrn1t/JSHxJ9yRNedpvwV+E+8ZGHo75K6SEwRx
-4NOG2mHbKSXZ3Ta+h/R4+Q4B2STg3w==
-=eDum
------END PGP SIGNATURE-----
-
---82evfD9Ogz2JrdWZ--
