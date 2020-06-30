@@ -2,116 +2,146 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A20C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A1DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:43:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 74412206B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:39:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7B57206B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:43:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="aVzH4BTu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oWxbFf0d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729925AbgF3Ujx (ORCPT
+        id S1729809AbgF3Unv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 16:39:53 -0400
-Received: from mail.efficios.com ([167.114.26.124]:58026 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728387AbgF3Ujw (ORCPT
+        Tue, 30 Jun 2020 16:43:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54904 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728340AbgF3Unv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 16:39:52 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id E3A5E2C6DA1;
-        Tue, 30 Jun 2020 16:39:51 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id u6VBh4kG6hgX; Tue, 30 Jun 2020 16:39:51 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id A3F032C6F0A;
-        Tue, 30 Jun 2020 16:39:51 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com A3F032C6F0A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1593549591;
-        bh=sjBFJc3lgLnEtXkMLVG8upOVvYseCMfl9eQoq9cRJWk=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=aVzH4BTuRyljgJfijNTSCPjBcg1+mZu6DzcLsK2m9gh+fz8RFYKk6Xh+3RBKTrAHw
-         y2h08B6OZmqZRAva7dh2vjzPt62ylUKIqx+29cL4RYoQH3yfcDC+qxw9eHLHeG1oDp
-         SqgH+/+W9BDYBgir9qvHma8l2pWuT+PQdaqu23q7ySZJ0jWtOaGTuhRiDfzsv1PWvU
-         Pq0L2e/7TvACjv2tpgWUPR0o+Fq+0qtw9W0/5c8604tEyNzUfnVFHkmsNPDfP8ZQ3r
-         rVi/RgiukynkG5S8HBzahHD/c8VlHiIvMY0w0swyDHTWRRn3gsLOWnPx0Ah4Zj9pUB
-         kBr3kVcBxRI2A==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 72GketiYT7h8; Tue, 30 Jun 2020 16:39:51 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 97CFA2C6E96;
-        Tue, 30 Jun 2020 16:39:51 -0400 (EDT)
-Date:   Tue, 30 Jun 2020 16:39:51 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Eric Dumazet <edumazet@google.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Yuchung Cheng <ycheng@google.com>,
-        Jonathan Rajotte-Julien <joraj@efficios.com>
-Message-ID: <1682267267.17918.1593549591608.JavaMail.zimbra@efficios.com>
-In-Reply-To: <CANn89iKUUJsEfwp2L0pwKdCP3Rx-o=6uM+1bUhT5Cc2p0p7XqA@mail.gmail.com>
-References: <1132973300.15954.1593459836756.JavaMail.zimbra@efficios.com> <CANn89iJ4nh6VRsMt_rh_YwC-pn=hBqsP-LD9ykeRTnDC-P5iog@mail.gmail.com> <CAHk-=wh=CEzD+xevqpJnOJ9w72=bEMjDNmKdovoR5GnESJBdqA@mail.gmail.com> <20200630.132112.1161418939084868350.davem@davemloft.net> <CANn89iKUUJsEfwp2L0pwKdCP3Rx-o=6uM+1bUhT5Cc2p0p7XqA@mail.gmail.com>
-Subject: Re: [regression] TCP_MD5SIG on established sockets
+        Tue, 30 Jun 2020 16:43:51 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E30B2C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 13:43:50 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id y18so8962983plr.4
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 13:43:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=2xmefk2RteGTnbCye5bI/kRpYMG9zcRY+jbKjm732i0=;
+        b=oWxbFf0dWEbKgf1ijqpkDLiaARpUgLO8Yms473N+ftU2hDK0S7Sg+q1MAZbJrbqDwl
+         jRk2EiiRBLa7Fpj/uVMGQYoaEVbAfTXeZIPTdL/EzyFcaSvbMX1/WphEUbAfY55+YDPH
+         wW4P7EuEl7iVQRhv6g3EadgIvwbFLfBY7ChCox/euQHzbuVk3hFGuXFCte+KLZZvZJd3
+         hByPirK0qMX9hPHHHtvniYveX8u+MFuE96iCRhrnGQUAqXP8jfUASfvJdIjePM9Uplb4
+         sU7nkYBxfpxH20++z8JHxiWwovrmTmEMXjPOZa7ywL45+LN29uFh+jEvjZ8zt54IL30V
+         A5rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=2xmefk2RteGTnbCye5bI/kRpYMG9zcRY+jbKjm732i0=;
+        b=gMChKrrWC5yuv/sWqiFvEFsH+R9yspQ7GEo8Eay0c/GNzKI72ppx45iPg34Q2u5kkI
+         xlgViVyB8SJiTnWWbXFNS2o7dH8BjNlUUo2cwnPHFsF2lcXo1M07pJiI7b4r0PMn5sY1
+         ZjbQWDKfjph+7juylhrjp+FW2SAaPV4NMMxroFIzKmjJLU77zuxkUmbwKT3/P1+/kSn5
+         cJFJa3xkXmJImItqmWX/WtFHqfV/wiR9LsQ0oJowqcLCyRBnW30IIOhTuGlHFRTaBMsM
+         F6uw66e/IDQrTTSrUvPqMYAS0vN496i/SST2QSXK1tMAwSFWVFhhUeEUwyMpnJtrdEgZ
+         PD4w==
+X-Gm-Message-State: AOAM532vMyr3etUCS6dlAeIgmIKZn40VAfzgMIvQY8NNkwpYi3I9XDHo
+        zOVKcHD6GdQeQga9EjCa23U=
+X-Google-Smtp-Source: ABdhPJyp+Ru6ZTl+M+JBG/QDbjnICiMjZXWHbVDoVlJcwTyylQKOvHvvsr3TjHrICMJ6rQMGQTc6lQ==
+X-Received: by 2002:a17:90a:fd12:: with SMTP id cv18mr17159212pjb.66.1593549830267;
+        Tue, 30 Jun 2020 13:43:50 -0700 (PDT)
+Received: from ubuntu-s3-xlarge-x86 ([2604:1380:1000:7a00::1])
+        by smtp.gmail.com with ESMTPSA id ia13sm3047342pjb.42.2020.06.30.13.43.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 13:43:49 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 13:43:48 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, kernel-team@android.com
+Subject: Re: [f2fs-dev] [PATCH v3] f2fs: avoid readahead race condition
+Message-ID: <20200630204348.GA2504307@ubuntu-s3-xlarge-x86>
+References: <20200624012148.180050-1-jaegeuk@kernel.org>
+ <20200629150323.GA3293033@google.com>
+ <20200629202720.GA230664@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3945 (ZimbraWebClient - FF77 (Linux)/8.8.15_GA_3928)
-Thread-Topic: TCP_MD5SIG on established sockets
-Thread-Index: tcdE3j+VTMeB5CSmGAl1c0l3cJ95bg==
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200629202720.GA230664@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Jun 30, 2020, at 4:30 PM, Eric Dumazet edumazet@google.com wrote:
-
-> On Tue, Jun 30, 2020 at 1:21 PM David Miller <davem@davemloft.net> wrote:
->>
->> From: Linus Torvalds <torvalds@linux-foundation.org>
->> Date: Tue, 30 Jun 2020 12:43:21 -0700
->>
->> > If you're not willing to do the work to fix it, I will revert that
->> > commit.
->>
->> Please let me handle this situation instead of making threats, this
->> just got reported.
->>
->> Thank you.
->>
+On Mon, Jun 29, 2020 at 01:27:20PM -0700, Jaegeuk Kim wrote:
+> If two readahead threads having same offset enter in readpages, every read
+> IOs are split and issued to the disk which giving lower bandwidth.
 > 
-> Also keep in mind the commit fixed a security issue, since we were
-> sending on the wire
-> garbage bytes from the kernel.
+> This patch tries to avoid redundant readahead calls.
 > 
-> We can not simply revert it and hope for the best.
+> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+> ---
+> v3:
+>  - use READ|WRITE_ONCE
+> v2:
+>   - add missing code to bypass read
+>  
+>  fs/f2fs/data.c  | 18 ++++++++++++++++++
+>  fs/f2fs/f2fs.h  |  1 +
+>  fs/f2fs/super.c |  2 ++
+>  3 files changed, 21 insertions(+)
 > 
-> I find quite alarming vendors still use TCP MD5 "for security
-> reasons", but none of them have contributed to it in linux kernel
-> since 2018
-> (Time of the 'buggy patch')
+> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+> index 995cf78b23c5e..360b4c9080d97 100644
+> --- a/fs/f2fs/data.c
+> +++ b/fs/f2fs/data.c
+> @@ -2296,6 +2296,7 @@ static int f2fs_mpage_readpages(struct inode *inode,
+>  	unsigned nr_pages = rac ? readahead_count(rac) : 1;
+>  	unsigned max_nr_pages = nr_pages;
+>  	int ret = 0;
+> +	bool drop_ra = false;
+>  
+>  	map.m_pblk = 0;
+>  	map.m_lblk = 0;
+> @@ -2306,10 +2307,24 @@ static int f2fs_mpage_readpages(struct inode *inode,
+>  	map.m_seg_type = NO_CHECK_TYPE;
+>  	map.m_may_create = false;
+>  
+> +	/*
+> +	 * Two readahead threads for same address range can cause race condition
+> +	 * which fragments sequential read IOs. So let's avoid each other.
+> +	 */
+> +	if (rac && readahead_count(rac)) {
+> +		if (READ_ONCE(F2FS_I(inode)->ra_offset) == readahead_index(rac))
+> +			drop_ra = true;
+> +		else
+> +			WRITE_ONCE(F2FS_I(inode)->ra_offset,
+> +						readahead_index(rac));
+> +	}
+> +
+>  	for (; nr_pages; nr_pages--) {
+>  		if (rac) {
+>  			page = readahead_page(rac);
+>  			prefetchw(&page->flags);
+> +			if (drop_ra)
+> +				goto next_page;
 
-I'm helping a customer increase their contributions and feedback to upstream.
-As we can see, they have accumulated some backlog over time.
+When CONFIG_F2FS_FS_COMPRESSION is not set (i.e. x86_64 defconfig +
+CONFIG_F2FS_FS=y):
 
-Clearly reverting a security fix is not acceptable here. Coming up with a
-proper ABI-compatible fix should not be out of our reach though.
+$ make -skj"$(nproc)" O=out distclean defconfig fs/f2fs/data.o
+../fs/f2fs/data.c: In function ‘f2fs_mpage_readpages’:
+../fs/f2fs/data.c:2327:5: error: label ‘next_page’ used but not defined
+ 2327 |     goto next_page;
+      |     ^~~~
+...
 
-Thanks,
-
-Mathieu
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+Cheers,
+Nathan
