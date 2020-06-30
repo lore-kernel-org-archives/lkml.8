@@ -2,151 +2,156 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61ACCC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01965C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:28:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3B87020663
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:25:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xnkdy9Ni"
+	by mail.kernel.org (Postfix) with ESMTP id CDC4B20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:28:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593530926;
+	bh=oDwuwcBbH5r46FCjDMOwXrQ4/5Jfmi+2JiFogLZ4YWk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VYGylXEdlmDy4aSz9TSQXkZJ3amcHU9AypDMmnt/wAzZRpIVjTuHUFwQrMM2mlEdn
+	 aUAQO+JZFlCh0bSFYAukRwVDNApYPqXUqjCtlxw9sVfRm0Dn/fUyzxj1CaCs8xtZn+
+	 pewIU+QYjIs44I8reMEmq41HqV2ysJWU1qJiqOZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389415AbgF3PZi (ORCPT
+        id S2388524AbgF3P2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 11:25:38 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:57996 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730017AbgF3PZh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 11:25:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593530736;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=pkHq4gPyon4ryzXtokU1cdea5U+e9AA/sfN4Eo2sSPA=;
-        b=Xnkdy9NijQNwDl4vRLk0AY6UIh9FHkIzdG6EwHUS2uyaWTTrxqf6vuqVFMSZ3vWPejZn8k
-        BzTy6Db5CWb5hErWURLuGanrgPl5vvEimm5f+a6fzGKaSos+VOfuoO32Yzjuk+cMQjB5mz
-        WKYJKtaKuDnspjvrkSmf/oLoE8Iw53M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-336-OKnOWfhXPnW6MNtVWQiEYA-1; Tue, 30 Jun 2020 11:25:34 -0400
-X-MC-Unique: OKnOWfhXPnW6MNtVWQiEYA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 30 Jun 2020 11:28:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58904 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727115AbgF3P2p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 11:28:45 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 03D1C464;
-        Tue, 30 Jun 2020 15:25:33 +0000 (UTC)
-Received: from horse.redhat.com (ovpn-113-245.rdu2.redhat.com [10.10.113.245])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E35AB5DC1E;
-        Tue, 30 Jun 2020 15:25:29 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 6B048220C58; Tue, 30 Jun 2020 11:25:29 -0400 (EDT)
-Date:   Tue, 30 Jun 2020 11:25:29 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, virtio-fs@redhat.com, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] kvm,x86: Exit to user space in case of page fault
- error
-Message-ID: <20200630152529.GC322149@redhat.com>
-References: <20200625214701.GA180786@redhat.com>
- <87lfkach6o.fsf@vitty.brq.redhat.com>
- <20200626150303.GC195150@redhat.com>
- <874kqtd212.fsf@vitty.brq.redhat.com>
- <20200629220353.GC269627@redhat.com>
- <87sgecbs9w.fsf@vitty.brq.redhat.com>
- <20200630145303.GB322149@redhat.com>
- <87mu4kbn7x.fsf@vitty.brq.redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id AB49120663;
+        Tue, 30 Jun 2020 15:28:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593530924;
+        bh=oDwuwcBbH5r46FCjDMOwXrQ4/5Jfmi+2JiFogLZ4YWk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sqSfDTqnG5EFsd7q4RVZoOzzvCT757+0ggDEDbCehh/VCLEqNmN2vH7yBh+636FB4
+         qyLbLD9yMTazCUQPx5jgK9BAVhmvDq1I5n/Re5EZy03jM7nkW28AMWS+E4A12G/9Ts
+         8JVQDFAGIi4JdT7Qt3UspX+IXnnJqNdrAVD1BFN0=
+Date:   Tue, 30 Jun 2020 17:28:32 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Daniel Gutson <daniel@eclypsium.com>
+Cc:     Derek Kiernan <derek.kiernan@xilinx.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        linux-kernel@vger.kernel.org, Richard Hughes <hughsient@gmail.com>,
+        Alex Bazhaniuk <alex@eclypsium.com>
+Subject: Re: [PATCH] SPI LPC information kernel module
+Message-ID: <20200630152832.GB1780940@kroah.com>
+References: <20200629225932.5036-1-daniel.gutson@eclypsium.com>
+ <20200630085641.GD637809@kroah.com>
+ <CAFmMkTGrnZt7ZaGyYCe-LCHET4yHz9DfanaZwsOS6HCxK40apQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87mu4kbn7x.fsf@vitty.brq.redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+In-Reply-To: <CAFmMkTGrnZt7ZaGyYCe-LCHET4yHz9DfanaZwsOS6HCxK40apQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 05:13:54PM +0200, Vitaly Kuznetsov wrote:
-> Vivek Goyal <vgoyal@redhat.com> writes:
+On Tue, Jun 30, 2020 at 11:42:58AM -0300, Daniel Gutson wrote:
+> On Tue, Jun 30, 2020 at 5:56 AM Greg Kroah-Hartman <
+> gregkh@linuxfoundation.org> wrote:
 > 
-> > On Tue, Jun 30, 2020 at 03:24:43PM +0200, Vitaly Kuznetsov wrote:
-> 
-> >> 
-> >> It's probably me who's missing something important here :-) but I think
-> >> you describe how it *should* work as I'm not seeing how we can leave the
-> >> loop in kvm_async_pf_task_wait_schedule() other than by 
-> >> "if (hlist_unhashed(&n.link)) break;" and this only happens when APF
-> >> completes.
+> > On Mon, Jun 29, 2020 at 07:59:32PM -0300, Daniel Gutson wrote:
+> > > This kernel module exports configuration attributes for the
+> > > system SPI chip.
+> > > This initial version exports the BIOS Write Enable (bioswe),
+> > > BIOS Lock Enable (ble), and the SMM Bios Write Protect (SMM_BWP)
+> > > fields of the Bios Control register. The idea is to keep adding more
+> > > flags, not only from the BC but also from other registers in following
+> > > versions.
+> > >
+> > > The goal is that the attributes are avilable to fwupd when SecureBoot
+> > > is turned on.
+> > >
+> > > A technical note: I check if *ppos == BUFFER_SIZE in the reading function
+> > > to exit early and avoid an extra access to the HW, for example when using
+> > > the 'cat' command, which causes two read operations.
 > >
-> > We don't leave loop in kvm_async_pf_task_wait_schedule(). It will happen
-> > before you return to user space.
-> >
-> > I have not looked too closely but I think following code path might be taken
-> > after aync PF has completed.
-> >
-> > __kvm_handle_async_pf()
-> >   idtentry_exit_cond_rcu()
-> >     prepare_exit_to_usermode()
-> >       __prepare_exit_to_usermode()
-> >         exit_to_usermode_loop()
-> > 	  do_signal()
-> >
-> > So once you have been woken up (because APF completed),
-> 
-> Ah, OK so we still need to complete APF and we can't kill the process
-> before this happens, that's what I was missing.
-> 
-> >  you will
-> > return to user space and before that you will check if there are
-> > pending signals and handle that signal first before user space
-> > gets a chance to run again and retry faulting instruction.
-> 
-> ...
-> 
-> >
-> >> 
-> >> When guest receives the 'page ready' event with an error it (like for
-> >> every other 'page ready' event) tries to wake up the corresponding
-> >> process but if the process is dead already it can do in-kernel probing
-> >> of the GFN, this way we guarantee that the error is always injected. I'm
-> >> not sure if it is needed though but in case it is, this can be a
-> >> solution. We can add a new feature bit and only deliver errors when the
-> >> guest indicates that it knows what to do with them.
-> >
-> > - Process will be delivered singal after async PF completion and during
-> >   returning to user space. You have lost control by then.
+> > Why not use the simple_* functions which should prevent that type of
+> > thing?
 > >
 > 
-> So actually there's no way for kernel to know if the userspace process
-> managed to re-try the instruction and get the error injected or if it
-> was killed prior to that.
+> a hint please? I don't see how to do it with simple_read_from_buffer, I
+> need to return in the read fop the amount of read bytes, but don't know
+> how to mark EOF. Because of that, 'cat' reads again just for me to tell it
+> there's nothing else to read.
 
-Yes. 
+That's fine, the kernel does not tell userspace "EOF", that is up to the
+libc to determine.  If you read the data from the hardware once, and
+keep it in your buffer, simple_read_from_buffer() will handle all of
+that logic for you, please let it do that.
 
+> > > Signed-off-by: Daniel Gutson <daniel.gutson@eclypsium.com>
+> > > ---
+> > >  Documentation/ABI/stable/securityfs-spi-lpc |  23 +
+> >
+> > Why is this going in securityfs at all?  Why not just sysfs as it is a
+> > CPU attribute, right?
+> >
 > 
-> > - If you retry in kernel, we will change the context completely that
-> >   who was trying to access the gfn in question. We want to retain
-> >   the real context and retain information who was trying to access
-> >   gfn in question.
+> Richard already discussed that, but "it" is not only (one) CPU attribute,
+> are SPI chip settings and attributes coming from the firmware.
+
+All hardware things, please use sysfs, that is what it is designed for.
+
+> Please note that I wanted to submit the minimum patch, but I need to add
+> more attributes.
+
+A patch series is great to create and send showing all of that.
+
+> > > diff --git a/Documentation/ABI/stable/securityfs-spi-lpc
+> > b/Documentation/ABI/stable/securityfs-spi-lpc
+> > > new file mode 100644
+> > > index 000000000000..22660a7fd914
+> > > --- /dev/null
+> > > +++ b/Documentation/ABI/stable/securityfs-spi-lpc
+> > > @@ -0,0 +1,23 @@
+> > > +What:                /sys/kernel/security/firmware/bioswe
+> > > +Date:                June 2020
+> > > +KernelVersion:       5.8.0
+> > > +Contact:     daniel.gutson@eclypsium.com
+> > > +Description: If the system firmware set BIOS Write Enable.
+> > > +             0: writes disabled, 1: writes enabled.
+> >
+> > THis is very x86-specific, what about ARM/MIPS/anything else?  Perhaps a
+> > cpu/arch-specific thing instead?
+> >
 > 
-> (Just so I understand the idea better) does the guest context matter to
-> the host? Or, more specifically, are we going to do anything besides
-> get_user_pages() which will actually analyze who triggered the access
-> *in the guest*?
+> We debated this but didn't find a better match, since cpu/arch-specific
+> seemed too core to put informational drivers.
+> Do you have a suggestion?
 
-When we exit to user space, qemu prints bunch of register state. I am
-wondering what does that state represent. Does some of that traces
-back to the process which was trying to access that hva? I don't
-know.
+Make it explicitly hardware specific in your userspace location.
+Otherwise you just defined this for all hardware types, with what you
+used above, and I do not think you wanted to do that.
 
-I think keeping a cache of error gfns might not be too bad from
-implemetation point of view. I will give it a try and see how
-bad does it look.
+> > Again, which makes it seem like securityfs is not the thing for this, as
+> > it describes the hardware, not a security model which is what securityfs
+> > has been for in the past, right?
+> >
+> 
+> I prefer to leave this to the other discussion with Richard. It's fine for
+> me too to use sysfs.
+> FWIW, the driver provides information related to firmware security.
 
-Vivek
+It provides information on what is going on with the firmware, it's up
+to userspace to know/determine/care if that means anything with regards
+to "security" or not :)
 
+thanks,
+
+greg k-h
