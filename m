@@ -2,120 +2,106 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27438C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:13:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE40BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:15:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0AF942073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:13:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8C4E207F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:15:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mHPPQN9W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730783AbgF3HNx (ORCPT
+        id S1730788AbgF3HPm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 03:13:53 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59110 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730635AbgF3HNx (ORCPT
+        Tue, 30 Jun 2020 03:15:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43142 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730638AbgF3HPl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 03:13:53 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05U73tFe053725;
-        Tue, 30 Jun 2020 03:13:49 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31xkqkcubr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 30 Jun 2020 03:13:49 -0400
-Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05U6WrKr055742;
-        Tue, 30 Jun 2020 03:13:49 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31xkqkcubj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 30 Jun 2020 03:13:49 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05U7AdjX009630;
-        Tue, 30 Jun 2020 07:13:48 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma03wdc.us.ibm.com with ESMTP id 31wwr8e3mu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 30 Jun 2020 07:13:48 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05U7DlhG49021424
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 30 Jun 2020 07:13:47 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B8E77C6055;
-        Tue, 30 Jun 2020 07:13:47 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 86DAFC605A;
-        Tue, 30 Jun 2020 07:13:47 +0000 (GMT)
-Received: from ltc.linux.ibm.com (unknown [9.16.170.189])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue, 30 Jun 2020 07:13:47 +0000 (GMT)
+        Tue, 30 Jun 2020 03:15:41 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30987C03E979
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 00:15:41 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id w3so6045796wmi.4
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 00:15:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qomXq2ActQZN/6bFPVvt+u08Ypzth62dhj61jRlqIqg=;
+        b=mHPPQN9W6sb5xzGjh62onzl2oulcD9KtmeoN3pj89jyErg91srjiDxZWGa0QP4AU81
+         hNytKu4gO1Hf57LjmGAHupV3KhZ6p7CP5e2bf1da5aZ/2Z8cECbVqs1BBE0k2MvEYqYS
+         AN13UDyfULgP0X2RttKExd9B7DOT7Y79cE+/fIOh/sYi11Hkq0VwmsCYk2uA/11QhZQf
+         capG494GGtRpc/Iecx47e5KMHddbnKyn/QXCZkCqBhw2n1GIR7jnkgI4Gtr8lyi2rsBX
+         5S8tnxAbcNGgp/h3MCUI/FhDtuUhaGODB7BFHDnSfKDU+7ImIZu6J1q0Ec9+OQ4JXn42
+         Kbgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qomXq2ActQZN/6bFPVvt+u08Ypzth62dhj61jRlqIqg=;
+        b=B4UIcpw99S74Zgnn/PgZohEtlazBBfxh+sUMOK0+dRGOntxtNb6dRw8cY15+d4xF9v
+         Mcq4STtQ9ziNaUloaJ+3VcP4umGhSYkOGVap8kiwyeUW+WzCPpdEpH6RhWM8EXNR653L
+         TxOHbScZ7wIXT8ZbGyhGhwG6iC5uZ0f3/FfkdEH/VH94R6R/HCuBc3YwpCiDKninWo/D
+         Xd+zYg5CRLJmfO2CM18To0vDUsypZHiPeRCklSnDKcSR0Bw/sVMPWdXB3U/Har4K2Jqx
+         0S8ZOUxRdgJEjgUZ/7yERJ3sGy7OlakES+ZEAfl+3gmpJn1978U72e+d/Gz0zOaTLRGp
+         U4Zw==
+X-Gm-Message-State: AOAM530dfoUIUxik4JPajY6oRgXW25du7NY1oFW2fZ8RPU7R/SNEkbIh
+        zBL+PvLtAKMc1heSkoc8Z67w3vXfiKqGUrXhIyi67g==
+X-Google-Smtp-Source: ABdhPJyKohk0LvsHxuOJ7RF09tiNLq0s5bjM/CBQtjGt7EOC+N3RWtGru1+JzCh2phyG6SALIaXkSdAO0MtBxqVEh7s=
+X-Received: by 2002:a1c:5a41:: with SMTP id o62mr5429652wmb.16.1593501339411;
+ Tue, 30 Jun 2020 00:15:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 30 Jun 2020 09:13:47 +0200
-From:   haver <haver@linux.vnet.ibm.com>
-To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, arnd@arndb.de,
-        gregkh@linuxfoundation.org, Frank Haverkamp <haver@linux.ibm.com>
-Subject: Re: [PATCH 2/4] misc: genwqe: Constify struct pci_error_handlers
-In-Reply-To: <20200610224704.27082-3-rikard.falkeborn@gmail.com>
-References: <20200610224704.27082-1-rikard.falkeborn@gmail.com>
- <20200610224704.27082-3-rikard.falkeborn@gmail.com>
-Message-ID: <c91aed2e8b1530c2f4334774af510814@linux.vnet.ibm.com>
-X-Sender: haver@linux.vnet.ibm.com
-User-Agent: Roundcube Webmail/1.0.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-06-30_01:2020-06-30,2020-06-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 bulkscore=0
- mlxscore=0 adultscore=0 clxscore=1011 phishscore=0 priorityscore=1501
- malwarescore=0 lowpriorityscore=0 suspectscore=0 cotscore=-2147483648
- spamscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2004280000 definitions=main-2006300048
+References: <20200607215715.90981-1-rikard.falkeborn@gmail.com>
+In-Reply-To: <20200607215715.90981-1-rikard.falkeborn@gmail.com>
+From:   David Gow <davidgow@google.com>
+Date:   Tue, 30 Jun 2020 15:15:28 +0800
+Message-ID: <CABVgOSnqyqg8xPT2wM=taN2=pPTAm_ySD-WscHuBW175QipuEw@mail.gmail.com>
+Subject: Re: [PATCH] kunit: kunit_config: Fix parsing of CONFIG options with space
+To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>,
+        Shuah Khan <shuah@kernel.org>
+Cc:     "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        masahiroy@kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-11 00:47, Rikard Falkeborn wrote:
-> genwqe_err_handler is never modified, so it can be made const to allow
-> the compiler to put it in read-only memory.
-> 
-> Before:
->    text    data     bss     dec     hex filename
->   20174    6104    2464   28742    7046 drivers/misc/genwqe/card_base.o
-> 
-> After:
->    text    data     bss     dec     hex filename
->   20270    6008    2464   28742    7046 drivers/misc/genwqe/card_base.o
-> 
+On Mon, Jun 8, 2020 at 5:57 AM Rikard Falkeborn
+<rikard.falkeborn@gmail.com> wrote:
+>
+> Commit 8b59cd81dc5e ("kbuild: ensure full rebuild when the compiler is
+> updated") introduced a new CONFIG option CONFIG_CC_VERSION_TEXT. On my
+> system, this is set to "gcc (GCC) 10.1.0" which breaks KUnit config
+> parsing which did not like the spaces in the string.
+>
+> Fix this by updating the regex to allow strings containing spaces.
+>
+> Fixes: 8b59cd81dc5e ("kbuild: ensure full rebuild when the compiler is updated")
 > Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+
+Tested-by: David Gow <davidgow@google.com>
+
+I've been using this patch quite a bit, and haven't hit any problems.
+
++Shuah: Any chance we get this into the kunit branch sooner rather
+than later? The KUnit tooling is quite broken without it.
+
 > ---
->  drivers/misc/genwqe/card_base.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/misc/genwqe/card_base.c 
-> b/drivers/misc/genwqe/card_base.c
-> index 1dc6c7c5cbce..9969c0003f15 100644
-> --- a/drivers/misc/genwqe/card_base.c
-> +++ b/drivers/misc/genwqe/card_base.c
-> @@ -1324,7 +1324,7 @@ static int genwqe_sriov_configure(struct pci_dev
-> *dev, int numvfs)
->  	return 0;
->  }
-> 
-> -static struct pci_error_handlers genwqe_err_handler = {
-> +static const struct pci_error_handlers genwqe_err_handler = {
->  	.error_detected = genwqe_err_error_detected,
->  	.mmio_enabled	= genwqe_err_result_none,
->  	.slot_reset	= genwqe_err_slot_reset,
+> Maybe it would have been sufficient to just use
+> CONFIG_PATTERN = r'^CONFIG_(\w+)=(.*)$' instead?
+>
 
-Good idea. Thanks for the contribution.
+FWIW, I tried this myself, and it seemed to work, but I think I like
+requiring the quotes more.
 
-Signed-off-by: Frank Haverkamp <haver@linux.ibm.com>
+Cheers,
+-- David
