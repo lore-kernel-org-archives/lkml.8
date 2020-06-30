@@ -2,167 +2,130 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79334C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD2FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4EB6120675
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:45:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HchvKg8a"
+	by mail.kernel.org (Postfix) with ESMTP id 753F6206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:46:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727996AbgF3VpD (ORCPT
+        id S1728957AbgF3VqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 17:45:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36218 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726142AbgF3VpC (ORCPT
+        Tue, 30 Jun 2020 17:46:03 -0400
+Received: from jabberwock.ucw.cz ([46.255.230.98]:53576 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728109AbgF3VqD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 17:45:02 -0400
-Received: from mail-yb1-xb41.google.com (mail-yb1-xb41.google.com [IPv6:2607:f8b0:4864:20::b41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1832EC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 14:45:02 -0700 (PDT)
-Received: by mail-yb1-xb41.google.com with SMTP id y13so10840272ybj.10
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 14:45:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MV644q9HdgOcMKjgfG3T+AvIinwaeIV1aDYJmZ0o2No=;
-        b=HchvKg8aGsg2M1dEaZcfZu7LlzxTSPddVSg1ojsLydYKfMBLGtZR5sC4jXYsApabBl
-         BkvwGrJ0KtlKu/1DVZSXDWActWbw4zH5L/lN1sRVI72DBdxEq8DouKLQwj8vPD+RZBeu
-         qm8p4G50gMANVFwvIzdZRLOT0+sZxDUDCeGW0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MV644q9HdgOcMKjgfG3T+AvIinwaeIV1aDYJmZ0o2No=;
-        b=ACrgxmhMouAbv5828HTMCevLRTBaiMNetv+79A/6BBkXb14amzdSIMK5czJ2ulZFqO
-         eM/pNMcOp0gqu1727nClPFcLPI4eyJb/CKDAxHqaahfHrtcKuzQ/I46Uoff1zbm7rjgl
-         eORRSfBmmlrwNbBnX03u2P6pojuCLCXjILGzdsmH58JJPIyjidSVQb/Rva3yfpo2zFsB
-         oGhB75YW1wjsZT76YwCdzm20B2xhnGzTOVO1DnF5dOkKEZjKoMkxKHSPa/ltK2yFLjSd
-         AzC4sORSISkXCklsTq3bOptiOaTFIhogl7pMBX/l9B0taSTrTHul+rcAKDmR6XuvSCyQ
-         Ctew==
-X-Gm-Message-State: AOAM531jMz5cwVctXCc7GVobfuSQ1sp9Z2XXFjN+Irs9jvxdKEXyjWD5
-        vEy37E4eKkzmvrsDNGIp8IS5gR3B39n7Jh+lkhtCVg==
-X-Google-Smtp-Source: ABdhPJxNR194x+9wZPmD+dw/0ZTOItOzDJyKjyz3QG6PjyroZdSf7EIKV1y/dOZKNW2kYEIBirN1Nde4YHSYxCPvDwU=
-X-Received: by 2002:a25:ae8c:: with SMTP id b12mr34313493ybj.502.1593553500134;
- Tue, 30 Jun 2020 14:45:00 -0700 (PDT)
+        Tue, 30 Jun 2020 17:46:03 -0400
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 797B31C0C0A; Tue, 30 Jun 2020 23:45:59 +0200 (CEST)
+Date:   Tue, 30 Jun 2020 23:45:59 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Jesse Barnes <jsbarnes@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rajat Jain <rajatja@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Krishnakumar, Lalithambika" <lalithambika.krishnakumar@intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        linux-pci <linux-pci@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Zubin Mithra <zsm@google.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] Restrict the untrusted devices, to bind to only a set of
+ "whitelisted" drivers
+Message-ID: <20200630214559.GA7113@duo.ucw.cz>
+References: <20200602050626.GA2174820@kroah.com>
+ <CAA93t1puWzFx=1h0xkZEkpzPJJbBAF7ONL_wicSGxHjq7KL+WA@mail.gmail.com>
+ <20200603060751.GA465970@kroah.com>
+ <CACK8Z6EXDf2vUuJbKm18R6HovwUZia4y_qUrTW8ZW+8LA2+RgA@mail.gmail.com>
+ <20200603121613.GA1488883@kroah.com>
+ <CACK8Z6EOGduHX1m7eyhFgsGV7CYiVN0en4U0cM4BEWJwk2bmoA@mail.gmail.com>
+ <20200605080229.GC2209311@kroah.com>
+ <CACK8Z6GR7-wseug=TtVyRarVZX_ao2geoLDNBwjtB+5Y7VWNEQ@mail.gmail.com>
+ <20200607113632.GA49147@kroah.com>
+ <CAJmaN=m5cGc8019LocvHTo-1U6beA9-h=T-YZtQEYEb_ry=b+Q@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200630005707.2181126-1-dbasehore@chromium.org> <20200630051619.GG248110@dtor-ws>
-In-Reply-To: <20200630051619.GG248110@dtor-ws>
-From:   "dbasehore ." <dbasehore@chromium.org>
-Date:   Tue, 30 Jun 2020 14:44:48 -0700
-Message-ID: <CAGAzgsoqsETR79hzdcWjyrPYeLJeM5aUNnxUXsdRQowjsdwLZg@mail.gmail.com>
-Subject: Re: [PATCH] Input: elan_i2c - only increment wakeup count on touch
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     jiada_wang@mentor.com, jeffrey.l.hugo@gmail.com,
-        benjamin.tissoires@redhat.com, linux-input@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="NzB8fVQJ5HfG6fxh"
+Content-Disposition: inline
+In-Reply-To: <CAJmaN=m5cGc8019LocvHTo-1U6beA9-h=T-YZtQEYEb_ry=b+Q@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 10:16 PM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> On Mon, Jun 29, 2020 at 05:57:07PM -0700, Derek Basehore wrote:
-> > This moves the wakeup increment for elan devices to the touch report.
-> > This prevents the drivers from incorrectly reporting a wakeup when the
-> > resume callback resets then device, which causes an interrupt to
-> > occur. This also avoids error messages when these interrupts occur,
-> > since this behavior is expected.
-> >
-> > Signed-off-by: Derek Basehore <dbasehore@chromium.org>
-> > ---
-> >  drivers/input/mouse/elan_i2c_core.c | 16 +++++++++++++---
-> >  1 file changed, 13 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
-> > index cdbe6b38c73c1..6ad53a75f9807 100644
-> > --- a/drivers/input/mouse/elan_i2c_core.c
-> > +++ b/drivers/input/mouse/elan_i2c_core.c
-> > @@ -49,6 +49,7 @@
-> >
-> >  #define ETP_MAX_FINGERS              5
-> >  #define ETP_FINGER_DATA_LEN  5
-> > +#define ETP_REPORT_LEN_OFFSET        0
-> >  #define ETP_REPORT_ID                0x5D
-> >  #define ETP_TP_REPORT_ID     0x5E
-> >  #define ETP_REPORT_ID_OFFSET 2
-> > @@ -1018,6 +1019,8 @@ static void elan_report_absolute(struct elan_tp_data *data, u8 *packet)
-> >       u8 hover_info = packet[ETP_HOVER_INFO_OFFSET];
-> >       bool contact_valid, hover_event;
-> >
-> > +     pm_wakeup_event(&data->client->dev, 0);
-> > +
-> >       hover_event = hover_info & 0x40;
-> >       for (i = 0; i < ETP_MAX_FINGERS; i++) {
-> >               contact_valid = tp_info & (1U << (3 + i));
-> > @@ -1041,6 +1044,8 @@ static void elan_report_trackpoint(struct elan_tp_data *data, u8 *report)
-> >       u8 *packet = &report[ETP_REPORT_ID_OFFSET + 1];
-> >       int x, y;
-> >
-> > +     pm_wakeup_event(&data->client->dev, 0);
-> > +
-> >       if (!data->tp_input) {
-> >               dev_warn_once(&data->client->dev,
-> >                             "received a trackpoint report while no trackpoint device has been created. Please report upstream.\n");
-> > @@ -1065,7 +1070,6 @@ static void elan_report_trackpoint(struct elan_tp_data *data, u8 *report)
-> >  static irqreturn_t elan_isr(int irq, void *dev_id)
-> >  {
-> >       struct elan_tp_data *data = dev_id;
-> > -     struct device *dev = &data->client->dev;
-> >       int error;
-> >       u8 report[ETP_MAX_REPORT_LEN];
-> >
-> > @@ -1083,7 +1087,13 @@ static irqreturn_t elan_isr(int irq, void *dev_id)
-> >       if (error)
-> >               goto out;
-> >
-> > -     pm_wakeup_event(dev, 0);
-> > +     /*
-> > +      * Controllers may send a full length report on power on and reset
-> > +      * cases. There are only meaningless bytes in these reports except for
-> > +      * report[ETP_REPORT_LEN_OFFSET], which is 0.
-> > +      */
->
-> Is this true for all versions of firmware? Also, should we pay attention
-> to the value of this field for various types of reports?
->
 
-I wrote the patch with input from Elan on our bug tracker, and they
-say that this will work. This is HID over I2C, so the first and second
-byte are the length. Since the packets are never long, just the first
-byte suffices for everything, but I think we should actually take the
-first and second byte for the length. Just in case some new version of
-the chip starts sending 256+ byte responses.
+--NzB8fVQJ5HfG6fxh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > +     if (!report[ETP_REPORT_LEN_OFFSET])
-> > +             goto out;
-> >
-> >       switch (report[ETP_REPORT_ID_OFFSET]) {
-> >       case ETP_REPORT_ID:
-> > @@ -1093,7 +1103,7 @@ static irqreturn_t elan_isr(int irq, void *dev_id)
-> >               elan_report_trackpoint(data, report);
-> >               break;
-> >       default:
-> > -             dev_err(dev, "invalid report id data (%x)\n",
-> > +             dev_err(&data->client->dev, "invalid report id data (%x)\n",
-> >                       report[ETP_REPORT_ID_OFFSET]);
-> >       }
-> >
-> > --
-> > 2.27.0.212.ge8ba1cc988-goog
-> >
->
-> Thanks.
->
-> --
-> Dmitry
+Hi!
+
+> Yes such drivers should be fixed, no doubt.  But without lots of
+> fuzzing (we're working on this) and testing we'd like to avoid
+> exposing that attack surface at all.
+>=20
+> I think your suggestion to disable driver binding once the initial
+> bus/slot devices have been bound will probably work for this
+> situation.  I just wanted to be clear that without some auditing,
+> fuzzing, and additional testing, we simply have to assume that drivers
+> are *not* secure and avoid using them on untrusted devices until we're
+> fairly confident they can handle them (whether just misbehaving or
+> malicious), in combination with other approaches like IOMMUs of
+> course.  And this isn't because we don't trust driver authors or
+> kernel developers to dtrt, it's just that for many devices (maybe USB
+> is an exception) I think driver authors haven't had to consider this
+> case much, and so I think it's prudent to expect bugs in this area
+> that we need to find & fix.
+
+We normally trust the hardware NOT to be malicious. (Because if hacker
+has physical access to hardware and lot of resources, you lost).
+
+This is still true today, but maybe trusting USB devices is bad idea,
+so drivers are being cleaned up. PCI drivers will be WORSE in this
+regard. And you can't really protect against malicious CPU, and it is
+very very hard to protect against malicous RAM (probably not practical
+without explicit CPU support).
+
+Linux was designed with "don't let hackers near your hardware" threat
+model in mind.
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--NzB8fVQJ5HfG6fxh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXvuylwAKCRAw5/Bqldv6
+8vGdAJ0QKiY2OtzgdgyV2OtyuW+u9KMnagCcD9BR/9VGydJ0oNx7BA9liQVujEY=
+=2jEj
+-----END PGP SIGNATURE-----
+
+--NzB8fVQJ5HfG6fxh--
