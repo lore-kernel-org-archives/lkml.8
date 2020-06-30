@@ -5,26 +5,26 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EE43C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E8D2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 03A2C206B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:39:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 603F620723
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:39:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732468AbgF3Qjh (ORCPT
+        id S1732558AbgF3Qjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 12:39:37 -0400
-Received: from out28-76.mail.aliyun.com ([115.124.28.76]:54899 "EHLO
-        out28-76.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732379AbgF3Qjf (ORCPT
+        Tue, 30 Jun 2020 12:39:41 -0400
+Received: from out28-101.mail.aliyun.com ([115.124.28.101]:34529 "EHLO
+        out28-101.mail.aliyun.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732068AbgF3Qjh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 12:39:35 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.04436562|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.108682-0.0117639-0.879554;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03307;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=11;RT=11;SR=0;TI=SMTPD_---.HvJGFHX_1593535155;
+        Tue, 30 Jun 2020 12:39:37 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.04479663|-1;CH=green;DM=|CONTINUE|false|;DS=CONTINUE|ham_regular_dialog|0.0176947-0.000462366-0.981843;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03306;MF=zhouyanjie@wanyeetech.com;NM=1;PH=DS;RN=11;RT=11;SR=0;TI=SMTPD_---.HvJGFHX_1593535155;
 Received: from localhost.localdomain(mailfrom:zhouyanjie@wanyeetech.com fp:SMTPD_---.HvJGFHX_1593535155)
           by smtp.aliyun-inc.com(10.147.43.230);
-          Wed, 01 Jul 2020 00:39:30 +0800
+          Wed, 01 Jul 2020 00:39:29 +0800
 From:   =?UTF-8?q?=E5=91=A8=E7=90=B0=E6=9D=B0=20=28Zhou=20Yanjie=29?= 
         <zhouyanjie@wanyeetech.com>
 To:     linux-clk@vger.kernel.org
@@ -33,9 +33,9 @@ Cc:     linux-kernel@vger.kernel.org, sboyd@kernel.org,
         dongsheng.qiu@ingenic.com, aric.pzqi@ingenic.com,
         rick.tyliu@ingenic.com, yanfei.li@ingenic.com,
         sernia.zhou@foxmail.com, zhenwenjin@gmail.com
-Subject: [PATCH v3 3/3] clk: X1000: Add support for calculat REFCLK of USB PHY.
-Date:   Wed,  1 Jul 2020 00:38:52 +0800
-Message-Id: <20200630163852.47267-4-zhouyanjie@wanyeetech.com>
+Subject: [PATCH v3 2/3] clk: JZ4780: Reformat the code to align it.
+Date:   Wed,  1 Jul 2020 00:38:51 +0800
+Message-Id: <20200630163852.47267-3-zhouyanjie@wanyeetech.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20200630163852.47267-1-zhouyanjie@wanyeetech.com>
 References: <20200630163852.47267-1-zhouyanjie@wanyeetech.com>
@@ -47,136 +47,149 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add functions for calculat the rate of REFCLK, which is needed by
-USB PHY in Ingenic X1000 SoC.
+Reformat the code (add one level of indentation before the values),
+to align the code in the macro definition section.
 
 Tested-by: 周正 (Zhou Zheng) <sernia.zhou@foxmail.com>
 Signed-off-by: 周琰杰 (Zhou Yanjie) <zhouyanjie@wanyeetech.com>
 ---
 
 Notes:
-    v1->v2:
-    1.Use "WARN()" instead "BUG()".
-    2.Remove unnecessary get_parent/set_parent functions.
+    v2:
+    New patch.
     
     v2->v3:
-    1.Remove the wrong "WARN()";
-    2.Fix wrong parameters in recalc_rate/set_rate functions.
+    No change.
 
- drivers/clk/ingenic/x1000-cgu.c | 84 ++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 83 insertions(+), 1 deletion(-)
+ drivers/clk/ingenic/jz4780-cgu.c | 90 ++++++++++++++++++++--------------------
+ 1 file changed, 45 insertions(+), 45 deletions(-)
 
-diff --git a/drivers/clk/ingenic/x1000-cgu.c b/drivers/clk/ingenic/x1000-cgu.c
-index 453f3323cb99..38143bcd4cbd 100644
---- a/drivers/clk/ingenic/x1000-cgu.c
-+++ b/drivers/clk/ingenic/x1000-cgu.c
-@@ -48,8 +48,87 @@
- #define USBPCR_SIDDQ		BIT(21)
- #define USBPCR_OTG_DISABLE	BIT(20)
+diff --git a/drivers/clk/ingenic/jz4780-cgu.c b/drivers/clk/ingenic/jz4780-cgu.c
+index cf3f7f87e7a6..abd8d6d78590 100644
+--- a/drivers/clk/ingenic/jz4780-cgu.c
++++ b/drivers/clk/ingenic/jz4780-cgu.c
+@@ -20,50 +20,50 @@
  
-+/* bits within the USBPCR1 register */
-+#define USBPCR1_REFCLKSEL_SHIFT	26
-+#define USBPCR1_REFCLKSEL_MASK	(0x3 << USBPCR1_REFCLKSEL_SHIFT)
-+#define USBPCR1_REFCLKSEL_CORE	(0x2 << USBPCR1_REFCLKSEL_SHIFT)
-+#define USBPCR1_REFCLKDIV_SHIFT	24
-+#define USBPCR1_REFCLKDIV_MASK	(0x3 << USBPCR1_REFCLKDIV_SHIFT)
-+#define USBPCR1_REFCLKDIV_48	(0x2 << USBPCR1_REFCLKDIV_SHIFT)
-+#define USBPCR1_REFCLKDIV_24	(0x1 << USBPCR1_REFCLKDIV_SHIFT)
-+#define USBPCR1_REFCLKDIV_12	(0x0 << USBPCR1_REFCLKDIV_SHIFT)
-+
+ /* CGU register offsets */
+ #define CGU_REG_CLOCKCONTROL	0x00
+-#define CGU_REG_LCR			0x04
+-#define CGU_REG_APLL		0x10
+-#define CGU_REG_MPLL		0x14
+-#define CGU_REG_EPLL		0x18
+-#define CGU_REG_VPLL		0x1c
+-#define CGU_REG_CLKGR0		0x20
+-#define CGU_REG_OPCR		0x24
+-#define CGU_REG_CLKGR1		0x28
+-#define CGU_REG_DDRCDR		0x2c
+-#define CGU_REG_VPUCDR		0x30
+-#define CGU_REG_USBPCR		0x3c
+-#define CGU_REG_USBRDT		0x40
+-#define CGU_REG_USBVBFIL	0x44
+-#define CGU_REG_USBPCR1		0x48
+-#define CGU_REG_LP0CDR		0x54
+-#define CGU_REG_I2SCDR		0x60
+-#define CGU_REG_LP1CDR		0x64
+-#define CGU_REG_MSC0CDR		0x68
+-#define CGU_REG_UHCCDR		0x6c
+-#define CGU_REG_SSICDR		0x74
+-#define CGU_REG_CIMCDR		0x7c
+-#define CGU_REG_PCMCDR		0x84
+-#define CGU_REG_GPUCDR		0x88
+-#define CGU_REG_HDMICDR		0x8c
+-#define CGU_REG_MSC1CDR		0xa4
+-#define CGU_REG_MSC2CDR		0xa8
+-#define CGU_REG_BCHCDR		0xac
+-#define CGU_REG_CLOCKSTATUS	0xd4
++#define CGU_REG_LCR				0x04
++#define CGU_REG_APLL			0x10
++#define CGU_REG_MPLL			0x14
++#define CGU_REG_EPLL			0x18
++#define CGU_REG_VPLL			0x1c
++#define CGU_REG_CLKGR0			0x20
++#define CGU_REG_OPCR			0x24
++#define CGU_REG_CLKGR1			0x28
++#define CGU_REG_DDRCDR			0x2c
++#define CGU_REG_VPUCDR			0x30
++#define CGU_REG_USBPCR			0x3c
++#define CGU_REG_USBRDT			0x40
++#define CGU_REG_USBVBFIL		0x44
++#define CGU_REG_USBPCR1			0x48
++#define CGU_REG_LP0CDR			0x54
++#define CGU_REG_I2SCDR			0x60
++#define CGU_REG_LP1CDR			0x64
++#define CGU_REG_MSC0CDR			0x68
++#define CGU_REG_UHCCDR			0x6c
++#define CGU_REG_SSICDR			0x74
++#define CGU_REG_CIMCDR			0x7c
++#define CGU_REG_PCMCDR			0x84
++#define CGU_REG_GPUCDR			0x88
++#define CGU_REG_HDMICDR			0x8c
++#define CGU_REG_MSC1CDR			0xa4
++#define CGU_REG_MSC2CDR			0xa8
++#define CGU_REG_BCHCDR			0xac
++#define CGU_REG_CLOCKSTATUS		0xd4
+ 
+ /* bits within the OPCR register */
+-#define OPCR_SPENDN0		BIT(7)
+-#define OPCR_SPENDN1		BIT(6)
++#define OPCR_SPENDN0			BIT(7)
++#define OPCR_SPENDN1			BIT(6)
+ 
+ /* bits within the USBPCR register */
+-#define USBPCR_USB_MODE		BIT(31)
++#define USBPCR_USB_MODE			BIT(31)
+ #define USBPCR_IDPULLUP_MASK	(0x3 << 28)
+-#define USBPCR_COMMONONN	BIT(25)
+-#define USBPCR_VBUSVLDEXT	BIT(24)
++#define USBPCR_COMMONONN		BIT(25)
++#define USBPCR_VBUSVLDEXT		BIT(24)
+ #define USBPCR_VBUSVLDEXTSEL	BIT(23)
+-#define USBPCR_POR		BIT(22)
+-#define USBPCR_SIDDQ		BIT(21)
+-#define USBPCR_OTG_DISABLE	BIT(20)
++#define USBPCR_POR				BIT(22)
++#define USBPCR_SIDDQ			BIT(21)
++#define USBPCR_OTG_DISABLE		BIT(20)
+ #define USBPCR_COMPDISTUNE_MASK	(0x7 << 17)
+-#define USBPCR_OTGTUNE_MASK	(0x7 << 14)
++#define USBPCR_OTGTUNE_MASK		(0x7 << 14)
+ #define USBPCR_SQRXTUNE_MASK	(0x7 << 11)
+ #define USBPCR_TXFSLSTUNE_MASK	(0xf << 7)
+ #define USBPCR_TXPREEMPHTUNE	BIT(6)
+@@ -80,13 +80,13 @@
+ #define USBPCR1_REFCLKDIV_48	(0x2 << USBPCR1_REFCLKDIV_SHIFT)
+ #define USBPCR1_REFCLKDIV_24	(0x1 << USBPCR1_REFCLKDIV_SHIFT)
+ #define USBPCR1_REFCLKDIV_12	(0x0 << USBPCR1_REFCLKDIV_SHIFT)
+-#define USBPCR1_USB_SEL		BIT(28)
+-#define USBPCR1_WORD_IF0	BIT(19)
+-#define USBPCR1_WORD_IF1	BIT(18)
++#define USBPCR1_USB_SEL			BIT(28)
++#define USBPCR1_WORD_IF0		BIT(19)
++#define USBPCR1_WORD_IF1		BIT(18)
+ 
+ /* bits within the USBRDT register */
+-#define USBRDT_VBFIL_LD_EN	BIT(25)
+-#define USBRDT_USBRDT_MASK	0x7fffff
++#define USBRDT_VBFIL_LD_EN		BIT(25)
++#define USBRDT_USBRDT_MASK		0x7fffff
+ 
+ /* bits within the USBVBFIL register */
+ #define USBVBFIL_IDDIGFIL_SHIFT	16
+@@ -94,11 +94,11 @@
+ #define USBVBFIL_USBVBFIL_MASK	(0xffff)
+ 
+ /* bits within the LCR register */
+-#define LCR_PD_SCPU			BIT(31)
+-#define LCR_SCPUS			BIT(27)
++#define LCR_PD_SCPU				BIT(31)
++#define LCR_SCPUS				BIT(27)
+ 
+ /* bits within the CLKGR1 register */
+-#define CLKGR1_CORE1		BIT(15)
++#define CLKGR1_CORE1			BIT(15)
+ 
  static struct ingenic_cgu *cgu;
  
-+static unsigned long x1000_otg_phy_recalc_rate(struct clk_hw *hw,
-+						unsigned long parent_rate)
-+{
-+	u32 usbpcr1;
-+	unsigned refclk_div;
-+
-+	usbpcr1 = readl(cgu->base + CGU_REG_USBPCR1);
-+	refclk_div = usbpcr1 & USBPCR1_REFCLKDIV_MASK;
-+
-+	switch (refclk_div) {
-+	case USBPCR1_REFCLKDIV_12:
-+		return 12000000;
-+
-+	case USBPCR1_REFCLKDIV_24:
-+		return 24000000;
-+
-+	case USBPCR1_REFCLKDIV_48:
-+		return 48000000;
-+	}
-+
-+	return parent_rate;
-+}
-+
-+static long x1000_otg_phy_round_rate(struct clk_hw *hw, unsigned long req_rate,
-+				      unsigned long *parent_rate)
-+{
-+	if (req_rate < 18000000)
-+		return 12000000;
-+
-+	if (req_rate < 36000000)
-+		return 24000000;
-+
-+	return 48000000;
-+}
-+
-+static int x1000_otg_phy_set_rate(struct clk_hw *hw, unsigned long req_rate,
-+				   unsigned long parent_rate)
-+{
-+	unsigned long flags;
-+	u32 usbpcr1, div_bits;
-+
-+	switch (req_rate) {
-+	case 12000000:
-+		div_bits = USBPCR1_REFCLKDIV_12;
-+		break;
-+
-+	case 24000000:
-+		div_bits = USBPCR1_REFCLKDIV_24;
-+		break;
-+
-+	case 48000000:
-+		div_bits = USBPCR1_REFCLKDIV_48;
-+		break;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	spin_lock_irqsave(&cgu->lock, flags);
-+
-+	usbpcr1 = readl(cgu->base + CGU_REG_USBPCR1);
-+	usbpcr1 &= ~USBPCR1_REFCLKDIV_MASK;
-+	usbpcr1 |= div_bits;
-+	writel(usbpcr1, cgu->base + CGU_REG_USBPCR1);
-+
-+	spin_unlock_irqrestore(&cgu->lock, flags);
-+	return 0;
-+}
-+
- static int x1000_usb_phy_enable(struct clk_hw *hw)
- {
- 	void __iomem *reg_opcr		= cgu->base + CGU_REG_OPCR;
-@@ -80,6 +159,10 @@ static int x1000_usb_phy_is_enabled(struct clk_hw *hw)
- }
- 
- static const struct clk_ops x1000_otg_phy_ops = {
-+	.recalc_rate = x1000_otg_phy_recalc_rate,
-+	.round_rate = x1000_otg_phy_round_rate,
-+	.set_rate = x1000_otg_phy_set_rate,
-+
- 	.enable		= x1000_usb_phy_enable,
- 	.disable	= x1000_usb_phy_disable,
- 	.is_enabled	= x1000_usb_phy_is_enabled,
-@@ -144,7 +227,6 @@ static const struct ingenic_cgu_clk_info x1000_cgu_clocks[] = {
- 		},
- 	},
- 
--
- 	/* Custom (SoC-specific) OTG PHY */
- 
- 	[X1000_CLK_OTGPHY] = {
 -- 
 2.11.0
 
