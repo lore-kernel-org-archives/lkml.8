@@ -1,290 +1,115 @@
 Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Level: **
+X-Spam-Status: No, score=2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 243FEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AEF8C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:44:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E72642074F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:43:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09BF920760
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:44:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="o8Mb8XrN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OdpXLhqm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389687AbgF3Pnt (ORCPT
+        id S2389696AbgF3PoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 11:43:49 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:15501 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389655AbgF3Pns (ORCPT
+        Tue, 30 Jun 2020 11:44:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36926 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389655AbgF3PoB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 11:43:48 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5efb5d810001>; Tue, 30 Jun 2020 08:42:58 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 30 Jun 2020 08:43:47 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 30 Jun 2020 08:43:47 -0700
-Received: from [10.2.167.193] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 30 Jun
- 2020 15:43:46 +0000
-Subject: Re: [RFC PATCH v2 00/18] Support for Tegra video capture from
- external sensor
-To:     Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <sakari.ailus@iki.fi>,
-        <robh+dt@kernel.org>, <helen.koike@collabora.com>
-CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
-        <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
-References: <1592358094-23459-1-git-send-email-skomatineni@nvidia.com>
- <b3f63f3f-50b2-e818-2c59-8009c31a9825@xs4all.nl>
- <f5c84071-46ad-aa6f-0820-1813d4a907c9@nvidia.com>
- <a60d8f80-312d-fce3-61f5-328e7f2a7a64@xs4all.nl>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <72ca3b09-7ca6-7421-4a9d-98326d1af087@nvidia.com>
-Date:   Tue, 30 Jun 2020 08:44:13 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 30 Jun 2020 11:44:01 -0400
+Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C833EC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 08:44:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=OQxTXNj9yDq06FjwILkGgyBd+fyQSISd2el9foUvjmY=; b=OdpXLhqmUTkQpG7XO1b4vM2siS
+        LFD48OPxmpiQ1k/FJWZRuQNCjQQnUoe0X9k8ddv79/uljEi9sxD1111DCbMvEXycp8wcxTWcO1mK9
+        KRQzy/tHwt0XIw7lL62vuKr0LY9AvqcnxsdD1BgSDc9pXU4EmE2ytWGPDvO6YfK6/1uP2tThFQ/Uk
+        yluCvkQpfaEFS66KAYfsNV/C8EQHT6kSDaJAZ/ntsj+7lt8mBXFzKzF5a0sMOCz/gWtAkQtr8nVKW
+        bnOaRFOOQ0qoJc3twdZXS3IApeVQ3HNiWoHR5Etd1AqSFMIcqP2648EgviZ4TM4jVY1JUxaphRrvY
+        VuGpRCpg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jqIPy-0003te-3d; Tue, 30 Jun 2020 15:43:30 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C4B3230015A;
+        Tue, 30 Jun 2020 17:43:26 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B164B20CF3979; Tue, 30 Jun 2020 17:43:26 +0200 (CEST)
+Date:   Tue, 30 Jun 2020 17:43:26 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     kan.liang@linux.intel.com
+Cc:     mingo@redhat.com, acme@kernel.org, tglx@linutronix.de,
+        bp@alien8.de, x86@kernel.org, linux-kernel@vger.kernel.org,
+        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
+        jolsa@redhat.com, namhyung@kernel.org, dave.hansen@intel.com,
+        yu-cheng.yu@intel.com, bigeasy@linutronix.de, gorcunov@gmail.com,
+        hpa@zytor.com, alexey.budankov@linux.intel.com, eranian@google.com,
+        ak@linux.intel.com, like.xu@linux.intel.com,
+        yao.jin@linux.intel.com, wei.w.wang@intel.com
+Subject: Re: [PATCH V2 13/23] perf/x86/intel/lbr: Factor out
+ intel_pmu_store_lbr
+Message-ID: <20200630154326.GT4781@hirez.programming.kicks-ass.net>
+References: <1593195620-116988-1-git-send-email-kan.liang@linux.intel.com>
+ <1593195620-116988-14-git-send-email-kan.liang@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <a60d8f80-312d-fce3-61f5-328e7f2a7a64@xs4all.nl>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1593531778; bh=Awb4OZIabXTvu1FWi3MWChEmL15hnuFJ0Nq97kg1ETs=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=o8Mb8XrNExe1mOsfRBwLYJhxbCBvOHqFQBhg0hdfQcvrmKkj+iXgqerAJYgKQPdpz
-         DAfJnvLS87E8V2C1so1VxhjniLTCPqo6XuvQhRnL4pzOcaKGign0sLGLDZij5GKs3n
-         afw93lqS+cRCKWs2A/BhGhBQaqZFgllCakBRVNYe67r0JstZ80bxQMtL6pD2ny3ygY
-         zkFVBllnGihHper0iJ27Cpf0JxpZ+y1ejErgn/qumdxh9lj+KgwGV2MMegoJUSM6W2
-         x/oAzwMW73OYUkqx/rWn1b0l1EsWwHmH+CqlyXrwrsymmNd4zSDSnbXvPkNIs+8p0Y
-         5mW5icd2i5Tzw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1593195620-116988-14-git-send-email-kan.liang@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 26, 2020 at 11:20:10AM -0700, kan.liang@linux.intel.com wrote:
+> -static inline u64 rdlbr_from(unsigned int idx)
+> +static inline u64 rdlbr_from(unsigned int idx, struct lbr_entry *lbr)
+>  {
+>  	u64 val;
+>  
+> +	if (lbr)
+> +		return lbr->from;
+> +
+>  	rdmsrl(x86_pmu.lbr_from + idx, val);
+>  
+>  	return lbr_from_signext_quirk_rd(val);
+>  }
+>  
+> -static inline u64 rdlbr_to(unsigned int idx)
+> +static inline u64 rdlbr_to(unsigned int idx, struct lbr_entry *lbr)
+>  {
+>  	u64 val;
+>  
+> +	if (lbr)
+> +		return lbr->to;
+> +
+>  	rdmsrl(x86_pmu.lbr_to + idx, val);
+>  
+>  	return val;
+>  }
+>  
+> -static inline u64 rdlbr_info(unsigned int idx)
+> +static inline u64 rdlbr_info(unsigned int idx, struct lbr_entry *lbr)
+>  {
+>  	u64 val;
+>  
+> +	if (lbr)
+> +		return lbr->info;
+> +
+>  	rdmsrl(x86_pmu.lbr_info + idx, val);
+>  
+>  	return val;
 
-On 6/30/20 8:13 AM, Hans Verkuil wrote:
-> On 30/06/2020 16:58, Sowjanya Komatineni wrote:
->> On 6/30/20 2:21 AM, Hans Verkuil wrote:
->>> On 17/06/2020 03:41, Sowjanya Komatineni wrote:
->>>> This series adds support for video capture from external camera sensor to
->>>> Tegra video driver.
->>>>
->>>> Jetson TX1 has camera expansion connector and supports custom camera module
->>>> designed as per TX1 design specification.
->>>>
->>>> This series also enables camera capture support for Jetson Nano which has
->>>> Raspberry PI camera header.
->>>>
->>>> This series is tested with IMX219 camera sensor.
->>> Which tree did you base this on? The media_tree master? Or the mainline kernel?
->> These patches are with linux-next base at the time I sent them out which
->> are on 20200616
->>> I now have the imx219 detected, but if I try to stream I get this:
->>>
->>> $ v4l2-ctl --stream-mmap
->>> <[  512.840944] video4linux video0: MW_ACK_DONE syncpt timeout: -11
->>> [  512.972975] video4linux video0: frame start syncpt timeout: -11
->>> <VIDIOC_DQBUF: failed: Input/output error
->>> [  513.180770] video4linux video0: MW_ACK_DONE syncpt timeout: -11
->>>
->>> And then everything hangs and I need to reset.
->>>
->>> I'm testing with the media_tree master with your patches on top.
->>>
->>> Regards,
->>>
->>> 	Hans
->> Are you using same device tree as I sent offline? It uses CSI A for IMX219.
->>
->> Does you setup also uses CSI-A as x2 for IMX219?
->>
->> I tested them on Jetson Nano + IMX219 rasp PI module and also on Jetson
->> TX1 + IMX274.
->>
->> I did not see any issue and am able to capture from both.
->>
->> Will try again on my side with today's latest linux-next and update result.
-> Please use the media_tree master, that's what I use as well.
->
-> I did some more testing and there is something weird going on.
->
-> I have a Leopard Imaging camera expansion board (LI-JTX1-MIPI-ADPT) with
-> three camera connectors. See here for the datasheet:
->
-> https://www.leopardimaging.com/uploads/LI-TX1-KIT-IMX274M12-T_datasheet.pdf
->
-> The first connector (with an IMX274) causes this error:
->
-> $ v4l2-ctl -d1 --stream-mmap
-> [  599.265885] video4linux video1: MW_ACK_DONE syncpt timeout: -11
-> [  599.473883] video4linux video1: MW_ACK_DONE syncpt timeout: -11
-> [  599.681904] video4linux video1: frame start syncpt timeout: -11
-> [  599.681909] video4linux video1: MW_ACK_DONE syncpt timeout: -11
-> <VIDIOC_DQBUF: failed: Input/output error
-> [  599.897884] video4linux video1: MW_ACK_DONE syncpt timeout: -11
->
-> Similar to the test above where I had an IMX219 connected. Except it didn't
-> hang with the IMX274 (I'm beginning to suspect a locking issue in the imx219
-> driver that is causing the hang, I'll look at that tomorrow).
->
-> If I connect the IMX219 to the middle camera connector, then it works fine.
-> I think I tested this with the IMX274 as well, but I'm not 100% certain, also
-> something to double check tomorrow.
->
-> If I connect the IMX219 or IMX274 to the third camera connector, then I get this:
+These should probably be __always_inline, just to make sure the compiler
+doesn't do anything stupid.
 
-Would like to know CSI port mapping to connectors as mipi calibrate pads 
-cells need to be updated in device tree based on CSI port in use.
-
-Will see if I can find that from DS link you sent above.
-
->
-> $ v4l2-ctl -d0 --stream-mmap
-> [  820.513866] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->
-> [  820.525354] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->
-> [  820.536780] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->
-> [  820.548222] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
->
-> [  820.559639] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
-> <[  820.646931] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
-> [  820.658355] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
-> [  820.669797] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
-> [  820.681216] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
-> [  820.692601] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
-> <<<<<<<<<<<<<<< 14.50 fps
-> <<<<<<<<<<<<<<< 14.75 fps
-> <<<<<<<<<<<<<<< 14.73 fps
-> <<<<<<<<<<<<<<< 14.80 fps
-> <<<<<<<<<<<<<[  825.517854] tegra_mc_irq: 133437 callbacks suppressed
-> [  825.517874] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
-> [  825.534395] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
-> [  825.545833] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
-> [  825.557280] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
-> [  825.579346] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
-> [  825.590764] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
-> [  825.602188] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
-> [  825.613649] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
-> [  825.625075] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
-> [  825.645983] tegra-mc 70019000.memory-controller: viw: write @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
-> < 14.64 fps
-> <<<<<<<<<<<<<<<< 14.87 fps
-> <<<<<<<<<<<<<<< 14.89 fps
->
-> Something is producing EMEM address decode errors. But it is streaming.
-
-above memory controller errors may be due to access faults and not sure 
-why these show up on your setup. I never have these with my testing.
-
-Also I am using CMA alloc of 256MB and not sure if low CMA alloc size is 
-causing this. Can you try with CMA alloc size of 256MB?
-
->
-> If I enable the TPG then everything is fine.
->
-> So I have currently three different behaviors for three camera connectors.
->
-> Do you have a datasheet for your Jetson TX1 camera board? It could be useful
-> to compare the two.
-
-Yeah we have and will send it offline.
-
-Also based on connector mapping to corresponding CSI port, 
-mipi-calibrate pad cell value also need to be changed.
-
-Below is for CSI-A
-
-nvidia,mipi-calibrate = <&mipi 0x001>
-> Regards,
->
-> 	Hans
->
->>>> This series include,
->>>>
->>>> VI I2C related fixes
->>>> - Camera sensor programming happens through VI I2C which is on host1x bus.
->>>> - These patches includes device tree and I2C driver fixes for VI I2C.
->>>>
->>>> Tegra video driver updates
->>>> - TPG Vs Non-TPG based on Kconfig
->>>> - Support for external sensor video capture based on device graph from DT.
->>>> - Support for selection ioctl operations
->>>> - Tegra MIPI CSI pads calibration
->>>> - CSI T-CLK and T-HS settle time computation based on clock rates.
->>>>
->>>> Host1x driver updates
->>>> - Adds API to allow creating mipi device for specific device node.
->>>> - Splits MIPI pads calibrate start and waiting for calibration to be done.
->>>>
->>>> Device tree updates
->>>> - Adds camera connector 2V8, 1V8, 1V2 regulator supplies to Jetson TX1 DT.
->>>> - Enabled VI and CSI support in Jetson Nano DT.
->>>>
->>>>
->>>> Delta between patch versions:
->>>>
->>>> [v2]:	Includes below changes based on v1 feedback
->>>> 	- dt-binding document and the driver update for device graph to use
->>>> 	  separate ports for sink endpoint and source endpoint for csi.
->>>> 	- Use data-lanes endpoint property for csi.
->>>> 	- Update tegra_mipi_request() to take device node pointer argument
->>>> 	  rather than adding extra API.
->>>> 	- Remove checking for clk pointer before clk_disable.
->>>>
->>>>
->>>> Sowjanya Komatineni (18):
->>>>     dt-bindings: i2c: tegra: Document Tegra210 VI I2C clocks and
->>>>       power-domains
->>>>     arm64: tegra: Add missing clocks and power-domains to Tegra210 VI I2C
->>>>     i2c: tegra: Don't mark VI I2C as IRQ safe runtime PM
->>>>     i2c: tegra: Fix the error path in tegra_i2c_runtime_resume
->>>>     i2c: tegra: Fix runtime resume to re-init VI I2C
->>>>     i2c: tegra: Avoid tegra_i2c_init_dma() for Tegra210 vi i2c
->>>>     media: tegra-video: Fix channel format alignment
->>>>     media: tegra-video: Enable TPG based on kernel config
->>>>     media: tegra-video: Update format lookup to offset based
->>>>     dt-bindings: tegra: Update VI and CSI bindings with port info
->>>>     media: tegra-video: Add support for external sensor capture
->>>>     media: tegra-video: Add support for selection ioctl ops
->>>>     gpu: host1x: mipi: Update tegra_mipi_request() to be node based
->>>>     gpu: host1x: mipi: Split tegra_mipi_calibrate and tegra_mipi_wait
->>>>     media: tegra-video: Add CSI MIPI pads calibration
->>>>     media: tegra-video: Compute settle times based on the clock rate
->>>>     arm64: tegra: jetson-tx1: Add camera supplies
->>>>     arm64: tegra: Enable Tegra VI CSI support for Jetson Nano
->>>>
->>>>    .../display/tegra/nvidia,tegra20-host1x.txt        |  92 ++-
->>>>    .../devicetree/bindings/i2c/nvidia,tegra20-i2c.txt |  19 +-
->>>>    arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi     |  41 ++
->>>>    arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts |  10 +
->>>>    arch/arm64/boot/dts/nvidia/tegra210.dtsi           |   6 +
->>>>    drivers/gpu/drm/tegra/dsi.c                        |   9 +-
->>>>    drivers/gpu/host1x/mipi.c                          |  30 +-
->>>>    drivers/i2c/busses/i2c-tegra.c                     |  39 +-
->>>>    drivers/staging/media/tegra-video/Kconfig          |   7 +
->>>>    drivers/staging/media/tegra-video/csi.c            | 245 ++++++-
->>>>    drivers/staging/media/tegra-video/csi.h            |   8 +
->>>>    drivers/staging/media/tegra-video/tegra210.c       |  25 +-
->>>>    drivers/staging/media/tegra-video/vi.c             | 770 +++++++++++++++++++--
->>>>    drivers/staging/media/tegra-video/vi.h             |  23 +-
->>>>    drivers/staging/media/tegra-video/video.c          |  23 +-
->>>>    include/linux/host1x.h                             |   4 +-
->>>>    16 files changed, 1251 insertions(+), 100 deletions(-)
->>>>
