@@ -4,152 +4,141 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB651C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:59:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82B8AC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8A7A820775
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:59:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6294C206BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:59:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731835AbgF3I7q (ORCPT
+        id S1731856AbgF3I7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 04:59:46 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:43896 "EHLO inva021.nxp.com"
+        Tue, 30 Jun 2020 04:59:52 -0400
+Received: from mx.socionext.com ([202.248.49.38]:40031 "EHLO mx.socionext.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731591AbgF3I7p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 04:59:45 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 73145201338;
-        Tue, 30 Jun 2020 10:59:43 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BA2B8201345;
-        Tue, 30 Jun 2020 10:59:38 +0200 (CEST)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id D653040287;
-        Tue, 30 Jun 2020 16:59:32 +0800 (SGT)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
-        festevam@gmail.com, broonie@kernel.org,
-        alsa-devel@alsa-project.org, lgirdwood@gmail.com, perex@perex.cz,
-        tiwai@suse.com
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] ASoC: fsl_asrc: Add an option to select internal ratio mode
-Date:   Tue, 30 Jun 2020 16:47:56 +0800
-Message-Id: <1593506876-14599-1-git-send-email-shengjiu.wang@nxp.com>
+        id S1731834AbgF3I7s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 04:59:48 -0400
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 30 Jun 2020 17:59:45 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id D844E180B3C;
+        Tue, 30 Jun 2020 17:59:45 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Tue, 30 Jun 2020 17:59:45 +0900
+Received: from plum.e01.socionext.com (unknown [10.213.132.32])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id 49EDB1A0508;
+        Tue, 30 Jun 2020 17:59:45 +0900 (JST)
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Subject: [PATCH v2 1/2] dt-bindings: phy: Add UniPhier AHCI PHY description
+Date:   Tue, 30 Jun 2020 17:59:33 +0900
+Message-Id: <1593507574-10007-2-git-send-email-hayashi.kunihiko@socionext.com>
 X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+In-Reply-To: <1593507574-10007-1-git-send-email-hayashi.kunihiko@socionext.com>
+References: <1593507574-10007-1-git-send-email-hayashi.kunihiko@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ASRC not only supports ideal ratio mode, but also supports
-internal ratio mode.
+Add DT bindings for PHY interface built into ahci controller implemented
+in UniPhier SoCs.
 
-For internal rato mode, the rate of clock source should be divided
-with no remainder by sample rate, otherwise there is sound
-distortion.
-
-Add function fsl_asrc_select_clk() to find proper clock source for
-internal ratio mode, if the clock source is available then internal
-ratio mode will be selected.
-
-With change, the ideal ratio mode is not the only option for user.
-
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 ---
-changes in v2
-- update according to Nicolin's comments
+ .../bindings/phy/socionext,uniphier-ahci-phy.yaml  | 76 ++++++++++++++++++++++
+ 1 file changed, 76 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/socionext,uniphier-ahci-phy.yaml
 
- sound/soc/fsl/fsl_asrc.c | 54 ++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 52 insertions(+), 2 deletions(-)
-
-diff --git a/sound/soc/fsl/fsl_asrc.c b/sound/soc/fsl/fsl_asrc.c
-index 95f6a9617b0b..4105ef2c4f99 100644
---- a/sound/soc/fsl/fsl_asrc.c
-+++ b/sound/soc/fsl/fsl_asrc.c
-@@ -582,11 +582,55 @@ static int fsl_asrc_dai_startup(struct snd_pcm_substream *substream,
- 			SNDRV_PCM_HW_PARAM_RATE, &fsl_asrc_rate_constraints);
- }
- 
-+/**
-+ * Select proper clock source for internal ratio mode
-+ */
-+static int fsl_asrc_select_clk(struct fsl_asrc_priv *asrc_priv,
-+			       struct fsl_asrc_pair *pair,
-+			       int in_rate,
-+			       int out_rate)
-+{
-+	struct fsl_asrc_pair_priv *pair_priv = pair->private;
-+	struct asrc_config *config = pair_priv->config;
-+	int rate[2], select_clk[2]; /* Array size 2 means IN and OUT */
-+	int clk_rate, clk_index;
-+	int i = 0, j = 0;
+diff --git a/Documentation/devicetree/bindings/phy/socionext,uniphier-ahci-phy.yaml b/Documentation/devicetree/bindings/phy/socionext,uniphier-ahci-phy.yaml
+new file mode 100644
+index 0000000..bab2ff4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/socionext,uniphier-ahci-phy.yaml
+@@ -0,0 +1,76 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/phy/socionext,uniphier-ahci-phy.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+	rate[0] = in_rate;
-+	rate[1] = out_rate;
++title: Socionext UniPhier AHCI PHY
 +
-+	/* Select proper clock source for internal ratio mode */
-+	for (j = 0; j < 2; j++) {
-+		for (i = 0; i < ASRC_CLK_MAP_LEN; i++) {
-+			clk_index = asrc_priv->clk_map[j][i];
-+			clk_rate = clk_get_rate(asrc_priv->asrck_clk[clk_index]);
-+			/* Only match a perfect clock source with no remainder */
-+			if (clk_rate != 0 && (clk_rate / rate[j]) <= 1024 &&
-+			    (clk_rate % rate[j]) == 0)
-+				break;
-+		}
++description: |
++  This describes the deivcetree bindings for PHY interfaces built into
++  AHCI controller implemented on Socionext UniPhier SoCs.
 +
-+		select_clk[j] = i;
-+	}
++maintainers:
++  - Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
 +
-+	/* Switch to ideal ratio mode if there is no proper clock source */
-+	if (select_clk[IN] == ASRC_CLK_MAP_LEN || select_clk[OUT] == ASRC_CLK_MAP_LEN) {
-+		select_clk[IN] = INCLK_NONE;
-+		select_clk[OUT] = OUTCLK_ASRCK1_CLK;
-+	}
++properties:
++  compatible:
++    enum:
++      - socionext,uniphier-pxs2-ahci-phy
++      - socionext,uniphier-pxs3-ahci-phy
 +
-+	config->inclk = select_clk[IN];
-+	config->outclk = select_clk[OUT];
++  reg:
++    description: PHY register region (offset and length)
 +
-+	return 0;
-+}
++  "#phy-cells":
++    const: 0
 +
- static int fsl_asrc_dai_hw_params(struct snd_pcm_substream *substream,
- 				  struct snd_pcm_hw_params *params,
- 				  struct snd_soc_dai *dai)
- {
- 	struct fsl_asrc *asrc = snd_soc_dai_get_drvdata(dai);
-+	struct fsl_asrc_priv *asrc_priv = asrc->private;
- 	struct snd_pcm_runtime *runtime = substream->runtime;
- 	struct fsl_asrc_pair *pair = runtime->private_data;
- 	struct fsl_asrc_pair_priv *pair_priv = pair->private;
-@@ -605,8 +649,6 @@ static int fsl_asrc_dai_hw_params(struct snd_pcm_substream *substream,
- 
- 	config.pair = pair->index;
- 	config.channel_num = channels;
--	config.inclk = INCLK_NONE;
--	config.outclk = OUTCLK_ASRCK1_CLK;
- 
- 	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
- 		config.input_format   = params_format(params);
-@@ -620,6 +662,14 @@ static int fsl_asrc_dai_hw_params(struct snd_pcm_substream *substream,
- 		config.output_sample_rate = rate;
- 	}
- 
-+	ret = fsl_asrc_select_clk(asrc_priv, pair,
-+				  config.input_sample_rate,
-+				  config.output_sample_rate);
-+	if (ret) {
-+		dev_err(dai->dev, "fail to select clock\n");
-+		return ret;
-+	}
++  clocks:
++    maxItems: 2
 +
- 	ret = fsl_asrc_config_pair(pair, false);
- 	if (ret) {
- 		dev_err(dai->dev, "fail to config asrc pair\n");
++  clock-names:
++    oneOf:
++      - items:          # for PXs2
++        - const: link
++      - items:          # for others
++        - const: link
++        - const: phy
++
++  resets:
++    maxItems: 2
++
++  reset-names:
++    items:
++      - const: link
++      - const: phy
++
++required:
++  - compatible
++  - reg
++  - "#phy-cells"
++  - clocks
++  - clock-names
++  - resets
++  - reset-names
++
++additionalProperties: false
++
++examples:
++  - |
++    ahci-glue@65700000 {
++        compatible = "socionext,uniphier-pxs3-ahci-glue",
++                     "simple-mfd";
++        #address-cells = <1>;
++        #size-cells = <1>;
++        ranges = <0 0x65700000 0x100>;
++
++        ahci_phy: phy@10 {
++            compatible = "socionext,uniphier-pxs3-ahci-phy";
++            reg = <0x10 0x10>;
++            #phy-cells = <0>;
++            clock-names = "link", "phy";
++            clocks = <&sys_clk 28>, <&sys_clk 30>;
++            reset-names = "link", "phy";
++            resets = <&sys_rst 28>, <&sys_rst 30>;
++        };
++    };
 -- 
-2.21.0
+2.7.4
 
