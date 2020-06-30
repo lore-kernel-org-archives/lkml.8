@@ -2,210 +2,185 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD52C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 484D6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:54:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E74E020663
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:53:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 157A820675
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:54:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593532386;
-	bh=7zv+7PF7ZlSBPq5WBZDD0jT9PvGkMFBumBDqNldM2hI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=S35fQNviPxdXnQgL+CY/SDHgKcct5A+ujIHln/EkPABap8vGeoKSPvLw0DaQ+XCG1
-	 g/8Oo+f249OWC0c5XktwrxPqIzX5nHzYgwTTnSYdYugZU749NTO6hZMW4oplpB1Sh/
-	 Tz7Ci/1GgG4ZlWoRiSOPO/PpGVkYAQlkii5YbaLA=
+	s=default; t=1593532474;
+	bh=wm9CH5Psh72y7++c+BHc42Ktic2Fsxt8lGgU19Pp4qM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=aqn8o8imPwqsEy/JlwXWp69MD2LMmSdJP+RO1cusw4J72QNVUu7QaGNohVz2eUSYb
+	 BDgmbg9esW6haj5c59GSF9wgNZdVcd0yJcGHyL8gUxPx05Vdfmoec5r/m7DGxFhHGM
+	 KU7S2Vnp/TP4Juw8JjYDjXkEB+mO4PjuhjZd2HcA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389781AbgF3PxE (ORCPT
+        id S2389798AbgF3Pyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 11:53:04 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:33512 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389385AbgF3PxD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 11:53:03 -0400
-Received: by mail-ot1-f66.google.com with SMTP id n6so18821614otl.0;
-        Tue, 30 Jun 2020 08:53:02 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=BeGbI6TV+haW2F8p5+60mh0zp8T26FQUSPwAAL8OJU8=;
-        b=e1+7/6qdomONgx8sGa+HNUuNNCZlikyDzWBahVbRrLQ+bEKbk/EGR8pfazVBx9nRea
-         Vg3rOrq6J9v+QITJKreJPhioPz00Wqi8YutfcWQZWJbyVLl+p4CzmbniSiZGPO+Lz0kY
-         4FxDySwMI1Cx8baqxX/uw3Bm1eRvtaXNWHtXPOTnIpwDShkBPFSToJ0hA/JnlJ4/lDDN
-         GUHvGYIoH8An05PXVTGqSwf/FkdQ3eRtFNxch9Q/Yrs5015H8Ej2TXcJmUqPjkme6l/X
-         wWAALiWerzOekfFQWE7PcyA9WPk+H6juN/bsDJ9QbICzscu9xfNBeZSf5Li5tKiUqY/L
-         da6w==
-X-Gm-Message-State: AOAM5309I+FGJyHiQ34hLgo4DgrOAlWYpP6dzvBV7WjdnUk5R7d1rwK/
-        +loAuUFppZhu073ZKD7a5tNP5JZ/fERw6fiFz+Q=
-X-Google-Smtp-Source: ABdhPJzqX7NzZBPZYOk7h2+zMQdsatMA7pVfRhktyZ6wg8EiraoRJvqPlZVDW6JoVIc75Ds/Pz8hdGk5IAwCtzicWHM=
-X-Received: by 2002:a9d:39f5:: with SMTP id y108mr18773658otb.262.1593532382114;
- Tue, 30 Jun 2020 08:53:02 -0700 (PDT)
+        Tue, 30 Jun 2020 11:54:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38538 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389385AbgF3Pyc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 11:54:32 -0400
+Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C00D320663;
+        Tue, 30 Jun 2020 15:54:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593532471;
+        bh=wm9CH5Psh72y7++c+BHc42Ktic2Fsxt8lGgU19Pp4qM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=QbJT6DHSHYNH502lbnWg3/rFWvMsvQF9mVoa3ymsXVGthhkK1O7yNWPt34yEYvddC
+         jlABVIOjYnIV+HQfY8Y011Ca/n5ZHzwnHb1Ss7xSQWU3Iyi0mTamgiZ975GLVIzKWC
+         jRZN4c5JdpLL231XWOfqYh9gLTYUHfBiPyoX5Vu8=
+Date:   Tue, 30 Jun 2020 10:54:29 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        Benoit =?iso-8859-1?Q?Gr=E9goire?= <benoitg@coeus.ca>,
+        juhapekka.heikkila@gmail.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] x86/resource: Do not exclude regions that are marked as
+ MMIO in EFI memmap
+Message-ID: <20200630155429.GA3431548@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <158889473309.2292982.18007035454673387731.stgit@dwillia2-desk3.amr.corp.intel.com>
- <2788992.3K7huLjdjL@kreacher> <1666722.UopIai5n7p@kreacher>
- <1794490.F2OrUDcHQn@kreacher> <20200629205708.GK1237914@redhat.com>
- <CAJZ5v0hiAVfgWTLcP2N5PWLsqL7mpHbuL1_de79svYYhd3R57A@mail.gmail.com> <20200630153127.GP1237914@redhat.com>
-In-Reply-To: <20200630153127.GP1237914@redhat.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 30 Jun 2020 17:52:51 +0200
-Message-ID: <CAJZ5v0hpe2pB76h=p+E4GpOFrDAP5ZGrreyQ-QVtga=08HQNUA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] ACPICA: Preserve memory opregion mappings
-To:     Al Stone <ahs3@redhat.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Erik Kaneda <erik.kaneda@intel.com>,
-        Rafael Wysocki <rafael.j.wysocki@intel.com>,
-        Len Brown <lenb@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Ira Weiny <ira.weiny@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Myron Stowe <myron.stowe@redhat.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        Bob Moore <robert.moore@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200630121300.GO5180@lahna.fi.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 5:31 PM Al Stone <ahs3@redhat.com> wrote:
->
-> On 30 Jun 2020 13:44, Rafael J. Wysocki wrote:
-> > On Mon, Jun 29, 2020 at 10:57 PM Al Stone <ahs3@redhat.com> wrote:
-> > >
-> > > On 29 Jun 2020 18:33, Rafael J. Wysocki wrote:
-> > > > From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-> > > >
-> > > > The ACPICA's strategy with respect to the handling of memory mappings
-> > > > associated with memory operation regions is to avoid mapping the
-> > > > entire region at once which may be problematic at least in principle
-> > > > (for example, it may lead to conflicts with overlapping mappings
-> > > > having different attributes created by drivers).  It may also be
-> > > > wasteful, because memory opregions on some systems take up vast
-> > > > chunks of address space while the fields in those regions actually
-> > > > accessed by AML are sparsely distributed.
-> > > >
-> > > > For this reason, a one-page "window" is mapped for a given opregion
-> > > > on the first memory access through it and if that "window" does not
-> > > > cover an address range accessed through that opregion subsequently,
-> > > > it is unmapped and a new "window" is mapped to replace it.  Next,
-> > > > if the new "window" is not sufficient to acess memory through the
-> > > > opregion in question in the future, it will be replaced with yet
-> > > > another "window" and so on.  That may lead to a suboptimal sequence
-> > > > of memory mapping and unmapping operations, for example if two fields
-> > > > in one opregion separated from each other by a sufficiently wide
-> > > > chunk of unused address space are accessed in an alternating pattern.
-> > > >
-> > > > The situation may still be suboptimal if the deferred unmapping
-> > > > introduced previously is supported by the OS layer.  For instance,
-> > > > the alternating memory access pattern mentioned above may produce
-> > > > a relatively long list of mappings to release with substantial
-> > > > duplication among the entries in it, which could be avoided if
-> > > > acpi_ex_system_memory_space_handler() did not release the mapping
-> > > > used by it previously as soon as the current access was not covered
-> > > > by it.
-> > > >
-> > > > In order to improve that, modify acpi_ex_system_memory_space_handler()
-> > > > to preserve all of the memory mappings created by it until the memory
-> > > > regions associated with them go away.
-> > > >
-> > > > Accordingly, update acpi_ev_system_memory_region_setup() to unmap all
-> > > > memory associated with memory opregions that go away.
-> > > >
-> > > > Reported-by: Dan Williams <dan.j.williams@intel.com>
-> > > > Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > ---
-> > > >  drivers/acpi/acpica/evrgnini.c | 14 ++++----
-> > > >  drivers/acpi/acpica/exregion.c | 65 ++++++++++++++++++++++++----------
-> > > >  include/acpi/actypes.h         | 12 +++++--
-> > > >  3 files changed, 64 insertions(+), 27 deletions(-)
-> > > >
-> > > > diff --git a/drivers/acpi/acpica/evrgnini.c b/drivers/acpi/acpica/evrgnini.c
-> > > > index aefc0145e583..89be3ccdad53 100644
-> > > > --- a/drivers/acpi/acpica/evrgnini.c
-> > > > +++ b/drivers/acpi/acpica/evrgnini.c
-> > > > @@ -38,6 +38,7 @@ acpi_ev_system_memory_region_setup(acpi_handle handle,
-> > > >       union acpi_operand_object *region_desc =
-> > > >           (union acpi_operand_object *)handle;
-> > > >       struct acpi_mem_space_context *local_region_context;
-> > > > +     struct acpi_mem_mapping *mm;
-> > > >
-> > > >       ACPI_FUNCTION_TRACE(ev_system_memory_region_setup);
-> > > >
-> > > > @@ -46,13 +47,14 @@ acpi_ev_system_memory_region_setup(acpi_handle handle,
-> > > >                       local_region_context =
-> > > >                           (struct acpi_mem_space_context *)*region_context;
-> > > >
-> > > > -                     /* Delete a cached mapping if present */
-> > > > +                     /* Delete memory mappings if present */
-> > > >
-> > > > -                     if (local_region_context->mapped_length) {
-> > > > -                             acpi_os_unmap_memory(local_region_context->
-> > > > -                                                  mapped_logical_address,
-> > > > -                                                  local_region_context->
-> > > > -                                                  mapped_length);
-> > > > +                     while (local_region_context->first_mm) {
-> > > > +                             mm = local_region_context->first_mm;
-> > > > +                             local_region_context->first_mm = mm->next_mm;
-> > > > +                             acpi_os_unmap_memory(mm->logical_address,
-> > > > +                                                  mm->length);
-> > > > +                             ACPI_FREE(mm);
-> > > >                       }
-> > > >                       ACPI_FREE(local_region_context);
-> > > >                       *region_context = NULL;
-> > > > diff --git a/drivers/acpi/acpica/exregion.c b/drivers/acpi/acpica/exregion.c
-> > > > index d15a66de26c0..fd68f2134804 100644
-> > > > --- a/drivers/acpi/acpica/exregion.c
-> > > > +++ b/drivers/acpi/acpica/exregion.c
-> > > > @@ -41,6 +41,7 @@ acpi_ex_system_memory_space_handler(u32 function,
-> > > >       acpi_status status = AE_OK;
-> > > >       void *logical_addr_ptr = NULL;
-> > > >       struct acpi_mem_space_context *mem_info = region_context;
-> > > > +     struct acpi_mem_mapping *mm = mem_info->cur_mm;
-> > > >       u32 length;
-> > > >       acpi_size map_length;
-> > >
-> > > I think this needs to be:
-> > >
-> > >         acpi_size map_length = mem_info->length;
-> > >
-> > > since it now gets used in the ACPI_ERROR() call below.
+On Tue, Jun 30, 2020 at 03:13:00PM +0300, Mika Westerberg wrote:
+> On Fri, Jun 26, 2020 at 05:43:44PM -0500, Bjorn Helgaas wrote:
+> > On Mon, Mar 02, 2020 at 05:14:51PM +0300, Mika Westerberg wrote:
+> > > Commit 4dc2287c1805 ("x86: avoid E820 regions when allocating address
+> > > space") made the resource allocation code to avoid all regions that are
+> > > in E820 table. This prevents the kernel to assign MMIO resources to
+> > > regions that may be real RAM for example.
+> > > 
+> > > However, at least with Lenovo Yoca C940 and S740 this causes problems
+> > > when allocating resources for PCIe devices behind Thunderbolt port(s).
+> > > 
+> > > On Yoga S740 the E820 table contains an entry like this:
+> > > 
+> > >   BIOS-e820: [mem 0x000000002bc50000-0x00000000cfffffff] reserved
+> > > 
+> > > and ACPI _CRS method for the host bridge returns these windows:
+> > > 
+> > >   pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
+> > >   pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
+> > >   pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
+> > >   pci_bus 0000:00: root bus resource [mem 0x45400000-0xbfffffff window]
+> > >   pci_bus 0000:00: root bus resource [mem 0x4000000000-0x7fffffffff window]
+> > > 
+> > > Note that the 0x45400000-0xbfffffff entry is also included in the E820
+> > > table and marked as "reserved".
+> > > 
+> > > When Thunderbolt device is connected and the PCIe gets tunneled PCI core
+> > > tries to allocate memory for the new devices but it fails because all
+> > > the resources are inside this reserved region so arch_remove_reservations()
+> > > clips them which makes the resource assignment fail as in below log:
+> > > 
+> > >   pci 0000:00:07.0: PCI bridge to [bus 01-2a]
+> > >   pci 0000:00:07.0:   bridge window [mem 0x46000000-0x521fffff]
+> > >   pci 0000:00:07.0:   bridge window [mem 0x6000000000-0x601bffffff 64bit pref]
+> > >   ...
+> > >   pci 0000:02:04.0: bridge window [mem 0x00100000-0x001fffff 64bit pref] to [bus 07-2a] add_size 100000 add_align 100000
+> > >   pci 0000:02:04.0: bridge window [mem 0x00100000-0x001fffff] to [bus 07-2a] add_size 100000 add_align 100000
+> > >   pci 0000:01:00.0: bridge window [mem 0x00100000-0x005fffff 64bit pref] to [bus 02-2a] add_size 100000 add_align 100000
+> > >   pci 0000:01:00.0: bridge window [mem 0x00100000-0x005fffff] to [bus 02-2a] add_size 100000 add_align 100000
+> > >   pci 0000:01:00.0: bridge window [io  0x1000-0x5fff] shrunken by 0x0000000000004000
+> > >   pci 0000:01:00.0: bridge window [mem 0x00100000-0x005fffff] extended by 0x000000000bd00000
+> > >   pci 0000:01:00.0: bridge window [mem 0x00100000-0x005fffff 64bit pref] extended by 0x000000001bb00000
+> > >   pci 0000:02:04.0: bridge window [mem 0x00100000-0x001fffff] extended by 0x000000000bd00000
+> > >   pci 0000:02:04.0: bridge window [mem 0x00100000-0x001fffff 64bit pref] extended by 0x000000001bb00000
+> > >   pci 0000:01:00.0: BAR 8: no space for [mem size 0x0c200000]
+> > >   pci 0000:01:00.0: BAR 8: failed to assign [mem size 0x0c200000]
+> > >   pci 0000:01:00.0: BAR 9: assigned [mem 0x6000000000-0x601bffffff 64bit pref]
+> > >   pci 0000:01:00.0: BAR 7: assigned [io  0x4000-0x4fff]
+> > > 
+> > > The 01:00.0 is the upstream port of the PCIe switch that is connected to
+> > > the PCIe root port (00:07.1) over Thunderbolt link.
+> > > 
+> > > If I add "efi=debug" to the command line I can see that the EFI memory
+> > > map actually contains several entries:
+> > > 
+> > >   [Reserved           |   |  |  |  |  |  |  | |   |WB|WT|WC|UC] range=[0x000000002bc50000-0x000000003fffffff] (323MB)
+> > >   [Reserved           |   |  |  |  |  |  |  | |   |WB|  |  |UC] range=[0x0000000040000000-0x0000000040ffffff] (16MB)
+> > >   [Reserved           |   |  |  |  |  |  |  | |   |  |  |  |  ] range=[0x0000000041000000-0x00000000453fffff] (68MB)
+> > >   [Memory Mapped I/O  |RUN|  |  |  |  |  |  | |   |  |  |  |UC] range=[0x0000000045400000-0x00000000cfffffff] (2220MB)
+> > > 
+> > > I think the EFI stub merges these consecutive entries into that single
+> > > E820 entry showed above. The last region marked as EFI_MEMORY_MAPPED_IO
+> > > actually covers the PCI host bridge window entirely. However, since
+> > > there is corresponding E820 type for this it is simply marked as
+> > > E820_TYPE_RESERVED.
+> > 
+> > Is this supposed to say "since there is *no* corresponding E820 type"?
+> 
+> Yes, I think it makes more sense that way :)
+> 
+> > I guess this refers to setup_e820()?  I see the switch case there that
+> > sets e820_type to E820_TYPE_RESERVED for EFI_MEMORY_MAPPED_IO.
+> > 
+> > I'm really not familiar with the EFI stub, but I guess that when
+> > booting with EFI, we basically build our own E820 table based on the
+> > EFI memory map, then use that constructed E820 table to initialize
+> > iomem_resource via e820__reserve_resources()?
+> > 
+> > I wonder why we don't just use the EFI memory map to initialize
+> > iomem_resource directly.  It seems like the EFI map -> E820 table ->
+> > iomem_resource path adds complication that makes issues like this more
+> > likely.
 > >
-> > No, it's better to print the length value in the message.
->
-> Yeah, that was the other option.
->
-> > >  I'm getting a "maybe used unitialized" error on compilation.
-> >
-> > Thanks for reporting!
-> >
-> > I've updated the commit in the acpica-osl branch with the fix.
->
-> Thanks, Rafael.
->
-> Do you have a generic way of testing this?  I can see a way to do it
-> -- timing a call of a method in a dynamically loaded SSDT -- but if
-> you had a test case laying around, I could continue to be lazy :).
+> > IIUC, this patch allows Linux to use EFI_MEMORY_MAPPED_IO for PCI MMIO
+> > space, i.e., if "avail" is in a EFI_MEMORY_MAPPED_IO region, we don't
+> > need to consider it "reserved" and we can put PCI resources there.
+> > 
+> > UEFI v2.8, Table 30 (doc p 160, PDF p 233) says about
+> > EfiMemoryMappedIO that
+> > 
+> >   before ExitBootServices():
+> > 
+> >     Used by system firmware to request that a memory-mapped IO region
+> >     be mapped by the OS to a virtual address so it can be accessed by
+> >     EFI runtime services.
+> > 
+> >   after ExitBootServices():
+> > 
+> >     This memory is not used by the OS. All system memory-mapped IO
+> >     information should come from ACPI tables.
+> > 
+> > I would read that as basically saying that the OS must virtually map
+> > EfiMemoryMappedIO for use by EFI runtime services (I don't know if
+> > Linux uses any of those).
+> > 
+> > The "after ExitBootServices()" part doesn't seem very clear to me.
+> > "This memory is not used by the OS" isn't quite stated as a
+> > requirement for the OS.  And "All .. MMIO information should come from
+> > ACPI tables" sounds like the OS should *ignore* this EFI map in favor
+> > of ACPI.
+> 
+> It is not clear to me either and I'm not 100% sure the patch here is the
+> correct thing to do. I think we may need some help from x86 maintainers
+> for a proper fix.
 
-I don't check the timing, but instrument the code to see if what
-happens is what is expected.
+FWIW, I think we have two pretty fundamental issues:
 
-Now, the overhead reduction resulting from this change in Linux is
-quite straightforward: Every time the current mapping doesn't cover
-the request at hand, an unmap is carried out by the original code,
-which involves a linear search through acpi_ioremaps, and which
-generally is (at least a bit) more expensive than the linear search
-through the list of opregion-specific mappings introduced by the
-$subject patch, because quite likely the acpi_ioremaps list holds more
-items.  And, of course, if the opregion in question holds many fields
-and they are not covered by one mapping, each of them needs to be
-mapped just once per the opregion life cycle.
+  1) The E820 map isn't a very good match for the Linux resource
+  manager because Linux assumes resources can't overlap unless they're
+  strictly hierarchical.  The E820 and EFI memory maps make no such
+  assumption.
+
+  2) We only look at ACPI _CRS information on an ad hoc basis, so we
+  ignore most of the detailed address space information from firmware.
