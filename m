@@ -2,136 +2,183 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD15C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 22:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38110C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 22:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 471652073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 22:04:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593554672;
-	bh=mGA2YplFVjTnmZVR4xUfskfFkFqNGscVAmlQNbhySbI=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=nzJ4MW+wiJgIzwAG0MDnB1ulgWhqLU6qOq8ULVmGn4HaQ5BXms60404G6s6EtAPvI
-	 HFtNBi2J9tMonVKjkURRU7uxOAcmvu4cXSTiQK5uDgfyE3JMJSjsPCNwz97B6acp77
-	 7TD1hxkSu6Mo8ppfBfvUzuqjmrox83hLx7CXDT6M=
+	by mail.kernel.org (Postfix) with ESMTP id 043242074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 22:05:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V1pPr+lF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726345AbgF3WEa (ORCPT
+        id S1726475AbgF3WFE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 18:04:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58210 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726117AbgF3WEa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 18:04:30 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99E39206B6;
-        Tue, 30 Jun 2020 22:04:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593554670;
-        bh=mGA2YplFVjTnmZVR4xUfskfFkFqNGscVAmlQNbhySbI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=p8yt4+qi4BuB9Mc9sfNMTpAWkpq2htNh7wMHhY4tNUsL/Fh9A3cwxhjWGkISAx3Wp
-         sRhF5Ux4mEMe8xmN49t3JK0CAshd5Zu4uuTNMTzeutSp9T6zbWhvuM0eFcn+YNHd0a
-         oK1kV4BY9JJS+2AuSLrL8lm7XIJrf9RPuBbGTpUQ=
-Date:   Tue, 30 Jun 2020 17:04:28 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Piotr Stankiewicz <piotr.stankiewicz@intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Jian-Hong Pan <jian-hong@endlessm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] PCI/MSI: Forward MSI-X vector enable error code in
- pci_alloc_irq_vectors_affinity()
-Message-ID: <20200630220428.GA3490187@bjorn-Precision-5520>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200616073318.20229-1-piotr.stankiewicz@intel.com>
+        Tue, 30 Jun 2020 18:05:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39486 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726095AbgF3WFD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 18:05:03 -0400
+Received: from mail-ej1-x644.google.com (mail-ej1-x644.google.com [IPv6:2a00:1450:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 957A5C061755;
+        Tue, 30 Jun 2020 15:05:03 -0700 (PDT)
+Received: by mail-ej1-x644.google.com with SMTP id rk21so22264243ejb.2;
+        Tue, 30 Jun 2020 15:05:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=egQ4BGWJwteRFV/3C15qu/VRsp09Uh379he2OhRxJJ8=;
+        b=V1pPr+lFhTYqoW/4omk3CaH3Hf+C4ij4nQON94pVIYsWtSgRFLcwm8nft6SEbzhzx2
+         zMCtzuoT74tgtD0bODXapszHHhjYKQmEDpHmV+WhKstXK/4LxrBajJkmmXxww5QUcZAd
+         PhyEtvfOiCtXFQ1YtdI9mhLJavjVT1YEJEtoaKIP89SpsbmHibnkHxQZA+3+d3lS6/7f
+         gPqVwm5dTmB0ZI8eyUiKmusm3lhyfeG7aZ534CT27RvAWfsjIrmZoZ1WAHJhCmN9GYhZ
+         lE20YVysD4eeC3gdry/OpzFduLt29M9ujf0cy2Dk61qCOV6SmhN6x5mZfDcsfATCGr1o
+         UJNg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=egQ4BGWJwteRFV/3C15qu/VRsp09Uh379he2OhRxJJ8=;
+        b=NBhqr9ALgZni5Dt8YLwB56/vQEZp7zJW1DGpzeK9EWzUR+SrYSM1Nx15eXwxrv5Lz8
+         PV+ayQp41GcnbhOharXbCSDp9n2oHTZmlXrjqpmJ5xso7VEge5rEjw2lsDjFXhzgv76k
+         n6ZnUjPjuqFnaV+vQQmIPoPHzG4eUxY7it8H/paA6cNkcAnjCDDVnNjLC8w/sraHOe4/
+         9+XL8JtQk22cB/Mo1UwvpBWlNaPeB2H2Jzs8b90eC3sFkmi98y3wdoGF4RfnoQJX+qQt
+         0Rn+WQhoFZaelRBJFy4z7UAGPHDaz9tkSNk7qdI1EveBfU5zu55WmxS23IsLxQ4VCyc/
+         urjw==
+X-Gm-Message-State: AOAM532n7Ph2QXbEPAQG2fTYHapzkbx9+7Zxf1Prvd6CZ+PZPOiLgjYN
+        74llwAkyFke2EFTbVgW/bPk=
+X-Google-Smtp-Source: ABdhPJxpEuRlMZt7mHPtT9izVdh8n98vXpyGSKNTHsCn7YZ7BR8/f9ldhCEaS1UqOUyzZHOUZpxnrg==
+X-Received: by 2002:a17:906:7802:: with SMTP id u2mr20688743ejm.478.1593554702359;
+        Tue, 30 Jun 2020 15:05:02 -0700 (PDT)
+Received: from ubuntu-laptop (ip5f5bfcc0.dynamic.kabel-deutschland.de. [95.91.252.192])
+        by smtp.googlemail.com with ESMTPSA id z1sm3054870ejb.41.2020.06.30.15.05.01
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 30 Jun 2020 15:05:01 -0700 (PDT)
+Message-ID: <fd205a23c433aea43f846c37cf1f521c114cdd68.camel@gmail.com>
+Subject: Re: [RFC PATCH v3 0/5] scsi: ufs: Add Host Performance Booster
+ Support
+From:   Bean Huo <huobean@gmail.com>
+To:     daejun7.park@samsung.com,
+        "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>
+Cc:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
+Date:   Wed, 01 Jul 2020 00:05:00 +0200
+In-Reply-To: <231786897.01593479281798.JavaMail.epsvc@epcpadp2>
+References: <60647cf00d9db6818488a714b48b9b6e2a1eb728.camel@gmail.com>
+         <948f573d136b39410f7d610e5019aafc9c04fe62.camel@gmail.com>
+         <963815509.21592879582091.JavaMail.epsvc@epcpadp2>
+         <336371513.41593411482259.JavaMail.epsvc@epcpadp2>
+         <CGME20200623010201epcms2p11aebdf1fbc719b409968cba997507114@epcms2p1>
+         <231786897.01593479281798.JavaMail.epsvc@epcpadp2>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 09:33:16AM +0200, Piotr Stankiewicz wrote:
-> When debugging an issue where I was asking the PCI machinery to enable a
-> set of MSI-X vectors, without falling back on MSI, I ran across a
-> behaviour which seems odd. The pci_alloc_irq_vectors_affinity() will
-> always return -ENOSPC on failure, when allocating MSI-X vectors only,
-> whereas with MSI fallback it will forward any error returned by
-> __pci_enable_msi_range(). This is a confusing behaviour, so have the
-> pci_alloc_irq_vectors_affinity() forward the error code from
-> __pci_enable_msix_range() when appropriate.
+On Tue, 2020-06-30 at 10:05 +0900, Daejun Park wrote:
+> Hi Bean,
+> > On Mon, 2020-06-29 at 15:15 +0900, Daejun Park wrote:
+> > > > Seems you intentionally ignored to give you comments on my
+> > > > suggestion.
+> > > > let me provide the reason.
+> > > 
+> > > Sorry! I replied to your comment (
+> > > 
+https://protect2.fireeye.com/url?k=be575021-e3854728-be56db6e-0cc47a31cdf8-6c7d0e1e42762b92&q=1&u=https%3A%2F%2Flkml.org%2Flkml%2F2020%2F6%2F15%2F1492
+> > > ),
+> > > but you didn't reply on that. I thought you agreed because you
+> > > didn't
+> > > send
+> > > any more comments.
+> > > 
+> > > 
+> > > > Before submitting your next version patch, please check your
+> > > > L2P
+> > > > mapping HPB reqeust submission logical algorithem. I have did
+> > > 
+> > > We are also reviewing the code that you submitted before.
+> > > It seems to be a performance improvement as it sends a map
+> > > request
+> > > directly.
+> > > 
+> > > > performance comparison testing on 4KB, there are about 13%
+> > > > performance
+> > > > drop. Also the hit count is lower. I don't know if this is
+> > > > related
+> > > > to
+> > > 
+> > > It is interesting that there is actually a performance
+> > > improvement. 
+> > > Could you share the test environment, please? However, I think
+> > > stability is
+> > > important to HPB driver. We have tested our method with the real
+> > > products and
+> > > the HPB 1.0 driver is based on that.
+> > 
+> > I just run fio benchmark tool with --rw=randread, --bs=4kb, --
+> > size=8G/10G/64G/100G. and see what performance diff with the direct
+> > submission approach.
 > 
-> Signed-off-by: Piotr Stankiewicz <piotr.stankiewicz@intel.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
-> Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> Thanks!
+> 
+> > > After this patch, your approach can be done as an incremental
+> > > patch?
+> > > I would
+> > > like to test the patch that you submitted and verify it.
+> > > 
+> > > > your current work queue scheduling, since you didn't add the
+> > > > timer
+> > > > for
+> > > > each HPB request.
+> > 
+> > Taking into consideration of the HPB 2.0, can we submit the HPB
+> > write
+> > request to the SCSI layer? if not, it will be a direct submission
+> > way.
+> > why not directly use direct way? or maybe you have a more advisable
+> > approach to work around this. would you please share with us.
+> > appreciate.
+> 
+> I am considering a direct submission way for the next version.
+> We will implement the write buffer command of HPB 2.0, after patching
+> HPB 1.0.
+> 
+> As for the direct submission of HPB releated command including HPB
+> write
+> buffer, I think we'd better discuss the right approach in depth
+> before
+> moving on to the next step.
+> 
 
-Applied to pci/msi for v5.8, thanks!
+Hi Daejun
+If you need reference code, you can freely copy my code from my RFC v3
+patchset. or if you need my side testing support, just let me, I can
+help you test your code.
 
-> ---
->  drivers/pci/msi.c | 22 +++++++++-------------
->  1 file changed, 9 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/pci/msi.c b/drivers/pci/msi.c
-> index 6b43a5455c7a..cade9be68b09 100644
-> --- a/drivers/pci/msi.c
-> +++ b/drivers/pci/msi.c
-> @@ -1191,8 +1191,7 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
->  				   struct irq_affinity *affd)
->  {
->  	struct irq_affinity msi_default_affd = {0};
-> -	int msix_vecs = -ENOSPC;
-> -	int msi_vecs = -ENOSPC;
-> +	int nvecs = -ENOSPC;
->  
->  	if (flags & PCI_IRQ_AFFINITY) {
->  		if (!affd)
-> @@ -1203,17 +1202,16 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
->  	}
->  
->  	if (flags & PCI_IRQ_MSIX) {
-> -		msix_vecs = __pci_enable_msix_range(dev, NULL, min_vecs,
-> -						    max_vecs, affd, flags);
-> -		if (msix_vecs > 0)
-> -			return msix_vecs;
-> +		nvecs = __pci_enable_msix_range(dev, NULL, min_vecs, max_vecs,
-> +						affd, flags);
-> +		if (nvecs > 0)
-> +			return nvecs;
->  	}
->  
->  	if (flags & PCI_IRQ_MSI) {
-> -		msi_vecs = __pci_enable_msi_range(dev, min_vecs, max_vecs,
-> -						  affd);
-> -		if (msi_vecs > 0)
-> -			return msi_vecs;
-> +		nvecs = __pci_enable_msi_range(dev, min_vecs, max_vecs, affd);
-> +		if (nvecs > 0)
-> +			return nvecs;
->  	}
->  
->  	/* use legacy IRQ if allowed */
-> @@ -1231,9 +1229,7 @@ int pci_alloc_irq_vectors_affinity(struct pci_dev *dev, unsigned int min_vecs,
->  		}
->  	}
->  
-> -	if (msix_vecs == -ENOSPC)
-> -		return -ENOSPC;
-> -	return msi_vecs;
-> +	return nvecs;
->  }
->  EXPORT_SYMBOL(pci_alloc_irq_vectors_affinity);
->  
-> -- 
-> 2.17.2
-> 
+Thanks,
+Bean
+
+
