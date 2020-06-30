@@ -2,443 +2,182 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27802C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE1AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:13:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 071B320722
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:13:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9E7520722
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:13:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="V/xCwuh4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390656AbgF3SNG (ORCPT
+        id S2390671AbgF3SNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 14:13:06 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:33523 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726831AbgF3SNE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 14:13:04 -0400
-Received: by mail-ed1-f66.google.com with SMTP id h28so17116508edz.0;
-        Tue, 30 Jun 2020 11:13:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=o/wz6XmxKZ0tv/v/GGSltHIFvli7W2s+ljG7BvKqwqQ=;
-        b=uXfGymvFBoaBxy0wltMGgnkDLHMKNGeWrxf9IWSL42sjnOo8HFgC2S5Lz7Nrj3b/1I
-         obuFVixRbFMLm8+djjfJrI3Xivtpv9+C6D2Gj8BnPmjKnW0PMY1x0B47K+SCGbBQ8TBF
-         Y+1/iMiih2p/tXwuEDNdNO2GRzEsZaDSWDazfspq0nuyjQmhw6wLKMuX6pQR9YKQ6r+K
-         WoYH5HUmkpM7fWA7B9IpWcqkc0XrNIp23NaEHz+3qYzBH9xmB/m0t7DwElmEVYaHLXoR
-         3B8xekMqAuoFv3W+1aLFPrVGLAaU2G69RLP3gFFawCqsETCl8P0eLTZ0kMlO3PW5WrXh
-         Yjrg==
-X-Gm-Message-State: AOAM531UXWs5CPJm+j5RkM0A0TH67HMA7c/8uIpvw/qLtelPuh12Si4H
-        aJ97Pa4DcoZv0YfTqGVy1fSDOTRqVYxCWA==
-X-Google-Smtp-Source: ABdhPJzoHHO7WGjMoZR8T9NxMCsHcMGp7ciSFD4tqcbwycHDK15RyhRlN2kIo2s2Dnvf0z7JbaWTFQ==
-X-Received: by 2002:aa7:d142:: with SMTP id r2mr17623427edo.211.1593540779030;
-        Tue, 30 Jun 2020 11:12:59 -0700 (PDT)
-Received: from msft-t490s.lan ([2001:b07:5d26:7f46:d7c1:f090:1563:f81f])
-        by smtp.gmail.com with ESMTPSA id d13sm2492313ejj.95.2020.06.30.11.12.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 11:12:58 -0700 (PDT)
-From:   Matteo Croce <mcroce@linux.microsoft.com>
-To:     netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        Sven Auhagen <sven.auhagen@voleatech.de>,
-        Lorenzo Bianconi <lorenzo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Stefan Chulski <stefanc@marvell.com>,
-        Marcin Wojtas <mw@semihalf.com>, maxime.chevallier@bootlin.com,
-        antoine.tenart@bootlin.com, thomas.petazzoni@bootlin.com
-Subject: [PATCH net-next 2/4] mvpp2: use page_pool allocator
-Date:   Tue, 30 Jun 2020 20:09:28 +0200
-Message-Id: <20200630180930.87506-3-mcroce@linux.microsoft.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200630180930.87506-1-mcroce@linux.microsoft.com>
-References: <20200630180930.87506-1-mcroce@linux.microsoft.com>
+        Tue, 30 Jun 2020 14:13:37 -0400
+Received: from mail-dm6nam11on2127.outbound.protection.outlook.com ([40.107.223.127]:54208
+        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726831AbgF3SNf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 14:13:35 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jEXFDrjVviZeSoEAcP7mGFTW+WRFKLtd3yBfPatr/qQGYCfhwZN5PBK7THi9RNvv8izSZyrPa9pooQjIQ7aaUCz7vspSX2zVJ9i0y24EvB0rhRG3AR0o41cRnDtQjwjtKzSmTfzYnVNjHBmhVqw/P/l5P2EkkW149Z7z7TucfxI/5DRI+xshzGFV/r7iReqcHtRmw/PNY73fzKP52ohaFkvlrAFkYpZHrtHqqkhDvhyXt3Y18yFhhR1yiaaE+ST7XrKl7F/Fp75iyTMsqexl1qJqwkwYCr/OWtewO2DXNhH13GirIAtvOBjK07CY8JrS+YYwbcE887bZZSB1u5DfCQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ci+eMdOPSubnsTlUv4P8HpKDkQzSkexc1lODC7isFJ8=;
+ b=DSAMRU6ysSJmIJzec6BCS5wYrPycd/kxe3kZsBmmRKW4G3kIp/ia9U1Xuf8XsfFMYRt7G0meCewljRExH/jjDXoyY8/yvZT+tLt+rc+67WxONYGaboVkTx5pyB/NbBW/r0D9PZZ4GV7LlGk9I4GM7N4+c+B+HNdh6iFPXVWUkWBuFNS+BWPpoLdUQuo2WE4PH9zk29ddg5JhNUPW8yEe3FSe3Pkkd4BnT7t0t0s9eCK9THMsqjxqOdlI+Dccl7IOwxKlPKN5fHq1AfTO9CMqT01yZlDAMKXB6RkxzwCc6ZDg2JeGAGdlVhLH5pRyn2kTBhQ/wVq0ODSs63eOSFASBQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=microsoft.com; dmarc=pass action=none
+ header.from=microsoft.com; dkim=pass header.d=microsoft.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ci+eMdOPSubnsTlUv4P8HpKDkQzSkexc1lODC7isFJ8=;
+ b=V/xCwuh46c+3vtzt1yeAQ5FYX5wzpdp2b0/LrsnjeV0oTmOF977aNw9dDDXMOKZUovlDR5Z1IU7LwjIJ535yyIbCw61x13apeS7B/jMMV8iheeJzPepMvFhKmiYUQ3ZYIhpCSCMQZLboM2lQICPIKeLagBvqzMl5JgM2t1SUrkw=
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com (2603:10b6:302:a::16)
+ by MW2PR2101MB1850.namprd21.prod.outlook.com (2603:10b6:302:3::30) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3174.2; Tue, 30 Jun
+ 2020 18:13:31 +0000
+Received: from MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::fc14:3ca6:8a8:7407]) by MW2PR2101MB1052.namprd21.prod.outlook.com
+ ([fe80::fc14:3ca6:8a8:7407%8]) with mapi id 15.20.3174.001; Tue, 30 Jun 2020
+ 18:13:31 +0000
+From:   Michael Kelley <mikelley@microsoft.com>
+To:     Stephen Hemminger <stephen@networkplumber.org>,
+        Andres Beltran <lkmlabelt@gmail.com>
+CC:     Andres Beltran <t-mabelt@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "wei.liu@kernel.org" <wei.liu@kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "parri.andrea@gmail.com" <parri.andrea@gmail.com>,
+        Saruhan Karademir <skarade@microsoft.com>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        "David S . Miller" <davem@davemloft.net>
+Subject: RE: [PATCH v3 0/3] Drivers: hv: vmbus: vmbus_requestor data structure
+ for VMBus hardening
+Thread-Topic: [PATCH v3 0/3] Drivers: hv: vmbus: vmbus_requestor data
+ structure for VMBus hardening
+Thread-Index: AQHWTvOf4ttKaLwwGECv5rK/oufMBqjxZnGAgAAPS4A=
+Date:   Tue, 30 Jun 2020 18:13:31 +0000
+Message-ID: <MW2PR2101MB1052E024460AE69A546183B2D76F0@MW2PR2101MB1052.namprd21.prod.outlook.com>
+References: <20200630153200.1537105-1-lkmlabelt@gmail.com>
+ <20200630101621.0f4d9dba@hermes.lan>
+In-Reply-To: <20200630101621.0f4d9dba@hermes.lan>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=true;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2020-06-30T18:13:30Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Method=Standard;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=Internal;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=1962cb0b-609d-47c4-83e0-cfb0c0e4623c;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ContentBits=0
+authentication-results: networkplumber.org; dkim=none (message not signed)
+ header.d=none;networkplumber.org; dmarc=none action=none
+ header.from=microsoft.com;
+x-originating-ip: [24.22.167.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 41f87a0c-fa8a-4053-0428-08d81d214beb
+x-ms-traffictypediagnostic: MW2PR2101MB1850:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MW2PR2101MB18509E4BE6E7A368A700C5C1D76F0@MW2PR2101MB1850.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: SO1NAwTq02ut+DZhAxqO2xbFIpc2ITQptowoi8BMjzdQy790GwDmb95c0zRrV6PYIBxwpgMY2DXTrnVeuRKRx4Zet9KBUSryWVTMP8XPCwQkrtHCMByR5d0XczM0lJLooKi3kYX/ssyH3ZTDxnD2Zy2v7zX36neDPmjIjEV91fXF/mFEJeEOI+EaBOaXNTLABBu4Mz1lAA5vcuR5j8GDi3AtYkdRIQRLPhSlKtoNdx2oXzGs30ZXKs9RCt+hLa5dlDVwYaCxU8+cmHnshh7osvACUilQFWfANRiPyXdjplIiNyDb6502YtwpesZUS82ESs24LU/1rxh03EpJM2uf5Q==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR2101MB1052.namprd21.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(376002)(396003)(346002)(39860400002)(366004)(10290500003)(316002)(33656002)(54906003)(83380400001)(110136005)(86362001)(26005)(478600001)(71200400001)(82950400001)(82960400001)(6506007)(52536014)(2906002)(66946007)(55016002)(7696005)(8676002)(9686003)(8936002)(76116006)(186003)(66476007)(8990500004)(4326008)(7416002)(5660300002)(64756008)(66446008)(66556008);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: KV8VeQuvq1LtOEo/fcLIq1XrDgtJpnevzjQywIoGWznbxdy/rR3Za8DEhdEh4pc2vy6j/IHWs/kJHklzeW8cIew5wDtXbLXXFE+x/R6QATCyf8oTJRalbfdODFypx+Z4hJve/NeeXhycLx+tpwE6VuYDyhIMKb0DnBGcJXOLIHJbMbzX+sFf0kKpWXZWOp+4Ycf90bnCEC28ffeh2o6X0oFtGQy6ssy/BtNLhVWeXFRCQPNoJ/FQhFJKN6TcnAf4qcM7WSQfebxH/Q11j0Rqpj3Bu488owalrCmPgv+eCkxEMJtgupgiX6fEyfPN5smJqLoQfy9LOUEy5Cdm21k0rw0VoBBHl+s4HIfKlxc+L1GVxKhaOLYrU/9jHrPzvvf4CSIHszbLoSwWDLIfcse3RjCaYK59DyM9b5a54724ibSP6+LUi/6Byp3UNGvT8Z1nmdJRowQcgxuXICve9985L51+nkz9YWJBKDyJc8/2MB76HKDotFfmG4USsbp5Od81
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MW2PR2101MB1052.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 41f87a0c-fa8a-4053-0428-08d81d214beb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2020 18:13:31.6315
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 40K+/kjZoyTmEVRCRbfh/laAQ2kBfp8jJ8+u43YRU6gRo6kx0qEqo4Nh/Ai67D5okJMOgmkXEk4gAi70sWbUCFapWSXMG7f1V6U4bYPgKIc=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1850
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matteo Croce <mcroce@microsoft.com>
+From: Stephen Hemminger <stephen@networkplumber.org>  Sent: Tuesday, June 3=
+0, 2020 10:16 AM
+>=20
+> On Tue, 30 Jun 2020 11:31:57 -0400
+> Andres Beltran <lkmlabelt@gmail.com> wrote:
+>=20
+> > Currently, VMbus drivers use pointers into guest memory as request IDs
+> > for interactions with Hyper-V. To be more robust in the face of errors
+> > or malicious behavior from a compromised Hyper-V, avoid exposing
+> > guest memory addresses to Hyper-V. Also avoid Hyper-V giving back a
+> > bad request ID that is then treated as the address of a guest data
+> > structure with no validation. Instead, encapsulate these memory
+> > addresses and provide small integers as request IDs.
+> >
+> > The first patch creates the definitions for the data structure, provide=
+s
+> > helper methods to generate new IDs and retrieve data, and
+> > allocates/frees the memory needed for vmbus_requestor.
+> >
+> > The second and third patches make use of vmbus_requestor to send reques=
+t
+> > IDs to Hyper-V in storvsc and netvsc respectively.
+> >
+> > Thanks.
+> > Andres Beltran
+> >
+> > Tested-by: Andrea Parri <parri.andrea@gmail.com>
+> >
+> > Cc: linux-scsi@vger.kernel.org
+> > Cc: netdev@vger.kernel.org
+> > Cc: James E.J. Bottomley <jejb@linux.ibm.com>
+> > Cc: Martin K. Petersen <martin.petersen@oracle.com>
+> > Cc: David S. Miller <davem@davemloft.net>
+> >
+> > Andres Beltran (3):
+> >   Drivers: hv: vmbus: Add vmbus_requestor data structure for VMBus
+> >     hardening
+> >   scsi: storvsc: Use vmbus_requestor to generate transaction IDs for
+> >     VMBus hardening
+> >   hv_netvsc: Use vmbus_requestor to generate transaction IDs for VMBus
+> >     hardening
+> >
+> >  drivers/hv/channel.c              | 154 ++++++++++++++++++++++++++++++
+> >  drivers/net/hyperv/hyperv_net.h   |  13 +++
+> >  drivers/net/hyperv/netvsc.c       |  79 ++++++++++++---
+> >  drivers/net/hyperv/rndis_filter.c |   1 +
+> >  drivers/scsi/storvsc_drv.c        |  85 ++++++++++++++---
+> >  include/linux/hyperv.h            |  22 +++++
+> >  6 files changed, 329 insertions(+), 25 deletions(-)
+> >
+>=20
+> How does this interact with use of the vmbus in usermode by DPDK through
+> hv_uio_generic?
+> Will it still work?
 
-Use the page_pool API for memory management. This is a prerequisite for
-native XDP support.
+This new mechanism for generating requestIDs to pass to Hyper-V is
+available for VMbus drivers to use, but drivers that have not been updated
+to use it are unaffected.  So hv_uio_generic will work as it always has.
 
-Tested-by: Sven Auhagen <sven.auhagen@voleatech.de>
-Signed-off-by: Matteo Croce <mcroce@microsoft.com>
----
- drivers/net/ethernet/marvell/Kconfig          |   1 +
- drivers/net/ethernet/marvell/mvpp2/mvpp2.h    |   8 +
- .../net/ethernet/marvell/mvpp2/mvpp2_main.c   | 155 +++++++++++++++---
- 3 files changed, 139 insertions(+), 25 deletions(-)
-
-diff --git a/drivers/net/ethernet/marvell/Kconfig b/drivers/net/ethernet/marvell/Kconfig
-index cd8ddd1ef6f2..ef4f35ba077d 100644
---- a/drivers/net/ethernet/marvell/Kconfig
-+++ b/drivers/net/ethernet/marvell/Kconfig
-@@ -87,6 +87,7 @@ config MVPP2
- 	depends on ARCH_MVEBU || COMPILE_TEST
- 	select MVMDIO
- 	select PHYLINK
-+	select PAGE_POOL
- 	help
- 	  This driver supports the network interface units in the
- 	  Marvell ARMADA 375, 7K and 8K SoCs.
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2.h b/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
-index 543a310ec102..4c16c9e9c1e5 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2.h
-@@ -15,6 +15,7 @@
- #include <linux/phy.h>
- #include <linux/phylink.h>
- #include <net/flow_offload.h>
-+#include <net/page_pool.h>
- 
- /* Fifo Registers */
- #define MVPP2_RX_DATA_FIFO_SIZE_REG(port)	(0x00 + 4 * (port))
-@@ -820,6 +821,9 @@ struct mvpp2 {
- 
- 	/* RSS Indirection tables */
- 	struct mvpp2_rss_table *rss_tables[MVPP22_N_RSS_TABLES];
-+
-+	/* page_pool allocator */
-+	struct page_pool *page_pool[MVPP2_PORT_MAX_RXQ];
- };
- 
- struct mvpp2_pcpu_stats {
-@@ -1161,6 +1165,10 @@ struct mvpp2_rx_queue {
- 
- 	/* Port's logic RXQ number to which physical RXQ is mapped */
- 	int logic_rxq;
-+
-+	/* XDP memory accounting */
-+	struct xdp_rxq_info xdp_rxq_short;
-+	struct xdp_rxq_info xdp_rxq_long;
- };
- 
- struct mvpp2_bm_pool {
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-index 027de7291f92..9e2e8fb0a0b8 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_main.c
-@@ -95,6 +95,22 @@ static inline u32 mvpp2_cpu_to_thread(struct mvpp2 *priv, int cpu)
- 	return cpu % priv->nthreads;
- }
- 
-+static struct page_pool *
-+mvpp2_create_page_pool(struct device *dev, int num, int len)
-+{
-+	struct page_pool_params pp_params = {
-+		/* internal DMA mapping in page_pool */
-+		.flags = PP_FLAG_DMA_MAP | PP_FLAG_DMA_SYNC_DEV,
-+		.pool_size = num,
-+		.nid = NUMA_NO_NODE,
-+		.dev = dev,
-+		.dma_dir = DMA_FROM_DEVICE,
-+		.max_len = len,
-+	};
-+
-+	return page_pool_create(&pp_params);
-+}
-+
- /* These accessors should be used to access:
-  *
-  * - per-thread registers, where each thread has its own copy of the
-@@ -327,17 +343,26 @@ static inline int mvpp2_txq_phys(int port, int txq)
- 	return (MVPP2_MAX_TCONT + port) * MVPP2_MAX_TXQ + txq;
- }
- 
--static void *mvpp2_frag_alloc(const struct mvpp2_bm_pool *pool)
-+/* Returns a struct page if page_pool is set, otherwise a buffer */
-+static void *mvpp2_frag_alloc(const struct mvpp2_bm_pool *pool,
-+			      struct page_pool *page_pool)
- {
-+	if (page_pool)
-+		return page_pool_alloc_pages(page_pool,
-+					     GFP_ATOMIC | __GFP_NOWARN);
-+
- 	if (likely(pool->frag_size <= PAGE_SIZE))
- 		return netdev_alloc_frag(pool->frag_size);
--	else
--		return kmalloc(pool->frag_size, GFP_ATOMIC);
-+
-+	return kmalloc(pool->frag_size, GFP_ATOMIC);
- }
- 
--static void mvpp2_frag_free(const struct mvpp2_bm_pool *pool, void *data)
-+static void mvpp2_frag_free(const struct mvpp2_bm_pool *pool,
-+			    struct page_pool *page_pool, void *data)
- {
--	if (likely(pool->frag_size <= PAGE_SIZE))
-+	if (page_pool)
-+		page_pool_put_full_page(page_pool, virt_to_head_page(data), false);
-+	else if (likely(pool->frag_size <= PAGE_SIZE))
- 		skb_free_frag(data);
- 	else
- 		kfree(data);
-@@ -442,6 +467,7 @@ static void mvpp2_bm_bufs_get_addrs(struct device *dev, struct mvpp2 *priv,
- static void mvpp2_bm_bufs_free(struct device *dev, struct mvpp2 *priv,
- 			       struct mvpp2_bm_pool *bm_pool, int buf_num)
- {
-+	struct page_pool *pp = NULL;
- 	int i;
- 
- 	if (buf_num > bm_pool->buf_num) {
-@@ -450,6 +476,9 @@ static void mvpp2_bm_bufs_free(struct device *dev, struct mvpp2 *priv,
- 		buf_num = bm_pool->buf_num;
- 	}
- 
-+	if (priv->percpu_pools)
-+		pp = priv->page_pool[bm_pool->id];
-+
- 	for (i = 0; i < buf_num; i++) {
- 		dma_addr_t buf_dma_addr;
- 		phys_addr_t buf_phys_addr;
-@@ -458,14 +487,15 @@ static void mvpp2_bm_bufs_free(struct device *dev, struct mvpp2 *priv,
- 		mvpp2_bm_bufs_get_addrs(dev, priv, bm_pool,
- 					&buf_dma_addr, &buf_phys_addr);
- 
--		dma_unmap_single(dev, buf_dma_addr,
--				 bm_pool->buf_size, DMA_FROM_DEVICE);
-+		if (!pp)
-+			dma_unmap_single(dev, buf_dma_addr,
-+					 bm_pool->buf_size, DMA_FROM_DEVICE);
- 
- 		data = (void *)phys_to_virt(buf_phys_addr);
- 		if (!data)
- 			break;
- 
--		mvpp2_frag_free(bm_pool, data);
-+		mvpp2_frag_free(bm_pool, pp, data);
- 	}
- 
- 	/* Update BM driver with number of buffers removed from pool */
-@@ -496,6 +526,9 @@ static int mvpp2_bm_pool_destroy(struct device *dev, struct mvpp2 *priv,
- 	int buf_num;
- 	u32 val;
- 
-+	if (priv->percpu_pools)
-+		page_pool_destroy(priv->page_pool[bm_pool->id]);
-+
- 	buf_num = mvpp2_check_hw_buf_num(priv, bm_pool);
- 	mvpp2_bm_bufs_free(dev, priv, bm_pool, buf_num);
- 
-@@ -548,8 +581,20 @@ static int mvpp2_bm_init(struct device *dev, struct mvpp2 *priv)
- {
- 	int i, err, poolnum = MVPP2_BM_POOLS_NUM;
- 
--	if (priv->percpu_pools)
-+	if (priv->percpu_pools) {
- 		poolnum = mvpp2_get_nrxqs(priv) * 2;
-+		for (i = 0; i < poolnum; i++) {
-+			/* the pool in use */
-+			int pn = i / (poolnum / 2);
-+
-+			priv->page_pool[i] =
-+				mvpp2_create_page_pool(dev,
-+						       mvpp2_pools[pn].buf_num,
-+						       mvpp2_pools[pn].pkt_size);
-+			if (IS_ERR(priv->page_pool[i]))
-+				return PTR_ERR(priv->page_pool[i]);
-+		}
-+	}
- 
- 	dev_info(dev, "using %d %s buffers\n", poolnum,
- 		 priv->percpu_pools ? "per-cpu" : "shared");
-@@ -632,23 +677,31 @@ static void mvpp2_rxq_short_pool_set(struct mvpp2_port *port,
- 
- static void *mvpp2_buf_alloc(struct mvpp2_port *port,
- 			     struct mvpp2_bm_pool *bm_pool,
-+			     struct page_pool *page_pool,
- 			     dma_addr_t *buf_dma_addr,
- 			     phys_addr_t *buf_phys_addr,
- 			     gfp_t gfp_mask)
- {
- 	dma_addr_t dma_addr;
-+	struct page *page;
- 	void *data;
- 
--	data = mvpp2_frag_alloc(bm_pool);
-+	data = mvpp2_frag_alloc(bm_pool, page_pool);
- 	if (!data)
- 		return NULL;
- 
--	dma_addr = dma_map_single(port->dev->dev.parent, data,
--				  MVPP2_RX_BUF_SIZE(bm_pool->pkt_size),
--				  DMA_FROM_DEVICE);
--	if (unlikely(dma_mapping_error(port->dev->dev.parent, dma_addr))) {
--		mvpp2_frag_free(bm_pool, data);
--		return NULL;
-+	if (page_pool) {
-+		page = (struct page *)data;
-+		dma_addr = page_pool_get_dma_addr(page);
-+		data = page_to_virt(page);
-+	} else {
-+		dma_addr = dma_map_single(port->dev->dev.parent, data,
-+					  MVPP2_RX_BUF_SIZE(bm_pool->pkt_size),
-+					  DMA_FROM_DEVICE);
-+		if (unlikely(dma_mapping_error(port->dev->dev.parent, dma_addr))) {
-+			mvpp2_frag_free(bm_pool, NULL, data);
-+			return NULL;
-+		}
- 	}
- 	*buf_dma_addr = dma_addr;
- 	*buf_phys_addr = virt_to_phys(data);
-@@ -706,6 +759,7 @@ static int mvpp2_bm_bufs_add(struct mvpp2_port *port,
- 	int i, buf_size, total_size;
- 	dma_addr_t dma_addr;
- 	phys_addr_t phys_addr;
-+	struct page_pool *pp = NULL;
- 	void *buf;
- 
- 	if (port->priv->percpu_pools &&
-@@ -726,8 +780,10 @@ static int mvpp2_bm_bufs_add(struct mvpp2_port *port,
- 		return 0;
- 	}
- 
-+	if (port->priv->percpu_pools)
-+		pp = port->priv->page_pool[bm_pool->id];
- 	for (i = 0; i < buf_num; i++) {
--		buf = mvpp2_buf_alloc(port, bm_pool, &dma_addr,
-+		buf = mvpp2_buf_alloc(port, bm_pool, pp, &dma_addr,
- 				      &phys_addr, GFP_KERNEL);
- 		if (!buf)
- 			break;
-@@ -2374,10 +2430,11 @@ static int mvpp2_aggr_txq_init(struct platform_device *pdev,
- /* Create a specified Rx queue */
- static int mvpp2_rxq_init(struct mvpp2_port *port,
- 			  struct mvpp2_rx_queue *rxq)
--
- {
-+	struct mvpp2 *priv = port->priv;
- 	unsigned int thread;
- 	u32 rxq_dma;
-+	int err;
- 
- 	rxq->size = port->rx_ring_size;
- 
-@@ -2415,7 +2472,41 @@ static int mvpp2_rxq_init(struct mvpp2_port *port,
- 	/* Add number of descriptors ready for receiving packets */
- 	mvpp2_rxq_status_update(port, rxq->id, 0, rxq->size);
- 
-+	if (priv->percpu_pools) {
-+		err = xdp_rxq_info_reg(&rxq->xdp_rxq_short, port->dev, rxq->id);
-+		if (err < 0)
-+			goto err_free_dma;
-+
-+		err = xdp_rxq_info_reg(&rxq->xdp_rxq_long, port->dev, rxq->id);
-+		if (err < 0)
-+			goto err_unregister_rxq_short;
-+
-+		/* Every RXQ has a pool for short and another for long packets */
-+		err = xdp_rxq_info_reg_mem_model(&rxq->xdp_rxq_short,
-+						 MEM_TYPE_PAGE_POOL,
-+						 priv->page_pool[rxq->logic_rxq]);
-+		if (err < 0)
-+			goto err_unregister_rxq_short;
-+
-+		err = xdp_rxq_info_reg_mem_model(&rxq->xdp_rxq_long,
-+						 MEM_TYPE_PAGE_POOL,
-+						 priv->page_pool[rxq->logic_rxq +
-+								 port->nrxqs]);
-+		if (err < 0)
-+			goto err_unregister_rxq_long;
-+	}
-+
- 	return 0;
-+
-+err_unregister_rxq_long:
-+	xdp_rxq_info_unreg(&rxq->xdp_rxq_long);
-+err_unregister_rxq_short:
-+	xdp_rxq_info_unreg(&rxq->xdp_rxq_short);
-+err_free_dma:
-+	dma_free_coherent(port->dev->dev.parent,
-+			  rxq->size * MVPP2_DESC_ALIGNED_SIZE,
-+			  rxq->descs, rxq->descs_dma);
-+	return err;
- }
- 
- /* Push packets received by the RXQ to BM pool */
-@@ -2449,6 +2540,12 @@ static void mvpp2_rxq_deinit(struct mvpp2_port *port,
- {
- 	unsigned int thread;
- 
-+	if (xdp_rxq_info_is_reg(&rxq->xdp_rxq_short))
-+		xdp_rxq_info_unreg(&rxq->xdp_rxq_short);
-+
-+	if (xdp_rxq_info_is_reg(&rxq->xdp_rxq_long))
-+		xdp_rxq_info_unreg(&rxq->xdp_rxq_long);
-+
- 	mvpp2_rxq_drop_pkts(port, rxq);
- 
- 	if (rxq->descs)
-@@ -2890,14 +2987,15 @@ static void mvpp2_rx_csum(struct mvpp2_port *port, u32 status,
- 
- /* Allocate a new skb and add it to BM pool */
- static int mvpp2_rx_refill(struct mvpp2_port *port,
--			   struct mvpp2_bm_pool *bm_pool, int pool)
-+			   struct mvpp2_bm_pool *bm_pool,
-+			   struct page_pool *page_pool, int pool)
- {
- 	dma_addr_t dma_addr;
- 	phys_addr_t phys_addr;
- 	void *buf;
- 
--	buf = mvpp2_buf_alloc(port, bm_pool, &dma_addr, &phys_addr,
--			      GFP_ATOMIC);
-+	buf = mvpp2_buf_alloc(port, bm_pool, page_pool,
-+			      &dma_addr, &phys_addr, GFP_ATOMIC);
- 	if (!buf)
- 		return -ENOMEM;
- 
-@@ -2956,6 +3054,7 @@ static int mvpp2_rx(struct mvpp2_port *port, struct napi_struct *napi,
- 	while (rx_done < rx_todo) {
- 		struct mvpp2_rx_desc *rx_desc = mvpp2_rxq_next_desc_get(rxq);
- 		struct mvpp2_bm_pool *bm_pool;
-+		struct page_pool *pp = NULL;
- 		struct sk_buff *skb;
- 		unsigned int frag_size;
- 		dma_addr_t dma_addr;
-@@ -2989,6 +3088,9 @@ static int mvpp2_rx(struct mvpp2_port *port, struct napi_struct *napi,
- 					DMA_FROM_DEVICE);
- 		prefetch(data);
- 
-+		if (port->priv->percpu_pools)
-+			pp = port->priv->page_pool[pool];
-+
- 		if (bm_pool->frag_size > PAGE_SIZE)
- 			frag_size = 0;
- 		else
-@@ -3000,15 +3102,18 @@ static int mvpp2_rx(struct mvpp2_port *port, struct napi_struct *napi,
- 			goto err_drop_frame;
- 		}
- 
--		err = mvpp2_rx_refill(port, bm_pool, pool);
-+		err = mvpp2_rx_refill(port, bm_pool, pp, pool);
- 		if (err) {
- 			netdev_err(port->dev, "failed to refill BM pools\n");
- 			goto err_drop_frame;
- 		}
- 
--		dma_unmap_single_attrs(dev->dev.parent, dma_addr,
--				       bm_pool->buf_size, DMA_FROM_DEVICE,
--				       DMA_ATTR_SKIP_CPU_SYNC);
-+		if (pp)
-+			page_pool_release_page(pp, virt_to_page(data));
-+		else
-+			dma_unmap_single_attrs(dev->dev.parent, dma_addr,
-+					       bm_pool->buf_size, DMA_FROM_DEVICE,
-+					       DMA_ATTR_SKIP_CPU_SYNC);
- 
- 		rcvd_pkts++;
- 		rcvd_bytes += rx_bytes;
--- 
-2.26.2
+Michael
 
