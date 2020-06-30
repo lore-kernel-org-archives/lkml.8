@@ -2,123 +2,98 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACACBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E5EAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8852A204EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:27:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 188DD20774
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:27:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="pTL/0O8r"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Valvzgq/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731956AbgF3J1d (ORCPT
+        id S1731968AbgF3J1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 05:27:33 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:57166 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730256AbgF3J1c (ORCPT
+        Tue, 30 Jun 2020 05:27:38 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:46414 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730256AbgF3J1g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 05:27:32 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05U9IGnX141742;
-        Tue, 30 Jun 2020 09:27:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : in-reply-to : message-id : references : mime-version :
- content-type; s=corp-2020-01-29;
- bh=p7l5BOkY6l6Gt/C4GiSucUE677LFprJkxNVuzkjGD1M=;
- b=pTL/0O8rggakV3TIE3i0fWZxXLn7dijdgqll9Y49Mk93Zb78rFFvye3P37dHGy4avBzU
- l+ZzzJVb9HFH+RxB7YqI2rQM7T/bACsj8hPmafRzQcoQvhXKqAUCqPugju+MKtC0jWf8
- xzw8PnP/3MPrvXaiBJhLL04nsISYwF6//4nw2FBwXpzQsNMv1dsugyr0uoj3QkU8TtiV
- jcm4GhLJkgESfudAYcKcDkaYJU2Iag/ymzkR9ShslfyIgxfFxhGCEMMlHjFe6/MEZivC
- zk+ZXr9EXlGfjQkZvhvVYaDoEf0/XVRylcIOKdzxxnwADEkrtqx6t79wZf2bZ2AXlM9R tw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 31xx1dr7cg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 30 Jun 2020 09:27:19 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05U9IeBo196590;
-        Tue, 30 Jun 2020 09:27:19 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 31xg12ujmv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 30 Jun 2020 09:27:19 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05U9RIfQ020087;
-        Tue, 30 Jun 2020 09:27:18 GMT
-Received: from dhcp-10-175-202-192.vpn.oracle.com (/10.175.202.192)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 30 Jun 2020 09:27:17 +0000
-Date:   Tue, 30 Jun 2020 10:27:12 +0100 (IST)
-From:   Alan Maguire <alan.maguire@oracle.com>
-X-X-Sender: alan@localhost
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-cc:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Brendan Higgins <brendanhiggins@google.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Alan Maguire <alan.maguire@oracle.com>
-Subject: Re: linux-next: build failure after merge of the thunderbolt tree
-In-Reply-To: <20200630160346.696f6419@canb.auug.org.au>
-Message-ID: <alpine.LRH.2.21.2006301021590.13740@localhost>
-References: <20200630160346.696f6419@canb.auug.org.au>
-User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
+        Tue, 30 Jun 2020 05:27:36 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05U9RXFu080159;
+        Tue, 30 Jun 2020 04:27:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1593509253;
+        bh=bBXVbl5c7a74Y3IHGcEjGv+uAGNnH0MEPRnsBGW+LLI=;
+        h=From:To:CC:Subject:Date;
+        b=Valvzgq/D6YZon5L70SMhk26W6zijqijkNWAvGQVjNKiXA1FGcnGWgAOFRvwFxv/p
+         YdnNbBusL1qcVfTn/d8UY0JmaM+w6TjPrw8GqcIKq/0UpU9Adxqbx11/kahaWPhzI8
+         j7yt8++do2cAxguzzwBpNpayAbrPzzrmLHdxvqeY=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05U9RXQb030278
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 30 Jun 2020 04:27:33 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 30
+ Jun 2020 04:27:33 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
+ Frontend Transport; Tue, 30 Jun 2020 04:27:33 -0500
+Received: from lta0400828a.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05U9RUU4003947;
+        Tue, 30 Jun 2020 04:27:31 -0500
+From:   Roger Quadros <rogerq@ti.com>
+To:     <kishon@ti.com>
+CC:     <robh+dt@kernel.org>, <nsekhar@ti.com>, <vigneshr@ti.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        Roger Quadros <rogerq@ti.com>
+Subject: [PATCH v3 0/3] phy: omap-usb2: add quirk to disable charger detection
+Date:   Tue, 30 Jun 2020 12:27:26 +0300
+Message-ID: <20200630092729.15346-1-rogerq@ti.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9667 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 malwarescore=0
- mlxlogscore=999 suspectscore=3 bulkscore=0 mlxscore=0 adultscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006300068
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9667 signatures=668680
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 clxscore=1011 adultscore=0
- suspectscore=3 mlxlogscore=999 cotscore=-2147483648 lowpriorityscore=0
- malwarescore=0 phishscore=0 impostorscore=0 mlxscore=0 spamscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2004280000 definitions=main-2006300068
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Jun 2020, Stephen Rothwell wrote:
+Hi,
 
-> Hi all,
-> 
-> After merging the thunderbolt tree, today's linux-next build (powerpc
-> allyesconfig) failed like this:
-> 
-> 
-> Caused by commit
-> 
->   54509f5005ca ("thunderbolt: Add KUnit tests for path walking")
-> 
-> interacting with commit
-> 
->   d4cdd146d0db ("kunit: generalize kunit_resource API beyond allocated resources")
-> 
-> from the kunit-next tree.
-> 
-> I have applied the following merge fix patch.
-> 
-> From: Stephen Rothwell <sfr@canb.auug.org.au>
-> Date: Tue, 30 Jun 2020 15:51:50 +1000
-> Subject: [PATCH] thunderbolt: merge fix for kunix_resource changes
-> 
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+- convert DT binding to YAML
+- add DT property to disable charger detection
+  (Errata i2075 for AM65 SR1.0)
 
-Thanks Stephen, resolution looks good to me! If you need it
+Changelog:
+v3
+- Removed quotes from compatibles
+- changed property to "ti,disable-charger-det"
 
-Reviewed-by: Alan Maguire <alan.maguire@oracle.com>
+v2
+- Address Rob's comments on YAML schema.
 
-Once the kunit and thunderbolt trees are merged there may
-be some additional things we can do to simplify kunit
-resource utilization in the thuderbolt tests using the new
-kunit resource APIs; no hurry with that though. Nice to
-see the kunit resources code being used!
+cheers,
+-roger
 
-Alan
+Roger Quadros (3):
+  dt-binding: phy: convert ti,omap-usb2 to YAML
+  dt-binding: phy: ti,omap-usb2: Add quirk to disable charger detection
+  phy: omap-usb2-phy: disable PHY charger detect
+
+ .../devicetree/bindings/phy/ti,omap-usb2.yaml | 74 +++++++++++++++++++
+ .../devicetree/bindings/phy/ti-phy.txt        | 37 ----------
+ drivers/phy/ti/phy-omap-usb2.c                | 35 +++++++--
+ 3 files changed, 102 insertions(+), 44 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/ti,omap-usb2.yaml
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+
