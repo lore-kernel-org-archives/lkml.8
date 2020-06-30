@@ -2,129 +2,149 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 874F7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D90B8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A6BE20768
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:22:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593501750;
-	bh=AGvlLNBlx3bbxyvR44zntByoYH0BX9djo9ELlICoPJE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cFZi4PEmDlQ1EAElcTTLGqSTFmMU+PdydE/sDTh1pIUXPGTtRO2ODSjR23tX4vI8K
-	 qBrfHIh9a0Xu3YFhjjyn+tOAqVkErBK/tCySQw2aI28lx0mZXkvJrHrDQ1K77Wftyh
-	 xpx3WJdI/sew3xM+Er5CkI6Hf2WTBdhzElkZVfEc=
+	by mail.kernel.org (Postfix) with ESMTP id B27B520759
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:22:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gOzXbiGv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730882AbgF3HW2 (ORCPT
+        id S1730901AbgF3HWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 03:22:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45340 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730636AbgF3HW2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 03:22:28 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75C8C20759;
-        Tue, 30 Jun 2020 07:22:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593501747;
-        bh=AGvlLNBlx3bbxyvR44zntByoYH0BX9djo9ELlICoPJE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Ot+WEl+7LPutY0WbZaf9ShIjKm24najLyECN/GK/osKG3Q/D41WMnDCzYDmTjKoVE
-         HyXs0Fjf7WRV2gskteKcNP47JGRO+xZo1u+96m5BNlSDpQgVggOLihuBVtX6isZstq
-         TzldNymbQVPR27djSf7i3snjb3X42AQ/VHiQmnmk=
-Date:   Tue, 30 Jun 2020 08:22:22 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     "liwei (GF)" <liwei391@huawei.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, liwei1412@163.com
-Subject: Re: [PATCH 0/4] arm64: kgdb/kdb: Fix single-step debugging issues
-Message-ID: <20200630072221.GA13332@willie-the-truck>
-References: <20200509214159.19680-1-liwei391@huawei.com>
- <CAD=FV=Xv6xgj_M9tYjHzmW4UZD2RdH2c5=dagNybSkdfBabYZw@mail.gmail.com>
- <a20ee677-495b-9336-a329-eabd50dd1cad@huawei.com>
- <CAD=FV=WYBAJB_nWxUAAVgV26e4CTzJeizZtxpwus6REi3j2meA@mail.gmail.com>
+        Tue, 30 Jun 2020 03:22:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44214 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730636AbgF3HWi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 03:22:38 -0400
+Received: from mail-qv1-xf41.google.com (mail-qv1-xf41.google.com [IPv6:2607:f8b0:4864:20::f41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B35BBC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 00:22:38 -0700 (PDT)
+Received: by mail-qv1-xf41.google.com with SMTP id t7so8821049qvl.8
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 00:22:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=YUb/R43ZMssEKSKqN14RVEh1G5REfGOWpdb3ieNJiMU=;
+        b=gOzXbiGvAcHgG9UYZFrhTZx/xxwMREB2h3FyW1s/GNRjauXXFRFeFNLlTtWgyE/HD/
+         WUwvGJNvfNCTaaFWaE80gjxJHWiVtb+YHBMXzGLOGqksNvnn2anA2KTlrIC8NIxZjP2n
+         SwxdCptGcM2slAMWCToErm1+bwmY3oVeR3wdEm3qyzpPjclyz4YGrpAimMqP216l9oZL
+         RJ3dpYvE+wW0Pfnp2xZvnWicRbgDzD4Z3QwqJQmgBrIpRfC4GwldbQTFKlirLW6DvSPl
+         QLfyNEnRwcTnChkQXbA7T2gfm9pykH5yG7hn2BRoKB6DDvTj7avCwnP6b38gJTjYXsiL
+         Vmmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=YUb/R43ZMssEKSKqN14RVEh1G5REfGOWpdb3ieNJiMU=;
+        b=H3a3wkRbLUWWvLfwoYXKfQPtSSeqWx15ozj7DeaNZXmvySRYaOxdA4cHguhhGXh+8j
+         DmKrcvdHZRZQf23pKAeSOF1jAwj6dFvD4pF21QzhgTP/jABH0IFCSiCBQhTSxi+q8XL3
+         Hu6fXJL7oOtzbzOYLmGWxVqq/VgQB8eX+JZeZUUf3cPKV6xlN654gMG0FOnQrVtdXYrv
+         4kxUFuj8Js1fcyc7j4WmXU452DYNk+z57PZcsb2r+cAHuocRDMIp3jNkSel0ICq11llb
+         JYgnx6+SIjA6AA6L5X/Ar0FY88nc5JVoN4V6mn+BXQjeOUmHMlyq3mQpYOXSP58KOHXz
+         /EGw==
+X-Gm-Message-State: AOAM531XuqvgxmxDhVnx+IYFZOxTl2Isqs+//KLDmquzMyBaKGj6VB6b
+        fdX1oXQo3tGSB3fg0LEBuiRfLaK0Gkjyit6yCmw=
+X-Google-Smtp-Source: ABdhPJw7Sh9pRpAxYP0KNguzmQTPOcCN248K7MQK4XOtXpVblcIPHBVLtKkKxLX6tZdJDGjgDgQXRql9vENUrZdA88g=
+X-Received: by 2002:a0c:84c2:: with SMTP id m60mr18687200qva.198.1593501757040;
+ Tue, 30 Jun 2020 00:22:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=WYBAJB_nWxUAAVgV26e4CTzJeizZtxpwus6REi3j2meA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1592892828-1934-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <1592892828-1934-5-git-send-email-iamjoonsoo.kim@lge.com> <20200625115422.GE1320@dhcp22.suse.cz>
+ <CAAmzW4MHuRhNqVXMntLAc_x4kJgkgQ-pD5GfFxRxJRchrEFr9g@mail.gmail.com>
+ <20200626072324.GT1320@dhcp22.suse.cz> <CAAmzW4NLVwvqtoUb+JJ+WV=7_n800vA+YYC0LyrDS6iQ7wxcdg@mail.gmail.com>
+ <20200629075510.GA32461@dhcp22.suse.cz> <CAAmzW4PFEEs0FGe+XMHzRdXr0LpdF3TZZG2L3E+opRyZWDZ48A@mail.gmail.com>
+ <20200630064256.GB2369@dhcp22.suse.cz>
+In-Reply-To: <20200630064256.GB2369@dhcp22.suse.cz>
+From:   Joonsoo Kim <js1304@gmail.com>
+Date:   Tue, 30 Jun 2020 16:22:22 +0900
+Message-ID: <CAAmzW4MFw_Xd_3rV8OVL_8jXfhUWT2v69xEFHaVLY4NKZPhD1A@mail.gmail.com>
+Subject: Re: [PATCH v3 4/8] mm/hugetlb: make hugetlb migration callback CMA aware
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, kernel-team@lge.com,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christoph Hellwig <hch@infradead.org>,
+        Roman Gushchin <guro@fb.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 02:20:11PM -0700, Doug Anderson wrote:
-> On Sat, May 16, 2020 at 1:20 AM liwei (GF) <liwei391@huawei.com> wrote:
-> > On 2020/5/14 8:34, Doug Anderson wrote:
-> > > On Sat, May 9, 2020 at 6:49 AM Wei Li <liwei391@huawei.com> wrote:
-> > >>
-> > >> This patch set is to fix several issues of single-step debugging
-> > >> in kgdb/kdb on arm64.
-> > >>
-> > >> It seems that these issues have been shelved a very long time,
-> > >> but i still hope to solve them, as the single-step debugging
-> > >> is an useful feature.
-> > >>
-> > >> Note:
-> > >> Based on patch "arm64: cacheflush: Fix KGDB trap detection",
-> > >> https://www.spinics.net/lists/arm-kernel/msg803741.html
-> > >>
-> > >> Wei Li (4):
-> > >>   arm64: kgdb: Fix single-step exception handling oops
-> > >>   arm64: Extract kprobes_save_local_irqflag() and
-> > >>     kprobes_restore_local_irqflag()
-> > >>   arm64: kgdb: Fix single-stepping into the irq handler wrongly
-> > >>   arm64: kgdb: Set PSTATE.SS to 1 to reenable single-step
-> > >>
-> > >>  arch/arm64/include/asm/debug-monitors.h |  6 ++++++
-> > >>  arch/arm64/kernel/debug-monitors.c      | 28 ++++++++++++++++++++++++-
-> > >>  arch/arm64/kernel/kgdb.c                | 16 +++++++++++---
-> > >>  arch/arm64/kernel/probes/kprobes.c      | 28 ++-----------------------
-> > >>  4 files changed, 48 insertions(+), 30 deletions(-)
+2020=EB=85=84 6=EC=9B=94 30=EC=9D=BC (=ED=99=94) =EC=98=A4=ED=9B=84 3:42, M=
+ichal Hocko <mhocko@kernel.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+>
+> On Tue 30-06-20 15:30:04, Joonsoo Kim wrote:
+> > 2020=EB=85=84 6=EC=9B=94 29=EC=9D=BC (=EC=9B=94) =EC=98=A4=ED=9B=84 4:5=
+5, Michal Hocko <mhocko@kernel.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+> [...]
+> > > diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+> > > index 57ece74e3aae..c1595b1d36f3 100644
+> > > --- a/mm/hugetlb.c
+> > > +++ b/mm/hugetlb.c
+> > > @@ -1092,10 +1092,14 @@ static struct page *dequeue_huge_page_nodemas=
+k(struct hstate *h, gfp_t gfp_mask,
+> > >  /* Movability of hugepages depends on migration support. */
+> > >  static inline gfp_t htlb_alloc_mask(struct hstate *h)
+> > >  {
+> > > +       gfp_t gfp;
+> > > +
+> > >         if (hugepage_movable_supported(h))
+> > > -               return GFP_HIGHUSER_MOVABLE;
+> > > +               gfp =3D GFP_HIGHUSER_MOVABLE;
+> > >         else
+> > > -               return GFP_HIGHUSER;
+> > > +               gfp =3D GFP_HIGHUSER;
+> > > +
+> > > +       return current_gfp_context(gfp);
+> > >  }
 > > >
-> > > Just an overall note that I'm very happy that you posted this patch
-> > > series!  It's always been a thorn in my side that stepping and
-> > > breakpoints were so broken on arm64 and I'm really excited that you're
-> > > fixing them.  Now I'll have to get in the habit of using kgdb for more
-> > > than just debugging crashes and maybe I can use it more for exploring
-> > > how functions work more.  :-)
-> > > > I'll also note that with your patch series I'm even seeing the "call"
-> > > feature of gdb working now.  That has always been terribly broken for
-> > > me.
+> > >  static struct page *dequeue_huge_page_vma(struct hstate *h,
 > > >
-> > Thanks for reviewing and testing this series.
-> > Enjoy exploring the kernel with kgdb/kdb! :-)
-> 
-> I'm curious to know if you plan another spin.  The feedback you
-> received was fairly minor so it hopefully shouldn't be too hard.  I'd
-> very much like to get your patches landed and I'd be happy to try to
-> address the feedback and spin them myself if you're no longer
-> available for it.
+> > > If we even fix this general issue for other allocations and allow a
+> > > better CMA exclusion then it would be implemented consistently for
+> > > everybody.
+> >
+> > Yes, I have reviewed the memalloc_nocma_{} APIs and found the better wa=
+y
+> > for CMA exclusion. I will do it after this patch is finished.
+> >
+> > > Does this make more sense to you are we still not on the same page wr=
+t
+> > > to the actual problem?
+> >
+> > Yes, but we have different opinions about it. As said above, I will mak=
+e
+> > a patch for better CMA exclusion after this patchset. It will make
+> > code consistent.
+> > I'd really appreciate it if you wait until then.
+>
+> As I've said I would _prefer_ simplicity over "correctness" if it is only
+> partial and hard to reason about from the userspace experience but this
+> is not something I would _insist_ on. If Mike as a maintainer of the
+> code is ok with that then I will not stand in the way.
 
-I'd welcome some feedback on the proposal I sent out at the end of last
-week:
+Okay.
 
-https://lore.kernel.org/r/20200626095551.GA9312@willie-the-truck
+> But please note that a missing current_gfp_context inside
+> htlb_alloc_mask is a subtle bug. I do not think it matters right now but
+> with a growing use of scoped apis this might actually hit some day so I
+> believe we want to have it in place.
 
-which looks to solve some (all?) of these issues slightly differently,
-because it turns out we need to perform some low-level surgery for
-preempt-rt *anyway*...
+Okay. I will keep in mind and consider it when fixing CMA exclusion on the
+other patchset.
 
-I'm particularly keen to hear any thoughts concerning the reschedule on
-return to EL1 after handling an interrupt that hit during a step.
-
-Will
+Thanks.
