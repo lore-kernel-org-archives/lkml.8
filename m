@@ -2,142 +2,102 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A60C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 806D2C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:36:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id EF191206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:35:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52BD120702
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:36:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593542137;
-	bh=RYKTZT8L2YCF69DV1EdcAmR1v9iwHZlvoOwk9RIUBfI=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=DL6TrTyLVS1HODbCBYjFjcJjQ531Gc9cBEgA6A+K5L+PjMGJaFm6MeRojT9z3RUeP
-	 7+gX/4Cd+FMl+6fdBRjCWW9WEN+49kbGcFsBHeRq29zlFRDB2b+xOZyTqvymHwypvr
-	 jqg7E+LCGNN4QzqnsR7FVltJ7OG6NdvottPNU8U0=
+	s=default; t=1593542166;
+	bh=0xUqRI8M0gz9xzqgotkv+G1CwD9Vh/oPvu1CpySWpE8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=DwtCfDYX473K+ETF+qGRizgKzKDlumllkX1nf+H1wJmS+DhBba6jzm2j30of0HJcG
+	 XtknUehuvHktCSWEQ8Tysvl0F9J8Wyx8qbL4RFf55FoWUWC86MIIkWuD4SJtOvB5cc
+	 MF5F9gwBUnqk77+x7g1R1LmewuC0mZKpnfa+R7dw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733208AbgF3Sff (ORCPT
+        id S1733180AbgF3SgF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 14:35:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44264 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725963AbgF3Sff (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 14:35:35 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A66392068F;
-        Tue, 30 Jun 2020 18:35:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593542134;
-        bh=RYKTZT8L2YCF69DV1EdcAmR1v9iwHZlvoOwk9RIUBfI=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=Jo7cYQcSnqavmJu3py5reMUEBjHqYsP72S5+fGaXFuuliQXf7MQYLdi8xzpH6+94s
-         yOpBKjGschI641wSf53+P5BFQnemkANvqB/pnhkl8YlF25Q+M5ykes5xA3/hcfIss2
-         1gLogO1nUHFCaKYCML6eGu8CDKtrccY50qPfZMmw=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 74B173522640; Tue, 30 Jun 2020 11:35:34 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 11:35:34 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     joel@joelfernandes.org, rcu@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com, mingo@kernel.org,
-        jiangshanlai@gmail.com, dipankar@in.ibm.com,
-        akpm@linux-foundation.org, mathieu.desnoyers@efficios.com,
-        josh@joshtriplett.org, tglx@linutronix.de, peterz@infradead.org,
-        rostedt@goodmis.org, dhowells@redhat.com, edumazet@google.com,
-        fweisbec@gmail.com, oleg@redhat.com,
-        Uladzislau Rezki <urezki@gmail.com>
-Subject: Re: [PATCH tip/core/rcu 03/17] rcu/tree: Skip entry into the page
- allocator for PREEMPT_RT
-Message-ID: <20200630183534.GG9247@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200624201200.GA28901@paulmck-ThinkPad-P72>
- <20200624201226.21197-3-paulmck@kernel.org>
- <20200630164543.4mdcf6zb4zfclhln@linutronix.de>
+        Tue, 30 Jun 2020 14:36:05 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:47015 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbgF3SgE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 14:36:04 -0400
+Received: by mail-ot1-f65.google.com with SMTP id n24so16993727otr.13;
+        Tue, 30 Jun 2020 11:36:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=r0w1rUKQgK5a4NrOFjBzuKsJ73al8FDWBmP26SO07LY=;
+        b=XyYNd9xsRp/zz4XAzRxOUMojhaKTMMJsGrMD3oRl0lP9vKidIjpwoDc4yLcayLDl3g
+         jS23+sCd/R0KUXhq5MEuG58Wa0KqEKkiC4JzfWKohSLD0Gv91VTMByKsB9j0QHrABIDX
+         qPGWv45CgO9/x8cX7wRdohTpwauB3YelCVRpuDM1gS+sRcUwyu83xIRlSPAbONpEBHsQ
+         skW5zBEQWA2Ufj0u6JBVJ7u4JkIR5L92Xk/MDnyBKb2mN7IvVQIIwr1py8zbrSnllasx
+         Fqs48w2aaOgYQpdYBRM7qmOMlWpNI6VozqgyXhT4xNB61tMW23CphhtMboI/LsskvqKJ
+         AI1A==
+X-Gm-Message-State: AOAM5302iSOLn53CmBMBArQqaQaJsbdGSR3xHivyujLR6mNuR86VXE8q
+        VDK8ahwsrf1Htmng3rw6fdPdJtBgS7NR8F0hTK8=
+X-Google-Smtp-Source: ABdhPJyfKNR2mAW+ZquuTmcfS4CS0jrfj9YUROqYC4rkoPStrpEF1YJI6C4RI2L3RKrKl8F9E2AWh4t/Pazokt5J/Fg=
+X-Received: by 2002:a9d:7d15:: with SMTP id v21mr18541238otn.118.1593542163940;
+ Tue, 30 Jun 2020 11:36:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200630164543.4mdcf6zb4zfclhln@linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200626183401.1495090-1-srinivas.pandruvada@linux.intel.com>
+In-Reply-To: <20200626183401.1495090-1-srinivas.pandruvada@linux.intel.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 30 Jun 2020 20:35:52 +0200
+Message-ID: <CAJZ5v0giN1Jmgdh5q_eiJ60O31c-Ez2EY9WLnmn7Z8f9tQvUWw@mail.gmail.com>
+Subject: Re: [PATCH v4 0/2] cpufreq: intel_pstate: Support raw epp and energy_efficiency
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Len Brown <lenb@kernel.org>,
+        Doug Smythies <dsmythies@telus.net>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 06:45:43PM +0200, Sebastian Andrzej Siewior wrote:
-> On 2020-06-24 13:12:12 [-0700], paulmck@kernel.org wrote:
-> > From: "Joel Fernandes (Google)" <joel@joelfernandes.org>
-> > 
-> > To keep the kfree_rcu() code working in purely atomic sections on RT,
-> > such as non-threaded IRQ handlers and raw spinlock sections, avoid
-> > calling into the page allocator which uses sleeping locks on RT.
-> > 
-> > In fact, even if the  caller is preemptible, the kfree_rcu() code is
-> > not, as the krcp->lock is a raw spinlock.
-> > 
-> > Calling into the page allocator is optional and avoiding it should be
-> > Ok, especially with the page pre-allocation support in future patches.
-> > Such pre-allocation would further avoid the a need for a dynamically
-> > allocated page in the first place.
-> > 
-> > Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> > Reviewed-by: Uladzislau Rezki <urezki@gmail.com>
-> > Co-developed-by: Uladzislau Rezki <urezki@gmail.com>
-> > Signed-off-by: Uladzislau Rezki <urezki@gmail.com>
-> > Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> > Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> > Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> > ---
-> >  kernel/rcu/tree.c | 12 ++++++++++++
-> >  1 file changed, 12 insertions(+)
-> > 
-> > diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-> > index 64592b4..dbdd509 100644
-> > --- a/kernel/rcu/tree.c
-> > +++ b/kernel/rcu/tree.c
-> > @@ -3184,6 +3184,18 @@ kfree_call_rcu_add_ptr_to_bulk(struct kfree_rcu_cpu *krcp,
-> >  		if (!bnode) {
-> >  			WARN_ON_ONCE(sizeof(struct kfree_rcu_bulk_data) > PAGE_SIZE);
-> >  
-> > +			/*
-> > +			 * To keep this path working on raw non-preemptible
-> > +			 * sections, prevent the optional entry into the
-> > +			 * allocator as it uses sleeping locks. In fact, even
-> > +			 * if the caller of kfree_rcu() is preemptible, this
-> > +			 * path still is not, as krcp->lock is a raw spinlock.
-> > +			 * With additional page pre-allocation in the works,
-> > +			 * hitting this return is going to be much less likely.
-> > +			 */
-> > +			if (IS_ENABLED(CONFIG_PREEMPT_RT))
-> > +				return false;
-> 
-> This is not going to work together with the "wait context validator"
-> (CONFIG_PROVE_RAW_LOCK_NESTING). As of -rc3 it should complain about
-> printk() which is why it is still disabled by default.
+On Fri, Jun 26, 2020 at 8:34 PM Srinivas Pandruvada
+<srinivas.pandruvada@linux.intel.com> wrote:
+>
+> v4
+> Changes suggested by Borislav
+> - msr-index file is sorted for the MSR_IA32_POWER_CTL
+> - Remove "_enable" from the new attribute
+> - Changes related to documentation
+> Changes suggested by Peter
+> - Use of kstrtobool
+> Suspend/resume restore
+>
+> v3
+> Some edits for the description as suggested by Doug
+>
+> v2
+> Remove raw value support for EPB
+>
+> Srinivas Pandruvada (2):
+>   cpufreq: intel_pstate: Allow enable/disable energy efficiency
+>   cpufreq: intel_pstate: Allow raw energy performance preference value
+>
+>  Documentation/admin-guide/pm/intel_pstate.rst |  17 +-
+>  arch/x86/include/asm/msr-index.h              |   6 +-
+>  drivers/cpufreq/intel_pstate.c                | 147 ++++++++++++++----
+>  3 files changed, 133 insertions(+), 37 deletions(-)
+>
+> --
 
-Fixing that should be "interesting".  In particular, RCU CPU stall
-warnings rely on the raw spin lock to reduce false positives due
-to race conditions.  Some thought will be required here.
-
-> So assume that this is fixed and enabled then on !PREEMPT_RT it will
-> complain that you have a raw_spinlock_t acquired (the one from patch
-> 02/17) and attempt to acquire a spinlock_t in the memory allocator.
-
-Given that the slab allocator doesn't acquire any locks until it gets
-a fair way in, wouldn't it make sense to allow a "shallow" allocation
-while a raw spinlock is held?  This would require yet another GFP_ flag,
-but that won't make all that much of a difference in the total.  ;-)
-
-							Thanx, Paul
-
-> >  			bnode = (struct kfree_rcu_bulk_data *)
-> >  				__get_free_page(GFP_NOWAIT | __GFP_NOWARN);
-> >  		}
-> 
-> Sebastian
+Both applied as 5.9 material, thanks!
