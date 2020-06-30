@@ -2,251 +2,283 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F14C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9758EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8EF9D2073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 702182073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:14:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387506AbgF3MNK (ORCPT
+        id S2387527AbgF3MOA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 08:13:10 -0400
-Received: from mga01.intel.com ([192.55.52.88]:33636 "EHLO mga01.intel.com"
+        Tue, 30 Jun 2020 08:14:00 -0400
+Received: from foss.arm.com ([217.140.110.172]:45014 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387472AbgF3MNF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 08:13:05 -0400
-IronPort-SDR: ipBrSnIzWSF1XqaJ8hFkLsm0by4fK+Z16FlHHW8a8UNCfuHtrfR9mdoUDEZ6W9GqFRjMq5R9ht
- eRrYL/xrNEEQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="164223896"
-X-IronPort-AV: E=Sophos;i="5.75,297,1589266800"; 
-   d="scan'208";a="164223896"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 05:13:04 -0700
-IronPort-SDR: 21wCZXE5dcWpOhMs8SS3CgqIIzPBVAd9zImwOAXO+sqtMZgrsnTnSLZBEI8xgor26bH2kdaQPe
- cCpMUW30pKgw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,297,1589266800"; 
-   d="scan'208";a="386680785"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 30 Jun 2020 05:13:01 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 30 Jun 2020 15:13:00 +0300
-Date:   Tue, 30 Jun 2020 15:13:00 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-        Benoit =?iso-8859-1?Q?Gr=E9goire?= <benoitg@coeus.ca>,
-        juhapekka.heikkila@gmail.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/resource: Do not exclude regions that are marked as
- MMIO in EFI memmap
-Message-ID: <20200630121300.GO5180@lahna.fi.intel.com>
-References: <20200302141451.18983-1-mika.westerberg@linux.intel.com>
- <20200626224344.GA1992137@bjorn-Precision-5520>
+        id S2387472AbgF3MN6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 08:13:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 66D641FB;
+        Tue, 30 Jun 2020 05:13:57 -0700 (PDT)
+Received: from [10.57.21.32] (unknown [10.57.21.32])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7644C3F71E;
+        Tue, 30 Jun 2020 05:13:54 -0700 (PDT)
+Subject: Re: [PATCH v8 3/3] iommu/arm-smmu: Add global/context fault
+ implementation hooks
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Krishna Reddy <vdumpa@nvidia.com>
+Cc:     snikam@nvidia.com, nicoleotsuka@gmail.com, mperttunen@nvidia.com,
+        bhuntsman@nvidia.com, will@kernel.org,
+        linux-kernel@vger.kernel.org, praithatha@nvidia.com,
+        talho@nvidia.com, iommu@lists.linux-foundation.org,
+        nicolinc@nvidia.com, linux-tegra@vger.kernel.org, yhsu@nvidia.com,
+        treding@nvidia.com, linux-arm-kernel@lists.infradead.org,
+        bbiswas@nvidia.com
+References: <20200630001051.12350-1-vdumpa@nvidia.com>
+ <20200630001051.12350-4-vdumpa@nvidia.com>
+ <4b4b20af-7baa-0987-e40d-af74235153f6@nvidia.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <6c2ce909-c71b-351f-79f5-b1a4b4c0e4ac@arm.com>
+Date:   Tue, 30 Jun 2020 13:13:52 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200626224344.GA1992137@bjorn-Precision-5520>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <4b4b20af-7baa-0987-e40d-af74235153f6@nvidia.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 05:43:44PM -0500, Bjorn Helgaas wrote:
-> On Mon, Mar 02, 2020 at 05:14:51PM +0300, Mika Westerberg wrote:
-> > Commit 4dc2287c1805 ("x86: avoid E820 regions when allocating address
-> > space") made the resource allocation code to avoid all regions that are
-> > in E820 table. This prevents the kernel to assign MMIO resources to
-> > regions that may be real RAM for example.
-> > 
-> > However, at least with Lenovo Yoca C940 and S740 this causes problems
-> > when allocating resources for PCIe devices behind Thunderbolt port(s).
-> > 
-> > On Yoga S740 the E820 table contains an entry like this:
-> > 
-> >   BIOS-e820: [mem 0x000000002bc50000-0x00000000cfffffff] reserved
-> > 
-> > and ACPI _CRS method for the host bridge returns these windows:
-> > 
-> >   pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
-> >   pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
-> >   pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
-> >   pci_bus 0000:00: root bus resource [mem 0x45400000-0xbfffffff window]
-> >   pci_bus 0000:00: root bus resource [mem 0x4000000000-0x7fffffffff window]
-> > 
-> > Note that the 0x45400000-0xbfffffff entry is also included in the E820
-> > table and marked as "reserved".
-> > 
-> > When Thunderbolt device is connected and the PCIe gets tunneled PCI core
-> > tries to allocate memory for the new devices but it fails because all
-> > the resources are inside this reserved region so arch_remove_reservations()
-> > clips them which makes the resource assignment fail as in below log:
-> > 
-> >   pci 0000:00:07.0: PCI bridge to [bus 01-2a]
-> >   pci 0000:00:07.0:   bridge window [mem 0x46000000-0x521fffff]
-> >   pci 0000:00:07.0:   bridge window [mem 0x6000000000-0x601bffffff 64bit pref]
-> >   ...
-> >   pci 0000:02:04.0: bridge window [mem 0x00100000-0x001fffff 64bit pref] to [bus 07-2a] add_size 100000 add_align 100000
-> >   pci 0000:02:04.0: bridge window [mem 0x00100000-0x001fffff] to [bus 07-2a] add_size 100000 add_align 100000
-> >   pci 0000:01:00.0: bridge window [mem 0x00100000-0x005fffff 64bit pref] to [bus 02-2a] add_size 100000 add_align 100000
-> >   pci 0000:01:00.0: bridge window [mem 0x00100000-0x005fffff] to [bus 02-2a] add_size 100000 add_align 100000
-> >   pci 0000:01:00.0: bridge window [io  0x1000-0x5fff] shrunken by 0x0000000000004000
-> >   pci 0000:01:00.0: bridge window [mem 0x00100000-0x005fffff] extended by 0x000000000bd00000
-> >   pci 0000:01:00.0: bridge window [mem 0x00100000-0x005fffff 64bit pref] extended by 0x000000001bb00000
-> >   pci 0000:02:04.0: bridge window [mem 0x00100000-0x001fffff] extended by 0x000000000bd00000
-> >   pci 0000:02:04.0: bridge window [mem 0x00100000-0x001fffff 64bit pref] extended by 0x000000001bb00000
-> >   pci 0000:01:00.0: BAR 8: no space for [mem size 0x0c200000]
-> >   pci 0000:01:00.0: BAR 8: failed to assign [mem size 0x0c200000]
-> >   pci 0000:01:00.0: BAR 9: assigned [mem 0x6000000000-0x601bffffff 64bit pref]
-> >   pci 0000:01:00.0: BAR 7: assigned [io  0x4000-0x4fff]
-> > 
-> > The 01:00.0 is the upstream port of the PCIe switch that is connected to
-> > the PCIe root port (00:07.1) over Thunderbolt link.
-> > 
-> > If I add "efi=debug" to the command line I can see that the EFI memory
-> > map actually contains several entries:
-> > 
-> >   [Reserved           |   |  |  |  |  |  |  | |   |WB|WT|WC|UC] range=[0x000000002bc50000-0x000000003fffffff] (323MB)
-> >   [Reserved           |   |  |  |  |  |  |  | |   |WB|  |  |UC] range=[0x0000000040000000-0x0000000040ffffff] (16MB)
-> >   [Reserved           |   |  |  |  |  |  |  | |   |  |  |  |  ] range=[0x0000000041000000-0x00000000453fffff] (68MB)
-> >   [Memory Mapped I/O  |RUN|  |  |  |  |  |  | |   |  |  |  |UC] range=[0x0000000045400000-0x00000000cfffffff] (2220MB)
-> > 
-> > I think the EFI stub merges these consecutive entries into that single
-> > E820 entry showed above. The last region marked as EFI_MEMORY_MAPPED_IO
-> > actually covers the PCI host bridge window entirely. However, since
-> > there is corresponding E820 type for this it is simply marked as
-> > E820_TYPE_RESERVED.
+On 2020-06-30 09:37, Jon Hunter wrote:
 > 
-> Is this supposed to say "since there is *no* corresponding E820 type"?
+> On 30/06/2020 01:10, Krishna Reddy wrote:
+>> Add global/context fault hooks to allow NVIDIA SMMU implementation
+>> handle faults across multiple SMMUs.
+> 
+> Nit ... this is not just for NVIDIA, but this allows anyone to add
+> custom global/context and fault hooks. So I think that the changelog
+> should be clear that this change permits custom fault hooks and that
+> custom fault hooks are needed for the Tegra194 SMMU. You may also want
+> to say why.
+> 
+>>
+>> Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
+>> ---
+>>   drivers/iommu/arm-smmu-nvidia.c | 98 +++++++++++++++++++++++++++++++++
+>>   drivers/iommu/arm-smmu.c        | 17 +++++-
+>>   drivers/iommu/arm-smmu.h        |  3 +
+>>   3 files changed, 116 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/iommu/arm-smmu-nvidia.c b/drivers/iommu/arm-smmu-nvidia.c
+>> index 1124f0ac1823a..c9423b4199c65 100644
+>> --- a/drivers/iommu/arm-smmu-nvidia.c
+>> +++ b/drivers/iommu/arm-smmu-nvidia.c
+>> @@ -147,6 +147,102 @@ static int nvidia_smmu_reset(struct arm_smmu_device *smmu)
+>>   	return 0;
+>>   }
+>>   
+>> +static struct arm_smmu_domain *to_smmu_domain(struct iommu_domain *dom)
+>> +{
+>> +	return container_of(dom, struct arm_smmu_domain, domain);
+>> +}
+>> +
+>> +static irqreturn_t nvidia_smmu_global_fault_inst(int irq,
+>> +					       struct arm_smmu_device *smmu,
+>> +					       int inst)
+>> +{
+>> +	u32 gfsr, gfsynr0, gfsynr1, gfsynr2;
+>> +	void __iomem *gr0_base = nvidia_smmu_page(smmu, inst, 0);
+>> +
+>> +	gfsr = readl_relaxed(gr0_base + ARM_SMMU_GR0_sGFSR);
+>> +	if (!gfsr)
+>> +		return IRQ_NONE;
+>> +
+>> +	gfsynr0 = readl_relaxed(gr0_base + ARM_SMMU_GR0_sGFSYNR0);
+>> +	gfsynr1 = readl_relaxed(gr0_base + ARM_SMMU_GR0_sGFSYNR1);
+>> +	gfsynr2 = readl_relaxed(gr0_base + ARM_SMMU_GR0_sGFSYNR2);
+>> +
+>> +	dev_err_ratelimited(smmu->dev,
+>> +		"Unexpected global fault, this could be serious\n");
+>> +	dev_err_ratelimited(smmu->dev,
+>> +		"\tGFSR 0x%08x, GFSYNR0 0x%08x, GFSYNR1 0x%08x, GFSYNR2 0x%08x\n",
+>> +		gfsr, gfsynr0, gfsynr1, gfsynr2);
+>> +
+>> +	writel_relaxed(gfsr, gr0_base + ARM_SMMU_GR0_sGFSR);
+>> +	return IRQ_HANDLED;
+>> +}
+>> +
+>> +static irqreturn_t nvidia_smmu_global_fault(int irq, void *dev)
+>> +{
+>> +	int inst;
+> 
+> Should be unsigned
+> 
+>> +	irqreturn_t irq_ret = IRQ_NONE;
+>> +	struct arm_smmu_device *smmu = dev;
+>> +	struct nvidia_smmu *nvidia_smmu = to_nvidia_smmu(smmu);
+>> +
+>> +	for (inst = 0; inst < nvidia_smmu->num_inst; inst++) {
+>> +		irq_ret = nvidia_smmu_global_fault_inst(irq, smmu, inst);
+>> +		if (irq_ret == IRQ_HANDLED)
+>> +			return irq_ret;
+> 
+> Any chance there could be more than one SMMU faulting by the time we
+> service the interrupt?
 
-Yes, I think it makes more sense that way :)
+It certainly seems plausible if the interconnect is automatically 
+load-balancing requests across the SMMU instances - say a driver bug 
+caused a buffer to be unmapped too early, there could be many in-flight 
+accesses to parts of that buffer that aren't all taking the same path 
+and thus could now fault in parallel.
 
-> I guess this refers to setup_e820()?  I see the switch case there that
-> sets e820_type to E820_TYPE_RESERVED for EFI_MEMORY_MAPPED_IO.
-> 
-> I'm really not familiar with the EFI stub, but I guess that when
-> booting with EFI, we basically build our own E820 table based on the
-> EFI memory map, then use that constructed E820 table to initialize
-> iomem_resource via e820__reserve_resources()?
-> 
-> I wonder why we don't just use the EFI memory map to initialize
-> iomem_resource directly.  It seems like the EFI map -> E820 table ->
-> iomem_resource path adds complication that makes issues like this more
-> likely.
->
-> IIUC, this patch allows Linux to use EFI_MEMORY_MAPPED_IO for PCI MMIO
-> space, i.e., if "avail" is in a EFI_MEMORY_MAPPED_IO region, we don't
-> need to consider it "reserved" and we can put PCI resources there.
-> 
-> UEFI v2.8, Table 30 (doc p 160, PDF p 233) says about
-> EfiMemoryMappedIO that
-> 
->   before ExitBootServices():
-> 
->     Used by system firmware to request that a memory-mapped IO region
->     be mapped by the OS to a virtual address so it can be accessed by
->     EFI runtime services.
-> 
->   after ExitBootServices():
-> 
->     This memory is not used by the OS. All system memory-mapped IO
->     information should come from ACPI tables.
-> 
-> I would read that as basically saying that the OS must virtually map
-> EfiMemoryMappedIO for use by EFI runtime services (I don't know if
-> Linux uses any of those).
-> 
-> The "after ExitBootServices()" part doesn't seem very clear to me.
-> "This memory is not used by the OS" isn't quite stated as a
-> requirement for the OS.  And "All .. MMIO information should come from
-> ACPI tables" sounds like the OS should *ignore* this EFI map in favor
-> of ACPI.
+[ And anyone inclined to nitpick global vs. context faults, s/unmap a 
+buffer/tear down a domain/ ;) ]
 
-It is not clear to me either and I'm not 100% sure the patch here is the
-correct thing to do. I think we may need some help from x86 maintainers
-for a proper fix.
+Either way I think it would be easier to reason about if we just handled 
+these like a typical shared interrupt and always checked all the instances.
 
-> So I don't know how to fix this.  I just feel like this patch adds
-> complication to an already very messy flow.  We may have to do that,
-> but it always makes me sad ;)
+>> +	}
+>> +
+>> +	return irq_ret;
+>> +}
+>> +
+>> +static irqreturn_t nvidia_smmu_context_fault_bank(int irq,
+>> +					    struct arm_smmu_device *smmu,
+>> +					    int idx, int inst)
+>> +{
+>> +	u32 fsr, fsynr, cbfrsynra;
+>> +	unsigned long iova;
+>> +	void __iomem *gr1_base = nvidia_smmu_page(smmu, inst, 1);
+>> +	void __iomem *cb_base = nvidia_smmu_page(smmu, inst, smmu->numpage + idx);
+>> +
+>> +	fsr = readl_relaxed(cb_base + ARM_SMMU_CB_FSR);
+>> +	if (!(fsr & ARM_SMMU_FSR_FAULT))
+>> +		return IRQ_NONE;
+>> +
+>> +	fsynr = readl_relaxed(cb_base + ARM_SMMU_CB_FSYNR0);
+>> +	iova = readq_relaxed(cb_base + ARM_SMMU_CB_FAR);
+>> +	cbfrsynra = readl_relaxed(gr1_base + ARM_SMMU_GR1_CBFRSYNRA(idx));
+>> +
+>> +	dev_err_ratelimited(smmu->dev,
+>> +	"Unhandled context fault: fsr=0x%x, iova=0x%08lx, fsynr=0x%x, cbfrsynra=0x%x, cb=%d\n",
+>> +			    fsr, iova, fsynr, cbfrsynra, idx);
+>> +
+>> +	writel_relaxed(fsr, cb_base + ARM_SMMU_CB_FSR);
+>> +	return IRQ_HANDLED;
+>> +}
+>> +
+>> +static irqreturn_t nvidia_smmu_context_fault(int irq, void *dev)
+>> +{
+>> +	int inst, idx;
 > 
-> > All in all, I think we can fix this by modifying arch_remove_reservations()
-> > to check the EFI type as well and if it is EFI_MEMORY_MAPPED_IO skip the
-> > clipping in that case.
-> > 
-> > Reported-by: Benoit Grégoire <benoitg@coeus.ca>
-> > Link: https://bugzilla.kernel.org/show_bug.cgi?id=206459
-> > Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > ---
-> >  arch/x86/kernel/resource.c | 34 +++++++++++++++++++++++++++++++++-
-> >  1 file changed, 33 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/x86/kernel/resource.c b/arch/x86/kernel/resource.c
-> > index 9b9fb7882c20..c0bc9117dd7d 100644
-> > --- a/arch/x86/kernel/resource.c
-> > +++ b/arch/x86/kernel/resource.c
-> > @@ -1,4 +1,5 @@
-> >  // SPDX-License-Identifier: GPL-2.0
-> > +#include <linux/efi.h>
-> >  #include <linux/ioport.h>
-> >  #include <asm/e820/api.h>
-> >  
-> > @@ -36,6 +37,36 @@ static void remove_e820_regions(struct resource *avail)
-> >  	}
-> >  }
-> >  
-> > +#ifdef CONFIG_EFI
-> > +static bool efi_mmio_mem(const struct resource *avail)
-> > +{
-> > +	resource_size_t start, end;
-> > +	efi_memory_desc_t desc;
-> > +
-> > +	if (!efi_enabled(EFI_MEMMAP) ||
-> > +	    efi_mem_desc_lookup(avail->start, &desc))
-> > +		return false;
-> > +
-> > +	start = desc.phys_addr;
-> > +	end = desc.phys_addr + (desc.num_pages << EFI_PAGE_SHIFT) - 1;
-> > +
-> > +	/*
-> > +	 * No need to clip the resource if it is fully contained in an
-> > +	 * EFI memory mapped region.
-> > +	 */
-> > +	if (avail->start >= start && avail->end <= end &&
-> > +	    desc.type == EFI_MEMORY_MAPPED_IO)
-> > +		return true;
-> > +
-> > +	return false;
-> > +}
-> > +#else
-> > +static inline bool efi_mmio_mem(const struct resource *avail)
-> > +{
-> > +	return false;
-> > +}
-> > +#endif
-> > +
-> >  void arch_remove_reservations(struct resource *avail)
-> >  {
-> >  	/*
-> > @@ -46,6 +77,7 @@ void arch_remove_reservations(struct resource *avail)
-> >  	if (avail->flags & IORESOURCE_MEM) {
-> >  		resource_clip(avail, BIOS_ROM_BASE, BIOS_ROM_END);
-> >  
-> > -		remove_e820_regions(avail);
-> > +		if (!efi_mmio_mem(avail))
-> > +			remove_e820_regions(avail);
-> >  	}
-> >  }
-> > -- 
-> > 2.25.0
-> > 
+> Unsigned
+> 
+>> +	irqreturn_t irq_ret = IRQ_NONE;
+>> +	struct iommu_domain *domain = dev;
+>> +	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
+>> +	struct arm_smmu_device *smmu = smmu_domain->smmu;
+>> +
+>> +	for (inst = 0; inst < to_nvidia_smmu(smmu)->num_inst; inst++) {
+>> +		/*
+>> +		 * Interrupt line shared between all context faults.
+>> +		 * Check for faults across all contexts.
+>> +		 */
+>> +		for (idx = 0; idx < smmu->num_context_banks; idx++) {
+>> +			irq_ret = nvidia_smmu_context_fault_bank(irq, smmu,
+>> +								 idx, inst);
+>> +
+>> +			if (irq_ret == IRQ_HANDLED)
+>> +				return irq_ret;
+> 
+> Any reason why we don't check all banks?
+
+As above, we certainly shouldn't bail out without checking the bank for 
+the offending domain across all of its instances, and I guess the way 
+this works means that we would have to iterate all the banks to achieve 
+that.
+
+>> +		}
+>> +	}
+>> +
+>> +	return irq_ret;
+>> +}
+>> +
+>>   static const struct arm_smmu_impl nvidia_smmu_impl = {
+>>   	.read_reg = nvidia_smmu_read_reg,
+>>   	.write_reg = nvidia_smmu_write_reg,
+>> @@ -154,6 +250,8 @@ static const struct arm_smmu_impl nvidia_smmu_impl = {
+>>   	.write_reg64 = nvidia_smmu_write_reg64,
+>>   	.reset = nvidia_smmu_reset,
+>>   	.tlb_sync = nvidia_smmu_tlb_sync,
+>> +	.global_fault = nvidia_smmu_global_fault,
+>> +	.context_fault = nvidia_smmu_context_fault,
+>>   };
+>>   
+>>   struct arm_smmu_device *nvidia_smmu_impl_init(struct arm_smmu_device *smmu)
+>> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+>> index 243bc4cb2705b..3bb0aba15a356 100644
+>> --- a/drivers/iommu/arm-smmu.c
+>> +++ b/drivers/iommu/arm-smmu.c
+>> @@ -673,6 +673,7 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+>>   	enum io_pgtable_fmt fmt;
+>>   	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
+>>   	struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
+>> +	irqreturn_t (*context_fault)(int irq, void *dev);
+>>   
+>>   	mutex_lock(&smmu_domain->init_mutex);
+>>   	if (smmu_domain->smmu)
+>> @@ -835,7 +836,13 @@ static int arm_smmu_init_domain_context(struct iommu_domain *domain,
+>>   	 * handler seeing a half-initialised domain state.
+>>   	 */
+>>   	irq = smmu->irqs[smmu->num_global_irqs + cfg->irptndx];
+>> -	ret = devm_request_irq(smmu->dev, irq, arm_smmu_context_fault,
+>> +
+>> +	if (smmu->impl && smmu->impl->context_fault)
+>> +		context_fault = smmu->impl->context_fault;
+>> +	else
+>> +		context_fault = arm_smmu_context_fault;
+> 
+> Why not see the default smmu->impl->context_fault to
+> arm_smmu_context_fault in arm_smmu_impl_init() and then allow the
+> various implementations to override as necessary? Then you can get rid
+> of this context_fault variable here and just use
+> smmu->impl->context_fault below.
+
+Because the default smmu->impl is NULL. And as I've said before, NAK to 
+forcing the common case to allocate a set of "quirks" purely to override 
+the default IRQ handler with the default IRQ handler ;)
+
+Robin.
+
+>> +
+>> +	ret = devm_request_irq(smmu->dev, irq, context_fault,
+>>   			       IRQF_SHARED, "arm-smmu-context-fault", domain);
+>>   	if (ret < 0) {
+>>   		dev_err(smmu->dev, "failed to request context IRQ %d (%u)\n",
+>> @@ -2107,6 +2114,7 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+>>   	struct arm_smmu_device *smmu;
+>>   	struct device *dev = &pdev->dev;
+>>   	int num_irqs, i, err;
+>> +	irqreturn_t (*global_fault)(int irq, void *dev);
+>>   
+>>   	smmu = devm_kzalloc(dev, sizeof(*smmu), GFP_KERNEL);
+>>   	if (!smmu) {
+>> @@ -2193,9 +2201,14 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+>>   		smmu->num_context_irqs = smmu->num_context_banks;
+>>   	}
+>>   
+>> +	if (smmu->impl && smmu->impl->global_fault)
+>> +		global_fault = smmu->impl->global_fault;
+>> +	else
+>> +		global_fault = arm_smmu_global_fault;
+>> +
+> 
+> Same here.
+> 
+> Jon
+> 
