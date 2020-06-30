@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8CEC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5056DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:26:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4A20320672
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:26:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23C8020672
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:26:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593498411;
-	bh=v+fJP3zpnLdDqpCxjw9RsnC9MqdLnPMCDMn2cVHwDew=;
+	s=default; t=1593498414;
+	bh=wGa+qBV2V1GP8GCaDKNfsF9c/pokG/wFsofWOOaD/1A=;
 	h=From:Cc:Subject:Date:In-Reply-To:References:To:List-ID:From;
-	b=vLdEypcl7EVPwI1fgjI1vWs+9lQZfwq58hchA9YfAhzZAZXXihr9RMOtkxSxa+FcS
-	 gnopiDqC8o6MDuDlPe68kfRw8o1pk9VWlntJmAlJF1xQGlkcmIylyxv8bubrVYjq71
-	 +cc9YkLyFoxUisARoQoa/OlUeLonFuGi39XbcQ0Q=
+	b=gaSlega+d21zGkcxiCKokK/cY3cmKD82VhLCtcv0dsXvC1IjuD5MyYKgUqQh11ZnN
+	 8Dz/EDm5vid1JAMgxwMQRlNTmJ8qWjrwNXxXFEE3eAuv8wNcWTFh8xTLGtaMQn5ZUU
+	 X0rG7ihYcIl5w9DKovBaRDtO4lgLr2fsWMLc/PfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730110AbgF3G0u (ORCPT
+        id S1730123AbgF3G0w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 02:26:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55704 "EHLO mail.kernel.org"
+        Tue, 30 Jun 2020 02:26:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730047AbgF3G0q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729984AbgF3G0q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 30 Jun 2020 02:26:46 -0400
 Received: from mail.kernel.org (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA2BB207D0;
+        by mail.kernel.org (Postfix) with ESMTPSA id 897BC20759;
         Tue, 30 Jun 2020 06:26:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1593498405;
-        bh=v+fJP3zpnLdDqpCxjw9RsnC9MqdLnPMCDMn2cVHwDew=;
+        bh=wGa+qBV2V1GP8GCaDKNfsF9c/pokG/wFsofWOOaD/1A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SZPsWt5gjjvoK9c1Tl4sFnb0CvJbUqtQBuhZnt9YboBXVABfiz8NhcZAg780i/1vG
-         bIt9qmj+jxelZBJQSLa7bPmy7OIpLuoupELcpfbCqy+gjHXXk1rNPY8nPGM7jXPuDL
-         TxvNHMdzmauWtDcBImUaEQmRoF7P+Soy0Ofxsxz4=
+        b=bfcupfYZOFR260roxhZ7vOF60m/dlnmaRVEmulDm2P4M+V+wdMpsjH9tjvNIJF8Og
+         PVz5lcHBK/6zWf0UJL2Y82WUE7kpDjyVJlVpJCpm81pLJrRlBIf3UaE3K/Shj2cw+M
+         ZUanRschzU60HYohVs/Cb2O6TO57CFE9oassZEFY=
 Received: from mchehab by mail.kernel.org with local (Exim 4.93)
         (envelope-from <mchehab@kernel.org>)
-        id 1jq9j9-008Wb2-Ri; Tue, 30 Jun 2020 08:26:43 +0200
+        id 1jq9j9-008Wap-N9; Tue, 30 Jun 2020 08:26:43 +0200
 From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
         Maxim Levitsky <mlevitsk@redhat.com>,
         Masahiro Yamada <masahiroy@kernel.org>,
         linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 4/7] kconfig: qconf: re-implement setSelected()
-Date:   Tue, 30 Jun 2020 08:26:38 +0200
-Message-Id: <872efc941f9780bb9e2ee919437be3babbc38da8.1593498345.git.mchehab+huawei@kernel.org>
+Subject: [PATCH v3 1/7] kconfig: qconf: cleanup includes
+Date:   Tue, 30 Jun 2020 08:26:35 +0200
+Message-Id: <c138cd9af908952a85a0fc0f0ff30c57b0e547ba.1593498345.git.mchehab+huawei@kernel.org>
 X-Mailer: git-send-email 2.26.2
 In-Reply-To: <cover.1593498345.git.mchehab+huawei@kernel.org>
 References: <cover.1593498345.git.mchehab+huawei@kernel.org>
@@ -61,98 +61,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The default implementation for setSelected() at QTreeWidgetItem
-allows multiple items to be selected.
+The usage of c-like include is deprecated on modern Qt
+versions. Use the c++ style includes.
 
-Well, this should never be possible for the configItem lists.
-
-So, implement a function that will automatically clean any
-previous selection. This simplifies the logic somewhat, while
-making the selection logic to be applied atomically, avoiding
-future issues on that.
+While here, remove uneeded and redundant ones, sorting
+them on alphabetic order.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 ---
- scripts/kconfig/qconf.cc | 15 ++++-----------
- scripts/kconfig/qconf.h  | 14 ++++++++++----
- 2 files changed, 14 insertions(+), 15 deletions(-)
+ scripts/kconfig/qconf.cc | 27 +++++++++------------------
+ scripts/kconfig/qconf.h  | 14 +++++++-------
+ 2 files changed, 16 insertions(+), 25 deletions(-)
 
 diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
-index 1fddbdfa58b4..29ca4823cfb9 100644
+index c0ac8f7b5f1a..0e06afa08908 100644
 --- a/scripts/kconfig/qconf.cc
 +++ b/scripts/kconfig/qconf.cc
-@@ -537,7 +537,7 @@ void ConfigList::setRootMenu(struct menu *menu)
- 	rootEntry = menu;
- 	updateListAll();
- 	if (currentItem()) {
--		currentItem()->setSelected(hasFocus());
-+		setSelected(currentItem(), hasFocus());
- 		scrollToItem(currentItem());
- 	}
- }
-@@ -865,7 +865,7 @@ void ConfigList::focusInEvent(QFocusEvent *e)
+@@ -4,27 +4,18 @@
+  * Copyright (C) 2015 Boris Barbulovski <bbarbulovski@gmail.com>
+  */
  
- 	ConfigItem* item = (ConfigItem *)currentItem();
- 	if (item) {
--		item->setSelected(true);
-+		setSelected(item, true);
- 		menu = item->menu;
- 	}
- 	emit gotFocus(menu);
-@@ -1711,17 +1711,10 @@ void ConfigMainWindow::setMenuLink(struct menu *menu)
- 			if (!parent)
- 				return;
- 
--			/* Clear an already-selected item */
--			if (!configList->selectedItems().isEmpty()) {
--				item = (ConfigItem*)configList->selectedItems().first();
--				if (item)
--					item->setSelected(false);
--			}
+-#include <qglobal.h>
 -
- 			/* Select the config view */
- 			item = configList->findConfigItem(parent);
- 			if (item) {
--				item->setSelected(true);
-+				configList->setSelected(item, true);
- 				configList->scrollToItem(item);
- 			}
+-#include <QMainWindow>
+-#include <QList>
+-#include <qtextbrowser.h>
+ #include <QAction>
++#include <QApplication>
++#include <QCloseEvent>
++#include <QDesktopWidget>
+ #include <QFileDialog>
++#include <QLabel>
++#include <QLayout>
++#include <QList>
+ #include <QMenu>
+-
+-#include <qapplication.h>
+-#include <qdesktopwidget.h>
+-#include <qtoolbar.h>
+-#include <qlayout.h>
+-#include <qsplitter.h>
+-#include <qlineedit.h>
+-#include <qlabel.h>
+-#include <qpushbutton.h>
+-#include <qmenubar.h>
+-#include <qmessagebox.h>
+-#include <qregexp.h>
+-#include <qevent.h>
++#include <QMenuBar>
++#include <QMessageBox>
++#include <QToolBar>
  
-@@ -1740,7 +1733,7 @@ void ConfigMainWindow::setMenuLink(struct menu *menu)
- 	if (list) {
- 		item = list->findConfigItem(menu);
- 		if (item) {
--			item->setSelected(true);
-+			list->setSelected(item, true);
- 			list->scrollToItem(item);
- 			list->setFocus();
- 		}
+ #include <stdlib.h>
+ 
 diff --git a/scripts/kconfig/qconf.h b/scripts/kconfig/qconf.h
-index a193137f2314..fb9e9729266f 100644
+index c879d79ce817..d913a02967ae 100644
 --- a/scripts/kconfig/qconf.h
 +++ b/scripts/kconfig/qconf.h
-@@ -45,11 +45,17 @@ class ConfigList : public QTreeWidget {
- public:
- 	ConfigList(ConfigView* p, const char *name = 0);
- 	void reinit(void);
--	ConfigView* parent(void) const
--	{
--		return (ConfigView*)Parent::parent();
--	}
- 	ConfigItem* findConfigItem(struct menu *);
-+	ConfigView* parent(void) const
-+	{
-+		return (ConfigView*)Parent::parent();
-+	}
-+	void setSelected(QTreeWidgetItem *item, bool enable) {
-+		for (int i = 0; i < selectedItems().size(); i++)
-+			selectedItems().at(i)->setSelected(false);
-+
-+		item->setSelected(enable);
-+	}
+@@ -3,17 +3,17 @@
+  * Copyright (C) 2002 Roman Zippel <zippel@linux-m68k.org>
+  */
  
- protected:
- 	void keyPressEvent(QKeyEvent *e);
+-#include <QTextBrowser>
+-#include <QTreeWidget>
+-#include <QMainWindow>
++#include <QCheckBox>
++#include <QDialog>
+ #include <QHeaderView>
+-#include <qsettings.h>
++#include <QLineEdit>
++#include <QMainWindow>
+ #include <QPushButton>
+ #include <QSettings>
+-#include <QLineEdit>
+ #include <QSplitter>
+-#include <QCheckBox>
+-#include <QDialog>
++#include <QTextBrowser>
++#include <QTreeWidget>
++
+ #include "expr.h"
+ 
+ class ConfigView;
 -- 
 2.26.2
 
