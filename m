@@ -2,74 +2,77 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C36C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:47:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B95E6C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C71A020775
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:47:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DD1F20775
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:48:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rc+Ca3tf"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RW58M7OS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730467AbgF3GrA (ORCPT
+        id S1730487AbgF3Gs2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 02:47:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38702 "EHLO
+        Tue, 30 Jun 2020 02:48:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730349AbgF3GrA (ORCPT
+        with ESMTP id S1730386AbgF3Gs1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 02:47:00 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA227C03E979
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 23:46:59 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id s1so21143083ljo.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 23:46:59 -0700 (PDT)
+        Tue, 30 Jun 2020 02:48:27 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FD59C03E97A
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 23:48:27 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id f18so10863043wrs.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 23:48:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=lmFRI05KEQyW9X/3WyeY71+JG49+1sxgawOGTBE7aEk=;
-        b=rc+Ca3tf00wqSX64JeEakDqEJSh8rw+48bpff6CEjnnFqAMBSNnoUtn9eER6VNGyhd
-         HitKxOZC3EYDADkWjm6WJtzT81JNvAFA5JUoeLS7OWz4QtS7qBpjjhJHx3MES6g9PziR
-         fU5XzGduGXYponHky45n/mQrrDf2+gANjH5fszKueSkmuzMyMzZfehHAVo9Cte1cKYbR
-         tGlj76d9zM7U12rWsRJrxPa4s7jdKkz8iOHzo2J9hnbAvMop9yDzUBLq0S2n7BkEFD2l
-         qNx+3lyC4IRjRPWhCKzv3BiwZin/TJr3Y3Cm8Sk1FsYI3dwXrHzuRWx1xanD/X4hRcXO
-         jGsw==
+        bh=XLMDo1UsxYJMELotpDQ5hxq+PK7DJHzcb1+KFvP8aG0=;
+        b=RW58M7OS7OlArVG0kvfUEakS2s5DQF2UyPiSnvoqoWFzkI9MOXX2LqKxVSAex0N/pd
+         YSwfgrU3vEo3/E1r2s0cCuclbQWayqu6bo1pDLXfV10T/BTp69V/js6AY0dVpbZZb+FX
+         +hr6o9+cjzIchZ1TF3glX0unPfcIQPTX6i/Be5GOFmxe+XP8YhbCpDwH/kQgdj9NQXMA
+         18zwOSPbADnMs4HbkNHkuY0xmLnqV1dVUkNeJD+rdHQYZq5C3fCmYvFmf9WOskxO56xJ
+         ondtmjKbGKkc5SOb/sJnijswm2WRDh3K8xA+EuWG7uAVGTDeWPqkLlKv9V9JdX6x5cfu
+         e7ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=lmFRI05KEQyW9X/3WyeY71+JG49+1sxgawOGTBE7aEk=;
-        b=E2ylkYFGiaPilJOm5eXX2CykMGE6JX7ScYX0YNc7OI5bsgLQAH6swi/cw/w1OizGvT
-         dNOaE/2jSOt+nOJ3k8CD/Kq6dlT3rXeGu1hI2KDYedioezBmt7K7kjs1iLg6+F6I5KyK
-         KUkJqXARa8d5etMsKAvZ6u5YOnVol5ZARlRJAxWf43jodWidQnCqwuIW2tKHhPvQSXDX
-         GweuYT36RClLlKnYCmkuXKlj2zYEOe41NZoumnN4Oo0zjODCh3WP64bBuzEmFMLCFLyS
-         UGepZ9+JEM7FD6CsbIo5yCuJgS26J7Be9O3u5CFzlTj6yBHHzmYs+u2VonwDJzTwwC83
-         4LKA==
-X-Gm-Message-State: AOAM532OlpycZOisGMou7ytxulworjJqZgf4gLC49A2wwwXeZHIKPjm5
-        klKaY8zitJ9O1tTE+T0vkQ+iYylqz/VT9r5X4mpDRA==
-X-Google-Smtp-Source: ABdhPJyhyyz8XQcU1a6vCXE6S0n+3/i6YMdUcFrktR33RNv5Qte8vv6ZFQLo8+tPN3qccrrR+wMi/GbT336jJozFZp0=
-X-Received: by 2002:a2e:3602:: with SMTP id d2mr10122914lja.152.1593499618074;
- Mon, 29 Jun 2020 23:46:58 -0700 (PDT)
+        bh=XLMDo1UsxYJMELotpDQ5hxq+PK7DJHzcb1+KFvP8aG0=;
+        b=ACITYfxpMykb5sFwnunY+QJ34Wocj7f1qTtI6yEWnX/xuHqeP7iGTKxks6kubvafSn
+         f+W6Ohg9th+rLl5Vzpg2wuyQK5x4Tm+mIs8ueaWafTeUNe6OvFTjTlDGWg4Rr9MTjExc
+         cIgSt8RvaOJzFHtejVnND54mXXNSSkJJZVQsx6Me6GfnnSqC4aRdUyrIe8q1gDTylasT
+         Q3h//lbURuVDh4Tbccmd8ps8FNpDuUyMMZlIg+/SybsV8lSW2pBP9Z6r/phQtR0KtYJC
+         H3E1MAvxZLe4Z29oJ1CZg1GH9Z1CtqqYUDVCEwjk+9yAXLvwQ+cIg69yHh773ENipJyk
+         5qaw==
+X-Gm-Message-State: AOAM530bQSZl8iIqW9jNQSSqZjlyUoQmsZyMtLZJPoL26lcHoqbAYlkY
+        wtxfnRd/qVrMdzl3gqRlB9YekVImYtQWVgedEJ078w==
+X-Google-Smtp-Source: ABdhPJxiGj2ce46YgeKfjo94LZhKWI+q485fKc5qIAWiIvNhlJ340b0LY5hRzmpr5wIz0Dofd/lpkoZQ/Feh/YDnlNA=
+X-Received: by 2002:adf:828b:: with SMTP id 11mr21950031wrc.58.1593499705514;
+ Mon, 29 Jun 2020 23:48:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200630032014.22956-1-andy.tang@nxp.com> <CAHLCerO3B4Z67KP8VaF957Jkid21gLvzhS49gNeqUC+6muPkjA@mail.gmail.com>
- <DBBPR04MB609085CD69E4CCBDD49CCF66F36F0@DBBPR04MB6090.eurprd04.prod.outlook.com>
- <CAP245DV-_+5Ht=yP9Mnzb2vUqXDJSEeBPfbNh48mEt62PmBeWA@mail.gmail.com> <DBBPR04MB60907EC06EAABC949DD42E3EF36F0@DBBPR04MB6090.eurprd04.prod.outlook.com>
-In-Reply-To: <DBBPR04MB60907EC06EAABC949DD42E3EF36F0@DBBPR04MB6090.eurprd04.prod.outlook.com>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Tue, 30 Jun 2020 12:16:46 +0530
-Message-ID: <CAP245DUzQBmKvg9oit8StKyfvp==eVZZ7dh0DUAwKkQnjSL_yw@mail.gmail.com>
-Subject: Re: [EXT] Re: [PATCH 1/2] arm64: dts: ls1088a: add more thermal zone support
-To:     Andy Tang <andy.tang@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        lakml <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20200627105437.453053-1-apusaka@google.com> <20200627185320.RFC.v1.1.Icea550bb064a24b89f2217cf19e35b4480a31afd@changeid>
+ <91CFE951-262A-4E83-8550-25445AE84B5A@holtmann.org>
+In-Reply-To: <91CFE951-262A-4E83-8550-25445AE84B5A@holtmann.org>
+From:   Archie Pusaka <apusaka@google.com>
+Date:   Tue, 30 Jun 2020 14:48:14 +0800
+Message-ID: <CAJQfnxFSfbUbPLVC-be41TqNXzr_6hLq2z=u521HL+BqxLHn_Q@mail.gmail.com>
+Subject: Re: [RFC PATCH v1 1/2] Bluetooth: queue ACL packets if no handle is found
+To:     Marcel Holtmann <marcel@holtmann.org>
+Cc:     linux-bluetooth <linux-bluetooth@vger.kernel.org>,
+        chromeos-bluetooth-upstreaming 
+        <chromeos-bluetooth-upstreaming@chromium.org>,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,163 +80,321 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 12:07 PM Andy Tang <andy.tang@nxp.com> wrote:
+Hi Marcel,
+
+On Mon, 29 Jun 2020 at 14:40, Marcel Holtmann <marcel@holtmann.org> wrote:
+>
+> Hi Archie,
+>
+> > There is a possibility that an ACL packet is received before we
+> > receive the HCI connect event for the corresponding handle. If this
+> > happens, we discard the ACL packet.
+> >
+> > Rather than just ignoring them, this patch provides a queue for
+> > incoming ACL packet without a handle. The queue is processed when
+> > receiving a HCI connection event. If 2 seconds elapsed without
+> > receiving the HCI connection event, assume something bad happened
+> > and discard the queued packet.
+> >
+> > Signed-off-by: Archie Pusaka <apusaka@chromium.org>
+> > Reviewed-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+>
+> so two things up front. I want to hide this behind a HCI_QUIRK_OUT_OF_ORD=
+ER_ACL that a transport driver has to set first. Frankly if this kind of ou=
+t-of-order happens on UART or SDIO transports, then something is obviously =
+going wrong. I have no plan to fix up after a fully serialized transport.
+>
+> Secondly, if a transport sets HCI_QUIRK_OUT_OF_ORDER_ACL, then I want thi=
+s off by default. You can enable it via an experimental setting. The reason=
+ here is that we have to make it really hard and fail as often as possible =
+so that hardware manufactures and spec writers realize that something is fu=
+ndamentally broken here.
+>
+> I have no problem in running the code and complaining loudly in case the =
+quirk has been set. Just injecting the packets can only happen if bluetooth=
+d explicitly enabled it.
+
+Got it.
+
 >
 >
+> >
+> > ---
+> >
+> > include/net/bluetooth/hci_core.h |  8 +++
+> > net/bluetooth/hci_core.c         | 84 +++++++++++++++++++++++++++++---
+> > net/bluetooth/hci_event.c        |  2 +
+> > 3 files changed, 88 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/h=
+ci_core.h
+> > index 836dc997ff94..b69ecdd0d15a 100644
+> > --- a/include/net/bluetooth/hci_core.h
+> > +++ b/include/net/bluetooth/hci_core.h
+> > @@ -270,6 +270,9 @@ struct adv_monitor {
+> > /* Default authenticated payload timeout 30s */
+> > #define DEFAULT_AUTH_PAYLOAD_TIMEOUT   0x0bb8
+> >
+> > +/* Time to keep ACL packets without a corresponding handle queued (2s)=
+ */
+> > +#define PENDING_ACL_TIMEOUT          msecs_to_jiffies(2000)
+> > +
 >
-> > -----Original Message-----
-> > From: Amit Kucheria <amit.kucheria@linaro.org>
-> > Sent: 2020=E5=B9=B46=E6=9C=8830=E6=97=A5 13:37
-> > To: Andy Tang <andy.tang@nxp.com>
-> > Cc: Shawn Guo <shawnguo@kernel.org>; Leo Li <leoyang.li@nxp.com>; Rob
-> > Herring <robh+dt@kernel.org>; lakml <linux-arm-kernel@lists.infradead.o=
-rg>;
-> > open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
-> > <devicetree@vger.kernel.org>; LKML <linux-kernel@vger.kernel.org>
-> > Subject: Re: [EXT] Re: [PATCH 1/2] arm64: dts: ls1088a: add more therma=
-l
-> > zone support
-> >
-> > Caution: EXT Email
-> >
-> > On Tue, Jun 30, 2020 at 10:58 AM Andy Tang <andy.tang@nxp.com> wrote:
-> > >
-> > >
-> > >
-> > > > -----Original Message-----
-> > > > From: Amit Kucheria <amit.kucheria@linaro.org>
-> > > > Sent: 2020=E5=B9=B46=E6=9C=8830=E6=97=A5 13:12
-> > > > To: Andy Tang <andy.tang@nxp.com>
-> > > > Cc: Shawn Guo <shawnguo@kernel.org>; Leo Li <leoyang.li@nxp.com>;
-> > > > Rob Herring <robh+dt@kernel.org>; lakml
-> > > > <linux-arm-kernel@lists.infradead.org>;
-> > > > open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
-> > > > <devicetree@vger.kernel.org>; LKML <linux-kernel@vger.kernel.org>
-> > > > Subject: [EXT] Re: [PATCH 1/2] arm64: dts: ls1088a: add more therma=
-l
-> > > > zone support
-> > > >
-> > > > Caution: EXT Email
-> > > >
-> > > > On Tue, Jun 30, 2020 at 8:56 AM <andy.tang@nxp.com> wrote:
-> > > > >
-> > > > > From: Yuantian Tang <andy.tang@nxp.com>
-> > > > >
-> > > > > There are 2 thermal zones in ls1088a soc. Add the other thermal
-> > > > > zone node to enable it.
-> > > > > Also update the values in calibration table to make the
-> > > > > temperatures monitored more precise.
-> > > > >
-> > > > > Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
-> > > > > ---
-> > > > >  .../arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 100
-> > > > > +++++++++++-------
-> > > > >  1 file changed, 62 insertions(+), 38 deletions(-)
-> > > > >
-> > > > > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> > > > > b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> > > > > index 36a799554620..ccbbc23e6c85 100644
-> > > > > --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> > > > > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> > > > > @@ -129,19 +129,19 @@
-> > > > >         };
-> > > > >
-> > > > >         thermal-zones {
-> > > > > -               cpu_thermal: cpu-thermal {
-> > > > > +               core-cluster {
-> > > > >                         polling-delay-passive =3D <1000>;
-> > > > >                         polling-delay =3D <5000>;
-> > > > >                         thermal-sensors =3D <&tmu 0>;
-> > > > >
-> > > > >                         trips {
-> > > > > -                               cpu_alert: cpu-alert {
-> > > > > +                               core_cluster_alert:
-> > > > core-cluster-alert
-> > > > > + {
-> > > > >                                         temperature =3D
-> > <85000>;
-> > > > >                                         hysteresis =3D <2000>;
-> > > > >                                         type =3D "passive";
-> > > > >                                 };
-> > > > >
-> > > > > -                               cpu_crit: cpu-crit {
-> > > > > +                               core_cluster_crit:
-> > > > > + core-cluster-crit {
-> > > > >                                         temperature =3D
-> > <95000>;
-> > > > >                                         hysteresis =3D <2000>;
-> > > > >                                         type =3D "critical"; @@
-> > > > -150,7
-> > > > > +150,7 @@
-> > > > >
-> > > > >                         cooling-maps {
-> > > > >                                 map0 {
-> > > > > -                                       trip =3D <&cpu_alert>;
-> > > > > +                                       trip =3D
-> > > > <&core_cluster_alert>;
-> > > > >                                         cooling-device =3D
-> > > > >                                                 <&cpu0
-> > > > THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > > > >                                                 <&cpu1
-> > > > > THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, @@ -163,6 +163,26 @@
-> > > > >                                 };
-> > > > >                         };
-> > > > >                 };
-> > > > > +
-> > > > > +               soc {
-> > > > > +                       polling-delay-passive =3D <1000>;
-> > > > > +                       polling-delay =3D <5000>;
-> > > > > +                       thermal-sensors =3D <&tmu 1>;
-> > > > > +
-> > > > > +                       trips {
-> > > > > +                               soc-alert {
-> > > > > +                                       temperature =3D
-> > <85000>;
-> > > > > +                                       hysteresis =3D <2000>;
-> > > > > +                                       type =3D "passive";
-> > > > > +                               };
-> > > > > +
-> > > > > +                               soc-crit {
-> > > > > +                                       temperature =3D
-> > <95000>;
-> > > > > +                                       hysteresis =3D <2000>;
-> > > > > +                                       type =3D "critical";
-> > > > > +                               };
-> > > > > +                       };
-> > > > > +               };
-> > > >
-> > > > You should also add a cooling-maps section for this thermal zone
-> > > > given that it has a passive trip type. Otherwise there is no use fo=
-r a
-> > passive trip type.
-> > > It is better to have a cooling device. But there is only one cooling
-> > > device on this platform which is used by core-cluster. So there is no=
- extra
-> > cooling device for it.
-> > > This zone can take action when critical temp is reached. So it is sti=
-ll useful.
-> > > What do you suggest?
-> >
-> > If the action taken by the core-cluster cooling-maps is the only one th=
-at can
-> > be taken, I suggest getting rid of the the soc-alert passive trip compl=
-etely. It is
-> > not of any use.
-> >
-> > If there is a chance that your soc thermal-zone can heat up before your
-> > cpu-cluster zone (unlikely), you could use the same cooling device (cpu=
-0, cpu1)
-> > for soc thermal zone too.
-> Thanks for your suggestion.
-> I was told that a cooling-maps can not be applied to more than one therma=
-l zone.
-> So the only option is to remove the alert trip.
+> Do we have some btmon traces with timestamps. Isn=E2=80=99t a second enou=
+gh? Actually 2 seconds is an awful long time.
 
-The cooling-map is unique to the thermal-zone. But the cooling devices
-may be reused.
+When this happens in the test lab, the HCI connect event is about
+0.002 second behind the first ACL packet. We can change this if
+required.
 
-See arch/arm64/boot/dts/qcom/sdm845.dtsi for an example.
+>
+> > struct amp_assoc {
+> >       __u16   len;
+> >       __u16   offset;
+> > @@ -538,6 +541,9 @@ struct hci_dev {
+> >       struct delayed_work     rpa_expired;
+> >       bdaddr_t                rpa;
+> >
+> > +     struct delayed_work     remove_pending_acl;
+> > +     struct sk_buff_head     pending_acl_q;
+> > +
+>
+> can we name this ooo_q and move it to the other queues in this struct. Un=
+less we want to add a Kconfig option around it, we don=E2=80=99t need to ke=
+ep it here.
 
-So, in your case, you would have a cooling-map section that ties the
-soc-alert trip to the same cooling devices as in cpu-cluster cooling
-map.
+Ack.
+
+>
+> > #if IS_ENABLED(CONFIG_BT_LEDS)
+> >       struct led_trigger      *power_led;
+> > #endif
+> > @@ -1773,6 +1779,8 @@ void hci_le_start_enc(struct hci_conn *conn, __le=
+16 ediv, __le64 rand,
+> > void hci_copy_identity_address(struct hci_dev *hdev, bdaddr_t *bdaddr,
+> >                              u8 *bdaddr_type);
+> >
+> > +void hci_process_pending_acl(struct hci_dev *hdev, struct hci_conn *co=
+nn);
+> > +
+> > #define SCO_AIRMODE_MASK       0x0003
+> > #define SCO_AIRMODE_CVSD       0x0000
+> > #define SCO_AIRMODE_TRANSP     0x0003
+> > diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+> > index 7959b851cc63..30780242c267 100644
+> > --- a/net/bluetooth/hci_core.c
+> > +++ b/net/bluetooth/hci_core.c
+> > @@ -1786,6 +1786,7 @@ int hci_dev_do_close(struct hci_dev *hdev)
+> >       skb_queue_purge(&hdev->rx_q);
+> >       skb_queue_purge(&hdev->cmd_q);
+> >       skb_queue_purge(&hdev->raw_q);
+> > +     skb_queue_purge(&hdev->pending_acl_q);
+> >
+> >       /* Drop last sent command */
+> >       if (hdev->sent_cmd) {
+> > @@ -3518,6 +3519,78 @@ static int hci_suspend_notifier(struct notifier_=
+block *nb, unsigned long action,
+> >       return NOTIFY_STOP;
+> > }
+> >
+> > +static void hci_add_pending_acl(struct hci_dev *hdev, struct sk_buff *=
+skb)
+> > +{
+> > +     skb_queue_tail(&hdev->pending_acl_q, skb);
+> > +
+> > +     queue_delayed_work(hdev->workqueue, &hdev->remove_pending_acl,
+> > +                        PENDING_ACL_TIMEOUT);
+> > +}
+> > +
+> > +void hci_process_pending_acl(struct hci_dev *hdev, struct hci_conn *co=
+nn)
+> > +{
+> > +     struct sk_buff *skb, *tmp;
+> > +     struct hci_acl_hdr *hdr;
+> > +     u16 handle, flags;
+> > +     bool reset_timer =3D false;
+> > +
+> > +     skb_queue_walk_safe(&hdev->pending_acl_q, skb, tmp) {
+> > +             hdr =3D (struct hci_acl_hdr *)skb->data;
+> > +             handle =3D __le16_to_cpu(hdr->handle);
+> > +             flags  =3D hci_flags(handle);
+> > +             handle =3D hci_handle(handle);
+> > +
+> > +             if (handle !=3D conn->handle)
+> > +                     continue;
+> > +
+> > +             __skb_unlink(skb, &hdev->pending_acl_q);
+> > +             skb_pull(skb, HCI_ACL_HDR_SIZE);
+> > +
+> > +             l2cap_recv_acldata(conn, skb, flags);
+> > +             reset_timer =3D true;
+> > +     }
+> > +
+> > +     if (reset_timer)
+> > +             mod_delayed_work(hdev->workqueue, &hdev->remove_pending_a=
+cl,
+> > +                              PENDING_ACL_TIMEOUT);
+> > +}
+> > +
+> > +/* Remove the oldest pending ACL, and all pending ACLs with the same h=
+andle */
+> > +static void hci_remove_pending_acl(struct work_struct *work)
+> > +{
+> > +     struct hci_dev *hdev;
+> > +     struct sk_buff *skb, *tmp;
+> > +     struct hci_acl_hdr *hdr;
+> > +     u16 handle, oldest_handle;
+> > +
+> > +     hdev =3D container_of(work, struct hci_dev, remove_pending_acl.wo=
+rk);
+> > +     skb =3D skb_dequeue(&hdev->pending_acl_q);
+> > +
+> > +     if (!skb)
+> > +             return;
+> > +
+> > +     hdr =3D (struct hci_acl_hdr *)skb->data;
+> > +     oldest_handle =3D hci_handle(__le16_to_cpu(hdr->handle));
+> > +     kfree_skb(skb);
+> > +
+> > +     bt_dev_err(hdev, "ACL packet for unknown connection handle %d",
+> > +                oldest_handle);
+> > +
+> > +     skb_queue_walk_safe(&hdev->pending_acl_q, skb, tmp) {
+> > +             hdr =3D (struct hci_acl_hdr *)skb->data;
+> > +             handle =3D hci_handle(__le16_to_cpu(hdr->handle));
+> > +
+> > +             if (handle =3D=3D oldest_handle) {
+> > +                     __skb_unlink(skb, &hdev->pending_acl_q);
+> > +                     kfree_skb(skb);
+> > +             }
+> > +     }
+> > +
+> > +     if (!skb_queue_empty(&hdev->pending_acl_q))
+> > +             queue_delayed_work(hdev->workqueue, &hdev->remove_pending=
+_acl,
+> > +                                PENDING_ACL_TIMEOUT);
+> > +}
+> > +
+>
+> So I am wondering if we make this too complicated. Since generally speaki=
+ng we can only have a single HCI connect complete anyway at a time. No matt=
+er if the controller serializes it for us or we do it for the controller. S=
+o hci_conn_add could just process the queue for packets with its handle and=
+ then flush it. And it can flush it no matter what since whatever other pac=
+kets are in the queue, they can not be valid.
+>
+> That said, we wouldn=E2=80=99t even need to check the packet handles at a=
+ll. We just needed to flag them as already out-of-order queued once and han=
+d them back into the rx_q at the top. Then the would be processed as usual.=
+ Already ooo packets would cause the same error as before if it is for a no=
+n-existing handle and others would end up being processed.
+>
+> For me this means we just need another queue to park the packets until hc=
+i_conn_add gets called. I might have missed something, but I am looking for=
+ the least invasive option for this and least code duplication.
+
+I'm not aware of the fact that we can only have a single HCI connect
+complete event at any time. Is this also true even if two / more
+peripherals connect at the same time?
+I was under the impression that if we have device A and B both are
+connecting to us at the same time, we might receive the packets in
+this order:
+(1) ACL A
+(2) ACL B
+(3) HCI conn evt B
+(4) HCI conn evt A
+Hence the queue and the handle check.
+
+>
+> > /* Alloc HCI device */
+> > struct hci_dev *hci_alloc_dev(void)
+> > {
+> > @@ -3610,10 +3683,12 @@ struct hci_dev *hci_alloc_dev(void)
+> >       INIT_WORK(&hdev->suspend_prepare, hci_prepare_suspend);
+> >
+> >       INIT_DELAYED_WORK(&hdev->power_off, hci_power_off);
+> > +     INIT_DELAYED_WORK(&hdev->remove_pending_acl, hci_remove_pending_a=
+cl);
+> >
+> >       skb_queue_head_init(&hdev->rx_q);
+> >       skb_queue_head_init(&hdev->cmd_q);
+> >       skb_queue_head_init(&hdev->raw_q);
+> > +     skb_queue_head_init(&hdev->pending_acl_q);
+> >
+> >       init_waitqueue_head(&hdev->req_wait_q);
+> >       init_waitqueue_head(&hdev->suspend_wait_q);
+> > @@ -4662,8 +4737,6 @@ static void hci_acldata_packet(struct hci_dev *hd=
+ev, struct sk_buff *skb)
+> >       struct hci_conn *conn;
+> >       __u16 handle, flags;
+> >
+> > -     skb_pull(skb, HCI_ACL_HDR_SIZE);
+> > -
+> >       handle =3D __le16_to_cpu(hdr->handle);
+> >       flags  =3D hci_flags(handle);
+> >       handle =3D hci_handle(handle);
+> > @@ -4678,17 +4751,16 @@ static void hci_acldata_packet(struct hci_dev *=
+hdev, struct sk_buff *skb)
+> >       hci_dev_unlock(hdev);
+> >
+> >       if (conn) {
+> > +             skb_pull(skb, HCI_ACL_HDR_SIZE);
+> > +
+> >               hci_conn_enter_active_mode(conn, BT_POWER_FORCE_ACTIVE_OF=
+F);
+> >
+> >               /* Send to upper protocol */
+> >               l2cap_recv_acldata(conn, skb, flags);
+> >               return;
+> >       } else {
+> > -             bt_dev_err(hdev, "ACL packet for unknown connection handl=
+e %d",
+> > -                        handle);
+> > +             hci_add_pending_acl(hdev, skb);
+>
+> So here I want to keep being verbose. If no quirk is set, then this has t=
+o stay as an error. In case the quirk is set, then this should still warn t=
+hat we are queuing up a packet. It is not an expected behavior.
+
+Ack.
+
+>
+> >       }
+> > -
+> > -     kfree_skb(skb);
+> > }
+> >
+> > /* SCO data packet */
+> > diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+> > index e060fc9ebb18..108c6c102a6a 100644
+> > --- a/net/bluetooth/hci_event.c
+> > +++ b/net/bluetooth/hci_event.c
+> > @@ -2627,6 +2627,8 @@ static void hci_conn_complete_evt(struct hci_dev =
+*hdev, struct sk_buff *skb)
+> >                       hci_send_cmd(hdev, HCI_OP_CHANGE_CONN_PTYPE, size=
+of(cp),
+> >                                    &cp);
+> >               }
+> > +
+> > +             hci_process_pending_acl(hdev, conn);
+>
+> Can we just do this in hci_conn_add() when we create the connection objec=
+t?
+
+Yes, we can.
+
+>
+> >       } else {
+> >               conn->state =3D BT_CLOSED;
+> >               if (conn->type =3D=3D ACL_LINK)
+> > --
+> > 2.27.0.212.ge8ba1cc988-goog
+> >
+>
+> Regards
+>
+> Marcel
+>
+
+Thanks,
+Archie
