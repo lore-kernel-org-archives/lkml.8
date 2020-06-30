@@ -2,133 +2,141 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34501C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89274C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1324620724
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:54:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XA6CWCMP"
+	by mail.kernel.org (Postfix) with ESMTP id 77A7520724
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:55:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388765AbgF3RyM (ORCPT
+        id S2389206AbgF3RzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 13:54:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56968 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgF3RyL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 13:54:11 -0400
-Received: from mail-qt1-x841.google.com (mail-qt1-x841.google.com [IPv6:2607:f8b0:4864:20::841])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC80BC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 10:54:11 -0700 (PDT)
-Received: by mail-qt1-x841.google.com with SMTP id u12so16252424qth.12
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 10:54:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=78g2lNiWm2EDkYkQ5OSAtg/8SeeBhLbfJO295zn42p8=;
-        b=XA6CWCMPQSNY/lSvYbaLKBUIMMmjG5vFufhTOuMoRkZp6z67LEQ8zSo7CBizOO+K7q
-         uN39hMYB8A2muMtV6Of4DH1J8ONz4zffuv5uYdPmizyY+dZI8z0JqexJRQg97sH1kUwY
-         azE3yxl2KZUobeKBn6FJ9hu21+0KRZ93tmM7Lm+TOxhR+6PKyLJhDD1DE+Wrn+2J9aJw
-         cEfz3+sWHcU+q8v1p7Hiy1e5sLjbh4XPO4czu411igsMod/E7FGUyXLV3IcLChh9Z6oT
-         lnL6DXKT35vZBvaTFu+QREcpcYEmC5JEWrLMQ1NUfnn5DGJ0EjgpafLl/HHAaBmSCnaV
-         +I8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=78g2lNiWm2EDkYkQ5OSAtg/8SeeBhLbfJO295zn42p8=;
-        b=s59bIslW9DYHKkS/WhxH7jqV96TP00StrAB7aomc/l+aO6zPJrslpP/DXrYeZUHWyO
-         MpRwmTQzyklOJBaAGfrWsNGcA4YW/+/QuWdf+zab51jcvS1J+IPf96PFkrtCzvXgz/sF
-         o3EqxX9peoMS6PPhotBk9W2r7Q3aKPgVsALQkt28Gy5wP3b3P0EzkJVfVFXXVun6GUl4
-         CjrISPeKrp2pt333YIwd3zcCWxF2xi9N9i+2qKp/HaJMGHjU+C26gNinvKPAojfSj89Q
-         HzHTAB1szipa+VWgLCmEQLPZC+d2mldUNl4Z6EVnj2qSDyUuwSrc4CcGfP3QvC+pKCOb
-         zP6A==
-X-Gm-Message-State: AOAM532J6LtZQgwXymT41H25W4XlxHgVfHAuu+deWdxvHZ9pzzDnvB3E
-        oAo+ZEwchL8shUZWAz1eQpQ=
-X-Google-Smtp-Source: ABdhPJwAvvqu+S3QRt0UlOOrjmCSmyPn6znVgnsKnlz1pn0iWvwoPeSXpy7v4ynCBLQ4U8Wx6HpOIQ==
-X-Received: by 2002:ac8:47d0:: with SMTP id d16mr22196554qtr.349.1593539650703;
-        Tue, 30 Jun 2020 10:54:10 -0700 (PDT)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id p66sm3581099qkf.58.2020.06.30.10.54.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 10:54:10 -0700 (PDT)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Tue, 30 Jun 2020 13:54:08 -0400
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Fangrui Song <maskray@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Dmitry Golovin <dima@golovin.in>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Daniel Kiper <daniel.kiper@oracle.com>,
-        Sedat Dilek <sedat.dilek@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "H . J . Lu" <hjl@sourceware.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 7/7] x86/boot: Check that there are no runtime
- relocations
-Message-ID: <20200630175408.GA2301688@rani.riverdale.lan>
-References: <20200629140928.858507-1-nivedita@alum.mit.edu>
- <20200629140928.858507-8-nivedita@alum.mit.edu>
- <202006290907.E5EF18A@keescook>
- <CAMj1kXFge5aWL2BY8Y1=m1TonB+SrDq6p7TQWuO5JkzcR2dhjQ@mail.gmail.com>
- <202006290919.93C759C62@keescook>
- <20200629165603.GD900899@rani.riverdale.lan>
- <20200629173735.l3ssrj7m3q5swfup@google.com>
- <CAMj1kXHaXzYFkW_H=w36vMb1qPpuZXsnTd_giq4vsh0bw3S3eA@mail.gmail.com>
- <20200629233405.n56yb4xwlgxrt3fn@google.com>
- <CAMj1kXGTOdNiuU70pFB74UJ6z43AM-UViTSd3=ATV=94W+f1RA@mail.gmail.com>
+        Tue, 30 Jun 2020 13:55:08 -0400
+Received: from foss.arm.com ([217.140.110.172]:50310 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725872AbgF3RzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 13:55:07 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A3B2E1FB;
+        Tue, 30 Jun 2020 10:55:06 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F16FC3F68F;
+        Tue, 30 Jun 2020 10:55:04 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 18:55:02 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Patrick Bellasi <patrick.bellasi@matbug.net>,
+        Chris Redpath <chris.redpath@arm.com>,
+        Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 2/2] sched/uclamp: Protect uclamp fast path code with
+ static key
+Message-ID: <20200630175502.otw4seymlynghje7@e107158-lin.cambridge.arm.com>
+References: <20200630112123.12076-1-qais.yousef@arm.com>
+ <20200630112123.12076-3-qais.yousef@arm.com>
+ <20200630170751.GA4817@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAMj1kXGTOdNiuU70pFB74UJ6z43AM-UViTSd3=ATV=94W+f1RA@mail.gmail.com>
+In-Reply-To: <20200630170751.GA4817@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 06:26:43PM +0200, Ard Biesheuvel wrote:
-> On Tue, 30 Jun 2020 at 01:34, Fangrui Song <maskray@google.com> wrote:
+On 06/30/20 19:07, Peter Zijlstra wrote:
+> On Tue, Jun 30, 2020 at 12:21:23PM +0100, Qais Yousef wrote:
+> > @@ -993,10 +1013,38 @@ static inline void uclamp_rq_dec_id(struct rq *rq, struct task_struct *p,
+> >  
+> >  	lockdep_assert_held(&rq->lock);
+> >  
+> > +	/*
+> > +	 * If sched_uclamp_used was enabled after task @p was enqueued,
+> > +	 * we could end up with unbalanced call to uclamp_rq_dec_id().
+> > +	 *
+> > +	 * In this case the uc_se->active flag should be false since no uclamp
+> > +	 * accounting was performed at enqueue time and we can just return
+> > +	 * here.
+> > +	 *
+> > +	 * Need to be careful of the following enqeueue/dequeue ordering
+> > +	 * problem too
+> > +	 *
+> > +	 *	enqueue(taskA)
+> > +	 *	// sched_uclamp_used gets enabled
+> > +	 *	enqueue(taskB)
+> > +	 *	dequeue(taskA)
+> > +	 *	// Must not decrement bukcet->tasks here
+> > +	 *	dequeue(taskB)
+> > +	 *
+> > +	 * where we could end up with stale data in uc_se and
+> > +	 * bucket[uc_se->bucket_id].
+> > +	 *
+> > +	 * The following check here eliminates the possibility of such race.
+> > +	 */
+> > +	if (unlikely(!uc_se->active))
+> > +		return;
+> > +
+> >  	bucket = &uc_rq->bucket[uc_se->bucket_id];
+> > +
+> >  	SCHED_WARN_ON(!bucket->tasks);
+> >  	if (likely(bucket->tasks))
+> >  		bucket->tasks--;
+> > +
+> >  	uc_se->active = false;
+> >  
+> >  	/*
 > 
-> > If (1) is not satisfied, the created .got.plt is just served as an anchor for
-> > things that want to reference (the distance from GOT base to some point). The
-> > linker will still reserve 3 words but the words are likely not needed.
-> >
-> > I don't think there is a specific need for another option to teach the linker
-> > (GNU ld or LLD) that this is a kernel link.  For -ffreestanding builds, cc
-> > -static (ld -no-pie))/-static-pie (-pie) already work quite well.
+> > @@ -1221,6 +1289,8 @@ static void __setscheduler_uclamp(struct task_struct *p,
+> >  	if (likely(!(attr->sched_flags & SCHED_FLAG_UTIL_CLAMP)))
+> >  		return;
+> >  
+> > +	static_branch_enable(&sched_uclamp_used);
+> > +
+> >  	if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MIN) {
+> >  		uclamp_se_set(&p->uclamp_req[UCLAMP_MIN],
+> >  			      attr->sched_util_min, true);
+> > @@ -7387,6 +7457,8 @@ static ssize_t cpu_uclamp_write(struct kernfs_open_file *of, char *buf,
+> >  	if (req.ret)
+> >  		return req.ret;
+> >  
+> > +	static_branch_enable(&sched_uclamp_used);
+> > +
+> >  	mutex_lock(&uclamp_mutex);
+> >  	rcu_read_lock();
+> >  
 > 
-> You mean 'ld -static -pie' right? That seems to work. Is that a recent
-> invention?
+> There's a fun race described in 9107c89e269d ("perf: Fix race between
+> event install and jump_labels"), are we sure this isn't also susceptible
+> to something similar?
+> 
+> I suspect not, but I just wanted to make sure.
 
-gcc -static-pie is fairly recent [0], but it just influences how the
-linker is invoked AFAIK (at least for gcc) -- in addition to passing
-some linker flags, it will change what startup files get linked in (for
-non-freestanding). It does not even imply -fPIE to the compiler, which
-is confusing as hell. It _would_ be nice if this also told the compiler
-that all symbols (perhaps unless explicitly marked) will be resolved at
-static link time, so there is no need to use the GOT or PLT for globals.
+IIUC, the worry is that not all CPUs might have observed the change in the
+static key state; hence could not be running the patched
+enqueue/dequeue_task(), so we could end up with some CPUs accounting for
+uclamp in the enqueue/dequeue path but not others?
 
-As it stands, the executable can still have relocations, GOT and PLT, it
-just needs to have startup code to handle them (provided by libc
-typically) instead of relying on an external dynamic linker.
+I was hoping this synchronization is guaranteed by the static_branch_*() call.
 
-I don't think it's really relevant for the kernel build -- all we get is
-ld -static --no-dynamic-linker, all -static does is prevent searching
-shared libraries, and we already pass --no-dynamic-linker if it's
-supported.
+aarch64_insn_patch_text_nosync() in arch/arm64/kernel/insn.c performs
+__flush_icache_range() after writing the new instruction.
 
-[0] https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81498
+I need to dig into what __flush_icache_range() do, but I think it'll just
+flush the icache of the calling CPU. Need to dig into upper layers too.
+
+It'd be good to know if I got you correctly first.
+
+Thanks
+
+--
+Qais Yousef
