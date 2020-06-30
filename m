@@ -2,97 +2,62 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BF2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC5BDC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F03BF20722
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:17:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C68A920722
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:19:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390679AbgF3SRT (ORCPT
+        id S2387992AbgF3STg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 14:17:19 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:36953 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726736AbgF3SRS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 14:17:18 -0400
-Received: by mail-ed1-f65.google.com with SMTP id g20so16886070edm.4;
-        Tue, 30 Jun 2020 11:17:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=y5Mt3w62B3XQY5/QbJq7kcGTRM0kicJutPXBswps/no=;
-        b=LixeDIWeBO2lXyjxh7/Jrnlr6UUty9VwyYbRtnI1VgxGIelaNVVqk08FScFtmw4+PO
-         v1iXrN26gf8mFnd8lE7aNSl++IFff5vq8S3hMAvAxKVI5h1alkcx/Hw0LPaYrOjBRMGO
-         wqRUFZcpYCTud9ep/yyi8ZUUl73nGfNgkK0O6Y1QGMk3eI+t4kk/xqTPcJ0iYKTA9occ
-         A+4xdJbEwxL4AGlHeQAPH86Y9VjpoDUC+UUNXxwj8DS7EUPY+ctjS4spxRHfTeUTuBbz
-         nc4y1Hhj09Ovl0/zTZ450hWKcE9vxT5pfKrQ4vyhzfXYqK1mWM8wkJ7v2itQIs+HR/Me
-         Bt7Q==
-X-Gm-Message-State: AOAM532YAkER3VLqlLnu82LQp9woWQfmiqlT/NBf2XK/msqMQ1Dlj7kj
-        V7NJizv3oVKndFxumwpxLY6mLVvF9pB8wA==
-X-Google-Smtp-Source: ABdhPJygbteH4H2nIDkfpYZxCZ8uRZYxp+ahdHSeCt3jc1NsBgprYHwwComNsOJMHASjwjgb5C2K7w==
-X-Received: by 2002:a17:906:7283:: with SMTP id b3mr20095438ejl.163.1593540577182;
-        Tue, 30 Jun 2020 11:09:37 -0700 (PDT)
-Received: from msft-t490s.lan ([2001:b07:5d26:7f46:d7c1:f090:1563:f81f])
-        by smtp.gmail.com with ESMTPSA id d13sm2492313ejj.95.2020.06.30.11.09.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 11:09:36 -0700 (PDT)
-From:   Matteo Croce <mcroce@linux.microsoft.com>
-To:     netdev@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        Sven Auhagen <sven.auhagen@voleatech.de>,
-        Lorenzo Bianconi <lorenzo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        Stefan Chulski <stefanc@marvell.com>,
-        Marcin Wojtas <mw@semihalf.com>, maxime.chevallier@bootlin.com,
-        antoine.tenart@bootlin.com, thomas.petazzoni@bootlin.com
-Subject: [PATCH net-next 0/4] mvpp2: XDP support
-Date:   Tue, 30 Jun 2020 20:09:26 +0200
-Message-Id: <20200630180930.87506-1-mcroce@linux.microsoft.com>
-X-Mailer: git-send-email 2.26.2
+        Tue, 30 Jun 2020 14:19:36 -0400
+Received: from verein.lst.de ([213.95.11.211]:36961 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726736AbgF3STe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 14:19:34 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 2C5A868B05; Tue, 30 Jun 2020 20:19:29 +0200 (CEST)
+Date:   Tue, 30 Jun 2020 20:19:28 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Christoph Hellwig <hch@lst.de>, dm-devel@redhat.com,
+        linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-xtensa@linux-xtensa.org, drbd-dev@lists.linbit.com,
+        linuxppc-dev@lists.ozlabs.org, linux-bcache@vger.kernel.org,
+        linux-raid@vger.kernel.org, linux-nvdimm@lists.01.org,
+        linux-nvme@lists.infradead.org, linux-s390@vger.kernel.org
+Subject: Re: rename ->make_request_fn and move it to the
+ block_device_operations
+Message-ID: <20200630181928.GA7853@lst.de>
+References: <20200629193947.2705954-1-hch@lst.de> <bd1443c0-be37-115b-1110-df6f0e661a50@kernel.dk> <6ddbe343-0fc2-58c8-3726-c4ba9952994f@kernel.dk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6ddbe343-0fc2-58c8-3726-c4ba9952994f@kernel.dk>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matteo Croce <mcroce@microsoft.com>
+On Tue, Jun 30, 2020 at 09:43:31AM -0600, Jens Axboe wrote:
+> On 6/30/20 7:57 AM, Jens Axboe wrote:
+> > On 6/29/20 1:39 PM, Christoph Hellwig wrote:
+> >> Hi Jens,
+> >>
+> >> this series moves the make_request_fn method into block_device_operations
+> >> with the much more descriptive ->submit_bio name.  It then also gives
+> >> generic_make_request a more descriptive name, and further optimize the
+> >> path to issue to blk-mq, removing the need for the direct_make_request
+> >> bypass.
+> > 
+> > Looks good to me, and it's a nice cleanup as well. Applied.
+> 
+> Dropped, insta-crashes with dm:
 
-Add XDP support to mvpp2. This series converts the driver to the
-page_pool API for RX buffer management, and adds native XDP support.
-
-These are the performance numbers, as measured by Sven:
-
-SKB fwd page pool:
-Rx bps     390.38 Mbps
-Rx pps     762.46 Kpps
-
-XDP fwd:
-Rx bps     1.39 Gbps
-Rx pps     2.72 Mpps
-
-XDP Drop:
-eth0: 12.9 Mpps
-eth1: 4.1 Mpps
-
-Matteo Croce (4):
-  mvpp2: refactor BM pool init percpu code
-  mvpp2: use page_pool allocator
-  mvpp2: add basic XDP support
-  mvpp2: XDP TX support
-
- drivers/net/ethernet/marvell/Kconfig          |   1 +
- drivers/net/ethernet/marvell/mvpp2/mvpp2.h    |  49 +-
- .../net/ethernet/marvell/mvpp2/mvpp2_main.c   | 600 ++++++++++++++++--
- 3 files changed, 588 insertions(+), 62 deletions(-)
-
--- 
-2.26.2
-
+Hmm.  Can you send me what is at "submit_bio_noacct+0x1f6" from gdb?
+Or your .config?
