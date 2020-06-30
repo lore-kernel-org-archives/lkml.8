@@ -2,182 +2,163 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 027FEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D51ECC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59FB720723
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:18:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=hartkopp.net header.i=@hartkopp.net header.b="D0eos3IU"
+	by mail.kernel.org (Postfix) with ESMTP id B2BE820722
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:18:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732826AbgF3QSM (ORCPT
+        id S1732877AbgF3QSt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 12:18:12 -0400
-Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.164]:15318 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726736AbgF3QSL (ORCPT
+        Tue, 30 Jun 2020 12:18:49 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:28944 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726736AbgF3QSt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 12:18:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1593533888;
-        s=strato-dkim-0002; d=hartkopp.net;
-        h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=UQbMuL5GteFYcEkQVqGEO+2ozDFITfnMDX6You1TvZU=;
-        b=D0eos3IUHG5uubRZ+jZO3w6c6Cgjodi3EbvzlvLP7Kh00+RMtr1p9Y1YFESL+mJfNh
-        7VxsPXR5ZBvTaD8bGAI8723TM8isoqHnNHbXqs5/IfVUVovms85w0TsEiQAqnP1oyxce
-        Z0G1NSj2SRtCKgnodsdBDsqnnf06rosREbS3QYj+2eOCnY2+OO+pqPJeWaPbelxJibLh
-        29hrwtbHXk7W4T2OJdim8D97at4YrXRrma+hRmVYjyX3tTUELRKl7Sx6EyWD1snVU7f/
-        wuUjX+KGQX8eD8wZ5IFHAbLUjJDWe0Mc0WkToZv/emCiKTnWxhnJK/gt5sT6u5JX6LPE
-        KwyA==
-X-RZG-AUTH: ":P2MHfkW8eP4Mre39l357AZT/I7AY/7nT2yrDxb8mjG14FZxedJy6qgO1o3PMaViOoLMJV8h7kyA="
-X-RZG-CLASS-ID: mo00
-Received: from [192.168.50.177]
-        by smtp.strato.de (RZmta 46.10.5 DYNA|AUTH)
-        with ESMTPSA id R09ac6w5UGF6I1A
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
-        (Client did not present a certificate);
-        Tue, 30 Jun 2020 18:15:06 +0200 (CEST)
-Subject: Re: [PATCH 2/2] can: flexcan: add support for ISO CAN-FD
-To:     Michael Walle <michael@walle.cc>,
-        Joakim Zhang <qiangqing.zhang@nxp.com>
-Cc:     linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-References: <20200629181809.25338-1-michael@walle.cc>
- <20200629181809.25338-3-michael@walle.cc>
- <DB8PR04MB679504980A67DB8B1EEC8386E66F0@DB8PR04MB6795.eurprd04.prod.outlook.com>
- <a42e035c8ee3334a721a089b5f8f0580@walle.cc>
-From:   Oliver Hartkopp <socketcan@hartkopp.net>
-Message-ID: <5f6e0843-8504-e941-b6a3-1dc8599db39e@hartkopp.net>
-Date:   Tue, 30 Jun 2020 18:15:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 30 Jun 2020 12:18:49 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05UGEenL099142;
+        Tue, 30 Jun 2020 12:18:46 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32041e1ghb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 Jun 2020 12:18:46 -0400
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05UFWgRo069799;
+        Tue, 30 Jun 2020 12:18:45 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 32041e1gfw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 Jun 2020 12:18:44 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05UG1UeG013833;
+        Tue, 30 Jun 2020 16:18:41 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+        by ppma03ams.nl.ibm.com with ESMTP id 31wwr8bwkv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 30 Jun 2020 16:18:41 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05UGHJJZ58589448
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Jun 2020 16:17:19 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7BD194204C;
+        Tue, 30 Jun 2020 16:18:39 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2A58B42047;
+        Tue, 30 Jun 2020 16:18:39 +0000 (GMT)
+Received: from oc3871087118.ibm.com (unknown [9.145.186.119])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 30 Jun 2020 16:18:39 +0000 (GMT)
+Date:   Tue, 30 Jun 2020 18:18:37 +0200
+From:   Alexander Gordeev <agordeev@linux.ibm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>
+Subject: Re: [PATCH 1/3] perf bench numa: fix incorrect NUMA toplogy
+ assumption
+Message-ID: <20200630161837.GA27888@oc3871087118.ibm.com>
+References: <cover.1593445668.git.agordeev@linux.ibm.com>
+ <a53eedd6ad2fb46aec4d59066277aad7ace470b7.1593445668.git.agordeev@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <a42e035c8ee3334a721a089b5f8f0580@walle.cc>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a53eedd6ad2fb46aec4d59066277aad7ace470b7.1593445668.git.agordeev@linux.ibm.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
+ definitions=2020-06-30_06:2020-06-30,2020-06-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 spamscore=0 mlxscore=0 suspectscore=1 adultscore=0
+ clxscore=1015 phishscore=0 lowpriorityscore=0 mlxlogscore=999
+ malwarescore=0 impostorscore=0 cotscore=-2147483648 classifier=spam
+ adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006300112
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 30.06.20 07:53, Michael Walle wrote:
-> [+ Oliver]
+On Mon, Jun 29, 2020 at 05:50:07PM +0200, Alexander Gordeev wrote:
+> The current code assumes that CPUs are evenly spread among
+> NUMA nodes. That is generally incorrect and leads to failure
+> on systems that have different NUMA topology.
 > 
-> Hi Joakim,
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+> ---
+>  tools/perf/bench/numa.c | 27 +++++++++++++--------------
+>  1 file changed, 13 insertions(+), 14 deletions(-)
 > 
-> Am 2020-06-30 04:42, schrieb Joakim Zhang:
->>> -----Original Message-----
->>> From: Michael Walle <michael@walle.cc>
->>> Sent: 2020年6月30日 2:18
->>> To: linux-can@vger.kernel.org; netdev@vger.kernel.org;
->>> linux-kernel@vger.kernel.org
->>> Cc: Wolfgang Grandegger <wg@grandegger.com>; Marc Kleine-Budde
->>> <mkl@pengutronix.de>; David S . Miller <davem@davemloft.net>; Jakub
->>> Kicinski <kuba@kernel.org>; Joakim Zhang <qiangqing.zhang@nxp.com>;
->>> dl-linux-imx <linux-imx@nxp.com>; Michael Walle <michael@walle.cc>
->>> Subject: [PATCH 2/2] can: flexcan: add support for ISO CAN-FD
->>>
->>> Up until now, the controller used non-ISO CAN-FD mode, although it 
->>> supports it.
->>> Add support for ISO mode, too. By default the hardware is in non-ISO 
->>> mode and
->>> an enable bit has to be explicitly set.
->>>
->>> Signed-off-by: Michael Walle <michael@walle.cc>
->>> ---
->>>  drivers/net/can/flexcan.c | 19 ++++++++++++++++---
->>>  1 file changed, 16 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/drivers/net/can/flexcan.c b/drivers/net/can/flexcan.c index
->>> 183e094f8d66..a92d3cdf4195 100644
->>> --- a/drivers/net/can/flexcan.c
->>> +++ b/drivers/net/can/flexcan.c
->>> @@ -94,6 +94,7 @@
->>>  #define FLEXCAN_CTRL2_MRP        BIT(18)
->>>  #define FLEXCAN_CTRL2_RRS        BIT(17)
->>>  #define FLEXCAN_CTRL2_EACEN        BIT(16)
->>> +#define FLEXCAN_CTRL2_ISOCANFDEN    BIT(12)
->>>
->>>  /* FLEXCAN memory error control register (MECR) bits */
->>>  #define FLEXCAN_MECR_ECRWRDIS        BIT(31)
->>> @@ -1344,14 +1345,25 @@ static int flexcan_chip_start(struct net_device
->>> *dev)
->>>      else
->>>          reg_mcr |= FLEXCAN_MCR_SRX_DIS;
->>>
->>> -    /* MCR - CAN-FD */
->>> -    if (priv->can.ctrlmode & CAN_CTRLMODE_FD)
->>> +    /* MCR, CTRL2
->>> +     *
->>> +     * CAN-FD mode
->>> +     * ISO CAN-FD mode
->>> +     */
->>> +    reg_ctrl2 = priv->read(&regs->ctrl2);
->>> +    if (priv->can.ctrlmode & CAN_CTRLMODE_FD) {
->>>          reg_mcr |= FLEXCAN_MCR_FDEN;
->>> -    else
->>> +        reg_ctrl2 |= FLEXCAN_CTRL2_ISOCANFDEN;
->>> +    } else {
->>>          reg_mcr &= ~FLEXCAN_MCR_FDEN;
->>> +    }
->>> +
->>> +    if (priv->can.ctrlmode & CAN_CTRLMODE_FD_NON_ISO)
->>> +        reg_ctrl2 &= ~FLEXCAN_CTRL2_ISOCANFDEN;
->>
->>
+> diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
+> index 5797253..5497c74 100644
+> --- a/tools/perf/bench/numa.c
+> +++ b/tools/perf/bench/numa.c
+> @@ -247,12 +247,13 @@ static int is_node_present(int node)
+>   */
+>  static bool node_has_cpus(int node)
+>  {
+> -	struct bitmask *cpu = numa_allocate_cpumask();
+> +	struct bitmask *cpumask = numa_allocate_cpumask();
+>  	unsigned int i;
+>  
+> -	if (cpu && !numa_node_to_cpus(node, cpu)) {
+> -		for (i = 0; i < cpu->size; i++) {
+> -			if (numa_bitmask_isbitset(cpu, i))
+> +	BUG_ON(cpumask);
+
+self-nack - should have been !cpumask,
+will send the fixed version
+
+> +	if (!numa_node_to_cpus(node, cpumask)) {
+> +		for (i = 0; i < cpumask->size; i++) {
+> +			if (numa_bitmask_isbitset(cpumask, i))
+>  				return true;
+>  		}
+>  	}
+> @@ -288,14 +289,10 @@ static cpu_set_t bind_to_cpu(int target_cpu)
+>  
+>  static cpu_set_t bind_to_node(int target_node)
+>  {
+> -	int cpus_per_node = g->p.nr_cpus / nr_numa_nodes();
+>  	cpu_set_t orig_mask, mask;
+>  	int cpu;
+>  	int ret;
+>  
+> -	BUG_ON(cpus_per_node * nr_numa_nodes() != g->p.nr_cpus);
+> -	BUG_ON(!cpus_per_node);
+> -
+>  	ret = sched_getaffinity(0, sizeof(orig_mask), &orig_mask);
+>  	BUG_ON(ret);
+>  
+> @@ -305,13 +302,15 @@ static cpu_set_t bind_to_node(int target_node)
+>  		for (cpu = 0; cpu < g->p.nr_cpus; cpu++)
+>  			CPU_SET(cpu, &mask);
+>  	} else {
+> -		int cpu_start = (target_node + 0) * cpus_per_node;
+> -		int cpu_stop  = (target_node + 1) * cpus_per_node;
+> -
+> -		BUG_ON(cpu_stop > g->p.nr_cpus);
+> +		struct bitmask *cpumask = numa_allocate_cpumask();
+>  
+> -		for (cpu = cpu_start; cpu < cpu_stop; cpu++)
+> -			CPU_SET(cpu, &mask);
+> +		BUG_ON(!cpumask);
+> +		if (!numa_node_to_cpus(target_node, cpumask)) {
+> +			for (cpu = 0; cpu < (int)cpumask->size; cpu++) {
+> +				if (numa_bitmask_isbitset(cpumask, cpu))
+> +					CPU_SET(cpu, &mask);
+> +			}
+> +		}
+>  	}
+>  
+>  	ret = sched_setaffinity(0, sizeof(mask), &mask);
+> -- 
+> 1.8.3.1
 > 
-> [..]
->> ip link set can0 up type can bitrate 1000000 dbitrate 5000000 fd on
->> ip link set can0 up type can bitrate 1000000 dbitrate 5000000 fd on \
->>    fd-non-iso on
-> 
-> vs.
-> 
->> ip link set can0 up type can bitrate 1000000 dbitrate 5000000 
->> fd-non-iso on
-> 
-> I haven't found anything if CAN_CTRLMODE_FD_NON_ISO depends on
-> CAN_CTRLMODE_FD. I.e. wether CAN_CTRLMODE_FD_NON_ISO can only be set if
-> CAN_CTRLMODE_FD is also set.
-> 
-> Only the following piece of code, which might be a hint that you
-> have to set CAN_CTRLMODE_FD if you wan't to use CAN_CTRLMODE_FD_NON_ISO:
-> 
-> drivers/net/can/dev.c:
->    /* do not check for static fd-non-iso if 'fd' is disabled */
->    if (!(maskedflags & CAN_CTRLMODE_FD))
->            ctrlstatic &= ~CAN_CTRLMODE_FD_NON_ISO;
-> 
-> If CAN_CTRLMODE_FD_NON_ISO can be set without CAN_CTRLMODE_FD, what
-> should be the mode if both are set at the same time?
-
-CAN_CTRLMODE_FD_NON_ISO is only relevant when CAN_CTRLMODE_FD is set.
-
-So in the example from above
-
-ip link set can0 up type can bitrate 1000000 dbitrate 5000000 fd-non-iso on
-
-either the setting of 'dbitrate 5000000' and 'fd-non-iso on' is pointless.
-
-When switching to FD-mode with 'fd on' the FD relevant settings need to 
-be applied.
-
-FD ISO is the default.
-
-Did this help or did I get anything wrong?
-
-Best,
-Oliver
