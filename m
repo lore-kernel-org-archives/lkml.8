@@ -2,140 +2,197 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56BE2C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BDA7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:44:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2981C2073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:43:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1E8D20780
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:44:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="puWqgxQA"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KhELrSlF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387821AbgF3MnC (ORCPT
+        id S2387832AbgF3MoO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 08:43:02 -0400
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:1396 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728016AbgF3MnB (ORCPT
+        Tue, 30 Jun 2020 08:44:14 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:52430 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728016AbgF3MoN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 08:43:01 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5efb33240000>; Tue, 30 Jun 2020 05:42:12 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 30 Jun 2020 05:43:01 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 30 Jun 2020 05:43:01 -0700
-Received: from [10.26.75.203] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 30 Jun
- 2020 12:42:54 +0000
-Subject: Re: [PATCH v8 3/3] iommu/arm-smmu: Add global/context fault
- implementation hooks
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Krishna Reddy <vdumpa@nvidia.com>
-CC:     <snikam@nvidia.com>, <nicoleotsuka@gmail.com>,
-        <mperttunen@nvidia.com>, <bhuntsman@nvidia.com>, <will@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <praithatha@nvidia.com>,
-        <talho@nvidia.com>, <iommu@lists.linux-foundation.org>,
-        <nicolinc@nvidia.com>, <linux-tegra@vger.kernel.org>,
-        <yhsu@nvidia.com>, <treding@nvidia.com>,
-        <linux-arm-kernel@lists.infradead.org>, <bbiswas@nvidia.com>
-References: <20200630001051.12350-1-vdumpa@nvidia.com>
- <20200630001051.12350-4-vdumpa@nvidia.com>
- <4b4b20af-7baa-0987-e40d-af74235153f6@nvidia.com>
- <6c2ce909-c71b-351f-79f5-b1a4b4c0e4ac@arm.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <fd1f1102-ab05-002a-a86a-d3c6cef21e01@nvidia.com>
-Date:   Tue, 30 Jun 2020 13:42:52 +0100
+        Tue, 30 Jun 2020 08:44:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593521051;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=eOB4QoPsgdm9AnxQjJI73ATUqfj2VJGa+RxI5dUhe7Q=;
+        b=KhELrSlF7GUMOC1I3gHczM7Q2z4spNglWf36yMyJi0SGpmo1n9Lcn19L4PGM4bxkzNLOjN
+        09N1US8Rrumt8PTuxUPbpj8Q0rEvgGxZpAlMEuw28GlgPPgaA20cIfUfVtUhPRq0D5H/j2
+        tN4sFOaUF2vCBE1+W79zmO0vaFE6plU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-485-Wkccd_yLNXOV5qzUPGNUZA-1; Tue, 30 Jun 2020 08:44:07 -0400
+X-MC-Unique: Wkccd_yLNXOV5qzUPGNUZA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3C2FF1005512;
+        Tue, 30 Jun 2020 12:44:04 +0000 (UTC)
+Received: from [10.36.114.56] (ovpn-114-56.ams2.redhat.com [10.36.114.56])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 76D6010013C1;
+        Tue, 30 Jun 2020 12:44:01 +0000 (UTC)
+Subject: Re: [PATCH] mm: define pte_add_end for consistency
+To:     Wei Yang <richard.weiyang@linux.alibaba.com>,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        akpm@linux-foundation.org
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        kasan-dev@googlegroups.com, linux-mm@kvack.org
+References: <20200630031852.45383-1-richard.weiyang@linux.alibaba.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <40362e99-a354-c44f-8645-e2326a6df680@redhat.com>
+Date:   Tue, 30 Jun 2020 14:44:00 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <6c2ce909-c71b-351f-79f5-b1a4b4c0e4ac@arm.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20200630031852.45383-1-richard.weiyang@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1593520932; bh=hK3xWsoaF4cxDik6Mhq5qaTx82gKOLvVl8GbV1br+EM=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=puWqgxQA8yIruffJjHDVkJAi+UFOYN1pn9OAiXwGvywkKRxjWFtBhUaip1YoThldr
-         i6NHZ/dtKAjI+ln4Q1pE/KqNNlnUyluMJWqRyzuo/t91r1WMqbicqPfWCCQfx+fvuQ
-         9NXOzVNUNZWMkxYN5++mPnQCMwjlfc9ZOiifR0/dSrwRbbHDHUpyGt6S6pI2K1RXDB
-         xuE3VAKgS4D2NXdlBAtGsx9f6aNRLRdRZV1Cq3f/maRdn2uW4ti2PRd18RZPpqrg4e
-         LqvR5JhOSxqw0tbBOpNj9MgYkrYITBUBAcsKIlpbugPsPSgP09fFVixBvKQSSvPNMp
-         STDwB7x62E+0g==
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 30.06.20 05:18, Wei Yang wrote:
+> When walking page tables, we define several helpers to get the address of
+> the next boundary. But we don't have one for pte level.
+> 
+> Let's define it and consolidate the code in several places.
+> 
+> Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
+> ---
+>  arch/x86/mm/init_64.c   | 6 ++----
+>  include/linux/pgtable.h | 7 +++++++
+>  mm/kasan/init.c         | 4 +---
+>  3 files changed, 10 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+> index dbae185511cd..f902fbd17f27 100644
+> --- a/arch/x86/mm/init_64.c
+> +++ b/arch/x86/mm/init_64.c
+> @@ -973,9 +973,7 @@ remove_pte_table(pte_t *pte_start, unsigned long addr, unsigned long end,
+>  
+>  	pte = pte_start + pte_index(addr);
+>  	for (; addr < end; addr = next, pte++) {
+> -		next = (addr + PAGE_SIZE) & PAGE_MASK;
+> -		if (next > end)
+> -			next = end;
+> +		next = pte_addr_end(addr, end);
+>  
+>  		if (!pte_present(*pte))
+>  			continue;
+> @@ -1558,7 +1556,7 @@ void register_page_bootmem_memmap(unsigned long section_nr,
+>  		get_page_bootmem(section_nr, pud_page(*pud), MIX_SECTION_INFO);
+>  
+>  		if (!boot_cpu_has(X86_FEATURE_PSE)) {
+> -			next = (addr + PAGE_SIZE) & PAGE_MASK;
+> +			next = pte_addr_end(addr, end);
+>  			pmd = pmd_offset(pud, addr);
+>  			if (pmd_none(*pmd))
+>  				continue;
+> diff --git a/include/linux/pgtable.h b/include/linux/pgtable.h
+> index 32b6c52d41b9..0de09c6c89d2 100644
+> --- a/include/linux/pgtable.h
+> +++ b/include/linux/pgtable.h
+> @@ -706,6 +706,13 @@ static inline pgprot_t pgprot_modify(pgprot_t oldprot, pgprot_t newprot)
+>  })
+>  #endif
+>  
+> +#ifndef pte_addr_end
+> +#define pte_addr_end(addr, end)						\
+> +({	unsigned long __boundary = ((addr) + PAGE_SIZE) & PAGE_MASK;	\
+> +	(__boundary - 1 < (end) - 1) ? __boundary : (end);		\
+> +})
+> +#endif
+> +
+>  /*
+>   * When walking page tables, we usually want to skip any p?d_none entries;
+>   * and any p?d_bad entries - reporting the error before resetting to none.
+> diff --git a/mm/kasan/init.c b/mm/kasan/init.c
+> index fe6be0be1f76..89f748601f74 100644
+> --- a/mm/kasan/init.c
+> +++ b/mm/kasan/init.c
+> @@ -349,9 +349,7 @@ static void kasan_remove_pte_table(pte_t *pte, unsigned long addr,
+>  	unsigned long next;
+>  
+>  	for (; addr < end; addr = next, pte++) {
+> -		next = (addr + PAGE_SIZE) & PAGE_MASK;
+> -		if (next > end)
+> -			next = end;
+> +		next = pte_addr_end(addr, end);
+>  
+>  		if (!pte_present(*pte))
+>  			continue;
+> 
 
-On 30/06/2020 13:13, Robin Murphy wrote:
-> On 2020-06-30 09:37, Jon Hunter wrote:
->>
->> On 30/06/2020 01:10, Krishna Reddy wrote:
->>> Add global/context fault hooks to allow NVIDIA SMMU implementation
->>> handle faults across multiple SMMUs.
->>
->> Nit ... this is not just for NVIDIA, but this allows anyone to add
->> custom global/context and fault hooks. So I think that the changelog
->> should be clear that this change permits custom fault hooks and that
->> custom fault hooks are needed for the Tegra194 SMMU. You may also want
->> to say why.
->>
->>>
->>> Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
->>> ---
->>> =C2=A0 drivers/iommu/arm-smmu-nvidia.c | 98 +++++++++++++++++++++++++++=
-++++++
->>> =C2=A0 drivers/iommu/arm-smmu.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 | 17 +++++-
->>> =C2=A0 drivers/iommu/arm-smmu.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0 |=C2=A0 3 +
->>> =C2=A0 3 files changed, 116 insertions(+), 2 deletions(-)
+I'm not really a friend of this I have to say. We're simply iterating
+over single pages, not much magic ....
 
-...
+What would definitely make sense is replacing (addr + PAGE_SIZE) &
+PAGE_MASK; by PAGE_ALIGN() ...
 
->>> @@ -835,7 +836,13 @@ static int arm_smmu_init_domain_context(struct
->>> iommu_domain *domain,
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * handler seeing a half-initialise=
-d domain state.
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 irq =3D smmu->irqs[smmu->num_global_irqs=
- + cfg->irptndx];
->>> -=C2=A0=C2=A0=C2=A0 ret =3D devm_request_irq(smmu->dev, irq, arm_smmu_c=
-ontext_fault,
->>> +
->>> +=C2=A0=C2=A0=C2=A0 if (smmu->impl && smmu->impl->context_fault)
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 context_fault =3D smmu->imp=
-l->context_fault;
->>> +=C2=A0=C2=A0=C2=A0 else
->>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 context_fault =3D arm_smmu_=
-context_fault;
->>
->> Why not see the default smmu->impl->context_fault to
->> arm_smmu_context_fault in arm_smmu_impl_init() and then allow the
->> various implementations to override as necessary? Then you can get rid
->> of this context_fault variable here and just use
->> smmu->impl->context_fault below.
->=20
-> Because the default smmu->impl is NULL. And as I've said before, NAK to
-> forcing the common case to allocate a set of "quirks" purely to override
-> the default IRQ handler with the default IRQ handler ;)
+-- 
+Thanks,
 
+David / dhildenb
 
-Ah OK, makes sense. Sorry I am a bit late to the review :-)
-
-Jon
-
---=20
-nvpublic
