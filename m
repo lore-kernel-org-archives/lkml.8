@@ -2,100 +2,140 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E5FEC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB3FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:53:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 796052067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:53:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54915206CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:53:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KNs+P26E"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SvDALAHu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727941AbgF3SxT (ORCPT
+        id S1728018AbgF3Sxk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 14:53:19 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:34559 "EHLO
+        Tue, 30 Jun 2020 14:53:40 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:20459 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725805AbgF3SxR (ORCPT
+        by vger.kernel.org with ESMTP id S1727964AbgF3Sxj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 14:53:17 -0400
+        Tue, 30 Jun 2020 14:53:39 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593543197;
+        s=mimecast20190719; t=1593543217;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=mcg17qf3dJLPIXN0i+iFpN5cYHhiLw7/LkTl8zB+uyg=;
-        b=KNs+P26EJtcGN3Y72PUnPm+E7O8TOGJFyjnhk/NNqrzAJp3xqGjcY+sIPpJY2ToxyWKudO
-        tZZcqvJnqE+IhYsdWgcJF2dF3R+2+EU5IsqYVDuRC4OIzaxhJr47/vw5w2BUWcBBQ4yRVL
-        xed99Hk0Q/RzEM5TY2d5dI3CE0aDAlA=
+        bh=EXXh1nLHeYCU/y8Dd7k4qJnwxFGXO5xfFdK00B3SJD4=;
+        b=SvDALAHuncSI/uiwy9C73aRIQ8mGT2lE3pmncQDWdPouP+TCFmrqkAedh0irg/2TnRx0mt
+        UI5nU84dejEb932qQGGotMGKpQIqBnY68l8M/8NEiqFyr+ds1fmi7GRo5IA514Z9wMAuTr
+        zFrv1Qv1S94xEoJ5zYNdQTwnC9dp6kQ=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-67-2uAIi_0rPKaN7X5KnfLU5g-1; Tue, 30 Jun 2020 14:53:15 -0400
-X-MC-Unique: 2uAIi_0rPKaN7X5KnfLU5g-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ us-mta-502-R7XLidzmPralqNKpPmIcow-1; Tue, 30 Jun 2020 14:53:33 -0400
+X-MC-Unique: R7XLidzmPralqNKpPmIcow-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 20B6F7BB0;
-        Tue, 30 Jun 2020 18:53:13 +0000 (UTC)
-Received: from redhat.com (ovpn-112-56.rdu2.redhat.com [10.10.112.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 36B15282E6;
-        Tue, 30 Jun 2020 18:53:12 +0000 (UTC)
-Date:   Tue, 30 Jun 2020 14:53:10 -0400
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Shuah Khan <shuah@kernel.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] selftests/lkdtm: Use "comm" instead of "diff" for dmesg
-Message-ID: <20200630185310.GA29805@redhat.com>
-References: <202006261358.3E8AA623A9@keescook>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C91F5800D5C;
+        Tue, 30 Jun 2020 18:53:31 +0000 (UTC)
+Received: from redhat.com (ovpn-113-167.phx2.redhat.com [10.3.113.167])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6B6695C1C5;
+        Tue, 30 Jun 2020 18:53:30 +0000 (UTC)
+Date:   Tue, 30 Jun 2020 14:53:28 -0400
+From:   Peter Jones <pjones@redhat.com>
+To:     Ard Biesheuvel <ardb@kernel.org>
+Cc:     Tyler Hicks <tyhicks@linux.microsoft.com>,
+        Matthew Garrett <mjg59@google.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Petr Vandrovec <petr@vmware.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Thirupathaiah Annapureddy <thiruan@microsoft.com>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] tpm: Require that all digests are present in
+ TCG_PCR_EVENT2 structures
+Message-ID: <20200630185327.pasrylg7og7rlno3@redhat.com>
+References: <20200615232504.1848159-1-tyhicks@linux.microsoft.com>
+ <CAMj1kXHJbsxA2-jqpbLnUeeNfM0oC8Sh70+axOKoBCFMJ8+jKQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <202006261358.3E8AA623A9@keescook>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <CAMj1kXHJbsxA2-jqpbLnUeeNfM0oC8Sh70+axOKoBCFMJ8+jKQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 26, 2020 at 01:59:43PM -0700, Kees Cook wrote:
-> Instead of full GNU diff (which smaller boot environments may not have),
-> use "comm" which is more available.
+On Tue, Jun 16, 2020 at 11:08:38AM +0200, Ard Biesheuvel wrote:
+> (cc Matthew and Peter)
 > 
-> Reported-by: Naresh Kamboju <naresh.kamboju@linaro.org>
-> Link: https://lore.kernel.org/lkml/CA+G9fYtHP+Gg+BrR_GkBMxu2oOi-_e9pATtpb6TVRswv1G1r1Q@mail.gmail.com
-> Fixes: f131d9edc29d ("selftests/lkdtm: Don't clear dmesg when running tests")
-> Signed-off-by: Kees Cook <keescook@chromium.org>
-> ---
->  tools/testing/selftests/lkdtm/run.sh | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> On Tue, 16 Jun 2020 at 01:28, Tyler Hicks <tyhicks@linux.microsoft.com> wrote:
+> >
+> > Require that the TCG_PCR_EVENT2.digests.count value strictly matches the
+> > value of TCG_EfiSpecIdEvent.numberOfAlgorithms in the event field of the
+> > TCG_PCClientPCREvent event log header. Also require that
+> > TCG_EfiSpecIdEvent.numberOfAlgorithms is non-zero.
+> >
+> > The TCG PC Client Platform Firmware Profile Specification section 9.1
+> > (Family "2.0", Level 00 Revision 1.04) states:
+> >
+> >  For each Hash algorithm enumerated in the TCG_PCClientPCREvent entry,
+> >  there SHALL be a corresponding digest in all TCG_PCR_EVENT2 structures.
+> >  Note: This includes EV_NO_ACTION events which do not extend the PCR.
+> >
+> > Section 9.4.5.1 provides this description of
+> > TCG_EfiSpecIdEvent.numberOfAlgorithms:
+> >
+> >  The number of Hash algorithms in the digestSizes field. This field MUST
+> >  be set to a value of 0x01 or greater.
+> >
+> > Enforce these restrictions, as required by the above specification, in
+> > order to better identify and ignore invalid sequences of bytes at the
+> > end of an otherwise valid TPM2 event log. Firmware doesn't always have
+> > the means necessary to inform the kernel of the actual event log size so
+> > the kernel's event log parsing code should be stringent when parsing the
+> > event log for resiliency against firmware bugs. This is true, for
+> > example, when firmware passes the event log to the kernel via a reserved
+> > memory region described in device tree.
+> >
 > 
-> diff --git a/tools/testing/selftests/lkdtm/run.sh b/tools/testing/selftests/lkdtm/run.sh
-> index 8383eb89d88a..5fe23009ae13 100755
-> --- a/tools/testing/selftests/lkdtm/run.sh
-> +++ b/tools/testing/selftests/lkdtm/run.sh
-> @@ -82,7 +82,7 @@ dmesg > "$DMESG"
->  ($SHELL -c 'cat <(echo '"$test"') >'"$TRIGGER" 2>/dev/null) || true
->  
->  # Record and dump the results
-> -dmesg | diff --changed-group-format='%>' --unchanged-group-format='' "$DMESG" - > "$LOG" || true
-> +dmesg | comm -13 "$DMESG" - > "$LOG" || true
->  
->  cat "$LOG"
->  # Check for expected output
+> When does this happen? Do we have code in mainline that does this?
+> 
+> > Prior to this patch, a single bit set in the offset corresponding to
+> > either the TCG_PCR_EVENT2.eventType or TCG_PCR_EVENT2.eventSize fields,
+> > after the last valid event log entry, could confuse the parser into
+> > thinking that an additional entry is present in the event log. This
+> > patch raises the bar on how difficult it is for stale memory to confuse
+> > the kernel's event log parser but there's still a reliance on firmware
+> > to properly initialize the remainder of the memory region reserved for
+> > the event log as the parser cannot be expected to detect a stale but
+> > otherwise properly formatted firmware event log entry.
+> >
+> > Fixes: fd5c78694f3f ("tpm: fix handling of the TPM 2.0 event logs")
+> > Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+> > ---
+> 
+> I am all for stringent checks, but this could potentially break
+> measured boot on systems that are working fine today, right?
 
-I'm not familiar with running lkdtm tests, but I copied the same fixup
-for the livepatching selftests and "comm" slides in nicely over there,
-so,
+Seems like in that case our measurement is unreliable and can't really
+be trusted.  That said, having things that were using the measurements
+before this suddenly stop being able to access sealed secrets is not a
+great experience for the user who unwittingly bought the junk hardware.
+Same with the zero-supported-hashes case.  It would be nice to at log it
+and have a way for them to opt-in to allowing the old measurement to go
+through, so they can recover their data, though I don't know what that
+method would be if the measured command line is one of their
+dependencies.
 
-Acked-by: Joe Lawrence <joe.lawrence@redhat.com>
-
--- Joe
+-- 
+        Peter
 
