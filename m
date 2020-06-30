@@ -2,101 +2,143 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 960BEC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 04:45:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F2E7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 04:49:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5A0CC2067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 04:45:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36B162067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 04:49:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gyNi5aAT"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eJkYImkb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729201AbgF3Epa (ORCPT
+        id S1729326AbgF3Ett (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 00:45:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48160 "EHLO
+        Tue, 30 Jun 2020 00:49:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725805AbgF3Ep3 (ORCPT
+        with ESMTP id S1725805AbgF3Ets (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 00:45:29 -0400
+        Tue, 30 Jun 2020 00:49:48 -0400
 Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA2B5C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 21:45:29 -0700 (PDT)
-Received: by mail-yb1-xb4a.google.com with SMTP id t7so6349310ybk.2
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 21:45:29 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65008C061755
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 21:49:48 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id u64so6931855ybf.13
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 21:49:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:message-id:mime-version:subject:from:to:cc;
-        bh=vSqeEeckvpRbZGibNjwUaMyXm8VkQnSd56e/epMHyVQ=;
-        b=gyNi5aATe8TqHE7u6B+wIEwHg193GUJBNOD+RzKybJOneonjln50tdgpwT43fJ/Ths
-         8dFI5YKs37yghC22E/N+87q5OGQUfcGqRPEuzA2jrf8AQ+hlNUnYSSxNLePtmV7PQemM
-         /YDnZE9BBFUxFo9T2OEttT/2WczcCMclSAM1gnLmg1VU2LbaUV0JN8t9ovWkuasnGbTe
-         6RglnmmOKNPkyucnT56IJXlkjCwDXBUvd7ypX5cTWV1EdocXxIbZFOz6T63wT+Lh6KOW
-         0JrJozUoxWuPBBQXzwzzBQai85mW3u1RNbD49V3jotfI9QHsoE0opMlsUwvXc72e0oY8
-         Xn+w==
+        bh=7hLDfRQH9BxeLi4te4CqBue6K7HzO3HL8RSU93kt7FA=;
+        b=eJkYImkbmfnxFDU8hfMSme7dtbktJO+dptPEHM9OdfQSJquqzQ2Dunh2RSfdHPb0QW
+         Lflu+V+rxJDuJGJNEgAH0tTRKH7f5MqQgf3QW0Z2ck//h43mrzeqbqh0e7nLTIf71cEH
+         ++LvFFqJ1jHJpzirL6NEoOQneAUQd9UDn/9Spdl5TObv/Xs3i5rNr1sGPXs3mjGImXnq
+         Kqz+FLWa8DEnSdugcjdmJbcrAcQ6bjdXvXnMTyP98VaJ0b09I/lArhactOpdnppimtGy
+         AjBG7WoCDugm9DNdgy5doLCdISe0m1Y97+ZJQvrFb3QKqABKPpqA8fRzSHUUaoDHsOeL
+         RDZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=vSqeEeckvpRbZGibNjwUaMyXm8VkQnSd56e/epMHyVQ=;
-        b=r2g9/laZktO0KsY2V1PIix6X8JEs4GgoSse2deXFzxSMc0MXN3mpSudltTpRFUjSJL
-         jVInY3eGqDfOxLbmpSqngTRkL6SJDLRge+f1tjXe8p89l5lhE9OfziJJIV9DA1rZvnsP
-         U4/IDrYuzIqXUEhNgW7a5mTmjMIYQD4KgzUtoxohHbPueq9UQFOu8YuHZtPWmEI/O731
-         dvS5Ako+tITq/jMgZnmfUxGefLem17CGJS0QhLpGXm/mZPQLOmqSCxieCdTZ0s1trKEN
-         S0YIw27s7h88MrEooZpBexKBh4OfmTeFpgapf8zDk/IoGKa0q+lo/QPXLuo4zqndQ5q2
-         k74Q==
-X-Gm-Message-State: AOAM531BbbZQhWEBX5pz3QhWlY79or0czfUoLQurTLcWI7JytHJ2/QPe
-        ARFEndjbs12WEfe2fr/o25rc/d9FWULBLg==
-X-Google-Smtp-Source: ABdhPJyU53scu18O26IxLx2seqo1666FrNwEmW6JQE0uTUsyEEKPzVYVNeqyTCA7tMSuyMdT+nkhBbNQt05sKQ==
-X-Received: by 2002:a25:f509:: with SMTP id a9mr32741555ybe.227.1593492328741;
- Mon, 29 Jun 2020 21:45:28 -0700 (PDT)
-Date:   Mon, 29 Jun 2020 21:45:17 -0700
-Message-Id: <20200630044518.1084468-1-davidgow@google.com>
+        bh=7hLDfRQH9BxeLi4te4CqBue6K7HzO3HL8RSU93kt7FA=;
+        b=so0RSPvX99LOgV7D7MysNN2XrlLV0FF06FYdGuotYGSaChon7NRzBE5ZnMsojZccYS
+         a25Rlj+Bclz0335nrPZaa0imY90XE8cj1eToJPOrgV8DDS3Q2SEUrP/vUi1mAL/JiSLC
+         Q40yaR6QnXq77hr9WolG54nkjfATFaSGrJWrlP9ln/pQQ+lNgrBBozbl1wq6xJ8PSwQg
+         ZiigwuPZtM56EjuZNuSdNVJ8qBW/6qm7DjeJgBBuyOdiakvUxEo9b+KU4vepmJ8VvbY2
+         rg17YK+orvRFz+HUrwNfvI+AwxujEbp/azWZytlosiuLqNhNq6EIjAgW+dNjvPJcQWvJ
+         TAeA==
+X-Gm-Message-State: AOAM533ns2ztyFufNRANp0dgb4G6ivuc8ILPvtNy3l7wOfzzCJlSp99B
+        SuQptLWFna2auV+t2QUdP1C22QTUlssh
+X-Google-Smtp-Source: ABdhPJxrD07NSjDpYr9t7nKiVps1AKnSwgUbfmBRtxm6cbXEYEj7w22JAGn9Re24HqxAzu0RSiaZt3/6TOEw
+X-Received: by 2002:a25:a2d1:: with SMTP id c17mr32028859ybn.192.1593492587468;
+ Mon, 29 Jun 2020 21:49:47 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 21:49:36 -0700
+Message-Id: <20200630044943.3425049-1-rajatja@google.com>
 Mime-Version: 1.0
 X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-Subject: [PATCH] clk: staging: Specify IOMEM dependency for Xilinx Clocking
- Wizard driver
-From:   David Gow <davidgow@google.com>
-To:     Soren Brinkmann <soren.brinkmann@xilinx.com>,
+Subject: [PATCH v2 0/7] Tighten PCI security, expose dev location in sysfs
+From:   Rajat Jain <rajatja@google.com>
+To:     David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
+        lalithambika.krishnakumar@intel.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>
-Cc:     linux-clk@vger.kernel.org, devel@driverdev.osuosl.org,
-        Brendan Higgins <brendanhiggins@google.com>,
-        linux-kernel@vger.kernel.org, David Gow <davidgow@google.com>
+        oohall@gmail.com, Saravana Kannan <saravanak@google.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Cc:     Rajat Jain <rajatja@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Xilinx Clocking Wizard driver uses the devm_ioremap_resource
-function, but does not specify a dependency on IOMEM in Kconfig. This
-causes a build failure on architectures without IOMEM, for example, UML
-(notably with make allyesconfig).
+This is a set of loosely related patches most of whom emerged out of
+discussion in the following threads. In a nutshell the goal was to allow
+an administrator to specify which driver he wants to allow on external
+ports, and a strategy was chalked out:
+https://lore.kernel.org/linux-pci/20200609210400.GA1461839@bjorn-Precision-5520/
+https://lore.kernel.org/linux-pci/20200618184621.GA446639@kroah.com/
+https://lore.kernel.org/linux-pci/20200627050225.GA226238@kroah.com/
 
-Fix this by making CONFIG_COMMON_CLK_XLNX_CLKWZRD depend on CONFIG_IOMEM.
+* The first 3 patches tighten the PCI security using ACS, and take care
+  of a border case.
+* The 4th patch takes care of PCI bug.
+* 5th and 6th patches expose a device's location into the sysfs to allow
+  admin to make decision based on that.
+* 7th patch is to ensure that the external devices don't bind to drivers
+  during boot.
 
-Signed-off-by: David Gow <davidgow@google.com>
----
- drivers/staging/clocking-wizard/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Rajat Jain (7):
+  PCI: Keep the ACS capability offset in device
+  PCI: Set "untrusted" flag for truly external devices only
+  PCI/ACS: Enable PCI_ACS_TB for untrusted/external-facing devices
+  PCI: Add device even if driver attach failed
+  driver core: Add device location to "struct device" and expose it in
+    sysfs
+  PCI: Move pci_dev->untrusted logic to use device location instead
+  PCI: Add parameter to disable attaching external devices
 
-diff --git a/drivers/staging/clocking-wizard/Kconfig b/drivers/staging/clocking-wizard/Kconfig
-index 04be22dca9b6..69cf51445f08 100644
---- a/drivers/staging/clocking-wizard/Kconfig
-+++ b/drivers/staging/clocking-wizard/Kconfig
-@@ -5,6 +5,6 @@
- 
- config COMMON_CLK_XLNX_CLKWZRD
- 	tristate "Xilinx Clocking Wizard"
--	depends on COMMON_CLK && OF
-+	depends on COMMON_CLK && OF && IOMEM
- 	help
- 	  Support for the Xilinx Clocking Wizard IP core clock generator.
+ drivers/base/core.c         | 35 +++++++++++++++++++++++++++++++
+ drivers/iommu/intel/iommu.c | 31 ++++++++++++++++++---------
+ drivers/pci/ats.c           |  2 +-
+ drivers/pci/bus.c           | 13 ++++++------
+ drivers/pci/of.c            |  2 +-
+ drivers/pci/p2pdma.c        |  2 +-
+ drivers/pci/pci-acpi.c      | 13 ++++++------
+ drivers/pci/pci-driver.c    |  1 +
+ drivers/pci/pci.c           | 34 ++++++++++++++++++++++++++----
+ drivers/pci/pci.h           |  3 ++-
+ drivers/pci/probe.c         | 20 +++++++++++-------
+ drivers/pci/quirks.c        | 19 +++++++++++++----
+ include/linux/device.h      | 42 +++++++++++++++++++++++++++++++++++++
+ include/linux/device/bus.h  |  8 +++++++
+ include/linux/pci.h         | 13 ++++++------
+ 15 files changed, 191 insertions(+), 47 deletions(-)
+
 -- 
 2.27.0.212.ge8ba1cc988-goog
 
