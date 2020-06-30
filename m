@@ -2,92 +2,129 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D52B0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E26C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:31:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 924B1206E9
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:28:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7BA9206E9
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:31:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BDbyBT3o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731171AbgF3L2z (ORCPT
+        id S1732970AbgF3Lbm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 07:28:55 -0400
-Received: from mga17.intel.com ([192.55.52.151]:35428 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727108AbgF3L2y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 07:28:54 -0400
-IronPort-SDR: 42fqf3TZudVnPWsI4Mmb4scvv1Ss5Ggl4/YKScFT5AB12zq9zbIR8JVtIIORvwT8WdwYaMo6ax
- q9dtUeZbVqXw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="126328317"
-X-IronPort-AV: E=Sophos;i="5.75,297,1589266800"; 
-   d="scan'208";a="126328317"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 04:28:54 -0700
-IronPort-SDR: 8FsIScqUd6XybB4TwPoVe8ouT1DyWB0gS+2ZZaba3IiTPySeeIJ6mL1Cf72uTSXvRhBPL4oqws
- 3hpPziN9TlAw==
-X-IronPort-AV: E=Sophos;i="5.75,297,1589266800"; 
-   d="scan'208";a="454578729"
-Received: from rgrotewx-mobl.ger.corp.intel.com (HELO localhost) ([10.252.38.12])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 04:28:49 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Colin Ian King <colin.king@canonical.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Animesh Manna <animesh.manna@intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@intel.com>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/i915/display: fix missing null check on allocated dsb object
-In-Reply-To: <45e8594c-14e5-ba67-9708-1b72fa2c51d3@canonical.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20200616114221.73971-1-colin.king@canonical.com> <20200616115459.GN4151@kadam> <45e8594c-14e5-ba67-9708-1b72fa2c51d3@canonical.com>
-Date:   Tue, 30 Jun 2020 14:28:47 +0300
-Message-ID: <877dvon66o.fsf@intel.com>
+        Tue, 30 Jun 2020 07:31:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54386 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726875AbgF3Lbl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 07:31:41 -0400
+Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51B66C061755;
+        Tue, 30 Jun 2020 04:31:41 -0700 (PDT)
+Received: by mail-pj1-x1042.google.com with SMTP id l6so6274200pjq.1;
+        Tue, 30 Jun 2020 04:31:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=iSzKjPE7Q/bcmLPgwav6pvuAnH2KjNETVRm7VbUG+wc=;
+        b=BDbyBT3ogv3cW0OPfgttzmIhkVAi258FDi/waFPExBvW77tkP8dTvnhPhS/wNG95oC
+         4XeiunNymDn3Ej3mp901CB1x/ExSDw6mZO7cYlkngJTMD/YQTap0jhdir7BSTL+94Iel
+         DfWkgOy9WTbjfezSjeslu+ywU3tmGI5lrEm77E4GROYc0KUOTWtQdcMBa+QEgRBLdujs
+         k+nkE/kwsMCXixPciNUpbBWA8rudmJ6h6EOK/urQJHQEb4TzubyFPFTjmn2LayGUEzSw
+         8vHCle6hPaNFR7lAMxwXRc1gZoGbMabwDoJZ4IZ4aecL+HT+3iMYmXZbMoNAqsM2ExH0
+         QkvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=iSzKjPE7Q/bcmLPgwav6pvuAnH2KjNETVRm7VbUG+wc=;
+        b=p5D4eyPUllOj4KOpSuRP0N70mLL+zmnsEzx8XvY1Zob+MbfUOH7McG7mMRCsKcrOan
+         SCRUEh/MUJPUhV3WkpgXEcjySzfCoBvSM3T+Mxf0RRgeVy8jdCiwSGEqDXOXNuEmQkln
+         GngI+Kl8TTBK/4p0DWOGKe3uuKXIGDWbptjTWr24r04P8OBJFKGITmLrP3inwBWde/mn
+         cXmWqTOQVcrbENRpZxk5amXDQDp8yqyFyvYsUxCestQWUQMRyvq7KwHpyDjECWjp+y14
+         tNWr+fnr2Tu+KICzmNKE3Qlifyuf6hVXxNef5DfJv/FfZY/H2OamW6Up8sGe1dtbyvS/
+         ZpZQ==
+X-Gm-Message-State: AOAM532C+Axq3irx2FWbBrnXuYXyOhiZlGOILI6v7rB/QEJ+f03KoE3y
+        4OKdpx/+UqdK1z0kWw41rgw=
+X-Google-Smtp-Source: ABdhPJwApLDmnbZsW2059pf2TQp6rsBGpQ7CU9JsEecPlrcz1m2w+Ma/YAwx/UMmY9kJ4laYypXj3Q==
+X-Received: by 2002:a17:90a:a887:: with SMTP id h7mr20346290pjq.0.1593516700728;
+        Tue, 30 Jun 2020 04:31:40 -0700 (PDT)
+Received: from localhost ([2409:10:2e40:5100:6e29:95ff:fe2d:8f34])
+        by smtp.gmail.com with ESMTPSA id ia13sm2100255pjb.42.2020.06.30.04.31.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 04:31:39 -0700 (PDT)
+From:   Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+X-Google-Original-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Date:   Tue, 30 Jun 2020 20:31:37 +0900
+To:     Alan Maguire <alan.maguire@oracle.com>
+Cc:     ast@kernel.org, daniel@iogearbox.net, yhs@fb.com, andriin@fb.com,
+        arnaldo.melo@gmail.com, kafai@fb.com, songliubraving@fb.com,
+        john.fastabend@gmail.com, kpsingh@chromium.org,
+        linux@rasmusvillemoes.dk, joe@perches.com, pmladek@suse.com,
+        rostedt@goodmis.org, sergey.senozhatsky@gmail.com,
+        andriy.shevchenko@linux.intel.com, corbet@lwn.net,
+        bpf@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3 bpf-next 0/8] bpf, printk: add BTF-based type printing
+Message-ID: <20200630113137.GA145027@jagdpanzerIV.localdomain>
+References: <1592914031-31049-1-git-send-email-alan.maguire@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1592914031-31049-1-git-send-email-alan.maguire@oracle.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Jun 2020, Colin Ian King <colin.king@canonical.com> wrote:
-> On 16/06/2020 12:54, Dan Carpenter wrote:
->> On Tue, Jun 16, 2020 at 12:42:21PM +0100, Colin King wrote:
->>> From: Colin Ian King <colin.king@canonical.com>
->>>
->>> Currently there is no null check for a failed memory allocation
->>> on the dsb object and without this a null pointer dereference
->>> error can occur. Fix this by adding a null check.
->>>
->>> Note: added a drm_err message in keeping with the error message style
->>> in the function.
->> 
->> Don't give in to peer pressure!  That's like being a lemming when Disney
->> film makers come to push you off the cliff to create the 1958 nature
->> film "White Wilderness".
->
-> :-)
+On (20/06/23 13:07), Alan Maguire wrote:
+>   struct sk_buff *skb = alloc_skb(64, GFP_KERNEL);
+> 
+>   pr_info("%pT", BTF_PTR_TYPE(skb, "struct sk_buff"));
+> 
+> ...gives us:
+> 
+> (struct sk_buff){
+>  .transport_header = (__u16)65535,
+>  .mac_header = (__u16)65535,
+>  .end = (sk_buff_data_t)192,
+>  .head = (unsigned char *)000000007524fd8b,
+>  .data = (unsigned char *)000000007524fd8b,
+>  .truesize = (unsigned int)768,
+>  .users = (refcount_t){
+>   .refs = (atomic_t){
+>    .counter = (int)1,
+>   },
+>  },
+> }
 
-Pushed, thanks for the patch and smile.
+Hmm. So this can expose the kernel memory layout (IOW do you print out real
+%px pointers and so on)? If so, then I'd suggest not to use printk.
+Unprivileged /dev/kmsg or /proc/kmsg reads are really OK thing for printk()
+log buffer. And if you are going to print pointer hashes instead,
 
-BR,
-Jani.
+  .transport_header = (__u16)65535,
+  .mac_header = (__u16)65535,
+  .end = (sk_buff_data_t)192,
+  .head = (unsigned char *)34897918740,   // pointer_hash
+  .data = (unsigned char *)23942384983,   // pointer hash
+  .truesize = (unsigned int)768,
+  .users = (refcount_t){
+   .refs = (atomic_t){
+    .counter = (int)1,
+   },
+  },
 
+then the value of such printouts becomes a bit unclear to me, sorry.
 
->
->> 
->> regards,
->> dan carpenter
->> 
->
+Probably, something like a seq print into a file somewhere in
+/sys/kernel/debug/foo, from which only privileged processes can
+read, would be a better approach? My 5 cents.
 
--- 
-Jani Nikula, Intel Open Source Graphics Center
+	-ss
