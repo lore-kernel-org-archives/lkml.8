@@ -2,125 +2,224 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37E5DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A04C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:18:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FDFE206B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:17:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hgiynQdP"
+	by mail.kernel.org (Postfix) with ESMTP id E074120759
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:18:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729937AbgF3GRT (ORCPT
+        id S1730017AbgF3GSG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 02:17:19 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56597 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725845AbgF3GRT (ORCPT
+        Tue, 30 Jun 2020 02:18:06 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:61336 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725845AbgF3GSF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 02:17:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593497837;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=9+RQ+qThaJtacs4jb/OrkWyGDybA1bqNRSM4ltwc1f0=;
-        b=hgiynQdP5neWRwjjGg2IDq5JISZSrg4QPPRKnl5cpluxA24gr+H6FyMsXR6Fp8vEfBqc+V
-        b4TAVfi47HCgzXnyQ4hcIaa3NsCKz5N5u3HhHSh+1wPPMFa/eceZ2gITSUMydApnfqRHaO
-        bXXZXuv7wDRgLnFg27N27lCuijkS9fY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-306-8Nb0DMCcPDGBs07zBmvtCw-1; Tue, 30 Jun 2020 02:17:15 -0400
-X-MC-Unique: 8Nb0DMCcPDGBs07zBmvtCw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 86695800D5C;
-        Tue, 30 Jun 2020 06:17:13 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.40.192.237])
-        by smtp.corp.redhat.com (Postfix) with SMTP id A202B5C290;
-        Tue, 30 Jun 2020 06:17:10 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Tue, 30 Jun 2020 08:17:13 +0200 (CEST)
-Date:   Tue, 30 Jun 2020 08:17:09 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Nicholas Piggin <npiggin@gmail.com>
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>, Jan Kara <jack@suse.cz>,
-        Lukas Czerner <lczerner@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Tue, 30 Jun 2020 02:18:05 -0400
+Received: from fsav405.sakura.ne.jp (fsav405.sakura.ne.jp [133.242.250.104])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 05U6H3xt072997;
+        Tue, 30 Jun 2020 15:17:03 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav405.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav405.sakura.ne.jp);
+ Tue, 30 Jun 2020 15:17:03 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav405.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 05U6H2bZ072931
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Tue, 30 Jun 2020 15:17:02 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: [PATCH v2 00/15] Make the user mode driver code a better citizen
+To:     "Eric W. Biederman" <ebiederm@xmission.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>,
+        Greg Kroah-Hartman <greg@kroah.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: wait_on_page_bit_common(TASK_KILLABLE, EXCLUSIVE) can miss
- wakeup?
-Message-ID: <20200630061708.GA21263@redhat.com>
-References: <20200624161142.GA12184@redhat.com>
- <20200624162042.GA12238@redhat.com>
- <CAHk-=wjJA2Z3kUFb-5s=6+n0qbTs8ELqKFt9B3pH85a8fGD73w@mail.gmail.com>
- <20200626154313.GI4817@hirez.programming.kicks-ass.net>
- <CAHk-=whvVWNXPJq1k566zn4SfXAifXtiA7T+7JFweR3rQ0nc9A@mail.gmail.com>
- <1593396958.ydiznwsuu8.astroid@bobo.none>
- <20200629140245.GB20323@redhat.com>
- <1593482844.k3rh7s05o8.astroid@bobo.none>
+References: <20200625095725.GA3303921@kroah.com>
+ <778297d2-512a-8361-cf05-42d9379e6977@i-love.sakura.ne.jp>
+ <20200625120725.GA3493334@kroah.com>
+ <20200625.123437.2219826613137938086.davem@davemloft.net>
+ <CAHk-=whuTwGHEPjvtbBvneHHXeqJC=q5S09mbPnqb=Q+MSPMag@mail.gmail.com>
+ <87pn9mgfc2.fsf_-_@x220.int.ebiederm.org>
+ <87y2oac50p.fsf@x220.int.ebiederm.org>
+ <87bll17ili.fsf_-_@x220.int.ebiederm.org>
+ <20200629221231.jjc2czk3ul2roxkw@ast-mbp.dhcp.thefacebook.com>
+ <87y2o51hkk.fsf@x220.int.ebiederm.org>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <8137153b-6163-b52c-a1f8-f3949dc321bd@i-love.sakura.ne.jp>
+Date:   Tue, 30 Jun 2020 15:16:57 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1593482844.k3rh7s05o8.astroid@bobo.none>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <87y2o51hkk.fsf@x220.int.ebiederm.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/30, Nicholas Piggin wrote:
-> Excerpts from Oleg Nesterov's message of June 30, 2020 12:02 am:
-> > On 06/29, Nicholas Piggin wrote:
-> >>
-> >> prepare_to_wait_event() has a pretty good pattern (and comment), I would
-> >> favour using that (test the signal when inserting on the waitqueue).
-> >>
-> >> @@ -1133,6 +1133,15 @@ static inline int wait_on_page_bit_common(wait_queue_head_t *q,
-> >>         for (;;) {
-> >>                 spin_lock_irq(&q->lock);
-> >>
-> >> +               if (signal_pending_state(state, current)) {
-> >> +                       /* Must not lose an exclusive wake up, see
-> >> +                        * prepare_to_wait_event comment */
-> >> +                       list_del_init(&wait->entry);
-> >> +                       spin_unlock_irq(&q->lock);
-> >> +                       ret = -EINTR;
-> >
-> > Basically this is what my patch in the 1st email does. But note that we can't
-> > just set "ret = -EINTR" here, we will need to clear "ret" if test_and_set_bit()
-> > below succeeds. That is why I used another "int intr" variable.
->
-> You snipped off one more important line of context. No such games are
-> required AFAIKS.
+On 2020/06/30 10:13, Eric W. Biederman wrote:
+> Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
+> 
+>> On Mon, Jun 29, 2020 at 02:55:05PM -0500, Eric W. Biederman wrote:
+>>>
+>>> I have tested thes changes by booting with the code compiled in and
+>>> by killing "bpfilter_umh" and running iptables -vnL to restart
+>>> the userspace driver.
+>>>
+>>> I have compiled tested each change with and without CONFIG_BPFILTER
+>>> enabled.
+>>
+>> With
+>> CONFIG_BPFILTER=y
+>> CONFIG_BPFILTER_UMH=m
+>> it doesn't build:
+>>
+>> ERROR: modpost: "kill_pid_info" [net/bpfilter/bpfilter.ko] undefined!
+>>
+>> I've added:
+>> +EXPORT_SYMBOL(kill_pid_info);
+>> to continue testing...
 
-		for (;;) {
-			spin_lock_irq(&q->lock);
-	 
-	+               if (signal_pending_state(state, current)) {
-	+                       /* Must not lose an exclusive wake up, see
-	+                        * prepare_to_wait_event comment */
-	+                       list_del_init(&wait->entry);
-	+                       spin_unlock_irq(&q->lock);
-	+                       ret = -EINTR;
-	+                       break;
-	+               }
+kill_pid() is already exported.
 
+>>
+>> And then did:
+>> while true; do iptables -L;rmmod bpfilter; done
+>>  
+>> Unfortunately sometimes 'rmmod bpfilter' hangs in wait_event().
+>>
+>> I suspect patch 13 is somehow responsible:
+>> +	if (tgid) {
+>> +		kill_pid_info(SIGKILL, SEND_SIG_PRIV, tgid);
+>> +		wait_event(tgid->wait_pidfd, !pid_task(tgid, PIDTYPE_TGID));
+>> +		bpfilter_umh_cleanup(info);
+>> +	}
+>>
+>> I cannot figure out why it hangs. Some sort of race ?
+>> Since adding short delay between kill and wait makes it work.
 
-so wait_on_page_bit_common() just returns -EINTR if signal_pending_state() == T.
-And this is wrong if "current" was already woken up by unlock_page().
+Because there is a race window that detach_pid() from __unhash_process() from
+__exit_signal() from release_task() from exit_notify() from do_exit() is called
+some time after wake_up_all(&pid->wait_pidfd) from do_notify_pidfd() from
+do_notify_parent() from exit_notify() from do_exit() was called (in other words,
+we can't use pid->wait_pidfd when pid_task() is used at wait_event()) ?
 
-That is why ___wait_event() checks the condition even if prepare_to_wait_event()
-returns -EINTR. The comment in prepare_to_wait_event() tries to explain this.
+Below are changes I suggest.
 
-Oleg.
+diff --git a/kernel/umd.c b/kernel/umd.c
+index ff79fb16d738..f688813b8830 100644
+--- a/kernel/umd.c
++++ b/kernel/umd.c
+@@ -26,7 +26,7 @@ static struct vfsmount *blob_to_mnt(const void *data, size_t len, const char *na
+ 	if (IS_ERR(mnt))
+ 		return mnt;
+ 
+-	file = file_open_root(mnt->mnt_root, mnt, name, O_CREAT | O_WRONLY, 0700);
++	file = file_open_root(mnt->mnt_root, mnt, name, O_CREAT | O_WRONLY | O_EXCL, 0700);
+ 	if (IS_ERR(file)) {
+ 		mntput(mnt);
+ 		return ERR_CAST(file);
+@@ -52,16 +52,18 @@ static struct vfsmount *blob_to_mnt(const void *data, size_t len, const char *na
+ 
+ /**
+  * umd_load_blob - Remember a blob of bytes for fork_usermode_driver
+- * @info: information about usermode driver
+- * @data: a blob of bytes that can be executed as a file
+- * @len:  The lentgh of the blob
++ * @info: information about usermode driver (shouldn't be NULL)
++ * @data: a blob of bytes that can be executed as a file (shouldn't be NULL)
++ * @len:  The lentgh of the blob (shouldn't be 0)
+  *
+  */
+ int umd_load_blob(struct umd_info *info, const void *data, size_t len)
+ {
+ 	struct vfsmount *mnt;
+ 
+-	if (WARN_ON_ONCE(info->wd.dentry || info->wd.mnt))
++	if (!info || !info->driver_name || !data || !len)
++		return -EINVAL;
++	if (info->wd.dentry || info->wd.mnt)
+ 		return -EBUSY;
+ 
+ 	mnt = blob_to_mnt(data, len, info->driver_name);
+@@ -76,15 +78,14 @@ EXPORT_SYMBOL_GPL(umd_load_blob);
+ 
+ /**
+  * umd_unload_blob - Disassociate @info from a previously loaded blob
+- * @info: information about usermode driver
++ * @info: information about usermode driver (shouldn't be NULL)
+  *
+  */
+ int umd_unload_blob(struct umd_info *info)
+ {
+-	if (WARN_ON_ONCE(!info->wd.mnt ||
+-			 !info->wd.dentry ||
+-			 info->wd.mnt->mnt_root != info->wd.dentry))
++	if (!info || !info->driver_name || !info->wd.dentry || !info->wd.mnt)
+ 		return -EINVAL;
++	BUG_ON(info->wd.mnt->mnt_root != info->wd.dentry);
+ 
+ 	kern_unmount(info->wd.mnt);
+ 	info->wd.mnt = NULL;
+@@ -138,7 +139,7 @@ static void umd_cleanup(struct subprocess_info *info)
+ {
+ 	struct umd_info *umd_info = info->data;
+ 
+-	/* cleanup if umh_setup() was successful but exec failed */
++	/* cleanup if umd_setup() was successful but exec failed */
+ 	if (info->retval) {
+ 		fput(umd_info->pipe_to_umh);
+ 		fput(umd_info->pipe_from_umh);
+@@ -163,7 +164,10 @@ int fork_usermode_driver(struct umd_info *info)
+ 	const char *argv[] = { info->driver_name, NULL };
+ 	int err;
+ 
+-	if (WARN_ON_ONCE(info->tgid))
++	if (!info || !info->driver_name || !info->wd.dentry || !info->wd.mnt)
++		return -EINVAL;
++	BUG_ON(info->wd.mnt->mnt_root != info->wd.dentry);
++	if (info->tgid)
+ 		return -EBUSY;
+ 
+ 	err = -ENOMEM;
+diff --git a/net/bpfilter/bpfilter_kern.c b/net/bpfilter/bpfilter_kern.c
+index 91474884ddb7..9dd70aacb81a 100644
+--- a/net/bpfilter/bpfilter_kern.c
++++ b/net/bpfilter/bpfilter_kern.c
+@@ -19,8 +19,13 @@ static void shutdown_umh(void)
+ 	struct pid *tgid = info->tgid;
+ 
+ 	if (tgid) {
+-		kill_pid_info(SIGKILL, SEND_SIG_PRIV, tgid);
+-		wait_event(tgid->wait_pidfd, !pid_task(tgid, PIDTYPE_TGID));
++		kill_pid(tgid, SIGKILL, 1);
++		while (({ bool done;
++			  rcu_read_lock();
++			  done = !pid_task(tgid, PIDTYPE_TGID);
++			  rcu_read_unlock();
++			  done; }))
++			schedule_timeout_uninterruptible(1);
+ 		bpfilter_umh_cleanup(info);
+ 	}
+ }
 
