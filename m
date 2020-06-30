@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBDF0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B723AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C0696206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:58:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FE2520772
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:58:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="r0AhEB3u"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IP4I+Usi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728945AbgF3T6U (ORCPT
+        id S1729029AbgF3T62 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 15:58:20 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:4434 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728327AbgF3T6Q (ORCPT
+        Tue, 30 Jun 2020 15:58:28 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:17403 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728888AbgF3T6R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 15:58:16 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5efb98f40000>; Tue, 30 Jun 2020 12:56:36 -0700
+        Tue, 30 Jun 2020 15:58:17 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5efb99260003>; Tue, 30 Jun 2020 12:57:26 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 30 Jun 2020 12:58:15 -0700
+  Tue, 30 Jun 2020 12:58:16 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 30 Jun 2020 12:58:15 -0700
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 30 Jun
- 2020 19:58:07 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 30 Jun 2020 19:58:07 +0000
+        by hqpgpgate101.nvidia.com on Tue, 30 Jun 2020 12:58:16 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 30 Jun
+ 2020 19:58:08 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 30 Jun 2020 19:58:08 +0000
 Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5efb994f0002>; Tue, 30 Jun 2020 12:58:07 -0700
+        id <B5efb994f0006>; Tue, 30 Jun 2020 12:58:07 -0700
 From:   Ralph Campbell <rcampbell@nvidia.com>
 To:     <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
         <nouveau@lists.freedesktop.org>, <linux-kselftest@vger.kernel.org>,
@@ -50,9 +50,9 @@ CC:     Jerome Glisse <jglisse@redhat.com>,
         Shuah Khan <shuah@kernel.org>,
         "Ben Skeggs" <bskeggs@redhat.com>,
         Ralph Campbell <rcampbell@nvidia.com>
-Subject: [PATCH v2 1/5] nouveau/hmm: fault one page at a time
-Date:   Tue, 30 Jun 2020 12:57:33 -0700
-Message-ID: <20200630195737.8667-2-rcampbell@nvidia.com>
+Subject: [PATCH v2 5/5] hmm: add tests for HMM_PFN_PMD flag
+Date:   Tue, 30 Jun 2020 12:57:37 -0700
+Message-ID: <20200630195737.8667-6-rcampbell@nvidia.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200630195737.8667-1-rcampbell@nvidia.com>
 References: <20200630195737.8667-1-rcampbell@nvidia.com>
@@ -61,319 +61,159 @@ X-NVConfidentiality: public
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1593546996; bh=2WyHYZcAAd5j4j8YMKEb9Xnebvu/ReeLnPA7IJpaPHY=;
+        t=1593547046; bh=xuRfNJ36q0LnGXZex5ovQdfiNn+iM2/aFxAzu26EyNY=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:MIME-Version:X-NVConfidentiality:
          Content-Transfer-Encoding:Content-Type;
-        b=r0AhEB3uF+5wNNtM0mmIB01SZmgLqLlmHnepBFQmHzf4tRP0UTxTQs9DPBBRuI0FP
-         zqjRwmgP1abIaPUC7nsZvRET4KZmg+f9mjYRi59+5CTjpP8xRc37YbBvC94qcxixKo
-         GMJGXam43JhMVk8m5Yr87K0qbRDzfBHuBQrOSeE8UpsCAWiClRlr/h4Ic38BqYsWk2
-         YONZNtzbM1atRj0HZuCSqgCkGm/atkoVDj66ClPR00F8p/EFuu3Fr0O4ndlzdir4wp
-         3mFRc3Xa3s/yv1B7CTJDLEX2naf8jt7Yni2zry2JH1TX5u4ZVOUlejHE8/he4/MtPP
-         o+cnDyb/dc/XQ==
+        b=IP4I+UsioFZBLvnRoozRSTgj3AkNCNg7sQ19NgqKnBZ7E02H2ArJ8qhpeblyEPs1k
+         N5QwP8OqGmCC3q+YgmfXEKkLY2Au0Mn9iRv2V0ovRKQKIMKWUvAfMoAPk3Y5/gra4F
+         DKrR5XJWn5XNp8nNBFYQ0seQWW1KWLih0lKov6AOkk4EUlsJ5XlJxUBvTJP4oVaUcJ
+         Kv9xeaZSH/wQ47mzGbAKhnMcR2Jxi5Qt3e6RUYz1Mq+qudm/B+keCu88HL89AjvUmw
+         xYKuFWr6iyl8mAKIjyHFnQoqJ2u4k8kul9ODB88dk5V6NrYXUdcR5TsgW4hVv/eKHP
+         cw8q9U8O/zN7Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The SVM page fault handler groups faults into a range of contiguous
-virtual addresses and requests hmm_range_fault() to populate and
-return the page frame number of system memory mapped by the CPU.
-In preparation for supporting large pages to be mapped by the GPU,
-process faults one page at a time. In addition, use the hmm_range
-default_flags to fix a corner case where the input hmm_pfns array
-is not reinitialized after hmm_range_fault() returns -EBUSY and must
-be called again.
+Add a sanity test for hmm_range_fault() returning the HMM_PFN_PMD
+flag.
 
 Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
 ---
- drivers/gpu/drm/nouveau/nouveau_svm.c | 199 +++++++++-----------------
- 1 file changed, 66 insertions(+), 133 deletions(-)
+ lib/test_hmm.c                         |  4 ++
+ lib/test_hmm_uapi.h                    |  4 ++
+ tools/testing/selftests/vm/hmm-tests.c | 76 ++++++++++++++++++++++++++
+ 3 files changed, 84 insertions(+)
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouvea=
-u/nouveau_svm.c
-index ba9f9359c30e..665dede69bd1 100644
---- a/drivers/gpu/drm/nouveau/nouveau_svm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
-@@ -516,7 +516,7 @@ static const struct mmu_interval_notifier_ops nouveau_s=
-vm_mni_ops =3D {
- static void nouveau_hmm_convert_pfn(struct nouveau_drm *drm,
- 				    struct hmm_range *range, u64 *ioctl_addr)
- {
--	unsigned long i, npages;
-+	struct page *page;
-=20
- 	/*
- 	 * The ioctl_addr prepared here is passed through nvif_object_ioctl()
-@@ -525,42 +525,38 @@ static void nouveau_hmm_convert_pfn(struct nouveau_dr=
-m *drm,
- 	 * This is all just encoding the internal hmm representation into a
- 	 * different nouveau internal representation.
- 	 */
--	npages =3D (range->end - range->start) >> PAGE_SHIFT;
--	for (i =3D 0; i < npages; ++i) {
--		struct page *page;
--
--		if (!(range->hmm_pfns[i] & HMM_PFN_VALID)) {
--			ioctl_addr[i] =3D 0;
--			continue;
--		}
--
--		page =3D hmm_pfn_to_page(range->hmm_pfns[i]);
--		if (is_device_private_page(page))
--			ioctl_addr[i] =3D nouveau_dmem_page_addr(page) |
--					NVIF_VMM_PFNMAP_V0_V |
--					NVIF_VMM_PFNMAP_V0_VRAM;
--		else
--			ioctl_addr[i] =3D page_to_phys(page) |
--					NVIF_VMM_PFNMAP_V0_V |
--					NVIF_VMM_PFNMAP_V0_HOST;
--		if (range->hmm_pfns[i] & HMM_PFN_WRITE)
--			ioctl_addr[i] |=3D NVIF_VMM_PFNMAP_V0_W;
-+	if (!(range->hmm_pfns[0] & HMM_PFN_VALID)) {
-+		ioctl_addr[0] =3D 0;
-+		return;
- 	}
-+
-+	page =3D hmm_pfn_to_page(range->hmm_pfns[0]);
-+	if (is_device_private_page(page))
-+		ioctl_addr[0] =3D nouveau_dmem_page_addr(page) |
-+				NVIF_VMM_PFNMAP_V0_V |
-+				NVIF_VMM_PFNMAP_V0_VRAM;
-+	else
-+		ioctl_addr[0] =3D page_to_phys(page) |
-+				NVIF_VMM_PFNMAP_V0_V |
-+				NVIF_VMM_PFNMAP_V0_HOST;
-+	if (range->hmm_pfns[0] & HMM_PFN_WRITE)
-+		ioctl_addr[0] |=3D NVIF_VMM_PFNMAP_V0_W;
+diff --git a/lib/test_hmm.c b/lib/test_hmm.c
+index a2a82262b97b..a0c081641f78 100644
+--- a/lib/test_hmm.c
++++ b/lib/test_hmm.c
+@@ -766,6 +766,10 @@ static void dmirror_mkentry(struct dmirror *dmirror, s=
+truct hmm_range *range,
+ 		*perm |=3D HMM_DMIRROR_PROT_WRITE;
+ 	else
+ 		*perm |=3D HMM_DMIRROR_PROT_READ;
++	if (entry & HMM_PFN_PMD)
++		*perm |=3D HMM_DMIRROR_PROT_PMD;
++	if (entry & HMM_PFN_PUD)
++		*perm |=3D HMM_DMIRROR_PROT_PUD;
  }
 =20
- static int nouveau_range_fault(struct nouveau_svmm *svmm,
- 			       struct nouveau_drm *drm, void *data, u32 size,
--			       unsigned long hmm_pfns[], u64 *ioctl_addr,
-+			       u64 *ioctl_addr, unsigned long hmm_flags,
- 			       struct svm_notifier *notifier)
- {
- 	unsigned long timeout =3D
- 		jiffies + msecs_to_jiffies(HMM_RANGE_DEFAULT_TIMEOUT);
- 	/* Have HMM fault pages within the fault window to the GPU. */
-+	unsigned long hmm_pfns[1];
- 	struct hmm_range range =3D {
- 		.notifier =3D &notifier->notifier,
- 		.start =3D notifier->notifier.interval_tree.start,
- 		.end =3D notifier->notifier.interval_tree.last + 1,
--		.pfn_flags_mask =3D HMM_PFN_REQ_FAULT | HMM_PFN_REQ_WRITE,
-+		.default_flags =3D hmm_flags,
- 		.hmm_pfns =3D hmm_pfns,
- 	};
- 	struct mm_struct *mm =3D notifier->notifier.mm;
-@@ -575,11 +571,6 @@ static int nouveau_range_fault(struct nouveau_svmm *sv=
-mm,
- 		ret =3D hmm_range_fault(&range);
- 		mmap_read_unlock(mm);
- 		if (ret) {
--			/*
--			 * FIXME: the input PFN_REQ flags are destroyed on
--			 * -EBUSY, we need to regenerate them, also for the
--			 * other continue below
--			 */
- 			if (ret =3D=3D -EBUSY)
- 				continue;
- 			return ret;
-@@ -614,17 +605,12 @@ nouveau_svm_fault(struct nvif_notify *notify)
- 	struct nvif_object *device =3D &svm->drm->client.device.object;
- 	struct nouveau_svmm *svmm;
- 	struct {
--		struct {
--			struct nvif_ioctl_v0 i;
--			struct nvif_ioctl_mthd_v0 m;
--			struct nvif_vmm_pfnmap_v0 p;
--		} i;
--		u64 phys[16];
-+		struct nouveau_pfnmap_args i;
-+		u64 phys[1];
- 	} args;
--	unsigned long hmm_pfns[ARRAY_SIZE(args.phys)];
--	struct vm_area_struct *vma;
-+	unsigned long hmm_flags;
- 	u64 inst, start, limit;
--	int fi, fn, pi, fill;
-+	int fi, fn;
- 	int replay =3D 0, ret;
+ static bool dmirror_snapshot_invalidate(struct mmu_interval_notifier *mni,
+diff --git a/lib/test_hmm_uapi.h b/lib/test_hmm_uapi.h
+index 67b3b2e6ff5d..670b4ef2a5b6 100644
+--- a/lib/test_hmm_uapi.h
++++ b/lib/test_hmm_uapi.h
+@@ -40,6 +40,8 @@ struct hmm_dmirror_cmd {
+  * HMM_DMIRROR_PROT_NONE: unpopulated PTE or PTE with no access
+  * HMM_DMIRROR_PROT_READ: read-only PTE
+  * HMM_DMIRROR_PROT_WRITE: read/write PTE
++ * HMM_DMIRROR_PROT_PMD: PMD sized page is fully mapped by same permission=
+s
++ * HMM_DMIRROR_PROT_PUD: PUD sized page is fully mapped by same permission=
+s
+  * HMM_DMIRROR_PROT_ZERO: special read-only zero page
+  * HMM_DMIRROR_PROT_DEV_PRIVATE_LOCAL: Migrated device private page on the
+  *					device the ioctl() is made
+@@ -51,6 +53,8 @@ enum {
+ 	HMM_DMIRROR_PROT_NONE			=3D 0x00,
+ 	HMM_DMIRROR_PROT_READ			=3D 0x01,
+ 	HMM_DMIRROR_PROT_WRITE			=3D 0x02,
++	HMM_DMIRROR_PROT_PMD			=3D 0x04,
++	HMM_DMIRROR_PROT_PUD			=3D 0x08,
+ 	HMM_DMIRROR_PROT_ZERO			=3D 0x10,
+ 	HMM_DMIRROR_PROT_DEV_PRIVATE_LOCAL	=3D 0x20,
+ 	HMM_DMIRROR_PROT_DEV_PRIVATE_REMOTE	=3D 0x30,
+diff --git a/tools/testing/selftests/vm/hmm-tests.c b/tools/testing/selftes=
+ts/vm/hmm-tests.c
+index 79db22604019..b533dd08da1d 100644
+--- a/tools/testing/selftests/vm/hmm-tests.c
++++ b/tools/testing/selftests/vm/hmm-tests.c
+@@ -1291,6 +1291,82 @@ TEST_F(hmm2, snapshot)
+ 	hmm_buffer_free(buffer);
+ }
 =20
- 	/* Parse available fault buffer entries into a cache, and update
-@@ -691,66 +677,53 @@ nouveau_svm_fault(struct nvif_notify *notify)
- 		 * window into a single update.
- 		 */
- 		start =3D buffer->fault[fi]->addr;
--		limit =3D start + (ARRAY_SIZE(args.phys) << PAGE_SHIFT);
-+		limit =3D start + PAGE_SIZE;
- 		if (start < svmm->unmanaged.limit)
- 			limit =3D min_t(u64, limit, svmm->unmanaged.start);
--		SVMM_DBG(svmm, "wndw %016llx-%016llx", start, limit);
-=20
--		mm =3D svmm->notifier.mm;
--		if (!mmget_not_zero(mm)) {
--			nouveau_svm_fault_cancel_fault(svm, buffer->fault[fi]);
--			continue;
--		}
--
--		/* Intersect fault window with the CPU VMA, cancelling
--		 * the fault if the address is invalid.
-+		/*
-+		 * Prepare the GPU-side update of all pages within the
-+		 * fault window, determining required pages and access
-+		 * permissions based on pending faults.
- 		 */
--		mmap_read_lock(mm);
--		vma =3D find_vma_intersection(mm, start, limit);
--		if (!vma) {
--			SVMM_ERR(svmm, "wndw %016llx-%016llx", start, limit);
--			mmap_read_unlock(mm);
--			mmput(mm);
--			nouveau_svm_fault_cancel_fault(svm, buffer->fault[fi]);
--			continue;
-+		args.i.p.addr =3D start;
-+		args.i.p.page =3D PAGE_SHIFT;
-+		args.i.p.size =3D PAGE_SIZE;
-+		/*
-+		 * Determine required permissions based on GPU fault
-+		 * access flags.
-+		 * XXX: atomic?
-+		 */
-+		switch (buffer->fault[fi]->access) {
-+		case 0: /* READ. */
-+			hmm_flags =3D HMM_PFN_REQ_FAULT;
-+			break;
-+		case 3: /* PREFETCH. */
-+			hmm_flags =3D 0;
-+			break;
-+		default:
-+			hmm_flags =3D HMM_PFN_REQ_FAULT | HMM_PFN_REQ_WRITE;
-+			break;
- 		}
--		start =3D max_t(u64, start, vma->vm_start);
--		limit =3D min_t(u64, limit, vma->vm_end);
--		mmap_read_unlock(mm);
--		SVMM_DBG(svmm, "wndw %016llx-%016llx", start, limit);
-=20
--		if (buffer->fault[fi]->addr !=3D start) {
--			SVMM_ERR(svmm, "addr %016llx", buffer->fault[fi]->addr);
--			mmput(mm);
-+		mm =3D svmm->notifier.mm;
-+		if (!mmget_not_zero(mm)) {
- 			nouveau_svm_fault_cancel_fault(svm, buffer->fault[fi]);
- 			continue;
- 		}
-=20
--		/* Prepare the GPU-side update of all pages within the
--		 * fault window, determining required pages and access
--		 * permissions based on pending faults.
--		 */
--		args.i.p.page =3D PAGE_SHIFT;
--		args.i.p.addr =3D start;
--		for (fn =3D fi, pi =3D 0;;) {
--			/* Determine required permissions based on GPU fault
--			 * access flags.
--			 *XXX: atomic?
--			 */
--			switch (buffer->fault[fn]->access) {
--			case 0: /* READ. */
--				hmm_pfns[pi++] =3D HMM_PFN_REQ_FAULT;
--				break;
--			case 3: /* PREFETCH. */
--				hmm_pfns[pi++] =3D 0;
--				break;
--			default:
--				hmm_pfns[pi++] =3D HMM_PFN_REQ_FAULT |
--						 HMM_PFN_REQ_WRITE;
--				break;
--			}
--			args.i.p.size =3D pi << PAGE_SHIFT;
-+		notifier.svmm =3D svmm;
-+		ret =3D mmu_interval_notifier_insert(&notifier.notifier, mm,
-+						   args.i.p.addr, args.i.p.size,
-+						   &nouveau_svm_mni_ops);
-+		if (!ret) {
-+			ret =3D nouveau_range_fault(svmm, svm->drm, &args,
-+				sizeof(args), args.phys, hmm_flags, &notifier);
-+			mmu_interval_notifier_remove(&notifier.notifier);
-+		}
-+		mmput(mm);
-=20
-+		for (fn =3D fi; ++fn < buffer->fault_nr; ) {
- 			/* It's okay to skip over duplicate addresses from the
- 			 * same SVMM as faults are ordered by access type such
- 			 * that only the first one needs to be handled.
-@@ -758,61 +731,21 @@ nouveau_svm_fault(struct nvif_notify *notify)
- 			 * ie. WRITE faults appear first, thus any handling of
- 			 * pending READ faults will already be satisfied.
- 			 */
--			while (++fn < buffer->fault_nr &&
--			       buffer->fault[fn]->svmm =3D=3D svmm &&
--			       buffer->fault[fn    ]->addr =3D=3D
--			       buffer->fault[fn - 1]->addr);
--
--			/* If the next fault is outside the window, or all GPU
--			 * faults have been dealt with, we're done here.
--			 */
--			if (fn >=3D buffer->fault_nr ||
--			    buffer->fault[fn]->svmm !=3D svmm ||
-+			if (buffer->fault[fn]->svmm !=3D svmm ||
- 			    buffer->fault[fn]->addr >=3D limit)
- 				break;
--
--			/* Fill in the gap between this fault and the next. */
--			fill =3D (buffer->fault[fn    ]->addr -
--				buffer->fault[fn - 1]->addr) >> PAGE_SHIFT;
--			while (--fill)
--				hmm_pfns[pi++] =3D 0;
- 		}
-=20
--		SVMM_DBG(svmm, "wndw %016llx-%016llx covering %d fault(s)",
--			 args.i.p.addr,
--			 args.i.p.addr + args.i.p.size, fn - fi);
--
--		notifier.svmm =3D svmm;
--		ret =3D mmu_interval_notifier_insert(&notifier.notifier,
--						   svmm->notifier.mm,
--						   args.i.p.addr, args.i.p.size,
--						   &nouveau_svm_mni_ops);
--		if (!ret) {
--			ret =3D nouveau_range_fault(
--				svmm, svm->drm, &args,
--				sizeof(args.i) + pi * sizeof(args.phys[0]),
--				hmm_pfns, args.phys, &notifier);
--			mmu_interval_notifier_remove(&notifier.notifier);
--		}
--		mmput(mm);
-+		/* If handling failed completely, cancel all faults. */
-+		if (ret) {
-+			while (fi < fn) {
-+				struct nouveau_svm_fault *fault =3D
-+					buffer->fault[fi++];
-=20
--		/* Cancel any faults in the window whose pages didn't manage
--		 * to keep their valid bit, or stay writeable when required.
--		 *
--		 * If handling failed completely, cancel all faults.
--		 */
--		while (fi < fn) {
--			struct nouveau_svm_fault *fault =3D buffer->fault[fi++];
--			pi =3D (fault->addr - args.i.p.addr) >> PAGE_SHIFT;
--			if (ret ||
--			     !(args.phys[pi] & NVIF_VMM_PFNMAP_V0_V) ||
--			    (!(args.phys[pi] & NVIF_VMM_PFNMAP_V0_W) &&
--			     fault->access !=3D 0 && fault->access !=3D 3)) {
- 				nouveau_svm_fault_cancel_fault(svm, fault);
--				continue;
- 			}
-+		} else
- 			replay++;
--		}
- 	}
-=20
- 	/* Issue fault replay to the GPU. */
++/*
++ * Test the hmm_range_fault() HMM_PFN_PMD flag for large pages that
++ * should be mapped by a large page table entry.
++ */
++TEST_F(hmm, compound)
++{
++	struct hmm_buffer *buffer;
++	unsigned long npages;
++	unsigned long size;
++	int *ptr;
++	unsigned char *m;
++	int ret;
++	long pagesizes[4];
++	int n, idx;
++	unsigned long i;
++
++	/* Skip test if we can't allocate a hugetlbfs page. */
++
++	n =3D gethugepagesizes(pagesizes, 4);
++	if (n <=3D 0)
++		return;
++	for (idx =3D 0; --n > 0; ) {
++		if (pagesizes[n] < pagesizes[idx])
++			idx =3D n;
++	}
++	size =3D ALIGN(TWOMEG, pagesizes[idx]);
++	npages =3D size >> self->page_shift;
++
++	buffer =3D malloc(sizeof(*buffer));
++	ASSERT_NE(buffer, NULL);
++
++	buffer->ptr =3D get_hugepage_region(size, GHR_STRICT);
++	if (buffer->ptr =3D=3D NULL) {
++		free(buffer);
++		return;
++	}
++
++	buffer->size =3D size;
++	buffer->mirror =3D malloc(npages);
++	ASSERT_NE(buffer->mirror, NULL);
++
++	/* Initialize the pages the device will snapshot in buffer->ptr. */
++	for (i =3D 0, ptr =3D buffer->ptr; i < size / sizeof(*ptr); ++i)
++		ptr[i] =3D i;
++
++	/* Simulate a device snapshotting CPU pagetables. */
++	ret =3D hmm_dmirror_cmd(self->fd, HMM_DMIRROR_SNAPSHOT, buffer, npages);
++	ASSERT_EQ(ret, 0);
++	ASSERT_EQ(buffer->cpages, npages);
++
++	/* Check what the device saw. */
++	m =3D buffer->mirror;
++	for (i =3D 0; i < npages; ++i)
++		ASSERT_EQ(m[i], HMM_DMIRROR_PROT_WRITE |
++				HMM_DMIRROR_PROT_PMD);
++
++	/* Make the region read-only. */
++	ret =3D mprotect(buffer->ptr, size, PROT_READ);
++	ASSERT_EQ(ret, 0);
++
++	/* Simulate a device snapshotting CPU pagetables. */
++	ret =3D hmm_dmirror_cmd(self->fd, HMM_DMIRROR_SNAPSHOT, buffer, npages);
++	ASSERT_EQ(ret, 0);
++	ASSERT_EQ(buffer->cpages, npages);
++
++	/* Check what the device saw. */
++	m =3D buffer->mirror;
++	for (i =3D 0; i < npages; ++i)
++		ASSERT_EQ(m[i], HMM_DMIRROR_PROT_READ |
++				HMM_DMIRROR_PROT_PMD);
++
++	free_hugepage_region(buffer->ptr);
++	buffer->ptr =3D NULL;
++	hmm_buffer_free(buffer);
++}
++
+ /*
+  * Test two devices reading the same memory (double mapped).
+  */
 --=20
 2.20.1
 
