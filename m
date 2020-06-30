@@ -2,114 +2,135 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7419C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C07C2C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 87F492065D
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AFEB2065D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:26:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CqI5q8x8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730684AbgF3VZ5 (ORCPT
+        id S1730716AbgF3V0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 17:25:57 -0400
-Received: from mga02.intel.com ([134.134.136.20]:43377 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728878AbgF3VZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 17:25:25 -0400
-IronPort-SDR: ITq4zyEAGNua+gUTrrKHgOzpdwX7k4XvG1fodZQlrq5CM/gaojUeJrduyX0PIe9+4ydAYuOkZH
- fOiPnDoZIa4w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="134676815"
-X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
-   d="scan'208";a="134676815"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 14:25:23 -0700
-IronPort-SDR: cA821hHlmTE2NiSTAOgHl5UlpxdCUWDkRaE6ceH/S074++WSfveBc1T2NQ4PPRjFo/FRFCZHo0
- t1fnhyXlrwPQ==
-X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
-   d="scan'208";a="481336263"
-Received: from schittin-mobl.amr.corp.intel.com (HELO bwidawsk-mobl5.local) ([10.252.132.42])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 14:25:23 -0700
-From:   Ben Widawsky <ben.widawsky@intel.com>
-To:     linux-mm <linux-mm@kvack.org>, linux-kernel@vger.kernel.org
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Ben Widawsky <ben.widawsky@intel.com>
-Subject: [PATCH 04/12] mm/mempolicy: allow preferred code to take a nodemask
-Date:   Tue, 30 Jun 2020 14:25:09 -0700
-Message-Id: <20200630212517.308045-5-ben.widawsky@intel.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200630212517.308045-1-ben.widawsky@intel.com>
-References: <20200630212517.308045-1-ben.widawsky@intel.com>
+        Tue, 30 Jun 2020 17:26:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33338 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730694AbgF3V0e (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 17:26:34 -0400
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 138CBC061755;
+        Tue, 30 Jun 2020 14:26:34 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id 80so20159881qko.7;
+        Tue, 30 Jun 2020 14:26:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=u6QrfK0w5ybbH9fi34xXU8b52YrlyrA/11EhFWPjHcY=;
+        b=CqI5q8x8tEfzpcgQJRXsrlzwKqVx+wSi8n79eup4ry7b6IboG8x3Mo5ta+oAtr6eao
+         1am7Wn0i/Uv0SJ6VTpa5eBmBnp+9xy/x+bEisQE5ZlhxVjJWCyOa4cDwY+hue3zb2+j5
+         j+h6l6giCeAFx5TefdU1ML9TNV4SFpFD91ZvzwAxHPj2Gm2frJI+s+JacWMiAKVnNHVp
+         OhoZhO5O6ui0V4njxE3Pg+SFDtt9Rpo5cKZZQ3UNYJRgXEdJW08Sx82AIQrZI7uouNUw
+         sM1Vt2FerL4pXP5AQu6BVts9FOnYKboA+BPb8w2Ed3J7+aD5NlhNJRkvTxi9d/tLDKnk
+         51Bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=u6QrfK0w5ybbH9fi34xXU8b52YrlyrA/11EhFWPjHcY=;
+        b=UI5tSun2jrcj88D91B5J+fXwmpgUmN4QPlAoVvU1yfoh6qojEXvIPeReH2VtywhZVA
+         Y5zurzQBlj/4d6A3iJDMtefGhSrRF3hdwYcu8LqeA15Kt8R2pO2FAVVO5bxI0uaCnVN+
+         +pBsgNmcV32++UiZRDLrHSK02IOA8RDvPz/00o5VNAXZz/yV6KdKhsoCV6A7GJXh/VX+
+         c4o3xmTs66YJS9Bo3Wm8PsDPmsNk8D3QgqhnIhXQ4tTG/qBV/rcRlacXiCFfSkXS3hyr
+         qIgbzoNymK0g3LJSrcwOBV7s7oPeROGJLqA7sOqvb1HP7fGBySDGh6QHAAaQUpIyZnft
+         5Cdg==
+X-Gm-Message-State: AOAM533fNLeFO3C1E+TGEqnfKYaajboPX3feKrQ0PuZYCnQq3EFdqrxU
+        o8Me8C+ga3RtBMkSudhkKUNbgtrHu4mZJur83Zk=
+X-Google-Smtp-Source: ABdhPJzNTMwPYp9iv+oRxOsQCp2yESwoibyek38j7BPYdMXfXDzKD6C5b60bb9+VFoBgf+eNaEiI78MjsxtvU5aRFpY=
+X-Received: by 2002:a37:270e:: with SMTP id n14mr20807794qkn.92.1593552393299;
+ Tue, 30 Jun 2020 14:26:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200630184922.455439-1-haoluo@google.com>
+In-Reply-To: <20200630184922.455439-1-haoluo@google.com>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 30 Jun 2020 14:26:21 -0700
+Message-ID: <CAEf4BzaH3TJWMsNHFPUTgEotErX0WS8R8ds1LYs6eXvLy1YbxQ@mail.gmail.com>
+Subject: Re: [PATCH bpf-next] selftests/bpf: Switch test_vmlinux to use hrtimer_range_start_ns.
+To:     Hao Luo <haoluo@google.com>
+Cc:     Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Hansen <dave.hansen@linux.intel.com>
+On Tue, Jun 30, 2020 at 1:47 PM Hao Luo <haoluo@google.com> wrote:
+>
+> The test_vmlinux test uses hrtimer_nanosleep as hook to test tracing
+> programs. But it seems Clang may have done an aggressive optimization,
+> causing fentry and kprobe to not hook on this function properly on a
+> Clang build kernel.
+>
+> A possible fix is switching to use a more reliable function, e.g. the
+> ones exported to kernel modules such as hrtimer_range_start_ns. After
+> we switch to using hrtimer_range_start_ns, the test passes again even
+> on a clang build kernel.
+>
+> Tested:
+>  In a clang build kernel, the test fail even when the flags
+>  {fentry, kprobe}_called are set unconditionally in handle__kprobe()
+>  and handle__fentry(), which implies the programs do not hook on
+>  hrtimer_nanosleep() properly. This could be because clang's code
+>  transformation is too aggressive.
+>
+>  test_vmlinux:PASS:skel_open 0 nsec
+>  test_vmlinux:PASS:skel_attach 0 nsec
+>  test_vmlinux:PASS:tp 0 nsec
+>  test_vmlinux:PASS:raw_tp 0 nsec
+>  test_vmlinux:PASS:tp_btf 0 nsec
+>  test_vmlinux:FAIL:kprobe not called
+>  test_vmlinux:FAIL:fentry not called
+>
+>  After we switch to hrtimer_range_start_ns, the test passes.
+>
+>  test_vmlinux:PASS:skel_open 0 nsec
+>  test_vmlinux:PASS:skel_attach 0 nsec
+>  test_vmlinux:PASS:tp 0 nsec
+>  test_vmlinux:PASS:raw_tp 0 nsec
+>  test_vmlinux:PASS:tp_btf 0 nsec
+>  test_vmlinux:PASS:kprobe 0 nsec
+>  test_vmlinux:PASS:fentry 0 nsec
+>
+> Signed-off-by: Hao Luo <haoluo@google.com>
+> ---
 
-Create a helper function (mpol_new_preferred_many()) which is usable
-both by the old, single-node MPOL_PREFERRED and the new
-MPOL_PREFERRED_MANY.
+Took me a bit of jumping around to find how it is related to nanosleep
+call :) But seems like it's unconditionally called, so should be fine.
 
-Enforce the old single-node MPOL_PREFERRED behavior in the "new"
-version of mpol_new_preferred() which calls mpol_new_preferred_many().
+Acked-by: Andrii Nakryiko <andriin@fb.com>
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
-Signed-off-by: Ben Widawsky <ben.widawsky@intel.com>
----
- mm/mempolicy.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index 33bf29ddfab2..1ad6e446d8f6 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -203,17 +203,30 @@ static int mpol_new_interleave(struct mempolicy *pol, const nodemask_t *nodes)
- 	return 0;
- }
- 
--static int mpol_new_preferred(struct mempolicy *pol, const nodemask_t *nodes)
-+static int mpol_new_preferred_many(struct mempolicy *pol,
-+				   const nodemask_t *nodes)
- {
- 	if (!nodes)
- 		pol->flags |= MPOL_F_LOCAL;	/* local allocation */
- 	else if (nodes_empty(*nodes))
- 		return -EINVAL;			/*  no allowed nodes */
- 	else
--		pol->v.preferred_nodes = nodemask_of_node(first_node(*nodes));
-+		pol->v.preferred_nodes = *nodes;
- 	return 0;
- }
- 
-+static int mpol_new_preferred(struct mempolicy *pol, const nodemask_t *nodes)
-+{
-+	if (nodes) {
-+		/* MPOL_PREFERRED can only take a single node: */
-+		nodemask_t tmp = nodemask_of_node(first_node(*nodes));
-+
-+		return mpol_new_preferred_many(pol, &tmp);
-+	}
-+
-+	return mpol_new_preferred_many(pol, NULL);
-+}
-+
- static int mpol_new_bind(struct mempolicy *pol, const nodemask_t *nodes)
- {
- 	if (nodes_empty(*nodes))
--- 
-2.27.0
+>  tools/testing/selftests/bpf/progs/test_vmlinux.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+>
 
+[...]
