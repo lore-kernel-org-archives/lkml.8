@@ -2,190 +2,252 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08953C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E521C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE8FE20775
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:59:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37FD32067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593503968;
-	bh=XMOMH6UjWMMz/zU5AkuWFlHeMYBgUXYfusDUefgj7NI=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=lGG6fXmkPz6Ifj04svky5Aan+zKrbTap37RdxAdkcxX8MZ1S3fAAnCgJbyls/xBtL
-	 22tWpQw6Etj1rDgFq6YbgD7f0TQ5kaDaEILF1pfsuroTTtrCXJ/eRpY8HY+JiTDcNb
-	 xYYef9uQ95N8LkDg6az3+cmg6u7paTdHIkqVyiCg=
+	s=default; t=1593504098;
+	bh=/K95gsIeDFvq/cfNbSHemowJV1GCgFyuiQ9gKwSv3Dg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=U70yubmkFHLiBmxIo1kgEcWEnxt1g79PMrm/QSP62zMUUpPk5YGYROSZDgHXvE4Aj
+	 V9PKkw9lWumaA5EWQ5qmaFVNbpRuo6fQh//sfDqmWmARNcVKJYaFU+QkLMavlu54cQ
+	 S9+9owEdW5uhBw9h1jNuozWDs+RXTK0fbGNZ0RT8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730548AbgF3H71 (ORCPT
+        id S1730602AbgF3IBf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 03:59:27 -0400
-Received: from mail-ej1-f67.google.com ([209.85.218.67]:39445 "EHLO
-        mail-ej1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727090AbgF3H70 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 03:59:26 -0400
-Received: by mail-ej1-f67.google.com with SMTP id w6so19544835ejq.6
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 00:59:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=7D2V9mpD134BewynmFSlbJNUC4Zgi7X013u5O1lES74=;
-        b=uiXMKlU+dpmBCpIybTzlf2MDSOutZlOe3uiu7QmFD8ss/NQWdn2TOhT8BnPhivxLL3
-         OSFLk5AvOdvIeWpfJ6KHa2vJT/RxbXchtK9vSq9NH1lxFc8O6h4G5DdSxJyqow/07YR6
-         1DrMwxOwKE8nsLhnxnccgMKjwb9gLq/Qz0OEgTrfiZhWVTvLbDhwRYoAxCH0/4NxKorU
-         //WEm/BQi+L0Wcaf4iK1C7kvm6tOiREsq13dofTeAyAo0D9/TtspBWVsObBKeOqboDgl
-         I+49YU+76ZsE9IMO4qg5GaB9Upb/Hi0kdgrXLaVH0raCdIqJg1lVf5/nkvMuBB9jj5KB
-         uZLg==
-X-Gm-Message-State: AOAM533cvzqQVyZE2y6e/LYCVkFTqMnnrjSXw29SLnwcNJ2HDiZyf/MY
-        +fiYSFPNO4MNsNsEdp4lpsQ=
-X-Google-Smtp-Source: ABdhPJyJd8hIHYQvHyjaOYy6CJ0Pka1Ps2CqcVu9SpI0qezbI0UkyuEnBLchBjC34+pewR1IzNQhnA==
-X-Received: by 2002:a17:906:4a45:: with SMTP id a5mr16799425ejv.384.1593503963301;
-        Tue, 30 Jun 2020 00:59:23 -0700 (PDT)
-Received: from ?IPv6:2a0b:e7c0:0:107::70f? ([2a0b:e7c0:0:107::70f])
-        by smtp.gmail.com with ESMTPSA id jo25sm1397143ejb.116.2020.06.30.00.59.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jun 2020 00:59:22 -0700 (PDT)
-Subject: Re: [PATCH v1 4/6] vt/vt: Add SRG mouse reporting protocol
-To:     Tammo Block <tammo.block@gmail.com>, linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <cover.1593499846.git.tammo.block@gmail.com>
- <d0435e5d32f1b14033d3c4ba22457356e8ae85b3.1593499846.git.tammo.block@gmail.com>
-From:   Jiri Slaby <jirislaby@kernel.org>
-Autocrypt: addr=jslaby@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <a28ffa0d-01ca-7406-dbea-3eaf80dd72a8@kernel.org>
-Date:   Tue, 30 Jun 2020 09:59:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 30 Jun 2020 04:01:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42190 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726994AbgF3IBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 04:01:34 -0400
+Received: from localhost (unknown [84.241.197.94])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 602DC2067D;
+        Tue, 30 Jun 2020 08:01:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593504093;
+        bh=/K95gsIeDFvq/cfNbSHemowJV1GCgFyuiQ9gKwSv3Dg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KyXAxBvS92Smno1SNYEhOgU+4s003HTesBM/Wqpyq2ZMXsxbMLjq6PKv3IHl+bKLg
+         yvpRpOc1IBZOBgNBFqef2xTUkXeHKaN2Bo9O041B7uAENgdVe0QtinHAU+wrTwGP21
+         Huxdlg6gNi+hL+Q/paKVdRwLAfPx39Vg77dI1sKs=
+Date:   Tue, 30 Jun 2020 10:01:30 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
+        lalithambika.krishnakumar@intel.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>, oohall@gmail.com,
+        Saravana Kannan <saravanak@google.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Subject: Re: [PATCH v2 5/7] driver core: Add device location to "struct
+ device" and expose it in sysfs
+Message-ID: <20200630080130.GB619174@kroah.com>
+References: <20200630044943.3425049-1-rajatja@google.com>
+ <20200630044943.3425049-6-rajatja@google.com>
 MIME-Version: 1.0
-In-Reply-To: <d0435e5d32f1b14033d3c4ba22457356e8ae85b3.1593499846.git.tammo.block@gmail.com>
-Content-Type: text/plain; charset=iso-8859-2
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200630044943.3425049-6-rajatja@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30. 06. 20, 9:11, Tammo Block wrote:
-> The SRG protocol indicates a button release by appending a "m" to the
-> report. In this case the button number is not 3 ("release state") but
-> the number of the button that was released. As release event are only
-> reported for the first three buttons, we need to store the number on
-> click events because it is not sent to us from userspace.
+On Mon, Jun 29, 2020 at 09:49:41PM -0700, Rajat Jain wrote:
+> Add a new (optional) field to denote the physical location of a device
+> in the system, and expose it in sysfs. This was discussed here:
+> https://lore.kernel.org/linux-acpi/20200618184621.GA446639@kroah.com/
 > 
-> We also need to check for the case where no button state change occurred
-> at all (bit 6 set), in this case a value of 3 is OK even in SRG.
+> (The primary choice for attribute name i.e. "location" is already
+> exposed as an ABI elsewhere, so settled for "site").
+
+Where is "location" exported?  I see one USB port sysfs attribute, is
+that what you are worried about here?
+
+> Individual buses
+> that want to support this new attribute can opt-in by setting a flag in
+> bus_type, and then populating the location of device while enumerating
+> it.
 > 
-> Bitmasks for your convenience:
-> 195 - All bits related to any button number
-> 227 - All bits related to button number and "state not changed" bit
-> 252 - All, except low button numbers (left, middle, right button)
-
-Ick, define macros for those (likely in 2/6 where you define the vc_data
-members holding these bits) and use them below.
-
-> Signed-off-by: Tammo Block <tammo.block@gmail.com>
+> Signed-off-by: Rajat Jain <rajatja@google.com>
 > ---
->  drivers/tty/vt/vt.c | 19 ++++++++++++++++---
->  1 file changed, 16 insertions(+), 3 deletions(-)
+> v2: (Initial version)
 > 
-> diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-> index e2324d8e4e74..36520f7f0315 100644
-> --- a/drivers/tty/vt/vt.c
-> +++ b/drivers/tty/vt/vt.c
-> @@ -183,6 +183,9 @@ core_param(consoleblank, blankinterval, int, 0444);
->  static DECLARE_WORK(console_work, console_callback);
->  static DECLARE_WORK(con_driver_unregister_work, con_driver_unregister_callback);
->  
-> +/* remember mouse state */
-> +unsigned char last_button_pressed = 3;
+>  drivers/base/core.c        | 35 +++++++++++++++++++++++++++++++
+>  include/linux/device.h     | 42 ++++++++++++++++++++++++++++++++++++++
+>  include/linux/device/bus.h |  8 ++++++++
+>  3 files changed, 85 insertions(+)
 
-So this can be static, right? Can this be in mouse_report or is it used
-elsewhere? If it has to be global, a mouse_ prefix would be good.
 
->  /*
->   * fg_console is the current virtual console,
->   * last_console is the last used one,
-> @@ -1840,11 +1843,21 @@ static inline void respond_ID(struct tty_struct *tty)
->  
->  void mouse_report(struct tty_struct *tty, int butt, int mrx, int mry)
->  {
-> -	char buf[8];
-> +	char buf[20];
-> +	bool rel;
->  	int len;
->  
-> -	len = sprintf(buf, "\033[M%c%c%c", (char)(' ' + butt),
-> -			(char)('!' + mrx), (char)('!' + mry));
-> +	if (vc_cons[fg_console].d->vc_protocol_mouse == 1) {	/* SRG*/
+No Documentation/ABI/ update for this new attribute?  Why not?
 
-So 1 is SRG, 2 is URXVT, 0 is X10, right? We need constants for those,
-or maybe enum and switch+case here? No need for the comments here then.
-
-> +		/* For SRG release events, we send the last clicked button < 3 */
-> +		rel = ((butt & 195) == 3);
-
-No need for the outer parentheses.
-
-> +		if ((butt & 195) < 3)
-> +			last_button_pressed = butt & 3;
-> +		if ((butt & 227) == 3)
-> +			butt = (butt & 252) | last_button_pressed;
-> +		len = sprintf(buf, "\033[<%d;%d;%d%c", butt, mrx + 1, mry + 1, rel ? 'm' : 'M');
-> +	} else							/* X10 */
-> +		len = sprintf(buf, "\033[M%c%c%c", (char)(' ' + butt),
-> +				(char)('!' + mrx), (char)('!' + mry));
->  	respond_string(buf, len, tty->port);
+> 
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index 67d39a90b45c7..14c815526b7fa 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -1778,6 +1778,32 @@ static ssize_t online_store(struct device *dev, struct device_attribute *attr,
 >  }
+>  static DEVICE_ATTR_RW(online);
+>  
+> +static ssize_t site_show(struct device *dev, struct device_attribute *attr,
+> +			 char *buf)
+> +{
+> +	const char *site;
+> +
+> +	device_lock(dev);
+> +	switch (dev->site) {
+> +	case SITE_INTERNAL:
+> +		site = "INTERNAL";
+> +		break;
+> +	case SITE_EXTENDED:
+> +		site = "EXTENDED";
+> +		break;
+> +	case SITE_EXTERNAL:
+> +		site = "EXTERNAL";
+> +		break;
+> +	case SITE_UNKNOWN:
+> +	default:
+> +		site = "UNKNOWN";
+> +		break;
+> +	}
+> +	device_unlock(dev);
+
+Why are you locking/unlocking a device here?
+
+You have a reference count on the structure, are you worried about
+something else changing here on it?  If so, what?  You aren't locking it
+when the state is set (which is fine, really, you shouldn't need to.)
+
+
+> +	return sprintf(buf, "%s\n", site);
+> +}
+> +static DEVICE_ATTR_RO(site);
+> +
+>  int device_add_groups(struct device *dev, const struct attribute_group **groups)
+>  {
+>  	return sysfs_create_groups(&dev->kobj, groups);
+> @@ -1949,8 +1975,16 @@ static int device_add_attrs(struct device *dev)
+>  			goto err_remove_dev_groups;
+>  	}
+>  
+> +	if (bus_supports_site(dev->bus)) {
+> +		error = device_create_file(dev, &dev_attr_site);
+> +		if (error)
+> +			goto err_remove_dev_attr_online;
+> +	}
+> +
+>  	return 0;
+>  
+> + err_remove_dev_attr_online:
+> +	device_remove_file(dev, &dev_attr_online);
+>   err_remove_dev_groups:
+>  	device_remove_groups(dev, dev->groups);
+>   err_remove_type_groups:
+> @@ -1968,6 +2002,7 @@ static void device_remove_attrs(struct device *dev)
+>  	struct class *class = dev->class;
+>  	const struct device_type *type = dev->type;
+>  
+> +	device_remove_file(dev, &dev_attr_site);
+>  	device_remove_file(dev, &dev_attr_online);
+>  	device_remove_groups(dev, dev->groups);
+>  
+> diff --git a/include/linux/device.h b/include/linux/device.h
+> index 15460a5ac024a..a4143735ae712 100644
+> --- a/include/linux/device.h
+> +++ b/include/linux/device.h
+> @@ -428,6 +428,31 @@ enum dl_dev_state {
+>  	DL_DEV_UNBINDING,
+>  };
+>  
+> +/**
+> + * enum device_site - Physical location of the device in the system.
+> + * The semantics of values depend on subsystem / bus:
+> + *
+> + * @SITE_UNKNOWN:  Location is Unknown (default)
+> + *
+> + * @SITE_INTERNAL: Device is internal to the system, and cannot be (easily)
+> + *                 removed. E.g. SoC internal devices, onboard soldered
+> + *                 devices, internal M.2 cards (that cannot be removed
+> + *                 without opening the chassis).
+> + * @SITE_EXTENDED: Device sits an extension of the system. E.g. devices
+> + *                 on external PCIe trays, docking stations etc. These
+> + *                 devices may be removable, but are generally housed
+> + *                 internally on an extension board, so they are removed
+> + *                 only when that whole extension board is removed.
+> + * @SITE_EXTERNAL: Devices truly external to the system (i.e. plugged on
+> + *                 an external port) that may be removed or added frequently.
+> + */
+> +enum device_site {
+> +	SITE_UNKNOWN = 0,
+> +	SITE_INTERNAL,
+> +	SITE_EXTENDED,
+> +	SITE_EXTERNAL,
+> +};
+> +
+>  /**
+>   * struct dev_links_info - Device data related to device links.
+>   * @suppliers: List of links to supplier devices.
+> @@ -513,6 +538,7 @@ struct dev_links_info {
+>   * 		device (i.e. the bus driver that discovered the device).
+>   * @iommu_group: IOMMU group the device belongs to.
+>   * @iommu:	Per device generic IOMMU runtime data
+> + * @site:	Physical location of the device w.r.t. the system
+>   *
+>   * @offline_disabled: If set, the device is permanently online.
+>   * @offline:	Set after successful invocation of bus type's .offline().
+> @@ -613,6 +639,8 @@ struct device {
+>  	struct iommu_group	*iommu_group;
+>  	struct dev_iommu	*iommu;
+>  
+> +	enum device_site	site;	/* Device physical location */
+> +
+>  	bool			offline_disabled:1;
+>  	bool			offline:1;
+>  	bool			of_node_reused:1;
+> @@ -806,6 +834,20 @@ static inline bool dev_has_sync_state(struct device *dev)
+>  	return false;
+>  }
+>  
+> +static inline int dev_set_site(struct device *dev, enum device_site site)
+> +{
+> +	if (site < SITE_UNKNOWN || site > SITE_EXTERNAL)
+> +		return -EINVAL;
+
+It's an enum, why check the range?
 
 thanks,
--- 
-js
-suse labs
+
+greg k-h
