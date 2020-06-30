@@ -2,213 +2,130 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5467FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C71B0C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:38:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D8D2206CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:37:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593542269;
-	bh=fkRM6htIHLO0nAmdSddtZqcErSqrnOOxacEtFc8Q7Bg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=iMJlHEb2220la+fLW//+u7sYWm0/NMkXtb/dvJ4TuWjlfrZtyFqOpQd2Tmun55OMC
-	 E065JBtDKh6lm6RrFY+meUiYBfOJmidAcV4d+eMrRhY+rXe20M33QsJ6mMOxoheaiQ
-	 XIrRiej1qVAjD3vUw+ACm/0uEK0w5e1+EjXPv83I=
+	by mail.kernel.org (Postfix) with ESMTP id 9E5F420775
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:38:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="rDdo76TV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387471AbgF3Shr (ORCPT
+        id S1730355AbgF3Si2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 14:37:47 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42831 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbgF3Shr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 14:37:47 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 76so4807930otu.9;
-        Tue, 30 Jun 2020 11:37:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+qDEyqS8NE3oxK3prUz3RFXZ5fxmePBlSyhV2vUSR+Q=;
-        b=VWAR2HIrilq+maXmrHUWNQ8MjJU6dFDHH1vhD/KMFptE2pmPYv0S5yagkGhic25nfu
-         iOKxNUVXYyEsPgNVy2kYhATEqdqUSIOwFpLyJclHH02lkTD7NVny2j/HVTCzBmJrNAog
-         D+c+iKzpW4t9P5zPLfFChN0fKdORkXGuXbtM+xsazSRvywm5JbwiBarj2qbZRoAuWRgb
-         rR4qzOIYsVvRDuxGMRHi75S7JGlpcCRvzx8U4pW2UDz3FogmRZm8t4IJ+rBXXDO0VtO+
-         gSbQoe17cZYGxFaAiYv2ClVXGWIpTMhfyLjMgTvPTYod2aKwBIav5s5D2ycmtAUTU1RK
-         ONRQ==
-X-Gm-Message-State: AOAM533aytCsau5gAledXbnvOp37EFRZUFfsq4pWtlS+PKMIQVkSkvLY
-        PAEwKfhB/y3EqPD2UskTagSW1zGHP4eJ1R8JoF4=
-X-Google-Smtp-Source: ABdhPJzarDlb+hklbsYImIVV9e+FkSn+Fib8wLTdLmfPuUKv5CsNUzd3PRFgygvj0YhPd75oNE26pMl/5znGaWv3gWw=
-X-Received: by 2002:a9d:7d15:: with SMTP id v21mr18548733otn.118.1593542265559;
- Tue, 30 Jun 2020 11:37:45 -0700 (PDT)
+        Tue, 30 Jun 2020 14:38:28 -0400
+Received: from mail-bn7nam10on2044.outbound.protection.outlook.com ([40.107.92.44]:53409
+        "EHLO NAM10-BN7-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725963AbgF3Si1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 14:38:27 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=C0uuT7wwCETxI+otkCZKqW4dCPAVmlPz6i5AGQ3g3CifhgvN7F9NuP0M141DJOXyBxKe5ewCBs17TK8+bWGZ9+Un9BwwziroCQQIuLO4V8du9sKDi9RsB2uUtXKEA2tr2iIMNJBfWgw92bqKQWs1DhCM55yUPx2F7DwHjttG2LcSmNfi7p+fCfV94Ebog+dyF/tZihvwAgjaVFsvqlKxXUioHxwBv56/bWM7b1ZfyMBfOeSZENQOqGevqM+H3rLE1tJqDfQrGEuiZg2YXubQ7ZaKgBcl75lhSYHNwR5KPcTAQWJwGDdD8popvSe8pEvZCsvoCKh4yaGvDy0HMEFEFA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yLcAjwrMvaQJkFqG2LSxKLIMRxGzXhPbs9PUwbM+gAU=;
+ b=d4pZu+T7NRAVByCJRNegb6MDWJv03lD5FxUpuyd5wKsKvF40L77xnCSmMzpNG0Tb5VD0D5CCpZ2sjNQHN5V/3Y0ypobRf7YZMCQJqgbdEVIyJPpVTFUbLVsg7orT1CP1OTeeQmST6/sj3QhdC22kh97bAMkc5afdajWK5TUiFtJLKv2uX4EplJv59m0zs21l3+YaW8PBwuwhSKwgfmvYZkNc0u8ZdF1Y7n3rL6DgeOaCgJDTkB2u0JGyEZEPhRjQ5KrNPwAmpD2Ym+xN7izvVFVZ/kRUFWi/kHG6ddd2agb0+S9f4f3ASoGLE4Xl0fRTBNIgrtjEZQ1t6oIa9SuSRg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yLcAjwrMvaQJkFqG2LSxKLIMRxGzXhPbs9PUwbM+gAU=;
+ b=rDdo76TV5Uphbl6HmABa938SM/64B4n7pbpO7PhHVptfPHuoGQFckuuejLgD+0nPG5/XAtd3LMJVuBySnVOwU+D1reKlSub6ymt0Uf34Cf625wwHH/g89fVq0dmV4oTCsOHQWWU5tMt1y5V2qjWgnfWqDMspcUXoqeUStxJSbfg=
+Authentication-Results: amd.com; dkim=none (message not signed)
+ header.d=none;amd.com; dmarc=none action=none header.from=amd.com;
+Received: from DM5PR12MB1337.namprd12.prod.outlook.com (2603:10b6:3:6e::11) by
+ DM5PR12MB2437.namprd12.prod.outlook.com (2603:10b6:4:ba::13) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.3131.25; Tue, 30 Jun 2020 18:38:23 +0000
+Received: from DM5PR12MB1337.namprd12.prod.outlook.com
+ ([fe80::b450:73e1:57a1:81b1]) by DM5PR12MB1337.namprd12.prod.outlook.com
+ ([fe80::b450:73e1:57a1:81b1%8]) with mapi id 15.20.3131.028; Tue, 30 Jun 2020
+ 18:38:23 +0000
+From:   Akshu Agrawal <akshu.agrawal@amd.com>
+Cc:     akshu.agrawal@amd.com, Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Ravulapati Vishnu vardhan rao 
+        <Vishnuvardhanrao.Ravulapati@amd.com>,
+        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        alsa-devel@alsa-project.org (moderated list:SOUND - SOC LAYER / DYNAMIC
+        AUDIO POWER MANAGEM...), linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] ASoC: amd: Enable interrupt in dma_open
+Date:   Wed,  1 Jul 2020 00:07:46 +0530
+Message-Id: <20200630183754.20641-1-akshu.agrawal@amd.com>
+X-Mailer: git-send-email 2.20.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: MAXPR01CA0114.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:a00:5d::32) To DM5PR12MB1337.namprd12.prod.outlook.com
+ (2603:10b6:3:6e::11)
 MIME-Version: 1.0
-References: <b217dc843935e3f86584a73893d330fd99a4e472.1592889188.git.viresh.kumar@linaro.org>
-In-Reply-To: <b217dc843935e3f86584a73893d330fd99a4e472.1592889188.git.viresh.kumar@linaro.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 30 Jun 2020 20:37:34 +0200
-Message-ID: <CAJZ5v0iZXQgiA1hB2f90XoPgz_piVD0Vg-3UWW_ZT-mhJ4_KCg@mail.gmail.com>
-Subject: Re: [PATCH] cpufreq: cppc: Reorder code and remove
- apply_hisi_workaround variable
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Rafael Wysocki <rjw@rjwysocki.net>,
-        Xiongfeng Wang <wangxiongfeng2@huawei.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from akshu-HP-EliteBook-745-G2.mshome.net (122.167.14.235) by MAXPR01CA0114.INDPRD01.PROD.OUTLOOK.COM (2603:1096:a00:5d::32) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21 via Frontend Transport; Tue, 30 Jun 2020 18:38:19 +0000
+X-Mailer: git-send-email 2.20.1
+X-Originating-IP: [122.167.14.235]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: c08a4fa1-686f-4403-354e-08d81d24c478
+X-MS-TrafficTypeDiagnostic: DM5PR12MB2437:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <DM5PR12MB243749D8686438AC76FC2EE0F86F0@DM5PR12MB2437.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3826;
+X-Forefront-PRVS: 0450A714CB
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: oy6F6/tEmfNYFLoeE6wMErag/vOiRf3s3driMZQ1oER0UD9hUUkdOHiis1aYfilJVVe5TR4dR8Qar1/zvXlV7qqV43G6zSly932xt9ly+hNbDClT8KiN+rYtfy9xP/WkD25R0C7yrpaJxT8LoMERj9Kt1mPbWY1Pv2MWs2noDTPDuq7Si7hR+K6tffNizxsLUWKrCgR+16jyNztdHHDCOh+AaluA0oz00JmhRm//IJ8etflXf7YJ4a+J7losXlRHMyqFiJhPcOGqAwr2t5Ep1xNG0Fbk39Vnut5p6hKBjaviY8CPDmtEwGJchwBWTZJecrGOk6HsEJ/Y0ABJZyew/ekBj1ieOJMn/kQxXJ8+pXb8V3ag8iw0bg4sItu8c6O0
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM5PR12MB1337.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(366004)(346002)(396003)(376002)(136003)(6506007)(316002)(109986005)(52116002)(478600001)(4326008)(36756003)(54906003)(6486002)(8936002)(8676002)(2906002)(6512007)(86362001)(44832011)(83380400001)(6666004)(956004)(2616005)(1076003)(5660300002)(26005)(66946007)(66476007)(66556008)(16526019)(186003)(4744005)(266003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: WxeujkaKS2/UbYP4j5+v0/l/lcRzg7hsKMZub1heCarKwcSCSu4MtSA8J8ZhvUn0AN0WlZNacItiZDZGfIVHFtfylgRWE7uMkFhqtCgcuhQvR9OsrpwU6WKSH5UVef8Wh5Mh5vNGziNLb2cECD6aIJAroumt9Vb+hFuExKRRTW7LPgtsBmzB8tkBw5qsd/qM5TR5RzsVUqXsXRgApgax+hfO4p1y2Lj9RpQve92M8E/8JjRRJCbr+ROz9vZW+LlO8c3HU9/sJhnYF0GFWHlZtFpRFU4bPYIDTkwEWsysT6YmGyYbShJf02VJavjHAB/c0amT/kmTOWy4pR4nb5abSv/AswSj4g0SN/2C7zO8HUcJXM078g+vLIL2xJkTDvcX3MtOf2o+7xOCI1D7qo+UrZTwVFneACwxUmtwkX/Ats/Vlv6K5hcekcFcbszKa4l9lz+PA2hqvpbFULgP94RBsKdDtNqprxUYQcV+QMEZfU/ya7G80BcaxfeRpQGkIb6P
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c08a4fa1-686f-4403-354e-08d81d24c478
+X-MS-Exchange-CrossTenant-AuthSource: DM5PR12MB1337.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2020 18:38:23.0843
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: QN4/uslHeBzhCNkNUZE3Fq3Ff0AoiLyDSMjgS0fLb3n5PDeVE5UFjhOQdL77QoBnRr6u6n6s3j7pKfbvhzUcPQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB2437
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 23, 2020 at 7:15 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> With the current approach we have an extra check in the
-> cppc_cpufreq_get_rate() callback, which checks if hisilicon's get rate
-> implementation should be used instead. While it works fine, the approach
-> isn't very straight forward, over that we have an extra check in the
-> routine.
->
-> Rearrange code and update the cpufreq driver's get() callback pointer
-> directly for the hisilicon case. This gets the extra variable is removed
-> and the extra check isn't required anymore as well.
->
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
-> Xiongfeng Wang, will it be possible for you to give this a try as I
-> can't really test it locally.
->
->  drivers/cpufreq/cppc_cpufreq.c | 91 ++++++++++++++++------------------
->  1 file changed, 42 insertions(+), 49 deletions(-)
->
-> diff --git a/drivers/cpufreq/cppc_cpufreq.c b/drivers/cpufreq/cppc_cpufreq.c
-> index 257d726a4456..03a21daddbec 100644
-> --- a/drivers/cpufreq/cppc_cpufreq.c
-> +++ b/drivers/cpufreq/cppc_cpufreq.c
-> @@ -45,8 +45,6 @@ struct cppc_workaround_oem_info {
->         u32 oem_revision;
->  };
->
-> -static bool apply_hisi_workaround;
-> -
->  static struct cppc_workaround_oem_info wa_info[] = {
->         {
->                 .oem_id         = "HISI  ",
-> @@ -59,50 +57,6 @@ static struct cppc_workaround_oem_info wa_info[] = {
->         }
->  };
->
-> -static unsigned int cppc_cpufreq_perf_to_khz(struct cppc_cpudata *cpu,
-> -                                       unsigned int perf);
-> -
-> -/*
-> - * HISI platform does not support delivered performance counter and
-> - * reference performance counter. It can calculate the performance using the
-> - * platform specific mechanism. We reuse the desired performance register to
-> - * store the real performance calculated by the platform.
-> - */
-> -static unsigned int hisi_cppc_cpufreq_get_rate(unsigned int cpunum)
-> -{
-> -       struct cppc_cpudata *cpudata = all_cpu_data[cpunum];
-> -       u64 desired_perf;
-> -       int ret;
-> -
-> -       ret = cppc_get_desired_perf(cpunum, &desired_perf);
-> -       if (ret < 0)
-> -               return -EIO;
-> -
-> -       return cppc_cpufreq_perf_to_khz(cpudata, desired_perf);
-> -}
-> -
-> -static void cppc_check_hisi_workaround(void)
-> -{
-> -       struct acpi_table_header *tbl;
-> -       acpi_status status = AE_OK;
-> -       int i;
-> -
-> -       status = acpi_get_table(ACPI_SIG_PCCT, 0, &tbl);
-> -       if (ACPI_FAILURE(status) || !tbl)
-> -               return;
-> -
-> -       for (i = 0; i < ARRAY_SIZE(wa_info); i++) {
-> -               if (!memcmp(wa_info[i].oem_id, tbl->oem_id, ACPI_OEM_ID_SIZE) &&
-> -                   !memcmp(wa_info[i].oem_table_id, tbl->oem_table_id, ACPI_OEM_TABLE_ID_SIZE) &&
-> -                   wa_info[i].oem_revision == tbl->oem_revision) {
-> -                       apply_hisi_workaround = true;
-> -                       break;
-> -               }
-> -       }
-> -
-> -       acpi_put_table(tbl);
-> -}
-> -
->  /* Callback function used to retrieve the max frequency from DMI */
->  static void cppc_find_dmi_mhz(const struct dmi_header *dm, void *private)
->  {
-> @@ -402,9 +356,6 @@ static unsigned int cppc_cpufreq_get_rate(unsigned int cpunum)
->         struct cppc_cpudata *cpu = all_cpu_data[cpunum];
->         int ret;
->
-> -       if (apply_hisi_workaround)
-> -               return hisi_cppc_cpufreq_get_rate(cpunum);
-> -
->         ret = cppc_get_perf_ctrs(cpunum, &fb_ctrs_t0);
->         if (ret)
->                 return ret;
-> @@ -455,6 +406,48 @@ static struct cpufreq_driver cppc_cpufreq_driver = {
->         .name = "cppc_cpufreq",
->  };
->
-> +/*
-> + * HISI platform does not support delivered performance counter and
-> + * reference performance counter. It can calculate the performance using the
-> + * platform specific mechanism. We reuse the desired performance register to
-> + * store the real performance calculated by the platform.
-> + */
-> +static unsigned int hisi_cppc_cpufreq_get_rate(unsigned int cpunum)
-> +{
-> +       struct cppc_cpudata *cpudata = all_cpu_data[cpunum];
-> +       u64 desired_perf;
-> +       int ret;
-> +
-> +       ret = cppc_get_desired_perf(cpunum, &desired_perf);
-> +       if (ret < 0)
-> +               return -EIO;
-> +
-> +       return cppc_cpufreq_perf_to_khz(cpudata, desired_perf);
-> +}
-> +
-> +static void cppc_check_hisi_workaround(void)
-> +{
-> +       struct acpi_table_header *tbl;
-> +       acpi_status status = AE_OK;
-> +       int i;
-> +
-> +       status = acpi_get_table(ACPI_SIG_PCCT, 0, &tbl);
-> +       if (ACPI_FAILURE(status) || !tbl)
-> +               return;
-> +
-> +       for (i = 0; i < ARRAY_SIZE(wa_info); i++) {
-> +               if (!memcmp(wa_info[i].oem_id, tbl->oem_id, ACPI_OEM_ID_SIZE) &&
-> +                   !memcmp(wa_info[i].oem_table_id, tbl->oem_table_id, ACPI_OEM_TABLE_ID_SIZE) &&
-> +                   wa_info[i].oem_revision == tbl->oem_revision) {
-> +                       /* Overwrite the get() callback */
-> +                       cppc_cpufreq_driver.get = hisi_cppc_cpufreq_get_rate;
-> +                       break;
-> +               }
-> +       }
-> +
-> +       acpi_put_table(tbl);
-> +}
-> +
->  static int __init cppc_cpufreq_init(void)
->  {
->         int i, ret = 0;
-> --
+Fixes interrupt enable condition check with which now
+interrupt gets enabled in dma_open.
+Prior to this patch it was getting enabled in runtime_resume only.
 
-Applied as 5.9 material, thanks!
+Signed-off-by: Akshu Agrawal <akshu.agrawal@amd.com>
+---
+ sound/soc/amd/raven/acp3x-pcm-dma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/sound/soc/amd/raven/acp3x-pcm-dma.c b/sound/soc/amd/raven/acp3x-pcm-dma.c
+index e6386de20ac7..5bd458e0fe31 100644
+--- a/sound/soc/amd/raven/acp3x-pcm-dma.c
++++ b/sound/soc/amd/raven/acp3x-pcm-dma.c
+@@ -238,7 +238,7 @@ static int acp3x_dma_open(struct snd_soc_component *component,
+ 	}
+ 
+ 	if (!adata->play_stream && !adata->capture_stream &&
+-		adata->i2ssp_play_stream && !adata->i2ssp_capture_stream)
++	    !adata->i2ssp_play_stream && !adata->i2ssp_capture_stream)
+ 		rv_writel(1, adata->acp3x_base + mmACP_EXTERNAL_INTR_ENB);
+ 
+ 	i2s_data->acp3x_base = adata->acp3x_base;
+-- 
+2.20.1
+
