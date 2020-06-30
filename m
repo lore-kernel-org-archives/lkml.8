@@ -2,109 +2,94 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B20C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17107C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:56:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2C30720702
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:56:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAF5920702
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:56:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="QLp5BLjW"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="wIR3jAVa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733195AbgF3L4p (ORCPT
+        id S1733207AbgF3L4t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 07:56:45 -0400
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:17957 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729580AbgF3L4p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 07:56:45 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5efb286e0001>; Tue, 30 Jun 2020 04:56:32 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 30 Jun 2020 04:56:44 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 30 Jun 2020 04:56:44 -0700
-Received: from [10.25.97.62] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 30 Jun
- 2020 11:56:35 +0000
-CC:     <spujar@nvidia.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        <perex@perex.cz>, <tiwai@suse.com>, <robh+dt@kernel.org>,
-        <lgirdwood@gmail.com>, <thierry.reding@gmail.com>,
-        <jonathanh@nvidia.com>, <digetx@gmail.com>,
-        <alsa-devel@alsa-project.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <sharadg@nvidia.com>,
-        <mkumard@nvidia.com>, <viswanathl@nvidia.com>,
-        <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
-        <atalambedu@nvidia.com>, <nwartikar@nvidia.com>,
-        <swarren@nvidia.com>, <nicoleotsuka@gmail.com>
-Subject: Re: Re: [PATCH v4 11/23] ASoC: simple-card: Loop over all children
- for 'mclk-fs'
-To:     Mark Brown <broonie@kernel.org>
-References: <1593233625-14961-1-git-send-email-spujar@nvidia.com>
- <1593233625-14961-12-git-send-email-spujar@nvidia.com>
- <875zba1y28.wl-kuninori.morimoto.gx@renesas.com>
- <58000bd3-861c-bbc2-75e1-128cf0199a76@nvidia.com>
- <87lfk5z4ov.wl-kuninori.morimoto.gx@renesas.com>
- <b33d5a1b-ecd5-3618-4894-c3ab0f4b077d@nvidia.com>
- <20200630105532.GG5272@sirena.org.uk>
-From:   Sameer Pujar <spujar@nvidia.com>
-Message-ID: <8b264575-08e7-64c5-fd7c-3109a0a36ce8@nvidia.com>
-Date:   Tue, 30 Jun 2020 17:26:32 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <20200630105532.GG5272@sirena.org.uk>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1593518192; bh=kRg7pU3gJSgsCt5OO4SsNHbiLgeij8sbJesDlJdXIC8=;
-        h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=QLp5BLjW8+idyvq+WuWlIPC61zDNT6Kje7XkXi8kNAoSVMwbMbbWavQJ6WlfZibDw
-         CQ0Sw4x9eV/JAKfaSJkPtWlcoWgibJd7FnDyn16roIHIEhdb/lahy1dJSa9iApPDxN
-         7wM2JeXbdjR+YTnTJ7G+ol6+c9mzd+lGqBHOx736znHl/t8p5Wmx60beRaUHXBUMLQ
-         6huyFzHmpjRQ6I8UeUpoGcv7Mf9kKFqrz5Gk5IxkEtEz6u0I7IyJBcpXmZKqbAp3RF
-         sIaAFK0ql04TSyxYZlSAYaN3OLETqq/Lpllw0DTtRQuIlPq6ejNhtzpO/Bz60Rlfqn
-         SokJqLJ4GVZ4g==
+        Tue, 30 Jun 2020 07:56:49 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:31976 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733198AbgF3L4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 07:56:47 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593518206; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=SmYTLnNpkoDIf6PQYp/bYgNnjLKYi/RBNugVXmRrIRU=; b=wIR3jAVaj+0RZ2KOnggtsnFTcyzGtEYgdsx6+NtMfGPriqvbcV2CvRjFeVCbHIDRK98jI/T5
+ kwvPHfMYS2Iq0KvPjJsMJ/LH8/qtFTiaAVCcJsFVijuRV8vopMdQt0RTj9xRZqhOheW53YDz
+ KqXsKt++FEWYoLtDrJ41tY5FtKs=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n13.prod.us-west-2.postgun.com with SMTP id
+ 5efb287dfe1db4db89f40bfb (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 30 Jun 2020 11:56:45
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 8C5F3C433A0; Tue, 30 Jun 2020 11:56:45 +0000 (UTC)
+Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 30920C433C6;
+        Tue, 30 Jun 2020 11:56:41 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 30920C433C6
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+To:     robdclark@gmail.com, sean@poorly.run, agross@kernel.org,
+        bjorn.andersson@linaro.org
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mka@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH 0/4] DVFS support for dpu and dsi
+Date:   Tue, 30 Jun 2020 17:26:12 +0530
+Message-Id: <1593518176-24450-1-git-send-email-rnayak@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+These patches add DVFS support for DPU and DSI. Where posted
+earlier as part of a series with multiple different drivers [1]
+I have split them into specific driver changes in order to avoid
+confusion on dependencies. Also added the corresponding device tree
+changes for sdm845 and sc7180 platforms.
 
+These patches have no other dependency and will need to be merged in
+via the MSM DRM tree.
 
-On 6/30/2020 4:25 PM, Mark Brown wrote:
-> On Tue, Jun 30, 2020 at 09:53:13AM +0530, Sameer Pujar wrote:
->> On 6/30/2020 7:38 AM, Kuninori Morimoto wrote:
->>> External email: Use caution opening links or attachments
->>>>>> +     if (cpu != codec)
->>>>>> +             of_property_read_u32(codec, prop, &props->mclk_fs);
->> Sorry if I was not clear before.
-> I agree with Moromito-san that the new code (especially the above bit)
-> is very confusing, I'm not sure how the reader is supposed to figure out
-> what the purpose of the check is or how the CPU could ever be the CODEC.
->
->> simple_parse_mclk_fs() is used by both simple_dai_link_of_dpcm() and
->> simple_dai_link_of(). To make the same API work for both the cases, I had to
->> use (A) in DPCM function. Now (B) does not get used for
->> simple_dai_link_of_dpcm(), but will get used by simple_dai_link_of().
->> If it is simpler I will just avoid 'cpu != codec' check and keep the
->> function simple_parse_mclk_fs() as it is.
-> That'd definitely be simpler, or supporting this with a CPU node as
-> well.
+DT patches will need to land via the msm tree.
 
-OK. I will keep it simple.
+[1] https://lkml.org/lkml/2020/6/15/535
+
+Rajendra Nayak (4):
+  drm/msm/dpu: Use OPP API to set clk/perf state
+  drm/msm: dsi: Use OPP API to set clk/perf state
+  arm64: dts: sdm845: Add DSI and MDP OPP tables and power-domains
+  arm64: dts: sc7180: Add DSI and MDP OPP tables and power-domains
+
+ arch/arm64/boot/dts/qcom/sc7180.dtsi          | 49 ++++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          | 59 +++++++++++++++++++++++++++
+ drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c |  3 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c       | 26 +++++++++++-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.h       |  4 ++
+ drivers/gpu/drm/msm/dsi/dsi.h                 |  2 +
+ drivers/gpu/drm/msm/dsi/dsi_cfg.c             |  4 +-
+ drivers/gpu/drm/msm/dsi/dsi_host.c            | 58 ++++++++++++++++++++++++++
+ 8 files changed, 201 insertions(+), 4 deletions(-)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
