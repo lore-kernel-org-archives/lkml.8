@@ -2,127 +2,101 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E459AC433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42F8DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF5852083E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16D2920853
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:58:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="AHtX7lz4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NwkdIgvI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388100AbgF3M6N (ORCPT
+        id S2388111AbgF3M6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 08:58:13 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:44844 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388063AbgF3M57 (ORCPT
+        Tue, 30 Jun 2020 08:58:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39532 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387971AbgF3M6v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 08:57:59 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 05UCvpUM102757;
-        Tue, 30 Jun 2020 07:57:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1593521871;
-        bh=N4st7905B306yEUjTON3RZKPjzNz1qXCxAYNaV7aO7s=;
-        h=From:To:CC:Subject:Date;
-        b=AHtX7lz4p8PXl8Eo+59XSYDbqUC8BnPlSpQ/pmAA2jroAECF38uciT6P5qFNe0QKl
-         8R3KsLNzZ/+4Q8gBnIm1cCMJxi/IdktlHAguip5nCNA604/mwGvL6wJwwl0zrunIr6
-         hFpWGzY8a3ERjxCDQFStDoORQVPjnh1YBgZ6ikfc=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 05UCvklX055812
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 30 Jun 2020 07:57:51 -0500
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3; Tue, 30
- Jun 2020 07:57:47 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1979.3 via
- Frontend Transport; Tue, 30 Jun 2020 07:57:47 -0500
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id 05UCviAI084334;
-        Tue, 30 Jun 2020 07:57:45 -0500
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <broonie@kernel.org>, <lgirdwood@gmail.com>, <robh+dt@kernel.org>
-CC:     <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 0/3] ASoC: ti: Add support for audio on J721e EVM
-Date:   Tue, 30 Jun 2020 15:58:40 +0300
-Message-ID: <20200630125843.11561-1-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.27.0
+        Tue, 30 Jun 2020 08:58:51 -0400
+Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0733C03E979
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 05:58:50 -0700 (PDT)
+Received: by mail-il1-x141.google.com with SMTP id k6so17564297ili.6
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 05:58:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sN4WZooX8Gl6AP3Ic7xgoU0JpRoYJKFZBAKo2Wp6GOY=;
+        b=NwkdIgvIjDrjCiYlaFBEn/UOBG6CtDIWqacpay+y08rck5lFhwf4gT5B9FYNAs9vzD
+         FZ0GuDIH9dbd2/SLh2f49YB29ERdOsffJMJ5QLVxnIfRQEmTswumKxjBEGP7wepW23pW
+         SZi70uR/hx83eweAUeolnBUvimEOPV0tr8OMSXwZRUrWq4v0fa8NAqXMFbzteb5yoUr3
+         9CURcA3baW0YtA7gA3GeKCpl8haPk/cEiTDO2qFCoLsdg275sVsuP4tSO+jNE6CFP/sJ
+         SFXhMO19vFpD+sYJZZOx+yWlJb+w1pIah4ttOgI2X5PE28Ot0sRZIYsfUxIxhQmYWOiA
+         b62g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=sN4WZooX8Gl6AP3Ic7xgoU0JpRoYJKFZBAKo2Wp6GOY=;
+        b=q+/MXJ1NwrlEv14w6/wIZe+aQj+xezVMkkNpvB5PYR5iwgG8s49SWF6UBipUVAYD7S
+         gqiJdsFl8uc4NMKUCP6TgOdwjRPfzGvSYsikB5/d35azcAc60r6V9jxUs1qu4wyoL1Qe
+         6r/2tIuLl5rPcLiRPaQXiI+5GlQGO3Xqk2gRV2gzOjCZGdGtUnonMeVmPsVx72orjiZn
+         rVQoa3BiZoY6pSIh1ZmWtFfIEjC8NYWoRDbUAyEQcbkq0mJdHJ50gVX95+uurhf+yftv
+         rPUj7zxRhfMUnhJZ03P4r9xiwfBD0gYM1j+NX2oFcOQb8bYoomtSFVQmB7wYQV4DTpEh
+         v4Ig==
+X-Gm-Message-State: AOAM5337dTWlxhcrJynYkCnAYwyrFY6K7bi/rQr7lWWQbAeAstTrqO1k
+        Q9/brp1gsMA7Yua2ts4cHST26g==
+X-Google-Smtp-Source: ABdhPJx9rT+fY5TiBPLJucFzrV8MGLXHE90n9Zw2yvlFQ2QJJpVgA91984J51C7l6guYP0Yj1hMFMg==
+X-Received: by 2002:a92:10a:: with SMTP id 10mr2399769ilb.172.1593521930164;
+        Tue, 30 Jun 2020 05:58:50 -0700 (PDT)
+Received: from presto.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.gmail.com with ESMTPSA id z9sm1622588ilb.41.2020.06.30.05.58.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 05:58:49 -0700 (PDT)
+From:   Alex Elder <elder@linaro.org>
+To:     davem@davemloft.net, kuba@kernel.org
+Cc:     evgreen@chromium.org, subashab@codeaurora.org,
+        cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next v2 0/3] net: ipa: small improvements
+Date:   Tue, 30 Jun 2020 07:58:43 -0500
+Message-Id: <20200630125846.1281988-1-elder@linaro.org>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+This series contains two patches that improve the error output
+that's reported when an error occurs while changing the state of a
+GSI channel or event ring.  The first ensures all such error
+conditions report an error, and the second simplifies the messages a
+little and ensures they are all consistent.
 
-Changes since v3:
-- Fix the single clock source handling and typo
+A third (independent) patch gets rid of an unused symbol in the
+microcontroller code.
 
-Changes since v2:
-- DT binding:
- - use proper (?) patch subject for the binding docuemtn patch
- - drop pll4 and pll15 from DT - driver should check the rate via
-   clk_get_parent. If it is not available (as it is not currently) then use the
-   match_data provided rates.
- - add simple explanation for the clocking setup
- - Use descriptive names for clocks: cpb/ivi-mcasp-auxclk and cpb/ivi-codec-scki
- - dt_binding_check shows no errors/warnings
-- ASoC machine driver:
- - Try to read the PLL4/15 rate with clk API (parent of the two clock divider)
-   if it is not available then use the match_data provided numbers.
- - Support for single PLL setup
+Version 2 fixes two alignment problems pointed out by checkpatch.pl,
+as requested by Jakub Kicinski.
 
-Changes since v1:
-- Fixed DT binding documentation errors
-- Rebased on ASoC head and updated the driver to compile and work
+					-Alex
 
-This series adds support for the analog audio setup on the j721e EVM.
-The audio setup of the EVM is:
-Common Processor Board (CPB): McASP10 <-> pcm3168a
-Infotainment Expansion Board (IVI): McASP0 <-> 2x pcm3168a
+Alex Elder (3):
+  net: ipa: always report GSI state errors
+  net: ipa: standarize more GSI error messages
+  net: ipa: kill IPA_MEM_UC_OFFSET
 
-Both CPB and IVI wired in parallel serializer setup.
-
-The first patch adds the stream_name for McASP driver as it is needed in
-multicodec (and would be needed in DPCM) setup for proper DAPM handling.
-
-The second patch adds two DT schema, one for the cpb and one for the cpb+ivi
-card.
-
-Regards,
-Peter
----
-Peter Ujfalusi (3):
-  ASoC: ti: davinci-mcasp: Specify stream_name for playback/capture
-  ASoC: dt-bindings: Add documentation for TI j721e EVM (CPB and IVI)
-  ASoC: ti: Add custom machine driver for j721e EVM (CPB and IVI)
-
- .../bindings/sound/ti,j721e-cpb-audio.yaml    |  95 ++
- .../sound/ti,j721e-cpb-ivi-audio.yaml         | 150 +++
- sound/soc/ti/Kconfig                          |   8 +
- sound/soc/ti/Makefile                         |   2 +
- sound/soc/ti/davinci-mcasp.c                  |   3 +
- sound/soc/ti/j721e-evm.c                      | 896 ++++++++++++++++++
- 6 files changed, 1154 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/ti,j721e-cpb-audio.yaml
- create mode 100644 Documentation/devicetree/bindings/sound/ti,j721e-cpb-ivi-audio.yaml
- create mode 100644 sound/soc/ti/j721e-evm.c
+ drivers/net/ipa/gsi.c    | 111 +++++++++++++++++++++------------------
+ drivers/net/ipa/ipa_uc.c |  10 ++--
+ 2 files changed, 63 insertions(+), 58 deletions(-)
 
 -- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.25.1
 
