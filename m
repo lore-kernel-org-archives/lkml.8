@@ -2,107 +2,101 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C946C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45808C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:13:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17FC4206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:11:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BA7C206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:13:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XOd0G8vh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbgF3TLw (ORCPT
+        id S1726922AbgF3TNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 15:11:52 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:52685 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbgF3TLv (ORCPT
+        Tue, 30 Jun 2020 15:13:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40900 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726324AbgF3TNH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 15:11:51 -0400
-Received: from mail-qv1-f49.google.com ([209.85.219.49]) by
- mrelayeu.kundenserver.de (mreue107 [212.227.15.145]) with ESMTPSA (Nemesis)
- id 1MauFB-1jDymc2bnf-00cU4W; Tue, 30 Jun 2020 21:11:49 +0200
-Received: by mail-qv1-f49.google.com with SMTP id e3so3479829qvo.10;
-        Tue, 30 Jun 2020 12:11:49 -0700 (PDT)
-X-Gm-Message-State: AOAM532tWlQGGtiLhBMJs2XEsARZS2BVbCoeRzEIL1e5ypc4cfTz7vDu
-        t/w4RhvExJnp4KMu8Mt/1P7ZURTpacmGBOKR3Fk=
-X-Google-Smtp-Source: ABdhPJy8Dn8rL1I0U5RYNNkDb6apYhSxF/cek48EVCvK4tcGtsr9BI41NIYfCMTIzNjQg3sijIRh8LwqEplBMOYW8s8=
-X-Received: by 2002:a05:6214:846:: with SMTP id dg6mr20327019qvb.210.1593544308407;
- Tue, 30 Jun 2020 12:11:48 -0700 (PDT)
+        Tue, 30 Jun 2020 15:13:07 -0400
+Received: from mail-lf1-x141.google.com (mail-lf1-x141.google.com [IPv6:2a00:1450:4864:20::141])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5D3BC061755;
+        Tue, 30 Jun 2020 12:13:06 -0700 (PDT)
+Received: by mail-lf1-x141.google.com with SMTP id g2so12060037lfb.0;
+        Tue, 30 Jun 2020 12:13:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Qh5qpq0DRF5ItkAziSeZrTjhiLljM/TKCiqFCudwnKM=;
+        b=XOd0G8vhwKM7selbWtFimmDM/t7yIBdIbFHaIpaOZDjzlFp/okhd6dlzL/sbJGEbQX
+         pcAsfzq7TpGSA68FtpbIm5sxxeIin/i9ENVGMlnKvFiYwh69RUnFvt4qWuVG/My88Vy7
+         gtCLu7aUzXUEKTUcBSbxBJ4mg2fYWpRRXukG7mvtoL7NRog9XjT9XBS5dcJZ3Xs0Mr6W
+         4EGLzQ9CJ9PI0CAcePP6J7OMOfXMBWh5f1e2cBDXK/U959+zti4VXqIRRwfXGVb0wHcc
+         3+DJWEsAwwuJq8UOnEqbXMk0AHa+4XDV9TlIjeZLofvXlMsCfzOzaX57ZD+CbGjjorYn
+         xsHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Qh5qpq0DRF5ItkAziSeZrTjhiLljM/TKCiqFCudwnKM=;
+        b=ecFhUsPzaf5JI0U8iBZmtd+l5F6sXjV5U/Zd0FZGnvdLuxJWecMkv39RE1kzINFjDC
+         imqXE9Ku2ixDAMDG+gk1Hkc3BeSgb4Dxv1aQds9vAM8rK0kTFkEmosqHwtnxbrz1wCN1
+         FNaQ+ap16s6nv0Qno76npNcabIPMwoHRnKlxU5IjsFZXpKY6W1tkRnBenH8pxtWLf7PO
+         Di9Ln+EXTsgGFGkLR9JRZdBA+r0ZgdRdala4qFgDTV90jFHX7boJDOhtfQvL527Vgl+j
+         h58yDTJYmfWBwjDTK1oj05HWM6NGaNUw3M4nfRC4tVhnRt2kGdK1E9fkLp83EOd/4wME
+         X3Ag==
+X-Gm-Message-State: AOAM533au4Y+SJf9QwpYQlrG4KTuBHTaC76UV28r6q27VzG/TtGMz2EE
+        DGiIr7ogzaKjni21QyY1nkBQ8uYFDfIE7LbQxcoTaQ==
+X-Google-Smtp-Source: ABdhPJwQe6pLq/YzqmjnIc7IaWJPawPhkGrywWgSTur5Pcmb3rRRjEPqThtHf7kj9EHlaRsXb/uVLoOMP4jScwen3IY=
+X-Received: by 2002:ac2:46f0:: with SMTP id q16mr12862291lfo.51.1593544385174;
+ Tue, 30 Jun 2020 12:13:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200630173734.14057-1-will@kernel.org> <20200630173734.14057-3-will@kernel.org>
-In-Reply-To: <20200630173734.14057-3-will@kernel.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 30 Jun 2020 21:11:32 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a136e2k-iGoJ4X51mnj0f0KSLJKOw6b=s4F2QHHeyAMEQ@mail.gmail.com>
-Message-ID: <CAK8P3a136e2k-iGoJ4X51mnj0f0KSLJKOw6b=s4F2QHHeyAMEQ@mail.gmail.com>
-Subject: Re: [PATCH 02/18] compiler.h: Split {READ,WRITE}_ONCE definitions out
- into rwonce.h
-To:     Will Deacon <will@kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Marco Elver <elver@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Matt Turner <mattst88@gmail.com>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Richard Henderson <rth@twiddle.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        alpha <linux-alpha@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        Android Kernel Team <kernel-team@android.com>
+References: <20200629085911.1676554-1-masahiroy@kernel.org>
+ <CAKwvOd=qe5KE1vdUYQmpsW2zmDbk5i-MgRujs9B7wqnAj+af0w@mail.gmail.com> <CAK7LNAR49jFZkEmBqpACE0V_-VyCXfFRcKe1Zq+cqO65QX1ozg@mail.gmail.com>
+In-Reply-To: <CAK7LNAR49jFZkEmBqpACE0V_-VyCXfFRcKe1Zq+cqO65QX1ozg@mail.gmail.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Tue, 30 Jun 2020 21:12:54 +0200
+Message-ID: <CANiq72nE+1F3yM+e9XzfphzOe3mb9DUcRCAtPuLMyFE4Rh38pg@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: make Clang build userprogs for target architecture
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:LnFDDIjRuXDckRiBaZGfmiG7HaTrrU39Wjww08d3sBPpTh0bBiC
- R18dhZQINNcBZ60ocsHkZQTFVn5tMd7QDCWiaBczDXRBCaIJYO2+OSoII+r0REMFq66/K1L
- JrRxCeJARV3JI27LVClu+VT9mpBekIzD1BccLbfV033oyigdtOGqzvrUfNDxQzH6vHslkIw
- lzDlRev00L4nSdR0SKE1g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:C8esC7patGM=:rsYR3CSmcrTZb51jltms7E
- po6GEFUweLiWLa6MnwKz6jP1OvSdinAWuRgL4RxGqEjTcIUqnIZtM9zZ8N5rlkYImj2FVoD1u
- DmCgeGWYe8RYHp8F2FOvsw44SD4KEEU2CuYPn1z7ob4JIC0iN5g3NPGAmdS6pbfgq9rPTCmfr
- G/ddu0SYVF1xX7fhdgkpxA1H8GpGJabJYFMXu/2NDCUk3LSaAjkkVuh5/L1kUgQmv8LiQoHqq
- 2LfkIooHR3zbPRDj6VvPw5z748NrIo8ZIsnYlKql+I8FTl6FYhemIZ8sDbwz5LqWbRod/u3F5
- 1IBJyjRgeC/7ISLQSSJZRX/yARVVmpMNPMyoPGUohK7Pnb3bFP6md/u7B/nXn2qyhht1NxC1w
- vE0vWzuFbRK9JzEAEIszGHDOX+QEMG8xDtPDAqyFpdSySWcgrJ9+NTCZoluVO7sO3ZibJTAwv
- /ymcT4QaME2TufvzqfhIDfSPjbniAZXLl6vvaOr0scExlP216N/eIU1bsZ7oxLppWcnZjzQ1d
- tD8BklSxYbvCyMjPl6WjHjA9cBNlYTVR6qyjQjVT4dQ1/0SFDLYXKzDglb9WPTw4vzRx9Iw97
- fZlVMA6tVeZm2ruZWTWpDlDUzrbWk4kKVtI/Lub0lUpE9T/3vfGKWlpRxPRIXZrY+HDJADtr9
- Tbb27S5WPrZJwTUTzEMLtrUz9gilecIsnLmYJI/L4SudOR1NnU2/AsdX0bB5spWf8HZ0SJCZc
- JlYtUxUKOk19jiVdO7wf+DXqGJ6VPrhajSLSZn4Vcvhfx+cDR8dlfCBU02D91pglFtBgNIkPX
- T3c54PQc87+m0oiZtyuWd4k7cPYZQrgc2yd7vllilybPnTROJ4=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 7:37 PM Will Deacon <will@kernel.org> wrote:
+On Tue, Jun 30, 2020 at 6:26 PM Masahiro Yamada <masahiroy@kernel.org> wrote:
 >
-> In preparation for allowing architectures to define their own
-> implementation of the READ_ONCE() macro, move the generic
-> {READ,WRITE}_ONCE() definitions out of the unwieldy 'linux/compiler.h'
-> file and into a new 'rwonce.h' header under 'asm-generic'.
+> I can reproduce this in the following
+> simple test code:
 >
-> Acked-by: Paul E. McKenney <paulmck@kernel.org>
-> Signed-off-by: Will Deacon <will@kernel.org>
-> ---
->  include/asm-generic/Kbuild   |  1 +
->  include/asm-generic/rwonce.h | 91 ++++++++++++++++++++++++++++++++++++
->  include/linux/compiler.h     | 83 +-------------------------------
+>
+> ----------------->8----------------
+> #include <stdio.h>
+>
+> int main(void)
+> {
+>         ssize_t x = 1;
+>
+>         printf("%zd", x);
+>
+>         return 0;
+> }
+> --------------->8-------------------
 
-Very nice, this has the added benefit of allowing us to stop including
-asm/barrier.h once linux/compiler.h gets changed to not include
-asm/rwonce.h.
+That is the old implicit int rule. Try including sys/types.h or
+compiling with a standard like -std=c99 for instance.
 
-The asm/barrier.h header has a circular dependency, pulling in
-linux/compiler.h itself.
-
-       Arnd
+Cheers,
+Miguel
