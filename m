@@ -2,60 +2,68 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD9CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ECADC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:55:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ACFD8207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:52:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36C062067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:55:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593503733;
+	bh=ffg5/LswWVXGgVOLOl5Wv2iNNvrTSpOWjpWqb/i6rWw=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=AsfQ+CpKOTxN/3LPhiom79vfH4iAP09WJlWFVLaXYaaj7ty2OApNWMuFzoPocJTRt
+	 CKYzMPwfc9VOaKB31N4U2bYq8oN+8xwALGzMmL7ZJK+E1MKDGwRXTsci9A5W3S2Jr+
+	 dXZm4uhtHxmMwCcLHJ6cNV8+ITxQonLHZdzAdRR0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731335AbgF3Hwq (ORCPT
+        id S1729862AbgF3Hzb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 03:52:46 -0400
-Received: from mga01.intel.com ([192.55.52.88]:11359 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731312AbgF3Hwp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 03:52:45 -0400
-IronPort-SDR: 4uKteS3ft0b/qoHH5vZf6mopGpvd2k4pABT2Kez7Jk/GZDF3ffKAYxppDZqEHdKO0j1LcWPDzf
- CkYCeTMizuYA==
-X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="164181079"
-X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
-   d="scan'208";a="164181079"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 00:52:44 -0700
-IronPort-SDR: eGGj2t6g5LUU1YhVwky6xRMNCWEVLwnbATlY9tpArRmc7dT1GHG5j1QV6jPn1Wb22N2/pWvd7O
- F2WuH6iRJGHw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
-   d="scan'208";a="266412260"
-Received: from blu2-mobl3.ccr.corp.intel.com (HELO [10.249.173.186]) ([10.249.173.186])
-  by fmsmga008.fm.intel.com with ESMTP; 30 Jun 2020 00:52:41 -0700
-Cc:     baolu.lu@linux.intel.com, David Woodhouse <dwmw2@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kai Heng Feng <kai.heng.feng@canonical.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Sun, Jian" <jian.sun@intel.com>
-Subject: Re: [Issue]platform/x86: iommu: System can't shutdown because iommu
- driver keeps checking the status of DMA_GSTS_TES
-To:     Koba Ko <koba.ko@canonical.com>
-References: <CAJB-X+Ww=bZN2qZ=e=4EkN_RUTiZxHxkdnHh50y9iVqZmT_XQg@mail.gmail.com>
- <111dde48-8018-6d74-5df8-1534143f4de6@linux.intel.com>
- <CAJB-X+WgjKR3PgoF_tn_g__+agCSGJpyB8sh+A62gs0qztDuVQ@mail.gmail.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <66cacbab-b04d-33f3-053e-4d554ac7c662@linux.intel.com>
-Date:   Tue, 30 Jun 2020 15:52:40 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Tue, 30 Jun 2020 03:55:31 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:46464 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726899AbgF3Hzb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 03:55:31 -0400
+Received: by mail-ed1-f67.google.com with SMTP id dm19so9001672edb.13
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 00:55:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=V1bLhkiGPt6XHgl4JbVg1NlUfJvh8q0QPOSgnDayaZE=;
+        b=casVe4TBTciEUwYQcz0xR56fPw5JSgR6H2h57TKo7ZE0m3TYOiy24t0CkP5lTLEsmi
+         fAsNyocwiV5ml6q2Hw74/jK3JgBKxfWBDzQMUNSK/brk1Gg3Pg0fYefTKCt4eJLmo6Tj
+         PHbRhXoCxoNGbqS7u0xOyK3HYevjZaEy/cZAHXq1XsztgNmsHbHzoBOVygui9XASPDl7
+         Fb86z4KkNy0xpsXH8xJbwTcyJ5hZz74dT9sE2T2CD2IXyPAGYWZ3WqpTLdEnFjZuorlV
+         LHjkG47rLet9zYTV2j4r8pElnOpcc9l0NsoIbOYC+sP1NiDvmiq+sRmB8C2+2exND14g
+         9Ubw==
+X-Gm-Message-State: AOAM531irjKFEy9pTUwwTMUlZqNUAjeITLdI0/fSeSsKy0AyxoIEIK9B
+        IN0r10xqRyHZMaCKcGsI1T9gidz+
+X-Google-Smtp-Source: ABdhPJzwdkfDeHtnq0CAyJMmKai4G1AaORHVEzQLU6uQpzDmORwybQh+naJ7BMTW6lzcOEyYF3Zx8Q==
+X-Received: by 2002:a05:6402:1b94:: with SMTP id cc20mr21237854edb.177.1593503729133;
+        Tue, 30 Jun 2020 00:55:29 -0700 (PDT)
+Received: from ?IPv6:2a0b:e7c0:0:107::70f? ([2a0b:e7c0:0:107::70f])
+        by smtp.gmail.com with ESMTPSA id b6sm1937008eds.64.2020.06.30.00.55.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Jun 2020 00:55:28 -0700 (PDT)
+Subject: Re: [PATCH v1 1/6] tiocl.h: Change/Add defines for mouse report
+To:     Tammo Block <tammo.block@gmail.com>, linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <cover.1593499846.git.tammo.block@gmail.com>
+ <159375ce8dcdbcada6fa079f0a120765b10a84a7.1593499846.git.tammo.block@gmail.com>
+From:   Jiri Slaby <jirislaby@kernel.org>
+Message-ID: <f00141ec-5da4-2743-7064-8094d7915f7c@kernel.org>
+Date:   Tue, 30 Jun 2020 09:55:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-In-Reply-To: <CAJB-X+WgjKR3PgoF_tn_g__+agCSGJpyB8sh+A62gs0qztDuVQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <159375ce8dcdbcada6fa079f0a120765b10a84a7.1593499846.git.tammo.block@gmail.com>
+Content-Type: text/plain; charset=iso-8859-2
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -63,53 +71,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Koba,
-
-On 2020/6/30 15:31, Koba Ko wrote:
-> On Mon, Jun 15, 2020 at 3:20 PM Lu Baolu <baolu.lu@linux.intel.com> wrote:
->>
->> Hi Koba Ko,
->>
->> On 2020/6/15 11:19, Koba Ko wrote:
->>> hi All,
->>> I have a machine and there's only intel gpu.
->>> the secureboot and vt-d is enabled in BIOS.
->>> On the Ubuntu desktop, I do s2idle first and restart the machine.
->>> The machine can't restart successfully, so I need to press the
->>> power button to shutdown.
->>> I tried  each of the following and the issue can't be triggered.
->>> 1. disable secure boot in BIOS.
->>> 2. intel_iommu=off.
->>> 3. intel_iomm=igfx_off.
->>> 4. nomodeset
->>> 5. i915.modeset=0.
->>>
->>> After I investigate further, find inte_iommu keeps checking the status
->>> of DMA_GSTS_TES.
->>> During the procedure of restart, the driver would disable iommu
->>> translation and
->>> check status of DMA_GSTS_TES until status of DMA_GSTS_TES is 0.
->>>
->>> If you need more information, I can provide it.
->>
->> Do you mind telling what platform is it?
->>
->> Best regards,
->> baolu
-> Hi Baolu,
-> Sorry, i missed your email.
-> I'm running on TGL.
-> My colleague has reported this on bugzilla.
-> Have tested your patch and it works fine.
-> https://bugzilla.kernel.org/show_bug.cgi?id=208363
+On 30. 06. 20, 9:10, Tammo Block wrote:
+> Add additional defines for mouse event types. The change of the value
+> of TIOCL_SELBUTTONMASK deserves a bit more explanation :
 > 
-> Could you explain more about these patches!? Why do we need  a flag
-> for active iommu!?
+> The old value of 15 uses the first 4 bits and sends them unchanged back
+> to userspace if requested by an application. But in fact only the first
+> two bits have ever been used by any daemon or useful at all, as the
+> kernel already knows the status of the shift and alt keys encoded in
+> bits 3 and 4. On the other hand we *do* want to know the status of bits
+> 6-8, encoding button values >3 and mouse move and drag operations.
+> 
+> This change is up- and downwards compatible by masking all spourious
+> bits and leaving only the undisputed parts (bits 1 and 2) untouched.
+> 
+> Signed-off-by: Tammo Block <tammo.block@gmail.com>
+> ---
+>  include/uapi/linux/tiocl.h | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/uapi/linux/tiocl.h b/include/uapi/linux/tiocl.h
+> index b32acc229024..c862053041e4 100644
+> --- a/include/uapi/linux/tiocl.h
+> +++ b/include/uapi/linux/tiocl.h
+> @@ -9,7 +9,7 @@
+>  #define 	TIOCL_SELPOINTER	3	/* show the pointer */
+>  #define 	TIOCL_SELCLEAR	4	/* clear visibility of selection */
+>  #define 	TIOCL_SELMOUSEREPORT	16	/* report beginning of selection */
+> -#define 	TIOCL_SELBUTTONMASK	15	/* button mask for report */
+> +#define 	TIOCL_SELBUTTONMASK	227	/* button mask for report */
+
+0xe3 is more obvious (can be in-brain translated to bits).
+
+If C only had 0b prefix like perl has...
+
+>  /* selection extent */
+>  struct tiocl_selection {
+>  	unsigned short xs;	/* X start */
+> @@ -28,7 +28,11 @@ struct tiocl_selection {
+>  
+>  /* these two don't return a value: they write it back in the type */
+>  #define TIOCL_GETSHIFTSTATE	6	/* write shift state */
+> -#define TIOCL_GETMOUSEREPORTING	7	/* write whether mouse event are reported */
+> +#define TIOCL_GETMOUSEREPORTING	7	/* write which mouse event are reported */
+
+s/event/&s/
+
+> +#define		TIOCL_REPORTBTNPRESS	1	/* report button press only    "9" */
+> +#define		TIOCL_REPORTRELEASE	2	/* report press and release "1000" */
+> +#define		TIOCL_REPORTDRAG	3	/* report drag events       "1002" */
+> +#define		TIOCL_REPORTANYMOVE	4	/* report any movement      "1003" */
+>  #define TIOCL_SETVESABLANK	10	/* set vesa blanking mode */
+>  #define TIOCL_SETKMSGREDIRECT	11	/* restrict kernel messages to a vt */
+>  #define TIOCL_GETFGCONSOLE	12	/* get foreground vt */
 > 
 
-We're still investigating this issue. If we find out more, I'll let you
-know. Thanks a lot for the reporting.
-
-Best regards,
-baolu
-
+thanks,
+-- 
+js
+suse labs
