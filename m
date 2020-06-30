@@ -2,105 +2,86 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE787C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:35:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A64C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:36:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BE5532067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:35:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E465320759
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:36:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730215AbgF3Gfb (ORCPT
+        id S1730263AbgF3Gg2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 02:35:31 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57760 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730002AbgF3Gfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 02:35:31 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 44BA6AAC3;
-        Tue, 30 Jun 2020 06:35:29 +0000 (UTC)
-Message-ID: <1593498910.3046.2.camel@suse.de>
-Subject: Re: [PATCH v3 00/15] HWPOISON: soft offline rework
-From:   Oscar Salvador <osalvador@suse.de>
-To:     Qian Cai <cai@lca.pw>, nao.horiguchi@gmail.com
-Cc:     linux-mm@kvack.org, mhocko@kernel.org, akpm@linux-foundation.org,
-        mike.kravetz@oracle.com, tony.luck@intel.com, david@redhat.com,
-        aneesh.kumar@linux.vnet.ibm.com, zeil@yandex-team.ru,
-        naoya.horiguchi@nec.com, linux-kernel@vger.kernel.org
-Date:   Tue, 30 Jun 2020 08:35:10 +0200
-In-Reply-To: <20200630050803.GA2747@lca.pw>
-References: <20200624150137.7052-1-nao.horiguchi@gmail.com>
-         <20200630050803.GA2747@lca.pw>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 30 Jun 2020 02:36:28 -0400
+Received: from smtp23.cstnet.cn ([159.226.251.23]:53462 "EHLO cstnet.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730002AbgF3Gg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 02:36:28 -0400
+Received: from localhost (unknown [159.226.5.99])
+        by APP-03 (Coremail) with SMTP id rQCowACnr_Ni3fpeCzNNAQ--.45316S2;
+        Tue, 30 Jun 2020 14:36:18 +0800 (CST)
+From:   Chen Ni <vulab@iscas.ac.cn>
+To:     dmitry.torokhov@gmail.com, linux-input@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Xu Wang <vulab@iscas.ac.cn>
+Subject: [PATCH] input: misc: remove needless check before usb_free_coherent()
+Date:   Tue, 30 Jun 2020 06:36:16 +0000
+Message-Id: <20200630063616.8060-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: rQCowACnr_Ni3fpeCzNNAQ--.45316S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrKFWrZw4UGr47GFWDGr4kZwb_yoWkCrXEv3
+        yUuF9xuryq9F4Ykr4UKwnxZr95tr4I9w4kWrn5tFW5JFWIg3s0vr1UXFZ0yw4DXa9rWF45
+        twn2grWFkw4fWjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbcxFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+        A2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
+        Cr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_GcCE3s
+        1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0
+        cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE14v26Fkl6r4jowAm72CE4IkC6x0Yz7v_Jr0_Gr
+        1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8AwCF
+        04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r
+        18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vI
+        r41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr
+        1lIxAIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAI
+        cVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUjMmh7UUUUU==
+X-Originating-IP: [159.226.5.99]
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiAw0DA13qZLQOjQAAsq
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-06-30 at 01:08 -0400, Qian Cai wrote:
-> On Wed, Jun 24, 2020 at 03:01:22PM +0000, nao.horiguchi@gmail.com
-> wrote:
-> > I rebased soft-offline rework patchset [1][2] onto the latest
-> > mmotm.  The
-> > rebasing required some non-trivial changes to adjust, but mainly
-> > that was
-> > straightforward.  I confirmed that the reported problem doesn't
-> > reproduce on
-> > compaction after soft offline.  For more precise description of the
-> > problem
-> > and the motivation of this patchset, please see [2].
-> > 
-> > I think that the following two patches in v2 are better to be done
-> > with
-> > separate work of hard-offline rework, so it's not included in this
-> > series.
-> > 
-> >   - mm,hwpoison: Take pages off the buddy when hard-offlining
-> >   - mm/hwpoison-inject: Rip off duplicated checks
-> > 
-> > These two are not directly related to the reported problem, so they
-> > seems
-> > not urgent.  And the first one breaks num_poisoned_pages counting
-> > in some
-> > testcases, and The second patch needs more consideration about
-> > commented point.
-> > 
-> > Any comment/suggestion/help would be appreciated.
-> 
-> Even after applied the compling fix,
-> 
-> https://lore.kernel.org/linux-mm/20200628065409.GA546944@u2004/
-> 
-> madvise(MADV_SOFT_OFFLINE) will fail with EIO with hugetlb where it
-> would succeed without this series. Steps:
-> 
-> # git clone https://github.com/cailca/linux-mm
-> # cd linux-mm; make
-> # ./random 1 (Need at least two NUMA memory nodes)
->  start: migrate_huge_offline
-> - use NUMA nodes 0,4.
-> - mmap and free 8388608 bytes hugepages on node 0
-> - mmap and free 8388608 bytes hugepages on node 4
-> madvise: Input/output error
+From: Xu Wang <vulab@iscas.ac.cn>
 
-I think I know why.
-It's been a while since I took a look, but I compared the posted
-patchset with my newest patchset I had ready and I saw I made some
-changes with regard of hugetlb pages.
+usb_free_coherent() is safe with NULL addr and this check is
+not required.
 
-I will be taking a look, although it might be better to re-post the
-patchset instead of adding a fix on top since the changes are a bit
-substantial.
+Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+---
+ drivers/input/misc/cm109.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-Thanks for reporting.
-
+diff --git a/drivers/input/misc/cm109.c b/drivers/input/misc/cm109.c
+index c09b9628ad34..e413801f0491 100644
+--- a/drivers/input/misc/cm109.c
++++ b/drivers/input/misc/cm109.c
+@@ -663,12 +663,8 @@ static const struct usb_device_id cm109_usb_table[] = {
+ static void cm109_usb_cleanup(struct cm109_dev *dev)
+ {
+ 	kfree(dev->ctl_req);
+-	if (dev->ctl_data)
+-		usb_free_coherent(dev->udev, USB_PKT_LEN,
+-				  dev->ctl_data, dev->ctl_dma);
+-	if (dev->irq_data)
+-		usb_free_coherent(dev->udev, USB_PKT_LEN,
+-				  dev->irq_data, dev->irq_dma);
++	usb_free_coherent(dev->udev, USB_PKT_LEN, dev->ctl_data, dev->ctl_dma);
++	usb_free_coherent(dev->udev, USB_PKT_LEN, dev->irq_data, dev->irq_dma);
+ 
+ 	usb_free_urb(dev->urb_irq);	/* parameter validation in core/urb */
+ 	usb_free_urb(dev->urb_ctl);	/* parameter validation in core/urb */
 -- 
-Oscar Salvador
-SUSE L3
+2.17.1
+
