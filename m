@@ -2,63 +2,71 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B915C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB1D3C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:32:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7DF8B2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BAF0206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:32:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FQHKTBle"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Iq79rUu7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387629AbgF3R3g (ORCPT
+        id S2387711AbgF3Rc3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 13:29:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53220 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgF3R3f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 13:29:35 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A6BBC061755;
-        Tue, 30 Jun 2020 10:29:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:Content-ID:
-        Content-Description:In-Reply-To:References;
-        bh=wl8EAQlU5U9NfFNfWCICO6BKBWbdzGclG26DsxfSj2g=; b=FQHKTBle1w7XJi6kZa+YzV7bRx
-        2Tr7Hr/5HbN8FfopyB2yWisfPt3LhRHCvEXaGrVDsVnYxilLbz8a3152bIxY3sqIN+lbZyW8pmbII
-        RqZBxiLVWcpKtJVlY4fFzjKMvW41HASMcny9V2DcmC18iafHUzxIB3m0pX11FLL6m07yh7bsCgud9
-        ICD8LC55/t9PtbIiWqP99ACqBdaHbsIP1Tm3dY9zRcHgFusyR/zxiF27cLAL72uUZY07dNp7ksOMP
-        jYvX10BaKeS+kVfzRaqyBipx0ZOJzHaTzPsbrT+RIpILXcmWbacJOVkRriwvNERFYeIyLKxfvcCwB
-        wHQqQ5EA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jqK4J-0004Iy-EV; Tue, 30 Jun 2020 17:29:15 +0000
-To:     LKML <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        David Miller <davem@davemloft.net>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH -next] bpf: fix net/core/filter build errors when INET is not
- enabled
-Message-ID: <b1a858ec-7e04-56bc-248a-62cb9bbee726@infradead.org>
-Date:   Tue, 30 Jun 2020 10:29:10 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        Tue, 30 Jun 2020 13:32:29 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:37581 "EHLO m43-7.mailgun.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730171AbgF3Rc2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 13:32:28 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593538347; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=ZFcSwfI5UdhOXhdrQZvHHPaea1ggOYoJbFhXiurrIwM=; b=Iq79rUu7QvScRzXQSAihxZlTWaKL5YIbxMXOFJJ6oMzDswFbZgW3r3IeEKZnxlOB+5O/mwf3
+ 0JR3My1K5F21+l/z2k+92/MuqQG8iqF3J2+QiDheA2E+rVdY/FvGSuDkXmVIC/Htdchzx4Ll
+ 8SUyx6Ek69TD2m0QzqnlszJCF0c=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n11.prod.us-west-2.postgun.com with SMTP id
+ 5efb772aad153efa34f14356 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 30 Jun 2020 17:32:26
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id E593CC433CA; Tue, 30 Jun 2020 17:32:25 +0000 (UTC)
+Received: from [192.168.8.176] (cpe-70-95-149-85.san.res.rr.com [70.95.149.85])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: asutoshd)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D29B9C433C8;
+        Tue, 30 Jun 2020 17:32:23 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D29B9C433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
+Subject: Re: [PATCH v2] scsi: ufs: Disable WriteBooster capability in
+ non-supported UFS device
+To:     Stanley Chu <stanley.chu@mediatek.com>, linux-scsi@vger.kernel.org,
+        martin.petersen@oracle.com, avri.altman@wdc.com,
+        alim.akhtar@samsung.com, jejb@linux.ibm.com
+Cc:     beanhuo@micron.com, cang@codeaurora.org, matthias.bgg@gmail.com,
+        bvanassche@acm.org, linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
+        chun-hung.wu@mediatek.com, andy.teng@mediatek.com,
+        chaotian.jing@mediatek.com, cc.chou@mediatek.com
+References: <20200624074110.21919-1-stanley.chu@mediatek.com>
+From:   "Asutosh Das (asd)" <asutoshd@codeaurora.org>
+Message-ID: <7f826f0c-6ed1-b3a3-72c9-aae0a1680e23@codeaurora.org>
+Date:   Tue, 30 Jun 2020 10:32:23 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200624074110.21919-1-stanley.chu@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -66,50 +74,110 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+On 6/24/2020 12:41 AM, Stanley Chu wrote:
+> If UFS device is not qualified to enter the detection of WriteBooster
+> probing by disallowed UFS version or device quirks, then WriteBooster
+> capability in host shall be disabled to prevent any WriteBooster
+> operations in the future.
+> 
+> Fixes: 3d17b9b5ab11 ("scsi: ufs: Add write booster feature support")
+> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+> ---
+>   drivers/scsi/ufs/ufshcd.c | 35 +++++++++++++++++++----------------
+>   1 file changed, 19 insertions(+), 16 deletions(-)
+> 
+Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
 
-Fix build errors when CONFIG_INET is not set/enabled.
 
-(.text+0x2b1b): undefined reference to `tcp_prot'
-(.text+0x2b3b): undefined reference to `tcp_prot'
+> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+> index f173ad1bd79f..c62bd47beeaa 100644
+> --- a/drivers/scsi/ufs/ufshcd.c
+> +++ b/drivers/scsi/ufs/ufshcd.c
+> @@ -6847,21 +6847,31 @@ static int ufshcd_scsi_add_wlus(struct ufs_hba *hba)
+>   
+>   static void ufshcd_wb_probe(struct ufs_hba *hba, u8 *desc_buf)
+>   {
+> +	struct ufs_dev_info *dev_info = &hba->dev_info;
+>   	u8 lun;
+>   	u32 d_lu_wb_buf_alloc;
+>   
+>   	if (!ufshcd_is_wb_allowed(hba))
+>   		return;
+> +	/*
+> +	 * Probe WB only for UFS-2.2 and UFS-3.1 (and later) devices or
+> +	 * UFS devices with quirk UFS_DEVICE_QUIRK_SUPPORT_EXTENDED_FEATURES
+> +	 * enabled
+> +	 */
+> +	if (!(dev_info->wspecversion >= 0x310 ||
+> +	      dev_info->wspecversion == 0x220 ||
+> +	     (hba->dev_quirks & UFS_DEVICE_QUIRK_SUPPORT_EXTENDED_FEATURES)))
+> +		goto wb_disabled;
+>   
+>   	if (hba->desc_size[QUERY_DESC_IDN_DEVICE] <
+>   	    DEVICE_DESC_PARAM_EXT_UFS_FEATURE_SUP + 4)
+>   		goto wb_disabled;
+>   
+> -	hba->dev_info.d_ext_ufs_feature_sup =
+> +	dev_info->d_ext_ufs_feature_sup =
+>   		get_unaligned_be32(desc_buf +
+>   				   DEVICE_DESC_PARAM_EXT_UFS_FEATURE_SUP);
+>   
+> -	if (!(hba->dev_info.d_ext_ufs_feature_sup & UFS_DEV_WRITE_BOOSTER_SUP))
+> +	if (!(dev_info->d_ext_ufs_feature_sup & UFS_DEV_WRITE_BOOSTER_SUP))
+>   		goto wb_disabled;
+>   
+>   	/*
+> @@ -6870,17 +6880,17 @@ static void ufshcd_wb_probe(struct ufs_hba *hba, u8 *desc_buf)
+>   	 * a max of 1 lun would have wb buffer configured.
+>   	 * Now only shared buffer mode is supported.
+>   	 */
+> -	hba->dev_info.b_wb_buffer_type =
+> +	dev_info->b_wb_buffer_type =
+>   		desc_buf[DEVICE_DESC_PARAM_WB_TYPE];
+>   
+> -	hba->dev_info.b_presrv_uspc_en =
+> +	dev_info->b_presrv_uspc_en =
+>   		desc_buf[DEVICE_DESC_PARAM_WB_PRESRV_USRSPC_EN];
+>   
+> -	if (hba->dev_info.b_wb_buffer_type == WB_BUF_MODE_SHARED) {
+> -		hba->dev_info.d_wb_alloc_units =
+> +	if (dev_info->b_wb_buffer_type == WB_BUF_MODE_SHARED) {
+> +		dev_info->d_wb_alloc_units =
+>   		get_unaligned_be32(desc_buf +
+>   				   DEVICE_DESC_PARAM_WB_SHARED_ALLOC_UNITS);
+> -		if (!hba->dev_info.d_wb_alloc_units)
+> +		if (!dev_info->d_wb_alloc_units)
+>   			goto wb_disabled;
+>   	} else {
+>   		for (lun = 0; lun < UFS_UPIU_MAX_WB_LUN_ID; lun++) {
+> @@ -6891,7 +6901,7 @@ static void ufshcd_wb_probe(struct ufs_hba *hba, u8 *desc_buf)
+>   					(u8 *)&d_lu_wb_buf_alloc,
+>   					sizeof(d_lu_wb_buf_alloc));
+>   			if (d_lu_wb_buf_alloc) {
+> -				hba->dev_info.wb_dedicated_lu = lun;
+> +				dev_info->wb_dedicated_lu = lun;
+>   				break;
+>   			}
+>   		}
+> @@ -6977,14 +6987,7 @@ static int ufs_get_device_desc(struct ufs_hba *hba)
+>   
+>   	ufs_fixup_device_setup(hba);
+>   
+> -	/*
+> -	 * Probe WB only for UFS-3.1 devices or UFS devices with quirk
+> -	 * UFS_DEVICE_QUIRK_SUPPORT_EXTENDED_FEATURES enabled
+> -	 */
+> -	if (dev_info->wspecversion >= 0x310 ||
+> -	    dev_info->wspecversion == 0x220 ||
+> -	    (hba->dev_quirks & UFS_DEVICE_QUIRK_SUPPORT_EXTENDED_FEATURES))
+> -		ufshcd_wb_probe(hba, desc_buf);
+> +	ufshcd_wb_probe(hba, desc_buf);
+>   
+>   	/*
+>   	 * ufshcd_read_string_desc returns size of the string
+> 
 
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Martin KaFai Lau <kafai@fb.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Yonghong Song <yhs@fb.com>
-Cc: Andrii Nakryiko <andriin@fb.com>
-Cc: John Fastabend <john.fastabend@gmail.com>
-Cc: KP Singh <kpsingh@chromium.org>
-Cc: netdev@vger.kernel.org
-Cc: bpf@vger.kernel.org
----
- net/core/filter.c |    4 ++++
- 1 file changed, 4 insertions(+)
 
---- linux-next-20200630.orig/net/core/filter.c
-+++ linux-next-20200630/net/core/filter.c
-@@ -9328,8 +9328,10 @@ const struct bpf_func_proto bpf_skc_to_t
- 
- BPF_CALL_1(bpf_skc_to_tcp_timewait_sock, struct sock *, sk)
- {
-+#ifdef CONFIG_INET
- 	if (sk->sk_prot == &tcp_prot && sk->sk_state == TCP_TIME_WAIT)
- 		return (unsigned long)sk;
-+#endif
- 
- #if IS_BUILTIN(CONFIG_IPV6)
- 	if (sk->sk_prot == &tcpv6_prot && sk->sk_state == TCP_TIME_WAIT)
-@@ -9350,8 +9352,10 @@ const struct bpf_func_proto bpf_skc_to_t
- 
- BPF_CALL_1(bpf_skc_to_tcp_request_sock, struct sock *, sk)
- {
-+#ifdef CONFIG_INET
- 	if (sk->sk_prot == &tcp_prot  && sk->sk_state == TCP_NEW_SYN_RECV)
- 		return (unsigned long)sk;
-+#endif
- 
- #if IS_BUILTIN(CONFIG_IPV6)
- 	if (sk->sk_prot == &tcpv6_prot && sk->sk_state == TCP_NEW_SYN_RECV)
-
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+Linux Foundation Collaborative Project
