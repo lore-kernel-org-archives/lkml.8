@@ -2,149 +2,112 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC937C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:23:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80955C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7536206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:23:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="s34WJzeT"
+	by mail.kernel.org (Postfix) with ESMTP id 5909F20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:25:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727887AbgF3TX0 (ORCPT
+        id S1727953AbgF3TZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 15:23:26 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:38908 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726283AbgF3TX0 (ORCPT
+        Tue, 30 Jun 2020 15:25:23 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:58875 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726065AbgF3TZW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 15:23:26 -0400
-Received: from sequoia (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 36EC020B717A;
-        Tue, 30 Jun 2020 12:23:24 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 36EC020B717A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1593545005;
-        bh=/73jWX48iDgfnF6CKgFhER3y8ByMtAjJCLEbLzm/Tko=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=s34WJzeT3xk/6f6Z8xCg7w6XoAIkynJE92+HKDEMZdPJZJi8PJ06GLuxZ8Tewp1Rc
-         VKZeGQ2OpWEFFDhwSynqTVjWpV8Hbk6+gvrwi61j1lGZj3WGu8le6HHGJFJBBANOAV
-         uNhU/U2+T0B7WFKmQSqWbgZDDRJpiEVlnCBedYLg=
-Date:   Tue, 30 Jun 2020 14:23:22 -0500
-From:   Tyler Hicks <tyhicks@linux.microsoft.com>
-To:     Peter Jones <pjones@redhat.com>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Petr Vandrovec <petr@vmware.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Thirupathaiah Annapureddy <thiruan@microsoft.com>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tpm: Require that all digests are present in
- TCG_PCR_EVENT2 structures
-Message-ID: <20200630192322.GF4694@sequoia>
-References: <20200615232504.1848159-1-tyhicks@linux.microsoft.com>
- <CAMj1kXHJbsxA2-jqpbLnUeeNfM0oC8Sh70+axOKoBCFMJ8+jKQ@mail.gmail.com>
- <20200630185327.pasrylg7og7rlno3@redhat.com>
+        Tue, 30 Jun 2020 15:25:22 -0400
+Received: from mail-qv1-f49.google.com ([209.85.219.49]) by
+ mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1Mi2eP-1jCK6T3JM9-00e1cG; Tue, 30 Jun 2020 21:25:20 +0200
+Received: by mail-qv1-f49.google.com with SMTP id t7so9813284qvl.8;
+        Tue, 30 Jun 2020 12:25:20 -0700 (PDT)
+X-Gm-Message-State: AOAM533XNKdCu/boRlQlXHXOgCTzD9NSlo4eeDbnYZu/cr0B8NYTaFHE
+        9kAOGVwZ4OFtu541UoXHbVqGl9X39c9TuPRHP0U=
+X-Google-Smtp-Source: ABdhPJx+lRE51JRL6fCvRnoLPfTGDuD4BIZlGSJkoIdVSw7mHYOQQlzJvl0jgp7ZS50oAcVKQOmUzXKXW4PZLLmEroY=
+X-Received: by 2002:a0c:ba0e:: with SMTP id w14mr21638836qvf.222.1593545119567;
+ Tue, 30 Jun 2020 12:25:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200630185327.pasrylg7og7rlno3@redhat.com>
+References: <20200630173734.14057-1-will@kernel.org> <20200630173734.14057-19-will@kernel.org>
+In-Reply-To: <20200630173734.14057-19-will@kernel.org>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 30 Jun 2020 21:25:03 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a2zB4z121reuy6BCqQ3-1mDBAkUkRRXeDuvSFtSr3ha2g@mail.gmail.com>
+Message-ID: <CAK8P3a2zB4z121reuy6BCqQ3-1mDBAkUkRRXeDuvSFtSr3ha2g@mail.gmail.com>
+Subject: Re: [PATCH 18/18] arm64: lto: Strengthen READ_ONCE() to acquire when CLANG_LTO=y
+To:     Will Deacon <will@kernel.org>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Marco Elver <elver@google.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Matt Turner <mattst88@gmail.com>,
+        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
+        Richard Henderson <rth@twiddle.net>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        alpha <linux-alpha@vger.kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:PHrO9izh4NNAQ0DpLs98Zi/cmfDRago2QI2t67m75yidnuOuK1y
+ dRxsXcxsm8wiJuINEL+rhy5rzZ8DT7OLpRDD4XWCtmuiZIVsTQIEa6bq5gS71Un2O3OcJHZ
+ VfoV4oxYRtJqd4TkIACF5ShEMlDu3Hb0fOa1W4wbIc0m72JV6V4P/vC5u23vyq3Hli5m6/f
+ jHHhY9bmP4fbJwEHOtNhw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:W9+Tl/3NP3s=:dK9mjkydT8Mu8YiyXNKw+P
+ qMs16YMejU0ODuWFv4qZ7ZlYlXkk4wHvecKoE0ODcvPYYXQPwS3c+CypwJnSnD1U87WKEvMcG
+ cvirPkAQxR9sFbpxIRmCs0kVpvD+MLji7qeO19Jnv4OhJ4CsWfTI+oQFPMApbwvROvgmMUeiQ
+ AdppnErFNSz2rcEruYJLcr8U8k9YSSb+sSxcgu+VU2wOqFqFB/PwVuNWPAXH9O7bjmk9zEh8+
+ VgC49SQLnZcASQPNT0GNV6jPLGnH1e/OcU4A/6hdw9cV7gp2KjKAutsz3/I20S/s0o4HfjlyQ
+ 2joKjxMfWZeBTJZKY5BF/qJ3TCKudf1x1bHl7FJAJ+t763jGm39elvBO91wXb/THJ3R8juijS
+ 37LrD2jGWf5AGD7fyjvqXUIgg5QTRGykMqKt8TxOMdasC3cYWX/SXSfgO5ZtMhc4/j6u0b1y+
+ CSBUA7YbUJIKTnZnpJD5jeVtOCiIpUlLC9QbhULUDATrfO+vNb4I1EXvmKkSJk+q926QmPAIU
+ SCneudOiwHSm/nAzqQxSo4Qu9YLVeGrXNfOnaH/2mA6EjEVAru7GbzgI9OkiW7Wb1xzGY7j1Y
+ LNz27F9dI0FQUQ79+rqHOHMpf5U4ck9vZXu8/RxY9voYkRZqRBt3BbGzqQvhaXy86uK2C1/FT
+ 7WtGOCDvTZ5BhTDfvpJM0Q7rP4zDKiJEZYRbgCl58flOBx65B8BF+YoOZEjH4yQWT5R0AbpfK
+ o+PS/GjIzHzpNli5uctSF96tEHsEN8B38ttqdfa6ddxlQxUbZnmEbRJ9IuA1mD1UXsu8376qj
+ l46sp0RFk5uPfmb8K64fcC2sK9ypzulKt2To3lDVC4u2sagdFY=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-30 14:53:28, Peter Jones wrote:
-> On Tue, Jun 16, 2020 at 11:08:38AM +0200, Ard Biesheuvel wrote:
-> > (cc Matthew and Peter)
-> > 
-> > On Tue, 16 Jun 2020 at 01:28, Tyler Hicks <tyhicks@linux.microsoft.com> wrote:
-> > >
-> > > Require that the TCG_PCR_EVENT2.digests.count value strictly matches the
-> > > value of TCG_EfiSpecIdEvent.numberOfAlgorithms in the event field of the
-> > > TCG_PCClientPCREvent event log header. Also require that
-> > > TCG_EfiSpecIdEvent.numberOfAlgorithms is non-zero.
-> > >
-> > > The TCG PC Client Platform Firmware Profile Specification section 9.1
-> > > (Family "2.0", Level 00 Revision 1.04) states:
-> > >
-> > >  For each Hash algorithm enumerated in the TCG_PCClientPCREvent entry,
-> > >  there SHALL be a corresponding digest in all TCG_PCR_EVENT2 structures.
-> > >  Note: This includes EV_NO_ACTION events which do not extend the PCR.
-> > >
-> > > Section 9.4.5.1 provides this description of
-> > > TCG_EfiSpecIdEvent.numberOfAlgorithms:
-> > >
-> > >  The number of Hash algorithms in the digestSizes field. This field MUST
-> > >  be set to a value of 0x01 or greater.
-> > >
-> > > Enforce these restrictions, as required by the above specification, in
-> > > order to better identify and ignore invalid sequences of bytes at the
-> > > end of an otherwise valid TPM2 event log. Firmware doesn't always have
-> > > the means necessary to inform the kernel of the actual event log size so
-> > > the kernel's event log parsing code should be stringent when parsing the
-> > > event log for resiliency against firmware bugs. This is true, for
-> > > example, when firmware passes the event log to the kernel via a reserved
-> > > memory region described in device tree.
-> > >
-> > 
-> > When does this happen? Do we have code in mainline that does this?
-> > 
-> > > Prior to this patch, a single bit set in the offset corresponding to
-> > > either the TCG_PCR_EVENT2.eventType or TCG_PCR_EVENT2.eventSize fields,
-> > > after the last valid event log entry, could confuse the parser into
-> > > thinking that an additional entry is present in the event log. This
-> > > patch raises the bar on how difficult it is for stale memory to confuse
-> > > the kernel's event log parser but there's still a reliance on firmware
-> > > to properly initialize the remainder of the memory region reserved for
-> > > the event log as the parser cannot be expected to detect a stale but
-> > > otherwise properly formatted firmware event log entry.
-> > >
-> > > Fixes: fd5c78694f3f ("tpm: fix handling of the TPM 2.0 event logs")
-> > > Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
-> > > ---
-> > 
-> > I am all for stringent checks, but this could potentially break
-> > measured boot on systems that are working fine today, right?
-> 
-> Seems like in that case our measurement is unreliable and can't really
-> be trusted.  That said, having things that were using the measurements
-> before this suddenly stop being able to access sealed secrets is not a
-> great experience for the user who unwittingly bought the junk hardware.
+On Tue, Jun 30, 2020 at 7:39 PM Will Deacon <will@kernel.org> wrote:
+> +#define __READ_ONCE(x)                                                 \
+> +({                                                                     \
+> +       int atomic = 1;                                                 \
+> +       union { __unqual_scalar_typeof(x) __val; char __c[1]; } __u;    \
+> +       typeof(&(x)) __x = &(x);                                        \
+> +       switch (sizeof(x)) {                                            \
+...
+> +       atomic ? (typeof(x))__u.__val : (*(volatile typeof(x) *)__x);   \
+> +})
 
-I haven't seen where anyone has suggested that such junk hardware
-exists. Do you know of or expect any firmware that has mismatched
-TCG_PCR_EVENT2.digests.count and TCG_EfiSpecIdEvent.numberOfAlgorithms
-values?
+This expands (x) nine times (five in __unqual_scala_typeof()), which can
+lead to significant code bloat after preprocessing if something passes a
+compound expression into READ_ONCE().
+The compiler works it out eventually, but we've seen an actual slowdown
+in compile speed from this recently, especially on clang.
 
-I would think that the userspace code that's parsing
-/sys/kernel/security/tpm0/binary_bios_measurements would also have
-issues with such an event log.
+I think if you move the
 
-> Same with the zero-supported-hashes case.
+        typeof(&(x)) __x = &(x);
 
-Small but important correction: it is a zero-hashes case, not a
-zero-supported-hashes case
+line first, all other instances can use typeof(*__x) instead of typeof(x)
+and avoid this problem. Once we make gcc-4.9 the minimum version,
+this could be further improved to
 
-There's no handshake involved or anything like that. This would only
-cause problems if the firmware provided no hashes, which means the
-firmware event log is unusable, anyways.
+       __auto_type __x = &(x);
 
-Tyler
-
-> It would be nice to at log it and have a way for them to opt-in to
-> allowing the old measurement to go through, so they can recover their
-> data, though I don't know what that method would be if the measured
-> command line is one of their dependencies.
-> 
-> -- 
->         Peter
+       Arnd
