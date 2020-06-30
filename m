@@ -2,313 +2,116 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A391C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:32:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F6A9C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CEF0A2074F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:32:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vXj/g1zp"
+	by mail.kernel.org (Postfix) with ESMTP id 8124420771
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:32:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593531146;
+	bh=X9DhlaL3h3M6dHLQYSpCp1s//BjVGMTXEFW1olrYlVY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ndvhnY6y/9gSLHAXV8RgdTCBBhn8wuTS/M8eW9rCHDyL5I2OGeU2yf8404Is7i7ld
+	 CyMgF0ommKLP60BePMNVePpyTE/moCxyr+fIPgCX+AcDYdnrbkOtPJ1vQEL34RK6JL
+	 ckdgLX6fUH3D8C4W3cD8vWiehS0LVD+qfDiB14/I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389524AbgF3PcU (ORCPT
+        id S2389534AbgF3PcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 11:32:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35092 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389467AbgF3PcJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 11:32:09 -0400
-Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29FFBC061755;
-        Tue, 30 Jun 2020 08:32:09 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id l63so10093956pge.12;
-        Tue, 30 Jun 2020 08:32:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:reply-to:content-transfer-encoding;
-        bh=MF1bBtZ+Aq7c8IzmavnmwS/FGsWjHOP4fnopnlhS1Do=;
-        b=vXj/g1zpbmUruRfL3bpNqukp6HhSpqsgVtsj67322pnA+zyVIpF3T4U3htI2zXnS1a
-         PUF3Ydnkpfd0dvq1/bVScYyiSriTQFrGWqkfDOIR2n4u8UyYK9zwCSQc6xE1Pt2A9YdN
-         dFLeLvIzCfMtM3ocGtolvPnDEtzNl7Ifl5wmDTEN3/j2OP7dpFOdqRjQVOoLTptM0J0I
-         SlVBRMNJIvZkif0phZYjOJqSoF33d/BNb2wa1CBKhmFC9eo2+jLwVNG3MJhZJ7P0JJ67
-         AFHWjVsKD/SKb3Azj+vHcJZdseMNVmYXU86Ly7fjgYrMGAzSbUmo4VliAuol5B8G2YS+
-         PFEg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:reply-to:content-transfer-encoding;
-        bh=MF1bBtZ+Aq7c8IzmavnmwS/FGsWjHOP4fnopnlhS1Do=;
-        b=B/POb1ZSo+LbVuxk8uSdPu9E69ZuniXqJD+u4e5rtBijnKC3IbPQuSdBFwwHh3uV6G
-         7M+yq1Fz8XbJMf1KH3ZrXlT0htfDHNyeGol4ZwEYUe3bZu3g4wLYAA2hcuJt0032aMhM
-         oGk5up4Zk1NLl3bxQpdu4b7yyRQIVXtZXftm3zQFag+sU8z4IDuW5spEvUplPs4gyTG0
-         SXNyFWwUnuG/0Q7a2ox5Zbta5D1nFlvl5Mdnk9AqYdLJIJyZdQ6wGqEVtWAT2rdGWbU7
-         xSLKtbd98nneGupLGfnm6GW53CQnCAf+k9s9qOTXjsoIgFBqONlnc0T679bwcMsgy3Kj
-         sm8Q==
-X-Gm-Message-State: AOAM532eHErkL4lEFx1RDWb/J8x0BNiemMGRzGn1/UD/prd/kHTANzV8
-        iRImZZCBe6QRgBy07/RrBKhmeahD
-X-Google-Smtp-Source: ABdhPJwglDbcltA8iIMOL3MvFsdK69Jun1wwZyVtwZVVXFBrZ6CCUbrqx/k4nLYcLRbn+TabMGlYkA==
-X-Received: by 2002:a62:758b:: with SMTP id q133mr6502412pfc.289.1593531128782;
-        Tue, 30 Jun 2020 08:32:08 -0700 (PDT)
-Received: from localhost.localdomain ([131.107.174.194])
-        by smtp.gmail.com with ESMTPSA id 140sm3067433pfz.154.2020.06.30.08.32.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 08:32:08 -0700 (PDT)
-From:   Andres Beltran <lkmlabelt@gmail.com>
-To:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org
-Cc:     linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mikelley@microsoft.com, parri.andrea@gmail.com,
-        skarade@microsoft.com, Andres Beltran <lkmlabelt@gmail.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org
-Subject: [PATCH v3 2/3] scsi: storvsc: Use vmbus_requestor to generate transaction IDs for VMBus hardening
-Date:   Tue, 30 Jun 2020 11:31:59 -0400
-Message-Id: <20200630153200.1537105-3-lkmlabelt@gmail.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200630153200.1537105-1-lkmlabelt@gmail.com>
-References: <20200630153200.1537105-1-lkmlabelt@gmail.com>
+        Tue, 30 Jun 2020 11:32:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60314 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389467AbgF3PcX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 11:32:23 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72B5D20760;
+        Tue, 30 Jun 2020 15:32:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593531143;
+        bh=X9DhlaL3h3M6dHLQYSpCp1s//BjVGMTXEFW1olrYlVY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cGmgcwpjkbNw52cCa7kRC/GPrkFsOqVEstQkyXvVZSV5xfX3TDwLBGaCURvEU0t5J
+         025muooT8Nw9JkjVoawTY13UY5CS39I1DCSxV8E++nanIFjyfYf2b5mkS5P4oQgLsh
+         spZcFcj44mNzi0dHHjyA82NYyDTZtJ89hsbkAFBI=
+Date:   Tue, 30 Jun 2020 16:32:20 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Sameer Pujar <spujar@nvidia.com>
+Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        perex@perex.cz, tiwai@suse.com, robh+dt@kernel.org,
+        lgirdwood@gmail.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, digetx@gmail.com,
+        alsa-devel@alsa-project.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sharadg@nvidia.com,
+        mkumard@nvidia.com, viswanathl@nvidia.com, rlokhande@nvidia.com,
+        dramesh@nvidia.com, atalambedu@nvidia.com, nwartikar@nvidia.com,
+        swarren@nvidia.com, nicoleotsuka@gmail.com
+Subject: Re: Re: [PATCH v4 12/23] ASoC: simple-card: Support DPCM DAI link
+ with multiple Codecs
+Message-ID: <20200630153220.GL5272@sirena.org.uk>
+References: <1593233625-14961-1-git-send-email-spujar@nvidia.com>
+ <1593233625-14961-13-git-send-email-spujar@nvidia.com>
+ <874kqu1x70.wl-kuninori.morimoto.gx@renesas.com>
+ <1e0cf6d1-bf4e-8808-5390-c8a3b7c7fe7e@nvidia.com>
+ <87mu4lz6pt.wl-kuninori.morimoto.gx@renesas.com>
+ <1d7888c7-a8cc-e891-01aa-016e31cc9113@nvidia.com>
+ <87ftadyrec.wl-kuninori.morimoto.gx@renesas.com>
+ <492079e9-4518-78ba-a227-859d31594369@nvidia.com>
+ <20200630110100.GH5272@sirena.org.uk>
+ <81d106c0-e1c8-a79a-8caf-1f3be0d61f0c@nvidia.com>
 MIME-Version: 1.0
-Reply-To: t-mabelt@microsoft.com
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="9/GiYV45wF7IL3Iq"
+Content-Disposition: inline
+In-Reply-To: <81d106c0-e1c8-a79a-8caf-1f3be0d61f0c@nvidia.com>
+X-Cookie: Walk softly and carry a megawatt laser.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, pointers to guest memory are passed to Hyper-V as
-transaction IDs in storvsc. In the face of errors or malicious
-behavior in Hyper-V, storvsc should not expose or trust the transaction
-IDs returned by Hyper-V to be valid guest memory addresses. Instead,
-use small integers generated by vmbus_requestor as requests
-(transaction) IDs.
 
-Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: linux-scsi@vger.kernel.org
-Signed-off-by: Andres Beltran <lkmlabelt@gmail.com>
----
-Changes in v2:
-        - Add casts to unsigned long to fix warnings on 32bit.
+--9/GiYV45wF7IL3Iq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
- drivers/scsi/storvsc_drv.c | 85 +++++++++++++++++++++++++++++++++-----
- 1 file changed, 74 insertions(+), 11 deletions(-)
+On Tue, Jun 30, 2020 at 06:23:49PM +0530, Sameer Pujar wrote:
+> On 6/30/2020 4:31 PM, Mark Brown wrote:
 
-diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-index 624467e2590a..6d2df1f0fe6d 100644
---- a/drivers/scsi/storvsc_drv.c
-+++ b/drivers/scsi/storvsc_drv.c
-@@ -399,6 +399,7 @@ static int storvsc_timeout = 180;
- static struct scsi_transport_template *fc_transport_template;
- #endif
- 
-+static struct scsi_host_template scsi_driver;
- static void storvsc_on_channel_callback(void *context);
- 
- #define STORVSC_MAX_LUNS_PER_TARGET			255
-@@ -698,6 +699,12 @@ static void handle_sc_creation(struct vmbus_channel *new_sc)
- 
- 	memset(&props, 0, sizeof(struct vmstorage_channel_properties));
- 
-+	/*
-+	 * The size of vmbus_requestor is an upper bound on the number of requests
-+	 * that can be in-progress at any one time across all channels.
-+	 */
-+	new_sc->rqstor_size = scsi_driver.can_queue;
-+
- 	ret = vmbus_open(new_sc,
- 			 storvsc_ringbuffer_size,
- 			 storvsc_ringbuffer_size,
-@@ -726,6 +733,7 @@ static void  handle_multichannel_storage(struct hv_device *device, int max_chns)
- 	struct storvsc_cmd_request *request;
- 	struct vstor_packet *vstor_packet;
- 	int ret, t;
-+	u64 rqst_id;
- 
- 	/*
- 	 * If the number of CPUs is artificially restricted, such as
-@@ -760,14 +768,23 @@ static void  handle_multichannel_storage(struct hv_device *device, int max_chns)
- 	vstor_packet->flags = REQUEST_COMPLETION_FLAG;
- 	vstor_packet->sub_channel_count = num_sc;
- 
-+	rqst_id = vmbus_next_request_id(&device->channel->requestor,
-+					(unsigned long)request);
-+	if (rqst_id == VMBUS_RQST_ERROR) {
-+		dev_err(dev, "No request id available\n");
-+		return;
-+	}
-+
- 	ret = vmbus_sendpacket(device->channel, vstor_packet,
- 			       (sizeof(struct vstor_packet) -
- 			       vmscsi_size_delta),
--			       (unsigned long)request,
-+			       rqst_id,
- 			       VM_PKT_DATA_INBAND,
- 			       VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
- 
- 	if (ret != 0) {
-+		/* Reclaim request ID to avoid leak of IDs */
-+		vmbus_request_addr(&device->channel->requestor, rqst_id);
- 		dev_err(dev, "Failed to create sub-channel: err=%d\n", ret);
- 		return;
- 	}
-@@ -818,20 +835,31 @@ static int storvsc_execute_vstor_op(struct hv_device *device,
- {
- 	struct vstor_packet *vstor_packet;
- 	int ret, t;
-+	u64 rqst_id;
- 
- 	vstor_packet = &request->vstor_packet;
- 
- 	init_completion(&request->wait_event);
- 	vstor_packet->flags = REQUEST_COMPLETION_FLAG;
- 
-+	rqst_id = vmbus_next_request_id(&device->channel->requestor,
-+					(unsigned long)request);
-+	if (rqst_id == VMBUS_RQST_ERROR) {
-+		dev_err(&device->device, "No request id available\n");
-+		return -EAGAIN;
-+	}
-+
- 	ret = vmbus_sendpacket(device->channel, vstor_packet,
- 			       (sizeof(struct vstor_packet) -
- 			       vmscsi_size_delta),
--			       (unsigned long)request,
-+			       rqst_id,
- 			       VM_PKT_DATA_INBAND,
- 			       VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
--	if (ret != 0)
-+	if (ret != 0) {
-+		/* Reclaim request ID to avoid leak of IDs */
-+		vmbus_request_addr(&device->channel->requestor, rqst_id);
- 		return ret;
-+	}
- 
- 	t = wait_for_completion_timeout(&request->wait_event, 5*HZ);
- 	if (t == 0)
-@@ -1233,9 +1261,17 @@ static void storvsc_on_channel_callback(void *context)
- 	foreach_vmbus_pkt(desc, channel) {
- 		void *packet = hv_pkt_data(desc);
- 		struct storvsc_cmd_request *request;
-+		u64 cmd_rqst;
- 
--		request = (struct storvsc_cmd_request *)
--			((unsigned long)desc->trans_id);
-+		cmd_rqst = vmbus_request_addr(&channel->requestor,
-+					      desc->trans_id);
-+		if (cmd_rqst == VMBUS_RQST_ERROR) {
-+			dev_err(&device->device,
-+				"Incorrect transaction id\n");
-+			continue;
-+		}
-+
-+		request = (struct storvsc_cmd_request *)(unsigned long)cmd_rqst;
- 
- 		if (request == &stor_device->init_request ||
- 		    request == &stor_device->reset_request) {
-@@ -1256,6 +1292,12 @@ static int storvsc_connect_to_vsp(struct hv_device *device, u32 ring_size,
- 
- 	memset(&props, 0, sizeof(struct vmstorage_channel_properties));
- 
-+	/*
-+	 * The size of vmbus_requestor is an upper bound on the number of requests
-+	 * that can be in-progress at any one time across all channels.
-+	 */
-+	device->channel->rqstor_size = scsi_driver.can_queue;
-+
- 	ret = vmbus_open(device->channel,
- 			 ring_size,
- 			 ring_size,
-@@ -1369,6 +1411,7 @@ static int storvsc_do_io(struct hv_device *device,
- 	int ret = 0;
- 	const struct cpumask *node_mask;
- 	int tgt_cpu;
-+	u64 rqst_id;
- 
- 	vstor_packet = &request->vstor_packet;
- 	stor_device = get_out_stor_device(device);
-@@ -1463,6 +1506,13 @@ static int storvsc_do_io(struct hv_device *device,
- 
- 	vstor_packet->operation = VSTOR_OPERATION_EXECUTE_SRB;
- 
-+	rqst_id = vmbus_next_request_id(&outgoing_channel->requestor,
-+					(unsigned long)request);
-+	if (rqst_id == VMBUS_RQST_ERROR) {
-+		dev_err(&device->device, "No request id available\n");
-+		return -EAGAIN;
-+	}
-+
- 	if (request->payload->range.len) {
- 
- 		ret = vmbus_sendpacket_mpb_desc(outgoing_channel,
-@@ -1470,18 +1520,21 @@ static int storvsc_do_io(struct hv_device *device,
- 				vstor_packet,
- 				(sizeof(struct vstor_packet) -
- 				vmscsi_size_delta),
--				(unsigned long)request);
-+				rqst_id);
- 	} else {
- 		ret = vmbus_sendpacket(outgoing_channel, vstor_packet,
- 			       (sizeof(struct vstor_packet) -
- 				vmscsi_size_delta),
--			       (unsigned long)request,
-+			       rqst_id,
- 			       VM_PKT_DATA_INBAND,
- 			       VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
- 	}
- 
--	if (ret != 0)
-+	if (ret != 0) {
-+		/* Reclaim request ID to avoid leak of IDs */
-+		vmbus_request_addr(&outgoing_channel->requestor, rqst_id);
- 		return ret;
-+	}
- 
- 	atomic_inc(&stor_device->num_outstanding_req);
- 
-@@ -1562,7 +1615,7 @@ static int storvsc_host_reset_handler(struct scsi_cmnd *scmnd)
- 	struct storvsc_cmd_request *request;
- 	struct vstor_packet *vstor_packet;
- 	int ret, t;
--
-+	u64 rqst_id;
- 
- 	stor_device = get_out_stor_device(device);
- 	if (!stor_device)
-@@ -1577,14 +1630,24 @@ static int storvsc_host_reset_handler(struct scsi_cmnd *scmnd)
- 	vstor_packet->flags = REQUEST_COMPLETION_FLAG;
- 	vstor_packet->vm_srb.path_id = stor_device->path_id;
- 
-+	rqst_id = vmbus_next_request_id(&device->channel->requestor,
-+					(unsigned long)&stor_device->reset_request);
-+	if (rqst_id == VMBUS_RQST_ERROR) {
-+		dev_err(&device->device, "No request id available\n");
-+		return FAILED;
-+	}
-+
- 	ret = vmbus_sendpacket(device->channel, vstor_packet,
- 			       (sizeof(struct vstor_packet) -
- 				vmscsi_size_delta),
--			       (unsigned long)&stor_device->reset_request,
-+			       rqst_id,
- 			       VM_PKT_DATA_INBAND,
- 			       VMBUS_DATA_PACKET_FLAG_COMPLETION_REQUESTED);
--	if (ret != 0)
-+	if (ret != 0) {
-+		/* Reclaim request ID to avoid leak of IDs */
-+		vmbus_request_addr(&device->channel->requestor, rqst_id);
- 		return FAILED;
-+	}
- 
- 	t = wait_for_completion_timeout(&request->wait_event, 5*HZ);
- 	if (t == 0)
--- 
-2.25.1
+> > Why simple-card and not audio-graph-card?
 
+> Frankly speaking I have not used audio-graph-card before. I had a brief look
+> at the related binding. It seems it can use similar DT properties that
+> simple-card uses, although the binding style appears to be different.
+> However I am not sure if it offers better solutions to the problems I am
+> facing. For example, the ability to connect or form a chain of components to
+> realize more complicated use cases with DPCM, some of which were discussed
+> in [0]. Can you please help me understand why it could be preferred?
+
+> [0] https://lkml.org/lkml/2020/4/30/519
+
+It's the more modern thing which covers everything simple-card does and
+more, I'd expect new development to go into that rather than
+simple-card.
+
+--9/GiYV45wF7IL3Iq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl77WwMACgkQJNaLcl1U
+h9BoOgf8CqlyK9s07Hb+/KSOYbf63ZpZ3dwuHoWv8+gtnKh+DZIH3KN07uHzVHXw
+q3NUE8wJkGfYijU49aUjB5lRw4KNjXtAUMUHNAKlzmjQM+cxlEj6nZOGWAFrHyYo
+0rzPMLRbmsHTp9dcKdr7c/AXqYB8vgW+aYo6j76+W7fNvgW3thQllyW9ZKkvzQmz
+7TePVknBmz5ov6rTQSau7p314ZBcJEYL74ANMr0LxKKe5TSv/xHLQM9WeEDdkMUE
+kELoYHwZrWvOFUfy1nCl+uPqvUr+ciJD5gW5+PQvKnV0nAaVA2jW0RE3KMWKRu/S
+PZJLfFNr7vFTIsIU0YMidjDYelIA0A==
+=8bSR
+-----END PGP SIGNATURE-----
+
+--9/GiYV45wF7IL3Iq--
