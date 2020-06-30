@@ -2,128 +2,112 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87845C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:32:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6455CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5B863206BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:32:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="d+UqhUrD"
+	by mail.kernel.org (Postfix) with ESMTP id 36505206BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:34:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388866AbgF3Qcv (ORCPT
+        id S2388938AbgF3Qd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 12:32:51 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:9409 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732382AbgF3Qcu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 12:32:50 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5efb68cf0000>; Tue, 30 Jun 2020 09:31:11 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 30 Jun 2020 09:32:50 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 30 Jun 2020 09:32:50 -0700
-Received: from [10.26.75.203] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 30 Jun
- 2020 16:32:43 +0000
-Subject: Re: [PATCH v8 1/3] iommu/arm-smmu: add NVIDIA implementation for dual
- ARM MMU-500 usage
-To:     Krishna Reddy <vdumpa@nvidia.com>
-CC:     "joro@8bytes.org" <joro@8bytes.org>,
-        "will@kernel.org" <will@kernel.org>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        "Yu-Huan Hsu" <YHsu@nvidia.com>, Sachin Nikam <Snikam@nvidia.com>,
-        Pritesh Raithatha <praithatha@nvidia.com>,
-        Timo Alho <talho@nvidia.com>,
-        Bitan Biswas <bbiswas@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Nicolin Chen <nicolinc@nvidia.com>,
-        Bryan Huntsman <bhuntsman@nvidia.com>,
-        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>
-References: <20200630001051.12350-1-vdumpa@nvidia.com>
- <20200630001051.12350-2-vdumpa@nvidia.com>
- <e6da9661-4e62-6e34-ac21-63ff993ca8bc@nvidia.com>
- <BYAPR12MB282210677459B8D62623C642B36F0@BYAPR12MB2822.namprd12.prod.outlook.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <4037efc7-fbed-e8cf-dac7-212c65014e4e@nvidia.com>
-Date:   Tue, 30 Jun 2020 17:32:41 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <BYAPR12MB282210677459B8D62623C642B36F0@BYAPR12MB2822.namprd12.prod.outlook.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1593534671; bh=BrdgzbzbGOaqIwpth+UjSE/3zpix62EIsg7FYiFJ6po=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=d+UqhUrDKQr8qFYOz/u1vjt8DsYokVFOhzKCisRgy5ftkePf+uBolfrmg8FgEHwdS
-         piLlBWJ0pLcqmaeAwHPOo/UaGVj9zVUQNskhfOXQpG0k6Ias7wEyUgS7An8mBhyL5p
-         tMQrr173OXX1OggHX8tDrBt3AxuIsi9WThAIxJW/79t3EfyxVilU+9a6SqzZALM6S/
-         p1xDklctnzMXhkzlodCLxyMmAnpk+KM94/7MvD6rRAYRUePSHy3nAMp+tNqgKSvViJ
-         3fQ+OW2hvHql+Q6b6F2BYaMga1HaxbS7PeG+b1/qaNATJXb75hdM3242unbLTHx59U
-         Q/kF7UjjTvN8g==
+        Tue, 30 Jun 2020 12:33:59 -0400
+Received: from gate.crashing.org ([63.228.1.57]:47874 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726639AbgF3Qd7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 12:33:59 -0400
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 05UGXQQP021824;
+        Tue, 30 Jun 2020 11:33:26 -0500
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id 05UGXOLS021820;
+        Tue, 30 Jun 2020 11:33:24 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Tue, 30 Jun 2020 11:33:24 -0500
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, npiggin@gmail.com,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] powerpc/uaccess: Use flexible addressing with __put_user()/__get_user()
+Message-ID: <20200630163324.GW3598@gate.crashing.org>
+References: <c2addbd9d76212242d3d8554a2f7ff849fb08b85.1587040754.git.christophe.leroy@c-s.fr> <7b916759-1683-b4df-0d4b-b04b3fcd9a02@csgroup.eu> <878sg6862r.fsf@mpe.ellerman.id.au> <875zb98i5a.fsf@mpe.ellerman.id.au> <311c3471-cad7-72d5-a5e6-04cf892c5e41@csgroup.eu>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <311c3471-cad7-72d5-a5e6-04cf892c5e41@csgroup.eu>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 30/06/2020 17:23, Krishna Reddy wrote:
->>> +struct arm_smmu_device *nvidia_smmu_impl_init(struct arm_smmu_device 
->>> +*smmu) {
->>> +	unsigned int i;
-> ....
->>> +	for (i = 1; i < MAX_SMMU_INSTANCES; i++) {
->>> +		struct resource *res;
->>> +
->>> +		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
->>> +		if (!res)
->>> +			break;
+On Tue, Jun 30, 2020 at 04:55:05PM +0200, Christophe Leroy wrote:
+> Le 30/06/2020 à 03:19, Michael Ellerman a écrit :
+> >Michael Ellerman <mpe@ellerman.id.au> writes:
+> >>Because it uses the "m<>" constraint which didn't work on GCC 4.6.
+> >>
+> >>https://github.com/linuxppc/issues/issues/297
+> >>
+> >>So we should be able to pick it up for v5.9 hopefully.
+> >
+> >It seems to break the build with the kernel.org 4.9.4 compiler and
+> >corenet64_smp_defconfig:
 > 
->> Currently this driver is only supported for Tegra194 which I understand has 3 SMMUs. Therefore, I don't feel that we should fail silently here, I think it is better to return an error if all 3 cannot be initialised.
-> 
-> Initialization of all the three SMMU instances is not necessary here.
+> Looks like 4.9.4 doesn't accept "m<>" constraint either.
 
-That is not what I am saying.
+The evidence contradicts this assertion.
 
-> The driver can work with all the possible number of instances 1, 2 and 3 based on the DT config though it doesn't make much sense to use it with 1 instance.
-> There is no silent failure here from driver point of view. If there is misconfig in DT, SMMU faults would catch issues.
+> Changing it to "m" make it build.
 
-I disagree and you should return a proper error here.
+But that just means something else is wrong.
 
->>> +		nvidia_smmu->bases[i] = devm_ioremap_resource(smmu->dev, res);
->>> +		if (IS_ERR(nvidia_smmu->bases[i]))
->>> +			return ERR_CAST(nvidia_smmu->bases[i]);
-> 
->> You want to use PTR_ERR() here.
-> 
-> PTR_ERR() returns long integer. 
-> This function returns a pointer. ERR_CAST is the right one to use here. 
+> >+ make -s CC=powerpc64-linux-gnu-gcc -j 160
+> >In file included from /linux/include/linux/uaccess.h:11:0,
+> >                  from /linux/include/linux/sched/task.h:11,
+> >                  from /linux/include/linux/sched/signal.h:9,
+> >                  from /linux/include/linux/rcuwait.h:6,
+> >                  from /linux/include/linux/percpu-rwsem.h:7,
+> >                  from /linux/include/linux/fs.h:33,
+> >                  from /linux/include/linux/huge_mm.h:8,
+> >                  from /linux/include/linux/mm.h:675,
+> >                  from /linux/arch/powerpc/kernel/signal_32.c:17:
+> >/linux/arch/powerpc/kernel/signal_32.c: In function 
+> >'save_user_regs.isra.14.constprop':
+> >/linux/arch/powerpc/include/asm/uaccess.h:161:2: error: 'asm' operand has 
+> >impossible constraints
+> >   __asm__ __volatile__(     \
+> >   ^
+> >/linux/arch/powerpc/include/asm/uaccess.h:197:12: note: in expansion of 
+> >macro '__put_user_asm'
+> >     case 4: __put_user_asm(x, ptr, retval, "stw"); break; \
+> >             ^
+> >/linux/arch/powerpc/include/asm/uaccess.h:206:2: note: in expansion of 
+> >macro '__put_user_size_allowed'
+> >   __put_user_size_allowed(x, ptr, size, retval);  \
+> >   ^
+> >/linux/arch/powerpc/include/asm/uaccess.h:220:2: note: in expansion of 
+> >macro '__put_user_size'
+> >   __put_user_size(__pu_val, __pu_addr, __pu_size, __pu_err); \
+> >   ^
+> >/linux/arch/powerpc/include/asm/uaccess.h:96:2: note: in expansion of 
+> >macro '__put_user_nocheck'
+> >   __put_user_nocheck((__typeof__(*(ptr)))(x), (ptr), sizeof(*(ptr)))
+> >   ^
+> >/linux/arch/powerpc/kernel/signal_32.c:120:7: note: in expansion of macro 
+> >'__put_user'
+> >    if (__put_user((unsigned int)gregs[i], &frame->mc_gregs[i]))
+> >        ^
 
-Ah yes, indeed. OK that's fine.
+Can we see what that was after the macro jungle?  Like, the actual
+preprocessed code?
 
-Jon
+Also, what GCC version *does* work on this?
 
--- 
-nvpublic
+
+Segher
