@@ -7,223 +7,105 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA40C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1B0AC433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:51:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2367C2073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:51:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE1562074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:51:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HmuUR+42"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sK/MjBLn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388400AbgF3NvZ (ORCPT
+        id S2388427AbgF3Nvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 09:51:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47652 "EHLO
+        Tue, 30 Jun 2020 09:51:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729787AbgF3NvP (ORCPT
+        with ESMTP id S2388395AbgF3NvZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 09:51:15 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFA91C03E979
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:51:14 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id z13so20279919wrw.5
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:51:14 -0700 (PDT)
+        Tue, 30 Jun 2020 09:51:25 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC2F0C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:51:23 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id w3so7223000wmi.4
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:51:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1tAsKayZdJ/bssiKZaLewML1qJ1Qy+lK1MBLKE8UREg=;
-        b=HmuUR+42Bn4cTBDsI05lTD2ybzQaTZdf85wQG+9YuVjwQPKeeP1tNYCTEcHXqTrEEM
-         T4z+jbv5tiNasZ6KmWnhlPG3QrEUrk/mMnYUOJsCJr6zrIDphWWO6uLDw76IRRzJVXc4
-         TLUyYMKT9neCKXZ+YO+leUiN+5MszBevEmTVS2AyFbJmk7XkV+VbUU3NKN2vGSdQ+ROA
-         4Lq+q5YSoYDj7Bda8DG5nn8T2TEXTgAqloWvajJ3guqnQBP5KTjMZi+BBUENM/oLgqox
-         R9HTq7j3jdyvH478RgakzrBZVsYX3BX+2508Ti/I99uQAOYeoJdK4AM8Dlgn5m+Ws9vn
-         omBg==
+        bh=0HQs0EX6y4pWd4N+iRFQEBAE/mvgYPFVjycd+tHmjaQ=;
+        b=sK/MjBLnUjG8NYp5Oa/pEOupOcPm/ZEJfX5LnNv64UNaye7QtI6qhMXXu5yhPadFKO
+         slhHIIMGRHslLQUhQw0nGrvcB2csGQrLajPzJws3XAbX+dSqe+64BeuOrd2V4sa1KDlM
+         qwewlAHNNakuxpilJrs56Kd+6HnPc/0FW/QpbIcrX0HsO/Js14vmF7Tl508WyfN4TGfC
+         j+bx/2GEUtQGnpfOLnqKFS45PXFGGEaf4H79E8BMcD6o0gmc+cw89fIaEX2oR/pmOtxm
+         DpCvADMUFGfO24Z8Ib1xpuo/06RZGIX45/BRDt8vBw0P2IXU+DfVDDcX5IqjHPTf/hmg
+         75FA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1tAsKayZdJ/bssiKZaLewML1qJ1Qy+lK1MBLKE8UREg=;
-        b=uPTPUzxDm0YImxqSBLFn6tiKSLGFZlMuoVw8HfzmVaRKgQ0iU0+a+mwEBkXZE9Mbo+
-         du3zIeIpmywLxhIG+LeqO0AgCUKoCJyGU4weR4krtDLlPQN6pwDKndwd/5/JiyemNjeV
-         BUzUUzV2TJMZ50Ip4KgkDMxRFtPSZijgajvXgZ01uGjpbBODWkrhFJqygIYhsMii5FsX
-         73sonBCAzMb/Iwp5n/XInhaT6szF5MgH+iNH+1tDdyzZDKZ/MICJN5w/JoWAo/csafpO
-         6YjuQBxpxvYr+RDqDrX97wD/uy+tTeDOGpRxhX4GItRxbIFZt4LEMbFQQSBiIzeq5TxN
-         E00Q==
-X-Gm-Message-State: AOAM531KXXdiLN8NFFkE2A5v38L8axOt9tOgWeZF/lfHhmkkpLOW8mBr
-        fPlWV89D2WDggz9ZryB2Ps8P2A==
-X-Google-Smtp-Source: ABdhPJxIo7/ko+Ybgyw1T84vSapma04jKlDgzkG2BjzAzen18pjnBD0YX9WF7hVrDcmqSZnly+BvqQ==
-X-Received: by 2002:adf:db4d:: with SMTP id f13mr21658826wrj.336.1593525073582;
-        Tue, 30 Jun 2020 06:51:13 -0700 (PDT)
+        bh=0HQs0EX6y4pWd4N+iRFQEBAE/mvgYPFVjycd+tHmjaQ=;
+        b=Y79I0FssVPVrvUnjYpciq99zrcSSaomPFBycS3TDzVN1+byguawRkfyaVTCIk3YVUy
+         T5NG5lrAnQRWYPghTmZmS7KzA8jw2jerpUM66nKkysdBz/0hYinpJcBXHroK8vJFvi1f
+         tLcv7Huz5bSpKRY0C5wvTYv9LUJmnTjrIcwxdighAL/ERzrlWcliA1gtC7RBPtBQsTF1
+         7iFamYPFLdo3DIUNa+z/GoTxM9ICbIVBqeChyGbI2OyerW8LCuuIbZbICl0fCFA05jg3
+         f2oyMKWmUuLqy4aNLorqZdJ4MlYhlY17axSecq4dKdHZMm7xfbMDTYE8llJ+vuBmSpZ1
+         cDkg==
+X-Gm-Message-State: AOAM53012UH51kI5UB5zcJkejCJXQV+KxZoGuyCx6ytXHlkpzph1h9Nm
+        WKLSwbRMyHTRh0HbHrIX1t3Kpw==
+X-Google-Smtp-Source: ABdhPJw0TifXBK9AOZnXWLaDXMh1MZL4Xz0zESP5aT8WW2ZN59Rj/jcbvhPgWlb4zVF2mMhmDW6lag==
+X-Received: by 2002:a7b:cf10:: with SMTP id l16mr21845849wmg.93.1593525082614;
+        Tue, 30 Jun 2020 06:51:22 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id t4sm3876746wmf.4.2020.06.30.06.51.12
+        by smtp.gmail.com with ESMTPSA id t4sm3876746wmf.4.2020.06.30.06.51.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 06:51:13 -0700 (PDT)
+        Tue, 30 Jun 2020 06:51:22 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     arnd@arndb.de, gregkh@linuxfoundation.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
-        Michael Jung <mijung@gmx.net>,
-        Michael Ruettger <michael@ibmra.de>,
-        Frank Haverkamp <haver@linux.ibm.com>,
-        Joerg-Stephan Vogt <jsvogt@de.ibm.com>
-Subject: [PATCH 01/30] misc: genwqe: card_ddcb: Fix a variety of kerneldoc issues
-Date:   Tue, 30 Jun 2020 14:50:41 +0100
-Message-Id: <20200630135110.2236389-2-lee.jones@linaro.org>
+        =?UTF-8?q?Max=20Asb=C3=B6ck?= <amax@us.ibm.com>
+Subject: [PATCH 08/30] misc: ibmasm: r_heartbeat: Demote function headers from kerneldoc
+Date:   Tue, 30 Jun 2020 14:50:48 +0100
+Message-Id: <20200630135110.2236389-9-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200630135110.2236389-1-lee.jones@linaro.org>
 References: <20200630135110.2236389-1-lee.jones@linaro.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Including; demoting file header from kerneldoc to standard comment/
-header, adding a variety of missing function argument documentation,
-re-ordering of #defines i.e. not placed between kerneldoc headers
-and the functions they are documenting and re-documenting of changed/
-renamed arguments.
+The correct format is not used and no attempt has been made
+to document the function arguments.  Makes sense to just demote
+the header back down to a simple comment.
 
-Fixes the following W=1 kernel build warnings:
+Fixes the following W=1 warnings:
 
- drivers/misc/genwqe/card_ddcb.c:83: warning: Function parameter or member 'queue' not described in 'queue_empty'
- drivers/misc/genwqe/card_ddcb.c:262: warning: Excess function parameter 'cd' description in 'RET_DDCB_APPENDED'
- drivers/misc/genwqe/card_ddcb.c:262: warning: Excess function parameter 'queue' description in 'RET_DDCB_APPENDED'
- drivers/misc/genwqe/card_ddcb.c:262: warning: Excess function parameter 'ddcb_no' description in 'RET_DDCB_APPENDED'
- drivers/misc/genwqe/card_ddcb.c:329: warning: Function parameter or member 'req' not described in 'copy_ddcb_results'
- drivers/misc/genwqe/card_ddcb.c:329: warning: Function parameter or member 'ddcb_no' not described in 'copy_ddcb_results'
- drivers/misc/genwqe/card_ddcb.c:364: warning: Function parameter or member 'queue' not described in 'genwqe_check_ddcb_queue'
- drivers/misc/genwqe/card_ddcb.c:565: warning: Function parameter or member 'queue' not described in 'get_next_ddcb'
- drivers/misc/genwqe/card_ddcb.c:565: warning: Function parameter or member 'num' not described in 'get_next_ddcb'
- drivers/misc/genwqe/card_ddcb.c:909: warning: Function parameter or member 'cmd' not described in '__genwqe_execute_raw_ddcb'
- drivers/misc/genwqe/card_ddcb.c:909: warning: Excess function parameter 'req' description in '__genwqe_execute_raw_ddcb'
- drivers/misc/genwqe/card_ddcb.c:972: warning: Function parameter or member 'cd' not described in 'genwqe_next_ddcb_ready'
- drivers/misc/genwqe/card_ddcb.c:1002: warning: Function parameter or member 'cd' not described in 'genwqe_ddcbs_in_flight'
- drivers/misc/genwqe/card_ddcb.c:1181: warning: Function parameter or member 'data' not described in 'genwqe_card_thread'
- drivers/misc/genwqe/card_ddcb.c:1308: warning: Function parameter or member 'cd' not described in 'queue_wake_up_all'
- drivers/misc/genwqe/card_ddcb.c:1333: warning: Function parameter or member 'cd' not described in 'genwqe_finish_queue'
+ drivers/misc/ibmasm/r_heartbeat.c:49: warning: Function parameter or member 'sp' not described in 'ibmasm_start_reverse_heartbeat'
+ drivers/misc/ibmasm/r_heartbeat.c:49: warning: Function parameter or member 'rhb' not described in 'ibmasm_start_reverse_heartbeat'
 
-Cc: Michael Jung <mijung@gmx.net>
-Cc: Michael Ruettger <michael@ibmra.de>
-Cc: Frank Haverkamp <haver@linux.ibm.com>
-Cc: Joerg-Stephan Vogt <jsvogt@de.ibm.com>
+Cc: "Max Asböck" <amax@us.ibm.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/misc/genwqe/card_ddcb.c | 20 +++++++++++++++-----
- 1 file changed, 15 insertions(+), 5 deletions(-)
+ drivers/misc/ibmasm/r_heartbeat.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/misc/genwqe/card_ddcb.c b/drivers/misc/genwqe/card_ddcb.c
-index 905106579935a..0db4000dedf20 100644
---- a/drivers/misc/genwqe/card_ddcb.c
-+++ b/drivers/misc/genwqe/card_ddcb.c
-@@ -1,5 +1,5 @@
- // SPDX-License-Identifier: GPL-2.0-only
--/**
-+/*
-  * IBM Accelerator Family 'GenWQE'
-  *
-  * (C) Copyright IBM Corp. 2013
-@@ -244,10 +244,13 @@ static int ddcb_requ_finished(struct genwqe_dev *cd, struct ddcb_requ *req)
- 		(cd->card_state != GENWQE_CARD_USED);
+diff --git a/drivers/misc/ibmasm/r_heartbeat.c b/drivers/misc/ibmasm/r_heartbeat.c
+index 6567df638ea93..21c9b6a6f2c36 100644
+--- a/drivers/misc/ibmasm/r_heartbeat.c
++++ b/drivers/misc/ibmasm/r_heartbeat.c
+@@ -39,7 +39,7 @@ void ibmasm_init_reverse_heartbeat(struct service_processor *sp, struct reverse_
+ 	rhb->stopped = 0;
  }
  
-+#define RET_DDCB_APPENDED 1
-+#define RET_DDCB_TAPPED   2
- /**
-  * enqueue_ddcb() - Enqueue a DDCB
-  * @cd:         pointer to genwqe device descriptor
-  * @queue:	queue this operation should be done on
-+ * @pddcb:      pointer to ddcb structure
-  * @ddcb_no:    pointer to ddcb number being tapped
-  *
-  * Start execution of DDCB by tapping or append to queue via NEXT
-@@ -259,9 +262,6 @@ static int ddcb_requ_finished(struct genwqe_dev *cd, struct ddcb_requ *req)
-  * Return: 1 if new DDCB is appended to previous
-  *         2 if DDCB queue is tapped via register/simulation
-  */
--#define RET_DDCB_APPENDED 1
--#define RET_DDCB_TAPPED   2
--
- static int enqueue_ddcb(struct genwqe_dev *cd, struct ddcb_queue *queue,
- 			struct ddcb *pddcb, int ddcb_no)
- {
-@@ -316,6 +316,8 @@ static int enqueue_ddcb(struct genwqe_dev *cd, struct ddcb_queue *queue,
- 
- /**
-  * copy_ddcb_results() - Copy output state from real DDCB to request
-+ * @req:        pointer to requsted DDCB parameters
-+ * @ddcb_no:    pointer to ddcb number being tapped
-  *
-  * Copy DDCB ASV to request struct. There is no endian
-  * conversion made, since data structure in ASV is still
-@@ -356,6 +358,7 @@ static void copy_ddcb_results(struct ddcb_requ *req, int ddcb_no)
- /**
-  * genwqe_check_ddcb_queue() - Checks DDCB queue for completed work equests.
-  * @cd:         pointer to genwqe device descriptor
-+ * @queue:	queue to be checked
-  *
-  * Return: Number of DDCBs which were finished
-  */
-@@ -553,6 +556,8 @@ int __genwqe_wait_ddcb(struct genwqe_dev *cd, struct ddcb_requ *req)
- /**
-  * get_next_ddcb() - Get next available DDCB
-  * @cd:         pointer to genwqe device descriptor
-+ * @queue:      DDCB queue
-+ * @num:        internal DDCB number
-  *
-  * DDCB's content is completely cleared but presets for PRE and
-  * SEQNUM. This function must only be called when ddcb_lock is held.
-@@ -900,7 +905,7 @@ int __genwqe_enqueue_ddcb(struct genwqe_dev *cd, struct ddcb_requ *req,
- /**
-  * __genwqe_execute_raw_ddcb() - Setup and execute DDCB
-  * @cd:         pointer to genwqe device descriptor
-- * @req:        user provided DDCB request
-+ * @cmd:        user provided DDCB command
-  * @f_flags:    file mode: blocking, non-blocking
-  */
- int __genwqe_execute_raw_ddcb(struct genwqe_dev *cd,
-@@ -965,6 +970,7 @@ int __genwqe_execute_raw_ddcb(struct genwqe_dev *cd,
- 
- /**
-  * genwqe_next_ddcb_ready() - Figure out if the next DDCB is already finished
-+ * @cd:         pointer to genwqe device descriptor
-  *
-  * We use this as condition for our wait-queue code.
-  */
-@@ -993,6 +999,7 @@ static int genwqe_next_ddcb_ready(struct genwqe_dev *cd)
- 
- /**
-  * genwqe_ddcbs_in_flight() - Check how many DDCBs are in flight
-+ * @cd:         pointer to genwqe device descriptor
-  *
-  * Keep track on the number of DDCBs which ware currently in the
-  * queue. This is needed for statistics as well as conditon if we want
-@@ -1171,6 +1178,7 @@ static irqreturn_t genwqe_vf_isr(int irq, void *dev_id)
- 
- /**
-  * genwqe_card_thread() - Work thread for the DDCB queue
-+ * @data:         pointer to genwqe device descriptor
-  *
-  * The idea is to check if there are DDCBs in processing. If there are
-  * some finished DDCBs, we process them and wakeup the
-@@ -1299,6 +1307,7 @@ int genwqe_setup_service_layer(struct genwqe_dev *cd)
- 
- /**
-  * queue_wake_up_all() - Handles fatal error case
-+ * @cd:         pointer to genwqe device descriptor
-  *
-  * The PCI device got unusable and we have to stop all pending
-  * requests as fast as we can. The code after this must purge the
-@@ -1323,6 +1332,7 @@ static int queue_wake_up_all(struct genwqe_dev *cd)
- 
- /**
-  * genwqe_finish_queue() - Remove any genwqe devices and user-interfaces
-+ * @cd:         pointer to genwqe device descriptor
-  *
-  * Relies on the pre-condition that there are no users of the card
-  * device anymore e.g. with open file-descriptors.
+-/**
++/*
+  * start_reverse_heartbeat
+  * Loop forever, sending a reverse heartbeat dot command to the service
+  * processor, then sleeping. The loop comes to an end if the service
 -- 
 2.25.1
 
