@@ -2,177 +2,179 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.1 required=3.0 tests=DATE_IN_FUTURE_06_12,
-	DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,MSGID_FROM_MTA_HEADER,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F0DBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F15F5C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 51B38206CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:25:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="kOVdD9vs"
+	by mail.kernel.org (Postfix) with ESMTP id CDE13206CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:25:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729845AbgF3FZn (ORCPT
+        id S1729857AbgF3FZ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 01:25:43 -0400
-Received: from mail-am6eur05on2049.outbound.protection.outlook.com ([40.107.22.49]:6022
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729832AbgF3FZk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 01:25:40 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gV+EHo0JENEuABxZ6g7bRCux86lgnX4btI140X3usOZp3g98fnBiOCXodpmAh8rzam1PPj7ziI9/PY3U5ma0rqDukcTaZYZolt8CNSXA2W0hp2CnfrD0+SGXXouBs0LhYJp/65dQtw/S5icZ8wYH+QAPGNu1Bu/Xmtfk8KzAjh/FSi5Rm04WlT3cb7g+4LuxIQi+F4YznoDfBczxMCD5AJE0HBxw8XAARfjHoV8wRzNiRAutF936MMkq77XojaEP3Vmy+ECoGy2q052DeWznglBO/1VwbUAjEOf4DkUMXtPsvCoMmtJofzSQIE8t4TYB6yswcGB4tDMx8GpZdyWzng==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nwRHmQ4mQ9Ssi/XHtHwbkLAPrzpFChC9/nuv3wVGWus=;
- b=f/OwWJrYgydUP2XZSxw6BX3iNNvUlmoyzDBjbUVG4rmmtIb1Os/7OAULOwz7ijljMc5hF2Id7VkimdH13qUpNcb/ETHBb7Z+IT7RhBRBu/LjaI7Lcdpq+Q9LSkUr6QxoLx92nKMssxKf0gvsxtLr4c3dv9Q4+BSmrrk/Kjwi+DmYk38F0kbEACoKDruXGnU5lXReTd6kJsEO77ur3WLqMlsCojm3lF1aODCq/nnsZTZO0M8HD8B/oRVs/m3qSArBHjhY1Xl4S28SwUoZiXNTKosF15oZ5oKsxNc4dDbIG0ssdPASwgwZALQ5BLlg4J2O/fuRd63lwLmMx5F2rU/49w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nwRHmQ4mQ9Ssi/XHtHwbkLAPrzpFChC9/nuv3wVGWus=;
- b=kOVdD9vsimmwFLWtDn0jmGcgHGqcfwheQjffTMbGCZMiHyJe+7t4T4ljrd4NcMVcYUQqv7Zni5++jNJxTozpVAnofZjk47HwljeGIvKjqD+eb82506UEikje1fvVLL7JCO0ba+mCqlJdyiSx62ZlRqUe7YmjxPP2MJw3bcxthDU=
-Authentication-Results: arm.com; dkim=none (message not signed)
- header.d=none;arm.com; dmarc=none action=none header.from=nxp.com;
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com (2603:10a6:803:119::15)
- by VE1PR04MB6640.eurprd04.prod.outlook.com (2603:10a6:803:122::32) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.26; Tue, 30 Jun
- 2020 05:25:35 +0000
-Received: from VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d]) by VE1PR04MB6638.eurprd04.prod.outlook.com
- ([fe80::5cc4:23a5:ca17:da7d%6]) with mapi id 15.20.3131.028; Tue, 30 Jun 2020
- 05:25:35 +0000
-From:   Robin Gong <yibin.gong@nxp.com>
-To:     mark.rutland@arm.com, broonie@kernel.org, robh+dt@kernel.org,
-        catalin.marinas@arm.com, vkoul@kernel.org, will.deacon@arm.com,
-        shawnguo@kernel.org, festevam@gmail.com, s.hauer@pengutronix.de,
-        martin.fuzzey@flowbird.group, u.kleine-koenig@pengutronix.de,
-        dan.j.williams@intel.com, matthias.schiffer@ew.tq-group.com
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kernel@pengutronix.de, dmaengine@vger.kernel.org, linux-imx@nxp.com
-Subject: [PATCH v10 12/12] dmaengine: imx-sdma: add uart rom script
-Date:   Tue, 30 Jun 2020 21:31:16 +0800
-Message-Id: <1593523876-22387-13-git-send-email-yibin.gong@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1593523876-22387-1-git-send-email-yibin.gong@nxp.com>
-References: <1593523876-22387-1-git-send-email-yibin.gong@nxp.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SG2PR06CA0132.apcprd06.prod.outlook.com
- (2603:1096:1:1d::34) To VE1PR04MB6638.eurprd04.prod.outlook.com
- (2603:10a6:803:119::15)
+        Tue, 30 Jun 2020 01:25:57 -0400
+Received: from mga18.intel.com ([134.134.136.126]:14465 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727842AbgF3FZ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 01:25:56 -0400
+IronPort-SDR: VvQLDTm5lQCG6pgCG2jodocLpGw3eKB7qJrKK66QtyL4bRrdb5SMIaaBLZU8HVkf/aDunXCzac
+ V2OK6mgywjcQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="133593945"
+X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
+   d="scan'208";a="133593945"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 22:25:55 -0700
+IronPort-SDR: 6toO2+WEROaRpdLmlhBTocqmJ0ab/uPB8f7X4XolBo209QA8i/+4+pZ88sid9qJUCj8admSqnq
+ +QR9c3/D2aeQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
+   d="scan'208";a="355671324"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by orsmga001.jf.intel.com with ESMTP; 29 Jun 2020 22:25:55 -0700
+Date:   Mon, 29 Jun 2020 22:25:55 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org
+Cc:     "H. Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
+Subject: Re: [PATCH] x86/split_lock: Don't write MSR_TEST_CTRL on CPUs that
+ aren't whitelisted
+Message-ID: <20200630052555.GR12312@linux.intel.com>
+References: <20200605192605.7439-1-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from robin-OptiPlex-790.ap.freescale.net (119.31.174.67) by SG2PR06CA0132.apcprd06.prod.outlook.com (2603:1096:1:1d::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.3131.21 via Frontend Transport; Tue, 30 Jun 2020 05:25:30 +0000
-X-Mailer: git-send-email 2.7.4
-X-Originating-IP: [119.31.174.67]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: e553974c-fe53-4c61-a08c-08d81cb60451
-X-MS-TrafficTypeDiagnostic: VE1PR04MB6640:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <VE1PR04MB664064452306464CDB731553896F0@VE1PR04MB6640.eurprd04.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
-X-Forefront-PRVS: 0450A714CB
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: i8UQB+H8rZHZnN/OBJN42KlVGhy5NtClfdZ/kta8inaH5HYP5WGJUnnaG8TNkA2Uq7VCEClbI06Y/eqns/42YasoBKrCb6iLpACXeH2PXy8Gpm5Zav+pQvya2LUMPZCp1ZBsGomxsxJBitcYMg9hESd7n4EXiVxXrbiglG0C7pDsgVky/AV/3KMOz69Q9sM6mUN9DCY5QSJ3aa5Fl/xrCcaFYTxmgEUPAW7LEO6R9MObiv/K15mrscw2ynebav157oGQwiWmHMlwPBMUk+QXP6Sx7Zumf8w0MrgnwQfKXaSNOFT+Dq5W4tBvwja0JyIwikDlQk3gQ2HFw7OSwZzpLY/ff4BxNTCCSHqUg9OUJHVJdPbjBUDzmnU12sROeYu/ZsZWx+A2z0Rtfj+ZbpeIG+xPT8DEjLdkZjBKPDkVnb8/GPbVR57LE1Ih1VC0Gfp9
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VE1PR04MB6638.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(346002)(136003)(39860400002)(366004)(396003)(86362001)(956004)(6666004)(2616005)(52116002)(7416002)(4326008)(6506007)(6486002)(2906002)(5660300002)(186003)(26005)(36756003)(16526019)(8676002)(966005)(478600001)(316002)(83380400001)(66946007)(66476007)(6512007)(8936002)(66556008)(921003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: nJfpPgNA6DMoeL0GGi82qHQSoF+O3XPTEdnpCE/chW3MLG2u0rC5473FnvTfgG+bgmPx/cDm00uX8w/3FpsaTK0SOMSD7PioOMAd60AmobCwQ5Tj3P/iJi1mrREHWmwxeUqqiO0PDaHhXs9sYwsyhKziXa1CybouXRYsm/z8phbFsNDFBMT7W7NgjfcNu6840RRgxNCdEWQikBkvMBJFpzKZli5vYopEwJFtxBoNy4AfA+U8StfwpDBZXtRWr2iA+Ec63LmrqnYvJotFMZKkBq21WddsVBIKWOtc6julEImhaDx4gEfFYJqCL5amnDdLlR3k9Yo3gz4GL/SSt6IHvUOg1RMEVdf2y5ZUB51aY/i6wsuZam4PK3t4/uoOnNRHiA/fGT3R7VTiHEJtO07fZ02zmBIQokMLvGMN55Gqqa6X42ZOIXy7VYZTHyaPblchnVbKrfdlSEfuB589X18CCbnJhG44qLZAw6NCd7fbwzE=
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e553974c-fe53-4c61-a08c-08d81cb60451
-X-MS-Exchange-CrossTenant-AuthSource: VE1PR04MB6638.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2020 05:25:35.7037
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: euCy1t98rRqtiF5f/n9UiS32eZmFiciWHJbdz/5hiJuFWRuLlge2VWC6b6X43NSg3twWrZvQ6UtWqeY6IswFGw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6640
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200605192605.7439-1-sean.j.christopherson@intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For the compatibility of NXP internal legacy kernel before 4.19 which
-is based on uart ram script and upstreaming kernel based on uart rom
-script, add both uart ram/rom script in latest sdma firmware. By default
-uart rom script used.
-Besides, add two multi-fifo scripts for SAI/PDM on i.mx8m/8mm and add
-back qspi script miss for v4(i.mx7d/8m/8mm family, but v3 is for i.mx6).
+Ping.  This would ideally get into 5.8, the bad behavior is quite nasty.
 
-rom script:
-        uart_2_mcu_addr
-	uartsh_2_mcu_addr /* through spba bus */
-am script:
-	uart_2_mcu_ram_addr
-	uartsh_2_mcu_ram_addr /* through spba bus */
-
-Please get latest sdma firmware from the below and put them into the path
-(/lib/firmware/imx/sdma/):
-https://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git
-/tree/imx/sdma
-
-Signed-off-by: Robin Gong <yibin.gong@nxp.com>
-Acked-by: Vinod Koul <vkoul@kernel.org>
----
- drivers/dma/imx-sdma.c                     | 4 ++--
- include/linux/platform_data/dma-imx-sdma.h | 8 ++++++--
- 2 files changed, 8 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index 3058c78..e946271 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -1729,8 +1729,8 @@ static void sdma_issue_pending(struct dma_chan *chan)
- 
- #define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V1	34
- #define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V2	38
--#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3	41
--#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V4	42
-+#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V3	45
-+#define SDMA_SCRIPT_ADDRS_ARRAY_SIZE_V4	46
- 
- static void sdma_add_scripts(struct sdma_engine *sdma,
- 		const struct sdma_script_start_addrs *addr)
-diff --git a/include/linux/platform_data/dma-imx-sdma.h b/include/linux/platform_data/dma-imx-sdma.h
-index 30e676b..e12d2e8 100644
---- a/include/linux/platform_data/dma-imx-sdma.h
-+++ b/include/linux/platform_data/dma-imx-sdma.h
-@@ -20,12 +20,12 @@ struct sdma_script_start_addrs {
- 	s32 per_2_firi_addr;
- 	s32 mcu_2_firi_addr;
- 	s32 uart_2_per_addr;
--	s32 uart_2_mcu_addr;
-+	s32 uart_2_mcu_ram_addr;
- 	s32 per_2_app_addr;
- 	s32 mcu_2_app_addr;
- 	s32 per_2_per_addr;
- 	s32 uartsh_2_per_addr;
--	s32 uartsh_2_mcu_addr;
-+	s32 uartsh_2_mcu_ram_addr;
- 	s32 per_2_shp_addr;
- 	s32 mcu_2_shp_addr;
- 	s32 ata_2_mcu_addr;
-@@ -52,6 +52,10 @@ struct sdma_script_start_addrs {
- 	s32 zcanfd_2_mcu_addr;
- 	s32 zqspi_2_mcu_addr;
- 	s32 mcu_2_ecspi_addr;
-+	s32 mcu_2_sai_addr;
-+	s32 sai_2_mcu_addr;
-+	s32 uart_2_mcu_addr;
-+	s32 uartsh_2_mcu_addr;
- 	/* End of v3 array */
- 	s32 mcu_2_zqspi_addr;
- 	/* End of v4 array */
--- 
-2.7.4
-
+On Fri, Jun 05, 2020 at 12:26:05PM -0700, Sean Christopherson wrote:
+> Choo! Choo!  All aboard the Split Lock Express, with direct service to
+> Wreckage!
+> 
+> Skip split_lock_verify_msr() if the CPU isn't whitelisted as a possible
+> SLD-enabled CPU model to avoid writing MSR_TEST_CTRL.  MSR_TEST_CTRL
+> exists, and is writable, on many generations of CPUs.  Writing the MSR,
+> even with '0', can result in bizarre, undocumented behavior.
+> 
+> This fixes a crash on Haswell when resuming from suspend with a live KVM
+> guest.  Because APs use the standard SMP boot flow for resume, they will
+> go through split_lock_init() and the subsequent RDMSR/WRMSR sequence,
+> which runs even when sld_state==sld_off to ensure SLD is disabled.  On
+> Haswell (at least, my Haswell), writing MSR_TEST_CTRL with '0' will
+> succeed and _may_ take the SMT _sibling_ out of VMX root mode.
+> 
+> When KVM has an active guest, KVM performs VMXON as part of CPU onlining
+> (see kvm_starting_cpu()).  Because SMP boot is serialized, the resulting
+> flow is effectively:
+> 
+>   on_each_ap_cpu() {
+>      WRMSR(MSR_TEST_CTRL, 0)
+>      VMXON
+>   }
+> 
+> As a result, the WRMSR can disable VMX on a different CPU that has
+> already done VMXON.  This ultimately results in a #UD on VMPTRLD when
+> KVM regains control and attempt run its vCPUs.
+> 
+> The above voodoo was confirmed by reworking KVM's VMXON flow to write
+> MSR_TEST_CTRL prior to VMXON, and to serialize the sequence as above.
+> Further verification of the insanity was done by redoing VMXON on all
+> APs after the initial WRMSR->VMXON sequence.  The additional VMXON,
+> which should VM-Fail, occasionally succeeded, and also eliminated the
+> unexpected #UD on VMPTRLD.
+> 
+> The damage done by writing MSR_TEST_CTRL doesn't appear to be limited
+> to VMX, e.g. after suspend with an active KVM guest, subsequent reboots
+> almost always hang (even when fudging VMXON), a #UD on a random Jcc was
+> observed, suspend/resume stability is qualitatively poor, and so on and
+> so forth.
+> 
+>   kernel BUG at arch/x86/kvm/x86.c:386!
+>   invalid opcode: 0000 [#7] SMP
+>   CPU: 1 PID: 2592 Comm: CPU 6/KVM Tainted: G      D
+>   Hardware name: ASUS Q87M-E/Q87M-E, BIOS 1102 03/03/2014
+>   RIP: 0010:kvm_spurious_fault+0xf/0x20
+>   Code: <0f> 0b 0f 1f 44 00 00 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00
+>   RSP: 0018:ffffc0bcc1677b78 EFLAGS: 00010246
+>   RAX: 0000617640000000 RBX: ffff9e8d01d80000 RCX: ffff9e8d4fa40000
+>   RDX: ffff9e8d03360000 RSI: 00000003c3360000 RDI: ffff9e8d03360000
+>   RBP: 0000000000000001 R08: ffff9e8d046d9d40 R09: 0000000000000018
+>   R10: ffffc0bcc1677b80 R11: 0000000000000008 R12: 0000000000000006
+>   R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+>   FS:  00007fe16c9f9700(0000) GS:ffff9e8d4fa40000(0000) knlGS:0000000000000000
+>   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>   CR2: 0000000000d7a418 CR3: 00000003c47b1006 CR4: 00000000001626e0
+>   Call Trace:
+>    vmx_vcpu_load_vmcs+0x1fb/0x2b0
+>    vmx_vcpu_load+0x3e/0x160
+>    kvm_arch_vcpu_load+0x48/0x260
+>    finish_task_switch+0x140/0x260
+>    __schedule+0x460/0x720
+>    _cond_resched+0x2d/0x40
+>    kvm_arch_vcpu_ioctl_run+0x82e/0x1ca0
+>    kvm_vcpu_ioctl+0x363/0x5c0
+>    ksys_ioctl+0x88/0xa0
+>    __x64_sys_ioctl+0x16/0x20
+>    do_syscall_64+0x4c/0x170
+>    entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> 
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Xiaoyao Li <xiaoyao.li@intel.com>
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: kvm@vger.kernel.org
+> Fixes: dbaba47085b0c ("x86/split_lock: Rework the initialization flow of split lock detection")
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> ---
+>  arch/x86/kernel/cpu/intel.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+> index a19a680542ce..19b6c42739fc 100644
+> --- a/arch/x86/kernel/cpu/intel.c
+> +++ b/arch/x86/kernel/cpu/intel.c
+> @@ -48,6 +48,13 @@ enum split_lock_detect_state {
+>  static enum split_lock_detect_state sld_state __ro_after_init = sld_off;
+>  static u64 msr_test_ctrl_cache __ro_after_init;
+>  
+> +/*
+> + * With a name like MSR_TEST_CTL it should go without saying, but don't touch
+> + * MSR_TEST_CTL unless the CPU is one of the whitelisted models.  Writing it
+> + * on CPUs that do not support SLD can cause fireworks, even when writing '0'.
+> + */
+> +static bool cpu_model_supports_sld __ro_after_init;
+> +
+>  /*
+>   * Processors which have self-snooping capability can handle conflicting
+>   * memory type across CPUs by snooping its own cache. However, there exists
+> @@ -1064,7 +1071,8 @@ static void sld_update_msr(bool on)
+>  
+>  static void split_lock_init(void)
+>  {
+> -	split_lock_verify_msr(sld_state != sld_off);
+> +	if (cpu_model_supports_sld)
+> +		split_lock_verify_msr(sld_state != sld_off);
+>  }
+>  
+>  static void split_lock_warn(unsigned long ip)
+> @@ -1167,5 +1175,6 @@ void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c)
+>  		return;
+>  	}
+>  
+> +	cpu_model_supports_sld = true;
+>  	split_lock_setup();
+>  }
+> -- 
+> 2.26.0
+> 
