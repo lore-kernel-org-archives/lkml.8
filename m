@@ -2,98 +2,140 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4394EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:58:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A22EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:02:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 282DC20759
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:58:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 364EC206CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:02:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730566AbgF3G6e convert rfc822-to-8bit (ORCPT
+        id S1730585AbgF3HCR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 02:58:34 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:46569 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725440AbgF3G6d (ORCPT
+        Tue, 30 Jun 2020 03:02:17 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:46723 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725440AbgF3HCQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 02:58:33 -0400
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id D812D6000A;
-        Tue, 30 Jun 2020 06:58:29 +0000 (UTC)
-Date:   Tue, 30 Jun 2020 08:58:28 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6] gpio: pca953x: Add Maxim MAX7313 PWM support
-Message-ID: <20200630085828.1aebdf99@xps13>
-In-Reply-To: <20200629195044.uvgma53cajiko3gf@pengutronix.de>
-References: <20200503105453.23658-1-miquel.raynal@bootlin.com>
-        <20200629160844.6ecf79c1@xps13>
-        <20200629195044.uvgma53cajiko3gf@pengutronix.de>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 30 Jun 2020 03:02:16 -0400
+Received: by mail-io1-f70.google.com with SMTP id z65so11124275iof.13
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 00:02:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=ECzA0dtAJHjhAvJtCFt9qVVpvMOwHbK1fmaElxhvgYw=;
+        b=GQW4dMSNRrgKiyL97NP/v1ML0CB8rsxbT+UlG+/CdwSPLOc8bX0JT8kPNXSsEd5GG2
+         jmf4E0kbDTfawwnd8mMOtNHLG4fEsy/IRTZDRjeJ+qNlGg5dpi05hRSIaPP03Z7pUCGt
+         XV1Wq1qE/8/PTad5z9F31V55WwGZKDdqj1Fd5Sgn1E627XpLg75cNYz+IjBwHa/OrLp6
+         GeYlFYzE77lBrCFGfpqw7gXOGCrrPDasyeCm4LxRZKi65JrZVuqDzVThgxy0SUCP2Bx/
+         d29SWLl4Hd2uUrO5JrOtjDqWars3PmfBqFRlNfn6PDnvoIf3AnRK3HT+1+CqI+mmQtNV
+         e+hg==
+X-Gm-Message-State: AOAM533D1QZLnR8iNAGL19JmwsQfnl6IiugyYcFslyi9Lekz/P1LCYjs
+        M9BqCs89rbUaGra9HXFh1D+C8gq4ZpSKmCFcHUhnFQrvHRU5
+X-Google-Smtp-Source: ABdhPJzTG/kuqgmwJS3mcXjkL9h0Lc571CELKWsFFh2qHpXJc6I7ogmcz5bq3MdTCfOCjDrkpL0sOCgHPx2oDK0uTnFcDJamR9Ez
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+X-Received: by 2002:a6b:b457:: with SMTP id d84mr20392610iof.21.1593500535403;
+ Tue, 30 Jun 2020 00:02:15 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 00:02:15 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000005cb9dc05a947c16e@google.com>
+Subject: general protection fault in create_empty_buffers (3)
+From:   syzbot <syzbot+66017672f8ea3c492d56@syzkaller.appspotmail.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Uwe,
+Hello,
 
-Uwe Kleine-König <u.kleine-koenig@pengutronix.de> wrote on Mon, 29 Jun
-2020 21:50:44 +0200:
+syzbot found the following crash on:
 
-> On Mon, Jun 29, 2020 at 04:08:44PM +0200, Miquel Raynal wrote:
-> > Hello Uwe, Thierry,
-> > 
-> > Miquel Raynal <miquel.raynal@bootlin.com> wrote on Sun,  3 May 2020
-> > 12:54:53 +0200:
-> >   
-> > > The MAX7313 chip is fully compatible with the PCA9535 on its basic
-> > > functions but can also manage the intensity on each of its ports with
-> > > PWM. Each output is independent and may be tuned with 16 values (4
-> > > bits per output). The period is always 32kHz, only the duty-cycle may
-> > > be changed. One can use any output as GPIO or PWM.
-> > > 
-> > > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> > > ---  
-> > 
-> > Can I have a status on this patch please?
-> > 
-> > If it was forgotten, I would be good to have it queued now, otherwise,
-> > may I know the reason?  
-> 
-> You could reply to my feedback ... If you could say there: "What you
-> want isn't possible" I'd count this as a strong indication to not ask to
-> implement Andy's suggestion. (Even if this would be possible, I'm not
-> sure this is a good idea, but still ...)
+HEAD commit:    4e99b321 Merge tag 'nfs-for-5.8-2' of git://git.linux-nfs...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=14355b4b100000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=bf3aec367b9ab569
+dashboard link: https://syzkaller.appspot.com/bug?extid=66017672f8ea3c492d56
+compiler:       gcc (GCC) 10.1.0-syz 20200507
 
-Sorry for the misunderstanding, but I already replied twice to Andy
-about this. Once in October, again in November, then I gave a shot to
-the idea of splitting the drivers (GPIO vs. PWM) in January. So I
-thought you were sharing your thoughts out loud but was not expecting
-any specific feedback on it.
+Unfortunately, I don't have any reproducer for this crash yet.
 
-So, no, even if the idea might make sense, it is not doable in a
-reasonable amount of time. I am not saying it is impossible, but someone
-has to think about it deeper and propose a core structure to handle it
-in a generic and clean way so that other drivers sharing the same
-properties can rely on it. I am not qualified enough to do it the proper
-way in a reasonable time frame.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+66017672f8ea3c492d56@syzkaller.appspotmail.com
 
-Thanks,
-Miquèl
+general protection fault, probably for non-canonical address 0xdffffc0000000000: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000000-0x0000000000000007]
+CPU: 0 PID: 3911 Comm: systemd-udevd Not tainted 5.8.0-rc2-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:create_empty_buffers+0x4f/0x820 fs/buffer.c:1565
+Code: 89 ef e8 94 9a ff ff 49 bc 00 00 00 00 00 fc ff df 48 89 44 24 08 48 89 c3 eb 03 48 89 c3 e8 78 9c a6 ff 48 89 d8 48 c1 e8 03 <42> 80 3c 20 00 0f 85 a8 06 00 00 4c 09 2b 48 8d 7b 08 48 89 f8 48
+RSP: 0018:ffffc90001577858 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff81cc51b9
+RDX: ffff8880a0d5c580 RSI: ffffffff81ccb478 RDI: 0000000000000005
+RBP: ffffea00027d2dc0 R08: 0000000000000001 R09: ffff8880a0d5ce48
+R10: 0000000000000000 R11: 0000000000000000 R12: dffffc0000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: dead000000000100
+FS:  00007fbeb87098c0(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000000400200 CR3: 00000000a03ad000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ create_page_buffers+0x295/0x3b0 fs/buffer.c:1679
+ block_read_full_page+0xcf/0xed0 fs/buffer.c:2269
+ do_read_cache_page+0x8d4/0x1390 mm/filemap.c:2765
+ read_mapping_page include/linux/pagemap.h:437 [inline]
+ read_part_sector+0xf6/0x5af block/partitions/core.c:772
+ adfspart_check_ICS+0x9d/0xc90 block/partitions/acorn.c:360
+ check_partition block/partitions/core.c:140 [inline]
+ blk_add_partitions+0x44b/0xe10 block/partitions/core.c:700
+ bdev_disk_changed+0x1ea/0x370 fs/block_dev.c:1524
+ blkdev_reread_part block/ioctl.c:103 [inline]
+ blkdev_common_ioctl+0x13d1/0x1760 block/ioctl.c:549
+ blkdev_ioctl+0x1a3/0x6c0 block/ioctl.c:618
+ block_ioctl+0xf9/0x140 fs/block_dev.c:1988
+ vfs_ioctl fs/ioctl.c:48 [inline]
+ ksys_ioctl+0x11a/0x180 fs/ioctl.c:753
+ __do_sys_ioctl fs/ioctl.c:762 [inline]
+ __se_sys_ioctl fs/ioctl.c:760 [inline]
+ __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:760
+ do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x7fbeb7582017
+Code: Bad RIP value.
+RSP: 002b:00007fff18b4d7e8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007fff18b4d960 RCX: 00007fbeb7582017
+RDX: 0000000000000000 RSI: 000000000000125f RDI: 000000000000000e
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000010
+R10: 0000000000000020 R11: 0000000000000246 R12: 00007fff18b4d990
+R13: 000055f766174010 R14: 000055f767066210 R15: 00007fff18b4d860
+Modules linked in:
+---[ end trace 3a62581c64dab56e ]---
+RIP: 0010:create_empty_buffers+0x4f/0x820 fs/buffer.c:1565
+Code: 89 ef e8 94 9a ff ff 49 bc 00 00 00 00 00 fc ff df 48 89 44 24 08 48 89 c3 eb 03 48 89 c3 e8 78 9c a6 ff 48 89 d8 48 c1 e8 03 <42> 80 3c 20 00 0f 85 a8 06 00 00 4c 09 2b 48 8d 7b 08 48 89 f8 48
+RSP: 0018:ffffc90001577858 EFLAGS: 00010246
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: ffffffff81cc51b9
+RDX: ffff8880a0d5c580 RSI: ffffffff81ccb478 RDI: 0000000000000005
+RBP: ffffea00027d2dc0 R08: 0000000000000001 R09: ffff8880a0d5ce48
+R10: 0000000000000000 R11: 0000000000000000 R12: dffffc0000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: dead000000000100
+FS:  00007fbeb87098c0(0000) GS:ffff8880ae600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000001b32f2d000 CR3: 00000000a03ad000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
