@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5351C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D05DC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BBADF208A7
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F081B208A7
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:38:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593538723;
-	bh=1FGhp5sGfkpSiXhXgfH5nBXKN4fqT4jY7nbDIPuK7X4=;
+	s=default; t=1593538729;
+	bh=Nj4BN+7NnXhh61WQDEI6UbIUFYmU1fy6kUCipohTCBw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x/kqmcD7TBAwKrEZefGgU9yhC58zXoxlc7uhswwnGa9DTOnkBFdsg/mCMyotNuJbz
-	 sqGV2zI8dwrE2qdbNS9untkEWiGnnp6yw0mQsUE1J/Q29Vh2d+Z0N5yD+yR9bz8oo8
-	 PQ3dOjV7KINuHYFJ2eoRP3LQidiwrHM5ocQxahLA=
+	b=vKjYKw55iG03YdlQa3WaK1E8mBKWC671tSEqYflXYsxN3LhYpz7lO+P2xe1C19KsI
+	 BJAHRFS29WYFXwDYScGZGPVMkOTD89uOp8T0Ua6wgCdNdQdoX0THT3xUKsK5lCwLaY
+	 HaN7RWKocawmUjPK9U3iwz4sSVFdCcT2vq99H6ko=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390440AbgF3Rim (ORCPT
+        id S2390455AbgF3Rir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 13:38:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51786 "EHLO mail.kernel.org"
+        Tue, 30 Jun 2020 13:38:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390427AbgF3Rij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 13:38:39 -0400
+        id S2390427AbgF3Rin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 13:38:43 -0400
 Received: from localhost.localdomain (236.31.169.217.in-addr.arpa [217.169.31.236])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCA8F207F9;
-        Tue, 30 Jun 2020 17:38:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C732320885;
+        Tue, 30 Jun 2020 17:38:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593538718;
-        bh=1FGhp5sGfkpSiXhXgfH5nBXKN4fqT4jY7nbDIPuK7X4=;
+        s=default; t=1593538722;
+        bh=Nj4BN+7NnXhh61WQDEI6UbIUFYmU1fy6kUCipohTCBw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bpLGiANhTDJLC7t5bWYwDrB2C0vByZC6qRCHBvONLGHbyWqUjDr91Fhnj0Qfj8ajH
-         b6o2hJwvm0H/J4VMMeXmYx2lzjErEQ+y1AiAsdofaMJowGhiD1x/0r79lPQWnl0rpi
-         KcoNDIgVtCvUFCTCs+tjhL7w1byxja9E2be1+JP4=
+        b=q6yYtsjbY8R1ClJ3fY+7A7bbvC/aZHA1hUFoAbMbyuIq/syGV9xhTj3PJm0G6VSla
+         nwocC351b9y0ZourX74cQDGe/IlY2yw9QWoOA/o5IHFN/STBYBJOiX3HhSPTH6MAle
+         Ae8qGQc8EkaQmft9biQIUeKHE6kUJlNgX5R/mtvM=
 From:   Will Deacon <will@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Will Deacon <will@kernel.org>,
@@ -61,9 +61,9 @@ Cc:     Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         linux-arm-kernel@lists.infradead.org, linux-alpha@vger.kernel.org,
         virtualization@lists.linux-foundation.org, kernel-team@android.com
-Subject: [PATCH 13/18] checkpatch: Remove checks relating to [smp_]read_barrier_depends()
-Date:   Tue, 30 Jun 2020 18:37:29 +0100
-Message-Id: <20200630173734.14057-14-will@kernel.org>
+Subject: [PATCH 14/18] arm64: Reduce the number of header files pulled into vmlinux.lds.S
+Date:   Tue, 30 Jun 2020 18:37:30 +0100
+Message-Id: <20200630173734.14057-15-will@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200630173734.14057-1-will@kernel.org>
 References: <20200630173734.14057-1-will@kernel.org>
@@ -74,42 +74,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The [smp_]read_barrier_depends() macros no longer exist, so we don't
-need to deal with them in the checkpatch script.
+Although vmlinux.lds.S smells like an assembly file and is compiled
+with __ASSEMBLY__ defined, it's actually just fed to the preprocessor to
+create our linker script. This means that any assembly macros defined
+by headers that it includes will result in a helpful link error:
 
-Acked-by: Paul E. McKenney <paulmck@kernel.org>
+| aarch64-linux-gnu-ld:./arch/arm64/kernel/vmlinux.lds:1: syntax error
+
+In preparation for an arm64-private asm/rwonce.h implementation, which
+will end up pulling assembly macros into linux/compiler.h, reduce the
+number of headers we include directly and transitively in vmlinux.lds.S
+
 Signed-off-by: Will Deacon <will@kernel.org>
 ---
- scripts/checkpatch.pl | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+ arch/arm64/include/asm/kernel-pgtable.h |  2 +-
+ arch/arm64/include/asm/memory.h         | 11 ++++++-----
+ arch/arm64/include/asm/uaccess.h        |  1 +
+ arch/arm64/kernel/entry.S               |  1 +
+ arch/arm64/kernel/vmlinux.lds.S         |  1 -
+ arch/arm64/kvm/hyp-init.S               |  1 +
+ 6 files changed, 10 insertions(+), 7 deletions(-)
 
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 4c820607540b..8032f80c5bc7 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -5903,8 +5903,7 @@ sub process {
- 		my $barriers = qr{
- 			mb|
- 			rmb|
--			wmb|
--			read_barrier_depends
-+			wmb
- 		}x;
- 		my $barrier_stems = qr{
- 			mb__before_atomic|
-@@ -5953,12 +5952,6 @@ sub process {
- 			}
- 		}
+diff --git a/arch/arm64/include/asm/kernel-pgtable.h b/arch/arm64/include/asm/kernel-pgtable.h
+index 3bf626f6fe0c..329fb15f6bac 100644
+--- a/arch/arm64/include/asm/kernel-pgtable.h
++++ b/arch/arm64/include/asm/kernel-pgtable.h
+@@ -8,7 +8,7 @@
+ #ifndef __ASM_KERNEL_PGTABLE_H
+ #define __ASM_KERNEL_PGTABLE_H
  
--# check for smp_read_barrier_depends and read_barrier_depends
--		if (!$file && $line =~ /\b(smp_|)read_barrier_depends\s*\(/) {
--			WARN("READ_BARRIER_DEPENDS",
--			     "$1read_barrier_depends should only be used in READ_ONCE or DEC Alpha code\n" . $herecurr);
--		}
--
- # check of hardware specific defines
- 		if ($line =~ m@^.\s*\#\s*if.*\b(__i386__|__powerpc64__|__sun__|__s390x__)\b@ && $realfile !~ m@include/asm-@) {
- 			CHK("ARCH_DEFINES",
+-#include <linux/pgtable.h>
++#include <asm/pgtable-hwdef.h>
+ #include <asm/sparsemem.h>
+ 
+ /*
+diff --git a/arch/arm64/include/asm/memory.h b/arch/arm64/include/asm/memory.h
+index a1871bb32bb1..9d4bf58cf7b3 100644
+--- a/arch/arm64/include/asm/memory.h
++++ b/arch/arm64/include/asm/memory.h
+@@ -10,11 +10,8 @@
+ #ifndef __ASM_MEMORY_H
+ #define __ASM_MEMORY_H
+ 
+-#include <linux/compiler.h>
+ #include <linux/const.h>
+ #include <linux/sizes.h>
+-#include <linux/types.h>
+-#include <asm/bug.h>
+ #include <asm/page-def.h>
+ 
+ /*
+@@ -157,11 +154,15 @@
+ #endif
+ 
+ #ifndef __ASSEMBLY__
+-extern u64			vabits_actual;
+-#define PAGE_END		(_PAGE_END(vabits_actual))
+ 
+ #include <linux/bitops.h>
++#include <linux/compiler.h>
+ #include <linux/mmdebug.h>
++#include <linux/types.h>
++#include <asm/bug.h>
++
++extern u64			vabits_actual;
++#define PAGE_END		(_PAGE_END(vabits_actual))
+ 
+ extern s64			physvirt_offset;
+ extern s64			memstart_addr;
+diff --git a/arch/arm64/include/asm/uaccess.h b/arch/arm64/include/asm/uaccess.h
+index bc5c7b091152..8d7c466f809b 100644
+--- a/arch/arm64/include/asm/uaccess.h
++++ b/arch/arm64/include/asm/uaccess.h
+@@ -19,6 +19,7 @@
+ #include <linux/string.h>
+ 
+ #include <asm/cpufeature.h>
++#include <asm/mmu.h>
+ #include <asm/ptrace.h>
+ #include <asm/memory.h>
+ #include <asm/extable.h>
+diff --git a/arch/arm64/kernel/entry.S b/arch/arm64/kernel/entry.S
+index 5304d193c79d..b668aad3b762 100644
+--- a/arch/arm64/kernel/entry.S
++++ b/arch/arm64/kernel/entry.S
+@@ -15,6 +15,7 @@
+ #include <asm/assembler.h>
+ #include <asm/asm-offsets.h>
+ #include <asm/asm_pointer_auth.h>
++#include <asm/bug.h>
+ #include <asm/cpufeature.h>
+ #include <asm/errno.h>
+ #include <asm/esr.h>
+diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
+index 6827da7f3aa5..e1e7c0431b4d 100644
+--- a/arch/arm64/kernel/vmlinux.lds.S
++++ b/arch/arm64/kernel/vmlinux.lds.S
+@@ -10,7 +10,6 @@
+ #include <asm-generic/vmlinux.lds.h>
+ #include <asm/cache.h>
+ #include <asm/kernel-pgtable.h>
+-#include <asm/thread_info.h>
+ #include <asm/memory.h>
+ #include <asm/page.h>
+ 
+diff --git a/arch/arm64/kvm/hyp-init.S b/arch/arm64/kvm/hyp-init.S
+index 6e6ed5581eed..076544393c3c 100644
+--- a/arch/arm64/kvm/hyp-init.S
++++ b/arch/arm64/kvm/hyp-init.S
+@@ -6,6 +6,7 @@
+ 
+ #include <linux/linkage.h>
+ 
++#include <asm/alternative.h>
+ #include <asm/assembler.h>
+ #include <asm/kvm_arm.h>
+ #include <asm/kvm_mmu.h>
 -- 
 2.27.0.212.ge8ba1cc988-goog
 
