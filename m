@@ -7,548 +7,530 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58024C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 02:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2EB0C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 02:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2008A206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 02:51:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DD89206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 02:52:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="hpYomOBB";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="sOy/4ggT"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="lj0q3gSG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728875AbgF3CvZ (ORCPT
+        id S1728692AbgF3Cwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 22:51:25 -0400
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:19282 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726746AbgF3CvY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 22:51:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1593485484; x=1625021484;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=FHcfa+lzHXNCnsPTqpxUVKPygkRwkj8v//4s674lhZc=;
-  b=hpYomOBBA4bPHeiCYP+pLuNZuzZZ71yJLABh7DZ4JcS0OElGGhBNOAxq
-   C4GmACwHs1KCehVNEiPiTUiBg8H7aDHMEle96VesIaL2R8/W8lw+jPILG
-   KVryodhW3ZaG8DT6yw6WOnQjuxB3Z9u5ozAe8bUP9VCqrlUDF2q7tYYWh
-   eqGl1DCfQLAwgQoncC7xFZ+s2H/EP3+pilxwVJcryrsHi+UMefeqkXTKZ
-   znGOtMTFXAbPNJcOU1vf5ko/QQaagInUaJP86LLao1vsxVcY3rV85qJ1X
-   Hwkq871UGBSo5U9py++QJT3e/8vpNTBxTk3QpXXgcQwooh0xkE1job0wV
-   A==;
-IronPort-SDR: 4ZskCVDfo3z6xhWA6PRwangD7rG7NEbNXou7VQaDVlVwaJWOEK9/Rvl9rDKCoLl9xdfk/WHOnu
- yD5iMwBVttHrBF74vmjLZ5P6HuAH1zeK/vEt0/BRUdz727jQP/JbJUvXjafuy7pyPODB7XHQD+
- 0Y2PR1AGegXFP3/IPOS1dBOta1Y4pAmSbiHl0eUFzqYrD+hpPQYaEEWqBG3wmKlcNiFWTbKZGX
- wyTzei15weSAulX5jyyzTEYdfHawM4RrE2zeGVdyLIMJ7nJQsPa89u6bR6m24T5ESQi9MllbSa
- glI=
-X-IronPort-AV: E=Sophos;i="5.75,296,1589212800"; 
-   d="scan'208";a="244255622"
-Received: from mail-mw2nam10lp2107.outbound.protection.outlook.com (HELO NAM10-MW2-obe.outbound.protection.outlook.com) ([104.47.55.107])
-  by ob1.hgst.iphmx.com with ESMTP; 30 Jun 2020 10:51:23 +0800
+        Mon, 29 Jun 2020 22:52:49 -0400
+Received: from mga02.intel.com ([134.134.136.20]:13457 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726746AbgF3Cws (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 22:52:48 -0400
+IronPort-SDR: Z44SkC6wy9Bpe338gwLaN2TdldiDUbzwk8jwv8Khhs/3TU1kEpgzASd8mDFlhjo18mgfxM+BBz
+ zMtiqGBn7iMA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="134428497"
+X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
+   d="scan'208";a="134428497"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 19:52:48 -0700
+IronPort-SDR: Kftm4TLNrMBSj+kFsiO3oqviYk2U/8lkYH1qke4QApeen6p+JGgKAycQ4sh45KSPbN0voKy5Dv
+ ZqPzepMzjz1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
+   d="scan'208";a="320805037"
+Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
+  by FMSMGA003.fm.intel.com with ESMTP; 29 Jun 2020 19:52:47 -0700
+Received: from FMSEDG002.ED.cps.intel.com (10.1.192.134) by
+ FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 29 Jun 2020 19:52:47 -0700
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.174)
+ by edgegateway.intel.com (192.55.55.69) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Mon, 29 Jun 2020 19:52:47 -0700
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=esHcWirXBWYw84OGXKK+4v6VbqGyGd7BOwfCSVhDL/bWSi2wgCmMI0ILyn+ds6NYaXqmxvOQmhtO9WcEu/ZVK6dPDwTW8aCNsxQ2CKUrHE2Hgi2WidFl4gl51dxO+3BiOZN+Pv1wnPq3ZMJ0xFWcMCdRzoX0Y2wfJ+Tg0fDv3bMzLVub1pm7XLPpoKSUMvTZlXVaayZeSA6T+EPxThCvA3ewNnVzwQSLQskwWf9nxJe6hsGcMeGp5LzvXvWcwDks4whgv96XqQ1WyR61MrYA6839Xv8tOe0XR/d1GSHDA+EAvsF8pRLqKx8VC7GtwGMTrFP6+UT4NMJ6lne1Mmpi/Q==
+ b=H1V8N4d3guz1UzCJPKLICbG0/gVwfE+E5TuZXpTz2VWnvZWMC4Ryu5FcGu4zmaW5b3fU1JLYkd39q/866VoQ/0NZw4HVVJ+bcB+l/Bmhr+TbB1D61DkdEXwLvIoUaFrYM2dfegmGQ2HGIS0OD4RVgFOb9aNqrdavgVuUUN9hCtq2y7+RjZ++3dtWaR10WVfHLuBbaIVRzI/AwrmdQKvnN3nu5I/gQt7P/5UN9EWIIB+lJw4QjFstK8PHm4NpOkwOnmYXP1+YSiTn4AzOdlBEssZ8xSpoyKyoNcdHWDm7rkWs9agC1OmYaivtN5bEeH1VXXugrHSaSoljE/N04Nfcug==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aXf1PxTaQW30IbjYGHpawK+arALHx+JtIREgsEGKpZ8=;
- b=G4MMjqVUoVJn983TsIbJrUkjbPWZPacsBArz+iqtyMbGsobaD8sof48RvZEexRkn0bWjs7sze/Lge0YK+wdPapPZFDUBMpnxF2yaLwtpJhN2EOHLJpLYVRHgOzs50DH4VcLDFJRKSDYf7cXv5FMnKdWQVIq/VJfGJAhMN2jZC923HncgnUx3uws8kJpNLgjLqXCYnWstFGdErK/XJqXXiy+L4nGt42aSP4Xw/EqnqB6q+tEV/wm1CczGpayMF+3O02Ee7PV34FUgnpcfpXLCXq9yHGtz+KvG2BSW0fq3OwpSWtOhOFJdarj8hJkoiGzhWrZ4PCUt5MpVF74FV9PT1Q==
+ bh=5QCUf+zQuHQ2jcZfLTe/jfSQQTSQEF9J6u9BSVprl78=;
+ b=OdKFthS6bUKZSAi+Bo8WNijR/zQDUvJBG1BUtBVm8sv4AGuYLOKVukPYTVq1J9u3lfSqhOvcrtagBYg1V2VF/muN5wo+iY3qQf/ivdw3Zzh4KQbHzC7ZPjXl5bjdzKXWZyzT4R8BgaCGzb9+nuniBgEdhTr22M0kiUcdA+3NYRwpISDjVvY+ZQ4ymCSDWf53byrZZkVjF6BbEBgl1D6ZxBtREME9VQ0BJ0x/joSTaL3sOgZeOn6bHgeXHsVMzgf7TQTL0ZRcJGIKey7MRKUoWJDXQ3rXwtVJ/k4A7xQ70zj+tAh8mBrKK9PCh/ZEbY+QQZgythRCplVtRhImr4agIQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
- header.d=wdc.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aXf1PxTaQW30IbjYGHpawK+arALHx+JtIREgsEGKpZ8=;
- b=sOy/4ggTS4usXK+oBPm9KO1fx35EtVpG41EuCTUL6lLgSJHJh4XxXLjEdbbLMW3FRvtFV+JXZK73Fp8F+quaiW3Kyqkk784yOZtgiTFJi5KfXIkcrkzm0IPx9O3f2lX4B8WBMI1TxffgkIKpShv2y9y7lijhc1I5QrdFqnCm28Q=
-Received: from CY4PR04MB3751.namprd04.prod.outlook.com (2603:10b6:903:ec::14)
- by CY4PR04MB0344.namprd04.prod.outlook.com (2603:10b6:903:3d::15) with
+ bh=5QCUf+zQuHQ2jcZfLTe/jfSQQTSQEF9J6u9BSVprl78=;
+ b=lj0q3gSG2tRif4+JPdY9MGbTzifcTz+dMhtp1pq6g1OSe8RjIkGLnS5yE/ZIetkqQEILVqu06GOingwYAQxhv40cYd3+67cBEW2z8A11YLHchnQHCS4cE9FDuYQ/NBAlsOm036h+yxHiB45O8UB6Uq0Igqhs0wh9T2EwyVF4ghQ=
+Received: from MWHPR11MB1645.namprd11.prod.outlook.com (2603:10b6:301:b::12)
+ by MWHPR11MB1455.namprd11.prod.outlook.com (2603:10b6:301:9::22) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21; Tue, 30 Jun
- 2020 02:51:18 +0000
-Received: from CY4PR04MB3751.namprd04.prod.outlook.com
- ([fe80::c593:f271:eebe:ac7]) by CY4PR04MB3751.namprd04.prod.outlook.com
- ([fe80::c593:f271:eebe:ac7%9]) with mapi id 15.20.3131.024; Tue, 30 Jun 2020
- 02:51:18 +0000
-From:   Damien Le Moal <Damien.LeMoal@wdc.com>
-To:     Ignat Korchagin <ignat@cloudflare.com>,
-        "agk@redhat.com" <agk@redhat.com>,
-        "snitzer@redhat.com" <snitzer@redhat.com>,
-        "dm-devel@redhat.com" <dm-devel@redhat.com>,
-        "dm-crypt@saout.de" <dm-crypt@saout.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "ebiggers@kernel.org" <ebiggers@kernel.org>,
-        "mpatocka@redhat.com" <mpatocka@redhat.com>,
-        "herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
-        "kernel-team@cloudflare.com" <kernel-team@cloudflare.com>
-Subject: Re: [PATCH v2] dm crypt: add flags to optionally bypass dm-crypt
- workqueues
-Thread-Topic: [PATCH v2] dm crypt: add flags to optionally bypass dm-crypt
- workqueues
-Thread-Index: AQHWS/06zZqSdIYp0k2e+HMuy61K4w==
-Date:   Tue, 30 Jun 2020 02:51:17 +0000
-Message-ID: <CY4PR04MB375127DC313F70875CAAC841E76F0@CY4PR04MB3751.namprd04.prod.outlook.com>
-References: <20200626210302.1813-1-ignat@cloudflare.com>
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.25; Tue, 30 Jun
+ 2020 02:52:45 +0000
+Received: from MWHPR11MB1645.namprd11.prod.outlook.com
+ ([fe80::9864:e0cb:af36:6feb]) by MWHPR11MB1645.namprd11.prod.outlook.com
+ ([fe80::9864:e0cb:af36:6feb%5]) with mapi id 15.20.3131.027; Tue, 30 Jun 2020
+ 02:52:45 +0000
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+CC:     "Raj, Ashok" <ashok.raj@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        David Woodhouse <dwmw2@infradead.org>
+Subject: RE: [PATCH v3 1/5] docs: IOMMU user API
+Thread-Topic: [PATCH v3 1/5] docs: IOMMU user API
+Thread-Index: AQHWSX9tEM38rhxxoUaw7eTgZyKye6jrfLGAgATD0wCAADz18A==
+Date:   Tue, 30 Jun 2020 02:52:45 +0000
+Message-ID: <MWHPR11MB1645D1A989A7D4E22BCB29A38C6F0@MWHPR11MB1645.namprd11.prod.outlook.com>
+References: <1592931837-58223-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1592931837-58223-2-git-send-email-jacob.jun.pan@linux.intel.com>
+ <20200626161923.339e17a6@w520.home> <20200629160518.471159cf@jacob-builder>
+In-Reply-To: <20200629160518.471159cf@jacob-builder>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: cloudflare.com; dkim=none (message not signed)
- header.d=none;cloudflare.com; dmarc=none action=none header.from=wdc.com;
-x-originating-ip: [199.255.47.5]
+dlp-version: 11.2.0.6
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+authentication-results: linux.intel.com; dkim=none (message not signed)
+ header.d=none;linux.intel.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [192.198.147.207]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: e80392c4-baf8-4c0a-d942-08d81ca0767d
-x-ms-traffictypediagnostic: CY4PR04MB0344:
-x-microsoft-antispam-prvs: <CY4PR04MB034426204230AC8005A5F9F9E76F0@CY4PR04MB0344.namprd04.prod.outlook.com>
-wdcipoutbound: EOP-TRUE
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-ms-office365-filtering-correlation-id: 381165dc-10a3-427d-9060-08d81ca0aa79
+x-ms-traffictypediagnostic: MWHPR11MB1455:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR11MB145560733C5AFBF0EC3854408C6F0@MWHPR11MB1455.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
 x-forefront-prvs: 0450A714CB
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: TjF2FTE9UXSX4z4I1Lpkysn3fakMekWB9+Yb0Fb7m3OIjffDYtdzfKqkq5ZtZJKELaThfMn/CEr0YmhX09m5c1+o41u1JesyfCW1/jrCpnEARGZGfP3WOhAuh3s5rigFOfOTqJoOqwEe9GhuUlCsgKuBZvLuGzfoQII6s1VUsnvmszFULPTj64aI8TulOShJdgbbE7etuWaf1L+ga9Yd6u6ywqDxJWT0GLAAFIk8FEkx3RO5QRRrl4FEob7hd+6ZS9bn12seW87Qn9ygpbfMhfN11pTSz3jAlBD9b/U53AU5aR2uzYonorVNmb0L+ztJQG7w/fAPlULM7d/BpKcbkmbCPOK9Gep1mgHhJ3Yohyhu9B5sI0dcFzvc02oW1TRs3jLSG2wUxoKgn4yxyHch1lz74Hw93W0ohV6fm4yZB8G+lZOZHTaxdV+oAvZY4wp+WUv+BUikO4fjmoiDzmTMfQ==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR04MB3751.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(376002)(136003)(39860400002)(346002)(366004)(7696005)(71200400001)(2906002)(8936002)(316002)(30864003)(8676002)(83380400001)(186003)(19627235002)(91956017)(478600001)(33656002)(76116006)(9686003)(966005)(55016002)(66446008)(66476007)(64756008)(66556008)(54906003)(110136005)(7416002)(26005)(86362001)(53546011)(5660300002)(66946007)(52536014)(4326008)(6506007)(309714004);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: zpY7hNsdspqcvoHSjphPepW0KLq00ihTyXs3DozZIoxEGZr6OihadCS/dw+ObFatQQq3nOKE2bX7IhMPlJuFnkz9D/w4a46agkkh+qRKjjJjUmRsb2cA08FINBcJJUzGT4+QYToVGyY4iMLZ5vhXFJOxbYLaa9BtLtAuXibsYChWq6K/dn7mH+rTxZRoUpqtoi3gF6M95FSlBXWYD39IJT4iwlnN0TlbVbEiTXie4zXX0D7o8l9W1CzhOUlNVQygnuGSFWgsC4xwZH9j1j44jTYxn8fF8nJvf2+qWoavqn8YU3RQJ9LUATwfkPPTJa9iFSdVcXyAJpAQjVA4vbG+VScoEdq4+F0CBcIh5y+HPYNWa8uKPWee3gAZNgPladXqzhaDQzrAAsFJKGzB8r5mmfNh3pYo2MIo7eooNkqgiiMTXPdxy9zlPwdE/ozOz739eXKmq7WfRYgxcNVf4XnR1RMBjQ+5JFP0QWHI1fhTT94=
-x-ms-exchange-transport-forked: True
+x-microsoft-antispam-message-info: sm7SpismwGGLqegZ0iwR1q8IUtBNrPyBJU1S/6SJo2NdKtmtTepuHajO+kN1R6ujP3Ji46FAe1lw3uf8X9e+MTwvFqLhH8K3h7InDHxpdxQybNGUBNDfBc2SlxItwCn5F0qhK8OTOIVyGZCuf0pF9JdhPzsugOqGtYx5w+4jRgGK9hPIiKFgvz5Wiz74pevtOPlUif6uTf/MpdyCNkQ2dn7BUoZEqsMUP7XrzmBKJTHxrHnGDTpE+to53hhSFNVh+zwfnId1BZWfmQ5EJDgctTa4t4TckBLPC/NWOFKk6c74sz21di+Dlr76ttGKQG0JRcMFzzfDxEP5JbLPCKUWZZHWyDXAd2sh0jgKe52dZqF7bLyAUrZY3SdfXxwEwq8k5/n9A/3GEYCq51X3gIER0g==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1645.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(346002)(376002)(136003)(366004)(396003)(39860400002)(2906002)(110136005)(54906003)(33656002)(316002)(83380400001)(86362001)(4326008)(8936002)(478600001)(71200400001)(26005)(5660300002)(8676002)(7696005)(66476007)(52536014)(30864003)(66446008)(76116006)(966005)(9686003)(66556008)(64756008)(66946007)(55016002)(186003)(6506007);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: ZfLDjAoD8Cl0+aOhYpm2Vw09CxhN7S36oqZCuClzK82NLG4PAeLO1UwcAox7nnb7MOf0++pwKxpkCBbZuaPryjcfRrVkA/yCQk3WOP/lnIfOQf7x4O49mBaCPowL3bNgCf4T5iTmYejaR3xIi8kJko3SbE4muNLpLXAXrbLyogN6ZJLbkz6TUTXoLfjK2wxFc7ZUgaUg0lS7H23FOfbcK+4BWgwT4bMxHinYt02cGgx0jX3i4T8r7xm1DiYNp4QuPyDp6gmbdabxIt3veYNtrFN7nEc4iECxoiMz1oBE8RwIDdaB2fxLX7kLvjqan7fAF2bheboTz7RDueHCAGPdjWpFaPcF+GjY81LZSrk8Z2HcGg3sa0Cbvd4kB1n0lrsnlYNyOj1Kfm+IhLB2unyy50M7neYPsWGMKXNjCmvZNblRApzA52ub0TJAQEtdlrjjENvuiud9ZT1ybUamB4vNhLVRs5XykAbF8xRLOi5ABU8aa2rIIhXd50kin4Qwsjxy
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CY4PR04MB3751.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e80392c4-baf8-4c0a-d942-08d81ca0767d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2020 02:51:17.9320
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR11MB1645.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 381165dc-10a3-427d-9060-08d81ca0aa79
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2020 02:52:45.0804
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: WDjtYWMUdCWgMVGSDLQyVGNY7doRZMbulOLZyNC/X/uwk6HY2BFWQbwkcaKnFD45xXoE94jScwserLmEugq9rw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR04MB0344
+X-MS-Exchange-CrossTenant-userprincipalname: NZpxeOOKEM6mq/dlVH7cA0FfiBZI4jx74nF4pO25JqSlxDlJza1dcGziTrDi0JpbAG7lDM779yg6m9cGKQLW7g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1455
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/06/27 6:03, Ignat Korchagin wrote:=0A=
-> This is a follow up from [1]. Consider the following script:=0A=
-> =0A=
-> sudo modprobe brd rd_nr=3D1 rd_size=3D4194304=0A=
-> =0A=
-> echo '0 8388608 crypt capi:ecb(cipher_null) - 0 /dev/ram0 0' | \=0A=
-> sudo dmsetup create eram0=0A=
-> =0A=
-> echo '0 8388608 crypt capi:ecb(cipher_null) - 0 /dev/ram0 0 1 no_write_wo=
-rkqueue' | \=0A=
-> sudo dmsetup create eram0-inline-write=0A=
-> =0A=
-> echo '0 8388608 crypt capi:ecb(cipher_null) - 0 /dev/ram0 0 1 no_read_wor=
-kqueue' | \=0A=
-> sudo dmsetup create eram0-inline-read=0A=
-> =0A=
-> devices=3D"/dev/ram0 /dev/mapper/eram0 /dev/mapper/eram0-inline-read "=0A=
-> devices+=3D"/dev/mapper/eram0-inline-write"=0A=
-> =0A=
-> for dev in $devices; do=0A=
->   echo "reading from $dev"=0A=
->   sudo fio --filename=3D$dev --readwrite=3Dread --bs=3D4k --direct=3D1 \=
-=0A=
->   --loops=3D1000000 --runtime=3D3m --name=3Dplain | grep READ=0A=
-> done=0A=
-> =0A=
-> for dev in $devices; do=0A=
->   echo "writing to $dev"=0A=
->   sudo fio --filename=3D$dev --readwrite=3Dwrite --bs=3D4k --direct=3D1 \=
-=0A=
->   --loops=3D1000000 --runtime=3D3m --name=3Dplain | grep WRITE=0A=
-> done=0A=
-> =0A=
-> This script creates a ramdisk (to eliminate hardware bias in the benchmar=
-k) and=0A=
-> three dm-crypt instances on top. All dm-crypt instances use the NULL ciph=
-er=0A=
-> to eliminate potentially expensive crypto bias (the NULL cipher just uses=
- memcpy=0A=
-> for "encyption"). The first instance is the current dm-crypt implementati=
-on from=0A=
-> 5.8-rc2, the two others have new optional flags enabled, which bypass kcr=
-yptd=0A=
-> workqueues for reads and writes respectively and write sorting for writes=
-. On=0A=
-> my VM (Debian in VirtualBox with 4 cores on 2.8 GHz Quad-Core Intel Core =
-i7) I=0A=
-> get the following output (formatted for better readability):=0A=
-> =0A=
-> reading from /dev/ram0=0A=
->    READ: bw=3D508MiB/s (533MB/s), 508MiB/s-508MiB/s (533MB/s-533MB/s), io=
-=3D89.3GiB (95.9GB), run=3D180000-180000msec=0A=
-> =0A=
-> reading from /dev/mapper/eram0=0A=
->    READ: bw=3D80.6MiB/s (84.5MB/s), 80.6MiB/s-80.6MiB/s (84.5MB/s-84.5MB/=
-s), io=3D14.2GiB (15.2GB), run=3D180000-180000msec=0A=
-> =0A=
-> reading from /dev/mapper/eram0-inline-read=0A=
->    READ: bw=3D295MiB/s (309MB/s), 295MiB/s-295MiB/s (309MB/s-309MB/s), io=
-=3D51.8GiB (55.6GB), run=3D180000-180000msec=0A=
-> =0A=
-> reading from /dev/mapper/eram0-inline-write=0A=
->    READ: bw=3D114MiB/s (120MB/s), 114MiB/s-114MiB/s (120MB/s-120MB/s), io=
-=3D20.1GiB (21.5GB), run=3D180000-180000msec=0A=
-> =0A=
-> writing to /dev/ram0=0A=
->   WRITE: bw=3D516MiB/s (541MB/s), 516MiB/s-516MiB/s (541MB/s-541MB/s), io=
-=3D90.7GiB (97.4GB), run=3D180001-180001msec=0A=
-> =0A=
-> writing to /dev/mapper/eram0=0A=
->   WRITE: bw=3D40.4MiB/s (42.4MB/s), 40.4MiB/s-40.4MiB/s (42.4MB/s-42.4MB/=
-s), io=3D7271MiB (7624MB), run=3D180001-180001msec=0A=
-> =0A=
-> writing to /dev/mapper/eram0-inline-read=0A=
->   WRITE: bw=3D38.9MiB/s (40.8MB/s), 38.9MiB/s-38.9MiB/s (40.8MB/s-40.8MB/=
-s), io=3D7000MiB (7340MB), run=3D180001-180001msec=0A=
-> =0A=
-> writing to /dev/mapper/eram0-inline-write=0A=
->   WRITE: bw=3D277MiB/s (290MB/s), 277MiB/s-277MiB/s (290MB/s-290MB/s), io=
-=3D48.6GiB (52.2GB), run=3D180000-180000msec=0A=
-> =0A=
-> Current dm-crypt implementation creates a significant IO performance over=
-head=0A=
-> (at least on small IO block sizes) for both latency and throughput. We su=
-spect=0A=
-> offloading IO request processing into workqueues and async threads is mor=
-e=0A=
-> harmful these days with the modern fast storage. I also did some digging =
-into=0A=
-> the dm-crypt git history and much of this async processing is not needed=
-=0A=
-> anymore, because the reasons it was added are mostly gone from the kernel=
-. More=0A=
-> details can be found in [2] (see "Git archeology" section).=0A=
-> =0A=
-> This change adds no_(read|write)_workqueue flags separately for read and =
-write=0A=
-> BIOs, which direct dm-crypt not to offload crypto operations into kcryptd=
-=0A=
-> workqueues and process everything inline. In addition, writes are not buf=
-fered=0A=
-> to be sorted in the dm-crypt red-black tree, but dispatched immediately. =
-For=0A=
-> cases, where crypto operations cannot happen inline (hard interrupt conte=
-xt,=0A=
-> for example the read path of some NVME drivers), we offload the work to a=
-=0A=
-> tasklet rather than a workqueue.=0A=
-> =0A=
-> These flags ensure inline BIO processing in the dm-crypt module only. It =
-is=0A=
-> worth noting that some Crypto API implementations may offload encryption =
-into=0A=
-> their own workqueues, which are independent of the dm-crypt and its=0A=
-> configuration. However upon enabling no_(read|write)_workqueue flags dm-c=
-rypt=0A=
-> will instruct Crypto API not to backlog crypto requests.=0A=
-> =0A=
-> [1]: https://www.spinics.net/lists/dm-crypt/msg07516.html=0A=
-> [2]: https://blog.cloudflare.com/speeding-up-linux-disk-encryption/=0A=
-> =0A=
-> Signed-off-by: Ignat Korchagin <ignat@cloudflare.com>=0A=
-> ---=0A=
->  drivers/md/dm-crypt.c | 68 +++++++++++++++++++++++++++++++++----------=
-=0A=
->  1 file changed, 52 insertions(+), 16 deletions(-)=0A=
-> =0A=
-> diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c=0A=
-> index 000ddfab5ba0..6924eb49b1df 100644=0A=
-> --- a/drivers/md/dm-crypt.c=0A=
-> +++ b/drivers/md/dm-crypt.c=0A=
-> @@ -69,6 +69,7 @@ struct dm_crypt_io {=0A=
->  	u8 *integrity_metadata;=0A=
->  	bool integrity_metadata_from_pool;=0A=
->  	struct work_struct work;=0A=
-> +	struct tasklet_struct tasklet;=0A=
->  =0A=
->  	struct convert_context ctx;=0A=
->  =0A=
-> @@ -127,7 +128,8 @@ struct iv_elephant_private {=0A=
->   * and encrypts / decrypts at the same time.=0A=
->   */=0A=
->  enum flags { DM_CRYPT_SUSPENDED, DM_CRYPT_KEY_VALID,=0A=
-> -	     DM_CRYPT_SAME_CPU, DM_CRYPT_NO_OFFLOAD };=0A=
-> +	     DM_CRYPT_SAME_CPU, DM_CRYPT_NO_OFFLOAD,=0A=
-> +	     DM_CRYPT_NO_READ_WORKQUEUE, DM_CRYPT_NO_WRITE_WORKQUEUE };=0A=
-=0A=
-I liked the "INLINE" naming. What about DM_CRYPT_READ_INLINE and=0A=
-DM_CRYPT_WRITE_INLINE ? Shorter too :)=0A=
-=0A=
-But from the changes below, it looks like your change is now less about bei=
-ng=0A=
-purely inline or synchronous but about bypassing the workqueue.=0A=
-Is this correct ?=0A=
-=0A=
->  =0A=
->  enum cipher_flags {=0A=
->  	CRYPT_MODE_INTEGRITY_AEAD,	/* Use authenticated mode for cihper */=0A=
-> @@ -1449,7 +1451,7 @@ static void kcryptd_async_done(struct crypto_async_=
-request *async_req,=0A=
->  			       int error);=0A=
->  =0A=
->  static void crypt_alloc_req_skcipher(struct crypt_config *cc,=0A=
-> -				     struct convert_context *ctx)=0A=
-> +				     struct convert_context *ctx, bool nobacklog)=0A=
->  {=0A=
->  	unsigned key_index =3D ctx->cc_sector & (cc->tfms_count - 1);=0A=
->  =0A=
-> @@ -1463,12 +1465,12 @@ static void crypt_alloc_req_skcipher(struct crypt=
-_config *cc,=0A=
->  	 * requests if driver request queue is full.=0A=
->  	 */=0A=
->  	skcipher_request_set_callback(ctx->r.req,=0A=
-> -	    CRYPTO_TFM_REQ_MAY_BACKLOG,=0A=
-> +	    nobacklog ? 0 : CRYPTO_TFM_REQ_MAY_BACKLOG,=0A=
->  	    kcryptd_async_done, dmreq_of_req(cc, ctx->r.req));=0A=
-=0A=
-Will not specifying CRYPTO_TFM_REQ_MAY_BACKLOG always cause the crypto API =
-to=0A=
-return -EBUSY ? From the comment above the skcipher_request_set_callback(),=
- it=0A=
-seems that this will be the case only if the skcipher diver queue is full. =
-So in=0A=
-other word, keeping the kcryptd_async_done() callback and executing the skc=
-ipher=0A=
-request through crypt_convert() and crypt_convert_block_skcipher() may stil=
-l end=0A=
-up being an asynchronous operation. Can you confirm this and is it what you=
-=0A=
-intended to implement ?=0A=
-=0A=
-From my understanding of the crypto API, and from what Eric commented, a tr=
-uly=0A=
-synchronous/inline execution of the skcypher needs a call like:=0A=
-=0A=
-crypto_wait_req(crypto_skcipher_encrypt(req), &wait);=0A=
-=0A=
-For SMR use case were we must absolutely preserve the write requests order,=
- the=0A=
-above change will probably be needed. Will check again.=0A=
-=0A=
->  }=0A=
->  =0A=
->  static void crypt_alloc_req_aead(struct crypt_config *cc,=0A=
-> -				 struct convert_context *ctx)=0A=
-> +				 struct convert_context *ctx, bool nobacklog)=0A=
->  {=0A=
->  	if (!ctx->r.req_aead)=0A=
->  		ctx->r.req_aead =3D mempool_alloc(&cc->req_pool, GFP_NOIO);=0A=
-> @@ -1480,17 +1482,17 @@ static void crypt_alloc_req_aead(struct crypt_con=
-fig *cc,=0A=
->  	 * requests if driver request queue is full.=0A=
->  	 */=0A=
->  	aead_request_set_callback(ctx->r.req_aead,=0A=
-> -	    CRYPTO_TFM_REQ_MAY_BACKLOG,=0A=
-> +	    nobacklog ? 0 : CRYPTO_TFM_REQ_MAY_BACKLOG,=0A=
->  	    kcryptd_async_done, dmreq_of_req(cc, ctx->r.req_aead));=0A=
->  }=0A=
->  =0A=
->  static void crypt_alloc_req(struct crypt_config *cc,=0A=
-> -			    struct convert_context *ctx)=0A=
-> +			    struct convert_context *ctx, bool nobacklog)=0A=
->  {=0A=
->  	if (crypt_integrity_aead(cc))=0A=
-> -		crypt_alloc_req_aead(cc, ctx);=0A=
-> +		crypt_alloc_req_aead(cc, ctx, nobacklog);=0A=
->  	else=0A=
-> -		crypt_alloc_req_skcipher(cc, ctx);=0A=
-> +		crypt_alloc_req_skcipher(cc, ctx, nobacklog);=0A=
->  }=0A=
->  =0A=
->  static void crypt_free_req_skcipher(struct crypt_config *cc,=0A=
-> @@ -1523,7 +1525,7 @@ static void crypt_free_req(struct crypt_config *cc,=
- void *req, struct bio *base_=0A=
->   * Encrypt / decrypt data from one bio to another one (can be the same o=
-ne)=0A=
->   */=0A=
->  static blk_status_t crypt_convert(struct crypt_config *cc,=0A=
-> -			 struct convert_context *ctx)=0A=
-> +			 struct convert_context *ctx, bool noresched)=0A=
-=0A=
-"noresched" is named after what will happen, not after the reason for it. S=
-o to=0A=
-clarify, why not rename this as "convert_inline" or "do_inline" ?=0A=
-=0A=
->  {=0A=
->  	unsigned int tag_offset =3D 0;=0A=
->  	unsigned int sector_step =3D cc->sector_size >> SECTOR_SHIFT;=0A=
-> @@ -1533,7 +1535,7 @@ static blk_status_t crypt_convert(struct crypt_conf=
-ig *cc,=0A=
->  =0A=
->  	while (ctx->iter_in.bi_size && ctx->iter_out.bi_size) {=0A=
->  =0A=
-> -		crypt_alloc_req(cc, ctx);=0A=
-> +		crypt_alloc_req(cc, ctx, noresched);=0A=
->  		atomic_inc(&ctx->cc_pending);=0A=
->  =0A=
->  		if (crypt_integrity_aead(cc))=0A=
-> @@ -1566,7 +1568,8 @@ static blk_status_t crypt_convert(struct crypt_conf=
-ig *cc,=0A=
->  			atomic_dec(&ctx->cc_pending);=0A=
->  			ctx->cc_sector +=3D sector_step;=0A=
->  			tag_offset++;=0A=
-> -			cond_resched();=0A=
-> +			if (!noresched)=0A=
-> +				cond_resched();=0A=
->  			continue;=0A=
->  		/*=0A=
->  		 * There was a data integrity error.=0A=
-> @@ -1879,6 +1882,9 @@ static void kcryptd_crypt_write_io_submit(struct dm=
-_crypt_io *io, int async)=0A=
->  	unsigned long flags;=0A=
->  	sector_t sector;=0A=
->  	struct rb_node **rbp, *parent;=0A=
-> +	bool nosort =3D=0A=
-> +			(likely(!async) && test_bit(DM_CRYPT_NO_OFFLOAD, &cc->flags)) ||=0A=
-> +			test_bit(DM_CRYPT_NO_WRITE_WORKQUEUE, &cc->flags);=0A=
-=0A=
-"nosort" is a little obscure as a name. Why not just "do_inline" ? In any c=
-ase,=0A=
-since this bool is used only in the if below, you could just write the cond=
-ition=0A=
-directly there.=0A=
-=0A=
->  =0A=
->  	if (unlikely(io->error)) {=0A=
->  		crypt_free_buffer_pages(cc, clone);=0A=
-> @@ -1892,7 +1898,7 @@ static void kcryptd_crypt_write_io_submit(struct dm=
-_crypt_io *io, int async)=0A=
->  =0A=
->  	clone->bi_iter.bi_sector =3D cc->start + io->sector;=0A=
->  =0A=
-> -	if (likely(!async) && test_bit(DM_CRYPT_NO_OFFLOAD, &cc->flags)) {=0A=
-> +	if (nosort) {=0A=
->  		generic_make_request(clone);=0A=
->  		return;=0A=
->  	}=0A=
-> @@ -1941,7 +1947,7 @@ static void kcryptd_crypt_write_convert(struct dm_c=
-rypt_io *io)=0A=
->  	sector +=3D bio_sectors(clone);=0A=
->  =0A=
->  	crypt_inc_pending(io);=0A=
-> -	r =3D crypt_convert(cc, &io->ctx);=0A=
-> +	r =3D crypt_convert(cc, &io->ctx, test_bit(DM_CRYPT_NO_WRITE_WORKQUEUE,=
- &cc->flags));=0A=
->  	if (r)=0A=
->  		io->error =3D r;=0A=
->  	crypt_finished =3D atomic_dec_and_test(&io->ctx.cc_pending);=0A=
-> @@ -1971,7 +1977,7 @@ static void kcryptd_crypt_read_convert(struct dm_cr=
-ypt_io *io)=0A=
->  	crypt_convert_init(cc, &io->ctx, io->base_bio, io->base_bio,=0A=
->  			   io->sector);=0A=
->  =0A=
-> -	r =3D crypt_convert(cc, &io->ctx);=0A=
-> +	r =3D crypt_convert(cc, &io->ctx, test_bit(DM_CRYPT_NO_READ_WORKQUEUE, =
-&cc->flags));=0A=
->  	if (r)=0A=
->  		io->error =3D r;=0A=
->  =0A=
-> @@ -2031,9 +2037,29 @@ static void kcryptd_crypt(struct work_struct *work=
-)=0A=
->  		kcryptd_crypt_write_convert(io);=0A=
->  }=0A=
->  =0A=
-> +static void kcryptd_crypt_tasklet(unsigned long work)=0A=
-> +{=0A=
-> +	kcryptd_crypt((struct work_struct *)work);=0A=
-> +}=0A=
-> +=0A=
->  static void kcryptd_queue_crypt(struct dm_crypt_io *io)=0A=
->  {=0A=
->  	struct crypt_config *cc =3D io->cc;=0A=
-> +	bool noworkqueue =3D=0A=
-> +			(bio_data_dir(io->base_bio) =3D=3D READ && test_bit(DM_CRYPT_NO_READ_=
-WORKQUEUE, &cc->flags)) ||=0A=
-> +			(bio_data_dir(io->base_bio) =3D=3D WRITE && test_bit(DM_CRYPT_NO_WRIT=
-E_WORKQUEUE, &cc->flags));=0A=
-=0A=
-Since this variable is used only in the if statement bleow, why not used th=
-e=0A=
-condition directly in that statement ?=0A=
-=0A=
-> +=0A=
-> +	if (noworkqueue) {=0A=
-> +		if (in_irq()) {=0A=
-> +			/* Crypto API's "skcipher_walk_first() refuses to work in hard IRQ co=
-ntext */=0A=
-> +			tasklet_init(&io->tasklet, kcryptd_crypt_tasklet, (unsigned long)&io-=
->work);=0A=
-> +			tasklet_schedule(&io->tasklet);=0A=
-> +			return;=0A=
-> +		}=0A=
-> +=0A=
-> +		kcryptd_crypt(&io->work);=0A=
-> +		return;=0A=
-> +	}=0A=
->  =0A=
->  	INIT_WORK(&io->work, kcryptd_crypt);=0A=
->  	queue_work(cc->crypt_queue, &io->work);=0A=
-> @@ -2838,7 +2864,7 @@ static int crypt_ctr_optional(struct dm_target *ti,=
- unsigned int argc, char **ar=0A=
->  	struct crypt_config *cc =3D ti->private;=0A=
->  	struct dm_arg_set as;=0A=
->  	static const struct dm_arg _args[] =3D {=0A=
-> -		{0, 6, "Invalid number of feature args"},=0A=
-> +		{0, 8, "Invalid number of feature args"},=0A=
->  	};=0A=
->  	unsigned int opt_params, val;=0A=
->  	const char *opt_string, *sval;=0A=
-> @@ -2868,6 +2894,10 @@ static int crypt_ctr_optional(struct dm_target *ti=
-, unsigned int argc, char **ar=0A=
->  =0A=
->  		else if (!strcasecmp(opt_string, "submit_from_crypt_cpus"))=0A=
->  			set_bit(DM_CRYPT_NO_OFFLOAD, &cc->flags);=0A=
-> +		else if (!strcasecmp(opt_string, "no_read_workqueue"))=0A=
-> +			set_bit(DM_CRYPT_NO_READ_WORKQUEUE, &cc->flags);=0A=
-> +		else if (!strcasecmp(opt_string, "no_write_workqueue"))=0A=
-> +			set_bit(DM_CRYPT_NO_WRITE_WORKQUEUE, &cc->flags);=0A=
->  		else if (sscanf(opt_string, "integrity:%u:", &val) =3D=3D 1) {=0A=
->  			if (val =3D=3D 0 || val > MAX_TAG_SIZE) {=0A=
->  				ti->error =3D "Invalid integrity arguments";=0A=
-> @@ -3196,6 +3226,8 @@ static void crypt_status(struct dm_target *ti, stat=
-us_type_t type,=0A=
->  		num_feature_args +=3D !!ti->num_discard_bios;=0A=
->  		num_feature_args +=3D test_bit(DM_CRYPT_SAME_CPU, &cc->flags);=0A=
->  		num_feature_args +=3D test_bit(DM_CRYPT_NO_OFFLOAD, &cc->flags);=0A=
-> +		num_feature_args +=3D test_bit(DM_CRYPT_NO_READ_WORKQUEUE, &cc->flags)=
-;=0A=
-> +		num_feature_args +=3D test_bit(DM_CRYPT_NO_WRITE_WORKQUEUE, &cc->flags=
-);=0A=
->  		num_feature_args +=3D cc->sector_size !=3D (1 << SECTOR_SHIFT);=0A=
->  		num_feature_args +=3D test_bit(CRYPT_IV_LARGE_SECTORS, &cc->cipher_fla=
-gs);=0A=
->  		if (cc->on_disk_tag_size)=0A=
-> @@ -3208,6 +3240,10 @@ static void crypt_status(struct dm_target *ti, sta=
-tus_type_t type,=0A=
->  				DMEMIT(" same_cpu_crypt");=0A=
->  			if (test_bit(DM_CRYPT_NO_OFFLOAD, &cc->flags))=0A=
->  				DMEMIT(" submit_from_crypt_cpus");=0A=
-> +			if (test_bit(DM_CRYPT_NO_READ_WORKQUEUE, &cc->flags))=0A=
-> +				DMEMIT(" no_read_workqueue");=0A=
-> +			if (test_bit(DM_CRYPT_NO_WRITE_WORKQUEUE, &cc->flags))=0A=
-> +				DMEMIT(" no_write_workqueue");=0A=
->  			if (cc->on_disk_tag_size)=0A=
->  				DMEMIT(" integrity:%u:%s", cc->on_disk_tag_size, cc->cipher_auth);=
-=0A=
->  			if (cc->sector_size !=3D (1 << SECTOR_SHIFT))=0A=
-> @@ -3320,7 +3356,7 @@ static void crypt_io_hints(struct dm_target *ti, st=
-ruct queue_limits *limits)=0A=
->  =0A=
->  static struct target_type crypt_target =3D {=0A=
->  	.name   =3D "crypt",=0A=
-> -	.version =3D {1, 21, 0},=0A=
-> +	.version =3D {1, 22, 0},=0A=
->  	.module =3D THIS_MODULE,=0A=
->  	.ctr    =3D crypt_ctr,=0A=
->  	.dtr    =3D crypt_dtr,=0A=
-> =0A=
-=0A=
-=0A=
--- =0A=
-Damien Le Moal=0A=
-Western Digital Research=0A=
+> From: Jacob Pan
+> Sent: Tuesday, June 30, 2020 7:05 AM
+>=20
+> On Fri, 26 Jun 2020 16:19:23 -0600
+> Alex Williamson <alex.williamson@redhat.com> wrote:
+>=20
+> > On Tue, 23 Jun 2020 10:03:53 -0700
+> > Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
+> >
+> > > IOMMU UAPI is newly introduced to support communications between
+> > > guest virtual IOMMU and host IOMMU. There has been lots of
+> > > discussions on how it should work with VFIO UAPI and userspace in
+> > > general.
+> > >
+> > > This document is indended to clarify the UAPI design and usage. The
+> > > mechenics of how future extensions should be achieved are also
+> > > covered in this documentation.
+> > >
+> > > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> > > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > > ---
+> > >  Documentation/userspace-api/iommu.rst | 244
+> > > ++++++++++++++++++++++++++++++++++ 1 file changed, 244 insertions(+)
+> > >  create mode 100644 Documentation/userspace-api/iommu.rst
+> > >
+> > > diff --git a/Documentation/userspace-api/iommu.rst
+> > > b/Documentation/userspace-api/iommu.rst new file mode 100644
+> > > index 000000000000..f9e4ed90a413
+> > > --- /dev/null
+> > > +++ b/Documentation/userspace-api/iommu.rst
+> > > @@ -0,0 +1,244 @@
+> > > +.. SPDX-License-Identifier: GPL-2.0
+> > > +.. iommu:
+> > > +
+> > > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > +IOMMU Userspace API
+> > > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > +
+> > > +IOMMU UAPI is used for virtualization cases where communications
+> > > are +needed between physical and virtual IOMMU drivers. For native
+> > > +usage, IOMMU is a system device which does not need to communicate
+> > > +with user space directly.
+> > > +
+> > > +The primary use cases are guest Shared Virtual Address (SVA) and
+> > > +guest IO virtual address (IOVA), wherein a virtual IOMMU (vIOMMU)
+> > > is +required to communicate with the physical IOMMU in the host.
+> > > +
+> > > +.. contents:: :local:
+> > > +
+> > > +Functionalities
+> > > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > +Communications of user and kernel involve both directions. The
+> > > +supported user-kernel APIs are as follows:
+> > > +
+> > > +1. Alloc/Free PASID
+> > > +2. Bind/unbind guest PASID (e.g. Intel VT-d)
+> > > +3. Bind/unbind guest PASID table (e.g. ARM sMMU)
+> > > +4. Invalidate IOMMU caches
+> > > +5. Service page requests
+> > > +
+> > > +Requirements
+> > > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > +The IOMMU UAPIs are generic and extensible to meet the following
+> > > +requirements:
+> > > +
+> > > +1. Emulated and para-virtualised vIOMMUs
+> > > +2. Multiple vendors (Intel VT-d, ARM sMMU, etc.)
+> > > +3. Extensions to the UAPI shall not break existing user space
+> > > +
+> > > +Interfaces
+> > > +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > +Although the data structures defined in IOMMU UAPI are
+> > > self-contained, +there is no user API functions introduced.
+> > > Instead, IOMMU UAPI is +designed to work with existing user driver
+> > > frameworks such as VFIO. +
+> > > +Extension Rules & Precautions
+> > > +-----------------------------
+> > > +When IOMMU UAPI gets extended, the data structures can *only* be
+> > > +modified in two ways:
+> > > +
+> > > +1. Adding new fields by re-purposing the padding[] field. No size
+> > > change. +2. Adding new union members at the end. May increase in
+> > > size. +
+> > > +No new fields can be added *after* the variable sized union in
+> > > that it +will break backward compatibility when offset moves. In
+> > > both cases, a +new flag must be accompanied with a new field such
+> > > that the IOMMU +driver can process the data based on the new flag.
+> > > Version field is +only reserved for the unlikely event of UAPI
+> > > upgrade at its entirety. +
+> > > +It's *always* the caller's responsibility to indicate the size of
+> > > the +structure passed by setting argsz appropriately.
+> > > +Though at the same time, argsz is user provided data which is not
+> > > +trusted. The argsz field allows the user to indicate how much data
+> > > +they're providing, it's still the kernel's responsibility to
+> > > validate +whether it's correct and sufficient for the requested
+> > > operation. +
+> > > +Compatibility Checking
+> > > +----------------------
+> > > +When IOMMU UAPI extension results in size increase, user such as
+> > > VFIO +has to handle the following cases:
+> > > +
+> > > +1. User and kernel has exact size match
+> > > +2. An older user with older kernel header (smaller UAPI size)
+> > > running on a
+> > > +   newer kernel (larger UAPI size)
+> > > +3. A newer user with newer kernel header (larger UAPI size) running
+> > > +   on an older kernel.
+> > > +4. A malicious/misbehaving user pass illegal/invalid size but
+> > > within
+> > > +   range. The data may contain garbage.
+> >
+> > What exactly does vfio need to do to handle these?
+> >
+> VFIO does nothing other than returning the status from IOMMU driver.
+> Based on the return status, users such as QEMU can cause fault
+> conditions within the vIOMMU.
+
+But from above description, "user such as VFIO has to handle the
+following cases"...
+
+Thanks
+Kevin
+
+>=20
+> > > +
+> > > +Feature Checking
+> > > +----------------
+> > > +While launching a guest with vIOMMU, it is important to ensure
+> > > that host +can support the UAPI data structures to be used for
+> > > vIOMMU-pIOMMU +communications. Without upfront compatibility
+> > > checking, future faults +are difficult to report even in normal
+> > > conditions. For example, TLB +invalidations should always succeed.
+> > > There is no architectural way to +report back to the vIOMMU if the
+> > > UAPI data is incompatible. If that +happens, in order to protect
+> > > IOMMU iosolation guarantee, we have to +resort to not giving
+> > > completion status in vIOMMU. This may result in +VM hang.
+> > > +
+> > > +For this reason the following IOMMU UAPIs cannot fail:
+> > > +
+> > > +1. Free PASID
+> > > +2. Unbind guest PASID
+> > > +3. Unbind guest PASID table (SMMU)
+> > > +4. Cache invalidate
+> > > +
+> > > +User applications such as QEMU is expected to import kernel UAPI
+> > > +headers. Backward compatibility is supported per feature flags.
+> > > +For example, an older QEMU (with older kernel header) can run on
+> > > newer +kernel. Newer QEMU (with new kernel header) may refuse to
+> > > initialize +on an older kernel if new feature flags are not
+> > > supported by older +kernel. Simply recompile existing code with
+> > > newer kernel header should +not be an issue in that only existing
+> > > flags are used. +
+> > > +IOMMU vendor driver should report the below features to IOMMU UAPI
+> > > +consumers (e.g. via VFIO).
+> > > +
+> > > +1. IOMMU_NESTING_FEAT_SYSWIDE_PASID
+> > > +2. IOMMU_NESTING_FEAT_BIND_PGTBL
+> > > +3. IOMMU_NESTING_FEAT_BIND_PASID_TABLE
+> > > +4. IOMMU_NESTING_FEAT_CACHE_INVLD
+> > > +5. IOMMU_NESTING_FEAT_PAGE_REQUEST
+> > > +
+> > > +Take VFIO as example, upon request from VFIO user space (e.g.
+> > > QEMU), +VFIO kernel code shall query IOMMU vendor driver for the
+> > > support of +the above features. Query result can then be reported
+> > > back to the +user-space caller. Details can be found in
+> > > +Documentation/driver-api/vfio.rst.
+> > > +
+> > > +
+> > > +Data Passing Example with VFIO
+> > > +------------------------------
+> > > +As the ubiquitous userspace driver framework, VFIO is already IOMMU
+> > > +aware and share many key concepts such as device model, group, and
+> > > +protection domain. Other user driver frameworks can also be
+> > > extended +to support IOMMU UAPI but it is outside the scope of this
+> > > document. +
+> > > +In this tight-knit VFIO-IOMMU interface, the ultimate consumer of
+> > > the +IOMMU UAPI data is the host IOMMU driver. VFIO facilitates
+> > > user-kernel +transport, capability checking, security, and life
+> > > cycle management of +process address space ID (PASID).
+> > > +
+> > > +Unlike normal user data passed via VFIO UAPI IOTCL, IOMMU driver
+> > > is the +ultimate consumer of its UAPI data. At VFIO layer, the
+> > > IOMMU UAPI data +is wrapped in a VFIO UAPI data. It follows the
+> > > +pattern below::
+> > > +
+> > > +   struct {
+> > > +	__u32 argsz;
+> > > +	__u32 flags;
+> > > +	__u8  data[];
+> > > +   };
+> > > +
+> > > +Here data[] contains the IOMMU UAPI data structures. VFIO has the
+> > > +freedom to bundle the data as well as parse data size based on its
+> > > own flags. +
+> > > +In order to determine the size and feature set of the user data,
+> > > argsz +and flags are also embedded in the IOMMU UAPI data
+> > > structures. +A "__u32 argsz" field is *always* at the beginning of
+> > > each structure. +
+> > > +For example:
+> > > +::
+> > > +
+> > > +   struct iommu_cache_invalidate_info {
+> > > +	__u32	argsz;
+> > > +	#define IOMMU_CACHE_INVALIDATE_INFO_VERSION_1 1
+> > > +	__u32	version;
+> > > +	/* IOMMU paging structure cache */
+> > > +	#define IOMMU_CACHE_INV_TYPE_IOTLB	(1 << 0) /*
+> > > IOMMU IOTLB */
+> > > +	#define IOMMU_CACHE_INV_TYPE_DEV_IOTLB	(1 << 1) /*
+> > > Device IOTLB */
+> > > +	#define IOMMU_CACHE_INV_TYPE_PASID	(1 << 2) /*
+> > > PASID cache */
+> > > +	#define IOMMU_CACHE_INV_TYPE_NR		(3)
+> > > +	__u8	cache;
+> > > +	__u8	granularity;
+> > > +	__u8	padding[2];
+> > > +	union {
+> > > +		struct iommu_inv_pasid_info pasid_info;
+> > > +		struct iommu_inv_addr_info addr_info;
+> > > +	} granu;
+> > > +   };
+> > > +
+> > > +VFIO is responsible for checking its own argsz and flags then
+> > > invokes +appropriate IOMMU UAPI functions. User pointer is passed
+> > > to IOMMU +layer for further processing. The responsibilities are
+> > > divided as +follows:
+> > > +
+> > > +- Generic IOMMU layer checks argsz range and override out-of-range
+> > > +  value. If the exact argsz is based on generic flags, they are
+> > > checked
+> > > +  here as well.
+> > > +
+> > > +- Vendor IOMMU driver checks argsz based on vendor flags, UAPI data
+> > > +  is consumed based on flags
+> > > +
+> > > +Once again, use guest TLB invalidation as an example, argsz is
+> > > based +on generic flags in the invalidation information. IOMMU
+> > > generic code +shall process the UAPI data as the following:
+> > > +
+> > > +::
+> > > +
+> > > + int iommu_cache_invalidate(struct iommu_domain *domain, struct
+> > > device *dev,
+> > > +			void __user *uinfo)
+> > > + {
+> > > +	/* Current kernel data size is the max to be copied from
+> > > user */
+> > > +	maxsz =3D sizeof(struct iommu_cache_invalidate_info);
+> > > +	memset((void *)&inv_info, 0, maxsz);
+> > > +
+> > > +	/*
+> > > +	 * No new spaces can be added before the variable sized
+> > > union, the
+> > > +	 * minimum size is the offset to the union.
+> > > +	 */
+> > > +	minsz =3D offsetof(struct iommu_cache_invalidate_info,
+> > > granu); +
+> > > +	/* Copy minsz from user to get flags and argsz */
+> > > +	if (copy_from_user(&inv_info, uinfo, minsz))
+> > > +		return -EFAULT;
+> > > +
+> > > +	/* Fields before variable size union is mandatory */
+> > > +	if (inv_info.argsz < minsz)
+> > > +		return -EINVAL;
+> > > +	/*
+> > > +	 * User might be using a newer UAPI header which has a
+> > > larger data
+> > > +	 * size, we shall support the existing flags within the
+> > > current
+> > > +	 * size.
+> > > +	 */
+> > > +	if (inv_info.argsz > maxsz)
+> > > +		inv_info.argsz =3D maxsz;
+> > > +
+> > > +	/* Checking the exact argsz based on generic flags */
+> > > +	if (inv_info.granularity =3D=3D IOMMU_INV_GRANU_ADDR &&
+> > > +		inv_info.argsz !=3D offsetofend(struct
+> > > iommu_cache_invalidate_info,
+> > > +					granu.addr_info))
+> >
+> > Is it really reasonable to expect the user to specify argsz to the
+> > exact union element for the callback?  I'd certainly expect users to
+> > simply use sizeof(struct iommu_cache_invalidate_info) and it should
+> > therefore be sufficient to test >=3D here rather than jump through hoop=
+s
+> > with an exact size.  We're already changing inv_info.argsz above to
+> > fit our known structure, it's inconsistent to then expect it to be
+> > some exact value.
+> >
+> I was thinking argsz doesn't have to be the exact struct size. It should
+> be whatever the sufficient & correct size used by the user for a given
+> call.
+>=20
+> For example, current struct iommu_gpasid_bind_data {} only has VT-d
+> data. If it gets extended with SMMU data in the union, VT-d vIOMMU
+> emulation should only fill the union size of vt-d.
+>=20
+> > > +		return -EINVAL;
+> > > +
+> > > +	if (inv_info.granularity =3D=3D IOMMU_INV_GRANU_PASID &&
+> > > +		inv_info.argsz !=3D offsetofend(struct
+> > > iommu_cache_invalidate_info,
+> > > +					granu.pasid_info))
+> > > +		return -EINVAL;
+> > > +
+> > > +	/* Copy the remaining user data _after_ minsz */
+> > > +	if (copy_from_user((void *)&inv_info + minsz, uinfo +
+> > > minsz,
+> > > +				inv_info.argsz - minsz))
+> > > +		return -EFAULT;
+> > > +
+> > > +	return domain->ops->cache_invalidate(domain, dev,
+> > > &inv_info);
+> > > + }
+> > > + Add a wrapper
+> > > +   __iommu_unbind_( kernel data, same user data, kernel copy)
+> > > +
+> This should be removed. Sorry about the confusion. The patch does not
+> have two data pointers, just separate APIs for kernel and user.
+>=20
+> > > +Notice that in this example, since union size is determined by
+> > > generic +flags, all checking to argsz is validated in the generic
+> > > IOMMU layer, +vendor driver does not need to check argsz. However,
+> > > if union size is +based on vendor data, such as
+> > > iommu_sva_bind_gpasid(), it will be +vendor driver's responsibility
+> > > to validate the exact argsz.
+> >
+> > struct iommu_cache_invalidate_info is a good example because it
+> > explicitly states a table of type vs granularity validity.  When the
+> > cache_invalidate() callback is used by an internal user we can
+> > consider it a bug in the caller if its usage falls outside of these
+> > prescribed valid combinations, ie. iommu_ops callbacks may assume a
+> > trusted caller that isn't trying to exploit any loophole.
+> Separate APIs are proposed in the patchset to address UAPIs
+> with both kernel and user callers. Sorry about the last line in the
+> example above. Currently, only unbind_gpasid() and page_response() have
+> both kernel and userspace callers. e.g.
+>=20
+>    /* userspace caller */
+>    int iommu_sva_unbind_gpasid(struct iommu_domain *domain, struct
+> device *dev,
+> 			void __user *udata)
+>=20
+>    /* in-kernel caller */
+>    int __iommu_sva_unbind_gpasid(struct iommu_domain *domain, struct
+> device *dev,
+>                                  struct iommu_gpasid_bind_data *data)
+>=20
+> We don;t expect in-kernel caller for cache invalidate in that it is
+> implied in unmap, unbind operations.
+>=20
+> >  But here
+> > we've done nothing more than validated the supplied size to pass it
+> > through to a non-user hardened callback.  We didn't check the
+> > version,
+> Yes, I should move up the version check from vendor driver.
+>=20
+> > we didn't check that any of the undefined bits in cache or
+> > granularity or padding were set, we don't know what flags might be
+> > set in the union elements.
+> You are right, we should sanitize reserved bits.
+>=20
+> > For example, if a user is able to set a
+> > flag that gets ignored now, that means we can never use that flag
+> > without potentially breaking that user in the future.
+> Good point, all reserved/unused bits should be tested.
+>=20
+> >  If a user can
+> > pass in version 3141592654 now, then we can never use version for
+> > validation.  I see that intel_iommu_sva_invalidate() does test the
+> > version, but has no obvious other hardening.  I'm afraid we're being
+> > far to lax about accepting a data structure provided by a user, we
+> > should not assume good faith. Thanks,
+> >
+> Agreed. will add checks in the IOMMU generic layer for reserved
+> bits.
+> For VT-d vendor driver, we do check all bits in cache types, i.e. in
+> intel/iommu.c
+> 	for_each_set_bit(cache_type,
+> 			 (unsigned long *)&inv_info->cache,
+> 			 IOMMU_CACHE_INV_TYPE_NR) {
+>=20
+>=20
+> one other hardening is to check vendor argsz. This is in the
+> bind_gpasid call.
+>=20
+> 	if (data->argsz !=3D offsetofend(struct iommu_gpasid_bind_data,
+> vendor.vtd))
+> 		return -EINVAL;
+>=20
+>=20
+>=20
+> > Alex
+> >
+>=20
+> [Jacob Pan]
+>=20
+>=20
+>=20
+> _______________________________________________
+> iommu mailing list
+> iommu@lists.linux-foundation.org
+> https://lists.linuxfoundation.org/mailman/listinfo/iommu
