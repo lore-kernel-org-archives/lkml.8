@@ -2,120 +2,126 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D5E8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:34:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FE16C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4D1C020768
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:34:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 276BC206B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:36:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="MhRbq1Ii"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d7ZZOgU2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729535AbgF3Ue4 (ORCPT
+        id S1729551AbgF3Ugi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 16:34:56 -0400
-Received: from mail.efficios.com ([167.114.26.124]:55450 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbgF3Uez (ORCPT
+        Tue, 30 Jun 2020 16:36:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53786 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbgF3Ugi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 16:34:55 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 87A1B2C6D8C;
-        Tue, 30 Jun 2020 16:34:53 -0400 (EDT)
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id dVsaSFwjYYPh; Tue, 30 Jun 2020 16:34:53 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.efficios.com (Postfix) with ESMTP id 45A442C6C2E;
-        Tue, 30 Jun 2020 16:34:53 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 45A442C6C2E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1593549293;
-        bh=Vph8FFamlLOEgiAqhpk9331XsQWYPCQ7ZL7ndNaBhMQ=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=MhRbq1IiUN8q3A8o2S0VWED1BT4voByE776z9VOt72rfAj9j1TNREBLWZzN0w1jJD
-         IUxwxzTPthk/yvgB+JL0iF9UOF8vhW+Okm8D5pvJE+PVsLaoWPjEJuVdgW2GCdKVk8
-         wVQcvf/7V/yrDnIrMjdbJaCy5MNdEBmkN+IZTuc6qXn88My9/R6GsEmBxNYpKzuR6G
-         6Gk1qypUp+B7N/AVGTnv8XQzWZs3XECuK0+a1VaEMiBWucnIbAUqKgCmG3CR2ue835
-         qn2ZFB46ZIL9U+s809LsE6/UrcwkahE9XJ1Ub/4yxbGkWDaflEBxR9yhbK74LW2SgQ
-         3aID6p5GOyKXA==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([127.0.0.1])
-        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id 2XoXp7J1s9mu; Tue, 30 Jun 2020 16:34:53 -0400 (EDT)
-Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
-        by mail.efficios.com (Postfix) with ESMTP id 3127C2C69FB;
-        Tue, 30 Jun 2020 16:34:53 -0400 (EDT)
-Date:   Tue, 30 Jun 2020 16:34:53 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Eric Dumazet <edumazet@google.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>,
-        Yuchung Cheng <ycheng@google.com>,
-        Jonathan Rajotte-Julien <joraj@efficios.com>
-Message-ID: <312079189.17903.1593549293094.JavaMail.zimbra@efficios.com>
-In-Reply-To: <CAHk-=wjEghg5_pX_GhNP+BfcUK6CRZ+4mh3bciitm9JwXvR7aQ@mail.gmail.com>
-References: <341326348.19635.1589398715534.JavaMail.zimbra@efficios.com> <CANn89i+GH2ukLZUcWYGquvKg66L9Vbto0FxyEt3pOJyebNxqBg@mail.gmail.com> <CANn89iL26OMWWAi18PqoQK4VBfFvRvxBJUioqXDk=8ZbKq_Efg@mail.gmail.com> <1132973300.15954.1593459836756.JavaMail.zimbra@efficios.com> <CANn89iJ4nh6VRsMt_rh_YwC-pn=hBqsP-LD9ykeRTnDC-P5iog@mail.gmail.com> <CAHk-=wh=CEzD+xevqpJnOJ9w72=bEMjDNmKdovoR5GnESJBdqA@mail.gmail.com> <CAHk-=wjEghg5_pX_GhNP+BfcUK6CRZ+4mh3bciitm9JwXvR7aQ@mail.gmail.com>
-Subject: Re: [regression] TCP_MD5SIG on established sockets
+        Tue, 30 Jun 2020 16:36:38 -0400
+Received: from mail-pl1-x643.google.com (mail-pl1-x643.google.com [IPv6:2607:f8b0:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0F56C061755;
+        Tue, 30 Jun 2020 13:36:37 -0700 (PDT)
+Received: by mail-pl1-x643.google.com with SMTP id s14so8945849plq.6;
+        Tue, 30 Jun 2020 13:36:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1JdJb/nPVAT5gkfGcCX+Fs5CyEjoe06QaSekf6Stnh8=;
+        b=d7ZZOgU2yNglOX/gwwDdMEMpRKngen5f3Xht5ti/J2AnhUkz2mZFmxUJf9mPqaUfhg
+         NTEu3vL5APw55cgTD82Z+6eX4EloHuqjnTO4UxuBLkxdL4eFu++4DDtwo6wYCZ6ktJpU
+         LabSdjrB6EyX9qB/wxFhqht9ZHj0jEDOG/5rf+ntwJDr8rRDqL3kjhTqgoCw6l7cG0+H
+         xG0inm/xX6f0d/4+aopYs8A4ubnKiZBzMAfwdmB2xH7m/oI03/Pyn8XeeVvJuiZJAEFl
+         i96jsx5trjNl5PH5GEgfZB9K3xVXQZUNJ73RedaEKE7wcgWTxzRcmiUjzmN1cuha4TYw
+         bL5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1JdJb/nPVAT5gkfGcCX+Fs5CyEjoe06QaSekf6Stnh8=;
+        b=NFKeOrYwMwndevnL2Ea7rx+tQDWhFpOcsarERQZNiGAtgxA+MIuJG4Cnrb9qWLZvS7
+         DUNco94E2AIM/y2OyK1CeSeKPQ1fZnPcHonWHRAbByVq9IeeP01cy4nYB9e0GRq+ZumQ
+         nkYLJiMyQhllYV2fx97KiQ8frp2uKaLuI/7PrQnygx7RyUSwFLHbcdEPdoESy5q0l254
+         TLzHt+1j/zRISHsHJkJFMaNNoCJd3LfrulolBxiTG5Dusliot9M0s8NEcuCgVOsPvYV9
+         ZAwFYOWJA0ZyC8IS4SoU8lUv6u5k7aBgM6MmF++wAvAFDBz3Snh5JZgJvzzs1ipJwgnK
+         oK8g==
+X-Gm-Message-State: AOAM5324Mwz/rP2UUJreIM4yz+9SBIEiasAy2lOaC9hOCzm5QHZtRDu8
+        P4rr4Jv1R3Mk4emx0LWneOk=
+X-Google-Smtp-Source: ABdhPJymtH7xcMvVH/kgjgDOiZvw/Qgu0o7ylLg9VDhbkJIM4SHD/nGfLFAeDemh4omr59n3AiuKAA==
+X-Received: by 2002:a17:90a:67c7:: with SMTP id g7mr22748358pjm.165.1593549397427;
+        Tue, 30 Jun 2020 13:36:37 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id m4sm3012520pjs.29.2020.06.30.13.36.36
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 30 Jun 2020 13:36:36 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 13:36:36 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Tero Kristo <t-kristo@ti.com>
+Cc:     wim@linux-watchdog.org, linux-watchdog@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jan.kiszka@siemens.com
+Subject: Re: [PATCH 1/2] watchdog: use __watchdog_ping in startup
+Message-ID: <20200630203636.GA20146@roeck-us.net>
+References: <20200624114534.1362-1-t-kristo@ti.com>
+ <20200624114534.1362-2-t-kristo@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.26.124]
-X-Mailer: Zimbra 8.8.15_GA_3945 (ZimbraWebClient - FF77 (Linux)/8.8.15_GA_3928)
-Thread-Topic: TCP_MD5SIG on established sockets
-Thread-Index: Wcu0dgtOM27y62oxUUFZ1+Lbhd18uw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200624114534.1362-2-t-kristo@ti.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Jun 30, 2020, at 3:52 PM, Linus Torvalds torvalds@linux-foundation.org wrote:
+On Wed, Jun 24, 2020 at 02:45:33PM +0300, Tero Kristo wrote:
+> Current watchdog startup functionality does not respect the minimum hw
+> heartbeat setup and the last watchdog ping timeframe when watchdog is
+> already running and userspace process attaches to it. Fix this by using
+> the __watchdog_ping from the startup also. For this code path, we can
+> also let the __watchdog_ping handle the bookkeeping for the worker and
+> last keepalive times.
+> 
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
 
-> On Tue, Jun 30, 2020 at 12:43 PM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
->>
-[...]
-> So I think it's still wrong (clearly others do change passwords
-> outside of listening state), but considering that it apparently took
-> people two years to notice, at least some of the onus on figuring out
-> a better morel is on people who didn't even bother to test things in a
-> timely manner.
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-I'm fully willing to work with Eric on finding a way forward with a
-fix which addresses the original issue Eric's patch was trying to
-fix while preserving ABI compatibility.
-
-The main thing we need to agree on at this stage is what is our goal. We
-can either choose to restore the original ABI behavior entirely, or only
-focus on what appears to be the most important use-cases.
-
-AFAIU, restoring full ABI compatibility would require to re-enable all
-the following scenarios:
-
-A) Transition of live socket from no key -> MD5 key.
-B) Transition of live socket from MD5 key -> no key.
-C) Transition of live socket from MD5 key to a different MD5 key.
-
-Scenario (C) appears to be the most important use-case, and probably the
-easiest to restore to its original behavior.
-
-AFAIU restoring scenarios A and B would require us to validate how
-much header space is needed by each SACK, TS and MD5 option enabled
-on the socket, and reject enabling any option that adds header space
-requirement exceeding the available space.
-
-I welcome advice on what should be the end goal here.
-
-Thanks,
-
-Mathieu
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+> ---
+>  drivers/watchdog/watchdog_dev.c | 19 +++++++++++--------
+>  1 file changed, 11 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
+> index 7e4cd34a8c20..bc1cfa288553 100644
+> --- a/drivers/watchdog/watchdog_dev.c
+> +++ b/drivers/watchdog/watchdog_dev.c
+> @@ -275,15 +275,18 @@ static int watchdog_start(struct watchdog_device *wdd)
+>  	set_bit(_WDOG_KEEPALIVE, &wd_data->status);
+>  
+>  	started_at = ktime_get();
+> -	if (watchdog_hw_running(wdd) && wdd->ops->ping)
+> -		err = wdd->ops->ping(wdd);
+> -	else
+> +	if (watchdog_hw_running(wdd) && wdd->ops->ping) {
+> +		err = __watchdog_ping(wdd);
+> +		if (err == 0)
+> +			set_bit(WDOG_ACTIVE, &wdd->status);
+> +	} else {
+>  		err = wdd->ops->start(wdd);
+> -	if (err == 0) {
+> -		set_bit(WDOG_ACTIVE, &wdd->status);
+> -		wd_data->last_keepalive = started_at;
+> -		wd_data->last_hw_keepalive = started_at;
+> -		watchdog_update_worker(wdd);
+> +		if (err == 0) {
+> +			set_bit(WDOG_ACTIVE, &wdd->status);
+> +			wd_data->last_keepalive = started_at;
+> +			wd_data->last_hw_keepalive = started_at;
+> +			watchdog_update_worker(wdd);
+> +		}
+>  	}
+>  
+>  	return err;
