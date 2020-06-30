@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50ECCC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CE95C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 22F8C20672
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:45:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46AB2206BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:45:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="YlxVqzCR";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="a11DQheL"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ba9A/7hH";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OBX1YqwE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729872AbgF3Fpg (ORCPT
+        id S1729883AbgF3Fpl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 01:45:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57472 "EHLO
+        Tue, 30 Jun 2020 01:45:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729852AbgF3Fpc (ORCPT
+        with ESMTP id S1729852AbgF3Fpj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 01:45:32 -0400
+        Tue, 30 Jun 2020 01:45:39 -0400
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C2EFC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 22:45:32 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3401AC061755
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 22:45:39 -0700 (PDT)
 From:   "Ahmed S. Darwish" <a.darwish@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1593495930;
+        s=2020; t=1593495936;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=e0jTHQoxks+qBbNy0dT5aGqcUc2Cr1SJenmjgFYt3N0=;
-        b=YlxVqzCRdCLagIuiSN5nItBjqQPZ2DP/4ckSar2DXzbSswXn/ue/b3BeDrtKXJn8SCKPbe
-        pWdtbU2WttkDk3HhnnV7n84yjDP+j8FIgu1dbFfwLX+YEKhVzZpSb/yDCAuvs5EguUB6vl
-        zsrWIv1wTdjqfz+W2JbO6PYEexxRFv3MowEDdeaDFaLdHdmki4loeuCpJoNR5d8c3AaSxU
-        IQK4+XvZ/zn4f/qaSnG+mfMoCO/xZn7nEO5YVmw2o5IkPJVGZ0A6et+OToHo9wigvwfqZh
-        QFAiLaPIp0D5qoRFG4xxm8VCo5XK4PlDSNio7/iWULQIdcSt05eQtuf/G3rn1A==
+        bh=NZtLnEh/8Ggo1oSNGaCwKiFVpXV3Gu22apdwju3+xHU=;
+        b=Ba9A/7hHQxrkLXf0rvCy47Zkw+9B2hPA5CmF9GYaxFpYfUYK37bKRc8ldMzYgGxMPYmjWC
+        pRLhmR/+2tkRSPl5iSTACEMOizob6b5+ztZ8mhRxCe9yxXVphmuGcRwxjbWFp/u60qZgs4
+        CNPr3+LkYu7lWC/d0OgqkgPJTnJitx8QtOl4fLbUPWF5lRkmJa2ShoYYqUH2K5mVwNTGV5
+        Ib1soCjGt57cMLr5xhAsghUVLoa0IBHDOuultpdgFtsNhtr1fqZRxfC2fgfaCQFLFHbutP
+        nEBENJIUxWRip4zj8tK+VbAYaOfthQ7KRJkgU+PZaXvpXes7I2fn7FCM4IRBfA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1593495930;
+        s=2020e; t=1593495936;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=e0jTHQoxks+qBbNy0dT5aGqcUc2Cr1SJenmjgFYt3N0=;
-        b=a11DQheLWNJeNZ9gNWThCp1M/5fUStr7/eAN6H/sAjWwH6voOIB1uCPnzRXmjXUo+A8OgP
-        dfrY76usUX8tVyBg==
+        bh=NZtLnEh/8Ggo1oSNGaCwKiFVpXV3Gu22apdwju3+xHU=;
+        b=OBX1YqwEJi7iGB0pX3HuWQwxwNqWtIyXA/f7x0tg57fieF+pY6ixJ3isrm4hKlWw1lKTHi
+        VL3zGoM/rJLTGLDg==
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
@@ -57,12 +57,14 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Steven Rostedt <rostedt@goodmis.org>,
         LKML <linux-kernel@vger.kernel.org>,
         "Ahmed S. Darwish" <a.darwish@linutronix.de>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        dri-devel@lists.freedesktop.org
-Subject: [PATCH v3 08/20] dma-buf: Use sequence counter with associated wound/wait mutex
-Date:   Tue, 30 Jun 2020 07:44:40 +0200
-Message-Id: <20200630054452.3675847-9-a.darwish@linutronix.de>
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: [PATCH v3 09/20] sched: tasks: Use sequence counter with associated spinlock
+Date:   Tue, 30 Jun 2020 07:44:41 +0200
+Message-Id: <20200630054452.3675847-10-a.darwish@linutronix.de>
 In-Reply-To: <20200630054452.3675847-1-a.darwish@linutronix.de>
 References: <20200519214547.352050-1-a.darwish@linutronix.de>
  <20200630054452.3675847-1-a.darwish@linutronix.de>
@@ -74,126 +76,65 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 A sequence counter write side critical section must be protected by some
-form of locking to serialize writers. If the serialization primitive is
-not disabling preemption implicitly, preemption has to be explicitly
-disabled before entering the sequence counter write side critical
-section.
+form of locking to serialize writers. A plain seqcount_t does not
+contain the information of which lock must be held when entering a write
+side critical section.
 
-The dma-buf reservation subsystem uses plain sequence counters to manage
-updates to reservations. Writer serialization is accomplished through a
-wound/wait mutex.
+Use the new seqcount_spinlock_t data type, which allows to associate a
+spinlock with the sequence counter. This enables lockdep to verify that
+the spinlock used for writer serialization is held when the write side
+critical section is entered.
 
-Acquiring a wound/wait mutex does not disable preemption, so this needs
-to be done manually before and after the write side critical section.
-
-Use the newly-added seqcount_ww_mutex_t instead:
-
-  - It associates the ww_mutex with the sequence count, which enables
-    lockdep to validate that the write side critical section is properly
-    serialized.
-
-  - It removes the need to explicitly add preempt_disable/enable()
-    around the write side critical section because the write_begin/end()
-    functions for this new data type automatically do this.
-
-If lockdep is disabled this ww_mutex lock association is compiled out
-and has neither storage size nor runtime overhead.
+If lockdep is disabled this lock association is compiled out and has
+neither storage size nor runtime overhead.
 
 Signed-off-by: Ahmed S. Darwish <a.darwish@linutronix.de>
-Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
 ---
- drivers/dma-buf/dma-resv.c                       | 8 +-------
- drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c | 2 --
- include/linux/dma-resv.h                         | 2 +-
- 3 files changed, 2 insertions(+), 10 deletions(-)
+ include/linux/sched.h | 2 +-
+ init/init_task.c      | 3 ++-
+ kernel/fork.c         | 2 +-
+ 3 files changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/dma-buf/dma-resv.c b/drivers/dma-buf/dma-resv.c
-index 15efa0c2dacb..a7631352a486 100644
---- a/drivers/dma-buf/dma-resv.c
-+++ b/drivers/dma-buf/dma-resv.c
-@@ -129,7 +129,7 @@ subsys_initcall(dma_resv_lockdep);
- void dma_resv_init(struct dma_resv *obj)
- {
- 	ww_mutex_init(&obj->lock, &reservation_ww_class);
--	seqcount_init(&obj->seq);
-+	seqcount_ww_mutex_init(&obj->seq, &obj->lock);
- 
- 	RCU_INIT_POINTER(obj->fence, NULL);
- 	RCU_INIT_POINTER(obj->fence_excl, NULL);
-@@ -260,7 +260,6 @@ void dma_resv_add_shared_fence(struct dma_resv *obj, struct dma_fence *fence)
- 	fobj = dma_resv_get_list(obj);
- 	count = fobj->shared_count;
- 
--	preempt_disable();
- 	write_seqcount_begin(&obj->seq);
- 
- 	for (i = 0; i < count; ++i) {
-@@ -282,7 +281,6 @@ void dma_resv_add_shared_fence(struct dma_resv *obj, struct dma_fence *fence)
- 	smp_store_mb(fobj->shared_count, count);
- 
- 	write_seqcount_end(&obj->seq);
--	preempt_enable();
- 	dma_fence_put(old);
- }
- EXPORT_SYMBOL(dma_resv_add_shared_fence);
-@@ -309,14 +307,12 @@ void dma_resv_add_excl_fence(struct dma_resv *obj, struct dma_fence *fence)
- 	if (fence)
- 		dma_fence_get(fence);
- 
--	preempt_disable();
- 	write_seqcount_begin(&obj->seq);
- 	/* write_seqcount_begin provides the necessary memory barrier */
- 	RCU_INIT_POINTER(obj->fence_excl, fence);
- 	if (old)
- 		old->shared_count = 0;
- 	write_seqcount_end(&obj->seq);
--	preempt_enable();
- 
- 	/* inplace update, no shared fences */
- 	while (i--)
-@@ -394,13 +390,11 @@ int dma_resv_copy_fences(struct dma_resv *dst, struct dma_resv *src)
- 	src_list = dma_resv_get_list(dst);
- 	old = dma_resv_get_excl(dst);
- 
--	preempt_disable();
- 	write_seqcount_begin(&dst->seq);
- 	/* write_seqcount_begin provides the necessary memory barrier */
- 	RCU_INIT_POINTER(dst->fence_excl, new);
- 	RCU_INIT_POINTER(dst->fence, dst_list);
- 	write_seqcount_end(&dst->seq);
--	preempt_enable();
- 
- 	dma_resv_list_free(src_list);
- 	dma_fence_put(old);
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-index b91b5171270f..ff4b583cb96a 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_amdkfd_gpuvm.c
-@@ -258,11 +258,9 @@ static int amdgpu_amdkfd_remove_eviction_fence(struct amdgpu_bo *bo,
- 	new->shared_count = k;
- 
- 	/* Install the new fence list, seqcount provides the barriers */
--	preempt_disable();
- 	write_seqcount_begin(&resv->seq);
- 	RCU_INIT_POINTER(resv->fence, new);
- 	write_seqcount_end(&resv->seq);
--	preempt_enable();
- 
- 	/* Drop the references to the removed fences or move them to ef_list */
- 	for (i = j, k = 0; i < old->shared_count; ++i) {
-diff --git a/include/linux/dma-resv.h b/include/linux/dma-resv.h
-index a6538ae7d93f..d44a77e8a7e3 100644
---- a/include/linux/dma-resv.h
-+++ b/include/linux/dma-resv.h
-@@ -69,7 +69,7 @@ struct dma_resv_list {
-  */
- struct dma_resv {
- 	struct ww_mutex lock;
--	seqcount_t seq;
-+	seqcount_ww_mutex_t seq;
- 
- 	struct dma_fence __rcu *fence_excl;
- 	struct dma_resv_list __rcu *fence;
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 03403ca6e44e..1b4e6b8dc523 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1055,7 +1055,7 @@ struct task_struct {
+ 	/* Protected by ->alloc_lock: */
+ 	nodemask_t			mems_allowed;
+ 	/* Seqence number to catch updates: */
+-	seqcount_t			mems_allowed_seq;
++	seqcount_spinlock_t		mems_allowed_seq;
+ 	int				cpuset_mem_spread_rotor;
+ 	int				cpuset_slab_spread_rotor;
+ #endif
+diff --git a/init/init_task.c b/init/init_task.c
+index 15089d15010a..94fe3ba1bb60 100644
+--- a/init/init_task.c
++++ b/init/init_task.c
+@@ -154,7 +154,8 @@ struct task_struct init_task
+ 	.trc_holdout_list = LIST_HEAD_INIT(init_task.trc_holdout_list),
+ #endif
+ #ifdef CONFIG_CPUSETS
+-	.mems_allowed_seq = SEQCNT_ZERO(init_task.mems_allowed_seq),
++	.mems_allowed_seq = SEQCNT_SPINLOCK_ZERO(init_task.mems_allowed_seq,
++						 &init_task.alloc_lock),
+ #endif
+ #ifdef CONFIG_RT_MUTEXES
+ 	.pi_waiters	= RB_ROOT_CACHED,
+diff --git a/kernel/fork.c b/kernel/fork.c
+index f44d70307210..eb260c6bdb8b 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -2032,7 +2032,7 @@ static __latent_entropy struct task_struct *copy_process(
+ #ifdef CONFIG_CPUSETS
+ 	p->cpuset_mem_spread_rotor = NUMA_NO_NODE;
+ 	p->cpuset_slab_spread_rotor = NUMA_NO_NODE;
+-	seqcount_init(&p->mems_allowed_seq);
++	seqcount_spinlock_init(&p->mems_allowed_seq, &p->alloc_lock);
+ #endif
+ #ifdef CONFIG_TRACE_IRQFLAGS
+ 	p->irq_events = 0;
 -- 
 2.20.1
 
