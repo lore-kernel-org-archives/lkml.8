@@ -2,68 +2,122 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D8B0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2286AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5ECF72065F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:41:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7AD12065F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:42:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="jyYJZQ9M"
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="sL1VXfAP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729876AbgF3Vls (ORCPT
+        id S1729907AbgF3Vmg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 17:41:48 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:32278 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726831AbgF3Vls (ORCPT
+        Tue, 30 Jun 2020 17:42:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35832 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726831AbgF3Vmf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 17:41:48 -0400
-X-UUID: 451adc818a6b41f58505f996fb0cc72f-20200701
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=my6niiLx0nSCCSrHDeMum2DvSxJq/ewHLuqNctNA8Dw=;
-        b=jyYJZQ9M9uLaWb8ieiKNYR3VipyDLMNsHY6ZZ3DT67ZbfhbWLYZCFjLx/tMeCU/lSSQcj33HWFYZ30MQ0Zf+UDL5sgL9nl4Cbd0wVzJENpgzE7mf/BnWIPpYZfBwp4CSMZzIrX4EvSsVkI/gsMJigXODK4FGQa5IOoGSC7KvnTA=;
-X-UUID: 451adc818a6b41f58505f996fb0cc72f-20200701
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <sean.wang@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 395041119; Wed, 01 Jul 2020 05:41:41 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1497.2; Wed, 1 Jul 2020 05:41:39 +0800
-Received: from mtkswgap22.mediatek.inc (172.21.77.33) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Wed, 1 Jul 2020 05:41:36 +0800
-From:   <sean.wang@mediatek.com>
-To:     <lorenzo@kernel.org>
-CC:     <nbd@nbd.name>, <Sean.Wang@mediatek.com>,
-        <lorenzo.bianconi@redhat.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <Ryder.Lee@mediatek.com>,
-        <linux-wireless@vger.kernel.org>,
-        Sean Wang <sean.wang@mediatek.com>
-Subject: Re: [PATCH 1/3] mt76: mt7663u: fix memory leak in set key
-Date:   Wed, 1 Jul 2020 05:41:37 +0800
-Message-ID: <1593553297-25352-1-git-send-email-sean.wang@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <20200630072429.GD2169@localhost.localdomain>
-References: <20200630072429.GD2169@localhost.localdomain>
+        Tue, 30 Jun 2020 17:42:35 -0400
+Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEF2EC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 14:42:34 -0700 (PDT)
+Received: by mail-ej1-x642.google.com with SMTP id a1so22170178ejg.12
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 14:42:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=9KeedTR4d1M1A9lgyC4RIPQ4BDuEfuh1R0OQqgZUzi0=;
+        b=sL1VXfAPgIwpkRUrHOBR0S3KARGoo22IZpw9Ln2g/8uJA+D8cryT0fwcS0mYEYkDzG
+         yDLdBOh9q71MnBNOFTtF3unADRfC9gu1GBSCTtGsBgHS9W4mu5t3tnpxAPmNwTnskgOg
+         TWLztxM8wF0bes2alk/X6xmeT/w7HGsFTAP9aHS7URr8YM32N2R6EUsq6g4f4QUgGMEg
+         jC+kF4hshwIXAwkSQ6D7laY0O9CRdk/7l47RZfA9MYkQXo8AGYdrfFphSiBj1/CSAYgv
+         M8ObwDuq30pWBlHirX5f+k+3nE9rAnR4cJ68dXg/jRkbS6wRCI8Kc38ZpYV+0kkQCvMQ
+         //Ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9KeedTR4d1M1A9lgyC4RIPQ4BDuEfuh1R0OQqgZUzi0=;
+        b=TrJnqgnQnIvhiJM6+/fu33+LjGTuZCIV7UfOsFhEc/0AwYaw70X4i5vKVVYaHo6UUg
+         1VqIRz/7EcoSdGI2xWrKsf3eNV1sga0oWBIASeO3TXcsEgGu4W6JS71++ds5SCi7zr+6
+         9B/l3JLfnS+4VW2bjJ13YuzeWeAbKdrvdnMyoePGyDqakBy7j4H1mY/X+VqfKKv15Sxz
+         8uRvDsdqOjSvGo0lRGJbCat7AaZKys5D5TaM/0ndDz9xQsacMiT5/iBB/uw9M17q/dQL
+         OmDISm4uGm+e+Wn2opZOlgRG3LP4lWMEtD8aKsur846KiYdyV6DasKZpjegRs3wXYzj/
+         5cyQ==
+X-Gm-Message-State: AOAM531ztYhGZWhVVe/M+SbvqmyBqf92bV18sdOoOxrWsq8Py/IsnL2d
+        FUQNiz2Hc/3GqydBoDk0QIPBMw==
+X-Google-Smtp-Source: ABdhPJwD7IscC90qcbmTMPk4qGK1hD1gSWxsH3Y+4s9sG7AqHB/LiBso4JvYQ5CVJ4vCPdVo2IZqJw==
+X-Received: by 2002:a17:906:95d9:: with SMTP id n25mr20683406ejy.437.1593553353709;
+        Tue, 30 Jun 2020 14:42:33 -0700 (PDT)
+Received: from x1 ([2001:16b8:5c28:7601:2d3c:7dcb:fbf0:3875])
+        by smtp.gmail.com with ESMTPSA id cw19sm3024133ejb.39.2020.06.30.14.42.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 14:42:33 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 23:42:31 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, bcousson@baylibre.com,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>,
+        "H . Nikolaus Schaller" <hns@goldelico.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2] ARM: dts: am335x-pocketbeagle: set default mux for
+ gpio pins
+Message-ID: <20200630214231.GA116238@x1>
+References: <20200628152442.322593-1-drew@beagleboard.org>
+ <20200629170358.GT37466@atomide.com>
+ <20200630020102.GA45128@x1>
+ <20200630182037.GF37466@atomide.com>
+ <20200630213155.GA115731@x1>
+ <20200630213423.GG37466@atomide.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 2C9B81AFE1CDC18AA22159E30B7F248C76E4B6EC919E3865F543F070162C8ACD2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200630213423.GG37466@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogU2VhbiBXYW5nIDxzZWFuLndhbmdAbWVkaWF0ZWsuY29tPg0KDQpUaGFua3MsIEknbGwg
-aGF2ZSB0aGUgbmV4dCB2ZXJzaW9uIHRvIHJlbW92ZSB0aGUgdW5uZWVkZWQga2ZyZWUuDQoNCj4N
-Cj4+ICsNCj4+ICsJcmV0dXJuIGVycjsNCj4+ICB9DQo+Pg0KPj4gIHZvaWQgbXQ3NjYzdV93dGJs
-X3dvcmsoc3RydWN0IHdvcmtfc3RydWN0ICp3b3JrKQ0K
+On Tue, Jun 30, 2020 at 02:34:23PM -0700, Tony Lindgren wrote:
+> * Drew Fustini <drew@beagleboard.org> [200630 21:32]:
+> > On Tue, Jun 30, 2020 at 11:20:37AM -0700, Tony Lindgren wrote:
+> ...
+> > > > > Needing to change the dts does not sound good to me.. But maybe you mean
+> > > > > this is needed until the gpio-omap and pinctrl-single patches are merged?
+> > > >
+> > > > I agree that I would like for userspace to be able to do run-time
+> > > > changes.  However, I think something would need to be added to the
+> > > > pinconf support in pinctrl-single for that to be possible.  There are
+> > > > bias properties but non for receiver enable.
+> > > > 
+> > > > Does it seem sensible to add that?
+> > > 
+> > > Well let's see with Linus W says. To me it seems this might be a good
+> > > reason to allow a sysfs interface to change the pinctrl if we don't
+> > > have it yet? With the proper gpio line naming it should be quite simple
+> > > to use too :)
+> > 
+> > I think if pinctrl-single allowed mux to be set through debugfs that
+> > could be one solution to the use case of users prototyping with a
+> > beaglebone.  Maybe that could be acceptable?
+> 
+> I think this should not depend on debugfs though, it should be a
+> generic interface.
 
+Ok, thanks.  I'm trying to imagine a solution as there no existing
+pinctrl uAPI.  gpiod uAPI has gained some pinctrl functionality with
+the work that Kent Gibson has been doing beyond just bias flags.
+
+Do you think trying to plumb this through gpio-omap is a reasonable
+approach?
+
+thanks,
+drew
