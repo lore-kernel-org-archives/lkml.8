@@ -5,59 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB1FEC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 04:54:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F9C2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 04:55:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E71F206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 04:54:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08ED1206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 04:55:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729585AbgF3Eyw (ORCPT
+        id S1729598AbgF3Ey6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 00:54:52 -0400
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:37708 "EHLO
+        Tue, 30 Jun 2020 00:54:58 -0400
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:40462 "EHLO
         mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729572AbgF3Eyu (ORCPT
+        by vger.kernel.org with ESMTP id S1729592AbgF3Eyz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 00:54:50 -0400
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05U4qaoM000358;
-        Tue, 30 Jun 2020 00:54:35 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-00128a01.pphosted.com with ESMTP id 31x315fr92-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 30 Jun 2020 00:54:35 -0400
-Received: from m0167089.ppops.net (m0167089.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05U4sYXD003490;
-        Tue, 30 Jun 2020 00:54:34 -0400
+        Tue, 30 Jun 2020 00:54:55 -0400
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05U4nxuV007820;
+        Tue, 30 Jun 2020 00:54:38 -0400
 Received: from nwd2mta3.analog.com ([137.71.173.56])
-        by mx0a-00128a01.pphosted.com with ESMTP id 31x315fr90-1
+        by mx0a-00128a01.pphosted.com with ESMTP id 31wyy6837h-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 30 Jun 2020 00:54:34 -0400
+        Tue, 30 Jun 2020 00:54:38 -0400
 Received: from SCSQMBX10.ad.analog.com (scsqmbx10.ad.analog.com [10.77.17.5])
-        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 05U4sWOc056024
+        by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 05U4saj3056044
         (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Tue, 30 Jun 2020 00:54:33 -0400
-Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
- SCSQMBX10.ad.analog.com (10.77.17.5) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Mon, 29 Jun 2020 21:54:31 -0700
-Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Mon, 29 Jun 2020 21:54:31 -0700
+        Tue, 30 Jun 2020 00:54:37 -0400
+Received: from SCSQMBX10.ad.analog.com (10.77.17.5) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Mon, 29 Jun
+ 2020 21:54:35 -0700
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX10.ad.analog.com
+ (10.77.17.5) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Mon, 29 Jun 2020 21:54:35 -0700
 Received: from localhost.localdomain ([10.48.65.12])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 05U4sPIl018305;
-        Tue, 30 Jun 2020 00:54:29 -0400
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 05U4sPIn018305;
+        Tue, 30 Jun 2020 00:54:32 -0400
 From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
 To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 CC:     <jic23@kernel.org>, <lars@metafoo.de>, <pmeerw@pmeerw.net>,
         <knaack.h@gmx.de>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: [PATCH v4 2/7] iio: core: wrap IIO device into an iio_dev_opaque object
-Date:   Tue, 30 Jun 2020 07:57:03 +0300
-Message-ID: <20200630045708.14166-3-alexandru.ardelean@analog.com>
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v4 4/7] iio: core: move debugfs data on the private iio dev info
+Date:   Tue, 30 Jun 2020 07:57:05 +0300
+Message-ID: <20200630045708.14166-5-alexandru.ardelean@analog.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200630045708.14166-1-alexandru.ardelean@analog.com>
 References: <20200630045708.14166-1-alexandru.ardelean@analog.com>
@@ -66,181 +58,210 @@ Content-Type: text/plain
 X-ADIRoutedOnPrem: True
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
  definitions=2020-06-29_21:2020-06-29,2020-06-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
- mlxscore=0 lowpriorityscore=0 impostorscore=0 priorityscore=1501
- malwarescore=0 phishscore=0 spamscore=0 clxscore=1015 suspectscore=2
- cotscore=-2147483648 bulkscore=0 classifier=spam adjust=0 reason=mlx
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ cotscore=-2147483648 adultscore=0 mlxlogscore=999 malwarescore=0
+ bulkscore=0 phishscore=0 impostorscore=0 clxscore=1015 mlxscore=0
+ priorityscore=1501 lowpriorityscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.12.0-2004280000 definitions=main-2006300035
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are plenty of bad designs we want to discourage or not have to review
-manually usually about accessing private (marked as [INTERN]) fields of
-'struct iio_dev'.
+This change moves all iio_dev debugfs fields to the iio_dev_priv object.
+It's not the biggest advantage yet (to the whole thing of abstractization)
+but it's a start.
 
-Sometimes users copy drivers that are not always the best examples.
-
-A better idea is to hide those fields into the framework.
-For 'struct iio_dev' this is a 'struct iio_dev_opaque' which wraps a public
-'struct iio_dev' object.
-
-In the next series, some fields will be moved to this new struct, each with
-it's own rework.
-
-This rework will not be complete-able for a while, as many fields need some
-drivers to be reworked in order to finalize them (e.g. 'indio_dev->mlock').
-
-But some fields can already be moved, and in time, all of them may get
-there (in the 'struct iio_dev_opaque' object).
-
-Since a lot of drivers also call 'iio_priv()', in order to preserve
-fast-paths (where this matters), the public iio_dev object will have a
-'priv' field that will have the pointer to the private information already
-computed. The reference returned by this field should be guaranteed to be
-cacheline aligned.
-
-The opaque parts will be moved into the 'include/linux/iio/iio-opaque.h'
-header. Should the hidden information be required for some debugging or
-some special needs, it can be made available via this header.
-Otherwise, only the IIO core files should include this file.
+The iio_get_debugfs_dentry() function (which is moved in
+industrialio-core.c) needs to also be guarded against the CONFIG_DEBUG_FS
+symbol, when it isn't defined. We do want to keep the inline definition in
+the iio.h header, so that the compiler can better infer when to compile out
+debugfs code that is related to the IIO debugfs directory.
 
 Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 ---
- drivers/iio/industrialio-core.c | 19 +++++++++++++------
- include/linux/iio/iio-opaque.h  | 17 +++++++++++++++++
- include/linux/iio/iio.h         |  6 +++++-
- 3 files changed, 35 insertions(+), 7 deletions(-)
- create mode 100644 include/linux/iio/iio-opaque.h
+ drivers/iio/industrialio-core.c | 46 +++++++++++++++++++++++----------
+ include/linux/iio/iio-opaque.h  | 10 +++++++
+ include/linux/iio/iio.h         | 13 +---------
+ 3 files changed, 44 insertions(+), 25 deletions(-)
 
 diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
-index 75661661aaba..33e2953cf021 100644
+index 27005ba4d09c..64174052641a 100644
 --- a/drivers/iio/industrialio-core.c
 +++ b/drivers/iio/industrialio-core.c
-@@ -25,6 +25,7 @@
- #include <linux/debugfs.h>
- #include <linux/mutex.h>
- #include <linux/iio/iio.h>
-+#include <linux/iio/iio-opaque.h>
- #include "iio_core.h"
- #include "iio_core_trigger.h"
- #include <linux/iio/sysfs.h>
-@@ -1473,6 +1474,8 @@ static void iio_device_unregister_sysfs(struct iio_dev *indio_dev)
- static void iio_dev_release(struct device *device)
- {
- 	struct iio_dev *indio_dev = dev_to_iio_dev(device);
-+	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
-+
- 	if (indio_dev->modes & INDIO_ALL_TRIGGERED_MODES)
- 		iio_device_unregister_trigger_consumer(indio_dev);
- 	iio_device_unregister_eventset(indio_dev);
-@@ -1481,7 +1484,7 @@ static void iio_dev_release(struct device *device)
- 	iio_buffer_put(indio_dev->buffer);
- 
- 	ida_simple_remove(&iio_ida, indio_dev->id);
--	kfree(indio_dev);
-+	kfree(iio_dev_opaque);
- }
- 
- struct device_type iio_device_type = {
-@@ -1495,10 +1498,11 @@ struct device_type iio_device_type = {
-  **/
- struct iio_dev *iio_device_alloc(struct device *parent, int sizeof_priv)
- {
-+	struct iio_dev_opaque *iio_dev_opaque;
- 	struct iio_dev *dev;
- 	size_t alloc_size;
- 
--	alloc_size = sizeof(struct iio_dev);
-+	alloc_size = sizeof(struct iio_dev_opaque);
- 	if (sizeof_priv) {
- 		alloc_size = ALIGN(alloc_size, IIO_ALIGN);
- 		alloc_size += sizeof_priv;
-@@ -1506,11 +1510,14 @@ struct iio_dev *iio_device_alloc(struct device *parent, int sizeof_priv)
- 	/* ensure 32-byte alignment of whole construct ? */
- 	alloc_size += IIO_ALIGN - 1;
- 
--	dev = kzalloc(alloc_size, GFP_KERNEL);
--	if (!dev)
-+	iio_dev_opaque = kzalloc(alloc_size, GFP_KERNEL);
-+	if (!iio_dev_opaque)
- 		return NULL;
- 
--	dev->dev.parent = parent;
-+	dev = &iio_dev_opaque->indio_dev;
-+	dev->priv = (char *)iio_dev_opaque +
-+		ALIGN(sizeof(struct iio_dev_opaque), IIO_ALIGN);
-+
- 	dev->dev.groups = dev->groups;
- 	dev->dev.type = &iio_device_type;
- 	dev->dev.bus = &iio_bus_type;
-@@ -1524,7 +1531,7 @@ struct iio_dev *iio_device_alloc(struct device *parent, int sizeof_priv)
- 	if (dev->id < 0) {
- 		/* cannot use a dev_err as the name isn't available */
- 		pr_err("failed to get device id\n");
--		kfree(dev);
-+		kfree(iio_dev_opaque);
- 		return NULL;
- 	}
- 	dev_set_name(&dev->dev, "iio:device%d", dev->id);
-diff --git a/include/linux/iio/iio-opaque.h b/include/linux/iio/iio-opaque.h
-new file mode 100644
-index 000000000000..1375674f14cd
---- /dev/null
-+++ b/include/linux/iio/iio-opaque.h
-@@ -0,0 +1,17 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef _INDUSTRIAL_IO_OPAQUE_H_
-+#define _INDUSTRIAL_IO_OPAQUE_H_
-+
-+/**
-+ * struct iio_dev_opaque - industrial I/O device opaque information
-+ * @indio_dev:			public industrial I/O device information
-+ */
-+struct iio_dev_opaque {
-+	struct iio_dev			indio_dev;
-+};
-+
-+#define to_iio_dev_opaque(indio_dev)		\
-+	container_of(indio_dev, struct iio_dev_opaque, indio_dev)
-+
-+#endif
-diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
-index 10a6d97a8e3e..86112e35ae5f 100644
---- a/include/linux/iio/iio.h
-+++ b/include/linux/iio/iio.h
-@@ -522,6 +522,8 @@ struct iio_buffer_setup_ops {
-  * @flags:		[INTERN] file ops related flags including busy flag.
-  * @debugfs_dentry:	[INTERN] device specific debugfs dentry.
-  * @cached_reg_addr:	[INTERN] cached register address for debugfs reads.
-+ * @priv:		[DRIVER] reference to driver's private information
-+ *			**MUST** be accessed **ONLY** via iio_priv() helper
-  */
- struct iio_dev {
- 	int				id;
-@@ -571,6 +573,7 @@ struct iio_dev {
- 	char				read_buf[20];
- 	unsigned int			read_buf_len;
- #endif
-+	void				*priv;
+@@ -165,6 +165,19 @@ static const char * const iio_chan_info_postfix[] = {
+ 	[IIO_CHAN_INFO_THERMOCOUPLE_TYPE] = "thermocouple_type",
  };
  
- const struct iio_chan_spec
-@@ -698,9 +701,10 @@ static inline void *iio_device_get_drvdata(const struct iio_dev *indio_dev)
- #define IIO_ALIGN L1_CACHE_BYTES
- struct iio_dev *iio_device_alloc(struct device *parent, int sizeof_priv);
- 
-+/* The information at the returned address is guaranteed to be cacheline aligned */
- static inline void *iio_priv(const struct iio_dev *indio_dev)
++#if !defined(CONFIG_DEBUG_FS)
++/**
++ * There's also a CONFIG_DEBUG_FS guard in include/linux/iio/iio.h for
++ * iio_get_debugfs_dentry() to make it inline if CONFIG_DEBUG_FS is undefined
++ */
++struct dentry *iio_get_debugfs_dentry(struct iio_dev *indio_dev)
++{
++	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
++	return iio_dev_opaque->debugfs_dentry;
++}
++EXPORT_SYMBOL_GPL(iio_get_debugfs_dentry);
++#endif
++
+ /**
+  * iio_find_channel_from_si() - get channel from its scan index
+  * @indio_dev:		device
+@@ -308,35 +321,37 @@ static ssize_t iio_debugfs_read_reg(struct file *file, char __user *userbuf,
+ 			      size_t count, loff_t *ppos)
  {
--	return (char *)indio_dev + ALIGN(sizeof(struct iio_dev), IIO_ALIGN);
-+	return indio_dev->priv;
+ 	struct iio_dev *indio_dev = file->private_data;
++	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
+ 	unsigned val = 0;
+ 	int ret;
+ 
+ 	if (*ppos > 0)
+ 		return simple_read_from_buffer(userbuf, count, ppos,
+-					       indio_dev->read_buf,
+-					       indio_dev->read_buf_len);
++					       iio_dev_opaque->read_buf,
++					       iio_dev_opaque->read_buf_len);
+ 
+ 	ret = indio_dev->info->debugfs_reg_access(indio_dev,
+-						  indio_dev->cached_reg_addr,
++						  iio_dev_opaque->cached_reg_addr,
+ 						  0, &val);
+ 	if (ret) {
+ 		dev_err(indio_dev->dev.parent, "%s: read failed\n", __func__);
+ 		return ret;
+ 	}
+ 
+-	indio_dev->read_buf_len = snprintf(indio_dev->read_buf,
+-					   sizeof(indio_dev->read_buf),
+-					   "0x%X\n", val);
++	iio_dev_opaque->read_buf_len = snprintf(iio_dev_opaque->read_buf,
++					      sizeof(iio_dev_opaque->read_buf),
++					      "0x%X\n", val);
+ 
+ 	return simple_read_from_buffer(userbuf, count, ppos,
+-				       indio_dev->read_buf,
+-				       indio_dev->read_buf_len);
++				       iio_dev_opaque->read_buf,
++				       iio_dev_opaque->read_buf_len);
  }
  
- void iio_device_free(struct iio_dev *indio_dev);
+ static ssize_t iio_debugfs_write_reg(struct file *file,
+ 		     const char __user *userbuf, size_t count, loff_t *ppos)
+ {
+ 	struct iio_dev *indio_dev = file->private_data;
++	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
+ 	unsigned reg, val;
+ 	char buf[80];
+ 	int ret;
+@@ -351,10 +366,10 @@ static ssize_t iio_debugfs_write_reg(struct file *file,
+ 
+ 	switch (ret) {
+ 	case 1:
+-		indio_dev->cached_reg_addr = reg;
++		iio_dev_opaque->cached_reg_addr = reg;
+ 		break;
+ 	case 2:
+-		indio_dev->cached_reg_addr = reg;
++		iio_dev_opaque->cached_reg_addr = reg;
+ 		ret = indio_dev->info->debugfs_reg_access(indio_dev, reg,
+ 							  val, NULL);
+ 		if (ret) {
+@@ -378,23 +393,28 @@ static const struct file_operations iio_debugfs_reg_fops = {
+ 
+ static void iio_device_unregister_debugfs(struct iio_dev *indio_dev)
+ {
+-	debugfs_remove_recursive(indio_dev->debugfs_dentry);
++	struct iio_dev_opaque *iio_dev_opaque = to_iio_dev_opaque(indio_dev);
++	debugfs_remove_recursive(iio_dev_opaque->debugfs_dentry);
+ }
+ 
+ static void iio_device_register_debugfs(struct iio_dev *indio_dev)
+ {
++	struct iio_dev_opaque *iio_dev_opaque;
++
+ 	if (indio_dev->info->debugfs_reg_access == NULL)
+ 		return;
+ 
+ 	if (!iio_debugfs_dentry)
+ 		return;
+ 
+-	indio_dev->debugfs_dentry =
++	iio_dev_opaque = to_iio_dev_opaque(indio_dev);
++
++	iio_dev_opaque->debugfs_dentry =
+ 		debugfs_create_dir(dev_name(&indio_dev->dev),
+ 				   iio_debugfs_dentry);
+ 
+ 	debugfs_create_file("direct_reg_access", 0644,
+-			    indio_dev->debugfs_dentry, indio_dev,
++			    iio_dev_opaque->debugfs_dentry, indio_dev,
+ 			    &iio_debugfs_reg_fops);
+ }
+ #else
+diff --git a/include/linux/iio/iio-opaque.h b/include/linux/iio/iio-opaque.h
+index 1375674f14cd..b3f234b4c1e9 100644
+--- a/include/linux/iio/iio-opaque.h
++++ b/include/linux/iio/iio-opaque.h
+@@ -6,9 +6,19 @@
+ /**
+  * struct iio_dev_opaque - industrial I/O device opaque information
+  * @indio_dev:			public industrial I/O device information
++ * @debugfs_dentry:		device specific debugfs dentry
++ * @cached_reg_addr:		cached register address for debugfs reads
++ * @read_buf:			read buffer to be used for the initial reg read
++ * @read_buf_len:		data length in @read_buf
+  */
+ struct iio_dev_opaque {
+ 	struct iio_dev			indio_dev;
++#if defined(CONFIG_DEBUG_FS)
++	struct dentry			*debugfs_dentry;
++	unsigned			cached_reg_addr;
++	char				read_buf[20];
++	unsigned int			read_buf_len;
++#endif
+ };
+ 
+ #define to_iio_dev_opaque(indio_dev)		\
+diff --git a/include/linux/iio/iio.h b/include/linux/iio/iio.h
+index 86112e35ae5f..bb0aae11a111 100644
+--- a/include/linux/iio/iio.h
++++ b/include/linux/iio/iio.h
+@@ -520,8 +520,6 @@ struct iio_buffer_setup_ops {
+  * @groups:		[INTERN] attribute groups
+  * @groupcounter:	[INTERN] index of next attribute group
+  * @flags:		[INTERN] file ops related flags including busy flag.
+- * @debugfs_dentry:	[INTERN] device specific debugfs dentry.
+- * @cached_reg_addr:	[INTERN] cached register address for debugfs reads.
+  * @priv:		[DRIVER] reference to driver's private information
+  *			**MUST** be accessed **ONLY** via iio_priv() helper
+  */
+@@ -567,12 +565,6 @@ struct iio_dev {
+ 	int				groupcounter;
+ 
+ 	unsigned long			flags;
+-#if defined(CONFIG_DEBUG_FS)
+-	struct dentry			*debugfs_dentry;
+-	unsigned			cached_reg_addr;
+-	char				read_buf[20];
+-	unsigned int			read_buf_len;
+-#endif
+ 	void				*priv;
+ };
+ 
+@@ -727,10 +719,7 @@ static inline bool iio_buffer_enabled(struct iio_dev *indio_dev)
+  * @indio_dev:		IIO device structure for device
+  **/
+ #if defined(CONFIG_DEBUG_FS)
+-static inline struct dentry *iio_get_debugfs_dentry(struct iio_dev *indio_dev)
+-{
+-	return indio_dev->debugfs_dentry;
+-}
++struct dentry *iio_get_debugfs_dentry(struct iio_dev *indio_dev);
+ #else
+ static inline struct dentry *iio_get_debugfs_dentry(struct iio_dev *indio_dev)
+ {
 -- 
 2.17.1
 
