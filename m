@@ -2,183 +2,189 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE107C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE87C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AABC520768
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:00:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593536426;
-	bh=OyZ+omFW90H968tlnQPxTsEGQ+ZnRPIJilI6YZvFABE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=folv7g43u/ePeyjzy31j45yTWl9Z7tfvhmxrP4rf0hbNuk6zM/7NNyUn9linLl7wp
-	 dqBaAGN9uW4ZbpIMGCndx8/QR7Oy5eSdR3LJ0ck2lBMvlzWme4tnXznfy9UcNB4y/H
-	 r6KWYDgKzE258Xe5jVKl0cjyfV0NMh/+4za3MQ0I=
+	by mail.kernel.org (Postfix) with ESMTP id 9D4382074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:00:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="oc98M6If"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389935AbgF3RAZ (ORCPT
+        id S2389952AbgF3RAc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 13:00:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54466 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727850AbgF3RAY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 13:00:24 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Tue, 30 Jun 2020 13:00:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48732 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727850AbgF3RAb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 13:00:31 -0400
+Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5E81C061755;
+        Tue, 30 Jun 2020 10:00:31 -0700 (PDT)
+Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86D562074D;
-        Tue, 30 Jun 2020 17:00:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593536424;
-        bh=OyZ+omFW90H968tlnQPxTsEGQ+ZnRPIJilI6YZvFABE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=K45nhmz01hL7sCVhpvbNV5JtcuCc6hXl+kjXibX1Ykjsq5r+dfPQfJXmtFL/Tjt8A
-         RKKacGE9MPcunFcTLy3SLGAGLhJuVahoFkd1l3GxQ3hpNOWP2HuvMz2vEdGCLLVEE6
-         vOKLRHIFxKeBGjKGSyYZwNfEMXAKP1uS4UeHxB2c=
-Date:   Tue, 30 Jun 2020 19:00:12 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Rajat Jain <rajatja@google.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        "open list:AMD IOMMU (AMD-VI)" <iommu@lists.linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Raj Ashok <ashok.raj@intel.com>,
-        lalithambika.krishnakumar@intel.com,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 5/7] driver core: Add device location to "struct
- device" and expose it in sysfs
-Message-ID: <20200630170012.GB1894898@kroah.com>
-References: <20200630044943.3425049-1-rajatja@google.com>
- <20200630044943.3425049-6-rajatja@google.com>
- <20200630104948.GC856968@kuha.fi.intel.com>
- <20200630125216.GA1109228@kroah.com>
- <CAJZ5v0iYFKrouQx_b7afPnz7ohjWOKKDhdHj_3HObKYV_rRhiw@mail.gmail.com>
- <20200630153816.GD1785141@kroah.com>
- <CAJZ5v0jUx-RVhJRDngkOXx-3szFJDOgCJs2yuGKFyo2f1qZAwA@mail.gmail.com>
+        by ssl.serverraum.org (Postfix) with ESMTPSA id AC28422F53;
+        Tue, 30 Jun 2020 19:00:26 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
+        t=1593536427;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=UDbH7pLz+12WxuhpnPo2DJiE1S7gV9ax36puEK6+/QY=;
+        b=oc98M6IfaUjWWnZvhfzupxBBG5qhZ9Uk28Ad8ZN4cLXuQ+UU3G4zUr1YS0/Y9L9rJwGDlN
+        Mfa5ibwsl2C4NvLtQc8g3+FBXRJRBGVZzCxlRaUevToaAUiU2k/jGWkOhO7jP61kjTRqxL
+        sDWxJ1RonQP9IApCA+hxEbLXmn3B3pQ=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJZ5v0jUx-RVhJRDngkOXx-3szFJDOgCJs2yuGKFyo2f1qZAwA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Tue, 30 Jun 2020 19:00:26 +0200
+From:   Michael Walle <michael@walle.cc>
+To:     Oliver Hartkopp <socketcan@hartkopp.net>
+Cc:     Joakim Zhang <qiangqing.zhang@nxp.com>, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Wolfgang Grandegger <wg@grandegger.com>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S . Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH 2/2] can: flexcan: add support for ISO CAN-FD
+In-Reply-To: <5f6e0843-8504-e941-b6a3-1dc8599db39e@hartkopp.net>
+References: <20200629181809.25338-1-michael@walle.cc>
+ <20200629181809.25338-3-michael@walle.cc>
+ <DB8PR04MB679504980A67DB8B1EEC8386E66F0@DB8PR04MB6795.eurprd04.prod.outlook.com>
+ <a42e035c8ee3334a721a089b5f8f0580@walle.cc>
+ <5f6e0843-8504-e941-b6a3-1dc8599db39e@hartkopp.net>
+User-Agent: Roundcube Webmail/1.4.6
+Message-ID: <e5b56262c291422160e822e4a378dd2c@walle.cc>
+X-Sender: michael@walle.cc
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 06:08:31PM +0200, Rafael J. Wysocki wrote:
-> On Tue, Jun 30, 2020 at 5:38 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Tue, Jun 30, 2020 at 03:00:34PM +0200, Rafael J. Wysocki wrote:
-> > > On Tue, Jun 30, 2020 at 2:52 PM Greg Kroah-Hartman
-> > > <gregkh@linuxfoundation.org> wrote:
-> > > >
-> > > > On Tue, Jun 30, 2020 at 01:49:48PM +0300, Heikki Krogerus wrote:
-> > > > > On Mon, Jun 29, 2020 at 09:49:41PM -0700, Rajat Jain wrote:
-> > > > > > Add a new (optional) field to denote the physical location of a device
-> > > > > > in the system, and expose it in sysfs. This was discussed here:
-> > > > > > https://lore.kernel.org/linux-acpi/20200618184621.GA446639@kroah.com/
-> > > > > >
-> > > > > > (The primary choice for attribute name i.e. "location" is already
-> > > > > > exposed as an ABI elsewhere, so settled for "site"). Individual buses
-> > > > > > that want to support this new attribute can opt-in by setting a flag in
-> > > > > > bus_type, and then populating the location of device while enumerating
-> > > > > > it.
-> > > > >
-> > > > > So why not just call it "physical_location"?
-> > > >
-> > > > That's better, and will allow us to put "3rd blue plug from the left,
-> > > > 4th row down" in there someday :)
-> > > >
-> > > > All of this is "relative" to the CPU, right?  But what CPU?  Again, how
-> > > > are the systems with drawers of PCI and CPUs and memory that can be
-> > > > added/removed at any point in time being handled here?  What is
-> > > > "internal" and "external" for them?
-> > > >
-> > > > What exactly is the physical boundry here that is attempting to be
-> > > > described?
-> > >
-> > > Also, where is the "physical location" information going to come from?
-> >
-> > Who knows?  :)
-> >
-> > Some BIOS seem to provide this, but do you trust that?
-> >
-> > > If that is the platform firmware (which I suspect is the anticipated
-> > > case), there may be problems with reliability related to that.
-> >
-> > s/may/will/
-> >
-> > which means making the kernel inact a policy like this patch series
-> > tries to add, will result in a lot of broken systems, which is why I
-> > keep saying that it needs to be done in userspace.
-> >
-> > It's as if some of us haven't been down this road before and just keep
-> > being ignored...
-> >
-> > {sigh}
+Am 2020-06-30 18:15, schrieb Oliver Hartkopp:
+> On 30.06.20 07:53, Michael Walle wrote:
+>> [+ Oliver]
+>> 
+>> Hi Joakim,
+>> 
+>> Am 2020-06-30 04:42, schrieb Joakim Zhang:
+>>>> -----Original Message-----
+>>>> From: Michael Walle <michael@walle.cc>
+>>>> Sent: 2020年6月30日 2:18
+>>>> To: linux-can@vger.kernel.org; netdev@vger.kernel.org;
+>>>> linux-kernel@vger.kernel.org
+>>>> Cc: Wolfgang Grandegger <wg@grandegger.com>; Marc Kleine-Budde
+>>>> <mkl@pengutronix.de>; David S . Miller <davem@davemloft.net>; Jakub
+>>>> Kicinski <kuba@kernel.org>; Joakim Zhang <qiangqing.zhang@nxp.com>;
+>>>> dl-linux-imx <linux-imx@nxp.com>; Michael Walle <michael@walle.cc>
+>>>> Subject: [PATCH 2/2] can: flexcan: add support for ISO CAN-FD
+>>>> 
+>>>> Up until now, the controller used non-ISO CAN-FD mode, although it 
+>>>> supports it.
+>>>> Add support for ISO mode, too. By default the hardware is in non-ISO 
+>>>> mode and
+>>>> an enable bit has to be explicitly set.
+>>>> 
+>>>> Signed-off-by: Michael Walle <michael@walle.cc>
+>>>> ---
+>>>>  drivers/net/can/flexcan.c | 19 ++++++++++++++++---
+>>>>  1 file changed, 16 insertions(+), 3 deletions(-)
+>>>> 
+>>>> diff --git a/drivers/net/can/flexcan.c b/drivers/net/can/flexcan.c 
+>>>> index
+>>>> 183e094f8d66..a92d3cdf4195 100644
+>>>> --- a/drivers/net/can/flexcan.c
+>>>> +++ b/drivers/net/can/flexcan.c
+>>>> @@ -94,6 +94,7 @@
+>>>>  #define FLEXCAN_CTRL2_MRP        BIT(18)
+>>>>  #define FLEXCAN_CTRL2_RRS        BIT(17)
+>>>>  #define FLEXCAN_CTRL2_EACEN        BIT(16)
+>>>> +#define FLEXCAN_CTRL2_ISOCANFDEN    BIT(12)
+>>>> 
+>>>>  /* FLEXCAN memory error control register (MECR) bits */
+>>>>  #define FLEXCAN_MECR_ECRWRDIS        BIT(31)
+>>>> @@ -1344,14 +1345,25 @@ static int flexcan_chip_start(struct 
+>>>> net_device
+>>>> *dev)
+>>>>      else
+>>>>          reg_mcr |= FLEXCAN_MCR_SRX_DIS;
+>>>> 
+>>>> -    /* MCR - CAN-FD */
+>>>> -    if (priv->can.ctrlmode & CAN_CTRLMODE_FD)
+>>>> +    /* MCR, CTRL2
+>>>> +     *
+>>>> +     * CAN-FD mode
+>>>> +     * ISO CAN-FD mode
+>>>> +     */
+>>>> +    reg_ctrl2 = priv->read(&regs->ctrl2);
+>>>> +    if (priv->can.ctrlmode & CAN_CTRLMODE_FD) {
+>>>>          reg_mcr |= FLEXCAN_MCR_FDEN;
+>>>> -    else
+>>>> +        reg_ctrl2 |= FLEXCAN_CTRL2_ISOCANFDEN;
+>>>> +    } else {
+>>>>          reg_mcr &= ~FLEXCAN_MCR_FDEN;
+>>>> +    }
+>>>> +
+>>>> +    if (priv->can.ctrlmode & CAN_CTRLMODE_FD_NON_ISO)
+>>>> +        reg_ctrl2 &= ~FLEXCAN_CTRL2_ISOCANFDEN;
+
+[1]
+
+>> [..]
+>>> ip link set can0 up type can bitrate 1000000 dbitrate 5000000 fd on
+>>> ip link set can0 up type can bitrate 1000000 dbitrate 5000000 fd on \
+>>>    fd-non-iso on
+>> 
+>> vs.
+>> 
+>>> ip link set can0 up type can bitrate 1000000 dbitrate 5000000 
+>>> fd-non-iso on
+>> 
+>> I haven't found anything if CAN_CTRLMODE_FD_NON_ISO depends on
+>> CAN_CTRLMODE_FD. I.e. wether CAN_CTRLMODE_FD_NON_ISO can only be set 
+>> if
+>> CAN_CTRLMODE_FD is also set.
+>> 
+>> Only the following piece of code, which might be a hint that you
+>> have to set CAN_CTRLMODE_FD if you wan't to use 
+>> CAN_CTRLMODE_FD_NON_ISO:
+>> 
+>> drivers/net/can/dev.c:
+>>    /* do not check for static fd-non-iso if 'fd' is disabled */
+>>    if (!(maskedflags & CAN_CTRLMODE_FD))
+>>            ctrlstatic &= ~CAN_CTRLMODE_FD_NON_ISO;
+>> 
+>> If CAN_CTRLMODE_FD_NON_ISO can be set without CAN_CTRLMODE_FD, what
+>> should be the mode if both are set at the same time?
 > 
-> Well, to be honest, if you are a "vertical" vendor and you control the
-> entire stack, *including* the platform firmware, it would be kind of
-> OK for you to do that in a product kernel.
+> CAN_CTRLMODE_FD_NON_ISO is only relevant when CAN_CTRLMODE_FD is set.
 > 
-> However, this is not a practical thing to do in the mainline kernel
-> which must work for everybody, including people who happen to use
-> systems with broken or even actively unfriendly firmware on them.
+> So in the example from above
 > 
-> So I'm inclined to say that IMO this series "as is" would not be an
-> improvement from the mainline perspective.
+> ip link set can0 up type can bitrate 1000000 dbitrate 5000000 
+> fd-non-iso on
+> 
+> either the setting of 'dbitrate 5000000' and 'fd-non-iso on' is 
+> pointless.
+> 
+> When switching to FD-mode with 'fd on' the FD relevant settings need
+> to be applied.
+> 
+> FD ISO is the default.
+> 
+> Did this help or did I get anything wrong?
 
-It can be, we have been using this for USB devices for many many years
-now, quite successfully.  The key is not to trust that the platform
-firmware got it right :)
+Thanks for the explanation. Yes this helped a great deal and this
+patch should be correct; it sets ISO mode if CAN_CTRLMODE_FD is set
+and masks it again if CAN_CTRLMODE_FD_NON_ISO is set. See [1].
 
-> I guess it would make sense to have an attribute for user space to
-> write to in order to make the kernel reject device plug-in events
-> coming from a given port or connector, but the kernel has no reliable
-> means to determine *which* ports or connectors are "safe", and even if
-> there was a way for it to do that, it still may not agree with user
-> space on which ports or connectors should be regarded as "safe".
-
-Again, we have been doing this for USB devices for a very long time, PCI
-shouldn't be any different.  Why people keep ignoring working solutions
-is beyond me, there's nothing "special" about PCI devices here for this
-type of "worry" or reasoning to try to create new solutions.
-
-So, again, I ask, go do what USB does, and to do that, take the logic
-out of the USB core, make it bus-agnositic, and _THEN_ add it to the PCI
-code.  Why the original submitter keeps ignoring my request to do this
-is beyond me, I guess they like making patches that will get rejected :(
-
-thanks,
-
-greg k-h
+-michael
