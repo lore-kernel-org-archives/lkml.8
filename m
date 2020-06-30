@@ -6,132 +6,94 @@ X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB45CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E45C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C67AE206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:31:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 616592067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:38:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728165AbgF3TbL (ORCPT
+        id S1728208AbgF3TiE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 15:31:11 -0400
-Received: from mga14.intel.com ([192.55.52.115]:4913 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726128AbgF3TbL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 15:31:11 -0400
-IronPort-SDR: J+8LMPoEnRqzFwq9cEKeQo5iFIO1jvYGvmrDL7eYXkX7tAt1giu98hTxKuT678JdTLpCVtVWL7
- mA6xwvoF5JjQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="145434192"
-X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
-   d="scan'208";a="145434192"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 12:31:10 -0700
-IronPort-SDR: dKTar9xY4iHMIIVg7xyqLcVVUN9OPStvROB7tkLJPCaE6w2lbc6qxT+nqx7xNMfvXGFrUjneO2
- /nKaYsT/mEYw==
-X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
-   d="scan'208";a="454721804"
-Received: from timfergu-mobl.amr.corp.intel.com (HELO [10.255.1.246]) ([10.255.1.246])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 12:31:08 -0700
-Subject: Re: [RFC][PATCH 0/8] Migrate Pages in lieu of discard
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        David Rientjes <rientjes@google.com>,
-        Huang Ying <ying.huang@intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-References: <20200629234503.749E5340@viggo.jf.intel.com>
- <CALvZod55OFzOozsDbyTkUh1uZEobo4CZ=+8JgrJJHw8QuWh0hw@mail.gmail.com>
- <654d785f-3fe5-d8bd-86bf-bf7431527184@intel.com>
- <CALvZod5-YuMC8b6rs=a_ahh0WF14wgKJBW18CARJtGa_bYUn0Q@mail.gmail.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
- z5cecg==
-Message-ID: <fdfeb902-e363-f8b5-4c63-df224b9817fa@intel.com>
-Date:   Tue, 30 Jun 2020 12:31:05 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 30 Jun 2020 15:38:04 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:40563 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1728124AbgF3TiE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 15:38:04 -0400
+Received: (qmail 464162 invoked by uid 1000); 30 Jun 2020 15:38:02 -0400
+Date:   Tue, 30 Jun 2020 15:38:02 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Martin Kepplinger <martin.kepplinger@puri.sm>, jejb@linux.ibm.com,
+        Can Guo <cang@codeaurora.org>, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@puri.sm
+Subject: Re: [PATCH] scsi: sd: add runtime pm to open / release
+Message-ID: <20200630193802.GA463609@rowland.harvard.edu>
+References: <20200623111018.31954-1-martin.kepplinger@puri.sm>
+ <ed9ae198-4c68-f82b-04fc-2299ab16df96@acm.org>
+ <eccacce9-393c-ca5d-e3b3-09961340e0db@puri.sm>
+ <1379e21d-c51a-3710-e185-c2d7a9681fb7@acm.org>
+ <20200626154441.GA296771@rowland.harvard.edu>
+ <c19f1938-ae47-2357-669d-5b4021aec154@puri.sm>
+ <20200629161536.GA405175@rowland.harvard.edu>
+ <5231c57d-3f4e-1853-d4d5-cf7f04a32246@acm.org>
+ <20200630180255.GA459638@rowland.harvard.edu>
+ <1804723c-4aaf-a820-d3ef-e70125017cad@acm.org>
 MIME-Version: 1.0
-In-Reply-To: <CALvZod5-YuMC8b6rs=a_ahh0WF14wgKJBW18CARJtGa_bYUn0Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1804723c-4aaf-a820-d3ef-e70125017cad@acm.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/30/20 12:25 PM, Shakeel Butt wrote:
->> Since there is never a demotion path out of the set of
->> all nodes, the common case would be that there is no demotion path out
->> of a reclaim node set.
->>
->> If that's true, I'd say that the kernel still needs to consider
->> migrations even within the set.
-> In my opinion it should be a user defined policy but I think that
-> discussion is orthogonal to this patch series. As I understand, this
-> patch series aims to add the migration-within-reclaim infrastructure,
-> IMO the policies, optimizations, heuristics can come later.
+On Tue, Jun 30, 2020 at 12:23:12PM -0700, Bart Van Assche wrote:
+> On 2020-06-30 11:02, Alan Stern wrote:
+> > Right now there doesn't seem to be any mechanism for resuming the queue 
+> > if an REQ_PREEMPT request is added while the queue is suspended.
+> 
+> I do not agree with the above statement. My understanding is that resuming
+> happens as follows if a request is submitted against a runtime suspended
+> queue owned by a SCSI LLD:
+> 
+> blk_queue_enter()
+>   -> blk_pm_request_resume()
 
-Yes, this should be considered to add the infrastructure and one
-_simple_ policy implementation which sets up migration away from nodes
-with CPUs to more distant nodes without CPUs.
+Assume that BLK_MQ_REQ_PREEMPT is set in flags.  Then where exactly 
+does blk_queue_enter(q, flags) call blk_pm_request_resume(q)?
 
-This simple policy will be useful for (but not limited to) volatile-use
-persistent memory like Intel's Optane DIMMS.
+Nowhere, as far as I can see.
 
-> BTW is this proposal only for systems having multi-tiers of memory?
-> Can a multi-node DRAM-only system take advantage of this proposal? For
-> example I have a system with two DRAM nodes running two jobs
-> hardwalled to each node. For each job the other node is kind of
-> low-tier memory. If I can describe the per-job demotion paths then
-> these jobs can take advantage of this proposal during occasional
-> peaks.
+Alan Stern
 
-I don't see any reason it could not work there.  There would just need
-to be a way to set up a different demotion path policy that what was
-done here.
+>     -> pm_request_resume(dev)
+>       -> __pm_runtime_resume(dev, RPM_ASYNC)
+>         -> rpm_resume(dev, RPM_ASYNC)
+>           -> dev->power.request = RPM_REQ_RESUME;
+>           -> queue_work(pm_wq, &dev->power.work)
+>             -> pm_runtime_work()
+>               -> rpm_resume(dev, RPM_NOWAIT)
+>                 -> callback = scsi_runtime_resume;
+>                 -> rpm_callback(callback, dev);
+>                   -> scsi_runtime_resume(dev);
+>                     -> sdev_runtime_resume(dev);
+>                       -> blk_pre_runtime_resume(sdev->request_queue);
+>                         -> q->rpm_status = RPM_RESUMING;
+>                       -> sd_resume(dev);
+>                         -> sd_start_stop_device(sdkp);
+>                           -> sd_pm_ops.runtime_resume == scsi_execute(sdp, START);
+>                             -> blk_get_request(..., ..., BLK_MQ_REQ_PREEMPT)
+>                               -> blk_mq_alloc_request()
+>                                 -> blk_queue_enter()
+>                                 -> __blk_mq_alloc_request()
+>                             -> blk_execute_rq()
+>                             -> blk_put_request()
+>                       -> blk_post_runtime_resume(sdev->request_queue);
+>                         -> q->rpm_status = RPM_ACTIVE;
+>                         -> pm_runtime_mark_last_busy(q->dev);
+>                         -> pm_request_autosuspend(q->dev);
+> 
+> Bart.
