@@ -2,311 +2,205 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 112EBC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E32EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D2C8120759
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:12:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F0BF20759
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:12:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DO5aHBa3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730388AbgF3IMP (ORCPT
+        id S1730755AbgF3IMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 04:12:15 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:33012 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726994AbgF3IMO (ORCPT
+        Tue, 30 Jun 2020 04:12:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52000 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728073AbgF3IMv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 04:12:14 -0400
-Received: by mail-ed1-f65.google.com with SMTP id h28so15327382edz.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 01:12:11 -0700 (PDT)
+        Tue, 30 Jun 2020 04:12:51 -0400
+Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DE4CC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 01:12:51 -0700 (PDT)
+Received: by mail-wr1-x442.google.com with SMTP id z15so7877998wrl.8
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 01:12:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=rLJNg6SZ5HWWuZJdX48spsQBewv6zMsf37jjJ1GBFiQ=;
+        b=DO5aHBa3pNUaSGETSWQbzofDqahUYhogpdVMSaV5TJlJRqs3OGdlyZtLoInmnpn22p
+         em373dlDejE5fuud8z1S1bUSgxOzS7iLzlW83StXkc7Ga5xL3v4jBHwQelDaajWtC2dp
+         ullhzxtosXK96KE1TcOpDCTk1l+zG0s1TfKx+8ZCadweQAoTXlb0KaAXVfdhQebo3kMd
+         dsSqaxyReuGgZWoekjOGguN93HVjM9tlZKISxbRSYMPfdkRtMndednWm7oqxlyGNhYH1
+         au1+FTOV3GzZJaAVjcz62PjOPBPQ8jxsU5cRAYNPI0GL45FdNc3Gg9jE9PbiKgLUvvoH
+         jmUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:message-id:date:mime-version;
-        bh=J9MxgcqbqpLXLDMoRI08abhZKfTDkvAje8aDh5X0sC4=;
-        b=hhNGKJvbFR9yuFRjiaxJsK2ydz4H2+7TeWllVLJzvwP6pZmVisstIK16iy0RniMOHF
-         fy55HsIUwTYLdWSrNvrxdI1JCrHLpKcjuW+ZFuUjUDqM8X5g/J4+34MpAo0iB3Uchcla
-         EeGKKuQIijem3TAq2vij0oQr+0Zxi+qI/e7QJn+M2pnybuv4hcq4Mp96NxeZmk6IUCGc
-         Hq8YRRU3BU63delgIUK31i+3YOmRBFQ6aZbXRUD9PfG2qp7sux2jx9AHHRCKhATJohZ9
-         Z1wHSPuqaubbr+1w/1tgy5LgzsIfrVa5HWlYJvsW24/Ssj1Qll3mNfxRGMEByrp6nJSA
-         YJ7w==
-X-Gm-Message-State: AOAM532i5k0/688A/rhDVehEE+4KdMlcnD0R8txGOw9DSA1RJw5lR6nT
-        pKlIJENeeP4etuEcKCh8BKWVzwBpZ5I=
-X-Google-Smtp-Source: ABdhPJyrA5os0afG5E78JifN6dc5ne4R5tgSA6mHjCtOGfq5/9Y5XWU2Qcqoz1WAcmNKPY6dy6pgOQ==
-X-Received: by 2002:a05:6402:94f:: with SMTP id h15mr22030687edz.313.1593504730113;
-        Tue, 30 Jun 2020 01:12:10 -0700 (PDT)
-Received: from darkstar ([2a04:ee41:4:5025:8295:1d2:ca0d:985e])
-        by smtp.gmail.com with ESMTPSA id m26sm1498371ejn.122.2020.06.30.01.12.08
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=rLJNg6SZ5HWWuZJdX48spsQBewv6zMsf37jjJ1GBFiQ=;
+        b=rCijSUNvG6DqDp/740kATmqyzBy72HAiCEApYLOjFVqukSPxOKnUjfwuVYG63fvVYX
+         i/UzA+S1EfWmPmaZ2qPO46ovOmu68Ts9NF9jruW4W5VCpxJY67lMVE1mec+MXnvlufvI
+         sOa+ZBDZGFUO0Myf+Ieu9EgR6AFKmumEeJmuJGBsUBbIqE4Rznq7hKz9vfbRf2T91Col
+         AVogC2f/acIXvIXF35imlXqVXYsegEXWiFACDuHnj89Yyiak1aQrFo4KYTLisHKBmkYi
+         8npKdGwlaqS/HVkdOarC93M5dbG5eBoB00o50IlASKy/2LUDhIRcHfkU7uSNMSqo48wR
+         r8Xg==
+X-Gm-Message-State: AOAM531VADdhQlmgxj3CqqJ3+8XliwW7j4qSeu8EXHJXRQDrZKmBp+pF
+        RZ7srrWXrlFAxQLnf7tyW9DjYQ==
+X-Google-Smtp-Source: ABdhPJwzVH84vx569ch3pQWZoaa/tB1s2+xBvZx8nv2vs4jTY0G7z5RQJESw82aZLv7bw+tzTqJuoA==
+X-Received: by 2002:a05:6000:1283:: with SMTP id f3mr20939240wrx.106.1593504770162;
+        Tue, 30 Jun 2020 01:12:50 -0700 (PDT)
+Received: from dell ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id i17sm2767303wrc.34.2020.06.30.01.12.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 01:12:09 -0700 (PDT)
-References: <20200629162633.8800-1-qais.yousef@arm.com> <20200629162633.8800-3-qais.yousef@arm.com>
-User-agent: mu4e 1.4.10; emacs 26.3
-From:   Patrick Bellasi <patrick.bellasi@matbug.net>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Chris Redpath <chris.redpath@arm.com>,
-        Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 2/2] sched/uclamp: Protect uclamp fast path code with static key
-In-reply-to: <20200629162633.8800-3-qais.yousef@arm.com>
-Message-ID: <87366dnfaq.derkling@matbug.net>
-Date:   Tue, 30 Jun 2020 10:11:57 +0200
+        Tue, 30 Jun 2020 01:12:49 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 09:12:47 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     haver <haver@linux.vnet.ibm.com>
+Cc:     arnd@arndb.de, gregkh@linuxfoundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Michael Jung <mijung@gmx.net>,
+        Michael Ruettger <michael@ibmra.de>,
+        Frank Haverkamp <haver@linux.ibm.com>,
+        Joerg-Stephan Vogt <jsvogt@de.ibm.com>
+Subject: Re: [PATCH 16/20] misc: genwqe: card_base: Remove set but unused
+ variable 'rc'
+Message-ID: <20200630081247.GI1179328@dell>
+References: <20200629140442.1043957-1-lee.jones@linaro.org>
+ <20200629140442.1043957-17-lee.jones@linaro.org>
+ <fff00e6667c442cac13147ee5095430a@linux.vnet.ibm.com>
+ <20200630074224.GH1179328@dell>
+ <770e66e5f2d7efcea61fc9d57e1053f0@linux.vnet.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <770e66e5f2d7efcea61fc9d57e1053f0@linux.vnet.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 30 Jun 2020, haver wrote:
 
-Hi Qais,
-here are some more 2c from me...
+> On 2020-06-30 09:42, Lee Jones wrote:
+> > On Tue, 30 Jun 2020, haver wrote:
+> > 
+> > > On 2020-06-29 16:04, Lee Jones wrote:
+> > > > Variable 'rc' hasn't been checked since the driver's inception
+> > > > in 2013.  If it hasn't caused any issues since then, it's unlikely
+> > > > to in the future.  Let's take it out for now.
+> > > >
+> > > > Fixes the following W=1 kernel build warning(s):
+> > > >
+> > > >  drivers/misc/genwqe/card_base.c: In function
+> > > > ‘genwqe_health_check_stop’:
+> > > >
+> > > > /home/lee/projects/linux/kernel/drivers/misc/genwqe/card_base.c:1046:6:
+> > > > warning: variable ‘rc’ set but not used
+> > > > [-Wunused-but-set-variable]
+> > > >  1046 | int rc;
+> > > >  | ^~
+> > > >
+> > > > Cc: Michael Jung <mijung@gmx.net>
+> > > > Cc: Michael Ruettger <michael@ibmra.de>
+> > > > Cc: Frank Haverkamp <haver@linux.ibm.com>
+> > > > Cc: Joerg-Stephan Vogt <jsvogt@de.ibm.com>
+> > > > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > > > ---
+> > > >  drivers/misc/genwqe/card_base.c | 4 +---
+> > > >  1 file changed, 1 insertion(+), 3 deletions(-)
+> > > >
+> > > > diff --git a/drivers/misc/genwqe/card_base.c
+> > > > b/drivers/misc/genwqe/card_base.c
+> > > > index 1dc6c7c5cbce9..bceebf49de2d5 100644
+> > > > --- a/drivers/misc/genwqe/card_base.c
+> > > > +++ b/drivers/misc/genwqe/card_base.c
+> > > > @@ -1043,12 +1043,10 @@ static int genwqe_health_thread_running(struct
+> > > > genwqe_dev *cd)
+> > > >
+> > > >  static int genwqe_health_check_stop(struct genwqe_dev *cd)
+> > > >  {
+> > > > -	int rc;
+> > > > -
+> > > >  	if (!genwqe_health_thread_running(cd))
+> > > >  		return -EIO;
+> > > >
+> > > > -	rc = kthread_stop(cd->health_thread);
+> > > > +	kthread_stop(cd->health_thread);
+> > > >  	cd->health_thread = NULL;
+> > > >  	return 0;
+> > > >  }
+> > > 
+> > > Good idea. Let's remove it Thanks for the contribution.
+> > 
+> > No problem, and you are welcome.
+> > 
+> > > Signed-off-by: Frank Haverkamp <haver@linux.ibm.com>
+> > 
+> > Just as an aside, this should be Acked-by, unless you either
+> > contributed to the patch directly or are in the delivery path i.e. you
+> > plan to pick the patch and send it to, say Linus, via a pull-request.
+> 
+> Right. Thanks for reminding me. Feel free to send it yourself.
+> When was the documentation checking introduced? At the time we
+> contributed the code there was no such checking.
 
-On Mon, Jun 29, 2020 at 18:26:33 +0200, Qais Yousef <qais.yousef@arm.com> wrote...
+The checking scripts have been in place for many years, but it looks
+like doc checking became part of EXTRA_GCC_CHECKS builds in 2017:
 
-[...]
+> commit 3a025e1d1c2ea42fa497c9c6b21c284e0f69e28b
+Author: Matthew Wilcox <willy@infradead.org>
+Date:   Mon Nov 20 10:40:40 2017 -0800
 
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 235b2cae00a0..8d80d6091d86 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -794,6 +794,26 @@ unsigned int sysctl_sched_uclamp_util_max = SCHED_CAPACITY_SCALE;
->  /* All clamps are required to be less or equal than these values */
->  static struct uclamp_se uclamp_default[UCLAMP_CNT];
->  
-> +/*
-> + * This static key is used to reduce the uclamp overhead in the fast path. It
-> + * primarily disables the call to uclamp_rq_{inc, dec}() in
-> + * enqueue/dequeue_task().
-> + *
-> + * This allows users to continue to enable uclamp in their kernel config with
-> + * minimum uclamp overhead in the fast path.
-> + *
-> + * As soon as userspace modifies any of the uclamp knobs, the static key is
-> + * enabled, since we have an actual users that make use of uclamp
-> + * functionality.
-> + *
-> + * The knobs that would enable this static key are:
-> + *
-> + *   * A task modifying its uclamp value with sched_setattr().
-> + *   * An admin modifying the sysctl_sched_uclamp_{min, max} via procfs.
-> + *   * An admin modifying the cgroup cpu.uclamp.{min, max}
+    Add optional check for bad kernel-doc comments
+    
+    Implement a '-none' output mode for kernel-doc which will only output
+    warning messages, and suppresses the warning message about there being
+    no kernel-doc in the file.
+    
+    If the build has requested additional warnings, automatically check all
+    .c files.  This patch does not check .h files.  Enabling the warning
+    by default would add about 1300 warnings, so it's default off for now.
+    People who care can use this to check they didn't break the docs and
+    maybe we'll get all the warnings fixed and be able to enable this check
+    by default in the future.
+    
+    Signed-off-by: Matthew Wilcox <mawilcox@microsoft.com>
+    Signed-off-by: Jonathan Corbet <corbet@lwn.net>
 
-I guess this list can be obtained with a grep or git changelog, moreover
-this text will require maintenance.
-
-What about replacing this full comment with something shorted like:
-
----8<---
-      Static key to reduce uclamp overhead in the fast path by disabling
-      calls to uclamp_rq_{inc, dec}().
----8<---
-
-> + */
-> +DEFINE_STATIC_KEY_FALSE(sched_uclamp_used);
-> +
->  /* Integer rounded range for each bucket */
->  #define UCLAMP_BUCKET_DELTA DIV_ROUND_CLOSEST(SCHED_CAPACITY_SCALE, UCLAMP_BUCKETS)
->  
-> @@ -994,9 +1014,30 @@ static inline void uclamp_rq_dec_id(struct rq *rq, struct task_struct *p,
->  	lockdep_assert_held(&rq->lock);
->  
->  	bucket = &uc_rq->bucket[uc_se->bucket_id];
-> -	SCHED_WARN_ON(!bucket->tasks);
-> +
-> +	/*
-> +	 * bucket->tasks could be zero if sched_uclamp_used was enabled while
-> +	 * the current task was running, hence we could end up with unbalanced
-> +	 * call to uclamp_rq_dec_id().
-> +	 *
-> +	 * Need to be careful of the following enqeueue/dequeue order
-> +	 * problem too
-> +	 *
-> +	 *	enqueue(taskA)
-> +	 *	// sched_uclamp_used gets enabled
-> +	 *	enqueue(taskB)
-> +	 *	dequeue(taskA)
-> +	 *	// bucket->tasks is now 0
-> +	 *	dequeue(taskB)
-> +	 *
-> +	 * where we could end up with uc_se->active of the task set to true and
-> +	 * the wrong bucket[uc_se->bucket_id].value.
-> +	 *
-> +	 * Hence always make sure we reset things properly.
-> +	 */
->  	if (likely(bucket->tasks))
->  		bucket->tasks--;
-> +
->  	uc_se->active = false;
-
-Better than v4, what about just using this active flag?
-
----8<---
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 8f360326861e..465a7645713b 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -990,6 +990,13 @@ static inline void uclamp_rq_dec_id(struct rq *rq, struct task_struct *p,
+diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+index 2e3a10e79ca9e..aceac0ba07451 100644
+--- a/scripts/Makefile.build
++++ b/scripts/Makefile.build
+@@ -108,6 +108,10 @@ ifneq ($(KBUILD_CHECKSRC),0)
+   endif
+ endif
  
-        lockdep_assert_held(&rq->lock);
- 
-+       /*
-+        * If a task was already enqueue at uclamp enable time
-+        * nothing has been accounted for it.
-+        */
-+       if (unlikely(!uc_se->active))
-+               return;
++ifneq ($(KBUILD_ENABLE_EXTRA_GCC_CHECKS),)
++  cmd_checkdoc = $(srctree)/scripts/kernel-doc -none $< ;
++endif
 +
-        bucket = &uc_rq->bucket[uc_se->bucket_id];
-        SCHED_WARN_ON(!bucket->tasks);
-        if (likely(bucket->tasks))
----8<---
+ # Do section mismatch analysis for each module/built-in.o
+ ifdef CONFIG_DEBUG_SECTION_MISMATCH
+   cmd_secanalysis = ; scripts/mod/modpost $@
+@@ -289,6 +293,7 @@ define rule_cc_o_c
+        $(call echo-cmd,checksrc) $(cmd_checksrc)                         \
+        $(call cmd_and_fixdep,cc_o_c)                                     \
+        $(cmd_modversions_c)                                              \
++       $(cmd_checkdoc)                                                   \
+        $(call echo-cmd,objtool) $(cmd_objtool)                           \
+        $(call echo-cmd,record_mcount) $(cmd_record_mcount)
+ endef
 
-This will allow also to keep in all the ref count checks we have,
-e.g. the SChed_WARN_ON().
-
-
->  	/*
-> @@ -1032,6 +1073,13 @@ static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
->  {
->  	enum uclamp_id clamp_id;
->  
-> +	/*
-> +	 * Avoid any overhead until uclamp is actually used by the userspace.
-> +	 * Including the branch if we use static_branch_likely()
-
-I still find this last sentence hard to parse, but perhaps it's just me
-still missing a breakfast :)
-
-> +	 */
-> +	if (!static_branch_unlikely(&sched_uclamp_used))
-> +		return;
-
-I'm also still wondering if the optimization is still working when we
-have that ! in front.
-
-Had a check at:
-
-   https://elixir.bootlin.com/linux/latest/source/include/linux/jump_label.h#L399
-
-and AFAIU, it all boils down to cook a __branch_check()'s compiler hint,
-and ISTR that those are "anti-patterns"?
-
-That said we do have some usages for this pattern too:
-
-$ git grep '!static_branch_unlikely' | wc -l       36
-$ git grep 'static_branch_unlikely' | wc -l       220
-
-?
-
-> +
->  	if (unlikely(!p->sched_class->uclamp_enabled))
->  		return;
->  
-
-[...]
-
-> +/**
-> + * uclamp_rq_util_with - clamp @util with @rq and @p effective uclamp values.
-> + * @rq:		The rq to clamp against. Must not be NULL.
-> + * @util:	The util value to clamp.
-> + * @p:		The task to clamp against. Can be NULL if you want to clamp
-> + *		against @rq only.
-> + *
-> + * Clamps the passed @util to the max(@rq, @p) effective uclamp values.
-> + *
-> + * If sched_uclamp_used static key is disabled, then just return the util
-> + * without any clamping since uclamp aggregation at the rq level in the fast
-> + * path is disabled, rendering this operation a NOP.
-> + *
-> + * Use uclamp_eff_value() if you don't care about uclamp values at rq level. It
-> + * will return the correct effective uclamp value of the task even if the
-> + * static key is disabled.
-
-Well, if you don't care about rq, you don't call a uclamp_rq_* method.
-
-I would say that the above paragraph is redundant, moreover it adds some
-cross-reference to a different method (name) which required maintenance.
-
-What about removing it?
-
-> + */
->  static __always_inline
->  unsigned long uclamp_rq_util_with(struct rq *rq, unsigned long util,
->  				  struct task_struct *p)
->  {
-> -	unsigned long min_util = READ_ONCE(rq->uclamp[UCLAMP_MIN].value);
-> -	unsigned long max_util = READ_ONCE(rq->uclamp[UCLAMP_MAX].value);
-> +	unsigned long min_util;
-> +	unsigned long max_util;
-> +
-> +	if (!static_branch_likely(&sched_uclamp_used))
-> +		return util;
-> +
-> +	min_util = READ_ONCE(rq->uclamp[UCLAMP_MIN].value);
-> +	max_util = READ_ONCE(rq->uclamp[UCLAMP_MAX].value);
-
-I think moving the initialization is not required, the compiler should
-be smart enough to place theme where's better.
-
->  	if (p) {
->  		min_util = max(min_util, uclamp_eff_value(p, UCLAMP_MIN));
-> @@ -2371,6 +2396,11 @@ unsigned long uclamp_rq_util_with(struct rq *rq, unsigned long util,
->  
->  	return clamp(util, min_util, max_util);
->  }
-> +
-> +static inline bool uclamp_is_enabled(void)
-> +{
-> +	return static_branch_likely(&sched_uclamp_used);
-> +}
-
-Looks like here we mix up terms, which can be confusing.
-AFAIKS, we use:
-- *_enabled for the sched class flags (compile time)
-- *_used    for the user-space opting in (run time)
-
-Thus, perhaps we can just use the same pattern used by the
-sched_numa_balancing static key:
-
-  $ git grep sched_numa_balancing
-  kernel/sched/core.c:DEFINE_STATIC_KEY_FALSE(sched_numa_balancing);
-  kernel/sched/core.c:            static_branch_enable(&sched_numa_balancing);
-  kernel/sched/core.c:            static_branch_disable(&sched_numa_balancing);
-  kernel/sched/core.c:    int state = static_branch_likely(&sched_numa_balancing);
-  kernel/sched/fair.c:    if (!static_branch_likely(&sched_numa_balancing))
-  kernel/sched/fair.c:    if (!static_branch_likely(&sched_numa_balancing))
-  kernel/sched/fair.c:    if (!static_branch_likely(&sched_numa_balancing))
-  kernel/sched/fair.c:    if (static_branch_unlikely(&sched_numa_balancing))
-  kernel/sched/sched.h:extern struct static_key_false sched_numa_balancing;
-
-IOW: unconditionally define sched_uclamp_used as non static in core.c,
-and use it directly on schedutil too.
-
->  #else /* CONFIG_UCLAMP_TASK */
->  static inline
->  unsigned long uclamp_rq_util_with(struct rq *rq, unsigned long util,
-> @@ -2378,6 +2408,11 @@ unsigned long uclamp_rq_util_with(struct rq *rq, unsigned long util,
->  {
->  	return util;
->  }
-> +
-> +static inline bool uclamp_is_enabled(void)
-> +{
-> +	return false;
-> +}
->  #endif /* CONFIG_UCLAMP_TASK */
->  
->  #ifdef arch_scale_freq_capacity
-
-Best,
-Patrick
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
