@@ -2,268 +2,162 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7819BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D32C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B3B020675
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:54:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Jidy+bGO"
+	by mail.kernel.org (Postfix) with ESMTP id 9FB2B20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:55:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389135AbgF3Oyj (ORCPT
+        id S2389143AbgF3OzH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 10:54:39 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:49654 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729260AbgF3Oyi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 10:54:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593528876;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=pQ69M6N/CBlBbtoEYAg2r+Q8b1zzN/C+ADvt98vtzbc=;
-        b=Jidy+bGOC9UALHdf5LsLbWvUWgk8yCXMwj6dT8yd1xchtmob3N6HwUXhHzQq6wWx9qk4VH
-        5qRtp357ZtcP7AepPuRSpCYFylPWMqXwcN0L3ZEb0Hqbho1C6w5FFL1wsB+fqYZP6Co16Q
-        6BQevIsuyJA1xB6e6RxL7sKiDGYUwus=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-176-IUCsFLbsOj2ELx2jclk_2A-1; Tue, 30 Jun 2020 10:53:37 -0400
-X-MC-Unique: IUCsFLbsOj2ELx2jclk_2A-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 703211906800;
-        Tue, 30 Jun 2020 14:53:34 +0000 (UTC)
-Received: from horse.redhat.com (ovpn-113-245.rdu2.redhat.com [10.10.113.245])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C3B1A70100;
-        Tue, 30 Jun 2020 14:53:03 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 3D903220C58; Tue, 30 Jun 2020 10:53:03 -0400 (EDT)
-Date:   Tue, 30 Jun 2020 10:53:03 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, virtio-fs@redhat.com, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] kvm,x86: Exit to user space in case of page fault
- error
-Message-ID: <20200630145303.GB322149@redhat.com>
-References: <20200625214701.GA180786@redhat.com>
- <87lfkach6o.fsf@vitty.brq.redhat.com>
- <20200626150303.GC195150@redhat.com>
- <874kqtd212.fsf@vitty.brq.redhat.com>
- <20200629220353.GC269627@redhat.com>
- <87sgecbs9w.fsf@vitty.brq.redhat.com>
+        Tue, 30 Jun 2020 10:55:07 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:11333 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729260AbgF3OzG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 10:55:06 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49x6pZ5Tr4z9twdq;
+        Tue, 30 Jun 2020 16:55:02 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id DW2g8NlcVvk7; Tue, 30 Jun 2020 16:55:02 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49x6pZ0L9vz9tvrw;
+        Tue, 30 Jun 2020 16:55:02 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 269198B7E4;
+        Tue, 30 Jun 2020 16:55:04 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id yCXNo6XMiDNf; Tue, 30 Jun 2020 16:55:04 +0200 (CEST)
+Received: from [10.25.210.22] (po15451.idsi0.si.c-s.fr [10.25.210.22])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id D96818B7DE;
+        Tue, 30 Jun 2020 16:55:03 +0200 (CEST)
+Subject: Re: [PATCH v2] powerpc/uaccess: Use flexible addressing with
+ __put_user()/__get_user()
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, npiggin@gmail.com,
+        segher@kernel.crashing.org
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <c2addbd9d76212242d3d8554a2f7ff849fb08b85.1587040754.git.christophe.leroy@c-s.fr>
+ <7b916759-1683-b4df-0d4b-b04b3fcd9a02@csgroup.eu>
+ <878sg6862r.fsf@mpe.ellerman.id.au> <875zb98i5a.fsf@mpe.ellerman.id.au>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <311c3471-cad7-72d5-a5e6-04cf892c5e41@csgroup.eu>
+Date:   Tue, 30 Jun 2020 16:55:05 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87sgecbs9w.fsf@vitty.brq.redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <875zb98i5a.fsf@mpe.ellerman.id.au>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 03:24:43PM +0200, Vitaly Kuznetsov wrote:
-> Vivek Goyal <vgoyal@redhat.com> writes:
+
+
+Le 30/06/2020 à 03:19, Michael Ellerman a écrit :
+> Michael Ellerman <mpe@ellerman.id.au> writes:
+>> Christophe Leroy <christophe.leroy@csgroup.eu> writes:
+>>> Hi Michael,
+>>>
+>>> I see this patch is marked as "defered" in patchwork, but I can't see
+>>> any related discussion. Is it normal ?
+>>
+>> Because it uses the "m<>" constraint which didn't work on GCC 4.6.
+>>
+>> https://github.com/linuxppc/issues/issues/297
+>>
+>> So we should be able to pick it up for v5.9 hopefully.
 > 
-> > On Mon, Jun 29, 2020 at 10:56:25PM +0200, Vitaly Kuznetsov wrote:
-> >> Vivek Goyal <vgoyal@redhat.com> writes:
-> >> 
-> >> > On Fri, Jun 26, 2020 at 11:25:19AM +0200, Vitaly Kuznetsov wrote:
-> >> >
-> >> > [..]
-> >> >> > diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> >> >> > index 76817d13c86e..a882a6a9f7a7 100644
-> >> >> > --- a/arch/x86/kvm/mmu/mmu.c
-> >> >> > +++ b/arch/x86/kvm/mmu/mmu.c
-> >> >> > @@ -4078,7 +4078,7 @@ static bool try_async_pf(struct kvm_vcpu *vcpu, bool prefault, gfn_t gfn,
-> >> >> >  	if (!async)
-> >> >> >  		return false; /* *pfn has correct page already */
-> >> >> >  
-> >> >> > -	if (!prefault && kvm_can_do_async_pf(vcpu)) {
-> >> >> > +	if (!prefault && kvm_can_do_async_pf(vcpu, cr2_or_gpa >> PAGE_SHIFT)) {
-> >> >> 
-> >> >> gpa_to_gfn(cr2_or_gpa) ?
-> >> >
-> >> > Will do.
-> >> >
-> >> > [..]
-> >> >> > -bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu)
-> >> >> > +bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu, gfn_t gfn)
-> >> >> >  {
-> >> >> >  	if (unlikely(!lapic_in_kernel(vcpu) ||
-> >> >> >  		     kvm_event_needs_reinjection(vcpu) ||
-> >> >> > @@ -10504,7 +10506,13 @@ bool kvm_can_do_async_pf(struct kvm_vcpu *vcpu)
-> >> >> >  	 * If interrupts are off we cannot even use an artificial
-> >> >> >  	 * halt state.
-> >> >> >  	 */
-> >> >> > -	return kvm_arch_interrupt_allowed(vcpu);
-> >> >> > +	if (!kvm_arch_interrupt_allowed(vcpu))
-> >> >> > +		return false;
-> >> >> > +
-> >> >> > +	if (vcpu->arch.apf.error_gfn == gfn)
-> >> >> > +		return false;
-> >> >> > +
-> >> >> > +	return true;
-> >> >> >  }
-> >> >> >  
-> >> >> >  bool kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
-> >> >> 
-> >> >> I'm a little bit afraid that a single error_gfn may not give us
-> >> >> deterministric behavior. E.g. when we have a lot of faulting processes
-> >> >> it may take many iterations to hit 'error_gfn == gfn' because we'll
-> >> >> always be overwriting 'error_gfn' with new values and waking up some
-> >> >> (random) process.
-> >> >> 
-> >> >> What if we just temporary disable the whole APF mechanism? That would
-> >> >> ensure we're making forward progress. Something like (completely
-> >> >> untested):
-> >> >> 
-> >> >> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> >> >> index f8998e97457f..945b3d5a2796 100644
-> >> >> --- a/arch/x86/include/asm/kvm_host.h
-> >> >> +++ b/arch/x86/include/asm/kvm_host.h
-> >> >> @@ -778,6 +778,7 @@ struct kvm_vcpu_arch {
-> >> >>  		unsigned long nested_apf_token;
-> >> >>  		bool delivery_as_pf_vmexit;
-> >> >>  		bool pageready_pending;
-> >> >> +		bool error_pending;
-> >> >>  	} apf;
-> >> >>  
-> >> >>  	/* OSVW MSRs (AMD only) */
-> >> >> diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-> >> >> index fdd05c233308..e5f04ae97e91 100644
-> >> >> --- a/arch/x86/kvm/mmu/mmu.c
-> >> >> +++ b/arch/x86/kvm/mmu/mmu.c
-> >> >> @@ -4124,8 +4124,18 @@ static int direct_page_fault(struct kvm_vcpu *vcpu, gpa_t gpa, u32 error_code,
-> >> >>  	if (try_async_pf(vcpu, prefault, gfn, gpa, &pfn, write, &map_writable))
-> >> >>  		return RET_PF_RETRY;
-> >> >>  
-> >> >> -	if (handle_abnormal_pfn(vcpu, is_tdp ? 0 : gpa, gfn, pfn, ACC_ALL, &r))
-> >> >> +	if (handle_abnormal_pfn(vcpu, is_tdp ? 0 : gpa, gfn, pfn, ACC_ALL, &r)) {
-> >> >> +		/*
-> >> >> +		 * In case APF mechanism was previously disabled due to an error
-> >> >> +		 * we are ready to re-enable it here as we're about to inject an
-> >> >> +		 * error to userspace. There is no guarantee we are handling the
-> >> >> +		 * same GFN which failed in APF here but at least we are making
-> >> >> +		 * forward progress.
-> >> >> +		 */
-> >> >> +
-> >> >> +		vcpu->arch.apf.error_pending = false;
-> >> >
-> >> > I like this idea. It is simple. But I have a concern with it though.
-> >> >
-> >> > - Can it happen that we never retry faulting in error pfn.  Say a process
-> >> >   accessed a pfn, we set error_pending, and then process got killed due
-> >> >   to pending signal. Now process will not retry error pfn. And
-> >> >   error_pending will remain set and we completely disabled APF
-> >> >   mechanism till next error happens (if it happens).
-> >> 
-> >> Can a process in kvm_async_pf_task_wait_schedule() get killed? I don't
-> >> see us checking signals/... in the loop, just 'if
-> >> (hlist_unhashed(&n.link))' -- and this only happens when APF task
-> >> completes. I don't know much about processes to be honest, could easily
-> >> be wrong completely :-)
-> >
-> > I think a waiting process will be woken up and scheduled again. And
-> > when it is starts running again and goes back to user space (faulting
-> > instruction was in user space), then we should check for pending SIGNAL
-> > and kill it.
-> >
-> > That's how my patches for sending SIGBUS were working. I queued SIGBUS
-> > and then when process got scheduled, it got SIGBUS and got killed and
-> > stopped retrying instruction. (Otherwise this fault cycle will never
-> > end).
-> >
-> > Hence, I think it is possible. Another process can send SIGKILL to
-> > this process which is waiting for APF. Once APF page ready event
-> > comes in, process will be killed after that without retrying the
-> > instruct. I will be glad to be corrected if I understood it wrong.
-> >
-> 
-> It's probably me who's missing something important here :-) but I think
-> you describe how it *should* work as I'm not seeing how we can leave the
-> loop in kvm_async_pf_task_wait_schedule() other than by 
-> "if (hlist_unhashed(&n.link)) break;" and this only happens when APF
-> completes.
+> It seems to break the build with the kernel.org 4.9.4 compiler and
+> corenet64_smp_defconfig:
 
-We don't leave loop in kvm_async_pf_task_wait_schedule(). It will happen
-before you return to user space.
+Looks like 4.9.4 doesn't accept "m<>" constraint either.
+Changing it to "m" make it build.
 
-I have not looked too closely but I think following code path might be taken
-after aync PF has completed.
-
-__kvm_handle_async_pf()
-  idtentry_exit_cond_rcu()
-    prepare_exit_to_usermode()
-      __prepare_exit_to_usermode()
-        exit_to_usermode_loop()
-	  do_signal()
-
-So once you have been woken up (because APF completed), you will
-return to user space and before that you will check if there are
-pending signals and handle that signal first before user space
-gets a chance to run again and retry faulting instruction.
+Christophe
 
 > 
-> >> 
-> >> >
-> >> > In another idea, we could think of maintaining another hash of error
-> >> > gfns. Similar to "vcpu->arch.apf.gfns[]". Say "vgpu->arch.apf.error_gfns[]"
-> >> >
-> >> > - When error happens on a gfn, add it to hash. If slot is busy, overwrite
-> >> >   it.
-> >> >
-> >> > - When kvm_can_do_async_pf(gfn) is called, check if this gfn is present
-> >> >   in error_gfn, if yes, clear it and force sync fault.
-> >> >
-> >> > This is more complicated but should take care of your concerns. Also 
-> >> > even if process never retries that gfn, we are fine. At max that
-> >> > gfn will remain error_gfn array but will not disable APF completely.
-> >> 
-> >> Yes, we can do that but I'm not sure it wouldn't be an overkill: we are
-> >> not trying to protect the mechanism against a malicious guest. Using APF
-> >> is guest's choice anyway so even if there's going to be an easy way to
-> >> disable it completely (poke an address and never retry upon wakeup) from
-> >> guest's side it doesn't sound like a big deal.
-> >
-> > Sure but if guest chose APF and then it got disabled completely
-> > intentionally, then its a probelm, isn't it. This is just a race
-> > condition which can disable APF unintentionally and leave it like
-> > that till next error happens. 
-> >
-> >> 
-> >> Also, we can introduce a status bit in the APF 'page ready' notification
-> >> stating that the page is actually NOT ready and the mecanism was blocked
-> >> because if that, the guest will have to access the GFN to get the error
-> >> injected (and unblock the mechanism).
-> >
-> > I am not sure how will we force guest to access that pfn if accessing
-> > process gets killed. This actually feels like least preferred of all
-> > options.
+> + make -s CC=powerpc64-linux-gnu-gcc -j 160
+> In file included from /linux/include/linux/uaccess.h:11:0,
+>                   from /linux/include/linux/sched/task.h:11,
+>                   from /linux/include/linux/sched/signal.h:9,
+>                   from /linux/include/linux/rcuwait.h:6,
+>                   from /linux/include/linux/percpu-rwsem.h:7,
+>                   from /linux/include/linux/fs.h:33,
+>                   from /linux/include/linux/huge_mm.h:8,
+>                   from /linux/include/linux/mm.h:675,
+>                   from /linux/arch/powerpc/kernel/signal_32.c:17:
+> /linux/arch/powerpc/kernel/signal_32.c: In function 'save_user_regs.isra.14.constprop':
+> /linux/arch/powerpc/include/asm/uaccess.h:161:2: error: 'asm' operand has impossible constraints
+>    __asm__ __volatile__(     \
+>    ^
+> /linux/arch/powerpc/include/asm/uaccess.h:197:12: note: in expansion of macro '__put_user_asm'
+>      case 4: __put_user_asm(x, ptr, retval, "stw"); break; \
+>              ^
+> /linux/arch/powerpc/include/asm/uaccess.h:206:2: note: in expansion of macro '__put_user_size_allowed'
+>    __put_user_size_allowed(x, ptr, size, retval);  \
+>    ^
+> /linux/arch/powerpc/include/asm/uaccess.h:220:2: note: in expansion of macro '__put_user_size'
+>    __put_user_size(__pu_val, __pu_addr, __pu_size, __pu_err); \
+>    ^
+> /linux/arch/powerpc/include/asm/uaccess.h:96:2: note: in expansion of macro '__put_user_nocheck'
+>    __put_user_nocheck((__typeof__(*(ptr)))(x), (ptr), sizeof(*(ptr)))
+>    ^
+> /linux/arch/powerpc/kernel/signal_32.c:120:7: note: in expansion of macro '__put_user'
+>     if (__put_user((unsigned int)gregs[i], &frame->mc_gregs[i]))
+>         ^
+> /linux/scripts/Makefile.build:280: recipe for target 'arch/powerpc/kernel/signal_32.o' failed
+> make[3]: *** [arch/powerpc/kernel/signal_32.o] Error 1
+> make[3]: *** Waiting for unfinished jobs....
+> In file included from /linux/include/linux/uaccess.h:11:0,
+>                   from /linux/include/linux/sched/task.h:11,
+>                   from /linux/include/linux/sched/signal.h:9,
+>                   from /linux/include/linux/rcuwait.h:6,
+>                   from /linux/include/linux/percpu-rwsem.h:7,
+>                   from /linux/include/linux/fs.h:33,
+>                   from /linux/include/linux/huge_mm.h:8,
+>                   from /linux/include/linux/mm.h:675,
+>                   from /linux/arch/powerpc/kernel/signal_64.c:12:
+> /linux/arch/powerpc/kernel/signal_64.c: In function '__se_sys_swapcontext':
+> /linux/arch/powerpc/include/asm/uaccess.h:319:2: error: 'asm' operand has impossible constraints
+>    __asm__ __volatile__(    \
+>    ^
+> /linux/arch/powerpc/include/asm/uaccess.h:359:10: note: in expansion of macro '__get_user_asm'
+>    case 1: __get_user_asm(x, (u8 __user *)ptr, retval, "lbz"); break; \
+>            ^
+> /linux/arch/powerpc/include/asm/uaccess.h:370:2: note: in expansion of macro '__get_user_size_allowed'
+>    __get_user_size_allowed(x, ptr, size, retval);  \
+>    ^
+> /linux/arch/powerpc/include/asm/uaccess.h:393:3: note: in expansion of macro '__get_user_size'
+>     __get_user_size(__gu_val, __gu_addr, __gu_size, __gu_err); \
+>     ^
+> /linux/arch/powerpc/include/asm/uaccess.h:94:2: note: in expansion of macro '__get_user_nocheck'
+>    __get_user_nocheck((x), (ptr), sizeof(*(ptr)), true)
+>    ^
+> /linux/arch/powerpc/kernel/signal_64.c:672:9: note: in expansion of macro '__get_user'
+>        || __get_user(tmp, (u8 __user *) new_ctx + ctx_size - 1))
+>           ^
+> /linux/scripts/Makefile.build:280: recipe for target 'arch/powerpc/kernel/signal_64.o' failed
+> make[3]: *** [arch/powerpc/kernel/signal_64.o] Error 1
+> /linux/scripts/Makefile.build:497: recipe for target 'arch/powerpc/kernel' failed
+> make[2]: *** [arch/powerpc/kernel] Error 2
+> /linux/Makefile:1756: recipe for target 'arch/powerpc' failed
+> make[1]: *** [arch/powerpc] Error 2
+> Makefile:185: recipe for target '__sub-make' failed
+> make: *** [__sub-make] Error 2
 > 
-> When guest receives the 'page ready' event with an error it (like for
-> every other 'page ready' event) tries to wake up the corresponding
-> process but if the process is dead already it can do in-kernel probing
-> of the GFN, this way we guarantee that the error is always injected. I'm
-> not sure if it is needed though but in case it is, this can be a
-> solution. We can add a new feature bit and only deliver errors when the
-> guest indicates that it knows what to do with them.
-
-- Process will be delivered singal after async PF completion and during
-  returning to user space. You have lost control by then.
-
-- If you retry in kernel, we will change the context completely that
-  who was trying to access the gfn in question. We want to retain
-  the real context and retain information who was trying to access
-  gfn in question.
-
-Vivek
-
+> 
+> cheers
+> 
