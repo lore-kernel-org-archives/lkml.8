@@ -2,124 +2,179 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29FB4C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E814C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:10:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 04304206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:08:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8618206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:10:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="g6H5Mkbt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DGZjrssa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731897AbgF3JIw (ORCPT
+        id S1729808AbgF3JKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 05:08:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60598 "EHLO
+        Tue, 30 Jun 2020 05:10:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731786AbgF3JIt (ORCPT
+        with ESMTP id S1726404AbgF3JKY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 05:08:49 -0400
-Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 111A1C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 02:08:49 -0700 (PDT)
-Received: by mail-qv1-xf42.google.com with SMTP id d12so8956452qvn.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 02:08:49 -0700 (PDT)
+        Tue, 30 Jun 2020 05:10:24 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7C9EC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 02:10:23 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id k6so19336285wrn.3
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 02:10:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=iK9bZflbG08ihQjRVcnie/mycSORKVkiSD9rdxO2fhk=;
-        b=g6H5Mkbt5DNNC4mpM8Ol5Sb2XFAAVgz7dk+QHwtFzZVZNmtS7nCKUPcrX84jfbcdBE
-         bUo/rHlBN4uFQuSRpShN17WBsTptjwVuG2PZBnqmo8xAyRdilDLUY/3lfIpU4iAhaqot
-         Xy9y/J6p7X0nQNFcJ+aahou+oeMcbuaSI7EfivxPYsakS5wa329R/bHCeCgoOR0ra7vr
-         xkJStDT3T984WOH8KXYf+jsirAHOCixX5rRq6veMsAQ5K5xjNLkXMVQOkpS/uSirKP0u
-         5schmfSp19lHLwXGCMWiW9MlF6yGg0zUDoZtN64aUyRoZpPspbkRrVL5TLjCA0YZLvyA
-         JRmA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=Qw+g1jLxSkKavfMbFGU6iuXSgClnm8neHGPQpEb1Hmc=;
+        b=DGZjrssaQWi8uYoqx2PT+vh8VkTkMaIbqx5nH+ZfB5u8Xpa7XLIr9EDpmliTqmZFg+
+         7DcuSDiwYO3dqO97ZJzf243XyLki7Msw2L1RRQQXeneYaG9OjPJf6mzF0T+BbWyAFFgR
+         b8sy0aMzEOLLEM8+OOvz4+yhBuPWi7Mr32BNRZFlLiBwH7v6QLM1NB9RL49pgHJWKGLo
+         mwbkx1dqSi/EeblRZtorv25vYrD/gjmD9DLpwMcj6AdvvF9oeJRYvFB8AtaKxr6fpoK0
+         fWbL5GDZr3QdNTRkRgxMFGSQfr8NFFVHXvv+D8OXXUYiBVJ+3G1aim4N972AddRYT2fT
+         5rpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=iK9bZflbG08ihQjRVcnie/mycSORKVkiSD9rdxO2fhk=;
-        b=QbNZvnvCAkGCGbbC9sfmTW+/r6uTB1w7LlEeb7bMzCav25P6okWr1gzZR29pRhY3Ys
-         KTbr3eb65VGlts/xesopaoBAKs6OBHcI9sD1aCSOQeOKGnHKrgHzOuWJxiv6c8feWCMW
-         h6H8/zr9sDfLxzLhxEuFNSMCxlsD9clJxpBx+zkN+bGAseqKi+oRBoeHKsuaqnseCL3x
-         UUc7uVTLoMZxF4TtGS9IE3kr4j59BVA4EF+uE2CC86kJosBlqz+vzwMWl9KM0pVq+R+q
-         PRigqBJtXsQxc4ZK1y9e96NTV6CHDLFrOmeEShabP2+MIAfKDLevvhQgvjeRsKlXYKh0
-         fNmw==
-X-Gm-Message-State: AOAM531osuplQPYCFPJmTpsdHhNUoUSRrcZxGK6V3kPLyJ4tIWBwztpI
-        aHRvQps8vNupSJ40x89vvDGd+SOhYPVfuovzq5jXLA==
-X-Google-Smtp-Source: ABdhPJwkBKiwHoQTkPDwgHkZOpEnSHjYxqckozTuh5xOgGjTCbFXW4/OwVL4K9CtiMFwbAzSCK7mZVJT+JVxeCNGWvE=
-X-Received: by 2002:a0c:bd15:: with SMTP id m21mr19505914qvg.61.1593508128336;
- Tue, 30 Jun 2020 02:08:48 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=Qw+g1jLxSkKavfMbFGU6iuXSgClnm8neHGPQpEb1Hmc=;
+        b=DeDOASRe0zNftL/0wK7t8e58eBwFRRVxb5IQx8cN3g9/RiI2sVrEGiSvCMVt20vHk0
+         na52FbPcPyhFnUizmwD+gY+CthwB68h3qeFztowm6I4syAng1YD80xetLyyibQ7Vccd4
+         v/C79TFFFRrTL4eT/ahPe8bX3BjyNiZZzmEtiDbnBipNY1g+eJHdqIUxPkzneSAK8zad
+         e/XJdPJqb5MRHNewJdbLtCYStv+7VbeImcSVPUgQkQhoR/bV4UdrHm2NNAlmfNw/TucZ
+         /mPgHZP4y22/lm87iQzNidTSouQ1GrhxUQu2Rp1FFRIx4Xy1QcEMdwGpiqPaMfgVjyZi
+         UqOA==
+X-Gm-Message-State: AOAM531NMCa1L/z1Xvtii68dMpypqa4AIcoeYJUw+oAYIZ+QtVN8+ZGG
+        8ffzmpB+qcPQu+mZ4Y+VzuvoNg==
+X-Google-Smtp-Source: ABdhPJxgqjKPF7nbSn/auL0wj5H0DWf+4ftxxPtYiwQsFQWStOssSU9Pwl5Wt4o7o9I8jDQgnqg/Ww==
+X-Received: by 2002:adf:f104:: with SMTP id r4mr21796791wro.90.1593508222607;
+        Tue, 30 Jun 2020 02:10:22 -0700 (PDT)
+Received: from dell ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id v18sm3013117wrv.49.2020.06.30.02.10.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 02:10:22 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 10:10:20 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     haver <haver@linux.vnet.ibm.com>
+Cc:     arnd@arndb.de, gregkh@linuxfoundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Michael Jung <mijung@gmx.net>,
+        Michael Ruettger <michael@ibmra.de>,
+        Frank Haverkamp <haver@linux.ibm.com>,
+        Joerg-Stephan Vogt <jsvogt@de.ibm.com>
+Subject: Re: [PATCH 17/20] misc: genwqe: card_base: Do not pass unused
+ argument 'fatal_err'
+Message-ID: <20200630091020.GJ1179328@dell>
+References: <20200629140442.1043957-1-lee.jones@linaro.org>
+ <20200629140442.1043957-18-lee.jones@linaro.org>
+ <016718c7218cf811897cc32cf9476222@linux.vnet.ibm.com>
 MIME-Version: 1.0
-References: <20200623040107.22270-1-warthog618@gmail.com> <20200623040107.22270-9-warthog618@gmail.com>
- <CAMpxmJVbiH9mh2c8aAS+GG9a76w9c0Nrrv-VDVhpo+wSyQ2NeQ@mail.gmail.com>
- <20200624140806.GA7569@sol> <CAMpxmJXbzFvR9h4fXvCwDMz4t6N16o2Y88K94aPwu6MFuCzqrg@mail.gmail.com>
- <20200625100126.GA18788@sol>
-In-Reply-To: <20200625100126.GA18788@sol>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 30 Jun 2020 11:08:37 +0200
-Message-ID: <CAMpxmJXbp_JYg8pX6StMy3578O4MZuatDTd-Ki6ydVY8u32+fw@mail.gmail.com>
-Subject: Re: [PATCH 08/22] gpiolib: cdev: complete the irq/thread timestamp handshake
-To:     Kent Gibson <warthog618@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-gpio <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <016718c7218cf811897cc32cf9476222@linux.vnet.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 12:01 PM Kent Gibson <warthog618@gmail.com> wrote:
->
-> On Thu, Jun 25, 2020 at 11:44:30AM +0200, Bartosz Golaszewski wrote:
-> > On Wed, Jun 24, 2020 at 4:08 PM Kent Gibson <warthog618@gmail.com> wrot=
-e:
-> > >
-> > > On Wed, Jun 24, 2020 at 04:00:42PM +0200, Bartosz Golaszewski wrote:
-> > > > wt., 23 cze 2020 o 06:02 Kent Gibson <warthog618@gmail.com> napisa=
-=C5=82(a):
-> [ snip ]
-> > >
-> > > I'm not totally sure myself, as my understanding of how interrupts ar=
-e
-> > > shared in the kernel is pretty sketchy, but my concern is that if we
-> > > are sharing the irq then whoever we are sharing with may release the =
-irq
-> > > and we go from nested to unnested.  Or vice versa.  Not sure if that =
-is
-> > > valid, but that was my concern, and it seemed like a minor change to
-> > > cover it just in case.
-> > >
-> >
-> > It's my understanding that a shared interrupt must be explicitly
-> > requested as shared by all previous users or request_irq() will fail.
-> > In this case: we call request_threaded_irq() without the IRQF_SHARED
-> > flag so it's never a shared interrupt. Even if someone previously
-> > requested it as shared - our call will simply fail.
-> >
->
-> OK.  Is there a reason not to share the interrupt?
->
+On Tue, 30 Jun 2020, haver wrote:
 
-If nobody requested this yet, I'd say: let's not touch it. :)
+> On 2020-06-29 16:04, Lee Jones wrote:
+> > 'fatal_err' is taken as an argument to a static function which is only
+> > invoked once.  During this invocation 'fatal_err' is not set.  There
+> > doesn't appear to be a good reason to keep it around.
+> > 
+> > Also fixes the following W=1 kernel build warning:
+> > 
+> >  drivers/misc/genwqe/card_base.c:588: warning: Function parameter or
+> > member 'fatal_err' not described in 'genwqe_recover_card'
+> > 
+> > Cc: Michael Jung <mijung@gmx.net>
+> > Cc: Michael Ruettger <michael@ibmra.de>
+> > Cc: Frank Haverkamp <haver@linux.ibm.com>
+> > Cc: Joerg-Stephan Vogt <jsvogt@de.ibm.com>
+> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> > ---
+> >  drivers/misc/genwqe/card_base.c | 18 +++---------------
+> >  1 file changed, 3 insertions(+), 15 deletions(-)
+> > 
+> > diff --git a/drivers/misc/genwqe/card_base.c
+> > b/drivers/misc/genwqe/card_base.c
+> > index bceebf49de2d5..809a6f46f6de3 100644
+> > --- a/drivers/misc/genwqe/card_base.c
+> > +++ b/drivers/misc/genwqe/card_base.c
+> > @@ -569,30 +569,18 @@ static int genwqe_stop(struct genwqe_dev *cd)
+> > 
+> >  /**
+> >   * genwqe_recover_card() - Try to recover the card if it is possible
+> > - *
+> > - * If fatal_err is set no register access is possible anymore. It is
+> > - * likely that genwqe_start fails in that situation. Proper error
+> > - * handling is required in this case.
+> > + * @cd: GenWQE device information
+> >   *
+> >   * genwqe_bus_reset() will cause the pci code to call genwqe_remove()
+> >   * and later genwqe_probe() for all virtual functions.
+> >   */
+> > -static int genwqe_recover_card(struct genwqe_dev *cd, int fatal_err)
+> > +static int genwqe_recover_card(struct genwqe_dev *cd)
+> >  {
+> >  	int rc;
+> >  	struct pci_dev *pci_dev = cd->pci_dev;
+> > 
+> >  	genwqe_stop(cd);
+> > 
+> > -	/*
+> > -	 * Make sure chip is not reloaded to maintain FFDC. Write SLU
+> > -	 * Reset Register, CPLDReset field to 0.
+> > -	 */
+> > -	if (!fatal_err) {
+> > -		cd->softreset = 0x70ull;
+> > -		__genwqe_writeq(cd, IO_SLC_CFGREG_SOFTRESET, cd->softreset);
+> > -	}
+> > -
+> >  	rc = genwqe_bus_reset(cd);
+> >  	if (rc != 0) {
+> >  		dev_err(&pci_dev->dev,
+> > @@ -958,7 +946,7 @@ static int genwqe_health_thread(void *data)
+> > 
+> >  			cd->card_state = GENWQE_CARD_FATAL_ERROR;
+> > 
+> > -			rc = genwqe_recover_card(cd, 0);
+> > +			rc = genwqe_recover_card(cd);
+> >  			if (rc < 0) {
+> >  				/* FIXME Card is unusable and needs unbind! */
+> >  				goto fatal_error;
+> 
+> I think this one I want to keep. Since fatal_err is 0, !fatal_error is 1 and
+> the register write is actually executed.
 
-In theory, we check if the line state changed so we should be fine but
-in practice this sounds like a can of worms. That being said: I don't
-have a reason not to do it. Just a feeling.
+Ah yes, good catch.
 
-> > I still think that resetting the timestamp is fine because it's not
-> > being set to 0 in hardirq context. We just need a different
-> > explanation.
-> >
->
-> Or just drop it?
+What if we *always* did instead then?
 
-Yes, I think dropping this patch for now is fine.
+> I also want to keep the parameter even though it is only used with 0. The
+> register bit causes a less drastic recovery, but if we would discover that
+> that is not working ok, we rather discard the debug data we get in this case
+> instead of letting the recovery fail. I think it does not hurt to keep it.
 
-Bart
+I'm not 100% against it, but it is dead code.
+
+> Maybe you can add a comment?
+
+If you really want to keep it, I can just update the kerneldoc
+instead.
+
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
