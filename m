@@ -2,109 +2,197 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B74C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B8CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9219B2068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:34:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D300206B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:35:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SOwYxgcV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nE7AsZJx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388279AbgF3Ney (ORCPT
+        id S1732925AbgF3NfX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 09:34:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44940 "EHLO
+        Tue, 30 Jun 2020 09:35:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388080AbgF3Ndu (ORCPT
+        with ESMTP id S1730087AbgF3NfU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 09:33:50 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFBFDC03E979
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:33:49 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id q15so18836112wmj.2
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:33:49 -0700 (PDT)
+        Tue, 30 Jun 2020 09:35:20 -0400
+Received: from mail-vs1-xe42.google.com (mail-vs1-xe42.google.com [IPv6:2607:f8b0:4864:20::e42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16CCCC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:35:20 -0700 (PDT)
+Received: by mail-vs1-xe42.google.com with SMTP id p25so3409206vsg.4
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:35:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=g/OBCOZny1ndsw3tmtK3a2umBUo6+P4OiGX2ORUOTVo=;
-        b=SOwYxgcVaWP69efaAXz9BhJcmlTyK1GZqGNK1MqJgMhuxbrP1cUHlsGK2XYPEVuoot
-         KTtEe9qq6HGV8fCOc+8e5ors98U36q7Ke+yVpoP8mVeODUQU4Dqiojr2Lr68JuvxfcIT
-         9u7cxUHcLRvtnCsd4woz3jbfJZ7xySd6MHAlwOphAAEb0h58APo9daYXwxoXL9yRDl9M
-         HkKFTYCyGu/mFr9dVcsDrxBPS3yaAATySXjSSLERl93KVRUu2daqu4B988sR46gWzz1z
-         T9HbXAn8MX+UcCVy8IcimypeXTMbCfyv1yFHF5YHpvWxE5T+N02+l6NAA5EsSo1+jBC4
-         iUmQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6tB0fuvE9XkXUicIj7TkXEw1CQTq9dQjVMcGs6V04Fs=;
+        b=nE7AsZJxn03bQvW0Wfy21hXDu5LwSRwi5sqZdn5Xw6M0wKfAkpw8BrW+7W7zBVCjrl
+         jgpbtYfkGv0VUa4zn6IVpxw365bkY5Hn3gAranlrll2ZqJH4t/z0tDXGjM2tcijDspBO
+         /KNvNQGfv1OKmRcl8MhW3QHp0dBix4TtpsPAtLd4dPgiLJa6L+i+8BZJlvxSMvdQqk7p
+         gN6sKj8KOE3hRQnH7VCaX0PCJhiOO/ovWzhzlQPyFKnPjS31Wz7/cJsiaeqL/TZnTD8R
+         9iCg49Kv74mPn4nzkaAcIlPr0dE6ppYKcG+oQadw9bFmcKrbmPT+UC0wJpZ0CpbZHSdf
+         8FsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=g/OBCOZny1ndsw3tmtK3a2umBUo6+P4OiGX2ORUOTVo=;
-        b=QTUPd4FrjGolAdPEGwQHmOMdhm6shjZ0tgssbDkwtPIzbMiWy4EUzvarQFqJa7UgC4
-         XPZMnSQXa/pwgrhdv0xxgpxqT1nWpBNCiOro1/SeD33tENrPRN60KeIdKSeScRwawmb3
-         5QB6qGenXmNWpou7vahOIAmg9mT4ov/xjC1aHWpjdso4LUGHbVg5bbiH+Plvw+zM5Miu
-         18UF5blyH10ms8k269fZn2UKwfRekDopA2RoYxm50ieBncQJQfRgClcOGHTBq7vlgbbp
-         yPLza73H4TDih4Uc/jekfn8vbN0MzNxi3eYMTDz9HgkjxD1wUh9NrvRPIlgptf7823Yl
-         hiNA==
-X-Gm-Message-State: AOAM532RsobiQ6Jxpj9HKhV8ykuqYovzY6trpCmRvPNIl76oxvo2IWeY
-        AL4nhX2MnEZ9IpD/VAdkK2todw==
-X-Google-Smtp-Source: ABdhPJwIF8ribrbnToYRwN/u2AGBLiHFeuBSCLm3XU+lxTFxPc4lFfZzghG4zloc1akGtH8+Nhr4Pw==
-X-Received: by 2002:a7b:c0da:: with SMTP id s26mr20301556wmh.96.1593524028491;
-        Tue, 30 Jun 2020 06:33:48 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id z16sm3682464wrr.35.2020.06.30.06.33.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 06:33:47 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 00/10] Clean GPIO of W=1 warnings
-Date:   Tue, 30 Jun 2020 14:33:35 +0100
-Message-Id: <20200630133345.2232932-1-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6tB0fuvE9XkXUicIj7TkXEw1CQTq9dQjVMcGs6V04Fs=;
+        b=X308jUYAlIlObjbk1NHrS2yFrkr8aPVPQw91ZSgD2Bygom/wn7FyxBDXsmPFTtIkgA
+         knMVWIWdBaK+5fs0VEKgg9PQyoZdK/R5MQpHWRzgvgWK6H3o/MF7f3AT997jvRm6ECrh
+         VTzPZpe+OqNyk73cKu/oiFyGyNB7QIQxWK3SfBhMurd2em19sEkn7YlCxu/R2/CxbSTv
+         1CJnC8p9yT/q/MWjUU1FNVYPfvNvsi1mIMtEn+C3m8B/Y6y3a/RKaBVyTob8z8sMfnMw
+         6DiswEDPlhMa9yuYWYXDb7WipRDcTESOkwi3yZGmP0w64tPnbpltfhSrMqkZCU0UrimD
+         q7Nw==
+X-Gm-Message-State: AOAM53315UiBBrdNLwH8Wt3YzHl0l9HqWZ2xosomDxkLP5jMkRrDdWJ7
+        Jz50MPmTQuReI/CqB7TV7UXnJSfgVZbP4qQQKHY=
+X-Google-Smtp-Source: ABdhPJyuENQTwT1P4tSS3M52Aywm0AqmxoFvqrcTeIZXqG4kvlXx63MC7X35eXWh91DDagBK39ayTMBcFdhVIfcL688=
+X-Received: by 2002:a67:d88c:: with SMTP id f12mr12854246vsj.92.1593524117177;
+ Tue, 30 Jun 2020 06:35:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20200611142009.1098058-1-jim.cromie@gmail.com> <20200630093754.GA13271@linux-8ccs.fritz.box>
+In-Reply-To: <20200630093754.GA13271@linux-8ccs.fritz.box>
+From:   jim.cromie@gmail.com
+Date:   Tue, 30 Jun 2020 07:34:51 -0600
+Message-ID: <CAJfuBxz5YzZfko_M5ap3QW-7ZJsHJDqzEqfN=GZVtDz4W2edLQ@mail.gmail.com>
+Subject: Re: [PATCH] kernel/module: add name size info to pr_debug() calls
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This set is part of a larger effort attempting to clean-up W=1
-kernel builds, which are currently overwhelmingly riddled with
-niggly little warnings.
+On Tue, Jun 30, 2020 at 3:37 AM Jessica Yu <jeyu@kernel.org> wrote:
+>
+> +++ Jim Cromie [11/06/20 08:20 -0600]:
+> >when booted with arg: module.dyndbg=+p
+> >dmesg gets volumes of info about loaded modules.
+> >This adds module & symbol names, and sizes where pertinent.
+> >Now I can know which module's info Im looking at.
+>
+> Hi,
+>
+> Could you please fix the changelog formatting according to
+> Documentation/process/submitting-patches.rst? More specifically,
+> complete sentences, line wrapped at 75 columns, and a Signed-off-by:
+> line at the end. There are plenty of examples if you look through the
+> lkml mailing list.
+>
 
-Lee Jones (10):
-  gpio: gpiolib-of: Provide documentation for of_gpio_spi_cs_get_count()
-  gpio: gpio-altera: Add missing kerneldoc entry and demote comment
-  gpio: gpio-ml-ioh: Fix missing ':' in 'struct ioh_gpio_reg_data
-  gpio: gpio-pmic-eic-sprd: Fix incorrectly named property 'map'
-  gpio: gpio-sama5d2-piobu: Demote all kerneldoc headers to basic
-    comment blocks
-  gpio: gpio-syscon: Fix formatting issues which confuse kerneldoc
-  gpio: gpio-it87: Fix formatting issues which confuse kerneldoc
-  gpio: gpio-mlxbf: Tell the compiler that ACPI functions may not be
-    used
-  gpio: gpio-mlxbf2: Tell the compiler that ACPI functions may not be
-    use
-  gpio: gpio-mlxbf2.c: Provide __releases() annotation to stop confusing
-    Sparse
+ack.  less casual next time. and with -s
 
- drivers/gpio/gpio-altera.c        |  3 ++-
- drivers/gpio/gpio-it87.c          | 14 +++++++-------
- drivers/gpio/gpio-ml-ioh.c        |  2 +-
- drivers/gpio/gpio-mlxbf.c         |  2 +-
- drivers/gpio/gpio-mlxbf2.c        |  4 +++-
- drivers/gpio/gpio-pmic-eic-sprd.c |  2 +-
- drivers/gpio/gpio-sama5d2-piobu.c | 16 ++++++++--------
- drivers/gpio/gpio-syscon.c        | 12 ++++++------
- drivers/gpio/gpiolib-of.c         |  3 +++
- 9 files changed, 32 insertions(+), 26 deletions(-)
+> >---
+> > kernel/module.c | 14 +++++++-------
+> > 1 file changed, 7 insertions(+), 7 deletions(-)
+> >
+> >diff --git a/kernel/module.c b/kernel/module.c
+> >index e8a198588f26..d871d9cee9eb 100644
+> >--- a/kernel/module.c
+> >+++ b/kernel/module.c
+> >@@ -2294,8 +2294,8 @@ static int simplify_symbols(struct module *mod, const struct load_info *info)
+> >
+> >               case SHN_ABS:
+> >                       /* Don't need to do anything */
+> >-                      pr_debug("Absolute symbol: 0x%08lx\n",
+> >-                             (long)sym[i].st_value);
+> >+                      pr_debug("Absolute symbol: 0x%08lx %s\n",
+> >+                               (long)sym[i].st_value, name);
+>
+> I would prefer "Absolute symbol %s:" rather than putting the symbol
+> name at the end.
 
--- 
-2.25.1
+i chose this for a more tabular appearance,
+names vary in length, so value afterwards looks cluttered.
+plus its more consistent with preceding messages
 
+[    3.458007] 0xffffffffc0023d40 0x00000030 .bss
+[    3.458008] 0xffffffffc0028000 0x00001158 .symtab
+[    3.458010] 0xffffffffc0029158 0x00000af5 .strtab
+[    3.458021] Absolute symbol: 0x00000000 rapl.mod.c
+[    3.458022] Absolute symbol: 0x00000000 rapl.c
+
+
+>
+> >                       break;
+> >
+> >               case SHN_LIVEPATCH:
+> >@@ -2409,7 +2409,7 @@ static void layout_sections(struct module *mod, struct load_info *info)
+> >       for (i = 0; i < info->hdr->e_shnum; i++)
+> >               info->sechdrs[i].sh_entsize = ~0UL;
+> >
+> >-      pr_debug("Core section allocation order:\n");
+> >+      pr_debug("Core section allocation order for: %s\n", mod->name);
+>
+> I would slightly prefer "Core section allocation order for %s:", but
+> it's a matter of taste.
+>
+
+done everywhere you noted.
+
+
+> >       for (m = 0; m < ARRAY_SIZE(masks); ++m) {
+> >               for (i = 0; i < info->hdr->e_shnum; ++i) {
+> >                       Elf_Shdr *s = &info->sechdrs[i];
+> >@@ -2442,7 +2442,7 @@ static void layout_sections(struct module *mod, struct load_info *info)
+> >               }
+> >       }
+> >
+> >-      pr_debug("Init section allocation order:\n");
+> >+      pr_debug("Init section allocation order for: %s\n", mod->name);
+>
+> Same here.
+>
+> >       for (m = 0; m < ARRAY_SIZE(masks); ++m) {
+> >               for (i = 0; i < info->hdr->e_shnum; ++i) {
+> >                       Elf_Shdr *s = &info->sechdrs[i];
+> >@@ -3276,7 +3276,7 @@ static int move_module(struct module *mod, struct load_info *info)
+> >               mod->init_layout.base = NULL;
+> >
+> >       /* Transfer each section which specifies SHF_ALLOC */
+> >-      pr_debug("final section addresses:\n");
+> >+      pr_debug("final section addresses for: %s\n", mod->name);
+>
+> Let's capitalize the "f" in "final section addresses" to be consistent
+> with the other two above.
+>
+> >       for (i = 0; i < info->hdr->e_shnum; i++) {
+> >               void *dest;
+> >               Elf_Shdr *shdr = &info->sechdrs[i];
+> >@@ -3294,8 +3294,8 @@ static int move_module(struct module *mod, struct load_info *info)
+> >                       memcpy(dest, (void *)shdr->sh_addr, shdr->sh_size);
+> >               /* Update sh_addr to point to copy in image. */
+> >               shdr->sh_addr = (unsigned long)dest;
+> >-              pr_debug("\t0x%lx %s\n",
+> >-                       (long)shdr->sh_addr, info->secstrings + shdr->sh_name);
+> >+              pr_debug("\t0x%lx 0x%.8lx %s\n", (long)shdr->sh_addr,
+> >+                       (long)shdr->sh_size, info->secstrings + shdr->sh_name);
+>
+> Any reason why you added sh_size here? Is it really needed? You can
+> usually deduce how much space a section is taking up in a module by
+> looking at the final section address printout. Plus the elf section
+> size is not entirely accurate here as each module section is aligned
+> to page boundaries when the module loader allocates memory for each
+> section. I would prefer to just leave it out.
+>
+
+mostly I added it cuz it was available.
+I do not know when it might be useful, but seeing it can help decide that.
+Having the data there makes your deduction possible,
+without seeing the data, it wouldnt occur to me that there are "inaccuracies".
+And seeing it in hex form might illuminate the page alignment too.
+
+Also, this is in move-module, which I havent seen in action AFAIK
+
+I'll send v2 shortly, as above, unless you want a tweak.
+
+> Thanks,
+>
+> Jessica
