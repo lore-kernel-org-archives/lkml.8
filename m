@@ -2,109 +2,209 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F50EC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18132C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:40:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7060D207D0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:38:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C43C5206BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:40:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593506331;
-	bh=CJ+C8ZdKsvhVaVIQGe4TZRTwKW7+G3J0siGkh8wZTdQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=O8hCNazm9UFebhPcPy8JGFyOwqhdW0X75CFkf75HtGTsPkLlV7d7Qqa5F3k2sh8bu
-	 lodA7izpJehjftxj7e7tFWY9L/AdFlonF+Uu3LWf1eylQlGDE885ReJgpv7hPBzYdp
-	 7u9d41OpKkMzYWNeiW9f02AcPxg+pvw2WvYtw0Gk=
+	s=default; t=1593506410;
+	bh=4rWqQhg+5mtxmFhsb50rEyT4z/1f9ATHJuUDJBaS3uo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=pMqZi/dZxYc9E6uemsuNbFYuWae06GB9DlMkkwITE7n/9J0GvHg3pyQ6A+TsjQkDf
+	 WDRyV4H/braGr1mhdU1romigi0nYgl3Am8Ot5N9IiIHkmz6gM8x00bXW0M1sGgxWmV
+	 BYILhKv+J/RhZrlxo5kbVrTrEsFCqFVIrsHrGYUE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731572AbgF3Iiu (ORCPT
+        id S1731540AbgF3IkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 04:38:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52922 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731458AbgF3Iit (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 04:38:49 -0400
-Received: from localhost (unknown [84.241.197.94])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2FFDF206BE;
-        Tue, 30 Jun 2020 08:38:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593506328;
-        bh=CJ+C8ZdKsvhVaVIQGe4TZRTwKW7+G3J0siGkh8wZTdQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZahWUwe6PFeTP3M0qu7LY5NLQwEnX83/pGSmNb08y/7YYeIPPogEea0UrvqCOqOxK
-         4mbZ01TEfqtiKeMvpLoz4cu26UR3wnPzKZUlo2EL57EZ7rGoehaideIYfbJ9/VBFgc
-         dZ3ALWv6NKFaygERtyLtGnJTNnKeWFbX5LzpvGMA=
-Date:   Tue, 30 Jun 2020 10:38:45 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org
-Subject: Re: [PATCH 5.7 000/265] 5.7.7-rc1 review
-Message-ID: <20200630083845.GA637154@kroah.com>
-References: <20200629151818.2493727-1-sashal@kernel.org>
- <42dadde8-04c0-863b-651a-1959a3d85494@linuxfoundation.org>
- <20200629231826.GT1931@sasha-vm>
+        Tue, 30 Jun 2020 04:40:08 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:38916 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728132AbgF3IkF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 04:40:05 -0400
+Received: by mail-lj1-f193.google.com with SMTP id b25so17884947ljp.6
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 01:40:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DjoSzu9rqnu2RmMjvpMxlvhGdgx+omtrZnaQOhXDhEw=;
+        b=Mta7160BtbOYXtIQOeBcAKSuyVdqekwUdxRGhQVjzJ83SBFoAe6pOI/SD6v/8OKjFl
+         CEUxRLkaETcYhfo+u1UDbSlaM9BhciWlnhdoqiEuVENZbUaV+K1sKioauaMQ8iy/gm/2
+         5W6fMdku0B5k5unVQj36TVwmJAH0I56xQJXJ3nbEW/u1390ggbXMHa0X15UvXv7wuqg1
+         sJqOysG4NGEwXN2WSeR1v7K0UfVHtXeZ1XT7YzJgXy9ZWap4GnHlD3mz1DFkEmina0h1
+         gY6lo0LjnIFIA8UqGq96ofAr7mosxyCeTz4UFTJO33d/1vPNuC0ER/UySA76WRn7PoG4
+         oaSg==
+X-Gm-Message-State: AOAM530ZwY8ZcXUTkaff/C9qsbfHs8k5fstCy8LXhbPqhJHItUyXfbeT
+        KdHpqNVTdR/ravZhXoEMGtW4LqzFefo=
+X-Google-Smtp-Source: ABdhPJxpHAXN99fomr5eH8btMJZMUmI29cf1Qw6iekH1htEBKR4Cnx9Ifc6Ihk/KMYuyj3SQf0g3Nw==
+X-Received: by 2002:a2e:6e01:: with SMTP id j1mr8773989ljc.442.1593506403007;
+        Tue, 30 Jun 2020 01:40:03 -0700 (PDT)
+Received: from xi.terra (c-beaee455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.174.190])
+        by smtp.gmail.com with ESMTPSA id n7sm508517lji.97.2020.06.30.01.40.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 01:40:02 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.93.0.4)
+        (envelope-from <johan@xi.terra>)
+        id 1jqBo7-0001pQ-QM; Tue, 30 Jun 2020 10:39:59 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH] mfd: lm3533: expand control-bank accessors
+Date:   Tue, 30 Jun 2020 10:39:48 +0200
+Message-Id: <20200630083948.6987-1-johan@kernel.org>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200629231826.GT1931@sasha-vm>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 07:18:26PM -0400, Sasha Levin wrote:
-> On Mon, Jun 29, 2020 at 02:37:53PM -0600, Shuah Khan wrote:
-> > Hi Sasha,
-> > 
-> > On 6/29/20 9:13 AM, Sasha Levin wrote:
-> > > 
-> > > This is the start of the stable review cycle for the 5.7.7 release.
-> > > There are 265 patches in this series, all will be posted as a response
-> > > to this one.  If anyone has any issues with these being applied, please
-> > > let me know.
-> > > 
-> > > Responses should be made by Wed 01 Jul 2020 03:14:48 PM UTC.
-> > > Anything received after that time might be too late.
-> > > 
-> > > The whole patch series can be found in one patch at:
-> > > 	https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/patch/?id=linux-5.7.y&id2=v5.7.6
-> > > 
-> > 
-> > Looks like patch naming convention has changed. My scripts look
-> > for the following convention Greg uses. Are you planning to use
-> > the above going forward? My scripts failed looking for the usual
-> > naming convention.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.6-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.7.y
-> > and the diffstat can be found below.
-> 
-> Sorry for that. I was hoping to avoid using the signed upload mechanism
-> Greg was using by simply pointing the links to automatically generated
-> patches on cgit (the git.kernel.org interface).
-> 
-> Would it be ok to change the pattern matching here? Something like this
-> should work for both Greg's format and my own (and whatever may come
-> next):
-> 
-> 	grep -A1 "The whole patch series can be found in one patch at:" | tail -n1 | sed 's/\t//'
+Expand the control-bank accessors that were implemented using macros.
+This allows the definitions of these exported functions to be found more
+easily and specifically avoids a W=1 compiler warning due to the
+redundant brightness sanity check:
 
-If those don't work, I can still push out -rc1 patches.
+drivers/mfd/lm3533-ctrlbank.c: In function 'lm3533_ctrlbank_set_brightness':
+drivers/mfd/lm3533-ctrlbank.c:98:10: warning: comparison is always false due to limited range of data type [-Wtype-limits]
+   98 |  if (val > LM3533_##_NAME##_MAX)     \
+      |          ^
+drivers/mfd/lm3533-ctrlbank.c:125:1: note: in expansion of macro 'lm3533_ctrlbank_set'
+  125 | lm3533_ctrlbank_set(brightness, BRIGHTNESS);
+      | ^~~~~~~~~~~~~~~~~~~
 
-It might be best given that the above -rc.git tree is unstable and can,
-and will, change, and patches stored on kernel.org will not.
+Signed-off-by: Johan Hovold <johan@kernel.org>
+---
+ drivers/mfd/lm3533-ctrlbank.c | 94 +++++++++++++++++++++--------------
+ 1 file changed, 56 insertions(+), 38 deletions(-)
 
-thanks,
+diff --git a/drivers/mfd/lm3533-ctrlbank.c b/drivers/mfd/lm3533-ctrlbank.c
+index 34fba06ec705..2537dfade51c 100644
+--- a/drivers/mfd/lm3533-ctrlbank.c
++++ b/drivers/mfd/lm3533-ctrlbank.c
+@@ -17,7 +17,6 @@
+ #define LM3533_MAX_CURRENT_MAX		29800
+ #define LM3533_MAX_CURRENT_STEP		800
+ 
+-#define LM3533_BRIGHTNESS_MAX		255
+ #define LM3533_PWM_MAX			0x3f
+ 
+ #define LM3533_REG_PWM_BASE		0x14
+@@ -89,41 +88,33 @@ int lm3533_ctrlbank_set_max_current(struct lm3533_ctrlbank *cb, u16 imax)
+ }
+ EXPORT_SYMBOL_GPL(lm3533_ctrlbank_set_max_current);
+ 
+-#define lm3533_ctrlbank_set(_name, _NAME)				\
+-int lm3533_ctrlbank_set_##_name(struct lm3533_ctrlbank *cb, u8 val)	\
+-{									\
+-	u8 reg;								\
+-	int ret;							\
+-									\
+-	if (val > LM3533_##_NAME##_MAX)					\
+-		return -EINVAL;						\
+-									\
+-	reg = lm3533_ctrlbank_get_reg(cb, LM3533_REG_##_NAME##_BASE);	\
+-	ret = lm3533_write(cb->lm3533, reg, val);			\
+-	if (ret)							\
+-		dev_err(cb->dev, "failed to set " #_name "\n");		\
+-									\
+-	return ret;							\
+-}									\
+-EXPORT_SYMBOL_GPL(lm3533_ctrlbank_set_##_name);
+-
+-#define lm3533_ctrlbank_get(_name, _NAME)				\
+-int lm3533_ctrlbank_get_##_name(struct lm3533_ctrlbank *cb, u8 *val)	\
+-{									\
+-	u8 reg;								\
+-	int ret;							\
+-									\
+-	reg = lm3533_ctrlbank_get_reg(cb, LM3533_REG_##_NAME##_BASE);	\
+-	ret = lm3533_read(cb->lm3533, reg, val);			\
+-	if (ret)							\
+-		dev_err(cb->dev, "failed to get " #_name "\n");		\
+-									\
+-	return ret;							\
+-}									\
+-EXPORT_SYMBOL_GPL(lm3533_ctrlbank_get_##_name);
+-
+-lm3533_ctrlbank_set(brightness, BRIGHTNESS);
+-lm3533_ctrlbank_get(brightness, BRIGHTNESS);
++int lm3533_ctrlbank_set_brightness(struct lm3533_ctrlbank *cb, u8 val)
++{
++	u8 reg;
++	int ret;
++
++	reg = lm3533_ctrlbank_get_reg(cb, LM3533_REG_BRIGHTNESS_BASE);
++	ret = lm3533_write(cb->lm3533, reg, val);
++	if (ret)
++		dev_err(cb->dev, "failed to set brightness\n");
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(lm3533_ctrlbank_set_brightness);
++
++int lm3533_ctrlbank_get_brightness(struct lm3533_ctrlbank *cb, u8 *val)
++{
++	u8 reg;
++	int ret;
++
++	reg = lm3533_ctrlbank_get_reg(cb, LM3533_REG_BRIGHTNESS_BASE);
++	ret = lm3533_read(cb->lm3533, reg, val);
++	if (ret)
++		dev_err(cb->dev, "failed to get brightness\n");
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(lm3533_ctrlbank_get_brightness);
+ 
+ /*
+  * PWM-input control mask:
+@@ -135,9 +126,36 @@ lm3533_ctrlbank_get(brightness, BRIGHTNESS);
+  *   bit 1 - PWM-input enabled in Zone 0
+  *   bit 0 - PWM-input enabled
+  */
+-lm3533_ctrlbank_set(pwm, PWM);
+-lm3533_ctrlbank_get(pwm, PWM);
++int lm3533_ctrlbank_set_pwm(struct lm3533_ctrlbank *cb, u8 val)
++{
++	u8 reg;
++	int ret;
++
++	if (val > LM3533_PWM_MAX)
++		return -EINVAL;
++
++	reg = lm3533_ctrlbank_get_reg(cb, LM3533_REG_PWM_BASE);
++	ret = lm3533_write(cb->lm3533, reg, val);
++	if (ret)
++		dev_err(cb->dev, "failed to set PWM mask\n");
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(lm3533_ctrlbank_set_pwm);
++
++int lm3533_ctrlbank_get_pwm(struct lm3533_ctrlbank *cb, u8 *val)
++{
++	u8 reg;
++	int ret;
+ 
++	reg = lm3533_ctrlbank_get_reg(cb, LM3533_REG_PWM_BASE);
++	ret = lm3533_read(cb->lm3533, reg, val);
++	if (ret)
++		dev_err(cb->dev, "failed to get PWM mask\n");
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(lm3533_ctrlbank_get_pwm);
+ 
+ MODULE_AUTHOR("Johan Hovold <jhovold@gmail.com>");
+ MODULE_DESCRIPTION("LM3533 Control Bank interface");
+-- 
+2.26.2
 
-greg k-h
