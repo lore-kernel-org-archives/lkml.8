@@ -2,154 +2,235 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D505C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 01:59:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC0EC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 02:00:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2D01420780
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 01:59:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63F8B20780
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 02:00:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="e/vudEKG"
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="IGRJt5OH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbgF3B7D (ORCPT
+        id S1727076AbgF3CAx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 21:59:03 -0400
-Received: from ozlabs.org ([203.11.71.1]:53729 "EHLO ozlabs.org"
+        Mon, 29 Jun 2020 22:00:53 -0400
+Received: from mga04.intel.com ([192.55.52.120]:27064 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725988AbgF3B7C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 21:59:02 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49wnb64C6Xz9sDX;
-        Tue, 30 Jun 2020 11:58:58 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1593482340;
-        bh=5cPu6wsgH/MuuN6WquTB5OoBViBaqpyzg6+ERh6fgFE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=e/vudEKGo+PonMu/StaXpztVkrHZTgpNNCOQdpuRl+K0wWRVC5BhqogqLWsZx2mrb
-         C7r2dLyhWo6GIOBlS8LK7z5R6Qn3LUuJuQ0hnW8xS3Tdq/4RWzfJ6UA1p1m5gXt0+J
-         zcscJDAXN4nK4LKPLNunInxFkogcybp1KfSsFxAODCTWELQpTI3Ml6Mmvf2TNG/H9x
-         TEIIydptycgC0LuPGh4O7iIcWhFgTZqVG3jE9Ux2Hax1XXHkKq3kICLvOaw4mtXK4e
-         kA0lak9ejHWHnHmlxFXx/zmJh/4Qm2frNJy6CZMJ1XcGi1IH0c/HikegiCswzALfQZ
-         qSQfhGMHAVSKg==
-Date:   Tue, 30 Jun 2020 11:58:57 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org
-Subject: Re: linux-next: build failures after merge of the vfs tree
-Message-ID: <20200630115857.48eab55d@canb.auug.org.au>
-In-Reply-To: <20200618100851.0f77ed52@canb.auug.org.au>
-References: <20200616103330.2df51a58@canb.auug.org.au>
-        <20200616103440.35a80b4b@canb.auug.org.au>
-        <20200616010502.GA28834@gondor.apana.org.au>
-        <20200616033849.GL23230@ZenIV.linux.org.uk>
-        <20200616143807.GA1359@gondor.apana.org.au>
-        <20200617165715.577aa76d@canb.auug.org.au>
-        <20200617070316.GA30348@gondor.apana.org.au>
-        <20200617173102.2b91c32d@canb.auug.org.au>
-        <20200617073845.GA20077@gondor.apana.org.au>
-        <20200618100851.0f77ed52@canb.auug.org.au>
+        id S1725988AbgF3CAx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 22:00:53 -0400
+IronPort-SDR: jcus4yDqKu4tJLw9kEEfolubmaV3qolzkmvD9uTjXw3CbFwzDKftXPSFg9lFK9fsTBy3XGUMpF
+ Y8CRtAJOmExw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="143602967"
+X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
+   d="scan'208";a="143602967"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 19:00:52 -0700
+IronPort-SDR: 3wVrju1Zt2XU4t+gH4O96wN7wVrjSDK9v17dC/wu/Za0xyv96GbHW5wXTx+pNXBUxtBsyRz0Fv
+ YeeDS881i/Tg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
+   d="scan'208";a="281061450"
+Received: from orsmsx107.amr.corp.intel.com ([10.22.240.5])
+  by orsmga006.jf.intel.com with ESMTP; 29 Jun 2020 19:00:52 -0700
+Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
+ ORSMSX107.amr.corp.intel.com (10.22.240.5) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 29 Jun 2020 19:00:51 -0700
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.109)
+ by edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 29 Jun 2020 19:00:52 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mizIwgAyWjW/Jd/jCB7PXP8tkBBsqL6xUW7LcsznY+aPZN9nxLyXMfA7unW6oMoqzv4y2uNUNBIfAkQpdrhIHK80bMd4L4cKYxGQF/eQBUohDT+Ss9Q7fnmh1gxDM7dqeSGO2iD5BAGISFNsX5PnMyF/Ai81v6ICtEEl+07yfVOaNJR4xg0fhqwyiaSRzAb6ftifIdsF2NPB+l6GI/hy+VbV0LF97oqz69R2jnpCW9QuDQ7re5D6d29BwhgILsMz+KlDvAYsJF98MCEyt5AMXbYWbDR27bQtcIoQFFLSlbqBzwCC9SknERC3C57yvTnILQ5bjFkFmNPK5WxJNhxp1g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wr9VI6/LgTjOXypC5id/RwphEVY5eJ0P8f4wZjPYhRg=;
+ b=IWbL2fF6q0LoXg1RG2Jhyvq/AjRfkUf0fb/BA1rV2XcoddDqacV/+Ewppo8letd+8gaYZUdoBRfql47Q3AY/f2kdvY7MgBxIOwvRAIMbsrrzZg9pudxTNM3r/FuOtUKGtq0Gvlz9JGwYy7vObjBYRVv+c2xxHspP99ATM+xW234DPLezSANPXykoOJ4PgV9hwTetvSQiWCLtwcEi8PsASmdEA5zDS+xzTPoGUkhuJT3dcxmolJzv0PS14hJbUDrTbbgWYLpD8IHyIwmt2N0A5gL3IKLpNQGLYnDBGfcZzSRvQvZ3tF5rGyh5vkVETbz2IrI1x6N6tq41e40ribIANw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wr9VI6/LgTjOXypC5id/RwphEVY5eJ0P8f4wZjPYhRg=;
+ b=IGRJt5OHYB48z7aOHRRCgZjMJDjz4rZIshKdi7oIiaMzeIs4wnsoSWNsiwxGLzYS+PhSdeAQXguLT6/PPQmwcD02cDrkCRYtANGn3JOpc8c4koheq5fTJAzE3B5SPsTU78p97o51RbBFlAzNKNAwofKuc07NI/7xeIqB0OPO7w4=
+Received: from MWHPR11MB1645.namprd11.prod.outlook.com (2603:10b6:301:b::12)
+ by MWHPR11MB1600.namprd11.prod.outlook.com (2603:10b6:301:b::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.23; Tue, 30 Jun
+ 2020 02:00:49 +0000
+Received: from MWHPR11MB1645.namprd11.prod.outlook.com
+ ([fe80::9864:e0cb:af36:6feb]) by MWHPR11MB1645.namprd11.prod.outlook.com
+ ([fe80::9864:e0cb:af36:6feb%5]) with mapi id 15.20.3131.027; Tue, 30 Jun 2020
+ 02:00:49 +0000
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     "Liu, Yi L" <yi.l.liu@intel.com>,
+        Stefan Hajnoczi <stefanha@gmail.com>
+CC:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Tian, Jun J" <jun.j.tian@intel.com>,
+        "Sun, Yi Y" <yi.y.sun@intel.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "peterx@redhat.com" <peterx@redhat.com>,
+        "Wu, Hao" <hao.wu@intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3 02/14] iommu: Report domain nesting info
+Thread-Topic: [PATCH v3 02/14] iommu: Report domain nesting info
+Thread-Index: AQHWSgRQYPLf19tsF0i4Fom/j2zC7qjvWjsAgAAx1ACAANlZcA==
+Date:   Tue, 30 Jun 2020 02:00:49 +0000
+Message-ID: <MWHPR11MB1645B09EBDC76514ADC897A68C6F0@MWHPR11MB1645.namprd11.prod.outlook.com>
+References: <1592988927-48009-1-git-send-email-yi.l.liu@intel.com>
+ <1592988927-48009-3-git-send-email-yi.l.liu@intel.com>
+ <20200629092448.GB31392@stefanha-x1.localdomain>
+ <DM5PR11MB1435FC14F2E8AC075DE41205C36E0@DM5PR11MB1435.namprd11.prod.outlook.com>
+In-Reply-To: <DM5PR11MB1435FC14F2E8AC075DE41205C36E0@DM5PR11MB1435.namprd11.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.2.0.6
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+authentication-results: intel.com; dkim=none (message not signed)
+ header.d=none;intel.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [192.198.147.207]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 47ced898-e848-426e-3a26-08d81c996962
+x-ms-traffictypediagnostic: MWHPR11MB1600:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR11MB16001908EBC8928FE8F337EC8C6F0@MWHPR11MB1600.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0450A714CB
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: nBBTpSGtX/0EZ/DTDpJHY4QeG3xQt8ltSxm2Plqe3QPWqzpB5m4jNr19ulmxhLQ0CJ1Pxbg1pakJUWI97muVbp7OH+mhQ1YQnlHYbjcEbCEutmAZveYy0N4S05rDeygfy8LZ3yZ/jDhm4c7IYtjV0/YvJvElTcGVpI9V+mf9ny/hpnZFf/TJRqTCqbqhoQyreIJNi0YdVlRQBFB4pkCxK3ROPQqD5hKgvNQke586QHA5X3xHgRZ4wo3kpq444gdNcuCQnlH7ttU8dS8PYAbbpv1N4V2OoYXU6k7GHhoRMltDGvY1cUq23OnQw5HyFX3nZqAR/BixogAMjyYD8xGFfg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1645.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(366004)(346002)(39860400002)(396003)(9686003)(186003)(76116006)(66946007)(66446008)(4326008)(54906003)(8936002)(66556008)(5660300002)(86362001)(110136005)(71200400001)(66476007)(52536014)(2906002)(33656002)(64756008)(8676002)(7416002)(26005)(55016002)(316002)(478600001)(7696005)(6506007)(83380400001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: yEh5+Uml/8KMDl7oSzfVTUJccRLQQ5ByQHwwtYHgWBex5DT5GcYLU780BOqOU+zqC5Tz5yQ+uC5FSgggKjd/TE5Ezpb+oDAhzoYEB+FwGFpUl31cesRzz+Lf0VyCTHE1Iw3a42yth97hhY/tyf4hPoMPzpeqEfsiG9TF+EDK7ABW5rPPwbyssDPVWSR/1ir/2qEj44anDgy2sID1IWR19FwI5olfviaYfUiAGWcHda/dv/r1zXULjHrB+Fxit4rozyREada/AQNc+Ep7SDs0qhLfcZuLZ/EtKqHgwOHpzwjsqo8aQxu1yGf7hETnUBp5yAKxoWtiIwjpm10mxyiB+MVgwsEI+vdXjGDDvU4QkeSC5pxI2WwiyRgkNtzJi+vdvU5VmoombVyJnnvvTqblWOIaZxpILAqkYX+nxrUxFMFX0uXOAZ4hthtKoSC4rnyRA4vN8qNxITlth51uUJpXis8R089rNWHPqeXMVk9flU2E9zLJ9sHMsFQSRv3aJO3t
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/_0FRHZJ7r_fvKJCjf8vCyNz";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR11MB1645.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 47ced898-e848-426e-3a26-08d81c996962
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2020 02:00:49.5654
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: OEQJ3iA0K8Lp19jhEECZDtRQsq1DiR+K75klEjOQqfQpOLhjwuNfXtDxlV9x/561H3Ht5Pw5RhwZaTveOJrn0A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1600
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/_0FRHZJ7r_fvKJCjf8vCyNz
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-On Thu, 18 Jun 2020 10:08:51 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> On Wed, 17 Jun 2020 17:38:45 +1000 Herbert Xu <herbert@gondor.apana.org.a=
-u> wrote:
-> >
-> > On Wed, Jun 17, 2020 at 05:31:02PM +1000, Stephen Rothwell wrote: =20
-> > > > >=20
-> > > > > Presumably another include needed:
-> > > > >=20
-> > > > > arch/s390/lib/test_unwind.c:49:2: error: implicit declaration of =
-function 'kmalloc' [-Werror=3Dimplicit-function-declaration]
-> > > > > arch/s390/lib/test_unwind.c:99:2: error: implicit declaration of =
-function 'kfree' [-Werror=3Dimplicit-function-declaration]     =20
-> > >=20
-> > > And more (these are coming from other's builds):
-> > >=20
-> > >   drivers/remoteproc/qcom_q6v5_mss.c:772:3: error: implicit declarati=
-on of function 'kfree' [-Werror,-Wimplicit-function-declaration]
-> > >   drivers/remoteproc/qcom_q6v5_mss.c:808:2: error: implicit declarati=
-on of function 'kfree' [-Werror,-Wimplicit-function-declaration]
-> > >   drivers/remoteproc/qcom_q6v5_mss.c:1195:2: error: implicit declarat=
-ion of function 'kfree' [-Werror,-Wimplicit-function-declaration]
-> > >=20
-> > > They may have other causes as they are full linux-next builds (not ju=
-st
-> > > after the merge of the vfs tree), but the timing is suspicious.   =20
-> >=20
-> > OK, here's a patch for both of these together:
-> >=20
-> > diff --git a/arch/s390/lib/test_unwind.c b/arch/s390/lib/test_unwind.c
-> > index 32b7a30b2485..eb382ceaa116 100644
-> > --- a/arch/s390/lib/test_unwind.c
-> > +++ b/arch/s390/lib/test_unwind.c
-> > @@ -9,6 +9,7 @@
-> >  #include <linux/kallsyms.h>
-> >  #include <linux/kthread.h>
-> >  #include <linux/module.h>
-> > +#include <linux/slab.h>
-> >  #include <linux/string.h>
-> >  #include <linux/kprobes.h>
-> >  #include <linux/wait.h>
-> > diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qc=
-om_q6v5_mss.c
-> > index feb70283b6a2..903b2bb97e12 100644
-> > --- a/drivers/remoteproc/qcom_q6v5_mss.c
-> > +++ b/drivers/remoteproc/qcom_q6v5_mss.c
-> > @@ -26,6 +26,7 @@
-> >  #include <linux/reset.h>
-> >  #include <linux/soc/qcom/mdt_loader.h>
-> >  #include <linux/iopoll.h>
-> > +#include <linux/slab.h>
-> > =20
-> >  #include "remoteproc_internal.h"
-> >  #include "qcom_common.h" =20
+> From: Liu, Yi L <yi.l.liu@intel.com>
+> Sent: Monday, June 29, 2020 8:23 PM
 >=20
-> I have applied those 2 by hand for today.
+> Hi Stefan,
+>=20
+> > From: Stefan Hajnoczi <stefanha@gmail.com>
+> > Sent: Monday, June 29, 2020 5:25 PM
+> >
+> > On Wed, Jun 24, 2020 at 01:55:15AM -0700, Liu Yi L wrote:
+> > > +/*
+> > > + * struct iommu_nesting_info - Information for nesting-capable IOMMU=
+.
+> > > + *				user space should check it before using
+> > > + *				nesting capability.
+> > > + *
+> > > + * @size:	size of the whole structure
+> > > + * @format:	PASID table entry format, the same definition with
+> > > + *		@format of struct iommu_gpasid_bind_data.
+> > > + * @features:	supported nesting features.
+> > > + * @flags:	currently reserved for future extension.
+> > > + * @data:	vendor specific cap info.
+> > > + *
+> > > + * +---------------+------------------------------------------------=
+----+
+> > > + * | feature       |  Notes                                         =
+    |
+> > > + *
+> >
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> =3D=3D=3D=3D
+> > =3D+
+> > > + * | SYSWIDE_PASID |  Kernel manages PASID in system wide, PASIDs
+> used  |
+> > > + * |               |  in the system should be allocated by host kern=
+el  |
+> > > + * +---------------+------------------------------------------------=
+----+
+> > > + * | BIND_PGTBL    |  bind page tables to host PASID, the PASID coul=
+d   |
+> > > + * |               |  either be a host PASID passed in bind request =
+or  |
+> > > + * |               |  default PASIDs (e.g. default PASID of aux-doma=
+in) |
+> > > + * +---------------+------------------------------------------------=
+----+
+> > > + * | CACHE_INVLD   |  mandatory feature for nesting capable IOMMU
+> |
+> > > + * +---------------+------------------------------------------------=
+----+
+> >
+> > This feature description is vague about what CACHE_INVLD does and how
+> to
+> > use it. If I understand correctly, the presence of this feature means
+> > that VFIO_IOMMU_NESTING_OP_CACHE_INVLD must be used?
+> >
+> > The same kind of clarification could be done for SYSWIDE_PASID and
+> > BIND_PGTBL too.
+>=20
+> For SYSWIDE_PASID and BIND_PGTBL, yes, presence of the feature bit
+> means must use. So the two are requirements to user space if it wants
+> to setup nesting. While for CACHE_INVLD, it's kind of availability
+> here. How about removing CACHE_INVLD as presence of BIND_PGTBL should
+> indicates support of CACHE_INVLD?
+>=20
 
-I am still applying the above patch.
+So far this assumption is correct but it may not be true when thinking forw=
+ard.
+For example, a vendor might find a way to allow the owner of 1st-level page
+table to directly invalidate cache w/o going through host IOMMU driver. Fro=
+m
+this angle I feel explicitly reporting this capability is more robust.
 
---=20
-Cheers,
-Stephen Rothwell
+Regarding to the description, what about below?
 
---Sig_/_0FRHZJ7r_fvKJCjf8vCyNz
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+--
+SYSWIDE_PASID: PASIDs are managed in system-wide, instead of per device.
+When a device is assigned to userspace or VM, proper uAPI (provided by=20
+userspace driver framework, e.g. VFIO) must be used to allocate/free PASIDs
+for the assigned device.
 
------BEGIN PGP SIGNATURE-----
+BIND_PGTBL: The owner of the first-level/stage-1 page table must explicitly=
+=20
+bind the page table to associated PASID (either the one specified in bind=20
+request or the default PASID of the iommu domain), through VFIO_IOMMU
+_NESTING_OP
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl76nGEACgkQAVBC80lX
-0GwBRggAgNcS26D8ioFjQ+eNTgaE+rGhw30ZcyikBkrj04MMls4rzmaAWMeVp/Qe
-DH+A2nj0Zra8LQMNH8ZmhIa+HgluH2acwYvWvZ3a4oTDpVQ5riaszprgkXqiDEwT
-x/L4gIt7ixHcqNwN4MO8unnR0jeV+vNprU+R1vAW6/il67qyo1TiSRvmngk+YyYX
-H8sNoU12xjCGPvRvPOZWiSJ5svT8yncbmDtDJipDfwutsADfpkd6PFHwsf/wYo/H
-Ljesigk7smwLbFZ74e0vVMQOS8ID4Q4WtACI961uzQEIaniuIY97MbG1IwZDLD3M
-kW4NQ3htlcdGMWGgaVshjCxs/hwNgA==
-=ROmu
------END PGP SIGNATURE-----
+CACHE_INVLD: The owner of the first-level/stage-1 page table must
+explicitly invalidate the IOMMU cache through VFIO_IOMMU_NESTING_OP,
+according to vendor-specific requirement when changing the page table.
+--
 
---Sig_/_0FRHZJ7r_fvKJCjf8vCyNz--
+Thanks
+Kevin
+
+
+
