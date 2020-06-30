@@ -2,139 +2,130 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 503E8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86378C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26239206A5
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:30:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AB58206A5
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:32:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="d1hMDAEh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vx1hrdTo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729105AbgF3Dar (ORCPT
+        id S1729140AbgF3DcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 23:30:47 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48659 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729037AbgF3Daq (ORCPT
+        Mon, 29 Jun 2020 23:32:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36924 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729037AbgF3DcJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 23:30:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593487844;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=B5CWu0YTtNLLeEFzddhpFxvlgHTZraP4ByG++eJey7I=;
-        b=d1hMDAEhTSibcunVhDsipfoIM5gKAng5VOXEWU3zm+iBdk8PfU6Z2a3eGJ1FRdfchYsCSu
-        twVOk7hB+u9wYPjmUVmykbCPu4rCeQQoDT2R7RHZIEKfxT5NM0tvGEUrW1aB/aPO30qgN7
-        IOI+rrqK2NJWLPMteKIaemy2dqu7uOM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-502-MtJI14wRPq6V8I8u-UWGKg-1; Mon, 29 Jun 2020 23:30:40 -0400
-X-MC-Unique: MtJI14wRPq6V8I8u-UWGKg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4F9911009600;
-        Tue, 30 Jun 2020 03:30:38 +0000 (UTC)
-Received: from [10.72.8.19] (ovpn-8-19.pek2.redhat.com [10.72.8.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1917160BF3;
-        Tue, 30 Jun 2020 03:30:29 +0000 (UTC)
-Subject: Re: [PATCH 04/11] ppc64/kexec_file: avoid stomping memory used by
- special regions
-To:     Hari Bathini <hbathini@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <159319825403.16351.7253978047621755765.stgit@hbathini.in.ibm.com>
- <159319831192.16351.17443438699302756548.stgit@hbathini.in.ibm.com>
- <9cfda789-0747-a67a-b825-5ea6f15099b8@redhat.com>
- <f745de42-297e-6eed-d25b-ea21d6000dc5@linux.ibm.com>
-Cc:     Kexec-ml <kexec@lists.infradead.org>,
-        Petr Tesarik <ptesarik@suse.cz>,
-        Mahesh J Salgaonkar <mahesh@linux.ibm.com>,
-        Sourabh Jain <sourabhjain@linux.ibm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@ozlabs.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        Dave Young <dyoung@redhat.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Eric Biederman <ebiederm@xmission.com>
-From:   piliu <piliu@redhat.com>
-X-Enigmail-Draft-Status: N1110
-Message-ID: <283fc181-2331-7c2f-db66-5e02e5ffb2e4@redhat.com>
-Date:   Tue, 30 Jun 2020 11:30:26 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
- Thunderbird/45.8.0
+        Mon, 29 Jun 2020 23:32:09 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E109CC061755;
+        Mon, 29 Jun 2020 20:32:08 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id s10so18581644wrw.12;
+        Mon, 29 Jun 2020 20:32:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TYX9fWWYxc3NtQf6c1BiLPg4Xa2kcKSBAxmy39/nMi0=;
+        b=Vx1hrdTou8GBP5cH9Qk8Yg41ImlQsua559dcHHD1XFdwrfonuvDuKal95+IWgxY556
+         ESoIG/n7q9PhJuU5EXMuDhIcmPRRL6wnW4gTP1J5ljvtyx7LGbOUwQJh6Wgkbzv9fwho
+         ferm6BbkAgQdPNjZF1cpvwRBf0wWN8hiVssct4aSArZHv9FF/gC3RZ3LM0mNKjoqucxK
+         Jt5gB73pwLHU3xqfI/JLulX8C74Hziwzfv4Dd/pYx+GAxvEv51cEIufOqBq7AWcXRo0n
+         xq94Mk9Nisy9RY1iH1OQKKrXPvkWJ+LtN+T4inkvYwpAyg5fWqrciuqFT7pdS3ldxsXU
+         s2TQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TYX9fWWYxc3NtQf6c1BiLPg4Xa2kcKSBAxmy39/nMi0=;
+        b=BDxCgZcFE+5nzjkiojpxGTuFnthsl6lcRAi78ORKPcK/EMCDKntPKdfYE37F4hPgB4
+         cq/3bkAzcuKPqJHueUJfLH3W9ScXCrI3X0aSNiIq161NW4yhFGpzy3JhQ9S8OrKVOlWn
+         x70/fSB0oXr05y/ctArLfpr3G7Vae6ZjO+btZx8uCVH1sDBC/g1TVUMDO2LX5YxO51Tp
+         K2Z8WYokG0c8GViaYjy6XHke4C+nzT0Vh3oSa9k/botVChEWq+OHF0UhdWz6VoufUQv1
+         9tFZRwAuPWxyt62195zirsCxpFiMTOXzjmobl4szfDX0fy/hGpq7HOj6wkhpzSJLvQTy
+         vSow==
+X-Gm-Message-State: AOAM5337vaNfC6k9gwGkF6jPu9sHxk9jqfBeezeD2VGKYTpv/pO4fGvS
+        xdWKrv884ecJx31/9Xdya4qJ3MmSpYXn3GBfZdKNeu4S
+X-Google-Smtp-Source: ABdhPJx7/HrwGyHbOivp0IOfLdGP20PJe4xs2riYe0Ai5imYypVM/HQuAYJLidAQ3YcvsVbLs/AN0VUtaG/voX3FftU=
+X-Received: by 2002:adf:ef89:: with SMTP id d9mr21037920wro.124.1593487927011;
+ Mon, 29 Jun 2020 20:32:07 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <f745de42-297e-6eed-d25b-ea21d6000dc5@linux.ibm.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <499138c8-b6d5-ef4a-2780-4f750ed337d3@0882a8b5-c6c3-11e9-b005-00805fc181fe>
+ <CY4PR04MB37511505492E9EC6A245CFB1E79B0@CY4PR04MB3751.namprd04.prod.outlook.com>
+ <20200623204234.GA16156@khazad-dum.debian.net>
+In-Reply-To: <20200623204234.GA16156@khazad-dum.debian.net>
+From:   Ming Lei <tom.leiming@gmail.com>
+Date:   Tue, 30 Jun 2020 11:31:55 +0800
+Message-ID: <CACVXFVNdC1U-gXdMr-B6i0WJdiYF+JvBcF3MkhFApEw_ZPx7pA@mail.gmail.com>
+Subject: Re: [PATCH] scsi: sd: stop SSD (non-rotational) disks before reboot
+To:     Henrique de Moraes Holschuh <hmh@hmh.eng.br>
+Cc:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Simon Arlott <simon@octiron.net>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 24, 2020 at 5:01 AM Henrique de Moraes Holschuh
+<hmh@hmh.eng.br> wrote:
+>
+> On Thu, 18 Jun 2020, Damien Le Moal wrote:
+> > Are you experiencing data loss or corruption ? If yes, since a clean reboot or
+> > shutdown issues a synchronize cache to all devices, a corruption would mean that
+> > your SSD is probably not correctly processing flush cache commands.
+>
+> Cache flushes do not matter that much when SSDs and sudden power cuts
+> are involved.  Power cuts at the wrong time harm the FLASH itself, it is
+> not about still-in-flight data.
+>
+> Keep in mind that SSDs do a _lot_ of background writing, and power cuts
 
+What is the __lot__ of SSD's BG writing? GC?
 
-On 06/29/2020 01:55 PM, Hari Bathini wrote:
-> 
-> 
-> On 28/06/20 7:44 am, piliu wrote:
->> Hi Hari,
-> 
-> Hi Pingfan,
-> 
->>
->> After a quick through for this series, I have a few question/comment on
->> this patch for the time being. Pls see comment inline.
->>
->> On 06/27/2020 03:05 AM, Hari Bathini wrote:
->>> crashkernel region could have an overlap with special memory regions
->>> like  opal, rtas, tce-table & such. These regions are referred to as
->>> exclude memory ranges. Setup this ranges during image probe in order
->>> to avoid them while finding the buffer for different kdump segments.
-> 
-> [...]
-> 
->>> +	/*
->>> +	 * Use the locate_mem_hole logic in kexec_add_buffer() for regular
->>> +	 * kexec_file_load syscall
->>> +	 */
->>> +	if (kbuf->image->type != KEXEC_TYPE_CRASH)
->>> +		return 0;
->> Can the ranges overlap [crashk_res.start, crashk_res.end]?  Otherwise
->> there is no requirement for @exclude_ranges.
-> 
-> The ranges like rtas, opal are loaded by f/w. They almost always overlap with
-> crashkernel region. So, @exclude_ranges is required to support kdump.
-f/w passes rtas/opal as service, then must f/w mark these ranges as
-fdt_reserved_mem in order to make kernel aware not to use these ranges?
-Otherwise kernel memory allocation besides kdump can also overwrite
-these ranges.
+> during a FLASH write or erase can cause from weakened cells, to much
+> larger damage.  It is possible to harden the chip or the design against
+> this, but it is *expensive*.  And even if warded off by hardening and no
+> FLASH damage happens, an erase/program cycle must be done on the whole
+> erase block to clean up the incomplete program cycle.
 
-Hmm, revisiting reserve_crashkernel(). It seems not to take any reserved
-memory into consider except kernel text. Could it work based on memblock
-allocator?
+It should have been SSD's(including FW) responsibility to avoid data loss when
+the SSD is doing its own BG writing, because power cut can happen any time
+from SSD's viewpoint.
+
+>
+> Due to this background activity, an unexpected power cut could damage
+> data *anywhere* in an SSD: it could hit some filesystem area that was
+> being scrubbed in background by the SSD, or internal SSD metadata.
+>
+> So, you want that SSD to know it must be quiescent-for-poweroff for
+> *real* before you allow the system to do anything that could power it
+> off.
+>
+> And, as I have found out the hard way years ago, you also want to give
+> the SSD enough *extra* time to actually quiesce, even if it claims to be
+> already prepared for poweroff [1].
+>
+> When you do not follow these rules, well, excellent datacenter-class
+> SSDs have super-capacitor power banks that actually work.  Most SSDs do
+> not, although they hopefully came a long way and hopefully modern SSDs
+> are not as easily to brick as they were reported to be three or four
+> years ago.
+
+I remember that DC SSDs often don't support BG GC.
+
 
 Thanks,
-Pingfan
-> 
->> I guess you have a design for future. If not true, then it is better to
->> fold the condition "if (kbuf->image->type != KEXEC_TYPE_CRASH)" into the
->> caller and rename this function to better distinguish use cases between
->> kexec and kdump
-> 
-> Yeah, this condition will be folded. I have a follow-up patch for that explaining
-> why kexec case should also be folded. Will try to add that to this series for v2.
-> 
-> Thanks
-> Hari
-> 
-
+Ming Lei
