@@ -2,101 +2,80 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00265C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CBBFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C36D92074F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:47:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AA5C2081A
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:49:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389727AbgF3Pr2 (ORCPT
+        id S2389735AbgF3Pt2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 11:47:28 -0400
-Received: from mga07.intel.com ([134.134.136.100]:20427 "EHLO mga07.intel.com"
+        Tue, 30 Jun 2020 11:49:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38102 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389506AbgF3Pr1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 11:47:27 -0400
-IronPort-SDR: 8rQoriK83JpukFlV/DZl9lUathskizCdGdw+gG3Ntu1+AYs8/nypLgpNRG+kczPQ92vYxhvXnu
- 6klSq8C5Y2bQ==
-X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="211338407"
-X-IronPort-AV: E=Sophos;i="5.75,297,1589266800"; 
-   d="scan'208";a="211338407"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 08:47:26 -0700
-IronPort-SDR: SlYIPYZJa5+zSOlnlfXA5REL6IeHhXYQKfFJ6b9i9QWvxh8YKY9HdlppbI+mFmE6m2ZnA1o1oc
- zG0AzYoQSv4w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,297,1589266800"; 
-   d="scan'208";a="355814591"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by orsmga001.jf.intel.com with ESMTP; 30 Jun 2020 08:47:26 -0700
-Date:   Tue, 30 Jun 2020 08:47:26 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Peter Xu <peterx@redhat.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH 1/2] KVM: X86: Move ignore_msrs handling upper the stack
-Message-ID: <20200630154726.GD7733@linux.intel.com>
-References: <20200622220442.21998-1-peterx@redhat.com>
- <20200622220442.21998-2-peterx@redhat.com>
- <20200625061544.GC2141@linux.intel.com>
- <1cebc562-89e9-3806-bb3c-771946fc64f3@redhat.com>
- <20200625162540.GC3437@linux.intel.com>
- <20200626180732.GB175520@xz-x1>
- <20200626181820.GG6583@linux.intel.com>
- <47b90b77-cf03-6087-b25f-fcd2fd313165@redhat.com>
+        id S2389599AbgF3Pt2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 11:49:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id A55FEAD63;
+        Tue, 30 Jun 2020 15:49:26 +0000 (UTC)
+From:   Michal Suchanek <msuchanek@suse.de>
+To:     Mikulas Patocka <mpatocka@redhat.com>
+Cc:     Michal Suchanek <msuchanek@suse.de>, linux-nvdimm@lists.01.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Jan Kara <jack@suse.cz>, Alasdair Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
+        Jakub Staron <jstaron@google.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Yuval Shaia <yuval.shaia@oracle.com>,
+        Cornelia Huck <cohuck@redhat.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] dm writecache: reject asynchronous pmem.
+Date:   Tue, 30 Jun 2020 17:49:24 +0200
+Message-Id: <20200630154924.3283-1-msuchanek@suse.de>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <alpine.LRH.2.02.2006301101210.24028@file01.intranet.prod.int.rdu2.redhat.com>
+References: <alpine.LRH.2.02.2006301101210.24028@file01.intranet.prod.int.rdu2.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <47b90b77-cf03-6087-b25f-fcd2fd313165@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 27, 2020 at 04:24:34PM +0200, Paolo Bonzini wrote:
-> On 26/06/20 20:18, Sean Christopherson wrote:
-> >> Btw, would it be more staightforward to check "vcpu->arch.arch_capabilities &
-> >> ARCH_CAP_TSX_CTRL_MSR" rather than "*ebx | (F(RTM) | F(HLE))" even if we want
-> >> to have such a fix?
-> > Not really, That ends up duplicating the check in vmx_get_msr().  From an
-> > emulation perspective, this really is a "guest" access to the MSR, in the
-> > sense that it the virtual CPU is in the guest domain, i.e. not a god-like
-> > entity that gets to break the rules of emulation.
-> 
-> But if you wrote a guest that wants to read MSR_IA32_TSX_CTRL, there are
-> two choices:
-> 
-> 1) check ARCH_CAPABILITIES first
-> 
-> 2) blindly access it and default to 0.
-> 
-> Both are fine, because we know MSR_IA32_TSX_CTRL has no
-> reserved/must-be-one bits.  Calling __kvm_get_msr and checking for an
-> invalid MSR through the return value is not breaking the rules of
-> emulation, it is "faking" a #GP handler.
+The writecache driver does not handle asynchronous pmem. Reject it when
+supplied as cache.
 
-"guest" was the wrong choice of word.  My point was that, IMO, emulation
-should never set host_initiated=true.
+Link: https://lore.kernel.org/linux-nvdimm/87lfk5hahc.fsf@linux.ibm.com/
+Fixes: 6e84200c0a29 ("virtio-pmem: Add virtio pmem driver")
 
-To me, accessing MSRs with host_initiated is the equivalent of loading a
-ucode patch, i.e. it's super duper special stuff that deliberately turns
-off all safeguards and can change the fundamental behavior of the (virtual)
-CPU.
+Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+---
+ drivers/md/dm-writecache.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Emulation on the other handle should either be subject to all the normal
-rules or have dedicated, intelligent handling for breaking the normal rules,
-e.g. nested usage of vmx_set_efer(), vmx_set_cr0, vmx_set_cr4, etc...
+diff --git a/drivers/md/dm-writecache.c b/drivers/md/dm-writecache.c
+index 30505d70f423..5358894bb9fd 100644
+--- a/drivers/md/dm-writecache.c
++++ b/drivers/md/dm-writecache.c
+@@ -2266,6 +2266,12 @@ static int writecache_ctr(struct dm_target *ti, unsigned argc, char **argv)
+ 	}
+ 
+ 	if (WC_MODE_PMEM(wc)) {
++		if (!dax_synchronous(wc->ssd_dev->dax_dev)) {
++			r = -EOPNOTSUPP;
++			ti->error = "Asynchronous persistent memory not supported as pmem cache";
++			goto bad;
++		}
++
+ 		r = persistent_memory_claim(wc);
+ 		if (r) {
+ 			ti->error = "Unable to map persistent memory for cache";
+-- 
+2.26.2
 
-> So I think Peter's patch is fine, but (possibly on top as a third patch)
-> __must_check should be added to MSR getters and setters.  Also one
-> possibility is to return -EINVAL for invalid MSRs.
-> 
-> Paolo
-> 
