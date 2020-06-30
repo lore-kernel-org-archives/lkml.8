@@ -2,209 +2,201 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D82EBC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB48C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AF3C520768
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CFA9206B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:25:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KcMy0csf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qEUkJEGG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729411AbgF3UYB (ORCPT
+        id S1729427AbgF3UZo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 16:24:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51848 "EHLO
+        Tue, 30 Jun 2020 16:25:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52114 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbgF3UYA (ORCPT
+        with ESMTP id S1726051AbgF3UZn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 16:24:00 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 429EBC061755;
-        Tue, 30 Jun 2020 13:24:00 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id k71so6464558pje.0;
-        Tue, 30 Jun 2020 13:24:00 -0700 (PDT)
+        Tue, 30 Jun 2020 16:25:43 -0400
+Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77C24C061755;
+        Tue, 30 Jun 2020 13:25:43 -0700 (PDT)
+Received: by mail-ej1-x643.google.com with SMTP id ga4so21896375ejb.11;
+        Tue, 30 Jun 2020 13:25:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=bAnFWDXrNwZJcACP9IOdAh/yJEqe7UvCHQljaZTXU6Q=;
-        b=KcMy0csfV+LwdO58342SklgsOVTD/dn11b/TFu+QjFjgpTJ/quFUh5M0g65ft4+9Rz
-         /n2q6A2VLSDgselfx38JxL8mznDfB79zSfuxmIAAbhw4M+OQyhf+mJ3hQ4kKJE0oaLsH
-         Rcj8TxxrkX6l0BzJ34rXA5CekVGHEKjU91pA7JCDSDs4m3JLsF1CIPMoqio9q8Na08yg
-         qFonsv3+lMdwDKNsryiShGcx88FObnuOb1qqlkleEWhJhFP6tKqqzq2A9CZ3qkysKuLh
-         SO7rGHbJV2Gie6Xj6XvcWAHwMJJLuCuM9dVXenV0PsFjqLR+giDGFfyapC4yb6mMJeGz
-         bc+w==
+        h=from:date:to:cc:subject:message-id:user-agent:mime-version;
+        bh=3BVg2c+iZJ6BUBSCd+wJqnaJSQM6YxHesQQZvEY+piQ=;
+        b=qEUkJEGGYrkC+/Z5OxodNQEc64G1Ld/5FVORp39W3p7SX7rS8vvvIvHNDrMbHWyTjv
+         IlQaQhu0GbjZNwBCycKG0MgO3arlxdEqHD1aFy+WLdTWh117RfS7g/hDv4WHgwtmXL+v
+         Cz+rxC2kp8na3SmkYeKvxx86yqZ7tV8oTarb9L4uifJfDE/yPquduDf0J5UEzmO9+XVG
+         NrHE3Gk2P9xDa3Mxf6HUvWGJuPdXp0uVBLuKi6Kq4v7PxAcJcsCkyMZl3QypopoFXqhO
+         rEoTnaDGV1AbIOeELk8zybp8lurmXf1JlJ93DSK0Y8wV3E+BA/PPCpgK6R3ZayyjQl+M
+         0tVw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=bAnFWDXrNwZJcACP9IOdAh/yJEqe7UvCHQljaZTXU6Q=;
-        b=TSARc3oD/pgs8oX2ndzaFQ2WipnYUTV1sADYn4G+A3uuEaRp62DGzBmk0yTQ6LrPZR
-         nIJdSl0n1S9F1HhflhcA5Mve+QnTMs0hAy1g+NMAzdQ6K7t6k1A6zEgFNbyvbdIkXMsn
-         Y8fXpr6BYnyzMnOkU0a58JKfBMRZZDhTBTCyQoHB54R1Xw/XPcwC780EMb2fRlRXJGLN
-         sGprjCfPQaqzjCcxiE4YozBa3ALF9UmOPTR1VVLgKlLeM2vBpK8EGydXg/WG85FgcvR3
-         rL49ZNkvUFoVhaVJS5a3uCIJqwuk4Dwih92A6Pi+8y1zpAV1hNKVDPDb5KZ9VXuK1NWk
-         ngjw==
-X-Gm-Message-State: AOAM533kpylF6y4d400cVOj7bEcpx1EQhlbLIPiUVg0fDVHV8LhL/Wfz
-        ANphT4WxwK1jUm0mdiNaE2s=
-X-Google-Smtp-Source: ABdhPJzQ/w+IwOwSx0RgvzmxIlFx1k6w2+8fhfEcPOHn5Gmjp2wfQYj9ujBGFtqtLKcszX2ZYG7w2Q==
-X-Received: by 2002:a17:902:6acc:: with SMTP id i12mr17649806plt.75.1593548638953;
-        Tue, 30 Jun 2020 13:23:58 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id w9sm3598332pfq.178.2020.06.30.13.23.57
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 30 Jun 2020 13:23:58 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 13:23:56 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Tero Kristo <t-kristo@ti.com>
-Cc:     Jan Kiszka <jan.kiszka@siemens.com>, wim@linux-watchdog.org,
-        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] watchdog: rti: tweak min_hw_heartbeat_ms to match
- initial allowed window
-Message-ID: <20200630202356.GA16412@roeck-us.net>
-References: <20200624114534.1362-1-t-kristo@ti.com>
- <20200624114534.1362-3-t-kristo@ti.com>
- <289c6104-a885-d3c1-c670-a081ebaaf782@siemens.com>
- <b3849bea-2a4d-079e-e9df-8a1d6c13c0c7@ti.com>
- <25bf3ed1-5434-9b45-20ae-e1b2cfc5e5c0@roeck-us.net>
- <1d84e633-b808-d6ac-a34c-9cc4709e43f6@ti.com>
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:user-agent
+         :mime-version;
+        bh=3BVg2c+iZJ6BUBSCd+wJqnaJSQM6YxHesQQZvEY+piQ=;
+        b=OTGjcA0zUZfQ48dMXB78tDGSN5OScUK5qhEs3M8nNLnkKXSM4ZEBrj3CO6eekJgoUP
+         9imeF+bBfr8NGbD3zHR/zsYQOoHJil5/Hzulfp7enhGN4qhsey2xWC0tJlyy2651xHQ+
+         o/46qZPA5RPV+NKvQDQ1bRMMOo9TvTwIZyRv9c6w5dB6vMRybUqmRuoTqZrtQt1loQ/v
+         fw71bxPhr1wb67mJ3+CObIw5zrFWIgfB41RjlyNzqaWwR7jwucRHsIZ4xr7CdNlxULFp
+         mr+cKpktE9YLbYSK33pjp6YcI5om1PrvecjrLmwHaJxW85BT5GIoqo7lDLppswBLbRos
+         WwzA==
+X-Gm-Message-State: AOAM531Q+Pf2sMx3myi7I+sB0WpR1TVnhWBtb8C0Qmp6MICu9GuAwA5h
+        ao95XXvKCF+pkqNh2nv/kucJlB9PZ1DLdg==
+X-Google-Smtp-Source: ABdhPJwueQ5FQ8JHUBqFoS3BbyZpSxDPjnNRkPgWqTNqTSI/grdE8JVpKA3f40vbNt5AO8DGfbThwA==
+X-Received: by 2002:a17:906:375a:: with SMTP id e26mr20546470ejc.324.1593548740521;
+        Tue, 30 Jun 2020 13:25:40 -0700 (PDT)
+Received: from felia ([2001:16b8:2d31:bc00:cc6f:aee9:d326:7bf7])
+        by smtp.gmail.com with ESMTPSA id ay27sm4004007edb.81.2020.06.30.13.25.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 13:25:40 -0700 (PDT)
+From:   Lukas Bulwahn <lukas.bulwahn@gmail.com>
+X-Google-Original-From: Lukas Bulwahn <lukas@gmail.com>
+Date:   Tue, 30 Jun 2020 22:25:31 +0200 (CEST)
+X-X-Sender: lukas@felia
+To:     Ralf Ramsauer <ralf.ramsauer@oth-regensburg.de>,
+        Pia Eichinger <pia.eichinger@st.oth-regensburg.de>
+cc:     Joe Perches <joe@perches.com>, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Status of MAINTAINERS clean-up
+Message-ID: <alpine.DEB.2.21.2006302214290.4085@felia>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1d84e633-b808-d6ac-a34c-9cc4709e43f6@ti.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 25, 2020 at 08:04:50PM +0300, Tero Kristo wrote:
-> On 25/06/2020 16:35, Guenter Roeck wrote:
-> > On 6/25/20 1:32 AM, Tero Kristo wrote:
-> > > On 24/06/2020 18:24, Jan Kiszka wrote:
-> > > > On 24.06.20 13:45, Tero Kristo wrote:
-> > > > > If the RTI watchdog has been started by someone (like bootloader) when
-> > > > > the driver probes, we must adjust the initial ping timeout to match the
-> > > > > currently running watchdog window to avoid generating watchdog reset.
-> > > > > 
-> > > > > Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> > > > > ---
-> > > > >    drivers/watchdog/rti_wdt.c | 25 +++++++++++++++++++++++++
-> > > > >    1 file changed, 25 insertions(+)
-> > > > > 
-> > > > > diff --git a/drivers/watchdog/rti_wdt.c b/drivers/watchdog/rti_wdt.c
-> > > > > index d456dd72d99a..02ea2b2435f5 100644
-> > > > > --- a/drivers/watchdog/rti_wdt.c
-> > > > > +++ b/drivers/watchdog/rti_wdt.c
-> > > > > @@ -55,11 +55,13 @@ static int heartbeat;
-> > > > >     * @base - base io address of WD device
-> > > > >     * @freq - source clock frequency of WDT
-> > > > >     * @wdd  - hold watchdog device as is in WDT core
-> > > > > + * @min_hw_heartbeat_save - save of the min hw heartbeat value
-> > > > >     */
-> > > > >    struct rti_wdt_device {
-> > > > >        void __iomem        *base;
-> > > > >        unsigned long        freq;
-> > > > >        struct watchdog_device    wdd;
-> > > > > +    unsigned int        min_hw_heartbeat_save;
-> > > > >    };
-> > > > >    static int rti_wdt_start(struct watchdog_device *wdd)
-> > > > > @@ -107,6 +109,11 @@ static int rti_wdt_ping(struct watchdog_device *wdd)
-> > > > >        /* put watchdog in active state */
-> > > > >        writel_relaxed(WDKEY_SEQ1, wdt->base + RTIWDKEY);
-> > > > > +    if (wdt->min_hw_heartbeat_save) {
-> > > > > +        wdd->min_hw_heartbeat_ms = wdt->min_hw_heartbeat_save;
-> > > > > +        wdt->min_hw_heartbeat_save = 0;
-> > > > > +    }
-> > > > > +
-> > > > >        return 0;
-> > > > >    }
-> > > > > @@ -201,6 +208,24 @@ static int rti_wdt_probe(struct platform_device *pdev)
-> > > > >            goto err_iomap;
-> > > > >        }
-> > > > > +    if (readl(wdt->base + RTIDWDCTRL) == WDENABLE_KEY) {
-> > > > > +        u32 time_left;
-> > > > > +        u32 heartbeat;
-> > > > > +
-> > > > > +        set_bit(WDOG_HW_RUNNING, &wdd->status);
-> > > > > +        time_left = rti_wdt_get_timeleft(wdd);
-> > > > > +        heartbeat = readl(wdt->base + RTIDWDPRLD);
-> > > > > +        heartbeat <<= WDT_PRELOAD_SHIFT;
-> > > > > +        heartbeat /= wdt->freq;
-> > > > > +        if (time_left < heartbeat / 2)
-> > > > > +            wdd->min_hw_heartbeat_ms = 0;
-> > > > > +        else
-> > > > > +            wdd->min_hw_heartbeat_ms =
-> > > > > +                (time_left - heartbeat / 2 + 1) * 1000;
-> > > > > +
-> > > > > +        wdt->min_hw_heartbeat_save = 11 * heartbeat * 1000 / 20;
-> > > > > +    }
-> > > > > +
-> > > > >        ret = watchdog_register_device(wdd);
-> > > > >        if (ret) {
-> > > > >            dev_err(dev, "cannot register watchdog device\n");
-> > > > > 
-> > > > 
-> > > > This assumes that the bootloader also programmed a 50% window, right? The pending U-Boot patch will do that, but what if that may chance or someone uses a different setup?
-> > > 
-> > > Yes, we assume 50%. I think based on the hw design, 50% is the only sane value to be used, otherwise you just shrink the open window too much and for no apparent reason.
-> > > 
-> > 
-> > Not sure if that is a valid assumption. Someone who designs a watchdog
-> > with such a narrow ping window might as well also use it. The question
-> > is if you want to rely on that assumption, or check and change it if needed.
-> 
-> Right, if that is a blocker, I can modify the code. Should be maybe couple
-> of lines addition.
-> 
-> > Also, I wonder if we should add an API function such as
-> > "set_last_hw_keepalive()" to avoid all that complexity.
-> 
-> I can try adding that also if it is desirable.
-> 
+Hi all,
 
-But wait, the code doesn't really match what the description of this
-patch claims, or at least the description is misleading. Per the
-description, this is to prevent an early timeout. However, the problem
-here is that the watchdog core does not generate a ping, even if
-requested, because it believes that it just generated one right before
-the watchdog timer was registered, and that it can not generate another
-one because min_hw_heartbeat_ms has not elapsed.
+as Ralf Ramsauer and Pia Eichinger coincidently picked up and worked on 
+the same MAINTAINERS clean-up task, Ralf requested to get a quick report 
+on the state of the MAINTAINERS clean-up. Here you go.
 
-With that in mind, the problem is a bit more complex.
+I regularly run ./scripts/get_maintainers.pl ./scripts/get_maintainer.pl 
+--self-test=patterns on Linus' tree and linux-next, address the issues and 
+send out minor patches or simply report to the committers after a basic 
+analysis.
 
-First, the driver doesn't really update the current timeout to the
-value that is currently configured and enabled. Instead, it just
-uses/assumes the default (DEFAULT_HEARTBEAT or whatever the heartbeat
-module parameter is set to). This means that it is still possible for
-an early timeout to occur if there is a mismatch between the bootloader
-timeout and the timeout assumed by the driver. Worse, the timeout
-is only updated in the start function - and the start function isn't
-called if the watchdog is already running. Actually, the driver does
-not support updating the timeout at all. This means that a mismatch
-between the bootloader timeout and the timeout assumed by the driver
-is not handled well.
+Currently on v5.8-rc3, we have 17 warnings. On next-20200629, we have 16 
+warnings with some overlap with the v5.8-rc3 warnings.
 
-To solve this, the driver would have to update the actual timeout to
-whatever is programmed into the chip and ignore any module parameter
-and default settings if the watchdog is already running. Alternatively,
-it would have to support updating the timeout (if the hardware supports
-that) after the watchdog was started.
+In more detail, here are all findings, put into categories and grouped 
+when addressed with one patch.
 
-Second, handling min_hw_heartbeat_ms properly should really be implemented
-in the watchdog core. Instead of assuming that the most recent keepalive
-happened "just before now", as it currently does, it should call the
-timeleft function (if available and if the watchdog is running) and
-calculate the most recent keepalive (and thus the earliest acceptable
-next keepalive) from its return value.
 
-Thanks,
-Guenter
+WARNING ON v5.8-rc3, ADDRESSED IN next-20200629
+
+./MAINTAINERS:3949: warning: no file matches	F:	Documentation/devicetree/bindings/rng/arm-cctrng.txt
+./MAINTAINERS:5493: warning: no file matches	F:	Documentation/devicetree/bindings/display/panel/raydium,rm67191.txt
+./MAINTAINERS:14577: warning: no file matches	F:	Documentation/devicetree/bindings/thermal/rcar-gen3-thermal.txt
+./MAINTAINERS:14578: warning: no file matches	F:	Documentation/devicetree/bindings/thermal/rcar-thermal.txt
+
+No further action required.
+
+
+WARNING ON v5.8-rc3 AND next-20200629, PATCH PENDING
+
+
+[PATCH] MAINTAINERS: rectify entry in ARM SMC WATCHDOG DRIVER
+./MAINTAINERS:1492: warning: no file matches	F:	devicetree/bindings/watchdog/arm-smc-wdt.yaml
+    Pending Patch: https://lore.kernel.org/linux-watchdog/20200602052104.7795-1-lukas.bulwahn@gmail.com/
+
+
+[PATCH v2 RESEND] MAINTAINERS: rectify MMP SUPPORT after moving cputype.h
+./MAINTAINERS:11487: warning: no file matches	F:	linux/soc/mmp/
+    Pending Patch: https://lore.kernel.org/lkml/20200506053431.7464-1-lukas.bulwahn@gmail.com/
+
+
+[PATCH SECOND RESEND] MAINTAINERS: adjust entries to moving CEC platform drivers
+./MAINTAINERS:2410: warning: no file matches	F:	drivers/media/platform/s5p-cec/
+./MAINTAINERS:2555: warning: no file matches	F:	drivers/media/platform/tegra-cec/
+./MAINTAINERS:3976: warning: no file matches	F:	drivers/media/platform/cec-gpio/
+./MAINTAINERS:11155: warning: no file matches	F:	drivers/media/platform/meson/ao-cec-g12a.c
+./MAINTAINERS:11156: warning: no file matches	F:	drivers/media/platform/meson/ao-cec.c
+./MAINTAINERS:15266: warning: no file matches	F:	drivers/media/platform/seco-cec/seco-cec.c
+./MAINTAINERS:15267: warning: no file matches	F:	drivers/media/platform/seco-cec/seco-cec.h
+./MAINTAINERS:16305: warning: no file matches	F:	drivers/media/platform/sti/cec/
+    Pending Patch: https://lore.kernel.org/lkml/20200525142946.8268-1-lukas.bulwahn@gmail.com/
+
+
+WARNING ON v5.8-rc3 AND next-20200629, UNADDRESSED
+
+
+./MAINTAINERS:11457: warning: no file matches	F:	drivers/*/*/*loongson2*
+./MAINTAINERS:11467: warning: no file matches	F:	drivers/*/*/*loongson3*
+./MAINTAINERS:11468: warning: no file matches	F:	drivers/*/*loongson3*
+
+I had a first look, it is a special case, the committer wants to be 
+informed on all loongson{2,3} files in drivers, but really in the last 
+two years, there is only one directory that appeared in the repository 
+and matched these patterns. So, one could probably just settle for naming 
+the file that is in the repository right now. I did not send a patch yet, 
+though.
+
+
+WARNING ONLY ON next-20200629, PATCH ACCEPTED
+
+
+[PATCH] MAINTAINERS: remove obsolete entry after file renaming
+./MAINTAINERS:5024: warning: no file matches	F:	drivers/regulator/da903x.c
+    Accepted Patch: https://lore.kernel.org/lkml/20200628180229.5068-1-lukas.bulwahn@gmail.com/
+
+No further action required.
+
+
+WARNING ONLY ON next-20200629, ADDRESSED DIFFERENTLY
+
+
+./MAINTAINERS:6874: warning: no file matches	F:	Documentation/devicetree/bindings/i2c/i2c-imx-lpi2c.txt
+    Warning just appeared recently, warnings on 
+Documentation/devicetree/bindings/ are usually addressed by devicetree 
+maintainers before the pull request. So, no action required for now.
+
+
+./MAINTAINERS:14057: warning: no file matches	F:	Documentation/networking/device_drivers/ethernet/qlogic/LICENSE.qla3xxx
+    Appeared with a recent commit of moving files in Documentation.
+
+    The real clean-up task for that file is described here: 
+https://lore.kernel.org/linux-spdx/alpine.DEB.2.21.2006300644130.4919@felia/
+
+
+SUMMARY
+
+At the moment, I do not see too much potential for others to really  
+contribute to this specific clean-up. Once the pending patches are picked 
+up, which is tricky part, i.e., resubmitting and reminding, there have 
+been so far not too many new warnings appearing, and the warnings on .txt 
+to .yaml conversions in Documentation/devicetree/bindings/ are usually  
+followed up by some devicetree maintainers and janitors.
+
+
+Other MAINTAINERS clean up topics, I see on a longer task list are:
+
+  - Go through the L: entries and address, "lists" that are 'email 
+forwarders', but not (public) mailing lists with archives.
+    Current idea is to either mark them special or make them M: or R: 
+entries.
+
+  - Assigning files to the "right" sections, not just having them lay 
+around in THE REST. This will be lots of manual work and needs some kind 
+of script-assisted approach, as many files are headers in include.
+
+  - Documenting the properties for a clean MAINTAINERS file and the 
+available checkers and tools
+
+Contribution to those tasks are welcome, but they are by no means quick 
+and easy fixes. They will need some thought and lots of persistence and 
+patience to get done.
+
+
+Lukas
