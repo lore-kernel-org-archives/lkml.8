@@ -2,121 +2,187 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23940C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 130BDC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F2E5620768
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:48:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCDE3207F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:49:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jwhzWOYT"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JpxC2J4R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731730AbgF3Is1 (ORCPT
+        id S1731683AbgF3Itr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 04:48:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57428 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728132AbgF3IsZ (ORCPT
+        Tue, 30 Jun 2020 04:49:47 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:48362 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728132AbgF3Itq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 04:48:25 -0400
-Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C38A4C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 01:48:24 -0700 (PDT)
-Received: by mail-lj1-x242.google.com with SMTP id e4so21528110ljn.4
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 01:48:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6fsC+acqOWGmffLGOO9jUUTQnpmWJlfaJA/k6/maTXQ=;
-        b=jwhzWOYTDIWkGYCjUjnh/hwQSfIQFakAv6CQUjqEt4lGOfycy+SXqpkauASE8Uv9mR
-         HQv/CFC25aFyJGL1zaWOskY9nxqomD8anB5SgT41JK2+NAhLoVv/V7kapQtj1LprizUz
-         9NWgdrg5DV/8QYEDqTeEoQBll6ZNiEtOUu9LIYIqDwuaV90Hauso9TljSKrWlRjz1xmS
-         5k/P3sBGk/fhl23Y3JhxJup+qF6wPjQBiJmZFPfu+b47V4hlKIbXN9MJiKdk/p4O6ugh
-         FfkzZelWVMWID7VeVmDc58BAsTKDDi1fjv0yA5t2BtW/F2wHXOgM/ab7n3m4BpJJL7ol
-         t/LA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6fsC+acqOWGmffLGOO9jUUTQnpmWJlfaJA/k6/maTXQ=;
-        b=QkNIk1RVO19b3y15Zt6YbsnR9oUtaICfVTQg12iV/by24jaJuxDnikY6lcXVb7e5M3
-         yXzLRm1yv+Ndjq9xozRBjsX+/SmlRGEPqXwfz61190xH+dkdlun0vqkcEJxx3IcDL1Jc
-         N6XEC57+CMGInFRt/397MCSyqs8FPyADdQjMfLLdxBKTVUZnkV2vr5ud1ZgXYt8nAuAF
-         LbAt97IqmKFLcsjxPEi1YehSKPKdFzno9BVJTpss7313/52s46yShbnbFirn8NOCqqTi
-         jSHfCFEWMoAlR0fHHUuYuM/CvWrSQKhFo0X5XU16pBE7N6NRjtBUVMi0QDcSB94svwLX
-         jOXw==
-X-Gm-Message-State: AOAM531W7OLuO5aOrXOzGDQJMY671gzuQ2Bs3pztD7djF6zyPO1IussR
-        l+yO+H8RQ/DiUs3fVoTwxe9yv9vszulAF1O4biI/hw==
-X-Google-Smtp-Source: ABdhPJwX4BRg7XNjPqa+bGRmf7a5TT5LE3ptad/uzUQ2PEfbNV+nz2O7wy3pdPl3lEJ0PbZmgV66tY8SYz/nHrGnDlw=
-X-Received: by 2002:a2e:9ed0:: with SMTP id h16mr10660397ljk.366.1593506903171;
- Tue, 30 Jun 2020 01:48:23 -0700 (PDT)
+        Tue, 30 Jun 2020 04:49:46 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200630084944euoutp0158c61c3ad39a0f610ac135ce949d9afc~dRijW5RJF0121401214euoutp01i
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 08:49:44 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200630084944euoutp0158c61c3ad39a0f610ac135ce949d9afc~dRijW5RJF0121401214euoutp01i
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593506984;
+        bh=O6hwU0/ZbS8O0w3UsaeSLAcNBQv6ONEsbFj4G3YFm7k=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=JpxC2J4RBaebRmR854QrBNmXgeHsx+OdGWOJqGIBdDGUsdPx3Pi/UFBXXHb3smFLt
+         PSoi8okVh0p6v63aLhzPpbpHxjeZJk1NSB5newj9jJG+7WwOUiXUC1nr9l2Ph9OzXl
+         BYFHIOLF8iCBtxSw/yFKD+Y1cnbydjLadHfavKcQ=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20200630084943eucas1p1397de9f1ccf058b4b07a0ed22ce94e9e~dRiiuUVvF0988409884eucas1p14;
+        Tue, 30 Jun 2020 08:49:43 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id A9.87.06318.7ACFAFE5; Tue, 30
+        Jun 2020 09:49:43 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200630084943eucas1p175574f4a8f74aab87afea7c6186b0256~dRiiTvzjs1664516645eucas1p1i;
+        Tue, 30 Jun 2020 08:49:43 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200630084943eusmtrp242fb2a7e8ecdac333a82831d2b9b16b1~dRiiTHClV2302923029eusmtrp2W;
+        Tue, 30 Jun 2020 08:49:43 +0000 (GMT)
+X-AuditID: cbfec7f5-38bff700000018ae-df-5efafca73d42
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id F3.92.06017.7ACFAFE5; Tue, 30
+        Jun 2020 09:49:43 +0100 (BST)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200630084942eusmtip2a2f37341c3fc97e834a6be1f0bbce556~dRihvINNA1683416834eusmtip2f;
+        Tue, 30 Jun 2020 08:49:42 +0000 (GMT)
+Subject: Re: [PATCH v7 00/36] DRM: fix struct sg_table nents vs. orig_nents
+ misuse
+To:     dri-devel@lists.freedesktop.org, iommu@lists.linux-foundation.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-arm-kernel@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <10cb27c9-286a-5ee5-dab1-183939e5b12d@samsung.com>
+Date:   Tue, 30 Jun 2020 10:49:42 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <CA+G9fYvHFs5Yx8TnT6VavtfjMN8QLPuXg6us-dXVJqUUt68adA@mail.gmail.com>
- <20200622224920.GA4332@42.do-not-panic.com> <CA+G9fYsXDZUspc5OyfqrGZn=k=2uRiGzWY_aPePK2C_kZ+dYGQ@mail.gmail.com>
- <20200623064056.GA8121@gondor.apana.org.au> <20200623170217.GB150582@gmail.com>
- <20200626062948.GA25285@gondor.apana.org.au>
-In-Reply-To: <20200626062948.GA25285@gondor.apana.org.au>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 30 Jun 2020 14:18:11 +0530
-Message-ID: <CA+G9fYutuU55iL_6Qrk3oG3iq-37PaxvtA4KnEQHuLH9YpH-QA@mail.gmail.com>
-Subject: Re: [PATCH] crypto: af_alg - Fix regression on empty requests
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Eric Biggers <ebiggers@kernel.org>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        LTP List <ltp@lists.linux.it>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        lkft-triage@lists.linaro.org,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Jan Stancek <jstancek@redhat.com>, chrubis <chrubis@suse.cz>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        David Howells <dhowells@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sachin Sant <sachinp@linux.vnet.ibm.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200619103636.11974-1-m.szyprowski@samsung.com>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTcRjG+e/szOPY5DQ131wkDQoTvGHEIcvMgs7HwupDpbn0MCXdZNO0
+        vrhKw7yRpZRr2tTM0qll856KWlsmLa+VFVhpd0xFExXRdnZm+e33PO/z530f+BOYZAD3JOKU
+        SYxaKY+XCYT8RvOi1bdyeSkyoOOFjMq19vKoR7fqcGq1MR+jhv9MCagH1c94lKEzmJob/sSj
+        6sdf49RQq15AdU1P4KFC2lhiRHT7vIFPN81/xOmxbAuPfnw3jX6/Mo7RN95WIrptVCug80xV
+        iJ6t33JYeEK4J4aJjzvHqP1DooSxhWN7E0elqYsFmU5a1LwxCzkTQO6EK8ZpQRYSEhLyPoKb
+        +XrEiTkE33L6HWIWwexyhdPak4WyBpwbVCIYLP3pEFMIRoZq7ClX8ihM/f6NsexGZiB4niti
+        Qxj5C8F46bQ9JCADIWsyS8CymAyB6oFLduaT22DAqOex7E5GQF6FwZHZAL1FE3yWnW35X+ld
+        OMsY6QVNk3qMYw94N3GHx5066QTF7eEcH4SrEyUO3xV+WkyOOpthtYXNC218GcEnK9uAFTkI
+        hi7dQlwqGD5Yl2xXELYNO6Cu1Z+z90Ph5y92G0gXeDu5gbvBBa433sQ4WwyZVyRcejvoLLX/
+        1nb1D2LXkEy3rpluXRvduja6/3sNiF+FPJhkTYKC0QQpmRQ/jTxBk6xU+EWrEuqR7aP1rVj+
+        NKOO5TPdiCSQTCSOsi5GSnD5Oc35hG4EBCZzE4e97IuUiGPk5y8watVpdXI8o+lGUoIv8xAH
+        lf2IkJAKeRJzlmESGfXalEc4e2pRWpiXtABvjxjdKi3/mvdVZZ4ReZuaL95OVI0caDtWtTs7
+        4Iip501Rz8niQ0/HFgqb0h9ag2rdzU98+hUrY98H+LteZZi1we3Gqs5T5nvS9FStZWtQp/vx
+        jJnvu/2hJu1wX7ikxBjq7bqv0m1bq+f9+dXS8pSWosIC0aZO3+iGO5iMr4mVB/pgao38Lz1J
+        +/pkAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrCIsWRmVeSWpSXmKPExsVy+t/xe7rL//yKM3h9hsei99xJJouNM9az
+        WvzfNpHZ4srX92wWK1cfZbJYsN/a4suVh0wWmx5fY7W4vGsOm8XBD09YHbg81sxbw+ix99sC
+        Fo/t3x6wetzvPs7ksXlJvcftf4+ZPSbfWM7osftmA5tH35ZVjB6fN8kFcEXp2RTll5akKmTk
+        F5fYKkUbWhjpGVpa6BmZWOoZGpvHWhmZKunb2aSk5mSWpRbp2yXoZUy9b1twU7ri55QO9gbG
+        HWJdjJwcEgImEj8WbWXtYuTiEBJYyihxbNIsFoiEjMTJaQ2sELawxJ9rXWwgtpDAW0aJ1o88
+        ILawQIjE+3fvmEGaRQRaGSWOPnjHDuIwC7xmlHh25QwzxNiJjBL/H+5iBGlhEzCU6HoLMYpX
+        wE5i9cUmMJtFQFXi4po5TCC2qECsxLd7W6BqBCVOznwCdhInUP3rloNgJzELmEnM2/yQGcKW
+        l9j+dg6ULS5x68l8pgmMQrOQtM9C0jILScssJC0LGFlWMYqklhbnpucWG+kVJ+YWl+al6yXn
+        525iBMbwtmM/t+xg7HoXfIhRgINRiYc34dzPOCHWxLLiytxDjBIczEoivE5nT8cJ8aYkVlal
+        FuXHF5XmpBYfYjQFem4is5Rocj4wveSVxBuaGppbWBqaG5sbm1koifN2CByMERJITyxJzU5N
+        LUgtgulj4uCUamAUfRmw9XOo4GLf7Q/Xn/zXtjW+izNDsrLg3i7R7dt0X6pnbtTSOPDt68xp
+        C5/MY0111xBflc/Mw/VH+cqRzrn3hTTKT7t5ZTisSRCr51VfkysVF1Iv5D3jVbrDo2Ovr0+L
+        /DRZl71XcPLl9C0adaI8lfvu8ywsFj87adqa3fkJjx2Yp/vlxq9VYinOSDTUYi4qTgQAM+BS
+        v/cCAAA=
+X-CMS-MailID: 20200630084943eucas1p175574f4a8f74aab87afea7c6186b0256
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200619103652eucas1p203d684adff0faa672ff5c8d383b52f23
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200619103652eucas1p203d684adff0faa672ff5c8d383b52f23
+References: <CGME20200619103652eucas1p203d684adff0faa672ff5c8d383b52f23@eucas1p2.samsung.com>
+        <20200619103636.11974-1-m.szyprowski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 26 Jun 2020 at 12:00, Herbert Xu <herbert@gondor.apana.org.au> wrote:
+Hi All,
+
+On 19.06.2020 12:36, Marek Szyprowski wrote:
+> During the Exynos DRM GEM rework and fixing the issues in the.
+> drm_prime_sg_to_page_addr_arrays() function [1] I've noticed that most
+> drivers in DRM framework incorrectly use nents and orig_nents entries of
+> the struct sg_table.
 >
-> On Tue, Jun 23, 2020 at 10:02:17AM -0700, Eric Biggers wrote:
-> >
-> > The source code for the two failing AF_ALG tests is here:
-> >
-> > https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/crypto/af_alg02.c
-> > https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/crypto/af_alg05.c
-> >
-> > They use read() and write(), not send() and recv().
-> >
-> > af_alg02 uses read() to read from a "salsa20" request socket without writing
-> > anything to it.  It is expected that this returns 0, i.e. that behaves like
-> > encrypting an empty message.
+> In case of the most DMA-mapping implementations exchanging those two
+> entries or using nents for all loops on the scatterlist is harmless,
+> because they both have the same value. There exists however a DMA-mapping
+> implementations, for which such incorrect usage breaks things. The nents
+> returned by dma_map_sg() might be lower than the nents passed as its
+> parameter and this is perfectly fine. DMA framework or IOMMU is allowed
+> to join consecutive chunks while mapping if such operation is supported
+> by the underlying HW (bus, bridge, IOMMU, etc). Example of the case
+> where dma_map_sg() might return 1 'DMA' chunk for the 4 'physical' pages
+> is described here [2]
+>
+> The DMA-mapping framework documentation [3] states that dma_map_sg()
+> returns the numer of the created entries in the DMA address space.
+> However the subsequent calls to dma_sync_sg_for_{device,cpu} and
+> dma_unmap_sg must be called with the original number of entries passed to
+> dma_map_sg. The common pattern in DRM drivers were to assign the
+> dma_map_sg() return value to sg_table->nents and use that value for
+> the subsequent calls to dma_sync_sg_* or dma_unmap_sg functions. Also
+> the code iterated over nents times to access the pages stored in the
+> processed scatterlist, while it should use orig_nents as the numer of
+> the page entries.
+>
+> I've tried to identify all such incorrect usage of sg_table->nents and
+> this is a result of my research. It looks that the incorrect pattern has
+> been copied over the many drivers mainly in the DRM subsystem. Too bad in
+> most cases it even worked correctly if the system used a simple, linear
+> DMA-mapping implementation, for which swapping nents and orig_nents
+> doesn't make any difference. To avoid similar issues in the future, I've
+> introduced a common wrappers for DMA-mapping calls, which operate directly
+> on the sg_table objects. I've also added wrappers for iterating over the
+> scatterlists stored in the sg_table objects and applied them where
+> possible. This, together with some common DRM prime helpers, allowed me
+> to almost get rid of all nents/orig_nents usage in the drivers. I hope
+> that such change makes the code robust, easier to follow and copy/paste
+> safe.
+>
+> The biggest TODO is DRM/i915 driver and I don't feel brave enough to fix
+> it fully. The driver creatively uses sg_table->orig_nents to store the
+> size of the allocate scatterlist and ignores the number of the entries
+> returned by dma_map_sg function. In this patchset I only fixed the
+> sg_table objects exported by dmabuf related functions. I hope that I
+> didn't break anything there.
+>
+> Patches are based on top of Linux next-20200618. The required changes to
+> DMA-mapping framework has been already merged to v5.8-rc1.
+>
+> If possible I would like ask for merging most of the patches via DRM
+> tree.
 
-Since we are on this subject,
-LTP af_alg02  test case fails on stable 4.9 and stable 4.4
-This is not a regression because the test case has been failing from
-the beginning.
+David & Daniel: how would you like to merge those patches? They got 
+quite a lot acks and some of them have dependencies on the DRM core. I 
+would really like to get patches 1-28 merged via DRM (misc?) tree. Do 
+you want me to prepare a branch and send a pull request?
 
-Is this test case expected to fail on stable 4.9 and 4.4 ?
-or any chance to fix this on these older branches ?
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
-Test output:
-af_alg02.c:52: BROK: Timed out while reading from request socket.
-
-ref:
-https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/build/v4.9.228-191-g082e807235d7/testrun/2884917/suite/ltp-crypto-tests/test/af_alg02/history/
-https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/build/v4.9.228-191-g082e807235d7/testrun/2884606/suite/ltp-crypto-tests/test/af_alg02/log
-
-- Naresh
