@@ -2,168 +2,120 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F5D7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5CCAC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1503320775
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:47:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80D3520772
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:48:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IUV4XzuA"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="hPnwIOP5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730001AbgF3UrE (ORCPT
+        id S1727073AbgF3UsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 16:47:04 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29871 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730024AbgF3UpS (ORCPT
+        Tue, 30 Jun 2020 16:48:08 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:45063 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726154AbgF3UsI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 16:45:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593549917;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=D8OdeaID5or5gsgcWoj3vmPJjBIrXv0E7kOuYlamE1o=;
-        b=IUV4XzuAa+Di+IOfIipqCZhNxKCivOXjwVDeztpqSuFabQL3alc6Wa43fJNEnzRXO7HN5K
-        PViGzJTsEwGgOw94nfADkhJp8+ajQvgR+rcaq6kkfKPNv/fAjo3LtNTQZQI2X9qQ86uuk9
-        SaNmg69EbSdTTSGByMFKAiuDlj08WNw=
-Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com
- [209.85.219.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-3-dZfhhqFPPqeEckBkZSw9hA-1; Tue, 30 Jun 2020 16:45:15 -0400
-X-MC-Unique: dZfhhqFPPqeEckBkZSw9hA-1
-Received: by mail-qv1-f70.google.com with SMTP id g17so12884937qvw.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 13:45:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=D8OdeaID5or5gsgcWoj3vmPJjBIrXv0E7kOuYlamE1o=;
-        b=Hg3FPpocs+gk+l8AbAL6l+fLRrDCQSU5GucfsVEM6E9qerXnGr0jET0Wx4j9oyzWtt
-         Bf3GWmKexsf37dzQhZj1cH5r2kX1jp6FRBO0Ww68k5vkzWaN7RtNdvvjA4AIeo6z7BUp
-         7Y/UGs+KNsJUQQ4ybhrVhoAp/Uk3mrLYKgtAoAuz2TF/xMFVBrFedf6olvurmWgWFg6c
-         d72Od4pSpkrtucgFVnxTROP+bq402zWf9MnNJkgH+l28II2M23KFvTPQZKAk/LajlfXg
-         hGvAWyzLujVMUP3dWnetOD6ShS3CXSxMnfh+WXmgu8K8uG7wqcmX7uwYxrNKUHnzzHEY
-         NCHA==
-X-Gm-Message-State: AOAM533CTuvSD9XUSvgBxu1p/lyDjpJ8pPSZ8MwxigzDmhYAlVVKCNAc
-        L/W9b67m7VOjbVVovK4omando0Smqwa5b2jJbwL6MhkV43rF5QBisCbew1n1jJVHDXYFG3XIvn5
-        TguGEI3LBAlkqfGGLlEoVW7M7
-X-Received: by 2002:a0c:aa41:: with SMTP id e1mr7773816qvb.117.1593549914664;
-        Tue, 30 Jun 2020 13:45:14 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJwyi+ZiCgpgJNPiRGb/lHwsXU/ArQZuHKcbcZdE9UMPtaTClSVeehVA8eVoAkqIf1DOQolAKg==
-X-Received: by 2002:a0c:aa41:: with SMTP id e1mr7773775qvb.117.1593549914158;
-        Tue, 30 Jun 2020 13:45:14 -0700 (PDT)
-Received: from xz-x1.redhat.com ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id p80sm3991738qke.19.2020.06.30.13.45.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 13:45:13 -0700 (PDT)
-From:   Peter Xu <peterx@redhat.com>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>, peterx@redhat.com,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Will Deacon <will@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v4 04/26] mm/arm: Use general page fault accounting
-Date:   Tue, 30 Jun 2020 16:45:11 -0400
-Message-Id: <20200630204511.38663-1-peterx@redhat.com>
-X-Mailer: git-send-email 2.26.2
+        Tue, 30 Jun 2020 16:48:08 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 59C978011F;
+        Wed,  1 Jul 2020 08:48:03 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1593550083;
+        bh=dkA9lCTZ8l7sxxsW0Hb4m+Cx86l4iCV5ssAnMigH/7Q=;
+        h=From:To:Cc:Subject:Date;
+        b=hPnwIOP5QE4UL/Sst4tj6aPbwJKT+wvvXSa1u8wzTVJt9NxtjHPraq5z9fz7mYwZG
+         t7S5ZYEJrSqpBte23GvqZKC0kcRJ5AfRS6gHxEQeCv9z5d5gycCR4pwQ1UeNeQraAY
+         3+UR0CvRkvcYsfrQk+ZudjTKDtHNJVzGOGi8P6KVDDf6eOy18gQwXoCatczdLQAfz2
+         s/JyRgdEj55v8EHUeVkpwc0QjywjRZXa55PIB3p6jTKvGzOvmPjnfMp0vxd8ZtQ+Q0
+         t1gznhalwiRbNekqRoMHm4n7Gyt+ZPKXjKQtre8D3k2sll9H89gk3gKMAuHOsOMHM7
+         yJqHoxOaz131g==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5efba5030000>; Wed, 01 Jul 2020 08:48:03 +1200
+Received: from markto-dl.ws.atlnz.lc (markto-dl.ws.atlnz.lc [10.33.23.25])
+        by smtp (Postfix) with ESMTP id 03CEB13EEB5;
+        Wed,  1 Jul 2020 08:48:02 +1200 (NZST)
+Received: by markto-dl.ws.atlnz.lc (Postfix, from userid 1155)
+        id 03FC533E9BD; Wed,  1 Jul 2020 08:48:03 +1200 (NZST)
+From:   Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+To:     rjui@broadcom.com, sbranden@broadcom.com,
+        bcm-kernel-feedback-list@broadcom.com, linus.walleij@linaro.org,
+        linux-gpio@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
+Subject: [PATCH] pinctrl: nsp: Set irq handler based on trig type
+Date:   Wed,  1 Jul 2020 08:47:04 +1200
+Message-Id: <20200630204704.17736-1-mark.tomlinson@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the general page fault accounting by passing regs into handle_mm_fault().
-It naturally solve the issue of multiple page fault accounting when page fault
-retry happened.  To do this, we need to pass the pt_regs pointer into
-__do_page_fault().
+Rather than always using handle_simple_irq() as the gpio_irq_chip
+handler, set a more appropriate handler based on the IRQ trigger type
+requested. This is important for level triggered interrupts which need
+to be masked during handling. Also, always acknowledge the interrupt
+regardless of whether it is edge or level triggered.
 
-Fix PERF_COUNT_SW_PAGE_FAULTS perf event manually for page fault retries, by
-moving it before taking mmap_sem.
-
-CC: Russell King <linux@armlinux.org.uk>
-CC: Will Deacon <will@kernel.org>
-CC: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Peter Xu <peterx@redhat.com>
+Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
 ---
- arch/arm/mm/fault.c | 25 ++++++-------------------
- 1 file changed, 6 insertions(+), 19 deletions(-)
+ drivers/pinctrl/bcm/pinctrl-nsp-gpio.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/mm/fault.c b/arch/arm/mm/fault.c
-index 01a8e0f8fef7..efa402025031 100644
---- a/arch/arm/mm/fault.c
-+++ b/arch/arm/mm/fault.c
-@@ -202,7 +202,8 @@ static inline bool access_error(unsigned int fsr, struct vm_area_struct *vma)
- 
- static vm_fault_t __kprobes
- __do_page_fault(struct mm_struct *mm, unsigned long addr, unsigned int fsr,
--		unsigned int flags, struct task_struct *tsk)
-+		unsigned int flags, struct task_struct *tsk,
-+		struct pt_regs *regs)
- {
- 	struct vm_area_struct *vma;
- 	vm_fault_t fault;
-@@ -224,7 +225,7 @@ __do_page_fault(struct mm_struct *mm, unsigned long addr, unsigned int fsr,
- 		goto out;
- 	}
- 
--	return handle_mm_fault(vma, addr & PAGE_MASK, flags, NULL);
-+	return handle_mm_fault(vma, addr & PAGE_MASK, flags, regs);
- 
- check_stack:
- 	/* Don't allow expansion below FIRST_USER_ADDRESS */
-@@ -266,6 +267,8 @@ do_page_fault(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
- 	if ((fsr & FSR_WRITE) && !(fsr & FSR_CM))
- 		flags |= FAULT_FLAG_WRITE;
- 
-+	perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, addr);
+diff --git a/drivers/pinctrl/bcm/pinctrl-nsp-gpio.c b/drivers/pinctrl/bcm=
+/pinctrl-nsp-gpio.c
+index bed0124388c0..349fb384113e 100644
+--- a/drivers/pinctrl/bcm/pinctrl-nsp-gpio.c
++++ b/drivers/pinctrl/bcm/pinctrl-nsp-gpio.c
+@@ -174,11 +174,8 @@ static void nsp_gpio_irq_ack(struct irq_data *d)
+ 	struct nsp_gpio *chip =3D gpiochip_get_data(gc);
+ 	unsigned gpio =3D d->hwirq;
+ 	u32 val =3D BIT(gpio);
+-	u32 trigger_type;
+=20
+-	trigger_type =3D irq_get_trigger_type(d->irq);
+-	if (trigger_type & (IRQ_TYPE_EDGE_FALLING | IRQ_TYPE_EDGE_RISING))
+-		nsp_set_bit(chip, REG, NSP_GPIO_EVENT, gpio, val);
++	nsp_set_bit(chip, REG, NSP_GPIO_EVENT, gpio, val);
+ }
+=20
+ /*
+@@ -262,6 +259,12 @@ static int nsp_gpio_irq_set_type(struct irq_data *d,=
+ unsigned int type)
+=20
+ 	nsp_set_bit(chip, REG, NSP_GPIO_EVENT_INT_POLARITY, gpio, falling);
+ 	nsp_set_bit(chip, REG, NSP_GPIO_INT_POLARITY, gpio, level_low);
 +
- 	/*
- 	 * As per x86, we may deadlock here.  However, since the kernel only
- 	 * validly references user space from well defined areas of the code,
-@@ -290,7 +293,7 @@ do_page_fault(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
- #endif
++	if (type & IRQ_TYPE_EDGE_BOTH)
++		irq_set_handler_locked(d, handle_edge_irq);
++	else
++		irq_set_handler_locked(d, handle_level_irq);
++
+ 	raw_spin_unlock_irqrestore(&chip->lock, flags);
+=20
+ 	dev_dbg(chip->dev, "gpio:%u level_low:%s falling:%s\n", gpio,
+@@ -691,7 +694,7 @@ static int nsp_gpio_probe(struct platform_device *pde=
+v)
+ 		girq->num_parents =3D 0;
+ 		girq->parents =3D NULL;
+ 		girq->default_type =3D IRQ_TYPE_NONE;
+-		girq->handler =3D handle_simple_irq;
++		girq->handler =3D handle_bad_irq;
  	}
- 
--	fault = __do_page_fault(mm, addr, fsr, flags, tsk);
-+	fault = __do_page_fault(mm, addr, fsr, flags, tsk, regs);
- 
- 	/* If we need to retry but a fatal signal is pending, handle the
- 	 * signal first. We do not need to release the mmap_lock because
-@@ -302,23 +305,7 @@ do_page_fault(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
- 		return 0;
- 	}
- 
--	/*
--	 * Major/minor page fault accounting is only done on the
--	 * initial attempt. If we go through a retry, it is extremely
--	 * likely that the page will be found in page cache at that point.
--	 */
--
--	perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, addr);
- 	if (!(fault & VM_FAULT_ERROR) && flags & FAULT_FLAG_ALLOW_RETRY) {
--		if (fault & VM_FAULT_MAJOR) {
--			tsk->maj_flt++;
--			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MAJ, 1,
--					regs, addr);
--		} else {
--			tsk->min_flt++;
--			perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN, 1,
--					regs, addr);
--		}
- 		if (fault & VM_FAULT_RETRY) {
- 			flags |= FAULT_FLAG_TRIED;
- 			goto retry;
--- 
-2.26.2
+=20
+ 	ret =3D devm_gpiochip_add_data(dev, gc, chip);
+--=20
+2.27.0
 
