@@ -4,57 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E791CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B23B9C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:11:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C2D0F207FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:11:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 886172073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:11:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yqm00unw";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="056MC/Ze"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="k+wUmVLb";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lufC/IuR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732338AbgF3KLy (ORCPT
+        id S1732351AbgF3KL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 06:11:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42124 "EHLO
+        Tue, 30 Jun 2020 06:11:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730237AbgF3KLx (ORCPT
+        with ESMTP id S1732340AbgF3KLy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 06:11:53 -0400
+        Tue, 30 Jun 2020 06:11:54 -0400
 Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A98D4C061755;
-        Tue, 30 Jun 2020 03:11:52 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 10:11:49 -0000
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32E93C061755;
+        Tue, 30 Jun 2020 03:11:54 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 10:11:50 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1593511910;
+        s=2020; t=1593511911;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-        bh=x9Kx/vy/1w4IrADsqyxp3ADoc04m1/GxSgLtI8leJRo=;
-        b=yqm00unww/tf7emFMmRYcQoP6G3pW/OPW7pAHNa9NzGrPtYx7NQtA4KhxQbH6Pdmw/LAoK
-        L53w72+fbN511Uepel2XoECfdNQy509NqY6vjV0A9Hrr27LBEc+Ma++/42zuYmBWM2J1CG
-        9ThWcKC2ib2qgMScwT2yeV4gO67nK7vj1JkU7g8ffjXjqA8rviX8yCNZKU3GoDkDTmeehD
-        EtLIy9MP8BFXhQ8hNJM07Qp+MrBclgxi0lm8P5b2Y7BKO7Wunvm/lFcrTR4YGpqcidCEs3
-        4NaCVnJw6/S/JX7shRF/YuSSrXpc2LM1m8421SnAAU4AuJ/2KrVN0KTisKtIcw==
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HzC5ybQu8kVGHWLGBhWSXXbonkpooFQmrjPK+FrJ/08=;
+        b=k+wUmVLb56qLBIu4uuNZ9DR6jOJisojB5fzPjAoPOqdWFplL2Wgc//LJ6Bq6FOLmCkRABC
+        TXx/U96lX8Y9TeqEeFCIOo0nhUSUtpd++YQ5V+GiYarpH9Vs6H++vSLCkYBlKfXdAzS/Kb
+        J3LY4tLC746gAlP6tkusdy5N/temxWHybLvpc9n8H6+Edo0a9k8P3O5fxCZ4pLGtYQgk5g
+        +DAsgGR2rljFy3L5RiVksKBOvjorwp8809MqBpVZXq9H1ed/tHAAH8ZdimvIb36pYVmqoT
+        yqwRh4nRWoOo95zRJ3NeLPAGKVNFLEmbc5mEqrM+urdV7cKLogPT7iosYogMZg==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1593511910;
+        s=2020e; t=1593511911;
         h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
-        bh=x9Kx/vy/1w4IrADsqyxp3ADoc04m1/GxSgLtI8leJRo=;
-        b=056MC/Zex643vEKzRVSxcolTlGKjRDPUzzlCVSnhCXGPSX+RqYaye02aJcatO7OuSLnmRD
-        iwphyka5gwGV0kBw==
-From:   "tip-bot2 for Marc Zyngier" <tip-bot2@linutronix.de>
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HzC5ybQu8kVGHWLGBhWSXXbonkpooFQmrjPK+FrJ/08=;
+        b=lufC/IuRKE58yrb9Jtxaz50eWLh+e1PSwB0ZD8Wfi/2pyv4Sb14zEUezQRmRGig/LeKiPG
+        rUcTUMYpzGXTGVAg==
+From:   "tip-bot2 for Jiaxun Yang" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: irq/urgent] irqchip/gic: Atomically update affinity
-Cc:     stable@vger.kernel.org, Marc Zyngier <maz@kernel.org>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Subject: [tip: irq/urgent] irqchip/loongson-pci-msi: Fix a typo in Kconfig
+Cc:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Marc Zyngier <maz@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200530121113.1797678-2-jiaxun.yang@flygoat.com>
+References: <20200530121113.1797678-2-jiaxun.yang@flygoat.com>
 MIME-Version: 1.0
-Message-ID: <159351190922.4006.6997590439954706407.tip-bot2@tip-bot2>
+Message-ID: <159351191099.4006.18157932896470485452.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Content-Type: text/plain; charset="utf-8"
@@ -66,64 +73,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the irq/urgent branch of tip:
 
-Commit-ID:     005c34ae4b44f085120d7f371121ec7ded677761
-Gitweb:        https://git.kernel.org/tip/005c34ae4b44f085120d7f371121ec7ded677761
-Author:        Marc Zyngier <maz@kernel.org>
-AuthorDate:    Sun, 21 Jun 2020 14:43:15 +01:00
+Commit-ID:     a23df9a4bd326fb4c7f160b72b0e0560b989ac29
+Gitweb:        https://git.kernel.org/tip/a23df9a4bd326fb4c7f160b72b0e0560b989ac29
+Author:        Jiaxun Yang <jiaxun.yang@flygoat.com>
+AuthorDate:    Sat, 30 May 2020 20:11:12 +08:00
 Committer:     Marc Zyngier <maz@kernel.org>
-CommitterDate: Sun, 21 Jun 2020 15:24:46 +01:00
+CommitterDate: Sun, 21 Jun 2020 15:13:11 +01:00
 
-irqchip/gic: Atomically update affinity
+irqchip/loongson-pci-msi: Fix a typo in Kconfig
 
-The GIC driver uses a RMW sequence to update the affinity, and
-relies on the gic_lock_irqsave/gic_unlock_irqrestore sequences
-to update it atomically.
+PCH MSI driver's menuconfig entry was wrong. Fix it.
 
-But these sequences only expand into anything meaningful if
-the BL_SWITCHER option is selected, which almost never happens.
-
-It also turns out that using a RMW and locks is just as silly,
-as the GIC distributor supports byte accesses for the GICD_TARGETRn
-registers, which when used make the update atomic by definition.
-
-Drop the terminally broken code and replace it by a byte write.
-
-Fixes: 04c8b0f82c7d ("irqchip/gic: Make locking a BL_SWITCHER only feature")
-Cc: stable@vger.kernel.org
+Fixes: 632dcc2c75ef ("irqchip: Add Loongson PCH MSI controller")
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/20200530121113.1797678-2-jiaxun.yang@flygoat.com
 ---
- drivers/irqchip/irq-gic.c | 14 +++-----------
- 1 file changed, 3 insertions(+), 11 deletions(-)
+ drivers/irqchip/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-index 00de05a..c17fabd 100644
---- a/drivers/irqchip/irq-gic.c
-+++ b/drivers/irqchip/irq-gic.c
-@@ -329,10 +329,8 @@ static int gic_irq_set_vcpu_affinity(struct irq_data *d, void *vcpu)
- static int gic_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
- 			    bool force)
- {
--	void __iomem *reg = gic_dist_base(d) + GIC_DIST_TARGET + (gic_irq(d) & ~3);
--	unsigned int cpu, shift = (gic_irq(d) % 4) * 8;
--	u32 val, mask, bit;
--	unsigned long flags;
-+	void __iomem *reg = gic_dist_base(d) + GIC_DIST_TARGET + gic_irq(d);
-+	unsigned int cpu;
+diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+index 29fead2..216b3b8 100644
+--- a/drivers/irqchip/Kconfig
++++ b/drivers/irqchip/Kconfig
+@@ -563,7 +563,7 @@ config LOONGSON_PCH_PIC
+ 	  Support for the Loongson PCH PIC Controller.
  
- 	if (!force)
- 		cpu = cpumask_any_and(mask_val, cpu_online_mask);
-@@ -342,13 +340,7 @@ static int gic_set_affinity(struct irq_data *d, const struct cpumask *mask_val,
- 	if (cpu >= NR_GIC_CPU_IF || cpu >= nr_cpu_ids)
- 		return -EINVAL;
- 
--	gic_lock_irqsave(flags);
--	mask = 0xff << shift;
--	bit = gic_cpu_map[cpu] << shift;
--	val = readl_relaxed(reg) & ~mask;
--	writel_relaxed(val | bit, reg);
--	gic_unlock_irqrestore(flags);
--
-+	writeb_relaxed(gic_cpu_map[cpu], reg);
- 	irq_data_update_effective_affinity(d, cpumask_of(cpu));
- 
- 	return IRQ_SET_MASK_OK_DONE;
+ config LOONGSON_PCH_MSI
+-	bool "Loongson PCH PIC Controller"
++	bool "Loongson PCH MSI Controller"
+ 	depends on MACH_LOONGSON64 || COMPILE_TEST
+ 	depends on PCI
+ 	default MACH_LOONGSON64
