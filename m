@@ -2,224 +2,288 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06A04C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 967F1C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E074120759
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60A33206B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:19:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="DoFjdvYP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730017AbgF3GSG (ORCPT
+        id S1730027AbgF3GTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 02:18:06 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:61336 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725845AbgF3GSF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 02:18:05 -0400
-Received: from fsav405.sakura.ne.jp (fsav405.sakura.ne.jp [133.242.250.104])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 05U6H3xt072997;
-        Tue, 30 Jun 2020 15:17:03 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav405.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav405.sakura.ne.jp);
- Tue, 30 Jun 2020 15:17:03 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav405.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 05U6H2bZ072931
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Tue, 30 Jun 2020 15:17:02 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: [PATCH v2 00/15] Make the user mode driver code a better citizen
-To:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <greg@kroah.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20200625095725.GA3303921@kroah.com>
- <778297d2-512a-8361-cf05-42d9379e6977@i-love.sakura.ne.jp>
- <20200625120725.GA3493334@kroah.com>
- <20200625.123437.2219826613137938086.davem@davemloft.net>
- <CAHk-=whuTwGHEPjvtbBvneHHXeqJC=q5S09mbPnqb=Q+MSPMag@mail.gmail.com>
- <87pn9mgfc2.fsf_-_@x220.int.ebiederm.org>
- <87y2oac50p.fsf@x220.int.ebiederm.org>
- <87bll17ili.fsf_-_@x220.int.ebiederm.org>
- <20200629221231.jjc2czk3ul2roxkw@ast-mbp.dhcp.thefacebook.com>
- <87y2o51hkk.fsf@x220.int.ebiederm.org>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <8137153b-6163-b52c-a1f8-f3949dc321bd@i-love.sakura.ne.jp>
-Date:   Tue, 30 Jun 2020 15:16:57 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
-MIME-Version: 1.0
-In-Reply-To: <87y2o51hkk.fsf@x220.int.ebiederm.org>
-Content-Type: text/plain; charset=utf-8
+        Tue, 30 Jun 2020 02:19:20 -0400
+Received: from mga03.intel.com ([134.134.136.65]:49751 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725845AbgF3GTU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 02:19:20 -0400
+IronPort-SDR: hzR+UTK0JTGFzOlNw+oQccG6n76EDsY1yzrtcKcRNazovSmErLyxEg9VVe16vxaB/DSqKBISWF
+ kS54wYPfmOPw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="146145960"
+X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
+   d="scan'208";a="146145960"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 23:19:19 -0700
+IronPort-SDR: CT19O4v1OL7Iblc6mBTE/llx+WDf06v7LUIj/kfAYdP7YvS7rRQQ7A+u1UxvlEyZSOhepqEpA+
+ lMrsCjeCwvNQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
+   d="scan'208";a="321296709"
+Received: from orsmsx109.amr.corp.intel.com ([10.22.240.7])
+  by orsmga007.jf.intel.com with ESMTP; 29 Jun 2020 23:19:19 -0700
+Received: from orsmsx607.amr.corp.intel.com (10.22.229.20) by
+ ORSMSX109.amr.corp.intel.com (10.22.240.7) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 29 Jun 2020 23:19:19 -0700
+Received: from orsmsx606.amr.corp.intel.com (10.22.229.19) by
+ ORSMSX607.amr.corp.intel.com (10.22.229.20) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 29 Jun 2020 23:19:18 -0700
+Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
+ orsmsx606.amr.corp.intel.com (10.22.229.19) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Mon, 29 Jun 2020 23:19:18 -0700
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (104.47.37.58) by
+ edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Mon, 29 Jun 2020 23:19:18 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Xo0GUM0eAg1c8tHrsNe6b6jH2PYSj/mod1Q1micr2UKHSKvAQg9cROpscNRcxSScRrEKkm9i7Kmo2QpVfHfXhQt/Mk+J6kpK9wbUe04xlLRKDNLVD2qKK85WrUlB2ti4Ap9aZ7fzzMuuey8Djd602JGv0yhQLeI5m3z2Q2AAGCZS+RIUnVVOBG2x/hk2epSvYNdat+6fSJ/jEVO7zRqWATVD++eHlxEjZzUG/i2hWuYH+iFf0oY4gvUKRyZv37MutUvu/xUUB1OKTuSXja3PdBP9gE1v6jpTkE7GBXwKIwr+xJqqi/019wQyKrJ6Fxm2eODd0JUrRNkM7zw4Bu0sPg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wPzkxpZvpkmcxQqaY8si4eDaz2UV32JluTs2xxrC//M=;
+ b=GtfFDcbI8e5h6bJb6EiXnCMXUKqW1duG/+Qb1aO21YjWbOE55B7MH28FgPEzWblX0kk1WHp6tXyS4Ks4shKq8mEjw8YHboUx9Tasw29qikGVeHrS9clUm0sPzY9DWvSq52MVYqlICmMSY4UugOmXidcoqE8gayfQxibTwR8TQPocRjQYMqW5TTGx5xw/Ispu0BJx75STNr4ajLPm/PxQkc0fknqO7GPY3uQP39CDZDYdfQx78h+Qq1fOr+X6JlfMBwrs9tmFvevEkxRGR9YWGOpIJJAhGmuFvIfE6zPI8c47pAmv9dCNlmlVduu7R5w2Eee8UiF/NW15bq3wxE21og==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
+ s=selector2-intel-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wPzkxpZvpkmcxQqaY8si4eDaz2UV32JluTs2xxrC//M=;
+ b=DoFjdvYP8jUAiZjEswMdMOo0bROBJHOyhCzdpK5S5hO0NA3gDSsbzb5e+Ey+HM/6G53CmhVhMlZhu9Pxwl4NychLumfaBbw2UeeypgBXkSh4o9ZHU+xplmguhYEF5lGKhVYlPysuOroVztwbwWaraTgdRLmL1kQJmL7l5qPTBq4=
+Received: from MWHPR11MB1645.namprd11.prod.outlook.com (2603:10b6:301:b::12)
+ by MWHPR11MB0063.namprd11.prod.outlook.com (2603:10b6:301:6c::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.25; Tue, 30 Jun
+ 2020 06:19:16 +0000
+Received: from MWHPR11MB1645.namprd11.prod.outlook.com
+ ([fe80::9864:e0cb:af36:6feb]) by MWHPR11MB1645.namprd11.prod.outlook.com
+ ([fe80::9864:e0cb:af36:6feb%5]) with mapi id 15.20.3131.027; Tue, 30 Jun 2020
+ 06:19:16 +0000
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Lu Baolu <baolu.lu@linux.intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>
+CC:     Joerg Roedel <joro@8bytes.org>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 4/4] iommu/vt-d: Add page response ops support
+Thread-Topic: [PATCH 4/4] iommu/vt-d: Add page response ops support
+Thread-Index: AQHWTORpzKVpnGuNLU6RQJAsChsNEKjwsO+A
+Date:   Tue, 30 Jun 2020 06:19:16 +0000
+Message-ID: <MWHPR11MB1645B92B81D6A1F7EDAC24848C6F0@MWHPR11MB1645.namprd11.prod.outlook.com>
+References: <20200628003332.5720-1-baolu.lu@linux.intel.com>
+ <20200628003332.5720-5-baolu.lu@linux.intel.com>
+In-Reply-To: <20200628003332.5720-5-baolu.lu@linux.intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-version: 11.2.0.6
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+authentication-results: linux.intel.com; dkim=none (message not signed)
+ header.d=none;linux.intel.com; dmarc=none action=none header.from=intel.com;
+x-originating-ip: [192.198.147.207]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1b0cd7fc-8c52-4ffa-1224-08d81cbd8426
+x-ms-traffictypediagnostic: MWHPR11MB0063:
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR11MB0063D9651F2FC9B143701FC98C6F0@MWHPR11MB0063.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5236;
+x-forefront-prvs: 0450A714CB
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: nuqKF5WOqABcTolvtMfaH5/SoTCpHWYBGNvIpUIpFxXv4xXOo8vwQWB3l8yix4zVVVeF3yeg/nuRMQ9CEjxuISwJlYVA/h118Ea7j4LLBEqoBwirOfqdEYSUK6dvL3iJ3HoimFM3RkpRT4m64osfX2RnIWpljZQrwf5j4/8aPpEHYJQVim5VwWEJCxFNj60mRuAyBBrsV3kwXXflPJLqsieS3bnM0DxwKH5J+BUVmyaYGK3qu8TJqaTL5ZOY3ss0K9n6braPdQiwxBvsJ6lBZhyHpkAbgTN6zQJjPxC2B8XS9HIiGWCqwQIj/oyKAuaiRSGxeZyPbSEAgMC0lanuNA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1645.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(39860400002)(366004)(136003)(376002)(346002)(186003)(86362001)(8676002)(6506007)(66556008)(26005)(76116006)(2906002)(66446008)(64756008)(66476007)(83380400001)(9686003)(66946007)(7696005)(55016002)(8936002)(478600001)(110136005)(316002)(33656002)(71200400001)(4326008)(5660300002)(52536014)(54906003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: 3RKaPkYfeGCnOPKHo2n6E27XSyKL/2lCCUMdY7hkyaVZEmJdvJkRzLMBBskx9TYXqwosMcF19KUzVDJZCp6KPQghEw8+tlxqAWDHMjYQTn1ZsJ9wasCyq0aCgNkPt9G5INHAv4rCV72qVpQzm2v9lIPOWrV2LVLNm1LsokYfzxya+UXX2y1zRl3drkPYJxfefvKB2PZEuGnYapBAaCe+oEZD8IDmhwpm8RTNXh4Ga3VgsXVNopObRWgoqexGbs61ueuHxIz/5W+MuDusjAea5omwgsHd0/xhrN2tEg1ITiNLDQh/K5qr7fvMG599IEjXOeWr6Yx1LCG3KZpn7QOyq8ZPMjj0VObVxfvKRTtL0Af503UdvZqCWKeK3HFJkvdRDXDtSJ57H5TMS0+wnxRsE2btCDNwHybEshPiYSEoeTS5ocR9Q1FDw3Zwy3/Fwwpr2DT9b51nrfj/4JmlGxj0mthn/7KcmdIeR1m/JbrXas/Njn/8+ftAVKmtPQDztTTD
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR11MB1645.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1b0cd7fc-8c52-4ffa-1224-08d81cbd8426
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2020 06:19:16.2380
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: KsOqGwiQiTGCZM3GnoVt7NyJy36iiIYfSWvqmYgaaIQ8bR+ITdWF9A+BBw7aGyIipohtt+4+OLQyJfgK4MJaVQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB0063
+X-OriginatorOrg: intel.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/06/30 10:13, Eric W. Biederman wrote:
-> Alexei Starovoitov <alexei.starovoitov@gmail.com> writes:
-> 
->> On Mon, Jun 29, 2020 at 02:55:05PM -0500, Eric W. Biederman wrote:
->>>
->>> I have tested thes changes by booting with the code compiled in and
->>> by killing "bpfilter_umh" and running iptables -vnL to restart
->>> the userspace driver.
->>>
->>> I have compiled tested each change with and without CONFIG_BPFILTER
->>> enabled.
->>
->> With
->> CONFIG_BPFILTER=y
->> CONFIG_BPFILTER_UMH=m
->> it doesn't build:
->>
->> ERROR: modpost: "kill_pid_info" [net/bpfilter/bpfilter.ko] undefined!
->>
->> I've added:
->> +EXPORT_SYMBOL(kill_pid_info);
->> to continue testing...
+> From: Lu Baolu <baolu.lu@linux.intel.com>
+> Sent: Sunday, June 28, 2020 8:34 AM
+>=20
+> After a page request is handled, software must response the device which
+> raised the page request with the handling result. This is done through
+> the iommu ops.page_response if the request was reported to outside of
+> vendor iommu driver through iommu_report_device_fault(). This adds the
+> VT-d implementation of page_response ops.
+>=20
+> Co-developed-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Co-developed-by: Liu Yi L <yi.l.liu@intel.com>
+> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+> ---
+>  drivers/iommu/intel/iommu.c |  1 +
+>  drivers/iommu/intel/svm.c   | 73
+> +++++++++++++++++++++++++++++++++++++
+>  include/linux/intel-iommu.h |  3 ++
+>  3 files changed, 77 insertions(+)
+>=20
+> diff --git a/drivers/iommu/intel/iommu.c b/drivers/iommu/intel/iommu.c
+> index de17952ed133..7eb29167e8f9 100644
+> --- a/drivers/iommu/intel/iommu.c
+> +++ b/drivers/iommu/intel/iommu.c
+> @@ -6057,6 +6057,7 @@ const struct iommu_ops intel_iommu_ops =3D {
+>  	.sva_bind		=3D intel_svm_bind,
+>  	.sva_unbind		=3D intel_svm_unbind,
+>  	.sva_get_pasid		=3D intel_svm_get_pasid,
+> +	.page_response		=3D intel_svm_page_response,
+>  #endif
+>  };
+>=20
+> diff --git a/drivers/iommu/intel/svm.c b/drivers/iommu/intel/svm.c
+> index 4800bb6f8794..003ea9579632 100644
+> --- a/drivers/iommu/intel/svm.c
+> +++ b/drivers/iommu/intel/svm.c
+> @@ -1092,3 +1092,76 @@ int intel_svm_get_pasid(struct iommu_sva *sva)
+>=20
+>  	return pasid;
+>  }
+> +
+> +int intel_svm_page_response(struct device *dev,
+> +			    struct iommu_fault_event *evt,
+> +			    struct iommu_page_response *msg)
+> +{
+> +	struct iommu_fault_page_request *prm;
+> +	struct intel_svm_dev *sdev;
+> +	struct intel_iommu *iommu;
+> +	struct intel_svm *svm;
+> +	bool private_present;
+> +	bool pasid_present;
+> +	bool last_page;
+> +	u8 bus, devfn;
+> +	int ret =3D 0;
+> +	u16 sid;
+> +
+> +	if (!dev || !dev_is_pci(dev))
+> +		return -ENODEV;
+> +
+> +	iommu =3D device_to_iommu(dev, &bus, &devfn);
+> +	if (!iommu)
+> +		return -ENODEV;
 
-kill_pid() is already exported.
+move to the place when iommu is referenced. This place is too early.
 
->>
->> And then did:
->> while true; do iptables -L;rmmod bpfilter; done
->>  
->> Unfortunately sometimes 'rmmod bpfilter' hangs in wait_event().
->>
->> I suspect patch 13 is somehow responsible:
->> +	if (tgid) {
->> +		kill_pid_info(SIGKILL, SEND_SIG_PRIV, tgid);
->> +		wait_event(tgid->wait_pidfd, !pid_task(tgid, PIDTYPE_TGID));
->> +		bpfilter_umh_cleanup(info);
->> +	}
->>
->> I cannot figure out why it hangs. Some sort of race ?
->> Since adding short delay between kill and wait makes it work.
+> +
+> +	if (!msg || !evt)
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&pasid_mutex);
+> +
+> +	prm =3D &evt->fault.prm;
+> +	sid =3D PCI_DEVID(bus, devfn);
+> +	pasid_present =3D prm->flags &
+> IOMMU_FAULT_PAGE_REQUEST_PASID_VALID;
+> +	private_present =3D prm->flags &
+> IOMMU_FAULT_PAGE_REQUEST_PRIV_DATA;
+> +	last_page =3D prm->flags &
+> IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE;
+> +
+> +	if (pasid_present) {
+> +		/* VT-d supports devices with full 20 bit PASIDs only */
+> +		if (pci_max_pasids(to_pci_dev(dev)) !=3D PASID_MAX) {
+> +			ret =3D -EINVAL;
+> +			goto out;
+> +		}
 
-Because there is a race window that detach_pid() from __unhash_process() from
-__exit_signal() from release_task() from exit_notify() from do_exit() is called
-some time after wake_up_all(&pid->wait_pidfd) from do_notify_pidfd() from
-do_notify_parent() from exit_notify() from do_exit() was called (in other words,
-we can't use pid->wait_pidfd when pid_task() is used at wait_event()) ?
+shouldn't we check prm->pasid here? Above is more reasonable to be
+checked when page request is reported.
 
-Below are changes I suggest.
+> +
+> +		ret =3D pasid_to_svm_sdev(dev, prm->pasid, &svm, &sdev);
+> +		if (ret || !sdev)
 
-diff --git a/kernel/umd.c b/kernel/umd.c
-index ff79fb16d738..f688813b8830 100644
---- a/kernel/umd.c
-+++ b/kernel/umd.c
-@@ -26,7 +26,7 @@ static struct vfsmount *blob_to_mnt(const void *data, size_t len, const char *na
- 	if (IS_ERR(mnt))
- 		return mnt;
- 
--	file = file_open_root(mnt->mnt_root, mnt, name, O_CREAT | O_WRONLY, 0700);
-+	file = file_open_root(mnt->mnt_root, mnt, name, O_CREAT | O_WRONLY | O_EXCL, 0700);
- 	if (IS_ERR(file)) {
- 		mntput(mnt);
- 		return ERR_CAST(file);
-@@ -52,16 +52,18 @@ static struct vfsmount *blob_to_mnt(const void *data, size_t len, const char *na
- 
- /**
-  * umd_load_blob - Remember a blob of bytes for fork_usermode_driver
-- * @info: information about usermode driver
-- * @data: a blob of bytes that can be executed as a file
-- * @len:  The lentgh of the blob
-+ * @info: information about usermode driver (shouldn't be NULL)
-+ * @data: a blob of bytes that can be executed as a file (shouldn't be NULL)
-+ * @len:  The lentgh of the blob (shouldn't be 0)
-  *
-  */
- int umd_load_blob(struct umd_info *info, const void *data, size_t len)
- {
- 	struct vfsmount *mnt;
- 
--	if (WARN_ON_ONCE(info->wd.dentry || info->wd.mnt))
-+	if (!info || !info->driver_name || !data || !len)
-+		return -EINVAL;
-+	if (info->wd.dentry || info->wd.mnt)
- 		return -EBUSY;
- 
- 	mnt = blob_to_mnt(data, len, info->driver_name);
-@@ -76,15 +78,14 @@ EXPORT_SYMBOL_GPL(umd_load_blob);
- 
- /**
-  * umd_unload_blob - Disassociate @info from a previously loaded blob
-- * @info: information about usermode driver
-+ * @info: information about usermode driver (shouldn't be NULL)
-  *
-  */
- int umd_unload_blob(struct umd_info *info)
- {
--	if (WARN_ON_ONCE(!info->wd.mnt ||
--			 !info->wd.dentry ||
--			 info->wd.mnt->mnt_root != info->wd.dentry))
-+	if (!info || !info->driver_name || !info->wd.dentry || !info->wd.mnt)
- 		return -EINVAL;
-+	BUG_ON(info->wd.mnt->mnt_root != info->wd.dentry);
- 
- 	kern_unmount(info->wd.mnt);
- 	info->wd.mnt = NULL;
-@@ -138,7 +139,7 @@ static void umd_cleanup(struct subprocess_info *info)
- {
- 	struct umd_info *umd_info = info->data;
- 
--	/* cleanup if umh_setup() was successful but exec failed */
-+	/* cleanup if umd_setup() was successful but exec failed */
- 	if (info->retval) {
- 		fput(umd_info->pipe_to_umh);
- 		fput(umd_info->pipe_from_umh);
-@@ -163,7 +164,10 @@ int fork_usermode_driver(struct umd_info *info)
- 	const char *argv[] = { info->driver_name, NULL };
- 	int err;
- 
--	if (WARN_ON_ONCE(info->tgid))
-+	if (!info || !info->driver_name || !info->wd.dentry || !info->wd.mnt)
-+		return -EINVAL;
-+	BUG_ON(info->wd.mnt->mnt_root != info->wd.dentry);
-+	if (info->tgid)
- 		return -EBUSY;
- 
- 	err = -ENOMEM;
-diff --git a/net/bpfilter/bpfilter_kern.c b/net/bpfilter/bpfilter_kern.c
-index 91474884ddb7..9dd70aacb81a 100644
---- a/net/bpfilter/bpfilter_kern.c
-+++ b/net/bpfilter/bpfilter_kern.c
-@@ -19,8 +19,13 @@ static void shutdown_umh(void)
- 	struct pid *tgid = info->tgid;
- 
- 	if (tgid) {
--		kill_pid_info(SIGKILL, SEND_SIG_PRIV, tgid);
--		wait_event(tgid->wait_pidfd, !pid_task(tgid, PIDTYPE_TGID));
-+		kill_pid(tgid, SIGKILL, 1);
-+		while (({ bool done;
-+			  rcu_read_lock();
-+			  done = !pid_task(tgid, PIDTYPE_TGID);
-+			  rcu_read_unlock();
-+			  done; }))
-+			schedule_timeout_uninterruptible(1);
- 		bpfilter_umh_cleanup(info);
- 	}
- }
+if sdev=3D=3DNULL, suppose an error (-ENODEV) should be returned here?
+
+> +			goto out;
+> +	}
+> +
+> +	/*
+> +	 * Per VT-d spec. v3.0 ch7.7, system software must respond
+> +	 * with page group response if private data is present (PDP)
+> +	 * or last page in group (LPIG) bit is set. This is an
+> +	 * additional VT-d feature beyond PCI ATS spec.
+
+feature->requirement
+
+Thanks
+Kevin
+
+> +	 */
+> +	if (last_page || private_present) {
+> +		struct qi_desc desc;
+> +
+> +		desc.qw0 =3D QI_PGRP_PASID(prm->pasid) | QI_PGRP_DID(sid)
+> |
+> +				QI_PGRP_PASID_P(pasid_present) |
+> +				QI_PGRP_PDP(private_present) |
+> +				QI_PGRP_RESP_CODE(msg->code) |
+> +				QI_PGRP_RESP_TYPE;
+> +		desc.qw1 =3D QI_PGRP_IDX(prm->grpid) |
+> QI_PGRP_LPIG(last_page);
+> +		desc.qw2 =3D 0;
+> +		desc.qw3 =3D 0;
+> +		if (private_present)
+> +			memcpy(&desc.qw2, prm->private_data,
+> +			       sizeof(prm->private_data));
+> +
+> +		qi_submit_sync(iommu, &desc, 1, 0);
+> +	}
+> +out:
+> +	mutex_unlock(&pasid_mutex);
+> +	return ret;
+> +}
+> diff --git a/include/linux/intel-iommu.h b/include/linux/intel-iommu.h
+> index fc2cfc3db6e1..bf6009a344f5 100644
+> --- a/include/linux/intel-iommu.h
+> +++ b/include/linux/intel-iommu.h
+> @@ -741,6 +741,9 @@ struct iommu_sva *intel_svm_bind(struct device
+> *dev, struct mm_struct *mm,
+>  				 void *drvdata);
+>  void intel_svm_unbind(struct iommu_sva *handle);
+>  int intel_svm_get_pasid(struct iommu_sva *handle);
+> +int intel_svm_page_response(struct device *dev, struct iommu_fault_event
+> *evt,
+> +			    struct iommu_page_response *msg);
+> +
+>  struct svm_dev_ops;
+>=20
+>  struct intel_svm_dev {
+> --
+> 2.17.1
 
