@@ -2,126 +2,85 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A32AC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD1AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3A68820768
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:07:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D94EB2073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:08:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730633AbgF3HHq (ORCPT
+        id S1730647AbgF3HIF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 03:07:46 -0400
-Received: from mga12.intel.com ([192.55.52.136]:2116 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730386AbgF3HHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 03:07:46 -0400
-IronPort-SDR: hMOBxv46gEWRiUELMFJ/DDcT67owjSTk6G5DQ20loaaBjVoak47/A3lUPAJCbaEM/qf5Gund4X
- ORm/jDbCzTKg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="125796951"
-X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
-   d="scan'208";a="125796951"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 00:07:45 -0700
-IronPort-SDR: zN0xCHYhnQTCKA6dD9R2SaSnOqW7vy7mgzTVJKR9fw9+XOH8P45kstYiWnpOjPL58W/EcoHYFt
- KioPeOKNjU5g==
-X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
-   d="scan'208";a="454499042"
-Received: from letingex-mobl.ger.corp.intel.com ([10.214.248.180])
-  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 00:07:37 -0700
-Message-ID: <e7068d39c8ca60159ba7d1d5f917ef209570bb86.camel@linux.intel.com>
-Subject: Re: [PATCH 0/7] Add initial Keem Bay SoC / Board support
-From:   Daniele Alessandrelli <daniele.alessandrelli@linux.intel.com>
-To:     linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-Cc:     devicetree@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-kernel@vger.kernel.org, Dinh Nguyen <dinguyen@kernel.org>,
-        Paul Murphy <paul.j.murphy@intel.com>,
-        Will Deacon <will@kernel.org>,
-        Daniele Alessandrelli <daniele.alessandrelli@intel.com>
-Date:   Tue, 30 Jun 2020 08:07:28 +0100
-In-Reply-To: <20200616155613.121242-1-daniele.alessandrelli@linux.intel.com>
-References: <20200616155613.121242-1-daniele.alessandrelli@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.3 (3.36.3-1.fc32) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 30 Jun 2020 03:08:05 -0400
+Received: from smtp23.cstnet.cn ([159.226.251.23]:45858 "EHLO cstnet.cn"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725440AbgF3HIE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 03:08:04 -0400
+Received: from localhost (unknown [159.226.5.99])
+        by APP-03 (Coremail) with SMTP id rQCowAC3OPjl4_peKEhOAQ--.46047S2;
+        Tue, 30 Jun 2020 15:04:05 +0800 (CST)
+From:   Chen Ni <vulab@iscas.ac.cn>
+To:     dsd@gentoo.org, kune@deine-taler.de, kvalo@codeaurora.org,
+        davem@davemloft.net, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Xu Wang <vulab@iscas.ac.cn>
+Subject: [PATCH] net: zydas: remove needless check before usb_free_coherent()
+Date:   Tue, 30 Jun 2020 07:04:04 +0000
+Message-Id: <20200630070404.8207-1-vulab@iscas.ac.cn>
+X-Mailer: git-send-email 2.17.1
+X-CM-TRANSID: rQCowAC3OPjl4_peKEhOAQ--.46047S2
+X-Coremail-Antispam: 1UD129KBjvdXoWrKFWrZw4UGr47GFWDGFyDWrg_yoWfKrg_Gr
+        Z7WFnxXry5Jw109rWUAay3Z39Yya93Xws5WrsaqrW5Wayjq3sxAw1jyry7JrsrGFnYvFnx
+        Gw1kJFW8JFySqjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUIcSsGvfJTRUUUbfxYjsxI4VW3JwAYFVCjjxCrM7AC8VAFwI0_Gr0_Xr1l1xkIjI8I
+        6I8E6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM2
+        8CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0
+        cI8IcVCY1x0267AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z2
+        80aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAK
+        zVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWrXwAv7VC2z280aVAFwI0_ZcC_Gr8dMc
+        vjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwACjcxG6xCI17CEII8vrVW3JVW8
+        Jr1lF7I21c0EjII2zVCS5cI20VAGYxC7MxkIecxEwVAFwVW8CwCF04k20xvY0x0EwIxGrw
+        CFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE
+        14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2
+        IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxK
+        x2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxV
+        AFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0ziiIDnUUUUU=
+X-Originating-IP: [159.226.5.99]
+X-CM-SenderInfo: pyxotu46lvutnvoduhdfq/1tbiAxADA13qZLQmfQAAsv
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-06-16 at 16:56 +0100, Daniele Alessandrelli wrote:
-> Hi,
-> 
-> This patch-set adds initial support for a new Intel Movidius SoC
-> code-named
-> Keem Bay. The SoC couples an ARM Cortex A53 CPU with an Intel
-> Movidius VPU.
-> 
-> This initial patch-set enables only the minimal set of components
-> required to
-> make the Keem Bay EVM board boot into initramfs.
-> 
-> Brief summary of the patch-set:
-> * Patches 1-2 add the Keem Bay SCMI Mailbox driver (needed to enable
-> SCMI in
->   Keem Bay)
-> * Patch 3 adds the ARCH_KEEMBAY config option
-> * Patches 4-7 add minimal device tree for Keem Bay SoC and Keem Bay
-> EVM
->   (together with information about the SoC maintainers)
-> 
-> Regards,
-> Daniele
-> 
-> 
-> Daniele Alessandrelli (5):
->   arm64: Add config for Keem Bay SoC
->   dt-bindings: arm: Add Keem Bay bindings
->   MAINTAINERS: Add maintainers for Keem Bay SoC
->   arm64: dts: keembay: Add device tree for Keem Bay SoC
->   arm64: dts: keembay: Add device tree for Keem Bay EVM board
-> 
-> Paul Murphy (2):
->   dt-bindings: mailbox: Add Keem Bay SCMI mailbox bindings
->   mailbox: keembay-scmi-mailbox: Add support for Keem Bay mailbox
-> 
->  .../devicetree/bindings/arm/keembay.yaml      |  19 ++
->  .../mailbox/intel,keembay-scmi-mailbox.yaml   |  44 ++++
->  MAINTAINERS                                   |  16 ++
->  arch/arm64/Kconfig.platforms                  |   5 +
->  arch/arm64/boot/dts/intel/Makefile            |   1 +
->  arch/arm64/boot/dts/intel/keembay-evm.dts     |  55 +++++
->  arch/arm64/boot/dts/intel/keembay-soc.dtsi    | 172 +++++++++++++++
->  drivers/mailbox/Kconfig                       |   9 +
->  drivers/mailbox/Makefile                      |   2 +
->  drivers/mailbox/keembay-scmi-mailbox.c        | 203
-> ++++++++++++++++++
->  include/dt-bindings/clock/keembay-clocks.h    | 188 ++++++++++++++++
->  include/dt-bindings/power/keembay-power.h     |  19 ++
->  12 files changed, 733 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/arm/keembay.yaml
->  create mode 100644
-> Documentation/devicetree/bindings/mailbox/intel,keembay-scmi-
-> mailbox.yaml
->  create mode 100644 arch/arm64/boot/dts/intel/keembay-evm.dts
->  create mode 100644 arch/arm64/boot/dts/intel/keembay-soc.dtsi
->  create mode 100644 drivers/mailbox/keembay-scmi-mailbox.c
->  create mode 100644 include/dt-bindings/clock/keembay-clocks.h
->  create mode 100644 include/dt-bindings/power/keembay-power.h
-> 
+From: Xu Wang <vulab@iscas.ac.cn>
 
-Ping
+usb_free_coherent() is safe with NULL addr and this check is
+not required.
 
+Signed-off-by: Xu Wang <vulab@iscas.ac.cn>
+---
+ drivers/net/wireless/zydas/zd1211rw/zd_usb.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
+diff --git a/drivers/net/wireless/zydas/zd1211rw/zd_usb.c b/drivers/net/wireless/zydas/zd1211rw/zd_usb.c
+index 8ff0374126e4..65b5985ad402 100644
+--- a/drivers/net/wireless/zydas/zd1211rw/zd_usb.c
++++ b/drivers/net/wireless/zydas/zd1211rw/zd_usb.c
+@@ -600,9 +600,7 @@ void zd_usb_disable_int(struct zd_usb *usb)
+ 	dev_dbg_f(zd_usb_dev(usb), "urb %p killed\n", urb);
+ 	usb_free_urb(urb);
+ 
+-	if (buffer)
+-		usb_free_coherent(udev, USB_MAX_EP_INT_BUFFER,
+-				  buffer, buffer_dma);
++	usb_free_coherent(udev, USB_MAX_EP_INT_BUFFER, buffer, buffer_dma);
+ }
+ 
+ static void handle_rx_packet(struct zd_usb *usb, const u8 *buffer,
+-- 
+2.17.1
 
