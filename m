@@ -2,276 +2,169 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1FAEC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAADC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8D13D20759
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:08:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gorani.run header.i=@gorani.run header.b="Uql6MpZO"
+	by mail.kernel.org (Postfix) with ESMTP id 9C50020759
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:08:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593533327;
+	bh=Yrw+E0tDD/xWJStSBD4plfXuQGMfBLXahbiSK/LOqwA=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=F7DwEak9wC4Nzfba+hAmdYg+71cunOpkmSYs8OOa27MRJZ/TeZcGwXhfjJ2yzVZYN
+	 4fjeOGLsIaxZxVO7CCBBlUYCpmRvfMFf/HR0FOQ4UJJyqkUrmejVaoexnVeapH3cI9
+	 dStGFwbo82DAbBDAYO6HG7z6o0AY6KA/p3c/1x6Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbgF3QIM (ORCPT
+        id S1728686AbgF3QIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 12:08:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40640 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726117AbgF3QIM (ORCPT
+        Tue, 30 Jun 2020 12:08:46 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42176 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726117AbgF3QIq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 12:08:12 -0400
-Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [IPv6:2001:67c:2050::465:103])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD965C061755;
-        Tue, 30 Jun 2020 09:08:11 -0700 (PDT)
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [80.241.60.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mout-p-103.mailbox.org (Postfix) with ESMTPS id 49x8Qy0JG5zKm5q;
-        Tue, 30 Jun 2020 18:08:10 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gorani.run; s=MBO0001;
-        t=1593533287;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=bukBcr3BI9HeIa7CGu/rD17u7w+04aytazFoytLYkkA=;
-        b=Uql6MpZOM8Sf2yldrDP0RUWXlzyi9fJF+eKKl25JNp4f1BIAgaf+x4BZqsCv7n14rldQYA
-        xGuU7nvNrc1H9NY8MVCPw12+yXOpDjFE666RZmWLphqe5mLzRF0EkAmnzupGvJBGWT1ZuE
-        Ie2uWOvmy5EHy7wWstww3elStZX+fQZvluzkUquCbSBIpLzX15Y4XQRwyvuO0rLcj/WOQU
-        ZFBBxz8SpgH6hPxKnLqZhutYINM0bNxMXAuh04V3YYNBxRi8Nf9hDIQyZj0pSp8t30kXd8
-        dy8DV/qAUTZxxiSKFqKgwWVdctgyKj7J83Wj6n5CIimzE6uwpnEFr2eihlRTEQ==
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
-        with ESMTP id LHHoUNE662Zk; Tue, 30 Jun 2020 18:08:05 +0200 (CEST)
-From:   Sungbo Eo <mans0n@gorani.run>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Michael Walle <michael@walle.cc>, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Cc:     Sungbo Eo <mans0n@gorani.run>
-Subject: [PATCH v3 1/2] gpio: add GPO driver for PCA9570
-Date:   Wed,  1 Jul 2020 01:07:36 +0900
-Message-Id: <20200630160736.1196697-1-mans0n@gorani.run>
+        Tue, 30 Jun 2020 12:08:46 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 76so4410060otu.9;
+        Tue, 30 Jun 2020 09:08:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jQDz/WabqYjbF35ePxjq+94tU34dFjVcRR53QQxEhIE=;
+        b=K1q9NJXTaJ3HUAez4QAa7bUgGd/B59WXkiVSTRwyVEJ5lir+keaS5BcKvwLftJmws4
+         ZgsZo26J22s4uYGQj8T9NaDwtCFXkWmet1LzOXzbIniQ7I0jyi0lt2Uh9CDKLoruE2Oz
+         vWDS5XxgVntVzkCSkY+pp8K5F7ruTuHSujPrNbgGg8/jc64J1fK5bZVK+RQZdedFwhoZ
+         5DUpv0R4jlHPusEoEH3r36B2hcNQYPuwlNGldIL8AZleVi17D5XrebxrXBm07s1JHuYH
+         Y2wyCNbV2YY34QcAFKWOw3f/MacIhCLSyEztLoOIfDDijAOcvihX6d96OiZy8SLkXyHG
+         DlVQ==
+X-Gm-Message-State: AOAM530kjvkx1t9KNdMVhqqUguYr//cKN6HVM8e8OnVpEFQBAJ30mhVp
+        cgVgvssvfOjpWubRiz/o7Myp/cjuLcdWtTNxcMc=
+X-Google-Smtp-Source: ABdhPJxaWnX9yrMQHErQh8Vw+ezc/MNNEhYcKVhPEqUi65LAtj57f/zeJ/ze1v+SS/GdZrhEkvjMvThwgj4FoHTcVQM=
+X-Received: by 2002:a9d:1c82:: with SMTP id l2mr1108124ota.167.1593533322766;
+ Tue, 30 Jun 2020 09:08:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-MBO-SPAM-Probability: 6
-X-Rspamd-Score: 0.98 / 15.00 / 15.00
-X-Rspamd-Queue-Id: A4FF31738
-X-Rspamd-UID: 463fb2
+References: <20200630044943.3425049-1-rajatja@google.com> <20200630044943.3425049-6-rajatja@google.com>
+ <20200630104948.GC856968@kuha.fi.intel.com> <20200630125216.GA1109228@kroah.com>
+ <CAJZ5v0iYFKrouQx_b7afPnz7ohjWOKKDhdHj_3HObKYV_rRhiw@mail.gmail.com> <20200630153816.GD1785141@kroah.com>
+In-Reply-To: <20200630153816.GD1785141@kroah.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 30 Jun 2020 18:08:31 +0200
+Message-ID: <CAJZ5v0jUx-RVhJRDngkOXx-3szFJDOgCJs2yuGKFyo2f1qZAwA@mail.gmail.com>
+Subject: Re: [PATCH v2 5/7] driver core: Add device location to "struct
+ device" and expose it in sysfs
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "open list:AMD IOMMU (AMD-VI)" <iommu@lists.linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Raj Ashok <ashok.raj@intel.com>,
+        lalithambika.krishnakumar@intel.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-NXP PCA9570 is 4-bit I2C GPO expander without interrupt functionality.
-Its ports are controlled only by a data byte without register address.
+On Tue, Jun 30, 2020 at 5:38 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, Jun 30, 2020 at 03:00:34PM +0200, Rafael J. Wysocki wrote:
+> > On Tue, Jun 30, 2020 at 2:52 PM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Tue, Jun 30, 2020 at 01:49:48PM +0300, Heikki Krogerus wrote:
+> > > > On Mon, Jun 29, 2020 at 09:49:41PM -0700, Rajat Jain wrote:
+> > > > > Add a new (optional) field to denote the physical location of a device
+> > > > > in the system, and expose it in sysfs. This was discussed here:
+> > > > > https://lore.kernel.org/linux-acpi/20200618184621.GA446639@kroah.com/
+> > > > >
+> > > > > (The primary choice for attribute name i.e. "location" is already
+> > > > > exposed as an ABI elsewhere, so settled for "site"). Individual buses
+> > > > > that want to support this new attribute can opt-in by setting a flag in
+> > > > > bus_type, and then populating the location of device while enumerating
+> > > > > it.
+> > > >
+> > > > So why not just call it "physical_location"?
+> > >
+> > > That's better, and will allow us to put "3rd blue plug from the left,
+> > > 4th row down" in there someday :)
+> > >
+> > > All of this is "relative" to the CPU, right?  But what CPU?  Again, how
+> > > are the systems with drawers of PCI and CPUs and memory that can be
+> > > added/removed at any point in time being handled here?  What is
+> > > "internal" and "external" for them?
+> > >
+> > > What exactly is the physical boundry here that is attempting to be
+> > > described?
+> >
+> > Also, where is the "physical location" information going to come from?
+>
+> Who knows?  :)
+>
+> Some BIOS seem to provide this, but do you trust that?
+>
+> > If that is the platform firmware (which I suspect is the anticipated
+> > case), there may be problems with reliability related to that.
+>
+> s/may/will/
+>
+> which means making the kernel inact a policy like this patch series
+> tries to add, will result in a lot of broken systems, which is why I
+> keep saying that it needs to be done in userspace.
+>
+> It's as if some of us haven't been down this road before and just keep
+> being ignored...
+>
+> {sigh}
 
-As there is no other driver similar enough to be adapted for it, a new
-driver is introduced here.
+Well, to be honest, if you are a "vertical" vendor and you control the
+entire stack, *including* the platform firmware, it would be kind of
+OK for you to do that in a product kernel.
 
-Signed-off-by: Sungbo Eo <mans0n@gorani.run>
----
-v3:
-* remove mutex
-* rename buffer to out
-* simplify return statements
-* replace ->probe() to ->probe_new()
-* move ngpio to driver_data
-  (PCA9571 is 8-bit so I thought making ngpio configurable is a good idea)
+However, this is not a practical thing to do in the mainline kernel
+which must work for everybody, including people who happen to use
+systems with broken or even actively unfriendly firmware on them.
 
-v2:
-* move the direction functions below the set functions
-* use devm_gpiochip_add_data() and remove the remove callback
+So I'm inclined to say that IMO this series "as is" would not be an
+improvement from the mainline perspective.
 
-v1:
-Tested in kernel 5.4 on an ipq40xx platform.
+I guess it would make sense to have an attribute for user space to
+write to in order to make the kernel reject device plug-in events
+coming from a given port or connector, but the kernel has no reliable
+means to determine *which* ports or connectors are "safe", and even if
+there was a way for it to do that, it still may not agree with user
+space on which ports or connectors should be regarded as "safe".
 
-This is my first time submitting a whole driver patch, and I'm not really
-familiar with this PCA expander series.
-Please let me know how I can improve this patch further.
-
-FYI there's an unmerged patch for this chip.
-http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/2017-May/105602.html
-I don't have PCA9571 either so I didn't add support for it.
----
- drivers/gpio/Kconfig        |   8 +++
- drivers/gpio/Makefile       |   1 +
- drivers/gpio/gpio-pca9570.c | 131 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 140 insertions(+)
- create mode 100644 drivers/gpio/gpio-pca9570.c
-
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index c6b5c65c8405..d10dcb81b841 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -962,6 +962,14 @@ config GPIO_PCA953X_IRQ
- 	  Say yes here to enable the pca953x to be used as an interrupt
- 	  controller. It requires the driver to be built in the kernel.
- 
-+config GPIO_PCA9570
-+	tristate "PCA9570 4-Bit I2C GPO expander"
-+	help
-+	  Say yes here to enable the GPO driver for the NXP PCA9570 chip.
-+
-+	  To compile this driver as a module, choose M here: the module will
-+	  be called gpio-pca9570.
-+
- config GPIO_PCF857X
- 	tristate "PCF857x, PCA{85,96}7x, and MAX732[89] I2C GPIO expanders"
- 	select GPIOLIB_IRQCHIP
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 1e4894e0bf0f..33cb40c28a61 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -110,6 +110,7 @@ obj-$(CONFIG_GPIO_OCTEON)		+= gpio-octeon.o
- obj-$(CONFIG_GPIO_OMAP)			+= gpio-omap.o
- obj-$(CONFIG_GPIO_PALMAS)		+= gpio-palmas.o
- obj-$(CONFIG_GPIO_PCA953X)		+= gpio-pca953x.o
-+obj-$(CONFIG_GPIO_PCA9570)		+= gpio-pca9570.o
- obj-$(CONFIG_GPIO_PCF857X)		+= gpio-pcf857x.o
- obj-$(CONFIG_GPIO_PCH)			+= gpio-pch.o
- obj-$(CONFIG_GPIO_PCIE_IDIO_24)		+= gpio-pcie-idio-24.o
-diff --git a/drivers/gpio/gpio-pca9570.c b/drivers/gpio/gpio-pca9570.c
-new file mode 100644
-index 000000000000..3898d1c6f407
---- /dev/null
-+++ b/drivers/gpio/gpio-pca9570.c
-@@ -0,0 +1,131 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Driver for PCA9570 I2C GPO expander
-+ *
-+ * Copyright (C) 2020 Sungbo Eo <mans0n@gorani.run>
-+ *
-+ * Based on gpio-tpic2810.c
-+ * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com/
-+ *	Andrew F. Davis <afd@ti.com>
-+ */
-+
-+#include <linux/gpio/driver.h>
-+#include <linux/i2c.h>
-+#include <linux/module.h>
-+
-+/**
-+ * struct pca9570 - GPIO driver data
-+ * @chip: GPIO controller chip
-+ * @client: I2C device pointer
-+ * @out: Buffer for device register
-+ */
-+struct pca9570 {
-+	struct gpio_chip chip;
-+	struct i2c_client *client;
-+	u8 out;
-+};
-+
-+static void pca9570_set_mask_bits(struct gpio_chip *chip, u8 mask, u8 bits)
-+{
-+	struct pca9570 *gpio = gpiochip_get_data(chip);
-+	u8 buffer;
-+	int err;
-+
-+	buffer = (gpio->out & ~mask) | (bits & mask);
-+
-+	err = i2c_smbus_write_byte(gpio->client, buffer);
-+	if (err)
-+		return;
-+
-+	gpio->out = buffer;
-+}
-+
-+static void pca9570_set(struct gpio_chip *chip, unsigned offset, int value)
-+{
-+	pca9570_set_mask_bits(chip, BIT(offset), value ? BIT(offset) : 0);
-+}
-+
-+static void pca9570_set_multiple(struct gpio_chip *chip, unsigned long *mask,
-+				 unsigned long *bits)
-+{
-+	pca9570_set_mask_bits(chip, *mask, *bits);
-+}
-+
-+static int pca9570_get_direction(struct gpio_chip *chip,
-+				 unsigned offset)
-+{
-+	/* This device always output */
-+	return GPIO_LINE_DIRECTION_OUT;
-+}
-+
-+static int pca9570_direction_input(struct gpio_chip *chip,
-+				   unsigned offset)
-+{
-+	/* This device is output only */
-+	return -EINVAL;
-+}
-+
-+static int pca9570_direction_output(struct gpio_chip *chip,
-+				    unsigned offset, int value)
-+{
-+	/* This device always output */
-+	pca9570_set(chip, offset, value);
-+	return 0;
-+}
-+
-+static const struct gpio_chip template_chip = {
-+	.label			= "pca9570",
-+	.owner			= THIS_MODULE,
-+	.get_direction		= pca9570_get_direction,
-+	.direction_input	= pca9570_direction_input,
-+	.direction_output	= pca9570_direction_output,
-+	.set			= pca9570_set,
-+	.set_multiple		= pca9570_set_multiple,
-+	.base			= -1,
-+	.can_sleep		= true,
-+};
-+
-+static const struct i2c_device_id pca9570_id_table[] = {
-+	{ "pca9570", 4 },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(i2c, pca9570_id_table);
-+
-+static const struct of_device_id pca9570_of_match_table[] = {
-+	{ .compatible = "nxp,pca9570" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, pca9570_of_match_table);
-+
-+static int pca9570_probe(struct i2c_client *client)
-+{
-+	struct pca9570 *gpio;
-+
-+	gpio = devm_kzalloc(&client->dev, sizeof(*gpio), GFP_KERNEL);
-+	if (!gpio)
-+		return -ENOMEM;
-+
-+	gpio->chip = template_chip;
-+	gpio->chip.parent = &client->dev;
-+	gpio->chip.ngpio = i2c_match_id(pca9570_id_table, client)->driver_data;
-+
-+	gpio->client = client;
-+
-+	i2c_set_clientdata(client, gpio);
-+
-+	return devm_gpiochip_add_data(&client->dev, &gpio->chip, gpio);
-+}
-+
-+static struct i2c_driver pca9570_driver = {
-+	.driver = {
-+		.name = "pca9570",
-+		.of_match_table = pca9570_of_match_table,
-+	},
-+	.probe_new = pca9570_probe,
-+	.id_table = pca9570_id_table,
-+};
-+module_i2c_driver(pca9570_driver);
-+
-+MODULE_AUTHOR("Sungbo Eo <mans0n@gorani.run>");
-+MODULE_DESCRIPTION("GPIO expander driver for PCA9570");
-+MODULE_LICENSE("GPL v2");
--- 
-2.27.0
-
+Cheers!
