@@ -2,114 +2,94 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 586A0C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:07:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06491C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 32C8920771
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:07:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bhT2YLra"
+	by mail.kernel.org (Postfix) with ESMTP id DE45220780
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:08:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732242AbgF3KHw (ORCPT
+        id S1732253AbgF3KH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 06:07:52 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44061 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1732234AbgF3KHu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 06:07:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593511669;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=6bMazijEUH/Uu9sCncXdhJdICYXtEKD+O6jGCzyyAiQ=;
-        b=bhT2YLra5NIwDrpiAkcClmLb9KhAEpcFbmJ4+jcRp314xMskjj9Ks4NGrBvxxsPwBDy0L+
-        0EGwbLzMsnXl/cfJDX0utUPEiV4ZzW9Di/VMze9Akc2nlIPLqox3xKucOVJbxBuZJtBTWv
-        w1HBY6Q2W2+C7Q1TfH3R33616p25fNY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-483-hLxQllp4PQGI9P72rIm5Eg-1; Tue, 30 Jun 2020 06:07:47 -0400
-X-MC-Unique: hLxQllp4PQGI9P72rIm5Eg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 36AF21883629;
-        Tue, 30 Jun 2020 10:07:46 +0000 (UTC)
-Received: from vitty.brq.redhat.com (unknown [10.40.195.43])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6B4EC74193;
-        Tue, 30 Jun 2020 10:07:43 +0000 (UTC)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     kvm@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Junaid Shahid <junaids@google.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] KVM: x86: drop erroneous mmu_check_root() from fast_pgd_switch()
-Date:   Tue, 30 Jun 2020 12:07:42 +0200
-Message-Id: <20200630100742.1167961-1-vkuznets@redhat.com>
+        Tue, 30 Jun 2020 06:07:59 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2420 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732234AbgF3KH7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 06:07:59 -0400
+Received: from lhreml710-chm.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 80D0CC09CB50DA5C418F;
+        Tue, 30 Jun 2020 11:07:57 +0100 (IST)
+Received: from localhost (10.52.125.17) by lhreml710-chm.china.huawei.com
+ (10.201.108.61) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1913.5; Tue, 30 Jun
+ 2020 11:07:57 +0100
+Date:   Tue, 30 Jun 2020 11:06:54 +0100
+From:   Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To:     David Gow <davidgow@google.com>
+CC:     Jonathan Cameron <jic23@kernel.org>,
+        Michael Hennerich <michael.hennerich@analog.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Brendan Higgins <brendanhiggins@google.com>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] iio: adc: Specify IOMEM dependency for adi-axi-adc
+ driver
+Message-ID: <20200630110654.00001d40@Huawei.com>
+In-Reply-To: <20200630070552.1110864-1-davidgow@google.com>
+References: <20200630070552.1110864-1-davidgow@google.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.52.125.17]
+X-ClientProxiedBy: lhreml715-chm.china.huawei.com (10.201.108.66) To
+ lhreml710-chm.china.huawei.com (10.201.108.61)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Undesired triple fault gets injected to L1 guest on SVM when L2 is
-launched with certain CR3 values. It seems the mmu_check_root()
-check in fast_pgd_switch() is wrong: first of all we don't know
-if 'new_pgd' is a GPA or a nested GPA and, in case it is a nested
-GPA, we can't check it with kvm_is_visible_gfn().
+On Tue, 30 Jun 2020 00:05:52 -0700
+David Gow <davidgow@google.com> wrote:
 
-The problematic code path is:
-nested_svm_vmrun()
-  ...
-  nested_prepare_vmcb_save()
-    kvm_set_cr3(..., nested_vmcb->save.cr3)
-      kvm_mmu_new_pgd()
-        ...
-        mmu_check_root() -> TRIPLE FAULT
+> The Analog Devices AXI ADC driver uses the devm_ioremap_resource
+> function, but does not specify a dependency on IOMEM in Kconfig. This
+> causes a build failure on architectures without IOMEM, for example, UML
+> (notably with make allyesconfig).
+> 
+> Fix this by making CONFIG_ADI_AXI_ADC depend on CONFIG_IOMEM.
+> 
+> Signed-off-by: David Gow <davidgow@google.com>
+Hi David,
 
-The mmu_check_root() check in fast_pgd_switch() seems to be
-superfluous even for non-nested case: when GPA is outside of the
-visible range cached_root_available() will fail for non-direct
-roots (as we can't have a matching one on the list) and we don't
-seem to care for direct ones.
+Could you confirm what the build error is?  I thought the stubs added in
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=1bcbfbfdeb
+were meant to allow us to avoid having lots of depends on IOMEM lines for the
+few architectures who don't support it.
 
-Also, raising #TF immediately when a non-existent GFN is written to CR3
-doesn't seem to mach architecture behavior.
+Jonathan
 
-Fixes: 7c390d350f8b ("kvm: x86: Add fast CR3 switch code path")
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
-- The patch fixes the immediate issue and doesn't seem to break any
-  tests even with shadow PT but I'm not sure I properly understood
-  why the check was there in the first place. Please review!
----
- arch/x86/kvm/mmu/mmu.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+> ---
+>  drivers/iio/adc/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index ff3569635ce0..f5009b61b80c 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
+> @@ -263,6 +263,7 @@ config AD9467
+>  
+>  config ADI_AXI_ADC
+>  	tristate "Analog Devices Generic AXI ADC IP core driver"
+> +	depends on IOMEM
+>  	select IIO_BUFFER
+>  	select IIO_BUFFER_HW_CONSUMER
+>  	select IIO_BUFFER_DMAENGINE
 
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 76817d13c86e..286c74d2ae8d 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -4277,8 +4277,7 @@ static bool fast_pgd_switch(struct kvm_vcpu *vcpu, gpa_t new_pgd,
- 	 */
- 	if (mmu->shadow_root_level >= PT64_ROOT_4LEVEL &&
- 	    mmu->root_level >= PT64_ROOT_4LEVEL)
--		return !mmu_check_root(vcpu, new_pgd >> PAGE_SHIFT) &&
--		       cached_root_available(vcpu, new_pgd, new_role);
-+		return cached_root_available(vcpu, new_pgd, new_role);
- 
- 	return false;
- }
--- 
-2.25.4
 
