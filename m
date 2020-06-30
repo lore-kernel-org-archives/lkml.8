@@ -2,135 +2,152 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF69AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E1FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 89C84206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:36:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mANY5A32"
+	by mail.kernel.org (Postfix) with ESMTP id 2A14E206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:38:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593509881;
+	bh=r6ySbBBH6JX5F+m+piVB8CEQhJDEWaoNh+6yuwgGlZc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RGpr3dyBwiz3HagZhRABy9LLITlYXxTUgAXAqPEGItWwfd6diA79HTRmOb/AorpIr
+	 O4AJo2qHA+DNPQKCP6OL+hHgWW4PfcYDsKvPh6uAePfygTEgTO5A7b808WMaq55ibA
+	 8VPlzJlNWlzpELFPA4fWUjoELSdyCNqX06RmK/TQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732013AbgF3Jgp (ORCPT
+        id S1732027AbgF3JiA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 05:36:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36706 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731994AbgF3Jgo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 05:36:44 -0400
-Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1003C03E979
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 02:36:43 -0700 (PDT)
-Received: by mail-wm1-x331.google.com with SMTP id o2so18924784wmh.2
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 02:36:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :content-transfer-encoding;
-        bh=yaOhFBmIqdn8G4lrtwHvUko5nSvGDP5g5mqN3hIlOT0=;
-        b=mANY5A32i8Xy+WIr5jslEb6KJMif7iF1qzxgC6tqzDIyhbXDlubrFkGRvv17KOz1vm
-         DII2C2sjbT0SA5QtOWC3rikX6g0TIDVksXlE1WBmXoEp4WtXimS2XIj+vUQDKFCQ1OwC
-         MoNz8JuOwgUmGPizW8OxgxTQcTmOKjJTQVd+q4vhbTE+4B6DCH58RLmW6IKe7DgMCgjv
-         OsXXjHFMAtwhR978XaZ0zoSIJGejy3aEkjbve+jCAezLx7GRLGipnVznG3yp4dlxWUup
-         GnB0P8WAGtunjHN9mR1OE6rxRa0jgcsUGuRObl8rCkz7RkXWovMOjDKXPf1NCvUP5Ema
-         eP5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding;
-        bh=yaOhFBmIqdn8G4lrtwHvUko5nSvGDP5g5mqN3hIlOT0=;
-        b=TVhnCORfRaRGjePo8EvKh6S+5i+pt3aAIFypdXy1vDUHj9Oj9Lqql5pXQnDbWLcU96
-         l9uaKOVtFqxRLS3vQL5xmkuuhkd2BPvYMvWxmbujHT0V4iFePqYfOiQFCP+UqJnioeCz
-         uXF3Uqdz87FqhyD5dJsLVjOyBwI3L8Z2Q1BfU2Atstxl8523+ZPuNwSKIJJIjKLrFeoF
-         5CNPplyKr9FXqZNDErbqQuSIOXa7LtZgV6S3QdQ4YnKburEvMtruBcx2mSi+LHe9jTel
-         Uci4ldVMwIUciXQU29tBGT7eiG3wiRgzz1lDIkrixiGjpyxjqhY68U8D2HhOM/693LoC
-         zGQg==
-X-Gm-Message-State: AOAM530/M+Asc3FWjmqb/qwU6e/B8OyAChW6/oR5FwdTQwKPhstge2FZ
-        y/xelacsQPuZM4Rhcu96TP5lsQ==
-X-Google-Smtp-Source: ABdhPJwHunjXx/RLUoEt7TrvTZZBpJuDl+cFP0Xg4HKFJn9lm5Uol4Z2jknkTbH7j0IqbX1N7+ZDxQ==
-X-Received: by 2002:a1c:7306:: with SMTP id d6mr12380909wmb.113.1593509802412;
-        Tue, 30 Jun 2020 02:36:42 -0700 (PDT)
-Received: from dell ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id j41sm3102267wre.12.2020.06.30.02.36.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 02:36:41 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 10:36:40 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     corbet@lwn.net
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: scripts/kernel-doc update
-Message-ID: <20200630093640.GK1179328@dell>
+        Tue, 30 Jun 2020 05:38:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38740 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729193AbgF3Jh7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 05:37:59 -0400
+Received: from linux-8ccs.fritz.box (p57a23121.dip0.t-ipconnect.de [87.162.49.33])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 804C0206A1;
+        Tue, 30 Jun 2020 09:37:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593509878;
+        bh=r6ySbBBH6JX5F+m+piVB8CEQhJDEWaoNh+6yuwgGlZc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yq82SEN3Xsghbqdpt/wIolcC1yVYA3uH7fTDChhOidiV1Y9x5Q0e2gcokD8iFSH7G
+         KfCS64//Bvb+Kx/nxNdkVz6eul6j7vZjp7qdEKhg4SzWy6hfGQcSnjNUPherjkE0eZ
+         r8DjkxawL3HCfWoWaVIqOdZDbaYUAolP73pAdIX4=
+Date:   Tue, 30 Jun 2020 11:37:54 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Jim Cromie <jim.cromie@gmail.com>
+Cc:     tobyboy0@gmail.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kernel/module:  add name size info to pr_debug() calls
+Message-ID: <20200630093754.GA13271@linux-8ccs.fritz.box>
+References: <20200611142009.1098058-1-jim.cromie@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200611142009.1098058-1-jim.cromie@gmail.com>
+X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Good morning Jon, et al.,
++++ Jim Cromie [11/06/20 08:20 -0600]:
+>when booted with arg: module.dyndbg=+p
+>dmesg gets volumes of info about loaded modules.
+>This adds module & symbol names, and sizes where pertinent.
+>Now I can know which module's info Im looking at.
 
-Would someone be kind enough to update scripts/kernel-doc to elegantly
-handle complex bitmap expressions in structures please?  Presently
-only simple syntax is handled.  Something like:
+Hi,
 
-struct foo {
-       u8 arg : 10;
-};
+Could you please fix the changelog formatting according to
+Documentation/process/submitting-patches.rst? More specifically,
+complete sentences, line wrapped at 75 columns, and a Signed-off-by:
+line at the end. There are plenty of examples if you look through the
+lkml mailing list.
 
-However, the bitmap is sometimes derived from some pre-processed
-define or calculated.  Similar to the following examples.
+>---
+> kernel/module.c | 14 +++++++-------
+> 1 file changed, 7 insertions(+), 7 deletions(-)
+>
+>diff --git a/kernel/module.c b/kernel/module.c
+>index e8a198588f26..d871d9cee9eb 100644
+>--- a/kernel/module.c
+>+++ b/kernel/module.c
+>@@ -2294,8 +2294,8 @@ static int simplify_symbols(struct module *mod, const struct load_info *info)
+>
+> 		case SHN_ABS:
+> 			/* Don't need to do anything */
+>-			pr_debug("Absolute symbol: 0x%08lx\n",
+>-			       (long)sym[i].st_value);
+>+			pr_debug("Absolute symbol: 0x%08lx %s\n",
+>+				 (long)sym[i].st_value, name);
 
-Example 1:
----------
+I would prefer "Absolute symbol %s:" rather than putting the symbol
+name at the end.
 
-  File: drivers/misc/vmw_balloon.c
+> 			break;
+>
+> 		case SHN_LIVEPATCH:
+>@@ -2409,7 +2409,7 @@ static void layout_sections(struct module *mod, struct load_info *info)
+> 	for (i = 0; i < info->hdr->e_shnum; i++)
+> 		info->sechdrs[i].sh_entsize = ~0UL;
+>
+>-	pr_debug("Core section allocation order:\n");
+>+	pr_debug("Core section allocation order for: %s\n", mod->name);
 
-  struct vmballoon_batch_entry {
-          u64 status : 5;
-          u64 reserved : PAGE_SHIFT - 5;
-          u64 pfn : 52;
-  } __packed;
+I would slightly prefer "Core section allocation order for %s:", but
+it's a matter of taste.
 
-Example 2:
----------
+> 	for (m = 0; m < ARRAY_SIZE(masks); ++m) {
+> 		for (i = 0; i < info->hdr->e_shnum; ++i) {
+> 			Elf_Shdr *s = &info->sechdrs[i];
+>@@ -2442,7 +2442,7 @@ static void layout_sections(struct module *mod, struct load_info *info)
+> 		}
+> 	}
+>
+>-	pr_debug("Init section allocation order:\n");
+>+	pr_debug("Init section allocation order for: %s\n", mod->name);
 
-  File: include/math-emu/single.h
-  
-  union _FP_UNION_S
-  {
-    float flt;
-    struct {
-  #if __BYTE_ORDER == __BIG_ENDIAN
-      unsigned sign : 1;
-      unsigned exp  : _FP_EXPBITS_S;
-      unsigned frac : _FP_FRACBITS_S - (_FP_IMPLBIT_S != 0);
-  #else
-      unsigned frac : _FP_FRACBITS_S - (_FP_IMPLBIT_S != 0);
-      unsigned exp  : _FP_EXPBITS_S;
-      unsigned sign : 1;
-  #endif
-    } bits __attribute__((packed));
-  };
+Same here.
 
-The first example causes this warning:
+> 	for (m = 0; m < ARRAY_SIZE(masks); ++m) {
+> 		for (i = 0; i < info->hdr->e_shnum; ++i) {
+> 			Elf_Shdr *s = &info->sechdrs[i];
+>@@ -3276,7 +3276,7 @@ static int move_module(struct module *mod, struct load_info *info)
+> 		mod->init_layout.base = NULL;
+>
+> 	/* Transfer each section which specifies SHF_ALLOC */
+>-	pr_debug("final section addresses:\n");
+>+	pr_debug("final section addresses for: %s\n", mod->name);
 
- drivers/misc/vmw_balloon.c:262: warning: Function parameter or member '5' not described in 'vmballoon_batch_entry'
+Let's capitalize the "f" in "final section addresses" to be consistent
+with the other two above.
 
-The second doesn't use kerneldoc, but is an example of a complex, but
-totally possible/legitimate use-case.
+> 	for (i = 0; i < info->hdr->e_shnum; i++) {
+> 		void *dest;
+> 		Elf_Shdr *shdr = &info->sechdrs[i];
+>@@ -3294,8 +3294,8 @@ static int move_module(struct module *mod, struct load_info *info)
+> 			memcpy(dest, (void *)shdr->sh_addr, shdr->sh_size);
+> 		/* Update sh_addr to point to copy in image. */
+> 		shdr->sh_addr = (unsigned long)dest;
+>-		pr_debug("\t0x%lx %s\n",
+>-			 (long)shdr->sh_addr, info->secstrings + shdr->sh_name);
+>+		pr_debug("\t0x%lx 0x%.8lx %s\n", (long)shdr->sh_addr,
+>+			 (long)shdr->sh_size, info->secstrings + shdr->sh_name);
 
-Would it be feasible to make to make the regex which handles bitmaps
-greedy up until the ';'?  Or perhaps someone can come up with
-something more refined that would solve the problem.
+Any reason why you added sh_size here? Is it really needed? You can
+usually deduce how much space a section is taking up in a module by
+looking at the final section address printout. Plus the elf section
+size is not entirely accurate here as each module section is aligned
+to page boundaries when the module loader allocates memory for each
+section. I would prefer to just leave it out.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Thanks,
+
+Jessica
