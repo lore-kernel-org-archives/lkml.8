@@ -3,234 +3,123 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC0EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 02:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5292C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 02:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 63F8B20780
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 02:00:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC51420780
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 02:01:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="IGRJt5OH"
+	dkim=pass (2048-bit key) header.d=beagleboard-org.20150623.gappssmtp.com header.i=@beagleboard-org.20150623.gappssmtp.com header.b="PfuQ8kZ4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbgF3CAx (ORCPT
+        id S1727909AbgF3CBI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 22:00:53 -0400
-Received: from mga04.intel.com ([192.55.52.120]:27064 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725988AbgF3CAx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 22:00:53 -0400
-IronPort-SDR: jcus4yDqKu4tJLw9kEEfolubmaV3qolzkmvD9uTjXw3CbFwzDKftXPSFg9lFK9fsTBy3XGUMpF
- Y8CRtAJOmExw==
-X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="143602967"
-X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
-   d="scan'208";a="143602967"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 19:00:52 -0700
-IronPort-SDR: 3wVrju1Zt2XU4t+gH4O96wN7wVrjSDK9v17dC/wu/Za0xyv96GbHW5wXTx+pNXBUxtBsyRz0Fv
- YeeDS881i/Tg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
-   d="scan'208";a="281061450"
-Received: from orsmsx107.amr.corp.intel.com ([10.22.240.5])
-  by orsmga006.jf.intel.com with ESMTP; 29 Jun 2020 19:00:52 -0700
-Received: from ORSEDG002.ED.cps.intel.com (10.7.248.5) by
- ORSMSX107.amr.corp.intel.com (10.22.240.5) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 29 Jun 2020 19:00:51 -0700
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.109)
- by edgegateway.intel.com (134.134.137.101) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 29 Jun 2020 19:00:52 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mizIwgAyWjW/Jd/jCB7PXP8tkBBsqL6xUW7LcsznY+aPZN9nxLyXMfA7unW6oMoqzv4y2uNUNBIfAkQpdrhIHK80bMd4L4cKYxGQF/eQBUohDT+Ss9Q7fnmh1gxDM7dqeSGO2iD5BAGISFNsX5PnMyF/Ai81v6ICtEEl+07yfVOaNJR4xg0fhqwyiaSRzAb6ftifIdsF2NPB+l6GI/hy+VbV0LF97oqz69R2jnpCW9QuDQ7re5D6d29BwhgILsMz+KlDvAYsJF98MCEyt5AMXbYWbDR27bQtcIoQFFLSlbqBzwCC9SknERC3C57yvTnILQ5bjFkFmNPK5WxJNhxp1g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wr9VI6/LgTjOXypC5id/RwphEVY5eJ0P8f4wZjPYhRg=;
- b=IWbL2fF6q0LoXg1RG2Jhyvq/AjRfkUf0fb/BA1rV2XcoddDqacV/+Ewppo8letd+8gaYZUdoBRfql47Q3AY/f2kdvY7MgBxIOwvRAIMbsrrzZg9pudxTNM3r/FuOtUKGtq0Gvlz9JGwYy7vObjBYRVv+c2xxHspP99ATM+xW234DPLezSANPXykoOJ4PgV9hwTetvSQiWCLtwcEi8PsASmdEA5zDS+xzTPoGUkhuJT3dcxmolJzv0PS14hJbUDrTbbgWYLpD8IHyIwmt2N0A5gL3IKLpNQGLYnDBGfcZzSRvQvZ3tF5rGyh5vkVETbz2IrI1x6N6tq41e40ribIANw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=wr9VI6/LgTjOXypC5id/RwphEVY5eJ0P8f4wZjPYhRg=;
- b=IGRJt5OHYB48z7aOHRRCgZjMJDjz4rZIshKdi7oIiaMzeIs4wnsoSWNsiwxGLzYS+PhSdeAQXguLT6/PPQmwcD02cDrkCRYtANGn3JOpc8c4koheq5fTJAzE3B5SPsTU78p97o51RbBFlAzNKNAwofKuc07NI/7xeIqB0OPO7w4=
-Received: from MWHPR11MB1645.namprd11.prod.outlook.com (2603:10b6:301:b::12)
- by MWHPR11MB1600.namprd11.prod.outlook.com (2603:10b6:301:b::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.23; Tue, 30 Jun
- 2020 02:00:49 +0000
-Received: from MWHPR11MB1645.namprd11.prod.outlook.com
- ([fe80::9864:e0cb:af36:6feb]) by MWHPR11MB1645.namprd11.prod.outlook.com
- ([fe80::9864:e0cb:af36:6feb%5]) with mapi id 15.20.3131.027; Tue, 30 Jun 2020
- 02:00:49 +0000
-From:   "Tian, Kevin" <kevin.tian@intel.com>
-To:     "Liu, Yi L" <yi.l.liu@intel.com>,
-        Stefan Hajnoczi <stefanha@gmail.com>
-CC:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "Wu, Hao" <hao.wu@intel.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3 02/14] iommu: Report domain nesting info
-Thread-Topic: [PATCH v3 02/14] iommu: Report domain nesting info
-Thread-Index: AQHWSgRQYPLf19tsF0i4Fom/j2zC7qjvWjsAgAAx1ACAANlZcA==
-Date:   Tue, 30 Jun 2020 02:00:49 +0000
-Message-ID: <MWHPR11MB1645B09EBDC76514ADC897A68C6F0@MWHPR11MB1645.namprd11.prod.outlook.com>
-References: <1592988927-48009-1-git-send-email-yi.l.liu@intel.com>
- <1592988927-48009-3-git-send-email-yi.l.liu@intel.com>
- <20200629092448.GB31392@stefanha-x1.localdomain>
- <DM5PR11MB1435FC14F2E8AC075DE41205C36E0@DM5PR11MB1435.namprd11.prod.outlook.com>
-In-Reply-To: <DM5PR11MB1435FC14F2E8AC075DE41205C36E0@DM5PR11MB1435.namprd11.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-authentication-results: intel.com; dkim=none (message not signed)
- header.d=none;intel.com; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [192.198.147.207]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 47ced898-e848-426e-3a26-08d81c996962
-x-ms-traffictypediagnostic: MWHPR11MB1600:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR11MB16001908EBC8928FE8F337EC8C6F0@MWHPR11MB1600.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0450A714CB
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: nBBTpSGtX/0EZ/DTDpJHY4QeG3xQt8ltSxm2Plqe3QPWqzpB5m4jNr19ulmxhLQ0CJ1Pxbg1pakJUWI97muVbp7OH+mhQ1YQnlHYbjcEbCEutmAZveYy0N4S05rDeygfy8LZ3yZ/jDhm4c7IYtjV0/YvJvElTcGVpI9V+mf9ny/hpnZFf/TJRqTCqbqhoQyreIJNi0YdVlRQBFB4pkCxK3ROPQqD5hKgvNQke586QHA5X3xHgRZ4wo3kpq444gdNcuCQnlH7ttU8dS8PYAbbpv1N4V2OoYXU6k7GHhoRMltDGvY1cUq23OnQw5HyFX3nZqAR/BixogAMjyYD8xGFfg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1645.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(376002)(136003)(366004)(346002)(39860400002)(396003)(9686003)(186003)(76116006)(66946007)(66446008)(4326008)(54906003)(8936002)(66556008)(5660300002)(86362001)(110136005)(71200400001)(66476007)(52536014)(2906002)(33656002)(64756008)(8676002)(7416002)(26005)(55016002)(316002)(478600001)(7696005)(6506007)(83380400001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: yEh5+Uml/8KMDl7oSzfVTUJccRLQQ5ByQHwwtYHgWBex5DT5GcYLU780BOqOU+zqC5Tz5yQ+uC5FSgggKjd/TE5Ezpb+oDAhzoYEB+FwGFpUl31cesRzz+Lf0VyCTHE1Iw3a42yth97hhY/tyf4hPoMPzpeqEfsiG9TF+EDK7ABW5rPPwbyssDPVWSR/1ir/2qEj44anDgy2sID1IWR19FwI5olfviaYfUiAGWcHda/dv/r1zXULjHrB+Fxit4rozyREada/AQNc+Ep7SDs0qhLfcZuLZ/EtKqHgwOHpzwjsqo8aQxu1yGf7hETnUBp5yAKxoWtiIwjpm10mxyiB+MVgwsEI+vdXjGDDvU4QkeSC5pxI2WwiyRgkNtzJi+vdvU5VmoombVyJnnvvTqblWOIaZxpILAqkYX+nxrUxFMFX0uXOAZ4hthtKoSC4rnyRA4vN8qNxITlth51uUJpXis8R089rNWHPqeXMVk9flU2E9zLJ9sHMsFQSRv3aJO3t
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 29 Jun 2020 22:01:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51298 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727118AbgF3CBH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 22:01:07 -0400
+Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB797C061755
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 19:01:06 -0700 (PDT)
+Received: by mail-ej1-x632.google.com with SMTP id a1so18821322ejg.12
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 19:01:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=beagleboard-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=upqBplyJTPlIYV6178VyJ9FGRE1kd4iocBYYT7PFDZ0=;
+        b=PfuQ8kZ47wXLR7y28mXDBoHtKG1IjV/PiIKJ319SHCJpoPTZV4u4rWCDTnD4EwSN25
+         5meu75LiP4qxwtbGwOVlTCyvHTVjBOUCQiBAe8WoYl1UbkQrstO3DTsIJzMh2/UExR4M
+         JitlpuSdlgIUJNxxoJgxIMGufRTw24nlXz2iMAbcDaHE0cYN9cXtoxNexxhdmxxmQI/y
+         0xTll11hOyrhRO2OlN70/e85JfxboQ7Rpdzm3Lij8ubKJ9dCX7AmjlWaTjVo8j5lM+yt
+         4Ob8jebe0dHMrE1ozFs9g2xSj77/XYVteaqHZFU2cjlKpCdxx6LclQ4Hux+iifBkCICN
+         7eLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=upqBplyJTPlIYV6178VyJ9FGRE1kd4iocBYYT7PFDZ0=;
+        b=PiSz/O8cjPjHNYbS/ffvORj5oBkvtWT0ETt0qy7m5lvVswLCaKl57jtXjWAdK47l8R
+         3UmvmMcXd+yOToOt9XTPBkqzCfgtomlAVtqNOD2G7x+E29QolFfPjpFk8eZd/bki0FMw
+         vU0LIT6lqcaLOzO8wM7i705/eRorfEgviSxfoIJOhj1g/HWv62+ReugPT3bCNCI9phx+
+         WK1hJq2eg9usxmwJrVFigfnYdUI5ID9xFSYKZOHrGs8dad21R3HejhykUsq1oKKIBDYv
+         iQz0cak10kqasd9aTgVTE5oxpRdHWY+CR3dsolZl2zuFNMP62+GoGVcsuVahgTTY6LdW
+         qxTQ==
+X-Gm-Message-State: AOAM531U0qzU9CxbDKW4AUzVmkFOb/ZfjNswiczitZeDI3g3CnIS1YVS
+        Obyr/b3SbBspTynru23AeSji8w==
+X-Google-Smtp-Source: ABdhPJxIhMhR+vOoqYVlIzIFxlRNDAZdK74nnP+E6DrBJzD1ebIK8Q5NvlBtVM3JV7VPIHrTcttVmw==
+X-Received: by 2002:a17:906:3bd5:: with SMTP id v21mr15777250ejf.329.1593482465479;
+        Mon, 29 Jun 2020 19:01:05 -0700 (PDT)
+Received: from x1 ([2001:16b8:5c28:7601:2d3c:7dcb:fbf0:3875])
+        by smtp.gmail.com with ESMTPSA id s2sm1252980edu.39.2020.06.29.19.01.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 29 Jun 2020 19:01:04 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 04:01:02 +0200
+From:   Drew Fustini <drew@beagleboard.org>
+To:     Tony Lindgren <tony@atomide.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, bcousson@baylibre.com,
+        linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jason Kridner <jkridner@beagleboard.org>,
+        Robert Nelson <robertcnelson@gmail.com>,
+        "H . Nikolaus Schaller" <hns@goldelico.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2] ARM: dts: am335x-pocketbeagle: set default mux for
+ gpio pins
+Message-ID: <20200630020102.GA45128@x1>
+References: <20200628152442.322593-1-drew@beagleboard.org>
+ <20200629170358.GT37466@atomide.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR11MB1645.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 47ced898-e848-426e-3a26-08d81c996962
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2020 02:00:49.5654
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OEQJ3iA0K8Lp19jhEECZDtRQsq1DiR+K75klEjOQqfQpOLhjwuNfXtDxlV9x/561H3Ht5Pw5RhwZaTveOJrn0A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR11MB1600
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200629170358.GT37466@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Liu, Yi L <yi.l.liu@intel.com>
-> Sent: Monday, June 29, 2020 8:23 PM
->=20
-> Hi Stefan,
->=20
-> > From: Stefan Hajnoczi <stefanha@gmail.com>
-> > Sent: Monday, June 29, 2020 5:25 PM
-> >
-> > On Wed, Jun 24, 2020 at 01:55:15AM -0700, Liu Yi L wrote:
-> > > +/*
-> > > + * struct iommu_nesting_info - Information for nesting-capable IOMMU=
-.
-> > > + *				user space should check it before using
-> > > + *				nesting capability.
-> > > + *
-> > > + * @size:	size of the whole structure
-> > > + * @format:	PASID table entry format, the same definition with
-> > > + *		@format of struct iommu_gpasid_bind_data.
-> > > + * @features:	supported nesting features.
-> > > + * @flags:	currently reserved for future extension.
-> > > + * @data:	vendor specific cap info.
-> > > + *
-> > > + * +---------------+------------------------------------------------=
-----+
-> > > + * | feature       |  Notes                                         =
-    |
-> > > + *
-> >
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D+=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> =3D=3D=3D=3D
-> > =3D+
-> > > + * | SYSWIDE_PASID |  Kernel manages PASID in system wide, PASIDs
-> used  |
-> > > + * |               |  in the system should be allocated by host kern=
-el  |
-> > > + * +---------------+------------------------------------------------=
-----+
-> > > + * | BIND_PGTBL    |  bind page tables to host PASID, the PASID coul=
-d   |
-> > > + * |               |  either be a host PASID passed in bind request =
-or  |
-> > > + * |               |  default PASIDs (e.g. default PASID of aux-doma=
-in) |
-> > > + * +---------------+------------------------------------------------=
-----+
-> > > + * | CACHE_INVLD   |  mandatory feature for nesting capable IOMMU
-> |
-> > > + * +---------------+------------------------------------------------=
-----+
-> >
-> > This feature description is vague about what CACHE_INVLD does and how
-> to
-> > use it. If I understand correctly, the presence of this feature means
-> > that VFIO_IOMMU_NESTING_OP_CACHE_INVLD must be used?
-> >
-> > The same kind of clarification could be done for SYSWIDE_PASID and
-> > BIND_PGTBL too.
->=20
-> For SYSWIDE_PASID and BIND_PGTBL, yes, presence of the feature bit
-> means must use. So the two are requirements to user space if it wants
-> to setup nesting. While for CACHE_INVLD, it's kind of availability
-> here. How about removing CACHE_INVLD as presence of BIND_PGTBL should
-> indicates support of CACHE_INVLD?
->=20
+On Mon, Jun 29, 2020 at 10:03:58AM -0700, Tony Lindgren wrote:
+> Hi,
+> 
+> * Drew Fustini <drew@beagleboard.org> [200628 08:26]:
+> > v2 changes:
+> > - change default mux from output to input.  Input is safer as it does
+> >   not drive the line.  If the user wants output, they will need to edit
+> >   this device tree.
+> 
+> So can you please clarify this a bit, are you saying that gpio output can't
+> be done via userspace?
 
-So far this assumption is correct but it may not be true when thinking forw=
-ard.
-For example, a vendor might find a way to allow the owner of 1st-level page
-table to directly invalidate cache w/o going through host IOMMU driver. Fro=
-m
-this angle I feel explicitly reporting this capability is more robust.
+As it stands, there is no way for userspace to change a pin from gpio 
+input to gpio output as it is based on the reciever active bit in the
+pin control register (table 9-60 in the AM3358 datasheet [0]).
 
-Regarding to the description, what about below?
+I thought it would be useful to at least define the GPIOs available for
+use on the PocketBeagle by default (and eventually the other BeagleBone
+device trees).  Input seems to be the safest value.  This patch at least
+makes it more clear where the user should edit to switch from input to
+output.
+ 
+> Needing to change the dts does not sound good to me.. But maybe you mean
+> this is needed until the gpio-omap and pinctrl-single patches are merged?
+> 
+> Regards,
+> 
+> Tony
 
---
-SYSWIDE_PASID: PASIDs are managed in system-wide, instead of per device.
-When a device is assigned to userspace or VM, proper uAPI (provided by=20
-userspace driver framework, e.g. VFIO) must be used to allocate/free PASIDs
-for the assigned device.
+I agree that I would like for userspace to be able to do run-time
+changes.  However, I think something would need to be added to the
+pinconf support in pinctrl-single for that to be possible.  There are
+bias properties but non for receiver enable.
 
-BIND_PGTBL: The owner of the first-level/stage-1 page table must explicitly=
-=20
-bind the page table to associated PASID (either the one specified in bind=20
-request or the default PASID of the iommu domain), through VFIO_IOMMU
-_NESTING_OP
-
-CACHE_INVLD: The owner of the first-level/stage-1 page table must
-explicitly invalidate the IOMMU cache through VFIO_IOMMU_NESTING_OP,
-according to vendor-specific requirement when changing the page table.
---
-
-Thanks
-Kevin
+Does it seem sensible to add that?
 
 
+thanks,
+drew
 
+[0] http://www.ti.com/lit/ds/symlink/am3358.pdf
