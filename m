@@ -2,340 +2,106 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD21C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 815AAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:00:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 28A3D20774
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:00:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AD45206BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:00:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DjbUwWSe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388763AbgF3OAL (ORCPT
+        id S2388570AbgF3OAU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 10:00:11 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:33840 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388626AbgF3OAH (ORCPT
+        Tue, 30 Jun 2020 10:00:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49120 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388747AbgF3OAI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 10:00:07 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: koike)
-        with ESMTPSA id 73A412A0CD7
-Subject: Re: [PATCH v7 3/3] media: vimc: Add a control to display info on test
- image
-To:     kieran.bingham@ideasonboard.com,
-        Kaaira Gupta <kgupta@es.iitr.ac.in>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hverkuil@xs4all.nl
-References: <20200626130700.2453-1-kgupta@es.iitr.ac.in>
- <20200626130700.2453-4-kgupta@es.iitr.ac.in>
- <1409b37e-f03d-cca8-c4a7-e1454f1da910@collabora.com>
- <20200630132510.GA12353@kaaira-HP-Pavilion-Notebook>
- <56cdfc6a-fdd1-bba7-a479-3b7741d8e011@collabora.com>
- <8cd2320f-ec2e-7a59-de60-e6765f9ea3ba@ideasonboard.com>
-From:   Helen Koike <helen.koike@collabora.com>
-Message-ID: <08a54915-b7be-d3e9-5885-178e2ace6ec0@collabora.com>
-Date:   Tue, 30 Jun 2020 11:00:00 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 30 Jun 2020 10:00:08 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1910C03E979
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 07:00:07 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id f18so19714914wml.3
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 07:00:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=+Oh4ApefyTnqgl3zRri2ZSE2mhpbCR1hfUifrIURqpY=;
+        b=DjbUwWSe0bUOM79CA2NMctk+cF1xo4+d4SgV4E081WpLOL71nEMW/qhGD4qvMVdkxD
+         dFQW7QgDRN86ePS6S0HIQoSyEwa2ndIcxq/ZG47135c7UHKCGmbVdpt+hQMoogfEDJgZ
+         jmAwWa3o0MUkXn4uggszhTCs1cLF1JiH3rtDSZI8cgk7HLi/5EFBJz8Jbwmv27Y6KREZ
+         G++sPZQaGCqQbhngv033h+GyA/J4Bck5x7iVJ+kyz8W8oQ6AfP+kHArvuv57Fg7tOXXw
+         NyI0XKPo20bCaXkQGlyd4GGel83m4H+oRbCoOyckk8eZYcZ073bm58KmfMskU0tLIN2v
+         7V0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=+Oh4ApefyTnqgl3zRri2ZSE2mhpbCR1hfUifrIURqpY=;
+        b=XuZ/Y0q3yIbb9ald9LArThpzumR11n2ju7iOPRd59qQnFDQG2IJx3l6JWyRi80XcDP
+         OpZENG7Sk6RhsVJ+2wC3/eg51rxpocTa34TXc89NhxGLc8MCfMpONvud6bL/ZhT+JMbQ
+         PsUH/P7VE2UV4Euy34uHw1ovMePRPX697z/Yzx4jxFdiI5bYueV/ipfwFlHMHIUlFb8+
+         GNTh4UCeaC6cQnIpNy3YaoZ/RrepPBPypZbgq5GAKJ03VW6SarYZAvUyqH+/qARyBTPl
+         hMhw6Sxg5IOkNPGypU6WUX9O3huk4d+IqN0vMtPqtsaATAVZsYBQbhJ2htn4a042fsro
+         HyrA==
+X-Gm-Message-State: AOAM531VYYGGZGf4R2VORLSdIyGAt8Pg+yX+NqEHvUtC7nW3l4WfVkRG
+        an7yU+XINEvhFxB8/MR6iqsJiQ==
+X-Google-Smtp-Source: ABdhPJwbLE+kcjKkrLT/25qlwcFppdADS5iumyeK5/Qqd5eAaD0ht8ENlqsto/03COPQKARN64Thnw==
+X-Received: by 2002:a7b:c099:: with SMTP id r25mr22949202wmh.159.1593525606573;
+        Tue, 30 Jun 2020 07:00:06 -0700 (PDT)
+Received: from dell ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id o9sm3931023wrs.1.2020.06.30.07.00.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 07:00:05 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 15:00:04 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     robh+dt@kernel.org, benjamin.gaignard@st.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: mfd: st,stmfx: Remove extra
+ additionalProperties
+Message-ID: <20200630140004.GM1179328@dell>
+References: <20200630114443.26414-1-festevam@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <8cd2320f-ec2e-7a59-de60-e6765f9ea3ba@ideasonboard.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200630114443.26414-1-festevam@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 30 Jun 2020, Fabio Estevam wrote:
 
+> The following build error is seen with 'make dt_binding_check':
+> 
+>   CHKDT   Documentation/devicetree/bindings/mfd/st,stmfx.yaml
+> /home/fabio/linux-next/Documentation/devicetree/bindings/mfd/st,stmfx.yaml: properties:pinctrl:patternProperties: {'enum': ['$ref', 'additionalItems', 'additionalProperties', 'allOf', 'anyOf', 'const', 'contains', 'default', 'dependencies', 'deprecated', 'description', 'else', 'enum', 'if', 'items', 'maxItems', 'maximum', 'minItems', 'minimum', 'multipleOf', 'not', 'oneOf', 'pattern', 'patternProperties', 'properties', 'propertyNames', 'required', 'then', 'unevaluatedProperties']} is not allowed for 'additionalProperties'
+> 
+> Remove the extra 'additionalProperties' to pass the build.
+> 
+> Signed-off-by: Fabio Estevam <festevam@gmail.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> Changes since RFC:
+> - Added Rob's Reviewed-by
+> - Added lkml on Cc
+> 
+>  Documentation/devicetree/bindings/mfd/st,stmfx.yaml | 2 --
+>  1 file changed, 2 deletions(-)
 
-On 6/30/20 10:52 AM, Kieran Bingham wrote:
-> Hi Helen, Kaaira,
-> 
-> On 30/06/2020 14:46, Helen Koike wrote:
->> Hi Kaaira,
->>
->> On 6/30/20 10:25 AM, Kaaira Gupta wrote:
->>> On Fri, Jun 26, 2020 at 01:01:03PM -0300, Helen Koike wrote:
->>>> Hi Kaaira,
->>>>
->>>> On 6/26/20 10:07 AM, Kaaira Gupta wrote:
->>>>> Add a control in VIMC to display information such as the correct order of
->>>>> colors for a given test pattern, brightness, hue, saturation, contrast,
->>>>> width and height at sensor over test image.
->>>>>
->>>>> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
->>>>> ---
->>>>>  drivers/media/test-drivers/vimc/Kconfig       |  2 +
->>>>>  drivers/media/test-drivers/vimc/vimc-common.h |  1 +
->>>>>  drivers/media/test-drivers/vimc/vimc-core.c   | 10 +++
->>>>>  drivers/media/test-drivers/vimc/vimc-sensor.c | 70 +++++++++++++++++++
->>>>>  4 files changed, 83 insertions(+)
->>>>>
->>>>> diff --git a/drivers/media/test-drivers/vimc/Kconfig b/drivers/media/test-drivers/vimc/Kconfig
->>>>> index 4068a67585f9..da4b2ad6e40c 100644
->>>>> --- a/drivers/media/test-drivers/vimc/Kconfig
->>>>> +++ b/drivers/media/test-drivers/vimc/Kconfig
->>>>> @@ -2,6 +2,8 @@
->>>>>  config VIDEO_VIMC
->>>>>  	tristate "Virtual Media Controller Driver (VIMC)"
->>>>>  	depends on VIDEO_DEV && VIDEO_V4L2
->>>>> +	select FONT_SUPPORT
->>>>> +	select FONT_8x16
->>>>>  	select MEDIA_CONTROLLER
->>>>>  	select VIDEO_V4L2_SUBDEV_API
->>>>>  	select VIDEOBUF2_VMALLOC
->>>>> diff --git a/drivers/media/test-drivers/vimc/vimc-common.h b/drivers/media/test-drivers/vimc/vimc-common.h
->>>>> index ae163dec2459..a289434e75ba 100644
->>>>> --- a/drivers/media/test-drivers/vimc/vimc-common.h
->>>>> +++ b/drivers/media/test-drivers/vimc/vimc-common.h
->>>>> @@ -20,6 +20,7 @@
->>>>>  #define VIMC_CID_VIMC_CLASS		(0x00f00000 | 1)
->>>>>  #define VIMC_CID_TEST_PATTERN		(VIMC_CID_VIMC_BASE + 0)
->>>>>  #define VIMC_CID_MEAN_WIN_SIZE		(VIMC_CID_VIMC_BASE + 1)
->>>>> +#define VIMC_CID_OSD_TEXT_MODE		(VIMC_CID_VIMC_BASE + 2)
->>>>>  
->>>>>  #define VIMC_FRAME_MAX_WIDTH 4096
->>>>>  #define VIMC_FRAME_MAX_HEIGHT 2160
->>>>> diff --git a/drivers/media/test-drivers/vimc/vimc-core.c b/drivers/media/test-drivers/vimc/vimc-core.c
->>>>> index 11210aaa2551..4b0ae6f51d76 100644
->>>>> --- a/drivers/media/test-drivers/vimc/vimc-core.c
->>>>> +++ b/drivers/media/test-drivers/vimc/vimc-core.c
->>>>> @@ -5,10 +5,12 @@
->>>>>   * Copyright (C) 2015-2017 Helen Koike <helen.fornazier@gmail.com>
->>>>>   */
->>>>>  
->>>>> +#include <linux/font.h>
->>>>>  #include <linux/init.h>
->>>>>  #include <linux/module.h>
->>>>>  #include <linux/platform_device.h>
->>>>>  #include <media/media-device.h>
->>>>> +#include <media/tpg/v4l2-tpg.h>
->>>>>  #include <media/v4l2-device.h>
->>>>>  
->>>>>  #include "vimc-common.h"
->>>>> @@ -263,11 +265,19 @@ static int vimc_register_devices(struct vimc_device *vimc)
->>>>>  
->>>>>  static int vimc_probe(struct platform_device *pdev)
->>>>>  {
->>>>> +	const struct font_desc *font = find_font("VGA8x16");
->>>>>  	struct vimc_device *vimc;
->>>>>  	int ret;
->>>>>  
->>>>>  	dev_dbg(&pdev->dev, "probe");
->>>>>  
->>>>> +	if (!font) {
->>>>> +		dev_err(&pdev->dev, "could not find font\n");
->>>>> +		return -ENODEV;
->>>>> +	}
->>>>> +
->>>>> +	tpg_set_font(font->data);
->>>>> +
->>>>>  	vimc = kzalloc(sizeof(*vimc), GFP_KERNEL);
->>>>>  	if (!vimc)
->>>>>  		return -ENOMEM;
->>>>> diff --git a/drivers/media/test-drivers/vimc/vimc-sensor.c b/drivers/media/test-drivers/vimc/vimc-sensor.c
->>>>> index a2f09ac9a360..9e4fb3f4d60d 100644
->>>>> --- a/drivers/media/test-drivers/vimc/vimc-sensor.c
->>>>> +++ b/drivers/media/test-drivers/vimc/vimc-sensor.c
->>>>> @@ -19,6 +19,8 @@ struct vimc_sen_device {
->>>>>  	struct v4l2_subdev sd;
->>>>>  	struct tpg_data tpg;
->>>>>  	u8 *frame;
->>>>> +	unsigned int osd_mode;
->>>>
->>>> If you declare the enum outside the below function, this could be type osd_mode instead of unsigned int, what do you think?
->>>>
->>>>> +	u64 start_stream_ts;
->>>>>  	/* The active format */
->>>>>  	struct v4l2_mbus_framefmt mbus_format;
->>>>>  	struct v4l2_ctrl_handler hdl;
->>>>> @@ -187,8 +189,54 @@ static void *vimc_sen_process_frame(struct vimc_ent_device *ved,
->>>>>  {
->>>>>  	struct vimc_sen_device *vsen = container_of(ved, struct vimc_sen_device,
->>>>>  						    ved);
->>>>> +	enum osd_mode {OSD_SHOW_ALL = 0, OSD_SHOW_COUNTERS = 1, OSD_SHOW_NONE = 2};
->>>>> +	const unsigned int line_height = 16;
->>>>> +	u8 *basep[TPG_MAX_PLANES][2];
->>>>> +	unsigned int line = 1;
->>>>> +	char str[100];
->>>>>  
->>>>>  	tpg_fill_plane_buffer(&vsen->tpg, 0, 0, vsen->frame);
->>>>> +	tpg_calc_text_basep(&vsen->tpg, basep, 0, vsen->frame);
->>>>> +	switch (vsen->osd_mode) {
->>>>> +	case OSD_SHOW_ALL:
->>>>> +		{
->>>>
->>>> Usually we don't use this curly braces in a case statement, please, check other examples in the code,
->>>
->>> I have declared variables inside the cases,hence they are not just
->>> statements, so I need to use them I think
->>
->> Doing this grep:
->>
->> git grep -A1 "case.*:" drivers/media | grep -B1 -P "\tstruct"
-> 
-> Aha, yes - they might indeed be needed then because of the local scope
-> variables...
-> 
->>
->> I see that the standard is to place the curly braces in the same line of the case statement,
->> example: https://elixir.bootlin.com/linux/latest/source/drivers/media/v4l2-core/v4l2-subdev.c#L469
->>
->>>
->>>>
->>>>> +			const char *order = tpg_g_color_order(&vsen->tpg);
->>>>
->>>> You also don't need this level of identation.
->>>
->>> I used it because of the braces
->>
->> Please check the example above
->>
->>>
->>>>
->>>>> +
->>>>> +			tpg_gen_text(&vsen->tpg, basep,
->>>>> +				     line++ * line_height, 16, order);
->>>>> +			snprintf(str, sizeof(str),
->>>>> +				 "brightness %3d, contrast %3d, saturation %3d, hue %d ",
->>>>> +				 vsen->tpg.brightness,
->>>>> +				 vsen->tpg.contrast,
->>>>> +				 vsen->tpg.saturation,
->>>>> +				 vsen->tpg.hue);
->>>>> +			tpg_gen_text(&vsen->tpg, basep, line++ * line_height,
->>>>> +				     16, str);
->>>>> +			snprintf(str, sizeof(str), "sensor size: %dx%d",
->>>>> +				 vsen->mbus_format.width,
->>>>> +				 vsen->mbus_format.height);
->>>>> +			tpg_gen_text(&vsen->tpg, basep, line++ * line_height,
->>>>> +				     16, str);
->>>>> +		}
->>>>> +	case OSD_SHOW_COUNTERS:
->>>>
->>>> Checkpatch gives this error:
->>>>
->>>> WARNING: Possible switch case/default not preceded by break or fallthrough comment
->>>>
->>>> You need to add a fallthrough comment (grep for fallthrough to find other examples)
->>>
->>> Okay, I will add that
->>>
->>>>
->>>>> +		{
->>>>> +			unsigned int ms;
->>>>> +
->>>>> +			ms = (ktime_get_ns() - vsen->start_stream_ts) / 1000000;
->>>>> +			snprintf(str, sizeof(str), "%02d:%02d:%02d:%03d",
->>>>> +				 (ms / (60 * 60 * 1000)) % 24,
->>>>> +				 (ms / (60 * 1000)) % 60,
->>>>> +				 (ms / 1000) % 60,
->>>>> +				 ms % 1000);
->>>>> +			tpg_gen_text(&vsen->tpg, basep, line++ * line_height,
->>>>> +				     16, str);
->>>>> +			break;
->>>>> +		}
->>>>> +	case OSD_SHOW_NONE:
->>>>
->>>> No need this case statement if you have the default below.
->>>
->>> I added it to make it clearer what default does, should I remove it?
->>
->> hmm, I think this depends on your style, but to me, just the "default" statement below makes it
->> clear that options not listed above do nothing.
->> I think you would also need to add a fallthtough comment.
-> 
-> Consecutive case statements (or the default) statement should not need a
-> /* fallthrough */. I believe it's only if there is a code block it
-> becomes required.
+Applied, thanks.
 
-Ok, cool, I don't mind keeping like this then.
-
-Regards,
-Helen
-
-> 
-> --
-> Kieran
-> 
-> 
->>
->> Or you could just add a comment instead of the case statement in the code, like:
->>
->> 	/* case OSD_SHOW_NONE: */
->>
->> So it would be clear what this option does.
->>
->> Regards,
->> Helen
->>
->>>
->>>>
->>>> Regards,
->>>> Helen
->>>>
->>>>> +	default:
->>>>> +		break;
->>>>> +	}
->>>>> +
->>>>>  	return vsen->frame;
->>>>>  }
->>>>>  
->>>>> @@ -201,6 +249,8 @@ static int vimc_sen_s_stream(struct v4l2_subdev *sd, int enable)
->>>>>  		const struct vimc_pix_map *vpix;
->>>>>  		unsigned int frame_size;
->>>>>  
->>>>> +		vsen->start_stream_ts = ktime_get_ns();
->>>>> +
->>>>>  		/* Calculate the frame size */
->>>>>  		vpix = vimc_pix_map_by_code(vsen->mbus_format.code);
->>>>>  		frame_size = vsen->mbus_format.width * vpix->bpp *
->>>>> @@ -269,6 +319,9 @@ static int vimc_sen_s_ctrl(struct v4l2_ctrl *ctrl)
->>>>>  	case V4L2_CID_SATURATION:
->>>>>  		tpg_s_saturation(&vsen->tpg, ctrl->val);
->>>>>  		break;
->>>>> +	case VIMC_CID_OSD_TEXT_MODE:
->>>>> +		vsen->osd_mode = ctrl->val;
->>>>> +		break;
->>>>>  	default:
->>>>>  		return -EINVAL;
->>>>>  	}
->>>>> @@ -307,6 +360,22 @@ static const struct v4l2_ctrl_config vimc_sen_ctrl_test_pattern = {
->>>>>  	.qmenu = tpg_pattern_strings,
->>>>>  };
->>>>>  
->>>>> +static const char * const vimc_ctrl_osd_mode_strings[] = {
->>>>> +	"All",
->>>>> +	"Counters Only",
->>>>> +	"None",
->>>>> +	NULL,
->>>>> +};
->>>>> +
->>>>> +static const struct v4l2_ctrl_config vimc_sen_ctrl_osd_mode = {
->>>>> +	.ops = &vimc_sen_ctrl_ops,
->>>>> +	.id = VIMC_CID_OSD_TEXT_MODE,
->>>>> +	.name = "Show Information",
->>>>> +	.type = V4L2_CTRL_TYPE_MENU,
->>>>> +	.max = ARRAY_SIZE(vimc_ctrl_osd_mode_strings) - 2,
->>>>> +	.qmenu = vimc_ctrl_osd_mode_strings,
->>>>> +};
->>>>> +
->>>>>  static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
->>>>>  					    const char *vcfg_name)
->>>>>  {
->>>>> @@ -323,6 +392,7 @@ static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
->>>>>  
->>>>>  	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_class, NULL);
->>>>>  	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_test_pattern, NULL);
->>>>> +	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_osd_mode, NULL);
->>>>>  	v4l2_ctrl_new_std(&vsen->hdl, &vimc_sen_ctrl_ops,
->>>>>  			  V4L2_CID_VFLIP, 0, 1, 1, 0);
->>>>>  	v4l2_ctrl_new_std(&vsen->hdl, &vimc_sen_ctrl_ops,
->>>>>
-> 
+-- 
+Lee Jones [李琼斯]
+Senior Technical Lead - Developer Services
+Linaro.org │ Open source software for Arm SoCs
+Follow Linaro: Facebook | Twitter | Blog
