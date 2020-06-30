@@ -2,148 +2,398 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D94AC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 594BFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3EDFD20759
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2604020759
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:19:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H2rKoBD3"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="n3HvGgxT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731312AbgF3ITP (ORCPT
+        id S1731343AbgF3IT2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 04:19:15 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:55597 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730183AbgF3ITN (ORCPT
+        Tue, 30 Jun 2020 04:19:28 -0400
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:18594 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730934AbgF3IT0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 04:19:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593505152;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=+NwluuLnwCyk2a0mUX9hCx+g9u/xnsF6zQojeN4n8xs=;
-        b=H2rKoBD3moTV9kis8MSu/eQbVl+eqI1x99fenVZQkK4hrlThlFPk7PtKoxpbE+1HHkJTGL
-        KswT6F0fQuUTSz/HV3wfMyoh76KgrXXF33OYUnKw4JwSo7SgwjhimYIou72sXDjZUvrnJf
-        ZI+kAgUtMLl9hBY6ki6BspZMykeILmY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-45-Gd2_LVKEOg-Rgr_PuBaLPw-1; Tue, 30 Jun 2020 04:19:10 -0400
-X-MC-Unique: Gd2_LVKEOg-Rgr_PuBaLPw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 271F518FE861;
-        Tue, 30 Jun 2020 08:19:09 +0000 (UTC)
-Received: from [10.36.114.56] (ovpn-114-56.ams2.redhat.com [10.36.114.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7B03D5C290;
-        Tue, 30 Jun 2020 08:19:07 +0000 (UTC)
-Subject: Re: [PATCH v1 1/2] mm/memblock: expose only miminal interface to
- add/walk physmem
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, linux-mm@kvack.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20200630081730.6862-1-david@redhat.com>
- <20200630081730.6862-2-david@redhat.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <db028915-dbad-6989-600a-27d9ea59ba76@redhat.com>
-Date:   Tue, 30 Jun 2020 10:19:06 +0200
+        Tue, 30 Jun 2020 04:19:26 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5efaf5810000>; Tue, 30 Jun 2020 01:19:13 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 30 Jun 2020 01:19:26 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 30 Jun 2020 01:19:26 -0700
+Received: from [10.26.75.203] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 30 Jun
+ 2020 08:19:17 +0000
+Subject: Re: [PATCH v8 1/3] iommu/arm-smmu: add NVIDIA implementation for dual
+ ARM MMU-500 usage
+To:     Krishna Reddy <vdumpa@nvidia.com>
+CC:     <joro@8bytes.org>, <will@kernel.org>, <robin.murphy@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <iommu@lists.linux-foundation.org>, <linux-kernel@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <treding@nvidia.com>,
+        <yhsu@nvidia.com>, <snikam@nvidia.com>, <praithatha@nvidia.com>,
+        <talho@nvidia.com>, <bbiswas@nvidia.com>, <mperttunen@nvidia.com>,
+        <nicolinc@nvidia.com>, <bhuntsman@nvidia.com>,
+        <nicoleotsuka@gmail.com>
+References: <20200630001051.12350-1-vdumpa@nvidia.com>
+ <20200630001051.12350-2-vdumpa@nvidia.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <53bfa5c8-c32d-6fa3-df60-a18ab33ca1c2@nvidia.com>
+Date:   Tue, 30 Jun 2020 09:19:15 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200630081730.6862-2-david@redhat.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200630001051.12350-2-vdumpa@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1593505153; bh=eI2tv3wTofqv6YlCkNI6JW/hkggCc4NSMZWlVcFoYcc=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=n3HvGgxTNxjzNxFkMcJYuzsKY7AhGEioDH7DyV5nNPjti+3gb3iacyjWkpcBK7NLW
+         XElM1CDSEmkL6UkeOp2lJw7k4WOCcKMzd/oEOcazYEK9PXne3qsNt61BQunweG+nZ3
+         +VOiPIQZgM5IlvDF8NbFKGmwrZVejxrF4gfHxlJY5decjKIqIcKEfY9ae3rV/kaTIv
+         2Sckt/DHYrM6DzGKm0YQo6XDRh0IIlocwB0KNDiyJpwU6ze8c9upZYTT9PuNlIpJrN
+         9VJnd4suIBXS3T8D0OBrkwMnCMeiPKXn7/oCotx/fSDnbVJZaZuuATVujoRNfwjx7e
+         tEI1LJmzX/e/Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30.06.20 10:17, David Hildenbrand wrote:
-> "physmem" in the memblock allocator is somewhat weird: it's not actually
-> used for allocation, it's simply information collected during boot, which
-> describes the unmodified physical memory map at boot time, without any
-> standby/hotplugged memory. It's only used on s390x and is currently the
-> only reason s390x keeps using CONFIG_ARCH_KEEP_MEMBLOCK.
-> 
-> Physmem isn't numa aware and current users don't specify any flags. Let's
-> hide it from the user, exposing only for_each_physmem(), and simplify. The
-> interface for physmem is now really minimalistic:
-> - memblock_physmem_add() to add ranges
-> - for_each_physmem() / __next_physmem_range() to walk physmem ranges
-> 
-> Don't place it into an __init section and don't discard it without
-> CONFIG_ARCH_KEEP_MEMBLOCK. As we're reusing __next_mem_range(), remove
-> the __meminit notifier to avoid section mismatch warnings once
-> CONFIG_ARCH_KEEP_MEMBLOCK is no longer used with
-> CONFIG_HAVE_MEMBLOCK_PHYS_MAP.
-> 
-> We can stop setting CONFIG_HAVE_MEMBLOCK_PHYS_MAP for s390x next.
 
-(how I hate to spot typos just after I send stuff :) )
+On 30/06/2020 01:10, Krishna Reddy wrote:
+> NVIDIA's Tegra194 SoC uses two ARM MMU-500s together to interleave
+> IOVA accesses across them.
+> Add NVIDIA implementation for dual ARM MMU-500s and add new compatible
+> string for Tegra194 SoC SMMU topology.
 
-s/CONFIG_HAVE_MEMBLOCK_PHYS_MAP/CONFIG_ARCH_KEEP_MEMBLOCK/
+There is no description here of the 3rd SMMU that you mention below.
+I think that we should describe the full picture here.
+ 
+> Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
+> ---
+>  MAINTAINERS                     |   2 +
+>  drivers/iommu/Makefile          |   2 +-
+>  drivers/iommu/arm-smmu-impl.c   |   3 +
+>  drivers/iommu/arm-smmu-nvidia.c | 196 ++++++++++++++++++++++++++++++++
+>  drivers/iommu/arm-smmu.h        |   1 +
+>  5 files changed, 203 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/iommu/arm-smmu-nvidia.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 7b5ffd646c6b9..64c37dbdd4426 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -16808,8 +16808,10 @@ F:	drivers/i2c/busses/i2c-tegra.c
+>  
+>  TEGRA IOMMU DRIVERS
+>  M:	Thierry Reding <thierry.reding@gmail.com>
+> +R:	Krishna Reddy <vdumpa@nvidia.com>
+>  L:	linux-tegra@vger.kernel.org
+>  S:	Supported
+> +F:	drivers/iommu/arm-smmu-nvidia.c
+>  F:	drivers/iommu/tegra*
+>  
+>  TEGRA KBC DRIVER
+> diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
+> index 342190196dfb0..2b8203db73ec3 100644
+> --- a/drivers/iommu/Makefile
+> +++ b/drivers/iommu/Makefile
+> @@ -15,7 +15,7 @@ obj-$(CONFIG_AMD_IOMMU) += amd/iommu.o amd/init.o amd/quirks.o
+>  obj-$(CONFIG_AMD_IOMMU_DEBUGFS) += amd/debugfs.o
+>  obj-$(CONFIG_AMD_IOMMU_V2) += amd/iommu_v2.o
+>  obj-$(CONFIG_ARM_SMMU) += arm_smmu.o
+> -arm_smmu-objs += arm-smmu.o arm-smmu-impl.o arm-smmu-qcom.o
+> +arm_smmu-objs += arm-smmu.o arm-smmu-impl.o arm-smmu-nvidia.o arm-smmu-qcom.o
+>  obj-$(CONFIG_ARM_SMMU_V3) += arm-smmu-v3.o
+>  obj-$(CONFIG_DMAR_TABLE) += intel/dmar.o
+>  obj-$(CONFIG_INTEL_IOMMU) += intel/iommu.o intel/pasid.o
+> diff --git a/drivers/iommu/arm-smmu-impl.c b/drivers/iommu/arm-smmu-impl.c
+> index c75b9d957b702..70f7318017617 100644
+> --- a/drivers/iommu/arm-smmu-impl.c
+> +++ b/drivers/iommu/arm-smmu-impl.c
+> @@ -171,6 +171,9 @@ struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu)
+>  	if (of_property_read_bool(np, "calxeda,smmu-secure-config-access"))
+>  		smmu->impl = &calxeda_impl;
+>  
+> +	if (of_device_is_compatible(smmu->dev->of_node, "nvidia,tegra194-smmu"))
+> +		return nvidia_smmu_impl_init(smmu);
+> +
+>  	if (of_device_is_compatible(np, "qcom,sdm845-smmu-500") ||
+>  	    of_device_is_compatible(np, "qcom,sc7180-smmu-500"))
+>  		return qcom_smmu_impl_init(smmu);
+> diff --git a/drivers/iommu/arm-smmu-nvidia.c b/drivers/iommu/arm-smmu-nvidia.c
+> new file mode 100644
+> index 0000000000000..1124f0ac1823a
+> --- /dev/null
+> +++ b/drivers/iommu/arm-smmu-nvidia.c
+> @@ -0,0 +1,196 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +// NVIDIA ARM SMMU v2 implementation quirks
+> +// Copyright (C) 2019-2020 NVIDIA CORPORATION.  All rights reserved.
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/delay.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +
+> +#include "arm-smmu.h"
+> +
+> +/*
+> + * Tegra194 has three ARM MMU-500 Instances.
+> + * Two of them are used together for interleaved IOVA accesses and
+> + * used by non-isochronous HW devices for SMMU translations.
+> + * Third one is used for SMMU translations from isochronous HW devices.
+> + * It is possible to use this implementation to program either
+> + * all three or two of the instances identically as desired through
+> + * DT node.
+> + *
+> + * Programming all the three instances identically comes with redundant TLB
+> + * invalidations as all three never need to be TLB invalidated for a HW device.
+> + *
+> + * When Linux kernel supports multiple SMMU devices, the SMMU device used for
+> + * isochornous HW devices should be added as a separate ARM MMU-500 device
+> + * in DT and be programmed independently for efficient TLB invalidates.
+> + */
+> +#define MAX_SMMU_INSTANCES 3
+> +
+> +#define TLB_LOOP_TIMEOUT_IN_US		1000000	/* 1s! */
+> +#define TLB_SPIN_COUNT			10
+> +
+> +struct nvidia_smmu {
+> +	struct arm_smmu_device	smmu;
+> +	unsigned int		num_inst;
+> +	void __iomem		*bases[MAX_SMMU_INSTANCES];
+> +};
+> +
+> +static inline struct nvidia_smmu *to_nvidia_smmu(struct arm_smmu_device *smmu)
+> +{
+> +	return container_of(smmu, struct nvidia_smmu, smmu);
+> +}
+> +
+> +static inline void __iomem *nvidia_smmu_page(struct arm_smmu_device *smmu,
+> +			       unsigned int inst, int page)
 
+If you run checkpatch --strict on these you will get a lot of ...
+
+CHECK: Alignment should match open parenthesis
+#116: FILE: drivers/iommu/arm-smmu-nvidia.c:46:
++static inline void __iomem *nvidia_smmu_page(struct arm_smmu_device *smmu,
++			       unsigned int inst, int page)
+
+We should fix these.
+
+> +{
+> +	struct nvidia_smmu *nvidia_smmu = to_nvidia_smmu(smmu);
+> +
+> +	if (!nvidia_smmu->bases[0])
+> +		nvidia_smmu->bases[0] = smmu->base;
+> +
+> +	return nvidia_smmu->bases[inst] + (page << smmu->pgshift);
+> +}
+> +
+> +static u32 nvidia_smmu_read_reg(struct arm_smmu_device *smmu,
+> +			      int page, int offset)
+> +{
+> +	void __iomem *reg = nvidia_smmu_page(smmu, 0, page) + offset;
+> +
+> +	return readl_relaxed(reg);
+> +}
+> +
+> +static void nvidia_smmu_write_reg(struct arm_smmu_device *smmu,
+> +			    int page, int offset, u32 val)
+> +{
+> +	unsigned int i;
+> +	struct nvidia_smmu *nvidia_smmu = to_nvidia_smmu(smmu);
+> +
+> +	for (i = 0; i < nvidia_smmu->num_inst; i++) {
+> +		void __iomem *reg = nvidia_smmu_page(smmu, i, page) + offset;
+
+Personally, I would declare 'reg' outside of the loop as I feel it will make
+the code cleaner and easier to read.
+
+> +
+> +		writel_relaxed(val, reg);
+> +	}
+> +}
+> +
+> +static u64 nvidia_smmu_read_reg64(struct arm_smmu_device *smmu,
+> +				int page, int offset)
+> +{
+> +	void __iomem *reg = nvidia_smmu_page(smmu, 0, page) + offset;
+> +
+> +	return readq_relaxed(reg);
+> +}
+> +
+> +static void nvidia_smmu_write_reg64(struct arm_smmu_device *smmu,
+> +				  int page, int offset, u64 val)
+> +{
+> +	unsigned int i;
+> +	struct nvidia_smmu *nvidia_smmu = to_nvidia_smmu(smmu);
+> +
+> +	for (i = 0; i < nvidia_smmu->num_inst; i++) {
+> +		void __iomem *reg = nvidia_smmu_page(smmu, i, page) + offset;
+> +
+> +		writeq_relaxed(val, reg);
+> +	}
+> +}
+> +
+> +static void nvidia_smmu_tlb_sync(struct arm_smmu_device *smmu, int page,
+> +			   int sync, int status)
+> +{
+> +	unsigned int delay;
+> +
+> +	arm_smmu_writel(smmu, page, sync, 0);
+> +
+> +	for (delay = 1; delay < TLB_LOOP_TIMEOUT_IN_US; delay *= 2) {
+
+So we are doubling the delay every time? Is this better than just using
+the same on each loop? 
+
+> +		unsigned int spin_cnt;
+> +
+> +		for (spin_cnt = TLB_SPIN_COUNT; spin_cnt > 0; spin_cnt--) {
+> +			u32 val = 0;
+> +			unsigned int i;
+> +			struct nvidia_smmu *nvidia_smmu = to_nvidia_smmu(smmu);
+
+Why not do this once at the beginning of the function? 
+
+> +
+> +			for (i = 0; i < nvidia_smmu->num_inst; i++) {
+> +				void __iomem *reg =
+> +					nvidia_smmu_page(smmu, i, page) + status;
+> +
+> +				val |= readl_relaxed(reg);
+> +			}
+> +
+> +			if (!(val & ARM_SMMU_sTLBGSTATUS_GSACTIVE))
+> +				return;
+> +
+> +			cpu_relax();
+> +		}
+> +
+> +		udelay(delay);
+> +	}
+> +
+> +	dev_err_ratelimited(smmu->dev,
+> +			    "TLB sync timed out -- SMMU may be deadlocked\n");
+> +}
+> +
+> +static int nvidia_smmu_reset(struct arm_smmu_device *smmu)
+> +{
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < to_nvidia_smmu(smmu)->num_inst; i++) {
+> +		u32 val;
+> +		void __iomem *reg = nvidia_smmu_page(smmu, i, ARM_SMMU_GR0) +
+> +				    ARM_SMMU_GR0_sGFSR;
+
+I feel that declaring variables here clutters the code.
+ 
+> +
+> +		/* clear global FSR */
+> +		val = readl_relaxed(reg);
+> +		writel_relaxed(val, reg);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct arm_smmu_impl nvidia_smmu_impl = {
+> +	.read_reg = nvidia_smmu_read_reg,
+> +	.write_reg = nvidia_smmu_write_reg,
+> +	.read_reg64 = nvidia_smmu_read_reg64,
+> +	.write_reg64 = nvidia_smmu_write_reg64,
+> +	.reset = nvidia_smmu_reset,
+> +	.tlb_sync = nvidia_smmu_tlb_sync,
+> +};
+> +
+> +struct arm_smmu_device *nvidia_smmu_impl_init(struct arm_smmu_device *smmu)
+> +{
+> +	unsigned int i;
+> +	struct nvidia_smmu *nvidia_smmu;
+> +	struct platform_device *pdev = to_platform_device(smmu->dev);
+> +
+> +	nvidia_smmu = devm_kzalloc(smmu->dev, sizeof(*nvidia_smmu), GFP_KERNEL);
+> +	if (!nvidia_smmu)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	nvidia_smmu->smmu = *smmu;
+> +	/* Instance 0 is ioremapped by arm-smmu.c after this function returns */
+> +	nvidia_smmu->num_inst = 1;
+> +
+> +	for (i = 1; i < MAX_SMMU_INSTANCES; i++) {
+> +		struct resource *res;
+> +
+> +		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
+> +		if (!res)
+> +			break;
+> +
+> +		nvidia_smmu->bases[i] = devm_ioremap_resource(smmu->dev, res);
+> +		if (IS_ERR(nvidia_smmu->bases[i]))
+> +			return ERR_CAST(nvidia_smmu->bases[i]);
+> +
+> +		nvidia_smmu->num_inst++;
+> +	}
+> +
+> +	nvidia_smmu->smmu.impl = &nvidia_smmu_impl;
+> +	/*
+> +	 * Free the arm_smmu_device struct allocated in arm-smmu.c.
+> +	 * Once this function returns, arm-smmu.c would use arm_smmu_device
+> +	 * allocated as part of nvidia_smmu struct.
+> +	 */
+> +	devm_kfree(smmu->dev, smmu);
+
+Why don't we just store the pointer of the smmu struct passed to this function
+in the nvidia_smmu struct and then we do not need to free this here. In other
+words make ...
+
+ struct nvidia_smmu {
+	struct arm_smmu_device	*smmu;
+	unsigned int		num_inst;
+	void __iomem		*bases[MAX_SMMU_INSTANCES];
+ };  
+
+This seems more appropriate, than copying the struct and freeing memory
+allocated else-where.
+ 
+> +
+> +	return &nvidia_smmu->smmu;
+> +}
+> diff --git a/drivers/iommu/arm-smmu.h b/drivers/iommu/arm-smmu.h
+> index d172c024be618..8cf1511ed9874 100644
+> --- a/drivers/iommu/arm-smmu.h
+> +++ b/drivers/iommu/arm-smmu.h
+> @@ -450,6 +450,7 @@ static inline void arm_smmu_writeq(struct arm_smmu_device *smmu, int page,
+>  	arm_smmu_writeq((s), ARM_SMMU_CB((s), (n)), (o), (v))
+>  
+>  struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu);
+> +struct arm_smmu_device *nvidia_smmu_impl_init(struct arm_smmu_device *smmu);
+>  struct arm_smmu_device *qcom_smmu_impl_init(struct arm_smmu_device *smmu);
+>  
+>  int arm_mmu500_reset(struct arm_smmu_device *smmu);
+> 
+
+Cheers
+Jon
 
 -- 
-Thanks,
-
-David / dhildenb
-
+nvpublic
