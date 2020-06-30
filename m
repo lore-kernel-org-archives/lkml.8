@@ -2,128 +2,128 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19907C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87845C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:32:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F136B206BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:32:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B863206BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:32:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="d+UqhUrD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388610AbgF3QcV (ORCPT
+        id S2388866AbgF3Qcv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 12:32:21 -0400
-Received: from mga17.intel.com ([192.55.52.151]:2223 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731126AbgF3QcU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 12:32:20 -0400
-IronPort-SDR: IodXyb0xPi/vxOTgYu3u9Yj3kSWN9XPkOQdritQZipp9xaT3O3Za+m0+fIb6GcbnnUhd+cqqYF
- WJHclqZGYAMg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9667"; a="126405342"
-X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
-   d="scan'208";a="126405342"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 09:32:19 -0700
-IronPort-SDR: oIQS/OHkEep/5BuWVDTlfTy5KSQp+wkGHV1WNKsGdyAtesGvONkbufj8q93zfcv++IYL9K5LX7
- JKCcfTcQgYKA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
-   d="scan'208";a="266519139"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
-  by fmsmga008.fm.intel.com with ESMTP; 30 Jun 2020 09:32:18 -0700
-Date:   Tue, 30 Jun 2020 09:32:18 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Vivek Goyal <vgoyal@redhat.com>, kvm@vger.kernel.org,
-        virtio-fs@redhat.com, pbonzini@redhat.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] kvm,x86: Exit to user space in case of page fault
- error
-Message-ID: <20200630163218.GF7733@linux.intel.com>
-References: <20200626150303.GC195150@redhat.com>
- <874kqtd212.fsf@vitty.brq.redhat.com>
- <20200629220353.GC269627@redhat.com>
- <87sgecbs9w.fsf@vitty.brq.redhat.com>
- <20200630145303.GB322149@redhat.com>
- <87mu4kbn7x.fsf@vitty.brq.redhat.com>
- <20200630152529.GC322149@redhat.com>
- <87k0zobltx.fsf@vitty.brq.redhat.com>
- <20200630155028.GE7733@linux.intel.com>
- <87h7usbkhq.fsf@vitty.brq.redhat.com>
+        Tue, 30 Jun 2020 12:32:51 -0400
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:9409 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732382AbgF3Qcu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 12:32:50 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5efb68cf0000>; Tue, 30 Jun 2020 09:31:11 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 30 Jun 2020 09:32:50 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 30 Jun 2020 09:32:50 -0700
+Received: from [10.26.75.203] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 30 Jun
+ 2020 16:32:43 +0000
+Subject: Re: [PATCH v8 1/3] iommu/arm-smmu: add NVIDIA implementation for dual
+ ARM MMU-500 usage
+To:     Krishna Reddy <vdumpa@nvidia.com>
+CC:     "joro@8bytes.org" <joro@8bytes.org>,
+        "will@kernel.org" <will@kernel.org>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        "Yu-Huan Hsu" <YHsu@nvidia.com>, Sachin Nikam <Snikam@nvidia.com>,
+        Pritesh Raithatha <praithatha@nvidia.com>,
+        Timo Alho <talho@nvidia.com>,
+        Bitan Biswas <bbiswas@nvidia.com>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Nicolin Chen <nicolinc@nvidia.com>,
+        Bryan Huntsman <bhuntsman@nvidia.com>,
+        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>
+References: <20200630001051.12350-1-vdumpa@nvidia.com>
+ <20200630001051.12350-2-vdumpa@nvidia.com>
+ <e6da9661-4e62-6e34-ac21-63ff993ca8bc@nvidia.com>
+ <BYAPR12MB282210677459B8D62623C642B36F0@BYAPR12MB2822.namprd12.prod.outlook.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <4037efc7-fbed-e8cf-dac7-212c65014e4e@nvidia.com>
+Date:   Tue, 30 Jun 2020 17:32:41 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87h7usbkhq.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <BYAPR12MB282210677459B8D62623C642B36F0@BYAPR12MB2822.namprd12.prod.outlook.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1593534671; bh=BrdgzbzbGOaqIwpth+UjSE/3zpix62EIsg7FYiFJ6po=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=d+UqhUrDKQr8qFYOz/u1vjt8DsYokVFOhzKCisRgy5ftkePf+uBolfrmg8FgEHwdS
+         piLlBWJ0pLcqmaeAwHPOo/UaGVj9zVUQNskhfOXQpG0k6Ias7wEyUgS7An8mBhyL5p
+         tMQrr173OXX1OggHX8tDrBt3AxuIsi9WThAIxJW/79t3EfyxVilU+9a6SqzZALM6S/
+         p1xDklctnzMXhkzlodCLxyMmAnpk+KM94/7MvD6rRAYRUePSHy3nAMp+tNqgKSvViJ
+         3fQ+OW2hvHql+Q6b6F2BYaMga1HaxbS7PeG+b1/qaNATJXb75hdM3242unbLTHx59U
+         Q/kF7UjjTvN8g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 06:12:49PM +0200, Vitaly Kuznetsov wrote:
-> Sean Christopherson <sean.j.christopherson@intel.com> writes:
+
+
+On 30/06/2020 17:23, Krishna Reddy wrote:
+>>> +struct arm_smmu_device *nvidia_smmu_impl_init(struct arm_smmu_device 
+>>> +*smmu) {
+>>> +	unsigned int i;
+> ....
+>>> +	for (i = 1; i < MAX_SMMU_INSTANCES; i++) {
+>>> +		struct resource *res;
+>>> +
+>>> +		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
+>>> +		if (!res)
+>>> +			break;
 > 
-> > On Tue, Jun 30, 2020 at 05:43:54PM +0200, Vitaly Kuznetsov wrote:
-> >> Vivek Goyal <vgoyal@redhat.com> writes:
-> >> 
-> >> > On Tue, Jun 30, 2020 at 05:13:54PM +0200, Vitaly Kuznetsov wrote:
-> >> >> 
-> >> >> > - If you retry in kernel, we will change the context completely that
-> >> >> >   who was trying to access the gfn in question. We want to retain
-> >> >> >   the real context and retain information who was trying to access
-> >> >> >   gfn in question.
-> >> >> 
-> >> >> (Just so I understand the idea better) does the guest context matter to
-> >> >> the host? Or, more specifically, are we going to do anything besides
-> >> >> get_user_pages() which will actually analyze who triggered the access
-> >> >> *in the guest*?
-> >> >
-> >> > When we exit to user space, qemu prints bunch of register state. I am
-> >> > wondering what does that state represent. Does some of that traces
-> >> > back to the process which was trying to access that hva? I don't
-> >> > know.
-> >> 
-> >> We can get the full CPU state when the fault happens if we need to but
-> >> generally we are not analyzing it. I can imagine looking at CPL, for
-> >> example, but trying to distinguish guest's 'process A' from 'process B'
-> >> may not be simple.
-> >> 
-> >> >
-> >> > I think keeping a cache of error gfns might not be too bad from
-> >> > implemetation point of view. I will give it a try and see how
-> >> > bad does it look.
-> >> 
-> >> Right; I'm only worried about the fact that every cache (or hash) has a
-> >> limited size and under certain curcumstances we may overflow it. When an
-> >> overflow happens, we will follow the APF path again and this can go over
-> >> and over. Maybe we can punch a hole in EPT/NPT making the PFN reserved/
-> >> not-present so when the guest tries to access it again we trap the
-> >> access in KVM and, if the error persists, don't follow the APF path?
-> >
-> > Just to make sure I'm somewhat keeping track, is the problem we're trying to
-> > solve that the guest may not immediately retry the "bad" GPA and so KVM may
-> > not detect that the async #PF already came back as -EFAULT or whatever? 
+>> Currently this driver is only supported for Tegra194 which I understand has 3 SMMUs. Therefore, I don't feel that we should fail silently here, I think it is better to return an error if all 3 cannot be initialised.
 > 
-> Yes. In Vivek's patch there's a single 'error_gfn' per vCPU which serves
-> as an indicator whether to follow APF path or not.
+> Initialization of all the three SMMU instances is not necessary here.
 
-A thought along the lines of your "punch a hole in the page tables" idea
-would be to invalidate the SPTE (in the unlikely case it's present but not
-writable) and tagging it as being invalid for async #PF.  E.g. for !EPT,
-there are 63 bits available for metadata.  For EPT, there's a measly 60,
-assuming we want to avoid using SUPPRESS_VE.  The fully !present case would
-be straightforward, but the !writable case would require extra work,
-especially for shadow paging.
+That is not what I am saying.
 
-With the SPTE tagged, it'd "just" be a matter of hooking into the page fault
-paths to detect the flag and disable async #PF.  For TDP that's not too bad,
-e.g. pass in a flag to fast_page_fault() and propagate it to try_async_pf().
-Not sure how to handle shadow paging, that code makes my head hurt just
-looking at it.
+> The driver can work with all the possible number of instances 1, 2 and 3 based on the DT config though it doesn't make much sense to use it with 1 instance.
+> There is no silent failure here from driver point of view. If there is misconfig in DT, SMMU faults would catch issues.
 
-It'd require tweaking is_shadow_present_pte() to be more precise, but that's
-probably a good thing, and peanuts compared to handling the faults.
+I disagree and you should return a proper error here.
+
+>>> +		nvidia_smmu->bases[i] = devm_ioremap_resource(smmu->dev, res);
+>>> +		if (IS_ERR(nvidia_smmu->bases[i]))
+>>> +			return ERR_CAST(nvidia_smmu->bases[i]);
+> 
+>> You want to use PTR_ERR() here.
+> 
+> PTR_ERR() returns long integer. 
+> This function returns a pointer. ERR_CAST is the right one to use here. 
+
+Ah yes, indeed. OK that's fine.
+
+Jon
+
+-- 
+nvpublic
