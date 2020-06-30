@@ -2,152 +2,152 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4770AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 01:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA36C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 01:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2487D20722
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 01:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79E9220722
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 01:08:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="mP4gYR51"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728178AbgF3BHi (ORCPT
+        id S1728308AbgF3BIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 21:07:38 -0400
-Received: from mga05.intel.com ([192.55.52.43]:23695 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726713AbgF3BHi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 21:07:38 -0400
-IronPort-SDR: 53mf9w8FfSoIP3vhlKdpOoIaQRWSO4Br3dHpnwmKyzyq9+Hr3C4mF5rGJLasCfREHWkkYIjZOI
- zheaixob2dJg==
-X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="230966044"
-X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
-   d="scan'208";a="230966044"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 18:07:37 -0700
-IronPort-SDR: kGRx+YEb453Pvy0g34UT43n3nzebgsN3dhv0bzJr1xJsVPwByS5GbjR+8qM+7tv+pkXsq5gbxp
- UJ+wLUq786mQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
-   d="scan'208";a="264981824"
-Received: from allen-box.sh.intel.com (HELO [10.239.159.139]) ([10.239.159.139])
-  by fmsmga007.fm.intel.com with ESMTP; 29 Jun 2020 18:07:34 -0700
-Cc:     baolu.lu@linux.intel.com, Kevin Tian <kevin.tian@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>, kvm@vger.kernel.org,
-        Cornelia Huck <cohuck@redhat.com>,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
-Subject: Re: [PATCH 1/2] iommu: Add iommu_group_get/set_domain()
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Alex Williamson <alex.williamson@redhat.com>
-References: <20200627031532.28046-1-baolu.lu@linux.intel.com>
- <acc0a8fd-bd23-fc34-aecc-67796ab216e7@arm.com>
-From:   Lu Baolu <baolu.lu@linux.intel.com>
-Message-ID: <5dc1cece-6111-9b56-d04c-9553d592675b@linux.intel.com>
-Date:   Tue, 30 Jun 2020 09:03:11 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <acc0a8fd-bd23-fc34-aecc-67796ab216e7@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Mon, 29 Jun 2020 21:08:06 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:61733 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728215AbgF3BIF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 21:08:05 -0400
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200630010802epoutp01db0e618cbcf70357f40d6b5ea6e04b6c~dLPb61sUV1577415774epoutp01V
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 01:08:02 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200630010802epoutp01db0e618cbcf70357f40d6b5ea6e04b6c~dLPb61sUV1577415774epoutp01V
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593479282;
+        bh=YGYwcMBNENiLw/VSkmKokq8wHpV1ERBPe5z3zZVvL/s=;
+        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
+        b=mP4gYR51+KoKKg92dgCmtf8ZsRRWFXS++MBjPkqZdtwpnKwB25hRDmhdZw/nNw55N
+         GoujU+NmSotv9T41A6rr7vX6wktg3cMumlbAXPc2UXMlAOtQIM/KwYp5HG/+bbxGIw
+         AskZ0CKkwAUNf8LjgQ6HqmYAyCOWtfntXBtKRmbE=
+Received: from epcpadp2 (unknown [182.195.40.12]) by epcas1p4.samsung.com
+        (KnoxPortal) with ESMTP id
+        20200630010801epcas1p4b2643a224cc2759a324e973a0c6241e3~dLPbV2_iA1813518135epcas1p4o;
+        Tue, 30 Jun 2020 01:08:01 +0000 (GMT)
+Mime-Version: 1.0
+Subject: Re: [RFC PATCH v3 0/5] scsi: ufs: Add Host Performance Booster
+ Support
+Reply-To: daejun7.park@samsung.com
+From:   Daejun Park <daejun7.park@samsung.com>
+To:     Bean Huo <huobean@gmail.com>,
+        Daejun Park <daejun7.park@samsung.com>,
+        "avri.altman@wdc.com" <avri.altman@wdc.com>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "stanley.chu@mediatek.com" <stanley.chu@mediatek.com>,
+        "cang@codeaurora.org" <cang@codeaurora.org>,
+        "bvanassche@acm.org" <bvanassche@acm.org>,
+        "tomas.winkler@intel.com" <tomas.winkler@intel.com>,
+        ALIM AKHTAR <alim.akhtar@samsung.com>
+CC:     "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sang-yoon Oh <sangyoon.oh@samsung.com>,
+        Sung-Jun Park <sungjun07.park@samsung.com>,
+        yongmyung lee <ymhungry.lee@samsung.com>,
+        Jinyoung CHOI <j-young.choi@samsung.com>,
+        Adel Choi <adel.choi@samsung.com>,
+        BoRam Shin <boram.shin@samsung.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+In-Reply-To: <60647cf00d9db6818488a714b48b9b6e2a1eb728.camel@gmail.com>
+X-CPGS-Detection: blocking_info_exchange
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <231786897.01593479281798.JavaMail.epsvc@epcpadp2>
+Date:   Tue, 30 Jun 2020 10:05:38 +0900
+X-CMS-MailID: 20200630010538epcms2p1672c42825cc42e92b2e3ec6bac79ee2b
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+X-CPGSPASS: Y
+X-CPGSPASS: Y
+X-Hop-Count: 3
+X-CMS-RootMailID: 20200623010201epcms2p11aebdf1fbc719b409968cba997507114
+References: <60647cf00d9db6818488a714b48b9b6e2a1eb728.camel@gmail.com>
+        <948f573d136b39410f7d610e5019aafc9c04fe62.camel@gmail.com>
+        <963815509.21592879582091.JavaMail.epsvc@epcpadp2>
+        <336371513.41593411482259.JavaMail.epsvc@epcpadp2>
+        <CGME20200623010201epcms2p11aebdf1fbc719b409968cba997507114@epcms2p1>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robin,
-
-On 6/29/20 7:56 PM, Robin Murphy wrote:
-> On 2020-06-27 04:15, Lu Baolu wrote:
->> The hardware assistant vfio mediated device is a use case of iommu
->> aux-domain. The interactions between vfio/mdev and iommu during mdev
->> creation and passthr are:
->>
->> - Create a group for mdev with iommu_group_alloc();
->> - Add the device to the group with
->>          group = iommu_group_alloc();
->>          if (IS_ERR(group))
->>                  return PTR_ERR(group);
->>
->>          ret = iommu_group_add_device(group, &mdev->dev);
->>          if (!ret)
->>                  dev_info(&mdev->dev, "MDEV: group_id = %d\n",
->>                           iommu_group_id(group));
->> - Allocate an aux-domain
->>     iommu_domain_alloc()
->> - Attach the aux-domain to the physical device from which the mdev is
->>    created.
->>     iommu_aux_attach_device()
->>
->> In the whole process, an iommu group was allocated for the mdev and an
->> iommu domain was attached to the group, but the group->domain leaves
->> NULL. As the result, iommu_get_domain_for_dev() doesn't work anymore.
->>
->> This adds iommu_group_get/set_domain() so that group->domain could be
->> managed whenever a domain is attached or detached through the aux-domain
->> api's.
+Hi Bean,
+> On Mon, 2020-06-29 at 15:15 +0900, Daejun Park wrote:
+> > > Seems you intentionally ignored to give you comments on my
+> > > suggestion.
+> > > let me provide the reason.
+> > 
+> > Sorry! I replied to your comment (
+> > https://protect2.fireeye.com/url?k=be575021-e3854728-be56db6e-0cc47a31cdf8-6c7d0e1e42762b92&q=1&u=https%3A%2F%2Flkml.org%2Flkml%2F2020%2F6%2F15%2F1492),
+> > but you didn't reply on that. I thought you agreed because you didn't
+> > send
+> > any more comments.
+> > 
+> > 
+> > > Before submitting your next version patch, please check your L2P
+> > > mapping HPB reqeust submission logical algorithem. I have did
+> > 
+> > We are also reviewing the code that you submitted before.
+> > It seems to be a performance improvement as it sends a map request
+> > directly.
+> > 
+> > > performance comparison testing on 4KB, there are about 13%
+> > > performance
+> > > drop. Also the hit count is lower. I don't know if this is related
+> > > to
+> > 
+> > It is interesting that there is actually a performance improvement. 
+> > Could you share the test environment, please? However, I think
+> > stability is
+> > important to HPB driver. We have tested our method with the real
+> > products and
+> > the HPB 1.0 driver is based on that.
 > 
-> Letting external callers poke around directly in the internals of 
-> iommu_group doesn't look right to me.
+> I just run fio benchmark tool with --rw=randread, --bs=4kb, --
+> size=8G/10G/64G/100G. and see what performance diff with the direct
+> submission approach.
 
-Unfortunately, it seems that the vifo iommu abstraction is deeply bound
-to the IOMMU subsystem. We can easily find other examples:
+Thanks!
 
-iommu_group_get/set_iommudata()
-iommu_group_get/set_name()
-...
-
+> > After this patch, your approach can be done as an incremental patch?
+> > I would
+> > like to test the patch that you submitted and verify it.
+> > 
+> > > your current work queue scheduling, since you didn't add the timer
+> > > for
+> > > each HPB request.
+> > 
 > 
-> If a regular device is attached to one or more aux domains for PASID 
-> use, iommu_get_domain_for_dev() is still going to return the primary 
-> domain, so why should it be expected to behave differently for mediated
+> Taking into consideration of the HPB 2.0, can we submit the HPB write
+> request to the SCSI layer? if not, it will be a direct submission way.
+> why not directly use direct way? or maybe you have a more advisable
+> approach to work around this. would you please share with us.
+> appreciate.
 
-Unlike the normal device attach, we will encounter two devices when it
-comes to aux-domain.
+I am considering a direct submission way for the next version.
+We will implement the write buffer command of HPB 2.0, after patching HPB 1.0.
 
-- Parent physical device - this might be, for example, a PCIe device
-with PASID feature support, hence it is able to tag an unique PASID
-for DMA transfers originated from its subset. The device driver hence
-is able to wrapper this subset into an isolated:
+As for the direct submission of HPB releated command including HPB write
+buffer, I think we'd better discuss the right approach in depth before
+moving on to the next step.
 
-- Mediated device - a fake device created by the device driver mentioned
-above.
-
-Yes. All you mentioned are right for the parent device. But for mediated
-device, iommu_get_domain_for_dev() doesn't work even it has an valid
-iommu_group and iommu_domain.
-
-iommu_get_domain_for_dev() is a necessary interface for device drivers
-which want to support aux-domain. For example,
-
-           struct iommu_domain *domain;
-           struct device *dev = mdev_dev(mdev);
-	  unsigned long pasid;
-
-           domain = iommu_get_domain_for_dev(dev);
-           if (!domain)
-                   return -ENODEV;
-
-           pasid = iommu_aux_get_pasid(domain, dev->parent);
-	  if (pasid == IOASID_INVALID)
-		  return -EINVAL;
-
-	  /* Program the device context with the PASID value */
-	  ....
-
-Without this fix, iommu_get_domain_for_dev() always returns NULL and the
-device driver has no means to support aux-domain.
-
-Best regards,
-baolu
-
-> devices? AFAICS it's perfectly legitimate to have no primary domain if 
-> traffic-without-PASID is invalid.
-> 
-> Robin.
+Thanks,
+Daejun
