@@ -2,157 +2,166 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9167C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:02:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF86EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9A6BD20748
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D07220748
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:05:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Il2wPhzB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728986AbgF3DCM (ORCPT
+        id S1728877AbgF3DFx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 23:02:12 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6786 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728049AbgF3DCL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 23:02:11 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id DC56E6EA0334CAF29281;
-        Tue, 30 Jun 2020 11:00:59 +0800 (CST)
-Received: from [10.174.185.226] (10.174.185.226) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 30 Jun 2020 11:00:53 +0800
-Subject: Re: [BUG] irqchip/gic-v4.1: sleeping function called from invalid
- context
-To:     Marc Zyngier <maz@kernel.org>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        <wanghaibin.wang@huawei.com>, <kuhn.chenqun@huawei.com>,
-        <wangjingyi11@huawei.com>
-References: <1d673e99-0dd2-d287-aedf-65686eed5194@huawei.com>
- <c401871295f68391473f2e522b920719@kernel.org>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <63fa30f0-4d9a-aa15-7f42-db09587c43e2@huawei.com>
-Date:   Tue, 30 Jun 2020 11:00:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 29 Jun 2020 23:05:53 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:21850 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727981AbgF3DFw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 23:05:52 -0400
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200630030549epoutp03a807b3d09df2a04257a1fc98fce5cf89~dM2RacP-L2578725787epoutp03T
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 03:05:49 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200630030549epoutp03a807b3d09df2a04257a1fc98fce5cf89~dM2RacP-L2578725787epoutp03T
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593486349;
+        bh=RM12vg22eGvbT18YzAf+yBv6C+eGBEkx3HzCNW8KJIg=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=Il2wPhzBDJJ5ejFp2rru/+BnSt5pm0AVFrrPeuweNLiS9FAOd2oRstg+HhPmdbAPA
+         Q7kUhS1btVFd1i5Vyd2743atYTG4FKNqlLwcxzjjsw6VVi0GuhW7XdnWvzAIjdKr+b
+         bzgjrz4bGOYMAGzoR8TTWbWpV1EkWYIn+qXoZrfg=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20200630030548epcas1p350032852c7696ab940e7acd6dff2c094~dM2QzPeSP2881228812epcas1p30;
+        Tue, 30 Jun 2020 03:05:48 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.159]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 49wq4C3RQVzMqYkf; Tue, 30 Jun
+        2020 03:05:47 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        79.70.18978.90CAAFE5; Tue, 30 Jun 2020 12:05:45 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200630030544epcas1p255f59b5d5e2c82219c37fc5b341b1e67~dM2NHjc1a2486824868epcas1p2Y;
+        Tue, 30 Jun 2020 03:05:44 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200630030544epsmtrp26f0fd4c259802f1fd3bcebc298d0b6c6~dM2NHA1JN2260722607epsmtrp2E;
+        Tue, 30 Jun 2020 03:05:44 +0000 (GMT)
+X-AuditID: b6c32a35-5edff70000004a22-d4-5efaac09d55b
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        EE.83.08382.80CAAFE5; Tue, 30 Jun 2020 12:05:44 +0900 (KST)
+Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip2.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200630030544epsmtip2003bab8adc7523ab13d2d3041826a204~dM2M9nQ9k3271032710epsmtip2U;
+        Tue, 30 Jun 2020 03:05:44 +0000 (GMT)
+From:   "Namjae Jeon" <namjae.jeon@samsung.com>
+To:     "'Linus Torvalds'" <torvalds@linux-foundation.org>
+Cc:     <linux-kernel@vger.kernel.org>
+Subject: [GIT PULL] exfat fixes for 5.8-rc4
+Date:   Tue, 30 Jun 2020 12:05:44 +0900
+Message-ID: <002f01d64e8b$586fa220$094ee660$@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <c401871295f68391473f2e522b920719@kernel.org>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.174.185.226]
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AdZOcLCU3DZik/kMTGioqDKJNkf5LQ==
+Content-Language: ko
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrLKsWRmVeSWpSXmKPExsWy7bCmri7nml9xBo9XqFlc3jWHzeJR31t2
+        ByaPEzN+s3h83iQXwBSVY5ORmpiSWqSQmpecn5KZl26r5B0c7xxvamZgqGtoaWGupJCXmJtq
+        q+TiE6DrlpkDNF5JoSwxpxQoFJBYXKykb2dTlF9akqqQkV9cYquUWpCSU2BoUKBXnJhbXJqX
+        rpecn2tlaGBgZApUmZCT8XP3CeaCU7wVF/beYWxg/M3VxcjJISFgInH03F0mEFtIYAejRMvX
+        1C5GLiD7E6PEvumdrBDON0aJk+u72GE6nt7sZIdI7GWUOL75CJTzklFi9ssLYFVsAroS//7s
+        Z+ti5OAQETCT+LbEEcRkFlCSuHpKDqRCWEBb4mtXOyuIzSKgKvFz5hY2EJtXwFKiuf8NC4Qt
+        KHFy5hMwm1lAXmL72znMEDcoSPx8ugysV0RAT6Kh5S9UjYjE7M42ZpBzJAT2sUvcfP+JFaLB
+        ReLg2jMsELawxKvjW6CekZL4/G4v2JkSAtUSH/dDze9glHjx3RbCNpa4uX4DK8T5mhLrd+lD
+        hBUldv6eywixlk/i3dceVogpvBIdbUIQJaoSfZcOM0HY0hJd7R+glnpI/PjZzjaBUXEWkidn
+        IXlyFpJnZiEsXsDIsopRLLWgODc9tdiwwBA5pjcxgtOdlukOxolvP+gdYmTiYDzEKMHBrCTC
+        e9rgV5wQb0piZVVqUX58UWlOavEhRlNgsE9klhJNzgcm3LySeENTI2NjYwsTM3MzU2MlcV5x
+        mQtxQgLpiSWp2ampBalFMH1MHJxSDUybCl8e+Xx2TZjT9g2XIi8+31rFwPnKOivpu7CE45Q5
+        u4NP7du9yeyfwouzv7jVizOPePcWf8/gC8ri2S+vvEB3ju2PpXEhfts/h9fr3Hqw++v7zVVV
+        F+VvafpP8fokPaVRTkCaO2ueTKheTWH5/R7Tr6b77rHKPOS9FLq+V++szeq03MX7VNofHdmn
+        H6ajlKIhE5W63++ycUO51pfV4gd8stZE+5zvVlO5fyZN8F1bnqye567W45X8u2bOYdjDczjI
+        sjdoxbl9Xvval/gez7N23PLvgN/i+98mPq9Irfz/8ICC40eneMeiY/2L9U1MNx875ric0+w8
+        G+fxy++/XEsJWm0fx1C/ncnigO7ElTuUWIozEg21mIuKEwErD5SmAAQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrHLMWRmVeSWpSXmKPExsWy7bCSvC7Hml9xBhdOKVlc3jWHzeJR31t2
+        ByaPEzN+s3h83iQXwBTFZZOSmpNZllqkb5fAlfFz9wnmglO8FRf23mFsYPzN1cXIySEhYCLx
+        9GYnexcjF4eQwG5GiYk9M5khEtISx06cAbI5gGxhicOHiyFqnjNKnN33khGkhk1AV+Lfn/1s
+        IDUiAmYS35Y4gpjMAkoSV0/JgVQIC2hLfO1qZwWxWQRUJX7O3MIGYvMKWEo0979hgbAFJU7O
+        fMIC0aon0bYRbDizgLzE9rdzoI5RkPj5dBnYGBGgkoaWvywQNSISszvbmCcwCs5CMmkWwqRZ
+        SCbNQtKxgJFlFaNkakFxbnpusWGBYV5quV5xYm5xaV66XnJ+7iZGcBBrae5g3L7qg94hRiYO
+        xkOMEhzMSiK8pw1+xQnxpiRWVqUW5ccXleakFh9ilOZgURLnvVG4ME5IID2xJDU7NbUgtQgm
+        y8TBKdXA5Fy3prVsfk1Kq/FnBv0GniMmkslhJ4q4hW+0HXD69rG+/smtV4/+1kR8Or9COuHJ
+        1a+7BKULmio5v9/meLvrgGHHFfeazsjMI77q52/er8v/qteV2bis3CWCf41NvYL8o5zutpMb
+        WWV2Md2R36vgel5Z9oqLybqbbnU//xYvPP5z5b7FkrUOkSUlGvlRxztZJltO0MjX0Cq8dolz
+        t3xAViGDqPDiq7v+lqrOjeFzt5DJO33l2kvGfKfvD2tb9Geucc0vFkgSLmjtY8zyMojL+yvy
+        qGm3fv+F+9zTPl4/EZp68AqPxvTC9sUPrTXcbvcoMJmb1vY3Wz6836sW/7j3a7Z49kK3uxt/
+        nuZ+IKnEUpyRaKjFXFScCAC3vZq20QIAAA==
+X-CMS-MailID: 20200630030544epcas1p255f59b5d5e2c82219c37fc5b341b1e67
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
 X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20200630030544epcas1p255f59b5d5e2c82219c37fc5b341b1e67
+References: <CGME20200630030544epcas1p255f59b5d5e2c82219c37fc5b341b1e67@epcas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
+Hi Linus,
 
-On 2020/6/29 22:01, Marc Zyngier wrote:
-> Hi Zenghui,
-> 
-> On 2020-06-29 10:39, Zenghui Yu wrote:
->> Hi All,
->>
->> Booting the latest kernel with DEBUG_ATOMIC_SLEEP=y on a GICv4.1 enabled
->> box, I get the following kernel splat:
->>
->> [    0.053766] BUG: sleeping function called from invalid context at
->> mm/slab.h:567
->> [    0.053767] in_atomic(): 1, irqs_disabled(): 128, non_block: 0,
->> pid: 0, name: swapper/1
->> [    0.053769] CPU: 1 PID: 0 Comm: swapper/1 Not tainted 5.8.0-rc3+ #23
->> [    0.053770] Call trace:
->> [    0.053774]  dump_backtrace+0x0/0x218
->> [    0.053775]  show_stack+0x2c/0x38
->> [    0.053777]  dump_stack+0xc4/0x10c
->> [    0.053779]  ___might_sleep+0xfc/0x140
->> [    0.053780]  __might_sleep+0x58/0x90
->> [    0.053782]  slab_pre_alloc_hook+0x7c/0x90
->> [    0.053783]  kmem_cache_alloc_trace+0x60/0x2f0
->> [    0.053785]  its_cpu_init+0x6f4/0xe40
->> [    0.053786]  gic_starting_cpu+0x24/0x38
->> [    0.053788]  cpuhp_invoke_callback+0xa0/0x710
->> [    0.053789]  notify_cpu_starting+0xcc/0xd8
->> [    0.053790]  secondary_start_kernel+0x148/0x200
->>
->> # ./scripts/faddr2line vmlinux its_cpu_init+0x6f4/0xe40
->> its_cpu_init+0x6f4/0xe40:
->> allocate_vpe_l1_table at drivers/irqchip/irq-gic-v3-its.c:2818
->> (inlined by) its_cpu_init_lpis at drivers/irqchip/irq-gic-v3-its.c:3138
->> (inlined by) its_cpu_init at drivers/irqchip/irq-gic-v3-its.c:5166
-> 
-> Let me guess: a system with more than a single CommonLPIAff group?
+This is exfat fixes pull request for v5.8-rc4. I add description of
+this pull request on below. Please pull exfat with following fixes.
 
-I *think* you're right. E.g., when we're allocating vpe_table_mask for
-the first CPU of the second CommonLPIAff group.
+Thanks!
 
-The truth is that all the GICv4.1 boards I'm having on hand only have a
-single CommonLPIAff group. Just to get the above backtrace, I did some
-crazy hacking on my 920 and pretend it as v4.1 capable (well, please
-ignore me). Hopefully I can get a new GICv4.1 board with more than one
-CommonLPIAff group next month and do more tests.
+The following changes since commit 9ebcfadb0610322ac537dd7aa5d9cbc2b2894c68:
 
->> I've tried to replace GFP_KERNEL flag with GFP_ATOMIC to allocate memory
->> in this atomic context, and the splat disappears. But after a quick look
->> at [*], it seems not a good idea to allocate memory within the CPU
->> hotplug notifier. I really don't know much about it, please have a look.
->>
->> [*]
->> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=11e37d357f6ba7a9af850a872396082cc0a0001f 
->>
-> 
-> The allocation of the cpumask is pretty benign, and could either be
-> allocated upfront for all RDs (and freed on detecting that we share
-> the same CommonLPIAff group) or made atomic.
-> 
-> The much bigger issue is the alloc_pages call just after. Allocating this
-> upfront probably is the wrong thing to do, as you are likely to allocate
-> way too much memory, even if you free it quickly afterwards.
-> 
-> At this stage, I'd rather we turn this into an atomic allocation. A 
-> notifier
-> is just another atomic context, and if this fails at such an early stage,
-> then the CPU is unlikely to continue booting...
+  Linux 5.8-rc3 (2020-06-28 15:00:24 -0700)
 
-Got it.
+are available in the Git repository at:
 
-> Would you like to write a patch for this? Given that you have tested
-> something, it probably already exists. Or do you want me to do it?
+  git://git.kernel.org/pub/scm/linux/kernel/git/linkinjeon/exfat.git tags/exfat-for-5.8-rc4
 
-Yes, I had written something like below. I will add a commit message and
-send it out today.
+for you to fetch changes up to 5267456e953fd8c5abd8e278b1cc6a9f9027ac0a:
 
-diff --git a/drivers/irqchip/irq-gic-v3-its.c 
-b/drivers/irqchip/irq-gic-v3-its.c
-index 6a5a87fc4601..b66eeca442c4 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -2814,7 +2814,7 @@ static int allocate_vpe_l1_table(void)
-  	if (val & GICR_VPROPBASER_4_1_VALID)
-  		goto out;
+  exfat: flush dirty metadata in fsync (2020-06-29 17:11:18 +0900)
 
--	gic_data_rdist()->vpe_table_mask = kzalloc(sizeof(cpumask_t), GFP_KERNEL);
-+	gic_data_rdist()->vpe_table_mask = kzalloc(sizeof(cpumask_t), GFP_ATOMIC);
-  	if (!gic_data_rdist()->vpe_table_mask)
-  		return -ENOMEM;
+----------------------------------------------------------------
+Description for this pull request:
+  - Zero out unused characters of FileName field to avoid a complaint from some fsck tool.
+  - Fix memory leak on error paths.
+  - Fix unnecessary VOL_DIRTY set when calling rmdir on non-empty directory.
+  - Call sync_filesystem() for read-only remount(Fix generic/452 test in xfstests)
+  - Add own fsync() to flush dirty metadata.
 
-@@ -2881,7 +2881,7 @@ static int allocate_vpe_l1_table(void)
+----------------------------------------------------------------
+Dan Carpenter (1):
+      exfat: add missing brelse() calls on error paths
 
-  	pr_debug("np = %d, npg = %lld, psz = %d, epp = %d, esz = %d\n",
-  		 np, npg, psz, epp, esz);
--	page = alloc_pages(GFP_KERNEL | __GFP_ZERO, get_order(np * PAGE_SIZE));
-+	page = alloc_pages(GFP_ATOMIC | __GFP_ZERO, get_order(np * PAGE_SIZE));
-  	if (!page)
-  		return -ENOMEM;
+Hyeongseok.Kim (1):
+      exfat: Set the unused characters of FileName field to the value 0000h
 
+Hyunchul Lee (1):
+      exfat: call sync_filesystem for read-only remount
 
-Thanks,
-Zenghui
+Namjae Jeon (1):
+      exfat: move setting VOL_DIRTY over exfat_remove_entries()
+
+Sungjong Seo (1):
+      exfat: flush dirty metadata in fsync
+
+ fs/exfat/dir.c      | 12 +++++++-----
+ fs/exfat/exfat_fs.h |  1 +
+ fs/exfat/file.c     | 19 ++++++++++++++++++-
+ fs/exfat/namei.c    | 14 +++++++++++---
+ fs/exfat/super.c    | 10 ++++++++++
+ 5 files changed, 47 insertions(+), 9 deletions(-)
+
