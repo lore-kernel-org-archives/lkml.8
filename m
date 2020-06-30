@@ -2,392 +2,397 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBEEBC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A946BC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8E34520722
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:15:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77EDD20722
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:16:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ITmC78T/"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="U+a1y8st"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732466AbgF3QP4 (ORCPT
+        id S1732699AbgF3QQv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 12:15:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41838 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730948AbgF3QPz (ORCPT
+        Tue, 30 Jun 2020 12:16:51 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:1105 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728290AbgF3QQu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 12:15:55 -0400
-Received: from mail-ua1-x94a.google.com (mail-ua1-x94a.google.com [IPv6:2607:f8b0:4864:20::94a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43742C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 09:15:55 -0700 (PDT)
-Received: by mail-ua1-x94a.google.com with SMTP id 46so5709635uao.16
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 09:15:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=bXv7tFHYuFoDT+bV9yObzbdNniN4ZQt6n71y+59QZgU=;
-        b=ITmC78T/W1E6u3FrKZeizUPZ25JHGQG8WTsG4EzB8aFC9/+itpaAlqWtCRGYKc4uRb
-         reNrinkUb2PfnyDrYpq8ADdHntuHaVrvEvbLJxJQLJnu0k/PPitwm2pwJsdt8jVnnMd9
-         EMQGFPu2i9te63GdO27YfGLHluZ20EBLIn3akBwevSukfjrVv/I9MO9ipQoll/p7o+dt
-         zyfb25BZbpN5K/AP7vqUb2qsaSneTRJ/IOI4UxsDtwURHzEvK3v+/B4bYz67UkrEEzqT
-         RuISp9mFEPEixq3mkwmt5mae+/y2C7x7G6Ul+hX/jxkSc1clqVWKa7QCRZd7wcJ5AyH/
-         rqOw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=bXv7tFHYuFoDT+bV9yObzbdNniN4ZQt6n71y+59QZgU=;
-        b=rQN2N1TaXbDU+6obainyvvoKnn5LQBrp3ekjgl5nPGqpHLsEzjFsZ2PlL9LXoTvVpk
-         EWZR87gelNQTM/3dBP76utvfll6c7Bjl6mnqnglelZNgHlAD1+Qp2lNOqB0XiUeNtavh
-         04M0hQxC7JzH4Mj21zVBvZ3Wi+cfwd6oEQDP77DCyAxzcnCGN28BJjYeQBhW1gj2mIPJ
-         f1MTrXFiOrxNDU2HglI+o/0lstHKM3XJCJM6qIjnn74Fr5PTm2htEf3Rut3KBR1L++Wy
-         w79p/e+f5DLKJf4lOEE2JgrYHIUQ/o1qXEABAI6x9LTQKYj+smGSvXC7G1OxhYIJT3CK
-         pfTw==
-X-Gm-Message-State: AOAM532QUItWoBSMG0DvNQNwenPIa/9oSWy+TuXQyEVuv3YWp8ncpWXF
-        dPgk3S+Zz/cd8AgdsKTwtQ0RLpMVC2bN8A==
-X-Google-Smtp-Source: ABdhPJym+92LjjR3i7eSz0LjVdy1XOkJS30Q00cKHTC98R1UZCy+i0xSaP9ams3etj+J1Bd0xR88nfTiR1butg==
-X-Received: by 2002:a1f:298f:: with SMTP id p137mr14550657vkp.11.1593533754424;
- Tue, 30 Jun 2020 09:15:54 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 09:15:39 -0700
-Message-Id: <20200630161539.1759185-1-shakeelb@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-Subject: [PATCH v2] mm: memcontrol: account kernel stack per node
-From:   Shakeel Butt <shakeelb@google.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <guro@fb.com>,
-        Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Shakeel Butt <shakeelb@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 30 Jun 2020 12:16:50 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5efb653e0000>; Tue, 30 Jun 2020 09:15:58 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 30 Jun 2020 09:16:47 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 30 Jun 2020 09:16:47 -0700
+Received: from [10.2.167.193] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 30 Jun
+ 2020 16:16:46 +0000
+Subject: Re: [RFC PATCH v2 00/18] Support for Tegra video capture from
+ external sensor
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Hans Verkuil <hverkuil@xs4all.nl>, <thierry.reding@gmail.com>,
+        <jonathanh@nvidia.com>, <frankc@nvidia.com>, <sakari.ailus@iki.fi>,
+        <robh+dt@kernel.org>, <helen.koike@collabora.com>
+CC:     <digetx@gmail.com>, <sboyd@kernel.org>,
+        <gregkh@linuxfoundation.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-i2c@vger.kernel.org>
+References: <1592358094-23459-1-git-send-email-skomatineni@nvidia.com>
+ <b3f63f3f-50b2-e818-2c59-8009c31a9825@xs4all.nl>
+ <f5c84071-46ad-aa6f-0820-1813d4a907c9@nvidia.com>
+ <a60d8f80-312d-fce3-61f5-328e7f2a7a64@xs4all.nl>
+ <72ca3b09-7ca6-7421-4a9d-98326d1af087@nvidia.com>
+Message-ID: <e8a8a678-e9e8-e941-8dcb-0e747616ba59@nvidia.com>
+Date:   Tue, 30 Jun 2020 09:17:14 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
+MIME-Version: 1.0
+In-Reply-To: <72ca3b09-7ca6-7421-4a9d-98326d1af087@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1593533758; bh=XSg2qN4yyT+tMT1zZSUfxAuzNf/qjGAod/D3XjDMvSc=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=U+a1y8stOypxAdDAGLd5xIiLrymaSl8aPTN1kxmJUrS9wEYXFMas9Ch5VQm9SctGm
+         R0yM7ZtBEKkamZWP78XKiZZSLpB9D9FSbPM7WCOotCpboKVRvmY38ODbjgErm3pRl4
+         bWY4e0JEohyIUej65fA0LjiyAFMybb6fCTSffr3e9cWYRezGjWZUByRoJvc21UsfPq
+         lG7I3PNbeqYClJaOvA3foL+rBhIgiqryUFMljtlLVERYwfLWSmdVF6E8L8M+dy83xr
+         a3EpT1GmZ2Wd5qtSf830KYTMa9L9mWyjggO89I2xos7m7Mdw8FKrpVGsGvCrt4l1lu
+         bU+ubzvEZmttw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the kernel stack is being accounted per-zone. There is no need
-to do that. In addition due to being per-zone, memcg has to keep a
-separate MEMCG_KERNEL_STACK_KB. Make the stat per-node and deprecate
-MEMCG_KERNEL_STACK_KB as memcg_stat_item is an extension of
-node_stat_item. In addition localize the kernel stack stats updates to
-account_kernel_stack().
 
-Signed-off-by: Shakeel Butt <shakeelb@google.com>
----
-Changes since v1:
-- Use lruvec based stat update functions based on Roman's suggestion.
+On 6/30/20 8:44 AM, Sowjanya Komatineni wrote:
+>
+> On 6/30/20 8:13 AM, Hans Verkuil wrote:
+>> On 30/06/2020 16:58, Sowjanya Komatineni wrote:
+>>> On 6/30/20 2:21 AM, Hans Verkuil wrote:
+>>>> On 17/06/2020 03:41, Sowjanya Komatineni wrote:
+>>>>> This series adds support for video capture from external camera=20
+>>>>> sensor to
+>>>>> Tegra video driver.
+>>>>>
+>>>>> Jetson TX1 has camera expansion connector and supports custom=20
+>>>>> camera module
+>>>>> designed as per TX1 design specification.
+>>>>>
+>>>>> This series also enables camera capture support for Jetson Nano=20
+>>>>> which has
+>>>>> Raspberry PI camera header.
+>>>>>
+>>>>> This series is tested with IMX219 camera sensor.
+>>>> Which tree did you base this on? The media_tree master? Or the=20
+>>>> mainline kernel?
+>>> These patches are with linux-next base at the time I sent them out=20
+>>> which
+>>> are on 20200616
+>>>> I now have the imx219 detected, but if I try to stream I get this:
+>>>>
+>>>> $ v4l2-ctl --stream-mmap
+>>>> <[=C2=A0 512.840944] video4linux video0: MW_ACK_DONE syncpt timeout: -=
+11
+>>>> [=C2=A0 512.972975] video4linux video0: frame start syncpt timeout: -1=
+1
+>>>> <VIDIOC_DQBUF: failed: Input/output error
+>>>> [=C2=A0 513.180770] video4linux video0: MW_ACK_DONE syncpt timeout: -1=
+1
+>>>>
+>>>> And then everything hangs and I need to reset.
+>>>>
+>>>> I'm testing with the media_tree master with your patches on top.
+>>>>
+>>>> Regards,
+>>>>
+>>>> =C2=A0=C2=A0=C2=A0=C2=A0Hans
+>>> Are you using same device tree as I sent offline? It uses CSI A for=20
+>>> IMX219.
+>>>
+>>> Does you setup also uses CSI-A as x2 for IMX219?
+>>>
+>>> I tested them on Jetson Nano + IMX219 rasp PI module and also on Jetson
+>>> TX1 + IMX274.
+>>>
+>>> I did not see any issue and am able to capture from both.
+>>>
+>>> Will try again on my side with today's latest linux-next and update=20
+>>> result.
+>> Please use the media_tree master, that's what I use as well.
+>>
+>> I did some more testing and there is something weird going on.
+>>
+>> I have a Leopard Imaging camera expansion board (LI-JTX1-MIPI-ADPT) with
+>> three camera connectors. See here for the datasheet:
+>>
+>> https://www.leopardimaging.com/uploads/LI-TX1-KIT-IMX274M12-T_datasheet.=
+pdf=20
+>>
+>>
+>> The first connector (with an IMX274) causes this error:
+>>
+>> $ v4l2-ctl -d1 --stream-mmap
+>> [=C2=A0 599.265885] video4linux video1: MW_ACK_DONE syncpt timeout: -11
+>> [=C2=A0 599.473883] video4linux video1: MW_ACK_DONE syncpt timeout: -11
+>> [=C2=A0 599.681904] video4linux video1: frame start syncpt timeout: -11
+>> [=C2=A0 599.681909] video4linux video1: MW_ACK_DONE syncpt timeout: -11
+>> <VIDIOC_DQBUF: failed: Input/output error
+>> [=C2=A0 599.897884] video4linux video1: MW_ACK_DONE syncpt timeout: -11
+>>
+>> Similar to the test above where I had an IMX219 connected. Except it=20
+>> didn't
+>> hang with the IMX274 (I'm beginning to suspect a locking issue in the=20
+>> imx219
+>> driver that is causing the hang, I'll look at that tomorrow).
+>>
+>> If I connect the IMX219 to the middle camera connector, then it works=20
+>> fine.
+>> I think I tested this with the IMX274 as well, but I'm not 100%=20
+>> certain, also
+>> something to double check tomorrow.
+>>
+>> If I connect the IMX219 or IMX274 to the third camera connector, then=20
+>> I get this:
+>
+> Would like to know CSI port mapping to connectors as mipi calibrate=20
+> pads cells need to be updated in device tree based on CSI port in use.
+>
+> Will see if I can find that from DS link you sent above.
+>
+>>
+>> $ v4l2-ctl -d0 --stream-mmap
+>> [=C2=A0 820.513866] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>>
+>> [=C2=A0 820.525354] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>>
+>> [=C2=A0 820.536780] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>>
+>> [=C2=A0 820.548222] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>>
+>> [=C2=A0 820.559639] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>> <[=C2=A0 820.646931] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>> [=C2=A0 820.658355] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>> [=C2=A0 820.669797] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>> [=C2=A0 820.681216] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>> [=C2=A0 820.692601] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>> <<<<<<<<<<<<<<< 14.50 fps
+>> <<<<<<<<<<<<<<< 14.75 fps
+>> <<<<<<<<<<<<<<< 14.73 fps
+>> <<<<<<<<<<<<<<< 14.80 fps
+>> <<<<<<<<<<<<<[ 825.517854] tegra_mc_irq: 133437 callbacks suppressed
+>> [=C2=A0 825.517874] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>> [=C2=A0 825.534395] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>> [=C2=A0 825.545833] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>> [=C2=A0 825.557280] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>> [=C2=A0 825.579346] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>> [=C2=A0 825.590764] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>> [=C2=A0 825.602188] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>> [=C2=A0 825.613649] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>> [=C2=A0 825.625075] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>> [=C2=A0 825.645983] tegra-mc 70019000.memory-controller: viw: write=20
+>> @0x00000001b5fd08c0: EMEM address decode error (EMEM decode error)
+>> < 14.64 fps
+>> <<<<<<<<<<<<<<<< 14.87 fps
+>> <<<<<<<<<<<<<<< 14.89 fps
+>>
+>> Something is producing EMEM address decode errors. But it is streaming.
+>
+> above memory controller errors may be due to access faults and not=20
+> sure why these show up on your setup. I never have these with my testing.
+>
+> Also I am using CMA alloc of 256MB and not sure if low CMA alloc size=20
+> is causing this. Can you try with CMA alloc size of 256MB?
+>
+>>
+>> If I enable the TPG then everything is fine.
+>>
+>> So I have currently three different behaviors for three camera=20
+>> connectors.
+>>
+>> Do you have a datasheet for your Jetson TX1 camera board? It could be=20
+>> useful
+>> to compare the two.
+>
+> Yeah we have and will send it offline.
+>
+> Also based on connector mapping to corresponding CSI port,=20
+> mipi-calibrate pad cell value also need to be changed.
+>
+> Below is for CSI-A
+>
+> nvidia,mipi-calibrate =3D <&mipi 0x001>
+>> Regards,
+>>
+>> =C2=A0=C2=A0=C2=A0=C2=A0Hans
+Connector-1 is CSI-AB where you had timeouts.
 
- drivers/base/node.c        |  4 +--
- fs/proc/meminfo.c          |  4 +--
- include/linux/memcontrol.h | 21 ++++++++++++++--
- include/linux/mmzone.h     |  8 +++---
- kernel/fork.c              | 51 +++++++++++---------------------------
- kernel/scs.c               |  2 +-
- mm/memcontrol.c            |  2 +-
- mm/page_alloc.c            | 16 ++++++------
- mm/vmstat.c                |  8 +++---
- 9 files changed, 55 insertions(+), 61 deletions(-)
+Connector-2 is CSI-CD and this works for you.
 
-diff --git a/drivers/base/node.c b/drivers/base/node.c
-index 0cf13e31603c..508b80f6329b 100644
---- a/drivers/base/node.c
-+++ b/drivers/base/node.c
-@@ -440,9 +440,9 @@ static ssize_t node_read_meminfo(struct device *dev,
- 		       nid, K(node_page_state(pgdat, NR_FILE_MAPPED)),
- 		       nid, K(node_page_state(pgdat, NR_ANON_MAPPED)),
- 		       nid, K(i.sharedram),
--		       nid, sum_zone_node_page_state(nid, NR_KERNEL_STACK_KB),
-+		       nid, node_page_state(pgdat, NR_KERNEL_STACK_KB),
- #ifdef CONFIG_SHADOW_CALL_STACK
--		       nid, sum_zone_node_page_state(nid, NR_KERNEL_SCS_KB),
-+		       nid, node_page_state(pgdat, NR_KERNEL_SCS_KB),
- #endif
- 		       nid, K(sum_zone_node_page_state(nid, NR_PAGETABLE)),
- 		       nid, 0UL,
-diff --git a/fs/proc/meminfo.c b/fs/proc/meminfo.c
-index f262bff3ca31..887a5532e449 100644
---- a/fs/proc/meminfo.c
-+++ b/fs/proc/meminfo.c
-@@ -101,10 +101,10 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
- 	show_val_kb(m, "SReclaimable:   ", sreclaimable);
- 	show_val_kb(m, "SUnreclaim:     ", sunreclaim);
- 	seq_printf(m, "KernelStack:    %8lu kB\n",
--		   global_zone_page_state(NR_KERNEL_STACK_KB));
-+		   global_node_page_state(NR_KERNEL_STACK_KB));
- #ifdef CONFIG_SHADOW_CALL_STACK
- 	seq_printf(m, "ShadowCallStack:%8lu kB\n",
--		   global_zone_page_state(NR_KERNEL_SCS_KB));
-+		   global_node_page_state(NR_KERNEL_SCS_KB));
- #endif
- 	show_val_kb(m, "PageTables:     ",
- 		    global_zone_page_state(NR_PAGETABLE));
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index ba1e42715ecf..b8f52a3fed90 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -33,8 +33,6 @@ enum memcg_stat_item {
- 	MEMCG_SWAP = NR_VM_NODE_STAT_ITEMS,
- 	MEMCG_SOCK,
- 	MEMCG_PERCPU_B,
--	/* XXX: why are these zone and not node counters? */
--	MEMCG_KERNEL_STACK_KB,
- 	MEMCG_NR_STAT,
- };
- 
-@@ -737,8 +735,19 @@ void __mod_memcg_lruvec_state(struct lruvec *lruvec, enum node_stat_item idx,
- void __mod_lruvec_state(struct lruvec *lruvec, enum node_stat_item idx,
- 			int val);
- void __mod_lruvec_slab_state(void *p, enum node_stat_item idx, int val);
-+
- void mod_memcg_obj_state(void *p, int idx, int val);
- 
-+static inline void mod_lruvec_slab_state(void *p, enum node_stat_item idx,
-+					 int val)
-+{
-+	unsigned long flags;
-+
-+	local_irq_save(flags);
-+	__mod_lruvec_slab_state(p, idx, val);
-+	local_irq_restore(flags);
-+}
-+
- static inline void mod_memcg_lruvec_state(struct lruvec *lruvec,
- 					  enum node_stat_item idx, int val)
- {
-@@ -1159,6 +1168,14 @@ static inline void __mod_lruvec_slab_state(void *p, enum node_stat_item idx,
- 	__mod_node_page_state(page_pgdat(page), idx, val);
- }
- 
-+static inline void mod_lruvec_slab_state(void *p, enum node_stat_item idx,
-+					 int val)
-+{
-+	struct page *page = virt_to_head_page(p);
-+
-+	mod_node_page_state(page_pgdat(page), idx, val);
-+}
-+
- static inline void mod_memcg_obj_state(void *p, int idx, int val)
- {
- }
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 8e859444927a..b79f73ce8b57 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -153,10 +153,6 @@ enum zone_stat_item {
- 	NR_ZONE_WRITE_PENDING,	/* Count of dirty, writeback and unstable pages */
- 	NR_MLOCK,		/* mlock()ed pages found and moved off LRU */
- 	NR_PAGETABLE,		/* used for pagetables */
--	NR_KERNEL_STACK_KB,	/* measured in KiB */
--#if IS_ENABLED(CONFIG_SHADOW_CALL_STACK)
--	NR_KERNEL_SCS_KB,	/* measured in KiB */
--#endif
- 	/* Second 128 byte cacheline */
- 	NR_BOUNCE,
- #if IS_ENABLED(CONFIG_ZSMALLOC)
-@@ -201,6 +197,10 @@ enum node_stat_item {
- 	NR_KERNEL_MISC_RECLAIMABLE,	/* reclaimable non-slab kernel pages */
- 	NR_FOLL_PIN_ACQUIRED,	/* via: pin_user_page(), gup flag: FOLL_PIN */
- 	NR_FOLL_PIN_RELEASED,	/* pages returned via unpin_user_page() */
-+	NR_KERNEL_STACK_KB,	/* measured in KiB */
-+#if IS_ENABLED(CONFIG_SHADOW_CALL_STACK)
-+	NR_KERNEL_SCS_KB,	/* measured in KiB */
-+#endif
- 	NR_VM_NODE_STAT_ITEMS
- };
- 
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 73fdfa9674b5..f00c7a4913e1 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -276,13 +276,8 @@ static inline void free_thread_stack(struct task_struct *tsk)
- 	if (vm) {
- 		int i;
- 
--		for (i = 0; i < THREAD_SIZE / PAGE_SIZE; i++) {
--			mod_memcg_page_state(vm->pages[i],
--					     MEMCG_KERNEL_STACK_KB,
--					     -(int)(PAGE_SIZE / 1024));
--
-+		for (i = 0; i < THREAD_SIZE / PAGE_SIZE; i++)
- 			memcg_kmem_uncharge_page(vm->pages[i], 0);
--		}
- 
- 		for (i = 0; i < NR_CACHED_STACKS; i++) {
- 			if (this_cpu_cmpxchg(cached_stacks[i],
-@@ -382,31 +377,14 @@ static void account_kernel_stack(struct task_struct *tsk, int account)
- 	void *stack = task_stack_page(tsk);
- 	struct vm_struct *vm = task_stack_vm_area(tsk);
- 
--	BUILD_BUG_ON(IS_ENABLED(CONFIG_VMAP_STACK) && PAGE_SIZE % 1024 != 0);
--
--	if (vm) {
--		int i;
--
--		BUG_ON(vm->nr_pages != THREAD_SIZE / PAGE_SIZE);
- 
--		for (i = 0; i < THREAD_SIZE / PAGE_SIZE; i++) {
--			mod_zone_page_state(page_zone(vm->pages[i]),
--					    NR_KERNEL_STACK_KB,
--					    PAGE_SIZE / 1024 * account);
--		}
--	} else {
--		/*
--		 * All stack pages are in the same zone and belong to the
--		 * same memcg.
--		 */
--		struct page *first_page = virt_to_page(stack);
--
--		mod_zone_page_state(page_zone(first_page), NR_KERNEL_STACK_KB,
--				    THREAD_SIZE / 1024 * account);
--
--		mod_memcg_obj_state(stack, MEMCG_KERNEL_STACK_KB,
--				    account * (THREAD_SIZE / 1024));
--	}
-+	/* All stack pages are in the same node. */
-+	if (vm)
-+		mod_lruvec_page_state(vm->pages[0], NR_KERNEL_STACK_KB,
-+				      account * (THREAD_SIZE / 1024));
-+	else
-+		mod_lruvec_slab_state(stack, NR_KERNEL_STACK_KB,
-+				      account * (THREAD_SIZE / 1024));
- }
- 
- static int memcg_charge_kernel_stack(struct task_struct *tsk)
-@@ -415,24 +393,23 @@ static int memcg_charge_kernel_stack(struct task_struct *tsk)
- 	struct vm_struct *vm = task_stack_vm_area(tsk);
- 	int ret;
- 
-+	BUILD_BUG_ON(IS_ENABLED(CONFIG_VMAP_STACK) && PAGE_SIZE % 1024 != 0);
-+
- 	if (vm) {
- 		int i;
- 
-+		BUG_ON(vm->nr_pages != THREAD_SIZE / PAGE_SIZE);
-+
- 		for (i = 0; i < THREAD_SIZE / PAGE_SIZE; i++) {
- 			/*
- 			 * If memcg_kmem_charge_page() fails, page->mem_cgroup
--			 * pointer is NULL, and both memcg_kmem_uncharge_page()
--			 * and mod_memcg_page_state() in free_thread_stack()
--			 * will ignore this page. So it's safe.
-+			 * pointer is NULL, and memcg_kmem_uncharge_page() in
-+			 * free_thread_stack() will ignore this page.
- 			 */
- 			ret = memcg_kmem_charge_page(vm->pages[i], GFP_KERNEL,
- 						     0);
- 			if (ret)
- 				return ret;
--
--			mod_memcg_page_state(vm->pages[i],
--					     MEMCG_KERNEL_STACK_KB,
--					     PAGE_SIZE / 1024);
- 		}
- 	}
- #endif
-diff --git a/kernel/scs.c b/kernel/scs.c
-index 5d4d9bbdec36..4ff4a7ba0094 100644
---- a/kernel/scs.c
-+++ b/kernel/scs.c
-@@ -17,7 +17,7 @@ static void __scs_account(void *s, int account)
- {
- 	struct page *scs_page = virt_to_page(s);
- 
--	mod_zone_page_state(page_zone(scs_page), NR_KERNEL_SCS_KB,
-+	mod_node_page_state(page_pgdat(scs_page), NR_KERNEL_SCS_KB,
- 			    account * (SCS_SIZE / SZ_1K));
- }
- 
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index b1a644224383..06de63901f81 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -1485,7 +1485,7 @@ static char *memory_stat_format(struct mem_cgroup *memcg)
- 		       (u64)memcg_page_state(memcg, NR_FILE_PAGES) *
- 		       PAGE_SIZE);
- 	seq_buf_printf(&s, "kernel_stack %llu\n",
--		       (u64)memcg_page_state(memcg, MEMCG_KERNEL_STACK_KB) *
-+		       (u64)memcg_page_state(memcg, NR_KERNEL_STACK_KB) *
- 		       1024);
- 	seq_buf_printf(&s, "slab %llu\n",
- 		       (u64)(memcg_page_state(memcg, NR_SLAB_RECLAIMABLE_B) +
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 174c849ba9f2..0568b126f719 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -5402,6 +5402,10 @@ void show_free_areas(unsigned int filter, nodemask_t *nodemask)
- 			" anon_thp: %lukB"
- #endif
- 			" writeback_tmp:%lukB"
-+			" kernel_stack:%lukB"
-+#ifdef CONFIG_SHADOW_CALL_STACK
-+			" shadow_call_stack:%lukB"
-+#endif
- 			" all_unreclaimable? %s"
- 			"\n",
- 			pgdat->node_id,
-@@ -5423,6 +5427,10 @@ void show_free_areas(unsigned int filter, nodemask_t *nodemask)
- 			K(node_page_state(pgdat, NR_ANON_THPS) * HPAGE_PMD_NR),
- #endif
- 			K(node_page_state(pgdat, NR_WRITEBACK_TEMP)),
-+			node_page_state(pgdat, NR_KERNEL_STACK_KB),
-+#ifdef CONFIG_SHADOW_CALL_STACK
-+			node_page_state(pgdat, NR_KERNEL_SCS_KB),
-+#endif
- 			pgdat->kswapd_failures >= MAX_RECLAIM_RETRIES ?
- 				"yes" : "no");
- 	}
-@@ -5454,10 +5462,6 @@ void show_free_areas(unsigned int filter, nodemask_t *nodemask)
- 			" present:%lukB"
- 			" managed:%lukB"
- 			" mlocked:%lukB"
--			" kernel_stack:%lukB"
--#ifdef CONFIG_SHADOW_CALL_STACK
--			" shadow_call_stack:%lukB"
--#endif
- 			" pagetables:%lukB"
- 			" bounce:%lukB"
- 			" free_pcp:%lukB"
-@@ -5479,10 +5483,6 @@ void show_free_areas(unsigned int filter, nodemask_t *nodemask)
- 			K(zone->present_pages),
- 			K(zone_managed_pages(zone)),
- 			K(zone_page_state(zone, NR_MLOCK)),
--			zone_page_state(zone, NR_KERNEL_STACK_KB),
--#ifdef CONFIG_SHADOW_CALL_STACK
--			zone_page_state(zone, NR_KERNEL_SCS_KB),
--#endif
- 			K(zone_page_state(zone, NR_PAGETABLE)),
- 			K(zone_page_state(zone, NR_BOUNCE)),
- 			K(free_pcp),
-diff --git a/mm/vmstat.c b/mm/vmstat.c
-index 2c5a96694490..96bf8bfffd1d 100644
---- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -1158,10 +1158,6 @@ const char * const vmstat_text[] = {
- 	"nr_zone_write_pending",
- 	"nr_mlock",
- 	"nr_page_table_pages",
--	"nr_kernel_stack",
--#if IS_ENABLED(CONFIG_SHADOW_CALL_STACK)
--	"nr_shadow_call_stack",
--#endif
- 	"nr_bounce",
- #if IS_ENABLED(CONFIG_ZSMALLOC)
- 	"nr_zspages",
-@@ -1212,6 +1208,10 @@ const char * const vmstat_text[] = {
- 	"nr_kernel_misc_reclaimable",
- 	"nr_foll_pin_acquired",
- 	"nr_foll_pin_released",
-+	"nr_kernel_stack",
-+#if IS_ENABLED(CONFIG_SHADOW_CALL_STACK)
-+	"nr_shadow_call_stack",
-+#endif
- 
- 	/* enum writeback_stat_item counters */
- 	"nr_dirty_threshold",
--- 
-2.27.0.212.ge8ba1cc988-goog
+Connector-3 is CSI-EF and this works for streaming from above but=20
+there's memory access fault errors (EMEM address decode errors)
 
+These EMEM decode errors are not related to connector but its just they=20
+showed up during connector-3 testing I believe. Can you also keep CMA=20
+size to 256MB and try?
+
+Not sure if CSI-AB issue with FS and MW_ACK sp timeouts are due to some=20
+HW/setup issue. Streaming should work on CSI-AB ports as well just like=20
+CSI-CD/EF with proper device tree change for port index and mipi=20
+calibrate cells for corresponding ports.
+
+On my setup that I tested IMX274 is on CSI-AB.
+
+Will update my side test results with today's linux-next
+
+>>
+>>>>> This series include,
+>>>>>
+>>>>> VI I2C related fixes
+>>>>> - Camera sensor programming happens through VI I2C which is on=20
+>>>>> host1x bus.
+>>>>> - These patches includes device tree and I2C driver fixes for VI I2C.
+>>>>>
+>>>>> Tegra video driver updates
+>>>>> - TPG Vs Non-TPG based on Kconfig
+>>>>> - Support for external sensor video capture based on device graph=20
+>>>>> from DT.
+>>>>> - Support for selection ioctl operations
+>>>>> - Tegra MIPI CSI pads calibration
+>>>>> - CSI T-CLK and T-HS settle time computation based on clock rates.
+>>>>>
+>>>>> Host1x driver updates
+>>>>> - Adds API to allow creating mipi device for specific device node.
+>>>>> - Splits MIPI pads calibrate start and waiting for calibration to=20
+>>>>> be done.
+>>>>>
+>>>>> Device tree updates
+>>>>> - Adds camera connector 2V8, 1V8, 1V2 regulator supplies to Jetson=20
+>>>>> TX1 DT.
+>>>>> - Enabled VI and CSI support in Jetson Nano DT.
+>>>>>
+>>>>>
+>>>>> Delta between patch versions:
+>>>>>
+>>>>> [v2]:=C2=A0=C2=A0=C2=A0 Includes below changes based on v1 feedback
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0- dt-binding document and the driver update f=
+or device graph=20
+>>>>> to use
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 separate ports for sink endpoint and s=
+ource endpoint for csi.
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0- Use data-lanes endpoint property for csi.
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0- Update tegra_mipi_request() to take device =
+node pointer=20
+>>>>> argument
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rather than adding extra API.
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0- Remove checking for clk pointer before clk_=
+disable.
+>>>>>
+>>>>>
+>>>>> Sowjanya Komatineni (18):
+>>>>> =C2=A0=C2=A0=C2=A0 dt-bindings: i2c: tegra: Document Tegra210 VI I2C =
+clocks and
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 power-domains
+>>>>> =C2=A0=C2=A0=C2=A0 arm64: tegra: Add missing clocks and power-domains=
+ to Tegra210=20
+>>>>> VI I2C
+>>>>> =C2=A0=C2=A0=C2=A0 i2c: tegra: Don't mark VI I2C as IRQ safe runtime =
+PM
+>>>>> =C2=A0=C2=A0=C2=A0 i2c: tegra: Fix the error path in tegra_i2c_runtim=
+e_resume
+>>>>> =C2=A0=C2=A0=C2=A0 i2c: tegra: Fix runtime resume to re-init VI I2C
+>>>>> =C2=A0=C2=A0=C2=A0 i2c: tegra: Avoid tegra_i2c_init_dma() for Tegra21=
+0 vi i2c
+>>>>> =C2=A0=C2=A0=C2=A0 media: tegra-video: Fix channel format alignment
+>>>>> =C2=A0=C2=A0=C2=A0 media: tegra-video: Enable TPG based on kernel con=
+fig
+>>>>> =C2=A0=C2=A0=C2=A0 media: tegra-video: Update format lookup to offset=
+ based
+>>>>> =C2=A0=C2=A0=C2=A0 dt-bindings: tegra: Update VI and CSI bindings wit=
+h port info
+>>>>> =C2=A0=C2=A0=C2=A0 media: tegra-video: Add support for external senso=
+r capture
+>>>>> =C2=A0=C2=A0=C2=A0 media: tegra-video: Add support for selection ioct=
+l ops
+>>>>> =C2=A0=C2=A0=C2=A0 gpu: host1x: mipi: Update tegra_mipi_request() to =
+be node based
+>>>>> =C2=A0=C2=A0=C2=A0 gpu: host1x: mipi: Split tegra_mipi_calibrate and =
+tegra_mipi_wait
+>>>>> =C2=A0=C2=A0=C2=A0 media: tegra-video: Add CSI MIPI pads calibration
+>>>>> =C2=A0=C2=A0=C2=A0 media: tegra-video: Compute settle times based on =
+the clock rate
+>>>>> =C2=A0=C2=A0=C2=A0 arm64: tegra: jetson-tx1: Add camera supplies
+>>>>> =C2=A0=C2=A0=C2=A0 arm64: tegra: Enable Tegra VI CSI support for Jets=
+on Nano
+>>>>>
+>>>>> =C2=A0=C2=A0 .../display/tegra/nvidia,tegra20-host1x.txt=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 92 ++-
+>>>>> =C2=A0=C2=A0 .../devicetree/bindings/i2c/nvidia,tegra20-i2c.txt | 19 =
++-
+>>>>> =C2=A0=C2=A0 arch/arm64/boot/dts/nvidia/tegra210-p2597.dtsi=C2=A0=C2=
+=A0=C2=A0=C2=A0 | 41 ++
+>>>>> =C2=A0=C2=A0 arch/arm64/boot/dts/nvidia/tegra210-p3450-0000.dts | 10 =
++
+>>>>> =C2=A0=C2=A0 arch/arm64/boot/dts/nvidia/tegra210.dtsi=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 6 +
+>>>>> =C2=A0=C2=A0 drivers/gpu/drm/tegra/dsi.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 9 +-
+>>>>> =C2=A0=C2=A0 drivers/gpu/host1x/mipi.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 30 +-
+>>>>> =C2=A0=C2=A0 drivers/i2c/busses/i2c-tegra.c=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 | 39 +-
+>>>>> =C2=A0=C2=A0 drivers/staging/media/tegra-video/Kconfig=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 7 +
+>>>>> =C2=A0=C2=A0 drivers/staging/media/tegra-video/csi.c=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 245 ++++++-
+>>>>> =C2=A0=C2=A0 drivers/staging/media/tegra-video/csi.h=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 8 +
+>>>>> =C2=A0=C2=A0 drivers/staging/media/tegra-video/tegra210.c=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 | 25 +-
+>>>>> =C2=A0=C2=A0 drivers/staging/media/tegra-video/vi.c=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 770=20
+>>>>> +++++++++++++++++++--
+>>>>> =C2=A0=C2=A0 drivers/staging/media/tegra-video/vi.h=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 23 +-
+>>>>> =C2=A0=C2=A0 drivers/staging/media/tegra-video/video.c=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 23 +-
+>>>>> =C2=A0=C2=A0 include/linux/host1x.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 4 +-
+>>>>> =C2=A0=C2=A0 16 files changed, 1251 insertions(+), 100 deletions(-)
+>>>>>
