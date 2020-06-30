@@ -2,162 +2,108 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E57E4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F243C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:33:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C072A20722
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:31:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F004420722
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:33:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H/Y2LEm0"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UyTT0PUJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729793AbgF3Fb2 (ORCPT
+        id S1729355AbgF3FdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 01:31:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55262 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725887AbgF3Fb1 (ORCPT
+        Tue, 30 Jun 2020 01:33:14 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:43459 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725887AbgF3FdO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 01:31:27 -0400
-Received: from mail-qt1-x842.google.com (mail-qt1-x842.google.com [IPv6:2607:f8b0:4864:20::842])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90150C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 22:31:27 -0700 (PDT)
-Received: by mail-qt1-x842.google.com with SMTP id v19so14670500qtq.10
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 22:31:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RQ4+/e636DjU53ZutFkneDCxV7N9AiA63WewmD4xQRo=;
-        b=H/Y2LEm0lur0oZA8cMF+qOfMdmDEufwHt8gopg4rg6MJFdWZkdZjG5EJjRH3nfkJDF
-         DKMJqCadNNnqvKBtaN3rHZkQVyKtfXSz4U90upgH1YbAExNl/mdq46fT9HMq7Wd9JQjY
-         0kx7V1ODrnNe93ASuiXATDjIk8RNPyGXqBDgrrEwUKHITq9bmkpjSfcpBWjJi6o7mR8L
-         MFMgZGfxkogIeoUm2AsGug0PM1LeGfBhG4P9xC3agZ0WkGRyLxJiPRPKjl4nIW5pjQSM
-         M4+K92DwUmXuiwAOKUFqO0Vf1wnCac1Gynjv5OLh30l+ftlAydyu9xSZj5WJGqxFcfXS
-         o46g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RQ4+/e636DjU53ZutFkneDCxV7N9AiA63WewmD4xQRo=;
-        b=ZDdqQ+9Ufjg76IsZW35oiHSPae+U8YOHiObeE+W4/V+jt4Q3WsP0Hkc8PsGOFOkO7z
-         Ptx8VA/CcPkEgMXhf/WWpdUylOo9AChTtEUHjuB1SMzcLrGNf1CFV+mqIyU/bjVFo0zm
-         rH4CX9oGLs08HsNJkBvHeE5SdwToDuR1xRPrpbsfSGYSWfoIZ8GgKAw3s3/EPafN3Ae9
-         huiFAyKXj5KZbfsNoVNC6kUPcafc/sivaLOtYakbJuO+E9EwEppJ7fHXZjnHXYrfmN63
-         GtTS7gE/m0/HTFmMNK5Oshoune+YnNnQ3HiyU4Iyyh9w141ZkLrYZw4w+2x4Blc2y+JJ
-         Jd7w==
-X-Gm-Message-State: AOAM533Ur/ppYCVG7vUqSgUFckkl1uBmBI+pLTH6XPQB6ON+vhQusbJ4
-        OIQyfFbtrf2lbgqjgl/PXXE2oGu5TvgJ6oBqkQU=
-X-Google-Smtp-Source: ABdhPJw/wlWIPyYhzzU13zpDaxH5qYo/b+CmHKJa4nXgPZmta/pNIYYI8YVXbPlxwfzKQtXmUfA37/tLflAUu6/Nsac=
-X-Received: by 2002:ac8:33d7:: with SMTP id d23mr19287396qtb.204.1593495086854;
- Mon, 29 Jun 2020 22:31:26 -0700 (PDT)
+        Tue, 30 Jun 2020 01:33:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593495192;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=pEuLRzXmEdahiAKGpnL+nVeF0sdlBPCkwM2Y/fcvgk0=;
+        b=UyTT0PUJHVw4TpWPN6mlq4968ndidJjiJDsI00EjasaDhND08SrulHyzsgOnQx5Zz390JB
+        OI/7lzXiKzzw0TpmLVQvA+IaRC4GzALHTSF8XZzD0faTO/2Tg0eq4ImvgL4+EPWhp+mXoh
+        7uQnCzoX3NPQYwG1wjM8588NyZD+SmU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-348-svVRFDr_OByaxAGU_0jUjA-1; Tue, 30 Jun 2020 01:33:10 -0400
+X-MC-Unique: svVRFDr_OByaxAGU_0jUjA-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8C5121800D42;
+        Tue, 30 Jun 2020 05:33:09 +0000 (UTC)
+Received: from [10.72.13.159] (ovpn-13-159.pek2.redhat.com [10.72.13.159])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EFE2F10013C1;
+        Tue, 30 Jun 2020 05:33:05 +0000 (UTC)
+Subject: Re: [PATCH] vhost: Fix documentation
+To:     Eli Cohen <eli@mellanox.com>, linux-kernel@vger.kernel.org,
+        netdev <netdev@vger.kernel.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+References: <20200630052925.GA157062@mtl-vdi-166.wap.labs.mlnx>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <dc269512-8f59-4389-4b7f-bec034d66bfa@redhat.com>
+Date:   Tue, 30 Jun 2020 13:33:03 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-References: <1593439115-19282-1-git-send-email-shengjiu.wang@nxp.com> <20200629200813.GB27967@Asurada-Nvidia>
-In-Reply-To: <20200629200813.GB27967@Asurada-Nvidia>
-From:   Shengjiu Wang <shengjiu.wang@gmail.com>
-Date:   Tue, 30 Jun 2020 13:31:15 +0800
-Message-ID: <CAA+D8APOd2MxO08nnK9UE03bMj25fyMfMnF-neBzdyoykbjAKA@mail.gmail.com>
-Subject: Re: [PATCH] ASoC: fsl_asrc: Add an option to select internal ratio mode
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200630052925.GA157062@mtl-vdi-166.wap.labs.mlnx>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 4:09 AM Nicolin Chen <nicoleotsuka@gmail.com> wrote:
->
-> On Mon, Jun 29, 2020 at 09:58:35PM +0800, Shengjiu Wang wrote:
-> > The ASRC not only supports ideal ratio mode, but also supports
-> > internal ratio mode.
-> >
-> > For internal rato mode, the rate of clock source should be divided
-> > with no remainder by sample rate, otherwise there is sound
-> > distortion.
-> >
-> > Add function fsl_asrc_select_clk() to find proper clock source for
-> > internal ratio mode, if the clock source is available then internal
-> > ratio mode will be selected.
-> >
-> > With change, the ideal ratio mode is not the only option for user.
-> >
-> > Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-> > ---
->
-> > +static int fsl_asrc_select_clk(struct fsl_asrc_priv *asrc_priv,
-> > +                            struct fsl_asrc_pair *pair,
-> > +                            int in_rate,
-> > +                            int out_rate)
-> > +{
-> > +     struct fsl_asrc_pair_priv *pair_priv = pair->private;
-> > +     struct asrc_config *config = pair_priv->config;
-> > +     int rate[2], select_clk[2]; /* Array size 2 means IN and OUT */
-> > +     int clk_rate, clk_index;
-> > +     int i = 0, j = 0;
-> > +     bool clk_sel[2];
-> > +
-> > +     rate[0] = in_rate;
-> > +     rate[1] = out_rate;
-> > +
-> > +     /* Select proper clock source for internal ratio mode */
-> > +     for (j = 0; j < 2; j++) {
-> > +             for (i = 0; i < ASRC_CLK_MAP_LEN; i++) {
-> > +                     clk_index = asrc_priv->clk_map[j][i];
-> > +                     clk_rate = clk_get_rate(asrc_priv->asrck_clk[clk_index]);
->
-> +                       /* Only match a perfect clock source with no remainder */
->
-> > +                     if (clk_rate != 0 && (clk_rate / rate[j]) <= 1024 &&
-> > +                         (clk_rate % rate[j]) == 0)
-> > +                             break;
-> > +             }
-> > +
-> > +             if (i == ASRC_CLK_MAP_LEN) {
-> > +                     select_clk[j] = OUTCLK_ASRCK1_CLK;
-> > +                     clk_sel[j] = false;
-> > +             } else {
-> > +                     select_clk[j] = i;
-> > +                     clk_sel[j] = true;
-> > +             }
-> > +     }
-> > +
-> > +     /* Switch to ideal ratio mode if there is no proper clock source */
-> > +     if (!clk_sel[IN] || !clk_sel[OUT])
-> > +             select_clk[IN] = INCLK_NONE;
->
-> Could get rid of clk_set:
->
->         for (j) {
->                 for (i) {
->                         if (match)
->                                 break;
->                 }
->
->                 clk[j] = i;
->         }
->
->         if (clk[IN] == ASRC_CLK_MAP_LEN || clk[OUT] == ASRC_CLK_MAP_LEN)
->
-> And it only overrides clk[IN] setting but leaving clk[OUT] to
-> to the searching result. This means that clk[OUT] may be using
-> a clock source other than OUTCLK_ASRCK1_CLK if sel[IN] happens
-> to be false while sel[OUT] happens to be true. Not sure if it
-> is intended...but I feel it would probably be safer to use the
-> previous settings: INCLK_NONE + OUTCLK_ASRCK1_CLK?
 
-ok, will update the patch.
+On 2020/6/30 下午1:29, Eli Cohen wrote:
+> Fix documentation to match actual function prototypes
+>
+> "end" used instead of "last". Fix that.
+>
+> Signed-off-by: Eli Cohen <eli@mellanox.com>
+> ---
 
-best regards
-wang shengjiu
+
+Acked-by: Jason Wang <jasowang@redhat.com>
+
+Thanks
+
+
+>   drivers/vhost/iotlb.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/vhost/iotlb.c b/drivers/vhost/iotlb.c
+> index 1f0ca6e44410..0d4213a54a88 100644
+> --- a/drivers/vhost/iotlb.c
+> +++ b/drivers/vhost/iotlb.c
+> @@ -149,7 +149,7 @@ EXPORT_SYMBOL_GPL(vhost_iotlb_free);
+>    * vhost_iotlb_itree_first - return the first overlapped range
+>    * @iotlb: the IOTLB
+>    * @start: start of IOVA range
+> - * @end: end of IOVA range
+> + * @last: last byte in IOVA range
+>    */
+>   struct vhost_iotlb_map *
+>   vhost_iotlb_itree_first(struct vhost_iotlb *iotlb, u64 start, u64 last)
+> @@ -162,7 +162,7 @@ EXPORT_SYMBOL_GPL(vhost_iotlb_itree_first);
+>    * vhost_iotlb_itree_first - return the next overlapped range
+>    * @iotlb: the IOTLB
+>    * @start: start of IOVA range
+> - * @end: end of IOVA range
+> + * @last: last byte IOVA range
+>    */
+>   struct vhost_iotlb_map *
+>   vhost_iotlb_itree_next(struct vhost_iotlb_map *map, u64 start, u64 last)
+
