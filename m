@@ -7,44 +7,45 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FBA6C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB44C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 794D520768
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E06C720768
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:01:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="gzug9RXY"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="J/jpyGp9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390583AbgF3SBp (ORCPT
+        id S2390595AbgF3SBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 14:01:45 -0400
-Received: from m43-7.mailgun.net ([69.72.43.7]:43655 "EHLO m43-7.mailgun.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388845AbgF3SBl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 14:01:41 -0400
+        Tue, 30 Jun 2020 14:01:54 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:36593 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390586AbgF3SBx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 14:01:53 -0400
 DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1593540100; h=Content-Transfer-Encoding: MIME-Version:
+ s=smtp; t=1593540112; h=Content-Transfer-Encoding: MIME-Version:
  References: In-Reply-To: Message-Id: Date: Subject: Cc: To: From:
- Sender; bh=+G0qzjq7xTY88X7OcBYQaImWxX0IMwWEgRF+hWEiQZg=; b=gzug9RXYHXl1G9j0OlovNBtCFii9hwJGR3sPZv/mIhoKFKYqVMh0yYDjyxgIz+ZDodlG2jSh
- 6+Ke3PkGH9sYaX9cT5s+4LEM6yLVBy4OfGUYoPh5oyTDqrijnNCyJUfvhatrbj8mbplkMO3x
- Q3LUr9puly7S5IqRpCdH+C7UXNc=
-X-Mailgun-Sending-Ip: 69.72.43.7
+ Sender; bh=7J3205xHAcKIOZ0yxFzSuU5/RNmIfj1AAO+iEidcbgM=; b=J/jpyGp9YMtoendJtEaKmOb1rRjpwBufhfAP2D72kDo7dwy+Bqb8l6BsNt0axh8ExzSo5a7i
+ tqV7yniyC1Rc8woyQkfq37folijHMAkOBN3Dg1by1ooAV6+OcuYMj4xRGpmLuqBP3P3Bhkrr
+ 3F3ebMQlcvHF4WU8Br1ohoISft4=
+X-Mailgun-Sending-Ip: 104.130.122.29
 X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
 Received: from smtp.codeaurora.org
  (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
- smtp-out-n20.prod.us-east-1.postgun.com with SMTP id
- 5efb7df98fe116ddd9429650 (version=TLS1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 30 Jun 2020 18:01:29
+ smtp-out-n01.prod.us-east-1.postgun.com with SMTP id
+ 5efb7df3a6e154319f7af315 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 30 Jun 2020 18:01:23
  GMT
 Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 2C129C433CA; Tue, 30 Jun 2020 18:01:28 +0000 (UTC)
+        id 3F8D5C433CA; Tue, 30 Jun 2020 18:01:22 +0000 (UTC)
 Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: saiprakash.ranjan)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 72BCCC433C6;
-        Tue, 30 Jun 2020 18:01:23 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 72BCCC433C6
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EB928C433C8;
+        Tue, 30 Jun 2020 18:01:16 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EB928C433C8
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
 From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
@@ -59,9 +60,9 @@ Cc:     Andre Przywara <andre.przywara@arm.com>,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-arm-msm@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>,
         Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCH 3/3] arm64: Add KRYO4XX silver CPU cores to erratum list 1530923 and 1024718
-Date:   Tue, 30 Jun 2020 23:30:55 +0530
-Message-Id: <7013e8a3f857ca7e82863cc9e34a614293d7f80c.1593539394.git.saiprakash.ranjan@codeaurora.org>
+Subject: [PATCH 2/3] arm64: Add KRYO4XX gold CPU cores to erratum list 1463225 and 1418040
+Date:   Tue, 30 Jun 2020 23:30:54 +0530
+Message-Id: <83780e80c6377c12ca51b5d53186b61241685e49.1593539394.git.saiprakash.ranjan@codeaurora.org>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <cover.1593539394.git.saiprakash.ranjan@codeaurora.org>
 References: <cover.1593539394.git.saiprakash.ranjan@codeaurora.org>
@@ -72,60 +73,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KRYO4XX silver/LITTLE CPU cores with revision r1p0 are affected by
-erratum 1530923 and 1024718, so add them to the respective list.
+KRYO4XX gold/big CPU core revisions r0p0 to r3p1 are affected by
+erratum 1463225 and 1418040, so add them to the respective list.
 The variant and revision bits are implementation defined and are
 different from the their Cortex CPU counterparts on which they are
-based on, i.e., r1p0 is equivalent to rdpe.
+based on, i.e., (r0p0 to r3p1) is equivalent to (rcpe to rfpf).
 
 Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 ---
- Documentation/arm64/silicon-errata.rst | 4 ++++
- arch/arm64/kernel/cpu_errata.c         | 2 ++
- arch/arm64/kernel/cpufeature.c         | 2 ++
- 3 files changed, 8 insertions(+)
+ Documentation/arm64/silicon-errata.rst |  4 ++++
+ arch/arm64/kernel/cpu_errata.c         | 19 +++++++++++++------
+ 2 files changed, 17 insertions(+), 6 deletions(-)
 
 diff --git a/Documentation/arm64/silicon-errata.rst b/Documentation/arm64/silicon-errata.rst
-index f3c0c4393e7e..3f7c3a7e8a2b 100644
+index 936cf2a59ca4..f3c0c4393e7e 100644
 --- a/Documentation/arm64/silicon-errata.rst
 +++ b/Documentation/arm64/silicon-errata.rst
-@@ -151,6 +151,10 @@ stable kernels.
+@@ -147,6 +147,10 @@ stable kernels.
  +----------------+-----------------+-----------------+-----------------------------+
- | Qualcomm Tech. | Kryo4xx Gold    | N/A             | ARM64_ERRATUM_1418040       |
+ | Qualcomm Tech. | Falkor v{1,2}   | E1041           | QCOM_FALKOR_ERRATUM_1041    |
  +----------------+-----------------+-----------------+-----------------------------+
-+| Qualcomm Tech. | Kryo4xx Silver  | N/A             | ARM64_ERRATUM_1530923       |
++| Qualcomm Tech. | Kryo4xx Gold    | N/A             | ARM64_ERRATUM_1463225       |
 ++----------------+-----------------+-----------------+-----------------------------+
-+| Qualcomm Tech. | Kryo4xx Silver  | N/A             | ARM64_ERRATUM_1024718       |
++| Qualcomm Tech. | Kryo4xx Gold    | N/A             | ARM64_ERRATUM_1418040       |
 ++----------------+-----------------+-----------------+-----------------------------+
  +----------------+-----------------+-----------------+-----------------------------+
  | Fujitsu        | A64FX           | E#010001        | FUJITSU_ERRATUM_010001      |
  +----------------+-----------------+-----------------+-----------------------------+
 diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
-index 044f1d7aebdf..8e302dc093d0 100644
+index cf50c53e9357..044f1d7aebdf 100644
 --- a/arch/arm64/kernel/cpu_errata.c
 +++ b/arch/arm64/kernel/cpu_errata.c
-@@ -769,6 +769,8 @@ static const struct midr_range erratum_speculative_at_list[] = {
- #ifdef CONFIG_ARM64_ERRATUM_1530923
- 	/* Cortex A55 r0p0 to r2p0 */
- 	MIDR_RANGE(MIDR_CORTEX_A55, 0, 0, 2, 0),
-+	/* Kryo4xx Silver (rdpe => r1p0) */
-+	MIDR_REV(MIDR_QCOM_KRYO_4XX_SILVER, 0xd, 0xe),
+@@ -472,12 +472,7 @@ static bool
+ has_cortex_a76_erratum_1463225(const struct arm64_cpu_capabilities *entry,
+ 			       int scope)
+ {
+-	u32 midr = read_cpuid_id();
+-	/* Cortex-A76 r0p0 - r3p1 */
+-	struct midr_range range = MIDR_RANGE(MIDR_CORTEX_A76, 0, 0, 3, 1);
+-
+-	WARN_ON(scope != SCOPE_LOCAL_CPU || preemptible());
+-	return is_midr_in_range(midr, &range) && is_kernel_in_hyp_mode();
++	return is_affected_midr_range_list(entry, scope) && is_kernel_in_hyp_mode();
+ }
  #endif
+ 
+@@ -728,6 +723,8 @@ static const struct midr_range erratum_1418040_list[] = {
+ 	MIDR_RANGE(MIDR_CORTEX_A76, 0, 0, 3, 1),
+ 	/* Neoverse-N1 r0p0 to r3p1 */
+ 	MIDR_RANGE(MIDR_NEOVERSE_N1, 0, 0, 3, 1),
++	/* Kryo4xx Gold (rcpe to rfpf) => (r0p0 to r3p1) */
++	MIDR_RANGE(MIDR_QCOM_KRYO_4XX_GOLD, 0xc, 0xe, 0xf, 0xf),
  	{},
  };
-diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
-index 9f63053a63a9..9fae0efc80c1 100644
---- a/arch/arm64/kernel/cpufeature.c
-+++ b/arch/arm64/kernel/cpufeature.c
-@@ -1408,6 +1408,8 @@ static bool cpu_has_broken_dbm(void)
- 	static const struct midr_range cpus[] = {
- #ifdef CONFIG_ARM64_ERRATUM_1024718
- 		MIDR_RANGE(MIDR_CORTEX_A55, 0, 0, 1, 0),  // A55 r0p0 -r1p0
-+		/* Kryo4xx Silver (rdpe => r1p0) */
-+		MIDR_REV(MIDR_QCOM_KRYO_4XX_SILVER, 0xd, 0xe),
  #endif
- 		{},
- 	};
+@@ -777,6 +774,15 @@ static const struct midr_range erratum_speculative_at_list[] = {
+ };
+ #endif
+ 
++#ifdef CONFIG_ARM64_ERRATUM_1463225
++static const struct midr_range erratum_1463225[] = {
++	/* Cortex-A76 r0p0 - r3p1 */
++	MIDR_RANGE(MIDR_CORTEX_A76, 0, 0, 3, 1),
++	/* Kryo4xx Gold (rcpe to rfpf) => (r0p0 to r3p1) */
++	MIDR_RANGE(MIDR_QCOM_KRYO_4XX_GOLD, 0xc, 0xe, 0xf, 0xf),
++};
++#endif
++
+ const struct arm64_cpu_capabilities arm64_errata[] = {
+ #ifdef CONFIG_ARM64_WORKAROUND_CLEAN_CACHE
+ 	{
+@@ -916,6 +922,7 @@ const struct arm64_cpu_capabilities arm64_errata[] = {
+ 		.capability = ARM64_WORKAROUND_1463225,
+ 		.type = ARM64_CPUCAP_LOCAL_CPU_ERRATUM,
+ 		.matches = has_cortex_a76_erratum_1463225,
++		.midr_range_list = erratum_1463225,
+ 	},
+ #endif
+ #ifdef CONFIG_CAVIUM_TX2_ERRATUM_219
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
