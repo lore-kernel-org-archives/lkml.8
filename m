@@ -2,258 +2,162 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB7AFC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4AE0C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA1772081A
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:05:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96B6E20771
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:05:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593511554;
+	bh=WGsfVoaT6gosQlq2ySDAquPdQTa/aXDxRdmxD1Nsln8=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=cnc2tEurBIOJemVhUc2y4kAWwBiDNfIflY+6ZD7fSVjjOYrbXNV1E21uqKwh8q1A6
+	 sa5opzvrriWPwpE/JAK9q+T6ecrJZs/8iqmDx4kNB7NNdg0aTaZmmA7p9tmW3dnv5o
+	 UWtAyDre6T8lBZssR7JYsQqx/PClhelON6MJU45Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732193AbgF3KFA (ORCPT
+        id S1732204AbgF3KFx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 06:05:00 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:55334 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1732078AbgF3KEw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 06:04:52 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 6C165951A27B524D3737;
-        Tue, 30 Jun 2020 18:04:47 +0800 (CST)
-Received: from szvp000203569.huawei.com (10.120.216.130) by
- DGGEMS411-HUB.china.huawei.com (10.3.19.211) with Microsoft SMTP Server id
- 14.3.487.0; Tue, 30 Jun 2020 18:04:36 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH RFC 3/5] f2fs: inherit mtime of original block during GC
-Date:   Tue, 30 Jun 2020 18:04:26 +0800
-Message-ID: <20200630100428.19105-3-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.26.2
-In-Reply-To: <20200630100428.19105-1-yuchao0@huawei.com>
-References: <20200630100428.19105-1-yuchao0@huawei.com>
+        Tue, 30 Jun 2020 06:05:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44640 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732078AbgF3KFw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 06:05:52 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02BA62073E;
+        Tue, 30 Jun 2020 10:05:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593511552;
+        bh=WGsfVoaT6gosQlq2ySDAquPdQTa/aXDxRdmxD1Nsln8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=um9iXcbbiq0/h4rBLL3CVKNNpdpKp8XNwiBmhB/N1BOewXCoTQv7OhhXdXZq6f9ui
+         Ijow/waRSxqxqtWZvi2jPWc9y+xoFjYJ/OGRAqwMc0EOJkcvDXR1W1S/yQT7zbDCba
+         +uBUUkYa6Ti/Pk+a4NA0Euc+oJuMGK+VCk/70QcA=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jqD9C-007hs2-EG; Tue, 30 Jun 2020 11:05:50 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Chanwoo Choi <cw00.choi@samsung.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Heiko Stuebner <heiko@sntech.de>, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-team@android.com,
+        stable@vger.kernel.org
+Subject: [PATCH v3] PM / devfreq: rk3399_dmc: Fix kernel oops when rockchip,pmu is absent
+Date:   Tue, 30 Jun 2020 11:05:46 +0100
+Message-Id: <20200630100546.862468-1-maz@kernel.org>
+X-Mailer: git-send-email 2.27.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.120.216.130]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: cw00.choi@samsung.com, enric.balletbo@collabora.com, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, heiko@sntech.de, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, kernel-team@android.com, stable@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't let f2fs inner GC ruins original aging degree of segment.
+Booting a recent kernel on a rk3399-based system (nanopc-t4),
+equipped with a recent u-boot and ATF results in an Oops due
+to a NULL pointer dereference.
 
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
+This turns out to be due to the rk3399-dmc driver looking for
+an *undocumented* property (rockchip,pmu), and happily using
+a NULL pointer when the property isn't there.
+
+Instead, make most of what was brought in with 9173c5ceb035
+("PM / devfreq: rk3399_dmc: Pass ODT and auto power down parameters
+to TF-A.") conditioned on finding this property in the device-tree,
+preventing the driver from exploding.
+
+Cc: stable@vger.kernel.org
+Fixes: 9173c5ceb035 ("PM / devfreq: rk3399_dmc: Pass ODT and auto power down parameters to TF-A.")
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- fs/f2fs/data.c    |  2 +-
- fs/f2fs/f2fs.h    |  5 +++--
- fs/f2fs/gc.c      |  4 ++--
- fs/f2fs/segment.c | 55 ++++++++++++++++++++++++++++++++++++-----------
- 4 files changed, 49 insertions(+), 17 deletions(-)
+* From v2:
+  - Trimmed down commit message
+  - Cc stable
 
-diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
-index d742f38b1445..062d585fa080 100644
---- a/fs/f2fs/data.c
-+++ b/fs/f2fs/data.c
-@@ -1366,7 +1366,7 @@ static int __allocate_data_block(struct dnode_of_data *dn, int seg_type)
- 	set_summary(&sum, dn->nid, dn->ofs_in_node, ni.version);
- 	old_blkaddr = dn->data_blkaddr;
- 	f2fs_allocate_data_block(sbi, NULL, old_blkaddr, &dn->data_blkaddr,
--					&sum, seg_type, NULL);
-+				&sum, seg_type, NULL, false);
- 	if (GET_SEGNO(sbi, old_blkaddr) != NULL_SEGNO)
- 		invalidate_mapping_pages(META_MAPPING(sbi),
- 					old_blkaddr, old_blkaddr);
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index f06c77066284..a90702a725b6 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -3383,7 +3383,8 @@ void f2fs_outplace_write_data(struct dnode_of_data *dn,
- int f2fs_inplace_write_data(struct f2fs_io_info *fio);
- void f2fs_do_replace_block(struct f2fs_sb_info *sbi, struct f2fs_summary *sum,
- 			block_t old_blkaddr, block_t new_blkaddr,
--			bool recover_curseg, bool recover_newaddr);
-+			bool recover_curseg, bool recover_newaddr,
-+			bool from_gc);
- void f2fs_replace_block(struct f2fs_sb_info *sbi, struct dnode_of_data *dn,
- 			block_t old_addr, block_t new_addr,
- 			unsigned char version, bool recover_curseg,
-@@ -3391,7 +3392,7 @@ void f2fs_replace_block(struct f2fs_sb_info *sbi, struct dnode_of_data *dn,
- void f2fs_allocate_data_block(struct f2fs_sb_info *sbi, struct page *page,
- 			block_t old_blkaddr, block_t *new_blkaddr,
- 			struct f2fs_summary *sum, int type,
--			struct f2fs_io_info *fio);
-+			struct f2fs_io_info *fio, bool from_gc);
- void f2fs_wait_on_page_writeback(struct page *page,
- 			enum page_type type, bool ordered, bool locked);
- void f2fs_wait_on_block_writeback(struct inode *inode, block_t blkaddr);
-diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
-index 84807abe4e00..e720886ef9bf 100644
---- a/fs/f2fs/gc.c
-+++ b/fs/f2fs/gc.c
-@@ -875,7 +875,7 @@ static int move_data_block(struct inode *inode, block_t bidx,
- 	}
+ drivers/devfreq/rk3399_dmc.c | 42 ++++++++++++++++++++----------------
+ 1 file changed, 23 insertions(+), 19 deletions(-)
+
+diff --git a/drivers/devfreq/rk3399_dmc.c b/drivers/devfreq/rk3399_dmc.c
+index 24f04f78285b..027769e39f9b 100644
+--- a/drivers/devfreq/rk3399_dmc.c
++++ b/drivers/devfreq/rk3399_dmc.c
+@@ -95,18 +95,20 @@ static int rk3399_dmcfreq_target(struct device *dev, unsigned long *freq,
  
- 	f2fs_allocate_data_block(fio.sbi, NULL, fio.old_blkaddr, &newaddr,
--					&sum, CURSEG_COLD_DATA, NULL);
-+				&sum, CURSEG_COLD_DATA, NULL, true);
+ 	mutex_lock(&dmcfreq->lock);
  
- 	fio.encrypted_page = f2fs_pagecache_get_page(META_MAPPING(fio.sbi),
- 				newaddr, FGP_LOCK | FGP_CREAT, GFP_NOFS);
-@@ -925,7 +925,7 @@ static int move_data_block(struct inode *inode, block_t bidx,
- recover_block:
- 	if (err)
- 		f2fs_do_replace_block(fio.sbi, &sum, newaddr, fio.old_blkaddr,
--								true, true);
-+							true, true, true);
- up_out:
- 	if (lfs_mode)
- 		up_write(&fio.sbi->io_order_lock);
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 906c313835ad..0fde06b904c5 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -2149,12 +2149,28 @@ static void __set_sit_entry_type(struct f2fs_sb_info *sbi, int type,
- 	if (modified)
- 		__mark_sit_entry_dirty(sbi, segno);
- }
-+static inline unsigned long long get_segment_mtime(struct f2fs_sb_info *sbi,
-+								block_t blkaddr)
-+{
-+	unsigned int segno = GET_SEGNO(sbi, blkaddr);
-+
-+	if (segno == NULL_SEGNO)
-+		return 0;
-+	return get_seg_entry(sbi, segno)->mtime;
-+}
- 
--static void update_segment_mtime(struct f2fs_sb_info *sbi, block_t blkaddr)
-+static void update_segment_mtime(struct f2fs_sb_info *sbi, block_t blkaddr,
-+						unsigned long long old_mtime)
- {
-+	struct seg_entry *se;
- 	unsigned int segno = GET_SEGNO(sbi, blkaddr);
--	struct seg_entry *se = get_seg_entry(sbi, segno);
--	unsigned long long mtime = get_mtime(sbi, false);
-+	unsigned long long ctime = get_mtime(sbi, false);
-+	unsigned long long mtime = old_mtime ? old_mtime : ctime;
-+
-+	if (segno == NULL_SEGNO)
-+		return;
-+
-+	se = get_seg_entry(sbi, segno);
- 
- 	if (!se->mtime) {
- 		se->mtime = mtime;
-@@ -2162,8 +2178,8 @@ static void update_segment_mtime(struct f2fs_sb_info *sbi, block_t blkaddr)
- 		se->mtime = (se->mtime * se->valid_blocks + mtime) /
- 						(se->valid_blocks + 1);
- 	}
--	if (mtime > SIT_I(sbi)->max_mtime)
--		SIT_I(sbi)->max_mtime = mtime;
-+	if (ctime > SIT_I(sbi)->max_mtime)
-+		SIT_I(sbi)->max_mtime = ctime;
- }
- 
- static void update_sit_entry(struct f2fs_sb_info *sbi, block_t blkaddr, int del)
-@@ -2185,8 +2201,6 @@ static void update_sit_entry(struct f2fs_sb_info *sbi, block_t blkaddr, int del)
- 	f2fs_bug_on(sbi, (new_vblocks >> (sizeof(unsigned short) << 3) ||
- 				(new_vblocks > sbi->blocks_per_seg)));
- 
--	update_segment_mtime(sbi, blkaddr);
+-	if (target_rate >= dmcfreq->odt_dis_freq)
+-		odt_enable = true;
 -
- 	se->valid_blocks = new_vblocks;
- 
- 	/* Update valid block bitmap */
-@@ -2280,6 +2294,7 @@ void f2fs_invalidate_blocks(struct f2fs_sb_info *sbi, block_t addr)
- 	/* add it into sit main buffer */
- 	down_write(&sit_i->sentry_lock);
- 
-+	update_segment_mtime(sbi, addr, 0);
- 	update_sit_entry(sbi, addr, -1);
- 
- 	/* add it into dirty seglist */
-@@ -3188,10 +3203,11 @@ static int __get_segment_type(struct f2fs_io_info *fio)
- void f2fs_allocate_data_block(struct f2fs_sb_info *sbi, struct page *page,
- 		block_t old_blkaddr, block_t *new_blkaddr,
- 		struct f2fs_summary *sum, int type,
--		struct f2fs_io_info *fio)
-+		struct f2fs_io_info *fio, bool from_gc)
- {
- 	struct sit_info *sit_i = SIT_I(sbi);
- 	struct curseg_info *curseg = CURSEG_I(sbi, type);
-+	unsigned long long old_mtime;
- 
- 	down_read(&SM_I(sbi)->curseg_lock);
- 
-@@ -3213,6 +3229,14 @@ void f2fs_allocate_data_block(struct f2fs_sb_info *sbi, struct page *page,
- 
- 	stat_inc_block_count(sbi, curseg);
- 
-+	if (from_gc) {
-+		old_mtime = get_segment_mtime(sbi, old_blkaddr);
-+	} else {
-+		update_segment_mtime(sbi, old_blkaddr, 0);
-+		old_mtime = 0;
-+	}
-+	update_segment_mtime(sbi, *new_blkaddr, old_mtime);
+-	/*
+-	 * This makes a SMC call to the TF-A to set the DDR PD (power-down)
+-	 * timings and to enable or disable the ODT (on-die termination)
+-	 * resistors.
+-	 */
+-	arm_smccc_smc(ROCKCHIP_SIP_DRAM_FREQ, dmcfreq->odt_pd_arg0,
+-		      dmcfreq->odt_pd_arg1,
+-		      ROCKCHIP_SIP_CONFIG_DRAM_SET_ODT_PD,
+-		      odt_enable, 0, 0, 0, &res);
++	if (dmcfreq->regmap_pmu) {
++		if (target_rate >= dmcfreq->odt_dis_freq)
++			odt_enable = true;
 +
- 	/*
- 	 * SIT information should be updated before segment allocation,
- 	 * since SSR needs latest valid block information.
-@@ -3289,7 +3313,8 @@ static void do_write_page(struct f2fs_summary *sum, struct f2fs_io_info *fio)
- 		down_read(&fio->sbi->io_order_lock);
- reallocate:
- 	f2fs_allocate_data_block(fio->sbi, fio->page, fio->old_blkaddr,
--			&fio->new_blkaddr, sum, type, fio);
-+			&fio->new_blkaddr, sum, type, fio,
-+			is_cold_data(fio->page));
- 	if (GET_SEGNO(fio->sbi, fio->old_blkaddr) != NULL_SEGNO)
- 		invalidate_mapping_pages(META_MAPPING(fio->sbi),
- 					fio->old_blkaddr, fio->old_blkaddr);
-@@ -3405,7 +3430,8 @@ static inline int __f2fs_get_curseg(struct f2fs_sb_info *sbi,
- 
- void f2fs_do_replace_block(struct f2fs_sb_info *sbi, struct f2fs_summary *sum,
- 				block_t old_blkaddr, block_t new_blkaddr,
--				bool recover_curseg, bool recover_newaddr)
-+				bool recover_curseg, bool recover_newaddr,
-+				bool from_gc)
- {
- 	struct sit_info *sit_i = SIT_I(sbi);
- 	struct curseg_info *curseg;
-@@ -3456,11 +3482,16 @@ void f2fs_do_replace_block(struct f2fs_sb_info *sbi, struct f2fs_summary *sum,
- 	curseg->next_blkoff = GET_BLKOFF_FROM_SEG0(sbi, new_blkaddr);
- 	__add_sum_entry(sbi, type, sum);
- 
--	if (!recover_curseg || recover_newaddr)
-+	if (!recover_curseg || recover_newaddr) {
-+		if (!from_gc)
-+			update_segment_mtime(sbi, new_blkaddr, 0);
- 		update_sit_entry(sbi, new_blkaddr, 1);
++		/*
++		 * This makes a SMC call to the TF-A to set the DDR PD
++		 * (power-down) timings and to enable or disable the
++		 * ODT (on-die termination) resistors.
++		 */
++		arm_smccc_smc(ROCKCHIP_SIP_DRAM_FREQ, dmcfreq->odt_pd_arg0,
++			      dmcfreq->odt_pd_arg1,
++			      ROCKCHIP_SIP_CONFIG_DRAM_SET_ODT_PD,
++			      odt_enable, 0, 0, 0, &res);
 +	}
- 	if (GET_SEGNO(sbi, old_blkaddr) != NULL_SEGNO) {
- 		invalidate_mapping_pages(META_MAPPING(sbi),
- 					old_blkaddr, old_blkaddr);
-+		if (!from_gc)
-+			update_segment_mtime(sbi, old_blkaddr, 0);
- 		update_sit_entry(sbi, old_blkaddr, -1);
+ 
+ 	/*
+ 	 * If frequency scaling from low to high, adjust voltage first.
+@@ -371,13 +373,14 @@ static int rk3399_dmcfreq_probe(struct platform_device *pdev)
  	}
  
-@@ -3492,7 +3523,7 @@ void f2fs_replace_block(struct f2fs_sb_info *sbi, struct dnode_of_data *dn,
- 	set_summary(&sum, dn->nid, dn->ofs_in_node, version);
+ 	node = of_parse_phandle(np, "rockchip,pmu", 0);
+-	if (node) {
+-		data->regmap_pmu = syscon_node_to_regmap(node);
+-		of_node_put(node);
+-		if (IS_ERR(data->regmap_pmu)) {
+-			ret = PTR_ERR(data->regmap_pmu);
+-			goto err_edev;
+-		}
++	if (!node)
++		goto no_pmu;
++
++	data->regmap_pmu = syscon_node_to_regmap(node);
++	of_node_put(node);
++	if (IS_ERR(data->regmap_pmu)) {
++		ret = PTR_ERR(data->regmap_pmu);
++		goto err_edev;
+ 	}
  
- 	f2fs_do_replace_block(sbi, &sum, old_addr, new_addr,
--					recover_curseg, recover_newaddr);
-+					recover_curseg, recover_newaddr, false);
+ 	regmap_read(data->regmap_pmu, RK3399_PMUGRF_OS_REG2, &val);
+@@ -399,6 +402,7 @@ static int rk3399_dmcfreq_probe(struct platform_device *pdev)
+ 		goto err_edev;
+ 	};
  
- 	f2fs_update_data_blkaddr(dn, new_addr);
- }
++no_pmu:
+ 	arm_smccc_smc(ROCKCHIP_SIP_DRAM_FREQ, 0, 0,
+ 		      ROCKCHIP_SIP_CONFIG_DRAM_INIT,
+ 		      0, 0, 0, 0, &res);
 -- 
-2.26.2
+2.27.0
 
