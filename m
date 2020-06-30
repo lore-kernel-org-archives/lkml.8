@@ -2,129 +2,130 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D0DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:59:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A58C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 01:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7A97B2078A
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:59:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8509B2078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 01:01:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HgOCBOmO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727062AbgF3A7A (ORCPT
+        id S1727086AbgF3BBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 20:59:00 -0400
-Received: from mail.loongson.cn ([114.242.206.163]:55686 "EHLO loongson.cn"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726175AbgF3A67 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 20:58:59 -0400
-Received: from localhost.localdomain (unknown [61.148.244.181])
-        by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxD2hJjvpekrVMAA--.366S2;
-        Tue, 30 Jun 2020 08:58:54 +0800 (CST)
-From:   Lichao Liu <liulichao@loongson.cn>
-To:     tsbogend@alpha.franken.de, yuanjunqing@loongson.cn,
-        chenhc@lemote.com, jiaxun.yang@flygoat.com
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lichao Liu <liulichao@loongson.cn>
-Subject: [PATCH] MIPS: Grant pte read permission, even if vma only have VM_WRITE permission.
-Date:   Tue, 30 Jun 2020 08:58:45 +0800
-Message-Id: <20200630005845.1239974-1-liulichao@loongson.cn>
-X-Mailer: git-send-email 2.25.1
+        Mon, 29 Jun 2020 21:01:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42114 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726403AbgF3BBX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 21:01:23 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E24FAC061755
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 18:01:22 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id t27so11242603ill.9
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 18:01:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=NaKJsSnkWrkKv86t4PQxxEiIe5XbiBA0vQt3uCPOwDc=;
+        b=HgOCBOmOrGhqt1M4N1Q+WX9+t8c9E4C/qSXa3AZtl0D0yXas0XVNIf2vxfKsHlyf3j
+         4A/NqlhxicnyvJCK0bueZ0RdIM8HGoQsikCDfm2TN6vItjMQfR84PRFvnYcq7hBH0H72
+         ZKcbnL3NKwogAPiVcM31Rw8V5odLZOcZOqA4Jb86DaWilVShSCWGsWKJw5cTYlFi4sxR
+         CwyJhsoeLTfJwAHGNZm7T8Xk8BrhL5QtriU55A19x4Wxr+DD1Vz2eKA1TH5ZKW9QCmRv
+         ZsGhD7BBI0+gTBoQaYE0oSitDUWXgbtvhbVw1qfuyag0GvhIcQC9oBkq6ELNjj6GtAzz
+         SAKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=NaKJsSnkWrkKv86t4PQxxEiIe5XbiBA0vQt3uCPOwDc=;
+        b=cauSpB6Ma37p/Fn8qEotz96KMKqMlG6Nfvt0nrij41br8FD4KI/idCH1cVzLTV63vD
+         nkkw00rorQY4Os9Rv3+6f6AkqzPA1fr4kakC7XbSkK+4pU9CiO9cPXWWTEpuEYCnqPT4
+         I7I5lRzXB7aDy5qVWoeFtiM7TTwsXuPemib92uzMFPL/MGAYIxSqIbSF6htpEbhPSrTk
+         7HmMiVUTVkXecOpYVodONX/n3jmfojyKhtvkVxIq+N2BfINFdBNknY4FNi00/7mn/09W
+         vdWkLjg6M9Z305GdTZVnw/ROpPqY6mhHCgjIkUy7guWk/ma7T2J6R+Klraok9jUS+4c5
+         UUhA==
+X-Gm-Message-State: AOAM5313Hz2A9jwecNd1+xYT/z7R2hVyEQha7JvwcBbYs3tJVpYYg2Uz
+        XJr68MidNxwB/x4xJOwRH5S/DFf8lp4=
+X-Google-Smtp-Source: ABdhPJxb2LLjuD2AwMZ4mlj1DzHPnDlxUnDhImUQBU2tCHGhwIHTkhfpN4MqogONmrw2HxmAF8vRMA==
+X-Received: by 2002:a05:6e02:4ca:: with SMTP id f10mr201432ils.291.1593478881872;
+        Mon, 29 Jun 2020 18:01:21 -0700 (PDT)
+Received: from [172.22.22.26] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
+        by smtp.googlemail.com with ESMTPSA id v5sm713008ios.54.2020.06.29.18.01.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jun 2020 18:01:21 -0700 (PDT)
+Subject: Re: [PATCH net-next 1/5] net: ipa: head-of-line block registers are
+ RX only
+To:     Jakub Kicinski <kuba@kernel.org>
+Cc:     davem@davemloft.net, evgreen@chromium.org, subashab@codeaurora.org,
+        cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200629214919.1196017-1-elder@linaro.org>
+ <20200629214919.1196017-2-elder@linaro.org>
+ <20200629173517.40716282@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+From:   Alex Elder <elder@linaro.org>
+Message-ID: <7c438ee3-8ff0-0ee1-2a0a-fa458d982e11@linaro.org>
+Date:   Mon, 29 Jun 2020 20:01:20 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: AQAAf9DxD2hJjvpekrVMAA--.366S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxur48Aw1fuF15Zry3Kr1UAwb_yoWrGr4xpa
-        4kCryxArWaqry7Zry7Zw17Zw4rAa9IqFW8Xw1Uu3W5ua1fWryktrZIka92va4Du393Cw4U
-        Zw4UXr45uw4av37anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUka14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j
-        6F4UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
-        4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUtVWrXwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r
-        4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCY02Avz4vE14v_twCF
-        04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r
-        18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vI
-        r41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr
-        1lIxAIcVCF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY
-        6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x0JUr73kUUUUU=
-X-CM-SenderInfo: xolxzxpfkd0qxorr0wxvrqhubq/
+In-Reply-To: <20200629173517.40716282@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Background:
-a cpu have RIXI feature.
+On 6/29/20 7:35 PM, Jakub Kicinski wrote:
+> On Mon, 29 Jun 2020 16:49:15 -0500 Alex Elder wrote:
+>> The INIT_HOL_BLOCK_EN and INIT_HOL_BLOCK_TIMER endpoint registers
+>> are only valid for RX endpoints.
+>>
+>> Have ipa_endpoint_modem_hol_block_clear_all() skip writing these
+>> registers for TX endpoints.
+>>
+>> Signed-off-by: Alex Elder <elder@linaro.org>
+>> ---
+>>  drivers/net/ipa/ipa_endpoint.c | 6 +++++-
+>>  1 file changed, 5 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/net/ipa/ipa_endpoint.c b/drivers/net/ipa/ipa_endpoint.c
+>> index 9f50d0d11704..3f5a41fc1997 100644
+>> --- a/drivers/net/ipa/ipa_endpoint.c
+>> +++ b/drivers/net/ipa/ipa_endpoint.c
+>> @@ -642,6 +642,8 @@ static int ipa_endpoint_init_hol_block_timer(struct ipa_endpoint *endpoint,
+>>  	u32 offset;
+>>  	u32 val;
+>>  
+>> +	/* assert(!endpoint->toward_ipa); */
+>> +
+>>  	/* XXX We'll fix this when the register definition is clear */
+>>  	if (microseconds) {
+>>  		struct device *dev = &ipa->pdev->dev;
+>> @@ -671,6 +673,8 @@ ipa_endpoint_init_hol_block_enable(struct ipa_endpoint *endpoint, bool enable)
+>>  	u32 offset;
+>>  	u32 val;
+>>  
+>> +	/* assert(!endpoint->toward_ipa); */
+> 
+> What are these assert comments for? :S
 
-Now, if a vma only have VM_WRITE permission, the vma->vm_page_prot will
-set _PAGE_NO_READ. In general case, someone read the vma will trigger
-RI exception, then do_page_fault will handle it.
+They are place holders for when I can put in a proper assert
+function.  For now I'm trying to avoid BUG_ON() calls, but
+at some point soon I'll replace these comments with calls
+to a macro that does BUG_ON() conditioned on a config option
+(or something else if there's a better suggestion).
 
-But in the following scene, program will hang.
+Even though it's commented, the assert() call does what
+I want, which is to communicate to the reader a condition
+assumed by the code, succinctly.
 
-example scene(a trinity test case):
-futex_wake_op() will read uaddr, which is passed from user space.
-If a program mmap a vma, which only have VM_WRITE permission,
-then call futex, and use an address belonging to the vma as uaddr
-argument. futex_wake_op() will read the address after disable
-pagefault and set correct __ex_table(return -14 directly),
-do_page_fault will find the correct __ex_table, and then return -14.
-Then futex_wake_op() will try to fixup this error by call
-fault_in_user_writeable(), because the pte have write permission,
-so handle_mm_fault will do nothing, and return success.
-But the RI bit in pte and tlb entry still exsits.
-The program will deadloop:
-do_page_fault -> find __ex_table success -> return -14;
-futex_wake_op -> call fault_in_user_writeable() to fix the error -> retry;
-do_page_fault -> find __ex_table success -> return -14;
-futex_wake_op -> call fault_in_user_writeable() to fix the error -> retry;
-.....
-
-The first perspective of root cause:
-Futex think a pte have write permission will have read permission.
-When page fault, it only try to fixup with FAULT_FLAG_WRITE.
-
-The second perspective of root cause:
-MIPS platform doesn't grant pte read permission, if vma only have
-VM_WRITE permission.But X86 and arm64 will.
-
-Most of the architecture will grant pte read permission, even if
-the vma only have VM_WRITE permission.
-And if the cpu doesn't have RIXI feature, MIPS platform will
-grant pte read permission by set _PAGE_READ.
-So I think we should fixup thix problem by grant pte read permission,
-even if vma only have VM_WRITE permission.
-
-Signed-off-by: Lichao Liu <liulichao@loongson.cn>
----
- arch/mips/mm/cache.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/mips/mm/cache.c b/arch/mips/mm/cache.c
-index ad6df1cea866..72b60c44a962 100644
---- a/arch/mips/mm/cache.c
-+++ b/arch/mips/mm/cache.c
-@@ -160,7 +160,7 @@ static inline void setup_protection_map(void)
- 	if (cpu_has_rixi) {
- 		protection_map[0]  = __pgprot(_page_cachable_default | _PAGE_PRESENT | _PAGE_NO_EXEC | _PAGE_NO_READ);
- 		protection_map[1]  = __pgprot(_page_cachable_default | _PAGE_PRESENT | _PAGE_NO_EXEC);
--		protection_map[2]  = __pgprot(_page_cachable_default | _PAGE_PRESENT | _PAGE_NO_EXEC | _PAGE_NO_READ);
-+		protection_map[2]  = __pgprot(_page_cachable_default | _PAGE_PRESENT | _PAGE_NO_EXEC);
- 		protection_map[3]  = __pgprot(_page_cachable_default | _PAGE_PRESENT | _PAGE_NO_EXEC);
- 		protection_map[4]  = __pgprot(_page_cachable_default | _PAGE_PRESENT);
- 		protection_map[5]  = __pgprot(_page_cachable_default | _PAGE_PRESENT);
-@@ -169,7 +169,7 @@ static inline void setup_protection_map(void)
- 
- 		protection_map[8]  = __pgprot(_page_cachable_default | _PAGE_PRESENT | _PAGE_NO_EXEC | _PAGE_NO_READ);
- 		protection_map[9]  = __pgprot(_page_cachable_default | _PAGE_PRESENT | _PAGE_NO_EXEC);
--		protection_map[10] = __pgprot(_page_cachable_default | _PAGE_PRESENT | _PAGE_NO_EXEC | _PAGE_WRITE | _PAGE_NO_READ);
-+		protection_map[10] = __pgprot(_page_cachable_default | _PAGE_PRESENT | _PAGE_NO_EXEC | _PAGE_WRITE);
- 		protection_map[11] = __pgprot(_page_cachable_default | _PAGE_PRESENT | _PAGE_NO_EXEC | _PAGE_WRITE);
- 		protection_map[12] = __pgprot(_page_cachable_default | _PAGE_PRESENT);
- 		protection_map[13] = __pgprot(_page_cachable_default | _PAGE_PRESENT);
--- 
-2.25.1
-
+					-Alex
