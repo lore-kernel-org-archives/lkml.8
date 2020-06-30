@@ -2,143 +2,148 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B264C433E5
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:45:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD73C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 015C720772
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:45:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2691420772
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:45:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DiHm4gi9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730158AbgF3Upc (ORCPT
+        id S1730180AbgF3Upf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 16:45:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55118 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729988AbgF3UpL (ORCPT
+        Tue, 30 Jun 2020 16:45:35 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34566 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730142AbgF3Upb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 16:45:11 -0400
-Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB303C061755;
-        Tue, 30 Jun 2020 13:45:10 -0700 (PDT)
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: koike)
-        with ESMTPSA id 244402A4ACE
-Subject: Re: [PATCH v8 2/3] media: tpg: Add function to return colors' order
- of test image
-To:     Kaaira Gupta <kgupta@es.iitr.ac.in>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hverkuil@xs4all.nl,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>
-References: <20200630195052.23880-1-kgupta@es.iitr.ac.in>
- <20200630195052.23880-3-kgupta@es.iitr.ac.in>
-From:   Helen Koike <helen.koike@collabora.com>
-Message-ID: <1ebdc438-2e8e-3e5a-59c2-53e3bc97ab8e@collabora.com>
-Date:   Tue, 30 Jun 2020 17:45:02 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Tue, 30 Jun 2020 16:45:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593549929;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Q+9vkARh0QAhoC5rVpcauEcS1HmAJvkVoHtpMHMdH44=;
+        b=DiHm4gi9gKbRmg+vVc3HskauaURD1feQOXOwr2uh30bkpQn4FOXlpi04N0aZ2J0I+bFI1Q
+        3Qf821OGFH8eydIdDJxeKxXXkms0LawTKE49S2KoqalpkOwy2j9/RkB5S82lmkjbbR5io1
+        1BqUufuNBzMtFBSURosWxEYxlz/rOtQ=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-398-lr160JaqM-qVkPabBl42NQ-1; Tue, 30 Jun 2020 16:45:28 -0400
+X-MC-Unique: lr160JaqM-qVkPabBl42NQ-1
+Received: by mail-qt1-f200.google.com with SMTP id c26so15267431qtq.6
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 13:45:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Q+9vkARh0QAhoC5rVpcauEcS1HmAJvkVoHtpMHMdH44=;
+        b=mFw60iIPpGloYTj//494j+gCp7RfMuKECXBBnVUodpU+wfJtRNDB/SYqO+qgWqZWoc
+         5zy709Usty64JHKeK7OUGnM9eY/MDFEBV7DMGfHMOPPEEa2hlUtEwqowIBHr3WaxmTYW
+         GzFRSq8piF6sHNwaZhBZkjXd3vwD/h69UJyuv3qLg0Dn9lfjWu1Wgz5LwECSZPY3BNCF
+         z9lH8WJxlb7dUKFraCp8zIj5UGG1wJAE2Zz7PX5ChDBUlWfhFz+3CXNbyRt/yHpI0awz
+         PM60ue+p/Y95SV1AoUHK4A7mRj2z4pT2VdwT9JD9qcI5GUeft0d6eSA11lmwbHGrYS5H
+         zVqg==
+X-Gm-Message-State: AOAM531FnBda5bOn4XAo37Mhd8mtz9vhGfn1Q6hUqez2d7s03fLhZ3D8
+        m6Q6f5iVKV4cmcs0ogwCtQI6z6uisTRJQmmR6qpA+5TQOMFZHdcWIZl+5vcLy3IT+7GCnvLAJgo
+        CjMnj/SN2IGpripRr/8xMMdVn
+X-Received: by 2002:a37:af41:: with SMTP id y62mr20874903qke.385.1593549927710;
+        Tue, 30 Jun 2020 13:45:27 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJw/9f/7q91pxPuT3m4Vf6AMh7F1XsjTpGX1SRngMV0Mt26KohAGiffe7X1KyPB+Pvn5KcloYw==
+X-Received: by 2002:a37:af41:: with SMTP id y62mr20874868qke.385.1593549927383;
+        Tue, 30 Jun 2020 13:45:27 -0700 (PDT)
+Received: from xz-x1.redhat.com ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id k194sm3755819qke.100.2020.06.30.13.45.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 13:45:26 -0700 (PDT)
+From:   Peter Xu <peterx@redhat.com>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>, peterx@redhat.com,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Will Deacon <will@kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-m68k@lists.linux-m68k.org
+Subject: [PATCH v4 09/26] mm/m68k: Use general page fault accounting
+Date:   Tue, 30 Jun 2020 16:45:25 -0400
+Message-Id: <20200630204525.38906-1-peterx@redhat.com>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <20200630195052.23880-3-kgupta@es.iitr.ac.in>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Use the general page fault accounting by passing regs into handle_mm_fault().
+It naturally solve the issue of multiple page fault accounting when page fault
+retry happened.
 
+Add the missing PERF_COUNT_SW_PAGE_FAULTS perf events too.  Note, the other two
+perf events (PERF_COUNT_SW_PAGE_FAULTS_[MAJ|MIN]) were done in handle_mm_fault().
 
-On 6/30/20 4:50 PM, Kaaira Gupta wrote:
-> Currently there is no method to know the correct order of the colors for
-> a test image generated by tpg. Write a function that returns a string of
-> colors' order given a tpg. It returns a NULL pointer in case of test
-> patterns which do not have a well defined colors' order. Hence add a
-> NULL check for text in tpg_gen_text().
-> 
-> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
-> Reviewed-by: Kieran Bingham <kieran.bingham@ideasonboard.com>
-> ---
->  drivers/media/common/v4l2-tpg/v4l2-tpg-core.c | 30 +++++++++++++++++--
->  include/media/tpg/v4l2-tpg.h                  |  1 +
->  2 files changed, 29 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-> index dde22a4cbd6c..c46ddd902675 100644
-> --- a/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-> +++ b/drivers/media/common/v4l2-tpg/v4l2-tpg-core.c
-> @@ -1959,12 +1959,14 @@ void tpg_gen_text(const struct tpg_data *tpg, u8 *basep[TPG_MAX_PLANES][2],
->  	unsigned step = V4L2_FIELD_HAS_T_OR_B(tpg->field) ? 2 : 1;
->  	unsigned div = step;
->  	unsigned first = 0;
-> -	unsigned len = strlen(text);
-> +	unsigned len;
->  	unsigned p;
->  
-> -	if (font8x16 == NULL || basep == NULL)
-> +	if (font8x16 == NULL || basep == NULL || text == NULL)
->  		return;
->  
-> +	len = strlen(text);
-> +
+CC: Geert Uytterhoeven <geert@linux-m68k.org>
+CC: linux-m68k@lists.linux-m68k.org
+Signed-off-by: Peter Xu <peterx@redhat.com>
+---
+ arch/m68k/mm/fault.c | 14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
 
-This part of the code fixes another problem a bit unrelated to the commit message, but I understand
-it's required to safely chain tpg_g_color_order() with tpg_gen_text(), so I guess it's fine.
+diff --git a/arch/m68k/mm/fault.c b/arch/m68k/mm/fault.c
+index 738fff2a16f4..d9c22e24d585 100644
+--- a/arch/m68k/mm/fault.c
++++ b/arch/m68k/mm/fault.c
+@@ -12,6 +12,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/module.h>
+ #include <linux/uaccess.h>
++#include <linux/perf_event.h>
+ 
+ #include <asm/setup.h>
+ #include <asm/traps.h>
+@@ -85,6 +86,8 @@ int do_page_fault(struct pt_regs *regs, unsigned long address,
+ 
+ 	if (user_mode(regs))
+ 		flags |= FAULT_FLAG_USER;
++
++	perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, address);
+ retry:
+ 	mmap_read_lock(mm);
+ 
+@@ -135,7 +138,7 @@ int do_page_fault(struct pt_regs *regs, unsigned long address,
+ 	 * the fault.
+ 	 */
+ 
+-	fault = handle_mm_fault(vma, address, flags, NULL);
++	fault = handle_mm_fault(vma, address, flags, regs);
+ 	pr_debug("handle_mm_fault returns %x\n", fault);
+ 
+ 	if (fault_signal_pending(fault, regs))
+@@ -151,16 +154,7 @@ int do_page_fault(struct pt_regs *regs, unsigned long address,
+ 		BUG();
+ 	}
+ 
+-	/*
+-	 * Major/minor page fault accounting is only done on the
+-	 * initial attempt. If we go through a retry, it is extremely
+-	 * likely that the page will be found in page cache at that point.
+-	 */
+ 	if (flags & FAULT_FLAG_ALLOW_RETRY) {
+-		if (fault & VM_FAULT_MAJOR)
+-			current->maj_flt++;
+-		else
+-			current->min_flt++;
+ 		if (fault & VM_FAULT_RETRY) {
+ 			flags |= FAULT_FLAG_TRIED;
+ 
+-- 
+2.26.2
 
-Reviewed-by: Helen Koike <helen.koike@collabora.com>
-
-Thanks
-Helen
-
->  	/* Checks if it is possible to show string */
->  	if (y + 16 >= tpg->compose.height || x + 8 >= tpg->compose.width)
->  		return;
-> @@ -2006,6 +2008,30 @@ void tpg_gen_text(const struct tpg_data *tpg, u8 *basep[TPG_MAX_PLANES][2],
->  }
->  EXPORT_SYMBOL_GPL(tpg_gen_text);
->  
-> +const char *tpg_g_color_order(const struct tpg_data *tpg)
-> +{
-> +	switch (tpg->pattern) {
-> +	case TPG_PAT_75_COLORBAR:
-> +	case TPG_PAT_100_COLORBAR:
-> +	case TPG_PAT_CSC_COLORBAR:
-> +	case TPG_PAT_100_HCOLORBAR:
-> +		return "white, yellow, cyan, green, magenta, red, blue, black";
-> +	case TPG_PAT_BLACK:
-> +		return "Black";
-> +	case TPG_PAT_WHITE:
-> +		return "White";
-> +	case TPG_PAT_RED:
-> +		return "Red";
-> +	case TPG_PAT_GREEN:
-> +		return "Green";
-> +	case TPG_PAT_BLUE:
-> +		return "Blue";
-> +	default:
-> +		return NULL;
-> +	}
-> +}
-> +EXPORT_SYMBOL_GPL(tpg_g_color_order);
-> +
->  void tpg_update_mv_step(struct tpg_data *tpg)
->  {
->  	int factor = tpg->mv_hor_mode > TPG_MOVE_NONE ? -1 : 1;
-> diff --git a/include/media/tpg/v4l2-tpg.h b/include/media/tpg/v4l2-tpg.h
-> index 9749ed409856..0b0ddb87380e 100644
-> --- a/include/media/tpg/v4l2-tpg.h
-> +++ b/include/media/tpg/v4l2-tpg.h
-> @@ -252,6 +252,7 @@ void tpg_fillbuffer(struct tpg_data *tpg, v4l2_std_id std,
->  bool tpg_s_fourcc(struct tpg_data *tpg, u32 fourcc);
->  void tpg_s_crop_compose(struct tpg_data *tpg, const struct v4l2_rect *crop,
->  		const struct v4l2_rect *compose);
-> +const char *tpg_g_color_order(const struct tpg_data *tpg);
->  
->  static inline void tpg_s_pattern(struct tpg_data *tpg, enum tpg_pattern pattern)
->  {
-> 
