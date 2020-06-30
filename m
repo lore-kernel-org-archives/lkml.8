@@ -2,137 +2,114 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBEA1C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E2AC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:26:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A68442074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:26:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75A6B2074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:26:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Kcs+3BM/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F4bRlhY7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390770AbgF3S0f (ORCPT
+        id S2390785AbgF3S0u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 14:26:35 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:24298 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728340AbgF3S0f (ORCPT
+        Tue, 30 Jun 2020 14:26:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33738 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729953AbgF3S0t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 14:26:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593541594;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=p61xyNRgf2HheJSE7oFI5c3zNSqwXuASgPjQkDl0Ai0=;
-        b=Kcs+3BM/HhU0MxsqyMpODFsnP2OUb7NTOqbJtpZLyq8CVaZf5SpDejPsCswhpoPyXv6iXC
-        CuYUzuByJZksx/8XoBXExtMfKwfjr/bm2Bs7vwGyULYXGzVmQOBHA1aS7GVXWtXyfJzHhG
-        7HMZcf7pp9RqG7rVLj/Qq29vBW3TUvQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-417-8NN3KgUaOF6j2mCdXgeW9w-1; Tue, 30 Jun 2020 14:26:32 -0400
-X-MC-Unique: 8NN3KgUaOF6j2mCdXgeW9w-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6AFBC8AF870;
-        Tue, 30 Jun 2020 18:26:10 +0000 (UTC)
-Received: from horse.redhat.com (ovpn-113-245.rdu2.redhat.com [10.10.113.245])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 33E2B10023A6;
-        Tue, 30 Jun 2020 18:25:43 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id BC56B222E23; Tue, 30 Jun 2020 14:25:42 -0400 (EDT)
-Date:   Tue, 30 Jun 2020 14:25:42 -0400
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm@vger.kernel.org, virtio-fs@redhat.com, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH] kvm,x86: Exit to user space in case of page fault
- error
-Message-ID: <20200630182542.GA328891@redhat.com>
-References: <20200625214701.GA180786@redhat.com>
- <87lfkach6o.fsf@vitty.brq.redhat.com>
- <20200626150303.GC195150@redhat.com>
- <874kqtd212.fsf@vitty.brq.redhat.com>
- <20200629220353.GC269627@redhat.com>
- <87sgecbs9w.fsf@vitty.brq.redhat.com>
- <20200630145303.GB322149@redhat.com>
- <87mu4kbn7x.fsf@vitty.brq.redhat.com>
- <20200630152529.GC322149@redhat.com>
- <87k0zobltx.fsf@vitty.brq.redhat.com>
+        Tue, 30 Jun 2020 14:26:49 -0400
+Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F303C061755;
+        Tue, 30 Jun 2020 11:26:48 -0700 (PDT)
+Received: by mail-io1-xd43.google.com with SMTP id f23so22095536iof.6;
+        Tue, 30 Jun 2020 11:26:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zHkMrF1WG28iaGTof2SgLVlAgajf1uvvDa148L1A4YA=;
+        b=F4bRlhY7JPlFE5MOJNhH06ubJD/AwLxDSHTkK8prEd7WJaNbBFDvroFyM7nSqG00Qh
+         zC5d+FeO3qACgBJISvU47GGOic70oP3x22flzistdPNasJi0UKqQxS4c4S1sc7PWUUi4
+         xJ1Vr0NWy8FyYXBmzQVtBjQ+nMkcbeOXGvwpb547MFCGBgXdN5rR+2y2OdZGN+iUAOax
+         eyGf3xANMO+ot5QApAld1RaJ+fkECK+TohwDhBwwPWS5JKI4p9uLq/W1X0CN884zX3Zo
+         rQx7fAnGqeoTgkMm1dwc6vbRGEP8aYycGvJWlI2LbF5LRtP3K6WJKWVy90C2pYHUjGyL
+         CApA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zHkMrF1WG28iaGTof2SgLVlAgajf1uvvDa148L1A4YA=;
+        b=gPjWyL+WMBeZOG0Uo1lIdiGHop1C7yR0LsrJSGJmLPtWMjLE3U3Anc0PFMW2oI7iIc
+         LxZPA2B20LzFOJUUrAm3qXBXqGMInklpuNyFoiaMnj2jxzzfLj6d1D26lZiSAbbdw68Q
+         h7++Z5nWwJ5N2Y28e1cfM96ax27EMgwtFgJujL3fQFYZasGBt3u0p3Ch/THhAEscxRx2
+         zjpOaculwp2YdjgMWLOGsZ4GgKYEPGWqZiHMEJ7kjRSz6apn0zoMGgD1MvZk4ASbrzaj
+         KyhKxtwXOAB4YNWBV8i5z+YAI6rxY1NvL00SzweBhoEOVUpPmUuYnhI9vuakYq7lzE+A
+         17fA==
+X-Gm-Message-State: AOAM5338bQExhAz4YoQFUJkKQ6fmrhmTw0Aww/D3hw5I2VxSaridU+YN
+        TYSG5qZtshrBh71L/+8tJMLenrHL
+X-Google-Smtp-Source: ABdhPJyAPNjOe2Euzd0n2GEPfkpD1dt5csCv1TH57jPtERYO/b5rK+8mNMNPSrE+XyMWMLNVkpw8xA==
+X-Received: by 2002:a6b:d809:: with SMTP id y9mr23557963iob.209.1593541607533;
+        Tue, 30 Jun 2020 11:26:47 -0700 (PDT)
+Received: from aford-IdeaCentre-A730.lan (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
+        by smtp.gmail.com with ESMTPSA id u6sm1966164ilg.32.2020.06.30.11.26.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 11:26:46 -0700 (PDT)
+From:   Adam Ford <aford173@gmail.com>
+To:     linux-fbdev@vger.kernel.org
+Cc:     Adam Ford <aford173@gmail.com>, stable@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Dave Airlie <airlied@gmail.com>,
+        Tomi Valkeinen <tomi.valkeinen@ti.com>,
+        Rob Clark <robdclark@gmail.com>, linux-omap@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] omapfb: dss: Fix max fclk divider for omap36xx
+Date:   Tue, 30 Jun 2020 13:26:36 -0500
+Message-Id: <20200630182636.439015-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87k0zobltx.fsf@vitty.brq.redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 05:43:54PM +0200, Vitaly Kuznetsov wrote:
-> Vivek Goyal <vgoyal@redhat.com> writes:
-> 
-> > On Tue, Jun 30, 2020 at 05:13:54PM +0200, Vitaly Kuznetsov wrote:
-> >> 
-> >> > - If you retry in kernel, we will change the context completely that
-> >> >   who was trying to access the gfn in question. We want to retain
-> >> >   the real context and retain information who was trying to access
-> >> >   gfn in question.
-> >> 
-> >> (Just so I understand the idea better) does the guest context matter to
-> >> the host? Or, more specifically, are we going to do anything besides
-> >> get_user_pages() which will actually analyze who triggered the access
-> >> *in the guest*?
-> >
-> > When we exit to user space, qemu prints bunch of register state. I am
-> > wondering what does that state represent. Does some of that traces
-> > back to the process which was trying to access that hva? I don't
-> > know.
-> 
-> We can get the full CPU state when the fault happens if we need to but
-> generally we are not analyzing it. I can imagine looking at CPL, for
-> example, but trying to distinguish guest's 'process A' from 'process B'
-> may not be simple.
-> 
-> >
-> > I think keeping a cache of error gfns might not be too bad from
-> > implemetation point of view. I will give it a try and see how
-> > bad does it look.
-> 
-> Right; I'm only worried about the fact that every cache (or hash) has a
-> limited size and under certain curcumstances we may overflow it. When an
-> overflow happens, we will follow the APF path again and this can go over
-> and over.
+The drm/omap driver was fixed to correct an issue where using a
+divider of 32 breaks the DSS despite the TRM stating 32 is a valid
+number.  Through experimentation, it appears that 31 works, and
+it is consistent with the value used by the drm/omap driver.
 
-Sure. But what are the chances of that happening. Say our cache size is
-64. That means we need atleast 128 processes to do co-ordinated faults
-(all in error zone) to skip the cache completely all the time. We
-have to hit cache only once. Chances of missing the error gnf
-cache completely for a very long time are very slim. And if we miss
-it few times, now harm done. We will just spin few times and then
-exit to qemu.
+This patch fixes the divider for fbdev driver instead of the drm.
 
-IOW, chances of spinning infinitely are not zero. But they look so
-small that in practice I am not worried about it.
+Fixes: f76ee892a99e ("omapfb: copy omapdss & displays for omapfb")
 
-> Maybe we can punch a hole in EPT/NPT making the PFN reserved/
-> not-present so when the guest tries to access it again we trap the
-> access in KVM and, if the error persists, don't follow the APF path?
+Cc: <stable@vger.kernel.org> #4.9+
+Signed-off-by: Adam Ford <aford173@gmail.com>
+---
+Linux 4.4 will need a similar patch, but it doesn't apply cleanly.
 
-Cache solution seems simpler than this. Trying to maintain any state
-in page tables will be invariably more complex (Especially given
-many flavors of paging).
+The DRM version of this same fix is:
+e2c4ed148cf3 ("drm/omap: fix max fclk divider for omap36xx")
 
-I can start looking in this direction if you really think that its worth
-implementing  page table based solution for this problem. I feel that
-we implement something simpler for now and if there are easy ways
-to skip error gns, then replace it with something page table based
-solution (This will only require hypervisor change and no guest
-changes).
 
-Vivek
+diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dss.c b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
+index 7252d22dd117..bfc5c4c5a26a 100644
+--- a/drivers/video/fbdev/omap2/omapfb/dss/dss.c
++++ b/drivers/video/fbdev/omap2/omapfb/dss/dss.c
+@@ -833,7 +833,7 @@ static const struct dss_features omap34xx_dss_feats = {
+ };
+ 
+ static const struct dss_features omap3630_dss_feats = {
+-	.fck_div_max		=	32,
++	.fck_div_max		=	31,
+ 	.dss_fck_multiplier	=	1,
+ 	.parent_clk_name	=	"dpll4_ck",
+ 	.dpi_select_source	=	&dss_dpi_select_source_omap2_omap3,
+-- 
+2.25.1
 
