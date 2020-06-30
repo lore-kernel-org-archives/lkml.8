@@ -2,198 +2,437 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90DA7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9D4DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F9D7206BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:37:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2D2020775
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:38:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eYs6ntqm"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="dAm8FtbS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728606AbgF3FhL (ORCPT
+        id S1728818AbgF3Fim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 01:37:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56180 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbgF3FhK (ORCPT
+        Tue, 30 Jun 2020 01:38:42 -0400
+Received: from mail29.static.mailgun.info ([104.130.122.29]:18156 "EHLO
+        mail29.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726019AbgF3Fim (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 01:37:10 -0400
-Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F08A6C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 22:37:09 -0700 (PDT)
-Received: by mail-lj1-x243.google.com with SMTP id n23so20997991ljh.7
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 22:37:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=y+NTTpix/VNOdqLN5V3EttevSJs3w1JqKA5tqe0k7BM=;
-        b=eYs6ntqmqtss9ojrvsY3GbB/7L1Al+U7Czg/OV/4iPVxFlg/rgjAwylYV2+807Ouw3
-         lG2gJOT6XtkwFhsSetyTp9B8beQdewzvq/NiVR+Ld/CtY3TmqPqJsGdIKNRSJgpEG+Va
-         HI+a0ktwNFAqqxnY5QzXXsDkxmfbfRXtzzJwH0R0p3Krd1wqu9p9hRUdHu4borVz2iky
-         ua61SdmRu99QBiPLuGGEbJJhbl2bl2jK8hph6bBgjLfGUKts9nCzELPGrg3B/qD8RTO+
-         CvwzlQaEB3O6b3sCb6o28skMvKESdqY+ZIMoymJl+kjgJvPPzrUfHCVuchyknlc7mlgz
-         SIfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=y+NTTpix/VNOdqLN5V3EttevSJs3w1JqKA5tqe0k7BM=;
-        b=Avtc+n03BhmFsDbhc/AdjC9+WTEV7aNx5uWYYNoKh5afNcbqFVgSRXgV4u/rgICXPc
-         mcA5HE8cvasv0Zc3fVCBHCcjd07JJ+MhV2ut+8T/awy10Q5Qc+WyIwGYkCHdln717O7M
-         HkB6AQWxmHEhHPvkk4y3m8L16Gt8LqFIAlPwbKstzWx4Q8QYsxFDsecPh4X17ufN2lFh
-         PMQQSlY30sRyN/66CGt2lqgPwwWKh7Q3SZREY29e4VpeqiYU9z4WuCln+epcj5atW+2w
-         1MztWcPE33RbDtMabVxco3GlBJYlCh4ryqOeVjbynjgcVODnOAZqax7ea3ZkcorZM16D
-         3KQA==
-X-Gm-Message-State: AOAM5310S5GQa5pTG2okFYWXuOiIjq9AAf3wipLpROiDFJlxj6h65xKC
-        6YGkxvKQjnGK7lkpmNuOvj7xFz80x0e+zGQ4wFZTQA==
-X-Google-Smtp-Source: ABdhPJyetVRam7dpe9Lk5SgkZI4NJyaTUvqWahZ3sGQ69bb4D0vK7IghSfJMsneSvvEZUdzelLl1qUxjPYP5FO0EPoY=
-X-Received: by 2002:a2e:a58a:: with SMTP id m10mr9501981ljp.346.1593495428184;
- Mon, 29 Jun 2020 22:37:08 -0700 (PDT)
+        Tue, 30 Jun 2020 01:38:42 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593495520; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=4V6Q0FFJcljBwQiJKxnJRcWq/1uVgChAvJRw5nP7aDg=; b=dAm8FtbSyeg0RXmAvS6Ze9RZJDiUMiChEfPZEepyYV4dQSNdkeviuSkFPUQ/Y/lVghXyTtuw
+ qjQW4zc3vaoWKhtsddDrLlr3V9RC9U3co68YpcDJO8S1dngdQBorKMZOqWFgCX2CITl7hfus
+ no5ZSwKoq+8MRXYEwmiZHhiE32I=
+X-Mailgun-Sending-Ip: 104.130.122.29
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n17.prod.us-east-1.postgun.com with SMTP id
+ 5efacfdac76a4e7a2a4172e0 (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 30 Jun 2020 05:38:34
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id A5412C433CB; Tue, 30 Jun 2020 05:38:33 +0000 (UTC)
+Received: from [192.168.1.10] (cpe-70-95-5-60.san.res.rr.com [70.95.5.60])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sidgup)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8478EC433C8;
+        Tue, 30 Jun 2020 05:38:31 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8478EC433C8
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=sidgup@codeaurora.org
+Subject: Re: [PATCH v3 1/2] remoteproc: Add remoteproc character device
+ interface
+To:     Arnaud POULIQUEN <arnaud.pouliquen@st.com>,
+        "rishabhb@codeaurora.org" <rishabhb@codeaurora.org>
+Cc:     "linux-remoteproc@vger.kernel.org" <linux-remoteproc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "mathieu.poirier@linaro.org" <mathieu.poirier@linaro.org>,
+        "ohad@wizery.com" <ohad@wizery.com>,
+        "tsoni@codeaurora.org" <tsoni@codeaurora.org>,
+        "psodagud@codeaurora.org" <psodagud@codeaurora.org>,
+        "linux-remoteproc-owner@vger.kernel.org" 
+        <linux-remoteproc-owner@vger.kernel.org>
+References: <1587492618-15896-1-git-send-email-rishabhb@codeaurora.org>
+ <1587492618-15896-2-git-send-email-rishabhb@codeaurora.org>
+ <d72ead5a-b25a-d4e2-4bbf-1790d2a64fb8@st.com>
+ <d9a477cbbf19ed50af49aee7c6699e09@codeaurora.org>
+ <3738198d-53d4-2fe6-a92b-2db0cd0afa68@st.com>
+From:   Siddharth Gupta <sidgup@codeaurora.org>
+Message-ID: <83c70517-32e4-9ce0-e1b4-2ed7a8b5c506@codeaurora.org>
+Date:   Mon, 29 Jun 2020 22:38:30 -0700
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <20200630032014.22956-1-andy.tang@nxp.com> <CAHLCerO3B4Z67KP8VaF957Jkid21gLvzhS49gNeqUC+6muPkjA@mail.gmail.com>
- <DBBPR04MB609085CD69E4CCBDD49CCF66F36F0@DBBPR04MB6090.eurprd04.prod.outlook.com>
-In-Reply-To: <DBBPR04MB609085CD69E4CCBDD49CCF66F36F0@DBBPR04MB6090.eurprd04.prod.outlook.com>
-From:   Amit Kucheria <amit.kucheria@linaro.org>
-Date:   Tue, 30 Jun 2020 11:06:56 +0530
-Message-ID: <CAP245DV-_+5Ht=yP9Mnzb2vUqXDJSEeBPfbNh48mEt62PmBeWA@mail.gmail.com>
-Subject: Re: [EXT] Re: [PATCH 1/2] arm64: dts: ls1088a: add more thermal zone support
-To:     Andy Tang <andy.tang@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        lakml <linux-arm-kernel@lists.infradead.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <3738198d-53d4-2fe6-a92b-2db0cd0afa68@st.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 10:58 AM Andy Tang <andy.tang@nxp.com> wrote:
->
->
->
-> > -----Original Message-----
-> > From: Amit Kucheria <amit.kucheria@linaro.org>
-> > Sent: 2020=E5=B9=B46=E6=9C=8830=E6=97=A5 13:12
-> > To: Andy Tang <andy.tang@nxp.com>
-> > Cc: Shawn Guo <shawnguo@kernel.org>; Leo Li <leoyang.li@nxp.com>; Rob
-> > Herring <robh+dt@kernel.org>; lakml <linux-arm-kernel@lists.infradead.o=
-rg>;
-> > open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
-> > <devicetree@vger.kernel.org>; LKML <linux-kernel@vger.kernel.org>
-> > Subject: [EXT] Re: [PATCH 1/2] arm64: dts: ls1088a: add more thermal zo=
-ne
-> > support
-> >
-> > Caution: EXT Email
-> >
-> > On Tue, Jun 30, 2020 at 8:56 AM <andy.tang@nxp.com> wrote:
-> > >
-> > > From: Yuantian Tang <andy.tang@nxp.com>
-> > >
-> > > There are 2 thermal zones in ls1088a soc. Add the other thermal zone
-> > > node to enable it.
-> > > Also update the values in calibration table to make the temperatures
-> > > monitored more precise.
-> > >
-> > > Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
-> > > ---
-> > >  .../arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 100
-> > > +++++++++++-------
-> > >  1 file changed, 62 insertions(+), 38 deletions(-)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> > > b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> > > index 36a799554620..ccbbc23e6c85 100644
-> > > --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> > > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-> > > @@ -129,19 +129,19 @@
-> > >         };
-> > >
-> > >         thermal-zones {
-> > > -               cpu_thermal: cpu-thermal {
-> > > +               core-cluster {
-> > >                         polling-delay-passive =3D <1000>;
-> > >                         polling-delay =3D <5000>;
-> > >                         thermal-sensors =3D <&tmu 0>;
-> > >
-> > >                         trips {
-> > > -                               cpu_alert: cpu-alert {
-> > > +                               core_cluster_alert:
-> > core-cluster-alert
-> > > + {
-> > >                                         temperature =3D <85000>;
-> > >                                         hysteresis =3D <2000>;
-> > >                                         type =3D "passive";
-> > >                                 };
-> > >
-> > > -                               cpu_crit: cpu-crit {
-> > > +                               core_cluster_crit: core-cluster-crit =
-{
-> > >                                         temperature =3D <95000>;
-> > >                                         hysteresis =3D <2000>;
-> > >                                         type =3D "critical"; @@
-> > -150,7
-> > > +150,7 @@
-> > >
-> > >                         cooling-maps {
-> > >                                 map0 {
-> > > -                                       trip =3D <&cpu_alert>;
-> > > +                                       trip =3D
-> > <&core_cluster_alert>;
-> > >                                         cooling-device =3D
-> > >                                                 <&cpu0
-> > THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > >                                                 <&cpu1
-> > > THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, @@ -163,6 +163,26 @@
-> > >                                 };
-> > >                         };
-> > >                 };
-> > > +
-> > > +               soc {
-> > > +                       polling-delay-passive =3D <1000>;
-> > > +                       polling-delay =3D <5000>;
-> > > +                       thermal-sensors =3D <&tmu 1>;
-> > > +
-> > > +                       trips {
-> > > +                               soc-alert {
-> > > +                                       temperature =3D <85000>;
-> > > +                                       hysteresis =3D <2000>;
-> > > +                                       type =3D "passive";
-> > > +                               };
-> > > +
-> > > +                               soc-crit {
-> > > +                                       temperature =3D <95000>;
-> > > +                                       hysteresis =3D <2000>;
-> > > +                                       type =3D "critical";
-> > > +                               };
-> > > +                       };
-> > > +               };
-> >
-> > You should also add a cooling-maps section for this thermal zone given =
-that it
-> > has a passive trip type. Otherwise there is no use for a passive trip t=
-ype.
-> It is better to have a cooling device. But there is only one cooling devi=
-ce on this platform
-> which is used by core-cluster. So there is no extra cooling device for it=
-.
-> This zone can take action when critical temp is reached. So it is still u=
-seful.
-> What do you suggest?
 
-If the action taken by the core-cluster cooling-maps is the only one
-that can be taken, I suggest getting rid of the the soc-alert passive
-trip completely. It is not of any use.
+On 6/17/2020 1:44 AM, Arnaud POULIQUEN wrote:
+>
+> On 6/16/20 9:56 PM, rishabhb@codeaurora.org wrote:
+>> On 2020-04-30 01:30, Arnaud POULIQUEN wrote:
+>>> Hi Rishabh,
+>>>
+>>>
+>>> On 4/21/20 8:10 PM, Rishabh Bhatnagar wrote:
+>>>> Add the character device interface into remoteproc framework.
+>>>> This interface can be used in order to boot/shutdown remote
+>>>> subsystems and provides a basic ioctl based interface to implement
+>>>> supplementary functionality. An ioctl call is implemented to enable
+>>>> the shutdown on release feature which will allow remote processors to
+>>>> be shutdown when the controlling userpsace application crashes or
+>>>> hangs.
+>>>>
+>>> Thanks for intruducing Ioctl, this will help for future evolutions.
+>>>
+>>>> Signed-off-by: Rishabh Bhatnagar <rishabhb@codeaurora.org>
+>>>> ---
+>>>>   Documentation/userspace-api/ioctl/ioctl-number.rst |   1 +
+>>>>   drivers/remoteproc/Kconfig                         |   9 ++
+>>>>   drivers/remoteproc/Makefile                        |   1 +
+>>>>   drivers/remoteproc/remoteproc_cdev.c               | 143
+>>>> +++++++++++++++++++++
+>>>>   drivers/remoteproc/remoteproc_internal.h           |  21 +++
+>>>>   include/linux/remoteproc.h                         |   3 +
+>>>>   include/uapi/linux/remoteproc_cdev.h               |  20 +++
+>>>>   7 files changed, 198 insertions(+)
+>>>>   create mode 100644 drivers/remoteproc/remoteproc_cdev.c
+>>>>   create mode 100644 include/uapi/linux/remoteproc_cdev.h
+>>>>
+>>>> diff --git a/Documentation/userspace-api/ioctl/ioctl-number.rst
+>>>> b/Documentation/userspace-api/ioctl/ioctl-number.rst
+>>>> index 2e91370..412b2a0 100644
+>>>> --- a/Documentation/userspace-api/ioctl/ioctl-number.rst
+>>>> +++ b/Documentation/userspace-api/ioctl/ioctl-number.rst
+>>>> @@ -337,6 +337,7 @@ Code  Seq#    Include File
+>>>>                    Comments
+>>>>   0xB4  00-0F  linux/gpio.h
+>>>> <mailto:linux-gpio@vger.kernel.org>
+>>>>   0xB5  00-0F  uapi/linux/rpmsg.h
+>>>> <mailto:linux-remoteproc@vger.kernel.org>
+>>>>   0xB6  all    linux/fpga-dfl.h
+>>>> +0xB7  all    uapi/linux/remoteproc_cdev.h			
+>>>> <mailto:linux-remoteproc@vger.kernel.org>
+>>>>   0xC0  00-0F  linux/usb/iowarrior.h
+>>>>   0xCA  00-0F  uapi/misc/cxl.h
+>>>>   0xCA  10-2F  uapi/misc/ocxl.h
+>>>> diff --git a/drivers/remoteproc/Kconfig b/drivers/remoteproc/Kconfig
+>>>> index de3862c..6374b79 100644
+>>>> --- a/drivers/remoteproc/Kconfig
+>>>> +++ b/drivers/remoteproc/Kconfig
+>>>> @@ -14,6 +14,15 @@ config REMOTEPROC
+>>>>
+>>>>   if REMOTEPROC
+>>>>
+>>>> +config REMOTEPROC_CDEV
+>>>> +	bool "Remoteproc character device interface"
+>>>> +	help
+>>>> +	  Say y here to have a character device interface for Remoteproc
+>>>> +	  framework. Userspace can boot/shutdown remote processors through
+>>>> +	  this interface.
+>>>> +
+>>>> +	  It's safe to say N if you don't want to use this interface.
+>>>> +
+>>>>   config IMX_REMOTEPROC
+>>>>   	tristate "IMX6/7 remoteproc support"
+>>>>   	depends on ARCH_MXC
+>>>> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
+>>>> index e30a1b1..b7d4f77 100644
+>>>> --- a/drivers/remoteproc/Makefile
+>>>> +++ b/drivers/remoteproc/Makefile
+>>>> @@ -9,6 +9,7 @@ remoteproc-y				+= remoteproc_debugfs.o
+>>>>   remoteproc-y				+= remoteproc_sysfs.o
+>>>>   remoteproc-y				+= remoteproc_virtio.o
+>>>>   remoteproc-y				+= remoteproc_elf_loader.o
+>>>> +obj-$(CONFIG_REMOTEPROC_CDEV)		+= remoteproc_cdev.o
+>>>>   obj-$(CONFIG_IMX_REMOTEPROC)		+= imx_rproc.o
+>>>>   obj-$(CONFIG_MTK_SCP)			+= mtk_scp.o mtk_scp_ipi.o
+>>>>   obj-$(CONFIG_OMAP_REMOTEPROC)		+= omap_remoteproc.o
+>>>> diff --git a/drivers/remoteproc/remoteproc_cdev.c
+>>>> b/drivers/remoteproc/remoteproc_cdev.c
+>>>> new file mode 100644
+>>>> index 0000000..65142ec
+>>>> --- /dev/null
+>>>> +++ b/drivers/remoteproc/remoteproc_cdev.c
+>>>> @@ -0,0 +1,143 @@
+>>>> +// SPDX-License-Identifier: GPL-2.0-only
+>>>> +/*
+>>>> + * Character device interface driver for Remoteproc framework.
+>>>> + *
+>>>> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
+>>>> + */
+>>>> +
+>>>> +#include <linux/cdev.h>
+>>>> +#include <linux/fs.h>
+>>>> +#include <linux/module.h>
+>>>> +#include <linux/mutex.h>
+>>>> +#include <linux/remoteproc.h>
+>>>> +#include <uapi/linux/remoteproc_cdev.h>
+>>>> +#include <linux/uaccess.h>
+>>>> +
+>>>> +#include "remoteproc_internal.h"
+>>>> +
+>>>> +#define NUM_RPROC_DEVICES	64
+>>>> +static dev_t rproc_major;
+>>>> +
+>>>> +static ssize_t rproc_cdev_write(struct file *filp, const char __user
+>>>> *buf,
+>>>> +				 size_t len, loff_t *pos)
+>>>> +{
+>>>> +	struct rproc *rproc = container_of(filp->f_inode->i_cdev,
+>>>> +					   struct rproc, char_dev);
+>>>> +	int ret = 0;
+>>>> +	char cmd[10];
+>>>> +
+>>>> +	if (!len || len > sizeof(cmd))
+>>>> +		return -EINVAL;
+>>>> +
+>>>> +	ret = copy_from_user(cmd, buf, sizeof(cmd));
+>>>> +	if (ret)
+>>>> +		return -EFAULT;
+>>>> +
+>>>> +	if (sysfs_streq(cmd, "start")) {
+>>>> +		if (rproc->state == RPROC_RUNNING)
+>>>> +			return -EBUSY;
+>>>> +
+>>>> +		ret = rproc_boot(rproc);
+>>>> +		if (ret)
+>>>> +			dev_err(&rproc->dev, "Boot failed:%d\n", ret);
+>>>> +	} else if (sysfs_streq(cmd, "stop")) {
+>>>> +		if (rproc->state == RPROC_OFFLINE)
+>>>> +			return -ENXIO;
+>>> returning ENXIO in this case seems to me no appropriate , what about
+>>> EPERM or
+>>> EINVAL (rproc_sysfs) ?
 
-If there is a chance that your soc thermal-zone can heat up before
-your cpu-cluster zone (unlikely), you could use the same cooling
-device (cpu0, cpu1) for soc thermal zone too.
+I think EPERM would indicate the operation is not permitted on the 
+device, and
+EINVAL would indicate that the command/string they wrote to the char device
+is not a valid command/string. I guess even ENXIO may not be appropriate?
+
+In that case we could use EHOSTDOWN or ESHUTDOWN, thoughts?
+
+Thanks,
+Sid
+
+>>>
+>>>> +
+>>>> +		rproc_shutdown(rproc);
+>>>> +	} else {
+>>>> +		dev_err(&rproc->dev, "Unrecognized option\n");
+>>>> +		ret = -EINVAL;
+>>>> +	}
+>>>> +
+>>>> +	return ret ? ret : len;
+>>>> +}
+>>>> +
+>>>> +static long rproc_device_ioctl(struct file *filp, unsigned int ioctl,
+>>>> +				unsigned long arg)
+>>>> +{
+>>>> +	struct rproc *rproc = container_of(filp->f_inode->i_cdev,
+>>>> +					   struct rproc, char_dev);
+>>>> +	void __user *argp = (void __user *)arg;
+>>>> +	int ret;
+>>>> +	bool param;
+>>>> +
+>>>> +	switch (ioctl) {
+>>>> +	case RPROC_SET_SHUTDOWN_ON_RELEASE:
+>>>> +		ret = copy_from_user(&param, argp, sizeof(bool));
+>>>> +		if (ret) {
+>>>> +			dev_err(&rproc->dev, "Data copy from userspace failed\n");
+>>>> +			return -EINVAL;
+>>>> +		}
+>>>> +		rproc->cdev_put_on_release = param;
+>>> argp is an void value, where cdev_put_on_release is a bool a check or
+>>> a conversion  seems
+>>> missing
+>>>
+>>>> +		break;
+>>>> +	case RPROC_GET_SHUTDOWN_ON_RELEASE:
+>>>> +		ret = copy_to_user(argp, &rproc->cdev_put_on_release,
+>>>> +				   sizeof(bool));
+>>>> +		if (ret) {
+>>>> +			dev_err(&rproc->dev, "Data copy to userspace failed\n");
+>>>> +			return -EINVAL;
+>>>> +		}
+>>>> +		break;
+>>>> +	default:
+>>>> +		dev_err(&rproc->dev, "Unsupported ioctl\n");
+>>>> +		return -EINVAL;
+>>>> +	}
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +static int rproc_cdev_release(struct inode *inode, struct file *filp)
+>>>> +{
+>>>> +	struct rproc *rproc = container_of(inode->i_cdev, struct rproc,
+>>>> +					   char_dev);
+>>>> +
+>>>> +	if (rproc->cdev_put_on_release && rproc->state != RPROC_OFFLINE)
+>>>> +		rproc_shutdown(rproc);
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +
+>>>> +static const struct file_operations rproc_fops = {
+>>>> +	.write = rproc_cdev_write,
+>>>> +	.unlocked_ioctl = rproc_device_ioctl,
+>>>> +	.release = rproc_cdev_release,
+>>>> +};
+>>>> +
+>>>> +int rproc_char_device_add(struct rproc *rproc)
+>>>> +{
+>>>> +	int ret;
+>>>> +	dev_t cdevt;
+>>>> +
+>>>> +	cdev_init(&rproc->char_dev, &rproc_fops);
+>>>> +	rproc->char_dev.owner = THIS_MODULE;
+>>>> +
+>>>> +	cdevt = MKDEV(MAJOR(rproc_major), rproc->index);
+>>>> +	ret = cdev_add(&rproc->char_dev, cdevt, 1);
+>>>> +	if (ret < 0)
+>>>> +		goto out;
+>>>> +
+>>>> +	rproc->dev.devt = cdevt;
+>>>> +out:
+>>>> +	return ret;
+>>>> +}
+>>>> +
+>>>> +void rproc_char_device_remove(struct rproc *rproc)
+>>>> +{
+>>>> +	__unregister_chrdev(MAJOR(rproc->dev.devt), rproc->index, 1,
+>>>> "rproc");
+>>>> +}
+>>>> +
+>>>> +void __init rproc_init_cdev(void)
+>>>> +{
+>>>> +	int ret;
+>>>> +
+>>>> +	ret = alloc_chrdev_region(&rproc_major, 0, NUM_RPROC_DEVICES,
+>>>> "rproc");
+>>> "remoteproc"instead of "rproc" (in line with sysfs and debugfs naming)
+>>> .
+>>>
+>>>> +	if (ret < 0)
+>>>> +		pr_err("Failed to alloc rproc_cdev region, err %d\n", ret);
+>>>> +}
+>>>> +
+>>>> +void __exit rproc_exit_cdev(void)
+>>>> +{
+>>>> +	unregister_chrdev_region(MKDEV(MAJOR(rproc_major), 0),
+>>>> +				 NUM_RPROC_DEVICES);
+>>>> +}
+>>>> diff --git a/drivers/remoteproc/remoteproc_internal.h
+>>>> b/drivers/remoteproc/remoteproc_internal.h
+>>>> index 493ef92..fb9d891 100644
+>>>> --- a/drivers/remoteproc/remoteproc_internal.h
+>>>> +++ b/drivers/remoteproc/remoteproc_internal.h
+>>>> @@ -47,6 +47,27 @@ struct dentry *rproc_create_trace_file(const char
+>>>> *name, struct rproc *rproc,
+>>>>   int rproc_init_sysfs(void);
+>>>>   void rproc_exit_sysfs(void);
+>>>>
+>>>> +#ifdef CONFIG_REMOTEPROC_CDEV
+>>>> +void rproc_init_cdev(void);
+>>>> +void rproc_exit_cdev(void);
+>>>> +int rproc_char_device_add(struct rproc *rproc);
+>>>> +void rproc_char_device_remove(struct rproc *rproc);
+>>>> +#else
+>>>> +static inline void rproc_init_cdev(void)
+>>>> +{
+>>>> +}
+>>>> +static inline void rproc_exit_cdev(void)
+>>>> +{
+>>>> +}
+>>>> +static inline int rproc_char_device_add(struct rproc *rproc)
+>>>> +{
+>>>> +	return 0;
+>>>> +}
+>>>> +static inline void  rproc_char_device_remove(struct rproc *rproc)
+>>>> +{
+>>>> +}
+>>>> +#endif
+>>>> +
+>>>>   void rproc_free_vring(struct rproc_vring *rvring);
+>>>>   int rproc_alloc_vring(struct rproc_vdev *rvdev, int i);
+>>>>
+>>>> diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+>>>> index 16ad666..9bd2ff5 100644
+>>>> --- a/include/linux/remoteproc.h
+>>>> +++ b/include/linux/remoteproc.h
+>>>> @@ -40,6 +40,7 @@
+>>>>   #include <linux/virtio.h>
+>>>>   #include <linux/completion.h>
+>>>>   #include <linux/idr.h>
+>>>> +#include <linux/cdev.h>
+>>>>   #include <linux/of.h>
+>>>>
+>>>>   /**
+>>>> @@ -514,6 +515,8 @@ struct rproc {
+>>>>   	bool auto_boot;
+>>>>   	struct list_head dump_segments;
+>>>>   	int nb_vdev;
+>>>> +	struct cdev char_dev;
+>>>> +	bool cdev_put_on_release;
+>>>>   };
+>>> These parameters are local variables of rproc_cdev. Could be defined
+>>> in a separate structure.
+>>> with a pointer in rproc to this structure.
+>>>
+>>>>   /**
+>>>> diff --git a/include/uapi/linux/remoteproc_cdev.h
+>>>> b/include/uapi/linux/remoteproc_cdev.h
+>>>> new file mode 100644
+>>>> index 0000000..3975120
+>>>> --- /dev/null
+>>>> +++ b/include/uapi/linux/remoteproc_cdev.h
+>>>> @@ -0,0 +1,20 @@
+>>>> +/* SPDX-License-Identifier: GPL-2.0-only WITH Linux-syscall-note */
+>>>> +/*
+>>>> + * IOCTLs for Remoteproc's character device interface.
+>>>> + *
+>>>> + * Copyright (c) 2020, The Linux Foundation. All rights reserved.
+>>>> + */
+>>>> +
+>>>> +
+>>>> +#ifndef _UAPI_REMOTEPROC_CDEV_H_
+>>>> +#define _UAPI_REMOTEPROC_CDEV_H_
+>>>> +
+>>>> +#include <linux/ioctl.h>
+>>>> +#include <linux/types.h>
+>>>> +
+>>>> +#define RPROC_MAGIC	0xB7
+>>>> +
+>>>> +#define RPROC_SET_SHUTDOWN_ON_RELEASE _IOW(RPROC_MAGIC, 1, int)
+>>>> +#define RPROC_GET_SHUTDOWN_ON_RELEASE _IOR(RPROC_MAGIC, 2, int)
+>>>> +
+>>>> +#endif
+>>>>
+>>> IOCTLs should probaly be documented.
+>> I have added documentation to
+>> Documentation/userspace-api/ioctl/ioctl-number.rst
+>> Is there another place where I need to add documentation for this?
+> Could you add in this file comments that describe
+> the IOCTL usage and associated parameter?
+>
+> Regards,
+> Arnaud
+>
+>>> Thanks,
+>>> Arnaud
