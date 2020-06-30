@@ -2,166 +2,191 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D5E3C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A20BEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:56:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id E34C820702
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 676AF20674
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:56:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="hpxwY3J3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zSmqHNR7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728622AbgF3Fyy (ORCPT
+        id S1729100AbgF3F4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 01:54:54 -0400
-Received: from nat-hk.nvidia.com ([203.18.50.4]:61324 "EHLO nat-hk.nvidia.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726019AbgF3Fyw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 01:54:52 -0400
-Received: from hkpgpgate102.nvidia.com (Not Verified[10.18.92.100]) by nat-hk.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5efad3a90000>; Tue, 30 Jun 2020 13:54:49 +0800
-Received: from HKMAIL102.nvidia.com ([10.18.16.11])
-  by hkpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 29 Jun 2020 22:54:49 -0700
-X-PGP-Universal: processed;
-        by hkpgpgate102.nvidia.com on Mon, 29 Jun 2020 22:54:49 -0700
-Received: from HKMAIL104.nvidia.com (10.18.16.13) by HKMAIL102.nvidia.com
- (10.18.16.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 30 Jun
- 2020 05:54:47 +0000
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.175)
- by HKMAIL104.nvidia.com (10.18.16.13) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Tue, 30 Jun 2020 05:54:47 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=g7c6FOkVbxVkV2wJbmtDrNfLdmRKrgHJHorEsuROkugmlaHDTN9NlmWn/5uYMt4oceIH4J2hBWncziMWthWSwWjNYVV/Q84DAaHaPoNVC0U+oFoO2KC4G84Ma8S3Au6CsQqxh4CyWVX23HmQA/4hiXZSuSEYFb+S9zHrDZHmkknlNBRb96qAM0HqDBa46aU334NceKcMTg3ZcEZRtfSKK7IyLKqNzFoxByeYpfgShg/htI+9PC0X7Ec1HwfEAqorXc0PNg8OG75fX5N9/efvivLpgFWbaQMfVvVeDQONuZ9swOIOo+utnJKf+hhF+mt5dXrziPT7P2EAKbp+3dHIWA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=L+nYYhidqPppFAQ7D8oopRQoLHOd+ny2kwKFIIHF+Qw=;
- b=QVIx4HXPx512JjEtdTIMIED4+kHz1K714T+JiEM/Gm70dxXuxRJSWincZe9/6kTf55Sv2vzqeq8qPeRIQ3R+aDKC0rrCd6rsk5La+8EfliI0ryPsuKBNPE+sker+0Lb/H5msnu4EqIH7qcWdWwg4K6GoolHP/7K7xhWJTN53uNyXX9nIy11nBJh9rwMs7SHAeEXRWdt8e0N7BrJie30jKaQ99zjVYdUkOskoHv6RifQERrijmfTEXZfLHS2iyicDqnWH1EAVix16DZa9mtpLHfguSTrT1CJ3j0ZMWg9TQAyAtlYu8xyN5KlBMO824usayBuxCjBUlF9bsUMvmgXfpA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Received: from CY4PR12MB1688.namprd12.prod.outlook.com (2603:10b6:910:8::15)
- by CY4PR1201MB0072.namprd12.prod.outlook.com (2603:10b6:910:1b::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.24; Tue, 30 Jun
- 2020 05:54:45 +0000
-Received: from CY4PR12MB1688.namprd12.prod.outlook.com
- ([fe80::a976:61a8:970b:d874]) by CY4PR12MB1688.namprd12.prod.outlook.com
- ([fe80::a976:61a8:970b:d874%11]) with mapi id 15.20.3131.028; Tue, 30 Jun
- 2020 05:54:45 +0000
-From:   Pritesh Raithatha <praithatha@nvidia.com>
-To:     Krishna Reddy <vdumpa@nvidia.com>
-CC:     "joro@8bytes.org" <joro@8bytes.org>,
-        "will@kernel.org" <will@kernel.org>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        "Yu-Huan Hsu" <YHsu@nvidia.com>, Sachin Nikam <Snikam@nvidia.com>,
-        Timo Alho <talho@nvidia.com>,
-        Bitan Biswas <bbiswas@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Nicolin Chen <nicolinc@nvidia.com>,
-        Bryan Huntsman <bhuntsman@nvidia.com>,
-        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>
-Subject: RE: [PATCH v8 1/3] iommu/arm-smmu: add NVIDIA implementation for dual
- ARM MMU-500 usage
-Thread-Topic: [PATCH v8 1/3] iommu/arm-smmu: add NVIDIA implementation for
- dual ARM MMU-500 usage
-Thread-Index: AQHWTnLsU6VMf9PQoUKznHa4uGpI5ajwqM8Q
-Date:   Tue, 30 Jun 2020 05:54:44 +0000
-Message-ID: <CY4PR12MB168833FC05B6A9F3CCD72210A26F0@CY4PR12MB1688.namprd12.prod.outlook.com>
-References: <20200630001051.12350-1-vdumpa@nvidia.com>
- <20200630001051.12350-2-vdumpa@nvidia.com>
-In-Reply-To: <20200630001051.12350-2-vdumpa@nvidia.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Enabled=True;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SiteId=43083d15-7273-40c1-b7db-39efd9ccc17a;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Owner=PRAITHATHA@nvidia.com;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SetDate=2020-06-30T05:54:42.5211466Z;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Name=Unrestricted;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_ActionId=4b921caa-18df-4b3e-b74e-f9e7e2d9c197;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Extended_MSFT_Method=Automatic
-authentication-results: nvidia.com; dkim=none (message not signed)
- header.d=none;nvidia.com; dmarc=none action=none header.from=nvidia.com;
-x-originating-ip: [202.164.25.5]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 99178a54-3213-402b-daf5-08d81cba1733
-x-ms-traffictypediagnostic: CY4PR1201MB0072:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <CY4PR1201MB00727B905139EF72946E5ED2A26F0@CY4PR1201MB0072.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2331;
-x-forefront-prvs: 0450A714CB
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: VroZ2dOd9kBbN1LO4fQJzCrqJsykIk6i7Vm/2t+KECkR4Gz7iExCq0yrNFz86ClTck59Zcgs8vD0t8ulPXmD/QTZCBROTkZm8vw3NRLWXGrsKWR7mqz/HgB5SA/21DAMNzuCXvq/RqczX6uzaH0pL2PCjb7MkOpWotkK6Bg6O0azCkZMSwXkBZr0wyRwzy3XYQa27w6VEuQ37IAZ9Guw+jSlJ1w6O63IpFiErZLaZhhNmW5fX6zJYqiaWx8w1ck8MLklGThz5Y4Klu0f2hRgasZc8kut9pPKYvgqy9gyHrLL5k4nIF/55npg51a6co8nSYjMWakL0KmEyBRGychaCw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY4PR12MB1688.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(376002)(346002)(396003)(366004)(2906002)(71200400001)(64756008)(66556008)(66476007)(6862004)(76116006)(66946007)(8936002)(66446008)(558084003)(8676002)(4326008)(7696005)(186003)(6506007)(26005)(54906003)(316002)(478600001)(6636002)(52536014)(5660300002)(83380400001)(33656002)(55016002)(9686003)(86362001);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: hQH/V1RrnUBNo5rEKj86o3AFTPT0ijuRAy6ie1G51h1ujSRdm5no8praeBf1JnZnq/qdhs+wCD+IKvT8ZMe3M1KLpJToHxTda7VamZ2xXvIPp0skh3AfVST/9SPrTj/PJuFgvP1xDxOTyPZ6URP2ZlyWPDmU0+pfgYHwTonZq7syPjoBd3b++qe9+Cnz+tDFA/u1i6e7H+00Ct3d6m9XpPfTR7Y6EvtkJaU4C3e+QaUXfuqyRaY82+HGs+oW25CBHZYZu9kY0y0yWTLU194JbeC1iit5iSG7Sj+LqVoqPVS7O8czI/xXZ76i644vGGeqrRm6cGP9XJsgU4TehRdc5FKucyJ3GlHkYc3LK8jNnDr6GCiAZ9omfAJv+NEY/D+UnRj75cAy63ZMVs2Go62UvaV0U+xRCmias876VFkRfDFG0FXjLVXsk3S7vk+hSVWSUDxGCKG6xtaM4SWl6+7hoGTkJpdqbyDG94DR/Z7O5R4=
+        Tue, 30 Jun 2020 01:56:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59130 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726213AbgF3F4L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 01:56:11 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CD9BC061755
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 22:56:10 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id c11so10615869lfh.8
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 22:56:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=E8oezB9J+U2+aZrUcRMbQ+boDcYTf1u5GevKkRgvGQw=;
+        b=zSmqHNR70DhHngHAc93WqKm7thBFYc0NMoZjyG8cNG+2dSEHnyy64EwZa7TL7HbTZA
+         c6MEmS/8BraTkUJw5+J7TddJrCqndBVNXlSvpYRjQoUlfKz9PBfSfcnIgPUcvMDf8GJM
+         yhkygfhOD5qrOUgdkyPst+0hJ0YvtoIhuKl6Dm0RpHACAt5HZvyI3Pgaa5vodgD7KaOU
+         wY3cZJdTj9KJveD3cuqSPqZDiLI3/l+ORputDKpC6c8ebcFaCRU2TwxmMl6TLHtdkmAD
+         PQkY6p5wU/uw+vAo2oovVe1ZXp3bukO/q4m0BEmh/gb4VeifPP+3jBYv6aT+mnjxWa4G
+         rxqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E8oezB9J+U2+aZrUcRMbQ+boDcYTf1u5GevKkRgvGQw=;
+        b=YUNPw/1Lh0jkpDTmQrDboYBMZloURfjT7BTSdRyp6XtqCm1D+enCRYttJ3BKuqIfUa
+         a5dEEsEpmR+wp75UJ368mK7iMrcqsnv6JzVvpy+LnOh/hM2OeUJQgWrmTTQh/8jkhSOV
+         DTiU8HLMBj0a36rEghcEKSdo2J7j87UZp6w4z+DbplEhD4VekKdPnSVF08qHy3ulOX4K
+         qlV6fjif/MNMWSAUNCZPazZpZ2v3FXYxIiZt4S/1yndQ2eg8RJqckM107Kg/a6LXDX3m
+         GfvdMNLEpzofct+GQ9PKEZWNP+fWPrpO8cedEPyCzm9LxtHok9+J0771MuyiErJKDh0a
+         wfag==
+X-Gm-Message-State: AOAM5300ZDbIETfTRbyaZvYgdgxZT5pzytltlKMD+r5f/OhLR1yCpX9R
+        p99UXouv9j+LY3DyuDvaXpcGeu34IfqLUYw6qKRRSOe6wTo=
+X-Google-Smtp-Source: ABdhPJwEQrcbY9Xpo6fvWx9CWHmTT5YtDnz0CtwCEmEVFhnk47jEhTH2dtMXCRsKU7sJrtbuCkCuLWiVOfyaOWzMBlw=
+X-Received: by 2002:a19:8c09:: with SMTP id o9mr11283562lfd.160.1593496569051;
+ Mon, 29 Jun 2020 22:56:09 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: CY4PR12MB1688.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 99178a54-3213-402b-daf5-08d81cba1733
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2020 05:54:44.9455
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 5A+qWsHQ0Gmzo4d2V2G2KdtSoWiZKrLDyzHgA7ZDsYCKA5MDMxefq5sswuWYYs7jzQxiBYikd9+tat0/BE3WIQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB0072
-X-OriginatorOrg: Nvidia.com
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1593496489; bh=L+nYYhidqPppFAQ7D8oopRQoLHOd+ny2kwKFIIHF+Qw=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:From:To:CC:Subject:Thread-Topic:
-         Thread-Index:Date:Message-ID:References:In-Reply-To:
-         Accept-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:msip_labels:
-         authentication-results:x-originating-ip:x-ms-publictraffictype:
-         x-ms-office365-filtering-correlation-id:x-ms-traffictypediagnostic:
-         x-ms-exchange-transport-forked:x-microsoft-antispam-prvs:
-         x-ms-oob-tlc-oobclassifiers:x-forefront-prvs:
-         x-ms-exchange-senderadcheck:x-microsoft-antispam:
-         x-microsoft-antispam-message-info:x-forefront-antispam-report:
-         x-ms-exchange-antispam-messagedata:MIME-Version:
-         X-MS-Exchange-CrossTenant-AuthAs:
-         X-MS-Exchange-CrossTenant-AuthSource:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-originalarrivaltime:
-         X-MS-Exchange-CrossTenant-fromentityheader:
-         X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
-         X-MS-Exchange-CrossTenant-userprincipalname:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg:
-         Content-Language:Content-Type:Content-Transfer-Encoding;
-        b=hpxwY3J3MRRKi2M9kYozgVrDyddkAYTzbfC+abRSKVJSduu1H5VlIhtVAsJPvRwY8
-         u8VCj26OxYaIcPx89HPp8zWYAp7QaxyLz6NUNjp8aUDSbc0peKNie3tr1wT97W0aTH
-         ctXPbl6g13beyrxE47I0nuKuE1P8JdILIoat/pmw0ibc1A6rWOwP824JbqXsAaULPs
-         42M3aCV/IZxhAm9helWe4rW5a5LgBDIgTDVOoX8/nrgcQTnfn0sW3BhjV5KAL8NJb0
-         HLKe42ily1DgtgbUPwhhTivnWkJ22AwTfsxwZrZFc+t5EaSvylDfnp00AYXVkIdQYQ
-         uVjhRwCpxfT0Q==
+References: <20200629135923.14912-1-cengiz@kernel.wtf> <20200629145020.GL6156@alley>
+ <20200629153756.cxg74nec3repa4lu@holly.lan>
+In-Reply-To: <20200629153756.cxg74nec3repa4lu@holly.lan>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Tue, 30 Jun 2020 11:25:57 +0530
+Message-ID: <CAFA6WYNpCG2xPERd=NeKf+EthbX+1R4iieOL52kWnBp8y_+Nbw@mail.gmail.com>
+Subject: Re: [PATCH] kdb: prevent possible null deref in kdb_msg_write
+To:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Petr Mladek <pmladek@suse.com>
+Cc:     Cengiz Can <cengiz@kernel.wtf>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> NVIDIA's Tegra194 SoC uses two ARM MMU-500s together to interleave IOVA
-> accesses across them.
-> Add NVIDIA implementation for dual ARM MMU-500s and add new compatible
-> string for Tegra194 SoC SMMU topology.
->=20
-> Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
+On Mon, 29 Jun 2020 at 21:07, Daniel Thompson
+<daniel.thompson@linaro.org> wrote:
+>
+> On Mon, Jun 29, 2020 at 04:50:20PM +0200, Petr Mladek wrote:
+> > On Mon 2020-06-29 16:59:24, Cengiz Can wrote:
+> > > `kdb_msg_write` operates on a global `struct kgdb_io *` called
+> > > `dbg_io_ops`.
+> > >
+> > > Although it is initialized in `debug_core.c`, there's a null check in
+> > > `kdb_msg_write` which implies that it can be null whenever we dereference
+> > > it in this function call.
+> > >
+> > > Coverity scanner caught this as CID 1465042.
+> > >
+> > > I have modified the function to bail out if `dbg_io_ops` is not properly
+> > > initialized.
+> > >
+> > > Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
+> > > ---
+> > >  kernel/debug/kdb/kdb_io.c | 15 ++++++++-------
+> > >  1 file changed, 8 insertions(+), 7 deletions(-)
+> > >
+> > > diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
+> > > index 683a799618ad..85e579812458 100644
+> > > --- a/kernel/debug/kdb/kdb_io.c
+> > > +++ b/kernel/debug/kdb/kdb_io.c
+> > > @@ -549,14 +549,15 @@ static void kdb_msg_write(const char *msg, int msg_len)
+> > >     if (msg_len == 0)
+> > >             return;
+> > >
+> > > -   if (dbg_io_ops) {
+> > > -           const char *cp = msg;
+> > > -           int len = msg_len;
+> > > +   if (!dbg_io_ops)
+> > > +           return;
+> >
+> > This looks wrong. The message should be printed to the consoles
+> > even when dbg_io_ops is NULL. I mean that the for_each_console(c)
+> > cycle should always get called.
+> >
+> > Well, the code really looks racy. dbg_io_ops is set under
+> > kgdb_registration_lock. IMHO, it should also get accessed under this lock.
+> >
+> > It seems that the race is possible. kdb_msg_write() is called from
+> > vkdb_printf(). This function is serialized on more CPUs using
+> > kdb_printf_cpu lock. But it is not serialized with
+> > kgdb_register_io_module() and kgdb_unregister_io_module() calls.
+>
+> We can't take the lock from the trap handler itself since we cannot
+> have spinlocks contended between regular threads and the debug trap
+> (which could be an NMI).
+>
+> Instead, the call to kgdb_unregister_callbacks() at the beginning
+> of kgdb_unregister_io_module() should render kdb_msg_write()
+> unreachable prior to dbg_io_ops becoming NULL.
+>
+> As it happens I am starting to believe there is a race in this area but
+> the race is between register/unregister calls rather than against the
+> trap handler (if there were register/unregister races then the trap
+> handler is be a potential victim of the race though).
+>
+>
+> > But I might miss something. dbg_io_ops is dereferenced on many other
+> > locations without any check.
+>
+> There is already a paranoid "just in case there are bugs" check in
+> kgdb_io_ready() so in any case I think the check in kdb_msg_write() can
+> simply be removed.
+>
+> As I said in my other post, if dbg_io_ops were ever NULL then the
+> system is completely hosed anyway: we can never receive the keystroke
+> needed to leave the debugger... and may not be able to tell anybody
+> why.
+>
+>
+> > >
+> > > -           while (len--) {
+> > > -                   dbg_io_ops->write_char(*cp);
+> > > -                   cp++;
+> > > -           }
+> > > +   const char *cp = msg;
+> > > +   int len = msg_len;
+> > > +
+> > > +   while (len--) {
+> > > +           dbg_io_ops->write_char(*cp);
+> > > +           cp++;
+> > >     }
+> > >
+> > >     for_each_console(c) {
+> >
+> > You probably got confused by this new code:
+> >
+> >               if (c == dbg_io_ops->cons)
+> >                       continue;
+> >
+> > It dereferences dbg_io_ops without NULL check. It should probably
+> > get replaced by:
+> >
+> >               if (dbg_io_ops && c == dbg_io_ops->cons)
+> >                       continue;
+> >
+> > Daniel, Sumit, could you please put some light on this?
+>
+> As above, I think the NULL check that confuses coverity can simply be
+> removed.
+>
 
-Reviewed-by: Pritesh Raithatha <praithatha@nvidia.com>
++1
+
+-Sumit
+
+>
+> Daniel.
