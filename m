@@ -2,162 +2,105 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D32C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D620FC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:55:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9FB2B20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:55:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1151207FB
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:55:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389143AbgF3OzH (ORCPT
+        id S2389147AbgF3Ozp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 10:55:07 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:11333 "EHLO pegase1.c-s.fr"
+        Tue, 30 Jun 2020 10:55:45 -0400
+Received: from mga14.intel.com ([192.55.52.115]:40606 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729260AbgF3OzG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 10:55:06 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49x6pZ5Tr4z9twdq;
-        Tue, 30 Jun 2020 16:55:02 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id DW2g8NlcVvk7; Tue, 30 Jun 2020 16:55:02 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49x6pZ0L9vz9tvrw;
-        Tue, 30 Jun 2020 16:55:02 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 269198B7E4;
-        Tue, 30 Jun 2020 16:55:04 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id yCXNo6XMiDNf; Tue, 30 Jun 2020 16:55:04 +0200 (CEST)
-Received: from [10.25.210.22] (po15451.idsi0.si.c-s.fr [10.25.210.22])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id D96818B7DE;
-        Tue, 30 Jun 2020 16:55:03 +0200 (CEST)
-Subject: Re: [PATCH v2] powerpc/uaccess: Use flexible addressing with
- __put_user()/__get_user()
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>, npiggin@gmail.com,
-        segher@kernel.crashing.org
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <c2addbd9d76212242d3d8554a2f7ff849fb08b85.1587040754.git.christophe.leroy@c-s.fr>
- <7b916759-1683-b4df-0d4b-b04b3fcd9a02@csgroup.eu>
- <878sg6862r.fsf@mpe.ellerman.id.au> <875zb98i5a.fsf@mpe.ellerman.id.au>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <311c3471-cad7-72d5-a5e6-04cf892c5e41@csgroup.eu>
-Date:   Tue, 30 Jun 2020 16:55:05 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1729260AbgF3Ozp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 10:55:45 -0400
+IronPort-SDR: Gr8vt0UrdPl9QD1QFhiVM4FsfugMOr8ctk86Z0plhUMxRVdtbPq/39LFmbY38WqB0kUk4C6zDY
+ aO3R1V51znFw==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="145323530"
+X-IronPort-AV: E=Sophos;i="5.75,297,1589266800"; 
+   d="scan'208";a="145323530"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 07:55:44 -0700
+IronPort-SDR: 0TRG9d159j5c9hBSSSCMIu6gXkycyMjX1F7tQzG4wyo0IKU//t6Rjy7rtmSJpE8wmgJBtGNMaW
+ 0dD1d0P6IOIA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,297,1589266800"; 
+   d="scan'208";a="266492435"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by fmsmga008.fm.intel.com with ESMTP; 30 Jun 2020 07:55:44 -0700
+Date:   Tue, 30 Jun 2020 07:55:43 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>, x86@kernel.org,
+        linux-sgx@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Jethro Beekman <jethro@fortanix.com>,
+        akpm@linux-foundation.org, andriy.shevchenko@linux.intel.com,
+        asapek@google.com, cedric.xing@intel.com, chenalexchen@google.com,
+        conradparker@google.com, cyhanish@google.com,
+        dave.hansen@intel.com, haitao.huang@intel.com,
+        josh@joshtriplett.org, kai.huang@intel.com, kai.svahn@intel.com,
+        kmoy@google.com, ludloff@google.com, luto@kernel.org,
+        nhorman@redhat.com, npmccallum@redhat.com, puiterwijk@redhat.com,
+        rientjes@google.com, tglx@linutronix.de, yaozhangx@google.com
+Subject: Re: [PATCH v33 15/21] x86/vdso: Add support for exception fixup in
+ vDSO functions
+Message-ID: <20200630145543.GB7733@linux.intel.com>
+References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
+ <20200617220844.57423-16-jarkko.sakkinen@linux.intel.com>
+ <20200629171022.GC32176@zn.tnic>
+ <20200630060055.GS12312@linux.intel.com>
+ <20200630084128.GA1093@zn.tnic>
 MIME-Version: 1.0
-In-Reply-To: <875zb98i5a.fsf@mpe.ellerman.id.au>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200630084128.GA1093@zn.tnic>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 30/06/2020 à 03:19, Michael Ellerman a écrit :
-> Michael Ellerman <mpe@ellerman.id.au> writes:
->> Christophe Leroy <christophe.leroy@csgroup.eu> writes:
->>> Hi Michael,
->>>
->>> I see this patch is marked as "defered" in patchwork, but I can't see
->>> any related discussion. Is it normal ?
->>
->> Because it uses the "m<>" constraint which didn't work on GCC 4.6.
->>
->> https://github.com/linuxppc/issues/issues/297
->>
->> So we should be able to pick it up for v5.9 hopefully.
+On Tue, Jun 30, 2020 at 10:41:28AM +0200, Borislav Petkov wrote:
+> On Mon, Jun 29, 2020 at 11:00:55PM -0700, Sean Christopherson wrote:
+> > E.g. the vDSO function should get the fixup even if userspace screws
+> > up mmap() and invokes __vdso_sgx_enter_enclave() without being tagged
+> > an SGX task.
 > 
-> It seems to break the build with the kernel.org 4.9.4 compiler and
-> corenet64_smp_defconfig:
+> I sincerely hope you don't mean this seriously.
+> 
+> Please add a member to task_struct which denotes that a task is an
+> sgx task, test that member where needed and forget real quickly about
+> running *any* *fixup* for unrelated tasks.
 
-Looks like 4.9.4 doesn't accept "m<>" constraint either.
-Changing it to "m" make it build.
+But IMO they're not unrelated if they end up in __vdso_sgx_enter_enclave().
+Getting to the point where __vdso_sgx_enter_enclave() actually attempts
+ENCLU (the single fixup entry) requires a very deliberate attempt to run an
+enclave.  Not to mention the fixup doesn't squash the fault, it simply
+morphs what would be a signal into a synchronous error.
 
-Christophe
+And I don't see how to sanely track this in task_struct.  As stated before,
+the only foolproof way to identify an SGX task is by tracking whether it
+has a VMA backed by /dev/sgx/enclave, i.e. the flag would probably need to
+reside in mm_struct.  Keying off opening /dev/sgx/enclave isn't viable as
+enclaves can be handed off via SCM_RIGHTS or fork().
 
-> 
-> + make -s CC=powerpc64-linux-gnu-gcc -j 160
-> In file included from /linux/include/linux/uaccess.h:11:0,
->                   from /linux/include/linux/sched/task.h:11,
->                   from /linux/include/linux/sched/signal.h:9,
->                   from /linux/include/linux/rcuwait.h:6,
->                   from /linux/include/linux/percpu-rwsem.h:7,
->                   from /linux/include/linux/fs.h:33,
->                   from /linux/include/linux/huge_mm.h:8,
->                   from /linux/include/linux/mm.h:675,
->                   from /linux/arch/powerpc/kernel/signal_32.c:17:
-> /linux/arch/powerpc/kernel/signal_32.c: In function 'save_user_regs.isra.14.constprop':
-> /linux/arch/powerpc/include/asm/uaccess.h:161:2: error: 'asm' operand has impossible constraints
->    __asm__ __volatile__(     \
->    ^
-> /linux/arch/powerpc/include/asm/uaccess.h:197:12: note: in expansion of macro '__put_user_asm'
->      case 4: __put_user_asm(x, ptr, retval, "stw"); break; \
->              ^
-> /linux/arch/powerpc/include/asm/uaccess.h:206:2: note: in expansion of macro '__put_user_size_allowed'
->    __put_user_size_allowed(x, ptr, size, retval);  \
->    ^
-> /linux/arch/powerpc/include/asm/uaccess.h:220:2: note: in expansion of macro '__put_user_size'
->    __put_user_size(__pu_val, __pu_addr, __pu_size, __pu_err); \
->    ^
-> /linux/arch/powerpc/include/asm/uaccess.h:96:2: note: in expansion of macro '__put_user_nocheck'
->    __put_user_nocheck((__typeof__(*(ptr)))(x), (ptr), sizeof(*(ptr)))
->    ^
-> /linux/arch/powerpc/kernel/signal_32.c:120:7: note: in expansion of macro '__put_user'
->     if (__put_user((unsigned int)gregs[i], &frame->mc_gregs[i]))
->         ^
-> /linux/scripts/Makefile.build:280: recipe for target 'arch/powerpc/kernel/signal_32.o' failed
-> make[3]: *** [arch/powerpc/kernel/signal_32.o] Error 1
-> make[3]: *** Waiting for unfinished jobs....
-> In file included from /linux/include/linux/uaccess.h:11:0,
->                   from /linux/include/linux/sched/task.h:11,
->                   from /linux/include/linux/sched/signal.h:9,
->                   from /linux/include/linux/rcuwait.h:6,
->                   from /linux/include/linux/percpu-rwsem.h:7,
->                   from /linux/include/linux/fs.h:33,
->                   from /linux/include/linux/huge_mm.h:8,
->                   from /linux/include/linux/mm.h:675,
->                   from /linux/arch/powerpc/kernel/signal_64.c:12:
-> /linux/arch/powerpc/kernel/signal_64.c: In function '__se_sys_swapcontext':
-> /linux/arch/powerpc/include/asm/uaccess.h:319:2: error: 'asm' operand has impossible constraints
->    __asm__ __volatile__(    \
->    ^
-> /linux/arch/powerpc/include/asm/uaccess.h:359:10: note: in expansion of macro '__get_user_asm'
->    case 1: __get_user_asm(x, (u8 __user *)ptr, retval, "lbz"); break; \
->            ^
-> /linux/arch/powerpc/include/asm/uaccess.h:370:2: note: in expansion of macro '__get_user_size_allowed'
->    __get_user_size_allowed(x, ptr, size, retval);  \
->    ^
-> /linux/arch/powerpc/include/asm/uaccess.h:393:3: note: in expansion of macro '__get_user_size'
->     __get_user_size(__gu_val, __gu_addr, __gu_size, __gu_err); \
->     ^
-> /linux/arch/powerpc/include/asm/uaccess.h:94:2: note: in expansion of macro '__get_user_nocheck'
->    __get_user_nocheck((x), (ptr), sizeof(*(ptr)), true)
->    ^
-> /linux/arch/powerpc/kernel/signal_64.c:672:9: note: in expansion of macro '__get_user'
->        || __get_user(tmp, (u8 __user *) new_ctx + ctx_size - 1))
->           ^
-> /linux/scripts/Makefile.build:280: recipe for target 'arch/powerpc/kernel/signal_64.o' failed
-> make[3]: *** [arch/powerpc/kernel/signal_64.o] Error 1
-> /linux/scripts/Makefile.build:497: recipe for target 'arch/powerpc/kernel' failed
-> make[2]: *** [arch/powerpc/kernel] Error 2
-> /linux/Makefile:1756: recipe for target 'arch/powerpc' failed
-> make[1]: *** [arch/powerpc] Error 2
-> Makefile:185: recipe for target '__sub-make' failed
-> make: *** [__sub-make] Error 2
-> 
-> 
-> cheers
-> 
+Putting a flag in mm_struct is doable, but it would need to be sticky to
+keep things sane, e.g. clearing the flag on unmapping the enclave would
+require refcounting VMAs and hooking vm_ops->close.  The refcounting is
+painful (we had it for several years) and ->close prevents merging VMAs,
+which IMO is far worse than unconditionally morphing fault-based signals
+that originate in __vdso_sgx_enter_enclave().  And assuming we don't do the
+whole ->close thing, we'd end up with MADV_DONTFORK -> fork() having
+divergent behavior for mm_structs without /dev/sgx/enclave VMAs, i.e. the
+child of MADV_DONTFORK -> fork() case would not be tagged SGX (unless we
+intentionally do the "wrong" thing and propagate the flag), whereas the
+munmap() case would result in a SGX-tagged mm_struct with no
+/dev/sgx/enclave VMAs.
