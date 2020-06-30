@@ -2,117 +2,178 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45B1BC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:55:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10498C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1BC322073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:55:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4CB52073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:55:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593514540;
-	bh=wWEquVMFKXy588FnMroMAEIB7yZ2El1wF3pvAg8G+us=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dLvxGKOB8YXCOkZIXvRZ5ksWqkdJOsbrbJdtvsWSCVn2G6+yAZTc4trYMCJpWS0n3
-	 kejmKaqFSJAvpWJ3dHqMCLItQ48oEU4C6VvA74SguHiP0u640fJ5SjJoaTHE+F5QeV
-	 UObDaOYA0E2aXMtZNVJfajjRXSmSYZz4s5sXPccg=
+	s=default; t=1593514543;
+	bh=xpXgFc6VJxI7yVbdK+oqDekGciZztfNlNY9vpGzixVE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=RpgV58O46dtE4xrGMMfMeN70Y02tFkf2lifbrnxX/UDHrCvxIo9VG8M6WnCQOluxt
+	 /QTG8MIAWMiKZjn5WYSOzaZcytPv7ZTNEe9khMGTYU6yPDdGLP8uiFImSu9S5Cm946
+	 jWK6/W069emTKJ4YWZNqZGi05r1L/fBai5sSVK2I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732707AbgF3Kzi (ORCPT
+        id S1732721AbgF3Kzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 06:55:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59816 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732641AbgF3Kzf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 06:55:35 -0400
-Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6367C2067D;
-        Tue, 30 Jun 2020 10:55:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593514535;
-        bh=wWEquVMFKXy588FnMroMAEIB7yZ2El1wF3pvAg8G+us=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NQ4PP3lA+9OQXQXTKh9wAZLuw5BlWl3O8LNVmIN+HRZd1eYn6Rhr+lkn1m5+1yi8w
-         9Yql01aDsfT08gki7cfAonM/MG2NmByEPY39KRuJ6ZpmTVLhi4cedXQS6qnqXY9kzd
-         5dXxbh8MIwmxGK/dxGK9SO8pPCVVpVanMwriZsA4=
-Date:   Tue, 30 Jun 2020 11:55:32 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Sameer Pujar <spujar@nvidia.com>
-Cc:     Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        perex@perex.cz, tiwai@suse.com, robh+dt@kernel.org,
-        lgirdwood@gmail.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, digetx@gmail.com,
-        alsa-devel@alsa-project.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sharadg@nvidia.com,
-        mkumard@nvidia.com, viswanathl@nvidia.com, rlokhande@nvidia.com,
-        dramesh@nvidia.com, atalambedu@nvidia.com, nwartikar@nvidia.com,
-        swarren@nvidia.com, nicoleotsuka@gmail.com
-Subject: Re: [PATCH v4 11/23] ASoC: simple-card: Loop over all children for
- 'mclk-fs'
-Message-ID: <20200630105532.GG5272@sirena.org.uk>
-References: <1593233625-14961-1-git-send-email-spujar@nvidia.com>
- <1593233625-14961-12-git-send-email-spujar@nvidia.com>
- <875zba1y28.wl-kuninori.morimoto.gx@renesas.com>
- <58000bd3-861c-bbc2-75e1-128cf0199a76@nvidia.com>
- <87lfk5z4ov.wl-kuninori.morimoto.gx@renesas.com>
- <b33d5a1b-ecd5-3618-4894-c3ab0f4b077d@nvidia.com>
+        Tue, 30 Jun 2020 06:55:41 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:33728 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732697AbgF3Kzj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 06:55:39 -0400
+Received: by mail-oi1-f196.google.com with SMTP id k22so5710124oib.0;
+        Tue, 30 Jun 2020 03:55:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hTbwPpfXI9xMDRsJXGGIpIBFM8wdp1+JDn7sklMEIMA=;
+        b=bMOQLUrrAjciG+YqTsVKynDdJEn+RLJ6NkWRn6vP/k/zSwLmRL3ICIfbYZZ6r0ZO3J
+         3+fRfm4+o9coIi1u5/z3OdMBHdkJQvnB9tyHfr29nIaAvY7lHxoOjr5wmuQwoRz+566u
+         Kk6MrNnIg0K365z77V54ox6cvIWShAmmVKeELW9OLgwtE2d9bGog4k4F87n3NHktkNxA
+         SaEptQghwTkTR+eJMvRuG+wXNpTAqs4U5vQksLmJ0l8uIaBzJ563ey1x41ATBzGwDrI6
+         QCG81h9gCTcCz+yv2HLwH8trcMWWP5mVHkw4X75uJqrc7qz7agI1Ff1FyYtxsjSpLS7v
+         pCHA==
+X-Gm-Message-State: AOAM531xusrdkSauo/j7kKR8p37I4BtdSAFialE3rICBL4CIRbE9sK9r
+        i7gSRoxtkv1zX0CUo7Fh3xSDFhzKQXiINDiYUSA=
+X-Google-Smtp-Source: ABdhPJyq1ZXnEfTbtsudUdaXDZrpsPo5g98IZqG6sv/5uEyV5HYApUjKZQyJd4BIkIqWp1JEVXC7zVOCno7knl/SaNo=
+X-Received: by 2002:aca:f58a:: with SMTP id t132mr9637240oih.68.1593514536147;
+ Tue, 30 Jun 2020 03:55:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="64j1qyTOoGvYcHb1"
-Content-Disposition: inline
-In-Reply-To: <b33d5a1b-ecd5-3618-4894-c3ab0f4b077d@nvidia.com>
-X-Cookie: Walk softly and carry a megawatt laser.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <159312902033.1850128.1712559453279208264.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <CAJZ5v0h8Eg5_FVxz0COLDMK8cy72xxDk_2nFnXDJNUY-MvdBEQ@mail.gmail.com>
+ <CAPcyv4jqShnZr1b0-upwWf8L3JjKtHox_pCuu229630rXGuLkg@mail.gmail.com>
+ <CAJZ5v0i=SkqtgcXzq0oYNEAuYA-FvBEG-bm6fyidzAsYSNcEdQ@mail.gmail.com> <CAPcyv4iTJcjbfeBHbOJEai4gZyD7m79AmqQrtdkEtEUOvXaYAA@mail.gmail.com>
+In-Reply-To: <CAPcyv4iTJcjbfeBHbOJEai4gZyD7m79AmqQrtdkEtEUOvXaYAA@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 30 Jun 2020 12:55:24 +0200
+Message-ID: <CAJZ5v0g8indmC4N1+QRFPi1oHPmCr6AxmYVcfW+oCEsk=LwJEA@mail.gmail.com>
+Subject: Re: [PATCH 00/12] ACPI/NVDIMM: Runtime Firmware Activation
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Len Brown <len.brown@intel.com>, Len Brown <lenb@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, Stable <stable@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jun 30, 2020 at 1:37 AM Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> On Sun, Jun 28, 2020 at 10:23 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> >
+> > On Fri, Jun 26, 2020 at 8:43 PM Dan Williams <dan.j.williams@intel.com> wrote:
+> > >
+> > > On Fri, Jun 26, 2020 at 7:22 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> > > >
+> > > > On Fri, Jun 26, 2020 at 2:06 AM Dan Williams <dan.j.williams@intel.com> wrote:
+> > > > >
+> > > > > Quoting the documentation:
+> > > > >
+> > > > >     Some persistent memory devices run a firmware locally on the device /
+> > > > >     "DIMM" to perform tasks like media management, capacity provisioning,
+> > > > >     and health monitoring. The process of updating that firmware typically
+> > > > >     involves a reboot because it has implications for in-flight memory
+> > > > >     transactions. However, reboots are disruptive and at least the Intel
+> > > > >     persistent memory platform implementation, described by the Intel ACPI
+> > > > >     DSM specification [1], has added support for activating firmware at
+> > > > >     runtime.
+> > > > >
+> > > > >     [1]: https://docs.pmem.io/persistent-memory/
+> > > > >
+> > > > > The approach taken is to abstract the Intel platform specific mechanism
+> > > > > behind a libnvdimm-generic sysfs interface. The interface could support
+> > > > > runtime-firmware-activation on another architecture without need to
+> > > > > change userspace tooling.
+> > > > >
+> > > > > The ACPI NFIT implementation involves a set of device-specific-methods
+> > > > > (DSMs) to 'arm' individual devices for activation and bus-level
+> > > > > 'trigger' method to execute the activation. Informational / enumeration
+> > > > > methods are also provided at the bus and device level.
+> > > > >
+> > > > > One complicating aspect of the memory device firmware activation is that
+> > > > > the memory controller may need to be quiesced, no memory cycles, during
+> > > > > the activation. While the platform has mechanisms to support holding off
+> > > > > in-flight DMA during the activation, the device response to that delay
+> > > > > is potentially undefined. The platform may reject a runtime firmware
+> > > > > update if, for example a PCI-E device does not support its completion
+> > > > > timeout value being increased to meet the activation time. Outside of
+> > > > > device timeouts the quiesce period may also violate application
+> > > > > timeouts.
+> > > > >
+> > > > > Given the above device and application timeout considerations the
+> > > > > implementation defaults to hooking into the suspend path to trigger the
+> > > > > activation, i.e. that a suspend-resume cycle (at least up to the syscore
+> > > > > suspend point) is required.
+> > > >
+> > > > Well, that doesn't work if the suspend method for the system is set to
+> > > > suspend-to-idle (for example, via /sys/power/mem_sleep), because the
+> > > > syscore callbacks are not invoked in that case.
+> > > >
+> > > > Also you probably don't need the device power state toggling that
+> > > > happens during regular suspend/resume (you may not want it even for
+> > > > some devices).
+> > > >
+> > > > The hibernation freeze/thaw may be a better match and there is some
+> > > > test support in there already that may be kind of co-opted for your
+> > > > use case.
+> > >
+> > > Hmm, yes I guess freeze should be sufficient to quiesce most
+> > > device-DMA in the general case as applications will stop sending
+> > > requests.
+> >
+> > It is expected to be sufficient to quiesce all of them.
+> >
+> > If that is not the case, the integrity of the hibernation image cannot
+> > be guaranteed on the system in question.
+> >
+>
+> Ah, indeed, I was overlooking that property.
+>
+> > > I do expect some RDMA devices will happily keep on
+> > > transmitting, but that likely will need explicit mitigation. It also
+> > > appears the suspend callback for at least one RDMA device
+> > > mlx5_suspend() is rather violent as it appears to fully teardown the
+> > > device context, not just suspend operations.
+> > >
+> > > To be clear, what debug interface were you thinking I could glom onto
+> > > to just trigger firmware-activate at the end of the freeze phase?
+> >
+> > Functionally, the same as for suspend, but using the hibernation
+> > interface, so "echo platform > /sys/power/pm_test" followed by "echo
+> > disk > /sys/power/state".
+> >
+> > But it might be cleaner to introduce a special "hibernation mode", ie.
+> > is one more item in /sys/power/disk, that will trigger what you need
+> > (in analogy with "test_resume").
+>
+> I'll move the trigger to be after process freeze, but I'll keep it
+> tied to suspend-debug vs hibernate-debug. It appears the hibernate
+> debug path still goes through the exercise of allocating memory for
+> the hibernation image which is unnecessary if the goal is just to
+> 'freeze', 'activate', and 'thaw'.
 
---64j1qyTOoGvYcHb1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+But you need the ->freeze and ->thaw callbacks to run which does not
+happen at the process freeze stage.
 
-On Tue, Jun 30, 2020 at 09:53:13AM +0530, Sameer Pujar wrote:
-> On 6/30/2020 7:38 AM, Kuninori Morimoto wrote:
-> > External email: Use caution opening links or attachments
-
-> > > > > +     if (cpu != codec)
-> > > > > +             of_property_read_u32(codec, prop, &props->mclk_fs);
-
-> Sorry if I was not clear before.
-
-I agree with Moromito-san that the new code (especially the above bit)
-is very confusing, I'm not sure how the reader is supposed to figure out
-what the purpose of the check is or how the CPU could ever be the CODEC.
-
-> simple_parse_mclk_fs() is used by both simple_dai_link_of_dpcm() and
-> simple_dai_link_of(). To make the same API work for both the cases, I had to
-> use (A) in DPCM function. Now (B) does not get used for
-> simple_dai_link_of_dpcm(), but will get used by simple_dai_link_of().
-
-> If it is simpler I will just avoid 'cpu != codec' check and keep the
-> function simple_parse_mclk_fs() as it is.
-
-That'd definitely be simpler, or supporting this with a CPU node as
-well.
-
---64j1qyTOoGvYcHb1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl77GiQACgkQJNaLcl1U
-h9ARuwf9F6cRaR8lFHxz06jNWSZeUUWjcGZNbZVTPkDMRXKH+RKTvtX5ac3/WiX1
-NjQFs+TK8LV6s36/D9pbDL+8tWytYKpmU5R4T82nWEl2QJLpcn+baR5mZ74u5ZUH
-HyUKVyPr/xujUOBmFCLBZkLexA+f8pICIwqskTUefJe9yJwvTj2wTtj9zD85PaMz
-2Mu+EtDEvw1/2bvn1jaHvpYHmhDqHALoExw6AIRiuWSdOBNESBMksOE0Cn/qBuwA
-BsOQz+jwqyAGR0K8VpGGhFnt7xXCRK0eFWzD95FIxpQnq3CqLrphjK6wA5nL+vV1
-4n4ZkVcumkebzoPUrfnpt3DSzYCwbg==
-=gAuw
------END PGP SIGNATURE-----
-
---64j1qyTOoGvYcHb1--
+If you add a new hibernation mode dedicated to the NVDIMM firmware
+update, though, you can instrument the code to skip the memory
+allocation if this mode is selected.
