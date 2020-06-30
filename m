@@ -2,306 +2,128 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10992C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 954B0C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8D562085B
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:59:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n+Us5OkI"
+	by mail.kernel.org (Postfix) with ESMTP id 769FE2068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:00:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593522050;
+	bh=gM0irjghrH8cc5OMtaevMb0DpG9WQfoprM7amJWpVkY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=rVA9r/ujDMXXi87FxIn51frC7UqreTZl1Eu1TMDV/6y6kAy1HOlEw6+vrqsAqWOv5
+	 i/gD8B3J+hg8WgYlO7em4oc91IKOcrc57clz+2K+pkbZAg0Uf9Ux3S283By0clb3ss
+	 cVWB1b9MNkPB2QGg/LSqFW0mW+2dyi7XC5hObp7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388156AbgF3M7G (ORCPT
+        id S2388117AbgF3NAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 08:59:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39546 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388117AbgF3M6x (ORCPT
+        Tue, 30 Jun 2020 09:00:49 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:35058 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387860AbgF3NAr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 08:58:53 -0400
-Received: from mail-io1-xd43.google.com (mail-io1-xd43.google.com [IPv6:2607:f8b0:4864:20::d43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E840C03E979
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 05:58:53 -0700 (PDT)
-Received: by mail-io1-xd43.google.com with SMTP id y2so20866373ioy.3
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 05:58:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=UdQQMyfGrlolCh1BnbuyYqAEi0ViFKDhVICFJSF0SgM=;
-        b=n+Us5OkI7c0Z8lMtIUZA3IpusUNx46SJMAt7aVzumio2pBDogN7972fK9OR6ahtuJl
-         Rdo5pnOuMtbpsdCF5sp5Ov4WzW+q3I7iRAkpcecv36tpdn7JD9KoPNwHABAZPAgNDTLh
-         3TUUwaoX2oMobnx47P6W+cGY+Edp40HoCoMDjNOVUipeft6vNj/5GxoDOcvoPwjB2n2K
-         vtQtiXDBWQ+yktOwPo4/pdQLp5GN38ll4tqm3IstW/Exh3G7lQE1yY+huVp/VlRZghGW
-         0UsULhS30Tp9b9xd1hOqOxbyfaOHt6XcArtOQvTyvdoTtM27US7KjhcL625Vly+OMhQS
-         nimg==
+        Tue, 30 Jun 2020 09:00:47 -0400
+Received: by mail-ot1-f65.google.com with SMTP id d4so18322175otk.2;
+        Tue, 30 Jun 2020 06:00:47 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=UdQQMyfGrlolCh1BnbuyYqAEi0ViFKDhVICFJSF0SgM=;
-        b=pObpm4lVOGSnp7Njh4nabDKpssETcmCzfXqjVQp2yGLpnn17PUhEfOMr6bIQs/OIm4
-         DNXJl4YIerP5BcwKkq60dMQhR95nbSmUDO0MPNJj43BSEd9oTPZTGrZZ3KFPyGEJgSfM
-         uzIN25FXC0biOcVjlHeIBauy7GYhsbq/uvC3O7mk9thiQTdLTzZYbkniWBP5LILMxi2f
-         ISORub+Bjzy2VB6UcYP4o8ltRgFrNck5SvufQCoSDZ+0NM3GTZKO1r5t6hSS2fgO8QfS
-         zkur76zlgi09L5FTApgUbIEOMlVzi+H1o/elEU3D9zNmQnyZgSOb0WjTHroBROg0JbMS
-         8Mgw==
-X-Gm-Message-State: AOAM532yRzZY3+A3WuR8RuuoLCTgZhX7WipkRnjasZwjjpNb3CNF0UfM
-        S/Fy58lVR6MBkV3l+0Pzk9cDPKtkJVE=
-X-Google-Smtp-Source: ABdhPJxFpAfIkJaK2wVJG8rjx+aiSrCkDToHiPY/UWZsI8xJRDh3FDvrwrc9BSjH7d5Zd16/Rd1sqA==
-X-Received: by 2002:a05:6602:21c3:: with SMTP id c3mr10296358ioc.93.1593521932441;
-        Tue, 30 Jun 2020 05:58:52 -0700 (PDT)
-Received: from presto.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.gmail.com with ESMTPSA id z9sm1622588ilb.41.2020.06.30.05.58.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 05:58:52 -0700 (PDT)
-From:   Alex Elder <elder@linaro.org>
-To:     davem@davemloft.net, kuba@kernel.org
-Cc:     evgreen@chromium.org, subashab@codeaurora.org,
-        cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2 2/3] net: ipa: standarize more GSI error messages
-Date:   Tue, 30 Jun 2020 07:58:45 -0500
-Message-Id: <20200630125846.1281988-3-elder@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200630125846.1281988-1-elder@linaro.org>
-References: <20200630125846.1281988-1-elder@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WqwbwU46JyOBSJ4M/llFeE1rugAXIYDl6Af9czQJBYA=;
+        b=jDFgAAuJGqYlbU3fXLv/gMLOuQAgYysSgZSbE6LepFkZOT3HfO8Qp2g512nitXF8WU
+         tNL8LbHaLiHWlMgAIIEiCFaAfI6TO/0L9EiHmYLaWoh6gUj1VLFDDvC/aVPiU86eNlzD
+         NWuurDaD4xa5PQzaFP/bfg4nNL2GJTW09ssxbhRplYCxZikO+6H75j0Q9MwIUq3s7Htc
+         4poFgdVtWsWy2dxLNFi6TDz4/vaAgL/rDpMso6eUUDfCVbFWLEmmN4fwK2mXrNcX1GAz
+         TmOlI6aWtq66iOgYRYYrpAN6RfUx0CbUwNnQzncJs2/WFMTdR7vaJX1ol8Fe6gG6vJfL
+         Xl/Q==
+X-Gm-Message-State: AOAM530oW9yWTHcFvY2+YKQ5T4QFA6QisDf0aqqI//cEwLhdIuchj9vF
+        uMDPD/AqqOnGSb60rDvQSvEjZVIcv4Khfs7w0b45kg==
+X-Google-Smtp-Source: ABdhPJxcZHXFcqosLW4f6iGFDsj3uWlS9K4nihvXh0uIED4aD7noF+010OtlL0o8ZeIfLr5tSucG2WE3CDKvAel9ATU=
+X-Received: by 2002:a9d:39f5:: with SMTP id y108mr17985171otb.262.1593522045805;
+ Tue, 30 Jun 2020 06:00:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200630044943.3425049-1-rajatja@google.com> <20200630044943.3425049-6-rajatja@google.com>
+ <20200630104948.GC856968@kuha.fi.intel.com> <20200630125216.GA1109228@kroah.com>
+In-Reply-To: <20200630125216.GA1109228@kroah.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 30 Jun 2020 15:00:34 +0200
+Message-ID: <CAJZ5v0iYFKrouQx_b7afPnz7ohjWOKKDhdHj_3HObKYV_rRhiw@mail.gmail.com>
+Subject: Re: [PATCH v2 5/7] driver core: Add device location to "struct
+ device" and expose it in sysfs
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rajat Jain <rajatja@google.com>
+Cc:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "open list:AMD IOMMU (AMD-VI)" <iommu@lists.linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Raj Ashok <ashok.raj@intel.com>,
+        lalithambika.krishnakumar@intel.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Oliver O'Halloran" <oohall@gmail.com>,
+        Saravana Kannan <saravanak@google.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make minor updates to error messages reported in "gsi.c":
-  - Use local variables to reduce multi-line function calls
-  - Don't use parentheses in messages
-  - Do some slight rewording in a few cases
+On Tue, Jun 30, 2020 at 2:52 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, Jun 30, 2020 at 01:49:48PM +0300, Heikki Krogerus wrote:
+> > On Mon, Jun 29, 2020 at 09:49:41PM -0700, Rajat Jain wrote:
+> > > Add a new (optional) field to denote the physical location of a device
+> > > in the system, and expose it in sysfs. This was discussed here:
+> > > https://lore.kernel.org/linux-acpi/20200618184621.GA446639@kroah.com/
+> > >
+> > > (The primary choice for attribute name i.e. "location" is already
+> > > exposed as an ABI elsewhere, so settled for "site"). Individual buses
+> > > that want to support this new attribute can opt-in by setting a flag in
+> > > bus_type, and then populating the location of device while enumerating
+> > > it.
+> >
+> > So why not just call it "physical_location"?
+>
+> That's better, and will allow us to put "3rd blue plug from the left,
+> 4th row down" in there someday :)
+>
+> All of this is "relative" to the CPU, right?  But what CPU?  Again, how
+> are the systems with drawers of PCI and CPUs and memory that can be
+> added/removed at any point in time being handled here?  What is
+> "internal" and "external" for them?
+>
+> What exactly is the physical boundry here that is attempting to be
+> described?
 
-Signed-off-by: Alex Elder <elder@linaro.org>
----
-v2: Fixed two indentation issues reported by checkpatch.pl.
+Also, where is the "physical location" information going to come from?
 
- drivers/net/ipa/gsi.c | 57 ++++++++++++++++++++++---------------------
- 1 file changed, 29 insertions(+), 28 deletions(-)
-
-diff --git a/drivers/net/ipa/gsi.c b/drivers/net/ipa/gsi.c
-index 7e4e54ee09b1..c84b8d92caa9 100644
---- a/drivers/net/ipa/gsi.c
-+++ b/drivers/net/ipa/gsi.c
-@@ -336,6 +336,7 @@ static int evt_ring_command(struct gsi *gsi, u32 evt_ring_id,
- {
- 	struct gsi_evt_ring *evt_ring = &gsi->evt_ring[evt_ring_id];
- 	struct completion *completion = &evt_ring->completion;
-+	struct device *dev = gsi->dev;
- 	u32 val;
- 
- 	val = u32_encode_bits(evt_ring_id, EV_CHID_FMASK);
-@@ -344,8 +345,8 @@ static int evt_ring_command(struct gsi *gsi, u32 evt_ring_id,
- 	if (gsi_command(gsi, GSI_EV_CH_CMD_OFFSET, val, completion))
- 		return 0;	/* Success! */
- 
--	dev_err(gsi->dev, "GSI command %u to event ring %u timed out "
--		"(state is %u)\n", opcode, evt_ring_id, evt_ring->state);
-+	dev_err(dev, "GSI command %u for event ring %u timed out, state %u\n",
-+		opcode, evt_ring_id, evt_ring->state);
- 
- 	return -ETIMEDOUT;
- }
-@@ -431,6 +432,7 @@ gsi_channel_command(struct gsi_channel *channel, enum gsi_ch_cmd_opcode opcode)
- 	struct completion *completion = &channel->completion;
- 	u32 channel_id = gsi_channel_id(channel);
- 	struct gsi *gsi = channel->gsi;
-+	struct device *dev = gsi->dev;
- 	u32 val;
- 
- 	val = u32_encode_bits(channel_id, CH_CHID_FMASK);
-@@ -439,8 +441,7 @@ gsi_channel_command(struct gsi_channel *channel, enum gsi_ch_cmd_opcode opcode)
- 	if (gsi_command(gsi, GSI_CH_CMD_OFFSET, val, completion))
- 		return 0;	/* Success! */
- 
--	dev_err(gsi->dev,
--		"GSI command %u to channel %u timed out (state is %u)\n",
-+	dev_err(dev, "GSI command %u for channel %u timed out, state %u\n",
- 		opcode, channel_id, gsi_channel_state(channel));
- 
- 	return -ETIMEDOUT;
-@@ -1154,8 +1155,8 @@ static irqreturn_t gsi_isr(int irq, void *dev_id)
- 				break;
- 			default:
- 				dev_err(gsi->dev,
--					"%s: unrecognized type 0x%08x\n",
--					__func__, gsi_intr);
-+					"unrecognized interrupt type 0x%08x\n",
-+					gsi_intr);
- 				break;
- 			}
- 		} while (intr_mask);
-@@ -1259,7 +1260,7 @@ static int gsi_ring_alloc(struct gsi *gsi, struct gsi_ring *ring, u32 count)
- 	if (ring->virt && addr % size) {
- 		dma_free_coherent(dev, size, ring->virt, ring->addr);
- 		dev_err(dev, "unable to alloc 0x%zx-aligned ring buffer\n",
--				size);
-+			size);
- 		return -EINVAL;	/* Not a good error value, but distinct */
- 	} else if (!ring->virt) {
- 		return -ENOMEM;
-@@ -1650,12 +1651,13 @@ static void gsi_channel_teardown(struct gsi *gsi)
- /* Setup function for GSI.  GSI firmware must be loaded and initialized */
- int gsi_setup(struct gsi *gsi, bool legacy)
- {
-+	struct device *dev = gsi->dev;
- 	u32 val;
- 
- 	/* Here is where we first touch the GSI hardware */
- 	val = ioread32(gsi->virt + GSI_GSI_STATUS_OFFSET);
- 	if (!(val & ENABLED_FMASK)) {
--		dev_err(gsi->dev, "GSI has not been enabled\n");
-+		dev_err(dev, "GSI has not been enabled\n");
- 		return -EIO;
- 	}
- 
-@@ -1663,24 +1665,24 @@ int gsi_setup(struct gsi *gsi, bool legacy)
- 
- 	gsi->channel_count = u32_get_bits(val, NUM_CH_PER_EE_FMASK);
- 	if (!gsi->channel_count) {
--		dev_err(gsi->dev, "GSI reports zero channels supported\n");
-+		dev_err(dev, "GSI reports zero channels supported\n");
- 		return -EINVAL;
- 	}
- 	if (gsi->channel_count > GSI_CHANNEL_COUNT_MAX) {
--		dev_warn(gsi->dev,
--			"limiting to %u channels (hardware supports %u)\n",
-+		dev_warn(dev,
-+			 "limiting to %u channels; hardware supports %u\n",
- 			 GSI_CHANNEL_COUNT_MAX, gsi->channel_count);
- 		gsi->channel_count = GSI_CHANNEL_COUNT_MAX;
- 	}
- 
- 	gsi->evt_ring_count = u32_get_bits(val, NUM_EV_PER_EE_FMASK);
- 	if (!gsi->evt_ring_count) {
--		dev_err(gsi->dev, "GSI reports zero event rings supported\n");
-+		dev_err(dev, "GSI reports zero event rings supported\n");
- 		return -EINVAL;
- 	}
- 	if (gsi->evt_ring_count > GSI_EVT_RING_COUNT_MAX) {
--		dev_warn(gsi->dev,
--			"limiting to %u event rings (hardware supports %u)\n",
-+		dev_warn(dev,
-+			 "limiting to %u event rings; hardware supports %u\n",
- 			 GSI_EVT_RING_COUNT_MAX, gsi->evt_ring_count);
- 		gsi->evt_ring_count = GSI_EVT_RING_COUNT_MAX;
- 	}
-@@ -1766,19 +1768,19 @@ static bool gsi_channel_data_valid(struct gsi *gsi,
- 
- 	/* Make sure channel ids are in the range driver supports */
- 	if (channel_id >= GSI_CHANNEL_COUNT_MAX) {
--		dev_err(dev, "bad channel id %u (must be less than %u)\n",
-+		dev_err(dev, "bad channel id %u; must be less than %u\n",
- 			channel_id, GSI_CHANNEL_COUNT_MAX);
- 		return false;
- 	}
- 
- 	if (data->ee_id != GSI_EE_AP && data->ee_id != GSI_EE_MODEM) {
--		dev_err(dev, "bad EE id %u (AP or modem)\n", data->ee_id);
-+		dev_err(dev, "bad EE id %u; not AP or modem\n", data->ee_id);
- 		return false;
- 	}
- 
- 	if (!data->channel.tlv_count ||
- 	    data->channel.tlv_count > GSI_TLV_MAX) {
--		dev_err(dev, "channel %u bad tlv_count %u (must be 1..%u)\n",
-+		dev_err(dev, "channel %u bad tlv_count %u; must be 1..%u\n",
- 			channel_id, data->channel.tlv_count, GSI_TLV_MAX);
- 		return false;
- 	}
-@@ -1796,13 +1798,13 @@ static bool gsi_channel_data_valid(struct gsi *gsi,
- 	}
- 
- 	if (!is_power_of_2(data->channel.tre_count)) {
--		dev_err(dev, "channel %u bad tre_count %u (not power of 2)\n",
-+		dev_err(dev, "channel %u bad tre_count %u; not power of 2\n",
- 			channel_id, data->channel.tre_count);
- 		return false;
- 	}
- 
- 	if (!is_power_of_2(data->channel.event_count)) {
--		dev_err(dev, "channel %u bad event_count %u (not power of 2)\n",
-+		dev_err(dev, "channel %u bad event_count %u; not power of 2\n",
- 			channel_id, data->channel.event_count);
- 		return false;
- 	}
-@@ -1956,6 +1958,7 @@ int gsi_init(struct gsi *gsi, struct platform_device *pdev, bool prefetch,
- 	     u32 count, const struct ipa_gsi_endpoint_data *data,
- 	     bool modem_alloc)
- {
-+	struct device *dev = &pdev->dev;
- 	struct resource *res;
- 	resource_size_t size;
- 	unsigned int irq;
-@@ -1963,7 +1966,7 @@ int gsi_init(struct gsi *gsi, struct platform_device *pdev, bool prefetch,
- 
- 	gsi_validate_build();
- 
--	gsi->dev = &pdev->dev;
-+	gsi->dev = dev;
- 
- 	/* The GSI layer performs NAPI on all endpoints.  NAPI requires a
- 	 * network device structure, but the GSI layer does not have one,
-@@ -1974,43 +1977,41 @@ int gsi_init(struct gsi *gsi, struct platform_device *pdev, bool prefetch,
- 	/* Get the GSI IRQ and request for it to wake the system */
- 	ret = platform_get_irq_byname(pdev, "gsi");
- 	if (ret <= 0) {
--		dev_err(gsi->dev,
--			"DT error %d getting \"gsi\" IRQ property\n", ret);
-+		dev_err(dev, "DT error %d getting \"gsi\" IRQ property\n", ret);
- 		return ret ? : -EINVAL;
- 	}
- 	irq = ret;
- 
- 	ret = request_irq(irq, gsi_isr, 0, "gsi", gsi);
- 	if (ret) {
--		dev_err(gsi->dev, "error %d requesting \"gsi\" IRQ\n", ret);
-+		dev_err(dev, "error %d requesting \"gsi\" IRQ\n", ret);
- 		return ret;
- 	}
- 	gsi->irq = irq;
- 
- 	ret = enable_irq_wake(gsi->irq);
- 	if (ret)
--		dev_warn(gsi->dev, "error %d enabling gsi wake irq\n", ret);
-+		dev_warn(dev, "error %d enabling gsi wake irq\n", ret);
- 	gsi->irq_wake_enabled = !ret;
- 
- 	/* Get GSI memory range and map it */
- 	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "gsi");
- 	if (!res) {
--		dev_err(gsi->dev,
--			"DT error getting \"gsi\" memory property\n");
-+		dev_err(dev, "DT error getting \"gsi\" memory property\n");
- 		ret = -ENODEV;
- 		goto err_disable_irq_wake;
- 	}
- 
- 	size = resource_size(res);
- 	if (res->start > U32_MAX || size > U32_MAX - res->start) {
--		dev_err(gsi->dev, "DT memory resource \"gsi\" out of range\n");
-+		dev_err(dev, "DT memory resource \"gsi\" out of range\n");
- 		ret = -EINVAL;
- 		goto err_disable_irq_wake;
- 	}
- 
- 	gsi->virt = ioremap(res->start, size);
- 	if (!gsi->virt) {
--		dev_err(gsi->dev, "unable to remap \"gsi\" memory\n");
-+		dev_err(dev, "unable to remap \"gsi\" memory\n");
- 		ret = -ENOMEM;
- 		goto err_disable_irq_wake;
- 	}
--- 
-2.25.1
-
+If that is the platform firmware (which I suspect is the anticipated
+case), there may be problems with reliability related to that.
