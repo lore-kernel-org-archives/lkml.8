@@ -7,69 +7,69 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 617C0C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:33:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF8FC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:34:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 38E8C206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:33:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19A2D206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:34:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ktsLrCTc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q6mGE5E3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388155AbgF3Ndw (ORCPT
+        id S2388184AbgF3Nd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 09:33:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44808 "EHLO
+        Tue, 30 Jun 2020 09:33:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732724AbgF3NdK (ORCPT
+        with ESMTP id S2388139AbgF3Ndw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 09:33:10 -0400
-Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85FCDC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:33:10 -0700 (PDT)
-Received: by mail-io1-xd44.google.com with SMTP id m81so21005074ioa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:33:10 -0700 (PDT)
+        Tue, 30 Jun 2020 09:33:52 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4CE8C03E97A
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:33:51 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id 22so18846295wmg.1
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:33:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=riisFCPpfIy+ddIeKemrrsU0BmBozz0Ml8rD1KyP5/o=;
-        b=ktsLrCTc/Su3iZGXae226c0RZ8TahBwtS3/Dt7AIozO9WfjMBKih7FkhSYt1fxrd0/
-         yR6k0TlCcG5GCV80FF+WW7HVUzzltC1l7tW5M8j+XiE9zZOjeetKjDQa4EQ8mGkSkaiO
-         RwmSvFCuXcrHLyTP+P6HiPUcdP+6hAILeqgXSYW5xbEKwr/rHsr8hNgCaF+DTVIbxPH+
-         gRDyLDtdmzzgX5tOfgdjiZRxrBHcZZmZ4mI1Sq3MMPfUW6OSWYlh8NA95WyOVCUI9eqX
-         7kWqrGc3XXVxxfsjnE1V58KffQMqI/taU7buHFFkVyuz+VGs0lxFJeeVQdj9pr0v7u5f
-         F2ZA==
+        bh=zyIUTlmpGUcnH+LiKgtC/ATIX5960EbAPmpzyReDmls=;
+        b=Q6mGE5E3X/8/+zlhENHURAJbLrEQhKKP61fNSre5+zd/awBDhaniAZCqLJv3T/K+xB
+         LLaHcTkwe5z7mGfkbouNMs2GcI+AqRHhuq6Gz1QCCRJe0Y+hn/YHQuGUZWAqb7RUpdaE
+         70+NaU99UEzrWJmcUxMJBjS1r9r8XFy8753y04wH/FBtreZ39DbEg4yxDeqSHADl49s1
+         crYCHpqzEp8rRerMgtEmyT9czhG4JiM8cwA7eHXPiSnTgDUgjm80qrR51MCfCoBh7bds
+         M2AxS/fr2tEVYfL0+cYxhEvrKD3lrdVVxo3BgjB+eZHFrUSXOVioVHn0oc/fAVoRStuq
+         SWvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=riisFCPpfIy+ddIeKemrrsU0BmBozz0Ml8rD1KyP5/o=;
-        b=QcaR3G5Bda8HIy9msOuGiY86yP0hoKcbFM8BUizMklTIeh8sEhZWw3mdAOjEZGCnxx
-         w0rWNBiozqU2O4bdzOxwuCjJXdWei8ryvKhEpjfrWkBRB49E20k9N+fGaxiO4pbsJ90G
-         mrQbquSDBt9qJ1PTxflMvglnB6M/8d1A6ms9OR/A5FN7cylUME7c8iR6oQFUeJb8KmgN
-         sI6ttMHW3DG2UU+z6Aw5Ptrw1m01f9iHTRLEEpS0aTjXcXEC2+l75QwiuVuaklB1KgO5
-         MMWeZRA4GZOyP5nxBVwySiY9ab3ggg4CFTYEJWioCwdSZTC9Mo+tgX5V4k8dNu7xNQpI
-         7q4g==
-X-Gm-Message-State: AOAM533rDTyL5TXKVliz5bSEc6iGiKxu5o4YwxRNcssx7ITWl58CoWQD
-        M8a1i0movwBpeB40z/GRDvGfWA==
-X-Google-Smtp-Source: ABdhPJyxkdvw3QKz0HMO2AiqGyCAIpBnZDMY5qytsopl8ajmuCMHUpnwfXppdlrX47I2lC/rIJPUmA==
-X-Received: by 2002:a6b:8e56:: with SMTP id q83mr21855491iod.61.1593523989803;
-        Tue, 30 Jun 2020 06:33:09 -0700 (PDT)
-Received: from presto.localdomain (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.gmail.com with ESMTPSA id u15sm1538776iog.18.2020.06.30.06.33.08
+        bh=zyIUTlmpGUcnH+LiKgtC/ATIX5960EbAPmpzyReDmls=;
+        b=YkmoKsZyD/Nr9vhoFzbY4doDSZlPeOqf7XfOsbbLJrCosMFZwvh3LEvjNx8S6Es2WJ
+         JWQFQbVYPeBE8bs6E2MUk8uo4ALi5gH6P+b3BnAzRZJE/mSoP0R3Zi+IzRshAtwYn1ff
+         s+EB4EV2IBYclxzmVBMO0Ayf5zg4HxuEu10GjjxekrF4Z4wB4fBEZ7Dj5XpeF3qrbAvK
+         Hm31/OwZoLiHuMGyhA2HuTTSTOwlK9mVp6C/Uta5/krVaBv+xBgdMvke5jmRW1WPPIru
+         N7mI68tqP6h5AnuTGMDTNxEKyLMpeTvALFUnv5kJ3YKKwSTJaJSLtRmXf9cFFovstTbT
+         JnkQ==
+X-Gm-Message-State: AOAM5315lgTRHQ3uU1JjxSyCjjhLfXIqT1WWUBcnjJip9HhvpIZnL5E2
+        dQUPohca5rsOmolVOgCzx1m39A==
+X-Google-Smtp-Source: ABdhPJw7St3BA3NSrWMeVnDiPKDDzNpn3UpLraNAHGKv+8L6f1Y/qEVIk8Dy7tAqPKp72fwVAxdgCg==
+X-Received: by 2002:a05:600c:2058:: with SMTP id p24mr21449910wmg.74.1593524029704;
+        Tue, 30 Jun 2020 06:33:49 -0700 (PDT)
+Received: from localhost.localdomain ([2.27.35.144])
+        by smtp.gmail.com with ESMTPSA id z16sm3682464wrr.35.2020.06.30.06.33.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 06:33:09 -0700 (PDT)
-From:   Alex Elder <elder@linaro.org>
-To:     davem@davemloft.net, kuba@kernel.org
-Cc:     evgreen@chromium.org, subashab@codeaurora.org,
-        cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net-next v2 2/5] net: ipa: metadata_mask register is RX only
-Date:   Tue, 30 Jun 2020 08:33:01 -0500
-Message-Id: <20200630133304.1331058-3-elder@linaro.org>
+        Tue, 30 Jun 2020 06:33:49 -0700 (PDT)
+From:   Lee Jones <lee.jones@linaro.org>
+To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Anton Vorontsov <avorontsov@ru.mvista.com>
+Subject: [PATCH 01/10] gpio: gpiolib-of: Provide documentation for of_gpio_spi_cs_get_count()
+Date:   Tue, 30 Jun 2020 14:33:36 +0100
+Message-Id: <20200630133345.2232932-2-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200630133304.1331058-1-elder@linaro.org>
-References: <20200630133304.1331058-1-elder@linaro.org>
+In-Reply-To: <20200630133345.2232932-1-lee.jones@linaro.org>
+References: <20200630133345.2232932-1-lee.jones@linaro.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,42 +77,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The INIT_HDR_METADATA_MASK endpoint configuration register is only
-valid for RX endpoints.  Rather than writing a zero to that register
-for TX endpoints, avoid writing the register at all.
+Descriptions for of_gpio_spi_cs_get_count()'s 2 arguments are
+missing.  Document both 'dev' and 'con_id'.
 
-Signed-off-by: Alex Elder <elder@linaro.org>
+Fixes the following W=1 kernel build warnings:
+
+ drivers/gpio/gpiolib-of.c:36: warning: Function parameter or member 'dev' not described in 'of_gpio_spi_cs_get_count'
+ drivers/gpio/gpiolib-of.c:36: warning: Function parameter or member 'con_id' not described in 'of_gpio_spi_cs_get_count'
+
+Cc: Anton Vorontsov <avorontsov@ru.mvista.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
-v2: The commented call to assert() that was added is now gone.
+ drivers/gpio/gpiolib-of.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
- drivers/net/ipa/ipa_endpoint.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ipa/ipa_endpoint.c b/drivers/net/ipa/ipa_endpoint.c
-index 31afe282f347..1babcfc79360 100644
---- a/drivers/net/ipa/ipa_endpoint.c
-+++ b/drivers/net/ipa/ipa_endpoint.c
-@@ -530,7 +530,7 @@ static void ipa_endpoint_init_hdr_metadata_mask(struct ipa_endpoint *endpoint)
- 	offset = IPA_REG_ENDP_INIT_HDR_METADATA_MASK_N_OFFSET(endpoint_id);
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index 219eb00542334..236985714ea92 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -25,6 +25,9 @@
  
- 	/* Note that HDR_ENDIANNESS indicates big endian header fields */
--	if (!endpoint->toward_ipa && endpoint->data->qmap)
-+	if (endpoint->data->qmap)
- 		val = cpu_to_be32(IPA_ENDPOINT_QMAP_METADATA_MASK);
- 
- 	iowrite32(val, endpoint->ipa->reg_virt + offset);
-@@ -1302,10 +1302,10 @@ static void ipa_endpoint_program(struct ipa_endpoint *endpoint)
- 			(void)ipa_endpoint_program_suspend(endpoint, false);
- 		ipa_endpoint_init_hdr_ext(endpoint);
- 		ipa_endpoint_init_aggr(endpoint);
-+		ipa_endpoint_init_hdr_metadata_mask(endpoint);
- 	}
- 	ipa_endpoint_init_cfg(endpoint);
- 	ipa_endpoint_init_hdr(endpoint);
--	ipa_endpoint_init_hdr_metadata_mask(endpoint);
- 	ipa_endpoint_init_mode(endpoint);
- 	ipa_endpoint_status(endpoint);
- }
+ /**
+  * of_gpio_spi_cs_get_count() - special GPIO counting for SPI
++ * @dev:    Consuming device
++ * @con_id: Function within the GPIO consumer
++ *
+  * Some elder GPIO controllers need special quirks. Currently we handle
+  * the Freescale GPIO controller with bindings that doesn't use the
+  * established "cs-gpios" for chip selects but instead rely on
 -- 
 2.25.1
 
