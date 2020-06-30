@@ -2,135 +2,130 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E00E4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:47:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 474DCC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AD173206B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:47:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="b5QTXRyr"
+	by mail.kernel.org (Postfix) with ESMTP id 28DE320774
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:48:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728405AbgF3Tro (ORCPT
+        id S1728424AbgF3Tso (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 15:47:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46280 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728045AbgF3Trn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 15:47:43 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CA37C03E979
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 12:47:43 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id w17so17796114oie.6
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 12:47:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=9UKxlIJOTY2zx2nzmpDV6yMhwVzomovdk4iBLHXz+to=;
-        b=b5QTXRyrtvJIel7TqOAPE7QxmKK0A0Kk/L9Y88ohrYuISTLLPdp5HH9fUHPSEDqcTq
-         etgp/5shPJOkJzg9Azw7IAVltGons+60NY0zqsd3wibTXJCm7bDqpHR4MPEfSKZzdKFY
-         RaVLrZFIUpykTrxj5+s/RbG50eBIV8k/bAMIsgo/F2IPeaMwuK8gvy97eT9jx28c4BLJ
-         n+G1HzxZvlmPyqoBCikNS2FAk3hiUfcugrxlaT9FJD/xkpXz+luMfWgNw9gAEJLh0JfU
-         sbJELKGA/NjGmfY/jqBwt2FR3nBPIvf0eHx8gW0vJwhwxCXQXRWsrnRGHLL8vwBPP+iw
-         v1sA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=9UKxlIJOTY2zx2nzmpDV6yMhwVzomovdk4iBLHXz+to=;
-        b=kR1DjWvSttyKzL8zjzufA598W0CI0/D9uknAvlv8FAQZEr2p6Fc1GVQPlLmfJNRuF4
-         OkWdtnDGQsebAdfKfI1NzsPuc2zaEDF9lP/X3Oat78TZy/JQWtKHj1UN8vmbIpHKXKyO
-         xi6TLBrv4oYc1QZp0uNYDne9jfidmOJagC36pPfGfJx7RgugaEqXBrwAxPYNla9QATsc
-         xkPll+UXtr1A6OWAPi9k80MAUn2u5H87r9kqWyKeExmp3nYz7KPWZVFQmghy6hlSLKly
-         oj7ORhqNAyScfhpZXer+HWvOaoeyFKEKE/oERZ+eieyM5AJIwPpvTKLCMSzW/+55142M
-         R0ng==
-X-Gm-Message-State: AOAM5318a2OgobRTZf1Qa7zJKOp8AQ/36+nm5MN2aeZiQeN1w2noOBB3
-        Pkv0VRsOraaQH6BFaNZWSVXC7xriaDPp/pTy04E5Hg==
-X-Google-Smtp-Source: ABdhPJzl9oZuNesnaQZ/teRrLRE7pNmT9CEUr1yOCRE9DkovB1JFdxUa5I7sAEWXrcc+60LRYFXJ6PfgRURsOozdFbY=
-X-Received: by 2002:a05:6808:3ab:: with SMTP id n11mr12490827oie.121.1593546462237;
- Tue, 30 Jun 2020 12:47:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200630173734.14057-1-will@kernel.org> <20200630173734.14057-19-will@kernel.org>
-In-Reply-To: <20200630173734.14057-19-will@kernel.org>
-From:   Marco Elver <elver@google.com>
-Date:   Tue, 30 Jun 2020 21:47:30 +0200
-Message-ID: <CANpmjNPOO=AVsVJMdL8sq03jwHsDR_1_FfWccwaLKEBRn1RFtA@mail.gmail.com>
-Subject: Re: [PATCH 18/18] arm64: lto: Strengthen READ_ONCE() to acquire when CLANG_LTO=y
-To:     Will Deacon <will@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Matt Turner <mattst88@gmail.com>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Richard Henderson <rth@twiddle.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-alpha@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 30 Jun 2020 15:48:44 -0400
+Received: from foss.arm.com ([217.140.110.172]:32882 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728407AbgF3Tso (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 15:48:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4C47931B;
+        Tue, 30 Jun 2020 12:48:43 -0700 (PDT)
+Received: from seattle-bionic.arm.com.Home (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5819D3F73C;
+        Tue, 30 Jun 2020 12:48:42 -0700 (PDT)
+From:   Oliver Swede <oli.swede@arm.com>
+To:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 00/14] arm64: Optimise and update memcpy, user copy and string routines
+Date:   Tue, 30 Jun 2020 19:48:08 +0000
+Message-Id: <20200630194822.1082-1-oli.swede@arm.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Jun 2020 at 19:39, Will Deacon <will@kernel.org> wrote:
->
-> When building with LTO, there is an increased risk of the compiler
-> converting an address dependency headed by a READ_ONCE() invocation
-> into a control dependency and consequently allowing for harmful
-> reordering by the CPU.
->
-> Ensure that such transformations are harmless by overriding the generic
-> READ_ONCE() definition with one that provides acquire semantics when
-> building with LTO.
->
-> Signed-off-by: Will Deacon <will@kernel.org>
-> ---
->  arch/arm64/include/asm/rwonce.h   | 63 +++++++++++++++++++++++++++++++
->  arch/arm64/kernel/vdso/Makefile   |  2 +-
->  arch/arm64/kernel/vdso32/Makefile |  2 +-
->  3 files changed, 65 insertions(+), 2 deletions(-)
->  create mode 100644 arch/arm64/include/asm/rwonce.h
+Hi,
 
-This seems reasonable, given we can't realistically tell the compiler
-about dependent loads. What (if any), is the performance impact? I
-guess this also heavily depends on the actual silicon.
+This contains an update to the cortex-strings patchset: the
+correctness of the fixup routines are improved, with the aim being to
+return the exact number of remaining bytes for all copy sizes.
+To ensure they are exact - which the current fixups are not for some
+copy sizes and are off by a few byes - is an extension to the
+original intention of fixing an issue reported by an LTP run last
+year, where the fixup routine in v2 of this patchset (which was
+importing the cortex-strings memcpy implementation) would over-report
+the number of bytes that successfully copied.
+Version 3 addressed this but I later found some issues with the fixup
+correctness after further testing, and have partially re-written them
+here, and addressed some other behaviours of the copy algorithm.
 
-I do wonder, though, if there is some way to make the compiler do
-something better for us. Clearly, implementing real
-memory_order_consume hasn't worked out until today. But maybe the
-compiler could promote dependent loads to acquires if it recognizes it
-lost dependencies during optimizations. Just thinking out loud, it
-probably still has some weird corner case that will break. ;-)
+Comments welcome,
 
-The other thing is that I'd be cautious blaming LTO, as I tried to
-summarize here:
-https://lore.kernel.org/kernel-hardening/20200630191931.GA884155@elver.google.com/
+Thanks
+Oliver
 
-The main thing is that, yes, this might be something to be worried
-about, but if we are worried about it, we need to be worried about it
-in *all* builds (LTO or not). My guess is that's not acceptable. Would
-it be better to just guard the promotion of READ_ONCE() to acquire
-behind a config option like CONFIG_ACQUIRE_READ_DEPENDENCIES, and then
-make LTO select that (or maybe leave it optional?). In future, for
-very aggressive non-LTO compilers even, one may then also select that
-if there is substantiated worry things do actually break.
+v1: https://lore.kernel.org/linux-arm-kernel/cover.1571073960.git.robin.murphy@arm.com/
+v2: https://lore.kernel.org/linux-arm-kernel/cover.1571421836.git.robin.murphy@arm.com/
+v3: https://lore.kernel.org/linux-arm-kernel/20200514143227.605-1-oli.swede@arm.com/
 
-Thanks,
--- Marco
+Changes since v3:
+* Improves the accuracy of the fixups in response to issues that
+  arose during futher testing
+* Accounts for faults on store instructions on systems with UAO
+  enabled
+* Expands on comments detailing the implementation
+
+Changes since v2:
+* Adds Robin's separate patch that fixes a compilation issue with
+  KProbes fixup [1]
+* Imports the most recent memcpy implementation by updating Sam's
+  patch (and moves this patch to occur after the cortex-strings
+  importing so that it's closer to the patches containing its 
+  corresponding fixups)
+* Uses the stack to preserve the initial parameters
+* Replaces the usercopy fixup routine in v2 with multiple longer
+  fixups that each make use of the fault address to return the exact
+  number of bytes that haven't yet copied.
+
+[1] https://lore.kernel.org/linux-arm-kernel/e70f7b9de7e601b9e4a6fedad8eaf64d304b1637.1571326276.git.robin.murphy@arm.com/
+
+Oliver Swede (5):
+  arm64: Store the arguments to copy_*_user on the stack
+  arm64: Use additional memcpy macros and fixups
+  arm64: Add fixup routines for usercopy load exceptions
+  arm64: Add fixup routines for usercopy store exceptions
+  arm64: Improve accuracy of fixup for UAO cases
+
+Robin Murphy (2):
+  arm64: kprobes: Drop open-coded exception fixup
+  arm64: Tidy up _asm_extable_faultaddr usage
+
+Sam Tebbs (7):
+  arm64: Allow passing fault address to fixup handlers
+  arm64: Import latest version of Cortex Strings' memcmp
+  arm64: Import latest version of Cortex Strings' memmove
+  arm64: Import latest version of Cortex Strings' strcmp
+  arm64: Import latest version of Cortex Strings' strlen
+  arm64: Import latest version of Cortex Strings' strncmp
+  arm64: Import latest optimization of memcpy
+
+ arch/arm64/include/asm/alternative.h |  36 ---
+ arch/arm64/include/asm/assembler.h   |  13 +
+ arch/arm64/include/asm/extable.h     |  10 +-
+ arch/arm64/kernel/probes/kprobes.c   |   7 -
+ arch/arm64/lib/copy_from_user.S      | 272 +++++++++++++++--
+ arch/arm64/lib/copy_in_user.S        | 287 ++++++++++++++++--
+ arch/arm64/lib/copy_template.S       | 377 +++++++++++++----------
+ arch/arm64/lib/copy_template_user.S  |  50 ++++
+ arch/arm64/lib/copy_to_user.S        | 273 +++++++++++++++--
+ arch/arm64/lib/copy_user_fixup.S     | 433 +++++++++++++++++++++++++++
+ arch/arm64/lib/memcmp.S              | 333 ++++++++------------
+ arch/arm64/lib/memcpy.S              | 127 ++++++--
+ arch/arm64/lib/memmove.S             | 232 +++++---------
+ arch/arm64/lib/strcmp.S              | 272 +++++++----------
+ arch/arm64/lib/strlen.S              | 247 ++++++++++-----
+ arch/arm64/lib/strncmp.S             | 363 ++++++++++------------
+ arch/arm64/mm/extable.c              |  13 +-
+ arch/arm64/mm/fault.c                |   2 +-
+ 18 files changed, 2228 insertions(+), 1119 deletions(-)
+ create mode 100644 arch/arm64/lib/copy_template_user.S
+ create mode 100644 arch/arm64/lib/copy_user_fixup.S
+
+-- 
+2.17.1
+
