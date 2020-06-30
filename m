@@ -2,86 +2,109 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36C92C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1E0DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:10:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0FA62206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:09:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D47F206F1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:10:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="GJfQz8fM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728967AbgF3DJ5 (ORCPT
+        id S1729005AbgF3DKo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 23:09:57 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:60732 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727826AbgF3DJ5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 23:09:57 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1jq6eW-0007F8-FF; Tue, 30 Jun 2020 13:09:45 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Tue, 30 Jun 2020 13:09:44 +1000
-Date:   Tue, 30 Jun 2020 13:09:44 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Damien Le Moal <Damien.LeMoal@wdc.com>
-Cc:     Ignat Korchagin <ignat@cloudflare.com>,
-        "agk@redhat.com" <agk@redhat.com>,
-        "snitzer@redhat.com" <snitzer@redhat.com>,
-        "dm-devel@redhat.com" <dm-devel@redhat.com>,
-        "dm-crypt@saout.de" <dm-crypt@saout.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "ebiggers@kernel.org" <ebiggers@kernel.org>,
-        "mpatocka@redhat.com" <mpatocka@redhat.com>,
-        "kernel-team@cloudflare.com" <kernel-team@cloudflare.com>
-Subject: Re: [PATCH v2] dm crypt: add flags to optionally bypass dm-crypt
- workqueues
-Message-ID: <20200630030944.GA20706@gondor.apana.org.au>
-References: <20200626210302.1813-1-ignat@cloudflare.com>
- <CY4PR04MB375127DC313F70875CAAC841E76F0@CY4PR04MB3751.namprd04.prod.outlook.com>
+        Mon, 29 Jun 2020 23:10:44 -0400
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:18267 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727826AbgF3DKn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 23:10:43 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5efaad020001>; Mon, 29 Jun 2020 20:09:54 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 29 Jun 2020 20:10:43 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 29 Jun 2020 20:10:43 -0700
+Received: from [10.2.91.207] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 30 Jun
+ 2020 03:10:42 +0000
+Subject: Re: [PATCH 1/2] KVM: SVM: fix svn_pin_memory()'s use of
+ get_user_pages_fast()
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
+CC:     Souptick Joarder <jrdr.linux@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paolo Bonzini" <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        "Jim Mattson" <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        "H . Peter Anvin" <hpa@zytor.com>, <x86@kernel.org>,
+        <kvm@vger.kernel.org>
+References: <20200526062207.1360225-1-jhubbard@nvidia.com>
+ <20200526062207.1360225-2-jhubbard@nvidia.com>
+ <87imgj6th4.fsf@vitty.brq.redhat.com>
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <c7fa9c34-2d4e-9f1b-9afd-7f4132cdd35c@nvidia.com>
+Date:   Mon, 29 Jun 2020 20:10:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CY4PR04MB375127DC313F70875CAAC841E76F0@CY4PR04MB3751.namprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <87imgj6th4.fsf@vitty.brq.redhat.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1593486594; bh=TNPJf3HsBwEnQUF6wdtHb8Wkjntp5E/Y8QIFRdOi/cE=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=GJfQz8fM6prclbfKWGDx93swr/zvjCbIRJ70f0jyWsMwbYmuXhhGztZnI3dm9JMER
+         UGqiHGS49qqXGEZNKEq8cqlok0NeLIrTBjgh9PGZ82/a1AjE05r+vAyQfXM1VtXqkQ
+         XZXca4tqzSskv9ao1DnxFvD4hSybO2fixNXPFRaVXAmIeLf6oO+l6eXpd/imcTa++3
+         5dMCASVZ7Vi5B3hModoO0QCHQHFHxRRdTw/bRQcQgYE/X566aDEcVxgLrySTa1U5hr
+         5GJGk+0pxQSBUIcp4GYHX13dTCkayRsJR1UW/MGCHFXfJk8zbNFBh/HPNL8dBHG9eS
+         DS6gGYtniQKeg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 02:51:17AM +0000, Damien Le Moal wrote:
->
-> > @@ -1463,12 +1465,12 @@ static void crypt_alloc_req_skcipher(struct crypt_config *cc,
-> >  	 * requests if driver request queue is full.
-> >  	 */
-> >  	skcipher_request_set_callback(ctx->r.req,
-> > -	    CRYPTO_TFM_REQ_MAY_BACKLOG,
-> > +	    nobacklog ? 0 : CRYPTO_TFM_REQ_MAY_BACKLOG,
-> >  	    kcryptd_async_done, dmreq_of_req(cc, ctx->r.req));
+On 2020-05-26 00:33, Vitaly Kuznetsov wrote:
+...
+> I bit unrelated to this patch, but callers of sev_pin_memory() treat
+> NULL differently:
 > 
-> Will not specifying CRYPTO_TFM_REQ_MAY_BACKLOG always cause the crypto API to
-> return -EBUSY ? From the comment above the skcipher_request_set_callback(), it
-> seems that this will be the case only if the skcipher diver queue is full. So in
-> other word, keeping the kcryptd_async_done() callback and executing the skcipher
-> request through crypt_convert() and crypt_convert_block_skcipher() may still end
-> up being an asynchronous operation. Can you confirm this and is it what you
-> intended to implement ?
+> sev_launch_secret()/svm_register_enc_region() return -ENOMEM
+> sev_dbg_crypt() returns -EFAULT
+> 
+> Should we switch to ERR_PTR() to preserve the error?
+> 
+>>   	/* Avoid using vmalloc for smaller buffers. */
+>>   	size = npages * sizeof(struct page *);
+>>   	if (size > PAGE_SIZE)
+> 
+> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> 
 
-The purpose of MAY_BACKLOG is to make the crypto request reliable.
-It has nothing to do with whether the request will be synchronous
-or not.
+Thanks for the review, Vitaly. If anyone is able to do any run-time
+testing of this patch and also patch 2/2, then I think a maintainer
+would be more willing to pick them up.
 
-Without the backlog flag, if the hardware queue is full the request
-will simply be dropped, which is appropriate in the network stack
-with IPsec where congestion can be dealt with at the source.
+Any testing help there is greatly appreciated!
 
-Block layer on the other hand should always use the backlog flag
-and stop sending more requests to the crypto API until the congestion
-goes away.
 
-Cheers,
+thanks,
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+John Hubbard
+NVIDIA
