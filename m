@@ -2,118 +2,109 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B35AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36837C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:01:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 610482068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A168206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:01:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JgT/qC1E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389845AbgF3P7E (ORCPT
+        id S2388247AbgF3QBU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 11:59:04 -0400
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:52062 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730478AbgF3P7E (ORCPT
+        Tue, 30 Jun 2020 12:01:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39584 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728192AbgF3QBT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 11:59:04 -0400
-Received: by mail-pj1-f68.google.com with SMTP id l6so6567693pjq.1;
-        Tue, 30 Jun 2020 08:59:03 -0700 (PDT)
+        Tue, 30 Jun 2020 12:01:19 -0400
+Received: from mail-vk1-xa41.google.com (mail-vk1-xa41.google.com [IPv6:2607:f8b0:4864:20::a41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8946C061755;
+        Tue, 30 Jun 2020 09:01:18 -0700 (PDT)
+Received: by mail-vk1-xa41.google.com with SMTP id r7so4681034vkf.0;
+        Tue, 30 Jun 2020 09:01:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IW7S+HDCp7B0Ek61OydG5Z6g/ROgWTAggp3+J+Law08=;
+        b=JgT/qC1EPb348NcHOxxcFkMaZthCEoisS79dWr0Kr6P8PapHQy0RWxPxraRWWj+fM9
+         P4JDlKUq+fRUCygFl8cJZa0Jfopry7aqt+5lqZta3gXWjRp1SEFIOVRHBjgral0h9XWT
+         FeZUwElCap7gIUAXRcmXrjVyGNaY2GsNbqLKZ9uQtztDqjrNrKgcZQ+i91NdBJLUlLgb
+         pFuxVQqdkBt43OqEQ8bG6tpIiH+8oZPXR2JdTZO7nE5b9rLXM1rMDFJQ2w+OgR/58gfs
+         wTG76UYEFI03zw7LRE1oAIiSYuPUnVCj1kKCH7NvY4VY13P3YBmWqFhkj0+mjsIJPVhC
+         Z9iQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=B6Sn/t65YbjgGNKeJPVMw6gVh6flAq80bGjJD0LBtBE=;
-        b=AIzxHSE3ZUNsZff0cH2PhDI8uciLUdklmOlA4hucj7w4ZveAwAk0Jd0IOd1Geqk6/e
-         LLDawVoDZRH4QQgaC6pzzutrYB03k3SjJL66UMD7UeGILeRJbGnNXBsDA+Nl5Ivnoreg
-         pY1d8b+l6bWauHPLt1g4YfSY50hMZQ7ojxUZE49/FuFil4ZJnuKD0I8pb+J2nVMmthDy
-         S+w1/AT5HB6Rt20z43h4IuIG5omzsEdmq4LheQg4q4mhaCQ6Irfj3AW3qjPuubyUuEbc
-         J5KSEd9G7ou5taWLgOnAvVmrJ4ibFT1F9/A/BT2mtFNskSGddv/0Mef7F2bDby62Whuy
-         ppNw==
-X-Gm-Message-State: AOAM531Lf7RXPukwQuhBlgNFTRZaFPVGg47+FxutCllaeH9my1/JcyJb
-        FDZrsxVX8nRbAy0XjxxYHLU=
-X-Google-Smtp-Source: ABdhPJzowE0CGYA5o9ggUG5LZTA7zFqp51Mk7kAHF8grf/QQSQu9WmeVe8trsboMaoog3epQdJt6Ig==
-X-Received: by 2002:a17:902:162:: with SMTP id 89mr18106470plb.211.1593532742709;
-        Tue, 30 Jun 2020 08:59:02 -0700 (PDT)
-Received: from [192.168.50.147] (c-73-241-217-19.hsd1.ca.comcast.net. [73.241.217.19])
-        by smtp.gmail.com with ESMTPSA id m14sm3130812pgn.83.2020.06.30.08.59.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jun 2020 08:59:01 -0700 (PDT)
-Subject: Re: [PATCH] scsi: sd: add runtime pm to open / release
-To:     Alan Stern <stern@rowland.harvard.edu>,
-        Martin Kepplinger <martin.kepplinger@puri.sm>
-Cc:     jejb@linux.ibm.com, Can Guo <cang@codeaurora.org>,
-        martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@puri.sm
-References: <20200623111018.31954-1-martin.kepplinger@puri.sm>
- <ed9ae198-4c68-f82b-04fc-2299ab16df96@acm.org>
- <eccacce9-393c-ca5d-e3b3-09961340e0db@puri.sm>
- <1379e21d-c51a-3710-e185-c2d7a9681fb7@acm.org>
- <20200626154441.GA296771@rowland.harvard.edu>
- <c19f1938-ae47-2357-669d-5b4021aec154@puri.sm>
- <20200629161536.GA405175@rowland.harvard.edu>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <5231c57d-3f4e-1853-d4d5-cf7f04a32246@acm.org>
-Date:   Tue, 30 Jun 2020 08:59:00 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IW7S+HDCp7B0Ek61OydG5Z6g/ROgWTAggp3+J+Law08=;
+        b=OrQR5PV25PByEX+CgJ1Iz1n1wfKL8HB4F6mOj2dttH5v/bQ5q0lpl3V7SWzLeuNX+d
+         yZh8rHxW/+3Gs4kjo6diX2e2vGIwhPd4zY3i4kpPtYhq3Mf06PiD5kFqEE8nyb/ypomV
+         0mvHpke557C6l1HVjC60X+vN73uB94KVh60wKSdWhtuLMpI5XEJXkF2goC3XQdeBByAc
+         HmtNBd1jRunHwdQXpR1zCprORLX1ErjHp+1fDiz1jF38I4h2jdy64JGoEkQpizO71Gul
+         NQei9M4SRDEXMi2IqzFWa59s0ZLUCpsG1ff9hI3aAIczc06zCr10hhdVWE0PVTVPGeBS
+         si8w==
+X-Gm-Message-State: AOAM532RUgu/JFkbFtHtgmCNuBhzi8UjL3CLHlbjzznSGJfhBQtyWjCg
+        nQGrfuKVJJR3371TVUzuIzzgcamCMNXtZ9rKvTs=
+X-Google-Smtp-Source: ABdhPJxgpBwp7SLfHhtmOXQng4CIxyB+mnTVugkIZvO3UlRMg8zEfMYz5P+Rz4uQbijCoX8HFf2xiPhV3ca8pqMhR78=
+X-Received: by 2002:a1f:9e8a:: with SMTP id h132mr14995446vke.14.1593532877997;
+ Tue, 30 Jun 2020 09:01:17 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200629161536.GA405175@rowland.harvard.edu>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200528032134.13752-1-hexie3605@gmail.com> <20200601.113206.2297277969426428314.davem@davemloft.net>
+In-Reply-To: <20200601.113206.2297277969426428314.davem@davemloft.net>
+From:   Xie He <hexie3605@gmail.com>
+Date:   Tue, 30 Jun 2020 09:01:07 -0700
+Message-ID: <CANJFnSS3XQqa4_Tnur+OhsF-sbCQyP7QBdaikDuUFmuF1ti3rw@mail.gmail.com>
+Subject: Re: [PATCH] drivers/net/wan/lapbether.c: Fixed kernel panic when used
+ with AF_PACKET sockets
+To:     David Miller <davem@davemloft.net>
+Cc:     Jakub Kicinski <kuba@kernel.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-29 09:15, Alan Stern wrote:
-> Aha.  Looking at this more closely, it's apparent that the code in 
-> blk-core.c contains a logic bug: It assumes that if the BLK_MQ_REQ_PREEMPT 
-> flag is set then the request can be issued regardless of the queue's 
-> runtime status.  That is not correct when the queue is suspended.
+From: David Miller <davem@davemloft.net>
+Date: Mon, Jun 1, 2020 at 11:32 AM -0700
+>
+> From: Xie He <hexie3605@gmail.com>
+> Date: Wed, 27 May 2020 20:21:33 -0700
+>
+> > When we use "AF_PACKET" sockets to send data directly over LAPB over
+> > Ethernet using this driver, the kernel will panic because of
+> > insufficient header space allocated in the "sk_buff" struct.
+> >
+> > The header space needs 18 bytes because:
+> >   the lapbether driver will remove a pseudo header of 1 byte;
+> >   the lapb module will prepend the LAPB header of 2 or 3 bytes;
+> >   the lapbether driver will prepend a length field of 2 bytes and the
+> > Ethernet header of 14 bytes.
+> >
+> > So -1 + 3 + 16 = 18.
+> >
+> > Signed-off-by: Xie He <hexie3605@gmail.com>
+>
+> This is not the real problem.
+>
+> The real problem is that this is a stacked, layered, device and the
+> lapbether driver does not take the inner device's header length into
+> consideration.  It should take this from the child device's netdev
+> structure rather than use constants.
+>
+> Your test case will still fail when lapbether is stacked on top of a
+> VLAN device or similar, even with your changes.
 
-Are you sure of this? In the past (legacy block layer) no requests were
-processed for queues in state RPM_SUSPENDED. However, that function and
-its successor blk_pm_allow_request() are gone. The following code was
-removed by commit 7cedffec8e75 ("block: Make blk_get_request() block for
-non-PM requests while suspended").
+Thank you for your email! I'm sorry I didn't see your email previously
+because of problems with my mailbox.
 
-static struct request *blk_pm_peek_request(struct request_queue *q,
-                                           struct request *rq)
-{
-        if (q->dev && (q->rpm_status == RPM_SUSPENDED ||
-            (q->rpm_status != RPM_ACTIVE && !(rq->cmd_flags & REQ_PM))))
-                return NULL;
-        else
-                return rq;
-}
-
-Bart.
+Yes, you are right. I'll use better ways to improve this and re-submit
+my patch. Thanks for pointing this out.
