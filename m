@@ -2,96 +2,119 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74BE1C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA4BBC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5479C2077D
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:22:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g/s7bBu9"
+	by mail.kernel.org (Postfix) with ESMTP id C59502078D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:23:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390280AbgF3RWx (ORCPT
+        id S2390292AbgF3RX3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 13:22:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52200 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387782AbgF3RWx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 13:22:53 -0400
-Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAED1C061755;
-        Tue, 30 Jun 2020 10:22:52 -0700 (PDT)
-Received: by mail-pg1-x544.google.com with SMTP id t6so10270693pgq.1;
-        Tue, 30 Jun 2020 10:22:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=J6Dvj7NV89wtkvCbV5PS8A6g9g8HFEftK3QgrFtRilo=;
-        b=g/s7bBu9AFFOZRsADDL0+VWTuLa+5OpWlhlEMbwDuwqSYh2F/5wLaZPZgUQvk43Hh6
-         V8TpWgwJyEn4olTVMI02Fk7GPj81v75E4d1Nm0dskOlxzJDkvzbNfJlPtU39QstaghSd
-         mHTjTaV7upKteM00D9YLHN8Pz/GMBdZfNyVEbmKYU4JbFd6GFfgF47SOpx0h/iK7KiBz
-         EwDMXMx3Znh50rsvyNHhaQs5nDynWZhrwT4zXK0+0oSvpL/ublmywESnVhdb49ytUfX+
-         FyOrpoeOxDaQkj0hmChs2h5V1YXUFXP4XzJfZv67W1H8kQph+2Ole53XNsZcTWvxGEkm
-         cK2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=J6Dvj7NV89wtkvCbV5PS8A6g9g8HFEftK3QgrFtRilo=;
-        b=aGhHSkEgpgDCEsojNUiYRKl1uHeLenqdMJrWXVEWo14r9NNZTKfbtVNZIiIoWAr1RX
-         ffdNYGX5p7tTPmKcbb/kH1OYxYSxn34+k0VBkKmg9eLI2vtZ+xEj/f49h/Cwva/8g0Hv
-         IDTFtlnv2rcx1D5DEkJMSJhD9ZJNGN1oyTXfC4eCcimcSGNGZmltzVHgc/JE/mnxkEve
-         n9MoPb28ulzRlMIESd7oDHH2APTGHPTUbrT2RtZwY/erE0suCvB8WN9skUsXmlyZhUAJ
-         /vVFHbYHPrIsC70+0exUtlLKxRpB1ZKHsKVAKEBeQHOH4ex6gFDOtG5m4oT0CBmK2hpc
-         W3xg==
-X-Gm-Message-State: AOAM530zMgZPG5q78bv/onZ6b3W6HOQjNqNrhO3v8CjBvyH32AqvPBF+
-        y9TLdQF4zRRh+e/XWBLcOII=
-X-Google-Smtp-Source: ABdhPJy4ftEkmB29eQLApJ31FyqfWRoPYSPTgo7iYHBqvsZ8vLoEk8waL7/bZhnr+ROtibaoSQBpIA==
-X-Received: by 2002:a65:6706:: with SMTP id u6mr15844632pgf.69.1593537772533;
-        Tue, 30 Jun 2020 10:22:52 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id o11sm2764076pjr.25.2020.06.30.10.22.51
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 30 Jun 2020 10:22:52 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 10:22:51 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org
-Subject: Re: [PATCH 5.7 000/265] 5.7.7-rc1 review
-Message-ID: <20200630172251.GF629@roeck-us.net>
-References: <20200629151818.2493727-1-sashal@kernel.org>
+        Tue, 30 Jun 2020 13:23:29 -0400
+Received: from mga12.intel.com ([192.55.52.136]:62758 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390282AbgF3RX2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 13:23:28 -0400
+IronPort-SDR: RyxdjboNfOtYfgJ2tVyG41C5M8cXaIW7ZRoFcJqKR1uJUQjXNWiXPehUAQkZiNyYubfrYULwGF
+ y6CbBMsR271A==
+X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="125950840"
+X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
+   d="scan'208";a="125950840"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 10:23:05 -0700
+IronPort-SDR: W+mmP8TYMf1/apOyssk6Ri4mYct5mOVaSAKhe3R5djAYh93yFp9VzXdXk3HMjAKgXjFgpD3mGz
+ LZ+gZniJyIKg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
+   d="scan'208";a="481003583"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.152])
+  by fmsmga006.fm.intel.com with ESMTP; 30 Jun 2020 10:23:05 -0700
+Date:   Tue, 30 Jun 2020 10:23:05 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        X86 ML <x86@kernel.org>, linux-sgx@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        asapek@google.com, "Xing, Cedric" <cedric.xing@intel.com>,
+        chenalexchen@google.com, conradparker@google.com,
+        cyhanish@google.com, Dave Hansen <dave.hansen@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, kmoy@google.com,
+        Christian Ludloff <ludloff@google.com>,
+        Andrew Lutomirski <luto@kernel.org>,
+        Neil Horman <nhorman@redhat.com>, npmccallum@redhat.com,
+        puiterwijk@redhat.com, David Rientjes <rientjes@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>, yaozhangx@google.com
+Subject: Re: [PATCH v33 15/21] x86/vdso: Add support for exception fixup in
+ vDSO functions
+Message-ID: <20200630172305.GG7733@linux.intel.com>
+References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
+ <20200617220844.57423-16-jarkko.sakkinen@linux.intel.com>
+ <20200629171022.GC32176@zn.tnic>
+ <20200630060055.GS12312@linux.intel.com>
+ <20200630084128.GA1093@zn.tnic>
+ <CALCETrWUHw2WSDaJrxrwVrXSGz-zR0N2R3cT06esKBCpqyoZaQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200629151818.2493727-1-sashal@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CALCETrWUHw2WSDaJrxrwVrXSGz-zR0N2R3cT06esKBCpqyoZaQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 11:13:53AM -0400, Sasha Levin wrote:
+On Tue, Jun 30, 2020 at 09:48:22AM -0700, Andy Lutomirski wrote:
+> On Tue, Jun 30, 2020 at 1:41 AM Borislav Petkov <bp@alien8.de> wrote:
+> >
+> > On Mon, Jun 29, 2020 at 11:00:55PM -0700, Sean Christopherson wrote:
+> > > E.g. the vDSO function should get the fixup even if userspace screws
+> > > up mmap() and invokes __vdso_sgx_enter_enclave() without being tagged
+> > > an SGX task.
+> >
+> > I sincerely hope you don't mean this seriously.
+> >
+> > Please add a member to task_struct which denotes that a task is an
+> > sgx task, test that member where needed and forget real quickly about
+> > running *any* *fixup* for unrelated tasks.
 > 
-> This is the start of the stable review cycle for the 5.7.7 release.
-> There are 265 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> I don't see the problem.  If you call this magic vDSO function and get
+> a fault, it gets handled.  What's the failure mode?
 > 
-> Responses should be made by Wed 01 Jul 2020 03:14:48 PM UTC.
-> Anything received after that time might be too late.
+> >
+> > > No hard dependency, it's normal kernel code.  My reasoning for dropping it
+> > > in .../vdso was largely to co-locate it with vdso/extable.h due to the
+> > > dependency on the format of 'struct vdso_exception_table_entry'.
+> >
+> > A struct which you defined instead of simply using struct
+> > exception_table_entry even if it has a handler member which would remain
+> > unused?
 > 
+> Don't forget the cross-arch issue.  We need that structure to have
+> constant layout so that the -m32 build from the vDSO has the same
+> layout as in the kernel.
+> 
+> So my only actual objection to the patch is that there should probably
+> be a comment above the structure reminding people that it needs to
+> have the same layout on 32-bit, x32, and x86_64.  So maybe the entries
+> should be s32 instead of int, although this doesn't really matter.
 
-Build results:
-	total: 155 pass: 155 fail: 0
-Qemu test results:
-	total: 430 pass: 430 fail: 0
+I highly doubt my past self thought about the cross-arch issue.  The main
+reason I created 'struct vdso_exception_table_entry' is that interpretation
+of the fields is different.  For the kernel, the fields contain offsets
+that are relative to the address of the field itself, i.e. of the fixup
+itself.  For vDSO, the offsets are relative to the base of the vDSO.
 
-Guenter
+Reusing exception_table_entry felt like it would be all kinds of confusing.
