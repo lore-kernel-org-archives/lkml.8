@@ -2,117 +2,134 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9685C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1198C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:52:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD9BF20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:51:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB0FC20759
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:52:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KdcNZMBc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389089AbgF3Ovb (ORCPT
+        id S2389095AbgF3Owe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 10:51:31 -0400
-Received: from smtprelay0035.hostedemail.com ([216.40.44.35]:60966 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727016AbgF3Ovb (ORCPT
+        Tue, 30 Jun 2020 10:52:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57218 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727016AbgF3Owd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 10:51:31 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id E1342100E7B42;
-        Tue, 30 Jun 2020 14:51:29 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: boat72_610e0a526e78
-X-Filterd-Recvd-Size: 3843
-Received: from XPS-9350.home (unknown [47.151.133.149])
-        (Authenticated sender: joe@perches.com)
-        by omf15.hostedemail.com (Postfix) with ESMTPA;
-        Tue, 30 Jun 2020 14:51:28 +0000 (UTC)
-Message-ID: <c0be072fee83719c74249d603cccf7fa59f9d3cf.camel@perches.com>
-Subject: Re: [PATCH] mm: util: update the kerneldoc for kstrdup_const()
-From:   Joe Perches <joe@perches.com>
-To:     David Hildenbrand <david@redhat.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Tue, 30 Jun 2020 07:51:27 -0700
-In-Reply-To: <9dfad174-4e8b-c733-b529-5c86a34333d4@redhat.com>
-References: <20200628152500.17916-1-brgl@bgdev.pl>
-         <693db5a878ac09994e2a27c64cb14c0e552f3f50.camel@perches.com>
-         <7f1439be-75c4-3a07-ab7b-f4505bf30c48@redhat.com>
-         <644c67ae316bde28669f660aa5aade274d19a2d0.camel@perches.com>
-         <98163576-c98e-77f7-17a7-efd04dc2e86f@redhat.com>
-         <b370f8bfbf2bfc958b15ce6f6d138bec64972183.camel@perches.com>
-         <9dfad174-4e8b-c733-b529-5c86a34333d4@redhat.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.36.2-0ubuntu1 
+        Tue, 30 Jun 2020 10:52:33 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AE77C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 07:52:33 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id 207so9342633pfu.3
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 07:52:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=e5weAmxeHY/HZDcuo/a+y01NxEAlRLsWW0XwibE2AXc=;
+        b=KdcNZMBcgu/1NT3Ui/X+l4Mzw5QlqI0Z1yCzhaCTJWNTMtdQR3mAzGCiLB6wkxhKjx
+         LVP5/VaZ4tmkuS9XoLLpYjyL9qMD0Jgzxa8Epa0po6wJCAa0gUGYt3R6lhB7D+l/PgCI
+         ZWfEeaxdyzER1jNfZWSvN03UPEyUn76Nwbp7W2ncJAQ+MKFR96aSu5bQI5y1u5G8acx9
+         goh3HkSTo7/PtptU7s34od9XBe+NWYGC7v8+TqkqCq34RJRD7fg5YeuKjo/JHu/BafrY
+         baKSkvbyQZsp9GG0Wod3pACnvCXsa5YcpE3BydYcgZZmS7qwYqCibzpCjAYNfY81prUO
+         J8PA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=e5weAmxeHY/HZDcuo/a+y01NxEAlRLsWW0XwibE2AXc=;
+        b=rKz12ZpbS8TRPPizy6a1r45Rg/pxNsO2azFtLRiyFbkpMn8ujufZap+CEZdvlUDbJ7
+         JW+ImosbMTrvqd2+9aDLsodvO5Mhi+tWRNv9n8i1Bxj+R+xqFZ9zpOlomHBag+wgzvwg
+         4yPMGtPhIUY1U5tsvWdGj66OfPlBiu/XHn9dOuzNwpkg3kD8FOUX3B5zbQn7wH2G/mu8
+         ck0hDkkl7LasIA92dxUgSvX8PemQ4z45GFVgXpik0HCcKBBd58S8GG7PQRVzrXogD1Mj
+         s+bAS0V92CScDcemFQX1aHAAG+YEX2YN1gJcyA01sr0qWNaT57OtDSNLefj8RQJECweS
+         l9Bw==
+X-Gm-Message-State: AOAM530BRSdzBVQ1TqAKxNCLBNc4E0Fd93BwZBGQrAqiXY+sLaLjkaKi
+        Jm84hxcbWCIp3b4emaFxmFYO6WygyiI=
+X-Google-Smtp-Source: ABdhPJxTsrQbRQvGqP0lLFh19GhfoXBIdE6Pe+sS9b4dz0E8IfPtWxbDZDGbv4uImfsTzdBDPKsfdQ==
+X-Received: by 2002:a63:6bc5:: with SMTP id g188mr14604148pgc.395.1593528752965;
+        Tue, 30 Jun 2020 07:52:32 -0700 (PDT)
+Received: from localhost ([144.34.187.180])
+        by smtp.gmail.com with ESMTPSA id k100sm2618702pjb.57.2020.06.30.07.52.22
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 30 Jun 2020 07:52:32 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 14:51:55 +0000
+From:   Long Li <lonuxli.64@gmail.com>
+To:     willy@infradead.org, cl@linux.com, penberg@kernel.org,
+        rientjes@google.com, iamjoonsoo.kim@lge.com,
+        akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2] mm, slab: Check GFP_SLAB_BUG_MASK before alloc_pages in
+ kmalloc_order
+Message-ID: <20200630145155.GA52108@lilong>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2020-06-30 at 16:36 +0200, David Hildenbrand wrote:
-> On 30.06.20 16:14, Joe Perches wrote:
-> > On Tue, 2020-06-30 at 10:57 +0200, David Hildenbrand wrote:
-> > > On 29.06.20 21:21, Joe Perches wrote:
-> > > > On Mon, 2020-06-29 at 12:54 +0200, David Hildenbrand wrote:
-> > > > > On 28.06.20 19:37, Joe Perches wrote:
-> > > > > > On Sun, 2020-06-28 at 17:25 +0200, Bartosz Golaszewski wrote:
-> > > > > > > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > > > > > > 
-> > > > > > > Memory allocated with kstrdup_const() must not be passed to regular
-> > > > > > > krealloc() as it is not aware of the possibility of the chunk residing
-> > > > > > > in .rodata. Since there are no potential users of krealloc_const()
-> > > > > > > at the moment, let's just update the doc to make it explicit.
-> > > > > > 
-> > > > > > Another option would be to return NULL if it's
-> > > > > > used from krealloc with a pointer into rodata
-> > > > []
-> > > > > > diff --git a/mm/slab_common.c b/mm/slab_common.c
-> > > > []
-> > > > > > @@ -1683,6 +1683,9 @@ static __always_inline void *__do_krealloc(const void *p, size_t new_size,
-> > > > > >   * @new_size: how many bytes of memory are required.
-> > > > > >   * @flags: the type of memory to allocate.
-> > > > > >   *
-> > > > > > + * If the object pointed to is in rodata (likely from kstrdup_const)
-> > > > > > + * %NULL is returned.
-> > > > > > + *
-> > > > []
-> > > > > Won't we have similar issues if somebody would do a kfree() instead of a
-> > > > > kfree_const()? So I think the original patch makes sense.
-> > > > 
-> > > > Which is why I also suggested making kfree work for
-> > > > more types of memory freeing earlier this month.
-> > > > 
-> > > > https://lore.kernel.org/lkml/573b3fbd5927c643920e1364230c296b23e7584d.camel@perches.com/
-> > []
-> > > what's the real benefit that is worth spending extra runtime cycles?
-> > 
-> > I very much doubt there is an actual instance
-> > where the runtime cycles matter.  Where could
-> > there be a fast-path instance of free?
-> 
-> Well, looking at kfree() I can directly spot "unlikely()", which sounds
-> like somebody cares about branch prediction in the slab.
+In the ARM32 environment with highmem enabled. Using flag of kmalloc()
+with __GFP_HIGHMEM to allocate large memory, it will go through the
+kmalloc_order() path and return NULL. The __GFP_HIGHMEM flag will
+cause alloc_pages() to allocate highmem memory and pages cannot be
+directly converted to a virtual address, kmalloc_order() will return
+NULL and the page has been allocated.
 
-Or is telling the compiler of a 95%+ likely case.
+After modification, GFP_SLAB_BUG_MASK has been checked before
+allocating pages, refer to the new_slab().
 
-> Once you have cases that can happen equally likely it most certainly
-> degrades performance. The question is if we care.
+Signed-off-by: Long Li <lonuxli.64@gmail.com>
+---
 
-Right.
+Changes in v2:
+- patch is rebased againest "[PATCH] mm: Free unused pages in
+kmalloc_order()" [1]
+- check GFP_SLAB_BUG_MASK and generate warnings before alloc_pages
+in kmalloc_order()
 
-Does 4 additional tests in what appears to be almost
-exclusively non-fast paths matter?
+[1] https://lkml.org/lkml/2020/6/27/16
 
-> Coming back to my question, so the major benefit you see is coding
-> simplicity, correct?
+ mm/slab_common.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Yes.
-
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index a143a8c8f874..3548f4f8374b 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -27,6 +27,7 @@
+ #include <trace/events/kmem.h>
+ 
+ #include "slab.h"
++#include "internal.h"
+ 
+ enum slab_state slab_state;
+ LIST_HEAD(slab_caches);
+@@ -815,6 +816,15 @@ void *kmalloc_order(size_t size, gfp_t flags, unsigned int order)
+ 	void *ret = NULL;
+ 	struct page *page;
+ 
++	if (unlikely(flags & GFP_SLAB_BUG_MASK)) {
++		gfp_t invalid_mask = flags & GFP_SLAB_BUG_MASK;
++
++		flags &= ~GFP_SLAB_BUG_MASK;
++		pr_warn("Unexpected gfp: %#x (%pGg). Fixing up to gfp: %#x (%pGg). Fix your code!\n",
++				invalid_mask, &invalid_mask, flags, &flags);
++		dump_stack();
++	}
++
+ 	flags |= __GFP_COMP;
+ 	page = alloc_pages(flags, order);
+ 	if (likely(page)) {
+-- 
+2.17.1
 
