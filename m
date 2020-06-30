@@ -2,139 +2,134 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B181C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 951DDC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:13:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6ACBC2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:12:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qBp9Bkd+"
+	by mail.kernel.org (Postfix) with ESMTP id 71AEB20723
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:13:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593537196;
+	bh=diSO1CamvrQdtfEI+H7me6fxh/KtADWecbcfO1/wVoo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=onNvhuUrgLOr5iIN5snoBT+5sFk34oxNyuDFHXclGfcnzx2mlA6frhoRCIS/BrquW
+	 pUKWWWReEOfAmmS58KSxs/+3vOD3xlUhXUwJhFkvZAteWhszmYEKefnlp9XElaXYF7
+	 /Qk5Ra9ZCBDZxwarDEFNPEp/k/eylWFgEZsd1Qpk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390077AbgF3RMW (ORCPT
+        id S2390079AbgF3RNO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 13:12:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50566 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729963AbgF3RMV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 13:12:21 -0400
-Received: from mail-ej1-x643.google.com (mail-ej1-x643.google.com [IPv6:2a00:1450:4864:20::643])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7F143C061755;
-        Tue, 30 Jun 2020 10:12:21 -0700 (PDT)
-Received: by mail-ej1-x643.google.com with SMTP id dr13so21439137ejc.3;
-        Tue, 30 Jun 2020 10:12:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=hLjY+FiejsKCHtdjZ2X5AG1Wh8QL9+hOBzArfxVt15s=;
-        b=qBp9Bkd+bZcKlIGx6Z9Kc30AXs6nEXO8oRuh2kHPe1me1YuqwxMpQQotWwJAoWvdS8
-         a6Mrxv1/phr4YSLPV7NPqwEAA3wKuJl455FYOqK3Y9pKm+4+z1ts+0MCd579LepC7xO+
-         0pd40N8nWIiy/44TDVRRzJ2NA0CY2DvN8dYUCczzJxlpv8y7l5RCWWO07FrsN+leH/F1
-         QxE4Tf7DCfGHyvEi32QPMwoG5cbIsx1s3q+R5ejMn0kFe4A+gZbC1bFYO0aSj25kA0sO
-         1Ie5WDR/Cco30yQ/hSHaklpDnkrCo1/XoWkEHeZJNRdGvzVHjR3/VwNx2aIfxA6ghRFN
-         GlKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=hLjY+FiejsKCHtdjZ2X5AG1Wh8QL9+hOBzArfxVt15s=;
-        b=r4DxTuqW/0XtQQ4OaGXYkAJtSb4hdeEX46mAMJIstl5VIo6qC4p/BKAlbRWFWDMgaB
-         rAGmkITpep3MAIzusoyYd8q4DRW62oouyeVsmAMHlF4l736FVoBd6O4L7ka1BybxcHg7
-         xJmdjG13MTcHPbPxSFOLEc7Hy2UfXYzVG3EuPJNh3g0xWp99/pGXUe6XLBBjattuCEgB
-         Dp0Q6VKY3Nh0vlWjYzGs5patbp27uJyOaJRNWW55lJasZs/KCsEvN2JDVOcr6+pSfTOJ
-         Hu2KTzmftRhoiYkiiGM6jLaFAAEtvKdCCBtDT5OCQhT9H0tFFC7PxWIRuSuzPnDczSPy
-         eiqA==
-X-Gm-Message-State: AOAM533+XmDZqMGEI1L5Nbe0E7GVSEd6S6+4VHGNZxffyrmK/432/W6P
-        pXGNg9I5RemuQjoZZH1llHw=
-X-Google-Smtp-Source: ABdhPJy/WiZXMjLukD00/Pj3vPe0LoKDdDGPP1BLeXkJAELpuKNhsZYuZ/vw/t2EYG6lMRHMuhnqMQ==
-X-Received: by 2002:a17:906:178b:: with SMTP id t11mr8136eje.489.1593537140016;
-        Tue, 30 Jun 2020 10:12:20 -0700 (PDT)
-Received: from andrea (ip-213-220-210-175.net.upcbroadband.cz. [213.220.210.175])
-        by smtp.gmail.com with ESMTPSA id g8sm3704441edk.13.2020.06.30.10.12.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 10:12:19 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 19:12:13 +0200
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     t-mabelt@microsoft.com
-Cc:     kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
-        wei.liu@kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
-        skarade@microsoft.com, Andres Beltran <lkmlabelt@gmail.com>,
-        linux-scsi@vger.kernel.org, netdev@vger.kernel.org,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH v3 0/3] Drivers: hv: vmbus: vmbus_requestor data
- structure for VMBus hardening
-Message-ID: <20200630171213.GA12948@andrea>
-References: <20200630153200.1537105-1-lkmlabelt@gmail.com>
+        Tue, 30 Jun 2020 13:13:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34238 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387878AbgF3RNO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 13:13:14 -0400
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5445920826
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 17:13:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593537193;
+        bh=diSO1CamvrQdtfEI+H7me6fxh/KtADWecbcfO1/wVoo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=g0VCHu5yhHihJYjJCE25aVIaqOgxXTAQluoAB712i8ttmyZBEH9ahl4xnIRcJWtkS
+         iVwKR3YMRuPh4XPkXtCRNRTnWn9b1ECnWaMeQehaphzIFVerVBpEe7M17DThvkJ1sZ
+         P3nA8JAbWGtM8U7nCzhsIFDigcair9/tQBjbwc0U=
+Received: by mail-wm1-f46.google.com with SMTP id q15so19534006wmj.2
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 10:13:13 -0700 (PDT)
+X-Gm-Message-State: AOAM530e/enI6/AE4C7tLif5horTVuyn6KKKlkp7G7P/V0ERZq8FGrkC
+        9AbjTJaRfyVF0fcLiZgjAcvMk8NgddzOt0qWZxXITg==
+X-Google-Smtp-Source: ABdhPJx13kM5LtvGGzUYGYkwAaAat6ZRo22ztI1o1g0eif8uiHVa9Xl3dnH22Xl8NV08uj/0CSG98+0e/i94UHndbTI=
+X-Received: by 2002:a1c:a304:: with SMTP id m4mr23802567wme.49.1593537191719;
+ Tue, 30 Jun 2020 10:13:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200630153200.1537105-1-lkmlabelt@gmail.com>
+References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
+ <20200617220844.57423-13-jarkko.sakkinen@linux.intel.com> <20200629160242.GB32176@zn.tnic>
+ <20200629220400.GI12312@linux.intel.com> <20200630084956.GB1093@zn.tnic> <20200630142027.GA7733@linux.intel.com>
+In-Reply-To: <20200630142027.GA7733@linux.intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Tue, 30 Jun 2020 10:13:00 -0700
+X-Gmail-Original-Message-ID: <CALCETrVD2suWEx7ysJCpOE39Ds7-TpBaGo6KjEbq=EenaHkQ_g@mail.gmail.com>
+Message-ID: <CALCETrVD2suWEx7ysJCpOE39Ds7-TpBaGo6KjEbq=EenaHkQ_g@mail.gmail.com>
+Subject: Re: [PATCH v33 12/21] x86/sgx: Allow a limited use of
+ ATTRIBUTE.PROVISIONKEY for attestation
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        X86 ML <x86@kernel.org>, linux-sgx@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        asapek@google.com, "Xing, Cedric" <cedric.xing@intel.com>,
+        chenalexchen@google.com, conradparker@google.com,
+        cyhanish@google.com, Dave Hansen <dave.hansen@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, kmoy@google.com,
+        Christian Ludloff <ludloff@google.com>,
+        Neil Horman <nhorman@redhat.com>, npmccallum@redhat.com,
+        puiterwijk@redhat.com, David Rientjes <rientjes@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>, yaozhangx@google.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 11:31:57AM -0400, Andres Beltran wrote:
-> Currently, VMbus drivers use pointers into guest memory as request IDs
-> for interactions with Hyper-V. To be more robust in the face of errors
-> or malicious behavior from a compromised Hyper-V, avoid exposing
-> guest memory addresses to Hyper-V. Also avoid Hyper-V giving back a
-> bad request ID that is then treated as the address of a guest data
-> structure with no validation. Instead, encapsulate these memory
-> addresses and provide small integers as request IDs.
-> 
-> The first patch creates the definitions for the data structure, provides
-> helper methods to generate new IDs and retrieve data, and
-> allocates/frees the memory needed for vmbus_requestor.
-> 
-> The second and third patches make use of vmbus_requestor to send request
-> IDs to Hyper-V in storvsc and netvsc respectively.
-> 
-> Thanks.
-> Andres Beltran
-> 
-> Tested-by: Andrea Parri <parri.andrea@gmail.com>
+On Tue, Jun 30, 2020 at 7:20 AM Sean Christopherson
+<sean.j.christopherson@intel.com> wrote:
+>
+> On Tue, Jun 30, 2020 at 10:49:56AM +0200, Borislav Petkov wrote:
+> > On Mon, Jun 29, 2020 at 03:04:00PM -0700, Sean Christopherson wrote:
+> > > /dev/sgx/provision is root-only by default, the expectation is that the admin
+> > > will configure the system to grant only specific enclaves access to the
+> > > PROVISION_KEY.
+> >
+> > Uuh, I don't like "the expectation is" - the reality happens to turn
+> > differently, more often than not.
+>
+> Would it help if I worded it as "only root should ever be able to run an
+> enclave with access to PROVISION_KEY"?  We obviously can't control what
+> admins actually do, hence my wording of it as the expected behavior.
+>
+> > > In this series, access is fairly binary, i.e. there's no additional kernel
+> > > infrastructure to help userspace make per-enclave decisions.  There have been
+> > > more than a few proposals on how to extend the kernel to help provide better
+> > > granularity, e.g. LSM hooks, but it was generally agreed to punt that stuff
+> > > to post-upstreaming to keep things "simple" once we went far enough down
+> > > various paths to ensure we weren't painting ourselves into a corner.
+> >
+> > So this all sounds to me like we should not upstream /dev/sgx/provision
+> > now but delay it until the infrastructure for that has been made more
+> > concrete. We can always add it then. Changing it after the fact -
+> > if we have to and for whatever reason - would be a lot harder for a
+> > user-visible interface which someone has started using already.
+>
+> The userspace and attestation infrastructure is very concrete, i.e. the
+> need for userspace to be able to access PROVISION_KEY is there, as is the
+> desire to be able to restrict access to PROVISION_KEY, e.g. I believe Andy
+> Lutomirski originally requested the ability to restrict access.
+>
+> The additional infrastructure for per-enclave decisions is somewhat
+> orthogonal to the PROVISION_KEY, e.g. they won't necessarily be employed
+> by everyone running enclaves, and environments that do have per-enclave
+> policies would still likely want the extra layer of restriction for
+> PROVISION_KEY.  I only brought the additional policy crud to call out that
+> we've done enough path-finding on additional restrictions to have strong
+> confidence that adding /dev/sgx/provision won't prevent us from adding more
+> fine grained control in the future.
 
-Em, I don't expect the changes introduced since v1 to have any observable
-effects, but I really don't know: I should be able to complete my testing
-of this by tomorrow or so; for now, please just ignore this tag.
+I agree.
 
-Thanks,
-  Andrea
-
-
-> 
-> Cc: linux-scsi@vger.kernel.org
-> Cc: netdev@vger.kernel.org
-> Cc: James E.J. Bottomley <jejb@linux.ibm.com>
-> Cc: Martin K. Petersen <martin.petersen@oracle.com>
-> Cc: David S. Miller <davem@davemloft.net>
-> 
-> Andres Beltran (3):
->   Drivers: hv: vmbus: Add vmbus_requestor data structure for VMBus
->     hardening
->   scsi: storvsc: Use vmbus_requestor to generate transaction IDs for
->     VMBus hardening
->   hv_netvsc: Use vmbus_requestor to generate transaction IDs for VMBus
->     hardening
-> 
->  drivers/hv/channel.c              | 154 ++++++++++++++++++++++++++++++
->  drivers/net/hyperv/hyperv_net.h   |  13 +++
->  drivers/net/hyperv/netvsc.c       |  79 ++++++++++++---
->  drivers/net/hyperv/rndis_filter.c |   1 +
->  drivers/scsi/storvsc_drv.c        |  85 ++++++++++++++---
->  include/linux/hyperv.h            |  22 +++++
->  6 files changed, 329 insertions(+), 25 deletions(-)
-> 
-> -- 
-> 2.25.1
-> 
+I anticipate that most of the nasty fine-grained stuff will end up in
+userspace down the road.  Systems can be configured such that
+provisioning is done as root, or systems can end up with fancy SELinux
+rules or daemons that pass around fds or whatever, but all of this can
+be done with the kernel code in this patchset.
