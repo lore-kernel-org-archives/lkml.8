@@ -7,65 +7,64 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECF4CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06C62C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:33:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B77022072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:33:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2A112072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:33:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="bzjeVyS+"
+	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="Nb8qycPy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728909AbgF3Vdi (ORCPT
+        id S1729018AbgF3Vdn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 17:33:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34424 "EHLO
+        Tue, 30 Jun 2020 17:33:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728659AbgF3Vda (ORCPT
+        with ESMTP id S1728355AbgF3Vde (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 17:33:30 -0400
+        Tue, 30 Jun 2020 17:33:34 -0400
 Received: from mail-pg1-x543.google.com (mail-pg1-x543.google.com [IPv6:2607:f8b0:4864:20::543])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54C5CC03E97A
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 14:33:30 -0700 (PDT)
-Received: by mail-pg1-x543.google.com with SMTP id o13so7596423pgf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 14:33:30 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEBD4C03E97B
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 14:33:34 -0700 (PDT)
+Received: by mail-pg1-x543.google.com with SMTP id g67so9663015pgc.8
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 14:33:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=digitalocean.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=LSoHFGJIoicakIrW1xW/AA2Wcpb4S6+hpatC6IJ18fw=;
-        b=bzjeVyS+N1b96VP1Udr57wChly7IIsoT4A0fK/6B8RT8BP6/qbJASsl2shKXfRng9g
-         wMCU7gTlwQGNrZvtaMrJCet/ze9Pa5a63ovkn0jZmkYNxMOReweNqXMu0i99bhm0m3FF
-         wT7mMJNRQRcNSPfqnEI40OkQRQWzIKTrR+/SE=
+        bh=hdQ2xMp70fMLuDoFDFmlbfpgm19jRCSqQFZhLgrcgyM=;
+        b=Nb8qycPySLCdz2sjcVEnERSJESpIpybwkbLOnP6sBAjWTK5hfBoW5oUr+e2zQrlnmW
+         RD+1YggCWJROo2G6+3D+JLGet32hVW1mb6AbBqngh4EfclDn+Adfk0jDkMK0rZJo00k8
+         WR3WF0KizLPviK9XrJxZQnbZy48JjjaAKU8io=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=LSoHFGJIoicakIrW1xW/AA2Wcpb4S6+hpatC6IJ18fw=;
-        b=soyJR8eYWQLtO968IWdWBh9X3LrKQs+3KbIY2hJIM70KTnSssmW/V3ZA5h9zD5GqnT
-         X6lDVGktLDqelBDLQP1H4iAZ1D/jmtc+RtqIA8WI3WsBVT47f4DoDLfPXF/a5LL9HyhX
-         Yw/J60Dilcv7sCe2u9vO6jo8XTUZ5Gh6XdEJzmlsTdWpEPrjrDDpzE4x/NFrD/XSsVjW
-         UWo9NOYIvnsQgrs7Sz5m9A4JFdFFjNVOvLsiUYSkFNDeLXDdwQAIB2WZGG+qwLueXw5k
-         9tXDoYXWq/1tDqo+IyNCROK0v6sBBVCOCWnsy+qHUIUjSb/llxIiDGcTr34xT2hwsG38
-         HeIw==
-X-Gm-Message-State: AOAM530JMJOGhD3iY3xBhLNLLlmbFvrGjVhI1rNI9xCpuRamASig3ri4
-        y1qmoOwD4efTjvSgHiEWoGBhmg==
-X-Google-Smtp-Source: ABdhPJz7wPDUh9oXaJLKp0y6gXEI9Olrsbi+0w1S8j2tVc9UuZ9uI3skdiMqcntNdTjaqwZuL9S20Q==
-X-Received: by 2002:a63:7987:: with SMTP id u129mr16048117pgc.353.1593552809632;
-        Tue, 30 Jun 2020 14:33:29 -0700 (PDT)
+        bh=hdQ2xMp70fMLuDoFDFmlbfpgm19jRCSqQFZhLgrcgyM=;
+        b=pc6PJEx63YxNnIag/JiUe6MbqSxUNIRvJxjZR7xd1K8rxryo1f8R0DdB2sPL8E1BHk
+         8FvEqN4Oa1vx4rtrbOVP2IBQqSQw2cC/ousmFg9iJ5hw3ytWZ9qpIGVci+czkkQkdF/7
+         T2EbjQKt+wcgmin5rw76UKq/nFsuMRcgQ14dbdBVo+eEPNouFQENdAAvbUyuzOVdKpr7
+         9bfWsIGDsqPAMF44MH8W482hBoUr91DCN1cJRKN+l9jODkpsxlEo2xENxBY1L6qggvBm
+         8opB27pVzOMeFYY2QfI1NUPq5WuaiiWoZth5L5sohFX9bpIvSmaquJwq4caT6PyMSIEI
+         8ssg==
+X-Gm-Message-State: AOAM530gJ58X33ArpwsDdqzDAc7LwHD83iePHITotILYvmuHsVfQ8vdX
+        Qc9FvpRHKRZ/nxrWeBc7NeRTBw==
+X-Google-Smtp-Source: ABdhPJx8QiOEFm6WkTF4aW+TwQxXNpJxIcZLmYITBJ67dFHy0AUEXP7SD34ubX1XCp7vLoERyuOEsQ==
+X-Received: by 2002:a62:140f:: with SMTP id 15mr20118719pfu.50.1593552814189;
+        Tue, 30 Jun 2020 14:33:34 -0700 (PDT)
 Received: from vpillai-dev.sfo2.internal.digitalocean.com ([138.68.32.68])
-        by smtp.gmail.com with ESMTPSA id 27sm3141241pjg.19.2020.06.30.14.33.28
+        by smtp.gmail.com with ESMTPSA id g22sm1054980pgb.82.2020.06.30.14.33.32
         (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 30 Jun 2020 14:33:29 -0700 (PDT)
+        Tue, 30 Jun 2020 14:33:33 -0700 (PDT)
 From:   Vineeth Remanan Pillai <vpillai@digitalocean.com>
 To:     Nishanth Aravamudan <naravamudan@digitalocean.com>,
         Julien Desfossez <jdesfossez@digitalocean.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Tim Chen <tim.c.chen@linux.intel.com>, mingo@kernel.org,
         tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org
-Cc:     Aaron Lu <aaron.lwe@gmail.com>, linux-kernel@vger.kernel.org,
-        subhra.mazumdar@oracle.com, fweisbec@gmail.com,
-        keescook@chromium.org, kerrnel@google.com,
-        Phil Auld <pauld@redhat.com>,
+Cc:     linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
+        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
+        Phil Auld <pauld@redhat.com>, Aaron Lu <aaron.lwe@gmail.com>,
         Aubrey Li <aubrey.intel@gmail.com>,
         Valentin Schneider <valentin.schneider@arm.com>,
         Mel Gorman <mgorman@techsingularity.net>,
@@ -73,11 +72,10 @@ Cc:     Aaron Lu <aaron.lwe@gmail.com>, linux-kernel@vger.kernel.org,
         Paolo Bonzini <pbonzini@redhat.com>,
         Joel Fernandes <joelaf@google.com>, joel@joelfernandes.org,
         vineethrp@gmail.com, Chen Yu <yu.c.chen@intel.com>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Aaron Lu <ziqian.lzq@antfin.com>
-Subject: [RFC PATCH 09/16] sched/fair: core wide cfs task priority comparison
-Date:   Tue, 30 Jun 2020 21:32:30 +0000
-Message-Id: <2d0e3da8c80c314048d598fb03ae3fe52d9619f3.1593530334.git.vpillai@digitalocean.com>
+        Christian Brauner <christian.brauner@ubuntu.com>
+Subject: [RFC PATCH 10/16] sched: Trivial forced-newidle balancer
+Date:   Tue, 30 Jun 2020 21:32:31 +0000
+Message-Id: <980b600006945a45ce1ec34ef206fc04bcf0b5dc.1593530334.git.vpillai@digitalocean.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1593530334.git.vpillai@digitalocean.com>
 References: <cover.1593530334.git.vpillai@digitalocean.com>
@@ -88,280 +86,249 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aaron Lu <aaron.lwe@gmail.com>
+From: Peter Zijlstra <peterz@infradead.org>
 
-This patch provides a vruntime based way to compare two cfs task's
-priority, be it on the same cpu or different threads of the same core.
+When a sibling is forced-idle to match the core-cookie; search for
+matching tasks to fill the core.
 
-When the two tasks are on the same CPU, we just need to find a common
-cfs_rq both sched_entities are on and then do the comparison.
+rcu_read_unlock() can incur an infrequent deadlock in
+sched_core_balance(). Fix this by using the RCU-sched flavor instead.
 
-When the two tasks are on differen threads of the same core, each thread
-will choose the next task to run the usual way and then the root level
-sched entities which the two tasks belong to will be used to decide
-which task runs next core wide.
-
-An illustration for the cross CPU case:
-
-   cpu0         cpu1
- /   |  \     /   |  \
-se1 se2 se3  se4 se5 se6
-    /  \            /   \
-  se21 se22       se61  se62
-  (A)                    /
-                       se621
-                        (B)
-
-Assume CPU0 and CPU1 are smt siblings and cpu0 has decided task A to
-run next and cpu1 has decided task B to run next. To compare priority
-of task A and B, we compare priority of se2 and se6. Whose vruntime is
-smaller, who wins.
-
-To make this work, the root level sched entities' vruntime of the two
-threads must be directly comparable. So one of the hyperthread's root
-cfs_rq's min_vruntime is chosen as the core wide one and all root level
-sched entities' vruntime is normalized against it.
-
-All sub cfs_rqs and sched entities are not interesting in cross cpu
-priority comparison as they will only participate in the usual cpu local
-schedule decision so no need to normalize their vruntimes.
-
-Signed-off-by: Aaron Lu <ziqian.lzq@antfin.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Acked-by: Paul E. McKenney <paulmck@kernel.org>
 ---
- kernel/sched/core.c  |  23 +++----
- kernel/sched/fair.c  | 142 ++++++++++++++++++++++++++++++++++++++++++-
- kernel/sched/sched.h |   3 +
- 3 files changed, 150 insertions(+), 18 deletions(-)
+ include/linux/sched.h |   1 +
+ kernel/sched/core.c   | 131 +++++++++++++++++++++++++++++++++++++++++-
+ kernel/sched/idle.c   |   1 +
+ kernel/sched/sched.h  |   6 ++
+ 4 files changed, 138 insertions(+), 1 deletion(-)
 
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 3c8dcc5ff039..4f9edf013df3 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -688,6 +688,7 @@ struct task_struct {
+ #ifdef CONFIG_SCHED_CORE
+ 	struct rb_node			core_node;
+ 	unsigned long			core_cookie;
++	unsigned int			core_occupation;
+ #endif
+ 
+ #ifdef CONFIG_CGROUP_SCHED
 diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index f51e5c4798c8..4d6d6a678013 100644
+index 4d6d6a678013..fb9edb09ead7 100644
 --- a/kernel/sched/core.c
 +++ b/kernel/sched/core.c
-@@ -114,19 +114,8 @@ static inline bool prio_less(struct task_struct *a, struct task_struct *b)
- 	if (pa == -1) /* dl_prio() doesn't work because of stop_class above */
- 		return !dl_time_before(a->dl.deadline, b->dl.deadline);
- 
--	if (pa == MAX_RT_PRIO + MAX_NICE)  { /* fair */
--		u64 vruntime = b->se.vruntime;
--
--		/*
--		 * Normalize the vruntime if tasks are in different cpus.
--		 */
--		if (task_cpu(a) != task_cpu(b)) {
--			vruntime -= task_cfs_rq(b)->min_vruntime;
--			vruntime += task_cfs_rq(a)->min_vruntime;
--		}
--
--		return !((s64)(a->se.vruntime - vruntime) <= 0);
--	}
-+	if (pa == MAX_RT_PRIO + MAX_NICE) /* fair */
-+		return cfs_prio_less(a, b);
- 
- 	return false;
+@@ -201,6 +201,21 @@ static struct task_struct *sched_core_find(struct rq *rq, unsigned long cookie)
+ 	return match;
  }
-@@ -229,8 +218,12 @@ static int __sched_core_stopper(void *data)
- 	bool enabled = !!(unsigned long)data;
- 	int cpu;
  
--	for_each_possible_cpu(cpu)
--		cpu_rq(cpu)->core_enabled = enabled;
-+	for_each_possible_cpu(cpu) {
-+		struct rq *rq = cpu_rq(cpu);
-+		rq->core_enabled = enabled;
-+		if (cpu_online(cpu) && rq->core != rq)
-+			sched_core_adjust_sibling_vruntime(cpu, enabled);
-+	}
++static struct task_struct *sched_core_next(struct task_struct *p, unsigned long cookie)
++{
++	struct rb_node *node = &p->core_node;
++
++	node = rb_next(node);
++	if (!node)
++		return NULL;
++
++	p = container_of(node, struct task_struct, core_node);
++	if (p->core_cookie != cookie)
++		return NULL;
++
++	return p;
++}
++
+ /*
+  * The static-key + stop-machine variable are needed such that:
+  *
+@@ -4233,7 +4248,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+ 	struct task_struct *next, *max = NULL;
+ 	const struct sched_class *class;
+ 	const struct cpumask *smt_mask;
+-	int i, j, cpu;
++	int i, j, cpu, occ = 0;
+ 	bool need_sync;
  
- 	return 0;
+ 	if (!sched_core_enabled(rq))
+@@ -4332,6 +4347,9 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+ 				goto done;
+ 			}
+ 
++			if (!is_idle_task(p))
++				occ++;
++
+ 			rq_i->core_pick = p;
+ 
+ 			/*
+@@ -4357,6 +4375,7 @@ pick_next_task(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+ 
+ 						cpu_rq(j)->core_pick = NULL;
+ 					}
++					occ = 1;
+ 					goto again;
+ 				} else {
+ 					/*
+@@ -4393,6 +4412,8 @@ next_class:;
+ 		if (is_idle_task(rq_i->core_pick) && rq_i->nr_running)
+ 			rq_i->core_forceidle = true;
+ 
++		rq_i->core_pick->core_occupation = occ;
++
+ 		if (i == cpu)
+ 			continue;
+ 
+@@ -4408,6 +4429,114 @@ next_class:;
+ 	return next;
  }
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 61d19e573443..d16939766361 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -462,11 +462,142 @@ find_matching_se(struct sched_entity **se, struct sched_entity **pse)
  
- #endif	/* CONFIG_FAIR_GROUP_SCHED */
++static bool try_steal_cookie(int this, int that)
++{
++	struct rq *dst = cpu_rq(this), *src = cpu_rq(that);
++	struct task_struct *p;
++	unsigned long cookie;
++	bool success = false;
++
++	local_irq_disable();
++	double_rq_lock(dst, src);
++
++	cookie = dst->core->core_cookie;
++	if (!cookie)
++		goto unlock;
++
++	if (dst->curr != dst->idle)
++		goto unlock;
++
++	p = sched_core_find(src, cookie);
++	if (p == src->idle)
++		goto unlock;
++
++	do {
++		if (p == src->core_pick || p == src->curr)
++			goto next;
++
++		if (!cpumask_test_cpu(this, &p->cpus_mask))
++			goto next;
++
++		if (p->core_occupation > dst->idle->core_occupation)
++			goto next;
++
++		p->on_rq = TASK_ON_RQ_MIGRATING;
++		deactivate_task(src, p, 0);
++		set_task_cpu(p, this);
++		activate_task(dst, p, 0);
++		p->on_rq = TASK_ON_RQ_QUEUED;
++
++		resched_curr(dst);
++
++		success = true;
++		break;
++
++next:
++		p = sched_core_next(p, cookie);
++	} while (p);
++
++unlock:
++	double_rq_unlock(dst, src);
++	local_irq_enable();
++
++	return success;
++}
++
++static bool steal_cookie_task(int cpu, struct sched_domain *sd)
++{
++	int i;
++
++	for_each_cpu_wrap(i, sched_domain_span(sd), cpu) {
++		if (i == cpu)
++			continue;
++
++		if (need_resched())
++			break;
++
++		if (try_steal_cookie(cpu, i))
++			return true;
++	}
++
++	return false;
++}
++
++static void sched_core_balance(struct rq *rq)
++{
++	struct sched_domain *sd;
++	int cpu = cpu_of(rq);
++
++	rcu_read_lock_sched();
++	raw_spin_unlock_irq(rq_lockp(rq));
++	for_each_domain(cpu, sd) {
++		if (!(sd->flags & SD_LOAD_BALANCE))
++			break;
++
++		if (need_resched())
++			break;
++
++		if (steal_cookie_task(cpu, sd))
++			break;
++	}
++	raw_spin_lock_irq(rq_lockp(rq));
++	rcu_read_unlock_sched();
++}
++
++static DEFINE_PER_CPU(struct callback_head, core_balance_head);
++
++void queue_core_balance(struct rq *rq)
++{
++	if (!sched_core_enabled(rq))
++		return;
++
++	if (!rq->core->core_cookie)
++		return;
++
++	if (!rq->nr_running) /* not forced idle */
++		return;
++
++	queue_balance_callback(rq, &per_cpu(core_balance_head, rq->cpu), sched_core_balance);
++}
++
+ #else /* !CONFIG_SCHED_CORE */
  
-+#ifdef CONFIG_SCHED_CORE
-+static inline struct cfs_rq *root_cfs_rq(struct cfs_rq *cfs_rq)
-+{
-+	return &rq_of(cfs_rq)->cfs;
-+}
-+
-+static inline bool is_root_cfs_rq(struct cfs_rq *cfs_rq)
-+{
-+	return cfs_rq == root_cfs_rq(cfs_rq);
-+}
-+
-+static inline struct cfs_rq *core_cfs_rq(struct cfs_rq *cfs_rq)
-+{
-+	return &rq_of(cfs_rq)->core->cfs;
-+}
-+
-+static inline u64 cfs_rq_min_vruntime(struct cfs_rq *cfs_rq)
-+{
-+	if (!sched_core_enabled(rq_of(cfs_rq)) || !is_root_cfs_rq(cfs_rq))
-+		return cfs_rq->min_vruntime;
-+
-+	return core_cfs_rq(cfs_rq)->min_vruntime;
-+}
-+
-+#ifndef CONFIG_64BIT
-+static inline u64 cfs_rq_min_vruntime_copy(struct cfs_rq *cfs_rq)
-+{
-+	if (!sched_core_enabled(rq_of(cfs_rq)) || !is_root_cfs_rq(cfs_rq))
-+		return cfs_rq->min_vruntime_copy;
-+
-+	return core_cfs_rq(cfs_rq)->min_vruntime_copy;
-+}
-+#endif /* CONFIG_64BIT */
-+
-+bool cfs_prio_less(struct task_struct *a, struct task_struct *b)
-+{
-+	struct sched_entity *sea = &a->se;
-+	struct sched_entity *seb = &b->se;
-+	bool samecpu = task_cpu(a) == task_cpu(b);
-+	s64 delta;
-+
-+#ifdef CONFIG_FAIR_GROUP_SCHED
-+	if (samecpu) {
-+		/* vruntime is per cfs_rq */
-+		while (!is_same_group(sea, seb)) {
-+			int sea_depth = sea->depth;
-+			int seb_depth = seb->depth;
-+
-+			if (sea_depth >= seb_depth)
-+				sea = parent_entity(sea);
-+			if (sea_depth <= seb_depth)
-+				seb = parent_entity(seb);
-+		}
-+
-+		delta = (s64)(sea->vruntime - seb->vruntime);
-+		goto out;
-+	}
-+
-+	/* crosscpu: compare root level se's vruntime to decide priority */
-+	while (sea->parent)
-+		sea = sea->parent;
-+	while (seb->parent)
-+		seb = seb->parent;
-+#else
-+	/*
-+	 * Use the min_vruntime of root cfs_rq if the tasks are
-+	 * enqueued in different cpus.
-+	 * */
-+	if (!samecpu) {
-+		delta = (s64)(task_rq(a)->cfs.min_vruntime -
-+			      task_rq(b)->cfs.min_vruntime);
-+		goto out;
-+	}
-+#endif /* CONFIG_FAIR_GROUP_SCHED */
-+
-+	delta = (s64)(sea->vruntime - seb->vruntime);
-+
-+out:
-+	return delta > 0;
-+}
-+
-+/*
-+ * This function takes care of adjusting the min_vruntime of siblings of
-+ * a core during coresched enable/disable.
-+ * This is called in stop machine context so no need to take the rq lock.
-+ *
-+ * Coresched enable case
-+ *  Once Core scheduling is enabled, the root level sched entities
-+ *  of both siblings will use cfs_rq->min_vruntime as the common cfs_rq
-+ *  min_vruntime, so it's necessary to normalize vruntime of existing root
-+ *  level sched entities in sibling_cfs_rq.
-+ *
-+ *  Update of sibling_cfs_rq's min_vruntime isn't necessary as we will be
-+ *  only using cfs_rq->min_vruntime during the entire run of core scheduling.
-+ *
-+ * Coresched disable case
-+ *  During the entire run of core scheduling, sibling_cfs_rq's min_vruntime
-+ *  is left unused and could lag far behind its still queued sched entities.
-+ *  Sync it to the up2date core wide one to avoid problems.
-+ */
-+void sched_core_adjust_sibling_vruntime(int cpu, bool coresched_enabled)
-+{
-+	struct cfs_rq *cfs = &cpu_rq(cpu)->cfs;
-+	struct cfs_rq *core_cfs = &cpu_rq(cpu)->core->cfs;
-+	if (coresched_enabled) {
-+		struct sched_entity *se, *next;
-+		s64 delta = core_cfs->min_vruntime - cfs->min_vruntime;
-+		rbtree_postorder_for_each_entry_safe(se, next,
-+				&cfs->tasks_timeline.rb_root,
-+				run_node) {
-+			se->vruntime += delta;
-+		}
-+	} else {
-+		cfs->min_vruntime = core_cfs->min_vruntime;
-+#ifndef CONFIG_64BIT
-+		smp_wmb();
-+		cfs->min_vruntime_copy = core_cfs->min_vruntime;
-+#endif
-+	}
-+}
-+
-+#else
- static inline u64 cfs_rq_min_vruntime(struct cfs_rq *cfs_rq)
+ static struct task_struct *
+diff --git a/kernel/sched/idle.c b/kernel/sched/idle.c
+index a8d40ffab097..dff6ba220ed7 100644
+--- a/kernel/sched/idle.c
++++ b/kernel/sched/idle.c
+@@ -395,6 +395,7 @@ static void set_next_task_idle(struct rq *rq, struct task_struct *next, bool fir
  {
- 	return cfs_rq->min_vruntime;
+ 	update_idle_core(rq);
+ 	schedstat_inc(rq->sched_goidle);
++	queue_core_balance(rq);
  }
  
-+#ifndef CONFIG_64BIT
-+static inline u64 cfs_rq_min_vruntime_copy(struct cfs_rq *cfs_rq)
-+{
-+	return cfs_rq->min_vruntime_copy;
-+}
-+#endif /* CONFIG_64BIT */
-+
-+#endif /* CONFIG_SCHED_CORE */
-+
- static __always_inline
- void account_cfs_rq_runtime(struct cfs_rq *cfs_rq, u64 delta_exec);
- 
-@@ -522,8 +653,13 @@ static void update_min_vruntime(struct cfs_rq *cfs_rq)
- 			vruntime = min_vruntime(vruntime, se->vruntime);
- 	}
- 
-+#ifdef CONFIG_SCHED_CORE
-+	if (sched_core_enabled(rq_of(cfs_rq)) && is_root_cfs_rq(cfs_rq))
-+		cfs_rq = core_cfs_rq(cfs_rq);
-+#endif
-+
- 	/* ensure we never gain time by being placed backwards. */
--	cfs_rq->min_vruntime = max_vruntime(cfs_rq_min_vruntime(cfs_rq), vruntime);
-+	cfs_rq->min_vruntime = max_vruntime(cfs_rq->min_vruntime, vruntime);
- #ifndef CONFIG_64BIT
- 	smp_wmb();
- 	cfs_rq->min_vruntime_copy = cfs_rq->min_vruntime;
-@@ -6700,9 +6836,9 @@ static void migrate_task_rq_fair(struct task_struct *p, int new_cpu)
- 		u64 min_vruntime_copy;
- 
- 		do {
--			min_vruntime_copy = cfs_rq->min_vruntime_copy;
-+			min_vruntime_copy = cfs_rq_min_vruntime_copy(cfs_rq);
- 			smp_rmb();
--			min_vruntime = cfs_rq->min_vruntime;
-+			min_vruntime = cfs_rq_min_vruntime(cfs_rq);
- 		} while (min_vruntime != min_vruntime_copy);
- #else
- 		min_vruntime = cfs_rq_min_vruntime(cfs_rq);
+ #ifdef CONFIG_SMP
 diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 4a738093d731..293aa1ae0308 100644
+index 293aa1ae0308..464559676fd2 100644
 --- a/kernel/sched/sched.h
 +++ b/kernel/sched/sched.h
-@@ -1086,6 +1086,9 @@ static inline raw_spinlock_t *rq_lockp(struct rq *rq)
- 	return &rq->__lock;
- }
+@@ -1089,6 +1089,8 @@ static inline raw_spinlock_t *rq_lockp(struct rq *rq)
+ bool cfs_prio_less(struct task_struct *a, struct task_struct *b);
+ void sched_core_adjust_sibling_vruntime(int cpu, bool coresched_enabled);
  
-+bool cfs_prio_less(struct task_struct *a, struct task_struct *b);
-+void sched_core_adjust_sibling_vruntime(int cpu, bool coresched_enabled);
++extern void queue_core_balance(struct rq *rq);
 +
  #else /* !CONFIG_SCHED_CORE */
  
  static inline bool sched_core_enabled(struct rq *rq)
+@@ -1101,6 +1103,10 @@ static inline raw_spinlock_t *rq_lockp(struct rq *rq)
+ 	return &rq->__lock;
+ }
+ 
++static inline void queue_core_balance(struct rq *rq)
++{
++}
++
+ #endif /* CONFIG_SCHED_CORE */
+ 
+ #ifdef CONFIG_SCHED_SMT
 -- 
 2.17.1
 
