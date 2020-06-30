@@ -2,74 +2,129 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88125C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DDF7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:22:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5131E206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:21:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66F3F206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:22:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="CSRw4qA3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbgF3TVX (ORCPT
+        id S1726952AbgF3TWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 15:21:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42180 "EHLO
+        Tue, 30 Jun 2020 15:22:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726704AbgF3TVW (ORCPT
+        with ESMTP id S1726283AbgF3TWg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 15:21:22 -0400
-Received: from shards.monkeyblade.net (shards.monkeyblade.net [IPv6:2620:137:e000::1:9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 73B10C061755;
-        Tue, 30 Jun 2020 12:21:22 -0700 (PDT)
-Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 8D75F1273208E;
-        Tue, 30 Jun 2020 12:21:17 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 12:21:14 -0700 (PDT)
-Message-Id: <20200630.122114.69420116631257185.davem@davemloft.net>
-To:     elder@linaro.org
-Cc:     kuba@kernel.org, evgreen@chromium.org, subashab@codeaurora.org,
-        cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 1/5] net: ipa: head-of-line block registers
- are RX only
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <825816f3-5797-bbcf-571b-c6a7a6821397@linaro.org>
-References: <7c438ee3-8ff0-0ee1-2a0a-fa458d982e11@linaro.org>
-        <20200629.180305.1550276438848153234.davem@davemloft.net>
-        <825816f3-5797-bbcf-571b-c6a7a6821397@linaro.org>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 30 Jun 2020 12:21:17 -0700 (PDT)
+        Tue, 30 Jun 2020 15:22:36 -0400
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3F54C061755;
+        Tue, 30 Jun 2020 12:22:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Z50zmfnBPo2u0p8708BAruvf3MnDJq1nng3tchC4BxM=; b=CSRw4qA3mqrXDXC30pTR66alas
+        v8/PTBq36Esj+PKN5s/rhns+lUf5KGCaFmEjZLDjCMief1m4AzpfaSpc4pou2l0sWIOxlI1pDg654
+        1hCURAZCV5U5z0PapH1RKgrrIwNB7wug4UAaLLNjuNBQINiSr99qYZPe67P4DDMxbpTc=;
+Received: from p200300ccff14dd001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff14:dd00:1a3d:a2ff:febf:d33a] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1jqLpZ-0001r0-AN; Tue, 30 Jun 2020 21:22:09 +0200
+Date:   Tue, 30 Jun 2020 21:22:07 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>
+Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Lubomir Rintel <lkundrak@v3.sk>,
+        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
+        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Josua Mayer <josua.mayer@jm0.eu>
+Subject: Re: [RFC PATCH 00/10] Netronix embedded controller driver for Kobo
+ and Tolino ebook readers
+Message-ID: <20200630212207.018ad355@aktux>
+In-Reply-To: <20200630071523.GA2983@latitude>
+References: <20200620223915.1311485-1-j.neuschaefer@gmx.net>
+        <20200630084051.66feadea@aktux>
+        <20200630071523.GA2983@latitude>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Elder <elder@linaro.org>
-Date: Mon, 29 Jun 2020 20:09:58 -0500
+On Tue, 30 Jun 2020 09:15:23 +0200
+Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net> wrote:
 
-> But the reason I was
-> considering it conditional on a config option is that Qualcomm
-> has a crash analysis tool that expects a BUG() call to stop the
-> system so its instant state can be captured.  I don't use this
-> tool, and I might be mistaken about what's required.
+> On Tue, Jun 30, 2020 at 08:40:51AM +0200, Andreas Kemnade wrote:
+> [...]
+> > got a chance to test it on a Tolino Shine 2 HD.
+> > It uses the RTC from the RC5T619 but backlight seems to go via MSP430
+> > EC.
+> >=20
+> > I got this.
+> >=20
+> > [    1.453603] ntxec 0-0043: Netronix embedded controller version f110 =
+detected.
+> > [   10.723638] ntxec-rtc 21a0000.i2c:embedded-controller@43:rtc: regist=
+ered as rtc0
+> > [   10.775276] ntxec-pwm: probe of 21a0000.i2c:embedded-controller@43:p=
+wm failed with error -5 =20
+>=20
+> Hmm, -EIO from the PWM driver.
+>
+Weird...
+IOMUXC_SW_PAD_CTL_PAD_I2C1_SDA/SCL is identical between
+vendor kernel (heavily patched 3.0.35) and patched mainline.
+                       =20
+MX6SL_PAD_I2C1_SCL__I2C1_SCL     0x4001f8b1
+MX6SL_PAD_I2C1_SDA__I2C1_SDA     0x4001f8b1
 
-A Qualcomm debugging tool with poorly choosen expectations does not
-determine how we do things in the kernel.
+root@tolino2:~# i2cset -f 0 0x43 0xa3 0x0001 w
+WARNING! This program can confuse your I2C bus, cause data loss and worse!
+I will write to device file /dev/i2c-0, chip address 0x43, data address
+0xa3, data 0x01, mode word.
+Continue? [Y/n]=20
+Error: Write failed
+root@tolino2:~# i2cset -f 0 0x43 0xa3 0x0000 w
+WARNING! This program can confuse your I2C bus, cause data loss and worse!
+I will write to device file /dev/i2c-0, chip address 0x43, data address
+0xa3, data 0x00, mode word.
+Continue? [Y/n]=20
+Error: Write failed
 
-> What I would *really* like to do is have a way to gracefully
-> shut down just the IPA driver when an unexpected condition occurs,
-> so I can stop everything without crashing the system.  But doing
-> that in a way that works in all cases is Hard.
+but backlight gets toggled. Same behavior on vendor kernel and
+in vendor uboot.
+That smells.
 
-Users would like their system and the IPA device to continue, even
-if in a reduced functionality manner, if possible.
-
-Doing things to make that less likely to be possible is undesirable.
+Regards,
+Andreas
