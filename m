@@ -2,115 +2,294 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5113EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BA8C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2E1292065D
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:37:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8880A20656
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:37:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gevpHk/D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729788AbgF3Vhl (ORCPT
+        id S1729866AbgF3Vhu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 17:37:41 -0400
-Received: from jabberwock.ucw.cz ([46.255.230.98]:52816 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726907AbgF3Vhl (ORCPT
+        Tue, 30 Jun 2020 17:37:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35100 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729580AbgF3Vhs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 17:37:41 -0400
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id D52471C0C0F; Tue, 30 Jun 2020 23:37:38 +0200 (CEST)
-Date:   Tue, 30 Jun 2020 23:37:38 +0200
-From:   Pavel Machek <pavel@ucw.cz>
-To:     kernel list <linux-kernel@vger.kernel.org>,
-        chris@chris-wilson.co.uk, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com
-Subject: 5.8-rc2: X hangs due to drm problem (on thinkpad x220)
-Message-ID: <20200630213738.GA6288@duo.ucw.cz>
+        Tue, 30 Jun 2020 17:37:48 -0400
+Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2870EC03E979;
+        Tue, 30 Jun 2020 14:30:32 -0700 (PDT)
+Received: by mail-pg1-x541.google.com with SMTP id z5so10551936pgb.6;
+        Tue, 30 Jun 2020 14:30:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=U5xBvyLpKOr/G1/pIFdkzOP1KvMJUbskSgpplnzTGZI=;
+        b=gevpHk/D1CiRUe+JiEVZKBwZOlT3CTqvldVFKaCoAWevvxp+XA4korqzj0TRMUe+GH
+         ROtO1q5n35lNEaUWn/Xh15IBjZbXom5TnEBdzyMqDelZ8M1uLtOoLxs6MnxxPWFNPthD
+         W/zEuJjuIvRoXqavNpwVtPMzERJ9wi/tSR2U51AakuS6Na/FgE9Ej0/odVcxc7100bDi
+         MB5hVx5O1AA8BHcbuc7lShjAHIuXE4CARRd8+UrZhpK2yq0SHu0pazrfpqe6DQwayhAL
+         ZVBmqw/AoCf6S6aji47kWb+RqNVCerXFqmiY6vX4M1oxX5qR6eGNNdSlKFbsKf7+HnAO
+         P2cQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=U5xBvyLpKOr/G1/pIFdkzOP1KvMJUbskSgpplnzTGZI=;
+        b=btu8o+JMu0YthnU7sjHB64EO57nS9ckUpaQ7XLJ4FXARQ0RoDTd8yEfnBXR6G9tllu
+         JxVJyhq3cK7AAcZt8rW1QSi6+t4kC1ayEpnPnZXNnPStdpFFw9L0eFSG8/gH4B5G1cqV
+         5P1k6eV9MUokbQgxIR1vuC6rZ4MAC8juWVi9d7zhXrx2acKYsU6tMzvALZ8dnN/4y7UN
+         yleUKLV7Mr0jIYvut3ZuRfuPjazIgJogaPfj24eSXuFNZmjonaq4RGJ3Y5UNyI8hycZx
+         pGe3fGJD+UmiZnfBNe58sVX53WdAb1VOQyNQFABdlOvYY0diqxWPEcUton+mpAnDfiGO
+         mNIA==
+X-Gm-Message-State: AOAM533OIhAXt9VHDtrHaNXx7Gg3M9HmyAPCfHHQGc2ACGJ67x6ochzu
+        m1i3G7Po2V0IZioJ5DTc5VVp/yQlx7SwJaflggw=
+X-Google-Smtp-Source: ABdhPJzbOoHlqgM660bd9qepiHFkNNh62/L3fKtE0vDOVY0GuMzH3AFdRlI4do6SnkdmD9SmwSBIoq+4vBUsVd7s8qs=
+X-Received: by 2002:a62:7657:: with SMTP id r84mr20132713pfc.130.1593552631611;
+ Tue, 30 Jun 2020 14:30:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="J/dobhs11T7y2rNN"
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200630160736.1196697-1-mans0n@gorani.run>
+In-Reply-To: <20200630160736.1196697-1-mans0n@gorani.run>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 1 Jul 2020 00:30:15 +0300
+Message-ID: <CAHp75VfuvuMQ3r_SHSUzE78TViQMqDCqPLEZ4eUjLVUpNHj7kA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/2] gpio: add GPO driver for PCA9570
+To:     Sungbo Eo <mans0n@gorani.run>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Michael Walle <michael@walle.cc>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jun 30, 2020 at 7:08 PM Sungbo Eo <mans0n@gorani.run> wrote:
+>
+> NXP PCA9570 is 4-bit I2C GPO expander without interrupt functionality.
+> Its ports are controlled only by a data byte without register address.
+>
+> As there is no other driver similar enough to be adapted for it, a new
+> driver is introduced here.
+>
 
---J/dobhs11T7y2rNN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It looks good, but I would add ->get() to return buffered value.
 
-Hi!
+> Signed-off-by: Sungbo Eo <mans0n@gorani.run>
+> ---
+> v3:
+> * remove mutex
+> * rename buffer to out
+> * simplify return statements
+> * replace ->probe() to ->probe_new()
+> * move ngpio to driver_data
+>   (PCA9571 is 8-bit so I thought making ngpio configurable is a good idea)
+>
+> v2:
+> * move the direction functions below the set functions
+> * use devm_gpiochip_add_data() and remove the remove callback
+>
+> v1:
+> Tested in kernel 5.4 on an ipq40xx platform.
+>
+> This is my first time submitting a whole driver patch, and I'm not really
+> familiar with this PCA expander series.
+> Please let me know how I can improve this patch further.
+>
+> FYI there's an unmerged patch for this chip.
+> http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/2017-May/105602.html
+> I don't have PCA9571 either so I didn't add support for it.
+> ---
+>  drivers/gpio/Kconfig        |   8 +++
+>  drivers/gpio/Makefile       |   1 +
+>  drivers/gpio/gpio-pca9570.c | 131 ++++++++++++++++++++++++++++++++++++
+>  3 files changed, 140 insertions(+)
+>  create mode 100644 drivers/gpio/gpio-pca9570.c
+>
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index c6b5c65c8405..d10dcb81b841 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -962,6 +962,14 @@ config GPIO_PCA953X_IRQ
+>           Say yes here to enable the pca953x to be used as an interrupt
+>           controller. It requires the driver to be built in the kernel.
+>
+> +config GPIO_PCA9570
+> +       tristate "PCA9570 4-Bit I2C GPO expander"
+> +       help
+> +         Say yes here to enable the GPO driver for the NXP PCA9570 chip.
+> +
+> +         To compile this driver as a module, choose M here: the module will
+> +         be called gpio-pca9570.
+> +
+>  config GPIO_PCF857X
+>         tristate "PCF857x, PCA{85,96}7x, and MAX732[89] I2C GPIO expanders"
+>         select GPIOLIB_IRQCHIP
+> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> index 1e4894e0bf0f..33cb40c28a61 100644
+> --- a/drivers/gpio/Makefile
+> +++ b/drivers/gpio/Makefile
+> @@ -110,6 +110,7 @@ obj-$(CONFIG_GPIO_OCTEON)           += gpio-octeon.o
+>  obj-$(CONFIG_GPIO_OMAP)                        += gpio-omap.o
+>  obj-$(CONFIG_GPIO_PALMAS)              += gpio-palmas.o
+>  obj-$(CONFIG_GPIO_PCA953X)             += gpio-pca953x.o
+> +obj-$(CONFIG_GPIO_PCA9570)             += gpio-pca9570.o
+>  obj-$(CONFIG_GPIO_PCF857X)             += gpio-pcf857x.o
+>  obj-$(CONFIG_GPIO_PCH)                 += gpio-pch.o
+>  obj-$(CONFIG_GPIO_PCIE_IDIO_24)                += gpio-pcie-idio-24.o
+> diff --git a/drivers/gpio/gpio-pca9570.c b/drivers/gpio/gpio-pca9570.c
+> new file mode 100644
+> index 000000000000..3898d1c6f407
+> --- /dev/null
+> +++ b/drivers/gpio/gpio-pca9570.c
+> @@ -0,0 +1,131 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Driver for PCA9570 I2C GPO expander
+> + *
+> + * Copyright (C) 2020 Sungbo Eo <mans0n@gorani.run>
+> + *
+> + * Based on gpio-tpic2810.c
+> + * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com/
+> + *     Andrew F. Davis <afd@ti.com>
+> + */
+> +
+> +#include <linux/gpio/driver.h>
+> +#include <linux/i2c.h>
+> +#include <linux/module.h>
+> +
+> +/**
+> + * struct pca9570 - GPIO driver data
+> + * @chip: GPIO controller chip
+> + * @client: I2C device pointer
+> + * @out: Buffer for device register
+> + */
+> +struct pca9570 {
+> +       struct gpio_chip chip;
+> +       struct i2c_client *client;
+> +       u8 out;
+> +};
+> +
+> +static void pca9570_set_mask_bits(struct gpio_chip *chip, u8 mask, u8 bits)
+> +{
+> +       struct pca9570 *gpio = gpiochip_get_data(chip);
+> +       u8 buffer;
+> +       int err;
+> +
+> +       buffer = (gpio->out & ~mask) | (bits & mask);
+> +
+> +       err = i2c_smbus_write_byte(gpio->client, buffer);
+> +       if (err)
+> +               return;
+> +
+> +       gpio->out = buffer;
+> +}
+> +
+> +static void pca9570_set(struct gpio_chip *chip, unsigned offset, int value)
+> +{
+> +       pca9570_set_mask_bits(chip, BIT(offset), value ? BIT(offset) : 0);
+> +}
+> +
+> +static void pca9570_set_multiple(struct gpio_chip *chip, unsigned long *mask,
+> +                                unsigned long *bits)
+> +{
+> +       pca9570_set_mask_bits(chip, *mask, *bits);
+> +}
+> +
+> +static int pca9570_get_direction(struct gpio_chip *chip,
+> +                                unsigned offset)
+> +{
+> +       /* This device always output */
+> +       return GPIO_LINE_DIRECTION_OUT;
+> +}
+> +
+> +static int pca9570_direction_input(struct gpio_chip *chip,
+> +                                  unsigned offset)
+> +{
+> +       /* This device is output only */
+> +       return -EINVAL;
+> +}
+> +
+> +static int pca9570_direction_output(struct gpio_chip *chip,
+> +                                   unsigned offset, int value)
+> +{
+> +       /* This device always output */
+> +       pca9570_set(chip, offset, value);
+> +       return 0;
+> +}
+> +
+> +static const struct gpio_chip template_chip = {
+> +       .label                  = "pca9570",
+> +       .owner                  = THIS_MODULE,
+> +       .get_direction          = pca9570_get_direction,
+> +       .direction_input        = pca9570_direction_input,
+> +       .direction_output       = pca9570_direction_output,
+> +       .set                    = pca9570_set,
+> +       .set_multiple           = pca9570_set_multiple,
+> +       .base                   = -1,
+> +       .can_sleep              = true,
+> +};
+> +
+> +static const struct i2c_device_id pca9570_id_table[] = {
+> +       { "pca9570", 4 },
+> +       { /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, pca9570_id_table);
+> +
+> +static const struct of_device_id pca9570_of_match_table[] = {
+> +       { .compatible = "nxp,pca9570" },
+> +       { /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, pca9570_of_match_table);
+> +
+> +static int pca9570_probe(struct i2c_client *client)
+> +{
+> +       struct pca9570 *gpio;
+> +
+> +       gpio = devm_kzalloc(&client->dev, sizeof(*gpio), GFP_KERNEL);
+> +       if (!gpio)
+> +               return -ENOMEM;
+> +
+> +       gpio->chip = template_chip;
+> +       gpio->chip.parent = &client->dev;
+> +       gpio->chip.ngpio = i2c_match_id(pca9570_id_table, client)->driver_data;
+> +
+> +       gpio->client = client;
+> +
+> +       i2c_set_clientdata(client, gpio);
+> +
+> +       return devm_gpiochip_add_data(&client->dev, &gpio->chip, gpio);
+> +}
+> +
+> +static struct i2c_driver pca9570_driver = {
+> +       .driver = {
+> +               .name = "pca9570",
+> +               .of_match_table = pca9570_of_match_table,
+> +       },
+> +       .probe_new = pca9570_probe,
+> +       .id_table = pca9570_id_table,
+> +};
+> +module_i2c_driver(pca9570_driver);
+> +
+> +MODULE_AUTHOR("Sungbo Eo <mans0n@gorani.run>");
+> +MODULE_DESCRIPTION("GPIO expander driver for PCA9570");
+> +MODULE_LICENSE("GPL v2");
+> --
+> 2.27.0
+>
 
 
-[221198.058766] oom-kill:constraint=3DCONSTRAINT_NONE,nodemask=3D(null),tas=
-k=3Dchromium,pid=3D3612,uid=3D1000
-[221198.058804] Out of memory: Killed process 3612 (chromium) total-vm:2677=
-236kB, anon-rss:95868kB, file-rss:0kB, shmem-rss:1390212kB, UID:1000 pgtabl=
-es:4104kB oom_score_adj:200
-[221198.123441] oom_reaper: reaped process 3612 (chromium), now anon-rss:16=
-kB, file-rss:0kB, shmem-rss:1380368kB
-[223149.407523] perf: interrupt took too long (10405 > 10375), lowering ker=
-nel.perf_event_max_sample_rate to 19000
-[223351.853087] perf: interrupt took too long (13074 > 13006), lowering ker=
-nel.perf_event_max_sample_rate to 15250
-[223652.320162] perf: interrupt took too long (16350 > 16342), lowering ker=
-nel.perf_event_max_sample_rate to 12000
-[223998.558829] perf: interrupt took too long (20625 > 20437), lowering ker=
-nel.perf_event_max_sample_rate to 9500
-[224119.659585] Adding 1681428k swap on /dev/sda1.  Priority:-2 extents:1 a=
-cross:1681428k=20
-[224452.285193] perf: interrupt took too long (25999 > 25781), lowering ker=
-nel.perf_event_max_sample_rate to 7500
-[225248.349100] i915 0000:00:02.0: [drm] Resetting chip for stopped heartbe=
-at on rcs0
-[225248.452665] i915 0000:00:02.0: [drm] chromium[719] context reset due to=
- GPU hang
-
-Ok, so... cat drm/card0/error, they said? Well... no. It says "can not
-allocate memory". Swap is unused and there are 3.5G free AFAICT.
-
-pavel@duo:~$ sudo cat /sys/devices/pci0000:00/0000:00:02.0/drm/card0/error
-cat: '/sys/devices/pci0000:00/0000:00:02.0/drm/card0/error': Cannot allocat=
-e memory
-
-pavel@duo:~$ free
-              total        used        free      shared  buff/cache   avail=
-able
-Mem:        5973704     1802036      987008      430904     3184660     365=
-4380
-Swap:       1681428           8     1681420
-
-(And yes, this is same machine from [Intel-gfx] v5.8-rc1 on thinkpad
-x220, intel graphics: interface frozen, can still switch to text
-console thread, and hang looks very similar).
-
-Any ideas?
-
-Is it possible that there's some kind of memory leak in graphics
-subsystem? I suspected leak in chromium, but this time I restarted
-chromium, and did swapoff / swapon, and machine was ... still pretty
-unusable, culminating with hang of graphics. Text console still works.
-
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---J/dobhs11T7y2rNN
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXvuwogAKCRAw5/Bqldv6
-8vh8AJ4scbz0dhJv1T0im0HIMLjhltwH+QCfY8flqZQMd46etkq2GXhhfdtx/hE=
-=q1QL
------END PGP SIGNATURE-----
-
---J/dobhs11T7y2rNN--
+-- 
+With Best Regards,
+Andy Shevchenko
