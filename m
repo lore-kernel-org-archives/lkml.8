@@ -2,79 +2,122 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2CD6C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB4AAC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:30:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A889720768
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:29:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94E5620759
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:30:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="hALw+ltj"
+	dkim=pass (2048-bit key) header.d=cerno.tech header.i=@cerno.tech header.b="JKF2RLxI";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="AtwYEx3u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730996AbgF3H3Y (ORCPT
+        id S1731005AbgF3Har (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 03:29:24 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:2851 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726943AbgF3H3Y (ORCPT
+        Tue, 30 Jun 2020 03:30:47 -0400
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:34217 "EHLO
+        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726943AbgF3Har (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 03:29:24 -0400
-X-UUID: bdfb1f422f734719ba678fd10bf1da45-20200630
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=HAx+5BTPXfGNqdXAn2CnRwU8idpAgHvW4EJmH0eOK5s=;
-        b=hALw+ltjvCgo8K/x7tJTs59w+VHEF1BeidKYbG+3dl16gCt4nF5/f+X3+aoZYd2nxcqrWle0FDoYIqIDtNXQqCaNLwwJk+SrF8+z4sgg6gB3/qRd+M6ebb8nciyv0bU/mC7oJM/WQ2YD0q6iJIVtLof9BCfu4/HkqN4ogCvrBCM=;
-X-UUID: bdfb1f422f734719ba678fd10bf1da45-20200630
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 762714230; Tue, 30 Jun 2020 15:29:19 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS31DR.mediatek.inc
- (172.27.6.102) with Microsoft SMTP Server (TLS) id 15.0.1497.2; Tue, 30 Jun
- 2020 15:29:18 +0800
-Received: from [10.17.3.153] (10.17.3.153) by MTKCAS32.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1497.2 via Frontend
- Transport; Tue, 30 Jun 2020 15:29:17 +0800
-Message-ID: <1593502139.23885.5.camel@mhfsdcap03>
-Subject: Re: [PATCH 2/2] usb: mtu3: fix NULL pointer dereference
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Markus Elfring <Markus.Elfring@web.de>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-usb@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>,
-        Colin Ian King <colin.king@canonical.com>
-Date:   Tue, 30 Jun 2020 15:28:59 +0800
-In-Reply-To: <99fc1f6e-7907-6723-612a-8b68ffa871e5@web.de>
-References: <1593410434-19406-1-git-send-email-chunfeng.yun@mediatek.com>
-         <1593410434-19406-2-git-send-email-chunfeng.yun@mediatek.com>
-         <99fc1f6e-7907-6723-612a-8b68ffa871e5@web.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Tue, 30 Jun 2020 03:30:47 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.west.internal (Postfix) with ESMTP id 04B83882;
+        Tue, 30 Jun 2020 03:30:43 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute4.internal (MEProxy); Tue, 30 Jun 2020 03:30:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cerno.tech; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=QLnlN1GIamFpAnpFCQURrJYtNy5
+        7NrXSIOmRV8y9wUQ=; b=JKF2RLxIBXte86OafrU1CczjM7wWmITOnY9j6EQiyh5
+        oSql38PtjeMbOMzdI1J/cHnSu3VGniq0Ynf6Lqmr6eNRMSNoaXktJc2/lP420gN7
+        LjJzidoSBSWxFImJiVr9SH+aZdrGLCLEgWGIjg4pT3OrEIAcTtikSnSBYd3iwL1/
+        YI/95CcUACkFObnta6KT5HaJ+MmZmtfkxtBJs8JPYMVYLGK0nj5MqRlAKSpi66y0
+        sPWWzQ4l+gD71UtXH/XE5qSjwWs4HSUD2d6wAotYI8nqgyJPpmA7hFCoX8Ww6MID
+        QK2XuuElENbTiLGrB3Fqxn8n03l1gFPgU+UTFv7/h8Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=QLnlN1
+        GIamFpAnpFCQURrJYtNy57NrXSIOmRV8y9wUQ=; b=AtwYEx3ucEB9E+0uMzHvA5
+        hBUFzf4DxPQBa1/IZXAexFcW08u3w/JwlH4C/cYllTW/7usQxQL9knN/rsHftvEh
+        WwTvsfqsc0nFRSuaNERTH2PSaKKPINuaokfwZZciA31pGLvyd1Gpfp7SFEm7Sza+
+        khjdoi4F+JLhEjjSMsCavQyNVT3JDrKN+3QUxT1jB+Vk0infVVRxW1UER8uoWKOo
+        NPfG8uwLTQjQ1AdiCKxIBeHkUKFIX7ixvhV5Cr6WZixMfG/pYzgCw5+a7fBoO/5P
+        xFgT+rBcH+gffQUBZErPAOTRQO1MrAMzfLkQjtOpmf54yRI8nKG3eGbb//yFgRnA
+        ==
+X-ME-Sender: <xms:I-r6XiusM8TAxYDB6oPtHE1yNYVFSZtJWD7unqnIMj7WgzaitngYsQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduhedrvddttddguddvfecutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpeffhffvuffkfhggtggujgesghdtreertddtvdenucfhrhhomhepofgrgihi
+    mhgvucftihhprghrugcuoehmrgigihhmvgestggvrhhnohdrthgvtghhqeenucggtffrrg
+    htthgvrhhnpeelkeeghefhuddtleejgfeljeffheffgfeijefhgfeufefhtdevteegheei
+    heegudenucfkphepledtrdekledrieekrdejieenucevlhhushhtvghrufhiiigvpedtne
+    curfgrrhgrmhepmhgrihhlfhhrohhmpehmrgigihhmvgestggvrhhnohdrthgvtghh
+X-ME-Proxy: <xmx:I-r6XncMSUAYpIG0ckwaMJDG-XHcRQS9zM0laKvzuuD-ngk85iLC2A>
+    <xmx:I-r6XtyQYadn044eZFyYfk29n0i-2Pg2jyCOtxhCoJR9oy_UINb3MQ>
+    <xmx:I-r6XtPBY4ReJfJO41cPLwmzktTJWawBjvE8dTP8EaVJqmoI_DgTrQ>
+    <xmx:I-r6XkLB9toL2myt6Bvvi3mG-Ddw8RqCa9XurJw7vREaW0XVLwWWug>
+Received: from localhost (lfbn-tou-1-1502-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        by mail.messagingengine.com (Postfix) with ESMTPA id B902F3280059;
+        Tue, 30 Jun 2020 03:30:42 -0400 (EDT)
+Date:   Tue, 30 Jun 2020 09:30:40 +0200
+From:   Maxime Ripard <maxime@cerno.tech>
+To:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
+Cc:     wens@csie.org, kishon@ti.com, vkoul@kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] phy: allwinner: phy-sun6i-mipi-dphy: Constify structs
+Message-ID: <20200630073040.t7mrd4jwldfgqov5@gilmour.lan>
+References: <20200629195727.9717-1-rikard.falkeborn@gmail.com>
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: C01562A8C5541EC7257F9E298FE7512CE55EAEBA0420D98040392F23F24A9DAF2000:8
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="wlgtdw6dwhcbgcba"
+Content-Disposition: inline
+In-Reply-To: <20200629195727.9717-1-rikard.falkeborn@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDIwLTA2LTI5IGF0IDEwOjAwICswMjAwLCBNYXJrdXMgRWxmcmluZyB3cm90ZToN
-Cj4gPiBTb21lIHBvaW50ZXJzIGFyZSBkZXJlZmVyZW5jZWQgYmVmb3JlIHN1Y2Nlc3NmdWwgY2hl
-Y2tzLg0KPiANCj4gSSBzdWdnZXN0IHRvIHJlY29uc2lkZXIgYW5kIGltcHJvdmUgdGhlIGNoYW5n
-ZSBkZXNjcmlwdGlvbi4NCj4gDQo+ICogV291bGQgYSBudWxsIHBvaW50ZXIgZGVyZWZlcmVuY2Ug
-YmUgcG9zc2libGUgb25seSB3aXRoIHRoZSB2YXJpYWJsZXMg4oCcbWVw4oCdDQo+ICAgYW5kIOKA
-nG1yZXHigJ0gaW4gdGhlIGltcGxlbWVudGF0aW9uIG9mIHRoZSBmdW5jdGlvbiDigJxtdHUzX2dh
-ZGdldF9kZXF1ZXVl4oCdPw0KPiANCj4gKiBIb3cgZG8geW91IHRoaW5rIGFib3V0IHRvIGFkanVz
-dCBhbnkgbW9yZSB2YXJpYWJsZSBpbml0aWFsaXNhdGlvbnM/DQpZZXMsIEknbGwgZG8gaXQgaWYg
-bmVlZCwgdGhhbmtzDQoNCj4gDQo+ICogV2lsbCBpdCBiZWNvbWUgaGVscGZ1bCB0byBhZGQgdGhl
-IHRhZyDigJxGaXhlc+KAnSB0byB0aGUgY29tbWl0IG1lc3NhZ2U/DQpNYXliZSBuZWVkbid0DQoN
-Cj4gDQo+IFJlZ2FyZHMsDQo+IE1hcmt1cw0KDQo=
 
+--wlgtdw6dwhcbgcba
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Jun 29, 2020 at 09:57:27PM +0200, Rikard Falkeborn wrote:
+> sun6i_dphy_ops and sun6i_dphy_regmap_config are not modified so make them
+> const structs to allow the compiler to put them in read-only memory.
+>=20
+> Before:
+>    text    data     bss     dec     hex filename
+>    4407    1944      64    6415    190f drivers/phy/allwinner/phy-sun6i-m=
+ipi-dphy.o
+>=20
+> After:
+>    text    data     bss     dec     hex filename
+>    4835    1496      64    6395    18fb drivers/phy/allwinner/phy-sun6i-m=
+ipi-dphy.o
+>=20
+> Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
+
+Acked-by: Maxime Ripard <mripard@kernel.org>
+
+Thanks!
+Maxime
+
+--wlgtdw6dwhcbgcba
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXvrqIAAKCRDj7w1vZxhR
+xfZ8AP9tdMkrg9oG7LM4vUF/Iy0hPfSCqDBI9oYxGR7atDeCjgEAtv6SPo9jII4a
+j55hopR07Yh3O2qa9eqIlPbKd5rMvwA=
+=QrJC
+-----END PGP SIGNATURE-----
+
+--wlgtdw6dwhcbgcba--
