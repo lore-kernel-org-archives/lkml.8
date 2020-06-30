@@ -2,159 +2,432 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81447C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:15:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BC3C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:15:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 50EDC20826
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:15:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="Wh3csM/n"
+	by mail.kernel.org (Postfix) with ESMTP id 9C13D2065D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:15:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729324AbgF3UPO (ORCPT
+        id S1729357AbgF3UP2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 16:15:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50514 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbgF3UPN (ORCPT
+        Tue, 30 Jun 2020 16:15:28 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:36350 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbgF3UP1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 16:15:13 -0400
-Received: from mail.andi.de1.cc (mail.andi.de1.cc [IPv6:2a01:238:4321:8900:456f:ecd6:43e:202c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54218C061755;
-        Tue, 30 Jun 2020 13:15:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=1Ui03MDnvSSEH+dE2r4HpklkE7If5x4CxWOyDT8PhmU=; b=Wh3csM/nQp3I5ofBzGGjZDfmYj
-        LX+B7MD3aD8f2k/+PYmWZyZyyKgybka3XZb1BjeE+VsEA7Qlt9iqw7xVB7nMnpjojxCgaAPsSYXMY
-        LI5lCGwSDCA0+UYZx5CisLClLFp+EK/oo6qg8DTzrqz6BsPpGlDpHipOKimQdSNybo/4=;
-Received: from p200300ccff14dd001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff14:dd00:1a3d:a2ff:febf:d33a] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1jqMeX-0002Ca-6r; Tue, 30 Jun 2020 22:14:49 +0200
-Date:   Tue, 30 Jun 2020 22:14:47 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Jonathan =?UTF-8?B?TmV1c2Now6RmZXI=?= <j.neuschaefer@gmx.net>
-Cc:     linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Heiko Stuebner <heiko.stuebner@theobroma-systems.com>,
-        Stephan Gerhold <stephan@gerhold.net>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Mark Brown <broonie@kernel.org>, allen <allen.chen@ite.com.tw>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, linux-pwm@vger.kernel.org,
-        linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Josua Mayer <josua.mayer@jm0.eu>
-Subject: Re: [RFC PATCH 00/10] Netronix embedded controller driver for Kobo
- and Tolino ebook readers
-Message-ID: <20200630221447.3e03ae28@aktux>
-In-Reply-To: <20200630071523.GA2983@latitude>
-References: <20200620223915.1311485-1-j.neuschaefer@gmx.net>
-        <20200630084051.66feadea@aktux>
-        <20200630071523.GA2983@latitude>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 30 Jun 2020 16:15:27 -0400
+Received: from ravnborg.org (unknown [188.228.123.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 4949380558;
+        Tue, 30 Jun 2020 22:15:20 +0200 (CEST)
+Date:   Tue, 30 Jun 2020 22:15:18 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>
+Subject: Re: [PATCH v2] dt-bindings: backlight: Convert common backlight
+ bindings to DT schema
+Message-ID: <20200630201518.GA1163583@ravnborg.org>
+References: <20200630200111.1170742-1-robh@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200630200111.1170742-1-robh@kernel.org>
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
+        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
+        a=kj9zAlcOel0A:10 a=KKAkSRfTAAAA:8 a=pGLkceISAAAA:8 a=7gkXJVJtAAAA:8
+        a=VwQbUJbxAAAA:8 a=gEfo2CItAAAA:8 a=LDWgo5KC_Z2-t0Z1-74A:9
+        a=D1p0UqrOMBU56ZgX:21 a=v5rLNfrWZjy50SLq:21 a=CjuIK1q_8ugA:10
+        a=cvBusfyB2V15izCimMoJ:22 a=E9Po1WZjFZOl8hwRPBS3:22
+        a=AjGcO6oz07-iQ99wixmX:22 a=sptkURWiP4Gy88Gu7hUp:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Jun 2020 09:15:23 +0200
-Jonathan Neusch=C3=A4fer <j.neuschaefer@gmx.net> wrote:
-
-> On Tue, Jun 30, 2020 at 08:40:51AM +0200, Andreas Kemnade wrote:
-> [...]
-> > got a chance to test it on a Tolino Shine 2 HD.
-> > It uses the RTC from the RC5T619 but backlight seems to go via MSP430
-> > EC.
-> >=20
-> > I got this.
-> >=20
-> > [    1.453603] ntxec 0-0043: Netronix embedded controller version f110 =
-detected.
-> > [   10.723638] ntxec-rtc 21a0000.i2c:embedded-controller@43:rtc: regist=
-ered as rtc0
-> > [   10.775276] ntxec-pwm: probe of 21a0000.i2c:embedded-controller@43:p=
-wm failed with error -5 =20
->=20
-> Hmm, -EIO from the PWM driver.
->=20
-turing debugging on:
-
-[  330.330599] i2c i2c-0: <i2c_imx_xfer_common>
-[  330.330621] i2c i2c-0: <i2c_imx_start>
-[  330.332927] i2c i2c-0: <i2c_imx_bus_busy>
-[  330.332953] i2c i2c-0: <i2c_imx_xfer_common> transfer message: 0
-[  330.332971] i2c i2c-0: <i2c_imx_write> write slave address: addr=3D0x86
-[  330.334365] i2c i2c-0: <i2c_imx_trx_complete> TRX complete
-[  330.334386] i2c i2c-0: <i2c_imx_acked> ACK received
-[  330.334402] i2c i2c-0: <i2c_imx_write> write data
-[  330.334420] i2c i2c-0: <i2c_imx_write> write byte: B0=3D0xA3
-[  330.334756] i2c i2c-0: <i2c_imx_trx_complete> TRX complete
-[  330.334774] i2c i2c-0: <i2c_imx_acked> ACK received
-[  330.334790] i2c i2c-0: <i2c_imx_write> write byte: B1=3D0x0
-[  330.351573] i2c i2c-0: <i2c_imx_trx_complete> TRX complete
-[  330.351598] i2c i2c-0: <i2c_imx_acked> No ACK
-[  330.351613] i2c i2c-0: <i2c_imx_stop>
-[  330.351629] i2c i2c-0: <i2c_imx_bus_busy>
-[  330.351648] i2c i2c-0: <i2c_imx_xfer_common> exit with: error: -6
-[  330.351690] i2c i2c-0: <i2c_imx_xfer_common>
-[  330.351704] i2c i2c-0: <i2c_imx_start>
-[  330.352297] i2c i2c-0: <i2c_imx_bus_busy>
-[  330.352321] i2c i2c-0: <i2c_imx_xfer_common> transfer message: 0
-[  330.352339] i2c i2c-0: <i2c_imx_write> write slave address: addr=3D0x86
-[  330.362152] i2c i2c-0: <i2c_imx_trx_complete> TRX complete
-[  330.362176] i2c i2c-0: <i2c_imx_acked> ACK received
-[  330.362191] i2c i2c-0: <i2c_imx_write> write data
-[  330.362208] i2c i2c-0: <i2c_imx_write> write byte: B0=3D0xA1
-[  330.362442] i2c i2c-0: <i2c_imx_trx_complete> TRX complete
-[  330.362461] i2c i2c-0: <i2c_imx_acked> ACK received
-[  330.362479] i2c i2c-0: <i2c_imx_write> write byte: B1=3D0xFF
-[  330.362686] i2c i2c-0: <i2c_imx_trx_complete> TRX complete
-[  330.362705] i2c i2c-0: <i2c_imx_acked> No ACK
-[  330.362720] i2c i2c-0: <i2c_imx_stop>
-[  330.362735] i2c i2c-0: <i2c_imx_bus_busy>
-[  330.362753] i2c i2c-0: <i2c_imx_xfer_common> exit with: error: -6
-[  330.362794] i2c i2c-0: <i2c_imx_xfer_common>
-[  330.362808] i2c i2c-0: <i2c_imx_start>
-[  330.363071] i2c i2c-0: <i2c_imx_bus_busy>
-[  330.363094] i2c i2c-0: <i2c_imx_xfer_common> transfer message: 0
-[  330.363112] i2c i2c-0: <i2c_imx_write> write slave address: addr=3D0x86
-[  330.363313] i2c i2c-0: <i2c_imx_trx_complete> TRX complete
-[  330.363331] i2c i2c-0: <i2c_imx_acked> ACK received
-[  330.363346] i2c i2c-0: <i2c_imx_write> write data
-[  330.363362] i2c i2c-0: <i2c_imx_write> write byte: B0=3D0xA2
-[  330.363572] i2c i2c-0: <i2c_imx_trx_complete> TRX complete
-[  330.363591] i2c i2c-0: <i2c_imx_acked> ACK received
-[  330.363608] i2c i2c-0: <i2c_imx_write> write byte: B1=3D0xFF
-[  330.363822] i2c i2c-0: <i2c_imx_trx_complete> TRX complete
-[  330.363841] i2c i2c-0: <i2c_imx_acked> No ACK
-[  330.363854] i2c i2c-0: <i2c_imx_stop>
-[  330.363869] i2c i2c-0: <i2c_imx_bus_busy>
-[  330.363886] i2c i2c-0: <i2c_imx_xfer_common> exit with: error: -6
-
-Regards,
-Andreas
+On Tue, Jun 30, 2020 at 02:01:11PM -0600, Rob Herring wrote:
+> Convert the common GPIO, LED, and PWM backlight bindings to DT schema
+> format.
+> 
+> Given there's only 2 common properties and the descriptions are slightly
+> different, I opted to not create a common backlight schema.
+> 
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Daniel Thompson <daniel.thompson@linaro.org>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+> Cc: Sam Ravnborg <sam@ravnborg.org>
+> Signed-off-by: Rob Herring <robh@kernel.org>
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
+> ---
+> v2:
+> - Reformat descriptions
+> - drop default-brightness-level dependency on brightness-levels for
+>   led-backlight
+> ---
+>  .../leds/backlight/gpio-backlight.txt         |  16 ---
+>  .../leds/backlight/gpio-backlight.yaml        |  41 +++++++
+>  .../bindings/leds/backlight/led-backlight.txt |  28 -----
+>  .../leds/backlight/led-backlight.yaml         |  57 ++++++++++
+>  .../bindings/leds/backlight/pwm-backlight.txt |  61 ----------
+>  .../leds/backlight/pwm-backlight.yaml         | 104 ++++++++++++++++++
+>  6 files changed, 202 insertions(+), 105 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/leds/backlight/gpio-backlight.txt
+>  create mode 100644 Documentation/devicetree/bindings/leds/backlight/gpio-backlight.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
+>  create mode 100644 Documentation/devicetree/bindings/leds/backlight/led-backlight.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+>  create mode 100644 Documentation/devicetree/bindings/leds/backlight/pwm-backlight.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/gpio-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/gpio-backlight.txt
+> deleted file mode 100644
+> index 321be6640533..000000000000
+> --- a/Documentation/devicetree/bindings/leds/backlight/gpio-backlight.txt
+> +++ /dev/null
+> @@ -1,16 +0,0 @@
+> -gpio-backlight bindings
+> -
+> -Required properties:
+> -  - compatible: "gpio-backlight"
+> -  - gpios: describes the gpio that is used for enabling/disabling the backlight.
+> -    refer to bindings/gpio/gpio.txt for more details.
+> -
+> -Optional properties:
+> -  - default-on: enable the backlight at boot.
+> -
+> -Example:
+> -	backlight {
+> -		compatible = "gpio-backlight";
+> -		gpios = <&gpio3 4 GPIO_ACTIVE_HIGH>;
+> -		default-on;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/gpio-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/gpio-backlight.yaml
+> new file mode 100644
+> index 000000000000..75cc569b9c55
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/backlight/gpio-backlight.yaml
+> @@ -0,0 +1,41 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/leds/backlight/gpio-backlight.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: gpio-backlight bindings
+> +
+> +maintainers:
+> +  - Lee Jones <lee.jones@linaro.org>
+> +  - Daniel Thompson <daniel.thompson@linaro.org>
+> +  - Jingoo Han <jingoohan1@gmail.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: gpio-backlight
+> +
+> +  gpios:
+> +    description: The gpio that is used for enabling/disabling the backlight.
+> +    maxItems: 1
+> +
+> +  default-on:
+> +    description: enable the backlight at boot.
+> +    type: boolean
+> +
+> +required:
+> +  - compatible
+> +  - gpios
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    backlight {
+> +        compatible = "gpio-backlight";
+> +        gpios = <&gpio3 4 GPIO_ACTIVE_HIGH>;
+> +        default-on;
+> +    };
+> +
+> +...
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
+> deleted file mode 100644
+> index 4c7dfbe7f67a..000000000000
+> --- a/Documentation/devicetree/bindings/leds/backlight/led-backlight.txt
+> +++ /dev/null
+> @@ -1,28 +0,0 @@
+> -led-backlight bindings
+> -
+> -This binding is used to describe a basic backlight device made of LEDs.
+> -It can also be used to describe a backlight device controlled by the output of
+> -a LED driver.
+> -
+> -Required properties:
+> -  - compatible: "led-backlight"
+> -  - leds: a list of LEDs
+> -
+> -Optional properties:
+> -  - brightness-levels: Array of distinct brightness levels. The levels must be
+> -                       in the range accepted by the underlying LED devices.
+> -                       This is used to translate a backlight brightness level
+> -                       into a LED brightness level. If it is not provided, the
+> -                       identity mapping is used.
+> -
+> -  - default-brightness-level: The default brightness level.
+> -
+> -Example:
+> -
+> -	backlight {
+> -		compatible = "led-backlight";
+> -
+> -		leds = <&led1>, <&led2>;
+> -		brightness-levels = <0 4 8 16 32 64 128 255>;
+> -		default-brightness-level = <6>;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/led-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/led-backlight.yaml
+> new file mode 100644
+> index 000000000000..625082bf3892
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/backlight/led-backlight.yaml
+> @@ -0,0 +1,57 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/leds/backlight/led-backlight.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: led-backlight bindings
+> +
+> +maintainers:
+> +  - Lee Jones <lee.jones@linaro.org>
+> +  - Daniel Thompson <daniel.thompson@linaro.org>
+> +  - Jingoo Han <jingoohan1@gmail.com>
+> +
+> +description:
+> +  This binding is used to describe a basic backlight device made of LEDs. It
+> +  can also be used to describe a backlight device controlled by the output of
+> +  a LED driver.
+> +
+> +properties:
+> +  compatible:
+> +    const: led-backlight
+> +
+> +  leds:
+> +    description: A list of LED nodes
+> +    $ref: /schemas/types.yaml#/definitions/phandle-array
+> +
+> +  brightness-levels:
+> +    description:
+> +      Array of distinct brightness levels. The levels must be in the range
+> +      accepted by the underlying LED devices. This is used to translate a
+> +      backlight brightness level into a LED brightness level. If it is not
+> +      provided, the identity mapping is used.
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +
+> +  default-brightness-level:
+> +    description:
+> +      The default brightness level (index into the array defined by the
+> +      "brightness-levels" property).
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +required:
+> +  - compatible
+> +  - leds
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    backlight {
+> +        compatible = "led-backlight";
+> +
+> +        leds = <&led1>, <&led2>;
+> +        brightness-levels = <0 4 8 16 32 64 128 255>;
+> +        default-brightness-level = <6>;
+> +    };
+> +
+> +...
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> deleted file mode 100644
+> index 64fa2fbd98c9..000000000000
+> --- a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.txt
+> +++ /dev/null
+> @@ -1,61 +0,0 @@
+> -pwm-backlight bindings
+> -
+> -Required properties:
+> -  - compatible: "pwm-backlight"
+> -  - pwms: OF device-tree PWM specification (see PWM binding[0])
+> -  - power-supply: regulator for supply voltage
+> -
+> -Optional properties:
+> -  - pwm-names: a list of names for the PWM devices specified in the
+> -               "pwms" property (see PWM binding[0])
+> -  - enable-gpios: contains a single GPIO specifier for the GPIO which enables
+> -                  and disables the backlight (see GPIO binding[1])
+> -  - post-pwm-on-delay-ms: Delay in ms between setting an initial (non-zero) PWM
+> -                          and enabling the backlight using GPIO.
+> -  - pwm-off-delay-ms: Delay in ms between disabling the backlight using GPIO
+> -                      and setting PWM value to 0.
+> -  - brightness-levels: Array of distinct brightness levels. Typically these
+> -                       are in the range from 0 to 255, but any range starting at
+> -                       0 will do. The actual brightness level (PWM duty cycle)
+> -                       will be interpolated from these values. 0 means a 0% duty
+> -                       cycle (darkest/off), while the last value in the array
+> -                       represents a 100% duty cycle (brightest).
+> -  - default-brightness-level: The default brightness level (index into the
+> -                              array defined by the "brightness-levels" property).
+> -  - num-interpolated-steps: Number of interpolated steps between each value
+> -                            of brightness-levels table. This way a high
+> -                            resolution pwm duty cycle can be used without
+> -                            having to list out every possible value in the
+> -                            brightness-level array.
+> -
+> -[0]: Documentation/devicetree/bindings/pwm/pwm.txt
+> -[1]: Documentation/devicetree/bindings/gpio/gpio.txt
+> -
+> -Example:
+> -
+> -	backlight {
+> -		compatible = "pwm-backlight";
+> -		pwms = <&pwm 0 5000000>;
+> -
+> -		brightness-levels = <0 4 8 16 32 64 128 255>;
+> -		default-brightness-level = <6>;
+> -
+> -		power-supply = <&vdd_bl_reg>;
+> -		enable-gpios = <&gpio 58 0>;
+> -		post-pwm-on-delay-ms = <10>;
+> -		pwm-off-delay-ms = <10>;
+> -	};
+> -
+> -Example using num-interpolation-steps:
+> -
+> -	backlight {
+> -		compatible = "pwm-backlight";
+> -		pwms = <&pwm 0 5000000>;
+> -
+> -		brightness-levels = <0 2048 4096 8192 16384 65535>;
+> -		num-interpolated-steps = <2048>;
+> -		default-brightness-level = <4096>;
+> -
+> -		power-supply = <&vdd_bl_reg>;
+> -		enable-gpios = <&gpio 58 0>;
+> -	};
+> diff --git a/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.yaml
+> new file mode 100644
+> index 000000000000..fcb8429f3088
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/backlight/pwm-backlight.yaml
+> @@ -0,0 +1,104 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/leds/backlight/pwm-backlight.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: pwm-backlight bindings
+> +
+> +maintainers:
+> +  - Lee Jones <lee.jones@linaro.org>
+> +  - Daniel Thompson <daniel.thompson@linaro.org>
+> +  - Jingoo Han <jingoohan1@gmail.com>
+> +
+> +properties:
+> +  compatible:
+> +    const: pwm-backlight
+> +
+> +  pwms:
+> +    maxItems: 1
+> +
+> +  pwm-names: true
+> +
+> +  power-supply:
+> +    description: regulator for supply voltage
+> +
+> +  enable-gpios:
+> +    description:
+> +      Contains a single GPIO specifier for the GPIO which enables and disables
+> +      the backlight.
+> +    maxItems: 1
+> +
+> +  post-pwm-on-delay-ms:
+> +    description:
+> +      Delay in ms between setting an initial (non-zero) PWM and enabling the
+> +      backlight using GPIO.
+> +
+> +  pwm-off-delay-ms:
+> +    description:
+> +      Delay in ms between disabling the backlight using GPIO and setting PWM
+> +      value to 0.
+> +
+> +  brightness-levels:
+> +    description:
+> +      Array of distinct brightness levels. Typically these are in the range
+> +      from 0 to 255, but any range starting at 0 will do. The actual brightness
+> +      level (PWM duty cycle) will be interpolated from these values. 0 means a
+> +      0% duty cycle (darkest/off), while the last value in the array represents
+> +      a 100% duty cycle (brightest).
+> +    $ref: /schemas/types.yaml#/definitions/uint32-array
+> +
+> +  default-brightness-level:
+> +    description:
+> +      The default brightness level (index into the array defined by the
+> +      "brightness-levels" property).
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +  num-interpolated-steps:
+> +    description:
+> +      Number of interpolated steps between each value of brightness-levels
+> +      table. This way a high resolution pwm duty cycle can be used without
+> +      having to list out every possible value in the brightness-level array.
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +dependencies:
+> +  default-brightness-level: [brightness-levels]
+> +  num-interpolated-steps: [brightness-levels]
+> +
+> +required:
+> +  - compatible
+> +  - pwms
+> +  - power-supply
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    backlight {
+> +        compatible = "pwm-backlight";
+> +        pwms = <&pwm 0 5000000>;
+> +
+> +        brightness-levels = <0 4 8 16 32 64 128 255>;
+> +        default-brightness-level = <6>;
+> +
+> +        power-supply = <&vdd_bl_reg>;
+> +        enable-gpios = <&gpio 58 0>;
+> +        post-pwm-on-delay-ms = <10>;
+> +        pwm-off-delay-ms = <10>;
+> +    };
+> +
+> +  - |
+> +    // Example using num-interpolation-steps:
+> +    backlight {
+> +        compatible = "pwm-backlight";
+> +        pwms = <&pwm 0 5000000>;
+> +
+> +        brightness-levels = <0 2048 4096 8192 16384 65535>;
+> +        num-interpolated-steps = <2048>;
+> +        default-brightness-level = <4096>;
+> +
+> +        power-supply = <&vdd_bl_reg>;
+> +        enable-gpios = <&gpio 58 0>;
+> +    };
+> +
+> +...
+> -- 
+> 2.25.1
