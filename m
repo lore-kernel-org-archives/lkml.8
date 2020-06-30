@@ -2,131 +2,142 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CDBC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:33:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E2EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:33:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 519382074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:33:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 313262074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:33:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="XCR6/KNi"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="BAIwnhaN";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UfTIEjG5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390820AbgF3SdZ (ORCPT
+        id S2390829AbgF3Sdm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 14:33:25 -0400
-Received: from linux.microsoft.com ([13.77.154.182]:51038 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729676AbgF3SdZ (ORCPT
+        Tue, 30 Jun 2020 14:33:42 -0400
+Received: from out4-smtp.messagingengine.com ([66.111.4.28]:55873 "EHLO
+        out4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729676AbgF3Sdl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 14:33:25 -0400
-Received: from sequoia (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 6AC6720B717A;
-        Tue, 30 Jun 2020 11:33:23 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 6AC6720B717A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1593542004;
-        bh=P8hrpLXW1bm+I0RtahNav7d3UiFywHUi9+V3kW2yqYE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XCR6/KNiEgjEaGmIFHHaIalSw46WRASLd42p0kaCSzM2PloibciuQ6Ca7BpcNHaEF
-         fiBOSjY9l3V2bp4c4mkWCoe/3MO1u/4l6cUOT2mGAH9qXByYLlrOrSa8yTvMe6Guto
-         RPw934ZtLlanwfAFvAT0OXWavNN3sLhY4Guwmfe0=
-Date:   Tue, 30 Jun 2020 13:33:21 -0500
-From:   Tyler Hicks <tyhicks@linux.microsoft.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Peter Jones <pjones@redhat.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Petr Vandrovec <petr@vmware.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Thirupathaiah Annapureddy <thiruan@microsoft.com>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tpm: Require that all digests are present in
- TCG_PCR_EVENT2 structures
-Message-ID: <20200630183321.GE4694@sequoia>
-References: <20200615232504.1848159-1-tyhicks@linux.microsoft.com>
- <CAMj1kXHJbsxA2-jqpbLnUeeNfM0oC8Sh70+axOKoBCFMJ8+jKQ@mail.gmail.com>
- <20200617230958.GC62794@linux.intel.com>
+        Tue, 30 Jun 2020 14:33:41 -0400
+Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
+        by mailout.nyi.internal (Postfix) with ESMTP id 7D3705C00B5;
+        Tue, 30 Jun 2020 14:33:40 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute1.internal (MEProxy); Tue, 30 Jun 2020 14:33:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:content-transfer-encoding:in-reply-to; s=fm1; bh=m
+        fiMhvbmtnm+tXAKCN63eyhgj9b7musJa++oOQ18GmI=; b=BAIwnhaNqYpRzszHu
+        kMJQzYdfuqPvgkWKcv/YfGqZlwZCaYxibCE3p2BwXzniISJ8Knxje8fW7bUXsDol
+        77S530XIAuWFHOXKJgHYfAU/dqxEwK9rtrXCWgcBeR2qwOH2sAGPC73V8uTuw6HE
+        MPEB3vhhit/sdnzjQgaJ/4SEUN/lG7uD9nqOvrqLrEjZC4Qpk4uPQclwjHIfSudj
+        /m1JSb3aJWoGJ7w/P3Qga1kH5x+LNJlXtNRz02UFKSOudzeqWLiwjrShiro0vAfC
+        qdFCzMLIUSz/TygjvyrV/OKNO5tNHQITJ0XK+CfYJGNsM5xXHpEgmy2UjufliBKO
+        YDtJA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:in-reply-to:message-id:mime-version:references
+        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm3; bh=mfiMhvbmtnm+tXAKCN63eyhgj9b7musJa++oOQ18G
+        mI=; b=UfTIEjG5HUvcqW9D1KsWrGE4hsFLj7TjV1lskAM7i8l/lrlysD1x7xOcK
+        Ob+SlbSOoOcjA4KayDgbbeb1gXehyhmLkBHfC3wfJSJJN0t3rRJcISD/gaCcMiog
+        oSP8bXyn7GMw24Zx/j9RFrz2hC9RwA0et7a5F54bQmWQmROZjdRjpGZIQRE7aEcr
+        4WFtMbpBSFf6TRpa9ZBSHR3hb5ckphPsyp71yeD+BMtb9X3y4OdGRjOn+WVqKBX9
+        5hO0Bh1XpYrM+wVtF77GPfi3c+08w5SnFMtRViZ38eGAISYlVGbNS4prymwmgKN0
+        3OP1kZVIIRxAPXPv4B828lnDEzBQQ==
+X-ME-Sender: <xms:g4X7XtDm9eyvWjoso0EisCwKG4_yn2HY-VIGqqv1Mm3rhv2hINS_bg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduiedrtddtgdelkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggugfgjsehtkeertddttdejnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucggtffrrghtthgvrhhnpeegieejue
+    dvffeuvdfftdetfeeuhfekhefgueffjeevtedtlefgueduffffteeftdenucffohhmrghi
+    nhepkhgvrhhnvghlrdhorhhgnecukfhppeekfedrkeeirdekledruddtjeenucevlhhush
+    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgr
+    hhdrtghomh
+X-ME-Proxy: <xmx:g4X7XrhCyEEd2xITSiCxMxfaYlhGuXIcyTF24HZmUsxAfasLbhKzzw>
+    <xmx:g4X7XokQNvfCWRz5wcKq7_2DyzXubGkVAWg3LLS59R2p2mJ01Oi2oQ>
+    <xmx:g4X7XnyMDyZTYlTm3iHpNLS9sOR0qE5_50GN1L3o67LhKF9vfQdEVg>
+    <xmx:hIX7XlIrhf00EhPQRtSkviR1D802GfjDqYwZmyr-C5LBT39IKGNWLg>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 6861630600BF;
+        Tue, 30 Jun 2020 14:33:39 -0400 (EDT)
+Date:   Tue, 30 Jun 2020 20:33:28 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Alexander Tsoy <alexander@tsoy.me>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: Re: [PATCH 4.9 026/191] ALSA: usb-audio: Improve frames size
+ computation
+Message-ID: <20200630183328.GA1916087@kroah.com>
+References: <20200629154007.2495120-1-sashal@kernel.org>
+ <20200629154007.2495120-27-sashal@kernel.org>
+ <e033669a50b53e439f5071ad12d05c2d02ab6cfc.camel@tsoy.me>
+ <20200630165407.GZ1931@sasha-vm>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200617230958.GC62794@linux.intel.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200630165407.GZ1931@sasha-vm>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-18 02:09:58, Jarkko Sakkinen wrote:
-> On Tue, Jun 16, 2020 at 11:08:38AM +0200, Ard Biesheuvel wrote:
-> > (cc Matthew and Peter)
-> > 
-> > On Tue, 16 Jun 2020 at 01:28, Tyler Hicks <tyhicks@linux.microsoft.com> wrote:
-> > >
-> > > Require that the TCG_PCR_EVENT2.digests.count value strictly matches the
-> > > value of TCG_EfiSpecIdEvent.numberOfAlgorithms in the event field of the
-> > > TCG_PCClientPCREvent event log header. Also require that
-> > > TCG_EfiSpecIdEvent.numberOfAlgorithms is non-zero.
-> > >
-> > > The TCG PC Client Platform Firmware Profile Specification section 9.1
-> > > (Family "2.0", Level 00 Revision 1.04) states:
-> > >
-> > >  For each Hash algorithm enumerated in the TCG_PCClientPCREvent entry,
-> > >  there SHALL be a corresponding digest in all TCG_PCR_EVENT2 structures.
-> > >  Note: This includes EV_NO_ACTION events which do not extend the PCR.
-> > >
-> > > Section 9.4.5.1 provides this description of
-> > > TCG_EfiSpecIdEvent.numberOfAlgorithms:
-> > >
-> > >  The number of Hash algorithms in the digestSizes field. This field MUST
-> > >  be set to a value of 0x01 or greater.
-> > >
-> > > Enforce these restrictions, as required by the above specification, in
-> > > order to better identify and ignore invalid sequences of bytes at the
-> > > end of an otherwise valid TPM2 event log. Firmware doesn't always have
-> > > the means necessary to inform the kernel of the actual event log size so
-> > > the kernel's event log parsing code should be stringent when parsing the
-> > > event log for resiliency against firmware bugs. This is true, for
-> > > example, when firmware passes the event log to the kernel via a reserved
-> > > memory region described in device tree.
-> > >
-> > 
-> > When does this happen? Do we have code in mainline that does this?
-> > 
-> > > Prior to this patch, a single bit set in the offset corresponding to
-> > > either the TCG_PCR_EVENT2.eventType or TCG_PCR_EVENT2.eventSize fields,
-> > > after the last valid event log entry, could confuse the parser into
-> > > thinking that an additional entry is present in the event log. This
-> > > patch raises the bar on how difficult it is for stale memory to confuse
-> > > the kernel's event log parser but there's still a reliance on firmware
-> > > to properly initialize the remainder of the memory region reserved for
-> > > the event log as the parser cannot be expected to detect a stale but
-> > > otherwise properly formatted firmware event log entry.
-> > >
-> > > Fixes: fd5c78694f3f ("tpm: fix handling of the TPM 2.0 event logs")
-> > > Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+On Tue, Jun 30, 2020 at 12:54:07PM -0400, Sasha Levin wrote:
+> On Tue, Jun 30, 2020 at 01:49:50PM +0300, Alexander Tsoy wrote:
+> > В Пн, 29/06/2020 в 11:37 -0400, Sasha Levin пишет:
+> > > From: Alexander Tsoy <alexander@tsoy.me>
+> > > 
+> > > [ Upstream commit f0bd62b64016508938df9babe47f65c2c727d25c ]
+> > > 
+> > > For computation of the the next frame size current value of fs/fps
+> > > and
+> > > accumulated fractional parts of fs/fps are used, where values are
+> > > stored
+> > > in Q16.16 format. This is quite natural for computing frame size for
+> > > asynchronous endpoints driven by explicit feedback, since in this
+> > > case
+> > > fs/fps is a value provided by the feedback endpoint and it's already
+> > > in
+> > > the Q format. If an error is accumulated over time, the device can
+> > > adjust fs/fps value to prevent buffer overruns/underruns.
+> > > 
+> > > But for synchronous endpoints the accuracy provided by these
+> > > computations
+> > > is not enough. Due to accumulated error the driver periodically
+> > > produces
+> > > frames with incorrect size (+/- 1 audio sample).
+> > > 
+> > > This patch fixes this issue by implementing a different algorithm for
+> > > frame size computation. It is based on accumulating of the remainders
+> > > from division fs/fps and it doesn't accumulate errors over time. This
+> > > new method is enabled for synchronous and adaptive playback
+> > > endpoints.
+> > > 
+> > > Signed-off-by: Alexander Tsoy <alexander@tsoy.me>
+> > > Link:
+> > > https://lore.kernel.org/r/20200424022449.14972-1-alexander@tsoy.me
+> > > Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> > > Signed-off-by: Sasha Levin <sashal@kernel.org>
 > > > ---
+> > >  sound/usb/card.h     |  4 ++++
+> > >  sound/usb/endpoint.c | 43 ++++++++++++++++++++++++++++++++++++++--
+> > > ---
+> > >  sound/usb/endpoint.h |  1 +
+> > >  sound/usb/pcm.c      |  2 ++
+> > >  4 files changed, 45 insertions(+), 5 deletions(-)
 > > 
-> > I am all for stringent checks, but this could potentially break
-> > measured boot on systems that are working fine today, right?
+> > Please drop this patch from the queue for now (and for 4.4 as well). It
+> > introduced a regression for some devices. The fix is available, but not
+> > accepted yet.
 > 
-> There would not be any sane reason to implement a TPM chip like that.
+> I've dropped it from the older branches, but note that it's already in
+> newer released stable kernels. Should it be reverted or should we wait
+> for the fix?
 
-Jarkko, is this an ack from you?
-
-Is there anything I can do to help along this fix?
-
-I've spoke with two others that have poured through these specs to
-implement firmware event log parsers and they thought the change made
-sense.
-
-Tyler
-
-> 
-> /Jarkko
+I was going to wait for the fix.
