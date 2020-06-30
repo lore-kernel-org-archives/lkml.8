@@ -2,100 +2,135 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C67C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A587C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:36:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CF21C20759
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:35:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6066F20759
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:36:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d2Z/LJOr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732992AbgF3Lfs (ORCPT
+        id S1733004AbgF3Lgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 07:35:48 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:42248 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727108AbgF3Lfr (ORCPT
+        Tue, 30 Jun 2020 07:36:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55158 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727108AbgF3Lgp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 07:35:47 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id BFD1E8053C;
-        Tue, 30 Jun 2020 13:35:43 +0200 (CEST)
-Date:   Tue, 30 Jun 2020 13:35:42 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, od@zcrc.me, stable@vger.kernel.org
-Subject: Re: [PATCH v2 05/10] drm/ingenic: Fix incorrect assumption about
- plane->index
-Message-ID: <20200630113542.GA560155@ravnborg.org>
-References: <20200629235210.441709-1-paul@crapouillou.net>
- <20200629235210.441709-5-paul@crapouillou.net>
+        Tue, 30 Jun 2020 07:36:45 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8A04C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 04:36:44 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id c21so11139184lfb.3
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 04:36:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZwFfXOGz4fxYZqVjks/MQV6KVpu2SdXqlr5+gsasvuE=;
+        b=d2Z/LJOrxI2sK/tnaStkPJbMfShNAs6iVqT+bRYw0LM4swNXBIn2gO3o+QA/oDFXXu
+         1H7pynjzt1f7s6oQ7MJ7ffa/nyEWclXo/+z/QgQEAqK5MR9ISJaKinJpScZQLM1BUqtD
+         oItWSrmUk6BAJEfVY5q8jDk1QbUIIVylOrDDym0HHRr/4uskhZMJqxMveoFBUO7CnKi6
+         tgFnwrDpCuFVoQCdrq5oOmrBbjcGyRMaKhWnlsaNWLba76yPtqZegF2oogYgqqsJ54Gb
+         jNdCJGUm0ietNh0RWrauTNTxTIjpkx0LttlMXfKYPPLIk6gbIexfbYcDPL0TbzOcvABn
+         n1UQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZwFfXOGz4fxYZqVjks/MQV6KVpu2SdXqlr5+gsasvuE=;
+        b=cvlMPGysdCxk1VSnsh1VgPyuVsWOxXoy0Hy+Or9hrZpGu4FDQCs7X+1ywsgGLbN/13
+         nBG8SKfzyZyb57d1ndIZVJvCMUwWGVnOIXpvS43S67DXNHomN6n+xGgW2n6EwT9UlWMe
+         MzbyUHtDGY2RBDQy0efd15sv4GxLrbbS2hcPR21IMsl3g/K9VO8YQkojc1h3vbfw/Mse
+         H+x3AA13Xr7DLezxZJhO5v5rsTbgCJX3kwkd9ou4EgdXqDCrwjiHuAe2LGwetj8xpMNQ
+         ldsSPQk4qoreC6K/ZX8thsBUpdHpHH6teSqxjiFZPmmKIHNg7fIsTtb03CvjRdZLI02t
+         mNGQ==
+X-Gm-Message-State: AOAM531F6jg/7hv1UJL5f4Y+FRNOAnKEVnSyvxA2GknEW+F1gP48voia
+        ct6U4FK/YZzZkRa1lqEclJB+Kot7GiLhZmKDaXC8swCyfH8J8Q==
+X-Google-Smtp-Source: ABdhPJy4I/6mxnpgXaNzE6Z3Ywobj35ziVNzhzkEx84vEjsqwwojs1dmBLrfTNEH+2Ne4WTLUHFLueH+JsJLBp1XV1c=
+X-Received: by 2002:a19:cc93:: with SMTP id c141mr11746250lfg.15.1593517003341;
+ Tue, 30 Jun 2020 04:36:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200629235210.441709-5-paul@crapouillou.net>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=VwQbUJbxAAAA:8 a=ER_8r6IbAAAA:8 a=7gkXJVJtAAAA:8
-        a=e5mUnYsNAAAA:8 a=h8Z_pZuLarzTNQul7jAA:9 a=CjuIK1q_8ugA:10
-        a=AjGcO6oz07-iQ99wixmX:22 a=9LHmKk7ezEChjTCyhBa9:22
-        a=E9Po1WZjFZOl8hwRPBS3:22 a=Vxmtnl_E_bksehYqCbjh:22
-        a=pHzHmUro8NiASowvMSCR:22 a=nt3jZW36AmriUCFCBwmW:22
+References: <CAFA6WYNpCG2xPERd=NeKf+EthbX+1R4iieOL52kWnBp8y_+Nbw@mail.gmail.com>
+ <20200630082922.28672-1-cengiz@kernel.wtf>
+In-Reply-To: <20200630082922.28672-1-cengiz@kernel.wtf>
+From:   Sumit Garg <sumit.garg@linaro.org>
+Date:   Tue, 30 Jun 2020 17:06:31 +0530
+Message-ID: <CAFA6WYPDTKQ4cm+TMmRt+qDiF+s3gggCsW1gfzCaaOdP9rJgdQ@mail.gmail.com>
+Subject: Re: [PATCH v3] kdb: remove unnecessary null check of dbg_io_ops
+To:     Cengiz Can <cengiz@kernel.wtf>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        kgdb-bugreport@lists.sourceforge.net,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Petr Mladek <pmladek@suse.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 01:52:05AM +0200, Paul Cercueil wrote:
-> plane->index is NOT the index of the color plane in a YUV frame.
-> Actually, a YUV frame is represented by a single drm_plane, even though
-> it contains three Y, U, V planes.
-> 
-> Cc: stable@vger.kernel.org # v5.3
-> Fixes: 90b86fcc47b4 ("DRM: Add KMS driver for the Ingenic JZ47xx SoCs")
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-
-Look correct to me.
-
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
-As this is tagged fixes: I assume this is for drm-misc-fixes and
-not for drm-misc-next.
-If you resend could you move it as patch 1/10 so this is more obvious.
-
-	Sam
+On Tue, 30 Jun 2020 at 14:00, Cengiz Can <cengiz@kernel.wtf> wrote:
+>
+> `kdb_msg_write` operates on a global `struct kgdb_io *` called
+> `dbg_io_ops`.
+>
+> It's initialized in `debug_core.c` and checked throughout the debug
+> flow.
+>
+> There's a null check in `kdb_msg_write` which triggers static analyzers
+> and gives the (almost entirely wrong) impression that it can be null.
+>
+> Coverity scanner caught this as CID 1465042.
+>
+> I have removed the unnecessary null check and eliminated false-positive
+> forward null dereference warning.
+>
+> Signed-off-by: Cengiz Can <cengiz@kernel.wtf>
 > ---
-> 
-> Notes:
->     v2: No change
-> 
->  drivers/gpu/drm/ingenic/ingenic-drm-drv.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/ingenic/ingenic-drm-drv.c b/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
-> index a15f9a1940c6..924c8daf071a 100644
-> --- a/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
-> +++ b/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
-> @@ -386,7 +386,7 @@ static void ingenic_drm_plane_atomic_update(struct drm_plane *plane,
->  		addr = drm_fb_cma_get_gem_addr(state->fb, state, 0);
->  		width = state->src_w >> 16;
->  		height = state->src_h >> 16;
-> -		cpp = state->fb->format->cpp[plane->index];
-> +		cpp = state->fb->format->cpp[0];
->  
->  		priv->dma_hwdesc->addr = addr;
->  		priv->dma_hwdesc->cmd = width * height * cpp / 4;
-> -- 
+>  kernel/debug/kdb/kdb_io.c | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+>
+
+Reviewed-by: Sumit Garg <sumit.garg@linaro.org>
+
+> diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
+> index 683a799618ad..81783ecaec58 100644
+> --- a/kernel/debug/kdb/kdb_io.c
+> +++ b/kernel/debug/kdb/kdb_io.c
+> @@ -545,18 +545,18 @@ static int kdb_search_string(char *searched, char *searchfor)
+>  static void kdb_msg_write(const char *msg, int msg_len)
+>  {
+>         struct console *c;
+> +       const char *cp;
+> +       int len;
+>
+>         if (msg_len == 0)
+>                 return;
+>
+> -       if (dbg_io_ops) {
+> -               const char *cp = msg;
+> -               int len = msg_len;
+> +       cp = msg;
+> +       len = msg_len;
+>
+> -               while (len--) {
+> -                       dbg_io_ops->write_char(*cp);
+> -                       cp++;
+> -               }
+> +       while (len--) {
+> +               dbg_io_ops->write_char(*cp);
+> +               cp++;
+>         }
+>
+>         for_each_console(c) {
+> --
 > 2.27.0
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>
