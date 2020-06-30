@@ -2,112 +2,126 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80955C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C259C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5909F20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53A6F20768
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:26:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="d+8whJ+C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727953AbgF3TZX (ORCPT
+        id S1727993AbgF3T0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 15:25:23 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:58875 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbgF3TZW (ORCPT
+        Tue, 30 Jun 2020 15:26:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42928 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726065AbgF3T0L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 15:25:22 -0400
-Received: from mail-qv1-f49.google.com ([209.85.219.49]) by
- mrelayeu.kundenserver.de (mreue010 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1Mi2eP-1jCK6T3JM9-00e1cG; Tue, 30 Jun 2020 21:25:20 +0200
-Received: by mail-qv1-f49.google.com with SMTP id t7so9813284qvl.8;
-        Tue, 30 Jun 2020 12:25:20 -0700 (PDT)
-X-Gm-Message-State: AOAM533XNKdCu/boRlQlXHXOgCTzD9NSlo4eeDbnYZu/cr0B8NYTaFHE
-        9kAOGVwZ4OFtu541UoXHbVqGl9X39c9TuPRHP0U=
-X-Google-Smtp-Source: ABdhPJx+lRE51JRL6fCvRnoLPfTGDuD4BIZlGSJkoIdVSw7mHYOQQlzJvl0jgp7ZS50oAcVKQOmUzXKXW4PZLLmEroY=
-X-Received: by 2002:a0c:ba0e:: with SMTP id w14mr21638836qvf.222.1593545119567;
- Tue, 30 Jun 2020 12:25:19 -0700 (PDT)
+        Tue, 30 Jun 2020 15:26:11 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71275C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 12:26:11 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id c11so12063006lfh.8
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 12:26:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zp5IF5vcvuCu2gwgY+TzliRbsIBW1Igf4k0wqLGBZVA=;
+        b=d+8whJ+CDvQp9gSztOTjyISsxB6w/oE1k0dTkyIrGpYzlrO1923v7B0bIv+IZMVGtc
+         dHtFpgYgpYYUSlaPoDeUP9I94LkopNHp2EZ+iFMcvnZA4TB+3hgToQ7S6eDAA1muI9o/
+         5UKWmPsC+oibSBac8iv2DnroNKr+dyZkRFHQoQobMflsbEJEscezjSQAYg7aCCfsIWmo
+         8ykwdNfJY0VYnbwzdHOOUJYRpzDOPDGitc8zLOW5XmPuGnMxgwRcq2xbU59NbAfZY16z
+         8ffEaE3N2dArYpSp4EMqD4MWE80Fiqpts6cMXsAL+Ke2DDnJAtLKGEeg2ZHlntLKE+Q/
+         K0nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zp5IF5vcvuCu2gwgY+TzliRbsIBW1Igf4k0wqLGBZVA=;
+        b=GUK1PNk/I9QqlN/2O1zwPaydHJ1cfmJ3qsbhSIJ9h63M1ZS8qRJP/5V/SOIj4ZUWSJ
+         B2btYtitKvbHreOMX2TXVh6y/eorpWrY9nsFxV78B2y3aRd5LCwpOabTxoywiZpGiGmF
+         qN/p4nQ+uXQKnTXUnjuWfmeAe1nJM9NfOt3TjwZdXV5bhOzUbsyXIhQgTiayIjtQHuz0
+         kZTxeADTdUGjbHQPuyGsmhdTva3NzGD/8Og2VJ3lwelBDUYPJDIIi+r82s8480bZRBmZ
+         l9DbGT9jCz4UumIMmqoZR3+Z22BSb/EHeM2mgnXx/+IWTxRZ6Tku9PAABXI+sJSe3gad
+         Slkw==
+X-Gm-Message-State: AOAM531mjA38s1Kda8/YqJLrniJDPBizZa9AdTWPsEqzh7BuVScekL3g
+        vsbpDY3cSe8elLX3+uwWL0nXMzr/eTxYbdQdSCLkYg==
+X-Google-Smtp-Source: ABdhPJw6Oa8Vk19NEDCPKZSad/tRxr0zgylemKX4mDPL8U6NR6qoINtpwhEq2uZrbweXXWRp9WjWNi5OPRzeVRhOvsk=
+X-Received: by 2002:a05:6512:482:: with SMTP id v2mr12596062lfq.3.1593545167726;
+ Tue, 30 Jun 2020 12:26:07 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200630173734.14057-1-will@kernel.org> <20200630173734.14057-19-will@kernel.org>
-In-Reply-To: <20200630173734.14057-19-will@kernel.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 30 Jun 2020 21:25:03 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a2zB4z121reuy6BCqQ3-1mDBAkUkRRXeDuvSFtSr3ha2g@mail.gmail.com>
-Message-ID: <CAK8P3a2zB4z121reuy6BCqQ3-1mDBAkUkRRXeDuvSFtSr3ha2g@mail.gmail.com>
-Subject: Re: [PATCH 18/18] arm64: lto: Strengthen READ_ONCE() to acquire when CLANG_LTO=y
-To:     Will Deacon <will@kernel.org>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Marco Elver <elver@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Matt Turner <mattst88@gmail.com>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Richard Henderson <rth@twiddle.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        alpha <linux-alpha@vger.kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        Android Kernel Team <kernel-team@android.com>
+References: <20200629234503.749E5340@viggo.jf.intel.com> <CALvZod55OFzOozsDbyTkUh1uZEobo4CZ=+8JgrJJHw8QuWh0hw@mail.gmail.com>
+ <654d785f-3fe5-d8bd-86bf-bf7431527184@intel.com>
+In-Reply-To: <654d785f-3fe5-d8bd-86bf-bf7431527184@intel.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Tue, 30 Jun 2020 12:25:56 -0700
+Message-ID: <CALvZod5-YuMC8b6rs=a_ahh0WF14wgKJBW18CARJtGa_bYUn0Q@mail.gmail.com>
+Subject: Re: [RFC][PATCH 0/8] Migrate Pages in lieu of discard
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        David Rientjes <rientjes@google.com>,
+        Huang Ying <ying.huang@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:PHrO9izh4NNAQ0DpLs98Zi/cmfDRago2QI2t67m75yidnuOuK1y
- dRxsXcxsm8wiJuINEL+rhy5rzZ8DT7OLpRDD4XWCtmuiZIVsTQIEa6bq5gS71Un2O3OcJHZ
- VfoV4oxYRtJqd4TkIACF5ShEMlDu3Hb0fOa1W4wbIc0m72JV6V4P/vC5u23vyq3Hli5m6/f
- jHHhY9bmP4fbJwEHOtNhw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:W9+Tl/3NP3s=:dK9mjkydT8Mu8YiyXNKw+P
- qMs16YMejU0ODuWFv4qZ7ZlYlXkk4wHvecKoE0ODcvPYYXQPwS3c+CypwJnSnD1U87WKEvMcG
- cvirPkAQxR9sFbpxIRmCs0kVpvD+MLji7qeO19Jnv4OhJ4CsWfTI+oQFPMApbwvROvgmMUeiQ
- AdppnErFNSz2rcEruYJLcr8U8k9YSSb+sSxcgu+VU2wOqFqFB/PwVuNWPAXH9O7bjmk9zEh8+
- VgC49SQLnZcASQPNT0GNV6jPLGnH1e/OcU4A/6hdw9cV7gp2KjKAutsz3/I20S/s0o4HfjlyQ
- 2joKjxMfWZeBTJZKY5BF/qJ3TCKudf1x1bHl7FJAJ+t763jGm39elvBO91wXb/THJ3R8juijS
- 37LrD2jGWf5AGD7fyjvqXUIgg5QTRGykMqKt8TxOMdasC3cYWX/SXSfgO5ZtMhc4/j6u0b1y+
- CSBUA7YbUJIKTnZnpJD5jeVtOCiIpUlLC9QbhULUDATrfO+vNb4I1EXvmKkSJk+q926QmPAIU
- SCneudOiwHSm/nAzqQxSo4Qu9YLVeGrXNfOnaH/2mA6EjEVAru7GbzgI9OkiW7Wb1xzGY7j1Y
- LNz27F9dI0FQUQ79+rqHOHMpf5U4ck9vZXu8/RxY9voYkRZqRBt3BbGzqQvhaXy86uK2C1/FT
- 7WtGOCDvTZ5BhTDfvpJM0Q7rP4zDKiJEZYRbgCl58flOBx65B8BF+YoOZEjH4yQWT5R0AbpfK
- o+PS/GjIzHzpNli5uctSF96tEHsEN8B38ttqdfa6ddxlQxUbZnmEbRJ9IuA1mD1UXsu8376qj
- l46sp0RFk5uPfmb8K64fcC2sK9ypzulKt2To3lDVC4u2sagdFY=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 7:39 PM Will Deacon <will@kernel.org> wrote:
-> +#define __READ_ONCE(x)                                                 \
-> +({                                                                     \
-> +       int atomic = 1;                                                 \
-> +       union { __unqual_scalar_typeof(x) __val; char __c[1]; } __u;    \
-> +       typeof(&(x)) __x = &(x);                                        \
-> +       switch (sizeof(x)) {                                            \
-...
-> +       atomic ? (typeof(x))__u.__val : (*(volatile typeof(x) *)__x);   \
-> +})
+On Tue, Jun 30, 2020 at 11:51 AM Dave Hansen <dave.hansen@intel.com> wrote:
+>
+> On 6/30/20 11:36 AM, Shakeel Butt wrote:
+> >> This is part of a larger patch set.  If you want to apply these or
+> >> play with them, I'd suggest using the tree from here.  It includes
+> >> autonuma-based hot page promotion back to DRAM:
+> >>
+> >>         http://lkml.kernel.org/r/c3d6de4d-f7c3-b505-2e64-8ee5f70b2118@intel.com
+> >>
+> >> This is also all based on an upstream mechanism that allows
+> >> persistent memory to be onlined and used as if it were volatile:
+> >>
+> >>         http://lkml.kernel.org/r/20190124231441.37A4A305@viggo.jf.intel.com
+> >>
+> > I have a high level question. Given a reclaim request for a set of
+> > nodes, if there is no demotion path out of that set, should the kernel
+> > still consider the migrations within the set of nodes?
+>
+> OK, to be specific, we're talking about a case where we've arrived at
+> try_to_free_pages()
 
-This expands (x) nine times (five in __unqual_scala_typeof()), which can
-lead to significant code bloat after preprocessing if something passes a
-compound expression into READ_ONCE().
-The compiler works it out eventually, but we've seen an actual slowdown
-in compile speed from this recently, especially on clang.
+Yes.
 
-I think if you move the
+> and, say, all of the nodes on the system are set in
+> sc->nodemask?  Isn't the common case that all nodes are set in
+> sc->nodemask?
 
-        typeof(&(x)) __x = &(x);
+Depends on the workload but for normal users, yes.
 
-line first, all other instances can use typeof(*__x) instead of typeof(x)
-and avoid this problem. Once we make gcc-4.9 the minimum version,
-this could be further improved to
+> Since there is never a demotion path out of the set of
+> all nodes, the common case would be that there is no demotion path out
+> of a reclaim node set.
+>
+> If that's true, I'd say that the kernel still needs to consider
+> migrations even within the set.
 
-       __auto_type __x = &(x);
+In my opinion it should be a user defined policy but I think that
+discussion is orthogonal to this patch series. As I understand, this
+patch series aims to add the migration-within-reclaim infrastructure,
+IMO the policies, optimizations, heuristics can come later.
 
-       Arnd
+BTW is this proposal only for systems having multi-tiers of memory?
+Can a multi-node DRAM-only system take advantage of this proposal? For
+example I have a system with two DRAM nodes running two jobs
+hardwalled to each node. For each job the other node is kind of
+low-tier memory. If I can describe the per-job demotion paths then
+these jobs can take advantage of this proposal during occasional
+peaks.
