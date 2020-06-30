@@ -2,87 +2,104 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E8CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:02:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E49BAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7B89420724
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:02:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA34520724
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:03:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390605AbgF3SC5 (ORCPT
+        id S2389635AbgF3SDD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 14:02:57 -0400
-Received: from netrider.rowland.org ([192.131.102.5]:51905 "HELO
-        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1733028AbgF3SC4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 14:02:56 -0400
-Received: (qmail 460459 invoked by uid 1000); 30 Jun 2020 14:02:55 -0400
-Date:   Tue, 30 Jun 2020 14:02:55 -0400
-From:   Alan Stern <stern@rowland.harvard.edu>
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Martin Kepplinger <martin.kepplinger@puri.sm>, jejb@linux.ibm.com,
-        Can Guo <cang@codeaurora.org>, martin.petersen@oracle.com,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel@puri.sm
-Subject: Re: [PATCH] scsi: sd: add runtime pm to open / release
-Message-ID: <20200630180255.GA459638@rowland.harvard.edu>
-References: <20200623111018.31954-1-martin.kepplinger@puri.sm>
- <ed9ae198-4c68-f82b-04fc-2299ab16df96@acm.org>
- <eccacce9-393c-ca5d-e3b3-09961340e0db@puri.sm>
- <1379e21d-c51a-3710-e185-c2d7a9681fb7@acm.org>
- <20200626154441.GA296771@rowland.harvard.edu>
- <c19f1938-ae47-2357-669d-5b4021aec154@puri.sm>
- <20200629161536.GA405175@rowland.harvard.edu>
- <5231c57d-3f4e-1853-d4d5-cf7f04a32246@acm.org>
+        Tue, 30 Jun 2020 14:03:03 -0400
+Received: from muru.com ([72.249.23.125]:60048 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729105AbgF3SDB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 14:03:01 -0400
+Received: from atomide.com (localhost [127.0.0.1])
+        by muru.com (Postfix) with ESMTPS id 829668164;
+        Tue, 30 Jun 2020 18:03:50 +0000 (UTC)
+Date:   Tue, 30 Jun 2020 11:02:55 -0700
+From:   Tony Lindgren <tony@atomide.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc:     Petr Mladek <pmladek@suse.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Raul Rangel <rrangel@google.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        kurt@linutronix.de, "S, Shirish" <Shirish.S@amd.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: UART/TTY console deadlock
+Message-ID: <20200630180255.GD37466@atomide.com>
+References: <CAHQZ30BnfX+gxjPm1DUd5psOTqbyDh4EJE=2=VAMW_VDafctkA@mail.gmail.com>
+ <CAHp75Vd8nTzmZdnhpTDChdc11zyCaSfeigbxaCpOWZ1Lv9ZBMw@mail.gmail.com>
+ <20200630035816.GA21591@jagdpanzerIV.localdomain>
+ <20200630102141.GA11587@alley>
+ <20200630105512.GA530@jagdpanzerIV.localdomain>
+ <20200630122239.GD6173@alley>
+ <20200630130534.GB145027@jagdpanzerIV.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5231c57d-3f4e-1853-d4d5-cf7f04a32246@acm.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200630130534.GB145027@jagdpanzerIV.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 08:59:00AM -0700, Bart Van Assche wrote:
-> On 2020-06-29 09:15, Alan Stern wrote:
-> > Aha.  Looking at this more closely, it's apparent that the code in 
-> > blk-core.c contains a logic bug: It assumes that if the BLK_MQ_REQ_PREEMPT 
-> > flag is set then the request can be issued regardless of the queue's 
-> > runtime status.  That is not correct when the queue is suspended.
+* Sergey Senozhatsky <sergey.senozhatsky@gmail.com> [200630 13:06]:
+> On (20/06/30 14:22), Petr Mladek wrote:
+...
+
+> > > > > @@ -2284,8 +2289,6 @@ int serial8250_do_startup(struct uart_port *port)
+> > > > >  		 * allow register changes to become visible.
+> > > > >  		 */
+> > > > >  		spin_lock_irqsave(&port->lock, flags);
+> > > > > -		if (up->port.irqflags & IRQF_SHARED)
+> > > > > -			disable_irq_nosync(port->irq);
+> > > > >  
+> > > > >  		wait_for_xmitr(up, UART_LSR_THRE);
+> > > > >  		serial_port_out_sync(port, UART_IER, UART_IER_THRI);
+> > > > > @@ -2297,9 +2300,9 @@ int serial8250_do_startup(struct uart_port *port)
+> > > > >  		iir = serial_port_in(port, UART_IIR);
+> > > > >  		serial_port_out(port, UART_IER, 0);
+> > > > >  
+> > > > > -		if (port->irqflags & IRQF_SHARED)
+> > > > > -			enable_irq(port->irq);
+> > > > >  		spin_unlock_irqrestore(&port->lock, flags);
+> > > > > +		if (irq_shared)
+> > > > > +			enable_irq(port->irq);
+> > > > >  
+> > > > >  		/*
+> > > > >  		 * If the interrupt is not reasserted, or we otherwise
+> > > > 
+> > > > I think that it might be safe but I am not 100% sure, sigh.
+> > > 
+> > > Yeah, I'm not 100%, but I'd give it a try.
+> > 
+> > I do not feel brave enough to ack it today. But I am all for trying it
+> > if anyone more familiar with the code is fine with it.
 > 
-> Are you sure of this? In the past (legacy block layer) no requests were
-> processed for queues in state RPM_SUSPENDED. However, that function and
-> its successor blk_pm_allow_request() are gone. The following code was
-> removed by commit 7cedffec8e75 ("block: Make blk_get_request() block for
-> non-PM requests while suspended").
-> 
-> static struct request *blk_pm_peek_request(struct request_queue *q,
->                                            struct request *rq)
-> {
->         if (q->dev && (q->rpm_status == RPM_SUSPENDED ||
->             (q->rpm_status != RPM_ACTIVE && !(rq->cmd_flags & REQ_PM))))
->                 return NULL;
->         else
->                 return rq;
-> }
+> I see. Well, I suppose we need Ack-s from tty/serial/8250 maintainers.
+> I would not be very happy if _only_ printk people Ack the patch.
 
-No, it wasn't.  Another routine, blk_pm_allow_request(), was removed by 
-that commit, but almost no other code was deleted.  Maybe you're thinking 
-of a different commit?
+This conditional disable for irq_shared does not look nice to me
+from the other device point of view :)
 
-In any case, I don't understand the point you're trying to make.
+Would it be possible to just set up te dummy interrupt handler
+for the startup, then change it back afterwards? See for example
+omap8250_no_handle_irq().
 
-Here's what I _do_ understand: While the queue is in the RPM_SUSPENDED 
-state, it can't carry out any requests at all.  If a request is added to 
-the queue, the queue must be resumed before the request can be issued to 
-the lower-layer drivers -- no matter what flags are set in the request.
+The other device for irq_shared should be capable of dealing
+with spurious interrupts if it's shared.
 
-Right now there doesn't seem to be any mechanism for resuming the queue 
-if an REQ_PREEMPT request is added while the queue is suspended.
+Regards,
 
-Alan Stern
+Tony
