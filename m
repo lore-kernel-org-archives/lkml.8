@@ -2,153 +2,282 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDCD2C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:24:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB97C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:24:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 90573206BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:24:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="HsMARRVI"
+	by mail.kernel.org (Postfix) with ESMTP id 382EE20759
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:24:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593534293;
+	bh=kIfUiVrpBir3v/fG8NxVe/vOD4Hn9v/O4aai8kR925w=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=T5wYw+3BMCQXubugIppB3TpQe0taxGmufek2lDsln/la/qj+eWgqXQdWj8+Ybm08R
+	 qvMM6bYYOhJYSax41MguVM+MvHlvVwYpRvqzN/xxDEjvng0cKyKYK4+m444FwDy1ZG
+	 Cc/FxpeyduYfkTsgTlz/qk7gmCXRWkw8z/E5qwTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387530AbgF3QYj (ORCPT
+        id S2387573AbgF3QYv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 12:24:39 -0400
-Received: from nat-hk.nvidia.com ([203.18.50.4]:33966 "EHLO nat-hk.nvidia.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726736AbgF3QYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 12:24:37 -0400
-Received: from hkpgpgate102.nvidia.com (Not Verified[10.18.92.77]) by nat-hk.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5efb67400000>; Wed, 01 Jul 2020 00:24:32 +0800
-Received: from HKMAIL104.nvidia.com ([10.18.16.13])
-  by hkpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 30 Jun 2020 09:24:32 -0700
-X-PGP-Universal: processed;
-        by hkpgpgate102.nvidia.com on Tue, 30 Jun 2020 09:24:32 -0700
-Received: from HKMAIL103.nvidia.com (10.18.16.12) by HKMAIL104.nvidia.com
- (10.18.16.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 30 Jun
- 2020 16:24:29 +0000
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (104.47.70.108)
- by HKMAIL103.nvidia.com (10.18.16.12) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Tue, 30 Jun 2020 16:24:29 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=CcPJsECZHGK9YklLcuvlrPJAa1fBLxBO34FmABzLbZGt2MfNPp34/TI4OBlKF23Lu8syoU5Gb4fSHE13WW4F6SL7zCMUJIzij7XUt9UXgsQpAFw3vj/Qk4Fq55uqCzxYZD/hXxRKGzlAdW6Y8piEgrUUSZAPzkS98RDER1xQhFnJjW6jv2P/mqvZuxnYuT72xiA6Bvk3IoIpIGEG4z46E685+6wF4rH1XVx97p4xDW5A74vVIuT/eORyACh87SvaEsOZi/xHLNTbwnGwo3OCP3dpRAbLuT+hOypmaM+cXybDiflIIW4u+d7gwHCF4R234aIWiMrXVFP/Q97svBNxDQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Tf2dhcL9+eo1RGk9caIfOU3fOhh/3KtsfCSJI4l1GHw=;
- b=K0DerbL9pLea0HuE0J896jSYDpAeL0ghQGBt4wAgXZsyQwH68K02qasZmt02oiULGXfxcbhh1gtK7UJKoC6IwpR+hKBGUkHfNWkfp5NARAC1Yc3cZ59KDsahvqWJzHQ78DcFmj2rR1Q5IY6EXb8R030muNtUKfFE722tM2EOJANxOY7+0/86u4IVF4e4MmwSGN704YXxylVbyDtojuxR2Ay+fFKYYiXyvWU0qfTGGYvUpdqlmqFEtphDxgjGCZKFUJJnqTWokSyCt1qv7rAIYmNzugjz/LkqS5wrzbh4/vs3lopuSe5pTtbKRg12DsHpWA2qkZL1DygJZF0d5m/d6A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Authentication-Results: gmail.com; dkim=none (message not signed)
- header.d=none;gmail.com; dmarc=none action=none header.from=nvidia.com;
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com (2603:10b6:5:14a::12)
- by DM5PR12MB1148.namprd12.prod.outlook.com (2603:10b6:3:74::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.24; Tue, 30 Jun
- 2020 16:24:27 +0000
-Received: from DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::1d53:7cb4:c3d7:2b54]) by DM6PR12MB3834.namprd12.prod.outlook.com
- ([fe80::1d53:7cb4:c3d7:2b54%6]) with mapi id 15.20.3131.027; Tue, 30 Jun 2020
- 16:24:27 +0000
-Date:   Tue, 30 Jun 2020 13:24:25 -0300
-From:   Jason Gunthorpe <jgg@nvidia.com>
-To:     <refactormyself@gmail.com>
-CC:     <helgaas@kernel.org>, <bjorn@helgaas.com>,
-        <skhan@linuxfoundation.org>, <linux-pci@vger.kernel.org>,
-        Vinod Koul <vkoul@kernel.org>, <dmaengine@vger.kernel.org>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Doug Ledford <dledford@redhat.com>,
-        <linux-rdma@vger.kernel.org>, Don Brace <don.brace@microsemi.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        <esc.storagedev@microsemi.com>, <linux-scsi@vger.kernel.org>,
-        Russell Currey <ruscur@russell.cc>,
-        Sam Bobroff <sbobroff@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        <linuxppc-dev@lists.ozlabs.org>,
-        <linux-kernel-mentees@lists.linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/8 v2] PCI: Align return values of PCIe capability and
- PCI accessors
-Message-ID: <20200630162425.GA442499@nvidia.com>
-References: <20200615073225.24061-1-refactormyself@gmail.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20200615073225.24061-1-refactormyself@gmail.com>
-X-ClientProxiedBy: YT1PR01CA0101.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b01:2c::10) To DM6PR12MB3834.namprd12.prod.outlook.com
- (2603:10b6:5:14a::12)
+        Tue, 30 Jun 2020 12:24:51 -0400
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:65505 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387536AbgF3QYu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 12:24:50 -0400
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 05UGOUAt006348;
+        Wed, 1 Jul 2020 01:24:31 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 05UGOUAt006348
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1593534271;
+        bh=c+cwIU+8oEzxj68ZnGZslrDy3urCnpH1lM48REJOvoU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=XXPv9vQqyADKyq3jd7G6TRPRrM8vHD9nUvlxNK1VSuz+JsmzLPp0OTC6v3ivaGECi
+         aIhqUaPFcRKJDaa3ELeg/R18bYCRruusTSSezqCabHO6PEN6g0ugLzPvqYd7tZ/iaU
+         y1te4HF8En3Flcg3/THoA1yn0rLYBDtTraL8YqTrxWrihiAOwHRnPoq5+gCkoUFyc8
+         q1lRMDaI5VMnUUwxEgmHv4D/yx6y73L/O1aTZWQP395aDZwT0RVeZAjlYzAL/pJ8Bs
+         tuRDwDDM0XirpswMf6yXLp96JWEqPkyJJBvA3Fe3uXTIaNAKL12VRxVl57cB3Yv5m/
+         wIk7p+f+PgGYg==
+X-Nifty-SrcIP: [209.85.217.42]
+Received: by mail-vs1-f42.google.com with SMTP id e15so11551787vsc.7;
+        Tue, 30 Jun 2020 09:24:31 -0700 (PDT)
+X-Gm-Message-State: AOAM5308w6A4chstu6GPvfDbw3g2e1RWUzMC+LH9GPd64PbJD4s6BXfA
+        t4dBf3K5KFFTwRXIAakP8KhfE7d13Zs0TR7c6dM=
+X-Google-Smtp-Source: ABdhPJxhr/KzZrCvSgoAkTh6B1GjTstTBZbIvfVZjezbczVQ33Y/X1OC/4s5dEZ/jDG57qhe8RuZkEZjHt8G0I7aoFo=
+X-Received: by 2002:a67:694d:: with SMTP id e74mr16230065vsc.155.1593534270033;
+ Tue, 30 Jun 2020 09:24:30 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from mlx.ziepe.ca (206.223.160.26) by YT1PR01CA0101.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:2c::10) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21 via Frontend Transport; Tue, 30 Jun 2020 16:24:26 +0000
-Received: from jgg by mlx with local (Exim 4.93)        (envelope-from <jgg@nvidia.com>)        id 1jqJ3Z-001r7m-BT; Tue, 30 Jun 2020 13:24:25 -0300
-X-Originating-IP: [206.223.160.26]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 2a534225-7b32-49c4-4a37-08d81d120ebc
-X-MS-TrafficTypeDiagnostic: DM5PR12MB1148:
-X-Microsoft-Antispam-PRVS: <DM5PR12MB1148183C60C0FC008ED7B4DEC26F0@DM5PR12MB1148.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:2089;
-X-Forefront-PRVS: 0450A714CB
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 3XPA2mmporxd5D9lQSVd/w3UNdpOTkYAyDeRptOQ+3mdoGdmGzeaXYEED+RoOa61P3nzZIpgI9sEW4ClSwxU1wbAkpTbvQBgv5CR0hG2CHA9zaJIN0pNPb5Gjv4JtWPuTVl9L+pbiiVI0wiTo6+oiWYyNuvrbDCJ7GU62o1wOXL9fbBYDjtVIxVaNjinuSxqJSq0g6VDGYBk4ZXJ4bJlM56JYZErSXmclCAlX2z8xLjrSv4x/NUs/0cmxCWM0YaN4JPlju9dIBiIxqWxBOPcZ/mPAXsO5BU2mbQIfM20I7I+LhxH1vezIiWyAZXWBOtayVIs36DedBsEyc8IzUecV1WJ5iydhq+Dmbir6aXZP7pNprziQy+rA3VahyYi5ozE
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR12MB3834.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(366004)(39860400002)(396003)(346002)(136003)(376002)(426003)(54906003)(36756003)(478600001)(186003)(316002)(26005)(33656002)(2906002)(4326008)(5660300002)(66476007)(8676002)(558084003)(7416002)(66556008)(2616005)(9746002)(9786002)(1076003)(8936002)(66946007)(6916009)(86362001)(27376004);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: 09afyx1Vygn3DWQT3nHWI32fN/JAaWD8eJvQYVH8FzN4Q19YhTtvuTGhY39r6AKCfvmkaISzbTyGlrSrdpEm9p3sla5Cm54NTJCnLlrvTvrxsTSzqpMw2WKBZKAPvHScEKKZXS1v3H7/BgAvLD2TmX/tBCuc9/hfxSbX/tD8a3HcjfOfQDOjQUE49cRPAHhP31mun1sp2SpSjCIYWGZE0irwMIAg1Kzp+BeZkjiGUNlLuGw9eh26BQp4TDcdDTXuVLUU70rR59TVtZLWATNziJ5AOkxcCxHN6qxJiJTJha2PtMfa4DGSbL6eeaj2gU0FPqxJ9Tx6Bfu8N14zdZR4YKtPJeBfTFp3RpDGL/JtglcCF3IhH226mQ0ThHv1d2e7a9p+VS2y/X1CJBS7sL0KCXgBEzA7//z0C24j9rjbJi2sJJ8Zf/iTcGUfCu1eYcSpLzzWURdJzmlw6Z7mBXMO7oKQx17JCV/sAE2gAsyToN0F7ySURKn3U0wOj+NVjGCd
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2a534225-7b32-49c4-4a37-08d81d120ebc
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR12MB3834.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2020 16:24:27.0560
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: sZyulziyqRoJ09NgMW8dgaI5LP0LWmkpbCsYy5hVK+28abFou1qeF8SSXD7eXi89
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1148
-X-OriginatorOrg: Nvidia.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1593534272; bh=Tf2dhcL9+eo1RGk9caIfOU3fOhh/3KtsfCSJI4l1GHw=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:Authentication-Results:Date:From:To:CC:
-         Subject:Message-ID:References:Content-Type:Content-Disposition:
-         In-Reply-To:X-ClientProxiedBy:MIME-Version:
-         X-MS-Exchange-MessageSentRepresentingType:X-Originating-IP:
-         X-MS-PublicTrafficType:X-MS-Office365-Filtering-Correlation-Id:
-         X-MS-TrafficTypeDiagnostic:X-Microsoft-Antispam-PRVS:
-         X-MS-Oob-TLC-OOBClassifiers:X-Forefront-PRVS:
-         X-MS-Exchange-SenderADCheck:X-Microsoft-Antispam:
-         X-Microsoft-Antispam-Message-Info:X-Forefront-Antispam-Report:
-         X-MS-Exchange-AntiSpam-MessageData:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-AuthSource:
-         X-MS-Exchange-CrossTenant-AuthAs:
-         X-MS-Exchange-CrossTenant-OriginalArrivalTime:
-         X-MS-Exchange-CrossTenant-FromEntityHeader:
-         X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
-         X-MS-Exchange-CrossTenant-UserPrincipalName:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg;
-        b=HsMARRVIdCuTSSBs8zmFYQOvzWCzbfgbyUub6vj2coY0KL3H8860ywhgI2ULPBE2d
-         J9bc+8RjX7OLtatIXGW+oQJG2kqpd0T7WH79D9Js68fH/poAGD42OLKJEsATvRVTAU
-         Rh/E+i/elKdbNWvq0P1YT+Sb49BKv3DbMxhsdEw8XT0daEiIzD2cbh2mru2a7T8G5D
-         8QOFxtNUGBMKubvCACV8N6o8WrS55d2rpwv0uM4Lt/A+UanxXYI/uAResytJ/G5S9u
-         TT9nWmInsNgmwm71mLDLztCIF7GhacpIDFc7uw6hYHysRFDvDY1gWGpJoj/ZiPA3UI
-         93tIOuis4aCnQ==
+References: <20200629085911.1676554-1-masahiroy@kernel.org> <CAKwvOd=qe5KE1vdUYQmpsW2zmDbk5i-MgRujs9B7wqnAj+af0w@mail.gmail.com>
+In-Reply-To: <CAKwvOd=qe5KE1vdUYQmpsW2zmDbk5i-MgRujs9B7wqnAj+af0w@mail.gmail.com>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 1 Jul 2020 01:23:53 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAR49jFZkEmBqpACE0V_-VyCXfFRcKe1Zq+cqO65QX1ozg@mail.gmail.com>
+Message-ID: <CAK7LNAR49jFZkEmBqpACE0V_-VyCXfFRcKe1Zq+cqO65QX1ozg@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: make Clang build userprogs for target architecture
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 15, 2020 at 09:32:17AM +0200, refactormyself@gmail.com wrote:
-> Bolarinwa Olayemi Saheed (8):
->   IB/hfi1: Convert PCIBIOS_* errors to generic -E* errors
->   IB/hfi1: Convert PCIBIOS_* errors to generic -E* errors
+On Tue, Jun 30, 2020 at 2:39 AM Nick Desaulniers
+<ndesaulniers@google.com> wrote:
+>
+> On Mon, Jun 29, 2020 at 1:59 AM Masahiro Yamada <masahiroy@kernel.org> wrote:
+> >
+> > Programs added 'userprogs' should be compiled for the target
+> > architecture i.e. the same architecture as the kernel.
+> >
+> > GCC does this correctly since the target architecture is implied
+> > by the toolchain prefix.
+> >
+> > Clang builds standalone programs always for the host architecture
+> > because the target triple is currently missing.
+> >
+> > Fix this.
+> >
+> > Fixes: 7f3a59db274c ("kbuild: add infrastructure to build userspace programs")
+>
+> This is a neat feature I didn't know about; looks relatively new.
+> What's the test case command line invocation to test this with Clang?
 
-Applied to rdma for-next thanks
 
-Jason
+
+Test command:
+
+$ make -j24 ARCH=arm  LLVM=1 CROSS_COMPILE=arm-linux-gnueabi-
+allyesconfig  samples/
+  [ snip ]
+  CC [U]  samples/watch_queue/watch_test
+  CC [U]  samples/timers/hpet_example
+  CC [U]  samples/vfs/test-fsmount
+  CC [U]  samples/binderfs/binderfs_example
+  CC [U]  samples/auxdisplay/cfag12864b-example
+  CC [U]  samples/hidraw/hid-example
+  CC [U]  samples/uhid/uhid-example
+  CC [U]  samples/connector/ucon
+  CC [U]  samples/watchdog/watchdog-simple
+  CC [U]  samples/vfs/test-statx
+
+
+Then, check if the sample programs
+were correctly built for ARM.
+
+
+
+Before this commit:
+
+$ file samples/vfs/test-statx
+samples/vfs/test-statx: ELF 64-bit LSB executable, x86-64, version 1
+(SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2,
+for GNU/Linux 3.2.0, not stripped
+
+
+
+After this commit:
+
+$ file samples/vfs/test-statx
+samples/vfs/test-statx: ELF 32-bit LSB executable, ARM, EABI5 version
+1 (SYSV), dynamically linked, interpreter /lib/ld-linux.so.3, for
+GNU/Linux 3.2.0, not stripped
+
+
+
+To test this, having LLVM is not enough
+because building userspace programs
+requires target-specific libraries.
+
+As for GCC, libc is usually bundled together
+with toolchains, but as for LLVM we need
+to provide target-specific libc.
+
+This introduces a different kind of complexity
+than building the kernel.
+
+I read this article:
+https://clang.llvm.org/docs/CrossCompilation.html
+
+
+I use tc-build to compile llvm from source code,
+but I also needed to install ARM libc.
+
+"apt install gcc-arm-linux-gnueabi"
+especially
+"apt install libc6-dev-armel-cross".
+
+
+
+
+
+If I build sample code for ARCH=arm64,
+I see the following warnings.
+
+
+$ make -j24 ARCH=arm64  LLVM=1 CROSS_COMPILE=aarch64-linux-gnu-
+allyesconfig  samples/
+  [ snip ]
+  CC [U]  samples/uhid/uhid-example
+samples/uhid/uhid-example.c:169:4: warning: format specifies type
+'ssize_t' (aka 'long') but the argument has type 'ssize_t' (aka 'int')
+[-Wformat]
+                        ret, sizeof(ev));
+                        ^~~
+samples/uhid/uhid-example.c:240:4: warning: format specifies type
+'ssize_t' (aka 'long') but the argument has type 'ssize_t' (aka 'int')
+[-Wformat]
+                        ret, sizeof(ev));
+                        ^~~
+2 warnings generated.
+  CC [U]  samples/vfs/test-fsmount
+  CC [U]  samples/vfs/test-statx
+  CC [U]  samples/watch_queue/watch_test
+samples/watch_queue/watch_test.c:86:50: warning: format specifies type
+'ssize_t' (aka 'long') but the argument has type 'ssize_t' (aka 'int')
+[-Wformat]
+                        fprintf(stderr, "Read buffer overrun: %zd\n", buf_len);
+                                                              ~~~     ^~~~~~~
+                                                              %d
+samples/watch_queue/watch_test.c:90:28: warning: format specifies type
+'ssize_t' (aka 'long') but the argument has type 'ssize_t' (aka 'int')
+[-Wformat]
+                printf("read() = %zd\n", buf_len);
+                                 ~~~     ^~~~~~~
+                                 %d
+2 warnings generated.
+  CC [U]  samples/watchdog/watchdog-simple
+  AR      samples/built-in.a
+
+
+
+
+
+I do not know how to solve this issue.
+
+
+I can reproduce this in the following
+simple test code:
+
+
+----------------->8----------------
+#include <stdio.h>
+
+int main(void)
+{
+        ssize_t x = 1;
+
+        printf("%zd", x);
+
+        return 0;
+}
+--------------->8-------------------
+
+$ clang --target=aarch64-linux-gnu test.c
+test.c:7:16: warning: format specifies type 'ssize_t' (aka 'long') but
+the argument has type 'ssize_t' (aka 'int') [-Wformat]
+        printf("%zd", x);
+                ~~~   ^
+                %zd
+1 warning generated.
+
+
+ssize_t is defined in /usr/include/stdio.h
+but perhaps this is not suitable
+for cross-compilation for aarch64.
+
+
+
+Is there any solution?
+
+
+
+
+
+
+> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> > ---
+> >
+> >  Makefile | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/Makefile b/Makefile
+> > index 73948798ce3f..cac29cc2ec25 100644
+> > --- a/Makefile
+> > +++ b/Makefile
+> > @@ -970,8 +970,8 @@ LDFLAGS_vmlinux     += --pack-dyn-relocs=relr
+> >  endif
+> >
+> >  # Align the bit size of userspace programs with the kernel
+> > -KBUILD_USERCFLAGS  += $(filter -m32 -m64, $(KBUILD_CFLAGS))
+> > -KBUILD_USERLDFLAGS += $(filter -m32 -m64, $(KBUILD_CFLAGS))
+> > +KBUILD_USERCFLAGS  += $(filter -m32 -m64 --target=%, $(KBUILD_CFLAGS))
+> > +KBUILD_USERLDFLAGS += $(filter -m32 -m64 --target=%, $(KBUILD_CFLAGS))
+>
+> That should be fine.
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+> https://www.gnu.org/software/make/manual/html_node/Text-Functions.html
+>
+> >
+> >  # make the checker run with the right architecture
+> >  CHECKFLAGS += --arch=$(ARCH)
+> > --
+>
+>
+> --
+> Thanks,
+> ~Nick Desaulniers
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
