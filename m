@@ -2,93 +2,122 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D279C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A48C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7D7EB20672
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:27:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2812C20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:29:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="H2gEzFv0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387665AbgF3M1q (ORCPT
+        id S2387611AbgF3M3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 08:27:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:46140 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730689AbgF3M1o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 08:27:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0E26E1FB;
-        Tue, 30 Jun 2020 05:27:44 -0700 (PDT)
-Received: from [10.57.21.32] (unknown [10.57.21.32])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4B98A3F71E;
-        Tue, 30 Jun 2020 05:27:38 -0700 (PDT)
-Subject: Re: [PATCH v8 2/3] dt-bindings: arm-smmu: Add binding for Tegra194
- SMMU
-To:     Krishna Reddy <vdumpa@nvidia.com>
-Cc:     joro@8bytes.org, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-tegra@vger.kernel.org, treding@nvidia.com, yhsu@nvidia.com,
-        snikam@nvidia.com, praithatha@nvidia.com, talho@nvidia.com,
-        bbiswas@nvidia.com, mperttunen@nvidia.com, nicolinc@nvidia.com,
-        bhuntsman@nvidia.com, nicoleotsuka@gmail.com
-References: <20200630001051.12350-1-vdumpa@nvidia.com>
- <20200630001051.12350-3-vdumpa@nvidia.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <3e655881-bac4-f083-44ed-cfa0a61298d0@arm.com>
-Date:   Tue, 30 Jun 2020 13:27:36 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 30 Jun 2020 08:29:43 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:3750 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730095AbgF3M3m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 08:29:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1593520181; x=1625056181;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=1SYBHjTB+q5E+ZB8QENYuEXlQudyQrqQO5pO6Am+EEU=;
+  b=H2gEzFv0kVTs7zN9dem+WBaSAh/9oFVo0mO+eDE3d7n+zPvwGeS0grV/
+   zBUFkFHBSXAaaWrYTinmEcyIxPM8Jeit5zAww9HJFp1USU8yiwc7JToPV
+   FTwQbL3GyalSH86SK/gHo9rQIVZVxZBSD7dS7F57vlb4EjtoOmqPAOOmp
+   8=;
+IronPort-SDR: 24GE8aKjT5T9+JGempUpxCY0xCGWdMUQzMqL9jkMNbtduu4ZyyCdQF6qGsE8klTAMuwe714Jgk
+ xvtVzeu8wrVQ==
+X-IronPort-AV: E=Sophos;i="5.75,297,1589241600"; 
+   d="scan'208";a="39354207"
+Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-2a-69849ee2.us-west-2.amazon.com) ([10.43.8.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 30 Jun 2020 12:29:39 +0000
+Received: from EX13MTAUEA002.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2a-69849ee2.us-west-2.amazon.com (Postfix) with ESMTPS id DD6ADA23B6;
+        Tue, 30 Jun 2020 12:29:38 +0000 (UTC)
+Received: from EX13D18EUC001.ant.amazon.com (10.43.164.108) by
+ EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 30 Jun 2020 12:29:38 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (10.43.61.82) by
+ EX13D18EUC001.ant.amazon.com (10.43.164.108) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.2; Tue, 30 Jun 2020 12:29:37 +0000
+Received: from dev-dsk-mheyne-60001.pdx1.corp.amazon.com (10.184.85.242) by
+ mail-relay.amazon.com (10.43.61.243) with Microsoft SMTP Server id
+ 15.0.1497.2 via Frontend Transport; Tue, 30 Jun 2020 12:29:36 +0000
+Received: by dev-dsk-mheyne-60001.pdx1.corp.amazon.com (Postfix, from userid 5466572)
+        id 92633222EA; Tue, 30 Jun 2020 12:29:35 +0000 (UTC)
+From:   Maximilian Heyne <mheyne@amazon.de>
+CC:     Amit Shah <aams@amazon.de>, Maximilian Heyne <mheyne@amazon.de>,
+        <stable@vger.kernel.org>, Keith Busch <kbusch@kernel.org>,
+        Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        <linux-nvme@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] nvme: validate cntlid's only for nvme >= 1.1.0
+Date:   Tue, 30 Jun 2020 12:29:23 +0000
+Message-ID: <20200630122923.70282-1-mheyne@amazon.de>
+X-Mailer: git-send-email 2.16.6
 MIME-Version: 1.0
-In-Reply-To: <20200630001051.12350-3-vdumpa@nvidia.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-30 01:10, Krishna Reddy wrote:
-> Add binding for NVIDIA's Tegra194 SoC SMMU topology that is based
-> on ARM MMU-500.
-> 
-> Signed-off-by: Krishna Reddy <vdumpa@nvidia.com>
-> ---
->   Documentation/devicetree/bindings/iommu/arm,smmu.yaml | 5 +++++
->   1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> index d7ceb4c34423b..5b2586ac715ed 100644
-> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.yaml
-> @@ -38,6 +38,11 @@ properties:
->                 - qcom,sc7180-smmu-500
->                 - qcom,sdm845-smmu-500
->             - const: arm,mmu-500
-> +      - description: NVIDIA SoCs that use more than one "arm,mmu-500"
+Controller ID's (cntlid) for NVMe devices were introduced in version
+1.1.0 of the specification. Controllers that follow the older 1.0.0 spec
+don't set this field so it doesn't make sense to validate it. On the
+contrary, when using SR-IOV this check breaks VFs as they are all part
+of the same NVMe subsystem.
 
-Hmm, there must be a better way to word that to express that it only 
-applies to the sets of SMMUs that must be programmed identically, and 
-not any other independent MMU-500s that might also happen to be in the 
-same SoC.
+Signed-off-by: Maximilian Heyne <mheyne@amazon.de>
+Cc: <stable@vger.kernel.org> # 5.4+
+---
+ drivers/nvme/host/core.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-> +        items:
-> +          - enum:
-> +              - nvdia,tegra194-smmu
-> +          - const: arm,mmu-500
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 28f4388c1337..c4a991acc949 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -2773,7 +2773,8 @@ static int nvme_init_subsystem(struct nvme_ctrl *ctrl, struct nvme_id_ctrl *id)
+ 		put_device(&subsys->dev);
+ 		subsys = found;
+ 
+-		if (!nvme_validate_cntlid(subsys, ctrl, id)) {
++		if (ctrl->vs >= NVME_VS(1, 1, 0) &&
++		    !nvme_validate_cntlid(subsys, ctrl, id)) {
+ 			ret = -EINVAL;
+ 			goto out_put_subsystem;
+ 		}
+@@ -2883,7 +2884,7 @@ int nvme_init_identify(struct nvme_ctrl *ctrl)
+ 			goto out_free;
+ 	}
+ 
+-	if (!(ctrl->ops->flags & NVME_F_FABRICS))
++	if (!(ctrl->ops->flags & NVME_F_FABRICS) && ctrl->vs >= NVME_VS(1, 1, 0))
+ 		ctrl->cntlid = le16_to_cpu(id->cntlid);
+ 
+ 	if (!ctrl->identified) {
+-- 
+2.16.6
 
-Is the fallback compatible appropriate here? If software treats this as 
-a standard MMU-500 it will only program the first instance (because the 
-second isn't presented as a separate MMU-500) - is there any way that 
-isn't going to blow up?
 
-Robin.
 
->         - items:
->             - const: arm,mmu-500
->             - const: arm,smmu-v2
-> 
+
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+Sitz: Berlin
+Ust-ID: DE 289 237 879
+
+
+
