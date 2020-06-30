@@ -2,86 +2,69 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D7E5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:39:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A5DC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:40:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5F24A206B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:39:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1986B20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:40:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732830AbgF3Njq (ORCPT
+        id S1732540AbgF3NkP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 09:39:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45878 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728808AbgF3Njq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 09:39:46 -0400
-Received: from albert.telenet-ops.be (albert.telenet-ops.be [IPv6:2a02:1800:110:4::f00:1a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A54D9C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:39:45 -0700 (PDT)
-Received: from ramsan ([IPv6:2a02:1810:ac12:ed20:503c:ab8:1424:9638])
-        by albert.telenet-ops.be with bizsmtp
-        id xRfi2200L49uj5306Rfi1w; Tue, 30 Jun 2020 15:39:44 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jqGUA-0005AS-Jj; Tue, 30 Jun 2020 15:39:42 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1jqGUA-0007Ta-F3; Tue, 30 Jun 2020 15:39:42 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Olivier Sobrie <olivier.sobrie@silexinsight.com>,
-        Waleed Ziad <waleed94ziad@gmail.com>,
-        Matt Mackall <mpm@selenic.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] hwrng: ba431 - HW_RANDOM_BA431 should not default to y
-Date:   Tue, 30 Jun 2020 15:39:41 +0200
-Message-Id: <20200630133941.28696-1-geert+renesas@glider.be>
+        Tue, 30 Jun 2020 09:40:15 -0400
+Received: from mga14.intel.com ([192.55.52.115]:31774 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728651AbgF3NkO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 09:40:14 -0400
+IronPort-SDR: k3t3bH4XVwYHtrM4+25tiM8ZqPwgL+r8CrWbMIHDDU8R76wIVHCcHc3TBCuyegPNZ9XHtdI+UQ
+ IMl7zUva1qAg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="145302173"
+X-IronPort-AV: E=Sophos;i="5.75,297,1589266800"; 
+   d="scan'208";a="145302173"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 06:40:13 -0700
+IronPort-SDR: STWRW55HtaBObb/Cxk3VvcsjQSJA2zFwfKXo9Fsy0Ayq912iaOUPHhwSINFzhfdTwg2LnTQii4
+ pMPBOTXdiLOg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,297,1589266800"; 
+   d="scan'208";a="425207181"
+Received: from ahunter-desktop.fi.intel.com ([10.237.72.73])
+  by orsmga004.jf.intel.com with ESMTP; 30 Jun 2020 06:40:12 -0700
+From:   Adrian Hunter <adrian.hunter@intel.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
+        Luwei Kang <luwei.kang@intel.com>
+Subject: [PATCH 0/3] perf intel-pt: Fix PEBS-via-PT with registers
+Date:   Tue, 30 Jun 2020 16:39:32 +0300
+Message-Id: <20200630133935.11150-1-adrian.hunter@intel.com>
 X-Mailer: git-send-email 2.17.1
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As HW_RANDOM_BA431 does not have any platform dependency, it should not
-default to enabled.
+Hi
 
-Fixes: 0289e9be5dc26d84 ("hwrng: ba431 - add support for BA431 hwrng")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- drivers/char/hw_random/Kconfig | 3 ---
- 1 file changed, 3 deletions(-)
+Here are some more Intel PT fixes for v5.8.
 
-diff --git a/drivers/char/hw_random/Kconfig b/drivers/char/hw_random/Kconfig
-index 7b876dfdbaafe7ad..9e91c556942b1c94 100644
---- a/drivers/char/hw_random/Kconfig
-+++ b/drivers/char/hw_random/Kconfig
-@@ -76,7 +76,6 @@ config HW_RANDOM_ATMEL
- 
- config HW_RANDOM_BA431
- 	tristate "Silex Insight BA431 Random Number Generator support"
--	default HW_RANDOM
- 	help
- 	  This driver provides kernel-side support for the Random Number
- 	  Generator hardware based on Silex Insight BA431 IP.
-@@ -84,8 +83,6 @@ config HW_RANDOM_BA431
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called ba431-rng.
- 
--	  If unsure, say Y.
--
- config HW_RANDOM_BCM2835
- 	tristate "Broadcom BCM2835/BCM63xx Random Number Generator support"
- 	depends on ARCH_BCM2835 || ARCH_BCM_NSP || ARCH_BCM_5301X || \
--- 
-2.17.1
 
+Adrian Hunter (3):
+      perf intel-pt: Fix recording PEBS-via-PT with registers
+      perf intel-pt: Fix displaying PEBS-via-PT with registers
+      perf intel-pt: Fix PEBS sample for XMM registers
+
+ tools/perf/arch/x86/util/intel-pt.c | 1 +
+ tools/perf/builtin-script.c         | 2 +-
+ tools/perf/util/evsel.c             | 4 ++--
+ tools/perf/util/intel-pt.c          | 5 +++--
+ 4 files changed, 7 insertions(+), 5 deletions(-)
+
+
+Regards
+Adrian
