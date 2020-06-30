@@ -7,93 +7,88 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54518C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C1CEC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:54:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2BA78206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:48:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A5A420675
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:54:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uCygjPNj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iOZTw5p3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732127AbgF3JsW (ORCPT
+        id S1731583AbgF3Jx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 05:48:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38494 "EHLO
+        Tue, 30 Jun 2020 05:53:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731983AbgF3JsU (ORCPT
+        with ESMTP id S1729017AbgF3Jx4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 05:48:20 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD035C061755;
-        Tue, 30 Jun 2020 02:48:19 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id dr13so19871159ejc.3;
-        Tue, 30 Jun 2020 02:48:19 -0700 (PDT)
+        Tue, 30 Jun 2020 05:53:56 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45062C061755;
+        Tue, 30 Jun 2020 02:53:56 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id e8so9721886pgc.5;
+        Tue, 30 Jun 2020 02:53:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=oNC78CqpkvHbTzJl7ozjMpsWiFnQpCxrCq3wYkDslBw=;
-        b=uCygjPNjpm8T1BUAh9Qf/bkYop8p2+DVJTrhrpfftvPO7ZTdWDR+VJqmYiXIDcVDPI
-         g1F3HRIhjHisjgQ5nNHAyH2FMmdFUeZn+R6JwVLmtyVyDVx0vt3PJ/aseb//pBN7dgaN
-         OXQFcHDqPRtUtMcF/bipam8DQ2+oyU00VpYfQ2kRL5d9O1L99nuAio8o3Xcu7qo50EKi
-         oLt0QX8BZeRjVJ+BZI26l7PjrVK6t4GapZmKbQ1/Ip4ITaleMJsp8ScQ07t90n3xNs4H
-         CurmJSyHPnZ02iarnM4o/PKfLnjOj22xplaf+7Le9g+Dfb4ohhC0zAx2wcQlPdyhc8mf
-         pTjg==
+        bh=pu+8c4pxZP7VDPcWMX3cvDqtPoM2Z/4+ORSQBZa9fP8=;
+        b=iOZTw5p3PhrLlB33oX3iHhPUa7AtOUAPU4fvtIi61vf7UYm4i+g1ybpyU0fH6irrMM
+         wr/HuNGd0XsNfcKV+dxU90wRk/Zp6TC81oWimDnGh1DHx/WD+EG9VpnKOqWe4a6nSB4P
+         CHGg/xLxDxTZ7ruZdr3kZNElBjD7Q58olV9nDKEArc/jJSdfa/GQ24jduQIdBSH/60pb
+         k4zLDdY/ZG925UKIPnx3XklzXTanzkM/ZK70pASTgju0rAdzkrRoSeF1BPhWN9lSPKdb
+         Bl1HiMs72X7BPylrygLupbmuXou6Tt0haGCEeljJZJiig+gyS9rvkvpvwVfnzjK2mb5s
+         nWFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=oNC78CqpkvHbTzJl7ozjMpsWiFnQpCxrCq3wYkDslBw=;
-        b=YL1eORTWJnoipIcwJBJMCqqgdvmI97iP2KbF9wBJ8YTPpDPPc53cbGXLKibnFiPvIG
-         K/4fxocL010MbsErfnd1G32BeclwOSHC+6snrKQEykXJ1AQcKYk/DtdXyzb89/KNp3TT
-         tmb7C8oarTfPZfaWU9wMZR7P8R7c1wGKzWZqyHFGcs5T/OQaLE19d8r/cOFzvSV3aMAg
-         Fz1VFTeQEHQ8yzoxafRitod1vjbC3dTdD0feYhW+tf0N5tmD2V1v3UhC/73QQWoT6jKs
-         6G2vRUwOIW3yJKY7ZAe4HrIHSVAErgSxaQr0yI1gdQm3YOielqmcDmJJ03Xi1rB5gAxG
-         L75A==
-X-Gm-Message-State: AOAM533oMilkg33IfzFmg6yLmg9PM7ij2bnKUJinvS39JdPb8HrPRezx
-        o77rva5JEQGyWIurPB1mfMREaEitlYCS1fIbrBM=
-X-Google-Smtp-Source: ABdhPJzKAZTTMdJAx/ZL9PlEPB5lTOl0gh4Ih+EoF1G9G8H8LsnK94bLhhiAJUYzQrEmDmfkmvTizUEmtvyArg1PjjA=
-X-Received: by 2002:a17:906:4145:: with SMTP id l5mr17255133ejk.334.1593510498539;
- Tue, 30 Jun 2020 02:48:18 -0700 (PDT)
+        bh=pu+8c4pxZP7VDPcWMX3cvDqtPoM2Z/4+ORSQBZa9fP8=;
+        b=K9FbcUp9/9k6LrmN4jmAquxnif9ZpupnISVFmwZpfSEWiU+fpVR8zTnTDGKBQX1BCt
+         npDMjeiyKiIYuSRaF8xuUyoXMBaTLD98lLX7RRDnb+EWSTnlyTM9BjnRRJwpyWb9NLEv
+         MDNG1+Rj+T1zkaN+lE3mlIdRSdiodZx5Iq7ZynlkeKlIDmNPRuZYfKwa6n4i0Vj4RlLC
+         RwASo+cHn7daNsKObamwuRAMSLNON6bo8q9x5TqEdY5zTs956Y+GZSdAcmdXm4B9TYaF
+         6//K+Rnl1/cXh9EA4R6VdUSON84p9X/786KSosn3ftiEbHV7gjz3Ingohm+TlKA0EoK1
+         E8XA==
+X-Gm-Message-State: AOAM533Y/vJBB8UD1US0p2GeLxL/HXVBD8N+kwpmICrI788uI+wiQ7Us
+        utuW/w4hsTBx7aUvCM+KcHHE7M/TsgdtIl62ktQ=
+X-Google-Smtp-Source: ABdhPJzlE4kn4dGUwstGhu5m4jND3oHLT5GOH9/tz0SCDE/5Gq8P4XHxl8f6dclTHmHCeJcHoxAKreSrwL9AqmUTKKE=
+X-Received: by 2002:a63:ff52:: with SMTP id s18mr14592506pgk.203.1593510835663;
+ Tue, 30 Jun 2020 02:53:55 -0700 (PDT)
 MIME-Version: 1.0
-References: <1591697830-16311-1-git-send-email-amittomer25@gmail.com>
- <1591697830-16311-3-git-send-email-amittomer25@gmail.com> <20200624061529.GF2324254@vkoul-mobl>
- <CABHD4K-Z7_MkG-j1uAt6XGnz4zWzNYeuEgq=BwE=NXPwY6gb6g@mail.gmail.com> <20200629095207.GG2599@vkoul-mobl>
-In-Reply-To: <20200629095207.GG2599@vkoul-mobl>
-From:   Amit Tomer <amittomer25@gmail.com>
-Date:   Tue, 30 Jun 2020 15:17:41 +0530
-Message-ID: <CABHD4K9VOWpC7=o2VKrqoxEtMQ2gFv_Qs885dBKL1o+B_fe_3g@mail.gmail.com>
-Subject: Re: [PATCH v4 02/10] dmaengine: Actions: Add support for S700 DMA engine
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Andre Przywara <andre.przywara@arm.com>,
-        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        dan.j.williams@intel.com, cristian.ciocaltea@gmail.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-actions@lists.infradead.org
+References: <20200625075805.363918-1-mans0n@gorani.run> <CAMpxmJXDHX-U-HWR8093orBU1ZxEeWp_r2Xar+k5FMoZ1pS78Q@mail.gmail.com>
+In-Reply-To: <CAMpxmJXDHX-U-HWR8093orBU1ZxEeWp_r2Xar+k5FMoZ1pS78Q@mail.gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 30 Jun 2020 12:53:42 +0300
+Message-ID: <CAHp75VdNh8nFNqZxSD0g7ADD8GvY+Dmbfg8xc6LW94hw_Brwew@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] gpio: add GPO driver for PCA9570
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     Sungbo Eo <mans0n@gorani.run>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinod,
+On Tue, Jun 30, 2020 at 12:28 PM Bartosz Golaszewski
+<bgolaszewski@baylibre.com> wrote:
+> On Thu, Jun 25, 2020 at 9:58 AM Sungbo Eo <mans0n@gorani.run> wrote:
 
-On Mon, Jun 29, 2020 at 3:22 PM Vinod Koul <vkoul@kernel.org> wrote:
+> > +static const struct of_device_id pca9570_of_match_table[] = {
+> > +       { .compatible = "nxp,pca9570" },
+> > +       { /* sentinel */ }
+> > +};
+> > +MODULE_DEVICE_TABLE(of, pca9570_of_match_table);
+>
+> If you're not using it in probe than maybe move it next to the I2C device table?
 
-> If you use of_device_get_match_data() you will not fall into this :)
+(Side note)
+...and even if so it can be assessed via a struct device pointer:
+dev->driver->id_table (don't remember by heart, but you have an idea).
 
-But again, of_device_get_match_data() returns void *, and we need
-"uintptr_t" in order to type cast it properly (at-least without
-warning).
-
-Also, while looking around found the similar warning for other file
-where it uses " of_device_get_match_data()"
-drivers/pci/controller/pcie-iproc-platform.c:56:15: warning: cast to
-smaller integer type 'enum iproc_pcie_type' from 'const void *'
-[-Wvoid-pointer-to-enum-cast]
-        pcie->type = (enum iproc_pcie_type) of_device_get_match_data(dev);
-
-Thanks
--Amit
+-- 
+With Best Regards,
+Andy Shevchenko
