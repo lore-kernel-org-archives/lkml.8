@@ -2,149 +2,119 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E2AC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 02:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36642C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 02:13:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6D7232068F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 02:12:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FAD52068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 02:13:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f3oO3nnF"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ks2IMMSA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727997AbgF3CMl (ORCPT
+        id S1728070AbgF3CNc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 22:12:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53064 "EHLO
+        Mon, 29 Jun 2020 22:13:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726288AbgF3CMl (ORCPT
+        with ESMTP id S1726288AbgF3CNb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 22:12:41 -0400
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 301C1C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 19:12:41 -0700 (PDT)
-Received: by mail-wm1-x334.google.com with SMTP id g75so17277138wme.5
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 19:12:41 -0700 (PDT)
+        Mon, 29 Jun 2020 22:13:31 -0400
+Received: from mail-pg1-x544.google.com (mail-pg1-x544.google.com [IPv6:2607:f8b0:4864:20::544])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9E8FC061755
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 19:13:31 -0700 (PDT)
+Received: by mail-pg1-x544.google.com with SMTP id p3so9203295pgh.3
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 19:13:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=4wknG23HaVvyRUB7piPKzRsEJzEa/wUAynhdy+wisas=;
-        b=f3oO3nnFjDZvFf+hMSus268RZXIfpI6JocqVz9m3c8DNLfrpNmC9na2fRnD3VtRu7Z
-         JaZ7qpPnE78ak4qZkRAipEtNWtDkrnhP0Rz/+iutY8aBVZfpeWBJmm7A6NCpnkTAOfk8
-         EwmCbfFL2ZT226aeri/k80+au5XzDBfIInS1m7aQYsP3OUdWmsTRHjO09QWcdkdtRtAM
-         ZHwECSb86wctAvqs0769drbNm0CU0dQVUP5Mqhm6krb7UHfNuEH/Y0EoFKHrP2rRx5mw
-         zWbVKAPlL1s2NVaOPossVoT63LVkI5ER3JeKzkExM48m8Y72RLKLyE5sS4DBGJwo4bYT
-         wYZw==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=MF0tumyvJgF2EIXZ5PzsAvRuflwiBGHgtFazb+SuUko=;
+        b=ks2IMMSAj5icRXiW6QCKN8i6yB/Zf3rYSqHgKQPp11BqkRTO33B8vGpq4rlDxEFqlM
+         c0nO8/c7Yhq9WD1S6L+u0rc+Jzn3Aydcv3sV3smeGDD4GLWFNp7lb9fTap9QnkPOO5S0
+         SgQDFpcP83zZ1SHbfcv6IrfMikKuTC8NBpAAiH1WSIMAipUvNZglh2VSW4AP+tS6I859
+         m46RapogpuEPKKVOmB9GGlx/k9wJge6T2RezhGLVZdsuKSuAkvKF1NJ7i3VJufobL+fN
+         xcCx4DT2MfNe9xTmMDww1JYwQQ2QAGB8yYkPTr8bIDrv8SmhHJv8UC2KuTFnfsVdVVeP
+         NQQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=4wknG23HaVvyRUB7piPKzRsEJzEa/wUAynhdy+wisas=;
-        b=hALE9hh3Ji9SWmtwNomNr546ESBOMrZzSGlB+eae20gHrUUJ52kA+Jr8z+VMI95E+s
-         /pecTprGfGmt8wJWGOSENkCtCvVLUtfkokPbPx4rBgIRfTNcgW5Q6ZttKM9Y1D9lPhbI
-         c87470g3cOBlN4GZz4L3f3h8CG9LhFA1RgKkASXvqmJMSaDyC3JujfADsyduMBfQRwSO
-         HwjcHdoc15Nkl72ILt3eTbDAWTrWZoSu5nNaZ4vkoL1IaJ68nSgAqcbfCOGbnrWVdNk4
-         21yMzbLy9WusmJNzrmy78Goz3U1rTW46Kk5p7iDwtwjyQyDF329bSFWndAhjEWFNc8yt
-         JG9w==
-X-Gm-Message-State: AOAM5310sAOU+XGWMK+Ls9K147zmsIEshPDEEYnDP6kSNi0oEwMUR8LD
-        YZclCUq+XFwQPvnWP0LkxooK/Y8Z
-X-Google-Smtp-Source: ABdhPJx9eiMBqo7w0KwUcdkTymiGnMRqY6bfkIuGqmhNl5sK/2lMoQySfCYkTTbojRjNKGacQMwk2w==
-X-Received: by 2002:a7b:cc92:: with SMTP id p18mr19814835wma.4.1593483159208;
-        Mon, 29 Jun 2020 19:12:39 -0700 (PDT)
-Received: from localhost (61-68-186-125.tpgi.com.au. [61.68.186.125])
-        by smtp.gmail.com with ESMTPSA id e25sm1865354wrc.69.2020.06.29.19.12.37
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=MF0tumyvJgF2EIXZ5PzsAvRuflwiBGHgtFazb+SuUko=;
+        b=IbawD7tj4g4NCThhhmQS+bOfyiJOZVMpj+G3nQb/naHz6X+QLLVnlj8SIhL3nawvpm
+         B1tK31LfOu3hQYYF4CjaijuH421JRrI6JB28YYM8RxB20McI+ra8k/eylfgD5qzku+Jt
+         bl5yzaqklsPIZ89YNH/W307fkFIdXZ5HOjM6/aKBfkls9dm5u0+vb2i2rLfDLss0YHGU
+         Hd/1KsccQHBKUO9jL6gAS/p1vOYtJAKbk23pT2JbqeuN7gwJxq1lorDxW9/RGEJW9GN5
+         3aVuRhH2PknLZbp+6zZLRwpD0euBkGzAwdKNDjGWQSt5YfSdEORZtwGWoS3D93A46vup
+         UU/g==
+X-Gm-Message-State: AOAM533cVJKPRHaruB1hLC7yyz4UahzcNkeDKvytN0IzauY9xrPT+rwI
+        VyBkbwEJ2r58qZ1YgYNU8UdPjQ==
+X-Google-Smtp-Source: ABdhPJxGsYpxRXI7kPx2ZPOl5Jey6CBmjf/tVXRs+llJKu9reGs17JeQbwjqrJPhWtM4+XWKUcV5OA==
+X-Received: by 2002:a65:51ca:: with SMTP id i10mr13324341pgq.115.1593483211317;
+        Mon, 29 Jun 2020 19:13:31 -0700 (PDT)
+Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
+        by smtp.gmail.com with ESMTPSA id s68sm650280pjb.38.2020.06.29.19.13.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 19:12:38 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 12:12:32 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: wait_on_page_bit_common(TASK_KILLABLE, EXCLUSIVE) can miss
- wakeup?
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>, Jan Kara <jack@suse.cz>,
-        Lukas Czerner <lczerner@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-References: <20200624161142.GA12184@redhat.com>
-        <20200624162042.GA12238@redhat.com>
-        <CAHk-=wjJA2Z3kUFb-5s=6+n0qbTs8ELqKFt9B3pH85a8fGD73w@mail.gmail.com>
-        <20200626154313.GI4817@hirez.programming.kicks-ass.net>
-        <CAHk-=whvVWNXPJq1k566zn4SfXAifXtiA7T+7JFweR3rQ0nc9A@mail.gmail.com>
-        <1593396958.ydiznwsuu8.astroid@bobo.none>
-        <1593436373.x8otyji40u.astroid@bobo.none>
-        <CAHk-=wjJKicPgmvf7atx=h6Li7ez9nFrpJdgTSRm5aUEnuVH6w@mail.gmail.com>
-In-Reply-To: <CAHk-=wjJKicPgmvf7atx=h6Li7ez9nFrpJdgTSRm5aUEnuVH6w@mail.gmail.com>
+        Mon, 29 Jun 2020 19:13:30 -0700 (PDT)
+Date:   Mon, 29 Jun 2020 19:13:30 -0700 (PDT)
+From:   David Rientjes <rientjes@google.com>
+X-X-Sender: rientjes@chino.kir.corp.google.com
+To:     Mike Rapoport <rppt@linux.ibm.com>
+cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: ERROR: "min_low_pfn" undefined!
+In-Reply-To: <202006300524.y9r1ZSHI%lkp@intel.com>
+Message-ID: <alpine.DEB.2.22.394.2006291911220.1118534@chino.kir.corp.google.com>
+References: <202006300524.y9r1ZSHI%lkp@intel.com>
+User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
 MIME-Version: 1.0
-Message-Id: <1593482936.bcy1487a6g.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from Linus Torvalds's message of June 30, 2020 2:36 am:
-> On Mon, Jun 29, 2020 at 6:16 AM Nicholas Piggin <npiggin@gmail.com> wrote=
-:
->>
->> No, ignore this part (which you explained well it was just a thinko,
->> and your patch of course would not have worked if this was the case):
->> the exclusive wake up doesn't get lost if schedule() was called because
->> state goes back to running regardless of what woke it.
->=20
-> Right.
->=20
-> The normal pattern for a wait-loop is
->=20
->  - add yourself to the wait-queue and set yourself "sleeping" with a
-> memory barrier.
->=20
->  - test for the condition, exit if ok
->=20
->  - go to sleep
->=20
-> and that pattern doesn't have the race.
->=20
-> The other common pattern is to check for the "do I need to sleep at
-> all" at the *top* of the function, long before you bother with any
-> wait-queues at all. This code does that odd "let's check in the middle
-> if we need to sleep" instead, which then caused the bug.
->=20
-> So we had an odd setup because of three different wait conditions that
-> had different rules for what they could/should do before sleeping, and
-> then not sleeping reliably at all.
->=20
-> We could also fix it by just splitting out the three cases into their
-> own wait routines that match the normal pattern. The bug really
-> happened because that wait-loop is doing things such an odd way due to
-> all the different cases..
->=20
-> I actually think it would be a lot more readable if it was three
-> different cases instead of trying to be one "common" routine.
->=20
-> The *common* parts is the special PG_locked logic at the top, and the
-> thrashing/delayacct code at the bottom.
->=20
-> And *that* could be a true common helper, but the wait loop (which
-> isn't even a loop for the DROP case) are fundamentally different and
-> probably should be separate functions.
->=20
-> So I think my "one-liner" fixes the problem, but I'd certainly be open
-> to somebody cleaning this up properly.
+On Tue, 30 Jun 2020, kernel test robot wrote:
 
-I think it does. I would rather my patch which doesn't add a barrier to=20
-the "fast" path though (by the time we get here I think the fast path is
-that we are sleeping on the page, doing the IO).
+> Hi Alexander,
+> 
+> FYI, the error/warning still remains.
+> 
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   7c30b859a947535f2213277e827d7ac7dcff9c84
+> commit: f220df66f67684246ae1bf4a4e479efc7c2f325a intel_th: msu-sink: An example msu buffer "sink"
+> date:   11 months ago
+> config: microblaze-randconfig-c023-20200629 (attached as .config)
+> compiler: microblaze-linux-gcc (GCC) 9.3.0
+> 
+> If you fix the issue, kindly add following tag as appropriate
+> Reported-by: kernel test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    ERROR: "min_low_pfn" [drivers/rpmsg/virtio_rpmsg_bus.ko] undefined!
+> >> ERROR: "min_low_pfn" [drivers/hwtracing/intel_th/intel_th_msu_sink.ko] undefined!
+>    ERROR: "min_low_pfn" [drivers/hwtracing/intel_th/intel_th_msu.ko] undefined!
+>    ERROR: "min_low_pfn" [drivers/mmc/core/mmc_core.ko] undefined!
+>    ERROR: "min_low_pfn" [drivers/md/dm-crypt.ko] undefined!
+>    ERROR: "min_low_pfn" [drivers/net/wireless/ath/ath6kl/ath6kl_sdio.ko] undefined!
+>    ERROR: "min_low_pfn" [crypto/tcrypt.ko] undefined!
+>    ERROR: "min_low_pfn" [crypto/asymmetric_keys/asym_tpm.ko] undefined!
+> 
 
-Alternatively (although this still adds more branching than necessary at
-least it doesn't have a barrier for the sleeping case), you could set
-the running state as an else case if you don't schedule.
+Looks like we have precedence for min_low_pfn failures and we can't blame 
+this poor commit :)
 
-Thanks,
-Nick
+I wonder why we don't simply do EXPORT_SYMBOL() in mm/memblock.c, 
+non-microblaze architectures do this themselves because it doesn't get 
+generically exported:
+
+arch/ia64/kernel/ia64_ksyms.c:EXPORT_SYMBOL(min_low_pfn);       /* defined by bootmem.c, but not exported by generic code */
+arch/sh/kernel/sh_ksyms_32.c:EXPORT_SYMBOL(min_low_pfn);
+
+Adding Mike Rapoport.
