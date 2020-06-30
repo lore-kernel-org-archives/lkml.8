@@ -2,164 +2,307 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 065DFC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF21C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CE0E6206B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:16:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90854206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:18:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="uKFtMr2b"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="FAJaW2kE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731924AbgF3JQm (ORCPT
+        id S1731490AbgF3JSs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 05:16:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33642 "EHLO
+        Tue, 30 Jun 2020 05:18:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729866AbgF3JQk (ORCPT
+        with ESMTP id S1727059AbgF3JSr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 05:16:40 -0400
-Received: from ssl.serverraum.org (ssl.serverraum.org [IPv6:2a01:4f8:151:8464::1:2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C30FCC061755;
-        Tue, 30 Jun 2020 02:16:40 -0700 (PDT)
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 8121C22FA7;
-        Tue, 30 Jun 2020 11:16:33 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2016061301;
-        t=1593508597;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=a5lu8xIsMoWKOl6aI/xDpiccbPJVfNnp92aKT5SSRCo=;
-        b=uKFtMr2b6G7FqzNpm3+nrKll+73nDG5Z/w3RrCBogOtLiqmdLfkPvVm/askffBgazljsDl
-        6lF56rkr3JEQ0dl/0nqZi7+AwKNTCOyJTaMC2IZ2w1OsLzn/NGY79k+JREWrzrEKQduGoN
-        ZXWx4oendgXnuVajvZxwNaF3oKcWGTw=
+        Tue, 30 Jun 2020 05:18:47 -0400
+Received: from mail-qk1-x741.google.com (mail-qk1-x741.google.com [IPv6:2607:f8b0:4864:20::741])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22C3CC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 02:18:47 -0700 (PDT)
+Received: by mail-qk1-x741.google.com with SMTP id r22so17858299qke.13
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 02:18:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yajFcXutlyuUzXy6XrHRrjFI2VbI//s8KLRf+4QmWBo=;
+        b=FAJaW2kEMqg+Eibw8vg8/cs1Xr3KiMYlvgcGE6tU3+20StMG5tPd8qBDeyg4ij50u2
+         TWWF0L828wRFQ7/B2Y3+a7lZugpLhKr/t4HZWKDYE0iIoAGdDXGGfZdRB+wrtXlkgoB0
+         3oTwopapi3G8a4LyEkRuHP3XP4pzbbM1GUscBxfiKeLC1NjFdTO3zeTKrhfLnGUnZd9u
+         Xi0zNxeJxSF2C98x0uKzf0EFxBBR44DKRCTvEyDjmxRTY9tvzABqiWnD8kilGeqbOqI9
+         r5wZjOP744G5Nl0StX1JVRqxCXiv+tdZQOwxs5QdbxUfeW9uUsYQqlgb7z9e9nifxMA3
+         IYEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yajFcXutlyuUzXy6XrHRrjFI2VbI//s8KLRf+4QmWBo=;
+        b=d3+aCKlXF/psN04XZJ0YkuK2jec5dpcVzqIQnyKQh1YkebB4lCWPycvN7/Hs5Z3+uo
+         3FbZyygBe3ZB0nAwKvN/AOMMO8prrjDL65zRzBt0HLtaJmReZx65fssmevGMi/V7o1q5
+         xLI6MT+M+XH5gnm6Gl/ECuxvfj3EJ075DOd13RHrjYdqIkjyTpoJFbiFcXu/zDulsP2/
+         EU18xmJUiqc/85KKX/2gz8ETOfUiJVaHP6bin0ppUgizktqF840+9lY3hZEyoucC/0vD
+         C+Aj9Vhp6uyeSTH687kxv0CDar3xEU7eMLiUsbLENCLGYT59O9TdDTEHm154/10T82GL
+         Mxgg==
+X-Gm-Message-State: AOAM530/fZQeK9v9Xiwmeo3bFMlWxJDCAUBR4D1mW0EdSQ0S5FRLv60D
+        I/cyv4M8jPV8ptPXcwMrZ+bbE4cTRz4E0KQYItewo+LtMo4=
+X-Google-Smtp-Source: ABdhPJxrawPMLg0aITxW+2XdI/OX7FTuR+6QiUPJ8FUGnCSz6nWPmPlzoCa+ca9sT3mq3U8FX5EFfHN8hUhoBXH8cEo=
+X-Received: by 2002:a37:9c81:: with SMTP id f123mr17654644qke.21.1593508726111;
+ Tue, 30 Jun 2020 02:18:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 30 Jun 2020 11:16:33 +0200
-From:   Michael Walle <michael@walle.cc>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     robh+dt@kernel.org, broonie@kernel.org, gregkh@linuxfoundation.org,
-        andriy.shevchenko@linux.intel.com, devicetree@vger.kernel.org,
-        linus.walleij@linaro.org, bgolaszewski@baylibre.com, arnd@arndb.de,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/1] mfd: Add I2C based System Configuaration (SYSCON)
- access
-In-Reply-To: <20200622075145.1464020-1-lee.jones@linaro.org>
-References: <20200622075145.1464020-1-lee.jones@linaro.org>
-User-Agent: Roundcube Webmail/1.4.6
-Message-ID: <e436fd60bf0ebb6d72a76034d0fc35de@walle.cc>
-X-Sender: michael@walle.cc
+References: <20200625075805.363918-1-mans0n@gorani.run>
+In-Reply-To: <20200625075805.363918-1-mans0n@gorani.run>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 30 Jun 2020 11:18:35 +0200
+Message-ID: <CAMpxmJXDHX-U-HWR8093orBU1ZxEeWp_r2Xar+k5FMoZ1pS78Q@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] gpio: add GPO driver for PCA9570
+To:     Sungbo Eo <mans0n@gorani.run>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lee,
+On Thu, Jun 25, 2020 at 9:58 AM Sungbo Eo <mans0n@gorani.run> wrote:
+>
+> NXP PCA9570 is 4-bit I2C GPO expander without interrupt functionality.
+> Its ports are controlled only by a data byte without register address.
+>
+> As there is no other driver similar enough to be adapted for it, a new
+> driver is introduced here.
+>
+> Signed-off-by: Sungbo Eo <mans0n@gorani.run>
 
-I'm just trying to use this for my sl28 driver. Some remarks, see below.
+Hi Sungbo,
 
-Am 2020-06-22 09:51, schrieb Lee Jones:
-> The existing SYSCON implementation only supports MMIO (memory mapped)
-> accesses, facilitated by Regmap.  This extends support for registers
-> held behind I2C busses.
-> 
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+on top of Andy's review, here are some more nits I spotted.
+
 > ---
-> Changelog:
-> 
-> v3 => v4
->   - Add ability to provide a non-default Regmap configuration
-> 
-> v2 => v3
->   - Change 'is CONFIG' present check to include loadable modules
->     - s/#ifdef CONFIG_MFD_SYSCON_I2C/#if 
-> IS_ENABLED(CONFIG_MFD_SYSCON_I2C)/
-> 
-> v1 => v2
->   - Remove legacy references to OF
->   - Allow building as a module (fixes h8300 0-day issue)
-> 
-> drivers/mfd/Kconfig            |   7 +++
->  drivers/mfd/Makefile           |   1 +
->  drivers/mfd/syscon-i2c.c       | 104 +++++++++++++++++++++++++++++++++
->  include/linux/mfd/syscon-i2c.h |  36 ++++++++++++
->  4 files changed, 148 insertions(+)
->  create mode 100644 drivers/mfd/syscon-i2c.c
->  create mode 100644 include/linux/mfd/syscon-i2c.h
-> 
+> v2:
+> * move the direction functions below the set functions
+> * use devm_gpiochip_add_data() and remove the remove callback
+>
+> v1:
+> Tested in kernel 5.4 on an ipq40xx platform.
+>
+> This is my first time submitting a whole driver patch, and I'm not really familiar with this PCA expander series.
+> Please let me know how I can improve this patch further.
+>
+> FYI there's an unmerged patch for this chip.
+> http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/2017-May/105602.html
+> I don't have PCA9571 either so I didn't add support for it.
+> ---
+>  drivers/gpio/Kconfig        |   8 ++
+>  drivers/gpio/Makefile       |   1 +
+>  drivers/gpio/gpio-pca9570.c | 148 ++++++++++++++++++++++++++++++++++++
+>  3 files changed, 157 insertions(+)
+>  create mode 100644 drivers/gpio/gpio-pca9570.c
+>
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index c6b5c65c8405..d10dcb81b841 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -962,6 +962,14 @@ config GPIO_PCA953X_IRQ
+>           Say yes here to enable the pca953x to be used as an interrupt
+>           controller. It requires the driver to be built in the kernel.
+>
+> +config GPIO_PCA9570
+> +       tristate "PCA9570 4-Bit I2C GPO expander"
+> +       help
+> +         Say yes here to enable the GPO driver for the NXP PCA9570 chip.
+> +
+> +         To compile this driver as a module, choose M here: the module will
+> +         be called gpio-pca9570.
+> +
+>  config GPIO_PCF857X
+>         tristate "PCF857x, PCA{85,96}7x, and MAX732[89] I2C GPIO expanders"
+>         select GPIOLIB_IRQCHIP
+> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> index 1e4894e0bf0f..33cb40c28a61 100644
+> --- a/drivers/gpio/Makefile
+> +++ b/drivers/gpio/Makefile
+> @@ -110,6 +110,7 @@ obj-$(CONFIG_GPIO_OCTEON)           += gpio-octeon.o
+>  obj-$(CONFIG_GPIO_OMAP)                        += gpio-omap.o
+>  obj-$(CONFIG_GPIO_PALMAS)              += gpio-palmas.o
+>  obj-$(CONFIG_GPIO_PCA953X)             += gpio-pca953x.o
+> +obj-$(CONFIG_GPIO_PCA9570)             += gpio-pca9570.o
+>  obj-$(CONFIG_GPIO_PCF857X)             += gpio-pcf857x.o
+>  obj-$(CONFIG_GPIO_PCH)                 += gpio-pch.o
+>  obj-$(CONFIG_GPIO_PCIE_IDIO_24)                += gpio-pcie-idio-24.o
+> diff --git a/drivers/gpio/gpio-pca9570.c b/drivers/gpio/gpio-pca9570.c
+> new file mode 100644
+> index 000000000000..e6b6c4e791c0
+> --- /dev/null
+> +++ b/drivers/gpio/gpio-pca9570.c
+> @@ -0,0 +1,148 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Driver for PCA9570 I2C GPO expander
+> + *
+> + * Copyright (C) 2020 Sungbo Eo <mans0n@gorani.run>
+> + *
+> + * Based on gpio-tpic2810.c
+> + * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com/
+> + *     Andrew F. Davis <afd@ti.com>
+> + */
+> +
+> +#include <linux/gpio/driver.h>
+> +#include <linux/i2c.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +
+> +/**
+> + * struct pca9570 - GPIO driver data
+> + * @chip: GPIO controller chip
+> + * @client: I2C device pointer
+> + * @buffer: Buffer for device register
+> + * @lock: Protects write sequences
+> + */
+> +struct pca9570 {
+> +       struct gpio_chip chip;
+> +       struct i2c_client *client;
+> +       u8 buffer;
 
-[..]
+Could you rename it to reg or something else more obvious? A buffer
+can be for anything.
 
-> +static struct regmap *syscon_i2c_get_regmap(struct i2c_client *client,
-> +					    struct regmap_config *regmap_config)
+> +       struct mutex lock;
+> +};
+> +
+> +static void pca9570_set_mask_bits(struct gpio_chip *chip, u8 mask, u8 bits)
 > +{
-> +	struct device *dev = &client->dev;
-> +	struct syscon *entry, *syscon = NULL;
+> +       struct pca9570 *gpio = gpiochip_get_data(chip);
+> +       u8 buffer;
+> +       int err;
 > +
-> +	spin_lock(&syscon_i2c_list_slock);
+> +       mutex_lock(&gpio->lock);
 > +
-> +	list_for_each_entry(entry, &syscon_i2c_list, list)
-> +		if (entry->dev == dev) {
-> +			syscon = entry;
-> +			break;
-> +		}
+> +       buffer = gpio->buffer & ~mask;
+> +       buffer |= (mask & bits);
 > +
-> +	spin_unlock(&syscon_i2c_list_slock);
+> +       err = i2c_smbus_write_byte(gpio->client, buffer);
+> +       if (!err)
+> +               gpio->buffer = buffer;
 > +
-> +	if (!syscon)
-> +		syscon = syscon_i2c_register(client, regmap_config);
-> +
-> +	if (IS_ERR(syscon))
-> +		return ERR_CAST(syscon);
-> +
-> +	return syscon->regmap;
+> +       mutex_unlock(&gpio->lock);
 > +}
 > +
-> +struct regmap *syscon_i2c_to_regmap_config(struct i2c_client *client,
-> +					   struct regmap_config *regmap_config)
+> +static void pca9570_set(struct gpio_chip *chip, unsigned offset, int value)
 > +{
-> +	return syscon_i2c_get_regmap(client, regmap_config);
+> +       pca9570_set_mask_bits(chip, BIT(offset), value ? BIT(offset) : 0);
 > +}
-> +EXPORT_SYMBOL_GPL(syscon_i2c_to_regmap_config);
 > +
-> +struct regmap *syscon_i2c_to_regmap(struct i2c_client *client)
+> +static void pca9570_set_multiple(struct gpio_chip *chip, unsigned long *mask,
+> +                                unsigned long *bits)
 > +{
-> +	return syscon_i2c_get_regmap(client, &syscon_i2c_regmap_config);
+> +       pca9570_set_mask_bits(chip, *mask, *bits);
 > +}
-> +EXPORT_SYMBOL_GPL(syscon_i2c_to_regmap);
+> +
+> +static int pca9570_get_direction(struct gpio_chip *chip,
+> +                                unsigned offset)
+> +{
+> +       /* This device always output */
+> +       return GPIO_LINE_DIRECTION_OUT;
+> +}
+> +
+> +static int pca9570_direction_input(struct gpio_chip *chip,
+> +                                  unsigned offset)
+> +{
+> +       /* This device is output only */
+> +       return -EINVAL;
+> +}
+> +
+> +static int pca9570_direction_output(struct gpio_chip *chip,
+> +                                   unsigned offset, int value)
+> +{
+> +       /* This device always output */
+> +       pca9570_set(chip, offset, value);
+> +       return 0;
+> +}
+> +
+> +static const struct gpio_chip template_chip = {
+> +       .label                  = "pca9570",
+> +       .owner                  = THIS_MODULE,
+> +       .get_direction          = pca9570_get_direction,
+> +       .direction_input        = pca9570_direction_input,
+> +       .direction_output       = pca9570_direction_output,
+> +       .set                    = pca9570_set,
+> +       .set_multiple           = pca9570_set_multiple,
+> +       .base                   = -1,
+> +       .ngpio                  = 4,
+> +       .can_sleep              = true,
+> +};
+> +
+> +static const struct of_device_id pca9570_of_match_table[] = {
+> +       { .compatible = "nxp,pca9570" },
+> +       { /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, pca9570_of_match_table);
 
-What do you think about
+If you're not using it in probe than maybe move it next to the I2C device table?
 
-struct regmap *syscon_i2c_to_regmap(struct device *dev)
-{
-	struct i2c_client *client = i2c_verify_client(dev);
+> +
+> +static int pca9570_probe(struct i2c_client *client,
+> +                        const struct i2c_device_id *id)
+> +{
+> +       struct pca9570 *gpio;
+> +       int ret;
+> +
+> +       gpio = devm_kzalloc(&client->dev, sizeof(*gpio), GFP_KERNEL);
+> +       if (!gpio)
+> +               return -ENOMEM;
+> +
+> +       i2c_set_clientdata(client, gpio);
+> +
+> +       gpio->chip = template_chip;
+> +       gpio->chip.parent = &client->dev;
+> +
+> +       gpio->client = client;
+> +
+> +       mutex_init(&gpio->lock);
+> +
+> +       ret = devm_gpiochip_add_data(&client->dev, &gpio->chip, gpio);
+> +       if (ret < 0) {
+> +               dev_err(&client->dev, "Unable to register gpiochip\n");
 
-	if (!client)
-		return ERR_PTR(-EINVAL);
+You don't need this message, the core library will print something for
+you. Just do return devm_gpiochip_add_data().
 
-	return syscon_i2c_get_regmap(client, &syscon_i2c_regmap_config);
-}
+> +               return ret;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct i2c_device_id pca9570_id_table[] = {
+> +       { "pca9570", },
+> +       { /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, pca9570_id_table);
+> +
+> +static struct i2c_driver pca9570_driver = {
+> +       .driver = {
+> +               .name = "pca9570",
+> +               .of_match_table = pca9570_of_match_table,
+> +       },
+> +       .probe = pca9570_probe,
+> +       .remove = pca9570_remove,
+> +       .id_table = pca9570_id_table,
+> +};
+> +module_i2c_driver(pca9570_driver);
+> +
+> +MODULE_AUTHOR("Sungbo Eo <mans0n@gorani.run>");
+> +MODULE_DESCRIPTION("GPIO expander driver for PCA9570");
+> +MODULE_LICENSE("GPL v2");
+> --
 
-Or even move it to syscon_i2c_get_regmap().
-
-This way, (a) a driver doesn't have to use "#include <linux/i2c.h>" just
-to call to_i2c_client() (or i2c_verify_client()) and (b) you won't do it
-all over again in all sub drivers.
-
-So you could just do a
-   regmap = syscon_i2c_to_regmap(pdev->dev.parent);
-
-I've also noticed that the mmio syscon uses device_node as parameter. 
-What
-was the reason to divert from that? Just curious.
-
--michael
+Bart
