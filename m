@@ -2,140 +2,148 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB3FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:53:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6A4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 54915206CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:53:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SvDALAHu"
+	by mail.kernel.org (Postfix) with ESMTP id 97E3520702
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:53:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728018AbgF3Sxk (ORCPT
+        id S1728073AbgF3Sxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 14:53:40 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:20459 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727964AbgF3Sxj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 14:53:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593543217;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=EXXh1nLHeYCU/y8Dd7k4qJnwxFGXO5xfFdK00B3SJD4=;
-        b=SvDALAHuncSI/uiwy9C73aRIQ8mGT2lE3pmncQDWdPouP+TCFmrqkAedh0irg/2TnRx0mt
-        UI5nU84dejEb932qQGGotMGKpQIqBnY68l8M/8NEiqFyr+ds1fmi7GRo5IA514Z9wMAuTr
-        zFrv1Qv1S94xEoJ5zYNdQTwnC9dp6kQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-502-R7XLidzmPralqNKpPmIcow-1; Tue, 30 Jun 2020 14:53:33 -0400
-X-MC-Unique: R7XLidzmPralqNKpPmIcow-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C91F5800D5C;
-        Tue, 30 Jun 2020 18:53:31 +0000 (UTC)
-Received: from redhat.com (ovpn-113-167.phx2.redhat.com [10.3.113.167])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6B6695C1C5;
-        Tue, 30 Jun 2020 18:53:30 +0000 (UTC)
-Date:   Tue, 30 Jun 2020 14:53:28 -0400
-From:   Peter Jones <pjones@redhat.com>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Tyler Hicks <tyhicks@linux.microsoft.com>,
-        Matthew Garrett <mjg59@google.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Petr Vandrovec <petr@vmware.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Thirupathaiah Annapureddy <thiruan@microsoft.com>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tpm: Require that all digests are present in
- TCG_PCR_EVENT2 structures
-Message-ID: <20200630185327.pasrylg7og7rlno3@redhat.com>
-References: <20200615232504.1848159-1-tyhicks@linux.microsoft.com>
- <CAMj1kXHJbsxA2-jqpbLnUeeNfM0oC8Sh70+axOKoBCFMJ8+jKQ@mail.gmail.com>
+        Tue, 30 Jun 2020 14:53:45 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:27475 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727964AbgF3Sxn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 14:53:43 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 49xD5x03X3z9v1Ws;
+        Tue, 30 Jun 2020 20:53:41 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id jKwv6oqZPRBN; Tue, 30 Jun 2020 20:53:40 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 49xD5w5zcRz9v1Wr;
+        Tue, 30 Jun 2020 20:53:40 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id D08408B7E6;
+        Tue, 30 Jun 2020 20:53:40 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id A_mx4dbjGFop; Tue, 30 Jun 2020 20:53:40 +0200 (CEST)
+Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 30BD28B7E5;
+        Tue, 30 Jun 2020 20:53:40 +0200 (CEST)
+Subject: Re: [PATCH v2] powerpc/uaccess: Use flexible addressing with
+ __put_user()/__get_user()
+To:     Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, npiggin@gmail.com,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <c2addbd9d76212242d3d8554a2f7ff849fb08b85.1587040754.git.christophe.leroy@c-s.fr>
+ <7b916759-1683-b4df-0d4b-b04b3fcd9a02@csgroup.eu>
+ <878sg6862r.fsf@mpe.ellerman.id.au> <875zb98i5a.fsf@mpe.ellerman.id.au>
+ <311c3471-cad7-72d5-a5e6-04cf892c5e41@csgroup.eu>
+ <20200630163324.GW3598@gate.crashing.org>
+From:   Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <f8819fa4-94e3-4bf9-4b60-c57d2804e529@csgroup.eu>
+Date:   Tue, 30 Jun 2020 18:53:39 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAMj1kXHJbsxA2-jqpbLnUeeNfM0oC8Sh70+axOKoBCFMJ8+jKQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+In-Reply-To: <20200630163324.GW3598@gate.crashing.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 16, 2020 at 11:08:38AM +0200, Ard Biesheuvel wrote:
-> (cc Matthew and Peter)
-> 
-> On Tue, 16 Jun 2020 at 01:28, Tyler Hicks <tyhicks@linux.microsoft.com> wrote:
-> >
-> > Require that the TCG_PCR_EVENT2.digests.count value strictly matches the
-> > value of TCG_EfiSpecIdEvent.numberOfAlgorithms in the event field of the
-> > TCG_PCClientPCREvent event log header. Also require that
-> > TCG_EfiSpecIdEvent.numberOfAlgorithms is non-zero.
-> >
-> > The TCG PC Client Platform Firmware Profile Specification section 9.1
-> > (Family "2.0", Level 00 Revision 1.04) states:
-> >
-> >  For each Hash algorithm enumerated in the TCG_PCClientPCREvent entry,
-> >  there SHALL be a corresponding digest in all TCG_PCR_EVENT2 structures.
-> >  Note: This includes EV_NO_ACTION events which do not extend the PCR.
-> >
-> > Section 9.4.5.1 provides this description of
-> > TCG_EfiSpecIdEvent.numberOfAlgorithms:
-> >
-> >  The number of Hash algorithms in the digestSizes field. This field MUST
-> >  be set to a value of 0x01 or greater.
-> >
-> > Enforce these restrictions, as required by the above specification, in
-> > order to better identify and ignore invalid sequences of bytes at the
-> > end of an otherwise valid TPM2 event log. Firmware doesn't always have
-> > the means necessary to inform the kernel of the actual event log size so
-> > the kernel's event log parsing code should be stringent when parsing the
-> > event log for resiliency against firmware bugs. This is true, for
-> > example, when firmware passes the event log to the kernel via a reserved
-> > memory region described in device tree.
-> >
-> 
-> When does this happen? Do we have code in mainline that does this?
-> 
-> > Prior to this patch, a single bit set in the offset corresponding to
-> > either the TCG_PCR_EVENT2.eventType or TCG_PCR_EVENT2.eventSize fields,
-> > after the last valid event log entry, could confuse the parser into
-> > thinking that an additional entry is present in the event log. This
-> > patch raises the bar on how difficult it is for stale memory to confuse
-> > the kernel's event log parser but there's still a reliance on firmware
-> > to properly initialize the remainder of the memory region reserved for
-> > the event log as the parser cannot be expected to detect a stale but
-> > otherwise properly formatted firmware event log entry.
-> >
-> > Fixes: fd5c78694f3f ("tpm: fix handling of the TPM 2.0 event logs")
-> > Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
-> > ---
-> 
-> I am all for stringent checks, but this could potentially break
-> measured boot on systems that are working fine today, right?
 
-Seems like in that case our measurement is unreliable and can't really
-be trusted.  That said, having things that were using the measurements
-before this suddenly stop being able to access sealed secrets is not a
-great experience for the user who unwittingly bought the junk hardware.
-Same with the zero-supported-hashes case.  It would be nice to at log it
-and have a way for them to opt-in to allowing the old measurement to go
-through, so they can recover their data, though I don't know what that
-method would be if the measured command line is one of their
-dependencies.
 
--- 
-        Peter
+On 06/30/2020 04:33 PM, Segher Boessenkool wrote:
+> On Tue, Jun 30, 2020 at 04:55:05PM +0200, Christophe Leroy wrote:
+>> Le 30/06/2020 à 03:19, Michael Ellerman a écrit :
+>>> Michael Ellerman <mpe@ellerman.id.au> writes:
+>>>> Because it uses the "m<>" constraint which didn't work on GCC 4.6.
+>>>>
+>>>> https://github.com/linuxppc/issues/issues/297
+>>>>
+>>>> So we should be able to pick it up for v5.9 hopefully.
+>>>
+>>> It seems to break the build with the kernel.org 4.9.4 compiler and
+>>> corenet64_smp_defconfig:
+>>
+>> Looks like 4.9.4 doesn't accept "m<>" constraint either.
+> 
+> The evidence contradicts this assertion.
+> 
+>> Changing it to "m" make it build.
+> 
+> But that just means something else is wrong.
+> 
+>>> + make -s CC=powerpc64-linux-gnu-gcc -j 160
+>>> In file included from /linux/include/linux/uaccess.h:11:0,
+>>>                   from /linux/include/linux/sched/task.h:11,
+>>>                   from /linux/include/linux/sched/signal.h:9,
+>>>                   from /linux/include/linux/rcuwait.h:6,
+>>>                   from /linux/include/linux/percpu-rwsem.h:7,
+>>>                   from /linux/include/linux/fs.h:33,
+>>>                   from /linux/include/linux/huge_mm.h:8,
+>>>                   from /linux/include/linux/mm.h:675,
+>>>                   from /linux/arch/powerpc/kernel/signal_32.c:17:
+>>> /linux/arch/powerpc/kernel/signal_32.c: In function
+>>> 'save_user_regs.isra.14.constprop':
+>>> /linux/arch/powerpc/include/asm/uaccess.h:161:2: error: 'asm' operand has
+>>> impossible constraints
+>>>    __asm__ __volatile__(     \
+>>>    ^
+>>> /linux/arch/powerpc/include/asm/uaccess.h:197:12: note: in expansion of
+>>> macro '__put_user_asm'
+>>>      case 4: __put_user_asm(x, ptr, retval, "stw"); break; \
+>>>              ^
+>>> /linux/arch/powerpc/include/asm/uaccess.h:206:2: note: in expansion of
+>>> macro '__put_user_size_allowed'
+>>>    __put_user_size_allowed(x, ptr, size, retval);  \
+>>>    ^
+>>> /linux/arch/powerpc/include/asm/uaccess.h:220:2: note: in expansion of
+>>> macro '__put_user_size'
+>>>    __put_user_size(__pu_val, __pu_addr, __pu_size, __pu_err); \
+>>>    ^
+>>> /linux/arch/powerpc/include/asm/uaccess.h:96:2: note: in expansion of
+>>> macro '__put_user_nocheck'
+>>>    __put_user_nocheck((__typeof__(*(ptr)))(x), (ptr), sizeof(*(ptr)))
+>>>    ^
+>>> /linux/arch/powerpc/kernel/signal_32.c:120:7: note: in expansion of macro
+>>> '__put_user'
+>>>     if (__put_user((unsigned int)gregs[i], &frame->mc_gregs[i]))
+>>>         ^
+> 
+> Can we see what that was after the macro jungle?  Like, the actual
+> preprocessed code?
+> 
 
+Sorry for previous misunderstanding
+
+Here is the code:
+
+#define __put_user_asm(x, addr, err, op)			\
+	__asm__ __volatile__(					\
+		"1:	" op "%U2%X2 %1,%2	# put_user\n"	\
+		"2:\n"						\
+		".section .fixup,\"ax\"\n"			\
+		"3:	li %0,%3\n"				\
+		"	b 2b\n"					\
+		".previous\n"					\
+		EX_TABLE(1b, 3b)				\
+		: "=r" (err)					\
+		: "r" (x), "m<>" (*addr), "i" (-EFAULT), "0" (err))
+
+Christophe
