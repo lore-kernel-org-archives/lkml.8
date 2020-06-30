@@ -2,98 +2,315 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A01A7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:46:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B99DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 7367420675
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:46:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Xaer0WCe"
+	by mail.kernel.org (Postfix) with ESMTP id DFB4620675
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:46:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388372AbgF3NqU (ORCPT
+        id S2388386AbgF3Nqd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 09:46:20 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55882 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726876AbgF3NqT (ORCPT
+        Tue, 30 Jun 2020 09:46:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46934 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726876AbgF3Nqc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 09:46:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593524777;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=1UH+55xErH58wgIIEldPnK8tt6qteH/PSC5nDDBo48w=;
-        b=Xaer0WCeG3ix6B5NJoqlQfk45jR7A/nK+PjUj/ApIrFsxScQA1URBeMSLub32pA5yTq6EN
-        T+7NTdbkhzzpDIMvFK7MFVSIMEkKWpogPcYY031bOXS1YQHaX7sAErh2lv4YGPf+nG6+/5
-        0MQwI4x7K1AuQoelZxwtCr8LUXVjOfM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-204-V-cXXv4oN1e8P0ZVFAFFwA-1; Tue, 30 Jun 2020 09:46:15 -0400
-X-MC-Unique: V-cXXv4oN1e8P0ZVFAFFwA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0C32C84AB68;
-        Tue, 30 Jun 2020 13:45:43 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (file01.intranet.prod.int.rdu2.redhat.com [10.11.5.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 80B8C70126;
-        Tue, 30 Jun 2020 13:45:40 +0000 (UTC)
-Received: from file01.intranet.prod.int.rdu2.redhat.com (localhost [127.0.0.1])
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4) with ESMTP id 05UDjdto015761;
-        Tue, 30 Jun 2020 09:45:39 -0400
-Received: from localhost (mpatocka@localhost)
-        by file01.intranet.prod.int.rdu2.redhat.com (8.14.4/8.14.4/Submit) with ESMTP id 05UDjbtN015757;
-        Tue, 30 Jun 2020 09:45:37 -0400
-X-Authentication-Warning: file01.intranet.prod.int.rdu2.redhat.com: mpatocka owned process doing -bs
-Date:   Tue, 30 Jun 2020 09:45:37 -0400 (EDT)
-From:   Mikulas Patocka <mpatocka@redhat.com>
-X-X-Sender: mpatocka@file01.intranet.prod.int.rdu2.redhat.com
-To:     Eric Biggers <ebiggers@kernel.org>
-cc:     Mike Snitzer <msnitzer@redhat.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Zaibo Xu <xuzaibo@huawei.com>, linux-kernel@vger.kernel.org,
-        Wei Xu <xuwei5@hisilicon.com>, dm-devel@redhat.com,
-        George Cherian <gcherian@marvell.com>,
-        linux-crypto@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Milan Broz <mbroz@redhat.com>
-Subject: Re: [dm-devel] [PATCH 1/3 v2] crypto: introduce the flag
- CRYPTO_ALG_ALLOCATES_MEMORY
-In-Reply-To: <alpine.LRH.2.02.2006290905340.11293@file01.intranet.prod.int.rdu2.redhat.com>
-Message-ID: <alpine.LRH.2.02.2006300944210.15237@file01.intranet.prod.int.rdu2.redhat.com>
-References: <alpine.LRH.2.02.2006161101080.28052@file01.intranet.prod.int.rdu2.redhat.com> <20200616173620.GA207319@gmail.com> <alpine.LRH.2.02.2006171107220.18714@file01.intranet.prod.int.rdu2.redhat.com> <alpine.LRH.2.02.2006171108440.18714@file01.intranet.prod.int.rdu2.redhat.com>
- <20200626044534.GA2870@gondor.apana.org.au> <alpine.LRH.2.02.2006261109520.11899@file01.intranet.prod.int.rdu2.redhat.com> <alpine.LRH.2.02.2006261215480.13882@file01.intranet.prod.int.rdu2.redhat.com> <20200626164617.GA211634@gmail.com>
- <20200626170039.GB211634@gmail.com> <alpine.LRH.2.02.2006281505530.347@file01.intranet.prod.int.rdu2.redhat.com> <20200628200022.GE11197@sol.localdomain> <alpine.LRH.2.02.2006290905340.11293@file01.intranet.prod.int.rdu2.redhat.com>
-User-Agent: Alpine 2.02 (LRH 1266 2009-07-14)
+        Tue, 30 Jun 2020 09:46:32 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B0A9C061755;
+        Tue, 30 Jun 2020 06:46:32 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id 7F3562A0C4D
+Subject: Re: [PATCH v7 3/3] media: vimc: Add a control to display info on test
+ image
+To:     Kaaira Gupta <kgupta@es.iitr.ac.in>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        hverkuil@xs4all.nl
+References: <20200626130700.2453-1-kgupta@es.iitr.ac.in>
+ <20200626130700.2453-4-kgupta@es.iitr.ac.in>
+ <1409b37e-f03d-cca8-c4a7-e1454f1da910@collabora.com>
+ <20200630132510.GA12353@kaaira-HP-Pavilion-Notebook>
+From:   Helen Koike <helen.koike@collabora.com>
+Message-ID: <56cdfc6a-fdd1-bba7-a479-3b7741d8e011@collabora.com>
+Date:   Tue, 30 Jun 2020 10:46:24 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <20200630132510.GA12353@kaaira-HP-Pavilion-Notebook>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Kaaira,
 
-
-On Mon, 29 Jun 2020, Mikulas Patocka wrote:
-
-> On Sun, 28 Jun 2020, Eric Biggers wrote:
+On 6/30/20 10:25 AM, Kaaira Gupta wrote:
+> On Fri, Jun 26, 2020 at 01:01:03PM -0300, Helen Koike wrote:
+>> Hi Kaaira,
+>>
+>> On 6/26/20 10:07 AM, Kaaira Gupta wrote:
+>>> Add a control in VIMC to display information such as the correct order of
+>>> colors for a given test pattern, brightness, hue, saturation, contrast,
+>>> width and height at sensor over test image.
+>>>
+>>> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+>>> ---
+>>>  drivers/media/test-drivers/vimc/Kconfig       |  2 +
+>>>  drivers/media/test-drivers/vimc/vimc-common.h |  1 +
+>>>  drivers/media/test-drivers/vimc/vimc-core.c   | 10 +++
+>>>  drivers/media/test-drivers/vimc/vimc-sensor.c | 70 +++++++++++++++++++
+>>>  4 files changed, 83 insertions(+)
+>>>
+>>> diff --git a/drivers/media/test-drivers/vimc/Kconfig b/drivers/media/test-drivers/vimc/Kconfig
+>>> index 4068a67585f9..da4b2ad6e40c 100644
+>>> --- a/drivers/media/test-drivers/vimc/Kconfig
+>>> +++ b/drivers/media/test-drivers/vimc/Kconfig
+>>> @@ -2,6 +2,8 @@
+>>>  config VIDEO_VIMC
+>>>  	tristate "Virtual Media Controller Driver (VIMC)"
+>>>  	depends on VIDEO_DEV && VIDEO_V4L2
+>>> +	select FONT_SUPPORT
+>>> +	select FONT_8x16
+>>>  	select MEDIA_CONTROLLER
+>>>  	select VIDEO_V4L2_SUBDEV_API
+>>>  	select VIDEOBUF2_VMALLOC
+>>> diff --git a/drivers/media/test-drivers/vimc/vimc-common.h b/drivers/media/test-drivers/vimc/vimc-common.h
+>>> index ae163dec2459..a289434e75ba 100644
+>>> --- a/drivers/media/test-drivers/vimc/vimc-common.h
+>>> +++ b/drivers/media/test-drivers/vimc/vimc-common.h
+>>> @@ -20,6 +20,7 @@
+>>>  #define VIMC_CID_VIMC_CLASS		(0x00f00000 | 1)
+>>>  #define VIMC_CID_TEST_PATTERN		(VIMC_CID_VIMC_BASE + 0)
+>>>  #define VIMC_CID_MEAN_WIN_SIZE		(VIMC_CID_VIMC_BASE + 1)
+>>> +#define VIMC_CID_OSD_TEXT_MODE		(VIMC_CID_VIMC_BASE + 2)
+>>>  
+>>>  #define VIMC_FRAME_MAX_WIDTH 4096
+>>>  #define VIMC_FRAME_MAX_HEIGHT 2160
+>>> diff --git a/drivers/media/test-drivers/vimc/vimc-core.c b/drivers/media/test-drivers/vimc/vimc-core.c
+>>> index 11210aaa2551..4b0ae6f51d76 100644
+>>> --- a/drivers/media/test-drivers/vimc/vimc-core.c
+>>> +++ b/drivers/media/test-drivers/vimc/vimc-core.c
+>>> @@ -5,10 +5,12 @@
+>>>   * Copyright (C) 2015-2017 Helen Koike <helen.fornazier@gmail.com>
+>>>   */
+>>>  
+>>> +#include <linux/font.h>
+>>>  #include <linux/init.h>
+>>>  #include <linux/module.h>
+>>>  #include <linux/platform_device.h>
+>>>  #include <media/media-device.h>
+>>> +#include <media/tpg/v4l2-tpg.h>
+>>>  #include <media/v4l2-device.h>
+>>>  
+>>>  #include "vimc-common.h"
+>>> @@ -263,11 +265,19 @@ static int vimc_register_devices(struct vimc_device *vimc)
+>>>  
+>>>  static int vimc_probe(struct platform_device *pdev)
+>>>  {
+>>> +	const struct font_desc *font = find_font("VGA8x16");
+>>>  	struct vimc_device *vimc;
+>>>  	int ret;
+>>>  
+>>>  	dev_dbg(&pdev->dev, "probe");
+>>>  
+>>> +	if (!font) {
+>>> +		dev_err(&pdev->dev, "could not find font\n");
+>>> +		return -ENODEV;
+>>> +	}
+>>> +
+>>> +	tpg_set_font(font->data);
+>>> +
+>>>  	vimc = kzalloc(sizeof(*vimc), GFP_KERNEL);
+>>>  	if (!vimc)
+>>>  		return -ENOMEM;
+>>> diff --git a/drivers/media/test-drivers/vimc/vimc-sensor.c b/drivers/media/test-drivers/vimc/vimc-sensor.c
+>>> index a2f09ac9a360..9e4fb3f4d60d 100644
+>>> --- a/drivers/media/test-drivers/vimc/vimc-sensor.c
+>>> +++ b/drivers/media/test-drivers/vimc/vimc-sensor.c
+>>> @@ -19,6 +19,8 @@ struct vimc_sen_device {
+>>>  	struct v4l2_subdev sd;
+>>>  	struct tpg_data tpg;
+>>>  	u8 *frame;
+>>> +	unsigned int osd_mode;
+>>
+>> If you declare the enum outside the below function, this could be type osd_mode instead of unsigned int, what do you think?
+>>
+>>> +	u64 start_stream_ts;
+>>>  	/* The active format */
+>>>  	struct v4l2_mbus_framefmt mbus_format;
+>>>  	struct v4l2_ctrl_handler hdl;
+>>> @@ -187,8 +189,54 @@ static void *vimc_sen_process_frame(struct vimc_ent_device *ved,
+>>>  {
+>>>  	struct vimc_sen_device *vsen = container_of(ved, struct vimc_sen_device,
+>>>  						    ved);
+>>> +	enum osd_mode {OSD_SHOW_ALL = 0, OSD_SHOW_COUNTERS = 1, OSD_SHOW_NONE = 2};
+>>> +	const unsigned int line_height = 16;
+>>> +	u8 *basep[TPG_MAX_PLANES][2];
+>>> +	unsigned int line = 1;
+>>> +	char str[100];
+>>>  
+>>>  	tpg_fill_plane_buffer(&vsen->tpg, 0, 0, vsen->frame);
+>>> +	tpg_calc_text_basep(&vsen->tpg, basep, 0, vsen->frame);
+>>> +	switch (vsen->osd_mode) {
+>>> +	case OSD_SHOW_ALL:
+>>> +		{
+>>
+>> Usually we don't use this curly braces in a case statement, please, check other examples in the code,
 > 
-> > On Sun, Jun 28, 2020 at 03:07:49PM -0400, Mikulas Patocka wrote:
-> > > > 
-> > > > cryptd_create_skcipher(), cryptd_create_hash(), cryptd_create_aead(), and
-> > > > crypto_rfc4309_create() are also missing setting the mask.
-> > > > 
-> > > > pcrypt_create_aead() is missing both setting the mask and inheriting the flags.
+> I have declared variables inside the cases,hence they are not just
+> statements, so I need to use them I think
 
-pcrypt_create_aead doesn't use "mask" and "type" arguments at all.
+Doing this grep:
 
-Mikulas
+git grep -A1 "case.*:" drivers/media | grep -B1 -P "\tstruct"
 
+I see that the standard is to place the curly braces in the same line of the case statement,
+example: https://elixir.bootlin.com/linux/latest/source/drivers/media/v4l2-core/v4l2-subdev.c#L469
+
+> 
+>>
+>>> +			const char *order = tpg_g_color_order(&vsen->tpg);
+>>
+>> You also don't need this level of identation.
+> 
+> I used it because of the braces
+
+Please check the example above
+
+> 
+>>
+>>> +
+>>> +			tpg_gen_text(&vsen->tpg, basep,
+>>> +				     line++ * line_height, 16, order);
+>>> +			snprintf(str, sizeof(str),
+>>> +				 "brightness %3d, contrast %3d, saturation %3d, hue %d ",
+>>> +				 vsen->tpg.brightness,
+>>> +				 vsen->tpg.contrast,
+>>> +				 vsen->tpg.saturation,
+>>> +				 vsen->tpg.hue);
+>>> +			tpg_gen_text(&vsen->tpg, basep, line++ * line_height,
+>>> +				     16, str);
+>>> +			snprintf(str, sizeof(str), "sensor size: %dx%d",
+>>> +				 vsen->mbus_format.width,
+>>> +				 vsen->mbus_format.height);
+>>> +			tpg_gen_text(&vsen->tpg, basep, line++ * line_height,
+>>> +				     16, str);
+>>> +		}
+>>> +	case OSD_SHOW_COUNTERS:
+>>
+>> Checkpatch gives this error:
+>>
+>> WARNING: Possible switch case/default not preceded by break or fallthrough comment
+>>
+>> You need to add a fallthrough comment (grep for fallthrough to find other examples)
+> 
+> Okay, I will add that
+> 
+>>
+>>> +		{
+>>> +			unsigned int ms;
+>>> +
+>>> +			ms = (ktime_get_ns() - vsen->start_stream_ts) / 1000000;
+>>> +			snprintf(str, sizeof(str), "%02d:%02d:%02d:%03d",
+>>> +				 (ms / (60 * 60 * 1000)) % 24,
+>>> +				 (ms / (60 * 1000)) % 60,
+>>> +				 (ms / 1000) % 60,
+>>> +				 ms % 1000);
+>>> +			tpg_gen_text(&vsen->tpg, basep, line++ * line_height,
+>>> +				     16, str);
+>>> +			break;
+>>> +		}
+>>> +	case OSD_SHOW_NONE:
+>>
+>> No need this case statement if you have the default below.
+> 
+> I added it to make it clearer what default does, should I remove it?
+
+hmm, I think this depends on your style, but to me, just the "default" statement below makes it
+clear that options not listed above do nothing.
+I think you would also need to add a fallthtough comment.
+
+Or you could just add a comment instead of the case statement in the code, like:
+
+	/* case OSD_SHOW_NONE: */
+
+So it would be clear what this option does.
+
+Regards,
+Helen
+
+> 
+>>
+>> Regards,
+>> Helen
+>>
+>>> +	default:
+>>> +		break;
+>>> +	}
+>>> +
+>>>  	return vsen->frame;
+>>>  }
+>>>  
+>>> @@ -201,6 +249,8 @@ static int vimc_sen_s_stream(struct v4l2_subdev *sd, int enable)
+>>>  		const struct vimc_pix_map *vpix;
+>>>  		unsigned int frame_size;
+>>>  
+>>> +		vsen->start_stream_ts = ktime_get_ns();
+>>> +
+>>>  		/* Calculate the frame size */
+>>>  		vpix = vimc_pix_map_by_code(vsen->mbus_format.code);
+>>>  		frame_size = vsen->mbus_format.width * vpix->bpp *
+>>> @@ -269,6 +319,9 @@ static int vimc_sen_s_ctrl(struct v4l2_ctrl *ctrl)
+>>>  	case V4L2_CID_SATURATION:
+>>>  		tpg_s_saturation(&vsen->tpg, ctrl->val);
+>>>  		break;
+>>> +	case VIMC_CID_OSD_TEXT_MODE:
+>>> +		vsen->osd_mode = ctrl->val;
+>>> +		break;
+>>>  	default:
+>>>  		return -EINVAL;
+>>>  	}
+>>> @@ -307,6 +360,22 @@ static const struct v4l2_ctrl_config vimc_sen_ctrl_test_pattern = {
+>>>  	.qmenu = tpg_pattern_strings,
+>>>  };
+>>>  
+>>> +static const char * const vimc_ctrl_osd_mode_strings[] = {
+>>> +	"All",
+>>> +	"Counters Only",
+>>> +	"None",
+>>> +	NULL,
+>>> +};
+>>> +
+>>> +static const struct v4l2_ctrl_config vimc_sen_ctrl_osd_mode = {
+>>> +	.ops = &vimc_sen_ctrl_ops,
+>>> +	.id = VIMC_CID_OSD_TEXT_MODE,
+>>> +	.name = "Show Information",
+>>> +	.type = V4L2_CTRL_TYPE_MENU,
+>>> +	.max = ARRAY_SIZE(vimc_ctrl_osd_mode_strings) - 2,
+>>> +	.qmenu = vimc_ctrl_osd_mode_strings,
+>>> +};
+>>> +
+>>>  static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
+>>>  					    const char *vcfg_name)
+>>>  {
+>>> @@ -323,6 +392,7 @@ static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
+>>>  
+>>>  	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_class, NULL);
+>>>  	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_test_pattern, NULL);
+>>> +	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_osd_mode, NULL);
+>>>  	v4l2_ctrl_new_std(&vsen->hdl, &vimc_sen_ctrl_ops,
+>>>  			  V4L2_CID_VFLIP, 0, 1, 1, 0);
+>>>  	v4l2_ctrl_new_std(&vsen->hdl, &vimc_sen_ctrl_ops,
+>>>
