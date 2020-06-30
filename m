@@ -2,170 +2,96 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AFCAC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BEA5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:12:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D091820656
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:11:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 056B920656
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:12:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Df3jej+5"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M8dsGP7+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729252AbgF3VLV (ORCPT
+        id S1728595AbgF3VMh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 17:11:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59198 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbgF3VLV (ORCPT
+        Tue, 30 Jun 2020 17:12:37 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:26713 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726084AbgF3VMg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 17:11:21 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13C4BC061755;
-        Tue, 30 Jun 2020 14:11:21 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id l63so10506990pge.12;
-        Tue, 30 Jun 2020 14:11:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Yu6NuPC3Q+KecbyZ7IV3fBQtyD9sH978qBZ87aU1QUo=;
-        b=Df3jej+5oQGsu0GbudM2ZsoDBQqOZjNPjXB5WOAnPbuOHhLKVuKWaNygkAxki7th5u
-         IXIlFw97usFyE6QjDSr8LaCMLv/b+YL56X8eIf1m8HRp0YDbheFdskZNePBNXkIAi7uV
-         WwuhHjod125oa468tRB8J4KVAiHUB+7U7eHJa43z5XJHGDXH6k+mrk+i6u3OxPJ3e3pH
-         brUqv814ft6FIpe1uq4RljC0Gj5FfoWkluo8OEIfsgSAha2YpDisbcp5iDrmjs2n38h0
-         cCYr/7d8AUJgyh+vJ6hs9Jqay0HYF0l6l3zQPpzgNXykz6XPaEaPYPpqZevZ7QgOV25J
-         VwvQ==
+        Tue, 30 Jun 2020 17:12:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593551555;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=9eR1j7iPcbPhsuYnUXZuMKKFs2mdd8EpB3F1MmbQhjc=;
+        b=M8dsGP7+x7NR/q4CAgxQBgT5RBAlK3NLHZoAbzZQFiI1quviXU0rWGGbPJEvilKx3FEG8P
+        tFacBY6Zka6y7OgABFnQYUwSKSDf8l3M8i5MIsKhCs0ylONPPpeRIFskvE1dXqG2xjn42J
+        D2e0+IY7sdDuJGezG0w593ci9U1bQ5I=
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
+ [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-88-vFsMYuyaMrKOvuuBIA23qw-1; Tue, 30 Jun 2020 17:12:00 -0400
+X-MC-Unique: vFsMYuyaMrKOvuuBIA23qw-1
+Received: by mail-qk1-f198.google.com with SMTP id k16so2260203qkh.12
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 14:12:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Yu6NuPC3Q+KecbyZ7IV3fBQtyD9sH978qBZ87aU1QUo=;
-        b=fwQoXmBGybs9iPZv8ThVEtzKZa4DpYx11+/3JF5A4xOQRyC3lG/8BXwlP5DZkayQSQ
-         zAurbHXsJd9pEPPgpCPNIxPLnqIdc2BBveQkd3DaWTLn5WAZO90Wo24PbFf/ZkGAUnEu
-         +FaAjCXTz1B3VXsNU3AzTRtCtBake8FU8gGAUCMbCw6K3WhT6r10yWl892dLVswd5TXl
-         Y7fSTTXGMLXlc8s3ePcy1cTNhJKzAqUv/DFacOn83/Be88GDYs5nZSVqOtGSETP8bJ7p
-         pHYbyyH7bq32S7e46D/aXb0pT7AXglAmagl+iXYsWWJ9jrkFIrkH5b8Z8he3wJsyeyI6
-         AC8Q==
-X-Gm-Message-State: AOAM530szUlM1Sv02Bu7SsOkC4eDn5uPDzabXHRplJMjANTf0GO7iFce
-        NzPeXCXjTgBGMnm6PONYCnx00dlJ
-X-Google-Smtp-Source: ABdhPJyf7MPQiidBWihoX7KAJT9OyvhkRpcuO25xqMJEmeZRbdkNOiewjHgnWJsOhS+XF7812xmIpQ==
-X-Received: by 2002:a62:158d:: with SMTP id 135mr1577972pfv.287.1593551480156;
-        Tue, 30 Jun 2020 14:11:20 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id 73sm3636634pfy.24.2020.06.30.14.11.19
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 30 Jun 2020 14:11:19 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 14:11:18 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Ahmad Fatoum <a.fatoum@pengutronix.de>
-Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-watchdog@vger.kernel.org, kernel@pengutronix.de,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 5/8] watchdog: f71808e_wdt: do stricter parameter
- validation
-Message-ID: <20200630211118.GA23432@roeck-us.net>
-References: <20200611191750.28096-1-a.fatoum@pengutronix.de>
- <20200611191750.28096-6-a.fatoum@pengutronix.de>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9eR1j7iPcbPhsuYnUXZuMKKFs2mdd8EpB3F1MmbQhjc=;
+        b=mX4WRfnAS717B2faFVFkIFIDXtUGWuc6OR6H0mK5TGlSb//kTdzAlJYONPbNbUn77Z
+         CrYfBX41p0AB80HmlqjyXozYvqs5ksnJwVbsp/BndfWMGDuc5bCrSmbZQKUoNo0KimNq
+         Ri9Ppqlc8+V0g4PukKijayhAN2X5JpDM2b3fbdvMBmgsjbObW5oVDmJpIbd3F8+vTI1D
+         oUJ9xsy32mKCW6E2opPVNeihyfwWhVdOPZfOuEkCHfV6gzrFudWlAWeyVPQb7Hr+SxUa
+         fup+/HXc69cjK4FTFRWK08WyXwFJ7Tpw3OUOShh+bw2MnLwzDzrLmVwXg79IPZaN7c1p
+         Aeqg==
+X-Gm-Message-State: AOAM533RQWjHnU5KwFY54N69ACLbEaKbGkWMIDUTi486mM9nxYtCtKOL
+        MyHg4W7AQdTzLe8e2AeKqIEhQ9mHH1msuBzqVChNcAOhALOydW7+RGcZ3Gpx5NV1eifubC3X/yF
+        qi3X/SsT8CuFpBMbVhXAJo+ks
+X-Received: by 2002:a37:ec7:: with SMTP id 190mr21529983qko.49.1593551519957;
+        Tue, 30 Jun 2020 14:11:59 -0700 (PDT)
+X-Google-Smtp-Source: ABdhPJz0oRW7HcfplpxcyTXsUSoBs7Ov1XtMthvXOXChOMssYR6yP7Q4ax0/y+vnmQ8nRbXAj97WgQ==
+X-Received: by 2002:a37:ec7:: with SMTP id 190mr21529805qko.49.1593551517572;
+        Tue, 30 Jun 2020 14:11:57 -0700 (PDT)
+Received: from xz-x1 ([2607:9880:19c0:32::2])
+        by smtp.gmail.com with ESMTPSA id u20sm4286037qtj.39.2020.06.30.14.11.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 14:11:56 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 17:11:55 -0400
+From:   Peter Xu <peterx@redhat.com>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v4 00/26] mm: Page fault accounting cleanups
+Message-ID: <20200630211155.GA40675@xz-x1>
+References: <20200630204501.38468-1-peterx@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200611191750.28096-6-a.fatoum@pengutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200630204501.38468-1-peterx@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 11, 2020 at 09:17:46PM +0200, Ahmad Fatoum wrote:
-> We check the f71862fg_pin module parameter every time a watchdog device
-> for the f71862fg is opened, but the parameter can't change at runtime.
-> 
-> If we move the check to the start of init:
-> 
->   - We catch userspace passing invalid, but unused, values
->   - We check the condition only once
->   - We simplify the code
-> 
-> Do so.
-> 
-> Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
+On Tue, Jun 30, 2020 at 04:45:01PM -0400, Peter Xu wrote:
+> v4:
+> - rebase to linux-next/akpm
+> - picked one more r-b
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+I fixed some stuff in the send scripts but definitely broke something else on
+the chaining of the messages.  Andrew, please let me know if you want me to
+resend...  Sorry for that.
 
-> ---
->  drivers/watchdog/f71808e_wdt.c | 37 +++++++++++-----------------------
->  1 file changed, 12 insertions(+), 25 deletions(-)
-> 
-> diff --git a/drivers/watchdog/f71808e_wdt.c b/drivers/watchdog/f71808e_wdt.c
-> index 26bf366aebc2..9f7823819ed1 100644
-> --- a/drivers/watchdog/f71808e_wdt.c
-> +++ b/drivers/watchdog/f71808e_wdt.c
-> @@ -306,27 +306,6 @@ static int watchdog_keepalive(void)
->  	return err;
->  }
->  
-> -static int f71862fg_pin_configure(unsigned short ioaddr)
-> -{
-> -	/* When ioaddr is non-zero the calling function has to take care of
-> -	   mutex handling and superio preparation! */
-> -
-> -	if (f71862fg_pin == 63) {
-> -		if (ioaddr) {
-> -			/* SPI must be disabled first to use this pin! */
-> -			superio_clear_bit(ioaddr, SIO_REG_ROM_ADDR_SEL, 6);
-> -			superio_set_bit(ioaddr, SIO_REG_MFUNCT3, 4);
-> -		}
-> -	} else if (f71862fg_pin == 56) {
-> -		if (ioaddr)
-> -			superio_set_bit(ioaddr, SIO_REG_MFUNCT1, 1);
-> -	} else {
-> -		pr_err("Invalid argument f71862fg_pin=%d\n", f71862fg_pin);
-> -		return -EINVAL;
-> -	}
-> -	return 0;
-> -}
-> -
->  static int watchdog_start(void)
->  {
->  	int err;
-> @@ -352,9 +331,13 @@ static int watchdog_start(void)
->  		break;
->  
->  	case f71862fg:
-> -		err = f71862fg_pin_configure(watchdog.sioaddr);
-> -		if (err)
-> -			goto exit_superio;
-> +		if (f71862fg_pin == 63) {
-> +			/* SPI must be disabled first to use this pin! */
-> +			superio_clear_bit(watchdog.sioaddr, SIO_REG_ROM_ADDR_SEL, 6);
-> +			superio_set_bit(watchdog.sioaddr, SIO_REG_MFUNCT3, 4);
-> +		} else if (f71862fg_pin == 56) {
-> +			superio_set_bit(watchdog.sioaddr, SIO_REG_MFUNCT1, 1);
-> +		}
->  		break;
->  
->  	case f71868:
-> @@ -810,7 +793,6 @@ static int __init f71808e_find(int sioaddr)
->  		break;
->  	case SIO_F71862_ID:
->  		watchdog.type = f71862fg;
-> -		err = f71862fg_pin_configure(0); /* validate module parameter */
->  		break;
->  	case SIO_F71868_ID:
->  		watchdog.type = f71868;
-> @@ -859,6 +841,11 @@ static int __init f71808e_init(void)
->  	int err = -ENODEV;
->  	int i;
->  
-> +	if (f71862fg_pin != 63 && f71862fg_pin != 56) {
-> +		pr_err("Invalid argument f71862fg_pin=%d\n", f71862fg_pin);
-> +		return -EINVAL;
-> +	}
-> +
->  	for (i = 0; i < ARRAY_SIZE(addrs); i++) {
->  		err = f71808e_find(addrs[i]);
->  		if (err == 0)
+-- 
+Peter Xu
+
