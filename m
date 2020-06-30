@@ -2,111 +2,142 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA625C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:44:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 815AAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9D7162074F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:44:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 56F582072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:44:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="nS1qp6Lx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389062AbgF3On7 (ORCPT
+        id S2389078AbgF3OoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 10:43:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58852 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726072AbgF3On7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 10:43:59 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.221.27])
-        by mx2.suse.de (Postfix) with ESMTP id 06EF1AB3D;
-        Tue, 30 Jun 2020 14:43:57 +0000 (UTC)
-Date:   Tue, 30 Jun 2020 16:43:55 +0200
-From:   Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-To:     Mike Snitzer <snitzer@redhat.com>
-Cc:     Mikulas Patocka <mpatocka@redhat.com>, linux-nvdimm@lists.01.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Jan Kara <jack@suse.cz>, Alasdair Kergon <agk@redhat.com>,
-        dm-devel@redhat.com, "Michael S. Tsirkin" <mst@redhat.com>,
-        Yuval Shaia <yuval.shaia@oracle.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Jakub Staron <jstaron@google.com>, linux-kernel@vger.kernel.org
-Subject: Re: dm writecache: reject asynchronous pmem.
-Message-ID: <20200630144355.GA21462@kitsune.suse.cz>
-References: <20200630123528.29660-1-msuchanek@suse.de>
- <alpine.LRH.2.02.2006300929580.4801@file01.intranet.prod.int.rdu2.redhat.com>
- <20200630141022.GZ21462@kitsune.suse.cz>
- <20200630133546.GA20439@redhat.com>
+        Tue, 30 Jun 2020 10:44:04 -0400
+Received: from mail-eopbgr80085.outbound.protection.outlook.com ([40.107.8.85]:56849
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726699AbgF3OoA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 10:44:00 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QgmmyROuzyLnkG2igx1QVtdz1bj/POZhVKtGNYJrEYnFKV1n2+JKVbBuZAgL2n7XdIpxxC2AXMXUT7Y1Luc8MfYX2OIrmCs5khOGcY4eNktynhBrp13L66DkXtR445LO/O7AayWcacm2/Z29ZSFsyTr71HskTq6GSrV8uHD2o+Rh172hEGdny68TZ/623uqQIz7wIxsrN5pEkjC1G0Ycc322rVdwOjRNPYGAmCRpFaltHRGOsSEeaAWvLFZqxerepiFDtpLbIZYaaVUqm+g9RnhCtRlC5mmJcNZCbDNHFNssPIwktVl9/Lv71GfO+CtRxpwnUANlF28a4WUBNKdABA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jNX6ajD670UpLGYvN8cR+QhT31OfT1IFjG5JkFipsIQ=;
+ b=Z5nIDL9Sg3vORhrBiHbsBu3t6ekOiB6DcRaXR1wu98QJk+IX9/sLARMYO8wVmYWtjPxMOS6DcoBtijHAvN7J6se0qzl9Zk7IyiKFytCFDyF9hPrxJzCtrE451RroLmua7r+CVUQwk2VK02nkfjPwVjSmrQY8pB+yZJEAL9p8R3ekrWfEAtFrLlNHRfcEgKs42Oiz/HXwp9JkqvIsu5l+bnoLGLEAOeTmbLkZL0iCQbyZrs73EFhCFCluM1xiJwBs7fUn/Tf7XkcP+5ZOxwS98MVMcPkZxClA7rIj/7/CGQMJXuozLHLroILBbqnh27b5s6ymxFy7O2CJGux0xjqgPA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jNX6ajD670UpLGYvN8cR+QhT31OfT1IFjG5JkFipsIQ=;
+ b=nS1qp6Lxb0vN5eJQjr0mpPCzx2C7Xry3ms+BbptoXbg4Y4HfiVce1/cG+MvqyvascXJKklWtGzH5/wFFw+judQJr74uNFV2w9J0IV+lTg5CobUuQALpPvr0Qd99l6GfGewWwt8OnVjI/nWE9mBirCF3LJRQOlzSYLqC8DCghOsE=
+Authentication-Results: vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=none action=none
+ header.from=mellanox.com;
+Received: from VI1PR0501MB2205.eurprd05.prod.outlook.com
+ (2603:10a6:800:2a::20) by VI1PR05MB5071.eurprd05.prod.outlook.com
+ (2603:10a6:803:52::24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.20; Tue, 30 Jun
+ 2020 14:43:55 +0000
+Received: from VI1PR0501MB2205.eurprd05.prod.outlook.com
+ ([fe80::d58c:3ca1:a6bb:e5fe]) by VI1PR0501MB2205.eurprd05.prod.outlook.com
+ ([fe80::d58c:3ca1:a6bb:e5fe%5]) with mapi id 15.20.3131.028; Tue, 30 Jun 2020
+ 14:43:55 +0000
+Subject: Re: [PATCH][next] net/tls: fix sign extension issue when left
+ shifting u16 value
+To:     Colin King <colin.king@canonical.com>,
+        Boris Pismenny <borisp@mellanox.com>,
+        Aviad Yehezkel <aviadye@mellanox.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Saeed Mahameed <saeedm@mellanox.com>, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200630142746.516188-1-colin.king@canonical.com>
+From:   Tariq Toukan <tariqt@mellanox.com>
+Message-ID: <dfb6ef40-d5ee-fd21-afb8-1632ecb03b6d@mellanox.com>
+Date:   Tue, 30 Jun 2020 17:43:50 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
+In-Reply-To: <20200630142746.516188-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: AM0PR01CA0114.eurprd01.prod.exchangelabs.com
+ (2603:10a6:208:168::19) To VI1PR0501MB2205.eurprd05.prod.outlook.com
+ (2603:10a6:800:2a::20)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200630133546.GA20439@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.1.110] (77.126.86.173) by AM0PR01CA0114.eurprd01.prod.exchangelabs.com (2603:10a6:208:168::19) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21 via Frontend Transport; Tue, 30 Jun 2020 14:43:54 +0000
+X-Originating-IP: [77.126.86.173]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 4da2fad4-fb43-4692-e950-08d81d0403c8
+X-MS-TrafficTypeDiagnostic: VI1PR05MB5071:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR05MB50710A45EE3651D28C3149AAAE6F0@VI1PR05MB5071.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:2958;
+X-Forefront-PRVS: 0450A714CB
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: bKu91cKUsvuLRDlaOyhpTWPeOyOSI0CeZlMFmW2ylMJVgJV//LTQgfujkg6DPqFPcjrYsMIF882bTIuRV/c2vXnL+lLu1x/isPCiBdxKaCVYf2amaDMIW8LgysLGVRB4dBa+u20OOjMAZZpFX04VeIiu6+XTCOzjINnRAem1TAVBB5JepO9PgrUryFWT95cyjpfCn2VTEwab6BExV95tfg2Ozu1Yh40WCR14v6p0/4tUuL2l5Hvi8nHhLJFCxH4IivW1yQqdl5pF9gz0AeQcR3QWi4jd7Oa7xw9cEE3s+VbkgKt1Z6H+m9rc1Q5AhIJcMqA3KdiLEugM/4pilKyOtnYvqy+v97EkybeRwf1oe8LApxvDgcg7KvJZj4hbtoUp
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:VI1PR0501MB2205.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(376002)(366004)(396003)(346002)(136003)(956004)(2616005)(52116002)(53546011)(31686004)(110136005)(478600001)(316002)(26005)(36756003)(16526019)(16576012)(8676002)(5660300002)(186003)(83380400001)(6486002)(66476007)(66556008)(66946007)(6666004)(86362001)(31696002)(8936002)(2906002)(4326008)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData: knfYtp1WEG1txu5Huzb7kY/VvY86KlEtWOP5nscAQf38Fd+O+jwDNABXR6Qd1bu+39tCz4sLWWtEoA9qZaV+EkZY57CKleRSvtg5V+df3QykNXFLCJ67W72QzNHMQ59wwAP9dR23Jp1K/K6bdSmqBWc0d6Dr0fgCuUdRdYun3SovJNglyEeFpw87sD/sNwcI9BiqUGKhtsGVs3lmgB0YWtUL2ZF5QUjzxzNrFH+mniuDUolVHw2kNNesnn/VWZt7jI8lYNY2owVAqNxPIf9y3EssOpWbdJqhI/Bm8dVtBbBlvtJL1KzQr4oYu6KLNPINmBjE46O7x/pVFxkhE4hVg1jg/1mqjlqaCMobduq6g8jIs+JZdHMfiIZdiC9pKrR3/Xci9es5I1KNtXw9THBWgucPMP2LITOmVgvQsijBW57K5M0p4m/bmgYkKxBs6SvOQZHR+bBTnU9cGB4/HdApR4zDzVAw6LMeBvvelqVRYRwt8Xwk7NJWBNUx4/Pm68Sq
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4da2fad4-fb43-4692-e950-08d81d0403c8
+X-MS-Exchange-CrossTenant-AuthSource: VI1PR0501MB2205.eurprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2020 14:43:55.6097
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: k5n/A68Y6MqElXxlxLE7NUOi+FS8yLbdSaqgZW31LYTeWVJ8syu96uY06bDVKbP6T66vKkg9MIoUCY04yBmmww==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5071
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 09:36:33AM -0400, Mike Snitzer wrote:
-> On Tue, Jun 30 2020 at 10:10am -0400,
-> Michal Suchánek <msuchanek@suse.de> wrote:
+
+
+On 6/30/2020 5:27 PM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> > On Tue, Jun 30, 2020 at 09:32:01AM -0400, Mikulas Patocka wrote:
-> > > 
-> > > 
-> > > On Tue, 30 Jun 2020, Michal Suchanek wrote:
-> > > 
-> > > > The writecache driver does not handle asynchronous pmem. Reject it when
-> > > > supplied as cache.
-> > > > 
-> > > > Link: https://lore.kernel.org/linux-nvdimm/87lfk5hahc.fsf@linux.ibm.com/
-> > > > Fixes: 6e84200c0a29 ("virtio-pmem: Add virtio pmem driver")
-> > > > 
-> > > > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-> > > > ---
-> > > >  drivers/md/dm-writecache.c | 6 ++++++
-> > > >  1 file changed, 6 insertions(+)
-> > > > 
-> > > > diff --git a/drivers/md/dm-writecache.c b/drivers/md/dm-writecache.c
-> > > > index 30505d70f423..57b0a972f6fd 100644
-> > > > --- a/drivers/md/dm-writecache.c
-> > > > +++ b/drivers/md/dm-writecache.c
-> > > > @@ -2277,6 +2277,12 @@ static int writecache_ctr(struct dm_target *ti, unsigned argc, char **argv)
-> > > >  
-> > > >  		wc->memory_map_size -= (uint64_t)wc->start_sector << SECTOR_SHIFT;
-> > > >  
-> > > > +		if (!dax_synchronous(wc->ssd_dev->dax_dev)) {
-> > > > +			r = -EOPNOTSUPP;
-> > > > +			ti->error = "Asynchronous persistent memory not supported as pmem cache";
-> > > > +			goto bad;
-> > > > +		}
-> > > > +
-> > > >  		bio_list_init(&wc->flush_list);
-> > > >  		wc->flush_thread = kthread_create(writecache_flush_thread, wc, "dm_writecache_flush");
-> > > >  		if (IS_ERR(wc->flush_thread)) {
-> > > > -- 
-> > > 
-> > > Hi
-> > > 
-> > > Shouldn't this be in the "if (WC_MODE_PMEM(wc))" block?
-> > That should be always the case at this point.
-> > > 
-> > > WC_MODE_PMEM(wc) retrurns true if we are using persistent memory as a 
-> > > cache device, otherwise we are using generic block device as a cache 
-> > > device.
-> >
-> > This is to prevent the situation where we have WC_MODE_PMEM(wc) but
-> > cannot guarantee consistency because the async flush is not handled.
+> Left shifting the u16 value promotes it to a int and then it
+> gets sign extended to a u64.  If len << 16 is greater than 0x7fffffff
+> then the upper bits get set to 1 because of the implicit sign extension.
+> Fix this by casting len to u64 before shifting it.
 > 
-> The writecache operates in 2 modes.  SSD or PMEM.  Mikulas is saying
-> your dax_synchronous() check should go within a WC_MODE_PMEM(wc) block
-> because it doesn't make sense to do the check when in SSD mode.
+> Addresses-Coverity: ("integer handling issues")
+> Fixes: ed9b7646b06a ("net/tls: Add asynchronous resync")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>   include/net/tls.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/net/tls.h b/include/net/tls.h
+> index c875c0a445a6..e5dac7e74e79 100644
+> --- a/include/net/tls.h
+> +++ b/include/net/tls.h
+> @@ -637,7 +637,7 @@ tls_offload_rx_resync_async_request_start(struct sock *sk, __be32 seq, u16 len)
+>   	struct tls_offload_context_rx *rx_ctx = tls_offload_ctx_rx(tls_ctx);
+>   
+>   	atomic64_set(&rx_ctx->resync_async->req, ((u64)ntohl(seq) << 32) |
+> -		     (len << 16) | RESYNC_REQ | RESYNC_REQ_ASYNC);
+> +		     ((u64)len << 16) | RESYNC_REQ | RESYNC_REQ_ASYNC);
+>   	rx_ctx->resync_async->loglen = 0;
+>   }
+>   
+> 
 
-Indeed, it's in the wrong if/else branch.
-
-Thanks
-
-Michal
+Reviewed-by: Tariq Toukan <tariqt@mellanox.com>
+Thanks!
