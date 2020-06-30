@@ -2,487 +2,238 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 147B9C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C36C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D214D20775
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:46:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C71A020775
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:47:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=intel.onmicrosoft.com header.i=@intel.onmicrosoft.com header.b="k8My/VL8"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rc+Ca3tf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730457AbgF3GqO (ORCPT
+        id S1730467AbgF3GrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 02:46:14 -0400
-Received: from mga09.intel.com ([134.134.136.24]:17802 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730349AbgF3GqN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 02:46:13 -0400
-IronPort-SDR: mGJ0WIApuvEWBnuJ5LUvqIQkRIaVPCD1LDGFfuJX7fPCLmzQ//Tf+5EgzL9xu1xjI0un/m9h4u
- t5aT2h+Rig/w==
-X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="147712281"
-X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
-   d="scan'208";a="147712281"
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 23:46:10 -0700
-IronPort-SDR: xPyIGqsIbHlo/Zy7/8AIopBRpU294NM5tCYOPJTmOKnxP6GoEZx4+RgSR5JEGE+lIVzLOD991f
- fWAjVvcNdkQA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
-   d="scan'208";a="312281612"
-Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
-  by orsmga008.jf.intel.com with ESMTP; 29 Jun 2020 23:46:10 -0700
-Received: from ORSEDG001.ED.cps.intel.com (10.7.248.4) by
- ORSMSX106.amr.corp.intel.com (10.22.225.133) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 29 Jun 2020 23:46:10 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.169)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Mon, 29 Jun 2020 23:46:09 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Gp5Ly5sdphxkwNDNIuS3iWeppR0oPAme/CrAupB62GTwQPFGN188TQ0n9ez244674HlutjYWe/XZUrU2VwdT9Z4PWQuMuw9FJvs9agfFC9g+GkGM3Ca0dJXuko1/VQMJRdEjDnjFt3C8pv84LTXA8EdGsefGgTPWs1NtmOTOpUJz7P6jSie6eksR7oULeSOcbFZrpL8TbGVaK2UfUdc/QK8iqaPL1HrSJhmfQ1ewL0jNN0WVOBKRAjdl5RGrRugmjWg+WrnJJ7cFeh15f6EK01TtymfGiuMXNQ89LlUbznMBdFHrBiditwNIrtCSRqP56/B1DOci9u6GuYuLRW27cg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4DU7yg59ELO3zziztL3Zgn3lQESBF1pZD5rAuEzZzfk=;
- b=EyPmOGIIU4rVk7ohvAci7vX7fw/wmAYwIFy0soiKPSYSi079ICfHxUH67eGSxOzv+lxjsR68eGP9pI4jj3jf37BjRKxLOP2fD4EmFCO34Sa5l/ATOjTUUCcbl44FPxFUB22roTdMmn32T4YPvbTX52flURtDiV+nD8P9tmb/3T73rc2P3kZm8s57A35tNnww63XMIWgGdaS+aFYnB4i7RVjhpGg5D3yFlyfFPcwWF8aR+LeIVFiux/JEK/iqjGvOfkcc4ogvReAVHgNvB/MzJ9Tl0jQpji3MoqE9sy1vlfYbOe1X/i/CVTH/e8suqgstoKnozgm7OQs5rCOHQXER7w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=intel.onmicrosoft.com;
- s=selector2-intel-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4DU7yg59ELO3zziztL3Zgn3lQESBF1pZD5rAuEzZzfk=;
- b=k8My/VL84Xel5RMx3b1AILd/VpUBw2errHhK70b4F3GwWO615fGVE/5zxvP0dEGIQkXhu8YVU80hfqYG2TeVNiVkl61zg6zp0MmD9HY3mt6eH4bpsbUhNe3GmJNbo1tSkkpKaZYpa72n8hAI7HVY+f5UldfY3w0boEn2Jzi25HQ=
-Received: from DM6PR11MB4316.namprd11.prod.outlook.com (2603:10b6:5:205::16)
- by DM6PR11MB2587.namprd11.prod.outlook.com (2603:10b6:5:c3::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21; Tue, 30 Jun
- 2020 06:46:07 +0000
-Received: from DM6PR11MB4316.namprd11.prod.outlook.com
- ([fe80::29db:26c0:5600:9a71]) by DM6PR11MB4316.namprd11.prod.outlook.com
- ([fe80::29db:26c0:5600:9a71%7]) with mapi id 15.20.3131.028; Tue, 30 Jun 2020
- 06:46:07 +0000
-From:   "Lu, Brent" <brent.lu@intel.com>
-To:     "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-CC:     "Rojewski, Cezary" <cezary.rojewski@intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        "Takashi Iwai" <tiwai@suse.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
-        "Ranjani Sridharan" <ranjani.sridharan@linux.intel.com>,
-        "M, Naveen" <naveen.m@intel.com>, "Zhi, Yong" <yong.zhi@intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Libin Yang <libin.yang@linux.intel.com>,
-        "Chiang, Mac" <mac.chiang@intel.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        "Song, Chao" <chao.song@intel.com>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Jason Yan <yanaijie@huawei.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] ASoC: Intel: bxt-da7219-max98357a: support MAX98390
- speaker amp
-Thread-Topic: [PATCH] ASoC: Intel: bxt-da7219-max98357a: support MAX98390
- speaker amp
-Thread-Index: AQHWTqkAWJec9MAQSEmIR6xGM1dpWajwtd2w
-Date:   Tue, 30 Jun 2020 06:46:06 +0000
-Message-ID: <DM6PR11MB4316CA5F11462D11D1751C6C976F0@DM6PR11MB4316.namprd11.prod.outlook.com>
-References: <1593498722-7074-1-git-send-email-brent.lu@intel.com>
-In-Reply-To: <1593498722-7074-1-git-send-email-brent.lu@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-version: 11.2.0.6
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-authentication-results: alsa-project.org; dkim=none (message not signed)
- header.d=none;alsa-project.org; dmarc=none action=none header.from=intel.com;
-x-originating-ip: [192.198.147.199]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e9024713-67b2-47a4-9767-08d81cc14478
-x-ms-traffictypediagnostic: DM6PR11MB2587:
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM6PR11MB2587FB6F5E80A6FFD2516A25976F0@DM6PR11MB2587.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:51;
-x-forefront-prvs: 0450A714CB
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: z9NElgEM8AkRQFoPtznCeRcgyqew3PiX8R5xlDS0VqqEsp1FxRuOQMWZkfcprjmnDwBcuCW2lyt063Bc1a8e49L9uAquef9u9keHRtXGPtsQoPalm8cXWZTNI+h50F6O1sLwRFT3HnymCOQWhCWBE78K4umMFEOXHZt5hHCbYm5g657SZYCW2YoK2xXmeCz2JFWAUjzvxDdI0DktqN1hpEBEwIwC1spLEIGE5TBohmy0TqCiS6OW6zfDLDdzVP9if1lYDHyTGyd8rFIFJSi/xPffrb7uRFvWTCb4KXYzb3HrpMGAK2gJ5n74tms7MTIfx0qhVQTScsWtKSaAjM3Olg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB4316.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(396003)(366004)(346002)(136003)(376002)(39860400002)(9686003)(71200400001)(478600001)(7416002)(83380400001)(2906002)(55016002)(6506007)(5660300002)(33656002)(30864003)(52536014)(4326008)(6916009)(64756008)(54906003)(26005)(66556008)(66946007)(66446008)(66476007)(76116006)(7696005)(316002)(186003)(86362001)(8936002)(8676002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata: SImS8Y3RtWGFrE18F/NHWGwVKZXwx0nabAK2R29ra/bwrfyRf2qoaDdVaFZM0+xQc5Q6EYoCHQs/PjRLtZ2LGoyBpB097Hgn8DifxN8l3ujKZONh0MN1hyKTpB/yLTQ2AqVszEgN8HiRCYjXA+7adRez8Pcb5b0t2AXCJULiqdREBl/rrsQgqNsljB+Crq5E54+eCwhm3XIzsXsuxNgRI3vtu05ukCaqyhZmgEtk0ALXCdhKqy1bH0lJl0ncAHM/AyNaVhcE9aE9rWgaIEUpT3ARiw2A/wHQvlRAzqckbIjjhu8YGfpdIBekStc4uCdVRYTYZQ4HroZX/nmqWb5SrcuPzeHUExPGKZpfbjRjOILtGgAWcpkemRziIvlZlGFNHN/GHfB+DxEUI9X1yBn5VLnfcx+308vtswoNZmTW5Ie0OoCeG6cVPJ43SOq2KTPrf3KVl9s2cb+gL3LNDGVlIVuLUyZzAmxyEhq6YwLcQIm94UT5wgkUcX0qi/fOXns5
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 30 Jun 2020 02:47:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38702 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730349AbgF3GrA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 02:47:00 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA227C03E979
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 23:46:59 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id s1so21143083ljo.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 23:46:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=lmFRI05KEQyW9X/3WyeY71+JG49+1sxgawOGTBE7aEk=;
+        b=rc+Ca3tf00wqSX64JeEakDqEJSh8rw+48bpff6CEjnnFqAMBSNnoUtn9eER6VNGyhd
+         HitKxOZC3EYDADkWjm6WJtzT81JNvAFA5JUoeLS7OWz4QtS7qBpjjhJHx3MES6g9PziR
+         fU5XzGduGXYponHky45n/mQrrDf2+gANjH5fszKueSkmuzMyMzZfehHAVo9Cte1cKYbR
+         tGlj76d9zM7U12rWsRJrxPa4s7jdKkz8iOHzo2J9hnbAvMop9yDzUBLq0S2n7BkEFD2l
+         qNx+3lyC4IRjRPWhCKzv3BiwZin/TJr3Y3Cm8Sk1FsYI3dwXrHzuRWx1xanD/X4hRcXO
+         jGsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=lmFRI05KEQyW9X/3WyeY71+JG49+1sxgawOGTBE7aEk=;
+        b=E2ylkYFGiaPilJOm5eXX2CykMGE6JX7ScYX0YNc7OI5bsgLQAH6swi/cw/w1OizGvT
+         dNOaE/2jSOt+nOJ3k8CD/Kq6dlT3rXeGu1hI2KDYedioezBmt7K7kjs1iLg6+F6I5KyK
+         KUkJqXARa8d5etMsKAvZ6u5YOnVol5ZARlRJAxWf43jodWidQnCqwuIW2tKHhPvQSXDX
+         GweuYT36RClLlKnYCmkuXKlj2zYEOe41NZoumnN4Oo0zjODCh3WP64bBuzEmFMLCFLyS
+         UGepZ9+JEM7FD6CsbIo5yCuJgS26J7Be9O3u5CFzlTj6yBHHzmYs+u2VonwDJzTwwC83
+         4LKA==
+X-Gm-Message-State: AOAM532OlpycZOisGMou7ytxulworjJqZgf4gLC49A2wwwXeZHIKPjm5
+        klKaY8zitJ9O1tTE+T0vkQ+iYylqz/VT9r5X4mpDRA==
+X-Google-Smtp-Source: ABdhPJyhyyz8XQcU1a6vCXE6S0n+3/i6YMdUcFrktR33RNv5Qte8vv6ZFQLo8+tPN3qccrrR+wMi/GbT336jJozFZp0=
+X-Received: by 2002:a2e:3602:: with SMTP id d2mr10122914lja.152.1593499618074;
+ Mon, 29 Jun 2020 23:46:58 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB4316.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e9024713-67b2-47a4-9767-08d81cc14478
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2020 06:46:06.4801
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: hK5psqRDdy6tt+clO82au0eQ3WSmbakHfsT1QJbH0S+seS7V7qTYQs5yf7pqhIcxhKplwZlQUhZEZ62PjbEOYQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR11MB2587
-X-OriginatorOrg: intel.com
+References: <20200630032014.22956-1-andy.tang@nxp.com> <CAHLCerO3B4Z67KP8VaF957Jkid21gLvzhS49gNeqUC+6muPkjA@mail.gmail.com>
+ <DBBPR04MB609085CD69E4CCBDD49CCF66F36F0@DBBPR04MB6090.eurprd04.prod.outlook.com>
+ <CAP245DV-_+5Ht=yP9Mnzb2vUqXDJSEeBPfbNh48mEt62PmBeWA@mail.gmail.com> <DBBPR04MB60907EC06EAABC949DD42E3EF36F0@DBBPR04MB6090.eurprd04.prod.outlook.com>
+In-Reply-To: <DBBPR04MB60907EC06EAABC949DD42E3EF36F0@DBBPR04MB6090.eurprd04.prod.outlook.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Tue, 30 Jun 2020 12:16:46 +0530
+Message-ID: <CAP245DUzQBmKvg9oit8StKyfvp==eVZZ7dh0DUAwKkQnjSL_yw@mail.gmail.com>
+Subject: Re: [EXT] Re: [PATCH 1/2] arm64: dts: ls1088a: add more thermal zone support
+To:     Andy Tang <andy.tang@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        lakml <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->=20
-> Support MAX98390 speaker amplifier on cometlake platform. Driver now
-> detects amplifier type in the probe function and installs corresponding
-> controls and DAPM widgets/routes in the late_probe function.
->=20
-> Signed-off-by: Brent Lu <brent.lu@intel.com>
+On Tue, Jun 30, 2020 at 12:07 PM Andy Tang <andy.tang@nxp.com> wrote:
+>
+>
+>
+> > -----Original Message-----
+> > From: Amit Kucheria <amit.kucheria@linaro.org>
+> > Sent: 2020=E5=B9=B46=E6=9C=8830=E6=97=A5 13:37
+> > To: Andy Tang <andy.tang@nxp.com>
+> > Cc: Shawn Guo <shawnguo@kernel.org>; Leo Li <leoyang.li@nxp.com>; Rob
+> > Herring <robh+dt@kernel.org>; lakml <linux-arm-kernel@lists.infradead.o=
+rg>;
+> > open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
+> > <devicetree@vger.kernel.org>; LKML <linux-kernel@vger.kernel.org>
+> > Subject: Re: [EXT] Re: [PATCH 1/2] arm64: dts: ls1088a: add more therma=
+l
+> > zone support
+> >
+> > Caution: EXT Email
+> >
+> > On Tue, Jun 30, 2020 at 10:58 AM Andy Tang <andy.tang@nxp.com> wrote:
+> > >
+> > >
+> > >
+> > > > -----Original Message-----
+> > > > From: Amit Kucheria <amit.kucheria@linaro.org>
+> > > > Sent: 2020=E5=B9=B46=E6=9C=8830=E6=97=A5 13:12
+> > > > To: Andy Tang <andy.tang@nxp.com>
+> > > > Cc: Shawn Guo <shawnguo@kernel.org>; Leo Li <leoyang.li@nxp.com>;
+> > > > Rob Herring <robh+dt@kernel.org>; lakml
+> > > > <linux-arm-kernel@lists.infradead.org>;
+> > > > open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
+> > > > <devicetree@vger.kernel.org>; LKML <linux-kernel@vger.kernel.org>
+> > > > Subject: [EXT] Re: [PATCH 1/2] arm64: dts: ls1088a: add more therma=
+l
+> > > > zone support
+> > > >
+> > > > Caution: EXT Email
+> > > >
+> > > > On Tue, Jun 30, 2020 at 8:56 AM <andy.tang@nxp.com> wrote:
+> > > > >
+> > > > > From: Yuantian Tang <andy.tang@nxp.com>
+> > > > >
+> > > > > There are 2 thermal zones in ls1088a soc. Add the other thermal
+> > > > > zone node to enable it.
+> > > > > Also update the values in calibration table to make the
+> > > > > temperatures monitored more precise.
+> > > > >
+> > > > > Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+> > > > > ---
+> > > > >  .../arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 100
+> > > > > +++++++++++-------
+> > > > >  1 file changed, 62 insertions(+), 38 deletions(-)
+> > > > >
+> > > > > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > > > > b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > > > > index 36a799554620..ccbbc23e6c85 100644
+> > > > > --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > > > > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > > > > @@ -129,19 +129,19 @@
+> > > > >         };
+> > > > >
+> > > > >         thermal-zones {
+> > > > > -               cpu_thermal: cpu-thermal {
+> > > > > +               core-cluster {
+> > > > >                         polling-delay-passive =3D <1000>;
+> > > > >                         polling-delay =3D <5000>;
+> > > > >                         thermal-sensors =3D <&tmu 0>;
+> > > > >
+> > > > >                         trips {
+> > > > > -                               cpu_alert: cpu-alert {
+> > > > > +                               core_cluster_alert:
+> > > > core-cluster-alert
+> > > > > + {
+> > > > >                                         temperature =3D
+> > <85000>;
+> > > > >                                         hysteresis =3D <2000>;
+> > > > >                                         type =3D "passive";
+> > > > >                                 };
+> > > > >
+> > > > > -                               cpu_crit: cpu-crit {
+> > > > > +                               core_cluster_crit:
+> > > > > + core-cluster-crit {
+> > > > >                                         temperature =3D
+> > <95000>;
+> > > > >                                         hysteresis =3D <2000>;
+> > > > >                                         type =3D "critical"; @@
+> > > > -150,7
+> > > > > +150,7 @@
+> > > > >
+> > > > >                         cooling-maps {
+> > > > >                                 map0 {
+> > > > > -                                       trip =3D <&cpu_alert>;
+> > > > > +                                       trip =3D
+> > > > <&core_cluster_alert>;
+> > > > >                                         cooling-device =3D
+> > > > >                                                 <&cpu0
+> > > > THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> > > > >                                                 <&cpu1
+> > > > > THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, @@ -163,6 +163,26 @@
+> > > > >                                 };
+> > > > >                         };
+> > > > >                 };
+> > > > > +
+> > > > > +               soc {
+> > > > > +                       polling-delay-passive =3D <1000>;
+> > > > > +                       polling-delay =3D <5000>;
+> > > > > +                       thermal-sensors =3D <&tmu 1>;
+> > > > > +
+> > > > > +                       trips {
+> > > > > +                               soc-alert {
+> > > > > +                                       temperature =3D
+> > <85000>;
+> > > > > +                                       hysteresis =3D <2000>;
+> > > > > +                                       type =3D "passive";
+> > > > > +                               };
+> > > > > +
+> > > > > +                               soc-crit {
+> > > > > +                                       temperature =3D
+> > <95000>;
+> > > > > +                                       hysteresis =3D <2000>;
+> > > > > +                                       type =3D "critical";
+> > > > > +                               };
+> > > > > +                       };
+> > > > > +               };
+> > > >
+> > > > You should also add a cooling-maps section for this thermal zone
+> > > > given that it has a passive trip type. Otherwise there is no use fo=
+r a
+> > passive trip type.
+> > > It is better to have a cooling device. But there is only one cooling
+> > > device on this platform which is used by core-cluster. So there is no=
+ extra
+> > cooling device for it.
+> > > This zone can take action when critical temp is reached. So it is sti=
+ll useful.
+> > > What do you suggest?
+> >
+> > If the action taken by the core-cluster cooling-maps is the only one th=
+at can
+> > be taken, I suggest getting rid of the the soc-alert passive trip compl=
+etely. It is
+> > not of any use.
+> >
+> > If there is a chance that your soc thermal-zone can heat up before your
+> > cpu-cluster zone (unlikely), you could use the same cooling device (cpu=
+0, cpu1)
+> > for soc thermal zone too.
+> Thanks for your suggestion.
+> I was told that a cooling-maps can not be applied to more than one therma=
+l zone.
+> So the only option is to remove the alert trip.
 
-This patch is from Chrome-v4.19 branch to support the combination of DA7219
-and MAX98390 on a CML Chromebook. It reuses the topology file
-sof-cml-da7219-max98357a.tplg
+The cooling-map is unique to the thermal-zone. But the cooling devices
+may be reused.
 
+See arch/arm64/boot/dts/qcom/sdm845.dtsi for an example.
 
-> ---
->  sound/soc/intel/boards/Kconfig                    |  20 ++++
->  sound/soc/intel/boards/bxt_da7219_max98357a.c     | 129
-> ++++++++++++++++++++--
->  sound/soc/intel/common/soc-acpi-intel-cml-match.c |   4 +-
->  3 files changed, 139 insertions(+), 14 deletions(-)
->=20
-> diff --git a/sound/soc/intel/boards/Kconfig
-> b/sound/soc/intel/boards/Kconfig index 3d820e1..b3b863e 100644
-> --- a/sound/soc/intel/boards/Kconfig
-> +++ b/sound/soc/intel/boards/Kconfig
-> @@ -291,9 +291,17 @@ config
-> SND_SOC_INTEL_DA7219_MAX98357A_GENERIC
->  	select SND_SOC_DMIC
->  	select SND_SOC_HDAC_HDMI
->=20
-> +config SND_SOC_INTEL_DA7219_MAX98390_GENERIC
-> +	tristate
-> +	select SND_SOC_DA7219
-> +	select SND_SOC_MAX98390
-> +	select SND_SOC_DMIC
-> +	select SND_SOC_HDAC_HDMI
-> +
->  config SND_SOC_INTEL_BXT_DA7219_MAX98357A_COMMON
->  	tristate
->  	select SND_SOC_INTEL_DA7219_MAX98357A_GENERIC
-> +	select SND_SOC_INTEL_DA7219_MAX98390_GENERIC
->=20
->  if SND_SOC_INTEL_APL
->=20
-> @@ -309,6 +317,18 @@ config
-> SND_SOC_INTEL_BXT_DA7219_MAX98357A_MACH
->  	   Say Y or m if you have such a device. This is a recommended option.
->  	   If unsure select "N".
->=20
-> +config SND_SOC_INTEL_BXT_DA7219_MAX98390_MACH
-> +	tristate "Broxton with DA7219 and MAX98390 in I2S Mode"
-> +	depends on I2C && ACPI && GPIOLIB
-> +	depends on MFD_INTEL_LPSS || COMPILE_TEST
-> +	depends on SND_HDA_CODEC_HDMI
-> +	select SND_SOC_INTEL_BXT_DA7219_MAX98357A_COMMON
-> +	help
-> +	   This adds support for ASoC machine driver for Broxton-P platforms
-> +	   with DA7219 + MAX98390 I2S audio codec.
-> +	   Say Y or m if you have such a device. This is a recommended option.
-> +	   If unsure select "N".
-> +
->  config SND_SOC_INTEL_BXT_RT298_MACH
->  	tristate "Broxton with RT298 I2S mode"
->  	depends on I2C && ACPI && GPIOLIB
-> diff --git a/sound/soc/intel/boards/bxt_da7219_max98357a.c
-> b/sound/soc/intel/boards/bxt_da7219_max98357a.c
-> index 44016c1..12f07e1 100644
-> --- a/sound/soc/intel/boards/bxt_da7219_max98357a.c
-> +++ b/sound/soc/intel/boards/bxt_da7219_max98357a.c
-> @@ -25,9 +25,14 @@
->=20
->  #define BXT_DIALOG_CODEC_DAI	"da7219-hifi"
->  #define BXT_MAXIM_CODEC_DAI	"HiFi"
-> +#define MAX98390_DEV0_NAME	"i2c-MX98390:00"
-> +#define MAX98390_DEV1_NAME	"i2c-MX98390:01"
->  #define DUAL_CHANNEL		2
->  #define QUAD_CHANNEL		4
->=20
-> +#define SPKAMP_MAX98357A	1
-> +#define SPKAMP_MAX98390	2
-> +
->  static struct snd_soc_jack broxton_headset;  static struct snd_soc_jack
-> broxton_hdmi[3];
->=20
-> @@ -40,6 +45,7 @@ struct bxt_hdmi_pcm {
->  struct bxt_card_private {
->  	struct list_head hdmi_pcm_list;
->  	bool common_hdmi_codec_drv;
-> +	int spkamp;
->  };
->=20
->  enum {
-> @@ -85,13 +91,20 @@ static int platform_clock_control(struct
-> snd_soc_dapm_widget *w,  static const struct snd_kcontrol_new
-> broxton_controls[] =3D {
->  	SOC_DAPM_PIN_SWITCH("Headphone Jack"),
->  	SOC_DAPM_PIN_SWITCH("Headset Mic"),
-> +};
-> +
-> +static const struct snd_kcontrol_new max98357a_controls[] =3D {
->  	SOC_DAPM_PIN_SWITCH("Spk"),
->  };
->=20
-> +static const struct snd_kcontrol_new max98390_controls[] =3D {
-> +	SOC_DAPM_PIN_SWITCH("Left Spk"),
-> +	SOC_DAPM_PIN_SWITCH("Right Spk"),
-> +};
-> +
->  static const struct snd_soc_dapm_widget broxton_widgets[] =3D {
->  	SND_SOC_DAPM_HP("Headphone Jack", NULL),
->  	SND_SOC_DAPM_MIC("Headset Mic", NULL),
-> -	SND_SOC_DAPM_SPK("Spk", NULL),
->  	SND_SOC_DAPM_MIC("SoC DMIC", NULL),
->  	SND_SOC_DAPM_SPK("HDMI1", NULL),
->  	SND_SOC_DAPM_SPK("HDMI2", NULL),
-> @@ -100,14 +113,20 @@ static const struct snd_soc_dapm_widget
-> broxton_widgets[] =3D {
->  			platform_clock_control,
-> 	SND_SOC_DAPM_POST_PMD|SND_SOC_DAPM_PRE_PMU),
->  };
->=20
-> +static const struct snd_soc_dapm_widget max98357a_widgets[] =3D {
-> +	SND_SOC_DAPM_SPK("Spk", NULL),
-> +};
-> +
-> +static const struct snd_soc_dapm_widget max98390_widgets[] =3D {
-> +	SND_SOC_DAPM_SPK("Left Spk", NULL),
-> +	SND_SOC_DAPM_SPK("Right Spk", NULL),
-> +};
-> +
->  static const struct snd_soc_dapm_route audio_map[] =3D {
->  	/* HP jack connectors - unknown if we have jack detection */
->  	{"Headphone Jack", NULL, "HPL"},
->  	{"Headphone Jack", NULL, "HPR"},
->=20
-> -	/* speaker */
-> -	{"Spk", NULL, "Speaker"},
-> -
->  	/* other jacks */
->  	{"MIC", NULL, "Headset Mic"},
->=20
-> @@ -134,6 +153,17 @@ static const struct snd_soc_dapm_route audio_map[]
-> =3D {
->  	{ "Headset Mic", NULL, "Platform Clock" },  };
->=20
-> +static const struct snd_soc_dapm_route max98357a_routes[] =3D {
-> +	/* speaker */
-> +	{"Spk", NULL, "Speaker"},
-> +};
-> +
-> +static const struct snd_soc_dapm_route max98390_routes[] =3D {
-> +	/* Speaker */
-> +	{"Left Spk", NULL, "Left BE_OUT"},
-> +	{"Right Spk", NULL, "Right BE_OUT"},
-> +};
-> +
->  static const struct snd_soc_dapm_route broxton_map[] =3D {
->  	{"HiFi Playback", NULL, "ssp5 Tx"},
->  	{"ssp5 Tx", NULL, "codec0_out"},
-> @@ -404,6 +434,10 @@ SND_SOC_DAILINK_DEF(ssp5_pin,
-> SND_SOC_DAILINK_DEF(ssp5_codec,
->  	DAILINK_COMP_ARRAY(COMP_CODEC("MX98357A:00",
->  				      BXT_MAXIM_CODEC_DAI)));
-> +SND_SOC_DAILINK_DEF(max98390_codec,
-> +	DAILINK_COMP_ARRAY(
-> +	/* Left */	COMP_CODEC(MAX98390_DEV0_NAME, "max98390-
-> aif1"),
-> +	/* Right */	COMP_CODEC(MAX98390_DEV1_NAME, "max98390-
-> aif1")));
->=20
->  SND_SOC_DAILINK_DEF(ssp1_pin,
->  	DAILINK_COMP_ARRAY(COMP_CPU("SSP1 Pin"))); @@ -601,15
-> +635,69 @@ static struct snd_soc_dai_link broxton_dais[] =3D {
->  	},
->  };
->=20
-> +static struct snd_soc_codec_conf max98390_codec_confs[] =3D {
-> +	{
-> +		.dlc =3D COMP_CODEC_CONF(MAX98390_DEV0_NAME),
-> +		.name_prefix =3D "Left",
-> +	},
-> +	{
-> +		.dlc =3D COMP_CODEC_CONF(MAX98390_DEV1_NAME),
-> +		.name_prefix =3D "Right",
-> +	},
-> +};
-> +
->  #define NAME_SIZE	32
->  static int bxt_card_late_probe(struct snd_soc_card *card)  {
->  	struct bxt_card_private *ctx =3D snd_soc_card_get_drvdata(card);
->  	struct bxt_hdmi_pcm *pcm;
->  	struct snd_soc_component *component =3D NULL;
-> -	int err, i =3D 0;
-> +	const struct snd_kcontrol_new *controls;
-> +	const struct snd_soc_dapm_widget *widgets;
-> +	const struct snd_soc_dapm_route *routes;
-> +	int num_controls, num_widgets, num_routes, ret, i =3D 0;
->  	char jack_name[NAME_SIZE];
->=20
-> +	switch (ctx->spkamp) {
-> +	case SPKAMP_MAX98357A:
-> +		controls =3D max98357a_controls;
-> +		num_controls =3D ARRAY_SIZE(max98357a_controls);
-> +		widgets =3D max98357a_widgets;
-> +		num_widgets =3D ARRAY_SIZE(max98357a_widgets);
-> +		routes =3D max98357a_routes;
-> +		num_routes =3D ARRAY_SIZE(max98357a_routes);
-> +		break;
-> +	case SPKAMP_MAX98390:
-> +		controls =3D max98390_controls;
-> +		num_controls =3D ARRAY_SIZE(max98390_controls);
-> +		widgets =3D max98390_widgets;
-> +		num_widgets =3D ARRAY_SIZE(max98390_widgets);
-> +		routes =3D max98390_routes;
-> +		num_routes =3D ARRAY_SIZE(max98390_routes);
-> +		break;
-> +	default:
-> +		dev_err(card->dev, "Invalid speaker amplifier %d\n", ctx-
-> >spkamp);
-> +		break;
-> +	}
-> +
-> +	ret =3D snd_soc_dapm_new_controls(&card->dapm, widgets,
-> num_widgets);
-> +	if (ret) {
-> +		dev_err(card->dev, "Fail to new widgets\n");
-> +		return ret;
-> +	}
-> +
-> +	ret =3D snd_soc_add_card_controls(card, controls, num_controls);
-> +	if (ret) {
-> +		dev_err(card->dev, "Fail to add controls\n");
-> +		return ret;
-> +	}
-> +
-> +	ret =3D snd_soc_dapm_add_routes(&card->dapm, routes,
-> num_routes);
-> +	if (ret) {
-> +		dev_err(card->dev, "Fail to add routes\n");
-> +		return ret;
-> +	}
-> +
->  	if (soc_intel_is_glk())
->  		snd_soc_dapm_add_routes(&card->dapm, gemini_map,
->  					ARRAY_SIZE(gemini_map));
-> @@ -631,17 +719,17 @@ static int bxt_card_late_probe(struct snd_soc_card
-> *card)
->  		component =3D pcm->codec_dai->component;
->  		snprintf(jack_name, sizeof(jack_name),
->  			"HDMI/DP, pcm=3D%d Jack", pcm->device);
-> -		err =3D snd_soc_card_jack_new(card, jack_name,
-> +		ret =3D snd_soc_card_jack_new(card, jack_name,
->  					SND_JACK_AVOUT,
-> &broxton_hdmi[i],
->  					NULL, 0);
->=20
-> -		if (err)
-> -			return err;
-> +		if (ret)
-> +			return ret;
->=20
-> -		err =3D hdac_hdmi_jack_init(pcm->codec_dai, pcm->device,
-> +		ret =3D hdac_hdmi_jack_init(pcm->codec_dai, pcm->device,
->  						&broxton_hdmi[i]);
-> -		if (err < 0)
-> -			return err;
-> +		if (ret < 0)
-> +			return ret;
->=20
->  		i++;
->  	}
-> @@ -678,6 +766,11 @@ static int broxton_audio_probe(struct
-> platform_device *pdev)
->=20
->  	INIT_LIST_HEAD(&ctx->hdmi_pcm_list);
->=20
-> +	if (acpi_dev_present("MX98390", NULL, -1))
-> +		ctx->spkamp =3D SPKAMP_MAX98390;
-> +	else
-> +		ctx->spkamp =3D SPKAMP_MAX98357A;
-> +
->  	broxton_audio_card.dev =3D &pdev->dev;
->  	snd_soc_card_set_drvdata(&broxton_audio_card, ctx);
->  	if (soc_intel_is_glk()) {
-> @@ -702,7 +795,13 @@ static int broxton_audio_probe(struct
-> platform_device *pdev)
->  	} else if (soc_intel_is_cml()) {
->  		unsigned int i;
->=20
-> -		broxton_audio_card.name =3D "cmlda7219max";
-> +		if (ctx->spkamp =3D=3D SPKAMP_MAX98390) {
-> +			broxton_audio_card.name =3D
-> "cml_max98390_da7219";
-> +
-> +			broxton_audio_card.codec_conf =3D
-> max98390_codec_confs;
-> +			broxton_audio_card.num_configs =3D
-> ARRAY_SIZE(max98390_codec_confs);
-> +		} else
-> +			broxton_audio_card.name =3D "cmlda7219max";
->=20
->  		for (i =3D 0; i < ARRAY_SIZE(broxton_dais); i++) {
->  			/* MAXIM_CODEC is connected to SSP1. */ @@ -
-> 710,6 +809,11 @@ static int broxton_audio_probe(struct platform_device
-> *pdev)
->  					BXT_MAXIM_CODEC_DAI)) {
->  				broxton_dais[i].name =3D "SSP1-Codec";
->  				broxton_dais[i].cpus->dai_name =3D "SSP1 Pin";
-> +
-> +				if (ctx->spkamp =3D=3D SPKAMP_MAX98390) {
-> +					broxton_dais[i].codecs =3D
-> max98390_codec;
-> +					broxton_dais[i].num_codecs =3D
-> ARRAY_SIZE(max98390_codec);
-> +				}
->  			}
->  			/* DIALOG_CODEC is connected to SSP0 */
->  			else if (!strcmp(broxton_dais[i].codecs->dai_name,
-> @@ -759,6 +863,7 @@ MODULE_AUTHOR("Harsha Priya
-> <harshapriya.n@intel.com>");  MODULE_AUTHOR("Conrad Cooke
-> <conrad.cooke@intel.com>");  MODULE_AUTHOR("Naveen Manohar
-> <naveen.m@intel.com>");  MODULE_AUTHOR("Mac Chiang
-> <mac.chiang@intel.com>");
-> +MODULE_AUTHOR("Brent Lu <brent.lu@intel.com>");
->  MODULE_LICENSE("GPL v2");
->  MODULE_ALIAS("platform:bxt_da7219_max98357a");
->  MODULE_ALIAS("platform:glk_da7219_max98357a");
-> diff --git a/sound/soc/intel/common/soc-acpi-intel-cml-match.c
-> b/sound/soc/intel/common/soc-acpi-intel-cml-match.c
-> index cdea0c0..7dc9ba9 100644
-> --- a/sound/soc/intel/common/soc-acpi-intel-cml-match.c
-> +++ b/sound/soc/intel/common/soc-acpi-intel-cml-match.c
-> @@ -15,8 +15,8 @@ static struct snd_soc_acpi_codecs rt1011_spk_codecs =3D
-> {  };
->=20
->  static struct snd_soc_acpi_codecs max98357a_spk_codecs =3D {
-> -	.num_codecs =3D 1,
-> -	.codecs =3D {"MX98357A"}
-> +	.num_codecs =3D 2,
-> +	.codecs =3D {"MX98357A", "MX98390"}
->  };
->=20
->  /*
-> --
-> 2.7.4
-
+So, in your case, you would have a cooling-map section that ties the
+soc-alert trip to the same cooling devices as in cpu-cluster cooling
+map.
