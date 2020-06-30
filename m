@@ -2,139 +2,116 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E312C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C89BC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B34920759
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:58:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 274432074F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:59:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593529133;
-	bh=PVTznXJyCvr/0gWflz6qqUnQVBqnaxBytLpA2ScZi2o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=mvLV8enCoLAZDMyvuJ4uz1mvluZ9Lp1TlLLry22WnVnmfrrXF0DLpGRmEujvokPZR
-	 9GGSX5zZEBGCQ8fIWYwlzidzmxM1QkIUXWzpz3zxW+s2chYzWH1V9XhjoCSGA0UHLA
-	 pKZSFfmuzNqeT0y853qeqR4G5eum/yv2e1Fq+Z00=
+	s=default; t=1593529156;
+	bh=No0jbfPqhTvoiKe+ouJqwtalNn8dLUQ7fW45cm50WlU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ukqqb959gXZDq9A1ke1o6cS3W25DPEG/CAu5MNZcJM8ZQ0vALSODsP7OC0B8P6WXU
+	 BhD06uusYgKQJFx8NLRvhzqoFb2GBbt+a81y3LvucLQPZSVNnzkv+C5oUTlydyY7VD
+	 RfxXy8XYUBuwCOudzdRDI+oUNMW8hwJ7KxeNQ8mg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389187AbgF3O6v (ORCPT
+        id S2389197AbgF3O7O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 10:58:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42110 "EHLO mail.kernel.org"
+        Tue, 30 Jun 2020 10:59:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730478AbgF3O6v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 10:58:51 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
+        id S2389189AbgF3O7O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 10:59:14 -0400
+Received: from localhost (fw-tnat.cambridge.arm.com [217.140.96.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37D8E20675;
-        Tue, 30 Jun 2020 14:58:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6841820675;
+        Tue, 30 Jun 2020 14:59:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593529130;
-        bh=PVTznXJyCvr/0gWflz6qqUnQVBqnaxBytLpA2ScZi2o=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=UGrtzr6l/Dz1zgmF5Gn8ardEy1SuMln8GZ6PHPueInRFfTdL6xyccEtApRZUKzTkL
-         j88PiPHDI8upfuyPX0p7SuHNe/Dn2IeiyQaogjChp6gqk6lkgA3IFhSioq7CnkWU/6
-         +rJo94TNidFUjFViAcaPH9sNj1lnDmYdpa+4u5b4=
-Date:   Tue, 30 Jun 2020 09:58:48 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Pali =?iso-8859-1?Q?Roh=E1r?= <pali@kernel.org>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marek =?iso-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: aardvark: Don't touch PCIe registers if no card
- connected
-Message-ID: <20200630145848.GA3419143@bjorn-Precision-5520>
+        s=default; t=1593529153;
+        bh=No0jbfPqhTvoiKe+ouJqwtalNn8dLUQ7fW45cm50WlU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=q/cCD2ySzWpV61HZ4clTiGfLrsyF09YTfMDL2HIDWE0842QXOpRFo3IkTukABgkoW
+         o4XDPpQ6nqg8KX6qmfaU/AGg4Lm+wLBr2YTU1cA/9r733tbj2tcakD/wGK3kXWf8Ww
+         OKVCrDJcyCy19GvhH7pTJHx7G6Adt6iiPCGO+0vg=
+Date:   Tue, 30 Jun 2020 15:59:11 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Juergen Borleis <jbe@pengutronix.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>, kernel@pengutronix.de
+Subject: Re: [PATCH] regmap: debugfs: really fix memory leak in
+ regmap_debugfs_init()
+Message-ID: <20200630145911.GK5272@sirena.org.uk>
+References: <20200630100650.23052-1-jbe@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="x+RZeZVNR8VILNfK"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200630140420.7qkuq7wturmaafzf@pali>
+In-Reply-To: <20200630100650.23052-1-jbe@pengutronix.de>
+X-Cookie: Walk softly and carry a megawatt laser.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 04:04:20PM +0200, Pali Rohár wrote:
-> On Tuesday 30 June 2020 08:51:27 Bjorn Helgaas wrote:
-> > On Thu, May 28, 2020 at 06:38:09PM +0200, Pali Rohár wrote:
-> > > On Thursday 28 May 2020 11:26:04 Bjorn Helgaas wrote:
-> > > > On Thu, May 28, 2020 at 04:31:41PM +0200, Pali Rohár wrote:
-> > > > > When there is no PCIe card connected and advk_pcie_rd_conf() or
-> > > > > advk_pcie_wr_conf() is called for PCI bus which doesn't belong to emulated
-> > > > > root bridge, the aardvark driver throws the following error message:
-> > > > > 
-> > > > >   advk-pcie d0070000.pcie: config read/write timed out
-> > > > > 
-> > > > > Obviously accessing PCIe registers of disconnected card is not possible.
-> > > > > 
-> > > > > Extend check in advk_pcie_valid_device() function for validating
-> > > > > availability of PCIe bus. If PCIe link is down, then the device is marked
-> > > > > as Not Found and the driver does not try to access these registers.
-> > > > > 
-> > > > > Signed-off-by: Pali Rohár <pali@kernel.org>
-> > > > > ---
-> > > > >  drivers/pci/controller/pci-aardvark.c | 3 +++
-> > > > >  1 file changed, 3 insertions(+)
-> > > > > 
-> > > > > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> > > > > index 90ff291c24f0..53a4cfd7d377 100644
-> > > > > --- a/drivers/pci/controller/pci-aardvark.c
-> > > > > +++ b/drivers/pci/controller/pci-aardvark.c
-> > > > > @@ -644,6 +644,9 @@ static bool advk_pcie_valid_device(struct advk_pcie *pcie, struct pci_bus *bus,
-> > > > >  	if ((bus->number == pcie->root_bus_nr) && PCI_SLOT(devfn) != 0)
-> > > > >  		return false;
-> > > > >  
-> > > > > +	if (bus->number != pcie->root_bus_nr && !advk_pcie_link_up(pcie))
-> > > > > +		return false;
-> > > > 
-> > > > I don't think this is the right fix.  This makes it racy because the
-> > > > link may go down after we call advk_pcie_valid_device() but before we
-> > > > perform the config read.
-> > > 
-> > > Yes, it is racy, but I do not think it cause problems. Trying to read
-> > > PCIe registers when device is not connected cause just those timeouts,
-> > > printing error message and increased delay in advk_pcie_wait_pio() due
-> > > to polling loop. This patch reduce unnecessary access to PCIe registers
-> > > when advk_pcie_wait_pio() polling just fail.
-> > 
-> > What happens when the device is removed after advk_pcie_link_up()
-> > returns true, but before we actually do the config access?
-> 
-> Do you mean to remove device physically at runtime? I was told that our
-> board would crash or issue reset. Removing device from mini PCIe slot
-> without power off is not supported.
 
-Right, I don't think PCIe mini cards support hotplug.
+--x+RZeZVNR8VILNfK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> Anyway, currently we are trying to read from device registers even when
-> no device is connected. So when advk_pcie_link_up() returns true and
-> after that device is not connected (somehow board and kernel would be
-> still alive) I guess that it would behave as without applying this
-> patch. So kernel starts reading from register and would wait until
-> timeout expires. As device is not connected there would be no answer,
-> so kernel print error message to dmesg (same as in commit message) and
-> returns error that read failed.
+On Tue, Jun 30, 2020 at 12:06:50PM +0200, Juergen Borleis wrote:
 
-OK, so if I understand correctly, checking advk_pcie_link_up() is
-strictly an optimization.  If we guess wrong (e.g., after calling
-advk_pcie_link_up(), the link went down because the card was removed,
-DPC triggered, etc), the only bad thing is that we wait for a timeout;
-it never causes a crash.
+>   unreferenced object 0xec548c80 (size 64):
+>   comm "swapper/0", pid 1, jiffies 4294937356 (age 3385.690s)
+>   hex dump (first 32 bytes):
+>     64 75 6d 6d 79 2d 69 6f 6d 75 78 63 2d 67 70 72  dummy-iomuxc-gpr
+>     40 32 30 65 30 30 30 30 00 7d cc fa 7c df bf 7d  @20e0000.}..|..}
+>   backtrace:
+>     [<703904e1>] __kmalloc_track_caller+0x1dc/0x43c
+>     [<523053d0>] kvasprintf+0x64/0xd8
+>     [<0d94bbe5>] kasprintf+0x38/0x5c
 
-If that's the case, I'm fine with this.  But please add a comment to
-that effect.
+Please think hard before including complete backtraces in upstream
+reports, they are very large and contain almost no useful information
+relative to their size so often obscure the relevant content in your
+message. If part of the backtrace is usefully illustrative (it often is
+for search engines if nothing else) then it's usually better to pull out
+the relevant sections.
 
-I think several other drivers check for the link being up because we
-actually crash if we try to read config space when the link is down.
-That's what I was trying to avoid here.
+> For this specific i.MX device the regmap_debugfs_init() function is called
+> twice for the same object:
 
-Bjorn
+> - first call: with name = "iomuxc-gpr@20e0000", but the underlying device
+>   has no name yet. So, regmap_debugfs_init() allocates the string
+>   "dummy-iomuxc-gpr@20e0000" into 'map->debugfs_name' (and this string is
+>   the one 'kmemleak' reports in its output).
+
+> - second call: with name = "gpr" and the underlying device now has the
+>   name "20e0000.iomuxc". So, regmap_debugfs_init() again allocates
+>   a string "20e0000.iomuxc-gpr" into 'map->debugfs_name'.
+
+This sounds like an issue in and of itself - why are we initializing the
+same regmap twice without first destroying it?
+
+--x+RZeZVNR8VILNfK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl77Uz4ACgkQJNaLcl1U
+h9CXOwgAhrUOF7f+iGWY5IKBDg1k2+D6dbhraw7i9AHekl6tVKgAzEZ5a471pWin
+XenMdLXRTMUh49k1zVBNwCRVfYGUoVFlA90JmtslQvZhSG6PFzG664YU2wAyIOoJ
+aKrTZsWiMORN/9VjtM5bJ933H2vUal9wtT+dfPMEfkDb2UDtpIEzF6bu+TJtmaJ9
+pXrxyAdb6qgwiF0VnMIuVnT29FkJ0FW0lvuvRSYAffmFs96+Y3p8zQevQeGX5qRP
+RKkELGtjesN+uYx/jUy4IavERQznC5hkMIObKovr87iushSUCbhUubfotiK9OwMI
+AJCYatyr3rP0aRv41McP7MAHmg1bfQ==
+=G9Fk
+-----END PGP SIGNATURE-----
+
+--x+RZeZVNR8VILNfK--
