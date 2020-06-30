@@ -2,95 +2,115 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C15E4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:20:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32999C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BBDF2077D
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:20:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A7F82077D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:20:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E9Mr54oI"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WxMfdOgv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390226AbgF3RUe (ORCPT
+        id S2390238AbgF3RU5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 13:20:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51842 "EHLO
+        Tue, 30 Jun 2020 13:20:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730584AbgF3RUd (ORCPT
+        with ESMTP id S2390230AbgF3RU4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 13:20:33 -0400
-Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71641C061755;
-        Tue, 30 Jun 2020 10:20:33 -0700 (PDT)
-Received: by mail-pj1-x1044.google.com with SMTP id cv18so4350228pjb.1;
-        Tue, 30 Jun 2020 10:20:33 -0700 (PDT)
+        Tue, 30 Jun 2020 13:20:56 -0400
+Received: from mail-io1-xd44.google.com (mail-io1-xd44.google.com [IPv6:2607:f8b0:4864:20::d44])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7131BC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 10:20:56 -0700 (PDT)
+Received: by mail-io1-xd44.google.com with SMTP id e64so16926428iof.12
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 10:20:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=q7vNRAdwknYiexV55sGxvItNjXux5N3RieyX7S5Yft0=;
-        b=E9Mr54oIaWNTdfrwloNwST7X7lG1Hx2fuV98wNIsLuOqhXYCPhslNa+SzA7oIDENmu
-         q4rb436TZk1yhzaY4ERvHJCfLiH4vNa7saSlGC35/psAWtTrLhylprMGR6c3ASUVUGJQ
-         ff27Z5XmUZjYlVg42V05SzqxrezO07tHejXW7/K2lTj0zynDFTAzVqmUE+56TTlKG9fe
-         yerGGRi+cnjUgwCasX6iPA48FSxrLOWLOIVuDNLsvN0RO9lkWGuNH4lIQ5XeOBAefU3o
-         WKFQWAi5JOqQb0oPD+REmtLkcC5p2b0dEeqlb9xusI4Qp+jTJH2AGB76XYKi0LFo+BhO
-         OlfA==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=77UK+cZyqyw3gLZiPb/FTe0nbUCTBAqAtX9BzSpsWzY=;
+        b=WxMfdOgvU4fe+nEqZoVfj1tZLcXZ7JB/FVumxjs6J7pPVVm6YdZQoIUAq3a9uT7n36
+         Wo/Khg/Jz2QflUcvY3eEORKKiY8iOVfoJ2pqUilIYAw+3TiEq7RfIzbI4aPHYKs48D5Q
+         grg+8KOZ5BqAwgWCGwBcsGROj5WVXB9KrIsK0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=q7vNRAdwknYiexV55sGxvItNjXux5N3RieyX7S5Yft0=;
-        b=sc1Xwz2qGrioomOHaGrm5IF+nZgTt2tb7cDZWWKHdeNXsj2dbbhP0hn+YmoEv2klUa
-         Lk31S8hqWzY2s5FhL0SnmWdUEwEt7G+2kxdhLaVat4Q8GbPqsPQmshqbbiv2YIEBrg93
-         37obSzagHdAjmFZ9laRYPsSYfAa4B34dUUodcTItVTbC5Sw/Zi3QAyLy9YikuougcQQb
-         XWhtAoL9Qa9KmHrCZtfl+aTkoicqWWRhK9kqcEEJ0evj73LOGr1SXI0N5tW5SrywBt7Z
-         Cy6i0oVFcJGoTzMwZ4r2AihujKosO0jfq71qpnoAWue6yhaNqzty8DMjcwE2Dc4dOsjI
-         JxoA==
-X-Gm-Message-State: AOAM5319rhbT24N175YKHwzuQ4o6WHnAWBO6xbmQBkamRFlZHgQaPWsT
-        rHP4qanYmOGrqw82btDAHu4=
-X-Google-Smtp-Source: ABdhPJwTY5TdjpWWCUEHKMn5KMRwZIVXi66kdtgBcNWEt7+FZt9zKEj3aCPxeCS9N9ZL26Sc1XpcRw==
-X-Received: by 2002:a17:90a:a788:: with SMTP id f8mr12612923pjq.39.1593537633093;
-        Tue, 30 Jun 2020 10:20:33 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id l191sm3399510pfd.149.2020.06.30.10.20.32
-        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 30 Jun 2020 10:20:32 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 10:20:31 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org
-Subject: Re: [PATCH 4.9 000/191] 4.9.229-rc1 review
-Message-ID: <20200630172031.GB629@roeck-us.net>
-References: <20200629154007.2495120-1-sashal@kernel.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=77UK+cZyqyw3gLZiPb/FTe0nbUCTBAqAtX9BzSpsWzY=;
+        b=eQ+Ozqte7qPoBmTx9qqikbfR4VVz+FpupK64msqiIs99+6MOm/MQGikLi9V5Fy6aWM
+         2FBUzpk31pfTWlrPwgdlmkwofUlzV2cAFM8Ab2cFXulEiK/AP+VEASVcTJSdBVx69pxs
+         W0YD+lIikRewi0ctujzq9zdbMebHoyDpPFmQPqfWeCycdmw2lYtjTEqzGLsLpQiYRegi
+         NNYcHudgmgoXYbDK85k78VvHz9WauOssVTFXOjfkynRId5YVSXSC+h9sk2a89AQtdtKm
+         VA3RMRN3d2tw+sFGeDimD7lh6prb7msw2xPvO5OG6zdKF5xvgYTSnwo77fnTmhS5o+zS
+         iluA==
+X-Gm-Message-State: AOAM53074u8e27UT+UkZVNDFoWeT4KQipSkfKXNfO7dQWqLl+E9+MU7K
+        N4PfO5em9G7NgcWeFcAV3yl1zGiKFvdNPKs4TwKoTg==
+X-Google-Smtp-Source: ABdhPJxRJcqT+JiOtcn8rPCQfvCvhao09rgzqxAO2d6F+Z8L+HWHLBP4c7fjts4NtwPa9WV0hEUtbkpVPxLWWCbrAeI=
+X-Received: by 2002:a6b:9042:: with SMTP id s63mr23191402iod.195.1593537655556;
+ Tue, 30 Jun 2020 10:20:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200629154007.2495120-1-sashal@kernel.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20200630143525.13869-1-quentin@isovalent.com> <39ba164ba44be848feac831f2f21effca92bfc96.camel@perches.com>
+In-Reply-To: <39ba164ba44be848feac831f2f21effca92bfc96.camel@perches.com>
+From:   Vadim Bendebury <vbendeb@chromium.org>
+Date:   Tue, 30 Jun 2020 10:20:19 -0700
+Message-ID: <CAC3GErHpyyA8eQUyP6s_H6csvbKfHXHi50Ky6A1PhU+A6waCeQ@mail.gmail.com>
+Subject: Re: [PATCH] checkpatch: prevent reporting C99_COMMENTS error for SPDX
+ tag in .c file
+To:     Joe Perches <joe@perches.com>
+Cc:     Quentin Monnet <quentin@isovalent.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 11:36:56AM -0400, Sasha Levin wrote:
-> 
-> This is the start of the stable review cycle for the 4.9.229 release.
-> There are 191 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed 01 Jul 2020 03:40:00 PM UTC.
-> Anything received after that time might be too late.
-> 
-Build results:
-	total: 171 pass: 171 fail: 0
-Qemu test results:
-	total: 386 pass: 386 fail: 0
-
-Guenter
+On Tue, Jun 30, 2020 at 7:47 AM Joe Perches <joe@perches.com> wrote:
+>
+> (adding Vadem Bendebury who added the tolerance test)
+>
+> On Tue, 2020-06-30 at 15:35 +0100, Quentin Monnet wrote:
+> > When checkpatch.pl is invoked with "--ignore C99_COMMENT_TOLERANCE", it
+> > reports C99-style comments found in the code, by matching on the
+> > double-slash pattern "//". This includes the leading slashes before the
+> > SPDX tags that are now used in a majority of C files.
+> >
+> > Such tags are commented with the double-slash on purpose, and should not
+> > trigger errors from checkpatch. Let's ignore them when searching for
+> > C99-style comments to report.
+> >
+> > Signed-off-by: Quentin Monnet <quentin@isovalent.com>
+>
+> I think this unnecessary as perhaps those that want no
+> c99 comments likely _really_ want no c99 comments.
+>
+> > ---
+> >  scripts/checkpatch.pl | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> > index 3cacc122c528..67f350c580ea 100755
+> > --- a/scripts/checkpatch.pl
+> > +++ b/scripts/checkpatch.pl
+> > @@ -3983,7 +3983,10 @@ sub process {
+> >               }
+> >
+> >  # no C99 // comments
+> > -             if ($line =~ m{//}) {
+> > +             if ($line =~ m{//} &&
+> > +                 !($rawline =~ m{// SPDX-License-Identifier:} &&
+> > +                   $realfile =~ /\.c$/ &&
+Do I understand this right that with this change in the check would be
+applied to .c files only? .h files should be included.
+> > +                   $realline == $checklicenseline)) {
+What is the purpose of the above check?
+> >                       if (ERROR("C99_COMMENTS",
+> >                                 "do not use C99 // comments\n" . $herecurr) &&
+> >                           $fix) {
+>
