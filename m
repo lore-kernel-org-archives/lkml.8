@@ -2,86 +2,104 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C9A4C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E48CC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:23:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1A8B20672
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:22:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BF0020672
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:23:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oaiL4G1T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729033AbgF3DWS (ORCPT
+        id S1729072AbgF3DXW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 23:22:18 -0400
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36]:59682 "EHLO
-        out4436.biz.mail.alibaba.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728898AbgF3DWS (ORCPT
+        Mon, 29 Jun 2020 23:23:22 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:43268 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729035AbgF3DXW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 23:22:18 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0U175HJB_1593487325;
-Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U175HJB_1593487325)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 30 Jun 2020 11:22:05 +0800
-From:   Wei Yang <richard.weiyang@linux.alibaba.com>
-To:     dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        tglx@linutronix.de
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Wei Yang <richard.weiyang@linux.alibaba.com>,
-        Baoquan He <bhe@redhat.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH] x86/mm: calculate the proper boundary in register_page_bootmem_memmap()
-Date:   Tue, 30 Jun 2020 11:22:04 +0800
-Message-Id: <20200630032204.45639-1-richard.weiyang@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1 (Apple Git-117)
+        Mon, 29 Jun 2020 23:23:22 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05U3I9PE093763;
+        Tue, 30 Jun 2020 03:23:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=corp-2020-01-29;
+ bh=QkEKs1G4nOwQk9stMmsSiw10VVkVybgTTlbcrUy7lXQ=;
+ b=oaiL4G1TDU6/JCSdZLXhY0Ac5oNdSR1qhTJ2ahZ/4aIhnMaD+eZ47Q4kqCkmTZor8T1G
+ 1PYoT4hkmPRyiV7d6bai9bBnlgznyyNf7z1fNkPB6Qo29fen3qx8OD02Esczw7KtoFzz
+ DwATBV8pUqI9UjJrD44GRtIadkb9pWDeqgnifTz1L9zOwk6qXFkfe2btS26XYxKDcqTS
+ GtuWZmv9Kh9voYEzOcNaKMGrLeAboAI4xhK0tNiIYLDwenhbL2n68xGfuMvEy28Rmkyl
+ p+fIpjNrtIxmEuY+Jaa39mqgH/SgIBtx5IYTRREHLGRX5yL2CmevbYGv/q0Fyu1q3Xpx ZQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 31wxrn1p9j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 30 Jun 2020 03:23:09 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 05U3IW0v065236;
+        Tue, 30 Jun 2020 03:23:09 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 31xfvrpwgp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Jun 2020 03:23:09 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 05U3N7No023576;
+        Tue, 30 Jun 2020 03:23:07 GMT
+Received: from ca-mkp.ca.oracle.com (/10.156.108.201)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 30 Jun 2020 03:23:06 +0000
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Kiwoong Kim <kwmad.kim@samsung.com>,
+        linux-scsi@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        linux-samsung-soc@vger.kernel.org,
+        Avri Altman <avri.altman@wdc.com>,
+        linux-kernel@vger.kernel.org, Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Wei Yongjun <weiyongjun1@huawei.com>
+Subject: Re: [PATCH] scsi: ufs: ufs-exynos: Remove an unnecessary NULL check
+Date:   Mon, 29 Jun 2020 23:23:04 -0400
+Message-Id: <159348736490.22355.10176976047581563338.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.26.2
+In-Reply-To: <20200626105133.GF314359@mwanda>
+References: <20200626105133.GF314359@mwanda>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9667 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0 spamscore=0
+ phishscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006300023
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9667 signatures=668680
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxscore=0 mlxlogscore=999
+ priorityscore=1501 impostorscore=0 bulkscore=0 clxscore=1015
+ malwarescore=0 phishscore=0 adultscore=0 cotscore=-2147483648
+ lowpriorityscore=0 suspectscore=0 spamscore=0 classifier=spam adjust=0
+ reason=mlx scancount=1 engine=8.12.0-2004280000
+ definitions=main-2006300023
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It would be proper to jump to end boundary of the proper level instead
-of always jump to the end boundary of a PAGE.
+On Fri, 26 Jun 2020 13:51:33 +0300, Dan Carpenter wrote:
 
-Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
-CC: Baoquan He <bhe@redhat.com>
-CC: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
----
- arch/x86/mm/init_64.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> The "head" pointer can't be NULL because it points to an address in
+> the middle of a ufs_hba struct.  Looking at this code, probably someone
+> would wonder if the intent was to check whether "hba" is NULL, but "hba"
+> isn't NULL and the check can just be removed.
 
-diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-index f902fbd17f27..45eddb755eaa 100644
---- a/arch/x86/mm/init_64.c
-+++ b/arch/x86/mm/init_64.c
-@@ -1536,21 +1536,21 @@ void register_page_bootmem_memmap(unsigned long section_nr,
- 
- 		pgd = pgd_offset_k(addr);
- 		if (pgd_none(*pgd)) {
--			next = (addr + PAGE_SIZE) & PAGE_MASK;
-+			next = pgd_addr_end(addr, end);
- 			continue;
- 		}
- 		get_page_bootmem(section_nr, pgd_page(*pgd), MIX_SECTION_INFO);
- 
- 		p4d = p4d_offset(pgd, addr);
- 		if (p4d_none(*p4d)) {
--			next = (addr + PAGE_SIZE) & PAGE_MASK;
-+			next = p4d_addr_end(addr, end);
- 			continue;
- 		}
- 		get_page_bootmem(section_nr, p4d_page(*p4d), MIX_SECTION_INFO);
- 
- 		pud = pud_offset(p4d, addr);
- 		if (pud_none(*pud)) {
--			next = (addr + PAGE_SIZE) & PAGE_MASK;
-+			next = pud_addr_end(addr, end);
- 			continue;
- 		}
- 		get_page_bootmem(section_nr, pud_page(*pud), MIX_SECTION_INFO);
+Applied to 5.9/scsi-queue, thanks!
+
+[1/1] scsi: ufs: ufs-exynos: Remove an unnecessary NULL check
+      https://git.kernel.org/mkp/scsi/c/b7a80dac0f1f
+
 -- 
-2.20.1 (Apple Git-117)
-
+Martin K. Petersen	Oracle Linux Engineering
