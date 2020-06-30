@@ -2,83 +2,111 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A9C2C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA625C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:44:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6A16B2074F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:42:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593528120;
-	bh=7DmX7oWQZyuosp8Mpct22BRWaWWExZsrij5D4i4cdFM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SPTkRpPckRZhbQRBsOsK7uyPRild1j0sj8CJzdgnvIA9wey4mliN/vn15HST9jITM
-	 4Fgt4qcNKZvpYmaJ/mn+f2EvJxDu46tkORDWm/MI+tuQhzOiLGFLa2fyI2YPVrpVNg
-	 jN3ZelVUL/uoZV3rReOmkMFPIBogBfmTedE5rgPU=
+	by mail.kernel.org (Postfix) with ESMTP id 9D7162074F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:44:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389060AbgF3Ol7 (ORCPT
+        id S2389062AbgF3On7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 10:41:59 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:43597 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726699AbgF3Ol6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 10:41:58 -0400
-Received: by mail-il1-f194.google.com with SMTP id i18so17927754ilk.10;
-        Tue, 30 Jun 2020 07:41:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=KWuxKgFISxi6aFfeR/+m+AVV5qQPW/Z25bWRDG1SOUI=;
-        b=ZFq36GFT7FM4ZJWVj4frRip+jV2roPnkAgeIQCuQ7BrVRWvdgeavALjQhRw6DiU3mN
-         ojd0LenycAgtSt38p7ZzuZXuGbw7nJdfpkXeeev2ZFlH6DyNI8voxFepiwy453bcm+v1
-         9DzDXWpBE3QwtzDov0rOZAyaCoRsNp7hO3xtDQ/ODE5Yezfy9FFjyswJetIhE468ryr+
-         xUst/RLAI3udghijpNipnFIxXkhZsEJrwGXydEYKICT4G0keiG8hFaFCqPFOuBhH9v89
-         scG8v6ToI3BzpsJqGAdHdEo6FPY5Al6Wt+61aRRO8jNWxCTcha3wt7fA8yiJslUYTL4t
-         mWVA==
-X-Gm-Message-State: AOAM530xbf2l8LMhjYh7BSi9am5f0fvxrP4fYa35IK3DYjZkBWP+2ZZZ
-        OUuXqNejEyljSELoJB126p/bz+CN6w==
-X-Google-Smtp-Source: ABdhPJxE47qO7YrcebiWxKhvPw21hhdjjh01IjgPQEKOUjWeylfnM28WpmFZCx02yUwlNgDM/HorbQ==
-X-Received: by 2002:a05:6e02:f87:: with SMTP id v7mr2859156ilo.251.1593528116254;
-        Tue, 30 Jun 2020 07:41:56 -0700 (PDT)
-Received: from xps15 ([64.188.179.255])
-        by smtp.gmail.com with ESMTPSA id t21sm1572808ioc.0.2020.06.30.07.41.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 07:41:55 -0700 (PDT)
-Received: (nullmailer pid 573635 invoked by uid 1000);
-        Tue, 30 Jun 2020 14:41:54 -0000
-Date:   Tue, 30 Jun 2020 08:41:54 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     daniel.lezcano@linaro.org, j-keerthy@ti.com, robh+dt@kernel.org,
-        amit.kucheria@verdurent.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: thermal: k3: Fix the reg property
-Message-ID: <20200630144154.GA573585@bogus>
-References: <20200630122527.28640-1-festevam@gmail.com>
+        Tue, 30 Jun 2020 10:43:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58852 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726072AbgF3On7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 10:43:59 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id 06EF1AB3D;
+        Tue, 30 Jun 2020 14:43:57 +0000 (UTC)
+Date:   Tue, 30 Jun 2020 16:43:55 +0200
+From:   Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
+To:     Mike Snitzer <snitzer@redhat.com>
+Cc:     Mikulas Patocka <mpatocka@redhat.com>, linux-nvdimm@lists.01.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Jan Kara <jack@suse.cz>, Alasdair Kergon <agk@redhat.com>,
+        dm-devel@redhat.com, "Michael S. Tsirkin" <mst@redhat.com>,
+        Yuval Shaia <yuval.shaia@oracle.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Jakub Staron <jstaron@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: dm writecache: reject asynchronous pmem.
+Message-ID: <20200630144355.GA21462@kitsune.suse.cz>
+References: <20200630123528.29660-1-msuchanek@suse.de>
+ <alpine.LRH.2.02.2006300929580.4801@file01.intranet.prod.int.rdu2.redhat.com>
+ <20200630141022.GZ21462@kitsune.suse.cz>
+ <20200630133546.GA20439@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200630122527.28640-1-festevam@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200630133546.GA20439@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Jun 2020 09:25:27 -0300, Fabio Estevam wrote:
-> Adjust the reg property to fix the following warning seen with
-> 'make dt_binding_check':
+On Tue, Jun 30, 2020 at 09:36:33AM -0400, Mike Snitzer wrote:
+> On Tue, Jun 30 2020 at 10:10am -0400,
+> Michal Suchánek <msuchanek@suse.de> wrote:
 > 
-> Documentation/devicetree/bindings/thermal/ti,am654-thermal.example.dt.yaml: example-0: thermal@42050000:reg:0: [0, 1107623936, 0, 604] is too long
+> > On Tue, Jun 30, 2020 at 09:32:01AM -0400, Mikulas Patocka wrote:
+> > > 
+> > > 
+> > > On Tue, 30 Jun 2020, Michal Suchanek wrote:
+> > > 
+> > > > The writecache driver does not handle asynchronous pmem. Reject it when
+> > > > supplied as cache.
+> > > > 
+> > > > Link: https://lore.kernel.org/linux-nvdimm/87lfk5hahc.fsf@linux.ibm.com/
+> > > > Fixes: 6e84200c0a29 ("virtio-pmem: Add virtio pmem driver")
+> > > > 
+> > > > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> > > > ---
+> > > >  drivers/md/dm-writecache.c | 6 ++++++
+> > > >  1 file changed, 6 insertions(+)
+> > > > 
+> > > > diff --git a/drivers/md/dm-writecache.c b/drivers/md/dm-writecache.c
+> > > > index 30505d70f423..57b0a972f6fd 100644
+> > > > --- a/drivers/md/dm-writecache.c
+> > > > +++ b/drivers/md/dm-writecache.c
+> > > > @@ -2277,6 +2277,12 @@ static int writecache_ctr(struct dm_target *ti, unsigned argc, char **argv)
+> > > >  
+> > > >  		wc->memory_map_size -= (uint64_t)wc->start_sector << SECTOR_SHIFT;
+> > > >  
+> > > > +		if (!dax_synchronous(wc->ssd_dev->dax_dev)) {
+> > > > +			r = -EOPNOTSUPP;
+> > > > +			ti->error = "Asynchronous persistent memory not supported as pmem cache";
+> > > > +			goto bad;
+> > > > +		}
+> > > > +
+> > > >  		bio_list_init(&wc->flush_list);
+> > > >  		wc->flush_thread = kthread_create(writecache_flush_thread, wc, "dm_writecache_flush");
+> > > >  		if (IS_ERR(wc->flush_thread)) {
+> > > > -- 
+> > > 
+> > > Hi
+> > > 
+> > > Shouldn't this be in the "if (WC_MODE_PMEM(wc))" block?
+> > That should be always the case at this point.
+> > > 
+> > > WC_MODE_PMEM(wc) retrurns true if we are using persistent memory as a 
+> > > cache device, otherwise we are using generic block device as a cache 
+> > > device.
+> >
+> > This is to prevent the situation where we have WC_MODE_PMEM(wc) but
+> > cannot guarantee consistency because the async flush is not handled.
 > 
-> Signed-off-by: Fabio Estevam <festevam@gmail.com>
-> ---
->  Documentation/devicetree/bindings/thermal/ti,am654-thermal.yaml | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
+> The writecache operates in 2 modes.  SSD or PMEM.  Mikulas is saying
+> your dax_synchronous() check should go within a WC_MODE_PMEM(wc) block
+> because it doesn't make sense to do the check when in SSD mode.
 
-Applied, thanks!
+Indeed, it's in the wrong if/else branch.
+
+Thanks
+
+Michal
