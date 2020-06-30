@@ -2,109 +2,59 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44BF8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C4D5C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:34:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1C572206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:34:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XwN9XpGG"
+	by mail.kernel.org (Postfix) with ESMTP id 5EA3C2074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:34:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388226AbgF3NeP (ORCPT
+        id S2388237AbgF3NeV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 09:34:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44968 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388180AbgF3Nd7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 09:33:59 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87D06C08C5DD
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:33:58 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id o8so18838267wmh.4
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:33:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=7A8fd8K6Xg2GcpEMDl/hEl1oZDzE0C0aQNCJLDk0izk=;
-        b=XwN9XpGGLLINb9bmDd9M7rq+kabOna2BscILWUe9Ys6KgtxEY+IvgWHLEoz0xXSSe1
-         tuwsdOmyH6jqNLGgiXb9sxAWHTg8xzvjeuK3NpnVTdmeORXc/6gyDSIH8o1nFbzHzJic
-         9mxzn+WvbvuC7gCHzWU847yTLCQ9aDVzScRidwsujRs5m/5XB7/akP33NYHmgwaLteWb
-         5IVrU1IZ+BCLITm0zbvFvVtao1FhFbrp1lU6tlXx+IWW1lpfOnrLK7No9Ji4DgdYUe7k
-         eGwkbeAZy0xAdcYz2AkElYtIHM9E1mzVMV2z+gBLshSbpcRyFtkZNinm5+eXnkBBEgvl
-         UAlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=7A8fd8K6Xg2GcpEMDl/hEl1oZDzE0C0aQNCJLDk0izk=;
-        b=f/4kj5XhTzbzMUvvfiPjjpLWLAdf45W+8eIChmrAmbEgwXFSO1RIpG4WCzLWSWGfPw
-         6/vl8ovd1Wzd4hGv9gXJpVts3VZ0vUAq6xCT7YM7XCOf5QGAkrkUGIq7Iio1yuh8kQwS
-         tkOiHlUvU+AkrjTfD2dOfVbzSUx/gLWQPkUnHbE5ryV/qBrhNK/o/73CSRCkIOW8pShd
-         pGBMNYlxSSBVkOvODkxbTZslQNu+N4BRMEfX+iP3QtWt18UlVV/FB5n+nn+Z5XCG6dWb
-         ubOU/1wfu/WgvejxcUCu0yKIOtfL8FL9CFQvQvpZTPDSEWLY704uDQj34xOhKRicwOU7
-         SV6Q==
-X-Gm-Message-State: AOAM530bWI1K/X0TLSAI2vukkx7zkmlpOeesIxcW3N/RTCT+dNk5aKCM
-        hJDcnJ+rzvqA0k79CJcFbjOLWQ==
-X-Google-Smtp-Source: ABdhPJynqohsoRrFIShWDkghOLuISD4f4oZVbWRjLzqNeAhn5TwaZv0Qb5XUX2AFsAIp934hGFepEw==
-X-Received: by 2002:a1c:1bc4:: with SMTP id b187mr22909206wmb.105.1593524037244;
-        Tue, 30 Jun 2020 06:33:57 -0700 (PDT)
-Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id z16sm3682464wrr.35.2020.06.30.06.33.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 06:33:56 -0700 (PDT)
-From:   Lee Jones <lee.jones@linaro.org>
-To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Shravan Kumar Ramani <sramani@mellanox.com>
-Subject: [PATCH 08/10] gpio: gpio-mlxbf: Tell the compiler that ACPI functions may not be used
-Date:   Tue, 30 Jun 2020 14:33:43 +0100
-Message-Id: <20200630133345.2232932-9-lee.jones@linaro.org>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200630133345.2232932-1-lee.jones@linaro.org>
-References: <20200630133345.2232932-1-lee.jones@linaro.org>
+        Tue, 30 Jun 2020 09:34:21 -0400
+Received: from verein.lst.de ([213.95.11.211]:35994 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388190AbgF3NeC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 09:34:02 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 21A1A68B05; Tue, 30 Jun 2020 15:33:59 +0200 (CEST)
+Date:   Tue, 30 Jun 2020 15:33:58 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Maximilian Heyne <mheyne@amazon.de>
+Cc:     Amit Shah <aams@amazon.de>, stable@vger.kernel.org,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] nvme: validate cntlid's only for nvme >= 1.1.0
+Message-ID: <20200630133358.GA20602@lst.de>
+References: <20200630122923.70282-1-mheyne@amazon.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200630122923.70282-1-mheyne@amazon.de>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-... as is the case when !CONFIG_ACPI.
+On Tue, Jun 30, 2020 at 12:29:23PM +0000, Maximilian Heyne wrote:
+> Controller ID's (cntlid) for NVMe devices were introduced in version
+> 1.1.0 of the specification. Controllers that follow the older 1.0.0 spec
+> don't set this field so it doesn't make sense to validate it. On the
+> contrary, when using SR-IOV this check breaks VFs as they are all part
+> of the same NVMe subsystem.
+> 
+> Signed-off-by: Maximilian Heyne <mheyne@amazon.de>
+> Cc: <stable@vger.kernel.org> # 5.4+
 
-Fixes the following W=1 kernel build warning:
+The first hunk looks ok, the second doesn't make sense as fabrics
+was only added with NVMe 1.2.2.  I can fix it up when applying if you
+are ok with that.
 
- drivers/gpio/gpio-mlxbf.c:130:36: warning: ‘mlxbf_gpio_acpi_match’ defined but not used [-Wunused-const-variable=]
- 130 | static const struct acpi_device_id mlxbf_gpio_acpi_match[] = {
- | ^~~~~~~~~~~~~~~~~~~~~
-
-Cc: Shravan Kumar Ramani <sramani@mellanox.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/gpio/gpio-mlxbf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpio-mlxbf.c b/drivers/gpio/gpio-mlxbf.c
-index 894aaf55fc96c..1fa9973f55b96 100644
---- a/drivers/gpio/gpio-mlxbf.c
-+++ b/drivers/gpio/gpio-mlxbf.c
-@@ -127,7 +127,7 @@ static int mlxbf_gpio_resume(struct platform_device *pdev)
- }
- #endif
- 
--static const struct acpi_device_id mlxbf_gpio_acpi_match[] = {
-+static const struct acpi_device_id __maybe_unused mlxbf_gpio_acpi_match[] = {
- 	{ "MLNXBF02", 0 },
- 	{}
- };
--- 
-2.25.1
-
+But you guys really shouldn't be doing SR-IOV with 1.0 controllers
+independent of this..
