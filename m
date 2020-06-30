@@ -2,155 +2,193 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4429EC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:09:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4447C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:09:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 183FC20826
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:09:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CB3720771
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:09:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Y6QZ8UAJ"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="GUqTDJ9K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732282AbgF3KJ0 (ORCPT
+        id S1732295AbgF3KJh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 06:09:26 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:53590 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732165AbgF3KJZ (ORCPT
+        Tue, 30 Jun 2020 06:09:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41776 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729259AbgF3KJf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 06:09:25 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200630100923euoutp01df73c6e42c8cebc8dd67f391f89e2645~dSoGbB9Xw0680906809euoutp01U
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 10:09:23 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200630100923euoutp01df73c6e42c8cebc8dd67f391f89e2645~dSoGbB9Xw0680906809euoutp01U
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1593511763;
-        bh=vvk/bkZo2eYBjVnTWyH4skPDFVB5Ke9h14iiIXjhEXU=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=Y6QZ8UAJu1kM16CoOkQFFrPQlbW5RBVsqg8KNYF/cNnGPWRHKOIl+514EQQtT0l3S
-         Na05LsGuSzWKtOiBmUJkw0ruf5JRX0Ny7uamkpeP3VtrOGZNPqGvam7e68yDb9WglC
-         PMzb7PdKPRtASCvJi4Za6Z9TXlcZVV/rPTJTHldY=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200630100923eucas1p21c0d910fd8e3ff9fade0ea1ad648fd91~dSoGJnirx2923529235eucas1p2t;
-        Tue, 30 Jun 2020 10:09:23 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id BF.EF.05997.35F0BFE5; Tue, 30
-        Jun 2020 11:09:23 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200630100922eucas1p2c7ae3d8210cc71045c779d8ea7f13f5e~dSoFsp6Nx1098410984eucas1p2Z;
-        Tue, 30 Jun 2020 10:09:22 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200630100922eusmtrp188ff4077e68e12838763b86609dce3a4~dSoFr9DJW1318213182eusmtrp1E;
-        Tue, 30 Jun 2020 10:09:22 +0000 (GMT)
-X-AuditID: cbfec7f4-65dff7000000176d-5d-5efb0f53dd60
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id A1.52.06314.25F0BFE5; Tue, 30
-        Jun 2020 11:09:22 +0100 (BST)
-Received: from [106.210.88.143] (unknown [106.210.88.143]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200630100922eusmtip2b526e8bbd87e76e84575cdde2a4ed8dc~dSoFECbdZ3075530755eusmtip2N;
-        Tue, 30 Jun 2020 10:09:22 +0000 (GMT)
-Subject: Re: [RFT 2/3] arm64: dts: exynos: Add unit address to soc node on
- Exynos5433
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Pankaj Dubey <pankaj.dubey@samsung.com>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <1c087737-5aa5-4232-69f3-26ac999a13a1@samsung.com>
-Date:   Tue, 30 Jun 2020 12:09:22 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
-        Thunderbird/68.9.0
+        Tue, 30 Jun 2020 06:09:35 -0400
+Received: from mail-lf1-x143.google.com (mail-lf1-x143.google.com [IPv6:2a00:1450:4864:20::143])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 281D0C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 03:09:35 -0700 (PDT)
+Received: by mail-lf1-x143.google.com with SMTP id g2so11027806lfb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 03:09:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=qmWg/+jpbOxQ2F1Zn/eg6jJ0YSCVNYZ/cm+95B4TJCY=;
+        b=GUqTDJ9KLKN9o+dp11x/jJH6eyI5mdjgZqCufGPzCAeE0W2ZtXNIeQrA52zabXMd9k
+         aNihOto2tdj+oHp8IuRNwTIJqph1SNFhyi+1nC544G+9LLbmx1NVOiaNsJrmLBopA18/
+         gc5lbnRDSEbwDgP73uE38AAmenOGm5QAT9c6XtiV+lDofflh/kMhCJKDFt+uO8qs4bfb
+         jWt5sSOrcTsJQBMul/qSQSRhiOvOvZG+yRAwSqoghKCe8E2SSQL4MWjLlXM+klJePrYU
+         75CIcj+94wTwNNY6ImSdHqXeOXKRjSsUlWewSuoBqDKfacM1gfhmoI4BzSzy6qtaPOZq
+         +L0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=qmWg/+jpbOxQ2F1Zn/eg6jJ0YSCVNYZ/cm+95B4TJCY=;
+        b=A4qfHJ3Rwh+UNZt2//Oc4kcDUfDfHcijJH+jHzervs98PD7CBOARsN1t6qlrCQaOjT
+         4W7jh009k4jdIrN2WEbGSvdAzBzJkGw1ObmUoql2URLJGRAuw4ORyoH8igBFPrX4ZdeF
+         zpFpPMQK3bCDKlilEK3aDZc4jvrU0dmAseHqcPNdpl/914Ry1wUSAW1f/RiBRHTi7PiW
+         1PqcumoreDXD99brJteSdDJN9Mn6nIxn/oV9VeUEaL6aIBA3mYNGFRTPvUBXEy2BB7+R
+         /CpQuGAUTOnOAX0d5nCrAH2UIAKJoAv28ZWng/CBtFU/3p0ngu/znhg2tgVPkuA0aqif
+         OS7g==
+X-Gm-Message-State: AOAM532Ba48EBM72ZcGEvqDIKJma3eCINxV7rLuJfVgyBO4fXOsIFxfB
+        6Q//h7Qggm4plK/ykUz7ItsC5Q==
+X-Google-Smtp-Source: ABdhPJySik5PUCHYPI0zhpnvXdET33Ycn7xwDFaHIxLodpL5XimXyR5OUblyqsatUY4l9OE3msdbwg==
+X-Received: by 2002:ac2:5f04:: with SMTP id 4mr11471273lfq.140.1593511773581;
+        Tue, 30 Jun 2020 03:09:33 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id f5sm657759ljc.99.2020.06.30.03.09.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 03:09:32 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 5793D101187; Tue, 30 Jun 2020 13:09:40 +0300 (+03)
+Date:   Tue, 30 Jun 2020 13:09:40 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Bibo Mao <maobibo@loongson.cn>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Paul Burton <paulburton@kernel.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Daniel Silsby <dansilsby@gmail.com>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [PATCH 1/3] mm: set page fault address for update_mmu_cache_pmd
+Message-ID: <20200630100940.wo5l5fcs44xhrqo7@box>
+References: <1592990792-1923-1-git-send-email-maobibo@loongson.cn>
 MIME-Version: 1.0
-In-Reply-To: <20200629193338.29540-2-krzk@kernel.org>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrHKsWRmVeSWpSXmKPExsWy7djPc7rB/L/jDE5vFbR4MG8bm8XGGetZ
-        La5/ec5qMf/IOVaL/sevmS3On9/AbrHp8TVWi8u75rBZzDi/j8li0dYv7Bate4+wW7Q/fcns
-        wOOxaVUnm8fmJfUefVtWMXp83iQXwBLFZZOSmpNZllqkb5fAlfHj9y/mgt/sFT27L7A1MG5m
-        62Lk5JAQMJGY3byXpYuRi0NIYAWjRMP0h4wQzhdGiX/nXrBDOJ8ZJSbtmMgK0zJ98R12EFtI
-        YDmjxM3n3BBF7xkl9l0/DjZXWCBc4tCqbiaQhIjALCaJtv33wEYxC2xjlDg25QnYKDYBQ4mu
-        t11gHbwCdhIHZn1kArFZBFQlfqy/C7ZCVCBWom/pAqgaQYmTM58AXcvBwSlgKrHkmBJImFlA
-        XmL72znMELa4xK0n85kgLr3ELvGuywzCdpHYsGgS1NPCEq+Ob2GHsGUkTk/uAQeAhEAzo8TD
-        c2vZIZweRonLTTMYIaqsJe6c+8UGsphZQFNi/S59iLCjxP+bb8HukRDgk7jxVhDiBj6JSdum
-        M0OEeSU62oQgqtUkZh1fB7f24IVLzBMYlWYheWwWkm9mIflmFsLeBYwsqxjFU0uLc9NTi43y
-        Usv1ihNzi0vz0vWS83M3MQJT1el/x7/sYNz1J+kQowAHoxIPb8K5n3FCrIllxZW5hxglOJiV
-        RHidzp6OE+JNSaysSi3Kjy8qzUktPsQozcGiJM5rvOhlrJBAemJJanZqakFqEUyWiYNTqoEx
-        d5nEPa2Im+/cxVWf1zVHBa8Q+e3k4VPqWXx3aX7ZEu5Z5qyfLv4qsXr2jusRwwE/2VyxZZve
-        8TmyPDGozlis/qhY/8HKlTvCPvkkhFtaKeb7mAYEmDusdPNMXBcXevUmx+XdWnP4++7rZ4XP
-        /pWseOqSuOjEHPbFq1lSnJRcDT4vZrCfWabEUpyRaKjFXFScCAAGNH+pUQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrEIsWRmVeSWpSXmKPExsVy+t/xe7pB/L/jDF5MNLZ4MG8bm8XGGetZ
-        La5/ec5qMf/IOVaL/sevmS3On9/AbrHp8TVWi8u75rBZzDi/j8li0dYv7Bate4+wW7Q/fcns
-        wOOxaVUnm8fmJfUefVtWMXp83iQXwBKlZ1OUX1qSqpCRX1xiqxRtaGGkZ2hpoWdkYqlnaGwe
-        a2VkqqRvZ5OSmpNZllqkb5egl/Hj9y/mgt/sFT27L7A1MG5m62Lk5JAQMJGYvvgOexcjF4eQ
-        wFJGiQPti6ASMhInpzWwQtjCEn+udbFBFL1llPg38SRYkbBAuMShVd1MIAkRgVlMEgf2PGYE
-        cZgFtjFK3L/SBtWymVFi+dFr7CAtbAKGEl1vu8DaeQXsJA7M+sgEYrMIqEr8WH8XrEZUIFbi
-        270tUDWCEidnPmHpYuTg4BQwlVhyTAkkzCxgJjFv80NmCFteYvvbOVC2uMStJ/OZJjAKzULS
-        PQtJyywkLbOQtCxgZFnFKJJaWpybnltsqFecmFtcmpeul5yfu4kRGJ/bjv3cvIPx0sbgQ4wC
-        HIxKPLwJ537GCbEmlhVX5h5ilOBgVhLhdTp7Ok6INyWxsiq1KD++qDQntfgQoynQbxOZpUST
-        84GpI68k3tDU0NzC0tDc2NzYzEJJnLdD4GCMkEB6YklqdmpqQWoRTB8TB6dUA6PuheqqrwVd
-        Gl9ElOf8XeUomWxy/X3cl/x2k8MCr/+lWCYKOWf4X5ianff/m8Ee5x/TUk6piir4e3IwfE7e
-        uVVGkN2hWlShbOHDw43PhXzF/LZNjpzPN8PzVmfcb1Pxe0FTPZriXx7O+Oo3f9LyoJk3bqtv
-        qDieX7Z3Tcd7ZbYjxoLPFs2/G6PEUpyRaKjFXFScCACVNFfb5QIAAA==
-X-CMS-MailID: 20200630100922eucas1p2c7ae3d8210cc71045c779d8ea7f13f5e
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200629193354eucas1p20f5d1811033f3ce3189a5d4682b759f7
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200629193354eucas1p20f5d1811033f3ce3189a5d4682b759f7
-References: <20200629193338.29540-1-krzk@kernel.org>
-        <CGME20200629193354eucas1p20f5d1811033f3ce3189a5d4682b759f7@eucas1p2.samsung.com>
-        <20200629193338.29540-2-krzk@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1592990792-1923-1-git-send-email-maobibo@loongson.cn>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29.06.2020 21:33, Krzysztof Kozlowski wrote:
-> Add @0 unit address to 'soc' node match its 'reg' property and silence
-> DTC warning:
->
->      Warning (unit_address_vs_reg): /soc: node has a reg or ranges property, but no unit name
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+On Wed, Jun 24, 2020 at 05:26:30PM +0800, Bibo Mao wrote:
+> update_mmu_cache_pmd is used to update tlb for the pmd entry by
+> software. On MIPS system, the tlb entry indexed by page fault
+> address maybe exists already, only that tlb entry may be small
+> page, also it may be huge page. Before updating pmd entry with
+> huge page size, older tlb entry need to be invalidated.
+> 
+> Here page fault address is passed to function update_mmu_cache_pmd,
+> rather than pmd huge page start address. The page fault address
+> can be used for invalidating older tlb entry.
+> 
+> Signed-off-by: Bibo Mao <maobibo@loongson.cn>
 > ---
->
-> Not tested on HW.
-> ---
->   arch/arm64/boot/dts/exynos/exynos5433.dtsi | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-> index 6721966140f4..ebe089469b5f 100644
-> --- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-> +++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-> @@ -256,7 +256,7 @@
->   		cpu_on = <0xC4000003>;
->   	};
->   
-> -	soc: soc {
-> +	soc: soc@0 {
->   		compatible = "simple-bus";
->   		#address-cells = <1>;
->   		#size-cells = <1>;
+>  arch/mips/include/asm/pgtable.h | 9 +++++++++
+>  mm/huge_memory.c                | 7 ++++---
+>  mm/memory.c                     | 2 +-
+>  3 files changed, 14 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/mips/include/asm/pgtable.h b/arch/mips/include/asm/pgtable.h
+> index dd7a0f5..bd81661 100644
+> --- a/arch/mips/include/asm/pgtable.h
+> +++ b/arch/mips/include/asm/pgtable.h
+> @@ -554,11 +554,20 @@ static inline void update_mmu_cache(struct vm_area_struct *vma,
+>  #define	__HAVE_ARCH_UPDATE_MMU_TLB
+>  #define update_mmu_tlb	update_mmu_cache
+>  
+> +extern void local_flush_tlb_page(struct vm_area_struct *vma,
+> +				unsigned long page);
+>  static inline void update_mmu_cache_pmd(struct vm_area_struct *vma,
+>  	unsigned long address, pmd_t *pmdp)
+>  {
+>  	pte_t pte = *(pte_t *)pmdp;
+>  
+> +	/*
+> +	 * If pmd_none is true, older tlb entry will be normal page.
+> +	 * here to invalidate older tlb entry indexed by address
+> +	 * parameter address must be page fault address rather than
+> +	 * start address of pmd huge page
+> +	 */
+> +	local_flush_tlb_page(vma, address);
 
-Best regards
+Can't say I follow what is going on.
+
+Why local? What happens on SMP?
+
+And don't you want to flush PMD_SIZE range around the address?
+
+>  	__update_tlb(vma, address, pte);
+>  }
+>  
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index 78c84be..0f9187b 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -780,6 +780,7 @@ static void insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
+>  		pgtable_t pgtable)
+>  {
+>  	struct mm_struct *mm = vma->vm_mm;
+> +	unsigned long start = addr & PMD_MASK;
+>  	pmd_t entry;
+>  	spinlock_t *ptl;
+>  
+> @@ -792,7 +793,7 @@ static void insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
+>  			}
+>  			entry = pmd_mkyoung(*pmd);
+>  			entry = maybe_pmd_mkwrite(pmd_mkdirty(entry), vma);
+> -			if (pmdp_set_access_flags(vma, addr, pmd, entry, 1))
+> +			if (pmdp_set_access_flags(vma, start, pmd, entry, 1))
+>  				update_mmu_cache_pmd(vma, addr, pmd);
+>  		}
+>  
+> @@ -813,7 +814,7 @@ static void insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
+>  		pgtable = NULL;
+>  	}
+>  
+> -	set_pmd_at(mm, addr, pmd, entry);
+> +	set_pmd_at(mm, start, pmd, entry);
+>  	update_mmu_cache_pmd(vma, addr, pmd);
+>  
+>  out_unlock:
+> @@ -864,7 +865,7 @@ vm_fault_t vmf_insert_pfn_pmd_prot(struct vm_fault *vmf, pfn_t pfn,
+>  
+>  	track_pfn_insert(vma, &pgprot, pfn);
+>  
+> -	insert_pfn_pmd(vma, addr, vmf->pmd, pfn, pgprot, write, pgtable);
+> +	insert_pfn_pmd(vma, vmf->address, vmf->pmd, pfn, pgprot, write, pgtable);
+>  	return VM_FAULT_NOPAGE;
+>  }
+>  EXPORT_SYMBOL_GPL(vmf_insert_pfn_pmd_prot);
+> diff --git a/mm/memory.c b/mm/memory.c
+> index dc7f354..c703458 100644
+> --- a/mm/memory.c
+> +++ b/mm/memory.c
+> @@ -3592,7 +3592,7 @@ static vm_fault_t do_set_pmd(struct vm_fault *vmf, struct page *page)
+>  
+>  	set_pmd_at(vma->vm_mm, haddr, vmf->pmd, entry);
+>  
+> -	update_mmu_cache_pmd(vma, haddr, vmf->pmd);
+> +	update_mmu_cache_pmd(vma, vmf->address, vmf->pmd);
+>  
+>  	/* fault is handled */
+>  	ret = 0;
+> -- 
+> 1.8.3.1
+> 
+> 
+
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
-
+ Kirill A. Shutemov
