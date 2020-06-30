@@ -2,95 +2,136 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 123AFC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB45CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:31:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBE0220702
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:30:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593545430;
-	bh=rEjh/g2S0tM9y4L43jJdE5PRYKCoFH1gQ/JFjzpI3J8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=mPt41kf1UZYI5VPceiM/M0EnYN+7s9gSN03Oj9fpu4oj9rzo++WyRv3VcKd0Hwitt
-	 aK44c6dwxRYY0cFVaey4Rxw67/bvLlrWlIuejxrKsH0D1j1hQrlrnifZPzrKgSMVjN
-	 3bMHvM90pLWIgOHK5Bl0U3cb78iKfXSUtYX8/+VI=
+	by mail.kernel.org (Postfix) with ESMTP id C67AE206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:31:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728121AbgF3Ta3 (ORCPT
+        id S1728165AbgF3TbL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 15:30:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33830 "EHLO mail.kernel.org"
+        Tue, 30 Jun 2020 15:31:11 -0400
+Received: from mga14.intel.com ([192.55.52.115]:4913 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726128AbgF3Ta2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 15:30:28 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFA06206C0;
-        Tue, 30 Jun 2020 19:30:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593545428;
-        bh=rEjh/g2S0tM9y4L43jJdE5PRYKCoFH1gQ/JFjzpI3J8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YrsWemV8NJvx04mW005Zc9MA2OgNruHQsVtdKH2T4vxRF2Zqm0xlQEPT9UKJUZbyq
-         ueVxKtzRjyE3noo1bvlLdwBw6z1lWqVx7WxIogIstM89v0LpL+fRtcftaeRrm4t6Rz
-         Ri8R1z08mqiVd1eaw1NHQ/BbeC/ASKIm1lBJFDtE=
-Date:   Tue, 30 Jun 2020 12:30:26 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        John Crispin <john@phrozen.org>,
-        Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <Mark-MC.Lee@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v2 00/10] net: improve devres helpers
-Message-ID: <20200630123026.39d97211@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200629120346.4382-1-brgl@bgdev.pl>
-References: <20200629120346.4382-1-brgl@bgdev.pl>
+        id S1726128AbgF3TbL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 15:31:11 -0400
+IronPort-SDR: J+8LMPoEnRqzFwq9cEKeQo5iFIO1jvYGvmrDL7eYXkX7tAt1giu98hTxKuT678JdTLpCVtVWL7
+ mA6xwvoF5JjQ==
+X-IronPort-AV: E=McAfee;i="6000,8403,9668"; a="145434192"
+X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
+   d="scan'208";a="145434192"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 12:31:10 -0700
+IronPort-SDR: dKTar9xY4iHMIIVg7xyqLcVVUN9OPStvROB7tkLJPCaE6w2lbc6qxT+nqx7xNMfvXGFrUjneO2
+ /nKaYsT/mEYw==
+X-IronPort-AV: E=Sophos;i="5.75,298,1589266800"; 
+   d="scan'208";a="454721804"
+Received: from timfergu-mobl.amr.corp.intel.com (HELO [10.255.1.246]) ([10.255.1.246])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 12:31:08 -0700
+Subject: Re: [RFC][PATCH 0/8] Migrate Pages in lieu of discard
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        David Rientjes <rientjes@google.com>,
+        Huang Ying <ying.huang@intel.com>,
+        Dan Williams <dan.j.williams@intel.com>
+References: <20200629234503.749E5340@viggo.jf.intel.com>
+ <CALvZod55OFzOozsDbyTkUh1uZEobo4CZ=+8JgrJJHw8QuWh0hw@mail.gmail.com>
+ <654d785f-3fe5-d8bd-86bf-bf7431527184@intel.com>
+ <CALvZod5-YuMC8b6rs=a_ahh0WF14wgKJBW18CARJtGa_bYUn0Q@mail.gmail.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+ z5cecg==
+Message-ID: <fdfeb902-e363-f8b5-4c63-df224b9817fa@intel.com>
+Date:   Tue, 30 Jun 2020 12:31:05 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <CALvZod5-YuMC8b6rs=a_ahh0WF14wgKJBW18CARJtGa_bYUn0Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Jun 2020 14:03:36 +0200 Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> So it seems like there's no support for relaxing certain networking devres
-> helpers to not require previously allocated structures to also be managed.
-> However the way mdio devres variants are implemented is still wrong and I
-> modified my series to address it while keeping the functions strict.
-> 
-> First two patches modify the ixgbe driver to get rid of the last user of
-> devm_mdiobus_free().
-> 
-> Patches 3, 4, 5 and 6 are mostly cosmetic.
-> 
-> Patch 7 fixes the way devm_mdiobus_register() is implemented.
-> 
-> Patches 8 & 9 provide a managed variant of of_mdiobus_register() and
-> last patch uses it in mtk-star-emac driver.
-> 
-> v1 -> v2:
-> - drop the patch relaxing devm_register_netdev()
-> - require struct mii_bus to be managed in devm_mdiobus_register() and
->   devm_of_mdiobus_register() but don't store that information in the
->   structure itself: use devres_find() instead
+On 6/30/20 12:25 PM, Shakeel Butt wrote:
+>> Since there is never a demotion path out of the set of
+>> all nodes, the common case would be that there is no demotion path out
+>> of a reclaim node set.
+>>
+>> If that's true, I'd say that the kernel still needs to consider
+>> migrations even within the set.
+> In my opinion it should be a user defined policy but I think that
+> discussion is orthogonal to this patch series. As I understand, this
+> patch series aims to add the migration-within-reclaim infrastructure,
+> IMO the policies, optimizations, heuristics can come later.
 
-Acked-by: Jakub Kicinski <kuba@kernel.org>
+Yes, this should be considered to add the infrastructure and one
+_simple_ policy implementation which sets up migration away from nodes
+with CPUs to more distant nodes without CPUs.
+
+This simple policy will be useful for (but not limited to) volatile-use
+persistent memory like Intel's Optane DIMMS.
+
+> BTW is this proposal only for systems having multi-tiers of memory?
+> Can a multi-node DRAM-only system take advantage of this proposal? For
+> example I have a system with two DRAM nodes running two jobs
+> hardwalled to each node. For each job the other node is kind of
+> low-tier memory. If I can describe the per-job demotion paths then
+> these jobs can take advantage of this proposal during occasional
+> peaks.
+
+I don't see any reason it could not work there.  There would just need
+to be a way to set up a different demotion path policy that what was
+done here.
