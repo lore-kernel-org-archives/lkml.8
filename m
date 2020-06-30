@@ -3,179 +3,175 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B2CC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2036AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 96B1F2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:15:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593537357;
-	bh=AzjHeoRhEYGDdYQ77wVjcaqvcWI9v5y5K3rNwEHdkRk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=QekQ0vV9DWHIOmw6f2PmdpAJlY4M9I+Q5ShS9ebrnEzF6308BjHgH83jXeD5ifLGb
-	 PPKbzfWyvkATZZ2h4K/cCZzC2LdnNRFAj896a6Yk6M50leBu/Adyn+MhZ1mvOMEUR7
-	 TMduzaVCFkYbTjkTJ/CTTIm7XTfHR2/2p+cAwHyc=
+	by mail.kernel.org (Postfix) with ESMTP id EBE7020723
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:16:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="PsL9QixB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390112AbgF3RP4 (ORCPT
+        id S2390125AbgF3RQU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 13:15:56 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36760 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbgF3RPz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 13:15:55 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 72so19033175otc.3
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 10:15:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZokXo4CHe7szjergvzRgNL3erxTR0QJ+oxc1DQHyuTU=;
-        b=chrZuKFJcjd8AS3ZxuItEq+Ds+4dMMh5loozVEnX2rArcCN3hBqH6YHYIuOjE2Lyo7
-         GSsIa7Kp/9546KGUjLuRRdehQ9PFrKSTx1IOnU1xbctdP//1n4sEMumqD7+Hhwh4jLsX
-         Pm6TNkAcjGuR47yCrCdc2e5bL7iNTlYlT9Bm+Knx6xzXyfekB2SUjUzHQ2kdGbMGOetC
-         SRHB0VTxXEpRBi7+h90cS9z49xm7q0fA5hV8DL17EXSPQ8atkZgeDJfRJeMjJBG1qK/3
-         j1RHX4qQzlTnrtWwf2WK6MwEt5r50npy45v4gQR0hV1gIxJks2ucszxQL4MdwGlb1wXk
-         u6Iw==
-X-Gm-Message-State: AOAM532X8Ev6pipcYORCCXNvPGHKpWc50+Bgj9XZtSWJF/SJpGgs9sik
-        SK0PXY8Q6X4+j2Ewxfck2q5gJ6bmginuB8gRHmo=
-X-Google-Smtp-Source: ABdhPJyxlbGwNwrnlDTcecZPx36RN1c5XCg7iMeUeozOeBhXalx950BDlVY50YGrPgnAnbB5E0DneOO3LhSCfA/KUWY=
-X-Received: by 2002:a9d:1c82:: with SMTP id l2mr1402042ota.167.1593537354222;
- Tue, 30 Jun 2020 10:15:54 -0700 (PDT)
+        Tue, 30 Jun 2020 13:16:20 -0400
+Received: from nat-hk.nvidia.com ([203.18.50.4]:41648 "EHLO nat-hk.nvidia.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726642AbgF3RQT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 13:16:19 -0400
+Received: from hkpgpgate102.nvidia.com (Not Verified[10.18.92.77]) by nat-hk.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5efb735f0000>; Wed, 01 Jul 2020 01:16:16 +0800
+Received: from HKMAIL101.nvidia.com ([10.18.16.10])
+  by hkpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 30 Jun 2020 10:16:16 -0700
+X-PGP-Universal: processed;
+        by hkpgpgate102.nvidia.com on Tue, 30 Jun 2020 10:16:16 -0700
+Received: from HKMAIL102.nvidia.com (10.18.16.11) by HKMAIL101.nvidia.com
+ (10.18.16.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 30 Jun
+ 2020 17:16:12 +0000
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.176)
+ by HKMAIL102.nvidia.com (10.18.16.11) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3 via Frontend Transport; Tue, 30 Jun 2020 17:16:12 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=A+fUZABkWpK08pLQEbOIHGY8XLy0B+RHNHSnGUoS+NGKOXf8VGFqopWTYz9cuAFyqRpncySLiTlKNNacmi68EoZ/7v6jyTbIaQl2VyjSORWaLU4FBqpOzYTmdm3q/xUWf+YRWsvQ+sugeJhjw/JA/QE7g/0lwIryzlQowdOkE6a2MiN+4g3DmYGQisEGaAezbXp6ziNBB2vt8aJiqqKMA/CCJX3MbdJ9iIPIqpMwXiDCHkLtYVbGfCXzkKVz51atfwySjQNt5ocDPFTdsKkGlN4ME8zqcAdajW0HS9zxlPbEEjTu7e3h0ieRGX5LYMwPY3r1LEwIvGUkZiA/NEJLVQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=/rpWkPa4G2BpSb5xcr1KVEdWuniqSALHDaJZNgqVOac=;
+ b=WtKai+0yi7qx7YDoCK/TguEaYfMHhtKCT4C1FXjRsHesEXdBtSeNvmOb0fg5MJHB3EgILGJ38ZCDakkQlsEzEoFitHRc0BbVg50dOy5UBbr/hxnY3GErCGcW2lsnoJnhdLaGug2la5+PyX6HZVHyEcLUKnSPf8Y0jUgvC83xFuc9WiqednKQL7XgU8VZYoMibMmgmKUCWin3910im1RQjO6WOxS+GR9t2H89UPdjcYiekO3XxtQ14rOY1dRj71lNN1IKT4HPFddTbOQdvrNHeojrhaze/JW1XC2/HccgnFxR2QrdPkogNiJ68FZJaloZ8SfH7mEdoAVkBTqjtMYI0w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+Received: from BYAPR12MB2822.namprd12.prod.outlook.com (2603:10b6:a03:9a::17)
+ by BYAPR12MB3126.namprd12.prod.outlook.com (2603:10b6:a03:df::28) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21; Tue, 30 Jun
+ 2020 17:16:10 +0000
+Received: from BYAPR12MB2822.namprd12.prod.outlook.com
+ ([fe80::70bd:803f:78b6:ebf2]) by BYAPR12MB2822.namprd12.prod.outlook.com
+ ([fe80::70bd:803f:78b6:ebf2%2]) with mapi id 15.20.3131.027; Tue, 30 Jun 2020
+ 17:16:09 +0000
+From:   Krishna Reddy <vdumpa@nvidia.com>
+To:     Jonathan Hunter <jonathanh@nvidia.com>
+CC:     "joro@8bytes.org" <joro@8bytes.org>,
+        "will@kernel.org" <will@kernel.org>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        Thierry Reding <treding@nvidia.com>,
+        "Yu-Huan Hsu" <YHsu@nvidia.com>, Sachin Nikam <Snikam@nvidia.com>,
+        Pritesh Raithatha <praithatha@nvidia.com>,
+        Timo Alho <talho@nvidia.com>,
+        Bitan Biswas <bbiswas@nvidia.com>,
+        Mikko Perttunen <mperttunen@nvidia.com>,
+        Nicolin Chen <nicolinc@nvidia.com>,
+        Bryan Huntsman <bhuntsman@nvidia.com>,
+        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>
+Subject: RE: [PATCH v8 1/3] iommu/arm-smmu: add NVIDIA implementation for dual
+ ARM MMU-500 usage
+Thread-Topic: [PATCH v8 1/3] iommu/arm-smmu: add NVIDIA implementation for
+ dual ARM MMU-500 usage
+Thread-Index: AQHWTnLtXe5vi7jgbE2pRnyepolCC6jw8nYAgABivFCAAAYNgIAAA0WAgAAGCAA=
+Date:   Tue, 30 Jun 2020 17:16:09 +0000
+Message-ID: <BYAPR12MB2822B43B0218F6E55C97451BB36F0@BYAPR12MB2822.namprd12.prod.outlook.com>
+References: <20200630001051.12350-1-vdumpa@nvidia.com>
+ <20200630001051.12350-2-vdumpa@nvidia.com>
+ <e6da9661-4e62-6e34-ac21-63ff993ca8bc@nvidia.com>
+ <BYAPR12MB282210677459B8D62623C642B36F0@BYAPR12MB2822.namprd12.prod.outlook.com>
+ <4037efc7-fbed-e8cf-dac7-212c65014e4e@nvidia.com>
+ <eb0ffc7e-f41b-d17c-6a90-049335098cd2@nvidia.com>
+In-Reply-To: <eb0ffc7e-f41b-d17c-6a90-049335098cd2@nvidia.com>
+Accept-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Enabled=True;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SiteId=43083d15-7273-40c1-b7db-39efd9ccc17a;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Owner=VDUMPA@nvidia.com;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SetDate=2020-06-30T17:16:08.1378150Z;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Name=Unrestricted;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_ActionId=9312166d-7c3d-4376-93ca-0c1bb1b6d0ee;
+ MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Extended_MSFT_Method=Automatic
+authentication-results: nvidia.com; dkim=none (message not signed)
+ header.d=none;nvidia.com; dmarc=none action=none header.from=nvidia.com;
+x-originating-ip: [216.228.112.22]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 49c3dc5a-94f8-4b05-3ef7-08d81d194875
+x-ms-traffictypediagnostic: BYAPR12MB3126:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <BYAPR12MB31267AEF461B142437C9446DB36F0@BYAPR12MB3126.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0450A714CB
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: eoZSV0Jgzs5uYk/Hdd0uSh8EsZvevrHBZ+AUcR3+z7sjftWvQObYM9JxyRmNdLGWYSiW7EnupfO/U0tYdSO9n0G2g1UDRD0QuUmGBp/ea5SnNU4HXaGz5O1bdkys8B9niCwHhe6hPYr9xea+kIdUQ7J6KUatjHqMJI9F7LFlwPaS3SLmNuINnyWOisiWAPmhETTiV0hceDSRQFPTblDs8BYeR0SW90vCtf5gIQr5FMeow7WXD1ahTg2W/awAatixTTK1B/GWGg44DcrxRFVKvE2i/0EF+WbCukSLDMsJht4ydTnrmb/IKWbWQXsJrUi8EZvO4EQM3kiuCvv167NALg==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2822.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(366004)(376002)(396003)(346002)(9686003)(7696005)(6636002)(6506007)(86362001)(4744005)(8936002)(71200400001)(33656002)(5660300002)(478600001)(2906002)(8676002)(54906003)(4326008)(66446008)(26005)(6862004)(316002)(55016002)(76116006)(66946007)(66556008)(66476007)(64756008)(52536014)(186003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata: ffo5rliOMSfvJ2bDNl0uodDl+d6TocgWCq8GIFaxaXVu9Gl5RHzthZgQoeuAwJVYsDVAKH9ri88H+NOhY4/Y/5BfdDovSyUmFCcDwFHpNWhPvFPI5H+Brc//ZNCjP5UbGsFcCnMARJWVHBQZcn41qdSO/yGrJeJFVilS3PQ6jZN/zq8ZsbXoWFSNkulMssWyvrcDIZDVl2cyRdtmpStkrme8ddxs+FiqBHglM2SKorAag47ixZ6rPJ6+MaG/em+vdB84gYLyvRPnqZtexbRLgswZiWjTv0iXVVuq/NUx78xoTHPXqZy31yJ2PjTJGkrHzRBGoMyv7rcZzYS97gYGNun0lUolksua1j6dwdh98zZzNSnafM0HD5ZkZfTQew3l7Qp7wi7fdDD7w42xeMKWADlc7z7X+t+HGrSaRh4u/0ZuMqxQYFedW/BB3oMfKfhTM5wjtmkELObyiyCX9/Hj3Vg335SK0TJZ4gFYUPlkZlyB7r8dJOs2dyQNneaLRiwT
 MIME-Version: 1.0
-References: <CAJZ5v0i=riYAA1wnuDBhBLfWQiGnaRW8fxkCU5X-3=noqSEhrQ@mail.gmail.com>
- <CAGETcx8J5fs42_HMVyYvbX1=gqGTnavEuDOH+LHprZYRbXvUzw@mail.gmail.com>
- <CAJZ5v0i-ySdNmToh=ExT9H_88bhHVeUNfTNWxXG1SzaP8a5j-w@mail.gmail.com>
- <CAGETcx9iLH8fBEA0a9=iPsObzaePg9Zj0A9T_7NSKH6KSq3vFg@mail.gmail.com>
- <CAJZ5v0iONFBX00NqzUaZ9kNWr6yLBNtLnA+sF-Ge-QNtY9qSug@mail.gmail.com>
- <CAGETcx-YqJDnc6fNu5dncc=DSHwS_=-uOMHvR8V=b-QQJ7HOcA@mail.gmail.com>
- <CAJZ5v0ju58LxvRckv2T=H0D=aDooGUoGfqFze5zWQ1ARAAJcag@mail.gmail.com>
- <CAGETcx8KknvzZxfW4o=siswB__c9yeh=1wOVyvtM2112WEBizQ@mail.gmail.com>
- <CAMuHMdXbzXnWQSaQ44p-cL9TA=ng20UB=vjscRDjpf7N=S4fjg@mail.gmail.com>
- <CAJZ5v0joi2YDgAPrPhT8SMXTu-Va7s9DXVs7YDYf87JY_ntONQ@mail.gmail.com>
- <20200630153850.GE1785141@kroah.com> <CAJZ5v0jQYK8LHaaJ4-GeJpzGdGY2Csmp_jmHfgc7BOaXyfsZCg@mail.gmail.com>
- <CAGETcx9xCvjZiht4Z_pnFVdaYp9vLPybwZTKNZ9wHGRRCi6VuA@mail.gmail.com>
-In-Reply-To: <CAGETcx9xCvjZiht4Z_pnFVdaYp9vLPybwZTKNZ9wHGRRCi6VuA@mail.gmail.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 30 Jun 2020 19:15:42 +0200
-Message-ID: <CAJZ5v0janAmg8j_ZC6Qw+QE5hJaGSQxpiAjwxWDw1jQs=mRkTw@mail.gmail.com>
-Subject: Re: [PATCH v1] driver core: Fix suspend/resume order issue with
- deferred probe
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2822.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 49c3dc5a-94f8-4b05-3ef7-08d81d194875
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2020 17:16:09.7947
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Wr4H5bsA5FtAIF0kmWiL6iiIYHO28paKasv6WgqZQZvE1MQ+KWF9SXd6rK494r8nQdJJHJyWay+NSY5WlY14+g==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3126
+X-OriginatorOrg: Nvidia.com
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1593537376; bh=/rpWkPa4G2BpSb5xcr1KVEdWuniqSALHDaJZNgqVOac=;
+        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
+         ARC-Authentication-Results:From:To:CC:Subject:Thread-Topic:
+         Thread-Index:Date:Message-ID:References:In-Reply-To:
+         Accept-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:msip_labels:
+         authentication-results:x-originating-ip:x-ms-publictraffictype:
+         x-ms-office365-filtering-correlation-id:x-ms-traffictypediagnostic:
+         x-ms-exchange-transport-forked:x-microsoft-antispam-prvs:
+         x-ms-oob-tlc-oobclassifiers:x-forefront-prvs:
+         x-ms-exchange-senderadcheck:x-microsoft-antispam:
+         x-microsoft-antispam-message-info:x-forefront-antispam-report:
+         x-ms-exchange-antispam-messagedata:MIME-Version:
+         X-MS-Exchange-CrossTenant-AuthAs:
+         X-MS-Exchange-CrossTenant-AuthSource:
+         X-MS-Exchange-CrossTenant-Network-Message-Id:
+         X-MS-Exchange-CrossTenant-originalarrivaltime:
+         X-MS-Exchange-CrossTenant-fromentityheader:
+         X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
+         X-MS-Exchange-CrossTenant-userprincipalname:
+         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg:
+         Content-Language:Content-Type:Content-Transfer-Encoding;
+        b=PsL9QixBsP51o7ATracMVmH1L2RSjzITpziJo81J/oGMjvJ7XhQohBdYXs7bC1/I2
+         rlvSHLB04gRQPm8a5F/3hIIGhN5+NHlvWVg4W7xu3farHJfrbgr6G3kJyvr9TRwdKn
+         jYCWnrcQPZiZuWz7DMdyM/F2vOYRH0eUoyILgdND3GCpbS6J0rpjg1qhmB/YE0LBVp
+         dQXrNeo3LNdrd21xON4c2qMTJ0VpCbHKXMkdjfWkUnTkSTKKZEgG4ukeUo+vfVZOi/
+         zBFlcJpW72wHRo0GVtD2VXOE1mSfuMZdOX5+arcOmmH8PzbjKkYmAhdrGf0Qf/95wX
+         AZpvLlmiAhudg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 7:11 PM Saravana Kannan <saravanak@google.com> wrote:
->
-> On Tue, Jun 30, 2020 at 9:11 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> >
-> > On Tue, Jun 30, 2020 at 5:39 PM Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > On Tue, Jun 30, 2020 at 03:50:58PM +0200, Rafael J. Wysocki wrote:
-> > > > On Fri, Jun 26, 2020 at 10:53 PM Geert Uytterhoeven
-> > > > <geert@linux-m68k.org> wrote:
-> > > > >
-> > > > > Hi Saravana,
-> > > > >
-> > > > > On Fri, Jun 26, 2020 at 10:34 PM Saravana Kannan <saravanak@google.com> wrote:
-> > > > > > On Fri, Jun 26, 2020 at 4:27 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > > > > > > On Thu, Jun 25, 2020 at 7:52 PM Saravana Kannan <saravanak@google.com> wrote:
-> > > > > > > > On Thu, Jun 25, 2020 at 10:47 AM Rafael J. Wysocki <rafael@kernel.org> wrote:
-> > > > > > > > > Note that deferred probing gets in the way here and so the problem is
-> > > > > > > > > related to it.
-> > > > > > > >
-> > > > > > > > I mean, we officially support deferred probing. Shouldn't we fix it so
-> > > > > > > > that it doesn't break suspend/resume?
-> > > > > > >
-> > > > > > > Yes, we should fix deferred probing.
-> > > > >
-> > > > > Please take into account that breakage is an actual regression.
-> > > > >
-> > > > > > > > Also, it's pretty easy to have
-> > > > > > > > cases where one module probes multiple device instances and loading it
-> > > > > > > > in one order would break dpm_list order for one device and loading it
-> > > > > > > > in another order would break it for another device. And there would be
-> > > > > > > > no "proper" order to load modules (because module order != device
-> > > > > > > > order).
-> > > > > > >
-> > > > > > > I'm not saying that the current code is perfect.  I'm saying that the
-> > > > > > > fix as proposed adds too much cost for everybody who may not care IMO.
-> > > > > >
-> > > > > > Ok, how about I don't do this reordering until we see the first
-> > > > > > deferred probe request? Will that work for you? In that case, systems
-> > > > > > with no deferred probing will not incur any reordering cost. Or if
-> > > > > > reordering starts only towards the end, all the previous probes won't
-> > > > > > incur reordering cost.
-> > > > >
-> > > > > That first deferred probe request is more or less as of the first probe,
-> > > > > since commit 93d2e4322aa74c1a ("of: platform: Batch fwnode parsing when
-> > > > > adding all top level devices"), at least on DT systems.
-> > > >
-> > > > The deferred probe reordering of devices to the end of dpm_list
-> > > > started in 2012, so it is nothing new, and it demonstrably works for
-> > > > devices where the dependencies are known to the driver core.
->
-> Isn't "where the dependencies are known to the driver core" this a big caveat?
->
-> > > >
-> > > > That said, in the cases when the dependencies are known to the driver
-> > > > core, it is also unnecessary to reorder dpm_list in
-> > > > deferred_probe_work_func(), because the right ordering of it is going
-> > > > to be determined elsewhere.
->
-> Until driver core knows about 100% of the dependencies, we still need
-> to do some kind of dpm_list reordering to have correct ordering. Even
-> with fw_devlink=on, I'd imagine it'd be difficult to achieve 100%
-> dependency being known to driver core.
->
-> > > >
-> > > > Also commit 494fd7b7ad10 ("PM / core: fix deferred probe breaking
-> > > > suspend resume order") is not the source of the problem here, because
-> > > > the problem would have still been there without it, due to the
-> > > > device_pm_move_last() that was there before, so the Fixes: tag
-> > > > pointing to that commit is misleading.
-> > > >
-> > > > Now, because 716a7a259690 ("driver core: fw_devlink: Add support for
-> > > > batching fwnode parsing") is an optimization and the regression is
-> > > > present because of it AFAICS, the best way to address it at that point
-> > > > would be to revert commit 716a7a259690 for 5.8 and maybe do the
-> > > > optimization more carefully.
->
-> No, this patch is not adding any new issues to deferred probe. It just
-> increases the probability of reproducing the issue. That's exactly why
-> I wrote the commit text for this patch without the fwnode batch
-> processing example. Even if you revert the patch, suspend/resume
-> ordering is broken if deferred probe happens.
->
-> > > >
-> > > > Greg, what do you think?
-> > >
-> > > I've been ignoreing this and letting you all sort it out :)
-> > >
-> > > But if you think that patch should be reverted, I'll not object and will
-> > > be glad to to it if this solves the issue.
-> >
-> > Well, if Geert can confirm that reverting commit 716a7a259690 makes
-> > the problem go away, IMO this would be the most reasonable thing to do
-> > at this stage of the cycle without risking that more regressions will
-> > be introduced.
->
-> I already have a patch to avoid deferred probe during batch fwnode
-> parsing. I'm trying to do a few more tests before I send it out. So,
-> it'd be nice if we don't revert it right now and give me some time to
-> finish testing.
-
-If you have an alternative fix, let's see it before deciding what to do.
+Pk9LLCB3ZWxsIEkgc2VlIHdoYXQgeW91IGFyZSBzYXlpbmcsIGJ1dCBpZiB3ZSBpbnRlbmRlZCB0
+byBzdXBwb3J0IGFsbCAzIGZvciBUZWdyYTE5NCwgdGhlbiB3ZSBzaG91bGQgZW5zdXJlIGFsbCAz
+IGFyZSBpbml0aWFsaXNlZCBjb3JyZWN0bHkuDQoNClRoZSBkcml2ZXIgaW50ZW5kIHRvIHN1cHBv
+cnQgdXAgdG8gMyBpbnN0YW5jZXMuIEl0IGRvZXNuJ3QgcmVhbGx5IG1hbmRhdGUgdGhhdCBhbGwg
+dGhyZWUgaW5zdGFuY2VzIGJlIHByZXNlbnQgaW4gc2FtZSBEVCBub2RlLg0KRWFjaCBtbWlvIGFw
+ZXJ0dXJlIGluICJyZWciIHByb3BlcnR5IGlzIGFuIGluc3RhbmNlIGhlcmUuIHJlZyA9IDxpbnN0
+MF9iYXNlLCBzaXplPiwgPGluc3QxX2Jhc2UsIHNpemU+LCA8aW5zdDJfYmFzZSwgc2l6ZT47DQpU
+aGUgcmVnIGNhbiBoYXZlIGFsbCB0aHJlZSBvciBsZXNzIGFuZCBkcml2ZXIganVzdCBjb25maWd1
+cmVzIGJhc2VkIG9uIHJlZyBhbmQgaXQgd29ya3MgZmluZS4NCg0KPkl0IHdvdWxkIGJlIGJldHRl
+ciB0byBxdWVyeSB0aGUgbnVtYmVyIG9mIFNNTVVzIHBvcHVsYXRlZCBpbiBkZXZpY2UtdHJlZSBh
+bmQgdGhlbiBlbnN1cmUgdGhhdCBhbGwgYXJlIGluaXRpYWxpc2VkIGNvcnJlY3RseS4NCg0KR2V0
+dGluZyB0aGUgSU9SRVNPVVJDRV9NRU0gaXMgdGhlIHdheSB0byBjb3VudCB0aGUgaW5zdGFuY2Vz
+IGRyaXZlciBuZWVkIHRvIHN1cHBvcnQuICANCkluIGEgd2F5LCBJdCBpcyBhbHJlYWR5IHF1ZXJ5
+aW5nIHRocm91Z2ggSU9SRVNPVVJDRV9NRU0gaGVyZS4gDQoNCg0KLUtSDQoNCg==
