@@ -2,84 +2,109 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C53D5C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1619C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B07D12073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:35:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8431206BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:35:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=isovalent-com.20150623.gappssmtp.com header.i=@isovalent-com.20150623.gappssmtp.com header.b="EEH5gsyR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389030AbgF3Ofu (ORCPT
+        id S2389038AbgF3Ofy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 10:35:50 -0400
-Received: from esa1.mentor.iphmx.com ([68.232.129.153]:52203 "EHLO
-        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731427AbgF3Oft (ORCPT
+        Tue, 30 Jun 2020 10:35:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54654 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731427AbgF3Ofv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 10:35:49 -0400
-IronPort-SDR: 5tvbdTmAquQ/S7OIcu6qtfXJgq78VdQKqQoiQFSVN1f9DTeSReU81YA1lRMBxWfY9NNQfSUoFZ
- Gozpp6rf+BYbR1nv//RgLZvqLTBm/noDwGqXGhaT+lAFp7UpUknbRlHhKqDt15xocE0mEdzeb8
- OcEOCZ3rMbXfnRQb+/8iw5nvnuJde7QFG97z1qCncp25nu9C9TMsSqoDG9NXDKdtz9jEGHkYv2
- T+gGoZXbjpuwVTUN4bz7Brz4+i5vQVKq3O66dY5fL+KAe31xYl/gaOlDQ0MpTRT5Ar4f7IljZN
- 5yA=
-X-IronPort-AV: E=Sophos;i="5.75,297,1589270400"; 
-   d="scan'208";a="52594957"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa1.mentor.iphmx.com with ESMTP; 30 Jun 2020 06:35:48 -0800
-IronPort-SDR: QUmpMKgQZBoOSLfOFlZ9GTo4BOiIkHBB4b/hUjS3lSgkZo54r1txVejdL12U3DJNjsyKwUNtPu
- sZGUlgf88b21raqVlpGqf4jIRHiMZh0wxPNsVOjTMWtlhfP1Ap7F+S+5uzARQH/6h+fGR7o/08
- swJEp5+d+mFlhm3h6MrngA6HC4eGtE6z1z/ESyxpesh+1rwi6Ap3mojh/aFly3UwC0O19eVjBp
- PYiGS0/oltTxgucZ77XisLoXQb5WcnuYPB2Ev15IIBCJ6W9ZOFZsLVAKXEpdfnBgY1s4uQwbbw
- aKQ=
-Subject: Re: [PATCH v11 07/56] Input: atmel_mxt_ts - implement T9
- vector/orientation support
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-CC:     <nick@shmanahar.org>, <jikos@kernel.org>,
-        <benjamin.tissoires@redhat.com>, <bsz@semihalf.com>,
-        <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>
-References: <20200508055656.96389-1-jiada_wang@mentor.com>
- <20200508055656.96389-8-jiada_wang@mentor.com>
- <20200511225306.GA89269@dtor-ws>
-From:   "Wang, Jiada" <jiada_wang@mentor.com>
-Message-ID: <56c34497-9306-17de-8d86-5a659aeccb1e@mentor.com>
-Date:   Tue, 30 Jun 2020 23:35:43 +0900
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 30 Jun 2020 10:35:51 -0400
+Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 920C9C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 07:35:50 -0700 (PDT)
+Received: by mail-wr1-x443.google.com with SMTP id z15so9175829wrl.8
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 07:35:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=isovalent-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9ehSuH0Ppvr3SarHPimFMKCcDFvWk7d98TWdLgtUAdk=;
+        b=EEH5gsyRve5CqoVSk9842wt6lCZaD9pqW/LmrXByhYGDb7lv2/0AB1uRi8n9uZrgnl
+         zbRJ3gPUiiszSXRu4zBUFqoQ7ZKqWf07Rvy1dvUDsOtJwcVhCROYD3Gi/mS4J1qp8cZm
+         O7Ngg/PDJPUoU+wNFXqad0N+bR9LJzVdE9c1ZM1674YTjLKD+VAtUeSgNVD07yKdCbNK
+         OmGdTamj+OtzMshlITGU4dYjOmQaTaRjGDvzWIq3A38ZSegGUjJMK6lPzjnpoRakFmB3
+         k8+NgjPmiBgALA+4PkjQ3ASBNovCRcdpSrsRF4WNQyHQ5KPqKYUlrtKk+ENfIXa2BGPs
+         oUPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9ehSuH0Ppvr3SarHPimFMKCcDFvWk7d98TWdLgtUAdk=;
+        b=DW9S2IccnoF+/kW4+F+hATd9U4wUUna9v3/Ce4CUZKE1MAbjkXkh/VtQJDZ96Gdeb8
+         +JaLbOTFRAgkn0b2TPkESGGFXWHT+J1qCDrhjSqv/4tknb1oGr3083USF0iaMH8bQVT6
+         NrLr6ZWHuciJZC7xctcRI9/09ZctINgoJchLtlD36PAeT8B0MsiPsjoIABJBqXrpdwag
+         uzwpLwKsN/qaLAOkMeK5HwhWy8eYTqA7vKA+9pEufS2ywyMIav7VOngm073eJH7KFl59
+         it8IYfSDzI75xmUCGa+hF5a9DT4bo6PqurOIT4H8cwbuAj8jjArKAjppHCKlK4MKF4wJ
+         NYiQ==
+X-Gm-Message-State: AOAM533w18ml51cIkK12vWMWZqLBmX5T4cb8ex6baJIavEJ65T39eWMY
+        DOYeNRhCacUo+sel6Bx9Sn4Syg==
+X-Google-Smtp-Source: ABdhPJxfreHHCSgkoRRa5/FN8jXyQ3dmNAYhdiaG0ZWp6lK21+Bv13m6PRC1LeUucj5OreEAxBU7ow==
+X-Received: by 2002:a5d:55c9:: with SMTP id i9mr21721835wrw.404.1593527749296;
+        Tue, 30 Jun 2020 07:35:49 -0700 (PDT)
+Received: from localhost.localdomain ([194.35.116.93])
+        by smtp.gmail.com with ESMTPSA id g16sm4317837wrh.91.2020.06.30.07.35.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 07:35:48 -0700 (PDT)
+From:   Quentin Monnet <quentin@isovalent.com>
+To:     Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Quentin Monnet <quentin@isovalent.com>
+Subject: [PATCH] checkpatch: prevent reporting C99_COMMENTS error for SPDX tag in .c file
+Date:   Tue, 30 Jun 2020 15:35:25 +0100
+Message-Id: <20200630143525.13869-1-quentin@isovalent.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20200511225306.GA89269@dtor-ws>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: svr-orw-mbx-04.mgc.mentorg.com (147.34.90.204) To
- svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Dmitry
+When checkpatch.pl is invoked with "--ignore C99_COMMENT_TOLERANCE", it
+reports C99-style comments found in the code, by matching on the
+double-slash pattern "//". This includes the leading slashes before the
+SPDX tags that are now used in a majority of C files.
 
-On 2020/05/12 7:53, Dmitry Torokhov wrote:
-> On Thu, May 07, 2020 at 10:56:07PM -0700, Jiada Wang wrote:
->> From: Nick Dyer <nick.dyer@itdev.co.uk>
->>
->> The atmel touch messages contain orientation information as a byte in a
->> packed format which can be passed straight on to Android if the input
->> device configuration is correct.
-> 
-> No, unfortunately I can not accept this. Please convert to the proper
-> format for ABS_MT_ORIENTATION as defined in
-> Documentation/input/multi-touch-protocol.rst
+Such tags are commented with the double-slash on purpose, and should not
+trigger errors from checkpatch. Let's ignore them when searching for
+C99-style comments to report.
 
-I will remove this patch in next version
+Signed-off-by: Quentin Monnet <quentin@isovalent.com>
+---
+ scripts/checkpatch.pl | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Thanks,
-Jiada
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 3cacc122c528..67f350c580ea 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -3983,7 +3983,10 @@ sub process {
+ 		}
+ 
+ # no C99 // comments
+-		if ($line =~ m{//}) {
++		if ($line =~ m{//} &&
++		    !($rawline =~ m{// SPDX-License-Identifier:} &&
++		      $realfile =~ /\.c$/ &&
++		      $realline == $checklicenseline)) {
+ 			if (ERROR("C99_COMMENTS",
+ 				  "do not use C99 // comments\n" . $herecurr) &&
+ 			    $fix) {
+-- 
+2.20.1
 
-> 
-> Thanks.
-> 
