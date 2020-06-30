@@ -2,399 +2,138 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B95E6C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA52C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8DD1F20775
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:48:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RW58M7OS"
+	by mail.kernel.org (Postfix) with ESMTP id E03F1207F5
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:48:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593499722;
+	bh=opNErX80aVhTkL1c4dyREpBW+fGK/RxUQFOWoLcp5BI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=s18T0hyUQCXtaxCst7A+leUDefaCCZzXgUvyuxHtusnGT2If1MGG8NqoGMV2V3KsL
+	 nm6u6NrvIs2RATrfDysw9INWlYv56swbrZRYBi9RAAI0+L6EJ5CwGGTz3juFPJ5sIQ
+	 BjtnwCvuKmzlnABQyXpJcDGHP4vzPazAzoGMnm4A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730487AbgF3Gs2 (ORCPT
+        id S1730497AbgF3Gsk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 02:48:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38930 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730386AbgF3Gs1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 02:48:27 -0400
-Received: from mail-wr1-x442.google.com (mail-wr1-x442.google.com [IPv6:2a00:1450:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FD59C03E97A
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 23:48:27 -0700 (PDT)
-Received: by mail-wr1-x442.google.com with SMTP id f18so10863043wrs.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 23:48:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=XLMDo1UsxYJMELotpDQ5hxq+PK7DJHzcb1+KFvP8aG0=;
-        b=RW58M7OS7OlArVG0kvfUEakS2s5DQF2UyPiSnvoqoWFzkI9MOXX2LqKxVSAex0N/pd
-         YSwfgrU3vEo3/E1r2s0cCuclbQWayqu6bo1pDLXfV10T/BTp69V/js6AY0dVpbZZb+FX
-         +hr6o9+cjzIchZ1TF3glX0unPfcIQPTX6i/Be5GOFmxe+XP8YhbCpDwH/kQgdj9NQXMA
-         18zwOSPbADnMs4HbkNHkuY0xmLnqV1dVUkNeJD+rdHQYZq5C3fCmYvFmf9WOskxO56xJ
-         ondtmjKbGKkc5SOb/sJnijswm2WRDh3K8xA+EuWG7uAVGTDeWPqkLlKv9V9JdX6x5cfu
-         e7ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=XLMDo1UsxYJMELotpDQ5hxq+PK7DJHzcb1+KFvP8aG0=;
-        b=ACITYfxpMykb5sFwnunY+QJ34Wocj7f1qTtI6yEWnX/xuHqeP7iGTKxks6kubvafSn
-         f+W6Ohg9th+rLl5Vzpg2wuyQK5x4Tm+mIs8ueaWafTeUNe6OvFTjTlDGWg4Rr9MTjExc
-         cIgSt8RvaOJzFHtejVnND54mXXNSSkJJZVQsx6Me6GfnnSqC4aRdUyrIe8q1gDTylasT
-         Q3h//lbURuVDh4Tbccmd8ps8FNpDuUyMMZlIg+/SybsV8lSW2pBP9Z6r/phQtR0KtYJC
-         H3E1MAvxZLe4Z29oJ1CZg1GH9Z1CtqqYUDVCEwjk+9yAXLvwQ+cIg69yHh773ENipJyk
-         5qaw==
-X-Gm-Message-State: AOAM530bQSZl8iIqW9jNQSSqZjlyUoQmsZyMtLZJPoL26lcHoqbAYlkY
-        wtxfnRd/qVrMdzl3gqRlB9YekVImYtQWVgedEJ078w==
-X-Google-Smtp-Source: ABdhPJxiGj2ce46YgeKfjo94LZhKWI+q485fKc5qIAWiIvNhlJ340b0LY5hRzmpr5wIz0Dofd/lpkoZQ/Feh/YDnlNA=
-X-Received: by 2002:adf:828b:: with SMTP id 11mr21950031wrc.58.1593499705514;
- Mon, 29 Jun 2020 23:48:25 -0700 (PDT)
+        Tue, 30 Jun 2020 02:48:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34278 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730386AbgF3Gsk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 02:48:40 -0400
+Received: from coco.lan (ip5f5ad5c5.dynamic.kabel-deutschland.de [95.90.213.197])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 861F3207E8;
+        Tue, 30 Jun 2020 06:48:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593499719;
+        bh=opNErX80aVhTkL1c4dyREpBW+fGK/RxUQFOWoLcp5BI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=FyZD4XE6wpxkoacblxnl9e06qqq8MKS8jp/35ef65p/HA653JKNVJtIviX9TXHH9m
+         A9ByMyMm+v7+1j+ZhEifXS8+89/+IB5Tge/kedmS2rq7VRJ0dE+fiDeJywVToXi9ec
+         XY7/lAPEeY+7njxxXYN0BCqATBIV7a5Dzu6Id5aY=
+Date:   Tue, 30 Jun 2020 08:48:35 +0200
+From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Maxim Levitsky <mlevitsk@redhat.com>, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3.1 7/7] kconfig: qconf: navigate menus on hyperlinks
+Message-ID: <20200630084835.4db1331f@coco.lan>
+In-Reply-To: <6f7162e40f127e76c7169315d33a14946a85719a.1593498345.git.mchehab+huawei@kernel.org>
+References: <cover.1593498345.git.mchehab+huawei@kernel.org>
+        <6f7162e40f127e76c7169315d33a14946a85719a.1593498345.git.mchehab+huawei@kernel.org>
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20200627105437.453053-1-apusaka@google.com> <20200627185320.RFC.v1.1.Icea550bb064a24b89f2217cf19e35b4480a31afd@changeid>
- <91CFE951-262A-4E83-8550-25445AE84B5A@holtmann.org>
-In-Reply-To: <91CFE951-262A-4E83-8550-25445AE84B5A@holtmann.org>
-From:   Archie Pusaka <apusaka@google.com>
-Date:   Tue, 30 Jun 2020 14:48:14 +0800
-Message-ID: <CAJQfnxFSfbUbPLVC-be41TqNXzr_6hLq2z=u521HL+BqxLHn_Q@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 1/2] Bluetooth: queue ACL packets if no handle is found
-To:     Marcel Holtmann <marcel@holtmann.org>
-Cc:     linux-bluetooth <linux-bluetooth@vger.kernel.org>,
-        chromeos-bluetooth-upstreaming 
-        <chromeos-bluetooth-upstreaming@chromium.org>,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marcel,
+Instead of just changing the helper window to show a
+dependency, also navigate to it at the config and menu
+widgets.
 
-On Mon, 29 Jun 2020 at 14:40, Marcel Holtmann <marcel@holtmann.org> wrote:
->
-> Hi Archie,
->
-> > There is a possibility that an ACL packet is received before we
-> > receive the HCI connect event for the corresponding handle. If this
-> > happens, we discard the ACL packet.
-> >
-> > Rather than just ignoring them, this patch provides a queue for
-> > incoming ACL packet without a handle. The queue is processed when
-> > receiving a HCI connection event. If 2 seconds elapsed without
-> > receiving the HCI connection event, assume something bad happened
-> > and discard the queued packet.
-> >
-> > Signed-off-by: Archie Pusaka <apusaka@chromium.org>
-> > Reviewed-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
->
-> so two things up front. I want to hide this behind a HCI_QUIRK_OUT_OF_ORD=
-ER_ACL that a transport driver has to set first. Frankly if this kind of ou=
-t-of-order happens on UART or SDIO transports, then something is obviously =
-going wrong. I have no plan to fix up after a fully serialized transport.
->
-> Secondly, if a transport sets HCI_QUIRK_OUT_OF_ORDER_ACL, then I want thi=
-s off by default. You can enable it via an experimental setting. The reason=
- here is that we have to make it really hard and fail as often as possible =
-so that hardware manufactures and spec writers realize that something is fu=
-ndamentally broken here.
->
-> I have no problem in running the code and complaining loudly in case the =
-quirk has been set. Just injecting the packets can only happen if bluetooth=
-d explicitly enabled it.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 
-Got it.
 
->
->
-> >
-> > ---
-> >
-> > include/net/bluetooth/hci_core.h |  8 +++
-> > net/bluetooth/hci_core.c         | 84 +++++++++++++++++++++++++++++---
-> > net/bluetooth/hci_event.c        |  2 +
-> > 3 files changed, 88 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/include/net/bluetooth/hci_core.h b/include/net/bluetooth/h=
-ci_core.h
-> > index 836dc997ff94..b69ecdd0d15a 100644
-> > --- a/include/net/bluetooth/hci_core.h
-> > +++ b/include/net/bluetooth/hci_core.h
-> > @@ -270,6 +270,9 @@ struct adv_monitor {
-> > /* Default authenticated payload timeout 30s */
-> > #define DEFAULT_AUTH_PAYLOAD_TIMEOUT   0x0bb8
-> >
-> > +/* Time to keep ACL packets without a corresponding handle queued (2s)=
- */
-> > +#define PENDING_ACL_TIMEOUT          msecs_to_jiffies(2000)
-> > +
->
-> Do we have some btmon traces with timestamps. Isn=E2=80=99t a second enou=
-gh? Actually 2 seconds is an awful long time.
+---
 
-When this happens in the test lab, the HCI connect event is about
-0.002 second behind the first ACL packet. We can change this if
-required.
+I ended re-sending the same version as on patch series 2. Please
+consider this patch instead.
 
->
-> > struct amp_assoc {
-> >       __u16   len;
-> >       __u16   offset;
-> > @@ -538,6 +541,9 @@ struct hci_dev {
-> >       struct delayed_work     rpa_expired;
-> >       bdaddr_t                rpa;
-> >
-> > +     struct delayed_work     remove_pending_acl;
-> > +     struct sk_buff_head     pending_acl_q;
-> > +
->
-> can we name this ooo_q and move it to the other queues in this struct. Un=
-less we want to add a Kconfig option around it, we don=E2=80=99t need to ke=
-ep it here.
-
-Ack.
-
->
-> > #if IS_ENABLED(CONFIG_BT_LEDS)
-> >       struct led_trigger      *power_led;
-> > #endif
-> > @@ -1773,6 +1779,8 @@ void hci_le_start_enc(struct hci_conn *conn, __le=
-16 ediv, __le64 rand,
-> > void hci_copy_identity_address(struct hci_dev *hdev, bdaddr_t *bdaddr,
-> >                              u8 *bdaddr_type);
-> >
-> > +void hci_process_pending_acl(struct hci_dev *hdev, struct hci_conn *co=
-nn);
-> > +
-> > #define SCO_AIRMODE_MASK       0x0003
-> > #define SCO_AIRMODE_CVSD       0x0000
-> > #define SCO_AIRMODE_TRANSP     0x0003
-> > diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
-> > index 7959b851cc63..30780242c267 100644
-> > --- a/net/bluetooth/hci_core.c
-> > +++ b/net/bluetooth/hci_core.c
-> > @@ -1786,6 +1786,7 @@ int hci_dev_do_close(struct hci_dev *hdev)
-> >       skb_queue_purge(&hdev->rx_q);
-> >       skb_queue_purge(&hdev->cmd_q);
-> >       skb_queue_purge(&hdev->raw_q);
-> > +     skb_queue_purge(&hdev->pending_acl_q);
-> >
-> >       /* Drop last sent command */
-> >       if (hdev->sent_cmd) {
-> > @@ -3518,6 +3519,78 @@ static int hci_suspend_notifier(struct notifier_=
-block *nb, unsigned long action,
-> >       return NOTIFY_STOP;
-> > }
-> >
-> > +static void hci_add_pending_acl(struct hci_dev *hdev, struct sk_buff *=
-skb)
-> > +{
-> > +     skb_queue_tail(&hdev->pending_acl_q, skb);
-> > +
-> > +     queue_delayed_work(hdev->workqueue, &hdev->remove_pending_acl,
-> > +                        PENDING_ACL_TIMEOUT);
-> > +}
-> > +
-> > +void hci_process_pending_acl(struct hci_dev *hdev, struct hci_conn *co=
-nn)
-> > +{
-> > +     struct sk_buff *skb, *tmp;
-> > +     struct hci_acl_hdr *hdr;
-> > +     u16 handle, flags;
-> > +     bool reset_timer =3D false;
-> > +
-> > +     skb_queue_walk_safe(&hdev->pending_acl_q, skb, tmp) {
-> > +             hdr =3D (struct hci_acl_hdr *)skb->data;
-> > +             handle =3D __le16_to_cpu(hdr->handle);
-> > +             flags  =3D hci_flags(handle);
-> > +             handle =3D hci_handle(handle);
-> > +
-> > +             if (handle !=3D conn->handle)
-> > +                     continue;
-> > +
-> > +             __skb_unlink(skb, &hdev->pending_acl_q);
-> > +             skb_pull(skb, HCI_ACL_HDR_SIZE);
-> > +
-> > +             l2cap_recv_acldata(conn, skb, flags);
-> > +             reset_timer =3D true;
-> > +     }
-> > +
-> > +     if (reset_timer)
-> > +             mod_delayed_work(hdev->workqueue, &hdev->remove_pending_a=
-cl,
-> > +                              PENDING_ACL_TIMEOUT);
-> > +}
-> > +
-> > +/* Remove the oldest pending ACL, and all pending ACLs with the same h=
-andle */
-> > +static void hci_remove_pending_acl(struct work_struct *work)
-> > +{
-> > +     struct hci_dev *hdev;
-> > +     struct sk_buff *skb, *tmp;
-> > +     struct hci_acl_hdr *hdr;
-> > +     u16 handle, oldest_handle;
-> > +
-> > +     hdev =3D container_of(work, struct hci_dev, remove_pending_acl.wo=
-rk);
-> > +     skb =3D skb_dequeue(&hdev->pending_acl_q);
-> > +
-> > +     if (!skb)
-> > +             return;
-> > +
-> > +     hdr =3D (struct hci_acl_hdr *)skb->data;
-> > +     oldest_handle =3D hci_handle(__le16_to_cpu(hdr->handle));
-> > +     kfree_skb(skb);
-> > +
-> > +     bt_dev_err(hdev, "ACL packet for unknown connection handle %d",
-> > +                oldest_handle);
-> > +
-> > +     skb_queue_walk_safe(&hdev->pending_acl_q, skb, tmp) {
-> > +             hdr =3D (struct hci_acl_hdr *)skb->data;
-> > +             handle =3D hci_handle(__le16_to_cpu(hdr->handle));
-> > +
-> > +             if (handle =3D=3D oldest_handle) {
-> > +                     __skb_unlink(skb, &hdev->pending_acl_q);
-> > +                     kfree_skb(skb);
-> > +             }
-> > +     }
-> > +
-> > +     if (!skb_queue_empty(&hdev->pending_acl_q))
-> > +             queue_delayed_work(hdev->workqueue, &hdev->remove_pending=
-_acl,
-> > +                                PENDING_ACL_TIMEOUT);
-> > +}
-> > +
->
-> So I am wondering if we make this too complicated. Since generally speaki=
-ng we can only have a single HCI connect complete anyway at a time. No matt=
-er if the controller serializes it for us or we do it for the controller. S=
-o hci_conn_add could just process the queue for packets with its handle and=
- then flush it. And it can flush it no matter what since whatever other pac=
-kets are in the queue, they can not be valid.
->
-> That said, we wouldn=E2=80=99t even need to check the packet handles at a=
-ll. We just needed to flag them as already out-of-order queued once and han=
-d them back into the rx_q at the top. Then the would be processed as usual.=
- Already ooo packets would cause the same error as before if it is for a no=
-n-existing handle and others would end up being processed.
->
-> For me this means we just need another queue to park the packets until hc=
-i_conn_add gets called. I might have missed something, but I am looking for=
- the least invasive option for this and least code duplication.
-
-I'm not aware of the fact that we can only have a single HCI connect
-complete event at any time. Is this also true even if two / more
-peripherals connect at the same time?
-I was under the impression that if we have device A and B both are
-connecting to us at the same time, we might receive the packets in
-this order:
-(1) ACL A
-(2) ACL B
-(3) HCI conn evt B
-(4) HCI conn evt A
-Hence the queue and the handle check.
-
->
-> > /* Alloc HCI device */
-> > struct hci_dev *hci_alloc_dev(void)
-> > {
-> > @@ -3610,10 +3683,12 @@ struct hci_dev *hci_alloc_dev(void)
-> >       INIT_WORK(&hdev->suspend_prepare, hci_prepare_suspend);
-> >
-> >       INIT_DELAYED_WORK(&hdev->power_off, hci_power_off);
-> > +     INIT_DELAYED_WORK(&hdev->remove_pending_acl, hci_remove_pending_a=
-cl);
-> >
-> >       skb_queue_head_init(&hdev->rx_q);
-> >       skb_queue_head_init(&hdev->cmd_q);
-> >       skb_queue_head_init(&hdev->raw_q);
-> > +     skb_queue_head_init(&hdev->pending_acl_q);
-> >
-> >       init_waitqueue_head(&hdev->req_wait_q);
-> >       init_waitqueue_head(&hdev->suspend_wait_q);
-> > @@ -4662,8 +4737,6 @@ static void hci_acldata_packet(struct hci_dev *hd=
-ev, struct sk_buff *skb)
-> >       struct hci_conn *conn;
-> >       __u16 handle, flags;
-> >
-> > -     skb_pull(skb, HCI_ACL_HDR_SIZE);
-> > -
-> >       handle =3D __le16_to_cpu(hdr->handle);
-> >       flags  =3D hci_flags(handle);
-> >       handle =3D hci_handle(handle);
-> > @@ -4678,17 +4751,16 @@ static void hci_acldata_packet(struct hci_dev *=
-hdev, struct sk_buff *skb)
-> >       hci_dev_unlock(hdev);
-> >
-> >       if (conn) {
-> > +             skb_pull(skb, HCI_ACL_HDR_SIZE);
-> > +
-> >               hci_conn_enter_active_mode(conn, BT_POWER_FORCE_ACTIVE_OF=
-F);
-> >
-> >               /* Send to upper protocol */
-> >               l2cap_recv_acldata(conn, skb, flags);
-> >               return;
-> >       } else {
-> > -             bt_dev_err(hdev, "ACL packet for unknown connection handl=
-e %d",
-> > -                        handle);
-> > +             hci_add_pending_acl(hdev, skb);
->
-> So here I want to keep being verbose. If no quirk is set, then this has t=
-o stay as an error. In case the quirk is set, then this should still warn t=
-hat we are queuing up a packet. It is not an expected behavior.
-
-Ack.
-
->
-> >       }
-> > -
-> > -     kfree_skb(skb);
-> > }
-> >
-> > /* SCO data packet */
-> > diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
-> > index e060fc9ebb18..108c6c102a6a 100644
-> > --- a/net/bluetooth/hci_event.c
-> > +++ b/net/bluetooth/hci_event.c
-> > @@ -2627,6 +2627,8 @@ static void hci_conn_complete_evt(struct hci_dev =
-*hdev, struct sk_buff *skb)
-> >                       hci_send_cmd(hdev, HCI_OP_CHANGE_CONN_PTYPE, size=
-of(cp),
-> >                                    &cp);
-> >               }
-> > +
-> > +             hci_process_pending_acl(hdev, conn);
->
-> Can we just do this in hci_conn_add() when we create the connection objec=
-t?
-
-Yes, we can.
-
->
-> >       } else {
-> >               conn->state =3D BT_CLOSED;
-> >               if (conn->type =3D=3D ACL_LINK)
-> > --
-> > 2.27.0.212.ge8ba1cc988-goog
-> >
->
-> Regards
->
-> Marcel
->
-
-Thanks,
-Archie
+diff --git a/scripts/kconfig/qconf.cc b/scripts/kconfig/qconf.cc
+index 6a327b69ff5f..fd721c6c4c94 100644
+--- a/scripts/kconfig/qconf.cc
++++ b/scripts/kconfig/qconf.cc
+@@ -1233,7 +1233,6 @@ void ConfigInfoView::clicked(const QUrl &url)
+ 	char *data = new char[count + 1];
+ 	struct symbol **result;
+ 	struct menu *m = NULL;
+-	char type;
+ 
+ 	if (count < 1) {
+ 		qInfo() << "Clicked link is empty";
+@@ -1243,7 +1242,6 @@ void ConfigInfoView::clicked(const QUrl &url)
+ 
+ 	memcpy(data, str.constData(), count);
+ 	data[count] = '\0';
+-	type = data[0];
+ 
+ 	/* Seek for exact match */
+ 	data[0] = '^';
+@@ -1256,15 +1254,8 @@ void ConfigInfoView::clicked(const QUrl &url)
+ 	}
+ 
+ 	sym = *result;
+-	if (type == 's') {
+-		symbolInfo();
+-		emit showDebugChanged(true);
+-		free(result);
+-		delete data;
+-		return;
+-	}
+ 
+-	/* URL is a menu */
++	/* Seek for the menu which holds the symbol */
+ 	for (struct property *prop = sym->prop; prop; prop = prop->next) {
+ 		    if (prop->type != P_PROMPT && prop->type != P_MENU)
+ 			    continue;
+@@ -1273,16 +1264,13 @@ void ConfigInfoView::clicked(const QUrl &url)
+ 	}
+ 
+ 	if (!m) {
+-		qInfo() << "Clicked menu is invalid:" << data;
+-		free(result);
+-		delete data;
+-		return;
++		/* Symbol is not visible as a menu */
++		symbolInfo();
++		emit showDebugChanged(true);
++	} else {
++		emit menuSelected(m);
+ 	}
+ 
+-	_menu = m;
+-	menuInfo();
+-
+-	emit showDebugChanged(true);
+ 	free(result);
+ 	delete data;
+ }
+@@ -1731,6 +1719,7 @@ void ConfigMainWindow::setMenuLink(struct menu *menu)
+ 			list->setSelected(item, true);
+ 			list->scrollToItem(item);
+ 			list->setFocus();
++			helpText->setInfo(menu);
+ 		}
+ 	}
+ }
