@@ -2,123 +2,117 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C93DC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94607C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:35:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3922920724
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 729EC2068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:35:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593542123;
+	bh=gyfWpjnOJwwzGi1tgl/VLHZLp+8PSWYx42nMxv5kKvo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=01gnjZaJp/3zMcOSTs+TBO1SYgcOS6OMrhE9KxBBXCaL2mmkws/eYLA7pIs8ry29K
+	 Br2tIqdWk96AqPTzNNjhzdO5dItzSKusGmFAZLhBJ1T7VFBykmyMJCzxVTfP+sxL7T
+	 kz1p9if0CezsfGyZ9dTDrLo5Cq1uo0z7zjMC3mJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390689AbgF3SfJ (ORCPT
+        id S2387911AbgF3SfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 14:35:09 -0400
-Received: from smtp.al2klimov.de ([78.46.175.9]:42526 "EHLO smtp.al2klimov.de"
+        Tue, 30 Jun 2020 14:35:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729500AbgF3SfI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 14:35:08 -0400
-Received: from authenticated-user (PRIMARY_HOSTNAME [PUBLIC_IP])
-        by smtp.al2klimov.de (Postfix) with ESMTPA id B3039BC11E;
-        Tue, 30 Jun 2020 18:35:04 +0000 (UTC)
-From:   "Alexander A. Klimov" <grandmaster@al2klimov.de>
-To:     paolo.valente@linaro.org, axboe@kernel.dk, corbet@lwn.net,
-        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] Replace HTTP links with HTTPS ones: BFQ I/O scheduler
-Date:   Tue, 30 Jun 2020 20:34:53 +0200
-Message-Id: <20200630183453.9452-1-grandmaster@al2klimov.de>
+        id S1731452AbgF3SfU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 14:35:20 -0400
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F91C206CB;
+        Tue, 30 Jun 2020 18:35:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593542119;
+        bh=gyfWpjnOJwwzGi1tgl/VLHZLp+8PSWYx42nMxv5kKvo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=VreS75mCNztVC55O5WYtKQ3ty6sypfwjFtEvCpKGJF/P6+aSEBXzu2b1RZvZfzGpB
+         fU3Crxvs7MtpRNg03J0qHtUpL7695T+IUbeYINW2k2LPMvnhMrjK404HPe1gY8RZrK
+         tm1PctHJAhBK3iKVLx00O8lxXyMtdbS71s+sKX4c=
+Received: by mail-ot1-f48.google.com with SMTP id c25so1622230otf.7;
+        Tue, 30 Jun 2020 11:35:19 -0700 (PDT)
+X-Gm-Message-State: AOAM532IMyqxNf0bTcKWksra+d6le2VoHnmV/JK7CkBuWDk8jVKT+CnD
+        8aoK56lNRYZ2JCso6aURqnwvImcCjPbE7V8M1Q==
+X-Google-Smtp-Source: ABdhPJyxGkRB5nAl2gD00aoXYNA+A7QZAkg3P0qe89BJ5GCB6sKgUEuOFJbEZFHSpYjGUE+sPWFRo4oj5kH9Y3fJIos=
+X-Received: by 2002:a9d:3a36:: with SMTP id j51mr19503925otc.129.1593542118992;
+ Tue, 30 Jun 2020 11:35:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Bar: +++++
-Authentication-Results: smtp.al2klimov.de;
-        auth=pass smtp.auth=aklimov@al2klimov.de smtp.mailfrom=grandmaster@al2klimov.de
+References: <20200520133932.30441-1-erwan.leray@st.com> <20200520133932.30441-2-erwan.leray@st.com>
+ <20200627141801.GA1945477@kroah.com>
+In-Reply-To: <20200627141801.GA1945477@kroah.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Tue, 30 Jun 2020 12:35:08 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+PFmeN_bFRD1M_E+1NOTsMowViG3CUWDWgy5=3kpC=xw@mail.gmail.com>
+Message-ID: <CAL_Jsq+PFmeN_bFRD1M_E+1NOTsMowViG3CUWDWgy5=3kpC=xw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: serial: add generic DT binding for
+ announcing RTS/CTS lines
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Erwan Le Ray <erwan.leray@st.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linaro-mm-sig@lists.linaro.org,
+        Fabrice Gasnier <fabrice.gasnier@st.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+On Sat, Jun 27, 2020 at 8:18 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Wed, May 20, 2020 at 03:39:31PM +0200, Erwan Le Ray wrote:
+> > Add support of generic DT binding for annoucing RTS/CTS lines. The initial
+> > binding 'st,hw-flow-control' is not needed anymore since generic binding
+> > is available, but is kept for backward compatibility.
+> >
+> > Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
+> >
+> > diff --git a/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml b/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml
+> > index 75b8521eb7cb..06d5f251ec88 100644
+> > --- a/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml
+> > +++ b/Documentation/devicetree/bindings/serial/st,stm32-uart.yaml
+> > @@ -35,9 +35,11 @@ properties:
+> >      description: label associated with this uart
+> >
+> >    st,hw-flow-ctrl:
+> > -    description: enable hardware flow control
+> > +    description: enable hardware flow control (deprecated)
+> >      $ref: /schemas/types.yaml#/definitions/flag
+> >
+> > +  uart-has-rtscts: true
+> > +
+> >    dmas:
+> >      minItems: 1
+> >      maxItems: 2
+> > --
+> > 2.17.1
+> >
+>
+> Did this get ignored by the DT maintainers?  :(
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-          If both the HTTP and HTTPS versions
-          return 200 OK and serve the same content:
-            Replace HTTP with HTTPS.
+When it doesn't go to the DT list, you are playing roulette whether I
+happen to see it. :(
 
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- Continuing my work started at 93431e0607e5.
+Anyways,
 
- If there are any URLs to be removed completely or at least not HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also https://lkml.org/lkml/2020/6/27/64
-
- If there are any valid, but yet not changed URLs:
- See https://lkml.org/lkml/2020/6/26/837
-
- Documentation/block/bfq-iosched.rst | 4 ++--
- block/bfq-iosched.c                 | 6 +++---
- 2 files changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/block/bfq-iosched.rst b/Documentation/block/bfq-iosched.rst
-index 0d237d402860..eb025b942f8d 100644
---- a/Documentation/block/bfq-iosched.rst
-+++ b/Documentation/block/bfq-iosched.rst
-@@ -581,7 +581,7 @@ applications. Unset this tunable if you need/want to control weights.
-     Scheduler", Proceedings of the First Workshop on Mobile System
-     Technologies (MST-2015), May 2015.
- 
--    http://algogroup.unimore.it/people/paolo/disk_sched/mst-2015.pdf
-+    https://algogroup.unimore.it/people/paolo/disk_sched/mst-2015.pdf
- 
- [2]
-     P. Valente and M. Andreolini, "Improving Application
-@@ -591,7 +591,7 @@ applications. Unset this tunable if you need/want to control weights.
- 
-     Slightly extended version:
- 
--    http://algogroup.unimore.it/people/paolo/disk_sched/bfq-v1-suite-results.pdf
-+    https://algogroup.unimore.it/people/paolo/disk_sched/bfq-v1-suite-results.pdf
- 
- [3]
-    https://github.com/Algodev-github/S
-diff --git a/block/bfq-iosched.c b/block/bfq-iosched.c
-index 50c8f034c01c..409865aaed68 100644
---- a/block/bfq-iosched.c
-+++ b/block/bfq-iosched.c
-@@ -99,19 +99,19 @@
-  * [1] P. Valente, A. Avanzini, "Evolution of the BFQ Storage I/O
-  *     Scheduler", Proceedings of the First Workshop on Mobile System
-  *     Technologies (MST-2015), May 2015.
-- *     http://algogroup.unimore.it/people/paolo/disk_sched/mst-2015.pdf
-+ *     https://algogroup.unimore.it/people/paolo/disk_sched/mst-2015.pdf
-  *
-  * [2] Jon C.R. Bennett and H. Zhang, "Hierarchical Packet Fair Queueing
-  *     Algorithms", IEEE/ACM Transactions on Networking, 5(5):675-689,
-  *     Oct 1997.
-  *
-- * http://www.cs.cmu.edu/~hzhang/papers/TON-97-Oct.ps.gz
-+ * https://www.cs.cmu.edu/~hzhang/papers/TON-97-Oct.ps.gz
-  *
-  * [3] I. Stoica and H. Abdel-Wahab, "Earliest Eligible Virtual Deadline
-  *     First: A Flexible and Accurate Mechanism for Proportional Share
-  *     Resource Allocation", technical report.
-  *
-- * http://www.cs.berkeley.edu/~istoica/papers/eevdf-tr-95.pdf
-+ * https://www.cs.berkeley.edu/~istoica/papers/eevdf-tr-95.pdf
-  */
- #include <linux/module.h>
- #include <linux/slab.h>
--- 
-2.27.0
-
+Reviewed-by: Rob Herring <robh@kernel.org>
