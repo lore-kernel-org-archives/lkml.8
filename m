@@ -8,68 +8,68 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 376E3C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89EA4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:44:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 0E7A3206CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65555206CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:44:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZsDNRiEK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RV+DgcBq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731253AbgF3HoV (ORCPT
+        id S1731264AbgF3Ho1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 03:44:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47618 "EHLO
+        Tue, 30 Jun 2020 03:44:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731077AbgF3HoU (ORCPT
+        with ESMTP id S1731077AbgF3HoZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 03:44:20 -0400
-Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E26BBC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 00:44:19 -0700 (PDT)
-Received: by mail-pl1-x641.google.com with SMTP id f2so8144239plr.8
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 00:44:19 -0700 (PDT)
+        Tue, 30 Jun 2020 03:44:25 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D943BC03E979
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 00:44:25 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id q90so8334673pjh.3
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 00:44:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=oOqmjhvuPBAEiyHp7TL6kqUg9v7jBR3QwTJJwMLLxHI=;
-        b=ZsDNRiEKrC4VHDYEKtee+J3noCJYUeVzePIO7GhImTxDvwPvsL291zvooNL/qm6jx7
-         qnvsqFrrr0H9ihS1Is66bjEEHeG61sx8gZXf4AR63LdcMvlVMWz70K1HcmorWTDmY3pP
-         TZhk1IU+7I3ifHtGRczUy13jzXO2ePWyUmxA5hMxDowgt3qR/Z4ORHblGjrLbrC5L5ee
-         U+9wphIvfpa45jM7lc/FtHUy6WxuPiAeZE9+AxZdhLq9JI3WerBztmKQ1ZG3dycI5ezF
-         v5Oo6JytqtOLuwLLnWK5+PDUVYoNkLTPb6z7rWPGFrWO7BAgOntchsftSa2mZkihgAwV
-         zDzg==
+        bh=xo4kx1NAZFSrQlqrR4fKrSHkld4dOPpLGIHAf+LkV2I=;
+        b=RV+DgcBqr6NVg6INhpMugvXHSNa/F0TzYbxypTH+e/Wc6xDl/PwgNhNdLoR0O/qZS7
+         BgK6r63y8zZUT5G74TK0Hhk6uRyY2ADRGEJaScbGc/86mescYkB/c3eko8t7ijVDEiJT
+         yn948PWA9bJZVWaBQtQ6ouY9W6qg+BR4CryAx19ck0fHqQ6mby9XijoYnTjbOMCAOkTR
+         ZuEa8eO5YMaG9hlJNnLFC3tgbHzjFwoI0iU5GWfU5dhE/x5UdZENNNdfXavL2EnZOcqK
+         AXiEq18Nx0pBfW2gHEgKzAiK48tq7NBoCNYwCC/Kl2AkWROpksejdG2LOoXGGUq4CpqX
+         0bgg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=oOqmjhvuPBAEiyHp7TL6kqUg9v7jBR3QwTJJwMLLxHI=;
-        b=szYu1BM+9l5L1LI76ut2yaFwtCfGh82M9uFtXoFMX+vf4KwoHrInXswCfjZkf/U/DP
-         oPikKIFnf7K36xs+6Z+PfY167kN8frCC8QRDSbHANPHGZ04WR7EiO97tx9F5xNp/wTO2
-         ZDO1vhLHFaO5bQZ8Ii9u5wDHNLD/YF1vL+qeMs7EQZH2KQsshfZ/HP5S++zAKwadzSVr
-         hoLQ8yHxc9j6UippOjQqcLfi1FbvLoE/VQIih7UqxyshJYNjZGdT2/Han7i9rrwBB6gl
-         7c+/kxFVqNY1Ff25KSoBxuDmqXKogyrU86qN2m4h333sZ+oDq/AHWBOCM5T6P4lswzCs
-         ccCw==
-X-Gm-Message-State: AOAM531BZpn2p4/6tFuiO31cD59DHzTRiyownTil28xO//9hYuGK/Q13
-        2sFOnjMYO7qBndGLT8kZgWhT+Upm+Vk=
-X-Google-Smtp-Source: ABdhPJx+RRpJReS8kxqO754KZ2IlBwIUOUaGkjouPlErmio0TT+zq3yenb0xAzezXeGRpVtKb+gcjQ==
-X-Received: by 2002:a17:90b:1497:: with SMTP id js23mr21624060pjb.30.1593503059495;
-        Tue, 30 Jun 2020 00:44:19 -0700 (PDT)
+        bh=xo4kx1NAZFSrQlqrR4fKrSHkld4dOPpLGIHAf+LkV2I=;
+        b=Xf3Ms13gaJfN/xGSaN8pJGfpf6nqua74S5IHeSrVLUgcZQRuUG7e4du/qNszdeiWEt
+         9bSVZcItAHlTvWGxmdyXgGoq9kjaCDKAMroIhZ+aBV0JfZp62k4W4szC6V1oO9dVL3hL
+         rgpcVjkU5TkmUwECQytoIETwurIcf+yPnafxf0H003vCfH1utXG3GCf00u+2lI1n/F6+
+         3G7ayOgvqOCH7jXpUHDvTewBhgXvqqF6d8L6cSryE7prx4oF8nmB1r7pJbLcKCFZA2y0
+         pbobkQXOkCnrsOgi0kpjfectMjl7+KETjRoCPPIwqmYmWWugiQNWxjeStPWCwii1wEO/
+         872g==
+X-Gm-Message-State: AOAM533r7GxDEbTRrEwfxO4iZDSDVLRderXnZFUVIezkYJuOCTlcH0e+
+        ftQVq4kH0af8lq+WkBHQL9o=
+X-Google-Smtp-Source: ABdhPJw7HZSUnx6MKXT5rvXvK+lEevsPWg351OVhFaa39QaOaPj5dW1s/EldxvCQwMpAAGrAF2sD/w==
+X-Received: by 2002:a17:90b:1004:: with SMTP id gm4mr21509603pjb.92.1593503065427;
+        Tue, 30 Jun 2020 00:44:25 -0700 (PDT)
 Received: from jordon-HP-15-Notebook-PC.domain.name ([122.182.225.143])
-        by smtp.gmail.com with ESMTPSA id w1sm1754276pfq.53.2020.06.30.00.44.15
+        by smtp.gmail.com with ESMTPSA id w1sm1754276pfq.53.2020.06.30.00.44.22
         (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 30 Jun 2020 00:44:18 -0700 (PDT)
+        Tue, 30 Jun 2020 00:44:24 -0700 (PDT)
 From:   Souptick Joarder <jrdr.linux@gmail.com>
 To:     jane.pnx9@gmail.com, ldufour@linux.ibm.com,
         gregkh@linuxfoundation.org, harshjain32@gmail.com, pakki001@umn.edu
 Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
         Souptick Joarder <jrdr.linux@gmail.com>,
         John Hubbard <jhubbard@nvidia.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Bharath Vedartham <linux.bhar@gmail.com>
-Subject: [PATCH v2 1/4] staging: kpc2000: kpc_dma: Unpin partial pinned pages
-Date:   Tue, 30 Jun 2020 13:22:16 +0530
-Message-Id: <1593503539-18649-2-git-send-email-jrdr.linux@gmail.com>
+        Bharath Vedartham <linux.bhar@gmail.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH v2 2/4] staging: kpc2000: kpc_dma: Convert set_page_dirty() -->  set_page_dirty_lock()
+Date:   Tue, 30 Jun 2020 13:22:17 +0530
+Message-Id: <1593503539-18649-3-git-send-email-jrdr.linux@gmail.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1593503539-18649-1-git-send-email-jrdr.linux@gmail.com>
 References: <1593503539-18649-1-git-send-email-jrdr.linux@gmail.com>
@@ -78,66 +78,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a bug, when get_user_pages() failed but partially pinned
-pages are not unpinned and positive numbers are returned instead of
--ERRNO. Fixed it.
+First, convert set_page_dirty() to set_page_dirty_lock()
 
-Also, int is more appropriate type for rv. Changed it.
+Second, there is an interval in there after set_page_dirty() and
+before put_page(), in which the device could be running and setting
+pages dirty. Moving set_page_dirty_lock() after dma_unmap_sg().
 
 Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+Suggested-by: John Hubbard <jhubbard@nvidia.com>
 Cc: John Hubbard <jhubbard@nvidia.com>
-Cc: Dan Carpenter <dan.carpenter@oracle.com>
 Cc: Bharath Vedartham <linux.bhar@gmail.com>
+Cc: Dan Carpenter <dan.carpenter@oracle.com>
 ---
- drivers/staging/kpc2000/kpc_dma/fileops.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/staging/kpc2000/kpc_dma/fileops.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/staging/kpc2000/kpc_dma/fileops.c b/drivers/staging/kpc2000/kpc_dma/fileops.c
-index 8975346..becdb41 100644
+index becdb41..08d90a6 100644
 --- a/drivers/staging/kpc2000/kpc_dma/fileops.c
 +++ b/drivers/staging/kpc2000/kpc_dma/fileops.c
-@@ -35,7 +35,7 @@ static int kpc_dma_transfer(struct dev_private_data *priv,
- 			    unsigned long iov_base, size_t iov_len)
- {
- 	unsigned int i = 0;
--	long rv = 0;
-+	int rv = 0;
- 	struct kpc_dma_device *ldev;
- 	struct aio_cb_data *acd;
- 	DECLARE_COMPLETION_ONSTACK(done);
-@@ -79,14 +79,14 @@ static int kpc_dma_transfer(struct dev_private_data *priv,
- 	rv = get_user_pages(iov_base, acd->page_count, FOLL_TOUCH | FOLL_WRITE | FOLL_GET, acd->user_pages, NULL);
- 	mmap_read_unlock(current->mm);        /*  release the semaphore */
- 	if (rv != acd->page_count) {
--		dev_err(&priv->ldev->pldev->dev, "Couldn't get_user_pages (%ld)\n", rv);
-+		dev_err(&priv->ldev->pldev->dev, "Couldn't get_user_pages (%d)\n", rv);
- 		goto err_get_user_pages;
+@@ -215,13 +215,13 @@ void  transfer_complete_cb(struct aio_cb_data *acd, size_t xfr_count, u32 flags)
+ 	BUG_ON(!acd->ldev);
+ 	BUG_ON(!acd->ldev->pldev);
+ 
++	dma_unmap_sg(&acd->ldev->pldev->dev, acd->sgt.sgl, acd->sgt.nents, acd->ldev->dir);
++
+ 	for (i = 0 ; i < acd->page_count ; i++) {
+ 		if (!PageReserved(acd->user_pages[i]))
+-			set_page_dirty(acd->user_pages[i]);
++			set_page_dirty_lock(acd->user_pages[i]);
  	}
  
- 	// Allocate and setup the sg_table (scatterlist entries)
- 	rv = sg_alloc_table_from_pages(&acd->sgt, acd->user_pages, acd->page_count, iov_base & (PAGE_SIZE - 1), iov_len, GFP_KERNEL);
- 	if (rv) {
--		dev_err(&priv->ldev->pldev->dev, "Couldn't alloc sg_table (%ld)\n", rv);
-+		dev_err(&priv->ldev->pldev->dev, "Couldn't alloc sg_table (%d)\n", rv);
- 		goto err_alloc_sg_table;
- 	}
- 
-@@ -193,10 +193,15 @@ static int kpc_dma_transfer(struct dev_private_data *priv,
+-	dma_unmap_sg(&acd->ldev->pldev->dev, acd->sgt.sgl, acd->sgt.nents, acd->ldev->dir);
+-
+ 	for (i = 0 ; i < acd->page_count ; i++)
  		put_page(acd->user_pages[i]);
- 
-  err_get_user_pages:
-+	if (rv > 0) {
-+		for (i = 0; i < rv; i++)
-+			put_pages(acd->user_pages[i]);
-+		rv = -EFAULT;
-+	}
- 	kfree(acd->user_pages);
-  err_alloc_userpages:
- 	kfree(acd);
--	dev_dbg(&priv->ldev->pldev->dev, "%s returning with error %ld\n", __func__, rv);
-+	dev_dbg(&priv->ldev->pldev->dev, "%s returning with error %d\n", __func__, rv);
- 	return rv;
- }
  
 -- 
 1.9.1
