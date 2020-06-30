@@ -2,105 +2,114 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78879C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C32C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 59ED72074F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:11:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PWHv1Ri4"
+	by mail.kernel.org (Postfix) with ESMTP id 2E4B62073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:12:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593529974;
+	bh=yj6nkosG6nmarxoBkMNBEUQpObxgnvhoR3UcCFW79Q4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eZSI0SG6Vpq09ug5tCleNuVdAXJr1epZPqsKXwZ90R0p3qrMMIVPLhCqOKuBVD1ux
+	 PvmDldNbKPqzJZhUOqfOAR2JEwcb3XlJgPRHfMa4HQ71EdTDEu4A5WCNZF3T+ALfdV
+	 13E5w29+OVeJsADwOn4t4rAGg05sMPhLrbNWHtDA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389270AbgF3PLf (ORCPT
+        id S2389277AbgF3PMw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 11:11:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60148 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389258AbgF3PLe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 11:11:34 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C70CC061755;
-        Tue, 30 Jun 2020 08:11:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=085m+qYdj3d+tEZKWFcDUm8R54zn/OUFEGECmgixYQk=; b=PWHv1Ri4OahOBANGBdgewR1kYX
-        0eV4Y+TiQMLmgJ4d41YcXTM7CKLL9ty0+/e8FIX7uWPhCdNzbZ5lsL4sF0T/6WQ8xW0qEzlA+5B1p
-        vdcK2H8HsqkztCWF79XfBWMwQwb0j//v2LNsh5l/chxeVz4IrMzM9lHs8gFcEisyV8y58rMykPlZX
-        dxwRpK9JUjzqIeAIuu+v4VGJ5Q/nRbeMXY2x+sJhA43J+ySwFVY0pIqkbn3BY35spqryNtnWoGaaO
-        ES3tlzjCAXc5wzqubmWWmKyiagTx0a5NjYpIqlxgoWTF+QWBALMvzD5yIXTfVbMiXudsp2iw8ExDa
-        HOUJEpcA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jqHus-0005fe-NV; Tue, 30 Jun 2020 15:11:23 +0000
-Subject: Re: [PATCH v2] Documentation: Coccinelle: fix typos and command
- example
-To:     Markus Elfring <Markus.Elfring@web.de>, linux-doc@vger.kernel.org,
-        Coccinelle <cocci@systeme.lip6.fr>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Gilles Muller <Gilles.Muller@lip6.fr>,
-        Nicolas Palix <nicolas.palix@imag.fr>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Jonathan Corbet <corbet@lwn.net>
-References: <0616dd0c-bb86-be2b-3dc6-1c695a92c3ca@infradead.org>
- <c2c1dec0-2bd1-b0e2-1aa4-38d0e954d5ba@web.de>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <efc8b0c9-db3b-3c9c-d876-897b53a9e278@infradead.org>
-Date:   Tue, 30 Jun 2020 08:11:18 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Tue, 30 Jun 2020 11:12:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47950 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731186AbgF3PMu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 11:12:50 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 905EF20720;
+        Tue, 30 Jun 2020 15:12:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593529969;
+        bh=yj6nkosG6nmarxoBkMNBEUQpObxgnvhoR3UcCFW79Q4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=t3j2C/wkRuYWOkFy9s7dD2o5Q/UR0JlQHwv2I7lBvwDOpt3PRKktxLVyBXxnILDrN
+         CTBkbzqhJVft7/wP24A3FhyI8HmvcwPpDfUqKZmVtDfT6DXND0wbtYIkHf9GhM9pYJ
+         6UUG+SHPg4yrnMDBRrAPkQWMZwWEtcuI5ttNnh9o=
+Date:   Tue, 30 Jun 2020 11:12:48 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org
+Subject: Re: [PATCH 5.7 000/265] 5.7.7-rc1 review
+Message-ID: <20200630151248.GY1931@sasha-vm>
+References: <20200629151818.2493727-1-sashal@kernel.org>
+ <42dadde8-04c0-863b-651a-1959a3d85494@linuxfoundation.org>
+ <20200629231826.GT1931@sasha-vm>
+ <20200630083845.GA637154@kroah.com>
 MIME-Version: 1.0
-In-Reply-To: <c2c1dec0-2bd1-b0e2-1aa4-38d0e954d5ba@web.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200630083845.GA637154@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/30/20 5:23 AM, Markus Elfring wrote:
-> …
->> +++ linux-next-20200629/Documentation/dev-tools/coccinelle.rst
-> …> @@ -177,13 +177,13 @@ For example, to check drivers/net/wirele
->>  To apply Coccinelle on a file basis, instead of a directory basis, the
->>  following command may be used::
+On Tue, Jun 30, 2020 at 10:38:45AM +0200, Greg Kroah-Hartman wrote:
+>On Mon, Jun 29, 2020 at 07:18:26PM -0400, Sasha Levin wrote:
+>> On Mon, Jun 29, 2020 at 02:37:53PM -0600, Shuah Khan wrote:
+>> > Hi Sasha,
+>> >
+>> > On 6/29/20 9:13 AM, Sasha Levin wrote:
+>> > >
+>> > > This is the start of the stable review cycle for the 5.7.7 release.
+>> > > There are 265 patches in this series, all will be posted as a response
+>> > > to this one.  If anyone has any issues with these being applied, please
+>> > > let me know.
+>> > >
+>> > > Responses should be made by Wed 01 Jul 2020 03:14:48 PM UTC.
+>> > > Anything received after that time might be too late.
+>> > >
+>> > > The whole patch series can be found in one patch at:
+>> > > 	https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/patch/?id=linux-5.7.y&id2=v5.7.6
+>> > >
+>> >
+>> > Looks like patch naming convention has changed. My scripts look
+>> > for the following convention Greg uses. Are you planning to use
+>> > the above going forward? My scripts failed looking for the usual
+>> > naming convention.
+>> >
+>> > The whole patch series can be found in one patch at:
+>> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.7.6-rc1.gz
+>> > or in the git tree and branch at:
+>> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.7.y
+>> > and the diffstat can be found below.
 >>
->> -    make C=1 CHECK="scripts/coccicheck"
->> +    make C=1 CHECK="scripts/coccicheck" path/to/file.c
-> 
-> I would like to clarify further software design aspects around such make functionality.
-> 
-> We might stumble on different interpretations according to the wording “file basis”.
-> Do you find a message like “make: Nothing to be done for 'path/to/file.c'.” interesting then?
-> 
-> * Would you like to add any links for information around the support for
->   source code checkers?
->   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Makefile?id=7c30b859a947535f2213277e827d7ac7dcff9c84#n198
-> 
-> * How do you think about to enclose the path for the shown parameter
->   by single quotes instead of double quotes?
-> 
-> * Can such path specifications become more interesting occasionally
->   if also an other file extension would be chosen than “.c”?
->   Would you like to achieve any software extensions around suffix rules?
-> 
-> Regards,
-> Markus
+>> Sorry for that. I was hoping to avoid using the signed upload mechanism
+>> Greg was using by simply pointing the links to automatically generated
+>> patches on cgit (the git.kernel.org interface).
+>>
+>> Would it be ok to change the pattern matching here? Something like this
+>> should work for both Greg's format and my own (and whatever may come
+>> next):
+>>
+>> 	grep -A1 "The whole patch series can be found in one patch at:" | tail -n1 | sed 's/\t//'
+>
+>If those don't work, I can still push out -rc1 patches.
+>
+>It might be best given that the above -rc.git tree is unstable and can,
+>and will, change, and patches stored on kernel.org will not.
 
-Markus:
-
-Feel free to submit patches.
+That's a good point. Maybe we should push tags for -rc releases too?
+that would allow us to keep stable links using the git.kernel.org
+interface.
 
 -- 
-~Randy
-
+Thanks,
+Sasha
