@@ -2,118 +2,153 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B227C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 02:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 808F6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 02:09:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 17D102076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 02:08:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dmd8aV0i"
+	by mail.kernel.org (Postfix) with ESMTP id 5C30F2068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 02:09:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593482942;
+	bh=kAlClsTWC8YeTId4UznUyRfXtKN/EBjSIIRj1X4nJY4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=R7ZZS8VLI2Nr0TZtB1G5nunJMikGQqVwv7vHEpPiZKcRWTQDW+IvSKdJE17A3Vwp9
+	 iAkeZvPeLT9qQrUJnQPuZ1UVNHvUUKKa8yLkHT1m7S3NqB22nkJHrmMkf8fTbmDP0T
+	 OjWbebW5h9wpZigwl4yt7HuAHm6FtgBprJmXDqn4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728140AbgF3CIm (ORCPT
+        id S1728200AbgF3CJB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 22:08:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52458 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726226AbgF3CIk (ORCPT
+        Mon, 29 Jun 2020 22:09:01 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:60726 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726813AbgF3CJA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 22:08:40 -0400
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC4A3C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 19:08:40 -0700 (PDT)
-Received: by mail-wr1-x434.google.com with SMTP id f18so10454820wrs.0
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 19:08:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=87SnUl50AwdYnWwZFe3OCGjdVn1OLaMK1lMsKVOtucs=;
-        b=Dmd8aV0i+sqLH1H+h8cmUQq+zkXKmGHHBrXY8J26j4MuYDH4WvyDGG39BHI+RsyS5X
-         rTkxyLNRET6S17XP9X9q9qHAjWoucIyE36RLYVyeEdrxOfT9fHtIvVDY2Wsu0ja8q234
-         ZQXr/ZkwAJOvh5ffdV7BhsOlkbPXfHo8cdimkPnIHK//px66AOI+rPFDfC4HNdcGKI/b
-         ymRkQ+ZHfhY0xTtN5t5/iny/OsSppDbfME8dj5PuA+ySRQ2Htq7/WUmQ9Cy3K0mJ0dLj
-         wzVqEsh7BvlQADcFYIwBd7Lc9xp/WAJsWpc59HLGJuzfA4GHB3GGfGGypY/YCj6L3U8a
-         l9Zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=87SnUl50AwdYnWwZFe3OCGjdVn1OLaMK1lMsKVOtucs=;
-        b=SWSXZBCK2vF2KCx43n9f4Vp9+x5DmUBuoKProHvfSIV1sUR9iduczxAkeyK+3mQUO5
-         lHIZV998vcAkONuYsJro0Zwz7jduGmM5xgYMstF7a+QYI7QKvURYwfrVrpknEELRoBnd
-         gmNXJemh7OEKUdwIckVPrbo80VYeQ4o7lITim4rreUHXedB3djFjgsG8o60dlRsPBYh6
-         cdfDfj+I0BYn8fd5YJ1MQ5BRG+/7F9NUSFF05rv90ClXFj7d9EUqdeFNZEzNzENsmtJw
-         S7zb7qLCV7t+IGArhlOzqPFvNom1zuYGutfEFy6E4vLl2Fpg1lFZOYXcY7VXcQUCqlVl
-         thkg==
-X-Gm-Message-State: AOAM532dkB4Hyi3TNkEx7spXMPHS2VU5j/13WkDla2WyR8+8tBgCCkGX
-        1YcbWGgSUiNiEFgqZG3qdDAYW1w/
-X-Google-Smtp-Source: ABdhPJxvkJA2vwoIyMEAk5rAJmf45l142ljIaPRL0QRlLQr42/b0WvemaHD5ZcmtdVVS5rukop78tw==
-X-Received: by 2002:adf:ef01:: with SMTP id e1mr20831527wro.116.1593482919564;
-        Mon, 29 Jun 2020 19:08:39 -0700 (PDT)
-Received: from localhost (61-68-186-125.tpgi.com.au. [61.68.186.125])
-        by smtp.gmail.com with ESMTPSA id u20sm1741035wmm.15.2020.06.29.19.08.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 19:08:38 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 12:08:32 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: wait_on_page_bit_common(TASK_KILLABLE, EXCLUSIVE) can miss
- wakeup?
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     Andi Kleen <ak@linux.intel.com>,
-        Davidlohr Bueso <dave@stgolabs.net>, Jan Kara <jack@suse.cz>,
-        Lukas Czerner <lczerner@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20200624161142.GA12184@redhat.com>
-        <20200624162042.GA12238@redhat.com>
-        <CAHk-=wjJA2Z3kUFb-5s=6+n0qbTs8ELqKFt9B3pH85a8fGD73w@mail.gmail.com>
-        <20200626154313.GI4817@hirez.programming.kicks-ass.net>
-        <CAHk-=whvVWNXPJq1k566zn4SfXAifXtiA7T+7JFweR3rQ0nc9A@mail.gmail.com>
-        <1593396958.ydiznwsuu8.astroid@bobo.none>
-        <20200629140245.GB20323@redhat.com>
-In-Reply-To: <20200629140245.GB20323@redhat.com>
+        Mon, 29 Jun 2020 22:09:00 -0400
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 05U28iKU007918;
+        Tue, 30 Jun 2020 11:08:44 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 05U28iKU007918
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1593482925;
+        bh=8N9eJ+P9q8UjGmkozh+JC0/G8Gi+VtjTGyH41GDG7qQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=XBPAVQ+D67fSeXqHbyyQDokt++S37hhSVW07zeWlL1772G3Pck6+8PzK+i0hf5ZW9
+         V2LI1trmHpPAJUoeSVpVWzMD5g7oJwbPUiOitRvoNTmUtdWzNvmjyxz2wOaMuyUawF
+         x6w5Y+wMvOIxMl++zTr6sNqmjiUt92Ndp8z1fyFkpmZnqJSY+aFffMfFb2dPJCebDO
+         f3DRiKWYIHuVPb2l3VNLMOEKcry29/159EG4Ai8XlOlrjOARaHR7cuZt54YkRajrvx
+         StoLhTChVQmh/pYjD8ETWkmixOig+IACKG0GBz/PuSQSZtoyQFVQlI6RqCv3zj6ONM
+         gyOCR7S3+nSZA==
+X-Nifty-SrcIP: [209.85.222.54]
+Received: by mail-ua1-f54.google.com with SMTP id g14so5971425ual.11;
+        Mon, 29 Jun 2020 19:08:44 -0700 (PDT)
+X-Gm-Message-State: AOAM533PQffsVU88BIfLTIBcAzE2I3lms0Bynt2OFVzqUIG0aYOGc6Sl
+        1Vjg4Oi4bh5U1rIeHTsvr3zVVS191wiVHT0DVxo=
+X-Google-Smtp-Source: ABdhPJzcTgvLU2AmkLENvHvRyD/efC2ONPJPB6N+NNMxQ+AWnRagsj4cZe5ewXyAh5Ardq+OWABinNwy06jhD+SST0c=
+X-Received: by 2002:a9f:2204:: with SMTP id 4mr13210692uad.40.1593482923565;
+ Mon, 29 Jun 2020 19:08:43 -0700 (PDT)
 MIME-Version: 1.0
-Message-Id: <1593482844.k3rh7s05o8.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <20200628015041.1000002-1-masahiroy@kernel.org> <87imfa8le0.fsf@mpe.ellerman.id.au>
+In-Reply-To: <87imfa8le0.fsf@mpe.ellerman.id.au>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Tue, 30 Jun 2020 11:08:07 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATusciypBJ4dYZcyrugdi_rXEV_s=zxAehDxsX+Sd5z4g@mail.gmail.com>
+Message-ID: <CAK7LNATusciypBJ4dYZcyrugdi_rXEV_s=zxAehDxsX+Sd5z4g@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: introduce ccflags-remove-y and asflags-remove-y
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Paul Mackerras <paulus@samba.org>,
+        Rich Felker <dalias@libc.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from Oleg Nesterov's message of June 30, 2020 12:02 am:
-> On 06/29, Nicholas Piggin wrote:
->>
->> prepare_to_wait_event() has a pretty good pattern (and comment), I would
->> favour using that (test the signal when inserting on the waitqueue).
->>
->> @@ -1133,6 +1133,15 @@ static inline int wait_on_page_bit_common(wait_qu=
-eue_head_t *q,
->>         for (;;) {
->>                 spin_lock_irq(&q->lock);
->>
->> +               if (signal_pending_state(state, current)) {
->> +                       /* Must not lose an exclusive wake up, see
->> +                        * prepare_to_wait_event comment */
->> +                       list_del_init(&wait->entry);
->> +                       spin_unlock_irq(&q->lock);
->> +                       ret =3D -EINTR;
->=20
-> Basically this is what my patch in the 1st email does. But note that we c=
-an't
-> just set "ret =3D -EINTR" here, we will need to clear "ret" if test_and_s=
-et_bit()
-> below succeeds. That is why I used another "int intr" variable.
+On Mon, Jun 29, 2020 at 2:55 PM Michael Ellerman <mpe@ellerman.id.au> wrote:
+>
+> Masahiro Yamada <masahiroy@kernel.org> writes:
+> > CFLAGS_REMOVE_<file>.o works per object, that is, there is no
+> > convenient way to filter out flags for every object in a directory.
+> >
+> > Add ccflags-remove-y and asflags-remove-y to make it easily.
+> >
+> > Use ccflags-remove-y to clean up some Makefiles.
+> >
+> > Suggested-by: Sami Tolvanen <samitolvanen@google.com>
+> > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> > ---
+> >
+> >  arch/arm/boot/compressed/Makefile | 6 +-----
+> >  arch/powerpc/xmon/Makefile        | 3 +--
+> >  arch/sh/boot/compressed/Makefile  | 5 +----
+> >  kernel/trace/Makefile             | 4 ++--
+> >  lib/Makefile                      | 5 +----
+> >  scripts/Makefile.lib              | 4 ++--
+> >  6 files changed, 8 insertions(+), 19 deletions(-)
+> >
+> > diff --git a/arch/powerpc/xmon/Makefile b/arch/powerpc/xmon/Makefile
+> > index 89c76ca35640..55cbcdd88ac0 100644
+> > --- a/arch/powerpc/xmon/Makefile
+> > +++ b/arch/powerpc/xmon/Makefile
+> > @@ -7,8 +7,7 @@ UBSAN_SANITIZE := n
+> >  KASAN_SANITIZE := n
+> >
+> >  # Disable ftrace for the entire directory
+> > -ORIG_CFLAGS := $(KBUILD_CFLAGS)
+> > -KBUILD_CFLAGS = $(subst $(CC_FLAGS_FTRACE),,$(ORIG_CFLAGS))
+> > +ccflags-remove-y += $(CC_FLAGS_FTRACE)
+>
+> This could be:
+>
+> ccflags-remove-$(CONFIG_FUNCTION_TRACER) += $(CC_FLAGS_FTRACE)
+>
+> Similar to kernel/trace/Makefile below.
 
-You snipped off one more important line of context. No such games are=20
-required AFAIKS.
 
-Thanks,
-Nick
+I fixed it up, and applied to linux-kbuild.
+Thanks.
+
+
+> I don't mind though.
+>
+> Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
+>
+> cheers
+>
+> > diff --git a/kernel/trace/Makefile b/kernel/trace/Makefile
+> > index 6575bb0a0434..7492844a8b1b 100644
+> > --- a/kernel/trace/Makefile
+> > +++ b/kernel/trace/Makefile
+> > @@ -2,9 +2,9 @@
+> >
+> >  # Do not instrument the tracer itself:
+> >
+> > +ccflags-remove-$(CONFIG_FUNCTION_TRACER) += $(CC_FLAGS_FTRACE)
+> > +
+> >  ifdef CONFIG_FUNCTION_TRACER
+> > -ORIG_CFLAGS := $(KBUILD_CFLAGS)
+> > -KBUILD_CFLAGS = $(subst $(CC_FLAGS_FTRACE),,$(ORIG_CFLAGS))
+> >
+> >  # Avoid recursion due to instrumentation.
+> >  KCSAN_SANITIZE := n
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
