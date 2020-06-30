@@ -2,184 +2,209 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE8ECC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:21:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D82EBC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:24:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A6E9C20774
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:21:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF3C520768
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:24:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="dimS1Y+T"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KcMy0csf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729399AbgF3UV5 (ORCPT
+        id S1729411AbgF3UYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 16:21:57 -0400
-Received: from nat-hk.nvidia.com ([203.18.50.4]:10782 "EHLO nat-hk.nvidia.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726642AbgF3UV4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 16:21:56 -0400
-Received: from hkpgpgate102.nvidia.com (Not Verified[10.18.92.77]) by nat-hk.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5efb9ee00000>; Wed, 01 Jul 2020 04:21:52 +0800
-Received: from HKMAIL104.nvidia.com ([10.18.16.13])
-  by hkpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 30 Jun 2020 13:21:52 -0700
-X-PGP-Universal: processed;
-        by hkpgpgate102.nvidia.com on Tue, 30 Jun 2020 13:21:52 -0700
-Received: from HKMAIL102.nvidia.com (10.18.16.11) by HKMAIL104.nvidia.com
- (10.18.16.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 30 Jun
- 2020 20:21:47 +0000
-Received: from NAM04-SN1-obe.outbound.protection.outlook.com (104.47.44.50) by
- HKMAIL102.nvidia.com (10.18.16.11) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3 via Frontend Transport; Tue, 30 Jun 2020 20:21:47 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=MiFHOpsh7vZK57P/Zpxxxb2Ku6dz4uBgQkop/WEa90petb8S7a5JnJDBCoYAjOOwy6ERUWy3Ne6tMhAazwxuDDDuaQ9zPPX0Tr/OLlGZhIdOE97ts+GzUlxvN4JIW1HiI28U+jDyRyi9EsjNxsmTa/me4XGNSQjikJDJE0c/Yy4Y+9/Bv1NGS5lkWN5AGP9EYcXYNdmZfe22dHkzydD2wm5HYFeGlL0IgFsX/CNwySp0NrjvArew/x6jW0OABaiz91qUkLRtERhEsrOzgUV7ZhXyoO+dHI40oka1SG6r+d/HzGm2fD/X8TdloPrQWlMmBQoYE8LPrUUjQJLh8IxfvA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=V9TmtNU1To6IxI+EH+P3BHjtxVj6UUA2yhTMaYLkcJI=;
- b=OFTPqql2e5EqDooH80QUxD5XTlczrsIeCzhUZv9RX82icNm0Ncm0k2L0ABBp3Z5c8MQr3Je3jLobpfaiKWZvMcq+ZsPqrMxECJgDU7f7xbpDeBSaj8r2N5LdiTaisO3G9e9L+n5wvx16LlFM+N7uCUrKSipUWgv5Aw8Ci72XFI+RwsdpX+HFGHZrWvgUnaEC+t69p5Uu8g8rd+e3UrRFShyx0P+isFbvVF2MKbJyCbpW1qfYKVTCoVkTF3r2cmsKVMSeCb6rQBZoD8N31c7MdAmvDAXeaIVMEwa0s+MBo0Fe4Hzd+pcpWnK/nvAimacNKAV1ZBz5xkCVX9odq6KaUA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-Received: from BYAPR12MB2822.namprd12.prod.outlook.com (2603:10b6:a03:9a::17)
- by BYAPR12MB3191.namprd12.prod.outlook.com (2603:10b6:a03:133::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21; Tue, 30 Jun
- 2020 20:21:44 +0000
-Received: from BYAPR12MB2822.namprd12.prod.outlook.com
- ([fe80::70bd:803f:78b6:ebf2]) by BYAPR12MB2822.namprd12.prod.outlook.com
- ([fe80::70bd:803f:78b6:ebf2%2]) with mapi id 15.20.3131.027; Tue, 30 Jun 2020
- 20:21:44 +0000
-From:   Krishna Reddy <vdumpa@nvidia.com>
-To:     Jonathan Hunter <jonathanh@nvidia.com>
-CC:     "joro@8bytes.org" <joro@8bytes.org>,
-        "will@kernel.org" <will@kernel.org>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        Thierry Reding <treding@nvidia.com>,
-        "Yu-Huan Hsu" <YHsu@nvidia.com>, Sachin Nikam <Snikam@nvidia.com>,
-        Pritesh Raithatha <praithatha@nvidia.com>,
-        Timo Alho <talho@nvidia.com>,
-        Bitan Biswas <bbiswas@nvidia.com>,
-        Mikko Perttunen <mperttunen@nvidia.com>,
-        Nicolin Chen <nicolinc@nvidia.com>,
-        Bryan Huntsman <bhuntsman@nvidia.com>,
-        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>
-Subject: RE: [PATCH v8 1/3] iommu/arm-smmu: add NVIDIA implementation for dual
- ARM MMU-500 usage
-Thread-Topic: [PATCH v8 1/3] iommu/arm-smmu: add NVIDIA implementation for
- dual ARM MMU-500 usage
-Thread-Index: AQHWTnLtXe5vi7jgbE2pRnyepolCC6jw8nYAgABivFCAAAYNgIAAA0WAgAAGCACAACC4AIAAFN+A
-Date:   Tue, 30 Jun 2020 20:21:44 +0000
-Message-ID: <BYAPR12MB282290F6E270DB90040379A0B36F0@BYAPR12MB2822.namprd12.prod.outlook.com>
-References: <20200630001051.12350-1-vdumpa@nvidia.com>
- <20200630001051.12350-2-vdumpa@nvidia.com>
- <e6da9661-4e62-6e34-ac21-63ff993ca8bc@nvidia.com>
- <BYAPR12MB282210677459B8D62623C642B36F0@BYAPR12MB2822.namprd12.prod.outlook.com>
- <4037efc7-fbed-e8cf-dac7-212c65014e4e@nvidia.com>
- <eb0ffc7e-f41b-d17c-6a90-049335098cd2@nvidia.com>
- <BYAPR12MB2822B43B0218F6E55C97451BB36F0@BYAPR12MB2822.namprd12.prod.outlook.com>
- <64ffa84f-a8cf-ae81-6306-b5d8b1ff0618@nvidia.com>
-In-Reply-To: <64ffa84f-a8cf-ae81-6306-b5d8b1ff0618@nvidia.com>
-Accept-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Enabled=True;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SiteId=43083d15-7273-40c1-b7db-39efd9ccc17a;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Owner=VDUMPA@nvidia.com;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_SetDate=2020-06-30T20:21:42.5016349Z;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Name=Unrestricted;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_ActionId=e86ac2ad-94a5-4360-b4fe-863d47606bad;
- MSIP_Label_6b558183-044c-4105-8d9c-cea02a2a3d86_Extended_MSFT_Method=Automatic
-authentication-results: nvidia.com; dkim=none (message not signed)
- header.d=none;nvidia.com; dmarc=none action=none header.from=nvidia.com;
-x-originating-ip: [71.202.129.3]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 30b2cd1e-c839-4a24-cf86-08d81d33350a
-x-ms-traffictypediagnostic: BYAPR12MB3191:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BYAPR12MB31911783FCEEF540DC5476E7B36F0@BYAPR12MB3191.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0450A714CB
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 9D0EPOHLLsgQl6+NSl7GbzxP6IgfyvIH4wxNzWyxuYt96se0Gl85/kycsYbsOsfSnZ8dmgzrtsCeueL3kOn/ltQ0zaPn+8E6lAMr4iy58gLG07g19ERjY53kvkN+FeimbUhVgiTDTa4BEeM0GNvLZQxgBpOTf/VUyWbXK4OGII5hxx1QJZJwovtDICQSRWMhRNNflv9KG1HoJWpMDkj2p7bXGLYig17JrXRyg58Wa9A4FXbTCl6lh+SYEIJvhBTtiyTiJlXsUNNYU1086Eo35Xs1IS/BYfCdEAFHvqFake+up593NUE3uvEOkCje7N+4
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB2822.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(136003)(39860400002)(346002)(366004)(376002)(396003)(7696005)(6636002)(6506007)(86362001)(52536014)(83380400001)(9686003)(6862004)(316002)(71200400001)(54906003)(478600001)(4326008)(33656002)(55016002)(186003)(26005)(8676002)(64756008)(8936002)(2906002)(66556008)(66476007)(66446008)(76116006)(66946007)(5660300002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata: 7XsW8+8X7Z15I+wTuT6GOEjHQUcvy8XdL6/5rqupM7RikkG4yNpjWVxR/iJAF8KUkESek7/1xZNln/6boM0/zXMEiyRZnjE2uEDkTkpQ/eoeoaxToPjT1s2vX9yFgxSi8+XDh92fBjHHjO7jXQqRH2N9g/pogNkDX+e93PNWWJLCuRNr5oYuIB87GPXi4cbpN+GZYdTl55EmIf979njpXTexKuQ7QYA1L8lbEHgVx0NHuPDGk4lnz0GcD/WCmPhXkKtwDpg9GODsEkoTJCCSQEZK1Y3eI2DphzARK7oLYzX6PHzV14JNQqJwVnD1ncyJCzpLeEaHIQlkeK3W9XiQgyDeGifAJPMFWaN/JDNXgWXR7hNIFt4H9iu0RDJiD3o2m2GbXD9FJrwL33u9AseQC6laurKAY7np2qJQ9IRZULYCunm/MNKqhQ/R+SxNgoF6rseRe6dkbGMSd5NJPx2VovJAtrgmSzSevgWjZgj2oG4=
+        Tue, 30 Jun 2020 16:24:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51848 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726642AbgF3UYA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 16:24:00 -0400
+Received: from mail-pj1-x1044.google.com (mail-pj1-x1044.google.com [IPv6:2607:f8b0:4864:20::1044])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 429EBC061755;
+        Tue, 30 Jun 2020 13:24:00 -0700 (PDT)
+Received: by mail-pj1-x1044.google.com with SMTP id k71so6464558pje.0;
+        Tue, 30 Jun 2020 13:24:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=bAnFWDXrNwZJcACP9IOdAh/yJEqe7UvCHQljaZTXU6Q=;
+        b=KcMy0csfV+LwdO58342SklgsOVTD/dn11b/TFu+QjFjgpTJ/quFUh5M0g65ft4+9Rz
+         /n2q6A2VLSDgselfx38JxL8mznDfB79zSfuxmIAAbhw4M+OQyhf+mJ3hQ4kKJE0oaLsH
+         Rcj8TxxrkX6l0BzJ34rXA5CekVGHEKjU91pA7JCDSDs4m3JLsF1CIPMoqio9q8Na08yg
+         qFonsv3+lMdwDKNsryiShGcx88FObnuOb1qqlkleEWhJhFP6tKqqzq2A9CZ3qkysKuLh
+         SO7rGHbJV2Gie6Xj6XvcWAHwMJJLuCuM9dVXenV0PsFjqLR+giDGFfyapC4yb6mMJeGz
+         bc+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=bAnFWDXrNwZJcACP9IOdAh/yJEqe7UvCHQljaZTXU6Q=;
+        b=TSARc3oD/pgs8oX2ndzaFQ2WipnYUTV1sADYn4G+A3uuEaRp62DGzBmk0yTQ6LrPZR
+         nIJdSl0n1S9F1HhflhcA5Mve+QnTMs0hAy1g+NMAzdQ6K7t6k1A6zEgFNbyvbdIkXMsn
+         Y8fXpr6BYnyzMnOkU0a58JKfBMRZZDhTBTCyQoHB54R1Xw/XPcwC780EMb2fRlRXJGLN
+         sGprjCfPQaqzjCcxiE4YozBa3ALF9UmOPTR1VVLgKlLeM2vBpK8EGydXg/WG85FgcvR3
+         rL49ZNkvUFoVhaVJS5a3uCIJqwuk4Dwih92A6Pi+8y1zpAV1hNKVDPDb5KZ9VXuK1NWk
+         ngjw==
+X-Gm-Message-State: AOAM533kpylF6y4d400cVOj7bEcpx1EQhlbLIPiUVg0fDVHV8LhL/Wfz
+        ANphT4WxwK1jUm0mdiNaE2s=
+X-Google-Smtp-Source: ABdhPJzQ/w+IwOwSx0RgvzmxIlFx1k6w2+8fhfEcPOHn5Gmjp2wfQYj9ujBGFtqtLKcszX2ZYG7w2Q==
+X-Received: by 2002:a17:902:6acc:: with SMTP id i12mr17649806plt.75.1593548638953;
+        Tue, 30 Jun 2020 13:23:58 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id w9sm3598332pfq.178.2020.06.30.13.23.57
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 30 Jun 2020 13:23:58 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 13:23:56 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Tero Kristo <t-kristo@ti.com>
+Cc:     Jan Kiszka <jan.kiszka@siemens.com>, wim@linux-watchdog.org,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] watchdog: rti: tweak min_hw_heartbeat_ms to match
+ initial allowed window
+Message-ID: <20200630202356.GA16412@roeck-us.net>
+References: <20200624114534.1362-1-t-kristo@ti.com>
+ <20200624114534.1362-3-t-kristo@ti.com>
+ <289c6104-a885-d3c1-c670-a081ebaaf782@siemens.com>
+ <b3849bea-2a4d-079e-e9df-8a1d6c13c0c7@ti.com>
+ <25bf3ed1-5434-9b45-20ae-e1b2cfc5e5c0@roeck-us.net>
+ <1d84e633-b808-d6ac-a34c-9cc4709e43f6@ti.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB2822.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 30b2cd1e-c839-4a24-cf86-08d81d33350a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2020 20:21:44.2524
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: meKE/dIyBW3rLkFmkswNJh4YdbB/mC4rtz6W4v+VFF1SNJkk6qnB003Cy10yOHDABRBDznaaqOmqZkMWHtiUow==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR12MB3191
-X-OriginatorOrg: Nvidia.com
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1593548512; bh=V9TmtNU1To6IxI+EH+P3BHjtxVj6UUA2yhTMaYLkcJI=;
-        h=X-PGP-Universal:ARC-Seal:ARC-Message-Signature:
-         ARC-Authentication-Results:From:To:CC:Subject:Thread-Topic:
-         Thread-Index:Date:Message-ID:References:In-Reply-To:
-         Accept-Language:X-MS-Has-Attach:X-MS-TNEF-Correlator:msip_labels:
-         authentication-results:x-originating-ip:x-ms-publictraffictype:
-         x-ms-office365-filtering-correlation-id:x-ms-traffictypediagnostic:
-         x-ms-exchange-transport-forked:x-microsoft-antispam-prvs:
-         x-ms-oob-tlc-oobclassifiers:x-forefront-prvs:
-         x-ms-exchange-senderadcheck:x-microsoft-antispam:
-         x-microsoft-antispam-message-info:x-forefront-antispam-report:
-         x-ms-exchange-antispam-messagedata:MIME-Version:
-         X-MS-Exchange-CrossTenant-AuthAs:
-         X-MS-Exchange-CrossTenant-AuthSource:
-         X-MS-Exchange-CrossTenant-Network-Message-Id:
-         X-MS-Exchange-CrossTenant-originalarrivaltime:
-         X-MS-Exchange-CrossTenant-fromentityheader:
-         X-MS-Exchange-CrossTenant-id:X-MS-Exchange-CrossTenant-mailboxtype:
-         X-MS-Exchange-CrossTenant-userprincipalname:
-         X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg:
-         Content-Language:Content-Type:Content-Transfer-Encoding;
-        b=dimS1Y+T9Itbi7CoQXzOmbB575VMGNHXMRu7ycjyJaS5vO4sKz4zxyZNqgFDtbz2T
-         eH8VTkGalhEFoxaKMFtbtJwA1rCeMC404y27WK/5SO1dtweefzvuroiJhqFY0WI4kQ
-         zFSBMNJmu3eg3oX5SQxrkcOTZnvbhhr7DZ7yvokpky7v6CG0SDiEUiVfJkh2fxKzGD
-         8O/54d15VOWzNsQ+52IjZLUkXWcJI91eb8GfVs4d1cU1aI2JMUZ5s3Eds5dkIpqAZt
-         9NTRk1IyclyVOeC9Tp6vNzwesom4yvwhVgGtg2cGjvY3gzO/ZKoQIzmhJdsJRmX4eu
-         lGikUzqk+0HzA==
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1d84e633-b808-d6ac-a34c-9cc4709e43f6@ti.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pj4gVGhlIGRyaXZlciBpbnRlbmQgdG8gc3VwcG9ydCB1cCB0byAzIGluc3RhbmNlcy4gSXQgZG9l
-c24ndCByZWFsbHkgbWFuZGF0ZSB0aGF0IGFsbCB0aHJlZSBpbnN0YW5jZXMgYmUgcHJlc2VudCBp
-biBzYW1lIERUIG5vZGUuDQo+PiBFYWNoIG1taW8gYXBlcnR1cmUgaW4gInJlZyIgcHJvcGVydHkg
-aXMgYW4gaW5zdGFuY2UgaGVyZS4gcmVnID0gDQo+PiA8aW5zdDBfYmFzZSwgc2l6ZT4sIDxpbnN0
-MV9iYXNlLCBzaXplPiwgPGluc3QyX2Jhc2UsIHNpemU+OyBUaGUgcmVnIGNhbiBoYXZlIGFsbCB0
-aHJlZSBvciBsZXNzIGFuZCBkcml2ZXIganVzdCBjb25maWd1cmVzIGJhc2VkIG9uIHJlZyBhbmQg
-aXQgd29ya3MgZmluZS4NCg0KPlNvIGl0IHNvdW5kcyBsaWtlIHdlIG5lZWQgYXQgbGVhc3QgMiBT
-TU1VcyAoZm9yIG5vbi1pc28gYW5kIGlzbykgYnV0IHdlIGhhdmUgdXAgdG8gMyAoZm9yIFRlZ3Jh
-MTk0KS4gU28gdGhlIHF1ZXN0aW9uIGlzIGRvIHdlIGhhdmUgYSB1c2UtY2FzZSB3aGVyZSB3ZSBv
-bmx5IHVzZSAyIGFuZCBub3QgMz8gSWYgbm90LCB0aGVuIGl0IHN0aWxsIHNlZW1zIHRoYXQgd2Ug
-c2hvdWxkIHJlcXVpcmUgdGhhdCBhbGwgMyBhcmUgcHJlc2VudC4NCg0KSXQgY2FuIGJlIGVpdGhl
-ciAyIFNNTVVzIChmb3Igbm9uLWlzbykgb3IgMyBTTU1VcyAoZm9yIG5vbi1pc28gYW5kIGlzbyku
-ICBMZXQgbWUgZmFpbCB0aGUgb25lIGluc3RhbmNlIGNhc2UgYXMgaXQgY2FuIHVzZSByZWd1bGFy
-IGFybSBzbW11IGltcGxlbWVudGF0aW9uIGFuZCBkb24ndCAgbmVlZCBudmlkaWEgaW1wbGVtZW50
-YXRpb24gZXhwbGljaXRseS4NCiANCj5UaGUgb3RoZXIgcHJvYmxlbSBJIHNlZSBoZXJlIGlzIHRo
-YXQgY3VycmVudGx5IHRoZSBhcm0tc21tdSBiaW5kaW5nIGRlZmluZXMgdGhlICdyZWcnIHdpdGgg
-YSAnbWF4SXRlbXMnIG9mIDEsIHdoZXJlYXMgd2UgaGF2ZSAzLiBJIGJlbGlldmUgdGhhdCB0aGlz
-IHdpbGwgZ2V0IGNhdWdodCBieSB0aGUgJ2R0X2JpbmRpbmdfY2hlY2snIHdoZW4gd2UgdHJ5IHRv
-IHBvcHVsYXRlIHRoZSBiaW5kaW5nLg0KDQpUaGFua3MgZm9yIHBvaW50aW5nIGl0IG91dCEgV2ls
-bCB1cGRhdGUgdGhlIGJpbmRpbmcgZG9jLg0KDQotS1INCg0KLS0NCm52cHVibGljDQo=
+On Thu, Jun 25, 2020 at 08:04:50PM +0300, Tero Kristo wrote:
+> On 25/06/2020 16:35, Guenter Roeck wrote:
+> > On 6/25/20 1:32 AM, Tero Kristo wrote:
+> > > On 24/06/2020 18:24, Jan Kiszka wrote:
+> > > > On 24.06.20 13:45, Tero Kristo wrote:
+> > > > > If the RTI watchdog has been started by someone (like bootloader) when
+> > > > > the driver probes, we must adjust the initial ping timeout to match the
+> > > > > currently running watchdog window to avoid generating watchdog reset.
+> > > > > 
+> > > > > Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> > > > > ---
+> > > > >    drivers/watchdog/rti_wdt.c | 25 +++++++++++++++++++++++++
+> > > > >    1 file changed, 25 insertions(+)
+> > > > > 
+> > > > > diff --git a/drivers/watchdog/rti_wdt.c b/drivers/watchdog/rti_wdt.c
+> > > > > index d456dd72d99a..02ea2b2435f5 100644
+> > > > > --- a/drivers/watchdog/rti_wdt.c
+> > > > > +++ b/drivers/watchdog/rti_wdt.c
+> > > > > @@ -55,11 +55,13 @@ static int heartbeat;
+> > > > >     * @base - base io address of WD device
+> > > > >     * @freq - source clock frequency of WDT
+> > > > >     * @wdd  - hold watchdog device as is in WDT core
+> > > > > + * @min_hw_heartbeat_save - save of the min hw heartbeat value
+> > > > >     */
+> > > > >    struct rti_wdt_device {
+> > > > >        void __iomem        *base;
+> > > > >        unsigned long        freq;
+> > > > >        struct watchdog_device    wdd;
+> > > > > +    unsigned int        min_hw_heartbeat_save;
+> > > > >    };
+> > > > >    static int rti_wdt_start(struct watchdog_device *wdd)
+> > > > > @@ -107,6 +109,11 @@ static int rti_wdt_ping(struct watchdog_device *wdd)
+> > > > >        /* put watchdog in active state */
+> > > > >        writel_relaxed(WDKEY_SEQ1, wdt->base + RTIWDKEY);
+> > > > > +    if (wdt->min_hw_heartbeat_save) {
+> > > > > +        wdd->min_hw_heartbeat_ms = wdt->min_hw_heartbeat_save;
+> > > > > +        wdt->min_hw_heartbeat_save = 0;
+> > > > > +    }
+> > > > > +
+> > > > >        return 0;
+> > > > >    }
+> > > > > @@ -201,6 +208,24 @@ static int rti_wdt_probe(struct platform_device *pdev)
+> > > > >            goto err_iomap;
+> > > > >        }
+> > > > > +    if (readl(wdt->base + RTIDWDCTRL) == WDENABLE_KEY) {
+> > > > > +        u32 time_left;
+> > > > > +        u32 heartbeat;
+> > > > > +
+> > > > > +        set_bit(WDOG_HW_RUNNING, &wdd->status);
+> > > > > +        time_left = rti_wdt_get_timeleft(wdd);
+> > > > > +        heartbeat = readl(wdt->base + RTIDWDPRLD);
+> > > > > +        heartbeat <<= WDT_PRELOAD_SHIFT;
+> > > > > +        heartbeat /= wdt->freq;
+> > > > > +        if (time_left < heartbeat / 2)
+> > > > > +            wdd->min_hw_heartbeat_ms = 0;
+> > > > > +        else
+> > > > > +            wdd->min_hw_heartbeat_ms =
+> > > > > +                (time_left - heartbeat / 2 + 1) * 1000;
+> > > > > +
+> > > > > +        wdt->min_hw_heartbeat_save = 11 * heartbeat * 1000 / 20;
+> > > > > +    }
+> > > > > +
+> > > > >        ret = watchdog_register_device(wdd);
+> > > > >        if (ret) {
+> > > > >            dev_err(dev, "cannot register watchdog device\n");
+> > > > > 
+> > > > 
+> > > > This assumes that the bootloader also programmed a 50% window, right? The pending U-Boot patch will do that, but what if that may chance or someone uses a different setup?
+> > > 
+> > > Yes, we assume 50%. I think based on the hw design, 50% is the only sane value to be used, otherwise you just shrink the open window too much and for no apparent reason.
+> > > 
+> > 
+> > Not sure if that is a valid assumption. Someone who designs a watchdog
+> > with such a narrow ping window might as well also use it. The question
+> > is if you want to rely on that assumption, or check and change it if needed.
+> 
+> Right, if that is a blocker, I can modify the code. Should be maybe couple
+> of lines addition.
+> 
+> > Also, I wonder if we should add an API function such as
+> > "set_last_hw_keepalive()" to avoid all that complexity.
+> 
+> I can try adding that also if it is desirable.
+> 
+
+But wait, the code doesn't really match what the description of this
+patch claims, or at least the description is misleading. Per the
+description, this is to prevent an early timeout. However, the problem
+here is that the watchdog core does not generate a ping, even if
+requested, because it believes that it just generated one right before
+the watchdog timer was registered, and that it can not generate another
+one because min_hw_heartbeat_ms has not elapsed.
+
+With that in mind, the problem is a bit more complex.
+
+First, the driver doesn't really update the current timeout to the
+value that is currently configured and enabled. Instead, it just
+uses/assumes the default (DEFAULT_HEARTBEAT or whatever the heartbeat
+module parameter is set to). This means that it is still possible for
+an early timeout to occur if there is a mismatch between the bootloader
+timeout and the timeout assumed by the driver. Worse, the timeout
+is only updated in the start function - and the start function isn't
+called if the watchdog is already running. Actually, the driver does
+not support updating the timeout at all. This means that a mismatch
+between the bootloader timeout and the timeout assumed by the driver
+is not handled well.
+
+To solve this, the driver would have to update the actual timeout to
+whatever is programmed into the chip and ignore any module parameter
+and default settings if the watchdog is already running. Alternatively,
+it would have to support updating the timeout (if the hardware supports
+that) after the watchdog was started.
+
+Second, handling min_hw_heartbeat_ms properly should really be implemented
+in the watchdog core. Instead of assuming that the most recent keepalive
+happened "just before now", as it currently does, it should call the
+timeleft function (if available and if the watchdog is running) and
+calculate the most recent keepalive (and thus the earliest acceptable
+next keepalive) from its return value.
+
+Thanks,
+Guenter
