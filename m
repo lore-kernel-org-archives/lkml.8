@@ -2,69 +2,101 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EBF1C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AB9AC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:50:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 2B8122065F
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:49:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4225E2073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:50:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732668AbgF3KtW (ORCPT
+        id S1732560AbgF3KuA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 06:49:22 -0400
-Received: from foss.arm.com ([217.140.110.172]:38118 "EHLO foss.arm.com"
+        Tue, 30 Jun 2020 06:50:00 -0400
+Received: from mga03.intel.com ([134.134.136.65]:7174 "EHLO mga03.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732560AbgF3KtV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 06:49:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 14FF330E;
-        Tue, 30 Jun 2020 03:49:21 -0700 (PDT)
-Received: from [10.57.21.32] (unknown [10.57.21.32])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0A7B33F68F;
-        Tue, 30 Jun 2020 03:49:19 -0700 (PDT)
-Subject: Re: [PATCH] iommu: SUN50I_IOMMU should depend on HAS_DMA
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Maxime Ripard <maxime@cerno.tech>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-References: <20200629121146.24011-1-geert@linux-m68k.org>
- <c2047394-ea6e-3bc3-4bf0-a732237dbeca@arm.com>
- <20200630100947.GL28824@8bytes.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <e66478ff-1df0-8f3a-b164-76a430eca58b@arm.com>
-Date:   Tue, 30 Jun 2020 11:49:06 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        id S1732632AbgF3Kt6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 06:49:58 -0400
+IronPort-SDR: pHUPZmOhELyoV/gKz5hpx6x4EHIcxd36ZecM/uOsSqwLEcQjLAOP1yWgO3t6H+a9EGBQkW5cDv
+ yYc2uBsPcDnA==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="146185002"
+X-IronPort-AV: E=Sophos;i="5.75,297,1589266800"; 
+   d="scan'208";a="146185002"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jun 2020 03:49:58 -0700
+IronPort-SDR: AHCabFJYknbIO+16YmrYmksrEmbBeWSI8iMfurM3s88EU4yDaqt+uf+KCqFHe7Ejg8AvfzLXib
+ 7p2mDBLjdUnA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,297,1589266800"; 
+   d="scan'208";a="386664591"
+Received: from kuha.fi.intel.com ([10.237.72.162])
+  by fmsmga001.fm.intel.com with SMTP; 30 Jun 2020 03:49:49 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 30 Jun 2020 13:49:48 +0300
+Date:   Tue, 30 Jun 2020 13:49:48 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Rajat Jain <rajatja@google.com>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-acpi@vger.kernel.org, Raj Ashok <ashok.raj@intel.com>,
+        lalithambika.krishnakumar@intel.com,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Prashant Malani <pmalani@google.com>,
+        Benson Leung <bleung@google.com>,
+        Todd Broch <tbroch@google.com>,
+        Alex Levin <levinale@google.com>,
+        Mattias Nissler <mnissler@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>,
+        Bernie Keany <bernie.keany@intel.com>,
+        Aaron Durbin <adurbin@google.com>,
+        Diego Rivas <diegorivas@google.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Christian Kellner <christian@kellner.me>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        oohall@gmail.com, Saravana Kannan <saravanak@google.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 5/7] driver core: Add device location to "struct
+ device" and expose it in sysfs
+Message-ID: <20200630104948.GC856968@kuha.fi.intel.com>
+References: <20200630044943.3425049-1-rajatja@google.com>
+ <20200630044943.3425049-6-rajatja@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20200630100947.GL28824@8bytes.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200630044943.3425049-6-rajatja@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-30 11:09, Joerg Roedel wrote:
-> On Mon, Jun 29, 2020 at 05:29:36PM +0100, Robin Murphy wrote:
->> On 2020-06-29 13:11, Geert Uytterhoeven wrote:
->>> If NO_DMA=y (e.g. Sun-3 all{mod,yes}-config):
->>>
->>>       drivers/iommu/dma-iommu.o: In function `iommu_dma_mmap':
->>>       dma-iommu.c:(.text+0x92e): undefined reference to `dma_pgprot'
->>>
->>> IOMMU_DMA must not be selected, unless HAS_DMA=y.
->>
->> Wait, no, IOMMU_DMA should not be selected by drivers at all - it's for arch
->> code to choose.
+On Mon, Jun 29, 2020 at 09:49:41PM -0700, Rajat Jain wrote:
+> Add a new (optional) field to denote the physical location of a device
+> in the system, and expose it in sysfs. This was discussed here:
+> https://lore.kernel.org/linux-acpi/20200618184621.GA446639@kroah.com/
 > 
-> Okay, but that is a different fix, right? I queued this patch for v5.8
-> for now.
+> (The primary choice for attribute name i.e. "location" is already
+> exposed as an ABI elsewhere, so settled for "site"). Individual buses
+> that want to support this new attribute can opt-in by setting a flag in
+> bus_type, and then populating the location of device while enumerating
+> it.
 
-If the driver didn't select IOMMU_DMA (completely unnecessarily, I might 
-add), there wouldn't be any problem to fix in the first place ;)
+So why not just call it "physical_location"?
 
-Robin.
+
+thanks,
+
+-- 
+heikki
