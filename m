@@ -2,297 +2,180 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2768C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C5CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8193220768
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:27:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B798020674
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:29:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="CbgtUtIu"
+	dkim=pass (1024-bit key) header.d=renesasgroup.onmicrosoft.com header.i=@renesasgroup.onmicrosoft.com header.b="jzGXp411"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731419AbgF3I11 (ORCPT
+        id S1731494AbgF3I3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 04:27:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54212 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731234AbgF3I1Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 04:27:25 -0400
-Received: from mail-vs1-xe41.google.com (mail-vs1-xe41.google.com [IPv6:2607:f8b0:4864:20::e41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 575C4C03E979
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 01:27:25 -0700 (PDT)
-Received: by mail-vs1-xe41.google.com with SMTP id k7so9375049vso.2
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 01:27:25 -0700 (PDT)
+        Tue, 30 Jun 2020 04:29:17 -0400
+Received: from mail-eopbgr1400130.outbound.protection.outlook.com ([40.107.140.130]:29315
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731227AbgF3I3O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 04:29:14 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=SU+RQHxKRfRSeja0XhbSkG+3uJ18yZPIHj1OCDEoZqy40j4w0XtzBPBuWsQulRyhiVUJN/mLQv/9d8fPQCp2PQ7++tta0+3zlDoDc7WNPwgxFV9oS54xQcrJcMXR2I0PtvJjELOr0PMh8ZmPjULau6HiPvYkaKEPGzzhDWRcfqHJlcGb6oe61JztlXD1R7d/ye6AOxZ8TGbyj+o/LaKvICFar5tKaiJv9TOiCXft+PVZzx4n4zFVgMPIuM9B33tpNL8a83GVPaGhP1EoWJI0ZQUoH0R40lpjFrdnNGwoBM53OHVDFw6YdyhML6kScJ1PyH8glJJXZzTs9DpVmAb4+g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=quotAp71mqfyvjE91Fn8oJMvXmO6OmLe8zlyJNYJ/aU=;
+ b=Yb1ao9TNaq4WsDQsNPIFRQmdgh6Y0wF0llu88Q010mSgitCmC1++0b3+gUWNpU3sSygHSaEtycGiCI+0aCirP0MrZbxh/NdMWYp5C/5qv3iC4C98WSZ0GEzSMlvg9KWHItOSRrVs4Ij2NP4PQ/cu9ios89VUZkO1gpGHkeVstwlN3IbijkvcZpj/cQrRezFPdUo4MqASmI0I/SO+OQzBFZ6skhjcm7ck1QiwGBXMc6elkJlxpx7drT4pbvYALbWue1KheO5TYatmdcfrxPCyKeFy50er+TN0WN4DUX7Il48UQ+hiT2F2L0Zbbza3n5eJcTaKf/N901BF5+lSIppsYA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=6TyFilXliZJy2d+mBi1GXmZQ03QK7DtnI0MwvDeR4fk=;
-        b=CbgtUtIunRLER4yB3euokUNze9d9uxoJ5Et643+JAhV/AIM/JYGkYp6wRKA+vfY3iA
-         0uAQm/XS5fyEGuSP7fCODzq4WOnnMcbmJ3gK/o7JvnSLN1jQgwmxlvglyiLRjWQ9d1DK
-         G3oWjo9EGntTmCL7rmn/GPZCW7KRREtAD50RPfxk0lOEeSZjbAH7pHnFKQGbA6j+xBDZ
-         YCrEtI4B5ozVcVfRq8vw+uwZ1TvuHkFwgPk+KeC/7qDjTeidEp2fCBxslutoxYfOjZgv
-         jaOhjuq5zqInQz6/KQJkx4+ZKXAhWTrchC/3PioCwpcUw6VsdjcUFu4TAzROH7ulEu72
-         TY0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=6TyFilXliZJy2d+mBi1GXmZQ03QK7DtnI0MwvDeR4fk=;
-        b=Rc2VJJ3R75RC3XEtjmjew+AdTHaJCsZKAQVu/k+fBo3bqTwj06iDZJr3wL/5ZQNG9E
-         eGbAzYylcMWzuINXACjWVTCNj3Pnjd1Ui8QYXvIKOeC9/OKzKHc/k59febvmEJff6ww0
-         DuPOi9I2FtNwkIG2zgOW4wigwcgkAFp/hULDY3exbkIsKoI1ZbX5XkbJt/uT8HYK15ML
-         V2mfQEPbrAHBSzpxRq2u+HeirZ5Wv+mEkFRfJYOyzGwefrxTjnJZD62oPJH3Offv4dex
-         VOUeV3TQBRjtEosdkEKbWR7GVF+Dm5JzlBODQfNVZSR8g3h7tV1Ke0fVOm3ahdpG0Q52
-         ikdg==
-X-Gm-Message-State: AOAM531oh8akfdg15qXB7hYTgy4WYcndDI59QQ/s7hLfGRfeMXE0NO4b
-        PKVnm+fU0ms/xrCn6xVfwczdz1ZRdlN4/M1ez2nRAw==
-X-Google-Smtp-Source: ABdhPJyu6oqHNp3qR9Yq9yQ9alWgxok3aKdKZ7hxGD+ds4LcjTYsN+j/e8KcUWZCfBJjn6S0Y/kxY+eIMGTPHFoTH10=
-X-Received: by 2002:a67:1e45:: with SMTP id e66mr13255904vse.95.1593505644125;
- Tue, 30 Jun 2020 01:27:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAPpJ_efxenmSXt2OXkhkQ1jDJ59tyWBDUvmpyOB-bfPMDENQZg@mail.gmail.com>
- <CAPpJ_ed9TMJjN8xS1_3saf5obQhULJSLNgQSAFxgiWM2QX9A7Q@mail.gmail.com>
- <20200526102018.kznh6aglpkqlp6en@gilmour.lan> <CAD8Lp467DiYWLwH6T1Jeq-uyN4VEuef-gGWw0_bBTtmSPr00Ag@mail.gmail.com>
- <20200527091335.7wc3uy67lbz7j4di@gilmour.lan> <CAD8Lp45ucK-yZ5G_DrUVA7rnxo58UF1LPUy65w2PCOcSxKx_Sg@mail.gmail.com>
- <20200528073055.znutrhkryzu3grrl@gilmour.lan> <CAPpJ_ec1KRwUrHGVVZrReaDPz4iga-Nvj5H652-tTKmkXL=Xmg@mail.gmail.com>
- <20200602110442.2ceuymhwuomvjj6i@gilmour> <CAPpJ_eePgLxO5URB3V5aeNMvBHOp+vXrW=+6SnVt4mB9J8oR+Q@mail.gmail.com>
- <20200629142145.aa2vdfkgeugrze4c@gilmour.lan>
-In-Reply-To: <20200629142145.aa2vdfkgeugrze4c@gilmour.lan>
-From:   Jian-Hong Pan <jian-hong@endlessm.com>
-Date:   Tue, 30 Jun 2020 16:26:20 +0800
-Message-ID: <CAPpJ_efVO9HxrYzbrZgYpcniX30YtvthcYAc=AOabLsThkO02Q@mail.gmail.com>
-Subject: Re: [PATCH v2 00/91] drm/vc4: Support BCM2711 Display Pipelin
-To:     Maxime Ripard <maxime@cerno.tech>
-Cc:     Daniel Drake <drake@endlessm.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Eric Anholt <eric@anholt.net>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-rpi-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-arm-kernel@lists.infradead.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-clk@vger.kernel.org, linux-i2c@vger.kernel.org,
-        Linux Upstreaming Team <linux@endlessm.com>
-Content-Type: text/plain; charset="UTF-8"
+ d=renesasgroup.onmicrosoft.com; s=selector2-renesasgroup-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=quotAp71mqfyvjE91Fn8oJMvXmO6OmLe8zlyJNYJ/aU=;
+ b=jzGXp411a8IP8ABnBP+k0HJwyd5/vnVfQocLx9ML/oxapG5XreBNVdYtFQAGjjXnBQHCkRTNVNVaiDb2wg0asL9E4q4AK+/2kAxnS+tSVt08SkMlxGAe2BeJkGEIwK11Ig5ru4sUzgQ/yCQo8KCGj6dD27t9IDLnuVkg+aSlC/8=
+Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com (2603:1096:404:d5::22)
+ by TYAPR01MB3936.jpnprd01.prod.outlook.com (2603:1096:404:c7::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.20; Tue, 30 Jun
+ 2020 08:29:10 +0000
+Received: from TY2PR01MB3692.jpnprd01.prod.outlook.com
+ ([fe80::9083:6001:8090:9f3]) by TY2PR01MB3692.jpnprd01.prod.outlook.com
+ ([fe80::9083:6001:8090:9f3%6]) with mapi id 15.20.3131.026; Tue, 30 Jun 2020
+ 08:29:10 +0000
+From:   Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To:     Mark Brown <broonie@kernel.org>
+CC:     "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "geert+renesas@glider.be" <geert+renesas@glider.be>,
+        "magnus.damm@gmail.com" <magnus.damm@gmail.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH/RFC v4 2/4] regulator: fixed: add regulator_ops members
+ for suspend/resume
+Thread-Topic: [PATCH/RFC v4 2/4] regulator: fixed: add regulator_ops members
+ for suspend/resume
+Thread-Index: AQHWS5y220V49G6mUUOIhQjj9iWCYajq9+eAgAPnVSCAALNbAIABQbjA
+Date:   Tue, 30 Jun 2020 08:29:09 +0000
+Message-ID: <TY2PR01MB3692F64AB29BD83203CFC802D86F0@TY2PR01MB3692.jpnprd01.prod.outlook.com>
+References: <1593163942-5087-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <1593163942-5087-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+ <20200626143914.GE5289@sirena.org.uk>
+ <TY2PR01MB3692A3B12CEF7F9708A8A59CD86E0@TY2PR01MB3692.jpnprd01.prod.outlook.com>
+ <20200629125756.GC5499@sirena.org.uk>
+In-Reply-To: <20200629125756.GC5499@sirena.org.uk>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=none action=none header.from=renesas.com;
+x-originating-ip: [240f:60:5f3e:1:6993:87cc:5ed8:ca72]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 4319976c-0ba1-41ec-a6e2-08d81ccfa9b5
+x-ms-traffictypediagnostic: TYAPR01MB3936:
+x-microsoft-antispam-prvs: <TYAPR01MB3936C7DFC6D66956E5836A94D86F0@TYAPR01MB3936.jpnprd01.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0450A714CB
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: arZmvLfbeTBNS4B9j2SQ8hOrIyqd3ZUQ/kx0NzIM7XR6ALd5GGjJl7/1q+ckgBoqbjUiB8mzFalgHrFy8cQjzVuwm1b4gPVyIru1SCITyglTny/i53UkxpP+cZ7KZlQbC3QSQc2DTSaLloLVB2w96Xwe1rkKMIHe0wxKCtdiUBDItKKTlwT11OK+MVFl1pAHdgPQNRNbdN6p9WYnXFfdQ4AwtPTkB0OqpasU/dIZK4xWfqUGgiu2CmNMe6rV4Q3VV20Ldi6NdMuuCURay4D6iSCS4DegKSZJsSR1afytMHs0k+WZ2u9l+RhzmUAh03tBSgguUi72ROkNzYvfeTZR3n0Ow6gwB4HMZZ/SsW+tAh9+TRBJy22wIK6JkWnVgh1SdfqHQf+z41Trt366e+JHWA==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR01MB3692.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(4636009)(39860400002)(136003)(376002)(366004)(346002)(396003)(2906002)(33656002)(52536014)(5660300002)(86362001)(83380400001)(6506007)(8936002)(8676002)(966005)(6916009)(478600001)(71200400001)(7696005)(186003)(66946007)(4326008)(66446008)(66556008)(54906003)(15650500001)(316002)(66476007)(9686003)(55016002)(64756008)(76116006);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata: glyAAUBJr0Tu52qfFnR0ss2o47VrE0UifZ211c7YCBQOABQJhj4F3xFNRjalTZa4OLH2QD1s2mS+Why97xgT1fftucBlmBYjtFgrecwQl5s8wrfilWdCu/Vh45GFbzKf9jEaE1eIm3u7ojFPJITDky7dmvO0m20j88kprolKMyj3UWLWyB3gwEsYOOlsE07n+jcvftRCq6g+2UaFoiBmF4P1gcAVkbmqGW9JBYnC6mmox6YmPSDLINcx+VBVxwIF9F0T547QCB3g0FtBWjF/eNB5HdStEYC0rDTQH+PKDNWzTQBpIAYFkrjlT5BUe/qj0/s2BXd2dsK3Bj2sXnhgoalnByad8dpen5d3Eu7ahOkv6ZRptAhiVbovaRibEi70LutmTQhuYXkuhEW/xwrQzMplM1Tjm0LbVnIf8iYv6i/fZ2F8bWhdMJhckoe1Ddd5mRvEJqYEch4zQE8IWl1+M7Ik2KfXleP0o46aha+shncNI8KTZ14r/1K2toJtJx06iF9RANiwAfPQGmIfF5lKTshq9lNMa7TgKDy8UBeOCnE=
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TY2PR01MB3692.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4319976c-0ba1-41ec-a6e2-08d81ccfa9b5
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2020 08:29:09.8600
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: XWmMucArLtofnGhvjrU+YJUugIps0rE38MKwuuno25G+AgwYqF5VLHh0frDf1ErYYUT0GvxVtQnWJcjBrFN/cu9WpP9s7SYYFX9WPro2kCTHGeabnEW7visIGVOzPTwo
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYAPR01MB3936
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Maxime Ripard <maxime@cerno.tech> =E6=96=BC 2020=E5=B9=B46=E6=9C=8829=E6=97=
-=A5 =E9=80=B1=E4=B8=80 =E4=B8=8B=E5=8D=8810:21=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Hi!
->
-> On Fri, Jun 05, 2020 at 04:44:51PM +0800, Jian-Hong Pan wrote:
-> > Maxime Ripard <maxime@cerno.tech> =E6=96=BC 2020=E5=B9=B46=E6=9C=882=E6=
-=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=887:04=E5=AF=AB=E9=81=93=EF=BC=9A
-> > >
-> > > Hi,
-> > >
-> > > On Mon, Jun 01, 2020 at 03:58:26PM +0800, Jian-Hong Pan wrote:
-> > > > Maxime Ripard <maxime@cerno.tech> =E6=96=BC 2020=E5=B9=B45=E6=9C=88=
-28=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=883:30=E5=AF=AB=E9=81=93=EF=
-=BC=9A
-> > > > >
-> > > > > Hi Daniel,
-> > > > >
-> > > > > On Wed, May 27, 2020 at 05:15:12PM +0800, Daniel Drake wrote:
-> > > > > > On Wed, May 27, 2020 at 5:13 PM Maxime Ripard <maxime@cerno.tec=
-h> wrote:
-> > > > > > > I'm about to send a v3 today or tomorrow, I can Cc you (and J=
-ian-Hong) if you
-> > > > > > > want.
-> > > > > >
-> > > > > > That would be great, although given the potentially inconsisten=
+Hi Mark,
+
+> From: Mark Brown, Sent: Monday, June 29, 2020 9:58 PM
+>=20
+> On Mon, Jun 29, 2020 at 02:42:26AM +0000, Yoshihiro Shimoda wrote:
+> > > From: Mark Brown, Sent: Friday, June 26, 2020 11:39 PM
+>=20
+> Copying in Sudeep for the feedback on firmware interfaces.
+
+Thank you very much for the discussion about the firmware.
+
+> > > According to the changelog this is all about reflecting changes in th=
+e
+> > > system state done by firmware but there's no interaction with firmwar=
+e
+> > > here which means this will be at best fragile.  If we need to reflect
+> > > changes in firmware configuration I'd expect there to be some
+> > > interaction with firmware about how it is configured, or at least tha=
 t
-> > > > > > results we've been seeing so far it would be great if you could
-> > > > > > additionally push a git branch somewhere.
-> > > > > > That way we can have higher confidence that we are applying exa=
-ctly
-> > > > > > the same patches to the same base etc.
-> > > > >
-> > > > > So I sent a new iteration yesterday, and of course forgot to cc y=
-ou... Sorry for
-> > > > > that.
-> > > > >
-> > > > > I've pushed my current branch here:
-> > > > > https://git.kernel.org/pub/scm/linux/kernel/git/mripard/linux.git=
-/log/?h=3Drpi4-kms
-> > > >
-> > > > Thanks to Maxime!
-> > > >
-> > > > I have tried your repository on branch rpi4-kms.  The DRM VC4 is us=
-ed!
-> > > > But got some issues:
-> > > > 1. Some weird error message in dmesg.  Not sure it is related, or n=
-ot
-> > > > [    5.219321] [drm:vc5_hdmi_init_resources] *ERROR* Failed to get
-> > > > HDMI state machine clock
-> > > > https://gist.github.com/starnight/3f317dca121065a361cf08e91225e389
-> > >
-> > > That's a deferred probing. The first time the HDMI driver is being
-> > > probed, the firmware clock driver has not been probed yet. It's makin=
-g
-> > > another attempt later on, which succeeds.
-> > >
-> > > > 2. The screen flashes suddenly sometimes.
-> >
-> > I append drm.debug=3D0x3 to boot command.  Whenever, the screen flashes=
-,
-> > I notice the logs like this:
-> >
-> > Jun 01 15:22:40 endless kernel: [drm:drm_calc_timestamping_constants]
-> > crtc 64: hwmode: htotal 2200, vtotal 1125, vdisplay 1080
-> > Jun 01 15:22:40 endless kernel: [drm:drm_calc_timestamping_constants]
-> > crtc 64: clock 148500 kHz framedur 16666666 linedur 14814
-> > Jun 01 15:22:40 endless kernel: [drm:drm_vblank_enable] enabling
-> > vblank on crtc 3, ret: 0
-> > Jun 01 15:22:40 endless kernel: [drm:drm_mode_object_put.part.0] OBJ ID=
-: 159 (2)
-> > Jun 01 15:22:40 endless kernel: [drm:drm_mode_object_put.part.0] OBJ ID=
-: 154 (1)
-> > Jun 01 15:22:40 endless kernel: [drm:vblank_disable_fn] disabling
-> > vblank on crtc 3
-> > Jun 01 15:22:42 endless kernel: [drm:drm_ioctl] pid=3D584, dev=3D0xe200=
-,
-> > auth=3D1, DRM_IOCTL_MODE_CURSOR
-> > Jun 01 15:22:42 endless kernel: [drm:drm_ioctl] pid=3D584, dev=3D0xe200=
-,
-> > auth=3D1, DRM_IOCTL_MODE_CURSOR2
-> > Jun 01 15:22:42 endless kernel: [drm:drm_mode_object_get] OBJ ID: 159 (=
-1)
-> > Jun 01 15:22:42 endless kernel: [drm:drm_mode_object_get] OBJ ID: 154 (=
-1)
-> > Jun 01 15:22:42 endless kernel: [drm:drm_calc_timestamping_constants]
-> > crtc 64: hwmode: htotal 2200, vtotal 1125, vdisplay 1080
-> > Jun 01 15:22:42 endless kernel: [drm:drm_calc_timestamping_constants]
-> > crtc 64: clock 148500 kHz framedur 16666666 linedur 14814
-> > Jun 01 15:22:42 endless kernel: [drm:drm_vblank_enable] enabling
-> > vblank on crtc 3, ret: 0
-> > Jun 01 15:22:42 endless kernel: [drm:drm_mode_object_put.part.0] OBJ ID=
-: 159 (2)
-> > Jun 01 15:22:42 endless kernel: [drm:drm_mode_object_put.part.0] OBJ ID=
-: 154 (2)
-> >
-> > Here is the full log
-> > https://gist.github.com/starnight/85d641819839eddc7a55ca7173990a56
-> >
-> > > > 3. The higher resolutions, like 1920x1080 ... are lost after hot
-> > > > re-plug HDMI cable (HDMI0)
-> >
-> > I should explain this in more detail.  Here are the steps to reproduce
-> > this issue:
-> > 1. Before unplug the HDMI cable from HDMI0 port.
-> > $ xrandr
-> > Screen 0: minimum 320 x 200, current 1920 x 1080, maximum 2048 x 2048
-> > HDMI-1 connected primary 1920x1080+0+0 (normal left inverted right x
-> > axis y axis) 521mm x 293mm
-> >    1920x1080     60.00*+  50.00    59.94
-> >    1920x1080i    60.00    50.00    59.94
-> >    1680x1050     59.88
-> >    1280x1024     75.02    60.02
-> >    1440x900      59.90
-> >    1280x960      60.00
-> >    1152x864      75.00
-> >    1280x720      60.00    50.00    59.94
-> >    1440x576      50.00
-> >    1024x768      75.03    70.07    60.00
-> >    1440x480      60.00    59.94
-> >    832x624       74.55
-> >    800x600       72.19    75.00    60.32    56.25
-> >    720x576       50.00
-> >    720x480       60.00    59.94
-> >    640x480       75.00    72.81    66.67    60.00    59.94
-> >    720x400       70.08
-> > HDMI-2 disconnected (normal left inverted right x axis y axis)
-> >
-> > 2. Unplug the HDMI cable from HDMI0 port.
-> > 3. Plug the HDMI cable to **HDMI1** port.
-> > $ xrandr
-> > Screen 0: minimum 320 x 200, current 1920 x 1080, maximum 2048 x 2048
-> > HDMI-1 disconnected (normal left inverted right x axis y axis)
-> > HDMI-2 connected primary 1920x1080+0+0 (normal left inverted right x
-> > axis y axis) 521mm x 293mm
-> >    1920x1080     60.00*+  50.00    59.94
-> >    1920x1080i    60.00    50.00    59.94
-> >    1680x1050     59.88
-> >    1280x1024     75.02    60.02
-> >    1440x900      59.90
-> >    1280x960      60.00
-> >    1152x864      75.00
-> >    1280x720      60.00    50.00    59.94
-> >    1440x576      50.00
-> >    1024x768      75.03    70.07    60.00
-> >    1440x480      60.00    59.94
-> >    832x624       74.55
-> >    800x600       72.19    75.00    60.32    56.25
-> >    720x576       50.00
-> >    720x480       60.00    59.94
-> >    640x480       75.00    72.81    66.67    60.00    59.94
-> >    720x400       70.08
-> >
-> > 4. Unplug the HDMI cable from **HDMI1** port.
-> > 5. Plug the HDMI cable back to HDMI0 port.
-> > $ xrandr
-> > Screen 0: minimum 320 x 200, current 1368 x 768, maximum 2048 x 2048
-> > HDMI-1 connected primary 1368x768+0+0 (normal left inverted right x
-> > axis y axis) 0mm x 0mm
-> >    1368x768      59.88*
-> >    1360x768      59.80
-> >    1280x800      59.81
-> >    1152x864      60.00
-> >    1280x720      59.86
-> >    1024x768      60.00
-> >    1024x576      59.90
-> >    960x540       59.63
-> >    800x600       60.32
-> >    800x450       59.82
-> >    700x450       59.88
-> >    640x480       59.94
-> >    684x384       59.88    59.85
-> >    680x384       59.80    59.96
-> >    640x400       59.88    59.98
-> >    576x432       60.06
-> >    640x360       59.86    59.83
-> >    512x384       60.00
-> >    512x288       60.00    59.92
-> >    480x270       59.63    59.82
-> >    400x300       60.32
-> >    320x240       60.05
-> > HDMI-2 disconnected (normal left inverted right x axis y axis)
->
-> Sorry for getting back at it so late. I just tested with modetest only
-> and my current branch and it seems to behave properly. Did you had to
-> run X to get that issue, or is it just how you noticed it?
->
-> Also, was that with the branch based on 5.7 I pushed on my git tree on
-> kernel.org or some earlier revision of the series?
+> > > the configuration would come from the same source.
+>=20
+> > I should have described background of previous patch series though,
+> > according to previous discussion [1] the firmware side (like PSCI) is
+> > also fragile unfortunately... So, I thought using regulator-off-in-susp=
+end
+> > in a regulator was better.
+>=20
+> > On other hand, Ulf is talking about either adding a property (perhaps l=
+ike
+> > regulator-off-in-suspend) into a regulator or just adding a new propert=
+y
+> > into MMC [2]. What do you think about Ulf' comment? I'm thinking
+> > adding a new property "full-pwr-cycle-in-suspend" is the best solution.
+> > This is because using a regulator property and reflecting a state of re=
+gulator without
+> > firmware is fragile, as you said.
+>=20
+> TBH I worry about a property drifting out of sync with the firmware on
+> systems where the firmware can be updated.
 
-Thanks for coming back :)
+I understood it.
 
-I use GNOME 3.36 with Xorg 1.20.4.
+>  Personally my default
+> assumption would always be that we're going to loose power for anything
+> except the RAM and whatever is needed for wake sources during suspend so
+> I find the discussion a bit surprising but in any case that seems like a
+> better option than trying to shoehorn things in the way the series here
+> did.
 
-To understand when it starts to hit the issues, I separate to step by step:
-1. System boots into command line mode first (systemd multi-user.target)
-2. Execute Xorg, then xterm.
-3. Execute mutter upon the screen of Xorg.
+Thank you for your comment! So, I'll make such a patch series later.
 
-I tried both branches rpi4-kms and rpi4-kms-5.7 of
-https://git.kernel.org/pub/scm/linux/kernel/git/mripard/linux.git
-Both of the branches hit issues:
-* The screen flashes suddenly sometimes.  This happens after mutter is laun=
-ched.
-* The higher resolutions, like 1920x1080 ... are lost after hot
-re-plug HDMI cable (HDMI0).  HDMI cable connects to HDMI0 -> HDMI1 ->
-HDMI0.  This happens not only with GNOME, but also pure Xorg.
+>  Like I said in my earlier replies if this is done through the
+> regulator API I'd expect it to be via the suspend interface.
 
-Jian-Hong Pan
+I don't intend to use any regulator API for this issue for now.
+
+Best regards,
+Yoshihiro Shimoda
+
+> > [1]
+> > https://lore.kernel.org/linux-renesas-soc/CAMuHMdXjU7N4oG89YsozGijMpjgK=
+GN6ezw2qm6FeGX=3DJyRhsvg@mail.gmail.com/
+> >
+> > [2]
+> > https://lore.kernel.org/linux-renesas-soc/CAPDyKFpiBU1D+a7zb+Ggm0_HZ+YR=
+4=3DLXJZ5MPytXtT=3DuBEdjPA@mail.gmail.com/
+> >
+> > Best regards,
+> > Yoshihiro Shimoda
+> >
