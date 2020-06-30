@@ -2,96 +2,112 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFDF7C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CED8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:07:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 99A9620759
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:05:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593533109;
-	bh=DVQ7kn2/Wku/b7CfuzAtJBp0Fob1ESFgaHZeJXVEbJk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iFtfpXNAzJVzPLINBLK4SjBjgy4OoVV+ly3kRSGfyi0GFCMK7oyIv6UZmRmGZUmyp
-	 HtTUANjX4ppGkxvxfdmrmeIaQhdEsyP+tsuiZjr+l746G3cHu6ND1sTOIxkTf7ZIPR
-	 A3V7OuZrMRQDmQo1n0ZUI4tQ05xjyCAE42x5AB54=
+	by mail.kernel.org (Postfix) with ESMTP id 368DF2074F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:07:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gorani.run header.i=@gorani.run header.b="EqeihTTH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389877AbgF3QFI (ORCPT
+        id S1727985AbgF3QHO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 12:05:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40198 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732334AbgF3QFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 12:05:07 -0400
-Received: from localhost (p54b336a9.dip0.t-ipconnect.de [84.179.54.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 30 Jun 2020 12:07:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40488 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726248AbgF3QHN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 12:07:13 -0400
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [IPv6:2001:67c:2050::465:201])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC720C061755;
+        Tue, 30 Jun 2020 09:07:12 -0700 (PDT)
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 372A02074F;
-        Tue, 30 Jun 2020 16:05:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593533107;
-        bh=DVQ7kn2/Wku/b7CfuzAtJBp0Fob1ESFgaHZeJXVEbJk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=d/Za/jf+99U8fE9hJ+CG+bJjyPZUgqY+Da2VK5aWdBQBuU7E8QIADUfnnqiAQwc/2
-         NOHbZBlc3hKxBnK5WYH+qPjeDYA3gg4Ato6os5prHvw5+ZXMMhEm5WgE+r87jSPnJs
-         2b63ibRL+yPYmVOaLS37uJK1yYKjR6FrkLrIUpbY=
-Date:   Tue, 30 Jun 2020 18:05:00 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Alain Volmat <alain.volmat@st.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        fabrice.gasnier@st.com
-Subject: Re: [PATCH v2 0/4] stm32-f7: Addition of SMBus Alert / Host-notify
- features
-Message-ID: <20200630160500.GA2394@kunai>
-References: <1593070769-9106-1-git-send-email-alain.volmat@st.com>
+        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 49x8Pl3xpLzQlKq;
+        Tue, 30 Jun 2020 18:07:07 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gorani.run; s=MBO0001;
+        t=1593533225;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/VL3Dz21dAtlF89v8AL+P+yUgMw+q0l6pUr1vTyUoRU=;
+        b=EqeihTTHsiTT+BI6AgUseJbDcpN1EGzeddVVIET8Qls83y16c1BxHS8/mRSrurLqael9cY
+        3Nqv++7+9xGp22RZPIexb54ttwZp57nN9avBi+GB29Kb7ctK96/yXxe1d4c8Vl2aHreM4V
+        ygmrRdOl4zYQ5Thcwdb/AWrdNKq6uFQF3Tt74bk/VuGr3vTaF/oFpQzYXd3+XqjZ3JYzKG
+        Z/arA3T2RYn8wS3Nm68G1dOY5oIv4qSI+uVgyMGqegA23TSu7t/yySz7lFgxGIe1IUc+Cp
+        svGunnbd0XUKBVMzKVEOwO+KTEeKXA/wrDnMPMFD2NFYzFX1gbl42feidMw/5g==
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
+        with ESMTP id 5ezmpbc6kQ54; Tue, 30 Jun 2020 18:07:03 +0200 (CEST)
+Subject: Re: [PATCH v2 2/2] dt-bindings: gpio: Add bindings for NXP PCA9570
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-gpio@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+References: <20200625075957.364273-1-mans0n@gorani.run>
+ <20200629220117.GA3012245@bogus>
+From:   Sungbo Eo <mans0n@gorani.run>
+Message-ID: <7686930b-2dca-bc88-1989-9daf74bf5af1@gorani.run>
+Date:   Wed, 1 Jul 2020 01:06:54 +0900
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ZPt4rx8FFjLCG7dd"
-Content-Disposition: inline
-In-Reply-To: <1593070769-9106-1-git-send-email-alain.volmat@st.com>
+In-Reply-To: <20200629220117.GA3012245@bogus>
+Content-Type: text/plain; charset=euc-kr; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-MBO-SPAM-Probability: 0
+X-Rspamd-Score: -4.58 / 15.00 / 15.00
+X-Rspamd-Queue-Id: 2A4AE177B
+X-Rspamd-UID: 942bc2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2020-06-30 07:01, Rob Herring wrote:
+> On Thu, 25 Jun 2020 16:59:57 +0900, Sungbo Eo wrote:
+>> This patch adds device tree bindings for the NXP PCA9570,
+>> a 4-bit I2C GPO expander.
+>>
+>> Signed-off-by: Sungbo Eo <mans0n@gorani.run>
+>> ---
+>> I don't feel I can really maintain this driver, but it seems all yaml docs
+>> have a maintainers field so I just added it...
+>> ---
+>>   .../bindings/gpio/gpio-pca9570.yaml           | 42 +++++++++++++++++++
+>>   1 file changed, 42 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml
+>>
+> 
+> 
+> My bot found errors running 'make dt_binding_check' on your patch:
+> 
+> Documentation/devicetree/bindings/gpio/gpio-pca9570.example.dts:21.13-26: Warning (reg_format): /example-0/gpio@24:reg: property has invalid length (4 bytes) (#address-cells == 1, #size-cells == 1)
+> Documentation/devicetree/bindings/gpio/gpio-pca9570.example.dt.yaml: Warning (pci_device_reg): Failed prerequisite 'reg_format'
+> Documentation/devicetree/bindings/gpio/gpio-pca9570.example.dt.yaml: Warning (pci_device_bus_num): Failed prerequisite 'reg_format'
+> Documentation/devicetree/bindings/gpio/gpio-pca9570.example.dt.yaml: Warning (simple_bus_reg): Failed prerequisite 'reg_format'
+> Documentation/devicetree/bindings/gpio/gpio-pca9570.example.dt.yaml: Warning (i2c_bus_reg): Failed prerequisite 'reg_format'
+> Documentation/devicetree/bindings/gpio/gpio-pca9570.example.dt.yaml: Warning (spi_bus_reg): Failed prerequisite 'reg_format'
+> /builds/robherring/linux-dt-review/Documentation/devicetree/bindings/gpio/gpio-pca9570.example.dt.yaml: example-0: gpio@24:reg:0: [36] is too short
+> 
+> 
+> See https://patchwork.ozlabs.org/patch/1316796
+> 
+> If you already ran 'make dt_binding_check' and didn't see the above
+> error(s), then make sure dt-schema is up to date:
+> 
+> pip3 install git+https://github.com/devicetree-org/dt-schema.git@master --upgrade
+> 
+> Please check and re-submit.
+> 
 
---ZPt4rx8FFjLCG7dd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, Jun 25, 2020 at 09:39:25AM +0200, Alain Volmat wrote:
-> This serie adds SMBus Alert and SMBus Host-Notify features for the i2c-stm32f7.
-
-If it is not too much work for you, I think it makes sense to split the
-series into two, i.e. HostNotify and SMBusAlert parts.
-
-
---ZPt4rx8FFjLCG7dd
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl77YqcACgkQFA3kzBSg
-KbZ+qg//cgwscro7RoDB8rFd2lb0GlBRleq8H3qAVXJxZnOM7kKr7Y3gJ7cVOjCc
-Ly2zLQOGeTpMZ3v5D94DI4DcxGXyH0BMKcXP7fw5llG24dM2Kgq/WFE7N9fRl4Fo
-dLbxUjuBU1XXTc+o8K3CD7uEkFn1alBNGf1xeHinUvFOoThmGxh3F/B0KeKBH9OL
-ydIFuwgBZJAbSrcA3TLLjqTF1THSFzrLI7eG7hyE3VqZs6xF8onzTG0OEIoD5Y+k
-0N2cWxP8bUKUb4s50PDGsqeHkXJ/mmt+loWwh6O8955RXGSvxS+dQI6B6XB7bLTg
-F2CEu7EvefCpKu5fjTfLCpMy0/ma7dAbcrvStqq3hMCHIjBWYq7A+qkhjrCCTzhX
-6TE8Kr81w0hIoahxe5pE4F9BLG+KKVo6hiJI/oJT0ylRLQsXmrpBgNjzJooxzOYw
-1T7qPD+3O+iUMQYPsre+JGY84cfDtjpcIptaJE/BHhi5U8Us1AQ5x3Cbw+4ZmIbS
-2LW+Mje6F1licPoZoSp9o/HfwBt3TL+4aUEpyEwIWzchbhCWlbW5D7eTRtTOSr/C
-BVs0mix8LliB6N7fQozyCmGI8+80Zqb4ZMSfAJ7AY5HWNRZUK1Q7XTm+uy7bP2oc
-85NQkLaTTZ+RhuXmeitFb4tR31A9f9rxZRhXy7fTwV/Iu6MGkNE=
-=OZyO
------END PGP SIGNATURE-----
-
---ZPt4rx8FFjLCG7dd--
+Thank you for pointing it out! I didn't noticed it. I'll re-submit an 
+updated patch soon.
