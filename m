@@ -2,78 +2,82 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8EC3C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE179C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:09:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B4B452073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:05:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D4182073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:09:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qAOOULAM";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fFq432rM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387440AbgF3MFw (ORCPT
+        id S1733019AbgF3MJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 08:05:52 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:54935 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387426AbgF3MFv (ORCPT
+        Tue, 30 Jun 2020 08:09:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60122 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731654AbgF3MJE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 08:05:51 -0400
-Received: from mail-qk1-f178.google.com ([209.85.222.178]) by
- mrelayeu.kundenserver.de (mreue012 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MODeL-1jRqXU1xxh-00OTRt for <linux-kernel@vger.kernel.org>; Tue, 30 Jun
- 2020 14:05:49 +0200
-Received: by mail-qk1-f178.google.com with SMTP id c30so14372567qka.10
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 05:05:49 -0700 (PDT)
-X-Gm-Message-State: AOAM533tjbkNRPWcUMnyhvhe3D4U6okbtrRXanq9g2Jvdp0/PJL7vEgr
-        TMVXDUzkMlAi1HWimoQKHEZf+CQtBJ/Jfv9IoPg=
-X-Google-Smtp-Source: ABdhPJyD2sTPFIhaB4+ilsJ2YeOSs7jo61s2FyUbZk9qT7eA2TcijeomDU1N0tw3ypRzRHDUYI5VXZv7yOapAOlhIZ8=
-X-Received: by 2002:a37:a282:: with SMTP id l124mr18603651qke.3.1593518748284;
- Tue, 30 Jun 2020 05:05:48 -0700 (PDT)
+        Tue, 30 Jun 2020 08:09:04 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C14D0C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 05:09:03 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 14:09:00 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1593518942;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=7C8vxekFFai8VGaBkEmkcfmiQqHJvnUGAhrxpnQgoNg=;
+        b=qAOOULAM2ZyG/eDbyaBMr9HS0/V4Xa2Lhp7C2fyiXjoAQzhW0qQ+AZ4NShrYc7lGFJcD+5
+        modMY7GB0SiXpSBX6KQAYwAFkbo0zMrrIpE38IWQlmIVpvG3RCi/NXurkOP5fy+tdvsSd9
+        0yN5z0bOnJAH1RRvZ2QyKkJJZWl2SO4MdcK6B0RO9OFpfvH2vfSGLAoRkhcq5jQFYQk9Xg
+        uAZVPXMrGExJE5gkHWKJ6I9GmkYWrOObDbPBRJu6h3FmUxLgmNviOse6mtuyzyZ2hf+dpP
+        /onNwr90DFgJ1bqc+3dBzvGmfmkYI+N6FWbFQaxi4Ti4ZhLahN9xb5vkZDscYQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1593518942;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=7C8vxekFFai8VGaBkEmkcfmiQqHJvnUGAhrxpnQgoNg=;
+        b=fFq432rMzp+GY0v4mZ4si0eGYamIVsIxDDC8Rk1gNmpB6aypBe7p9nYRG6e8rSUX831BYm
+        AClDF9m5ySORVvAg==
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, "H . Peter Anvin " <hpa@zytor.com>
+Subject: Re: [PATCH 2/2] x86/entry: Remove `regs' parameter from
+ idtentry_exit_cond_resched()
+Message-ID: <20200630120900.crhrbdqcqn7illie@linutronix.de>
+References: <20200630102209.1143072-1-bigeasy@linutronix.de>
+ <20200630102209.1143072-3-bigeasy@linutronix.de>
+ <20200630111430.GN4800@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <202006301056.8ppxjF2q%lkp@intel.com>
-In-Reply-To: <202006301056.8ppxjF2q%lkp@intel.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 30 Jun 2020 14:05:32 +0200
-X-Gmail-Original-Message-ID: <CAK8P3a3xoJkd4sOny94Fs3YFeXvymkJWWcPnLLGZTLvLK4sDAQ@mail.gmail.com>
-Message-ID: <CAK8P3a3xoJkd4sOny94Fs3YFeXvymkJWWcPnLLGZTLvLK4sDAQ@mail.gmail.com>
-Subject: Re: drivers/usb/gadget/udc/lpc32xx_udc.c:1928:6: warning: no previous
- prototype for 'udc_send_in_zlp'
-To:     kernel test robot <lkp@intel.com>
-Cc:     kbuild-all@lists.01.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:fzoGJGtVyxjdmfcv4rapUaJsFZIRWRCcmjJegj9Q1oOEmlWRubO
- yG08dD5qujVuGkmFwP4kSpaVHApMxq8LFBZAkXf/2CB3AmDMvgTaAQ6f5OjG4QrdYZJ5fLb
- wwBY1jlnrmUGGB6bNY4t2fqC1WK5nR4t3BsjBCM4X849urSGFRNyi7nSB83JA24qc+xLuAJ
- N6cMAEMCfskyhCJmZgLSw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:X5S2M58vEGM=:argfAXArNAL/nrXr7rBeT5
- oN6FIuit6z9IL/vXI+9ewBWYgceRl7+npAuY2DiEnKs21NzDjdZoM9uunGjuE3ZIS4wIYhEeg
- fP1EQmtR8qauoXNcWsZ7neh6oPxWhIjLBlcgNxM6Vo5SoJd41xmbDp5B4ZcDOJmJibORh/ptr
- O5QBA3ZIfit2IihwK5cKmJWsiHLM93kfvaSBEcOHsz5LT8NPSx1bI4pkVGwP9KhMDLHWW0BWk
- PuIyAB9mHJyrhGFVURwdWZS44U/nWpSj2Kndj1MsBzchRh9oblB1LxR91yqj4cpBroXH0xE4h
- ecwm0rpt3naedadZ64hHBwEuGcYuj7K8R1jngm0XEot6eBsumEcd7wc+Bai3MgZHB+BuwgsAa
- ZB2zzf+g14lOB05Cl/Xe9LJHbPkPy9MsoKaZFqkccqTwSnf5hxfey134XTFE/qkhZika9eDgL
- JvdNZCpPzSg0APFJ6+dUfWwxE7SFNCLzCBJAr1DdEOJhxWWd274mTz9rZJQA7A/7WFwgrHvai
- ST4+0Cnty2bVJ45XiLq9miLSXTOe8nusoqdZR5jfl1ZDLiI51bOq0gaS6VSfYjQ0pIEiler9K
- LFhLNggrV/Bo0qhkVrGmhQOiJvKWXaZ+9B0U+Iy3kUlAq2oDhS0i4HEd2hH9zoJShyUqDjKhF
- xNAsBdhxeMdIrkygNg/qhVboqnaS0GaXM7gUioaxxayXnHD/FUDUZJwJ2QR4SK9ZL+VMc/YKl
- Gqt73PqFCICgbDPZUV8Sm1dPtQVPBPCTrbJ/9oso0clAIFwZQBEyF/+k6tSWE46lOo7fnhX0c
- faRGChSrCG0NTwS8zEpOTSbSpRNvJqjxSUD1sb/uHKWkSawSyQ=
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200630111430.GN4800@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 4:20 AM kernel test robot <lkp@intel.com> wrote:
->
-> Hi Arnd,
->
-> First bad commit (maybe != root cause):
+On 2020-06-30 13:14:30 [+0200], Peter Zijlstra wrote:
+> > -static void idtentry_exit_cond_resched(struct pt_regs *regs, bool may_sched)
+> > +static void idtentry_exit_cond_resched(bool may_sched)
+> 
+> This is a style question; so far all idtentry_*() functions have regs
+> passed. In the lockdep-vs-nmi series I introduce
+> idtentry_{enter,exit}_nmi() both having an unused regs argument.
+> 
+> Not sure which way around I feel on this.
 
-Correct, my patch only made the driver build on all architectures for the first
-time, and now it produces a harmless warning. I sent a fix for it anyway.
+Do as you are pleased. I was more attached to the previous patch that to
+this one :)
 
-         Arnd
+Sebastian
