@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7903C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D82D3C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9BD5B2074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:09:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B70AF2074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:10:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e5jyJSNB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tv8C/UYY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388748AbgF3OJ4 (ORCPT
+        id S2388785AbgF3OKB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 10:09:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50610 "EHLO
+        Tue, 30 Jun 2020 10:10:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50630 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388638AbgF3OJo (ORCPT
+        with ESMTP id S2388729AbgF3OJu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 10:09:44 -0400
-Received: from mail-ej1-x642.google.com (mail-ej1-x642.google.com [IPv6:2a00:1450:4864:20::642])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE044C061755;
-        Tue, 30 Jun 2020 07:09:43 -0700 (PDT)
-Received: by mail-ej1-x642.google.com with SMTP id o18so16349067eje.7;
-        Tue, 30 Jun 2020 07:09:43 -0700 (PDT)
+        Tue, 30 Jun 2020 10:09:50 -0400
+Received: from mail-ed1-x542.google.com (mail-ed1-x542.google.com [IPv6:2a00:1450:4864:20::542])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4B5BC061755;
+        Tue, 30 Jun 2020 07:09:49 -0700 (PDT)
+Received: by mail-ed1-x542.google.com with SMTP id b15so16357922edy.7;
+        Tue, 30 Jun 2020 07:09:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=tl9JWQ8+j2DoVhTG+CwFOZrvxvIZ9+gVkhBo8fcxQrc=;
-        b=e5jyJSNB6SHcJf/l2KeBi2t0RLs72qjp8/4xOzi1WV4pX8DpnqNXNv0BFP4Njv359K
-         Whl6slgbEf9Ftlxow+ziSVVGQnSEqmzfWiTvFhnBN3ntlOk0amVPqy9gmqu4UeS61quA
-         tQ7LlDsoIJQPoS2jNzn4kZSdpCv7EK2NaDLD0JOComaW2C308hLkXIynlAoeNgBk7/+i
-         WF9ySiIvh6bxVgfFqOCsBOYhMsERt05i65lzKkqj6zeCDlEpgVRO5DMtAQ+aXs+6JTQb
-         S3/TFk4w1sDNsRoz2gNk6LLxTVeMxLky64dqq6u7c3iYWFgj6ljFLsCI7IysYw/LPmdk
-         g3mg==
+        bh=fZ6EA5FNrJjXMrMBZwxAfBnL6L5p1y0KiK8AwGx10HQ=;
+        b=tv8C/UYYGPn7oGsWntvdusvYlJg7c33gM2oBNJAgGEDWQ/mDXtwVH4M8u8sDE5hMEh
+         yc1ESDsG95rSCqFCRJ68ggKSyVuLB6/7HB2FAh3Us74P4DUKItUas7un7ve2NPdQ0snD
+         xjfLeraiBmdHFpO4ZdeqzZroe8/BVFTqSas6MZLGuBg/8FjfY+mhu9YbL20BxOMYm39q
+         MxQaMM7vGHddChXTRz6fq2CfiDy/jvqxSNdDD74w6Ti8V2T3OrYt5LRZUN+FinTx/igc
+         p9GDSAjkWgkbZjN9GtiuMZsAqXDP0vQpfXyiv55SQCQ1hCP5fn9SBra4IGRodO3PuJ5X
+         Y/NQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=tl9JWQ8+j2DoVhTG+CwFOZrvxvIZ9+gVkhBo8fcxQrc=;
-        b=qkaB894MLnhGtt0d0tGhRcrV45XYmyZzlLYSAbuFS8ssBMT414eZm2PksYwVCw7wrr
-         Oh+Pmja2Tc6zS+26dB+jwmJdU0QCwLMhsvnTFLo9umyWXIeMh86WMPffVJ4z/W5wzI84
-         Pq3FNlk84vyPYZs7Re6pEPU1Efoq87h2ZyQuWdHRaRlKP7p+bDCa0naBbR2es3WV2Zo/
-         fZclSB/tcbjaXaP9rWwB2cWrQ12ebmZ/uJpDT3Ouj5hoWLnu65WKp8AXArdwuZukKKhr
-         BGH/lZJjarlntm+xpDqq367Jiuhlf+w0xE1NBgZPNxV32qRCXsPQjEliQ1ELnUcjnf70
-         xzow==
-X-Gm-Message-State: AOAM533Wdd0gV63tKsChKo69/BchzyegsahxjcvPo7POgmI/uIciRD2t
-        +kFBDUI4y2MfvHRuj021SnfQsVpUnjc=
-X-Google-Smtp-Source: ABdhPJzjzUnn8P5o+WV/Ymhan4pwv340Mg/Uk2F+BT4HxAwWEYY81Ndd3rkmEhEc3zIBmtQ1BPNKrA==
-X-Received: by 2002:a17:906:8595:: with SMTP id v21mr19027398ejx.333.1593526182563;
-        Tue, 30 Jun 2020 07:09:42 -0700 (PDT)
+        bh=fZ6EA5FNrJjXMrMBZwxAfBnL6L5p1y0KiK8AwGx10HQ=;
+        b=fanM4ZZhAERBwvEj1XNBqjJcDnHATHk7ajxgG5IYsBfkuSikCYpEQ9qIR2i/J8WrsG
+         Oo+JTJabXeX3kLHT1cCUTiA7Nq9piY3lPzeMIC0GKh0oS0XeH140jrKS5jDt9MXdhabO
+         T++Q5Ky2QwnFB8pGC06us9Zj65MKZq3GFwO8VPHn0VJBOIEk5NXgTT4ttV4EYediuhuG
+         l91qoXwFQ2QQZBTonne77eam8gw86cHQ6Afjk5796hZZNuJkbmGbxwPJh116FiJFlT77
+         3rx6fgWXJvRkoimBS4WRFlmoiTCU9ajAFI7fMXZzrPe6Ag1MV5Y+bOr0nTZ5JTnKfLGD
+         lEhg==
+X-Gm-Message-State: AOAM530OjIhduC2bB6yQUVgW9HW3JYn7ijt9z7kx+tfRmNlsKOxCs78h
+        vOHNBWib8Aw2LlVhUtnaG8w=
+X-Google-Smtp-Source: ABdhPJzUc/AlPUjCu8xEJyv2O/B2cKzBvviK5uXiBogcMciemzbbhXPpqbyrUBv3NJ+NxHkAdd6Gvw==
+X-Received: by 2002:a05:6402:1597:: with SMTP id c23mr22301422edv.243.1593526188104;
+        Tue, 30 Jun 2020 07:09:48 -0700 (PDT)
 Received: from localhost ([213.191.183.145])
-        by smtp.gmail.com with ESMTPSA id i10sm2833738edx.42.2020.06.30.07.09.40
+        by smtp.gmail.com with ESMTPSA id d24sm2564876edp.83.2020.06.30.07.09.46
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jun 2020 07:09:41 -0700 (PDT)
+        Tue, 30 Jun 2020 07:09:47 -0700 (PDT)
 From:   Iskren Chernev <iskren.chernev@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>
 Cc:     Andy Gross <agross@kernel.org>,
@@ -68,9 +68,9 @@ Cc:     Andy Gross <agross@kernel.org>,
         ~postmarketos/upstreaming@lists.sr.ht,
         linux-arm-msm@vger.kernel.org,
         Iskren Chernev <iskren.chernev@gmail.com>
-Subject: [PATCH 5/7] ARM: dts: qcom: msm8974-klte: Add gpio expander chip
-Date:   Tue, 30 Jun 2020 17:09:10 +0300
-Message-Id: <20200630140912.260294-6-iskren.chernev@gmail.com>
+Subject: [PATCH 7/7] ARM: dts: qcom: msm8974-klte: Add support for SD card
+Date:   Tue, 30 Jun 2020 17:09:12 +0300
+Message-Id: <20200630140912.260294-8-iskren.chernev@gmail.com>
 X-Mailer: git-send-email 2.27.0
 In-Reply-To: <20200630140912.260294-1-iskren.chernev@gmail.com>
 References: <20200630140912.260294-1-iskren.chernev@gmail.com>
@@ -81,72 +81,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Samsung Galaxy S5 has a GPIO Expander chip, the PCAL6416A with 16
-ports on a i2c bus. These pins are used for WiFi, NFC, IR among other
-things.
+The Samsung Galaxy S5 (klte), has 3 SDHCI nodes used for internal
+storage, WiFi, external SD card slot. The external SD card slot is
+similar to the internal storage.
+
+The device has support for CD (card detect), but if enabled, the card is
+not initialized properly if present during startup. That is why CD is
+disabled and polling is used instead. Related thread [1]
+
+[1] https://lore.kernel.org/linux-mmc/491cfef4-4a97-b6e8-0f41-d44e1c73eea4@gmail.com/
 
 Signed-off-by: Iskren Chernev <iskren.chernev@gmail.com>
 ---
- .../boot/dts/qcom-msm8974-samsung-klte.dts    | 29 +++++++++++++++++--
- 1 file changed, 27 insertions(+), 2 deletions(-)
+ .../boot/dts/qcom-msm8974-samsung-klte.dts    | 44 ++++++++++++++++++-
+ 1 file changed, 43 insertions(+), 1 deletion(-)
 
 diff --git a/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts b/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
-index 7b398da9b75ed..29099b83b231d 100644
+index 989447beb4319..b0899107f3ced 100644
 --- a/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
 +++ b/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
-@@ -236,10 +236,25 @@ i2c-gpio-led {
- 		scl-gpios = <&msmgpio 121 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
- 		sda-gpios = <&msmgpio 120 (GPIO_ACTIVE_HIGH | GPIO_OPEN_DRAIN)>;
- 		pinctrl-names = "default";
--		pinctrl-0 = <&i2c_led_pins>;
-+		pinctrl-0 = <&i2c_led_gpioex_pins>;
- 
- 		i2c-gpio,delay-us = <2>;
- 
-+		gpio_expander: gpio@20 {
-+			compatible = "nxp,pcal6416";
-+			reg = <0x20>;
+@@ -12,6 +12,8 @@ / {
+
+ 	aliases {
+ 		serial0 = &blsp1_uart1;
++		sdhc1 = &sdhc_1; /* SDC1 eMMC slot */
++		sdhc2 = &sdhc_2; /* SDC2 SD card slot */
+ 	};
+
+ 	chosen {
+@@ -161,6 +163,9 @@ pma8084_l20: l20 {
+ 					pma8084_l21: l21 {
+ 						regulator-min-microvolt = <2950000>;
+ 						regulator-max-microvolt = <2950000>;
 +
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+
-+			vcc-supply = <&pma8084_s4>;
-+
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&gpioex_pin>;
-+
-+			reset-gpios = <&msmgpio 145 GPIO_ACTIVE_LOW>;
-+		};
-+
- 		led-controller@30 {
- 			compatible = "panasonic,an30259a";
- 			reg = <0x30>;
-@@ -352,7 +367,7 @@ mux {
++						regulator-allow-set-load;
++						regulator-system-load = <200000>;
+ 					};
+
+ 					pma8084_l22: l22 {
+@@ -349,6 +354,24 @@ cmd-data {
  			};
  		};
- 
--		i2c_led_pins: i2c-led {
-+		i2c_led_gpioex_pins: i2c-led-gpioex {
- 			mux {
- 				pins = "gpio120", "gpio121";
- 				function = "gpio";
-@@ -360,6 +375,16 @@ mux {
- 				bias-pull-down;
- 			};
- 		};
-+
-+		gpioex_pin: gpioex {
-+			res {
-+				pins = "gpio145";
-+				function = "gpio";
-+
-+				bias-pull-up;
-+				drive-strength = <2>;
+
++		sdhc2_pin_a: sdhc2-pin-active {
++			clk-cmd-data {
++				pins = "gpio35", "gpio36", "gpio37", "gpio38",
++					"gpio39", "gpio40";
++				function = "sdc3";
++				drive-strength = <8>;
++				bias-disable;
 +			};
 +		};
++
++		sdhc2_cd_pin: sdhc2-cd {
++			pins = "gpio62";
++			function = "gpio";
++
++			drive-strength = <2>;
++			bias-disable;
++		};
++
+ 		sdhc3_pin_a: sdhc3-pin-active {
+ 			clk {
+ 				pins = "sdc2_clk";
+@@ -422,7 +445,7 @@ int {
+ 		};
  	};
- 
- 	sdhci@f9824900 {
--- 
+
+-	sdhci@f9824900 {
++	sdhc_1: sdhci@f9824900 {
+ 		status = "ok";
+
+ 		vmmc-supply = <&pma8084_l20>;
+@@ -435,6 +458,25 @@ sdhci@f9824900 {
+ 		pinctrl-0 = <&sdhc1_pin_a>;
+ 	};
+
++	sdhc_2: sdhci@f9864900 {
++		status = "ok";
++
++		max-frequency = <100000000>;
++
++		vmmc-supply = <&pma8084_l21>;
++		vqmmc-supply = <&pma8084_l13>;
++
++		bus-width = <4>;
++
++		/* cd-gpio is intentionally disabled. If enabled, an SD card
++		 * present during boot is not initialized correctly. Without
++		 * cd-gpios the driver resorts to polling, so hotplug works.
++		 */
++		pinctrl-names = "default";
++		pinctrl-0 = <&sdhc2_pin_a /* &sdhc2_cd_pin */>;
++		// cd-gpios = <&msmgpio 62 GPIO_ACTIVE_LOW>;
++	};
++
+ 	sdhci@f98a4900 {
+ 		status = "okay";
+
+--
 2.27.0
 
