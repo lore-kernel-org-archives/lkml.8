@@ -2,226 +2,124 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A76C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08DA2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:48:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 98441206B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:47:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4E372074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:48:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AbhmhW0F"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="Us1GnfTV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389508AbgF3QrO (ORCPT
+        id S1732958AbgF3Qsg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 12:47:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46670 "EHLO
+        Tue, 30 Jun 2020 12:48:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728022AbgF3QrN (ORCPT
+        with ESMTP id S1728022AbgF3Qsf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 12:47:13 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BD14C061755;
-        Tue, 30 Jun 2020 09:47:13 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id gc9so3216489pjb.2;
-        Tue, 30 Jun 2020 09:47:13 -0700 (PDT)
+        Tue, 30 Jun 2020 12:48:35 -0400
+Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 434E4C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 09:48:35 -0700 (PDT)
+Received: by mail-wm1-x344.google.com with SMTP id l2so18783697wmf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 09:48:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=YjTGvZoFn9Gr5f+ufVSqWbKLtKiqYnTgMSui3Jl24dg=;
-        b=AbhmhW0FcojEGsKBYgxR7fSDLdEmZIHxD1D6PsAJ6ezhxe6haZFOGdqcwtTOYqYnu8
-         csrp77Uvqm6t4IumS+BuU61yWOx70HoJ41gDFDYF8E+Zmw0AAoyfuQhgU/t+mqkKZsIC
-         vVhikQmUhVtik11wConsSXBOGyvUYPNOP/lzTbpybyPyry4tdraGAavYhELPywTAotso
-         bAuWqD0/PD0M7VqkuCWpV0b6jIHGoC8ycoC/G88LPswm8vS5xGaKsp6YW6Fv4PTcmLBe
-         WgbbqA+Jb55/agSHibk0rBoYDaCC4wiEvlOCFxzERjIl3GcYz/WxmmMIO3ieSKgJnCvp
-         Nx1Q==
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=f7Ay0BZPslo+/hkCnggDepdpgQUh8gMzDJFRyBpq1nE=;
+        b=Us1GnfTVGgPfn6BZ4oalx8awSn0OTVLHxF/OybbrBjUNIdDbMMtrsNdC8UeBizxeQr
+         kLqIeB2f+/UErnJCKJ6L7kCAV0MjzaTFXCYV9VSYnLPtipEG5VQZwo6UTPOz/ZpSZpP6
+         c8uOASv+hgH2OPRdLBkQkNbrrtYeVoV8XmsXMBatc7/gSEndnveufJCTL1si/k1glEuf
+         glgrqCQpQUU/nu8aDXdW/SdKiJe1Y8njN6bLtrkajqa/Z9YFXHjBhjWDJ63rVH5X+95F
+         7WoSYv6DPgWq0PKhILzkm4iU9hBm2T1hjlA4HK3cw/aSdRttrTnktnryceVXfxZGLVcf
+         uzsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=YjTGvZoFn9Gr5f+ufVSqWbKLtKiqYnTgMSui3Jl24dg=;
-        b=VYDyI/iOlySC8nb/Ebs0kCsCO3BI/4HOruzI/dB2IOQShqLeFJFimXHTMVNzYByP8a
-         OjzbWOPaDVXdSAnEa+kM4BJ7fRtN1QoW3kFEYxX/iXOHB6H0nYuwVvgmkdgeSzq/0WaP
-         ErhzFCSAfk6yYoMKeEKpVu57Z6HrPC7J3l8lE3rcUINKRGFSCPPk1urA2glYI1mbCeOW
-         iX0h4dsfw9D5W+SM6AcLle3mp0wHrr4rw4a+Iov2l6IAUTakldGotMBKJaka+KfanRyV
-         gtUiNNS0A/5emmkAzMSrLa5m9uqzZCbCiTO5457vmTz/NcClBHDNSHTU5HVdW6cgnKgq
-         zziQ==
-X-Gm-Message-State: AOAM530RbEKR99D6xLB4HG2uvO+ZwwsbgrD8cTmNoSyn8pI7+unO7cYy
-        Y29lsKTFN3MBH8POF0UCjmY=
-X-Google-Smtp-Source: ABdhPJzjpHaWFt/qmhE5T9q47jzJ9TE9edAwd+c9ayFlVVVk4E53qs0ThsG+1c9hkzQ01gj2/NvXeg==
-X-Received: by 2002:a17:90a:cc18:: with SMTP id b24mr23349815pju.89.1593535632810;
-        Tue, 30 Jun 2020 09:47:12 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:e083])
-        by smtp.gmail.com with ESMTPSA id c188sm3203756pfc.143.2020.06.30.09.47.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 09:47:11 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 09:47:08 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Michal Kubecek <mkubecek@suse.cz>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Sam Ravnborg <sam@ravnborg.org>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@chromium.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>
-Subject: Re: [PATCH 04/16] net: bpfilter: use 'userprogs' syntax to build
- bpfilter_umh
-Message-ID: <20200630164708.aeuoq4ruhivu5o2d@ast-mbp.dhcp.thefacebook.com>
-References: <20200423073929.127521-1-masahiroy@kernel.org>
- <20200423073929.127521-5-masahiroy@kernel.org>
- <20200608115628.osizkpo76cgn2ci7@lion.mk-sys.cz>
- <CAK7LNARGKCyWbfWUOX3nLLOBS3gi1QU3acdXLPVK4C+ErMDLpA@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=f7Ay0BZPslo+/hkCnggDepdpgQUh8gMzDJFRyBpq1nE=;
+        b=cVjG/0FZwULLjwNgUjFbpF3l35FEu2lJVqtHLb8bhymt8p37a/Dh0ysp8x1XPnCXf3
+         oYfUAkO4Fy2MtumAPQDIEpY7WkN2KUBE8b42P80Vtl70vLWkeYnOHYdgp1RCR6H2Q2vd
+         QUcqii2eyVsJQBUKG31m5EF5F7OpvR0mx3wDe6bqrIRWsj4sbCQkIxbgUXUYLup44hjp
+         Boi/O3OQDWf+uXIUY7BciWrTBaKxC5Bj/W1YCbQ5UvvQSfqcCOpGHhRU7sbts5UZVkpL
+         IQq9X1uAFXSfB9od0y4zgrwCoOMIrM8SQkoqyXg520V24YUT5YMaWfrCo2n0k54wfICM
+         +GWA==
+X-Gm-Message-State: AOAM531UlSP2IqDT1VVPJkFoo7iiPfGB4E3f+B1Ow9W7n/f7ZaEpLQQd
+        ra5VpNjq+dBG6bH/SJahO0wP5jHasoGg20YH078iaQ==
+X-Google-Smtp-Source: ABdhPJxqzIU5btpf1eaBo0LEO1vKMRw3WnGwPch2zdl3Rfe6iegM4Lo9X8WcWgVOxg1bPl16MABezC6j9ET3LLm/5f8=
+X-Received: by 2002:a7b:c92e:: with SMTP id h14mr21564715wml.36.1593535713991;
+ Tue, 30 Jun 2020 09:48:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK7LNARGKCyWbfWUOX3nLLOBS3gi1QU3acdXLPVK4C+ErMDLpA@mail.gmail.com>
+References: <20200617220844.57423-1-jarkko.sakkinen@linux.intel.com>
+ <20200617220844.57423-16-jarkko.sakkinen@linux.intel.com> <20200629171022.GC32176@zn.tnic>
+ <20200630060055.GS12312@linux.intel.com> <20200630084128.GA1093@zn.tnic>
+In-Reply-To: <20200630084128.GA1093@zn.tnic>
+From:   Andy Lutomirski <luto@amacapital.net>
+Date:   Tue, 30 Jun 2020 09:48:22 -0700
+Message-ID: <CALCETrWUHw2WSDaJrxrwVrXSGz-zR0N2R3cT06esKBCpqyoZaQ@mail.gmail.com>
+Subject: Re: [PATCH v33 15/21] x86/vdso: Add support for exception fixup in
+ vDSO functions
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        X86 ML <x86@kernel.org>, linux-sgx@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        asapek@google.com, "Xing, Cedric" <cedric.xing@intel.com>,
+        chenalexchen@google.com, conradparker@google.com,
+        cyhanish@google.com, Dave Hansen <dave.hansen@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, kmoy@google.com,
+        Christian Ludloff <ludloff@google.com>,
+        Andrew Lutomirski <luto@kernel.org>,
+        Neil Horman <nhorman@redhat.com>, npmccallum@redhat.com,
+        puiterwijk@redhat.com, David Rientjes <rientjes@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>, yaozhangx@google.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 03:30:04PM +0900, Masahiro Yamada wrote:
-> Hi Michal, Alexei,
-> 
-> On Mon, Jun 8, 2020 at 8:56 PM Michal Kubecek <mkubecek@suse.cz> wrote:
-> >
-> > On Thu, Apr 23, 2020 at 04:39:17PM +0900, Masahiro Yamada wrote:
-> > > The user mode helper should be compiled for the same architecture as
-> > > the kernel.
-> > >
-> > > This Makefile reuses the 'hostprogs' syntax by overriding HOSTCC with CC.
-> > >
-> > > Now that Kbuild provides the syntax 'userprogs', use it to fix the
-> > > Makefile mess.
-> > >
-> > > Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
-> > > Reported-by: kbuild test robot <lkp@intel.com>
-> > > ---
-> > >
-> > >  net/bpfilter/Makefile | 11 ++++-------
-> > >  1 file changed, 4 insertions(+), 7 deletions(-)
-> > >
-> > > diff --git a/net/bpfilter/Makefile b/net/bpfilter/Makefile
-> > > index 36580301da70..6ee650c6badb 100644
-> > > --- a/net/bpfilter/Makefile
-> > > +++ b/net/bpfilter/Makefile
-> > > @@ -3,17 +3,14 @@
-> > >  # Makefile for the Linux BPFILTER layer.
-> > >  #
-> > >
-> > > -hostprogs := bpfilter_umh
-> > > +userprogs := bpfilter_umh
-> > >  bpfilter_umh-objs := main.o
-> > > -KBUILD_HOSTCFLAGS += -I $(srctree)/tools/include/ -I $(srctree)/tools/include/uapi
-> > > -HOSTCC := $(CC)
-> > > +user-ccflags += -I $(srctree)/tools/include/ -I $(srctree)/tools/include/uapi
-> > >
-> > > -ifeq ($(CONFIG_BPFILTER_UMH), y)
-> > > -# builtin bpfilter_umh should be compiled with -static
-> > > +# builtin bpfilter_umh should be linked with -static
-> > >  # since rootfs isn't mounted at the time of __init
-> > >  # function is called and do_execv won't find elf interpreter
-> > > -KBUILD_HOSTLDFLAGS += -static
-> > > -endif
-> > > +bpfilter_umh-ldflags += -static
-> > >
-> > >  $(obj)/bpfilter_umh_blob.o: $(obj)/bpfilter_umh
-> >
-> > Hello,
-> >
-> > I just noticed that this patch (now in mainline as commit 8a2cc0505cc4)
-> > drops the test if CONFIG_BPFILTER_UMH is "y" so that -static is now
-> > passed to the linker even if bpfilter_umh is built as a module which
-> > wasn't the case in v5.7.
-> >
-> > This is not mentioned in the commit message and the comment still says
-> > "*builtin* bpfilter_umh should be linked with -static" so this change
-> > doesn't seem to be intentional. Did I miss something?
-> >
-> > Michal Kubecek
-> 
-> I was away for a while from this because I saw long discussion in
-> "net/bpfilter: Remove this broken and apparently unmaintained"
-> 
-> 
-> Please let me resume this topic now.
-> 
-> 
-> The original behavior of linking umh was like this:
->   - If CONFIG_BPFILTER_UMH=y, bpfilter_umh was linked with -static
->   - If CONFIG_BPFILTER_UMH=m, bpfilter_umh was linked without -static
+On Tue, Jun 30, 2020 at 1:41 AM Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Mon, Jun 29, 2020 at 11:00:55PM -0700, Sean Christopherson wrote:
+> > E.g. the vDSO function should get the fixup even if userspace screws
+> > up mmap() and invokes __vdso_sgx_enter_enclave() without being tagged
+> > an SGX task.
+>
+> I sincerely hope you don't mean this seriously.
+>
+> Please add a member to task_struct which denotes that a task is an
+> sgx task, test that member where needed and forget real quickly about
+> running *any* *fixup* for unrelated tasks.
 
-That was done to make sure both static and dynamic linking work.
-For production -static is necessary.
-For debugging of usermode blob dynamic is beneficial.
+I don't see the problem.  If you call this magic vDSO function and get
+a fault, it gets handled.  What's the failure mode?
 
-> Restoring the original behavior will add more complexity because
-> now we have CONFIG_CC_CAN_LINK and CONFIG_CC_CAN_LINK_STATIC
-> since commit b1183b6dca3e0d5
-> 
-> If CONFIG_BPFILTER_UMH=y, we need to check CONFIG_CC_CAN_LINK_STATIC.
-> If CONFIG_BPFILTER_UMH=m, we need to check CONFIG_CC_CAN_LINK.
-> This would make the Kconfig dependency logic too complicated.
+>
+> > No hard dependency, it's normal kernel code.  My reasoning for dropping it
+> > in .../vdso was largely to co-locate it with vdso/extable.h due to the
+> > dependency on the format of 'struct vdso_exception_table_entry'.
+>
+> A struct which you defined instead of simply using struct
+> exception_table_entry even if it has a handler member which would remain
+> unused?
 
-Currently I'm working on adding bpf_iter to use 'user mode driver'
-(old user mode blob) facility on top of Eric's patches.
-So there will be quite a bit more complexity to build system.
-Folks who don't want to deal with -static requirement should
-just disable the feature.
+Don't forget the cross-arch issue.  We need that structure to have
+constant layout so that the -m32 build from the vDSO has the same
+layout as in the kernel.
 
-> To make it simpler, I'd like to suggest two options.
-> 
-> 
-> 
-> Idea 1:
-> 
->   Always use -static irrespective of whether
->   CONFIG_BPFILTER_UMH is y or m.
-
-I don't think it's making it much simpler.
-It's a tiny change to makefile.
-I could be missing something.
-Requiring -static for =y and =m is fine.
-
->   Add two more lines to clarify this
->   in the comment in net/bpfilter/Makefile:
-> 
->   # builtin bpfilter_umh should be linked with -static
->   # since rootfs isn't mounted at the time of __init
->   # function is called and do_execv won't find elf interpreter.
->   # Static linking is not required when bpfilter is modular, but
->   # we always pass -static to keep the 'depends on' in Kconfig simple.
-> 
-> 
-> 
-> Idea 2:
-> 
->    Allow umh to become only modular,
->    and drop -static flag entirely.
-
-absolutely not.
-Both =y and =m are mandatory.
-
-> 
->    If you look at net/bpfilter/Kconfig,
->    BPFILTER_UMH already has 'default m'.
->    So, I assume the most expected use-case
->    is modular.
-
-The default for BPFILTER is =N.
-Distros should NOT be turning that to =y
-
-Same thing with upcoming bpf_iter. It will default to =n.
+So my only actual objection to the patch is that there should probably
+be a comment above the structure reminding people that it needs to
+have the same layout on 32-bit, x32, and x86_64.  So maybe the entries
+should be s32 instead of int, although this doesn't really matter.
