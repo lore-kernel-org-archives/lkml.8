@@ -2,189 +2,102 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F266C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:30:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABEC4C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:30:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8193207FB
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:30:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593549019;
-	bh=riLIoerWqEJyBrNNXh66ZrgcqlGhJPhnyVyuz3pbS7M=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=CLGHRyEd9GlFB4EW253QI9XefmSzhjft/1fD6meSDFMRj/3azI9Oc6AFbHqzBCuJJ
-	 urv5YGq1mrz1rn3MIZwDPIi9XrYEJ2hVtJx0lLMWvd5BeDXjBMwwRznFlmnnHZfueT
-	 NnU41r2l/U7UvD8Axsx/UYCkyLoVXQAoaYm1kaIc=
+	by mail.kernel.org (Postfix) with ESMTP id 86FD520768
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:30:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="srxxOCIJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729465AbgF3UaS (ORCPT
+        id S1729495AbgF3Uar (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 16:30:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55222 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727082AbgF3UaR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 16:30:17 -0400
-Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45D9D20768;
-        Tue, 30 Jun 2020 20:30:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593549016;
-        bh=riLIoerWqEJyBrNNXh66ZrgcqlGhJPhnyVyuz3pbS7M=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=DZWNcctVGZb1GP4Q3/zbbYdw7d/SxPOxCNuLx/IYYUSbbRjM9YYnOSM+5P1GnmxHF
-         DRLuIed6y3u6lbYYzr0bRfBa2YypwADNOjEjYrESyRMO0yTWyKocwHvkFEJ6MANgJw
-         E46CB5czyZVqNvtaSluBcCKaeggVdm8Tx/DuVW1A=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 31AE13522640; Tue, 30 Jun 2020 13:30:16 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 13:30:16 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Marco Elver <elver@google.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>
-Subject: Re: [PATCH 00/22] add support for Clang LTO
-Message-ID: <20200630203016.GI9247@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200624203200.78870-1-samitolvanen@google.com>
- <20200624211540.GS4817@hirez.programming.kicks-ass.net>
- <CAKwvOdmxz91c-M8egR9GdR1uOjeZv7-qoTP=pQ55nU8TCpkK6g@mail.gmail.com>
- <20200625080313.GY4817@hirez.programming.kicks-ass.net>
- <20200625082433.GC117543@hirez.programming.kicks-ass.net>
- <20200625085745.GD117543@hirez.programming.kicks-ass.net>
- <20200630191931.GA884155@elver.google.com>
- <20200630201243.GD4817@hirez.programming.kicks-ass.net>
+        Tue, 30 Jun 2020 16:30:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52886 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727082AbgF3Uaq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 16:30:46 -0400
+Received: from mail-yb1-xb42.google.com (mail-yb1-xb42.google.com [IPv6:2607:f8b0:4864:20::b42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C33A6C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 13:30:45 -0700 (PDT)
+Received: by mail-yb1-xb42.google.com with SMTP id h39so10749803ybj.3
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 13:30:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hbndbL/42Lj3+0S0TLvtcAj80v30sW3yhJRu17Ph6zg=;
+        b=srxxOCIJovcrNRpTPb+vPoi7ULhN9VgUvdErE5TP3DfGhwyIFPB5X6g/ztxdOGr8Us
+         cpjIkRDzkeH2jZw3D/wftckIEerLd5rUdvtUl/8LL7o4CvGcZbSKsdi+WaWM/qnxhKCd
+         boIWgG2TNdAWNBWCHz2xUim+xon2BGB9X2PErs/zMBI/HKpUPXRX84z8HRxjpZoFyw7A
+         GRglbCa0bCmzMh4akDcfXLnK7oVF8/P6yxO8QApOOeMLhhaF9eUr5Q3XjeEze4ATPnqG
+         ikdD5qaYLJKTBX9M7QaAARpIER+Zh5xgTueSnTdX8NYLpWJN3CQq0kE8IPbrNVGNSHgn
+         da3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hbndbL/42Lj3+0S0TLvtcAj80v30sW3yhJRu17Ph6zg=;
+        b=pKRJbVB8KGQmUdVOsCqIxszytcr32SK3Z94buzdpQfFzoPQZQ6f7MvmjFQyndBCLcB
+         Yp6bgfe2yZ+AIcbHHrwAOMMbWOETGda4UYQ8k01o0xMETsX2ZJol3+eR34BC7iN2WRza
+         gBpayW5R9WvGmamXOJEmjSknujY9oN+/V+Gofy3X0jWt8gpgYRvp/pqDy+B7iUY9+dH2
+         szQQTwQGyBq0IrxG/0xBHZQ9GWERDijdHzsr1vzuKt1FjF6784N1gQYcvu4T/cx354nV
+         wdryjUPRVHh6N8Sfy9hwu2LkVzoniSfQqZm7RxE2iw+Jb62KbpdInfrmRoiDl0ZUmzIC
+         vL/Q==
+X-Gm-Message-State: AOAM530Zq5ZGC56jYlcFm0GA/gBRaidtE33g/9VhWXJ97682y5FK3NCQ
+        8mY4BIHweVE+woIovLsR30mCAGGDEW1skOfgcayY1Q==
+X-Google-Smtp-Source: ABdhPJxNvCwjAE5cOI2IQkuy3+eSCuJzg/Oj6+537Ld+qP6KKGMKhW1Nd2SL7YrZZVP+Kg19OaW36nzhlXVEm+D0/5s=
+X-Received: by 2002:a25:81c2:: with SMTP id n2mr14190731ybm.520.1593549044541;
+ Tue, 30 Jun 2020 13:30:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200630201243.GD4817@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1132973300.15954.1593459836756.JavaMail.zimbra@efficios.com>
+ <CANn89iJ4nh6VRsMt_rh_YwC-pn=hBqsP-LD9ykeRTnDC-P5iog@mail.gmail.com>
+ <CAHk-=wh=CEzD+xevqpJnOJ9w72=bEMjDNmKdovoR5GnESJBdqA@mail.gmail.com> <20200630.132112.1161418939084868350.davem@davemloft.net>
+In-Reply-To: <20200630.132112.1161418939084868350.davem@davemloft.net>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Tue, 30 Jun 2020 13:30:33 -0700
+Message-ID: <CANn89iKUUJsEfwp2L0pwKdCP3Rx-o=6uM+1bUhT5Cc2p0p7XqA@mail.gmail.com>
+Subject: Re: [regression] TCP_MD5SIG on established sockets
+To:     David Miller <davem@davemloft.net>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>,
+        Yuchung Cheng <ycheng@google.com>,
+        Jonathan Rajotte-Julien <joraj@efficios.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 10:12:43PM +0200, Peter Zijlstra wrote:
-> On Tue, Jun 30, 2020 at 09:19:31PM +0200, Marco Elver wrote:
-> > I was asked for input on this, and after a few days digging through some
-> > history, thought I'd comment. Hope you don't mind.
-> 
-> Not at all, being the one that asked :-)
-> 
-> > First of all, I agree with the concerns, but not because of LTO.
-> > 
-> > To set the stage better, and summarize the fundamental problem again:
-> > we're in the unfortunate situation that no compiler today has a way to
-> > _efficiently_ deal with C11's memory_order_consume
-> > [https://lwn.net/Articles/588300/]. If we did, we could just use that
-> > and be done with it. But, sadly, that doesn't seem possible right now --
-> > compilers just say consume==acquire.
-> 
-> I'm not convinced C11 memory_order_consume would actually work for us,
-> even if it would work. That is, given:
-> 
->   https://lore.kernel.org/lkml/20150520005510.GA23559@linux.vnet.ibm.com/
-> 
-> only pointers can have consume, but like I pointed out, we have code
-> that relies on dependent loads from integers.
+On Tue, Jun 30, 2020 at 1:21 PM David Miller <davem@davemloft.net> wrote:
+>
+> From: Linus Torvalds <torvalds@linux-foundation.org>
+> Date: Tue, 30 Jun 2020 12:43:21 -0700
+>
+> > If you're not willing to do the work to fix it, I will revert that
+> > commit.
+>
+> Please let me handle this situation instead of making threats, this
+> just got reported.
+>
+> Thank you.
+>
 
-I agree that C11 memory_order_consume is not normally what we want,
-given that it is universally promoted to memory_order_acquire.
+Also keep in mind the commit fixed a security issue, since we were
+sending on the wire
+garbage bytes from the kernel.
 
-However, dependent loads from integers are, if anything, more difficult
-to defend from the compiler than are control dependencies.  This applies
-doubly to integers that are used to index two-element arrays, in which
-case you are just asking the compiler to destroy your dependent loads
-by converting them into control dependencies.
+We can not simply revert it and hope for the best.
 
-> > Will suggests doing the same in the
-> > kernel: https://lkml.kernel.org/r/20200630173734.14057-19-will@kernel.org
-> 
-> PowerPC would need a similar thing, it too will not preserve causality
-> for control dependecies.
-> 
-> > What we're most worried about right now is the existence of compiler
-> > transformations that could break data dependencies by e.g. turning them
-> > into control dependencies.
-> 
-> Correct.
-> 
-> > If this is a real worry, I don't think LTO is the magical feature that
-> > will uncover those optimizations. If these compiler transformations are
-> > real, they also exist in a normal build! 
-> 
-> Agreed, _however_ with the caveat that LTO could make them more common.
-> 
-> After all, with whole program analysis, the compiler might be able to
-> more easily determine that our pointer @ptr is only ever assigned the
-> values of &A, &B or &C, while without that visibility it would not be
-> able to determine this.
-> 
-> Once it knows @ptr has a limited number of determined values, the
-> conversion into control dependencies becomes much more likely.
-
-Which would of course break dependent loads.
-
-> > And if we are worried about them, we need to stop relying on dependent
-> > load ordering across the board; or switch to -O0 for everything.
-> > Clearly, we don't want either.
-> 
-> Agreed.
-> 
-> > Why do we think LTO is special?
-> 
-> As argued above, whole-program analysis would make it more likely. But I
-> agree the fundamental problem exists independent from LTO.
-> 
-> > But as far as we can tell, there is no evidence of the dreaded "data
-> > dependency to control dependency" conversion with LTO that isn't there
-> > in non-LTO builds, if it's even there at all. Has the data to control
-> > dependency conversion been encountered in the wild? If not, is the
-> > resulting reaction an overreaction? If so, we need to be careful blaming
-> > LTO for something that it isn't even guilty of.
-> 
-> It is mostly paranoia; in a large part driven by the fact that even if
-> such a conversion were to be done, it could go a very long time without
-> actually causing problems, and longer still for such problems to be
-> traced back to such an 'optimization'.
-> 
-> That is, the collective hurt from debugging too many ordering issues.
-> 
-> > So, we are probably better off untangling LTO from the story:
-> > 
-> > 1. LTO or no LTO does not matter. The LTO series should not get tangled
-> >    up with memory model issues.
-> > 
-> > 2. The memory model question and problems need to be answered and
-> >    addressed separately.
-> > 
-> > Thoughts?
-> 
-> How hard would it be to creates something that analyzes a build and
-> looks for all 'dependent load -> control dependency' transformations
-> headed by a volatile (and/or from asm) load and issues a warning for
-> them?
-> 
-> This would give us an indication of how valuable this transformation is
-> for the kernel. I'm hoping/expecting it's vanishingly rare, but what do
-> I know.
-> 
-
-This could be quite useful!
-
-							Thanx, Paul
+I find quite alarming vendors still use TCP MD5 "for security
+reasons", but none of them have contributed to it in linux kernel
+since 2018
+(Time of the 'buggy patch')
