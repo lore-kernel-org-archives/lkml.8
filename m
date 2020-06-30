@@ -2,186 +2,182 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9892CC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF371C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 71B962072D
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F8122072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:12:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TY+YXW2P"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fhJpbjvw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388813AbgF3OLr (ORCPT
+        id S2388823AbgF3OMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 10:11:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50940 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729908AbgF3OLq (ORCPT
+        Tue, 30 Jun 2020 10:12:14 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:51697 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388818AbgF3OMN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 10:11:46 -0400
-Received: from merlin.infradead.org (merlin.infradead.org [IPv6:2001:8b0:10b:1231::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99462C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 07:11:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=YJD6TTLpz8/8gN7B9DDKH/+ajtfA3gfjfVSXPv470ZY=; b=TY+YXW2P4Y22gzauf6MPYCwCJ8
-        5LBOy2A/fFl/357ObSg8eM/BxKanIRodczo8oknJBdGaNAsqcASUkCnbVPYlA5u5404dGkAhlWmn5
-        yApk4MWgahauxrdxp1qI/IBAzmADoEUNqgyjvoB6m2iJvwiOQd+aPm/z3rWF6ywMhrMcGrRernEP8
-        +bTjj8dYUnq8V/52q6t2yEgiWeON9yYiA5IuTXo/+0MSBZREV1gdw374dQ/ogdjzP5klgIXKCD231
-        k9ir0tDj6k2YL0J2/FxadUnXLdLP+YoEHQk4xnD9ejWA8ZKISSMuQy5IR0J0zZU90D9iVec4nC5qz
-        bSMH8xVA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jqGz1-0001R4-0J; Tue, 30 Jun 2020 14:11:35 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AC5E7302753;
-        Tue, 30 Jun 2020 16:11:32 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 993822122FE70; Tue, 30 Jun 2020 16:11:32 +0200 (CEST)
-Date:   Tue, 30 Jun 2020 16:11:32 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     kernel test robot <lkp@intel.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        lkp@lists.01.org, keescook@chromium.org, hjl.tools@gmail.com
-Subject: Re: [sched] c3a340f7e7: invalid_opcode:#[##]
-Message-ID: <20200630141132.GH117543@hirez.programming.kicks-ass.net>
-References: <20200629003127.GB5535@shao2-debian>
- <20200630124628.GV4817@hirez.programming.kicks-ass.net>
- <5b7286c9-ef4f-c1d0-fae3-ebb198aa0742@rasmusvillemoes.dk>
- <20200630140231.GW4817@hirez.programming.kicks-ass.net>
+        Tue, 30 Jun 2020 10:12:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593526331;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=V3Af6hWTp7LBSaBND9ImFa5WyHf1i7dt1HmmPhjgU4Y=;
+        b=fhJpbjvw4u0nEThXQgGhGLZVXCoPjizUAvBqZLFRd4mIvnQ2qw4F3B7TA0l1DRiCEZrZXU
+        JRhjNRk/afGfjZsLd+Z3xwMXKnaIy8WqZcyk3f+oy0Y/4XSS3kP4H3uWcpYC4DDMG83Fu0
+        DYDhSTk2EiQpcQ6Tg+moEYB6iffvzCI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-451-iaiVYEzwP_aeq5AmCfPScQ-1; Tue, 30 Jun 2020 10:12:02 -0400
+X-MC-Unique: iaiVYEzwP_aeq5AmCfPScQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 73DFC804003;
+        Tue, 30 Jun 2020 14:11:59 +0000 (UTC)
+Received: from lorien.usersys.redhat.com (ovpn-113-67.phx2.redhat.com [10.3.113.67])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 881701001B0B;
+        Tue, 30 Jun 2020 14:11:57 +0000 (UTC)
+Date:   Tue, 30 Jun 2020 10:11:55 -0400
+From:   Phil Auld <pauld@redhat.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Vineeth Remanan Pillai <vpillai@digitalocean.com>,
+        Nishanth Aravamudan <naravamudan@digitalocean.com>,
+        Julien Desfossez <jdesfossez@digitalocean.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kerr <kerrnel@google.com>, Aaron Lu <aaron.lwe@gmail.com>,
+        Aubrey Li <aubrey.intel@gmail.com>,
+        "Li, Aubrey" <aubrey.li@linux.intel.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Paul Turner <pjt@google.com>
+Subject: Re: [RFC PATCH 00/13] Core scheduling v5
+Message-ID: <20200630141155.GB132455@lorien.usersys.redhat.com>
+References: <cover.1583332764.git.vpillai@digitalocean.com>
+ <CANaguZBQMarzMb-iXBEx8wJqkTYtRskTL+xQnShuAW7hP9UdqA@mail.gmail.com>
+ <CAEXW_YSU5=ZUf-4j55av9Q8b+PRiM2DCKydM9Bv__mzL2MWx4g@mail.gmail.com>
+ <CANaguZCi7Gj5TSUfU5AZ5w1v=EEz23rdgUsSg1NVb3DBM+F6bA@mail.gmail.com>
+ <20200626151028.GA538235@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200630140231.GW4817@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200626151028.GA538235@google.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 04:02:31PM +0200, Peter Zijlstra wrote:
-> On Tue, Jun 30, 2020 at 03:55:05PM +0200, Rasmus Villemoes wrote:
+On Fri, Jun 26, 2020 at 11:10:28AM -0400 Joel Fernandes wrote:
+> On Fri, Jun 26, 2020 at 10:36:01AM -0400, Vineeth Remanan Pillai wrote:
+> > On Thu, Jun 25, 2020 at 9:47 PM Joel Fernandes <joel@joelfernandes.org> wrote:
+> > >
+> > > On Thu, Jun 25, 2020 at 4:12 PM Vineeth Remanan Pillai
+> > > <vpillai@digitalocean.com> wrote:
+> > > [...]
+> > > > TODO lists:
+> > > >
+> > > >  - Interface discussions could not come to a conclusion in v5 and hence would
+> > > >    like to restart the discussion and reach a consensus on it.
+> > > >    - https://lwn.net/ml/linux-kernel/20200520222642.70679-1-joel@joelfernandes.org
+> > >
+> > > Thanks Vineeth, just want to add: I have a revised implementation of
+> > > prctl(2) where you only pass a TID of a task you'd like to share a
+> > > core with (credit to Peter for the idea [1]) so we can make use of
+> > > ptrace_may_access() checks. I am currently finishing writing of
+> > > kselftests for this and post it all once it is ready.
+> > >
+> > Thinking more about it, using TID/PID for prctl(2) and internally
+> > using a task identifier to identify coresched group may have
+> > limitations. A coresched group can exist longer than the lifetime
+> > of a task and then there is a chance for that identifier to be
+> > reused by a newer task which may or maynot be a part of the same
+> > coresched group.
 > 
-> > > Consistently so with GCC-4.9. Any other GCC I tried does the sane thing.
-> > 
-> > Does that include gcc 4.8, or is it only "anything newer than 4.9"?
-> 
-> It includes 4.8 :-)
-> 
-> > so the section it was put in has an alignment of 64. The generated
-> > assembly is indeed
-> > 
-> >         .globl  fair_sched_class
-> >         .section        __fair_sched_class,"a",@progbits
-> >         .align 64
-> > 
-> > /me goes brew coffee
-> 
-> Right.. so I now have the below patch, and with that I get:
-> 
-> 62931: c1e62c20     0 NOTYPE  GLOBAL DEFAULT    2 __begin_sched_classes
-> 65736: c1e62e40   128 OBJECT  GLOBAL DEFAULT    2 stop_sched_class
-> 71813: c1e62cc0   128 OBJECT  GLOBAL DEFAULT    2 fair_sched_class
-> 78689: c1e62c40   128 OBJECT  GLOBAL DEFAULT    2 idle_sched_class
-> 78953: c1e62ec0     0 NOTYPE  GLOBAL DEFAULT    2 __end_sched_classes
-> 79090: c1e62d40   128 OBJECT  GLOBAL DEFAULT    2 rt_sched_class
-> 79431: c1e62dc0   128 OBJECT  GLOBAL DEFAULT    2 dl_sched_class
-> 
-> 
-> Which has me stumped on __begin_sched_classes being on a 32byte edge
-> (and crashes differently due to that).
-> 
-> Argh!!
+> True, for the prctl(2) tagging (a task wanting to share core with
+> another) we will need some way of internally identifying groups which does
+> not depend on any value that can be reused for another purpose.
+>
 
-Steve suggested adding a dummy variable before the lot and this actually
-works... But this just cannot be right :-(
+That was my concern as well. That's why I was thinking it should be
+an arbitrary, user/admin/orchestrator defined value and not be the
+responsibility of the kernel at all.  However...
 
 
----
-diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
-index 66fb84c3dc7ee..9c0ee5cf73a50 100644
---- a/include/asm-generic/vmlinux.lds.h
-+++ b/include/asm-generic/vmlinux.lds.h
-@@ -108,6 +108,17 @@
- #define SBSS_MAIN .sbss
- #endif
- 
-+/*
-+ * Align to a 32 byte boundary equal to the
-+ * alignment gcc 4.5 uses for a struct
-+ */
-+#if GCC_VERSION >= 40900 && GCC_VERSION < 50000
-+#define STRUCT_ALIGNMENT 64
-+#else
-+#define STRUCT_ALIGNMENT 32
-+#endif
-+#define STRUCT_ALIGN() . = ALIGN(STRUCT_ALIGNMENT)
-+
- /*
-  * The order of the sched class addresses are important, as they are
-  * used to determine the order of the priority of each sched class in
-@@ -115,6 +126,7 @@
-  */
- #define SCHED_DATA				\
- 	STRUCT_ALIGN();				\
-+	*(__dummy_sched_class)			\
- 	__begin_sched_classes = .;		\
- 	*(__idle_sched_class)			\
- 	*(__fair_sched_class)			\
-@@ -123,13 +135,6 @@
- 	*(__stop_sched_class)			\
- 	__end_sched_classes = .;
- 
--/*
-- * Align to a 32 byte boundary equal to the
-- * alignment gcc 4.5 uses for a struct
-- */
--#define STRUCT_ALIGNMENT 32
--#define STRUCT_ALIGN() . = ALIGN(STRUCT_ALIGNMENT)
--
- /* The actual configuration determine if the init/exit sections
-  * are handled as text/data or they can be discarded (which
-  * often happens at runtime)
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 81640fe0eae8f..f8535a3438819 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -6641,6 +6641,9 @@ static struct kmem_cache *task_group_cache __read_mostly;
- DECLARE_PER_CPU(cpumask_var_t, load_balance_mask);
- DECLARE_PER_CPU(cpumask_var_t, select_idle_mask);
- 
-+const struct sched_class dummy_sched_class
-+	__attribute__((section("__dummy_sched_class")));
-+
- void __init sched_init(void)
- {
- 	unsigned long ptr = 0;
-diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-index 4165c06d1d7bd..33251d0ab62e7 100644
---- a/kernel/sched/sched.h
-+++ b/kernel/sched/sched.h
-@@ -67,6 +67,7 @@
- #include <linux/tsacct_kern.h>
- 
- #include <asm/tlb.h>
-+#include <asm-generic/vmlinux.lds.h>
- 
- #ifdef CONFIG_PARAVIRT
- # include <asm/paravirt.h>
-@@ -1811,7 +1812,7 @@ struct sched_class {
- #ifdef CONFIG_FAIR_GROUP_SCHED
- 	void (*task_change_group)(struct task_struct *p, int type);
- #endif
--} __aligned(32); /* STRUCT_ALIGN(), vmlinux.lds.h */
-+} __aligned(STRUCT_ALIGNMENT); /* STRUCT_ALIGN(), vmlinux.lds.h */
- 
- static inline void put_prev_task(struct rq *rq, struct task_struct *prev)
- {
+> [..]
+> > What do you think about having a separate cgroup for coresched?
+> > Both coresched cgroup and prctl() could co-exist where prctl could
+> > be used to isolate individual process or task and coresched cgroup
+> > to group trusted processes.
+> 
+> This sounds like a fine idea to me. I wonder how Tejun and Peter feel about
+> having a new attribute-less CGroup controller for core-scheduling and just
+> use that for tagging. (No need to even have a tag file, just adding/removing
+> to/from CGroup will tag).
+>
+
+... this could be an interesting approach. Then the cookie could still
+be the cgroup address as is and there would be no need for the prctl. At
+least so it seems. 
+
+
+
+Cheers,
+Phil
+
+> > > However a question: If using the prctl(2) on a CGroup tagged task, we
+> > > discussed in previous threads [2] to override the CGroup cookie such
+> > > that the task may not share a core with any of the tasks in its CGroup
+> > > anymore and I think Peter and Phil are Ok with.  My question though is
+> > > - would that not be confusing for anyone looking at the CGroup
+> > > filesystem's "tag" and "tasks" files?
+> > >
+> > Having a dedicated cgroup for coresched could solve this problem
+> > as well. "coresched.tasks" inside the cgroup hierarchy would list all
+> > the taskx in the group and prctl can override this and take it out
+> > of the group.
+> 
+> We don't even need coresched.tasks, just the existing 'tasks' of CGroups can
+> be used.
+> 
+> > > To resolve this, I am proposing to add a new CGroup file
+> > > 'tasks.coresched' to the CGroup, and this will only contain tasks that
+> > > were assigned cookies due to their CGroup residency. As soon as one
+> > > prctl(2)'s the task, it will stop showing up in the CGroup's
+> > > "tasks.coresched" file (unless of course it was requesting to
+> > > prctl-share a core with someone in its CGroup itself). Are folks Ok
+> > > with this solution?
+> > >
+> > As I mentioned above, IMHO cpu cgroups should not be used to account
+> > for core scheduling as well. Cpu cgroups serve a different purpose
+> > and overloading it with core scheduling would not be flexible and
+> > scalable. But if there is a consensus to move forward with cpu cgroups,
+> > adding this new file seems to be okay with me.
+> 
+> Yes, this is the problem. Many people use CPU controller CGroups already for
+> other purposes. In that case, tagging a CGroup would make all the entities in
+> the group be able to share a core, which may not always make sense. May be a
+> new CGroup controller is the answer (?).
+> 
+> thanks,
+> 
+>  - Joel
+> 
+
+-- 
+
