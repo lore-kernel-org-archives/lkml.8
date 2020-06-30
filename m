@@ -2,115 +2,105 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E781FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78879C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:11:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C00932073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:11:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593529891;
-	bh=Kof5P3F4RhHddyde/k6hvfouOCHADx+GYO+1CoM3OgM=;
-	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
-	b=lA2ihnyDUQXjxKD0Hh6OpwWbg5wuQN+ObeFXtpKHB6Y4Ew07JWk4Jsn/bO4F37XTm
-	 6MzOp7AE/iAYyDZgwVH0hXMbuVVUvCKbuhYyLgRoRaKJslZNObbccDQmiYWJB/TpVy
-	 bgm8h9APXkFjAP7xaVrgHVKnG4cWvSQBUN/5V4hE=
+	by mail.kernel.org (Postfix) with ESMTP id 59ED72074F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:11:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PWHv1Ri4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389256AbgF3PL3 (ORCPT
+        id S2389270AbgF3PLf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 11:11:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47398 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729051AbgF3PL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 11:11:29 -0400
-Received: from localhost (p54b336a9.dip0.t-ipconnect.de [84.179.54.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CCD120720;
-        Tue, 30 Jun 2020 15:11:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593529889;
-        bh=Kof5P3F4RhHddyde/k6hvfouOCHADx+GYO+1CoM3OgM=;
-        h=Date:From:To:Subject:References:In-Reply-To:From;
-        b=wDcjG9Ffp2rf2uyADpUEj8oIWGdNSEHcfaFoqa6A2PydIwLazG4iE4vp2Dr3rz9HY
-         lgsmGFRLso5cO8GTM1JLw/m5tCTB4+9iKbbfhPX7paqvUJBYp1aDsmOYduexVJd4XX
-         WfNUaav0IfqFf3DoRSzEp6acRgJBg1ZWoLp4Ahao=
-Date:   Tue, 30 Jun 2020 17:11:15 +0200
-From:   Wolfram Sang <wsa@kernel.org>
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        pierre-yves.mordret@st.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        fabrice.gasnier@st.com
-Subject: Re: [PATCH 4/4] i2c: stm32f7: Add SMBus-specific protocols support
-Message-ID: <20200630151115.GA1058@kunai>
-References: <1588657871-14747-1-git-send-email-alain.volmat@st.com>
- <1588657871-14747-5-git-send-email-alain.volmat@st.com>
- <20200523110140.GD3459@ninjato>
- <20200526103938.GC14423@gnbcxd0016.gnb.st.com>
- <20200630064050.GA996@ninjato>
- <20200630093135.GC5652@gnbcxd0016.gnb.st.com>
+        Tue, 30 Jun 2020 11:11:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60148 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389258AbgF3PLe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 11:11:34 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C70CC061755;
+        Tue, 30 Jun 2020 08:11:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=085m+qYdj3d+tEZKWFcDUm8R54zn/OUFEGECmgixYQk=; b=PWHv1Ri4OahOBANGBdgewR1kYX
+        0eV4Y+TiQMLmgJ4d41YcXTM7CKLL9ty0+/e8FIX7uWPhCdNzbZ5lsL4sF0T/6WQ8xW0qEzlA+5B1p
+        vdcK2H8HsqkztCWF79XfBWMwQwb0j//v2LNsh5l/chxeVz4IrMzM9lHs8gFcEisyV8y58rMykPlZX
+        dxwRpK9JUjzqIeAIuu+v4VGJ5Q/nRbeMXY2x+sJhA43J+ySwFVY0pIqkbn3BY35spqryNtnWoGaaO
+        ES3tlzjCAXc5wzqubmWWmKyiagTx0a5NjYpIqlxgoWTF+QWBALMvzD5yIXTfVbMiXudsp2iw8ExDa
+        HOUJEpcA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jqHus-0005fe-NV; Tue, 30 Jun 2020 15:11:23 +0000
+Subject: Re: [PATCH v2] Documentation: Coccinelle: fix typos and command
+ example
+To:     Markus Elfring <Markus.Elfring@web.de>, linux-doc@vger.kernel.org,
+        Coccinelle <cocci@systeme.lip6.fr>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Jonathan Corbet <corbet@lwn.net>
+References: <0616dd0c-bb86-be2b-3dc6-1c695a92c3ca@infradead.org>
+ <c2c1dec0-2bd1-b0e2-1aa4-38d0e954d5ba@web.de>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <efc8b0c9-db3b-3c9c-d876-897b53a9e278@infradead.org>
+Date:   Tue, 30 Jun 2020 08:11:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="IS0zKkzwUGydFO0o"
-Content-Disposition: inline
-In-Reply-To: <20200630093135.GC5652@gnbcxd0016.gnb.st.com>
+In-Reply-To: <c2c1dec0-2bd1-b0e2-1aa4-38d0e954d5ba@web.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 6/30/20 5:23 AM, Markus Elfring wrote:
+> …
+>> +++ linux-next-20200629/Documentation/dev-tools/coccinelle.rst
+> …> @@ -177,13 +177,13 @@ For example, to check drivers/net/wirele
+>>  To apply Coccinelle on a file basis, instead of a directory basis, the
+>>  following command may be used::
+>>
+>> -    make C=1 CHECK="scripts/coccicheck"
+>> +    make C=1 CHECK="scripts/coccicheck" path/to/file.c
+> 
+> I would like to clarify further software design aspects around such make functionality.
+> 
+> We might stumble on different interpretations according to the wording “file basis”.
+> Do you find a message like “make: Nothing to be done for 'path/to/file.c'.” interesting then?
+> 
+> * Would you like to add any links for information around the support for
+>   source code checkers?
+>   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Makefile?id=7c30b859a947535f2213277e827d7ac7dcff9c84#n198
+> 
+> * How do you think about to enclose the path for the shown parameter
+>   by single quotes instead of double quotes?
+> 
+> * Can such path specifications become more interesting occasionally
+>   if also an other file extension would be chosen than “.c”?
+>   Would you like to achieve any software extensions around suffix rules?
+> 
+> Regards,
+> Markus
 
---IS0zKkzwUGydFO0o
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Markus:
 
-Hi Alain,
+Feel free to submit patches.
 
-> Ok, understood. Fine for me that way as well. I am just a little worrying that
-> the "host-notify" can now be present in both controller AND slave nodes
-> and might be a bit hard to understand. At the same time I don't have a better
-> proposal for naming the binding for the controller.
+-- 
+~Randy
 
-It is a valid concern, maybe we could name the binding for the host
-"enable-host-notify"?
-
-> Please do not consider serie v2 I just posted few days ago and I will
-> post a serie v3 updating the binding information and using the host-notify
-> binding in the i2c-stm32f7 driver.
-
-I also have an idea for the SMBusAlert topic, hopefully I can come up
-with a summary later today.
-
-All the best,
-
-   Wolfram
-
-
---IS0zKkzwUGydFO0o
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl77Vg8ACgkQFA3kzBSg
-KbY4ww//em/vnMiq7NS89p7OgWcLT8uZEKJWygqaUmVWOpwz0HD1JlDWg1fgYnCQ
-cICy1tOydUEo+FXs/AZty5YQHRSghTEYrEA/SDdTfKDassc897O6K747UW9OYAYN
-94ls0vDGfyW9+MmyPhLLHbocYfHpyPusZyueZvqH5ou5+1RlmyPvXgg9/Hh+SCYR
-oY4JoZZ0u8k/WpZGhS4z4QQKXJ/h2220mEvLVxEwt/ZhQWXWGTHCc9T6yHmplXxR
-SQu64RVtAz/JZfOQcG6JiBsX+ZD707n78SClOSszcGrKMfFBGdXJa1giQcFI9wEQ
-ImA91dkgWhYWYaynOyn1wydKElDfHSIm4TSjDo5JtIGO5u/+CrnYzrSBsJ76lz3C
-VQ9XrgyN2On4t+hKEJ044QKPJcoGUBnIUx8ERU9JbEIXHgHBmXNs0Vvt6gH0cBBu
-hLMgnRWOUZdh382yowRY0cdq3gD4ePXiivAVLoDaQDDetk/eWX9GIZNPROU0rS6E
-/F7W8yI3hohLmvDqA8AnHvEQR3wnNmmXBCJLV/sK3Q5FI8OEFxETwsumAziY4nHW
-rujYZBZ7z+apz3Bxq08DUZxj9aIZ+o3SN39cW7j3pU4e47wnrpf4WRCAchwiVjvu
-EkaGFUnE/oAmfrP2FzisenLvLUvyZ477TWrDVytEHbBzgWnfEsI=
-=6INs
------END PGP SIGNATURE-----
-
---IS0zKkzwUGydFO0o--
