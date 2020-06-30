@@ -7,139 +7,207 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 617E7C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 01:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C4CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 01:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 1F80720780
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 01:17:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88F4B20781
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 01:17:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="kDtop+xD"
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="ZD6ev6XB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbgF3BRR (ORCPT
+        id S1727972AbgF3BRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 21:17:17 -0400
-Received: from ozlabs.org ([203.11.71.1]:53977 "EHLO ozlabs.org"
+        Mon, 29 Jun 2020 21:17:50 -0400
+Received: from mail.zx2c4.com ([192.95.5.64]:36919 "EHLO mail.zx2c4.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726612AbgF3BRR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 21:17:17 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 49wmfz2qYRz9sDX;
-        Tue, 30 Jun 2020 11:17:15 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1593479835;
-        bh=c1L8DnWKBEK734+NRCMwarazgG4eaw4rI7iix+fR1fM=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=kDtop+xDEp6QqlXkx0SzTxPfqSZeaL8NAwcqTcjv6q34IAtCPjulKUhhnD+7SnUFj
-         6woeh33FoYTtI5Rd9M5jonIDa+nbkhTKULpPQ/XjloHpjsVMpNakgC96oS3KmmI74a
-         y5j0ZZNyacS46inOgRddJS7op0JOxbQc5nrAcHPzFbax0A5KX5Mdk46P2PPz0zR6SP
-         0E7Td3Cs41zmvcYGpYbbI0N5Hlkv2HZd+OrBxphVRpmm3IX0C3e0EinfIokcfq/BuM
-         lAYkckZwFbZfYIPagygrZ9AZin/b0DoRct0tdVRTR8J9WZ1NppEaXJlTOxKn80dNfB
-         5Vktad6YByV0w==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>, npiggin@gmail.com,
-        segher@kernel.crashing.org
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] powerpc/uaccess: Use flexible addressing with __put_user()/__get_user()
-In-Reply-To: <878sg6862r.fsf@mpe.ellerman.id.au>
-References: <c2addbd9d76212242d3d8554a2f7ff849fb08b85.1587040754.git.christophe.leroy@c-s.fr> <7b916759-1683-b4df-0d4b-b04b3fcd9a02@csgroup.eu> <878sg6862r.fsf@mpe.ellerman.id.au>
-Date:   Tue, 30 Jun 2020 11:19:29 +1000
-Message-ID: <875zb98i5a.fsf@mpe.ellerman.id.au>
+        id S1726612AbgF3BRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 21:17:49 -0400
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTP id ff2a2235;
+        Tue, 30 Jun 2020 00:58:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=JKTunggZ6BIJW3mIWp7h9mZGZHg=; b=ZD6ev6
+        XBdl2lw+g15z7JsW2iuNaNJOsSxpjk0ZHM05DsOrTF3NVrSOodg6+zGMfxL/h6QC
+        mOzX0ESO/powuZmKCGMF1ROgPR/mPVtTRSjaGb2kemlu5Pi1CgZPQM38C7QDflT4
+        gfFyHcF78mQ9+wo/mfqIsuZgXId9pht9vN60rgpc0rP+3JBl+DAI85y1fCQ4376d
+        dapJ/pGogcEwDVDRHdswfkwBvO+R1oxQloJZJi+vGNW+4bcTMtCv9V/lJ9yXbbp5
+        yqfIEfPEPjsKfCRbZ/qPM4vLBc4FhiBxwSKe6Cdav4aBupTsdLTslNzpzkK25SyS
+        GY+kNqNHhs1rkTOA==
+Received: by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 76f8b7de (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+        Tue, 30 Jun 2020 00:58:00 +0000 (UTC)
+Received: by mail-il1-f170.google.com with SMTP id w9so16208093ilk.13;
+        Mon, 29 Jun 2020 18:17:43 -0700 (PDT)
+X-Gm-Message-State: AOAM531p7VlgFMi6SsxoHy5DG811hbCG3EYZAPVElPo9T1lxCJrgKlk3
+        oK20Fxb4lY8TpGSR1c41CYdxIhCMwRlu57bu+dI=
+X-Google-Smtp-Source: ABdhPJwq4zRLfzdALEdewCyt3e7rgf/QpkJOSOD5+E1XWlCvpJnBE5lXlTd8rRNe3l2/AyITAn497qjbYI8T6AyFg2A=
+X-Received: by 2002:a92:9ed5:: with SMTP id s82mr278885ilk.231.1593479862886;
+ Mon, 29 Jun 2020 18:17:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <0000000000006eb8b705a9426b8b@google.com>
+In-Reply-To: <0000000000006eb8b705a9426b8b@google.com>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Mon, 29 Jun 2020 19:17:31 -0600
+X-Gmail-Original-Message-ID: <CAHmME9qOR4h7hsQ4_QuztPN+6w4KcoaYNs75yJn=L3S2Mhq9rA@mail.gmail.com>
+Message-ID: <CAHmME9qOR4h7hsQ4_QuztPN+6w4KcoaYNs75yJn=L3S2Mhq9rA@mail.gmail.com>
+Subject: Re: KASAN: use-after-free Read in netdev_name_node_lookup_rcu
+To:     syzbot <syzbot+a82be85e09cd5df398fe@syzkaller.appspotmail.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Johannes Berg <johannes@sipsolutions.net>
+Cc:     David Miller <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>, syzkaller-bugs@googlegroups.com,
+        WireGuard mailing list <wireguard@lists.zx2c4.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Michael Ellerman <mpe@ellerman.id.au> writes:
-> Christophe Leroy <christophe.leroy@csgroup.eu> writes:
->> Hi Michael,
->>
->> I see this patch is marked as "defered" in patchwork, but I can't see 
->> any related discussion. Is it normal ?
+Hey Cong,
+
+I'm wondering if the below error is related to what you've been
+looking at yesterday. AFAICT, there's a simple UaF on the attrbuf
+passed to the start method. I recall recently you were working on the
+locking in genetlink's family buffers and wound up mallocing some
+things, so it seems like this might be related. See below.
+
+Regards,
+Jason
+
+On Mon, Jun 29, 2020 at 6:40 PM syzbot
+<syzbot+a82be85e09cd5df398fe@syzkaller.appspotmail.com> wrote:
 >
-> Because it uses the "m<>" constraint which didn't work on GCC 4.6.
+> Hello,
 >
-> https://github.com/linuxppc/issues/issues/297
+> syzbot found the following crash on:
 >
-> So we should be able to pick it up for v5.9 hopefully.
-
-It seems to break the build with the kernel.org 4.9.4 compiler and
-corenet64_smp_defconfig:
-
-+ make -s CC=powerpc64-linux-gnu-gcc -j 160
-In file included from /linux/include/linux/uaccess.h:11:0,
-                 from /linux/include/linux/sched/task.h:11,
-                 from /linux/include/linux/sched/signal.h:9,
-                 from /linux/include/linux/rcuwait.h:6,
-                 from /linux/include/linux/percpu-rwsem.h:7,
-                 from /linux/include/linux/fs.h:33,
-                 from /linux/include/linux/huge_mm.h:8,
-                 from /linux/include/linux/mm.h:675,
-                 from /linux/arch/powerpc/kernel/signal_32.c:17:
-/linux/arch/powerpc/kernel/signal_32.c: In function 'save_user_regs.isra.14.constprop':
-/linux/arch/powerpc/include/asm/uaccess.h:161:2: error: 'asm' operand has impossible constraints
-  __asm__ __volatile__(     \
-  ^
-/linux/arch/powerpc/include/asm/uaccess.h:197:12: note: in expansion of macro '__put_user_asm'
-    case 4: __put_user_asm(x, ptr, retval, "stw"); break; \
-            ^
-/linux/arch/powerpc/include/asm/uaccess.h:206:2: note: in expansion of macro '__put_user_size_allowed'
-  __put_user_size_allowed(x, ptr, size, retval);  \
-  ^
-/linux/arch/powerpc/include/asm/uaccess.h:220:2: note: in expansion of macro '__put_user_size'
-  __put_user_size(__pu_val, __pu_addr, __pu_size, __pu_err); \
-  ^
-/linux/arch/powerpc/include/asm/uaccess.h:96:2: note: in expansion of macro '__put_user_nocheck'
-  __put_user_nocheck((__typeof__(*(ptr)))(x), (ptr), sizeof(*(ptr)))
-  ^
-/linux/arch/powerpc/kernel/signal_32.c:120:7: note: in expansion of macro '__put_user'
-   if (__put_user((unsigned int)gregs[i], &frame->mc_gregs[i]))
-       ^
-/linux/scripts/Makefile.build:280: recipe for target 'arch/powerpc/kernel/signal_32.o' failed
-make[3]: *** [arch/powerpc/kernel/signal_32.o] Error 1
-make[3]: *** Waiting for unfinished jobs....
-In file included from /linux/include/linux/uaccess.h:11:0,
-                 from /linux/include/linux/sched/task.h:11,
-                 from /linux/include/linux/sched/signal.h:9,
-                 from /linux/include/linux/rcuwait.h:6,
-                 from /linux/include/linux/percpu-rwsem.h:7,
-                 from /linux/include/linux/fs.h:33,
-                 from /linux/include/linux/huge_mm.h:8,
-                 from /linux/include/linux/mm.h:675,
-                 from /linux/arch/powerpc/kernel/signal_64.c:12:
-/linux/arch/powerpc/kernel/signal_64.c: In function '__se_sys_swapcontext':
-/linux/arch/powerpc/include/asm/uaccess.h:319:2: error: 'asm' operand has impossible constraints
-  __asm__ __volatile__(    \
-  ^
-/linux/arch/powerpc/include/asm/uaccess.h:359:10: note: in expansion of macro '__get_user_asm'
-  case 1: __get_user_asm(x, (u8 __user *)ptr, retval, "lbz"); break; \
-          ^
-/linux/arch/powerpc/include/asm/uaccess.h:370:2: note: in expansion of macro '__get_user_size_allowed'
-  __get_user_size_allowed(x, ptr, size, retval);  \
-  ^
-/linux/arch/powerpc/include/asm/uaccess.h:393:3: note: in expansion of macro '__get_user_size'
-   __get_user_size(__gu_val, __gu_addr, __gu_size, __gu_err); \
-   ^
-/linux/arch/powerpc/include/asm/uaccess.h:94:2: note: in expansion of macro '__get_user_nocheck'
-  __get_user_nocheck((x), (ptr), sizeof(*(ptr)), true)
-  ^
-/linux/arch/powerpc/kernel/signal_64.c:672:9: note: in expansion of macro '__get_user'
-      || __get_user(tmp, (u8 __user *) new_ctx + ctx_size - 1))
-         ^
-/linux/scripts/Makefile.build:280: recipe for target 'arch/powerpc/kernel/signal_64.o' failed
-make[3]: *** [arch/powerpc/kernel/signal_64.o] Error 1
-/linux/scripts/Makefile.build:497: recipe for target 'arch/powerpc/kernel' failed
-make[2]: *** [arch/powerpc/kernel] Error 2
-/linux/Makefile:1756: recipe for target 'arch/powerpc' failed
-make[1]: *** [arch/powerpc] Error 2
-Makefile:185: recipe for target '__sub-make' failed
-make: *** [__sub-make] Error 2
-
-
-cheers
+> HEAD commit:    1590a2e1 Merge tag 'acpi-5.8-rc3' of git://git.kernel.org/..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1664afad100000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=bf3aec367b9ab569
+> dashboard link: https://syzkaller.appspot.com/bug?extid=a82be85e09cd5df398fe
+> compiler:       gcc (GCC) 10.1.0-syz 20200507
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14a1bf1d100000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1514a06b100000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+a82be85e09cd5df398fe@syzkaller.appspotmail.com
+>
+> ==================================================================
+> BUG: KASAN: use-after-free in strnlen+0x64/0x70 lib/string.c:561
+> Read of size 1 at addr ffff8880933b8c18 by task syz-executor821/6893
+>
+> CPU: 0 PID: 6893 Comm: syz-executor821 Not tainted 5.8.0-rc2-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+> Call Trace:
+>  __dump_stack lib/dump_stack.c:77 [inline]
+>  dump_stack+0x18f/0x20d lib/dump_stack.c:118
+>  print_address_description.constprop.0.cold+0xae/0x436 mm/kasan/report.c:383
+>  __kasan_report mm/kasan/report.c:513 [inline]
+>  kasan_report.cold+0x1f/0x37 mm/kasan/report.c:530
+>  strnlen+0x64/0x70 lib/string.c:561
+>  strnlen include/linux/string.h:339 [inline]
+>  dev_name_hash net/core/dev.c:208 [inline]
+>  netdev_name_node_lookup_rcu+0x22/0x150 net/core/dev.c:290
+>  dev_get_by_name_rcu net/core/dev.c:883 [inline]
+>  dev_get_by_name+0x7b/0x1e0 net/core/dev.c:905
+>  lookup_interface drivers/net/wireguard/netlink.c:63 [inline]
+>  wg_get_device_start+0x2e4/0x3f0 drivers/net/wireguard/netlink.c:203
+>  genl_start+0x342/0x6e0 net/netlink/genetlink.c:556
+>  __netlink_dump_start+0x585/0x900 net/netlink/af_netlink.c:2343
+>  genl_family_rcv_msg_dumpit+0x2ac/0x310 net/netlink/genetlink.c:638
+>  genl_family_rcv_msg net/netlink/genetlink.c:733 [inline]
+>  genl_rcv_msg+0x797/0x9e0 net/netlink/genetlink.c:753
+>  netlink_rcv_skb+0x15a/0x430 net/netlink/af_netlink.c:2469
+>  genl_rcv+0x24/0x40 net/netlink/genetlink.c:764
+>  netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+>  netlink_unicast+0x533/0x7d0 net/netlink/af_netlink.c:1329
+>  netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
+>  sock_sendmsg_nosec net/socket.c:652 [inline]
+>  sock_sendmsg+0xcf/0x120 net/socket.c:672
+>  ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
+>  ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
+>  __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
+>  do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> RIP: 0033:0x445299
+> Code: Bad RIP value.
+> RSP: 002b:00007ffd1e794308 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+> RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000445299
+> RDX: 0000000000000000 RSI: 0000000020000200 RDI: 0000000000000003
+> RBP: 0000000000082a5d R08: 0000000000000000 R09: 00000000004002e0
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402430
+> R13: 00000000004024c0 R14: 0000000000000000 R15: 0000000000000000
+>
+> Allocated by task 6894:
+>  save_stack+0x1b/0x40 mm/kasan/common.c:48
+>  set_track mm/kasan/common.c:56 [inline]
+>  __kasan_kmalloc.constprop.0+0xc2/0xd0 mm/kasan/common.c:494
+>  __kmalloc_reserve net/core/skbuff.c:142 [inline]
+>  __alloc_skb+0xae/0x550 net/core/skbuff.c:210
+>  alloc_skb include/linux/skbuff.h:1083 [inline]
+>  netlink_alloc_large_skb net/netlink/af_netlink.c:1175 [inline]
+>  netlink_sendmsg+0x94f/0xd90 net/netlink/af_netlink.c:1893
+>  sock_sendmsg_nosec net/socket.c:652 [inline]
+>  sock_sendmsg+0xcf/0x120 net/socket.c:672
+>  ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
+>  ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
+>  __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
+>  do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>
+> Freed by task 6894:
+>  save_stack+0x1b/0x40 mm/kasan/common.c:48
+>  set_track mm/kasan/common.c:56 [inline]
+>  kasan_set_free_info mm/kasan/common.c:316 [inline]
+>  __kasan_slab_free+0xf5/0x140 mm/kasan/common.c:455
+>  __cache_free mm/slab.c:3426 [inline]
+>  kfree+0x103/0x2c0 mm/slab.c:3757
+>  skb_free_head net/core/skbuff.c:590 [inline]
+>  skb_release_data+0x6d9/0x910 net/core/skbuff.c:610
+>  skb_release_all net/core/skbuff.c:664 [inline]
+>  __kfree_skb net/core/skbuff.c:678 [inline]
+>  consume_skb net/core/skbuff.c:837 [inline]
+>  consume_skb+0xc2/0x160 net/core/skbuff.c:831
+>  netlink_unicast_kernel net/netlink/af_netlink.c:1304 [inline]
+>  netlink_unicast+0x53b/0x7d0 net/netlink/af_netlink.c:1329
+>  netlink_sendmsg+0x856/0xd90 net/netlink/af_netlink.c:1918
+>  sock_sendmsg_nosec net/socket.c:652 [inline]
+>  sock_sendmsg+0xcf/0x120 net/socket.c:672
+>  ____sys_sendmsg+0x6e8/0x810 net/socket.c:2352
+>  ___sys_sendmsg+0xf3/0x170 net/socket.c:2406
+>  __sys_sendmsg+0xe5/0x1b0 net/socket.c:2439
+>  do_syscall_64+0x60/0xe0 arch/x86/entry/common.c:359
+>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>
+> The buggy address belongs to the object at ffff8880933b8c00
+>  which belongs to the cache kmalloc-512 of size 512
+> The buggy address is located 24 bytes inside of
+>  512-byte region [ffff8880933b8c00, ffff8880933b8e00)
+> The buggy address belongs to the page:
+> page:ffffea00024cee00 refcount:1 mapcount:0 mapping:0000000000000000 index:0x0
+> flags: 0xfffe0000000200(slab)
+> raw: 00fffe0000000200 ffffea0002a1da08 ffffea0002763a08 ffff8880aa000a80
+> raw: 0000000000000000 ffff8880933b8000 0000000100000004 0000000000000000
+> page dumped because: kasan: bad access detected
+>
+> Memory state around the buggy address:
+>  ffff8880933b8b00: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>  ffff8880933b8b80: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+> >ffff8880933b8c00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>                             ^
+>  ffff8880933b8c80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>  ffff8880933b8d00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ==================================================================
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
