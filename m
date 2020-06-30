@@ -2,122 +2,186 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F046EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07772C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CBEC220775
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:02:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YafiIJGF"
+	by mail.kernel.org (Postfix) with ESMTP id DEC802074D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:02:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728324AbgF3VCO (ORCPT
+        id S1728444AbgF3VCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 17:02:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57772 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726739AbgF3VCN (ORCPT
+        Tue, 30 Jun 2020 17:02:44 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:37474 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726739AbgF3VCo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 17:02:13 -0400
-Received: from mail-il1-x143.google.com (mail-il1-x143.google.com [IPv6:2607:f8b0:4864:20::143])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59869C061755;
-        Tue, 30 Jun 2020 14:02:13 -0700 (PDT)
-Received: by mail-il1-x143.google.com with SMTP id w73so7238222ila.11;
-        Tue, 30 Jun 2020 14:02:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WRQJQwlXflGJ37/jOmBKwBicPdHtRMvLxub3PxAmuG4=;
-        b=YafiIJGFdTuNrNOw5wgMfTU5z5VCFcwrmrkj5aDpKRPveSUPGb87Nix4nVeKmqyfzd
-         mQ+CAaSnQkWl/svbr03I/+zkPd2YCsGg5sSVeXENjGmX9VeAm5jlxgK8qV44lDJdOPAs
-         hwFNNJIc2HJ/OnEDGt5H+as2z9wK6mScltRqJWPSCioNmXilHw0aFW/SPTjRNhUEdJnl
-         OmdZszUZAdEYJEHf9ync6UpH0dTsKwFesYfRthpL4F8ASAtuh9sULifQ925xgm9rzaeo
-         0UrgMbxZJeUcONIDmq9Fw3Pa3fP8I1yIy+CBU/InS2ZKrl86Uycy2kHsI6DVXnOlQnMw
-         5vcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=WRQJQwlXflGJ37/jOmBKwBicPdHtRMvLxub3PxAmuG4=;
-        b=aTuN8VZPs4/cZ3a1Cg2BBcVq0z5oAbXqsYKYLrYTete9Hy4/rOsIi8ssJADp5tkxW1
-         vwm6xeMf0Lokjjx1eMDA7EpoXU9ZCdjEOWYYBoJryWX607hLtNAL1cr1yJXMc3HWLrjI
-         QIUw1AgFvjfQKDrHnz4XI8t+FNHVadr07dNR6oCY24vAI1bFdrvrmmSoQ5zebv+SpQ0l
-         VqQ58yE58wBLO9VpPsTrby0TYcD10/N3PKIdjnls48oYRiQ++MuoLWhySUBfc6P8OC0V
-         /ciB57p1zjPgEWgrjRS1sCKFuqwdEUNJyxYgynqS9X1qt0+85t6QEK0pG+mgDeOKYVlP
-         TYCQ==
-X-Gm-Message-State: AOAM532zeHo6Ex2lBxr0uPLF17Fjb0qVlWvzjl+zWRHp1o2XRAsiUsCR
-        Ij+8m8IgKQtszkFCVW67p7QTXAQ5
-X-Google-Smtp-Source: ABdhPJzxlgl9i3L/TOVMOKrSO/CQ+RM3Rvt9gET5kEH7jf3JrlknMOqxpP5M4qAAvyEk88ReahfcxA==
-X-Received: by 2002:a92:cb10:: with SMTP id s16mr4690250ilo.192.1593550932284;
-        Tue, 30 Jun 2020 14:02:12 -0700 (PDT)
-Received: from aford-IdeaCentre-A730.lan (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
-        by smtp.gmail.com with ESMTPSA id o16sm2105042ilt.59.2020.06.30.14.02.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 14:02:11 -0700 (PDT)
-From:   Adam Ford <aford173@gmail.com>
-To:     linux-clk@vger.kernel.org
-Cc:     dan.carpenter@oracle.com, aford@beaconembedded.com,
-        Adam Ford <aford173@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH] clk: vc5: Add memory check to prevent oops
-Date:   Tue, 30 Jun 2020 16:01:54 -0500
-Message-Id: <20200630210155.459250-1-aford173@gmail.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 30 Jun 2020 17:02:44 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 70B3F2A3C6B
+Subject: Re: [RESEND PATCH v4 0/7] Convert mtk-dsi to drm_bridge API and get
+ EDID for ps8640 bridge
+To:     Chun-Kuang Hu <chunkuang.hu@kernel.org>
+Cc:     Sam Ravnborg <sam@ravnborg.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        David Airlie <airlied@linux.ie>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+References: <20200615203108.786083-1-enric.balletbo@collabora.com>
+ <20200620213302.GC74146@ravnborg.org>
+ <593a4666-d6aa-7d16-f3a0-ba3713047d84@collabora.com>
+ <CAAOTY_9ZHemp0U76_oPjwy-XoTRXW108UMD_9JVnNXndNNsiTw@mail.gmail.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <43e5b273-d156-beea-bcfb-cc61b190a671@collabora.com>
+Date:   Tue, 30 Jun 2020 23:02:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
+In-Reply-To: <CAAOTY_9ZHemp0U76_oPjwy-XoTRXW108UMD_9JVnNXndNNsiTw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When getting the names of the child nodes, kasprintf is used to
-allocate memory which is used to create the string for the node
-name.  Unfortunately, there is no memory check to determine
-if this allocation fails, it may cause an error when trying
-to get child node name.
+Hi Chun-Kuang,
 
-This patch will check if the memory allocation fails, and returns
-and -NOMEM error instead of blindly moving on.
+On 30/6/20 18:26, Chun-Kuang Hu wrote:
+> Hi, Enric:
+> 
+> Enric Balletbo i Serra <enric.balletbo@collabora.com> 於 2020年6月30日 週二 下午10:34寫道：
+>>
+>> Hi Sam, Chun-Kuan,
+>>
+>> On 20/6/20 23:33, Sam Ravnborg wrote:
+>>> Hi Enric
+>>>
+>>> On Mon, Jun 15, 2020 at 10:31:01PM +0200, Enric Balletbo i Serra wrote:
+>>>> (This resend is to fix some trivial conflicts due the merge window)
+>>>>
+>>>> The PS8640 dsi-to-eDP bridge driver is using the panel bridge API,
+>>>> however, not all the components in the chain have been ported to the
+>>>> drm_bridge API. Actually, when a panel is attached the default panel's mode
+>>>> is used, but in some cases we can't get display up if mode getting from
+>>>> eDP control EDID is not chosen.
+>>>>
+>>>> This series address that problem, first implements the .get_edid()
+>>>> callback in the PS8640 driver (which is not used until the conversion is
+>>>> done) and then, converts the Mediatek DSI driver to use the drm_bridge
+>>>> API.
+>>>>
+>>>> As far as I know, we're the only users of the mediatek dsi driver in
+>>>> mainline, so should be safe to switch to the new chain of drm_bridge API
+>>>> unconditionally.
+>>>>
+>>>> The patches has been tested on a Acer Chromebook R13 (Elm) running a
+>>>> Chrome OS userspace and checking that the valid EDID mode reported by
+>>>> the bridge is selected.
+>>>>
+>>>> Changes in v4:
+>>>> - Remove double call to drm_encoder_init(). (Chun-Kuang Hu)
+>>>> - Cleanup the encoder in mtk_dsi_unbind(). (Chun-Kuang Hu)
+>>>>
+>>>> Changes in v3:
+>>>> - Replace s/bridge/next bridge/ for comment. (Laurent Pinchart)
+>>>> - Add the bridge.type. (Laurent Pinchart)
+>>>> - Use next_bridge field to store the panel bridge. (Laurent Pinchart)
+>>>> - Add the bridge.type field. (Laurent Pinchart)
+>>>> - This patch requires https://lkml.org/lkml/2020/4/16/2080 to work
+>>>>   properly.
+>>>> - Move the bridge.type line to the patch that adds drm_bridge support. (Laurent Pinchart)
+>>>>
+>>>> Changes in v2:
+>>>> - Do not set connector_type for panel here. (Sam Ravnborg)
+>>>>
+>>>> Enric Balletbo i Serra (7):
+>>>>   drm/bridge: ps8640: Get the EDID from eDP control
+>>>>   drm/bridge_connector: Set default status connected for eDP connectors
+>>>>   drm/mediatek: mtk_dsi: Rename bridge to next_bridge
+>>>>   drm/mediatek: mtk_dsi: Convert to bridge driver
+>>>>   drm/mediatek: mtk_dsi: Use simple encoder
+>>>>   drm/mediatek: mtk_dsi: Use the drm_panel_bridge API
+>>>>   drm/mediatek: mtk_dsi: Create connector for bridges
+>>>
+>>> Patch seems ready to apply. Will they be applied to a mediatek tree
+>>> or to drm-misc-next?
+>>> Or shall we take the first two patches via drm-misc-next, and the
+>>> remaning via a mediatek tree? (I hope not)
+>>>
+>>
+>> I think the only concern is from Chun-Kuan regarding patch 7/7 "drm/mediatek:
+>> mtk_dsi: Create connector for bridges" whether we should support the old API or
+>> not, but the discussion stalled.
+>>
+> 
+> I get more clear now. In patch 7/7,
+> 
+> ret = drm_bridge_attach(&dsi->encoder, &dsi->bridge, NULL,
+>                                         DRM_BRIDGE_ATTACH_NO_CONNECTOR);
+> 
+> this would call into mtk_dsi_bridge_attach() first, and then call into
+> panel_bridge_attach() next. So panel_bridge_attach() would receive
+> DRM_BRIDGE_ATTACH_NO_CONNECTOR and it return immediately so it does
+> not call drm_panel_attach(). So where do you call drm_panel_attach()?
+> 
 
-Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Adam Ford <aford173@gmail.com>
+Why I need to call drm_panel_attach?
 
-diff --git a/drivers/clk/clk-versaclock5.c b/drivers/clk/clk-versaclock5.c
-index 1d8ee4b8b1f5..29cdb38dc40b 100644
---- a/drivers/clk/clk-versaclock5.c
-+++ b/drivers/clk/clk-versaclock5.c
-@@ -789,10 +789,14 @@ static int vc5_get_output_config(struct i2c_client *client,
- 	int ret = 0;
- 
- 	child_name = kasprintf(GFP_KERNEL, "OUT%d", clk_out->num + 1);
-+	if (!child_name) {
-+		ret = -ENOMEM;
-+		goto output_error;
-+	}
- 	np_output = of_get_child_by_name(client->dev.of_node, child_name);
- 	kfree(child_name);
- 	if (!np_output)
--		goto output_done;
-+		return 0;
- 
- 	ret = vc5_update_mode(np_output, clk_out);
- 	if (ret)
-@@ -813,7 +817,6 @@ static int vc5_get_output_config(struct i2c_client *client,
- 
- 	of_node_put(np_output);
- 
--output_done:
- 	return ret;
- }
- 
--- 
-2.25.1
+I believe drm_panel_attach() was to attach a panel to a connector, but we don't
+need to do this with the new API as the connector is already created and
+attached to the "dummy" encoder.
 
+Makes that sense to you? What do you think will not work if I don't call
+drm_panel_attach?
+
+[1]
+https://elixir.bootlin.com/linux/v5.8-rc3/source/drivers/gpu/drm/drm_panel.c#L101
+
+Regards,
+ Enric
+
+
+> Regards,
+> Chun-Kuang.
+> 
+>> Thanks,
+>>  Enric
+>>
+>>
+>>
+>>>       Sam
+>>>
+>>>
+>>>>
+>>>>  drivers/gpu/drm/bridge/parade-ps8640.c |  12 ++
+>>>>  drivers/gpu/drm/drm_bridge_connector.c |   1 +
+>>>>  drivers/gpu/drm/mediatek/mtk_dsi.c     | 269 ++++++++-----------------
+>>>>  3 files changed, 97 insertions(+), 185 deletions(-)
+>>>>
+>>>> --
+>>>> 2.27.0
+>>>>
+>>>> _______________________________________________
+>>>> dri-devel mailing list
+>>>> dri-devel@lists.freedesktop.org
+>>>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>>>
+> 
