@@ -2,109 +2,109 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDCABC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 035DAC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ADEFF206CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:14:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC518206CB
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:15:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FR0SZP0y"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XWeAl/Q1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729022AbgF3DOF (ORCPT
+        id S1729047AbgF3DPH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 23:14:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34172 "EHLO
+        Mon, 29 Jun 2020 23:15:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727826AbgF3DOE (ORCPT
+        with ESMTP id S1728901AbgF3DPG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 23:14:04 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD742C061755;
-        Mon, 29 Jun 2020 20:14:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description;
-        bh=DTz5nZ2U2vWrhMxB2tZISkXyFSv2s5nmvlXXxcC25tA=; b=FR0SZP0y+XdblDdVeC0FOLt4ij
-        KClSdfMcFcTiIifhgmYA8qZUXemTwAXHLhCRZ8qjypY+ecDQTZ3ekBViMx1dJZJeHqSQZitc2Mded
-        K6AH64qA12pGKx5nKLWaQrHvi96ShySY1VVti8yYZokVyvwxngSatDbK5YAGdBc0w/h4Iwcq/hFpS
-        1pc2Z3fzYnk1a5OSztWpnfq7CUAEA8pRFMY1vCHNuVDrWLuqH0KuIY2Kd6kgGSQMEZ7FBacUkFXzH
-        fJpmT/4eQKpA+QWmSdFo8B2kToT6Ds0XSU7p4w9jexM58ZVPzcQd7X57V90bAgqSqrhzPbcu2AVxw
-        VE0k4RFg==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jq6iY-00008H-TB; Tue, 30 Jun 2020 03:13:56 +0000
-Subject: Re: [PATCH v15 3/3] Input: new da7280 haptic driver
-To:     Roy Im <roy.im.opensource@diasemi.com>,
-        Uwe Kleine-Koenig <u.kleine-koenig@pengutronix.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Brian Masney <masneyb@onstation.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Lee Jones <lee.jones@linaro.org>, Luca Weiss <luca@z3ntu.xyz>,
-        Maximilian Luz <luzmaximilian@gmail.com>,
-        Pascal PAILLET-LME <p.paillet@st.com>,
-        Rob Herring <robh@kernel.org>,
-        Samuel Ortiz <sameo@linux.intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Support Opensource <support.opensource@diasemi.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pwm@vger.kernel.org
-References: <cover.1593435662.git.Roy.Im@diasemi.com>
- <c7b8cb993abe7bb771108bb94e5d9edbeb4f7103.1593435662.git.Roy.Im@diasemi.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <602a5743-d27b-3e81-e917-d343f58d35e9@infradead.org>
-Date:   Mon, 29 Jun 2020 20:13:48 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.9.0
+        Mon, 29 Jun 2020 23:15:06 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6D92C03E979
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 20:15:05 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id 35so7908859ple.0
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 20:15:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lnvoY3haB0lkXFUtpPBEotF++tFsvMyqqAyM4Qg1MaQ=;
+        b=XWeAl/Q1DUptQJdejIDggTu9F0H4AtRUlR9s9MxsEwBtXR7JAE3kLeX11fTCj/Dycr
+         hNBqrh5b7MRiUYB5pQgEbL71EsKqbhYN8g63BKt1LHdu4lI8vK0prJ1YAISUG7K2RqVS
+         hcvNXEbx1VMxIGtqRnzQ+tKyAcStwdn8W3PgQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lnvoY3haB0lkXFUtpPBEotF++tFsvMyqqAyM4Qg1MaQ=;
+        b=NYv9s+Ld2BtB09hR4mO9qr1HZHOM5s2E7NzyexV0/6+Kk58DSsS35qFP8RaSkdXHRE
+         jj2NvwJBfiUkK3FbCUD6xQxLol2QziYwO5qeCR79tJwsTTw3MvE2++7CmOgN7myv+0NR
+         PI84oy+i/1x7V9oSAaRC6dSwaY2jHKZNIGEknrGMZTYgyDAoq4YFDjC9tRJvT1ohvliD
+         Tv9zxMktgTu4sF4lFzzjkq+MPeQKl+rH6KpXPLQItTy5vysyES+N5pEOOgZSj6EIT3oL
+         Z2OKOXjId9j9RbjkYfEl+ZZ8+2KP96JJ1jMXKc+A9g882QejkTH9ujZkAd9D1g22cjOa
+         7r7g==
+X-Gm-Message-State: AOAM532wecyQ23mTwmj+URlPE9WSIif+0fbmCGN2ha9Tfn6RB/F4rlei
+        uFkubtaD27G8MJ8aQAhy91EFc95qgsw=
+X-Google-Smtp-Source: ABdhPJyCaY4RyJ36oOm/AkJtdEmCYXpSXmi7dv53zIUgI3DXuKN9uF2aD+jKbihSx6VE2FF7bgv16w==
+X-Received: by 2002:a17:902:a513:: with SMTP id s19mr15417102plq.140.1593486905209;
+        Mon, 29 Jun 2020 20:15:05 -0700 (PDT)
+Received: from mcchou0.mtv.corp.google.com ([2620:15c:202:201:de4a:3eff:fe75:1314])
+        by smtp.gmail.com with ESMTPSA id x66sm54166pgb.12.2020.06.29.20.15.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jun 2020 20:15:04 -0700 (PDT)
+From:   Miao-chen Chou <mcchou@chromium.org>
+To:     Bluetooth Kernel Mailing List <linux-bluetooth@vger.kernel.org>
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Alain Michaud <alainm@chromium.org>, pavel@ucw.cz,
+        Miao-chen Chou <mcchou@chromium.org>,
+        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: [PATCH v1] Bluetooth: Fix kernel oops triggered by hci_adv_monitors_clear()
+Date:   Mon, 29 Jun 2020 20:15:00 -0700
+Message-Id: <20200629201441.v1.1.I162e3c6c4f4d963250c37733c3428329110c5989@changeid>
+X-Mailer: git-send-email 2.26.2
 MIME-Version: 1.0
-In-Reply-To: <c7b8cb993abe7bb771108bb94e5d9edbeb4f7103.1593435662.git.Roy.Im@diasemi.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Roy,
+This fixes the kernel oops by removing unnecessary background scan
+update from hci_adv_monitors_clear() which shouldn't invoke any work
+queue.
 
+The following test was performed.
+- Run "rmmod btusb" and verify that no kernel oops is triggered.
 
-On 6/29/20 6:01 AM, Roy Im wrote:
-> diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-> index 362e8a0..79fbddb 100644
-> --- a/drivers/input/misc/Kconfig
-> +++ b/drivers/input/misc/Kconfig
-> @@ -869,4 +869,17 @@ config INPUT_STPMIC1_ONKEY
->  	  To compile this driver as a module, choose M here: the
->  	  module will be called stpmic1_onkey.
->  
-> +config INPUT_DA7280_HAPTICS
-> +	tristate "Dialog Semiconductor DA7280 haptics support"
-> +	depends on INPUT && I2C
-> +	select INPUT_FF_MEMLESS
-> +	select REGMAP_I2C
-> +	help
-> +	  Say Y to enable support for the Dialog DA7280 haptics driver.
-> +	  The haptics can be controlled by i2c communication,
+Signed-off-by: Miao-chen Chou <mcchou@chromium.org>
+Reviewed-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Reviewed-by: Alain Michaud <alainm@chromium.org>
+---
 
-If you make any more updates, make this:   I2C communication,
-please.
+ net/bluetooth/hci_core.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-> +	  or by PWM input, or by GPI.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called da7280.
-> +
->  endif
-
-thanks.
+diff --git a/net/bluetooth/hci_core.c b/net/bluetooth/hci_core.c
+index 5577cf9e2c7cd..77615161c7d72 100644
+--- a/net/bluetooth/hci_core.c
++++ b/net/bluetooth/hci_core.c
+@@ -3005,8 +3005,6 @@ void hci_adv_monitors_clear(struct hci_dev *hdev)
+ 		hci_free_adv_monitor(monitor);
+ 
+ 	idr_destroy(&hdev->adv_monitors_idr);
+-
+-	hci_update_background_scan(hdev);
+ }
+ 
+ void hci_free_adv_monitor(struct adv_monitor *monitor)
 -- 
-~Randy
+2.26.2
 
