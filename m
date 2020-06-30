@@ -5,68 +5,69 @@ X-Spam-Level:
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E813FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25072C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BD1DD20722
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:34:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0716520722
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:34:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m5TXu/t5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x/GhyMw3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388269AbgF3Nen (ORCPT
+        id S2388264AbgF3Neu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 09:34:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44958 "EHLO
+        Tue, 30 Jun 2020 09:34:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44952 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732724AbgF3Ndx (ORCPT
+        with ESMTP id S2388152AbgF3Ndw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 09:33:53 -0400
-Received: from mail-wm1-x344.google.com (mail-wm1-x344.google.com [IPv6:2a00:1450:4864:20::344])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12AE7C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:33:53 -0700 (PDT)
-Received: by mail-wm1-x344.google.com with SMTP id f139so19613124wmf.5
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:33:52 -0700 (PDT)
+        Tue, 30 Jun 2020 09:33:52 -0400
+Received: from mail-wm1-x342.google.com (mail-wm1-x342.google.com [IPv6:2a00:1450:4864:20::342])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05CA1C08C5DB
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:33:51 -0700 (PDT)
+Received: by mail-wm1-x342.google.com with SMTP id q15so18836218wmj.2
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:33:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=+qGhRYBFyg4w70/+i8v0aKH3im1q1Wu84G6qHkN10ns=;
-        b=m5TXu/t5DKfMXruQKZB68+3bIMiutcLyKBEStN8LN7fnI7W31+Ke2AzvBR8VwgqjKR
-         LqwayMuHUVg/5efbOBN+c7Jr5PsEe+CE1FN9f+EDZU+XR2HKF77dvsLsvNzwSw9+Sszb
-         /3M/mw8soiSberSwHv7Zi15ZVc7HUq0eVnUrtWiLDFwj5IJXDUbjclnJKU9rbOXe+LbB
-         ONz02j168Rt3Gw6tn+TFBAHJ94k922AEa2refrxFnJrzSG1Zr+nOH/sHdeKLyXNxx50T
-         hfXn4EeRnGQ/vOjTI860tqbnIymxlU+3sB0X9hZgmUyDUB3MDcTHNcsEB6oyKaSQOmbo
-         Snvw==
+        bh=0KDVLpzHsMQDeKu96sh9LYIj12RVnAxA/ichztsrMZQ=;
+        b=x/GhyMw3/PifnbCbFgYc7YsXMeDkSg5tTzV3oQIeQg6caOEYi+xswGvOI4ODzVR/8n
+         iYpm0sI3ldVEWE09KVrxRclwDY+yPK6PRD4DJgs9uGscSp38D6ptpQ1FCdluuhPOl+3a
+         fjUpiqUFSOdZEY8qRBCBH2z1Xp7eeoe0+lVECx17sZjtUMuLT84RMxJ1egmxJL5M4AyA
+         FyjcF0JSFT6aIyLB57aBRZk7L9szqdI9Oh3iXaf7HgtrY7jWAvB45lA39yduqcbnBQ/4
+         YDdIIUEW1DQrsDmASh/wUS7qq16C1l2mnsG2iKBst8FVZG1WDGPO9hfscMSITQxIUidG
+         53Gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=+qGhRYBFyg4w70/+i8v0aKH3im1q1Wu84G6qHkN10ns=;
-        b=Xuqd9DcMy4aZgoITRKTIUuLlYhPiGEXsLM5uk/Bv7UZlamMmjHr7HnOJluampuN70Q
-         Mia76AVWQNcAUJmA/XX+tHS33HRIwWD0yE+1gSKIJhRikIVJodwfL0ZiIIRscUUocIf3
-         Ji72wIMnc6dPJY/GWDdrrZMOUUJGaZNy7+o1bKzzwEZamYtJQIaqGYwqs/Hxz5d/M14t
-         6/u0xaz8BQKhS4guFA/NwMaGpEvxdCTpi5MgJ1hhK22tP7HKQ4PxkKiuMsuVMrvurY7H
-         Iugh0WZ96bznXS+0sCeyip9Dsq9qGG77gjU7Qa7eYEm4L3cPSmolsxjduxqVdrYgBYxV
-         ASCg==
-X-Gm-Message-State: AOAM5321h/y5QSZZaiEgLl19RcKjp0VqUS1yA8zDHTz5KpZ5l8yzMs5A
-        5DR4Ch4OO+pjBoGyGtIRQwRK+A==
-X-Google-Smtp-Source: ABdhPJwxspIcxssmP1G2rn5ofE8vN2GTlugAs3HTO7L+/ydE6J3tNErrAGTO6z80v51SGDcQuZLyCA==
-X-Received: by 2002:a1c:16:: with SMTP id 22mr20990748wma.42.1593524031756;
-        Tue, 30 Jun 2020 06:33:51 -0700 (PDT)
+        bh=0KDVLpzHsMQDeKu96sh9LYIj12RVnAxA/ichztsrMZQ=;
+        b=ZiimIyhQzRi0b3wLG1ZxDn9PdHeWV8TdOO9otxUhW/Dzf0Mevb1QpTH7U8tKmtJ34q
+         SOuoszgwUf7LEzum2ku4JYpmzTifiMHXUG26N2b8gjwv4WZggKT0Zf0g4+QqqZ1hl6pV
+         w1yDveagxV4nPM436tTE+vcChfMIcFxoAdJ61if2N9483ob+LMD6/vrPIEgxolGS6bAQ
+         9TZlNMDKveFEn9AfoeUiiwQODyK/xcO6bId5SARKeWRgnd5gLAPVOkeYeWztFDkI/XVi
+         9TF8QkbU4GGuNnW9biOSv353DOewB51SUr9YEp4i0WTqvZIYujFvuObay29QHOf8Pn+0
+         6TUw==
+X-Gm-Message-State: AOAM5322ycYUqsRqmzpsBR4bvhp+KFHKVpdmKbDWkx4xo0B6p6W+Yh/h
+        wdyaUDw8kYPoIoZRem6clnH2NSVK/0M=
+X-Google-Smtp-Source: ABdhPJyW4GtmRxifF3bHq9VjFlQY+qelF9g4jJYBP6hKH+QoodWUb+3zaFky4HbgEYJPkrGSE/VpMw==
+X-Received: by 2002:a1c:80d3:: with SMTP id b202mr22156497wmd.111.1593524030718;
+        Tue, 30 Jun 2020 06:33:50 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id z16sm3682464wrr.35.2020.06.30.06.33.50
+        by smtp.gmail.com with ESMTPSA id z16sm3682464wrr.35.2020.06.30.06.33.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 06:33:51 -0700 (PDT)
+        Tue, 30 Jun 2020 06:33:50 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     linus.walleij@linaro.org, bgolaszewski@baylibre.com
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-gpio@vger.kernel.org, Lee Jones <lee.jones@linaro.org>,
-        Andy Shevchenko <andy@kernel.org>
-Subject: [PATCH 03/10] gpio: gpio-ml-ioh: Fix missing ':' in 'struct ioh_gpio_reg_data
-Date:   Tue, 30 Jun 2020 14:33:38 +0100
-Message-Id: <20200630133345.2232932-4-lee.jones@linaro.org>
+        Joyce Ooi <joyce.ooi@intel.com>,
+        Tien Hock Loh <thloh@altera.com>
+Subject: [PATCH 02/10] gpio: gpio-altera: Add missing kerneldoc entry and demote comment
+Date:   Tue, 30 Jun 2020 14:33:37 +0100
+Message-Id: <20200630133345.2232932-3-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200630133345.2232932-1-lee.jones@linaro.org>
 References: <20200630133345.2232932-1-lee.jones@linaro.org>
@@ -77,32 +78,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-'struct ioh_gpio_reg_data's 'ien_reg' property is missing a ':'
-which confuses the kerneldoc tooling/parsers/validators.
+'struct altera_gpio_chip's 'irq_chip' property is undocumented.  So
+add property description to the struct's kerneldoc header.  Also
+demote comment block which is clearly not in kerneldoc format.
 
-Replacing it squashes the following W=1 warning:
+Fixes the following W=1 warnings:
 
- drivers/gpio/gpio-ml-ioh.c:63: warning: Function parameter or member 'ien_reg' not described in 'ioh_gpio_reg_data'
+ drivers/gpio/gpio-altera.c:34: warning: Function parameter or member 'irq_chip' not described in 'altera_gpio_chip'
+ drivers/gpio/gpio-altera.c:78: warning: Function parameter or member 'd' not described in 'altera_gpio_irq_set_type'
+ drivers/gpio/gpio-altera.c:78: warning: Function parameter or member 'type' not described in 'altera_gpio_irq_set_type'
 
-Cc: Andy Shevchenko <andy@kernel.org>
+Cc: Joyce Ooi <joyce.ooi@intel.com>
+Cc: Tien Hock Loh <thloh@altera.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/gpio/gpio-ml-ioh.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpio/gpio-altera.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpio/gpio-ml-ioh.c b/drivers/gpio/gpio-ml-ioh.c
-index 92b6e958cfed5..53d4abefa6ff2 100644
---- a/drivers/gpio/gpio-ml-ioh.c
-+++ b/drivers/gpio/gpio-ml-ioh.c
-@@ -44,7 +44,7 @@ struct ioh_regs {
+diff --git a/drivers/gpio/gpio-altera.c b/drivers/gpio/gpio-altera.c
+index cc4ba71e4fe3c..b7932ecc3b613 100644
+--- a/drivers/gpio/gpio-altera.c
++++ b/drivers/gpio/gpio-altera.c
+@@ -24,6 +24,7 @@
+ * @interrupt_trigger	: specifies the hardware configured IRQ trigger type
+ *			  (rising, falling, both, high)
+ * @mapped_irq		: kernel mapped irq number.
++* @irq_chip		: IRQ chip configuration
+ */
+ struct altera_gpio_chip {
+ 	struct of_mm_gpio_chip mmchip;
+@@ -69,7 +70,7 @@ static void altera_gpio_irq_mask(struct irq_data *d)
+ 	raw_spin_unlock_irqrestore(&altera_gc->gpio_lock, flags);
+ }
  
- /**
-  * struct ioh_gpio_reg_data - The register store data.
-- * @ien_reg	To store contents of interrupt enable register.
-+ * @ien_reg:	To store contents of interrupt enable register.
-  * @imask_reg:	To store contents of interrupt mask regist
-  * @po_reg:	To store contents of PO register.
-  * @pm_reg:	To store contents of PM register.
+-/**
++/*
+  * This controller's IRQ type is synthesized in hardware, so this function
+  * just checks if the requested set_type matches the synthesized IRQ type
+  */
 -- 
 2.25.1
 
