@@ -2,138 +2,124 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 089D5C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29FB4C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:08:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB075206A1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:08:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04304206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:08:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="mzDNPm+n"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="g6H5Mkbt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731884AbgF3JIp (ORCPT
+        id S1731897AbgF3JIw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 05:08:45 -0400
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:26080 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731666AbgF3JIo (ORCPT
+        Tue, 30 Jun 2020 05:08:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60598 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731786AbgF3JIt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 05:08:44 -0400
+        Tue, 30 Jun 2020 05:08:49 -0400
+Received: from mail-qv1-xf42.google.com (mail-qv1-xf42.google.com [IPv6:2607:f8b0:4864:20::f42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 111A1C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 02:08:49 -0700 (PDT)
+Received: by mail-qv1-xf42.google.com with SMTP id d12so8956452qvn.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 02:08:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1593508124; x=1625044124;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=5n5MJugzhcrSeTK9NLulOvMBQ+MVsMc5zw8tneUXurM=;
-  b=mzDNPm+nPege7qlvXC27kifyiGTp4XTnYrz4I/f0gvQwvr8ZzBcRPJJX
-   6LJ7n34kO3hvo+6dykN83wiKqtG/7ylBj1bQu5feTIBX1qrzj6qQ/SO/h
-   PjhDs3MkhkR+11aKZ5aM4l2+4eH50/KlVXLMCO8yWuxmnipQ6xw7VhrMp
-   M=;
-IronPort-SDR: 1FuC4n/N1heBbR2UfmJjtI/St0Aok87VCumCXcOdEPUYCUotoC7Ewk1KHAarkIB3Vthtv9l+nq
- RfVwVNI5g/pA==
-X-IronPort-AV: E=Sophos;i="5.75,296,1589241600"; 
-   d="scan'208";a="54946739"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1a-807d4a99.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 30 Jun 2020 09:08:41 +0000
-Received: from EX13MTAUEA002.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-807d4a99.us-east-1.amazon.com (Postfix) with ESMTPS id 4AAA8A185A;
-        Tue, 30 Jun 2020 09:08:39 +0000 (UTC)
-Received: from EX13D16EUB001.ant.amazon.com (10.43.166.28) by
- EX13MTAUEA002.ant.amazon.com (10.43.61.77) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 30 Jun 2020 09:08:38 +0000
-Received: from 38f9d34ed3b1.ant.amazon.com (10.43.162.248) by
- EX13D16EUB001.ant.amazon.com (10.43.166.28) with Microsoft SMTP Server (TLS)
- id 15.0.1497.2; Tue, 30 Jun 2020 09:08:31 +0000
-Subject: Re: [PATCH v4 07/18] nitro_enclaves: Init misc device providing the
- ioctl interface
-To:     Greg KH <gregkh@linuxfoundation.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        Anthony Liguori <aliguori@amazon.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Colm MacCarthaigh <colmmacc@amazon.com>,
-        Bjoern Doebel <doebel@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Frank van der Linden <fllinden@amazon.com>,
-        "Alexander Graf" <graf@amazon.de>,
-        Martin Pohlack <mpohlack@amazon.de>,
-        Matt Wilson <msw@amazon.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Balbir Singh <sblbir@amazon.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        "Stefan Hajnoczi" <stefanha@redhat.com>,
-        Stewart Smith <trawets@amazon.com>,
-        "Uwe Dannowski" <uwed@amazon.de>, <kvm@vger.kernel.org>,
-        <ne-devel-upstream@amazon.com>
-References: <20200622200329.52996-1-andraprs@amazon.com>
- <20200622200329.52996-8-andraprs@amazon.com>
- <20200629162013.GA718066@kroah.com>
- <b87e2eeb-39cf-8de5-0f5f-1db04b3e2794@amazon.com>
- <20200630080535.GD619174@kroah.com>
-From:   "Paraschiv, Andra-Irina" <andraprs@amazon.com>
-Message-ID: <7166a6aa-2e8f-fed9-6b95-f53b823e5bb7@amazon.com>
-Date:   Tue, 30 Jun 2020 12:08:18 +0300
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
- Gecko/20100101 Thunderbird/68.9.0
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=iK9bZflbG08ihQjRVcnie/mycSORKVkiSD9rdxO2fhk=;
+        b=g6H5Mkbt5DNNC4mpM8Ol5Sb2XFAAVgz7dk+QHwtFzZVZNmtS7nCKUPcrX84jfbcdBE
+         bUo/rHlBN4uFQuSRpShN17WBsTptjwVuG2PZBnqmo8xAyRdilDLUY/3lfIpU4iAhaqot
+         Xy9y/J6p7X0nQNFcJ+aahou+oeMcbuaSI7EfivxPYsakS5wa329R/bHCeCgoOR0ra7vr
+         xkJStDT3T984WOH8KXYf+jsirAHOCixX5rRq6veMsAQ5K5xjNLkXMVQOkpS/uSirKP0u
+         5schmfSp19lHLwXGCMWiW9MlF6yGg0zUDoZtN64aUyRoZpPspbkRrVL5TLjCA0YZLvyA
+         JRmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=iK9bZflbG08ihQjRVcnie/mycSORKVkiSD9rdxO2fhk=;
+        b=QbNZvnvCAkGCGbbC9sfmTW+/r6uTB1w7LlEeb7bMzCav25P6okWr1gzZR29pRhY3Ys
+         KTbr3eb65VGlts/xesopaoBAKs6OBHcI9sD1aCSOQeOKGnHKrgHzOuWJxiv6c8feWCMW
+         h6H8/zr9sDfLxzLhxEuFNSMCxlsD9clJxpBx+zkN+bGAseqKi+oRBoeHKsuaqnseCL3x
+         UUc7uVTLoMZxF4TtGS9IE3kr4j59BVA4EF+uE2CC86kJosBlqz+vzwMWl9KM0pVq+R+q
+         PRigqBJtXsQxc4ZK1y9e96NTV6CHDLFrOmeEShabP2+MIAfKDLevvhQgvjeRsKlXYKh0
+         fNmw==
+X-Gm-Message-State: AOAM531osuplQPYCFPJmTpsdHhNUoUSRrcZxGK6V3kPLyJ4tIWBwztpI
+        aHRvQps8vNupSJ40x89vvDGd+SOhYPVfuovzq5jXLA==
+X-Google-Smtp-Source: ABdhPJwkBKiwHoQTkPDwgHkZOpEnSHjYxqckozTuh5xOgGjTCbFXW4/OwVL4K9CtiMFwbAzSCK7mZVJT+JVxeCNGWvE=
+X-Received: by 2002:a0c:bd15:: with SMTP id m21mr19505914qvg.61.1593508128336;
+ Tue, 30 Jun 2020 02:08:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200630080535.GD619174@kroah.com>
-Content-Language: en-US
-X-Originating-IP: [10.43.162.248]
-X-ClientProxiedBy: EX13d09UWA002.ant.amazon.com (10.43.160.186) To
- EX13D16EUB001.ant.amazon.com (10.43.166.28)
-Content-Type: text/plain; charset="utf-8"; format="flowed"
-Content-Transfer-Encoding: base64
+References: <20200623040107.22270-1-warthog618@gmail.com> <20200623040107.22270-9-warthog618@gmail.com>
+ <CAMpxmJVbiH9mh2c8aAS+GG9a76w9c0Nrrv-VDVhpo+wSyQ2NeQ@mail.gmail.com>
+ <20200624140806.GA7569@sol> <CAMpxmJXbzFvR9h4fXvCwDMz4t6N16o2Y88K94aPwu6MFuCzqrg@mail.gmail.com>
+ <20200625100126.GA18788@sol>
+In-Reply-To: <20200625100126.GA18788@sol>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Tue, 30 Jun 2020 11:08:37 +0200
+Message-ID: <CAMpxmJXbp_JYg8pX6StMy3578O4MZuatDTd-Ki6ydVY8u32+fw@mail.gmail.com>
+Subject: Re: [PATCH 08/22] gpiolib: cdev: complete the irq/thread timestamp handshake
+To:     Kent Gibson <warthog618@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-gpio <linux-gpio@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-CgpPbiAzMC8wNi8yMDIwIDExOjA1LCBHcmVnIEtIIHdyb3RlOgo+Cj4gT24gTW9uLCBKdW4gMjks
-IDIwMjAgYXQgMDg6NDU6MjVQTSArMDMwMCwgUGFyYXNjaGl2LCBBbmRyYS1JcmluYSB3cm90ZToK
-Pj4KPj4gT24gMjkvMDYvMjAyMCAxOToyMCwgR3JlZyBLSCB3cm90ZToKPj4+IE9uIE1vbiwgSnVu
-IDIyLCAyMDIwIGF0IDExOjAzOjE4UE0gKzAzMDAsIEFuZHJhIFBhcmFzY2hpdiB3cm90ZToKPj4+
-PiArc3RhdGljIGludCBfX2luaXQgbmVfaW5pdCh2b2lkKQo+Pj4+ICt7Cj4+Pj4gKyAgICAgc3Ry
-dWN0IHBjaV9kZXYgKnBkZXYgPSBwY2lfZ2V0X2RldmljZShQQ0lfVkVORE9SX0lEX0FNQVpPTiwK
-Pj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFBDSV9ERVZJ
-Q0VfSURfTkUsIE5VTEwpOwo+Pj4+ICsgICAgIGludCByYyA9IC1FSU5WQUw7Cj4+Pj4gKwo+Pj4+
-ICsgICAgIGlmICghcGRldikKPj4+PiArICAgICAgICAgICAgIHJldHVybiAtRU5PREVWOwo+Pj4g
-SWNrLCB0aGF0J3MgYSBfdmVyeV8gb2xkLXNjaG9vbCB3YXkgb2YgYmluZGluZyB0byBhIHBjaSBk
-ZXZpY2UuICBQbGVhc2UKPj4+IGp1c3QgYmUgYSAicmVhbCIgcGNpIGRyaXZlciBhbmQgeW91ciBw
-cm9iZSBmdW5jdGlvbiB3aWxsIGJlIGNhbGxlZCBpZgo+Pj4geW91ciBoYXJkd2FyZSBpcyBwcmVz
-ZW50IChvciB3aGVuIGl0IHNob3dzIHVwLikgIFRvIGRvIGl0IHRoaXMgd2F5Cj4+PiBwcmV2ZW50
-cyB5b3VyIGRyaXZlciBmcm9tIGJlaW5nIGF1dG8tbG9hZGVkIGZvciB3aGVuIHlvdXIgaGFyZHdh
-cmUgaXMKPj4+IHNlZW4gaW4gdGhlIHN5c3RlbSwgYXMgd2VsbCBhcyBsb3RzIG9mIG90aGVyIHRo
-aW5ncy4KPj4gVGhpcyBjaGVjayBpcyBtYWlubHkgaGVyZSBpbiB0aGUgY2FzZSBhbnkgY29kZWJh
-c2UgaXMgYWRkZWQgYmVmb3JlIHRoZSBwY2kKPj4gZHJpdmVyIHJlZ2lzdGVyIGNhbGwgYmVsb3cu
-Cj4gV2hhdCBkbyB5b3UgbWVhbiBieSAiY29kZWJhc2UiPyAgWW91IGNvbnRyb2wgdGhpcyBkcml2
-ZXIsIGp1c3QgZG8gYWxsIG9mCj4gdGhlIGxvZ2ljIGluIHRoZSBwcm9iZSgpIGZ1bmN0aW9uLCBu
-byBuZWVkIHRvIGRvIHRoaXMgaW4gdGhlIG1vZHVsZSBpbml0Cj4gY2FsbC4KPgo+PiBBbmQgaWYg
-d2UgbG9nIGFueSBlcnJvciB3aXRoIGRldl9lcnIoKSBpbnN0ZWFkIG9mIHByX2VycigpIGJlZm9y
-ZSB0aGUgZHJpdmVyCj4+IHJlZ2lzdGVyLgo+IERvbid0IGRvIHRoYXQuCj4KPj4gVGhhdCBjaGVj
-ayB3YXMgb25seSBmb3IgbG9nZ2luZyBwdXJwb3NlcywgaWYgZG9uZSB3aXRoIGRldl9lcnIoKS4g
-SSByZW1vdmVkCj4+IHRoZSBjaGVjayBpbiB2NS4KPiBBZ2FpbiwgZG9uJ3QgZG8gaXQgOikKPgo+
-Pj4+ICsKPj4+PiArICAgICBpZiAoIXphbGxvY19jcHVtYXNrX3ZhcigmbmVfY3B1X3Bvb2wuYXZh
-aWwsIEdGUF9LRVJORUwpKQo+Pj4+ICsgICAgICAgICAgICAgcmV0dXJuIC1FTk9NRU07Cj4+Pj4g
-Kwo+Pj4+ICsgICAgIG11dGV4X2luaXQoJm5lX2NwdV9wb29sLm11dGV4KTsKPj4+PiArCj4+Pj4g
-KyAgICAgcmMgPSBwY2lfcmVnaXN0ZXJfZHJpdmVyKCZuZV9wY2lfZHJpdmVyKTsKPj4+IE5pY2Us
-IHlvdSBkaWQgaXQgcmlnaHQgaGVyZSwgYnV0IHdoeSB0aGUgYWJvdmUgY3JhenkgdGVzdD8KPj4+
-Cj4+Pj4gKyAgICAgaWYgKHJjIDwgMCkgewo+Pj4+ICsgICAgICAgICAgICAgZGV2X2VycigmcGRl
-di0+ZGV2LAo+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAiRXJyb3IgaW4gcGNpIHJlZ2lzdGVy
-IGRyaXZlciBbcmM9JWRdXG4iLCByYyk7Cj4+Pj4gKwo+Pj4+ICsgICAgICAgICAgICAgZ290byBm
-cmVlX2NwdW1hc2s7Cj4+Pj4gKyAgICAgfQo+Pj4+ICsKPj4+PiArICAgICByZXR1cm4gMDsKPj4+
-IFlvdSBsZWFrZWQgYSByZWZlcmVuY2Ugb24gdGhhdCBwY2kgZGV2aWNlLCBkaWRuJ3QgeW91PyAg
-Tm90IGdvb2QgOigKPj4gWWVzLCB0aGUgcGNpIGdldCBkZXZpY2UgY2FsbCBuZWVkcyBpdHMgcGFp
-ciAtIHBjaV9kZXZfcHV0KCkuIEkgYWRkZWQgaXQgaGVyZQo+PiBhbmQgZm9yIHRoZSBvdGhlciBv
-Y2N1cnJlbmNlcyB3aGVyZSBpdCB3YXMgbWlzc2luZy4KPiBBZ2FpbiwganVzdCBkb24ndCBkbyBp
-dCBhbmQgdGhlbiB5b3UgZG9uJ3QgaGF2ZSB0byB3b3JyeSBhYm91dCBhbnkgb2YKPiB0aGlzLgoK
-WXVwLCBhbHJlYWR5IHN0YXJ0ZWQgdGhpcyBtb3JuaW5nIHRvIGNoZWNrICYgdXBkYXRlIHdoZXJl
-IHdlIGNhbiBnbyAKd2l0aG91dCB0aGlzIGNhbGwgdG8gZ2V0IGEgUENJIGRldmljZSByZWZlcmVu
-Y2UsIGFzIGEgZm9sbG93LXVwIHRvIHdoYXQgCndlIGRpc2N1c3NlZCB5ZXN0ZXJkYXkuCgpUaGFu
-a3MsCkFuZHJhCgoKCkFtYXpvbiBEZXZlbG9wbWVudCBDZW50ZXIgKFJvbWFuaWEpIFMuUi5MLiBy
-ZWdpc3RlcmVkIG9mZmljZTogMjdBIFNmLiBMYXphciBTdHJlZXQsIFVCQzUsIGZsb29yIDIsIElh
-c2ksIElhc2kgQ291bnR5LCA3MDAwNDUsIFJvbWFuaWEuIFJlZ2lzdGVyZWQgaW4gUm9tYW5pYS4g
-UmVnaXN0cmF0aW9uIG51bWJlciBKMjIvMjYyMS8yMDA1Lgo=
+On Thu, Jun 25, 2020 at 12:01 PM Kent Gibson <warthog618@gmail.com> wrote:
+>
+> On Thu, Jun 25, 2020 at 11:44:30AM +0200, Bartosz Golaszewski wrote:
+> > On Wed, Jun 24, 2020 at 4:08 PM Kent Gibson <warthog618@gmail.com> wrot=
+e:
+> > >
+> > > On Wed, Jun 24, 2020 at 04:00:42PM +0200, Bartosz Golaszewski wrote:
+> > > > wt., 23 cze 2020 o 06:02 Kent Gibson <warthog618@gmail.com> napisa=
+=C5=82(a):
+> [ snip ]
+> > >
+> > > I'm not totally sure myself, as my understanding of how interrupts ar=
+e
+> > > shared in the kernel is pretty sketchy, but my concern is that if we
+> > > are sharing the irq then whoever we are sharing with may release the =
+irq
+> > > and we go from nested to unnested.  Or vice versa.  Not sure if that =
+is
+> > > valid, but that was my concern, and it seemed like a minor change to
+> > > cover it just in case.
+> > >
+> >
+> > It's my understanding that a shared interrupt must be explicitly
+> > requested as shared by all previous users or request_irq() will fail.
+> > In this case: we call request_threaded_irq() without the IRQF_SHARED
+> > flag so it's never a shared interrupt. Even if someone previously
+> > requested it as shared - our call will simply fail.
+> >
+>
+> OK.  Is there a reason not to share the interrupt?
+>
 
+If nobody requested this yet, I'd say: let's not touch it. :)
+
+In theory, we check if the line state changed so we should be fine but
+in practice this sounds like a can of worms. That being said: I don't
+have a reason not to do it. Just a feeling.
+
+> > I still think that resetting the timestamp is fine because it's not
+> > being set to 0 in hardirq context. We just need a different
+> > explanation.
+> >
+>
+> Or just drop it?
+
+Yes, I think dropping this patch for now is fine.
+
+Bart
