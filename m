@@ -2,149 +2,195 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A156C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23751C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:43:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D5E2D206CB
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:42:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEF20207FF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:43:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yqLdN9FS"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="vcbfoAZp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731131AbgF3Hm3 (ORCPT
+        id S1731173AbgF3HnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 03:42:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47322 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731090AbgF3Hm3 (ORCPT
+        Tue, 30 Jun 2020 03:43:10 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:19862 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731083AbgF3HnH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 03:42:29 -0400
-Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEC05C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 00:42:28 -0700 (PDT)
-Received: by mail-wm1-x343.google.com with SMTP id l2so17086839wmf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 00:42:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=EbxmwuEjQQfl0DLnt0sNJ+F2kmsq43FibPJ5cYs3dqE=;
-        b=yqLdN9FSFlc2kfZ0HaUeSh6+xZMoG7a9hzTaXM0IMMK5oWr68ppNQrgeClaW4VtRUD
-         rFYlYSf6VHD56zsg9coVkWgeRcWacQzlqPnh/db28TtnLyJ8TpO7cot2Jp6WWPSnqj9V
-         VKIQCL8OCCYRTJ21S8wEgG0mnhAkrxCUAdTtuj1Qra7KRs9FwPRqSTIpW1CYXVaMfG46
-         Y815eVv61K0j/7D463kGd6fefzG3ZSlikA0ypDPxzl8tWlCufEbnpnlBJhlIs7dwOFA6
-         ZD0+aXK4MYWSJmdqYHlONh1MTPhdc2VevfIjQLiHbpnjJrXZfpkUATo6S9GZ/a3axCg3
-         jivw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=EbxmwuEjQQfl0DLnt0sNJ+F2kmsq43FibPJ5cYs3dqE=;
-        b=SMNTzIiiYcKLBd95PWaMwsN0CJw78yrnsnDTgyWBrU4MOIaQV3znkB6rF7Z5jcIULv
-         b4Y6i2cbzz52FV6XQP3V4DRh2gG+38aaOyqZtBKZuWT1OrtHHsOsDPwkI0XHkk5IdTem
-         YaLTRpt4Jji/LvdxIF7CNYk5Gm/OCxEujFBv3H9Dmw4g6LzohnaMJxJOzdxQV3u+8NN0
-         SKtSdfUWjvIGbAnJ4EPDJzkixj2xtbxPct/lRPHxADI+/4WWPkRZda8NIMOHcb7XVEhi
-         ef7wCxBqV24FyvO2WHCQ+qADjaUTBw+NAiv3+jd0Ye/1VnbCcF+Ib5GfoOqOqGVCIgSl
-         ii5g==
-X-Gm-Message-State: AOAM533vSP39UpQbS4LsPc9R5nxKtqnNJfBh0fn0qg48OMhm13b7QDf2
-        ELzYH3dUpHqUMnO7ciFnf7SnzA==
-X-Google-Smtp-Source: ABdhPJynBs/c9Tpp0cRBlrxHe3SOKjg30fkelhIJdotq3aQy3/38ta6zFfmNTfQnAoNndEXyGBNB4w==
-X-Received: by 2002:a05:600c:28d:: with SMTP id 13mr19908915wmk.30.1593502947403;
-        Tue, 30 Jun 2020 00:42:27 -0700 (PDT)
-Received: from dell ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id g3sm2848943wrb.46.2020.06.30.00.42.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 00:42:26 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 08:42:24 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     haver <haver@linux.vnet.ibm.com>
-Cc:     arnd@arndb.de, gregkh@linuxfoundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Michael Jung <mijung@gmx.net>,
-        Michael Ruettger <michael@ibmra.de>,
-        Frank Haverkamp <haver@linux.ibm.com>,
-        Joerg-Stephan Vogt <jsvogt@de.ibm.com>
-Subject: Re: [PATCH 16/20] misc: genwqe: card_base: Remove set but unused
- variable 'rc'
-Message-ID: <20200630074224.GH1179328@dell>
-References: <20200629140442.1043957-1-lee.jones@linaro.org>
- <20200629140442.1043957-17-lee.jones@linaro.org>
- <fff00e6667c442cac13147ee5095430a@linux.vnet.ibm.com>
+        Tue, 30 Jun 2020 03:43:07 -0400
+Received: from epcas5p1.samsung.com (unknown [182.195.41.39])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20200630074304epoutp0195a19f63d01a9bf884093be4a2a3d615~dQoWKpQnz1851218512epoutp01S
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 07:43:04 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20200630074304epoutp0195a19f63d01a9bf884093be4a2a3d615~dQoWKpQnz1851218512epoutp01S
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1593502984;
+        bh=OyE6nCakjN8L2TXqjWPoLxfFg3bpeI7JuV8HbCeOFNM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=vcbfoAZpPPBhSVutbqHBsNBvU/UpYvHOQrlTKfikhWSwTkSwHOFmMfFBPYGKVsGgV
+         BUySFFTNXrTznkWYdDnhhkqpqbdv99wF/lrH+Z7s2CD1/WXoRxD0dHdQx6zuhGspds
+         xR8nz0gXkaIKHqFTjVaCE4rPuQZTLj3CkQXfvS4U=
+Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+        20200630074303epcas5p32ef759ffbbf09c7c0f2ad71cec50deb4~dQoVlnqSh1977419774epcas5p3n;
+        Tue, 30 Jun 2020 07:43:03 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        8D.85.09467.70DEAFE5; Tue, 30 Jun 2020 16:43:03 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+        20200630074302epcas5p3d0791c46509137e448c4cc610048bec7~dQoUlKlDN1977419774epcas5p3m;
+        Tue, 30 Jun 2020 07:43:02 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200630074302epsmtrp228e13e67d0e4f4e02af8176a34428f50~dQoUkI-4X1041310413epsmtrp2b;
+        Tue, 30 Jun 2020 07:43:02 +0000 (GMT)
+X-AuditID: b6c32a49-a3fff700000024fb-d0-5efaed076f04
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        E9.23.08303.60DEAFE5; Tue, 30 Jun 2020 16:43:02 +0900 (KST)
+Received: from test-zns (unknown [107.110.206.5]) by epsmtip1.samsung.com
+        (KnoxPortal) with ESMTPA id
+        20200630074300epsmtip101ce30976cb10709db63d8a7c976bcb7~dQoSY4SHy2852328523epsmtip1C;
+        Tue, 30 Jun 2020 07:43:00 +0000 (GMT)
+Date:   Tue, 30 Jun 2020 13:10:05 +0530
+From:   Kanchan Joshi <joshi.k@samsung.com>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     "axboe@kernel.dk" <axboe@kernel.dk>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "bcrl@kvack.org" <bcrl@kvack.org>,
+        "asml.silence@gmail.com" <asml.silence@gmail.com>,
+        "hch@infradead.org" <hch@infradead.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "mb@lightnvm.io" <mb@lightnvm.io>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-aio@kvack.org" <linux-aio@kvack.org>,
+        "io-uring@vger.kernel.org" <io-uring@vger.kernel.org>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "selvakuma.s1@samsung.com" <selvakuma.s1@samsung.com>,
+        "nj.shetty@samsung.com" <nj.shetty@samsung.com>,
+        "javier.gonz@samsung.com" <javier.gonz@samsung.com>,
+        Arnav Dawn <a.dawn@samsung.com>
+Subject: Re: [PATCH v2 1/2] fs,block: Introduce RWF_ZONE_APPEND and handling
+ in direct IO path
+Message-ID: <20200630074005.GA5701@test-zns>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <fff00e6667c442cac13147ee5095430a@linux.vnet.ibm.com>
+In-Reply-To: <CY4PR04MB3751213DD4B370F58A63368BE76F0@CY4PR04MB3751.namprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrIKsWRmVeSWpSXmKPExsWy7bCmhi77219xBpd2GVj83vaIxWLOqm2M
+        Fqvv9rNZdP3bwmLR2v6NyeL0hEVMFu9az7FYPL7zmd1iyrQmRou9t7Qt9uw9yWJxedccNosV
+        24+wWGz7PZ/Z4vWPk2wW5/8eZ3UQ8Ng56y67x+YVWh6Xz5Z6bPo0id2j++oPRo++LasYPT5v
+        kvNoP9DN5LHpyVumAM4oLpuU1JzMstQifbsErow1P54wFRwUq1jU8YGlgfGtUBcjJ4eEgInE
+        7ZvLWbsYuTiEBHYzSpxf8ogJwvnEKNH48Qo7hPOZUeLyyZeMXYwcYC1nvydDxHcxSnz+9x+q
+        /RmjxIKdy1hA5rIIqEr8uX+NFaSBTUBT4sLkUpCwiICWxLJ978DqmQU+s0q03lnPBlIjLJAg
+        sfazJ0gNr4COxMpXPxkhbEGJkzOfsICUcArESpw45gISFhVQljiw7TjYoRICdzgkvrwHuQHk
+        HReJ789/s0DYwhKvjm9hh7ClJD6/28sGYRdL/LpzlBmiuYNR4nrDTKgGe4mLe/4ygdjMAhkS
+        3d/fsUDYfBK9v58wQTzPK9HRBg06RYl7k55C7RWXeDhjCZTtIXFsfz8bJExmM0s8mfiSaQKj
+        3Cwk/8xCsgLCtpLo/NDEOgtoBbOAtMTyfxwQpqbE+l36CxhZVzFKphYU56anFpsWGOallusV
+        J+YWl+al6yXn525iBKc6Lc8djHcffNA7xMjEwXiIUYKDWUmE97TBrzgh3pTEyqrUovz4otKc
+        1OJDjNIcLErivEo/zsQJCaQnlqRmp6YWpBbBZJk4OKUamFYLOJQ+eXvjhy9j4EPnabvexNmF
+        sRt+2v7GTdhAWTff3s881PFIvE0F07YNrq++2umkM37p97rOsPC6pO1Z1dvxep1+566c0Z09
+        o9t2Rs+nfTp37fsu9kq9OPKz0sI7e6fQlAKTbxODC7ZO+7f9uE/B4q1zNm/dsG/CteI7QSkz
+        JjwRu1LdHfiq7IRKcmnFTf/9j0SbXv/+fd0g68e/eoupn/JW5OZqhZxb3V+efbXRe2l10ZGC
+        hJydkaEaZR/rTt3kMfKpW7Rh2+xGMf+TfsXReRunrP5wd8FO/qlM67Is3fb1ei3Iz9Xffjmr
+        VoLffpnj2zdsG5Zp5X3pO/k/NqSZX3KlBtPUGYcNJ6TpLlRiKc5INNRiLipOBADpryth5AMA
+        AA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBIsWRmVeSWpSXmKPExsWy7bCSnC7b219xBhu+qlv83vaIxWLOqm2M
+        Fqvv9rNZdP3bwmLR2v6NyeL0hEVMFu9az7FYPL7zmd1iyrQmRou9t7Qt9uw9yWJxedccNosV
+        24+wWGz7PZ/Z4vWPk2wW5/8eZ3UQ8Ng56y67x+YVWh6Xz5Z6bPo0id2j++oPRo++LasYPT5v
+        kvNoP9DN5LHpyVumAM4oLpuU1JzMstQifbsErozJTSwFn4UrJp64wNTAuFOgi5GDQ0LAROLs
+        9+QuRi4OIYEdjBIv/t5m6mLkBIqLSzRf+8EOYQtLrPz3nB2i6AmjxJTjbYwgCRYBVYk/96+x
+        ggxiE9CUuDC5FCQsIqAlsWzfO1aQemaBn6wSl35sYASpERZIkFj72ROkhldAR2Llq5+MEDNn
+        M0vsa/zEDJEQlDg58wkLiM0sYCYxb/NDZpBeZgFpieX/OEBMToFYiRPHXEAqRAWUJQ5sO840
+        gVFwFpLmWUiaZyE0L2BkXsUomVpQnJueW2xYYJSXWq5XnJhbXJqXrpecn7uJERx5Wlo7GPes
+        +qB3iJGJg/EQowQHs5II72mDX3FCvCmJlVWpRfnxRaU5qcWHGKU5WJTEeb/OWhgnJJCeWJKa
+        nZpakFoEk2Xi4JRqYNI/Jhz6d9Ptpsu2DS0xH0JMQ0vPzbmga2Rh6M6/JyG632AJtwfzoY6v
+        p30uvWC8wlj6h6MlQ+rgh/hZykVTFFZNjfr0UWryjZVFHyp03mVc8qhJyl7LHBNltuDU5Hld
+        ElbfxLXsNzhniGtwnrqmb6H+b2nAev5Gya6jberse8zZc+SKHRWn97jn/jo0MeCQv5TNat7p
+        73daJWyvzS7g6xU6/H3hi9XS/eXss5j7OH8ITglYyb9k7r0zO2R+/pgzIT/yaunjEiGrPfty
+        toZsnS6lvn/+Vv9tt4LsdyTbnXJ2cV09p+5YTKevlIteQ8iio9EeMy/+iO27E719t/iujDNf
+        AkUkNk96dPpxwfFMDiWW4oxEQy3mouJEADlCgVsrAwAA
+X-CMS-MailID: 20200630074302epcas5p3d0791c46509137e448c4cc610048bec7
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+        boundary="----_kWsYTlEiWgRcgg3slXo3.6fqMwSg3MgpFIky2YSZcHasXdW=_adde7_"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20200625171834epcas5p226a24dfcb84cfa83fe29a2bd17795d85
+References: <1593105349-19270-1-git-send-email-joshi.k@samsung.com>
+        <CGME20200625171834epcas5p226a24dfcb84cfa83fe29a2bd17795d85@epcas5p2.samsung.com>
+        <1593105349-19270-2-git-send-email-joshi.k@samsung.com>
+        <CY4PR04MB37511FB1D3B3491A2CED5470E7930@CY4PR04MB3751.namprd04.prod.outlook.com>
+        <20200629183202.GA24003@test-zns>
+        <CY4PR04MB3751213DD4B370F58A63368BE76F0@CY4PR04MB3751.namprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Jun 2020, haver wrote:
+------_kWsYTlEiWgRcgg3slXo3.6fqMwSg3MgpFIky2YSZcHasXdW=_adde7_
+Content-Type: text/plain; charset="utf-8"; format="flowed"
+Content-Disposition: inline
 
-> On 2020-06-29 16:04, Lee Jones wrote:
-> > Variable 'rc' hasn't been checked since the driver's inception
-> > in 2013.  If it hasn't caused any issues since then, it's unlikely
-> > to in the future.  Let's take it out for now.
-> > 
-> > Fixes the following W=1 kernel build warning(s):
-> > 
-> >  drivers/misc/genwqe/card_base.c: In function
-> > ‘genwqe_health_check_stop’:
-> > 
-> > /home/lee/projects/linux/kernel/drivers/misc/genwqe/card_base.c:1046:6:
-> > warning: variable ‘rc’ set but not used
-> > [-Wunused-but-set-variable]
-> >  1046 | int rc;
-> >  | ^~
-> > 
-> > Cc: Michael Jung <mijung@gmx.net>
-> > Cc: Michael Ruettger <michael@ibmra.de>
-> > Cc: Frank Haverkamp <haver@linux.ibm.com>
-> > Cc: Joerg-Stephan Vogt <jsvogt@de.ibm.com>
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> > ---
-> >  drivers/misc/genwqe/card_base.c | 4 +---
-> >  1 file changed, 1 insertion(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/misc/genwqe/card_base.c
-> > b/drivers/misc/genwqe/card_base.c
-> > index 1dc6c7c5cbce9..bceebf49de2d5 100644
-> > --- a/drivers/misc/genwqe/card_base.c
-> > +++ b/drivers/misc/genwqe/card_base.c
-> > @@ -1043,12 +1043,10 @@ static int genwqe_health_thread_running(struct
-> > genwqe_dev *cd)
-> > 
-> >  static int genwqe_health_check_stop(struct genwqe_dev *cd)
-> >  {
-> > -	int rc;
-> > -
-> >  	if (!genwqe_health_thread_running(cd))
-> >  		return -EIO;
-> > 
-> > -	rc = kthread_stop(cd->health_thread);
-> > +	kthread_stop(cd->health_thread);
-> >  	cd->health_thread = NULL;
-> >  	return 0;
-> >  }
-> 
-> Good idea. Let's remove it Thanks for the contribution.
+On Tue, Jun 30, 2020 at 12:37:07AM +0000, Damien Le Moal wrote:
+>On 2020/06/30 3:35, Kanchan Joshi wrote:
+>> On Fri, Jun 26, 2020 at 02:50:20AM +0000, Damien Le Moal wrote:
+>>> On 2020/06/26 2:18, Kanchan Joshi wrote:
+>>>> Introduce RWF_ZONE_APPEND flag to represent zone-append. User-space
+>>>> sends this with write. Add IOCB_ZONE_APPEND which is set in
+>>>> kiocb->ki_flags on receiving RWF_ZONE_APPEND.
+>>>> Make direct IO submission path use IOCB_ZONE_APPEND to send bio with
+>>>> append op. Direct IO completion returns zone-relative offset, in sector
+>>>> unit, to upper layer using kiocb->ki_complete interface.
+>>>> Report error if zone-append is requested on regular file or on sync
+>>>> kiocb (i.e. one without ki_complete).
+>>>>
+>>>> Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
+>>>> Signed-off-by: SelvaKumar S <selvakuma.s1@samsung.com>
+>>>> Signed-off-by: Arnav Dawn <a.dawn@samsung.com>
+>>>> Signed-off-by: Nitesh Shetty <nj.shetty@samsung.com>
+>>>> Signed-off-by: Javier Gonzalez <javier.gonz@samsung.com>
+>>>> ---
+>>>>  fs/block_dev.c          | 28 ++++++++++++++++++++++++----
+>>>>  include/linux/fs.h      |  9 +++++++++
+>>>>  include/uapi/linux/fs.h |  5 ++++-
+>>>>  3 files changed, 37 insertions(+), 5 deletions(-)
+>>>>
+>>>> diff --git a/fs/block_dev.c b/fs/block_dev.c
+>>>> index 47860e5..5180268 100644
+>>>> --- a/fs/block_dev.c
+>>>> +++ b/fs/block_dev.c
+>>>> @@ -185,6 +185,10 @@ static unsigned int dio_bio_write_op(struct kiocb *iocb)
+>>>>  	/* avoid the need for a I/O completion work item */
+>>>>  	if (iocb->ki_flags & IOCB_DSYNC)
+>>>>  		op |= REQ_FUA;
+>>>> +
+>>>> +	if (iocb->ki_flags & IOCB_ZONE_APPEND)
+>>>> +		op |= REQ_OP_ZONE_APPEND;
+>>>
+>>> This is wrong. REQ_OP_WRITE is already set in the declaration of "op". How can
+>>> this work ?
+>> REQ_OP_ZONE_APPEND will override the REQ_WRITE op, while previously set op
+>> flags (REQ_FUA etc.) will be retained. But yes, this can be made to look
+>> cleaner.
+>> V3 will include the other changes you pointed out. Thanks for the review.
+>>
+>
+>REQ_OP_WRITE and REQ_OP_ZONE_APPEND are different bits, so there is no
+>"override". A well formed BIO bi_opf is one op+flags. Specifying multiple OP
+>codes does not make sense.
 
-No problem, and you are welcome.
+one op+flags behavior is retained here. OP is not about bits (op flags are).
+Had it been, REQ_OP_WRITE (value 1) can not be differentiated from
+REQ_OP_ZONE_APPEND (value 13).
+We do not do "bio_op(bio) & REQ_OP_WRITE", rather we look at the
+absolute value "bio_op(bio) == REQ_OP_WRITE".
 
-> Signed-off-by: Frank Haverkamp <haver@linux.ibm.com>
+------_kWsYTlEiWgRcgg3slXo3.6fqMwSg3MgpFIky2YSZcHasXdW=_adde7_
+Content-Type: text/plain; charset="utf-8"
 
-Just as an aside, this should be Acked-by, unless you either
-contributed to the patch directly or are in the delivery path i.e. you
-plan to pick the patch and send it to, say Linus, via a pull-request.
 
--- 
-Lee Jones [李琼斯]
-Senior Technical Lead - Developer Services
-Linaro.org │ Open source software for Arm SoCs
-Follow Linaro: Facebook | Twitter | Blog
+------_kWsYTlEiWgRcgg3slXo3.6fqMwSg3MgpFIky2YSZcHasXdW=_adde7_--
