@@ -2,81 +2,75 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB197C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B61C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:20:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id A01A12073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:19:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 453B520759
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 07:20:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lPMXTxAk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qw2Y7GPz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730841AbgF3HTy (ORCPT
+        id S1730853AbgF3HUE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 03:19:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43788 "EHLO
+        Tue, 30 Jun 2020 03:20:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730637AbgF3HTy (ORCPT
+        with ESMTP id S1730637AbgF3HUD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 03:19:54 -0400
-Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E02FC061755
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 00:19:54 -0700 (PDT)
-Received: by mail-qk1-x742.google.com with SMTP id z63so17655691qkb.8
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 00:19:53 -0700 (PDT)
+        Tue, 30 Jun 2020 03:20:03 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71AECC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 00:20:03 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id f8so8960010ljc.2
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 00:20:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc:content-transfer-encoding;
-        bh=L9NG4akQ0nBWtVO2y1bLpJgsekyyKFQb47fyn8KWpiw=;
-        b=lPMXTxAkII6/orv+Q0Cdu0nhGP2a1FRjQaxioElZ1l4TZYjNTQn/S79/ayPPa0CMQM
-         vrorLFeJ8fyA/7aMcJK6QB6fIHr7kOn0pKy20MkETgC7lLx2/1cbhPXojqu3rNlL+YQz
-         4bd8ZbgcuzGuKIyxKawPxgYdqDEK9QAUZDy6amqg9LdAeLAhuk5Hh9+cEFeEP1c5dIvV
-         WONCyPtK3OyIJTxd4XsbqaJx6psL7FgErxLpbd1XPefsNg6lLCg4CqjXGK9q7M6Qar90
-         CTIpq5Ugakti7ZX7uxl+fCZwuEwLl0/R213ebetw91FeTxPUAt/R9+dP9xYB2C9JLYrq
-         SZWQ==
+        bh=Vx+bktY88yN1DvPoXEuGvm00CANlOXwakGCi9dazwYc=;
+        b=Qw2Y7GPzBmCMTBmuRC7mN6k5TBliujq1dQ+M9LzBbaSPFc7X0iIsZxmZaUVzOm9Tzk
+         ImM2Fn7fUNJDubghC8f4jS/CiNE++57SiEyIrpLOIfkYVW2Km7fSdabrbeROVxg/qMFG
+         SeLdZ8ZkC56zmHaG7VvoXBfgzCW8zIhFgklbUtMiggJfKcTnW3kwgZoMyqvSfywiqL60
+         z3PFc0RYIRL+LOtBjRHnjb2U3lVjmhrxBQ2xBOE/Tml/CuQcGKshuEPLtDLe85DlHcin
+         2L6wUNJ/V2Fn1pcynk0brpRRp+bDN0IjkngQzng9wuxoG0YHR++s9nH5ZQHJEV/kqx2s
+         nBUg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc:content-transfer-encoding;
-        bh=L9NG4akQ0nBWtVO2y1bLpJgsekyyKFQb47fyn8KWpiw=;
-        b=Ogp0wsbjNaYw2eIQsgwCd5DfsP0/6xtrBPV+XFDUANVXuFACD/lBI1PswhFNgCRGPI
-         uKSzHJrv1YkdEwHHnCxUzAF/hPqNdHwpt0FGT1TP3vfJqtmXsQ6+KALwAZdIVK/vKEdY
-         4hO95oSHl1tAJGvL/evDQPQfMlINNFDwhLHTFR7zYW8IGfH3Ez4vXuYyf/Knohmb2RQF
-         BZIt3BKp3VNJ4yLvR/mrZDjJqSSlMZx3Zbla2/TQVG4YUlVp2hTnoDJOZBscf4B07jZu
-         GC0RLVZtuIHkS8ageqURNtGxLDW72kpreEE5ULp2fdmkdKBkB5m7JHJR+S+qF5i88cUX
-         pmtg==
-X-Gm-Message-State: AOAM532PLoq1e7hxFBmePAQkOwqQcyq1WdaHzpQDE7NeWte3C4kXujU3
-        LpUr+zW6lDu1Rj6gZH0gFWXs6hVtNrHLF3N3QLHhLNxZ
-X-Google-Smtp-Source: ABdhPJy4lgpHe8MfHwzjN4iKzdqrH2z9+Uk33jz/UDOx2enXLyTAGWpa0tXr+Km23qSNcTLudgmzGWYmkC8LrrQ8Pc4=
-X-Received: by 2002:a05:620a:a1b:: with SMTP id i27mr18736007qka.429.1593501593115;
- Tue, 30 Jun 2020 00:19:53 -0700 (PDT)
+        bh=Vx+bktY88yN1DvPoXEuGvm00CANlOXwakGCi9dazwYc=;
+        b=q4Z/8r9SM3KmbAcSY32jKHvEIZJKC4j4b5thwNRLdtV82YY0kRXt8Np0NA3Bw6PQBm
+         aF3MJ5WdZqliyeKVap3oRwhDa5dl2iKTgbsuG3UBd3YkLNGno3UcVoXiND3JOXenm2ff
+         DTJ2niNBT7kkFymxkhF5VQyoemqZ/TcWbhA21ar4Vd5JYP/HkBjPMxGWQjCXlSWmoZ6e
+         u5w96iixdr42AxzTAGMrOmAo5Eq9AYAUS+AGFnO4NR9UYcE+Y5ylzUfg9Ty4dLqLOvV8
+         ghRusD+KZt+g+iRWRZYSInqjMMlFL+p4dI+zJE31QkYMWZ2zTi1RuQN7H12ssXWFCmF5
+         gfbw==
+X-Gm-Message-State: AOAM5329h47pgrmVE1c4irRVtm1lTZcppTn5jaZUzwieXWCL1rKGBVi0
+        WUj1w3gC24BygshYZYPsnlNWfie/DiKFtZkNZIHfjQ==
+X-Google-Smtp-Source: ABdhPJxtq/onlnBNSXVbWeg4Ga0r62C3dLuD/Kf3TuslGIQyDyz0m7pr0lvBamePIyU0uVcaFt6aMs9VanlR5pN4mYk=
+X-Received: by 2002:a2e:b054:: with SMTP id d20mr9306783ljl.55.1593501601810;
+ Tue, 30 Jun 2020 00:20:01 -0700 (PDT)
 MIME-Version: 1.0
-References: <1592892828-1934-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1592892828-1934-6-git-send-email-iamjoonsoo.kim@lge.com> <20200625120550.GF1320@dhcp22.suse.cz>
- <CAAmzW4ObN=GAzCLw8betLftTeCEsLs4OihfNXvtg4CaWyWiBCw@mail.gmail.com>
- <20200626073342.GU1320@dhcp22.suse.cz> <CAAmzW4PT+M8mUwXMPhQSKLhz9nkPATivL5D-yLyyfC9SOwPnYQ@mail.gmail.com>
- <20200629080350.GB32461@dhcp22.suse.cz>
-In-Reply-To: <20200629080350.GB32461@dhcp22.suse.cz>
-From:   Joonsoo Kim <js1304@gmail.com>
-Date:   Tue, 30 Jun 2020 16:19:38 +0900
-Message-ID: <CAAmzW4PLMc-NgSwZC5VutyJ4AsCcOVchLXEDhKtTtfbRkkfdEA@mail.gmail.com>
-Subject: Re: [PATCH v3 5/8] mm/migrate: make a standard migration target
- allocation function
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, kernel-team@lge.com,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christoph Hellwig <hch@infradead.org>,
-        Roman Gushchin <guro@fb.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
+References: <20200629153806.2494953-1-sashal@kernel.org>
+In-Reply-To: <20200629153806.2494953-1-sashal@kernel.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 30 Jun 2020 12:49:50 +0530
+Message-ID: <CA+G9fYtmPtr+OWv0XASquDb=wcLTXwREQzpmzZuqwctjP1RmJA@mail.gmail.com>
+Subject: Re: [PATCH 4.14 00/78] 4.14.186-rc1 review
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        linux- stable <stable@vger.kernel.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        patches@kernelci.org, lkft-triage@lists.linaro.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
@@ -84,105 +78,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2020=EB=85=84 6=EC=9B=94 29=EC=9D=BC (=EC=9B=94) =EC=98=A4=ED=9B=84 5:03, M=
-ichal Hocko <mhocko@kernel.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
+On Mon, 29 Jun 2020 at 21:08, Sasha Levin <sashal@kernel.org> wrote:
 >
-> On Mon 29-06-20 15:41:37, Joonsoo Kim wrote:
-> > 2020=EB=85=84 6=EC=9B=94 26=EC=9D=BC (=EA=B8=88) =EC=98=A4=ED=9B=84 4:3=
-3, Michal Hocko <mhocko@kernel.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=B1:
-> > >
-> > > On Fri 26-06-20 14:02:49, Joonsoo Kim wrote:
-> > > > 2020=EB=85=84 6=EC=9B=94 25=EC=9D=BC (=EB=AA=A9) =EC=98=A4=ED=9B=84=
- 9:05, Michal Hocko <mhocko@kernel.org>=EB=8B=98=EC=9D=B4 =EC=9E=91=EC=84=
-=B1:
-> > > > >
-> > > > > On Tue 23-06-20 15:13:45, Joonsoo Kim wrote:
-> > > [...]
-> > > > > > -struct page *new_page_nodemask(struct page *page,
-> > > > > > -                             int preferred_nid, nodemask_t *no=
-demask)
-> > > > > > +struct page *alloc_migration_target(struct page *page, unsigne=
-d long private)
-> > > > > >  {
-> > > > > > -     gfp_t gfp_mask =3D GFP_USER | __GFP_MOVABLE | __GFP_RETRY=
-_MAYFAIL;
-> > > > > > +     struct migration_target_control *mtc;
-> > > > > > +     gfp_t gfp_mask;
-> > > > > >       unsigned int order =3D 0;
-> > > > > >       struct page *new_page =3D NULL;
-> > > > > > +     int zidx;
-> > > > > > +
-> > > > > > +     mtc =3D (struct migration_target_control *)private;
-> > > > > > +     gfp_mask =3D mtc->gfp_mask;
-> > > > > >
-> > > > > >       if (PageHuge(page)) {
-> > > > > >               return alloc_huge_page_nodemask(
-> > > > > > -                             page_hstate(compound_head(page)),
-> > > > > > -                             preferred_nid, nodemask, 0, false=
-);
-> > > > > > +                             page_hstate(compound_head(page)),=
- mtc->nid,
-> > > > > > +                             mtc->nmask, gfp_mask, false);
-> > > > > >       }
-> > > > > >
-> > > > > >       if (PageTransHuge(page)) {
-> > > > > > +             gfp_mask &=3D ~__GFP_RECLAIM;
-> > > > >
-> > > > > What's up with this gfp_mask modification?
-> > > >
-> > > > THP page allocation uses a standard gfp masks, GFP_TRANSHUGE_LIGHT =
-and
-> > > > GFP_TRANHUGE. __GFP_RECLAIM flags is a big part of this standard ma=
-sk design.
-> > > > So, I clear it here so as not to disrupt the THP gfp mask.
-> > >
-> > > Why this wasn't really needed before? I guess I must be missing
-> > > something here. This patch should be mostly mechanical convergence of
-> > > existing migration callbacks but this change adds a new behavior AFAI=
-CS.
-> >
-> > Before this patch, a user cannot specify a gfp_mask and THP allocation
-> > uses GFP_TRANSHUGE
-> > statically.
 >
-> Unless I am misreading there are code paths (e.g.new_page_nodemask) which=
- simply use
-> add GFP_TRANSHUGE to GFP_USER | __GFP_MOVABLE | __GFP_RETRY_MAYFAIL. And
-> this goes all the way to thp migration introduction.
-
-Ahh... Indeed. I missed that. There are multiple THP migration target
-allocation functions
-and some functions use GFP_TRANSHUGE + extra_mask so doesn't include
-__GFP_KSWAPD_RECLAIM
-but the others includes __GFP_KSWAPD_RECLAIM due to original GFP_USER.
-Thanks for clarifying.
-
-> > After this patch, a user can specify a gfp_mask and it
-> > could conflict with GFP_TRANSHUGE.
-> > This code tries to avoid this conflict.
-> >
-> > > It would effectively drop __GFP_RETRY_MAYFAIL and __GFP_KSWAPD_RECLAI=
-M
-> >
-> > __GFP_RETRY_MAYFAIL isn't dropped. __GFP_RECLAIM is
-> > "___GFP_DIRECT_RECLAIM|___GFP_KSWAPD_RECLAIM".
-> > So, __GFP_KSWAPD_RECLAIM would be dropped for THP allocation.
-> > IIUC, THP allocation doesn't use __GFP_KSWAPD_RECLAIM since it's
-> > overhead is too large and this overhead should be given to the caller
-> > rather than system thread (kswapd) and so on.
+> This is the start of the stable review cycle for the 4.14.186 release.
+> There are 78 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> Yes, there is a reason why KSWAPD is excluded from THP allocations in
-> the page fault path. Maybe we want to extend that behavior to the
-> migration as well. I do not have a strong opinion on that because I
-> haven't seen excessive kswapd reclaim due to THP migrations. They are
-> likely too rare.
+> Responses should be made by Wed 01 Jul 2020 03:38:04 PM UTC.
+> Anything received after that time might be too late.
 >
-> But as I've said in my previous email. Make this a separate patch with
-> an explanation why we want this.
+> The whole patch series can be found in one patch at:
+>         https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git/patch/?id=3Dlinux-4.14.y&id2=3Dv4.14.185
+>
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.14.y
+> and the diffstat can be found below.
+>
+> --
+> Thanks,
+> Sasha
 
-Okay. I will make a separate patch that clears __GFP_RECLAIM for passed
-gfp_mask to extend the behavior. It will make THP migration target allocati=
-on
-consistent. :)
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Thanks.
+Summary
+------------------------------------------------------------------------
+
+kernel: 4.14.187-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.14.y
+git commit: 27e703aa31e48c3ebe64c4d8665ab5cea76eac29
+git describe: v4.14.186-78-g27e703aa31e4
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
+ild/v4.14.186-78-g27e703aa31e4
+
+
+No regressions (compared to build v4.14.186)
+
+No fixes (compared to build v4.14.186)
+
+Ran 35120 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- juno-r2-compat
+- juno-r2-kasan
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+- x86-kasan
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* install-android-platform-tools-r2800
+* kselftest
+* kselftest/drivers
+* kselftest/filesystems
+* kselftest/net
+* libhugetlbfs
+* linux-log-parser
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-controllers-tests
+* ltp-cpuhotplug-tests
+* ltp-crypto-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* perf
+* v4l2-compliance
+* network-basic-tests
+* ltp-open-posix-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-native/drivers
+* kselftest-vsyscall-mode-native/filesystems
+* kselftest-vsyscall-mode-native/net
+* kselftest-vsyscall-mode-none
+* kselftest-vsyscall-mode-none/drivers
+* kselftest-vsyscall-mode-none/filesystems
+* kselftest-vsyscall-mode-none/net
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
