@@ -2,127 +2,117 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B8BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:05:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A52C7C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8AFE42053B
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:05:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 802062053B
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:05:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QUdibEW+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ll1q8Q6N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728175AbgF3VF2 (ORCPT
+        id S1728646AbgF3VF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 17:05:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58288 "EHLO
+        Tue, 30 Jun 2020 17:05:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726084AbgF3VF1 (ORCPT
+        with ESMTP id S1726084AbgF3VF4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 17:05:27 -0400
-Received: from mail-pj1-x1043.google.com (mail-pj1-x1043.google.com [IPv6:2607:f8b0:4864:20::1043])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EAB9C061755
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 14:05:27 -0700 (PDT)
-Received: by mail-pj1-x1043.google.com with SMTP id o22so4981752pjw.2
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 14:05:27 -0700 (PDT)
+        Tue, 30 Jun 2020 17:05:56 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39903C061755;
+        Tue, 30 Jun 2020 14:05:56 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id gc9so3522805pjb.2;
+        Tue, 30 Jun 2020 14:05:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=7IVzLJAup4VkDuAt/OunGpXP5pyiE7ynN3kodoEoQWE=;
-        b=QUdibEW+tmy14fhQZz/MEX47zW5zuODLO2iw5hCK+fuz6atzNqZS7wfwq88aa5gGNZ
-         tcoL4SeyvbY2vZmuDYF3SJACAtGQNg2IUJvfpnMncjKaqSpG+Ag8Up58cx+CC5r0x0by
-         oWkkAUayol9EAh71nHOO/Cyzkwxn0qRfwv8rIwAUjTLk55vymD83jgXIJjUjDplKPxzQ
-         twNxTc0A2bK/TrTAepZMJ8yD2igZBAP5033cejEg5xi9B5nra3awyGB6anyEkxBLnPth
-         xMLNrjI0kueaOX2OFYgDwPamPjl7Tj5L+9O1YReWNl93rCB3emRFthqAk9voQHii1UyL
-         1iLQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=7YJzM68xF5+T7oFwixHoGmxrMD80y0Idtu8GDH5eoGs=;
+        b=Ll1q8Q6NPvtJ9gux80N+4epUWpVp2kVuyAmSUrOnAccbgOaadBM1J1JxWdB8LnXk3L
+         xBDAb/6LnxpFIoTJ3Xmmxx/gIIKMZV/REgqy7Aljk1jeGpL8i9h95WanWPhLo/Dya49b
+         xxei+axxgXCcBJ11NXuf3fcgD0t/sEWCowtnvD+x6sPJJjAh0FwFvN7gGocoUaeE+bgv
+         TL8SM8OdEs/5Q20aVXsWF6IPCoi2kZa4UhBrGu/qKhTxTxqZvc7tFpzV9F1l5RuRcpoR
+         0AI7iw/EzbjU53mPOjAVYnTLxIWdd846zHX9vK1Wl2Z8bLB5daSfY8hdOmClHP7G5zj7
+         LU+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=7IVzLJAup4VkDuAt/OunGpXP5pyiE7ynN3kodoEoQWE=;
-        b=THvUTBumXe2ohCp4cURbFgKM0XJ13evyjPJ6HfMsUsjwN3uBjsCFpzK9mHw4e9XhB9
-         bHTdV2TYuYZXt2W+cYPc81XI7qu/jG2SPVyHH+cEnIApf3z30a6+hSFsARA4PyQawn6r
-         Pg8SwkGAqDhum5hUgN4te3yuC7QpEHHoeD97EN1VPj+6B6dg51duViuXkHpaReawl7ku
-         HNSnGl8T0cIXEHm13+ogofJXWZOA+Jkkr93jtf8XdC3GTjMwDdfEJuHloZtDxX8qmpPa
-         Hu7aInlOk/aThuz2aTqMp6n5qzmKRnjS11kK3iZzre745i2hWafTV9KbkKUyU9qFsaVH
-         8AKg==
-X-Gm-Message-State: AOAM530R7oVsshqSce2uH10HQjS20ouOGYR1qKEszQnq4+lg7E93I3rQ
-        OpktdEzkeMM0R/WRj/ehT1l17KgGbJk=
-X-Google-Smtp-Source: ABdhPJyq5YmJisNfnjQfOl9rdHWGw5ke+qYQHvoo0zgIGiWy+mH4xpMMFhE4xTloPrHRDSCSwy44xw==
-X-Received: by 2002:a17:90a:db0f:: with SMTP id g15mr23799623pjv.5.1593551125958;
-        Tue, 30 Jun 2020 14:05:25 -0700 (PDT)
-Received: from [2620:15c:17:3:4a0f:cfff:fe51:6667] ([2620:15c:17:3:4a0f:cfff:fe51:6667])
-        by smtp.gmail.com with ESMTPSA id h100sm3168311pjb.46.2020.06.30.14.05.24
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=7YJzM68xF5+T7oFwixHoGmxrMD80y0Idtu8GDH5eoGs=;
+        b=dwBVzjy3ymMaco+OSIDpLbN4mDTGHxNjOrsYL6k1TLnQTsEM3GbulNIeUojgZWg2nZ
+         CZi6pLnsi9XjOaCrqxklWYZ0NIpdJmEswwqUrAUzaMFquJJHolAnkz7fqghhVI2uiK1k
+         6y3aUf35Xq93lFslqXeXf38K8OeyN1E+k9rnKVgmrTUTEcMJDgf3NIOuQHch5bFlzoWT
+         GowX6+eCmqm9YTecwwRO9YihO7oEaWPz+aBTyk07UgyaS+8iO8+UMug5Nu9DAVHIkk2+
+         34bJCoVERbG+Uc0Zbm/aPp3UYSKv3pKDkDK9N1KPW/aTCRG4PJUNJqinsEG007Kn5P2F
+         zYEA==
+X-Gm-Message-State: AOAM533B+9eCJQ1YtJ0yFQ9V7VpsOvvECjVVs96ZbVgQFSRd17KYlKLF
+        1TSC+fazyTFn4JR0tXqOrcM=
+X-Google-Smtp-Source: ABdhPJxeLJp0yfbLRrAt4jASBtFaw2qen6+OCgR/gSCl/omhdWgXqt/uF6uRIbULcUTrjMLFU8/qnQ==
+X-Received: by 2002:a17:90a:d709:: with SMTP id y9mr24500675pju.30.1593551155767;
+        Tue, 30 Jun 2020 14:05:55 -0700 (PDT)
+Received: from ubuntu-s3-xlarge-x86 ([2604:1380:1000:7a00::1])
+        by smtp.gmail.com with ESMTPSA id w1sm3615703pfq.53.2020.06.30.14.05.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 14:05:24 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 14:05:24 -0700 (PDT)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Peter Xu <peterx@redhat.com>
-cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v4 01/26] mm: Do page fault accounting in
- handle_mm_fault
-In-Reply-To: <20200630204504.38516-1-peterx@redhat.com>
-Message-ID: <alpine.DEB.2.22.394.2006301401560.1512657@chino.kir.corp.google.com>
-References: <20200630204504.38516-1-peterx@redhat.com>
-User-Agent: Alpine 2.22 (DEB 394 2020-01-19)
+        Tue, 30 Jun 2020 14:05:55 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 14:05:53 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Dennis Dalessandro <dennis.dalessandro@intel.com>
+Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] IB/hfi1: Add explicit cast OPA_MTU_8192 to 'enum ib_mtu'
+Message-ID: <20200630210553.GB3710423@ubuntu-s3-xlarge-x86>
+References: <20200623005224.492239-1-natechancellor@gmail.com>
+ <5f98c547-1bac-bb05-1c75-cefb8616964a@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5f98c547-1bac-bb05-1c75-cefb8616964a@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Jun 2020, Peter Xu wrote:
+On Wed, Jun 24, 2020 at 02:22:08PM -0400, Dennis Dalessandro wrote:
+> On 6/22/2020 8:52 PM, Nathan Chancellor wrote:
+> > Clang warns:
+> > 
+> > drivers/infiniband/hw/hfi1/qp.c:198:9: warning: implicit conversion from
+> > enumeration type 'enum opa_mtu' to different enumeration type 'enum
+> > ib_mtu' [-Wenum-conversion]
+> >                  mtu = OPA_MTU_8192;
+> >                      ~ ^~~~~~~~~~~~
+> > 1 warning generated.
+> > 
+> > enum opa_mtu extends enum ib_mtu. There are typically two ways to deal
+> > with this:
+> > 
+> > * Remove the expected types and just use 'int' for all parameters and
+> >    types.
+> > 
+> > * Explicitly cast the enums between each other.
+> > 
+> > This driver chooses to do the later so do the same thing here.
+> > 
+> > Fixes: 6d72344cf6c4 ("IB/ipoib: Increase ipoib Datagram mode MTU's upper limit")
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/1062
+> > Link: https://lore.kernel.org/linux-rdma/20200527040350.GA3118979@ubuntu-s3-xlarge-x86/
+> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> > ---
+> 
+> Acked-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+> 
 
-> @@ -4408,6 +4440,34 @@ vm_fault_t handle_mm_fault(struct vm_area_struct *vma, unsigned long address,
->  			mem_cgroup_oom_synchronize(false);
->  	}
->  
-> +	if (ret & (VM_FAULT_RETRY | VM_FAULT_ERROR))
-> +		return ret;
-> +
-> +	/*
-> +	 * Do accounting in the common code, to avoid unnecessary
-> +	 * architecture differences or duplicated code.
-> +	 *
-> +	 * We arbitrarily make the rules be:
-> +	 *
-> +	 *  - Unsuccessful faults do not count (e.g. when the address wasn't
-> +	 *    valid). That includes arch_vma_access_permitted() failing above.
-> +	 *
-> +	 *    So this is expressly not a "this many hardware page faults"
-> +	 *    counter. Use the hw profiling for that.
-> +	 *
-> +	 *  - Incomplete faults do not count (e.g. RETRY).  They will only
-> +	 *    count once completed.
-> +	 *
-> +	 *  - The fault counts as a "major" fault when the final successful
-> +	 *    fault is VM_FAULT_MAJOR, or if it was a retry (which implies that
-> +	 *    we couldn't handle it immediately previously).
-> +	 *
-> +	 *  - If the fault is done for GUP, regs will be NULL and no accounting
-> +	 *    will be done.
-> +	 */
-> +	mm_account_fault(regs, address, (ret & VM_FAULT_MAJOR) ||
-> +			 (flags & FAULT_FLAG_TRIED));
-> +
->  	return ret;
->  }
->  EXPORT_SYMBOL_GPL(handle_mm_fault);
+Thanks! Who should pick up this patch? This warning is in mainline now,
+it would be nice if this could go via an -rc branch but if it is too
+late for that, I understand.
 
-Just a nit, likely not important: I wonder if it would be cleaner to pass 
-the vm_fault_t into mm_account_fault() and then do the VM_FAULT_RETRY and
-VM_FAULT_ERROR checks there as well as putting the comment about how 
-accounting is handled in that function.  Your comment is great.
+Cheers,
+Nathan
