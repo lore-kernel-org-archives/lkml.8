@@ -2,197 +2,183 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF927C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1F2C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id C098720759
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:55:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B80E20759
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:58:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PODnF+l0"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PHS9HS3y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389917AbgF3Qzm (ORCPT
+        id S2389565AbgF3Q6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 12:55:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47980 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387839AbgF3Qzk (ORCPT
+        Tue, 30 Jun 2020 12:58:51 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40317 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726084AbgF3Q6v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 12:55:40 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 178E3C061755;
-        Tue, 30 Jun 2020 09:55:41 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id z5so10217154pgb.6;
-        Tue, 30 Jun 2020 09:55:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=eoz3Pq8kUpqZqE/rV7PU7fyf3xWjp/m0nHwjaG4KRwE=;
-        b=PODnF+l0rjCnsE+RxJCoNmZU19ALYCpdn9HbLnhdAU00bhmfKviYN3YNUS1EdyhqrX
-         Ci/EETDvLpNIdyj2y2OGdwjd6GgTpyGxz37sURehqja2Cvnje8LVamKm3Iwj5sJUPTsP
-         XOYiMxbS6tVQfIFbkNJR+tU9vAo/BSV+18EZXrbKoCILDiWeNtJ4288xhjRvIcUByf16
-         5jhz14JjKOmL7GGAcZEwWVoZSEpz98LURwlAwHsI+jT7r8RJwgy2XNSBZDFvjgoknArz
-         AraKcUCMGDwQDZORTg5JeGLIaFu3RjUS8CAykcsQC+MoJdUHCVskRPMJZ71N69xLMfb8
-         BxvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=eoz3Pq8kUpqZqE/rV7PU7fyf3xWjp/m0nHwjaG4KRwE=;
-        b=MgYDDSuT8zU0N/RpJ5WTBUDHndRA/1M8usHBHlGaz9YqPBuSbLFRx5Z706VmYbU6Ny
-         XLUEIUWTukeRyE+qPGeLODyQ9u1JsWpMIO/2slZY6r7QXvEfKGUS46ZM6fXvKM0K2MWA
-         +s4ZBBL9J2HHZ6/pEZHzndFtkTi/s21e1rjhKPawRwdc8wOWRiQIwVxhulxxHdL6u7A+
-         z+8jtQO85VLt4LsKgpNhDV02NfhvW1wlNTWF3dBQ99ovx3V6oFUgKIZQEWcRvdg+1uog
-         9RkrnsWqgGqZk2ZQKCqasQ0eAkTmm/nW7Rm7+AjxLchF+VNSdGAVPzX/VPHC3avK5p6S
-         omfA==
-X-Gm-Message-State: AOAM530X2O5HkCnT3Q6IcpMSgv0JM5Nk/xKqIuUUGXCMx1HWF30j6URl
-        /EnfBSzCMxcLCQnSfuSafws=
-X-Google-Smtp-Source: ABdhPJx0io5eJXz+CA0pAIwthbDFQEzc7Jl+71RSIYSn+jf5Py8ZP0DOchWskQdaN+pfZJisRpAOOw==
-X-Received: by 2002:a05:6a00:15c8:: with SMTP id o8mr20444419pfu.286.1593536140578;
-        Tue, 30 Jun 2020 09:55:40 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:400::5:e083])
-        by smtp.gmail.com with ESMTPSA id n12sm3210703pgr.88.2020.06.30.09.55.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 09:55:39 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 09:55:36 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <greg@kroah.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2 10/15] exec: Remove do_execve_file
-Message-ID: <20200630165536.c4ffmurfz5kosx7e@ast-mbp.dhcp.thefacebook.com>
-References: <20200625.123437.2219826613137938086.davem@davemloft.net>
- <CAHk-=whuTwGHEPjvtbBvneHHXeqJC=q5S09mbPnqb=Q+MSPMag@mail.gmail.com>
- <87pn9mgfc2.fsf_-_@x220.int.ebiederm.org>
- <87y2oac50p.fsf@x220.int.ebiederm.org>
- <87bll17ili.fsf_-_@x220.int.ebiederm.org>
- <87lfk54p0m.fsf_-_@x220.int.ebiederm.org>
- <20200630054313.GB27221@infradead.org>
- <87a70k21k0.fsf@x220.int.ebiederm.org>
- <20200630133802.GA30093@infradead.org>
- <878sg4y6f9.fsf@x220.int.ebiederm.org>
+        Tue, 30 Jun 2020 12:58:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1593536329;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=cUG+xvpCXBxcoZX1tRhgzPHCdk+MyqeP1/1VUS+YrEs=;
+        b=PHS9HS3yxlfx5xe6XHyvM+rspObZAwjDV2Moq27IQRrtyym2y+yRZIyl+1rfwZb6VmoEDi
+        AINHdcWz2tzdp0YZBQOEqr9y02dgIIk9xoZvFEI/YQ2lO/s5PY8AO3FSzG8uV+PpL4dcon
+        lyRV+KinocxHxSAKSP3T8P938ZT+HvY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-28-UW9GlsfkMXWdSLu5H0JMBg-1; Tue, 30 Jun 2020 12:58:45 -0400
+X-MC-Unique: UW9GlsfkMXWdSLu5H0JMBg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 04B8D185B381;
+        Tue, 30 Jun 2020 16:58:44 +0000 (UTC)
+Received: from [10.36.112.210] (ovpn-112-210.ams2.redhat.com [10.36.112.210])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 41E11B3A7A;
+        Tue, 30 Jun 2020 16:58:42 +0000 (UTC)
+Subject: Re: [PATCH v1 1/2] mm/memblock: expose only miminal interface to
+ add/walk physmem
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-mm@kvack.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20200630081730.6862-1-david@redhat.com>
+ <20200630081730.6862-2-david@redhat.com>
+ <20200630162929.GC2500444@linux.ibm.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <bbd86b6e-e344-514f-7a10-e1078cb60e99@redhat.com>
+Date:   Tue, 30 Jun 2020 18:58:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <878sg4y6f9.fsf@x220.int.ebiederm.org>
+In-Reply-To: <20200630162929.GC2500444@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 09:28:10AM -0500, Eric W. Biederman wrote:
-> Christoph Hellwig <hch@infradead.org> writes:
+>>  extern struct memblock memblock;
+>> @@ -114,6 +110,19 @@ int memblock_remove(phys_addr_t base, phys_addr_t size);
+>>  int memblock_free(phys_addr_t base, phys_addr_t size);
+>>  int memblock_reserve(phys_addr_t base, phys_addr_t size);
+>>  #ifdef CONFIG_HAVE_MEMBLOCK_PHYS_MAP
+>> +/**
+>> + * for_each_physmem_range - iterate through physmem areas not included in type.
+>> + * @i: u64 used as loop variable
+>> + * @type: ptr to memblock_type which excludes from the iteration, can be %NULL
+>> + * @p_start: ptr to phys_addr_t for start address of the range, can be %NULL
+>> + * @p_end: ptr to phys_addr_t for end address of the range, can be %NULL
+>> + */
+>> +#define for_each_physmem_range(i, type, p_start, p_end)			\
+>> +	for (i = 0, __next_physmem_range(&i, type, p_start, p_end);	\
+>> +	     i != (u64)ULLONG_MAX;					\
+>> +	     __next_physmem_range(&i, type, p_start, p_end))
+>> +void __next_physmem_range(u64 *idx, struct memblock_type *type,
+>> +			  phys_addr_t *out_start, phys_addr_t *out_end);
 > 
-> > On Tue, Jun 30, 2020 at 07:14:23AM -0500, Eric W. Biederman wrote:
-> >> Christoph Hellwig <hch@infradead.org> writes:
-> >> 
-> >> > FYI, this clashes badly with my exec rework.  I'd suggest you
-> >> > drop everything touching exec here for now, and I can then
-> >> > add the final file based exec removal to the end of my series.
-> >> 
-> >> I have looked and I haven't even seen any exec work.  Where can it be
-> >> found?
-> >> 
-> >> I have working and cleaning up exec for what 3 cycles now.  There is
-> >> still quite a ways to go before it becomes possible to fix some of the
-> >> deep problems in exec.  Removing all of these broken exec special cases
-> >> is quite frankly the entire point of this patchset.
-> >> 
-> >> Sight unseen I suggest you send me your exec work and I can merge it
-> >> into my branch if we are going to conflict badly.
-> >
-> > https://lore.kernel.org/linux-fsdevel/20200627072704.2447163-1-hch@lst.de/T/#t
+> __next_physmem_range() is not really necessary, the
+> for_each_physmem_range() macro can use __next_mem_range() directly, but
+> I suspect it won't look nice :)
 > 
-> 
-> Looking at your final patch I do not like the construct.
-> 
-> static int __do_execveat(int fd, struct filename *filename,
->  		const char __user *const __user *argv,
->  		const char __user *const __user *envp,
-> 		const char *const *kernel_argv,
-> 		const char *const *kernel_envp,
->  		int flags, struct file *file);
-> 
-> 
-> It results in a function that is full of:
-> 	if (kernel_argv) {
->         	// For kernel_exeveat 
-> 		...
-> 	} else {
->         	// For ordinary exeveat
->         	
->         }
-> 
-> Which while understandable.  I do not think results in good long term
-> maintainble code.
-> 
-> The current file paramter that I am getting rid of in my patchset is
-> a stark example of that.  Because of all of the if's no one realized
-> that the code had it's file reference counting wrong (amoung other
-> bugs).
-> 
-> I think this is important to address as exec has already passed
-> the point where people can fix all of the bugs in exec because
-> the code is so hairy.
-> 
-> I think to be maintainable and clear the code exec code is going to
-> need to look something like:
-> 
-> static int bprm_execveat(int fd, struct filename *filename,
-> 			struct bprm *bprm, int flags);
-> 
-> int kernel_execve(const char *filename,
-> 		  const char *const *argv, const char *const *envp, int flags)
-> {
-> 	bprm = kzalloc(sizeof(*pbrm), GFP_KERNEL);
->         bprm->argc = count_kernel_strings(argv);
->         bprm->envc = count_kernel_strings(envp);
->         prepare_arg_pages(bprm);
->         copy_strings_kernel(bprm->envc, envp, bprm);
->         copy_strings_kernel(bprm->argc, argc, bprm);
-> 	ret = bprm_execveat(AT_FDCWD, filename, bprm);
->         free_bprm(bprm);
->         return ret;
-> }
-> 
-> int do_exeveat(int fd, const char *filename,
-> 		const char __user *const __user *argv,
->                 const char __user *const __user *envp, int flags)
-> {
-> 	bprm = kzalloc(sizeof(*pbrm), GFP_KERNEL);
->         bprm->argc = count_strings(argv);
->         bprm->envc = count_strings(envp);
->         prepare_arg_pages(bprm);
->         copy_strings(bprm->envc, envp, bprm);
->         copy_strings(bprm->argc, argc, bprm);
-> 	ret = bprm_execveat(fd, filename, bprm);
->         free_bprm(bprm);
->         return ret;
-> }
-> 
-> More work is required obviously to make the code above really work but
-> when the dust clears a structure like that doesn't have funny edge cases
-> that can hide bugs and make it tricky to change the code.
+> Can you please make __next_physmem_range() static inline if we are to
+> keep it?
 
-+1 to the approach.
-I think Christoph's work need to be on top of Eric's.
+The thing is, then I have to expose "physmem" to something outside
+memblock.c. That's what I wanted to avoid here. (instead, have a minimal
+interface that is sufficient enough for this special case of physmem -
+add memory during boot, walk memory after boot. Performance is not an
+issue).
+
+[...]
+
+>>   * Each region is represented by :c:type:`struct memblock_region` that
+>>   * defines the region extents, its attributes and NUMA node id on NUMA
+>>   * systems. Every memory type is described by the :c:type:`struct
+>>   * memblock_type` which contains an array of memory regions along with
+>> - * the allocator metadata. The memory types are nicely wrapped with
+>> - * :c:type:`struct memblock`. This structure is statically initialzed
+>> - * at build time. The region arrays for the "memory" and "reserved"
+>> - * types are initially sized to %INIT_MEMBLOCK_REGIONS and for the
+>> - * "physmap" type to %INIT_PHYSMEM_REGIONS.
+>> + * the allocator metadata. The memory types (except "physmem") are nicely
+>> + * wrapped with :c:type:`struct memblock`. This structure is statically
+>> + * initialized at build time. The region arrays for the "memory" and
+>> + * "reserved" types are initially sized to %INIT_MEMBLOCK_REGIONS.
+> 
+> I'd prefer
+> 
+> 	... The "memory" and "reserved" types are nicely wrapped 
+> 	with :c:type:`struct memblock`. This structure is statically
+>         initialized at build time. 
+> 
+> And while on this we can update the "reserved" size to match the code:
+> 
+> 	The region arrays are initilily sized to %INIT_MEMBLOCK_REGIONS
+>  	for "memory" and %INIT_MEMBLOCK_RESERVED_REGIONS for "reserved".
+
+Ack to both!
+
+-- 
+Thanks,
+
+David / dhildenb
+
