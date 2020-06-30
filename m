@@ -2,169 +2,142 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBAADC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A697C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 9C50020759
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:08:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593533327;
-	bh=Yrw+E0tDD/xWJStSBD4plfXuQGMfBLXahbiSK/LOqwA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=F7DwEak9wC4Nzfba+hAmdYg+71cunOpkmSYs8OOa27MRJZ/TeZcGwXhfjJ2yzVZYN
-	 4fjeOGLsIaxZxVO7CCBBlUYCpmRvfMFf/HR0FOQ4UJJyqkUrmejVaoexnVeapH3cI9
-	 dStGFwbo82DAbBDAYO6HG7z6o0AY6KA/p3c/1x6Q=
+	by mail.kernel.org (Postfix) with ESMTP id 199F92074F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:10:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gorani.run header.i=@gorani.run header.b="Ysv+xs4V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728686AbgF3QIq (ORCPT
+        id S1729305AbgF3QKF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 12:08:46 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42176 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726117AbgF3QIq (ORCPT
+        Tue, 30 Jun 2020 12:10:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40922 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726117AbgF3QKE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 12:08:46 -0400
-Received: by mail-ot1-f67.google.com with SMTP id 76so4410060otu.9;
-        Tue, 30 Jun 2020 09:08:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jQDz/WabqYjbF35ePxjq+94tU34dFjVcRR53QQxEhIE=;
-        b=K1q9NJXTaJ3HUAez4QAa7bUgGd/B59WXkiVSTRwyVEJ5lir+keaS5BcKvwLftJmws4
-         ZgsZo26J22s4uYGQj8T9NaDwtCFXkWmet1LzOXzbIniQ7I0jyi0lt2Uh9CDKLoruE2Oz
-         vWDS5XxgVntVzkCSkY+pp8K5F7ruTuHSujPrNbgGg8/jc64J1fK5bZVK+RQZdedFwhoZ
-         5DUpv0R4jlHPusEoEH3r36B2hcNQYPuwlNGldIL8AZleVi17D5XrebxrXBm07s1JHuYH
-         Y2wyCNbV2YY34QcAFKWOw3f/MacIhCLSyEztLoOIfDDijAOcvihX6d96OiZy8SLkXyHG
-         DlVQ==
-X-Gm-Message-State: AOAM530kjvkx1t9KNdMVhqqUguYr//cKN6HVM8e8OnVpEFQBAJ30mhVp
-        cgVgvssvfOjpWubRiz/o7Myp/cjuLcdWtTNxcMc=
-X-Google-Smtp-Source: ABdhPJxaWnX9yrMQHErQh8Vw+ezc/MNNEhYcKVhPEqUi65LAtj57f/zeJ/ze1v+SS/GdZrhEkvjMvThwgj4FoHTcVQM=
-X-Received: by 2002:a9d:1c82:: with SMTP id l2mr1108124ota.167.1593533322766;
- Tue, 30 Jun 2020 09:08:42 -0700 (PDT)
+        Tue, 30 Jun 2020 12:10:04 -0400
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [IPv6:2001:67c:2050::465:201])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2C4CC061755;
+        Tue, 30 Jun 2020 09:10:03 -0700 (PDT)
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 49x8T56KSVzQlL5;
+        Tue, 30 Jun 2020 18:10:01 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gorani.run; s=MBO0001;
+        t=1593533399;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/GvbcSzf93t3Xo8PgTLO0RFe1bXEAMDeF7vWz9G0lXY=;
+        b=Ysv+xs4V8Jruw1SxiPoUfjc6pgAqz91VNB8/TGmbrM6bCDpgr6byLNxH1oBz6+X2FsYugj
+        6f6t+GJh9046R2sqSJhTQIF2xTrIHb7qWcjFOeHlMoUMHlVTWQ4T0zDXG/gsmV8Og0bN4B
+        3S36A6pgFxS+hbBuFkX1/fjP05xLfnjy106gR+ZLXSi1d8t5CIY624T6CoGqn47rH1UmUH
+        auD5wx+t8YI2amB2gt9qAngvycTsQPaTWMkvAeRoFAABUXHsFSCctSbcbQetHBC63cnRkI
+        7lkQEk9J0hmKRCt+PyKgHUCdZYVnlu4DMNZBgk900GOE4wcRHY224Lf2Mzj+Vg==
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
+        with ESMTP id 5PLJZsftWcGX; Tue, 30 Jun 2020 18:09:57 +0200 (CEST)
+From:   Sungbo Eo <mans0n@gorani.run>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+Cc:     Sungbo Eo <mans0n@gorani.run>
+Subject: [PATCH v3 2/2] dt-bindings: gpio: Add bindings for NXP PCA9570
+Date:   Wed,  1 Jul 2020 01:09:34 +0900
+Message-Id: <20200630160934.1197066-1-mans0n@gorani.run>
+In-Reply-To: <20200630160736.1196697-1-mans0n@gorani.run>
+References: <20200630160736.1196697-1-mans0n@gorani.run>
 MIME-Version: 1.0
-References: <20200630044943.3425049-1-rajatja@google.com> <20200630044943.3425049-6-rajatja@google.com>
- <20200630104948.GC856968@kuha.fi.intel.com> <20200630125216.GA1109228@kroah.com>
- <CAJZ5v0iYFKrouQx_b7afPnz7ohjWOKKDhdHj_3HObKYV_rRhiw@mail.gmail.com> <20200630153816.GD1785141@kroah.com>
-In-Reply-To: <20200630153816.GD1785141@kroah.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 30 Jun 2020 18:08:31 +0200
-Message-ID: <CAJZ5v0jUx-RVhJRDngkOXx-3szFJDOgCJs2yuGKFyo2f1qZAwA@mail.gmail.com>
-Subject: Re: [PATCH v2 5/7] driver core: Add device location to "struct
- device" and expose it in sysfs
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rajat Jain <rajatja@google.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        "open list:AMD IOMMU (AMD-VI)" <iommu@lists.linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Raj Ashok <ashok.raj@intel.com>,
-        lalithambika.krishnakumar@intel.com,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Prashant Malani <pmalani@google.com>,
-        Benson Leung <bleung@google.com>,
-        Todd Broch <tbroch@google.com>,
-        Alex Levin <levinale@google.com>,
-        Mattias Nissler <mnissler@google.com>,
-        Rajat Jain <rajatxjain@gmail.com>,
-        Bernie Keany <bernie.keany@intel.com>,
-        Aaron Durbin <adurbin@google.com>,
-        Diego Rivas <diegorivas@google.com>,
-        Duncan Laurie <dlaurie@google.com>,
-        Furquan Shaikh <furquan@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Christian Kellner <christian@kellner.me>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Saravana Kannan <saravanak@google.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-MBO-SPAM-Probability: 8
+X-Rspamd-Score: 1.27 / 15.00 / 15.00
+X-Rspamd-Queue-Id: 706AB17FE
+X-Rspamd-UID: c515cf
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 5:38 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Tue, Jun 30, 2020 at 03:00:34PM +0200, Rafael J. Wysocki wrote:
-> > On Tue, Jun 30, 2020 at 2:52 PM Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > On Tue, Jun 30, 2020 at 01:49:48PM +0300, Heikki Krogerus wrote:
-> > > > On Mon, Jun 29, 2020 at 09:49:41PM -0700, Rajat Jain wrote:
-> > > > > Add a new (optional) field to denote the physical location of a device
-> > > > > in the system, and expose it in sysfs. This was discussed here:
-> > > > > https://lore.kernel.org/linux-acpi/20200618184621.GA446639@kroah.com/
-> > > > >
-> > > > > (The primary choice for attribute name i.e. "location" is already
-> > > > > exposed as an ABI elsewhere, so settled for "site"). Individual buses
-> > > > > that want to support this new attribute can opt-in by setting a flag in
-> > > > > bus_type, and then populating the location of device while enumerating
-> > > > > it.
-> > > >
-> > > > So why not just call it "physical_location"?
-> > >
-> > > That's better, and will allow us to put "3rd blue plug from the left,
-> > > 4th row down" in there someday :)
-> > >
-> > > All of this is "relative" to the CPU, right?  But what CPU?  Again, how
-> > > are the systems with drawers of PCI and CPUs and memory that can be
-> > > added/removed at any point in time being handled here?  What is
-> > > "internal" and "external" for them?
-> > >
-> > > What exactly is the physical boundry here that is attempting to be
-> > > described?
-> >
-> > Also, where is the "physical location" information going to come from?
->
-> Who knows?  :)
->
-> Some BIOS seem to provide this, but do you trust that?
->
-> > If that is the platform firmware (which I suspect is the anticipated
-> > case), there may be problems with reliability related to that.
->
-> s/may/will/
->
-> which means making the kernel inact a policy like this patch series
-> tries to add, will result in a lot of broken systems, which is why I
-> keep saying that it needs to be done in userspace.
->
-> It's as if some of us haven't been down this road before and just keep
-> being ignored...
->
-> {sigh}
+This patch adds device tree bindings for the NXP PCA9570,
+a 4-bit I2C GPO expander.
 
-Well, to be honest, if you are a "vertical" vendor and you control the
-entire stack, *including* the platform firmware, it would be kind of
-OK for you to do that in a product kernel.
+Signed-off-by: Sungbo Eo <mans0n@gorani.run>
+---
+v3:
+* fixed dt_binding_check error
 
-However, this is not a practical thing to do in the mainline kernel
-which must work for everybody, including people who happen to use
-systems with broken or even actively unfriendly firmware on them.
+v2:
+I don't feel I can really maintain this driver, but it seems all yaml docs
+have a maintainers field so I just added it...
+---
+ .../bindings/gpio/gpio-pca9570.yaml           | 47 +++++++++++++++++++
+ 1 file changed, 47 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml
 
-So I'm inclined to say that IMO this series "as is" would not be an
-improvement from the mainline perspective.
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml b/Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml
+new file mode 100644
+index 000000000000..338c5312a106
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml
+@@ -0,0 +1,47 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/gpio-pca9570.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: PCA9570 I2C GPO expander
++
++maintainers:
++  - Sungbo Eo <mans0n@gorani.run>
++
++properties:
++  compatible:
++    enum:
++      - nxp,pca9570
++
++  reg:
++    maxItems: 1
++
++  gpio-controller: true
++
++  '#gpio-cells':
++    const: 2
++
++required:
++  - compatible
++  - reg
++  - gpio-controller
++  - "#gpio-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    i2c0 {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        gpio@24 {
++            compatible = "nxp,pca9570";
++            reg = <0x24>;
++            gpio-controller;
++            #gpio-cells = <2>;
++        };
++    };
++
++...
+-- 
+2.27.0
 
-I guess it would make sense to have an attribute for user space to
-write to in order to make the kernel reject device plug-in events
-coming from a given port or connector, but the kernel has no reliable
-means to determine *which* ports or connectors are "safe", and even if
-there was a way for it to do that, it still may not agree with user
-space on which ports or connectors should be regarded as "safe".
-
-Cheers!
