@@ -2,108 +2,198 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F243C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90DA7C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:37:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F004420722
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:33:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F9D7206BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:37:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UyTT0PUJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eYs6ntqm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729355AbgF3FdO (ORCPT
+        id S1728606AbgF3FhL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 01:33:14 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:43459 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725887AbgF3FdO (ORCPT
+        Tue, 30 Jun 2020 01:37:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56180 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbgF3FhK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 01:33:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593495192;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=pEuLRzXmEdahiAKGpnL+nVeF0sdlBPCkwM2Y/fcvgk0=;
-        b=UyTT0PUJHVw4TpWPN6mlq4968ndidJjiJDsI00EjasaDhND08SrulHyzsgOnQx5Zz390JB
-        OI/7lzXiKzzw0TpmLVQvA+IaRC4GzALHTSF8XZzD0faTO/2Tg0eq4ImvgL4+EPWhp+mXoh
-        7uQnCzoX3NPQYwG1wjM8588NyZD+SmU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-348-svVRFDr_OByaxAGU_0jUjA-1; Tue, 30 Jun 2020 01:33:10 -0400
-X-MC-Unique: svVRFDr_OByaxAGU_0jUjA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8C5121800D42;
-        Tue, 30 Jun 2020 05:33:09 +0000 (UTC)
-Received: from [10.72.13.159] (ovpn-13-159.pek2.redhat.com [10.72.13.159])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EFE2F10013C1;
-        Tue, 30 Jun 2020 05:33:05 +0000 (UTC)
-Subject: Re: [PATCH] vhost: Fix documentation
-To:     Eli Cohen <eli@mellanox.com>, linux-kernel@vger.kernel.org,
-        netdev <netdev@vger.kernel.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-References: <20200630052925.GA157062@mtl-vdi-166.wap.labs.mlnx>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <dc269512-8f59-4389-4b7f-bec034d66bfa@redhat.com>
-Date:   Tue, 30 Jun 2020 13:33:03 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
+        Tue, 30 Jun 2020 01:37:10 -0400
+Received: from mail-lj1-x243.google.com (mail-lj1-x243.google.com [IPv6:2a00:1450:4864:20::243])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F08A6C061755
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 22:37:09 -0700 (PDT)
+Received: by mail-lj1-x243.google.com with SMTP id n23so20997991ljh.7
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 22:37:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=y+NTTpix/VNOdqLN5V3EttevSJs3w1JqKA5tqe0k7BM=;
+        b=eYs6ntqmqtss9ojrvsY3GbB/7L1Al+U7Czg/OV/4iPVxFlg/rgjAwylYV2+807Ouw3
+         lG2gJOT6XtkwFhsSetyTp9B8beQdewzvq/NiVR+Ld/CtY3TmqPqJsGdIKNRSJgpEG+Va
+         HI+a0ktwNFAqqxnY5QzXXsDkxmfbfRXtzzJwH0R0p3Krd1wqu9p9hRUdHu4borVz2iky
+         ua61SdmRu99QBiPLuGGEbJJhbl2bl2jK8hph6bBgjLfGUKts9nCzELPGrg3B/qD8RTO+
+         CvwzlQaEB3O6b3sCb6o28skMvKESdqY+ZIMoymJl+kjgJvPPzrUfHCVuchyknlc7mlgz
+         SIfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=y+NTTpix/VNOdqLN5V3EttevSJs3w1JqKA5tqe0k7BM=;
+        b=Avtc+n03BhmFsDbhc/AdjC9+WTEV7aNx5uWYYNoKh5afNcbqFVgSRXgV4u/rgICXPc
+         mcA5HE8cvasv0Zc3fVCBHCcjd07JJ+MhV2ut+8T/awy10Q5Qc+WyIwGYkCHdln717O7M
+         HkB6AQWxmHEhHPvkk4y3m8L16Gt8LqFIAlPwbKstzWx4Q8QYsxFDsecPh4X17ufN2lFh
+         PMQQSlY30sRyN/66CGt2lqgPwwWKh7Q3SZREY29e4VpeqiYU9z4WuCln+epcj5atW+2w
+         1MztWcPE33RbDtMabVxco3GlBJYlCh4ryqOeVjbynjgcVODnOAZqax7ea3ZkcorZM16D
+         3KQA==
+X-Gm-Message-State: AOAM5310S5GQa5pTG2okFYWXuOiIjq9AAf3wipLpROiDFJlxj6h65xKC
+        6YGkxvKQjnGK7lkpmNuOvj7xFz80x0e+zGQ4wFZTQA==
+X-Google-Smtp-Source: ABdhPJyetVRam7dpe9Lk5SgkZI4NJyaTUvqWahZ3sGQ69bb4D0vK7IghSfJMsneSvvEZUdzelLl1qUxjPYP5FO0EPoY=
+X-Received: by 2002:a2e:a58a:: with SMTP id m10mr9501981ljp.346.1593495428184;
+ Mon, 29 Jun 2020 22:37:08 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200630052925.GA157062@mtl-vdi-166.wap.labs.mlnx>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+References: <20200630032014.22956-1-andy.tang@nxp.com> <CAHLCerO3B4Z67KP8VaF957Jkid21gLvzhS49gNeqUC+6muPkjA@mail.gmail.com>
+ <DBBPR04MB609085CD69E4CCBDD49CCF66F36F0@DBBPR04MB6090.eurprd04.prod.outlook.com>
+In-Reply-To: <DBBPR04MB609085CD69E4CCBDD49CCF66F36F0@DBBPR04MB6090.eurprd04.prod.outlook.com>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Tue, 30 Jun 2020 11:06:56 +0530
+Message-ID: <CAP245DV-_+5Ht=yP9Mnzb2vUqXDJSEeBPfbNh48mEt62PmBeWA@mail.gmail.com>
+Subject: Re: [EXT] Re: [PATCH 1/2] arm64: dts: ls1088a: add more thermal zone support
+To:     Andy Tang <andy.tang@nxp.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        lakml <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2020/6/30 下午1:29, Eli Cohen wrote:
-> Fix documentation to match actual function prototypes
+On Tue, Jun 30, 2020 at 10:58 AM Andy Tang <andy.tang@nxp.com> wrote:
 >
-> "end" used instead of "last". Fix that.
 >
-> Signed-off-by: Eli Cohen <eli@mellanox.com>
-> ---
-
-
-Acked-by: Jason Wang <jasowang@redhat.com>
-
-Thanks
-
-
->   drivers/vhost/iotlb.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
 >
-> diff --git a/drivers/vhost/iotlb.c b/drivers/vhost/iotlb.c
-> index 1f0ca6e44410..0d4213a54a88 100644
-> --- a/drivers/vhost/iotlb.c
-> +++ b/drivers/vhost/iotlb.c
-> @@ -149,7 +149,7 @@ EXPORT_SYMBOL_GPL(vhost_iotlb_free);
->    * vhost_iotlb_itree_first - return the first overlapped range
->    * @iotlb: the IOTLB
->    * @start: start of IOVA range
-> - * @end: end of IOVA range
-> + * @last: last byte in IOVA range
->    */
->   struct vhost_iotlb_map *
->   vhost_iotlb_itree_first(struct vhost_iotlb *iotlb, u64 start, u64 last)
-> @@ -162,7 +162,7 @@ EXPORT_SYMBOL_GPL(vhost_iotlb_itree_first);
->    * vhost_iotlb_itree_first - return the next overlapped range
->    * @iotlb: the IOTLB
->    * @start: start of IOVA range
-> - * @end: end of IOVA range
-> + * @last: last byte IOVA range
->    */
->   struct vhost_iotlb_map *
->   vhost_iotlb_itree_next(struct vhost_iotlb_map *map, u64 start, u64 last)
+> > -----Original Message-----
+> > From: Amit Kucheria <amit.kucheria@linaro.org>
+> > Sent: 2020=E5=B9=B46=E6=9C=8830=E6=97=A5 13:12
+> > To: Andy Tang <andy.tang@nxp.com>
+> > Cc: Shawn Guo <shawnguo@kernel.org>; Leo Li <leoyang.li@nxp.com>; Rob
+> > Herring <robh+dt@kernel.org>; lakml <linux-arm-kernel@lists.infradead.o=
+rg>;
+> > open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
+> > <devicetree@vger.kernel.org>; LKML <linux-kernel@vger.kernel.org>
+> > Subject: [EXT] Re: [PATCH 1/2] arm64: dts: ls1088a: add more thermal zo=
+ne
+> > support
+> >
+> > Caution: EXT Email
+> >
+> > On Tue, Jun 30, 2020 at 8:56 AM <andy.tang@nxp.com> wrote:
+> > >
+> > > From: Yuantian Tang <andy.tang@nxp.com>
+> > >
+> > > There are 2 thermal zones in ls1088a soc. Add the other thermal zone
+> > > node to enable it.
+> > > Also update the values in calibration table to make the temperatures
+> > > monitored more precise.
+> > >
+> > > Signed-off-by: Yuantian Tang <andy.tang@nxp.com>
+> > > ---
+> > >  .../arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 100
+> > > +++++++++++-------
+> > >  1 file changed, 62 insertions(+), 38 deletions(-)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > > b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > > index 36a799554620..ccbbc23e6c85 100644
+> > > --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > > +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> > > @@ -129,19 +129,19 @@
+> > >         };
+> > >
+> > >         thermal-zones {
+> > > -               cpu_thermal: cpu-thermal {
+> > > +               core-cluster {
+> > >                         polling-delay-passive =3D <1000>;
+> > >                         polling-delay =3D <5000>;
+> > >                         thermal-sensors =3D <&tmu 0>;
+> > >
+> > >                         trips {
+> > > -                               cpu_alert: cpu-alert {
+> > > +                               core_cluster_alert:
+> > core-cluster-alert
+> > > + {
+> > >                                         temperature =3D <85000>;
+> > >                                         hysteresis =3D <2000>;
+> > >                                         type =3D "passive";
+> > >                                 };
+> > >
+> > > -                               cpu_crit: cpu-crit {
+> > > +                               core_cluster_crit: core-cluster-crit =
+{
+> > >                                         temperature =3D <95000>;
+> > >                                         hysteresis =3D <2000>;
+> > >                                         type =3D "critical"; @@
+> > -150,7
+> > > +150,7 @@
+> > >
+> > >                         cooling-maps {
+> > >                                 map0 {
+> > > -                                       trip =3D <&cpu_alert>;
+> > > +                                       trip =3D
+> > <&core_cluster_alert>;
+> > >                                         cooling-device =3D
+> > >                                                 <&cpu0
+> > THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> > >                                                 <&cpu1
+> > > THERMAL_NO_LIMIT THERMAL_NO_LIMIT>, @@ -163,6 +163,26 @@
+> > >                                 };
+> > >                         };
+> > >                 };
+> > > +
+> > > +               soc {
+> > > +                       polling-delay-passive =3D <1000>;
+> > > +                       polling-delay =3D <5000>;
+> > > +                       thermal-sensors =3D <&tmu 1>;
+> > > +
+> > > +                       trips {
+> > > +                               soc-alert {
+> > > +                                       temperature =3D <85000>;
+> > > +                                       hysteresis =3D <2000>;
+> > > +                                       type =3D "passive";
+> > > +                               };
+> > > +
+> > > +                               soc-crit {
+> > > +                                       temperature =3D <95000>;
+> > > +                                       hysteresis =3D <2000>;
+> > > +                                       type =3D "critical";
+> > > +                               };
+> > > +                       };
+> > > +               };
+> >
+> > You should also add a cooling-maps section for this thermal zone given =
+that it
+> > has a passive trip type. Otherwise there is no use for a passive trip t=
+ype.
+> It is better to have a cooling device. But there is only one cooling devi=
+ce on this platform
+> which is used by core-cluster. So there is no extra cooling device for it=
+.
+> This zone can take action when critical temp is reached. So it is still u=
+seful.
+> What do you suggest?
 
+If the action taken by the core-cluster cooling-maps is the only one
+that can be taken, I suggest getting rid of the the soc-alert passive
+trip completely. It is not of any use.
+
+If there is a chance that your soc thermal-zone can heat up before
+your cpu-cluster zone (unlikely), you could use the same cooling
+device (cpu0, cpu1) for soc thermal zone too.
