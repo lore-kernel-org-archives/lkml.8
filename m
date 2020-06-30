@@ -2,126 +2,53 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6452C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43B24C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:17:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AA2FE2073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:16:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JagFxB5A"
+	by mail.kernel.org (Postfix) with ESMTP id 2A65220760
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:17:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732393AbgF3KQV (ORCPT
+        id S1732401AbgF3KRn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 06:16:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42808 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732330AbgF3KQR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 06:16:17 -0400
-Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B37DC061755;
-        Tue, 30 Jun 2020 03:16:17 -0700 (PDT)
-Received: by mail-il1-x144.google.com with SMTP id x9so17225691ila.3;
-        Tue, 30 Jun 2020 03:16:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
-         :subject:to:cc;
-        bh=SbAEPN1m4iKiBG7QA+v5cU/z7WYXiQ4xQRuZe2DabsE=;
-        b=JagFxB5Alxz5lawsJrsU1BV3p45tgLIiw6eyUiLkQ9M2clbGsq/EUH4mHWDUI7V+Z7
-         ykJ6E1/dzBdJUNP3bGIl984EaTjwXv/xOUYgoaY4+D9udjTTeTqW1mOsRvmgGv7Xh5ja
-         atogqR0dfQ7KneaRgE46UwZR11RYw2pqF+QETBRdKTgQL5rCLTRl1UJ9BBJ9LCXEo2ER
-         Jz9zN312H0j7chDLj34pxs5TaD6OqqQeScBqX/SMicm3wHRFdmN/zLo9lrqhWoA1Cv3L
-         ximYiJNO2PRIYxSJQoDAfoNUbJOatMPWwYjBbFO16cZJMsDsS9TxwC/DyiA48bqGoNW8
-         fn8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
-         :from:date:message-id:subject:to:cc;
-        bh=SbAEPN1m4iKiBG7QA+v5cU/z7WYXiQ4xQRuZe2DabsE=;
-        b=HZA/Y7enn0CEkPBlCeWj0bHhuxz4i8k0oLO/YZpdfqstlIlgiEluhKFsnp3DpwuDJr
-         Q36OTH1e6d+Vy8wmM+idPIo0EeRVbszDIGK4GctF/50cJMYSxTzD3oZIjHzCYzGQsGma
-         QwfLJczCIgVa2GEVZaE8dYq1oz2iylpPnqWo503BOkGzeKMtSwb8dT2g99TUGg3hNIyi
-         /E0hX0AJKwasOgWxfQQczL++A/FUWm7jYsM0iXicZ00tLsSj+/L/II2o9b1d/nfGvCe7
-         C2w3pbnlyPJ/EzYJ6e3afY02qMcg2bzRGi7ItBlFNfkyc0ycBUfTLh3Il+0cps7NIVr9
-         eXlA==
-X-Gm-Message-State: AOAM531UYnoJknImIOF5zpFzWIHQ9jydMX/DDeNQ3K7CBEZnOmj/6RzB
-        S1L9G1BHyD0mbDcUCwgixJ3Dw3CeZMVO0zx6qk8=
-X-Google-Smtp-Source: ABdhPJyaCeWhPWJX1rNdVyxwunt0oDSFfid+9IdQTFGd6ZVsBgSziCP0bPkd2a7xYaiH53s/3vetfJQKqWLlilwNzpk=
-X-Received: by 2002:a92:940f:: with SMTP id c15mr1993358ili.204.1593512177008;
- Tue, 30 Jun 2020 03:16:17 -0700 (PDT)
+        Tue, 30 Jun 2020 06:17:43 -0400
+Received: from 8bytes.org ([81.169.241.247]:50734 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732259AbgF3KRl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 06:17:41 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 5C6A72A7; Tue, 30 Jun 2020 12:17:40 +0200 (CEST)
+Date:   Tue, 30 Jun 2020 12:17:39 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH] iommu: move sg_table wrapper out of CONFIG_IOMMU_SUPPORT
+Message-ID: <20200630101738.GN28824@8bytes.org>
+References: <CGME20200630081806eucas1p2a9a0ecae69dfe3306092aff30e21cb5c@eucas1p2.samsung.com>
+ <20200630081756.18526-1-m.szyprowski@samsung.com>
 MIME-Version: 1.0
-References: <CGME20200512081526epcas1p364393ddc6bae354db5aaaae9b09ffbff@epcas1p3.samsung.com>
- <000201d62835$7ddafe50$7990faf0$@samsung.com>
-In-Reply-To: <000201d62835$7ddafe50$7990faf0$@samsung.com>
-Reply-To: sedat.dilek@gmail.com
-From:   Sedat Dilek <sedat.dilek@gmail.com>
-Date:   Tue, 30 Jun 2020 12:16:33 +0200
-Message-ID: <CA+icZUUjcyrVsDNQ4gHVMYWkLLX9oscme3PmXUnfnc5DojkqVA@mail.gmail.com>
-Subject: Re: exfatprogs-1.0.3 version released
-To:     Namjae Jeon <namjae.jeon@samsung.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, Eric Sandeen <sandeen@sandeen.net>,
-        Goldwyn Rodrigues <rgoldwyn@suse.com>,
-        Hyunchul Lee <hyc.lee@gmail.com>,
-        Nicolas Boos <nicolas.boos@wanadoo.fr>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200630081756.18526-1-m.szyprowski@samsung.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 12, 2020 at 10:17 AM Namjae Jeon <namjae.jeon@samsung.com> wrote:
->
-> Hi folk,
->
-> We have released exfatprogs-1.0.3 version.
-> Any feedback is welcome!:)
->
-> CHANGES :
->  * Rename label.exfat to tune.exfat.
->  * tune.exfat: change argument style(-l option for print level,
->    -L option for setting label)
->  * mkfs.exfat: harmonize set volume label option with tune.exfat.
->
-> NEW FEATURES :
->  * Add man page.
->
-> BUG FIXES :
->  * Fix the reported build warnings/errors.
->  * Add memset to clean garbage in allocation.
->  * Fix wrong volume label array size.
->  * Open a device using O_EXCL to avoid formatting it while it is mounted.
->  * Fix incomplete "make dist" generated tarball.
->
-> The git tree is at:
->       https://github.com/exfatprogs/exfatprogs
->
-> The tarballs can be found at:
->       https://github.com/exfatprogs/exfatprogs/releases/download/1.0.3/exfatprogs-1.0.3.tar.gz
->
+On Tue, Jun 30, 2020 at 10:17:56AM +0200, Marek Szyprowski wrote:
+> Move the recently added sg_table wrapper out of CONFIG_IOMMU_SUPPORT to
+> let the client code copile also when IOMMU support is disabled.
+> 
+> Fixes: 48530d9fab0d ("iommu: add generic helper for mapping sgtable objects")
+> Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> ---
+>  include/linux/iommu.h | 32 ++++++++++++++++----------------
+>  1 file changed, 16 insertions(+), 16 deletions(-)
 
-Hi,
+Applied, thanks (not for v5.8, as there seem to be no users yet).
 
-thanks for the upgrade.
-
-Today, I contacted the Debian maintainer on how he wants to
-distinguish between exfat-utils vs. exfatprogs as Linux v5.7 entered
-Debian/unstable.
-
-When I looked at the release/tags page on github:
-
-Can you please offer tar.xz tarballs, please?
-Hashes? Like sha256sum
-Signing keys? (Signed tarballs?)
-
-Thanks.
-
-Regards,
-- Sedat -
