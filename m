@@ -2,173 +2,126 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA86EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6452C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:16:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B95AB2073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:15:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593512148;
-	bh=AnrGPXZ0L3XFWcwycTfoFtiR62BIC4cXUJGTL2T6Ymk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=nZe9LyggYv+e6clouaAlFuflVllUXpVpaKMcktE9ucs9Bc8Uke36ZrDGol33n5sim
-	 7moH/G361z/vSlbKTKt1MPhHKWevGbplhctx2eImZDK43xE7CQUwqsHillqM8bFDpc
-	 +9C+T0gnH+HU9OxAWQi/p08tgo8r10/DoBN+n62E=
+	by mail.kernel.org (Postfix) with ESMTP id AA2FE2073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 10:16:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JagFxB5A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732346AbgF3KPq (ORCPT
+        id S1732393AbgF3KQV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 06:15:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47728 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731155AbgF3KPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 06:15:45 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 310812073E;
-        Tue, 30 Jun 2020 10:15:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593512144;
-        bh=AnrGPXZ0L3XFWcwycTfoFtiR62BIC4cXUJGTL2T6Ymk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=poSpxfVsPFzdrIYdiHqRbaXPpyDLpWpyCa/T+q7RuCj//1Y90s/jNdAltWjoJqTv5
-         xU3qD4C0ZpR+CUSfhDjWssLQ3KHLbtjZGOx2lOH60RKvc23lPiTTD9CCbrkIX/bqvw
-         2YKqpUMLl4yxpzXAH3qYmxrRyes8clDAaQsKJYc4=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jqDIk-007i3h-O9; Tue, 30 Jun 2020 11:15:42 +0100
+        Tue, 30 Jun 2020 06:16:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42808 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732330AbgF3KQR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 06:16:17 -0400
+Received: from mail-il1-x144.google.com (mail-il1-x144.google.com [IPv6:2607:f8b0:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B37DC061755;
+        Tue, 30 Jun 2020 03:16:17 -0700 (PDT)
+Received: by mail-il1-x144.google.com with SMTP id x9so17225691ila.3;
+        Tue, 30 Jun 2020 03:16:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:reply-to:from:date:message-id
+         :subject:to:cc;
+        bh=SbAEPN1m4iKiBG7QA+v5cU/z7WYXiQ4xQRuZe2DabsE=;
+        b=JagFxB5Alxz5lawsJrsU1BV3p45tgLIiw6eyUiLkQ9M2clbGsq/EUH4mHWDUI7V+Z7
+         ykJ6E1/dzBdJUNP3bGIl984EaTjwXv/xOUYgoaY4+D9udjTTeTqW1mOsRvmgGv7Xh5ja
+         atogqR0dfQ7KneaRgE46UwZR11RYw2pqF+QETBRdKTgQL5rCLTRl1UJ9BBJ9LCXEo2ER
+         Jz9zN312H0j7chDLj34pxs5TaD6OqqQeScBqX/SMicm3wHRFdmN/zLo9lrqhWoA1Cv3L
+         ximYiJNO2PRIYxSJQoDAfoNUbJOatMPWwYjBbFO16cZJMsDsS9TxwC/DyiA48bqGoNW8
+         fn8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:reply-to
+         :from:date:message-id:subject:to:cc;
+        bh=SbAEPN1m4iKiBG7QA+v5cU/z7WYXiQ4xQRuZe2DabsE=;
+        b=HZA/Y7enn0CEkPBlCeWj0bHhuxz4i8k0oLO/YZpdfqstlIlgiEluhKFsnp3DpwuDJr
+         Q36OTH1e6d+Vy8wmM+idPIo0EeRVbszDIGK4GctF/50cJMYSxTzD3oZIjHzCYzGQsGma
+         QwfLJczCIgVa2GEVZaE8dYq1oz2iylpPnqWo503BOkGzeKMtSwb8dT2g99TUGg3hNIyi
+         /E0hX0AJKwasOgWxfQQczL++A/FUWm7jYsM0iXicZ00tLsSj+/L/II2o9b1d/nfGvCe7
+         C2w3pbnlyPJ/EzYJ6e3afY02qMcg2bzRGi7ItBlFNfkyc0ycBUfTLh3Il+0cps7NIVr9
+         eXlA==
+X-Gm-Message-State: AOAM531UYnoJknImIOF5zpFzWIHQ9jydMX/DDeNQ3K7CBEZnOmj/6RzB
+        S1L9G1BHyD0mbDcUCwgixJ3Dw3CeZMVO0zx6qk8=
+X-Google-Smtp-Source: ABdhPJyaCeWhPWJX1rNdVyxwunt0oDSFfid+9IdQTFGd6ZVsBgSziCP0bPkd2a7xYaiH53s/3vetfJQKqWLlilwNzpk=
+X-Received: by 2002:a92:940f:: with SMTP id c15mr1993358ili.204.1593512177008;
+ Tue, 30 Jun 2020 03:16:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 30 Jun 2020 11:15:42 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Russell King <linux@arm.linux.org.uk>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Sumit Garg <sumit.garg@linaro.org>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Andrew Lunn <andrew@lunn.ch>, kernel-team@android.com
-Subject: Re: [PATCH v2 06/17] irqchip/gic-v3: Configure SGIs as standard
- interrupts
-In-Reply-To: <jhjimffgfyt.mognet@arm.com>
-References: <20200624195811.435857-1-maz@kernel.org>
- <20200624195811.435857-7-maz@kernel.org> <jhjimffgfyt.mognet@arm.com>
-User-Agent: Roundcube Webmail/1.4.5
-Message-ID: <f9502c41d941e56ffcc30c51f2d23ab9@kernel.org>
-X-Sender: maz@kernel.org
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: valentin.schneider@arm.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, will@kernel.org, catalin.marinas@arm.com, linux@arm.linux.org.uk, tglx@linutronix.de, jason@lakedaemon.net, sumit.garg@linaro.org, f.fainelli@gmail.com, gregory.clement@bootlin.com, andrew@lunn.ch, kernel-team@android.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+References: <CGME20200512081526epcas1p364393ddc6bae354db5aaaae9b09ffbff@epcas1p3.samsung.com>
+ <000201d62835$7ddafe50$7990faf0$@samsung.com>
+In-Reply-To: <000201d62835$7ddafe50$7990faf0$@samsung.com>
+Reply-To: sedat.dilek@gmail.com
+From:   Sedat Dilek <sedat.dilek@gmail.com>
+Date:   Tue, 30 Jun 2020 12:16:33 +0200
+Message-ID: <CA+icZUUjcyrVsDNQ4gHVMYWkLLX9oscme3PmXUnfnc5DojkqVA@mail.gmail.com>
+Subject: Re: exfatprogs-1.0.3 version released
+To:     Namjae Jeon <namjae.jeon@samsung.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel@vger.kernel.org, Eric Sandeen <sandeen@sandeen.net>,
+        Goldwyn Rodrigues <rgoldwyn@suse.com>,
+        Hyunchul Lee <hyc.lee@gmail.com>,
+        Nicolas Boos <nicolas.boos@wanadoo.fr>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-06-25 19:25, Valentin Schneider wrote:
-> On 24/06/20 20:58, Marc Zyngier wrote:
->> Change the way we deal with GICv3 SGIs by turning them into proper
->> IRQs, and calling into the arch code to register the interrupt range
->> instead of a callback.
->> 
->> Signed-off-by: Marc Zyngier <maz@kernel.org>
->> ---
->>  drivers/irqchip/irq-gic-v3.c | 81 
->> +++++++++++++++++++-----------------
->>  1 file changed, 43 insertions(+), 38 deletions(-)
->> 
->> diff --git a/drivers/irqchip/irq-gic-v3.c 
->> b/drivers/irqchip/irq-gic-v3.c
->> index 19b294ed48ba..d275e9b9533d 100644
->> --- a/drivers/irqchip/irq-gic-v3.c
->> +++ b/drivers/irqchip/irq-gic-v3.c
->> @@ -36,6 +36,8 @@
->>  #define FLAGS_WORKAROUND_GICR_WAKER_MSM8996	(1ULL << 0)
->>  #define FLAGS_WORKAROUND_CAVIUM_ERRATUM_38539	(1ULL << 1)
->> 
->> +#define GIC_IRQ_TYPE_PARTITION	(GIC_IRQ_TYPE_LPI + 1)
->> +
-> 
-> Nit: this piqued my interest but ended up being just a define shuffle; 
-> As a
-> member of the git speleologists' guild, I'd be overjoyed with having a
-> small notion of that in the changelog.
+On Tue, May 12, 2020 at 10:17 AM Namjae Jeon <namjae.jeon@samsung.com> wrote:
+>
+> Hi folk,
+>
+> We have released exfatprogs-1.0.3 version.
+> Any feedback is welcome!:)
+>
+> CHANGES :
+>  * Rename label.exfat to tune.exfat.
+>  * tune.exfat: change argument style(-l option for print level,
+>    -L option for setting label)
+>  * mkfs.exfat: harmonize set volume label option with tune.exfat.
+>
+> NEW FEATURES :
+>  * Add man page.
+>
+> BUG FIXES :
+>  * Fix the reported build warnings/errors.
+>  * Add memset to clean garbage in allocation.
+>  * Fix wrong volume label array size.
+>  * Open a device using O_EXCL to avoid formatting it while it is mounted.
+>  * Fix incomplete "make dist" generated tarball.
+>
+> The git tree is at:
+>       https://github.com/exfatprogs/exfatprogs
+>
+> The tarballs can be found at:
+>       https://github.com/exfatprogs/exfatprogs/releases/download/1.0.3/exfatprogs-1.0.3.tar.gz
+>
 
-Fair enough.
+Hi,
 
-> 
->>  struct redist_region {
->>       void __iomem		*redist_base;
->>       phys_addr_t		phys_base;
->> @@ -657,38 +659,14 @@ static asmlinkage void __exception_irq_entry 
->> gic_handle_irq(struct pt_regs *regs
->>       if ((irqnr >= 1020 && irqnr <= 1023))
->>               return;
->> 
->> -	/* Treat anything but SGIs in a uniform way */
->> -	if (likely(irqnr > 15)) {
->> -		int err;
->> -
->> -		if (static_branch_likely(&supports_deactivate_key))
->> -			gic_write_eoir(irqnr);
->> -		else
->> -			isb();
->> -
->> -		err = handle_domain_irq(gic_data.domain, irqnr, regs);
->> -		if (err) {
->> -			WARN_ONCE(true, "Unexpected interrupt received!\n");
->> -			gic_deactivate_unhandled(irqnr);
->> -		}
->> -		return;
->> -	}
->> -	if (irqnr < 16) {
->> +	if (static_branch_likely(&supports_deactivate_key))
->>               gic_write_eoir(irqnr);
->> -		if (static_branch_likely(&supports_deactivate_key))
->> -			gic_write_dir(irqnr);
->> -#ifdef CONFIG_SMP
->> -		/*
->> -		 * Unlike GICv2, we don't need an smp_rmb() here.
->> -		 * The control dependency from gic_read_iar to
->> -		 * the ISB in gic_write_eoir is enough to ensure
->> -		 * that any shared data read by handle_IPI will
->> -		 * be read after the ACK.
->> -		 */
-> 
-> Isn't that still relevant?
+thanks for the upgrade.
 
-It is. It is just that there is no really good place to put it.
-I may end-up just leaving it where it is.
+Today, I contacted the Debian maintainer on how he wants to
+distinguish between exfat-utils vs. exfatprogs as Linux v5.7 entered
+Debian/unstable.
 
-> Also, while staring at this it dawned on me that IPI's don't need the
-> eoimode=0 isb(): due to how the IPI flow-handler is structured, we'll 
-> get a
-> gic_eoi_irq() just before calling into the irqaction. Dunno how much we
-> care about it.
+When I looked at the release/tags page on github:
 
-That's interesting. This ISB is a leftover from the loop we had before
-the pseudo-NMI code, where we had to make sure the write to EOIR was
-ordered with the read from IAR.
+Can you please offer tar.xz tarballs, please?
+Hashes? Like sha256sum
+Signing keys? (Signed tarballs?)
 
-Given that we have an exception return right after the interrupt
-handling, I *think* we could get rid of it (but that would need
-mode checking on broken systems such as TX1...).  I don't think
-this is specific to IPIs though.
+Thanks.
 
-Thanks,
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Regards,
+- Sedat -
