@@ -2,299 +2,150 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06984C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:04:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B7B6C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BC43B2067D
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:04:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B99820768
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 08:05:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="K3kO38dk"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="DxcHdp4o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbgF3IEy (ORCPT
+        id S1731017AbgF3IFj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 04:04:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50770 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726038AbgF3IEr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 04:04:47 -0400
-Received: from mail-oi1-x241.google.com (mail-oi1-x241.google.com [IPv6:2607:f8b0:4864:20::241])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C178BC03E979
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 01:04:47 -0700 (PDT)
-Received: by mail-oi1-x241.google.com with SMTP id w17so16005753oie.6
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 01:04:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uSwJ/W/lRw0v9UPsOhAMrsTDDMuy5z41SxLbRgQ5TDU=;
-        b=K3kO38dkQBt7+szKOMThbIyae/crPZux3TEOjJwbyq27+uLadotJVKQ3p0y2+ldID5
-         KHjmWAFw3njjO/TSrsenc9kzH8zRIiSDAY6BuP9myl3q6adSOasESofv0eiOGVmPm7A5
-         f631OFwGjZ2jIVnbh/KnTk3C1HujHRGimSHy9Cgl09ey4FNNdDjOQMs2/mf/8P9cge92
-         DYiIouNu+If079eRPIWj4+q8imMMGytMoMGv+nRByesRXKuYbsp1VvtZ3v2Q6O3lnzmb
-         CcszPOK+8sZjC9ABr1YF+fN3Tl1OzwXtLqmc/QZM7J2UyWWXDgS3owHgtXJPvru61ORs
-         BH2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uSwJ/W/lRw0v9UPsOhAMrsTDDMuy5z41SxLbRgQ5TDU=;
-        b=X6Bc1aV7tmOdqfeFvge5uIKfDQAI0WD0Myi8CeeglPl0jlL79aZEa3jig2Vy/BDO99
-         24dj+TOqEbfxYGK7lBPL9SrkxuJ6MJW8/EBJmA2uoROcYKuHCAvOJukmHtX4TW+vKH2/
-         eRi0oHb3NGBM27Jy0PTB//r8rWbgfSsXnY9pWJJWRJzCKnPrO0XzhL89aOf7F9a1PmGe
-         rtMmtQXGX/JB4716TXg2ylv6wGP2crvAkiiUSNAzsiUO1spPsRKZwOGmUWBES8E0Xvao
-         3HFDzOhKcwfw4kruSG0G5O0IMJnonwLLPjaRh4+3fJlAjLHFQ99hAiZ9f5UJTbJXkn6r
-         Vdsw==
-X-Gm-Message-State: AOAM531BHaslTDUYItbylJdCP4ElUkB4A0XiVFQvM1lPklthaOfDo1bF
-        CxZTyHKDriF2pbCQCV//nFXUD3iMrU+jICR2E1B9N5aI
-X-Google-Smtp-Source: ABdhPJwRMwvJZxV8gP8zqL562vARrIY2lDLTTkJTBsSD4snW4MrC9Tpi9Emg10HBYeWSIh4Nu6HKpiERnXCmbmvuE6w=
-X-Received: by 2002:aca:be57:: with SMTP id o84mr621517oif.32.1593504286915;
- Tue, 30 Jun 2020 01:04:46 -0700 (PDT)
+        Tue, 30 Jun 2020 04:05:39 -0400
+Received: from mout.web.de ([212.227.15.3]:38353 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726038AbgF3IFC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 04:05:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1593504275;
+        bh=0a2jDaPAta2pGBTBPrjgK6rNlIENB8BdbiDPwlDFeKo=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=DxcHdp4oR2P+7+3wDn9A7F2moCixZuHGPBmikMnttMS+TiGShuPZMPaWq9MGTk8Ax
+         d34uc7eO1ZQB/CrEmh3xLffwJISqRWuFAcZd7PswTlWr7Ua0kBsl+X0r50CH7ZTN7P
+         R//eI+bt//9Q7vVMVwFzHU6S1olouWgGv2gHomNs=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.243.105.212]) by smtp.web.de (mrweb005
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 1MzCEB-1iuU9w2DZr-00wHfc; Tue, 30
+ Jun 2020 10:04:35 +0200
+Subject: Re: [PATCH v2] Documentation: Coccinelle: fix typos and command
+ example
+To:     Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org,
+        Coccinelle <cocci@systeme.lip6.fr>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Jonathan Corbet <corbet@lwn.net>
+References: <0616dd0c-bb86-be2b-3dc6-1c695a92c3ca@infradead.org>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <3cedcc41-38b2-d17b-3ad5-5a5b8403f953@web.de>
+Date:   Tue, 30 Jun 2020 10:04:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-References: <cover.1593397455.git.zong.li@sifive.com> <CAAhSdy1uFt3rqf8cSHqS=W90AoeQjo10R_Ak4Cknb_QUvH1SPQ@mail.gmail.com>
- <CANXhq0p_HoD6npHmoxxYHohBsgihfe5S-0DG04xLpQ3VO1w7oQ@mail.gmail.com>
- <CAAhSdy0Ed8zQ5LVZva6p2TWqTOzrDRtL0JJkAdmpzWFhzJLUfg@mail.gmail.com>
- <CANXhq0o9BMe6G6kv-zO7OvLTfKsz-4XKsoZJe3nxvX9_6uunvw@mail.gmail.com>
- <CAAhSdy1fEge0AbKH6B72SwVHM-heN0QJPO0rQuCK5QhXq3uA0g@mail.gmail.com>
- <CANXhq0ojMx2c+OJ56YWiQG-6iHa0XvU=4qzdOvKL2_iUzwF20A@mail.gmail.com> <CAAhSdy1jC-hfWdSxVsaZ0Ri5AjgEQAV3YHMixqH9GW_a+VAg5w@mail.gmail.com>
-In-Reply-To: <CAAhSdy1jC-hfWdSxVsaZ0Ri5AjgEQAV3YHMixqH9GW_a+VAg5w@mail.gmail.com>
-From:   Zong Li <zong.li@sifive.com>
-Date:   Tue, 30 Jun 2020 16:04:35 +0800
-Message-ID: <CANXhq0rfQs_Q0q4sza0HaQOzrQoQosW4B0OduJ6T9ttMTWGZNA@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/6] Support raw event and DT for perf on RISC-V
-To:     Anup Patel <anup@brainfault.org>
-Cc:     Alan Kao <alankao@andestech.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <0616dd0c-bb86-be2b-3dc6-1c695a92c3ca@infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:v+jKo3ey1TaoZykU449FsWKzY5Ns7C+OliDsLZ/420n38YLVpSh
+ mHX2nyrC6/COPCjq6wmUzIfUxb0VUJeZYsvMQM9hndq/GyBnwGQ3T41FXAoP0r8DAz1t9bf
+ OUlKAb/kmikcmxQ4JDFPzzhotdi7u+uxfSechjjzY5772NmUpv2lUVEYp5GOKmoNRZPNcbQ
+ jfajIejT7540a3sEQFBiQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:uh3H6WoO5Ho=:/binRVePZvRad/OrOa5v62
+ 6N5O3fZWaSB7wZ7q75GjYbC6EnDzQIdtG8K+5wY0u8/rukfVk6tGzbrmyPT2nzC/1ziRZjkjD
+ CASfP/0GSlfz8fGMOtNqQMvtgpV4OnHAgSJbkcSUbYrBEX7Z6Ti9Q/cT8Pm1CKsvIl3IF3TPi
+ wmANqjzzTlLLCDrQOABH18uFO/S/xXjKpZ0NuNakBfBGKuOjZWRkZ53oPee/8/g+kFXC1oA/I
+ 4cXL5EYkEvLn+ezVX1a5zDfEuDdjEOzWeipIOmyYrbzSMIoCizZr/WgUqbSTBCldKYXBnj1eB
+ lzmNEGzF7K0Ax+ZJV7ZMHaswzSWHQclCktXN1CHinLcpnwC35tgrLCz7FRSQWmqeWb6LfoqeA
+ y+LAMb1I4nHOxs4GwzHhsyVsL4jl4yJbmYu7hDD0QUkvNOKmDZHHewGcU2CbFjYX2FmRu4hEX
+ zsgVvrphfXozMjxKdhi/fefMAKX4akjYu+MX/NnB9UIvyuBZtp5pC5vPzgXUb/KivbOHR9iVz
+ 55o255LxEj9+nlPiHmYjblpC1BJ7Y/meyv1p2MP1I/JQbo5HDsSppONFth5+vWDfA2wUQbKaF
+ bVUGerzRZX6i3gSQ9SGhWUeBCuA3Lu8w3S/ATmBniaBcfOEeRQw1H/N2PM7aLX00HZQGa0s5t
+ TE8OYe32u4ncu4hLah8aztFN6+kU3Hd0/4xVy76Jdry6P5ZWRRbC/d8s7PxnYK7+OhUc1MFgW
+ o3uXwcwsgobSPScETDmYFvatHknYdYP+yYONNf6s1xcjVVaxtsuaM0iitbnZC3ZXRgNA3tNeE
+ O8rkUTSntHzEGY1rCZQTAwy8nDqrKgSk308YDVsAzs4Rc153pcW6sp+ECM/HRBhNR9J1wTwLH
+ NcBWwHlrgY72KxnTr39xkJyqv1oiJMsnNkspT5TS0EXileK280Vng+GkRyjSiUe6rX9kz/Ndf
+ xuK0Z0MrUJvFcK+Z8mrQJDCZ98ZHiag5bw6cSOKdyJfk1Gijw2A79X7XW3xf6xOLaoy+RTwVV
+ apGPmMJzzcgMMDalwGaiFoU+AFU8D+wsh6XHk0lQY2PAxytIdI02lAg/xC9dafaontIzn5SGz
+ uL1O33zmRhhcQzElIcrq+ZtRJSTkIlDmZ4eyEiVXScUbqEhod8dh8734WjSZGHKve7VrWfdWa
+ UHFlijxk9nVxxKRVi7Icz7CJFurOmas4s7/0V+eVV9dY1HRtvTSRqXvBqEwo22dID7NCYhl5a
+ BdCmHtG1b9erZE9CV
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 3:40 PM Anup Patel <anup@brainfault.org> wrote:
+> @@ -177,13 +177,13 @@ For example, to check drivers/net/wirele
+>  To apply Coccinelle on a file basis, instead of a directory basis, the
+>  following command may be used::
 >
-> On Tue, Jun 30, 2020 at 12:07 PM Zong Li <zong.li@sifive.com> wrote:
-> >
-> > On Mon, Jun 29, 2020 at 9:23 PM Anup Patel <anup@brainfault.org> wrote:
-> > >
-> > > On Mon, Jun 29, 2020 at 6:23 PM Zong Li <zong.li@sifive.com> wrote:
-> > > >
-> > > > On Mon, Jun 29, 2020 at 4:28 PM Anup Patel <anup@brainfault.org> wrote:
-> > > > >
-> > > > > On Mon, Jun 29, 2020 at 11:22 AM Zong Li <zong.li@sifive.com> wrote:
-> > > > > >
-> > > > > > On Mon, Jun 29, 2020 at 12:53 PM Anup Patel <anup@brainfault.org> wrote:
-> > > > > > >
-> > > > > > > On Mon, Jun 29, 2020 at 8:49 AM Zong Li <zong.li@sifive.com> wrote:
-> > > > > > > >
-> > > > > > > > This patch set adds raw event support on RISC-V. In addition, we
-> > > > > > > > introduce the DT mechanism to make our perf more generic and common.
-> > > > > > > >
-> > > > > > > > Currently, we set the hardware events by writing the mhpmeventN CSRs, it
-> > > > > > > > would raise an illegal instruction exception and trap into m-mode to
-> > > > > > > > emulate event selector CSRs access. It doesn't make sense because we
-> > > > > > > > shouldn't write the m-mode CSRs in s-mode. Ideally, we should set event
-> > > > > > > > selector through standard SBI call or the shadow CSRs of s-mode. We have
-> > > > > > > > prepared a proposal of a new SBI extension, called "PMU SBI extension",
-> > > > > > > > but we also discussing the feasibility of accessing these PMU CSRs on
-> > > > > > > > s-mode at the same time, such as delegation mechanism, so I was
-> > > > > > > > wondering if we could use SBI calls first and make the PMU SBI extension
-> > > > > > > > as legacy when s-mode access mechanism is accepted by Foundation? or
-> > > > > > > > keep the current situation to see what would happen in the future.
-> > > > > > > >
-> > > > > > > > This patch set also introduces the DT mechanism, we don't want to add too
-> > > > > > > > much platform-dependency code in perf like other architectures, so we
-> > > > > > > > put the mapping of generic hardware events to DT, then we can easy to
-> > > > > > > > transfer generic hardware events to vendor's own hardware events without
-> > > > > > > > any platfrom-dependency stuff in our perf.
-> > > > > > >
-> > > > > > > Please re-write this series to have RISC-V PMU driver as a regular
-> > > > > > > platform driver as drivers/perf/riscv_pmu.c.
-> > > > > > >
-> > > > > > > The PMU related sources will have to be removed from arch/riscv.
-> > > > > > >
-> > > > > > > Based on implementation of final drivers/perf/riscv_pmu.c we will
-> > > > > > > come-up with drivers/perf/riscv_sbi_pmu.c driver for SBI perf counters.
-> > > > > > >
-> > > > > >
-> > > > > > There are some different ways to implement perf, and current
-> > > > > > implementation seems to be consensus when perf was introduced at the
-> > > > > > beginning [0][1]. I don't persist to which one, I could change the
-> > > > > > implementation as you mentioned if it is a new consensus one.
-> > > > > >
-> > > > > > [0] https://github.com/riscv/riscv-linux/pull/124#issuecomment-367563910
-> > > > >
-> > > > > I would not recommend taking the original RISC-V linux fork as reference.
-> > > > >
-> > > > > Rather we should study how things are done on other architectures.
-> > > > >
-> > > > > I really appreciate the attempt to make RISC-V PMU driver depend on DT
-> > > > > but if we are going this route then we should maximize the use of Linux
-> > > > > platform driver framework. In fact, whenever possible we should integrate
-> > > > > RISC-V features as platform drivers under the drivers/ directory.
-> > > > >
-> > > >
-> > > > OK, I would change the implementation to platform driver if there is no
-> > > > other voice.
-> > > >
-> > > > > I thought about SBI PMU counters as well. In future, we can easily
-> > > > > expose SBI PMU counters as RAW events in the same RISC-V PMU
-> > > > > driver. The sbi_probe_extension() can be used in RISC-V PMU driver
-> > > > > to check for SBI PMU counters so no special provisions needed in DT
-> > > > > for SBI PMU counters.
-> > > > >
-> > > >
-> > > > I thought about probing raw events by SBI extension too, I'm interested if you
-> > > > have more detail about this.
-> > > >
-> > > > It seems to me that it is a little bit hard to return all events
-> > > > through one SBI call,
-> > > > so I thought we could map the generic hardware events and maintain their own
-> > > > raw events by each platform in OpenSBI. But eventually, I thought the
-> > > > DT mechanism
-> > > > is more clear and easy than that. Let me know if you have any ideas about
-> > > > probe function. Thanks.
-> > >
-> > > We can design SBI calls such that no SBI call is required to read
-> > > the perf counter.
-> > >
-> > > The sbi_probe_extension() will only be used to check whether
-> > > underlying SBI implementation supports SBI PMU extension.
-> > >
-> > > As-per my initial thoughts, we can potentially have the following SBI calls:
-> > >
-> > > 1. SBI_PMU_NUM_COUNTERS
-> > >     This call will return the number of SBI PMU counters
-> > > 2. SBI_PMU_COUNTER_DESCRIBE
-> > >    This call takes two parameters: 1) physical address 2) counter index
-> > >     It will write the description of SBI PMU counter at specified
-> > > physical address.
-> > >     The details of the SBI PMU counter will include name, type, etc
-> >
-> > The main things are that we need to pass the information of raw events
-> > and the information of mapping of generic hardware events. Maybe
-> > this information could be passed by this SBI call.
-> >
-> > > 3. SBI_PMU_COUNTER_START
-> > >     This call takes two parameters: 1) physical address 2) counter index
-> > >     It will inform SBI implementation to start counting specified counter on the
-> > >     calling HART. The counter value will be written to the specified physical
-> > >     address whenever it changes.
-> >
-> > I would prefer to read the counter directly on s-mode. Spec already defines the
-> > mechanism to allow that. But this way would still work if we couldn't
-> > read counters
-> > on s-mode.
->
-> The SBI PMU counters have nothing to do with RISC-V PMU counters because
-> these are counters provided by SBI implementation.
->
-> All-in-all, we have three types of counters:
-> 1. PMU counters defined by RISC-V privilege spec. These are TIME,
-> INSRET, and CYCLE CSRs.
-> 2. Implementation specific counters accessed via HPMCOUNTER CSRs.
-> 3. SBI PMU counters for traps taken and processed by M-mode runtime
-> firmware. Examples: number of misaligned load/store, number of illegal
-> instructions, number of SBI RFENCE calls, number of SBI IPI calls, etc.
->
-> The DT based RISC-V PMU platform driver being discussed in this email
-> thread only addresses points 1) and 2) above.
->
+> -    make C=3D1 CHECK=3D"scripts/coccicheck"
+> +    make C=3D1 CHECK=3D"scripts/coccicheck" path/to/file.c
 
-OK, sounds good, I misunderstood your ideas, I mixed the 2) and 3)
-and see them as the same thing. Many thanks for the clear explanation.
+Can such information still be questionable according to usual make functio=
+nality?
 
-> For point 3) above, we need to first define SBI PMU extension. Once SBI
-> PMU extension is defined, we can have separate SBI PMU driver in Linux
-> or extend RISC-V PMU driver to register additonal counters based on
-> SBI PMU extension.
->
-> I never suggested  to access RISC-V HPMCOUNTER CSRs via SBI calls
-> so DT based RISC-V PMU platform driver (for 1) and 2) above) is good
-> to have. The SBI PMU extension is a separate topic.
->
-> >
-> > > 4. SBI_PMU_COUNTER_STOP
-> > >     This call takes one parameter: 1) counter index
-> > >     It will inform SBI implementation to stop counting specified counters on
-> > >     the calling HART.
-> > >
-> > > The above calls are generic enough to support any number of counters
-> > > and we don't need any SBI call to read the counter. We can also assume
-> > > all counters to be of fixed 64bit width. In fact, even Hypervisors can support
-> > > it's own SBI PMU counters with SBI PMU extension.
-> > >
-> > > We still need to think more about the above calls because above SBI
-> > > calls are just initial ideas.
-> > >
-> >
-> > We also need a SBI call to set the event selector to specify which event
-> > is monitored.
->
-> SBI_PMU_COUNTER_START will do that.
+* Do you usually expect that such a source file does not need to be regene=
+rated
+  (because it should be up-to-date already according a selected revision)?
 
-I'm not sure whether this SBI call is only for SBI PMU counter and
-it's own events.
-For 2), it needs one SBI call to set the events, we just set the event selector
-by writing m-mode CSRs on s-mode now. If this SBI call could serve 2)
-and 3) both,
-we don't need another SBI call.
+* Would you like to trigger the generation of a corresponding source code
+  analysis log file (or a =E2=80=9Cdiff=E2=80=9D)?
 
->
-> >
-> > > Maybe you can refine the above ideas and send a proposal to the
-> > > UnixPlatformSpec mailing list ??
-> > >
-> >
-> > Ok, let us talk about the details in that.
->
-> Regards,
-> Anup
->
-> >
-> >
-> > > Regards,
-> > > Anup
-> > >
-> > > >
-> > > > > Also, the RISC-V PMU driver can be implemented such that it will
-> > > > > work for RV32, RV64, NoMMU RV32, and NoMMU RV64.
-> > > > >
-> > > > > Regards,
-> > > > > Anup
-> > > > >
-> > > > > > [1] https://groups.google.com/a/groups.riscv.org/g/sw-dev/c/f19TmCNP6yA
-> > > > > >
-> > > > > > > Regards,
-> > > > > > > Anup
-> > > > > > >
-> > > > > > > >
-> > > > > > > > Zong Li (6):
-> > > > > > > >   dt-bindings: riscv: Add YAML documentation for PMU
-> > > > > > > >   riscv: dts: sifive: Add DT support for PMU
-> > > > > > > >   riscv: add definition of hpmcounter CSRs
-> > > > > > > >   riscv: perf: Add raw event support
-> > > > > > > >   riscv: perf: introduce DT mechanism
-> > > > > > > >   riscv: remove PMU menu of Kconfig
-> > > > > > > >
-> > > > > > > >  .../devicetree/bindings/riscv/pmu.yaml        |  59 +++
-> > > > > > > >  arch/riscv/Kconfig                            |  13 -
-> > > > > > > >  arch/riscv/boot/dts/sifive/fu540-c000.dtsi    |  13 +
-> > > > > > > >  arch/riscv/include/asm/csr.h                  |  58 +++
-> > > > > > > >  arch/riscv/include/asm/perf_event.h           | 100 ++--
-> > > > > > > >  arch/riscv/kernel/Makefile                    |   2 +-
-> > > > > > > >  arch/riscv/kernel/perf_event.c                | 471 +++++++++++-------
-> > > > > > > >  7 files changed, 471 insertions(+), 245 deletions(-)
-> > > > > > > >  create mode 100644 Documentation/devicetree/bindings/riscv/pmu.yaml
-> > > > > > > >
-> > > > > > > > --
-> > > > > > > > 2.27.0
-> > > > > > > >
+* How do you think about to pass an other parameter to the build target =
+=E2=80=9Ccoccicheck=E2=80=9D?
+
+Regards,
+Markus
