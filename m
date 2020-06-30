@@ -2,70 +2,137 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB0FC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E80C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6C7D9206C3
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:01:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593507663;
-	bh=JcF8qvU8w2KHZowpHoHgAHPE8do02qsOarLkPLKejdY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bebKhAD/Cnqn74IB3t8hZONmOSkHHdcAJxvKZHQMx8G5PrHi5lI0dN0f4NaEbYgmw
-	 5kEjrrU73fAtktMcxDmBPlUiQn1MuCZJ/NaxVYOR9O88rRr+dKUMlAup8eatYRmPYU
-	 fzlb0k/hpX5Jw8VnoPKVOsRiw10hG+NBJ3nb7K24=
+	by mail.kernel.org (Postfix) with ESMTP id 4B7E5206A1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 09:08:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731882AbgF3JBB (ORCPT
+        id S1731797AbgF3JIM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 05:01:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58060 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731591AbgF3JBB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 05:01:01 -0400
-Received: from localhost (unknown [84.241.197.94])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15CCC206C3;
-        Tue, 30 Jun 2020 09:00:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593507660;
-        bh=JcF8qvU8w2KHZowpHoHgAHPE8do02qsOarLkPLKejdY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pOPIoThJ9cnFewrARtPtEO4OILc92Zvg+2hVVlBwENeL5KPwQ3RCm5NWChQ2okHfX
-         F9q3iSZ919056i8uQPrhCIhP1mPEbZzz6JCEqkGnfKafizFUEYnkEr/7cwqyTOv4Lj
-         ZeCWgvx4NXT5UYv7NJamBf1SDPbEYLREc0rPoy9I=
-Date:   Tue, 30 Jun 2020 11:00:57 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Daniel Gutson <daniel.gutson@eclypsium.com>
-Cc:     Derek Kiernan <derek.kiernan@xilinx.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        linux-kernel@vger.kernel.org, Richard Hughes <hughsient@gmail.com>,
-        Alex Bazhaniuk <alex@eclypsium.com>
-Subject: Re: [PATCH] SPI LPC information kernel module
-Message-ID: <20200630090057.GG637809@kroah.com>
-References: <20200629225932.5036-1-daniel.gutson@eclypsium.com>
+        Tue, 30 Jun 2020 05:08:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60502 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731678AbgF3JIM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 05:08:12 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0A1DC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 02:08:11 -0700 (PDT)
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jqCFL-000619-6a; Tue, 30 Jun 2020 11:08:07 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1jqCFK-0001al-AU; Tue, 30 Jun 2020 11:08:06 +0200
+Date:   Tue, 30 Jun 2020 11:08:06 +0200
+From:   Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6] gpio: pca953x: Add Maxim MAX7313 PWM support
+Message-ID: <20200630090806.6bgjgi34gtcrzfze@pengutronix.de>
+References: <20200503105453.23658-1-miquel.raynal@bootlin.com>
+ <20200629160844.6ecf79c1@xps13>
+ <20200629195044.uvgma53cajiko3gf@pengutronix.de>
+ <20200630085828.1aebdf99@xps13>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="q6efgvsv3vhhwcas"
 Content-Disposition: inline
-In-Reply-To: <20200629225932.5036-1-daniel.gutson@eclypsium.com>
+In-Reply-To: <20200630085828.1aebdf99@xps13>
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 07:59:32PM -0300, Daniel Gutson wrote:
-> +EXPORT_SYMBOL_GPL(spi_read_sbase);
 
-Why are you exporting symbols?  Nothing in this patch uses them.
+--q6efgvsv3vhhwcas
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-And that's the spi_* namespace for the SPI core, not your tiny driver,
-why pollute the global namespace in a confusing way like this?
+Hello Miquel,
 
-thanks,
+On Tue, Jun 30, 2020 at 08:58:28AM +0200, Miquel Raynal wrote:
+> Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de> wrote on Mon, 29 Jun
+> 2020 21:50:44 +0200:
+>=20
+> > On Mon, Jun 29, 2020 at 04:08:44PM +0200, Miquel Raynal wrote:
+> > > Hello Uwe, Thierry,
+> > >=20
+> > > Miquel Raynal <miquel.raynal@bootlin.com> wrote on Sun,  3 May 2020
+> > > 12:54:53 +0200:
+> > >  =20
+> > > > The MAX7313 chip is fully compatible with the PCA9535 on its basic
+> > > > functions but can also manage the intensity on each of its ports wi=
+th
+> > > > PWM. Each output is independent and may be tuned with 16 values (4
+> > > > bits per output). The period is always 32kHz, only the duty-cycle m=
+ay
+> > > > be changed. One can use any output as GPIO or PWM.
+> > > >=20
+> > > > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> > > > --- =20
+> > >=20
+> > > Can I have a status on this patch please?
+> > >=20
+> > > If it was forgotten, I would be good to have it queued now, otherwise,
+> > > may I know the reason? =20
+> >=20
+> > You could reply to my feedback ... If you could say there: "What you
+> > want isn't possible" I'd count this as a strong indication to not ask to
+> > implement Andy's suggestion. (Even if this would be possible, I'm not
+> > sure this is a good idea, but still ...)
+>=20
+> Sorry for the misunderstanding, but I already replied twice to Andy
+> about this. Once in October, again in November, then I gave a shot to
+> the idea of splitting the drivers (GPIO vs. PWM) in January. So I
+> thought you were sharing your thoughts out loud but was not expecting
+> any specific feedback on it.
 
-greg k-h
+Ah ok. Probably the discussion took too long already and was swapped out
+on my end.
+
+I will take a look once more later this week. One thing I noticed while
+skimming the patch was, that the added defines could make use of a nice
+prefix. MAX_PWM for example sounds quite generic.
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--q6efgvsv3vhhwcas
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAl77APMACgkQwfwUeK3K
+7AmdWwf+NJnKEOUjeeHA3Ud3w8l7E+nDL0RwEKeFDSjcFcoPKx+gC9VOj+8qFbA5
+rMEQZUXEY3sN5K36oVWQ4F6RU7e8LZwU1Q458H0t1+YK4wnVaT/lq4qisRejIot9
+1nuyfRuz4LfbAzERL5CIpCQu+LsfDbg6ZyUOiyR12N42wVYWGcdi/wS77eXPtS6C
++R+vYVrZtwIW+xK5OeY8PXycziJeLkYTZ382yObdsN0y6+05oYpBe8HUgEp9IxHG
+6qEebvwI6Ta2p+SBo1WBbKqntOqDZDR0fRvGABLI9fRTDRC++fBXlNYVdepIP52C
+5pJbowCjeSdTZXZPI5VgbdQvMzoejw==
+=0bW1
+-----END PGP SIGNATURE-----
+
+--q6efgvsv3vhhwcas--
