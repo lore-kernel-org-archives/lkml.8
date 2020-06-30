@@ -2,171 +2,99 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05E27C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:10:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA5CCC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:10:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D21DD2073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:10:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GQg6Mbdt"
+	by mail.kernel.org (Postfix) with ESMTP id 875122072D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:10:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388782AbgF3OKJ (ORCPT
+        id S2388798AbgF3OK1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 10:10:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50592 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388654AbgF3OJi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 10:09:38 -0400
-Received: from mail-ej1-x641.google.com (mail-ej1-x641.google.com [IPv6:2a00:1450:4864:20::641])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ED84C061755;
-        Tue, 30 Jun 2020 07:09:38 -0700 (PDT)
-Received: by mail-ej1-x641.google.com with SMTP id ga4so20749001ejb.11;
-        Tue, 30 Jun 2020 07:09:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=H/evTaw/z01ZGDeG0L9HG7odwSXvoYGd70EVEtMJgyw=;
-        b=GQg6MbdtC7O/JksYFnsXCQUa7VM8GqRFaJ7o8tcCki5SbVvNanFklIHngwm1SCsdqC
-         TiCNmopPL1Snjo7Fdp4DTuoud9uG2t5ZbHcB+yD2UD+nJPL6amp/HOxMecS6EZs6Ds3V
-         cEGwKV7X36jt39dHe/Lhe7DxJtDdcoSS3BM1ufWuJhYrCUwaWl0kamfYurWYaGbaPLXs
-         vVdxw3V1aSUlRPXyqc2mtIZ7pI7aaK2Z1ru9CkXNoq7zo7hJAAMzwv55RCLXIJbH9/SB
-         TPhpEXceHaEjSDLRP/rNok1EhUfP8FXZnsD9Pqg0ZAxb+y9elKXyFHc4UeI/Lt8GYk/E
-         X8XQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=H/evTaw/z01ZGDeG0L9HG7odwSXvoYGd70EVEtMJgyw=;
-        b=qKEmkcxd6EBBHDiigRWtySxHT+cID03D8BeAVH8oqusKDoQ3WWg15XW3nOkqt+gfbp
-         lpBl3ogqtNKDDbWRVICyNbD66LBxXuVTZ0X/uBBP6M0Io8kjZm+DUmF+40BfjRGPAyyk
-         LTSrqVKB/usRa6//tcND1sgTFtYVSaU1C3NXLZhvQiEW3hYwVr1pu9Og4A0SiQHLNZ+w
-         kBaLI9blgu59MTV/55i1glQB3413u9qbkB9r2+dHbIFuYVDw7yx7VZmeShzzR/g+N+Fl
-         cGBv0WDV1lcj0VJPKjAGSXvUjERCAnZvMCDIWGNAW7gH2WOBHG65G4XLOMDSVWDDMBIM
-         JWIg==
-X-Gm-Message-State: AOAM530U7CCpOsMhN7YdCYkP3Yu7zdP3Tl0ixgBl3IUA/+WMM6bUA4t3
-        L+BH9HBoInWmKeQu/nkO58Y=
-X-Google-Smtp-Source: ABdhPJxbREhkDAOSI8igfNmrRTf/zORHDkDfanfv8ux3Hn4L44dxoCoo9pmVHaHGHVli3Hb61tBPpQ==
-X-Received: by 2002:a17:906:970a:: with SMTP id k10mr19194276ejx.236.1593526177178;
-        Tue, 30 Jun 2020 07:09:37 -0700 (PDT)
-Received: from localhost ([213.191.183.145])
-        by smtp.gmail.com with ESMTPSA id n5sm2132704eja.70.2020.06.30.07.09.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jun 2020 07:09:36 -0700 (PDT)
-From:   Iskren Chernev <iskren.chernev@gmail.com>
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ~postmarketos/upstreaming@lists.sr.ht,
-        linux-arm-msm@vger.kernel.org,
-        Iskren Chernev <iskren.chernev@gmail.com>
-Subject: [PATCH 3/7] ARM: dts: qcom: msm8974-klte: Add support for touchscreen
-Date:   Tue, 30 Jun 2020 17:09:08 +0300
-Message-Id: <20200630140912.260294-4-iskren.chernev@gmail.com>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200630140912.260294-1-iskren.chernev@gmail.com>
-References: <20200630140912.260294-1-iskren.chernev@gmail.com>
+        Tue, 30 Jun 2020 10:10:27 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40940 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731123AbgF3OKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 10:10:25 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.221.27])
+        by mx2.suse.de (Postfix) with ESMTP id DC17FB614;
+        Tue, 30 Jun 2020 14:10:23 +0000 (UTC)
+Date:   Tue, 30 Jun 2020 16:10:22 +0200
+From:   Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
+To:     Mikulas Patocka <mpatocka@redhat.com>
+Cc:     linux-nvdimm@lists.01.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Jan Kara <jack@suse.cz>, Alasdair Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
+        Pankaj Gupta <pagupta@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Yuval Shaia <yuval.shaia@oracle.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Jakub Staron <jstaron@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dm writecache: reject asynchronous pmem.
+Message-ID: <20200630141022.GZ21462@kitsune.suse.cz>
+References: <20200630123528.29660-1-msuchanek@suse.de>
+ <alpine.LRH.2.02.2006300929580.4801@file01.intranet.prod.int.rdu2.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LRH.2.02.2006300929580.4801@file01.intranet.prod.int.rdu2.redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for the touchscreen found on the Samsung Galaxy S5.
+On Tue, Jun 30, 2020 at 09:32:01AM -0400, Mikulas Patocka wrote:
+> 
+> 
+> On Tue, 30 Jun 2020, Michal Suchanek wrote:
+> 
+> > The writecache driver does not handle asynchronous pmem. Reject it when
+> > supplied as cache.
+> > 
+> > Link: https://lore.kernel.org/linux-nvdimm/87lfk5hahc.fsf@linux.ibm.com/
+> > Fixes: 6e84200c0a29 ("virtio-pmem: Add virtio pmem driver")
+> > 
+> > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> > ---
+> >  drivers/md/dm-writecache.c | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> > 
+> > diff --git a/drivers/md/dm-writecache.c b/drivers/md/dm-writecache.c
+> > index 30505d70f423..57b0a972f6fd 100644
+> > --- a/drivers/md/dm-writecache.c
+> > +++ b/drivers/md/dm-writecache.c
+> > @@ -2277,6 +2277,12 @@ static int writecache_ctr(struct dm_target *ti, unsigned argc, char **argv)
+> >  
+> >  		wc->memory_map_size -= (uint64_t)wc->start_sector << SECTOR_SHIFT;
+> >  
+> > +		if (!dax_synchronous(wc->ssd_dev->dax_dev)) {
+> > +			r = -EOPNOTSUPP;
+> > +			ti->error = "Asynchronous persistent memory not supported as pmem cache";
+> > +			goto bad;
+> > +		}
+> > +
+> >  		bio_list_init(&wc->flush_list);
+> >  		wc->flush_thread = kthread_create(writecache_flush_thread, wc, "dm_writecache_flush");
+> >  		if (IS_ERR(wc->flush_thread)) {
+> > -- 
+> 
+> Hi
+> 
+> Shouldn't this be in the "if (WC_MODE_PMEM(wc))" block?
+That should be always the case at this point.
+> 
+> WC_MODE_PMEM(wc) retrurns true if we are using persistent memory as a 
+> cache device, otherwise we are using generic block device as a cache 
+> device.
+This is to prevent the situation where we have WC_MODE_PMEM(wc) but
+cannot guarantee consistency because the async flush is not handled.
 
-Signed-off-by: Iskren Chernev <iskren.chernev@gmail.com>
----
- .../boot/dts/qcom-msm8974-samsung-klte.dts    | 54 +++++++++++++++++++
- 1 file changed, 54 insertions(+)
+Thanks
 
-diff --git a/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts b/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
-index 750e2f261139a..085636f182d01 100644
---- a/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
-+++ b/arch/arm/boot/dts/qcom-msm8974-samsung-klte.dts
-@@ -284,6 +284,16 @@ cmd-data {
- 			};
- 		};
- 
-+		i2c2_pins: i2c2 {
-+			mux {
-+				pins = "gpio6", "gpio7";
-+				function = "blsp_i2c2";
-+
-+				drive-strength = <2>;
-+				bias-disable;
-+			};
-+		};
-+
- 		i2c6_pins: i2c6 {
- 			mux {
- 				pins = "gpio29", "gpio30";
-@@ -342,6 +352,42 @@ phy@a {
- 		};
- 	};
- 
-+	i2c@f9924000 {
-+		status = "okay";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2c2_pins>;
-+
-+		touchscreen@20 {
-+			compatible = "syna,rmi4-i2c";
-+			reg = <0x20>;
-+
-+			interrupt-parent = <&pma8084_gpios>;
-+			interrupts = <8 IRQ_TYPE_EDGE_FALLING>;
-+
-+			vdd-supply = <&max77826_ldo13>;
-+			vio-supply = <&pma8084_lvs2>;
-+
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&touch_pin>;
-+
-+			syna,startup-delay-ms = <100>;
-+
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			rmi4-f01@1 {
-+				reg = <0x1>;
-+				syna,nosleep-mode = <1>;
-+			};
-+
-+			rmi4-f12@12 {
-+				reg = <0x12>;
-+				syna,sensor-type = <1>;
-+			};
-+		};
-+	};
-+
- 	i2c@f9928000 {
- 		status = "okay";
- 
-@@ -460,6 +506,14 @@ touchkey_pin: touchkey-int-pin {
- 				input-enable;
- 				power-source = <PMA8084_GPIO_S4>;
- 			};
-+
-+			touch_pin: touchscreen-int-pin {
-+				pins = "gpio8";
-+				function = "normal";
-+				bias-disable;
-+				input-enable;
-+				power-source = <PMA8084_GPIO_S4>;
-+			};
- 		};
- 	};
- };
--- 
-2.27.0
-
+Michal
