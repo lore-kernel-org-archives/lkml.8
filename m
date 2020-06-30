@@ -7,68 +7,67 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 308ADC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CEECC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:52:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id F1386206BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:52:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D49A8206BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:52:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Tpifyogt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="d7k/5kR1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388541AbgF3NwN (ORCPT
+        id S2388546AbgF3NwV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 09:52:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47746 "EHLO
+        Tue, 30 Jun 2020 09:52:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388469AbgF3Nvo (ORCPT
+        with ESMTP id S2388459AbgF3Nvm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 09:51:44 -0400
-Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B837C08C5DB
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:51:44 -0700 (PDT)
-Received: by mail-wr1-x444.google.com with SMTP id b6so20247314wrs.11
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:51:44 -0700 (PDT)
+        Tue, 30 Jun 2020 09:51:42 -0400
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D500EC03E979
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:51:41 -0700 (PDT)
+Received: by mail-wm1-x343.google.com with SMTP id g75so18883709wme.5
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 06:51:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=7Vgj6mJ007ffR2XpxkUWmsRKmQ1//Tce8MuBu+oPzlU=;
-        b=TpifyogtmSQyoYQkRCsDn943WBZc7wqFAHoz5GIiSpG94b7uokBuZwOSI3krYEDuIZ
-         rFXoISEx06/BbuCR5VaMBQujjIk44C2m3HNDPGCyDaWpb7154AzN435wx/tD0npm9m+v
-         R65mNjskdTU6G0NRxvyTGhXjBReTvGUeBKaqJJnLBm3CTy2N/FTEAd7Of9BLBWysQGWr
-         1nx6FcwuKJv2b0fwL/qC/HkpqhsYGRH+GBnF81zCDMv+S4YKI3ZGYxBHFQTFMImlMZ4V
-         mSkC43Hxq9EClkoTAWRsHGtsbVNSchBai6am4E8ViMGIjYvNOhAQxw0LTiOZPVJeEirj
-         pMsg==
+        bh=y1zDXtnu4nYqM822JS90Uin0HwiZbzzdDBFpt66EWWs=;
+        b=d7k/5kR1qiJB9I8wUeO83oekbSzZU46dMeScb0EzHVURvCyrbXk22BSOWM13XyQfXA
+         L3RPHyLinXF2f6JXJeD2Fg1c6YkaXr7SR3yfuhwD2YXqQhVqJ9YX4k8AjZsbGyp4FGQZ
+         BzvEp6WPUEno848z2J9xukGRDZ7BFdONeFmHe0p3+qPu7B9kHH4RBtMrYlGJsbmkWDCV
+         y7jAs2hIF5HP+6I81qf2QOcBLnlVbmEU4BzDpO0o1Hnb67F4ZTc/SIqxJRriKk7MbTfu
+         y8wY4Rz8ziEOXnTvSEN0ADNEg+jEFmj9Hj+jdifuGZusImdpAjBegKAr2hdrfDYj8RzI
+         C5pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=7Vgj6mJ007ffR2XpxkUWmsRKmQ1//Tce8MuBu+oPzlU=;
-        b=j3xdZjyg/nxYJf7XJBsOcbYRWciZOGvodKU72ynh0kOgN8nyHTE4RanFbwgoI+L42Z
-         EMlGLcemBwjUhwcCi/vKod1+2RUf4Om2/dzUlvANmRHD4GOMANbile7gCjgu+rQxbmZf
-         NeokTaB6kaC7L3JmfmLGxtybt8Vat6IqiU1fK6PZGrofheiC0cmInsBXR9zyS+xuh71x
-         VFPG0aO6xTzfCk05wfITRHMFRdQfB5tPxBWezmL2ydViZ+FsnlpAtPLseQcEy+cZf5gc
-         RfveDh3k8FQxO31kfjCo6L9/7OrT4aSx8+zpb+IRbDd4Ah/2kIQ/ljw+5AU0Me47/nwr
-         mvow==
-X-Gm-Message-State: AOAM530/TXE/ozspQ+9Enf7RbG943jknyVqGjJhTCJi6+CB/39HxKkkb
-        vqK3hD3NWwba3aW+m9nmi97I9A==
-X-Google-Smtp-Source: ABdhPJx721IVepbgyMmVRJlfPKLFs9l9eVG25Gkt/1drnG8PPf9M+3ev+koLG4DTEaifYuBuIbULTA==
-X-Received: by 2002:adf:edc6:: with SMTP id v6mr22116585wro.413.1593525102783;
-        Tue, 30 Jun 2020 06:51:42 -0700 (PDT)
+        bh=y1zDXtnu4nYqM822JS90Uin0HwiZbzzdDBFpt66EWWs=;
+        b=nE09fnQ+SZXRkJadMaVoJ62AWi5P+E8PpXhAgIMlwdPLx4FkHpjbTv1e32N8gvSwte
+         mPlVzwQ+TavvE+8IC5P2TS+St3uFlReh8/tVCr8aefWTIZSMvxwxc2caq9UPmATws64p
+         OAGnGAgd9td839SU1OivTxk15FJ6Lic4CpARv9mDy7sZEqw/wzst6EKjUGZaGuSHMweS
+         outriaoO4Zuj6HsEqXvExdRQusumfx81dK7v0Ktg4QnhSeLHkgROAShaNR82f4MFc5T/
+         7rmZxDd/SdvgGmivKiVxy3bEooyG7Bw2QLacJ5qomq71j0/6fjuhMtST4jNNoNArjhMP
+         E7IQ==
+X-Gm-Message-State: AOAM531zG9CgWGhDrqKqG8MsQHeklRE4F151YTGPDBy5Sq9MKoYGgooz
+        VzY+ioQtv/aGRZ9XzG53QU2W0Q==
+X-Google-Smtp-Source: ABdhPJzsUzBMER02528kWrOC9qgDSaXSh2ak8iFAlndL0t+7FKAxkUl019ETK2s+ggIgnhv+g5sDVQ==
+X-Received: by 2002:a1c:98cc:: with SMTP id a195mr21391693wme.89.1593525100565;
+        Tue, 30 Jun 2020 06:51:40 -0700 (PDT)
 Received: from localhost.localdomain ([2.27.35.144])
-        by smtp.gmail.com with ESMTPSA id t4sm3876746wmf.4.2020.06.30.06.51.41
+        by smtp.gmail.com with ESMTPSA id t4sm3876746wmf.4.2020.06.30.06.51.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 06:51:42 -0700 (PDT)
+        Tue, 30 Jun 2020 06:51:39 -0700 (PDT)
 From:   Lee Jones <lee.jones@linaro.org>
 To:     arnd@arndb.de, gregkh@linuxfoundation.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Lee Jones <lee.jones@linaro.org>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH 27/30] misc: cxl: hcalls: Demote half-assed kerneldoc attempt
-Date:   Tue, 30 Jun 2020 14:51:07 +0100
-Message-Id: <20200630135110.2236389-28-lee.jones@linaro.org>
+        Sudeep Dutt <sudeep.dutt@intel.com>,
+        Ashutosh Dixit <ashutosh.dixit@intel.com>
+Subject: [PATCH 25/30] misc: mic: scif: scif_rma: Repair a bunch of kerneldoc issues
+Date:   Tue, 30 Jun 2020 14:51:05 +0100
+Message-Id: <20200630135110.2236389-26-lee.jones@linaro.org>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20200630135110.2236389-1-lee.jones@linaro.org>
 References: <20200630135110.2236389-1-lee.jones@linaro.org>
@@ -79,283 +78,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Function headers will need a lot of work before they reach the
-standards expected of kerneldoc.  Demote them down to basic
-comments/headers, for now at least.
+Firstly, for some reason documentation of all 'scifdev' arguments
+are missing, so apply those.  Also remove 2 descriptions of 'ep'
+which appear to document non-existent function arguments.
 
-Fixes the following W=1 kernel build warnings:
+ drivers/misc/mic/scif/scif_rma.c:468: warning: Function parameter or member 'scifdev' not described in 'scif_create_remote_window'
+ drivers/misc/mic/scif/scif_rma.c:468: warning: Excess function parameter 'ep' description in 'scif_create_remote_window'
+ drivers/misc/mic/scif/scif_rma.c:510: warning: Excess function parameter 'ep' description in 'scif_destroy_remote_window'
+ drivers/misc/mic/scif/scif_rma.c:1045: warning: Function parameter or member 'scifdev' not described in 'scif_alloc_req'
+ drivers/misc/mic/scif/scif_rma.c:1080: warning: Function parameter or member 'scifdev' not described in 'scif_alloc_gnt_rej'
+ drivers/misc/mic/scif/scif_rma.c:1104: warning: Function parameter or member 'scifdev' not described in 'scif_free_virt'
+ drivers/misc/mic/scif/scif_rma.c:1142: warning: Function parameter or member 'scifdev' not described in 'scif_recv_reg'
+ drivers/misc/mic/scif/scif_rma.c:1178: warning: Function parameter or member 'scifdev' not described in 'scif_recv_unreg'
+ drivers/misc/mic/scif/scif_rma.c:1243: warning: Function parameter or member 'scifdev' not described in 'scif_recv_reg_ack'
+ drivers/misc/mic/scif/scif_rma.c:1262: warning: Function parameter or member 'scifdev' not described in 'scif_recv_reg_nack'
+ drivers/misc/mic/scif/scif_rma.c:1280: warning: Function parameter or member 'scifdev' not described in 'scif_recv_unreg_ack'
+ drivers/misc/mic/scif/scif_rma.c:1299: warning: Function parameter or member 'scifdev' not described in 'scif_recv_unreg_nack'
 
- drivers/misc/cxl/hcalls.c:175: warning: Function parameter or member 'unit_address' not described in 'cxl_h_detach_process'
- drivers/misc/cxl/hcalls.c:175: warning: Function parameter or member 'process_token' not described in 'cxl_h_detach_process'
- drivers/misc/cxl/hcalls.c:207: warning: Function parameter or member 'unit_address' not described in 'cxl_h_control_function'
- drivers/misc/cxl/hcalls.c:207: warning: Function parameter or member 'op' not described in 'cxl_h_control_function'
- drivers/misc/cxl/hcalls.c:207: warning: Function parameter or member 'p1' not described in 'cxl_h_control_function'
- drivers/misc/cxl/hcalls.c:207: warning: Function parameter or member 'p2' not described in 'cxl_h_control_function'
- drivers/misc/cxl/hcalls.c:207: warning: Function parameter or member 'p3' not described in 'cxl_h_control_function'
- drivers/misc/cxl/hcalls.c:207: warning: Function parameter or member 'p4' not described in 'cxl_h_control_function'
- drivers/misc/cxl/hcalls.c:207: warning: Function parameter or member 'out' not described in 'cxl_h_control_function'
- drivers/misc/cxl/hcalls.c:245: warning: Function parameter or member 'unit_address' not described in 'cxl_h_reset_afu'
- drivers/misc/cxl/hcalls.c:258: warning: Function parameter or member 'unit_address' not described in 'cxl_h_suspend_process'
- drivers/misc/cxl/hcalls.c:258: warning: Function parameter or member 'process_token' not described in 'cxl_h_suspend_process'
- drivers/misc/cxl/hcalls.c:271: warning: Function parameter or member 'unit_address' not described in 'cxl_h_resume_process'
- drivers/misc/cxl/hcalls.c:271: warning: Function parameter or member 'process_token' not described in 'cxl_h_resume_process'
- drivers/misc/cxl/hcalls.c:284: warning: Function parameter or member 'unit_address' not described in 'cxl_h_read_error_state'
- drivers/misc/cxl/hcalls.c:284: warning: Function parameter or member 'state' not described in 'cxl_h_read_error_state'
- drivers/misc/cxl/hcalls.c:300: warning: Function parameter or member 'unit_address' not described in 'cxl_h_get_afu_err'
- drivers/misc/cxl/hcalls.c:300: warning: Function parameter or member 'offset' not described in 'cxl_h_get_afu_err'
- drivers/misc/cxl/hcalls.c:300: warning: Function parameter or member 'buf_address' not described in 'cxl_h_get_afu_err'
- drivers/misc/cxl/hcalls.c:300: warning: Function parameter or member 'len' not described in 'cxl_h_get_afu_err'
- drivers/misc/cxl/hcalls.c:320: warning: Function parameter or member 'unit_address' not described in 'cxl_h_get_config'
- drivers/misc/cxl/hcalls.c:320: warning: Function parameter or member 'cr_num' not described in 'cxl_h_get_config'
- drivers/misc/cxl/hcalls.c:320: warning: Function parameter or member 'offset' not described in 'cxl_h_get_config'
- drivers/misc/cxl/hcalls.c:320: warning: Function parameter or member 'buf_address' not described in 'cxl_h_get_config'
- drivers/misc/cxl/hcalls.c:320: warning: Function parameter or member 'len' not described in 'cxl_h_get_config'
- drivers/misc/cxl/hcalls.c:333: warning: Function parameter or member 'unit_address' not described in 'cxl_h_terminate_process'
- drivers/misc/cxl/hcalls.c:333: warning: Function parameter or member 'process_token' not described in 'cxl_h_terminate_process'
- drivers/misc/cxl/hcalls.c:351: warning: Function parameter or member 'unit_address' not described in 'cxl_h_collect_vpd'
- drivers/misc/cxl/hcalls.c:351: warning: Function parameter or member 'record' not described in 'cxl_h_collect_vpd'
- drivers/misc/cxl/hcalls.c:351: warning: Function parameter or member 'list_address' not described in 'cxl_h_collect_vpd'
- drivers/misc/cxl/hcalls.c:351: warning: Function parameter or member 'num' not described in 'cxl_h_collect_vpd'
- drivers/misc/cxl/hcalls.c:351: warning: Function parameter or member 'out' not described in 'cxl_h_collect_vpd'
- drivers/misc/cxl/hcalls.c:362: warning: Function parameter or member 'unit_address' not described in 'cxl_h_get_fn_error_interrupt'
- drivers/misc/cxl/hcalls.c:362: warning: Function parameter or member 'reg' not described in 'cxl_h_get_fn_error_interrupt'
- drivers/misc/cxl/hcalls.c:374: warning: Function parameter or member 'unit_address' not described in 'cxl_h_ack_fn_error_interrupt'
- drivers/misc/cxl/hcalls.c:374: warning: Function parameter or member 'value' not described in 'cxl_h_ack_fn_error_interrupt'
- drivers/misc/cxl/hcalls.c:386: warning: Function parameter or member 'unit_address' not described in 'cxl_h_get_error_log'
- drivers/misc/cxl/hcalls.c:386: warning: Function parameter or member 'value' not described in 'cxl_h_get_error_log'
- drivers/misc/cxl/hcalls.c:399: warning: Function parameter or member 'unit_address' not described in 'cxl_h_collect_int_info'
- drivers/misc/cxl/hcalls.c:399: warning: Function parameter or member 'process_token' not described in 'cxl_h_collect_int_info'
- drivers/misc/cxl/hcalls.c:399: warning: Function parameter or member 'info' not described in 'cxl_h_collect_int_info'
- drivers/misc/cxl/hcalls.c:440: warning: Function parameter or member 'unit_address' not described in 'cxl_h_control_faults'
- drivers/misc/cxl/hcalls.c:440: warning: Function parameter or member 'process_token' not described in 'cxl_h_control_faults'
- drivers/misc/cxl/hcalls.c:440: warning: Function parameter or member 'control_mask' not described in 'cxl_h_control_faults'
- drivers/misc/cxl/hcalls.c:440: warning: Function parameter or member 'reset_mask' not described in 'cxl_h_control_faults'
- drivers/misc/cxl/hcalls.c:480: warning: Function parameter or member 'unit_address' not described in 'cxl_h_control_facility'
- drivers/misc/cxl/hcalls.c:480: warning: Function parameter or member 'op' not described in 'cxl_h_control_facility'
- drivers/misc/cxl/hcalls.c:480: warning: Function parameter or member 'p1' not described in 'cxl_h_control_facility'
- drivers/misc/cxl/hcalls.c:480: warning: Function parameter or member 'p2' not described in 'cxl_h_control_facility'
- drivers/misc/cxl/hcalls.c:480: warning: Function parameter or member 'p3' not described in 'cxl_h_control_facility'
- drivers/misc/cxl/hcalls.c:480: warning: Function parameter or member 'p4' not described in 'cxl_h_control_facility'
- drivers/misc/cxl/hcalls.c:480: warning: Function parameter or member 'out' not described in 'cxl_h_control_facility'
- drivers/misc/cxl/hcalls.c:516: warning: Function parameter or member 'unit_address' not described in 'cxl_h_reset_adapter'
- drivers/misc/cxl/hcalls.c:532: warning: Function parameter or member 'unit_address' not described in 'cxl_h_collect_vpd_adapter'
- drivers/misc/cxl/hcalls.c:532: warning: Function parameter or member 'list_address' not described in 'cxl_h_collect_vpd_adapter'
- drivers/misc/cxl/hcalls.c:532: warning: Function parameter or member 'num' not described in 'cxl_h_collect_vpd_adapter'
- drivers/misc/cxl/hcalls.c:532: warning: Function parameter or member 'out' not described in 'cxl_h_collect_vpd_adapter'
- drivers/misc/cxl/hcalls.c:561: warning: Function parameter or member 'unit_address' not described in 'cxl_h_download_facility'
- drivers/misc/cxl/hcalls.c:561: warning: Function parameter or member 'op' not described in 'cxl_h_download_facility'
- drivers/misc/cxl/hcalls.c:561: warning: Function parameter or member 'list_address' not described in 'cxl_h_download_facility'
- drivers/misc/cxl/hcalls.c:561: warning: Function parameter or member 'num' not described in 'cxl_h_download_facility'
- drivers/misc/cxl/hcalls.c:561: warning: Function parameter or member 'out' not described in 'cxl_h_download_facility'
- drivers/misc/cxl/hcalls.c:626: warning: Function parameter or member 'unit_address' not described in 'cxl_h_download_adapter_image'
- drivers/misc/cxl/hcalls.c:626: warning: Function parameter or member 'list_address' not described in 'cxl_h_download_adapter_image'
- drivers/misc/cxl/hcalls.c:626: warning: Function parameter or member 'num' not described in 'cxl_h_download_adapter_image'
- drivers/misc/cxl/hcalls.c:626: warning: Function parameter or member 'out' not described in 'cxl_h_download_adapter_image'
- drivers/misc/cxl/hcalls.c:639: warning: Function parameter or member 'unit_address' not described in 'cxl_h_validate_adapter_image'
- drivers/misc/cxl/hcalls.c:639: warning: Function parameter or member 'list_address' not described in 'cxl_h_validate_adapter_image'
- drivers/misc/cxl/hcalls.c:639: warning: Function parameter or member 'num' not described in 'cxl_h_validate_adapter_image'
-
-Cc: Frederic Barrat <fbarrat@linux.ibm.com>
-Cc: Andrew Donnellan <ajd@linux.ibm.com>
-Cc: linuxppc-dev@lists.ozlabs.org
+Cc: Sudeep Dutt <sudeep.dutt@intel.com>
+Cc: Ashutosh Dixit <ashutosh.dixit@intel.com>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 ---
- drivers/misc/cxl/hcalls.c | 42 +++++++++++++++++++--------------------
- 1 file changed, 21 insertions(+), 21 deletions(-)
+ drivers/misc/mic/scif/scif_rma.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/misc/cxl/hcalls.c b/drivers/misc/cxl/hcalls.c
-index b7c57f67f4f52..aba5e20eeb1f5 100644
---- a/drivers/misc/cxl/hcalls.c
-+++ b/drivers/misc/cxl/hcalls.c
-@@ -167,7 +167,7 @@ long cxl_h_attach_process(u64 unit_address,
- 	}
- }
+diff --git a/drivers/misc/mic/scif/scif_rma.c b/drivers/misc/mic/scif/scif_rma.c
+index 406cd5abfa726..de8f61efaef5c 100644
+--- a/drivers/misc/mic/scif/scif_rma.c
++++ b/drivers/misc/mic/scif/scif_rma.c
+@@ -458,7 +458,7 @@ static void scif_destroy_remote_lookup(struct scif_dev *remote_dev,
  
--/**
-+/*
-  * cxl_h_detach_process - Detach a process element from a coherent
-  *                        platform function.
-  */
-@@ -197,7 +197,7 @@ long cxl_h_detach_process(u64 unit_address, u64 process_token)
- 	}
- }
- 
--/**
-+/*
-  * cxl_h_control_function - This H_CONTROL_CA_FUNCTION hypervisor call allows
-  *                          the partition to manipulate or query
-  *                          certain coherent platform function behaviors.
-@@ -238,7 +238,7 @@ static long cxl_h_control_function(u64 unit_address, u64 op,
- 	}
- }
- 
--/**
-+/*
-  * cxl_h_reset_afu - Perform a reset to the coherent platform function.
-  */
- long cxl_h_reset_afu(u64 unit_address)
-@@ -249,7 +249,7 @@ long cxl_h_reset_afu(u64 unit_address)
- 				NULL);
- }
- 
--/**
-+/*
-  * cxl_h_suspend_process - Suspend a process from being executed
-  * Parameter1 = process-token as returned from H_ATTACH_CA_PROCESS when
-  *              process was attached.
-@@ -262,7 +262,7 @@ long cxl_h_suspend_process(u64 unit_address, u64 process_token)
- 				NULL);
- }
- 
--/**
-+/*
-  * cxl_h_resume_process - Resume a process to be executed
-  * Parameter1 = process-token as returned from H_ATTACH_CA_PROCESS when
-  *              process was attached.
-@@ -275,7 +275,7 @@ long cxl_h_resume_process(u64 unit_address, u64 process_token)
- 				NULL);
- }
- 
--/**
-+/*
-  * cxl_h_read_error_state - Checks the error state of the coherent
-  *                          platform function.
-  * R4 contains the error state
-@@ -288,7 +288,7 @@ long cxl_h_read_error_state(u64 unit_address, u64 *state)
- 				state);
- }
- 
--/**
-+/*
-  * cxl_h_get_afu_err - collect the AFU error buffer
-  * Parameter1 = byte offset into error buffer to retrieve, valid values
-  *              are between 0 and (ibm,error-buffer-size - 1)
-@@ -304,7 +304,7 @@ long cxl_h_get_afu_err(u64 unit_address, u64 offset,
- 				NULL);
- }
- 
--/**
-+/*
-  * cxl_h_get_config - collect configuration record for the
-  *                    coherent platform function
-  * Parameter1 = # of configuration record to retrieve, valid values are
-@@ -324,7 +324,7 @@ long cxl_h_get_config(u64 unit_address, u64 cr_num, u64 offset,
- 				NULL);
- }
- 
--/**
-+/*
-  * cxl_h_terminate_process - Terminate the process before completion
-  * Parameter1 = process-token as returned from H_ATTACH_CA_PROCESS when
-  *              process was attached.
-@@ -337,7 +337,7 @@ long cxl_h_terminate_process(u64 unit_address, u64 process_token)
- 				NULL);
- }
- 
--/**
-+/*
-  * cxl_h_collect_vpd - Collect VPD for the coherent platform function.
-  * Parameter1 = # of VPD record to retrieve, valid values are between 0
-  *              and (ibm,#config-records - 1).
-@@ -355,7 +355,7 @@ long cxl_h_collect_vpd(u64 unit_address, u64 record, u64 list_address,
- 				out);
- }
- 
--/**
-+/*
-  * cxl_h_get_fn_error_interrupt - Read the function-wide error data based on an interrupt
-  */
- long cxl_h_get_fn_error_interrupt(u64 unit_address, u64 *reg)
-@@ -365,7 +365,7 @@ long cxl_h_get_fn_error_interrupt(u64 unit_address, u64 *reg)
- 				0, 0, 0, 0, reg);
- }
- 
--/**
-+/*
-  * cxl_h_ack_fn_error_interrupt - Acknowledge function-wide error data
-  *                                based on an interrupt
-  * Parameter1 = value to write to the function-wide error interrupt register
-@@ -378,7 +378,7 @@ long cxl_h_ack_fn_error_interrupt(u64 unit_address, u64 value)
- 				NULL);
- }
- 
--/**
-+/*
-  * cxl_h_get_error_log - Retrieve the Platform Log ID (PLID) of
-  *                       an error log
-  */
-@@ -390,7 +390,7 @@ long cxl_h_get_error_log(u64 unit_address, u64 value)
- 				NULL);
- }
- 
--/**
-+/*
-  * cxl_h_collect_int_info - Collect interrupt info about a coherent
-  *                          platform function after an interrupt occurred.
-  */
-@@ -425,7 +425,7 @@ long cxl_h_collect_int_info(u64 unit_address, u64 process_token,
- 	}
- }
- 
--/**
-+/*
-  * cxl_h_control_faults - Control the operation of a coherent platform
-  *                        function after a fault occurs.
+ /**
+  * scif_create_remote_window:
+- * @ep: end point
++ * @scifdev:  SCIF device
+  * @nr_pages: number of pages in window
   *
-@@ -470,7 +470,7 @@ long cxl_h_control_faults(u64 unit_address, u64 process_token,
- 	}
- }
+  * Allocate and prepare a remote registration window.
+@@ -500,7 +500,6 @@ scif_create_remote_window(struct scif_dev *scifdev, int nr_pages)
  
--/**
-+/*
-  * cxl_h_control_facility - This H_CONTROL_CA_FACILITY hypervisor call
-  *                          allows the partition to manipulate or query
-  *                          certain coherent platform facility behaviors.
-@@ -509,7 +509,7 @@ static long cxl_h_control_facility(u64 unit_address, u64 op,
- 	}
- }
+ /**
+  * scif_destroy_remote_window:
+- * @ep: end point
+  * @window: remote registration window
+  *
+  * Deallocate resources for remote window.
+@@ -1037,6 +1036,7 @@ void scif_free_window_offset(struct scif_endpt *ep,
  
--/**
-+/*
-  * cxl_h_reset_adapter - Perform a reset to the coherent platform facility.
-  */
- long cxl_h_reset_adapter(u64 unit_address)
-@@ -520,7 +520,7 @@ long cxl_h_reset_adapter(u64 unit_address)
- 				NULL);
- }
+ /**
+  * scif_alloc_req: Respond to SCIF_ALLOC_REQ interrupt message
++ * @scifdev:    SCIF device
+  * @msg:        Interrupt message
+  *
+  * Remote side is requesting a memory allocation.
+@@ -1072,6 +1072,7 @@ void scif_alloc_req(struct scif_dev *scifdev, struct scifmsg *msg)
  
--/**
-+/*
-  * cxl_h_collect_vpd - Collect VPD for the coherent platform function.
-  * Parameter1 = 4K naturally aligned real buffer containing block
-  *              list entries
-@@ -536,7 +536,7 @@ long cxl_h_collect_vpd_adapter(u64 unit_address, u64 list_address,
- 				out);
- }
+ /**
+  * scif_alloc_gnt_rej: Respond to SCIF_ALLOC_GNT/REJ interrupt message
++ * @scifdev:    SCIF device
+  * @msg:        Interrupt message
+  *
+  * Remote side responded to a memory allocation.
+@@ -1096,6 +1097,7 @@ void scif_alloc_gnt_rej(struct scif_dev *scifdev, struct scifmsg *msg)
  
--/**
-+/*
-  * cxl_h_download_facility - This H_DOWNLOAD_CA_FACILITY
-  *                    hypervisor call provide platform support for
-  *                    downloading a base adapter image to the coherent
-@@ -616,7 +616,7 @@ static long cxl_h_download_facility(u64 unit_address, u64 op,
- 	}
- }
+ /**
+  * scif_free_virt: Respond to SCIF_FREE_VIRT interrupt message
++ * @scifdev:    SCIF device
+  * @msg:        Interrupt message
+  *
+  * Free up memory kmalloc'd earlier.
+@@ -1134,6 +1136,7 @@ scif_fixup_aper_base(struct scif_dev *dev, struct scif_window *window)
  
--/**
-+/*
-  * cxl_h_download_adapter_image - Download the base image to the coherent
-  *                                platform facility.
-  */
-@@ -629,7 +629,7 @@ long cxl_h_download_adapter_image(u64 unit_address,
- 				       list_address, num, out);
- }
+ /**
+  * scif_recv_reg: Respond to SCIF_REGISTER interrupt message
++ * @scifdev:    SCIF device
+  * @msg:        Interrupt message
+  *
+  * Update remote window list with a new registered window.
+@@ -1170,6 +1173,7 @@ void scif_recv_reg(struct scif_dev *scifdev, struct scifmsg *msg)
  
--/**
-+/*
-  * cxl_h_validate_adapter_image - Validate the base image in the coherent
-  *                                platform facility.
-  */
+ /**
+  * scif_recv_unreg: Respond to SCIF_UNREGISTER interrupt message
++ * @scifdev:    SCIF device
+  * @msg:        Interrupt message
+  *
+  * Remove window from remote registration list;
+@@ -1235,6 +1239,7 @@ void scif_recv_unreg(struct scif_dev *scifdev, struct scifmsg *msg)
+ 
+ /**
+  * scif_recv_reg_ack: Respond to SCIF_REGISTER_ACK interrupt message
++ * @scifdev:    SCIF device
+  * @msg:        Interrupt message
+  *
+  * Wake up the window waiting to complete registration.
+@@ -1253,6 +1258,7 @@ void scif_recv_reg_ack(struct scif_dev *scifdev, struct scifmsg *msg)
+ 
+ /**
+  * scif_recv_reg_nack: Respond to SCIF_REGISTER_NACK interrupt message
++ * @scifdev:    SCIF device
+  * @msg:        Interrupt message
+  *
+  * Wake up the window waiting to inform it that registration
+@@ -1272,6 +1278,7 @@ void scif_recv_reg_nack(struct scif_dev *scifdev, struct scifmsg *msg)
+ 
+ /**
+  * scif_recv_unreg_ack: Respond to SCIF_UNREGISTER_ACK interrupt message
++ * @scifdev:    SCIF device
+  * @msg:        Interrupt message
+  *
+  * Wake up the window waiting to complete unregistration.
+@@ -1290,6 +1297,7 @@ void scif_recv_unreg_ack(struct scif_dev *scifdev, struct scifmsg *msg)
+ 
+ /**
+  * scif_recv_unreg_nack: Respond to SCIF_UNREGISTER_NACK interrupt message
++ * @scifdev:    SCIF device
+  * @msg:        Interrupt message
+  *
+  * Wake up the window waiting to inform it that unregistration
 -- 
 2.25.1
 
