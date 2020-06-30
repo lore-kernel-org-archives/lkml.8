@@ -2,84 +2,187 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F96BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E40C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:26:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 499422074D
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:26:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593537974;
-	bh=UX4LNw0FS/ZhCgJ7Ajk3hHxhW/1ixDfkdXFZJJe+7K8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S+Texy3mQnSAdEhlrkC+lDduYrrenYa7a6B2/A7jUJyyIqYdp1WEDLh8Ur01DunWU
-	 C9PuZ4O+RAIFjjegZtbExXrs7ajPEoIITQhzV+8luf53MSh8Tg09ek1aGZ+PIyAN+y
-	 EUp0FcY8Gx35RCEhwT+Ev+jJZ4zUYJPA7GYWhDWs=
+	by mail.kernel.org (Postfix) with ESMTP id B4BF820723
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 17:26:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="euiEEt3U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388799AbgF3R0N (ORCPT
+        id S2390300AbgF3R02 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 13:26:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41752 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729892AbgF3R0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 13:26:12 -0400
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32B23206C0;
-        Tue, 30 Jun 2020 17:26:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593537972;
-        bh=UX4LNw0FS/ZhCgJ7Ajk3hHxhW/1ixDfkdXFZJJe+7K8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Xj7h0zP9RMlPnHrQlPpqjPoP2AuUHNpm6Sxon3Zx1UKQD9qSdJ78kE0TafXDLjra6
-         BBY24Vke4NflqXKSnfX6IkPaQS+qHb/jb2dR1cWyt/DNESxWKPKtW1Of4p6U3mwTgj
-         NCgPw2apFCYTE8kEs2sclKGO0mLcTyb4vMHJeTDE=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1jqK1K-007oaL-GP; Tue, 30 Jun 2020 18:26:10 +0100
-From:   Marc Zyngier <maz@kernel.org>
-To:     linux-kernel@vger.kernel.org, Zenghui Yu <yuzenghui@huawei.com>
-Cc:     wanghaibin.wang@huawei.com
-Subject: Re: [PATCH] irqchip/gic-v3: Remove the unused register definition
-Date:   Tue, 30 Jun 2020 18:26:04 +0100
-Message-Id: <159353791986.882710.14067280307027336552.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.27.0
-In-Reply-To: <20200630134126.880-1-yuzenghui@huawei.com>
-References: <20200630134126.880-1-yuzenghui@huawei.com>
+        Tue, 30 Jun 2020 13:26:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52744 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729892AbgF3R01 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 13:26:27 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F5AAC061755;
+        Tue, 30 Jun 2020 10:26:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description;
+        bh=PTxWEstMBHu18X1ijaajKUQM5vwViAK5Whu2SCXSGc4=; b=euiEEt3UPUHl6p/MYdOwi4x4cC
+        fspyG1IF6UzfyiKaDMdNu8IZ+fxquRRrWov/i7f5ng3oQCmyFWJCVSsEMzKXjAB4Yjp2MUQ1HDaTX
+        BDonvWWco8wiRjJndN+uVBKadEYQ6G+7fuMrGy41v8p1fwNy2z16c0S83u/3si4dwZXRtqIqE4K0r
+        B6HhbFEzaOl4WtnvuAfUO/gkLPdNybIr9Qg69AYUJNS/N9RYjZvy4XWaqW5ghlWW0yyHM1Lel8gfS
+        FrRyBaV/cknODIY73QpEImRcm3jMbAntXwrhNUTNLlIGYqU6L0bIL9GaJYX2CLSqU+J7TOzgQYBcn
+        I3uRxfog==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by casper.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jqK1X-0004Bo-4r; Tue, 30 Jun 2020 17:26:23 +0000
+Subject: Re: [RFC 1/1] fpga: dfl: RFC PCI config
+To:     trix@redhat.com, hao.wu@intel.com, mdf@kernel.org, corbet@lwn.net
+Cc:     linux-fpga@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200630171656.20151-1-trix@redhat.com>
+ <20200630171656.20151-2-trix@redhat.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <67f7f2b8-3567-aadd-30d6-4cfbc0bc8ce5@infradead.org>
+Date:   Tue, 30 Jun 2020 10:26:19 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, yuzenghui@huawei.com, wanghaibin.wang@huawei.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+In-Reply-To: <20200630171656.20151-2-trix@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 30 Jun 2020 21:41:26 +0800, Zenghui Yu wrote:
-> As per the GICv3 specification, GIC{D,R}_SEIR are not assigned and the
-> locations (0x0068) are actually Reserved. GICR_MOV{LPI,ALL}R are two IMP
-> DEF registers and might be defined by some specific micro-architecture,
-> Linux doesn't use them.
+On 6/30/20 10:16 AM, trix@redhat.com wrote:
+> From: Tom Rix <trix@redhat.com>
 > 
-> As they're not used anywhere in the kernel, just drop all of them.
+> Create some top level configs the map to dfl pci cards.
+> 
+> Autoselect the parts of fpga that are needed to run these cards
+> as well as the other subsystem configs to the card's subdevices.
+> 
+> Signed-off-by: Tom Rix <trix@redhat.com>
+> ---
+>  Documentation/fpga/dfl.rst | 33 +++++++++++++++++++++++++++++++++
+>  drivers/fpga/Kconfig       | 28 ++++++++++++++++++++++++++++
+>  2 files changed, 61 insertions(+)
+> 
+> diff --git a/Documentation/fpga/dfl.rst b/Documentation/fpga/dfl.rst
+> index d7648d7c7eee..3a872bc8e3d3 100644
+> --- a/Documentation/fpga/dfl.rst
+> +++ b/Documentation/fpga/dfl.rst
+> @@ -500,6 +500,39 @@ Developer only needs to provide a sub feature driver with matched feature id.
+>  FME Partial Reconfiguration Sub Feature driver (see drivers/fpga/dfl-fme-pr.c)
+>  could be a reference.
+>  
+> +Kernel configuration
+> +====================
+> +
+> +While it is possible to manually setup a configuration to match your device,
+> +there are some top level configurations that collect configuations for
 
-Applied to irq/irqchip-5.9, thanks!
+                                                        configurations
 
-[1/1] irqchip/gic-v3: Remove unused register definition
-      commit: c15c35a83c01fb25a995fbc4f58fe499f0493813
+> +some reference pci cards.  Below descibes these configuration as well as
 
-Cheers,
+                  PCI               describes
 
-	M.
+> +what other kernel configs are needed for proper configuration.
+> +
+> +FPGA_DFL_PAC10
+> +Intel Arria 10 GX PCI card, PCI id 0X09C4
+> +Depends on
+> +  SPI_ALTERA
+> +  MFD_INTEL_M10_BMC
+> +  MFD_INTEL_M10_BMC_SECURE
+> +  SENSORS_INTEL_M10_BMC_HWMON
+> +
+> +FPGA_DFL_D5005
+> +Intel Stratix 10, D5005 PCI card, PCI id 0X0B2B
+> +Depends on
+> +  SPI_ALTERA
+> +  MFD_INTEL_M10_BMC
+> +  MFD_INTEL_M10_BMC_SECURE
+> +  SENSORS_INTEL_M10_BMC_HWMON
+> +  INTEL_S10_PHY
+> +
+> +FPGA_DFL_N3000
+> +Intel Network Accelerator, N3000 PCI card, PCI id 0X0B30
+> +Depends on
+> +  SPI_ALTERA
+> +  MFD_INTEL_M10_BMC
+> +  MFD_INTEL_M10_BMC_SECURE
+> +  SENSORS_INTEL_M10_BMC_HWMON
+> +  INTEL_LL_10G_MAC
+>  
+>  Open discussion
+>  ===============
+> diff --git a/drivers/fpga/Kconfig b/drivers/fpga/Kconfig
+> index 9d53bd9094e2..b657de20bc98 100644
+> --- a/drivers/fpga/Kconfig
+> +++ b/drivers/fpga/Kconfig
+> @@ -138,6 +138,34 @@ config OF_FPGA_REGION
+>  	  Support for loading FPGA images by applying a Device Tree
+>  	  overlay.
+>  
+> +config FPGA_DFL_PAC10
+> +	tristate "Intel Arria 10 GX PCI card"
+> +	select SPI_ALTERA
+
+above kconfig symbol:
+	depends on SPI_MASTER
+
+> +	select MFD_INTEL_M10_BMC
+> +	select MFD_INTEL_M10_BMC_SECURE
+> +	select SENSORS_INTEL_M10_BMC_HWMON
+
+I haven't tested this, but in general it's not safe to select something like
+SENSORS* or HWMON* unless you first check that CONFIG_HWMON is enabled.
+Otherwise this would usually cause kconfig warning(s).
+
+But don't add things like
+	select HWMON
+	select SPI
+	select SPI_MASTER
+
+because we don't enable subsystems (like HWMON or SPI) just inside one
+driver's kconfig entry.
+The driver(s) should instead depend on HWMON, SPI, SPI_MASTER etc.
+
+> +	select FPGA_DFL
+> +	select FPGA_DFL_FME
+> +	select FPGA_DFL_FME_MGR
+> +	select FPGA_DFL_FME_BRIDGE
+> +	select FPGA_DFL_FME_REGION
+> +	select FPGA_DFL_AFU
+> +	select FPGA_DFL_SPI_ALTERA
+> +	select FPGA_DFL_PCI
+> +	select IFPGA_SEC_MGR
+> +
+> +config FPGA_DFL_D5005
+> +	tristate "Intel Stratix 10, D5005 PCI card"
+> +	select FPGA_DFL_PAC10
+> +	select INTEL_S10_PHY
+> +	select FPGA_DFl_HSSI
+> +
+> +config FPGA_DFL_N3000
+> +	tristate "Intel Network Accelerator, N3000 PCI card"
+> +	select FPGA_DFL_PAC10
+> +	select INTEL_LL_10G_MAC
+> +	select FPGA_DFL_N3000_NIOS
+> +
+>  config FPGA_DFL
+>  	tristate "FPGA Device Feature List (DFL) support"
+>  	select FPGA_BRIDGE
+> 
+
+
 -- 
-Without deviation from the norm, progress is not possible.
-
-
+~Randy
