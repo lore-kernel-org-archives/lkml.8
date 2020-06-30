@@ -2,166 +2,122 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF86EC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:05:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55665C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 5D07220748
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:05:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C9A320748
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 03:06:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Il2wPhzB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="szix04EN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728877AbgF3DFx (ORCPT
+        id S1728910AbgF3DF6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 23:05:53 -0400
-Received: from mailout3.samsung.com ([203.254.224.33]:21850 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727981AbgF3DFw (ORCPT
+        Mon, 29 Jun 2020 23:05:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32934 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728880AbgF3DF4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 23:05:52 -0400
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20200630030549epoutp03a807b3d09df2a04257a1fc98fce5cf89~dM2RacP-L2578725787epoutp03T
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 03:05:49 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20200630030549epoutp03a807b3d09df2a04257a1fc98fce5cf89~dM2RacP-L2578725787epoutp03T
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1593486349;
-        bh=RM12vg22eGvbT18YzAf+yBv6C+eGBEkx3HzCNW8KJIg=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=Il2wPhzBDJJ5ejFp2rru/+BnSt5pm0AVFrrPeuweNLiS9FAOd2oRstg+HhPmdbAPA
-         Q7kUhS1btVFd1i5Vyd2743atYTG4FKNqlLwcxzjjsw6VVi0GuhW7XdnWvzAIjdKr+b
-         bzgjrz4bGOYMAGzoR8TTWbWpV1EkWYIn+qXoZrfg=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20200630030548epcas1p350032852c7696ab940e7acd6dff2c094~dM2QzPeSP2881228812epcas1p30;
-        Tue, 30 Jun 2020 03:05:48 +0000 (GMT)
-Received: from epsmges1p1.samsung.com (unknown [182.195.40.159]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 49wq4C3RQVzMqYkf; Tue, 30 Jun
-        2020 03:05:47 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-        79.70.18978.90CAAFE5; Tue, 30 Jun 2020 12:05:45 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200630030544epcas1p255f59b5d5e2c82219c37fc5b341b1e67~dM2NHjc1a2486824868epcas1p2Y;
-        Tue, 30 Jun 2020 03:05:44 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200630030544epsmtrp26f0fd4c259802f1fd3bcebc298d0b6c6~dM2NHA1JN2260722607epsmtrp2E;
-        Tue, 30 Jun 2020 03:05:44 +0000 (GMT)
-X-AuditID: b6c32a35-5edff70000004a22-d4-5efaac09d55b
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        EE.83.08382.80CAAFE5; Tue, 30 Jun 2020 12:05:44 +0900 (KST)
-Received: from namjaejeon01 (unknown [10.88.104.63]) by epsmtip2.samsung.com
-        (KnoxPortal) with ESMTPA id
-        20200630030544epsmtip2003bab8adc7523ab13d2d3041826a204~dM2M9nQ9k3271032710epsmtip2U;
-        Tue, 30 Jun 2020 03:05:44 +0000 (GMT)
-From:   "Namjae Jeon" <namjae.jeon@samsung.com>
-To:     "'Linus Torvalds'" <torvalds@linux-foundation.org>
-Cc:     <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL] exfat fixes for 5.8-rc4
-Date:   Tue, 30 Jun 2020 12:05:44 +0900
-Message-ID: <002f01d64e8b$586fa220$094ee660$@samsung.com>
+        Mon, 29 Jun 2020 23:05:56 -0400
+Received: from mail-pl1-x644.google.com (mail-pl1-x644.google.com [IPv6:2607:f8b0:4864:20::644])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 44068C03E97A
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 20:05:55 -0700 (PDT)
+Received: by mail-pl1-x644.google.com with SMTP id x11so7882131plo.7
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 20:05:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cNEVQy+vICiaQ3dEMjEVUMkRw1CNp3UqW6ADGZMeyq0=;
+        b=szix04ENS8s/vNMuSV9gmxw6eDA/gHtPJCmi32AKDZtmQTu3dznzhrEYphazqsUTuV
+         SD1LuvDvVW4PVhTqNQR0lQ8s/bE0fcLUu7dY1F+4WnisN/0UIb6GE1KSfXBiM+j9ft7q
+         3iBqr8MxTD6kVSOBAVKm7ROP5aQqjOLPul/cWyg6+21Z5+UFZU571T26GNGiF3nYrcef
+         wtJU0UjEtuJI9OtB7V78h+IZIMC48jFdlYemLhceDJ8QUmUGJL+kxfIUgAFPz+omWvMn
+         7fQszesv9mXKkojzECfYvnGnx0N2NU2b1Cj0u94tyqer7SKrGU4IIREFN0OHnge5CFUJ
+         zE9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cNEVQy+vICiaQ3dEMjEVUMkRw1CNp3UqW6ADGZMeyq0=;
+        b=Vi3kIDIWgOaXwCzy7UvIJZS25YfGeEbCiCrc/IoeUXDDwUucdCe8Aubbr1xdJAe8Kn
+         sUYmY+MUTAZeF7yK7LLdprVWGUZV5yZ6qW3FiXyH6wmGaMjp7Jog50nayWR8iKv0ONHM
+         HWvpnP5OlOsNp6qzDtvqmBwrF7o+nnGlnwJu9z2U9btu0g0bG4x6UQlDSSlMg/7dumIp
+         G4yl9qaZVmxCsQ5JLGcTnvPGO+xdb9X9rTnQVaewNYplEBGRvU+N8in1Da3FDn9X4Zy8
+         lYIzUrlkAlQEF54FFDs7yecb6vI5GuTF97FKnipHzFmywpaxoC0NJDhDqEoqz3WwxUvY
+         +DWA==
+X-Gm-Message-State: AOAM530iIwvD7SncAayrN5hVyAlE10t0zLpAYvX+tGaXYGS4Xz4eDFk+
+        JUJlhNZgl9A+lQjOThOyv45Yuw==
+X-Google-Smtp-Source: ABdhPJwwYS9W4O4PrjOlLGBl4/OdVWJfaqDpaTLMqlG01WLme1r8xY9RSXQUaUY08Gft6qu0rVWgxg==
+X-Received: by 2002:a17:90a:110:: with SMTP id b16mr7674307pjb.235.1593486354641;
+        Mon, 29 Jun 2020 20:05:54 -0700 (PDT)
+Received: from localhost ([122.172.127.76])
+        by smtp.gmail.com with ESMTPSA id z2sm905277pfq.67.2020.06.29.20.05.53
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jun 2020 20:05:54 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 08:35:52 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Stephen Boyd <swboyd@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        robdclark@chromium.org, robdclark@gmail.com,
+        stanimir.varbanov@linaro.org, mka@chromium.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Akash Asthana <akashast@codeaurora.org>,
+        linux-serial@vger.kernel.org
+Subject: Re: [PATCH v6 1/6] tty: serial: qcom_geni_serial: Use OPP API to set
+ clk/perf state
+Message-ID: <20200630030552.cfp5oh33qde6nlnf@vireshk-i7>
+References: <1592222564-13556-1-git-send-email-rnayak@codeaurora.org>
+ <1592222564-13556-2-git-send-email-rnayak@codeaurora.org>
+ <159347264530.1987609.11350620235820019545@swboyd.mtv.corp.google.com>
+ <a3d53f82-b29d-97ef-3ba1-ca9bd650d354@codeaurora.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AdZOcLCU3DZik/kMTGioqDKJNkf5LQ==
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrLKsWRmVeSWpSXmKPExsWy7bCmri7nml9xBo9XqFlc3jWHzeJR31t2
-        ByaPEzN+s3h83iQXwBSVY5ORmpiSWqSQmpecn5KZl26r5B0c7xxvamZgqGtoaWGupJCXmJtq
-        q+TiE6DrlpkDNF5JoSwxpxQoFJBYXKykb2dTlF9akqqQkV9cYquUWpCSU2BoUKBXnJhbXJqX
-        rpecn2tlaGBgZApUmZCT8XP3CeaCU7wVF/beYWxg/M3VxcjJISFgInH03F0mEFtIYAejRMvX
-        1C5GLiD7E6PEvumdrBDON0aJk+u72GE6nt7sZIdI7GWUOL75CJTzklFi9ssLYFVsAroS//7s
-        Z+ti5OAQETCT+LbEEcRkFlCSuHpKDqRCWEBb4mtXOyuIzSKgKvFz5hY2EJtXwFKiuf8NC4Qt
-        KHFy5hMwm1lAXmL72znMEDcoSPx8ugysV0RAT6Kh5S9UjYjE7M42ZpBzJAT2sUvcfP+JFaLB
-        ReLg2jMsELawxKvjW6CekZL4/G4v2JkSAtUSH/dDze9glHjx3RbCNpa4uX4DK8T5mhLrd+lD
-        hBUldv6eywixlk/i3dceVogpvBIdbUIQJaoSfZcOM0HY0hJd7R+glnpI/PjZzjaBUXEWkidn
-        IXlyFpJnZiEsXsDIsopRLLWgODc9tdiwwBA5pjcxgtOdlukOxolvP+gdYmTiYDzEKMHBrCTC
-        e9rgV5wQb0piZVVqUX58UWlOavEhRlNgsE9klhJNzgcm3LySeENTI2NjYwsTM3MzU2MlcV5x
-        mQtxQgLpiSWp2ampBalFMH1MHJxSDUybCl8e+Xx2TZjT9g2XIi8+31rFwPnKOivpu7CE45Q5
-        u4NP7du9yeyfwouzv7jVizOPePcWf8/gC8ri2S+vvEB3ju2PpXEhfts/h9fr3Hqw++v7zVVV
-        F+VvafpP8fokPaVRTkCaO2ueTKheTWH5/R7Tr6b77rHKPOS9FLq+V++szeq03MX7VNofHdmn
-        H6ajlKIhE5W63++ycUO51pfV4gd8stZE+5zvVlO5fyZN8F1bnqye567W45X8u2bOYdjDczjI
-        sjdoxbl9Xvval/gez7N23PLvgN/i+98mPq9Irfz/8ICC40eneMeiY/2L9U1MNx875ric0+w8
-        G+fxy++/XEsJWm0fx1C/ncnigO7ElTuUWIozEg21mIuKEwErD5SmAAQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrHLMWRmVeSWpSXmKPExsWy7bCSvC7Hml9xBhdOKVlc3jWHzeJR31t2
-        ByaPEzN+s3h83iQXwBTFZZOSmpNZllqkb5fAlfFz9wnmglO8FRf23mFsYPzN1cXIySEhYCLx
-        9GYnexcjF4eQwG5GiYk9M5khEtISx06cAbI5gGxhicOHiyFqnjNKnN33khGkhk1AV+Lfn/1s
-        IDUiAmYS35Y4gpjMAkoSV0/JgVQIC2hLfO1qZwWxWQRUJX7O3MIGYvMKWEo0979hgbAFJU7O
-        fMIC0aon0bYRbDizgLzE9rdzoI5RkPj5dBnYGBGgkoaWvywQNSISszvbmCcwCs5CMmkWwqRZ
-        SCbNQtKxgJFlFaNkakFxbnpusWGBYV5quV5xYm5xaV66XnJ+7iZGcBBrae5g3L7qg94hRiYO
-        xkOMEhzMSiK8pw1+xQnxpiRWVqUW5ccXleakFh9ilOZgURLnvVG4ME5IID2xJDU7NbUgtQgm
-        y8TBKdXA5Fy3prVsfk1Kq/FnBv0GniMmkslhJ4q4hW+0HXD69rG+/smtV4/+1kR8Or9COuHJ
-        1a+7BKULmio5v9/meLvrgGHHFfeazsjMI77q52/er8v/qteV2bis3CWCf41NvYL8o5zutpMb
-        WWV2Md2R36vgel5Z9oqLybqbbnU//xYvPP5z5b7FkrUOkSUlGvlRxztZJltO0MjX0Cq8dolz
-        t3xAViGDqPDiq7v+lqrOjeFzt5DJO33l2kvGfKfvD2tb9Geucc0vFkgSLmjtY8zyMojL+yvy
-        qGm3fv+F+9zTPl4/EZp68AqPxvTC9sUPrTXcbvcoMJmb1vY3Wz6836sW/7j3a7Z49kK3uxt/
-        nuZ+IKnEUpyRaKjFXFScCAC3vZq20QIAAA==
-X-CMS-MailID: 20200630030544epcas1p255f59b5d5e2c82219c37fc5b341b1e67
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20200630030544epcas1p255f59b5d5e2c82219c37fc5b341b1e67
-References: <CGME20200630030544epcas1p255f59b5d5e2c82219c37fc5b341b1e67@epcas1p2.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a3d53f82-b29d-97ef-3ba1-ca9bd650d354@codeaurora.org>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+On 30-06-20, 08:31, Rajendra Nayak wrote:
+> 
+> 
+> On 6/30/2020 4:47 AM, Stephen Boyd wrote:
+> > Quoting Rajendra Nayak (2020-06-15 05:02:39)
+> > > diff --git a/drivers/tty/serial/qcom_geni_serial.c b/drivers/tty/serial/qcom_geni_serial.c
+> > > index 457c0bf..a90f8ec 100644
+> > > --- a/drivers/tty/serial/qcom_geni_serial.c
+> > > +++ b/drivers/tty/serial/qcom_geni_serial.c
+> > > @@ -9,6 +9,7 @@
+> > >   #include <linux/module.h>
+> > >   #include <linux/of.h>
+> > >   #include <linux/of_device.h>
+> > > +#include <linux/pm_opp.h>
+> > >   #include <linux/platform_device.h>
+> > >   #include <linux/pm_runtime.h>
+> > >   #include <linux/pm_wakeirq.h>
+> > > @@ -962,7 +963,7 @@ static void qcom_geni_serial_set_termios(struct uart_port *uport,
+> > >                  goto out_restart_rx;
+> > >          uport->uartclk = clk_rate;
+> > > -       clk_set_rate(port->se.clk, clk_rate);
+> > > +       dev_pm_opp_set_rate(uport->dev, clk_rate);
+> > 
+> > If there isn't an OPP table for the device because it is optional then
+> > how can we unconditionally call dev_pm_opp_set_rate()?
 
-This is exfat fixes pull request for v5.8-rc4. I add description of
-this pull request on below. Please pull exfat with following fixes.
+Looks like some *Maintainers* aren't paying enough attention lately ;)
 
-Thanks!
+Just kidding.
 
-The following changes since commit 9ebcfadb0610322ac537dd7aa5d9cbc2b2894c68:
+> because we have 'aca48b6 opp: Manage empty OPP tables with clk handle' to handle this.
 
-  Linux 5.8-rc3 (2020-06-28 15:00:24 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/linkinjeon/exfat.git tags/exfat-for-5.8-rc4
-
-for you to fetch changes up to 5267456e953fd8c5abd8e278b1cc6a9f9027ac0a:
-
-  exfat: flush dirty metadata in fsync (2020-06-29 17:11:18 +0900)
-
-----------------------------------------------------------------
-Description for this pull request:
-  - Zero out unused characters of FileName field to avoid a complaint from some fsck tool.
-  - Fix memory leak on error paths.
-  - Fix unnecessary VOL_DIRTY set when calling rmdir on non-empty directory.
-  - Call sync_filesystem() for read-only remount(Fix generic/452 test in xfstests)
-  - Add own fsync() to flush dirty metadata.
-
-----------------------------------------------------------------
-Dan Carpenter (1):
-      exfat: add missing brelse() calls on error paths
-
-Hyeongseok.Kim (1):
-      exfat: Set the unused characters of FileName field to the value 0000h
-
-Hyunchul Lee (1):
-      exfat: call sync_filesystem for read-only remount
-
-Namjae Jeon (1):
-      exfat: move setting VOL_DIRTY over exfat_remove_entries()
-
-Sungjong Seo (1):
-      exfat: flush dirty metadata in fsync
-
- fs/exfat/dir.c      | 12 +++++++-----
- fs/exfat/exfat_fs.h |  1 +
- fs/exfat/file.c     | 19 ++++++++++++++++++-
- fs/exfat/namei.c    | 14 +++++++++++---
- fs/exfat/super.c    | 10 ++++++++++
- 5 files changed, 47 insertions(+), 9 deletions(-)
-
+-- 
+viresh
