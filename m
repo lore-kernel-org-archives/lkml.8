@@ -2,170 +2,126 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A78C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0727CC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:31:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B7B5220774
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:31:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593520310;
-	bh=PhXZOiHYFfQIlVAYlW6qFnQSXZojRskUV7lRHqn16QI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0sC5wG0OGXWInBZ8Mt9Ia5YlYYXlD71i5CiaXraLqmfoQLRXnNJT5x9GOh/kAj3BA
-	 4Zl+RHwDb0la6PAAf/hP7LNxWkgumW1FGouyXjzxdNfL3WEXGvORYg3OUDiTz1c4Th
-	 qyTXXtohrp8RXBeb/3v2GvBrBEB0nQPvD7XYqMg4=
+	by mail.kernel.org (Postfix) with ESMTP id D8C4920672
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 12:31:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="i+FRdFxL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387692AbgF3Mbs (ORCPT
+        id S2387707AbgF3Mb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 08:31:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41128 "EHLO mail.kernel.org"
+        Tue, 30 Jun 2020 08:31:56 -0400
+Received: from m43-7.mailgun.net ([69.72.43.7]:33630 "EHLO m43-7.mailgun.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730095AbgF3Mbr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 08:31:47 -0400
-Received: from pali.im (pali.im [31.31.79.79])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730095AbgF3Mbz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 08:31:55 -0400
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1593520315; h=Message-ID: References: In-Reply-To: Subject:
+ To: From: Date: Content-Transfer-Encoding: Content-Type: MIME-Version:
+ Sender; bh=k0MdTyKtV4z22dAVkmjS3nxPgaMUlZ3id20kmVJEhWM=; b=i+FRdFxLZeLEInFPxsSSvAEM7JxW9so+NAx/vtrmnbAsmOXiZwR2HGXG05WMbwLUPM0T+u5j
+ BnOxvaxIdMA8mbZDuSafTk6JVkpMxFV5+6MPacy+UZtJ/eQayvItbwEc45SjCunthFWrs5xz
+ 5YKtH6F5X7bG/WAiSBQh9qBu1oI=
+X-Mailgun-Sending-Ip: 69.72.43.7
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org
+ (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171]) by
+ smtp-out-n13.prod.us-east-1.postgun.com with SMTP id
+ 5efb30b1c4bb4f886db6ea4e (version=TLS1.2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256); Tue, 30 Jun 2020 12:31:45
+ GMT
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 4C166C4339C; Tue, 30 Jun 2020 12:31:44 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B08BC20780;
-        Tue, 30 Jun 2020 12:31:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593520306;
-        bh=PhXZOiHYFfQIlVAYlW6qFnQSXZojRskUV7lRHqn16QI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cqHNnvn1lWCLKzNx58COqIF64R7i6pFEt/4LFtvh1Ej/N2dgN/Q+MWsoWC3ZNu5Fr
-         fJcY48jSvAkZZNEUk3EkwlqRFhITTJKiKqMCke3rrxcBk83U0HF0I1+QBipkFT1oEp
-         Q/L7EyKjSyu+aoYwUk/9qDLLHmTudgKe/qVS3pFo=
-Received: by pali.im (Postfix)
-        id 944ED81A; Tue, 30 Jun 2020 14:31:44 +0200 (CEST)
-Date:   Tue, 30 Jun 2020 14:31:44 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Marek =?utf-8?B?QmVow7pu?= <marek.behun@nic.cz>,
-        Remi Pommarel <repk@triplefau.lt>,
-        Tomasz Maciej Nowak <tmn505@gmail.com>,
-        Xogium <contact@xogium.me>, linux-pci@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: aardvark: Don't touch PCIe registers if no card
- connected
-Message-ID: <20200630123144.vllnun266i6n5q4d@pali>
-References: <20200528163809.54f5ldvphrjg3zg3@pali>
- <20200528164938.GA325239@bjorn-Precision-5520>
- <20200529083013.5cg7tvfemomnmvjd@pali>
+        (Authenticated sender: gokulsri)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9A0D0C433C8;
+        Tue, 30 Jun 2020 12:31:43 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200529083013.5cg7tvfemomnmvjd@pali>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 30 Jun 2020 18:01:43 +0530
+From:   gokulsri@codeaurora.org
+To:     gokulsri@codeaurora.org, sboyd@kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, david.brown@linaro.org,
+        devicetree@vger.kernel.org, jassisinghbrar@gmail.com,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        mark.rutland@arm.com, mturquette@baylibre.com, ohad@wizery.com,
+        robh+dt@kernel.org, sricharan@codeaurora.org,
+        nprakash@codeaurora.org
+Subject: Re: [PATCH V5 00/10] remoteproc: qcom: q6v5-wcss: Add support for
+ secure pil
+In-Reply-To: <1589362265-22702-1-git-send-email-gokulsri@codeaurora.org>
+References: <1589362265-22702-1-git-send-email-gokulsri@codeaurora.org>
+Message-ID: <14579d9dbcc06bca392b41ace1b0ce49@codeaurora.org>
+X-Sender: gokulsri@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+  Hi Bjorn,
+  My below patch series (https://patchwork.kernel.org/cover/11545511/) 
+with all the review comments addressed and this is on top of
+  Govind's series (https://patchwork.kernel.org/cover/11060629/) "[v5] 
+"Add non PAS wcss Q6 support for QCS404".
+  Need your help to know how should I proceed further to merge these 
+patches.
 
-On Friday 29 May 2020 10:30:13 Pali Rohár wrote:
-> On Thursday 28 May 2020 11:49:38 Bjorn Helgaas wrote:
-> > On Thu, May 28, 2020 at 06:38:09PM +0200, Pali Rohár wrote:
-> > > On Thursday 28 May 2020 11:26:04 Bjorn Helgaas wrote:
-> > > > On Thu, May 28, 2020 at 04:31:41PM +0200, Pali Rohár wrote:
-> > > > > When there is no PCIe card connected and advk_pcie_rd_conf() or
-> > > > > advk_pcie_wr_conf() is called for PCI bus which doesn't belong to emulated
-> > > > > root bridge, the aardvark driver throws the following error message:
-> > > > > 
-> > > > >   advk-pcie d0070000.pcie: config read/write timed out
-> > > > > 
-> > > > > Obviously accessing PCIe registers of disconnected card is not possible.
-> > > > > 
-> > > > > Extend check in advk_pcie_valid_device() function for validating
-> > > > > availability of PCIe bus. If PCIe link is down, then the device is marked
-> > > > > as Not Found and the driver does not try to access these registers.
-> > > > > 
-> > > > > Signed-off-by: Pali Rohár <pali@kernel.org>
-> > > > > ---
-> > > > >  drivers/pci/controller/pci-aardvark.c | 3 +++
-> > > > >  1 file changed, 3 insertions(+)
-> > > > > 
-> > > > > diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-> > > > > index 90ff291c24f0..53a4cfd7d377 100644
-> > > > > --- a/drivers/pci/controller/pci-aardvark.c
-> > > > > +++ b/drivers/pci/controller/pci-aardvark.c
-> > > > > @@ -644,6 +644,9 @@ static bool advk_pcie_valid_device(struct advk_pcie *pcie, struct pci_bus *bus,
-> > > > >  	if ((bus->number == pcie->root_bus_nr) && PCI_SLOT(devfn) != 0)
-> > > > >  		return false;
-> > > > >  
-> > > > > +	if (bus->number != pcie->root_bus_nr && !advk_pcie_link_up(pcie))
-> > > > > +		return false;
-> > > > 
-> > > > I don't think this is the right fix.  This makes it racy because the
-> > > > link may go down after we call advk_pcie_valid_device() but before we
-> > > > perform the config read.
-> > > 
-> > > Yes, it is racy, but I do not think it cause problems. Trying to read
-> > > PCIe registers when device is not connected cause just those timeouts,
-> > > printing error message and increased delay in advk_pcie_wait_pio() due
-> > > to polling loop. This patch reduce unnecessary access to PCIe registers
-> > > when advk_pcie_wait_pio() polling just fail.
-> > > 
-> > > I think it is a good idea to not call blocking advk_pcie_wait_pio() when
-> > > it is not needed. We could have faster enumeration of PCIe buses when
-> > > card is not connected.
-> > 
-> > Maybe advk_pcie_check_pio_status() and advk_pcie_wait_pio() could be
-> > combined so we could get the correct error status as soon as it's
-> > available, without waiting for a timeout?
+  Regards,
+  Gokul
+
+On 2020-05-13 15:00, Gokul Sriram Palanisamy wrote:
+> IPQ8074 needs support for secure pil as well.
+> Also, currently only unified firmware is supported.
+> IPQ8074 supports split firmware for q6 and m3, so
+> adding support for that.
 > 
-> Any idea how to achieve it?
+> This series is based on Govind's
+> "[v5] Add non PAS wcss Q6 support for QCS404"
 > 
-> First call is polling function advk_pcie_wait_pio() and second call is
-> advk_pcie_check_pio_status() which just reads status register and prints
-> error message to dmesg.
+> changes since v4:
+>  - Rebased patch 8
 > 
-> So for me it looks like that combining these two functions into one does
-> not change anything. We always need to call polling code prior to
-> checking status register. And therefore need to wait for timeout. Unless
-> something like in this proposed patch is not used (to skip whole
-> register access if it would fail).
-
-So to answer your question, correct status is possible to retrieve only
-after waiting for timeout. As status would be available only after
-timeout expires.
-
-Therefore my proposed patch in this (or some other) form is needed if we
-want to prevent trying to read from registers and waiting for answer
-when card is disconnected.
-
-I would really like to see this issue fixed, so booting linux kernel on
-board without connected PCIe card would not be delayed.
-
-Thomas, Lorenzo, Bjorn: do you have any idea how to fix it differently?
-Or if not, could be my proposed patch accepted in some form?
-
-> > In any event, the "return PCIBIOS_SET_FAILED" needs to be fixed.  Most
-> > callers of config read do not check for failure, but most of the ones
-> > that do, check for "val == ~0".  Only a few check for a status of
-> > other than PCIBIOS_SUCCESSFUL.
-> > 
-> > > > I have no objection to removing the "config read/write timed out"
-> > > > message.  The "return PCIBIOS_SET_FAILED" in the read case probably
-> > > > should be augmented by setting "*val = 0xffffffff".
+> changes since v3:
+>  - In patch 10, Added release_firmware to free up
+>    memory requested for m3 firmware.
 > 
-> Now I see, "*val = 0xffffffff" should be really set when function
-> advk_pcie_rd_conf() fails.
-
-I have already sent separate patch which fixes this issue.
-
-> > > > >  	return true;
-> > > > >  }
-> > > > >  
-> > > > > -- 
-> > > > > 2.20.1
-> > > > > 
+> changes since v2:
+>  - In patch 5, Added a driver data 'bcr_reset_required'
+>    to select if bcr reset is required
+>  - In patch 10, Removed syscon implementation and moved
+>    to mailbox framework to access APCS IPC
+> 
+> changes since v1:
+>  - In patch 10, Addressed minor review comments.
+> 
+> Gokul Sriram Palanisamy (10):
+>   remoteproc: qcom: Add PRNG proxy clock
+>   remoteproc: qcom: Add secure PIL support
+>   remoteproc: qcom: Add support for split q6 + m3 wlan firmware
+>   remoteproc: qcom: Add ssr subdevice identifier
+>   remoteproc: qcom: Update regmap offsets for halt register
+>   dt-bindings: clock: qcom: Add reset for WCSSAON
+>   clk: qcom: Add WCSSAON reset
+>   dt-bindings: firmware: qcom: Add compatible for IPQ8074 SoC
+>   arm64: dts: Add support for scm on IPQ8074 SoCs
+>   arm64: dts: qcom: Enable Q6v5 WCSS for ipq8074 SoC
+> 
+>  .../devicetree/bindings/firmware/qcom,scm.txt      |   1 +
+>  arch/arm64/boot/dts/qcom/ipq8074.dtsi              | 127 
+> +++++++++++++++++
+>  drivers/clk/qcom/gcc-ipq8074.c                     |   1 +
+>  drivers/remoteproc/qcom_q6v5_wcss.c                | 157 
+> +++++++++++++++++----
+>  include/dt-bindings/clock/qcom,gcc-ipq8074.h       |   1 +
+>  5 files changed, 258 insertions(+), 29 deletions(-)
