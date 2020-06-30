@@ -2,75 +2,82 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9398C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B856C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:43:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 88153206BE
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:42:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBC33206BE
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 05:43:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KS/1RcoO"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="A1pw3V+O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbgF3FmU (ORCPT
+        id S1728590AbgF3FnV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 01:42:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56962 "EHLO
+        Tue, 30 Jun 2020 01:43:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725994AbgF3FmU (ORCPT
+        with ESMTP id S1725994AbgF3FnU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 01:42:20 -0400
+        Tue, 30 Jun 2020 01:43:20 -0400
 Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4B19C061755;
-        Mon, 29 Jun 2020 22:42:19 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97CDAC061755;
+        Mon, 29 Jun 2020 22:43:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
         References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=10n6fkJT5YFknRXlHwj9gjNGg/R91/iiEmizqFo2Wwo=; b=KS/1RcoO2tBOxUo26C2OeBpqjl
-        OB2sVaGqmZWJ+kuE7+75OHOwksmtSEVZNf0KN2lNbbk0YFvsUp8g7rb33mF9Rygtv5wn3lgzZTqcQ
-        khfetKq77lCf6uZ5aoegLeRgrbxkfD9th0T/zwET+2XNS6OaFaYwljTfGureLmMCEM6xUmlALsOn6
-        64lRKuziJU6P4RoeTfLQ1YJWx3PW+uzU5MLFefV1CBVi5nANFuxRSC3wsLmhnzFHvJOpDKlVhyZlz
-        HPSfid7WCsQEdj3nRsPpNptdaSIlJen04FrqdMpG9XIJEksoqGon0zcHUxo8koUf5NuQ15sP9H+H+
-        76vP82GA==;
+        bh=qszr3MAAxpGDAjOTug71QT6Sd6sc2nlH1A7hGQd+K/w=; b=A1pw3V+OadqGvu2MXZTkGzZFi6
+        lEyofW9BKz5JF2RO6lrC5mAiQnSv544rTutI0U/r07hWAnH0+UW1Jqplo1prrmeGxrv12e7DTuFkR
+        0R6zKc8wo8cd+Z72u1ZW5mKhCm22afdNHgL7qEzKx9kCzxzMQYnUHdkUa+Je/ueK0mfXnByJVyJuA
+        USJKKW70cvPbrd1bhwjUzgUGgwOGhQF1bvxOqA20jR0tOOKh+3rh6tmaidX+xdkEUdWQ3VKOZaZLu
+        dF7l/Rw2oALrKxOXNjM28FXR9JO844UMQinzNyTKhoVLW//A4czpi0a3d2N4IzinkC5KRWLyyes8n
+        9wj1NLbQ==;
 Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jq929-0007BL-K3; Tue, 30 Jun 2020 05:42:17 +0000
-Date:   Tue, 30 Jun 2020 06:42:17 +0100
+        id 1jq933-0007LP-Js; Tue, 30 Jun 2020 05:43:13 +0000
+Date:   Tue, 30 Jun 2020 06:43:13 +0100
 From:   Christoph Hellwig <hch@infradead.org>
-To:     Eric Sandeen <sandeen@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Jonathan Corbet <corbet@lwn.net>, cgroups@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-xfs <linux-xfs@vger.kernel.org>
-Subject: Re: [PATCH] doc: cgroup: add f2fs and xfs to supported list for
- writeback
-Message-ID: <20200630054217.GA27221@infradead.org>
-References: <c8271324-9132-388c-5242-d7699f011892@redhat.com>
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>,
+        Greg Kroah-Hartman <greg@kroah.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2 10/15] exec: Remove do_execve_file
+Message-ID: <20200630054313.GB27221@infradead.org>
+References: <20200625095725.GA3303921@kroah.com>
+ <778297d2-512a-8361-cf05-42d9379e6977@i-love.sakura.ne.jp>
+ <20200625120725.GA3493334@kroah.com>
+ <20200625.123437.2219826613137938086.davem@davemloft.net>
+ <CAHk-=whuTwGHEPjvtbBvneHHXeqJC=q5S09mbPnqb=Q+MSPMag@mail.gmail.com>
+ <87pn9mgfc2.fsf_-_@x220.int.ebiederm.org>
+ <87y2oac50p.fsf@x220.int.ebiederm.org>
+ <87bll17ili.fsf_-_@x220.int.ebiederm.org>
+ <87lfk54p0m.fsf_-_@x220.int.ebiederm.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c8271324-9132-388c-5242-d7699f011892@redhat.com>
+In-Reply-To: <87lfk54p0m.fsf_-_@x220.int.ebiederm.org>
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 02:08:09PM -0500, Eric Sandeen wrote:
-> f2fs and xfs have both added support for cgroup writeback:
-> 
-> 578c647 f2fs: implement cgroup writeback support
-> adfb5fb xfs: implement cgroup aware writeback
-> 
-> so add them to the supported list in the docs.
-> 
-> Signed-off-by: Eric Sandeen <sandeen@redhat.com>
-> ---
-> 
-> TBH I wonder about the wisdom of having this detail in
-> the doc, as it apparently gets missed quite often ...
-
-I'd rather remove the list of file systems.  It has no chance of
-staying uptodate.
+FYI, this clashes badly with my exec rework.  I'd suggest you
+drop everything touching exec here for now, and I can then
+add the final file based exec removal to the end of my series.
