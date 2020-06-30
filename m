@@ -2,95 +2,94 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A45D9C433E2
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 02:14:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22425C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 02:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8CEB62076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 02:14:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0098D2078A
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 02:14:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728270AbgF3COU (ORCPT
+        id S1728343AbgF3COn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 22:14:20 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:60500 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725988AbgF3COT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 22:14:19 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.92 #5 (Debian))
-        id 1jq5mb-0006gx-9Q; Tue, 30 Jun 2020 12:14:02 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Tue, 30 Jun 2020 12:14:01 +1000
-Date:   Tue, 30 Jun 2020 12:14:01 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org
-Subject: Re: linux-next: build failures after merge of the vfs tree
-Message-ID: <20200630021401.GA20427@gondor.apana.org.au>
-References: <20200616103440.35a80b4b@canb.auug.org.au>
- <20200616010502.GA28834@gondor.apana.org.au>
- <20200616033849.GL23230@ZenIV.linux.org.uk>
- <20200616143807.GA1359@gondor.apana.org.au>
- <20200617165715.577aa76d@canb.auug.org.au>
- <20200617070316.GA30348@gondor.apana.org.au>
- <20200617173102.2b91c32d@canb.auug.org.au>
- <20200617073845.GA20077@gondor.apana.org.au>
- <20200618100851.0f77ed52@canb.auug.org.au>
- <20200630115857.48eab55d@canb.auug.org.au>
+        Mon, 29 Jun 2020 22:14:43 -0400
+Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:47279 "EHLO
+        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725988AbgF3COn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 22:14:43 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R881e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04357;MF=richard.weiyang@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0U16sMPl_1593483280;
+Received: from localhost(mailfrom:richard.weiyang@linux.alibaba.com fp:SMTPD_---0U16sMPl_1593483280)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 30 Jun 2020 10:14:40 +0800
+From:   Wei Yang <richard.weiyang@linux.alibaba.com>
+To:     dan.j.williams@intel.com, akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Wei Yang <richard.weiyang@linux.alibaba.com>
+Subject: [PATCH] mm/sparse: only sub-section aligned range would be populated
+Date:   Tue, 30 Jun 2020 10:14:36 +0800
+Message-Id: <20200630021436.43281-1-richard.weiyang@linux.alibaba.com>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200630115857.48eab55d@canb.auug.org.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 11:58:57AM +1000, Stephen Rothwell wrote:
->
-> > > OK, here's a patch for both of these together:
-> > > 
-> > > diff --git a/arch/s390/lib/test_unwind.c b/arch/s390/lib/test_unwind.c
-> > > index 32b7a30b2485..eb382ceaa116 100644
-> > > --- a/arch/s390/lib/test_unwind.c
-> > > +++ b/arch/s390/lib/test_unwind.c
-> > > @@ -9,6 +9,7 @@
-> > >  #include <linux/kallsyms.h>
-> > >  #include <linux/kthread.h>
-> > >  #include <linux/module.h>
-> > > +#include <linux/slab.h>
-> > >  #include <linux/string.h>
-> > >  #include <linux/kprobes.h>
-> > >  #include <linux/wait.h>
-> > > diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
-> > > index feb70283b6a2..903b2bb97e12 100644
-> > > --- a/drivers/remoteproc/qcom_q6v5_mss.c
-> > > +++ b/drivers/remoteproc/qcom_q6v5_mss.c
-> > > @@ -26,6 +26,7 @@
-> > >  #include <linux/reset.h>
-> > >  #include <linux/soc/qcom/mdt_loader.h>
-> > >  #include <linux/iopoll.h>
-> > > +#include <linux/slab.h>
-> > >  
-> > >  #include "remoteproc_internal.h"
-> > >  #include "qcom_common.h"  
-> > 
-> > I have applied those 2 by hand for today.
-> 
-> I am still applying the above patch.
+There are two code path which invoke __populate_section_memmap()
 
-Hi Al:
+  * sparse_init_nid()
+  * sparse_add_section()
 
-Could you please fold these changes into your tree?
+For both case, we are sure the memory range is sub-section aligned.
 
-Thanks,
+  * we pass PAGES_PER_SECTION to sparse_init_nid()
+  * we check range by check_pfn_span() before calling
+    sparse_add_section()
+
+Also, the counterpart of __populate_section_memmap(), we don't do such
+calculation and check since the range is checked by check_pfn_span() in
+__remove_pages().
+
+Clear the calculation and check to keep it simple and comply with its
+counterpart.
+
+Signed-off-by: Wei Yang <richard.weiyang@linux.alibaba.com>
+---
+ mm/sparse-vmemmap.c | 16 ++--------------
+ 1 file changed, 2 insertions(+), 14 deletions(-)
+
+diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
+index 0db7738d76e9..24b01ebae111 100644
+--- a/mm/sparse-vmemmap.c
++++ b/mm/sparse-vmemmap.c
+@@ -247,20 +247,8 @@ int __meminit vmemmap_populate_basepages(unsigned long start,
+ struct page * __meminit __populate_section_memmap(unsigned long pfn,
+ 		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
+ {
+-	unsigned long start;
+-	unsigned long end;
+-
+-	/*
+-	 * The minimum granularity of memmap extensions is
+-	 * PAGES_PER_SUBSECTION as allocations are tracked in the
+-	 * 'subsection_map' bitmap of the section.
+-	 */
+-	end = ALIGN(pfn + nr_pages, PAGES_PER_SUBSECTION);
+-	pfn &= PAGE_SUBSECTION_MASK;
+-	nr_pages = end - pfn;
+-
+-	start = (unsigned long) pfn_to_page(pfn);
+-	end = start + nr_pages * sizeof(struct page);
++	unsigned long start = (unsigned long) pfn_to_page(pfn);
++	unsigned long end = start + nr_pages * sizeof(struct page);
+ 
+ 	if (vmemmap_populate(start, end, nid, altmap))
+ 		return NULL;
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.20.1 (Apple Git-117)
+
