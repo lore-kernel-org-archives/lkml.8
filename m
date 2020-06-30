@@ -2,120 +2,114 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5CCAC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC0BBC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:49:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 80D3520772
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:48:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8FF520663
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:49:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="hPnwIOP5"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LQOptagw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbgF3UsI (ORCPT
+        id S1726265AbgF3Utn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 16:48:08 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:45063 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726154AbgF3UsI (ORCPT
+        Tue, 30 Jun 2020 16:49:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55824 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725805AbgF3Utn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 16:48:08 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 59C978011F;
-        Wed,  1 Jul 2020 08:48:03 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1593550083;
-        bh=dkA9lCTZ8l7sxxsW0Hb4m+Cx86l4iCV5ssAnMigH/7Q=;
-        h=From:To:Cc:Subject:Date;
-        b=hPnwIOP5QE4UL/Sst4tj6aPbwJKT+wvvXSa1u8wzTVJt9NxtjHPraq5z9fz7mYwZG
-         t7S5ZYEJrSqpBte23GvqZKC0kcRJ5AfRS6gHxEQeCv9z5d5gycCR4pwQ1UeNeQraAY
-         3+UR0CvRkvcYsfrQk+ZudjTKDtHNJVzGOGi8P6KVDDf6eOy18gQwXoCatczdLQAfz2
-         s/JyRgdEj55v8EHUeVkpwc0QjywjRZXa55PIB3p6jTKvGzOvmPjnfMp0vxd8ZtQ+Q0
-         t1gznhalwiRbNekqRoMHm4n7Gyt+ZPKXjKQtre8D3k2sll9H89gk3gKMAuHOsOMHM7
-         yJqHoxOaz131g==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5efba5030000>; Wed, 01 Jul 2020 08:48:03 +1200
-Received: from markto-dl.ws.atlnz.lc (markto-dl.ws.atlnz.lc [10.33.23.25])
-        by smtp (Postfix) with ESMTP id 03CEB13EEB5;
-        Wed,  1 Jul 2020 08:48:02 +1200 (NZST)
-Received: by markto-dl.ws.atlnz.lc (Postfix, from userid 1155)
-        id 03FC533E9BD; Wed,  1 Jul 2020 08:48:03 +1200 (NZST)
-From:   Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-To:     rjui@broadcom.com, sbranden@broadcom.com,
-        bcm-kernel-feedback-list@broadcom.com, linus.walleij@linaro.org,
-        linux-gpio@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
-Subject: [PATCH] pinctrl: nsp: Set irq handler based on trig type
-Date:   Wed,  1 Jul 2020 08:47:04 +1200
-Message-Id: <20200630204704.17736-1-mark.tomlinson@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.27.0
+        Tue, 30 Jun 2020 16:49:43 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 198EDC061755;
+        Tue, 30 Jun 2020 13:49:43 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id u185so7895935pfu.1;
+        Tue, 30 Jun 2020 13:49:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sQoAydE/3UY3Alh/aGXWB+4BkhDq1O/wJupmqiEZk5o=;
+        b=LQOptagwhd+Vwu2bgtXRJPK7VgNJrpIbMAn9qdEyRPdVnuCsJMA6HhNJqB8T6DEyIJ
+         7BhMZCYFsqqnAjPDchlJGJwtjch4l7nA/pjQUv57dLVoyw+FaOCRQKLYkTlwp+p2rPdD
+         hgvkPGfrL9Aq2q7cLq20PYO93qPhW9SVDkRqYyLyjFJXjU+NF4pzu0DB6FBPmdLO8Dgs
+         xwk77Oo49uTA5yPcZUL0nHc0XAClVphem4C79//jaRng1jPkrEsmy72vBBoae3HVPLuV
+         nbRTs5gJ8DzQB5aIjmbGr4ejG8Crqejt7byp6tBFtdsjDb7zQHZWzpTQjyoR8xxW9kXB
+         95KQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sQoAydE/3UY3Alh/aGXWB+4BkhDq1O/wJupmqiEZk5o=;
+        b=EF2bmptlBGlgqOdaim9gH6vpebgyuo+chnlkSlmPEh4KA0SLdg+U3CKR77q/hqCYtY
+         blLRBZTUNrNEoC+aa2Ukx4ZjIxrh2ucSnZuuqwf7q+G1He6Dpc2bNij0vvHYhUbok/bz
+         jdTa9MMr4wJ8fxrlWMiD62pSMSMcf5IjQcWvSeYuNNyEh0vtZyBxWWR6bELm6pT0uZf1
+         nKnDD6PEJBq2ivYJQlllI90c8ODiY6KU2SYg+ivqqbFBKu9yH64BvTXfu+jflbD3EOTG
+         pgrmavBlQrD6YvAEq8vH9qWj2Jq/6LoOdrfbEnOQUYr0LvekBky5JSJL97NTgQ7wO2oe
+         OPwA==
+X-Gm-Message-State: AOAM5310gFYP8lttxOq3snWolCb0mX6Emk7Wqw0JVfkJUSu7fV4CdZa8
+        qybAWdteJ2osbhttCExrw7b3A4yX
+X-Google-Smtp-Source: ABdhPJxFi+QMSPKppjW0crVKIt+/uhwCuFq8PsfWF31k5dQKhwGYgSPOejxH4d+9bPw1v/zT08n67w==
+X-Received: by 2002:a63:8b42:: with SMTP id j63mr16993931pge.131.1593550181938;
+        Tue, 30 Jun 2020 13:49:41 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id t29sm3569483pfq.50.2020.06.30.13.49.41
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 30 Jun 2020 13:49:41 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 13:49:40 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Ahmad Fatoum <a.fatoum@pengutronix.de>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-watchdog@vger.kernel.org, kernel@pengutronix.de,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/8] docs: watchdog: codify ident.options as superset
+ of possible status flags
+Message-ID: <20200630204940.GA21564@roeck-us.net>
+References: <20200611191750.28096-1-a.fatoum@pengutronix.de>
+ <20200611191750.28096-2-a.fatoum@pengutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200611191750.28096-2-a.fatoum@pengutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rather than always using handle_simple_irq() as the gpio_irq_chip
-handler, set a more appropriate handler based on the IRQ trigger type
-requested. This is important for level triggered interrupts which need
-to be masked during handling. Also, always acknowledge the interrupt
-regardless of whether it is edge or level triggered.
+On Thu, Jun 11, 2020 at 09:17:42PM +0200, Ahmad Fatoum wrote:
+> The FIXME comment has been in-tree since the very first git commit.
+> The described behavior has been since relied on by some userspace, e.g.
+> the util-linux wdctl command and has been ignored by some kernelspace,
+> like the f71808e_wdt driver.
+> 
+> The functionality is useful to have to be able to differentiate between a
+> driver that doesn't support WDIOF_CARDRESET and one that does, but hasn't
+> had a watchdog reset, thus drop the FIXME to encourage drivers adopting
+> this convention.
+> 
+> Signed-off-by: Ahmad Fatoum <a.fatoum@pengutronix.de>
 
-Signed-off-by: Mark Tomlinson <mark.tomlinson@alliedtelesis.co.nz>
----
- drivers/pinctrl/bcm/pinctrl-nsp-gpio.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-nsp-gpio.c b/drivers/pinctrl/bcm=
-/pinctrl-nsp-gpio.c
-index bed0124388c0..349fb384113e 100644
---- a/drivers/pinctrl/bcm/pinctrl-nsp-gpio.c
-+++ b/drivers/pinctrl/bcm/pinctrl-nsp-gpio.c
-@@ -174,11 +174,8 @@ static void nsp_gpio_irq_ack(struct irq_data *d)
- 	struct nsp_gpio *chip =3D gpiochip_get_data(gc);
- 	unsigned gpio =3D d->hwirq;
- 	u32 val =3D BIT(gpio);
--	u32 trigger_type;
-=20
--	trigger_type =3D irq_get_trigger_type(d->irq);
--	if (trigger_type & (IRQ_TYPE_EDGE_FALLING | IRQ_TYPE_EDGE_RISING))
--		nsp_set_bit(chip, REG, NSP_GPIO_EVENT, gpio, val);
-+	nsp_set_bit(chip, REG, NSP_GPIO_EVENT, gpio, val);
- }
-=20
- /*
-@@ -262,6 +259,12 @@ static int nsp_gpio_irq_set_type(struct irq_data *d,=
- unsigned int type)
-=20
- 	nsp_set_bit(chip, REG, NSP_GPIO_EVENT_INT_POLARITY, gpio, falling);
- 	nsp_set_bit(chip, REG, NSP_GPIO_INT_POLARITY, gpio, level_low);
-+
-+	if (type & IRQ_TYPE_EDGE_BOTH)
-+		irq_set_handler_locked(d, handle_edge_irq);
-+	else
-+		irq_set_handler_locked(d, handle_level_irq);
-+
- 	raw_spin_unlock_irqrestore(&chip->lock, flags);
-=20
- 	dev_dbg(chip->dev, "gpio:%u level_low:%s falling:%s\n", gpio,
-@@ -691,7 +694,7 @@ static int nsp_gpio_probe(struct platform_device *pde=
-v)
- 		girq->num_parents =3D 0;
- 		girq->parents =3D NULL;
- 		girq->default_type =3D IRQ_TYPE_NONE;
--		girq->handler =3D handle_simple_irq;
-+		girq->handler =3D handle_bad_irq;
- 	}
-=20
- 	ret =3D devm_gpiochip_add_data(dev, gc, chip);
---=20
-2.27.0
-
+> ---
+>  Documentation/watchdog/watchdog-api.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/watchdog/watchdog-api.rst b/Documentation/watchdog/watchdog-api.rst
+> index c6c1e9fa9f73..800dcd7586f2 100644
+> --- a/Documentation/watchdog/watchdog-api.rst
+> +++ b/Documentation/watchdog/watchdog-api.rst
+> @@ -168,7 +168,7 @@ the fields returned in the ident struct are:
+>  
+>  the options field can have the following bits set, and describes what
+>  kind of information that the GET_STATUS and GET_BOOT_STATUS ioctls can
+> -return.   [FIXME -- Is this correct?]
+> +return.
+>  
+>  	================	=========================
+>  	WDIOF_OVERHEAT		Reset due to CPU overheat
