@@ -2,294 +2,153 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5BA8C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB8CC433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:37:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8880A20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:37:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E396F20656
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 21:37:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gevpHk/D"
+	dkim=pass (2048-bit key) header.d=isovalent-com.20150623.gappssmtp.com header.i=@isovalent-com.20150623.gappssmtp.com header.b="CVuzlkRb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729866AbgF3Vhu (ORCPT
+        id S1729814AbgF3Vht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 17:37:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35100 "EHLO
+        Tue, 30 Jun 2020 17:37:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35098 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729580AbgF3Vhs (ORCPT
+        with ESMTP id S1726907AbgF3Vhs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 30 Jun 2020 17:37:48 -0400
-Received: from mail-pg1-x541.google.com (mail-pg1-x541.google.com [IPv6:2607:f8b0:4864:20::541])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2870EC03E979;
-        Tue, 30 Jun 2020 14:30:32 -0700 (PDT)
-Received: by mail-pg1-x541.google.com with SMTP id z5so10551936pgb.6;
-        Tue, 30 Jun 2020 14:30:32 -0700 (PDT)
+Received: from mail-qk1-x742.google.com (mail-qk1-x742.google.com [IPv6:2607:f8b0:4864:20::742])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 271E3C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 14:30:21 -0700 (PDT)
+Received: by mail-qk1-x742.google.com with SMTP id l6so20171906qkc.6
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 14:30:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=isovalent-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=U5xBvyLpKOr/G1/pIFdkzOP1KvMJUbskSgpplnzTGZI=;
-        b=gevpHk/D1CiRUe+JiEVZKBwZOlT3CTqvldVFKaCoAWevvxp+XA4korqzj0TRMUe+GH
-         ROtO1q5n35lNEaUWn/Xh15IBjZbXom5TnEBdzyMqDelZ8M1uLtOoLxs6MnxxPWFNPthD
-         W/zEuJjuIvRoXqavNpwVtPMzERJ9wi/tSR2U51AakuS6Na/FgE9Ej0/odVcxc7100bDi
-         MB5hVx5O1AA8BHcbuc7lShjAHIuXE4CARRd8+UrZhpK2yq0SHu0pazrfpqe6DQwayhAL
-         ZVBmqw/AoCf6S6aji47kWb+RqNVCerXFqmiY6vX4M1oxX5qR6eGNNdSlKFbsKf7+HnAO
-         P2cQ==
+        bh=c5EMuGF306H+8MVBaWM0r+rGzFzFrlYDXGMThC9HfD4=;
+        b=CVuzlkRbGxcrGQk88QUs7Tk5iS78bBLcpFuKyvp3XajOVHCPbZdyPTp86/unda5k5j
+         dzghI3xEj/ExjNk4Ne2mTEsY63nRHrFuQfaIcZrV+6MflMDNZBcbhLZmAI/WwWlNCjsz
+         2M87hwgFPODrfWf196lE2NAcze08Hd/lyoeNAwDHnPJW0inSlI6ufZDuFeQV6L0HTBTT
+         i6Vgax5ZiWEscxUdrX9hLY5wOPxD1CGs7ImMfiecSMcE+KMVdvxTcP/NZe7poOhqK7XM
+         dGTKgpf2cIL38jvWVIfLUAz2UhW/Ee9VExtEnkl31piwwc1/OtbcFu+1IJZ2wsbFi9Oa
+         NxBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=U5xBvyLpKOr/G1/pIFdkzOP1KvMJUbskSgpplnzTGZI=;
-        b=btu8o+JMu0YthnU7sjHB64EO57nS9ckUpaQ7XLJ4FXARQ0RoDTd8yEfnBXR6G9tllu
-         JxVJyhq3cK7AAcZt8rW1QSi6+t4kC1ayEpnPnZXNnPStdpFFw9L0eFSG8/gH4B5G1cqV
-         5P1k6eV9MUokbQgxIR1vuC6rZ4MAC8juWVi9d7zhXrx2acKYsU6tMzvALZ8dnN/4y7UN
-         yleUKLV7Mr0jIYvut3ZuRfuPjazIgJogaPfj24eSXuFNZmjonaq4RGJ3Y5UNyI8hycZx
-         pGe3fGJD+UmiZnfBNe58sVX53WdAb1VOQyNQFABdlOvYY0diqxWPEcUton+mpAnDfiGO
-         mNIA==
-X-Gm-Message-State: AOAM533OIhAXt9VHDtrHaNXx7Gg3M9HmyAPCfHHQGc2ACGJ67x6ochzu
-        m1i3G7Po2V0IZioJ5DTc5VVp/yQlx7SwJaflggw=
-X-Google-Smtp-Source: ABdhPJzbOoHlqgM660bd9qepiHFkNNh62/L3fKtE0vDOVY0GuMzH3AFdRlI4do6SnkdmD9SmwSBIoq+4vBUsVd7s8qs=
-X-Received: by 2002:a62:7657:: with SMTP id r84mr20132713pfc.130.1593552631611;
- Tue, 30 Jun 2020 14:30:31 -0700 (PDT)
+        bh=c5EMuGF306H+8MVBaWM0r+rGzFzFrlYDXGMThC9HfD4=;
+        b=IFRxFWX2sLoFgy6xmLP6zPx85olsJHa1ka+5Fr3ZS4PqDqrA3SeuCFr48ZS0UZhnVy
+         RU0NjfpCwMME3ZF6LTDK4c1zhGJZEg3ICP2WEiNCbsMCSSq5h8UDTbYNTEjorOigOw4d
+         WDoYDGYeePfm4BN26aAFoPHIMaWMW3XVlHF4fBCF2mXhYkSupzwXNvk0rAvsMrY+sv0J
+         nYRharjLv6ZwuZOOf9tP4tSGr0vpKcnYAxfeLEMqHRJ1DX+O64RWTefdwoxZjaf5T+oG
+         DPohXTmnzyxVqDgOP9sFJtvHBUAtLIF30JThsqWyQ+bPWAbLkP2P3pj5XP9Qvdmji+Kb
+         6xlg==
+X-Gm-Message-State: AOAM532GQ65KZHVY3op1q9ZQvZf2tzal3RsT9dMt+ejbCo5nos+9qWHZ
+        87FAqtE6YEMZcIf+yrguRcXN+yxqH5LXYP3ND1VZtw==
+X-Google-Smtp-Source: ABdhPJwWO1R9i1wl8MgcDzCK99YlU9Z+CbqF2VkRE+FU0jHeiGGtc1krNP9QFqj9mxYwxQ/bQKqY86nI0ZiWwDimUnA=
+X-Received: by 2002:ae9:ed86:: with SMTP id c128mr22482794qkg.475.1593552620158;
+ Tue, 30 Jun 2020 14:30:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20200630160736.1196697-1-mans0n@gorani.run>
-In-Reply-To: <20200630160736.1196697-1-mans0n@gorani.run>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 1 Jul 2020 00:30:15 +0300
-Message-ID: <CAHp75VfuvuMQ3r_SHSUzE78TViQMqDCqPLEZ4eUjLVUpNHj7kA@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] gpio: add GPO driver for PCA9570
-To:     Sungbo Eo <mans0n@gorani.run>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Michael Walle <michael@walle.cc>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <20200630143525.13869-1-quentin@isovalent.com> <39ba164ba44be848feac831f2f21effca92bfc96.camel@perches.com>
+ <CAC3GErHpyyA8eQUyP6s_H6csvbKfHXHi50Ky6A1PhU+A6waCeQ@mail.gmail.com>
+In-Reply-To: <CAC3GErHpyyA8eQUyP6s_H6csvbKfHXHi50Ky6A1PhU+A6waCeQ@mail.gmail.com>
+From:   Quentin Monnet <quentin@isovalent.com>
+Date:   Tue, 30 Jun 2020 22:30:09 +0100
+Message-ID: <CACdoK4Kqx3e5om=OH2D4QWSSHp-y0AOakiPjDG-ViqHz27d_=w@mail.gmail.com>
+Subject: Re: [PATCH] checkpatch: prevent reporting C99_COMMENTS error for SPDX
+ tag in .c file
+To:     Vadim Bendebury <vbendeb@chromium.org>,
+        Joe Perches <joe@perches.com>
+Cc:     Andy Whitcroft <apw@canonical.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 7:08 PM Sungbo Eo <mans0n@gorani.run> wrote:
+On Tue, 30 Jun 2020 at 18:20, Vadim Bendebury <vbendeb@chromium.org> wrote:
 >
-> NXP PCA9570 is 4-bit I2C GPO expander without interrupt functionality.
-> Its ports are controlled only by a data byte without register address.
->
-> As there is no other driver similar enough to be adapted for it, a new
-> driver is introduced here.
->
+> On Tue, Jun 30, 2020 at 7:47 AM Joe Perches <joe@perches.com> wrote:
+> >
+> > (adding Vadem Bendebury who added the tolerance test)
+> >
+> > On Tue, 2020-06-30 at 15:35 +0100, Quentin Monnet wrote:
+> > > When checkpatch.pl is invoked with "--ignore C99_COMMENT_TOLERANCE", it
+> > > reports C99-style comments found in the code, by matching on the
+> > > double-slash pattern "//". This includes the leading slashes before the
+> > > SPDX tags that are now used in a majority of C files.
+> > >
+> > > Such tags are commented with the double-slash on purpose, and should not
+> > > trigger errors from checkpatch. Let's ignore them when searching for
+> > > C99-style comments to report.
+> > >
+> > > Signed-off-by: Quentin Monnet <quentin@isovalent.com>
+> >
+> > I think this unnecessary as perhaps those that want no
+> > c99 comments likely _really_ want no c99 comments.
+> >
+> > > ---
+> > >  scripts/checkpatch.pl | 5 ++++-
+> > >  1 file changed, 4 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> > > index 3cacc122c528..67f350c580ea 100755
+> > > --- a/scripts/checkpatch.pl
+> > > +++ b/scripts/checkpatch.pl
+> > > @@ -3983,7 +3983,10 @@ sub process {
+> > >               }
+> > >
+> > >  # no C99 // comments
+> > > -             if ($line =~ m{//}) {
+> > > +             if ($line =~ m{//} &&
+> > > +                 !($rawline =~ m{// SPDX-License-Identifier:} &&
+> > > +                   $realfile =~ /\.c$/ &&
+> Do I understand this right that with this change in the check would be
+> applied to .c files only? .h files should be included.
 
-It looks good, but I would add ->get() to return buffered value.
+The idea is to exclude (from the search for C99-style comments) the
+SPDX tags at the top of source code files. The convention in kernel
+code is that .c files use C99 comments for those tags, but .h files do
+not and use "/* */" comments instead (details and motivation in
+Documentation/process/license-rules.rst). So having "//" at the top of
+a .h file is not conventional and should always be reported; whereas
+the idea for the current patch was to ignore it for .c files.
 
-> Signed-off-by: Sungbo Eo <mans0n@gorani.run>
-> ---
-> v3:
-> * remove mutex
-> * rename buffer to out
-> * simplify return statements
-> * replace ->probe() to ->probe_new()
-> * move ngpio to driver_data
->   (PCA9571 is 8-bit so I thought making ngpio configurable is a good idea)
->
-> v2:
-> * move the direction functions below the set functions
-> * use devm_gpiochip_add_data() and remove the remove callback
->
-> v1:
-> Tested in kernel 5.4 on an ipq40xx platform.
->
-> This is my first time submitting a whole driver patch, and I'm not really
-> familiar with this PCA expander series.
-> Please let me know how I can improve this patch further.
->
-> FYI there's an unmerged patch for this chip.
-> http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/2017-May/105602.html
-> I don't have PCA9571 either so I didn't add support for it.
-> ---
->  drivers/gpio/Kconfig        |   8 +++
->  drivers/gpio/Makefile       |   1 +
->  drivers/gpio/gpio-pca9570.c | 131 ++++++++++++++++++++++++++++++++++++
->  3 files changed, 140 insertions(+)
->  create mode 100644 drivers/gpio/gpio-pca9570.c
->
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index c6b5c65c8405..d10dcb81b841 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -962,6 +962,14 @@ config GPIO_PCA953X_IRQ
->           Say yes here to enable the pca953x to be used as an interrupt
->           controller. It requires the driver to be built in the kernel.
->
-> +config GPIO_PCA9570
-> +       tristate "PCA9570 4-Bit I2C GPO expander"
-> +       help
-> +         Say yes here to enable the GPO driver for the NXP PCA9570 chip.
-> +
-> +         To compile this driver as a module, choose M here: the module will
-> +         be called gpio-pca9570.
-> +
->  config GPIO_PCF857X
->         tristate "PCF857x, PCA{85,96}7x, and MAX732[89] I2C GPIO expanders"
->         select GPIOLIB_IRQCHIP
-> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-> index 1e4894e0bf0f..33cb40c28a61 100644
-> --- a/drivers/gpio/Makefile
-> +++ b/drivers/gpio/Makefile
-> @@ -110,6 +110,7 @@ obj-$(CONFIG_GPIO_OCTEON)           += gpio-octeon.o
->  obj-$(CONFIG_GPIO_OMAP)                        += gpio-omap.o
->  obj-$(CONFIG_GPIO_PALMAS)              += gpio-palmas.o
->  obj-$(CONFIG_GPIO_PCA953X)             += gpio-pca953x.o
-> +obj-$(CONFIG_GPIO_PCA9570)             += gpio-pca9570.o
->  obj-$(CONFIG_GPIO_PCF857X)             += gpio-pcf857x.o
->  obj-$(CONFIG_GPIO_PCH)                 += gpio-pch.o
->  obj-$(CONFIG_GPIO_PCIE_IDIO_24)                += gpio-pcie-idio-24.o
-> diff --git a/drivers/gpio/gpio-pca9570.c b/drivers/gpio/gpio-pca9570.c
-> new file mode 100644
-> index 000000000000..3898d1c6f407
-> --- /dev/null
-> +++ b/drivers/gpio/gpio-pca9570.c
-> @@ -0,0 +1,131 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Driver for PCA9570 I2C GPO expander
-> + *
-> + * Copyright (C) 2020 Sungbo Eo <mans0n@gorani.run>
-> + *
-> + * Based on gpio-tpic2810.c
-> + * Copyright (C) 2015 Texas Instruments Incorporated - http://www.ti.com/
-> + *     Andrew F. Davis <afd@ti.com>
-> + */
-> +
-> +#include <linux/gpio/driver.h>
-> +#include <linux/i2c.h>
-> +#include <linux/module.h>
-> +
-> +/**
-> + * struct pca9570 - GPIO driver data
-> + * @chip: GPIO controller chip
-> + * @client: I2C device pointer
-> + * @out: Buffer for device register
-> + */
-> +struct pca9570 {
-> +       struct gpio_chip chip;
-> +       struct i2c_client *client;
-> +       u8 out;
-> +};
-> +
-> +static void pca9570_set_mask_bits(struct gpio_chip *chip, u8 mask, u8 bits)
-> +{
-> +       struct pca9570 *gpio = gpiochip_get_data(chip);
-> +       u8 buffer;
-> +       int err;
-> +
-> +       buffer = (gpio->out & ~mask) | (bits & mask);
-> +
-> +       err = i2c_smbus_write_byte(gpio->client, buffer);
-> +       if (err)
-> +               return;
-> +
-> +       gpio->out = buffer;
-> +}
-> +
-> +static void pca9570_set(struct gpio_chip *chip, unsigned offset, int value)
-> +{
-> +       pca9570_set_mask_bits(chip, BIT(offset), value ? BIT(offset) : 0);
-> +}
-> +
-> +static void pca9570_set_multiple(struct gpio_chip *chip, unsigned long *mask,
-> +                                unsigned long *bits)
-> +{
-> +       pca9570_set_mask_bits(chip, *mask, *bits);
-> +}
-> +
-> +static int pca9570_get_direction(struct gpio_chip *chip,
-> +                                unsigned offset)
-> +{
-> +       /* This device always output */
-> +       return GPIO_LINE_DIRECTION_OUT;
-> +}
-> +
-> +static int pca9570_direction_input(struct gpio_chip *chip,
-> +                                  unsigned offset)
-> +{
-> +       /* This device is output only */
-> +       return -EINVAL;
-> +}
-> +
-> +static int pca9570_direction_output(struct gpio_chip *chip,
-> +                                   unsigned offset, int value)
-> +{
-> +       /* This device always output */
-> +       pca9570_set(chip, offset, value);
-> +       return 0;
-> +}
-> +
-> +static const struct gpio_chip template_chip = {
-> +       .label                  = "pca9570",
-> +       .owner                  = THIS_MODULE,
-> +       .get_direction          = pca9570_get_direction,
-> +       .direction_input        = pca9570_direction_input,
-> +       .direction_output       = pca9570_direction_output,
-> +       .set                    = pca9570_set,
-> +       .set_multiple           = pca9570_set_multiple,
-> +       .base                   = -1,
-> +       .can_sleep              = true,
-> +};
-> +
-> +static const struct i2c_device_id pca9570_id_table[] = {
-> +       { "pca9570", 4 },
-> +       { /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(i2c, pca9570_id_table);
-> +
-> +static const struct of_device_id pca9570_of_match_table[] = {
-> +       { .compatible = "nxp,pca9570" },
-> +       { /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, pca9570_of_match_table);
-> +
-> +static int pca9570_probe(struct i2c_client *client)
-> +{
-> +       struct pca9570 *gpio;
-> +
-> +       gpio = devm_kzalloc(&client->dev, sizeof(*gpio), GFP_KERNEL);
-> +       if (!gpio)
-> +               return -ENOMEM;
-> +
-> +       gpio->chip = template_chip;
-> +       gpio->chip.parent = &client->dev;
-> +       gpio->chip.ngpio = i2c_match_id(pca9570_id_table, client)->driver_data;
-> +
-> +       gpio->client = client;
-> +
-> +       i2c_set_clientdata(client, gpio);
-> +
-> +       return devm_gpiochip_add_data(&client->dev, &gpio->chip, gpio);
-> +}
-> +
-> +static struct i2c_driver pca9570_driver = {
-> +       .driver = {
-> +               .name = "pca9570",
-> +               .of_match_table = pca9570_of_match_table,
-> +       },
-> +       .probe_new = pca9570_probe,
-> +       .id_table = pca9570_id_table,
-> +};
-> +module_i2c_driver(pca9570_driver);
-> +
-> +MODULE_AUTHOR("Sungbo Eo <mans0n@gorani.run>");
-> +MODULE_DESCRIPTION("GPIO expander driver for PCA9570");
-> +MODULE_LICENSE("GPL v2");
-> --
-> 2.27.0
->
+All "//" comments not identified as an SPDX tag would still be
+reported by checkpatch, whether in a .c or in a .h file.
 
+> > > +                   $realline == $checklicenseline)) {
+> What is the purpose of the above check?
 
--- 
-With Best Regards,
-Andy Shevchenko
+This is for the "at the top" part. Because the SPDX tag is expected to
+be at the top of the file (Unless I am mistaken, $checklicenseline
+typically equals 1 for .c files). So with the patch, we consider a "//
+SPDX-License-Identifier:" string at the top of the .c file as a SPDX
+tag (and do not report a C99_COMMENTS error), but not if it is in the
+middle of a file.
+
+[...]
+
+Thank you Joe and Vadim for your feedback. My intent is to use
+checkpatch on a third-party repository where we mostly follow kernel
+style (including for SPDX tags) and do not desire "//" comments. I
+found it strange to have this option to report C99_COMMENTS errors
+that would raise a high number of false positives on the kernel
+repository (or for the repo I work with), hence the patch.
+
+But if the feeling is that there is too little value in the change, or
+if it goes against the intent of the reports for C99-style comments,
+there's not much to do but to drop the patch. I can't imagine adding
+new command line options for such a corner case.
+
+Regards,
+Quentin
