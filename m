@@ -2,99 +2,100 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE487C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 02:07:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1284C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 02:08:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id CB92D2076C
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 02:07:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ye/Aut1F"
+	by mail.kernel.org (Postfix) with ESMTP id CCC282068F
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 02:08:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727922AbgF3CHP (ORCPT
+        id S1728040AbgF3CIf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 22:07:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52240 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726226AbgF3CHO (ORCPT
+        Mon, 29 Jun 2020 22:08:35 -0400
+Received: from relmlor2.renesas.com ([210.160.252.172]:12662 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726227AbgF3CIe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 22:07:14 -0400
-Received: from mail-wr1-x441.google.com (mail-wr1-x441.google.com [IPv6:2a00:1450:4864:20::441])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 37ED7C061755
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 19:07:14 -0700 (PDT)
-Received: by mail-wr1-x441.google.com with SMTP id z15so7237165wrl.8
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 19:07:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :message-id:content-transfer-encoding;
-        bh=CAsTIhg9GNAtVe3y8RLBs7slHNRQHigQcda0zsTXJMU=;
-        b=Ye/Aut1FZk5CUmWtGzbs4WamhVJapkHBREiS6HzooXxA+QSNZLSxcWdKhFl5fVOijI
-         QjAkXfOcPdD4pvd4TadqirUYPj+IiWJsQUaT38IiTmSftGrkJ8up8qtoms5aA1v/y6mi
-         Vu7l0Twb7nZ5zJ2bGH3bwa1NxyXgjHXG2qWzGRydFRxtTjH2PUSCokd5S2kSRFh+pBdv
-         QtIkZDxF+rY2OxdB1UonxgPi7iLGVRqWtVEQ+BBuRa3R6YSZnkulkQecr7aCU70E2GHb
-         pF3jFRCs0/Jr1OycpRlVTCbokVvameruvI62xSNa+/rG2/ucuDObn6sesburtx/jGTfP
-         lu2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:message-id:content-transfer-encoding;
-        bh=CAsTIhg9GNAtVe3y8RLBs7slHNRQHigQcda0zsTXJMU=;
-        b=IwGYf5svEpbsG24lCqJlL4kFafpFqq/kGqDMEw1BZsp/AzwyWjZvOmxGVcEeQKtYGl
-         iwQkFDKsBk29U7eFcwhzxJBwBWwAcZlip7hDT2fKHvRrwIXm4BHt4l3/gsKK9WGx8rVx
-         wEjgdIkMfVuh0Re/r6Y90efYBpLksTewkpABa7U9dxmEUi9QU05T9cyYwBUP6ebbFEHt
-         IoXt3xpaoCs3+AtXfCXdMHU0nzAdCvyziEguh5KiR8QF0C9kiIcpAOHSkSnX6JkDR/qf
-         ODSg8tWd0kxUXcp9/8/ktGR8omHbYkRqjcr+lKi4Wlgsdtlk5WQs6ZSq5R64JiTolba8
-         4uog==
-X-Gm-Message-State: AOAM530pFEPR9erfkLjR0gEnffXYWCvyAbo3ZILL83KJV6Y0AWBuF22A
-        JMvPNEY995RXjj9QI8C6+7c6kV8j
-X-Google-Smtp-Source: ABdhPJxeBHPofo2CZ9l30kz/aGmZtBFTSZb3INkPrxOhAitO7+hEgc+1GAqPToOnJHNfIXglvf2Zvg==
-X-Received: by 2002:adf:97d6:: with SMTP id t22mr18807618wrb.385.1593482832968;
-        Mon, 29 Jun 2020 19:07:12 -0700 (PDT)
-Received: from localhost (61-68-186-125.tpgi.com.au. [61.68.186.125])
-        by smtp.gmail.com with ESMTPSA id l132sm1815730wmf.6.2020.06.29.19.07.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 19:07:12 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 12:07:05 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH] ring-buffer: speed up buffer resets by avoiding
- synchronize_rcu for each CPU
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Anton Blanchard <anton@ozlabs.org>, linux-kernel@vger.kernel.org,
-        Paul McKenney <paulmck@kernel.org>
-References: <20200625053403.2386972-1-npiggin@gmail.com>
-        <20200629181625.4b87a63a@oasis.local.home>
-In-Reply-To: <20200629181625.4b87a63a@oasis.local.home>
-MIME-Version: 1.0
-Message-Id: <1593482725.5cl7vnne3j.astroid@bobo.none>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        Mon, 29 Jun 2020 22:08:34 -0400
+Date:   30 Jun 2020 11:08:33 +0900
+X-IronPort-AV: E=Sophos;i="5.75,296,1589209200"; 
+   d="scan'208";a="50683838"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 30 Jun 2020 11:08:33 +0900
+Received: from mercury.renesas.com (unknown [10.166.252.133])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id CF456400493A;
+        Tue, 30 Jun 2020 11:08:33 +0900 (JST)
+Message-ID: <87lfk5z4ov.wl-kuninori.morimoto.gx@renesas.com>
+From:   Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+To:     Sameer Pujar <spujar@nvidia.com>
+Cc:     <broonie@kernel.org>, <perex@perex.cz>, <tiwai@suse.com>,
+        <robh+dt@kernel.org>, <lgirdwood@gmail.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <digetx@gmail.com>, <alsa-devel@alsa-project.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sharadg@nvidia.com>, <mkumard@nvidia.com>,
+        <viswanathl@nvidia.com>, <rlokhande@nvidia.com>,
+        <dramesh@nvidia.com>, <atalambedu@nvidia.com>,
+        <nwartikar@nvidia.com>, <swarren@nvidia.com>,
+        <nicoleotsuka@gmail.com>
+Subject: Re: [PATCH v4 11/23] ASoC: simple-card: Loop over all children for 'mclk-fs'
+In-Reply-To: <58000bd3-861c-bbc2-75e1-128cf0199a76@nvidia.com>
+References: <1593233625-14961-1-git-send-email-spujar@nvidia.com>
+        <1593233625-14961-12-git-send-email-spujar@nvidia.com>
+        <875zba1y28.wl-kuninori.morimoto.gx@renesas.com>
+        <58000bd3-861c-bbc2-75e1-128cf0199a76@nvidia.com>
+User-Agent: Wanderlust/2.15.9 Emacs/26.3 Mule/6.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Excerpts from Steven Rostedt's message of June 30, 2020 8:16 am:
-> On Thu, 25 Jun 2020 15:34:03 +1000
-> Nicholas Piggin <npiggin@gmail.com> wrote:
->=20
->> Batch these up so we disable all the per-cpu buffers first, then
->> synchronize_rcu() once, then reset each of the buffers. This brings
->> the time down to about 0.5s.
->=20
-> After applying this patch, running tools/testing/selftests/ftracetest
-> went from 5 minutes and 35 seconds to 5 minutes 5 seconds to complete
-> on my 4 core (8 with hyperthreading) machine! That's almost a 10% drop!
->=20
-> Thanks, I'm definitely applying this for the next merge window.
 
-Cool, always good when a big system optimisation helps small ones as=20
-well. Thanks all.
+Hi Sameer
 
-Thanks,
-Nick
+> >>        snprintf(prop, sizeof(prop), "%smclk-fs", prefix);
+> >>        of_property_read_u32(node,      prop, &props->mclk_fs);
+> >>        of_property_read_u32(cpu,       prop, &props->mclk_fs);
+> >> -     of_property_read_u32(codec,     prop, &props->mclk_fs);
+> >> +
+> >> +     if (cpu != codec)
+> >> +             of_property_read_u32(codec, prop, &props->mclk_fs);
+> > Maybe we want to have "cpu" in simple_dai_link_of_dpcm() side
+> > without using magical code in simple_parse_mclk_fs() side ?
+> 
+> Are you suggesting if we should simplify simple_parse_mclk_fs() by
+> either passing 'cpu' or 'codec'?
 
+Oops, sorry I was misunderstand.
+
+But I still not 100% understand what do you want to do here.
+Maybe 50% is my English skill, but in your code
+ 
+(C)	 	of_property_read_u32(cpu,	prop, &props->mclk_fs);
+	-	of_property_read_u32(codec,	prop, &props->mclk_fs);
+	+
+	+	if (cpu != codec)
+(B)	+		of_property_read_u32(codec, prop, &props->mclk_fs);
+
+and
+
+	-	simple_parse_mclk_fs(top, np, codec, dai_props, prefix);
+(A)	+	simple_parse_mclk_fs(top, np, np, dai_props, prefix);
+
+Because of (A), cpu = codec = np in simple_parse_mclk_fs().
+Do we have chance to call (B) ?
+And it still have read_u32(cpu, ...) at (C),
+this means all np will read mclk_fs anyway ?
+For me, if you don't want/need mclk_fs, don't set it on DT
+is the best answer, but am I misunderstanding ?
+
+Thank you for your help !!
+
+Best regards
+---
+Kuninori Morimoto
