@@ -2,100 +2,133 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2B31C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 22:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D12F1C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 22:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id B8BBA208C7
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 22:12:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593555173;
-	bh=h1obBUyTPJ75QgeorGRJK1b9zJ+cbov4c/nHPyLr+yw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=AjZbs4YDp0XJMrFxdFGP8liflV5m/nxlRi0s+s68XSZ5oowi4GAme31uqO7iv3e02
-	 +h9dZAfxHTnMeTLu56Ur+GovoPGZMkqPNVsGGLVjFWV0iWPS5jNwMgvzQuQ7qGVMJg
-	 3TrcxAZcTd8TcQrPyEP1wIBXcfkHQrUqucejS9fA=
+	by mail.kernel.org (Postfix) with ESMTP id 98B832081A
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 22:15:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="i4OC8A2N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726156AbgF3WMw (ORCPT
+        id S1726178AbgF3WPH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 18:12:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33530 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725862AbgF3WMv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 18:12:51 -0400
-Received: from localhost (mobile-166-175-191-139.mycingular.net [166.175.191.139])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D16072081A;
-        Tue, 30 Jun 2020 22:12:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593555171;
-        bh=h1obBUyTPJ75QgeorGRJK1b9zJ+cbov4c/nHPyLr+yw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=M/84Qq3eKACfAHQjDCkpV3cm4rQfN9fudLtrODHV/aJYn7tGBP4MbNKzLWTc4wcbQ
-         8wxU6ED77IYa/Qy/hiMpWO6dMSUxGVVEE//2L7iGf/0Lt9kZ4iUwcFbIHZrWAum8Iq
-         d1+6PKGsAIhjnkj3qCRYtXN45CyM9IaaV6LCntes=
-Date:   Tue, 30 Jun 2020 17:12:49 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        xen-devel@lists.xenproject.org, linux-pci@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Subject: Re: [PATCH] xen/pci: remove redundant assignment to variable irq
-Message-ID: <20200630221249.GA3491219@bjorn-Precision-5520>
+        Tue, 30 Jun 2020 18:15:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41024 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbgF3WPF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 18:15:05 -0400
+Received: from mail-pf1-x443.google.com (mail-pf1-x443.google.com [IPv6:2607:f8b0:4864:20::443])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA39DC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 15:15:05 -0700 (PDT)
+Received: by mail-pf1-x443.google.com with SMTP id j1so10034451pfe.4
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 15:15:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NWmBv3YltHW/EEoBJLmtefyvNy5kBfRz96ALBdjJByA=;
+        b=i4OC8A2NnoQYYhFSBzKGQhfcsUxIuhlLxYzhbhO1E47sANv4esb7YPdypZ78GCnRgJ
+         R4jzgAYwWSLgPK+foOo5vg1fcGZCwmz6IxEXUqhm9Jmyp/DoO3nT+pFzaRt2dlwd/l2V
+         Q6aloZ1x4QX4sslsEvkqFnwJgDRrYP2orzxqY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=NWmBv3YltHW/EEoBJLmtefyvNy5kBfRz96ALBdjJByA=;
+        b=LyIU4t3ZtQlGyrNEOndTPfUY+ieJcOY631FAKACvmVMOFqjjJF1MlBz6CE1JZg9yQy
+         cc8L8MeJmJ8m7xz4WKotkj3x1xkS4ZoZQqqP3D04NhQYLHJi3bxUp56QaIsc3CGUY4Ux
+         E8QfLxRYD/Rd4LQsG2ZhqOkpm+MqXBVqTNprCeLTu1dRk0DG/l+oviydPGKEzb7Zt0BS
+         LXTDXOmdzeshSRw5jAincM1znGTOhjUNAQrClXNf/MUSt2SgAzG/QLlp487+1VRqAt4F
+         LeZnyDla83ftaf42LFygO6e20t7SZEN2mMoXyjUOei9DahgpiQbnTcv9a5UOsmuBwxXO
+         3DNw==
+X-Gm-Message-State: AOAM532RgYunz6uMGDJBRYv4632TMRrMoyj9Uaoax2fk9UVW/wbH3L8Y
+        oFv9m/CcQ3buscbXTXnbAnBgFZYf19g=
+X-Google-Smtp-Source: ABdhPJyKHa6qXWttCDJwtRhEezmQHkbESqhRkjZuyuXJBFKcn94rvb/rNTut0m0nWQjac2Zjcwk1fA==
+X-Received: by 2002:aa7:8ac3:: with SMTP id b3mr22179202pfd.45.1593555305183;
+        Tue, 30 Jun 2020 15:15:05 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:42b0:34ff:fe3d:58e6])
+        by smtp.gmail.com with ESMTPSA id n12sm3611295pgr.88.2020.06.30.15.15.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 15:15:04 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Daniel Thompson <daniel.thompson@linaro.org>
+Cc:     Sumit Garg <sumit.garg@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Jason Wessel <jason.wessel@windriver.com>,
+        kgdb-bugreport@lists.sourceforge.net, linux-kernel@vger.kernel.org
+Subject: [PATCH] kgdb: Make "kgdbcon" work properly with "kgdb_earlycon"
+Date:   Tue, 30 Jun 2020 15:14:38 -0700
+Message-Id: <20200630151422.1.I4aa062751ff5e281f5116655c976dff545c09a46@changeid>
+X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200409114118.249461-1-colin.king@canonical.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Juergen, Boris]
+On my system the kernel processes the "kgdb_earlycon" parameter before
+the "kgdbcon" parameter.  When we setup "kgdb_earlycon" we'll end up
+in kgdb_register_callbacks() and "kgdb_use_con" won't have been set
+yet so we'll never get around to starting "kgdbcon".  Let's remedy
+this by detecting that the IO module was already registered when
+setting "kgdb_use_con" and registering the console then.
 
-On Thu, Apr 09, 2020 at 12:41:18PM +0100, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> The variable irq is being initialized with a value that is never read
-> and it is being updated later with a new value.  The initialization is
-> redundant and can be removed.
-> 
-> Addresses-Coverity: ("Unused value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+As part of this, to avoid pre-declaring things, move the handling of
+the "kgdbcon" further down in the file.
 
-Applied to pci/virtualization for v5.9, thanks!
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+---
 
-I don't see this in linux-next yet, but if anybody else would prefer
-to take it, let me know and I'll drop it.  
+ kernel/debug/debug_core.c | 22 ++++++++++++++--------
+ 1 file changed, 14 insertions(+), 8 deletions(-)
 
-> ---
->  arch/x86/pci/xen.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/pci/xen.c b/arch/x86/pci/xen.c
-> index 91220cc25854..80272eb49230 100644
-> --- a/arch/x86/pci/xen.c
-> +++ b/arch/x86/pci/xen.c
-> @@ -63,7 +63,7 @@ static int xen_pcifront_enable_irq(struct pci_dev *dev)
->  static int xen_register_pirq(u32 gsi, int gsi_override, int triggering,
->  			     bool set_pirq)
->  {
-> -	int rc, pirq = -1, irq = -1;
-> +	int rc, pirq = -1, irq;
->  	struct physdev_map_pirq map_irq;
->  	int shareable = 0;
->  	char *name;
-> -- 
-> 2.25.1
-> 
+diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
+index 9e5934780f41..03d5b17347da 100644
+--- a/kernel/debug/debug_core.c
++++ b/kernel/debug/debug_core.c
+@@ -94,14 +94,6 @@ int dbg_switch_cpu;
+ /* Use kdb or gdbserver mode */
+ int dbg_kdb_mode = 1;
+ 
+-static int __init opt_kgdb_con(char *str)
+-{
+-	kgdb_use_con = 1;
+-	return 0;
+-}
+-
+-early_param("kgdbcon", opt_kgdb_con);
+-
+ module_param(kgdb_use_con, int, 0644);
+ module_param(kgdbreboot, int, 0644);
+ 
+@@ -920,6 +912,20 @@ static struct console kgdbcons = {
+ 	.index		= -1,
+ };
+ 
++static int __init opt_kgdb_con(char *str)
++{
++	kgdb_use_con = 1;
++
++	if (kgdb_io_module_registered && !kgdb_con_registered) {
++		register_console(&kgdbcons);
++		kgdb_con_registered = 1;
++	}
++
++	return 0;
++}
++
++early_param("kgdbcon", opt_kgdb_con);
++
+ #ifdef CONFIG_MAGIC_SYSRQ
+ static void sysrq_handle_dbg(int key)
+ {
+-- 
+2.27.0.212.ge8ba1cc988-goog
+
