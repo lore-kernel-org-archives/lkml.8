@@ -2,82 +2,84 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_STARTS_WITH_NUMS,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F79C433E3
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:09:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD901C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:09:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id DC7A920780
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:09:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1593475758;
-	bh=qWOHGgpcP/+e/wuOBkP4VH0IjHDw9w2ffR+dS1tYc/4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=bQZGxTWlFv585dgyygozzW16fQa/7vOmFhGV//pI0ovOWpWpuEWSmu17OCM9+8E8P
-	 Z8ovXliV9hq/RDzc+sURzxeEDrpthVOFPdqq00eGnNyBDFxFihwTKjCiUPwgbHs7GJ
-	 MeVYGqmnLvCs523jPNpSkFOEofzWcogljMW39lpQ=
+	by mail.kernel.org (Postfix) with ESMTP id 9F00720781
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 00:09:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oNBgUBpj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728323AbgF3AJR (ORCPT
+        id S1728388AbgF3AJ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 20:09:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60760 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728220AbgF3AJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 20:09:14 -0400
-Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.4])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACBB320780;
-        Tue, 30 Jun 2020 00:09:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1593475754;
-        bh=qWOHGgpcP/+e/wuOBkP4VH0IjHDw9w2ffR+dS1tYc/4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Y9EYGWXG2LBIlQFHESd5r0hHX5j5SIX5rF0YBNAFKftpr5COq6AlUg536oV4ofxrv
-         ndf8Ug61ANgtNlDI8H09C7an1ECADL4FkTNMa1lCuAf8mKM0WupKBBYEHkls2BawGI
-         YkuqHcZjJNIi+7wRoBKZLE+Iw0WKJZdvqSJdBDm0=
-Date:   Mon, 29 Jun 2020 17:09:12 -0700
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Alex Elder <elder@linaro.org>
-Cc:     davem@davemloft.net, evgreen@chromium.org, subashab@codeaurora.org,
-        cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 1/3] net: ipa: always report GSI state errors
-Message-ID: <20200629170912.39188c5b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
-In-Reply-To: <20200629213738.1180618-2-elder@linaro.org>
-References: <20200629213738.1180618-1-elder@linaro.org>
-        <20200629213738.1180618-2-elder@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 29 Jun 2020 20:09:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34066 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728025AbgF3AJF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 29 Jun 2020 20:09:05 -0400
+Received: from mail-pj1-x1041.google.com (mail-pj1-x1041.google.com [IPv6:2607:f8b0:4864:20::1041])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EEB31C03E979;
+        Mon, 29 Jun 2020 17:09:04 -0700 (PDT)
+Received: by mail-pj1-x1041.google.com with SMTP id k71so5214552pje.0;
+        Mon, 29 Jun 2020 17:09:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:content-transfer-encoding:mime-version:subject:message-id:date
+         :cc:to;
+        bh=N2ghh+x2mnd38hUoBxoJrOWkNTcIvZQjlTMkdavqdz0=;
+        b=oNBgUBpj+1ShUQHnAs8/BfFKffFhuDXBkCS4kUeTG6jYJZc6oVuHHgkNayMtpXVkaK
+         Ddf0CbIS5TRiP0N6DWUTRTenBe3xIo2k1o3Owu005rLGa4LlCNpPKiRM9aLu2WdyOaRu
+         TGtHJ6hvP6+zqgChWUyaqU8REFQj7EBnih6jhAQ9DXjZ4HrrguaEThBfzng6VP3qmp7B
+         6XZMyBKvQVpYNoOBL7euZysd6KD2ZjzHSu4Q8v3hj87fNU2CyAQC77brwIyewPQSqmgc
+         BNWFy1cyZfJzlXmSegSSvlmbt/wDIgDOZiW06r4uBb/7vgsIGr6oY1W73Y36hfWWF43o
+         jJOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:content-transfer-encoding:mime-version
+         :subject:message-id:date:cc:to;
+        bh=N2ghh+x2mnd38hUoBxoJrOWkNTcIvZQjlTMkdavqdz0=;
+        b=Q93WzTGytfcwAhol2SX70aqGGtGqWuqQcKCI2IqehmMjE8UGkKYZ6AhNt3YGTnkpFX
+         DWxfaG5Zd8xtTV/ruUUtzMYRZkGkFha3rz1a5xICCwcvB8xcxMzzd5/m59XaRCSjEngj
+         EkZiq/dN66qbEDchRY88bAXgQuejO4Pxw6oK5SQ7D0UM6+g394qaO8eRbgGvdfPUeGmR
+         Vn/p8/2HIlFu5UoqBYpBNIWbAyn8GLT57ypiBJ2Tgut3eEeZzzfAKds/UgrXMD8tYHBw
+         n7A2Hgpwd4cDx9JBoj4wM5qVpcJpkouGjs/j1MTSctnD6wuc9ORmIuyEcGxrvglnQ4zY
+         +mhA==
+X-Gm-Message-State: AOAM5321vz8LiNNTrXBmLpCbLxYGHesg2TY/WpxiXBZ1MWp9/b46TbC+
+        cD/kbxkX7Tugeh3Kb2hvovQ=
+X-Google-Smtp-Source: ABdhPJzGefNdqarPqnCe1jKaGTGJasxjDFy43fWwUBKu6Jg3mnRjOYWTkeNA+C6ITaCW43nMnHDFjA==
+X-Received: by 2002:a17:902:8e8c:: with SMTP id bg12mr11255411plb.202.1593475744522;
+        Mon, 29 Jun 2020 17:09:04 -0700 (PDT)
+Received: from [127.0.0.1] ([47.244.202.117])
+        by smtp.gmail.com with ESMTPSA id c207sm688780pfb.159.2020.06.29.17.09.00
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Jun 2020 17:09:04 -0700 (PDT)
+From:   hackapple <2538082724huangjinhai@gmail.com>
+X-Google-Original-From: hackapple <2538082724@qq.com>
+Content-Type: text/plain;
+        charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: [RFC PATCH 1/7] x86/cpufeatures: add X86_FEATURE_SCI
+Message-Id: <94E40D06-B481-45B7-A929-CC324F5B856B@qq.com>
+Date:   Tue, 30 Jun 2020 08:08:59 +0800
+Cc:     James.Bottomley@hansenpartnership.com,
+        alexandre.chartre@oracle.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, hpa@zytor.com, jwadams@google.com,
+        keescook@chromium.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-security-module@vger.kernel.org,
+        luto@kernel.org, mingo@redhat.com, peterz@infradead.org,
+        pjt@google.com, tglx@linutronix.de, x86@kernel.org
+To:     rppt@linux.ibm.com
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 29 Jun 2020 16:37:36 -0500 Alex Elder wrote:
-> We check the state of an event ring or channel both before and after
-> any GSI command issued that will change that state.  In most--but
-> not all--cases, if the state is something different than expected we
-> report an error message.
-> 
-> Add error messages where missing, so that all unexpected states
-> provide information about what went wrong.  Drop the parentheses
-> around the state value shown in all cases.
-> 
-> Signed-off-by: Alex Elder <elder@linaro.org>
-
-nit:
-
-CHECK: Alignment should match open parenthesis
-#105: FILE: drivers/net/ipa/gsi.c:1673:
-+		dev_warn(dev,
-+			"limiting to %u channels; hardware supports %u\n",
-
-CHECK: Alignment should match open parenthesis
-#120: FILE: drivers/net/ipa/gsi.c:1685:
-+		dev_warn(dev,
-+			"limiting to %u event rings; hardware supports %u\n",
-
+What=E2=80=99s the version of kernel?=
