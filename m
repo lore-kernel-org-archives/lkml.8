@@ -2,81 +2,149 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF255C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC937C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 8018F206C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:23:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7536206C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:23:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="s34WJzeT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727805AbgF3TXF (ORCPT
+        id S1727887AbgF3TX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 15:23:05 -0400
-Received: from winnie.ispras.ru ([83.149.199.91]:14590 "EHLO smtp.ispras.ru"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726283AbgF3TXE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 15:23:04 -0400
-Received: from monopod.intra.ispras.ru (monopod.intra.ispras.ru [10.10.3.121])
-        by smtp.ispras.ru (Postfix) with ESMTP id D8065201D0;
-        Tue, 30 Jun 2020 22:22:55 +0300 (MSK)
-Date:   Tue, 30 Jun 2020 22:22:55 +0300 (MSK)
-From:   Alexander Monakov <amonakov@ispras.ru>
-To:     Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
-cc:     linux-kernel@vger.kernel.org, Joerg Roedel <joro@8bytes.org>,
-        iommu@lists.linux-foundation.org
-Subject: Re: [PATCH] iommu/amd: Fix event counter availability check
-In-Reply-To: <b01994db-da9b-d8e6-e0c1-1af35dd62191@amd.com>
-Message-ID: <alpine.LNX.2.20.13.2006302219240.6255@monopod.intra.ispras.ru>
-References: <20200529200738.1923-1-amonakov@ispras.ru> <56761139-f794-39b1-4dfa-dfc05fbe5f60@amd.com> <alpine.LNX.2.20.13.2006011132530.16067@monopod.intra.ispras.ru> <dba1e37a-1ed7-ef7f-7252-2ebd1d6bde8c@amd.com> <alpine.LNX.2.20.13.2006152346320.21123@monopod.intra.ispras.ru>
- <b01994db-da9b-d8e6-e0c1-1af35dd62191@amd.com>
-User-Agent: Alpine 2.20.13 (LNX 116 2015-12-14)
+        Tue, 30 Jun 2020 15:23:26 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:38908 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726283AbgF3TX0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 15:23:26 -0400
+Received: from sequoia (162-237-133-238.lightspeed.rcsntx.sbcglobal.net [162.237.133.238])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 36EC020B717A;
+        Tue, 30 Jun 2020 12:23:24 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 36EC020B717A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1593545005;
+        bh=/73jWX48iDgfnF6CKgFhER3y8ByMtAjJCLEbLzm/Tko=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=s34WJzeT3xk/6f6Z8xCg7w6XoAIkynJE92+HKDEMZdPJZJi8PJ06GLuxZ8Tewp1Rc
+         VKZeGQ2OpWEFFDhwSynqTVjWpV8Hbk6+gvrwi61j1lGZj3WGu8le6HHGJFJBBANOAV
+         uNhU/U2+T0B7WFKmQSqWbgZDDRJpiEVlnCBedYLg=
+Date:   Tue, 30 Jun 2020 14:23:22 -0500
+From:   Tyler Hicks <tyhicks@linux.microsoft.com>
+To:     Peter Jones <pjones@redhat.com>
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Matthew Garrett <mjg59@google.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Petr Vandrovec <petr@vmware.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        Thirupathaiah Annapureddy <thiruan@microsoft.com>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] tpm: Require that all digests are present in
+ TCG_PCR_EVENT2 structures
+Message-ID: <20200630192322.GF4694@sequoia>
+References: <20200615232504.1848159-1-tyhicks@linux.microsoft.com>
+ <CAMj1kXHJbsxA2-jqpbLnUeeNfM0oC8Sh70+axOKoBCFMJ8+jKQ@mail.gmail.com>
+ <20200630185327.pasrylg7og7rlno3@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200630185327.pasrylg7og7rlno3@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Jun 2020, Suravee Suthikulpanit wrote:
-
-> > > On 6/1/20 4:01 PM, Alexander Monakov wrote:
-> > > > On Mon, 1 Jun 2020, Suravee Suthikulpanit wrote:
-> > > > 
-> > > > > > Moving init_iommu_perf_ctr just after iommu_flush_all_caches
-> > > > > > resolves the issue. This is the earliest point in amd_iommu_init_pci
-> > > > > > where the call succeeds on my laptop.
-> > > > > According to your description, it should just need to be anywhere
-> > > > > after the pci_enable_device() is called for the IOMMU device, isn't
-> > > > > it? So, on your system, what if we just move the init_iommu_perf_ctr()
-> > > > > here:
-> > > > No, this doesn't work, as I already said in the paragraph you are
-> > > > responding to. See my last sentence in the quoted part.
-> > > > 
-> > > > So the implication is init_device_table_dma together with subsequent
-> > > > cache flush is also setting up something that is necessary for counters
-> > > > to be writable.
-> > > > 
-> > > > Alexander
-> > > > 
-> > > Instead of blindly moving the code around to a spot that would just work,
-> > > I am trying to understand what might be required here. In this case,
-> > > the init_device_table_dma()should not be needed. I suspect it's the IOMMU
-> > > invalidate all command that's also needed here.
-> > > 
-> > > I'm also checking with the HW and BIOS team. Meanwhile, could you please
-> > > give the following change a try:
-> > Hello. Can you give any update please?
+On 2020-06-30 14:53:28, Peter Jones wrote:
+> On Tue, Jun 16, 2020 at 11:08:38AM +0200, Ard Biesheuvel wrote:
+> > (cc Matthew and Peter)
 > > 
-> > Alexander
+> > On Tue, 16 Jun 2020 at 01:28, Tyler Hicks <tyhicks@linux.microsoft.com> wrote:
+> > >
+> > > Require that the TCG_PCR_EVENT2.digests.count value strictly matches the
+> > > value of TCG_EfiSpecIdEvent.numberOfAlgorithms in the event field of the
+> > > TCG_PCClientPCREvent event log header. Also require that
+> > > TCG_EfiSpecIdEvent.numberOfAlgorithms is non-zero.
+> > >
+> > > The TCG PC Client Platform Firmware Profile Specification section 9.1
+> > > (Family "2.0", Level 00 Revision 1.04) states:
+> > >
+> > >  For each Hash algorithm enumerated in the TCG_PCClientPCREvent entry,
+> > >  there SHALL be a corresponding digest in all TCG_PCR_EVENT2 structures.
+> > >  Note: This includes EV_NO_ACTION events which do not extend the PCR.
+> > >
+> > > Section 9.4.5.1 provides this description of
+> > > TCG_EfiSpecIdEvent.numberOfAlgorithms:
+> > >
+> > >  The number of Hash algorithms in the digestSizes field. This field MUST
+> > >  be set to a value of 0x01 or greater.
+> > >
+> > > Enforce these restrictions, as required by the above specification, in
+> > > order to better identify and ignore invalid sequences of bytes at the
+> > > end of an otherwise valid TPM2 event log. Firmware doesn't always have
+> > > the means necessary to inform the kernel of the actual event log size so
+> > > the kernel's event log parsing code should be stringent when parsing the
+> > > event log for resiliency against firmware bugs. This is true, for
+> > > example, when firmware passes the event log to the kernel via a reserved
+> > > memory region described in device tree.
+> > >
 > > 
+> > When does this happen? Do we have code in mainline that does this?
+> > 
+> > > Prior to this patch, a single bit set in the offset corresponding to
+> > > either the TCG_PCR_EVENT2.eventType or TCG_PCR_EVENT2.eventSize fields,
+> > > after the last valid event log entry, could confuse the parser into
+> > > thinking that an additional entry is present in the event log. This
+> > > patch raises the bar on how difficult it is for stale memory to confuse
+> > > the kernel's event log parser but there's still a reliance on firmware
+> > > to properly initialize the remainder of the memory region reserved for
+> > > the event log as the parser cannot be expected to detect a stale but
+> > > otherwise properly formatted firmware event log entry.
+> > >
+> > > Fixes: fd5c78694f3f ("tpm: fix handling of the TPM 2.0 event logs")
+> > > Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+> > > ---
+> > 
+> > I am all for stringent checks, but this could potentially break
+> > measured boot on systems that are working fine today, right?
 > 
-> Sorry for late reply. I have a reproducer and working with the HW team to
-> understand the issue.
-> I should be able to provide update with solution by the end of this week.
+> Seems like in that case our measurement is unreliable and can't really
+> be trusted.  That said, having things that were using the measurements
+> before this suddenly stop being able to access sealed secrets is not a
+> great experience for the user who unwittingly bought the junk hardware.
 
-Hi, can you share any information (two more weeks have passed)?
+I haven't seen where anyone has suggested that such junk hardware
+exists. Do you know of or expect any firmware that has mismatched
+TCG_PCR_EVENT2.digests.count and TCG_EfiSpecIdEvent.numberOfAlgorithms
+values?
 
-Alexander
+I would think that the userspace code that's parsing
+/sys/kernel/security/tpm0/binary_bios_measurements would also have
+issues with such an event log.
+
+> Same with the zero-supported-hashes case.
+
+Small but important correction: it is a zero-hashes case, not a
+zero-supported-hashes case
+
+There's no handshake involved or anything like that. This would only
+cause problems if the firmware provided no hashes, which means the
+firmware event log is unusable, anyways.
+
+Tyler
+
+> It would be nice to at log it and have a way for them to opt-in to
+> allowing the old measurement to go through, so they can recover their
+> data, though I don't know what that method would be if the measured
+> command line is one of their dependencies.
+> 
+> -- 
+>         Peter
