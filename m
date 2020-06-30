@@ -2,98 +2,95 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E99B4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 123AFC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BF59820702
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:29:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="co3GS2Cj"
+	by mail.kernel.org (Postfix) with ESMTP id CBE0220702
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:30:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593545430;
+	bh=rEjh/g2S0tM9y4L43jJdE5PRYKCoFH1gQ/JFjzpI3J8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=mPt41kf1UZYI5VPceiM/M0EnYN+7s9gSN03Oj9fpu4oj9rzo++WyRv3VcKd0Hwitt
+	 aK44c6dwxRYY0cFVaey4Rxw67/bvLlrWlIuejxrKsH0D1j1hQrlrnifZPzrKgSMVjN
+	 3bMHvM90pLWIgOHK5Bl0U3cb78iKfXSUtYX8/+VI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728069AbgF3T3q (ORCPT
+        id S1728121AbgF3Ta3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 15:29:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43476 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726961AbgF3T3o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 15:29:44 -0400
-Received: from mail-pj1-x1042.google.com (mail-pj1-x1042.google.com [IPv6:2607:f8b0:4864:20::1042])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F17FC061755;
-        Tue, 30 Jun 2020 12:29:44 -0700 (PDT)
-Received: by mail-pj1-x1042.google.com with SMTP id k5so342966pjg.3;
-        Tue, 30 Jun 2020 12:29:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=z9NbGrJNVhmDvwjE4p/JaViBJ44BVQVTuZHg6UXMIYY=;
-        b=co3GS2Cjq3IS4PBvsxpk3iaeANWXu9yXQTCa2iad2uBkShSkMJdxn3+XTqZQwNfDXy
-         RlY76zsgVjCL43sSBus5UM6FBRu0aVIGHO4JN/bDnKmaer8C5enTUMgjW4YUfz0eEODp
-         txdPInWQ7GWQUOgDHHs67W+oOI5hBCYfzX84Pyz9UvnCOi9y2q9BZsXzQtKmfkRJwZS/
-         DSpFrB5U9oQ8oRblkl/qrgws8AvvQ8uhGK98S0lQDOU8OMLjrYC4/eH9XoZZOebAzwN3
-         GMrQM3PT/yZRtiT7PUVWYyuFrPxxrQknyJOyE0djQIFkCeBzVBbtogf+f5Rg3LzrjwjY
-         5UiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=z9NbGrJNVhmDvwjE4p/JaViBJ44BVQVTuZHg6UXMIYY=;
-        b=IJ1p4wsJ8933pTc/90QJlWLZOVSf+VxrPV0IsOJCBOVWIgIw0WzFeUgAipJCoZfo3s
-         IetVpmsBSlp0AmQJfvYJVRt8RzYYPgPGn6EgTm3pkd1t7ATGMNpRuC6Ek7b34OxIl3Ly
-         0XSy2p+RBFriT9v0pJCZyKuELLs9S1yeAoW97hvxpMRyc+zxJQq5cADi7Li8nNxd7FDK
-         ms7Tbqo7yqhbtnv9aiPDHnetMKMMKBMQrZx2IgF492WB+eNCbAbUuz7HaSLNG+27A8oa
-         SMusYD7DnsJUec00RYHnsNoCNT2ROzm81mZL6OvSSNgRRkFIyFlVAxe5uwmKhAPsm0Kk
-         bZoA==
-X-Gm-Message-State: AOAM533VYVJW+nsZ17bV/+OIiebLSAYxaGNpjw9V/EvDo7Yr2sD8fB/8
-        bmjv9GUbuTixMfrBQ309ypk=
-X-Google-Smtp-Source: ABdhPJwv4jFJgO1XEbhIRLji/2KijRhr9g67KUtACfRcPhhVmiFQ8SFh/i4yjIkB/MOaOvhH2n3yTg==
-X-Received: by 2002:a17:902:8a8f:: with SMTP id p15mr19083179plo.172.1593545383723;
-        Tue, 30 Jun 2020 12:29:43 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:a6ae:11ff:fe11:fcc3])
-        by smtp.gmail.com with ESMTPSA id s12sm3554059pgp.54.2020.06.30.12.29.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 12:29:43 -0700 (PDT)
-Date:   Tue, 30 Jun 2020 12:29:41 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Merlijn Wajer <merlijn@wizzup.org>
-Cc:     pavel@ucw.cz,
-        =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson@baylibre.com>,
-        Tony Lindgren <tony@atomide.com>,
+        Tue, 30 Jun 2020 15:30:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33830 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726128AbgF3Ta2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 15:30:28 -0400
+Received: from kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com (unknown [163.114.132.6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFA06206C0;
+        Tue, 30 Jun 2020 19:30:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593545428;
+        bh=rEjh/g2S0tM9y4L43jJdE5PRYKCoFH1gQ/JFjzpI3J8=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=YrsWemV8NJvx04mW005Zc9MA2OgNruHQsVtdKH2T4vxRF2Zqm0xlQEPT9UKJUZbyq
+         ueVxKtzRjyE3noo1bvlLdwBw6z1lWqVx7WxIogIstM89v0LpL+fRtcftaeRrm4t6Rz
+         Ri8R1z08mqiVd1eaw1NHQ/BbeC/ASKIm1lBJFDtE=
+Date:   Tue, 30 Jun 2020 12:30:26 -0700
+From:   Jakub Kicinski <kuba@kernel.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        John Crispin <john@phrozen.org>,
+        Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <Mark-MC.Lee@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
         Rob Herring <robh+dt@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jeffrey Hugo <jhugo@codeaurora.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@suse.de>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Mattias Jacobsson <2pi@mok.nu>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Mark Gross <mgross@linux.intel.com>,
-        "open list:OMAP DEVICE TREE SUPPORT" <linux-omap@vger.kernel.org>,
-        "open list:OMAP DEVICE TREE SUPPORT" <devicetree@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:INPUT (KEYBOARD, MOUSE, JOYSTICK, TOUCHSCREEN)..." 
-        <linux-input@vger.kernel.org>
-Subject: Re: [PATCH 0/2] Add SW_MACHINE_COVER key
-Message-ID: <20200630192941.GI248110@dtor-ws>
-References: <20200612125402.18393-1-merlijn@wizzup.org>
+        Frank Rowand <frowand.list@gmail.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH v2 00/10] net: improve devres helpers
+Message-ID: <20200630123026.39d97211@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+In-Reply-To: <20200629120346.4382-1-brgl@bgdev.pl>
+References: <20200629120346.4382-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200612125402.18393-1-merlijn@wizzup.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 12, 2020 at 02:53:57PM +0200, Merlijn Wajer wrote:
+On Mon, 29 Jun 2020 14:03:36 +0200 Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> So it seems like there's no support for relaxing certain networking devres
+> helpers to not require previously allocated structures to also be managed.
+> However the way mdio devres variants are implemented is still wrong and I
+> modified my series to address it while keeping the functions strict.
+> 
+> First two patches modify the ixgbe driver to get rid of the last user of
+> devm_mdiobus_free().
+> 
+> Patches 3, 4, 5 and 6 are mostly cosmetic.
+> 
+> Patch 7 fixes the way devm_mdiobus_register() is implemented.
+> 
+> Patches 8 & 9 provide a managed variant of of_mdiobus_register() and
+> last patch uses it in mtk-star-emac driver.
+> 
+> v1 -> v2:
+> - drop the patch relaxing devm_register_netdev()
+> - require struct mii_bus to be managed in devm_mdiobus_register() and
+>   devm_of_mdiobus_register() but don't store that information in the
+>   structure itself: use devres_find() instead
 
-Applied, thank you.
-
--- 
-Dmitry
+Acked-by: Jakub Kicinski <kuba@kernel.org>
