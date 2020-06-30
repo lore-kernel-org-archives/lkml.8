@@ -2,103 +2,112 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7168FC433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 01:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32271C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 01:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4BC5E20722
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 01:10:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 115FB20780
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 01:11:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ke2ZIOIW"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cSM7Pwgj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbgF3BKD (ORCPT
+        id S1728062AbgF3BLD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 29 Jun 2020 21:10:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43470 "EHLO
+        Mon, 29 Jun 2020 21:11:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726813AbgF3BKA (ORCPT
+        with ESMTP id S1726813AbgF3BLD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 29 Jun 2020 21:10:00 -0400
-Received: from mail-il1-x141.google.com (mail-il1-x141.google.com [IPv6:2607:f8b0:4864:20::141])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4ADAC03E979
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 18:10:00 -0700 (PDT)
-Received: by mail-il1-x141.google.com with SMTP id w73so4369511ila.11
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 18:10:00 -0700 (PDT)
+        Mon, 29 Jun 2020 21:11:03 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04CA8C061755
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 18:11:03 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id z7so20892836ybz.1
+        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 18:11:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=FUjeWh/gnv7SsSmyLjAY3l5nUPUBHNsyTtmhdqkaD88=;
-        b=ke2ZIOIWH+veJU83MCRtimartTjxTMMQ7ssNfBQTBE0nYNCs34C2CGZBIQ5oYiTIuM
-         1NPZJTPyefZhNA2BwCNjVIHOQ0bnqy3XaYx+HPU0HUotSFcx4C+QT9i2gIdC045w78KZ
-         Y+IuxZUWzznlaa5qTO6WYtQBws082Pajjk1GozsCl1RQqq2Pl5gRzL7edHo6hxDF6TAN
-         4+SUQs5KrBMWbu4KxiaLzKyqXKD+A0jeMYCS6V3nulKsHAENNVDk+oRhTXGTSSQE17kH
-         kgDWkEfDkHYzlMQoEgV0IFTuKXRbC48oq9b2uHEcH/9wH/2wMUGCaUh/HJhfdhmBuR32
-         gmMw==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=3+Iq/MXOcbSUp/+nHtUzggFuUsgKGhG/vV+48k4w4OQ=;
+        b=cSM7Pwgj28gdY5CA12KGe4fYcjvJzOjCGrwQ0AmXermj1tHfdZrsjUZJBsBx2GrEPY
+         BA1q0mlnRFN2+jx1RR2i6CitfER/2t0HDTe1Ea6GnnnNQB5IPSRhOHNXqbwbNUPbT37f
+         DzH8QBrP2sy/jsH6Tq37FKzFLDwvC2ffYWXdjs9u5G58B68x0mZp4+sRmtufEXeKXBvy
+         E1cgWh7vGWO+Xo5ZffR5iH1Tnc5JVBb50PIy8cwDQ8SQP+y6sIPGW8hb40ECLqLLaRvZ
+         5kqhGq8GSvG2uX3JOUsUesKCvX7hxtmpipPnOsbmzuHn50ZPZkki9Y7lI+siCFRkCevp
+         Cbtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=FUjeWh/gnv7SsSmyLjAY3l5nUPUBHNsyTtmhdqkaD88=;
-        b=aRUX1JAPujf4dQmvCDzUtYnfLWnO5ONQbSacgHbp0vKaMLw6ZIgHikhdW+VDWxkrxv
-         aHs3A5vB2Y0MYbJ7pg3WH7T05xpHVrNZOMRwAt+9vPF0zCrTHjTBzr+6UCLFg2VFrVSH
-         w2rRl9blMKiYPNA8s7d8fAjTgsR5JO26qZg9tHe0sKm+yLpkAVsIAsUQIo1fBfPPZ/18
-         roCbsoGiPTbtRSNom9o1smkPpSpf1wKw+hODSCbzk+jlWGudiL8FmEM8kra/9U5yNbGC
-         yY0xd8MJtV5NDy2bRRMaH9dYMbebEl2UXLxtvS3RTUCgJGIZ1jcJaBrQcj+volcAV7uk
-         +RMw==
-X-Gm-Message-State: AOAM531yf9AMbvqpbHM+bciPb8NiTQxIb3D+aoUOA14ne84uAeFAadfg
-        XwR2FhWS1wSIKpma2UnDurqPq5Qkc7Q=
-X-Google-Smtp-Source: ABdhPJwwJng843waUYdG70JKRjW/vvvCqyWW4BPiJUqCaqyW31WOH015fo5edjCQjfhloVEZLR7iUg==
-X-Received: by 2002:a92:9914:: with SMTP id p20mr238232ili.273.1593479399781;
-        Mon, 29 Jun 2020 18:09:59 -0700 (PDT)
-Received: from [172.22.22.26] (c-73-185-129-58.hsd1.mn.comcast.net. [73.185.129.58])
-        by smtp.googlemail.com with ESMTPSA id z9sm838964ilb.41.2020.06.29.18.09.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jun 2020 18:09:59 -0700 (PDT)
-Subject: Re: [PATCH net-next 1/5] net: ipa: head-of-line block registers are
- RX only
-To:     David Miller <davem@davemloft.net>
-Cc:     kuba@kernel.org, evgreen@chromium.org, subashab@codeaurora.org,
-        cpratapa@codeaurora.org, bjorn.andersson@linaro.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200629214919.1196017-2-elder@linaro.org>
- <20200629173517.40716282@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
- <7c438ee3-8ff0-0ee1-2a0a-fa458d982e11@linaro.org>
- <20200629.180305.1550276438848153234.davem@davemloft.net>
-From:   Alex Elder <elder@linaro.org>
-Message-ID: <825816f3-5797-bbcf-571b-c6a7a6821397@linaro.org>
-Date:   Mon, 29 Jun 2020 20:09:58 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.8.0
-MIME-Version: 1.0
-In-Reply-To: <20200629.180305.1550276438848153234.davem@davemloft.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=3+Iq/MXOcbSUp/+nHtUzggFuUsgKGhG/vV+48k4w4OQ=;
+        b=omvV9EkjibacTw1UY44qkWY/V0FhcuDG8h9FG30p3ZhNhseE0xuHWRllqXyd5SQBuS
+         gsa7ZK0pcMaFbOvBS0sLC1s511ctEYFmdnZgHiLUQ7/wwqPWGvs1xNBcEDBhppEJj7Em
+         u+t7b1n+Soea24sQiLTRARbieDX1E0Z5D6lxAxgPeUxmJQd9fJF3knZ/CAWxU5+gMd5H
+         N5giJQhhPag9i2nqirq8X/xtyMSg1uhelG1w/JDFgnYhpl/5c3Llq8eQbSLgxpB4CilM
+         Jd0oyGrkYkRxSBY8eT+FjCv+VjEB2RwBpJDUxlughjVgWMMIhTwNU0Khh8kQXzS/g32g
+         Do5w==
+X-Gm-Message-State: AOAM5310zc1csRD2Ao5h80s9oa4HTKZX3r/K27NXsOHq9NT4WpATpB/9
+        RYZNj8q74h2J/jTRcGypC7CkXQ1g/VIj
+X-Google-Smtp-Source: ABdhPJwHlV12J3jmhSgfapnwmVJEvCJRHQHW7Wzl8yg/D9C9h0zd6idlrSpzbckw9anZCATywg6aWVmQswSM
+X-Received: by 2002:a25:b21e:: with SMTP id i30mr29661766ybj.35.1593479462230;
+ Mon, 29 Jun 2020 18:11:02 -0700 (PDT)
+Date:   Tue, 30 Jun 2020 11:10:51 +1000
+Message-Id: <20200630111047.1.I05d781ac794389337a4adc2f6402f673117e2937@changeid>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
+Subject: [PATCH] regulator: mt6397: Implement of_map_mode regulator_desc function
+From:   Anand K Mistry <amistry@google.com>
+To:     linux-mediatek@lists.infradead.org
+Cc:     broonie@kernel.org, drinkcat@chromium.org,
+        hsin-hsiung.wang@mediatek.com, Anand K Mistry <amistry@google.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/29/20 8:03 PM, David Miller wrote:
-> Never BUG_ON() unless you absolutely cannot continue executing kernel
-> without corrupting memory or similar.
+Without a of_map_mode implementation, the regulator-allowed-modes
+devicetree field is skipped, and attempting to change the regulator mode
+results in an error:
+[    1.439165] vpca15: mode operation not allowed
 
-Yes, that's basically why I don't use it.  But the reason I was
-considering it conditional on a config option is that Qualcomm
-has a crash analysis tool that expects a BUG() call to stop the
-system so its instant state can be captured.  I don't use this
-tool, and I might be mistaken about what's required.
+Signed-off-by: Anand K Mistry <amistry@google.com>
 
-What I would *really* like to do is have a way to gracefully
-shut down just the IPA driver when an unexpected condition occurs,
-so I can stop everything without crashing the system.  But doing
-that in a way that works in all cases is Hard.
+---
 
-Do you have any suggestions?
+ drivers/regulator/mt6397-regulator.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-					-Alex
+diff --git a/drivers/regulator/mt6397-regulator.c b/drivers/regulator/mt6397-regulator.c
+index 269c2a6028e8..5c60b52addf1 100644
+--- a/drivers/regulator/mt6397-regulator.c
++++ b/drivers/regulator/mt6397-regulator.c
+@@ -55,6 +55,7 @@ struct mt6397_regulator_info {
+ 		.vsel_mask = vosel_mask,				\
+ 		.enable_reg = enreg,					\
+ 		.enable_mask = BIT(0),					\
++		.of_map_mode = mt6397_map_mode,				\
+ 	},								\
+ 	.qi = BIT(13),							\
+ 	.vselon_reg = voselon,						\
+@@ -146,6 +147,12 @@ static const unsigned int ldo_volt_table7[] = {
+ 	1300000, 1500000, 1800000, 2000000, 2500000, 2800000, 3000000, 3300000,
+ };
+ 
++static unsigned int mt6397_map_mode(unsigned int mode)
++{
++	return mode == MT6397_BUCK_MODE_AUTO ?
++		REGULATOR_MODE_NORMAL : REGULATOR_MODE_FAST;
++}
++
+ static int mt6397_regulator_set_mode(struct regulator_dev *rdev,
+ 				     unsigned int mode)
+ {
+-- 
+2.27.0.212.ge8ba1cc988-goog
+
