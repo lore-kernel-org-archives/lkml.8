@@ -2,166 +2,159 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62DA8C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 800E2C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 3DCAB206B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54B8A20768
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 19:51:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=es-iitr-ac-in.20150623.gappssmtp.com header.i=@es-iitr-ac-in.20150623.gappssmtp.com header.b="oCSHK38q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728447AbgF3Tsr (ORCPT
+        id S1728465AbgF3TvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 15:48:47 -0400
-Received: from foss.arm.com ([217.140.110.172]:32894 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728428AbgF3Tso (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 15:48:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6EC6A1045;
-        Tue, 30 Jun 2020 12:48:44 -0700 (PDT)
-Received: from seattle-bionic.arm.com.Home (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8087C3F73C;
-        Tue, 30 Jun 2020 12:48:43 -0700 (PDT)
-From:   Oliver Swede <oli.swede@arm.com>
-To:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 01/14] arm64: Allow passing fault address to fixup handlers
-Date:   Tue, 30 Jun 2020 19:48:09 +0000
-Message-Id: <20200630194822.1082-2-oli.swede@arm.com>
+        Tue, 30 Jun 2020 15:51:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46784 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726618AbgF3TvC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 15:51:02 -0400
+Received: from mail-pl1-x641.google.com (mail-pl1-x641.google.com [IPv6:2607:f8b0:4864:20::641])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D450DC061755
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 12:51:01 -0700 (PDT)
+Received: by mail-pl1-x641.google.com with SMTP id x11so8891653plo.7
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 12:51:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=es-iitr-ac-in.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=ZBKhPH2eOj78fdRxQESh5z9MefWxohtucDof9Au70c8=;
+        b=oCSHK38qHA3h7x8nQ3ie1Ji+667P+uNGr518mAyd4wB1cfXINEPL4Awq7DVvOwoC4D
+         sTdvHKxf2wjy8ksGkoGNm8G/if3JRZW716VZ50wyRtVdvlef7Dscsdw+xew8eydpY2nA
+         gS1bo5p4xDkd61yoqeedcGy2TG1837VlugsRkdKpiU0/uXcOpV+W5aD8HI8O3Yi2kT4A
+         Zid02nGJhcDAyIIyO0Khb9p5dc2CFr7bKDc+oYhm1t9Ig+vd7kWsZgmJ+ACbSIYFeA5q
+         y1WO2eqVvdrNTCtUNFDp2kD/UmON/ciq4l9QqXQrXAganlR/RPqr15WP4Uop0U+WZ3Ym
+         uB+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ZBKhPH2eOj78fdRxQESh5z9MefWxohtucDof9Au70c8=;
+        b=PBaYFAvDsKUI4mc1zeGLncBmXgmRI63aiw9FqDy74O8BJHifgjb1ogxWUrS3+e2Z8E
+         ahkxP8kEfPdM2B2g6sbtPNBqCu617oSaT9EBKdZXJvnxKgFdiXUteNpgPnuFtdTiPwHF
+         LdGH7CXPrC+6rOYQ2VdHaTs3lp8XNbMDIvCJVZYyN8g07CgyXnqNqqnKSwoX1c8muvUF
+         OBoX6esi+fcZNIaHcr+7TROgtQp/AcaL+EMSjNJEQE6lGzHD7NFykqFkRJSGyk6uJHcg
+         ZOi10SDX7717YT8ZQM8ahrtp6zyahRxhTfGtDeXjbFiDYqgbGj+MDk/1Hct6VmctlEHe
+         PY8w==
+X-Gm-Message-State: AOAM531G3bNxl8t8IvQ+3fa03vQjstk9b5yDNqwNbqIf6aYPt+TLjfPj
+        WYvp43+0Z2egLPrl+IL/dN6Lzg==
+X-Google-Smtp-Source: ABdhPJxpLnqqCjd7c5irLWhkJ3MT7ltWgE1cp48scosszOeV4cAuiYu60P4/diMi7vVTrWghSeFGDg==
+X-Received: by 2002:a17:90a:ac0a:: with SMTP id o10mr933122pjq.235.1593546661311;
+        Tue, 30 Jun 2020 12:51:01 -0700 (PDT)
+Received: from kaaira-HP-Pavilion-Notebook ([103.113.213.178])
+        by smtp.gmail.com with ESMTPSA id s188sm3337163pfb.118.2020.06.30.12.50.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 12:51:00 -0700 (PDT)
+From:   Kaaira Gupta <kgupta@es.iitr.ac.in>
+To:     Helen Koike <helen.koike@collabora.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hverkuil@xs4all.nl,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>
+Cc:     Kaaira Gupta <kgupta@es.iitr.ac.in>
+Subject: [PATCH v8 0/3] media: Add colors' order and other info over test image
+Date:   Wed,  1 Jul 2020 01:20:49 +0530
+Message-Id: <20200630195052.23880-1-kgupta@es.iitr.ac.in>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200630194822.1082-1-oli.swede@arm.com>
-References: <20200630194822.1082-1-oli.swede@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sam Tebbs <sam.tebbs@arm.com>
+This patchset aims to add a method to display the correct order of
+colors for a test image generated. It does so by adding a function
+which returns a string of correct order of the colors for a test
+pattern. It then adds a control in vimc which displays the string
+over test image. It also displays some other information like saturation,
+hue, contrast brightness and time since the stream started over test
+image generated by vimc.
 
-Extend fixup_exception() to optionally place the faulting address in a
-register when returning to a fixup handler. Since A64 instructions must
-be 4-byte-aligned, we can mimic the IA-64 implementation and encode a
-flag in the lower bits of the offset field to indicate handlers which
-expect an address. This will allow us to use more efficient offset
-addressing modes in usercopy routines, rather than updating the base
-register on every access just for the sake of inferring where a fault
-occurred in order to compute the return value upon failure.
+Changes since v7:
+	In patch 3:
+	- Use fallthrough; to indicate a fall through in switch-case
+	- Use enum type instead of int for osd_value
+	- Change varaible to osd_value instead of osd_mode as the enum
+	  osd_mode defines the modes.
 
-The choice of x15 is somewhat arbitrary, but with the consideration that
-as the highest-numbered temporary register with no possible 'special'
-role in the ABI, it is most likely not used by hand-written assembly
-code, and thus a minimally-invasive option for imported routines.
+Changes since v6:
+        In patch 3:
+        - Use switch case instead of if()
+        - reorder declarartions.
 
-Signed-off-by: Sam Tebbs <sam.tebbs@arm.com>
-[ rm: split into separate patch, use UL(), expand commit message ]
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Oliver Swede <oli.swede@arm.com>
----
- arch/arm64/include/asm/assembler.h |  9 +++++++++
- arch/arm64/include/asm/extable.h   | 10 +++++++++-
- arch/arm64/mm/extable.c            | 13 +++++++++----
- arch/arm64/mm/fault.c              |  2 +-
- 4 files changed, 28 insertions(+), 6 deletions(-)
+Changes since v5:
+        In patch 2:
+        - Add missing EXPORT_SYMBOL_GPL()
+        In patch 3:
+        - Renamed varaibles.
+        - use u64 instead of int for getting current time in
+          nanoseconds.
+        - Use enum instead of numbers to describe the state of osd_mode
+          control in code.
 
-diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
-index 54d181177656..438382a277c8 100644
---- a/arch/arm64/include/asm/assembler.h
-+++ b/arch/arm64/include/asm/assembler.h
-@@ -18,6 +18,7 @@
- #include <asm/cpufeature.h>
- #include <asm/cputype.h>
- #include <asm/debug-monitors.h>
-+#include <asm/extable.h>
- #include <asm/page.h>
- #include <asm/pgtable-hwdef.h>
- #include <asm/ptrace.h>
-@@ -129,6 +130,14 @@ alternative_endif
- 	.popsection
- 	.endm
- 
-+/*
-+ * Emit an entry into the exception table.
-+ * The fixup handler will receive the faulting address in x15
-+ */
-+	.macro		_asm_extable_faultaddr, from, to
-+	_asm_extable	\from, \to + FIXUP_WITH_ADDR
-+	.endm
-+
- #define USER(l, x...)				\
- 9999:	x;					\
- 	_asm_extable	9999b, l
-diff --git a/arch/arm64/include/asm/extable.h b/arch/arm64/include/asm/extable.h
-index 56a4f68b262e..4c4955f2bb44 100644
---- a/arch/arm64/include/asm/extable.h
-+++ b/arch/arm64/include/asm/extable.h
-@@ -2,6 +2,12 @@
- #ifndef __ASM_EXTABLE_H
- #define __ASM_EXTABLE_H
- 
-+#include <linux/const.h>
-+
-+#define FIXUP_WITH_ADDR UL(1)
-+
-+#ifndef __ASSEMBLY__
-+
- /*
-  * The exception table consists of pairs of relative offsets: the first
-  * is the relative offset to an instruction that is allowed to fault,
-@@ -22,5 +28,7 @@ struct exception_table_entry
- 
- #define ARCH_HAS_RELATIVE_EXTABLE
- 
--extern int fixup_exception(struct pt_regs *regs);
-+extern int fixup_exception(struct pt_regs *regs, unsigned long addr);
-+
-+#endif
- #endif
-diff --git a/arch/arm64/mm/extable.c b/arch/arm64/mm/extable.c
-index 81e694af5f8c..e6578c2814b5 100644
---- a/arch/arm64/mm/extable.c
-+++ b/arch/arm64/mm/extable.c
-@@ -6,13 +6,18 @@
- #include <linux/extable.h>
- #include <linux/uaccess.h>
- 
--int fixup_exception(struct pt_regs *regs)
-+int fixup_exception(struct pt_regs *regs, unsigned long addr)
- {
- 	const struct exception_table_entry *fixup;
- 
- 	fixup = search_exception_tables(instruction_pointer(regs));
--	if (fixup)
--		regs->pc = (unsigned long)&fixup->fixup + fixup->fixup;
--
-+	if (fixup) {
-+		unsigned long offset = fixup->fixup;
-+		if (offset & FIXUP_WITH_ADDR) {
-+			regs->regs[15] = addr;
-+			offset &= ~FIXUP_WITH_ADDR;
-+		}
-+		regs->pc = (unsigned long)&fixup->fixup + offset;
-+	}
- 	return fixup != NULL;
- }
-diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
-index 8afb238ff335..f80e299dc91b 100644
---- a/arch/arm64/mm/fault.c
-+++ b/arch/arm64/mm/fault.c
-@@ -303,7 +303,7 @@ static void __do_kernel_fault(unsigned long addr, unsigned int esr,
- 	 * Are we prepared to handle this kernel fault?
- 	 * We are almost certainly not prepared to handle instruction faults.
- 	 */
--	if (!is_el1_instruction_abort(esr) && fixup_exception(regs))
-+	if (!is_el1_instruction_abort(esr) && fixup_exception(regs, addr))
- 		return;
- 
- 	if (WARN_RATELIMIT(is_spurious_el1_translation_fault(addr, esr, regs),
+Changes since v4:
+        - Add another patch which changes char argument to const char
+        in function tpg_gen_text()
+        - Return const char * from function tpg_g_color_order() in patch
+          2
+        In 3rd patch:
+        - Check font in probe() instead of s_stream()
+        - Use dev_err instead of pr_err
+        - Fix errors in commit message.
+        - Base VIMC_CID_SHOW_INFO on VIVID_CID_OSD_TEXT_MODE
+
+Changes since v3:
+        In 1st patch:
+        -Improved formatting of returned string.
+
+        In 2nd patch:
+         - Add CID prefix in control name and change it to a more
+           generic name.
+         - Rename bool variable to a generic name.
+         - Disable text rendering instead of stopping stream if no
+           font found.
+         - Display more info like VIVID in VIMC.
+
+Changes since v2:
+        In 1st patch:
+        - Create a 'define' to prevent repetition of the common color
+          sequence string.
+        - Use 'fallthrough' on case statement to prevent repetition of
+          code.
+
+Changes since v1:
+        - Divided the patch into two patches.
+        - Returned NULL for patterns whose color order cannot be
+          defined. (Reported-by: kernel test robot <lkp@intel.com>)
+        - Made separate switch cases for separate test patterns
+         (Reported-by: kernel test robot <lkp@intel.com>)
+        - Renamed variables from camelcase to use '_'
+        - prefixed 'media' to the patches.
+
+Kaaira Gupta (3):
+  media: tpg: change char argument to const char
+  media: tpg: Add function to return colors' order of test image
+  media: vimc: Add a control to display info on test image
+
+ drivers/media/common/v4l2-tpg/v4l2-tpg-core.c | 40 +++++++++--
+ drivers/media/test-drivers/vimc/Kconfig       |  2 +
+ drivers/media/test-drivers/vimc/vimc-common.h |  1 +
+ drivers/media/test-drivers/vimc/vimc-core.c   | 10 +++
+ drivers/media/test-drivers/vimc/vimc-sensor.c | 67 +++++++++++++++++++
+ include/media/tpg/v4l2-tpg.h                  |  3 +-
+ 6 files changed, 115 insertions(+), 8 deletions(-)
+
 -- 
 2.17.1
 
