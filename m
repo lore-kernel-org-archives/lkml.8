@@ -2,157 +2,125 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4A39C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 604F8C433E1
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:18:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id ABC4920723
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:18:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 326C820723
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 16:18:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593533939;
+	bh=dTicqrGAqJYvU5F5OACn0DexTfdWgZmG06b7erbsdpU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=GUVWACFiwyAHoDFCnsIl1n8vsFOKfbgode6iHVziYhw0isoW7sXxm4vO06zKTHduX
+	 P3Cpkwqqnls4s73Gikg3v7WTRxr/D/97SF7Dh1q4GfzHBNfQprwRWu7ou643OQsB0u
+	 eAYGSy6DPk77eLIEc3onpbOyluyxfd/mEdEdvpFc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732930AbgF3QSy (ORCPT
+        id S1733044AbgF3QS6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 12:18:54 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64386 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726736AbgF3QSx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 12:18:53 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 05UG36PI152148;
-        Tue, 30 Jun 2020 12:18:52 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31x1rvxrrf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 30 Jun 2020 12:18:52 -0400
-Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 05UGIcOu001406;
-        Tue, 30 Jun 2020 12:18:51 -0400
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 31x1rvxrpm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 30 Jun 2020 12:18:51 -0400
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-        by ppma06fra.de.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 05UFuuSX028501;
-        Tue, 30 Jun 2020 16:18:46 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-        by ppma06fra.de.ibm.com with ESMTP id 31wwcgstem-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 30 Jun 2020 16:18:46 +0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 05UGIisd57540772
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 30 Jun 2020 16:18:44 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7BFA3A405C;
-        Tue, 30 Jun 2020 16:18:44 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2C6EDA405B;
-        Tue, 30 Jun 2020 16:18:44 +0000 (GMT)
-Received: from oc3871087118.ibm.com (unknown [9.145.186.119])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 30 Jun 2020 16:18:44 +0000 (GMT)
-Date:   Tue, 30 Jun 2020 18:18:42 +0200
-From:   Alexander Gordeev <agordeev@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: [PATCH v2 1/3] perf bench numa: fix incorrect NUMA toplogy assumption
-Message-ID: <20200630161842.GA29743@oc3871087118.ibm.com>
-References: <cover.1593445668.git.agordeev@linux.ibm.com>
- <a53eedd6ad2fb46aec4d59066277aad7ace470b7.1593445668.git.agordeev@linux.ibm.com>
+        Tue, 30 Jun 2020 12:18:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43370 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726736AbgF3QSz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 12:18:55 -0400
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9C7820722;
+        Tue, 30 Jun 2020 16:18:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1593533934;
+        bh=dTicqrGAqJYvU5F5OACn0DexTfdWgZmG06b7erbsdpU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=PTk6Yz4ZHLFZ/QXk9b6+NxPFEu2htevoFjkGvU3KUlCshSj0JuWzw+48nFaqPtpEo
+         XQGz9vzxhJpb75RsXc9xBrGFpn8uJJLPpThmjsPg5JeFev2MjhagZTaULU8HhbnBB3
+         BYfnjklO8ocFYsozqV7veozKQpcGrgCP5lAjaNm4=
+Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1jqIyC-007nTv-SF; Tue, 30 Jun 2020 17:18:53 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a53eedd6ad2fb46aec4d59066277aad7ace470b7.1593445668.git.agordeev@linux.ibm.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.235,18.0.687
- definitions=2020-06-30_06:2020-06-30,2020-06-30 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- cotscore=-2147483648 lowpriorityscore=0 phishscore=0 spamscore=0
- bulkscore=0 adultscore=0 mlxlogscore=999 suspectscore=1 clxscore=1015
- malwarescore=0 mlxscore=0 impostorscore=0 classifier=spam adjust=0
- reason=mlx scancount=1 engine=8.12.0-2004280000
- definitions=main-2006300115
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 30 Jun 2020 17:18:52 +0100
+From:   Marc Zyngier <maz@kernel.org>
+To:     Zenghui Yu <yuzenghui@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, wanghaibin.wang@huawei.com
+Subject: Re: [PATCH] irqchip/gic-v3: Remove the unused register definition
+In-Reply-To: <20200630134126.880-1-yuzenghui@huawei.com>
+References: <20200630134126.880-1-yuzenghui@huawei.com>
+User-Agent: Roundcube Webmail/1.4.5
+Message-ID: <4d1319ffb0631f59bc5355b409331c42@kernel.org>
+X-Sender: maz@kernel.org
+X-SA-Exim-Connect-IP: 51.254.78.96
+X-SA-Exim-Rcpt-To: yuzenghui@huawei.com, linux-kernel@vger.kernel.org, wanghaibin.wang@huawei.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The current code assumes that CPUs are evenly spread among
-NUMA nodes. That is generally incorrect and leads to failure
-on systems that have different NUMA topology.
+On 2020-06-30 14:41, Zenghui Yu wrote:
+> As per the GICv3 specification, GIC{D,R}_SEIR are not assigned and the
+> locations (0x0068) are actually Reserved. GICR_MOV{LPI,ALL}R are two 
+> IMP
+> DEF registers and might be defined by some specific micro-architecture,
+> Linux doesn't use them.
+> 
+> As they're not used anywhere in the kernel, just drop all of them.
+> 
+> Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
 
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
----
- tools/perf/bench/numa.c | 27 +++++++++++++--------------
- 1 file changed, 13 insertions(+), 14 deletions(-)
+To be clear, those were actually present in the spec back in the days
+(in the 2013 time frame). It just shows how the architecture evolved...
 
-diff --git a/tools/perf/bench/numa.c b/tools/perf/bench/numa.c
-index 5797253..23e224e 100644
---- a/tools/perf/bench/numa.c
-+++ b/tools/perf/bench/numa.c
-@@ -247,12 +247,13 @@ static int is_node_present(int node)
-  */
- static bool node_has_cpus(int node)
- {
--	struct bitmask *cpu = numa_allocate_cpumask();
-+	struct bitmask *cpumask = numa_allocate_cpumask();
- 	unsigned int i;
- 
--	if (cpu && !numa_node_to_cpus(node, cpu)) {
--		for (i = 0; i < cpu->size; i++) {
--			if (numa_bitmask_isbitset(cpu, i))
-+	BUG_ON(!cpumask);
-+	if (!numa_node_to_cpus(node, cpumask)) {
-+		for (i = 0; i < cpumask->size; i++) {
-+			if (numa_bitmask_isbitset(cpumask, i))
- 				return true;
- 		}
- 	}
-@@ -288,14 +289,10 @@ static cpu_set_t bind_to_cpu(int target_cpu)
- 
- static cpu_set_t bind_to_node(int target_node)
- {
--	int cpus_per_node = g->p.nr_cpus / nr_numa_nodes();
- 	cpu_set_t orig_mask, mask;
- 	int cpu;
- 	int ret;
- 
--	BUG_ON(cpus_per_node * nr_numa_nodes() != g->p.nr_cpus);
--	BUG_ON(!cpus_per_node);
--
- 	ret = sched_getaffinity(0, sizeof(orig_mask), &orig_mask);
- 	BUG_ON(ret);
- 
-@@ -305,13 +302,15 @@ static cpu_set_t bind_to_node(int target_node)
- 		for (cpu = 0; cpu < g->p.nr_cpus; cpu++)
- 			CPU_SET(cpu, &mask);
- 	} else {
--		int cpu_start = (target_node + 0) * cpus_per_node;
--		int cpu_stop  = (target_node + 1) * cpus_per_node;
--
--		BUG_ON(cpu_stop > g->p.nr_cpus);
-+		struct bitmask *cpumask = numa_allocate_cpumask();
- 
--		for (cpu = cpu_start; cpu < cpu_stop; cpu++)
--			CPU_SET(cpu, &mask);
-+		BUG_ON(!cpumask);
-+		if (!numa_node_to_cpus(target_node, cpumask)) {
-+			for (cpu = 0; cpu < (int)cpumask->size; cpu++) {
-+				if (numa_bitmask_isbitset(cpumask, cpu))
-+					CPU_SET(cpu, &mask);
-+			}
-+		}
- 	}
- 
- 	ret = sched_setaffinity(0, sizeof(mask), &mask);
+I'll queue this for 5.9.
+
+Thanks,
+
+         M.
+
+> ---
+> 
+> Compile tested on top of mainline.
+> 
+>  include/linux/irqchip/arm-gic-v3.h | 4 ----
+>  1 file changed, 4 deletions(-)
+> 
+> diff --git a/include/linux/irqchip/arm-gic-v3.h
+> b/include/linux/irqchip/arm-gic-v3.h
+> index 6c36b6cc3edf..f6d092fdb93d 100644
+> --- a/include/linux/irqchip/arm-gic-v3.h
+> +++ b/include/linux/irqchip/arm-gic-v3.h
+> @@ -19,7 +19,6 @@
+>  #define GICD_CLRSPI_NSR			0x0048
+>  #define GICD_SETSPI_SR			0x0050
+>  #define GICD_CLRSPI_SR			0x0058
+> -#define GICD_SEIR			0x0068
+>  #define GICD_IGROUPR			0x0080
+>  #define GICD_ISENABLER			0x0100
+>  #define GICD_ICENABLER			0x0180
+> @@ -119,14 +118,11 @@
+>  #define GICR_WAKER			0x0014
+>  #define GICR_SETLPIR			0x0040
+>  #define GICR_CLRLPIR			0x0048
+> -#define GICR_SEIR			GICD_SEIR
+>  #define GICR_PROPBASER			0x0070
+>  #define GICR_PENDBASER			0x0078
+>  #define GICR_INVLPIR			0x00A0
+>  #define GICR_INVALLR			0x00B0
+>  #define GICR_SYNCR			0x00C0
+> -#define GICR_MOVLPIR			0x0100
+> -#define GICR_MOVALLR			0x0110
+>  #define GICR_IDREGS			GICD_IDREGS
+>  #define GICR_PIDR2			GICD_PIDR2
+
 -- 
-1.8.3.1
-
+Jazz is not dead. It just smells funny...
