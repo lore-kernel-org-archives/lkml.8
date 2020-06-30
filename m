@@ -2,201 +2,212 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 687FAC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA038C433E2
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:28:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 43D6F20672
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:28:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NgxNazi/"
+	by mail.kernel.org (Postfix) with ESMTP id CA49D20672
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:28:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1593498499;
+	bh=TNKEx3gGBMjHuf5Vh/NVCYWtE2+awYFdc7SUADVjD0o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=i13XPCYoOIPDhksuQEcJB6NQNBPLA/5TCBMOHAu+a4DGQH1EAPYIdhGfp7xKfK9wa
+	 3Oa1yFmidjap9v2HT3YeXTIoUdPv3MUPVIG1XIG36/vbGjprIu5TWoxdHyU99aJzGy
+	 qNEKbcK0CH4orppT5PhIm1rDyRcIc9J/9s4cHtos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730308AbgF3G2M (ORCPT
+        id S1730324AbgF3G2S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 02:28:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35818 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730292AbgF3G2H (ORCPT
+        Tue, 30 Jun 2020 02:28:18 -0400
+Received: from mail-ej1-f66.google.com ([209.85.218.66]:35801 "EHLO
+        mail-ej1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730273AbgF3G2M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 02:28:07 -0400
-Received: from mail-pf1-x442.google.com (mail-pf1-x442.google.com [IPv6:2607:f8b0:4864:20::442])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C164FC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 23:28:07 -0700 (PDT)
-Received: by mail-pf1-x442.google.com with SMTP id j12so8964299pfn.10
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 23:28:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=fI8HnXoHL36NipPIacNI9gsuTmN2YmF4x8kkOxnjHJM=;
-        b=NgxNazi/4NDPHZazkyx72vObQoLThGuPLwjaDWkOz/me6q5ikQwO9toW9ubWJKpPz4
-         MAeQsnLtgzDJNq20N5wTPrTFydudGufvClwM7ODIDFm81qNGD5AKNBLJDNda4IjeNTzH
-         6jQ6PUVlksjmph6b9wW1UAGs3tNkWU68ujN1s=
+        Tue, 30 Jun 2020 02:28:12 -0400
+Received: by mail-ej1-f66.google.com with SMTP id rk21so19301179ejb.2;
+        Mon, 29 Jun 2020 23:28:09 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=fI8HnXoHL36NipPIacNI9gsuTmN2YmF4x8kkOxnjHJM=;
-        b=oAoLWmuvJuBbUwYVRp1PQnv7+/5OsQh+eV8Qxh2OWHPOTJ0o7YHjRiiajrWNR+LCUq
-         6WRqK556fRsqCx98/TwqRvSbGXIzYVm+W8rqSjTYlheEqPjYpwJHOGcdLwOmLgu/1/9m
-         f2374NjMqR3T5k3mLC5CGd4QAggCsQ79euyBNLKarbpXDpW4RIXHInwLNdYEDiEHFYcM
-         4WgLPODXXsAyggQX3/hLfdvfhXujKm2lYauw4cZQ+74fx1nmg569RJr/BFhYJhJULCJY
-         tEHRF+W3p2CcSKxk6IJ37K7JOE4G4MF1ICDebSYavdp8nn7Npo85ElnMQhqbEifh5MbP
-         84fQ==
-X-Gm-Message-State: AOAM533S37JlZBDSGBE54sxnlFHA9j2flKiJIPAWA6jcfuuKKVZ/jp1E
-        C14vAaOrSKtsSFxuTdwWETfChA==
-X-Google-Smtp-Source: ABdhPJyqQPQLx66yCaLhyl3uQCAVHiz7CJM/ZYhIR5tsBTwfptdnq5A03XpzQZFsy3TRMntZxzoPcg==
-X-Received: by 2002:aa7:9e5c:: with SMTP id z28mr5770994pfq.49.1593498487276;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IBkBLpidCraeYaB8aHMjDRRIIiX4iWGeZXOZd0wY14o=;
+        b=B/eLdk6rbhR+Eb/sTI3RjUaz+aH/Ek6A2HyyHrtslWntPbI0wRzhjvzgBBnllw+hZx
+         7c/aQg/QaOFrc+kDBp6yVHdNZAEykRXJGkowz+CY0aI37UdWFBW8MiCEmLgyl+jTrJd7
+         gEm04pSpn35PI3RGyku5vg5EnN36o0hzIvBtFAFMlxPtLEyzp92hgkPFLubqkGbnq46y
+         K1wOKwi0cj1kex/FHwvoBvBHXFkGYQ0DlpLrxvu06kb5KPIjtog/ebE2kTi1KIGYBVg6
+         G7NrrzI8/K+J8HLJOvnClJrbWmX7fM5QWoFMAfTn0V2U4jjIhFdcK4ZN6ApRB57OE821
+         TvBA==
+X-Gm-Message-State: AOAM533z8340jhcQMAqti1sDBz8fWqTEyiK7RdLShrPd3jN7E/MNhR5s
+        id5XUw3LaJhM3ZP+kTCUOEIBoorg
+X-Google-Smtp-Source: ABdhPJxrnQJ8Sw8QlDZTRApQSzi8VhlGhavIsxexzeuYwAhLoHtisPXAuSYMS+fORpXHNKXE3Aj1Wg==
+X-Received: by 2002:a17:906:1998:: with SMTP id g24mr12481950ejd.11.1593498488710;
+        Mon, 29 Jun 2020 23:28:08 -0700 (PDT)
+Received: from kozik-lap ([194.230.155.195])
+        by smtp.googlemail.com with ESMTPSA id a13sm1774702edk.58.2020.06.29.23.28.07
+        (version=TLS1_2 cipher=ECDHE-ECDSA-CHACHA20-POLY1305 bits=256/256);
         Mon, 29 Jun 2020 23:28:07 -0700 (PDT)
-Received: from acourbot.tok.corp.google.com ([2401:fa00:8f:203:93d9:de4d:e834:3086])
-        by smtp.gmail.com with ESMTPSA id d1sm1463366pfq.113.2020.06.29.23.28.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jun 2020 23:28:06 -0700 (PDT)
-From:   Alexandre Courbot <acourbot@chromium.org>
-To:     Tiffany Lin <tiffany.lin@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Rui Wang <gtk_ruiwang@mediatek.com>,
-        Yunfei Dong <yunfei.dong@mediatek.com>,
-        Pi-Hsun Shih <pihsun@chromium.org>,
-        Maoguang Meng <maoguang.meng@mediatek.com>
-Cc:     linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Alexandre Courbot <acourbot@chromium.org>
-Subject: [PATCH 7/9] media: mtk-vcodec: vdec: add media device if using stateless api
-Date:   Tue, 30 Jun 2020 15:27:09 +0900
-Message-Id: <20200630062711.4169601-8-acourbot@chromium.org>
-X-Mailer: git-send-email 2.27.0.212.ge8ba1cc988-goog
-In-Reply-To: <20200630062711.4169601-1-acourbot@chromium.org>
-References: <20200630062711.4169601-1-acourbot@chromium.org>
+Date:   Tue, 30 Jun 2020 08:28:05 +0200
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Chanwoo Choi <cw00.choi@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH] rtc: max77686: Do not allow interrupt to fire before
+ system resume
+Message-ID: <20200630062805.GA12949@kozik-lap>
+References: <20200615161455.4420-1-krzk@kernel.org>
+ <20200629222353.GB3800@piout.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200629222353.GB3800@piout.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yunfei Dong <yunfei.dong@mediatek.com>
+On Tue, Jun 30, 2020 at 12:23:53AM +0200, Alexandre Belloni wrote:
+> Hi,
+> 
+> On 15/06/2020 18:14:55+0200, Krzysztof Kozlowski wrote:
+> > The rtc-max77686 device shares the main interrupt line with parent MFD
+> > device (max77686 driver).  During the system suspend, the parent MFD
+> > device disables this IRQ to prevent an early event happening before
+> > resuming I2C bus controller.
+> > 
+> > The same should be done by rtc-max77686 driver because otherwise the
+> > interrupt handler max77686_rtc_alarm_irq() will be called before its
+> > resume function (max77686_rtc_resume()).  Such issue is not fatal but
+> > disabling shared IRQ by all users ensures correct behavior.
+> > 
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > 
+> > ---
+> > 
+> > If this looks ok, I guess all maxim RTC drivers should be updated?
+> 
+> But then, shouldn't that means that this affects all RTCs on an i2c bus?
+> 
+> I'm not completely proficient with PM but shouldn't using _noirq
+> propagate to the parents? Then you are sure that the resume is called
+> with interrupts disabled and this also means that the i2c driver has
+> resumed (hopefully with interrupts disabled).
 
-The stateless API requires a media device for issuing requests. Add one
-if we are being instantiated as a stateless decoder.
+This won't work, at least for Exynos platforms now, because of ordering
+with other drivers.  The RTC and MFD enable wake up interrupt which goes
+through pinctrl... but pinctrl suspends with "late", so before "noirq".
+Therefore the wake does not work.
 
-Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
-[acourbot: refactor, cleanup and split]
-Co-developed-by: Alexandre Courbot <acourbot@chromium.org>
-Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
----
- drivers/media/platform/Kconfig                |  1 +
- .../platform/mtk-vcodec/mtk_vcodec_dec_drv.c  | 39 +++++++++++++++++++
- .../platform/mtk-vcodec/mtk_vcodec_drv.h      |  2 +
- 3 files changed, 42 insertions(+)
+In the same time, the enable_irq_wake() (I am not sure why) also uses
+I2C which goes to I2C bus driver... which suspends in "noirq" as well.
+This results in some I2C timeouts during suspend and resume:
 
-diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
-index ff77c6db55db..cb5ffb98dc09 100644
---- a/drivers/media/platform/Kconfig
-+++ b/drivers/media/platform/Kconfig
-@@ -258,6 +258,7 @@ config VIDEO_MEDIATEK_VCODEC
- 	select V4L2_H264
- 	select VIDEO_MEDIATEK_VPU
- 	select MTK_SCP
-+	select MEDIA_CONTROLLER
- 	help
- 	    Mediatek video codec driver provides HW capability to
- 	    encode and decode in a range of video formats
-diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
-index 3d8eaf0746c2..e723f8573322 100644
---- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
-+++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_drv.c
-@@ -14,6 +14,7 @@
- #include <media/v4l2-event.h>
- #include <media/v4l2-mem2mem.h>
- #include <media/videobuf2-dma-contig.h>
-+#include <media/v4l2-device.h>
- 
- #include "mtk_vcodec_drv.h"
- #include "mtk_vcodec_dec.h"
-@@ -322,6 +323,31 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
- 		goto err_event_workq;
- 	}
- 
-+	if (dev->vdec_pdata->uses_stateless_api) {
-+		dev->mdev_dec.dev = &pdev->dev;
-+		strscpy(dev->mdev_dec.model, MTK_VCODEC_DEC_NAME,
-+				sizeof(dev->mdev_dec.model));
-+
-+		media_device_init(&dev->mdev_dec);
-+		dev->mdev_dec.ops = &mtk_vcodec_media_ops;
-+		dev->v4l2_dev.mdev = &dev->mdev_dec;
-+
-+		ret = v4l2_m2m_register_media_controller(dev->m2m_dev_dec,
-+			dev->vfd_dec, MEDIA_ENT_F_PROC_VIDEO_DECODER);
-+		if (ret) {
-+			mtk_v4l2_err("Failed to register media controller");
-+			goto err_reg_cont;
-+		}
-+
-+		ret = media_device_register(&dev->mdev_dec);
-+		if (ret) {
-+			mtk_v4l2_err("Failed to register media device");
-+			goto err_media_reg;
-+		}
-+
-+		mtk_v4l2_debug(0, "media registered as /dev/media%d",
-+			vfd_dec->num);
-+	}
- 	ret = video_register_device(vfd_dec, VFL_TYPE_VIDEO, 0);
- 	if (ret) {
- 		mtk_v4l2_err("Failed to register video device");
-@@ -334,6 +360,12 @@ static int mtk_vcodec_probe(struct platform_device *pdev)
- 	return 0;
- 
- err_dec_reg:
-+	if (dev->vdec_pdata->uses_stateless_api)
-+		media_device_unregister(&dev->mdev_dec);
-+err_media_reg:
-+	if (dev->vdec_pdata->uses_stateless_api)
-+		v4l2_m2m_unregister_media_controller(dev->m2m_dev_dec);
-+err_reg_cont:
- 	destroy_workqueue(dev->decode_workqueue);
- err_event_workq:
- 	v4l2_m2m_release(dev->m2m_dev_dec);
-@@ -366,6 +398,13 @@ static int mtk_vcodec_dec_remove(struct platform_device *pdev)
- 
- 	flush_workqueue(dev->decode_workqueue);
- 	destroy_workqueue(dev->decode_workqueue);
-+
-+	if (media_devnode_is_registered(dev->mdev_dec.devnode)) {
-+		media_device_unregister(&dev->mdev_dec);
-+		v4l2_m2m_unregister_media_controller(dev->m2m_dev_dec);
-+		media_device_cleanup(&dev->mdev_dec);
-+	}
-+
- 	if (dev->m2m_dev_dec)
- 		v4l2_m2m_release(dev->m2m_dev_dec);
- 
-diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h b/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
-index 755631d0fe92..7071434b5c5b 100644
---- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
-+++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
-@@ -382,6 +382,7 @@ struct mtk_vcodec_enc_pdata {
-  * struct mtk_vcodec_dev - driver data
-  * @v4l2_dev: V4L2 device to register video devices for.
-  * @vfd_dec: Video device for decoder
-+ * @mdev_dec: Media device for decoder
-  * @vfd_enc: Video device for encoder.
-  *
-  * @m2m_dev_dec: m2m device for decoder
-@@ -418,6 +419,7 @@ struct mtk_vcodec_enc_pdata {
- struct mtk_vcodec_dev {
- 	struct v4l2_device v4l2_dev;
- 	struct video_device *vfd_dec;
-+	struct media_device mdev_dec;
- 	struct video_device *vfd_enc;
- 
- 	struct v4l2_m2m_dev *m2m_dev_dec;
--- 
-2.27.0.212.ge8ba1cc988-goog
+[   82.631344] wake enabled for irq 131
+[   82.632743] wake enabled for irq 132
+[   82.649868] samsung-pinctrl 11000000.pinctrl: Setting external wakeup interrupt mask: 0xfffbf7ff
+[   82.658367] max77686_rtc_suspend:811
+[   82.658488] max77686_rtc_suspend:815
+[   87.695000] s3c-i2c 13860000.i2c: timeout waiting for bus idle
+[   87.695574] dummy 0-0006: Failed to sync masks in 1
+[   87.700446] wake enabled for irq 127
+[   87.703883] max77686_rtc_suspend:818
+[   87.707408] max77686_rtc_suspend:829
+[   87.716862] max77686_suspend:236
+[   87.716972] max77686_suspend:240
+[   87.717714] max77686_suspend:252
+[   87.723173] Disabling non-boot CPUs ...
+[   87.745844] Enabling non-boot CPUs ...
+[   87.751164] CPU1 is up
+[   87.754842] CPU2 is up
+[   87.759008] CPU3 is up
+[   87.760598] s3c-i2c 13860000.i2c: slave address 0x00
+[   87.760709] s3c-i2c 13860000.i2c: bus frequency set to 390 KHz
+[   87.760851] s3c-i2c 13870000.i2c: slave address 0x00
+[   87.760951] s3c-i2c 13870000.i2c: bus frequency set to 97 KHz
+[   87.761085] s3c-i2c 13880000.i2c: slave address 0x00
+[   87.761185] s3c-i2c 13880000.i2c: bus frequency set to 97 KHz
+[   87.761319] s3c-i2c 138e0000.i2c: slave address 0x00
+[   87.761418] s3c-i2c 138e0000.i2c: bus frequency set to 97 KHz
+[   87.764159] max77686_resume:261
+[   87.764236] max77686_resume:265
+[   87.764303] max77686_resume:268
+[   87.768204] max77686_rtc_resume:837
+[   87.768283] max77686_rtc_resume:840
+[   87.768370] max77686_rtc_resume:844
+[   92.813964] s3c-i2c 13860000.i2c: timeout waiting for bus idle
+[   92.814105] dummy 0-0006: Failed to sync masks in 1
+[   92.814205] wake disabled for irq 127
 
+In general, disabling and enabling this shared interrupt seems like a
+nice way to be able to suspend/resume driver in the "normal" time,
+without the need to order anything (noirq, late).
+
+Best regards,
+Krzysztof
+
+
+> 
+> I must admit that I don't know and I hope that the answer would also
+> answer whether moving all the RTC resume to resume_early is safe. (See
+> https://lore.kernel.org/linux-rtc/20200610132403.2539519-1-martin@geanix.com/#t)
+> 
+> > ---
+> >  drivers/rtc/rtc-max77686.c | 20 ++++++++++++++++++--
+> >  1 file changed, 18 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/rtc/rtc-max77686.c b/drivers/rtc/rtc-max77686.c
+> > index 03ebcf1c0f3d..645de5af707b 100644
+> > --- a/drivers/rtc/rtc-max77686.c
+> > +++ b/drivers/rtc/rtc-max77686.c
+> > @@ -805,17 +805,33 @@ static int max77686_rtc_remove(struct platform_device *pdev)
+> >  #ifdef CONFIG_PM_SLEEP
+> >  static int max77686_rtc_suspend(struct device *dev)
+> >  {
+> > +	struct max77686_rtc_info *info = dev_get_drvdata(dev);
+> > +	int ret = 0;
+> > +
+> >  	if (device_may_wakeup(dev)) {
+> >  		struct max77686_rtc_info *info = dev_get_drvdata(dev);
+> >  
+> > -		return enable_irq_wake(info->virq);
+> > +		ret = enable_irq_wake(info->virq);
+> >  	}
+> >  
+> > -	return 0;
+> > +	/*
+> > +	 * Main IRQ (not virtual) must be disabled during suspend because if it
+> > +	 * happens while suspended it will be handled before resuming I2C.
+> > +	 *
+> > +	 * Since Main IRQ is shared, all its users should disable it to be sure
+> > +	 * it won't fire while one of them is still suspended.
+> > +	 */
+> > +	disable_irq(info->rtc_irq);
+> > +
+> > +	return ret;
+> >  }
+> >  
+> >  static int max77686_rtc_resume(struct device *dev)
+> >  {
+> > +	struct max77686_rtc_info *info = dev_get_drvdata(dev);
+> > +
+> > +	enable_irq(info->rtc_irq);
+> > +
+> >  	if (device_may_wakeup(dev)) {
+> >  		struct max77686_rtc_info *info = dev_get_drvdata(dev);
+> >  
+> > -- 
+> > 2.17.1
+> > 
+> 
+> -- 
+> Alexandre Belloni, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
