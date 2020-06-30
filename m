@@ -2,344 +2,188 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_50_75,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDE49C433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52B3CC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id BDA9120702
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:46:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A7ED20702
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 11:46:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="azIpapjS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733091AbgF3LqQ (ORCPT
+        id S1733097AbgF3Lqd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 07:46:16 -0400
-Received: from asavdk4.altibox.net ([109.247.116.15]:43228 "EHLO
-        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733080AbgF3LqP (ORCPT
+        Tue, 30 Jun 2020 07:46:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56658 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731944AbgF3Lqc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 07:46:15 -0400
-Received: from ravnborg.org (unknown [188.228.123.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by asavdk4.altibox.net (Postfix) with ESMTPS id 9A64880535;
-        Tue, 30 Jun 2020 13:46:09 +0200 (CEST)
-Date:   Tue, 30 Jun 2020 13:46:08 +0200
-From:   Sam Ravnborg <sam@ravnborg.org>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, od@zcrc.me
-Subject: Re: [PATCH v2 07/10] drm/ingenic: Move register definitions to
- ingenic-drm.h
-Message-ID: <20200630114608.GC560155@ravnborg.org>
-References: <20200629235210.441709-1-paul@crapouillou.net>
- <20200629235210.441709-7-paul@crapouillou.net>
+        Tue, 30 Jun 2020 07:46:32 -0400
+Received: from mail-lj1-x242.google.com (mail-lj1-x242.google.com [IPv6:2a00:1450:4864:20::242])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9938C061755
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 04:46:31 -0700 (PDT)
+Received: by mail-lj1-x242.google.com with SMTP id q7so8832187ljm.1
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 04:46:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sFhX7QV1ZJHlGJSXvrR+TtCCSjWX8gXgJM2sQ/0NzMQ=;
+        b=azIpapjSNCTUdv0mtHkly/y2XXN947eAPmIZuK8SfeXM1VHpZP9cHWZ5oGzUX0rlST
+         sajoLuEIiLdBKscbgH5D7Sy15AY04RIhKOi6OJ+OBVk8ys2xViLzu0+KrkuoxzuYCPtb
+         nQst/6BNoaMcf39ngth3XHDQmjUjU8CxZeO8Jc59KpXOmP6gaLejwMUajk+l8igKNirA
+         GWXcX4L3LELlT8PWPYoOKAC7GIgnFJHi+LOBSG7a0ByQQgHA7ENhjrtbEYM+Mk/RD73S
+         MslyP0qTOcy9o+M6bbj9ruF301TueNMmSihmEgvd+Phm+4VLaukfFXuqGjcxaX7DGrO3
+         UHRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sFhX7QV1ZJHlGJSXvrR+TtCCSjWX8gXgJM2sQ/0NzMQ=;
+        b=ZGHz3D8PAY02HQvcZ+Jmqo5r/acbnMMOk9OqKv+7Exf1ZHSrBd6RA0wqAkS58eEI+y
+         fMxR1E4x5FA1a/2F9T11moBgFWx26Cr0Z1a1JV8oU+oNitqY1q9hXq7EnETgQulcRYJ4
+         4X8qRPlh/CXsSgdBAo4v7c5MmulEv60Pzn1IMGHiu3Ol7ghL0X5jRssa3Kg1pz+HNPir
+         sEbZ+BKpwOUlcXvdTM0tP+Pm9RGMHGUgoLYUtNCLrAPsiwmcAsW2phxEsqV7mKweg+9c
+         JT7aS51OaTrGWddEdOr4//l2DXRqZ8JExXV9mWPM2PsFPv8iZIueGZBHfYmpqJOgXkhD
+         RpQA==
+X-Gm-Message-State: AOAM533MV179aZ5g1XbtdxQfN5HzJ7GpImw+2/NdV4IRpOP8Jnr8ugZH
+        AtNti36HIk7kgGH1FOgxrU8Y6e9yINPDF1m4+dnqCA==
+X-Google-Smtp-Source: ABdhPJwznset+KDtI0yZGVRi0+xkPKFKcnVg5Ufvb7fhILr2kGyutkQzLR/OehI81NBp/Jz5b+IrlDSmHjljk0cyy0E=
+X-Received: by 2002:a2e:8855:: with SMTP id z21mr5660314ljj.325.1593517590395;
+ Tue, 30 Jun 2020 04:46:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200629235210.441709-7-paul@crapouillou.net>
-X-CMAE-Score: 0
-X-CMAE-Analysis: v=2.3 cv=aP3eV41m c=1 sm=1 tr=0
-        a=S6zTFyMACwkrwXSdXUNehg==:117 a=S6zTFyMACwkrwXSdXUNehg==:17
-        a=kj9zAlcOel0A:10 a=ER_8r6IbAAAA:8 a=7gkXJVJtAAAA:8 a=e5mUnYsNAAAA:8
-        a=8_MGJwbRltm55tZ9CNwA:9 a=CjuIK1q_8ugA:10 a=9LHmKk7ezEChjTCyhBa9:22
-        a=E9Po1WZjFZOl8hwRPBS3:22 a=Vxmtnl_E_bksehYqCbjh:22
-        a=pHzHmUro8NiASowvMSCR:22 a=nt3jZW36AmriUCFCBwmW:22
+References: <20200625144509.17918-1-daniel.lezcano@linaro.org>
+In-Reply-To: <20200625144509.17918-1-daniel.lezcano@linaro.org>
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+Date:   Tue, 30 Jun 2020 17:16:19 +0530
+Message-ID: <CAP245DVy+Z9D+6=-cX4TaGFoK-e2N+mWwOvNYOe_E9Fh=7vnaA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/5] thermal: core: Add helpers to browse the cdev, tz
+ and governor list
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Zhang Rui <rui.zhang@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Ram Chandrasekar <rkumbako@codeaurora.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 01:52:07AM +0200, Paul Cercueil wrote:
-> Move the register definitions to ingenic-drm.h, to keep
-> ingenic-drm-drv.c tidy.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Acked-by: Sam Ravnborg <sam@ravnborg.org>
+On Thu, Jun 25, 2020 at 8:15 PM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
+>
+> The cdev, tz and governor list, as well as their respective locks are
+> statically defined in the thermal_core.c file.
+>
+> In order to give a sane access to these list, like browsing all the
+> thermal zones or all the cooling devices, let's define a set of
+> helpers where we pass a callback as a parameter to be called for each
+> thermal entity.
+>
+> We keep the self-encapsulation and ensure the locks are correctly
+> taken when looking at the list.
+>
+> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 > ---
-> 
-> Notes:
->     v2: Fix SPDX license tag
-> 
->  drivers/gpu/drm/ingenic/ingenic-drm-drv.c | 116 +-------------------
->  drivers/gpu/drm/ingenic/ingenic-drm.h     | 126 ++++++++++++++++++++++
->  2 files changed, 128 insertions(+), 114 deletions(-)
->  create mode 100644 drivers/gpu/drm/ingenic/ingenic-drm.h
-> 
-> diff --git a/drivers/gpu/drm/ingenic/ingenic-drm-drv.c b/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
-> index f7b0c5dc8cd8..6590b61cb915 100644
-> --- a/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
-> +++ b/drivers/gpu/drm/ingenic/ingenic-drm-drv.c
-> @@ -4,6 +4,8 @@
->  //
->  // Copyright (C) 2019, Paul Cercueil <paul@crapouillou.net>
->  
-> +#include "ingenic-drm.h"
+>  drivers/thermal/thermal_core.c | 51 ++++++++++++++++++++++++++++++++++
+
+Is the idea to not use thermal_helpers.c from now on? It fits
+perfectly with a patch I have to merge all its contents to
+thermal_core.c :-)
+
+
+>  drivers/thermal/thermal_core.h |  9 ++++++
+>  2 files changed, 60 insertions(+)
+>
+> diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+> index 2a3f83265d8b..e2f8d2550ecd 100644
+> --- a/drivers/thermal/thermal_core.c
+> +++ b/drivers/thermal/thermal_core.c
+> @@ -611,6 +611,57 @@ void thermal_zone_device_rebind_exception(struct thermal_zone_device *tz,
+>         mutex_unlock(&thermal_list_lock);
+>  }
+>
+> +int for_each_thermal_governor(int (*cb)(struct thermal_governor *, void *),
+> +                             void *data)
+
+
+> +{
+> +       struct thermal_governor *gov;
+> +       int ret = 0;
 > +
->  #include <linux/clk.h>
->  #include <linux/dma-mapping.h>
->  #include <linux/module.h>
-> @@ -32,120 +34,6 @@
->  #include <drm/drm_simple_kms_helper.h>
->  #include <drm/drm_vblank.h>
->  
-> -#define JZ_REG_LCD_CFG				0x00
-> -#define JZ_REG_LCD_VSYNC			0x04
-> -#define JZ_REG_LCD_HSYNC			0x08
-> -#define JZ_REG_LCD_VAT				0x0C
-> -#define JZ_REG_LCD_DAH				0x10
-> -#define JZ_REG_LCD_DAV				0x14
-> -#define JZ_REG_LCD_PS				0x18
-> -#define JZ_REG_LCD_CLS				0x1C
-> -#define JZ_REG_LCD_SPL				0x20
-> -#define JZ_REG_LCD_REV				0x24
-> -#define JZ_REG_LCD_CTRL				0x30
-> -#define JZ_REG_LCD_STATE			0x34
-> -#define JZ_REG_LCD_IID				0x38
-> -#define JZ_REG_LCD_DA0				0x40
-> -#define JZ_REG_LCD_SA0				0x44
-> -#define JZ_REG_LCD_FID0				0x48
-> -#define JZ_REG_LCD_CMD0				0x4C
-> -#define JZ_REG_LCD_DA1				0x50
-> -#define JZ_REG_LCD_SA1				0x54
-> -#define JZ_REG_LCD_FID1				0x58
-> -#define JZ_REG_LCD_CMD1				0x5C
-> -
-> -#define JZ_LCD_CFG_SLCD				BIT(31)
-> -#define JZ_LCD_CFG_PS_DISABLE			BIT(23)
-> -#define JZ_LCD_CFG_CLS_DISABLE			BIT(22)
-> -#define JZ_LCD_CFG_SPL_DISABLE			BIT(21)
-> -#define JZ_LCD_CFG_REV_DISABLE			BIT(20)
-> -#define JZ_LCD_CFG_HSYNCM			BIT(19)
-> -#define JZ_LCD_CFG_PCLKM			BIT(18)
-> -#define JZ_LCD_CFG_INV				BIT(17)
-> -#define JZ_LCD_CFG_SYNC_DIR			BIT(16)
-> -#define JZ_LCD_CFG_PS_POLARITY			BIT(15)
-> -#define JZ_LCD_CFG_CLS_POLARITY			BIT(14)
-> -#define JZ_LCD_CFG_SPL_POLARITY			BIT(13)
-> -#define JZ_LCD_CFG_REV_POLARITY			BIT(12)
-> -#define JZ_LCD_CFG_HSYNC_ACTIVE_LOW		BIT(11)
-> -#define JZ_LCD_CFG_PCLK_FALLING_EDGE		BIT(10)
-> -#define JZ_LCD_CFG_DE_ACTIVE_LOW		BIT(9)
-> -#define JZ_LCD_CFG_VSYNC_ACTIVE_LOW		BIT(8)
-> -#define JZ_LCD_CFG_18_BIT			BIT(7)
-> -#define JZ_LCD_CFG_PDW				(BIT(5) | BIT(4))
-> -
-> -#define JZ_LCD_CFG_MODE_GENERIC_16BIT		0
-> -#define JZ_LCD_CFG_MODE_GENERIC_18BIT		BIT(7)
-> -#define JZ_LCD_CFG_MODE_GENERIC_24BIT		BIT(6)
-> -
-> -#define JZ_LCD_CFG_MODE_SPECIAL_TFT_1		1
-> -#define JZ_LCD_CFG_MODE_SPECIAL_TFT_2		2
-> -#define JZ_LCD_CFG_MODE_SPECIAL_TFT_3		3
-> -
-> -#define JZ_LCD_CFG_MODE_TV_OUT_P		4
-> -#define JZ_LCD_CFG_MODE_TV_OUT_I		6
-> -
-> -#define JZ_LCD_CFG_MODE_SINGLE_COLOR_STN	8
-> -#define JZ_LCD_CFG_MODE_SINGLE_MONOCHROME_STN	9
-> -#define JZ_LCD_CFG_MODE_DUAL_COLOR_STN		10
-> -#define JZ_LCD_CFG_MODE_DUAL_MONOCHROME_STN	11
-> -
-> -#define JZ_LCD_CFG_MODE_8BIT_SERIAL		12
-> -#define JZ_LCD_CFG_MODE_LCM			13
-> -
-> -#define JZ_LCD_VSYNC_VPS_OFFSET			16
-> -#define JZ_LCD_VSYNC_VPE_OFFSET			0
-> -
-> -#define JZ_LCD_HSYNC_HPS_OFFSET			16
-> -#define JZ_LCD_HSYNC_HPE_OFFSET			0
-> -
-> -#define JZ_LCD_VAT_HT_OFFSET			16
-> -#define JZ_LCD_VAT_VT_OFFSET			0
-> -
-> -#define JZ_LCD_DAH_HDS_OFFSET			16
-> -#define JZ_LCD_DAH_HDE_OFFSET			0
-> -
-> -#define JZ_LCD_DAV_VDS_OFFSET			16
-> -#define JZ_LCD_DAV_VDE_OFFSET			0
-> -
-> -#define JZ_LCD_CTRL_BURST_4			(0x0 << 28)
-> -#define JZ_LCD_CTRL_BURST_8			(0x1 << 28)
-> -#define JZ_LCD_CTRL_BURST_16			(0x2 << 28)
-> -#define JZ_LCD_CTRL_RGB555			BIT(27)
-> -#define JZ_LCD_CTRL_OFUP			BIT(26)
-> -#define JZ_LCD_CTRL_FRC_GRAYSCALE_16		(0x0 << 24)
-> -#define JZ_LCD_CTRL_FRC_GRAYSCALE_4		(0x1 << 24)
-> -#define JZ_LCD_CTRL_FRC_GRAYSCALE_2		(0x2 << 24)
-> -#define JZ_LCD_CTRL_PDD_MASK			(0xff << 16)
-> -#define JZ_LCD_CTRL_EOF_IRQ			BIT(13)
-> -#define JZ_LCD_CTRL_SOF_IRQ			BIT(12)
-> -#define JZ_LCD_CTRL_OFU_IRQ			BIT(11)
-> -#define JZ_LCD_CTRL_IFU0_IRQ			BIT(10)
-> -#define JZ_LCD_CTRL_IFU1_IRQ			BIT(9)
-> -#define JZ_LCD_CTRL_DD_IRQ			BIT(8)
-> -#define JZ_LCD_CTRL_QDD_IRQ			BIT(7)
-> -#define JZ_LCD_CTRL_REVERSE_ENDIAN		BIT(6)
-> -#define JZ_LCD_CTRL_LSB_FISRT			BIT(5)
-> -#define JZ_LCD_CTRL_DISABLE			BIT(4)
-> -#define JZ_LCD_CTRL_ENABLE			BIT(3)
-> -#define JZ_LCD_CTRL_BPP_1			0x0
-> -#define JZ_LCD_CTRL_BPP_2			0x1
-> -#define JZ_LCD_CTRL_BPP_4			0x2
-> -#define JZ_LCD_CTRL_BPP_8			0x3
-> -#define JZ_LCD_CTRL_BPP_15_16			0x4
-> -#define JZ_LCD_CTRL_BPP_18_24			0x5
-> -#define JZ_LCD_CTRL_BPP_MASK			(JZ_LCD_CTRL_RGB555 | (0x7 << 0))
-> -
-> -#define JZ_LCD_CMD_SOF_IRQ			BIT(31)
-> -#define JZ_LCD_CMD_EOF_IRQ			BIT(30)
-> -#define JZ_LCD_CMD_ENABLE_PAL			BIT(28)
-> -
-> -#define JZ_LCD_SYNC_MASK			0x3ff
-> -
-> -#define JZ_LCD_STATE_EOF_IRQ			BIT(5)
-> -#define JZ_LCD_STATE_SOF_IRQ			BIT(4)
-> -#define JZ_LCD_STATE_DISABLED			BIT(0)
-> -
->  struct ingenic_dma_hwdesc {
->  	u32 next;
->  	u32 addr;
-> diff --git a/drivers/gpu/drm/ingenic/ingenic-drm.h b/drivers/gpu/drm/ingenic/ingenic-drm.h
-> new file mode 100644
-> index 000000000000..cb578cff7bb1
-> --- /dev/null
-> +++ b/drivers/gpu/drm/ingenic/ingenic-drm.h
-> @@ -0,0 +1,126 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +//
-> +// Ingenic JZ47xx KMS driver - Register definitions and private API
-> +//
-> +// Copyright (C) 2020, Paul Cercueil <paul@crapouillou.net>
+> +       mutex_lock(&thermal_governor_lock);
+> +       list_for_each_entry(gov, &thermal_governor_list, governor_list) {
+> +               ret = cb(gov, data);
+> +               if (ret)
+> +                       break;
+> +       }
+> +       mutex_unlock(&thermal_governor_lock);
 > +
-> +#ifndef DRIVERS_GPU_DRM_INGENIC_INGENIC_DRM_H
-> +#define DRIVERS_GPU_DRM_INGENIC_INGENIC_DRM_H
+> +       return ret;
+> +}
 > +
-> +#include <linux/bitops.h>
+> +int for_each_thermal_cooling_device(int (*cb)(struct thermal_cooling_device *,
+> +                                             void *), void *data)
+> +{
+> +       struct thermal_cooling_device *cdev;
+> +       int ret = 0;
 > +
-> +#define JZ_REG_LCD_CFG				0x00
-> +#define JZ_REG_LCD_VSYNC			0x04
-> +#define JZ_REG_LCD_HSYNC			0x08
-> +#define JZ_REG_LCD_VAT				0x0C
-> +#define JZ_REG_LCD_DAH				0x10
-> +#define JZ_REG_LCD_DAV				0x14
-> +#define JZ_REG_LCD_PS				0x18
-> +#define JZ_REG_LCD_CLS				0x1C
-> +#define JZ_REG_LCD_SPL				0x20
-> +#define JZ_REG_LCD_REV				0x24
-> +#define JZ_REG_LCD_CTRL				0x30
-> +#define JZ_REG_LCD_STATE			0x34
-> +#define JZ_REG_LCD_IID				0x38
-> +#define JZ_REG_LCD_DA0				0x40
-> +#define JZ_REG_LCD_SA0				0x44
-> +#define JZ_REG_LCD_FID0				0x48
-> +#define JZ_REG_LCD_CMD0				0x4C
-> +#define JZ_REG_LCD_DA1				0x50
-> +#define JZ_REG_LCD_SA1				0x54
-> +#define JZ_REG_LCD_FID1				0x58
-> +#define JZ_REG_LCD_CMD1				0x5C
+> +       mutex_lock(&thermal_list_lock);
+> +       list_for_each_entry(cdev, &thermal_cdev_list, node) {
+> +               ret = cb(cdev, data);
+> +               if (ret)
+> +                       break;
+> +       }
+> +       mutex_unlock(&thermal_list_lock);
 > +
-> +#define JZ_LCD_CFG_SLCD				BIT(31)
-> +#define JZ_LCD_CFG_PS_DISABLE			BIT(23)
-> +#define JZ_LCD_CFG_CLS_DISABLE			BIT(22)
-> +#define JZ_LCD_CFG_SPL_DISABLE			BIT(21)
-> +#define JZ_LCD_CFG_REV_DISABLE			BIT(20)
-> +#define JZ_LCD_CFG_HSYNCM			BIT(19)
-> +#define JZ_LCD_CFG_PCLKM			BIT(18)
-> +#define JZ_LCD_CFG_INV				BIT(17)
-> +#define JZ_LCD_CFG_SYNC_DIR			BIT(16)
-> +#define JZ_LCD_CFG_PS_POLARITY			BIT(15)
-> +#define JZ_LCD_CFG_CLS_POLARITY			BIT(14)
-> +#define JZ_LCD_CFG_SPL_POLARITY			BIT(13)
-> +#define JZ_LCD_CFG_REV_POLARITY			BIT(12)
-> +#define JZ_LCD_CFG_HSYNC_ACTIVE_LOW		BIT(11)
-> +#define JZ_LCD_CFG_PCLK_FALLING_EDGE		BIT(10)
-> +#define JZ_LCD_CFG_DE_ACTIVE_LOW		BIT(9)
-> +#define JZ_LCD_CFG_VSYNC_ACTIVE_LOW		BIT(8)
-> +#define JZ_LCD_CFG_18_BIT			BIT(7)
-> +#define JZ_LCD_CFG_PDW				(BIT(5) | BIT(4))
+> +       return ret;
+> +}
 > +
-> +#define JZ_LCD_CFG_MODE_GENERIC_16BIT		0
-> +#define JZ_LCD_CFG_MODE_GENERIC_18BIT		BIT(7)
-> +#define JZ_LCD_CFG_MODE_GENERIC_24BIT		BIT(6)
+> +int for_each_thermal_zone(int (*cb)(struct thermal_zone_device *, void *),
+> +                         void *data)
+> +{
+> +       struct thermal_zone_device *tz;
+> +       int ret = 0;
 > +
-> +#define JZ_LCD_CFG_MODE_SPECIAL_TFT_1		1
-> +#define JZ_LCD_CFG_MODE_SPECIAL_TFT_2		2
-> +#define JZ_LCD_CFG_MODE_SPECIAL_TFT_3		3
+> +       mutex_lock(&thermal_list_lock);
+> +       list_for_each_entry(tz, &thermal_tz_list, node) {
+> +               ret = cb(tz, data);
+> +               if (ret)
+> +                       break;
+> +       }
+> +       mutex_unlock(&thermal_list_lock);
 > +
-> +#define JZ_LCD_CFG_MODE_TV_OUT_P		4
-> +#define JZ_LCD_CFG_MODE_TV_OUT_I		6
+> +       return ret;
+> +}
 > +
-> +#define JZ_LCD_CFG_MODE_SINGLE_COLOR_STN	8
-> +#define JZ_LCD_CFG_MODE_SINGLE_MONOCHROME_STN	9
-> +#define JZ_LCD_CFG_MODE_DUAL_COLOR_STN		10
-> +#define JZ_LCD_CFG_MODE_DUAL_MONOCHROME_STN	11
+>  void thermal_zone_device_unbind_exception(struct thermal_zone_device *tz,
+>                                           const char *cdev_type, size_t size)
+>  {
+> diff --git a/drivers/thermal/thermal_core.h b/drivers/thermal/thermal_core.h
+> index 4e271016b7a9..bb8f8aee79eb 100644
+> --- a/drivers/thermal/thermal_core.h
+> +++ b/drivers/thermal/thermal_core.h
+> @@ -41,6 +41,15 @@ extern struct thermal_governor *__governor_thermal_table_end[];
+>              __governor < __governor_thermal_table_end; \
+>              __governor++)
+>
+> +int for_each_thermal_zone(int (*cb)(struct thermal_zone_device *, void *),
+> +                         void *);
 > +
-> +#define JZ_LCD_CFG_MODE_8BIT_SERIAL		12
-> +#define JZ_LCD_CFG_MODE_LCM			13
+> +int for_each_thermal_cooling_device(int (*cb)(struct thermal_cooling_device *,
+> +                                             void *), void *);
 > +
-> +#define JZ_LCD_VSYNC_VPS_OFFSET			16
-> +#define JZ_LCD_VSYNC_VPE_OFFSET			0
+> +int for_each_thermal_governor(int (*cb)(struct thermal_governor *, void *),
+> +                             void *thermal_governor);
 > +
-> +#define JZ_LCD_HSYNC_HPS_OFFSET			16
-> +#define JZ_LCD_HSYNC_HPE_OFFSET			0
-> +
-> +#define JZ_LCD_VAT_HT_OFFSET			16
-> +#define JZ_LCD_VAT_VT_OFFSET			0
-> +
-> +#define JZ_LCD_DAH_HDS_OFFSET			16
-> +#define JZ_LCD_DAH_HDE_OFFSET			0
-> +
-> +#define JZ_LCD_DAV_VDS_OFFSET			16
-> +#define JZ_LCD_DAV_VDE_OFFSET			0
-> +
-> +#define JZ_LCD_CTRL_BURST_4			(0x0 << 28)
-> +#define JZ_LCD_CTRL_BURST_8			(0x1 << 28)
-> +#define JZ_LCD_CTRL_BURST_16			(0x2 << 28)
-> +#define JZ_LCD_CTRL_RGB555			BIT(27)
-> +#define JZ_LCD_CTRL_OFUP			BIT(26)
-> +#define JZ_LCD_CTRL_FRC_GRAYSCALE_16		(0x0 << 24)
-> +#define JZ_LCD_CTRL_FRC_GRAYSCALE_4		(0x1 << 24)
-> +#define JZ_LCD_CTRL_FRC_GRAYSCALE_2		(0x2 << 24)
-> +#define JZ_LCD_CTRL_PDD_MASK			(0xff << 16)
-> +#define JZ_LCD_CTRL_EOF_IRQ			BIT(13)
-> +#define JZ_LCD_CTRL_SOF_IRQ			BIT(12)
-> +#define JZ_LCD_CTRL_OFU_IRQ			BIT(11)
-> +#define JZ_LCD_CTRL_IFU0_IRQ			BIT(10)
-> +#define JZ_LCD_CTRL_IFU1_IRQ			BIT(9)
-> +#define JZ_LCD_CTRL_DD_IRQ			BIT(8)
-> +#define JZ_LCD_CTRL_QDD_IRQ			BIT(7)
-> +#define JZ_LCD_CTRL_REVERSE_ENDIAN		BIT(6)
-> +#define JZ_LCD_CTRL_LSB_FISRT			BIT(5)
-> +#define JZ_LCD_CTRL_DISABLE			BIT(4)
-> +#define JZ_LCD_CTRL_ENABLE			BIT(3)
-> +#define JZ_LCD_CTRL_BPP_1			0x0
-> +#define JZ_LCD_CTRL_BPP_2			0x1
-> +#define JZ_LCD_CTRL_BPP_4			0x2
-> +#define JZ_LCD_CTRL_BPP_8			0x3
-> +#define JZ_LCD_CTRL_BPP_15_16			0x4
-> +#define JZ_LCD_CTRL_BPP_18_24			0x5
-> +#define JZ_LCD_CTRL_BPP_MASK			(JZ_LCD_CTRL_RGB555 | 0x7)
-> +
-> +#define JZ_LCD_CMD_SOF_IRQ			BIT(31)
-> +#define JZ_LCD_CMD_EOF_IRQ			BIT(30)
-> +#define JZ_LCD_CMD_ENABLE_PAL			BIT(28)
-> +
-> +#define JZ_LCD_SYNC_MASK			0x3ff
-> +
-> +#define JZ_LCD_STATE_EOF_IRQ			BIT(5)
-> +#define JZ_LCD_STATE_SOF_IRQ			BIT(4)
-> +#define JZ_LCD_STATE_DISABLED			BIT(0)
-> +
-> +#endif /* DRIVERS_GPU_DRM_INGENIC_INGENIC_DRM_H */
-> -- 
-> 2.27.0
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>  struct thermal_attr {
+>         struct device_attribute attr;
+>         char name[THERMAL_NAME_LENGTH];
+> --
+> 2.17.1
+>
