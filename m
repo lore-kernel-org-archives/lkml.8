@@ -2,250 +2,384 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17388C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:37:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D1EC433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id D8ADE20759
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:37:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="afwd75JW"
+	by mail.kernel.org (Postfix) with ESMTP id 8990720759
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 06:37:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730403AbgF3GhT (ORCPT
+        id S1730409AbgF3Ghp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 02:37:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37218 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730386AbgF3GhP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 02:37:15 -0400
-Received: from mail-ot1-x343.google.com (mail-ot1-x343.google.com [IPv6:2607:f8b0:4864:20::343])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFEADC061755
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 23:37:14 -0700 (PDT)
-Received: by mail-ot1-x343.google.com with SMTP id 72so17580694otc.3
-        for <linux-kernel@vger.kernel.org>; Mon, 29 Jun 2020 23:37:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QkjCMEhelPuir6tJNrGPv5JSjPKA0iYWqx+HiSFw4CM=;
-        b=afwd75JWFLA1yb9zL4acHZ7SMaN1NprTUO6FOx4gQfPSiMQowVLZwmxHGRCuy/N0w5
-         3y0Ld60YONgaGAiyb1g9uhKnN0jdfERPxLDVKJosENeG1C0if/ejAw2VCtUXHPAeoI9X
-         oCMVfQloTHOKh1DFR9mPVOMAkh4pQLKnKobWaXOo6iIC8ctoqD6w7iVfANJXL1KtSKb3
-         U/ihaO/7xx82qvWt/Qf4vCREEAUkzSqaKtO7lsFZHQ1xGtYvsEcbg9cB+SKJhw6KVSSk
-         3+XhQxpN422g5ySs7I17x4GKsmc3s9BqPUj29Jl4ixlMLxvewtMmrgQrtMY7TRN+vg80
-         Aeeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QkjCMEhelPuir6tJNrGPv5JSjPKA0iYWqx+HiSFw4CM=;
-        b=A9GmjHlxT3LRfnFB6BEaxjPpa+KUVCch7Ww5sZSUhHkiExsk6WVEHwN+bGKZp1aRca
-         dhuZjO1Rtjlaxl1PA876YGAbzPJd4F2T4Cf8FE+u94HIW0BYoQBVzzIqU1+Hx5741oeK
-         8LfntSh8agSVvxpjyQ7KABsZciUaaza3IkNfcNORJJ/15vJjeFeCR0T2uaqTKS1GRiwf
-         3XJzumdDwCONCqwiu18mUfxfZNzjqnUPrTfqw7n+1yUq3oV2pe7IFasjOsTOafwvR7K+
-         HkCKYCkukgmSky/x92R9VzYyixN0qRVRPXObYOxlwv0nb3jpyRcb3ES95eCZbM4JcwGU
-         NaJw==
-X-Gm-Message-State: AOAM533dgugs0E0qIe/TFpO0ROYkBpgIAzrjz08naMysXpSPOxDJlKUt
-        fupmfASoi/2Uz4ve4CZVAbcpZummQoTo3ZLiaI5W79dzwl8=
-X-Google-Smtp-Source: ABdhPJx4mdHrEiTKaeKy3dwowu1dmSH/c8pKR5jBjqHLXF39fN4+Oc02y1xGUuamTIyRpf7y//Mfpg8TzxVJVUDUvxI=
-X-Received: by 2002:a9d:186:: with SMTP id e6mr16894916ote.33.1593499034050;
- Mon, 29 Jun 2020 23:37:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1593397455.git.zong.li@sifive.com> <CAAhSdy1uFt3rqf8cSHqS=W90AoeQjo10R_Ak4Cknb_QUvH1SPQ@mail.gmail.com>
- <CANXhq0p_HoD6npHmoxxYHohBsgihfe5S-0DG04xLpQ3VO1w7oQ@mail.gmail.com>
- <CAAhSdy0Ed8zQ5LVZva6p2TWqTOzrDRtL0JJkAdmpzWFhzJLUfg@mail.gmail.com>
- <CANXhq0o9BMe6G6kv-zO7OvLTfKsz-4XKsoZJe3nxvX9_6uunvw@mail.gmail.com> <CAAhSdy1fEge0AbKH6B72SwVHM-heN0QJPO0rQuCK5QhXq3uA0g@mail.gmail.com>
-In-Reply-To: <CAAhSdy1fEge0AbKH6B72SwVHM-heN0QJPO0rQuCK5QhXq3uA0g@mail.gmail.com>
-From:   Zong Li <zong.li@sifive.com>
-Date:   Tue, 30 Jun 2020 14:37:02 +0800
-Message-ID: <CANXhq0ojMx2c+OJ56YWiQG-6iHa0XvU=4qzdOvKL2_iUzwF20A@mail.gmail.com>
-Subject: Re: [RFC PATCH 0/6] Support raw event and DT for perf on RISC-V
-To:     Anup Patel <anup@brainfault.org>
-Cc:     Alan Kao <alankao@andestech.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 30 Jun 2020 02:37:45 -0400
+Received: from mga04.intel.com ([192.55.52.120]:47553 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730373AbgF3Gho (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 02:37:44 -0400
+IronPort-SDR: huZ27mEyBq+IB1htHzkcC/gLV64tGpBS4fRQYuxqdb7IKMt6VBap+Y4aJOhqzeOf4GTbq5hXEw
+ ZXRx399Y/yVg==
+X-IronPort-AV: E=McAfee;i="6000,8403,9666"; a="143638920"
+X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
+   d="scan'208";a="143638920"
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Jun 2020 23:37:13 -0700
+IronPort-SDR: Id1b9LUdRv0jr27N7ZjFhoSD9J+C6WE5exCoS/fB3XJmLM7pPPbY66tSR1b82D29aeNdLamhyV
+ /M7QDM99xfjQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.75,296,1589266800"; 
+   d="scan'208";a="480822274"
+Received: from brentlu-desk0.itwn.intel.com ([10.5.253.11])
+  by fmsmga006.fm.intel.com with ESMTP; 29 Jun 2020 23:37:03 -0700
+From:   Brent Lu <brent.lu@intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     Cezary Rojewski <cezary.rojewski@intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Guennadi Liakhovetski <guennadi.liakhovetski@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Naveen Manohar <naveen.m@intel.com>,
+        Yong Zhi <yong.zhi@intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Libin Yang <libin.yang@linux.intel.com>,
+        Brent Lu <brent.lu@intel.com>,
+        Mac Chiang <mac.chiang@intel.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        Amery Song <chao.song@intel.com>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Jason Yan <yanaijie@huawei.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: Intel: bxt-da7219-max98357a: support MAX98390 speaker amp
+Date:   Tue, 30 Jun 2020 14:32:02 +0800
+Message-Id: <1593498722-7074-1-git-send-email-brent.lu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 29, 2020 at 9:23 PM Anup Patel <anup@brainfault.org> wrote:
->
-> On Mon, Jun 29, 2020 at 6:23 PM Zong Li <zong.li@sifive.com> wrote:
-> >
-> > On Mon, Jun 29, 2020 at 4:28 PM Anup Patel <anup@brainfault.org> wrote:
-> > >
-> > > On Mon, Jun 29, 2020 at 11:22 AM Zong Li <zong.li@sifive.com> wrote:
-> > > >
-> > > > On Mon, Jun 29, 2020 at 12:53 PM Anup Patel <anup@brainfault.org> wrote:
-> > > > >
-> > > > > On Mon, Jun 29, 2020 at 8:49 AM Zong Li <zong.li@sifive.com> wrote:
-> > > > > >
-> > > > > > This patch set adds raw event support on RISC-V. In addition, we
-> > > > > > introduce the DT mechanism to make our perf more generic and common.
-> > > > > >
-> > > > > > Currently, we set the hardware events by writing the mhpmeventN CSRs, it
-> > > > > > would raise an illegal instruction exception and trap into m-mode to
-> > > > > > emulate event selector CSRs access. It doesn't make sense because we
-> > > > > > shouldn't write the m-mode CSRs in s-mode. Ideally, we should set event
-> > > > > > selector through standard SBI call or the shadow CSRs of s-mode. We have
-> > > > > > prepared a proposal of a new SBI extension, called "PMU SBI extension",
-> > > > > > but we also discussing the feasibility of accessing these PMU CSRs on
-> > > > > > s-mode at the same time, such as delegation mechanism, so I was
-> > > > > > wondering if we could use SBI calls first and make the PMU SBI extension
-> > > > > > as legacy when s-mode access mechanism is accepted by Foundation? or
-> > > > > > keep the current situation to see what would happen in the future.
-> > > > > >
-> > > > > > This patch set also introduces the DT mechanism, we don't want to add too
-> > > > > > much platform-dependency code in perf like other architectures, so we
-> > > > > > put the mapping of generic hardware events to DT, then we can easy to
-> > > > > > transfer generic hardware events to vendor's own hardware events without
-> > > > > > any platfrom-dependency stuff in our perf.
-> > > > >
-> > > > > Please re-write this series to have RISC-V PMU driver as a regular
-> > > > > platform driver as drivers/perf/riscv_pmu.c.
-> > > > >
-> > > > > The PMU related sources will have to be removed from arch/riscv.
-> > > > >
-> > > > > Based on implementation of final drivers/perf/riscv_pmu.c we will
-> > > > > come-up with drivers/perf/riscv_sbi_pmu.c driver for SBI perf counters.
-> > > > >
-> > > >
-> > > > There are some different ways to implement perf, and current
-> > > > implementation seems to be consensus when perf was introduced at the
-> > > > beginning [0][1]. I don't persist to which one, I could change the
-> > > > implementation as you mentioned if it is a new consensus one.
-> > > >
-> > > > [0] https://github.com/riscv/riscv-linux/pull/124#issuecomment-367563910
-> > >
-> > > I would not recommend taking the original RISC-V linux fork as reference.
-> > >
-> > > Rather we should study how things are done on other architectures.
-> > >
-> > > I really appreciate the attempt to make RISC-V PMU driver depend on DT
-> > > but if we are going this route then we should maximize the use of Linux
-> > > platform driver framework. In fact, whenever possible we should integrate
-> > > RISC-V features as platform drivers under the drivers/ directory.
-> > >
-> >
-> > OK, I would change the implementation to platform driver if there is no
-> > other voice.
-> >
-> > > I thought about SBI PMU counters as well. In future, we can easily
-> > > expose SBI PMU counters as RAW events in the same RISC-V PMU
-> > > driver. The sbi_probe_extension() can be used in RISC-V PMU driver
-> > > to check for SBI PMU counters so no special provisions needed in DT
-> > > for SBI PMU counters.
-> > >
-> >
-> > I thought about probing raw events by SBI extension too, I'm interested if you
-> > have more detail about this.
-> >
-> > It seems to me that it is a little bit hard to return all events
-> > through one SBI call,
-> > so I thought we could map the generic hardware events and maintain their own
-> > raw events by each platform in OpenSBI. But eventually, I thought the
-> > DT mechanism
-> > is more clear and easy than that. Let me know if you have any ideas about
-> > probe function. Thanks.
->
-> We can design SBI calls such that no SBI call is required to read
-> the perf counter.
->
-> The sbi_probe_extension() will only be used to check whether
-> underlying SBI implementation supports SBI PMU extension.
->
-> As-per my initial thoughts, we can potentially have the following SBI calls:
->
-> 1. SBI_PMU_NUM_COUNTERS
->     This call will return the number of SBI PMU counters
-> 2. SBI_PMU_COUNTER_DESCRIBE
->    This call takes two parameters: 1) physical address 2) counter index
->     It will write the description of SBI PMU counter at specified
-> physical address.
->     The details of the SBI PMU counter will include name, type, etc
+Support MAX98390 speaker amplifier on cometlake platform. Driver now
+detects amplifier type in the probe function and installs corresponding
+controls and DAPM widgets/routes in the late_probe function.
 
-The main things are that we need to pass the information of raw events
-and the information of mapping of generic hardware events. Maybe
-this information could be passed by this SBI call.
+Signed-off-by: Brent Lu <brent.lu@intel.com>
+---
+ sound/soc/intel/boards/Kconfig                    |  20 ++++
+ sound/soc/intel/boards/bxt_da7219_max98357a.c     | 129 ++++++++++++++++++++--
+ sound/soc/intel/common/soc-acpi-intel-cml-match.c |   4 +-
+ 3 files changed, 139 insertions(+), 14 deletions(-)
 
-> 3. SBI_PMU_COUNTER_START
->     This call takes two parameters: 1) physical address 2) counter index
->     It will inform SBI implementation to start counting specified counter on the
->     calling HART. The counter value will be written to the specified physical
->     address whenever it changes.
+diff --git a/sound/soc/intel/boards/Kconfig b/sound/soc/intel/boards/Kconfig
+index 3d820e1..b3b863e 100644
+--- a/sound/soc/intel/boards/Kconfig
++++ b/sound/soc/intel/boards/Kconfig
+@@ -291,9 +291,17 @@ config SND_SOC_INTEL_DA7219_MAX98357A_GENERIC
+ 	select SND_SOC_DMIC
+ 	select SND_SOC_HDAC_HDMI
+ 
++config SND_SOC_INTEL_DA7219_MAX98390_GENERIC
++	tristate
++	select SND_SOC_DA7219
++	select SND_SOC_MAX98390
++	select SND_SOC_DMIC
++	select SND_SOC_HDAC_HDMI
++
+ config SND_SOC_INTEL_BXT_DA7219_MAX98357A_COMMON
+ 	tristate
+ 	select SND_SOC_INTEL_DA7219_MAX98357A_GENERIC
++	select SND_SOC_INTEL_DA7219_MAX98390_GENERIC
+ 
+ if SND_SOC_INTEL_APL
+ 
+@@ -309,6 +317,18 @@ config SND_SOC_INTEL_BXT_DA7219_MAX98357A_MACH
+ 	   Say Y or m if you have such a device. This is a recommended option.
+ 	   If unsure select "N".
+ 
++config SND_SOC_INTEL_BXT_DA7219_MAX98390_MACH
++	tristate "Broxton with DA7219 and MAX98390 in I2S Mode"
++	depends on I2C && ACPI && GPIOLIB
++	depends on MFD_INTEL_LPSS || COMPILE_TEST
++	depends on SND_HDA_CODEC_HDMI
++	select SND_SOC_INTEL_BXT_DA7219_MAX98357A_COMMON
++	help
++	   This adds support for ASoC machine driver for Broxton-P platforms
++	   with DA7219 + MAX98390 I2S audio codec.
++	   Say Y or m if you have such a device. This is a recommended option.
++	   If unsure select "N".
++
+ config SND_SOC_INTEL_BXT_RT298_MACH
+ 	tristate "Broxton with RT298 I2S mode"
+ 	depends on I2C && ACPI && GPIOLIB
+diff --git a/sound/soc/intel/boards/bxt_da7219_max98357a.c b/sound/soc/intel/boards/bxt_da7219_max98357a.c
+index 44016c1..12f07e1 100644
+--- a/sound/soc/intel/boards/bxt_da7219_max98357a.c
++++ b/sound/soc/intel/boards/bxt_da7219_max98357a.c
+@@ -25,9 +25,14 @@
+ 
+ #define BXT_DIALOG_CODEC_DAI	"da7219-hifi"
+ #define BXT_MAXIM_CODEC_DAI	"HiFi"
++#define MAX98390_DEV0_NAME	"i2c-MX98390:00"
++#define MAX98390_DEV1_NAME	"i2c-MX98390:01"
+ #define DUAL_CHANNEL		2
+ #define QUAD_CHANNEL		4
+ 
++#define SPKAMP_MAX98357A	1
++#define SPKAMP_MAX98390	2
++
+ static struct snd_soc_jack broxton_headset;
+ static struct snd_soc_jack broxton_hdmi[3];
+ 
+@@ -40,6 +45,7 @@ struct bxt_hdmi_pcm {
+ struct bxt_card_private {
+ 	struct list_head hdmi_pcm_list;
+ 	bool common_hdmi_codec_drv;
++	int spkamp;
+ };
+ 
+ enum {
+@@ -85,13 +91,20 @@ static int platform_clock_control(struct snd_soc_dapm_widget *w,
+ static const struct snd_kcontrol_new broxton_controls[] = {
+ 	SOC_DAPM_PIN_SWITCH("Headphone Jack"),
+ 	SOC_DAPM_PIN_SWITCH("Headset Mic"),
++};
++
++static const struct snd_kcontrol_new max98357a_controls[] = {
+ 	SOC_DAPM_PIN_SWITCH("Spk"),
+ };
+ 
++static const struct snd_kcontrol_new max98390_controls[] = {
++	SOC_DAPM_PIN_SWITCH("Left Spk"),
++	SOC_DAPM_PIN_SWITCH("Right Spk"),
++};
++
+ static const struct snd_soc_dapm_widget broxton_widgets[] = {
+ 	SND_SOC_DAPM_HP("Headphone Jack", NULL),
+ 	SND_SOC_DAPM_MIC("Headset Mic", NULL),
+-	SND_SOC_DAPM_SPK("Spk", NULL),
+ 	SND_SOC_DAPM_MIC("SoC DMIC", NULL),
+ 	SND_SOC_DAPM_SPK("HDMI1", NULL),
+ 	SND_SOC_DAPM_SPK("HDMI2", NULL),
+@@ -100,14 +113,20 @@ static const struct snd_soc_dapm_widget broxton_widgets[] = {
+ 			platform_clock_control,	SND_SOC_DAPM_POST_PMD|SND_SOC_DAPM_PRE_PMU),
+ };
+ 
++static const struct snd_soc_dapm_widget max98357a_widgets[] = {
++	SND_SOC_DAPM_SPK("Spk", NULL),
++};
++
++static const struct snd_soc_dapm_widget max98390_widgets[] = {
++	SND_SOC_DAPM_SPK("Left Spk", NULL),
++	SND_SOC_DAPM_SPK("Right Spk", NULL),
++};
++
+ static const struct snd_soc_dapm_route audio_map[] = {
+ 	/* HP jack connectors - unknown if we have jack detection */
+ 	{"Headphone Jack", NULL, "HPL"},
+ 	{"Headphone Jack", NULL, "HPR"},
+ 
+-	/* speaker */
+-	{"Spk", NULL, "Speaker"},
+-
+ 	/* other jacks */
+ 	{"MIC", NULL, "Headset Mic"},
+ 
+@@ -134,6 +153,17 @@ static const struct snd_soc_dapm_route audio_map[] = {
+ 	{ "Headset Mic", NULL, "Platform Clock" },
+ };
+ 
++static const struct snd_soc_dapm_route max98357a_routes[] = {
++	/* speaker */
++	{"Spk", NULL, "Speaker"},
++};
++
++static const struct snd_soc_dapm_route max98390_routes[] = {
++	/* Speaker */
++	{"Left Spk", NULL, "Left BE_OUT"},
++	{"Right Spk", NULL, "Right BE_OUT"},
++};
++
+ static const struct snd_soc_dapm_route broxton_map[] = {
+ 	{"HiFi Playback", NULL, "ssp5 Tx"},
+ 	{"ssp5 Tx", NULL, "codec0_out"},
+@@ -404,6 +434,10 @@ SND_SOC_DAILINK_DEF(ssp5_pin,
+ SND_SOC_DAILINK_DEF(ssp5_codec,
+ 	DAILINK_COMP_ARRAY(COMP_CODEC("MX98357A:00",
+ 				      BXT_MAXIM_CODEC_DAI)));
++SND_SOC_DAILINK_DEF(max98390_codec,
++	DAILINK_COMP_ARRAY(
++	/* Left */	COMP_CODEC(MAX98390_DEV0_NAME, "max98390-aif1"),
++	/* Right */	COMP_CODEC(MAX98390_DEV1_NAME, "max98390-aif1")));
+ 
+ SND_SOC_DAILINK_DEF(ssp1_pin,
+ 	DAILINK_COMP_ARRAY(COMP_CPU("SSP1 Pin")));
+@@ -601,15 +635,69 @@ static struct snd_soc_dai_link broxton_dais[] = {
+ 	},
+ };
+ 
++static struct snd_soc_codec_conf max98390_codec_confs[] = {
++	{
++		.dlc = COMP_CODEC_CONF(MAX98390_DEV0_NAME),
++		.name_prefix = "Left",
++	},
++	{
++		.dlc = COMP_CODEC_CONF(MAX98390_DEV1_NAME),
++		.name_prefix = "Right",
++	},
++};
++
+ #define NAME_SIZE	32
+ static int bxt_card_late_probe(struct snd_soc_card *card)
+ {
+ 	struct bxt_card_private *ctx = snd_soc_card_get_drvdata(card);
+ 	struct bxt_hdmi_pcm *pcm;
+ 	struct snd_soc_component *component = NULL;
+-	int err, i = 0;
++	const struct snd_kcontrol_new *controls;
++	const struct snd_soc_dapm_widget *widgets;
++	const struct snd_soc_dapm_route *routes;
++	int num_controls, num_widgets, num_routes, ret, i = 0;
+ 	char jack_name[NAME_SIZE];
+ 
++	switch (ctx->spkamp) {
++	case SPKAMP_MAX98357A:
++		controls = max98357a_controls;
++		num_controls = ARRAY_SIZE(max98357a_controls);
++		widgets = max98357a_widgets;
++		num_widgets = ARRAY_SIZE(max98357a_widgets);
++		routes = max98357a_routes;
++		num_routes = ARRAY_SIZE(max98357a_routes);
++		break;
++	case SPKAMP_MAX98390:
++		controls = max98390_controls;
++		num_controls = ARRAY_SIZE(max98390_controls);
++		widgets = max98390_widgets;
++		num_widgets = ARRAY_SIZE(max98390_widgets);
++		routes = max98390_routes;
++		num_routes = ARRAY_SIZE(max98390_routes);
++		break;
++	default:
++		dev_err(card->dev, "Invalid speaker amplifier %d\n", ctx->spkamp);
++		break;
++	}
++
++	ret = snd_soc_dapm_new_controls(&card->dapm, widgets, num_widgets);
++	if (ret) {
++		dev_err(card->dev, "Fail to new widgets\n");
++		return ret;
++	}
++
++	ret = snd_soc_add_card_controls(card, controls, num_controls);
++	if (ret) {
++		dev_err(card->dev, "Fail to add controls\n");
++		return ret;
++	}
++
++	ret = snd_soc_dapm_add_routes(&card->dapm, routes, num_routes);
++	if (ret) {
++		dev_err(card->dev, "Fail to add routes\n");
++		return ret;
++	}
++
+ 	if (soc_intel_is_glk())
+ 		snd_soc_dapm_add_routes(&card->dapm, gemini_map,
+ 					ARRAY_SIZE(gemini_map));
+@@ -631,17 +719,17 @@ static int bxt_card_late_probe(struct snd_soc_card *card)
+ 		component = pcm->codec_dai->component;
+ 		snprintf(jack_name, sizeof(jack_name),
+ 			"HDMI/DP, pcm=%d Jack", pcm->device);
+-		err = snd_soc_card_jack_new(card, jack_name,
++		ret = snd_soc_card_jack_new(card, jack_name,
+ 					SND_JACK_AVOUT, &broxton_hdmi[i],
+ 					NULL, 0);
+ 
+-		if (err)
+-			return err;
++		if (ret)
++			return ret;
+ 
+-		err = hdac_hdmi_jack_init(pcm->codec_dai, pcm->device,
++		ret = hdac_hdmi_jack_init(pcm->codec_dai, pcm->device,
+ 						&broxton_hdmi[i]);
+-		if (err < 0)
+-			return err;
++		if (ret < 0)
++			return ret;
+ 
+ 		i++;
+ 	}
+@@ -678,6 +766,11 @@ static int broxton_audio_probe(struct platform_device *pdev)
+ 
+ 	INIT_LIST_HEAD(&ctx->hdmi_pcm_list);
+ 
++	if (acpi_dev_present("MX98390", NULL, -1))
++		ctx->spkamp = SPKAMP_MAX98390;
++	else
++		ctx->spkamp = SPKAMP_MAX98357A;
++
+ 	broxton_audio_card.dev = &pdev->dev;
+ 	snd_soc_card_set_drvdata(&broxton_audio_card, ctx);
+ 	if (soc_intel_is_glk()) {
+@@ -702,7 +795,13 @@ static int broxton_audio_probe(struct platform_device *pdev)
+ 	} else if (soc_intel_is_cml()) {
+ 		unsigned int i;
+ 
+-		broxton_audio_card.name = "cmlda7219max";
++		if (ctx->spkamp == SPKAMP_MAX98390) {
++			broxton_audio_card.name = "cml_max98390_da7219";
++
++			broxton_audio_card.codec_conf = max98390_codec_confs;
++			broxton_audio_card.num_configs = ARRAY_SIZE(max98390_codec_confs);
++		} else
++			broxton_audio_card.name = "cmlda7219max";
+ 
+ 		for (i = 0; i < ARRAY_SIZE(broxton_dais); i++) {
+ 			/* MAXIM_CODEC is connected to SSP1. */
+@@ -710,6 +809,11 @@ static int broxton_audio_probe(struct platform_device *pdev)
+ 					BXT_MAXIM_CODEC_DAI)) {
+ 				broxton_dais[i].name = "SSP1-Codec";
+ 				broxton_dais[i].cpus->dai_name = "SSP1 Pin";
++
++				if (ctx->spkamp == SPKAMP_MAX98390) {
++					broxton_dais[i].codecs = max98390_codec;
++					broxton_dais[i].num_codecs = ARRAY_SIZE(max98390_codec);
++				}
+ 			}
+ 			/* DIALOG_CODEC is connected to SSP0 */
+ 			else if (!strcmp(broxton_dais[i].codecs->dai_name,
+@@ -759,6 +863,7 @@ MODULE_AUTHOR("Harsha Priya <harshapriya.n@intel.com>");
+ MODULE_AUTHOR("Conrad Cooke <conrad.cooke@intel.com>");
+ MODULE_AUTHOR("Naveen Manohar <naveen.m@intel.com>");
+ MODULE_AUTHOR("Mac Chiang <mac.chiang@intel.com>");
++MODULE_AUTHOR("Brent Lu <brent.lu@intel.com>");
+ MODULE_LICENSE("GPL v2");
+ MODULE_ALIAS("platform:bxt_da7219_max98357a");
+ MODULE_ALIAS("platform:glk_da7219_max98357a");
+diff --git a/sound/soc/intel/common/soc-acpi-intel-cml-match.c b/sound/soc/intel/common/soc-acpi-intel-cml-match.c
+index cdea0c0..7dc9ba9 100644
+--- a/sound/soc/intel/common/soc-acpi-intel-cml-match.c
++++ b/sound/soc/intel/common/soc-acpi-intel-cml-match.c
+@@ -15,8 +15,8 @@ static struct snd_soc_acpi_codecs rt1011_spk_codecs = {
+ };
+ 
+ static struct snd_soc_acpi_codecs max98357a_spk_codecs = {
+-	.num_codecs = 1,
+-	.codecs = {"MX98357A"}
++	.num_codecs = 2,
++	.codecs = {"MX98357A", "MX98390"}
+ };
+ 
+ /*
+-- 
+2.7.4
 
-I would prefer to read the counter directly on s-mode. Spec already defines the
-mechanism to allow that. But this way would still work if we couldn't
-read counters
-on s-mode.
-
-> 4. SBI_PMU_COUNTER_STOP
->     This call takes one parameter: 1) counter index
->     It will inform SBI implementation to stop counting specified counters on
->     the calling HART.
->
-> The above calls are generic enough to support any number of counters
-> and we don't need any SBI call to read the counter. We can also assume
-> all counters to be of fixed 64bit width. In fact, even Hypervisors can support
-> it's own SBI PMU counters with SBI PMU extension.
->
-> We still need to think more about the above calls because above SBI
-> calls are just initial ideas.
->
-
-We also need a SBI call to set the event selector to specify which event
-is monitored.
-
-> Maybe you can refine the above ideas and send a proposal to the
-> UnixPlatformSpec mailing list ??
->
-
-Ok, let us talk about the details in that.
-
-
-> Regards,
-> Anup
->
-> >
-> > > Also, the RISC-V PMU driver can be implemented such that it will
-> > > work for RV32, RV64, NoMMU RV32, and NoMMU RV64.
-> > >
-> > > Regards,
-> > > Anup
-> > >
-> > > > [1] https://groups.google.com/a/groups.riscv.org/g/sw-dev/c/f19TmCNP6yA
-> > > >
-> > > > > Regards,
-> > > > > Anup
-> > > > >
-> > > > > >
-> > > > > > Zong Li (6):
-> > > > > >   dt-bindings: riscv: Add YAML documentation for PMU
-> > > > > >   riscv: dts: sifive: Add DT support for PMU
-> > > > > >   riscv: add definition of hpmcounter CSRs
-> > > > > >   riscv: perf: Add raw event support
-> > > > > >   riscv: perf: introduce DT mechanism
-> > > > > >   riscv: remove PMU menu of Kconfig
-> > > > > >
-> > > > > >  .../devicetree/bindings/riscv/pmu.yaml        |  59 +++
-> > > > > >  arch/riscv/Kconfig                            |  13 -
-> > > > > >  arch/riscv/boot/dts/sifive/fu540-c000.dtsi    |  13 +
-> > > > > >  arch/riscv/include/asm/csr.h                  |  58 +++
-> > > > > >  arch/riscv/include/asm/perf_event.h           | 100 ++--
-> > > > > >  arch/riscv/kernel/Makefile                    |   2 +-
-> > > > > >  arch/riscv/kernel/perf_event.c                | 471 +++++++++++-------
-> > > > > >  7 files changed, 471 insertions(+), 245 deletions(-)
-> > > > > >  create mode 100644 Documentation/devicetree/bindings/riscv/pmu.yaml
-> > > > > >
-> > > > > > --
-> > > > > > 2.27.0
-> > > > > >
