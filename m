@@ -2,87 +2,49 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F08BC433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD21C433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 4B318207E8
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:59:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28A3D20774
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:00:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388303AbgF3N7j (ORCPT
+        id S2388763AbgF3OAL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 09:59:39 -0400
-Received: from sandeen.net ([63.231.237.45]:38348 "EHLO sandeen.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388215AbgF3N7g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 09:59:36 -0400
-Received: from [10.0.0.11] (liberator [10.0.0.11])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by sandeen.net (Postfix) with ESMTPSA id 9E5AB4CB;
-        Tue, 30 Jun 2020 08:59:31 -0500 (CDT)
-Subject: Re: [PATCH] doc: cgroup: add f2fs and xfs to supported list for
- writeback
-To:     Christoph Hellwig <hch@infradead.org>,
-        Eric Sandeen <sandeen@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Jonathan Corbet <corbet@lwn.net>, cgroups@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-xfs <linux-xfs@vger.kernel.org>
-References: <c8271324-9132-388c-5242-d7699f011892@redhat.com>
- <20200630054217.GA27221@infradead.org>
-From:   Eric Sandeen <sandeen@sandeen.net>
-Autocrypt: addr=sandeen@sandeen.net; prefer-encrypt=mutual; keydata=
- mQINBE6x99QBEADMR+yNFBc1Y5avoUhzI/sdR9ANwznsNpiCtZlaO4pIWvqQJCjBzp96cpCs
- nQZV32nqJBYnDpBDITBqTa/EF+IrHx8gKq8TaSBLHUq2ju2gJJLfBoL7V3807PQcI18YzkF+
- WL05ODFQ2cemDhx5uLghHEeOxuGj+1AI+kh/FCzMedHc6k87Yu2ZuaWF+Gh1W2ix6hikRJmQ
- vj5BEeAx7xKkyBhzdbNIbbjV/iGi9b26B/dNcyd5w2My2gxMtxaiP7q5b6GM2rsQklHP8FtW
- ZiYO7jsg/qIppR1C6Zr5jK1GQlMUIclYFeBbKggJ9mSwXJH7MIftilGQ8KDvNuV5AbkronGC
- sEEHj2khs7GfVv4pmUUHf1MRIvV0x3WJkpmhuZaYg8AdJlyGKgp+TQ7B+wCjNTdVqMI1vDk2
- BS6Rg851ay7AypbCPx2w4d8jIkQEgNjACHVDU89PNKAjScK1aTnW+HNUqg9BliCvuX5g4z2j
- gJBs57loTWAGe2Ve3cMy3VoQ40Wt3yKK0Eno8jfgzgb48wyycINZgnseMRhxc2c8hd51tftK
- LKhPj4c7uqjnBjrgOVaVBupGUmvLiePlnW56zJZ51BR5igWnILeOJ1ZIcf7KsaHyE6B1mG+X
- dmYtjDhjf3NAcoBWJuj8euxMB6TcQN2MrSXy5wSKaw40evooGwARAQABtCVFcmljIFIuIFNh
- bmRlZW4gPHNhbmRlZW5Ac2FuZGVlbi5uZXQ+iQI7BBMBAgAlAhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgAUCUzMzbAIZAQAKCRAgrhaS4T3e4Fr7D/wO+fenqVvHjq21SCjDCrt8HdVj
- aJ28B1SqSU2toxyg5I160GllAxEHpLFGdbFAhQfBtnmlY9eMjwmJb0sCIrkrB6XNPSPA/B2B
- UPISh0z2odJv35/euJF71qIFgWzp2czJHkHWwVZaZpMWWNvsLIroXoR+uA9c2V1hQFVAJZyk
- EE4xzfm1+oVtjIC12B9tTCuS00pY3AUy21yzNowT6SSk7HAzmtG/PJ/uSB5wEkwldB6jVs2A
- sjOg1wMwVvh/JHilsQg4HSmDfObmZj1d0RWlMWcUE7csRnCE0ZWBMp/ttTn+oosioGa09HAS
- 9jAnauznmYg43oQ5Akd8iQRxz5I58F/+JsdKvWiyrPDfYZtFS+UIgWD7x+mHBZ53Qjazszox
- gjwO9ehZpwUQxBm4I0lPDAKw3HJA+GwwiubTSlq5PS3P7QoCjaV8llH1bNFZMz2o8wPANiDx
- 5FHgpRVgwLHakoCU1Gc+LXHXBzDXt7Cj02WYHdFzMm2hXaslRdhNGowLo1SXZFXa41KGTlNe
- 4di53y9CK5ynV0z+YUa+5LR6RdHrHtgywdKnjeWdqhoVpsWIeORtwWGX8evNOiKJ7j0RsHha
- WrePTubr5nuYTDsQqgc2r4aBIOpeSRR2brlT/UE3wGgy9LY78L4EwPR0MzzecfE1Ws60iSqw
- Pu3vhb7h3bkCDQROsffUARAA0DrUifTrXQzqxO8aiQOC5p9Tz25Np/Tfpv1rofOwL8VPBMvJ
- X4P5l1V2yd70MZRUVgjmCydEyxLJ6G2YyHO2IZTEajUY0Up+b3ErOpLpZwhvgWatjifpj6bB
- SKuDXeThqFdkphF5kAmgfVAIkan5SxWK3+S0V2F/oxstIViBhMhDwI6XsRlnVBoLLYcEilxA
- 2FlRUS7MOZGmRJkRtdGD5koVZSM6xVZQSmfEBaYQ/WJBGJQdPy94nnlAVn3lH3+N7pXvNUuC
- GV+t4YUt3tLcRuIpYBCOWlc7bpgeCps5Xa0dIZgJ8Louu6OBJ5vVXjPxTlkFdT0S0/uerCG5
- 1u8p6sGRLnUeAUGkQfIUqGUjW2rHaXgWNvzOV6i3tf9YaiXKl3avFaNW1kKBs0T5M1cnlWZU
- Utl6k04lz5OjoNY9J/bGyV3DSlkblXRMK87iLYQSrcV6cFz9PRl4vW1LGff3xRQHngeN5fPx
- ze8X5NE3hb+SSwyMSEqJxhVTXJVfQWWW0dQxP7HNwqmOWYF/6m+1gK/Y2gY3jAQnsWTru4RV
- TZGnKwEPmOCpSUvsTRXsVHgsWJ70qd0yOSjWuiv4b8vmD3+QFgyvCBxPMdP3xsxN5etheLMO
- gRwWpLn6yNFq/xtgs+ECgG+gR78yXQyA7iCs5tFs2OrMqV5juSMGmn0kxJUAEQEAAYkCHwQY
- AQIACQUCTrH31AIbDAAKCRAgrhaS4T3e4BKwD/0ZOOmUNOZCSOLAMjZx3mtYtjYgfUNKi0ki
- YPveGoRWTqbis8UitPtNrG4XxgzLOijSdOEzQwkdOIp/QnZhGNssMejCnsluK0GQd+RkFVWN
- mcQT78hBeGcnEMAXZKq7bkIKzvc06GFmkMbX/gAl6DiNGv0UNAX+5FYh+ucCJZSyAp3sA+9/
- LKjxnTedX0aygXA6rkpX0Y0FvN/9dfm47+LGq7WAqBOyYTU3E6/+Z72bZoG/cG7ANLxcPool
- LOrU43oqFnD8QwcN56y4VfFj3/jDF2MX3xu4v2OjglVjMEYHTCxP3mpxesGHuqOit/FR+mF0
- MP9JGfj6x+bj/9JMBtCW1bY/aPeMdPGTJvXjGtOVYblGZrSjXRn5++Uuy36CvkcrjuziSDG+
- JEexGxczWwN4mrOQWhMT5Jyb+18CO+CWxJfHaYXiLEW7dI1AynL4jjn4W0MSiXpWDUw+fsBO
- Pk6ah10C4+R1Jc7dyUsKksMfvvhRX1hTIXhth85H16706bneTayZBhlZ/hK18uqTX+s0onG/
- m1F3vYvdlE4p2ts1mmixMF7KajN9/E5RQtiSArvKTbfsB6Two4MthIuLuf+M0mI4gPl9SPlf
- fWCYVPhaU9o83y1KFbD/+lh1pjP7bEu/YudBvz7F2Myjh4/9GUAijrCTNeDTDAgvIJDjXuLX pA==
-Message-ID: <59265a9d-ee0f-4432-3f86-00d076aeb8e8@sandeen.net>
-Date:   Tue, 30 Jun 2020 08:59:34 -0500
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.9.0
+        Tue, 30 Jun 2020 10:00:11 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:33840 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388626AbgF3OAH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 10:00:07 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id 73A412A0CD7
+Subject: Re: [PATCH v7 3/3] media: vimc: Add a control to display info on test
+ image
+To:     kieran.bingham@ideasonboard.com,
+        Kaaira Gupta <kgupta@es.iitr.ac.in>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hverkuil@xs4all.nl
+References: <20200626130700.2453-1-kgupta@es.iitr.ac.in>
+ <20200626130700.2453-4-kgupta@es.iitr.ac.in>
+ <1409b37e-f03d-cca8-c4a7-e1454f1da910@collabora.com>
+ <20200630132510.GA12353@kaaira-HP-Pavilion-Notebook>
+ <56cdfc6a-fdd1-bba7-a479-3b7741d8e011@collabora.com>
+ <8cd2320f-ec2e-7a59-de60-e6765f9ea3ba@ideasonboard.com>
+From:   Helen Koike <helen.koike@collabora.com>
+Message-ID: <08a54915-b7be-d3e9-5885-178e2ace6ec0@collabora.com>
+Date:   Tue, 30 Jun 2020 11:00:00 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-In-Reply-To: <20200630054217.GA27221@infradead.org>
+In-Reply-To: <8cd2320f-ec2e-7a59-de60-e6765f9ea3ba@ideasonboard.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -91,26 +53,289 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/30/20 12:42 AM, Christoph Hellwig wrote:
-> On Mon, Jun 29, 2020 at 02:08:09PM -0500, Eric Sandeen wrote:
->> f2fs and xfs have both added support for cgroup writeback:
->>
->> 578c647 f2fs: implement cgroup writeback support
->> adfb5fb xfs: implement cgroup aware writeback
->>
->> so add them to the supported list in the docs.
->>
->> Signed-off-by: Eric Sandeen <sandeen@redhat.com>
->> ---
->>
->> TBH I wonder about the wisdom of having this detail in
->> the doc, as it apparently gets missed quite often ...
+
+
+On 6/30/20 10:52 AM, Kieran Bingham wrote:
+> Hi Helen, Kaaira,
 > 
-> I'd rather remove the list of file systems.  It has no chance of
-> staying uptodate.
+> On 30/06/2020 14:46, Helen Koike wrote:
+>> Hi Kaaira,
+>>
+>> On 6/30/20 10:25 AM, Kaaira Gupta wrote:
+>>> On Fri, Jun 26, 2020 at 01:01:03PM -0300, Helen Koike wrote:
+>>>> Hi Kaaira,
+>>>>
+>>>> On 6/26/20 10:07 AM, Kaaira Gupta wrote:
+>>>>> Add a control in VIMC to display information such as the correct order of
+>>>>> colors for a given test pattern, brightness, hue, saturation, contrast,
+>>>>> width and height at sensor over test image.
+>>>>>
+>>>>> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+>>>>> ---
+>>>>>  drivers/media/test-drivers/vimc/Kconfig       |  2 +
+>>>>>  drivers/media/test-drivers/vimc/vimc-common.h |  1 +
+>>>>>  drivers/media/test-drivers/vimc/vimc-core.c   | 10 +++
+>>>>>  drivers/media/test-drivers/vimc/vimc-sensor.c | 70 +++++++++++++++++++
+>>>>>  4 files changed, 83 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/media/test-drivers/vimc/Kconfig b/drivers/media/test-drivers/vimc/Kconfig
+>>>>> index 4068a67585f9..da4b2ad6e40c 100644
+>>>>> --- a/drivers/media/test-drivers/vimc/Kconfig
+>>>>> +++ b/drivers/media/test-drivers/vimc/Kconfig
+>>>>> @@ -2,6 +2,8 @@
+>>>>>  config VIDEO_VIMC
+>>>>>  	tristate "Virtual Media Controller Driver (VIMC)"
+>>>>>  	depends on VIDEO_DEV && VIDEO_V4L2
+>>>>> +	select FONT_SUPPORT
+>>>>> +	select FONT_8x16
+>>>>>  	select MEDIA_CONTROLLER
+>>>>>  	select VIDEO_V4L2_SUBDEV_API
+>>>>>  	select VIDEOBUF2_VMALLOC
+>>>>> diff --git a/drivers/media/test-drivers/vimc/vimc-common.h b/drivers/media/test-drivers/vimc/vimc-common.h
+>>>>> index ae163dec2459..a289434e75ba 100644
+>>>>> --- a/drivers/media/test-drivers/vimc/vimc-common.h
+>>>>> +++ b/drivers/media/test-drivers/vimc/vimc-common.h
+>>>>> @@ -20,6 +20,7 @@
+>>>>>  #define VIMC_CID_VIMC_CLASS		(0x00f00000 | 1)
+>>>>>  #define VIMC_CID_TEST_PATTERN		(VIMC_CID_VIMC_BASE + 0)
+>>>>>  #define VIMC_CID_MEAN_WIN_SIZE		(VIMC_CID_VIMC_BASE + 1)
+>>>>> +#define VIMC_CID_OSD_TEXT_MODE		(VIMC_CID_VIMC_BASE + 2)
+>>>>>  
+>>>>>  #define VIMC_FRAME_MAX_WIDTH 4096
+>>>>>  #define VIMC_FRAME_MAX_HEIGHT 2160
+>>>>> diff --git a/drivers/media/test-drivers/vimc/vimc-core.c b/drivers/media/test-drivers/vimc/vimc-core.c
+>>>>> index 11210aaa2551..4b0ae6f51d76 100644
+>>>>> --- a/drivers/media/test-drivers/vimc/vimc-core.c
+>>>>> +++ b/drivers/media/test-drivers/vimc/vimc-core.c
+>>>>> @@ -5,10 +5,12 @@
+>>>>>   * Copyright (C) 2015-2017 Helen Koike <helen.fornazier@gmail.com>
+>>>>>   */
+>>>>>  
+>>>>> +#include <linux/font.h>
+>>>>>  #include <linux/init.h>
+>>>>>  #include <linux/module.h>
+>>>>>  #include <linux/platform_device.h>
+>>>>>  #include <media/media-device.h>
+>>>>> +#include <media/tpg/v4l2-tpg.h>
+>>>>>  #include <media/v4l2-device.h>
+>>>>>  
+>>>>>  #include "vimc-common.h"
+>>>>> @@ -263,11 +265,19 @@ static int vimc_register_devices(struct vimc_device *vimc)
+>>>>>  
+>>>>>  static int vimc_probe(struct platform_device *pdev)
+>>>>>  {
+>>>>> +	const struct font_desc *font = find_font("VGA8x16");
+>>>>>  	struct vimc_device *vimc;
+>>>>>  	int ret;
+>>>>>  
+>>>>>  	dev_dbg(&pdev->dev, "probe");
+>>>>>  
+>>>>> +	if (!font) {
+>>>>> +		dev_err(&pdev->dev, "could not find font\n");
+>>>>> +		return -ENODEV;
+>>>>> +	}
+>>>>> +
+>>>>> +	tpg_set_font(font->data);
+>>>>> +
+>>>>>  	vimc = kzalloc(sizeof(*vimc), GFP_KERNEL);
+>>>>>  	if (!vimc)
+>>>>>  		return -ENOMEM;
+>>>>> diff --git a/drivers/media/test-drivers/vimc/vimc-sensor.c b/drivers/media/test-drivers/vimc/vimc-sensor.c
+>>>>> index a2f09ac9a360..9e4fb3f4d60d 100644
+>>>>> --- a/drivers/media/test-drivers/vimc/vimc-sensor.c
+>>>>> +++ b/drivers/media/test-drivers/vimc/vimc-sensor.c
+>>>>> @@ -19,6 +19,8 @@ struct vimc_sen_device {
+>>>>>  	struct v4l2_subdev sd;
+>>>>>  	struct tpg_data tpg;
+>>>>>  	u8 *frame;
+>>>>> +	unsigned int osd_mode;
+>>>>
+>>>> If you declare the enum outside the below function, this could be type osd_mode instead of unsigned int, what do you think?
+>>>>
+>>>>> +	u64 start_stream_ts;
+>>>>>  	/* The active format */
+>>>>>  	struct v4l2_mbus_framefmt mbus_format;
+>>>>>  	struct v4l2_ctrl_handler hdl;
+>>>>> @@ -187,8 +189,54 @@ static void *vimc_sen_process_frame(struct vimc_ent_device *ved,
+>>>>>  {
+>>>>>  	struct vimc_sen_device *vsen = container_of(ved, struct vimc_sen_device,
+>>>>>  						    ved);
+>>>>> +	enum osd_mode {OSD_SHOW_ALL = 0, OSD_SHOW_COUNTERS = 1, OSD_SHOW_NONE = 2};
+>>>>> +	const unsigned int line_height = 16;
+>>>>> +	u8 *basep[TPG_MAX_PLANES][2];
+>>>>> +	unsigned int line = 1;
+>>>>> +	char str[100];
+>>>>>  
+>>>>>  	tpg_fill_plane_buffer(&vsen->tpg, 0, 0, vsen->frame);
+>>>>> +	tpg_calc_text_basep(&vsen->tpg, basep, 0, vsen->frame);
+>>>>> +	switch (vsen->osd_mode) {
+>>>>> +	case OSD_SHOW_ALL:
+>>>>> +		{
+>>>>
+>>>> Usually we don't use this curly braces in a case statement, please, check other examples in the code,
+>>>
+>>> I have declared variables inside the cases,hence they are not just
+>>> statements, so I need to use them I think
+>>
+>> Doing this grep:
+>>
+>> git grep -A1 "case.*:" drivers/media | grep -B1 -P "\tstruct"
+> 
+> Aha, yes - they might indeed be needed then because of the local scope
+> variables...
+> 
+>>
+>> I see that the standard is to place the curly braces in the same line of the case statement,
+>> example: https://elixir.bootlin.com/linux/latest/source/drivers/media/v4l2-core/v4l2-subdev.c#L469
+>>
+>>>
+>>>>
+>>>>> +			const char *order = tpg_g_color_order(&vsen->tpg);
+>>>>
+>>>> You also don't need this level of identation.
+>>>
+>>> I used it because of the braces
+>>
+>> Please check the example above
+>>
+>>>
+>>>>
+>>>>> +
+>>>>> +			tpg_gen_text(&vsen->tpg, basep,
+>>>>> +				     line++ * line_height, 16, order);
+>>>>> +			snprintf(str, sizeof(str),
+>>>>> +				 "brightness %3d, contrast %3d, saturation %3d, hue %d ",
+>>>>> +				 vsen->tpg.brightness,
+>>>>> +				 vsen->tpg.contrast,
+>>>>> +				 vsen->tpg.saturation,
+>>>>> +				 vsen->tpg.hue);
+>>>>> +			tpg_gen_text(&vsen->tpg, basep, line++ * line_height,
+>>>>> +				     16, str);
+>>>>> +			snprintf(str, sizeof(str), "sensor size: %dx%d",
+>>>>> +				 vsen->mbus_format.width,
+>>>>> +				 vsen->mbus_format.height);
+>>>>> +			tpg_gen_text(&vsen->tpg, basep, line++ * line_height,
+>>>>> +				     16, str);
+>>>>> +		}
+>>>>> +	case OSD_SHOW_COUNTERS:
+>>>>
+>>>> Checkpatch gives this error:
+>>>>
+>>>> WARNING: Possible switch case/default not preceded by break or fallthrough comment
+>>>>
+>>>> You need to add a fallthrough comment (grep for fallthrough to find other examples)
+>>>
+>>> Okay, I will add that
+>>>
+>>>>
+>>>>> +		{
+>>>>> +			unsigned int ms;
+>>>>> +
+>>>>> +			ms = (ktime_get_ns() - vsen->start_stream_ts) / 1000000;
+>>>>> +			snprintf(str, sizeof(str), "%02d:%02d:%02d:%03d",
+>>>>> +				 (ms / (60 * 60 * 1000)) % 24,
+>>>>> +				 (ms / (60 * 1000)) % 60,
+>>>>> +				 (ms / 1000) % 60,
+>>>>> +				 ms % 1000);
+>>>>> +			tpg_gen_text(&vsen->tpg, basep, line++ * line_height,
+>>>>> +				     16, str);
+>>>>> +			break;
+>>>>> +		}
+>>>>> +	case OSD_SHOW_NONE:
+>>>>
+>>>> No need this case statement if you have the default below.
+>>>
+>>> I added it to make it clearer what default does, should I remove it?
+>>
+>> hmm, I think this depends on your style, but to me, just the "default" statement below makes it
+>> clear that options not listed above do nothing.
+>> I think you would also need to add a fallthtough comment.
+> 
+> Consecutive case statements (or the default) statement should not need a
+> /* fallthrough */. I believe it's only if there is a code block it
+> becomes required.
 
-Is there any way for a user to know whether a filesytem does or doesn't
-support it, in practice?
+Ok, cool, I don't mind keeping like this then.
 
-Thanks,
--Eric
+Regards,
+Helen
+
+> 
+> --
+> Kieran
+> 
+> 
+>>
+>> Or you could just add a comment instead of the case statement in the code, like:
+>>
+>> 	/* case OSD_SHOW_NONE: */
+>>
+>> So it would be clear what this option does.
+>>
+>> Regards,
+>> Helen
+>>
+>>>
+>>>>
+>>>> Regards,
+>>>> Helen
+>>>>
+>>>>> +	default:
+>>>>> +		break;
+>>>>> +	}
+>>>>> +
+>>>>>  	return vsen->frame;
+>>>>>  }
+>>>>>  
+>>>>> @@ -201,6 +249,8 @@ static int vimc_sen_s_stream(struct v4l2_subdev *sd, int enable)
+>>>>>  		const struct vimc_pix_map *vpix;
+>>>>>  		unsigned int frame_size;
+>>>>>  
+>>>>> +		vsen->start_stream_ts = ktime_get_ns();
+>>>>> +
+>>>>>  		/* Calculate the frame size */
+>>>>>  		vpix = vimc_pix_map_by_code(vsen->mbus_format.code);
+>>>>>  		frame_size = vsen->mbus_format.width * vpix->bpp *
+>>>>> @@ -269,6 +319,9 @@ static int vimc_sen_s_ctrl(struct v4l2_ctrl *ctrl)
+>>>>>  	case V4L2_CID_SATURATION:
+>>>>>  		tpg_s_saturation(&vsen->tpg, ctrl->val);
+>>>>>  		break;
+>>>>> +	case VIMC_CID_OSD_TEXT_MODE:
+>>>>> +		vsen->osd_mode = ctrl->val;
+>>>>> +		break;
+>>>>>  	default:
+>>>>>  		return -EINVAL;
+>>>>>  	}
+>>>>> @@ -307,6 +360,22 @@ static const struct v4l2_ctrl_config vimc_sen_ctrl_test_pattern = {
+>>>>>  	.qmenu = tpg_pattern_strings,
+>>>>>  };
+>>>>>  
+>>>>> +static const char * const vimc_ctrl_osd_mode_strings[] = {
+>>>>> +	"All",
+>>>>> +	"Counters Only",
+>>>>> +	"None",
+>>>>> +	NULL,
+>>>>> +};
+>>>>> +
+>>>>> +static const struct v4l2_ctrl_config vimc_sen_ctrl_osd_mode = {
+>>>>> +	.ops = &vimc_sen_ctrl_ops,
+>>>>> +	.id = VIMC_CID_OSD_TEXT_MODE,
+>>>>> +	.name = "Show Information",
+>>>>> +	.type = V4L2_CTRL_TYPE_MENU,
+>>>>> +	.max = ARRAY_SIZE(vimc_ctrl_osd_mode_strings) - 2,
+>>>>> +	.qmenu = vimc_ctrl_osd_mode_strings,
+>>>>> +};
+>>>>> +
+>>>>>  static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
+>>>>>  					    const char *vcfg_name)
+>>>>>  {
+>>>>> @@ -323,6 +392,7 @@ static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
+>>>>>  
+>>>>>  	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_class, NULL);
+>>>>>  	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_test_pattern, NULL);
+>>>>> +	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_osd_mode, NULL);
+>>>>>  	v4l2_ctrl_new_std(&vsen->hdl, &vimc_sen_ctrl_ops,
+>>>>>  			  V4L2_CID_VFLIP, 0, 1, 1, 0);
+>>>>>  	v4l2_ctrl_new_std(&vsen->hdl, &vimc_sen_ctrl_ops,
+>>>>>
+> 
