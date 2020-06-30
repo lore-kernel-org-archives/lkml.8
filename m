@@ -2,130 +2,87 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52011C433DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB79BC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 26F502073E
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 14:59:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="TQejIFvM"
+	by mail.kernel.org (Postfix) with ESMTP id C47E92073E
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 15:00:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389208AbgF3O7d (ORCPT
+        id S2389211AbgF3PAe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 10:59:33 -0400
-Received: from mail-db8eur05on2081.outbound.protection.outlook.com ([40.107.20.81]:40353
-        "EHLO EUR05-DB8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389189AbgF3O7b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 10:59:31 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=jh+Bu/TIBROHpubWofE5V00XGDHn0EXwb0LQrMLpvqAEY6Ja+TgUbNtiAOUGM1vrTjdsRqGWEa1/UmlBbtpgO/JDrmyYe0aGfCB6TpzQACyGgTne3Uj0T4FSoMeJ7FYvUX4pHs+1F/d7hU7FJacXKu4CiA81BQzGBkXK3/qfLb6HFyOLMiFKBQB7hmP0wOUeMJF3a1hqbhzkfpNUg725ArY/hY9T8RXurCpQsbkuvcbFoR50pINelpwlyDSf73mzwajcwdGeEhO3vNReig4cRhnK/DVUikgtJRDSXETVeuHKM9sqFzgsbQHzcE96KA767SMt1xYdjkuQqxR9HaqNtw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jS6cGqQoq38ZV97YSt38ngXvCTX0SazQh6ZoNrOtMEM=;
- b=QJWZtYtOoo8anePTr8zDxxAOKOnkFPnFDqgodLTp88O7h1F05aqRZOzL8fyNoR1yh2J9Xce1x1FatI0JbqO2yRgCokMJVTuSxXk1iHiuEoj7GJvhhB44HKd8+CqmqEwSY7cJoG3rAF2iqnhv9VF6XREIqVLPWxyejxPOdpIxPjsswYo4UT61hVxdRIUbSZDzDW9aCUp+v31g2bn630LMq4f2H2gIykVqmaIXYHqW2teJM7eg3S6TEpPuGIkWKlR81BiRDrBZdaUqDXNYGGpVqDPnJLbiXVT0yu+Q8BIXMxalWScMrfCLpi7YdtsZmCwOeCZKAo8L+D8Q6hSYXJx2jg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jS6cGqQoq38ZV97YSt38ngXvCTX0SazQh6ZoNrOtMEM=;
- b=TQejIFvMU+MtNQOvGsb2qNjBLkYuq7mmQ0bQ2Mgy2jzdjzzFKPN3vmDMpwPO2HP5V6rTwZ+Vra10zmAJjhvZRlR95+mdQ6QrPtHVcC0tlWqQSKyV/qWInDn7X8cLop4FM8Qr4NPSrfXwJY/zycOhsSWYfMIvUqtuloUPSEwkrFw=
-Authentication-Results: redhat.com; dkim=none (message not signed)
- header.d=none;redhat.com; dmarc=none action=none header.from=mellanox.com;
-Received: from AM6PR05MB6408.eurprd05.prod.outlook.com (2603:10a6:20b:b8::23)
- by AM6PR05MB5320.eurprd05.prod.outlook.com (2603:10a6:20b:3f::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21; Tue, 30 Jun
- 2020 14:59:29 +0000
-Received: from AM6PR05MB6408.eurprd05.prod.outlook.com
- ([fe80::15f4:b130:d907:ce72]) by AM6PR05MB6408.eurprd05.prod.outlook.com
- ([fe80::15f4:b130:d907:ce72%6]) with mapi id 15.20.3131.027; Tue, 30 Jun 2020
- 14:59:29 +0000
-Date:   Tue, 30 Jun 2020 17:59:26 +0300
-From:   Leon Romanovsky <leonro@mellanox.com>
-To:     Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Lijun Ou <oulijun@huawei.com>, linux-kernel@vger.kernel.org,
-        linux-rdma@vger.kernel.org,
-        Potnuri Bharat Teja <bharat@chelsio.com>,
-        Weihang Li <liweihang@huawei.com>,
-        "Wei Hu(Xavier)" <huwei87@hisilicon.com>,
-        Yishai Hadas <yishaih@mellanox.com>
-Subject: Re: [PATCH rdma-next v1 0/4] ib_core allocation patches
-Message-ID: <20200630145926.GA4837@unreal>
-References: <20200630101855.368895-1-leon@kernel.org>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200630101855.368895-1-leon@kernel.org>
-X-ClientProxiedBy: AM0PR01CA0093.eurprd01.prod.exchangelabs.com
- (2603:10a6:208:10e::34) To AM6PR05MB6408.eurprd05.prod.outlook.com
- (2603:10a6:20b:b8::23)
+        Tue, 30 Jun 2020 11:00:34 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:51025 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729330AbgF3PAd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 11:00:33 -0400
+Received: from mail-qk1-f182.google.com ([209.85.222.182]) by
+ mrelayeu.kundenserver.de (mreue108 [212.227.15.145]) with ESMTPSA (Nemesis)
+ id 1M42b8-1jqHkO0eQK-0007pw for <linux-kernel@vger.kernel.org>; Tue, 30 Jun
+ 2020 17:00:32 +0200
+Received: by mail-qk1-f182.google.com with SMTP id j80so18865329qke.0
+        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 08:00:31 -0700 (PDT)
+X-Gm-Message-State: AOAM530WlOS6EM6piA3vZPjjw35Mp/C0edZC6SufNqSpLrBLXqulw2kx
+        lGC5vdriMwSiQludntRFm+iUVclMTGNNyK18/ho=
+X-Google-Smtp-Source: ABdhPJxc+rJC1FVSVT20ACTLzJUDfVOt+ZKzz/cHEuAhJFG7HGFLCm4c5Y2ASqeRRJISfwukuMx0yd+d949gp2cgAVE=
+X-Received: by 2002:a37:a496:: with SMTP id n144mr20363421qke.286.1593529230706;
+ Tue, 30 Jun 2020 08:00:30 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-Received: from localhost (213.57.247.131) by AM0PR01CA0093.eurprd01.prod.exchangelabs.com (2603:10a6:208:10e::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.3131.21 via Frontend Transport; Tue, 30 Jun 2020 14:59:28 +0000
-X-Originating-IP: [213.57.247.131]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 8bce2af0-45d2-4733-e4ae-08d81d063000
-X-MS-TrafficTypeDiagnostic: AM6PR05MB5320:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <AM6PR05MB532015706EEC49D8285F02FEB06F0@AM6PR05MB5320.eurprd05.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7219;
-X-Forefront-PRVS: 0450A714CB
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: X/iRX/3NVigfgZolHPIdOhgYbFQqGdKrsJnsWh2xuEbDv8NNeaXoMZyZACm/l017mAOarHdFDY3wLpb9+n9DuGjv+QJMLUYBYpYxtGcOopc7Mqgo076SCpvY2weWKMkQe87Y7GarkOqzZQhl4+mgXTDmYLo3Cb5TwsOJJQ47W2U1LacFPSqvev/hjTldqGAkfMSy/3PfP+hyIICkM4k+CygWniHmaz7+BMWwUWC4Y+9FjXzJw8gIrXay4RY9XL6jMk6NzkgEiKnp1EQ0IZ6LWZSri1gfUK4+DGDTc35aSwiX+cIHaLi+Jhi4zsAPgJqvw+UgRYdJyjCfDX8j3P/aJIHKYGAZpIPqCMAh+iLmZc56q9rXh5vP1pRSHAeHxNP6JRGj5bbtM+10bLjF39Lnuw==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM6PR05MB6408.eurprd05.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(7916004)(4636009)(376002)(346002)(39860400002)(366004)(396003)(136003)(956004)(4326008)(6636002)(478600001)(52116002)(16526019)(54906003)(1076003)(186003)(110136005)(316002)(107886003)(4744005)(26005)(966005)(9686003)(5660300002)(33656002)(83380400001)(8936002)(6486002)(33716001)(86362001)(8676002)(2906002)(66556008)(66476007)(66946007)(6496006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData: xrAnPkI0J2UQlBkNTUtkRJMtx8/c9r+nk+Uosu5KDqqsK2eVVcr1fqTwgmJ5QRSDl0eRQWcZhmOV1HW7GSvqirxYD2AOW6fFn8Ux6FCqZr83hYl2QCSLihSTNuX5zbmG8NzS+reClW0gE6pFao/1ajwrR91nvAKj7SNZHNdVymG/NaXuU/bUrfJL1Q0lunXwBy2RscOPb7QRJ+L1ExZstF/uRowcefprnRhQG0/VT5BaGIVhR1/BEO4Z8s1wMtLjc/JZaz5oxOquNf5LVGzwv2Mx5w06JLi2i1XuHwgwsxC3U2zf+k39ziFdfFb2/2V7SIKsxdWlcsbqTgorHMrUYfJS+WMyHaX9dHL+eU0efr0lwtODtBurg7pctdKhxaOMypMrp/3GUE8Un0Zpu2Lz1PdBJaxrLbF/LTsBZYOjP/Ifz/5V6lukmSSGnLg9Vk5Yen7uHdkAZr8JjrHR/0LL5EICk8KCc8Wct5+28Ng+Lu8TyH1azKbwHOB/oTarqBKl
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8bce2af0-45d2-4733-e4ae-08d81d063000
-X-MS-Exchange-CrossTenant-AuthSource: AM6PR05MB6408.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 30 Jun 2020 14:59:28.8057
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: yOV7d/YnzWAxCBd2wzZDAW+NbRgWjT3bRotHxjB3HbZ1A5RnCcFeRxnSzQ8E6kwLzrphZdiDk0bD6OmimAbMJw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB5320
+References: <20200629225932.5036-1-daniel.gutson@eclypsium.com>
+ <20200630085641.GD637809@kroah.com> <CAFmMkTGrnZt7ZaGyYCe-LCHET4yHz9DfanaZwsOS6HCxK40apQ@mail.gmail.com>
+In-Reply-To: <CAFmMkTGrnZt7ZaGyYCe-LCHET4yHz9DfanaZwsOS6HCxK40apQ@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 30 Jun 2020 17:00:14 +0200
+X-Gmail-Original-Message-ID: <CAK8P3a0WKODYvHzsf05QZ1dFh5uMQu2z7dzO1DMp1E9TWCrsPQ@mail.gmail.com>
+Message-ID: <CAK8P3a0WKODYvHzsf05QZ1dFh5uMQu2z7dzO1DMp1E9TWCrsPQ@mail.gmail.com>
+Subject: Re: [PATCH] SPI LPC information kernel module
+To:     Daniel Gutson <daniel@eclypsium.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Derek Kiernan <derek.kiernan@xilinx.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Richard Hughes <hughsient@gmail.com>,
+        Alex Bazhaniuk <alex@eclypsium.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:669HeGT6U6E3Rq2JQkIMVKl6CONWwyMwcTepCuBIMw+537tUoxw
+ 9xJSGOy6lHZO1B5TILaKxo6qfVcChN7+xieEXSme9uTBONF83h5uJGzj/6YfcE9uqP7nkN9
+ DAn6b7/eAyqBBQyazOdxKeA0YcJc56faWAnOCEp8cLTzrTda7TIVB/jy1zwHvNkyA5Lku6x
+ 25z8Pmu4jKiDxOjSO6NDA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:98U+WpWIQC0=:N7MDersVAjJozj+a33ZsLe
+ KwfeFjq9G7yJB28qquAaOuksdZ/IKBtxUvmopnWt7rXYB2+Fi985LvtGs+1MT8Z7sjfLsmv7p
+ XmIyeeK2n/Tqbt1DF44Jf/mfza9M+aZV+W6I5WPS0PQXtNV9bSUeLOi8QQmJBFNlJLr848Obb
+ 6hnHE3QBj6Tfwv/yut83aFEDl3nKS07MuNbCNuDxl8S6p9n5wRXBy7v41JgPPtuEMqbq+KqzP
+ L7yth0aLMD8h/0jVT556d/RQjOOx2zwlrvldUwUq7iKbgDoUCQG313eoCstaA1DsAXpR0bvn3
+ g7nFUUDVLegpiEnVly06kIcTgV3UCBFOI8bMSKeOpIpk8/s0fOSOwJL76/KDMsSQWBA3R+Qce
+ mCw4UGTINMuivUGqVASFIF0EPg+DvgY2A2G0UjyzMbzy6qEqoiEHwqZ/Yz6s7YY0zzkB2VhfY
+ EZmh9sQFErtuwBrtK2cV7H9CN/3aALWX8Bjp2rou7+wWM3NnlM92fbcSuCnbHJw3FEVwl2i0+
+ cudddCsU33pEd+Qa0UuKlLd5kbpCBDGZjljSTiHw7AUM6gueCAFw9SCx1TIr+0amG9RyEYwrU
+ BPqNE38joPx5Q0gkcXLb44tqBwLlZM8Gj5Jet7+nmRubVgV0mNuuo3Sg8mLkmdNggGLnqVXrK
+ 00HaEG02gB2zR2ktmB1Pi8+rs1Vt+Y5iIyqX8naxULy67v+TEdxiu4L+fiDPCGu6g50i7P0s8
+ /dpHgjPjmh8HF1tuGjHJgRq54s4G81QnVtR57oIjShnBEtc3PFKZeOAaufmXiyMw0jRNzinLS
+ R/JL+4F3+K24gGIcn8gI2A3db/ZSLT/IsHBwB9T4hlGTw5rXGw=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 01:18:51PM +0300, Leon Romanovsky wrote:
-> From: Leon Romanovsky <leonro@mellanox.com>
+On Tue, Jun 30, 2020 at 4:43 PM Daniel Gutson <daniel@eclypsium.com> wrote:
+> On Tue, Jun 30, 2020 at 5:56 AM Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+>> On Mon, Jun 29, 2020 at 07:59:32PM -0300, Daniel Gutson wrote:
+>> Why is this going in securityfs at all?  Why not just sysfs as it is a
+>> CPU attribute, right?
 >
-> Changelog
-> v1:
->  * Removed empty "//" comment
->  * Deleted destroy_rwq_ind_table from object tree
->  * One patch was accepted, so rebased on latest for-upstream
-> v0:
-> https://lore.kernel.org/lkml/20200624105422.1452290-1-leon@kernel.org
->
-> ----------------------------------------------------------------------
->
-> Let's continue my allocation work.
->
-> Leon Romanovsky (4):
->   RDMA/core: Create and destroy counters in the ib_core
->   RDMA: Clean MW allocation and free flows
->   RDMA: Move XRCD to be under ib_core responsibility
->   RDMA/core: Convert RWQ table logic to ib_core allocation scheme
+> Richard already discussed that, but "it" is not only (one) CPU attribute, are SPI chip
+> settings and attributes coming from the firmware.
+> Please note that I wanted to submit the minimum patch, but I need to add more attributes.
 
-Jason,
+Why can't the SPI chip settings be attributes of the SPI chip device in sysfs?
 
-Please drop this patch, I will resubmit it together with fixes to
-create/destroy RWQ table, like proper error unwind and proper usecnt
-usage.
+Which firmware are you actually talking about here? Do you mean firmware running
+on a device behind the SPI controller?
 
-Thanks
+      Arnd
