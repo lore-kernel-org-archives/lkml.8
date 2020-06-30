@@ -2,100 +2,102 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E170DC433E1
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A20C433DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id AB005206B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:38:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OfGszqe3"
+	by mail.kernel.org (Postfix) with ESMTP id A6A42206B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 13:38:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732836AbgF3NiP (ORCPT
+        id S1733088AbgF3NiV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 09:38:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45642 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726033AbgF3NiO (ORCPT
+        Tue, 30 Jun 2020 09:38:21 -0400
+Received: from netrider.rowland.org ([192.131.102.5]:43723 "HELO
+        netrider.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1732994AbgF3NiR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 09:38:14 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 079BAC061755;
-        Tue, 30 Jun 2020 06:38:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=peNiu7obudJ+iIiHoebhj0Cx80UUqQKMz/3V6VsewcA=; b=OfGszqe3liARav2iSE515YirEx
-        Rnqq9NA3fuI8sdsGAgobESsESiY51vgA7FJAtE7nA/mdf2yKvas0Wre3fDlcxa0AiDIRWiDQZ4/Le
-        PPcntnez3mv8Otw7TG8VEuAHY7nKnbCiH13UrvVGGrnNYNdQIZxhscd/odT1lWDwV1aHMYRIoZ7wp
-        EXVQA+L0Ai1FffXuWtoGkeISpyfPunrQcV1gy/602zLdFjQxzHGHK95DEs0Y+ZJ2foV0oRE8K2eki
-        YL7fHzkJ9ZnyfXddig2AIiS5XQ2K0fp+mv6+0l4DFT+PGnICeJjFMwPARJldzwSa9tLr+wZNX7PQw
-        142+hsbw==;
-Received: from hch by casper.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jqGSY-0007s1-CQ; Tue, 30 Jun 2020 13:38:02 +0000
-Date:   Tue, 30 Jun 2020 14:38:02 +0100
-From:   Christoph Hellwig <hch@infradead.org>
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        linux-kernel@vger.kernel.org, David Miller <davem@davemloft.net>,
-        Greg Kroah-Hartman <greg@kroah.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, bpf <bpf@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Gary Lin <GLin@suse.com>, Bruno Meneguele <bmeneg@redhat.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2 10/15] exec: Remove do_execve_file
-Message-ID: <20200630133802.GA30093@infradead.org>
-References: <778297d2-512a-8361-cf05-42d9379e6977@i-love.sakura.ne.jp>
- <20200625120725.GA3493334@kroah.com>
- <20200625.123437.2219826613137938086.davem@davemloft.net>
- <CAHk-=whuTwGHEPjvtbBvneHHXeqJC=q5S09mbPnqb=Q+MSPMag@mail.gmail.com>
- <87pn9mgfc2.fsf_-_@x220.int.ebiederm.org>
- <87y2oac50p.fsf@x220.int.ebiederm.org>
- <87bll17ili.fsf_-_@x220.int.ebiederm.org>
- <87lfk54p0m.fsf_-_@x220.int.ebiederm.org>
- <20200630054313.GB27221@infradead.org>
- <87a70k21k0.fsf@x220.int.ebiederm.org>
+        Tue, 30 Jun 2020 09:38:17 -0400
+Received: (qmail 448451 invoked by uid 1000); 30 Jun 2020 09:38:16 -0400
+Date:   Tue, 30 Jun 2020 09:38:16 -0400
+From:   Alan Stern <stern@rowland.harvard.edu>
+To:     Martin Kepplinger <martin.kepplinger@puri.sm>
+Cc:     Bart Van Assche <bvanassche@acm.org>, jejb@linux.ibm.com,
+        Can Guo <cang@codeaurora.org>, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel@puri.sm
+Subject: Re: [PATCH] scsi: sd: add runtime pm to open / release
+Message-ID: <20200630133816.GA447566@rowland.harvard.edu>
+References: <20200623111018.31954-1-martin.kepplinger@puri.sm>
+ <ed9ae198-4c68-f82b-04fc-2299ab16df96@acm.org>
+ <eccacce9-393c-ca5d-e3b3-09961340e0db@puri.sm>
+ <1379e21d-c51a-3710-e185-c2d7a9681fb7@acm.org>
+ <20200626154441.GA296771@rowland.harvard.edu>
+ <c19f1938-ae47-2357-669d-5b4021aec154@puri.sm>
+ <20200629161536.GA405175@rowland.harvard.edu>
+ <823057f0-95cf-bfcf-c39f-ca5d7abe2372@puri.sm>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87a70k21k0.fsf@x220.int.ebiederm.org>
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by casper.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <823057f0-95cf-bfcf-c39f-ca5d7abe2372@puri.sm>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 30, 2020 at 07:14:23AM -0500, Eric W. Biederman wrote:
-> Christoph Hellwig <hch@infradead.org> writes:
+On Tue, Jun 30, 2020 at 05:33:25AM +0200, Martin Kepplinger wrote:
+> > Martin, does this fix the problem?
+> > 
 > 
-> > FYI, this clashes badly with my exec rework.  I'd suggest you
-> > drop everything touching exec here for now, and I can then
-> > add the final file based exec removal to the end of my series.
+> not quite: mounting works and resuming itself indeed happens now when
+> copying a file, but the I/O itself doesn't, but says "device offline or
+> changed":
 > 
-> I have looked and I haven't even seen any exec work.  Where can it be
-> found?
-> 
-> I have working and cleaning up exec for what 3 cycles now.  There is
-> still quite a ways to go before it becomes possible to fix some of the
-> deep problems in exec.  Removing all of these broken exec special cases
-> is quite frankly the entire point of this patchset.
-> 
-> Sight unseen I suggest you send me your exec work and I can merge it
-> into my branch if we are going to conflict badly.
+> [  167.167615] sd 0:0:0:0: [sda] tag#0 UNKNOWN(0x2003) Result:
+> hostbyte=0x00 driverbyte=0x08 cmd_age=0s
+> [  167.167630] sd 0:0:0:0: [sda] tag#0 Sense Key : 0x6 [current]
+> [  167.167638] sd 0:0:0:0: [sda] tag#0 ASC=0x28 ASCQ=0x0
 
-https://lore.kernel.org/linux-fsdevel/20200627072704.2447163-1-hch@lst.de/T/#t
+That code stands for "Not-ready to ready transition".  It isn't really an 
+error, just a notification.  The command should have been retried.
+
+> [  167.167648] sd 0:0:0:0: [sda] tag#0 CDB: opcode=0x28 28 00 00 00 24
+> c2 00 00 01 00
+> [  167.167658] blk_update_request: I/O error, dev sda, sector 9410 op
+> 0x0:(READ) flags 0x0 phys_seg 1 prio class 0
+> [  167.178327] FAT-fs (sda1): FAT read failed (blocknr 1218)
+
+And it should not have failed.  Martin or James, any ideas about this?
+
+> [  167.183895] sd 0:0:0:0: [sda] tag#0 device offline or changed
+> [  167.189695] blk_update_request: I/O error, dev sda, sector 5101888 op
+> 0x0:(READ) flags 0x80700 phys_seg 8 prio class 0
+> [  167.200510] sd 0:0:0:0: [sda] tag#0 device offline or changed
+> 
+> 
+> and a later try to copy a file only yields (mostly my own debug prints):
+> 
+> 
+> [  371.110798] blk_queue_enter: wait_event: pm=0
+> [  371.300666] scsi_runtime_resume
+> [  371.303834] scsi_runtime_resume
+> [  371.307007] scsi_runtime_resume
+> [  371.310213] sd 0:0:0:0: [sda] tag#0 device offline or changed
+> [  371.316011] blk_update_request: I/O error, dev sda, sector 5101888 op
+> 0x0:(READ) flags 0x0 phys_seg 1 prio class 0
+
+No way to tell from the log what caused this error.
+
+> [  372.560690] scsi_runtime_suspend
+> [  372.563968] scsi_runtime_suspend
+> [  372.567237] scsi_runtime_suspend
+> 
+> thanks Alan for taking the time and trying to fix this! you're close.
+> what is missing?
+
+At this point I don't know.
+
+Alan Stern
