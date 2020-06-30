@@ -2,148 +2,145 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6A4C433E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:53:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B99DC433E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:54:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 97E3520702
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:53:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4561B2067D
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 18:54:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i5+s2fv2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728073AbgF3Sxp (ORCPT
+        id S1728105AbgF3SyH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 14:53:45 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:27475 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727964AbgF3Sxn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 14:53:43 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 49xD5x03X3z9v1Ws;
-        Tue, 30 Jun 2020 20:53:41 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id jKwv6oqZPRBN; Tue, 30 Jun 2020 20:53:40 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 49xD5w5zcRz9v1Wr;
-        Tue, 30 Jun 2020 20:53:40 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id D08408B7E6;
-        Tue, 30 Jun 2020 20:53:40 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id A_mx4dbjGFop; Tue, 30 Jun 2020 20:53:40 +0200 (CEST)
-Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 30BD28B7E5;
-        Tue, 30 Jun 2020 20:53:40 +0200 (CEST)
-Subject: Re: [PATCH v2] powerpc/uaccess: Use flexible addressing with
- __put_user()/__get_user()
-To:     Segher Boessenkool <segher@kernel.crashing.org>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>, npiggin@gmail.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <c2addbd9d76212242d3d8554a2f7ff849fb08b85.1587040754.git.christophe.leroy@c-s.fr>
- <7b916759-1683-b4df-0d4b-b04b3fcd9a02@csgroup.eu>
- <878sg6862r.fsf@mpe.ellerman.id.au> <875zb98i5a.fsf@mpe.ellerman.id.au>
- <311c3471-cad7-72d5-a5e6-04cf892c5e41@csgroup.eu>
- <20200630163324.GW3598@gate.crashing.org>
-From:   Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <f8819fa4-94e3-4bf9-4b60-c57d2804e529@csgroup.eu>
-Date:   Tue, 30 Jun 2020 18:53:39 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
-MIME-Version: 1.0
-In-Reply-To: <20200630163324.GW3598@gate.crashing.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Tue, 30 Jun 2020 14:54:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37962 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727964AbgF3SyF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 30 Jun 2020 14:54:05 -0400
+Received: from mail-pf1-x444.google.com (mail-pf1-x444.google.com [IPv6:2607:f8b0:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F21A2C061755;
+        Tue, 30 Jun 2020 11:54:05 -0700 (PDT)
+Received: by mail-pf1-x444.google.com with SMTP id 67so5738865pfg.5;
+        Tue, 30 Jun 2020 11:54:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=jaSCX2cHIXDe/3NIJE8l/vJ0BfgRacUWWr7lL1FWFC0=;
+        b=i5+s2fv2j8daMmNq+Qo21BVRmE/ZYrfLv3IJYXC4Z8I6uZJHSMzfOWMKQZYSitkBnz
+         2AbCwlnjJ5kgJdkvn772l7AsjjUsv0iWTCpXm4F1uwuQqyOydYZwy+zY1oFldl3DeZFw
+         agVdUd3z5u7u+LTPgWx85TaLT9cNMuCUFiPxWLMf6rxJCTQklAOuC2qpRO4v+U+kApF8
+         j282mbSwxNLBt8TCaBGdpcSyxGxtBOLbWiPCxK6a7eT8pFkSRnx5ehfmQYEKq+bUkV4q
+         1+bCSKY3k5s87ZD+a7/E1NkOsY0A9SdoWmTSEC/wljrdtZ7ncRDTKGjQVG3+JIFlWc2y
+         OXkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=jaSCX2cHIXDe/3NIJE8l/vJ0BfgRacUWWr7lL1FWFC0=;
+        b=N5FuexCnjEAAh+k5/VVM8YdqoPLrwTBLz3qzWh3NpgaWR1OZNQBoyft51BfFn6JYkX
+         Jl9QsaTPljIlEi7rEDrwbXBcjTDsvSmlkmAEIBVquC4K9zOrbdsIC4IuGQ21wOpW86DS
+         RoBCwmCitPfh5v+hc3BuS5XDvO8Q6XM1sKJ9pNjC6Klm4M2GqT+Yl07aS992Q+pS3MYL
+         7gypJj3ZR5jrTSKKBGq6EBpwLRgk89nPuOZMpljfUiASGI+0sdbbyBs2vFsaaFDkQh1I
+         8zwShkfBGW6ztnPeoS5hHeXJMWu9HUwipRQ2cHixFYhPDxG79kPVKU4wrkBCpYNWz9nS
+         dIkQ==
+X-Gm-Message-State: AOAM5326uT3fcbRCacxC8ObMIZhbDL2r3WNJTIno04VPz1YSvLZLe7iW
+        Ob08HrbK+PTKHjbqiZmikdw=
+X-Google-Smtp-Source: ABdhPJyelGFUvPwAg7nmV1K7tug8dp9jh5zbeSjhfl6w4plbwTUGNccG6cF3nQv9ypnfAyilSzcnPQ==
+X-Received: by 2002:a63:b30f:: with SMTP id i15mr16476143pgf.42.1593543245547;
+        Tue, 30 Jun 2020 11:54:05 -0700 (PDT)
+Received: from ubuntu.localdomain (61-216-143-21.HINET-IP.hinet.net. [61.216.143.21])
+        by smtp.googlemail.com with ESMTPSA id y27sm3492438pgc.56.2020.06.30.11.54.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jun 2020 11:54:05 -0700 (PDT)
+From:   Manbing <manbing3@gmail.com>
+Cc:     manbing3@gmail.com, Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        linux-doc@vger.kernel.org (open list:DOCUMENTATION),
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] trace doc: fix typo of trace/ftrace.rst
+Date:   Tue, 30 Jun 2020 11:53:55 -0700
+Message-Id: <20200630185356.3467-1-manbing3@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Some documents was converted from the plain text documentation
+to reStructuredText format.
 
+Signed-off-by: Manbing <manbing3@gmail.com>
+---
+ Documentation/trace/ftrace.rst | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-On 06/30/2020 04:33 PM, Segher Boessenkool wrote:
-> On Tue, Jun 30, 2020 at 04:55:05PM +0200, Christophe Leroy wrote:
->> Le 30/06/2020 à 03:19, Michael Ellerman a écrit :
->>> Michael Ellerman <mpe@ellerman.id.au> writes:
->>>> Because it uses the "m<>" constraint which didn't work on GCC 4.6.
->>>>
->>>> https://github.com/linuxppc/issues/issues/297
->>>>
->>>> So we should be able to pick it up for v5.9 hopefully.
->>>
->>> It seems to break the build with the kernel.org 4.9.4 compiler and
->>> corenet64_smp_defconfig:
->>
->> Looks like 4.9.4 doesn't accept "m<>" constraint either.
-> 
-> The evidence contradicts this assertion.
-> 
->> Changing it to "m" make it build.
-> 
-> But that just means something else is wrong.
-> 
->>> + make -s CC=powerpc64-linux-gnu-gcc -j 160
->>> In file included from /linux/include/linux/uaccess.h:11:0,
->>>                   from /linux/include/linux/sched/task.h:11,
->>>                   from /linux/include/linux/sched/signal.h:9,
->>>                   from /linux/include/linux/rcuwait.h:6,
->>>                   from /linux/include/linux/percpu-rwsem.h:7,
->>>                   from /linux/include/linux/fs.h:33,
->>>                   from /linux/include/linux/huge_mm.h:8,
->>>                   from /linux/include/linux/mm.h:675,
->>>                   from /linux/arch/powerpc/kernel/signal_32.c:17:
->>> /linux/arch/powerpc/kernel/signal_32.c: In function
->>> 'save_user_regs.isra.14.constprop':
->>> /linux/arch/powerpc/include/asm/uaccess.h:161:2: error: 'asm' operand has
->>> impossible constraints
->>>    __asm__ __volatile__(     \
->>>    ^
->>> /linux/arch/powerpc/include/asm/uaccess.h:197:12: note: in expansion of
->>> macro '__put_user_asm'
->>>      case 4: __put_user_asm(x, ptr, retval, "stw"); break; \
->>>              ^
->>> /linux/arch/powerpc/include/asm/uaccess.h:206:2: note: in expansion of
->>> macro '__put_user_size_allowed'
->>>    __put_user_size_allowed(x, ptr, size, retval);  \
->>>    ^
->>> /linux/arch/powerpc/include/asm/uaccess.h:220:2: note: in expansion of
->>> macro '__put_user_size'
->>>    __put_user_size(__pu_val, __pu_addr, __pu_size, __pu_err); \
->>>    ^
->>> /linux/arch/powerpc/include/asm/uaccess.h:96:2: note: in expansion of
->>> macro '__put_user_nocheck'
->>>    __put_user_nocheck((__typeof__(*(ptr)))(x), (ptr), sizeof(*(ptr)))
->>>    ^
->>> /linux/arch/powerpc/kernel/signal_32.c:120:7: note: in expansion of macro
->>> '__put_user'
->>>     if (__put_user((unsigned int)gregs[i], &frame->mc_gregs[i]))
->>>         ^
-> 
-> Can we see what that was after the macro jungle?  Like, the actual
-> preprocessed code?
-> 
+diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
+index 430a16283103..0b479243b903 100644
+--- a/Documentation/trace/ftrace.rst
++++ b/Documentation/trace/ftrace.rst
+@@ -34,7 +34,7 @@ Throughout the kernel is hundreds of static event points that
+ can be enabled via the tracefs file system to see what is
+ going on in certain parts of the kernel.
+ 
+-See events.txt for more information.
++See events.rst for more information.
+ 
+ 
+ Implementation Details
+@@ -376,11 +376,11 @@ of ftrace. Here is a list of some of the key files:
+ 
+   kprobe_events:
+ 
+-	Enable dynamic trace points. See kprobetrace.txt.
++	Enable dynamic trace points. See kprobetrace.rst.
+ 
+   kprobe_profile:
+ 
+-	Dynamic trace points stats. See kprobetrace.txt.
++	Dynamic trace points stats. See kprobetrace.rst.
+ 
+   max_graph_depth:
+ 
+@@ -568,7 +568,7 @@ of ftrace. Here is a list of some of the key files:
+   uprobe_events:
+ 
+ 	Add dynamic tracepoints in programs.
+-	See uprobetracer.txt
++	See uprobetracer.rst
+ 
+   uprobe_profile:
+ 
+@@ -589,19 +589,19 @@ of ftrace. Here is a list of some of the key files:
+ 	files at various levels that can enable the tracepoints
+ 	when a "1" is written to them.
+ 
+-	See events.txt for more information.
++	See events.rst for more information.
+ 
+   set_event:
+ 
+ 	By echoing in the event into this file, will enable that event.
+ 
+-	See events.txt for more information.
++	See events.rst for more information.
+ 
+   available_events:
+ 
+ 	A list of events that can be enabled in tracing.
+ 
+-	See events.txt for more information.
++	See events.rst for more information.
+ 
+   timestamp_mode:
+ 
+-- 
+2.17.1
 
-Sorry for previous misunderstanding
-
-Here is the code:
-
-#define __put_user_asm(x, addr, err, op)			\
-	__asm__ __volatile__(					\
-		"1:	" op "%U2%X2 %1,%2	# put_user\n"	\
-		"2:\n"						\
-		".section .fixup,\"ax\"\n"			\
-		"3:	li %0,%3\n"				\
-		"	b 2b\n"					\
-		".previous\n"					\
-		EX_TABLE(1b, 3b)				\
-		: "=r" (err)					\
-		: "r" (x), "m<>" (*addr), "i" (-EFAULT), "0" (err))
-
-Christophe
