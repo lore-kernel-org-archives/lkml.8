@@ -2,129 +2,273 @@ Return-Path: <SRS0=mvbx=AL=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C1DC433EB
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 868DDC433EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:45:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.kernel.org (Postfix) with ESMTP id 6F91420772
-	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:45:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ufg7F3nm"
+	by mail.kernel.org (Postfix) with ESMTP id 68E2520775
+	for <linux-kernel@archiver.kernel.org>; Tue, 30 Jun 2020 20:45:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730309AbgF3Upx (ORCPT
+        id S1730244AbgF3Upp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 30 Jun 2020 16:45:53 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47833 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730274AbgF3Upu (ORCPT
+        Tue, 30 Jun 2020 16:45:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55194 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729952AbgF3Upk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 30 Jun 2020 16:45:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1593549949;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=ynnJMHDkmLB1gpQYI5LlP8bTNHn29Vusf9IRRJFn7yI=;
-        b=Ufg7F3nmvBga7La4MrAhniboqGrDqLHrpaVEn8Ni10clofwftR7Bymxa/C282Z2AlpkIc2
-        2PDaPNxLmlDneI22MQ/Vh15BKkbEvMpgm0P7TbkuBZhVqH75JGRsV/4v1C3CHC5DQQX8Ey
-        qjvphRLkLdGIoXrjDwnLugx0PR4+c/Y=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-379-GUA0D--FMtKQDLcN_My_kw-1; Tue, 30 Jun 2020 16:45:47 -0400
-X-MC-Unique: GUA0D--FMtKQDLcN_My_kw-1
-Received: by mail-qv1-f69.google.com with SMTP id 59so14672951qvb.4
-        for <linux-kernel@vger.kernel.org>; Tue, 30 Jun 2020 13:45:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ynnJMHDkmLB1gpQYI5LlP8bTNHn29Vusf9IRRJFn7yI=;
-        b=S0Fu04o6PPhDFjluxnZSKhZyoUmicvpykayf8Z1aurvto6fAlRhwA3M3ZRMUMtC9hL
-         1ZknDQe6ayCWtUtWZ1qSMCwprYbKQwI31QGG3E5uBsJc/E9dr89vvn2vCHLhOB7Szvn5
-         6fG9l25Kbu2tCYxcu/ROwHLgVFYAOWmRMLJGm7bQHb81AIQyanZm6nV9tBe4ey+Rg/Jw
-         0yVMPI5ZhJCO190uqfIiFRHIA0ZRyvC6ffb4ejPduFikqnrIk4qi+cEgFwJbgHFO1cSE
-         dM/tpKmp44PFRaNbpZaKBYRgCsrKofEgN2/X8LXWB0jkp3gay5DEjaGlBPW4QzubXrKb
-         HN3A==
-X-Gm-Message-State: AOAM5335FD1pXUN3eT2pVVvzepsORp2orevsUXGBf7MOPuq/VNEm5E6V
-        KnKvg6VPAsS/4flkxUU1zSZX49jv+4xxS4p35GNAnCqhJJUWIhGe1x7ntD1eiHtF1anH0w31p5q
-        qTzI/G3yD4hKOFiZyi11hBg2Z
-X-Received: by 2002:a37:6382:: with SMTP id x124mr19156398qkb.13.1593549946777;
-        Tue, 30 Jun 2020 13:45:46 -0700 (PDT)
-X-Google-Smtp-Source: ABdhPJxYJzOveTh/zHsoqWyRhvWa6nes5qts8kYD9+VOymtjnIw0C/lNBXFLIHdqm4iSlLEtMxrrcQ==
-X-Received: by 2002:a37:6382:: with SMTP id x124mr19156332qkb.13.1593549945576;
-        Tue, 30 Jun 2020 13:45:45 -0700 (PDT)
-Received: from xz-x1.redhat.com ([2607:9880:19c0:32::2])
-        by smtp.gmail.com with ESMTPSA id y40sm4291853qtc.29.2020.06.30.13.45.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jun 2020 13:45:44 -0700 (PDT)
-From:   Peter Xu <peterx@redhat.com>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>, peterx@redhat.com,
-        John Hubbard <jhubbard@nvidia.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH v4 16/26] mm/powerpc: Use general page fault accounting
-Date:   Tue, 30 Jun 2020 16:45:43 -0400
-Message-Id: <20200630204543.39245-1-peterx@redhat.com>
-X-Mailer: git-send-email 2.26.2
+        Tue, 30 Jun 2020 16:45:40 -0400
+Received: from bhuna.collabora.co.uk (bhuna.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e3e3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3B0CC061755;
+        Tue, 30 Jun 2020 13:45:39 -0700 (PDT)
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: koike)
+        with ESMTPSA id 316F32A02B3
+Subject: Re: [PATCH v8 3/3] media: vimc: Add a control to display info on test
+ image
+To:     Kaaira Gupta <kgupta@es.iitr.ac.in>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        hverkuil@xs4all.nl,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>
+References: <20200630195052.23880-1-kgupta@es.iitr.ac.in>
+ <20200630195052.23880-4-kgupta@es.iitr.ac.in>
+From:   Helen Koike <helen.koike@collabora.com>
+Message-ID: <365c7b32-cfc3-2a56-9f79-9c5ed14be45e@collabora.com>
+Date:   Tue, 30 Jun 2020 17:45:33 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200630195052.23880-4-kgupta@es.iitr.ac.in>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the general page fault accounting by passing regs into handle_mm_fault().
+Hi Kaaira,
 
-CC: Michael Ellerman <mpe@ellerman.id.au>
-CC: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-CC: Paul Mackerras <paulus@samba.org>
-CC: linuxppc-dev@lists.ozlabs.org
-Signed-off-by: Peter Xu <peterx@redhat.com>
----
- arch/powerpc/mm/fault.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+On 6/30/20 4:50 PM, Kaaira Gupta wrote:
+> Add a control in VIMC to display information such as the correct order of
+> colors for a given test pattern, counter, brightness, hue, saturation,
+> contrast, width and height at sensor over test image.
+> 
+> Signed-off-by: Kaaira Gupta <kgupta@es.iitr.ac.in>
+> ---
+>  drivers/media/test-drivers/vimc/Kconfig       |  2 +
+>  drivers/media/test-drivers/vimc/vimc-common.h |  1 +
+>  drivers/media/test-drivers/vimc/vimc-core.c   | 10 +++
+>  drivers/media/test-drivers/vimc/vimc-sensor.c | 67 +++++++++++++++++++
+>  4 files changed, 80 insertions(+)
+> 
+> diff --git a/drivers/media/test-drivers/vimc/Kconfig b/drivers/media/test-drivers/vimc/Kconfig
+> index 4068a67585f9..da4b2ad6e40c 100644
+> --- a/drivers/media/test-drivers/vimc/Kconfig
+> +++ b/drivers/media/test-drivers/vimc/Kconfig
+> @@ -2,6 +2,8 @@
+>  config VIDEO_VIMC
+>  	tristate "Virtual Media Controller Driver (VIMC)"
+>  	depends on VIDEO_DEV && VIDEO_V4L2
+> +	select FONT_SUPPORT
+> +	select FONT_8x16
+>  	select MEDIA_CONTROLLER
+>  	select VIDEO_V4L2_SUBDEV_API
+>  	select VIDEOBUF2_VMALLOC
+> diff --git a/drivers/media/test-drivers/vimc/vimc-common.h b/drivers/media/test-drivers/vimc/vimc-common.h
+> index ae163dec2459..a289434e75ba 100644
+> --- a/drivers/media/test-drivers/vimc/vimc-common.h
+> +++ b/drivers/media/test-drivers/vimc/vimc-common.h
+> @@ -20,6 +20,7 @@
+>  #define VIMC_CID_VIMC_CLASS		(0x00f00000 | 1)
+>  #define VIMC_CID_TEST_PATTERN		(VIMC_CID_VIMC_BASE + 0)
+>  #define VIMC_CID_MEAN_WIN_SIZE		(VIMC_CID_VIMC_BASE + 1)
+> +#define VIMC_CID_OSD_TEXT_MODE		(VIMC_CID_VIMC_BASE + 2)
+>  
+>  #define VIMC_FRAME_MAX_WIDTH 4096
+>  #define VIMC_FRAME_MAX_HEIGHT 2160
+> diff --git a/drivers/media/test-drivers/vimc/vimc-core.c b/drivers/media/test-drivers/vimc/vimc-core.c
+> index 11210aaa2551..4b0ae6f51d76 100644
+> --- a/drivers/media/test-drivers/vimc/vimc-core.c
+> +++ b/drivers/media/test-drivers/vimc/vimc-core.c
+> @@ -5,10 +5,12 @@
+>   * Copyright (C) 2015-2017 Helen Koike <helen.fornazier@gmail.com>
+>   */
+>  
+> +#include <linux/font.h>
+>  #include <linux/init.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+>  #include <media/media-device.h>
+> +#include <media/tpg/v4l2-tpg.h>
+>  #include <media/v4l2-device.h>
+>  
+>  #include "vimc-common.h"
+> @@ -263,11 +265,19 @@ static int vimc_register_devices(struct vimc_device *vimc)
+>  
+>  static int vimc_probe(struct platform_device *pdev)
+>  {
+> +	const struct font_desc *font = find_font("VGA8x16");
+>  	struct vimc_device *vimc;
+>  	int ret;
+>  
+>  	dev_dbg(&pdev->dev, "probe");
+>  
+> +	if (!font) {
+> +		dev_err(&pdev->dev, "could not find font\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	tpg_set_font(font->data);
+> +
+>  	vimc = kzalloc(sizeof(*vimc), GFP_KERNEL);
+>  	if (!vimc)
+>  		return -ENOMEM;
+> diff --git a/drivers/media/test-drivers/vimc/vimc-sensor.c b/drivers/media/test-drivers/vimc/vimc-sensor.c
+> index a2f09ac9a360..ec9ddd42984c 100644
+> --- a/drivers/media/test-drivers/vimc/vimc-sensor.c
+> +++ b/drivers/media/test-drivers/vimc/vimc-sensor.c
+> @@ -14,11 +14,15 @@
+>  
+>  #include "vimc-common.h"
+>  
+> +enum osd_mode {OSD_SHOW_ALL = 0, OSD_SHOW_COUNTERS = 1, OSD_SHOW_NONE = 2};
 
-diff --git a/arch/powerpc/mm/fault.c b/arch/powerpc/mm/fault.c
-index 25dee001d8e1..00259e9b452d 100644
---- a/arch/powerpc/mm/fault.c
-+++ b/arch/powerpc/mm/fault.c
-@@ -607,7 +607,7 @@ static int __do_page_fault(struct pt_regs *regs, unsigned long address,
- 	 * make sure we exit gracefully rather than endlessly redo
- 	 * the fault.
- 	 */
--	fault = handle_mm_fault(vma, address, flags, NULL);
-+	fault = handle_mm_fault(vma, address, flags, regs);
- 
- 	major |= fault & VM_FAULT_MAJOR;
- 
-@@ -633,14 +633,9 @@ static int __do_page_fault(struct pt_regs *regs, unsigned long address,
- 	/*
- 	 * Major/minor page fault accounting.
- 	 */
--	if (major) {
--		current->maj_flt++;
--		perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MAJ, 1, regs, address);
-+	if (major)
- 		cmo_account_page_fault();
--	} else {
--		current->min_flt++;
--		perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS_MIN, 1, regs, address);
--	}
-+
- 	return 0;
- }
- NOKPROBE_SYMBOL(__do_page_fault);
--- 
-2.26.2
+Just a nit, I would prefer if you declare like:
 
+enum vimc_sen_osd_mode {
+	VIMC_SEN_OSD_SHOW_ALL = 0,
+	VIMC_SEN_OSD_SHOW_COUNTERS = 1,
+	VIMC_SEN_OSD_SHOW_NONE = 2
+};
+
+> +
+>  struct vimc_sen_device {
+>  	struct vimc_ent_device ved;
+>  	struct v4l2_subdev sd;
+>  	struct tpg_data tpg;
+>  	u8 *frame;
+> +	enum osd_mode osd_value;
+> +	u64 start_stream_ts;
+>  	/* The active format */
+>  	struct v4l2_mbus_framefmt mbus_format;
+>  	struct v4l2_ctrl_handler hdl;
+> @@ -187,8 +191,49 @@ static void *vimc_sen_process_frame(struct vimc_ent_device *ved,
+>  {
+>  	struct vimc_sen_device *vsen = container_of(ved, struct vimc_sen_device,
+>  						    ved);
+> +	const unsigned int line_height = 16;
+> +	u8 *basep[TPG_MAX_PLANES][2];
+> +	unsigned int line = 1;
+> +	char str[100];
+>  
+>  	tpg_fill_plane_buffer(&vsen->tpg, 0, 0, vsen->frame);
+> +	tpg_calc_text_basep(&vsen->tpg, basep, 0, vsen->frame);
+> +	switch (vsen->osd_value) {
+> +	case OSD_SHOW_ALL: {
+> +		const char *order = tpg_g_color_order(&vsen->tpg);
+> +
+> +		tpg_gen_text(&vsen->tpg, basep, line++ * line_height,
+> +			     16, order);
+> +		snprintf(str, sizeof(str),
+> +			 "brightness %3d, contrast %3d, saturation %3d, hue %d ",
+> +			 vsen->tpg.brightness,
+> +			 vsen->tpg.contrast,
+> +			 vsen->tpg.saturation,
+> +			 vsen->tpg.hue);
+> +		tpg_gen_text(&vsen->tpg, basep, line++ * line_height, 16, str);
+> +		snprintf(str, sizeof(str), "sensor size: %dx%d",
+> +			 vsen->mbus_format.width,
+> +			 vsen->mbus_format.height);
+> +		tpg_gen_text(&vsen->tpg, basep, line++ * line_height, 16, str);
+> +	fallthrough;
+
+Nice! I didn't wasn't aware about this macro. Could you just align with the previous like?
+If I understand corretly from the its docs [1], it should be used the same way "break;" is used.
+
+[1] https://elixir.bootlin.com/linux/latest/source/include/linux/compiler_attributes.h#L190
+
+With these changes:
+
+Acked-by: Helen Koike <helen.koike@collabora.com>
+
+Thanks
+Helen
+
+> +	}
+> +	case OSD_SHOW_COUNTERS: {
+> +		unsigned int ms;
+> +
+> +		ms = (ktime_get_ns() - vsen->start_stream_ts) / 1000000;
+> +		snprintf(str, sizeof(str), "%02d:%02d:%02d:%03d",
+> +			 (ms / (60 * 60 * 1000)) % 24,
+> +			 (ms / (60 * 1000)) % 60,
+> +			 (ms / 1000) % 60,
+> +			 ms % 1000);
+> +		tpg_gen_text(&vsen->tpg, basep, line++ * line_height, 16, str);
+> +		break;
+> +	}
+> +	case OSD_SHOW_NONE:
+> +	default:
+> +		break;
+> +	}
+> +
+>  	return vsen->frame;
+>  }
+>  
+> @@ -201,6 +246,8 @@ static int vimc_sen_s_stream(struct v4l2_subdev *sd, int enable)
+>  		const struct vimc_pix_map *vpix;
+>  		unsigned int frame_size;
+>  
+> +		vsen->start_stream_ts = ktime_get_ns();
+> +
+>  		/* Calculate the frame size */
+>  		vpix = vimc_pix_map_by_code(vsen->mbus_format.code);
+>  		frame_size = vsen->mbus_format.width * vpix->bpp *
+> @@ -269,6 +316,9 @@ static int vimc_sen_s_ctrl(struct v4l2_ctrl *ctrl)
+>  	case V4L2_CID_SATURATION:
+>  		tpg_s_saturation(&vsen->tpg, ctrl->val);
+>  		break;
+> +	case VIMC_CID_OSD_TEXT_MODE:
+> +		vsen->osd_value = ctrl->val;
+> +		break;
+>  	default:
+>  		return -EINVAL;
+>  	}
+> @@ -307,6 +357,22 @@ static const struct v4l2_ctrl_config vimc_sen_ctrl_test_pattern = {
+>  	.qmenu = tpg_pattern_strings,
+>  };
+>  
+> +static const char * const vimc_ctrl_osd_mode_strings[] = {
+> +	"All",
+> +	"Counters Only",
+> +	"None",
+> +	NULL,
+> +};
+> +
+> +static const struct v4l2_ctrl_config vimc_sen_ctrl_osd_mode = {
+> +	.ops = &vimc_sen_ctrl_ops,
+> +	.id = VIMC_CID_OSD_TEXT_MODE,
+> +	.name = "Show Information",
+> +	.type = V4L2_CTRL_TYPE_MENU,
+> +	.max = ARRAY_SIZE(vimc_ctrl_osd_mode_strings) - 2,
+> +	.qmenu = vimc_ctrl_osd_mode_strings,
+> +};
+> +
+>  static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
+>  					    const char *vcfg_name)
+>  {
+> @@ -323,6 +389,7 @@ static struct vimc_ent_device *vimc_sen_add(struct vimc_device *vimc,
+>  
+>  	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_class, NULL);
+>  	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_test_pattern, NULL);
+> +	v4l2_ctrl_new_custom(&vsen->hdl, &vimc_sen_ctrl_osd_mode, NULL);
+>  	v4l2_ctrl_new_std(&vsen->hdl, &vimc_sen_ctrl_ops,
+>  			  V4L2_CID_VFLIP, 0, 1, 1, 0);
+>  	v4l2_ctrl_new_std(&vsen->hdl, &vimc_sen_ctrl_ops,
+> 
